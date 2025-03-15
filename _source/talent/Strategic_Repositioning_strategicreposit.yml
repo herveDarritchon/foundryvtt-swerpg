@@ -1,0 +1,34 @@
+name: Strategic Repositioning
+type: talent
+img: icons/sundries/gaming/chess-knight-white.webp
+system:
+  node: int1b
+  description: >-
+    <p>You are always thinking ahead about where to position yourself should
+    danger loom. Before <strong>Turn 1</strong> of a Combat encounter, provided
+    that you are not Unaware, you may immediately move <strong>1 Space</strong>
+    in any permitted direction.</p><p>If multiple combatants have this feature,
+    repositioning occurs in reverse order of Initiative.</p>
+  actions: []
+  requirements: {}
+effects: []
+ownership:
+  default: 0
+  AnoypGxxNIMOS0XY: 3
+flags:
+  core:
+    sourceId: Item.strategicreposit
+_stats:
+  systemId: swerpg
+  systemVersion: 0.6.0
+  coreVersion: '12.331'
+  createdTime: 1675741470187
+  modifiedTime: 1727321391331
+  lastModifiedBy: AnoypGxxNIMOS0XY
+  compendiumSource: Item.strategicreposit
+  duplicateSource: null
+_id: strategicreposit
+folder: MqZKCMx5KrZQffGU
+sort: 103125
+_key: '!items!strategicreposit'
+

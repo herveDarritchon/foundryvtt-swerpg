@@ -1,0 +1,32 @@
+<section class="tab secondary flexcol scrollable {{tabs.spells.id}} {{tabs.spells.cssClass}}"
+         data-tab="{{tabs.spells.id}}" data-group="{{tabs.spells.group}}">
+
+    {{#each spells as |section id|}}
+    <div class="sheet-section item-section flexcol">
+        <h3 class="section-header">{{section.label}}</h3>
+        <ol class="items-list">
+            {{#each section.known as |item|}}
+            <li class="line-item" data-component="{{item.id}}" {{#if item.isItem}}data-item-id="{{item.id}}"{{/if}}>
+                <img class="icon" src="{{item.img}}" alt="{{item.name}}">
+                <div class="title">
+                    <h4>{{item.name}}</h4>
+                    <div class="tags">
+                        {{#each item.tags as |tag|}}
+                        <span class="tag">{{tag}}</span>
+                        {{/each}}
+                    </div>
+                </div>
+                {{#if item.isItem}}
+                <div class="controls">
+                    <a class="button icon fa-solid fa-edit" data-action="itemEdit" data-tooltip="Edit Item"></a>
+                    <a class="button icon fa-solid fa-trash" data-action="itemDelete" data-tooltip="Delete Item"></a>
+                </div>
+                {{/if}}
+            </li>
+            {{else}}
+            <li class="notes">{{section.emptyLabel}}</li>
+            {{/each}}
+        </ol>
+    </div>
+    {{/each}}
+</section>

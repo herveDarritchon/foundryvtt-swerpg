@@ -1,0 +1,280 @@
+@import "variables.less";
+
+/* ----------------------------------------- */
+/*  All Items                                */
+/* ----------------------------------------- */
+
+.swerpg.item,
+.swerpg.action {
+  --margin-size: 1rem;
+  --margin-half: calc(var(--margin-size) / 2);
+
+  .sheet-body {
+    padding: var(--margin-size);
+  }
+
+  .item-properties {
+    display: grid;
+    gap: 0.5rem 1rem;
+
+    multi-checkbox {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+}
+
+/* ----------------------------------------- */
+/*  Armor and Weapons                        */
+/* ----------------------------------------- */
+
+.swerpg.weapon,
+.swerpg.armor {
+  .form-group.defense {
+    .form-fields {
+      flex: 8;
+      display: grid;
+      grid-template-columns: 1fr 64px 1fr 64px;
+    }
+  }
+
+  // Equipment Attributes
+  .item-equipment {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem 1rem;
+
+    label {
+      font-size: var(--font-size-12);
+      font-weight: normal;
+      color: var(--color-secondary);
+    }
+
+    .slot {
+      grid-column: 1 / span 2;
+    }
+
+    .reload {
+      grid-column: 2;
+    }
+  }
+
+  // Tabbed descriptions
+  .tab[data-tab=description] {
+    padding: 0;
+    gap: 0;
+
+    .sheet-tabs {
+      border-top: none;
+    }
+
+    section.tab {
+      padding: 1rem;
+    }
+  }
+}
+
+/** ----------------------------------------- *
+ *  Archetype Sheet                           *
+ * ------------------------------------------ */
+
+.swerpg.archetype,
+.swerpg.taxonomy {
+  .abilities,
+  .resistances {
+    .form-fields {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-gap: 0.5rem;
+
+      label {
+        padding: 0.25rem;
+        border: 1px solid var(--color-frame);
+        border-radius: 6px;
+      }
+
+      input {
+        --input-border-color: transparent;
+        font-size: var(--font-size-18);
+      }
+    }
+
+    .sum {
+      margin-left: 0.25rem;
+      padding: 0.25rem 0.5rem;
+      border: 1px solid green;
+      border-radius: 4px;
+
+      &.invalid {
+        border-color: red;
+      }
+    }
+  }
+
+  .resistances .form-fields {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .talents {
+    gap: 1rem;
+  }
+
+  .droppable {
+    padding: 0 1rem;
+    border: 1px dashed var(--color-frame);
+    border-radius: 6px;
+  }
+}
+
+/** ----------------------------------------- *
+ *  Background Sheet                          *
+ * ------------------------------------------ */
+
+.swerpg.background {
+  .talents {
+    .talent .tags {
+      flex: none;
+    }
+
+    .droppable {
+      padding: 0.5rem 1rem;
+      border: 1px dashed var(--color-tertiary);
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .talent + .droppable {
+      display: none;
+    }
+  }
+}
+
+/** ----------------------------------------- *
+ *  Background Origin                          *
+ * ------------------------------------------ */
+
+.swerpg.origin {
+
+  .skill-modifiers-list {
+    display: flex;
+    width: 100%;
+
+    .skill-tags-container {
+      margin-right: 5px;
+    }
+
+    .skill-tag {
+      display: flex;
+      align-items: center;
+      background: radial-gradient(circle, #533828, #2b221b);
+      border: 1px solid #8a644f;
+      border-radius: 5px;
+      padding: 2px 5px;
+      font-family: 'Cinzel', serif;
+      font-size: 11px;
+      font-weight: bold;
+      color: #caa472;
+      text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+      box-shadow: inset 0 0 8px rgba(0, 0, 0, 1);
+      position: relative;
+      height: 2rem;
+
+      .skill-abbr {
+        margin-left: 2px;
+        margin-right: 5px;
+        text-transform: uppercase;
+      }
+
+      .delete-tag {
+        background: none;
+        border: none;
+        color: #aa4f2f;
+        font-size: 18px;
+        cursor: pointer;
+        font-weight: bold;
+        padding-left: 2px;
+        padding-right: 2px;
+      }
+    }
+
+    .skill-tag:hover {
+      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
+      color: #e4c9a8;
+    }
+
+    .delete-tag:hover {
+      color: #ff6347;
+    }
+
+  }
+
+  .skills {
+
+    .add-skill {
+
+      .select-skill {
+        flex: 3;
+        margin-left: 1rem;
+        display: inline-block;
+      }
+
+      .shift-actions {
+        flex: none;
+        margin-left: 1rem;
+        margin-right: 0.1rem;
+
+        button {
+          padding: 0;
+          margin: 0;
+          flex: 1;
+        }
+      }
+
+      .shift-value {
+        flex: 1;
+
+        .skill-modification-value {
+          display: inline;
+
+          input {
+            text-align: center;
+          }
+        }
+      }
+
+      .shift-value::after {
+        content: '%';
+        margin: 0 0.2rem;
+      }
+
+      .add-skill-action {
+        margin-left: 1rem;
+      }
+    }
+
+    .hint {
+      margin-top: 1rem;
+    }
+
+    .message {
+      width: 100%;
+      line-height: 0;
+      margin: 0;
+    }
+  }
+}
+
+/** ----------------------------------------- *
+ *  Action                                    *
+ * ------------------------------------------ */
+
+.swerpg.action {
+  fieldset.hook {
+    label {
+      flex: 1;
+    }
+
+    button {
+      flex: 0;
+    }
+  }
+}

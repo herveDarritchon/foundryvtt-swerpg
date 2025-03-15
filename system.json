@@ -1,0 +1,237 @@
+{
+  "id": "swerpg",
+  "title": "Star Wars Edge",
+  "description": "Enjoy thrilling adventures in the Star Wars™ galaxy with any or all of three different Star Wars roleplaying systems — Age of Rebellion, Edge of the Empire, and Force and Destiny.",
+  "version": "0.1.0-dev",
+  "manifest": "#{MANIFEST}#",
+  "download": "#{DOWNLOAD}#",
+  "url": "https://github.com/herveDarritchon/foundryvtt-swerpg",
+  "bugs": "https://github.com/herveDarritchon/foundryvtt-swerpg/issues",
+  "background": "systems/swerpg/assets/images/star-wars-edge.webp",
+  "authors": [
+    {
+      "name": "Hervé Darritchon",
+      "discord": "herveDarritchon#7262",
+      "email": "herve.darritchon@gmail.com",
+      "flags": {}
+    }
+  ],
+  "flags": {
+    "hotReload": {
+      "extensions": ["css", "hbs", "json"],
+      "paths": ["lang/en.json", "styles/swerpg.css", "templates"]
+    }
+  },
+  "media": [
+    {
+      "type": "setup",
+      "url": "systems/swerpg/assets/swerpg-logo.png",
+      "thumbnail": "systems/swerpg/assets/swerpg-logo.png"
+    }
+  ],
+  "compatibility": {
+    "minimum": 12,
+    "verified": 13.334
+  },
+  "license": "LICENSE",
+  "esmodules": ["swerpg.mjs"],
+  "styles": ["styles/swerpg.css"],
+  "packs": [
+    {
+      "name": "adversary-talents",
+      "label": "Adversary Talents",
+      "path": "packs/adversary-talents",
+      "type": "Item"
+    },
+    {
+      "name": "ancestry",
+      "label": "Ancestries",
+      "path": "packs/ancestry",
+      "type": "Item"
+    },
+    {
+      "name": "archetype",
+      "label": "Archetypes",
+      "path": "packs/archetype",
+      "type": "Item"
+    },
+    {
+      "name": "armor",
+      "label": "Armor",
+      "path": "packs/armor",
+      "type": "Item"
+    },
+    {
+      "name": "background",
+      "label": "Backgrounds",
+      "path": "packs/background",
+      "type": "Item"
+    },
+    {
+      "name": "origin",
+      "label": "Origin",
+      "path": "packs/origin",
+      "type": "Item"
+    },
+    {
+      "name": "rules",
+      "label": "System Rules",
+      "path": "packs/rules",
+      "type": "JournalEntry"
+    },
+    {
+      "name": "playtest",
+      "label": "Playtest",
+      "path": "packs/playtest",
+      "type": "Adventure"
+    },
+    {
+      "name": "pregens",
+      "label": "Pregenerated Heroes",
+      "path": "packs/pregens",
+      "type": "Actor"
+    },
+    {
+      "name": "spell",
+      "label": "Iconic Spells",
+      "path": "packs/spell",
+      "type": "Item"
+    },
+    {
+      "name": "summons",
+      "label": "Summoned Creatures",
+      "path": "packs/summons",
+      "type": "Actor"
+    },
+    {
+      "name": "talent",
+      "label": "Talents",
+      "path": "packs/talent",
+      "type": "Item"
+    },
+    {
+      "name": "taxonomy",
+      "label": "Taxonomies",
+      "path": "packs/taxonomy",
+      "type": "Item"
+    },
+    {
+      "name": "weapon",
+      "label": "Weapons",
+      "path": "packs/weapon",
+      "type": "Item"
+    }
+  ],
+  "packFolders": [
+    {
+      "name": "Swerpg",
+      "color": "#561206",
+      "folders": [
+        {
+          "name": "Adversary Options",
+          "color": "#380d05",
+          "packs": [
+            "adversary-talents",
+            "archetype",
+            "taxonomy"
+          ]
+        },
+        {
+          "name": "Character Options",
+          "color": "#380d05",
+          "packs": [
+            "ancestry",
+            "background",
+            "origin",
+            "spell",
+            "talent"
+          ]
+        },
+        {
+          "name": "Actors",
+          "color": "#380d05",
+          "packs": [
+            "pregens",
+            "summons"
+          ]
+        },
+        {
+          "name": "Equipment",
+          "color": "#380d05",
+          "packs": [
+            "armor",
+            "weapon"
+          ]
+        }
+      ],
+      "packs": [
+        "rules",
+        "playtest"
+      ]
+    }
+  ],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    },
+    {
+      "lang": "fr",
+      "name": "French",
+      "path": "lang/fr.json"
+    }
+  ],
+  "documentTypes": {
+    "Actor": {
+      "hero": {
+        "htmlFields": ["details.biography.public", "details.biography.private", "details.biography.appearance"]
+      },
+      "character": {
+        "htmlFields": ["details.biography.public", "details.biography.private", "details.biography.appearance"]
+      },
+      "adversary": {}
+    },
+    "Item": {
+      "ancestry": {
+        "htmlFields": ["description"]
+      },
+      "archetype": {
+        "htmlFields": ["description"]
+      },
+      "armor": {
+        "htmlFields": ["description.public", "description.secret"]
+      },
+      "background": {
+        "htmlFields": ["description"]
+      },
+      "origin": {
+        "htmlFields": ["description"]
+      },
+      "spell": {
+        "htmlFields": ["description"]
+      },
+      "talent": {
+        "htmlFields": ["description"]
+      },
+      "taxonomy": {
+        "htmlFields": ["description"]
+      },
+      "weapon": {
+        "htmlFields": ["description.public", "description.secret"]
+      }
+    },
+    "JournalEntryPage": {
+      "skill": {}
+    }
+  },
+  "grid": {
+    "type": 1,
+    "distance": 5,
+    "units": "ft",
+    "diagonals": 1
+  },
+  "socket": true,
+  "primaryTokenAttribute": "resources.health",
+  "secondaryTokenAttribute": "resources.morale"
+}

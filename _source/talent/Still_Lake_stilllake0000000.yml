@@ -1,0 +1,35 @@
+name: Still Lake
+type: talent
+_id: stilllake0000000
+img: icons/magic/water/orb-water-transparent.webp
+system:
+  node: wis2a
+  description: >-
+    <p>Your life experiences provide serenity that allows you to resist the
+    attempted manipulation of others.</p><p><strong>Skill Attacks</strong>
+    against you from any of the <strong>Social</strong> skills are made with
+    <strong>2 Banes</strong>.</p>
+  actions: []
+  actorHooks:
+    - hook: defendSkillAttack
+      fn: >-
+        if ( CONFIG.SYSTEM.SKILLS[action.usage.skillId].category === "soc" )
+        rollData.banes.stillLake = {label: "Still Lake", number: 2};
+effects: []
+folder: CZGTdmrVS3xRvahX
+sort: 100000
+ownership:
+  default: 0
+  AnoypGxxNIMOS0XY: 3
+flags: {}
+_stats:
+  systemId: swerpg
+  systemVersion: 0.6.0
+  coreVersion: '12.331'
+  createdTime: 1685821347312
+  modifiedTime: 1726367748069
+  lastModifiedBy: AnoypGxxNIMOS0XY
+  compendiumSource: null
+  duplicateSource: null
+_key: '!items!stilllake0000000'
+

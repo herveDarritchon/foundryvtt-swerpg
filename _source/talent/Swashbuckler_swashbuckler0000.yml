@@ -1,0 +1,33 @@
+name: Swashbuckler
+type: talent
+img: icons/skills/melee/weapons-crossed-swords-yellow-teal.webp
+system:
+  description: >-
+    <p>Your bravado inspires your allies and cowes your enemies. When you Dodge
+    or Parry a Strike, the attacker loses Morale equal to your Presence
+    attribute. When you achieve a Critical Hit, all nearby allies who can see
+    you gain Morale equal to your Presence attribute.</p>
+  actions: []
+  requirements: {}
+  node: sig3.dexterity.presence
+effects: []
+ownership:
+  default: 0
+  AnoypGxxNIMOS0XY: 3
+flags:
+  core:
+    sourceId: Item.swashbuckler0000
+_stats:
+  systemId: swerpg
+  systemVersion: 0.6.0
+  coreVersion: '12.331'
+  createdTime: 1675626189295
+  modifiedTime: 1726782838153
+  lastModifiedBy: AnoypGxxNIMOS0XY
+  compendiumSource: Item.swashbuckler0000
+  duplicateSource: null
+_id: swashbuckler0000
+folder: fOYHlZJEWUukD7yr
+sort: 303125
+_key: '!items!swashbuckler0000'
+

@@ -1,0 +1,72 @@
+{{log "origin configuration" this}}
+{{log "source skillModifierDraft" source.system.skillModifierDraft}}
+{{log "fields skillModifierDraft" this.fields.skillModifierDraft}}
+{{log "skillModifierDraft" this.skillModifierDraft}}
+<section class="tab sheet-body flexcol {{tabs.config.cssClass}}"
+         data-tab="{{tabs.config.id}}" data-group="{{tabs.config.group}}">
+
+    <fieldset class="form-group skills" {{fieldDisabled}}>
+        <legend>{{localize "ORIGIN.SHEET.SKILLS.title"}}</legend>
+        <div class="flexrow">
+            <label class="add-skill flexrow">Label
+                {{formGroup skillModifierDraft.skillId.field value=skillModifierDraft.skillId.value
+                            choices=remainingSkills valueAttr="id" labelAttr="label" localize=true
+                            classes="select-skill"}}
+
+                <span class="flexcol shift-actions">
+                    <button type="button" class="icon fa-solid fa-arrow-up" data-action="increase-skill-modification"
+                            data-tooltip="ORIGIN.SHEET.SKILLS.increase.tooltip.label"
+                            data-tooltip-direction={{localize
+                            "ORIGIN.SHEET.SKILLS.increase.tooltip.direction"}}></button>
+
+                    <button type="button" class="icon fa-solid fa-arrow-down" data-action="decrease-skill-modification"
+                            data-tooltip="ORIGIN.SHEET.SKILLS.decrease.tooltip.label"
+                            data-tooltip-direction={{localize
+                            "ORIGIN.SHEET.SKILLS.decrease.tooltip.direction"}}></button>
+                </span>
+
+                <span class="shift-value flexrow">
+                    {{formGroup skillModifierDraft.modifierValue.field value=skillModifierDraft.modifierValue.value
+                                type="number" hint=null classes="skill-modification-value"}}
+                </span>
+
+                <button type="button" class="add-skill-action icon fa-solid fa-add" data-action="add-skill"
+                        data-tooltip="ORIGIN.SHEET.SKILLS.add.tooltip.label"
+                        data-tooltip-direcxion={{localize "ORIGIN.SHEET.SKILLS.add.tooltip.direction"}}
+                {{#if addIsDisabled}}disabled{{/if}}></button>
+            </label>
+            <p class="hint">{{localize "ORIGIN.SHEET.SKILLS.hint"}}</p>
+        </div>
+
+        <div class="swerpg-separator"></div>
+
+        {{#if hasSkillModifiers}}
+            <div class="skill-modifiers-list">
+                {{#each skillTags as |skillTag|}}
+
+                    {{> "systems/swerpg/templates/sheets/partials/skill-modifier-tag.hbs" skillTag=skillTag}}
+
+                {{/each}}
+            </div>
+        {{else}}
+            <p class="message hint">{{localize "ORIGIN.SHEET.SKILLS.empty"}}</p>
+        {{/if}}
+    </fieldset>
+    <fieldset class="form-group skills" {{fieldDisabled}}>
+        <div class="form-fields">
+            {{#each skills as |skill|}}
+                <legend>{{skill.label}} <span class="sum"></span></legend>
+                {{log "skill" skill}}
+
+                <label>{{localize "ORIGIN.SHEET.SKILLS.base"}}
+                    {{formInput skill.base.field value=skill.base.value type="number"}}/
+                </label>
+                <label>{{localize "ORIGIN.SHEET.SKILLS.max"}}
+                    {{formInput skill.max.field value=skill.max.value type="number"}}
+                </label>
+            {{/each}}
+        </div>
+        <p class="hint">{{fields.skills.hint}}</p>
+    </fieldset>
+
+</section>

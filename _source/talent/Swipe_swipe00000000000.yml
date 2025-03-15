@@ -1,0 +1,53 @@
+name: Swipe
+type: talent
+_id: swipe00000000000
+img: icons/skills/melee/strike-axe-red.webp
+system:
+  node: str0
+  description: >-
+    You perform a broad swipe with your weapon, hitting two adjacent targets
+    within your weapon range.
+  actions:
+    - id: swipe
+      description: >-
+        <p>You perform a <strong>Strike</strong> against two adjacent enemies,
+        attacking both of them using a single swing of your great weapon.</p>
+      tags:
+        - melee
+        - twohand
+      cost:
+        action: 2
+        focus: 0
+        weapon: true
+        heroism: 0
+      target:
+        type: single
+        number: 2
+        scope: 3
+      effects: []
+      name: Swipe
+      img: icons/skills/melee/strike-axe-red.webp
+      condition: ''
+      range:
+        maximum: null
+        weapon: true
+        minimum: null
+      actionHooks: []
+effects: []
+folder: yQPNpmhq761VzMZe
+sort: -200000
+ownership:
+  default: 0
+  AnoypGxxNIMOS0XY: 3
+flags: {}
+_stats:
+  systemId: swerpg
+  systemVersion: 0.6.0
+  coreVersion: '12.331'
+  createdTime: 1688230630765
+  modifiedTime: 1727320704645
+  lastModifiedBy: AnoypGxxNIMOS0XY
+  compendiumSource: null
+  duplicateSource: null
+_key: '!items!swipe00000000000'
+

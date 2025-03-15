@@ -1,0 +1,90 @@
+@import "./variables.less";
+
+/* -------------------------------------------- */
+/*  Chat Cards                                  */
+/* -------------------------------------------- */
+
+.swerpg.chat-message {
+  --background-texture: url("../ui/journal/background-texture.webp");
+  background: var(--background-texture) repeat;
+  border: none;
+  margin: 0.5rem 0.25rem;
+  padding: 0.25rem 0.5rem 0.5rem;
+
+  .message-header {
+    font-size: var(--font-size-12);
+    color: var(--color-tertiary);
+  }
+
+  .flavor-text {
+    font-size: var(--font-size-12);
+    color: var(--color-secondary);
+    border-top: 1px solid var(--color-cool-4);
+    padding-top: 0.25rem;
+    margin-top: 0.25rem;
+  }
+
+  &.whisper {
+    background: #090b13;
+    border: 1px solid #7b8cc7;
+  }
+  &.blind {
+    background: #130913;
+    border: 1px solid #977dcc;
+  }
+
+  // Smaller die icons
+  .swerpg.dice-roll .pool .die {
+    --die-size: 48px;
+  }
+
+  // Confirm button
+  button.confirm {
+    margin-top: 0.5rem;
+  }
+}
+
+
+/* -------------------------------------------- */
+/*  Chat Actions                                */
+/* -------------------------------------------- */
+
+.swerpg .action {
+
+  /** Action Header */
+  .action-header {
+    flex: none;
+  }
+  // TODO temporarily needed until styles in `theme.less` can be applied to chat cards
+  label.tag-icon {
+    flex: none;
+  }
+
+  /** Text Description */
+  .action-description {
+    padding: 4px 0;
+    font-size: var(--font-size-12);
+    font-style: italic;
+    border-top: 1px solid var(--colorBeige);
+    border-bottom: 1px solid var(--colorBeige);
+  }
+}
+
+.swerpg.confirm {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-14);
+  color: var(--colorOlive);
+  line-height: 20px;
+  margin-top: 0.25rem;
+}
+
+.message-metadata {
+  .confirmed {
+    color: var(--colorSuccess);
+  }
+  .unconfirmed {
+    color: var(--colorError);
+  }
+}

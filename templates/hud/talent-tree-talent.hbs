@@ -1,0 +1,12 @@
+<aside id="swerpg-talent-hud" class="swerpg hud talent">
+    <header class="flexrow">
+        <img class="icon" src="{{source.img}}" title="{{source.name}}"/>
+        <h1 class="title">{{source.name}}</h1>
+        <div class="talent-tags tags prerequisites">
+            {{#each prerequisites as |req|}}
+            <span class="tag {{#unless req.met}}unmet{{/unless}}">{{req.tag}}</span>
+            {{/each}}
+        </div>
+    </header>
+    {{> "systems/swerpg/templates/sheets/partials/talent-summary.hbs"}}
+</aside>

@@ -1,0 +1,23 @@
+{
+  "name": "swerpg",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "compile": "npm run compilePacks && npm run compileCSS",
+    "compileCSS": "lessc styles/swerpg.less styles/swerpg.css",
+    "compilePacks": "node build.mjs compile",
+    "extractPacks": "node build.mjs extract",
+    "test": "vitest"
+  },
+  "devDependencies": {
+    "@foundryvtt/foundryvtt-cli": "^1.0.3",
+    "commander": "^11.1.0",
+    "gulp": "^5.0.0",
+    "gulp-less": "^5.0.0",
+    "less": "^4.2.0",
+    "vitest": "^3.0.4"
+  },
+  "author": "Foundry Gaming, LLC",
+  "license": "UNLICENSED"
+}

@@ -1,0 +1,12 @@
+{{log "skillTag" skillTag}}
+
+<div class="skill-tags-container" data-item-id="{{skillTag.skill.id}}">
+    <div class="skill-tag">
+        <span class="skill-abbr">{{localize skillTag.skill.abbreviation}}</span>
+        <span class="skill-value">{{skillTag.modifier}}</span>
+        <button class="delete-tag" data-action="delete-skill-tag" data-tooltip="{{localize "ACTION.TAGS.delete"}}"
+                data-tooltip-direction="UP">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
+</div>

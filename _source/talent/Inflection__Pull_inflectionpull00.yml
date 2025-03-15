@@ -1,0 +1,34 @@
+name: 'Inflection: Pull'
+type: talent
+img: icons/skills/movement/arrow-down-pink.webp
+system:
+  node: wispre1
+  description: >-
+    <p>Empower a spell to attract affected creatures toward the caster.
+    Creatures affected by a spell with the Pull inflection move 1 space closer
+    towards the spellcaster if that destination space is unoccupied.</p>
+  actions: []
+  inflection: pull
+  actorHooks: []
+  iconicSpells: 1
+effects: []
+flags:
+  core:
+    sourceId: Compendium.swerpg.talent.inflectionpull00
+_stats:
+  systemId: swerpg
+  systemVersion: 0.6.0
+  coreVersion: '12.331'
+  createdTime: 1675016427487
+  modifiedTime: 1727211393392
+  lastModifiedBy: AnoypGxxNIMOS0XY
+  compendiumSource: Compendium.swerpg.talent.inflectionpull00
+  duplicateSource: null
+ownership:
+  default: 0
+  AnoypGxxNIMOS0XY: 3
+_id: inflectionpull00
+folder: mFfsius4gpT45Q2R
+sort: 400000
+_key: '!items!inflectionpull00'
+

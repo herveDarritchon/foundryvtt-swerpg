@@ -1,0 +1,140 @@
+/** ----------------------------------------- *
+ *  Journal Sheet                             *
+ * ------------------------------------------ */
+
+.swerpg.journal-sheet {
+  --background-overlay: url("../ui/journal/overlay-dark.webp");
+  --background-texture: url("../ui/journal/background-texture.webp");
+  background: var(--background-texture) repeat;
+
+  &::before {
+    display: block;
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: var(--background-overlay) no-repeat;
+    background-position: top center;
+    background-size: 100% auto;
+    opacity: 0.75;
+    z-index: -1;
+  }
+
+  .window-content {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  .journal-entry-content {
+    border: none;
+    background: none;
+  }
+
+  /** Journal Entry Header */
+  .journal-header {
+    position: relative;
+    padding-bottom: 60px;
+    margin-bottom: 20px;
+    background-image: url("../ui/journal/h1-separator.png"); // TODO convert SVG
+    background-repeat: no-repeat;
+    background-position: bottom center;
+
+    .title {
+      background: none;
+      border: none;
+      font-family: var(--font-h1);
+      font-size: 2.25rem;
+      color: var(--color-h1);
+    }
+  }
+
+  /** Journal Sidebar TOC */
+  .journal-sidebar {
+    .action-buttons {
+      margin: 1rem 0;
+      button.next, button.previous {
+        color: transparent;
+        border: none;
+        background: url("../ui/journal/arrow-left.png") no-repeat; // TODO convert to WEBP/SVG
+        background-size: contain;
+        background-position: center;
+      }
+      button.next {
+        background-image: url("../ui/journal/arrow-right.png"); // TODO convert to WEBP/SVG
+      }
+    }
+  }
+}
+
+/** ----------------------------------------- *
+ *  Single Page Styles                        *
+ * ------------------------------------------ */
+
+.swerpg.journal-sheet .journal-entry-page {
+  --font-h1: "AwerySmallcaps", serif;
+  --font-h2: "AwerySmallcaps", serif;
+  --font-h3: "AwerySmallcaps", serif;
+
+  /* Page Headers */
+  .journal-page-header {
+    position: relative;
+    padding-bottom: 40px;
+    margin-bottom: 20px;
+    background-image: url("../ui/journal/h2-separator.png"); // TODO convert SVG
+    background-repeat: no-repeat;
+    background-position: bottom center;
+    h1 {
+      text-align: center;
+    }
+  }
+
+  /* Page Content */
+  .journal-page-content {
+    padding: 0 2rem;
+    font-size: var(--font-size-14);
+    line-height: var(--font-size-20);
+
+    // Immediate child paragraphs are justified
+    > p {
+      text-align: justify;
+    }
+  }
+}
+
+/** ----------------------------------------- *
+ *  Skill Page Sheet                          *
+ * ------------------------------------------ */
+
+.swerpg-skill-page {
+  height: 100%;
+  overflow: hidden;
+  .scrollable {
+    flex: 1;
+    gap: 1rem;
+    padding: 1rem;
+    overflow: hidden auto;
+    h2.divider,
+    div.form-group {
+      margin: 0;
+    }
+  }
+  .form-footer {
+    flex: none;
+    margin: 1rem;
+  }
+}
+
+.swerpg.skill {
+  .overview > p {
+    text-align: left;
+  }
+  figure.right {
+    float: right;
+    margin: 0 0 1rem 1rem;
+    img {
+      width: 200px;
+      height: 200px;
+      border-radius: 6px;
+    }
+  }
+}

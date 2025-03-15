@@ -1,0 +1,34 @@
+_id: merchant00000000
+name: Merchant
+type: background
+img: icons/skills/social/diplomacy-handshake.webp
+effects: []
+folder: 5piCK2JWjY34nSY3
+flags: {}
+system:
+  description: >-
+    <p>You were a travelling salesperson or tended a small shop. You spent a
+    significant portion of your time learning the art of negotiation with people
+    from all walks of life, and where the boundaries of the best deal lay.</p>
+  skills:
+    - science
+    - society
+    - diplomacy
+    - awareness
+  talents:
+    - Compendium.swerpg.talent.Item.preparedness0000
+_stats:
+  systemId: swerpg
+  systemVersion: 0.6.0
+  coreVersion: '12.331'
+  createdTime: 1674942420028
+  modifiedTime: 1726428664573
+  lastModifiedBy: AnoypGxxNIMOS0XY
+  compendiumSource: null
+  duplicateSource: null
+sort: 0
+ownership:
+  default: 0
+  AnoypGxxNIMOS0XY: 3
+_key: '!items!merchant00000000'
+

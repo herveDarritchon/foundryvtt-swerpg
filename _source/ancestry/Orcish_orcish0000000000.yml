@@ -1,0 +1,35 @@
+_id: orcish0000000000
+name: Orcish
+type: ancestry
+img: icons/creatures/magical/construct-iron-stomping-yellow.webp
+effects: []
+folder: cvTY534vgfLqkvXj
+flags: {}
+system:
+  primary: strength
+  secondary: toughness
+  resistance: cold
+  vulnerability: fire
+  description: >-
+    <p>Your birth was marked by the stars and traditions of a proud and enduring
+    people. Your tall and well-toned body and natural propensity for toughness
+    has origins amid a people exposed to the relentless struggle of a harsh
+    northern clime. Your people are known for their strength and resilience
+    above all else.</p>
+  size: 4
+  stride: 10
+_stats:
+  systemId: swerpg
+  systemVersion: 0.6.0
+  coreVersion: '12.331'
+  createdTime: 1674942420029
+  modifiedTime: 1726325330310
+  lastModifiedBy: AnoypGxxNIMOS0XY
+  compendiumSource: null
+  duplicateSource: null
+sort: 0
+ownership:
+  default: 0
+  AnoypGxxNIMOS0XY: 3
+_key: '!items!orcish0000000000'
+

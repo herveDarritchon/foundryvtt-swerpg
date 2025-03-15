@@ -1,0 +1,49 @@
+name: Cadence
+type: talent
+img: icons/skills/melee/strikes-sword-triple-gray.webp
+system:
+  node: str1a
+  description: >-
+    <p>You are drilled in performing sequences of melee attacks with rhythmic
+    precision. When you <strong>Strike</strong> multiple times in sequence using
+    a one-handed melee weapon you gain a stacking <strong>+1 Boon</strong> for
+    each successive attack.</p><p></p>
+  actions: []
+  requirements: {}
+  actorHooks:
+    - hook: prepareWeaponAttack
+      fn: >-
+        // Increment Cadence Count
+
+        const status = actor.status;
+
+        const {actorStatus, boons} = action.usage;
+
+        actorStatus.cadence = (status.cadence ?? 0) + 1;
+
+
+        // Add Boons
+
+        if ( status.cadence ) rollData.boons.cadence = {label: "Cadence",
+        number: status.cadence};
+effects: []
+ownership:
+  default: 0
+  AnoypGxxNIMOS0XY: 3
+flags:
+  core:
+    sourceId: Item.cadence000000000
+_stats:
+  systemId: swerpg
+  systemVersion: 0.6.0
+  coreVersion: '12.331'
+  createdTime: 1677208371269
+  modifiedTime: 1727057874097
+  lastModifiedBy: AnoypGxxNIMOS0XY
+  compendiumSource: Item.cadence000000000
+  duplicateSource: null
+_id: cadence000000000
+folder: SAZROgHuRagTzjCu
+sort: 100000
+_key: '!items!cadence000000000'
+

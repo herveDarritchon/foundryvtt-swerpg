@@ -1,0 +1,55 @@
+name: Penetrating Shot
+type: talent
+_id: penetratingshot0
+img: icons/skills/ranged/projectile-explosion-black-orange.webp
+system:
+  node: dex1b
+  description: >-
+    You load special ammunition which deals less damage but penetrates directly
+    through a line of targets.
+  actions:
+    - id: penetratingShot
+      tags:
+        - ranged
+        - mechanical
+        - mainhand
+        - weakened
+      cost:
+        action: 1
+        focus: 1
+        weapon: true
+        heroism: 0
+      target:
+        type: ray
+        number: 1
+        scope: 3
+      effects: []
+      name: Penetrating Shot
+      img: icons/skills/ranged/projectile-explosion-black-orange.webp
+      condition: ''
+      description: >-
+        <p>You fire a shot which penetrates through multiple targets in a direct
+        line.</p>
+      range:
+        maximum: null
+        weapon: true
+        minimum: null
+      actionHooks: []
+effects: []
+folder: i7P1uwWcECj5KWfY
+sort: 37500
+ownership:
+  default: 0
+  AnoypGxxNIMOS0XY: 3
+flags: {}
+_stats:
+  systemId: swerpg
+  systemVersion: 0.6.0
+  coreVersion: '12.331'
+  createdTime: 1687616511078
+  modifiedTime: 1727321506145
+  lastModifiedBy: AnoypGxxNIMOS0XY
+  compendiumSource: null
+  duplicateSource: null
+_key: '!items!penetratingshot0'
+

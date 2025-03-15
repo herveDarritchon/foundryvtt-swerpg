@@ -1,0 +1,2553 @@
+/* ----------------------------------------- */
+/*  Font Faces                               */
+/* ----------------------------------------- */
+@font-face {
+  font-family: "AwerySmallcaps";
+  src: url("../fonts/AwerySmallcaps/AwerySmallcaps.ttf");
+}
+@font-face {
+  font-family: "CaslonAntique";
+  src: url("../fonts/CaslonAntique/CaslonAntique.ttf");
+}
+@font-face {
+  font-family: 'Vollkorn';
+  font-style: normal;
+  font-weight: 300 800;
+  src: url("../fonts/vollkorn/Vollkorn-VariableFont_wght.ttf") format('truetype');
+}
+/* ----------------------------------------- */
+/*  CSS Variables                            */
+/* ----------------------------------------- */
+.swerpg {
+  --background: #0b0909;
+  --color-text: #eee8df;
+  --color-primary: var(--color-text);
+  --color-secondary: #d7c4a9;
+  --color-tertiary: #b6967c;
+  --color-header: #cac5ba;
+  --color-h1: #cfbea2;
+  --color-frame: #3f3128;
+  --color-frame-bg: #1c1a1a;
+  --color-frame-bg-25: rgba(28, 26, 26, 0.25);
+  --color-frame-bg-50: rgba(28, 26, 26, 0.5);
+  --color-frame-bg-75: rgba(28, 26, 26, 0.75);
+  --color-accent: #cf9356;
+  --color-link-text: #f36739;
+  --color-border-highlight: var(--color-accent);
+  --color-damage-vulnerability: #641010;
+  --color-damage-vulnerability-border: #dc3232;
+  --color-damage-resistance: #236212;
+  --color-damage-resistance-border: #51c433;
+  --color-result-bad: #641010;
+  --color-result-good: #236212;
+  --color-result-warn: #a98d0b;
+  --font-h1: "AwerySmallcaps", serif;
+  --font-h2: "AwerySmallcaps", serif;
+  --font-h3: "AwerySmallcaps", serif;
+  --font-body: "Vollkorn", serif;
+  --font-quote: "CaslonAntique", serif;
+  --font-sans: "Signika", sans-serif;
+  --color-fieldset-border: var(--color-frame);
+}
+.swerpg input,
+.swerpg select {
+  --input-background-color: var(--color-frame-bg);
+  --input-border-color: var(--color-frame);
+  --input-text-color: var(--color-text);
+  --color-select-option-bg: var(--color-frame);
+}
+.swerpg input:focus,
+.swerpg select:focus {
+  --input-text-color: var(--color-text);
+}
+.swerpg input:disabled,
+.swerpg select:disabled {
+  --input-text-color: var(--color-secondary);
+}
+/* ----------------------------------------- */
+/*  Light Theme (NOT USED YET)               */
+/* ----------------------------------------- */
+.theme-light .swerpg.UNUSED {
+  --background: #cac5ba;
+  --color-background: #cac5ba;
+  --color-text: #000000;
+  --color-secondary: #0b0909;
+  --color-tertiary: #1c1a1a;
+  --color-frame-bg: var(--color-cool-5-25);
+  --color-frame: #938c9a;
+  --color-h1: #000000;
+}
+.theme-light .swerpg.UNUSED.application {
+  --color-header-background: transparent;
+  --background-texture: url("../ui/journal/background-light.webp");
+  --background-overlay: url("../ui/journal/overlay-light.webp");
+}
+/** ----------------------------------------- *
+ *  Swerpg V2 Styles                        *
+ * ------------------------------------------ */
+.swerpg {
+  font-family: var(--font-body);
+  color: var(--color-text);
+  font-size: 0.9375rem;
+  letter-spacing: 0.5px;
+}
+.swerpg h1,
+.swerpg h2,
+.swerpg h3,
+.swerpg h4 {
+  font-family: var(--font-h1);
+  font-weight: normal;
+  color: var(--color-h1);
+  border: none;
+}
+.swerpg h1.divider,
+.swerpg h2.divider,
+.swerpg h3.divider,
+.swerpg h4.divider {
+  clear: both;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  white-space: nowrap;
+}
+.swerpg h1.divider::before,
+.swerpg h2.divider::before,
+.swerpg h3.divider::before,
+.swerpg h4.divider::before {
+  flex: 1;
+  content: "";
+  margin-right: 0.5rem;
+  border-top: 2px ridge var(--color-h1);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 100%);
+  mask-image: linear-gradient(90deg, transparent 0%, black 100%);
+}
+.swerpg h1.divider::after,
+.swerpg h2.divider::after,
+.swerpg h3.divider::after,
+.swerpg h4.divider::after {
+  flex: 1;
+  content: "";
+  margin-left: 0.5rem;
+  border-top: 2px ridge var(--color-h1);
+  -webkit-mask-image: linear-gradient(270deg, transparent 0%, black 100%);
+  mask-image: linear-gradient(270deg, transparent 0%, black 100%);
+}
+.swerpg strong {
+  color: var(--color-h1);
+}
+.swerpg a.content-link,
+.swerpg a.inline-roll {
+  background: none;
+  border: none;
+  color: var(--color-link-text);
+}
+.swerpg a.content-link i,
+.swerpg a.inline-roll i {
+  color: var(--color-link-text);
+}
+.swerpg table {
+  margin: 1rem 0;
+  border: none;
+  color: var(--color-secondary);
+}
+.swerpg table td,
+.swerpg table th {
+  text-align: left;
+  padding: 0.25rem 0.5rem;
+  font-size: var(--font-size-14);
+}
+.swerpg table thead {
+  background: var(--color-frame-bg);
+  border: none;
+}
+.swerpg table th {
+  line-height: 1.5rem;
+  color: var(--color-text);
+  font-family: var(--font-h1);
+  font-weight: normal;
+  text-align: left;
+  text-shadow: none;
+}
+.swerpg table tr:nth-child(even) {
+  background-color: var(--color-frame-bg);
+}
+.swerpg blockquote {
+  margin: 1rem 0;
+  border-left: 4px solid var(--color-secondary);
+  font-family: var(--font-quote);
+  font-size: var(--font-size-18);
+  color: var(--color-secondary);
+  letter-spacing: 0;
+}
+.swerpg .frame-brown {
+  background: var(--color-frame);
+  border-image: url('../ui/journal/button-border.png');
+  border-image-slice: 16;
+  border-image-outset: 2;
+  border-image-width: 8px;
+  color: var(--color-h1);
+}
+.swerpg ::-webkit-scrollbar-thumb {
+  background: var(--color-frame);
+}
+.swerpg code {
+  color: #d3caf6;
+  border: 1px solid #321e7f;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  font-size: var(--font-size-14);
+}
+.swerpg .tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  justify-content: flex-end;
+  align-items: center;
+  color: var(--color-text);
+}
+.swerpg .tags label {
+  flex: 1;
+  font-size: var(--font-size-14);
+}
+.swerpg .tags .tag {
+  padding: 1px 4px;
+  background: var(--color-frame-bg-75);
+  border: 1px solid var(--color-frame);
+  border-radius: 4px;
+  font-family: var(--font-sans);
+  font-size: var(--font-size-10);
+  color: var(--color-light-4);
+  white-space: nowrap;
+}
+.swerpg .tags .tag.unmet {
+  border-color: darkred;
+  color: red;
+}
+.swerpg .tags:empty {
+  display: none;
+}
+.swerpg .tag-icon {
+  flex: none;
+  font-size: 10px;
+}
+.swerpg section.construction {
+  position: relative;
+  margin: 1rem 0;
+  padding: 0.5rem 1rem 0.5rem 80px;
+  border: 1px solid #af6417;
+  border-radius: 8px;
+  color: var(--color-accent);
+}
+.swerpg section.construction::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  font-family: var(--font-awesome);
+  content: "\f7d9";
+  font-size: 48px;
+  text-align: center;
+  line-height: 80px;
+  width: 80px;
+}
+.swerpg section.foundryvtt {
+  position: relative;
+  margin: 1rem 0;
+  padding: 0.5rem 1rem 0.5rem 120px;
+  border: 1px solid #d74e14;
+  border-radius: 8px;
+}
+.swerpg section.foundryvtt::before {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: block;
+  content: "";
+  width: 120px;
+  height: 100%;
+  background: url("/icons/vtt-512.png") no-repeat;
+  background-size: 100px;
+  background-position: center;
+}
+.swerpg section.gameplay {
+  position: relative;
+  padding: 1rem 1.5rem;
+  margin: 1rem 6px;
+  background: #21120e;
+}
+.swerpg section.gameplay::before,
+.swerpg section.gameplay::after {
+  display: block;
+  width: calc(100% + 12px);
+  height: 12px;
+  position: absolute;
+  left: -6px;
+  content: "";
+  background: url("../ui/journal/divider-border.png") no-repeat center;
+  background-size: cover;
+}
+.swerpg section.gameplay::before {
+  top: -6px;
+}
+.swerpg section.gameplay::after {
+  bottom: -6px;
+}
+.swerpg section.gameplay h4 {
+  margin-top: 0.5rem;
+}
+.swerpg section.gameplay p {
+  font-family: var(--font-quote);
+  font-size: var(--font-size-18);
+  font-style: italic;
+  color: var(--color-tertiary);
+  line-height: 1.25rem;
+  letter-spacing: 0;
+}
+.swerpg section.gameplay strong {
+  font-family: var(--font-body);
+  font-size: var(--font-size-14);
+  font-style: normal;
+}
+.swerpg section.formula {
+  margin: 1rem 0;
+  padding: 0.5rem 3rem 0.5rem 1.5rem;
+  background: url("../ui/journal/math-full.png") no-repeat center left;
+  background-size: 100% 100%;
+  color: #30030b;
+  font-weight: bold;
+  line-height: 1.25rem;
+  display: flex;
+  gap: 0.25rem;
+}
+.swerpg section.formula .value,
+.swerpg section.formula .equals {
+  flex: none;
+}
+.swerpg section.formula .equation {
+  flex: 1;
+  word-break: break-word;
+}
+.swerpg textarea {
+  padding: 0.5rem;
+  border: 1px solid var(--color-frame);
+  border-radius: 8px;
+  font-family: var(--font-body);
+  color: var(--color-text);
+}
+.swerpg .hex {
+  --hex-bg: url("../ui/elements/hex-plain.svg");
+  --hex-rotation: 0;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 0;
+}
+.swerpg .hex::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: var(--hex-bg) no-repeat center;
+  background-size: auto 100%;
+  transform: rotate(var(--hex-rotation));
+  z-index: -1;
+}
+.swerpg .hex.filled {
+  --hex-bg: url("../ui/elements/hex-plain-filled.svg");
+}
+.swerpg .hex.dexterity-intellect {
+  --hex-bg: url("../ui/elements/hex-accent-2b.svg");
+  --hex-rotation: -120deg;
+}
+.swerpg .hex.dexterity-strength {
+  --hex-bg: url("../ui/elements/hex-accent-2c.svg");
+  --hex-rotation: -60deg;
+}
+.swerpg .hex.dexterity-presence {
+  --hex-bg: url("../ui/elements/hex-accent-2c.svg");
+  --hex-rotation: 180deg;
+}
+.swerpg .hex.intellect-presence {
+  --hex-bg: url("../ui/elements/hex-accent-2b.svg");
+  --hex-rotation: 180deg;
+}
+.swerpg .hex.intellect-toughness {
+  --hex-bg: url("../ui/elements/hex-accent-2c.svg");
+  --hex-rotation: -120deg;
+}
+.swerpg .hex.intellect-wisdom {
+  --hex-bg: url("../ui/elements/hex-accent-2c.svg");
+  --hex-rotation: 120deg;
+}
+.swerpg .hex.presence-strength {
+  --hex-bg: url("../ui/elements/hex-accent-2c.svg");
+  --hex-rotation: 60deg;
+}
+.swerpg .hex.presence-wisdom {
+  --hex-bg: url("../ui/elements/hex-accent-2b.svg");
+  --hex-rotation: 120deg;
+}
+.swerpg .hex.strength-wisdom {
+  --hex-bg: url("../ui/elements/hex-accent-2c.svg");
+  --hex-rotation: 0;
+}
+.swerpg .hex.toughness-wisdom {
+  --hex-bg: url("../ui/elements/hex-accent-2c.svg");
+  --hex-rotation: 0;
+}
+/* Tooltips */
+#swerpg-tooltip,
+.swerpg .tooltip {
+  display: none;
+  width: max-content;
+  max-width: 320px;
+  line-height: 16px;
+  position: absolute;
+  top: 120%;
+  padding: 2px 5px;
+  background: rgba(0, 0, 0, 0.95);
+  font-family: "Signika", serif;
+  font-size: 12px;
+  font-weight: normal;
+  text-align: left;
+  text-shadow: none;
+  color: var(--color-primary);
+  border-radius: 3px;
+  box-shadow: 0 0 4px #000;
+  z-index: 999;
+}
+#swerpg-tooltip.left,
+.swerpg .tooltip.left {
+  left: 0;
+}
+#swerpg-tooltip.right,
+.swerpg .tooltip.right {
+  right: 0;
+}
+#swerpg-tooltip.center,
+.swerpg .tooltip.center {
+  left: calc(100% - 180px);
+}
+#swerpg-tooltip {
+  position: absolute;
+}
+#swerpg-tooltip.active {
+  display: block;
+}
+.swerpg .tooltipped {
+  position: relative;
+}
+.swerpg .tooltipped:hover > .tooltip {
+  display: block;
+}
+.swerpg-separator {
+  margin: 5px auto 0;
+  padding: 0;
+  border: 0;
+  border-top: solid 1px var(--color-secondary);
+  text-align: center;
+  width: 95%;
+  opacity: 65%;
+}
+.swerpg-separator:after {
+  content: "\f0e3";
+  display: inline-block;
+  position: relative;
+  padding: 0 1rem;
+  font-family: FontAwesome;
+  color: var(--color-secondary);
+  background-color: var(--background);
+  top: -0.65rem;
+  font-size: 1rem;
+  border: 0;
+}
+/* ----------------------------------------- */
+/*  Application V2 Styles                    */
+/* ----------------------------------------- */
+.swerpg.application {
+  --color-header-background: transparent;
+  --color-form-label: var(--color-h1);
+  --color-form-label-hover: var(--color-primary);
+  --color-form-hint: var(--color-tertiary);
+  --color-form-hint-hover: var(--color-secondary);
+  --background-texture: url("../ui/journal/background-texture.webp");
+  --background-overlay: url("../ui/journal/overlay-dark.webp");
+  background: var(--background-texture) no-repeat;
+  background-size: cover;
+  gap: 0;
+}
+.swerpg.application::before {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: var(--background-overlay) no-repeat;
+  background-position: top center;
+  background-size: 100% auto;
+}
+.swerpg.application .window-header {
+  border-bottom: none;
+}
+.swerpg.application .window-header .window-title {
+  font-family: var(--font-h1);
+  font-size: var(--font-size-14);
+  color: var(--color-primary);
+}
+.swerpg.application .window-header .header-control {
+  color: var(--color-secondary);
+}
+.swerpg.application .window-content {
+  padding: 0;
+}
+.swerpg.application button,
+.swerpg.application .button,
+.swerpg.application .control {
+  --button-text-color: var(--color-tertiary);
+  --button-background-color: transparent;
+  --button-border-color: transparent;
+  --button-hover-background-color: var(--color-frame-bg-75);
+  --button-hover-border-color: var(--color-frame);
+  --button-hover-text-color: var(--color-primary);
+  padding: 0.25rem 0.5rem;
+  text-align: center;
+  opacity: 0.5;
+}
+.swerpg.application button:disabled,
+.swerpg.application .button:disabled,
+.swerpg.application .control:disabled {
+  opacity: 0.25;
+  pointer-events: none;
+}
+.swerpg.application button:hover,
+.swerpg.application .button:hover,
+.swerpg.application .control:hover {
+  opacity: 1;
+}
+.swerpg.application button.framed,
+.swerpg.application .button.framed,
+.swerpg.application .control.framed {
+  --button-text-color: var(--color-secondary);
+  --button-background-color: var(--color-frame-bg-75);
+  --button-border-color: var(--color-frame);
+}
+.swerpg.application button.invisible,
+.swerpg.application .button.invisible,
+.swerpg.application .control.invisible {
+  visibility: hidden;
+  pointer-events: none;
+}
+.swerpg.application .header-control button {
+  --button-text-color: var(--color-secondary);
+  opacity: 1;
+}
+/* ----------------------------------------- */
+/*  DocumentSheet V2 Styles                  */
+/* ----------------------------------------- */
+.swerpg.sheet .sheet-header {
+  --sheet-header-height: 80px;
+  gap: 0.5rem;
+  padding: 1rem;
+}
+.swerpg.sheet .sheet-header img.profile {
+  flex: 0 0 var(--sheet-header-height);
+  width: var(--sheet-header-height);
+  height: var(--sheet-header-height);
+  margin: 0;
+  border: 1px solid var(--color-cool-5);
+  border-radius: 4px;
+  object-fit: contain;
+}
+.swerpg.sheet .sheet-header .name {
+  height: var(--sheet-header-height);
+  gap: 0.25rem;
+}
+.swerpg.sheet .sheet-header .title {
+  flex: 1;
+  border: none;
+}
+.swerpg.sheet .sheet-header .title input {
+  display: block;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0 0.5rem;
+  background: var(--color-cool-5-50);
+  border: none;
+  font-size: var(--font-size-24);
+}
+.swerpg.sheet nav.sheet-tabs {
+  margin: 0;
+  border-color: var(--color-cool-4);
+  font-family: var(--font-h1);
+  color: var(--color-secondary);
+}
+.swerpg.sheet nav.sheet-tabs > a {
+  padding: 8px 0;
+}
+.swerpg.sheet .sheet-body {
+  gap: 1rem;
+}
+.swerpg.sheet fieldset {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  border: 1px solid var(--color-frame);
+  border-radius: 6px;
+}
+.swerpg.sheet fieldset legend {
+  display: flex;
+  align-items: center;
+  font-family: var(--font-h1);
+  color: var(--color-h1);
+  font-weight: normal;
+}
+.swerpg.sheet .form-group {
+  width: 100%;
+  margin: 0;
+}
+.swerpg.sheet .form-group.slim .form-fields > label {
+  color: var(--color-secondary);
+}
+.swerpg.sheet .form-group.slim .form-fields input {
+  text-align: center;
+}
+.swerpg.sheet prose-mirror {
+  font-size: 13px;
+}
+/* ----------------------------------------- */
+/*  Line Items: Actions, Talents, etc...     */
+/* ----------------------------------------- */
+.swerpg .line-item {
+  --icon-size: 32px;
+  --title-font-size: var(--font-size-14);
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  /** Optional Full-Width Header */
+  /** Description */
+  /** Controls */
+  /** Applied Effects */
+}
+.swerpg .line-item img.icon {
+  height: var(--icon-size);
+  width: var(--icon-size);
+  flex: none;
+}
+.swerpg .line-item .title {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.swerpg .line-item .title h4 {
+  flex: none;
+  margin: 0;
+  font-size: var(--title-font-size);
+  color: var(--color-text);
+  overflow: hidden;
+  white-space: nowrap;
+}
+.swerpg .line-item .title .tags {
+  width: 100%;
+  flex: none;
+  justify-content: flex-start;
+  margin: 0;
+}
+.swerpg .line-item header {
+  display: flex;
+  flex: none;
+  width: 100%;
+  height: auto;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+}
+.swerpg .line-item .description {
+  flex: none;
+  width: 100%;
+  height: auto;
+  font-size: var(--font-size-12);
+  color: var(--color-primary);
+}
+.swerpg .line-item .description > p:first-child {
+  margin-top: 0;
+}
+.swerpg .line-item .description > p:last-child {
+  margin-bottom: 0;
+}
+.swerpg .line-item .controls {
+  flex: none;
+  display: flex;
+  gap: 0.25rem;
+  align-items: center;
+}
+.swerpg .line-item .button.icon {
+  width: 24px;
+  height: 24px;
+  font-size: var(--font-size-10);
+  padding: 0.25rem;
+}
+.swerpg .line-item .effects {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+.swerpg .line-item .effects .effect {
+  --icon-size: 24px;
+}
+.swerpg .line-item.hook textarea {
+  font-family: monospace;
+  font-size: 12px;
+}
+/* ----------------------------------------- */
+/*  Actor Sheet                              */
+/* ----------------------------------------- */
+.swerpg.sheet.actor {
+  --sidebar-width: 200px;
+  --profile-size: 200px;
+  --margin-size: 1rem;
+  --margin-half: calc(var(--margin-size) / 2);
+  overflow: visible;
+  /* ----------------------------------------- */
+  /*  General Styles                           */
+  /* ----------------------------------------- */
+  /* ----------------------------------------- */
+  /*  Sheet Header                             */
+  /* ----------------------------------------- */
+  /* ----------------------------------------- */
+  /*  Sheet Sidebar                            */
+  /* ----------------------------------------- */
+  /* ----------------------------------------- */
+  /*  Sheet Tabs                               */
+  /* ----------------------------------------- */
+  /* ----------------------------------------- */
+  /*  Attributes Tab                           */
+  /* ----------------------------------------- */
+  /* ----------------------------------------- */
+  /*  Biography Tab                            */
+  /* ----------------------------------------- */
+  /* ----------------------------------------- */
+  /*  Inventory, Talents, Skills               */
+  /* ----------------------------------------- */
+  /* ----------------------------------------- */
+  /*  Skills Tab                               */
+  /* ----------------------------------------- */
+  /* ----------------------------------------- */
+  /*  Inventory, Talents, Skills               */
+  /* ----------------------------------------- */
+}
+.swerpg.sheet.actor .window-content {
+  overflow: visible;
+  height: calc(100% - var(--header-height));
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: var(--margin-size);
+  padding: 0 var(--margin-size) var(--margin-size);
+}
+.swerpg.sheet.actor.minimized,
+.swerpg.sheet.actor.minimizing,
+.swerpg.sheet.actor.maximizing {
+  overflow: hidden;
+}
+.swerpg.sheet.actor.minimized .window-content,
+.swerpg.sheet.actor.minimizing .window-content,
+.swerpg.sheet.actor.maximizing .window-content {
+  overflow: hidden;
+}
+.swerpg.sheet.actor .sheet-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  flex: 1;
+  gap: 0 1rem;
+  height: 100%;
+}
+.swerpg.sheet.actor .tab {
+  flex: 1;
+  position: relative;
+  padding: 1.5rem 0 1rem;
+  gap: 1.5rem;
+}
+.swerpg.sheet.actor a.button.icon {
+  flex: none;
+  font-size: var(--font-size-12);
+}
+.swerpg.sheet.actor .sheet-section {
+  background: var(--color-frame-bg-50);
+  border-radius: 6px;
+  position: relative;
+  padding: 1.5rem 1rem 1rem;
+}
+.swerpg.sheet.actor .sheet-section.flexcol {
+  width: 100%;
+  align-items: center;
+}
+.swerpg.sheet.actor .sheet-section.flexrow {
+  justify-content: center;
+}
+.swerpg.sheet.actor .sheet-section > h3 {
+  box-sizing: content-box;
+  position: absolute;
+  margin: 0;
+  padding: 0 1rem;
+  height: 1.5rem;
+  line-height: 1.5rem;
+  top: -0.75rem;
+  font-size: var(--font-size-14);
+  color: var(--color-primary);
+  background: var(--color-frame-bg);
+  border-radius: 3px;
+}
+.swerpg.sheet.actor h4.label {
+  flex: none;
+  font-size: var(--font-size-11);
+  background: var(--color-frame-bg);
+  padding: 2px 6px;
+  margin: 0;
+}
+.swerpg.sheet.actor .sheet-header {
+  --sheet-header-height: 40px;
+  padding: 0;
+}
+.swerpg.sheet.actor .sheet-header header.title {
+  gap: var(--margin-half);
+}
+.swerpg.sheet.actor .sheet-header header.title input {
+  height: var(--sheet-header-height);
+  width: initial;
+  background: var(--color-frame-bg-50);
+  border: none;
+  font-family: var(--font-h1);
+  font-size: var(--font-size-24);
+}
+.swerpg.sheet.actor .sheet-header header.title .charname {
+  margin-right: 2rem;
+  padding: 0 0.5rem;
+}
+.swerpg.sheet.actor .sheet-header header.title .level,
+.swerpg.sheet.actor .sheet-header header.title .controls,
+.swerpg.sheet.actor .sheet-header header.title a.level-up {
+  flex: none;
+}
+.swerpg.sheet.actor .sheet-header header.title a.level-up {
+  opacity: 1;
+  height: 28px;
+  border: 1px solid var(--color-warm-1);
+}
+.swerpg.sheet.actor .sheet-header header.title input:last-child {
+  flex: 0 0 var(--sheet-header-height);
+  padding: 0;
+  text-align: center;
+}
+.swerpg.sheet.actor .sheet-header div.subtitle {
+  gap: var(--margin-half);
+}
+.swerpg.sheet.actor .sheet-header div.subtitle h2 {
+  flex: none;
+  margin: 0;
+  font-size: var(--font-size-14);
+  line-height: 24px;
+  padding: 0 0.5rem;
+  background: var(--color-frame-bg-75);
+  border: 1px solid var(--color-frame);
+  border-radius: 4px;
+}
+.swerpg.sheet.actor .sheet-header div.subtitle h2.incomplete {
+  border-color: var(--color-warm-1);
+}
+.swerpg.sheet.actor .sheet-header div.metadata {
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+.swerpg.sheet.actor .sheet-header div.metadata select {
+  flex: 0 0 120px;
+}
+.swerpg.sheet.actor .sheet-header div.metadata div.size {
+  flex: none;
+  gap: 0.25rem;
+  margin-right: 0.5rem;
+}
+.swerpg.sheet.actor .sheet-header div.metadata div.size span.value {
+  flex: none;
+  width: 24px;
+  background: url("../ui/elements/hex-plain.svg") no-repeat center;
+  background-size: 24px;
+  font-family: var(--font-h1);
+  font-size: var(--font-size-16);
+  padding: 0.25rem 0.5rem;
+}
+.swerpg.sheet.actor .sheet-sidebar {
+  flex: 0 0 var(--sidebar-width);
+  height: 100%;
+  gap: var(--margin-half);
+  overflow: hidden;
+}
+.swerpg.sheet.actor .sheet-sidebar img.profile {
+  border: none;
+  background: var(--color-frame-bg-50);
+  border-radius: 4px;
+  object-fit: contain;
+}
+.swerpg.sheet.actor .sheet-sidebar h2.divider {
+  margin: 0;
+  font-size: var(--font-size-14);
+}
+.swerpg.sheet.actor .sheet-sidebar .item-list {
+  overflow: hidden auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--margin-half);
+}
+.swerpg.sheet.actor .sheet-sidebar .item-list.equipment {
+  flex: none;
+}
+.swerpg.sheet.actor .sheet-sidebar .item-list.actions {
+  flex: 1;
+}
+.swerpg.sheet.actor .sheet-sidebar .line-item {
+  flex-wrap: nowrap;
+}
+.swerpg.sheet.actor .sheet-sidebar .line-item .title {
+  font-size: var(--font-size-12);
+  line-height: 1rem;
+}
+.swerpg.sheet.actor .sheet-tabs {
+  --tab-size: 32px;
+  --icon-size: 28px;
+  flex-direction: column;
+  position: absolute;
+  width: calc(var(--tab-size) + 4px);
+  right: calc(-1 * (var(--tab-size) + 4px));
+  top: 90px;
+  padding: 4px 4px 4px 0;
+  gap: var(--margin-half);
+  border: none;
+  overflow: hidden;
+}
+.swerpg.sheet.actor .sheet-tabs > a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: var(--tab-size);
+  height: calc(var(--tab-size) + 4px);
+  padding: 0;
+  background: var(--color-frame-bg-75);
+  border: 1px solid #000;
+  border-left: none;
+  border-radius: 0 4px 4px 0;
+}
+.swerpg.sheet.actor .sheet-tabs > a .tab-icon {
+  box-sizing: content-box;
+  width: var(--icon-size);
+  height: var(--icon-size);
+  border: none;
+  opacity: 0.5;
+}
+.swerpg.sheet.actor .sheet-tabs > a.active {
+  background: var(--color-frame-bg);
+  border-color: var(--color-accent);
+  box-shadow: 0 0 4px var(--color-link-text);
+}
+.swerpg.sheet.actor .sheet-tabs > a.active .tab-icon {
+  opacity: 1;
+}
+.swerpg.sheet.actor .tab.attributes {
+  grid-template-rows: 140px 200px 1fr;
+  grid-template-columns: 2fr 1fr;
+  padding-bottom: var(--margin-size);
+  /** Resources */
+  /** Abilities */
+  /** Defenses */
+  /** Resistances */
+}
+.swerpg.sheet.actor .tab.attributes.active {
+  display: grid;
+}
+.swerpg.sheet.actor .tab.attributes .resources {
+  grid-column: 1;
+  grid-row: 1;
+  justify-content: center;
+  padding: 0 0.5rem;
+  /** Pool Resources */
+  /** Economy Resources */
+}
+.swerpg.sheet.actor .tab.attributes .resources .resource {
+  --resource-pct: 0%;
+  position: relative;
+  flex: 0 0 100px;
+  height: 114px;
+  background: var(--resource-bg) no-repeat center;
+  background-size: 100px;
+  justify-content: center;
+  align-items: center;
+}
+.swerpg.sheet.actor .tab.attributes .resources .resource .label {
+  position: absolute;
+  z-index: 1;
+}
+.swerpg.sheet.actor .tab.attributes .resources .resource .label.above {
+  top: -0.5rem;
+}
+.swerpg.sheet.actor .tab.attributes .resources .resource .label.below {
+  bottom: -0.5rem;
+}
+.swerpg.sheet.actor .tab.attributes .resources .resource .pool {
+  z-index: 1;
+  justify-content: center;
+  align-items: center;
+}
+.swerpg.sheet.actor .tab.attributes .resources .resource .pool input {
+  flex: 0 0 40%;
+  height: 1.25em;
+  background: none;
+  padding: 0 0.25rem;
+  border: none;
+  text-align: center;
+  font-family: var(--font-h1);
+  font-size: inherit;
+}
+.swerpg.sheet.actor .tab.attributes .resources .resource .pool .total,
+.swerpg.sheet.actor .tab.attributes .resources .resource .pool .sep {
+  font-family: var(--font-h1);
+  color: var(--color-secondary);
+}
+.swerpg.sheet.actor .tab.attributes .resources .resource .pool .sep {
+  flex: none;
+}
+.swerpg.sheet.actor .tab.attributes .resources .resource .pool .total {
+  flex: 0 0 40%;
+  text-align: center;
+}
+.swerpg.sheet.actor .tab.attributes .resources .resource .pool.short {
+  font-size: var(--font-size-20);
+}
+.swerpg.sheet.actor .tab.attributes .resources .resource .pool.long {
+  font-size: var(--font-size-14);
+}
+.swerpg.sheet.actor .tab.attributes .resources .resource::before {
+  display: block;
+  position: absolute;
+  pointer-events: none;
+  content: "";
+  width: 100%;
+  height: 100%;
+  background: var(--resource-fill) no-repeat center;
+  background-size: 100px;
+  z-index: 0;
+  clip-path: inset(var(--resource-pct) 0px 0px 0px);
+  transition: clip-path 1s;
+}
+.swerpg.sheet.actor .tab.attributes .resources .resource .threshold {
+  position: absolute;
+  bottom: -8px;
+  flex: none;
+  width: 32px;
+  height: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: url("../ui/elements/hex-plain.svg") no-repeat center;
+  background-size: auto 32px;
+}
+.swerpg.sheet.actor .tab.attributes .resources .resource .threshold .value {
+  font-size: var(--font-size-12);
+  font-family: var(--font-h1);
+  color: var(--color-secondary);
+}
+.swerpg.sheet.actor .tab.attributes .resources .resource .threshold.wounds {
+  right: -12px;
+}
+.swerpg.sheet.actor .tab.attributes .resources .resource .threshold.madness {
+  left: -12px;
+}
+.swerpg.sheet.actor .tab.attributes .resources .resource.health {
+  --resource-bg: url("../ui/resources/health-bg.png");
+  --resource-fill: url("../ui/resources/health-fill.png");
+}
+.swerpg.sheet.actor .tab.attributes .resources .resource.morale {
+  --resource-bg: url("../ui/resources/morale-bg.png");
+  --resource-fill: url("../ui/resources/morale-fill.png");
+}
+.swerpg.sheet.actor .tab.attributes .resources .economy {
+  height: 100%;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1.25rem 0 0;
+}
+.swerpg.sheet.actor .tab.attributes .resources .economy .currency {
+  width: 100%;
+  align-items: center;
+}
+.swerpg.sheet.actor .tab.attributes .resources .economy .currency .points {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 0.25rem;
+}
+.swerpg.sheet.actor .tab.attributes .resources .economy .currency .points input {
+  flex: 0 0 16px;
+  height: 16px;
+  padding: 0;
+  background: none;
+  border: none;
+  text-align: center;
+  font-size: var(--font-size-12);
+  font-family: var(--font-sans);
+}
+.swerpg.sheet.actor .tab.attributes .resources .economy .currency .points span.max {
+  flex: 0 0 16px;
+  font-family: var(--font-sans);
+  color: var(--color-secondary);
+  font-size: var(--font-size-12);
+  text-align: center;
+}
+.swerpg.sheet.actor .tab.attributes .resources .economy .currency .pips {
+  flex: 0 0 100px;
+  justify-content: center;
+  gap: 4px 0;
+}
+.swerpg.sheet.actor .tab.attributes .resources .economy .currency .pips .pip {
+  flex: 0 0 14px;
+  height: 14px;
+  border: 1px solid var(--color-frame);
+  border-radius: 7px;
+}
+.swerpg.sheet.actor .tab.attributes .resources .economy .currency .pips .pip.double {
+  border-color: var(--resource-color);
+}
+.swerpg.sheet.actor .tab.attributes .resources .economy .currency .pips .full::before {
+  display: block;
+  content: "";
+  width: 8px;
+  height: 8px;
+  margin: 2px;
+  background: var(--resource-color);
+  border-radius: 4px;
+}
+.swerpg.sheet.actor .tab.attributes .resources .economy .action {
+  --resource-color: #FF9900;
+}
+.swerpg.sheet.actor .tab.attributes .resources .economy .focus {
+  --resource-color: #0066FF;
+}
+.swerpg.sheet.actor .tab.attributes .resources .economy .heroism {
+  --resource-color: #ff0059;
+}
+.swerpg.sheet.actor .tab.attributes .abilities {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: repeat(3, 1fr);
+  justify-items: center;
+  padding: 1.5rem 0 0;
+}
+.swerpg.sheet.actor .tab.attributes .abilities .ability {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  justify-content: center;
+  align-items: center;
+  gap: 0;
+  background: url("../ui/abilities/frame.svg") no-repeat center;
+  background-size: cover;
+}
+.swerpg.sheet.actor .tab.attributes .abilities .ability .label {
+  position: absolute;
+  top: -8px;
+}
+.swerpg.sheet.actor .tab.attributes .abilities .ability .input {
+  font-size: var(--font-size-24);
+  font-family: var(--font-h1);
+}
+.swerpg.sheet.actor .tab.attributes .abilities .ability::before {
+  display: block;
+  position: absolute;
+  pointer-events: none;
+  content: "";
+  width: 80px;
+  height: 80px;
+  background: var(--ability-icon) no-repeat center;
+  background-size: 54px;
+}
+.swerpg.sheet.actor .tab.attributes .abilities .strength {
+  --ability-icon: url("../ui/abilities/strength.svg");
+}
+.swerpg.sheet.actor .tab.attributes .abilities .toughness {
+  --ability-icon: url("../ui/abilities/toughness.svg");
+}
+.swerpg.sheet.actor .tab.attributes .abilities .dexterity {
+  --ability-icon: url("../ui/abilities/dexterity.svg");
+}
+.swerpg.sheet.actor .tab.attributes .abilities .wisdom {
+  --ability-icon: url("../ui/abilities/wisdom.svg");
+}
+.swerpg.sheet.actor .tab.attributes .abilities .presence {
+  --ability-icon: url("../ui/abilities/presence.svg");
+}
+.swerpg.sheet.actor .tab.attributes .abilities .intellect {
+  --ability-icon: url("../ui/abilities/intellect.svg");
+}
+.swerpg.sheet.actor .tab.attributes .abilities a.button {
+  position: absolute;
+  height: 20px;
+  width: 20px;
+  top: -10px;
+  opacity: 1;
+}
+.swerpg.sheet.actor .tab.attributes .abilities a.button.decrease {
+  left: -10px;
+}
+.swerpg.sheet.actor .tab.attributes .abilities a.button.increase {
+  right: -10px;
+}
+.swerpg.sheet.actor .tab.attributes .abilities .point-pools {
+  position: absolute;
+  padding: 0 0 0 0.5rem;
+  bottom: -0.5rem;
+  z-index: 1;
+  font-size: var(--font-size-12);
+  justify-content: center;
+  background: var(--color-frame-bg);
+  gap: 0.5rem;
+}
+.swerpg.sheet.actor .tab.attributes .abilities .point-pools .label {
+  flex: none;
+  color: var(--color-secondary);
+}
+.swerpg.sheet.actor .tab.attributes .abilities .point-pools .value {
+  flex: none;
+  width: 24px;
+  height: 24px;
+  margin: -2px -12px -2px 0;
+}
+.swerpg.sheet.actor .tab.attributes .defenses {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.swerpg.sheet.actor .tab.attributes .defenses .defense {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+}
+.swerpg.sheet.actor .tab.attributes .defenses .defense .label {
+  position: absolute;
+  top: 0;
+}
+.swerpg.sheet.actor .tab.attributes .defenses .defense .value {
+  font-size: var(--font-size-24);
+  font-family: var(--font-h1);
+}
+.swerpg.sheet.actor .tab.attributes .defenses .defense .pct {
+  position: absolute;
+  bottom: 0;
+}
+.swerpg.sheet.actor .tab.attributes .defenses .physical {
+  width: 100%;
+  justify-content: space-between;
+}
+.swerpg.sheet.actor .tab.attributes .defenses .physical > * {
+  flex: none;
+}
+.swerpg.sheet.actor .tab.attributes .defenses .physical .total {
+  width: 60px;
+  height: 100px;
+  background: url("../ui/elements/hex-willpower.svg") no-repeat center;
+  background-size: 60px;
+}
+.swerpg.sheet.actor .tab.attributes .defenses .physical .sep {
+  color: var(--color-h1);
+  font-size: var(--font-size-20);
+}
+.swerpg.sheet.actor .tab.attributes .defenses .physical .component {
+  width: 40px;
+  height: 80px;
+  background: url("../ui/elements/hex-plain.svg") no-repeat center;
+  background-size: 40px;
+}
+.swerpg.sheet.actor .tab.attributes .defenses .physical .component .value {
+  font-size: var(--font-size-18);
+}
+.swerpg.sheet.actor .tab.attributes .defenses .physical .component .pct {
+  font-size: var(--font-size-10);
+  font-family: var(--font-sans);
+}
+.swerpg.sheet.actor .tab.attributes .defenses .physical .component.inactive {
+  opacity: 0.5;
+}
+.swerpg.sheet.actor .tab.attributes .defenses .magical {
+  width: 100%;
+  justify-content: space-between;
+}
+.swerpg.sheet.actor .tab.attributes .defenses .magical > * {
+  flex: none;
+}
+.swerpg.sheet.actor .tab.attributes .defenses .magical .defense {
+  width: 60px;
+  height: 80px;
+  padding: 16px 0 0;
+  background: var(--defense-icon) no-repeat bottom center;
+  background-size: auto 64px;
+}
+.swerpg.sheet.actor .tab.attributes .defenses .magical .defense.fortitude {
+  --defense-icon: url("../ui/elements/hex-fortitude.svg");
+}
+.swerpg.sheet.actor .tab.attributes .defenses .magical .defense.willpower {
+  --defense-icon: url("../ui/elements/hex-willpower.svg");
+}
+.swerpg.sheet.actor .tab.attributes .defenses .magical .defense.reflex {
+  --defense-icon: url("../ui/elements/hex-reflex.svg");
+}
+.swerpg.sheet.actor .tab.attributes .defenses .magical .extra {
+  --defense-icon: url("../ui/elements/hex-plain.svg");
+  width: 32px;
+  height: 64px;
+  align-self: flex-end;
+  padding: 16px 0;
+  background-size: auto 32px;
+  background-position: center;
+}
+.swerpg.sheet.actor .tab.attributes .defenses .magical .extra .value {
+  font-size: var(--font-size-12);
+}
+.swerpg.sheet.actor .tab.attributes .defenses .magical .extra .label {
+  bottom: 0;
+  top: unset;
+}
+.swerpg.sheet.actor .tab.attributes .resistances {
+  grid-column: 1 / span 2;
+  justify-content: center;
+  gap: 1rem;
+}
+.swerpg.sheet.actor .tab.attributes .resistances .resistance-group {
+  align-items: center;
+  gap: 0.25rem;
+}
+.swerpg.sheet.actor .tab.attributes .resistances .resistance {
+  width: 100%;
+  align-items: center;
+}
+.swerpg.sheet.actor .tab.attributes .resistances .resistance .resistance-bar {
+  width: 100%;
+  height: 12px;
+  margin: 6px 0;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-left: 1px solid var(--color-frame);
+  border-right: 1px solid var(--color-frame);
+}
+.swerpg.sheet.actor .tab.attributes .resistances .resistance .resistance-bar::before {
+  content: "";
+  display: block;
+  width: 100%;
+  position: absolute;
+  top: 6px;
+  border-top: 1px solid var(--color-frame);
+}
+.swerpg.sheet.actor .tab.attributes .resistances .resistance .resistance-bar .value {
+  flex: 0 0 24px;
+  height: 24px;
+  background: url("../ui/elements/hex-plain-filled.svg") no-repeat center;
+  background-size: auto 24px;
+  line-height: 24px;
+  text-align: center;
+  font-size: var(--font-size-12);
+  z-index: 1;
+}
+.swerpg.sheet.actor .tab.attributes .resistances .resistance .resistance-bar .bar {
+  position: absolute;
+  height: 8px;
+  max-width: 50%;
+  border: 1px solid;
+  border-radius: 2px;
+  z-index: 0;
+}
+.swerpg.sheet.actor .tab.attributes .resistances .resistance.none {
+  opacity: 0.5;
+}
+.swerpg.sheet.actor .tab.attributes .resistances .resistance.none .bar {
+  display: none;
+}
+.swerpg.sheet.actor .tab.attributes .resistances .resistance.res .value {
+  background: url("../ui/elements/hex-resistance.svg") no-repeat center;
+  background-size: auto 24px;
+}
+.swerpg.sheet.actor .tab.attributes .resistances .resistance.res .bar {
+  left: 50%;
+  background: var(--color-damage-resistance);
+  border: 1px solid var(--color-damage-resistance-border);
+  border-left: none;
+}
+.swerpg.sheet.actor .tab.attributes .resistances .resistance.vuln .value {
+  background: url("../ui/elements/hex-vulnerability.svg") no-repeat center;
+  background-size: auto 24px;
+}
+.swerpg.sheet.actor .tab.attributes .resistances .resistance.vuln .bar {
+  right: 50%;
+  background: var(--color-damage-vulnerability);
+  border: 1px solid var(--color-damage-vulnerability-border);
+  border-right: none;
+}
+.swerpg.sheet.actor .tab.biography {
+  flex: 1;
+  padding: 1rem 0 0;
+}
+.swerpg.sheet.actor .tab.biography .sheet-section {
+  flex: 1;
+  padding: 0.5rem;
+}
+.swerpg.sheet.actor .tab.biography .sheet-section prose-mirror {
+  flex: 1;
+  width: 100%;
+}
+.swerpg.sheet.actor .tab.biography .sheet-section prose-mirror.active {
+  margin-top: 0.5rem;
+}
+.swerpg.sheet.actor .tab.biography .sheet-section prose-mirror menu {
+  padding: 0;
+}
+.swerpg.sheet.actor .tab.biography .sheet-section prose-mirror button.toggle {
+  right: 1rem;
+  background: var(--color-frame-bg);
+  border-color: var(--color-frame);
+  color: var(--color-secondary);
+}
+.swerpg.sheet.actor .tab.biography .appearance {
+  align-items: flex-start;
+}
+.swerpg.sheet.actor .tab.biography .appearance fieldset {
+  flex: 0 0 150px;
+  padding: 0.5rem 1rem;
+  font-size: var(--font-size-12);
+}
+.swerpg.sheet.actor .tab.biography .appearance > div {
+  padding: 0 1rem;
+}
+.swerpg.sheet.actor .tab.secondary .header-section {
+  justify-content: space-between;
+}
+.swerpg.sheet.actor .tab.secondary .header-section a.button {
+  flex: none;
+}
+.swerpg.sheet.actor .tab.secondary .header-section a.framed {
+  font-size: var(--font-size-12);
+}
+.swerpg.sheet.actor .tab.secondary .point-pools {
+  justify-content: flex-end;
+  font-size: var(--font-size-12);
+  gap: 0.5rem;
+  z-index: 1;
+  padding: 1px 0.5rem;
+  box-sizing: content-box;
+  background: var(--color-frame-bg);
+  border-radius: 3px;
+}
+.swerpg.sheet.actor .tab.secondary .point-pools .label {
+  flex: none;
+  color: var(--color-secondary);
+}
+.swerpg.sheet.actor .tab.secondary .point-pools .value {
+  flex: 0 0 24px;
+  height: 24px;
+  background: url("../ui/elements/hex-plain.svg") no-repeat center;
+  background-size: auto 24px;
+  line-height: 24px;
+  text-align: center;
+}
+.swerpg.sheet.actor .tab.secondary .item-section {
+  padding: 1rem;
+}
+.swerpg.sheet.actor .tab.secondary .item-section .notes {
+  color: var(--color-tertiary);
+}
+.swerpg.sheet.actor .tab.secondary ol.items-list {
+  width: 100%;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.swerpg.sheet.actor .tab.secondary ol.items-list li {
+  margin: 0;
+}
+.swerpg.sheet.actor .tab.inventory .inventory-create {
+  position: absolute;
+  width: 32px;
+  bottom: 0;
+  right: 0;
+}
+.swerpg.sheet.actor .tab.talents .header-section {
+  margin-bottom: -1rem;
+}
+.swerpg.sheet.actor .tab.talents .point-pools {
+  flex: none;
+  width: 200px;
+}
+.swerpg.sheet.actor .tab.skills .point-pools {
+  width: 160px;
+  position: absolute;
+  right: 1rem;
+  top: 0.75rem;
+}
+.swerpg.sheet.actor .tab.skills .bonus {
+  flex: 0 0 70px;
+  justify-content: center;
+}
+.swerpg.sheet.actor .tab.skills .bonus span.value {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  flex: 0 0 40px;
+}
+.swerpg.sheet.actor .tab.skills .bonus span.passive {
+  flex: 0 0 20px;
+  text-align: center;
+  font-size: var(--font-size-10);
+  font-family: var(--font-sans);
+  color: var(--color-secondary);
+}
+.swerpg.sheet.actor .tab.skills .ranks {
+  flex: 0 0 170px;
+  justify-content: center;
+  gap: 4px;
+}
+.swerpg.sheet.actor .tab.skills .pips {
+  flex: 0 0 80px;
+  justify-content: space-between;
+  gap: 4px 0;
+}
+.swerpg.sheet.actor .tab.skills .pips .pip {
+  flex: 0 0 14px;
+  height: 14px;
+  border: 1px solid var(--color-frame);
+  border-radius: 7px;
+}
+.swerpg.sheet.actor .tab.skills .pips .trained::before {
+  display: block;
+  content: "";
+  width: 8px;
+  height: 8px;
+  margin: 2px;
+  background: var(--skill-color);
+  border-radius: 4px;
+}
+.swerpg.sheet.actor .tab.skills .cost {
+  flex: none;
+  text-align: center;
+  font-size: var(--font-size-10);
+  font-family: var(--font-sans);
+  color: var(--color-secondary);
+}
+.swerpg.sheet.actor .skill-container {
+  display: inline-block;
+  text-align: center;
+  margin: 10px;
+  min-width: 50px;
+  /* Empêche l'écrasement */
+}
+.swerpg.sheet.actor .skill-container .skill-title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(90deg, #3d2a1e, #5a3e2b);
+  color: #e4c9a8;
+  font-family: 'Cinzel', serif;
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  padding: 4px;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 5px;
+  border-bottom: 1px solid #e4c9a8;
+  border-top: 1px solid #8a644f;
+  border-right: 1px solid #8a644f;
+  /*      box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5),
+        -4px -4px 10px rgba(255, 255, 255, 0.1);*/
+  /* Ombre principale */
+  transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+.swerpg.sheet.actor .skill-container .skill-title span {
+  font-size: 16px;
+  /* Première lettre plus grande */
+}
+.swerpg.sheet.actor .skill-container .skill-box {
+  position: relative;
+  background: #2b221b;
+  color: #e4c9a8;
+  font-family: 'Patrick Hand', cursive;
+  font-weight: bold;
+  padding: 8px;
+  height: 40px;
+  min-width: 50px;
+  border-right: 1px solid #44362d;
+  border-bottom-left-radius: 15px 40px;
+  border-bottom-right-radius: 15px 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: visible;
+  border-bottom: 1px solid #2b221b;
+  /*box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5),
+        -4px -4px 10px rgba(255, 255, 255, 0.1);*/
+  /* Ombre principale */
+  transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+.swerpg.sheet.actor .skill-container .skill-box span {
+  position: relative;
+  font-size: 20px;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+}
+.swerpg.sheet.actor .skill-container .skill-box span::after {
+  content: "%";
+  font-size: 14px;
+  position: absolute;
+  right: -12px;
+  top: 6px;
+}
+/* ----------------------------------------- */
+/*  Character Creation Tooltip               */
+/* ----------------------------------------- */
+#tooltip.creation-steps {
+  padding: 1rem 1.5rem;
+  text-align: left;
+  font-size: var(--font-size-13);
+  font-family: var(--font-serif);
+}
+/* ----------------------------------------- */
+/*  All Items                                */
+/* ----------------------------------------- */
+.swerpg.item,
+.swerpg.action {
+  --margin-size: 1rem;
+  --margin-half: calc(var(--margin-size) / 2);
+}
+.swerpg.item .sheet-body,
+.swerpg.action .sheet-body {
+  padding: var(--margin-size);
+}
+.swerpg.item .item-properties,
+.swerpg.action .item-properties {
+  display: grid;
+  gap: 0.5rem 1rem;
+}
+.swerpg.item .item-properties multi-checkbox,
+.swerpg.action .item-properties multi-checkbox {
+  grid-template-columns: repeat(4, 1fr);
+}
+/* ----------------------------------------- */
+/*  Armor and Weapons                        */
+/* ----------------------------------------- */
+.swerpg.weapon .form-group.defense .form-fields,
+.swerpg.armor .form-group.defense .form-fields {
+  flex: 8;
+  display: grid;
+  grid-template-columns: 1fr 64px 1fr 64px;
+}
+.swerpg.weapon .item-equipment,
+.swerpg.armor .item-equipment {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem 1rem;
+}
+.swerpg.weapon .item-equipment label,
+.swerpg.armor .item-equipment label {
+  font-size: var(--font-size-12);
+  font-weight: normal;
+  color: var(--color-secondary);
+}
+.swerpg.weapon .item-equipment .slot,
+.swerpg.armor .item-equipment .slot {
+  grid-column: 1 / span 2;
+}
+.swerpg.weapon .item-equipment .reload,
+.swerpg.armor .item-equipment .reload {
+  grid-column: 2;
+}
+.swerpg.weapon .tab[data-tab=description],
+.swerpg.armor .tab[data-tab=description] {
+  padding: 0;
+  gap: 0;
+}
+.swerpg.weapon .tab[data-tab=description] .sheet-tabs,
+.swerpg.armor .tab[data-tab=description] .sheet-tabs {
+  border-top: none;
+}
+.swerpg.weapon .tab[data-tab=description] section.tab,
+.swerpg.armor .tab[data-tab=description] section.tab {
+  padding: 1rem;
+}
+/** ----------------------------------------- *
+ *  Archetype Sheet                           *
+ * ------------------------------------------ */
+.swerpg.archetype .abilities .form-fields,
+.swerpg.taxonomy .abilities .form-fields,
+.swerpg.archetype .resistances .form-fields,
+.swerpg.taxonomy .resistances .form-fields {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 0.5rem;
+}
+.swerpg.archetype .abilities .form-fields label,
+.swerpg.taxonomy .abilities .form-fields label,
+.swerpg.archetype .resistances .form-fields label,
+.swerpg.taxonomy .resistances .form-fields label {
+  padding: 0.25rem;
+  border: 1px solid var(--color-frame);
+  border-radius: 6px;
+}
+.swerpg.archetype .abilities .form-fields input,
+.swerpg.taxonomy .abilities .form-fields input,
+.swerpg.archetype .resistances .form-fields input,
+.swerpg.taxonomy .resistances .form-fields input {
+  --input-border-color: transparent;
+  font-size: var(--font-size-18);
+}
+.swerpg.archetype .abilities .sum,
+.swerpg.taxonomy .abilities .sum,
+.swerpg.archetype .resistances .sum,
+.swerpg.taxonomy .resistances .sum {
+  margin-left: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  border: 1px solid green;
+  border-radius: 4px;
+}
+.swerpg.archetype .abilities .sum.invalid,
+.swerpg.taxonomy .abilities .sum.invalid,
+.swerpg.archetype .resistances .sum.invalid,
+.swerpg.taxonomy .resistances .sum.invalid {
+  border-color: red;
+}
+.swerpg.archetype .resistances .form-fields,
+.swerpg.taxonomy .resistances .form-fields {
+  grid-template-columns: repeat(4, 1fr);
+}
+.swerpg.archetype .talents,
+.swerpg.taxonomy .talents {
+  gap: 1rem;
+}
+.swerpg.archetype .droppable,
+.swerpg.taxonomy .droppable {
+  padding: 0 1rem;
+  border: 1px dashed var(--color-frame);
+  border-radius: 6px;
+}
+/** ----------------------------------------- *
+ *  Background Sheet                          *
+ * ------------------------------------------ */
+.swerpg.background .talents .talent .tags {
+  flex: none;
+}
+.swerpg.background .talents .droppable {
+  padding: 0.5rem 1rem;
+  border: 1px dashed var(--color-tertiary);
+  border-radius: 8px;
+  cursor: pointer;
+}
+.swerpg.background .talents .talent + .droppable {
+  display: none;
+}
+/** ----------------------------------------- *
+ *  Background Origin                          *
+ * ------------------------------------------ */
+.swerpg.origin .skill-modifiers-list {
+  display: flex;
+  width: 100%;
+}
+.swerpg.origin .skill-modifiers-list .skill-tags-container {
+  margin-right: 5px;
+}
+.swerpg.origin .skill-modifiers-list .skill-tag {
+  display: flex;
+  align-items: center;
+  background: radial-gradient(circle, #533828, #2b221b);
+  border: 1px solid #8a644f;
+  border-radius: 5px;
+  padding: 2px 5px;
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  font-weight: bold;
+  color: #caa472;
+  text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+  box-shadow: inset 0 0 8px #000000;
+  position: relative;
+  height: 2rem;
+}
+.swerpg.origin .skill-modifiers-list .skill-tag .skill-abbr {
+  margin-left: 2px;
+  margin-right: 5px;
+  text-transform: uppercase;
+}
+.swerpg.origin .skill-modifiers-list .skill-tag .delete-tag {
+  background: none;
+  border: none;
+  color: #aa4f2f;
+  font-size: 18px;
+  cursor: pointer;
+  font-weight: bold;
+  padding-left: 2px;
+  padding-right: 2px;
+}
+.swerpg.origin .skill-modifiers-list .skill-tag:hover {
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
+  color: #e4c9a8;
+}
+.swerpg.origin .skill-modifiers-list .delete-tag:hover {
+  color: #ff6347;
+}
+.swerpg.origin .skills .add-skill .select-skill {
+  flex: 3;
+  margin-left: 1rem;
+  display: inline-block;
+}
+.swerpg.origin .skills .add-skill .shift-actions {
+  flex: none;
+  margin-left: 1rem;
+  margin-right: 0.1rem;
+}
+.swerpg.origin .skills .add-skill .shift-actions button {
+  padding: 0;
+  margin: 0;
+  flex: 1;
+}
+.swerpg.origin .skills .add-skill .shift-value {
+  flex: 1;
+}
+.swerpg.origin .skills .add-skill .shift-value .skill-modification-value {
+  display: inline;
+}
+.swerpg.origin .skills .add-skill .shift-value .skill-modification-value input {
+  text-align: center;
+}
+.swerpg.origin .skills .add-skill .shift-value::after {
+  content: '%';
+  margin: 0 0.2rem;
+}
+.swerpg.origin .skills .add-skill .add-skill-action {
+  margin-left: 1rem;
+}
+.swerpg.origin .skills .hint {
+  margin-top: 1rem;
+}
+.swerpg.origin .skills .message {
+  width: 100%;
+  line-height: 0;
+  margin: 0;
+}
+/** ----------------------------------------- *
+ *  Action                                    *
+ * ------------------------------------------ */
+.swerpg.action fieldset.hook label {
+  flex: 1;
+}
+.swerpg.action fieldset.hook button {
+  flex: 0;
+}
+/** ----------------------------------------- *
+ *  Journal Sheet                             *
+ * ------------------------------------------ */
+.swerpg.journal-sheet {
+  --background-overlay: url("../ui/journal/overlay-dark.webp");
+  --background-texture: url("../ui/journal/background-texture.webp");
+  background: var(--background-texture) repeat;
+  /** Journal Entry Header */
+  /** Journal Sidebar TOC */
+}
+.swerpg.journal-sheet::before {
+  display: block;
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: var(--background-overlay) no-repeat;
+  background-position: top center;
+  background-size: 100% auto;
+  opacity: 0.75;
+  z-index: -1;
+}
+.swerpg.journal-sheet .window-content {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+.swerpg.journal-sheet .journal-entry-content {
+  border: none;
+  background: none;
+}
+.swerpg.journal-sheet .journal-header {
+  position: relative;
+  padding-bottom: 60px;
+  margin-bottom: 20px;
+  background-image: url("../ui/journal/h1-separator.png");
+  background-repeat: no-repeat;
+  background-position: bottom center;
+}
+.swerpg.journal-sheet .journal-header .title {
+  background: none;
+  border: none;
+  font-family: var(--font-h1);
+  font-size: 2.25rem;
+  color: var(--color-h1);
+}
+.swerpg.journal-sheet .journal-sidebar .action-buttons {
+  margin: 1rem 0;
+}
+.swerpg.journal-sheet .journal-sidebar .action-buttons button.next,
+.swerpg.journal-sheet .journal-sidebar .action-buttons button.previous {
+  color: transparent;
+  border: none;
+  background: url("../ui/journal/arrow-left.png") no-repeat;
+  background-size: contain;
+  background-position: center;
+}
+.swerpg.journal-sheet .journal-sidebar .action-buttons button.next {
+  background-image: url("../ui/journal/arrow-right.png");
+}
+/** ----------------------------------------- *
+ *  Single Page Styles                        *
+ * ------------------------------------------ */
+.swerpg.journal-sheet .journal-entry-page {
+  --font-h1: "AwerySmallcaps", serif;
+  --font-h2: "AwerySmallcaps", serif;
+  --font-h3: "AwerySmallcaps", serif;
+  /* Page Headers */
+  /* Page Content */
+}
+.swerpg.journal-sheet .journal-entry-page .journal-page-header {
+  position: relative;
+  padding-bottom: 40px;
+  margin-bottom: 20px;
+  background-image: url("../ui/journal/h2-separator.png");
+  background-repeat: no-repeat;
+  background-position: bottom center;
+}
+.swerpg.journal-sheet .journal-entry-page .journal-page-header h1 {
+  text-align: center;
+}
+.swerpg.journal-sheet .journal-entry-page .journal-page-content {
+  padding: 0 2rem;
+  font-size: var(--font-size-14);
+  line-height: var(--font-size-20);
+}
+.swerpg.journal-sheet .journal-entry-page .journal-page-content > p {
+  text-align: justify;
+}
+/** ----------------------------------------- *
+ *  Skill Page Sheet                          *
+ * ------------------------------------------ */
+.swerpg-skill-page {
+  height: 100%;
+  overflow: hidden;
+}
+.swerpg-skill-page .scrollable {
+  flex: 1;
+  gap: 1rem;
+  padding: 1rem;
+  overflow: hidden auto;
+}
+.swerpg-skill-page .scrollable h2.divider,
+.swerpg-skill-page .scrollable div.form-group {
+  margin: 0;
+}
+.swerpg-skill-page .form-footer {
+  flex: none;
+  margin: 1rem;
+}
+.swerpg.skill .overview > p {
+  text-align: left;
+}
+.swerpg.skill figure.right {
+  float: right;
+  margin: 0 0 1rem 1rem;
+}
+.swerpg.skill figure.right img {
+  width: 200px;
+  height: 200px;
+  border-radius: 6px;
+}
+.swerpg.sheet.skill .sheet-header {
+  --sheet-header-height: 48px;
+  padding: 0 1.5rem;
+}
+.swerpg.sheet.skill .sheet-header h1.title {
+  font-size: var(--font-size-28);
+}
+.swerpg.sheet.skill .sheet-header .purchase {
+  flex: 0 0 140px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.5rem;
+}
+.swerpg.sheet.skill .sheet-header .purchase .rank {
+  flex: 0 0 40px;
+  padding: 0 3px;
+  border: 1px solid var(--color-tertiary);
+  border-radius: 4px;
+  font-family: var(--font-h1);
+  font-size: 28px;
+  text-align: center;
+}
+.swerpg.sheet.skill a.choose-path {
+  width: 32px;
+  text-align: center;
+  float: left;
+  margin-right: 0.5rem;
+}
+.swerpg.sheet.skill .sheet-body {
+  width: 100%;
+  max-height: 80vh;
+  padding: 1rem 1.5rem;
+  overflow-y: auto;
+}
+.swerpg.sheet.skill input.choose-path {
+  margin: 0;
+  height: 16px;
+  position: relative;
+  top: 3px;
+}
+/* -------------------------------------------- */
+/*  Chat Cards                                  */
+/* -------------------------------------------- */
+.swerpg.chat-message {
+  --background-texture: url("../ui/journal/background-texture.webp");
+  background: var(--background-texture) repeat;
+  border: none;
+  margin: 0.5rem 0.25rem;
+  padding: 0.25rem 0.5rem 0.5rem;
+}
+.swerpg.chat-message .message-header {
+  font-size: var(--font-size-12);
+  color: var(--color-tertiary);
+}
+.swerpg.chat-message .flavor-text {
+  font-size: var(--font-size-12);
+  color: var(--color-secondary);
+  border-top: 1px solid var(--color-cool-4);
+  padding-top: 0.25rem;
+  margin-top: 0.25rem;
+}
+.swerpg.chat-message.whisper {
+  background: #090b13;
+  border: 1px solid #7b8cc7;
+}
+.swerpg.chat-message.blind {
+  background: #130913;
+  border: 1px solid #977dcc;
+}
+.swerpg.chat-message .swerpg.dice-roll .pool .die {
+  --die-size: 48px;
+}
+.swerpg.chat-message button.confirm {
+  margin-top: 0.5rem;
+}
+/* -------------------------------------------- */
+/*  Chat Actions                                */
+/* -------------------------------------------- */
+.swerpg .action {
+  /** Action Header */
+  /** Text Description */
+}
+.swerpg .action .action-header {
+  flex: none;
+}
+.swerpg .action label.tag-icon {
+  flex: none;
+}
+.swerpg .action .action-description {
+  padding: 4px 0;
+  font-size: var(--font-size-12);
+  font-style: italic;
+  border-top: 1px solid var(--colorBeige);
+  border-bottom: 1px solid var(--colorBeige);
+}
+.swerpg.confirm {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-14);
+  color: var(--colorOlive);
+  line-height: 20px;
+  margin-top: 0.25rem;
+}
+.message-metadata .confirmed {
+  color: var(--colorSuccess);
+}
+.message-metadata .unconfirmed {
+  color: var(--colorError);
+}
+/* ----------------------------------------- */
+/*  Dice Roll                                */
+/* ----------------------------------------- */
+.swerpg.dice-roll {
+  margin: 0;
+  /** Expanded Tooltip */
+  /** Boons and Banes */
+  /** Dice Pool Visualization */
+  /** Dice Roll Bonuses */
+  /** Boon and Bane Details */
+  /** Spell Components */
+}
+.swerpg.dice-roll .standard-check {
+  padding: 1rem;
+  gap: 1rem;
+}
+.swerpg.dice-roll .dice-tooltip {
+  flex: none;
+  gap: 0.5rem;
+}
+.swerpg.dice-roll .dice-tooltip .roll-breakdown {
+  gap: 0.25rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--color-frame);
+}
+.swerpg.dice-roll .dice-tooltip .counter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: var(--font-size-12);
+}
+.swerpg.dice-roll .dice-tooltip .counter label {
+  color: var(--color-secondary);
+}
+.swerpg.dice-roll .dice-tooltip .counter .hex {
+  width: 24px;
+  height: 24px;
+  border: none;
+  color: var(--color-primary);
+}
+.swerpg.dice-roll .dice-tooltip .counter .tag {
+  width: 24px;
+  text-align: center;
+}
+.swerpg.dice-roll .dice-tooltip .counter.total {
+  margin: -0.2rem 0 0;
+  font-weight: bold;
+}
+.swerpg.dice-roll .dice-tooltip.expanded {
+  display: flex !important;
+}
+.swerpg.dice-roll .dice-total {
+  height: 20px;
+  margin: 0.5rem 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.25rem;
+  box-shadow: none;
+}
+.swerpg.dice-roll .dice-total .result {
+  font-size: var(--font-size-20);
+  font-weight: normal;
+  z-index: 0;
+}
+.swerpg.dice-roll .dice-total .outcome,
+.swerpg.dice-roll .dice-total .target {
+  flex: 1;
+  overflow: visible;
+  text-wrap: none;
+  color: var(--color-secondary);
+  font-size: var(--font-size-11);
+  font-weight: normal;
+}
+.swerpg.dice-roll .dice-total .outcome {
+  text-align: right;
+}
+.swerpg.dice-roll .dice-total .target {
+  text-align: left;
+}
+.swerpg.dice-roll .dice-total .applied::after {
+  float: right;
+  content: "\f00c";
+  font-family: var(--font-awesome);
+  font-weight: 900;
+  margin-right: 0.25rem;
+}
+.swerpg.dice-roll .check-result {
+  z-index: 1;
+  background: var(--check-bg-color);
+  border: 1px solid var(--check-border-color);
+}
+.swerpg.dice-roll .check-result .result {
+  --hex-bg: url("../ui/elements/hex-plain-filled-flat.svg");
+  font-size: var(--font-size-16);
+  flex: 0 0 32px;
+  height: 32px;
+}
+.swerpg.dice-roll .damage-result {
+  z-index: 0;
+  border: none;
+  margin: -2px 0 1rem;
+}
+.swerpg.dice-roll .damage-result .result {
+  font-size: var(--font-size-20);
+  flex: 0 0 48px;
+  height: 48px;
+}
+.swerpg.dice-roll .damage-result .result::before {
+  background-position-y: -4px;
+  opacity: 0.2;
+}
+.swerpg.dice-roll.success .check-result {
+  --check-bg-color: #000800;
+  --check-border-color: var(--color-result-good);
+}
+.swerpg.dice-roll.failure .check-result {
+  --check-bg-color: #080000;
+  --check-border-color: var(--color-result-bad);
+}
+.swerpg.dice-roll.glance .check-result {
+  --check-bg-color: #080800;
+  --check-border-color: var(--color-result-warn);
+}
+.swerpg.dice-roll.failure.critical .check-result {
+  --check-bg-color: #080000;
+  --check-border-color: var(--color-result-bad);
+  color: #ff3724;
+}
+.swerpg.dice-roll.success.critical .check-result {
+  --check-bg-color: #000800;
+  --check-border-color: var(--color-result-good);
+  color: #12cb3f;
+}
+.swerpg.dice-roll .hex .label {
+  position: absolute;
+  bottom: -1rem;
+  margin: 0;
+  padding: 2px 6px;
+  font-size: var(--font-size-11);
+  background: var(--color-frame-bg);
+}
+.swerpg.dice-roll .roller {
+  flex: 2;
+  gap: 1rem;
+  text-align: center;
+}
+.swerpg.dice-roll .modifiers {
+  padding: 0 0 1rem;
+  justify-content: space-between;
+}
+.swerpg.dice-roll .modifiers .boons,
+.swerpg.dice-roll .modifiers .banes {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.swerpg.dice-roll .modifiers .boons .hex,
+.swerpg.dice-roll .modifiers .banes .hex {
+  flex: 0 0 48px;
+  height: 48px;
+  margin: 0;
+  gap: 1rem;
+}
+.swerpg.dice-roll .modifiers .boons .hex .value,
+.swerpg.dice-roll .modifiers .banes .hex .value {
+  font-family: var(--font-h1);
+  font-size: 24px;
+  font-weight: normal;
+}
+.swerpg.dice-roll .modifiers .boons button,
+.swerpg.dice-roll .modifiers .banes button {
+  width: 32px;
+  flex: 0 0 32px;
+  font-size: 16px;
+  opacity: 1;
+}
+.swerpg.dice-roll .modifiers .boons button:disabled,
+.swerpg.dice-roll .modifiers .banes button:disabled {
+  opacity: 0.25;
+}
+.swerpg.dice-roll .pool {
+  padding: 0.5rem 0;
+  justify-content: space-evenly;
+}
+.swerpg.dice-roll .pool .die {
+  --die-size: 64px;
+  position: relative;
+  flex: 0 0 var(--die-size);
+  height: var(--die-size);
+  line-height: var(--die-size);
+  font-family: var(--font-h1);
+  color: var(--color-primary);
+  text-align: center;
+  font-size: 24px;
+  filter: drop-shadow(0px 0px 6px #000);
+}
+.swerpg.dice-roll .pool .die::before {
+  display: block;
+  position: absolute;
+  content: "";
+  width: 100%;
+  height: 100%;
+  background: var(--die-bg) no-repeat;
+  background-size: 100%;
+  background-position: center;
+  opacity: 0.2;
+  z-index: -1;
+}
+.swerpg.dice-roll .pool .die h4.label {
+  position: absolute;
+  bottom: 0;
+  margin: 0;
+  flex: none;
+  width: 100%;
+  font-size: var(--font-size-11);
+  color: var(--color-secondary);
+  line-height: 1em;
+}
+.swerpg.dice-roll .pool .die.d4 {
+  --die-bg: url("/icons/svg/d4-grey.svg");
+}
+.swerpg.dice-roll .pool .die.d6 {
+  --die-bg: url("/icons/svg/d6-grey.svg");
+}
+.swerpg.dice-roll .pool .die.d8 {
+  --die-bg: url("/icons/svg/d8-grey.svg");
+}
+.swerpg.dice-roll .pool .die.d10 {
+  --die-bg: url("/icons/svg/d10-grey.svg");
+}
+.swerpg.dice-roll .pool .die.d12 {
+  --die-bg: url("/icons/svg/d12-grey.svg");
+}
+.swerpg.dice-roll .bonuses {
+  justify-content: space-evenly;
+  padding: 0 0 1rem;
+}
+.swerpg.dice-roll .bonuses .bonus {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 0 0 48px;
+  height: 48px;
+  line-height: 48px;
+}
+.swerpg.dice-roll .bonuses .value {
+  font-size: var(--font-size-20);
+}
+.swerpg.dice-roll .details {
+  width: 100%;
+  flex: none;
+  gap: 0.25rem;
+}
+.swerpg.dice-roll .details h4 {
+  margin: 0;
+  font-size: var(--font-size-16);
+}
+.swerpg.dice-roll .details .boon-details,
+.swerpg.dice-roll .details .bane-details {
+  gap: 0.25rem;
+  font-size: var(--font-size-12);
+}
+.swerpg.dice-roll .details .boon-details .boon,
+.swerpg.dice-roll .details .bane-details .boon,
+.swerpg.dice-roll .details .boon-details .bane,
+.swerpg.dice-roll .details .bane-details .bane {
+  gap: 0.5rem;
+  align-items: center;
+}
+.swerpg.dice-roll .details .boon-details .boon .label,
+.swerpg.dice-roll .details .bane-details .boon .label,
+.swerpg.dice-roll .details .boon-details .bane .label,
+.swerpg.dice-roll .details .bane-details .bane .label {
+  flex: 1;
+  color: var(--color-secondary);
+}
+.swerpg.dice-roll .details .boon-details .boon .value,
+.swerpg.dice-roll .details .bane-details .boon .value,
+.swerpg.dice-roll .details .boon-details .bane .value,
+.swerpg.dice-roll .details .bane-details .bane .value {
+  flex: 0 0 24px;
+  text-align: center;
+}
+.swerpg.dice-roll .details .boon-details .boon .type,
+.swerpg.dice-roll .details .bane-details .boon .type,
+.swerpg.dice-roll .details .boon-details .bane .type,
+.swerpg.dice-roll .details .bane-details .bane .type {
+  flex: none;
+  color: var(--color-tertiary);
+  font-size: var(--font-size-11);
+}
+.swerpg.dice-roll .difficulty .form-fields {
+  gap: 0.5rem;
+}
+.swerpg.dice-roll .difficulty .form-fields input {
+  flex: 0 0 40px;
+}
+.swerpg.dice-roll .form-footer {
+  gap: 1rem;
+}
+.swerpg.dice-roll .form-footer button,
+.swerpg.dice-roll .form-footer select {
+  flex: 1;
+  height: 32px;
+}
+.swerpg.dice-roll .form-footer button {
+  opacity: 1;
+}
+.swerpg.dice-roll .standard-form .form-footer {
+  flex-wrap: wrap;
+}
+.swerpg.dice-roll button.place-template {
+  flex: 0 0 140px;
+  background: none;
+  line-height: 20px;
+  height: auto;
+}
+.swerpg.dice-roll .spell-component {
+  font-size: var(--font-size-12);
+  line-height: 1.25em;
+}
+.swerpg.dice-roll .spell-component > label {
+  flex: 2;
+}
+/* ----------------------------------------- */
+/*  Action Roll                              */
+/* ----------------------------------------- */
+.swerpg.action-roll {
+  margin-bottom: 0.5rem;
+}
+.swerpg.action-roll .line-item .full-tags {
+  flex: 0 0 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+/* ----------------------------------------- */
+/*  Initiative Report                        */
+/* ----------------------------------------- */
+.swerpg.dice-roll.initiative .initiative-table {
+  margin: 0;
+}
+/* -------------------------------------------- */
+/*  Talent Tree Canvas                          */
+/* -------------------------------------------- */
+#swerpg-talent-tree {
+  position: absolute;
+  z-index: calc(var(--z-index-window) - 1);
+}
+/* -------------------------------------------- */
+/*  Talent Tree HUD                             */
+/* -------------------------------------------- */
+/** HUD Elements */
+.swerpg.hud,
+.swerpg .hud {
+  padding: 1rem;
+  background: url("../ui/journal/background-texture.webp");
+  border: 1px solid var(--color-frame);
+  border-radius: 8px;
+  z-index: var(--z-index-tooltip);
+}
+#swerpg-talent-hud {
+  min-width: 320px;
+  width: min-content;
+  max-width: 600px;
+  text-align: left;
+  pointer-events: all;
+}
+#swerpg-talent-hud > header {
+  align-items: center;
+  gap: 0.5rem;
+}
+#swerpg-talent-hud > header h1 {
+  margin: 0;
+  font-size: var(--font-size-24);
+}
+#swerpg-talent-hud > header .icon {
+  flex: 0 0 60px;
+  height: 60px;
+  border-radius: 8px;
+}
+#swerpg-talent-hud .full-tags {
+  flex: 0 0 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+/* -------------------------------------------- */
+/*  Talent Tree Controls                        */
+/* -------------------------------------------- */
+#swerpg-talent-controls {
+  position: fixed;
+  width: 100%;
+  bottom: 50px;
+  justify-content: center;
+  pointer-events: none;
+  font-size: var(--font-size-18);
+  color: var(--color-secondary);
+  z-index: calc(var(--z-index-tooltip) - 1);
+}
+#swerpg-talent-controls nav {
+  width: 100%;
+  max-width: 960px;
+  align-items: center;
+  pointer-events: all;
+  padding: 0.5rem 1rem;
+}
+#swerpg-talent-controls nav button {
+  height: 2rem;
+}
+#swerpg-talent-controls .points {
+  gap: 0.5rem;
+  flex: 0 0 240px;
+  align-items: center;
+}
+#swerpg-talent-controls .points span.input {
+  flex: none;
+  text-align: center;
+  font-family: var(--font-h1);
+  font-size: var(--font-size-32);
+  color: var(--color-text);
+}
+#swerpg-talent-controls header.name {
+  gap: 0.5rem;
+  justify-content: center;
+  align-items: center;
+}
+#swerpg-talent-controls header.name h2 {
+  flex: none;
+  margin: 0;
+  border: none;
+  font-size: var(--font-size-32);
+  color: var(--color-text);
+}
+#swerpg-talent-controls header.name span.level {
+  flex: none;
+}
+#swerpg-talent-controls div.controls {
+  flex: 0 0 240px;
+  gap: 0.5rem;
+}
+/**
+ * TODO: A collection of temporary rules that should be removed in V13
+ */
+.swerpg prose-mirror menu {
+  padding: 0;
+}
+.swerpg prose-mirror menu .pm-dropdown {
+  background: var(--color-control-bg);
+  color: var(--color-cool-5);
+}
+.swerpg prose-mirror menu .pm-dropdown > span {
+  text-align: left;
+  align-self: unset;
+}
+/*# sourceMappingURL=swerpg.css.map */

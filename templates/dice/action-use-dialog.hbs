@@ -1,0 +1,26 @@
+<form>
+    <div class="action line-item">
+        {{> "systems/swerpg/templates/dice/partials/action-use-header.hbs"}}
+    </div>
+
+    {{#if hasDice}}
+    <section class="roller flexcol">
+        {{> "systems/swerpg/templates/dice/partials/standard-check-roll.hbs"}}
+    </section>
+    {{#if showDetails}}
+    <section class="details flexcol">
+        {{> "systems/swerpg/templates/dice/partials/standard-check-details.hbs"}}
+    </section>
+    {{/if}}
+    {{/if}}
+
+    <footer class="form-footer">
+        <select name="rollMode">
+            {{selectOptions rollModes selected=rollMode localize=true}}
+        </select>
+        <button type="submit" class="dialog-button frame-brown" data-action="roll">
+            <i class="fas fa-dice"></i>
+            <label>Use Action</label>
+        </button>
+    </footer>
+</form>

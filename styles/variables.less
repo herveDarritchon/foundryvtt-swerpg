@@ -1,0 +1,96 @@
+
+/* ----------------------------------------- */
+/*  Font Faces                               */
+/* ----------------------------------------- */
+
+
+@font-face {
+  font-family: "AwerySmallcaps";
+  src: url("../fonts/AwerySmallcaps/AwerySmallcaps.ttf");
+}
+
+@font-face {
+  font-family: "CaslonAntique";
+  src: url("../fonts/CaslonAntique/CaslonAntique.ttf");
+}
+
+@font-face {
+  font-family: 'Vollkorn';
+  font-style: normal;
+  font-weight: 300 800;
+  src: url("../fonts/vollkorn/Vollkorn-VariableFont_wght.ttf") format('truetype');
+}
+
+/* ----------------------------------------- */
+/*  CSS Variables                            */
+/* ----------------------------------------- */
+
+.swerpg {
+  --background: #0b0909;
+  --color-text: #eee8df;
+  --color-primary: var(--color-text);
+  --color-secondary: #d7c4a9;
+  --color-tertiary: #b6967c;
+  --color-header: #cac5ba;
+  --color-h1: #cfbea2;
+  --color-frame: #3f3128;
+  --color-frame-bg: #1c1a1a;
+  --color-frame-bg-25: rgb(28 26 26 / 25%);
+  --color-frame-bg-50: rgb(28 26 26 / 50%);
+  --color-frame-bg-75: rgb(28 26 26 / 75%);
+  --color-accent: #cf9356;
+  --color-link-text: #f36739;
+  --color-border-highlight: var(--color-accent); // Replace core style
+
+  --color-damage-vulnerability: #641010;
+  --color-damage-vulnerability-border: #dc3232;
+  --color-damage-resistance: #236212;
+  --color-damage-resistance-border: #51c433;
+
+  --color-result-bad: #641010;
+  --color-result-good: #236212;
+  --color-result-warn: #a98d0b;
+
+  --font-h1: "AwerySmallcaps", serif;
+  --font-h2: "AwerySmallcaps", serif;
+  --font-h3: "AwerySmallcaps", serif;
+  --font-body: "Vollkorn", serif;
+  --font-quote: "CaslonAntique", serif;
+  --font-sans: "Signika", sans-serif;
+
+  // Form Styles
+  input, select {
+    --input-background-color: var(--color-frame-bg);
+    --input-border-color: var(--color-frame);
+    --input-text-color: var(--color-text);
+    --color-select-option-bg:  var(--color-frame);
+    &:focus {
+      --input-text-color: var(--color-text);
+    }
+    &:disabled {
+      --input-text-color: var(--color-secondary);
+    }
+  }
+  --color-fieldset-border: var(--color-frame);
+}
+
+/* ----------------------------------------- */
+/*  Light Theme (NOT USED YET)               */
+/* ----------------------------------------- */
+
+
+.theme-light .swerpg.UNUSED {
+  --background: #cac5ba;
+  --color-background: #cac5ba;
+  --color-text: #000000;
+  --color-secondary: #0b0909;
+  --color-tertiary: #1c1a1a;
+  --color-frame-bg: var(--color-cool-5-25);
+  --color-frame: #938c9a;
+  --color-h1: #000000;
+  &.application {
+    --color-header-background: transparent;
+    --background-texture: url("../ui/journal/background-light.webp");
+    --background-overlay: url("../ui/journal/overlay-light.webp");
+  }
+}

@@ -1,0 +1,30 @@
+name: Blood Magic
+type: talent
+_id: bloodmagic000000
+img: icons/skills/wounds/blood-drip-droplet-red.webp
+system:
+  node: tou3a
+  description: >-
+    <p>You rely upon occult techniques to transform physical pain into arcane
+    potential. You cast spells by spending Health instead of Focus. When casting
+    a spell each point of Focus costs 10 points of Health.</p>
+  actions: []
+  requirements: {}
+effects: []
+flags: {}
+_stats:
+  systemId: swerpg
+  systemVersion: 0.6.0
+  coreVersion: '12.331'
+  createdTime: 1674957908610
+  modifiedTime: 1727279950883
+  lastModifiedBy: AnoypGxxNIMOS0XY
+  compendiumSource: null
+  duplicateSource: null
+folder: Uk4FgmLsNJc62zCJ
+sort: 37500
+ownership:
+  default: 0
+  AnoypGxxNIMOS0XY: 3
+_key: '!items!bloodmagic000000'
+

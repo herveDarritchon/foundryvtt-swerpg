@@ -1,0 +1,109 @@
+
+/* -------------------------------------------- */
+/*  Talent Tree Canvas                          */
+/* -------------------------------------------- */
+
+#swerpg-talent-tree {
+  position: absolute;
+  z-index: calc(var(--z-index-window) - 1);
+}
+
+/* -------------------------------------------- */
+/*  Talent Tree HUD                             */
+/* -------------------------------------------- */
+
+/** HUD Elements */
+.swerpg.hud,
+.swerpg .hud {
+  padding: 1rem;
+  background: url("../ui/journal/background-texture.webp");
+  border: 1px solid var(--color-frame);
+  border-radius: 8px;
+  z-index: var(--z-index-tooltip);
+}
+
+#swerpg-talent-hud {
+  min-width: 320px;
+  width: min-content;
+  max-width: 600px;
+  text-align: left;
+  pointer-events: all;
+  > header {
+    align-items: center;
+    gap: 0.5rem;
+    h1 {
+      margin: 0;
+      font-size: var(--font-size-24);
+    }
+    .icon {
+      flex: 0 0 60px;
+      height: 60px;
+      border-radius: 8px;
+    }
+  }
+  .full-tags {
+    flex: 0 0 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+/* -------------------------------------------- */
+/*  Talent Tree Controls                        */
+/* -------------------------------------------- */
+
+#swerpg-talent-controls {
+  position: fixed;
+  width: 100%;
+  bottom: 50px;
+  justify-content: center;
+  pointer-events: none;
+  font-size: var(--font-size-18);
+  color: var(--color-secondary);
+  z-index: calc(var(--z-index-tooltip) - 1);
+  nav {
+    width: 100%;
+    max-width: 960px;
+    align-items: center;
+    pointer-events: all;
+    padding: 0.5rem 1rem;
+    button {
+      height: 2rem;
+    }
+  }
+
+  .points {
+    gap: 0.5rem;
+    flex: 0 0 240px;
+    align-items: center;
+    span.input {
+      flex: none;
+      text-align: center;
+      font-family: var(--font-h1);
+      font-size: var(--font-size-32);
+      color: var(--color-text);
+    }
+  }
+
+  header.name {
+    gap: 0.5rem;
+    justify-content: center;
+    align-items: center;
+    h2 {
+      flex: none;
+      margin: 0;
+      border: none;
+      font-size: var(--font-size-32);
+      color: var(--color-text);
+    }
+    span.level {
+      flex: none;
+    }
+  }
+
+  div.controls {
+    flex: 0 0 240px;
+    gap: 0.5rem;
+  }
+}

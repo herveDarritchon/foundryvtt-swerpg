@@ -1,0 +1,32 @@
+name: Armored Efficiency
+type: talent
+img: icons/equipment/chest/breastplate-helmet-metal.webp
+system:
+  node: str0b
+  description: >-
+    <p>You are trained in wearing the heaviest types of armor while still
+    retaining mobility. You are able to use a free Movement action once per Turn
+    while wearing Heavy armor.</p>
+  actions: []
+  requirements: {}
+effects: []
+ownership:
+  default: 0
+  AnoypGxxNIMOS0XY: 3
+flags:
+  core:
+    sourceId: Item.armoredefficienc
+_stats:
+  systemId: swerpg
+  systemVersion: 0.6.0
+  coreVersion: '12.331'
+  createdTime: 1676829084233
+  modifiedTime: 1727018092673
+  lastModifiedBy: AnoypGxxNIMOS0XY
+  compendiumSource: Item.armoredefficienc
+  duplicateSource: null
+_id: armoredefficienc
+folder: p4F0SmUoKJr0riBd
+sort: 100000
+_key: '!items!armoredefficienc'
+

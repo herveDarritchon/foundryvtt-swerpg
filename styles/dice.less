@@ -1,0 +1,361 @@
+
+
+/* ----------------------------------------- */
+/*  Dice Roll                                */
+/* ----------------------------------------- */
+
+.swerpg.dice-roll {
+  margin: 0;
+
+  .standard-check {
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  /** Expanded Tooltip */
+  .dice-tooltip {
+    flex: none;
+    gap: 0.5rem;
+    .roll-breakdown {
+      gap: 0.25rem;
+      padding-top: 0.5rem;
+      border-top: 1px solid var(--color-frame);
+    }
+    .counter {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: var(--font-size-12);
+      label {
+        color: var(--color-secondary);
+      }
+      .hex {
+        width: 24px;
+        height: 24px;
+        border: none;
+        color: var(--color-primary);
+      }
+      .tag {
+        width: 24px;
+        text-align: center;
+      }
+      &.total {
+        margin: -0.2rem 0 0;
+        font-weight: bold;
+      }
+    }
+    &.expanded {
+      display: flex !important; // FIXME fight core jquery
+    }
+  }
+
+  // Check Result
+  .dice-total {
+    height: 20px;
+    margin: 0.5rem 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.25rem;
+    box-shadow: none;
+    .result {
+      font-size: var(--font-size-20);
+      font-weight: normal;
+      z-index: 0;
+    }
+    .outcome, .target {
+      flex: 1;
+      overflow: visible;
+      text-wrap: none;
+      color: var(--color-secondary);
+      font-size: var(--font-size-11);
+      font-weight: normal;
+    }
+    .outcome {
+      text-align: right;
+    }
+    .target {
+      text-align: left;
+    }
+
+    // Confirmation mark
+    .applied::after {
+      float: right;
+      content: "\f00c";
+      font-family: var(--font-awesome);
+      font-weight: 900;
+      margin-right: 0.25rem;
+    }
+  }
+
+  // Check Result
+  .check-result {
+    z-index: 1;
+    background: var(--check-bg-color);
+    border: 1px solid var(--check-border-color);
+    .result {
+      --hex-bg: url("../ui/elements/hex-plain-filled-flat.svg");
+      font-size: var(--font-size-16);
+      flex: 0 0 32px;
+      height: 32px;
+    }
+  }
+
+  // Damage Result
+  .damage-result {
+    z-index: 0;
+    border: none;
+    margin: -2px 0 1rem;
+    .result {
+      font-size: var(--font-size-20);
+      flex: 0 0 48px;
+      height: 48px;
+      &::before {
+        background-position-y: -4px;
+        opacity: 0.2;
+      }
+    }
+  }
+
+  // Success
+  &.success .check-result {
+    --check-bg-color: rgb(0 8 0);
+    --check-border-color: var(--color-result-good);
+  }
+
+  // Failure
+  &.failure .check-result  {
+    --check-bg-color: rgb(8 0 0);
+    --check-border-color: var(--color-result-bad);
+  }
+
+  // Deflection
+  &.glance .check-result {
+    --check-bg-color: rgb(8 8 0);
+    --check-border-color: var(--color-result-warn);
+  }
+
+  // Critical Failure
+  &.failure.critical .check-result  {
+    --check-bg-color: rgb(8 0 0);
+    --check-border-color: var(--color-result-bad);
+    color: #ff3724;
+  }
+
+  // Critical Success
+  &.success.critical .check-result {
+    --check-bg-color: rgb(0 8 0);
+    --check-border-color: var(--color-result-good);
+    color: #12cb3f;
+  }
+
+  // Hex labels
+  .hex .label {
+    position: absolute;
+    bottom: -1rem;
+    margin: 0;
+    padding: 2px 6px;
+    font-size: var(--font-size-11);
+    background: var(--color-frame-bg);
+  }
+
+  .roller {
+    flex: 2;
+    gap: 1rem;
+    text-align: center;
+  }
+
+  /** Boons and Banes */
+  .modifiers {
+    padding: 0 0 1rem;
+    justify-content: space-between;
+    .boons, .banes {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      .hex {
+        flex: 0 0 48px;
+        height: 48px;
+        margin: 0;
+        gap: 1rem;
+        .value {
+          font-family: var(--font-h1);
+          font-size: 24px;
+          font-weight: normal;
+        }
+      }
+      button {
+        width: 32px;
+        flex: 0 0 32px;
+        font-size: 16px;
+        opacity: 1.0;
+        &:disabled {
+          opacity: 0.25;
+        }
+      }
+    }
+  }
+
+  /** Dice Pool Visualization */
+  .pool {
+    padding: 0.5rem 0;
+    justify-content: space-evenly;
+    .die {
+      --die-size: 64px;
+      position: relative;
+      flex: 0 0 var(--die-size);
+      height: var(--die-size);
+      line-height: var(--die-size);
+      font-family: var(--font-h1);
+      color: var(--color-primary);
+      text-align: center;
+      font-size: 24px;
+      filter: drop-shadow(0px 0px 6px #000);
+      &::before {
+        display: block;
+        position: absolute;
+        content: "";
+        width: 100%;
+        height: 100%;
+        background: var(--die-bg) no-repeat;
+        background-size: 100%;
+        background-position: center;
+        opacity: 0.2;
+        z-index: -1;
+      }
+      h4.label {
+        position: absolute;
+        bottom: 0;
+        margin: 0;
+        flex: none;
+        width: 100%;
+        font-size: var(--font-size-11);
+        color: var(--color-secondary);
+        line-height: 1em;
+      }
+    }
+    .die.d4 { --die-bg: url("/icons/svg/d4-grey.svg"); }
+    .die.d6 { --die-bg: url("/icons/svg/d6-grey.svg"); }
+    .die.d8 { --die-bg: url("/icons/svg/d8-grey.svg"); }
+    .die.d10 { --die-bg: url("/icons/svg/d10-grey.svg"); }
+    .die.d12 { --die-bg: url("/icons/svg/d12-grey.svg"); }
+  }
+
+  /** Dice Roll Bonuses */
+  .bonuses {
+    justify-content: space-evenly;
+    padding: 0 0 1rem;
+    .bonus {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex: 0 0 48px;
+      height: 48px;
+      line-height: 48px;
+    }
+    .value {
+      font-size: var(--font-size-20);
+    }
+  }
+
+  /** Boon and Bane Details */
+  .details {
+    width: 100%;
+    flex: none;
+    gap: 0.25rem;
+    h4 {
+      margin: 0;
+      font-size: var(--font-size-16);
+    }
+    .boon-details,
+    .bane-details {
+      gap: 0.25rem;
+      font-size: var(--font-size-12);
+      .boon,
+      .bane {
+        gap: 0.5rem;
+        align-items: center;
+        .label {
+          flex: 1;
+          color: var(--color-secondary);
+        }
+        .value {
+          flex: 0 0 24px;
+          text-align: center;
+        }
+        .type {
+          flex: none;
+          color: var(--color-tertiary);
+          font-size: var(--font-size-11);
+        }
+      }
+    }
+  }
+
+  // GM Difficulty Selection
+  .difficulty .form-fields {
+    gap: 0.5rem;
+    input {
+      flex: 0 0 40px;
+    }
+  }
+
+  .form-footer {
+    gap: 1rem;
+    button, select {
+      flex: 1;
+      height: 32px;
+    }
+    button {
+      opacity: 1.0;
+    }
+  }
+  .standard-form .form-footer {
+    flex-wrap: wrap; // FIXME fight core style specificity
+  }
+
+  // Template placement prompt
+  button.place-template {
+    flex: 0 0 140px;
+    background: none;
+    line-height: 20px;
+    height: auto;
+  }
+
+
+  /** Spell Components */
+  .spell-component {
+    font-size: var(--font-size-12);
+    line-height: 1.25em;
+    > label {
+      flex: 2;
+    }
+  }
+}
+
+/* ----------------------------------------- */
+/*  Action Roll                              */
+/* ----------------------------------------- */
+
+.swerpg.action-roll {
+  margin-bottom: 0.5rem;
+  .line-item {
+    .full-tags {
+      flex: 0 0 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  }
+}
+
+/* ----------------------------------------- */
+/*  Initiative Report                        */
+/* ----------------------------------------- */
+
+.swerpg.dice-roll.initiative {
+  .initiative-table {
+    margin: 0;
+  }
+}
