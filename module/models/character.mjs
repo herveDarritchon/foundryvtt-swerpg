@@ -2,6 +2,7 @@ import SwerpgActorType from "./actor-type.mjs";
 import SwerpgAncestry from "./ancestry.mjs";
 import SwerpgBackground from "./background.mjs";
 import SwerpgSpeciality from "./speciality.mjs";
+import {SwerpgSpecies} from "./_module.mjs";
 
 /**
  * Data schema, attributes, and methods specific to Character type Actors.
@@ -29,7 +30,7 @@ export default class SwerpgCharacter extends SwerpgActorType {
             species: new fields.SchemaField({
                 name: new fields.StringField({blank: false}),
                 img: new fields.StringField(),
-                ...SwerpgAncestry.defineSchema()
+                ...SwerpgSpecies.defineSchema()
             }, {required: true, nullable: true, initial: null}),
             career: new fields.SchemaField({
                 name: new fields.StringField({blank: false}),
@@ -113,7 +114,7 @@ export default class SwerpgCharacter extends SwerpgActorType {
 
     /** @override */
     prepareBaseData() {
-        this.#prepareAdvancement();
+        //this.#prepareAdvancement();
         this.size = (this.details.ancestry?.size || 3) + this.details.size;
         this.#prepareBaseMovement();
         super.prepareBaseData();
@@ -158,12 +159,12 @@ export default class SwerpgCharacter extends SwerpgActorType {
     _prepareDetails() {
 
         // Initialize default ancestry or background data
-        const a = this.details.ancestry ||= this.schema.getField("details.ancestry").initialize({});
-        this.details.background ||= this.schema.getField("details.background").initialize({});
+        const a = this.details.species ||= this.schema.getField("details.species").initialize({});
+        //this.details.background ||= this.schema.getField("details.background").initialize({});
 
         // Threat level
-        this.advancement.threatLevel = this.advancement.level;
-        this.advancement.threatFactor = 1;
+/*        this.advancement.threatLevel = this.advancement.level;
+        this.advancement.threatFactor = 1;*/
 
         // Base Resistances
         const res = this.resistances;

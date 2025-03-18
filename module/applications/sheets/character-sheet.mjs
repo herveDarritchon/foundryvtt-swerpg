@@ -12,9 +12,8 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
       type: "character"
     },
     actions: {
-      editAncestry: CharacterSheet.#onEditAncestry,
+      editSpecies: CharacterSheet.#onEditSpecies,
       editBackground: CharacterSheet.#onEditBackground,
-      levelUp: CharacterSheet.#onLevelUp
     }
   };
 
@@ -27,6 +26,37 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
   /** @override */
   async _prepareContext(options) {
     const context = await super._prepareContext(options);
+    const {actor: a, source: s, incomplete: i} = context;
+
+    // Expand Context
+    Object.assign(context, {
+      speciesName: s.system.details.species?.name || game.i18n.localize("SPECIES.SHEET.CHOOSE"),
+      backgroundName: s.system.details.background?.name || game.i18n.localize("BACKGROUND.SHEET.CHOOSE"),
+      talentTreeButtonText: game.system.tree.actor === a ? "Close Talent Tree" : "Open Talent Tree"
+    });
+
+    // Incomplete Tasks
+    context.points = a.system.points;
+    Object.assign(i, {
+      species: !s.system.details.species?.name,
+      background: !s.system.details.background?.name,
+/*      abilities: context.points.ability.requireInput,
+      skills: context.points.skill.available,
+      talents: context.points.talent.available,*/
+      abilities: true,
+      skills: true,
+      talents: true,
+    });
+    i.creation = i.species || i.background || i.abilities || i.skills || i.talents;
+    if ( i.creation ) {
+      i.creationTooltip = "<p>Character Creation Incomplete!</p><ol>";
+      if ( i.species ) i.creationTooltip += "<li>Select Species</li>";
+      if ( i.background ) i.creationTooltip += "<li>Select Background</li>";
+      if ( i.abilities ) i.creationTooltip += "<li>Spend Ability Points</li>";
+      if ( i.skills ) i.creationTooltip += "<li>Spend Skill Points</li>";
+      if ( i.talents ) i.creationTooltip += "<li>Spend Talent Points</li>";
+      i.creationTooltip += "</ol>";
+    }
     return context;
   }
 
@@ -89,8 +119,8 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
    * @param {PointerEvent} event
    * @returns {Promise<void>}
    */
-  static async #onEditAncestry(event) {
-    await this.actor._viewDetailItem("ancestry", {editable: false});
+  static async #onEditSpecies(event) {
+    await this.actor._viewDetailItem("species", {editable: false});
   }
 
   /* -------------------------------------------- */

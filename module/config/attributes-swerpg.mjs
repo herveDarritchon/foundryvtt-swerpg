@@ -56,7 +56,7 @@ export const ABILITIES = Object.freeze({
         nodeId: "wil"
     },
     presence: {
-        id: "Presence",
+        id: "presence",
         label: "ABILITIES.Presence",
         abbreviation: "ABILITIES.PresenceAbbr",
         type: "mental",
@@ -171,9 +171,9 @@ export const SKILLS = Object.freeze({
         characteristics: ABILITIES.agility
     },
     gunnery: {
-        id: "gunner",
-        label: "SKILLS.Gunner",
-        abbreviation: "SKILLS.GunnerAbbr",
+        id: "gunnery",
+        label: "SKILLS.Gunnery",
+        abbreviation: "SKILLS.GunneryAbbr",
         color: Color.from("#2c0303"),
         sheetOrder: 10,
         nodeId: "gun",

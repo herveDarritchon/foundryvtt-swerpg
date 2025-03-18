@@ -831,6 +831,8 @@
 .swerpg.sheet.actor .sheet-header header.title .charname {
   margin-right: 2rem;
   padding: 0 0.5rem;
+  flex: 1 !important;
+  text-align: left;
 }
 .swerpg.sheet.actor .sheet-header header.title .level,
 .swerpg.sheet.actor .sheet-header header.title .controls,

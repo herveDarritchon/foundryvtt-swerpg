@@ -300,7 +300,7 @@ export default class SwerpgActor extends Actor {
             mechanical: 0,
             shield: 0,
             talisman: 0,
-            natural: Math.clamp(Math.floor((this.system.advancement.level + 1) / 4), 0, 3) // TODO temporary
+//            natural: Math.clamp(Math.floor((this.system.advancement.level + 1) / 4), 0, 3) // TODO temporary
         };
         this.callActorHooks("prepareTraining", training);
         return training;
@@ -651,14 +651,14 @@ export default class SwerpgActor extends Actor {
         details.signatureName = signatureNames.sort((a, b) => a.localeCompare(b)).join(" ");
 
         // Warn if the Actor does not have a legal build
-        if (this.type === "character" || this.type === "character") {
+       /* if (this.type === "character" || this.type === "character") {
             const points = this.system.points.talent;
             points.spent = this.talentIds.size - this.permanentTalentIds.size;
             points.available = points.total - points.spent;
             if (points.available < 0) {
                 ui.notifications?.warn(`Actor ${this.name} has more Talents unlocked than they have talent points available.`);
             }
-        }
+        }*/
     }
 
     /* -------------------------------------------- */
@@ -733,7 +733,8 @@ export default class SwerpgActor extends Actor {
     getAbilityBonus(scaling) {
         const abilities = this.system.abilities;
         if (scaling == null || scaling.length === 0) return 0;
-        return Math.round(scaling.reduce((x, t) => x + abilities[t].value, 0) / (scaling.length * 2));
+/*        return Math.round(scaling.reduce((x, t) => x + abilities[t].value, 0) / (scaling.length * 2));*/
+        return 1;
     }
 
     /* -------------------------------------------- */
