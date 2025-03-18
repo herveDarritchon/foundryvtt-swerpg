@@ -1143,22 +1143,23 @@
   --resource-color: #ff0059;
 }
 .swerpg.sheet.actor .tab.attributes .abilities {
-  grid-column: 2;
-  grid-row: 1 / span 2;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: repeat(3, 1fr);
+  grid-column: 1;
+  grid-row: 2;
+  display: flex;
+  /*      grid-template-columns: 1fr 1fr;
+      grid-template-rows: repeat(3, 1fr);*/
   justify-items: center;
   padding: 1.5rem 0 0;
 }
 .swerpg.sheet.actor .tab.attributes .abilities .ability {
   position: relative;
-  width: 80px;
+  width: 85px;
   height: 80px;
+  margin: 0 2px;
   justify-content: center;
   align-items: center;
   gap: 0;
-  background: url("../ui/abilities/frame.svg") no-repeat center;
+  background: url(../ui/abilities/swerpg-frame.webp) no-repeat center;
   background-size: cover;
 }
 .swerpg.sheet.actor .tab.attributes .abilities .ability .label {
@@ -1176,7 +1177,6 @@
   content: "";
   width: 80px;
   height: 80px;
-  background: var(--ability-icon) no-repeat center;
   background-size: 54px;
 }
 .swerpg.sheet.actor .tab.attributes .abilities .strength {
@@ -1232,6 +1232,8 @@
 }
 .swerpg.sheet.actor .tab.attributes .defenses {
   display: flex;
+  grid-column: 1;
+  grid-row: 3;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -2550,4 +2552,3 @@
   text-align: left;
   align-self: unset;
 }
-/*# sourceMappingURL=swerpg.css.map */

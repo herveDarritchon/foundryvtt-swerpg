@@ -91,34 +91,6 @@
         </div>
     </div>
 
-    <div class="sheet-section abilities">
-        <h3>Abilities</h3>
-        {{#each abilityScores as |ability|}}
-        <div class="ability {{ability.id}} {{ability.type}} flexcol" data-ability="{{ability.id}}">
-            <h4 class="label">{{ability.label}}</h4>
-            <span class="input score">{{ability.value}}</span>
-            {{#if ability.canDecrease}}
-            <a class="button icon fa-solid fa-caret-down decrease" data-action="abilityDecrease"
-               data-tooltip="Decrease {{ability.label}}" data-tooltip-direction="LEFT"></a>
-            {{/if}}
-            {{#if ability.canIncrease}}
-            <a class="button icon fa-solid fa-caret-up increase" data-action="abilityIncrease"
-               data-tooltip="Increase {{ability.label}}" data-tooltip-direction="RIGHT"></a>
-            {{/if}}
-        </div>
-        {{/each}}
-        {{#if points.ability.requireInput}}
-        <footer class="footer-section point-pools flexrow">
-            <span class="label">Ability Points</span>
-            {{#if points.ability.pool}}
-            <span class="value hex filled">{{points.ability.pool}}</span>
-            {{else if points.ability.available}}
-            <span class="value hex filled">{{points.ability.available}}</span>
-            {{/if}}
-        </footer>
-        {{/if}}
-    </div>
-
     <div class="sheet-section defenses">
         <h3>Defenses</h3>
         <div class="physical flexrow">
@@ -161,6 +133,34 @@
                 </h4>
             </div>
         </div>
+    </div>
+
+    <div class="sheet-section abilities">
+        <h3>Abilities</h3>
+        {{#each abilityScores as |ability|}}
+            <div class="ability {{ability.id}} {{ability.type}} flexcol" data-ability="{{ability.id}}">
+                <h4 class="label">{{ability.label}}</h4>
+                <span class="input score">{{ability.value}}</span>
+                {{#if ability.canDecrease}}
+                    <a class="button icon fa-solid fa-caret-down decrease" data-action="abilityDecrease"
+                       data-tooltip="Decrease {{ability.label}}" data-tooltip-direction="LEFT"></a>
+                {{/if}}
+                {{#if ability.canIncrease}}
+                    <a class="button icon fa-solid fa-caret-up increase" data-action="abilityIncrease"
+                       data-tooltip="Increase {{ability.label}}" data-tooltip-direction="RIGHT"></a>
+                {{/if}}
+            </div>
+        {{/each}}
+        {{#if points.ability.requireInput}}
+            <footer class="footer-section point-pools flexrow">
+                <span class="label">Ability Points</span>
+                {{#if points.ability.pool}}
+                    <span class="value hex filled">{{points.ability.pool}}</span>
+                {{else if points.ability.available}}
+                    <span class="value hex filled">{{points.ability.available}}</span>
+                {{/if}}
+            </footer>
+        {{/if}}
     </div>
 
     <div class="sheet-section resistances flexrow">
