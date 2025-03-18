@@ -49,7 +49,7 @@ export default class SwerpgTalent extends foundry.abstract.TypeDataModel {
     const fields = foundry.data.fields;
     return {
       node: new fields.StringField({required: true, blank: true, choices: () => SwerpgTalentNode.getChoices()}),
-      description: new fields.HTMLField(),
+      description: new fields.HTMLField({required: false, initial: undefined}),
       actions: new fields.ArrayField(new fields.EmbeddedDataField(SwerpgAction)),
       rune: new fields.StringField({required: false, choices: SYSTEM.SPELL.RUNES, initial: undefined}),
       gesture: new fields.StringField({required: false, choices: SYSTEM.SPELL.GESTURES, initial: undefined}),

@@ -18,8 +18,16 @@
   ],
   "flags": {
     "hotReload": {
-      "extensions": ["css", "hbs", "json"],
-      "paths": ["lang/en.json", "styles/swerpg.css", "templates"]
+      "extensions": [
+        "css",
+        "hbs",
+        "json"
+      ],
+      "paths": [
+        "lang/en.json",
+        "styles/swerpg.css",
+        "templates"
+      ]
     }
   },
   "media": [
@@ -34,8 +42,12 @@
     "verified": 13.334
   },
   "license": "LICENSE",
-  "esmodules": ["swerpg.mjs"],
-  "styles": ["styles/swerpg.css"],
+  "esmodules": [
+    "swerpg.mjs"
+  ],
+  "styles": [
+    "styles/swerpg.css"
+  ],
   "packs": [
     {
       "name": "adversary-talents",
@@ -185,40 +197,73 @@
   "documentTypes": {
     "Actor": {
       "character": {
-        "htmlFields": ["details.biography.public", "details.biography.private", "details.biography.appearance"]
+        "htmlFields": [
+          "details.biography.public",
+          "details.biography.private",
+          "details.biography.appearance"
+        ]
       },
       "character": {
-        "htmlFields": ["details.biography.public", "details.biography.private", "details.biography.appearance"]
+        "htmlFields": [
+          "details.biography.public",
+          "details.biography.private",
+          "details.biography.appearance"
+        ]
       },
       "adversary": {}
     },
     "Item": {
       "ancestry": {
-        "htmlFields": ["description"]
+        "htmlFields": [
+          "description"
+        ]
       },
       "archetype": {
-        "htmlFields": ["description"]
+        "htmlFields": [
+          "description"
+        ]
       },
       "armor": {
-        "htmlFields": ["description.public", "description.secret"]
+        "htmlFields": [
+          "description.public",
+          "description.secret"
+        ]
       },
       "background": {
-        "htmlFields": ["description"]
+        "htmlFields": [
+          "description"
+        ]
       },
       "origin": {
-        "htmlFields": ["description"]
+        "htmlFields": [
+          "description"
+        ]
+      },
+      "species": {
+        "htmlFields": [
+          "description"
+        ]
       },
       "spell": {
-        "htmlFields": ["description"]
+        "htmlFields": [
+          "description"
+        ]
       },
       "talent": {
-        "htmlFields": ["description"]
+        "htmlFields": [
+          "description"
+        ]
       },
       "taxonomy": {
-        "htmlFields": ["description"]
+        "htmlFields": [
+          "description"
+        ]
       },
       "weapon": {
-        "htmlFields": ["description.public", "description.secret"]
+        "htmlFields": [
+          "description.public",
+          "description.secret"
+        ]
       }
     },
     "JournalEntryPage": {

@@ -2,7 +2,6 @@
   "TYPES": {
     "Actor": {
       "adversary": "Adversary",
-      "character": "Protagonist",
       "character": "Player Character",
       "npc": "Non-Player Character"
     },
@@ -12,6 +11,7 @@
       "armor": "Armor",
       "background": "Background",
       "origin": "Origin",
+      "species": "Species",
       "spell": "Iconic Spell",
       "taxonomy": "Taxonomy",
       "talent": "Talent",
@@ -434,6 +434,7 @@
   "ATTRIBUTES.Abilities": "Ability Scores",
   "ATTRIBUTES.Pools": "Resource Pools",
   "ATTRIBUTES.Resistances": "Damage Resistances",
+  "BIOGRAPHY.eyes": "Eyes",
   "BACKGROUND": {
     "FIELDS": {
       "description": {
@@ -728,6 +729,60 @@
     "SurvivalAbbr": "Sur",
     "Willpower": "Willpower",
     "WillpowerAbbr": "Wil"
+  },
+  "SPECIES": {
+    "FIELDS": {
+      "description": {
+        "label": "Species Description"
+      },
+      "stride": {
+        "label": "Stride",
+        "hint": "The starting movement speed of this Ancestry in grid spaces."
+      },
+      "primary": {
+        "label": "Primary Ability",
+        "hint": "Select a primary ability score which begins at 3."
+      },
+      "secondary": {
+        "label": "Secondary Ability",
+        "hint": "Select a secondary ability score which begins at 2."
+      },
+      "resistance": {
+        "label": "Damage Resistance",
+        "hint": "A biological Resistance (+5) to a certain damage type."
+      },
+      "StartingExperience": {
+        "label": "Value",
+        "hint": "Select the starting experience for this species."
+      },
+      "StrainThreshold": {
+        "modifier": "StrainThreshold Modifier",
+        "abilityKey": "Key"
+      },
+      "WoundThreshold": {
+        "modifier": "WoundThreshold Modifier",
+        "abilityKey": "Key"
+      },
+      "vulnerability": {
+        "label": "Damage Vulnerability",
+        "hint": "A biological Vulnerability (-5) to a certain damage type."
+      }
+    },
+    "SHEET": {
+      "Abilities": "Abilities Scores",
+      "BROWSE": "Browse Ancestries",
+      "CHOOSE": "Choose Ancestry",
+      "CLEAR": "Clear Ancestry",
+      "StartingExperience": "Starting Experience",
+      "Threshold": "Threshold Scores",
+      "RESISTANCES": "Resistances and Vulnerabilities",
+      "RESISTANCE_HINT": "You must choose both a Resistance and a Vulnerability if you select either.",
+      "STATURE": "Ancestry Stature"
+    },
+    "WARNINGS": {
+      "ABILITIES": "The primary and secondary Abilities for an Ancestry may not be the same.",
+      "RESISTANCES": "The chosen Resistance and Vulnerability for an Ancestry may not be the same."
+    }
   },
   "SPELL": {
     "FIELDS": {

@@ -20,6 +20,7 @@ const CONFIG = {
     "playtest",
     "pregens",
     "rules",
+    "species",
     "summons",
     "talent",
     "taxonomy",

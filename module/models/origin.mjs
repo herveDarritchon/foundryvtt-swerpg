@@ -18,7 +18,7 @@ export default class SwerpgOrigin extends foundry.abstract.TypeDataModel {
         const requiredInteger = {required: true, nullable: false, integer: true};
 
         return {
-            description: new fields.HTMLField(),
+            description: new fields.HTMLField({required: false, initial: undefined}),
             // Skills Scores
             skillModifierDraft: new fields.SchemaField({
                 skillId: new fields.StringField({required: true}),

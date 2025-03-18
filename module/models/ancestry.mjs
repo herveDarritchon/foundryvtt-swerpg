@@ -11,7 +11,7 @@ export default class SwerpgAncestry extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     const fields = foundry.data.fields;
     return {
-      description: new fields.HTMLField(),
+      description: new fields.HTMLField({required: false, initial: undefined}),
       size: new fields.NumberField({required: true, integer: true, nullable: false, min: 1, initial: 3}),
       stride: new fields.NumberField({required: true, integer: true, nullable: false, min: 1, initial: 10}),
       primary: new fields.StringField({required: false, initial: undefined, choices: SYSTEM.ABILITIES}),

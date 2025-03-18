@@ -9,7 +9,7 @@ export default class SwerpgSpell extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     const fields = foundry.data.fields;
     return {
-      description: new fields.HTMLField(),
+      description: new fields.HTMLField({required: false, initial: undefined}),
       actions: new fields.ArrayField(new fields.EmbeddedDataField(SwerpgAction)),
       runes: new fields.SetField(new fields.StringField({choices: SYSTEM.SPELL.RUNES})),
       gestures: new fields.SetField(new fields.StringField({choices: SYSTEM.SPELL.GESTURES})),

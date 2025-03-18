@@ -13,7 +13,7 @@ export default class SwerpgTaxonomy extends foundry.abstract.TypeDataModel {
     const nullableInteger = {required: true, nullable: true, integer: true};
     const requiredInteger = {required: true, nullable: false, integer: true};
     return {
-      description: new fields.HTMLField(),
+      description: new fields.HTMLField({required: false, initial: undefined}),
       size: new fields.NumberField({required: true, integer: true, nullable: false, min: 1, initial: 3}),
       stride: new fields.NumberField({required: true, integer: true, nullable: false, min: 1, initial: 10}),
       category: new fields.StringField({choices: SYSTEM.ADVERSARY.TAXONOMY_CATEGORIES, initial: "humanoid"}),

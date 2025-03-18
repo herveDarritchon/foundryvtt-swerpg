@@ -11,6 +11,7 @@ export {default as SwerpgCharacter} from "./character.mjs";
 export {default as SwerpgInflection} from "./inflection.mjs";
 export {default as SwerpgRune} from "./rune.mjs";
 export {default as SwerpgSkill} from "./skill.mjs";
+export {default as SwerpgSpecies} from "./species.mjs";
 export {default as SwerpgSpell} from "./spell.mjs";
 export {default as SwerpgSpellAction} from "./spell-action.mjs";
 export {default as SwerpgTalent} from "./talent.mjs";

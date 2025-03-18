@@ -54,7 +54,7 @@ export default class SwerpgBaseItemSheet extends api.HandlebarsApplicationMixin(
     },
     config: {
       id: "config",
-      template: undefined // Populated during _initializeItemSheetClass
+      template: undefined, // Populated during _initializeItemSheetClass
     }
   };
 

@@ -99,6 +99,7 @@ Hooks.once("init", async function () {
         armor: models.SwerpgArmor,
         origin: models.SwerpgOrigin,
         background: models.SwerpgBackground,
+        species: models.SwerpgSpecies,
         spell: models.SwerpgSpell,
         talent: models.SwerpgTalent,
         taxonomy: models.SwerpgTaxonomy,
@@ -118,6 +119,7 @@ Hooks.once("init", async function () {
     Items.registerSheet(SYSTEM.id, applications.ArchetypeSheet, {types: ["archetype"], makeDefault: true});
     Items.registerSheet(SYSTEM.id, applications.BackgroundSheet, {types: ["background"], makeDefault: true});
     Items.registerSheet(SYSTEM.id, applications.OriginSheet, {types: ["origin"], makeDefault: true});
+    Items.registerSheet(SYSTEM.id, applications.SpeciesSheet, {types: ["species"], makeDefault: true});
     Items.registerSheet(SYSTEM.id, applications.SpellSheet, {types: ["spell"], makeDefault: true});
     Items.registerSheet(SYSTEM.id, applications.TalentSheet, {types: ["talent"], makeDefault: true});
     Items.registerSheet(SYSTEM.id, applications.TaxonomySheet, {types: ["taxonomy"], makeDefault: true});
@@ -197,6 +199,7 @@ Hooks.once("i18nInit", function () {
         "QUALITY_TIERS", "ENCHANTMENT_TIERS",
         "ADVERSARY.TAXONOMY_CATEGORIES",
         "SKILL.CATEGORIES", "SKILL.RANKS",
+        "SPECIES",
         "WEAPON.CATEGORIES", "WEAPON.PROPERTIES", "WEAPON.SLOTS",
     ];
     for (let c of toLocalize) {
@@ -495,6 +498,7 @@ async function resetAllActorTalents() {
             if (actor.system.details.origin?.talents?.has(item.id)) continue;
             if (actor.system.details.background?.talents?.has(item.id)) continue;
             if (actor.system.details.archetype?.talents?.has(item.id)) continue;
+            if (actor.system.details.species?.talents?.has(item.id)) continue;
             if (actor.system.details.taxonomy?.talents?.has(item.id)) continue;
             deleteIds.add(item.id);
         }

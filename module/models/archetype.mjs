@@ -12,7 +12,7 @@ export default class SwerpgArchetype extends foundry.abstract.TypeDataModel {
     const fields = foundry.data.fields;
     const nullableInteger = {required: true, nullable: true, integer: true};
     return {
-      description: new fields.HTMLField(),
+      description: new fields.HTMLField({required: false, initial: undefined}),
       abilities: new fields.SchemaField(Object.values(SYSTEM.ABILITIES).reduce((obj, ability) => {
         obj[ability.id] = new fields.NumberField({...nullableInteger, initial: 3, min: 0, max: 8})
         return obj;

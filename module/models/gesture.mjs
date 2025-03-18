@@ -13,7 +13,7 @@ export default class SwerpgGesture extends foundry.abstract.DataModel {
       nameFormat: new fields.NumberField({required: false, choices: Object.values(SYSTEM.SPELL.NAME_FORMATS),
         initial: undefined}),
       img: new fields.FilePathField({categories: ["IMAGE"]}),
-      description: new fields.HTMLField(),
+      description: new fields.HTMLField({required: false, initial: undefined}),
       cost: actionSchema.cost,
       damage: new fields.SchemaField({
         base: new fields.NumberField({required: true, integer: true, min: 0})
