@@ -53,6 +53,7 @@ Hooks.once("init", async function () {
         console.info(SYSTEM.ASCII)
     }
 
+    //TODO Fix these comments to restore the features.
     SwerpgTalentNode.defineTree();
 
     // Expose the system API
@@ -86,7 +87,7 @@ Hooks.once("init", async function () {
         character: models.SwerpgCharacter
     };
     Actors.unregisterSheet("core", ActorSheet);
-    Actors.registerSheet(SYSTEM.id, applications.HeroSheet, {types: ["hero"], makeDefault: true});
+    Actors.registerSheet(SYSTEM.id, applications.HeroSheet, {types: ["character"], makeDefault: true});
     Actors.registerSheet(SYSTEM.id, applications.CharacterSheet, {types: ["character"], makeDefault: true});
     Actors.registerSheet(SYSTEM.id, applications.AdversarySheet, {types: ["adversary"], makeDefault: true});
 
@@ -223,9 +224,10 @@ Hooks.once("i18nInit", function () {
     preLocalizeConfig();
 
     // Initialize Spellcraft Components
-    models.SwerpgGesture.initialize();
-    models.SwerpgInflection.initialize();
-    models.SwerpgRune.initialize();
+    // TODO Fix these comments
+    //models.SwerpgGesture.initialize();
+    //models.SwerpgInflection.initialize();
+    //models.SwerpgRune.initialize();
 
 });
 

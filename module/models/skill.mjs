@@ -41,6 +41,9 @@ export default class SwerpgSkill extends foundry.abstract.TypeDataModel {
   static async initialize() {
     const entry = await fromUuid(SKILL.JOURNAL_ID);
     game.i18n.translations.SKILLS ||= {};
+    if (entry == null) {
+      return;
+    }
     for ( const page of entry.pages ) {
       if ( page.type !== "skill" ) continue;
       const {skillId, overview, paths, ranks} = page.system;

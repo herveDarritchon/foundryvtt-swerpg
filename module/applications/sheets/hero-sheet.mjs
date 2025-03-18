@@ -2,14 +2,14 @@ import SwerpgBaseActorSheet from "./base-actor-sheet.mjs";
 import SkillConfig from "../config/skill.mjs";
 
 /**
- * A SwerpgBaseActorSheet subclass used to configure Actors of the "hero" type.
+ * A SwerpgBaseActorSheet subclass used to configure Actors of the "character" type.
  */
 export default class HeroSheet extends SwerpgBaseActorSheet {
 
   /** @inheritDoc */
   static DEFAULT_OPTIONS = {
     actor: {
-      type: "hero"
+      type: "character"
     },
     actions: {
       editAncestry: HeroSheet.#onEditAncestry,

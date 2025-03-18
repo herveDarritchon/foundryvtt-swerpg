@@ -166,7 +166,7 @@ export default class SwerpgCombat extends Combat {
     }
 
     const protagonistLevels = this.combatants.reduce((arr, c) => {
-      if ( c.actor?.type === "hero" ) arr.push(c.actor.level);
+      if ( c.actor?.type === "character" ) arr.push(c.actor.level);
       return arr;
     }, []);
     const heroismRequired = protagonistLevels.reduce((h, l) => h + l * 12, 0);
@@ -181,7 +181,7 @@ export default class SwerpgCombat extends Combat {
 
     // Award
     for ( const c of this.combatants ) {
-      if ( c.actor?.type !== "hero" ) continue;
+      if ( c.actor?.type !== "character" ) continue;
       await c.actor.alterResources({heroism: toAward}, {}, {statusText: "Heroism!"});
     }
   }

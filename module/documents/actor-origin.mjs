@@ -651,7 +651,7 @@ export default class SwerpgActor extends Actor {
         details.signatureName = signatureNames.sort((a, b) => a.localeCompare(b)).join(" ");
 
         // Warn if the Actor does not have a legal build
-        if (this.type === "character" || this.type === "character") {
+        if (this.type === "character") {
             const points = this.system.points.talent;
             points.spent = this.talentIds.size - this.permanentTalentIds.size;
             points.available = points.total - points.spent;

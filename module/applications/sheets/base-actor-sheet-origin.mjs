@@ -118,7 +118,6 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
     static _initializeActorSheetClass() {
         const actor = this.DEFAULT_OPTIONS.actor;
         this.PARTS = foundry.utils.deepClone(this.PARTS);
-        console.log ("[base-actor-sheet] initializeActorSheetClass with type", actor.type);
         this.PARTS.header.template = `systems/swerpg/templates/sheets/actor/${actor.type}-header.hbs`;
         this.PARTS.attributes.template = `systems/swerpg/templates/sheets/actor/${actor.type}-attributes.hbs`;
         this.PARTS.biography.template = `systems/swerpg/templates/sheets/actor/${actor.type}-biography.hbs`;
@@ -138,7 +137,7 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
         const {sections: actions, favorites: favoriteActions} = this.#prepareActions();
         return {
             abilityScores: this.#prepareAbilities(),
-            actions : actions ?? [],
+            actions,
             actor: this.document,
             biography: await this.#prepareBiography(),
             canPurchaseTalents: true,
@@ -233,7 +232,60 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
      * @returns {Record<string, object>}
      */
     #prepareDefenses() {
-        return {};
+        const data = this.document.system.defenses;
+
+        // Physical defenses
+        const defenses = {
+            physical: {
+                value: data.physical.total,
+                label: SYSTEM.DEFENSES.physical.label,
+                subtitle: this.actor.equipment.armor.name,
+                components: {
+                    armor: {
+                        value: data.armor.total,
+                        label: SYSTEM.DEFENSES.armor.label,
+                        pct: Math.round(data.armor.total * 100 / data.physical.total),
+                        cssClass: data.armor.total > 0 ? "active" : "inactive",
+                        separator: "="
+                    },
+                    dodge: {
+                        value: data.dodge.total,
+                        label: SYSTEM.DEFENSES.dodge.label,
+                        pct: Math.round(data.dodge.total * 100 / data.physical.total),
+                        cssClass: data.dodge.total > 0 ? "active" : "inactive",
+                        separator: "+"
+                    },
+                    parry: {
+                        value: data.parry.total,
+                        label: SYSTEM.DEFENSES.parry.label,
+                        pct: Math.round(data.parry.total * 100 / data.physical.total),
+                        cssClass: data.parry.total > 0 ? "active" : "inactive",
+                        separator: "+"
+                    },
+                    block: {
+                        value: data.block.total,
+                        label: SYSTEM.DEFENSES.block.label,
+                        pct: Math.round(data.block.total * 100 / data.physical.total),
+                        cssClass: data.block.total > 0 ? "active" : "inactive",
+                        separator: "+"
+                    }
+                }
+            },
+        };
+
+        // Non-physical defenses
+        for (const [id, defense] of Object.entries(SYSTEM.DEFENSES)) {
+            if (defense.type === "physical") continue;
+            const d = foundry.utils.mergeObject(defense, data[id], {inplace: false});
+            d.id = id;
+            if (d.bonus !== 0) {
+                const sign = d.bonus > 0 ? "+" : "-";
+                d.tooltip += ` ${sign} ${Math.abs(d.bonus)}`;
+            }
+            if (["wounds", "madness"].includes(id)) d.tooltip = `${d.label}<br>${d.tooltip}`;
+            defenses[id] = d;
+        }
+        return defenses;
     }
 
     /* -------------------------------------------- */
@@ -243,7 +295,18 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
      * @returns {{name: string, img: string, tags: string[]}[]}
      */
     #prepareFeaturedEquipment() {
-        return {};
+        const featuredEquipment = [];
+        const {armor, weapons} = this.actor.equipment;
+        const {mainhand: mh, offhand: oh, twoHanded: th} = weapons;
+        const mhTags = mh.getTags();
+        featuredEquipment.push({name: mh.name, img: mh.img, tags: [mhTags.damage, mhTags.range]});
+        if (oh?.id && !th) {
+            const ohTags = oh.getTags();
+            featuredEquipment.push({name: oh.name, img: oh.img, tags: [ohTags.damage, ohTags.range]})
+        }
+        const armorTags = armor.getTags();
+        featuredEquipment.push({name: armor.name, img: armor.img, tags: [armorTags.armor, armorTags.dodge]});
+        return featuredEquipment;
     }
 
     /* -------------------------------------------- */
@@ -332,7 +395,7 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
         const favorites = [];
 
         // Iterate over all Actions
-        for (const action of Object.values(this.actor?.actions ?? [])) {
+        for (const action of Object.values(this.actor.actions)) {
             const a = {
                 id: action.id,
                 name: action.name,
@@ -453,7 +516,44 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
      * }}
      */
     #prepareSpells(iconicSpells) {
-        return {};
+        const {runes, gestures, inflections, iconicSlots} = this.actor.grimoire;
+        const spells = {
+            runes: {
+                label: game.i18n.localize("SPELL.COMPONENTS.RunePl"),
+                known: runes,
+                emptyLabel: game.i18n.localize("SPELL.COMPONENTS.RuneNone")
+            },
+            gestures: {
+                label: game.i18n.localize("SPELL.COMPONENTS.GesturePl"),
+                known: gestures,
+                emptyLabel: game.i18n.localize("SPELL.COMPONENTS.GestureNone")
+            },
+            inflections: {
+                label: game.i18n.localize("SPELL.COMPONENTS.InflectionPl"),
+                known: inflections,
+                emptyLabel: game.i18n.localize("SPELL.COMPONENTS.InflectionNone")
+            },
+            iconicSpells: {
+                label: iconicSpells.label,
+                known: iconicSpells.items,
+                emptyLabel: game.i18n.localize("SPELL.IconicNone")
+            }
+        }
+
+        // Placeholder Iconic Slots
+        if (iconicSlots > iconicSpells.items.length) {
+            for (let i = iconicSpells.items.length; i < iconicSlots; i++) {
+                spells.iconicSpells.known.push({
+                    id: `iconicSlot${i}`,
+                    name: "Available Slot",
+                    img: "icons/magic/symbols/question-stone-yellow.webp",
+                    cssClass: "iconic-slot",
+                    tags: {},
+                    isItem: false
+                });
+            }
+        }
+        return spells;
     }
 
     /* -------------------------------------------- */
@@ -463,7 +563,18 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
      * @return {{physical: object[], elemental: object[], spiritual: object[]}}
      */
     #prepareResistances() {
-        return {};
+        const resistances = foundry.utils.deepClone(SYSTEM.DAMAGE_CATEGORIES);
+        for (const c of Object.values(resistances)) c.resistances = [];
+        const rs = this.document.system.resistances;
+        const barCap = this.document.level * 2;
+        for (const [id, d] of Object.entries(SYSTEM.DAMAGE_TYPES)) {
+            const r = Object.assign({}, d, rs[id]);
+            r.cssClass = r.total < 0 ? "vuln" : (r.total > 0 ? "res" : "none");
+            const p = Math.min(Math.abs(r.total) / barCap, 1);
+            r.barPct = `${p * 50}%`;
+            resistances[d.type].resistances.push(r);
+        }
+        return resistances;
     }
 
     /* -------------------------------------------- */
@@ -473,7 +584,46 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
      * @returns {Record<string, {id: string, pct: number, color: {bg: string, fill: string}}>}
      */
     #prepareResources() {
-        return {};
+        const resources = {};
+        const rs = this.document.system.resources;
+
+        // Pools
+        for (const [id, resource] of Object.entries(rs)) {
+            const r = foundry.utils.mergeObject(SYSTEM.RESOURCES[id], resource, {inplace: false});
+            r.id = id;
+            r.pct = Math.round(r.value * 100 / r.max);
+            r.cssPct = `--resource-pct: ${100 - r.pct}%`;
+            resources[r.id] = r;
+        }
+
+        // Action
+        resources.action.pips = [];
+        const maxAction = Math.min(resources.action.max, 6);
+        for (let i = 1; i <= maxAction; i++) {
+            const full = resources.action.value >= i;
+            const double = (resources.action.value - 6) >= i;
+            const cssClass = [full ? "full" : "", double ? "double" : ""].filterJoin(" ");
+            resources.action.pips.push({full, double, cssClass});
+        }
+
+        // Focus
+        resources.focus.pips = [];
+        const maxFocus = Math.min(resources.focus.max, 12);
+        for (let i = 1; i <= maxFocus; i++) {
+            const full = resources.focus.value >= i;
+            const double = (resources.focus.value - 12) >= i;
+            const cssClass = [full ? "full" : "", double ? "double" : ""].filterJoin(" ");
+            resources.focus.pips.push({full, double, cssClass});
+        }
+
+        // Heroism
+        resources.heroism.pips = [];
+        for (let i = 1; i <= 3; i++) {
+            const full = resources.heroism.value >= i;
+            const cssClass = full ? "full" : "";
+            resources.heroism.pips.push({full, double: false, cssClass});
+        }
+        return resources;
     }
 
     /* -------------------------------------------- */
@@ -495,7 +645,42 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
      * }>}
      */
     #prepareSkills() {
-        return {};
+        const skills = this.document.system.skills;
+        const categories = foundry.utils.deepClone(SYSTEM.SKILL.CATEGORIES);
+        for (const skill of Object.values(SYSTEM.SKILLS)) {
+            const s = foundry.utils.mergeObject(skill, skills[skill.id], {inplace: false});
+            let category = categories[skill.category];
+            const a1 = SYSTEM.ABILITIES['wisdom'];
+            const a2 = SYSTEM.ABILITIES['presence'];
+
+            // Skill data
+            s.abilityAbbrs = [a1.abbreviation, a2.abbreviation];
+            s.pips = Array.fromRange(5).map((v, i) => i < s.rank ? "trained" : "untrained");
+            s.css = [
+                s.rank > 0 ? "trained" : "untrained",
+                s.path ? "specialized" : "unspecialized"
+            ].join(" ");
+            s.canIncrease = this.actor.canPurchaseSkill(skill.id, 1);
+            s.canDecrease = this.actor.canPurchaseSkill(skill.id, -1);
+
+            // Specialization status
+            s.rankTags = [SYSTEM.SKILL.RANKS[s.rank].label];
+            const path = null;
+            if (path) s.rankTags.push(path.name);
+            s.hexClass = "";
+
+            // Tooltips
+            s.tooltips = {
+                value: game.i18n.format("SKILL.TooltipCheck", {a1: a1.label, a2: a2.label}),
+                passive: game.i18n.localize("SKILL.TooltipPassive")
+            }
+
+            // Add to category
+            category = {};
+            category.skills = {};
+            category.skills[skill.id] = s;
+        }
+        return categories;
     }
 
     /* -------------------------------------------- */

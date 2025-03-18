@@ -27,6 +27,38 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
   /** @override */
   async _prepareContext(options) {
     const context = await super._prepareContext(options);
+    const {actor: a, source: s, incomplete: i} = context;
+
+    // Expand Context
+    Object.assign(context, {
+      speciesName: s.system.details.ancestry?.name || game.i18n.localize("SPECIES.SHEET.CHOOSE"),
+      careerName: s.system.details.origin?.name || game.i18n.localize("CAREER.SHEET.CHOOSE"),
+      backgroundName: s.system.details.background?.name || game.i18n.localize("BACKGROUND.SHEET.CHOOSE"),
+      talentTreeButtonText: game.system.tree.actor === a ? "Close Talent Tree" : "Open Talent Tree"
+    });
+
+    // Incomplete Tasks
+    const {isL0} = a;
+    context.points = a.system.points;
+    Object.assign(i, {
+      species: !s.system.details.ancestry?.name,
+      background: !s.system.details.background?.name,
+      abilities: context.points.ability.requireInput,
+      skills: context.points.skill.available,
+      talents: context.points.talent.available,
+      isL0: isL0
+    });
+    i.creation = i.ancestry || i.background || i.abilities || i.skills || i.talents;
+    i.level = isL0 ? !i.creation : (a.system.advancement.pct === 100);
+    if ( i.creation ) {
+      i.creationTooltip = "<p>Character Creation Incomplete!</p><ol>";
+      if ( i.ancestry ) i.creationTooltip += "<li>Select Ancestry</li>";
+      if ( i.background ) i.creationTooltip += "<li>Select Background</li>";
+      if ( i.abilities ) i.creationTooltip += "<li>Spend Ability Points</li>";
+      if ( i.skills ) i.creationTooltip += "<li>Spend Skill Points</li>";
+      if ( i.talents ) i.creationTooltip += "<li>Spend Talent Points</li>";
+      i.creationTooltip += "</ol>";
+    }
     return context;
   }
 

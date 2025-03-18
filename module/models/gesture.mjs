@@ -42,8 +42,14 @@ export default class SwerpgGesture extends foundry.abstract.DataModel {
   static initialize() {
     const gestures = SYSTEM.SPELL.GESTURES;
     for ( const [k, v] of Object.entries(gestures) ) {
-      gestures[k] = new SwerpgGesture(v);
+
+      try {
+        gestures[k] = new SwerpgGesture(v);
+      } catch (e) {
+        console.error(e);
+      }
     }
+
     Object.freeze(gestures);
   }
 

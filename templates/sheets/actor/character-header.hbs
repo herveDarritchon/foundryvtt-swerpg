@@ -1,0 +1,48 @@
+<section class="sheet-header flexcol">
+    <header class="title flexrow">
+        <input class="charname" name="name" type="text" value="{{source.name}}" placeholder="Actor Name">
+        {{#if incomplete.level}}
+        <a class="button icon level-up fa-solid fa-plus incomplete" data-action="levelUp"
+           data-tooltip="Level Up!"></a>
+        {{else if incomplete.creation}}
+        <a class="button icon level-up fa-solid fa-triangle-exclamation incomplete" data-action="levelUp"
+           data-tooltip="{{incomplete.creationTooltip}}" data-tooltip-class="creation-steps"></a>
+        {{/if}}
+        <label class="level">Level</label>
+        {{formInput fields.advancement.fields.level value=source.system.advancement.level type="number"
+                    disabled=incomplete.isL0}}
+    </header>
+
+    <div class="subtitle flexrow">
+        <h2 class="origin flexrow {{#if incomplete.origin}}incomplete{{/if}}" data-action="editOrigin"
+            {{#if incomplete.origin}}data-tooltip="WALKTHROUGH.AddOrigin"{{/if}}>
+            <a>{{#if incomplete.origin}}<i class="fa-solid fa-circle-plus"></i> {{/if}}{{originName}}</a>
+        </h2>
+
+        <h2 class="ancestry flexrow {{#if incomplete.ancestry}}incomplete{{/if}}" data-action="editAncestry"
+            {{#if incomplete.ancestry}}data-tooltip="WALKTHROUGH.AddAncestry"{{/if}}>
+            <a>{{#if incomplete.ancestry}}<i class="fa-solid fa-circle-plus"></i> {{/if}}{{ancestryName}}</a>
+        </h2>
+        <h2 class="background flexrow {{#if incomplete.background}}incomplete{{/if}}" data-action="editBackground"
+            {{#if incomplete.background}}data-tooltip="WALKTHROUGH.AddBackground"{{/if}}>
+            <a>{{#if incomplete.background}}<i class="fa-solid fa-circle-plus"></i> {{/if}}{{backgroundName}}</a>
+        </h2>
+        {{#if actor.system.details.signatureName}}
+        <h2 class="signature">{{actor.system.details.signatureName}}</h2>
+        {{/if}}
+        {{#if showMilestones}}
+        <div class="advancement flexrow" data-tooltip="WALKTHROUGH.NextLevel">
+            <div class="bar"><div class="fill" style="width:{{actor.system.advancement.pct}}%"></div></div>
+            <input type="number" name="system.advancement.progress" value="{{actor.system.advancement.progress}}">
+            <span class="slash"></span>
+            <span class="input">{{actor.system.advancement.next}}</span>
+        </div>
+        {{/if}}
+        <div class="metadata flexrow">
+            <div class="size flexrow">
+                <span class="label" data-tooltip="ANCESTRY.FIELDS.size.hint">{{localize "ACTOR.LABELS.SIZE"}}</span>
+                <span class="value">{{actor.size}}</span>
+            </div>
+        </div>
+    </div>
+</section>

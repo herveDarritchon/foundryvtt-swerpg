@@ -114,16 +114,16 @@ export default class SwerpgItem extends Item {
     if ( this.isOwned ) {
       switch (data.type) {
         case "ancestry":
-          if ( this.parent.type === "hero" ) await this.parent.system.applyAncestry(this);
+          if ( this.parent.type === "character" ) await this.parent.system.applyAncestry(this);
           return false;   // Prevent creation
         case "archetype":
           if ( this.parent.type === "adversary" ) await this.parent.system.applyArchetype(this);
           return false;   // Prevent creation
         case "background":
-          if ( this.parent.type === "hero" ) await this.parent.system.applyBackground(this);
+          if ( this.parent.type === "character" ) await this.parent.system.applyBackground(this);
           return false;   // Prevent creation
         case "origin":
-          if ( this.parent.type === "hero" ) await this.parent.system.applyOrigin(this);
+          if ( this.parent.type === "character" ) await this.parent.system.applyOrigin(this);
           return false;   // Prevent creation
         case "spell":
           try {

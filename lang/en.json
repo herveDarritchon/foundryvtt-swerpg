@@ -2,7 +2,7 @@
   "TYPES": {
     "Actor": {
       "adversary": "Adversary",
-      "hero": "Protagonist",
+      "character": "Protagonist",
       "character": "Player Character",
       "npc": "Non-Player Character"
     },
@@ -32,18 +32,18 @@
       "Journal": "Swerpg Journal Sheet"
     }
   },
-  "ABILITIES.Strength": "Strength",
-  "ABILITIES.StrengthAbbr": "Str",
-  "ABILITIES.Toughness": "Toughness",
-  "ABILITIES.ToughnessAbbr": "Tou",
-  "ABILITIES.Dexterity": "Dexterity",
-  "ABILITIES.DexterityAbbr": "Dex",
+  "ABILITIES.Brawn": "Brawn",
+  "ABILITIES.BrawnAbbr": "Bra",
+  "ABILITIES.Agility": "Agility",
+  "ABILITIES.AgilityAbbr": "Agi",
   "ABILITIES.Intellect": "Intellect",
   "ABILITIES.IntellectAbbr": "Int",
+  "ABILITIES.Cunning": "Cunning",
+  "ABILITIES.CunningAbbr": "Cun",
+  "ABILITIES.Willpower": "Willpower",
+  "ABILITIES.WillpowerAbbr": "Wil",
   "ABILITIES.Presence": "Presence",
   "ABILITIES.PresenceAbbr": "Pre",
-  "ABILITIES.Wisdom": "Wisdom",
-  "ABILITIES.WisdomAbbr": "Wis",
   "ADVERSARY.ThreatMinion": "Minion",
   "ADVERSARY.ThreatNormal": "Normal",
   "ADVERSARY.ThreatElite": "Elite",

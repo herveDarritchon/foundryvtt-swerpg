@@ -2,7 +2,7 @@
 "TYPES": {
   "Actor": {
     "adversary": "Adversaire",
-    "hero": "Protagonist",
+    "character": "Protagonist",
     "character": "Personnage-Joueur",
     "npc": "Personnage Non-Joueur"
   },
