@@ -13,6 +13,7 @@ export default class SwerpgSpecies extends foundry.abstract.TypeDataModel {
     /** @inheritDoc */
     static defineSchema() {
         const fields = foundry.data.fields;
+
         return {
             description: new fields.HTMLField({required: false, initial: undefined}),
             abilities: new fields.SchemaField({

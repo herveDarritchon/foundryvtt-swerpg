@@ -143,8 +143,8 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
   async _onDropItem(event, item) {
     if ( !this.actor.isOwner ) return;
     switch (item.type) {
-      case "ancestry":
-        await this.actor.system.applyAncestry(item);
+      case "species":
+        await this.actor.system.applySpecies(item);
         return;
       case "background":
         await this.actor.system.applyBackground(item);

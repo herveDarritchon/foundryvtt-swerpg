@@ -91,11 +91,11 @@ export default class SwerpgActor extends Actor {
     training = this.training;
 
     /**
-     * The ancestry of the Actor.
+     * The species of the Actor.
      * @returns {*}
      */
-    get ancestry() {
-        return this.system.details.ancestry;
+    get species() {
+        return this.system.details.species;
     }
 
     /**

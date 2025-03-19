@@ -1,32 +1,20 @@
 let gulp = require('gulp');
 let less = require('gulp-less');
 
+gulp.task('less', function () {
+    return gulp
+        .src('./styles/swerpg.less')
+        .pipe(less())
+        .pipe(gulp.dest('./styles'));
+});
 
-/* ----------------------------------------- */
-/*  Compile LESS
-/* ----------------------------------------- */
+gulp.task('styles', function () {
+    return gulp
+        .src('./styles/swerpg.less')
+        .pipe(less())
+        .pipe(gulp.dest('./styles/'));
+});
 
-function compileLESS() {
-  return gulp.src("styles/swerpg.less")
-    .pipe(less())
-    .pipe(gulp.dest("./"))
-}
-const css = gulp.series(compileLESS);
-
-/* ----------------------------------------- */
-/*  Watch Updates
-/* ----------------------------------------- */
-
-function watchUpdates() {
-  gulp.watch(["styles/*.less"], css);
-}
-
-/* ----------------------------------------- */
-/*  Export Tasks
-/* ----------------------------------------- */
-
-exports.default = gulp.series(
-  gulp.parallel(css),
-  watchUpdates
-);
-exports.css = css;
+gulp.task('default', function () {
+    return gulp.watch('./styles/**/*.less', gulp.series('styles'));
+});

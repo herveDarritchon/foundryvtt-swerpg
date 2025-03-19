@@ -104,7 +104,7 @@ export default class SwerpgActorType extends foundry.abstract.TypeDataModel {
     prepareBaseData() {
         this.status ||= {};
         this._prepareDetails();
-        //this._prepareAbilities();
+        this._prepareAbilities();
         //this._prepareSkills();
     }
 

@@ -1,3 +1,4 @@
+{{log "Species" this}}
 <section class="sheet-header flexcol">
     <header class="title flexrow">
         <input class="charname" name="name" type="text" value="{{source.name}}" placeholder="Actor Name">
@@ -8,12 +9,7 @@
     </header>
 
     <div class="subtitle flexrow">
-        <h2 class="origin flexrow {{#if incomplete.origin}}incomplete{{/if}}" data-action="editOrigin"
-            {{#if incomplete.origin}}data-tooltip="WALKTHROUGH.AddOrigin"{{/if}}>
-            <a>{{#if incomplete.origin}}<i class="fa-solid fa-circle-plus"></i> {{/if}}{{originName}}</a>
-        </h2>
-
-        <h2 class="ancestry flexrow {{#if incomplete.species}}incomplete{{/if}}" data-action="editAncestry"
+        <h2 class="species flexrow {{#if incomplete.species}}incomplete{{/if}}" data-action="editSpecies"
             {{#if incomplete.species}}data-tooltip="WALKTHROUGH.AddSpecies"{{/if}}>
             <a>{{#if incomplete.species}}<i class="fa-solid fa-circle-plus"></i> {{/if}}{{speciesName}}</a>
         </h2>

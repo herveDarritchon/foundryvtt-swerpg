@@ -1149,9 +1149,12 @@
   grid-row: 2;
   display: flex;
   /*      grid-template-columns: 1fr 1fr;
-      grid-template-rows: repeat(3, 1fr);*/
+            grid-template-rows: repeat(3, 1fr);*/
   justify-items: center;
   padding: 1.5rem 0 0;
+}
+.swerpg.sheet.actor .tab.attributes .abilities .abilities-wrapper {
+  display: flex;
 }
 .swerpg.sheet.actor .tab.attributes .abilities .ability {
   position: relative;
@@ -1585,7 +1588,7 @@
   border-top: 1px solid #8a644f;
   border-right: 1px solid #8a644f;
   /*      box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5),
-        -4px -4px 10px rgba(255, 255, 255, 0.1);*/
+              -4px -4px 10px rgba(255, 255, 255, 0.1);*/
   /* Ombre principale */
   transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
 }

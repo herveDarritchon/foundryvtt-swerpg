@@ -1,3 +1,4 @@
+{{log "Character sheet" this}}
 <section class="tab {{tabs.attributes.id}} {{tabs.attributes.cssClass}}"
          data-tab="{{tabs.attributes.id}}" data-group="{{tabs.attributes.group}}">
 
@@ -11,7 +12,7 @@
             <div class="skill-title"><span>P</span>ER</div>
             <div class="skill-box"><span>42</span></div>
         </div>
-        
+
         <h3>Resources</h3>
         <div class="resource health flexcol" style="{{resources.health.cssPct}}">
             <h4 class="label above" data-tooltip="{{resources.health.tooltip}}">{{resources.health.label}}</h4>
@@ -38,7 +39,7 @@
                     {{formInput fields.resources.fields.action.fields.value value=resources.action.value type="number"}}
                     <div class="pips flexrow">
                         {{#each resources.action.pips as |pip|}}
-                        <div class="pip {{pip.cssClass}}"></div>
+                            <div class="pip {{pip.cssClass}}"></div>
                         {{/each}}
                     </div>
                     <span class="max">{{resources.action.max}}</span>
@@ -51,7 +52,7 @@
                     {{formInput fields.resources.fields.focus.fields.value value=resources.focus.value type="number"}}
                     <div class="pips flexrow">
                         {{#each resources.focus.pips as |pip|}}
-                        <div class="pip {{pip.cssClass}}"></div>
+                            <div class="pip {{pip.cssClass}}"></div>
                         {{/each}}
                     </div>
                     <span class="max">{{resources.focus.max}}</span>
@@ -61,7 +62,8 @@
             <div class="currency heroism flexcol">
                 <h4 class="label" data-tooltip="{{resources.heroism.tooltip}}">{{resources.heroism.label}}</h4>
                 <div class="points flexrow">
-                    {{formInput fields.resources.fields.heroism.fields.value value=resources.heroism.value type="number"}}
+                    {{formInput fields.resources.fields.heroism.fields.value value=resources.heroism.value
+                                type="number"}}
                     <div class="pips flexrow">
                         {{#each resources.heroism.pips as |pip|}}
                             <div class="pip {{pip.cssClass}}"></div>
@@ -99,12 +101,12 @@
                 <span class="value">{{defenses.physical.value}}</span>
             </div>
             {{#each defenses.physical.components as |c id|}}
-            <span class="sep">{{c.separator}}</span>
-            <div class="defense component {{id}} {{c.cssClass}}">
-                <h4 class="label">{{c.label}}</h4>
-                <span class="value">{{c.value}}</span>
-                <span class="pct">{{c.pct}}%</span>
-            </div>
+                <span class="sep">{{c.separator}}</span>
+                <div class="defense component {{id}} {{c.cssClass}}">
+                    <h4 class="label">{{c.label}}</h4>
+                    <span class="value">{{c.value}}</span>
+                    <span class="pct">{{c.pct}}%</span>
+                </div>
             {{/each}}
         </div>
         <div class="magical flexrow">
@@ -137,20 +139,22 @@
 
     <div class="sheet-section abilities">
         <h3>Abilities</h3>
-        {{#each abilityScores as |ability|}}
-            <div class="ability {{ability.id}} {{ability.type}} flexcol" data-ability="{{ability.id}}">
-                <h4 class="label">{{ability.label}}</h4>
-                <span class="input score">{{ability.value}}</span>
-                {{#if ability.canDecrease}}
-                    <a class="button icon fa-solid fa-caret-down decrease" data-action="abilityDecrease"
-                       data-tooltip="Decrease {{ability.label}}" data-tooltip-direction="LEFT"></a>
-                {{/if}}
-                {{#if ability.canIncrease}}
-                    <a class="button icon fa-solid fa-caret-up increase" data-action="abilityIncrease"
-                       data-tooltip="Increase {{ability.label}}" data-tooltip-direction="RIGHT"></a>
-                {{/if}}
-            </div>
-        {{/each}}
+        <div class="abilities-wrapper">
+            {{#each abilityScores as |ability|}}
+                <div class="ability {{ability.id}} {{ability.type}} flexcol" data-ability="{{ability.id}}">
+                    <h4 class="label">{{ability.label}}</h4>
+                    <span class="input score">{{ability.value}}</span>
+                    {{#if ability.canDecrease}}
+                        <a class="button icon fa-solid fa-caret-down decrease" data-action="abilityDecrease"
+                           data-tooltip="Decrease {{ability.label}}" data-tooltip-direction="LEFT"></a>
+                    {{/if}}
+                    {{#if ability.canIncrease}}
+                        <a class="button icon fa-solid fa-caret-up increase" data-action="abilityIncrease"
+                           data-tooltip="Increase {{ability.label}}" data-tooltip-direction="RIGHT"></a>
+                    {{/if}}
+                </div>
+            {{/each}}
+        </div>
         {{#if points.ability.requireInput}}
             <footer class="footer-section point-pools flexrow">
                 <span class="label">Ability Points</span>
@@ -166,17 +170,17 @@
     <div class="sheet-section resistances flexrow">
         <h3>Resistances</h3>
         {{#each resistances as |group|}}
-        <div class="resistance-group flexcol">
-            {{#each group.resistances as |r|}}
-            <div class="resistance flexcol {{r.cssClass}}" data-resistance="{{r.id}}">
-                <h4 class="label">{{r.label}}</h4>
-                <div class="resistance-bar">
-                    <span class="value">{{r.total}}</span>
-                    <span class="bar" style="width:{{r.barPct}}"></span>
-                </div>
+            <div class="resistance-group flexcol">
+                {{#each group.resistances as |r|}}
+                    <div class="resistance flexcol {{r.cssClass}}" data-resistance="{{r.id}}">
+                        <h4 class="label">{{r.label}}</h4>
+                        <div class="resistance-bar">
+                            <span class="value">{{r.total}}</span>
+                            <span class="bar" style="width:{{r.barPct}}"></span>
+                        </div>
+                    </div>
+                {{/each}}
             </div>
-            {{/each}}
-        </div>
         {{/each}}
     </div>
 

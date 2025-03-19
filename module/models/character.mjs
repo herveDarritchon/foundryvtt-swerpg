@@ -118,6 +118,7 @@ export default class SwerpgCharacter extends SwerpgActorType {
         this.size = (this.details.ancestry?.size || 3) + this.details.size;
         this.#prepareBaseMovement();
         super.prepareBaseData();
+        console.log ("[prepareBaseData]: character data", this);
     }
 
     /* -------------------------------------------- */
@@ -157,9 +158,12 @@ export default class SwerpgCharacter extends SwerpgActorType {
      * @override
      */
     _prepareDetails() {
+        // Default Species data
+        if ( !this.details.species ) {
+            const speciesDefaults = swerpg.api.models.SwerpgSpecies.schema.getInitialValue();
+            this.details.species = this.schema.getField("details.species").initialize(speciesDefaults);
+        }
 
-        // Initialize default ancestry or background data
-        const a = this.details.species ||= this.schema.getField("details.species").initialize({});
         //this.details.background ||= this.schema.getField("details.background").initialize({});
 
         // Threat level
@@ -167,10 +171,10 @@ export default class SwerpgCharacter extends SwerpgActorType {
         this.advancement.threatFactor = 1;*/
 
         // Base Resistances
-        const res = this.resistances;
+/*        const res = this.resistances;
         for (const r of Object.values(res)) r.base = 0;
         if (a.resistance) res[a.resistance].base += SYSTEM.ANCESTRIES.resistanceAmount;
-        if (a.vulnerability) res[a.vulnerability].base -= SYSTEM.ANCESTRIES.resistanceAmount;
+        if (a.vulnerability) res[a.vulnerability].base -= SYSTEM.ANCESTRIES.resistanceAmount;*/
     }
 
     /* -------------------------------------------- */
@@ -180,8 +184,8 @@ export default class SwerpgCharacter extends SwerpgActorType {
      * @override
      */
     _prepareAbilities() {
-        const points = this.points.ability;
-        const ancestry = this.details.ancestry;
+//        const points = this.points.ability;
+        const species = this.details.species;
 
         // Ability Scores
         let abilityPointsBought = 0;
@@ -191,21 +195,23 @@ export default class SwerpgCharacter extends SwerpgActorType {
 
             // Configure initial value
             ability.initial = 1;
-            if (a === ancestry.primary) ability.initial = SYSTEM.ANCESTRIES.primaryAbilityStart;
-            else if (a === ancestry.secondary) ability.initial = SYSTEM.ANCESTRIES.secondaryAbilityStart;
-            ability.value = Math.clamp(ability.initial + ability.base + ability.increases + ability.bonus, 0, 12);
+            ability.species = species.abilities[a] -1 || 0;
+/*            if (a === species.primary) ability.initial = SYSTEM.ANCESTRIES.primaryAbilityStart;
+            else if (a === species.secondary) ability.initial = SYSTEM.ANCESTRIES.secondaryAbilityStart;*/
+            ability.value = Math.clamp(ability.initial + ability.base + ability.increases + ability.bonus + ability.species, 1, 5);
 
             // Track points spent
             abilityPointsBought += ability.base;
             abilityPointsSpent += ability.increases;
         }
 
+        // TODO to be reactivated when experience is used.
         // Track spent ability points
-        points.bought = abilityPointsBought;
+/*        points.bought = abilityPointsBought;
         points.pool = 9 - points.bought;
         points.spent = abilityPointsSpent;
         points.available = points.total - abilityPointsSpent;
-        points.requireInput = (this.advancement.level === 0) ? (points.pool > 0) : (points.available !== 0);
+        points.requireInput = (this.advancement.level === 0) ? (points.pool > 0) : (points.available !== 0);*/
     }
 
     /* -------------------------------------------- */
@@ -278,11 +284,14 @@ export default class SwerpgCharacter extends SwerpgActorType {
      * @param {SwerpgItem} ancestry     The ancestry Item to apply to the Actor.
      * @returns {Promise<void>}
      */
-    async applyAncestry(ancestry) {
+    async applySpecies(species) {
         const actor = this.parent;
-        await actor._applyDetailItem(ancestry, {
-            canApply: actor.isL0 && !actor.points.ability.spent,
-            canClear: actor.isL0
+        await actor._applyDetailItem(species, {
+            // TODO Change this when points are used for experience
+            //canApply: actor.isL0 && !actor.points.ability.spent,
+            canApply: true,
+            //canClear: actor.isL0
+            canClear: true
         });
     }
 
