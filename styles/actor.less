@@ -306,6 +306,20 @@
       justify-content: center;
       padding: 0 0.5rem;
 
+      /* HTML: <div class="octagon"></div> */
+      .octagon {
+        width: 200px;
+        aspect-ratio: 1;
+        --o:calc(50%*tan(-22.5deg));
+        clip-path: polygon(
+                var(--o) 50%,
+                50% var(--o),
+                calc(100% - var(--o)) 50%,
+                50% calc(100% - var(--o))
+        );
+        background: #3B8686;
+      }
+
       /** Pool Resources */
 
       .resource {

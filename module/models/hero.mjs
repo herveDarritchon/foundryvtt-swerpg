@@ -159,7 +159,7 @@ export default class SwerpgHero extends SwerpgActorType {
    * Prepare abilities data for the Hero subtype specifically.
    * @override
    */
-  _prepareAbilities() {
+  _prepareSpecies() {
     const points = this.points.ability;
     const ancestry = this.details.ancestry;
 

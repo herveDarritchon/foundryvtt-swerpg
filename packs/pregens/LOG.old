@@ -1,8 +1,5 @@
-2025/03/19-15:29:01.101249 30ac1a000 Recovering log #162
-2025/03/19-15:29:01.102363 30ac1a000 Delete type=3 #160
-2025/03/19-15:29:01.102510 30ac1a000 Delete type=0 #162
-2025/03/19-15:29:33.617902 3140c7000 Level-0 table #167: started
-2025/03/19-15:29:33.617922 3140c7000 Level-0 table #167: 0 bytes OK
-2025/03/19-15:29:33.618056 3140c7000 Delete type=0 #165
-2025/03/19-15:29:33.618218 3140c7000 Manual compaction at level-0 from '!actors!3nHQrIU9vj5vIfSU' @ 72057594037927935 : 1 .. '!folders!xoE3iSbPfFPlq6wD' @ 0 : 0; will stop at (end)
-2025/03/19-15:29:33.618240 3140c7000 Manual compaction at level-1 from '!actors!3nHQrIU9vj5vIfSU' @ 72057594037927935 : 1 .. '!folders!xoE3iSbPfFPlq6wD' @ 0 : 0; will stop at (end)
+2025/03/20-16:14:06.604051 312f8b000 Log #173: 0 ops saved to Table #174 OK
+2025/03/20-16:14:06.604325 312f8b000 Archiving /Users/hervedarritchon/Library/Application Support/FoundryVTTV13/Data/systems/swerpg/packs/pregens/000173.log: OK
+2025/03/20-16:14:06.606085 312f8b000 Table #137: 189 entries OK
+2025/03/20-16:14:06.606849 312f8b000 Archiving /Users/hervedarritchon/Library/Application Support/FoundryVTTV13/Data/systems/swerpg/packs/pregens/MANIFEST-000172: OK
+2025/03/20-16:14:06.608412 312f8b000 **** Repaired leveldb /Users/hervedarritchon/Library/Application Support/FoundryVTTV13/Data/systems/swerpg/packs/pregens; recovered 1 files; 128231 bytes. Some data may have been lost. ****

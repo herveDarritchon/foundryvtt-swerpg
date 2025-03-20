@@ -3,94 +3,138 @@
          data-tab="{{tabs.attributes.id}}" data-group="{{tabs.attributes.group}}">
 
     <div class="sheet-section resources flexrow">
-        <div class="skill-container">
-            <div class="skill-title"><span>F</span>OR</div>
-            <div class="skill-box"><span>75</span></div>
-        </div>
-
-        <div class="skill-container">
-            <div class="skill-title"><span>P</span>ER</div>
-            <div class="skill-box"><span>42</span></div>
-        </div>
-
         <h3>Resources</h3>
-        <div class="resource health flexcol" style="{{resources.health.cssPct}}">
-            <h4 class="label above" data-tooltip="{{resources.health.tooltip}}">{{resources.health.label}}</h4>
-            <div class="pool short flexrow">
-                {{formInput fields.resources.fields.health.fields.value value=resources.health.value type="number"}}
-                <span class="sep">/</span>
-                <span class="total value">{{resources.health.max}}</span>
-            </div>
-            <div class="pool long flexrow">
-                {{formInput fields.resources.fields.wounds.fields.value value=resources.wounds.value type="number"}}
-                <span class="sep">/</span>
-                <span class="total value">{{resources.wounds.max}}</span>
-            </div>
-            <h4 class="label below" data-tooltip="{{resources.wounds.tooltip}}">{{resources.wounds.label}}</h4>
-            <div class="threshold wounds" data-tooltip="{{defenses.wounds.tooltip}}">
-                <span class="value">{{defenses.wounds.total}}</span>
-            </div>
+
+        <div class="flexrow">
+            <div class="octagon"></div>
+            <div class="octagon"></div>
+            <div class="octagon"></div>
+            <div class="octagon"></div>
+            <div class="octagon"></div>
         </div>
 
-        <div class="economy flexcol">
-            <div class="currency action flexcol">
-                <h4 class="label" data-tooltip="{{resources.action.tooltip}}">{{resources.action.label}}</h4>
-                <div class="points flexrow">
-                    {{formInput fields.resources.fields.action.fields.value value=resources.action.value type="number"}}
-                    <div class="pips flexrow">
-                        {{#each resources.action.pips as |pip|}}
-                            <div class="pip {{pip.cssClass}}"></div>
-                        {{/each}}
-                    </div>
-                    <span class="max">{{resources.action.max}}</span>
+
+        <div class="flexrow">
+
+            <div class="resource health flexcol" style="{{resources.health.cssPct}}">
+                <h4 class="label above" data-tooltip="{{resources.health.tooltip}}">{{resources.health.label}}</h4>
+                <div class="pool short flexrow">
+                    {{!--{{formInput fields.resources.fields.health.fields.value value=resources.health.value type="number"}}--}}
+                    <span class="sep">/</span>
+                    <span class="total value">{{resources.health.max}}</span>
+                </div>
+                <div class="pool long flexrow">
+                    {{!--{{formInput fields.resources.fields.wounds.fields.value value=resources.wounds.value type="number"}}--}}
+                    <span class="sep">/</span>
+                    <span class="total value">{{resources.wounds.max}}</span>
+                </div>
+                <h4 class="label below" data-tooltip="{{resources.wounds.tooltip}}">{{resources.wounds.label}}</h4>
+                <div class="threshold wounds" data-tooltip="{{defenses.wounds.tooltip}}">
+                    <span class="value">{{defenses.wounds.total}}</span>
                 </div>
             </div>
 
-            <div class="currency focus flexcol">
-                <h4 class="label" data-tooltip="{{resources.focus.tooltip}}">{{resources.focus.label}}</h4>
-                <div class="points flexrow">
-                    {{formInput fields.resources.fields.focus.fields.value value=resources.focus.value type="number"}}
-                    <div class="pips flexrow">
-                        {{#each resources.focus.pips as |pip|}}
-                            <div class="pip {{pip.cssClass}}"></div>
-                        {{/each}}
-                    </div>
-                    <span class="max">{{resources.focus.max}}</span>
+            <div class="resource health flexcol" style="{{resources.health.cssPct}}">
+                <h4 class="label above" data-tooltip="{{resources.health.tooltip}}">{{resources.health.label}}</h4>
+                <div class="pool short flexrow">
+                    {{!--{{formInput fields.resources.fields.health.fields.value value=resources.health.value type="number"}}--}}
+                    <span class="sep">/</span>
+                    <span class="total value">{{resources.health.max}}</span>
+                </div>
+                <div class="pool long flexrow">
+                    {{!--{{formInput fields.resources.fields.wounds.fields.value value=resources.wounds.value type="number"}}--}}
+                    <span class="sep">/</span>
+                    <span class="total value">{{resources.wounds.max}}</span>
+                </div>
+                <h4 class="label below" data-tooltip="{{resources.wounds.tooltip}}">{{resources.wounds.label}}</h4>
+                <div class="threshold wounds" data-tooltip="{{defenses.wounds.tooltip}}">
+                    <span class="value">{{defenses.wounds.total}}</span>
                 </div>
             </div>
 
-            <div class="currency heroism flexcol">
-                <h4 class="label" data-tooltip="{{resources.heroism.tooltip}}">{{resources.heroism.label}}</h4>
-                <div class="points flexrow">
-                    {{formInput fields.resources.fields.heroism.fields.value value=resources.heroism.value
-                                type="number"}}
-                    <div class="pips flexrow">
-                        {{#each resources.heroism.pips as |pip|}}
-                            <div class="pip {{pip.cssClass}}"></div>
-                        {{/each}}
+            {{!--
+                    <div class="economy flexcol">
+                        <div class="currency action flexcol">
+                            <h4 class="label" data-tooltip="{{resources.action.tooltip}}">{{resources.action.label}}</h4>
+                            <div class="points flexrow">
+                                {{formInput fields.resources.fields.action.fields.value value=resources.action.value type="number"}}
+                                <div class="pips flexrow">
+                                    {{#each resources.action.pips as |pip|}}
+                                        <div class="pip {{pip.cssClass}}"></div>
+                                    {{/each}}
+                                </div>
+                                <span class="max">{{resources.action.max}}</span>
+                            </div>
+                        </div>
+
+                        <div class="currency focus flexcol">
+                            <h4 class="label" data-tooltip="{{resources.focus.tooltip}}">{{resources.focus.label}}</h4>
+                            <div class="points flexrow">
+                                {{formInput fields.resources.fields.focus.fields.value value=resources.focus.value type="number"}}
+                                <div class="pips flexrow">
+                                    {{#each resources.focus.pips as |pip|}}
+                                        <div class="pip {{pip.cssClass}}"></div>
+                                    {{/each}}
+                                </div>
+                                <span class="max">{{resources.focus.max}}</span>
+                            </div>
+                        </div>
+
+                        <div class="currency heroism flexcol">
+                            <h4 class="label" data-tooltip="{{resources.heroism.tooltip}}">{{resources.heroism.label}}</h4>
+                            <div class="points flexrow">
+                                {{formInput fields.resources.fields.heroism.fields.value value=resources.heroism.value
+                                            type="number"}}
+                                <div class="pips flexrow">
+                                    {{#each resources.heroism.pips as |pip|}}
+                                        <div class="pip {{pip.cssClass}}"></div>
+                                    {{/each}}
+                                </div>
+                                <span class="max">{{resources.heroism.max}}</span>
+                            </div>
+                        </div>
                     </div>
-                    <span class="max">{{resources.heroism.max}}</span>
+            --}}
+
+            <div class="resource morale flexcol" style="{{resources.morale.cssPct}}">
+                <h4 class="label above" data-tooltip="{{resources.morale.tooltip}}">{{resources.morale.label}}</h4>
+                <div class="pool short flexrow">
+                    {{!--{{formInput fields.resources.fields.morale.fields.value value=resources.morale.value type="number"}}--}}
+                    <span class="sep">/</span>
+                    <span class="total value">{{resources.morale.max}}</span>
+                </div>
+                <div class="pool long flexrow">
+                    {{!--{{formInput fields.resources.fields.madness.fields.value value=resources.madness.value
+                                type="number"}}--}}
+                    <span class="sep">/</span>
+                    <span class="total value">{{resources.madness.max}}</span>
+                </div>
+                <h4 class="label below" data-tooltip="{{resources.madness.tooltip}}">{{resources.madness.label}}</h4>
+                <div class="threshold madness" data-tooltip="{{defenses.madness.tooltip}}">
+                    <span class="value">{{defenses.madness.total}}</span>
+                </div>
+            </div>
+
+            <div class="resource morale flexcol" style="{{resources.morale.cssPct}}">
+                <h4 class="label above" data-tooltip="{{resources.morale.tooltip}}">{{resources.morale.label}}</h4>
+                <div class="pool short flexrow">
+                    {{!--{{formInput fields.resources.fields.morale.fields.value value=resources.morale.value type="number"}}--}}
+                    <span class="sep">/</span>
+                    <span class="total value">{{resources.morale.max}}</span>
+                </div>
+                <div class="pool long flexrow">
+{{!--                    {{formInput fields.resources.fields.madness.fields.value value=resources.madness.value
+                                type="number"}}--}}
+                    <span class="sep">/</span>
+                    <span class="total value">{{resources.madness.max}}</span>
+                </div>
+                <h4 class="label below" data-tooltip="{{resources.madness.tooltip}}">{{resources.madness.label}}</h4>
+                <div class="threshold madness" data-tooltip="{{defenses.madness.tooltip}}">
+                    <span class="value">{{defenses.madness.total}}</span>
                 </div>
             </div>
         </div>
 
-        <div class="resource morale flexcol" style="{{resources.morale.cssPct}}">
-            <h4 class="label above" data-tooltip="{{resources.morale.tooltip}}">{{resources.morale.label}}</h4>
-            <div class="pool short flexrow">
-                {{formInput fields.resources.fields.morale.fields.value value=resources.morale.value type="number"}}
-                <span class="sep">/</span>
-                <span class="total value">{{resources.morale.max}}</span>
-            </div>
-            <div class="pool long flexrow">
-                {{formInput fields.resources.fields.madness.fields.value value=resources.madness.value type="number"}}
-                <span class="sep">/</span>
-                <span class="total value">{{resources.madness.max}}</span>
-            </div>
-            <h4 class="label below" data-tooltip="{{resources.madness.tooltip}}">{{resources.madness.label}}</h4>
-            <div class="threshold madness" data-tooltip="{{defenses.madness.tooltip}}">
-                <span class="value">{{defenses.madness.total}}</span>
-            </div>
-        </div>
     </div>
 
     <div class="sheet-section defenses">
@@ -138,7 +182,7 @@
     </div>
 
     <div class="sheet-section abilities">
-        <h3>Abilities</h3>
+        <h3>Characteristics</h3>
         <div class="abilities-wrapper">
             {{#each abilityScores as |ability|}}
                 <div class="ability {{ability.id}} {{ability.type}} flexcol" data-ability="{{ability.id}}">

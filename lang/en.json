@@ -534,6 +534,10 @@
   "EFFECT.STATUSES.Staggered": "Staggered",
   "EFFECT.STATUSES.Weakened": "Weakened",
   "EFFECT.STATUSES.FlankedDescription": "You are flanked by multiple enemies who gain additional Boons to their attacks!",
+  "EXPERIENCE": {
+    "Gained": "Gained",
+    "Spent": "Spent"
+  },
   "ITEM": {
     "FIELDS": {
       "category": {

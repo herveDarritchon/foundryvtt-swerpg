@@ -1,8 +1,5 @@
-2025/03/19-15:29:01.022444 30ac1a000 Recovering log #157
-2025/03/19-15:29:01.024041 30ac1a000 Delete type=3 #155
-2025/03/19-15:29:01.024187 30ac1a000 Delete type=0 #157
-2025/03/19-15:29:33.615801 3140c7000 Level-0 table #162: started
-2025/03/19-15:29:33.615830 3140c7000 Level-0 table #162: 0 bytes OK
-2025/03/19-15:29:33.615993 3140c7000 Delete type=0 #160
-2025/03/19-15:29:33.616612 3140c7000 Manual compaction at level-0 from '!items!packhunter000000' @ 72057594037927935 : 1 .. '!items!tuskCharge000000' @ 0 : 0; will stop at (end)
-2025/03/19-15:29:33.616643 3140c7000 Manual compaction at level-1 from '!items!packhunter000000' @ 72057594037927935 : 1 .. '!items!tuskCharge000000' @ 0 : 0; will stop at (end)
+2025/03/20-16:14:06.443479 31378e000 Log #168: 0 ops saved to Table #169 OK
+2025/03/20-16:14:06.443982 31378e000 Archiving /Users/hervedarritchon/Library/Application Support/FoundryVTTV13/Data/systems/swerpg/packs/adversary-talents/000168.log: OK
+2025/03/20-16:14:06.451013 31378e000 Table #132: 2 entries OK
+2025/03/20-16:14:06.451605 31378e000 Archiving /Users/hervedarritchon/Library/Application Support/FoundryVTTV13/Data/systems/swerpg/packs/adversary-talents/MANIFEST-000167: OK
+2025/03/20-16:14:06.452411 31378e000 **** Repaired leveldb /Users/hervedarritchon/Library/Application Support/FoundryVTTV13/Data/systems/swerpg/packs/adversary-talents; recovered 1 files; 1606 bytes. Some data may have been lost. ****

@@ -138,6 +138,7 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
         const {sections: actions, favorites: favoriteActions} = this.#prepareActions();
         return {
             abilityScores: this.#prepareAbilities(),
+            experienceScore: this.#prepareExperience(),
             actions : actions ?? [],
             actor: this.document,
             biography: await this.#prepareBiography(),
@@ -208,6 +209,18 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
         });
         abilities.sort((a, b) => a.sheetOrder - b.sheetOrder);
         return abilities;
+    }
+
+    /**
+     * Prepare formatted experience scores for display on the Actor sheet.
+     * @return {object[]}
+     */
+    #prepareExperience() {
+        let e = this.actor.system.experience;
+        const experience = foundry.utils.deepClone(e);
+        experience.total = e.starting + e.gained
+        experience.available = experience.total - e.spent;
+        return experience;
     }
 
     /* -------------------------------------------- */

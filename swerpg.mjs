@@ -199,7 +199,6 @@ Hooks.once("i18nInit", function () {
         "QUALITY_TIERS", "ENCHANTMENT_TIERS",
         "ADVERSARY.TAXONOMY_CATEGORIES",
         "SKILL.CATEGORIES", "SKILL.RANKS",
-        "SPECIES",
         "WEAPON.CATEGORIES", "WEAPON.PROPERTIES", "WEAPON.SLOTS",
     ];
     for (let c of toLocalize) {

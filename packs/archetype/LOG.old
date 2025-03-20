@@ -1,8 +1,5 @@
-2025/03/19-15:29:01.040759 30b41d000 Recovering log #157
-2025/03/19-15:29:01.041818 30b41d000 Delete type=3 #155
-2025/03/19-15:29:01.042069 30b41d000 Delete type=0 #157
-2025/03/19-15:29:33.614752 3140c7000 Level-0 table #162: started
-2025/03/19-15:29:33.614953 3140c7000 Level-0 table #162: 0 bytes OK
-2025/03/19-15:29:33.615227 3140c7000 Delete type=0 #160
-2025/03/19-15:29:33.616596 3140c7000 Manual compaction at level-0 from '!folders!6Up7ddrphLept3RW' @ 72057594037927935 : 1 .. '!items!tusker0000000000' @ 0 : 0; will stop at (end)
-2025/03/19-15:29:33.616629 3140c7000 Manual compaction at level-1 from '!folders!6Up7ddrphLept3RW' @ 72057594037927935 : 1 .. '!items!tusker0000000000' @ 0 : 0; will stop at (end)
+2025/03/20-16:14:06.482525 312f8b000 Log #168: 0 ops saved to Table #169 OK
+2025/03/20-16:14:06.482863 312f8b000 Archiving /Users/hervedarritchon/Library/Application Support/FoundryVTTV13/Data/systems/swerpg/packs/archetype/000168.log: OK
+2025/03/20-16:14:06.485172 312f8b000 Table #132: 13 entries OK
+2025/03/20-16:14:06.485580 312f8b000 Archiving /Users/hervedarritchon/Library/Application Support/FoundryVTTV13/Data/systems/swerpg/packs/archetype/MANIFEST-000167: OK
+2025/03/20-16:14:06.486159 312f8b000 **** Repaired leveldb /Users/hervedarritchon/Library/Application Support/FoundryVTTV13/Data/systems/swerpg/packs/archetype; recovered 1 files; 4468 bytes. Some data may have been lost. ****

@@ -131,6 +131,22 @@ export default class SwerpgActor extends Actor {
     }
 
     /**
+     * A convenience reference to the Actor available experience.
+     * @type {number}
+     */
+    get availableExperience() {
+        return this.system.experience.available;
+    }
+
+    /**
+     * A convenience reference to the Actor total experience.
+     * @type {number}
+     */
+    get totalExperience() {
+        return this.system.experience.total;
+    }
+
+    /**
      * Is this actor currently "level zero"
      * @returns {boolean}
      */

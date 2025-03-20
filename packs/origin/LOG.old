@@ -1,7 +1,4 @@
-2025/03/19-15:29:01.063863 309c14000 Recovering log #117
-2025/03/19-15:29:01.064736 309c14000 Delete type=0 #117
-2025/03/19-15:29:01.064860 309c14000 Delete type=3 #115
-2025/03/19-15:29:33.616831 3140c7000 Level-0 table #122: started
-2025/03/19-15:29:33.616870 3140c7000 Level-0 table #122: 0 bytes OK
-2025/03/19-15:29:33.617033 3140c7000 Delete type=0 #120
-2025/03/19-15:29:33.618191 3140c7000 Manual compaction at level-0 from 'undefined' @ 72057594037927935 : 1 .. 'undefined' @ 0 : 0; will stop at (end)
+2025/03/20-16:14:06.528031 312f8b000 Log #128: 0 ops saved to Table #129 OK
+2025/03/20-16:14:06.528367 312f8b000 Archiving /Users/hervedarritchon/Library/Application Support/FoundryVTTV13/Data/systems/swerpg/packs/origin/000128.log: OK
+2025/03/20-16:14:06.528749 312f8b000 Archiving /Users/hervedarritchon/Library/Application Support/FoundryVTTV13/Data/systems/swerpg/packs/origin/MANIFEST-000127: OK
+2025/03/20-16:14:06.529382 312f8b000 **** Repaired leveldb /Users/hervedarritchon/Library/Application Support/FoundryVTTV13/Data/systems/swerpg/packs/origin; recovered 0 files; 0 bytes. Some data may have been lost. ****

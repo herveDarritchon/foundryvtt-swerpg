@@ -1,11 +1,24 @@
-{{log "Species" this}}
+{{log "Character Sheet" this}}
 <section class="sheet-header flexcol">
     <header class="title flexrow">
         <input class="charname" name="name" type="text" value="{{source.name}}" placeholder="Actor Name">
         {{#if incomplete.creation}}
-        <a class="button icon level-up fa-solid fa-triangle-exclamation incomplete" data-action="levelUp"
-           data-tooltip="{{incomplete.creationTooltip}}" data-tooltip-class="creation-steps"></a>
+            <a class="button icon level-up fa-solid fa-triangle-exclamation incomplete" data-action="levelUp"
+               data-tooltip="{{incomplete.creationTooltip}}" data-tooltip-class="creation-steps"></a>
         {{/if}}
+        <div class="experience flexrow">
+            <label for="gained" class="experience">Experience</label>
+            <span>{{experienceScore.available}}</span>
+            /<span>{{experienceScore.total}}</span>
+        </div>
+
+        <div class="flexrow">
+            {{formField fields.experience.fields.spent value=source.system.experience.spent type="number"
+                        localize="true"}}
+            {{formField fields.experience.fields.gained value=source.system.experience.gained type="number"
+                        localize="true"}}
+        </div>
+        </div>
     </header>
 
     <div class="subtitle flexrow">
@@ -18,15 +31,17 @@
             <a>{{#if incomplete.background}}<i class="fa-solid fa-circle-plus"></i> {{/if}}{{backgroundName}}</a>
         </h2>
         {{#if actor.system.details.signatureName}}
-        <h2 class="signature">{{actor.system.details.signatureName}}</h2>
+            <h2 class="signature">{{actor.system.details.signatureName}}</h2>
         {{/if}}
         {{#if showMilestones}}
-        <div class="advancement flexrow" data-tooltip="WALKTHROUGH.NextLevel">
-            <div class="bar"><div class="fill" style="width:{{actor.system.advancement.pct}}%"></div></div>
-            <input type="number" name="system.advancement.progress" value="{{actor.system.advancement.progress}}">
-            <span class="slash"></span>
-            <span class="input">{{actor.system.advancement.next}}</span>
-        </div>
+            <div class="advancement flexrow" data-tooltip="WALKTHROUGH.NextLevel">
+                <div class="bar">
+                    <div class="fill" style="width:{{actor.system.advancement.pct}}%"></div>
+                </div>
+                <input type="number" name="system.advancement.progress" value="{{actor.system.advancement.progress}}">
+                <span class="slash"></span>
+                <span class="input">{{actor.system.advancement.next}}</span>
+            </div>
         {{/if}}
     </div>
 </section>

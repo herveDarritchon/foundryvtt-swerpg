@@ -1,8 +1,6 @@
-2025/03/19-15:29:01.074920 30b41d000 Recovering log #167
-2025/03/19-15:29:01.076341 30b41d000 Delete type=0 #167
-2025/03/19-15:29:01.076523 30b41d000 Delete type=3 #164
-2025/03/19-15:29:33.617471 3140c7000 Level-0 table #174: started
-2025/03/19-15:29:33.617492 3140c7000 Level-0 table #174: 0 bytes OK
-2025/03/19-15:29:33.617652 3140c7000 Delete type=0 #172
-2025/03/19-15:29:33.618210 3140c7000 Manual compaction at level-0 from '!folders!MMeWpMmsLOblp07U' @ 72057594037927935 : 1 .. '!journal.pages!veKSDiOWHLaF7Gok.OmJNyYrgeaTwYE7L' @ 0 : 0; will stop at (end)
-2025/03/19-15:29:33.618231 3140c7000 Manual compaction at level-1 from '!folders!MMeWpMmsLOblp07U' @ 72057594037927935 : 1 .. '!journal.pages!veKSDiOWHLaF7Gok.OmJNyYrgeaTwYE7L' @ 0 : 0; will stop at (end)
+2025/03/20-16:14:06.543991 31378e000 Log #181: 27 ops saved to Table #182 OK
+2025/03/20-16:14:06.544372 31378e000 Archiving /Users/hervedarritchon/Library/Application Support/FoundryVTTV13/Data/systems/swerpg/packs/rules/000181.log: OK
+2025/03/20-16:14:06.546492 31378e000 Table #179: 80 entries OK
+2025/03/20-16:14:06.546565 31378e000 Table #182: 27 entries OK
+2025/03/20-16:14:06.546963 31378e000 Archiving /Users/hervedarritchon/Library/Application Support/FoundryVTTV13/Data/systems/swerpg/packs/rules/MANIFEST-000180: OK
+2025/03/20-16:14:06.547451 31378e000 **** Repaired leveldb /Users/hervedarritchon/Library/Application Support/FoundryVTTV13/Data/systems/swerpg/packs/rules; recovered 2 files; 205086 bytes. Some data may have been lost. ****
