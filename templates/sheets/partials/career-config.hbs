@@ -2,24 +2,15 @@
          data-tab="{{tabs.config.id}}" data-group="{{tabs.config.group}}">
 
     <fieldset {{fieldDisabled}}>
-        <legend>{{localize "SPECIES.SHEET.Abilities"}}</legend>
-        {{formField fields.abilities.fields.brawn value=source.system.abilities.brawn localize=true}}
-        {{formField fields.abilities.fields.agility value=source.system.abilities.agility localize=true}}
-        {{formField fields.abilities.fields.intellect value=source.system.abilities.intellect localize=true}}
-        {{formField fields.abilities.fields.cunning value=source.system.abilities.cunning localize=true}}
-        {{formField fields.abilities.fields.willpower value=source.system.abilities.willpower localize=true}}
-        {{formField fields.abilities.fields.presence value=source.system.abilities.presence localize=true}}
+        <legend>{{localize "CAREER.FIELDS.FreeSkill"}}</legend>
+        {{formField fields.freeSkillRank value=source.system.freeSkillRank localize=true}}
     </fieldset>
 
     <fieldset {{fieldDisabled}}>
-        <legend>{{localize "SPECIES.SHEET.Threshold"}}</legend>
-        {{formField fields.woundThreshold.fields.modifier value=source.system.woundThreshold.modifier  localize=true}}
-        {{formField fields.strainThreshold.fields.modifier value=source.system.strainThreshold.modifier  localize=true}}
-    </fieldset>
-
-    <fieldset {{fieldDisabled}}>
-        <legend>{{localize "SPECIES.SHEET.StartingExperience"}}</legend>
-        {{formField fields.startingExperience value=source.system.startingExperience localize=true}}
+        <legend>{{localize "CAREER.FIELDS.Skills"}}</legend>
+        {{#each careerSkills as |skill|}}
+            <span class="career">{{skill.label}}</span>
+        {{/each}}
     </fieldset>
 
 </section>

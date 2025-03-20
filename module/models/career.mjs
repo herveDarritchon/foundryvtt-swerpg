@@ -1,5 +1,3 @@
-import {CHARACTERISTICS} from "../config/attributes.mjs";
-
 /**
  * Data schema, attributes, and methods specific to Ancestry type Items.
  */
@@ -16,111 +14,24 @@ export default class SwerpgCareer extends foundry.abstract.TypeDataModel {
 
         return {
             description: new fields.HTMLField({required: false, initial: undefined}),
-            abilities: new fields.SchemaField({
-                brawn: new fields.NumberField({
-                    required: true,
-                    integer: true,
-                    nullable: false,
-                    min: 1,
-                    max: 5,
-                    initial: 1,
-                    label: CHARACTERISTICS.brawn.label
-                }),
-                agility: new fields.NumberField({
-                    required: true,
-                    integer: true,
-                    nullable: false,
-                    min: 1,
-                    max: 5,
-                    initial: 1,
-                    label: CHARACTERISTICS.agility.label
-                }),
-                intellect: new fields.NumberField({
-                    required: true,
-                    integer: true,
-                    nullable: false,
-                    min: 1,
-                    max: 5,
-                    initial: 1,
-                    label: CHARACTERISTICS.intellect.label
-                }),
-                cunning: new fields.NumberField({
-                    required: true,
-                    integer: true,
-                    nullable: false,
-                    min: 1,
-                    max: 5,
-                    initial: 1,
-                    label: CHARACTERISTICS.cunning.label
-                }),
-                willpower: new fields.NumberField({
-                    required: true,
-                    integer: true,
-                    nullable: false,
-                    min: 1,
-                    max: 5,
-                    initial: 1,
-                    label: CHARACTERISTICS.willpower.label
-                }),
-                presence: new fields.NumberField({
-                    required: true,
-                    integer: true,
-                    nullable: false,
-                    min: 1,
-                    max: 5,
-                    initial: 1,
-                    label: CHARACTERISTICS.presence.label
-                })
-            }),
-            woundThreshold: new fields.SchemaField({
-                modifier: new fields.NumberField({
-                    required: true,
-                    integer: true,
-                    nullable: false,
-                    min: 10,
-                    initial: 10,
-                    max: 30,
-                    label: "SPECIES.FIELDS.WoundThreshold.modifier"
-                }),
-                abilityKey: new fields.StringField({
-                    required: true,
-                    initial: "brawn",
-                    choices: SYSTEM.CHARACTERISTICS,
-                    label: "SPECIES.FIELDS.WoundThreshold.abilityKey"
-                })
-            }),
-            strainThreshold: new fields.SchemaField({
-                modifier: new fields.NumberField({
-                    required: true,
-                    integer: true,
-                    nullable: false,
-                    min: 10,
-                    initial: 10,
-                    max: 30,
-                    label: "SPECIES.FIELDS.StrainThreshold.modifier"
-                }),
-                abilityKey: new fields.StringField({
-                    required: true,
-                    initial: "willpower",
-                    choices: SYSTEM.CHARACTERISTICS,
-                    label: "SPECIES.FIELDS.StrainThreshold.abilityKey"
-                })
-            }),
-            startingExperience: new fields.NumberField({
+            careerSkills: new fields.ArrayField(new fields.SchemaField({
+                id: new fields.StringField({required: true, blank: false}),
+            })),
+            freeSkillRank: new fields.NumberField({
                 required: true,
                 integer: true,
                 nullable: false,
-                min: 100,
-                initial: 100,
-                max: 300,
-                label: "SPECIES.FIELDS.StartingExperience.label",
-                hint: "SPECIES.FIELDS.StartingExperience.hint"
+                min: 0,
+                initial: 4,
+                max: 8,
+                label: "CAREER.FIELDS.FreeSkillRank.label",
+                hint: "CAREER.FIELDS.FreeSkillRank.hint"
             }),
         };
     }
 
     /** @override */
-    static LOCALIZATION_PREFIXES = ["SPECIES"];
+    static LOCALIZATION_PREFIXES = ["CAREER"];
 
     /* -------------------------------------------- */
 

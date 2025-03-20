@@ -8,7 +8,7 @@ export default class CareerSheet extends SwerpgBaseItemSheet {
     /** @inheritDoc */
     static DEFAULT_OPTIONS = {
         item: {
-            type: "species"
+            type: "career"
         },
         position: {
             width: 600,
