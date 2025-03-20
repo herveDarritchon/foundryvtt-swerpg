@@ -206,7 +206,7 @@ export default class SwerpgTalentTree extends PIXI.Container {
       "systems/swerpg/ui/tree/background.webp",
       "systems/swerpg/ui/tree/wheel.webp"
     ];
-    const varities = Object.keys(SYSTEM.ABILITIES).concat(["inactive"]);
+    const varities = Object.keys(SYSTEM.CHARACTERISTICS).concat(["inactive"]);
     for ( const nodeType in SwerpgTalentTreeNode.NODE_TYPES ) {
       for ( const variety of varities ) {
         toLoad.push(`systems/swerpg/ui/tree/nodes/${nodeType}-${variety}.webp`);

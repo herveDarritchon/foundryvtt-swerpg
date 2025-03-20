@@ -40,19 +40,19 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
         Object.assign(i, {
             species: !s.system.details.species?.name,
             background: !s.system.details.background?.name,
-            /*      abilities: context.points.ability.requireInput,
+            /*      characteristics: context.points.ability.requireInput,
                   skills: context.points.skill.available,
                   talents: context.points.talent.available,*/
-            abilities: true,
+            characteristics: true,
             skills: true,
             talents: true,
         });
-        i.creation = i.species || i.background || i.abilities || i.skills || i.talents;
+        i.creation = i.species || i.background || i.characteristics || i.skills || i.talents;
         if (i.creation) {
             i.creationTooltip = "<p>Character Creation Incomplete!</p><ol>";
             if (i.species) i.creationTooltip += "<li>Select Species</li>";
             if (i.background) i.creationTooltip += "<li>Select Background</li>";
-            if (i.abilities) i.creationTooltip += "<li>Spend Ability Points</li>";
+            if (i.characteristics) i.creationTooltip += "<li>Spend Ability Points</li>";
             if (i.skills) i.creationTooltip += "<li>Spend Skill Points</li>";
             if (i.talents) i.creationTooltip += "<li>Spend Talent Points</li>";
             i.creationTooltip += "</ol>";

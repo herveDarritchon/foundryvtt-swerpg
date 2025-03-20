@@ -1,4 +1,4 @@
-import {ABILITIES} from "../config/attributes.mjs";
+import {CHARACTERISTICS} from "../config/attributes.mjs";
 
 /**
  * Data schema, attributes, and methods specific to Ancestry type Items.
@@ -16,7 +16,7 @@ export default class SwerpgSpecies extends foundry.abstract.TypeDataModel {
 
         return {
             description: new fields.HTMLField({required: false, initial: undefined}),
-            abilities: new fields.SchemaField({
+            characteristics: new fields.SchemaField({
                 brawn: new fields.NumberField({
                     required: true,
                     integer: true,
@@ -24,7 +24,7 @@ export default class SwerpgSpecies extends foundry.abstract.TypeDataModel {
                     min: 1,
                     max: 5,
                     initial: 1,
-                    label: ABILITIES.brawn.label
+                    label: CHARACTERISTICS.brawn.label
                 }),
                 agility: new fields.NumberField({
                     required: true,
@@ -33,7 +33,7 @@ export default class SwerpgSpecies extends foundry.abstract.TypeDataModel {
                     min: 1,
                     max: 5,
                     initial: 1,
-                    label: ABILITIES.agility.label
+                    label: CHARACTERISTICS.agility.label
                 }),
                 intellect: new fields.NumberField({
                     required: true,
@@ -42,7 +42,7 @@ export default class SwerpgSpecies extends foundry.abstract.TypeDataModel {
                     min: 1,
                     max: 5,
                     initial: 1,
-                    label: ABILITIES.intellect.label
+                    label: CHARACTERISTICS.intellect.label
                 }),
                 cunning: new fields.NumberField({
                     required: true,
@@ -51,7 +51,7 @@ export default class SwerpgSpecies extends foundry.abstract.TypeDataModel {
                     min: 1,
                     max: 5,
                     initial: 1,
-                    label: ABILITIES.cunning.label
+                    label: CHARACTERISTICS.cunning.label
                 }),
                 willpower: new fields.NumberField({
                     required: true,
@@ -60,7 +60,7 @@ export default class SwerpgSpecies extends foundry.abstract.TypeDataModel {
                     min: 1,
                     max: 5,
                     initial: 1,
-                    label: ABILITIES.willpower.label
+                    label: CHARACTERISTICS.willpower.label
                 }),
                 presence: new fields.NumberField({
                     required: true,
@@ -69,7 +69,7 @@ export default class SwerpgSpecies extends foundry.abstract.TypeDataModel {
                     min: 1,
                     max: 5,
                     initial: 1,
-                    label: ABILITIES.presence.label
+                    label: CHARACTERISTICS.presence.label
                 })
             }),
             woundThreshold: new fields.SchemaField({
@@ -85,7 +85,7 @@ export default class SwerpgSpecies extends foundry.abstract.TypeDataModel {
                 abilityKey: new fields.StringField({
                     required: true,
                     initial: "brawn",
-                    choices: SYSTEM.ABILITIES,
+                    choices: SYSTEM.CHARACTERISTICS,
                     label: "SPECIES.FIELDS.WoundThreshold.abilityKey"
                 })
             }),
@@ -102,7 +102,7 @@ export default class SwerpgSpecies extends foundry.abstract.TypeDataModel {
                 abilityKey: new fields.StringField({
                     required: true,
                     initial: "willpower",
-                    choices: SYSTEM.ABILITIES,
+                    choices: SYSTEM.CHARACTERISTICS,
                     label: "SPECIES.FIELDS.StrainThreshold.abilityKey"
                 })
             }),

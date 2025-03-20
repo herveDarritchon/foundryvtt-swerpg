@@ -9,11 +9,11 @@
  *   wisdom: {id: string, label: string, abbreviation: string}
  * }}
  */
-export const ABILITIES = Object.freeze({
+export const CHARACTERISTICS = Object.freeze({
     brawn: {
         id: "brawn",
-        label: "ABILITIES.Brawn",
-        abbreviation: "ABILITIES.BrawnAbbr",
+        label: "CHARACTERISTICS.Brawn",
+        abbreviation: "CHARACTERISTICS.BrawnAbbr",
         type: "physical",
         color: Color.from("#870321"),
         sheetOrder: 1,
@@ -21,8 +21,8 @@ export const ABILITIES = Object.freeze({
     },
     agility: {
         id: "agility",
-        label: "ABILITIES.Agility",
-        abbreviation: "ABILITIES.AgilityAbbr",
+        label: "CHARACTERISTICS.Agility",
+        abbreviation: "CHARACTERISTICS.AgilityAbbr",
         type: "physical",
         color: Color.from("#113c1b"),
         sheetOrder: 2,
@@ -30,8 +30,8 @@ export const ABILITIES = Object.freeze({
     },
     intellect: {
         id: "intellect",
-        label: "ABILITIES.Intellect",
-        abbreviation: "ABILITIES.IntellectAbbr",
+        label: "CHARACTERISTICS.Intellect",
+        abbreviation: "CHARACTERISTICS.IntellectAbbr",
         type: "mental",
         color: Color.from("#00FFFF"),
         sheetOrder: 3,
@@ -39,8 +39,8 @@ export const ABILITIES = Object.freeze({
     },
     cunning: {
         id: "cunning",
-        label: "ABILITIES.Cunning",
-        abbreviation: "ABILITIES.CunningAbbr",
+        label: "CHARACTERISTICS.Cunning",
+        abbreviation: "CHARACTERISTICS.CunningAbbr",
         type: "mental",
         color: Color.from("#dc7818"),
         sheetOrder: 4,
@@ -48,8 +48,8 @@ export const ABILITIES = Object.freeze({
     },
     willpower: {
         id: "willpower",
-        label: "ABILITIES.Willpower",
-        abbreviation: "ABILITIES.WillpowerAbbr",
+        label: "CHARACTERISTICS.Willpower",
+        abbreviation: "CHARACTERISTICS.WillpowerAbbr",
         type: "mental",
         color: Color.from("#8a8a17"),
         sheetOrder: 5,
@@ -57,8 +57,8 @@ export const ABILITIES = Object.freeze({
     },
     presence: {
         id: "presence",
-        label: "ABILITIES.Presence",
-        abbreviation: "ABILITIES.PresenceAbbr",
+        label: "CHARACTERISTICS.Presence",
+        abbreviation: "CHARACTERISTICS.PresenceAbbr",
         type: "mental",
         color: Color.from("#640c88"),
         sheetOrder: 5,
@@ -96,7 +96,7 @@ export const SKILLS = Object.freeze({
         color: Color.from("#ec7bf1"),
         sheetOrder: 1,
         nodeId: "coo",
-        characteristic: ABILITIES.presence
+        characteristic: CHARACTERISTICS.presence
     },
     discipline: {
         id: "discipline",
@@ -105,7 +105,7 @@ export const SKILLS = Object.freeze({
         color: Color.from("#00FFFF"),
         sheetOrder: 2,
         nodeId: "dis",
-        characteristic: ABILITIES.willpower
+        characteristic: CHARACTERISTICS.willpower
     },
     negotiation: {
         id: "negotiation",
@@ -114,7 +114,7 @@ export const SKILLS = Object.freeze({
         color: Color.from("#8032d8"),
         sheetOrder: 3,
         nodeId: "neg",
-        characteristic: ABILITIES.presence
+        characteristic: CHARACTERISTICS.presence
     },
     perception: {
         id: "perception",
@@ -123,7 +123,7 @@ export const SKILLS = Object.freeze({
         color: Color.from("#0e55d3"),
         sheetOrder: 4,
         nodeId: "per",
-        characteristic: ABILITIES.cunning
+        characteristic: CHARACTERISTICS.cunning
     },
     vigilance: {
         id: "vigilance",
@@ -132,7 +132,7 @@ export const SKILLS = Object.freeze({
         color: Color.from("#4090c1"),
         sheetOrder: 5,
         nodeId: "vig",
-        characteristic: ABILITIES.willpower
+        characteristic: CHARACTERISTICS.willpower
     },
     brawl: {
         id: "brawl",
@@ -141,7 +141,7 @@ export const SKILLS = Object.freeze({
         color: Color.from("#dc7818"),
         sheetOrder: 6,
         nodeId: "bra",
-        characteristic: ABILITIES.brawn
+        characteristic: CHARACTERISTICS.brawn
     },
     melee: {
         id: "melee",
@@ -150,7 +150,7 @@ export const SKILLS = Object.freeze({
         color: Color.from("#00FF00"),
         sheetOrder: 7,
         nodeId: "mel",
-        characteristics: ABILITIES.brawn
+        characteristics: CHARACTERISTICS.brawn
     },
     rangedlight: {
         id: "rangedlight",
@@ -159,7 +159,7 @@ export const SKILLS = Object.freeze({
         color: Color.from("#f61c1c"),
         sheetOrder: 8,
         nodeId: "rgl",
-        characteristics: ABILITIES.agility
+        characteristics: CHARACTERISTICS.agility
     },
     rangedheavy: {
         id: "rangedheavy",
@@ -168,7 +168,7 @@ export const SKILLS = Object.freeze({
         color: Color.from("#7e0808"),
         sheetOrder: 9,
         nodeId: "rgh",
-        characteristics: ABILITIES.agility
+        characteristics: CHARACTERISTICS.agility
     },
     gunnery: {
         id: "gunnery",
@@ -177,7 +177,7 @@ export const SKILLS = Object.freeze({
         color: Color.from("#2c0303"),
         sheetOrder: 10,
         nodeId: "gun",
-        characteristics: ABILITIES.agility
+        characteristics: CHARACTERISTICS.agility
     },
     astrogation: {
         id: "astrogation",
@@ -186,7 +186,7 @@ export const SKILLS = Object.freeze({
         color: Color.from("#085560"),
         sheetOrder: 11,
         nodeId: "ast",
-        characteristics: ABILITIES.intellect
+        characteristics: CHARACTERISTICS.intellect
     },
     athletics: {
         id: "athletics",
@@ -195,7 +195,7 @@ export const SKILLS = Object.freeze({
         color: Color.from("#47331f"),
         sheetOrder: 12,
         nodeId: "ath",
-        characteristics: ABILITIES.brawn
+        characteristics: CHARACTERISTICS.brawn
     },
     charm: {
         id: "charm",
@@ -204,7 +204,7 @@ export const SKILLS = Object.freeze({
         color: Color.from("#ecbd6c"),
         sheetOrder: 13,
         nodeId: "cha",
-        characteristics: ABILITIES.presence
+        characteristics: CHARACTERISTICS.presence
     },
     coercion: {
         id: "coercion",
@@ -213,7 +213,7 @@ export const SKILLS = Object.freeze({
         color: Color.from("#350963"),
         sheetOrder: 14,
         nodeId: "coe",
-        characteristics: ABILITIES.willpower
+        characteristics: CHARACTERISTICS.willpower
     },
     computers: {
         id: "computers",
@@ -222,7 +222,7 @@ export const SKILLS = Object.freeze({
         color: Color.from("#350963"),
         sheetOrder: 15,
         nodeId: "com",
-        characteristics: ABILITIES.intellect
+        characteristics: CHARACTERISTICS.intellect
     },
     coordination: {
         id: "coordination",
@@ -231,7 +231,7 @@ export const SKILLS = Object.freeze({
         color: Color.from("#350963"),
         sheetOrder: 16,
         nodeId: "coo",
-        characteristics: ABILITIES.agility
+        characteristics: CHARACTERISTICS.agility
     },
     deception: {
         id: "deception",
@@ -240,7 +240,7 @@ export const SKILLS = Object.freeze({
         color: Color.from("#350963"),
         sheetOrder: 17,
         nodeId: "dec",
-        characteristics: ABILITIES.cunning
+        characteristics: CHARACTERISTICS.cunning
     },
     leadership: {
         id: "leadership",
@@ -249,7 +249,7 @@ export const SKILLS = Object.freeze({
         color: Color.from("#350963"),
         sheetOrder: 18,
         nodeId: "lea",
-        characteristics: ABILITIES.presence
+        characteristics: CHARACTERISTICS.presence
     },
     mechanics: {
         id: "mechanics",
@@ -258,7 +258,7 @@ export const SKILLS = Object.freeze({
         color: Color.from("#350963"),
         sheetOrder: 19,
         nodeId: "mec",
-        characteristics: ABILITIES.intellect
+        characteristics: CHARACTERISTICS.intellect
     },
     medicine: {
         id: "medicine",
@@ -267,7 +267,7 @@ export const SKILLS = Object.freeze({
         color: Color.from("#350963"),
         sheetOrder: 20,
         nodeId: "med",
-        characteristics: ABILITIES.intellect
+        characteristics: CHARACTERISTICS.intellect
     },
     pilotingplanetary: {
         id: "pilotingplanetary",
@@ -276,7 +276,7 @@ export const SKILLS = Object.freeze({
         color: Color.from("#350963"),
         sheetOrder: 21,
         nodeId: "pip",
-        characteristics: ABILITIES.agility
+        characteristics: CHARACTERISTICS.agility
     },
     pilotingspace: {
         id: "pilotingspace",
@@ -285,7 +285,7 @@ export const SKILLS = Object.freeze({
         color: Color.from("#350963"),
         sheetOrder: 22,
         nodeId: "pis",
-        characteristics: ABILITIES.agility
+        characteristics: CHARACTERISTICS.agility
     },
     resilience: {
         id: "resilience",
@@ -294,7 +294,7 @@ export const SKILLS = Object.freeze({
         color: Color.from("#350963"),
         sheetOrder: 23,
         nodeId: "res",
-        characteristics: ABILITIES.brawn
+        characteristics: CHARACTERISTICS.brawn
     },
     skulduggery: {
         id: "skulduggery",
@@ -303,7 +303,7 @@ export const SKILLS = Object.freeze({
         color: Color.from("#350963"),
         sheetOrder: 24,
         nodeId: "sku",
-        characteristics: ABILITIES.cunning
+        characteristics: CHARACTERISTICS.cunning
     },
     stealth: {
         id: "stealth",
@@ -312,7 +312,7 @@ export const SKILLS = Object.freeze({
         color: Color.from("#350963"),
         sheetOrder: 25,
         nodeId: "ste",
-        characteristics: ABILITIES.agility
+        characteristics: CHARACTERISTICS.agility
     },
     streetwise: {
         id: "streetwise",
@@ -321,7 +321,7 @@ export const SKILLS = Object.freeze({
         color: Color.from("#350963"),
         sheetOrder: 26,
         nodeId: "stw",
-        characteristics: ABILITIES.cunning
+        characteristics: CHARACTERISTICS.cunning
     },
     survival: {
         id: "survival",
@@ -330,7 +330,7 @@ export const SKILLS = Object.freeze({
         color: Color.from("#0b3514"),
         sheetOrder: 27,
         nodeId: "sur",
-        characteristics: ABILITIES.cunning
+        characteristics: CHARACTERISTICS.cunning
     },
     lightsaber: {
         id: "lightsaber",
@@ -339,7 +339,7 @@ export const SKILLS = Object.freeze({
         color: Color.from("#0b3514"),
         sheetOrder: 28,
         nodeId: "lig",
-        characteristic: ABILITIES.brawn
+        characteristic: CHARACTERISTICS.brawn
     },
     coreworlds: {
         id: "coreworlds",
@@ -348,7 +348,7 @@ export const SKILLS = Object.freeze({
         color: Color.from("#0b3514"),
         sheetOrder: 29,
         nodeId: "cow",
-        characteristic: ABILITIES.intellect
+        characteristic: CHARACTERISTICS.intellect
     },
 
 });

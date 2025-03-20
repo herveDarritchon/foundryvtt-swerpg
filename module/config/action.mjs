@@ -1,5 +1,5 @@
 import {SKILLS} from "./skills.mjs";
-import {ABILITIES, DAMAGE_TYPES, RESOURCES} from "./attributes.mjs";
+import {CHARACTERISTICS, DAMAGE_TYPES, RESOURCES} from "./attributes.mjs";
 import Enum from "./enum.mjs";
 
 /**
@@ -773,7 +773,7 @@ for ( const {id, label} of Object.values(DAMAGE_TYPES) ) {
 /*  Specialized Scaling                         */
 /* -------------------------------------------- */
 
-for ( const {id, label} of Object.values(ABILITIES) ) {
+for ( const {id, label} of Object.values(CHARACTERISTICS) ) {
   TAGS[id] = {
     tag: id,
     label,

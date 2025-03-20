@@ -1,5 +1,5 @@
 import * as SKILL from "../../config/skills.mjs";
-import {ABILITIES} from "../../config/attributes.mjs";
+import {CHARACTERISTICS} from "../../config/attributes.mjs";
 
 /**
  * The application used to view and edit a skill page in the system journal.
@@ -37,8 +37,8 @@ export default class SkillPageSheet extends JournalPageSheet {
   #getTags(skill) {
     if ( !skill?.category ) return {};
     const c = SKILL.CATEGORIES[skill.category];
-    const a1 = ABILITIES[skill.abilities[0]];
-    const a2 = ABILITIES[skill.abilities[1]];
+    const a1 = CHARACTERISTICS[skill.abilities[0]];
+    const a2 = CHARACTERISTICS[skill.abilities[1]];
     return [
       {type: "category", label: c.label, color: c.color.css + "50"},
       {type: "ability", label: a1.label, color: a1.color.css + "50"},

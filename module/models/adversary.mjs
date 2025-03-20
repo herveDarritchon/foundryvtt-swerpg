@@ -43,9 +43,9 @@ export default class SwerpgAdversary extends SwerpgActorType {
     });
 
     // Adversaries do not track ability advancement
-    for ( const abilityField of Object.values(schema.abilities.fields) ) {
-      delete abilityField.fields.base;
-      delete abilityField.fields.increases;
+    for ( const characteristicField of Object.values(schema.characteristics.fields) ) {
+      delete characteristicField.fields.base;
+      delete characteristicField.fields.increases;
     }
 
     // Adversaries only use active resource pools
@@ -112,16 +112,16 @@ export default class SwerpgAdversary extends SwerpgActorType {
   /* -------------------------------------------- */
 
   /**
-   * Scale adversary abilities according to their threat level, taxonomy, and archetype.
+   * Scale adversary characteristics according to their threat level, taxonomy, and archetype.
    * @param taxonomy
    * @param archetype
    */
   #scaleAbilities(taxonomy, archetype) {
 
     // Assign base Taxonomy ability scores
-    for ( const k in SYSTEM.ABILITIES ) {
-      const a = this.abilities[k];
-      a.base = taxonomy.abilities[k];
+    for ( const k in SYSTEM.CHARACTERISTICS ) {
+      const a = this.characteristics[k];
+      a.base = taxonomy.characteristics[k];
       a.increases = 0;
       a.value = a.base;
     }
@@ -132,18 +132,18 @@ export default class SwerpgAdversary extends SwerpgActorType {
     // Compute Archetype scaling weights
     const weights = {};
     let wTotal = 0;
-    const maxA = this.advancement.threatLevel <= 0 ? Math.max(...Object.values(archetype.abilities)) : undefined;
-    for ( const k in SYSTEM.ABILITIES ) {
-      const w = this.advancement.threatLevel > 0 ? archetype.abilities[k] : (maxA + 1 - archetype.abilities[k]);
+    const maxA = this.advancement.threatLevel <= 0 ? Math.max(...Object.values(archetype.characteristics)) : undefined;
+    for ( const k in SYSTEM.CHARACTERISTICS ) {
+      const w = this.advancement.threatLevel > 0 ? archetype.characteristics[k] : (maxA + 1 - archetype.characteristics[k]);
       weights[k] = Math.pow(w, 2);
       wTotal += weights[k];
     }
 
     // Pass 1: Unconstrained Increases
     let spent = 0;
-    for ( const k in SYSTEM.ABILITIES ) {
+    for ( const k in SYSTEM.CHARACTERISTICS ) {
       weights[k] /= wTotal;
-      const a = this.abilities[k];
+      const a = this.characteristics[k];
       a.desired = a.base + (toSpend * weights[k]);
       let d = Math.round(Math.abs(toSpend) * weights[k]) * Math.sign(toSpend);
       a.increases = Math.clamp(d, 1 - a.value, 18 - a.value);
@@ -155,17 +155,17 @@ export default class SwerpgAdversary extends SwerpgActorType {
     // Pass 2: Iterative Assignment
     const delta = Math.sign(toSpend - spent);
     const order = [];
-    for ( const k in SYSTEM.ABILITIES ) {
-      const a = this.abilities[k];
+    for ( const k in SYSTEM.CHARACTERISTICS ) {
+      const a = this.characteristics[k];
       const capped = delta > 0 ? a.value === 18 : a.value === 1;
       if ( !capped ) order.push([k, a.desired, a.value]);
     }
     while ( spent !== toSpend ) {
-      if ( !order.length ) break;                                           // No uncapped abilities remaining
+      if ( !order.length ) break;                                           // No uncapped characteristics remaining
       if ( delta > 0 ) order.sort((a, b) => (b[1] - b[2]) - (a[1] - a[2]))  // Increase farthest below desired value
       else order.sort((a, b) => (a[1] - a[2]) - (b[1] - b[2]));             // Reduce farthest above desired value
       const target = order[0];
-      const a = this.abilities[target[0]];
+      const a = this.characteristics[target[0]];
       a.increases += delta;
       target[2] = a.value += delta;
       const capped = delta > 0 ? a.value === 18 : a.value === 1;

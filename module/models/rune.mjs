@@ -18,7 +18,7 @@ export default class SwerpgRune extends foundry.abstract.DataModel {
         return obj;
       }, {})}),
       nameFormat: new fields.NumberField({choices: Object.values(SYSTEM.SPELL.NAME_FORMATS)}),
-      scaling: new fields.StringField({choices: SYSTEM.ABILITIES})
+      scaling: new fields.StringField({choices: SYSTEM.CHARACTERISTICS})
     }
   }
 
@@ -59,7 +59,7 @@ export default class SwerpgRune extends foundry.abstract.DataModel {
    */
   get tags() {
     const tags = [
-      SYSTEM.ABILITIES[this.scaling].label,
+      SYSTEM.CHARACTERISTICS[this.scaling].label,
       SYSTEM.RESOURCES[this.resource].label,
       SYSTEM.DEFENSES[this.defense].label
     ];

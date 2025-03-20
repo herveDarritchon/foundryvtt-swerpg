@@ -17,7 +17,7 @@ export default class SwerpgTaxonomy extends foundry.abstract.TypeDataModel {
       size: new fields.NumberField({required: true, integer: true, nullable: false, min: 1, initial: 3}),
       stride: new fields.NumberField({required: true, integer: true, nullable: false, min: 1, initial: 10}),
       category: new fields.StringField({choices: SYSTEM.ADVERSARY.TAXONOMY_CATEGORIES, initial: "humanoid"}),
-      abilities: new fields.SchemaField(Object.values(SYSTEM.ABILITIES).reduce((obj, ability) => {
+      abilities: new fields.SchemaField(Object.values(SYSTEM.CHARACTERISTICS).reduce((obj, ability) => {
         obj[ability.id] = new fields.NumberField({...nullableInteger, initial: 3, min: 0, max: 6})
         return obj;
       }, {}), {validate: SwerpgTaxonomy.#validateAbilities}),

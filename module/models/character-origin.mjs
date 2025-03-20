@@ -160,7 +160,7 @@ export default class SwerpgCharacter extends SwerpgActorType {
     // Ability Scores
     let abilityPointsBought = 0;
     let abilityPointsSpent = 0;
-    for ( let a in SYSTEM.ABILITIES ) {
+    for ( let a in SYSTEM.CHARACTERISTICS ) {
       const ability = this.abilities[a];
 
       // Configure initial value

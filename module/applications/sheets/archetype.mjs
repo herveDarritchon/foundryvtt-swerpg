@@ -23,7 +23,7 @@ export default class ArchetypeSheet extends BackgroundSheet {
   async _prepareContext(options) {
     const context = await super._prepareContext(options);
     return Object.assign(context, {
-      abilities: Object.values(SYSTEM.ABILITIES).map(ability => ({
+      abilities: Object.values(SYSTEM.CHARACTERISTICS).map(ability => ({
         field: context.fields.abilities.fields[ability.id],
         id: ability.id,
         label: ability.label,

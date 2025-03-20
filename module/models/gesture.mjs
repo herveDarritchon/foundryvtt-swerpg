@@ -20,7 +20,7 @@ export default class SwerpgGesture extends foundry.abstract.DataModel {
       }),
       hands: new fields.NumberField({required: true, integer: true, min: 0, max: 2}),
       range: actionSchema.range,
-      scaling: new fields.StringField({required: true, choices: SYSTEM.ABILITIES}),
+      scaling: new fields.StringField({required: true, choices: SYSTEM.CHARACTERISTICS}),
       target: actionSchema.target
     }
   }
@@ -67,7 +67,7 @@ export default class SwerpgGesture extends foundry.abstract.DataModel {
    * @returns {string[]}
    */
   get tags() {
-    const tags = [SYSTEM.ABILITIES[this.scaling].label];
+    const tags = [SYSTEM.CHARACTERISTICS[this.scaling].label];
 
     // Damage
     if ( this.damage.base ) tags.push(`${this.damage.base} Damage`);

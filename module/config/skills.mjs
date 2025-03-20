@@ -122,66 +122,66 @@ export const SKILLS = {
   athletics: {
     id: "athletics",
     category: "exp",
-    abilities: ["strength", "dexterity"]
+    characteristics: ["strength", "dexterity"]
   },
   awareness: {
     id: "awareness",
     category: "exp",
-    abilities: ["intellect", "wisdom"]
+    characteristics: ["intellect", "wisdom"]
   },
   stealth: {
     id: "stealth",
     category: "exp",
-    abilities: ["dexterity", "intellect"]
+    characteristics: ["dexterity", "intellect"]
   },
   wilderness: {
     id: "wilderness",
     category: "exp",
-    abilities: ["toughness", "wisdom"]
+    characteristics: ["toughness", "wisdom"]
   },
 
   // Knowledge Skills
   arcana: {
     id: "arcana",
     category: "kno",
-    abilities: ["intellect", "presence"]
+    characteristics: ["intellect", "presence"]
   },
   medicine: {
     id: "medicine",
     category: "kno",
-    abilities: ["toughness", "wisdom"]
+    characteristics: ["toughness", "wisdom"]
   },
   science: {
     id: "science",
     category: "kno",
-    abilities: ["intellect", "wisdom"]
+    characteristics: ["intellect", "wisdom"]
   },
   society: {
     id: "society",
     category: "kno",
-    abilities: ["presence", "wisdom"]
+    characteristics: ["presence", "wisdom"]
   },
 
   // Social Skills
   deception: {
     id: "deception",
     category: "soc",
-    abilities: ["intellect", "presence"]
+    characteristics: ["intellect", "presence"]
   },
   diplomacy: {
     id: "diplomacy",
     category: "soc",
-    abilities: ["wisdom", "presence"]
+    characteristics: ["wisdom", "presence"]
   },
   intimidation: {
     id: "intimidation",
     category: "soc",
-    abilities: ["strength", "presence"]
+    characteristics: ["strength", "presence"]
   },
   performance: {
     id: "performance",
     category: "soc",
-    abilities: ["dexterity", "presence"]
+    characteristics: ["dexterity", "presence"]
   }
 };
 

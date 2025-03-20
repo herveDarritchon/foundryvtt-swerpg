@@ -14,8 +14,8 @@ export default class SwerpgAncestry extends foundry.abstract.TypeDataModel {
       description: new fields.HTMLField({required: false, initial: undefined}),
       size: new fields.NumberField({required: true, integer: true, nullable: false, min: 1, initial: 3}),
       stride: new fields.NumberField({required: true, integer: true, nullable: false, min: 1, initial: 10}),
-      primary: new fields.StringField({required: false, initial: undefined, choices: SYSTEM.ABILITIES}),
-      secondary: new fields.StringField({required: false, initial: undefined, choices: SYSTEM.ABILITIES}),
+      primary: new fields.StringField({required: false, initial: undefined, choices: SYSTEM.CHARACTERISTICS}),
+      secondary: new fields.StringField({required: false, initial: undefined, choices: SYSTEM.CHARACTERISTICS}),
       resistance: new fields.StringField({blank: true, choices: SYSTEM.DAMAGE_TYPES}),
       vulnerability: new fields.StringField({blank: true, choices: SYSTEM.DAMAGE_TYPES})
     };

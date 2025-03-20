@@ -416,7 +416,7 @@ export default class SwerpgSpellAction extends SwerpgAction {
     }
 
     delete tags.action.spell;
-    tags.action.scaling = Array.from(this.scaling).map(a => SYSTEM.ABILITIES[a].label).join("/");
+    tags.action.scaling = Array.from(this.scaling).map(a => SYSTEM.CHARACTERISTICS[a].label).join("/");
     if ( this.damage.healing ) tags.action.healing = "Healing";
     else tags.action.defense = SYSTEM.DEFENSES[this.defense].label;
     tags.action.resource = SYSTEM.RESOURCES[this.rune.resource].label;

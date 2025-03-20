@@ -19,8 +19,8 @@ export default class SwerpgHero extends SwerpgActorType {
     const schema = super.defineSchema();
 
     // Extra validation for abilities
-    for ( const abilityField of Object.values(schema.abilities.fields) ) {
-      abilityField.options.validate = SwerpgHero.#validateAttribute;
+    for ( const characteristicField of Object.values(schema.characteristics.fields) ) {
+      characteristicField.options.validate = SwerpgHero.#validateAttribute;
     }
 
     // Advancement
@@ -166,7 +166,7 @@ export default class SwerpgHero extends SwerpgActorType {
     // Ability Scores
     let abilityPointsBought = 0;
     let abilityPointsSpent = 0;
-    for ( let a in SYSTEM.ABILITIES ) {
+    for ( let a in SYSTEM.CHARACTERISTICS ) {
       const ability = this.abilities[a];
 
       // Configure initial value

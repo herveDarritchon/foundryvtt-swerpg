@@ -137,7 +137,7 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
         const {inventory, talents, iconicSpells} = this.#prepareItems();
         const {sections: actions, favorites: favoriteActions} = this.#prepareActions();
         return {
-            abilityScores: this.#prepareAbilities(),
+            characteristicScores: this.#prepareCharacteristics(),
             experienceScore: this.#prepareExperience(),
             actions : actions ?? [],
             actor: this.document,
@@ -198,17 +198,17 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
      * Prepare formatted ability scores for display on the Actor sheet.
      * @return {object[]}
      */
-    #prepareAbilities() {
-        const a = this.actor.system.abilities;
-        const abilities = Object.values(SYSTEM.ABILITIES).map(cfg => {
-            const ability = foundry.utils.deepClone(cfg);
-            ability.value = a[ability.id].value;
-            ability.canIncrease = this.actor.canPurchaseAbility(ability.id, 1);
-            ability.canDecrease = this.actor.canPurchaseAbility(ability.id, -1);
-            return ability;
+    #prepareCharacteristics() {
+        const c = this.actor.system.characteristics;
+        const characteristics = Object.values(SYSTEM.CHARACTERISTICS).map(cfg => {
+            const characteristic = foundry.utils.deepClone(cfg);
+            characteristic.value = c[characteristic.id].value;
+            characteristic.canIncrease = this.actor.canPurchaseAbility(characteristic.id, 1);
+            characteristic.canDecrease = this.actor.canPurchaseAbility(characteristic.id, -1);
+            return characteristic;
         });
-        abilities.sort((a, b) => a.sheetOrder - b.sheetOrder);
-        return abilities;
+        characteristics.sort((a, b) => a.sheetOrder - b.sheetOrder);
+        return characteristics;
     }
 
     /**

@@ -1152,7 +1152,7 @@
 .swerpg.sheet.actor .tab.attributes .resources .economy .heroism {
   --resource-color: #ff0059;
 }
-.swerpg.sheet.actor .tab.attributes .abilities {
+.swerpg.sheet.actor .tab.attributes .characteristics {
   grid-column: 1;
   grid-row: 2;
   display: flex;
@@ -1161,10 +1161,10 @@
   justify-items: center;
   padding: 1.5rem 0 0;
 }
-.swerpg.sheet.actor .tab.attributes .abilities .abilities-wrapper {
+.swerpg.sheet.actor .tab.attributes .characteristics .characteristics-wrapper {
   display: flex;
 }
-.swerpg.sheet.actor .tab.attributes .abilities .ability {
+.swerpg.sheet.actor .tab.attributes .characteristics .characteristic {
   position: relative;
   width: 80px;
   height: 80px;
@@ -1175,15 +1175,15 @@
   background: url(../ui/abilities/swerpg-frame.webp) no-repeat center;
   background-size: cover;
 }
-.swerpg.sheet.actor .tab.attributes .abilities .ability .label {
+.swerpg.sheet.actor .tab.attributes .characteristics .characteristic .label {
   position: absolute;
   top: -8px;
 }
-.swerpg.sheet.actor .tab.attributes .abilities .ability .input {
+.swerpg.sheet.actor .tab.attributes .characteristics .characteristic .input {
   font-size: var(--font-size-24);
   font-family: var(--font-h1);
 }
-.swerpg.sheet.actor .tab.attributes .abilities .ability::before {
+.swerpg.sheet.actor .tab.attributes .characteristics .characteristic::before {
   display: block;
   position: absolute;
   pointer-events: none;
@@ -1192,38 +1192,38 @@
   height: 80px;
   background-size: 54px;
 }
-.swerpg.sheet.actor .tab.attributes .abilities .strength {
+.swerpg.sheet.actor .tab.attributes .characteristics .strength {
   --ability-icon: url("../ui/abilities/strength.svg");
 }
-.swerpg.sheet.actor .tab.attributes .abilities .toughness {
+.swerpg.sheet.actor .tab.attributes .characteristics .toughness {
   --ability-icon: url("../ui/abilities/toughness.svg");
 }
-.swerpg.sheet.actor .tab.attributes .abilities .dexterity {
+.swerpg.sheet.actor .tab.attributes .characteristics .dexterity {
   --ability-icon: url("../ui/abilities/dexterity.svg");
 }
-.swerpg.sheet.actor .tab.attributes .abilities .wisdom {
+.swerpg.sheet.actor .tab.attributes .characteristics .wisdom {
   --ability-icon: url("../ui/abilities/wisdom.svg");
 }
-.swerpg.sheet.actor .tab.attributes .abilities .presence {
+.swerpg.sheet.actor .tab.attributes .characteristics .presence {
   --ability-icon: url("../ui/abilities/presence.svg");
 }
-.swerpg.sheet.actor .tab.attributes .abilities .intellect {
+.swerpg.sheet.actor .tab.attributes .characteristics .intellect {
   --ability-icon: url("../ui/abilities/intellect.svg");
 }
-.swerpg.sheet.actor .tab.attributes .abilities a.button {
+.swerpg.sheet.actor .tab.attributes .characteristics a.button {
   position: absolute;
   height: 20px;
   width: 20px;
   top: -10px;
   opacity: 1;
 }
-.swerpg.sheet.actor .tab.attributes .abilities a.button.decrease {
+.swerpg.sheet.actor .tab.attributes .characteristics a.button.decrease {
   left: -10px;
 }
-.swerpg.sheet.actor .tab.attributes .abilities a.button.increase {
+.swerpg.sheet.actor .tab.attributes .characteristics a.button.increase {
   right: -10px;
 }
-.swerpg.sheet.actor .tab.attributes .abilities .point-pools {
+.swerpg.sheet.actor .tab.attributes .characteristics .point-pools {
   position: absolute;
   padding: 0 0 0 0.5rem;
   bottom: -0.5rem;
@@ -1233,11 +1233,11 @@
   background: var(--color-frame-bg);
   gap: 0.5rem;
 }
-.swerpg.sheet.actor .tab.attributes .abilities .point-pools .label {
+.swerpg.sheet.actor .tab.attributes .characteristics .point-pools .label {
   flex: none;
   color: var(--color-secondary);
 }
-.swerpg.sheet.actor .tab.attributes .abilities .point-pools .value {
+.swerpg.sheet.actor .tab.attributes .characteristics .point-pools .value {
   flex: none;
   width: 24px;
   height: 24px;
@@ -1713,31 +1713,31 @@
 /** ----------------------------------------- *
  *  Archetype Sheet                           *
  * ------------------------------------------ */
-.swerpg.archetype .abilities .form-fields,
-.swerpg.taxonomy .abilities .form-fields,
+.swerpg.archetype .characteristics .form-fields,
+.swerpg.taxonomy .characteristics .form-fields,
 .swerpg.archetype .resistances .form-fields,
 .swerpg.taxonomy .resistances .form-fields {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-gap: 0.5rem;
 }
-.swerpg.archetype .abilities .form-fields label,
-.swerpg.taxonomy .abilities .form-fields label,
+.swerpg.archetype .characteristics .form-fields label,
+.swerpg.taxonomy .characteristics .form-fields label,
 .swerpg.archetype .resistances .form-fields label,
 .swerpg.taxonomy .resistances .form-fields label {
   padding: 0.25rem;
   border: 1px solid var(--color-frame);
   border-radius: 6px;
 }
-.swerpg.archetype .abilities .form-fields input,
-.swerpg.taxonomy .abilities .form-fields input,
+.swerpg.archetype .characteristics .form-fields input,
+.swerpg.taxonomy .characteristics .form-fields input,
 .swerpg.archetype .resistances .form-fields input,
 .swerpg.taxonomy .resistances .form-fields input {
   --input-border-color: transparent;
   font-size: var(--font-size-18);
 }
-.swerpg.archetype .abilities .sum,
-.swerpg.taxonomy .abilities .sum,
+.swerpg.archetype .characteristics .sum,
+.swerpg.taxonomy .characteristics .sum,
 .swerpg.archetype .resistances .sum,
 .swerpg.taxonomy .resistances .sum {
   margin-left: 0.25rem;
@@ -1745,8 +1745,8 @@
   border: 1px solid green;
   border-radius: 4px;
 }
-.swerpg.archetype .abilities .sum.invalid,
-.swerpg.taxonomy .abilities .sum.invalid,
+.swerpg.archetype .characteristics .sum.invalid,
+.swerpg.taxonomy .characteristics .sum.invalid,
 .swerpg.archetype .resistances .sum.invalid,
 .swerpg.taxonomy .resistances .sum.invalid {
   border-color: red;

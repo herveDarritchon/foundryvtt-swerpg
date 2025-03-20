@@ -1,12 +1,12 @@
 import SwerpgTalent from "../models/talent.mjs";
-import {ABILITIES} from "./attributes.mjs";
+import {CHARACTERISTICS} from "./attributes.mjs";
 
 export default class SwerpgTalentNode {
     constructor({
                     id,
                     tier = 0,
                     type = "choice",
-                    abilities = [],
+                    characteristics = [],
                     angle,
                     distance = 200,
                     connected = [],
@@ -16,7 +16,7 @@ export default class SwerpgTalentNode {
         if (SwerpgTalentNode.#nodes.has(id)) {
             throw new Error(`SwerpgTalentNode id "${id}" is already defined.`);
         }
-        this.#initializeNode({id, tier, type, abilities, angle, distance, connected, point, groups});
+        this.#initializeNode({id, tier, type, abilities: characteristics, angle, distance, connected, point, groups});
     }
 
     static #counters = {};
@@ -188,9 +188,9 @@ export default class SwerpgTalentNode {
 
         // Node color
         for (const ability of this.abilities) {
-            if (!this.color) this.color = ABILITIES[ability]?.color ?? Color.from("#113c1b");
+            if (!this.color) this.color = CHARACTERISTICS[ability]?.color ?? Color.from("#113c1b");
             else {
-                const c2 = ABILITIES[ability]?.color?.maximize(0.5) ?? Color.from("#113c1b").maximize(0.5);
+                const c2 = CHARACTERISTICS[ability]?.color?.maximize(0.5) ?? Color.from("#113c1b").maximize(0.5);
                 this.color = this.color.mix(c2, 0.5);
             }
         }
@@ -292,7 +292,7 @@ export default class SwerpgTalentNode {
      * @returns {-1|0|1} Is ability1 counter-clockwise of ability2 (-1), clockwise of ability2 (1), or not adjacent (0)
      */
     static areAbilitiesAdjacent(ability1, ability2) {
-        const abilities = Object.keys(SYSTEM.ABILITIES);
+        const abilities = Object.keys(SYSTEM.CHARACTERISTICS);
         abilities.push(abilities[0]);
         const idx = abilities.findIndex(a => a === ability1);
         if (abilities[idx + 1] === ability2) return 1;
@@ -311,7 +311,7 @@ export default class SwerpgTalentNode {
         return Object.entries(foundry.utils.flattenObject(requirements)).reduce((obj, r) => {
             const [k, v] = r;
             const o = obj[k] = {value: v};
-            if (k.startsWith("abilities.")) o.label = SYSTEM.ABILITIES[k.split(".")[1]]?.label ?? "unknown";
+            if (k.startsWith("abilities.")) o.label = SYSTEM.CHARACTERISTICS[k.split(".")[1]]?.label ?? "unknown";
             else if (k === "advancement.level") o.label = "Level"
             else if (k.startsWith("skills.")) o.label = SYSTEM.SKILLS[k.split(".")[1]].label;
             else o.label = k;
@@ -340,7 +340,7 @@ export default class SwerpgTalentNode {
 
         new SwerpgTalentNode({
             id: "dex0a",
-            abilities: ["dexterity"],
+            characteristics: ["dexterity"],
             type: "utility",
             tier: 0,
             angle: 15,
@@ -349,7 +349,7 @@ export default class SwerpgTalentNode {
 
         new SwerpgTalentNode({
             id: "dex0b",
-            abilities: ["dexterity"],
+            characteristics: ["dexterity"],
             type: "attack",
             tier: 0,
             angle: 45,
@@ -358,7 +358,7 @@ export default class SwerpgTalentNode {
 
         new SwerpgTalentNode({
             id: "tou0",
-            abilities: ["toughness"],
+            characteristics: ["toughness"],
             type: "defense",
             tier: 0,
             angle: 75,
@@ -367,7 +367,7 @@ export default class SwerpgTalentNode {
 
         new SwerpgTalentNode({
             id: "tou0b",
-            abilities: ["toughness"],
+            characteristics: ["toughness"],
             type: "attack",
             tier: 0,
             angle: 105,
@@ -376,7 +376,7 @@ export default class SwerpgTalentNode {
 
         new SwerpgTalentNode({
             id: "str0",
-            abilities: ["strength"],
+            characteristics: ["strength"],
             type: "attack",
             tier: 0,
             angle: 135,
@@ -385,7 +385,7 @@ export default class SwerpgTalentNode {
 
         new SwerpgTalentNode({
             id: "str0b",
-            abilities: ["strength"],
+            characteristics: ["strength"],
             type: "utility",
             tier: 0,
             angle: 165,
@@ -394,7 +394,7 @@ export default class SwerpgTalentNode {
 
         new SwerpgTalentNode({
             id: "wis0",
-            abilities: ["wisdom"],
+            characteristics: ["wisdom"],
             type: "utility",
             tier: 0,
             angle: 195,
@@ -403,7 +403,7 @@ export default class SwerpgTalentNode {
 
         new SwerpgTalentNode({
             id: "wis0b",
-            abilities: ["wisdom"],
+            characteristics: ["wisdom"],
             type: "magic",
             tier: 0,
             angle: 225,
@@ -412,7 +412,7 @@ export default class SwerpgTalentNode {
 
         new SwerpgTalentNode({
             id: "pre0",
-            abilities: ["presence"],
+            characteristics: ["presence"],
             type: "attack",
             tier: 0,
             angle: 255,
@@ -421,7 +421,7 @@ export default class SwerpgTalentNode {
 
         new SwerpgTalentNode({
             id: "pre0b",
-            abilities: ["presence"],
+            characteristics: ["presence"],
             type: "magic",
             tier: 0,
             angle: 285,
@@ -430,7 +430,7 @@ export default class SwerpgTalentNode {
 
         new SwerpgTalentNode({
             id: "int0",
-            abilities: ["intellect"],
+            characteristics: ["intellect"],
             type: "magic",
             tier: 0,
             angle: 315,
@@ -439,7 +439,7 @@ export default class SwerpgTalentNode {
 
         new SwerpgTalentNode({
             id: "int0b",
-            abilities: ["intellect"],
+            characteristics: ["intellect"],
             type: "utility",
             tier: 0,
             angle: 345,
@@ -452,7 +452,7 @@ export default class SwerpgTalentNode {
 
         const intdex1 = new SwerpgTalentNode({
             id: "intdex1",
-            abilities: ["intellect", "dexterity"],
+            characteristics: ["intellect", "dexterity"],
             type: "attack",
             tier: 1,
             connected: ["dex0a", "int0b"]
@@ -460,7 +460,7 @@ export default class SwerpgTalentNode {
 
         new SwerpgTalentNode({
             id: "dex1a",
-            abilities: ["dexterity"],
+            characteristics: ["dexterity"],
             type: "utility",
             tier: 1,
             connected: ["dex0a", "dex0b", "intdex1"]
@@ -468,7 +468,7 @@ export default class SwerpgTalentNode {
 
         new SwerpgTalentNode({
             id: "dex1b",
-            abilities: ["dexterity"],
+            characteristics: ["dexterity"],
             type: "attack",
             tier: 1,
             connected: ["dex0a", "dex0b", "dex1a"]
@@ -476,7 +476,7 @@ export default class SwerpgTalentNode {
 
         new SwerpgTalentNode({
             id: "dextou1",
-            abilities: ["dexterity", "toughness"],
+            characteristics: ["dexterity", "toughness"],
             type: "move",
             tier: 1,
             connected: ["dex0b", "tou0", "dex1b"]
@@ -484,7 +484,7 @@ export default class SwerpgTalentNode {
 
         new SwerpgTalentNode({
             id: "tou1a",
-            abilities: ["toughness"],
+            characteristics: ["toughness"],
             type: "defense",
             tier: 1,
             connected: ["tou0", "tou0b", "dextou1"]
@@ -492,7 +492,7 @@ export default class SwerpgTalentNode {
 
         new SwerpgTalentNode({
             id: "tou1b",
-            abilities: ["toughness"],
+            characteristics: ["toughness"],
             type: "heal",
             tier: 1,
             connected: ["tou0", "tou0b", "tou1a"]
@@ -500,7 +500,7 @@ export default class SwerpgTalentNode {
 
         new SwerpgTalentNode({
             id: "toustr1",
-            abilities: ["toughness", "strength"],
+            characteristics: ["toughness", "strength"],
             type: "move",
             tier: 1,
             connected: ["tou0b", "str0", "tou1b"]
@@ -508,7 +508,7 @@ export default class SwerpgTalentNode {
 
         new SwerpgTalentNode({
             id: "str1a",
-            abilities: ["strength"],
+            characteristics: ["strength"],
             type: "attack",
             tier: 1,
             connected: ["str0", "str0b", "toustr1"]
@@ -516,7 +516,7 @@ export default class SwerpgTalentNode {
 
         new SwerpgTalentNode({
             id: "str1b",
-            abilities: ["strength"],
+            characteristics: ["strength"],
             type: "utility",
             tier: 1,
             connected: ["str0", "str0b", "str1a"]
@@ -524,7 +524,7 @@ export default class SwerpgTalentNode {
 
         new SwerpgTalentNode({
             id: "strwis1",
-            abilities: ["strength", "wisdom"],
+            characteristics: ["strength", "wisdom"],
             type: "attack",
             tier: 1,
             connected: ["str0b", "wis0", "str1b"]
@@ -532,7 +532,7 @@ export default class SwerpgTalentNode {
 
         new SwerpgTalentNode({
             id: "wis1a",
-            abilities: ["wisdom"],
+            characteristics: ["wisdom"],
             type: "utility",
             tier: 1,
             connected: ["wis0", "wis0b", "strwis1"]
@@ -540,7 +540,7 @@ export default class SwerpgTalentNode {
 
         new SwerpgTalentNode({
             id: "wis1b",
-            abilities: ["wisdom"],
+            characteristics: ["wisdom"],
             type: "magic",
             tier: 1,
             connected: ["wis0", "wis0b", "wis1a"]
@@ -548,7 +548,7 @@ export default class SwerpgTalentNode {
 
         new SwerpgTalentNode({
             id: "wispre1",
-            abilities: ["wisdom", "presence"],
+            characteristics: ["wisdom", "presence"],
             type: "magic",
             tier: 1,
             connected: ["wis0b", "pre0", "wis1b"]
@@ -556,7 +556,7 @@ export default class SwerpgTalentNode {
 
         new SwerpgTalentNode({
             id: "pre1a",
-            abilities: ["presence"],
+            characteristics: ["presence"],
             type: "heal",
             tier: 1,
             connected: ["pre0", "pre0b", "wispre1"]
@@ -564,7 +564,7 @@ export default class SwerpgTalentNode {
 
         new SwerpgTalentNode({
             id: "pre1b",
-            abilities: ["presence"],
+            characteristics: ["presence"],
             type: "magic",
             tier: 1,
             connected: ["pre0", "pre0b", "pre1a"]
@@ -572,7 +572,7 @@ export default class SwerpgTalentNode {
 
         new SwerpgTalentNode({
             id: "preint1",
-            abilities: ["presence", "intellect"],
+            characteristics: ["presence", "intellect"],
             type: "magic",
             tier: 1,
             connected: ["pre0b", "int0", "pre1b"]
@@ -580,7 +580,7 @@ export default class SwerpgTalentNode {
 
         new SwerpgTalentNode({
             id: "int1a",
-            abilities: ["intellect"],
+            characteristics: ["intellect"],
             type: "magic",
             tier: 1,
             connected: ["int0", "int0b", "preint1"]
@@ -588,7 +588,7 @@ export default class SwerpgTalentNode {
 
         const int1b = new SwerpgTalentNode({
             id: "int1b",
-            abilities: ["intellect"],
+            characteristics: ["intellect"],
             type: "move",
             tier: 1,
             connected: ["int0", "int0b", "int1a"]
@@ -601,7 +601,7 @@ export default class SwerpgTalentNode {
 
         const intdex2 = new SwerpgTalentNode({
             id: "intdex2",
-            abilities: ["intellect", "dexterity"],
+            characteristics: ["intellect", "dexterity"],
             type: "utility",
             tier: 2,
             connected: ["int1b", "intdex1", "dex1a"]
@@ -609,7 +609,7 @@ export default class SwerpgTalentNode {
 
         new SwerpgTalentNode({
             id: "dex2a",
-            abilities: ["dexterity"],
+            characteristics: ["dexterity"],
             type: "magic",
             tier: 2,
             connected: ["dex1a", "intdex2"]
@@ -617,7 +617,7 @@ export default class SwerpgTalentNode {
 
         new SwerpgTalentNode({
             id: "dex2b",
-            abilities: ["dexterity"],
+            characteristics: ["dexterity"],
             type: "attack",
             tier: 2,
             connected: ["dex1a", "dex1b", "dex2a"]
@@ -625,7 +625,7 @@ export default class SwerpgTalentNode {
 
         new SwerpgTalentNode({
             id: "dex2c",
-            abilities: ["dexterity"],
+            characteristics: ["dexterity"],
             type: "move",
             tier: 2,
             connected: ["dex1b", "dex2b"]
@@ -633,7 +633,7 @@ export default class SwerpgTalentNode {
 
         new SwerpgTalentNode({
             id: "dextou2",
-            abilities: ["dexterity", "toughness"],
+            characteristics: ["dexterity", "toughness"],
             type: "defense",
             tier: 2,
             connected: ["dex1b", "dextou1", "tou1a", "dex2c"]
@@ -641,7 +641,7 @@ export default class SwerpgTalentNode {
 
         new SwerpgTalentNode({
             id: "tou2a",
-            abilities: ["toughness"],
+            characteristics: ["toughness"],
             type: "defense",
             tier: 2,
             connected: ["tou1a", "dextou2"]
@@ -649,7 +649,7 @@ export default class SwerpgTalentNode {
 
         new SwerpgTalentNode({
             id: "tou2b",
-            abilities: ["toughness"],
+            characteristics: ["toughness"],
             type: "magic",
             tier: 2,
             connected: ["tou1a", "tou1b", "tou2a"]
@@ -657,7 +657,7 @@ export default class SwerpgTalentNode {
 
         new SwerpgTalentNode({
             id: "tou2c",
-            abilities: ["toughness"],
+            characteristics: ["toughness"],
             type: "attack",
             tier: 2,
             connected: ["tou1b", "tou2b"]
@@ -665,7 +665,7 @@ export default class SwerpgTalentNode {
 
         new SwerpgTalentNode({
             id: "toustr2",
-            abilities: ["toughness", "strength"],
+            characteristics: ["toughness", "strength"],
             type: "defense",
             tier: 2,
             connected: ["tou1b", "toustr1", "str1a", "tou2c"]
@@ -673,7 +673,7 @@ export default class SwerpgTalentNode {
 
         new SwerpgTalentNode({
             id: "str2a",
-            abilities: ["strength"],
+            characteristics: ["strength"],
             type: "utility",
             tier: 2,
             connected: ["str1a", "toustr2"]
@@ -681,7 +681,7 @@ export default class SwerpgTalentNode {
 
         new SwerpgTalentNode({
             id: "str2b",
-            abilities: ["strength"],
+            characteristics: ["strength"],
             type: "attack",
             tier: 2,
             connected: ["str1a", "str1b", "str2a"]
@@ -689,7 +689,7 @@ export default class SwerpgTalentNode {
 
         new SwerpgTalentNode({
             id: "str2c",
-            abilities: ["strength"],
+            characteristics: ["strength"],
             type: "magic",
             tier: 2,
             connected: ["str1b", "str2b"]
@@ -697,7 +697,7 @@ export default class SwerpgTalentNode {
 
         new SwerpgTalentNode({
             id: "strwis2",
-            abilities: ["strength", "wisdom"],
+            characteristics: ["strength", "wisdom"],
             type: "utility",
             tier: 2,
             connected: ["str1b", "strwis1", "wis1a", "str2c"]
@@ -705,7 +705,7 @@ export default class SwerpgTalentNode {
 
         new SwerpgTalentNode({
             id: "wis2a",
-            abilities: ["wisdom"],
+            characteristics: ["wisdom"],
             type: "defense",
             tier: 2,
             connected: ["wis1a", "strwis2"]
@@ -713,7 +713,7 @@ export default class SwerpgTalentNode {
 
         new SwerpgTalentNode({
             id: "wis2b",
-            abilities: ["wisdom"],
+            characteristics: ["wisdom"],
             type: "magic",
             tier: 2,
             connected: ["wis1a", "wis1b", "wis2a"]
@@ -721,7 +721,7 @@ export default class SwerpgTalentNode {
 
         new SwerpgTalentNode({
             id: "wis2c",
-            abilities: ["wisdom"],
+            characteristics: ["wisdom"],
             type: "heal",
             tier: 2,
             connected: ["wis1b", "wis2b"]
@@ -729,7 +729,7 @@ export default class SwerpgTalentNode {
 
         new SwerpgTalentNode({
             id: "wispre2",
-            abilities: ["wisdom", "presence"],
+            characteristics: ["wisdom", "presence"],
             type: "utility",
             tier: 2,
             connected: ["wis1b", "wispre1", "pre1a", "wis2c"]
@@ -737,7 +737,7 @@ export default class SwerpgTalentNode {
 
         new SwerpgTalentNode({
             id: "pre2a",
-            abilities: ["presence"],
+            characteristics: ["presence"],
             type: "defense",
             tier: 2,
             connected: ["pre1a", "wispre2"]
@@ -745,7 +745,7 @@ export default class SwerpgTalentNode {
 
         new SwerpgTalentNode({
             id: "pre2b",
-            abilities: ["presence"],
+            characteristics: ["presence"],
             type: "magic",
             tier: 2,
             connected: ["pre1a", "pre1b", "pre2a"]
@@ -753,7 +753,7 @@ export default class SwerpgTalentNode {
 
         new SwerpgTalentNode({
             id: "pre2c",
-            abilities: ["presence"],
+            characteristics: ["presence"],
             type: "magic",
             tier: 2,
             connected: ["pre1b", "pre2b"]
@@ -761,7 +761,7 @@ export default class SwerpgTalentNode {
 
         new SwerpgTalentNode({
             id: "preint2",
-            abilities: ["presence", "intellect"],
+            characteristics: ["presence", "intellect"],
             type: "utility",
             tier: 2,
             connected: ["pre1b", "preint1", "int1a", "pre2c"]
@@ -769,7 +769,7 @@ export default class SwerpgTalentNode {
 
         new SwerpgTalentNode({
             id: "int2a",
-            abilities: ["intellect"],
+            characteristics: ["intellect"],
             type: "utility",
             tier: 2,
             connected: ["int1a", "preint2"]
@@ -777,7 +777,7 @@ export default class SwerpgTalentNode {
 
         new SwerpgTalentNode({
             id: "int2b",
-            abilities: ["intellect"],
+            characteristics: ["intellect"],
             type: "magic",
             tier: 2,
             connected: ["int1a", "int1b", "int2a"]
@@ -785,7 +785,7 @@ export default class SwerpgTalentNode {
 
         const int2c = new SwerpgTalentNode({
             id: "int2c",
-            abilities: ["intellect"],
+            characteristics: ["intellect"],
             type: "heal",
             tier: 2,
             connected: ["int1b", "int2b"]
@@ -798,15 +798,15 @@ export default class SwerpgTalentNode {
 
         // Dexterity Quadrant
         const sig3intdex = new SwerpgTalentNode({
-            id: "sig3.intellect.dexterity", abilities: ["intellect", "dexterity"],
+            id: "sig3.intellect.dexterity", characteristics: ["intellect", "dexterity"],
             type: "signature", tier: 3, connected: ["int2c", "intdex2", "dex2a"]
         });
         new SwerpgTalentNode({
-            id: "dex3a", type: "attack", abilities: ["dexterity"], tier: 3,
+            id: "dex3a", type: "attack", characteristics: ["dexterity"], tier: 3,
             connected: ["intdex2", "dex2a", "dex2b", "sig3.intellect.dexterity"]
         });
         new SwerpgTalentNode({
-            id: "sig3.dexterity", type: "signature", abilities: ["dexterity"], tier: 3,
+            id: "sig3.dexterity", type: "signature", characteristics: ["dexterity"], tier: 3,
             point: {x: 692, y: 400}, teleport: true, connected: ["dex2a", "dex2b", "dex2c", "dex3a"], groups: {
                 "sig3.dexterity.strength": {abilities: ["dexterity", "strength"], teleport: "sig3.strength"},
                 "sig3.dexterity.wisdom": {abilities: ["dexterity", "wisdom"], teleport: "sig3.wisdom"},
@@ -814,21 +814,21 @@ export default class SwerpgTalentNode {
             }
         });
         new SwerpgTalentNode({
-            id: "dex3b", type: "attack", abilities: ["dexterity"], tier: 3,
+            id: "dex3b", type: "attack", characteristics: ["dexterity"], tier: 3,
             connected: ["dex2b", "dex2c", "dextou2", "sig3.dexterity"]
         })
 
         // Toughness Quadrant
         new SwerpgTalentNode({
-            id: "sig3.dexterity.toughness", abilities: ["dexterity", "toughness"], type: "signature",
+            id: "sig3.dexterity.toughness", characteristics: ["dexterity", "toughness"], type: "signature",
             tier: 3, connected: ["dex2c", "dextou2", "tou2a", "dex3b"]
         });
         new SwerpgTalentNode({
-            id: "tou3a", type: "attack", abilities: ["toughness"], tier: 3,
+            id: "tou3a", type: "attack", characteristics: ["toughness"], tier: 3,
             connected: ["dextou2", "tou2a", "tou2b", "sig3.dexterity.toughness"]
         });
         new SwerpgTalentNode({
-            id: "sig3.toughness", type: "signature", abilities: ["toughness"], tier: 3, point: {x: 0, y: 800},
+            id: "sig3.toughness", type: "signature", characteristics: ["toughness"], tier: 3, point: {x: 0, y: 800},
             teleport: true, connected: ["tou2a", "tou2b", "tou2c", "tou3a"], groups: {
                 "sig3.toughness.wisdom": {abilities: ["toughness", "wisdom"], teleport: "sig3.wisdom"},
                 "sig3.toughness.presence": {abilities: ["toughness", "presence"], teleport: "sig3.presence"},
@@ -836,84 +836,84 @@ export default class SwerpgTalentNode {
             }
         });
         new SwerpgTalentNode({
-            id: "tou3b", type: "defense", abilities: ["toughness"], tier: 3,
+            id: "tou3b", type: "defense", characteristics: ["toughness"], tier: 3,
             connected: ["tou2b", "tou2c", "toustr2", "sig3.toughness"]
         })
 
         // Strength Quadrant
         new SwerpgTalentNode({
-            id: "sig3.toughness.strength", abilities: ["toughness", "strength"], type: "signature",
+            id: "sig3.toughness.strength", characteristics: ["toughness", "strength"], type: "signature",
             tier: 3, connected: ["tou2c", "toustr2", "str2a", "tou3b"]
         });
         new SwerpgTalentNode({
-            id: "str3a", type: "attack", abilities: ["strength"], tier: 3,
+            id: "str3a", type: "attack", characteristics: ["strength"], tier: 3,
             connected: ["toustr2", "str2a", "str2b", "sig3.toughness.strength"]
         });
         new SwerpgTalentNode({
-            id: "sig3.strength", type: "signature", abilities: ["strength"], tier: 3,
+            id: "sig3.strength", type: "signature", characteristics: ["strength"], tier: 3,
             point: {x: -692, y: 400}, connected: ["str2a", "str2b", "str2c", "str3a"], groups: {
                 "sig3.strength.presence": {abilities: ["strength", "presence"], teleport: "sig3.presence"},
                 "sig3.strength.intellect": {abilities: ["strength", "intellect"], teleport: "sig3.intellect"}
             }
         });
         new SwerpgTalentNode({
-            id: "str3b", type: "attack", abilities: ["strength"], tier: 3,
+            id: "str3b", type: "attack", characteristics: ["strength"], tier: 3,
             connected: ["str2b", "str2c", "strwis2", "sig3.strength"]
         })
 
         // Wisdom Quadrant
         new SwerpgTalentNode({
-            id: "sig3.strength.wisdom", abilities: ["strength", "wisdom"], type: "signature", tier: 3,
+            id: "sig3.strength.wisdom", characteristics: ["strength", "wisdom"], type: "signature", tier: 3,
             connected: ["str2c", "strwis2", "wis2a", "str3b"]
         });
         new SwerpgTalentNode({
-            id: "wis3a", type: "attack", abilities: ["wisdom"], tier: 3,
+            id: "wis3a", type: "attack", characteristics: ["wisdom"], tier: 3,
             connected: ["strwis2", "wis2a", "wis2b", "sig3.strength.wisdom"]
         });
         new SwerpgTalentNode({
-            id: "sig3.wisdom", type: "signature", abilities: ["wisdom"], tier: 3, point: {x: -692, y: -400},
+            id: "sig3.wisdom", type: "signature", characteristics: ["wisdom"], tier: 3, point: {x: -692, y: -400},
             connected: ["wis2a", "wis2b", "wis2c", "wis3a"], groups: {
                 "sig3.wisdom.intellect": {abilities: ["wisdom", "intellect"], teleport: "sig3.intellect"},
             }
         });
         new SwerpgTalentNode({
-            id: "wis3b", type: "magic", abilities: ["wisdom"], tier: 3,
+            id: "wis3b", type: "magic", characteristics: ["wisdom"], tier: 3,
             connected: ["wis2b", "wis2c", "wispre2", "sig3.wisdom"]
         })
 
         // Presence Quadrant
         new SwerpgTalentNode({
-            id: "sig3.wisdom.presence", abilities: ["wisdom", "presence"], type: "signature", tier: 3,
+            id: "sig3.wisdom.presence", characteristics: ["wisdom", "presence"], type: "signature", tier: 3,
             connected: ["wis2c", "wispre2", "pre2a", "wis3b"]
         });
         new SwerpgTalentNode({
-            id: "pre3a", type: "attack", abilities: ["presence"], tier: 3,
+            id: "pre3a", type: "attack", characteristics: ["presence"], tier: 3,
             connected: ["wispre2", "pre2a", "pre2b", "sig3.wisdom.presence"]
         });
         new SwerpgTalentNode({
-            id: "sig3.presence", type: "signature", abilities: ["presence"], tier: 3, point: {x: 0, y: -800},
+            id: "sig3.presence", type: "signature", characteristics: ["presence"], tier: 3, point: {x: 0, y: -800},
             connected: ["pre2a", "pre2b", "pre2c", "pre3a"], groups: {}
         });
         new SwerpgTalentNode({
-            id: "pre3b", type: "magic", abilities: ["presence"], tier: 3,
+            id: "pre3b", type: "magic", characteristics: ["presence"], tier: 3,
             connected: ["pre2b", "pre2c", "preint2", "sig3.presence"]
         })
 
         // Intellect Quadrant
         new SwerpgTalentNode({
-            id: "sig3.presence.intellect", abilities: ["presence", "intellect"], type: "signature",
+            id: "sig3.presence.intellect", characteristics: ["presence", "intellect"], type: "signature",
             tier: 3, connected: ["pre2c", "preint2", "int2a", "pre3b"]
         });
         new SwerpgTalentNode({
-            id: "int3a", type: "magic", abilities: ["intellect"], tier: 3,
+            id: "int3a", type: "magic", characteristics: ["intellect"], tier: 3,
             connected: ["preint2", "int2a", "int2b", "sig3.presence.intellect"]
         });
         new SwerpgTalentNode({
-            id: "sig3.intellect", type: "signature", abilities: ["intellect"], tier: 3,
+            id: "sig3.intellect", type: "signature", characteristics: ["intellect"], tier: 3,
             point: {x: 692, y: -400}, connected: ["int2a", "int2b", "int2c", "int3a"], groups: {}
         });
         const int3b = new SwerpgTalentNode({
-            id: "int3b", type: "attack", abilities: ["intellect"], tier: 3,
+            id: "int3b", type: "attack", characteristics: ["intellect"], tier: 3,
             connected: ["int2b", "int2c", "intdex2", "sig3.intellect"]
         })
         sig3intdex.connect(int3b);

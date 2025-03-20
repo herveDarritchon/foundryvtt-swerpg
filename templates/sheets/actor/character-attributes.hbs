@@ -181,31 +181,31 @@
         </div>
     </div>
 
-    <div class="sheet-section abilities">
+    <div class="sheet-section characteristics">
         <h3>Characteristics</h3>
-        <div class="abilities-wrapper">
-            {{#each abilityScores as |ability|}}
-                <div class="ability {{ability.id}} {{ability.type}} flexcol" data-ability="{{ability.id}}">
-                    <h4 class="label">{{ability.label}}</h4>
-                    <span class="input score">{{ability.value}}</span>
-                    {{#if ability.canDecrease}}
-                        <a class="button icon fa-solid fa-caret-down decrease" data-action="abilityDecrease"
-                           data-tooltip="Decrease {{ability.label}}" data-tooltip-direction="LEFT"></a>
+        <div class="characteristics-wrapper">
+            {{#each characteristicScores as |characteristic|}}
+                <div class="characteristic {{characteristic.id}} {{characteristic.type}} flexcol" data-characteristic="{{characteristic.id}}">
+                    <h4 class="label">{{characteristic.label}}</h4>
+                    <span class="input score">{{characteristic.value}}</span>
+                    {{#if characteristic.canDecrease}}
+                        <a class="button icon fa-solid fa-caret-down decrease" data-action="characteristicDecrease"
+                           data-tooltip="Decrease {{characteristic.label}}" data-tooltip-direction="LEFT"></a>
                     {{/if}}
-                    {{#if ability.canIncrease}}
-                        <a class="button icon fa-solid fa-caret-up increase" data-action="abilityIncrease"
-                           data-tooltip="Increase {{ability.label}}" data-tooltip-direction="RIGHT"></a>
+                    {{#if characteristic.canIncrease}}
+                        <a class="button icon fa-solid fa-caret-up increase" data-action="characteristicIncrease"
+                           data-tooltip="Increase {{characteristic.label}}" data-tooltip-direction="RIGHT"></a>
                     {{/if}}
                 </div>
             {{/each}}
         </div>
-        {{#if points.ability.requireInput}}
+        {{#if points.characteristic.requireInput}}
             <footer class="footer-section point-pools flexrow">
-                <span class="label">Ability Points</span>
-                {{#if points.ability.pool}}
-                    <span class="value hex filled">{{points.ability.pool}}</span>
-                {{else if points.ability.available}}
-                    <span class="value hex filled">{{points.ability.available}}</span>
+                <span class="label">Characteristic Points</span>
+                {{#if points.characteristic.pool}}
+                    <span class="value hex filled">{{points.characteristic.pool}}</span>
+                {{else if points.characteristic.available}}
+                    <span class="value hex filled">{{points.characteristic.available}}</span>
                 {{/if}}
             </footer>
         {{/if}}

@@ -56,7 +56,7 @@ export default class ArmorSheet extends SwerpgBaseItemSheet {
     const config = this.document.system.config.category.dodge;
     const {widget, fields} = ArmorSheet.#createDefenseWidget(field, groupConfig, inputConfig, config);
     fields.appendChild(ArmorSheet._createElement("label", {innerText: game.i18n.localize("ARMOR.SHEET.DODGE_SCALING")}));
-    const dodgeStart = `${this.document.system.dodge.start} ${swerpg.CONST.ABILITIES.dexterity.abbreviation}`;
+    const dodgeStart = `${this.document.system.dodge.start} ${swerpg.CONST.CHARACTERISTICS.dexterity.abbreviation}`;
     fields.appendChild(foundry.applications.fields.createTextInput({value: dodgeStart, disabled: true}));
     return widget;
   }

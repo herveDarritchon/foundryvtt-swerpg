@@ -33,18 +33,6 @@
       "Journal": "Swerpg Journal Sheet"
     }
   },
-  "ABILITIES.Brawn": "Brawn",
-  "ABILITIES.BrawnAbbr": "Bra",
-  "ABILITIES.Agility": "Agility",
-  "ABILITIES.AgilityAbbr": "Agi",
-  "ABILITIES.Intellect": "Intellect",
-  "ABILITIES.IntellectAbbr": "Int",
-  "ABILITIES.Cunning": "Cunning",
-  "ABILITIES.CunningAbbr": "Cun",
-  "ABILITIES.Willpower": "Willpower",
-  "ABILITIES.WillpowerAbbr": "Wil",
-  "ABILITIES.Presence": "Presence",
-  "ABILITIES.PresenceAbbr": "Pre",
   "ADVERSARY.ThreatMinion": "Minion",
   "ADVERSARY.ThreatNormal": "Normal",
   "ADVERSARY.ThreatElite": "Elite",
@@ -465,6 +453,18 @@
       "TALENT_TIER": "Backgrounds may only offer Tier 0 starting Talents."
     }
   },
+  "CHARACTERISTICS.Brawn": "Brawn",
+  "CHARACTERISTICS.BrawnAbbr": "Bra",
+  "CHARACTERISTICS.Agility": "Agility",
+  "CHARACTERISTICS.AgilityAbbr": "Agi",
+  "CHARACTERISTICS.Intellect": "Intellect",
+  "CHARACTERISTICS.IntellectAbbr": "Int",
+  "CHARACTERISTICS.Cunning": "Cunning",
+  "CHARACTERISTICS.CunningAbbr": "Cun",
+  "CHARACTERISTICS.Willpower": "Willpower",
+  "CHARACTERISTICS.WillpowerAbbr": "Wil",
+  "CHARACTERISTICS.Presence": "Presence",
+  "CHARACTERISTICS.PresenceAbbr": "Pre",
   "COMBAT.WarningCannotChangeRound": "Only a Gamemaster user may change the Combat round.",
   "DAMAGE.Damage": "Damage",
   "DAMAGE.Restoration": "Restoration",
@@ -772,7 +772,7 @@
     "Underworld": "Underworld",
     "UnderworldAbbr": "Und",
     "Xenology": "Piloting Planetary",
-    "XenologyAbbr": "Xen",
+    "XenologyAbbr": "Xen"
   },
   "SPECIES": {
     "FIELDS": {

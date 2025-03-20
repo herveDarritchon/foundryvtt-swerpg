@@ -34,7 +34,7 @@ export default class SwerpgActorType extends foundry.abstract.TypeDataModel {
         const schema = {};
 
         // Ability Scores
-        schema.abilities = new fields.SchemaField(Object.values(SYSTEM.ABILITIES).reduce((obj, ability) => {
+        schema.characteristics = new fields.SchemaField(Object.values(SYSTEM.CHARACTERISTICS).reduce((obj, ability) => {
             obj[ability.id] = new fields.SchemaField({
                 base: new fields.NumberField({...requiredInteger, initial: 0, min: 0, max: 3}),
                 increases: new fields.NumberField({...requiredInteger, initial: 0, min: 0, max: 12}),
@@ -186,7 +186,7 @@ export default class SwerpgActorType extends foundry.abstract.TypeDataModel {
         //const {level: l, threatFactor, maxAction=6} = this.advancement;
         const {level: l, threatFactor, maxAction = 6} = {level: 1, threatFactor: 1, maxAction: 6};
         const r = this.resources;
-        const a = this.abilities;
+        const a = this.characteristics;
 
         // Health
         // TODO remettre value à la place de base dans les calculs ci-dessous

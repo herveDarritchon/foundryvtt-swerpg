@@ -20,8 +20,8 @@ export default class SwerpgCharacter extends SwerpgActorType {
         const schema = super.defineSchema();
 
         // Extra validation for abilities
-        for (const abilityField of Object.values(schema.abilities.fields)) {
-            abilityField.options.validate = SwerpgCharacter.#validateAttribute;
+        for (const characteristicField of Object.values(schema.characteristics.fields)) {
+            characteristicField.options.validate = SwerpgCharacter.#validateAttribute;
         }
 
         // Details
@@ -204,18 +204,18 @@ export default class SwerpgCharacter extends SwerpgActorType {
         // Ability Scores
         let abilityPointsBought = 0;
         let abilityPointsSpent = 0;
-        for (let a in SYSTEM.ABILITIES) {
-            const ability = this.abilities[a];
+        for (let a in SYSTEM.CHARACTERISTICS) {
+            const characteristic = this.characteristics[a];
 
             // Configure initial value
-            ability.base = species?.abilities[a] || 1;
-            /*            if (a === species.primary) ability.initial = SYSTEM.ANCESTRIES.primaryAbilityStart;
-                        else if (a === species.secondary) ability.initial = SYSTEM.ANCESTRIES.secondaryAbilityStart;*/
-            ability.value = Math.clamp(ability.base + ability.increases + ability.bonus, 1, 5);
+            characteristic.base = species?.characteristics[a] || 1;
+            /*            if (a === species.primary) characteristic.initial = SYSTEM.ANCESTRIES.primaryAbilityStart;
+                        else if (a === species.secondary) characteristic.initial = SYSTEM.ANCESTRIES.secondaryAbilityStart;*/
+            characteristic.value = Math.clamp(characteristic.base + characteristic.increases + characteristic.bonus, 1, 5);
 
             // Track points spent
-            abilityPointsBought += ability.base;
-            abilityPointsSpent += ability.increases;
+            abilityPointsBought += characteristic.base;
+            abilityPointsSpent += characteristic.increases;
         }
 
         let startingExperience = species?.startingExperience || 0;

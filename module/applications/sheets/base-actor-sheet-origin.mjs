@@ -198,7 +198,7 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
      */
     #prepareAbilities() {
         const a = this.actor.system.abilities;
-        const abilities = Object.values(SYSTEM.ABILITIES).map(cfg => {
+        const abilities = Object.values(SYSTEM.CHARACTERISTICS).map(cfg => {
             const ability = foundry.utils.deepClone(cfg);
             ability.value = a[ability.id].value;
             ability.canIncrease = this.actor.canPurchaseAbility(ability.id, 1);
@@ -650,8 +650,8 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
         for (const skill of Object.values(SYSTEM.SKILLS)) {
             const s = foundry.utils.mergeObject(skill, skills[skill.id], {inplace: false});
             let category = categories[skill.category];
-            const a1 = SYSTEM.ABILITIES['wisdom'];
-            const a2 = SYSTEM.ABILITIES['presence'];
+            const a1 = SYSTEM.CHARACTERISTICS['wisdom'];
+            const a2 = SYSTEM.CHARACTERISTICS['presence'];
 
             // Skill data
             s.abilityAbbrs = [a1.abbreviation, a2.abbreviation];

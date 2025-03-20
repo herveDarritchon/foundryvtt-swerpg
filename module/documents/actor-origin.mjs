@@ -2314,7 +2314,7 @@ export default class SwerpgActor extends Actor {
 
     #replenishResources(data) {
         const levelChange = foundry.utils.hasProperty(data, "system.advancement.level");
-        const attributeChange = Object.keys(SYSTEM.ABILITIES).some(k => {
+        const attributeChange = Object.keys(SYSTEM.CHARACTERISTICS).some(k => {
             return foundry.utils.hasProperty(data, `system.abilities.${k}`);
         });
         if (this.isOwner && (levelChange || attributeChange)) this.rest();

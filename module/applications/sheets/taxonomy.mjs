@@ -23,7 +23,7 @@ export default class TaxonomySheet extends SwerpgBaseItemSheet {
     const context = await super._prepareContext(options);
     console.log("taxonomy context", context);
     let assign = Object.assign(context, {
-      abilities: Object.values(SYSTEM.ABILITIES).map(ability => ({
+      abilities: Object.values(SYSTEM.CHARACTERISTICS).map(ability => ({
         field: context.fields.abilities.fields[ability.id],
         id: ability.id,
         label: ability.label,
