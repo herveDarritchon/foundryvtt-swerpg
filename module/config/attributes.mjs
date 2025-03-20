@@ -350,7 +350,42 @@ export const SKILLS = Object.freeze({
         nodeId: "cow",
         characteristic: ABILITIES.intellect
     },
-
+    lore: {
+        id: "lore",
+        label: "SKILLS.Lore",
+        abbreviation: "SKILLS.LoreAbbr",
+        color: Color.from("#0b3514"),
+        sheetOrder: 30,
+        nodeId: "lor",
+        characteristic: ABILITIES.intellect
+    },
+    outerrim: {
+        id: "outerrim",
+        label: "SKILLS.OuterRim",
+        abbreviation: "SKILLS.OuterRimAbbr",
+        color: Color.from("#0b3514"),
+        sheetOrder: 31,
+        nodeId: "out",
+        characteristic: ABILITIES.intellect
+    },
+    underworld: {
+        id: "underworld",
+        label: "SKILLS.Underworld",
+        abbreviation: "SKILLS.UnderworldAbbr",
+        color: Color.from("#0b3514"),
+        sheetOrder: 32,
+        nodeId: "out",
+        characteristic: ABILITIES.intellect
+    },
+    xenology: {
+        id: "xenology",
+        label: "SKILLS.Xenology",
+        abbreviation: "SKILLS.XenologyAbbr",
+        color: Color.from("#0b3514"),
+        sheetOrder: 32,
+        nodeId: "out",
+        characteristic: ABILITIES.intellect
+    },
 });
 
 /**
