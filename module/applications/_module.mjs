@@ -7,6 +7,7 @@ export {default as SwerpgBaseItemSheet} from "./sheets/base-item.mjs";
 export {default as SwerpgBaseActorSheet} from "./sheets/base-actor-sheet.mjs";
 export {default as AdversarySheet} from "./sheets/adversary-sheet.mjs";
 export {default as AncestrySheet} from "./sheets/ancestry.mjs";
+export {default as CareerSheet} from "./sheets/species.mjs";
 export {default as SpeciesSheet} from "./sheets/species.mjs";
 export {default as OriginSheet} from "./sheets/origin.mjs";
 export {default as ArchetypeSheet} from "./sheets/archetype.mjs";

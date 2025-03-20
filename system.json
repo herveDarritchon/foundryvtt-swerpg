@@ -234,6 +234,11 @@
           "description"
         ]
       },
+      "career": {
+        "htmlFields": [
+          "description"
+        ]
+      },
       "origin": {
         "htmlFields": [
           "description"

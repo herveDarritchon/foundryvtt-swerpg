@@ -100,6 +100,7 @@ Hooks.once("init", async function () {
         origin: models.SwerpgOrigin,
         background: models.SwerpgBackground,
         species: models.SwerpgSpecies,
+        career: models.SwerpgCareer,
         spell: models.SwerpgSpell,
         talent: models.SwerpgTalent,
         taxonomy: models.SwerpgTaxonomy,
@@ -120,6 +121,7 @@ Hooks.once("init", async function () {
     Items.registerSheet(SYSTEM.id, applications.BackgroundSheet, {types: ["background"], makeDefault: true});
     Items.registerSheet(SYSTEM.id, applications.OriginSheet, {types: ["origin"], makeDefault: true});
     Items.registerSheet(SYSTEM.id, applications.SpeciesSheet, {types: ["species"], makeDefault: true});
+    Items.registerSheet(SYSTEM.id, applications.CareerSheet, {types: ["career"], makeDefault: true});
     Items.registerSheet(SYSTEM.id, applications.SpellSheet, {types: ["spell"], makeDefault: true});
     Items.registerSheet(SYSTEM.id, applications.TalentSheet, {types: ["talent"], makeDefault: true});
     Items.registerSheet(SYSTEM.id, applications.TaxonomySheet, {types: ["taxonomy"], makeDefault: true});

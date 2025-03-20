@@ -1,5 +1,11 @@
-2025/03/20-16:14:06.443479 31378e000 Log #168: 0 ops saved to Table #169 OK
-2025/03/20-16:14:06.443982 31378e000 Archiving /Users/hervedarritchon/Library/Application Support/FoundryVTTV13/Data/systems/swerpg/packs/adversary-talents/000168.log: OK
-2025/03/20-16:14:06.451013 31378e000 Table #132: 2 entries OK
-2025/03/20-16:14:06.451605 31378e000 Archiving /Users/hervedarritchon/Library/Application Support/FoundryVTTV13/Data/systems/swerpg/packs/adversary-talents/MANIFEST-000167: OK
-2025/03/20-16:14:06.452411 31378e000 **** Repaired leveldb /Users/hervedarritchon/Library/Application Support/FoundryVTTV13/Data/systems/swerpg/packs/adversary-talents; recovered 1 files; 1606 bytes. Some data may have been lost. ****
+2025/03/20-16:14:06.460651 31378e000 Delete type=3 #1
+2025/03/20-16:53:35.901193 31800c000 Level-0 table #173: started
+2025/03/20-16:53:35.901245 31800c000 Level-0 table #173: 0 bytes OK
+2025/03/20-16:53:35.901714 31800c000 Delete type=0 #171
+2025/03/20-16:53:35.915018 31800c000 Manual compaction at level-0 from '!items!packhunter000000' @ 72057594037927935 : 1 .. '!items!tuskCharge000000' @ 0 : 0; will stop at '!items!tuskCharge000000' @ 10 : 1
+2025/03/20-16:53:35.915027 31800c000 Compacting 1@0 + 0@1 files
+2025/03/20-16:53:35.923999 31800c000 Generated table #174@0: 2 keys, 1606 bytes
+2025/03/20-16:53:35.924060 31800c000 Compacted 1@0 + 0@1 files => 1606 bytes
+2025/03/20-16:53:35.924246 31800c000 compacted to: files[ 0 1 0 0 0 0 0 ]
+2025/03/20-16:53:35.924382 31800c000 Delete type=2 #132
+2025/03/20-16:53:35.933013 31800c000 Manual compaction at level-0 from '!items!tuskCharge000000' @ 10 : 1 .. '!items!tuskCharge000000' @ 0 : 0; will stop at (end)

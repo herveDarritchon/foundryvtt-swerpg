@@ -1,5 +1,11 @@
-2025/03/20-16:14:06.482525 312f8b000 Log #168: 0 ops saved to Table #169 OK
-2025/03/20-16:14:06.482863 312f8b000 Archiving /Users/hervedarritchon/Library/Application Support/FoundryVTTV13/Data/systems/swerpg/packs/archetype/000168.log: OK
-2025/03/20-16:14:06.485172 312f8b000 Table #132: 13 entries OK
-2025/03/20-16:14:06.485580 312f8b000 Archiving /Users/hervedarritchon/Library/Application Support/FoundryVTTV13/Data/systems/swerpg/packs/archetype/MANIFEST-000167: OK
-2025/03/20-16:14:06.486159 312f8b000 **** Repaired leveldb /Users/hervedarritchon/Library/Application Support/FoundryVTTV13/Data/systems/swerpg/packs/archetype; recovered 1 files; 4468 bytes. Some data may have been lost. ****
+2025/03/20-16:14:06.494639 312f8b000 Delete type=3 #1
+2025/03/20-16:53:35.895346 31800c000 Level-0 table #173: started
+2025/03/20-16:53:35.895425 31800c000 Level-0 table #173: 0 bytes OK
+2025/03/20-16:53:35.895888 31800c000 Delete type=0 #171
+2025/03/20-16:53:35.908489 31800c000 Manual compaction at level-0 from '!folders!6Up7ddrphLept3RW' @ 72057594037927935 : 1 .. '!items!tusker0000000000' @ 0 : 0; will stop at '!items!tusker0000000000' @ 62 : 1
+2025/03/20-16:53:35.908511 31800c000 Compacting 1@0 + 0@1 files
+2025/03/20-16:53:35.911489 31800c000 Generated table #174@0: 13 keys, 4468 bytes
+2025/03/20-16:53:35.911521 31800c000 Compacted 1@0 + 0@1 files => 4468 bytes
+2025/03/20-16:53:35.911756 31800c000 compacted to: files[ 0 1 0 0 0 0 0 ]
+2025/03/20-16:53:35.911874 31800c000 Delete type=2 #132
+2025/03/20-16:53:35.932987 31800c000 Manual compaction at level-0 from '!items!tusker0000000000' @ 62 : 1 .. '!items!tusker0000000000' @ 0 : 0; will stop at (end)

@@ -1,5 +1,11 @@
-2025/03/20-16:14:06.751997 312788000 Log #168: 0 ops saved to Table #169 OK
-2025/03/20-16:14:06.752335 312788000 Archiving /Users/hervedarritchon/Library/Application Support/FoundryVTTV13/Data/systems/swerpg/packs/weapon/000168.log: OK
-2025/03/20-16:14:06.754931 312788000 Table #132: 50 entries OK
-2025/03/20-16:14:06.755518 312788000 Archiving /Users/hervedarritchon/Library/Application Support/FoundryVTTV13/Data/systems/swerpg/packs/weapon/MANIFEST-000167: OK
-2025/03/20-16:14:06.756060 312788000 **** Repaired leveldb /Users/hervedarritchon/Library/Application Support/FoundryVTTV13/Data/systems/swerpg/packs/weapon; recovered 1 files; 11426 bytes. Some data may have been lost. ****
+2025/03/20-16:14:06.763499 312788000 Delete type=3 #1
+2025/03/20-16:53:35.958979 31800c000 Level-0 table #173: started
+2025/03/20-16:53:35.958996 31800c000 Level-0 table #173: 0 bytes OK
+2025/03/20-16:53:35.959219 31800c000 Delete type=0 #171
+2025/03/20-16:53:35.968256 31800c000 Manual compaction at level-0 from '!folders!9v0ru58f09fO3sE3' @ 72057594037927935 : 1 .. '!items!warlance00000000' @ 0 : 0; will stop at '!items!warlance00000000' @ 244 : 1
+2025/03/20-16:53:35.968267 31800c000 Compacting 1@0 + 0@1 files
+2025/03/20-16:53:35.970247 31800c000 Generated table #174@0: 50 keys, 11426 bytes
+2025/03/20-16:53:35.970253 31800c000 Compacted 1@0 + 0@1 files => 11426 bytes
+2025/03/20-16:53:35.970303 31800c000 compacted to: files[ 0 1 0 0 0 0 0 ]
+2025/03/20-16:53:35.970370 31800c000 Delete type=2 #132
+2025/03/20-16:53:35.971189 31800c000 Manual compaction at level-0 from '!items!warlance00000000' @ 244 : 1 .. '!items!warlance00000000' @ 0 : 0; will stop at (end)
