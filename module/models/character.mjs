@@ -1,7 +1,7 @@
 import SwerpgActorType from "./actor-type.mjs";
-import SwerpgBackground from "./background.mjs";
 import SwerpgSpeciality from "./speciality.mjs";
 import {SwerpgSpecies} from "./_module.mjs";
+import SwerpgCareer from "./career.mjs";
 
 /**
  * Data schema, attributes, and methods specific to Character type Actors.
@@ -47,6 +47,15 @@ export default class SwerpgCharacter extends SwerpgActorType {
         });
 
         schema.details = new fields.SchemaField({
+            freeSkillRankToUse: new fields.NumberField({
+                required: true,
+                integer: true,
+                initial: 0,
+                min: 0,
+                max: 10,
+                step: 1,
+                label: "CHARACTER.freeSkillRankToUse"
+            }),
             species: new fields.SchemaField({
                 name: new fields.StringField({blank: false}),
                 img: new fields.StringField(),
@@ -55,7 +64,7 @@ export default class SwerpgCharacter extends SwerpgActorType {
             career: new fields.SchemaField({
                 name: new fields.StringField({blank: false}),
                 img: new fields.StringField(),
-                ...SwerpgBackground.defineSchema()
+                ...SwerpgCareer.defineSchema()
             }, {required: true, nullable: true, initial: null}),
             specialities: new fields.ArrayField(new fields.SchemaField({
                 ...SwerpgSpeciality.defineSchema()
@@ -118,6 +127,7 @@ export default class SwerpgCharacter extends SwerpgActorType {
         //this.#prepareExperience();
         this.size = (this.details?.ancestry?.size || 3) + (this.details?.size || 0);
         this.#prepareSpecies();
+        this.#prepareCareer();
         this.#prepareBaseMovement();
         super.prepareBaseData();
         console.log("[prepareBaseData]: character data", this);
@@ -176,6 +186,11 @@ export default class SwerpgCharacter extends SwerpgActorType {
         if (!this.details.species) {
             const speciesDefaults = swerpg.api.models.SwerpgSpecies.schema.getInitialValue();
             this.details.species = this.schema.getField("details.species").initialize(speciesDefaults);
+        }
+
+        if (!this.details.career) {
+            const careerDefaults = swerpg.api.models.SwerpgCareer.schema.getInitialValue();
+            this.details.career = this.schema.getField("details.career").initialize(careerDefaults);
         }
 
         //this.details.background ||= this.schema.getField("details.background").initialize({});
@@ -240,10 +255,23 @@ export default class SwerpgCharacter extends SwerpgActorType {
     /* -------------------------------------------- */
 
     /**
+     * Prepare abilities data for the Character subtype specifically.
+     * @override
+     */
+    #prepareCareer() {
+        const career = this.details.career;
+        this.details.freeSkillRankToUse = career?.freeSkillRank || 0;
+        //this.career.careerSkills = career?.careerSkills || [];
+    }
+
+    /* -------------------------------------------- */
+
+    /**
      * Prepare skills data for the Character subtype specifically.
      * @override
      */
     _prepareSkills() {
+        // TODO Sans doute à voir comment on l'intègre dans la suite du système avec la gestion des points
         let pointsSpent = 0;
         for (const [skillId, skill] of Object.entries(this.skills)) {
             this._prepareSkill(skillId, skill);
@@ -303,13 +331,29 @@ export default class SwerpgCharacter extends SwerpgActorType {
     /* -------------------------------------------- */
 
     /**
-     * Apply an Ancestry item to this Character Actor.
+     * Apply a Species item to this Character Actor.
      * @param {SwerpgItem} species     The species Item to apply to the Actor.
      * @returns {Promise<void>}
      */
     async applySpecies(species) {
         const actor = this.parent;
         await actor._applyDetailItem(species, {
+            // TODO Change this when points are used for experience
+            //canApply: actor.isL0 && !actor.points.ability.spent,
+            canApply: true,
+            //canClear: actor.isL0
+            canClear: true
+        });
+    }
+
+    /**
+     * Apply a Career item to this Character Actor.
+     * @param {SwerpgItem} career     The career Item to apply to the Actor.
+     * @returns {Promise<void>}
+     */
+    async applyCareer(career) {
+        const actor = this.parent;
+        await actor._applyDetailItem(career, {
             // TODO Change this when points are used for experience
             //canApply: actor.isL0 && !actor.points.ability.spent,
             canApply: true,

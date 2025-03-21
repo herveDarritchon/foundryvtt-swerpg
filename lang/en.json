@@ -462,6 +462,7 @@
       }
     },
     "SHEET":{
+      "CHOOSE": "Choose Career",
       "CareerSkills":{
         "maxNumber": "Number of Career Skills maximum to pick"
       }
@@ -1125,6 +1126,7 @@
   "WARNING.CannotEquipInvalidCategory": "Actor {actor} cannot use {item} in the {type} equipment slot.",
   "WARNING.SkillRequireAncestryBackground": "You must assign both Ancestry and Background before you can purchase Skill ranks.",
   "WALKTHROUGH.AddSpecies": "Choose a Species from the Compendium or Items sidebar and add it via drag-and-drop.",
+  "WALKTHROUGH.AddCareer": "Choose a Career from the Compendium or Items sidebar and add it via drag-and-drop.",
   "WALKTHROUGH.AddBackground": "Choose a Background from the Compendium or Items sidebar and add it via drag-and-drop.",
   "WALKTHROUGH.ConfigureArchetype": "Configure an Archetype for this adversary.",
   "WALKTHROUGH.ConfigureTaxonomy": "Configure a Taxonomy for this adversary.",

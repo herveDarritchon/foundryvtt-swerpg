@@ -26,6 +26,10 @@
             {{#if incomplete.species}}data-tooltip="WALKTHROUGH.AddSpecies"{{/if}}>
             <a>{{#if incomplete.species}}<i class="fa-solid fa-circle-plus"></i> {{/if}}{{speciesName}}</a>
         </h2>
+        <h2 class="career flexrow {{#if incomplete.career}}incomplete{{/if}}" data-action="editCareer"
+            {{#if incomplete.career}}data-tooltip="WALKTHROUGH.AddCareer"{{/if}}>
+            <a>{{#if incomplete.career}}<i class="fa-solid fa-circle-plus"></i> {{/if}}{{careerName}}</a>
+        </h2>
         <h2 class="background flexrow {{#if incomplete.background}}incomplete{{/if}}" data-action="editBackground"
             {{#if incomplete.background}}data-tooltip="WALKTHROUGH.AddBackground"{{/if}}>
             <a>{{#if incomplete.background}}<i class="fa-solid fa-circle-plus"></i> {{/if}}{{backgroundName}}</a>

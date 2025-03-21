@@ -13,6 +13,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
         },
         actions: {
             editSpecies: CharacterSheet.#onEditSpecies,
+            editCareer: CharacterSheet.#onEditCareer,
             editBackground: CharacterSheet.#onEditBackground,
         }
     };
@@ -31,14 +32,18 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
         // Expand Context
         Object.assign(context, {
             speciesName: s.system.details.species?.name || game.i18n.localize("SPECIES.SHEET.CHOOSE"),
+            careerName: s.system.details.career?.name || game.i18n.localize("CAREER.SHEET.CHOOSE"),
             backgroundName: s.system.details.background?.name || game.i18n.localize("BACKGROUND.SHEET.CHOOSE"),
             talentTreeButtonText: game.system.tree.actor === a ? "Close Talent Tree" : "Open Talent Tree",
+            freeSkillRankToUse: a.system.details.freeSkillRankToUse,
         });
 
         // Incomplete Tasks
         context.points = a.system.points;
         Object.assign(i, {
             species: !s.system.details.species?.name,
+            career: !s.system.details.career?.name,
+            freeSkill: a.system.details.freeSkillRankToUse !== 0,
             background: !s.system.details.background?.name,
             /*      characteristics: context.points.ability.requireInput,
                   skills: context.points.skill.available,
@@ -47,10 +52,12 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
             skills: true,
             talents: true,
         });
-        i.creation = i.species || i.background || i.characteristics || i.skills || i.talents;
+        i.creation = i.species || i.career || i.freeSkill || i.background || i.characteristics || i.skills || i.talents;
         if (i.creation) {
             i.creationTooltip = "<p>Character Creation Incomplete!</p><ol>";
             if (i.species) i.creationTooltip += "<li>Select Species</li>";
+            if (i.career) i.creationTooltip += "<li>Select Career</li>";
+            if (i.freeSkill) i.creationTooltip += "<li>Use Free Skill</li>";
             if (i.background) i.creationTooltip += "<li>Select Background</li>";
             if (i.characteristics) i.creationTooltip += "<li>Spend Ability Points</li>";
             if (i.skills) i.creationTooltip += "<li>Spend Skill Points</li>";
@@ -121,13 +128,25 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
     /* -------------------------------------------- */
 
     /**
-     * Handle click action to choose or edit your Ancestry.
+     * Handle click action to choose or edit your Career.
      * @this {CharacterSheet}
      * @param {PointerEvent} event
      * @returns {Promise<void>}
      */
     static async #onEditSpecies(event) {
         await this.actor._viewDetailItem("species", {editable: false});
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle click action to choose or edit your Career.
+     * @this {CharacterSheet}
+     * @param {PointerEvent} event
+     * @returns {Promise<void>}
+     */
+    static async #onEditCareer(event) {
+        await this.actor._viewDetailItem("career", {editable: false});
     }
 
     /* -------------------------------------------- */
@@ -153,6 +172,9 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
         switch (item.type) {
             case "species":
                 await this.actor.system.applySpecies(item);
+                return;
+            case "career":
+                await this.actor.system.applyCareer(item);
                 return;
             case "background":
                 await this.actor.system.applyBackground(item);
@@ -183,7 +205,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
         const skills =  skillKeys
             .map(skillKey => {
                 const skill = SYSTEM.SKILLS[skillKey];
-                skill.pips = [{cssClass: "trained"}, {cssClass: "empty"}, {cssClass: "empty"}, {cssClass: "empty"}, {cssClass: "empty"}];
+                skill.pips = this._prepareSkillranks();
                 return skill;
             });
         const skillsByType = Object.groupBy(skills, (skill) => skill.type.id );
@@ -195,5 +217,13 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
                 return [type, skillGroup];
             })
         );
+    }
+
+    /**
+     * Prepare the skill Ranks for the context
+     * @returns {undefined}
+     */
+    static _prepareSkillranks() {
+        return [{cssClass: "trained"}, {cssClass: "empty"}, {cssClass: "empty"}, {cssClass: "empty"}, {cssClass: "empty"}];
     }
 }
