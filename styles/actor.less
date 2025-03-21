@@ -1000,22 +1000,65 @@
     }
 
     .pips {
-      flex: 0 0 80px;
-      justify-content: space-between;
+      flex: 0 0 123px;
+      justify-content: center;
       gap: 4px 0;
-      margin-right: 0.5em;
+      margin-right: 0.75em;
+      align-items: center;
+      align-content: center;
 
       .pip {
-        height: 20px;
-        width: 20px;
-        background: url("../ui/untrained-pip.svg") no-repeat center ;
-        background-size: 10px;
+        height: 30px;
+        width: 30px;
+        padding: 0;
+        margin: 0;
+        justify-content: center;
+        align-items: center;
+        align-content: center;
+        display: flex;
+      }
+
+      .pip.empty {
+        background: url("../ui/skills/central-pips.png") no-repeat center;
+        background-size: 25px;
+        position: relative;
+      }
+
+      .pip.empty:nth-child(1) {
+        background: url("../ui/skills/first-pip.png") no-repeat center;
+        background-size: 25px;
+        position: relative;
+      }
+
+      .pip.empty:nth-child(5) {
+        background: url("../ui/skills/fifth-pip.png") no-repeat center;
+        background-size: 25px;
+        position: relative;
       }
 
       .pip.trained {
-        background: url("../ui/trained-pip.svg") no-repeat center ;
-        background-size: 10px;
+        background: url("../ui/skills/central-trained-pips.png") no-repeat center;
+        background-size: 25px;
+        position: relative;
       }
+
+      .pip.trained:nth-child(1) {
+        background: url("../ui/skills/first-trained-pip.png") no-repeat center;
+        background-size: 25px;
+        position: relative;
+      }
+
+      .pip.trained:nth-child(5) {
+        background: url("../ui/skills/fifth-trained-pip.png") no-repeat center;
+        background-size: 25px;
+        position: relative;
+      }
+
+      each(range(1, 5, 1), {
+        .pip:nth-child(@{index}) {
+          left: -((@value - 1)* 4px);
+        }
+      });
     }
 
   }
