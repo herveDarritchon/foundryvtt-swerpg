@@ -2,51 +2,87 @@
 /*  Font Faces                               */
 /* ----------------------------------------- */
 @font-face {
-  font-family: "AwerySmallcaps";
-  src: url("../fonts/AwerySmallcaps/AwerySmallcaps.ttf");
+  font-family: "Star Jedi";
+  src: url("../fonts/Star_Jedi/STJEDISE.TTF");
 }
 @font-face {
-  font-family: "CaslonAntique";
-  src: url("../fonts/CaslonAntique/CaslonAntique.ttf");
+  font-family: "Orbitron";
+  src: url("../fonts/Orbitron/Orbitron-VariableFont_wght.ttf");
 }
 @font-face {
-  font-family: 'Vollkorn';
+  font-family: 'Exo 2';
   font-style: normal;
   font-weight: 300 800;
-  src: url("../fonts/vollkorn/Vollkorn-VariableFont_wght.ttf") format('truetype');
+  src: url("../fonts/Exo_2/Exo2-Italic-VariableFont_wght.ttf") format('truetype');
+}
+@font-face {
+  font-family: 'Rajdhani';
+  src: url("../fonts/Rajdhani/Rajdhani-Regular.ttf") format('truetype');
 }
 /* ----------------------------------------- */
 /*  CSS Variables                            */
 /* ----------------------------------------- */
 .swerpg {
-  --background: #0b0909;
-  --color-text: #eee8df;
+  --background: #0A1F44;
+  /* Bleu nuit profond */
+  --background-element: #5A5F67;
+  /* Bleu nuit profond */
+  --color-text: #DDE7F2;
+  /* Blanc bleuté pour le texte */
   --color-primary: var(--color-text);
-  --color-secondary: #d7c4a9;
-  --color-tertiary: #b6967c;
-  --color-header: #cac5ba;
-  --color-h1: #cfbea2;
-  --color-frame: #3f3128;
-  --color-frame-bg: #1c1a1a;
-  --color-frame-bg-25: rgba(28, 26, 26, 0.25);
-  --color-frame-bg-50: rgba(28, 26, 26, 0.5);
-  --color-frame-bg-75: rgba(28, 26, 26, 0.75);
-  --color-accent: #cf9356;
-  --color-link-text: #f36739;
+  --color-secondary: #7C8A9E;
+  /* Gris bleuté pour les textes secondaires */
+  --color-tertiary: #5A5F67;
+  /* Gris acier pour les détails */
+  --color-header: #26C6DA;
+  /* Cyan lumineux pour les titres */
+  --color-h1: #1B65C6;
+  /* Bleu électrique pour les titres H1 */
+  --color-frame: #3A3F48;
+  /* Gris sombre pour les encadrés */
+  --color-frame-bg: #121923;
+  /* Noir bleu profond pour les fonds */
+  --color-frame-bg-25: rgba(18, 25, 35, 0.25);
+  --color-frame-bg-50: rgba(18, 25, 35, 0.5);
+  --color-frame-bg-75: rgba(18, 25, 35, 0.75);
+  --color-accent: #0096FF;
+  /* Bleu néon pour les éléments interactifs */
+  --color-tern: #063a5e;
+  /* Bleu néon pour les éléments interactifs */
+  --color-link-text: #26C6DA;
+  /* Cyan éclatant pour les liens */
   --color-border-highlight: var(--color-accent);
-  --color-damage-vulnerability: #641010;
-  --color-damage-vulnerability-border: #dc3232;
-  --color-damage-resistance: #236212;
-  --color-damage-resistance-border: #51c433;
-  --color-result-bad: #641010;
-  --color-result-good: #236212;
-  --color-result-warn: #a98d0b;
-  --font-h1: "AwerySmallcaps", serif;
-  --font-h2: "AwerySmallcaps", serif;
-  --font-h3: "AwerySmallcaps", serif;
-  --font-body: "Vollkorn", serif;
-  --font-quote: "CaslonAntique", serif;
-  --font-sans: "Signika", sans-serif;
+  /* Bordures lumineuses */
+  --color-border: var(--color-tern);
+  /* Bordures lumineuses */
+  --color-damage-vulnerability: #640A0A;
+  /* Rouge sombre pour les faiblesses */
+  --color-damage-vulnerability-border: #D92E2E;
+  /* Rouge vif pour accentuer */
+  --color-damage-resistance: #0F4C75;
+  /* Bleu profond pour la résistance */
+  --color-damage-resistance-border: #2FA8FF;
+  /* Bleu clair lumineux */
+  --color-result-bad: #640A0A;
+  /* Rouge sombre pour les mauvais résultats */
+  --color-result-good: #0F4C75;
+  /* Bleu profond pour les bons résultats */
+  --color-result-warn: #A98D0B;
+  /* Doré vieilli pour les avertissements */
+  --color-active: #1ab82a;
+  /* Vert pour les éléments actifs */
+  --color-border-active: #0e5915;
+  /* Vert sombre pour les borders des éléments actifs */
+  --color-inactive: #da1717;
+  /* Rouge pour les éléments inactifs */
+  --color-border-inactive: #831010;
+  /* Rouge sombre pour les borders des éléments inactifs */
+  --font-h1: "Star Jedi", sans-serif;
+  --font-h2: "Star Jedi", sans-serif;
+  --font-h3: "Star Jedi", sans-serif;
+  --font-body: "Orbitron", sans-serif;
+  --font-quote: "Exo 2", sans-serif;
+  --font-sans: "Rajdhani", sans-serif;
   --color-fieldset-border: var(--color-frame);
 }
 .swerpg input,
@@ -1667,6 +1703,54 @@
 .swerpg.item .item-properties multi-checkbox,
 .swerpg.action .item-properties multi-checkbox {
   grid-template-columns: repeat(4, 1fr);
+}
+/* ----------------------------------------- */
+/*  Career                        */
+/* ----------------------------------------- */
+.careers {
+  column-count: 3;
+}
+.careers .career {
+  cursor: pointer;
+  text-align: center;
+  border-radius: 5px 20px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+.careers .career.inactive {
+  border: 3px solid var(--color-border);
+  color: var(--color-text);
+  background: var(--color-frame-bg-25);
+}
+.careers .career.active {
+  border: 3px solid var(--color-frame-bg-25);
+  color: var(--color-text);
+  background: var(--color-border);
+}
+.careers .career:hover {
+  background: var(--color-link-text);
+  border-color: var(--color-accent);
+}
+.careers .career::before,
+.careers .career::after {
+  display: flex;
+  content: "";
+  width: 0.7em;
+  height: 0.7em;
+  border-radius: 5px;
+}
+.careers .career.inactive::before,
+.careers .career.inactive::after {
+  background: var(--color-inactive);
+  mask-image: linear-gradient(270deg, transparent 0%, var(--color-border-inactive) 100%);
+  border: 1px solid var(--color-border-inactive);
+}
+.careers .career.active::before,
+.careers .career.active::after {
+  background: var(--color-active);
+  mask-image: linear-gradient(270deg, transparent 0%, var(--color-border-active) 100%);
+  border: 1px solid var(--color-border-active);
 }
 /* ----------------------------------------- */
 /*  Armor and Weapons                        */

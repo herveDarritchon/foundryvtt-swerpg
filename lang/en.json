@@ -453,6 +453,20 @@
       "TALENT_TIER": "Backgrounds may only offer Tier 0 starting Talents."
     }
   },
+  "CAREER": {
+    "FIELDS": {
+      "FreeSkill": "Free Skill",
+      "FreeSkillRank": {
+        "label": "Free Rank(s)",
+        "hint": "Select number of free ranks from career."
+      }
+    },
+    "SHEET":{
+      "CareerSkills":{
+        "maxNumber": "Number of Career Skills maximum to pick"
+      }
+    }
+  },
   "CHARACTERISTICS.Brawn": "Brawn",
   "CHARACTERISTICS.BrawnAbbr": "Bra",
   "CHARACTERISTICS.Agility": "Agility",
@@ -714,6 +728,8 @@
     "CoercionAbbr": "Coe",
     "Cool": "Cool",
     "CoolAbbr": "Coo",
+    "Education": "Education",
+    "EducationAbbr": "Edu",
     "Discipline": "Discipline",
     "DisciplineAbbr": "Dis",
     "Negotiation": "Negotiation",
@@ -736,8 +752,8 @@
     "AstrogationAbbr": "Ast",
     "Charm": "Charm",
     "CharmAbbr": "Cha",
-    "Computer": "Computer",
-    "ComputerAbbr": "Com",
+    "Computers": "Computers",
+    "ComputersAbbr": "Com",
     "Coordination": "Coordination",
     "CoordinationAbbr": "cod",
     "Deception": "Deception",
