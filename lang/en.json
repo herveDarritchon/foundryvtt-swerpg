@@ -723,7 +723,7 @@
   },
   "SKILLS": {
     "Athletics": "Athletics",
-    "AthleticsAbbr": "ath",
+    "AthleticsAbbr": "Ath",
     "Coercion": "Coercion",
     "CoercionAbbr": "Coe",
     "Cool": "Cool",
@@ -755,7 +755,7 @@
     "Computers": "Computers",
     "ComputersAbbr": "Com",
     "Coordination": "Coordination",
-    "CoordinationAbbr": "cod",
+    "CoordinationAbbr": "Cod",
     "Deception": "Deception",
     "DeceptionAbbr": "Dec",
     "Leadership": "Leadership",
@@ -770,7 +770,6 @@
     "PilotingSpaceAbbr": "Pis",
     "Resilience": "Resilience",
     "ResilienceAbbr": "Res",
-
     "Skulduggery": "Skulduggery",
     "SkulduggeryAbbr": "Sku",
     "Stealth": "Stealth",

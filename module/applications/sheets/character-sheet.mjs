@@ -57,6 +57,9 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
             if (i.talents) i.creationTooltip += "<li>Spend Talent Points</li>";
             i.creationTooltip += "</ol>";
         }
+
+        context.skills = CharacterSheet.#prepareSkills();
+
         return context;
     }
 
@@ -167,5 +170,30 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
                 return;
         }
         return super._onDropItem(event, item);
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Prepare the skills for the context
+     * @returns {undefined}
+     */
+    static #prepareSkills() {
+        const skillKeys = Object.keys(SYSTEM.SKILLS);
+        const skills =  skillKeys
+            .map(skillKey => {
+                const skill = SYSTEM.SKILLS[skillKey];
+                skill.pips = [{cssClass: "trained"}, {cssClass: "empty"}, {cssClass: "empty"}, {cssClass: "empty"}, {cssClass: "empty"}];
+                return skill;
+            });
+        const skillsByType = Object.groupBy(skills, (skill) => skill.type.id );
+
+        // Sort and return the skills
+        return Object.fromEntries(
+            Object.entries(skillsByType).map(([type, skillGroup]) => {
+                skillGroup.sort((a, b) => a.label.localeCompare(b.label));
+                return [type, skillGroup];
+            })
+        );
     }
 }

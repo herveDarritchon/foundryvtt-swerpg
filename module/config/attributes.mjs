@@ -287,7 +287,7 @@ export const SKILLS = Object.freeze({
         abbreviation: "SKILLS.CoordinationAbbr",
         color: Color.from("#350963"),
         sheetOrder: 16,
-        nodeId: "coo",
+        nodeId: "cod",
         characteristics: CHARACTERISTICS.agility,
         type: SKILL_TYPE.general
     },
@@ -298,7 +298,8 @@ export const SKILLS = Object.freeze({
         color: Color.from("#350963"),
         sheetOrder: 17,
         nodeId: "dec",
-        characteristics: CHARACTERISTICS.cunning
+        characteristics: CHARACTERISTICS.cunning,
+        type: SKILL_TYPE.general
     },
     leadership: {
         id: "leadership",
@@ -337,7 +338,8 @@ export const SKILLS = Object.freeze({
         color: Color.from("#350963"),
         sheetOrder: 21,
         nodeId: "pip",
-        characteristics: CHARACTERISTICS.agility
+        characteristics: CHARACTERISTICS.agility,
+        type: SKILL_TYPE.general
     },
     pilotingspace: {
         id: "pilotingspace",
@@ -396,7 +398,8 @@ export const SKILLS = Object.freeze({
         color: Color.from("#0b3514"),
         sheetOrder: 27,
         nodeId: "sur",
-        characteristics: CHARACTERISTICS.cunning
+        characteristics: CHARACTERISTICS.cunning,
+        type: SKILL_TYPE.general
     },
     coreworlds: {
         id: "coreworlds",
@@ -404,7 +407,7 @@ export const SKILLS = Object.freeze({
         abbreviation: "SKILLS.CoreWorldsAbbr",
         color: Color.from("#0b3514"),
         sheetOrder: 29,
-        nodeId: "cow",
+        nodeId: "cor",
         characteristic: CHARACTERISTICS.intellect,
         type: SKILL_TYPE.knowledge
     },

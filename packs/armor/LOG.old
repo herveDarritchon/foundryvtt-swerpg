@@ -1,11 +1,3 @@
-2025/03/20-16:14:06.509687 31378e000 Delete type=3 #1
-2025/03/20-16:53:35.904977 31800c000 Level-0 table #173: started
-2025/03/20-16:53:35.905004 31800c000 Level-0 table #173: 0 bytes OK
-2025/03/20-16:53:35.905380 31800c000 Delete type=0 #171
-2025/03/20-16:53:35.924626 31800c000 Manual compaction at level-0 from '!folders!HVRX1hdeNtvlHbQs' @ 72057594037927935 : 1 .. '!items!studdedleatherar' @ 0 : 0; will stop at '!items!studdedleatherar' @ 62 : 1
-2025/03/20-16:53:35.924637 31800c000 Compacting 1@0 + 0@1 files
-2025/03/20-16:53:35.932333 31800c000 Generated table #174@0: 13 keys, 2716 bytes
-2025/03/20-16:53:35.932368 31800c000 Compacted 1@0 + 0@1 files => 2716 bytes
-2025/03/20-16:53:35.932495 31800c000 compacted to: files[ 0 1 0 0 0 0 0 ]
-2025/03/20-16:53:35.932625 31800c000 Delete type=2 #132
-2025/03/20-16:53:35.933024 31800c000 Manual compaction at level-0 from '!items!studdedleatherar' @ 62 : 1 .. '!items!studdedleatherar' @ 0 : 0; will stop at (end)
+2025/03/20-16:53:45.924362 312f8b000 Recovering log #172
+2025/03/20-16:53:45.926626 312f8b000 Delete type=0 #172
+2025/03/20-16:53:45.926892 312f8b000 Delete type=3 #170
