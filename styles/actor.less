@@ -980,9 +980,30 @@
 .tab.skills {
 
   // Skill categories
-  .skills {
+  .skills-wrapper {
     display: grid;
 
+    .skill {
+
+      .name {
+        justify-content: flex-start;
+        align-content: baseline;
+        align-items: baseline;
+
+        .label {
+          font-size: var(--font-size-12);
+          flex: none;
+          margin-right: 0.2em;
+          font-weight: bold;
+        }
+
+        .abbreviation {
+          font-size: var(--font-size-10);
+          flex: none;
+        }
+      }
+
+    }
 
     .general-skills {
       grid-column: 1;

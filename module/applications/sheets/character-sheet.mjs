@@ -11,6 +11,14 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
         actor: {
             type: "character"
         },
+        position: {
+            width: 900,
+            height: "auto",
+        },
+        window: {
+            minimizable: true,
+            resizable: true,
+        },
         actions: {
             editSpecies: CharacterSheet.#onEditSpecies,
             editCareer: CharacterSheet.#onEditCareer,
@@ -65,7 +73,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
             i.creationTooltip += "</ol>";
         }
 
-        context.skills = CharacterSheet.#prepareSkills();
+        context.skills = CharacterSheet.#prepareSkills(a);
 
         return context;
     }
@@ -200,12 +208,13 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
      * Prepare the skills for the context
      * @returns {undefined}
      */
-    static #prepareSkills() {
+    static #prepareSkills(actor) {
         const skillKeys = Object.keys(SYSTEM.SKILLS);
         const skills =  skillKeys
             .map(skillKey => {
                 const skill = SYSTEM.SKILLS[skillKey];
-                skill.pips = this._prepareSkillranks();
+                skill.pips = this._prepareSkillRanks();
+                skill.career = this._prepareCareerFreeSkill(actor, skillKey);
                 return skill;
             });
         const skillsByType = Object.groupBy(skills, (skill) => skill.type.id );
@@ -223,7 +232,16 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
      * Prepare the skill Ranks for the context
      * @returns {undefined}
      */
-    static _prepareSkillranks() {
+    static _prepareSkillRanks() {
         return [{cssClass: "trained"}, {cssClass: "empty"}, {cssClass: "empty"}, {cssClass: "empty"}, {cssClass: "empty"}];
+    }
+
+    /**
+     * Prepare the skill Ranks for the context
+     * @returns {undefined}
+     */
+    static _prepareCareerFreeSkill(actor, skillKey) {
+        const mayBeASkill = actor.system.details.career?.careerSkills.find(skill => skill.id === skillKey);
+        return mayBeASkill ? actor.system.details.career.name : "-";
     }
 }
