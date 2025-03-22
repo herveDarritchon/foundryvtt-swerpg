@@ -310,11 +310,11 @@
 
       .examples {
 
-        .first{
+        .first {
 
         }
 
-        .second{
+        .second {
 
         }
 
@@ -358,7 +358,7 @@
             background-color: white;
             padding: 2px 3px;
             margin: 0;
-            --notchSize: 10px;
+            --notchSize: 17px;
             clip-path: polygon(0% var(--notchSize), var(--notchSize) 0%, calc(100% - var(--notchSize)) 0%, 100% var(--notchSize), 100% calc(100% - var(--notchSize)), calc(100% - var(--notchSize)) 100%, var(--notchSize) 100%, 0% calc(100% - var(--notchSize)));
             height: 75px;
             display: flex;
@@ -367,7 +367,7 @@
               background-color: var(--color-frame-bg-75);
               padding: 0;
               margin: 0;
-              --notchSize: 8px;
+              --notchSize: 16px;
               clip-path: polygon(0% var(--notchSize), var(--notchSize) 0%, calc(100% - var(--notchSize)) 0%, 100% var(--notchSize), 100% calc(100% - var(--notchSize)), calc(100% - var(--notchSize)) 100%, var(--notchSize) 100%, 0% calc(100% - var(--notchSize)));
               height: 70px;
               width: 100%;
@@ -376,11 +376,34 @@
               .octagon {
                 background-color: var(--color-accent);
                 padding: 0;
-                margin: 0;
-                --notchSize: 10px;
+                margin: 3px 3px 0 7px;
+                --notchSize: 8px;
                 clip-path: polygon(0% var(--notchSize), var(--notchSize) 0%, calc(100% - var(--notchSize)) 0%, 100% var(--notchSize), 100% calc(100% - var(--notchSize)), calc(100% - var(--notchSize)) 100%, var(--notchSize) 100%, 0% calc(100% - var(--notchSize)));
-                height: 20px;
+                height: 16px;
+                width: 79px;
                 display: flex;
+              }
+
+              .column-wrapper {
+                height: 100%;
+
+                .column_1, .column_2 {
+                  height: 100%;
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                  align-content: center;
+
+                  p {
+
+                  }
+
+                }
+
+                .column_1 {
+                  border-right: 1px solid white;
+                  margin-right: 0.25em;
+                }
               }
             }
           }
