@@ -17,20 +17,7 @@
         <section class="general-skills">
             <h4>General Skills</h4>
             {{#each skills.general as |skill|}}
-                <div class="skill flexrow">
-                    <div class="name flexrow">
-                        <span class="label">{{skill.label}}</span>
-                        <span class="abbreviation">({{skill.characteristics.abbreviation}})</span>
-                    </div>
-                    <div class="career">
-                        <span class="label">{{skill.career}}</span>
-                    </div>
-                    <div class="pips flexrow">
-                        {{#each skill.pips as |pip|}}
-                            <div class="pip {{pip.cssClass}}"></div>
-                        {{/each}}
-                    </div>
-                </div>
+                {{> "systems/swerpg/templates/sheets/partials/character-skill.hbs" skill}}
             {{/each}}
         </section>
 
@@ -38,39 +25,13 @@
             <div class="combat-skills">
                 <h4>Combat Skills</h4>
                 {{#each skills.combat as |skill|}}
-                    <div class="skill flexrow">
-                        <div class="name flexrow">
-                            <span class="label">{{skill.label}}</span>
-                            <span class="abbreviation">({{skill.characteristics.abbreviation}})</span>
-                        </div>
-                        <div class="career">
-                            <span class="label">{{skill.career}}</span>
-                        </div>
-                        <div class="pips flexrow">
-                            {{#each skill.pips as |pip|}}
-                                <div class="pip {{pip.cssClass}}"></div>
-                            {{/each}}
-                        </div>
-                    </div>
+                    {{> "systems/swerpg/templates/sheets/partials/character-skill.hbs" skill}}
                 {{/each}}
             </div>
             <div class="knowledge-skills">
                 <h4>Lore Skills</h4>
                 {{#each skills.knowledge as |skill|}}
-                    <div class="skill flexrow">
-                        <div class="name flexrow">
-                            <span class="label">{{skill.label}}</span>
-                            <span class="abbreviation">({{skill.characteristics.abbreviation}})</span>
-                        </div>
-                        <div class="career">
-                            <span class="label">{{skill.career}}</span>
-                        </div>
-                        <div class="pips flexrow">
-                            {{#each skill.pips as |pip|}}
-                                <div class="pip {{pip.cssClass}}"></div>
-                            {{/each}}
-                        </div>
-                    </div>
+                    {{> "systems/swerpg/templates/sheets/partials/character-skill.hbs" skill}}
                 {{/each}}
             </div>
         </section>

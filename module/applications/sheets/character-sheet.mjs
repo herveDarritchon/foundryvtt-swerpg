@@ -233,7 +233,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
      * @returns {undefined}
      */
     static _prepareSkillRanks() {
-        return [{cssClass: "trained"}, {cssClass: "empty"}, {cssClass: "empty"}, {cssClass: "empty"}, {cssClass: "empty"}];
+        return [{cssClass: "empty"}, {cssClass: "empty"}, {cssClass: "empty"}, {cssClass: "empty"}, {cssClass: "empty"}];
     }
 
     /**

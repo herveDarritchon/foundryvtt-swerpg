@@ -370,6 +370,7 @@ async function preloadHandlebarsTemplates() {
         // Sheet Templates
         `systems/${SYSTEM.id}/templates/sheets/partials/talent-summary.hbs`,
         `systems/${SYSTEM.id}/templates/sheets/partials/skill-modifier-tag.hbs`,
+        `systems/${SYSTEM.id}/templates/sheets/partials/character-skill.hbs`,
     ];
     return loadTemplates(templatePaths);
 }

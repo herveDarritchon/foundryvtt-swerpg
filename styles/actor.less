@@ -308,15 +308,70 @@
 
       /* HTML: <div class="octagon"></div> */
 
-      .octagon {
-        width: 200px;
-        aspect-ratio: 1;
-        --o: calc(50% * tan(-22.5deg));
-        clip-path: polygon(var(--o) 50%,
-        50% var(--o),
-        calc(100% - var(--o)) 50%,
-        50% calc(100% - var(--o)));
-        background: #3B8686;
+      .resource-wrapper {
+        margin: 0.5em 1em;
+        width: 100px;
+        flex: none;
+
+        .beveled-rectangle {
+          background-color: var(--color-accent);
+          padding: 0;
+          margin: 0;
+          --notchSize: 5px;
+          clip-path: polygon(0% var(--notchSize), var(--notchSize) 0%, calc(100% - var(--notchSize)) 0%, 100% var(--notchSize), 100% calc(100% - var(--notchSize)), calc(100% - var(--notchSize)) 100%, var(--notchSize) 100%, 0% calc(100% - var(--notchSize)));
+          height: 25px;
+          display: flex;
+        }
+
+        .beveled-frame {
+          background-color: white;
+          padding: 2px 3px;
+          margin: 0;
+          --notchSize: 5px;
+          clip-path: polygon(0% var(--notchSize), var(--notchSize) 0%, calc(100% - var(--notchSize)) 0%, 100% var(--notchSize), 100% calc(100% - var(--notchSize)), calc(100% - var(--notchSize)) 100%, var(--notchSize) 100%, 0% calc(100% - var(--notchSize)));
+          height: 25px;
+          display: flex;
+
+          .empty-rectangle {
+            background-color: var(--color-frame-bg-75);
+            padding: 0;
+            margin: 0;
+            --notchSize: 4px;
+            clip-path: polygon(0% var(--notchSize), var(--notchSize) 0%, calc(100% - var(--notchSize)) 0%, 100% var(--notchSize), 100% calc(100% - var(--notchSize)), calc(100% - var(--notchSize)) 100%, var(--notchSize) 100%, 0% calc(100% - var(--notchSize)));
+            height: 21px;
+            width: 100%;
+            display: flex
+          ;
+          }
+        }
+
+        .octagon {
+          background-color: var(--color-accent);
+          padding: 0;
+          margin: 0;
+          --notchSize: 10px;
+          clip-path: polygon(0% var(--notchSize), var(--notchSize) 0%, calc(100% - var(--notchSize)) 0%, 100% var(--notchSize), 100% calc(100% - var(--notchSize)), calc(100% - var(--notchSize)) 100%, var(--notchSize) 100%, 0% calc(100% - var(--notchSize)));
+          height: 20px;
+          display: flex;
+        }
+
+        .octagon, .beveled-rectangle, .beveled-frame {
+          .label {
+            text-transform: uppercase;
+            font-size: var(--font-size-10);
+            font-weight: bold;
+            align-items: center;
+            padding: 0;
+            margin: auto;
+          }
+        }
+
+        .octagon, .beveled-rectangle,.beveled-frame {
+          .label {
+            color: var(--color-primary);
+          }
+        }
+
       }
 
       /** Pool Resources */

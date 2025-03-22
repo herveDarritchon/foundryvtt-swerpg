@@ -1,0 +1,14 @@
+<div class="skill flexrow">
+    <div class="name flexrow">
+        <span class="label">{{label}}</span>
+        <span class="abbreviation">({{characteristics.abbreviation}})</span>
+    </div>
+    <div class="career">
+        <span class="label">{{career}}</span>
+    </div>
+    <div class="pips flexrow">
+        {{#each pips as |pip|}}
+            <div class="pip {{pip.cssClass}}"></div>
+        {{/each}}
+    </div>
+</div>
