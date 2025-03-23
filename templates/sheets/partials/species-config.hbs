@@ -1,8 +1,26 @@
+{{log "Species" this}}
 <section class="tab sheet-body flexcol {{tabs.config.cssClass}} scrollable"
          data-tab="{{tabs.config.id}}" data-group="{{tabs.config.group}}">
 
     <fieldset {{fieldDisabled}}>
-        <legend>{{localize "SPECIES.SHEET.Abilities"}}</legend>
+        <legend>{{localize "SPECIES.SHEET.SpecialAbility"}}</legend>
+
+        <fieldset {{fieldDisabled}}>
+            <legend>{{localize "SPECIES.SHEET.FreeSkill"}}</legend>
+
+            {{formField @root.fields.freeSkills value=source.system.freeSkills localize=true rootId=partId}}
+        </fieldset>
+
+        <fieldset {{fieldDisabled}}>
+            <legend>{{localize "SPECIES.SHEET.FreeTalent"}}</legend>
+
+            {{formField @root.fields.freeTalents value=source.system.freeTalents localize=true rootId=partId}}
+        </fieldset>
+
+    </fieldset>
+
+    <fieldset {{fieldDisabled}}>
+        <legend>{{localize "SPECIES.SHEET.Characteristics"}}</legend>
         {{formField fields.characteristics.fields.brawn value=source.system.characteristics.brawn localize=true}}
         {{formField fields.characteristics.fields.agility value=source.system.characteristics.agility localize=true}}
         {{formField fields.characteristics.fields.intellect value=source.system.characteristics.intellect localize=true}}

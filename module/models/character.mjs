@@ -24,8 +24,17 @@ export default class SwerpgCharacter extends SwerpgActorType {
             characteristicField.options.validate = SwerpgCharacter.#validateAttribute;
         }
 
-        // Details
+        // Experience/Advancement
         schema.experience = new fields.SchemaField({
+            freeSkillRankToUse: new fields.NumberField({
+                required: true,
+                integer: true,
+                initial: 0,
+                min: 0,
+                max: 10,
+                step: 1,
+                label: "CHARACTER.freeSkillRankToUse"
+            }),
             spent: new fields.NumberField({
                 required: true,
                 integer: true,
@@ -47,15 +56,6 @@ export default class SwerpgCharacter extends SwerpgActorType {
         });
 
         schema.details = new fields.SchemaField({
-            freeSkillRankToUse: new fields.NumberField({
-                required: true,
-                integer: true,
-                initial: 0,
-                min: 0,
-                max: 10,
-                step: 1,
-                label: "CHARACTER.freeSkillRankToUse"
-            }),
             species: new fields.SchemaField({
                 name: new fields.StringField({blank: false}),
                 img: new fields.StringField(),
@@ -260,7 +260,7 @@ export default class SwerpgCharacter extends SwerpgActorType {
      */
     #prepareCareer() {
         const career = this.details.career;
-        this.details.freeSkillRankToUse = career?.freeSkillRank || 0;
+        this.freeSkillRankToUse = career?.freeSkillRank || 0;
         //this.career.careerSkills = career?.careerSkills || [];
     }
 

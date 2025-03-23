@@ -1,6 +1,6 @@
 /* -------------------------------------------- */
 
-export const CARACTERISTICS_TYPE = Object.freeze({
+export const CARACTERISTIC_TYPE = Object.freeze({
     physical:{
         id: "physical",
         label: "SKILL_TYPE.Physical",
@@ -32,7 +32,7 @@ export const CHARACTERISTICS = Object.freeze({
         id: "brawn",
         label: "CHARACTERISTICS.Brawn",
         abbreviation: "CHARACTERISTICS.BrawnAbbr",
-        type: CARACTERISTICS_TYPE.physical,
+        type: CARACTERISTIC_TYPE.physical,
         color: Color.from("#870321"),
         sheetOrder: 1,
         nodeId: "bra"
@@ -41,7 +41,7 @@ export const CHARACTERISTICS = Object.freeze({
         id: "agility",
         label: "CHARACTERISTICS.Agility",
         abbreviation: "CHARACTERISTICS.AgilityAbbr",
-        type: CARACTERISTICS_TYPE.physical,
+        type: CARACTERISTIC_TYPE.physical,
         color: Color.from("#113c1b"),
         sheetOrder: 2,
         nodeId: "agi"
@@ -50,7 +50,7 @@ export const CHARACTERISTICS = Object.freeze({
         id: "intellect",
         label: "CHARACTERISTICS.Intellect",
         abbreviation: "CHARACTERISTICS.IntellectAbbr",
-        type: CARACTERISTICS_TYPE.mental,
+        type: CARACTERISTIC_TYPE.mental,
         color: Color.from("#00FFFF"),
         sheetOrder: 3,
         nodeId: "int"
@@ -59,7 +59,7 @@ export const CHARACTERISTICS = Object.freeze({
         id: "cunning",
         label: "CHARACTERISTICS.Cunning",
         abbreviation: "CHARACTERISTICS.CunningAbbr",
-        type: CARACTERISTICS_TYPE.mental,
+        type: CARACTERISTIC_TYPE.mental,
         color: Color.from("#dc7818"),
         sheetOrder: 4,
         nodeId: "cun"
@@ -68,7 +68,7 @@ export const CHARACTERISTICS = Object.freeze({
         id: "willpower",
         label: "CHARACTERISTICS.Willpower",
         abbreviation: "CHARACTERISTICS.WillpowerAbbr",
-        type: CARACTERISTICS_TYPE.mental,
+        type: CARACTERISTIC_TYPE.mental,
         color: Color.from("#8a8a17"),
         sheetOrder: 5,
         nodeId: "wil"
@@ -77,7 +77,7 @@ export const CHARACTERISTICS = Object.freeze({
         id: "presence",
         label: "CHARACTERISTICS.Presence",
         abbreviation: "CHARACTERISTICS.PresenceAbbr",
-        type: CARACTERISTICS_TYPE.mental,
+        type: CARACTERISTIC_TYPE.mental,
         color: Color.from("#640c88"),
         sheetOrder: 5,
         nodeId: "pre"
@@ -832,3 +832,53 @@ export const DEFENSES = {
     }
 }
 
+/* -------------------------------------------- */
+
+export const TALENT_ACTIVATION = Object.freeze({
+    passive:{
+        id: "passive",
+        label: "TALENT_ACTIVATION.Passive",
+        abbreviation: "TALENT_ACTIVATION.PassiveAbbr",
+        color: Color.from("#1d32b1"),
+    },
+    mental:{
+        id: "mental",
+        label: "SKILL_TYPE.Mental",
+        abbreviation: "SKILL_TYPE.MentalAbbr",
+        color: Color.from("#4354b8"),
+    },
+});
+
+/**
+ * Secondary attributes complete the character: Initiative, Vitality, Composure, and Fate.
+ * These four scores will fluctuate throughout the adventures.
+ * @type {{
+ * initiative: {id: string, label: string, abbreviation: string, color: Color, sheetOrder: number, nodeId: string},
+ * vitality: {id: string, label: string, abbreviation: string, color: Color, sheetOrder: number, nodeId: string},
+ * resolve: {id: string, label: string, abbreviation: string, color: Color, sheetOrder: number, nodeId: string},
+ * fortune: {id: string, label: string, abbreviation: string, color: Color, sheetOrder: number, nodeId: string},
+ * }}
+ */
+export const TALENTS = Object.freeze({
+    adversary: {
+        id: "adversary",
+        label: "TALENTS.Adversary",
+        abbreviation: "TALENTS.AdversaryAbbr",
+        color: Color.from("#d6d30c"),
+        sheetOrder: 1,
+        activation: TALENT_ACTIVATION.passive,
+        ranked: true,
+        nodeId: "adv"
+    },
+    convincingDemeanor: {
+        id: "convincingDemeanor",
+        label: "TALENTS.ConvincingDemeanor",
+        abbreviation: "TALENTS.ConvincingDemeanorAbbr",
+        color: Color.from("#d6d30c"),
+        sheetOrder: 3,
+        activation: TALENT_ACTIVATION.passive,
+        ranked: true,
+        nodeId: "cdr"
+    },
+
+});

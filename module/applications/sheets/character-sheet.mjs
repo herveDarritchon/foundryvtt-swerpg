@@ -43,7 +43,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
             careerName: s.system.details.career?.name || game.i18n.localize("CAREER.SHEET.CHOOSE"),
             backgroundName: s.system.details.background?.name || game.i18n.localize("BACKGROUND.SHEET.CHOOSE"),
             talentTreeButtonText: game.system.tree.actor === a ? "Close Talent Tree" : "Open Talent Tree",
-            freeSkillRankToUse: a.system.details.freeSkillRankToUse,
+            freeSkillRankToUse: a.system.freeSkillRankToUse,
         });
 
         // Incomplete Tasks
@@ -51,7 +51,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
         Object.assign(i, {
             species: !s.system.details.species?.name,
             career: !s.system.details.career?.name,
-            freeSkill: a.system.details.freeSkillRankToUse !== 0,
+            freeSkill: a.system.freeSkillRankToUse !== 0,
             background: !s.system.details.background?.name,
             /*      characteristics: context.points.ability.requireInput,
                   skills: context.points.skill.available,

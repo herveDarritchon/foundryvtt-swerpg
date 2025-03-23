@@ -829,15 +829,18 @@
       }
     },
     "SHEET": {
-      "Abilities": "Abilities Scores",
       "BROWSE": "Browse Ancestries",
+      "Characteristics": "Characteristic Scores",
       "CHOOSE": "Choose Species",
       "CLEAR": "Clear Species",
-      "StartingExperience": "Starting Experience",
-      "Threshold": "Threshold Scores",
+      "FreeSkill": "Free Skill",
+      "FreeTalent": "Free Talent",
       "RESISTANCES": "Resistances and Vulnerabilities",
       "RESISTANCE_HINT": "You must choose both a Resistance and a Vulnerability if you select either.",
-      "STATURE": "Ancestry Stature"
+      "SpecialAbility": "Special Ability",
+      "StartingExperience": "Starting Experience",
+      "STATURE": "Ancestry Stature",
+      "Threshold": "Threshold Scores"
     },
     "WARNINGS": {
       "ABILITIES": "The primary and secondary Abilities for an Ancestry may not be the same.",
@@ -1008,6 +1011,12 @@
     "NodeSignature": "Signature",
     "NodeUtility": "Utility",
     "PointsAvailable": "Points Available"
+  },
+  "TALENTS": {
+    "Adversary": "Adversary",
+    "AdversaryAbbr": "Adv",
+    "ConvincingDemeanor": "Convincing Demeanor",
+    "ConvincingDemeanorAbbr": "Cdr"
   },
   "TAXONOMY": {
     "FIELDS": {
