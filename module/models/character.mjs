@@ -55,6 +55,19 @@ export default class SwerpgCharacter extends SwerpgActorType {
             }),
         });
 
+        schema.skills = new fields.SetField(
+            new fields.SchemaField({
+                id: new fields.StringField({required: true, blank: false, label: "SKILLS.Skill"}),
+                rank: new fields.NumberField({
+                    required: true,
+                    integer: true,
+                    initial: 0,
+                    min: 0,
+                    max: 5,
+                    label: "SKILLS.Label"
+                }),
+            }));
+
         schema.details = new fields.SchemaField({
             species: new fields.SchemaField({
                 name: new fields.StringField({blank: false}),
@@ -215,6 +228,7 @@ export default class SwerpgCharacter extends SwerpgActorType {
     #prepareSpecies() {
 //        const points = this.points.ability;
         const species = this.details.species;
+        const thresholds = this.thresholds;
 
         // Ability Scores
         let abilityPointsBought = 0;
@@ -233,15 +247,15 @@ export default class SwerpgCharacter extends SwerpgActorType {
             abilityPointsSpent += characteristic.increases;
         }
 
+        this._prepareSkills();
+
         let startingExperience = species?.startingExperience || 0;
         const spent = this.experience.spent;
         const gained = this.experience.gained;
         this.experience = {spent: spent, gained: gained, starting: startingExperience};
 
-        this.thresholds = {
-            strain: 0,
-            wounds: 0,
-        }
+        //thresholds.strain = 0;
+        //thresholds.wounds = 0;
 
         // TODO to be reactivated when experience is used.
         // Track spent ability points
@@ -250,6 +264,45 @@ export default class SwerpgCharacter extends SwerpgActorType {
                 points.spent = abilityPointsSpent;
                 points.available = points.total - abilityPointsSpent;
                 points.requireInput = (this.advancement.level === 0) ? (points.pool > 0) : (points.available !== 0);*/
+    }
+
+    /* -------------------------------------------- */
+    /**
+     * Prepare skills data for Character Actor subtypes.
+     * @protected
+     */
+    _prepareSkills() {
+        if (this.skills.size === 0) {
+            this.skills = SYSTEM.SKILLS;
+        }
+        for (const skill of Object.entries(this.skills)) {
+            this._prepareSkill(...skill);
+        }
+    }
+
+
+    /* -------------------------------------------- */
+
+    /**
+     * Prepare a single skill for the Character subtype specifically.
+     * @inheritDoc
+     */
+    _prepareSkill(skillId, skill) {
+
+        // Adjust base skill rank
+        let base = 0;
+        if (this.details.species?.freeSkills?.has(skillId)) base++;
+        skill.rank = Math.max(skill.rank || 0, base);
+
+        // Standard skill preparation
+        //super._prepareSkill(skillId, skill);
+
+        // Record point cost
+        /*        const ranks = SYSTEM.SKILL.RANKS;
+                const rank = ranks[skill.rank];
+                skill.spent = rank.spent - base;
+                const next = ranks[skill.rank + 1] || {cost: null};
+                skill.cost = next.cost;*/
     }
 
     /* -------------------------------------------- */
@@ -270,17 +323,17 @@ export default class SwerpgCharacter extends SwerpgActorType {
      * Prepare skills data for the Character subtype specifically.
      * @override
      */
-    _prepareSkills() {
-        // TODO Sans doute à voir comment on l'intègre dans la suite du système avec la gestion des points
-        let pointsSpent = 0;
-        for (const [skillId, skill] of Object.entries(this.skills)) {
-            this._prepareSkill(skillId, skill);
-            pointsSpent += skill.spent;
-        }
-        const points = this.points;
-        points.skill.spent = pointsSpent;
-        points.skill.available = points.skill.total - points.skill.spent;
-    }
+    /*    _prepareSkills() {
+            // TODO Sans doute à voir comment on l'intègre dans la suite du système avec la gestion des points
+            let pointsSpent = 0;
+            for (const [skillId, skill] of Object.entries(this.skills)) {
+                this._prepareSkill(skillId, skill);
+                pointsSpent += skill.spent;
+            }
+            const points = this.points;
+            points.skill.spent = pointsSpent;
+            points.skill.available = points.skill.total - points.skill.spent;
+        }*/
 
     /* -------------------------------------------- */
 
@@ -288,23 +341,25 @@ export default class SwerpgCharacter extends SwerpgActorType {
      * Prepare a single skill for the Character subtype specifically.
      * @inheritDoc
      */
-    _prepareSkill(skillId, skill) {
+    /*
+        _prepareSkill(skillId, skill) {
 
-        // Adjust base skill rank
-        let base = 0;
-        if (this.details.background?.skills?.has(skillId)) base++;
-        skill.rank = Math.max(skill.rank || 0, base);
+            // Adjust base skill rank
+            let base = 0;
+            if (this.details.background?.skills?.has(skillId)) base++;
+            skill.rank = Math.max(skill.rank || 0, base);
 
-        // Standard skill preparation
-        super._prepareSkill(skillId, skill);
+            // Standard skill preparation
+            super._prepareSkill(skillId, skill);
 
-        // Record point cost
-        const ranks = SYSTEM.SKILL.RANKS;
-        const rank = ranks[skill.rank];
-        skill.spent = rank.spent - base;
-        const next = ranks[skill.rank + 1] || {cost: null};
-        skill.cost = next.cost;
-    }
+            // Record point cost
+            const ranks = SYSTEM.SKILL.RANKS;
+            const rank = ranks[skill.rank];
+            skill.spent = rank.spent - base;
+            const next = ranks[skill.rank + 1] || {cost: null};
+            skill.cost = next.cost;
+        }
+    */
 
     /* -------------------------------------------- */
 

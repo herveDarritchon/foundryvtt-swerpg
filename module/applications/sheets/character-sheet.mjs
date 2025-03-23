@@ -210,14 +210,14 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
      */
     static #prepareSkills(actor) {
         const skillKeys = Object.keys(SYSTEM.SKILLS);
-        const skills =  skillKeys
+        const skills = skillKeys
             .map(skillKey => {
                 const skill = SYSTEM.SKILLS[skillKey];
-                skill.pips = this._prepareSkillRanks();
+                skill.pips = this._prepareSkillRanks(skill);
                 skill.career = this._prepareCareerFreeSkill(actor, skillKey);
                 return skill;
             });
-        const skillsByType = Object.groupBy(skills, (skill) => skill.type.id );
+        const skillsByType = Object.groupBy(skills, (skill) => skill.type.id);
 
         // Sort and return the skills
         return Object.fromEntries(
@@ -230,10 +230,13 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
 
     /**
      * Prepare the skill Ranks for the context
+     * If skill rank is equal or greater of the current pip value then it is filled otherwise it is empty
      * @returns {undefined}
      */
-    static _prepareSkillRanks() {
-        return [{cssClass: "empty"}, {cssClass: "empty"}, {cssClass: "empty"}, {cssClass: "empty"}, {cssClass: "empty"}];
+    static _prepareSkillRanks(skill) {
+        return Array.from({ length: 5 }, (_, i) => ({
+            cssClass: i < skill.rank ? "trained" : "untrained"
+        }));
     }
 
     /**
