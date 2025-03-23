@@ -14,7 +14,7 @@ export default class SwerpgCareer extends foundry.abstract.TypeDataModel {
         const schema = {};
 
         schema.description = new fields.HTMLField({required: false, initial: undefined});
-        schema.careerSkills = new fields.ArrayField(new fields.SchemaField({
+        schema.careerSkills = new fields.SetField(new fields.SchemaField({
             id: new fields.StringField({required: true, blank: false}),
         }));
         schema.freeSkillRank = new fields.NumberField({

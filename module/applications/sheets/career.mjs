@@ -84,8 +84,10 @@ export default class CareerSheet extends SwerpgBaseItemSheet {
      * @returns {Promise<void>} A promise that resolves when the skill has been added
      */
     static async addCareerSkill(document, skillId) {
-        document.system.careerSkills.push({id: skillId});
-        await document.update({"system.careerSkills": document.system.careerSkills});
+        const skillSet = new Set();
+        document.system.careerSkills.forEach(skill => skillSet.add({id: skill.id}));
+        skillSet.add({id: skillId});
+        await document.update({"system.careerSkills": skillSet});
     }
 
     /* -------------------------------------------- */
@@ -97,8 +99,13 @@ export default class CareerSheet extends SwerpgBaseItemSheet {
      * @returns {Promise<void>} A promise that resolves when the skill has been removed
      */
     static async removeCareerSkill(document, skillId) {
-        document.system.careerSkills = document.system.careerSkills.filter(skill => skill.id !== skillId);
-        await document.update({"system.careerSkills": document.system.careerSkills});
+        const skillSet = new Set();
+        document.system.careerSkills.forEach(skill => {
+            if (skill.id !== skillId) {
+                skillSet.add({id: skill.id})
+            }
+        });
+        await document.update({"system.careerSkills": skillSet});
     }
 
     /* -------------------------------------------- */
