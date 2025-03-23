@@ -235,7 +235,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
      */
     static _prepareSkillRanks(skill) {
         return Array.from({ length: 5 }, (_, i) => ({
-            cssClass: i < skill.rank ? "trained" : "untrained"
+            cssClass: i < skill.rank.value ? "trained" : "untrained"
         }));
     }
 
@@ -245,6 +245,10 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
      */
     static _prepareCareerFreeSkill(actor, skillKey) {
         const mayBeASkill = actor.system.details.career?.careerSkills.find(skill => skill.id === skillKey);
-        return mayBeASkill ? actor.system.details.career.name : "-";
+        return {
+            label: mayBeASkill ? "X" : "",
+            name: mayBeASkill ? actor.system.details.career.name : "-",
+            isCareer: !!mayBeASkill,
+        };
     }
 }

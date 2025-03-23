@@ -247,7 +247,7 @@ export default class SwerpgCharacter extends SwerpgActorType {
             abilityPointsSpent += characteristic.increases;
         }
 
-        this._prepareSkills();
+        this._prepareSkills(this.skills);
 
         let startingExperience = species?.startingExperience || 0;
         const spent = this.experience.spent;
@@ -270,12 +270,13 @@ export default class SwerpgCharacter extends SwerpgActorType {
     /**
      * Prepare skills data for Character Actor subtypes.
      * @protected
+     * @param {Set<Object>} skills The skills object to prepare
      */
-    _prepareSkills() {
-        if (this.skills.size === 0) {
-            this.skills = SYSTEM.SKILLS;
+    _prepareSkills(skills) {
+        if (skills.size === 0) {
+            skills = SYSTEM.SKILLS;
         }
-        for (const skill of Object.entries(this.skills)) {
+        for (const skill of Object.entries(skills)) {
             this._prepareSkill(...skill);
         }
     }
@@ -291,8 +292,17 @@ export default class SwerpgCharacter extends SwerpgActorType {
 
         // Adjust base skill rank
         let base = 0;
-        if (this.details.species?.freeSkills?.has(skillId)) base++;
-        skill.rank = Math.max(skill.rank || 0, base);
+        let free = 0;
+        if (this.details.species?.freeSkills?.has(skillId)) {
+            base++;
+        }
+
+        const total = free + base;
+        skill.rank = {
+            base: base,
+            free: free,
+            value: Math.max(skill?.rank?.value || 0, total)
+        };
 
         // Standard skill preparation
         //super._prepareSkill(skillId, skill);

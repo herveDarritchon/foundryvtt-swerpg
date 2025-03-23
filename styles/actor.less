@@ -1102,12 +1102,18 @@
   .skills-wrapper {
     display: grid;
 
+    .combat-skills{
+      margin-bottom: 2em;
+    }
+
     .skill {
+      height: 1.5em;
 
       .name {
         justify-content: flex-start;
         align-content: baseline;
         align-items: baseline;
+        flex: 2;
 
         .label {
           font-size: var(--font-size-12);
@@ -1120,6 +1126,10 @@
           font-size: var(--font-size-10);
           flex: none;
         }
+      }
+
+      .career{
+        flex: 0.25;
       }
 
     }
