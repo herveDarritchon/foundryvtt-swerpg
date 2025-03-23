@@ -24,6 +24,25 @@ export default class SwerpgCharacter extends SwerpgActorType {
             characteristicField.options.validate = SwerpgCharacter.#validateAttribute;
         }
 
+        schema.thresholds = new fields.SchemaField({
+            wounds: new fields.NumberField({
+                required: true,
+                integer: true,
+                initial: 0,
+                min: 0,
+                max: 2000,
+                step: 1,
+            }, {label: "THRESHOLD.Wounds"}),
+            strain: new fields.NumberField({
+                required: true,
+                integer: true,
+                initial: 0,
+                min: 0,
+                max: 2000,
+                step: 1,
+            }, {label: "THRESHOLD.Strain"}),
+        });
+
         // Experience/Advancement
         schema.experience = new fields.SchemaField({
             freeSkillRankToUse: new fields.NumberField({
@@ -33,8 +52,8 @@ export default class SwerpgCharacter extends SwerpgActorType {
                 min: 0,
                 max: 10,
                 step: 1,
-                label: "CHARACTER.freeSkillRankToUse"
-            }),
+
+            }, {label: "CHARACTER.freeSkillRankToUse"}),
             spent: new fields.NumberField({
                 required: true,
                 integer: true,
@@ -42,8 +61,8 @@ export default class SwerpgCharacter extends SwerpgActorType {
                 min: 0,
                 max: 2000,
                 step: 1,
-                label: "EXPERIENCE.Spent"
-            }),
+
+            }, {label: "EXPERIENCE.Spent"}),
             gained: new fields.NumberField({
                 required: true,
                 integer: true,
@@ -51,22 +70,9 @@ export default class SwerpgCharacter extends SwerpgActorType {
                 min: 0,
                 max: 2000,
                 step: 1,
-                label: "EXPERIENCE.Gained"
-            }),
-        });
 
-        schema.skills = new fields.SetField(
-            new fields.SchemaField({
-                id: new fields.StringField({required: true, blank: false, label: "SKILLS.Skill"}),
-                rank: new fields.NumberField({
-                    required: true,
-                    integer: true,
-                    initial: 0,
-                    min: 0,
-                    max: 5,
-                    label: "SKILLS.Label"
-                }),
-            }));
+            }, {label: "EXPERIENCE.Gained"}),
+        });
 
         schema.details = new fields.SchemaField({
             species: new fields.SchemaField({
@@ -85,15 +91,14 @@ export default class SwerpgCharacter extends SwerpgActorType {
             biography: new fields.SchemaField({
                 notableFeatures: new fields.HTMLField({
                     required: false,
-                    initial: undefined,
-                    label: "BIOGRAPHY.notableFeatures"
-                }),
-                age: new fields.StringField({required: false, initial: undefined, label: "BIOGRAPHY.age"}),
-                gender: new fields.StringField({required: false, initial: undefined, label: "BIOGRAPHY.gender"}),
-                height: new fields.StringField({required: false, initial: undefined, label: "BIOGRAPHY.height"}),
-                build: new fields.StringField({required: false, initial: undefined, label: "BIOGRAPHY.build"}),
-                hair: new fields.HTMLField({required: false, initial: undefined, label: "BIOGRAPHY.hair"}),
-                eyes: new fields.HTMLField({required: false, initial: undefined, label: "BIOGRAPHY.eyes"}),
+                    initial: undefined
+                }, {label: "BIOGRAPHY.notableFeatures"}),
+                age: new fields.StringField({required: false, initial: undefined}, {label: "BIOGRAPHY.age"}),
+                gender: new fields.StringField({required: false, initial: undefined}, {label: "BIOGRAPHY.gender"}),
+                height: new fields.StringField({required: false, initial: undefined}, {label: "BIOGRAPHY.height"}),
+                build: new fields.StringField({required: false, initial: undefined}, {label: "BIOGRAPHY.build"}),
+                hair: new fields.HTMLField({required: false, initial: undefined}, {label: "BIOGRAPHY.hair"}),
+                eyes: new fields.HTMLField({required: false, initial: undefined}, {label: "BIOGRAPHY.eyes"}),
             })
         });
         return schema;
@@ -230,6 +235,9 @@ export default class SwerpgCharacter extends SwerpgActorType {
         const species = this.details.species;
         const thresholds = this.thresholds;
 
+        thresholds.strain = 2;
+        thresholds.wounds = 3;
+
         // Ability Scores
         let abilityPointsBought = 0;
         let abilityPointsSpent = 0;
@@ -254,8 +262,6 @@ export default class SwerpgCharacter extends SwerpgActorType {
         const gained = this.experience.gained;
         this.experience = {spent: spent, gained: gained, starting: startingExperience};
 
-        //thresholds.strain = 0;
-        //thresholds.wounds = 0;
 
         // TODO to be reactivated when experience is used.
         // Track spent ability points
@@ -273,12 +279,10 @@ export default class SwerpgCharacter extends SwerpgActorType {
      * @param {Set<Object>} skills The skills object to prepare
      */
     _prepareSkills(skills) {
-        if (skills.size === 0) {
-            skills = SYSTEM.SKILLS;
-        }
         for (const skill of Object.entries(skills)) {
             this._prepareSkill(...skill);
         }
+
     }
 
 
@@ -304,6 +308,7 @@ export default class SwerpgCharacter extends SwerpgActorType {
             value: Math.max(skill?.rank?.value || 0, total)
         };
 
+        return skill;
         // Standard skill preparation
         //super._prepareSkill(skillId, skill);
 

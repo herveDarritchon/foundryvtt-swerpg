@@ -23,6 +23,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
             editSpecies: CharacterSheet.#onEditSpecies,
             editCareer: CharacterSheet.#onEditCareer,
             editBackground: CharacterSheet.#onEditBackground,
+            toggleTrainedSkill: CharacterSheet.#onToggleTrainedSkill,
         }
     };
 
@@ -39,9 +40,9 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
 
         // Expand Context
         Object.assign(context, {
-            speciesName: s.system.details.species?.name || game.i18n.localize("SPECIES.SHEET.CHOOSE"),
-            careerName: s.system.details.career?.name || game.i18n.localize("CAREER.SHEET.CHOOSE"),
-            backgroundName: s.system.details.background?.name || game.i18n.localize("BACKGROUND.SHEET.CHOOSE"),
+            speciesName: a.system.details.species?.name || game.i18n.localize("SPECIES.SHEET.CHOOSE"),
+            careerName: a.system.details.career?.name || game.i18n.localize("CAREER.SHEET.CHOOSE"),
+            backgroundName: a.system.details.background?.name || game.i18n.localize("BACKGROUND.SHEET.CHOOSE"),
             talentTreeButtonText: game.system.tree.actor === a ? "Close Talent Tree" : "Open Talent Tree",
             freeSkillRankToUse: a.system.freeSkillRankToUse,
         });
@@ -141,6 +142,19 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
      * @param {PointerEvent} event
      * @returns {Promise<void>}
      */
+    static async #onToggleTrainedSkill(event) {
+        const element = event.target.closest(".skill");
+        const skillId = element.dataset.skillId;
+        const skill = foundry.utils.getProperty(this.actor.system.skills, skillId);
+        console.log("onToggleTrainedSkill skill", skill);
+    }    /* -------------------------------------------- */
+
+    /**
+     * Handle click action to choose or edit your Career.
+     * @this {CharacterSheet}
+     * @param {PointerEvent} event
+     * @returns {Promise<void>}
+     */
     static async #onEditSpecies(event) {
         await this.actor._viewDetailItem("species", {editable: false});
     }
@@ -209,14 +223,21 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
      * @returns {undefined}
      */
     static #prepareSkills(actor) {
-        const skillKeys = Object.keys(SYSTEM.SKILLS);
-        const skills = skillKeys
-            .map(skillKey => {
-                const skill = SYSTEM.SKILLS[skillKey];
-                skill.pips = this._prepareSkillRanks(skill);
-                skill.career = this._prepareCareerFreeSkill(actor, skillKey);
-                return skill;
+        const skills = Object.entries(actor.system.skills).map(([k, v]) => (
+            {
+                id: k,
+                ...v,
+                ...SYSTEM.SKILLS[k]
+            })
+        )
+            .map(skill => {
+                return {
+                    pips: this._prepareSkillRanks(skill),
+                    career: this._prepareCareerFreeSkill(actor, skill.id),
+                    ...skill
+                }
             });
+
         const skillsByType = Object.groupBy(skills, (skill) => skill.type.id);
 
         // Sort and return the skills
@@ -234,7 +255,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
      * @returns {undefined}
      */
     static _prepareSkillRanks(skill) {
-        return Array.from({ length: 5 }, (_, i) => ({
+        return Array.from({length: 5}, (_, i) => ({
             cssClass: i < skill.rank.value ? "trained" : "untrained"
         }));
     }

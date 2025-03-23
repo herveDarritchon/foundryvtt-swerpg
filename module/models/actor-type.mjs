@@ -70,7 +70,11 @@ export default class SwerpgActorType extends foundry.abstract.TypeDataModel {
         // Skills
         schema.skills = new fields.SchemaField(Object.values(SYSTEM.SKILLS).reduce((obj, skill) => {
             obj[skill.id] = new fields.SchemaField({
-                rank: new fields.NumberField({...requiredInteger, initial: 0, max: 5}),
+                rank: new fields.SchemaField({
+                    base: new fields.NumberField({...requiredInteger, initial: 0, max: 5}),
+                    free: new fields.NumberField({...requiredInteger, initial: 0, max: 5}),
+                    value: new fields.NumberField({...requiredInteger, initial: 0, max: 5})
+                }, {label: skill.name}),
                 path: new fields.StringField({required: false, initial: undefined, blank: false})
             }, {label: skill.name})
             return obj;
@@ -208,14 +212,14 @@ export default class SwerpgActorType extends foundry.abstract.TypeDataModel {
         r.action.max = Math.max(r.action.max, 0);
         r.action.value = Math.clamp(r.action.value, 0, r.action.max);
 
-    // Focus
-    r.focus.max = Math.ceil((a.willpower.base + a.presence.base + a.intellect.base) / 2);
-    r.focus.value = Math.clamp(r.focus.value, 0, 3);
+        // Focus
+        r.focus.max = Math.ceil((a.willpower.base + a.presence.base + a.intellect.base) / 2);
+        r.focus.value = Math.clamp(r.focus.value, 0, 3);
 
-    // Heroism
-    r.heroism.max = 3;
-    r.heroism.value = Math.clamp(r.heroism.value, 0, 3);
-  }
+        // Heroism
+        r.heroism.max = 3;
+        r.heroism.value = Math.clamp(r.heroism.value, 0, 3);
+    }
 
     /* -------------------------------------------- */
 
