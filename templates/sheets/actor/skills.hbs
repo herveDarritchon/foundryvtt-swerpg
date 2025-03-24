@@ -4,11 +4,11 @@
     {{#if incomplete.skills}}
         <div class="point-pools flexrow">
             <span class="label">Free Skill(s) left</span>
-            <span class="value">{{freeSkillRankToUse}}</span>
-            <span class="label">Available</span>
-            <span class="value">{{points.skill.available}}</span>
+            <span class="value">{{experience.freeSkillRank.available}}</span>
             <span class="label">Spent</span>
-            <span class="value">{{points.skill.spent}}</span>
+            <span class="value">{{experience.spent}}</span>
+            <span class="label">Available</span>
+            <span class="value">{{experience.gained}}</span>
         </div>
     {{/if}}
 

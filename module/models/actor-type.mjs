@@ -73,8 +73,8 @@ export default class SwerpgActorType extends foundry.abstract.TypeDataModel {
                 rank: new fields.SchemaField({
                     base: new fields.NumberField({...requiredInteger, initial: 0, max: 5}),
                     free: new fields.NumberField({...requiredInteger, initial: 0, max: 5}),
-                    value: new fields.NumberField({...requiredInteger, initial: 0, max: 5})
-                }, {label: skill.name}),
+                    trained: new fields.NumberField({...requiredInteger, initial: 0, max: 5})
+                }, {validate: SwerpgActorType.#validateSkillRank, label: skill.name}),
                 path: new fields.StringField({required: false, initial: undefined, blank: false})
             }, {label: skill.name})
             return obj;
@@ -95,6 +95,18 @@ export default class SwerpgActorType extends foundry.abstract.TypeDataModel {
 
     /** @override */
     static LOCALIZATION_PREFIXES = ["ACTOR"];
+
+    /* -------------------------------------------- */
+
+    /**
+     * Validate an attribute field
+     * @param {{base: number, increases: number, bonus: number}} attr     The attribute value
+     */
+    static #validateSkillRank(attr) {
+        const value = attr.base + attr.free + attr.trained;
+        if (value < 0 || value > 5) throw new Error(`Skill Rank cannot exceed 5 or less than 0.`);
+    }
+
 
     /* -------------------------------------------- */
     /*  Data Preparation                            */

@@ -66,11 +66,11 @@ export default class SwerpgActor extends Actor {
     /**
      * The spellcraft components known by this Actor
      * @type {{
-     *   runes: Set<SwerpgRune>,
-     *   inflections: Set<SwerpgInflection>,
      *   gestures: Set<SwerpgGesture>,
      *   iconicSlots: number,
-     *   iconicSpells: SwerpgItem[]
+     *   iconicSpells: SwerpgItem[],
+     *   inflections: Set<SwerpgInflection>,
+     *   runes: Set<SwerpgRune>
      * }}
      */
     grimoire = this.grimoire;
@@ -128,22 +128,6 @@ export default class SwerpgActor extends Actor {
      */
     get level() {
         return this.system.advancement.level;
-    }
-
-    /**
-     * A convenience reference to the Actor available experience.
-     * @type {number}
-     */
-    get availableExperience() {
-        return this.system.experience.available;
-    }
-
-    /**
-     * A convenience reference to the Actor total experience.
-     * @type {number}
-     */
-    get totalExperience() {
-        return this.system.experience.total;
     }
 
     /**

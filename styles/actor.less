@@ -1108,6 +1108,9 @@
 
     .skill {
       height: 1.5em;
+      justify-content: center;
+      align-items: center;
+      align-content: center;
 
       .name {
         justify-content: flex-start;
@@ -1153,12 +1156,11 @@
       flex: 0 0 123px;
       justify-content: center;
       gap: 4px 0;
-      margin-right: 0.75em;
       align-items: center;
       align-content: center;
 
       .pip {
-        height: 30px;
+        height: 15px;
         width: 30px;
         padding: 0;
         margin: 0;
@@ -1166,6 +1168,7 @@
         align-items: center;
         align-content: center;
         display: flex;
+        cursor: pointer;
       }
 
       .pip.untrained {
@@ -1206,7 +1209,7 @@
 
       each(range(1, 5, 1), {
         .pip:nth-child(@{index}) {
-          left: -((@value - 1)* 4px);
+          left: -((@value - 1)* 5px);
         }
       });
     }

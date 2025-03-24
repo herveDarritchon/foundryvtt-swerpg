@@ -44,15 +44,17 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
             careerName: a.system.details.career?.name || game.i18n.localize("CAREER.SHEET.CHOOSE"),
             backgroundName: a.system.details.background?.name || game.i18n.localize("BACKGROUND.SHEET.CHOOSE"),
             talentTreeButtonText: game.system.tree.actor === a ? "Close Talent Tree" : "Open Talent Tree",
-            freeSkillRankToUse: a.system.freeSkillRankToUse,
+            experience: a.system.experience,
         });
 
+        context.skills = CharacterSheet.#prepareSkills(a);
+        context.experience.freeSkillRank.available = a.system.experience.freeSkillRank.gained - a.system.experience.freeSkillRank.spent;
         // Incomplete Tasks
         context.points = a.system.points;
         Object.assign(i, {
             species: !s.system.details.species?.name,
             career: !s.system.details.career?.name,
-            freeSkill: a.system.freeSkillRankToUse !== 0,
+            freeSkill: a.system.experience.freeSkillRank.available !== 0,
             background: !s.system.details.background?.name,
             /*      characteristics: context.points.ability.requireInput,
                   skills: context.points.skill.available,
@@ -74,7 +76,6 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
             i.creationTooltip += "</ol>";
         }
 
-        context.skills = CharacterSheet.#prepareSkills(a);
 
         return context;
     }
@@ -145,9 +146,62 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
     static async #onToggleTrainedSkill(event) {
         const element = event.target.closest(".skill");
         const skillId = element.dataset.skillId;
+        const isCareer = element.dataset.isCareer === "true";
         const skill = foundry.utils.getProperty(this.actor.system.skills, skillId);
-        console.log("onToggleTrainedSkill skill", skill);
-    }    /* -------------------------------------------- */
+        if (!isCareer) {
+            ui.notifications.warn("you have to spend a free career skill points first !");
+            return;
+        }
+        console.log(`[Before] onToggleTrainedSkill skill with id '${skillId}', is Career ${isCareer} and values:`, skill, this.actor);
+        const rank = foundry.utils.deepClone(skill.rank);
+        const freeSkillRank = foundry.utils.deepClone(this.actor.system.experience.freeSkillRank);
+
+        if (event.ctrlKey) {
+            rank.free--;
+            freeSkillRank.spent--;
+// TODO à ajouter pour gérer les trained et non les free from career            rank.trained--;
+        } else {
+            rank.free++;
+            freeSkillRank.spent++;
+// TODO à ajouter pour gérer les trained et non les free from career            rank.trained++;
+        }
+
+        const value = rank.base + rank.free + rank.trained;
+        const freeSkillRankAvailable = freeSkillRank.gained - freeSkillRank.spent;
+
+        if (rank.free < 0) {
+            ui.notifications.warn("you can't forget this rank because it comes from species!");
+            return;
+        }
+
+        if (value < 0) {
+            ui.notifications.warn("you can't have less than 0 ranks!");
+            return;
+        }
+
+        if (value > 2) {
+            ui.notifications.warn("you can't have more than 2 ranks during character creation!");
+            return;
+        }
+
+        if (freeSkillRankAvailable < 0) {
+            ui.notifications.warn("you can't have use free skill rank anymore. You have used all!");
+            return;
+        }
+
+        if (freeSkillRankAvailable > 4) {
+            ui.notifications.warn("you can't get more than 4 free skill ranks!");
+            return;
+        }
+
+        const updateActorResult = await this.actor.update({[`system.skills.${skillId}.rank`]: rank});
+        const updateActorResult2 = await this.actor.update({'system.experience.freeSkillRank': freeSkillRank});
+
+        console.log(`[After] onToggleTrainedSkill skill with id '${skillId}', is Career ${isCareer} and values:`, updateActorResult, updateActorResult2, this.actor, rank);
+
+    }
+
+    /* -------------------------------------------- */
 
     /**
      * Handle click action to choose or edit your Career.
@@ -231,10 +285,12 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
             })
         )
             .map(skill => {
+                const total = skill.rank.base + skill.rank.free + skill.rank.trained;
+                const skillEnriched = foundry.utils.mergeObject(skill, {rank: {value: total}});
                 return {
-                    pips: this._prepareSkillRanks(skill),
+                    pips: this._prepareSkillRanks(skillEnriched),
                     career: this._prepareCareerFreeSkill(actor, skill.id),
-                    ...skill
+                    ...skillEnriched
                 }
             });
 
