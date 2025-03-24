@@ -1,0 +1,20 @@
+<section class="tab sheet-body flexcol {{tabs.config.cssClass}} scrollable"
+         data-tab="{{tabs.config.id}}" data-group="{{tabs.config.group}}">
+
+    <fieldset {{fieldDisabled}}>
+        <legend>{{localize "SPECIALIZATION.FIELDS.FreeSkill"}}</legend>
+        {{formField fields.freeSkillRank value=source.system.freeSkillRank localize=true}}
+    </fieldset>
+
+    <fieldset {{fieldDisabled}}>
+        <legend>{{localize "SPECIALIZATION.FIELDS.Skills"}} ({{selectedSkills}})</legend>
+        <div class="specializations">
+            {{#each specializationSkills as |skill|}}
+                <p class="specialization {{skill.extraCss}}" data-action="toggleSpecialization" data-action-id="{{skill.id}}"
+                   data-action-is-active="{{skill.isActive}}">{{localize skill.label}}</p>
+            {{/each}}
+        </div>
+        <p class="message hint">{{localize "SPECIALIZATION.SHEET.SpecializationSkills.maxNumber"}}</p>
+    </fieldset>
+
+</section>

@@ -244,6 +244,11 @@
           "description"
         ]
       },
+      "specialization": {
+        "htmlFields": [
+          "description"
+        ]
+      },
       "species": {
         "htmlFields": [
           "description"

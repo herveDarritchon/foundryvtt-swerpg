@@ -6,6 +6,7 @@ export {default as SwerpgArchetype} from "./archetype.mjs";
 export {default as SwerpgArmor} from "./armor.mjs";
 export {default as SwerpgBackground} from "./background.mjs";
 export {default as SwerpgCareer} from "./career.mjs";
+export {default as SwerpgSpecialization} from "./specialization.mjs";
 export {default as SwerpgGesture} from "./gesture.mjs";
 export {default as SwerpgHero} from "./hero.mjs";
 export {default as SwerpgCharacter} from "./character.mjs";
