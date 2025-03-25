@@ -2,6 +2,7 @@ import SwerpgActorType from "./actor-type.mjs";
 import SwerpgSpeciality from "./speciality.mjs";
 import {SwerpgSpecies} from "./_module.mjs";
 import SwerpgCareer from "./career.mjs";
+import SwerpgSpecialization from "./specialization.mjs";
 
 /**
  * Data schema, attributes, and methods specific to Character type Actors.
@@ -128,7 +129,7 @@ export default class SwerpgCharacter extends SwerpgActorType {
                 new fields.SchemaField({
                     name: new fields.StringField({blank: false}),
                     img: new fields.StringField(),
-                    ...SwerpgCareer.defineSchema()
+                    ...SwerpgSpecialization.defineSchema()
                 }, {required: true, nullable: true, initial: null}),
             ),
             specialities: new fields.ArrayField(new fields.SchemaField({

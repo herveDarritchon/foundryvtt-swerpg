@@ -153,23 +153,26 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
         const element = event.target.closest(".skill");
         const skillId = element.dataset.skillId;
         const isCareer = element.dataset.isCareer === "true";
+        const isSpecialization = element.dataset.isSpecialization === "true";
+
         const skill = foundry.utils.getProperty(this.actor.system.skills, skillId);
-        if (!isCareer) {
-            ui.notifications.warn("you have to spend career free skill points first!");
+
+        if (!isCareer && !isSpecialization) {
+            ui.notifications.warn("you have to spend free skill points first during character creation!");
             return;
         }
+
         console.log(`[Before] onToggleTrainedSkill skill with id '${skillId}', is Career ${isCareer} and values:`, skill, this.actor);
+
         const rank = foundry.utils.deepClone(skill.rank);
         const freeSkillRanks = foundry.utils.deepClone(this.actor.system.progression.freeSkillRanks);
 
         if (event.ctrlKey) {
             rank.free--;
             freeSkillRanks.career.spent--;
-// TODO à ajouter pour gérer les trained et non les free from career            rank.trained--;
         } else {
             rank.free++;
             freeSkillRanks.career.spent++;
-// TODO à ajouter pour gérer les trained et non les free from career            rank.trained++;
         }
 
         const value = rank.base + rank.free + rank.trained;
@@ -310,7 +313,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
                 const skillEnriched = foundry.utils.mergeObject(skill, {rank: {value: total}});
                 return {
                     pips: this._prepareSkillRanks(skillEnriched),
-                    career: this._prepareCareerFreeSkill(actor, skill.id),
+                    freeRank: this._prepareFreeSkill(actor, skill.id),
                     ...skillEnriched
                 }
             });
@@ -341,12 +344,33 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
      * Prepare the skill Ranks for the context
      * @returns {undefined}
      */
-    static _prepareCareerFreeSkill(actor, skillKey) {
-        const mayBeASkill = actor.system.details.career?.careerSkills.find(skill => skill.id === skillKey);
+    static _prepareFreeSkill(actor, skillKey) {
+        const specializationFreeSkills = Array.from(actor.system.details.specializations)
+            .flatMap(specialization => Array.from(specialization.specializationSkills
+                .map(skill => {
+                    return {
+                        id: skill.id,
+                        parent: specialization.name,
+                        type: "specialization"
+                    }
+                })));
+        const careerFreeSkills = Array.from(actor.system.details.career?.careerSkills).map(skill => {
+            return {
+                id: skill.id,
+                parent: actor.system.details.career.name,
+                type: "career"
+            }
+        });
+
+        const freeSkills = specializationFreeSkills.concat(careerFreeSkills);
+
+        const mayBeAFreeSkill = freeSkills.filter(skill => skill.id === skillKey)
+
         return {
-            label: mayBeASkill ? "X" : "",
-            name: mayBeASkill ? actor.system.details.career.name : "-",
-            isCareer: !!mayBeASkill,
+            label: mayBeAFreeSkill.length ? "X" : "",
+            name:  mayBeAFreeSkill.length ? mayBeAFreeSkill.map(skill => skill.parent).join(", ") : "-",
+            isCareer: mayBeAFreeSkill.length !== 0 && mayBeAFreeSkill.filter(skill => skill.type === "career").length > 0,
+            isSpecialization: mayBeAFreeSkill.length !== 0 && mayBeAFreeSkill.filter(skill => skill.type === "specialization").length > 0,
         };
     }
 }
