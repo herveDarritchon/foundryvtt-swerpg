@@ -155,7 +155,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
         const isCareer = element.dataset.isCareer === "true";
         const skill = foundry.utils.getProperty(this.actor.system.skills, skillId);
         if (!isCareer) {
-            ui.notifications.warn("you have to spend a free career skill points first !");
+            ui.notifications.warn("you have to spend career free skill points first!");
             return;
         }
         console.log(`[Before] onToggleTrainedSkill skill with id '${skillId}', is Career ${isCareer} and values:`, skill, this.actor);
@@ -181,12 +181,12 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
         }
 
         if (value < 0) {
-            ui.notifications.warn("you can't have less than 0 ranks!");
+            ui.notifications.warn("you can't have less than 0 rank!");
             return;
         }
 
-        if (value > 2) {
-            ui.notifications.warn("you can't have more than 2 ranks during character creation!");
+        if (rank.free > 1) {
+            ui.notifications.warn("you can't use more than 1 free skill rank into the same skill!");
             return;
         }
 
@@ -201,7 +201,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
         }
 
         const updateActorResult = await this.actor.update({[`system.skills.${skillId}.rank`]: rank});
-        const updateActorResult2 = await this.actor.update({'system.experience.freeSkillRanks': freeSkillRanks});
+        const updateActorResult2 = await this.actor.update({'system.progression.freeSkillRanks': freeSkillRanks});
 
         console.log(`[After] onToggleTrainedSkill skill with id '${skillId}', is Career ${isCareer} and values:`, updateActorResult, updateActorResult2, this.actor, rank);
 
