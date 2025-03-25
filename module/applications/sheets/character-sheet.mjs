@@ -50,14 +50,16 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
         });
 
         context.skills = CharacterSheet.#prepareSkills(a);
-        context.experience.freeSkillRank.available = a.system.experience.freeSkillRank.gained - a.system.experience.freeSkillRank.spent;
+        context.progression.freeSkillRanks.career.available = a.system.progression.freeSkillRanks.career.gained - a.system.progression.freeSkillRanks.career.spent;
+        context.progression.freeSkillRanks.specialization.available = a.system.progression.freeSkillRanks.specialization.gained - a.system.progression.freeSkillRanks.specialization.spent;
         // Incomplete Tasks
         context.points = a.system.points;
+
         Object.assign(i, {
             species: !s.system.details.species?.name,
             career: !s.system.details.career?.name,
-            specialization: s.system.details.specializations?.size === 0 ,
-            freeSkill: a.system.experience.freeSkillRank.available !== 0,
+            specialization: s.system.details.specializations?.length === 0,
+            freeSkill: a.system.progression.freeSkillRanks.career.available !== 0 || a.system.progression.freeSkillRanks.specialization.available !== 0,
             background: !s.system.details.background?.name,
             /*      characteristics: context.points.ability.requireInput,
                   skills: context.points.skill.available,
@@ -158,20 +160,20 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
         }
         console.log(`[Before] onToggleTrainedSkill skill with id '${skillId}', is Career ${isCareer} and values:`, skill, this.actor);
         const rank = foundry.utils.deepClone(skill.rank);
-        const freeSkillRank = foundry.utils.deepClone(this.actor.system.experience.freeSkillRank);
+        const freeSkillRanks = foundry.utils.deepClone(this.actor.system.progression.freeSkillRanks);
 
         if (event.ctrlKey) {
             rank.free--;
-            freeSkillRank.spent--;
+            freeSkillRanks.career.spent--;
 // TODO à ajouter pour gérer les trained et non les free from career            rank.trained--;
         } else {
             rank.free++;
-            freeSkillRank.spent++;
+            freeSkillRanks.career.spent++;
 // TODO à ajouter pour gérer les trained et non les free from career            rank.trained++;
         }
 
         const value = rank.base + rank.free + rank.trained;
-        const freeSkillRankAvailable = freeSkillRank.gained - freeSkillRank.spent;
+        const freeSkillRankAvailable = freeSkillRanks.career.gained - freeSkillRanks.career.spent;
 
         if (rank.free < 0) {
             ui.notifications.warn("you can't forget this rank because it comes from species!");
@@ -199,7 +201,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
         }
 
         const updateActorResult = await this.actor.update({[`system.skills.${skillId}.rank`]: rank});
-        const updateActorResult2 = await this.actor.update({'system.experience.freeSkillRank': freeSkillRank});
+        const updateActorResult2 = await this.actor.update({'system.experience.freeSkillRanks': freeSkillRanks});
 
         console.log(`[After] onToggleTrainedSkill skill with id '${skillId}', is Career ${isCareer} and values:`, updateActorResult, updateActorResult2, this.actor, rank);
 

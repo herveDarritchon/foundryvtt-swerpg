@@ -44,8 +44,54 @@ export default class SwerpgCharacter extends SwerpgActorType {
         });
 
         // Experience/Advancement
-        schema.experience = new fields.SchemaField({
-            freeSkillRank: new fields.SchemaField({
+        schema.progression = new fields.SchemaField({
+            freeSkillRanks: new fields.SchemaField({
+                career: new fields.SchemaField({
+                    id: new fields.StringField({required: true, initial: ""}),
+                    name: new fields.StringField({required: true, initial: ""}),
+                    spent: new fields.NumberField({
+                        required: true,
+                        integer: true,
+                        initial: 0,
+                        min: 0,
+                        max: 2000,
+                        step: 1,
+
+                    }, {label: "EXPERIENCE.FreeSkillRank.Spent"}),
+                    gained: new fields.NumberField({
+                        required: true,
+                        integer: true,
+                        initial: 0,
+                        min: 0,
+                        max: 2000,
+                        step: 1,
+
+                    }, {label: "EXPERIENCE.FreeSkillRank.Gained"}),
+                }),
+                specialization: new fields.SchemaField({
+                    id: new fields.StringField({required: true, initial: ""}),
+                    name: new fields.StringField({required: true, initial: ""}),
+                    spent: new fields.NumberField({
+                        required: true,
+                        integer: true,
+                        initial: 0,
+                        min: 0,
+                        max: 2000,
+                        step: 1,
+
+                    }, {label: "EXPERIENCE.FreeSkillRank.Spent"}),
+                    gained: new fields.NumberField({
+                        required: true,
+                        integer: true,
+                        initial: 0,
+                        min: 0,
+                        max: 2000,
+                        step: 1,
+
+                    }, {label: "EXPERIENCE.FreeSkillRank.Gained"}),
+                }),
+            }),
+            experience: new fields.SchemaField({
                 spent: new fields.NumberField({
                     required: true,
                     integer: true,
@@ -54,7 +100,7 @@ export default class SwerpgCharacter extends SwerpgActorType {
                     max: 2000,
                     step: 1,
 
-                }, {label: "EXPERIENCE.FreeSkillRank.Spent"}),
+                }, {label: "EXPERIENCE.Spent"}),
                 gained: new fields.NumberField({
                     required: true,
                     integer: true,
@@ -63,26 +109,8 @@ export default class SwerpgCharacter extends SwerpgActorType {
                     max: 2000,
                     step: 1,
 
-                }, {label: "EXPERIENCE.FreeSkillRank.Gained"}),
+                }, {label: "EXPERIENCE.Gained"}),
             }),
-            spent: new fields.NumberField({
-                required: true,
-                integer: true,
-                initial: 0,
-                min: 0,
-                max: 2000,
-                step: 1,
-
-            }, {label: "EXPERIENCE.Spent"}),
-            gained: new fields.NumberField({
-                required: true,
-                integer: true,
-                initial: 0,
-                min: 0,
-                max: 2000,
-                step: 1,
-
-            }, {label: "EXPERIENCE.Gained"}),
         });
 
         schema.details = new fields.SchemaField({
@@ -276,7 +304,7 @@ export default class SwerpgCharacter extends SwerpgActorType {
 
         this._applyFreeSkillSpecies(this.skills);
 
-        this.experience.startingExperience = species?.startingExperience || 0;
+        this.progression.experience.startingExperience = species?.startingExperience || 0;
 
 
         // TODO to be reactivated when experience is used.
@@ -359,9 +387,8 @@ export default class SwerpgCharacter extends SwerpgActorType {
      * @override
      */
     #prepareSpecializations() {
-        const career = this.details.career;
-        this.experience.freeSkillRank.gained = career?.freeSkillRank || 0;
-        //this.career.careerSkills = career?.careerSkills || [];
+        const specialization = Array.from(this.details.specializations)[0];
+        this.progression.freeSkillRanks.specialization.gained = specialization?.freeSkillRank || 0;
     }
 
     /* -------------------------------------------- */
@@ -372,8 +399,7 @@ export default class SwerpgCharacter extends SwerpgActorType {
      */
     #prepareCareer() {
         const career = this.details.career;
-        this.experience.freeSkillRank.gained = career?.freeSkillRank || 0;
-        //this.career.careerSkills = career?.careerSkills || [];
+        this.progression.freeSkillRanks.career.gained = career?.freeSkillRank || 0;
     }
 
     /* -------------------------------------------- */

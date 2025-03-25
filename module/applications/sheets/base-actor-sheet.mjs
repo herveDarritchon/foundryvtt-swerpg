@@ -138,7 +138,7 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
         const {sections: actions, favorites: favoriteActions} = this.#prepareActions();
         return {
             characteristicScores: this.#prepareCharacteristics(),
-            experienceScore: this.#prepareExperience(),
+            progression: this.#prepareProgression(),
             actions : actions ?? [],
             actor: this.document,
             biography: await this.#prepareBiography(),
@@ -211,16 +211,49 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
         return characteristics;
     }
 
+
+    /**
+     * Prepare formatted experience scores for display on the Actor sheet.
+     * @return {object[]}
+     */
+    #prepareProgression() {
+        const progression = {};
+        progression.experience = this.#prepareExperience();
+        progression.freeSkillRanks = this.#prepareFreeSkillRanks();
+        return progression;
+    }
+
+
     /**
      * Prepare formatted experience scores for display on the Actor sheet.
      * @return {object[]}
      */
     #prepareExperience() {
-        let e = this.actor.system.experience;
+        let e = this.actor.system.progression.experience;
         const experience = foundry.utils.deepClone(e);
-        experience.total = e.starting + e.gained
+        experience.total = e.startingExperience + e.gained
         experience.available = experience.total - e.spent;
         return experience;
+    }
+
+    /**
+     * Prepare formatted experience scores for display on the Actor sheet.
+     * @return {object[]}
+     */
+    #prepareFreeSkillRanks() {
+        const freeSkilRanks = {};
+
+        let c = this.actor.system.progression.freeSkillRanks.career;
+        const freeSkillRanksCareer = foundry.utils.deepClone(c);
+        freeSkillRanksCareer.available = freeSkillRanksCareer.gained - c.spent;
+        freeSkilRanks.career = freeSkillRanksCareer;
+
+        let s = this.actor.system.progression.freeSkillRanks.specialization;
+        const freeSkillRanksSpecialization = foundry.utils.deepClone(s);
+        freeSkillRanksSpecialization.available = freeSkillRanksSpecialization.gained - s.spent;
+        freeSkilRanks.specialization = freeSkillRanksSpecialization;
+
+        return freeSkilRanks;
     }
 
     /* -------------------------------------------- */
