@@ -96,6 +96,13 @@ export default class SwerpgCharacter extends SwerpgActorType {
                 img: new fields.StringField(),
                 ...SwerpgCareer.defineSchema()
             }, {required: true, nullable: true, initial: null}),
+            specializations: new fields.SetField(
+                new fields.SchemaField({
+                    name: new fields.StringField({blank: false}),
+                    img: new fields.StringField(),
+                    ...SwerpgCareer.defineSchema()
+                }, {required: true, nullable: true, initial: null}),
+            ),
             specialities: new fields.ArrayField(new fields.SchemaField({
                 ...SwerpgSpeciality.defineSchema()
             }), {required: true, nullable: true, initial: null}),
@@ -157,6 +164,7 @@ export default class SwerpgCharacter extends SwerpgActorType {
         this.size = (this.details?.ancestry?.size || 3) + (this.details?.size || 0);
         this.#prepareSpecies();
         this.#prepareCareer();
+        this.#prepareSpecializations();
         this.#prepareBaseMovement();
         super.prepareBaseData();
         console.log("[prepareBaseData]: character data", this);
@@ -343,6 +351,19 @@ export default class SwerpgCharacter extends SwerpgActorType {
                 skill.cost = next.cost;*/
     }
 
+
+    /* -------------------------------------------- */
+
+    /**
+     * Prepare abilities data for the Character subtype specifically.
+     * @override
+     */
+    #prepareSpecializations() {
+        const career = this.details.career;
+        this.experience.freeSkillRank.gained = career?.freeSkillRank || 0;
+        //this.career.careerSkills = career?.careerSkills || [];
+    }
+
     /* -------------------------------------------- */
 
     /**
@@ -441,7 +462,7 @@ export default class SwerpgCharacter extends SwerpgActorType {
 
     /**
      * Apply a Career item to this Character Actor.
-     * @param {SwerpgItem} career     The career Item to apply to the Actor.
+     * @param {SwerpgCareer} career     The career Item to apply to the Actor.
      * @returns {Promise<void>}
      */
     async applyCareer(career) {
@@ -452,6 +473,24 @@ export default class SwerpgCharacter extends SwerpgActorType {
             canApply: true,
             //canClear: actor.isL0
             canClear: true
+        });
+    }
+
+    /**
+     * Apply a Specialization item to this Character Actor.
+     * @param {SwerpgSpeciality} specialization     The specialization Item to apply to the Actor.
+     * @returns {Promise<void>}
+     */
+    async applySpecialization(specialization) {
+        const actor = this.parent;
+        await actor._applyDetailItem(specialization, {
+            // TODO Change this when points are used for experience
+            //canApply: actor.isL0 && !actor.points.ability.spent,
+            canApply: true,
+            //canClear: actor.isL0
+            canClear: true,
+            isCollection: true,
+            collectionKey: "specializations"
         });
     }
 

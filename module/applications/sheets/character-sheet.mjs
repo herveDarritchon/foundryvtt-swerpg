@@ -22,6 +22,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
         actions: {
             editSpecies: CharacterSheet.#onEditSpecies,
             editCareer: CharacterSheet.#onEditCareer,
+            editSpecializations: CharacterSheet.#onEditSpecializations,
             editBackground: CharacterSheet.#onEditBackground,
             toggleTrainedSkill: CharacterSheet.#onToggleTrainedSkill,
         }
@@ -42,6 +43,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
         Object.assign(context, {
             speciesName: a.system.details.species?.name || game.i18n.localize("SPECIES.SHEET.CHOOSE"),
             careerName: a.system.details.career?.name || game.i18n.localize("CAREER.SHEET.CHOOSE"),
+            specializationName: Array.from(a.system.details.specializations)[0]?.name || game.i18n.localize("SPECIALIZATION.SHEET.CHOOSE"),
             backgroundName: a.system.details.background?.name || game.i18n.localize("BACKGROUND.SHEET.CHOOSE"),
             talentTreeButtonText: game.system.tree.actor === a ? "Close Talent Tree" : "Open Talent Tree",
             experience: a.system.experience,
@@ -54,6 +56,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
         Object.assign(i, {
             species: !s.system.details.species?.name,
             career: !s.system.details.career?.name,
+            specialization: s.system.details.specializations?.size === 0 ,
             freeSkill: a.system.experience.freeSkillRank.available !== 0,
             background: !s.system.details.background?.name,
             /*      characteristics: context.points.ability.requireInput,
@@ -63,11 +66,12 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
             skills: true,
             talents: true,
         });
-        i.creation = i.species || i.career || i.freeSkill || i.background || i.characteristics || i.skills || i.talents;
+        i.creation = i.species || i.career || i.freeSkill || i.specialization || i.background || i.characteristics || i.skills || i.talents;
         if (i.creation) {
             i.creationTooltip = "<p>Character Creation Incomplete!</p><ol>";
             if (i.species) i.creationTooltip += "<li>Select Species</li>";
             if (i.career) i.creationTooltip += "<li>Select Career</li>";
+            if (i.specialization) i.creationTooltip += "<li>Select Specialization</li>";
             if (i.freeSkill) i.creationTooltip += "<li>Use Free Skill</li>";
             if (i.background) i.creationTooltip += "<li>Select Background</li>";
             if (i.characteristics) i.creationTooltip += "<li>Spend Ability Points</li>";
@@ -221,6 +225,18 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
      * @param {PointerEvent} event
      * @returns {Promise<void>}
      */
+    static async #onEditSpecializations(event) {
+        await this.actor._viewDetailItem("specialization", {editable: false});
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle click action to choose or edit your Career.
+     * @this {CharacterSheet}
+     * @param {PointerEvent} event
+     * @returns {Promise<void>}
+     */
     static async #onEditCareer(event) {
         await this.actor._viewDetailItem("career", {editable: false});
     }
@@ -251,6 +267,9 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
                 return;
             case "career":
                 await this.actor.system.applyCareer(item);
+                return;
+            case "specialization":
+                await this.actor.system.applySpecialization(item);
                 return;
             case "background":
                 await this.actor.system.applyBackground(item);

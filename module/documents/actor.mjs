@@ -651,14 +651,14 @@ export default class SwerpgActor extends Actor {
         details.signatureName = signatureNames.sort((a, b) => a.localeCompare(b)).join(" ");
 
         // Warn if the Actor does not have a legal build
-       /* if (this.type === "character" || this.type === "character") {
-            const points = this.system.points.talent;
-            points.spent = this.talentIds.size - this.permanentTalentIds.size;
-            points.available = points.total - points.spent;
-            if (points.available < 0) {
-                ui.notifications?.warn(`Actor ${this.name} has more Talents unlocked than they have talent points available.`);
-            }
-        }*/
+        /* if (this.type === "character" || this.type === "character") {
+             const points = this.system.points.talent;
+             points.spent = this.talentIds.size - this.permanentTalentIds.size;
+             points.available = points.total - points.spent;
+             if (points.available < 0) {
+                 ui.notifications?.warn(`Actor ${this.name} has more Talents unlocked than they have talent points available.`);
+             }
+         }*/
     }
 
     /* -------------------------------------------- */
@@ -733,7 +733,7 @@ export default class SwerpgActor extends Actor {
     getAbilityBonus(scaling) {
         const abilities = this.system.abilities;
         if (scaling == null || scaling.length === 0) return 0;
-/*        return Math.round(scaling.reduce((x, t) => x + abilities[t].value, 0) / (scaling.length * 2));*/
+        /*        return Math.round(scaling.reduce((x, t) => x + abilities[t].value, 0) / (scaling.length * 2));*/
         return 1;
     }
 
@@ -1856,12 +1856,14 @@ export default class SwerpgActor extends Actor {
      * @returns {Promise<void>}
      * @internal
      */
-    async _applyDetailItem(item, {canApply = true, canClear = false} = {}) {
-        const type = item.type;
+    async _applyDetailItem(item, {canApply = true, canClear = false, isCollection = false, collectionKey = ""} = {}) {
+        // If the item is a collection, use the collection key instead of the item type
+        const type = isCollection ? collectionKey : item.type;
+
         if (!canApply) {
             throw new Error(`You are not allowed to apply this ${type} item to Actor type ${this.type}`);
         }
-        if (!(item.type in this.system.details)) {
+        if (!(type in this.system.details)) {
             throw new Error(`Incorrect detail item type ${type} for Actor type ${this.type}`);
         }
         if (!item && !canClear) {
@@ -1889,15 +1891,21 @@ export default class SwerpgActor extends Actor {
         // Add new detail data
         else {
             const itemData = item.toObject();
-            const detail = updateData[key] = Object.assign(itemData.system, {name: itemData.name, img: itemData.img});
-            if (detail.talents?.length) {
-                updateData.items = [];
-                for (const uuid of detail.talents) {
-                    const doc = await fromUuid(uuid);
-                    if (doc) updateData.items.push(doc.toObject());
+            const data = Object.assign(itemData.system, {name: itemData.name, img: itemData.img});
+            if (isCollection) {
+                this.system.details.specializations.add(data);
+                updateData[key] = this.system.details.specializations;
+            } else {
+                const detail = updateData[key] = data;
+                if (detail.talents?.length) {
+                    updateData.items = [];
+                    for (const uuid of detail.talents) {
+                        const doc = await fromUuid(uuid);
+                        if (doc) updateData.items.push(doc.toObject());
+                    }
                 }
             }
-            message = game.i18n.format("ACTOR.AppliedDetailItem", {name: detail.name, type, actor: this.name});
+            message = game.i18n.format("ACTOR.AppliedDetailItem", {name: data.name, type, actor: this.name});
         }
 
         // Perform the update

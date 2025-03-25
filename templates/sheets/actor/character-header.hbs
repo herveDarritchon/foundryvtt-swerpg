@@ -30,6 +30,10 @@
             {{#if incomplete.career}}data-tooltip="WALKTHROUGH.AddCareer"{{/if}}>
             <a>{{#if incomplete.career}}<i class="fa-solid fa-circle-plus"></i> {{/if}}{{careerName}}</a>
         </h2>
+        <h2 class="specialization flexrow {{#if incomplete.specialization}}incomplete{{/if}}" data-action="editBackground"
+            {{#if incomplete.specialization}}data-tooltip="WALKTHROUGH.AddSpecialization"{{/if}}>
+            <a>{{#if incomplete.specialization}}<i class="fa-solid fa-circle-plus"></i> {{/if}}{{specializationName}}</a>
+        </h2>
         <h2 class="background flexrow {{#if incomplete.background}}incomplete{{/if}}" data-action="editBackground"
             {{#if incomplete.background}}data-tooltip="WALKTHROUGH.AddBackground"{{/if}}>
             <a>{{#if incomplete.background}}<i class="fa-solid fa-circle-plus"></i> {{/if}}{{backgroundName}}</a>

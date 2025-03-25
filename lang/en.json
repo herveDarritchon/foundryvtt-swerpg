@@ -791,6 +791,15 @@
     "Xenology": "Piloting Planetary",
     "XenologyAbbr": "Xen"
   },
+  "SPECIALIZATION": {
+    "FIELDS": {
+
+    },
+    "SHEET": {
+      "CHOOSE": "Choose Specialization",
+      "CLEAR": "Clear Specialization"
+    }
+  },
   "SPECIES": {
     "FIELDS": {
       "description": {
@@ -1137,6 +1146,7 @@
   "WARNING.SkillRequireAncestryBackground": "You must assign both Ancestry and Background before you can purchase Skill ranks.",
   "WALKTHROUGH.AddSpecies": "Choose a Species from the Compendium or Items sidebar and add it via drag-and-drop.",
   "WALKTHROUGH.AddCareer": "Choose a Career from the Compendium or Items sidebar and add it via drag-and-drop.",
+  "WALKTHROUGH.AddSpecialization": "Choose a Specialization from the Compendium or Items sidebar and add it via drag-and-drop.",
   "WALKTHROUGH.AddBackground": "Choose a Background from the Compendium or Items sidebar and add it via drag-and-drop.",
   "WALKTHROUGH.ConfigureArchetype": "Configure an Archetype for this adversary.",
   "WALKTHROUGH.ConfigureTaxonomy": "Configure a Taxonomy for this adversary.",
