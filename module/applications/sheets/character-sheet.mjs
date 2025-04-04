@@ -1,5 +1,6 @@
 import SwerpgBaseActorSheet from "./base-actor-sheet.mjs";
 import SkillConfig from "../config/skill.mjs";
+import {SkillFactory} from "../../lib/skill.mjs";
 
 /**
  * A SwerpgBaseActorSheet subclass used to configure Actors of the "character" type.
@@ -59,7 +60,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
             species: !s.system.details.species?.name,
             career: !s.system.details.career?.name,
             specialization: s.system.details.specializations?.length === 0,
-            freeSkill: a.system.progression.freeSkillRanks.career.available !== 0 || a.system.progression.freeSkillRanks.specialization.available !== 0,
+            freeSkill: a.hasFreeSkillsAvailable(),
             background: !s.system.details.background?.name,
             /*      characteristics: context.points.ability.requireInput,
                   skills: context.points.skill.available,
@@ -156,6 +157,14 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
         const isSpecialization = element.dataset.isSpecialization === "true";
 
         const skill = foundry.utils.getProperty(this.actor.system.skills, skillId);
+        const action = event.ctrlKey ? "forget" : "train";
+
+        const skillClass = SkillFactory.build(this.actor, skill, {
+            action,
+            isCreation: true,
+            isCareer,
+            isSpecialization
+        }, {});
 
         if (!isCareer && !isSpecialization) {
             ui.notifications.warn("you have to spend free skill points first during character creation!");
@@ -166,19 +175,22 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
 
         const rank = foundry.utils.deepClone(skill.rank);
         const freeSkillRanks = foundry.utils.deepClone(this.actor.system.progression.freeSkillRanks);
+        let result = {};
 
         if (event.ctrlKey) {
-            rank.free--;
+            result = skillClass.forget();
+            rank.careerFree--;
             freeSkillRanks.career.spent--;
         } else {
-            rank.free++;
+            result = skillClass.train();
+            rank.careerFree++;
             freeSkillRanks.career.spent++;
         }
 
-        const value = rank.base + rank.free + rank.trained;
+        const value = rank.base + rank.careerFree + rank.specializationFree + rank.trained;
         const freeSkillRankAvailable = freeSkillRanks.career.gained - freeSkillRanks.career.spent;
 
-        if (rank.free < 0) {
+        if (rank.careerFree < 0) {
             ui.notifications.warn("you can't forget this rank because it comes from species!");
             return;
         }
@@ -188,13 +200,13 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
             return;
         }
 
-        if (rank.free > 1) {
+        if (rank.careerFree > 1) {
             ui.notifications.warn("you can't use more than 1 free skill rank into the same skill!");
             return;
         }
 
         if (freeSkillRankAvailable < 0) {
-            ui.notifications.warn("you can't have use free skill rank anymore. You have used all!");
+            ui.notifications.warn("you can't use free skill rank anymore. You have used all!");
             return;
         }
 
@@ -309,7 +321,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
             })
         )
             .map(skill => {
-                const total = skill.rank.base + skill.rank.free + skill.rank.trained;
+                const total = skill.rank.base + skill.rank.careerFree + skill.rank.specializationFree + skill.rank.trained;
                 const skillEnriched = foundry.utils.mergeObject(skill, {rank: {value: total}});
                 return {
                     pips: this._prepareSkillRanks(skillEnriched),
@@ -367,8 +379,9 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
         const mayBeAFreeSkill = freeSkills.filter(skill => skill.id === skillKey)
 
         return {
-            label: mayBeAFreeSkill.length ? "X" : "",
-            name:  mayBeAFreeSkill.length ? mayBeAFreeSkill.map(skill => skill.parent).join(", ") : "-",
+            extraCss: mayBeAFreeSkill.length ? "active" : "",
+
+            name: mayBeAFreeSkill.length ? mayBeAFreeSkill.map(skill => skill.parent).join(", ") : "-",
             isCareer: mayBeAFreeSkill.length !== 0 && mayBeAFreeSkill.filter(skill => skill.type === "career").length > 0,
             isSpecialization: mayBeAFreeSkill.length !== 0 && mayBeAFreeSkill.filter(skill => skill.type === "specialization").length > 0,
         };

@@ -5,6 +5,46 @@ import SwerpgCareer from "./career.mjs";
 import SwerpgSpecialization from "./specialization.mjs";
 
 /**
+ * @typedef {Object} Thresholds
+ * @property {number} wounds - The wounds threshold
+ * @property {number} strain - The strain threshold
+ */
+
+/**
+ * @typedef {Object} Experience
+ * @property {number} spent - The number of experience points spent
+ * @property {number} gained - The number of experience points gained
+ */
+
+/**
+ * @typedef {Object} Progression
+ * @property {FreeSkillRanks} freeSkillRanks - The free skill ranks
+ * @property {Experience} experience - The experience
+ */
+
+/**
+ * @typedef {Object} CareerFreeRank
+ * @property {string} id - The id of the career
+ * @property {string} name - The name of the career
+ * @property {number} spent - The number of ranks spent
+ * @property {number} gained - The number of ranks gained at creation
+ */
+
+/**
+ * @typedef {Object} SpecializationFreeRank
+ * @property {string} id - The id of the specialization
+ * @property {string} name - The name of the specialization
+ * @property {number} spent - The number of ranks spent
+ * @property {number} gained - The number of ranks gained at creation
+ */
+
+/**
+ * @typedef {Object} FreeSkillRanks
+ * @property {CareerFreeRank} career - The career free ranks
+ * @property {SpecializationFreeRank} specialization - The specialization free ranks
+ */
+
+/**
  * Data schema, attributes, and methods specific to Character type Actors.
  */
 export default class SwerpgCharacter extends SwerpgActorType {
@@ -355,7 +395,8 @@ export default class SwerpgCharacter extends SwerpgActorType {
 
         // Adjust base skill rank
         let base = skill?.base || 0;
-        let free = skill?.free || 0;
+        let careerFree = skill?.careerFree || 0;
+        let specializationFree = skill?.specializationFree || 0;
         let trained = skill?.trained || 0;
 
         if (this.details.species?.freeSkills?.has(skillId)) {
@@ -364,7 +405,8 @@ export default class SwerpgCharacter extends SwerpgActorType {
 
         skill.rank = {
             base: base,
-            free: free,
+            careerFree: careerFree,
+            specializationFree: specializationFree,
             trained: trained
         };
 

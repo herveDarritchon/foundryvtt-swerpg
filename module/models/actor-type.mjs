@@ -72,7 +72,8 @@ export default class SwerpgActorType extends foundry.abstract.TypeDataModel {
             obj[skill.id] = new fields.SchemaField({
                 rank: new fields.SchemaField({
                     base: new fields.NumberField({...requiredInteger, initial: 0, max: 5}),
-                    free: new fields.NumberField({...requiredInteger, initial: 0, max: 5}),
+                    careerFree: new fields.NumberField({...requiredInteger, initial: 0, max: 5}),
+                    specializationFree: new fields.NumberField({...requiredInteger, initial: 0, max: 5}),
                     trained: new fields.NumberField({...requiredInteger, initial: 0, max: 5})
                 }, {validate: SwerpgActorType.#validateSkillRank, label: skill.name}),
                 path: new fields.StringField({required: false, initial: undefined, blank: false})
@@ -100,11 +101,11 @@ export default class SwerpgActorType extends foundry.abstract.TypeDataModel {
 
     /**
      * Validate an attribute field
-     * @param {{base: number, increases: number, bonus: number}} attr     The attribute value
+     * @param {{base: number, careerFree: number, specializationFree: number, trained: number}} attr     The attribute value
      */
     static #validateSkillRank(attr) {
-        const value = attr.base + attr.free + attr.trained;
-        if (value < 0 || value > 5) throw new Error(`Skill Rank cannot exceed 5 or less than 0.`);
+        const value = attr.base + attr.careerFree + attr.specializationFree + attr.trained;
+        if (value < 0 || value > 5) throw new Error(`Skill Rank cannot exceed 5 or be less than 0.`);
     }
 
 
