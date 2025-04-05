@@ -176,8 +176,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
         // Apply modification to the skill depending on the action from the user
         let result = {};
 
-        // TODO: Use action instead of event.ctrlKey
-        if (event.ctrlKey) {
+        if (action === "forget") {
             result = skillClass.forget();
         } else {
             result = skillClass.train();
