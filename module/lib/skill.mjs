@@ -1,5 +1,15 @@
 /**
  * @typedef {Object} Skill
+ * @property {SwerpgActor} actor - The actor instance.
+ * @property {Skill} skill - The skill instance.
+ * @property {boolean} isCreation - Indicates if the skill is in the creation phase.
+ * @property {boolean} isCareer - Indicates if the skill is a career skill.
+ * @property {boolean} isSpecialization - Indicates if the skill is a specialization skill.
+ * @property {string} action - The action to be performed on the skill.
+ * @property {SkillOptions} options - Additional options for the skill.
+ * @property {number} freeSkillRankAvailable - The number of free skill ranks available.
+ * @property {boolean} evaluated - Indicates if the skill has been evaluated.
+ *
  **/
 
 /**
@@ -27,14 +37,14 @@ class SkillFactory {
     /**
      * Builds a skill object based on a context.
      * @param actor {SwerpgActor} an Actor instance
-     * @param skill {Skill} a skill from the list of skills
+     * @param skillId {string} a skill id from the list of skills
      * @param params {SkillParams} the params to be used to build the skill
      * @param options {SkillOptions} additional options
      * @returns {CareerFreeSkill|SpecializationFreeSkill|TrainedSkill|FreeSkill|ErrorSkill} a skill object
      */
     static build(
         actor,
-        skill,
+        skillId,
         {
             action /** @type {"train" | "forget"} */ = ("train"),
             isCreation = false,
@@ -42,6 +52,9 @@ class SkillFactory {
             isSpecialization = false
         } = {},
         options = {}) {
+
+        const skill = foundry.utils.getProperty(actor.system.skills, skillId);
+        skill.id = skillId;
 
         if (!isCreation) {
             return new TrainedSkill(actor, skill, {action, isCreation, isCareer, isSpecialization}, options);
@@ -143,6 +156,8 @@ class Skill {
         this.isSpecialization = params.isSpecialization;
         this.action = params.action;
         this.options = options;
+        //this.freeSkillRankAvailable = this.#computeFreeSkillRankAvailable();
+        this.evaluated = false;
     }
 
     /**
@@ -164,25 +179,55 @@ class Skill {
     /**
      * Processes the action on the skill.
      * @abstract
-     * return {SkillResult} the result of the action
+     * return {Skill} the result of the action
      */
     train() {
-        throw new Error("Method 'method2()' must be implemented.");
+        throw new Error("Method 'train()' must be implemented.");
     }
 
     /**
      * Processes the action on the skill.
      * @abstract
-     * return {SkillResult} the result of the action
+     * return {Skill} the result of the action
      */
     forget() {
-        throw new Error("Method 'method2()' must be implemented.");
+        throw new Error("Method 'forget()' must be implemented.");
+    }
+
+    /**
+     * Evaluate the skill.
+     * @abstract
+     * return {Skill} the result of the action
+     */
+    evaluate() {
+        throw new Error("Method 'evaluate()' must be implemented.");
+    }
+
+    /**
+     * Save the skill elements in the Database.
+     * @abstract
+     * @async
+     * return {Promise<Skill>} the result of the action
+     */
+    async updateState() {
+        throw new Error("Method 'updateState()' must be implemented.");
+    }
+
+    /**
+     * Compute the free skill rank available.
+     * @abstract
+     * @private
+     * return {number} the free skill rank available
+     */
+    #computeFreeSkillRankAvailable() {
+        throw new Error("Method 'computeFreeSkillRankAvailable' must be implemented.");
     }
 }
 
 class CareerFreeSkill extends Skill {
     constructor(actor, skill, params, options) {
         super(actor, skill, params, options);
+        this.freeSkillRankAvailable = this.#computeFreeSkillRankAvailable();
     }
 
     /**
@@ -215,11 +260,68 @@ class CareerFreeSkill extends Skill {
         this.actor.freeSkillRanks.career.spent--;
         return this;
     }
+
+    /**
+     * @inheritDoc
+     * @override
+     */
+    evaluate() {
+        if (this.skill.rank.careerFree < 0) {
+            return new ErrorSkill(this.actor, this.skill, {}, {message: ("you can't forget this rank because it comes from species!")});
+        }
+
+        if (this.value < 0) {
+            return new ErrorSkill(this.actor, this.skill, {}, {message: ("you can't have less than 0 rank!")});
+        }
+
+        if (this.skill.rank.careerFree > 1) {
+            return new ErrorSkill(this.actor, this.skill, {}, {message: ("you can't use more than 1 free skill rank into the same skill!")});
+        }
+
+        if (this.freeSkillRankAvailable < 0) {
+            return new ErrorSkill(this.actor, this.skill, {}, {message: ("you can't use free skill rank anymore. You have used all!")});
+        }
+
+        if (this.freeSkillRankAvailable > 4) {
+            return new ErrorSkill(this.actor, this.skill, {}, {message: ("you can't get more than 4 free skill ranks!")});
+        }
+
+        this.value = this.skill.rank.base + this.skill.rank.careerFree + this.skill.rank.specializationFree + this.skill.rank.trained
+        this.evaluated = true;
+        return this;
+    }
+
+    /**
+     * @inheritDoc
+     * @override
+     */
+    #computeFreeSkillRankAvailable() {
+        return this.actor.freeSkillRanks.career.gained - this.actor.freeSkillRanks.career.spent;
+    }
+
+    /**
+     * @inheritDoc
+     * @override
+     */
+    async updateState() {
+        try {
+            await this.actor.update({'system.progression.freeSkillRanks': this.actor.freeSkillRanks});
+            await this.actor.update({[`system.skills.${this.skill.id}.rank`]: this.skill.rank});
+            return new Promise((resolve, _) => {
+                resolve(this);
+            });
+        } catch (e) {
+            return new Promise((resolve, _) => {
+                resolve(new ErrorSkill(this.actor, this.skill, {}, {message: e.toString()}));
+            });
+        }
+    }
 }
 
 class SpecializationFreeSkill extends Skill {
     constructor(actor, skill, params, options) {
         super(actor, skill, params, options);
+        this.freeSkillRankAvailable = this.#computeFreeSkillRankAvailable();
     }
 
     /**
@@ -239,6 +341,7 @@ class SpecializationFreeSkill extends Skill {
     train() {
         this.skill.rank.specializationFree++;
         this.actor.freeSkillRanks.specialization.spent++;
+        return this;
     }
 
     /**
@@ -249,13 +352,26 @@ class SpecializationFreeSkill extends Skill {
     forget() {
         this.skill.rank.specializationFree--;
         this.actor.freeSkillRanks.specialization.spent--;
+        return this;
     }
 
+    evaluate() {
+        return undefined;
+    }
+
+    /**
+     * @inheritDoc
+     * @override
+     */
+    #computeFreeSkillRankAvailable() {
+        return this.actor.freeSkillRanks.career.gained - this.actor.freeSkillRanks.career.spent;
+    }
 }
 
 class TrainedSkill extends Skill {
     constructor(actor, skill, params, options) {
         super(actor, skill, params, options);
+        this.#computeFreeSkillRankAvailable();
     }
 
     /**
@@ -291,11 +407,23 @@ class TrainedSkill extends Skill {
         console.log("Forget not implemented.");
     }
 
+    evaluate() {
+        return undefined;
+    }
+
+    /**
+     * @inheritDoc
+     * @override
+     */
+    #computeFreeSkillRankAvailable() {
+        return false;
+    }
 }
 
 class ErrorSkill extends Skill {
     constructor(actor, skill, params, options) {
         super(actor, skill, params, options);
+        this.#computeFreeSkillRankAvailable();
     }
 
     /**
@@ -330,6 +458,18 @@ class ErrorSkill extends Skill {
     forget() {
         console.log("Forget not implemented.");
     }
+
+    evaluate() {
+        return undefined;
+    }
+
+    /**
+     * @inheritDoc
+     * @override
+     */
+    #computeFreeSkillRankAvailable() {
+        return -1;
+    }
 }
 
 export {
@@ -337,5 +477,6 @@ export {
     CareerFreeSkill,
     SpecializationFreeSkill,
     TrainedSkill,
-    SkillFactory
+    ErrorSkill,
+    SkillFactory,
 }

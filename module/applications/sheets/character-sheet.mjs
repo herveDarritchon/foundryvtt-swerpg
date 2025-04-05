@@ -1,6 +1,6 @@
 import SwerpgBaseActorSheet from "./base-actor-sheet.mjs";
 import SkillConfig from "../config/skill.mjs";
-import {SkillFactory} from "../../lib/skill.mjs";
+import {ErrorSkill, SkillFactory} from "../../lib/skill.mjs";
 
 /**
  * A SwerpgBaseActorSheet subclass used to configure Actors of the "character" type.
@@ -151,75 +151,52 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
      * @returns {Promise<void>}
      */
     static async #onToggleTrainedSkill(event) {
+        // Iniitialize the context depending on the event
         const element = event.target.closest(".skill");
         const skillId = element.dataset.skillId;
         const isCareer = element.dataset.isCareer === "true";
         const isSpecialization = element.dataset.isSpecialization === "true";
-
-        const skill = foundry.utils.getProperty(this.actor.system.skills, skillId);
         const action = event.ctrlKey ? "forget" : "train";
 
-        const skillClass = SkillFactory.build(this.actor, skill, {
+        // Build the skill class depending on the context
+        const skillClass = SkillFactory.build(this.actor, skillId, {
             action,
             isCreation: true,
             isCareer,
             isSpecialization
         }, {});
 
+        // TODO: Migrate to the Skill class
         if (!isCareer && !isSpecialization) {
             ui.notifications.warn("you have to spend free skill points first during character creation!");
             return;
         }
 
-        console.log(`[Before] onToggleTrainedSkill skill with id '${skillId}', is Career ${isCareer} and values:`, skill, this.actor);
+        console.log(`[Before] onToggleTrainedSkill skill with id '${skillId}', is Career ${isCareer} and values:`, skillClass, this.actor);
 
-        const rank = foundry.utils.deepClone(skill.rank);
-        const freeSkillRanks = foundry.utils.deepClone(this.actor.system.progression.freeSkillRanks);
+        // Apply modification to the skill depending on the action from the user
         let result = {};
 
+        // TODO: Use action instead of event.ctrlKey
         if (event.ctrlKey) {
             result = skillClass.forget();
-            rank.careerFree--;
-            freeSkillRanks.career.spent--;
         } else {
             result = skillClass.train();
-            rank.careerFree++;
-            freeSkillRanks.career.spent++;
         }
 
-        const value = rank.base + rank.careerFree + rank.specializationFree + rank.trained;
-        const freeSkillRankAvailable = freeSkillRanks.career.gained - freeSkillRanks.career.spent;
+        // Evaluate the skill following the action processed
+        const skillEvaluated = result.evaluate();
 
-        if (rank.careerFree < 0) {
-            ui.notifications.warn("you can't forget this rank because it comes from species!");
+        // Display a warning if the skill action is not valid
+        if (skillEvaluated instanceof ErrorSkill) {
+            ui.notifications.warn(skillEvaluated.options.message);
             return;
         }
 
-        if (value < 0) {
-            ui.notifications.warn("you can't have less than 0 rank!");
-            return;
-        }
+        // Update the skill state in the Database
+        const skillUpdated = await skillEvaluated.updateState();
 
-        if (rank.careerFree > 1) {
-            ui.notifications.warn("you can't use more than 1 free skill rank into the same skill!");
-            return;
-        }
-
-        if (freeSkillRankAvailable < 0) {
-            ui.notifications.warn("you can't use free skill rank anymore. You have used all!");
-            return;
-        }
-
-        if (freeSkillRankAvailable > 4) {
-            ui.notifications.warn("you can't get more than 4 free skill ranks!");
-            return;
-        }
-
-        const updateActorResult = await this.actor.update({[`system.skills.${skillId}.rank`]: rank});
-        const updateActorResult2 = await this.actor.update({'system.progression.freeSkillRanks': freeSkillRanks});
-
-        console.log(`[After] onToggleTrainedSkill skill with id '${skillId}', is Career ${isCareer} and values:`, updateActorResult, updateActorResult2, this.actor, rank);
-
+        console.log(`[After] onToggleTrainedSkill skill with id '${skillId}', is Career ${isCareer} and values:`, skillUpdated.actor, skillUpdated.skill.rank);
     }
 
     /* -------------------------------------------- */
