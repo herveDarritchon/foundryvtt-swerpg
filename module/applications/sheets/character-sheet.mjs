@@ -379,9 +379,8 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
         const mayBeAFreeSkill = freeSkills.filter(skill => skill.id === skillKey)
 
         return {
-            extraCss: mayBeAFreeSkill.length ? "active" : "",
-
-            name: mayBeAFreeSkill.length ? mayBeAFreeSkill.map(skill => skill.parent).join(", ") : "-",
+            extraClass: mayBeAFreeSkill.length ? "active" : "",
+            name: mayBeAFreeSkill.length ? mayBeAFreeSkill.map(skill => skill.parent).join(", ") : "",
             isCareer: mayBeAFreeSkill.length !== 0 && mayBeAFreeSkill.filter(skill => skill.type === "career").length > 0,
             isSpecialization: mayBeAFreeSkill.length !== 0 && mayBeAFreeSkill.filter(skill => skill.type === "specialization").length > 0,
         };
