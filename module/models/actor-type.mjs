@@ -176,6 +176,7 @@ export default class SwerpgActorType extends foundry.abstract.TypeDataModel {
 
         // Resource pools
         this._prepareResources();
+        this._prepareExperience();
         this.parent.callActorHooks("prepareResources", this.resources);
 
         // Defenses
@@ -190,6 +191,13 @@ export default class SwerpgActorType extends foundry.abstract.TypeDataModel {
         // Movement
         //this._prepareMovement();
         //this.parent.callActorHooks("prepareMovement", this.movement);
+    }
+
+    _prepareExperience() {
+        const experience = this.progression.experience;
+        experience.total = experience.startingExperience + experience.gained
+        experience.available = experience.total - experience.spent;
+        console.log ("prepareExperience", experience, this);
     }
 
     /* -------------------------------------------- */

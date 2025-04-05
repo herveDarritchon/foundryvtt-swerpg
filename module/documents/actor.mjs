@@ -7,6 +7,13 @@ import {SYSTEM} from "../config/system.mjs";
 const {DialogV2} = foundry.applications.api;
 
 /**
+ * @typedef {Object} ExperiencePoints
+ * @property {number} gained
+ * @property {number} spent
+ * @property {number} startingExperience
+ */
+
+/**
  * @typedef {Object} ActorEquippedWeapons
  * @property {SwerpgItem} mainhand
  * @property {SwerpgItem} offhand
@@ -97,6 +104,22 @@ export default class SwerpgActor extends Actor {
      */
     get species() {
         return this.system.details.species;
+    }
+
+    /**
+     * Convenient access to the Actor's Experience Points.
+     * if the Actor is an adversary, this is undefined because adversaries do not have experience points.
+     * @type {ExperiencePoints}  The experience point available to the Actor
+     */
+    get experiencePoints() {
+        // Adversaries do not have experience points
+        if (this.type !== SYSTEM.ACTOR_TYPE.character.type) return {
+            gained: 0,
+            spent: 0,
+            startingExperience: 0,
+        };
+        // Otherwise
+        return this.system.progression.experience;
     }
 
     /**
