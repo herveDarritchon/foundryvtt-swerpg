@@ -56,6 +56,11 @@ class SkillFactory {
         const skill = foundry.utils.getProperty(actor.system.skills, skillId);
         skill.id = skillId;
 
+        if (!isCareer && !isSpecialization) {
+            options.message = "you have to spend free skill points first during character creation!";
+            return new ErrorSkill(actor, skill, {action, isCreation, isCareer, isSpecialization}, options);
+        }
+
         if (!isCreation) {
             return new TrainedSkill(actor, skill, {action, isCreation, isCareer, isSpecialization}, options);
         }

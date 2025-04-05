@@ -166,9 +166,8 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
             isSpecialization
         }, {});
 
-        // TODO: Migrate to the Skill class
-        if (!isCareer && !isSpecialization) {
-            ui.notifications.warn("you have to spend free skill points first during character creation!");
+        if (skillClass instanceof  ErrorSkill) {
+            ui.notifications.warn(skillClass.options.message);
             return;
         }
 
