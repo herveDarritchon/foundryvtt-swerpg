@@ -149,8 +149,8 @@ class SkillFactory {
 
 class Skill {
     constructor(actor, skill, params, options) {
-        this.actor = actor;
-        this.skill = skill;
+        this.actor = foundry.utils.deepClone(actor);
+        this.skill = foundry.utils.deepClone(skill);
         this.isCreation = params.isCreation;
         this.isCareer = params.isCareer;
         this.isSpecialization = params.isSpecialization;
@@ -266,8 +266,9 @@ class CareerFreeSkill extends Skill {
      * @override
      */
     evaluate() {
+        this.freeSkillRankAvailable = this.#computeFreeSkillRankAvailable();
         if (this.skill.rank.careerFree < 0) {
-            return new ErrorSkill(this.actor, this.skill, {}, {message: ("you can't forget this rank because it comes from species!")});
+            return new ErrorSkill(this.actor, this.skill, {}, {message: ("you can't forget this rank because it comes from species free bonus!")});
         }
 
         if (this.value < 0) {
