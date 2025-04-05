@@ -116,7 +116,8 @@ class SkillFactory {
         }
 
         if (action === "forget") {
-            if (freeSkillRanks.specialization.spent > 0) {
+            const freeSkillRanks = foundry.utils.deepClone(actor.freeSkillRanks);
+            if (skill.rank.specializationFree > 0 && freeSkillRanks.specialization.spent > 0 ) {
                 return new SpecializationFreeSkill(
                     actor,
                     skill, {
@@ -126,7 +127,7 @@ class SkillFactory {
                         isSpecialization: false
                     }, options);
             }
-            if (freeSkillRanks.career.spent > 0) {
+            if (skill.rank.careerFree > 0 && freeSkillRanks.career.spent > 0) {
                 return new CareerFreeSkill(
                     actor,
                     skill, {
@@ -361,8 +362,35 @@ class SpecializationFreeSkill extends Skill {
         return this;
     }
 
+    /**
+     * @inheritDoc
+     * @override
+     */
     evaluate() {
-        return undefined;
+        this.freeSkillRankAvailable = this.#computeFreeSkillRankAvailable();
+        if (this.skill.rank.specializationFree < 0) {
+            return new ErrorSkill(this.actor, this.skill, {}, {message: ("you can't forget this rank because it comes from species free bonus!")});
+        }
+
+        if (this.value < 0) {
+            return new ErrorSkill(this.actor, this.skill, {}, {message: ("you can't have less than 0 rank!")});
+        }
+
+        if (this.skill.rank.specializationFree > 1) {
+            return new ErrorSkill(this.actor, this.skill, {}, {message: ("you can't use more than 1 free skill rank into the same skill!")});
+        }
+
+        if (this.freeSkillRankAvailable < 0) {
+            return new ErrorSkill(this.actor, this.skill, {}, {message: ("you can't use free skill rank anymore. You have used all!")});
+        }
+
+        if (this.freeSkillRankAvailable > 4) {
+            return new ErrorSkill(this.actor, this.skill, {}, {message: ("you can't get more than 4 free skill ranks!")});
+        }
+
+        this.value = this.skill.rank.base + this.skill.rank.careerFree + this.skill.rank.specializationFree + this.skill.rank.trained
+        this.evaluated = true;
+        return this;
     }
 
     /**
@@ -370,7 +398,25 @@ class SpecializationFreeSkill extends Skill {
      * @override
      */
     #computeFreeSkillRankAvailable() {
-        return this.actor.freeSkillRanks.career.gained - this.actor.freeSkillRanks.career.spent;
+        return this.actor.freeSkillRanks.specialization.gained - this.actor.freeSkillRanks.specialization.spent;
+    }
+
+    /**
+     * @inheritDoc
+     * @override
+     */
+    async updateState() {
+        try {
+            await this.actor.update({'system.progression.freeSkillRanks': this.actor.freeSkillRanks});
+            await this.actor.update({[`system.skills.${this.skill.id}.rank`]: this.skill.rank});
+            return new Promise((resolve, _) => {
+                resolve(this);
+            });
+        } catch (e) {
+            return new Promise((resolve, _) => {
+                resolve(new ErrorSkill(this.actor, this.skill, {}, {message: e.toString()}));
+            });
+        }
     }
 }
 
