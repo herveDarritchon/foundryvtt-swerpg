@@ -43,8 +43,6 @@ describe('Specialization Free Skill', () => {
     });
     describe('evaluate a skill', () => {
         describe('should return an error skill if', () => {
-            describe('you train a skill', () => {
-            });
             describe('you forget a skill', () => {
                 test('and trained skill rank is less than 0', () => {
                     const actor = createActor();
