@@ -1,6 +1,7 @@
 import SwerpgBaseActorSheet from "./base-actor-sheet.mjs";
 import SkillConfig from "../config/skill.mjs";
-import {ErrorSkill, SkillFactory} from "../../lib/skill.mjs";
+import {ErrorSkill} from "../../lib/skill.mjs";
+import SkillFactory from "../../lib/skills/skill-factory.mjs";
 
 /**
  * A SwerpgBaseActorSheet subclass used to configure Actors of the "character" type.

@@ -177,6 +177,7 @@ export default class SwerpgActorType extends foundry.abstract.TypeDataModel {
         // Resource pools
         this._prepareResources();
         this._prepareExperience();
+        this._prepareFreeSkillRanks();
         this.parent.callActorHooks("prepareResources", this.resources);
 
         // Defenses
@@ -193,11 +194,29 @@ export default class SwerpgActorType extends foundry.abstract.TypeDataModel {
         //this.parent.callActorHooks("prepareMovement", this.movement);
     }
 
+    /**
+     * Prepare formatted experience scores for display on the Actor sheet.
+     * @return {object[]}
+     */
+    _prepareFreeSkillRanks() {
+        const freeSkillRanks = this.progression.freeSkillRanks;
+
+        let c = freeSkillRanks.career;
+        c.available = c.gained - c.spent;
+        freeSkillRanks.career = c;
+
+        let s = freeSkillRanks.specialization;
+        s.available = s.gained - s.spent;
+        freeSkillRanks.specialization = s;
+
+        console.log("_prepareFreeSkillRanks", freeSkillRanks, this);
+    }
+
     _prepareExperience() {
         const experience = this.progression.experience;
         experience.total = experience.startingExperience + experience.gained
         experience.available = experience.total - experience.spent;
-        console.log ("prepareExperience", experience, this);
+        console.log("prepareExperience", experience, this);
     }
 
     /* -------------------------------------------- */

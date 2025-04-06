@@ -28,6 +28,7 @@ import SwerpgSpecialization from "./specialization.mjs";
  * @property {string} name - The name of the career
  * @property {number} spent - The number of ranks spent
  * @property {number} gained - The number of ranks gained at creation
+ * @property {number} available - The maximum number of ranks available to spend
  */
 
 /**
@@ -36,6 +37,7 @@ import SwerpgSpecialization from "./specialization.mjs";
  * @property {string} name - The name of the specialization
  * @property {number} spent - The number of ranks spent
  * @property {number} gained - The number of ranks gained at creation
+ * @property {number} available - The maximum number of ranks available to spend
  */
 
 /**

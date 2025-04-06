@@ -2321,11 +2321,31 @@ export default class SwerpgActor extends Actor {
     /* -------------------------------------------- */
 
     /**
+     * Check if actor has any career free skill ranks available.
+     * @returns {boolean}   True if actor has free skill ranks
+     */
+    hasCareerFreeSkillsAvailable() {
+        return this.freeSkillRanks.career.available !== 0;
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Check if actor has any specialization free skill ranks available.
+     * @returns {boolean}   True if actor has free skill ranks
+     */
+    hasSpecializationFreeSkillsAvailable() {
+        return this.freeSkillRanks.specialization.available !== 0;
+    }
+
+    /* -------------------------------------------- */
+
+    /**
      * Check if actor has any free skill ranks available.
      * @returns {boolean}   True if actor has free skill ranks
      */
-    hasFreeSkillsAvailable(){
-        return this.freeSkillRanks.career.available !== 0 || this.freeSkillRanks.specialization.available !== 0;
+    hasFreeSkillsAvailable() {
+        return this.hasCareerFreeSkillsAvailable() || this.hasSpecializationFreeSkillsAvailable();
     }
 
     /* -------------------------------------------- */
