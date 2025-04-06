@@ -37,11 +37,10 @@ export default class TrainedSkill extends Skill {
             return new ErrorSkill(this.actor, this.skill, {}, {message: ("you can't forget this rank because it was not trained but free!")});
         }
 
-        this.skill.rank.value = this.skill.rank.base + this.skill.rank.careerFree + this.skill.rank.specializationFree + this.skill.rank.trained
-
+/*        this.skill.rank.value = this.skill.rank.base + this.skill.rank.careerFree + this.skill.rank.specializationFree + this.skill.rank.trained;
         if (this.skill.rank.value < 0) {
             return new ErrorSkill(this.actor, this.skill, {}, {message: ("you can't have less than 0 rank!")});
-        }
+        }*/
 
         this.evaluated = true;
         return this;

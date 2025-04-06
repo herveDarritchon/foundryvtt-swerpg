@@ -4,6 +4,8 @@ import {describe, expect, test} from 'vitest'
 import {createActor} from "../../utils/actors/actor.mjs";
 import {createSkill} from "../../utils/skills/skill.mjs";
 import SpecializationFreeSkill from "../../../module/lib/skills/specialization-free-skill.mjs";
+import CareerFreeSkill from "../../../module/lib/skills/career-free-skill.mjs";
+import ErrorSkill from "../../../module/lib/skills/error-skill.mjs";
 
 describe('Specialization Free Skill', () => {
     describe('train a skill', () => {
@@ -38,5 +40,64 @@ describe('Specialization Free Skill', () => {
             expect(trainedSkill.skill.rank.careerFree).toBe(0);
         });
     });
+    describe('evaluate a skill', () => {
+        describe('should return an error skill if', () => {
+            describe('you train a skill', () => {
+                test('and specialization free skill rank is greater than 1', () => {
+                    const actor = createActor();
+                    const skill = createSkill({specializationFree: 2});
+                    const params = {};
+                    const options = {};
 
+                    const specializationFreeSkill = new SpecializationFreeSkill(actor, skill, params, options);
+                    const errorSkill = specializationFreeSkill.evaluate();
+
+                    expect(errorSkill).toBeInstanceOf(ErrorSkill);
+                    expect(errorSkill.options.message).toBe("you can't use more than 1 free skill rank into the same skill!");
+                    expect(errorSkill.evaluated).toBe(false);
+                });
+                test('after train free skill rank available is less than 0', () => {
+                    const actor = createActor({specializationSpent: 5});
+                    const skill = createSkill({specializationFree: 1});
+                    const params = {};
+                    const options = {};
+
+                    const specializationFreeSkill = new SpecializationFreeSkill(actor, skill, params, options);
+                    const errorSkill = specializationFreeSkill.evaluate();
+
+                    expect(errorSkill).toBeInstanceOf(ErrorSkill);
+                    expect(errorSkill.options.message).toBe("you can't use free skill rank anymore. You have used all!");
+                    expect(errorSkill.evaluated).toBe(false);
+                });
+            });
+            describe('you forget a skill', () => {
+                test('and specialization free skill rank is less than 0', () => {
+                    const actor = createActor();
+                    const skill = createSkill({specializationFree: -1});
+                    const params = {};
+                    const options = {};
+
+                    const specializationFreeSkill = new SpecializationFreeSkill(actor, skill, params, options);
+                    const errorSkill = specializationFreeSkill.evaluate();
+
+                    expect(errorSkill).toBeInstanceOf(ErrorSkill);
+                    expect(errorSkill.options.message).toBe("you can't forget this rank because it comes from species free bonus!");
+                    expect(errorSkill.evaluated).toBe(false);
+                });
+                test('and specialization free skill rank is greater than specialization free skill rank gained', () => {
+                    const actor = createActor({specializationSpent: -1});
+                    const skill = createSkill({specializationFree: 0});
+                    const params = {};
+                    const options = {};
+
+                    const specializationFreeSkill = new SpecializationFreeSkill(actor, skill, params, options);
+                    const errorSkill = specializationFreeSkill.evaluate();
+
+                    expect(errorSkill).toBeInstanceOf(ErrorSkill);
+                    expect(errorSkill.options.message).toBe("you can't get more than 2 free skill ranks!");
+                    expect(errorSkill.evaluated).toBe(false);
+                });
+            });
+        });
+    });
 });

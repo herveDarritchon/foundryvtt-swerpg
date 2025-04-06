@@ -4,6 +4,7 @@ import {describe, expect, test} from 'vitest'
 import {createActor} from "../../utils/actors/actor.mjs";
 import {createSkill} from "../../utils/skills/skill.mjs";
 import TrainedSkill from "../../../module/lib/skills/trained-skill.mjs";
+import ErrorSkill from "../../../module/lib/skills/error-skill.mjs";
 
 describe('Specialization Free Skill', () => {
     describe('train a skill', () => {
@@ -40,5 +41,25 @@ describe('Specialization Free Skill', () => {
             expect(forgetTrainedSkill.skill.rank.careerFree).toBe(0);
         });
     });
+    describe('evaluate a skill', () => {
+        describe('should return an error skill if', () => {
+            describe('you train a skill', () => {
+            });
+            describe('you forget a skill', () => {
+                test('and trained skill rank is less than 0', () => {
+                    const actor = createActor();
+                    const skill = createSkill({trained: -1});
+                    const params = {};
+                    const options = {};
 
+                    const trainedSkill = new TrainedSkill(actor, skill, params, options);
+                    const errorSkill = trainedSkill.evaluate();
+
+                    expect(errorSkill).toBeInstanceOf(ErrorSkill);
+                    expect(errorSkill.options.message).toBe("you can't forget this rank because it was not trained but free!");
+                    expect(errorSkill.evaluated).toBe(false);
+                });
+            });
+        });
+    });
 });
