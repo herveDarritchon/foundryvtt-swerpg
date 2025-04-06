@@ -1,8 +1,8 @@
 // skill-factory.test.mjs
 import '../../setupTests.js';
 import {describe, expect, test} from 'vitest'
-import SkillFactory from "./skill-factory.mjs";
-import {CareerFreeSkill, ErrorSkill, SpecializationFreeSkill, TrainedSkill} from "../skill.mjs";
+import SkillFactory from "../../../module/lib/skills/skill-factory.mjs";
+import {CareerFreeSkill, ErrorSkill, SpecializationFreeSkill, TrainedSkill} from "../../../module/lib/skill.mjs";
 
 /**
  * @returns {SwerpgActor} an actor object
