@@ -1,4 +1,5 @@
-import {ErrorSkill, Skill} from "../skill.mjs";
+import Skill from "./skill.mjs";
+import ErrorSkill from "./error-skill.mjs";
 
 export default class SpecializationFreeSkill extends Skill {
     constructor(actor, skill, params, options) {

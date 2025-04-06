@@ -2,10 +2,11 @@
 import '../../setupTests.js';
 import {describe, expect, test} from 'vitest'
 import SkillFactory from "../../../module/lib/skills/skill-factory.mjs";
-import {ErrorSkill, TrainedSkill} from "../../../module/lib/skill.mjs";
 import {createActor} from "../../utils/actors/actor.mjs";
 import CareerFreeSkill from "../../../module/lib/skills/career-free-skill.mjs";
 import SpecializationFreeSkill from "../../../module/lib/skills/specialization-free-skill.mjs";
+import TrainedSkill from "../../../module/lib/skills/trained-skill.mjs";
+import ErrorSkill from "../../../module/lib/skills/error-skill.mjs";
 
 describe("SkillFactory build()", () => {
     describe("during creation time", () => {

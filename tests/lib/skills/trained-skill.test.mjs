@@ -1,0 +1,44 @@
+// trained-skill.test.mjs
+import '../../setupTests.js';
+import {describe, expect, test} from 'vitest'
+import {createActor} from "../../utils/actors/actor.mjs";
+import {createSkill} from "../../utils/skills/skill.mjs";
+import TrainedSkill from "../../../module/lib/skills/trained-skill.mjs";
+
+describe('Specialization Free Skill', () => {
+    describe('train a skill', () => {
+        test('should increase the specialization free skill rank', () => {
+            const actor = createActor();
+            const skill = createSkill();
+            const params = {};
+            const options = {};
+
+            const trainedSkill = new TrainedSkill(actor, skill, params, options);
+            const trainTrainedSkill = trainedSkill.train();
+
+            expect(trainTrainedSkill.skill.rank.trained).toBe(1);
+            expect(trainTrainedSkill.skill.rank.specializationFree).toBe(0);
+            expect(trainTrainedSkill.actor.freeSkillRanks.specialization.spent).toBe(0);
+            expect(trainTrainedSkill.actor.freeSkillRanks.career.spent).toBe(0);
+            expect(trainTrainedSkill.skill.rank.careerFree).toBe(0);
+        });
+    });
+    describe('forget a skill', () => {
+        test('should decrease the specialization free skill rank', () => {
+            const actor = createActor();
+            const skill = createSkill({trained: 1});
+            const params = {};
+            const options = {};
+
+            const trainedSkill = new TrainedSkill(actor, skill, params, options);
+            const forgetTrainedSkill = trainedSkill.forget();
+
+            expect(forgetTrainedSkill.skill.rank.trained).toBe(0);
+            expect(forgetTrainedSkill.skill.rank.specializationFree).toBe(0);
+            expect(forgetTrainedSkill.actor.freeSkillRanks.specialization.spent).toBe(0);
+            expect(forgetTrainedSkill.actor.freeSkillRanks.career.spent).toBe(0);
+            expect(forgetTrainedSkill.skill.rank.careerFree).toBe(0);
+        });
+    });
+
+});

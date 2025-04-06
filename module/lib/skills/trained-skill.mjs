@@ -1,10 +1,10 @@
-import ErrorSkill from "./error-skill.mjs";
 import Skill from "./skill.mjs";
+import ErrorSkill from "./error-skill.mjs";
 
-export default class CareerFreeSkill extends Skill {
+export default class TrainedSkill extends Skill {
     constructor(actor, skill, params, options) {
         super(actor, skill, params, options);
-        this.freeSkillRankAvailable = this.#computeFreeSkillRankAvailable();
+        this.#computeFreeSkillRankAvailable();
     }
 
     /**
@@ -12,8 +12,7 @@ export default class CareerFreeSkill extends Skill {
      * @override
      */
     train() {
-        this.skill.rank.careerFree++;
-        this.actor.freeSkillRanks.career.spent++;
+        this.skill.rank.trained++;
         return this;
     }
 
@@ -23,8 +22,7 @@ export default class CareerFreeSkill extends Skill {
      */
 
     forget() {
-        this.skill.rank.careerFree--;
-        this.actor.freeSkillRanks.career.spent--;
+        this.skill.rank.trained--;
         return this;
     }
 
@@ -34,8 +32,9 @@ export default class CareerFreeSkill extends Skill {
      */
     evaluate() {
         this.freeSkillRankAvailable = this.#computeFreeSkillRankAvailable();
-        if (this.skill.rank.careerFree < 0) {
-            return new ErrorSkill(this.actor, this.skill, {}, {message: ("you can't forget this rank because it comes from species free bonus!")});
+
+        if (this.skill.rank.trained < 0) {
+            return new ErrorSkill(this.actor, this.skill, {}, {message: ("you can't forget this rank because it was not trained but free!")});
         }
 
         this.skill.rank.value = this.skill.rank.base + this.skill.rank.careerFree + this.skill.rank.specializationFree + this.skill.rank.trained
@@ -44,18 +43,6 @@ export default class CareerFreeSkill extends Skill {
             return new ErrorSkill(this.actor, this.skill, {}, {message: ("you can't have less than 0 rank!")});
         }
 
-        if (this.skill.rank.careerFree > 1) {
-            return new ErrorSkill(this.actor, this.skill, {}, {message: ("you can't use more than 1 free skill rank into the same skill!")});
-        }
-
-        if (this.freeSkillRankAvailable < 0) {
-            return new ErrorSkill(this.actor, this.skill, {}, {message: ("you can't use free skill rank anymore. You have used all!")});
-
-        }
-        if (this.freeSkillRankAvailable > 4) {
-            return new ErrorSkill(this.actor, this.skill, {}, {message: ("you can't get more than 4 free skill ranks!")});
-
-        }
         this.evaluated = true;
         return this;
     }
@@ -65,7 +52,7 @@ export default class CareerFreeSkill extends Skill {
      * @override
      */
     #computeFreeSkillRankAvailable() {
-        return this.actor.freeSkillRanks.career.gained - this.actor.freeSkillRanks.career.spent;
+        return false;
     }
 
     /**
