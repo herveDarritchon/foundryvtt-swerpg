@@ -1,4 +1,6 @@
-import {CareerFreeSkill, ErrorSkill, SpecializationFreeSkill, TrainedSkill} from "../skill.mjs";
+import {ErrorSkill, TrainedSkill} from "../skill.mjs";
+import CareerFreeSkill from "./career-free-skill.mjs";
+import SpecializationFreeSkill from "./specialization-free-skill.mjs";
 
 /**
  * @typedef {Object} Skill
