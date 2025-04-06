@@ -1,6 +1,6 @@
 // career-free-skill.test.mjs
 import '../../setupTests.js';
-import {describe, expect, test} from 'vitest'
+import {describe, expect, test, vi} from 'vitest'
 import {createActor} from "../../utils/actors/actor.mjs";
 import {createSkill} from "../../utils/skills/skill.mjs";
 import CareerFreeSkill from "../../../module/lib/skills/career-free-skill.mjs";
@@ -99,9 +99,9 @@ describe('Career Free Skill', () => {
             });
         });
         describe('should return a career free skill if', () => {
-           test('career free skill rank is 1 and only 1', () => {
+            test('career free skill rank is 1 and only 1', () => {
                 const actor = createActor();
-                const skill = createSkill({careerFree:1})
+                const skill = createSkill({careerFree: 1})
                 const params = {};
                 const options = {};
                 const careerFreeSkill = new CareerFreeSkill(actor, skill, params, options);
@@ -110,7 +110,96 @@ describe('Career Free Skill', () => {
                 expect(evaluatedSkill.skill.rank.careerFree).toBe(1);
                 expect(evaluatedSkill.skill.rank.value).toBe(1);
                 expect(evaluatedSkill.evaluated).toBe(true);
-           });
+            });
+        });
+    });
+    describe('updateState a skill', () => {
+        test('should update the state of the skill and return the skill', async () => {
+            const actor = createActor();
+            const updateMock = vi.fn().mockResolvedValue({});
+            actor.update = updateMock;
+            const skill = createSkill({careerFree: 1});
+            const params = {};
+            const options = {};
+            const careerFreeSkill = new CareerFreeSkill(actor, skill, params, options);
+            careerFreeSkill.evaluate();
+            const updatedSkill = await careerFreeSkill.updateState();
+            expect(updatedSkill).toBeInstanceOf(CareerFreeSkill);
+            expect(updateMock).toHaveBeenCalledTimes(2);
+            expect(updateMock).toHaveBeenNthCalledWith(1, {
+                'system.progression.freeSkillRanks': {
+                    "career": {
+                        "available": 4,
+                        "gained": 4,
+                        "id": "",
+                        "name": "",
+                        "spent": 0,
+                    },
+                    "specialization": {
+                        "available": 2,
+                        "gained": 2,
+                        "id": "",
+                        "name": "",
+                        "spent": 0,
+                    },
+                },
+            });
+            expect(updateMock).toHaveBeenNthCalledWith(2, {
+                'system.skills.skill-id.rank': {
+                    "base": 0,
+                    "careerFree": 1,
+                    "specializationFree": 0,
+                    "trained": 0,
+                    "value": 1,
+                },
+            });
+        });
+        describe('should return an Error Skill if any update fails', () => {
+            test('should not update the state of the skill if the skill evaluated state is false', async () => {
+                const actor = createActor();
+                const updateMock = vi.fn()
+                    .mockResolvedValue({});
+                actor.update = updateMock;
+                const skill = createSkill({careerFree: 1});
+                const params = {};
+                const options = {};
+                const careerFreeSkill = new CareerFreeSkill(actor, skill, params, options);
+                const result = await careerFreeSkill.updateState();
+                expect(updateMock).toHaveBeenCalledTimes(0);
+                expect(result).toBeInstanceOf(ErrorSkill);
+                expect(result.options.message).toContain('you must evaluate the skill before updating it!');
+            });
+            test('free skill ranks update fails', async () => {
+                const actor = createActor();
+                const updateMock = vi.fn()
+                    .mockRejectedValueOnce(new Error('Erreur sur premier update'));
+                actor.update = updateMock;
+                const skill = createSkill({careerFree: 1});
+                const params = {};
+                const options = {};
+                const careerFreeSkill = new CareerFreeSkill(actor, skill, params, options);
+                careerFreeSkill.evaluate();
+                const result = await careerFreeSkill.updateState();
+                expect(updateMock).toHaveBeenCalledTimes(1);
+                expect(result).toBeInstanceOf(ErrorSkill);
+                expect(result.options.message).toContain('Erreur sur premier update');
+            });
+            test('skill rank update fails', async () => {
+                const actor = createActor();
+                const updateMock = vi.fn()
+                    .mockResolvedValueOnce({})
+                    .mockRejectedValueOnce(new Error('Erreur sur deuxième update'));
+                actor.update = updateMock;
+                const skill = createSkill({careerFree: 1});
+                const params = {};
+                const options = {};
+                const careerFreeSkill = new CareerFreeSkill(actor, skill, params, options);
+                careerFreeSkill.evaluate();
+                const result = await careerFreeSkill.updateState();
+                expect(updateMock).toHaveBeenCalledTimes(2);
+                expect(result).toBeInstanceOf(ErrorSkill);
+                expect(result.options.message).toContain('Erreur sur deuxième update');
+            });
         });
     });
 });
