@@ -4,7 +4,6 @@ import {describe, expect, test} from 'vitest'
 import {createActor} from "../../utils/actors/actor.mjs";
 import {createSkill} from "../../utils/skills/skill.mjs";
 import SpecializationFreeSkill from "../../../module/lib/skills/specialization-free-skill.mjs";
-import CareerFreeSkill from "../../../module/lib/skills/career-free-skill.mjs";
 import ErrorSkill from "../../../module/lib/skills/error-skill.mjs";
 
 describe('Specialization Free Skill', () => {
@@ -99,5 +98,20 @@ describe('Specialization Free Skill', () => {
                 });
             });
         });
+        describe('should return a specialization free skill if', () => {
+            test('specialization free skill rank is 1 and only 1', () => {
+                const actor = createActor();
+                const skill = createSkill({careerFree: 1, specializationFree: 1})
+                const params = {};
+                const options = {};
+                const specializationFreeSkill = new SpecializationFreeSkill(actor, skill, params, options);
+                const evaluatedSkill = specializationFreeSkill.evaluate();
+                expect(evaluatedSkill).toBeInstanceOf(SpecializationFreeSkill);
+                expect(evaluatedSkill.skill.rank.specializationFree).toBe(1);
+                expect(evaluatedSkill.skill.rank.value).toBe(2);
+                expect(evaluatedSkill.evaluated).toBe(true);
+            });
+        });
+
     });
 });

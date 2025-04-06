@@ -59,5 +59,20 @@ describe('Specialization Free Skill', () => {
                 });
             });
         });
+        describe('should return a trained skill if', () => {
+            test('trained skill rank is 1 and only 1', () => {
+                const actor = createActor();
+                const skill = createSkill({careerFree: 1, specializationFree: 1, trained: 1})
+                const params = {};
+                const options = {};
+                const trainedFreeSkill = new TrainedSkill(actor, skill, params, options);
+                const evaluatedSkill = trainedFreeSkill.evaluate();
+                expect(evaluatedSkill).toBeInstanceOf(TrainedSkill);
+                expect(evaluatedSkill.skill.rank.trained).toBe(1);
+                expect(evaluatedSkill.skill.rank.value).toBe(3);
+                expect(evaluatedSkill.evaluated).toBe(true);
+            });
+        });
+
     });
 });

@@ -38,11 +38,11 @@ export default class SpecializationFreeSkill extends Skill {
             return new ErrorSkill(this.actor, this.skill, {}, {message: ("you can't forget this rank because it comes from species free bonus!")});
         }
 
-/*        this.skill.rank.value = this.skill.rank.base + this.skill.rank.careerFree + this.skill.rank.specializationFree + this.skill.rank.trained
-
-        if (this.skill.rank.value < 0) {
-            return new ErrorSkill(this.actor, this.skill, {}, {message: ("you can't have less than 0 rank!")});
-        }*/
+        this.skill.rank.value = this.skill.rank.base + this.skill.rank.careerFree + this.skill.rank.specializationFree + this.skill.rank.trained
+        /*
+                if (this.skill.rank.value < 0) {
+                    return new ErrorSkill(this.actor, this.skill, {}, {message: ("you can't have less than 0 rank!")});
+                }*/
 
         if (this.skill.rank.specializationFree > 1) {
             return new ErrorSkill(this.actor, this.skill, {}, {message: ("you can't use more than 1 free skill rank into the same skill!")});

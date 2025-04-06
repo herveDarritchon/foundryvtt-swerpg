@@ -98,5 +98,19 @@ describe('Career Free Skill', () => {
                 });
             });
         });
+        describe('should return a career free skill if', () => {
+           test('career free skill rank is 1 and only 1', () => {
+                const actor = createActor();
+                const skill = createSkill({careerFree:1})
+                const params = {};
+                const options = {};
+                const careerFreeSkill = new CareerFreeSkill(actor, skill, params, options);
+                const evaluatedSkill = careerFreeSkill.evaluate();
+                expect(evaluatedSkill).toBeInstanceOf(CareerFreeSkill);
+                expect(evaluatedSkill.skill.rank.careerFree).toBe(1);
+                expect(evaluatedSkill.skill.rank.value).toBe(1);
+                expect(evaluatedSkill.evaluated).toBe(true);
+           });
+        });
     });
 });
