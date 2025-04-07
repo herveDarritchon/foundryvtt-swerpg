@@ -26,7 +26,8 @@ export default class ErrorSkill extends Skill {
     }
 
     evaluate() {
-        return undefined;
+        this.options.message = ("Evaluate not implemented. Should not be used!");
+        return this;
     }
 
     /**
@@ -37,7 +38,14 @@ export default class ErrorSkill extends Skill {
         return -1;
     }
 
+    /**
+     * @inheritDoc
+     * @override
+     */
     async updateState() {
-        return Promise.resolve(undefined);
+        this.options.message = ("UpdateState not implemented. Should not be used!");
+        return new Promise((resolve, _) => {
+            resolve(this);
+        });
     }
 }
