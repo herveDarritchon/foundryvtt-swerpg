@@ -13,6 +13,7 @@ export default class TrainedSkill extends Skill {
      */
     train() {
         this.skill.rank.trained++;
+        this.actor.experiencePoints.spent = 5;
         return this;
     }
 
@@ -23,6 +24,7 @@ export default class TrainedSkill extends Skill {
 
     forget() {
         this.skill.rank.trained--;
+        this.actor.experiencePoints.spent = 0;
         return this;
     }
 

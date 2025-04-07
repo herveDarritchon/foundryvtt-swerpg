@@ -134,6 +134,7 @@ describe("SkillFactory build()", () => {
                     const actor = createActor();
                     actor.system.skills.brawl.rank.specializationFree = 1;
                     actor.system.skills.brawl.rank.careerFree = 1;
+                    actor.experiencePoints.spent = 10;
                     actor.freeSkillRanks = {
                         career: {
                             spent: 1,
@@ -159,7 +160,7 @@ describe("SkillFactory build()", () => {
 
         });
         describe("should create a TrainedSkill", () => {
-            const expectClassSkill = TrainedSkill;
+            const expectTrainedClassSkill = TrainedSkill;
             describe("action is train", () => {
                 const action = "train";
                 test('click on a skill neither career-free nor specialization-free and actor has no career-free points.', () => {
@@ -185,7 +186,7 @@ describe("SkillFactory build()", () => {
                     };
                     const options = {};
                     const skill = SkillFactory.build(actor, skillId, params, options);
-                    expect(skill).toBeInstanceOf(expectClassSkill);
+                    expect(skill).toBeInstanceOf(expectTrainedClassSkill);
                 });
                 test('an actor that has spent career-free and specialization-free skill points and click on a skill that is both career-free and specialization-free.', () => {
                     const actor = createActor();
@@ -208,7 +209,7 @@ describe("SkillFactory build()", () => {
                     };
                     const options = {};
                     const skill = SkillFactory.build(actor, skillId, params, options);
-                    expect(skill).toBeInstanceOf(expectClassSkill);
+                    expect(skill).toBeInstanceOf(expectTrainedClassSkill);
                 });
             });
             describe("action is forget", () => {
@@ -240,7 +241,7 @@ describe("SkillFactory build()", () => {
                     };
                     const options = {};
                     const skill = SkillFactory.build(actor, skillId, params, options);
-                    expect(skill).toBeInstanceOf(expectClassSkill);
+                    expect(skill).toBeInstanceOf(expectTrainedClassSkill);
                 });
                 test('click on on a skill with trained and career free skill points.', () => {
                     const actor = createActor();
@@ -269,7 +270,7 @@ describe("SkillFactory build()", () => {
                     };
                     const options = {};
                     const skill = SkillFactory.build(actor, skillId, params, options);
-                    expect(skill).toBeInstanceOf(expectClassSkill);
+                    expect(skill).toBeInstanceOf(expectTrainedClassSkill);
                 })
                 test('click on on a skill with trained and specialization free skill points.', () => {
                     const actor = createActor();
@@ -298,9 +299,37 @@ describe("SkillFactory build()", () => {
                     };
                     const options = {};
                     const skill = SkillFactory.build(actor, skillId, params, options);
-                    expect(skill).toBeInstanceOf(expectClassSkill);
+                    expect(skill).toBeInstanceOf(expectTrainedClassSkill);
                 });
-
+                test('click on on a skill with trained, career and specialization free skill points.', () => {
+                    const actor = createActor();
+                    actor.system.skills.brawl.rank.careerFree = 1;
+                    actor.system.skills.brawl.rank.specializationFree = 1;
+                    actor.system.skills.brawl.rank.trained = 1;
+                    actor.experiencePoints.spent = 10;
+                    actor.freeSkillRanks = {
+                        career: {
+                            spent: 4,
+                            gained: 4,
+                            available: 0
+                        },
+                        specialization: {
+                            spent: 2,
+                            gained: 2,
+                            available: 0
+                        }
+                    }
+                    const skillId = "brawl";
+                    const params = {
+                        action: action,
+                        isCreation: true,
+                        isCareer: true,
+                        isSpecialization: true
+                    };
+                    const options = {};
+                    const skill = SkillFactory.build(actor, skillId, params, options);
+                    expect(skill).toBeInstanceOf(expectTrainedClassSkill);
+                });
             });
         });
         describe("should create a ErrorSkill", () => {

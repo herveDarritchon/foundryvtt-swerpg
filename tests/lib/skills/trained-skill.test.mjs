@@ -23,6 +23,7 @@ describe('Specialization Free Skill', () => {
             expect(trainTrainedSkill.actor.freeSkillRanks.specialization.spent).toBe(0);
             expect(trainTrainedSkill.actor.freeSkillRanks.career.spent).toBe(0);
             expect(trainTrainedSkill.skill.rank.careerFree).toBe(0);
+            expect(trainedSkill.actor.experiencePoints.spent).toBe(5);
         });
     });
     describe('forget a skill', () => {
@@ -40,6 +41,7 @@ describe('Specialization Free Skill', () => {
             expect(forgetTrainedSkill.actor.freeSkillRanks.specialization.spent).toBe(0);
             expect(forgetTrainedSkill.actor.freeSkillRanks.career.spent).toBe(0);
             expect(forgetTrainedSkill.skill.rank.careerFree).toBe(0);
+            expect(trainedSkill.actor.experiencePoints.spent).toBe(0);
         });
     });
     describe('evaluate a skill', () => {

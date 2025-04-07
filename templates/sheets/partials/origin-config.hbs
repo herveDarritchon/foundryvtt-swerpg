@@ -56,7 +56,6 @@
         <div class="form-fields">
             {{#each skills as |skill|}}
                 <legend>{{skill.label}} <span class="sum"></span></legend>
-                {{log "skill" skill}}
 
                 <label>{{localize "ORIGIN.SHEET.SKILLS.base"}}
                     {{formInput skill.base.field value=skill.base.value type="number"}}/
