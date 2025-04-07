@@ -59,6 +59,11 @@ export default class TrainedSkill extends Skill {
      * @override
      */
     async updateState() {
+        if (!this.evaluated) {
+            return new Promise((resolve, _) => {
+                resolve(new ErrorSkill(this.actor, this.skill, {}, {message: "you must evaluate the skill before updating it!"}));
+            });
+        }
         try {
             await this.actor.update({'system.progression.freeSkillRanks': this.actor.freeSkillRanks});
             await this.actor.update({[`system.skills.${this.skill.id}.rank`]: this.skill.rank});
