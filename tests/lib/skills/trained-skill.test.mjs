@@ -5,7 +5,6 @@ import {createActor} from "../../utils/actors/actor.mjs";
 import {createSkill} from "../../utils/skills/skill.mjs";
 import TrainedSkill from "../../../module/lib/skills/trained-skill.mjs";
 import ErrorSkill from "../../../module/lib/skills/error-skill.mjs";
-import CareerFreeSkill from "../../../module/lib/skills/career-free-skill.mjs";
 
 describe('Specialization Free Skill', () => {
     describe('train a skill', () => {
@@ -41,32 +40,75 @@ describe('Specialization Free Skill', () => {
             expect(forgetTrainedSkill.actor.freeSkillRanks.specialization.spent).toBe(0);
             expect(forgetTrainedSkill.actor.freeSkillRanks.career.spent).toBe(0);
             expect(forgetTrainedSkill.skill.rank.careerFree).toBe(0);
-            expect(trainedSkill.actor.experiencePoints.spent).toBe(0);
+            expect(trainedSkill.actor.experiencePoints.spent).toBe(10);
         });
     });
     describe('evaluate a skill', () => {
         describe('should return an error skill if', () => {
-            describe('you forget a skill', () => {
-                test('and trained skill rank is less than 0', () => {
-                    const actor = createActor();
-                    const skill = createSkill({trained: -1});
-                    const params = {};
-                    const options = {};
+            test('trained skill rank is less than 0', () => {
+                const actor = createActor();
+                const skill = createSkill({trained: -1});
+                const params = {
+                    action: "forget",
+                    isCreation: true,
+                    isCareer: false,
+                    isSpecialization: false};
+                const options = {};
 
-                    const trainedSkill = new TrainedSkill(actor, skill, params, options);
-                    const errorSkill = trainedSkill.evaluate();
+                const trainedSkill = new TrainedSkill(actor, skill, params, options);
+                const errorSkill = trainedSkill.evaluate();
 
-                    expect(errorSkill).toBeInstanceOf(ErrorSkill);
-                    expect(errorSkill.options.message).toBe("you can't forget this rank because it was not trained but free!");
-                    expect(errorSkill.evaluated).toBe(false);
-                });
+                expect(errorSkill).toBeInstanceOf(ErrorSkill);
+                expect(errorSkill.options.message).toBe("you can't forget this rank because it was not trained but free!");
+                expect(errorSkill.evaluated).toBe(false);
+            });
+            test('trained skill rank is greater than 2 and isCreation is true', () => {
+                const actor = createActor();
+                const skill = createSkill({trained: 3});
+                const params = {
+                    action: "train",
+                    isCreation: true,
+                    isCareer: false,
+                    isSpecialization: false
+                };
+                const options = {};
+
+                const trainedSkill = new TrainedSkill(actor, skill, params, options);
+                const errorSkill = trainedSkill.evaluate();
+
+                expect(errorSkill).toBeInstanceOf(ErrorSkill);
+                expect(errorSkill.options.message).toBe("you can't have more than 2 rank at creation!");
+                expect(errorSkill.evaluated).toBe(false);
+            });
+            test('trained skill rank is greater than 5 and isCreation is false', () => {
+                const actor = createActor();
+                const skill = createSkill({trained: 6});
+                const params = {
+                    action: "train",
+                    isCreation: false,
+                    isCareer: false,
+                    isSpecialization: false
+                };
+                const options = {};
+
+                const trainedSkill = new TrainedSkill(actor, skill, params, options);
+                const errorSkill = trainedSkill.evaluate();
+
+                expect(errorSkill).toBeInstanceOf(ErrorSkill);
+                expect(errorSkill.options.message).toBe("you can't have more than 5 rank!");
+                expect(errorSkill.evaluated).toBe(false);
             });
         });
         describe('should return a trained skill if', () => {
             test('trained skill rank is 1 and only 1', () => {
                 const actor = createActor();
-                const skill = createSkill({careerFree: 1, specializationFree: 1, trained: 1})
-                const params = {};
+                const skill = createSkill({careerFree: 1, specializationFree: 1, trained: 1, value: 3})
+                const params = {
+                    action: "train",
+                    isCreation: false,
+                    isCareer: true,
+                    isSpecialization: true
+                };
                 const options = {};
                 const trainedFreeSkill = new TrainedSkill(actor, skill, params, options);
                 const evaluatedSkill = trainedFreeSkill.evaluate();
@@ -89,7 +131,7 @@ describe('Specialization Free Skill', () => {
             trainedFreeSkill.evaluate();
             const updatedSkill = await trainedFreeSkill.updateState();
             expect(updatedSkill).toBeInstanceOf(TrainedSkill);
-            expect(updateMock).toHaveBeenCalledTimes(2);
+            expect(updateMock).toHaveBeenCalledTimes(3);
             expect(updateMock).toHaveBeenNthCalledWith(1, {
                 'system.progression.freeSkillRanks': {
                     "career": {
@@ -116,6 +158,9 @@ describe('Specialization Free Skill', () => {
                     "trained": 1,
                     "value": 3,
                 },
+            });
+            expect(updateMock).toHaveBeenNthCalledWith(3, {
+                'system.progression.experience.spent': 0
             });
         });
         describe('should return an Error Skill if any update fails', () => {

@@ -14,7 +14,7 @@ describe("SkillFactory build()", () => {
             const expectClassSkill = CareerFreeSkill;
             describe("action is train", () => {
                 const action = "train";
-                test('click on on a career-free skill only.', () => {
+                test('click on a career-free skill only.', () => {
                     const actor = createActor();
                     const skillId = "brawl";
                     const params = {
@@ -43,7 +43,7 @@ describe("SkillFactory build()", () => {
             })
             describe("action is forget", () => {
                 const action = "forget";
-                test('click on on a skill either career-free or specialization-free only and has a career-free skill point.', () => {
+                test('click on a skill either career-free or specialization-free only and has a career-free skill point.', () => {
                     const actor = createActor();
                     actor.system.skills.brawl.rank.careerFree = 1;
                     actor.freeSkillRanks = {
@@ -106,7 +106,7 @@ describe("SkillFactory build()", () => {
             });
             describe("action is forget", () => {
                 const action = "forget";
-                test('click on on a skill either career-free or specialization-free only and has a specialization-free skill point.', () => {
+                test('click on a skill either career-free or specialization-free only and has a specialization-free skill point.', () => {
                     const actor = createActor();
                     actor.system.skills.brawl.rank.specializationFree = 1;
                     actor.freeSkillRanks = {
@@ -130,7 +130,7 @@ describe("SkillFactory build()", () => {
                     const skill = SkillFactory.build(actor, skillId, params, options);
                     expect(skill).toBeInstanceOf(expectClassSkill);
                 });
-                test('click on on a skill either career-free or specialization-free only and has a both a career-free and a specialization-free skill point.', () => {
+                test('click on a skill either career-free or specialization-free only and has a both a career-free and a specialization-free skill point.', () => {
                     const actor = createActor();
                     actor.system.skills.brawl.rank.specializationFree = 1;
                     actor.system.skills.brawl.rank.careerFree = 1;
@@ -211,10 +211,41 @@ describe("SkillFactory build()", () => {
                     const skill = SkillFactory.build(actor, skillId, params, options);
                     expect(skill).toBeInstanceOf(expectTrainedClassSkill);
                 });
+                test('click on a skill with trained points, actor has no free skill point and some experience points to spend.', () => {
+                    const actor = createActor();
+                    actor.system.skills.brawl.rank.careerFree = 0;
+                    actor.system.skills.brawl.rank.specializationFree = 0;
+                    actor.system.skills.brawl.rank.trained = 1;
+                    actor.experiencePoints.spent = 10;
+                    actor.experiencePoints.gained = 100;
+                    actor.experiencePoints.available = 90;
+                    actor.freeSkillRanks = {
+                        career: {
+                            spent: 0,
+                            gained: 4,
+                            available: 0
+                        },
+                        specialization: {
+                            spent: 0,
+                            gained: 2,
+                            available: 0
+                        }
+                    }
+                    const skillId = "brawl";
+                    const params = {
+                        action: action,
+                        isCreation: true,
+                        isCareer: true,
+                        isSpecialization: false
+                    };
+                    const options = {};
+                    const skill = SkillFactory.build(actor, skillId, params, options);
+                    expect(skill).toBeInstanceOf(expectTrainedClassSkill);
+                });
             });
             describe("action is forget", () => {
                 const action = "forget";
-                test('click on on a skill with trained points, actor has no free skill point and some experience point spent.', () => {
+                test('click on a skill with trained points, actor has no free skill point and some experience point spent.', () => {
                     const actor = createActor();
                     actor.system.skills.brawl.rank.careerFree = 0;
                     actor.system.skills.brawl.rank.specializationFree = 0;
@@ -243,7 +274,7 @@ describe("SkillFactory build()", () => {
                     const skill = SkillFactory.build(actor, skillId, params, options);
                     expect(skill).toBeInstanceOf(expectTrainedClassSkill);
                 });
-                test('click on on a skill with trained and career free skill points.', () => {
+                test('click on a skill with trained and career free skill points.', () => {
                     const actor = createActor();
                     actor.system.skills.brawl.rank.careerFree = 1;
                     actor.system.skills.brawl.rank.specializationFree = 0;
@@ -272,7 +303,7 @@ describe("SkillFactory build()", () => {
                     const skill = SkillFactory.build(actor, skillId, params, options);
                     expect(skill).toBeInstanceOf(expectTrainedClassSkill);
                 })
-                test('click on on a skill with trained and specialization free skill points.', () => {
+                test('click on a skill with trained and specialization free skill points.', () => {
                     const actor = createActor();
                     actor.system.skills.brawl.rank.careerFree = 0;
                     actor.system.skills.brawl.rank.specializationFree = 1;
@@ -301,10 +332,39 @@ describe("SkillFactory build()", () => {
                     const skill = SkillFactory.build(actor, skillId, params, options);
                     expect(skill).toBeInstanceOf(expectTrainedClassSkill);
                 });
-                test('click on on a skill with trained, career and specialization free skill points.', () => {
+                test('click on a skill with trained, career and specialization free skill points.', () => {
                     const actor = createActor();
                     actor.system.skills.brawl.rank.careerFree = 1;
                     actor.system.skills.brawl.rank.specializationFree = 1;
+                    actor.system.skills.brawl.rank.trained = 1;
+                    actor.experiencePoints.spent = 10;
+                    actor.freeSkillRanks = {
+                        career: {
+                            spent: 4,
+                            gained: 4,
+                            available: 0
+                        },
+                        specialization: {
+                            spent: 2,
+                            gained: 2,
+                            available: 0
+                        }
+                    }
+                    const skillId = "brawl";
+                    const params = {
+                        action: action,
+                        isCreation: true,
+                        isCareer: true,
+                        isSpecialization: true
+                    };
+                    const options = {};
+                    const skill = SkillFactory.build(actor, skillId, params, options);
+                    expect(skill).toBeInstanceOf(expectTrainedClassSkill);
+                });
+                test('click on a skill with trained points, actor has no free skill point and some experience point spent.', () => {
+                    const actor = createActor();
+                    actor.system.skills.brawl.rank.careerFree = 0;
+                    actor.system.skills.brawl.rank.specializationFree = 0;
                     actor.system.skills.brawl.rank.trained = 1;
                     actor.experiencePoints.spent = 10;
                     actor.freeSkillRanks = {
@@ -336,7 +396,7 @@ describe("SkillFactory build()", () => {
             const expectClassSkill = ErrorSkill;
             describe("action is train", () => {
                 const action = "train";
-                test('click train on on a skill that is neither career-free nor specialization-free and actor has career-free points', () => {
+                test('click train on a skill that is neither career-free nor specialization-free and actor has career-free points', () => {
                     const actor = createActor();
                     const skillId = "brawl";
                     const params = {
@@ -350,7 +410,7 @@ describe("SkillFactory build()", () => {
                     expect(skill).toBeInstanceOf(expectClassSkill);
                     expect(skill.options.message).toBe("you have to spend free skill points first during character creation!");
                 });
-                test('click train on on a skill that is neither career-free nor specialization-free and actor has specialization-free points', () => {
+                test('click train on a skill that is neither career-free nor specialization-free and actor has specialization-free points', () => {
                     const actor = createActor();
                     const skillId = "brawl";
                     const params = {
@@ -367,7 +427,7 @@ describe("SkillFactory build()", () => {
             });
             describe("action is forget", () => {
                 const action = "forget";
-                test('click on on a skill with trained points, actor has no free skill point and no experience point spent.', () => {
+                test('click on a skill with trained points, actor has no free skill point and no experience point spent.', () => {
                     const actor = createActor();
                     actor.system.skills.brawl.rank.careerFree = 0;
                     actor.system.skills.brawl.rank.specializationFree = 0;
@@ -396,7 +456,6 @@ describe("SkillFactory build()", () => {
                     expect(skill).toBeInstanceOf(expectClassSkill);
                 });
             });
-
         });
     });
     describe("during creation time", () => {

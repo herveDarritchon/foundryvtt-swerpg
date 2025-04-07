@@ -160,16 +160,6 @@ export default class SkillFactory {
                         isSpecialization: false
                     }, options);
             }
-            if (skill.rank.trained > 0 && actor.experiencePoints.spent > 0) {
-                return new TrainedSkill(
-                    actor,
-                    skill, {
-                        action,
-                        isCreation: true,
-                        isCareer: false,
-                        isSpecialization: false
-                    }, options);
-            }
             options.message = "you can't forget this rank because it comes from species!"
             return new ErrorSkill(actor, skill, {
                 action,

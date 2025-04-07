@@ -1,10 +1,12 @@
 import Skill from "./skill.mjs";
 import ErrorSkill from "./error-skill.mjs";
+import SkillCostCalculator from "./skill-cost-calculator.mjs";
 
 export default class TrainedSkill extends Skill {
     constructor(actor, skill, params, options) {
         super(actor, skill, params, options);
         this.#computeFreeSkillRankAvailable();
+        this.skillCostCalculator = new SkillCostCalculator(this);
     }
 
     /**
@@ -13,7 +15,7 @@ export default class TrainedSkill extends Skill {
      */
     train() {
         this.skill.rank.trained++;
-        this.actor.experiencePoints.spent = 5;
+        this.actor.experiencePoints.spent = this.skillCostCalculator.calculateCost("train");
         return this;
     }
 
@@ -24,7 +26,7 @@ export default class TrainedSkill extends Skill {
 
     forget() {
         this.skill.rank.trained--;
-        this.actor.experiencePoints.spent = 0;
+        this.actor.experiencePoints.spent = this.skillCostCalculator.calculateCost("forget");
         return this;
     }
 
@@ -34,15 +36,19 @@ export default class TrainedSkill extends Skill {
      */
     evaluate() {
         this.freeSkillRankAvailable = this.#computeFreeSkillRankAvailable();
+        this.skill.rank.value = this.skill.rank.base + this.skill.rank.careerFree + this.skill.rank.specializationFree + this.skill.rank.trained;
 
         if (this.skill.rank.trained < 0) {
             return new ErrorSkill(this.actor, this.skill, {}, {message: ("you can't forget this rank because it was not trained but free!")});
         }
 
-        this.skill.rank.value = this.skill.rank.base + this.skill.rank.careerFree + this.skill.rank.specializationFree + this.skill.rank.trained;
-        /*         if (this.skill.rank.value < 0) {
-                    return new ErrorSkill(this.actor, this.skill, {}, {message: ("you can't have less than 0 rank!")});
-                }*/
+        if (this.isCreation && this.skill.rank.value > 2) {
+            return new ErrorSkill(this.actor, this.skill, {}, {message: ("you can't have more than 2 rank at creation!")});
+        }
+
+        if (!this.isCreation && this.skill.rank.value > 5) {
+            return new ErrorSkill(this.actor, this.skill, {}, {message: ("you can't have more than 5 rank!")});
+        }
 
         this.evaluated = true;
         return this;
@@ -69,6 +75,7 @@ export default class TrainedSkill extends Skill {
         try {
             await this.actor.update({'system.progression.freeSkillRanks': this.actor.freeSkillRanks});
             await this.actor.update({[`system.skills.${this.skill.id}.rank`]: this.skill.rank});
+            await this.actor.update({'system.progression.experience.spent': this.actor.experiencePoints.spent});
             return new Promise((resolve, _) => {
                 resolve(this);
             });
