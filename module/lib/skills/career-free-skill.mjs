@@ -7,6 +7,48 @@ export default class CareerFreeSkill extends Skill {
         this.freeSkillRankAvailable = this.#computeFreeSkillRankAvailable();
     }
 
+    process() {
+        this.freeSkillRankAvailable = this.#computeFreeSkillRankAvailable();
+
+        let careerFree = this.skill.rank.careerFree;
+        let careerFreeRankSpent = this.actor.freeSkillRanks.career.spent;
+
+        if (this.action === "train") {
+            careerFree++;
+            careerFreeRankSpent++;
+        }
+
+        if (this.action === "forget") {
+            careerFree--;
+            careerFreeRankSpent--;
+        }
+
+        if (careerFree < 0) {
+            return new ErrorSkill(this.actor, this.skill, {}, {message: ("you can't forget this rank because it comes from species free bonus!")});
+        }
+
+        if (careerFree > 1) {
+            return new ErrorSkill(this.actor, this.skill, {}, {message: ("you can't use more than 1 career free skill rank into the same skill!")});
+        }
+
+        if (this.freeSkillRankAvailable < 0) {
+            return new ErrorSkill(this.actor, this.skill, {}, {message: ("you can't use free skill rank anymore. You have used all!")});
+
+        }
+
+        const maxCareerFreeSkillRank = this.actor.freeSkillRanks.career.gained;
+        if (this.freeSkillRankAvailable > maxCareerFreeSkillRank) {
+            return new ErrorSkill(this.actor, this.skill, {}, {message: (`you can't get more than ${maxCareerFreeSkillRank} free skill ranks!`)});
+        }
+
+
+        this.skill.rank.value = this.skill.rank.base + careerFree + this.skill.rank.specializationFree + this.skill.rank.trained
+        this.skill.rank.careerFree= careerFree;
+        this.actor.freeSkillRanks.career.spent = careerFreeRankSpent;
+        this.evaluated = true;
+        return this;
+    }
+
     /**
      * @inheritDoc
      * @override
@@ -38,15 +80,13 @@ export default class CareerFreeSkill extends Skill {
             return new ErrorSkill(this.actor, this.skill, {}, {message: ("you can't forget this rank because it comes from species free bonus!")});
         }
 
-        this.skill.rank.value = this.skill.rank.base + this.skill.rank.careerFree + this.skill.rank.specializationFree + this.skill.rank.trained
-
         /*
                 if (this.skill.rank.value < 0) {
                     return new ErrorSkill(this.actor, this.skill, {}, {message: ("you can't have less than 0 rank!")});
-                }*/
+        }*/
 
         if (this.skill.rank.careerFree > 1) {
-            return new ErrorSkill(this.actor, this.skill, {}, {message: ("you can't use more than 1 free skill rank into the same skill!")});
+            return new ErrorSkill(this.actor, this.skill, {}, {message: ("you can't use more than 1 career free skill rank into the same skill!")});
         }
 
         if (this.freeSkillRankAvailable < 0) {
@@ -58,6 +98,8 @@ export default class CareerFreeSkill extends Skill {
             return new ErrorSkill(this.actor, this.skill, {}, {message: (`you can't get more than ${maxCareerFreeSkillRank} free skill ranks!`)});
 
         }
+
+        this.skill.rank.value = this.skill.rank.base + this.skill.rank.careerFree + this.skill.rank.specializationFree + this.skill.rank.trained
         this.evaluated = true;
         return this;
     }

@@ -208,15 +208,12 @@ export default class SwerpgActorType extends foundry.abstract.TypeDataModel {
         let s = freeSkillRanks.specialization;
         s.available = s.gained - s.spent;
         freeSkillRanks.specialization = s;
-
-        console.log("_prepareFreeSkillRanks", freeSkillRanks, this);
     }
 
     _prepareExperience() {
         const experience = this.progression.experience;
         experience.total = experience.startingExperience + experience.gained
         experience.available = experience.total - experience.spent;
-        console.log("prepareExperience", experience, this);
     }
 
     /* -------------------------------------------- */

@@ -131,25 +131,7 @@ describe('Specialization Free Skill', () => {
             trainedFreeSkill.evaluate();
             const updatedSkill = await trainedFreeSkill.updateState();
             expect(updatedSkill).toBeInstanceOf(TrainedSkill);
-            expect(updateMock).toHaveBeenCalledTimes(3);
-            expect(updateMock).toHaveBeenNthCalledWith(1, {
-                'system.progression.freeSkillRanks': {
-                    "career": {
-                        "available": 4,
-                        "gained": 4,
-                        "id": "",
-                        "name": "",
-                        "spent": 0,
-                    },
-                    "specialization": {
-                        "available": 2,
-                        "gained": 2,
-                        "id": "",
-                        "name": "",
-                        "spent": 0,
-                    },
-                },
-            });
+            expect(updateMock).toHaveBeenCalledTimes(2);
             expect(updateMock).toHaveBeenNthCalledWith(2, {
                 'system.skills.skill-id.rank': {
                     "base": 0,
@@ -159,7 +141,7 @@ describe('Specialization Free Skill', () => {
                     "value": 3,
                 },
             });
-            expect(updateMock).toHaveBeenNthCalledWith(3, {
+            expect(updateMock).toHaveBeenNthCalledWith(1, {
                 'system.progression.experience.spent': 0
             });
         });

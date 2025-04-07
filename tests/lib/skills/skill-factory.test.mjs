@@ -73,6 +73,20 @@ describe("SkillFactory build()", () => {
             const expectClassSkill = SpecializationFreeSkill;
             describe("action is train", () => {
                 const action = "train";
+                test('click on a skill that is specialization-free and career-free with already a career-free on it.', () => {
+                    const actor = createActor({careerSpent: 1});
+                    actor.system.skills.brawl.rank.careerFree = 1;
+                    const skillId = "brawl";
+                    const params = {
+                        action: action,
+                        isCreation: true,
+                        isCareer: true,
+                        isSpecialization: true
+                    };
+                    const options = {};
+                    const skill = SkillFactory.build(actor, skillId, params, options);
+                    expect(skill).toBeInstanceOf(expectClassSkill);
+                });
                 test('click on a specialization-free skill only.', () => {
                     const actor = createActor();
                     const skillId = "brawl";

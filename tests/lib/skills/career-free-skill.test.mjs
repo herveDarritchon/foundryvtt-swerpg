@@ -52,7 +52,7 @@ describe('Career Free Skill', () => {
                     const errorSkill = careerFreeSkill.evaluate();
 
                     expect(errorSkill).toBeInstanceOf(ErrorSkill);
-                    expect(errorSkill.options.message).toBe("you can't use more than 1 free skill rank into the same skill!");
+                    expect(errorSkill.options.message).toBe("you can't use more than 1 career free skill rank into the same skill!");
                     expect(errorSkill.evaluated).toBe(false);
                 });
                 test('after train free skill rank available is less than 0', () => {

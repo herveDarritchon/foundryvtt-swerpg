@@ -14,21 +14,22 @@ export default class SkillCostCalculator {
     /**
      * Calculate the cost of the skill.
      * @param {string} action - The action to perform.
+     * @param value
      * @returns {number} - The cost of the skill.
      */
-    calculateCost(action) {
+    calculateCost(action, value) {
         let cost = 0;
         if (this.skill instanceof TrainedSkill) {
             if (action === "train") {
-                cost = this.#calculateTrainCost();
+                cost = this.#calculateTrainCost(value);
             } else if (action === "forget") {
-                cost = this.#calculateForgetCost();
+                cost = this.#calculateForgetCost(value);
             }
         }
         return cost;
     }
 
-    #calculateTrainCost(value = this.skill.skill.rank.value) {
+    #calculateTrainCost(value) {
         const baseCost = value * 5;
         if (this.isSpecialized) {
             return baseCost;
@@ -36,8 +37,8 @@ export default class SkillCostCalculator {
         return baseCost + 5;
     }
 
-    #calculateForgetCost() {
-        return this.#calculateTrainCost(this.skill.skill.rank.value + 1);
+    #calculateForgetCost(value) {
+        return this.#calculateTrainCost(value + 1);
     }
 
     #skillIsSpecialized() {

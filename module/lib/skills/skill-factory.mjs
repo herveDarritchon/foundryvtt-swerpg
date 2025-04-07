@@ -108,7 +108,7 @@ export default class SkillFactory {
     static #buildCareerOrSpecialization(actor, skill, action, options) {
         if (action === "train") {
             const freeSkillRanks = foundry.utils.deepClone(actor.freeSkillRanks);
-            if (freeSkillRanks.career.gained - freeSkillRanks.career.spent > 0) {
+            if ((freeSkillRanks.career.gained - freeSkillRanks.career.spent > 0) && skill.rank.careerFree === 0) {
                 return new CareerFreeSkill(
                     actor,
                     skill, {
@@ -160,7 +160,16 @@ export default class SkillFactory {
                         isSpecialization: false
                     }, options);
             }
-            options.message = "you can't forget this rank because it comes from species!"
+            if (skill.rank.base > 0){
+                options.message = "you can't forget this rank because it comes from species!"
+                return new ErrorSkill(actor, skill, {
+                    action,
+                    isCreation: true,
+                    isCareer: true,
+                    isSpecialization: true
+                }, options);
+            }
+            options.message = "Unknown error occurred. Please report a bug!"
             return new ErrorSkill(actor, skill, {
                 action,
                 isCreation: true,

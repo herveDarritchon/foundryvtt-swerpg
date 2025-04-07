@@ -52,7 +52,7 @@ describe('Specialization Free Skill', () => {
                     const errorSkill = specializationFreeSkill.evaluate();
 
                     expect(errorSkill).toBeInstanceOf(ErrorSkill);
-                    expect(errorSkill.options.message).toBe("you can't use more than 1 free skill rank into the same skill!");
+                    expect(errorSkill.options.message).toBe("you can't use more than 1 specialization free skill rank into the same skill!");
                     expect(errorSkill.evaluated).toBe(false);
                 });
                 test('after train free skill rank available is less than 0', () => {

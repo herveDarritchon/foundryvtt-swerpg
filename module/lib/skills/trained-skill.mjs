@@ -9,6 +9,43 @@ export default class TrainedSkill extends Skill {
         this.skillCostCalculator = new SkillCostCalculator(this);
     }
 
+    process() {
+        this.freeSkillRankAvailable = this.#computeFreeSkillRankAvailable();
+
+        let trained = this.skill.rank.trained;
+        let experiencePointsSpent = this.actor.experiencePoints.spent;
+
+        if (this.action === "train") {
+            trained++;
+            experiencePointsSpent = experiencePointsSpent + this.skillCostCalculator.calculateCost("train", trained);
+        }
+
+        if (this.action === "forget") {
+            trained--;
+            experiencePointsSpent = experiencePointsSpent - this.skillCostCalculator.calculateCost("forget", trained);
+        }
+
+        if (this.skill.rank.trained < 0) {
+            return new ErrorSkill(this.actor, this.skill, {}, {message: ("you can't forget this rank because it was not trained but free!")});
+        }
+
+        const value = this.skill.rank.base + this.skill.rank.careerFree + this.skill.rank.specializationFree + trained;
+
+        if (this.isCreation && value > 2) {
+            return new ErrorSkill(this.actor, this.skill, {}, {message: ("you can't have more than 2 rank at creation!")});
+        }
+
+        if (!this.isCreation && value > 5) {
+            return new ErrorSkill(this.actor, this.skill, {}, {message: ("you can't have more than 5 rank!")});
+        }
+
+        this.skill.rank.value = value;
+        this.skill.rank.trained = trained;
+        this.actor.experiencePoints.spent = experiencePointsSpent;
+        this.evaluated = true;
+        return this;
+    }
+
     /**
      * @inheritDoc
      * @override
@@ -73,9 +110,8 @@ export default class TrainedSkill extends Skill {
             });
         }
         try {
-            await this.actor.update({'system.progression.freeSkillRanks': this.actor.freeSkillRanks});
-            await this.actor.update({[`system.skills.${this.skill.id}.rank`]: this.skill.rank});
             await this.actor.update({'system.progression.experience.spent': this.actor.experiencePoints.spent});
+            await this.actor.update({[`system.skills.${this.skill.id}.rank`]: this.skill.rank});
             return new Promise((resolve, _) => {
                 resolve(this);
             });

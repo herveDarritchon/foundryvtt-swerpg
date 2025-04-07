@@ -238,7 +238,6 @@ export default class SwerpgCharacter extends SwerpgActorType {
         this.#prepareSpecializations();
         this.#prepareBaseMovement();
         super.prepareBaseData();
-        console.log("[prepareBaseData]: character data", this);
     }
 
     /* -------------------------------------------- */
