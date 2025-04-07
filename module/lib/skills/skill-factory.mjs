@@ -65,6 +65,15 @@ export default class SkillFactory {
             }
         }
 
+        if (skill.rank.trained > 0) {
+            if (action === "forget" && actor.experiencePoints.spent > 0) {
+                return new TrainedSkill(actor, skill, {action, isCreation, isCareer, isSpecialization}, options);
+            }
+            if (action === "train" && actor.experiencePoints.available > 0) {
+                return new TrainedSkill(actor, skill, {action, isCreation, isCareer, isSpecialization}, options);
+            }
+        }
+
         if (isCareer && isSpecialization) {
             return SkillFactory.#buildCareerOrSpecialization(actor, skill, action, options);
         }
