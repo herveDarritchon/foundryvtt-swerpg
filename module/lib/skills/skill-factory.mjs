@@ -79,11 +79,28 @@ export default class SkillFactory {
         }
 
         if (isCareer) {
-            return new CareerFreeSkill(actor, skill, {action, isCreation, isCareer, isSpecialization}, options);
+            if (
+                (action === "train" && SkillFactory.#hasCareerFreeSkill(actor)) ||
+                (action === "forget" && actor.freeSkillRanks.career.spent > 0)) {
+                return new CareerFreeSkill(actor, skill, {action, isCreation, isCareer, isSpecialization}, options);
+            }
         }
 
         if (isSpecialization) {
-            return new SpecializationFreeSkill(actor, skill, {action, isCreation, isCareer, isSpecialization}, options);
+            if (
+                (action === "train" && SkillFactory.#hasSpecializationFreeSkill(actor)) ||
+                (action === "forget" && actor.freeSkillRanks.specialization.spent > 0)) {
+                return new SpecializationFreeSkill(actor, skill, {
+                    action,
+                    isCreation,
+                    isCareer,
+                    isSpecialization
+                }, options);
+            }
+        }
+
+        if (actor.experiencePoints.available > 0) {
+            return new TrainedSkill(actor, skill, {action, isCreation, isCareer, isSpecialization}, options);
         }
     }
 
@@ -160,7 +177,7 @@ export default class SkillFactory {
                         isSpecialization: false
                     }, options);
             }
-            if (skill.rank.base > 0){
+            if (skill.rank.base > 0) {
                 options.message = "you can't forget this rank because it comes from species!"
                 return new ErrorSkill(actor, skill, {
                     action,
