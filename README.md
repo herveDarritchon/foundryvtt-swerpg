@@ -1,4 +1,3 @@
-Code coverage: https://herdev.hervedarritchon.fr/foundryvtt-swerpg/index.html
 [![Code Coverage](https://github.com/herveDarritchon/foundryvtt-swerpg/actions/workflows/test.yml/badge.svg?branch=main)](https://herdev.hervedarritchon.fr/foundryvtt-swerpg/index.html)
 
 # The Swerpg Game System
