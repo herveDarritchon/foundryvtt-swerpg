@@ -1,4 +1,4 @@
-name: Run Vitest Tests & Publish Coverage
+name: Unit Tests & Coverage
 
 on:
   push:
