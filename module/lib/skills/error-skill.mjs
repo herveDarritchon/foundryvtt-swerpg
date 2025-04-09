@@ -1,8 +1,8 @@
 import Skill from "./skill.mjs";
 
 export default class ErrorSkill extends Skill {
-    constructor(actor, skill, params, options) {
-        super(actor, skill, params, options);
+    constructor(actor, data, params, options) {
+        super(actor, data, params, options);
         this.#computeFreeSkillRankAvailable();
     }
 

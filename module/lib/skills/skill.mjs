@@ -1,14 +1,7 @@
-/**
- * @typedef {Object} SkillResult
- * @property {boolean} success - Indicates whether the skill creation was successful.
- * @property {CareerFreeSkill|SpecializationFreeSkill|TrainedSkill|ErrorSkill} [data] - The created skill instance.
- * @property {string|null} [error] - An error message if skill creation failed.
- */
-
 export default class Skill {
-    constructor(actor, skill, params, options) {
+    constructor(actor, data, params, options) {
         this.actor = foundry.utils.deepClone(actor);
-        this.skill = foundry.utils.deepClone(skill);
+        this.data = foundry.utils.deepClone(data);
         this.isCreation = params.isCreation;
         this.isCareer = params.isCareer;
         this.isSpecialization = params.isSpecialization;

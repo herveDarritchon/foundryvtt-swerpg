@@ -8,7 +8,7 @@
  * @param value
  * @returns {{id: string, rank: {base: number, careerFree: number, specializationFree: number, trained: number, value: number}}}
  */
-export function createSkill(
+export function createSkillData(
     {
         id = 'skill-id',
         base = 0,

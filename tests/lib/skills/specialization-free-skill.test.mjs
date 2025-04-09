@@ -2,7 +2,7 @@
 import '../../setupTests.js';
 import {describe, expect, test, vi} from 'vitest'
 import {createActor} from "../../utils/actors/actor.mjs";
-import {createSkill} from "../../utils/skills/skill.mjs";
+import {createSkillData} from "../../utils/skills/skill.mjs";
 import SpecializationFreeSkill from "../../../module/lib/skills/specialization-free-skill.mjs";
 import ErrorSkill from "../../../module/lib/skills/error-skill.mjs";
 
@@ -10,7 +10,7 @@ describe('Specialization Free Skill', () => {
     describe('train a skill', () => {
         test('should increase the specialization free skill rank', () => {
             const actor = createActor();
-            const skill = createSkill();
+            const data = createSkillData();
             const params = {
                 action: "train",
                 isCreation: true,
@@ -19,19 +19,19 @@ describe('Specialization Free Skill', () => {
             };
             const options = {};
 
-            const specializationFreeSkill = new SpecializationFreeSkill(actor, skill, params, options);
+            const specializationFreeSkill = new SpecializationFreeSkill(actor, data, params, options);
             const trainedSkill = specializationFreeSkill.process();
 
-            expect(trainedSkill.skill.rank.specializationFree).toBe(1);
+            expect(trainedSkill.data.rank.specializationFree).toBe(1);
             expect(trainedSkill.actor.freeSkillRanks.specialization.spent).toBe(1);
             expect(trainedSkill.actor.freeSkillRanks.career.spent).toBe(0);
-            expect(trainedSkill.skill.rank.careerFree).toBe(0);
+            expect(trainedSkill.data.rank.careerFree).toBe(0);
         });
     });
     describe('forget a skill', () => {
         test('should decrease the specialization free skill rank', () => {
             const actor = createActor({specializationSpent: 1});
-            const skill = createSkill({specializationFree: 1});
+            const data = createSkillData({specializationFree: 1});
             const params = {
                 action: "forget",
                 isCreation: true,
@@ -40,13 +40,13 @@ describe('Specialization Free Skill', () => {
             };
             const options = {};
 
-            const specializationFreeSkill = new SpecializationFreeSkill(actor, skill, params, options);
+            const specializationFreeSkill = new SpecializationFreeSkill(actor, data, params, options);
             const trainedSkill = specializationFreeSkill.process();
 
-            expect(trainedSkill.skill.rank.specializationFree).toBe(0);
+            expect(trainedSkill.data.rank.specializationFree).toBe(0);
             expect(trainedSkill.actor.freeSkillRanks.specialization.spent).toBe(0);
             expect(trainedSkill.actor.freeSkillRanks.career.spent).toBe(0);
-            expect(trainedSkill.skill.rank.careerFree).toBe(0);
+            expect(trainedSkill.data.rank.careerFree).toBe(0);
         });
     });
     describe('evaluate a skill', () => {
@@ -54,11 +54,11 @@ describe('Specialization Free Skill', () => {
             describe('you train a skill', () => {
                 test('and specialization free skill rank is greater than 1', () => {
                     const actor = createActor();
-                    const skill = createSkill({specializationFree: 2});
+                    const data = createSkillData({specializationFree: 2});
                     const params = {};
                     const options = {};
 
-                    const specializationFreeSkill = new SpecializationFreeSkill(actor, skill, params, options);
+                    const specializationFreeSkill = new SpecializationFreeSkill(actor, data, params, options);
                     const errorSkill = specializationFreeSkill.process();
 
                     expect(errorSkill).toBeInstanceOf(ErrorSkill);
@@ -67,11 +67,11 @@ describe('Specialization Free Skill', () => {
                 });
                 test('after train free skill rank available is less than 0', () => {
                     const actor = createActor({specializationSpent: 5});
-                    const skill = createSkill({specializationFree: 1});
+                    const data = createSkillData({specializationFree: 1});
                     const params = {};
                     const options = {};
 
-                    const specializationFreeSkill = new SpecializationFreeSkill(actor, skill, params, options);
+                    const specializationFreeSkill = new SpecializationFreeSkill(actor, data, params, options);
                     const errorSkill = specializationFreeSkill.process();
 
                     expect(errorSkill).toBeInstanceOf(ErrorSkill);
@@ -82,11 +82,11 @@ describe('Specialization Free Skill', () => {
             describe('you forget a skill', () => {
                 test('and specialization free skill rank is less than 0', () => {
                     const actor = createActor();
-                    const skill = createSkill({specializationFree: -1});
+                    const data = createSkillData({specializationFree: -1});
                     const params = {};
                     const options = {};
 
-                    const specializationFreeSkill = new SpecializationFreeSkill(actor, skill, params, options);
+                    const specializationFreeSkill = new SpecializationFreeSkill(actor, data, params, options);
                     const errorSkill = specializationFreeSkill.process();
 
                     expect(errorSkill).toBeInstanceOf(ErrorSkill);
@@ -95,11 +95,11 @@ describe('Specialization Free Skill', () => {
                 });
                 test('and specialization free skill rank is greater than specialization free skill rank gained', () => {
                     const actor = createActor({specializationSpent: -1});
-                    const skill = createSkill({specializationFree: 0});
+                    const data = createSkillData({specializationFree: 0});
                     const params = {};
                     const options = {};
 
-                    const specializationFreeSkill = new SpecializationFreeSkill(actor, skill, params, options);
+                    const specializationFreeSkill = new SpecializationFreeSkill(actor, data, params, options);
                     const errorSkill = specializationFreeSkill.process();
 
                     expect(errorSkill).toBeInstanceOf(ErrorSkill);
@@ -111,14 +111,14 @@ describe('Specialization Free Skill', () => {
         describe('should return a specialization free skill if', () => {
             test('specialization free skill rank is 1 and only 1', () => {
                 const actor = createActor();
-                const skill = createSkill({careerFree: 1, specializationFree: 1})
+                const data = createSkillData({careerFree: 1, specializationFree: 1})
                 const params = {};
                 const options = {};
-                const specializationFreeSkill = new SpecializationFreeSkill(actor, skill, params, options);
+                const specializationFreeSkill = new SpecializationFreeSkill(actor, data, params, options);
                 const evaluatedSkill = specializationFreeSkill.process();
                 expect(evaluatedSkill).toBeInstanceOf(SpecializationFreeSkill);
-                expect(evaluatedSkill.skill.rank.specializationFree).toBe(1);
-                expect(evaluatedSkill.skill.rank.value).toBe(2);
+                expect(evaluatedSkill.data.rank.specializationFree).toBe(1);
+                expect(evaluatedSkill.data.rank.value).toBe(2);
                 expect(evaluatedSkill.evaluated).toBe(true);
             });
         });
@@ -129,10 +129,10 @@ describe('Specialization Free Skill', () => {
             const actor = createActor();
             const updateMock = vi.fn().mockResolvedValue({});
             actor.update = updateMock;
-            const skill = createSkill({careerFree: 1, specializationFree: 1});
+            const data = createSkillData({careerFree: 1, specializationFree: 1});
             const params = {};
             const options = {};
-            const specializationFreeSkill = new SpecializationFreeSkill(actor, skill, params, options);
+            const specializationFreeSkill = new SpecializationFreeSkill(actor, data, params, options);
             specializationFreeSkill.process();
             const updatedSkill = await specializationFreeSkill.updateState();
             expect(updatedSkill).toBeInstanceOf(SpecializationFreeSkill);
@@ -171,10 +171,10 @@ describe('Specialization Free Skill', () => {
                 const updateMock = vi.fn()
                     .mockResolvedValue({});
                 actor.update = updateMock;
-                const skill = createSkill({careerFree: 1, specializationFree: 1});
+                const data = createSkillData({careerFree: 1, specializationFree: 1});
                 const params = {};
                 const options = {};
-                const specializationFreeSkill = new SpecializationFreeSkill(actor, skill, params, options);
+                const specializationFreeSkill = new SpecializationFreeSkill(actor, data, params, options);
                 const result = await specializationFreeSkill.updateState();
                 expect(updateMock).toHaveBeenCalledTimes(0);
                 expect(result).toBeInstanceOf(ErrorSkill);
@@ -185,10 +185,10 @@ describe('Specialization Free Skill', () => {
                 const updateMock = vi.fn()
                     .mockRejectedValueOnce(new Error('Erreur sur premier update'));
                 actor.update = updateMock;
-                const skill = createSkill({specializationFree: 1});
+                const data = createSkillData({specializationFree: 1});
                 const params = {};
                 const options = {};
-                const specializationFreeSkill = new SpecializationFreeSkill(actor, skill, params, options);
+                const specializationFreeSkill = new SpecializationFreeSkill(actor, data, params, options);
                 specializationFreeSkill.process();
                 const result = await specializationFreeSkill.updateState();
                 expect(updateMock).toHaveBeenCalledTimes(1);
@@ -201,10 +201,10 @@ describe('Specialization Free Skill', () => {
                     .mockResolvedValueOnce({})
                     .mockRejectedValueOnce(new Error('Erreur sur deuxième update'));
                 actor.update = updateMock;
-                const skill = createSkill({specializationFree: 1});
+                const data = createSkillData({specializationFree: 1});
                 const params = {};
                 const options = {};
-                const specializationFreeSkill = new SpecializationFreeSkill(actor, skill, params, options);
+                const specializationFreeSkill = new SpecializationFreeSkill(actor, data, params, options);
                 specializationFreeSkill.process();
                 const result = await specializationFreeSkill.updateState();
                 expect(updateMock).toHaveBeenCalledTimes(2);

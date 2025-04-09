@@ -1,7 +1,7 @@
 // trained-skill.test.mjs
 import '../../setupTests.js';
 import {describe, expect, test} from 'vitest'
-import {createSkill} from "../../utils/skills/skill.mjs";
+import {createSkillData} from "../../utils/skills/skill.mjs";
 import TrainedSkill from "../../../module/lib/skills/trained-skill.mjs";
 import CareerFreeSkill from "../../../module/lib/skills/career-free-skill.mjs";
 import SpecializationFreeSkill from "../../../module/lib/skills/specialization-free-skill.mjs";
@@ -22,7 +22,7 @@ describe('Skills Calculator', () => {
         const options = {};
         describe('of type career free skill', () => {
             test('should return a cost of 0', () => {
-                const data = createSkill({
+                const data = createSkillData({
                     careerFree: 1,
                     value: 1
                 });
@@ -35,7 +35,7 @@ describe('Skills Calculator', () => {
         });
         describe('of type specialization free skill', () => {
             test('should return a cost of 0', () => {
-                const data = createSkill({
+                const data = createSkillData({
                     specializationFree: 1,
                     value: 1
                 });
@@ -49,7 +49,7 @@ describe('Skills Calculator', () => {
         });
         describe('of type error skill', () => {
             test('should return a cost of 0', () => {
-                const data = createSkill({
+                const data = createSkillData({
                     base: 1,
                     value: 1
                 });
@@ -64,7 +64,7 @@ describe('Skills Calculator', () => {
         describe('of type trained skill', () => {
             describe('skill is specialized (career or specialization', () => {
                 test('should return 5 if new rank is 1', () => {
-                    const data = createSkill({
+                    const data = createSkillData({
                         trained: 1,
                         value: 1
                     });
@@ -80,7 +80,7 @@ describe('Skills Calculator', () => {
                     expect(cost).toBe(5);
                 });
                 test('should return 10 if new rank is 2', () => {
-                    const data = createSkill({
+                    const data = createSkillData({
                         career: 1,
                         trained: 1,
                         value: 2
@@ -99,7 +99,7 @@ describe('Skills Calculator', () => {
             });
             describe('skill is not specialized (neither career nor specialization)', () => {
                 test('should return 10 if new rank is 1', () => {
-                    const data = createSkill({
+                    const data = createSkillData({
                         trained: 1,
                         value: 1
                     });
@@ -115,7 +115,7 @@ describe('Skills Calculator', () => {
                     expect(cost).toBe(10);
                 });
                 test('should return 15 if new rank is 2', () => {
-                    const data = createSkill({
+                    const data = createSkillData({
                         career: 1,
                         trained: 1,
                         value: 2
@@ -146,7 +146,7 @@ describe('Skills Calculator', () => {
         const options = {};
         describe('of type career free skill', () => {
             test('should return a cost of 0', () => {
-                const data = createSkill({
+                const data = createSkillData({
                     careerFree: 1,
                     value: 1
                 });
@@ -159,7 +159,7 @@ describe('Skills Calculator', () => {
         });
         describe('of type specialization free skill', () => {
             test('should return a cost of 0', () => {
-                const data = createSkill({
+                const data = createSkillData({
                     specializationFree: 1,
                     value: 1
                 });
@@ -173,7 +173,7 @@ describe('Skills Calculator', () => {
         });
         describe('of type error skill', () => {
             test('should return a cost of 0', () => {
-                const data = createSkill({
+                const data = createSkillData({
                     base: 1,
                     value: 1
                 });
@@ -188,7 +188,7 @@ describe('Skills Calculator', () => {
         describe('of type trained skill', () => {
             describe('skill is specialized (career or specialization', () => {
                 test('should return 5 if new rank is 0 with no free rank', () => {
-                    const data = createSkill();
+                    const data = createSkillData();
                     const params = {
                         action: action,
                         isCreation: true,
@@ -201,7 +201,7 @@ describe('Skills Calculator', () => {
                     expect(cost).toBe(5);
                 });
                 test('should return 10 if new rank is 1', () => {
-                    const data = createSkill({
+                    const data = createSkillData({
                         career: 0,
                         trained: 1,
                         value: 1
@@ -220,7 +220,7 @@ describe('Skills Calculator', () => {
             });
             describe('skill is not specialized (neither career nor specialization)', () => {
                 test('should return 10 if new rank is 0', () => {
-                    const data = createSkill({
+                    const data = createSkillData({
                         trained: 0,
                         value: 0,
                     });
@@ -236,7 +236,7 @@ describe('Skills Calculator', () => {
                     expect(cost).toBe(10);
                 });
                 test('should return 15 if new rank is 1', () => {
-                    const data = createSkill({
+                    const data = createSkillData({
                         career: 0,
                         trained: 1,
                         value: 1
@@ -253,7 +253,7 @@ describe('Skills Calculator', () => {
                     expect(cost).toBe(15);
                 });
                 test('should return 20 if new rank is 2 with a career free', () => {
-                    const data = createSkill({
+                    const data = createSkillData({
                         career: 1,
                         trained: 1,
                         value: 2

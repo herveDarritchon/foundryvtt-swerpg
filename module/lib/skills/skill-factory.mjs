@@ -6,7 +6,7 @@ import ErrorSkill from "./error-skill.mjs";
 /**
  * @typedef {Object} Skill
  * @property {SwerpgActor} actor - The actor instance.
- * @property {Skill} skill - The skill instance.
+ * @property {Skill} data - The skill instance.
  * @property {boolean} isCreation - Indicates if the skill is in the creation phase.
  * @property {boolean} isCareer - Indicates if the skill is a career skill.
  * @property {boolean} isSpecialization - Indicates if the skill is a specialization skill.

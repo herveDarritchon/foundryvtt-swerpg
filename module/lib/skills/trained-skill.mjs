@@ -3,44 +3,44 @@ import ErrorSkill from "./error-skill.mjs";
 import SkillCostCalculator from "./skill-cost-calculator.mjs";
 
 export default class TrainedSkill extends Skill {
-    constructor(actor, skill, params, options) {
-        super(actor, skill, params, options);
+    constructor(actor, data, params, options) {
+        super(actor, data, params, options);
         this.#computeFreeSkillRankAvailable();
-        this.skillCostCalculator = new SkillCostCalculator(this);
+        this.dataCostCalculator = new SkillCostCalculator(this);
     }
 
     process() {
         this.freeSkillRankAvailable = this.#computeFreeSkillRankAvailable();
 
-        let trained = this.skill.rank.trained;
+        let trained = this.data.rank.trained;
         let experiencePointsSpent = this.actor.experiencePoints.spent;
 
         if (this.action === "train") {
             trained++;
-            experiencePointsSpent = experiencePointsSpent + this.skillCostCalculator.calculateCost("train", trained);
+            experiencePointsSpent = experiencePointsSpent + this.dataCostCalculator.calculateCost("train", trained);
         }
 
         if (this.action === "forget") {
             trained--;
-            experiencePointsSpent = experiencePointsSpent - this.skillCostCalculator.calculateCost("forget", trained);
+            experiencePointsSpent = experiencePointsSpent - this.dataCostCalculator.calculateCost("forget", trained);
         }
 
-        if (this.skill.rank.trained < 0) {
-            return new ErrorSkill(this.actor, this.skill, {}, {message: ("you can't forget this rank because it was not trained but free!")});
+        if (this.data.rank.trained < 0) {
+            return new ErrorSkill(this.actor, this.data, {}, {message: ("you can't forget this rank because it was not trained but free!")});
         }
 
-        const value = this.skill.rank.base + this.skill.rank.careerFree + this.skill.rank.specializationFree + trained;
+        const value = this.data.rank.base + this.data.rank.careerFree + this.data.rank.specializationFree + trained;
 
         if (this.isCreation && value > 2) {
-            return new ErrorSkill(this.actor, this.skill, {}, {message: ("you can't have more than 2 rank at creation!")});
+            return new ErrorSkill(this.actor, this.data, {}, {message: ("you can't have more than 2 rank at creation!")});
         }
 
         if (!this.isCreation && value > 5) {
-            return new ErrorSkill(this.actor, this.skill, {}, {message: ("you can't have more than 5 rank!")});
+            return new ErrorSkill(this.actor, this.data, {}, {message: ("you can't have more than 5 rank!")});
         }
 
-        this.skill.rank.value = value;
-        this.skill.rank.trained = trained;
+        this.data.rank.value = value;
+        this.data.rank.trained = trained;
         this.actor.experiencePoints.spent = experiencePointsSpent;
         this.evaluated = true;
         return this;
@@ -61,18 +61,18 @@ export default class TrainedSkill extends Skill {
     async updateState() {
         if (!this.evaluated) {
             return new Promise((resolve, _) => {
-                resolve(new ErrorSkill(this.actor, this.skill, {}, {message: "you must evaluate the skill before updating it!"}));
+                resolve(new ErrorSkill(this.actor, this.data, {}, {message: "you must evaluate the skill before updating it!"}));
             });
         }
         try {
             await this.actor.update({'system.progression.experience.spent': this.actor.experiencePoints.spent});
-            await this.actor.update({[`system.skills.${this.skill.id}.rank`]: this.skill.rank});
+            await this.actor.update({[`system.skills.${this.data.id}.rank`]: this.data.rank});
             return new Promise((resolve, _) => {
                 resolve(this);
             });
         } catch (e) {
             return new Promise((resolve, _) => {
-                resolve(new ErrorSkill(this.actor, this.skill, {}, {message: e.toString()}));
+                resolve(new ErrorSkill(this.actor, this.data, {}, {message: e.toString()}));
             });
         }
     }
