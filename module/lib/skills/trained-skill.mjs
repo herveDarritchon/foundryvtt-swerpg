@@ -52,7 +52,7 @@ export default class TrainedSkill extends Skill {
      */
     train() {
         this.skill.rank.trained++;
-        this.actor.experiencePoints.spent = this.skillCostCalculator.calculateCost("train");
+        this.actor.experiencePoints.spent = this.skillCostCalculator.calculateCost("train", this.skill.rank.value++);
         return this;
     }
 
@@ -63,7 +63,7 @@ export default class TrainedSkill extends Skill {
 
     forget() {
         this.skill.rank.trained--;
-        this.actor.experiencePoints.spent = this.skillCostCalculator.calculateCost("forget");
+        this.actor.experiencePoints.spent = this.skillCostCalculator.calculateCost("forget", this.skill.rank.value++);
         return this;
     }
 

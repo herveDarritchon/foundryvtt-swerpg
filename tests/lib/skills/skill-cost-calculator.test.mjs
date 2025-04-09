@@ -29,7 +29,7 @@ describe('Skills Calculator', () => {
 
                 const skill = new CareerFreeSkill(actor, data, params, options);
                 const skillCostCalculator = new SkillCostCalculator(skill);
-                const cost = skillCostCalculator.calculateCost(action);
+                const cost = skillCostCalculator.calculateCost(action, data.rank.value);
                 expect(cost).toBe(0);
             })
         });
@@ -42,7 +42,7 @@ describe('Skills Calculator', () => {
 
                 const skill = new SpecializationFreeSkill(actor, data, params, options);
                 const skillCostCalculator = new SkillCostCalculator(skill);
-                const cost = skillCostCalculator.calculateCost(action);
+                const cost = skillCostCalculator.calculateCost(action, data.rank.value);
                 expect(cost).toBe(0);
 
             });
@@ -56,7 +56,7 @@ describe('Skills Calculator', () => {
 
                 const skill = new ErrorSkill(actor, data, params, options);
                 const skillCostCalculator = new SkillCostCalculator(skill);
-                const cost = skillCostCalculator.calculateCost(action);
+                const cost = skillCostCalculator.calculateCost(action, data.rank.value);
                 expect(cost).toBe(0);
 
             });
@@ -76,7 +76,7 @@ describe('Skills Calculator', () => {
                     };
                     const skill = new TrainedSkill(actor, data, params, options);
                     const skillCostCalculator = new SkillCostCalculator(skill);
-                    const cost = skillCostCalculator.calculateCost(action);
+                    const cost = skillCostCalculator.calculateCost(action, data.rank.value);
                     expect(cost).toBe(5);
                 });
                 test('should return 10 if new rank is 2', () => {
@@ -93,7 +93,7 @@ describe('Skills Calculator', () => {
                     };
                     const skill = new TrainedSkill(actor, data, params, options);
                     const skillCostCalculator = new SkillCostCalculator(skill);
-                    const cost = skillCostCalculator.calculateCost(action);
+                    const cost = skillCostCalculator.calculateCost(action, data.rank.value);
                     expect(cost).toBe(10);
                 });
             });
@@ -111,7 +111,7 @@ describe('Skills Calculator', () => {
                     };
                     const skill = new TrainedSkill(actor, data, params, options);
                     const skillCostCalculator = new SkillCostCalculator(skill);
-                    const cost = skillCostCalculator.calculateCost(action);
+                    const cost = skillCostCalculator.calculateCost(action, data.rank.value);
                     expect(cost).toBe(10);
                 });
                 test('should return 15 if new rank is 2', () => {
@@ -128,7 +128,7 @@ describe('Skills Calculator', () => {
                     };
                     const skill = new TrainedSkill(actor, data, params, options);
                     const skillCostCalculator = new SkillCostCalculator(skill);
-                    const cost = skillCostCalculator.calculateCost(action);
+                    const cost = skillCostCalculator.calculateCost(action, data.rank.value);
                     expect(cost).toBe(15);
                 });
             });
@@ -153,7 +153,7 @@ describe('Skills Calculator', () => {
 
                 const skill = new CareerFreeSkill(actor, data, params, options);
                 const skillCostCalculator = new SkillCostCalculator(skill);
-                const cost = skillCostCalculator.calculateCost(action);
+                const cost = skillCostCalculator.calculateCost(action, data.rank.value);
                 expect(cost).toBe(0);
             })
         });
@@ -166,7 +166,7 @@ describe('Skills Calculator', () => {
 
                 const skill = new SpecializationFreeSkill(actor, data, params, options);
                 const skillCostCalculator = new SkillCostCalculator(skill);
-                const cost = skillCostCalculator.calculateCost(action);
+                const cost = skillCostCalculator.calculateCost(action, data.rank.value);
                 expect(cost).toBe(0);
 
             });
@@ -180,7 +180,7 @@ describe('Skills Calculator', () => {
 
                 const skill = new ErrorSkill(actor, data, params, options);
                 const skillCostCalculator = new SkillCostCalculator(skill);
-                const cost = skillCostCalculator.calculateCost(action);
+                const cost = skillCostCalculator.calculateCost(action, data.rank.value);
                 expect(cost).toBe(0);
 
             });
@@ -197,7 +197,7 @@ describe('Skills Calculator', () => {
                     };
                     const skill = new TrainedSkill(actor, data, params, options);
                     const skillCostCalculator = new SkillCostCalculator(skill);
-                    const cost = skillCostCalculator.calculateCost(action);
+                    const cost = skillCostCalculator.calculateCost(action, data.rank.value);
                     expect(cost).toBe(5);
                 });
                 test('should return 10 if new rank is 1', () => {
@@ -214,7 +214,7 @@ describe('Skills Calculator', () => {
                     };
                     const skill = new TrainedSkill(actor, data, params, options);
                     const skillCostCalculator = new SkillCostCalculator(skill);
-                    const cost = skillCostCalculator.calculateCost(action);
+                    const cost = skillCostCalculator.calculateCost(action, data.rank.value);
                     expect(cost).toBe(10);
                 });
             });
@@ -232,7 +232,7 @@ describe('Skills Calculator', () => {
                     };
                     const skill = new TrainedSkill(actor, data, params, options);
                     const skillCostCalculator = new SkillCostCalculator(skill);
-                    const cost = skillCostCalculator.calculateCost(action);
+                    const cost = skillCostCalculator.calculateCost(action, data.rank.value);
                     expect(cost).toBe(10);
                 });
                 test('should return 15 if new rank is 1', () => {
@@ -249,7 +249,7 @@ describe('Skills Calculator', () => {
                     };
                     const skill = new TrainedSkill(actor, data, params, options);
                     const skillCostCalculator = new SkillCostCalculator(skill);
-                    const cost = skillCostCalculator.calculateCost(action);
+                    const cost = skillCostCalculator.calculateCost(action, data.rank.value);
                     expect(cost).toBe(15);
                 });
                 test('should return 20 if new rank is 2 with a career free', () => {
@@ -266,7 +266,7 @@ describe('Skills Calculator', () => {
                     };
                     const skill = new TrainedSkill(actor, data, params, options);
                     const skillCostCalculator = new SkillCostCalculator(skill);
-                    const cost = skillCostCalculator.calculateCost(action);
+                    const cost = skillCostCalculator.calculateCost(action, data.rank.value);
                     expect(cost).toBe(20);
                 });
             });
