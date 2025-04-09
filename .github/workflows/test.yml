@@ -3,8 +3,10 @@ name: Run Vitest tests
 on:
   push:
     branches:
-      - '**' # ou la branche que tu veux surveiller
+      - '**'
   pull_request:
+    branches:
+      - '**'
 
 jobs:
   test:
@@ -17,10 +19,14 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20' # ou ta version actuelle de Node.js
+          node-version: '20' # adapte si nécessaire
+          cache: 'pnpm'      # active le cache pnpm (optionnel mais recommandé)
+
+      - name: Install pnpm
+        run: npm install -g pnpm
 
       - name: Install dependencies
-        run: npm ci # ou npm install si tu n'utilises pas package-lock.json
+        run: pnpm install
 
       - name: Run Vitest tests
-        run: npx vitest run
+        run: pnpm vitest run
