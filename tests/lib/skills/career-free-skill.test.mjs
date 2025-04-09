@@ -7,39 +7,7 @@ import CareerFreeSkill from "../../../module/lib/skills/career-free-skill.mjs";
 import ErrorSkill from "../../../module/lib/skills/error-skill.mjs";
 
 describe('Career Free Skill', () => {
-    describe('train a skill', () => {
-        test('should increase the career free skill rank', () => {
-            const actor = createActor();
-            const skill = createSkill();
-            const params = {};
-            const options = {};
-
-            const careerFreeSkill = new CareerFreeSkill(actor, skill, params, options);
-            const trainedSkill = careerFreeSkill.train();
-
-            expect(trainedSkill.skill.rank.careerFree).toBe(1);
-            expect(trainedSkill.actor.freeSkillRanks.career.spent).toBe(1);
-            expect(trainedSkill.actor.freeSkillRanks.specialization.spent).toBe(0);
-            expect(trainedSkill.skill.rank.specializationFree).toBe(0);
-        });
-    });
-    describe('forget a skill', () => {
-        test('should decrease the career free skill rank', () => {
-            const actor = createActor({careerSpent: 1});
-            const skill = createSkill({careerFree: 1});
-            const params = {};
-            const options = {};
-
-            const careerFreeSkill = new CareerFreeSkill(actor, skill, params, options);
-            const trainedSkill = careerFreeSkill.forget();
-
-            expect(trainedSkill.skill.rank.careerFree).toBe(0);
-            expect(trainedSkill.actor.freeSkillRanks.career.spent).toBe(0);
-            expect(trainedSkill.actor.freeSkillRanks.specialization.spent).toBe(0);
-            expect(trainedSkill.skill.rank.specializationFree).toBe(0);
-        });
-    });
-    describe('evaluate a skill', () => {
+    describe('process a skill', () => {
         describe('should return an error skill if', () => {
             describe('you train a skill', () => {
                 test('and career free skill rank is greater than 1', () => {
@@ -49,7 +17,7 @@ describe('Career Free Skill', () => {
                     const options = {};
 
                     const careerFreeSkill = new CareerFreeSkill(actor, skill, params, options);
-                    const errorSkill = careerFreeSkill.evaluate();
+                    const errorSkill = careerFreeSkill.process();
 
                     expect(errorSkill).toBeInstanceOf(ErrorSkill);
                     expect(errorSkill.options.message).toBe("you can't use more than 1 career free skill rank into the same skill!");
@@ -62,7 +30,7 @@ describe('Career Free Skill', () => {
                     const options = {};
 
                     const careerFreeSkill = new CareerFreeSkill(actor, skill, params, options);
-                    const errorSkill = careerFreeSkill.evaluate();
+                    const errorSkill = careerFreeSkill.process();
 
                     expect(errorSkill).toBeInstanceOf(ErrorSkill);
                     expect(errorSkill.options.message).toBe("you can't use free skill rank anymore. You have used all!");
@@ -77,7 +45,7 @@ describe('Career Free Skill', () => {
                     const options = {};
 
                     const careerFreeSkill = new CareerFreeSkill(actor, skill, params, options);
-                    const errorSkill = careerFreeSkill.evaluate();
+                    const errorSkill = careerFreeSkill.process();
 
                     expect(errorSkill).toBeInstanceOf(ErrorSkill);
                     expect(errorSkill.options.message).toBe("you can't forget this rank because it comes from species free bonus!");
@@ -90,7 +58,7 @@ describe('Career Free Skill', () => {
                     const options = {};
 
                     const careerFreeSkill = new CareerFreeSkill(actor, skill, params, options);
-                    const errorSkill = careerFreeSkill.evaluate();
+                    const errorSkill = careerFreeSkill.process();
 
                     expect(errorSkill).toBeInstanceOf(ErrorSkill);
                     expect(errorSkill.options.message).toBe("you can't get more than 4 free skill ranks!");
@@ -99,13 +67,55 @@ describe('Career Free Skill', () => {
             });
         });
         describe('should return a career free skill if', () => {
+            describe('train a skill', () => {
+                test('should increase the career free skill rank', () => {
+                    const actor = createActor();
+                    const skill = createSkill();
+                    const params = {
+                        action: "train",
+                        isCreation: true,
+                        isCareer: true,
+                        isSpecialization: true
+                    };
+                    const options = {};
+
+                    const careerFreeSkill = new CareerFreeSkill(actor, skill, params, options);
+                    const trainedSkill = careerFreeSkill.process();
+
+                    expect(trainedSkill.skill.rank.careerFree).toBe(1);
+                    expect(trainedSkill.actor.freeSkillRanks.career.spent).toBe(1);
+                    expect(trainedSkill.actor.freeSkillRanks.specialization.spent).toBe(0);
+                    expect(trainedSkill.skill.rank.specializationFree).toBe(0);
+                });
+            });
+            describe('forget a skill', () => {
+                test('should decrease the career free skill rank', () => {
+                    const actor = createActor({careerSpent: 1});
+                    const skill = createSkill({careerFree: 1});
+                    const params = {
+                        action: "forget",
+                        isCreation: true,
+                        isCareer: true,
+                        isSpecialization: true
+                    };
+                    const options = {};
+
+                    const careerFreeSkill = new CareerFreeSkill(actor, skill, params, options);
+                    const trainedSkill = careerFreeSkill.process();
+
+                    expect(trainedSkill.skill.rank.careerFree).toBe(0);
+                    expect(trainedSkill.actor.freeSkillRanks.career.spent).toBe(0);
+                    expect(trainedSkill.actor.freeSkillRanks.specialization.spent).toBe(0);
+                    expect(trainedSkill.skill.rank.specializationFree).toBe(0);
+                });
+            });
             test('career free skill rank is 1 and only 1', () => {
                 const actor = createActor();
                 const skill = createSkill({careerFree: 1})
                 const params = {};
                 const options = {};
                 const careerFreeSkill = new CareerFreeSkill(actor, skill, params, options);
-                const evaluatedSkill = careerFreeSkill.evaluate();
+                const evaluatedSkill = careerFreeSkill.process();
                 expect(evaluatedSkill).toBeInstanceOf(CareerFreeSkill);
                 expect(evaluatedSkill.skill.rank.careerFree).toBe(1);
                 expect(evaluatedSkill.skill.rank.value).toBe(1);
@@ -122,7 +132,7 @@ describe('Career Free Skill', () => {
             const params = {};
             const options = {};
             const careerFreeSkill = new CareerFreeSkill(actor, skill, params, options);
-            careerFreeSkill.evaluate();
+            careerFreeSkill.process();
             const updatedSkill = await careerFreeSkill.updateState();
             expect(updatedSkill).toBeInstanceOf(CareerFreeSkill);
             expect(updateMock).toHaveBeenCalledTimes(2);
@@ -178,7 +188,7 @@ describe('Career Free Skill', () => {
                 const params = {};
                 const options = {};
                 const careerFreeSkill = new CareerFreeSkill(actor, skill, params, options);
-                careerFreeSkill.evaluate();
+                careerFreeSkill.process();
                 const result = await careerFreeSkill.updateState();
                 expect(updateMock).toHaveBeenCalledTimes(1);
                 expect(result).toBeInstanceOf(ErrorSkill);
@@ -194,7 +204,7 @@ describe('Career Free Skill', () => {
                 const params = {};
                 const options = {};
                 const careerFreeSkill = new CareerFreeSkill(actor, skill, params, options);
-                careerFreeSkill.evaluate();
+                careerFreeSkill.process();
                 const result = await careerFreeSkill.updateState();
                 expect(updateMock).toHaveBeenCalledTimes(2);
                 expect(result).toBeInstanceOf(ErrorSkill);

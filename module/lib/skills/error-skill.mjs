@@ -10,23 +10,8 @@ export default class ErrorSkill extends Skill {
      * @inheritDoc
      * @override
      */
-    train() {
-        this.options.message = ("Train not implemented. Should not be used!");
-        return this;
-    }
-
-    /**
-     * @inheritDoc
-     * @override
-     */
-
-    forget() {
-        this.options.message = ("Forget not implemented. Should not be used!");
-        return this;
-    }
-
-    evaluate() {
-        this.options.message = ("Evaluate not implemented. Should not be used!");
+    process() {
+        this.options.message = ("Process not implemented. Should not be used!");
         return this;
     }
 

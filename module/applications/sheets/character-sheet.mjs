@@ -174,16 +174,6 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
 
         console.log(`[Before] onToggleTrainedSkill skill with id '${skillId}', is Career ${isCareer} and values:`, skillClass, this.actor);
 
-        // Apply modification to the skill depending on the action from the user
-/*
-        let result = {};
-
-  if (action === "forget") {
-            result = skillClass.forget();
-        } else {
-            result = skillClass.train();
-        }*/
-
         // Evaluate the skill following the action processed
         const skillEvaluated = skillClass.process();
 

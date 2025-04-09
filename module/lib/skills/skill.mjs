@@ -22,26 +22,8 @@ export default class Skill {
      * @abstract
      * return {Skill} the result of the action
      */
-    train() {
-        throw new Error("Method 'train()' must be implemented.");
-    }
-
-    /**
-     * Processes the action on the skill.
-     * @abstract
-     * return {Skill} the result of the action
-     */
-    forget() {
-        throw new Error("Method 'forget()' must be implemented.");
-    }
-
-    /**
-     * Evaluate the skill.
-     * @abstract
-     * return {Skill} the result of the action
-     */
-    evaluate() {
-        throw new Error("Method 'evaluate()' must be implemented.");
+    process() {
+        throw new Error("Method 'process()' must be implemented.");
     }
 
     /**

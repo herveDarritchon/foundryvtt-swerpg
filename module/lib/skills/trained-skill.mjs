@@ -50,51 +50,6 @@ export default class TrainedSkill extends Skill {
      * @inheritDoc
      * @override
      */
-    train() {
-        this.skill.rank.trained++;
-        this.actor.experiencePoints.spent = this.skillCostCalculator.calculateCost("train", this.skill.rank.value++);
-        return this;
-    }
-
-    /**
-     * @inheritDoc
-     * @override
-     */
-
-    forget() {
-        this.skill.rank.trained--;
-        this.actor.experiencePoints.spent = this.skillCostCalculator.calculateCost("forget", this.skill.rank.value++);
-        return this;
-    }
-
-    /**
-     * @inheritDoc
-     * @override
-     */
-    evaluate() {
-        this.freeSkillRankAvailable = this.#computeFreeSkillRankAvailable();
-        this.skill.rank.value = this.skill.rank.base + this.skill.rank.careerFree + this.skill.rank.specializationFree + this.skill.rank.trained;
-
-        if (this.skill.rank.trained < 0) {
-            return new ErrorSkill(this.actor, this.skill, {}, {message: ("you can't forget this rank because it was not trained but free!")});
-        }
-
-        if (this.isCreation && this.skill.rank.value > 2) {
-            return new ErrorSkill(this.actor, this.skill, {}, {message: ("you can't have more than 2 rank at creation!")});
-        }
-
-        if (!this.isCreation && this.skill.rank.value > 5) {
-            return new ErrorSkill(this.actor, this.skill, {}, {message: ("you can't have more than 5 rank!")});
-        }
-
-        this.evaluated = true;
-        return this;
-    }
-
-    /**
-     * @inheritDoc
-     * @override
-     */
     #computeFreeSkillRankAvailable() {
         return false;
     }
