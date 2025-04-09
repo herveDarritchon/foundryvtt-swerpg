@@ -8,7 +8,7 @@ export default defineConfig({
         //restoreMocks: true,     // ⬅️ remet les implémentations d’origine si tu fais vi.spyOn()
         coverage: {
             provider: 'v8',
-            reporter: ['text', 'lcov'],
+            reporter: ['text', 'lcov', 'html'],
             reportsDirectory: './coverage',
         },
     },
