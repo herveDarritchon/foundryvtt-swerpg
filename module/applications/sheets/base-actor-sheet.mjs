@@ -229,7 +229,7 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
      * @return {object[]}
      */
     #prepareExperience() {
-        let e = this.actor.system.progression.experience;
+        const e = this.actor.system.progression.experience;
         const experience = foundry.utils.deepClone(e);
         experience.total = e.startingExperience + e.gained
         experience.available = experience.total - e.spent;
@@ -241,19 +241,19 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
      * @return {object[]}
      */
     #prepareFreeSkillRanks() {
-        const freeSkilRanks = {};
+        const freeSkillRanks = {};
 
         let c = this.actor.system.progression.freeSkillRanks.career;
         const freeSkillRanksCareer = foundry.utils.deepClone(c);
         freeSkillRanksCareer.available = freeSkillRanksCareer.gained - c.spent;
-        freeSkilRanks.career = freeSkillRanksCareer;
+        freeSkillRanks.career = freeSkillRanksCareer;
 
         let s = this.actor.system.progression.freeSkillRanks.specialization;
         const freeSkillRanksSpecialization = foundry.utils.deepClone(s);
         freeSkillRanksSpecialization.available = freeSkillRanksSpecialization.gained - s.spent;
-        freeSkilRanks.specialization = freeSkillRanksSpecialization;
+        freeSkillRanks.specialization = freeSkillRanksSpecialization;
 
-        return freeSkilRanks;
+        return freeSkillRanks;
     }
 
     /* -------------------------------------------- */

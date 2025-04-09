@@ -1,5 +1,7 @@
 import SwerpgBaseActorSheet from "./base-actor-sheet.mjs";
 import SkillConfig from "../config/skill.mjs";
+import SkillFactory from "../../lib/skills/skill-factory.mjs";
+import ErrorSkill from "../../lib/skills/error-skill.mjs";
 
 /**
  * A SwerpgBaseActorSheet subclass used to configure Actors of the "character" type.
@@ -59,7 +61,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
             species: !s.system.details.species?.name,
             career: !s.system.details.career?.name,
             specialization: s.system.details.specializations?.length === 0,
-            freeSkill: a.system.progression.freeSkillRanks.career.available !== 0 || a.system.progression.freeSkillRanks.specialization.available !== 0,
+            freeSkill: a.hasFreeSkillsAvailable(),
             background: !s.system.details.background?.name,
             /*      characteristics: context.points.ability.requireInput,
                   skills: context.points.skill.available,
@@ -150,64 +152,41 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
      * @returns {Promise<void>}
      */
     static async #onToggleTrainedSkill(event) {
+        // Iniitialize the context depending on the event
         const element = event.target.closest(".skill");
         const skillId = element.dataset.skillId;
         const isCareer = element.dataset.isCareer === "true";
         const isSpecialization = element.dataset.isSpecialization === "true";
+        const action = event.ctrlKey ? "forget" : "train";
 
-        const skill = foundry.utils.getProperty(this.actor.system.skills, skillId);
+        // Build the skill class depending on the context
+        const skillClass = SkillFactory.build(this.actor, skillId, {
+            action,
+            isCreation: true,
+            isCareer,
+            isSpecialization
+        }, {});
 
-        if (!isCareer && !isSpecialization) {
-            ui.notifications.warn("you have to spend free skill points first during character creation!");
+        if (skillClass instanceof  ErrorSkill) {
+            ui.notifications.warn(skillClass.options.message);
             return;
         }
 
-        console.log(`[Before] onToggleTrainedSkill skill with id '${skillId}', is Career ${isCareer} and values:`, skill, this.actor);
+        console.log(`[Before] onToggleTrainedSkill skill with id '${skillId}', is Career ${isCareer} and values:`, skillClass, this.actor);
 
-        const rank = foundry.utils.deepClone(skill.rank);
-        const freeSkillRanks = foundry.utils.deepClone(this.actor.system.progression.freeSkillRanks);
+        // Evaluate the skill following the action processed
+        const skillEvaluated = skillClass.process();
 
-        if (event.ctrlKey) {
-            rank.free--;
-            freeSkillRanks.career.spent--;
-        } else {
-            rank.free++;
-            freeSkillRanks.career.spent++;
-        }
-
-        const value = rank.base + rank.free + rank.trained;
-        const freeSkillRankAvailable = freeSkillRanks.career.gained - freeSkillRanks.career.spent;
-
-        if (rank.free < 0) {
-            ui.notifications.warn("you can't forget this rank because it comes from species!");
+        // Display a warning if the skill action is not valid
+        if (skillEvaluated instanceof ErrorSkill) {
+            ui.notifications.warn(skillEvaluated.options.message);
             return;
         }
 
-        if (value < 0) {
-            ui.notifications.warn("you can't have less than 0 rank!");
-            return;
-        }
+        // Update the skill state in the Database
+        const skillUpdated = await skillEvaluated.updateState();
 
-        if (rank.free > 1) {
-            ui.notifications.warn("you can't use more than 1 free skill rank into the same skill!");
-            return;
-        }
-
-        if (freeSkillRankAvailable < 0) {
-            ui.notifications.warn("you can't have use free skill rank anymore. You have used all!");
-            return;
-        }
-
-        if (freeSkillRankAvailable > 4) {
-            ui.notifications.warn("you can't get more than 4 free skill ranks!");
-            return;
-        }
-
-        const updateActorResult = await this.actor.update({[`system.skills.${skillId}.rank`]: rank});
-        const updateActorResult2 = await this.actor.update({'system.progression.freeSkillRanks': freeSkillRanks});
-
-        console.log(`[After] onToggleTrainedSkill skill with id '${skillId}', is Career ${isCareer} and values:`, updateActorResult, updateActorResult2, this.actor, rank);
-
+        console.log(`[After] onToggleTrainedSkill skill with id '${skillId}', is Career ${isCareer} and values:`, skillUpdated.actor, skillUpdated.data.rank);
     }
 
     /* -------------------------------------------- */
@@ -309,7 +288,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
             })
         )
             .map(skill => {
-                const total = skill.rank.base + skill.rank.free + skill.rank.trained;
+                const total = skill.rank.base + skill.rank.careerFree + skill.rank.specializationFree + skill.rank.trained;
                 const skillEnriched = foundry.utils.mergeObject(skill, {rank: {value: total}});
                 return {
                     pips: this._prepareSkillRanks(skillEnriched),
@@ -367,8 +346,8 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
         const mayBeAFreeSkill = freeSkills.filter(skill => skill.id === skillKey)
 
         return {
-            label: mayBeAFreeSkill.length ? "X" : "",
-            name:  mayBeAFreeSkill.length ? mayBeAFreeSkill.map(skill => skill.parent).join(", ") : "-",
+            extraClass: mayBeAFreeSkill.length ? "active" : "",
+            name: mayBeAFreeSkill.length ? mayBeAFreeSkill.map(skill => skill.parent).join(", ") : "",
             isCareer: mayBeAFreeSkill.length !== 0 && mayBeAFreeSkill.filter(skill => skill.type === "career").length > 0,
             isSpecialization: mayBeAFreeSkill.length !== 0 && mayBeAFreeSkill.filter(skill => skill.type === "specialization").length > 0,
         };

@@ -1102,7 +1102,7 @@
   .skills-wrapper {
     display: grid;
 
-    .combat-skills{
+    .combat-skills {
       margin-bottom: 2em;
     }
 
@@ -1131,8 +1131,23 @@
         }
       }
 
-      .career{
+      .career {
         flex: 0.25;
+
+        .career-and-speciality {
+          height: 15px;
+          width: 15px;
+          display: block;
+          content: " ";
+        }
+
+        .career-and-speciality.active {
+          background-image: url(../ui/actor/career-and-speciality-icon-small.webp);
+          background-size: 100%;
+          background-repeat: no-repeat;
+          background-position: bottom center;
+        }
+
       }
 
     }

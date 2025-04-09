@@ -72,7 +72,8 @@ export default class SwerpgActorType extends foundry.abstract.TypeDataModel {
             obj[skill.id] = new fields.SchemaField({
                 rank: new fields.SchemaField({
                     base: new fields.NumberField({...requiredInteger, initial: 0, max: 5}),
-                    free: new fields.NumberField({...requiredInteger, initial: 0, max: 5}),
+                    careerFree: new fields.NumberField({...requiredInteger, initial: 0, max: 5}),
+                    specializationFree: new fields.NumberField({...requiredInteger, initial: 0, max: 5}),
                     trained: new fields.NumberField({...requiredInteger, initial: 0, max: 5})
                 }, {validate: SwerpgActorType.#validateSkillRank, label: skill.name}),
                 path: new fields.StringField({required: false, initial: undefined, blank: false})
@@ -100,11 +101,11 @@ export default class SwerpgActorType extends foundry.abstract.TypeDataModel {
 
     /**
      * Validate an attribute field
-     * @param {{base: number, increases: number, bonus: number}} attr     The attribute value
+     * @param {{base: number, careerFree: number, specializationFree: number, trained: number}} attr     The attribute value
      */
     static #validateSkillRank(attr) {
-        const value = attr.base + attr.free + attr.trained;
-        if (value < 0 || value > 5) throw new Error(`Skill Rank cannot exceed 5 or less than 0.`);
+        const value = attr.base + attr.careerFree + attr.specializationFree + attr.trained;
+        if (value < 0 || value > 5) throw new Error(`Skill Rank cannot exceed 5 or be less than 0.`);
     }
 
 
@@ -175,6 +176,8 @@ export default class SwerpgActorType extends foundry.abstract.TypeDataModel {
 
         // Resource pools
         this._prepareResources();
+        this._prepareExperience();
+        this._prepareFreeSkillRanks();
         this.parent.callActorHooks("prepareResources", this.resources);
 
         // Defenses
@@ -189,6 +192,28 @@ export default class SwerpgActorType extends foundry.abstract.TypeDataModel {
         // Movement
         //this._prepareMovement();
         //this.parent.callActorHooks("prepareMovement", this.movement);
+    }
+
+    /**
+     * Prepare formatted experience scores for display on the Actor sheet.
+     * @return {object[]}
+     */
+    _prepareFreeSkillRanks() {
+        const freeSkillRanks = this.progression.freeSkillRanks;
+
+        let c = freeSkillRanks.career;
+        c.available = c.gained - c.spent;
+        freeSkillRanks.career = c;
+
+        let s = freeSkillRanks.specialization;
+        s.available = s.gained - s.spent;
+        freeSkillRanks.specialization = s;
+    }
+
+    _prepareExperience() {
+        const experience = this.progression.experience;
+        experience.total = experience.startingExperience + experience.gained
+        experience.available = experience.total - experience.spent;
     }
 
     /* -------------------------------------------- */

@@ -1,4 +1,18 @@
 /* -------------------------------------------- */
+export const ACTOR_TYPE = Object.freeze({
+    adversary: {
+        id : "adversary",
+        type: "adversary",
+        label: "Adversary",
+    },
+    character: {
+        id : "character",
+        type: "character",
+        label: "Character"
+    }
+});
+
+/* -------------------------------------------- */
 
 export const CARACTERISTIC_TYPE = Object.freeze({
     physical:{
