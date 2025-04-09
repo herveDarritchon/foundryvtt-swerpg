@@ -2,8 +2,16 @@ import StandardCheck from "../dice/standard-check.mjs"
 import AttackRoll from "../dice/attack-roll.mjs";
 import SwerpgAction from "../models/action.mjs";
 import SwerpgSpellAction from "../models/spell-action.mjs";
+import {SYSTEM} from "../config/system.mjs";
 
 const {DialogV2} = foundry.applications.api;
+
+/**
+ * @typedef {Object} ExperiencePoints
+ * @property {number} gained
+ * @property {number} spent
+ * @property {number} startingExperience
+ */
 
 /**
  * @typedef {Object} ActorEquippedWeapons
@@ -96,6 +104,37 @@ export default class SwerpgActor extends Actor {
      */
     get species() {
         return this.system.details.species;
+    }
+
+    /**
+     * Convenient access to the Actor's Experience Points.
+     * if the Actor is an adversary, this is undefined because adversaries do not have experience points.
+     * @type {ExperiencePoints}  The experience point available to the Actor
+     */
+    get experiencePoints() {
+        // Adversaries do not have experience points
+        if (this.type !== SYSTEM.ACTOR_TYPE.character.type) return {
+            gained: 0,
+            spent: 0,
+            startingExperience: 0,
+        };
+        // Otherwise
+        return this.system.progression.experience;
+    }
+
+    /**
+     * Convenient access to the Actor's Fre Skill Ranks (species and career).
+     * if the Actor is an adversary, this is undefined because adversaries do not have free skill ranks.
+     * @type {FreeSkillRanks}  The free skill ranks available to the Actor
+     */
+    get freeSkillRanks() {
+        // Adversaries do not have free skill ranks
+        if (this.type !== SYSTEM.ACTOR_TYPE.character.type) return {
+            career: {spent: 0, gained: 0},
+            specialization: {spent: 0, gained: 0},
+        };
+        // Otherwise
+        return this.system.progression.freeSkillRanks;
     }
 
     /**
@@ -1576,7 +1615,7 @@ export default class SwerpgActor extends Actor {
      * Toggle display of the Talent Tree.
      */
     async toggleTalentTree(active) {
-        if (this.type !== "character") return;
+        if (this.type !== SYSTEM.ACTOR_TYPE.character.type) return;
         const tree = game.system.tree;
         if ((tree.actor === this) && (active !== true)) return game.system.tree.close();
         else if (active !== false) return game.system.tree.open(this);
@@ -1803,7 +1842,7 @@ export default class SwerpgActor extends Actor {
         delta = Math.sign(delta);
         const skill = this.system.skills[skillId];
         if (!skill || (delta === 0)) return false;
-        if (this.type !== "character") return false; // TODO only heroes can purchase skills currently
+        if (this.type !== SYSTEM.ACTOR_TYPE.character.type) return false; // TODO only heroes can purchase skills currently
 
         // Must Choose Background first
         if (!this.background.name && (delta > 0)) {
@@ -2137,10 +2176,10 @@ export default class SwerpgActor extends Actor {
         // Automatic Prototype Token configuration
         const prototypeToken = {bar1: {attribute: "resources.health"}, bar2: {attribute: "resources.morale"}};
         switch (data.type) {
-            case "character":
+            case SYSTEM.ACTOR_TYPE.character.type:
                 Object.assign(prototypeToken, {vision: true, actorLink: true, disposition: 1});
                 break;
-            case "adversary":
+            case SYSTEM.ACTOR_TYPE.adversary.type:
                 Object.assign(prototypeToken, {vision: false, actorLink: false, disposition: -1});
                 break;
         }
@@ -2157,13 +2196,13 @@ export default class SwerpgActor extends Actor {
         const a1 = data.system?.advancement;
         if (!a1) return;
         const a0 = this._source.system.advancement;
-        const resetResourceKeys = this.type === "character" ? ["level"] : ["level", "threat"];
+        const resetResourceKeys = this.type === SYSTEM.ACTOR_TYPE.character.type ? ["level"] : ["level", "threat"];
         const resetResources = resetResourceKeys.some(k => (k in a1) && (a1[k] !== a0[k]));
         if (resetResources) {
             const clone = this.clone();
             clone.updateSource(data);
             Object.assign(data, clone._getRestData());
-            if (this.type === "character") a1.progress = clone.level > this.level ? 0 : clone.system.advancement.next;
+            if (this.type === SYSTEM.ACTOR_TYPE.character.type) a1.progress = clone.level > this.level ? 0 : clone.system.advancement.next;
         }
     }
 
@@ -2277,6 +2316,36 @@ export default class SwerpgActor extends Actor {
             await this.toggleStatusEffect("broken", {active: this.isBroken && !this.isInsane});
             await this.toggleStatusEffect("insane", {active: this.isInsane});
         }
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Check if actor has any career free skill ranks available.
+     * @returns {boolean}   True if actor has free skill ranks
+     */
+    hasCareerFreeSkillsAvailable() {
+        return this.freeSkillRanks.career.available !== 0;
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Check if actor has any specialization free skill ranks available.
+     * @returns {boolean}   True if actor has free skill ranks
+     */
+    hasSpecializationFreeSkillsAvailable() {
+        return this.freeSkillRanks.specialization.available !== 0;
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Check if actor has any free skill ranks available.
+     * @returns {boolean}   True if actor has free skill ranks
+     */
+    hasFreeSkillsAvailable() {
+        return this.hasCareerFreeSkillsAvailable() || this.hasSpecializationFreeSkillsAvailable();
     }
 
     /* -------------------------------------------- */
