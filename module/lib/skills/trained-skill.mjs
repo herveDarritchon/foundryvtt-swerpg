@@ -13,23 +13,25 @@ export default class TrainedSkill extends Skill {
         this.freeSkillRankAvailable = this.#computeFreeSkillRankAvailable();
 
         let trained = this.data.rank.trained;
+
         let experiencePointsSpent = this.actor.experiencePoints.spent;
+        let value;
 
         if (this.action === "train") {
             trained++;
-            experiencePointsSpent = experiencePointsSpent + this.dataCostCalculator.calculateCost("train", trained);
+            value = this.data.rank.base + this.data.rank.careerFree + this.data.rank.specializationFree + trained;
+            experiencePointsSpent = experiencePointsSpent + this.dataCostCalculator.calculateCost("train", value);
         }
 
         if (this.action === "forget") {
             trained--;
-            experiencePointsSpent = experiencePointsSpent - this.dataCostCalculator.calculateCost("forget", trained);
+            value = this.data.rank.base + this.data.rank.careerFree + this.data.rank.specializationFree + trained;
+            experiencePointsSpent = experiencePointsSpent - this.dataCostCalculator.calculateCost("forget", value);
         }
 
         if (this.data.rank.trained < 0) {
             return new ErrorSkill(this.actor, this.data, {}, {message: ("you can't forget this rank because it was not trained but free!")});
         }
-
-        const value = this.data.rank.base + this.data.rank.careerFree + this.data.rank.specializationFree + trained;
 
         if (this.isCreation && value > 2) {
             return new ErrorSkill(this.actor, this.data, {}, {message: ("you can't have more than 2 rank at creation!")});
@@ -37,6 +39,10 @@ export default class TrainedSkill extends Skill {
 
         if (!this.isCreation && value > 5) {
             return new ErrorSkill(this.actor, this.data, {}, {message: ("you can't have more than 5 rank!")});
+        }
+
+        if (experiencePointsSpent > this.actor.experiencePoints.total) {
+            return new ErrorSkill(this.actor, this.data, {}, {message: ("you can't spend more experience than total!")});
         }
 
         this.data.rank.value = value;

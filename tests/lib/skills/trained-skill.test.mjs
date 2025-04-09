@@ -65,7 +65,8 @@ describe('Trained Skill', () => {
                     action: "forget",
                     isCreation: true,
                     isCareer: false,
-                    isSpecialization: false};
+                    isSpecialization: false
+                };
                 const options = {};
 
                 const trainedSkill = new TrainedSkill(actor, data, params, options);
@@ -73,6 +74,27 @@ describe('Trained Skill', () => {
 
                 expect(errorSkill).toBeInstanceOf(ErrorSkill);
                 expect(errorSkill.options.message).toBe("you can't forget this rank because it was not trained but free!");
+                expect(errorSkill.evaluated).toBe(false);
+            });
+            test('trained a skill costs more than experience points available', () => {
+                const actor = createActor();
+                actor.experiencePoints.spent = 90;
+                actor.experiencePoints.gained = 100;
+                actor.experiencePoints.available = 10;
+                const data = createSkillData({careerFree: 1, trained: 1, value: 2});
+                const params = {
+                    action: "train",
+                    isCreation: false,
+                    isCareer: true,
+                    isSpecialization: false
+                };
+                const options = {};
+
+                const trainedSkill = new TrainedSkill(actor, data, params, options);
+                const errorSkill = trainedSkill.process();
+
+                expect(errorSkill).toBeInstanceOf(ErrorSkill);
+                expect(errorSkill.options.message).toBe("you can't spend more experience than total!");
                 expect(errorSkill.evaluated).toBe(false);
             });
             test('trained skill rank is greater than 2 and isCreation is true', () => {
@@ -140,12 +162,17 @@ describe('Trained Skill', () => {
             const actor = createActor();
             const updateMock = vi.fn().mockResolvedValue({});
             actor.update = updateMock;
-            const data = createSkillData({careerFree: 1, specializationFree: 1, trained: 1});
-            const params = {};
+            const data = createSkillData({careerFree: 1, specializationFree: 1, trained: 0, value: 3});
+            const params = {
+                action: "train",
+                isCreation: false,
+                isCareer: true,
+                isSpecialization: true
+            };
             const options = {};
             const trainedFreeSkill = new TrainedSkill(actor, data, params, options);
-            trainedFreeSkill.process();
-            const updatedSkill = await trainedFreeSkill.updateState();
+            const processedTrainedSkill = trainedFreeSkill.process();
+            const updatedSkill = await processedTrainedSkill.updateState();
             expect(updatedSkill).toBeInstanceOf(TrainedSkill);
             expect(updateMock).toHaveBeenCalledTimes(2);
             expect(updateMock).toHaveBeenNthCalledWith(2, {
@@ -158,7 +185,7 @@ describe('Trained Skill', () => {
                 },
             });
             expect(updateMock).toHaveBeenNthCalledWith(1, {
-                'system.progression.experience.spent': 0
+                'system.progression.experience.spent': 15
             });
         });
         describe('should return an Error Skill if any update fails', () => {

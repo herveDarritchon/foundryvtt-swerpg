@@ -186,7 +186,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
         // Update the skill state in the Database
         const skillUpdated = await skillEvaluated.updateState();
 
-        console.log(`[After] onToggleTrainedSkill skill with id '${skillId}', is Career ${isCareer} and values:`, skillUpdated.actor, skillUpdated.skill.rank);
+        console.log(`[After] onToggleTrainedSkill skill with id '${skillId}', is Career ${isCareer} and values:`, skillUpdated.actor, skillUpdated.data.rank);
     }
 
     /* -------------------------------------------- */
