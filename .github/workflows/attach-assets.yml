@@ -1,0 +1,59 @@
+### 📆 .github/workflows/attach-assets.yml
+name: 📆 Attach System Assets
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build-and-upload:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📖 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🎟 Combine CSS files
+        run: cat styles/*.css > swerpg.css
+
+      - name: 🌐 Extract tag version number
+        id: version
+        uses: battila7/get-version-action@v2
+
+      - name: 🔧 Modify Manifest to remove HotReload
+        uses: microsoft/variable-substitution@v1
+        with:
+          files: "system.json"
+        env:
+          flags.hotReload: false
+          version: ${{ steps.version.outputs.version-without-v }}
+          download: https://github.com/${{ github.repository }}/releases/download/${{ github.event.release.tag_name }}/system.zip
+          esmodules: "[\"swerpg.mjs\"]"
+          styles: "[\"swerpg.css\"]"
+
+      - name: 🛠 Install Dependencies
+        run: npm install
+
+      - name: ⚖️ Verify package signatures
+        run: npm audit signatures || true
+
+      - name: 📚 Build All
+        run: |
+          npm run db:pack
+          npm run build
+          mv --force public/swerpg.mjs swerpg.mjs
+
+      - name: 📋 Create ZIP archive
+        run: zip -r ./system.zip system.json swerpg.css swerpg.mjs packs/ lang/ templates/ assets/
+
+      - name: 🔗 Attach Files to Release
+        uses: ncipollo/release-action@v1
+        with:
+          allowUpdates: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+          artifacts: "./system.zip, ./system.json"
+          tag: ${{ github.event.release.tag_name }}
+          body: ${{ github.event.release.body }}
+          name: ${{ github.event.release.name }}
+          draft: false
+          prerelease: false
