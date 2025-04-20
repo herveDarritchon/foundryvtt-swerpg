@@ -19,6 +19,7 @@
   "flags": {
     "hotReload": {
       "extensions": [
+        "less",
         "css",
         "hbs",
         "json"
@@ -26,7 +27,8 @@
       "paths": [
         "lang/en.json",
         "styles/swerpg.css",
-        "templates"
+        "styles/**/*.less",
+        "templates/**/*.hbs"
       ]
     }
   },
