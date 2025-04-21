@@ -40,6 +40,18 @@
   }
 }
 
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 6px fade(@color-glow, 50%);
+  }
+  50% {
+    box-shadow: 0 0 12px fade(@color-glow, 70%);
+  }
+  100% {
+    box-shadow: 0 0 6px fade(@color-glow, 50%);
+  }
+}
+
 /* ----------------------------------------- */
 /*  Actor Sheet                              */
 /* ----------------------------------------- */
@@ -676,61 +688,68 @@
 
     .characteristics-wrapper {
       display: flex;
+      min-width: 100px;
+      justify-content: center;
+      align-content: center;
+      align-items: center;
 
-      .characteristic.holo-circle {
+      .characteristic-wrapper {
         display: flex;
-        flex-direction: column;
+        justify-content: center;
+        align-content: center;
         align-items: center;
-        justify-content: start;
-        width: 80px;
-        margin: 0.5rem;
-        position: relative;
-        color: var(--color-text);
-        font-family: var(--font-body);
-        text-align: center;
-        transition: transform 0.2s ease-in-out;
 
-        .circle-content {
+        .characteristic.holo-circle {
+          position: relative;
           width: 80px;
           height: 80px;
           border-radius: 50%;
-          border: 2px solid var(--color-glow);
-
-          background: radial-gradient(ellipse at center,
-          lighten(@background-dark, 5%) 0%,
-          darken(@background-dark, 20%) 60%,
-          transparent 100%);
-
-          box-shadow: 0 0 4px var(--color-glow),
-          0 0 10px fade(@color-glow, 60%),
-          0 0 20px fade(@color-glow, 30%),
-          inset 0 0 8px fade(@color-glow, 15%);
-
+          background: radial-gradient(circle at center, lighten(@background-dark, 5%) 40%, darken(@background-dark, 20%) 100%);
+          box-shadow: 0 0 10px fade(@color-glow, 40%);
           display: flex;
-          flex-direction: column;
           align-items: center;
           justify-content: center;
-          position: relative;
-          transition: box-shadow 0.3s ease, transform 0.3s ease;
-          animation: pulse-glow 2s infinite ease-in-out;
+          overflow: hidden;
+          margin: 0 0.2rem;
 
-          .characteristic-icon {
-            width: 36px;
-            height: 36px;
-            margin: 0.1rem;
-            padding: 0.1rem;
-            filter: drop-shadow(0 0 2px @color-glow),
-                    drop-shadow(0 0 6px fade(@color-glow, 40%)),
-                    drop-shadow(0 0 12px fade(@color-glow, 20%));
-            opacity: 0.75;
-            transition: transform 0.25s ease, filter 0.25s ease;
-            animation: holo-fade-in 0.6s ease-out;
+          .circle-content {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 4px solid var(--color-glow);
 
-            .characteristic:hover & {
-              transform: scale(1.1);
-              filter: drop-shadow(0 0 4px @color-glow),
-                      drop-shadow(0 0 8px fade(@color-glow, 60%)),
-                      drop-shadow(0 0 16px fade(@color-glow, 30%));
+            background: radial-gradient(ellipse at center,
+            lighten(@background-dark, 5%) 0%,
+            darken(@background-dark, 20%) 60%,
+            transparent 100%);
+
+            box-shadow: 0 0 4px var(--color-glow),
+            0 0 10px fade(@color-glow, 60%),
+            0 0 20px fade(@color-glow, 30%),
+            inset 0 0 8px fade(@color-glow, 15%);
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            transition: box-shadow 0.3s ease, transform 0.3s ease;
+            animation: pulse-glow 2s infinite ease-in-out;
+
+            //animation: pulse-ring 2.5s infinite ease-in-out;
+
+            .characteristic-icon {
+              z-index: 1;
+              position: absolute;
+              height: 70px;
+              width: 70px;
+              margin: 0.1rem;
+              padding: 0.1rem;
+              filter: drop-shadow(0 0 6px @color-glow);
+              opacity: 0.2;
+              /* transition: transform 0.25s ease, filter 0.25s ease; */
+              animation: holo-fade-in 0.6s ease-out;
+              fill: var(--color-accent);
             }
 
             // pour coloriser les paths du SVG si inline (optionnel)
@@ -743,12 +762,16 @@
           }
 
           .value {
-            font-size: 2rem;
+            position: absolute;
+            z-index: 10;
+            font-size: 3rem;
             font-weight: bold;
-            text-shadow: 0 0 3px @color-glow-yellow,
-            0 0 6px fade(@color-glow-yellow, 50%),
-            0 0 12px fade(@color-glow-yellow, 20%);
+            //text-shadow: 0 0 3px #efe58b, 0 0 6px rgba(239, 229, 139, 0.5), 0 0 12px rgba(239, 229, 139, 0.2);
             color: var(--color-accent-yellow);
+            text-shadow: 0 0 2px @color-glow-yellow,
+            0 0 4px fade(@color-glow-yellow, 50%),
+            0 0 8px fade(@color-glow-yellow, 20%),
+            5px 5px 5px black; // ajout : ombre contrastée nette
           }
 
           .icon-svg {
@@ -765,109 +788,111 @@
             }
           }
         }
-
-        &:hover .circle-content {
-          box-shadow: 0 0 12px @color-glow-hover, 0 0 24px fade(@color-glow, 20%);
-        }
-
-        .label {
-          font-size: 0.8rem;
-          margin-top: 0.4rem;
-          letter-spacing: 0.05em;
-          color: @color-label;
-          text-shadow: 0 0 4px #222;
-        }
-
-        .button.icon {
-          position: absolute;
-          font-size: 0.8rem;
-          color: @color-glow;
-          background: none;
-          border: none;
-          padding: 2px;
-          transition: transform 0.2s ease;
-
-          &.increase {
-            top: -10px;
-            right: -10px;
-          }
-
-          &.decrease {
-            bottom: -10px;
-            left: -10px;
-          }
-        }
       }
 
+      &:hover .circle-content {
+        box-shadow: 0 0 12px @color-glow-hover, 0 0 24px fade(@color-glow, 20%);
+      }
+
+      .label {
+        font-size: 0.8rem;
+        margin-top: 0.4rem;
+        letter-spacing: 0.05em;
+        color: @color-label;
+        text-shadow: 0 0 4px #222;
+        text-align: center;
+      }
+
+      .button.icon {
+        position: absolute;
+        font-size: 0.8rem;
+        color: @color-glow;
+        background: none;
+        border: none;
+        padding: 2px;
+        transition: transform 0.2s ease;
+
+        &.increase {
+          top: -10px;
+          right: -10px;
+        }
+
+        &.decrease {
+          bottom: -10px;
+          left: -10px;
+        }
+      }
     }
 
   }
 
-  .strength {
-    --ability-icon: url("../ui/abilities/strength.svg");
+}
+
+.strength {
+  --ability-icon: url("../ui/abilities/strength.svg");
+}
+
+.toughness {
+  --ability-icon: url("../ui/abilities/toughness.svg");
+}
+
+.dexterity {
+  --ability-icon: url("../ui/abilities/dexterity.svg");
+}
+
+.wisdom {
+  --ability-icon: url("../ui/abilities/wisdom.svg");
+}
+
+.presence {
+  --ability-icon: url("../ui/abilities/presence.svg");
+}
+
+.intellect {
+  --ability-icon: url("../ui/abilities/intellect.svg");
+}
+
+// Control Buttons
+a.button {
+  position: absolute;
+  height: 20px;
+  width: 20px;
+  top: -10px;
+  opacity: 1.0;
+
+  &.decrease {
+    left: -10px;
   }
 
-  .toughness {
-    --ability-icon: url("../ui/abilities/toughness.svg");
-  }
-
-  .dexterity {
-    --ability-icon: url("../ui/abilities/dexterity.svg");
-  }
-
-  .wisdom {
-    --ability-icon: url("../ui/abilities/wisdom.svg");
-  }
-
-  .presence {
-    --ability-icon: url("../ui/abilities/presence.svg");
-  }
-
-  .intellect {
-    --ability-icon: url("../ui/abilities/intellect.svg");
-  }
-
-  // Control Buttons
-  a.button {
-    position: absolute;
-    height: 20px;
-    width: 20px;
-    top: -10px;
-    opacity: 1.0;
-
-    &.decrease {
-      left: -10px;
-    }
-
-    &.increase {
-      right: -10px;
-    }
-  }
-
-  // Ability Point Pool
-  .point-pools {
-    position: absolute;
-    padding: 0 0 0 0.5rem;
-    bottom: -0.5rem;
-    z-index: 1;
-    font-size: var(--font-size-12);
-    justify-content: center;
-    background: var(--color-frame-bg);
-    gap: 0.5rem;
-
-    .label {
-      flex: none;
-      color: var(--color-secondary);
-    }
-
-    .value {
-      flex: none;
-      width: 24px;
-      height: 24px;
-      margin: -2px -12px -2px 0;
-    }
+  &.increase {
+    right: -10px;
   }
 }
+
+// Ability Point Pool
+.point-pools {
+  position: absolute;
+  padding: 0 0 0 0.5rem;
+  bottom: -0.5rem;
+  z-index: 1;
+  font-size: var(--font-size-12);
+  justify-content: center;
+  background: var(--color-frame-bg);
+  gap: 0.5rem;
+
+  .label {
+    flex: none;
+    color: var(--color-secondary);
+  }
+
+  .value {
+    flex: none;
+    width: 24px;
+    height: 24px;
+    margin: -2px -12px -2px 0;
+  }
+}
+
 
 /** Defenses */
 
@@ -1365,7 +1390,7 @@
   // Special case display for available and spent
   .point-pools {
     width: 550px;
-    //position: absolute;
+    position: relative;
     right: 1rem;
     top: 0.75rem;
     justify-content: center;

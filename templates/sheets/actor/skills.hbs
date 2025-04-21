@@ -2,17 +2,19 @@
          data-tab="{{tabs.skills.id}}" data-group="{{tabs.skills.group}}">
 
     {{#if incomplete.skills}}
-        <div class="point-pools flexrow">
-            <span class="label">Career Free Skill(s) left</span>
-            <span class="value">{{progression.freeSkillRanks.career.available}}</span>
-            <span class="label">Specialization Free Skill(s) left</span>
-            <span class="value">{{progression.freeSkillRanks.specialization.available}}</span>
-        </div>
-        <div class="point-pools flexrow">
-            <span class="label">Experience Spent</span>
-            <span class="value">{{progression.experience.available}}</span>
-            <span class="label">Available</span>
-            <span class="value">{{progression.experience.total}}</span>
+        <div>
+            <div class="point-pools flexrow">
+                <span class="label">Career Free Skill(s) left</span>
+                <span class="value">{{progression.freeSkillRanks.career.available}}</span>
+                <span class="label">Specialization Free Skill(s) left</span>
+                <span class="value">{{progression.freeSkillRanks.specialization.available}}</span>
+            </div>
+            <div class="point-pools flexrow">
+                <span class="label">Experience Spent</span>
+                <span class="value">{{progression.experience.available}}</span>
+                <span class="label">Available</span>
+                <span class="value">{{progression.experience.total}}</span>
+            </div>
         </div>
     {{/if}}
 
