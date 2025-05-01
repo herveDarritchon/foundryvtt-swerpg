@@ -208,6 +208,7 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
             return characteristic;
         });
         characteristics.sort((a, b) => a.sheetOrder - b.sheetOrder);
+        console.log("[base-actor-sheet] prepareCharacteristics", characteristics);
         return characteristics;
     }
 
