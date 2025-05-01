@@ -1428,7 +1428,7 @@ export default class SwerpgActor extends Actor {
         const resources = {};
         const updates = {};
         if (!this.isIncapacitated) {
-            resources.action = Infinity; // Try to recover as much action as possible, in case your maximum increases
+            resources.action = Infinity; // Try to recover as much action as possible, in case your maximum trained
             if (this.talentIds.has("lesserregenerati") && !this.isWeakened) resources.health = 1;
             if (this.talentIds.has("irrepressiblespi") && !this.isBroken) resources.morale = 1;
         }
@@ -1728,7 +1728,7 @@ export default class SwerpgActor extends Actor {
 
         // Modify the ability
         if (this.isL0) return this.update({[`system.abilities.${ability}.base`]: Math.max(a.base + delta, 0)});
-        else return this.update({[`system.abilities.${ability}.increases`]: a.increases + delta});
+        else return this.update({[`system.abilities.${ability}.trained`]: a.trained + delta});
     }
 
     /* -------------------------------------------- */
@@ -1756,7 +1756,7 @@ export default class SwerpgActor extends Actor {
         // Case 2 - Regular Increase
         else {
             if ((delta > 0) && ((a.value === 12) || (points.available < 1))) return false;
-            else if ((delta < 0) && (a.increases === 0)) return false;
+            else if ((delta < 0) && (a.trained === 0)) return false;
             return true;
         }
     }

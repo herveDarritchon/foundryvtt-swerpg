@@ -1,14 +1,7 @@
-2025/05/01-11:52:39.779534 313eef000 Recovering log #237
-2025/05/01-11:52:39.780579 313eef000 Delete type=3 #225
-2025/05/01-11:52:39.780835 313eef000 Delete type=0 #237
-2025/05/01-11:59:50.152281 30d675000 Level-0 table #240: started
-2025/05/01-11:59:50.163012 30d675000 Level-0 table #240: 104525 bytes OK
-2025/05/01-11:59:50.164525 30d675000 Delete type=0 #238
-2025/05/01-11:59:50.209240 30d675000 Manual compaction at level-0 from '!folders!08mOaWGw5rYKejer' @ 72057594037927935 : 1 .. '!items!zealoussmite0000' @ 0 : 0; will stop at '!items!zealoussmite0000' @ 1222 : 1
-2025/05/01-11:59:50.209271 30d675000 Compacting 1@0 + 1@1 files
-2025/05/01-11:59:50.212946 30d675000 Generated table #241@0: 216 keys, 107601 bytes
-2025/05/01-11:59:50.212974 30d675000 Compacted 1@0 + 1@1 files => 107601 bytes
-2025/05/01-11:59:50.213141 30d675000 compacted to: files[ 0 1 0 0 0 0 0 ]
-2025/05/01-11:59:50.213417 30d675000 Delete type=2 #174
-2025/05/01-11:59:50.214217 30d675000 Delete type=2 #240
-2025/05/01-11:59:50.219275 30d675000 Manual compaction at level-0 from '!items!zealoussmite0000' @ 1222 : 1 .. '!items!zealoussmite0000' @ 0 : 0; will stop at (end)
+2025/05/01-12:17:20.609008 3136ec000 Recovering log #272
+2025/05/01-12:17:20.609985 3136ec000 Delete type=0 #272
+2025/05/01-12:17:20.610159 3136ec000 Delete type=3 #270
+2025/05/01-18:33:59.584128 30d675000 Level-0 table #277: started
+2025/05/01-18:33:59.584263 30d675000 Level-0 table #277: 0 bytes OK
+2025/05/01-18:33:59.584414 30d675000 Delete type=0 #275
+2025/05/01-18:33:59.586078 30d675000 Manual compaction at level-0 from '!folders!08mOaWGw5rYKejer' @ 72057594037927935 : 1 .. '!items!zealoussmite0000' @ 0 : 0; will stop at (end)

@@ -1,14 +1,7 @@
-2025/05/01-11:52:39.711104 312ee9000 Recovering log #237
-2025/05/01-11:52:39.711917 312ee9000 Delete type=3 #225
-2025/05/01-11:52:39.712029 312ee9000 Delete type=0 #237
-2025/05/01-11:59:50.086447 30d675000 Level-0 table #240: started
-2025/05/01-11:59:50.092061 30d675000 Level-0 table #240: 1607 bytes OK
-2025/05/01-11:59:50.092818 30d675000 Delete type=0 #238
-2025/05/01-11:59:50.107915 30d675000 Manual compaction at level-0 from '!items!packhunter000000' @ 72057594037927935 : 1 .. '!items!tuskCharge000000' @ 0 : 0; will stop at '!items!tuskCharge000000' @ 12 : 1
-2025/05/01-11:59:50.107957 30d675000 Compacting 1@0 + 1@1 files
-2025/05/01-11:59:50.109785 30d675000 Generated table #241@0: 2 keys, 1607 bytes
-2025/05/01-11:59:50.109809 30d675000 Compacted 1@0 + 1@1 files => 1607 bytes
-2025/05/01-11:59:50.109899 30d675000 compacted to: files[ 0 1 0 0 0 0 0 ]
-2025/05/01-11:59:50.109998 30d675000 Delete type=2 #174
-2025/05/01-11:59:50.110185 30d675000 Delete type=2 #240
-2025/05/01-11:59:50.112743 30d675000 Manual compaction at level-0 from '!items!tuskCharge000000' @ 12 : 1 .. '!items!tuskCharge000000' @ 0 : 0; will stop at (end)
+2025/05/01-12:17:20.531635 3146f2000 Recovering log #272
+2025/05/01-12:17:20.533993 3146f2000 Delete type=0 #272
+2025/05/01-12:17:20.534448 3146f2000 Delete type=3 #270
+2025/05/01-18:33:59.585015 30d675000 Level-0 table #277: started
+2025/05/01-18:33:59.585172 30d675000 Level-0 table #277: 0 bytes OK
+2025/05/01-18:33:59.585356 30d675000 Delete type=0 #275
+2025/05/01-18:33:59.586091 30d675000 Manual compaction at level-0 from '!items!packhunter000000' @ 72057594037927935 : 1 .. '!items!tuskCharge000000' @ 0 : 0; will stop at (end)

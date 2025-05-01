@@ -1,14 +1,7 @@
-2025/05/01-11:52:39.773933 3136ec000 Recovering log #242
-2025/05/01-11:52:39.774848 3136ec000 Delete type=0 #242
-2025/05/01-11:52:39.775006 3136ec000 Delete type=3 #230
-2025/05/01-11:59:50.137207 30d675000 Level-0 table #245: started
-2025/05/01-11:59:50.139978 30d675000 Level-0 table #245: 14749 bytes OK
-2025/05/01-11:59:50.140663 30d675000 Delete type=0 #243
-2025/05/01-11:59:50.145047 30d675000 Manual compaction at level-0 from '!actors!56puGK932Qc0cowe' @ 72057594037927935 : 1 .. '!folders!5oBBNdq95OvvXx3e' @ 0 : 0; will stop at '!actors.items!xTFgTg5Rh2s0s5gZ.runeearth0000000' @ 227 : 1
-2025/05/01-11:59:50.145058 30d675000 Compacting 1@0 + 1@1 files
-2025/05/01-11:59:50.147399 30d675000 Generated table #246@0: 26 keys, 14882 bytes
-2025/05/01-11:59:50.147455 30d675000 Compacted 1@0 + 1@1 files => 14882 bytes
-2025/05/01-11:59:50.147612 30d675000 compacted to: files[ 0 1 0 0 0 0 0 ]
-2025/05/01-11:59:50.147729 30d675000 Delete type=2 #179
-2025/05/01-11:59:50.148193 30d675000 Delete type=2 #245
-2025/05/01-11:59:50.206146 30d675000 Manual compaction at level-0 from '!actors.items!xTFgTg5Rh2s0s5gZ.runeearth0000000' @ 227 : 1 .. '!folders!5oBBNdq95OvvXx3e' @ 0 : 0; will stop at (end)
+2025/05/01-12:17:20.601793 313eef000 Recovering log #277
+2025/05/01-12:17:20.603153 313eef000 Delete type=3 #275
+2025/05/01-12:17:20.603388 313eef000 Delete type=0 #277
+2025/05/01-18:33:59.583178 30d675000 Level-0 table #282: started
+2025/05/01-18:33:59.583288 30d675000 Level-0 table #282: 0 bytes OK
+2025/05/01-18:33:59.583456 30d675000 Delete type=0 #280
+2025/05/01-18:33:59.583963 30d675000 Manual compaction at level-0 from '!actors!56puGK932Qc0cowe' @ 72057594037927935 : 1 .. '!folders!5oBBNdq95OvvXx3e' @ 0 : 0; will stop at (end)
