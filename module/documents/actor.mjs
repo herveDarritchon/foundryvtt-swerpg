@@ -1780,7 +1780,7 @@ export default class SwerpgActor extends Actor {
      * @returns {boolean}           Can the ability score be changed?
      */
     canPurchaseAbility(ability, delta = 1) {
-        if (!this.system.points) return false;
+        if (!this.system.points) return true;
         delta = Math.sign(delta);
         const points = this.points.ability;
         const a = this.system.abilities[ability];

@@ -1,3 +1,14 @@
-2025/04/20-18:34:26.326752 3123c8000 Recovering log #222
-2025/04/20-18:34:26.327894 3123c8000 Delete type=3 #221
-2025/04/20-18:34:26.328057 3123c8000 Delete type=0 #222
+2025/05/01-11:52:39.734899 3146f2000 Recovering log #237
+2025/05/01-11:52:39.736280 3146f2000 Delete type=3 #225
+2025/05/01-11:52:39.736463 3146f2000 Delete type=0 #237
+2025/05/01-11:59:50.113682 30d675000 Level-0 table #240: started
+2025/05/01-11:59:50.118348 30d675000 Level-0 table #240: 2534 bytes OK
+2025/05/01-11:59:50.118964 30d675000 Delete type=0 #238
+2025/05/01-11:59:50.125048 30d675000 Manual compaction at level-0 from '!folders!HVRX1hdeNtvlHbQs' @ 72057594037927935 : 1 .. '!items!studdedleatherar' @ 0 : 0; will stop at '!items!studdedleatherar' @ 72 : 1
+2025/05/01-11:59:50.125056 30d675000 Compacting 1@0 + 1@1 files
+2025/05/01-11:59:50.129177 30d675000 Generated table #241@0: 13 keys, 2715 bytes
+2025/05/01-11:59:50.129220 30d675000 Compacted 1@0 + 1@1 files => 2715 bytes
+2025/05/01-11:59:50.129336 30d675000 compacted to: files[ 0 1 0 0 0 0 0 ]
+2025/05/01-11:59:50.129440 30d675000 Delete type=2 #174
+2025/05/01-11:59:50.129740 30d675000 Delete type=2 #240
+2025/05/01-11:59:50.141004 30d675000 Manual compaction at level-0 from '!items!studdedleatherar' @ 72 : 1 .. '!items!studdedleatherar' @ 0 : 0; will stop at (end)
