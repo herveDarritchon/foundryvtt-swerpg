@@ -84,7 +84,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
             i.creationTooltip += "</ol>";
         }
 
-
+        console.log ("[CharacterSheet] context", context);
         return context;
     }
 
@@ -106,10 +106,10 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
         event.preventDefault();
         event.stopPropagation();
         switch (target.dataset.action) {
-            case "abilityDecrease":
-                return this.actor.purchaseAbility(target.closest(".ability").dataset.ability, -1);
-            case "abilityIncrease":
-                return this.actor.purchaseAbility(target.closest(".ability").dataset.ability, 1);
+            case "characteristicDecrease":
+                return this.actor.purchaseCharacteristic(target.closest(".characteristic-wrapper").dataset.characteristic, 'forget');
+            case "characteristicIncrease":
+                return this.actor.purchaseCharacteristic(target.closest(".characteristic-wrapper").dataset.characteristic, 'train');
             case "skillConfig":
                 const skillConfig = new SkillConfig({
                     document: this.actor,

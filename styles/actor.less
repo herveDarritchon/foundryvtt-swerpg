@@ -699,6 +699,11 @@
         align-content: center;
         align-items: center;
 
+        .action-wrapper {
+          position: relative;
+          margin: 0 0.5rem;
+        }
+
         .characteristic.holo-circle {
           position: relative;
           width: 80px;
@@ -805,7 +810,7 @@
 
       .button.icon {
         position: absolute;
-        font-size: 0.8rem;
+        font-size: 1rem;
         color: @color-glow;
         background: none;
         border: none;
@@ -813,13 +818,13 @@
         transition: transform 0.2s ease;
 
         &.increase {
-          top: -10px;
-          right: -10px;
+          top: -15px;
+          right: -5px;
         }
 
         &.decrease {
-          bottom: -10px;
-          left: -10px;
+          top: -15px;
+          left: -5px;
         }
       }
     }

@@ -6,7 +6,7 @@ system:
   node: dextou1
   description: >-
     You are adept at covering distance quickly. Your <strong>Stride</strong>
-    increases by 1.
+    trained by 1.
   actorHooks:
     - hook: prepareMovement
       fn: movement.stride += 1;

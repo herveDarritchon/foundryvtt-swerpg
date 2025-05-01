@@ -1,4 +1,3 @@
-{{log "Characteristics" characteristicScores}}
 <section class="tab {{tabs.attributes.id}} {{tabs.attributes.cssClass}}"
          data-tab="{{tabs.attributes.id}}" data-group="{{tabs.attributes.group}}">
 
@@ -187,43 +186,35 @@
         <h3>Characteristics</h3>
         <div class="characteristics-wrapper">
             {{#each characteristicScores as |characteristic|}}
-                {{log "{{characteristic.id}}" characteristic}}
-                <div class="characteristic-wrapper flexcol">
-                    <div class="characteristic {{characteristic.id}} {{characteristic.type.id}} holo-circle"
-                         data-characteristic="{{characteristic.id}}">
+                <div class="characteristic-wrapper flexcol" data-characteristic="{{characteristic.id}}">
+                    <div class="characteristic {{characteristic.id}} {{characteristic.type.id}} holo-circle">
                         <div class="circle-content flexcol">
                             <img class="characteristic-icon"
                                  src="systems/swerpg/assets/icons/characteristics/{{characteristic.id}}.svg"
                                  alt="{{characteristic.label}}"/>
-                            <span class="value">{{characteristic.value}}</span>
+                            <span class="value">{{characteristic.rank.value}}</span>
 
                         </div>
                     </div>
-                    {{#if characteristic.canDecrease}}
-                        {{log "canDecrease" characteristic.canDecrease}}
-                        <a class="button icon decrease"
-                           data-action="characteristicDecrease"
-                           data-tooltip="Decrease {{characteristic.label}}"
-                           data-tooltip-direction="LEFT">
-                            <img class=""
-                                 src="systems/swerpg/assets/icons/actions/decrease-action.svg"
-                                 alt="decrease}"/>
-                        </a>
-                    {{/if}}
+                    <div class="action-wrapper">
+                        {{#if characteristic.canDecrease}}
+                            <a class="button icon fa-solid fa-circle-caret-down decrease"
+                               data-action="characteristicDecrease"
+                               data-tooltip="Decrease {{characteristic.label}}"
+                               data-tooltip-direction="LEFT">
+                            </a>
+                        {{/if}}
 
-                    <h4 class="label">{{characteristic.label}}</h4>
+                        <h4 class="label">{{characteristic.label}}</h4>
 
-                    {{#if characteristic.canIncrease}}
-                        {{log "canIncrease" characteristic.canIncrease}}
-                        <a class="button icon increase"
-                           data-action="characteristicIncrease"
-                           data-tooltip="Increase {{characteristic.label}}"
-                           data-tooltip-direction="RIGHT">
-                            <img class="button icon increase"
-                                 src="systems/swerpg/assets/icons/actions/increase-action.svg"
-                                 alt="increase"/>
-                        </a>
-                    {{/if}}
+                        {{#if characteristic.canIncrease}}
+                            <a class="button icon fa-solid fa-circle-caret-up increase"
+                               data-action="characteristicIncrease"
+                               data-tooltip="Increase {{characteristic.label}}"
+                               data-tooltip-direction="RIGHT">
+                            </a>
+                        {{/if}}
+                    </div>
                 </div>
             {{/each}}
         </div>

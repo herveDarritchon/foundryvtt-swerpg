@@ -6,7 +6,7 @@ system:
   node: tou1a
   description: >-
     <p>Your physical tenacity allows you to remain composed while surrounded by
-    foes. Your <strong>Engagement</strong> increases by +1, allowing you to
+    foes. Your <strong>Engagement</strong> trained by +1, allowing you to
     simultaneously engage more adjacent foes.</p>
   actions: []
   actorHooks:

@@ -6,7 +6,7 @@ system:
   node: toustr2
   description: >-
     <p>You are a calm anchor in the swirling sea of combat. Your
-    <strong>Engagement</strong> increases by +1, allowing you to simultaneously
+    <strong>Engagement</strong> trained by +1, allowing you to simultaneously
     engage more adjacent foes.</p>
   actions: []
   actorHooks:

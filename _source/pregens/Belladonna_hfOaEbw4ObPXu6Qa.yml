@@ -6,27 +6,27 @@ system:
   abilities:
     wisdom:
       base: 1
-      increases: 0
+      trained: 0
       bonus: 0
     presence:
       base: 0
-      increases: 0
+      trained: 0
       bonus: 0
     intellect:
       base: 3
-      increases: 0
+      trained: 0
       bonus: 0
     strength:
       base: 1
-      increases: 0
+      trained: 0
       bonus: 0
     toughness:
       base: 1
-      increases: 0
+      trained: 0
       bonus: 0
     dexterity:
       base: 3
-      increases: 0
+      trained: 0
       bonus: 0
   advancement:
     level: 1

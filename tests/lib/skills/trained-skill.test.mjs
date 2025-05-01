@@ -94,7 +94,7 @@ describe('Trained Skill', () => {
                 const errorSkill = trainedSkill.process();
 
                 expect(errorSkill).toBeInstanceOf(ErrorSkill);
-                expect(errorSkill.options.message).toBe("you can't spend more experience than total!");
+                expect(errorSkill.options.message).toBe("you can't spend more experience than your total!");
                 expect(errorSkill.evaluated).toBe(false);
             });
             test('trained skill rank is greater than 2 and isCreation is true', () => {

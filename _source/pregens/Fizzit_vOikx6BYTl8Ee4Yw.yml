@@ -5,27 +5,27 @@ system:
   abilities:
     wisdom:
       base: 3
-      increases: 1
+      trained: 1
       bonus: 0
     presence:
       base: 2
-      increases: 1
+      trained: 1
       bonus: 0
     intellect:
       base: 2
-      increases: 1
+      trained: 1
       bonus: 0
     strength:
       base: 0
-      increases: 0
+      trained: 0
       bonus: 0
     toughness:
       base: 2
-      increases: 2
+      trained: 2
       bonus: 0
     dexterity:
       base: 0
-      increases: 0
+      trained: 0
       bonus: 0
   advancement:
     level: 6
@@ -827,7 +827,7 @@ items:
         know the Arcane Rune attuned to that damage type.</p>
 
         <p>When you use the <strong>Ward</strong> gesture, the Resistance
-        provided by your Ward also increases by half your Wisdom.</p>
+        provided by your Ward also trained by half your Wisdom.</p>
       actions: []
       actorHooks:
         - hook: prepareResistances

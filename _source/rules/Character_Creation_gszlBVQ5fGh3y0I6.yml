@@ -244,7 +244,7 @@ pages:
         not yet to a degree that is wondrous. As characters advance in level
         they attain tiers of power where their physical, mental, and social
         capabilities are truly legendary. Character advancement in Swerpg is
-        level-based. Increases in level grant additional Ability, Skill, and
+        level-based. trained in level grant additional Ability, Skill, and
         Talent points to spend which increase a character's power and
         capabilities. The maximum character level in Swerpg is anticipated to
         be <strong>18</strong>.</p><p>If organizing a gameplay experience that
@@ -373,7 +373,7 @@ pages:
         mental health of a character is similarly modeled using two resource
         pools. <strong>Morale</strong> is a temporary resource which begins full
         and is decreased as the character suffers stress or trauma.
-        <strong>Madness</strong> is a permanent resource which increases when a
+        <strong>Madness</strong> is a permanent resource which trained when a
         character suffers greivous mental strain.</p><p>If the Morale pool is
         reduced to zero, the character becomes <strong>Broken</strong> and
         begins to suffer Madness. If the Madness meter reaches its maximum, the
@@ -650,7 +650,7 @@ pages:
         defenses may be obtained through Talents or magical Equipment. Adversary
         creatures have a -2 penalty to these defenses to compensate for their
         comparatively advantaged Ability score progression. This penalty
-        increases for Adversaries with threat level below 1.</p><h2
+        trained for Adversaries with threat level below 1.</p><h2
         class="divider">Restoration Thresholds</h2><p><strong>Restoration
         Thresholds</strong> describe a pair of defenses which dictate how
         challenging it is to restore a creature's resources through healing or

@@ -36,9 +36,11 @@ export default class SwerpgActorType extends foundry.abstract.TypeDataModel {
         // Ability Scores
         schema.characteristics = new fields.SchemaField(Object.values(SYSTEM.CHARACTERISTICS).reduce((obj, ability) => {
             obj[ability.id] = new fields.SchemaField({
-                base: new fields.NumberField({...requiredInteger, initial: 0, min: 0, max: 3}),
-                increases: new fields.NumberField({...requiredInteger, initial: 0, min: 0, max: 12}),
-                bonus: new fields.NumberField({...requiredInteger, initial: 0, min: 0})
+                rank: new fields.SchemaField({
+                    base: new fields.NumberField({...requiredInteger, initial: 1, min: 1, max: 5}),
+                    trained: new fields.NumberField({...requiredInteger, initial: 0, min: 0, max: 4}),
+                    bonus: new fields.NumberField({...requiredInteger, initial: 0, min: 0, max: 1})
+                }, {validate: SwerpgActorType.#validateCharacteristicRank, label: ability.name}),
             }, {label: ability.label});
             return obj;
         }, {}));
@@ -100,7 +102,16 @@ export default class SwerpgActorType extends foundry.abstract.TypeDataModel {
     /* -------------------------------------------- */
 
     /**
-     * Validate an attribute field
+     * Validate a characteristic field
+     * @param {{base: number, trained: number}} attr     The attribute value
+     */
+    static #validateCharacteristicRank(attr) {
+        const value = attr.base + attr.trained;
+        if (value < 1 || value > 6) throw new Error(`Characteristic Rank cannot exceed 6 or be less than 1.`);
+    }
+
+    /**
+     * Validate a skill field
      * @param {{base: number, careerFree: number, specializationFree: number, trained: number}} attr     The attribute value
      */
     static #validateSkillRank(attr) {

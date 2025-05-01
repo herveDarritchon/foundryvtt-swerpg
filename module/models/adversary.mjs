@@ -45,7 +45,7 @@ export default class SwerpgAdversary extends SwerpgActorType {
     // Adversaries do not track ability advancement
     for ( const characteristicField of Object.values(schema.characteristics.fields) ) {
       delete characteristicField.fields.base;
-      delete characteristicField.fields.increases;
+      delete characteristicField.fields.trained;
     }
 
     // Adversaries only use active resource pools
@@ -122,7 +122,7 @@ export default class SwerpgAdversary extends SwerpgActorType {
     for ( const k in SYSTEM.CHARACTERISTICS ) {
       const a = this.characteristics[k];
       a.base = taxonomy.characteristics[k];
-      a.increases = 0;
+      a.trained = 0;
       a.value = a.base;
     }
 
@@ -139,16 +139,16 @@ export default class SwerpgAdversary extends SwerpgActorType {
       wTotal += weights[k];
     }
 
-    // Pass 1: Unconstrained Increases
+    // Pass 1: Unconstrained trained
     let spent = 0;
     for ( const k in SYSTEM.CHARACTERISTICS ) {
       weights[k] /= wTotal;
       const a = this.characteristics[k];
       a.desired = a.base + (toSpend * weights[k]);
       let d = Math.round(Math.abs(toSpend) * weights[k]) * Math.sign(toSpend);
-      a.increases = Math.clamp(d, 1 - a.value, 18 - a.value);
-      a.value = a.base + a.increases;
-      spent += a.increases;
+      a.trained = Math.clamp(d, 1 - a.value, 18 - a.value);
+      a.value = a.base + a.trained;
+      spent += a.trained;
     }
     if ( spent === toSpend ) return;
 
@@ -166,7 +166,7 @@ export default class SwerpgAdversary extends SwerpgActorType {
       else order.sort((a, b) => (a[1] - a[2]) - (b[1] - b[2]));             // Reduce farthest above desired value
       const target = order[0];
       const a = this.characteristics[target[0]];
-      a.increases += delta;
+      a.trained += delta;
       target[2] = a.value += delta;
       const capped = delta > 0 ? a.value === 18 : a.value === 1;
       if ( capped ) order.shift();

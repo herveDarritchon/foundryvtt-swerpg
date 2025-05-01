@@ -80,9 +80,9 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
     event.stopPropagation();
     switch ( target.dataset.action ) {
       case "abilityDecrease":
-        return this.actor.purchaseAbility(target.closest(".ability").dataset.ability, -1);
+        return this.actor.purchaseCharacteristic(target.closest(".ability").dataset.ability, -1);
       case "abilityIncrease":
-        return this.actor.purchaseAbility(target.closest(".ability").dataset.ability, 1);
+        return this.actor.purchaseCharacteristic(target.closest(".ability").dataset.ability, 1);
       case "skillConfig":
         const skillConfig = new SkillConfig({document: this.actor, skillId: target.closest(".skill").dataset.skill})
         await skillConfig.render({force: true});

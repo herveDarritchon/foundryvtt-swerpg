@@ -1347,6 +1347,10 @@ input[type=range] {
   align-content: center;
   align-items: center;
 }
+.swerpg.sheet.actor .characteristics .characteristics-wrapper .characteristic-wrapper .action-wrapper {
+  position: relative;
+  margin: 0 0.5rem;
+}
 .swerpg.sheet.actor .characteristics .characteristics-wrapper .characteristic-wrapper .characteristic.holo-circle {
   position: relative;
   width: 80px;
@@ -1426,7 +1430,7 @@ input[type=range] {
 }
 .swerpg.sheet.actor .characteristics .characteristics-wrapper .button.icon {
   position: absolute;
-  font-size: 0.8rem;
+  font-size: 1rem;
   color: #00b0ff;
   background: none;
   border: none;
@@ -1434,12 +1438,12 @@ input[type=range] {
   transition: transform 0.2s ease;
 }
 .swerpg.sheet.actor .characteristics .characteristics-wrapper .button.icon.increase {
-  top: -10px;
-  right: -10px;
+  top: -15px;
+  right: -5px;
 }
 .swerpg.sheet.actor .characteristics .characteristics-wrapper .button.icon.decrease {
-  bottom: -10px;
-  left: -10px;
+  top: -15px;
+  left: -5px;
 }
 .strength {
   --ability-icon: url("../ui/abilities/strength.svg");
