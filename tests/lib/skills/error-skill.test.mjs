@@ -1,4 +1,4 @@
-// error-free-skill.test.mjs
+// error-skill.test.mjs
 import '../../setupTests.js';
 import {describe, expect, test} from 'vitest'
 import {createActor} from "../../utils/actors/actor.mjs";

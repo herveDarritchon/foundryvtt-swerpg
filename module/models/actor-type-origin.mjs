@@ -37,7 +37,7 @@ export default class SwerpgActorType extends foundry.abstract.TypeDataModel {
     schema.abilities = new fields.SchemaField(Object.values(SYSTEM.CHARACTERISTICS).reduce((obj, ability) => {
       obj[ability.id] = new fields.SchemaField({
         base: new fields.NumberField({...requiredInteger, initial: 0, min: 0, max: 3}),
-        increases: new fields.NumberField({...requiredInteger, initial: 0, min: 0, max: 12}),
+        trained: new fields.NumberField({...requiredInteger, initial: 0, min: 0, max: 12}),
         bonus: new fields.NumberField({...requiredInteger, initial: 0, min: 0})
       }, {label: ability.label});
       return obj;

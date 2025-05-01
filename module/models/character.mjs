@@ -197,10 +197,10 @@ export default class SwerpgCharacter extends SwerpgActorType {
 
     /**
      * Validate an attribute field
-     * @param {{base: number, increases: number, bonus: number}} attr     The attribute value
+     * @param {{base: number, trained: number, bonus: number}} attr     The attribute value
      */
     static #validateAttribute(attr) {
-        if (attr.value < 0 || attr.value > 10) throw new Error(`Attribute base + bonus cannot exceed 12`);
+        if (attr.value < 1 || attr.value > 6) throw new Error(`Characteristic cannot be lower than 1 and cannot exceed 6`);
     }
 
     /* -------------------------------------------- */
@@ -334,14 +334,12 @@ export default class SwerpgCharacter extends SwerpgActorType {
             const characteristic = this.characteristics[a];
 
             // Configure initial value
-            characteristic.base = species?.characteristics[a] || 1;
-            /*            if (a === species.primary) characteristic.initial = SYSTEM.ANCESTRIES.primaryAbilityStart;
-                        else if (a === species.secondary) characteristic.initial = SYSTEM.ANCESTRIES.secondaryAbilityStart;*/
-            characteristic.value = Math.clamp(characteristic.base + characteristic.increases + characteristic.bonus, 1, 5);
+            characteristic.rank.base = species?.characteristics[a] || 1;
+            characteristic.rank.value = Math.clamp(characteristic.rank.base + characteristic.rank.trained + characteristic.rank.bonus, 1, 6);
 
             // Track points spent
-            abilityPointsBought += characteristic.base;
-            abilityPointsSpent += characteristic.increases;
+            abilityPointsBought += characteristic.rank.base;
+            abilityPointsSpent += characteristic.rank.trained;
         }
 
         this._applyFreeSkillSpecies(this.skills);

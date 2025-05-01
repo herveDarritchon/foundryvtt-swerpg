@@ -26,9 +26,8 @@
       ],
       "paths": [
         "lang/en.json",
-        "styles/swerpg.css",
-        "styles/**/*.less",
-        "templates/**/*.hbs"
+        "styles",
+        "templates"
       ]
     }
   },
