@@ -56,10 +56,10 @@ export default class SwerpgCharacter extends SwerpgActorType {
 
   /**
    * Validate an attribute field
-   * @param {{base: number, increases: number, bonus: number}} attr     The attribute value
+   * @param {{base: number, trained: number, bonus: number}} attr     The attribute value
    */
   static #validateAttribute(attr) {
-    if ( (attr.base + attr.increases) > 12 ) throw new Error(`Attribute base + bonus cannot exceed 12`);
+    if ( (attr.base + attr.trained) > 12 ) throw new Error(`Attribute base + bonus cannot exceed 12`);
   }
 
   /* -------------------------------------------- */
@@ -167,11 +167,11 @@ export default class SwerpgCharacter extends SwerpgActorType {
       ability.initial = 1;
       if ( a === ancestry.primary ) ability.initial = SYSTEM.ANCESTRIES.primaryAbilityStart;
       else if ( a === ancestry.secondary ) ability.initial = SYSTEM.ANCESTRIES.secondaryAbilityStart;
-      ability.value = Math.clamp(ability.initial + ability.base + ability.increases + ability.bonus, 0, 12);
+      ability.value = Math.clamp(ability.initial + ability.base + ability.trained + ability.bonus, 0, 12);
 
       // Track points spent
       abilityPointsBought += ability.base;
-      abilityPointsSpent += ability.increases;
+      abilityPointsSpent += ability.trained;
     }
 
     // Track spent ability points

@@ -6094,27 +6094,27 @@ actors:
       abilities:
         wisdom:
           base: 0
-          increases: 0
+          trained: 0
           bonus: 0
         presence:
           base: 2
-          increases: 0
+          trained: 0
           bonus: 0
         intellect:
           base: 3
-          increases: 0
+          trained: 0
           bonus: 0
         strength:
           base: 0
-          increases: 0
+          trained: 0
           bonus: 0
         toughness:
           base: 2
-          increases: 0
+          trained: 0
           bonus: 0
         dexterity:
           base: 2
-          increases: 0
+          trained: 0
           bonus: 0
       advancement:
         level: 1
@@ -6574,27 +6574,27 @@ actors:
       abilities:
         wisdom:
           base: 1
-          increases: 0
+          trained: 0
           bonus: 0
         presence:
           base: 1
-          increases: 0
+          trained: 0
           bonus: 0
         intellect:
           base: 2
-          increases: 2
+          trained: 2
           bonus: 0
         strength:
           base: 2
-          increases: 1
+          trained: 1
           bonus: 0
         toughness:
           base: 2
-          increases: 1
+          trained: 1
           bonus: 0
         dexterity:
           base: 1
-          increases: 1
+          trained: 1
           bonus: 0
       advancement:
         level: 6
@@ -7457,27 +7457,27 @@ actors:
       abilities:
         wisdom:
           base: 1
-          increases: 0
+          trained: 0
           bonus: 0
         presence:
           base: 0
-          increases: 0
+          trained: 0
           bonus: 0
         intellect:
           base: 3
-          increases: 1
+          trained: 1
           bonus: 0
         strength:
           base: 1
-          increases: 0
+          trained: 0
           bonus: 0
         toughness:
           base: 1
-          increases: 1
+          trained: 1
           bonus: 0
         dexterity:
           base: 3
-          increases: 3
+          trained: 3
           bonus: 0
       advancement:
         level: 6
@@ -8527,27 +8527,27 @@ actors:
       abilities:
         wisdom:
           base: 0
-          increases: 3
+          trained: 3
           bonus: 0
         presence:
           base: 2
-          increases: 2
+          trained: 2
           bonus: 0
         intellect:
           base: 1
-          increases: 0
+          trained: 0
           bonus: 0
         strength:
           base: 3
-          increases: 0
+          trained: 0
           bonus: 0
         toughness:
           base: 2
-          increases: 0
+          trained: 0
           bonus: 0
         dexterity:
           base: 1
-          increases: 0
+          trained: 0
           bonus: 0
       advancement:
         level: 6
@@ -9262,7 +9262,7 @@ actors:
             equal to half your Wisdom for each Elemental or Spiritual damage
             type where you know the Arcane Rune attuned to that damage
             type.</p><p>When you use the <strong>Ward</strong> gesture, the
-            Resistance provided by your Ward also increases by half your
+            Resistance provided by your Ward also trained by half your
             Wisdom.</p>
           actions: []
           actorHooks:
@@ -9541,7 +9541,7 @@ actors:
           node: toustr2
           description: >-
             <p>You are a calm anchor in the swirling sea of combat. Your
-            <strong>Engagement</strong> increases by +1, allowing you to
+            <strong>Engagement</strong> trained by +1, allowing you to
             simultaneously engage more adjacent foes.</p>
           actions: []
           actorHooks:
@@ -9701,27 +9701,27 @@ actors:
       abilities:
         wisdom:
           base: 1
-          increases: 0
+          trained: 0
           bonus: 0
         presence:
           base: 1
-          increases: 0
+          trained: 0
           bonus: 0
         intellect:
           base: 0
-          increases: 2
+          trained: 2
           bonus: 0
         strength:
           base: 2
-          increases: 0
+          trained: 0
           bonus: 0
         toughness:
           base: 2
-          increases: 1
+          trained: 1
           bonus: 0
         dexterity:
           base: 3
-          increases: 2
+          trained: 2
           bonus: 0
       advancement:
         level: 6
@@ -10655,27 +10655,27 @@ actors:
       abilities:
         wisdom:
           base: 3
-          increases: 2
+          trained: 2
           bonus: 0
         presence:
           base: 3
-          increases: 1
+          trained: 1
           bonus: 0
         intellect:
           base: 1
-          increases: 2
+          trained: 2
           bonus: 0
         strength:
           base: 0
-          increases: 0
+          trained: 0
           bonus: 0
         toughness:
           base: 2
-          increases: 0
+          trained: 0
           bonus: 0
         dexterity:
           base: 0
-          increases: 0
+          trained: 0
           bonus: 0
       advancement:
         level: 6
@@ -11570,27 +11570,27 @@ actors:
       abilities:
         wisdom:
           base: 1
-          increases: 2
+          trained: 2
           bonus: 0
         presence:
           base: 3
-          increases: 1
+          trained: 1
           bonus: 0
         intellect:
           base: 1
-          increases: 1
+          trained: 1
           bonus: 0
         strength:
           base: 1
-          increases: 0
+          trained: 0
           bonus: 0
         toughness:
           base: 2
-          increases: 1
+          trained: 1
           bonus: 0
         dexterity:
           base: 1
-          increases: 0
+          trained: 0
           bonus: 0
       advancement:
         level: 6
@@ -12295,7 +12295,7 @@ actors:
             equal to half your Wisdom for each Elemental or Spiritual damage
             type where you know the Arcane Rune attuned to that damage
             type.</p><p>When you use the <strong>Ward</strong> gesture, the
-            Resistance provided by your Ward also increases by half your
+            Resistance provided by your Ward also trained by half your
             Wisdom.</p>
           actions: []
           actorHooks:
@@ -12444,27 +12444,27 @@ actors:
       abilities:
         wisdom:
           base: 1
-          increases: 1
+          trained: 1
           bonus: 0
         presence:
           base: 0
-          increases: 0
+          trained: 0
           bonus: 0
         intellect:
           base: 1
-          increases: 0
+          trained: 0
           bonus: 0
         strength:
           base: 3
-          increases: 3
+          trained: 3
           bonus: 0
         toughness:
           base: 3
-          increases: 0
+          trained: 0
           bonus: 0
         dexterity:
           base: 1
-          increases: 1
+          trained: 1
           bonus: 0
       advancement:
         level: 6
@@ -13510,27 +13510,27 @@ actors:
       abilities:
         wisdom:
           base: 0
-          increases: 1
+          trained: 1
           bonus: 0
         presence:
           base: 2
-          increases: 1
+          trained: 1
           bonus: 0
         intellect:
           base: 3
-          increases: 2
+          trained: 2
           bonus: 0
         strength:
           base: 0
-          increases: 0
+          trained: 0
           bonus: 0
         toughness:
           base: 2
-          increases: 0
+          trained: 0
           bonus: 0
         dexterity:
           base: 2
-          increases: 1
+          trained: 1
           bonus: 0
       advancement:
         level: 6
@@ -14349,27 +14349,27 @@ actors:
       abilities:
         wisdom:
           base: 1
-          increases: 0
+          trained: 0
           bonus: 0
         presence:
           base: 1
-          increases: 0
+          trained: 0
           bonus: 0
         intellect:
           base: 2
-          increases: 0
+          trained: 0
           bonus: 0
         strength:
           base: 2
-          increases: 0
+          trained: 0
           bonus: 0
         toughness:
           base: 2
-          increases: 0
+          trained: 0
           bonus: 0
         dexterity:
           base: 1
-          increases: 0
+          trained: 0
           bonus: 0
       advancement:
         level: 1
@@ -14815,27 +14815,27 @@ actors:
       abilities:
         wisdom:
           base: 1
-          increases: 0
+          trained: 0
           bonus: 0
         presence:
           base: 0
-          increases: 0
+          trained: 0
           bonus: 0
         intellect:
           base: 3
-          increases: 0
+          trained: 0
           bonus: 0
         strength:
           base: 1
-          increases: 0
+          trained: 0
           bonus: 0
         toughness:
           base: 1
-          increases: 0
+          trained: 0
           bonus: 0
         dexterity:
           base: 3
-          increases: 0
+          trained: 0
           bonus: 0
       advancement:
         level: 1
@@ -15385,27 +15385,27 @@ actors:
       abilities:
         wisdom:
           base: 0
-          increases: 0
+          trained: 0
           bonus: 0
         presence:
           base: 2
-          increases: 0
+          trained: 0
           bonus: 0
         intellect:
           base: 1
-          increases: 0
+          trained: 0
           bonus: 0
         strength:
           base: 3
-          increases: 0
+          trained: 0
           bonus: 0
         toughness:
           base: 2
-          increases: 0
+          trained: 0
           bonus: 0
         dexterity:
           base: 1
-          increases: 0
+          trained: 0
           bonus: 0
       advancement:
         level: 1
@@ -15950,27 +15950,27 @@ actors:
       abilities:
         wisdom:
           base: 1
-          increases: 0
+          trained: 0
           bonus: 0
         presence:
           base: 1
-          increases: 0
+          trained: 0
           bonus: 0
         intellect:
           base: 0
-          increases: 0
+          trained: 0
           bonus: 0
         strength:
           base: 2
-          increases: 0
+          trained: 0
           bonus: 0
         toughness:
           base: 2
-          increases: 0
+          trained: 0
           bonus: 0
         dexterity:
           base: 3
-          increases: 0
+          trained: 0
           bonus: 0
       advancement:
         level: 1
@@ -16462,27 +16462,27 @@ actors:
       abilities:
         wisdom:
           base: 3
-          increases: 0
+          trained: 0
           bonus: 0
         presence:
           base: 3
-          increases: 0
+          trained: 0
           bonus: 0
         intellect:
           base: 1
-          increases: 0
+          trained: 0
           bonus: 0
         strength:
           base: 0
-          increases: 0
+          trained: 0
           bonus: 0
         toughness:
           base: 2
-          increases: 0
+          trained: 0
           bonus: 0
         dexterity:
           base: 0
-          increases: 0
+          trained: 0
           bonus: 0
       advancement:
         level: 1
@@ -16967,27 +16967,27 @@ actors:
       abilities:
         wisdom:
           base: 1
-          increases: 0
+          trained: 0
           bonus: 0
         presence:
           base: 3
-          increases: 0
+          trained: 0
           bonus: 0
         intellect:
           base: 1
-          increases: 0
+          trained: 0
           bonus: 0
         strength:
           base: 1
-          increases: 0
+          trained: 0
           bonus: 0
         toughness:
           base: 2
-          increases: 0
+          trained: 0
           bonus: 0
         dexterity:
           base: 1
-          increases: 0
+          trained: 0
           bonus: 0
       advancement:
         level: 1
@@ -17435,27 +17435,27 @@ actors:
       abilities:
         wisdom:
           base: 1
-          increases: 0
+          trained: 0
           bonus: 0
         presence:
           base: 0
-          increases: 0
+          trained: 0
           bonus: 0
         intellect:
           base: 1
-          increases: 0
+          trained: 0
           bonus: 0
         strength:
           base: 3
-          increases: 0
+          trained: 0
           bonus: 0
         toughness:
           base: 3
-          increases: 0
+          trained: 0
           bonus: 0
         dexterity:
           base: 1
-          increases: 0
+          trained: 0
           bonus: 0
       advancement:
         level: 1

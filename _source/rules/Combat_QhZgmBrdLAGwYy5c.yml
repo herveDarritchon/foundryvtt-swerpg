@@ -28,7 +28,7 @@ pages:
         Statuses</h2><h4>Weakened</h4><p>A creature that is
         <strong>Weakened</strong> is vulnerable to taking deadly wounds.
         Protagonists become Weakened when they reach zero Health. Any further
-        damage to Health taken while Weakened increases Wounds.</p><p>While a
+        damage to Health taken while Weakened trained Wounds.</p><p>While a
         creature is Weakened, it suffers -1 to maximum Action, loses access to a
         free Movement action, and suffers an additional <strong>2
         Vulnerability</strong> to any <strong>Morale</strong> damage
@@ -44,7 +44,7 @@ pages:
         damage.</p><h2 class="divider">Morale Statuses</h2><h4>Broken</h4><p>A
         creature that is <strong>Broken</strong> is vulnerable to psychological
         trauma. Protagonists become Broken when they reach zero Morale. Any
-        further damage to Morale taken while Broken increases
+        further damage to Morale taken while Broken trained
         Madness.</p><p>While a creature is Broken it cannot expend
         <strong>Focus</strong>, actions it takes suffer from <strong>+2
         Banes</strong>, and it suffers an additional <strong>2
@@ -361,7 +361,7 @@ pages:
         reduce its overall cost.</p><p>Free Movement is not available to
         creatures wearing <strong>Heavy </strong>armor or those who are
         <strong>Prone</strong>. Additionally, the <strong>Slowed</strong>
-        condition increases the cost of Movement actions, however the first such
+        condition trained the cost of Movement actions, however the first such
         movement per round is still discounted.</p><h2
         class="divider">Terrain</h2><section class="construction"><p>Swerpg
         will eventually support declaring certain grid spaces as difficult
@@ -608,7 +608,7 @@ pages:
         reloading.</p></td></tr><tr><td><p>Deadly</p></td><td><p>Gains a +1
         damage overflow
         multiplier.</p></td></tr><tr><td><p>Difficult</p></td><td><p>Incurs +1
-        Bane.</p></td></tr><tr><td><p>Empowered</p></td><td><p>Increases base
+        Bane.</p></td></tr><tr><td><p>Empowered</p></td><td><p>trained base
         damage by +6.</p></td></tr><tr><td><p>Exposing</p></td><td><p>Adds +2
         Boons.</p></td></tr><tr><td><p>Harmless</p></td><td><p>Always deals zero
         damage.</p></td></tr><tr><td><p>Weakened</p></td><td><p>Reduces base
@@ -691,7 +691,7 @@ pages:
         by five Goblins, he would have the <strong>Flanked 2</strong> condition
         and each Goblin's attacks would benefit from <strong>+2 Boons (5 engaged
         enemies - 3 Engagement)</strong>.</p></section><p>While having more
-        Engaged enemies increases your Flanked condition, having adjacent allies
+        Engaged enemies trained your Flanked condition, having adjacent allies
         who are supporting you can nullify flanking. Allies contribute their own
         <strong>Engagement</strong> as a bonus to yours if you share enemies in
         common that you are both Engaged with.</p><section

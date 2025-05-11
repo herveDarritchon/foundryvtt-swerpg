@@ -186,18 +186,35 @@
         <h3>Characteristics</h3>
         <div class="characteristics-wrapper">
             {{#each characteristicScores as |characteristic|}}
-                <div class="characteristic {{characteristic.id}} {{characteristic.type}} flexcol"
-                     data-characteristic="{{characteristic.id}}">
-                    <h4 class="label">{{characteristic.label}}</h4>
-                    <span class="input score">{{characteristic.value}}</span>
-                    {{#if characteristic.canDecrease}}
-                        <a class="button icon fa-solid fa-caret-down decrease" data-action="characteristicDecrease"
-                           data-tooltip="Decrease {{characteristic.label}}" data-tooltip-direction="LEFT"></a>
-                    {{/if}}
-                    {{#if characteristic.canIncrease}}
-                        <a class="button icon fa-solid fa-caret-up increase" data-action="characteristicIncrease"
-                           data-tooltip="Increase {{characteristic.label}}" data-tooltip-direction="RIGHT"></a>
-                    {{/if}}
+                <div class="characteristic-wrapper flexcol" data-characteristic="{{characteristic.id}}">
+                    <div class="characteristic {{characteristic.id}} {{characteristic.type.id}} holo-circle">
+                        <div class="circle-content flexcol">
+                            <img class="characteristic-icon"
+                                 src="systems/swerpg/assets/icons/characteristics/{{characteristic.id}}.svg"
+                                 alt="{{characteristic.label}}"/>
+                            <span class="value">{{characteristic.rank.value}}</span>
+
+                        </div>
+                    </div>
+                    <div class="action-wrapper">
+                        {{#if characteristic.canDecrease}}
+                            <a class="button icon fa-solid fa-circle-caret-down decrease"
+                               data-action="characteristicDecrease"
+                               data-tooltip="Decrease {{characteristic.label}}"
+                               data-tooltip-direction="LEFT">
+                            </a>
+                        {{/if}}
+
+                        <h4 class="label">{{characteristic.label}}</h4>
+
+                        {{#if characteristic.canIncrease}}
+                            <a class="button icon fa-solid fa-circle-caret-up increase"
+                               data-action="characteristicIncrease"
+                               data-tooltip="Increase {{characteristic.label}}"
+                               data-tooltip-direction="RIGHT">
+                            </a>
+                        {{/if}}
+                    </div>
                 </div>
             {{/each}}
         </div>

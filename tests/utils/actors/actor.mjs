@@ -330,6 +330,56 @@ export function createActor(
                         "value": 0
                     }
                 }
+            },
+            characteristics: {
+                "brawn": {
+                    "rank": {
+                        "base": 1,
+                        "trained": 0,
+                        "bonus": 0,
+                        "value": 1
+                    }
+                },
+                "agility": {
+                    "rank": {
+                        "base": 1,
+                        "trained": 0,
+                        "bonus": 0,
+                        "value": 2
+                    }
+                },
+                "intellect": {
+                    "rank": {
+                        "base": 1,
+                        "trained": 0,
+                        "bonus": 0,
+                        "value": 1
+                    }
+                },
+                "cunning": {
+                    "rank": {
+                        "base": 1,
+                        "trained": 0,
+                        "bonus": 0,
+                        "value": 1
+                    }
+                },
+                "willpower": {
+                    "rank": {
+                        "base": 1,
+                        "trained": 0,
+                        "bonus": 0,
+                        "value": 1
+                    }
+                },
+                "presence": {
+                    "rank": {
+                        "base": 1,
+                        "trained": 0,
+                        "bonus": 0,
+                        "value": 1
+                    }
+                }
             }
         }
     };
