@@ -42,7 +42,7 @@ export default class TrainedSkill extends Skill {
         }
 
         if (experiencePointsSpent > this.actor.experiencePoints.total) {
-            return new ErrorSkill(this.actor, this.data, {}, {message: ("you can't spend more experience than total!")});
+            return new ErrorSkill(this.actor, this.data, {}, {message: ("you can't spend more experience than your total!")});
         }
 
         this.data.rank.value = value;

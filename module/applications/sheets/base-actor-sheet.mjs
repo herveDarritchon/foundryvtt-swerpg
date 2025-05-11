@@ -118,7 +118,7 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
     static _initializeActorSheetClass() {
         const actor = this.DEFAULT_OPTIONS.actor;
         this.PARTS = foundry.utils.deepClone(this.PARTS);
-        console.log ("[base-actor-sheet] initializeActorSheetClass with type", actor.type);
+        console.log("[base-actor-sheet] initializeActorSheetClass with type", actor.type);
         this.PARTS.header.template = `systems/swerpg/templates/sheets/actor/${actor.type}-header.hbs`;
         this.PARTS.attributes.template = `systems/swerpg/templates/sheets/actor/${actor.type}-attributes.hbs`;
         this.PARTS.biography.template = `systems/swerpg/templates/sheets/actor/${actor.type}-biography.hbs`;
@@ -139,7 +139,7 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
         return {
             characteristicScores: this.#prepareCharacteristics(),
             progression: this.#prepareProgression(),
-            actions : actions ?? [],
+            actions: actions ?? [],
             actor: this.document,
             biography: await this.#prepareBiography(),
             canPurchaseTalents: true,
@@ -202,12 +202,17 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
         const c = this.actor.system.characteristics;
         const characteristics = Object.values(SYSTEM.CHARACTERISTICS).map(cfg => {
             const characteristic = foundry.utils.deepClone(cfg);
-            characteristic.value = c[characteristic.id].value;
-            characteristic.canIncrease = this.actor.canPurchaseAbility(characteristic.id, 1);
-            characteristic.canDecrease = this.actor.canPurchaseAbility(characteristic.id, -1);
+            let currentCharac = c[characteristic.id];
+            characteristic.rank = {};
+            characteristic.rank.base = currentCharac.rank.base;
+            characteristic.rank.trained = currentCharac.rank.trained;
+            characteristic.rank.value = currentCharac.rank.base + currentCharac.rank.trained;
+            characteristic.canIncrease = this.actor.canPurchaseCharacteristic(characteristic.id, 1);
+            characteristic.canDecrease = this.actor.canPurchaseCharacteristic(characteristic.id, -1);
             return characteristic;
         });
         characteristics.sort((a, b) => a.sheetOrder - b.sheetOrder);
+        console.log("[base-actor-sheet] prepareCharacteristics", characteristics);
         return characteristics;
     }
 

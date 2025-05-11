@@ -3,6 +3,10 @@
 /*  Font Faces                               */
 /* ----------------------------------------- */
 
+@font-face {
+  font-family: "Audiowide";
+  src: url("../fonts/Audiowide/Audiowide-Regular.ttf");
+}
 
 @font-face {
   font-family: "Star Jedi";
@@ -31,24 +35,38 @@
 /* ----------------------------------------- */
 
 .swerpg {
-  --background: #0A1F44; /* Bleu nuit profond */
+  --color-glow: #00b0ff; // bleu néon
+  --color-text: #d0e6f6;
+  --color-label: #9bb0c2;
+  --color-shadow: rgba(0, 176, 255, 0.3);
+  --color-glow-hover: lighten(#00b0ff, 15%);
+  --color-background: #0c0f17;
+  --color-frame: #3a3f48;
+  --color-accent: #00b0ff;
+
+  --background: #0A1F44; /* Bleu nuit */
+  --background-dark: #0c0f17; /* Bleu nuit profond */
   --background-element: #5A5F67; /* Bleu nuit profond */
-  --color-text: #DDE7F2; /* Blanc bleuté pour le texte */
+
+  //--color-text: #DDE7F2; /* Blanc bleuté pour le texte */
   --color-primary: var(--color-text);
   --color-secondary: #7C8A9E; /* Gris bleuté pour les textes secondaires */
   --color-tertiary: #5A5F67; /* Gris acier pour les détails */
   --color-header: #26C6DA; /* Cyan lumineux pour les titres */
   --color-h1: #72a4ea; /* Bleu électrique pour les titres H1 */
-  --color-frame: #3A3F48; /* Gris sombre pour les encadrés */
+  //--color-frame: #3A3F48; /* Gris sombre pour les encadrés */
   --color-frame-bg: #121923; /* Noir bleu profond pour les fonds */
   --color-frame-bg-25: rgb(18 25 35 / 25%);
   --color-frame-bg-50: rgb(18 25 35 / 50%);
   --color-frame-bg-75: rgb(18 25 35 / 75%);
-  --color-accent: #0096FF; /* Bleu néon pour les éléments interactifs */
+  //--color-accent: #0096FF; /* Bleu néon pour les éléments interactifs */
   --color-tern: #063a5e; /* Bleu néon pour les éléments interactifs */
   --color-link-text: #26C6DA; /* Cyan éclatant pour les liens */
   --color-border-highlight: var(--color-accent); /* Bordures lumineuses */
   --color-border: var(--color-tern); /* Bordures lumineuses */
+
+  --color-accent-blue: #00b0ff; /* Bleu néon */
+  --color-accent-yellow: #ffe81f; /* jaune sabre */
 
   --color-damage-vulnerability: #640A0A; /* Rouge sombre pour les faiblesses */
   --color-damage-vulnerability-border: #D92E2E; /* Rouge vif pour accentuer */
@@ -62,6 +80,7 @@
   --color-active: #1ab82a; /* Vert pour les éléments actifs */
   --color-border-active: #0e5915; /* Vert sombre pour les borders des éléments actifs */
 
+  --color-light-blue: #d0e6f6; /* Bleu clair froid pour les grands caractères */
   --color-inactive: #da1717; /* Rouge pour les éléments inactifs */
   --color-border-inactive: #831010; /* Rouge sombre pour les borders des éléments inactifs */
 
@@ -94,19 +113,48 @@
 /*  Light Theme (NOT USED YET)               */
 /* ----------------------------------------- */
 
+@color-glow: #00b0ff;
+@color-text: var(--color-text);
+@color-label: var(--color-label);
+@color-shadow: var(--color-shadow);
+@color-glow-hover: var(--color-glow-hover);
+@font-body: var(--font-body);
+@background-dark: #0c0f17;
+@color-glow-yellow: #efe58b;
 
-.theme-light .swerpg.UNUSED {
-  --background: #cac5ba;
-  --color-background: #cac5ba;
-  --color-text: #000000;
-  --color-secondary: #0b0909;
-  --color-tertiary: #1c1a1a;
-  --color-frame-bg: var(--color-cool-5-25);
-  --color-frame: #938c9a;
-  --color-h1: #000000;
-  &.application {
-    --color-header-background: transparent;
-    --background-texture: url("../ui/journal/background-light.webp");
-    --background-overlay: url("../ui/journal/overlay-light.webp");
-  }
+
+// === Thèmes dynamiques Jedi / Sith ===
+
+.theme-light() {
+  --color-glow: #ffe81f; // jaune Jedi
+  --color-text: #1c1c1c;
+  --color-label: #3a3a3a;
+  --color-shadow: rgba(255, 232, 31, 0.3);
+  --color-glow-hover: #fff56e;
+  --color-background: #f0f5fa;
+  --color-frame: #ccd5e0;
+  --color-accent: #ffe81f;
+  --font-body: 'Orbitron', sans-serif;
 }
+
+.theme-dark() {
+  --color-glow: #00b0ff; // bleu néon
+  --color-text: #d0e6f6;
+  --color-label: #9bb0c2;
+  --color-shadow: rgba(0, 176, 255, 0.3);
+  --color-glow-hover: lighten(#00b0ff, 15%);
+  --color-background: #0c0f17;
+  --color-frame: #3a3f48;
+  --color-accent: #00b0ff;
+  --font-body: 'Orbitron', sans-serif;
+}
+
+.swerpg.light-side {
+  .theme-light();
+}
+
+.swerpg.dark-side {
+  .theme-dark();
+}
+
+

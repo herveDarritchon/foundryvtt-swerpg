@@ -6,27 +6,27 @@ system:
   abilities:
     wisdom:
       base: 1
-      increases: 0
+      trained: 0
       bonus: 0
     presence:
       base: 2
-      increases: 2
+      trained: 2
       bonus: 0
     intellect:
       base: 1
-      increases: 0
+      trained: 0
       bonus: 0
     strength:
       base: 3
-      increases: 2
+      trained: 2
       bonus: 0
     toughness:
       base: 1
-      increases: 1
+      trained: 1
       bonus: 0
     dexterity:
       base: 1
-      increases: 0
+      trained: 0
       bonus: 0
   advancement:
     level: 6
@@ -679,7 +679,7 @@ items:
       node: toustr2
       description: >-
         <p>You are a calm anchor in the swirling sea of combat. Your
-        <strong>Engagement</strong> increases by +1, allowing you to
+        <strong>Engagement</strong> trained by +1, allowing you to
         simultaneously engage more adjacent foes.</p>
       actions: []
       actorHooks:
@@ -710,7 +710,7 @@ items:
       node: tou1a
       description: >-
         <p>Your physical tenacity allows you to remain composed while surrounded
-        by foes. Your <strong>Engagement</strong> increases by +1, allowing you
+        by foes. Your <strong>Engagement</strong> trained by +1, allowing you
         to simultaneously engage more adjacent foes.</p>
       actions: []
       actorHooks:

@@ -6,7 +6,7 @@ system:
   node: strwis2
   description: >-
     <p>You battlefield experience makes you accustomed to engaging multiple
-    foes. Your <strong>Engagement</strong> increases by +1, allowing you to
+    foes. Your <strong>Engagement</strong> trained by +1, allowing you to
     simultaneously engage more adjacent foes.</p>
   actions: []
   actorHooks:
