@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/880</span>
+                <span class='fraction'>0/885</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/880</span>
+                <span class='fraction'>0/885</span>
             </div>
         
             
@@ -1064,7 +1064,12 @@
 <a name='L999'></a><a href='#L999'>999</a>
 <a name='L1000'></a><a href='#L1000'>1000</a>
 <a name='L1001'></a><a href='#L1001'>1001</a>
-<a name='L1002'></a><a href='#L1002'>1002</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<a name='L1002'></a><a href='#L1002'>1002</a>
+<a name='L1003'></a><a href='#L1003'>1003</a>
+<a name='L1004'></a><a href='#L1004'>1004</a>
+<a name='L1005'></a><a href='#L1005'>1005</a>
+<a name='L1006'></a><a href='#L1006'>1006</a>
+<a name='L1007'></a><a href='#L1007'>1007</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -1260,6 +1265,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -2185,7 +2195,7 @@
 <span class="cstat-no" title="statement not covered" >    static _initializeActorSheetClass() {</span>
 <span class="cstat-no" title="statement not covered" >        const actor = this.DEFAULT_OPTIONS.actor;</span>
 <span class="cstat-no" title="statement not covered" >        this.PARTS = foundry.utils.deepClone(this.PARTS);</span>
-<span class="cstat-no" title="statement not covered" >        console.log ("[base-actor-sheet] initializeActorSheetClass with type", actor.type);</span>
+<span class="cstat-no" title="statement not covered" >        console.log("[base-actor-sheet] initializeActorSheetClass with type", actor.type);</span>
 <span class="cstat-no" title="statement not covered" >        this.PARTS.header.template = `systems/swerpg/templates/sheets/actor/${actor.type}-header.hbs`;</span>
 <span class="cstat-no" title="statement not covered" >        this.PARTS.attributes.template = `systems/swerpg/templates/sheets/actor/${actor.type}-attributes.hbs`;</span>
 <span class="cstat-no" title="statement not covered" >        this.PARTS.biography.template = `systems/swerpg/templates/sheets/actor/${actor.type}-biography.hbs`;</span>
@@ -2206,7 +2216,7 @@
 <span class="cstat-no" title="statement not covered" >        return {</span>
 <span class="cstat-no" title="statement not covered" >            characteristicScores: this.#prepareCharacteristics(),</span>
 <span class="cstat-no" title="statement not covered" >            progression: this.#prepareProgression(),</span>
-<span class="cstat-no" title="statement not covered" >            actions : actions ?? [],</span>
+<span class="cstat-no" title="statement not covered" >            actions: actions ?? [],</span>
 <span class="cstat-no" title="statement not covered" >            actor: this.document,</span>
 <span class="cstat-no" title="statement not covered" >            biography: await this.#prepareBiography(),</span>
 <span class="cstat-no" title="statement not covered" >            canPurchaseTalents: true,</span>
@@ -2269,12 +2279,17 @@
 <span class="cstat-no" title="statement not covered" >        const c = this.actor.system.characteristics;</span>
 <span class="cstat-no" title="statement not covered" >        const characteristics = Object.values(SYSTEM.CHARACTERISTICS).map(cfg =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >            const characteristic = foundry.utils.deepClone(cfg);</span>
-<span class="cstat-no" title="statement not covered" >            characteristic.value = c[characteristic.id].value;</span>
-<span class="cstat-no" title="statement not covered" >            characteristic.canIncrease = this.actor.canPurchaseAbility(characteristic.id, 1);</span>
-<span class="cstat-no" title="statement not covered" >            characteristic.canDecrease = this.actor.canPurchaseAbility(characteristic.id, -1);</span>
+<span class="cstat-no" title="statement not covered" >            let currentCharac = c[characteristic.id];</span>
+<span class="cstat-no" title="statement not covered" >            characteristic.rank = {};</span>
+<span class="cstat-no" title="statement not covered" >            characteristic.rank.base = currentCharac.rank.base;</span>
+<span class="cstat-no" title="statement not covered" >            characteristic.rank.trained = currentCharac.rank.trained;</span>
+<span class="cstat-no" title="statement not covered" >            characteristic.rank.value = currentCharac.rank.base + currentCharac.rank.trained;</span>
+<span class="cstat-no" title="statement not covered" >            characteristic.canIncrease = this.actor.canPurchaseCharacteristic(characteristic.id, 1);</span>
+<span class="cstat-no" title="statement not covered" >            characteristic.canDecrease = this.actor.canPurchaseCharacteristic(characteristic.id, -1);</span>
 <span class="cstat-no" title="statement not covered" >            return characteristic;</span>
 <span class="cstat-no" title="statement not covered" >        });</span>
 <span class="cstat-no" title="statement not covered" >        characteristics.sort((a, b) =&gt; a.sheetOrder - b.sheetOrder);</span>
+<span class="cstat-no" title="statement not covered" >        console.log("[base-actor-sheet] prepareCharacteristics", characteristics);</span>
 <span class="cstat-no" title="statement not covered" >        return characteristics;</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
@@ -3073,7 +3088,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-05-11T08:14:57.471Z
+                at 2025-05-11T08:34:16.200Z
             </div>
         <script src="../../../../prettify.js"></script>
         <script>

@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/497</span>
+                <span class='fraction'>0/495</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/497</span>
+                <span class='fraction'>0/495</span>
             </div>
         
             
@@ -642,9 +642,7 @@
 <a name='L577'></a><a href='#L577'>577</a>
 <a name='L578'></a><a href='#L578'>578</a>
 <a name='L579'></a><a href='#L579'>579</a>
-<a name='L580'></a><a href='#L580'>580</a>
-<a name='L581'></a><a href='#L581'>581</a>
-<a name='L582'></a><a href='#L582'>582</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<a name='L580'></a><a href='#L580'>580</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -979,8 +977,6 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -1424,10 +1420,10 @@
 &nbsp;
 <span class="cstat-no" title="statement not covered" >    /**</span>
 <span class="cstat-no" title="statement not covered" >     * Validate an attribute field</span>
-<span class="cstat-no" title="statement not covered" >     * @param {{base: number, increases: number, bonus: number}} attr     The attribute value</span>
+<span class="cstat-no" title="statement not covered" >     * @param {{base: number, trained: number, bonus: number}} attr     The attribute value</span>
 <span class="cstat-no" title="statement not covered" >     */</span>
 <span class="cstat-no" title="statement not covered" >    static #validateAttribute(attr) {</span>
-<span class="cstat-no" title="statement not covered" >        if (attr.value &lt; 0 || attr.value &gt; 10) throw new Error(`Attribute base + bonus cannot exceed 12`);</span>
+<span class="cstat-no" title="statement not covered" >        if (attr.value &lt; 1 || attr.value &gt; 6) throw new Error(`Characteristic cannot be lower than 1 and cannot exceed 6`);</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
@@ -1561,14 +1557,12 @@
 <span class="cstat-no" title="statement not covered" >            const characteristic = this.characteristics[a];</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >            // Configure initial value</span>
-<span class="cstat-no" title="statement not covered" >            characteristic.base = species?.characteristics[a] || 1;</span>
-<span class="cstat-no" title="statement not covered" >            /*            if (a === species.primary) characteristic.initial = SYSTEM.ANCESTRIES.primaryAbilityStart;</span>
-<span class="cstat-no" title="statement not covered" >                        else if (a === species.secondary) characteristic.initial = SYSTEM.ANCESTRIES.secondaryAbilityStart;*/</span>
-<span class="cstat-no" title="statement not covered" >            characteristic.value = Math.clamp(characteristic.base + characteristic.increases + characteristic.bonus, 1, 5);</span>
+<span class="cstat-no" title="statement not covered" >            characteristic.rank.base = species?.characteristics[a] || 1;</span>
+<span class="cstat-no" title="statement not covered" >            characteristic.rank.value = Math.clamp(characteristic.rank.base + characteristic.rank.trained + characteristic.rank.bonus, 1, 6);</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >            // Track points spent</span>
-<span class="cstat-no" title="statement not covered" >            abilityPointsBought += characteristic.base;</span>
-<span class="cstat-no" title="statement not covered" >            abilityPointsSpent += characteristic.increases;</span>
+<span class="cstat-no" title="statement not covered" >            abilityPointsBought += characteristic.rank.base;</span>
+<span class="cstat-no" title="statement not covered" >            abilityPointsSpent += characteristic.rank.trained;</span>
 <span class="cstat-no" title="statement not covered" >        }</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >        this._applyFreeSkillSpecies(this.skills);</span>
@@ -1813,7 +1807,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-05-11T08:14:57.471Z
+                at 2025-05-11T08:34:16.200Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

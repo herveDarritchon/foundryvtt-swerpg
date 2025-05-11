@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/328</span>
+                <span class='fraction'>0/338</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/328</span>
+                <span class='fraction'>0/338</span>
             </div>
         
             
@@ -458,7 +458,18 @@
 <a name='L393'></a><a href='#L393'>393</a>
 <a name='L394'></a><a href='#L394'>394</a>
 <a name='L395'></a><a href='#L395'>395</a>
-<a name='L396'></a><a href='#L396'>396</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<a name='L396'></a><a href='#L396'>396</a>
+<a name='L397'></a><a href='#L397'>397</a>
+<a name='L398'></a><a href='#L398'>398</a>
+<a name='L399'></a><a href='#L399'>399</a>
+<a name='L400'></a><a href='#L400'>400</a>
+<a name='L401'></a><a href='#L401'>401</a>
+<a name='L402'></a><a href='#L402'>402</a>
+<a name='L403'></a><a href='#L403'>403</a>
+<a name='L404'></a><a href='#L404'>404</a>
+<a name='L405'></a><a href='#L405'>405</a>
+<a name='L406'></a><a href='#L406'>406</a>
+<a name='L407'></a><a href='#L407'>407</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -502,12 +513,6 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -534,6 +539,14 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -557,6 +570,15 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -891,9 +913,11 @@
 <span class="cstat-no" title="statement not covered" >        // Ability Scores</span>
 <span class="cstat-no" title="statement not covered" >        schema.characteristics = new fields.SchemaField(Object.values(SYSTEM.CHARACTERISTICS).reduce((obj, ability) =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >            obj[ability.id] = new fields.SchemaField({</span>
-<span class="cstat-no" title="statement not covered" >                base: new fields.NumberField({...requiredInteger, initial: 0, min: 0, max: 3}),</span>
-<span class="cstat-no" title="statement not covered" >                increases: new fields.NumberField({...requiredInteger, initial: 0, min: 0, max: 12}),</span>
-<span class="cstat-no" title="statement not covered" >                bonus: new fields.NumberField({...requiredInteger, initial: 0, min: 0})</span>
+<span class="cstat-no" title="statement not covered" >                rank: new fields.SchemaField({</span>
+<span class="cstat-no" title="statement not covered" >                    base: new fields.NumberField({...requiredInteger, initial: 1, min: 1, max: 5}),</span>
+<span class="cstat-no" title="statement not covered" >                    trained: new fields.NumberField({...requiredInteger, initial: 0, min: 0, max: 4}),</span>
+<span class="cstat-no" title="statement not covered" >                    bonus: new fields.NumberField({...requiredInteger, initial: 0, min: 0, max: 1})</span>
+<span class="cstat-no" title="statement not covered" >                }, {validate: SwerpgActorType.#validateCharacteristicRank, label: ability.name}),</span>
 <span class="cstat-no" title="statement not covered" >            }, {label: ability.label});</span>
 <span class="cstat-no" title="statement not covered" >            return obj;</span>
 <span class="cstat-no" title="statement not covered" >        }, {}));</span>
@@ -955,7 +979,16 @@
 <span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >    /**</span>
-<span class="cstat-no" title="statement not covered" >     * Validate an attribute field</span>
+<span class="cstat-no" title="statement not covered" >     * Validate a characteristic field</span>
+<span class="cstat-no" title="statement not covered" >     * @param {{base: number, trained: number}} attr     The attribute value</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    static #validateCharacteristicRank(attr) {</span>
+<span class="cstat-no" title="statement not covered" >        const value = attr.base + attr.trained;</span>
+<span class="cstat-no" title="statement not covered" >        if (value &lt; 1 || value &gt; 6) throw new Error(`Characteristic Rank cannot exceed 6 or be less than 1.`);</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Validate a skill field</span>
 <span class="cstat-no" title="statement not covered" >     * @param {{base: number, careerFree: number, specializationFree: number, trained: number}} attr     The attribute value</span>
 <span class="cstat-no" title="statement not covered" >     */</span>
 <span class="cstat-no" title="statement not covered" >    static #validateSkillRank(attr) {</span>
@@ -1255,7 +1288,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-05-11T08:14:57.625Z
+                at 2025-05-11T08:34:16.353Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>
