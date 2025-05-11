@@ -2,6 +2,10 @@
 /*  Font Faces                               */
 /* ----------------------------------------- */
 @font-face {
+  font-family: "Audiowide";
+  src: url("../fonts/Audiowide/Audiowide-Regular.ttf");
+}
+@font-face {
   font-family: "Star Jedi";
   src: url("../fonts/Star_Jedi/STJEDISE.TTF");
 }
@@ -23,12 +27,20 @@
 /*  CSS Variables                            */
 /* ----------------------------------------- */
 .swerpg {
+  --color-glow: #00b0ff;
+  --color-text: #d0e6f6;
+  --color-label: #9bb0c2;
+  --color-shadow: rgba(0, 176, 255, 0.3);
+  --color-glow-hover: #4dc8ff;
+  --color-background: #0c0f17;
+  --color-frame: #3a3f48;
+  --color-accent: #00b0ff;
   --background: #0A1F44;
+  /* Bleu nuit */
+  --background-dark: #0c0f17;
   /* Bleu nuit profond */
   --background-element: #5A5F67;
   /* Bleu nuit profond */
-  --color-text: #DDE7F2;
-  /* Blanc bleuté pour le texte */
   --color-primary: var(--color-text);
   --color-secondary: #7C8A9E;
   /* Gris bleuté pour les textes secondaires */
@@ -38,15 +50,11 @@
   /* Cyan lumineux pour les titres */
   --color-h1: #72a4ea;
   /* Bleu électrique pour les titres H1 */
-  --color-frame: #3A3F48;
-  /* Gris sombre pour les encadrés */
   --color-frame-bg: #121923;
   /* Noir bleu profond pour les fonds */
   --color-frame-bg-25: rgba(18, 25, 35, 0.25);
   --color-frame-bg-50: rgba(18, 25, 35, 0.5);
   --color-frame-bg-75: rgba(18, 25, 35, 0.75);
-  --color-accent: #0096FF;
-  /* Bleu néon pour les éléments interactifs */
   --color-tern: #063a5e;
   /* Bleu néon pour les éléments interactifs */
   --color-link-text: #26C6DA;
@@ -55,6 +63,10 @@
   /* Bordures lumineuses */
   --color-border: var(--color-tern);
   /* Bordures lumineuses */
+  --color-accent-blue: #00b0ff;
+  /* Bleu néon */
+  --color-accent-yellow: #ffe81f;
+  /* jaune sabre */
   --color-damage-vulnerability: #640A0A;
   /* Rouge sombre pour les faiblesses */
   --color-damage-vulnerability-border: #D92E2E;
@@ -73,6 +85,8 @@
   /* Vert pour les éléments actifs */
   --color-border-active: #0e5915;
   /* Vert sombre pour les borders des éléments actifs */
+  --color-light-blue: #d0e6f6;
+  /* Bleu clair froid pour les grands caractères */
   --color-inactive: #da1717;
   /* Rouge pour les éléments inactifs */
   --color-border-inactive: #831010;
@@ -104,20 +118,27 @@
 /* ----------------------------------------- */
 /*  Light Theme (NOT USED YET)               */
 /* ----------------------------------------- */
-.theme-light .swerpg.UNUSED {
-  --background: #cac5ba;
-  --color-background: #cac5ba;
-  --color-text: #000000;
-  --color-secondary: #0b0909;
-  --color-tertiary: #1c1a1a;
-  --color-frame-bg: var(--color-cool-5-25);
-  --color-frame: #938c9a;
-  --color-h1: #000000;
+.swerpg.light-side {
+  --color-glow: #ffe81f;
+  --color-text: #1c1c1c;
+  --color-label: #3a3a3a;
+  --color-shadow: rgba(255, 232, 31, 0.3);
+  --color-glow-hover: #fff56e;
+  --color-background: #f0f5fa;
+  --color-frame: #ccd5e0;
+  --color-accent: #ffe81f;
+  --font-body: 'Orbitron', sans-serif;
 }
-.theme-light .swerpg.UNUSED.application {
-  --color-header-background: transparent;
-  --background-texture: url("../ui/journal/background-light.webp");
-  --background-overlay: url("../ui/journal/overlay-light.webp");
+.swerpg.dark-side {
+  --color-glow: #00b0ff;
+  --color-text: #d0e6f6;
+  --color-label: #9bb0c2;
+  --color-shadow: rgba(0, 176, 255, 0.3);
+  --color-glow-hover: #4dc8ff;
+  --color-background: #0c0f17;
+  --color-frame: #3a3f48;
+  --color-accent: #00b0ff;
+  --font-body: 'Orbitron', sans-serif;
 }
 /** ----------------------------------------- *
  *  Swerpg V2 Styles                        *
@@ -746,6 +767,50 @@ input[type=range] {
   font-family: monospace;
   font-size: 12px;
 }
+@keyframes fade-in-holo {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+    filter: drop-shadow(0 0 5px rgba(0, 176, 255, 0.3));
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+    filter: drop-shadow(0 0 10px rgba(0, 176, 255, 0.6));
+  }
+}
+@keyframes pulse-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 6px rgba(0, 176, 255, 0.5), 0 0 12px rgba(0, 176, 255, 0.25), inset 0 0 6px rgba(0, 176, 255, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 10px rgba(0, 176, 255, 0.8), 0 0 18px rgba(0, 176, 255, 0.4), inset 0 0 10px rgba(0, 176, 255, 0.25);
+  }
+}
+@keyframes holo-fade-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+    filter: blur(4px) brightness(150%);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0) brightness(100%);
+  }
+}
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 6px rgba(0, 176, 255, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 12px rgba(0, 176, 255, 0.7);
+  }
+  100% {
+    box-shadow: 0 0 6px rgba(0, 176, 255, 0.5);
+  }
+}
 /* ----------------------------------------- */
 /*  Actor Sheet                              */
 /* ----------------------------------------- */
@@ -771,8 +836,6 @@ input[type=range] {
   /*  Attributes Tab                           */
   /* ----------------------------------------- */
   /** Abilities */
-  /** Defenses */
-  /** Resistances */
 }
 .swerpg.sheet.actor .window-content {
   overflow: visible;
@@ -1273,67 +1336,143 @@ input[type=range] {
 }
 .swerpg.sheet.actor .characteristics .characteristics-wrapper {
   display: flex;
+  min-width: 100px;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
 }
-.swerpg.sheet.actor .characteristics .characteristic {
+.swerpg.sheet.actor .characteristics .characteristics-wrapper .characteristic-wrapper {
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+}
+.swerpg.sheet.actor .characteristics .characteristics-wrapper .characteristic-wrapper .characteristic.holo-circle {
   position: relative;
   width: 80px;
   height: 80px;
-  margin: 0 2px;
-  justify-content: center;
+  border-radius: 50%;
+  background: radial-gradient(circle at center, #151a28 40%, #000000 100%);
+  box-shadow: 0 0 10px rgba(0, 176, 255, 0.4);
+  display: flex;
   align-items: center;
-  gap: 0;
-  background: url(../ui/abilities/swerpg-frame.webp) no-repeat center;
-  background-size: cover;
+  justify-content: center;
+  overflow: hidden;
+  margin: 0 0.2rem;
 }
-.swerpg.sheet.actor .characteristics .characteristic .label {
-  position: absolute;
-  top: -8px;
-}
-.swerpg.sheet.actor .characteristics .characteristic .input {
-  font-size: var(--font-size-24);
-  font-family: var(--font-h1);
-}
-.swerpg.sheet.actor .characteristics .characteristic::before {
-  display: block;
-  position: absolute;
-  pointer-events: none;
-  content: "";
+.swerpg.sheet.actor .characteristics .characteristics-wrapper .characteristic-wrapper .characteristic.holo-circle .circle-content {
   width: 80px;
   height: 80px;
-  background-size: 54px;
+  border-radius: 50%;
+  border: 4px solid var(--color-glow);
+  background: radial-gradient(ellipse at center, #151a28 0%, #000000 60%, transparent 100%);
+  box-shadow: 0 0 4px var(--color-glow), 0 0 10px rgba(0, 176, 255, 0.6), 0 0 20px rgba(0, 176, 255, 0.3), inset 0 0 8px rgba(0, 176, 255, 0.15);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+  animation: pulse-glow 2s infinite ease-in-out;
+  fill: var(--color-accent);
 }
-.swerpg.sheet.actor .characteristics .strength {
+.swerpg.sheet.actor .characteristics .characteristics-wrapper .characteristic-wrapper .characteristic.holo-circle .circle-content .characteristic-icon {
+  z-index: 1;
+  position: absolute;
+  height: 70px;
+  width: 70px;
+  margin: 0.1rem;
+  padding: 0.1rem;
+  filter: drop-shadow(0 0 6px #00b0ff);
+  opacity: 0.2;
+  /* transition: transform 0.25s ease, filter 0.25s ease; */
+  animation: holo-fade-in 0.6s ease-out;
+  fill: var(--color-accent);
+}
+.characteristic:hover .swerpg.sheet.actor .characteristics .characteristics-wrapper .characteristic-wrapper .characteristic.holo-circle {
+  transform: scale(1.1);
+  opacity: 1;
+}
+.swerpg.sheet.actor .characteristics .characteristics-wrapper .characteristic-wrapper .characteristic.holo-circle .value {
+  position: absolute;
+  z-index: 10;
+  font-size: 3rem;
+  font-weight: bold;
+  color: var(--color-accent-yellow);
+  text-shadow: 0 0 2px #efe58b, 0 0 4px rgba(239, 229, 139, 0.5), 0 0 8px rgba(239, 229, 139, 0.2), 5px 5px 5px black;
+}
+.swerpg.sheet.actor .characteristics .characteristics-wrapper .characteristic-wrapper .characteristic.holo-circle .icon-svg {
+  width: 28px;
+  height: 28px;
+  fill: var(--color-glow);
+  margin-bottom: 4px;
+  filter: drop-shadow(0 0 3px rgba(0, 176, 255, 0.4));
+  transition: transform 0.2s ease;
+}
+.swerpg.sheet.actor .characteristics .characteristics-wrapper .characteristic-wrapper .characteristic.holo-circle .icon-svg:hover {
+  transform: scale(1.2);
+  filter: drop-shadow(0 0 6px rgba(0, 176, 255, 0.7));
+}
+.swerpg.sheet.actor .characteristics .characteristics-wrapper:hover .circle-content {
+  box-shadow: 0 0 12px var(--color-glow-hover), 0 0 24px rgba(0, 176, 255, 0.2);
+}
+.swerpg.sheet.actor .characteristics .characteristics-wrapper .label {
+  font-size: 0.8rem;
+  margin-top: 0.4rem;
+  letter-spacing: 0.05em;
+  color: var(--color-label);
+  text-shadow: 0 0 4px #222;
+  text-align: center;
+}
+.swerpg.sheet.actor .characteristics .characteristics-wrapper .button.icon {
+  position: absolute;
+  font-size: 0.8rem;
+  color: #00b0ff;
+  background: none;
+  border: none;
+  padding: 2px;
+  transition: transform 0.2s ease;
+}
+.swerpg.sheet.actor .characteristics .characteristics-wrapper .button.icon.increase {
+  top: -10px;
+  right: -10px;
+}
+.swerpg.sheet.actor .characteristics .characteristics-wrapper .button.icon.decrease {
+  bottom: -10px;
+  left: -10px;
+}
+.strength {
   --ability-icon: url("../ui/abilities/strength.svg");
 }
-.swerpg.sheet.actor .characteristics .toughness {
+.toughness {
   --ability-icon: url("../ui/abilities/toughness.svg");
 }
-.swerpg.sheet.actor .characteristics .dexterity {
+.dexterity {
   --ability-icon: url("../ui/abilities/dexterity.svg");
 }
-.swerpg.sheet.actor .characteristics .wisdom {
+.wisdom {
   --ability-icon: url("../ui/abilities/wisdom.svg");
 }
-.swerpg.sheet.actor .characteristics .presence {
+.presence {
   --ability-icon: url("../ui/abilities/presence.svg");
 }
-.swerpg.sheet.actor .characteristics .intellect {
+.intellect {
   --ability-icon: url("../ui/abilities/intellect.svg");
 }
-.swerpg.sheet.actor .characteristics a.button {
+a.button {
   position: absolute;
   height: 20px;
   width: 20px;
   top: -10px;
   opacity: 1;
 }
-.swerpg.sheet.actor .characteristics a.button.decrease {
+a.button.decrease {
   left: -10px;
 }
-.swerpg.sheet.actor .characteristics a.button.increase {
+a.button.increase {
   right: -10px;
 }
-.swerpg.sheet.actor .characteristics .point-pools {
+.point-pools {
   position: absolute;
   padding: 0 0 0 0.5rem;
   bottom: -0.5rem;
@@ -1343,17 +1482,18 @@ input[type=range] {
   background: var(--color-frame-bg);
   gap: 0.5rem;
 }
-.swerpg.sheet.actor .characteristics .point-pools .label {
+.point-pools .label {
   flex: none;
   color: var(--color-secondary);
 }
-.swerpg.sheet.actor .characteristics .point-pools .value {
+.point-pools .value {
   flex: none;
   width: 24px;
   height: 24px;
   margin: -2px -12px -2px 0;
 }
-.swerpg.sheet.actor .defenses {
+/** Defenses */
+.defenses {
   display: flex;
   grid-column: 1;
   grid-row: 3;
@@ -1361,82 +1501,82 @@ input[type=range] {
   justify-content: center;
   align-items: center;
 }
-.swerpg.sheet.actor .defenses .defense {
+.defenses .defense {
   display: flex;
   flex-direction: column;
   position: relative;
   align-items: center;
   justify-content: center;
 }
-.swerpg.sheet.actor .defenses .defense .label {
+.defenses .defense .label {
   position: absolute;
   top: 0;
 }
-.swerpg.sheet.actor .defenses .defense .value {
+.defenses .defense .value {
   font-size: var(--font-size-24);
   font-family: var(--font-h1);
 }
-.swerpg.sheet.actor .defenses .defense .pct {
+.defenses .defense .pct {
   position: absolute;
   bottom: 0;
 }
-.swerpg.sheet.actor .defenses .physical {
+.defenses .physical {
   width: 100%;
   justify-content: space-between;
 }
-.swerpg.sheet.actor .defenses .physical > * {
+.defenses .physical > * {
   flex: none;
 }
-.swerpg.sheet.actor .defenses .physical .total {
+.defenses .physical .total {
   width: 60px;
   height: 100px;
   background: url("../ui/elements/hex-willpower.svg") no-repeat center;
   background-size: 60px;
 }
-.swerpg.sheet.actor .defenses .physical .sep {
+.defenses .physical .sep {
   color: var(--color-h1);
   font-size: var(--font-size-20);
 }
-.swerpg.sheet.actor .defenses .physical .component {
+.defenses .physical .component {
   width: 40px;
   height: 80px;
   background: url("../ui/elements/hex-plain.svg") no-repeat center;
   background-size: 40px;
 }
-.swerpg.sheet.actor .defenses .physical .component .value {
+.defenses .physical .component .value {
   font-size: var(--font-size-18);
 }
-.swerpg.sheet.actor .defenses .physical .component .pct {
+.defenses .physical .component .pct {
   font-size: var(--font-size-10);
   font-family: var(--font-sans);
 }
-.swerpg.sheet.actor .defenses .physical .component.inactive {
+.defenses .physical .component.inactive {
   opacity: 0.5;
 }
-.swerpg.sheet.actor .defenses .magical {
+.defenses .magical {
   width: 100%;
   justify-content: space-between;
 }
-.swerpg.sheet.actor .defenses .magical > * {
+.defenses .magical > * {
   flex: none;
 }
-.swerpg.sheet.actor .defenses .magical .defense {
+.defenses .magical .defense {
   width: 60px;
   height: 80px;
   padding: 16px 0 0;
   background: var(--defense-icon) no-repeat bottom center;
   background-size: auto 64px;
 }
-.swerpg.sheet.actor .defenses .magical .defense.fortitude {
+.defenses .magical .defense.fortitude {
   --defense-icon: url("../ui/elements/hex-fortitude.svg");
 }
-.swerpg.sheet.actor .defenses .magical .defense.willpower {
+.defenses .magical .defense.willpower {
   --defense-icon: url("../ui/elements/hex-willpower.svg");
 }
-.swerpg.sheet.actor .defenses .magical .defense.reflex {
+.defenses .magical .defense.reflex {
   --defense-icon: url("../ui/elements/hex-reflex.svg");
 }
-.swerpg.sheet.actor .defenses .magical .extra {
+.defenses .magical .extra {
   --defense-icon: url("../ui/elements/hex-plain.svg");
   width: 32px;
   height: 64px;
@@ -1445,27 +1585,28 @@ input[type=range] {
   background-size: auto 32px;
   background-position: center;
 }
-.swerpg.sheet.actor .defenses .magical .extra .value {
+.defenses .magical .extra .value {
   font-size: var(--font-size-12);
 }
-.swerpg.sheet.actor .defenses .magical .extra .label {
+.defenses .magical .extra .label {
   bottom: 0;
   top: unset;
 }
-.swerpg.sheet.actor .resistances {
+/** Resistances */
+.resistances {
   grid-column: 1 / span 2;
   justify-content: center;
   gap: 1rem;
 }
-.swerpg.sheet.actor .resistances .resistance-group {
+.resistances .resistance-group {
   align-items: center;
   gap: 0.25rem;
 }
-.swerpg.sheet.actor .resistances .resistance {
+.resistances .resistance {
   width: 100%;
   align-items: center;
 }
-.swerpg.sheet.actor .resistances .resistance .resistance-bar {
+.resistances .resistance .resistance-bar {
   width: 100%;
   height: 12px;
   margin: 6px 0;
@@ -1476,7 +1617,7 @@ input[type=range] {
   border-left: 1px solid var(--color-frame);
   border-right: 1px solid var(--color-frame);
 }
-.swerpg.sheet.actor .resistances .resistance .resistance-bar::before {
+.resistances .resistance .resistance-bar::before {
   content: "";
   display: block;
   width: 100%;
@@ -1484,7 +1625,7 @@ input[type=range] {
   top: 6px;
   border-top: 1px solid var(--color-frame);
 }
-.swerpg.sheet.actor .resistances .resistance .resistance-bar .value {
+.resistances .resistance .resistance-bar .value {
   flex: 0 0 24px;
   height: 24px;
   background: url("../ui/elements/hex-plain-filled.svg") no-repeat center;
@@ -1494,7 +1635,7 @@ input[type=range] {
   font-size: var(--font-size-12);
   z-index: 1;
 }
-.swerpg.sheet.actor .resistances .resistance .resistance-bar .bar {
+.resistances .resistance .resistance-bar .bar {
   position: absolute;
   height: 8px;
   max-width: 50%;
@@ -1502,27 +1643,27 @@ input[type=range] {
   border-radius: 2px;
   z-index: 0;
 }
-.swerpg.sheet.actor .resistances .resistance.none {
+.resistances .resistance.none {
   opacity: 0.5;
 }
-.swerpg.sheet.actor .resistances .resistance.none .bar {
+.resistances .resistance.none .bar {
   display: none;
 }
-.swerpg.sheet.actor .resistances .resistance.res .value {
+.resistances .resistance.res .value {
   background: url("../ui/elements/hex-resistance.svg") no-repeat center;
   background-size: auto 24px;
 }
-.swerpg.sheet.actor .resistances .resistance.res .bar {
+.resistances .resistance.res .bar {
   left: 50%;
   background: var(--color-damage-resistance);
   border: 1px solid var(--color-damage-resistance-border);
   border-left: none;
 }
-.swerpg.sheet.actor .resistances .resistance.vuln .value {
+.resistances .resistance.vuln .value {
   background: url("../ui/elements/hex-vulnerability.svg") no-repeat center;
   background-size: auto 24px;
 }
-.swerpg.sheet.actor .resistances .resistance.vuln .bar {
+.resistances .resistance.vuln .bar {
   right: 50%;
   background: var(--color-damage-vulnerability);
   border: 1px solid var(--color-damage-vulnerability-border);
@@ -1748,6 +1889,7 @@ input[type=range] {
 }
 .tab.skills .point-pools {
   width: 550px;
+  position: relative;
   right: 1rem;
   top: 0.75rem;
   justify-content: center;
