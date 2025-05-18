@@ -1775,6 +1775,8 @@ a.button.increase {
 .tab.talents .point-pools {
   flex: none;
   width: 200px;
+  justify-content: space-around;
+  min-height: 50px;
 }
 /* ----------------------------------------- */
 /*  Skills Tab                               */
