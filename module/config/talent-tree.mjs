@@ -1,7 +1,13 @@
 import SwerpgTalent from "../models/talent.mjs";
 import {CHARACTERISTICS} from "./attributes.mjs";
+import Enum from "./enum.mjs";
 
 export default class SwerpgTalentNode {
+    static ACTIVATION = Object.freeze({
+        ACTIVE: "active",
+        PASSIVE: "passive",
+    });
+
     constructor({
                     id,
                     tier = 0,
@@ -1060,3 +1066,12 @@ export default class SwerpgTalentNode {
         SwerpgTalentNode.nodes.get("intdex4").connect(SwerpgTalentNode.nodes.get("int4d"));
     }
 }
+
+/**
+ * Designate which equipped slot the weapon is used in.
+ * @type {Enum<number>}
+ */
+export const ACTIVATION = new Enum({
+    PASSIVE: {value: 0, label: "TALENT.ACTIVATION.PASSIVE"},
+    ACTIVE: {value: 1, label: "TALENT.ACTIVATION.ACTIVE"},
+});

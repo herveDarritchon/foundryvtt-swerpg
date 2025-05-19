@@ -855,10 +855,10 @@ export const TALENT_ACTIVATION = Object.freeze({
         abbreviation: "TALENT_ACTIVATION.PassiveAbbr",
         color: Color.from("#1d32b1"),
     },
-    mental:{
-        id: "mental",
-        label: "SKILL_TYPE.Mental",
-        abbreviation: "SKILL_TYPE.MentalAbbr",
+    active:{
+        id: "active",
+        label: "TALENT_ACTIVATION.Active",
+        abbreviation: "TALENT_ACTIVATION.ActiveAbbr",
         color: Color.from("#4354b8"),
     },
 });

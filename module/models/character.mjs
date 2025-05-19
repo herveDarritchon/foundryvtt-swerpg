@@ -324,6 +324,7 @@ export default class SwerpgCharacter extends SwerpgActorType {
         const species = this.details.species;
         const thresholds = this.thresholds;
 
+        // FIXME this is some Stubs for the moment
         thresholds.strain = 2;
         thresholds.wounds = 3;
 
@@ -347,6 +348,7 @@ export default class SwerpgCharacter extends SwerpgActorType {
         this.progression.experience.startingExperience = species?.startingExperience || 0;
 
 
+        this.freeTalents = species?.freeTalents.map(uuid => fromUuidSync(uuid)) || new Set();
         // TODO to be reactivated when experience is used.
         // Track spent ability points
         /*        points.bought = abilityPointsBought;

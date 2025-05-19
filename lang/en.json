@@ -965,12 +965,24 @@
         "label": "Talent Node",
         "hint": "Assign this Talent to be purchased from a particular node in the Talent Tree."
       },
+      "trees": {
+        "label": "Talent Trees",
+        "hint": "Select the Talent Trees which this Talent is available from."
+      },
       "description": {
         "label": "Talent Description"
       },
       "actions": {
         "label": "Granted Actions",
         "hint": "Associate Actions which are available to characters which possess this Talent."
+      },
+      "activation": {
+        "label": "Activation",
+        "hint": "The type of Action to activate this Talent."
+      },
+      "ranked": {
+        "label": "Ranked",
+        "hint": "This Talent may be purchased multiple times, each time increasing its effectiveness."
       },
       "rune": {
         "label": "Rune",
