@@ -117,18 +117,17 @@ export default class SwerpgSpecies extends foundry.abstract.TypeDataModel {
             hint: "SPECIES.FIELDS.StartingExperience.hint"
         });
         schema.freeSkills = new fields.SetField(
-            new fields.StringField({choices: Object.values(SYSTEM.SKILLS).reduce((obj, d) => {
+            new fields.StringField({
+                choices: Object.values(SYSTEM.SKILLS).reduce((obj, d) => {
                     obj[d.id] = d.label;
                     return obj;
-                }, {})})
+                }, {})
+            })
         );
         schema.freeTalents = new fields.SetField(
-            new fields.StringField({choices: Object.values(SYSTEM.TALENTS).reduce((obj, d) => {
-                    obj[d.id] = d.label;
-                    return obj;
-                }, {})})
-        );
-
+            new fields.DocumentUUIDField({type: "Item"}), {
+                validate: SwerpgSpecies.#validateFreeTalents
+            });
         schema.freeSkills.options.validate = SwerpgSpecies.#validatefreeSkills;
         schema.freeTalents.options.validate = SwerpgSpecies.#validatefreeTalents;
 
@@ -166,5 +165,20 @@ export default class SwerpgSpecies extends foundry.abstract.TypeDataModel {
 
     static #choices() {
         return ["toto"];
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Validate that the item assigned to this Species are appropriate (talent).
+     * @param {string[]} talents    The assigned talent UUIDs
+     * @throws {Error}              An error if too many talents are assigned
+     */
+    static #validateFreeTalents(talents) {
+        if (game.items == null){
+            return true;
+        }
+        console.log(`[SWERPG] - talents (${talents.length}):`, talents);
+        return talents.map(uuid => fromUuidSync(uuid)).every(item => item.type === 'talent');
     }
 }

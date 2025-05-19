@@ -84,6 +84,8 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
             i.creationTooltip += "</ol>";
         }
 
+        context.talents = this.actor.system.freeTalents;
+
         console.log ("[CharacterSheet] context", context);
         return context;
     }
