@@ -4,6 +4,27 @@ import SkillFactory from "../../lib/skills/skill-factory.mjs";
 import ErrorSkill from "../../lib/skills/error-skill.mjs";
 
 /**
+ * @typedef {Object} TalentTag
+ * Represents a visual tag or label associated with a talent.
+ *
+ * @property {string} label - The visible label of the tag (e.g., "Active", "Ranked", "Combat").
+ * @property {string} [cssClass] - Optional CSS class for styling the tag (e.g., "tag-active", "tag-passive").
+ * @property {string} [tooltip] - Optional tooltip text for the tag.
+ */
+
+/**
+ * @typedef {Object} TalentDisplayData
+ * Represents the data structure used to render a talent on the character sheet.
+ *
+ * @property {string} id - Unique ID of the Talent Item.
+ * @property {string} name - Name of the talent.
+ * @property {string} img - Image path used for the talent icon.
+ * @property {string} [cssClass] - Optional CSS class applied to the container (e.g., "highlighted", "disabled").
+ * @property {boolean} isFree - Indicates if the talent is free by any mean.
+ * @property {TalentTag[]} tags - List of tags to display under the talent.
+ */
+
+/**
  * A SwerpgBaseActorSheet subclass used to configure Actors of the "character" type.
  */
 export default class CharacterSheet extends SwerpgBaseActorSheet {
@@ -63,9 +84,6 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
             specialization: s.system.details.specializations?.length === 0,
             freeSkill: a.hasFreeSkillsAvailable(),
             background: !s.system.details.background?.name,
-            /*      characteristics: context.points.ability.requireInput,
-                  skills: context.points.skill.available,
-                  talents: context.points.talent.available,*/
             characteristics: true,
             skills: true,
             talents: true,
@@ -84,9 +102,9 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
             i.creationTooltip += "</ol>";
         }
 
-        context.talents = this.actor.system.freeTalents;
+        context.talents = this.#buildTalentList();
 
-        console.log ("[CharacterSheet] context", context);
+        console.log("[CharacterSheet] context", context);
         return context;
     }
 
@@ -169,7 +187,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
             isSpecialization
         }, {});
 
-        if (skillClass instanceof  ErrorSkill) {
+        if (skillClass instanceof ErrorSkill) {
             ui.notifications.warn(skillClass.options.message);
             return;
         }
@@ -268,9 +286,9 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
                     return;
                 }
                 break;
-            case "talent":
-                ui.notifications.error("Talents can only be added to a protagonist Actor via the Talent Tree.");
-                return;
+            /* case "talent":
+                 ui.notifications.error("Talents can only be added to a protagonist Actor via the Talent Tree.");
+                 return;*/
         }
         return super._onDropItem(event, item);
     }
@@ -353,5 +371,56 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
             isCareer: mayBeAFreeSkill.length !== 0 && mayBeAFreeSkill.filter(skill => skill.type === "career").length > 0,
             isSpecialization: mayBeAFreeSkill.length !== 0 && mayBeAFreeSkill.filter(skill => skill.type === "specialization").length > 0,
         };
+    }
+
+    /**
+     * Builds the display-ready data for a talent item.
+     * @param {Item} item - A Foundry VTT Item of type "talent".
+     * @returns {TalentDisplayData}
+     */
+    #buildTalentDisplayData(item) {
+        const tags = [];
+
+        if (item.system.activation === "active") {
+            tags.push({label: "Active", cssClass: "tag-active"});
+        } else {
+            tags.push({label: "Passive", cssClass: "tag-passive"});
+        }
+
+        if (item.system.ranked) {
+            tags.push({label: "Ranked"});
+        }
+
+        if (item.system.category) {
+            tags.push({label: item.system.category});
+        }
+
+        if (item.isFree) {
+            tags.push({label: "Species", cssClass: "tag-free", tooltip: "Talent is free thanks to the Species"});
+        }
+
+        return {
+            id: item.id,
+            name: item.name,
+            img: item.img,
+            isFree: item.isFree,
+            cssClass: item.system.disabled ? "disabled" : "",
+            tags
+        };
+    }
+
+
+    /**
+     * Builds a list of talents for the character sheet.
+     * @returns {TalentDisplayData[]}
+     */
+    #buildTalentList() {
+        const talents = this.actor.items.filter(item => item.type === 'talent');
+        const freeTalents = Array.from(this.actor.system.freeTalents)
+            .map(talent => ({
+                ...talent,
+                isFree: true
+            }));
+        return talents.concat(freeTalents).map(talent => this.#buildTalentDisplayData(talent));
     }
 }

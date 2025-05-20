@@ -5,20 +5,6 @@ import {SYSTEM} from "../config/system.mjs";
 import {getItemsOf} from "../utils/items.mjs";
 
 /**
- *             node: new fields.StringField({required: true, blank: true, choices: () => SwerpgTalentNode.getChoices()}),
- *             description: new fields.HTMLField({required: false, initial: undefined}),
- *             ranked: new fields.BooleanField({required: false, initial: false}),
- *             active: new fields.BooleanField({required: false, initial: false}),
- *             trees: new fields.ArrayField(new fields.EmbeddedDataField(SwerpgSpecialization)),
- *             actions: new fields.ArrayField(new fields.EmbeddedDataField(SwerpgAction)),
- *             iconicSpells: new fields.NumberField({required: true, nullable: false, initial: 0, integer: true, min: 0}),
- *             actorHooks: new fields.ArrayField(new fields.SchemaField({
- *                 hook: new fields.StringField({required: true, blank: false, choices: SYSTEM.ACTOR_HOOKS}),
- *                 fn: new fields.JavaScriptField({async: true, gmOnly: true})
- *             }))
- */
-
-/**
  * @typedef {Object} ActorHook
  * @property {string} hook
  * @property {function} fn
