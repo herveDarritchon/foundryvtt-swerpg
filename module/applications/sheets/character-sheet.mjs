@@ -395,7 +395,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
             tags.push({label: item.system.category});
         }
 
-        if (item.isFree) {
+        if (item.system.isFree) {
             tags.push({label: "Species", cssClass: "tag-free", tooltip: "Talent is free thanks to the Species"});
         }
 
@@ -403,7 +403,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
             id: item.id,
             name: item.name,
             img: item.img,
-            isFree: item.isFree,
+            isFree: item.system.isFree,
             cssClass: item.system.disabled ? "disabled" : "",
             tags
         };
@@ -416,11 +416,6 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
      */
     #buildTalentList() {
         const talents = this.actor.items.filter(item => item.type === 'talent');
-        const freeTalents = Array.from(this.actor.system.freeTalents)
-            .map(talent => ({
-                ...talent,
-                isFree: true
-            }));
-        return talents.concat(freeTalents).map(talent => this.#buildTalentDisplayData(talent));
+        return talents.map(talent => this.#buildTalentDisplayData(talent));
     }
 }

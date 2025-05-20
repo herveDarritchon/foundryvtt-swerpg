@@ -1960,11 +1960,15 @@ export default class SwerpgActor extends Actor {
                 updateData[key] = this.system.details.specializations;
             } else {
                 const detail = updateData[key] = data;
-                if (detail.talents?.length) {
+                if (detail.freeTalents?.length) {
                     updateData.items = [];
-                    for (const uuid of detail.talents) {
+                    for (const uuid of detail.freeTalents) {
                         const doc = await fromUuid(uuid);
-                        if (doc) updateData.items.push(doc.toObject());
+                        if (doc) {
+                            const object = doc.toObject();
+                            object.system.isFree =  true;
+                            updateData.items.push(object)
+                        };
                     }
                 }
             }
