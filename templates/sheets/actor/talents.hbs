@@ -1,40 +1,27 @@
 <section class="tab secondary {{tabs.talents.id}} flexcol scrollable {{tabs.talents.cssClass}}"
          data-tab="{{tabs.talents.id}}" data-group="{{tabs.talents.group}}">
 
-    {{!-- #if canPurchaseTalents}}
-        <div class="header-section flexrow">
-            <a class="button framed" data-action="talentTree" data-tooltip="Toggle Talent Tree">
-                <i class="fa-solid fa-diagram-project"></i> {{talentTreeButtonText}}</a>
-            <div class="point-pools flexrow">
-                <span class="label">Available</span>
-                <span class="value">{{points.talent.available}}</span>
-                <span class="label">Spent</span>
-                <span class="value">{{points.talent.spent}}</span>
-                <a class="button icon fa-solid fa-undo" data-action="talentReset" data-tooltip="Reset All Talents"></a>
+    {{log "Talents in ActorSheet" talents}}
+    {{#each talents as |talent s|}}
+        <div class="line-item {{talent.cssClass}}" data-item-id="{{talent.id}}">
+            <div class="title">
+                <img class="icon" src="{{talent.img}}" alt="{{talent.name}}">
+                <h4 class="item-header">{{talent.name}}</h4>
+                <div class="tags">
+                    {{#each talent.tags as |tag i|}}
+                        {{log "index" i "tags" talent.tags}}
+                        <span class="tag {{tag.cssClass}}" data-tooltip="{{tag.tooltip}}">{{tag.label}}</span>
+                    {{/each}}
+                </div>
+            </div>
+            <div class="controls">
+                <a class="button icon fa-solid fa-edit" data-action="itemEdit"
+                   data-tooltip="Edit Talent"></a>
+                {{#unless talent.isFree}}
+                    <a class="button icon fa-solid fa-trash" data-action="itemDelete"
+                       data-tooltip="Delete Talent"></a>
+                {{/unless}}
             </div>
         </div>
-    {{/if --}}
-
-    {{#each talents as |talent s|}}
-        {{log "Talent" talent "index" s}}
-            <div class="line-item {{talent.cssClass}}" data-item-id="{{talent.id}}">
-                <div class="title">
-                    <img class="icon" src="{{talent.img}}" alt="{{talent.name}}">
-                    <div class="talent-header">{{talent.name}}</div>
-                    <div class="tags">
-                        {{#each item.tags}}
-                            {{#if this}}<span class="tag">{{this}}</span>{{/if}}
-                        {{/each}}
-                    </div>
-                </div>
-                <div class="controls">
-                    <a class="button icon fa-solid fa-edit" data-action="itemEdit"
-                       data-tooltip="Edit Talent"></a>
-                    {{#unless canPurchaseTalents}}
-                        <a class="button icon fa-solid fa-trash" data-action="itemDelete"
-                           data-tooltip="Delete Talent"></a>
-                    {{/unless}}
-                </div>
-            </div>
     {{/each}}
 </section>

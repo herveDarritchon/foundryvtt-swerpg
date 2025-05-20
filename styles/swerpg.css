@@ -701,19 +701,24 @@ input[type=range] {
   height: var(--icon-size);
   width: var(--icon-size);
   flex: none;
+  margin-right: 0.5rem;
 }
 .swerpg .line-item .title {
   flex: 1;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  align-content: center;
 }
 .swerpg .line-item .title h4 {
   flex: none;
-  margin: 0;
   font-size: var(--title-font-size);
   color: var(--color-text);
   overflow: hidden;
   white-space: nowrap;
+  gap: 0.5rem;
+  margin: 0 0.5rem 0 0;
 }
 .swerpg .line-item .title .tags {
   width: 100%;
@@ -750,6 +755,7 @@ input[type=range] {
   align-items: center;
 }
 .swerpg .line-item .button.icon {
+  position: unset;
   width: 24px;
   height: 24px;
   font-size: var(--font-size-10);
