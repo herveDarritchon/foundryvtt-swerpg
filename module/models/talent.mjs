@@ -306,7 +306,7 @@ export default class SwerpgTalent extends foundry.abstract.TypeDataModel {
         if (game.items == null){
             return true;
         }
-        console.log(`[SWERPG] - talents (${trees.length}):`, trees);
+        console.debug(`[SWERPG] - talents (${trees.length}):`, trees);
         return trees.map(uuid => fromUuidSync(uuid)).every(item => item.type === 'specialization' || item.type === 'career');
     }
 }
