@@ -15,6 +15,8 @@ const {DialogV2} = foundry.applications.api;
  * @property {number} gained
  * @property {number} spent
  * @property {number} startingExperience
+ * @property {number} total
+ * @property {number} available
  */
 
 /**
@@ -124,6 +126,26 @@ export default class SwerpgActor extends Actor {
         };
         // Otherwise
         return this.system.progression.experience;
+    }
+
+    /**
+     * Convenient access to the Actor's experience points spent.
+     * @param value
+     * @returns {Promise<boolean>}
+     */
+    async spendExperiencePoints(value) {
+        if (this.type !== SYSTEM.ACTOR_TYPE.character.type) return;
+        const experiencePoints = this.experiencePoints;
+        const spent = experiencePoints.spent + value;
+
+        if (spent > experiencePoints.total) {
+            ui.notifications.warn(game.i18n.localize("EXPERIENCE.OVERSPENT"));
+            return false;
+        }
+        experiencePoints.spent = spent;
+
+        await this.update({"system.progression.experience": experiencePoints});
+        return true;
     }
 
     /**
@@ -1966,9 +1988,10 @@ export default class SwerpgActor extends Actor {
                         const doc = await fromUuid(uuid);
                         if (doc) {
                             const object = doc.toObject();
-                            object.system.isFree =  true;
+                            object.system.isFree = true;
                             updateData.items.push(object)
-                        };
+                        }
+                        ;
                     }
                 }
             }
@@ -2375,6 +2398,34 @@ export default class SwerpgActor extends Actor {
     hasFreeSkillsAvailable() {
         return this.hasCareerFreeSkillsAvailable() || this.hasSpecializationFreeSkillsAvailable();
     }
+
+    /**
+     * Add a Talent item to the actor with XP check and duplicate prevention.
+     * @param {Item} item - The Talent item to add.
+     * @returns {Promise<boolean>} - Whether the talent was added successfully.
+     */
+    async addTalentWithXpCheck(item) {
+        const alreadyOwned = this.items.find(i => i.name === item.name);
+        if (alreadyOwned) {
+            ui.notifications.warn(`${this.name} already has "${item.name}"`);
+            return false;
+        }
+
+        const experiencePoints = this.experiencePoints;
+        const currentXP = experiencePoints.available;
+        const cost = 5;
+
+        if (currentXP - cost < 0) {
+            ui.notifications.warn(`${this.name} doesn't have enough XP (${cost} required)`);
+            return false;
+        }
+
+        await this.createEmbeddedDocuments("Item", [item.toObject()]);
+        await this.spendExperiencePoints(cost);
+
+        return true;
+    }
+
 
     /* -------------------------------------------- */
 

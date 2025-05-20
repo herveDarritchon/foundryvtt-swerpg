@@ -286,9 +286,10 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
                     return;
                 }
                 break;
-            /* case "talent":
-                 ui.notifications.error("Talents can only be added to a protagonist Actor via the Talent Tree.");
-                 return;*/
+            case "talent":
+                const result = await this.actor.addTalentWithXpCheck(item);
+                console.info(`Swerpg | Talent (${item.id}) added to Actor ${this.actor.name}`, result)
+                return result;
         }
         return super._onDropItem(event, item);
     }

@@ -86,10 +86,19 @@ Hooks.once("init", async function () {
         hero: models.SwerpgHero,
         character: models.SwerpgCharacter
     };
-    Actors.unregisterSheet("core", ActorSheet);
-    Actors.registerSheet(SYSTEM.id, applications.HeroSheet, {types: ["character"], makeDefault: true});
-    Actors.registerSheet(SYSTEM.id, applications.CharacterSheet, {types: ["character"], makeDefault: true});
-    Actors.registerSheet(SYSTEM.id, applications.AdversarySheet, {types: ["adversary"], makeDefault: true});
+    foundry.documents.collections.Actors.unregisterSheet("core", foundry.appv1.sheets.ActorSheet);
+    foundry.documents.collections.Actors.registerSheet(SYSTEM.id, applications.HeroSheet, {
+        types: ["character"],
+        makeDefault: true
+    });
+    foundry.documents.collections.Actors.registerSheet(SYSTEM.id, applications.CharacterSheet, {
+        types: ["character"],
+        makeDefault: true
+    });
+    foundry.documents.collections.Actors.registerSheet(SYSTEM.id, applications.AdversarySheet, {
+        types: ["adversary"],
+        makeDefault: true
+    });
 
     // Item document configuration
     CONFIG.Item.documentClass = documents.SwerpgItem;
@@ -107,27 +116,60 @@ Hooks.once("init", async function () {
         taxonomy: models.SwerpgTaxonomy,
         weapon: models.SwerpgWeapon
     };
-    Items.unregisterSheet("core", ItemSheet);
+    foundry.documents.collections.Items.unregisterSheet("core", foundry.appv1.sheets.ItemSheet);
 
     // V2 Registrations
-    DocumentSheetConfig.registerSheet(Item, "swerpg", applications.ArmorSheet, {
+    foundry.applications.apps.DocumentSheetConfig.registerSheet(Item, "swerpg", applications.ArmorSheet, {
         types: ["armor"],
         makeDefault: true,
         label: "SWERPG.SHEETS.Armor"
     });
 
     // V1 Registrations
-    Items.registerSheet(SYSTEM.id, applications.AncestrySheet, {types: ["ancestry"], makeDefault: true});
-    Items.registerSheet(SYSTEM.id, applications.ArchetypeSheet, {types: ["archetype"], makeDefault: true});
-    Items.registerSheet(SYSTEM.id, applications.BackgroundSheet, {types: ["background"], makeDefault: true});
-    Items.registerSheet(SYSTEM.id, applications.OriginSheet, {types: ["origin"], makeDefault: true});
-    Items.registerSheet(SYSTEM.id, applications.SpeciesSheet, {types: ["species"], makeDefault: true});
-    Items.registerSheet(SYSTEM.id, applications.CareerSheet, {types: ["career"], makeDefault: true});
-    Items.registerSheet(SYSTEM.id, applications.SpecializationSheet, {types: ["specialization"], makeDefault: true});
-    Items.registerSheet(SYSTEM.id, applications.SpellSheet, {types: ["spell"], makeDefault: true});
-    Items.registerSheet(SYSTEM.id, applications.TalentSheet, {types: ["talent"], makeDefault: true});
-    Items.registerSheet(SYSTEM.id, applications.TaxonomySheet, {types: ["taxonomy"], makeDefault: true});
-    Items.registerSheet(SYSTEM.id, applications.WeaponSheet, {types: ["weapon"], makeDefault: true});
+    foundry.documents.collections.Items.registerSheet(SYSTEM.id, applications.AncestrySheet, {
+        types: ["ancestry"],
+        makeDefault: true
+    });
+    foundry.documents.collections.Items.registerSheet(SYSTEM.id, applications.ArchetypeSheet, {
+        types: ["archetype"],
+        makeDefault: true
+    });
+    foundry.documents.collections.Items.registerSheet(SYSTEM.id, applications.BackgroundSheet, {
+        types: ["background"],
+        makeDefault: true
+    });
+    foundry.documents.collections.Items.registerSheet(SYSTEM.id, applications.OriginSheet, {
+        types: ["origin"],
+        makeDefault: true
+    });
+    foundry.documents.collections.Items.registerSheet(SYSTEM.id, applications.SpeciesSheet, {
+        types: ["species"],
+        makeDefault: true
+    });
+    foundry.documents.collections.Items.registerSheet(SYSTEM.id, applications.CareerSheet, {
+        types: ["career"],
+        makeDefault: true
+    });
+    foundry.documents.collections.Items.registerSheet(SYSTEM.id, applications.SpecializationSheet, {
+        types: ["specialization"],
+        makeDefault: true
+    });
+    foundry.documents.collections.Items.registerSheet(SYSTEM.id, applications.SpellSheet, {
+        types: ["spell"],
+        makeDefault: true
+    });
+    foundry.documents.collections.Items.registerSheet(SYSTEM.id, applications.TalentSheet, {
+        types: ["talent"],
+        makeDefault: true
+    });
+    foundry.documents.collections.Items.registerSheet(SYSTEM.id, applications.TaxonomySheet, {
+        types: ["taxonomy"],
+        makeDefault: true
+    });
+    foundry.documents.collections.Items.registerSheet(SYSTEM.id, applications.WeaponSheet, {
+        types: ["weapon"],
+        makeDefault: true
+    });
 
     // Other Document Configuration
     CONFIG.ChatMessage.documentClass = documents.SwerpgChatMessage;
@@ -141,10 +183,10 @@ Hooks.once("init", async function () {
     Object.assign(CONFIG.JournalEntryPage.dataModels, {
         "skill": models.SwerpgSkill
     });
-    DocumentSheetConfig.registerSheet(JournalEntry, SYSTEM.id, applications.SwerpgJournalSheet, {
+    foundry.applications.apps.DocumentSheetConfig.registerSheet(JournalEntry, SYSTEM.id, applications.SwerpgJournalSheet, {
         label: "SWERPG.SHEETS.Journal"
     })
-    DocumentSheetConfig.registerSheet(JournalEntryPage, SYSTEM.id, applications.SkillPageSheet, {
+    foundry.applications.apps.DocumentSheetConfig.registerSheet(JournalEntryPage, SYSTEM.id, applications.SkillPageSheet, {
         types: ["skill"],
         makeDefault: true,
         label: "SKILL.PageSheet"
@@ -224,7 +266,7 @@ Hooks.once("i18nInit", function () {
     }
 
     // Localize models
-    Localization.localizeDataModel(models.SwerpgAction)
+    foundry.helpers.Localization.localizeDataModel(models.SwerpgAction)
 
     // Pre-localize configuration objects
     preLocalizeConfig();
@@ -374,7 +416,7 @@ async function preloadHandlebarsTemplates() {
         `systems/${SYSTEM.id}/templates/sheets/partials/skill-modifier-tag.hbs`,
         `systems/${SYSTEM.id}/templates/sheets/partials/character-skill.hbs`,
     ];
-    return loadTemplates(templatePaths);
+    return foundry.applications.handlebars.loadTemplates(templatePaths);
 }
 
 /**
