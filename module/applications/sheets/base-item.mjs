@@ -133,7 +133,7 @@ export default class SwerpgBaseItemSheet extends api.HandlebarsApplicationMixin(
 
   /** @override */
   async _prepareContext(options) {
-    console.log("base item options", this, options);
+    console.debug("base item options", this, options);
     const tabGroups = this._getTabs();
     return {
       item: this.document,

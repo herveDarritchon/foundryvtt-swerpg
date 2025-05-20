@@ -178,7 +178,7 @@ export default class SwerpgSpecies extends foundry.abstract.TypeDataModel {
         if (game.items == null){
             return true;
         }
-        console.log(`[SWERPG] - talents (${talents.length}):`, talents);
+        console.debug(`[SWERPG] - talents (${talents.length}):`, talents);
         return talents.map(uuid => fromUuidSync(uuid)).every(item => item.type === 'talent');
     }
 }

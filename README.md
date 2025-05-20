@@ -20,3 +20,11 @@ npm run compileCSS
 
 # Contribution Policy
 The Swerpg game system is in early development and does not offer an open-source license or contribution policy at this time. Such a policy will be added as the system progresses.
+
+## Activate Hook display
+
+To activate the hook display, you need to set the `debug` flag in the devtools console. You can do this by opening the devtools console (F12) and entering the following command:
+
+```
+CONFIG.debug.hooks = true;
+```
