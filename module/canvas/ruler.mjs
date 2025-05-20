@@ -1,5 +1,5 @@
 
-export default class SwerpgRuler extends Ruler {
+export default class SwerpgRuler extends foundry.canvas.interaction.Ruler {
 
   /**
    * The Movement action being measured, or null.

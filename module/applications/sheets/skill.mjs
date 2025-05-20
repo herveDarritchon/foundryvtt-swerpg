@@ -4,7 +4,7 @@ import {CHARACTERISTICS} from "../../config/attributes.mjs";
 /**
  * The application used to view and edit a skill page in the system journal.
  */
-export default class SkillPageSheet extends JournalPageSheet {
+export default class SkillPageSheet extends foundry.appv1.sheets.JournalPageSheet {
 
   /** @inheritDoc */
   static get defaultOptions() {

@@ -103,7 +103,7 @@ export default class BackgroundSheet extends SwerpgBaseItemSheet {
    */
   async #onDropTalent(event) {
     const dropZone = event.currentTarget;
-    const data = TextEditor.getDragEventData(event);
+    const data = foundry.applications.ux.TextEditor.getDragEventData(event);
     if ( data.type !== "Item" ) return;
     const talent = await fromUuid(data.uuid);
     if ( talent?.type !== "talent" ) return;

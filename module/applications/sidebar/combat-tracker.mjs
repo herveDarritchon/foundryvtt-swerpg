@@ -1,7 +1,7 @@
 /**
  * Extend and replace the core CombatTracker class to add Swerpg-specific UI customizations.
  */
-export default class SwerpgCombatTracker extends CombatTracker {
+export default class SwerpgCombatTracker extends foundry.applications.sidebar.tabs.CombatTracker {
 
   /** @inheritDoc */
   async _renderInner(data) {

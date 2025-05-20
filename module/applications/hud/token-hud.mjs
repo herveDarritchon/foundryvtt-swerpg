@@ -3,7 +3,7 @@
  * For now this just adjusts for the grid size.
  * Eventually it will add custom resource management, action HUD, etc...
  */
-export default class SwerpgTokenHUD extends TokenHUD {
+export default class SwerpgTokenHUD extends foundry.applications.hud.TokenHUD {
 
   /** @override */
   setPosition(_position) {

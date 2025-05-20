@@ -176,7 +176,7 @@ export default class SwerpgTalentNode {
         angle ??= n * SwerpgTalentNode.TIER_ANGLES[tier];
 
         // Create a Ray
-        if (!point) point = Ray.fromAngle(0, 0, Math.toRadians(angle), distance * (tier + 1)).B;
+        if (!point) point = foundry.canvas.geometry.Ray.fromAngle(0, 0, Math.toRadians(angle), distance * (tier + 1)).B;
 
         // Define node attributes
         Object.defineProperties(this, {

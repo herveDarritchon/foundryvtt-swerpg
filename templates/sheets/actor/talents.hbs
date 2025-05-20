@@ -1,7 +1,6 @@
 <section class="tab secondary {{tabs.talents.id}} flexcol scrollable {{tabs.talents.cssClass}}"
          data-tab="{{tabs.talents.id}}" data-group="{{tabs.talents.group}}">
 
-    {{log "Talents in ActorSheet" talents}}
     {{#each talents as |talent s|}}
         <div class="line-item {{talent.cssClass}}" data-item-id="{{talent.id}}">
             <div class="title">
@@ -9,7 +8,6 @@
                 <h4 class="item-header">{{talent.name}}</h4>
                 <div class="tags">
                     {{#each talent.tags as |tag i|}}
-                        {{log "index" i "tags" talent.tags}}
                         <span class="tag {{tag.cssClass}}" data-tooltip="{{tag.tooltip}}">{{tag.label}}</span>
                     {{/each}}
                 </div>

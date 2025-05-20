@@ -219,9 +219,9 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
         const biography = this.document.system.details.biography;
         const context = {relativeTo: this.document, secrets: this.document.isOwner};
         return {
-            appearance: await TextEditor.enrichHTML(biography.appearance, context),
-            public: await TextEditor.enrichHTML(biography.public, context),
-            private: await TextEditor.enrichHTML(biography.private, context)
+            appearance: await foundry.applications.ux.TextEditor.enrichHTML(biography.appearance, context),
+            public: await foundry.applications.ux.TextEditor.enrichHTML(biography.public, context),
+            private: await foundry.applications.ux.TextEditor.enrichHTML(biography.private, context)
         }
     }
 
@@ -934,7 +934,7 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
 
     /** @override */
     _onRender(_context, _options) {
-        new DragDrop({
+        new foundry.applications.ux.DragDrop({
             dragSelector: '.draggable',
             dropSelector: null,
             callbacks: {
@@ -998,28 +998,6 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
      * @protected
      */
     _onDragOver(event) {
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * An event that occurs when data is dropped into a drop target.
-     * @param {DragEvent} event
-     * @returns {Promise<void>}
-     * @protected
-     */
-    async _onDrop(event) {
-        const data = TextEditor.getDragEventData(event);
-        const actor = this.actor;
-        const allowed = Hooks.call("dropActorSheetData", actor, this, data);
-        if (allowed === false) return;
-
-        // Dropped Documents
-        const documentClass = getDocumentClass(data.type);
-        if (documentClass) {
-            const document = await documentClass.fromDropData(data);
-            await this._onDropDocument(event, document);
-        }
     }
 
     /* -------------------------------------------- */
