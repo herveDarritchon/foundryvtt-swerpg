@@ -347,8 +347,6 @@ export default class SwerpgCharacter extends SwerpgActorType {
 
         this.progression.experience.startingExperience = species?.startingExperience || 0;
 
-
-        this.freeTalents = species?.freeTalents.map(uuid => fromUuidSync(uuid)) || new Set();
         // TODO to be reactivated when experience is used.
         // Track spent ability points
         /*        points.bought = abilityPointsBought;

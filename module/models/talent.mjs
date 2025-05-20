@@ -78,6 +78,7 @@ export default class SwerpgTalent extends foundry.abstract.TypeDataModel {
                 choices: SYSTEM.TALENT_ACTIVATION,
                 initial: SYSTEM.TALENT_ACTIVATION.passive.id
             }),
+            isFree: new fields.BooleanField({required: false, initial: false}),
             actions: new fields.ArrayField(new fields.EmbeddedDataField(SwerpgAction)),
             actorHooks: new fields.ArrayField(new fields.SchemaField({
                 hook: new fields.StringField({required: true, blank: false, choices: SYSTEM.ACTOR_HOOKS}),
