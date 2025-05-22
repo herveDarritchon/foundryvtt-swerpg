@@ -2,6 +2,8 @@ import SwerpgBaseActorSheet from "./base-actor-sheet.mjs";
 import SkillConfig from "../config/skill.mjs";
 import SkillFactory from "../../lib/skills/skill-factory.mjs";
 import ErrorSkill from "../../lib/skills/error-skill.mjs";
+import TalentFactory from "../../lib/talents/talent-factory.mjs";
+import ErrorTalent from "../../lib/talents/error-talent.mjs";
 
 /**
  * @typedef {Object} TalentTag
@@ -287,9 +289,38 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
                 }
                 break;
             case "talent":
-                const result = await this.actor.addTalentWithXpCheck(item);
-                console.info(`Swerpg | Talent (${item.id}) added to Actor ${this.actor.name}`, result)
-                return result;
+
+
+                // Build the skill class depending on the context
+                const talentClass = TalentFactory.build(this.actor, item.id, {
+                    action: "train",
+                    isCreation: true,
+                }, {});
+
+                if (talentClass instanceof ErrorTalent) {
+                    ui.notifications.warn(talentClass.options.message);
+                    return false;
+                }
+
+                console.log(`[Before] onToggleTrainedTalent talent with id '${talentId}', is Career ${isCareer} and values:`, talentClass, this.actor);
+
+                // Evaluate the talent following the action processed
+                const talentEvaluated = talentClass.process();
+
+                // Display a warning if the talent action is not valid
+                if (talentEvaluated instanceof ErrorTalent) {
+                    ui.notifications.warn(talentEvaluated.options.message);
+                    return false;
+                }
+
+                // Update the talent state in the Database
+                const talentUpdated = await talentEvaluated.updateState();
+
+                console.log(`[After] onToggleTrainedTalent talent with id '${talentId}', is Career ${isCareer} and values:`, talentUpdated.actor, talentUpdated.data.rank);
+
+/*                const result = await this.actor.addTalentWithXpCheck(item);
+                console.info(`Swerpg | Talent (${item.id}) added to Actor ${this.actor.name}`, result)*/
+                return true;
         }
         return super._onDropItem(event, item);
     }
@@ -388,7 +419,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
             tags.push({label: "Passive", cssClass: "tag-passive"});
         }
 
-        if (item.system.ranked) {
+        if (item.system.isRanked) {
             tags.push({label: "Ranked"});
         }
 
