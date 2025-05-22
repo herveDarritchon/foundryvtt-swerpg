@@ -5,9 +5,11 @@ export function createActor(
     {
         careerSpent = 0,
         specializationSpent = 0,
+        items= []
     } = {}
 ) {
     return {
+        items: items,
         freeSkillRanks: {
             "career": {
                 "id": "",

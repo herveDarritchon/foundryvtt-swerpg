@@ -881,7 +881,7 @@ export const TALENTS = Object.freeze({
         color: Color.from("#d6d30c"),
         sheetOrder: 1,
         activation: TALENT_ACTIVATION.passive,
-        ranked: true,
+        isRanked: true,
         nodeId: "adv"
     },
     convincingDemeanor: {
@@ -891,7 +891,7 @@ export const TALENTS = Object.freeze({
         color: Color.from("#d6d30c"),
         sheetOrder: 3,
         activation: TALENT_ACTIVATION.passive,
-        ranked: true,
+        isRanked: true,
         nodeId: "cdr"
     },
 

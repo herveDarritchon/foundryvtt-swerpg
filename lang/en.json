@@ -980,7 +980,7 @@
         "label": "Activation",
         "hint": "The type of Action to activate this Talent."
       },
-      "ranked": {
+      "isRanked": {
         "label": "Ranked",
         "hint": "This Talent may be purchased multiple times, each time increasing its effectiveness."
       },

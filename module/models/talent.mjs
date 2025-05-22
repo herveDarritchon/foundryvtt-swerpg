@@ -1,8 +1,6 @@
 import SwerpgAction from "./action.mjs";
 import SwerpgTalentNode from "../config/talent-tree.mjs";
-import SwerpgSpecialization from "./specialization.mjs";
 import {SYSTEM} from "../config/system.mjs";
-import {getItemsOf} from "../utils/items.mjs";
 
 /**
  * @typedef {Object} ActorHook
@@ -11,10 +9,17 @@ import {getItemsOf} from "../utils/items.mjs";
  */
 
 /**
+ * @typedef {Object} Rank
+ * @property {number} idx index of the rank in the list of talents
+ * @property {cost} cost cost of the rank
+ */
+
+/**
  * @typedef {Object} TalentData
  * @property {string} node
  * @property {string} description
- * @property {boolean} ranked
+ * @property {boolean} isRanked
+ * @property {Rank} rank
  * @property {boolean} active
  * @property {SwerpgSpecialization[]} trees
  * @property {SwerpgAction[]} actions   The actions which have been unlocked by this talent
@@ -57,14 +62,6 @@ export default class SwerpgTalent extends foundry.abstract.TypeDataModel {
     /** @override */
     static defineSchema() {
         const fields = foundry.data.fields;
-        const model = SwerpgSpecialization;
-        const availableTrees = SwerpgTalent.getAvailableTrees();
-        const options = {
-            required: true,
-            blank: false,
-            nullable: false,
-            choices: availableTrees,
-        }
 
         return {
             node: new fields.StringField({required: true, blank: true, choices: () => SwerpgTalentNode.getChoices()}),
@@ -72,7 +69,13 @@ export default class SwerpgTalent extends foundry.abstract.TypeDataModel {
                 validate: SwerpgTalent.#validateTrees
             }),
             description: new fields.HTMLField({required: false, initial: undefined}),
-            ranked: new fields.BooleanField({required: false, initial: false}),
+            isRanked: new fields.BooleanField({required: false, initial: false}),
+            row: new fields.NumberField({required: true, initial: 1}),
+            rank:
+                new fields.SchemaField({
+                    idx: new fields.NumberField({required: true, blank: false, initial: 0}),
+                    cost: new fields.NumberField({required: true, blank: false, initial: 0})
+                }),
             activation: new fields.StringField({
                 required: true,
                 choices: SYSTEM.TALENT_ACTIVATION,
@@ -277,11 +280,6 @@ export default class SwerpgTalent extends foundry.abstract.TypeDataModel {
         return true;
     }
 
-    static getAvailableTrees() {
-        return getItemsOf(game.items, "specialization")
-    }
-
-
     /* -------------------------------------------- */
 
     /**
@@ -290,7 +288,7 @@ export default class SwerpgTalent extends foundry.abstract.TypeDataModel {
      * @throws {Error}              An error if too many talents are assigned
      */
     static #validateTrees(trees) {
-        if (game.items == null){
+        if (game.items == null) {
             return true;
         }
         console.debug(`[SWERPG] - talents (${trees.length}):`, trees);
