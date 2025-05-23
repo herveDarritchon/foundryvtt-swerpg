@@ -2,9 +2,9 @@ _id: shortsword000000
 name: Shortsword
 type: weapon
 img: icons/weapons/swords/sword-guard.webp
-effects: []
+effects: [ ]
 folder: pUXcL0pnY3FlKwj8
-flags: {}
+flags: { }
 system:
   category: balanced1
   quantity: 1

@@ -14,12 +14,12 @@ system:
     dexterity: 4
   talents:
     - Compendium.swerpg.adversary-talents.Item.packhunter000000
-effects: []
+effects: [ ]
 sort: 0
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3
-flags: {}
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.8.0

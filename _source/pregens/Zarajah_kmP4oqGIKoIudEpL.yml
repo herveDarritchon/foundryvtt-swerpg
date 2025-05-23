@@ -221,8 +221,8 @@ prototypeToken:
     brightness: 0
     saturation: 0
     contrast: 0
-  detectionModes: []
-  flags: {}
+  detectionModes: [ ]
+  flags: { }
   randomImg: false
   hexagonalShape: 0
   occludable:
@@ -241,7 +241,7 @@ items:
     name: Inspire Heroism
     type: talent
     img: icons/skills/social/intimidation-impressing.webp
-    effects: []
+    effects: [ ]
     flags:
       core:
         sourceId: Item.V4stscWtnt2GFRY2
@@ -258,7 +258,7 @@ items:
           description: >-
             Each ally, excluding yourself, within 3 spaces gains +1 Boon to
             actions performed until the end of their next Turn.
-          tags: []
+          tags: [ ]
           cost:
             action: 1
             focus: 1
@@ -274,7 +274,7 @@ items:
                 - key: rollBonuses.boons
                   value: 1
                   mode: 2
-      actorHooks: []
+      actorHooks: [ ]
     _stats:
       systemId: swerpg
       systemVersion: 0.5.4
@@ -302,10 +302,10 @@ items:
         <p>The Flame rune scales using <strong>Intellect</strong>, targets
         <strong>Reflex</strong>, and deals <strong>Fire</strong> damage to
         <strong>Health</strong>.</p>
-      actions: []
+      actions: [ ]
       rune: flame
-      actorHooks: []
-    effects: []
+      actorHooks: [ ]
+    effects: [ ]
     flags:
       core:
         sourceId: Compendium.swerpg.talent.runeflame0000000
@@ -338,10 +338,10 @@ items:
         <p>The Arrow gesture scales using <strong>Intellect</strong> and targets
         a <strong>single</strong> creature up to a distance of 10 spaces,
         dealing 10 base damage on a successful attack.</p>
-      actions: []
+      actions: [ ]
       gesture: arrow
-      actorHooks: []
-    effects: []
+      actorHooks: [ ]
+    effects: [ ]
     flags:
       core:
         sourceId: Compendium.swerpg.talent.gesturearrow0000
@@ -365,7 +365,7 @@ items:
     name: Fine Scale Mail
     type: armor
     img: icons/equipment/chest/breastplate-banded-steel-studded.webp
-    effects: []
+    effects: [ ]
     flags:
       core:
         sourceId: Compendium.swerpg.armor.Item.6ww3SkYTk6RZBwMS
@@ -377,7 +377,7 @@ items:
       quality: fine
       enchantment: mundane
       equipped: true
-      properties: []
+      properties: [ ]
       description: ''
       armor:
         base: 13
@@ -418,7 +418,7 @@ items:
       damageType: radiant
       animation: quarterstaff
       slot: 0
-    effects: []
+    effects: [ ]
     flags:
       core:
         sourceId: Compendium.swerpg.weapon.Item.magestaff0000000
@@ -440,7 +440,7 @@ items:
     name: Rapier
     type: weapon
     img: icons/weapons/swords/sword-guard-gold-red.webp
-    effects: []
+    effects: [ ]
     folder: pUXcL0pnY3FlKwj8
     flags:
       core:
@@ -484,10 +484,10 @@ items:
         the expense of increased Focus. The Quicken inflection reduces the
         <strong>Action</strong> cost of a spell by 1 while increasing its
         <strong>Focus</strong> cost by 1 in exchange.</p>
-      actions: []
+      actions: [ ]
       inflection: quicken
-      actorHooks: []
-    effects: []
+      actorHooks: [ ]
+    effects: [ ]
     ownership:
       default: 0
       AnoypGxxNIMOS0XY: 3
@@ -523,10 +523,10 @@ items:
         <p>The Influence gesture scales using <strong>Presence</strong> and
         targets a <strong>single</strong> adjacent creature, dealing 12 base
         damage on a successful attack.</p>
-      actions: []
+      actions: [ ]
       gesture: influence
-      actorHooks: []
-    effects: []
+      actorHooks: [ ]
+    effects: [ ]
     flags:
       core:
         sourceId: Compendium.swerpg.talent.gestureinfluence
@@ -557,9 +557,9 @@ items:
 
         <p>The Burning effect lasts for 1 Round and deals your Intellect score
         as Fire damage to both Health and Morale.</p>
-      actions: []
-      actorHooks: []
-    effects: []
+      actions: [ ]
+      actorHooks: [ ]
+    effects: [ ]
     ownership:
       default: 0
       AnoypGxxNIMOS0XY: 3
@@ -613,8 +613,8 @@ items:
                 - key: rollBonuses.boons
                   value: 1
                   mode: 2
-      actorHooks: []
-    effects: []
+      actorHooks: [ ]
+    effects: [ ]
     ownership:
       default: 0
       AnoypGxxNIMOS0XY: 3
@@ -643,10 +643,10 @@ items:
         of other magi. You may ask the Gamemaster if you know a Rune capable of
         countering an enemy spell, even if you do not recognize the spell being
         cast. You gain +2 Boons to any Counterspell attempt.
-      actions: []
+      actions: [ ]
       node: preint3
-      actorHooks: []
-    effects: []
+      actorHooks: [ ]
+    effects: [ ]
     ownership:
       default: 0
       AnoypGxxNIMOS0XY: 3
@@ -676,7 +676,7 @@ items:
         It is sometimes a marvel how slowly others around you think. You gain
         <strong>+1 Boon</strong> on any Strike or Spell attack against an enemy
         lower than you in Initiative order.
-      actions: []
+      actions: [ ]
       actorHooks:
         - hook: prepareWeaponAttack
           fn: >-
@@ -696,13 +696,13 @@ items:
             if ( ac?.initiative > tc?.initiative )
             rollData.boons.intellectualSuperiority = {label: "Intellectual
             Superiority", number: 1};
-    effects: []
+    effects: [ ]
     folder: BevAJzzLeFbSaVic
     sort: -50000
     ownership:
       default: 0
       AnoypGxxNIMOS0XY: 3
-    flags: {}
+    flags: { }
     _stats:
       systemId: swerpg
       systemVersion: 0.5.4
@@ -726,10 +726,10 @@ items:
         <p>The Lightning rune scales using <strong>Intellect</strong>, targets
         <strong>Reflex</strong>, and deals <strong>Electrical</strong> damage to
         <strong>Health</strong>.</p>
-      actions: []
+      actions: [ ]
       rune: lightning
-      actorHooks: []
-    effects: []
+      actorHooks: [ ]
+    effects: [ ]
     flags:
       core:
         sourceId: Compendium.swerpg.talent.runelightning000
@@ -763,10 +763,10 @@ items:
         <strong>Physical</strong> defense, and deals
         <strong>Bludgeoning</strong>, <strong>Piercing</strong>, or
         <strong>Slashing</strong> damage to <strong>Health</strong>.</p>
-      actions: []
+      actions: [ ]
       rune: kinesis
-      actorHooks: []
-    effects: []
+      actorHooks: [ ]
+    effects: [ ]
     ownership:
       default: 0
       AnoypGxxNIMOS0XY: 3
@@ -796,15 +796,15 @@ items:
         You are gifted at exploiting the slowness with which others think. If
         you are first in Initiative order for the first round of Combat, you
         gain +1 Action during your turn.
-      actions: []
-      actorHooks: []
-    effects: []
+      actions: [ ]
+      actorHooks: [ ]
+    effects: [ ]
     folder: BevAJzzLeFbSaVic
     sort: -75000
     ownership:
       default: 0
       AnoypGxxNIMOS0XY: 3
-    flags: {}
+    flags: { }
     _stats:
       systemId: swerpg
       systemVersion: 0.5.4
@@ -824,10 +824,10 @@ items:
       description: >-
         Your feats of arcana are fueled by anger. While Enraged you may still
         spend Focus and you deal 2 additional damage to all spell attacks.
-      actions: []
-      actorHooks: []
-    effects: []
-    flags: {}
+      actions: [ ]
+      actorHooks: [ ]
+    effects: [ ]
+    flags: { }
     _stats:
       systemId: swerpg
       systemVersion: 0.5.4
@@ -843,11 +843,11 @@ items:
       default: 0
       AnoypGxxNIMOS0XY: 3
     _key: '!actors.items!kmP4oqGIKoIudEpL.iramancer0000000'
-effects: []
+effects: [ ]
 flags:
   swerpg:
     lastSpell: spell.flame.arrow
-  core: {}
+  core: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.5.4

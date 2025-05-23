@@ -27,10 +27,10 @@ system:
         number: 1
         distance: 1
         scope: 0
-      effects: []
-  requirements: {}
-effects: []
-flags: {}
+      effects: [ ]
+  requirements: { }
+effects: [ ]
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.6.0

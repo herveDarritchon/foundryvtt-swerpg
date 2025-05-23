@@ -2,9 +2,9 @@ _id: greatclub0000000
 name: Greatclub
 type: weapon
 img: icons/weapons/clubs/club-heavy-barbed-brown.webp
-effects: []
+effects: [ ]
 folder: bvWJheBtuW1LmkAy
-flags: {}
+flags: { }
 system:
   category: simple2
   quantity: 1

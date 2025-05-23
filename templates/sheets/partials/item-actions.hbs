@@ -8,7 +8,7 @@
             </a>
         </legend>
         {{#each actions as |action|}}
-        {{> (lookup @root "actionPartial") action=action isEditable=@root.isEditable}}
+            {{> (lookup @root "actionPartial") action=action isEditable=@root.isEditable}}
         {{/each}}
     </fieldset>
 </section>

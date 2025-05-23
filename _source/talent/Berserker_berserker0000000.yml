@@ -17,7 +17,7 @@ system:
         melee attacks. You may attempt to end the effect on your own turn by
         succeeding on a Willpower test against a DC of 20. The effect ends
         automatically when Combat is concluded.
-      tags: []
+      tags: [ ]
       cost:
         action: 1
         focus: 0
@@ -34,8 +34,8 @@ system:
               mode: 2
           statuses:
             - enraged
-  requirements: {}
-effects: []
+  requirements: { }
+effects: [ ]
 flags:
   core:
     sourceId: Compendium.swerpg.talent.berserker0000000

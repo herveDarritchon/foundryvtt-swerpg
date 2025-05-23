@@ -10,10 +10,10 @@ system:
 
     <p>The Step gesture scales with <strong>Dexterity</strong>, targets a line
     with distance 4, dealing 4 base damage on a successful attack.</p>
-  actions: []
+  actions: [ ]
   gesture: step
-  actorHooks: []
-effects: []
+  actorHooks: [ ]
+effects: [ ]
 flags:
   core:
     sourceId: Compendium.swerpg.talent.gesturestep00000

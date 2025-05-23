@@ -16,7 +16,7 @@ system:
         plan later in the same Round, they gain +2 Boons on any dice rolls
         associated with that plan. The Gamemaster may arbitrate whether or not
         the plan was followed.
-      tags: []
+      tags: [ ]
       cost:
         action: 2
         focus: 0
@@ -25,10 +25,10 @@ system:
         number: 1
         distance: 1
         scope: 0
-      effects: []
-  requirements: {}
-effects: []
-flags: {}
+      effects: [ ]
+  requirements: { }
+effects: [ ]
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.6.0

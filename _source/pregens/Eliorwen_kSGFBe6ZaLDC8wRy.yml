@@ -219,8 +219,8 @@ prototypeToken:
     brightness: 0
     saturation: 0
     contrast: 0
-  detectionModes: []
-  flags: {}
+  detectionModes: [ ]
+  flags: { }
   randomImg: false
   hexagonalShape: 0
   occludable:
@@ -245,15 +245,15 @@ items:
         <p>You have heightened insight into aspects of your surroundings. You
         gain +2 Boons to any <strong>Awareness</strong> skill test which does
         not rely upon eyesight.</p>
-      actions: []
-      actorHooks: []
-    effects: []
+      actions: [ ]
+      actorHooks: [ ]
+    effects: [ ]
     folder: 2MFixpDJ379KOogE
     sort: -275000
     ownership:
       default: 0
       AnoypGxxNIMOS0XY: 3
-    flags: {}
+    flags: { }
     _stats:
       systemId: swerpg
       systemVersion: 0.5.4
@@ -276,19 +276,19 @@ items:
 
         <p>You gain a +1 Skill bonus to attacks using ranged weapons in the
         <strong>Projectile</strong> or <strong>Mechanical</strong> category.</p>
-      actions: []
+      actions: [ ]
       actorHooks:
         - hook: prepareTraining
           fn: |-
             training.projectile += 1;
             training.mechanical += 1;
-    effects: []
+    effects: [ ]
     folder: FQAUMNkcagdBLURJ
     sort: 25000
     ownership:
       default: 0
       AnoypGxxNIMOS0XY: 3
-    flags: {}
+    flags: { }
     _stats:
       systemId: swerpg
       systemVersion: 0.5.4
@@ -303,8 +303,8 @@ items:
     name: Precision Shot
     type: talent
     img: icons/skills/ranged/target-bullseye-arrow-glowing.webp
-    effects: []
-    flags: {}
+    effects: [ ]
+    flags: { }
     system:
       node: dex0b
       description: >-
@@ -326,8 +326,8 @@ items:
             type: single
             number: 1
             scope: 3
-          effects: []
-      actorHooks: []
+          effects: [ ]
+      actorHooks: [ ]
     _stats:
       systemId: swerpg
       systemVersion: 0.5.4
@@ -347,7 +347,7 @@ items:
     name: Longbow
     type: weapon
     img: icons/weapons/bows/longbow-leather-green.webp
-    effects: []
+    effects: [ ]
     folder: Pe27j9LY8Nmygkqt
     flags:
       core:
@@ -385,7 +385,7 @@ items:
     name: Scimitar
     type: weapon
     img: icons/weapons/swords/scimitar-worn-blue.webp
-    effects: []
+    effects: [ ]
     folder: pUXcL0pnY3FlKwj8
     flags:
       core:
@@ -398,7 +398,7 @@ items:
       quality: standard
       enchantment: mundane
       equipped: false
-      properties: []
+      properties: [ ]
       description: ''
       damageType: slashing
       broken: false
@@ -422,7 +422,7 @@ items:
     name: Studded Leather Armor
     type: armor
     img: icons/equipment/chest/breastplate-layered-leather-studded-brown.webp
-    effects: []
+    effects: [ ]
     folder: kjHb0FCE2nJe6Dtx
     flags:
       core:
@@ -435,7 +435,7 @@ items:
       quality: standard
       enchantment: mundane
       equipped: true
-      properties: []
+      properties: [ ]
       description: ''
       armor:
         base: 7
@@ -456,9 +456,9 @@ items:
       default: 0
       AnoypGxxNIMOS0XY: 3
     _key: '!actors.items!kSGFBe6ZaLDC8wRy.3FyLFKnVlHqIedzr'
-effects: []
+effects: [ ]
 flags:
-  core: {}
+  core: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.5.4

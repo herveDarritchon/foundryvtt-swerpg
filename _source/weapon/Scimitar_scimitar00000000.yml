@@ -2,9 +2,9 @@ _id: scimitar00000000
 name: Scimitar
 type: weapon
 img: icons/weapons/swords/scimitar-worn-blue.webp
-effects: []
+effects: [ ]
 folder: pUXcL0pnY3FlKwj8
-flags: {}
+flags: { }
 system:
   category: balanced1
   quantity: 1
@@ -13,7 +13,7 @@ system:
   quality: standard
   enchantment: mundane
   equipped: false
-  properties: []
+  properties: [ ]
   description: ''
   damageType: slashing
   broken: false

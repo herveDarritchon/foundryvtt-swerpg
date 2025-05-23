@@ -2,9 +2,9 @@ _id: halberd000000000
 name: Halberd
 type: weapon
 img: icons/weapons/polearms/halberd-curved-steel.webp
-effects: []
+effects: [ ]
 folder: bvWJheBtuW1LmkAy
-flags: {}
+flags: { }
 system:
   category: heavy2
   quantity: 1

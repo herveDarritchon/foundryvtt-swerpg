@@ -8,11 +8,11 @@ system:
     expense of increased Focus. The Quicken inflection reduces the
     <strong>Action</strong> cost of a spell by 1 while increasing its
     <strong>Focus</strong> cost by 1 in exchange.</p>
-  actions: []
+  actions: [ ]
   inflection: quicken
-  actorHooks: []
+  actorHooks: [ ]
   iconicSpells: 1
-effects: []
+effects: [ ]
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3

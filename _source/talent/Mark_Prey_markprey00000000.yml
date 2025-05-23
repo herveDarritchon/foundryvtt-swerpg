@@ -39,8 +39,8 @@ system:
         maximum: null
         weapon: true
         minimum: null
-      actionHooks: []
-effects: []
+      actionHooks: [ ]
+effects: [ ]
 flags:
   core:
     sourceId: Compendium.swerpg.talent.markprey00000000

@@ -2,9 +2,9 @@ _id: warhammer0000000
 name: War Hammer
 type: weapon
 img: icons/weapons/hammers/hammer-war-rounding.webp
-effects: []
+effects: [ ]
 folder: pUXcL0pnY3FlKwj8
-flags: {}
+flags: { }
 system:
   category: heavy1
   quantity: 1

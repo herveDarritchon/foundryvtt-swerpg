@@ -7,10 +7,10 @@ system:
   description: >-
     <p>Once per Round, you can make a Reaction which incorporates a Strike
     attack without spending any Focus.</p>
-  actions: []
-  requirements: {}
-effects: []
-flags: {}
+  actions: [ ]
+  requirements: { }
+effects: [ ]
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.6.0

@@ -48,12 +48,12 @@ system:
         weapon: true
   node: str3a
   iconicSpells: 0
-  actorHooks: []
-effects: []
+  actorHooks: [ ]
+effects: [ ]
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3
-flags: {}
+flags: { }
 _stats:
   compendiumSource: null
   duplicateSource: null

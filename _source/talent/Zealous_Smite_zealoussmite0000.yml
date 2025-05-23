@@ -27,17 +27,17 @@ system:
         type: single
         number: 1
         scope: 0
-      effects: []
+      effects: [ ]
       name: Zealous Smite
       img: icons/magic/fire/dagger-rune-enchant-flame-blue-yellow.webp
-      actionHooks: []
+      actionHooks: [ ]
       range:
         maximum: null
         weapon: true
         minimum: null
-  requirements: {}
-effects: []
-flags: {}
+  requirements: { }
+effects: [ ]
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.6.0

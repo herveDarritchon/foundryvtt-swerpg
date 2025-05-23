@@ -318,8 +318,8 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
 
                 console.log(`[After] onToggleTrainedTalent talent with id '${talentId}', is Career ${isCareer} and values:`, talentUpdated.actor, talentUpdated.data.rank);
 
-/*                const result = await this.actor.addTalentWithXpCheck(item);
-                console.info(`Swerpg | Talent (${item.id}) added to Actor ${this.actor.name}`, result)*/
+                /*                const result = await this.actor.addTalentWithXpCheck(item);
+                                console.info(`Swerpg | Talent (${item.id}) added to Actor ${this.actor.name}`, result)*/
                 return true;
         }
         return super._onDropItem(event, item);

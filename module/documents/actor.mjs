@@ -4,8 +4,6 @@ import SwerpgAction from "../models/action.mjs";
 import SwerpgSpellAction from "../models/spell-action.mjs";
 import {SYSTEM} from "../config/system.mjs";
 import CharacteristicFactory from "../lib/characteristics/characteristic-factory.mjs";
-import SkillFactory from "../lib/skills/skill-factory.mjs";
-import ErrorSkill from "../lib/skills/error-skill.mjs";
 import ErrorCharacteristic from "../lib/characteristics/error-characteristic.mjs";
 
 const {DialogV2} = foundry.applications.api;

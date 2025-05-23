@@ -10,16 +10,16 @@ system:
 
     <p>Your <strong>Wounds Threshold</strong> is reduced by 1, making you easier
     to heal.</p>
-  actions: []
+  actions: [ ]
   actorHooks:
     - hook: prepareDefenses
       fn: defenses.wounds.bonus -= 1;
-effects: []
+effects: [ ]
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3
 flags:
-  core: {}
+  core: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.8.0

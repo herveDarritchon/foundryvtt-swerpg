@@ -11,10 +11,10 @@ system:
     <p>The Shadow rune scales using <strong>Presence</strong>, targets
     <strong>Fortitude</strong>, and deals <strong>Void</strong> damage to
     <strong>Morale</strong>.</p>
-  actions: []
+  actions: [ ]
   rune: shadow
-  actorHooks: []
-effects: []
+  actorHooks: [ ]
+effects: [ ]
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3

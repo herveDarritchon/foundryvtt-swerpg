@@ -2,7 +2,7 @@ _id: feintingstrike00
 name: Feinting Strike
 type: talent
 img: icons/skills/melee/weapons-crossed-swords-black-gray.webp
-effects: []
+effects: [ ]
 flags:
   core:
     sourceId: Item.vIhvItiKYuiqaSp9
@@ -27,7 +27,7 @@ system:
         type: single
         number: 1
         scope: 3
-      effects: []
+      effects: [ ]
       name: Feinting Strike
       img: icons/skills/melee/weapons-crossed-swords-black-gray.webp
       condition: ''

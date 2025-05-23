@@ -13,12 +13,12 @@ system:
     strength: 4
     toughness: 4
     dexterity: 4
-  talents: []
-effects: []
+  talents: [ ]
+effects: [ ]
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3
-flags: {}
+flags: { }
 _stats:
   compendiumSource: null
   duplicateSource: null

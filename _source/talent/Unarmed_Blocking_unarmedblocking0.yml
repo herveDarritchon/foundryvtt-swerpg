@@ -8,7 +8,7 @@ system:
     Your honed reflexes and physical toughness allow you to block enemy blows
     using your bare arms. While <strong>Unarmed</strong>, half your Toughness
     score contributes to your <strong>Block</strong> defense.
-  actions: []
+  actions: [ ]
   actorHooks:
     - hook: prepareDefenses
       fn: |-
@@ -17,8 +17,8 @@ system:
           const toughness = actor.system.abilities.toughness.value;
           defenses.block.bonus += Math.ceil(toughness / 2);
         }
-effects: []
-flags: {}
+effects: [ ]
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.8.0

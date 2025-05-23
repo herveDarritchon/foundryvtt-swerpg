@@ -9,7 +9,6 @@ import * as SPELL from "./spellcraft.mjs";
 import * as WEAPON from "./weapon.mjs";
 import {ENCHANTMENT_TIERS, QUALITY_TIERS} from "./items.mjs";
 import {ASCII, ASCII_DEV_MODE, DEV_MODE} from "../applications/system/constants.mjs";
-import {ACTOR_TYPE} from "./attributes.mjs";
 
 export const SYSTEM_ID = "swerpg";
 

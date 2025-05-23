@@ -11,16 +11,16 @@ system:
     template target only target enemies within the area. Healing spells which
     use a template target only target allies within the area.</p><p>Single
     target spells do not incur any Banes due to intervening creatures.</p>
-  actions: []
+  actions: [ ]
   iconicSpells: 1
-  actorHooks: []
+  actorHooks: [ ]
   inflection: reshape
-effects: []
+effects: [ ]
 sort: 0
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3
-flags: {}
+flags: { }
 _stats:
   compendiumSource: null
   duplicateSource: null

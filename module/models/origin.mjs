@@ -22,11 +22,25 @@ export default class SwerpgOrigin extends foundry.abstract.TypeDataModel {
             // Skills Scores
             skillModifierDraft: new fields.SchemaField({
                 skillId: new fields.StringField({required: true}),
-                modifierValue: new fields.NumberField({required: true, integer: true, initial: 0, min: -20, max: 20, step: 5})
+                modifierValue: new fields.NumberField({
+                    required: true,
+                    integer: true,
+                    initial: 0,
+                    min: -20,
+                    max: 20,
+                    step: 5
+                })
             }),
             skills: new fields.ArrayField(new fields.SchemaField({
                 skillId: new fields.StringField({required: true}),
-                modifier: new fields.NumberField({required: true, integer: true, initial: 0, min: -20, max: 20, step: 5})
+                modifier: new fields.NumberField({
+                    required: true,
+                    integer: true,
+                    initial: 0,
+                    min: -20,
+                    max: 20,
+                    step: 5
+                })
             })),
             secondaryAttributes: new fields.SchemaField(Object.values(SYSTEM.SECONDARY_ATTRIBUTES).reduce((obj, attribute) => {
                 obj[attribute.id] = new fields.SchemaField({

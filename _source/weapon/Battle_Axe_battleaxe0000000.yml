@@ -2,9 +2,9 @@ _id: battleaxe0000000
 name: Battle Axe
 type: weapon
 img: icons/weapons/axes/axe-battle-black.webp
-effects: []
+effects: [ ]
 folder: pUXcL0pnY3FlKwj8
-flags: {}
+flags: { }
 system:
   category: heavy1
   quantity: 1

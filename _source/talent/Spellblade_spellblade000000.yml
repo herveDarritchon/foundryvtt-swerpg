@@ -10,11 +10,11 @@ system:
     spellcraft.</p><p>After performing a <strong>Strike</strong> attack, the
     cost of the next Spell you cast during the same Turn is reduced by <strong>1
     Action</strong>.</p>
-  actions: []
-  requirements: {}
+  actions: [ ]
+  requirements: { }
   node: sig3.strength.intellect
   iconicSpells: 1
-effects: []
+effects: [ ]
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3

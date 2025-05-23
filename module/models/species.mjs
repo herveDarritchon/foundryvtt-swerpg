@@ -175,7 +175,7 @@ export default class SwerpgSpecies extends foundry.abstract.TypeDataModel {
      * @throws {Error}              An error if too many talents are assigned
      */
     static #validateFreeTalents(talents) {
-        if (game.items == null){
+        if (game.items == null) {
             return true;
         }
         console.debug(`[SWERPG] - talents (${talents.length}):`, talents);

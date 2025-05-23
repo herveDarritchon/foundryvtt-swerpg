@@ -41,15 +41,15 @@ system:
       actionHooks:
         - hook: prepare
           fn: this.range.maximum = this.actor.system.movement.stride
-  actorHooks: []
+  actorHooks: [ ]
   node: ''
   iconicSpells: 0
-effects: []
+effects: [ ]
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3
 flags:
-  core: {}
+  core: { }
 _stats:
   compendiumSource: null
   duplicateSource: null

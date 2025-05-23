@@ -3,21 +3,22 @@
 </section>
 
 {{#if isGM}}
-<section class="difficulty form-group">
-    <div class="form-fields">
-        <select name="difficultyTier">
-            {{selectOptions difficulties selected=difficulty.dc nameAttr="dc" labelAttr="label" blank="Custom Difficulty"}}
-        </select>
-        <label>DC</label>
-        {{numberInput difficulty.dc class="dc" name="dc" min=0 max=50}}
-    </div>
-</section>
+    <section class="difficulty form-group">
+        <div class="form-fields">
+            <select name="difficultyTier">
+                {{selectOptions difficulties selected=difficulty.dc nameAttr="dc" labelAttr="label"
+                                blank="Custom Difficulty"}}
+            </select>
+            <label>DC</label>
+            {{numberInput difficulty.dc class="dc" name="dc" min=0 max=50}}
+        </div>
+    </section>
 {{/if}}
 
 {{#if showDetails}}
-<section class="details flexcol">
-    {{> "systems/swerpg/templates/dice/partials/standard-check-details.hbs"}}
-</section>
+    <section class="details flexcol">
+        {{> "systems/swerpg/templates/dice/partials/standard-check-details.hbs"}}
+    </section>
 {{/if}}
 
 <footer class="form-footer">

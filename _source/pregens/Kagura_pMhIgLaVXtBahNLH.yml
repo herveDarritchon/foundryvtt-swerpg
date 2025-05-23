@@ -217,8 +217,8 @@ prototypeToken:
     brightness: 0
     saturation: 0
     contrast: 0
-  detectionModes: []
-  flags: {}
+  detectionModes: [ ]
+  flags: { }
   randomImg: false
   hexagonalShape: 0
   occludable:
@@ -245,10 +245,10 @@ items:
 
         <p>The Life rune scales using <strong>Wisdom</strong> and provides
         <strong>Restoration</strong> of <strong>Health</strong>.</p>
-      actions: []
+      actions: [ ]
       rune: life
-      actorHooks: []
-    effects: []
+      actorHooks: [ ]
+    effects: [ ]
     flags:
       core:
         sourceId: Compendium.swerpg.talent.runelife00000000
@@ -278,10 +278,10 @@ items:
         resource costs in exchange. The Compose inflection reduces the
         <strong>Focus</strong> cost of a spell by 1 while increasing its
         <strong>Action</strong> cost by 1 in exchange.</p>
-      actions: []
+      actions: [ ]
       inflection: compose
-      actorHooks: []
-    effects: []
+      actorHooks: [ ]
+    effects: [ ]
     ownership:
       default: 0
       AnoypGxxNIMOS0XY: 3
@@ -328,10 +328,10 @@ items:
             number: 1
             distance: 3
             scope: 2
-          effects: []
-      actorHooks: []
-    effects: []
-    flags: {}
+          effects: [ ]
+      actorHooks: [ ]
+    effects: [ ]
+    flags: { }
     _stats:
       systemId: swerpg
       systemVersion: 0.5.4
@@ -358,7 +358,7 @@ items:
         the attacks of your foes. Any enemy which acts after you in
         <strong>Initiative</strong> order suffers 1 Bane to their spell or
         weapon attacks against you.
-      actions: []
+      actions: [ ]
       actorHooks:
         - hook: defendWeaponAttack
           fn: |-
@@ -374,13 +374,13 @@ items:
 
             if ( ac?.initiative > oc?.initiative ) rollData.banes.plannedDefense
             = {label: "Planned Defense", number: 1};
-    effects: []
+    effects: [ ]
     folder: BevAJzzLeFbSaVic
     sort: 50000
     ownership:
       default: 0
       AnoypGxxNIMOS0XY: 3
-    flags: {}
+    flags: { }
     _stats:
       systemId: swerpg
       systemVersion: 0.5.4
@@ -407,10 +407,10 @@ items:
         <p>The Influence gesture scales using <strong>Presence</strong> and
         targets a <strong>single</strong> adjacent creature, dealing 12 base
         damage on a successful attack.</p>
-      actions: []
+      actions: [ ]
       gesture: influence
-      actorHooks: []
-    effects: []
+      actorHooks: [ ]
+    effects: [ ]
     flags:
       core:
         sourceId: Compendium.swerpg.talent.gestureinfluence
@@ -445,16 +445,16 @@ items:
         <p>The Pulse gesture scales using <strong>Presence</strong> and targets
         a 360 degree radius with distance 1, dealing 6 base damage on a
         successful attack.</p>
-      actions: []
+      actions: [ ]
       gesture: pulse
-      actorHooks: []
-    effects: []
+      actorHooks: [ ]
+    effects: [ ]
     folder: D14x9AJ0TgXKtnzu
     sort: 1000000
     ownership:
       default: 0
       AnoypGxxNIMOS0XY: 3
-    flags: {}
+    flags: { }
     _stats:
       systemId: swerpg
       systemVersion: 0.5.4
@@ -477,15 +477,15 @@ items:
 
         <p>The Mending effect lasts for 1 Round and deals your Wisdom score as
         restoration to Health.</p>
-      actions: []
-      actorHooks: []
-    effects: []
+      actions: [ ]
+      actorHooks: [ ]
+    effects: [ ]
     folder: c0nl6X8tp4Of0Y4O
     sort: 25000
     ownership:
       default: 0
       AnoypGxxNIMOS0XY: 3
-    flags: {}
+    flags: { }
     _stats:
       systemId: swerpg
       systemVersion: 0.5.4
@@ -508,10 +508,10 @@ items:
 
         <p>The Spirit rune scales using <strong>Presence</strong> and provides
         <strong>Restoration</strong> of <strong>Morale</strong>.</p>
-      actions: []
+      actions: [ ]
       rune: spirit
-      actorHooks: []
-    effects: []
+      actorHooks: [ ]
+    effects: [ ]
     flags:
       core:
         sourceId: Compendium.swerpg.talent.runecourage00000
@@ -544,10 +544,10 @@ items:
         <p>The Frost rune scales using <strong>Wisdom</strong>, targets
         <strong>Fortitude</strong>, and deals <strong>Cold</strong> damage to
         <strong>Health</strong>.</p>
-      actions: []
+      actions: [ ]
       rune: frost
-      actorHooks: []
-    effects: []
+      actorHooks: [ ]
+    effects: [ ]
     flags:
       core:
         sourceId: Compendium.swerpg.talent.runefrost0000000
@@ -582,10 +582,10 @@ items:
         <p>The Ray gesture scales using <strong>Wisdom</strong> and targets a
         line emanating from the caster at distance 6, dealing 6 base damage on a
         successful attack.</p>
-      actions: []
+      actions: [ ]
       gesture: ray
-      actorHooks: []
-    effects: []
+      actorHooks: [ ]
+    effects: [ ]
     ownership:
       default: 0
       AnoypGxxNIMOS0XY: 3
@@ -616,15 +616,15 @@ items:
         yourself to the worst attacks in return. Any <strong>Disengagement
         Attack</strong> against you is performed without the 2 Boons that would
         ordinarily apply to such an attack.</p>
-      actions: []
-      actorHooks: []
-    effects: []
+      actions: [ ]
+      actorHooks: [ ]
+    effects: [ ]
     folder: aB808IWOdgwmFCIF
     sort: 250000
     ownership:
       default: 0
       AnoypGxxNIMOS0XY: 3
-    flags: {}
+    flags: { }
     _stats:
       systemId: swerpg
       systemVersion: 0.5.4
@@ -643,9 +643,9 @@ items:
       description: >-
         You find calmness and focus in conserving your effort in battle. When
         you end your Turn with un-spent Action you gain +1 Focus.
-      actions: []
-      actorHooks: []
-    effects: []
+      actions: [ ]
+      actorHooks: [ ]
+    effects: [ ]
     ownership:
       default: 0
       AnoypGxxNIMOS0XY: 3
@@ -674,13 +674,13 @@ items:
         You are unparalleled at manipulating vital arcana to treat injuries.
         When healing allies using the Rune of Life you gain +2 boons to your
         roll and your spellcraft cannot be Counterspelled.
-      actions: []
+      actions: [ ]
       actorHooks:
         - hook: prepareSpellAttack
           fn: >-
             if ( spell.rune.id === "life" ) rollData.boons.healer = {label:
             "Healer", number: 2};
-    effects: []
+    effects: [ ]
     ownership:
       default: 0
       AnoypGxxNIMOS0XY: 3
@@ -719,7 +719,7 @@ items:
       damageType: radiant
       animation: quarterstaff
       slot: 0
-    effects: []
+    effects: [ ]
     flags:
       core:
         sourceId: Compendium.swerpg.weapon.Item.magestaff0000000
@@ -741,7 +741,7 @@ items:
     name: Fine Scale Mail
     type: armor
     img: icons/equipment/chest/breastplate-banded-steel-studded.webp
-    effects: []
+    effects: [ ]
     flags:
       core:
         sourceId: Compendium.swerpg.armor.Item.6ww3SkYTk6RZBwMS
@@ -753,7 +753,7 @@ items:
       quality: fine
       enchantment: mundane
       equipped: true
-      properties: []
+      properties: [ ]
       description: ''
       armor:
         base: 13
@@ -775,12 +775,12 @@ items:
       default: 0
       AnoypGxxNIMOS0XY: 3
     _key: '!actors.items!pMhIgLaVXtBahNLH.xGT2rxbFgrtyMXDz'
-effects: []
+effects: [ ]
 folder: xoE3iSbPfFPlq6wD
 flags:
   swerpg:
     lastSpell: spell.life.touch
-  core: {}
+  core: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.5.4

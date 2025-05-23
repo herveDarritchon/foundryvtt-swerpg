@@ -28,14 +28,14 @@ system:
         multiple: 3
         distance: 1
         scope: 0
-      effects: []
-effects: []
+      effects: [ ]
+effects: [ ]
 folder: fOYHlZJEWUukD7yr
 sort: 275000
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3
-flags: {}
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.6.0

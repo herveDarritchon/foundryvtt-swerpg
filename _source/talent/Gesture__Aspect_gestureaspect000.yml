@@ -17,10 +17,10 @@ system:
     <p>Your Aspect lasts for <strong>6 Rounds</strong>. You may only have one
     active Aspect, casting another spell using the Aspect gesture replaces the
     previous effect.</p>
-  actions: []
+  actions: [ ]
   gesture: aspect
-  actorHooks: []
-effects: []
+  actorHooks: [ ]
+effects: [ ]
 flags:
   core:
     sourceId: Compendium.swerpg.talent.gestureaspect000

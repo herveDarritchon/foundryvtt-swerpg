@@ -8,15 +8,15 @@ system:
     <p>You have heightened insight into aspects of your surroundings. You gain
     +2 Boons to any <strong>Awareness</strong> skill test which does not rely
     upon eyesight.</p>
-  actions: []
-  requirements: {}
-effects: []
+  actions: [ ]
+  requirements: { }
+effects: [ ]
 folder: 2MFixpDJ379KOogE
 sort: -275000
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3
-flags: {}
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.6.2

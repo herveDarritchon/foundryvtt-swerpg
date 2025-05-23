@@ -11,19 +11,19 @@ system:
     <p>You gain a +1 Skill bonus to attacks using melee weapons in the
     <strong>Simple</strong>, <strong>Heavy</strong>, or
     <strong>Balanced</strong> categories.</p>
-  actions: []
+  actions: [ ]
   actorHooks:
     - hook: prepareTraining
       fn: |-
         training.heavy += 1;
         training.balanced += 1;
-effects: []
+effects: [ ]
 folder: FQAUMNkcagdBLURJ
 sort: 125000
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3
-flags: {}
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.5.1

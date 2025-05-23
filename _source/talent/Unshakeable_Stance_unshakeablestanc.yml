@@ -7,9 +7,9 @@ system:
     You cannot be unvoluntarily Moved or knocked Prone by any action that is not
     a Critical Success rolled by an enemy or a Critical Failure rolled by
     yourself.
-  actions: []
-  requirements: {}
-effects: []
+  actions: [ ]
+  requirements: { }
+effects: [ ]
 flags:
   core:
     sourceId: Compendium.swerpg.talent.unshakeablestanc

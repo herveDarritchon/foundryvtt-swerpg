@@ -1,7 +1,7 @@
 name: Extoll Deeds
 type: talent
 img: icons/tools/instruments/harp-gold-glowing.webp
-effects: []
+effects: [ ]
 flags:
   core:
     sourceId: Item.V4stscWtnt2GFRY2
@@ -39,15 +39,15 @@ system:
         number: 1
         scope: 2
         size: 10
-      effects: []
+      effects: [ ]
       name: Extoll Deeds
       img: icons/tools/instruments/harp-gold-glowing.webp
       range:
         maximum: null
         weapon: false
         minimum: null
-      actionHooks: []
-  requirements: {}
+      actionHooks: [ ]
+  requirements: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.6.0

@@ -1,7 +1,7 @@
 name: Intercept
 type: talent
 img: icons/skills/melee/shield-block-gray-orange.webp
-effects: []
+effects: [ ]
 flags:
   core:
     sourceId: Item.V4stscWtnt2GFRY2
@@ -32,7 +32,7 @@ system:
         type: single
         number: 1
         scope: 3
-      effects: []
+      effects: [ ]
       name: Intercept
       img: icons/skills/melee/shield-block-gray-orange.webp
       range:
@@ -45,7 +45,7 @@ system:
             if ( this.actor ) {
               this.range.maximum = this.actor.system.movement.stride;
             }
-  requirements: {}
+  requirements: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.6.0

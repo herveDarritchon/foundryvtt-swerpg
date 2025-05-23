@@ -12,10 +12,10 @@ system:
     <p>The Ray gesture scales using <strong>Wisdom</strong> and targets a line
     emanating from the caster at distance 6, dealing 6 base damage on a
     successful attack.</p>
-  actions: []
+  actions: [ ]
   gesture: ray
-  actorHooks: []
-effects: []
+  actorHooks: [ ]
+effects: [ ]
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3

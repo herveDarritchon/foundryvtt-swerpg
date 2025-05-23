@@ -2,9 +2,9 @@ _id: wanderer00000000
 name: Wanderer
 type: background
 img: icons/environment/wilderness/portal.webp
-effects: []
+effects: [ ]
 folder: 5piCK2JWjY34nSY3
-flags: {}
+flags: { }
 system:
   description: >-
     <p>Yours has been an itinerant life. You enjoy nothing more than the feeling

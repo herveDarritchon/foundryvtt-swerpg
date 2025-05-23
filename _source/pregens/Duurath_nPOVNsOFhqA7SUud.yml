@@ -217,8 +217,8 @@ prototypeToken:
     brightness: 0
     saturation: 0
     contrast: 0
-  detectionModes: []
-  flags: {}
+  detectionModes: [ ]
+  flags: { }
   randomImg: false
   hexagonalShape: 0
   occludable:
@@ -261,15 +261,15 @@ items:
             number: 1
             distance: 1
             scope: 0
-          effects: []
-      actorHooks: []
-    effects: []
+          effects: [ ]
+      actorHooks: [ ]
+    effects: [ ]
     folder: 2MFixpDJ379KOogE
     sort: -100000
     ownership:
       default: 0
       AnoypGxxNIMOS0XY: 3
-    flags: {}
+    flags: { }
     _stats:
       systemId: swerpg
       systemVersion: 0.5.4
@@ -293,19 +293,19 @@ items:
         <p>You gain a +1 Skill bonus to attacks using melee weapons in the
         <strong>Simple</strong>, <strong>Heavy</strong>, or
         <strong>Balanced</strong> categories.</p>
-      actions: []
+      actions: [ ]
       actorHooks:
         - hook: prepareTraining
           fn: |-
             training.heavy += 1;
             training.balanced += 1;
-    effects: []
+    effects: [ ]
     folder: FQAUMNkcagdBLURJ
     sort: 125000
     ownership:
       default: 0
       AnoypGxxNIMOS0XY: 3
-    flags: {}
+    flags: { }
     _stats:
       systemId: swerpg
       systemVersion: 0.5.4
@@ -325,9 +325,9 @@ items:
         You have expertise in using a Shield to defend a fixed position. You can
         use the Defend action for free instead of a free Move action once per
         Turn.
-      actions: []
-      actorHooks: []
-    effects: []
+      actions: [ ]
+      actorHooks: [ ]
+    effects: [ ]
     ownership:
       default: 0
       AnoypGxxNIMOS0XY: 3
@@ -351,7 +351,7 @@ items:
     name: War Hammer
     type: weapon
     img: icons/weapons/hammers/hammer-war-rounding.webp
-    effects: []
+    effects: [ ]
     folder: pUXcL0pnY3FlKwj8
     flags:
       core:
@@ -389,7 +389,7 @@ items:
     name: Heater Shield
     type: weapon
     img: icons/equipment/shield/heater-steel-worn.webp
-    effects: []
+    effects: [ ]
     folder: 9v0ru58f09fO3sE3
     flags:
       core:
@@ -426,7 +426,7 @@ items:
     name: Scale Mail
     type: armor
     img: icons/equipment/chest/breastplate-banded-steel-studded.webp
-    effects: []
+    effects: [ ]
     flags:
       core:
         sourceId: Compendium.swerpg.armor.Item.6ww3SkYTk6RZBwMS
@@ -438,7 +438,7 @@ items:
       quality: standard
       enchantment: mundane
       equipped: true
-      properties: []
+      properties: [ ]
       description: ''
       armor:
         base: 13
@@ -460,9 +460,9 @@ items:
       default: 0
       AnoypGxxNIMOS0XY: 3
     _key: '!actors.items!nPOVNsOFhqA7SUud.uzOVLLoRYLWoQjWV'
-effects: []
+effects: [ ]
 flags:
-  core: {}
+  core: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.5.4

@@ -2,8 +2,8 @@ _id: precisionshot000
 name: Precision Shot
 type: talent
 img: icons/skills/ranged/target-bullseye-arrow-glowing.webp
-effects: []
-flags: {}
+effects: [ ]
+flags: { }
 system:
   node: dex0b
   description: >-
@@ -27,14 +27,14 @@ system:
         type: single
         number: 1
         scope: 3
-      effects: []
+      effects: [ ]
       name: Precision Shot
       img: icons/skills/ranged/target-bullseye-arrow-glowing.webp
       range:
         maximum: null
         weapon: true
         minimum: null
-      actionHooks: []
+      actionHooks: [ ]
 _stats:
   systemId: swerpg
   systemVersion: 0.6.0

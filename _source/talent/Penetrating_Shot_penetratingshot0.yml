@@ -23,7 +23,7 @@ system:
         type: ray
         number: 1
         scope: 3
-      effects: []
+      effects: [ ]
       name: Penetrating Shot
       img: icons/skills/ranged/projectile-explosion-black-orange.webp
       condition: ''
@@ -34,14 +34,14 @@ system:
         maximum: null
         weapon: true
         minimum: null
-      actionHooks: []
-effects: []
+      actionHooks: [ ]
+effects: [ ]
 folder: i7P1uwWcECj5KWfY
 sort: 37500
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3
-flags: {}
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.6.0

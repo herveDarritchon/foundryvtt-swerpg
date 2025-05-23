@@ -462,9 +462,9 @@
         "hint": "Select number of free ranks from career."
       }
     },
-    "SHEET":{
+    "SHEET": {
       "CHOOSE": "Choose Career",
-      "CareerSkills":{
+      "CareerSkills": {
         "maxNumber": "Number of Career Skills maximum to pick"
       }
     }
@@ -793,7 +793,6 @@
   },
   "SPECIALIZATION": {
     "FIELDS": {
-
     },
     "SHEET": {
       "CHOOSE": "Choose Specialization",

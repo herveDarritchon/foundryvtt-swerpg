@@ -17,13 +17,13 @@ system:
     - Compendium.swerpg.talent.Item.dualwield0000000
     - Compendium.swerpg.talent.Item.flurry0000000000
     - Compendium.swerpg.talent.Item.skirmisher000000
-effects: []
+effects: [ ]
 folder: 6Up7ddrphLept3RW
 sort: 25000
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3
-flags: {}
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.5.0

@@ -7,9 +7,9 @@ system:
     <p>You are trained in wearing the heaviest types of armor while still
     retaining mobility. You are able to use a free Movement action once per Turn
     while wearing Heavy armor.</p>
-  actions: []
-  requirements: {}
-effects: []
+  actions: [ ]
+  requirements: { }
+effects: [ ]
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3

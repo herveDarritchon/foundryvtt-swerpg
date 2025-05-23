@@ -13,16 +13,16 @@ system:
     <p>The Pulse gesture scales using <strong>Presence</strong> and targets a
     360 degree radius with distance 1, dealing 6 base damage on a successful
     attack.</p>
-  actions: []
+  actions: [ ]
   gesture: pulse
-  actorHooks: []
-effects: []
+  actorHooks: [ ]
+effects: [ ]
 folder: D14x9AJ0TgXKtnzu
 sort: 1000000
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3
-flags: {}
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.5.0

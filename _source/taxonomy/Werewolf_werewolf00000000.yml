@@ -27,13 +27,13 @@ system:
     void: 0
   size: 6
   stride: 12
-effects: []
+effects: [ ]
 folder: XE2BjE0vCGKPdZU7
 sort: 150000
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3
-flags: {}
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.6.0

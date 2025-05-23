@@ -4,14 +4,14 @@
     </div>
 
     {{#if hasDice}}
-    <section class="roller flexcol">
-        {{> "systems/swerpg/templates/dice/partials/standard-check-roll.hbs"}}
-    </section>
-    {{#if showDetails}}
-    <section class="details flexcol">
-        {{> "systems/swerpg/templates/dice/partials/standard-check-details.hbs"}}
-    </section>
-    {{/if}}
+        <section class="roller flexcol">
+            {{> "systems/swerpg/templates/dice/partials/standard-check-roll.hbs"}}
+        </section>
+        {{#if showDetails}}
+            <section class="details flexcol">
+                {{> "systems/swerpg/templates/dice/partials/standard-check-details.hbs"}}
+            </section>
+        {{/if}}
     {{/if}}
 
     <footer class="form-footer">

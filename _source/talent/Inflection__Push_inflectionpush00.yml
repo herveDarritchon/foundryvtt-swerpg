@@ -7,11 +7,11 @@ system:
     <p>Empower a spell to repel affected creatures away from the caster.
     Creatures affected by a spell with the Push inflection move 1 space away
     from the spellcaster if that destination space is unoccupied.</p>
-  actions: []
+  actions: [ ]
   inflection: push
-  actorHooks: []
+  actorHooks: [ ]
   iconicSpells: 1
-effects: []
+effects: [ ]
 flags:
   core:
     sourceId: Compendium.swerpg.talent.inflectionpush00

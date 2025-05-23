@@ -11,36 +11,36 @@
  * @enum {ItemQualityTier}
  */
 export const QUALITY_TIERS = {
-  shoddy: {
-    id: "shoddy",
-    label: "ITEM.QualityShoddy",
-    bonus: -2,
-    rarity: -1
-  },
-  standard: {
-    id: "standard",
-    label: "ITEM.QualityStandard",
-    bonus: 0,
-    rarity: 0
-  },
-  fine: {
-    id: "fine",
-    label: "ITEM.QualityFine",
-    bonus: 1,
-    rarity: 1
-  },
-  superior: {
-    id: "superior",
-    label: "ITEM.QualitySuperior",
-    bonus: 2,
-    rarity: 2
-  },
-  masterwork: {
-    id: "masterwork",
-    label: "ITEM.QualityMasterwork",
-    bonus: 3,
-    rarity: 4
-  }
+    shoddy: {
+        id: "shoddy",
+        label: "ITEM.QualityShoddy",
+        bonus: -2,
+        rarity: -1
+    },
+    standard: {
+        id: "standard",
+        label: "ITEM.QualityStandard",
+        bonus: 0,
+        rarity: 0
+    },
+    fine: {
+        id: "fine",
+        label: "ITEM.QualityFine",
+        bonus: 1,
+        rarity: 1
+    },
+    superior: {
+        id: "superior",
+        label: "ITEM.QualitySuperior",
+        bonus: 2,
+        rarity: 2
+    },
+    masterwork: {
+        id: "masterwork",
+        label: "ITEM.QualityMasterwork",
+        bonus: 3,
+        rarity: 4
+    }
 }
 
 /**
@@ -56,28 +56,28 @@ export const QUALITY_TIERS = {
  * @enum {ItemEnchantmentTier}
  */
 export const ENCHANTMENT_TIERS = {
-  mundane: {
-    id: "mundane",
-    label: "ITEM.EnchantmentMundane",
-    bonus: 0,
-    rarity: 0
-  },
-  minor: {
-    id: "minor",
-    label: "ITEM.EnchantmentMinor",
-    bonus: 1,
-    rarity: 2
-  },
-  major: {
-    id: "major",
-    label: "ITEM.EnchantmentMajor",
-    bonus: 2,
-    rarity: 4
-  },
-  legendary: {
-    id: "legendary",
-    label: "ITEM.EnchantmentLegendary",
-    bonus: 3,
-    rarity: 6
-  }
+    mundane: {
+        id: "mundane",
+        label: "ITEM.EnchantmentMundane",
+        bonus: 0,
+        rarity: 0
+    },
+    minor: {
+        id: "minor",
+        label: "ITEM.EnchantmentMinor",
+        bonus: 1,
+        rarity: 2
+    },
+    major: {
+        id: "major",
+        label: "ITEM.EnchantmentMajor",
+        bonus: 2,
+        rarity: 4
+    },
+    legendary: {
+        id: "legendary",
+        label: "ITEM.EnchantmentLegendary",
+        bonus: 3,
+        rarity: 6
+    }
 }

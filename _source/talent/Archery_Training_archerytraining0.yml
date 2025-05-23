@@ -10,19 +10,19 @@ system:
 
     <p>You gain a +1 Skill bonus to attacks using ranged weapons in the
     <strong>Projectile</strong> or <strong>Mechanical</strong> category.</p>
-  actions: []
+  actions: [ ]
   actorHooks:
     - hook: prepareTraining
       fn: |-
         training.projectile += 1;
         training.mechanical += 1;
-effects: []
+effects: [ ]
 folder: FQAUMNkcagdBLURJ
 sort: 25000
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3
-flags: {}
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.8.0

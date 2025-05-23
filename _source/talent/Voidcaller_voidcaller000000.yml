@@ -9,7 +9,7 @@ system:
     this Rune cause the Entropy condition on Critical Hits.</p><p>The Entropy
     effect lasts for 1 Round, deals half your Presence score as Void damage to
     Morale, and applies the Frightened condition.</p>
-  actions: []
+  actions: [ ]
   actorHooks:
     - hook: applyCriticalEffects
       fn: |-
@@ -24,13 +24,13 @@ system:
         // Apply Entropy effect
         const entropy = SYSTEM.EFFECTS.entropy(actor, outcome.target);
         outcome.effects.push(entropy);
-effects: []
+effects: [ ]
 folder: c0nl6X8tp4Of0Y4O
 sort: 31250
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3
-flags: {}
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.6.0

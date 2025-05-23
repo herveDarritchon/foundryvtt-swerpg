@@ -2,7 +2,7 @@ _id: stunningstrike00
 name: Stunning Strike
 type: talent
 img: icons/magic/lightning/fist-unarmed-strike-blue.webp
-effects: []
+effects: [ ]
 flags:
   core:
     sourceId: Compendium.swerpg.talent.CANFHQxFjIJwgEYK
@@ -45,8 +45,8 @@ system:
         maximum: 1
         weapon: true
         minimum: null
-      actionHooks: []
-  requirements: {}
+      actionHooks: [ ]
+  requirements: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.6.0

@@ -9,9 +9,9 @@ system:
     that you are not Unaware, you may immediately move <strong>1 Space</strong>
     in any permitted direction.</p><p>If multiple combatants have this feature,
     repositioning occurs in reverse order of Initiative.</p>
-  actions: []
-  requirements: {}
-effects: []
+  actions: [ ]
+  requirements: { }
+effects: [ ]
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3

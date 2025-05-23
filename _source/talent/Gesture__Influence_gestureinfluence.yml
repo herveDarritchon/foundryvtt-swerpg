@@ -14,10 +14,10 @@ system:
     <p>The Influence gesture scales using <strong>Presence</strong> and targets
     a <strong>single</strong> adjacent creature, dealing 12 base damage on a
     successful attack.</p>
-  actions: []
+  actions: [ ]
   gesture: influence
-  actorHooks: []
-effects: []
+  actorHooks: [ ]
+effects: [ ]
 flags:
   core:
     sourceId: Compendium.swerpg.talent.gestureinfluence

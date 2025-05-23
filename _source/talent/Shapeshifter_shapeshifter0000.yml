@@ -21,7 +21,7 @@ system:
       description: >-
         You assume the form of a beast that you are familiar with of one-half
         your level or less.
-      tags: []
+      tags: [ ]
       cost:
         action: 3
         focus: 3
@@ -35,11 +35,11 @@ system:
           duration:
             rounds: 60
       img: null
-      actionHooks: []
+      actionHooks: [ ]
     - id: beastShapeRevert
       name: Revert Shape
       description: You end your bestial transformation, returning to your normal form.
-      tags: []
+      tags: [ ]
       cost:
         action: 3
         focus: 0
@@ -48,7 +48,7 @@ system:
         scope: 1
         number: 1
         distance: 1
-      effects: []
+      effects: [ ]
       img: icons/creatures/mammals/beast-horned-scaled-glowing-orange.webp
       condition: ''
       actionHooks:
@@ -58,8 +58,8 @@ system:
             this.actor.effects.get(SYSTEM.EFFECTS.getEffectId("beastShape"));
 
             await effect.delete();
-  requirements: {}
-effects: []
+  requirements: { }
+effects: [ ]
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3

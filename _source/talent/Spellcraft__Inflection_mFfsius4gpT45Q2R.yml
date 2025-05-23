@@ -5,7 +5,7 @@ type: Item
 _id: mFfsius4gpT45Q2R
 sort: 0
 color: '#3a2c58'
-flags: {}
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.6.2

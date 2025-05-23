@@ -6,14 +6,14 @@ system:
   description: >-
     Your physical toughness makes you more resistant to harm. You gain +2
     Resistance to Bludgeoning, Slashing, and Piercing damage.
-  actions: []
+  actions: [ ]
   actorHooks:
     - hook: prepareResistances
       fn: |-
         resistances.bludgeoning.base += 2;
         resistances.slashing.base += 2;
         resistances.piercing.base += 2;
-effects: []
+effects: [ ]
 folder: SMe30RkoLutLr4ef
 ownership:
   default: 0

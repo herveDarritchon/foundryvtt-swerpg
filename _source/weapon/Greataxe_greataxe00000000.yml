@@ -2,9 +2,9 @@ _id: greataxe00000000
 name: Greataxe
 type: weapon
 img: icons/weapons/axes/axe-double-simple-brown.webp
-effects: []
+effects: [ ]
 folder: bvWJheBtuW1LmkAy
-flags: {}
+flags: { }
 system:
   category: heavy2
   quantity: 1
@@ -13,7 +13,7 @@ system:
   quality: standard
   enchantment: mundane
   equipped: false
-  properties: []
+  properties: [ ]
   description: ''
   damageType: slashing
   broken: false

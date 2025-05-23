@@ -12,10 +12,10 @@ system:
     <p>The Fan gesture scales using <strong>Intellect</strong> and targets a 120
     degree cone with distance 1, dealing 6 base damage on a successful
     attack.</p>
-  actions: []
+  actions: [ ]
   gesture: fan
-  actorHooks: []
-effects: []
+  actorHooks: [ ]
+effects: [ ]
 flags:
   core:
     sourceId: Compendium.swerpg.talent.gesturefan000000

@@ -217,8 +217,8 @@ prototypeToken:
     brightness: 0
     saturation: 0
     contrast: 0
-  detectionModes: []
-  flags: {}
+  detectionModes: [ ]
+  flags: { }
   randomImg: false
   hexagonalShape: 0
   occludable:
@@ -249,7 +249,7 @@ items:
           description: >-
             You still your mind and study the physiology of your foe, attempting
             to identify a vulnerability in its defenses.
-          tags: []
+          tags: [ ]
           cost:
             action: 1
             focus: 1
@@ -258,10 +258,10 @@ items:
             number: 1
             distance: 10
             scope: 0
-          effects: []
-      actorHooks: []
-    effects: []
-    flags: {}
+          effects: [ ]
+      actorHooks: [ ]
+    effects: [ ]
+    flags: { }
     _stats:
       systemId: swerpg
       systemVersion: 0.5.4
@@ -290,10 +290,10 @@ items:
         <p>The Frost rune scales using <strong>Wisdom</strong>, targets
         <strong>Fortitude</strong>, and deals <strong>Cold</strong> damage to
         <strong>Health</strong>.</p>
-      actions: []
+      actions: [ ]
       rune: frost
-      actorHooks: []
-    effects: []
+      actorHooks: [ ]
+    effects: [ ]
     flags:
       core:
         sourceId: Compendium.swerpg.talent.runefrost0000000
@@ -330,10 +330,10 @@ items:
         <p>The Creation lasts for <strong>10 Rounds</strong>. You may only have
         one active Creation, casting another spell using the Create gesture
         replaces your previous Creation.</p>
-      actions: []
+      actions: [ ]
       gesture: create
-      actorHooks: []
-    effects: []
+      actorHooks: [ ]
+    effects: [ ]
     flags:
       core:
         sourceId: Compendium.swerpg.talent.gesturecreate000
@@ -366,10 +366,10 @@ items:
         <p>The Earth rune scales using <strong>Wisdom</strong>, targets
         <strong>Reflex</strong>, and deals <strong>Acid</strong> damage to
         <strong>Health</strong>.</p>
-      actions: []
+      actions: [ ]
       rune: earth
-      actorHooks: []
-    effects: []
+      actorHooks: [ ]
+    effects: [ ]
     flags:
       core:
         sourceId: Compendium.swerpg.talent.runeearth0000000
@@ -400,9 +400,9 @@ items:
 
         <p>The Chilled effect lasts for 1 Round, deals half your Wisdom  score
         as Frost damage to Health, and applies the Slowed condition.</p>
-      actions: []
-      actorHooks: []
-    effects: []
+      actions: [ ]
+      actorHooks: [ ]
+    effects: [ ]
     ownership:
       default: 0
       AnoypGxxNIMOS0XY: 3
@@ -430,10 +430,10 @@ items:
         You are a master of Conjuration and the Gesture of Creation to manifest
         arcane energy as physical form. You can maintain up to 3 such creations
         simultaneously rather than only one.
-      actions: []
+      actions: [ ]
       node: wisint3
-      actorHooks: []
-    effects: []
+      actorHooks: [ ]
+    effects: [ ]
     ownership:
       default: 0
       AnoypGxxNIMOS0XY: 3
@@ -465,10 +465,10 @@ items:
         <p>The Flame rune scales using <strong>Intellect</strong>, targets
         <strong>Reflex</strong>, and deals <strong>Fire</strong> damage to
         <strong>Health</strong>.</p>
-      actions: []
+      actions: [ ]
       rune: flame
-      actorHooks: []
-    effects: []
+      actorHooks: [ ]
+    effects: [ ]
     flags:
       core:
         sourceId: Compendium.swerpg.talent.runeflame0000000
@@ -505,7 +505,7 @@ items:
             You harden yourself against demoralization. Your Morale is increased
             by your Wisdom score and you temporarily gain the Resolute
             condition.
-          tags: []
+          tags: [ ]
           cost:
             action: 1
             focus: 2
@@ -519,8 +519,8 @@ items:
                 rounds: 1
               statuses:
                 - resolute
-      actorHooks: []
-    effects: []
+      actorHooks: [ ]
+    effects: [ ]
     ownership:
       default: 0
       AnoypGxxNIMOS0XY: 3
@@ -556,10 +556,10 @@ items:
 
         <p>You may only have a single Ward at a time. Casting another spell
         using the Ward gesture replaces your prior Ward.</p>
-      actions: []
+      actions: [ ]
       gesture: ward
-      actorHooks: []
-    effects: []
+      actorHooks: [ ]
+    effects: [ ]
     ownership:
       default: 0
       AnoypGxxNIMOS0XY: 3
@@ -583,7 +583,7 @@ items:
     name: Inspire Heroism
     type: talent
     img: icons/skills/social/intimidation-impressing.webp
-    effects: []
+    effects: [ ]
     flags:
       core:
         sourceId: Item.V4stscWtnt2GFRY2
@@ -600,7 +600,7 @@ items:
           description: >-
             Each ally, excluding yourself, within 3 spaces gains +1 Boon to
             actions performed until the end of their next Turn.
-          tags: []
+          tags: [ ]
           cost:
             action: 1
             focus: 1
@@ -616,7 +616,7 @@ items:
                 - key: rollBonuses.boons
                   value: 1
                   mode: 2
-      actorHooks: []
+      actorHooks: [ ]
     _stats:
       systemId: swerpg
       systemVersion: 0.5.4
@@ -636,7 +636,7 @@ items:
     name: Fine Ring Mail
     type: armor
     img: icons/equipment/chest/breastplate-layered-leather-studded-black.webp
-    effects: []
+    effects: [ ]
     flags:
       core:
         sourceId: Compendium.swerpg.armor.Item.1lTOzjUX4bUNDQFc
@@ -648,7 +648,7 @@ items:
       quality: fine
       enchantment: mundane
       equipped: true
-      properties: []
+      properties: [ ]
       description: ''
       armor:
         base: 9
@@ -674,7 +674,7 @@ items:
     name: Fine Shortsword
     type: weapon
     img: icons/weapons/swords/sword-guard.webp
-    effects: []
+    effects: [ ]
     folder: pUXcL0pnY3FlKwj8
     flags:
       core:
@@ -722,10 +722,10 @@ items:
       broken: false
       enchantment: mundane
       equipped: true
-      properties: []
+      properties: [ ]
       damageType: void
       slot: 0
-    effects: []
+    effects: [ ]
     flags:
       core:
         sourceId: Compendium.swerpg.weapon.Item.arcaneorb0000000
@@ -756,10 +756,10 @@ items:
         <p>The Lightning rune scales using <strong>Intellect</strong>, targets
         <strong>Reflex</strong>, and deals <strong>Electrical</strong> damage to
         <strong>Health</strong>.</p>
-      actions: []
+      actions: [ ]
       rune: lightning
-      actorHooks: []
-    effects: []
+      actorHooks: [ ]
+    effects: [ ]
     flags:
       core:
         sourceId: Compendium.swerpg.talent.runelightning000
@@ -792,10 +792,10 @@ items:
         <p>The Arrow gesture scales using <strong>Intellect</strong> and targets
         a <strong>single</strong> creature up to a distance of 10 spaces,
         dealing 10 base damage on a successful attack.</p>
-      actions: []
+      actions: [ ]
       gesture: arrow
-      actorHooks: []
-    effects: []
+      actorHooks: [ ]
+    effects: [ ]
     flags:
       core:
         sourceId: Compendium.swerpg.talent.gesturearrow0000
@@ -828,7 +828,7 @@ items:
 
         <p>When you use the <strong>Ward</strong> gesture, the Resistance
         provided by your Ward also trained by half your Wisdom.</p>
-      actions: []
+      actions: [ ]
       actorHooks:
         - hook: prepareResistances
           fn: |-
@@ -838,7 +838,7 @@ items:
                 r.base += Math.ceil(actor.abilities.wisdom.value / 2);
               }
             }
-    effects: []
+    effects: [ ]
     ownership:
       default: 0
       AnoypGxxNIMOS0XY: 3
@@ -858,12 +858,12 @@ items:
     folder: fOYHlZJEWUukD7yr
     sort: 306250
     _key: '!actors.items!vOikx6BYTl8Ee4Yw.runewarden000000'
-effects: []
+effects: [ ]
 folder: xoE3iSbPfFPlq6wD
 flags:
   swerpg:
     lastSpell: spell.flame.arrow
-  core: {}
+  core: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.5.4

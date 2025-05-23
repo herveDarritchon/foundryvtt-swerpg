@@ -37,8 +37,8 @@ system:
       range:
         maximum: 4
         weapon: false
-      actionHooks: []
-effects: []
+      actionHooks: [ ]
+effects: [ ]
 flags:
   core:
     sourceId: Compendium.swerpg.talent.dirtytricks00000

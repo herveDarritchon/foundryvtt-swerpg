@@ -212,8 +212,8 @@ prototypeToken:
     brightness: 0
     saturation: 0
     contrast: 0
-  detectionModes: []
-  flags: {}
+  detectionModes: [ ]
+  flags: { }
   randomImg: false
   hexagonalShape: 0
   occludable:
@@ -242,12 +242,12 @@ items:
       broken: false
       enchantment: mundane
       equipped: true
-      properties: []
+      properties: [ ]
       armor:
         base: 3
       dodge:
         base: 10
-    effects: []
+    effects: [ ]
     sort: 0
     ownership:
       default: 0
@@ -279,9 +279,9 @@ items:
       broken: false
       enchantment: mundane
       equipped: true
-      properties: []
+      properties: [ ]
       damageType: electricity
-    effects: []
+    effects: [ ]
     sort: 0
     ownership:
       default: 0
@@ -310,10 +310,10 @@ items:
 
         <p>The Arrow gesture deals damage corresponding to the Rune used to a
         single enemy target at range.</p>
-      actions: []
-      requirements: {}
+      actions: [ ]
+      requirements: { }
       gesture: arrow
-    effects: []
+    effects: [ ]
     flags:
       core:
         sourceId: Compendium.swerpg.talent.gesturearrow0000
@@ -341,10 +341,10 @@ items:
       description: >-
         You learn Rune of Lightning, allowing you to control volatile arcane
         surges of electricity.
-      actions: []
-      requirements: {}
+      actions: [ ]
+      requirements: { }
       rune: lightning
-    effects: []
+    effects: [ ]
     flags:
       core:
         sourceId: Compendium.swerpg.talent.runelightning000
@@ -364,9 +364,9 @@ items:
     folder: null
     sort: 10700000
     _key: '!actors.items!Ne25xsSqYijgcrm0.runelightning000'
-effects: []
+effects: [ ]
 flags:
-  core: {}
+  core: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.6.0

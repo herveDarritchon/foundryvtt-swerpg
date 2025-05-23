@@ -28,16 +28,16 @@ system:
         type: single
         number: 1
         scope: 3
-      effects: []
+      effects: [ ]
       name: Lunge
       img: icons/skills/melee/strike-polearm-light-orange.webp
-      actionHooks: []
+      actionHooks: [ ]
       range:
         maximum: 2
         weapon: true
         minimum: null
-  requirements: {}
-effects: []
+  requirements: { }
+effects: [ ]
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3

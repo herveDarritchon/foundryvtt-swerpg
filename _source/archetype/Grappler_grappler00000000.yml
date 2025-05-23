@@ -18,13 +18,13 @@ system:
     - Compendium.swerpg.talent.Item.wrestler00000000
     - Compendium.swerpg.talent.Item.legsweep00000000
     - Compendium.swerpg.talent.Item.concussiveblows0
-effects: []
+effects: [ ]
 folder: 6Up7ddrphLept3RW
 sort: 75000
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3
-flags: {}
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.5.0

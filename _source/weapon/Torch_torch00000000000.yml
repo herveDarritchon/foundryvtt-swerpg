@@ -2,10 +2,10 @@ _id: torch00000000000
 name: Torch
 type: weapon
 img: icons/sundries/lights/torch-brown-lit.webp
-effects: []
+effects: [ ]
 folder: pUXcL0pnY3FlKwj8
 flags:
-  core: {}
+  core: { }
 system:
   category: simple1
   quantity: 1
@@ -14,7 +14,7 @@ system:
   quality: shoddy
   enchantment: mundane
   equipped: false
-  properties: []
+  properties: [ ]
   description: ''
   damageType: fire
   broken: false

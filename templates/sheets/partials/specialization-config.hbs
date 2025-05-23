@@ -10,7 +10,8 @@
         <legend>{{localize "SPECIALIZATION.FIELDS.Skills"}} ({{selectedSkills}})</legend>
         <div class="specializations">
             {{#each specializationSkills as |skill|}}
-                <p class="specialization {{skill.extraCss}}" data-action="toggleSpecialization" data-action-id="{{skill.id}}"
+                <p class="specialization {{skill.extraCss}}" data-action="toggleSpecialization"
+                   data-action-id="{{skill.id}}"
                    data-action-is-active="{{skill.isActive}}">{{localize skill.label}}</p>
             {{/each}}
         </div>

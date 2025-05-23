@@ -28,15 +28,15 @@ system:
         type: pulse
         number: 1
         scope: 3
-      effects: []
+      effects: [ ]
       condition: ''
       range:
         minimum: null
         maximum: null
         weapon: true
-      actionHooks: []
-  actorHooks: []
-effects: []
+      actionHooks: [ ]
+  actorHooks: [ ]
+effects: [ ]
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3

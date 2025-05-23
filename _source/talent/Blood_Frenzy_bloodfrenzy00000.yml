@@ -8,7 +8,7 @@ system:
     <p>Your battle lust spurs you to feats of heightened action. When you
     achieve a <strong>Critical Hit</strong> that deals damage to Health you
     immediately gain +1 Action. This benefit may only happen once per Round.</p>
-  actions: []
+  actions: [ ]
   actorHooks:
     - hook: applyCriticalEffects
       fn: >-
@@ -34,7 +34,7 @@ system:
         self.resources.action = (self.resources.action || 0) + 1;
 
         foundry.utils.setProperty(updates, "system.status.bloodFrenzy", true);
-effects: []
+effects: [ ]
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3

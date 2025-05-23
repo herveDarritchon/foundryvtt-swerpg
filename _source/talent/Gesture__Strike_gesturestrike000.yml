@@ -11,10 +11,10 @@ system:
     <p>The Strike gesture scales using <strong>Strength</strong> and targets a
     <strong>single</strong> adjacent creature, dealing 12 base damage on a
     successful attack.</p>
-  actions: []
+  actions: [ ]
   gesture: strike
-  actorHooks: []
-effects: []
+  actorHooks: [ ]
+effects: [ ]
 flags:
   core:
     sourceId: Compendium.swerpg.talent.gesturearrowcopy

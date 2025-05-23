@@ -33,14 +33,14 @@ system:
       effects:
         - name: Vow of Animus
           scope: 3
-          statuses: []
+          statuses: [ ]
           duration:
             turns: 60
       tags:
         - harmless
-      actionHooks: []
-effects: []
-flags: {}
+      actionHooks: [ ]
+effects: [ ]
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.6.0

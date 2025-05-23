@@ -7,11 +7,11 @@ system:
   description: >-
     Your supernatural toughness makes you resistant to venoms and toxins. You
     gain +5 Resistance to Poison damage.
-  actions: []
+  actions: [ ]
   actorHooks:
     - hook: prepareResistances
       fn: resistances.poison.base += 5;
-effects: []
+effects: [ ]
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3

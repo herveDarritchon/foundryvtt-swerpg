@@ -36,13 +36,13 @@ system:
             turns: 1
       name: Shield Bash
       img: icons/skills/melee/shield-block-bash-blue.webp
-      actionHooks: []
+      actionHooks: [ ]
       range:
         maximum: null
         weapon: true
         minimum: null
-  requirements: {}
-effects: []
+  requirements: { }
+effects: [ ]
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3

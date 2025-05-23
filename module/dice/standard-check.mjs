@@ -36,362 +36,364 @@ import StandardCheckDialog from "./standard-check-dialog.mjs";
  * @param {StandardCheckData} [data]          An object of roll data, containing the following optional fields
  */
 export default class StandardCheck extends Roll {
-  constructor(formula, data) {
-    if ( typeof formula === "object" ) {
-      data = formula;
-      formula = "";
-    }
-    super(formula, data);
-  }
-
-  /* -------------------------------------------- */
-
-  /**
-   * Define the default data attributes for this type of Roll
-   * @type {object}
-   */
-  static defaultData = {
-    actorId: null,
-    ability: 0,
-    banes: {},
-    boons: {},
-    dc: 20,
-    enchantment: 0,
-    skill: 0,
-    type: "general",
-    criticalSuccessThreshold: undefined,
-    criticalFailureThreshold: undefined,
-    rollMode: undefined
-  };
-
-  /* -------------------------------------------- */
-
-  /**
-   * Which Dialog subclass should display a prompt for this Roll type?
-   * @type {StandardCheckDialog}
-   */
-  static dialogClass = StandardCheckDialog;
-
-  /* -------------------------------------------- */
-
-  /**
-   * The HTML template path used to render dice checks of this type
-   * @type {string}
-   */
-  static CHAT_TEMPLATE = "systems/swerpg/templates/dice/standard-check-chat.hbs";
-
-  /* -------------------------------------------- */
-
-  /**
-   * Did this check result in a success?
-   * @returns {boolean}
-   */
-  get isSuccess() {
-    if ( !this._evaluated ) return undefined;
-    return this.total > this.data.dc;
-  }
-
-  /* -------------------------------------------- */
-
-  /**
-   * Did this check result in a critical success?
-   * @returns {boolean}
-   */
-  get isCriticalSuccess() {
-    if ( !this._evaluated ) return undefined;
-    return this.total > (this.data.dc + (this.data.criticalSuccessThreshold ?? 6));
-  }
-
-  /* -------------------------------------------- */
-
-  /**
-   * Did this check result in a failure?
-   * @returns {boolean}
-   */
-  get isFailure() {
-    if ( !this._evaluated ) return undefined;
-    return this.total <= this.data.dc;
-  }
-
-  /* -------------------------------------------- */
-
-  /**
-   * Did this check result in a critical failure?
-   * @returns {boolean}
-   */
-  get isCriticalFailure() {
-    if ( !this._evaluated ) return undefined;
-    return this.total <= (this.data.dc - (this.data.criticalFailureThreshold ?? 6));
-  }
-
-  /* -------------------------------------------- */
-  /*  Roll Configuration                          */
-  /* -------------------------------------------- */
-
-  /** @override */
-  _prepareData(data={}) {
-    if ( ("boons" in data) && (typeof data.boons !== "object") ) {
-      console.warn("StandardCheck received boons passed as a number instead of an object");
-      data.boons = {special: {label: "Special", number: Number.isNumeric(data.boons) ? data.boons : 0}};
-    }
-    if ( ("banes" in data) && (typeof data.banes !== "object") ) {
-      data.banes = {special: {label: "Special", number: Number.isNumeric(data.banes) ? data.banes : 0}};
-      console.warn("StandardCheck received boons passed as a number instead of an object");
-    }
-    const current = this.data || foundry.utils.deepClone(this.constructor.defaultData);
-    for ( let [k, v] of Object.entries(data) ) {
-      if ( v === undefined ) delete data[k];
-    }
-    data = foundry.utils.mergeObject(current, data, {insertKeys: false});
-    StandardCheck.#configureData(data);
-    return data;
-  }
-
-  /* -------------------------------------------- */
-
-  /**
-   * Configure the provided data used to customize this type of Roll
-   * @param {object} data     The initially provided data object
-   * @returns {object}        The configured data object
-   */
-  static #configureData(data) {
-
-    // Bonuses
-    data.dc = Math.max(data.dc, 0);
-    data.ability = Math.clamp(data.ability, 0, 12);
-    data.skill = Math.clamp(data.skill, -4, 12);
-    data.enchantment = Math.clamp(data.enchantment, 0, 6);
-
-    // Boons and Banes
-    data.totalBoons = StandardCheck.#prepareBoons(data.boons);
-    data.totalBanes = StandardCheck.#prepareBoons(data.banes);
-  }
-
-  /* -------------------------------------------- */
-
-  /**
-   * Prepare an object of boons or banes to compute the total which apply to the roll.
-   * @param {Object<string, DiceBoon>} boons    Boons applied to the roll
-   * @returns {number}                          The total number of applied boons
-   */
-  static #prepareBoons(boons) {
-    let total = 0;
-    for ( const [id, boon] of Object.entries(boons) ) {
-      boon.id = id;
-      boon.number ??= 1;
-      if ( (total + boon.number) > SYSTEM.dice.MAX_BOONS ) {
-        boon.number = SYSTEM.dice.MAX_BOONS - total;
-      }
-      total += boon.number;
-    }
-    return total;
-  }
-
-  /* -------------------------------------------- */
-
-  /** @override */
-  static parse(_, data) {
-
-    // Configure the pool
-    const pool = [8, 8, 8];
-
-    // Apply boons from the left
-    let d = 0;
-    for (let i = 0; i < data.totalBoons; i++) {
-      pool[d] = pool[d] + SYSTEM.dice.DIE_STEP;
-      if (pool[d] === SYSTEM.dice.MAX_DIE) d++;
-    }
-
-    // Apply banes from the right
-    d = 2;
-    for (let i = 0; i < data.totalBanes; i++) {
-      pool[d] = pool[d] - SYSTEM.dice.DIE_STEP;
-      if (pool[d] === SYSTEM.dice.MIN_DIE) d--;
-    }
-
-    // Construct the formula
-    const terms = pool.map(p => `1d${p}`).concat([data.ability, data.skill]);
-    if ( data.enchantment > 0 ) terms.push(data.enchantment);
-    const formula = terms.join(" + ");
-    return super.parse(formula, data);
-  }
-
-  /* -------------------------------------------- */
-
-  /**
-   * FIXME remove this override in v13+
-   * @override
-   */
-  async render(chatOptions) {
-    const chatData = await this._prepareChatRenderContext(chatOptions);
-    return renderTemplate(this.constructor.CHAT_TEMPLATE, chatData);
-  }
-
-  /* -------------------------------------------- */
-
-  /** @override */
-  async _prepareChatRenderContext({flavor, isPrivate=false}={}) {
-    const cardData = {
-      cssClass: [SYSTEM.id, "dice-roll", "standard-check"],
-      data: this.data,
-      defenseType: "DC",
-      defenseValue: this.data.dc,
-      diceTotal: this.dice.reduce((t, d) => t + d.total, 0),
-      isPrivate,
-      isGM: game.user.isGM,
-      flavor,
-      formula: this.formula,
-      outcome: "Unknown",
-      pool: this.dice.map(d => ({denom: `d${d.faces}`, result: d.total})),
-      total: this.total
-    }
-
-    // Successes and Failures
-    if ( this.data.dc ) {
-      if ( this.isSuccess ) {
-        cardData.outcome = "Success";
-        cardData.cssClass.push("success");
-        if ( this.isCriticalSuccess ) {
-          cardData.outcome = "Critical " + cardData.outcome;
-          cardData.cssClass.push("critical");
+    constructor(formula, data) {
+        if (typeof formula === "object") {
+            data = formula;
+            formula = "";
         }
-      }
-      else {
-        cardData.outcome = "Failure";
-        cardData.cssClass.push("failure");
-        if ( this.isCriticalFailure ) {
-          cardData.outcome = "Critical " + cardData.outcome;
-          cardData.cssClass.push("critical");
+        super(formula, data);
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Define the default data attributes for this type of Roll
+     * @type {object}
+     */
+    static defaultData = {
+        actorId: null,
+        ability: 0,
+        banes: {},
+        boons: {},
+        dc: 20,
+        enchantment: 0,
+        skill: 0,
+        type: "general",
+        criticalSuccessThreshold: undefined,
+        criticalFailureThreshold: undefined,
+        rollMode: undefined
+    };
+
+    /* -------------------------------------------- */
+
+    /**
+     * Which Dialog subclass should display a prompt for this Roll type?
+     * @type {StandardCheckDialog}
+     */
+    static dialogClass = StandardCheckDialog;
+
+    /* -------------------------------------------- */
+
+    /**
+     * The HTML template path used to render dice checks of this type
+     * @type {string}
+     */
+    static CHAT_TEMPLATE = "systems/swerpg/templates/dice/standard-check-chat.hbs";
+
+    /* -------------------------------------------- */
+
+    /**
+     * Did this check result in a success?
+     * @returns {boolean}
+     */
+    get isSuccess() {
+        if (!this._evaluated) return undefined;
+        return this.total > this.data.dc;
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Did this check result in a critical success?
+     * @returns {boolean}
+     */
+    get isCriticalSuccess() {
+        if (!this._evaluated) return undefined;
+        return this.total > (this.data.dc + (this.data.criticalSuccessThreshold ?? 6));
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Did this check result in a failure?
+     * @returns {boolean}
+     */
+    get isFailure() {
+        if (!this._evaluated) return undefined;
+        return this.total <= this.data.dc;
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Did this check result in a critical failure?
+     * @returns {boolean}
+     */
+    get isCriticalFailure() {
+        if (!this._evaluated) return undefined;
+        return this.total <= (this.data.dc - (this.data.criticalFailureThreshold ?? 6));
+    }
+
+    /* -------------------------------------------- */
+    /*  Roll Configuration                          */
+
+    /* -------------------------------------------- */
+
+    /** @override */
+    _prepareData(data = {}) {
+        if (("boons" in data) && (typeof data.boons !== "object")) {
+            console.warn("StandardCheck received boons passed as a number instead of an object");
+            data.boons = {special: {label: "Special", number: Number.isNumeric(data.boons) ? data.boons : 0}};
         }
-      }
+        if (("banes" in data) && (typeof data.banes !== "object")) {
+            data.banes = {special: {label: "Special", number: Number.isNumeric(data.banes) ? data.banes : 0}};
+            console.warn("StandardCheck received boons passed as a number instead of an object");
+        }
+        const current = this.data || foundry.utils.deepClone(this.constructor.defaultData);
+        for (let [k, v] of Object.entries(data)) {
+            if (v === undefined) delete data[k];
+        }
+        data = foundry.utils.mergeObject(current, data, {insertKeys: false});
+        StandardCheck.#configureData(data);
+        return data;
     }
 
-    // Damage Resistance or Vulnerability
-    if ( Number.isNumeric(this.data.damage?.total) ) {
-      cardData.resistanceLabel = this.data.damage.resistance < 0 ? "DICE.DamageVulnerability": "DICE.DamageResistance";
-      cardData.resistanceValue = Math.abs(this.data.damage.resistance);
+    /* -------------------------------------------- */
+
+    /**
+     * Configure the provided data used to customize this type of Roll
+     * @param {object} data     The initially provided data object
+     * @returns {object}        The configured data object
+     */
+    static #configureData(data) {
+
+        // Bonuses
+        data.dc = Math.max(data.dc, 0);
+        data.ability = Math.clamp(data.ability, 0, 12);
+        data.skill = Math.clamp(data.skill, -4, 12);
+        data.enchantment = Math.clamp(data.enchantment, 0, 6);
+
+        // Boons and Banes
+        data.totalBoons = StandardCheck.#prepareBoons(data.boons);
+        data.totalBanes = StandardCheck.#prepareBoons(data.banes);
     }
-    cardData.cssClass = cardData.cssClass.join(" ");
-    return cardData;
-  }
 
-  /* -------------------------------------------- */
+    /* -------------------------------------------- */
 
-  /**
-   * Used to re-initialize the pool with different data
-   * @param {object} data
-   */
-  initialize(data) {
-    this.data = this._prepareData(data);
-    this.terms = this.constructor.parse("", this.data);
-  }
-
-  /* -------------------------------------------- */
-
-  /**
-   * Present a Dialog instance for this pool
-   * @param {string} title      The title of the roll request
-   * @param {string} flavor     Any flavor text attached to the roll
-   * @param {string} rollMode   The requested roll mode
-   * @returns {Promise<{roll:StandardCheck, rollMode: string}|null>}
-   */
-  async dialog({title, flavor, rollMode}={}) {
-    return this.constructor.dialogClass.prompt({
-      window: {title},
-      flavor,
-      rollMode,
-      roll: this
-    });
-  }
-
-  /* -------------------------------------------- */
-
-  /**
-   * Construct a StandardCheck instance from a SwerpgAction which involves dice rolls.
-   * @param {SwerpgAction} action   The action from which to construct the check
-   * @returns {StandardCheck}         The constructed check instance
-   */
-  static fromAction(action) {
-    let {boons, banes, bonuses} = action.usage;
-    return new this({boons, banes, ...bonuses});
-  }
-
-  /* -------------------------------------------- */
-  /*  Saving and Loading                          */
-  /* -------------------------------------------- */
-
-  /** @inheritdoc */
-  toJSON() {
-    const data = super.toJSON();
-    data.data = foundry.utils.deepClone(this.data);
-    return data;
-  }
-
-  /* -------------------------------------------- */
-
-  /** @inheritdoc */
-  async toMessage(messageData, options={}) {
-    options.rollMode = options.rollMode || this.data.rollMode;
-    messageData.content ||= "";
-    this.#addDiceSoNiceEffects();
-    return super.toMessage(messageData, options);
-  }
-
-  /* -------------------------------------------- */
-
-  /**
-   * Augment the Roll with custom DiceSoNice module effects.
-   */
-  #addDiceSoNiceEffects() {
-    for ( const die of this.dice ) {
-      if ( die.faces > 8 ) die.options.sfx = {
-        specialEffect: "PlayAnimationBright",
-        options: {muteSound: true}
-      };
-      if ( die.faces < 8 ) die.options.sfx = {
-        specialEffect: "PlayAnimationDark",
-        options: {muteSound: true}
-      };
+    /**
+     * Prepare an object of boons or banes to compute the total which apply to the roll.
+     * @param {Object<string, DiceBoon>} boons    Boons applied to the roll
+     * @returns {number}                          The total number of applied boons
+     */
+    static #prepareBoons(boons) {
+        let total = 0;
+        for (const [id, boon] of Object.entries(boons)) {
+            boon.id = id;
+            boon.number ??= 1;
+            if ((total + boon.number) > SYSTEM.dice.MAX_BOONS) {
+                boon.number = SYSTEM.dice.MAX_BOONS - total;
+            }
+            total += boon.number;
+        }
+        return total;
     }
-  }
 
-  /* -------------------------------------------- */
-  /*  Socket Interactions                         */
-  /* -------------------------------------------- */
+    /* -------------------------------------------- */
 
-  /**
-   * Dispatch a request to perform a roll
-   * @param {string} title      The title of the roll request
-   * @param {string} flavor     Any flavor text attached to the roll
-   */
-  request({title, flavor}={}) {
-    game.socket.emit(`system.${SYSTEM.id}`, {
-      action: "diceCheck",
-      data: {
-        title: title,
-        flavor: flavor,
-        check: this.data
-      }
-    });
-  }
+    /** @override */
+    static parse(_, data) {
 
-  /* -------------------------------------------- */
+        // Configure the pool
+        const pool = [8, 8, 8];
 
-  /**
-   * Handle a request to roll a standard check
-   * @param {string} title              The title of the roll request
-   * @param {string} flavor             Any flavor text attached to the roll
-   * @param {StandardCheckData} check   Data for the handled check request
-   */
-  static async handle({title, flavor, check}={}) {
-    const actor = game.actors.get(check.actorId);
-    if ( actor.testUserPermission(game.user, "OWNER", {exact: true}) ) {
-      const pool = new this(check);
-      const response = await pool.dialog({title, flavor});
-      if ( response === null ) return;
-      return pool.toMessage({flavor});
+        // Apply boons from the left
+        let d = 0;
+        for (let i = 0; i < data.totalBoons; i++) {
+            pool[d] = pool[d] + SYSTEM.dice.DIE_STEP;
+            if (pool[d] === SYSTEM.dice.MAX_DIE) d++;
+        }
+
+        // Apply banes from the right
+        d = 2;
+        for (let i = 0; i < data.totalBanes; i++) {
+            pool[d] = pool[d] - SYSTEM.dice.DIE_STEP;
+            if (pool[d] === SYSTEM.dice.MIN_DIE) d--;
+        }
+
+        // Construct the formula
+        const terms = pool.map(p => `1d${p}`).concat([data.ability, data.skill]);
+        if (data.enchantment > 0) terms.push(data.enchantment);
+        const formula = terms.join(" + ");
+        return super.parse(formula, data);
     }
-  }
+
+    /* -------------------------------------------- */
+
+    /**
+     * FIXME remove this override in v13+
+     * @override
+     */
+    async render(chatOptions) {
+        const chatData = await this._prepareChatRenderContext(chatOptions);
+        return renderTemplate(this.constructor.CHAT_TEMPLATE, chatData);
+    }
+
+    /* -------------------------------------------- */
+
+    /** @override */
+    async _prepareChatRenderContext({flavor, isPrivate = false} = {}) {
+        const cardData = {
+            cssClass: [SYSTEM.id, "dice-roll", "standard-check"],
+            data: this.data,
+            defenseType: "DC",
+            defenseValue: this.data.dc,
+            diceTotal: this.dice.reduce((t, d) => t + d.total, 0),
+            isPrivate,
+            isGM: game.user.isGM,
+            flavor,
+            formula: this.formula,
+            outcome: "Unknown",
+            pool: this.dice.map(d => ({denom: `d${d.faces}`, result: d.total})),
+            total: this.total
+        }
+
+        // Successes and Failures
+        if (this.data.dc) {
+            if (this.isSuccess) {
+                cardData.outcome = "Success";
+                cardData.cssClass.push("success");
+                if (this.isCriticalSuccess) {
+                    cardData.outcome = "Critical " + cardData.outcome;
+                    cardData.cssClass.push("critical");
+                }
+            } else {
+                cardData.outcome = "Failure";
+                cardData.cssClass.push("failure");
+                if (this.isCriticalFailure) {
+                    cardData.outcome = "Critical " + cardData.outcome;
+                    cardData.cssClass.push("critical");
+                }
+            }
+        }
+
+        // Damage Resistance or Vulnerability
+        if (Number.isNumeric(this.data.damage?.total)) {
+            cardData.resistanceLabel = this.data.damage.resistance < 0 ? "DICE.DamageVulnerability" : "DICE.DamageResistance";
+            cardData.resistanceValue = Math.abs(this.data.damage.resistance);
+        }
+        cardData.cssClass = cardData.cssClass.join(" ");
+        return cardData;
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Used to re-initialize the pool with different data
+     * @param {object} data
+     */
+    initialize(data) {
+        this.data = this._prepareData(data);
+        this.terms = this.constructor.parse("", this.data);
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Present a Dialog instance for this pool
+     * @param {string} title      The title of the roll request
+     * @param {string} flavor     Any flavor text attached to the roll
+     * @param {string} rollMode   The requested roll mode
+     * @returns {Promise<{roll:StandardCheck, rollMode: string}|null>}
+     */
+    async dialog({title, flavor, rollMode} = {}) {
+        return this.constructor.dialogClass.prompt({
+            window: {title},
+            flavor,
+            rollMode,
+            roll: this
+        });
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Construct a StandardCheck instance from a SwerpgAction which involves dice rolls.
+     * @param {SwerpgAction} action   The action from which to construct the check
+     * @returns {StandardCheck}         The constructed check instance
+     */
+    static fromAction(action) {
+        let {boons, banes, bonuses} = action.usage;
+        return new this({boons, banes, ...bonuses});
+    }
+
+    /* -------------------------------------------- */
+    /*  Saving and Loading                          */
+
+    /* -------------------------------------------- */
+
+    /** @inheritdoc */
+    toJSON() {
+        const data = super.toJSON();
+        data.data = foundry.utils.deepClone(this.data);
+        return data;
+    }
+
+    /* -------------------------------------------- */
+
+    /** @inheritdoc */
+    async toMessage(messageData, options = {}) {
+        options.rollMode = options.rollMode || this.data.rollMode;
+        messageData.content ||= "";
+        this.#addDiceSoNiceEffects();
+        return super.toMessage(messageData, options);
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Augment the Roll with custom DiceSoNice module effects.
+     */
+    #addDiceSoNiceEffects() {
+        for (const die of this.dice) {
+            if (die.faces > 8) die.options.sfx = {
+                specialEffect: "PlayAnimationBright",
+                options: {muteSound: true}
+            };
+            if (die.faces < 8) die.options.sfx = {
+                specialEffect: "PlayAnimationDark",
+                options: {muteSound: true}
+            };
+        }
+    }
+
+    /* -------------------------------------------- */
+    /*  Socket Interactions                         */
+
+    /* -------------------------------------------- */
+
+    /**
+     * Dispatch a request to perform a roll
+     * @param {string} title      The title of the roll request
+     * @param {string} flavor     Any flavor text attached to the roll
+     */
+    request({title, flavor} = {}) {
+        game.socket.emit(`system.${SYSTEM.id}`, {
+            action: "diceCheck",
+            data: {
+                title: title,
+                flavor: flavor,
+                check: this.data
+            }
+        });
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle a request to roll a standard check
+     * @param {string} title              The title of the roll request
+     * @param {string} flavor             Any flavor text attached to the roll
+     * @param {StandardCheckData} check   Data for the handled check request
+     */
+    static async handle({title, flavor, check} = {}) {
+        const actor = game.actors.get(check.actorId);
+        if (actor.testUserPermission(game.user, "OWNER", {exact: true})) {
+            const pool = new this(check);
+            const response = await pool.dialog({title, flavor});
+            if (response === null) return;
+            return pool.toMessage({flavor});
+        }
+    }
 }
 
 StandardCheck.PARTS = ["3d8", "@ability", "@skill", "@enchantment"];

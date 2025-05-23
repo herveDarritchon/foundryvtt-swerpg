@@ -22,7 +22,7 @@ system:
         number: 1
         multiple: 2
         scope: 3
-      effects: []
+      effects: [ ]
       name: Twinned Shot
       img: icons/skills/ranged/arrows-flying-salvo-yellow.webp
       condition: ''
@@ -34,14 +34,14 @@ system:
         maximum: null
         weapon: true
         minimum: null
-      actionHooks: []
-effects: []
+      actionHooks: [ ]
+effects: [ ]
 folder: i7P1uwWcECj5KWfY
 sort: -200000
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3
-flags: {}
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.6.0

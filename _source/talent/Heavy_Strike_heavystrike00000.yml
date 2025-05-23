@@ -26,15 +26,15 @@ system:
         type: single
         number: 1
         scope: 3
-      effects: []
+      effects: [ ]
       name: Heavy Strike
       img: icons/skills/melee/strike-hammer-destructive-blue.webp
-      actionHooks: []
+      actionHooks: [ ]
       range:
         maximum: null
         weapon: true
         minimum: null
-effects: []
+effects: [ ]
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3

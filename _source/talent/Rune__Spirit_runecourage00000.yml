@@ -10,7 +10,7 @@ system:
 
     <p>The Spirit rune scales using <strong>Presence</strong> and provides
     <strong>Restoration</strong> of <strong>Morale</strong>.</p>
-  actions: []
+  actions: [ ]
   rune: spirit
   actorHooks:
     - hook: applyCriticalEffects
@@ -25,7 +25,7 @@ system:
         // Apply Inspired effect
         const inspired = SYSTEM.EFFECTS.inspired(actor, outcome.target);
         outcome.effects.push(inspired);
-effects: []
+effects: [ ]
 flags:
   core:
     sourceId: Compendium.swerpg.talent.runecourage00000

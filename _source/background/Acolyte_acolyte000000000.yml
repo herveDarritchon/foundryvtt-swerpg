@@ -2,9 +2,9 @@ _id: acolyte000000000
 name: Acolyte
 type: background
 img: icons/magic/holy/chalice-glowing-gold.webp
-effects: []
+effects: [ ]
 folder: 5piCK2JWjY34nSY3
-flags: {}
+flags: { }
 system:
   description: >-
     <p>You were a person of faith. You learned how to live selflessly in service

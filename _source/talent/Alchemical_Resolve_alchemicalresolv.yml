@@ -25,17 +25,17 @@ system:
         type: single
         number: 1
         scope: 0
-      effects: []
+      effects: [ ]
       name: Alchemical Resolve
       img: icons/skills/toxins/bottle-open-vapors-pink.webp
       range:
         maximum: 4
         weapon: false
         minimum: null
-      actionHooks: []
-  requirements: {}
+      actionHooks: [ ]
+  requirements: { }
   node: int2c
-effects: []
+effects: [ ]
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3

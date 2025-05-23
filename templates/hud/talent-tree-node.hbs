@@ -3,12 +3,12 @@
         <div class="tags">
             <label>{{id}}</label>
             {{#each tags as |tag|}}
-            <span class="tag {{tag.class}}">{{tag.label}}</span>
+                <span class="tag {{tag.class}}">{{tag.label}}</span>
             {{/each}}
         </div>
         <div class="tags prerequisites">
             {{#each prerequisites as |req|}}
-            <span class="tag {{#unless req.met}}unmet{{/unless}}">{{req.tag}}</span>
+                <span class="tag {{#unless req.met}}unmet{{/unless}}">{{req.tag}}</span>
             {{/each}}
         </div>
     </header>

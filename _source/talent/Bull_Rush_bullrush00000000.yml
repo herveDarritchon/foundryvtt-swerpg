@@ -42,14 +42,14 @@ system:
         maximum: 10
         weapon: false
         minimum: null
-      actionHooks: []
-effects: []
+      actionHooks: [ ]
+effects: [ ]
 folder: MqZKCMx5KrZQffGU
 sort: 200000
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3
-flags: {}
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.6.0

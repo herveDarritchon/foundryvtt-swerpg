@@ -10,16 +10,16 @@ system:
     against its casting. This spell does not provide any opportunity to make
     reactions that involve Strike attacks, regardless of the results of the
     spell.</p>
-  actions: []
+  actions: [ ]
   inflection: eluding
-  actorHooks: []
+  actorHooks: [ ]
   iconicSpells: 1
-effects: []
+effects: [ ]
 sort: 0
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3
-flags: {}
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.6.0

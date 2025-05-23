@@ -2,9 +2,9 @@ _id: longbow000000000
 name: Longbow
 type: weapon
 img: icons/weapons/bows/longbow-leather-green.webp
-effects: []
+effects: [ ]
 folder: Pe27j9LY8Nmygkqt
-flags: {}
+flags: { }
 system:
   category: projectile2
   quantity: 1

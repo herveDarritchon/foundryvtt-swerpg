@@ -28,7 +28,7 @@ system:
         number: 1
         scope: 2
         size: 12
-      effects: []
+      effects: [ ]
       name: Soothe
       img: icons/magic/life/heart-cross-strong-blue.webp
       condition: ''
@@ -36,10 +36,10 @@ system:
         maximum: null
         weapon: false
         minimum: null
-      actionHooks: []
-  requirements: {}
-effects: []
-flags: {}
+      actionHooks: [ ]
+  requirements: { }
+effects: [ ]
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.6.0

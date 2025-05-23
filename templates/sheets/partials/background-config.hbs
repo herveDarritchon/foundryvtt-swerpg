@@ -9,11 +9,11 @@
     <fieldset class="talents" {{fieldDisabled}}>
         <legend>{{fields.talents.label}}</legend>
         {{#each talents}}
-        {{{this}}}
+            {{{this}}}
         {{else}}
-        <div class="talent-drop droppable">
-            <p class="hint">{{localize "BACKGROUND.SHEET.TALENT_DROP"}}</p>
-        </div>
+            <div class="talent-drop droppable">
+                <p class="hint">{{localize "BACKGROUND.SHEET.TALENT_DROP"}}</p>
+            </div>
         {{/each}}
         <p class="hint">{{fields.talents.hint}}</p>
     </fieldset>

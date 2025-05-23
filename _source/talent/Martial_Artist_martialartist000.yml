@@ -7,10 +7,10 @@ system:
   description: >-
     You have honed your body into a dangerous weapon. Your bare fists are
     treated as weapons of Fine quality, increasing their damage by +1.
-  actions: []
-  requirements: {}
-effects: []
-flags: {}
+  actions: [ ]
+  requirements: { }
+effects: [ ]
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.6.2

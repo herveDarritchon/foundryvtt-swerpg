@@ -5,7 +5,7 @@ type: Item
 _id: Dy9HnwadNE3kSZ4f
 sort: -100000
 color: '#3a2c58'
-flags: {}
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.6.2

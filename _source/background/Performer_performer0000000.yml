@@ -2,9 +2,9 @@ _id: performer0000000
 name: Performer
 type: background
 img: icons/skills/movement/ball-spinning-blue.webp
-effects: []
+effects: [ ]
 folder: 5piCK2JWjY34nSY3
-flags: {}
+flags: { }
 system:
   description: >-
     You were a travelling entertainer. You learned to be comfortable attending a

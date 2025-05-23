@@ -47,7 +47,7 @@ system:
         strength: 4
         toughness: 4
         dexterity: 4
-      talents: []
+      talents: [ ]
       name: Creation
       img: icons/magic/symbols/elements-air-earth-fire-water.webp
     stature: small
@@ -218,8 +218,8 @@ prototypeToken:
     brightness: 0
     saturation: 0
     contrast: 0
-  detectionModes: []
-  flags: {}
+  detectionModes: [ ]
+  flags: { }
   randomImg: false
   hexagonalShape: 0
   occludable:
@@ -248,12 +248,12 @@ items:
       broken: false
       enchantment: mundane
       equipped: true
-      properties: []
+      properties: [ ]
       armor:
         base: 4
       dodge:
         base: 10
-    effects: []
+    effects: [ ]
     sort: 0
     ownership:
       default: 0
@@ -285,9 +285,9 @@ items:
       broken: false
       enchantment: mundane
       equipped: true
-      properties: []
+      properties: [ ]
       damageType: slashing
-    effects: []
+    effects: [ ]
     sort: 0
     ownership:
       default: 0
@@ -311,10 +311,10 @@ items:
     system:
       node: int0
       description: You learn Rune of Death, allowing you to manipulate unholy power.
-      actions: []
+      actions: [ ]
       rune: death
-      actorHooks: []
-    effects: []
+      actorHooks: [ ]
+    effects: [ ]
     flags:
       core:
         sourceId: Compendium.swerpg.talent.runedeath0000000
@@ -342,10 +342,10 @@ items:
       description: >-
         You learn the Fan gesture, allowing you to cast arcane power in a
         limited arc.
-      actions: []
+      actions: [ ]
       gesture: fan
-      actorHooks: []
-    effects: []
+      actorHooks: [ ]
+    effects: [ ]
     flags:
       core:
         sourceId: Compendium.swerpg.talent.gesturefan000000
@@ -365,13 +365,13 @@ items:
     folder: D14x9AJ0TgXKtnzu
     sort: 400000
     _key: '!actors.items!56puGK932Qc0cowe.gesturefan000000'
-effects: []
+effects: [ ]
 folder: 5oBBNdq95OvvXx3e
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3
 flags:
-  core: {}
+  core: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.6.0

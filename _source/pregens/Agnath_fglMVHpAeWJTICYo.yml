@@ -219,8 +219,8 @@ prototypeToken:
     brightness: 0
     saturation: 0
     contrast: 0
-  detectionModes: []
-  flags: {}
+  detectionModes: [ ]
+  flags: { }
   randomImg: false
   hexagonalShape: 0
   occludable:
@@ -248,19 +248,19 @@ items:
         <p>You gain a +1 Skill bonus to attacks using melee weapons in the
         <strong>Simple</strong>, <strong>Heavy</strong>, or
         <strong>Balanced</strong> categories.</p>
-      actions: []
+      actions: [ ]
       actorHooks:
         - hook: prepareTraining
           fn: |-
             training.heavy += 1;
             training.balanced += 1;
-    effects: []
+    effects: [ ]
     folder: FQAUMNkcagdBLURJ
     sort: 125000
     ownership:
       default: 0
       AnoypGxxNIMOS0XY: 3
-    flags: {}
+    flags: { }
     _stats:
       systemId: swerpg
       systemVersion: 0.5.4
@@ -275,7 +275,7 @@ items:
     name: Fine Greatsword
     type: weapon
     img: icons/weapons/swords/greatsword-crossguard-flanged-red.webp
-    effects: []
+    effects: [ ]
     folder: bvWJheBtuW1LmkAy
     flags:
       core:
@@ -288,7 +288,7 @@ items:
       quality: fine
       enchantment: mundane
       equipped: true
-      properties: []
+      properties: [ ]
       description: ''
       damageType: slashing
       broken: false
@@ -318,15 +318,15 @@ items:
         You are gifted at exploiting the slowness with which others think. If
         you are first in Initiative order for the first round of Combat, you
         gain +1 Action during your turn.
-      actions: []
-      actorHooks: []
-    effects: []
+      actions: [ ]
+      actorHooks: [ ]
+    effects: [ ]
     folder: BevAJzzLeFbSaVic
     sort: -75000
     ownership:
       default: 0
       AnoypGxxNIMOS0XY: 3
-    flags: {}
+    flags: { }
     _stats:
       systemId: swerpg
       systemVersion: 0.5.4
@@ -349,15 +349,15 @@ items:
 
         <p>The Corrupted effect lasts for 3 Rounds and deals your Intellect
         score as Corruption damage to Health each Round.</p>
-      actions: []
-      actorHooks: []
-    effects: []
+      actions: [ ]
+      actorHooks: [ ]
+    effects: [ ]
     folder: c0nl6X8tp4Of0Y4O
     sort: -250000
     ownership:
       default: 0
       AnoypGxxNIMOS0XY: 3
-    flags: {}
+    flags: { }
     _stats:
       systemId: swerpg
       systemVersion: 0.5.4
@@ -381,10 +381,10 @@ items:
         <p>The Arrow gesture scales using <strong>Intellect</strong> and targets
         a <strong>single</strong> creature up to a distance of 10 spaces,
         dealing 10 base damage on a successful attack.</p>
-      actions: []
+      actions: [ ]
       gesture: arrow
-      actorHooks: []
-    effects: []
+      actorHooks: [ ]
+    effects: [ ]
     flags:
       core:
         sourceId: Compendium.swerpg.talent.gesturearrow0000
@@ -414,15 +414,15 @@ items:
         <p>Your quick thinking can weave magic to exploit brief windows of
         opportunity. You may make a <strong>Disengagement Attack</strong> using
         the <strong>Touch</strong> Gesture instead of a melee weapon attack.</p>
-      actions: []
-      actorHooks: []
-    effects: []
+      actions: [ ]
+      actorHooks: [ ]
+    effects: [ ]
     folder: aB808IWOdgwmFCIF
     sort: 300000
     ownership:
       default: 0
       AnoypGxxNIMOS0XY: 3
-    flags: {}
+    flags: { }
     _stats:
       systemId: swerpg
       systemVersion: 0.5.4
@@ -443,7 +443,7 @@ items:
         It is sometimes a marvel how slowly others around you think. You gain
         <strong>+1 Boon</strong> on any Strike or Spell attack against an enemy
         lower than you in Initiative order.
-      actions: []
+      actions: [ ]
       actorHooks:
         - hook: prepareWeaponAttack
           fn: >-
@@ -463,13 +463,13 @@ items:
             if ( ac?.initiative > tc?.initiative )
             rollData.boons.intellectualSuperiority = {label: "Intellectual
             Superiority", number: 1};
-    effects: []
+    effects: [ ]
     folder: BevAJzzLeFbSaVic
     sort: -50000
     ownership:
       default: 0
       AnoypGxxNIMOS0XY: 3
-    flags: {}
+    flags: { }
     _stats:
       systemId: swerpg
       systemVersion: 0.5.4
@@ -496,7 +496,7 @@ items:
         when you have less than 50% of your maximum Health remaining. You gain
         +2 Boons to all checks when you have less than 25% of your maximum
         Health remaining.</p>
-      actions: []
+      actions: [ ]
       actorHooks:
         - hook: prepareStandardCheck
           fn: >-
@@ -512,13 +512,13 @@ items:
             else if ( health.value < Math.ceil(health.max * 0.5) ) {
               rollData.boons.operator= {label: "Operator", number: 1};
             }
-    effects: []
+    effects: [ ]
     folder: fOYHlZJEWUukD7yr
     sort: 304688
     ownership:
       default: 0
       AnoypGxxNIMOS0XY: 3
-    flags: {}
+    flags: { }
     _stats:
       systemId: swerpg
       systemVersion: 0.5.4
@@ -533,7 +533,7 @@ items:
     name: Cleave
     type: talent
     img: icons/skills/melee/strike-sword-steel-yellow.webp
-    effects: []
+    effects: [ ]
     flags:
       core:
         sourceId: Item.pHRUZ8Zfv5E0TcH2
@@ -559,8 +559,8 @@ items:
             number: 1
             distance: 1
             scope: 3
-          effects: []
-      actorHooks: []
+          effects: [ ]
+      actorHooks: [ ]
     _stats:
       systemId: swerpg
       systemVersion: 0.5.4
@@ -589,10 +589,10 @@ items:
         <p>The Strike gesture scales using <strong>Strength</strong> and targets
         a <strong>single</strong> adjacent creature, dealing 12 base damage on a
         successful attack.</p>
-      actions: []
+      actions: [ ]
       gesture: strike
-      actorHooks: []
-    effects: []
+      actorHooks: [ ]
+    effects: [ ]
     flags:
       core:
         sourceId: Compendium.swerpg.talent.gesturearrowcopy
@@ -621,10 +621,10 @@ items:
         Your battle lust spurs you to feats of heightened action. When you
         achieve a Critical Hit you immediately gain +1 Action. This benefit may
         only happen once per Round.
-      actions: []
+      actions: [ ]
       node: str2a
-      actorHooks: []
-    effects: []
+      actorHooks: [ ]
+    effects: [ ]
     ownership:
       default: 0
       AnoypGxxNIMOS0XY: 3
@@ -647,7 +647,7 @@ items:
     name: Fine Scale Mail
     type: armor
     img: icons/equipment/chest/breastplate-banded-steel-studded.webp
-    effects: []
+    effects: [ ]
     flags:
       core:
         sourceId: Compendium.swerpg.armor.Item.6ww3SkYTk6RZBwMS
@@ -659,7 +659,7 @@ items:
       quality: fine
       enchantment: mundane
       equipped: true
-      properties: []
+      properties: [ ]
       description: ''
       armor:
         base: 13
@@ -694,10 +694,10 @@ items:
         <p>The Death rune scales using <strong>Intellect</strong>, targets
         <strong>Fortitude</strong>, and deals <strong>Corruption</strong> damage
         to <strong>Health</strong>.</p>
-      actions: []
+      actions: [ ]
       rune: death
-      actorHooks: []
-    effects: []
+      actorHooks: [ ]
+    effects: [ ]
     flags:
       core:
         sourceId: Compendium.swerpg.talent.runedeath0000000
@@ -727,10 +727,10 @@ items:
         Your grasp of your weaponry is firm and unyielding. You can perform
         Actions which require a free hand while wielding a two-handed weapon.
         Attempts to Disarm you are made with +2 Banes.
-      actions: []
-      actorHooks: []
-    effects: []
-    flags: {}
+      actions: [ ]
+      actorHooks: [ ]
+    effects: [ ]
+    flags: { }
     _stats:
       systemId: swerpg
       systemVersion: 0.5.4
@@ -759,10 +759,10 @@ items:
 
         <p>After performing a Strike attack, the Action cost of the next Spell
         you cast during the same Turn is reduced by 1.</p>
-      actions: []
+      actions: [ ]
       node: strint3
-      actorHooks: []
-    effects: []
+      actorHooks: [ ]
+    effects: [ ]
     ownership:
       default: 0
       AnoypGxxNIMOS0XY: 3
@@ -785,7 +785,7 @@ items:
     name: Katana
     type: weapon
     img: icons/weapons/swords/sword-katana.webp
-    effects: []
+    effects: [ ]
     folder: pUXcL0pnY3FlKwj8
     flags:
       core:
@@ -820,10 +820,10 @@ items:
       default: 0
       AnoypGxxNIMOS0XY: 3
     _key: '!actors.items!fglMVHpAeWJTICYo.UjiAa4uL8B2qy8Zm'
-effects: []
+effects: [ ]
 flags:
-  core: {}
-  swerpg: {}
+  core: { }
+  swerpg: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.5.4

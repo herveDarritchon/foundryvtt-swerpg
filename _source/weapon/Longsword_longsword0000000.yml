@@ -2,9 +2,9 @@ _id: longsword0000000
 name: Longsword
 type: weapon
 img: icons/weapons/swords/greatsword-crossguard-steel.webp
-effects: []
+effects: [ ]
 folder: pUXcL0pnY3FlKwj8
-flags: {}
+flags: { }
 system:
   category: heavy1
   quantity: 1

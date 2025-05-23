@@ -47,7 +47,7 @@ export default class CareerFreeSkill extends Skill {
 
 
         this.data.rank.value = this.data.rank.base + careerFree + this.data.rank.specializationFree + this.data.rank.trained
-        this.data.rank.careerFree= careerFree;
+        this.data.rank.careerFree = careerFree;
         this.actor.freeSkillRanks.career.spent = careerFreeRankSpent;
         this.evaluated = true;
         return this;

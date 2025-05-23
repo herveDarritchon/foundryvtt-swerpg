@@ -27,16 +27,16 @@ system:
         type: self
         number: 1
         scope: 0
-      effects: []
+      effects: [ ]
       name: ''
       img: null
       range:
         maximum: 0
         weapon: false
-      actionHooks: []
-  requirements: {}
-effects: []
-flags: {}
+      actionHooks: [ ]
+  requirements: { }
+effects: [ ]
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.5.9

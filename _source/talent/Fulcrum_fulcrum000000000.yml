@@ -26,14 +26,14 @@ system:
         number: 1
         distance: 1
         scope: 3
-      effects: []
-  actorHooks: []
-effects: []
+      effects: [ ]
+  actorHooks: [ ]
+effects: [ ]
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3
 flags:
-  core: {}
+  core: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.6.0

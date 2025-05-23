@@ -7,11 +7,11 @@ system:
     other magi. You may ask the Gamemaster if you know a Rune capable of
     countering an enemy spell, even if you do not recognize the spell being
     cast. You gain +2 Boons to any Counterspell attempt.</p>
-  actions: []
-  requirements: {}
+  actions: [ ]
+  requirements: { }
   node: sig3.presence.intellect
   iconicSpells: 2
-effects: []
+effects: [ ]
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3

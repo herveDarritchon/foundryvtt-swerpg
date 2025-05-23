@@ -15,7 +15,7 @@ system:
         <p>You harden yourself against demoralization. Your Morale is increased
         by your Wisdom score and you temporarily gain the Resolute
         condition.</p>
-      tags: []
+      tags: [ ]
       cost:
         action: 2
         focus: 1
@@ -37,9 +37,9 @@ system:
         maximum: null
         weapon: false
         minimum: null
-      actionHooks: []
-  requirements: {}
-effects: []
+      actionHooks: [ ]
+  requirements: { }
+effects: [ ]
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3

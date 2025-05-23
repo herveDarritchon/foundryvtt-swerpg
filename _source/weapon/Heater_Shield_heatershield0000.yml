@@ -2,10 +2,10 @@ _id: heatershield0000
 name: Heater Shield
 type: weapon
 img: icons/equipment/shield/heater-steel-worn.webp
-effects: []
+effects: [ ]
 folder: 9v0ru58f09fO3sE3
 flags:
-  core: {}
+  core: { }
 system:
   category: shieldLight
   quantity: 1

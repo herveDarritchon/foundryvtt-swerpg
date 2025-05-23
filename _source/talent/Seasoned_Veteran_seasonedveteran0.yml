@@ -8,12 +8,12 @@ system:
     <p>You battlefield experience makes you accustomed to engaging multiple
     foes. Your <strong>Engagement</strong> trained by +1, allowing you to
     simultaneously engage more adjacent foes.</p>
-  actions: []
+  actions: [ ]
   actorHooks:
     - hook: prepareMovement
       fn: movement.engagement += 1;
-effects: []
-flags: {}
+effects: [ ]
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.5.4

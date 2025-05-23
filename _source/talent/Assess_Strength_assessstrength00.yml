@@ -17,7 +17,7 @@ system:
       description: >-
         You observe a creature you can see to assess it's notable areas of
         strength.
-      tags: []
+      tags: [ ]
       cost:
         action: 1
         focus: 1
@@ -26,15 +26,15 @@ system:
         number: 1
         distance: 10
         scope: 0
-      effects: []
-  actorHooks: []
-effects: []
+      effects: [ ]
+  actorHooks: [ ]
+effects: [ ]
 folder: 2MFixpDJ379KOogE
 sort: -87500
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3
-flags: {}
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.5.0

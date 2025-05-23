@@ -31,107 +31,108 @@ import ActionUseDialog from "./action-use-dialog.mjs";
  */
 export default class AttackRoll extends StandardCheck {
 
-  /** @override */
-  static defaultData = foundry.utils.mergeObject(StandardCheck.defaultData, {
-    target: undefined,
-    defenseType: "physical",
-    result: undefined,
-    damage: undefined,
-    index: undefined,
-    newTarget: false  // FIXME it would be good to handle this a different way
-  });
+    /** @override */
+    static defaultData = foundry.utils.mergeObject(StandardCheck.defaultData, {
+        target: undefined,
+        defenseType: "physical",
+        result: undefined,
+        damage: undefined,
+        index: undefined,
+        newTarget: false  // FIXME it would be good to handle this a different way
+    });
 
-  /**
-   * Which Dialog subclass should display a prompt for this Roll type?
-   * @type {ActionUseDialog}
-   */
-  static dialogClass = ActionUseDialog;
+    /**
+     * Which Dialog subclass should display a prompt for this Roll type?
+     * @type {ActionUseDialog}
+     */
+    static dialogClass = ActionUseDialog;
 
-  /**
-   * The possible result types which can occur from an attack roll
-   * @enum {number}
-   */
-  static RESULT_TYPES = {
-    MISS: 0,
-    DODGE: 1,
-    PARRY: 2,
-    BLOCK: 3,
-    ARMOR: 4,
-    RESIST: 5,
-    GLANCE: 6,
-    HIT: 7
-  };
+    /**
+     * The possible result types which can occur from an attack roll
+     * @enum {number}
+     */
+    static RESULT_TYPES = {
+        MISS: 0,
+        DODGE: 1,
+        PARRY: 2,
+        BLOCK: 3,
+        ARMOR: 4,
+        RESIST: 5,
+        GLANCE: 6,
+        HIT: 7
+    };
 
-  /**
-   * The localization labels used for each result in RESULT_TYPES
-   * @enum {string}
-   */
-  static RESULT_TYPE_LABELS = {
-    [this.RESULT_TYPES.MISS]: "ATTACK.RESULT_TYPES.MISS",
-    [this.RESULT_TYPES.DODGE]: "ATTACK.RESULT_TYPES.DODGE",
-    [this.RESULT_TYPES.PARRY]: "ATTACK.RESULT_TYPES.PARRY",
-    [this.RESULT_TYPES.BLOCK]: "ATTACK.RESULT_TYPES.BLOCK",
-    [this.RESULT_TYPES.ARMOR]: "ATTACK.RESULT_TYPES.ARMOR",
-    [this.RESULT_TYPES.RESIST]: "ATTACK.RESULT_TYPES.RESIST",
-    [this.RESULT_TYPES.GLANCE]: "ATTACK.RESULT_TYPES.GLANCE",
-    [this.RESULT_TYPES.HIT]: "ATTACK.RESULT_TYPES.HIT",
-  }
-
-  /**
-   * The overflow damage amount produced by this attack roll
-   * @returns {number}
-   */
-  get overflow() {
-    return this.total - this.data.dc;
-  }
-
-  /* -------------------------------------------- */
-  /*  Helpers                                     */
-  /* -------------------------------------------- */
-
-  /** @inheritdoc */
-  async _prepareChatRenderContext({flavor, isPrivate=false}={}) {
-    const cardData = await super._prepareChatRenderContext();
-    cardData.cssClass += ` ${this.#getResultClass()}`;
-
-    // Target
-    if ( this.data.target ) {
-      const target = fromUuidSync(this.data.target);
-      cardData.target = {uuid: this.data.target, name: target?.name ?? "Unknown"};
+    /**
+     * The localization labels used for each result in RESULT_TYPES
+     * @enum {string}
+     */
+    static RESULT_TYPE_LABELS = {
+        [this.RESULT_TYPES.MISS]: "ATTACK.RESULT_TYPES.MISS",
+        [this.RESULT_TYPES.DODGE]: "ATTACK.RESULT_TYPES.DODGE",
+        [this.RESULT_TYPES.PARRY]: "ATTACK.RESULT_TYPES.PARRY",
+        [this.RESULT_TYPES.BLOCK]: "ATTACK.RESULT_TYPES.BLOCK",
+        [this.RESULT_TYPES.ARMOR]: "ATTACK.RESULT_TYPES.ARMOR",
+        [this.RESULT_TYPES.RESIST]: "ATTACK.RESULT_TYPES.RESIST",
+        [this.RESULT_TYPES.GLANCE]: "ATTACK.RESULT_TYPES.GLANCE",
+        [this.RESULT_TYPES.HIT]: "ATTACK.RESULT_TYPES.HIT",
     }
 
-    // Defense label
-    const dt = this.data.defenseType;
-    if ( dt in SYSTEM.DEFENSES ) cardData.defenseType = SYSTEM.DEFENSES[dt].label;
-    else if ( dt in SYSTEM.SKILLS ) cardData.defenseType = SYSTEM.SKILLS[dt].label;
-    else cardData.defenseType = "DC";
-
-    // Outcome label
-    cardData.outcome = game.i18n.localize(this.constructor.RESULT_TYPE_LABELS[this.data.result]);
-
-    // Damage type
-    const damage = this.data.damage || {};
-    damage.display = (damage.total > 0) || Number.isNumeric(damage.overflow);
-    if ( damage.display ) {
-      cardData.damageLabel = game.i18n.localize(damage.restoration ? "DICE.Healing" : "DICE.Damage");
-      cardData.baseLabel = game.i18n.format("DICE.DamageBase", {type: cardData.damageLabel});
-      if ( damage.restoration ) cardData.damageType = SYSTEM.RESOURCES[damage.resource].label;
-      else if ( damage.type ) cardData.damageType = SYSTEM.DAMAGE_TYPES[damage.type].label;
+    /**
+     * The overflow damage amount produced by this attack roll
+     * @returns {number}
+     */
+    get overflow() {
+        return this.total - this.data.dc;
     }
-    cardData.hasMultiplier = damage?.multiplier !== 1;
-    return cardData;
-  }
 
-  /* -------------------------------------------- */
+    /* -------------------------------------------- */
+    /*  Helpers                                     */
 
-  /**
-   * Get the attack roll result CSS class.
-   * @returns {string}
-   */
-  #getResultClass() {
-    const results = this.constructor.RESULT_TYPES;
-    const result = Object.entries(results).find(e => e[1] === this.data.result);
-    if ( (result[1] === results.GLANCE) && !this.data.damage.total )  return "miss";
-    else return result[0].toLowerCase();
-  }
+    /* -------------------------------------------- */
+
+    /** @inheritdoc */
+    async _prepareChatRenderContext({flavor, isPrivate = false} = {}) {
+        const cardData = await super._prepareChatRenderContext();
+        cardData.cssClass += ` ${this.#getResultClass()}`;
+
+        // Target
+        if (this.data.target) {
+            const target = fromUuidSync(this.data.target);
+            cardData.target = {uuid: this.data.target, name: target?.name ?? "Unknown"};
+        }
+
+        // Defense label
+        const dt = this.data.defenseType;
+        if (dt in SYSTEM.DEFENSES) cardData.defenseType = SYSTEM.DEFENSES[dt].label;
+        else if (dt in SYSTEM.SKILLS) cardData.defenseType = SYSTEM.SKILLS[dt].label;
+        else cardData.defenseType = "DC";
+
+        // Outcome label
+        cardData.outcome = game.i18n.localize(this.constructor.RESULT_TYPE_LABELS[this.data.result]);
+
+        // Damage type
+        const damage = this.data.damage || {};
+        damage.display = (damage.total > 0) || Number.isNumeric(damage.overflow);
+        if (damage.display) {
+            cardData.damageLabel = game.i18n.localize(damage.restoration ? "DICE.Healing" : "DICE.Damage");
+            cardData.baseLabel = game.i18n.format("DICE.DamageBase", {type: cardData.damageLabel});
+            if (damage.restoration) cardData.damageType = SYSTEM.RESOURCES[damage.resource].label;
+            else if (damage.type) cardData.damageType = SYSTEM.DAMAGE_TYPES[damage.type].label;
+        }
+        cardData.hasMultiplier = damage?.multiplier !== 1;
+        return cardData;
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Get the attack roll result CSS class.
+     * @returns {string}
+     */
+    #getResultClass() {
+        const results = this.constructor.RESULT_TYPES;
+        const result = Object.entries(results).find(e => e[1] === this.data.result);
+        if ((result[1] === results.GLANCE) && !this.data.damage.total) return "miss";
+        else return result[0].toLowerCase();
+    }
 }

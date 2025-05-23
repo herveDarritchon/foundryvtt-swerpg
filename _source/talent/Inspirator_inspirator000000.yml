@@ -9,15 +9,15 @@ system:
     this Rune cause the Inspired condition on Critical Hits.</p><p>The Inspired
     effect lasts for 1 Round and deals your Presence score as restoration to
     Morale.</p>
-  actions: []
-  requirements: {}
-effects: []
+  actions: [ ]
+  requirements: { }
+effects: [ ]
 folder: c0nl6X8tp4Of0Y4O
 sort: 50000
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3
-flags: {}
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.6.0

@@ -219,8 +219,8 @@ prototypeToken:
     brightness: 0
     saturation: 0
     contrast: 0
-  detectionModes: []
-  flags: {}
+  detectionModes: [ ]
+  flags: { }
   randomImg: false
   hexagonalShape: 0
   occludable:
@@ -244,9 +244,9 @@ items:
         You have expertise in using a Shield to defend a fixed position. You can
         use the Defend action for free instead of a free Move action once per
         Turn.
-      actions: []
-      actorHooks: []
-    effects: []
+      actions: [ ]
+      actorHooks: [ ]
+    effects: [ ]
     ownership:
       default: 0
       AnoypGxxNIMOS0XY: 3
@@ -279,19 +279,19 @@ items:
         <p>You gain a +1 Skill bonus to attacks using melee weapons in the
         <strong>Simple</strong>, <strong>Heavy</strong>, or
         <strong>Balanced</strong> categories.</p>
-      actions: []
+      actions: [ ]
       actorHooks:
         - hook: prepareTraining
           fn: |-
             training.heavy += 1;
             training.balanced += 1;
-    effects: []
+    effects: [ ]
     folder: FQAUMNkcagdBLURJ
     sort: 125000
     ownership:
       default: 0
       AnoypGxxNIMOS0XY: 3
-    flags: {}
+    flags: { }
     _stats:
       systemId: swerpg
       systemVersion: 0.5.4
@@ -306,7 +306,7 @@ items:
     name: Fine War Hammer
     type: weapon
     img: icons/weapons/hammers/hammer-war-rounding.webp
-    effects: []
+    effects: [ ]
     folder: pUXcL0pnY3FlKwj8
     flags:
       core:
@@ -344,7 +344,7 @@ items:
     name: Fine Splint Mail
     type: armor
     img: icons/equipment/chest/breastplate-layered-steel-black.webp
-    effects: []
+    effects: [ ]
     folder: mLC1TdXCG7bX8VE9
     flags:
       core:
@@ -396,10 +396,10 @@ items:
 
         <p>You may only have a single Ward at a time. Casting another spell
         using the Ward gesture replaces your prior Ward.</p>
-      actions: []
+      actions: [ ]
       gesture: ward
-      actorHooks: []
-    effects: []
+      actorHooks: [ ]
+    effects: [ ]
     ownership:
       default: 0
       AnoypGxxNIMOS0XY: 3
@@ -455,8 +455,8 @@ items:
               scope: 3
               statuses:
                 - frightened
-      actorHooks: []
-    effects: []
+      actorHooks: [ ]
+    effects: [ ]
     ownership:
       default: 0
       AnoypGxxNIMOS0XY: 3
@@ -503,9 +503,9 @@ items:
             number: 1
             distance: 1
             scope: 3
-          effects: []
-      actorHooks: []
-    effects: []
+          effects: [ ]
+      actorHooks: [ ]
+    effects: [ ]
     ownership:
       default: 0
       AnoypGxxNIMOS0XY: 3
@@ -529,8 +529,8 @@ items:
     name: Shield Charge
     type: talent
     img: icons/skills/movement/arrow-upward-white.webp
-    effects: []
-    flags: {}
+    effects: [ ]
+    flags: { }
     system:
       node: toustr1
       description: >-
@@ -558,8 +558,8 @@ items:
             number: 1
             distance: 6
             scope: 3
-          effects: []
-      actorHooks: []
+          effects: [ ]
+      actorHooks: [ ]
     _stats:
       systemId: swerpg
       systemVersion: 0.5.4
@@ -578,7 +578,7 @@ items:
   - name: Second Wind
     type: talent
     img: icons/magic/life/cross-area-circle-green-white.webp
-    effects: []
+    effects: [ ]
     flags:
       core:
         sourceId: Item.V4stscWtnt2GFRY2
@@ -602,8 +602,8 @@ items:
             number: 0
             distance: 1
             scope: 1
-          effects: []
-      actorHooks: []
+          effects: [ ]
+      actorHooks: [ ]
     _stats:
       systemId: swerpg
       systemVersion: 0.5.4
@@ -623,7 +623,7 @@ items:
   - name: Counter Strike
     type: talent
     img: icons/skills/melee/shield-block-bash-yellow.webp
-    effects: []
+    effects: [ ]
     flags:
       core:
         sourceId: Compendium.swerpg.talent.counterstrike000
@@ -653,8 +653,8 @@ items:
             number: 1
             distance: 1
             scope: 3
-          effects: []
-      actorHooks: []
+          effects: [ ]
+      actorHooks: [ ]
     _stats:
       systemId: swerpg
       systemVersion: 0.5.4
@@ -681,17 +681,17 @@ items:
         <p>You are a calm anchor in the swirling sea of combat. Your
         <strong>Engagement</strong> trained by +1, allowing you to
         simultaneously engage more adjacent foes.</p>
-      actions: []
+      actions: [ ]
       actorHooks:
         - hook: prepareMovement
           fn: movement.engagement += 1;
-    effects: []
+    effects: [ ]
     folder: aB808IWOdgwmFCIF
     sort: 100000
     ownership:
       default: 0
       AnoypGxxNIMOS0XY: 3
-    flags: {}
+    flags: { }
     _stats:
       systemId: swerpg
       systemVersion: 0.5.4
@@ -712,17 +712,17 @@ items:
         <p>Your physical tenacity allows you to remain composed while surrounded
         by foes. Your <strong>Engagement</strong> trained by +1, allowing you
         to simultaneously engage more adjacent foes.</p>
-      actions: []
+      actions: [ ]
       actorHooks:
         - hook: prepareMovement
           fn: movement.engagement += 1;
-    effects: []
+    effects: [ ]
     folder: aB808IWOdgwmFCIF
     sort: 275000
     ownership:
       default: 0
       AnoypGxxNIMOS0XY: 3
-    flags: {}
+    flags: { }
     _stats:
       systemId: swerpg
       systemVersion: 0.5.4
@@ -737,7 +737,7 @@ items:
     name: Fine Heater Shield
     type: weapon
     img: icons/equipment/shield/heater-steel-worn.webp
-    effects: []
+    effects: [ ]
     folder: 9v0ru58f09fO3sE3
     flags:
       core:
@@ -784,10 +784,10 @@ items:
         <strong>Physical</strong> defense, and deals
         <strong>Bludgeoning</strong>, <strong>Piercing</strong>, or
         <strong>Slashing</strong> damage to <strong>Health</strong>.</p>
-      actions: []
+      actions: [ ]
       rune: kinesis
-      actorHooks: []
-    effects: []
+      actorHooks: [ ]
+    effects: [ ]
     ownership:
       default: 0
       AnoypGxxNIMOS0XY: 3
@@ -835,15 +835,15 @@ items:
             number: 1
             distance: 1
             scope: 0
-          effects: []
-      actorHooks: []
-    effects: []
+          effects: [ ]
+      actorHooks: [ ]
+    effects: [ ]
     folder: 2MFixpDJ379KOogE
     sort: -100000
     ownership:
       default: 0
       AnoypGxxNIMOS0XY: 3
-    flags: {}
+    flags: { }
     _stats:
       systemId: swerpg
       systemVersion: 0.5.4
@@ -867,15 +867,15 @@ items:
 
         <p>The Staggered effect lasts for 1 round and reduces your target's
         maximum Action by 1.</p>
-      actions: []
-      actorHooks: []
-    effects: []
+      actions: [ ]
+      actorHooks: [ ]
+    effects: [ ]
     folder: c0nl6X8tp4Of0Y4O
     sort: 0
     ownership:
       default: 0
       AnoypGxxNIMOS0XY: 3
-    flags: {}
+    flags: { }
     _stats:
       systemId: swerpg
       systemVersion: 0.5.4
@@ -886,10 +886,10 @@ items:
       compendiumSource: null
       duplicateSource: null
     _key: '!actors.items!wvaoj9WGrzAdFR8F.concussiveblows0'
-effects: []
+effects: [ ]
 flags:
-  swerpg: {}
-  core: {}
+  swerpg: { }
+  core: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.5.4

@@ -26,7 +26,7 @@ system:
         type: single
         number: 1
         scope: 3
-      effects: []
+      effects: [ ]
       name: Ferocious Leap
       img: icons/magic/movement/portal-vortex-orange.webp
       condition: ''
@@ -34,10 +34,10 @@ system:
         maximum: 10
         weapon: false
         minimum: 4
-      actionHooks: []
-  requirements: {}
-effects: []
-flags: {}
+      actionHooks: [ ]
+  requirements: { }
+effects: [ ]
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.6.0

@@ -8,7 +8,9 @@
     "less": "lessc styles/swerpg.less styles/swerpg.css",
     "compilePacks": "node build.mjs compile",
     "extractPacks": "node build.mjs extract",
-    "test": "vitest"
+    "test": "vitest",
+    "test:watch": "vitest --watch",
+    "test:coverage": "pnpm vitest run --coverage"
   },
   "devDependencies": {
     "@foundryvtt/foundryvtt-cli": "^1.0.3",

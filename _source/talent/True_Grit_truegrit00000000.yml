@@ -8,17 +8,17 @@ system:
     <p>Your physical tenacity allows you to remain composed while surrounded by
     foes. Your <strong>Engagement</strong> trained by +1, allowing you to
     simultaneously engage more adjacent foes.</p>
-  actions: []
+  actions: [ ]
   actorHooks:
     - hook: prepareMovement
       fn: movement.engagement += 1;
-effects: []
+effects: [ ]
 folder: aB808IWOdgwmFCIF
 sort: 275000
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3
-flags: {}
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.5.0

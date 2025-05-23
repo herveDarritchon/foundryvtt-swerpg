@@ -29,7 +29,7 @@ system:
         type: single
         number: 1
         scope: 0
-      effects: []
+      effects: [ ]
       img: icons/skills/social/peace-luck-insult.webp
       actionHooks:
         - hook: postActivate
@@ -45,14 +45,14 @@ system:
         minimum: null
         maximum: 30
         weapon: false
-  requirements: {}
-effects: []
+  requirements: { }
+effects: [ ]
 folder: 2MFixpDJ379KOogE
 sort: 0
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3
-flags: {}
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.6.0

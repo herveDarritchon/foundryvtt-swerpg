@@ -11,7 +11,7 @@ system:
 
     <p>The Staggered effect lasts for 1 round and reduces your target's maximum
     Action by 1.</p>
-  actions: []
+  actions: [ ]
   actorHooks:
     - hook: applyCriticalEffects
       fn: |-
@@ -26,13 +26,13 @@ system:
         // Apply stagger
         const stagger = SYSTEM.EFFECTS.staggered(actor, outcome.target);
         outcome.effects.push(stagger);
-effects: []
+effects: [ ]
 folder: c0nl6X8tp4Of0Y4O
 sort: 0
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3
-flags: {}
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.5.7

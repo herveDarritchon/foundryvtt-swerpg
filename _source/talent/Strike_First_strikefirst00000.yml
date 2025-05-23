@@ -8,7 +8,7 @@ system:
     Shoot first, ask questions later. You gain <strong>+1 Boon</strong> on any
     Strike or Spell attack against an enemy whose initiative score is lower than
     your own.
-  actions: []
+  actions: [ ]
   actorHooks:
     - hook: prepareWeaponAttack
       fn: >-
@@ -26,8 +26,8 @@ system:
 
         if ( ac?.initiative > tc?.initiative ) rollData.boons.strikeFirst =
         {label: "Strike First", number: 1};
-effects: []
-flags: {}
+effects: [ ]
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.5.4

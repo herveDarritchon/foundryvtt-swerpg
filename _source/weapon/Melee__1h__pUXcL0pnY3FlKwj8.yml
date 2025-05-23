@@ -3,7 +3,7 @@ type: Item
 sorting: a
 sort: 100000
 color: null
-flags: {}
+flags: { }
 _id: pUXcL0pnY3FlKwj8
 folder: null
 description: ''

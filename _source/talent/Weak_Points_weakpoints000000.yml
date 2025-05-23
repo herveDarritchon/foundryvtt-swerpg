@@ -9,9 +9,9 @@ system:
     When attacking a target that is <strong>Unaware</strong>,
     <strong>Flanked</strong>, or <strong>Exposed</strong> using Finesse
     weaponry, you gain +2 damage to any Strike.
-  actions: []
-effects: []
-flags: {}
+  actions: [ ]
+effects: [ ]
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.5.6

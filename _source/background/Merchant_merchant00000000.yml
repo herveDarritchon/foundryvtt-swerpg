@@ -2,9 +2,9 @@ _id: merchant00000000
 name: Merchant
 type: background
 img: icons/skills/social/diplomacy-handshake.webp
-effects: []
+effects: [ ]
 folder: 5piCK2JWjY34nSY3
-flags: {}
+flags: { }
 system:
   description: >-
     <p>You were a travelling salesperson or tended a small shop. You spent a

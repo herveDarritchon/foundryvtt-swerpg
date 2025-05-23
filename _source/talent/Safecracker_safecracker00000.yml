@@ -7,10 +7,10 @@ system:
   description: >-
     You are skilled in the arts of disarming traps and picking locks. You gain
     +1 Boon on Crafting checks to disable a device or open a lock.
-  actions: []
-  requirements: {}
-effects: []
-flags: {}
+  actions: [ ]
+  requirements: { }
+effects: [ ]
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.6.2

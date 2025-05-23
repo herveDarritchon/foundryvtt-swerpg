@@ -2,9 +2,9 @@ _id: elvish0000000000
 name: Elvish
 type: ancestry
 img: icons/magic/nature/leaf-rune-glow-green.webp
-effects: []
+effects: [ ]
 folder: cvTY534vgfLqkvXj
-flags: {}
+flags: { }
 system:
   primary: intellect
   secondary: dexterity
