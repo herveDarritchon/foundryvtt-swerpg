@@ -19,7 +19,7 @@ describe("TalentFactory build()", () => {
                 isCreation: true,
             };
             const options = {};
-            const droppedItem = createTalentData();
+            const droppedItem = createTalentData("1");
 
             const talent = TalentFactory.build(actor, droppedItem, params, options);
             expect(talent).toBeInstanceOf(expectedTrainedClassTalent);
@@ -35,7 +35,7 @@ describe("TalentFactory build()", () => {
                 isCreation: true,
             };
             const options = {};
-            const droppedItem = createTalentData({
+            const droppedItem = createTalentData("1", {
                 isRanked: true,
             })
 
@@ -53,7 +53,7 @@ describe("TalentFactory build()", () => {
                 isCreation: false,
             };
             const options = {};
-            const droppedItem = createTalentData();
+            const droppedItem = createTalentData("1");
 
             const talent = TalentFactory.build(actor, droppedItem, params, options);
             expect(talent).toBeInstanceOf(expectClassTalent);
@@ -66,7 +66,7 @@ describe("TalentFactory build()", () => {
                 isCreation: true,
             };
             const options = {};
-            const droppedItem = createTalentData(
+            const droppedItem = createTalentData("1",
                 {type: 'not-talent'}
             );
 

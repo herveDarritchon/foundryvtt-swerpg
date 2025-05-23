@@ -6,11 +6,11 @@ import {createTalentData} from "../../utils/talents/talent.mjs";
 import RankedTrainedTalent from "../../../module/lib/talents/ranked-trained-talent.mjs";
 import ErrorTalent from "../../../module/lib/talents/error-talent.mjs";
 
-describe('Trained Talent', () => {
-    describe('train a talent', () => {
+describe('Ranked Trained Talent', () => {
+    describe('train a ranked talent', () => {
         test('should add a new ranked trained talent with idx 0, row 1 and spend 5xp', () => {
-            const data = createTalentData({isRanked: true});
-            const existingTalents = [createTalentData({name: 'talent-1'})];
+            const data = createTalentData("1",{isRanked: true});
+            const existingTalents = [createTalentData("2",{name: 'talent-1'})];
             const actor = createActor({items: existingTalents});
             const params = {
                 action: "train",
@@ -27,8 +27,8 @@ describe('Trained Talent', () => {
             expect(trainedTalent.actor.experiencePoints.spent).toBe(5);
         });
         test('should add an existing ranked trained talent with idx 1, row 2 and spend 10xp', () => {
-            const data = createTalentData({isRanked: true, row: 2});
-            const existingTalents = [data];
+            const data = createTalentData("2",{isRanked: true, row: 2});
+            const existingTalents = [createTalentData("1",{isRanked: true, row: 1})];
             const actor = createActor({items: existingTalents});
             const params = {
                 action: "train",
@@ -46,9 +46,9 @@ describe('Trained Talent', () => {
         });
 
     });
-    describe('forget a talent', () => {
+    describe('forget a ranked talent', () => {
         test('should remove a new trained talent, row 1 and regain 5xp', () => {
-            const data = createTalentData({isRanked: true, row: 1});
+            const data = createTalentData("2",{isRanked: true, row: 1});
             const existingTalents = [data];
             const actor = createActor({items: existingTalents});
             actor.experiencePoints.spent = 30;
@@ -69,12 +69,11 @@ describe('Trained Talent', () => {
             expect(forgetRankedTrainedTalent.actor.experiencePoints.spent).toBe(25);
         });
     });
-    describe('evaluate a talent', () => {
+    describe('process a ranked talent', () => {
         describe('should return an error talent if', () => {
-
             test('trained a talent costs more than experience points available', () => {
-                const data = createTalentData({row: 3});
-                const existingTalents = [createTalentData({name: 'talent-1'})];
+                const data = createTalentData("2",{row: 3});
+                const existingTalents = [createTalentData("1",{name: 'talent-1'})];
                 const actor = createActor({items: existingTalents});
 
                 actor.experiencePoints.spent = 90;
@@ -95,10 +94,10 @@ describe('Trained Talent', () => {
             });
         });
     });
-    describe('updateState a talent', () => {
+    describe('updateState a ranked talent', () => {
         test('should return a TalentError is TrainedError is not evaluated', async () => {
-            const data = createTalentData();
-            const existingTalents = [createTalentData({name: 'talent-1'})];
+            const data = createTalentData("1");
+            const existingTalents = [createTalentData("2",{name: 'talent-1'})];
             const actor = createActor({items: existingTalents});
 
             const updateMock = vi.fn().mockResolvedValue({});
@@ -121,8 +120,8 @@ describe('Trained Talent', () => {
             expect(createEmbeddedDocumentsMock).toHaveBeenCalledTimes(0);
         });
         test('should update the state of the talent and return the talent', async () => {
-            const data = createTalentData();
-            const existingTalents = [createTalentData({name: 'talent-1'})];
+            const data = createTalentData("1");
+            const existingTalents = [createTalentData("2",{name: 'talent-1'})];
             const actor = createActor({items: existingTalents});
 
             const updateMock = vi.fn().mockResolvedValue({});
@@ -150,8 +149,8 @@ describe('Trained Talent', () => {
         });
         describe('should return an Error Talent if any update fails', () => {
             test('create embedded fails', async () => {
-                const data = createTalentData();
-                const existingTalents = [createTalentData({name: 'talent-1'})];
+                const data = createTalentData("1");
+                const existingTalents = [createTalentData("2",{name: 'talent-1'})];
                 const actor = createActor({items: existingTalents});
 
                 const updateMock = vi.fn().mockResolvedValue({});
@@ -178,8 +177,8 @@ describe('Trained Talent', () => {
             });
 
             test('talent rank update fails', async () => {
-                const data = createTalentData();
-                const existingTalents = [createTalentData({name: 'talent-1'})];
+                const data = createTalentData("1");
+                const existingTalents = [createTalentData("2",{name: 'talent-1'})];
                 const actor = createActor({items: existingTalents});
 
                 const updateMock = vi.fn()

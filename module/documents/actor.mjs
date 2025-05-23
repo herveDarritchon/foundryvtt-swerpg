@@ -2398,6 +2398,15 @@ export default class SwerpgActor extends Actor {
     }
 
     /**
+     * Check if actor has this item already
+     * @param {string} itemId the Item id.
+     * @returns {boolean}   True if actor has already the item
+     */
+    hasItem(itemId) {
+        return this.items.some(i => i.id === itemId);
+    }
+
+    /**
      * Add a Talent item to the actor with XP check and duplicate prevention.
      * @param {Item} item - The Talent item to add.
      * @returns {Promise<boolean>} - Whether the talent was added successfully.

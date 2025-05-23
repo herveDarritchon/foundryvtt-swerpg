@@ -5,42 +5,48 @@ import TalentCostCalculator from "./talent-cost-calculator.mjs";
 export default class TrainedTalent extends Talent {
     constructor(actor, data, params, options) {
         super(actor, data, params, options);
-        this.dataCostCalculator = new TalentCostCalculator(this);
+        this.talentCostCalculator = new TalentCostCalculator(this);
     }
 
     process() {
 
         let experiencePointsSpent = this.actor.experiencePoints.spent;
-        const row = this.data.system.row;
+        const talent = this.data;
+        const row = talent.system.row;
 
-        const alreadyOwned = this.actor.items.find(i => i.name === this.data.name);
+        if (this.action === "train" && this.actor.hasItem(talent.id)) {
+            const message = `Talent '${talent.name}' (ID: '${talent.id})' is already owned by the actor.`;
+            return new ErrorTalent(this.actor, talent, {}, {message: message});
+        }
+
+        const alreadyOwned = this.actor.items.some(i => i.name === talent.name);
 
         if (alreadyOwned && this.action === "train") {
-            return new ErrorTalent(this.actor, this.data, {}, {message: `you already own this talent ('${this.data.name}') and it is not a Ranked Talent!`});
+            return new ErrorTalent(this.actor, talent, {}, {message: `you already own this talent ('${talent.name}') and it is not a Ranked Talent!`});
         }
 
         if (!alreadyOwned && this.action === "forget") {
-            return new ErrorTalent(this.actor, this.data, {}, {message: `you can't forget a talent ('${this.data.name}') you don't own!`});
+            return new ErrorTalent(this.actor, talent, {}, {message: `you can't forget a talent ('${talent.name}') you don't own!`});
         }
 
         let cost;
         if (this.action === "train") {
-            cost = this.dataCostCalculator.calculateCost("train", row);
+            cost = this.talentCostCalculator.calculateCost("train", row);
             experiencePointsSpent = experiencePointsSpent + cost;
         }
 
         if (this.action === "forget") {
-            cost = this.dataCostCalculator.calculateCost("forget", row);
+            cost = this.talentCostCalculator.calculateCost("forget", row);
             experiencePointsSpent = experiencePointsSpent - cost;
             cost = 0;
         }
 
         if (experiencePointsSpent > this.actor.experiencePoints.total) {
-            return new ErrorTalent(this.actor, this.data, {}, {message: ("you can't spend more experience than your total!")});
+            return new ErrorTalent(this.actor, talent, {}, {message: ("you can't spend more experience than your total!")});
         }
 
         this.actor.experiencePoints.spent = experiencePointsSpent;
-        this.data.system.rank = {
+        talent.system.rank = {
             idx: 0,
             cost: cost
         };
@@ -61,6 +67,7 @@ export default class TrainedTalent extends Talent {
         try {
             await this.actor.createEmbeddedDocuments("Item", [this.data.toObject()]);
             await this.actor.update({'system.progression.experience.spent': this.actor.experiencePoints.spent});
+            return this;
         } catch (e) {
             return new Promise((resolve, _) => {
                 resolve(new ErrorTalent(this.actor, this.data, {}, {message: e.toString()}));

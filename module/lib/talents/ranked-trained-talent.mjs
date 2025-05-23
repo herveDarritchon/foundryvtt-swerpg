@@ -5,38 +5,44 @@ import TalentCostCalculator from "./talent-cost-calculator.mjs";
 export default class RankedTrainedTalent extends Talent {
     constructor(actor, data, params, options) {
         super(actor, data, params, options);
-        this.dataCostCalculator = new TalentCostCalculator(this);
+        this.talentCostCalculator = new TalentCostCalculator(this);
     }
 
     process() {
 
         let experiencePointsSpent = this.actor.experiencePoints.spent;
-        const row = this.data.system.row;
+        const talent = this.data;
+        const row = talent.system.row;
 
-        const ranks = this.actor.items.filter(i => i.name === this.data.name);
+        const ranks = this.actor.items.filter(i => i.name === talent.name);
         let idx = ranks.length;
+
+        if (this.action === "train" && this.actor.hasItem(talent.id)) {
+            const message = `Talent '${talent.name}' (ID: '${talent.id})' is already owned by the actor.`;
+            return new ErrorTalent(this.actor, talent, {}, {message: message});
+        }
 
         let cost;
         if (this.action === "train") {
-            cost = this.dataCostCalculator.calculateCost("train", row);
+            cost = this.talentCostCalculator.calculateCost("train", row);
             experiencePointsSpent = experiencePointsSpent + cost;
         }
 
         if (this.action === "forget") {
-            cost = this.dataCostCalculator.calculateCost("forget", row);
+            cost = this.talentCostCalculator.calculateCost("forget", row);
             experiencePointsSpent = experiencePointsSpent - cost;
             cost = 0;
             idx = ranks.length - 1;
         }
 
         if (experiencePointsSpent > this.actor.experiencePoints.total) {
-            return new ErrorTalent(this.actor, this.data, {}, {message: ("you can't spend more experience than your total!")});
+            return new ErrorTalent(this.actor, talent, {}, {message: ("you can't spend more experience than your total!")});
         }
 
         // As we are dealing with a ranked talent, we need to set the rank value to the number of ranks
         // Set to ranks.length because we are adding a new rank and we count from 0
         this.actor.experiencePoints.spent = experiencePointsSpent;
-        this.data.system.rank = {
+        talent.system.rank = {
             idx: idx,
             cost: cost
         };
@@ -57,6 +63,7 @@ export default class RankedTrainedTalent extends Talent {
         try {
             await this.actor.createEmbeddedDocuments("Item", [this.data.toObject()]);
             await this.actor.update({'system.progression.experience.spent': this.actor.experiencePoints.spent});
+            return this;
         } catch (e) {
             return new Promise((resolve, _) => {
                 resolve(new ErrorTalent(this.actor, this.data, {}, {message: e.toString()}));

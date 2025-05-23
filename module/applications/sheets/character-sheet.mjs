@@ -289,20 +289,18 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
                 }
                 break;
             case "talent":
-
-
                 // Build the skill class depending on the context
-                const talentClass = TalentFactory.build(this.actor, item.id, {
+                const talentClass = TalentFactory.build(this.actor, item, {
                     action: "train",
                     isCreation: true,
                 }, {});
 
                 if (talentClass instanceof ErrorTalent) {
                     ui.notifications.warn(talentClass.options.message);
-                    return false;
+                    return;
                 }
 
-                console.log(`[Before] onToggleTrainedTalent talent with id '${talentId}', is Career ${isCareer} and values:`, talentClass, this.actor);
+                console.debug(`[Before] onToggleTrainedTalent talent with id '${item.id}', is Career ${item.system.isRanked} and values:`, talentClass, this.actor);
 
                 // Evaluate the talent following the action processed
                 const talentEvaluated = talentClass.process();
@@ -310,17 +308,21 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
                 // Display a warning if the talent action is not valid
                 if (talentEvaluated instanceof ErrorTalent) {
                     ui.notifications.warn(talentEvaluated.options.message);
-                    return false;
+                    return;
                 }
 
                 // Update the talent state in the Database
                 const talentUpdated = await talentEvaluated.updateState();
 
-                console.log(`[After] onToggleTrainedTalent talent with id '${talentId}', is Career ${isCareer} and values:`, talentUpdated.actor, talentUpdated.data.rank);
+                // Display a warning if the talent action is not valid
+                if (talentUpdated instanceof ErrorTalent) {
+                    ui.notifications.warn(talentUpdated.options.message);
+                    return;
+                }
 
-                /*                const result = await this.actor.addTalentWithXpCheck(item);
-                                console.info(`Swerpg | Talent (${item.id}) added to Actor ${this.actor.name}`, result)*/
-                return true;
+                console.debug(`[After] onToggleTrainedTalent talent with id '${talentUpdated.data.id}', is ranked ${talentUpdated.data.system.isRanked} and values:`, talentUpdated.actor, talentUpdated.data.system.rank.idx);
+
+                return;
         }
         return super._onDropItem(event, item);
     }
