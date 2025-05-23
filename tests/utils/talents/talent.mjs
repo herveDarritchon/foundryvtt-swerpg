@@ -1,5 +1,6 @@
 /**
  * create a talent object to be used in tests
+ * @param id id of the talent
  * @param name name of the talent
  * @param type type of the talent
  * @param isRanked whether the talent is ranked or not
@@ -7,9 +8,10 @@
  * @param idxRank index of the rank in case of a ranked talent
  * @param cost cost of the talent
  * @param trees array of trees the talent belongs to
- * @returns {{id: string, rank: {base: number, trained: number, value: number}}}
+ * @returns {SwerpgTalent} a talent object
  */
 export function createTalentData(
+        id = "O0bl3Rdmkgf8wYIi",
     {
         name = 'talent-name',
         type = 'talent',
@@ -23,7 +25,7 @@ export function createTalentData(
     const baseData = {
         "name": name,
         "type": type,
-        "_id": "O0bl3Rdmkgf8wYIi",
+        "id": id,
         "img": "worlds/swerpg-test/assets/talent.webp",
         "system": {
             "description": "",

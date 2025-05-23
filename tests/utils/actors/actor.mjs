@@ -8,7 +8,7 @@ export function createActor(
         items = []
     } = {}
 ) {
-    return {
+    const baseData = {
         items: items,
         freeSkillRanks: {
             "career": {
@@ -385,6 +385,8 @@ export function createActor(
             }
         }
     };
+    baseData.hasItem = (id) => items.some(item => item.id === id);
+    return baseData;
 }
 
 export function updateActor(actor, updates) {

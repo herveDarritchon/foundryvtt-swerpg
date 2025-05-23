@@ -9,8 +9,8 @@ import ErrorTalent from "../../../module/lib/talents/error-talent.mjs";
 describe('Trained Talent', () => {
     describe('train a talent', () => {
         test('should add a trained talent with idx 0 and spend 5xp', () => {
-            const data = createTalentData();
-            const existingTalents = [createTalentData({name: 'talent-1'})];
+            const data = createTalentData("1");
+            const existingTalents = [createTalentData("2", {name: 'talent-1'})];
             const actor = createActor({items: existingTalents});
             const params = {
                 action: "train",
@@ -29,7 +29,7 @@ describe('Trained Talent', () => {
     });
     describe('forget a talent', () => {
         test('should remove a trained talent and regain 5xp', () => {
-            const data = createTalentData();
+            const data = createTalentData("1");
             const existingTalents = [data];
             const actor = createActor({items: existingTalents});
             actor.experiencePoints.spent = 30;
@@ -53,8 +53,8 @@ describe('Trained Talent', () => {
     describe('evaluate a talent', () => {
         describe('should return an error talent if', () => {
             test('remove a trained talent not known', () => {
-                const data = createTalentData();
-                const existingTalents = [createTalentData({name: 'talent-1'})];
+                const data = createTalentData("1");
+                const existingTalents = [createTalentData("2", {name: 'talent-1'})];
                 const actor = createActor({items: existingTalents});
                 const params = {
                     action: "forget",
@@ -70,9 +70,27 @@ describe('Trained Talent', () => {
                 expect(errorTalent.evaluated).toBe(false);
             });
 
-            test('drop a trained talent already known', () => {
-                const data = createTalentData();
+            test('drop a trained talent already known by id', () => {
+                const data = createTalentData("1");
                 const existingTalents = [data];
+                const actor = createActor({items: existingTalents});
+                const params = {
+                    action: "train",
+                    isCreation: true,
+                };
+                const options = {};
+
+                const trainedTalent = new TrainedTalent(actor, data, params, options);
+                const errorTalent = trainedTalent.process();
+
+                expect(errorTalent).toBeInstanceOf(ErrorTalent);
+                expect(errorTalent.options.message).toBe("Talent 'talent-name' (ID: '1)' is already owned by the actor.");
+                expect(errorTalent.evaluated).toBe(false);
+            });
+
+            test('drop a trained talent already known by name', () => {
+                const data = createTalentData("1");
+                const existingTalents = [createTalentData("2")];
                 const actor = createActor({items: existingTalents});
                 const params = {
                     action: "train",
@@ -89,8 +107,8 @@ describe('Trained Talent', () => {
             });
 
             test('trained a talent costs more than experience points available', () => {
-                const data = createTalentData({row: 3});
-                const existingTalents = [createTalentData({name: 'talent-1'})];
+                const data = createTalentData("1", {row: 3});
+                const existingTalents = [createTalentData("2", {name: 'talent-1'})];
                 const actor = createActor({items: existingTalents});
 
                 actor.experiencePoints.spent = 90;
@@ -113,8 +131,8 @@ describe('Trained Talent', () => {
     });
     describe('updateState a talent', () => {
         test('should return a TalentError is TrainedError is not evaluated', async () => {
-            const data = createTalentData();
-            const existingTalents = [createTalentData({name: 'talent-1'})];
+            const data = createTalentData("1");
+            const existingTalents = [createTalentData("2", {name: 'talent-1'})];
             const actor = createActor({items: existingTalents});
 
             const updateMock = vi.fn().mockResolvedValue({});
@@ -137,8 +155,8 @@ describe('Trained Talent', () => {
             expect(createEmbeddedDocumentsMock).toHaveBeenCalledTimes(0);
         });
         test('should update the state of the talent and return the talent', async () => {
-            const data = createTalentData();
-            const existingTalents = [createTalentData({name: 'talent-1'})];
+            const data = createTalentData("1");
+            const existingTalents = [createTalentData("2", {name: 'talent-1'})];
             const actor = createActor({items: existingTalents});
 
             const updateMock = vi.fn().mockResolvedValue({});
@@ -166,8 +184,8 @@ describe('Trained Talent', () => {
         });
         describe('should return an Error Talent if any update fails', () => {
             test('create embedded fails', async () => {
-                const data = createTalentData();
-                const existingTalents = [createTalentData({name: 'talent-1'})];
+                const data = createTalentData("1");
+                const existingTalents = [createTalentData("2", {name: 'talent-1'})];
                 const actor = createActor({items: existingTalents});
 
                 const updateMock = vi.fn().mockResolvedValue({});
@@ -194,8 +212,8 @@ describe('Trained Talent', () => {
             });
 
             test('talent rank update fails', async () => {
-                const data = createTalentData();
-                const existingTalents = [createTalentData({name: 'talent-1'})];
+                const data = createTalentData("1");
+                const existingTalents = [createTalentData("2", {name: 'talent-1'})];
                 const actor = createActor({items: existingTalents});
 
                 const updateMock = vi.fn()
