@@ -50,16 +50,16 @@ pages:
         influences Morale, Willpower defense, and Focus Points.</p>
       markdown: ''
     _id: RHCy135mF4EN1mWZ
-    image: {}
+    image: { }
     video:
       controls: true
       volume: 0.5
     src: null
-    system: {}
+    system: { }
     sort: 300000
     ownership:
       default: -1
-    flags: {}
+    flags: { }
     _stats:
       systemId: swerpg
       systemVersion: 0.5.0
@@ -133,12 +133,12 @@ pages:
         Ability from Strength to Wisdom.</p></section>
       markdown: ''
     _id: ovqgeiXHPrdiUXci
-    image: {}
+    image: { }
     video:
       controls: true
       volume: 0.5
     src: null
-    system: {}
+    system: { }
     sort: 100000
     ownership:
       default: -1
@@ -207,12 +207,12 @@ pages:
         a Game Master and storyteller, you should work with your players to
         create backgrounds which are suitable for their personal stories.</p>
     _id: uCwStnXHoUCV2TrK
-    image: {}
+    image: { }
     video:
       controls: true
       volume: 0.5
     src: null
-    system: {}
+    system: { }
     sort: 200000
     ownership:
       default: -1
@@ -325,12 +325,12 @@ pages:
         continue growing your character as you further advance in level.</p>
       markdown: ''
     _id: DjePpoV2oJenlyTf
-    image: {}
+    image: { }
     video:
       controls: true
       volume: 0.5
     src: null
-    system: {}
+    system: { }
     sort: 0
     ownership:
       default: -1
@@ -405,12 +405,12 @@ pages:
         development.</p>
       markdown: ''
     _id: FmmADsI9qo1uIIT3
-    image: {}
+    image: { }
     video:
       controls: true
       volume: 0.5
     src: null
-    system: {}
+    system: { }
     sort: 300000
     ownership:
       default: -1
@@ -434,7 +434,7 @@ pages:
     title:
       show: true
       level: 1
-    image: {}
+    image: { }
     text:
       format: 1
       content: >-
@@ -482,10 +482,10 @@ pages:
       controls: true
       volume: 0.5
     src: null
-    system: {}
+    system: { }
     ownership:
       default: -1
-    flags: {}
+    flags: { }
     _stats:
       systemId: swerpg
       systemVersion: 0.8.0
@@ -503,7 +503,7 @@ pages:
     title:
       show: true
       level: 1
-    image: {}
+    image: { }
     text:
       format: 1
       content: >-
@@ -558,11 +558,11 @@ pages:
       controls: true
       volume: 0.5
     src: null
-    system: {}
+    system: { }
     ownership:
       default: -1
       AnoypGxxNIMOS0XY: 3
-    flags: {}
+    flags: { }
     _stats:
       systemId: swerpg
       systemVersion: 0.6.2
@@ -580,7 +580,7 @@ pages:
     title:
       show: true
       level: 1
-    image: {}
+    image: { }
     text:
       format: 1
       content: >-
@@ -679,11 +679,11 @@ pages:
       controls: true
       volume: 0.5
     src: null
-    system: {}
+    system: { }
     ownership:
       default: -1
       AnoypGxxNIMOS0XY: 3
-    flags: {}
+    flags: { }
     _stats:
       systemId: swerpg
       systemVersion: 0.5.1

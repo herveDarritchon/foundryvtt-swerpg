@@ -2,7 +2,7 @@ _id: cleave0000000000
 name: Cleave
 type: talent
 img: icons/skills/melee/strike-sword-steel-yellow.webp
-effects: []
+effects: [ ]
 flags:
   core:
     sourceId: Item.pHRUZ8Zfv5E0TcH2
@@ -29,7 +29,7 @@ system:
         type: fan
         number: 1
         scope: 4
-      effects: []
+      effects: [ ]
       name: Cleave
       img: icons/skills/melee/strike-sword-steel-yellow.webp
       condition: ''
@@ -37,8 +37,8 @@ system:
         maximum: 1
         weapon: true
         minimum: null
-      actionHooks: []
-  actorHooks: []
+      actionHooks: [ ]
+  actorHooks: [ ]
 _stats:
   systemId: swerpg
   systemVersion: 0.6.0

@@ -8,10 +8,10 @@ system:
     <p>After you Delay your Turn, gain +2 Boons on any Strike or Spell attack
     against an enemy that you allowed to act before you that Round.</p><p>TODO:
     Needs automation. For now apply boons manually.</p>
-  actions: []
-  requirements: {}
-effects: []
-flags: {}
+  actions: [ ]
+  requirements: { }
+effects: [ ]
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.6.0

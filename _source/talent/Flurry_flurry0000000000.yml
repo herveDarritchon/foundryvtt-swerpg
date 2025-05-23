@@ -2,7 +2,7 @@ _id: flurry0000000000
 name: Flurry
 type: talent
 img: icons/skills/melee/blade-tips-triple-steel.webp
-effects: []
+effects: [ ]
 flags:
   core:
     sourceId: Compendium.swerpg.talent.CANFHQxFjIJwgEYK
@@ -34,13 +34,13 @@ system:
         number: 1
         scope: 0
         multiple: 2
-      effects: []
-      actionHooks: []
+      effects: [ ]
+      actionHooks: [ ]
       range:
         maximum: null
         weapon: true
         minimum: null
-  requirements: {}
+  requirements: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.6.0

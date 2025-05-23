@@ -10,10 +10,10 @@ system:
     <p>The Flame rune scales using <strong>Intellect</strong>, targets
     <strong>Reflex</strong>, and deals <strong>Fire</strong> damage to
     <strong>Health</strong>.</p>
-  actions: []
+  actions: [ ]
   rune: flame
-  actorHooks: []
-effects: []
+  actorHooks: [ ]
+effects: [ ]
 flags:
   core:
     sourceId: Compendium.swerpg.talent.runeflame0000000

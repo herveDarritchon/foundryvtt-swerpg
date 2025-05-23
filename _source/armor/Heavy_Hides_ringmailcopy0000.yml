@@ -1,9 +1,9 @@
 name: Heavy Hides
 type: armor
 img: icons/equipment/chest/vest-leather-tattered-white.webp
-effects: []
+effects: [ ]
 flags:
-  core: {}
+  core: { }
 system:
   category: medium
   quantity: 1
@@ -12,7 +12,7 @@ system:
   quality: standard
   enchantment: mundane
   equipped: false
-  properties: []
+  properties: [ ]
   description: ''
   armor:
     base: 11

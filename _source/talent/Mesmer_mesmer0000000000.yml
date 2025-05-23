@@ -9,7 +9,7 @@ system:
     this Rune cause the Confusion condition on Critical Hits.</p><p>The
     Confusion effect lasts for 1 Round, deals half your Intellect score as
     Psychic damage to Morale, and applies the Disoriented condition.</p>
-  actions: []
+  actions: [ ]
   actorHooks:
     - hook: applyCriticalEffects
       fn: |-
@@ -23,13 +23,13 @@ system:
         // Apply Confused effect
         const confused = SYSTEM.EFFECTS.confusion(actor, outcome.target);
         outcome.effects.push(confused);
-effects: []
+effects: [ ]
 folder: c0nl6X8tp4Of0Y4O
 sort: -300000
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3
-flags: {}
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.6.0

@@ -30,8 +30,8 @@ system:
             rounds: 1
           statuses:
             - resolute
-  actorHooks: []
-effects: []
+  actorHooks: [ ]
+effects: [ ]
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3

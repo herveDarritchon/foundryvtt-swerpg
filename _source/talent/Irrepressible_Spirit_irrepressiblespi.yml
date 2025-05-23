@@ -6,9 +6,9 @@ system:
   description: >-
     Your tenacity gives you an irrepressible spirit which resists the onset of
     despair. At the start of your turn if you are not Broken you gain 1 Morale.
-  actions: []
-  requirements: {}
-effects: []
+  actions: [ ]
+  requirements: { }
+effects: [ ]
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3

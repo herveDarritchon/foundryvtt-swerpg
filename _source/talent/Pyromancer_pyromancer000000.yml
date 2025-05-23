@@ -8,7 +8,7 @@ system:
     this Rune cause Burning on Critical Hits.</p><p>The Burning effect lasts for
     1 Round and deals your Intellect score as Fire damage to both Health and
     Morale.</p>
-  actions: []
+  actions: [ ]
   actorHooks:
     - hook: applyCriticalEffects
       fn: |-
@@ -22,7 +22,7 @@ system:
         // Apply Burning effect
         const burning = SYSTEM.EFFECTS.burning(actor, outcome.target);
         outcome.effects.push(burning);
-effects: []
+effects: [ ]
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3

@@ -11,11 +11,11 @@ system:
     inflection are not yet automated for Playtest 1. This inflection is included
     as an example of the intended direction for the Spellcraft
     system.</p></section>
-  actions: []
+  actions: [ ]
   inflection: negate
-  actorHooks: []
+  actorHooks: [ ]
   iconicSpells: 1
-effects: []
+effects: [ ]
 flags:
   core:
     sourceId: Compendium.swerpg.talent.inflectionnegate

@@ -5,7 +5,7 @@ type: JournalEntry
 _id: z0IT31iKpgcA3QYr
 sort: 100000
 color: '#561206'
-flags: {}
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.8.0

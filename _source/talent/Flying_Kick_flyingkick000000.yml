@@ -2,7 +2,7 @@ _id: flyingkick000000
 name: Flying Kick
 type: talent
 img: icons/skills/melee/unarmed-punch-fist-blue.webp
-effects: []
+effects: [ ]
 flags:
   core:
     sourceId: Compendium.swerpg.talent.CANFHQxFjIJwgEYK
@@ -32,14 +32,14 @@ system:
         type: single
         number: 1
         scope: 0
-      effects: []
+      effects: [ ]
       condition: ''
       range:
         maximum: 6
         weapon: false
         minimum: 3
-      actionHooks: []
-  requirements: {}
+      actionHooks: [ ]
+  requirements: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.6.0

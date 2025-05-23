@@ -7,10 +7,10 @@ system:
     or Parry a Strike, the attacker loses Morale equal to your Presence
     attribute. When you achieve a Critical Hit, all nearby allies who can see
     you gain Morale equal to your Presence attribute.</p>
-  actions: []
-  requirements: {}
+  actions: [ ]
+  requirements: { }
   node: sig3.dexterity.presence
-effects: []
+effects: [ ]
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3

@@ -10,10 +10,10 @@ system:
     <p>The Control rune scales using <strong>Intellect</strong>, targets
     <strong>Willpower</strong>, and deals <strong>Psychic</strong> damage to
     <strong>Morale</strong>.</p>
-  actions: []
+  actions: [ ]
   rune: control
-  actorHooks: []
-effects: []
+  actorHooks: [ ]
+effects: [ ]
 flags:
   core:
     sourceId: Compendium.swerpg.talent.runemind00000000

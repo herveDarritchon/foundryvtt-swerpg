@@ -30,16 +30,16 @@ system:
         type: single
         number: 1
         scope: 2
-      effects: []
+      effects: [ ]
       img: icons/skills/movement/ball-spinning-blue.webp
       condition: ''
       range:
         maximum: null
         weapon: false
         minimum: null
-      actionHooks: []
-  requirements: {}
-effects: []
+      actionHooks: [ ]
+  requirements: { }
+effects: [ ]
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3

@@ -2,8 +2,8 @@ _id: rapidreload00000
 name: Rapid Reload
 type: talent
 img: icons/skills/ranged/bullet-sparks-yellow.webp
-effects: []
-flags: {}
+effects: [ ]
+flags: { }
 system:
   node: dex2b
   description: >-
@@ -28,10 +28,10 @@ system:
         type: self
         number: 1
         scope: 1
-      effects: []
+      effects: [ ]
       tags:
         - Reload
-      actionHooks: []
+      actionHooks: [ ]
 _stats:
   systemId: swerpg
   systemVersion: 0.6.0

@@ -17,8 +17,8 @@ system:
         const stride = actor.system.movement.stride;
         const bonus = (move.bonus ?? 0) + stride;
         foundry.utils.setProperty(status, "movement.bonus", bonus);
-effects: []
-flags: {}
+effects: [ ]
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.5.9

@@ -213,8 +213,8 @@ prototypeToken:
     brightness: 0
     saturation: 0
     contrast: 0
-  detectionModes: []
-  flags: {}
+  detectionModes: [ ]
+  flags: { }
   randomImg: false
   hexagonalShape: 0
   occludable:
@@ -237,10 +237,10 @@ items:
       description: >-
         You learn Rune of Flame, allowing you to weave the arcane element of
         fire.
-      actions: []
-      requirements: {}
+      actions: [ ]
+      requirements: { }
       rune: flame
-    effects: []
+    effects: [ ]
     flags:
       core:
         sourceId: Compendium.swerpg.talent.runeflame0000000
@@ -268,10 +268,10 @@ items:
       description: >-
         You learn the Fan gesture, allowing you to cast arcane power in a
         limited arc.
-      actions: []
-      requirements: {}
+      actions: [ ]
+      requirements: { }
       gesture: fan
-    effects: []
+    effects: [ ]
     flags:
       core:
         sourceId: Compendium.swerpg.talent.gesturefan000000
@@ -305,9 +305,9 @@ items:
       broken: false
       enchantment: mundane
       equipped: true
-      properties: []
+      properties: [ ]
       damageType: fire
-    effects: []
+    effects: [ ]
     sort: 0
     ownership:
       default: 0
@@ -339,12 +339,12 @@ items:
       broken: false
       enchantment: mundane
       equipped: true
-      properties: []
+      properties: [ ]
       armor:
         base: 3
       dodge:
         base: 10
-    effects: []
+    effects: [ ]
     sort: 0
     ownership:
       default: 0
@@ -362,8 +362,8 @@ items:
       compendiumSource: Item.livingflame00000
       duplicateSource: null
     _key: '!actors.items!RuNh1bFGiHKdHeKI.kxuUSxeLhkQ5J1Nn'
-effects: []
-flags: {}
+effects: [ ]
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.6.0

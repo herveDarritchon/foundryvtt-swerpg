@@ -10,7 +10,7 @@ system:
 
     <p>All <strong>Ranged</strong> weapon attacks against you are made with +1
     Bane and you gain a +1 Skill bonus to attacks which use your shield.</p>
-  actions: []
+  actions: [ ]
   actorHooks:
     - hook: prepareTraining
       fn: training.shield += 1;
@@ -24,13 +24,13 @@ system:
 
         // Apply bane
         rollData.banes.shieldTraining = {label: "Shield Training", number: 1};
-effects: []
+effects: [ ]
 folder: FQAUMNkcagdBLURJ
 sort: 6250
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3
-flags: {}
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.5.7

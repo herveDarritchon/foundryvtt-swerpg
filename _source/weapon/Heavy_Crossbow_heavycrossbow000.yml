@@ -2,9 +2,9 @@ _id: heavycrossbow000
 name: Heavy Crossbow
 type: weapon
 img: icons/weapons/crossbows/crossbow-purple.webp
-effects: []
+effects: [ ]
 folder: Pe27j9LY8Nmygkqt
-flags: {}
+flags: { }
 system:
   category: mechanical2
   quantity: 1
@@ -13,7 +13,7 @@ system:
   quality: standard
   enchantment: mundane
   equipped: false
-  properties: []
+  properties: [ ]
   description: ''
   damageType: piercing
   broken: false

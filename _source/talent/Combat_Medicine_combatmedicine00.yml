@@ -1,7 +1,7 @@
 name: Combat Medicine
 type: talent
 img: icons/magic/life/heart-glowing-red.webp
-effects: []
+effects: [ ]
 flags:
   core:
     sourceId: Item.V4stscWtnt2GFRY2
@@ -31,15 +31,15 @@ system:
         type: single
         number: 1
         scope: 2
-      effects: []
+      effects: [ ]
       name: Combat Medicine
       img: icons/magic/life/heart-glowing-red.webp
       range:
         maximum: 4
         weapon: false
         minimum: null
-      actionHooks: []
-  requirements: {}
+      actionHooks: [ ]
+  requirements: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.6.0

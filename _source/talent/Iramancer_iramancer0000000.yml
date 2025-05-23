@@ -7,10 +7,10 @@ system:
   description: >-
     Your feats of arcana are fueled by anger. While Enraged you may still spend
     Focus and you deal 2 additional damage to all spell attacks.
-  actions: []
-  requirements: {}
-effects: []
-flags: {}
+  actions: [ ]
+  requirements: { }
+effects: [ ]
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.6.2

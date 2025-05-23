@@ -29,7 +29,7 @@ system:
       effects:
         - name: Executioner's Strike
           scope: 3
-          statuses: []
+          statuses: [ ]
           duration:
             turns: null
       name: Executioner's Strike
@@ -49,9 +49,9 @@ system:
         maximum: null
         weapon: true
         minimum: null
-  requirements: {}
-effects: []
-flags: {}
+  requirements: { }
+effects: [ ]
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.6.0

@@ -2,9 +2,9 @@ _id: shortbow00000000
 name: Shortbow
 type: weapon
 img: icons/weapons/bows/shortbow-leather.webp
-effects: []
+effects: [ ]
 folder: Pe27j9LY8Nmygkqt
-flags: {}
+flags: { }
 system:
   category: projectile2
   quantity: 1

@@ -12,9 +12,11 @@
         </div>
 
         <div class="flexrow">
-            {{formField fields.progression.fields.experience.fields.spent value=source.system.progression.experience.spent type="number"
+            {{formField fields.progression.fields.experience.fields.spent
+                        value=source.system.progression.experience.spent type="number"
                         localize="true"}}
-            {{formField fields.progression.fields.experience.fields.gained value=source.system.progression.experience.gained type="number"
+            {{formField fields.progression.fields.experience.fields.gained
+                        value=source.system.progression.experience.gained type="number"
                         localize="true"}}
         </div>
         </div>
@@ -29,9 +31,11 @@
             {{#if incomplete.career}}data-tooltip="WALKTHROUGH.AddCareer"{{/if}}>
             <a>{{#if incomplete.career}}<i class="fa-solid fa-circle-plus"></i> {{/if}}{{careerName}}</a>
         </h2>
-        <h2 class="specialization flexrow {{#if incomplete.specialization}}incomplete{{/if}}" data-action="editSpecialization"
+        <h2 class="specialization flexrow {{#if incomplete.specialization}}incomplete{{/if}}"
+            data-action="editSpecialization"
             {{#if incomplete.specialization}}data-tooltip="WALKTHROUGH.AddSpecialization"{{/if}}>
-            <a>{{#if incomplete.specialization}}<i class="fa-solid fa-circle-plus"></i> {{/if}}{{specializationName}}</a>
+            <a>{{#if incomplete.specialization}}<i class="fa-solid fa-circle-plus"></i> {{/if}}{{specializationName}}
+            </a>
         </h2>
         <h2 class="background flexrow {{#if incomplete.background}}incomplete{{/if}}" data-action="editBackground"
             {{#if incomplete.background}}data-tooltip="WALKTHROUGH.AddBackground"{{/if}}>

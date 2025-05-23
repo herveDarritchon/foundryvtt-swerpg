@@ -218,8 +218,8 @@ prototypeToken:
     brightness: 0
     saturation: 0
     contrast: 0
-  detectionModes: []
-  flags: {}
+  detectionModes: [ ]
+  flags: { }
   randomImg: false
   hexagonalShape: 0
   occludable:
@@ -246,10 +246,10 @@ items:
 
         <p>The Life rune scales using <strong>Wisdom</strong> and provides
         <strong>Restoration</strong> of <strong>Health</strong>.</p>
-      actions: []
+      actions: [ ]
       rune: life
-      actorHooks: []
-    effects: []
+      actorHooks: [ ]
+    effects: [ ]
     flags:
       core:
         sourceId: Compendium.swerpg.talent.runelife00000000
@@ -279,10 +279,10 @@ items:
         resource costs in exchange. The Compose inflection reduces the
         <strong>Focus</strong> cost of a spell by 1 while increasing its
         <strong>Action</strong> cost by 1 in exchange.</p>
-      actions: []
+      actions: [ ]
       inflection: compose
-      actorHooks: []
-    effects: []
+      actorHooks: [ ]
+    effects: [ ]
     ownership:
       default: 0
       AnoypGxxNIMOS0XY: 3
@@ -329,10 +329,10 @@ items:
             number: 1
             distance: 3
             scope: 2
-          effects: []
-      actorHooks: []
-    effects: []
-    flags: {}
+          effects: [ ]
+      actorHooks: [ ]
+    effects: [ ]
+    flags: { }
     _stats:
       systemId: swerpg
       systemVersion: 0.5.4
@@ -367,7 +367,7 @@ items:
       damageType: radiant
       animation: quarterstaff
       slot: 0
-    effects: []
+    effects: [ ]
     flags:
       core:
         sourceId: Compendium.swerpg.weapon.Item.magestaff0000000
@@ -389,7 +389,7 @@ items:
     name: Scale Mail
     type: armor
     img: icons/equipment/chest/breastplate-banded-steel-studded.webp
-    effects: []
+    effects: [ ]
     flags:
       core:
         sourceId: Compendium.swerpg.armor.Item.6ww3SkYTk6RZBwMS
@@ -401,7 +401,7 @@ items:
       quality: standard
       enchantment: mundane
       equipped: true
-      properties: []
+      properties: [ ]
       description: ''
       armor:
         base: 13
@@ -423,9 +423,9 @@ items:
       default: 0
       AnoypGxxNIMOS0XY: 3
     _key: '!actors.items!z8PYWkq3bxce7vwb.Jucaft0kqe7QBfgY'
-effects: []
+effects: [ ]
 flags:
-  core: {}
+  core: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.5.4

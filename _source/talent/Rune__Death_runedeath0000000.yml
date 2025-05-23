@@ -11,10 +11,10 @@ system:
     <p>The Death rune scales using <strong>Intellect</strong>, targets
     <strong>Fortitude</strong>, and deals <strong>Corruption</strong> damage to
     <strong>Health</strong>.</p>
-  actions: []
+  actions: [ ]
   rune: death
-  actorHooks: []
-effects: []
+  actorHooks: [ ]
+effects: [ ]
 flags:
   core:
     sourceId: Compendium.swerpg.talent.runedeath0000000

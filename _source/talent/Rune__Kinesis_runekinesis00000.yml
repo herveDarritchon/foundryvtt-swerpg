@@ -12,10 +12,10 @@ system:
     <strong>Physical</strong> defense, and deals <strong>Bludgeoning</strong>,
     <strong>Piercing</strong>, or <strong>Slashing</strong> damage to
     <strong>Health</strong>.</p>
-  actions: []
+  actions: [ ]
   rune: kinesis
-  actorHooks: []
-effects: []
+  actorHooks: [ ]
+effects: [ ]
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3

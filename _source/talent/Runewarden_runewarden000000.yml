@@ -10,7 +10,7 @@ system:
     the Arcane Rune attuned to that damage type.</p><p>When you use the
     <strong>Ward</strong> gesture, the Resistance provided by your Ward also
     trained by half your Wisdom.</p>
-  actions: []
+  actions: [ ]
   actorHooks:
     - hook: prepareResistances
       fn: |-
@@ -21,7 +21,7 @@ system:
           }
         }
   iconicSpells: 1
-effects: []
+effects: [ ]
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3

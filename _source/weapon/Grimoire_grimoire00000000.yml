@@ -10,16 +10,16 @@ system:
   broken: false
   enchantment: mundane
   equipped: false
-  properties: []
+  properties: [ ]
   damageType: bludgeoning
   slot: 0
-effects: []
+effects: [ ]
 folder: SQH4h6ujibkpGCUF
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3
 flags:
-  core: {}
+  core: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.5.6

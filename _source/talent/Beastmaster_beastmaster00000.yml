@@ -6,9 +6,9 @@ system:
   description: >-
     <p>You have trained your animal companion to aid you in combat. Your
     companion may participate in encounters as an allied combatant.</p>
-  actions: []
-  requirements: {}
-effects: []
+  actions: [ ]
+  requirements: { }
+effects: [ ]
 flags:
   core:
     sourceId: Compendium.swerpg.talent.Item.beastmaster00000

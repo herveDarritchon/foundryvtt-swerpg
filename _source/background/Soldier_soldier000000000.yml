@@ -2,9 +2,9 @@ _id: soldier000000000
 name: Soldier
 type: background
 img: icons/environment/people/infantry.webp
-effects: []
+effects: [ ]
 folder: 5piCK2JWjY34nSY3
-flags: {}
+flags: { }
 system:
   description: >-
     <p>You were a rank-and-file member of a military organization of some

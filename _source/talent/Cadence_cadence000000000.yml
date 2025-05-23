@@ -8,8 +8,8 @@ system:
     precision. When you <strong>Strike</strong> multiple times in sequence using
     a one-handed melee weapon you gain a stacking <strong>+1 Boon</strong> for
     each successive attack.</p><p></p>
-  actions: []
-  requirements: {}
+  actions: [ ]
+  requirements: { }
   actorHooks:
     - hook: prepareWeaponAttack
       fn: >-
@@ -26,7 +26,7 @@ system:
 
         if ( status.cadence ) rollData.boons.cadence = {label: "Cadence",
         number: status.cadence};
-effects: []
+effects: [ ]
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3

@@ -8,7 +8,7 @@ system:
     this Rune cause the Shocked condition on Critical Hits.</p><p>The Shocked
     effect lasts for 1 Round, deals half your Intellect score as Lightning
     damage to Morale, and applies the Staggered condition.</p>
-  actions: []
+  actions: [ ]
   actorHooks:
     - hook: applyCriticalEffects
       fn: |-
@@ -23,7 +23,7 @@ system:
         // Apply Shocked effect
         const shocked  = SYSTEM.EFFECTS.shocked(actor, outcome.target);
         outcome.effects.push(shocked);
-effects: []
+effects: [ ]
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3

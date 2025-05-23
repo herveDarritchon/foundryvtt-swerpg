@@ -219,8 +219,8 @@ prototypeToken:
     brightness: 0
     saturation: 0
     contrast: 0
-  detectionModes: []
-  flags: {}
+  detectionModes: [ ]
+  flags: { }
   randomImg: false
   hexagonalShape: 0
   occludable:
@@ -239,7 +239,7 @@ items:
     name: Inspire Heroism
     type: talent
     img: icons/skills/social/intimidation-impressing.webp
-    effects: []
+    effects: [ ]
     flags:
       core:
         sourceId: Item.V4stscWtnt2GFRY2
@@ -256,7 +256,7 @@ items:
           description: >-
             Each ally, excluding yourself, within 3 spaces gains +1 Boon to
             actions performed until the end of their next Turn.
-          tags: []
+          tags: [ ]
           cost:
             action: 1
             focus: 1
@@ -272,7 +272,7 @@ items:
                 - key: rollBonuses.boons
                   value: 1
                   mode: 2
-      actorHooks: []
+      actorHooks: [ ]
     _stats:
       systemId: swerpg
       systemVersion: 0.5.4
@@ -300,10 +300,10 @@ items:
         <p>The Flame rune scales using <strong>Intellect</strong>, targets
         <strong>Reflex</strong>, and deals <strong>Fire</strong> damage to
         <strong>Health</strong>.</p>
-      actions: []
+      actions: [ ]
       rune: flame
-      actorHooks: []
-    effects: []
+      actorHooks: [ ]
+    effects: [ ]
     flags:
       core:
         sourceId: Compendium.swerpg.talent.runeflame0000000
@@ -339,10 +339,10 @@ items:
         <p>The Influence gesture scales using <strong>Presence</strong> and
         targets a <strong>single</strong> adjacent creature, dealing 12 base
         damage on a successful attack.</p>
-      actions: []
+      actions: [ ]
       gesture: influence
-      actorHooks: []
-    effects: []
+      actorHooks: [ ]
+    effects: [ ]
     flags:
       core:
         sourceId: Compendium.swerpg.talent.gestureinfluence
@@ -381,7 +381,7 @@ items:
       damageType: radiant
       animation: quarterstaff
       slot: 0
-    effects: []
+    effects: [ ]
     flags:
       core:
         sourceId: Compendium.swerpg.weapon.Item.magestaff0000000
@@ -403,7 +403,7 @@ items:
     name: Ring Mail
     type: armor
     img: icons/equipment/chest/breastplate-layered-leather-studded-black.webp
-    effects: []
+    effects: [ ]
     flags:
       core:
         sourceId: Compendium.swerpg.armor.Item.1lTOzjUX4bUNDQFc
@@ -415,7 +415,7 @@ items:
       quality: standard
       enchantment: mundane
       equipped: true
-      properties: []
+      properties: [ ]
       description: ''
       armor:
         base: 9
@@ -437,9 +437,9 @@ items:
       default: 0
       AnoypGxxNIMOS0XY: 3
     _key: '!actors.items!sqTUaPrXpwCzk3xs.DTvwKvvLLEhvJ7ER'
-effects: []
+effects: [ ]
 flags:
-  core: {}
+  core: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.5.4

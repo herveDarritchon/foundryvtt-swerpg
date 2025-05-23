@@ -11,9 +11,9 @@ system:
     <strong>Strike</strong> with a projectile weapon, you may cast a spell using
     the <strong>Arrow</strong> gesture during the same Turn with Action Cost
     reduced by 1.</p>
-  actions: []
+  actions: [ ]
   iconicSpells: 1
-effects: []
+effects: [ ]
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3

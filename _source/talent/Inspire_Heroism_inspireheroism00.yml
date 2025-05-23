@@ -2,7 +2,7 @@ _id: inspireheroism00
 name: Inspire Heroism
 type: talent
 img: icons/skills/social/intimidation-impressing.webp
-effects: []
+effects: [ ]
 flags:
   core:
     sourceId: Item.V4stscWtnt2GFRY2
@@ -20,7 +20,7 @@ system:
         <p>Each ally, excluding yourself, within <strong>10 Feet</strong> gains
         <strong>+1 Boon</strong> to actions performed until the end of their
         next Turn.</p>
-      tags: []
+      tags: [ ]
       cost:
         action: 3
         focus: 1
@@ -34,14 +34,14 @@ system:
       effects:
         - name: Inspire Heroism
           scope: 0
-          statuses: []
+          statuses: [ ]
           duration:
             turns: 1
       range:
         maximum: null
         weapon: false
         minimum: null
-      actionHooks: []
+      actionHooks: [ ]
 _stats:
   systemId: swerpg
   systemVersion: 0.6.0

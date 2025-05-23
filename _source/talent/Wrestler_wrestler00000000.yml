@@ -36,9 +36,9 @@ system:
           scope: 1
           statuses:
             - restrained
-  actorHooks: []
-effects: []
-flags: {}
+  actorHooks: [ ]
+effects: [ ]
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.5.0

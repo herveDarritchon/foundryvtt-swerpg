@@ -34,8 +34,8 @@ system:
             rounds: 1
           statuses:
             - enraged
-  requirements: {}
-effects: []
+  requirements: { }
+effects: [ ]
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3

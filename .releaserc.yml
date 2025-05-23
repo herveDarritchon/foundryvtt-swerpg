@@ -25,7 +25,7 @@ plugins:
         - type: breaking
           release: minor
       parserOpts:
-        noteKeywords: ['BREAKING CHANGE']
+        noteKeywords: [ 'BREAKING CHANGE' ]
   - '@semantic-release/release-notes-generator'
   - - '@semantic-release/changelog'
     - changelogFile: CHANGELOG.md
@@ -40,7 +40,7 @@ plugins:
   - - '@semantic-release/github'
     - successComment: false
       failComment: false
-      assets: []
+      assets: [ ]
 
 prepare:
   - path: '@semantic-release/changelog'

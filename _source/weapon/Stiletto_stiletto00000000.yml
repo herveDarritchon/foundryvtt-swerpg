@@ -16,8 +16,8 @@ system:
     - keen
   damageType: piercing
   animation: dagger
-effects: []
-flags: {}
+effects: [ ]
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.6.2

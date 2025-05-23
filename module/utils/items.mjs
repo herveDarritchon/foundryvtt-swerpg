@@ -7,5 +7,5 @@
  * @returns {Array} - An array of items that match the specified type.
  */
 export function getItemsOf(items, type) {
-  return items?.filter((item) => item.type === type) ?? [];
+    return items?.filter((item) => item.type === type) ?? [];
 }

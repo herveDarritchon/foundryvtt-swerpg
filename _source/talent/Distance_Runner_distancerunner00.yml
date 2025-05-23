@@ -10,8 +10,8 @@ system:
   actorHooks:
     - hook: prepareMovement
       fn: movement.stride += 1;
-effects: []
-flags: {}
+effects: [ ]
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.5.9

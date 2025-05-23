@@ -8,7 +8,7 @@ pages:
     title:
       show: true
       level: 1
-    image: {}
+    image: { }
     text:
       format: 1
       content: >-
@@ -68,11 +68,11 @@ pages:
       controls: true
       volume: 0.5
     src: null
-    system: {}
+    system: { }
     ownership:
       default: -1
       PQhsT89HTP8uxjkQ: 3
-    flags: {}
+    flags: { }
     _stats:
       systemId: swerpg
       systemVersion: 0.5.0
@@ -90,7 +90,7 @@ pages:
     title:
       show: true
       level: 1
-    image: {}
+    image: { }
     text:
       format: 1
       content: >-
@@ -139,11 +139,11 @@ pages:
       controls: true
       volume: 0.5
     src: null
-    system: {}
+    system: { }
     ownership:
       default: -1
       PQhsT89HTP8uxjkQ: 3
-    flags: {}
+    flags: { }
     _stats:
       systemId: swerpg
       systemVersion: 0.5.0
@@ -161,7 +161,7 @@ pages:
     title:
       show: true
       level: 1
-    image: {}
+    image: { }
     text:
       format: 1
       content: >-
@@ -184,11 +184,11 @@ pages:
       controls: true
       volume: 0.5
     src: null
-    system: {}
+    system: { }
     ownership:
       default: -1
       PQhsT89HTP8uxjkQ: 3
-    flags: {}
+    flags: { }
     _stats:
       systemId: swerpg
       systemVersion: 0.5.0
@@ -214,11 +214,11 @@ pages:
       controls: true
       volume: 0.5
     src: systems/swerpg/ui/swerpg-text-dark.png
-    system: {}
+    system: { }
     ownership:
       default: -1
       AnoypGxxNIMOS0XY: 3
-    flags: {}
+    flags: { }
     _stats:
       systemId: swerpg
       systemVersion: 0.6.2
@@ -236,7 +236,7 @@ pages:
     title:
       show: true
       level: 1
-    image: {}
+    image: { }
     text:
       format: 1
       content: >-
@@ -262,11 +262,11 @@ pages:
       controls: true
       volume: 0.5
     src: null
-    system: {}
+    system: { }
     ownership:
       default: -1
       AnoypGxxNIMOS0XY: 3
-    flags: {}
+    flags: { }
     _stats:
       systemId: swerpg
       systemVersion: 0.5.0
@@ -284,7 +284,7 @@ pages:
     title:
       show: true
       level: 1
-    image: {}
+    image: { }
     text:
       format: 1
       content: >-
@@ -304,11 +304,11 @@ pages:
       controls: true
       volume: 0.5
     src: null
-    system: {}
+    system: { }
     ownership:
       default: -1
       JMECHdsPmLGGi1RC: 3
-    flags: {}
+    flags: { }
     _stats:
       systemId: swerpg
       systemVersion: 0.5.0

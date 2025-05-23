@@ -29,12 +29,12 @@ system:
     void: 0
   size: 6
   stride: 10
-effects: []
+effects: [ ]
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3
 flags:
-  core: {}
+  core: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.6.0

@@ -2,10 +2,10 @@ _id: buckler000000000
 name: Buckler
 type: weapon
 img: icons/equipment/shield/buckler-wooden-boss-brown.webp
-effects: []
+effects: [ ]
 folder: 9v0ru58f09fO3sE3
 flags:
-  core: {}
+  core: { }
 system:
   category: shieldLight
   quantity: 1
@@ -14,7 +14,7 @@ system:
   quality: standard
   enchantment: mundane
   equipped: false
-  properties: []
+  properties: [ ]
   description: ''
   damageType: bludgeoning
   broken: false

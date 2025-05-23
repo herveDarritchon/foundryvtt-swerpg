@@ -8,14 +8,14 @@ system:
     You are highly skilled in using shields to adopt a defensive posture. You
     gain double the benefit of the <strong>Guarded</strong> condition against
     <strong>Weapon Attacks</strong> while wielding a shield.
-  actions: []
+  actions: [ ]
   actorHooks:
     - hook: defendWeaponAttack
       fn: >-
         if ( actor.statuses.has("guarded") && actor.equipment.weapons.shield )
         rollData.banes.testudo = {label: "Testudo", number: 1};
-effects: []
-flags: {}
+effects: [ ]
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.5.4

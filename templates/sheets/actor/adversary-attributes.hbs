@@ -22,7 +22,7 @@
                     {{formInput fields.resources.fields.action.fields.value value=resources.action.value type="number"}}
                     <div class="pips flexrow">
                         {{#each resources.action.pips as |pip|}}
-                        <div class="pip {{pip.cssClass}}"></div>
+                            <div class="pip {{pip.cssClass}}"></div>
                         {{/each}}
                     </div>
                     <span class="max">{{resources.action.max}}</span>
@@ -35,7 +35,7 @@
                     {{formInput fields.resources.fields.focus.fields.value value=resources.focus.value type="number"}}
                     <div class="pips flexrow">
                         {{#each resources.focus.pips as |pip|}}
-                        <div class="pip {{pip.cssClass}}"></div>
+                            <div class="pip {{pip.cssClass}}"></div>
                         {{/each}}
                     </div>
                     <span class="max">{{resources.focus.max}}</span>
@@ -59,10 +59,10 @@
     <div class="sheet-section abilities">
         <h3>Abilities</h3>
         {{#each abilityScores as |ability|}}
-        <div class="ability {{ability.id}} {{ability.type}} flexcol" data-ability="{{ability.id}}">
-            <h4 class="label">{{ability.label}}</h4>
-            <span class="input score">{{ability.value}}</span>
-        </div>
+            <div class="ability {{ability.id}} {{ability.type}} flexcol" data-ability="{{ability.id}}">
+                <h4 class="label">{{ability.label}}</h4>
+                <span class="input score">{{ability.value}}</span>
+            </div>
         {{/each}}
     </div>
 
@@ -74,12 +74,12 @@
                 <span class="value">{{defenses.physical.value}}</span>
             </div>
             {{#each defenses.physical.components as |c id|}}
-            <span class="sep">{{c.separator}}</span>
-            <div class="defense component {{id}} {{c.cssClass}}">
-                <h4 class="label">{{c.label}}</h4>
-                <span class="value">{{c.value}}</span>
-                <span class="pct">{{c.pct}}%</span>
-            </div>
+                <span class="sep">{{c.separator}}</span>
+                <div class="defense component {{id}} {{c.cssClass}}">
+                    <h4 class="label">{{c.label}}</h4>
+                    <span class="value">{{c.value}}</span>
+                    <span class="pct">{{c.pct}}%</span>
+                </div>
             {{/each}}
         </div>
         <div class="magical flexrow">
@@ -113,17 +113,17 @@
     <div class="sheet-section resistances flexrow">
         <h3>Resistances</h3>
         {{#each resistances as |group|}}
-        <div class="resistance-group flexcol">
-            {{#each group.resistances as |r|}}
-            <div class="resistance flexcol {{r.cssClass}}" data-resistance="{{r.id}}">
-                <h4 class="label">{{r.label}}</h4>
-                <div class="resistance-bar">
-                    <span class="value">{{r.total}}</span>
-                    <span class="bar" style="width:{{r.barPct}}"></span>
-                </div>
+            <div class="resistance-group flexcol">
+                {{#each group.resistances as |r|}}
+                    <div class="resistance flexcol {{r.cssClass}}" data-resistance="{{r.id}}">
+                        <h4 class="label">{{r.label}}</h4>
+                        <div class="resistance-bar">
+                            <span class="value">{{r.total}}</span>
+                            <span class="bar" style="width:{{r.barPct}}"></span>
+                        </div>
+                    </div>
+                {{/each}}
             </div>
-            {{/each}}
-        </div>
         {{/each}}
     </div>
 

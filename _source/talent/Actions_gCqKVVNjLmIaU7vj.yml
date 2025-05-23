@@ -5,7 +5,7 @@ type: Item
 _id: gCqKVVNjLmIaU7vj
 sort: 0
 color: '#3a2c58'
-flags: {}
+flags: { }
 _stats:
   systemId: null
   systemVersion: null

@@ -2,7 +2,7 @@ _id: artfulparry00000
 name: Artful Parry
 type: talent
 img: icons/skills/melee/weapons-crossed-swords-white-blue.webp
-effects: []
+effects: [ ]
 flags:
   core:
     sourceId: Item.V4stscWtnt2GFRY2
@@ -31,13 +31,13 @@ system:
         type: single
         number: 1
         scope: 0
-      effects: []
-      actionHooks: []
+      effects: [ ]
+      actionHooks: [ ]
       range:
         minimum: null
         maximum: null
         weapon: false
-  requirements: {}
+  requirements: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.6.0

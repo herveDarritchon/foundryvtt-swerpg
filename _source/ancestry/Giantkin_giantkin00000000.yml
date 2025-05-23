@@ -2,9 +2,9 @@ _id: giantkin00000000
 name: Giantkin
 type: ancestry
 img: icons/environment/wilderness/tree-oak.webp
-effects: []
+effects: [ ]
 folder: cvTY534vgfLqkvXj
-flags: {}
+flags: { }
 system:
   primary: wisdom
   secondary: toughness

@@ -11,7 +11,7 @@ system:
     combat and not Incapacitated, you gain +1 Boon to all checks when you have
     less than 50% of your maximum Health remaining. You gain +2 Boons to all
     checks when you have less than 25% of your maximum Health remaining.</p>
-  actions: []
+  actions: [ ]
   actorHooks:
     - hook: prepareStandardCheck
       fn: >-
@@ -27,13 +27,13 @@ system:
         else if ( health.value < Math.ceil(health.max * 0.5) ) {
           rollData.boons.operator= {label: "Operator", number: 1};
         }
-effects: []
+effects: [ ]
 folder: fOYHlZJEWUukD7yr
 sort: 304688
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3
-flags: {}
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.6.0

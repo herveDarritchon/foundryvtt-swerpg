@@ -2,7 +2,7 @@ _id: ruthlessmomentum
 name: Ruthless Momentum
 type: talent
 img: icons/skills/melee/strikes-sword-scimitar.webp
-effects: []
+effects: [ ]
 flags:
   core:
     sourceId: Item.pHRUZ8Zfv5E0TcH2
@@ -33,7 +33,7 @@ system:
         type: single
         number: 1
         scope: 3
-      effects: []
+      effects: [ ]
       tags:
         - melee
         - movement

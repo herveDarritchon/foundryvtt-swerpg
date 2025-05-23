@@ -8,10 +8,10 @@ system:
     Your grasp of your weaponry is firm and unyielding. You can perform Actions
     which require a free hand while wielding a two-handed weapon. Attempts to
     Disarm you are made with +2 Banes.
-  actions: []
-  requirements: {}
-effects: []
-flags: {}
+  actions: [ ]
+  requirements: { }
+effects: [ ]
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.6.2

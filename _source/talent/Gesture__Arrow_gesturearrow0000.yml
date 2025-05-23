@@ -11,10 +11,10 @@ system:
     <p>The Arrow gesture scales using <strong>Intellect</strong> and targets a
     <strong>single</strong> creature up to a distance of 10 spaces, dealing 10
     base damage on a successful attack.</p>
-  actions: []
+  actions: [ ]
   gesture: arrow
-  actorHooks: []
-effects: []
+  actorHooks: [ ]
+effects: [ ]
 flags:
   core:
     sourceId: Compendium.swerpg.talent.gesturearrow0000

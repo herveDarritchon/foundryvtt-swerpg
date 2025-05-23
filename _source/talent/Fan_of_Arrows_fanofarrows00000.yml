@@ -2,8 +2,8 @@ _id: fanofarrows00000
 name: Fan of Arrows
 type: talent
 img: icons/skills/ranged/bow-arrows-blue.webp
-effects: []
-flags: {}
+effects: [ ]
+flags: { }
 system:
   node: dex1b
   description: >-
@@ -31,11 +31,11 @@ system:
         type: cone
         number: 1
         scope: 3
-      effects: []
+      effects: [ ]
       tags:
         - ranged
         - difficult
-      actionHooks: []
+      actionHooks: [ ]
 _stats:
   systemId: swerpg
   systemVersion: 0.6.0

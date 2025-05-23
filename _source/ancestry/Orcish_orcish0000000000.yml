@@ -2,9 +2,9 @@ _id: orcish0000000000
 name: Orcish
 type: ancestry
 img: icons/creatures/magical/construct-iron-stomping-yellow.webp
-effects: []
+effects: [ ]
 folder: cvTY534vgfLqkvXj
-flags: {}
+flags: { }
 system:
   primary: strength
   secondary: toughness

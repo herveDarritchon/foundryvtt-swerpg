@@ -2,9 +2,9 @@ _id: claws00000000000
 name: Claws
 type: weapon
 img: icons/weapons/fist/claw-gauntlet-gray.webp
-effects: []
+effects: [ ]
 folder: Or65MVkMdOIVRUqb
-flags: {}
+flags: { }
 system:
   category: unarmed
   quantity: 1
@@ -13,7 +13,7 @@ system:
   quality: standard
   enchantment: mundane
   equipped: false
-  properties: []
+  properties: [ ]
   description: ''
   damageType: slashing
   broken: false

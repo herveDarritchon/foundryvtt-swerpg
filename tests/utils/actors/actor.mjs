@@ -5,7 +5,7 @@ export function createActor(
     {
         careerSpent = 0,
         specializationSpent = 0,
-        items= []
+        items = []
     } = {}
 ) {
     return {

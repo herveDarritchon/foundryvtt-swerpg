@@ -3,7 +3,7 @@ type: Item
 sorting: a
 sort: 0
 color: null
-flags: {}
+flags: { }
 _id: Or65MVkMdOIVRUqb
 folder: null
 description: ''

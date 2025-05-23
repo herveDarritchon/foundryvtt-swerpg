@@ -7,20 +7,20 @@ system:
     target to render it exposed to further harm.</p><p>This creature adds one
     additional Boon to all melee attacks against a target that is
     <strong>Flanked</strong>.</p>
-  actions: []
+  actions: [ ]
   actorHooks:
     - hook: prepareWeaponAttack
       fn: |-
         if ( target.statuses.has("flanked") ) {
           rollData.boons.packHunter = {label: "Pack Hunter", number: 1};
         }
-effects: []
+effects: [ ]
 folder: null
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3
 flags:
-  core: {}
+  core: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.5.7

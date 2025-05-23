@@ -8,16 +8,16 @@ system:
   description: >-
     <p>Enhance a spell to make it more difficult to counter. Any attempt to
     Counter-Spell this spell is made with +2 Banes.</p>
-  actions: []
+  actions: [ ]
   inflection: determine
-  actorHooks: []
+  actorHooks: [ ]
   iconicSpells: 1
-effects: []
+effects: [ ]
 sort: 0
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3
-flags: {}
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.6.0

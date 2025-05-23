@@ -1,7 +1,7 @@
 name: Uppercut
 type: talent
 img: icons/skills/melee/strike-sword-gray.webp
-effects: []
+effects: [ ]
 flags:
   core:
     sourceId: Item.pHRUZ8Zfv5E0TcH2
@@ -32,13 +32,13 @@ system:
         type: single
         number: 1
         scope: 3
-      effects: []
-      actionHooks: []
+      effects: [ ]
+      actionHooks: [ ]
       range:
         maximum: null
         weapon: true
         minimum: null
-  requirements: {}
+  requirements: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.6.0

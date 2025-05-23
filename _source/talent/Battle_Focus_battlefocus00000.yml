@@ -8,7 +8,7 @@ system:
     You find focus and calm within the thrill of battle. When you achieve a
     <strong>Critical Hit</strong> that deals damage to Health or Morale you gain
     +1 Focus. This benefit may occur at most once per Round.
-  actions: []
+  actions: [ ]
   actorHooks:
     - hook: applyCriticalEffects
       fn: >-
@@ -36,8 +36,8 @@ system:
         self.resources.focus = (self.resources.focus || 0) + 1;
 
         foundry.utils.setProperty(updates, "system.status.battleFocus", true);
-effects: []
-flags: {}
+effects: [ ]
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.5.7

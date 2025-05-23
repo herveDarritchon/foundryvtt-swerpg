@@ -14,7 +14,7 @@ system:
       description: >-
         You still your mind and study the physiology of your foe, attempting to
         identify a vulnerability in its defenses.
-      tags: []
+      tags: [ ]
       cost:
         action: 1
         focus: 1
@@ -23,10 +23,10 @@ system:
         number: 1
         distance: 10
         scope: 0
-      effects: []
-  actorHooks: []
-effects: []
-flags: {}
+      effects: [ ]
+  actorHooks: [ ]
+effects: [ ]
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.5.0

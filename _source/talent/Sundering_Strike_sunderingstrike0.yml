@@ -1,7 +1,7 @@
 name: Sundering Strike
 type: talent
 img: icons/skills/melee/shield-damaged-broken-gold.webp
-effects: []
+effects: [ ]
 flags:
   core:
     sourceId: Item.vIhvItiKYuiqaSp9
@@ -40,12 +40,12 @@ system:
             - exposed
           duration:
             turns: 3
-      actionHooks: []
+      actionHooks: [ ]
       range:
         maximum: null
         weapon: true
         minimum: null
-  requirements: {}
+  requirements: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.6.0

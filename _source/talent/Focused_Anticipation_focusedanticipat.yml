@@ -8,13 +8,13 @@ system:
     Anticipation leads to decisive action. When you have the highest
     <strong>Initiative</strong> score for a Round of combat, you gain <strong>+1
     Focus</strong>.</p>
-effects: []
+effects: [ ]
 folder: qHUCrqkzuPHtBkbG
 sort: 300000
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3
-flags: {}
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.5.9

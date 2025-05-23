@@ -9,7 +9,7 @@ system:
     this Rune cause the Corrupted condition on Critical Hits.</p><p>The
     Corrupted effect lasts for 3 Rounds and deals your Intellect score as
     Corruption damage to Health each Round.</p>
-  actions: []
+  actions: [ ]
   actorHooks:
     - hook: applyCriticalEffects
       fn: |-
@@ -23,13 +23,13 @@ system:
         // Apply Decay effect
         const decay = SYSTEM.EFFECTS.decay(actor, outcome.target);
         outcome.effects.push(decay);
-effects: []
+effects: [ ]
 folder: c0nl6X8tp4Of0Y4O
 sort: -250000
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3
-flags: {}
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.6.0

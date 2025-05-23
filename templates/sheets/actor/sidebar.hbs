@@ -6,15 +6,15 @@
     <h2 class="section-header divider">{{localize "ACTOR.LABELS.CURRENT_EQUIPMENT"}}</h2>
     <div class="item-list equipped">
         {{#each featuredEquipment as |e|}}
-        <div class="equipped line-item">
-            <img class="icon" src="{{e.img}}" alt="{{e.name}}">
-            <div class="title">
-                <h4>{{this.name}}</h4>
-                <div class="tags">
-                    {{#each e.tags}}<span class="tag">{{this}}</span>{{/each}}
+            <div class="equipped line-item">
+                <img class="icon" src="{{e.img}}" alt="{{e.name}}">
+                <div class="title">
+                    <h4>{{this.name}}</h4>
+                    <div class="tags">
+                        {{#each e.tags}}<span class="tag">{{this}}</span>{{/each}}
+                    </div>
                 </div>
             </div>
-        </div>
         {{/each}}
     </div>
 
@@ -22,17 +22,17 @@
     <h2 class="section-header divider">{{localize "ACTOR.LABELS.FAVORITE_ACTIONS"}}</h2>
     <div class="item-list actions">
         {{#each favoriteActions as |action|}}
-        <div class="action line-item" data-action-id="{{action.id}}">
-            <img class="icon draggable action-drag" src="{{action.img}}" alt="{{action.name}}" draggable="true">
-            <div class="title">
-                <h4 data-action="actionUse"><a>{{action.name}}</a></h4>
-                <div class="tags">
-                    {{#each action.tags as |label tag|}}
-                    <span class="tag {{tag}}">{{label}}</span>
-                    {{/each}}
+            <div class="action line-item" data-action-id="{{action.id}}">
+                <img class="icon draggable action-drag" src="{{action.img}}" alt="{{action.name}}" draggable="true">
+                <div class="title">
+                    <h4 data-action="actionUse"><a>{{action.name}}</a></h4>
+                    <div class="tags">
+                        {{#each action.tags as |label tag|}}
+                            <span class="tag {{tag}}">{{label}}</span>
+                        {{/each}}
+                    </div>
                 </div>
             </div>
-        </div>
         {{/each}}
     </div>
 </section>

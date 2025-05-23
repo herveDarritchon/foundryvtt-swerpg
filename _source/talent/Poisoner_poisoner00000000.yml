@@ -63,7 +63,7 @@ system:
         const poisoned = SYSTEM.EFFECTS.poisoned(actor, outcome.target);
 
         outcome.effects.push(poisoned);
-effects: []
+effects: [ ]
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3

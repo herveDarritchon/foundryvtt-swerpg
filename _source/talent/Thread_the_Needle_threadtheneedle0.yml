@@ -28,7 +28,7 @@ system:
         type: single
         number: 1
         scope: 3
-      effects: []
+      effects: [ ]
       tags:
         - ranged
         - mainhand
@@ -39,13 +39,13 @@ system:
             false).boons;
 
             if ( boons.flanked ) rolls[0].data.boons.flanked = boons.flanked;
-effects: []
+effects: [ ]
 folder: i7P1uwWcECj5KWfY
 sort: -300000
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3
-flags: {}
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.6.0

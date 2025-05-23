@@ -40,9 +40,9 @@ system:
         maximum: null
         weapon: true
         minimum: null
-      actionHooks: []
-effects: []
-flags: {}
+      actionHooks: [ ]
+effects: [ ]
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.6.0

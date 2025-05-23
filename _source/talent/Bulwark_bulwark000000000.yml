@@ -19,7 +19,7 @@ system:
         defend.cost.action -= 1;
 
         defend.usage.actorUpdates["system.status.bulwark"] = true;
-effects: []
+effects: [ ]
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3

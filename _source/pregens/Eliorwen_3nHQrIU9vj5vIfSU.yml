@@ -219,8 +219,8 @@ prototypeToken:
     brightness: 0
     saturation: 0
     contrast: 0
-  detectionModes: []
-  flags: {}
+  detectionModes: [ ]
+  flags: { }
   randomImg: false
   hexagonalShape: 0
   occludable:
@@ -245,15 +245,15 @@ items:
         <p>You have heightened insight into aspects of your surroundings. You
         gain +2 Boons to any <strong>Awareness</strong> skill test which does
         not rely upon eyesight.</p>
-      actions: []
-      actorHooks: []
-    effects: []
+      actions: [ ]
+      actorHooks: [ ]
+    effects: [ ]
     folder: 2MFixpDJ379KOogE
     sort: -275000
     ownership:
       default: 0
       AnoypGxxNIMOS0XY: 3
-    flags: {}
+    flags: { }
     _stats:
       systemId: swerpg
       systemVersion: 0.5.4
@@ -276,19 +276,19 @@ items:
 
         <p>You gain a +1 Skill bonus to attacks using ranged weapons in the
         <strong>Projectile</strong> or <strong>Mechanical</strong> category.</p>
-      actions: []
+      actions: [ ]
       actorHooks:
         - hook: prepareTraining
           fn: |-
             training.projectile += 1;
             training.mechanical += 1;
-    effects: []
+    effects: [ ]
     folder: FQAUMNkcagdBLURJ
     sort: 25000
     ownership:
       default: 0
       AnoypGxxNIMOS0XY: 3
-    flags: {}
+    flags: { }
     _stats:
       systemId: swerpg
       systemVersion: 0.5.4
@@ -303,8 +303,8 @@ items:
     name: Precision Shot
     type: talent
     img: icons/skills/ranged/target-bullseye-arrow-glowing.webp
-    effects: []
-    flags: {}
+    effects: [ ]
+    flags: { }
     system:
       node: dex0b
       description: >-
@@ -326,8 +326,8 @@ items:
             type: single
             number: 1
             scope: 3
-          effects: []
-      actorHooks: []
+          effects: [ ]
+      actorHooks: [ ]
     _stats:
       systemId: swerpg
       systemVersion: 0.5.4
@@ -347,8 +347,8 @@ items:
     name: Fan of Arrows
     type: talent
     img: icons/skills/ranged/bow-arrows-blue.webp
-    effects: []
-    flags: {}
+    effects: [ ]
+    flags: { }
     system:
       node: dex1b
       description: >-
@@ -371,8 +371,8 @@ items:
             number: 1
             distance: 3
             scope: 3
-          effects: []
-      actorHooks: []
+          effects: [ ]
+      actorHooks: [ ]
     _stats:
       systemId: swerpg
       systemVersion: 0.5.4
@@ -398,7 +398,7 @@ items:
         Shoot first, ask questions later. You gain <strong>+1 Boon</strong> on
         any Strike or Spell attack against an enemy whose initiative score is
         lower than your own.
-      actions: []
+      actions: [ ]
       actorHooks:
         - hook: prepareWeaponAttack
           fn: >-
@@ -416,8 +416,8 @@ items:
 
             if ( ac?.initiative > tc?.initiative ) rollData.boons.strikeFirst =
             {label: "Strike First", number: 1};
-    effects: []
-    flags: {}
+    effects: [ ]
+    flags: { }
     _stats:
       systemId: swerpg
       systemVersion: 0.5.4
@@ -442,14 +442,14 @@ items:
       description: >-
         Your quickness of mind and body are equally impressive. You gain +2
         Boons to all Initiative checks.
-      actions: []
+      actions: [ ]
       actorHooks:
         - hook: prepareInitiativeCheck
           fn: >-
             rollData.boons.preternaturalInstinct = {label: "Preternatural
             Instinct", number: 2};
-    effects: []
-    flags: {}
+    effects: [ ]
+    flags: { }
     _stats:
       systemId: swerpg
       systemVersion: 0.5.4
@@ -475,15 +475,15 @@ items:
         You are gifted at exploiting the slowness with which others think. If
         you are first in Initiative order for the first round of Combat, you
         gain +1 Action during your turn.
-      actions: []
-      actorHooks: []
-    effects: []
+      actions: [ ]
+      actorHooks: [ ]
+    effects: [ ]
     folder: BevAJzzLeFbSaVic
     sort: -75000
     ownership:
       default: 0
       AnoypGxxNIMOS0XY: 3
-    flags: {}
+    flags: { }
     _stats:
       systemId: swerpg
       systemVersion: 0.5.4
@@ -507,10 +507,10 @@ items:
         <p>The Arrow gesture scales using <strong>Intellect</strong> and targets
         a <strong>single</strong> creature up to a distance of 10 spaces,
         dealing 10 base damage on a successful attack.</p>
-      actions: []
+      actions: [ ]
       gesture: arrow
-      actorHooks: []
-    effects: []
+      actorHooks: [ ]
+    effects: [ ]
     flags:
       core:
         sourceId: Compendium.swerpg.talent.gesturearrow0000
@@ -543,10 +543,10 @@ items:
         <p>The Lightning rune scales using <strong>Intellect</strong>, targets
         <strong>Reflex</strong>, and deals <strong>Electrical</strong> damage to
         <strong>Health</strong>.</p>
-      actions: []
+      actions: [ ]
       rune: lightning
-      actorHooks: []
-    effects: []
+      actorHooks: [ ]
+    effects: [ ]
     flags:
       core:
         sourceId: Compendium.swerpg.talent.runelightning000
@@ -578,9 +578,9 @@ items:
         <p>After performing a <strong>Strike</strong> with a projectile weapon,
         you may cast a spell using the <strong>Arrow</strong> gesture during the
         same Turn with Action Cost reduced by 1.</p>
-      actions: []
-      actorHooks: []
-    effects: []
+      actions: [ ]
+      actorHooks: [ ]
+    effects: [ ]
     ownership:
       default: 0
       AnoypGxxNIMOS0XY: 3
@@ -611,9 +611,9 @@ items:
 
         <p>The Shocked effect lasts for 1 Round, deals half your Intellect score
         as Lightning damage to Morale, and applies the Staggered condition.</p>
-      actions: []
-      actorHooks: []
-    effects: []
+      actions: [ ]
+      actorHooks: [ ]
+    effects: [ ]
     ownership:
       default: 0
       AnoypGxxNIMOS0XY: 3
@@ -662,8 +662,8 @@ items:
             - scope: 3
               statuses:
                 - exposed
-      actorHooks: []
-    effects: []
+      actorHooks: [ ]
+    effects: [ ]
     flags:
       core:
         sourceId: Compendium.swerpg.talent.markprey00000000
@@ -687,7 +687,7 @@ items:
     name: Fine Longbow
     type: weapon
     img: icons/weapons/bows/longbow-leather-green.webp
-    effects: []
+    effects: [ ]
     folder: Pe27j9LY8Nmygkqt
     flags:
       core:
@@ -725,7 +725,7 @@ items:
     name: Fine Studded Leather Armor
     type: armor
     img: icons/equipment/chest/breastplate-layered-leather-studded-brown.webp
-    effects: []
+    effects: [ ]
     folder: kjHb0FCE2nJe6Dtx
     flags:
       core:
@@ -738,7 +738,7 @@ items:
       quality: fine
       enchantment: mundane
       equipped: true
-      properties: []
+      properties: [ ]
       description: ''
       armor:
         base: 7
@@ -763,7 +763,7 @@ items:
     name: Scimitar
     type: weapon
     img: icons/weapons/swords/scimitar-worn-blue.webp
-    effects: []
+    effects: [ ]
     folder: pUXcL0pnY3FlKwj8
     flags:
       core:
@@ -776,7 +776,7 @@ items:
       quality: standard
       enchantment: mundane
       equipped: false
-      properties: []
+      properties: [ ]
       description: ''
       damageType: slashing
       broken: false
@@ -800,7 +800,7 @@ items:
     name: Scimitar
     type: weapon
     img: icons/weapons/swords/scimitar-worn-blue.webp
-    effects: []
+    effects: [ ]
     folder: pUXcL0pnY3FlKwj8
     flags:
       core:
@@ -813,7 +813,7 @@ items:
       quality: standard
       enchantment: mundane
       equipped: false
-      properties: []
+      properties: [ ]
       description: ''
       damageType: slashing
       broken: false
@@ -843,7 +843,7 @@ items:
         It is sometimes a marvel how slowly others around you think. You gain
         <strong>+1 Boon</strong> on any Strike or Spell attack against an enemy
         lower than you in Initiative order.
-      actions: []
+      actions: [ ]
       actorHooks:
         - hook: prepareWeaponAttack
           fn: >-
@@ -863,13 +863,13 @@ items:
             if ( ac?.initiative > tc?.initiative )
             rollData.boons.intellectualSuperiority = {label: "Intellectual
             Superiority", number: 1};
-    effects: []
+    effects: [ ]
     folder: BevAJzzLeFbSaVic
     sort: -50000
     ownership:
       default: 0
       AnoypGxxNIMOS0XY: 3
-    flags: {}
+    flags: { }
     _stats:
       systemId: swerpg
       systemVersion: 0.5.4
@@ -880,11 +880,11 @@ items:
       compendiumSource: null
       duplicateSource: null
     _key: '!actors.items!3nHQrIU9vj5vIfSU.intellectualsupe'
-effects: []
+effects: [ ]
 flags:
   swerpg:
     lastSpell: spell.lightning.arrow
-  core: {}
+  core: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.5.4

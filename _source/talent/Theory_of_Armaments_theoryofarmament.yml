@@ -8,19 +8,19 @@ system:
     The theory and physics of combat are a matter of study for you. You gain a
     +1 Skill Bonus to attacks using weapons in the <strong>Balanced</strong> or
     <strong>Projectile</strong> categories.
-  actions: []
+  actions: [ ]
   actorHooks:
     - hook: prepareTraining
       fn: |-
         training.balanced += 1;
         training.projectile += 1;
-effects: []
+effects: [ ]
 folder: FQAUMNkcagdBLURJ
 sort: 12500
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3
-flags: {}
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.5.0

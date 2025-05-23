@@ -2,9 +2,9 @@ _id: splintmail000000
 name: Splint Mail
 type: armor
 img: icons/equipment/chest/breastplate-layered-steel-black.webp
-effects: []
+effects: [ ]
 folder: mLC1TdXCG7bX8VE9
-flags: {}
+flags: { }
 system:
   category: heavy
   quantity: 1

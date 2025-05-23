@@ -9,14 +9,14 @@ system:
     shield into the <strong>Ward</strong> gesture. You may ignore the free-hand
     requirement for spells using the Ward gesture while you have a
     <strong>Shield</strong> equipped.</p>
-  actions: []
-effects: []
+  actions: [ ]
+effects: [ ]
 folder: Uk4FgmLsNJc62zCJ
 sort: 25000
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3
-flags: {}
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.6.0

@@ -220,8 +220,8 @@ prototypeToken:
     brightness: 0
     saturation: 0
     contrast: 0
-  detectionModes: []
-  flags: {}
+  detectionModes: [ ]
+  flags: { }
   randomImg: false
   hexagonalShape: 0
   occludable:
@@ -265,15 +265,15 @@ items:
             number: 1
             distance: 10
             scope: 0
-          effects: []
-      actorHooks: []
-    effects: []
+          effects: [ ]
+      actorHooks: [ ]
+    effects: [ ]
     folder: 2MFixpDJ379KOogE
     sort: 0
     ownership:
       default: 0
       AnoypGxxNIMOS0XY: 3
-    flags: {}
+    flags: { }
     _stats:
       systemId: swerpg
       systemVersion: 0.5.4
@@ -310,9 +310,9 @@ items:
             number: 1
             distance: 1
             scope: 0
-          effects: []
-      actorHooks: []
-    effects: []
+          effects: [ ]
+      actorHooks: [ ]
+    effects: [ ]
     ownership:
       default: 0
       AnoypGxxNIMOS0XY: 3
@@ -336,7 +336,7 @@ items:
     name: Flurry
     type: talent
     img: icons/skills/melee/blade-tips-triple-steel.webp
-    effects: []
+    effects: [ ]
     flags:
       core:
         sourceId: Compendium.swerpg.talent.CANFHQxFjIJwgEYK
@@ -366,8 +366,8 @@ items:
             number: 1
             distance: 1
             scope: 0
-          effects: []
-      actorHooks: []
+          effects: [ ]
+      actorHooks: [ ]
     _stats:
       systemId: swerpg
       systemVersion: 0.5.4
@@ -393,10 +393,10 @@ items:
         You are adept at entering and exiting the fray. When moving out of the
         Engagement radius of an enemy, that enemy has 2 Banes to any attempted
         melee Strike against you.
-      actions: []
-      actorHooks: []
-    effects: []
-    flags: {}
+      actions: [ ]
+      actorHooks: [ ]
+    effects: [ ]
+    flags: { }
     _stats:
       systemId: swerpg
       systemVersion: 0.5.4
@@ -423,9 +423,9 @@ items:
 
         <p>The Bleeding effect lasts for 1 round and deals your Dexterity score
         as additional damage to Health.</p>
-      actions: []
-      actorHooks: []
-    effects: []
+      actions: [ ]
+      actorHooks: [ ]
+    effects: [ ]
     ownership:
       default: 0
       AnoypGxxNIMOS0XY: 3
@@ -449,7 +449,7 @@ items:
     name: Counter Evade
     type: talent
     img: icons/skills/melee/maneuver-greatsword-yellow.webp
-    effects: []
+    effects: [ ]
     flags:
       core:
         sourceId: Item.V4stscWtnt2GFRY2
@@ -479,8 +479,8 @@ items:
             number: 1
             distance: 1
             scope: 3
-          effects: []
-      actorHooks: []
+          effects: [ ]
+      actorHooks: [ ]
     _stats:
       systemId: swerpg
       systemVersion: 0.5.4
@@ -508,19 +508,19 @@ items:
 
         <p>You gain a +1 Skill bonus to attacks using melee weapons in the
         <strong>Light</strong> or <strong>Balanced</strong> categories.</p>
-      actions: []
+      actions: [ ]
       actorHooks:
         - hook: prepareTraining
           fn: |-
             training.finesse += 1;
             training.balanced += 1;
-    effects: []
+    effects: [ ]
     folder: FQAUMNkcagdBLURJ
     sort: 100000
     ownership:
       default: 0
       AnoypGxxNIMOS0XY: 3
-    flags: {}
+    flags: { }
     _stats:
       systemId: swerpg
       systemVersion: 0.5.4
@@ -541,7 +541,7 @@ items:
         Shoot first, ask questions later. You gain <strong>+1 Boon</strong> on
         any Strike or Spell attack against an enemy whose initiative score is
         lower than your own.
-      actions: []
+      actions: [ ]
       actorHooks:
         - hook: prepareWeaponAttack
           fn: >-
@@ -559,8 +559,8 @@ items:
 
             if ( ac?.initiative > tc?.initiative ) rollData.boons.strikeFirst =
             {label: "Strike First", number: 1};
-    effects: []
-    flags: {}
+    effects: [ ]
+    flags: { }
     _stats:
       systemId: swerpg
       systemVersion: 0.5.4
@@ -585,14 +585,14 @@ items:
       description: >-
         Your quickness of mind and body are equally impressive. You gain +2
         Boons to all Initiative checks.
-      actions: []
+      actions: [ ]
       actorHooks:
         - hook: prepareInitiativeCheck
           fn: >-
             rollData.boons.preternaturalInstinct = {label: "Preternatural
             Instinct", number: 2};
-    effects: []
-    flags: {}
+    effects: [ ]
+    flags: { }
     _stats:
       systemId: swerpg
       systemVersion: 0.5.4
@@ -611,7 +611,7 @@ items:
   - name: Combat Medicine
     type: talent
     img: icons/magic/life/heart-glowing-red.webp
-    effects: []
+    effects: [ ]
     flags:
       core:
         sourceId: Item.V4stscWtnt2GFRY2
@@ -639,8 +639,8 @@ items:
             number: 1
             distance: 1
             scope: 0
-          effects: []
-      actorHooks: []
+          effects: [ ]
+      actorHooks: [ ]
     _stats:
       systemId: swerpg
       systemVersion: 0.5.4
@@ -667,10 +667,10 @@ items:
         You identify moments of opportunity to strike at an enemy's weak points.
         When attacking a target that is Unaware, Flanked, or Exposed using
         Finesse weaponry, you gain +2 damage to any Strike.
-      actions: []
-      actorHooks: []
-    effects: []
-    flags: {}
+      actions: [ ]
+      actorHooks: [ ]
+    effects: [ ]
+    flags: { }
     _stats:
       systemId: swerpg
       systemVersion: 0.5.4
@@ -717,9 +717,9 @@ items:
             number: 1
             distance: 1
             scope: 0
-          effects: []
-      actorHooks: []
-    effects: []
+          effects: [ ]
+      actorHooks: [ ]
+    effects: [ ]
     ownership:
       default: 0
       AnoypGxxNIMOS0XY: 3
@@ -742,7 +742,7 @@ items:
     name: Fine Studded Leather Armor
     type: armor
     img: icons/equipment/chest/breastplate-layered-leather-studded-brown.webp
-    effects: []
+    effects: [ ]
     folder: kjHb0FCE2nJe6Dtx
     flags:
       core:
@@ -755,7 +755,7 @@ items:
       quality: fine
       enchantment: mundane
       equipped: true
-      properties: []
+      properties: [ ]
       description: ''
       armor:
         base: 7
@@ -780,7 +780,7 @@ items:
     name: Fine Dagger
     type: weapon
     img: icons/weapons/daggers/dagger-straight-blue.webp
-    effects: []
+    effects: [ ]
     folder: pUXcL0pnY3FlKwj8
     flags:
       core:
@@ -819,7 +819,7 @@ items:
     name: Fine Dagger
     type: weapon
     img: icons/weapons/daggers/dagger-straight-blue.webp
-    effects: []
+    effects: [ ]
     folder: pUXcL0pnY3FlKwj8
     flags:
       core:
@@ -886,8 +886,8 @@ items:
                 - key: rollBonuses.damage.poison
                   value: 2
                   mode: 2
-      actorHooks: []
-    effects: []
+      actorHooks: [ ]
+    effects: [ ]
     ownership:
       default: 0
       AnoypGxxNIMOS0XY: 3
@@ -907,10 +907,10 @@ items:
     folder: fOYHlZJEWUukD7yr
     sort: 312500
     _key: '!actors.items!iKBmWjmzLSXzKWZA.poisoner00000000'
-effects: []
+effects: [ ]
 flags:
-  swerpg: {}
-  core: {}
+  swerpg: { }
+  core: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.5.4

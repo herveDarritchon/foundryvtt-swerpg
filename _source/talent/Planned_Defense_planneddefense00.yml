@@ -9,7 +9,7 @@ system:
     attacks of your foes. Any enemy which acts after you in
     <strong>Initiative</strong> order suffers 1 Bane to their spell or weapon
     attacks against you.
-  actions: []
+  actions: [ ]
   actorHooks:
     - hook: defendWeaponAttack
       fn: |-
@@ -25,13 +25,13 @@ system:
 
         if ( ac?.initiative > oc?.initiative ) rollData.banes.plannedDefense =
         {label: "Planned Defense", number: 1};
-effects: []
+effects: [ ]
 folder: BevAJzzLeFbSaVic
 sort: 50000
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3
-flags: {}
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.5.4

@@ -218,8 +218,8 @@ prototypeToken:
     brightness: 0
     saturation: 0
     contrast: 0
-  detectionModes: []
-  flags: {}
+  detectionModes: [ ]
+  flags: { }
   randomImg: false
   hexagonalShape: 0
   occludable:
@@ -262,15 +262,15 @@ items:
             number: 1
             distance: 1
             scope: 0
-          effects: []
-      actorHooks: []
-    effects: []
+          effects: [ ]
+      actorHooks: [ ]
+    effects: [ ]
     folder: 2MFixpDJ379KOogE
     sort: -100000
     ownership:
       default: 0
       AnoypGxxNIMOS0XY: 3
-    flags: {}
+    flags: { }
     _stats:
       systemId: swerpg
       systemVersion: 0.5.4
@@ -294,19 +294,19 @@ items:
         <p>You gain a +1 Skill bonus to attacks using melee weapons in the
         <strong>Simple</strong>, <strong>Heavy</strong>, or
         <strong>Balanced</strong> categories.</p>
-      actions: []
+      actions: [ ]
       actorHooks:
         - hook: prepareTraining
           fn: |-
             training.heavy += 1;
             training.balanced += 1;
-    effects: []
+    effects: [ ]
     folder: FQAUMNkcagdBLURJ
     sort: 125000
     ownership:
       default: 0
       AnoypGxxNIMOS0XY: 3
-    flags: {}
+    flags: { }
     _stats:
       systemId: swerpg
       systemVersion: 0.5.4
@@ -321,7 +321,7 @@ items:
     name: Cleave
     type: talent
     img: icons/skills/melee/strike-sword-steel-yellow.webp
-    effects: []
+    effects: [ ]
     flags:
       core:
         sourceId: Item.pHRUZ8Zfv5E0TcH2
@@ -347,8 +347,8 @@ items:
             number: 1
             distance: 1
             scope: 3
-          effects: []
-      actorHooks: []
+          effects: [ ]
+      actorHooks: [ ]
     _stats:
       systemId: swerpg
       systemVersion: 0.5.4
@@ -391,10 +391,10 @@ items:
             number: 1
             distance: 3
             scope: 0
-          effects: []
-      actorHooks: []
-    effects: []
-    flags: {}
+          effects: [ ]
+      actorHooks: [ ]
+    effects: [ ]
+    flags: { }
     _stats:
       systemId: swerpg
       systemVersion: 0.5.4
@@ -419,10 +419,10 @@ items:
         Your battle lust spurs you to feats of heightened action. When you
         achieve a Critical Hit you immediately gain +1 Action. This benefit may
         only happen once per Round.
-      actions: []
+      actions: [ ]
       node: str2a
-      actorHooks: []
-    effects: []
+      actorHooks: [ ]
+    effects: [ ]
     ownership:
       default: 0
       AnoypGxxNIMOS0XY: 3
@@ -460,7 +460,7 @@ items:
             all melee attacks. You may attempt to end the effect on your own
             turn by succeeding on a Willpower test against a DC of 20. The
             effect ends automatically when Combat is concluded.
-          tags: []
+          tags: [ ]
           cost:
             action: 1
             focus: 0
@@ -477,8 +477,8 @@ items:
                   mode: 2
               statuses:
                 - enraged
-      actorHooks: []
-    effects: []
+      actorHooks: [ ]
+    effects: [ ]
     flags:
       core:
         sourceId: Compendium.swerpg.talent.berserker0000000
@@ -506,7 +506,7 @@ items:
       description: >-
         You can wield weapons with the Slow trait and wear Armor with the Bulky
         trait without suffering Banes to your Initiative rolls.
-      actions: []
+      actions: [ ]
       actorHooks:
         - hook: prepareInitiativeCheck
           fn: >-
@@ -521,7 +521,7 @@ items:
 
             if ( armor.system.properties.has("bulky") && bulkyBanes )
             bulkyBanes.number -= 2;
-    effects: []
+    effects: [ ]
     flags:
       core:
         sourceId: Compendium.swerpg.talent.powerfulphysique
@@ -575,9 +575,9 @@ items:
               duration:
                 rounds: 3
               scope: 3
-      actorHooks: []
-    effects: []
-    flags: {}
+      actorHooks: [ ]
+    effects: [ ]
+    flags: { }
     _stats:
       systemId: swerpg
       systemVersion: 0.5.4
@@ -596,7 +596,7 @@ items:
   - name: Uppercut
     type: talent
     img: icons/skills/melee/strike-sword-gray.webp
-    effects: []
+    effects: [ ]
     flags:
       core:
         sourceId: Item.pHRUZ8Zfv5E0TcH2
@@ -624,8 +624,8 @@ items:
             number: 1
             distance: 1
             scope: 0
-          effects: []
-      actorHooks: []
+          effects: [ ]
+      actorHooks: [ ]
     _stats:
       systemId: swerpg
       systemVersion: 0.5.4
@@ -651,9 +651,9 @@ items:
         You are trained in wearing the heaviest types of armor while still
         retaining mobility. You are able to use a free Movement action once per
         Turn while wearing Heavy armor.
-      actions: []
-      actorHooks: []
-    effects: []
+      actions: [ ]
+      actorHooks: [ ]
+    effects: [ ]
     ownership:
       default: 0
       AnoypGxxNIMOS0XY: 3
@@ -683,10 +683,10 @@ items:
         Your prodigious hardiness conveys a supernatural capability to recover
         from wounds quickly. At the start of your turn if you are not
         Incapacitated you gain 1 Health.
-      actions: []
-      actorHooks: []
-    effects: []
-    flags: {}
+      actions: [ ]
+      actorHooks: [ ]
+    effects: [ ]
+    flags: { }
     _stats:
       systemId: swerpg
       systemVersion: 0.5.4
@@ -710,14 +710,14 @@ items:
       description: >-
         Your physical toughness makes you more resistant to harm. You gain +2
         Resistance to Bludgeoning, Slashing, and Piercing damage.
-      actions: []
+      actions: [ ]
       actorHooks:
         - hook: prepareResistances
           fn: |-
             resistances.bludgeoning.base += 2;
             resistances.slashing.base += 2;
             resistances.piercing.base += 2;
-    effects: []
+    effects: [ ]
     folder: SMe30RkoLutLr4ef
     ownership:
       default: 0
@@ -746,9 +746,9 @@ items:
         You cannot be unvoluntarily Moved or knocked Prone by any action that is
         not a Critical Success rolled by an enemy or a Critical Failure rolled
         by yourself.
-      actions: []
-      actorHooks: []
-    effects: []
+      actions: [ ]
+      actorHooks: [ ]
+    effects: [ ]
     flags:
       core:
         sourceId: Compendium.swerpg.talent.unshakeablestanc
@@ -772,7 +772,7 @@ items:
     name: Fine Greataxe
     type: weapon
     img: icons/weapons/axes/axe-double-simple-brown.webp
-    effects: []
+    effects: [ ]
     folder: bvWJheBtuW1LmkAy
     flags:
       core:
@@ -785,7 +785,7 @@ items:
       quality: fine
       enchantment: mundane
       equipped: true
-      properties: []
+      properties: [ ]
       description: ''
       damageType: slashing
       broken: false
@@ -809,7 +809,7 @@ items:
     name: Fine Splint Mail
     type: armor
     img: icons/equipment/chest/breastplate-layered-steel-black.webp
-    effects: []
+    effects: [ ]
     folder: mLC1TdXCG7bX8VE9
     flags:
       core:
@@ -844,11 +844,11 @@ items:
       default: 0
       AnoypGxxNIMOS0XY: 3
     _key: '!actors.items!Z8LHgAlhpAuSkMPp.ageGLVUTbhdjBNo1'
-effects: []
+effects: [ ]
 folder: xoE3iSbPfFPlq6wD
 flags:
-  core: {}
-  swerpg: {}
+  core: { }
+  swerpg: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.5.4

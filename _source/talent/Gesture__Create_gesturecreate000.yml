@@ -14,10 +14,10 @@ system:
     <p>The Creation lasts for <strong>10 Rounds</strong>. You may only have one
     active Creation, casting another spell using the Create gesture replaces
     your previous Creation.</p>
-  actions: []
+  actions: [ ]
   gesture: create
-  actorHooks: []
-effects: []
+  actorHooks: [ ]
+effects: [ ]
 flags:
   core:
     sourceId: Compendium.swerpg.talent.gesturecreate000

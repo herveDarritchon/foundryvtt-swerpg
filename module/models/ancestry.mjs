@@ -3,45 +3,46 @@
  */
 export default class SwerpgAncestry extends foundry.abstract.TypeDataModel {
 
-  /* -------------------------------------------- */
-  /*  Data Schema                                 */
-  /* -------------------------------------------- */
+    /* -------------------------------------------- */
+    /*  Data Schema                                 */
 
-  /** @inheritDoc */
-  static defineSchema() {
-    const fields = foundry.data.fields;
-    return {
-      description: new fields.HTMLField({required: false, initial: undefined}),
-      size: new fields.NumberField({required: true, integer: true, nullable: false, min: 1, initial: 3}),
-      stride: new fields.NumberField({required: true, integer: true, nullable: false, min: 1, initial: 10}),
-      primary: new fields.StringField({required: false, initial: undefined, choices: SYSTEM.CHARACTERISTICS}),
-      secondary: new fields.StringField({required: false, initial: undefined, choices: SYSTEM.CHARACTERISTICS}),
-      resistance: new fields.StringField({blank: true, choices: SYSTEM.DAMAGE_TYPES}),
-      vulnerability: new fields.StringField({blank: true, choices: SYSTEM.DAMAGE_TYPES})
-    };
-  }
+    /* -------------------------------------------- */
 
-  /** @override */
-  static LOCALIZATION_PREFIXES = ["ANCESTRY"];
-
-  /* -------------------------------------------- */
-
-  /** @inheritdoc */
-  static validateJoint(data) {
-
-    // Skip validation if this is a newly created item that has not yet been populated
-    const isNew = !data.primary && !data.secondary;
-    if ( isNew ) return;
-
-    // Validate Abilities
-    if ( data.primary === data.secondary ) {
-      throw new Error(game.i18n.localize("ANCESTRY.WARNINGS.ABILITIES"));
+    /** @inheritDoc */
+    static defineSchema() {
+        const fields = foundry.data.fields;
+        return {
+            description: new fields.HTMLField({required: false, initial: undefined}),
+            size: new fields.NumberField({required: true, integer: true, nullable: false, min: 1, initial: 3}),
+            stride: new fields.NumberField({required: true, integer: true, nullable: false, min: 1, initial: 10}),
+            primary: new fields.StringField({required: false, initial: undefined, choices: SYSTEM.CHARACTERISTICS}),
+            secondary: new fields.StringField({required: false, initial: undefined, choices: SYSTEM.CHARACTERISTICS}),
+            resistance: new fields.StringField({blank: true, choices: SYSTEM.DAMAGE_TYPES}),
+            vulnerability: new fields.StringField({blank: true, choices: SYSTEM.DAMAGE_TYPES})
+        };
     }
 
-    // Validate Resistances
-    if ( (data.resistance && (!data.vulnerability || (data.vulnerability === data.resistance)))
-      || (data.vulnerability && (!data.resistance || (data.resistance === data.vulnerability)))) {
-      throw new Error(game.i18n.localize("ANCESTRY.WARNINGS.RESISTANCES"));
+    /** @override */
+    static LOCALIZATION_PREFIXES = ["ANCESTRY"];
+
+    /* -------------------------------------------- */
+
+    /** @inheritdoc */
+    static validateJoint(data) {
+
+        // Skip validation if this is a newly created item that has not yet been populated
+        const isNew = !data.primary && !data.secondary;
+        if (isNew) return;
+
+        // Validate Abilities
+        if (data.primary === data.secondary) {
+            throw new Error(game.i18n.localize("ANCESTRY.WARNINGS.ABILITIES"));
+        }
+
+        // Validate Resistances
+        if ((data.resistance && (!data.vulnerability || (data.vulnerability === data.resistance)))
+            || (data.vulnerability && (!data.resistance || (data.resistance === data.vulnerability)))) {
+            throw new Error(game.i18n.localize("ANCESTRY.WARNINGS.RESISTANCES"));
+        }
     }
-  }
 }

@@ -7,10 +7,10 @@ system:
   description: >-
     <p>You are an instrument of justice. Critical Strike attacks also deal the
     Overflow portion of damage to enemy Morale.</p>
-  actions: []
-  requirements: {}
-effects: []
-flags: {}
+  actions: [ ]
+  requirements: { }
+effects: [ ]
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.6.0

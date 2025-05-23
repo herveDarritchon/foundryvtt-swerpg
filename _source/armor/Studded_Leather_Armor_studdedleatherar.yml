@@ -2,9 +2,9 @@ _id: studdedleatherar
 name: Studded Leather Armor
 type: armor
 img: icons/equipment/chest/breastplate-layered-leather-studded-brown.webp
-effects: []
+effects: [ ]
 folder: kjHb0FCE2nJe6Dtx
-flags: {}
+flags: { }
 system:
   category: light
   quantity: 1
@@ -13,7 +13,7 @@ system:
   quality: standard
   enchantment: mundane
   equipped: false
-  properties: []
+  properties: [ ]
   description: ''
   armor:
     base: 7

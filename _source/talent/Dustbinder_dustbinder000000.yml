@@ -8,7 +8,7 @@ system:
     this Rune cause the Corroding condition on Critical Hits.</p><p>The
     Corroding effect lasts for 3 Rounds and deals your Wisdom score as Acid
     damage to Health each Round.</p>
-  actions: []
+  actions: [ ]
   actorHooks:
     - hook: applyCriticalEffects
       fn: |-
@@ -22,7 +22,7 @@ system:
         // Apply Corroding effect
         const corroding = SYSTEM.EFFECTS.corroding(actor, outcome.target);
         outcome.effects.push(corroding);
-effects: []
+effects: [ ]
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3

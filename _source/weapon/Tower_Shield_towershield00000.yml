@@ -2,10 +2,10 @@ _id: towershield00000
 name: Tower Shield
 type: weapon
 img: icons/equipment/shield/wardoor-wooden-boss-brown.webp
-effects: []
+effects: [ ]
 folder: 9v0ru58f09fO3sE3
 flags:
-  core: {}
+  core: { }
 system:
   category: shieldHeavy
   quantity: 1

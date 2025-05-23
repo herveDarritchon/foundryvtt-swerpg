@@ -24,7 +24,7 @@ system:
         type: single
         number: 2
         scope: 3
-      effects: []
+      effects: [ ]
       name: Swipe
       img: icons/skills/melee/strike-axe-red.webp
       condition: ''
@@ -32,14 +32,14 @@ system:
         maximum: null
         weapon: true
         minimum: null
-      actionHooks: []
-effects: []
+      actionHooks: [ ]
+effects: [ ]
 folder: yQPNpmhq761VzMZe
 sort: -200000
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3
-flags: {}
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.6.0

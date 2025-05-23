@@ -8,7 +8,7 @@ system:
     this Rune cause the Chilled condition on Critical Hits.</p><p>The Chilled
     effect lasts for 1 Round, deals half your Wisdom score as Frost damage to
     Health, and applies the Slowed condition.</p>
-  actions: []
+  actions: [ ]
   actorHooks:
     - hook: applyCriticalEffects
       fn: |-
@@ -22,7 +22,7 @@ system:
         // Apply Chilled effect
         const chilled  = SYSTEM.EFFECTS.chilled(actor, outcome.target);
         outcome.effects.push(chilled);
-effects: []
+effects: [ ]
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3

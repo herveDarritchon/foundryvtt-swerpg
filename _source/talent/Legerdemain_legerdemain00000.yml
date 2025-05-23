@@ -6,9 +6,9 @@ system:
   description: >-
     You can silently alter your spellcraft. You can apply Lesser Inflections
     using only your hands without the need for vocalization.
-  actions: []
-  requirements: {}
-effects: []
+  actions: [ ]
+  requirements: { }
+effects: [ ]
 flags:
   core:
     sourceId: Compendium.swerpg.talent.legerdemain00000

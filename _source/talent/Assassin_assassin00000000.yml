@@ -19,7 +19,7 @@ system:
         target is Vulnerable. Your minimum Initiative during the first round of
         Combat becomes one greater than the Initiative of your marked
         target.</p>
-      tags: []
+      tags: [ ]
       cost:
         action: 0
         focus: 1
@@ -28,9 +28,9 @@ system:
         number: 1
         distance: 1
         scope: 0
-      effects: []
-  actorHooks: []
-effects: []
+      effects: [ ]
+  actorHooks: [ ]
+effects: [ ]
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3

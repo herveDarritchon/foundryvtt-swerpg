@@ -29,7 +29,7 @@ system:
         number: 1
         distance: 1
         scope: 0
-      effects: []
+      effects: [ ]
       img: icons/magic/death/mouth-bite-fangs-vampire.webp
       actionHooks:
         - hook: prepare
@@ -68,7 +68,7 @@ system:
   actorHooks:
     - hook: prepareResistances
       fn: resistances.radiant.base -= 10;
-effects: []
+effects: [ ]
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3

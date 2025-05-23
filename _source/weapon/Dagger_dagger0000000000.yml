@@ -2,9 +2,9 @@ _id: dagger0000000000
 name: Dagger
 type: weapon
 img: icons/weapons/daggers/dagger-straight-blue.webp
-effects: []
+effects: [ ]
 folder: pUXcL0pnY3FlKwj8
-flags: {}
+flags: { }
 system:
   category: light1
   quantity: 1

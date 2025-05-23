@@ -16,8 +16,8 @@ system:
     - science
   talents:
     - Compendium.swerpg.talent.Item.runelife00000000
-effects: []
-flags: {}
+effects: [ ]
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.6.0

@@ -10,10 +10,10 @@ system:
 
     <p>The Life rune scales using <strong>Wisdom</strong> and provides
     <strong>Restoration</strong> of <strong>Health</strong>.</p>
-  actions: []
+  actions: [ ]
   rune: life
-  actorHooks: []
-effects: []
+  actorHooks: [ ]
+effects: [ ]
 flags:
   core:
     sourceId: Compendium.swerpg.talent.runelife00000000

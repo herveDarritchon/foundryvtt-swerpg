@@ -2,9 +2,9 @@ _id: clawhammer000000
 name: Claw Hammer
 type: weapon
 img: icons/weapons/hammers/hammer-war-spiked.webp
-effects: []
+effects: [ ]
 folder: pUXcL0pnY3FlKwj8
-flags: {}
+flags: { }
 system:
   category: balanced1
   quantity: 1
@@ -13,7 +13,7 @@ system:
   quality: standard
   enchantment: mundane
   equipped: false
-  properties: []
+  properties: [ ]
   description: ''
   damageType: bludgeoning
   broken: false

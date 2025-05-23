@@ -2,8 +2,8 @@
     <header class="title flexrow">
         <input class="charname" name="name" type="text" value="{{source.name}}" placeholder="Actor Name">
         {{#if incomplete.level}}
-        <a class="button icon level-up fa-solid fa-plus" data-action="levelUp"
-           data-tooltip="{{incomplete.levelTooltip}}"></a>
+            <a class="button icon level-up fa-solid fa-plus" data-action="levelUp"
+               data-tooltip="{{incomplete.levelTooltip}}"></a>
         {{/if}}
         <label class="level"><i class="threat-icon {{threat.icon}}" data-tooltip="{{threat.label}}"></i> Level</label>
         <div class="controls flexcol">

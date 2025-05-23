@@ -14,13 +14,13 @@ system:
     - Compendium.swerpg.talent.Item.heavystrike00000
     - Compendium.swerpg.talent.Item.thickskin0000000
     - Compendium.swerpg.talent.Item.berserker0000000
-effects: []
+effects: [ ]
 folder: 6Up7ddrphLept3RW
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3
 flags:
-  core: {}
+  core: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.8.0

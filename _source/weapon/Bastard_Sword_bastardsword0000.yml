@@ -1,9 +1,9 @@
 name: Bastard Sword
 type: weapon
 img: icons/weapons/swords/greatsword-crossguard-silver.webp
-effects: []
+effects: [ ]
 flags:
-  core: {}
+  core: { }
 system:
   category: heavy1
   quantity: 1
@@ -19,7 +19,7 @@ system:
   damageType: slashing
   broken: false
   animation: sword
-  actions: []
+  actions: [ ]
 _stats:
   systemId: swerpg
   systemVersion: 0.6.0

@@ -7,9 +7,9 @@ system:
     <p>You find calmness and focus in conserving your effort in battle. When you
     end your <strong>Turn</strong> with un-spent Action you gain <strong>+1
     Focus</strong>.</p>
-  actions: []
-  requirements: {}
-effects: []
+  actions: [ ]
+  requirements: { }
+effects: [ ]
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3

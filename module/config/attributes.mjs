@@ -1,12 +1,12 @@
 /* -------------------------------------------- */
 export const ACTOR_TYPE = Object.freeze({
     adversary: {
-        id : "adversary",
+        id: "adversary",
         type: "adversary",
         label: "Adversary",
     },
     character: {
-        id : "character",
+        id: "character",
         type: "character",
         label: "Character"
     }
@@ -15,13 +15,13 @@ export const ACTOR_TYPE = Object.freeze({
 /* -------------------------------------------- */
 
 export const CARACTERISTIC_TYPE = Object.freeze({
-    physical:{
+    physical: {
         id: "physical",
         label: "SKILL_TYPE.Physical",
         abbreviation: "SKILL_TYPE.PhysicalAbbr",
         color: Color.from("#1d32b1"),
     },
-    mental:{
+    mental: {
         id: "mental",
         label: "SKILL_TYPE.Mental",
         abbreviation: "SKILL_TYPE.MentalAbbr",
@@ -102,19 +102,19 @@ export const CHARACTERISTICS = Object.freeze({
 /* -------------------------------------------- */
 
 export const SKILL_TYPE = Object.freeze({
-    general:{
+    general: {
         id: "general",
         label: "SKILL_TYPE.General",
         abbreviation: "SKILL_TYPE.GeneralAbbr",
         color: Color.from("#1d32b1"),
     },
-    knowledge:{
+    knowledge: {
         id: "knowledge",
         label: "SKILL_TYPE.Knowledge",
         abbreviation: "SKILL_TYPE.KnowledgeAbbr",
         color: Color.from("#4354b8"),
     },
-    combat:{
+    combat: {
         id: "combat",
         label: "SKILL_TYPE.Combat",
         abbreviation: "SKILL_TYPE.CombatAbbr",
@@ -849,13 +849,13 @@ export const DEFENSES = {
 /* -------------------------------------------- */
 
 export const TALENT_ACTIVATION = Object.freeze({
-    passive:{
+    passive: {
         id: "passive",
         label: "TALENT_ACTIVATION.Passive",
         abbreviation: "TALENT_ACTIVATION.PassiveAbbr",
         color: Color.from("#1d32b1"),
     },
-    active:{
+    active: {
         id: "active",
         label: "TALENT_ACTIVATION.Active",
         abbreviation: "TALENT_ACTIVATION.ActiveAbbr",

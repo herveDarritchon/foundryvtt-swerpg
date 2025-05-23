@@ -16,8 +16,8 @@ system:
     - blocking
   damageType: radiant
   animation: quarterstaff
-effects: []
-flags: {}
+effects: [ ]
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.5.6

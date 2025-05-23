@@ -2,9 +2,9 @@ _id: chainmail0000000
 name: Chain Mail
 type: armor
 img: icons/equipment/chest/breastplate-scale-grey.webp
-effects: []
+effects: [ ]
 folder: mLC1TdXCG7bX8VE9
-flags: {}
+flags: { }
 system:
   category: heavy
   quantity: 1
@@ -13,7 +13,7 @@ system:
   quality: standard
   enchantment: mundane
   equipped: false
-  properties: []
+  properties: [ ]
   description:
     public: <p>Chain Mail public description.</p>
     secret: <p>Chain Mail secret description.</p>

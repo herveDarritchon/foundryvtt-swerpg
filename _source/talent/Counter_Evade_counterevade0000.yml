@@ -2,7 +2,7 @@ _id: counterevade0000
 name: Counter Evade
 type: talent
 img: icons/skills/melee/maneuver-greatsword-yellow.webp
-effects: []
+effects: [ ]
 flags:
   core:
     sourceId: Item.V4stscWtnt2GFRY2
@@ -33,13 +33,13 @@ system:
         type: single
         number: 1
         scope: 3
-      effects: []
-      actionHooks: []
+      effects: [ ]
+      actionHooks: [ ]
       range:
         maximum: 1
         weapon: true
         minimum: null
-  requirements: {}
+  requirements: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.6.0

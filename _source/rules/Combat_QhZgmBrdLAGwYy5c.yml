@@ -125,16 +125,16 @@ pages:
         at the start of its subsequent turns.</p>
       markdown: ''
     _id: USjhhuOGsLTXQM9v
-    image: {}
+    image: { }
     video:
       controls: true
       volume: 0.5
     src: null
-    system: {}
+    system: { }
     sort: 600000
     ownership:
       default: -1
-    flags: {}
+    flags: { }
     _stats:
       systemId: swerpg
       systemVersion: 0.5.6
@@ -204,12 +204,12 @@ pages:
         loses Morale equal to the numbered Round of combat.</p>
       markdown: ''
     _id: DPrsFbPo3tD7TJ5g
-    image: {}
+    image: { }
     video:
       controls: true
       volume: 0.5
     src: null
-    system: {}
+    system: { }
     sort: 100000
     ownership:
       default: -1
@@ -299,12 +299,12 @@ pages:
         Focus</strong> because of the Battle Focus talent.</p></section>
       markdown: ''
     _id: lZfPVvBSsCEqlte4
-    image: {}
+    image: { }
     video:
       controls: true
       volume: 0.5
     src: null
-    system: {}
+    system: { }
     sort: 500000
     ownership:
       default: -1
@@ -328,7 +328,7 @@ pages:
     title:
       show: true
       level: 1
-    image: {}
+    image: { }
     text:
       format: 1
       content: >-
@@ -390,11 +390,11 @@ pages:
       controls: true
       volume: 0.5
     src: null
-    system: {}
+    system: { }
     ownership:
       default: -1
       AnoypGxxNIMOS0XY: 3
-    flags: {}
+    flags: { }
     _stats:
       systemId: swerpg
       systemVersion: 0.5.6
@@ -412,7 +412,7 @@ pages:
     title:
       show: true
       level: 1
-    image: {}
+    image: { }
     text:
       format: 1
       content: >-
@@ -434,11 +434,11 @@ pages:
       controls: true
       volume: 0.5
     src: null
-    system: {}
+    system: { }
     ownership:
       default: -1
       AnoypGxxNIMOS0XY: 3
-    flags: {}
+    flags: { }
     _stats:
       systemId: swerpg
       systemVersion: 0.5.0
@@ -456,7 +456,7 @@ pages:
     title:
       show: true
       level: 1
-    image: {}
+    image: { }
     text:
       format: 1
       content: >-
@@ -473,11 +473,11 @@ pages:
       controls: true
       volume: 0.5
     src: null
-    system: {}
+    system: { }
     ownership:
       default: -1
       AnoypGxxNIMOS0XY: 3
-    flags: {}
+    flags: { }
     _stats:
       systemId: swerpg
       systemVersion: 0.5.0
@@ -495,7 +495,7 @@ pages:
     title:
       show: true
       level: 1
-    image: {}
+    image: { }
     text:
       format: 1
       content: >-
@@ -630,11 +630,11 @@ pages:
       controls: true
       volume: 0.5
     src: null
-    system: {}
+    system: { }
     ownership:
       default: -1
       AnoypGxxNIMOS0XY: 3
-    flags: {}
+    flags: { }
     _stats:
       systemId: swerpg
       systemVersion: 0.6.2
@@ -649,11 +649,11 @@ pages:
     name: Engagement and Flanking
     type: text
     _id: akwDfoFV3AWbOSI6
-    system: {}
+    system: { }
     title:
       show: true
       level: 1
-    image: {}
+    image: { }
     text:
       format: 1
       content: >-
@@ -735,7 +735,7 @@ pages:
     ownership:
       default: -1
       AnoypGxxNIMOS0XY: 3
-    flags: {}
+    flags: { }
     _stats:
       compendiumSource: null
       duplicateSource: null
@@ -750,11 +750,11 @@ pages:
     name: Concealment and Surprise
     type: text
     _id: 1fAJeBGIEaMnsi5A
-    system: {}
+    system: { }
     title:
       show: true
       level: 1
-    image: {}
+    image: { }
     text:
       format: 1
       content: >-
@@ -776,7 +776,7 @@ pages:
     ownership:
       default: -1
       AnoypGxxNIMOS0XY: 3
-    flags: {}
+    flags: { }
     _stats:
       compendiumSource: null
       duplicateSource: null

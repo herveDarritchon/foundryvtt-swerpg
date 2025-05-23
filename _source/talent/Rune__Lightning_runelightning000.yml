@@ -11,10 +11,10 @@ system:
     <p>The Lightning rune scales using <strong>Intellect</strong>, targets
     <strong>Reflex</strong>, and deals <strong>Electrical</strong> damage to
     <strong>Health</strong>.</p>
-  actions: []
+  actions: [ ]
   rune: lightning
-  actorHooks: []
-effects: []
+  actorHooks: [ ]
+effects: [ ]
 flags:
   core:
     sourceId: Compendium.swerpg.talent.runelightning000

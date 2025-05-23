@@ -27,13 +27,13 @@ system:
     psychic: 0
     radiant: 0
     void: 0
-effects: []
+effects: [ ]
 folder: wTcQjW37uAKhpMQL
 sort: 100000
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3
-flags: {}
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.5.0

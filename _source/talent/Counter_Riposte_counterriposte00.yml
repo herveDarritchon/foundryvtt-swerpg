@@ -2,7 +2,7 @@ _id: counterriposte00
 name: Counter Riposte
 type: talent
 img: icons/skills/melee/strike-polearm-glowing-white.webp
-effects: []
+effects: [ ]
 flags:
   core:
     sourceId: Item.V4stscWtnt2GFRY2
@@ -30,13 +30,13 @@ system:
         type: single
         number: 1
         scope: 0
-      effects: []
+      effects: [ ]
       tags:
         - melee
         - reaction
         - mainhand
         - exposing
-      actionHooks: []
+      actionHooks: [ ]
       range:
         maximum: 1
         weapon: true

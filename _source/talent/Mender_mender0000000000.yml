@@ -8,7 +8,7 @@ system:
     <p>You are highly skilled in weaving the Rune of Life. Spells which use this
     Rune cause the Mending condition on Critical Hits.</p><p>The Mending effect
     lasts for 1 Round and deals your Wisdom score as restoration to Health.</p>
-  actions: []
+  actions: [ ]
   actorHooks:
     - hook: applyCriticalEffects
       fn: |-
@@ -22,13 +22,13 @@ system:
         // Apply Mending effect
         const mending = SYSTEM.EFFECTS.mending(actor, outcome.target);
         outcome.effects.push(mending);
-effects: []
+effects: [ ]
 folder: c0nl6X8tp4Of0Y4O
 sort: 25000
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3
-flags: {}
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.6.0

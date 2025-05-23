@@ -46,7 +46,7 @@ system:
               roll.data.damage.multiplier = 0;
               roll.data.damage.base = roll.data.damage.total = 1;
             }
-effects: []
+effects: [ ]
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3

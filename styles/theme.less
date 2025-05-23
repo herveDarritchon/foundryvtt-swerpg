@@ -1,4 +1,3 @@
-
 /** ----------------------------------------- *
  *  Swerpg V2 Styles                        *
  * ------------------------------------------ */
@@ -33,6 +32,7 @@
     align-items: center;
     white-space: nowrap;
   }
+
   h1.divider::before,
   h2.divider::before,
   h3.divider::before,
@@ -44,6 +44,7 @@
     -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 100%);
     mask-image: linear-gradient(90deg, transparent 0%, black 100%);
   }
+
   h1.divider::after,
   h2.divider::after,
   h3.divider::after,
@@ -78,15 +79,18 @@
     margin: 1rem 0;
     border: none;
     color: var(--color-secondary);
+
     td, th {
       text-align: left;
       padding: 0.25rem 0.5rem;
       font-size: var(--font-size-14);
     }
+
     thead {
       background: var(--color-frame-bg);
       border: none;
     }
+
     th {
       line-height: 1.5rem;
       color: var(--color-text);
@@ -95,6 +99,7 @@
       text-align: left;
       text-shadow: none;
     }
+
     tr:nth-child(even) {
       background-color: var(--color-frame-bg);
     }
@@ -142,10 +147,12 @@
     justify-content: flex-end;
     align-items: center;
     color: var(--color-text);
+
     label {
       flex: 1;
       font-size: var(--font-size-14);
     }
+
     .tag {
       padding: 1px 4px;
       background: var(--color-frame-bg-75);
@@ -155,15 +162,18 @@
       font-size: var(--font-size-10);
       color: var(--color-light-4);
       white-space: nowrap;
+
       &.unmet {
         border-color: darkred;
         color: red;
       }
     }
+
     &:empty {
       display: none;
     }
   }
+
   .tag-icon {
     flex: none;
     font-size: 10px;
@@ -177,6 +187,7 @@
     border: 1px solid #af6417;
     border-radius: 8px;
     color: var(--color-accent);
+
     &::before {
       position: absolute;
       top: 0;
@@ -198,6 +209,7 @@
     padding: 0.5rem 1rem 0.5rem 120px;
     border: 1px solid #d74e14;
     border-radius: 8px;
+
     &::before {
       position: absolute;
       left: 0;
@@ -230,15 +242,19 @@
       background: url("../ui/journal/divider-border.png") no-repeat center;
       background-size: cover;
     }
+
     &::before {
       top: -6px;
     }
+
     &::after {
       bottom: -6px;
     }
+
     h4 {
       margin-top: 0.5rem;
     }
+
     p {
       font-family: var(--font-quote);
       font-size: var(--font-size-18);
@@ -247,6 +263,7 @@
       line-height: 1.25rem;
       letter-spacing: 0;
     }
+
     strong {
       font-family: var(--font-body);
       font-size: var(--font-size-14);
@@ -265,10 +282,12 @@
     line-height: 1.25rem;
     display: flex;
     gap: 0.25rem;
+
     .value,
     .equals {
       flex: none;
     }
+
     .equation {
       flex: 1;
       word-break: break-word;
@@ -293,6 +312,7 @@
     justify-content: center;
     align-items: center;
     z-index: 0;
+
     &::before {
       content: "";
       position: absolute;
@@ -303,45 +323,56 @@
       transform: rotate(var(--hex-rotation));
       z-index: -1;
     }
+
     &.filled {
       --hex-bg: url("../ui/elements/hex-plain-filled.svg");
     }
+
     &.dexterity-intellect {
       --hex-bg: url("../ui/elements/hex-accent-2b.svg");
       --hex-rotation: -120deg;
     }
+
     &.dexterity-strength {
       --hex-bg: url("../ui/elements/hex-accent-2c.svg");
       --hex-rotation: -60deg;
     }
+
     &.dexterity-presence {
       --hex-bg: url("../ui/elements/hex-accent-2c.svg");
       --hex-rotation: 180deg;
     }
+
     &.intellect-presence {
       --hex-bg: url("../ui/elements/hex-accent-2b.svg");
       --hex-rotation: 180deg;
     }
+
     &.intellect-toughness {
       --hex-bg: url("../ui/elements/hex-accent-2c.svg");
       --hex-rotation: -120deg;
     }
+
     &.intellect-wisdom {
       --hex-bg: url("../ui/elements/hex-accent-2c.svg");
       --hex-rotation: 120deg;
     }
+
     &.presence-strength {
       --hex-bg: url("../ui/elements/hex-accent-2c.svg");
       --hex-rotation: 60deg;
     }
+
     &.presence-wisdom {
       --hex-bg: url("../ui/elements/hex-accent-2b.svg");
       --hex-rotation: 120deg;
     }
+
     &.strength-wisdom {
       --hex-bg: url("../ui/elements/hex-accent-2c.svg");
       --hex-rotation: 0;
     }
+
     &.toughness-wisdom {
       --hex-bg: url("../ui/elements/hex-accent-2c.svg");
       --hex-rotation: 0;
@@ -369,26 +400,43 @@
   border-radius: 3px;
   box-shadow: 0 0 4px #000;
   z-index: 999;
-  &.left { left: 0; }
-  &.right { right: 0; }
-  &.center { left: calc(100% - 180px); }
+
+  &.left {
+    left: 0;
+  }
+
+  &.right {
+    right: 0;
+  }
+
+  &.center {
+    left: calc(100% - 180px);
+  }
 }
+
 // Global tooltip
 #swerpg-tooltip {
   position: absolute;
-  &.active { display: block }
+
+  &.active {
+    display: block
+  }
 }
+
 // Relative tooltip
 .swerpg .tooltipped {
   position: relative;
-  &:hover > .tooltip { display: block; }
+
+  &:hover > .tooltip {
+    display: block;
+  }
 }
 
 .swerpg-separator {
   margin: 5px auto 0;
   padding: 0;
   border: 0;
-  border-top: solid 1px var(--color-secondary) ;
+  border-top: solid 1px var(--color-secondary);
   text-align: center;
   width: 95%;
   opacity: 65%;

@@ -2,7 +2,7 @@ _id: defensiveroll000
 name: Defensive Roll
 type: talent
 img: icons/skills/movement/feet-winged-boots-glowing-yellow.webp
-effects: []
+effects: [ ]
 flags:
   core:
     sourceId: Item.V4stscWtnt2GFRY2
@@ -32,13 +32,13 @@ system:
         type: single
         number: 1
         scope: 0
-      effects: []
-      actionHooks: []
+      effects: [ ]
+      actionHooks: [ ]
       range:
         minimum: null
         maximum: null
         weapon: false
-  actorHooks: []
+  actorHooks: [ ]
 _stats:
   systemId: swerpg
   systemVersion: 0.6.0

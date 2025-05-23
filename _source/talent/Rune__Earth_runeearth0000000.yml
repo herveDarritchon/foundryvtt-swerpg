@@ -11,10 +11,10 @@ system:
     <p>The Earth rune scales using <strong>Wisdom</strong>, targets
     <strong>Reflex</strong>, and deals <strong>Acid</strong> damage to
     <strong>Health</strong>.</p>
-  actions: []
+  actions: [ ]
   rune: earth
-  actorHooks: []
-effects: []
+  actorHooks: [ ]
+effects: [ ]
 flags:
   core:
     sourceId: Compendium.swerpg.talent.runeearth0000000

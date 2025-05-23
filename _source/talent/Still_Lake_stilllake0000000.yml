@@ -9,19 +9,19 @@ system:
     attempted manipulation of others.</p><p><strong>Skill Attacks</strong>
     against you from any of the <strong>Social</strong> skills are made with
     <strong>2 Banes</strong>.</p>
-  actions: []
+  actions: [ ]
   actorHooks:
     - hook: defendSkillAttack
       fn: >-
         if ( CONFIG.SYSTEM.SKILLS[action.usage.skillId].category === "soc" )
         rollData.banes.stillLake = {label: "Still Lake", number: 2};
-effects: []
+effects: [ ]
 folder: CZGTdmrVS3xRvahX
 sort: 100000
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3
-flags: {}
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.6.0

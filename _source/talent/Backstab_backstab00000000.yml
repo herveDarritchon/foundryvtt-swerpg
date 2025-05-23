@@ -1,7 +1,7 @@
 name: Backstab
 type: talent
 img: icons/skills/melee/strike-dagger-white-orange.webp
-effects: []
+effects: [ ]
 flags:
   core:
     sourceId: Item.pHRUZ8Zfv5E0TcH2
@@ -33,10 +33,10 @@ system:
         type: single
         number: 1
         scope: 3
-      effects: []
+      effects: [ ]
       name: Backstab
       img: icons/skills/melee/strike-dagger-white-orange.webp
-      actionHooks: []
+      actionHooks: [ ]
       range:
         maximum: null
         weapon: true

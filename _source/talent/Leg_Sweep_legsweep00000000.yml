@@ -38,13 +38,13 @@ system:
             - prone
       name: Leg Sweep
       img: icons/skills/melee/strike-sword-slashing-red.webp
-      actionHooks: []
+      actionHooks: [ ]
       range:
         maximum: null
         weapon: true
         minimum: null
-  requirements: {}
-effects: []
+  requirements: { }
+effects: [ ]
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3

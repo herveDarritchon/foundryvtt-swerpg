@@ -1,7 +1,7 @@
 name: Second Wind
 type: talent
 img: icons/magic/life/cross-area-circle-green-white.webp
-effects: []
+effects: [ ]
 flags:
   core:
     sourceId: Item.V4stscWtnt2GFRY2
@@ -26,7 +26,7 @@ system:
         type: self
         number: 0
         scope: 1
-      effects: []
+      effects: [ ]
       img: icons/magic/life/cross-area-circle-green-white.webp
       actionHooks:
         - hook: confirm
@@ -39,7 +39,7 @@ system:
         maximum: null
         weapon: false
         minimum: null
-  requirements: {}
+  requirements: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.6.0

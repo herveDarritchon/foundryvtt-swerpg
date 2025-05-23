@@ -800,7 +800,7 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
 
     /** @override */
     _onRender(_context, _options) {
-       new foundry.applications.ux.DragDrop({
+        new foundry.applications.ux.DragDrop({
             dragSelector: '.draggable',
             dropSelector: null,
             callbacks: {

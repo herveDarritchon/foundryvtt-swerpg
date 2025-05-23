@@ -217,8 +217,8 @@ prototypeToken:
     brightness: 0
     saturation: 0
     contrast: 0
-  detectionModes: []
-  flags: {}
+  detectionModes: [ ]
+  flags: { }
   randomImg: false
   hexagonalShape: 0
   occludable:
@@ -261,15 +261,15 @@ items:
             number: 1
             distance: 1
             scope: 0
-          effects: []
-      actorHooks: []
-    effects: []
+          effects: [ ]
+      actorHooks: [ ]
+    effects: [ ]
     folder: 2MFixpDJ379KOogE
     sort: -100000
     ownership:
       default: 0
       AnoypGxxNIMOS0XY: 3
-    flags: {}
+    flags: { }
     _stats:
       systemId: swerpg
       systemVersion: 0.5.4
@@ -293,19 +293,19 @@ items:
         <p>You gain a +1 Skill bonus to attacks using melee weapons in the
         <strong>Simple</strong>, <strong>Heavy</strong>, or
         <strong>Balanced</strong> categories.</p>
-      actions: []
+      actions: [ ]
       actorHooks:
         - hook: prepareTraining
           fn: |-
             training.heavy += 1;
             training.balanced += 1;
-    effects: []
+    effects: [ ]
     folder: FQAUMNkcagdBLURJ
     sort: 125000
     ownership:
       default: 0
       AnoypGxxNIMOS0XY: 3
-    flags: {}
+    flags: { }
     _stats:
       systemId: swerpg
       systemVersion: 0.5.4
@@ -320,7 +320,7 @@ items:
     name: Cleave
     type: talent
     img: icons/skills/melee/strike-sword-steel-yellow.webp
-    effects: []
+    effects: [ ]
     flags:
       core:
         sourceId: Item.pHRUZ8Zfv5E0TcH2
@@ -346,8 +346,8 @@ items:
             number: 1
             distance: 1
             scope: 3
-          effects: []
-      actorHooks: []
+          effects: [ ]
+      actorHooks: [ ]
     _stats:
       systemId: swerpg
       systemVersion: 0.5.4
@@ -367,7 +367,7 @@ items:
     name: Scale Mail
     type: armor
     img: icons/equipment/chest/breastplate-banded-steel-studded.webp
-    effects: []
+    effects: [ ]
     flags:
       core:
         sourceId: Compendium.swerpg.armor.Item.6ww3SkYTk6RZBwMS
@@ -379,7 +379,7 @@ items:
       quality: standard
       enchantment: mundane
       equipped: true
-      properties: []
+      properties: [ ]
       description: ''
       armor:
         base: 13
@@ -405,7 +405,7 @@ items:
     name: Greataxe
     type: weapon
     img: icons/weapons/axes/axe-double-simple-brown.webp
-    effects: []
+    effects: [ ]
     folder: bvWJheBtuW1LmkAy
     flags:
       core:
@@ -418,7 +418,7 @@ items:
       quality: standard
       enchantment: mundane
       equipped: true
-      properties: []
+      properties: [ ]
       description: ''
       damageType: slashing
       broken: false
@@ -438,9 +438,9 @@ items:
       default: 0
       AnoypGxxNIMOS0XY: 3
     _key: '!actors.items!vT1UpPCVxKRg2A1J.ciTtaw2LB6hN6fMx'
-effects: []
+effects: [ ]
 flags:
-  core: {}
+  core: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.5.4

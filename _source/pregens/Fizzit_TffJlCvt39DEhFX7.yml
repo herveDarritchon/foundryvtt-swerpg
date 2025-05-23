@@ -216,8 +216,8 @@ prototypeToken:
     brightness: 0
     saturation: 0
     contrast: 0
-  detectionModes: []
-  flags: {}
+  detectionModes: [ ]
+  flags: { }
   randomImg: false
   hexagonalShape: 0
   occludable:
@@ -248,7 +248,7 @@ items:
           description: >-
             You still your mind and study the physiology of your foe, attempting
             to identify a vulnerability in its defenses.
-          tags: []
+          tags: [ ]
           cost:
             action: 1
             focus: 1
@@ -257,10 +257,10 @@ items:
             number: 1
             distance: 10
             scope: 0
-          effects: []
-      actorHooks: []
-    effects: []
-    flags: {}
+          effects: [ ]
+      actorHooks: [ ]
+    effects: [ ]
+    flags: { }
     _stats:
       systemId: swerpg
       systemVersion: 0.5.4
@@ -289,10 +289,10 @@ items:
         <p>The Arrow gesture scales using <strong>Intellect</strong> and targets
         a <strong>single</strong> creature up to a distance of 10 spaces,
         dealing 10 base damage on a successful attack.</p>
-      actions: []
+      actions: [ ]
       gesture: arrow
-      actorHooks: []
-    effects: []
+      actorHooks: [ ]
+    effects: [ ]
     flags:
       core:
         sourceId: Compendium.swerpg.talent.gesturearrow0000
@@ -324,10 +324,10 @@ items:
         <p>The Flame rune scales using <strong>Intellect</strong>, targets
         <strong>Reflex</strong>, and deals <strong>Fire</strong> damage to
         <strong>Health</strong>.</p>
-      actions: []
+      actions: [ ]
       rune: flame
-      actorHooks: []
-    effects: []
+      actorHooks: [ ]
+    effects: [ ]
     flags:
       core:
         sourceId: Compendium.swerpg.talent.runeflame0000000
@@ -351,7 +351,7 @@ items:
     name: Ring Mail
     type: armor
     img: icons/equipment/chest/breastplate-layered-leather-studded-black.webp
-    effects: []
+    effects: [ ]
     flags:
       core:
         sourceId: Compendium.swerpg.armor.Item.1lTOzjUX4bUNDQFc
@@ -363,7 +363,7 @@ items:
       quality: standard
       enchantment: mundane
       equipped: true
-      properties: []
+      properties: [ ]
       description: ''
       armor:
         base: 9
@@ -389,7 +389,7 @@ items:
     name: Shortsword
     type: weapon
     img: icons/weapons/swords/sword-guard.webp
-    effects: []
+    effects: [ ]
     folder: pUXcL0pnY3FlKwj8
     flags:
       core:
@@ -437,10 +437,10 @@ items:
       broken: false
       enchantment: mundane
       equipped: true
-      properties: []
+      properties: [ ]
       damageType: void
       slot: 0
-    effects: []
+    effects: [ ]
     flags:
       core:
         sourceId: Compendium.swerpg.weapon.Item.arcaneorb0000000
@@ -458,9 +458,9 @@ items:
       default: 0
       AnoypGxxNIMOS0XY: 3
     _key: '!actors.items!TffJlCvt39DEhFX7.wXxurnCyPXbLaVIY'
-effects: []
+effects: [ ]
 flags:
-  core: {}
+  core: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.5.4

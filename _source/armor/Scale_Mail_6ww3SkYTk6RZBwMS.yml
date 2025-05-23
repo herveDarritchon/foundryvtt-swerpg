@@ -2,9 +2,9 @@ _id: 6ww3SkYTk6RZBwMS
 name: Scale Mail
 type: armor
 img: icons/equipment/chest/breastplate-banded-steel-studded.webp
-effects: []
+effects: [ ]
 flags:
-  core: {}
+  core: { }
 system:
   category: medium
   quantity: 1
@@ -13,7 +13,7 @@ system:
   quality: standard
   enchantment: mundane
   equipped: false
-  properties: []
+  properties: [ ]
   description: ''
   armor:
     base: 13

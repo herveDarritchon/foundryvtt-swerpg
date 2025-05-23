@@ -2,8 +2,8 @@ _id: disarmingstrike0
 name: Disarming Strike
 type: talent
 img: icons/skills/melee/hand-grip-staff-teal.webp
-effects: []
-flags: {}
+effects: [ ]
+flags: { }
 system:
   node: str2b
   description: >-
@@ -36,13 +36,13 @@ system:
         type: single
         number: 1
         scope: 3
-      effects: []
-      actionHooks: []
+      effects: [ ]
+      actionHooks: [ ]
       range:
         maximum: null
         weapon: true
         minimum: null
-  requirements: {}
+  requirements: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.6.0

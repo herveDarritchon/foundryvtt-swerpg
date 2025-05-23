@@ -12,10 +12,10 @@ system:
   broken: false
   enchantment: mundane
   equipped: false
-  properties: []
+  properties: [ ]
   damageType: void
-effects: []
-flags: {}
+effects: [ ]
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.5.6

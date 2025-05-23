@@ -16,12 +16,12 @@ system:
     dexterity: 3
   talents:
     - Compendium.swerpg.adversary-talents.Item.tuskCharge000000
-effects: []
+effects: [ ]
 sort: 0
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3
-flags: {}
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.6.0

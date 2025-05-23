@@ -8,10 +8,10 @@ system:
     <p>You rely upon occult techniques to transform physical pain into arcane
     potential. You cast spells by spending Health instead of Focus. When casting
     a spell each point of Focus costs 10 points of Health.</p>
-  actions: []
-  requirements: {}
-effects: []
-flags: {}
+  actions: [ ]
+  requirements: { }
+effects: [ ]
+flags: { }
 _stats:
   systemId: swerpg
   systemVersion: 0.6.0

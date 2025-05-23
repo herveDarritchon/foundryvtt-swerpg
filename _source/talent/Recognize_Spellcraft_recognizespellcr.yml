@@ -7,10 +7,10 @@ system:
     their spellcraft. When an enemy within 10 spaces that you can see and hear
     begins casting a spell, you can identify its Rune if you have mastered that
     Rune.
-  actions: []
-  requirements: {}
+  actions: [ ]
+  requirements: { }
   node: int2a
-effects: []
+effects: [ ]
 ownership:
   default: 0
   AnoypGxxNIMOS0XY: 3
