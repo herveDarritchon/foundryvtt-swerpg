@@ -14,6 +14,8 @@ export default class RankedTrainedTalent extends Talent {
         const talent = this.data;
         const row = talent.system.row;
 
+        console.log(`[process] start - talent ${talent.name} wit row ${row} and initial experience points`, experiencePointsSpent);
+
         const ranks = this.actor.items.filter(i => i.name === talent.name);
         if (this.action === "train" && this.actor.hasItem(talent.id)) {
             const message = `Talent '${talent.name}' (ID: '${talent.id}') is already owned by the actor.`;
@@ -69,12 +71,9 @@ export default class RankedTrainedTalent extends Talent {
             });
         }
         try {
-            console.log(`[updateState] talent ${talent.name} with rank and cost`, talent.system.rank);
             const object = talent.toObject();
-            console.log(`[updateState] object`, object);
-            const result = await this.actor.createEmbeddedDocuments("Item", [object]);
-            console.log(`[updateState] result`, result);
             await this.actor.update({'system.progression.experience.spent': this.actor.experiencePoints.spent});
+            await this.actor.createEmbeddedDocuments("Item", [object]);
             return this;
         } catch (e) {
             return new Promise((resolve, _) => {

@@ -118,7 +118,7 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
     static _initializeActorSheetClass() {
         const actor = this.DEFAULT_OPTIONS.actor;
         this.PARTS = foundry.utils.deepClone(this.PARTS);
-        console.log("[base-actor-sheet] initializeActorSheetClass with type", actor.type);
+        console.debug("[base-actor-sheet] initializeActorSheetClass with type", actor.type);
         this.PARTS.header.template = `systems/swerpg/templates/sheets/actor/${actor.type}-header.hbs`;
         this.PARTS.attributes.template = `systems/swerpg/templates/sheets/actor/${actor.type}-attributes.hbs`;
         this.PARTS.biography.template = `systems/swerpg/templates/sheets/actor/${actor.type}-biography.hbs`;
@@ -212,7 +212,7 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
             return characteristic;
         });
         characteristics.sort((a, b) => a.sheetOrder - b.sheetOrder);
-        console.log("[base-actor-sheet] prepareCharacteristics", characteristics);
+        console.debug("[base-actor-sheet] prepareCharacteristics", characteristics);
         return characteristics;
     }
 
