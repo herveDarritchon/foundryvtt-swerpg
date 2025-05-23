@@ -22,7 +22,7 @@ export function createTalentData(
         trees = ["Item.assassin00000000", "Item.gadgeteerCopy000"]
     } = {}
 ) {
-    const baseData = {
+    let baseData = {
         "name": name,
         "type": type,
         "id": id,
@@ -44,6 +44,19 @@ export function createTalentData(
         },
         "flags": {},
     };
+    baseData._source = foundry.utils.deepClone(baseData); // simule _source
+    baseData.source = foundry.utils.deepClone(baseData);  // accessible pour les assertions
+
+    baseData.updateSource = function (changes = {}) {
+        // `this` ici est bien `baseData`
+        const expanded = foundry.utils.expandObject ? foundry.utils.expandObject(changes) : changes;
+
+        this._source = foundry.utils.mergeObject(this._source, expanded);
+        this.source = foundry.utils.deepClone(this._source);
+
+        return expanded; // simulate diff
+    };
+
     baseData.toObject = () => JSON.parse(JSON.stringify(baseData));
     return baseData
 }

@@ -61,6 +61,32 @@ function getProperty(object, key) {
     return target;
 }
 
+/**
+ * Merge the source object into the original, returning a new object.
+ * Arrays are overwritten, and only plain objects are deeply merged.
+ * @param {object} original   The base object
+ * @param {object} other      The object to merge into the original
+ * @returns {object}          A new merged object
+ */
+function mergeObject(original, other) {
+    const isObject = obj => obj && typeof obj === 'object' && obj.constructor === Object;
+
+    if (!isObject(original)) return deepClone(other);
+    if (!isObject(other)) return deepClone(original);
+
+    const merged = deepClone(original);
+
+    for (const [key, value] of Object.entries(other)) {
+        if (isObject(value) && isObject(merged[key])) {
+            merged[key] = mergeObject(merged[key], value);
+        } else {
+            merged[key] = deepClone(value);
+        }
+    }
+
+    return merged;
+}
+
 global.foundry = {
     utils: {
         deepClone: vi.fn((original, options = {}) => {
@@ -68,6 +94,9 @@ global.foundry = {
         }),
         getProperty: vi.fn((object, key) => {
             return getProperty(object, key);
+        }),
+        mergeObject: vi.fn((original, other) => {
+            return mergeObject(original, other);
         })
     }
 };

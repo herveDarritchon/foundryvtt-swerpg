@@ -413,6 +413,26 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
      * @returns {TalentDisplayData}
      */
     #buildTalentDisplayData(item) {
+        const tags = this.#buidTags(item);
+
+        return {
+            id: item.id,
+            name: item.name,
+            img: item.img,
+            isFree: item.system.isFree,
+            cssClass: item.system.disabled ? "disabled" : "",
+            tags,
+            rank: "-"
+        };
+    }
+
+
+    /**
+     * Builds the tags for a talent item.
+     * @param item {Item} - A Foundry VTT Item of type "talent".
+     * @returns {*[]} A list of tags to display under the talent.
+     */
+    #buidTags(item) {
         const tags = [];
 
         if (item.system.activation === "active") {
@@ -432,24 +452,45 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
         if (item.system.isFree) {
             tags.push({label: "Species", cssClass: "tag-free", tooltip: "Talent is free thanks to the Species"});
         }
-
-        return {
-            id: item.id,
-            name: item.name,
-            img: item.img,
-            isFree: item.system.isFree,
-            cssClass: item.system.disabled ? "disabled" : "",
-            tags
-        };
+        return tags;
     }
-
 
     /**
      * Builds a list of talents for the character sheet.
      * @returns {TalentDisplayData[]}
      */
     #buildTalentList() {
-        const talents = this.actor.items.filter(item => item.type === 'talent');
-        return talents.map(talent => this.#buildTalentDisplayData(talent));
+        const simpleTalents = this.actor.items.filter(item => item.type === 'talent' & !item.system.isRanked);
+        const rankedTalents = this.actor.items.filter(item => item.type === 'talent' && item.system.isRanked);
+        const rankedTalentsData = this.#buildAggregateTalentDisplayData(rankedTalents);
+        const simpleTalentsData = simpleTalents.map(talent => this.#buildTalentDisplayData(talent));
+
+        return simpleTalentsData.concat(rankedTalentsData);
+    }
+
+    #buildAggregateTalentDisplayData(talents) {
+        const groupedByName = talents.reduce((acc, talent) => {
+            const key = talent.name;
+            if (!acc[key]) acc[key] = [];
+            acc[key].push(talent);
+            return acc;
+        }, {});
+        return Object.entries(groupedByName).map(([name, group], index) => {
+            // Trouver le talent avec le rank maximal
+            const maxRankTalent = group.reduce((a, b) => (a.idx > b.idx ? a : b));
+
+            // Exemple de génération de tags — à adapter à ton système
+            const tags = this.#buidTags(maxRankTalent); // ← Ajoute ici une logique si nécessaire
+
+            return {
+                id: maxRankTalent.id,
+                name: maxRankTalent.name,
+                img: maxRankTalent.img,
+                isFree: maxRankTalent.system.isFree,
+                cssClass: maxRankTalent.system.disabled ? "disabled" : "",
+                tags,
+                rank: maxRankTalent.system.rank.idx
+            };
+        });
     }
 }
