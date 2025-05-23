@@ -70,7 +70,7 @@ export default class SwerpgTalent extends foundry.abstract.TypeDataModel {
             }),
             description: new fields.HTMLField({required: false, initial: undefined}),
             isRanked: new fields.BooleanField({required: false, initial: false}),
-            row: new fields.NumberField({required: true, initial: 1}),
+            row: new fields.NumberField({required: true, nullable: false, integer: true, initial: 1, min: 1, max: 5}),
             rank:
                 new fields.SchemaField({
                     idx: new fields.NumberField({required: true, blank: false, initial: 0}),

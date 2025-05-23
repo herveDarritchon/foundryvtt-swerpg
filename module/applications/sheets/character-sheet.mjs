@@ -106,7 +106,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
 
         context.talents = this.#buildTalentList();
 
-        console.log("[CharacterSheet] context", context);
+        console.debug("[CharacterSheet] context", context);
         return context;
     }
 
@@ -300,7 +300,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
                     return;
                 }
 
-                console.debug(`[Before] onToggleTrainedTalent talent with id '${item.id}', is Career ${item.system.isRanked} and values:`, talentClass, this.actor);
+                console.log(`[Before] onToggleTrainedTalent talent ('${talentClass}') with id '${item.id}', is Career ${item.system.isRanked} and values:`, this.actor, item.system.rank);
 
                 // Evaluate the talent following the action processed
                 const talentEvaluated = talentClass.process();
@@ -320,7 +320,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
                     return;
                 }
 
-                console.debug(`[After] onToggleTrainedTalent talent with id '${talentUpdated.data.id}', is ranked ${talentUpdated.data.system.isRanked} and values:`, talentUpdated.actor, talentUpdated.data.system.rank.idx);
+                console.log(`[After] onToggleTrainedTalent talent with id '${talentUpdated.data.id}', is ranked ${talentUpdated.data.system.isRanked} and values:`, talentUpdated.actor, talentUpdated.data.system.rank);
 
                 return;
         }

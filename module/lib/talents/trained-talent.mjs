@@ -46,6 +46,7 @@ export default class TrainedTalent extends Talent {
         }
 
         this.actor.experiencePoints.spent = experiencePointsSpent;
+
         talent.system.rank = {
             idx: 0,
             cost: cost

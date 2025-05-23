@@ -968,6 +968,10 @@
         "label": "Talent Trees",
         "hint": "Select the Talent Trees which this Talent is available from."
       },
+      "row": {
+        "label": "Talent Row in Tree",
+        "hint": "Select the row of the Talent Tree which this Talent is available from."
+      },
       "description": {
         "label": "Talent Description"
       },

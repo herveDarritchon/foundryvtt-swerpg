@@ -1,19 +1,13 @@
-{{log "Talent" this}}
-{{log "Talent Specializations" specializations}}
-
 <section class="tab sheet-body flexcol {{tabs.config.cssClass}}"
          data-tab="{{tabs.config.id}}" data-group="{{tabs.config.group}}">
 
     <fieldset>
         <legend>Talent Configuration</legend>
-
         {{formField @root.fields.trees value=source.system.trees localize=true rootId=partId}}
+        {{formField @root.fields.row value=source.system.row localize=true rootId=partId}}
 
-    </fieldset>
-
-    <fieldset>
-        <legend></legend>
         {{formGroup fields.isRanked value=source.system.isRanked}}
         {{formGroup fields.activation value=source.system.activation valueAttr="id" labelAttr="name"}}
     </fieldset>
+
 </section>
