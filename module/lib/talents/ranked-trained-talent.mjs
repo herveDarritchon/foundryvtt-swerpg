@@ -15,17 +15,17 @@ export default class RankedTrainedTalent extends Talent {
         const row = talent.system.row;
 
         const ranks = this.actor.items.filter(i => i.name === talent.name);
-        let idx = ranks.length;
-
         if (this.action === "train" && this.actor.hasItem(talent.id)) {
-            const message = `Talent '${talent.name}' (ID: '${talent.id})' is already owned by the actor.`;
+            const message = `Talent '${talent.name}' (ID: '${talent.id}') is already owned by the actor.`;
             return new ErrorTalent(this.actor, talent, {}, {message: message});
         }
 
+        let idx;
         let cost;
         if (this.action === "train") {
             cost = this.talentCostCalculator.calculateCost("train", row);
             experiencePointsSpent = experiencePointsSpent + cost;
+            idx = ranks.length + 1;
         }
 
         if (this.action === "forget") {
@@ -42,10 +42,17 @@ export default class RankedTrainedTalent extends Talent {
         // As we are dealing with a ranked talent, we need to set the rank value to the number of ranks
         // Set to ranks.length because we are adding a new rank and we count from 0
         this.actor.experiencePoints.spent = experiencePointsSpent;
-        talent.system.rank = {
-            idx: idx,
-            cost: cost
-        };
+
+        this.data.updateSource({
+            system: {
+                rank: {
+                    idx: idx,
+                    cost: cost
+                }
+            }
+        });
+
+        console.log(`[process] talent ${talent.name} wit rank and cost ${cost}`, talent.system.rank);
         this.evaluated = true;
         return this;
     }
@@ -55,18 +62,23 @@ export default class RankedTrainedTalent extends Talent {
      * @override
      */
     async updateState() {
+        const talent = this.data;
         if (!this.evaluated) {
             return new Promise((resolve, _) => {
-                resolve(new ErrorTalent(this.actor, this.data, {}, {message: "you must evaluate the talent before updating it!"}));
+                resolve(new ErrorTalent(this.actor, talent, {}, {message: "you must evaluate the talent before updating it!"}));
             });
         }
         try {
-            await this.actor.createEmbeddedDocuments("Item", [this.data.toObject()]);
+            console.log(`[updateState] talent ${talent.name} with rank and cost`, talent.system.rank);
+            const object = talent.toObject();
+            console.log(`[updateState] object`, object);
+            const result = await this.actor.createEmbeddedDocuments("Item", [object]);
+            console.log(`[updateState] result`, result);
             await this.actor.update({'system.progression.experience.spent': this.actor.experiencePoints.spent});
             return this;
         } catch (e) {
             return new Promise((resolve, _) => {
-                resolve(new ErrorTalent(this.actor, this.data, {}, {message: e.toString()}));
+                resolve(new ErrorTalent(this.actor, talent, {}, {message: e.toString()}));
             });
         }
     }

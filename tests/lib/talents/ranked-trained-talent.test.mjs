@@ -22,8 +22,8 @@ describe('Ranked Trained Talent', () => {
             const trainRankedTrainedTalent = trainedTalent.process();
 
             expect(trainRankedTrainedTalent).toBeInstanceOf(RankedTrainedTalent);
-            expect(trainRankedTrainedTalent.data.system.rank.idx).toBe(0);
-            expect(trainRankedTrainedTalent.data.system.rank.cost).toBe(5);
+            expect(trainRankedTrainedTalent.data._source.system.rank.idx).toBe(1);
+            expect(trainRankedTrainedTalent.data._source.system.rank.cost).toBe(5);
             expect(trainedTalent.actor.experiencePoints.spent).toBe(5);
         });
         test('should add an existing ranked trained talent with idx 1, row 2 and spend 10xp', () => {
@@ -40,8 +40,8 @@ describe('Ranked Trained Talent', () => {
             const trainRankedTrainedTalent = trainedTalent.process();
 
             expect(trainRankedTrainedTalent).toBeInstanceOf(RankedTrainedTalent);
-            expect(trainRankedTrainedTalent.data.system.rank.idx).toBe(1);
-            expect(trainRankedTrainedTalent.data.system.rank.cost).toBe(10);
+            expect(trainRankedTrainedTalent.data._source.system.rank.idx).toBe(2);
+            expect(trainRankedTrainedTalent.data._source.system.rank.cost).toBe(10);
             expect(trainedTalent.actor.experiencePoints.spent).toBe(10);
         });
 
@@ -64,8 +64,8 @@ describe('Ranked Trained Talent', () => {
             const forgetRankedTrainedTalent = trainedTalent.process();
 
             expect(forgetRankedTrainedTalent).toBeInstanceOf(RankedTrainedTalent);
-            expect(forgetRankedTrainedTalent.data.system.rank.idx).toBe(0);
-            expect(forgetRankedTrainedTalent.data.system.rank.cost).toBe(0);
+            expect(forgetRankedTrainedTalent.data._source.system.rank.idx).toBe(0);
+            expect(forgetRankedTrainedTalent.data._source.system.rank.cost).toBe(0);
             expect(forgetRankedTrainedTalent.actor.experiencePoints.spent).toBe(25);
         });
     });
