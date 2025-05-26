@@ -14,7 +14,7 @@ export default class RankedTrainedTalent extends Talent {
         const talent = this.data;
         const row = talent.system.row;
 
-        console.log(`[process] start - talent ${talent.name} wit row ${row} and initial experience points`, experiencePointsSpent);
+        console.debug(`[process] start - talent ${talent.name} wit row ${row} and initial experience points`, experiencePointsSpent);
 
         const ranks = this.actor.items.filter(i => i.name === talent.name);
         if (this.action === "train" && this.actor.hasItem(talent.id)) {
@@ -54,7 +54,7 @@ export default class RankedTrainedTalent extends Talent {
             }
         });
 
-        console.log(`[process] talent ${talent.name} wit rank and cost ${cost}`, talent.system.rank);
+        console.debug(`[process] talent ${talent.name} wit rank and cost ${cost}`, talent.system.rank);
         this.evaluated = true;
         return this;
     }
@@ -71,9 +71,13 @@ export default class RankedTrainedTalent extends Talent {
             });
         }
         try {
-            const object = talent.toObject();
             await this.actor.update({'system.progression.experience.spent': this.actor.experiencePoints.spent});
-            await this.actor.createEmbeddedDocuments("Item", [object]);
+            if (this.action === "train") {
+                await this.actor.createEmbeddedDocuments("Item", [this.data.toObject()]);
+            } else {
+                const id = this.data.id;
+                await this.actor.deleteEmbeddedDocuments("Item", [id]);
+            }
             return this;
         } catch (e) {
             return new Promise((resolve, _) => {

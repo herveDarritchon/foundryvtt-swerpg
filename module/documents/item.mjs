@@ -1,3 +1,6 @@
+import TalentFactory from "../lib/talents/talent-factory.mjs";
+import ErrorTalent from "../lib/talents/error-talent.mjs";
+
 /**
  * An Item subclass which handles system specific logic for the Item document type.
  */
@@ -146,6 +149,50 @@ export default class SwerpgItem extends Item {
                     return false;   // Prevent creation
             }
         }
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Deletes the talent associated with the current object instance.
+     *
+     * Logs the name of the talent and its data to the console.
+     *
+     * @return {void} No return value.
+     */
+    async deleteTalent(){
+        // Build the skill class depending on the context
+        const talentClass = TalentFactory.build(this.actor, this, {
+            action: "forget",
+            isCreation: true,
+        }, {});
+
+        if (talentClass instanceof ErrorTalent) {
+            ui.notifications.warn(talentClass.options.message);
+            return;
+        }
+
+        console.debug(`[Before] onToggleTrainedTalent talent ('${talentClass}') with id '${this.id}', is Career ${this.system.isRanked} and values:`, this.actor, this.system.rank);
+
+        // Evaluate the talent following the action processed
+        const talentEvaluated = talentClass.process();
+
+        // Display a warning if the talent action is not valid
+        if (talentEvaluated instanceof ErrorTalent) {
+            ui.notifications.warn(talentEvaluated.options.message);
+            return;
+        }
+
+        // Update the talent state in the Database
+        const talentUpdated = await talentEvaluated.updateState();
+
+        // Display a warning if the talent action is not valid
+        if (talentUpdated instanceof ErrorTalent) {
+            ui.notifications.warn(talentUpdated.options.message);
+            return;
+        }
+
+        console.debug(`[After] onToggleTrainedTalent talent with id '${talentUpdated.data.id}', is ranked ${talentUpdated.data.system.isRanked} and values:`, talentUpdated.actor, talentUpdated.data.system.rank);
     }
 
     /* -------------------------------------------- */

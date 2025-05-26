@@ -2,7 +2,8 @@
          data-tab="{{tabs.talents.id}}" data-group="{{tabs.talents.group}}">
 
     {{#each talents as |talent s|}}
-        <div class="line-item {{talent.cssClass}}" data-item-id="{{talent.id}}">
+        <div class="line-item {{talent.cssClass}}" data-item-id="{{talent.id}}" data-delete-action="deleteTalent"
+             data-item-type="talent">
             <div class="title">
                 <img class="icon" src="{{talent.img}}" alt="{{talent.name}}">
                 <h4 class="item-header">{{talent.name}}</h4>

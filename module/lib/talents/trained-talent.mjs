@@ -66,8 +66,13 @@ export default class TrainedTalent extends Talent {
             });
         }
         try {
-            await this.actor.createEmbeddedDocuments("Item", [this.data.toObject()]);
             await this.actor.update({'system.progression.experience.spent': this.actor.experiencePoints.spent});
+            if (this.action === "train") {
+                await this.actor.createEmbeddedDocuments("Item", [this.data.toObject()]);
+            } else {
+                const id = this.data.id;
+                await this.actor.deleteEmbeddedDocuments("Item", [id]);
+            }
             return this;
         } catch (e) {
             return new Promise((resolve, _) => {
