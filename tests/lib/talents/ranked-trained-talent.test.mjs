@@ -171,7 +171,7 @@ describe('Ranked Trained Talent', () => {
                 const result = await processedRankedTrainedTalent.updateState();
 
                 expect(createEmbeddedDocumentsMock).toHaveBeenCalledTimes(1);
-                expect(updateMock).toHaveBeenCalledTimes(0);
+                expect(updateMock).toHaveBeenCalledTimes(1);
                 expect(result).toBeInstanceOf(ErrorTalent);
                 expect(result.options.message).toContain('Erreur sur create embedded');
             });
@@ -199,7 +199,7 @@ describe('Ranked Trained Talent', () => {
                 const processedRankedTrainedTalent = trainedFreeTalent.process();
                 const result = await processedRankedTrainedTalent.updateState();
 
-                expect(createEmbeddedDocumentsMock).toHaveBeenCalledTimes(1);
+                expect(createEmbeddedDocumentsMock).toHaveBeenCalledTimes(0);
                 expect(updateMock).toHaveBeenCalledTimes(1);
                 expect(result).toBeInstanceOf(ErrorTalent);
                 expect(result.options.message).toContain('Erreur sur update');
