@@ -1,5 +1,4 @@
 import TrainedTalent from "./trained-talent.mjs";
-import RankedTrainedTalent from "./ranked-trained-talent.mjs";
 
 /**
  * TalentCostCalculator class
@@ -19,7 +18,7 @@ export default class TalentCostCalculator {
      */
     calculateCost(action, rank) {
         let cost = 0;
-        if (this.talent instanceof TrainedTalent || this.talent instanceof RankedTrainedTalent) {
+        if (this.talent instanceof TrainedTalent) {
             if (action === "train") {
                 cost = this.#calculateTrainCost(rank);
             } else if (action === "forget") {

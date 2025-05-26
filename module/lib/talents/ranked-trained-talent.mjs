@@ -1,8 +1,8 @@
-import Talent from "./talent.mjs";
 import ErrorTalent from "./error-talent.mjs";
 import TalentCostCalculator from "./talent-cost-calculator.mjs";
+import TrainedTalent from "./trained-talent.mjs";
 
-export default class RankedTrainedTalent extends Talent {
+export default class RankedTrainedTalent extends TrainedTalent {
     constructor(actor, data, params, options) {
         super(actor, data, params, options);
         this.talentCostCalculator = new TalentCostCalculator(this);
@@ -57,32 +57,5 @@ export default class RankedTrainedTalent extends Talent {
         console.debug(`[process] talent ${talent.name} wit rank and cost ${cost}`, talent.system.rank);
         this.evaluated = true;
         return this;
-    }
-
-    /**
-     * @inheritDoc
-     * @override
-     */
-    async updateState() {
-        const talent = this.data;
-        if (!this.evaluated) {
-            return new Promise((resolve, _) => {
-                resolve(new ErrorTalent(this.actor, talent, {}, {message: "you must evaluate the talent before updating it!"}));
-            });
-        }
-        try {
-            await this.actor.update({'system.progression.experience.spent': this.actor.experiencePoints.spent});
-            if (this.action === "train") {
-                await this.actor.createEmbeddedDocuments("Item", [this.data.toObject()]);
-            } else {
-                const id = this.data.id;
-                await this.actor.deleteEmbeddedDocuments("Item", [id]);
-            }
-            return this;
-        } catch (e) {
-            return new Promise((resolve, _) => {
-                resolve(new ErrorTalent(this.actor, talent, {}, {message: e.toString()}));
-            });
-        }
     }
 }
