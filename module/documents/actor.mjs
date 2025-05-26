@@ -1782,7 +1782,7 @@ export default class SwerpgActor extends Actor {
      */
     async purchaseCharacteristic(characteristicId, action) {
 
-        console.log(`purchaseCharacteristic(${characteristicId}, ${action})`);
+        console.debug(`purchaseCharacteristic(${characteristicId}, ${action})`);
         const c = this.system.characteristics[characteristicId];
 
         // Build the characteristic class depending on the context
@@ -1796,7 +1796,7 @@ export default class SwerpgActor extends Actor {
             return;
         }
 
-        console.log(`[Before] purchaseCharacteristic characteristic with id '${characteristicId}' and values:`, characteristicClass, this.actor);
+        console.debug(`[Before] purchaseCharacteristic characteristic with id '${characteristicId}' and values:`, characteristicClass, this.actor);
 
         // Evaluate the characteristic following the action processed
         const characteristicEvaluated = characteristicClass.process();
@@ -1810,7 +1810,7 @@ export default class SwerpgActor extends Actor {
         // Update the characteristic state in the Database
         const characteristicUpdated = await characteristicEvaluated.updateState();
 
-        console.log(`[After] purchaseCharacteristic characteristic with id '${characteristicId}' and values:`, characteristicUpdated.actor, characteristicUpdated.data.rank);
+        console.debug(`[After] purchaseCharacteristic characteristic with id '${characteristicId}' and values:`, characteristicUpdated.actor, characteristicUpdated.data.rank);
 
 
     }

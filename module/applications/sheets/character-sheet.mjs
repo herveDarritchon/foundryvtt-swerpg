@@ -194,7 +194,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
             return;
         }
 
-        console.log(`[Before] onToggleTrainedSkill skill with id '${skillId}', is Career ${isCareer} and values:`, skillClass, this.actor);
+        console.debug(`[Before] onToggleTrainedSkill skill with id '${skillId}', is Career ${isCareer} and values:`, skillClass, this.actor);
 
         // Evaluate the skill following the action processed
         const skillEvaluated = skillClass.process();
@@ -208,7 +208,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
         // Update the skill state in the Database
         const skillUpdated = await skillEvaluated.updateState();
 
-        console.log(`[After] onToggleTrainedSkill skill with id '${skillId}', is Career ${isCareer} and values:`, skillUpdated.actor, skillUpdated.data.rank);
+        console.debug(`[After] onToggleTrainedSkill skill with id '${skillId}', is Career ${isCareer} and values:`, skillUpdated.actor, skillUpdated.data.rank);
     }
 
     /* -------------------------------------------- */
@@ -300,7 +300,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
                     return;
                 }
 
-                console.log(`[Before] onToggleTrainedTalent talent ('${talentClass}') with id '${item.id}', is Career ${item.system.isRanked} and values:`, this.actor, item.system.rank);
+                console.debug(`[Before] onToggleTrainedTalent talent ('${talentClass}') with id '${item.id}', is Career ${item.system.isRanked} and values:`, this.actor, item.system.rank);
 
                 // Evaluate the talent following the action processed
                 const talentEvaluated = talentClass.process();
@@ -320,7 +320,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
                     return;
                 }
 
-                console.log(`[After] onToggleTrainedTalent talent with id '${talentUpdated.data.id}', is ranked ${talentUpdated.data.system.isRanked} and values:`, talentUpdated.actor, talentUpdated.data.system.rank);
+                console.debug(`[After] onToggleTrainedTalent talent with id '${talentUpdated.data.id}', is ranked ${talentUpdated.data.system.isRanked} and values:`, talentUpdated.actor, talentUpdated.data.system.rank);
 
                 return;
         }

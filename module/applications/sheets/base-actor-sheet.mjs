@@ -643,14 +643,20 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
     /* -------------------------------------------- */
 
     /**
-     * @this {SwerpgBaseActorSheet}
+     * Gère la suppression d'un item avec confirmation.
      * @param {PointerEvent} event
-     * @returns {Promise<void>}
      */
     static async #onItemDelete(event) {
         const item = this.#getEventItem(event);
-        await item.deleteDialog();
+        const deleteAction = this.#getEventItemDeleteAction(event);
+
+        await item.deleteDialog?.({
+            yes: {
+                callback: () => deleteAction()  // ✅ Appelle la bonne méthode
+            }
+        });
     }
+
 
     /* -------------------------------------------- */
 
@@ -701,6 +707,30 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
     #getEventItem(event) {
         const itemId = event.target.closest(".line-item")?.dataset.itemId;
         return this.actor.items.get(itemId, {strict: true});
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Retourne la fonction de suppression à exécuter en fonction du dataset.
+     * @param {PointerEvent} event
+     * @returns {function(): Promise<void>}
+     */
+    #getEventItemDeleteAction(event) {
+        const item = this.#getEventItem(event);
+        const target = event.target.closest(".line-item");
+        const actionName = target?.dataset.deleteAction;
+        const itemType = target?.dataset.itemType;
+
+        const isTalent = itemType === item.type;
+        const action = item[actionName];
+
+        if (isTalent && actionName && typeof action === "function") {
+            return () => action.call(item);
+        }
+
+        // fallback : appel par défaut
+        return () => item.delete?.(); // ou toute méthode alternative si delete() n'existe pas
     }
 
     /* -------------------------------------------- */
