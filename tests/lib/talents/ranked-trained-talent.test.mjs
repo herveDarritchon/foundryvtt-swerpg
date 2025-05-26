@@ -5,6 +5,7 @@ import {createActor} from "../../utils/actors/actor.mjs";
 import {createTalentData} from "../../utils/talents/talent.mjs";
 import RankedTrainedTalent from "../../../module/lib/talents/ranked-trained-talent.mjs";
 import ErrorTalent from "../../../module/lib/talents/error-talent.mjs";
+import TrainedTalent from "../../../module/lib/talents/trained-talent.mjs";
 
 describe('Ranked Trained Talent', () => {
     describe('train a ranked talent', () => {
@@ -119,7 +120,7 @@ describe('Ranked Trained Talent', () => {
             expect(updateMock).toHaveBeenCalledTimes(0);
             expect(createEmbeddedDocumentsMock).toHaveBeenCalledTimes(0);
         });
-        test('should update the state of the talent and return the talent', async () => {
+        test('should update the state of the train talent and return the talent', async () => {
             const data = createTalentData("1");
             const existingTalents = [createTalentData("2",{name: 'talent-1'})];
             const actor = createActor({items: existingTalents});
@@ -146,6 +147,35 @@ describe('Ranked Trained Talent', () => {
                 "system.progression.experience.spent": 5,
             });
             expect(createEmbeddedDocumentsMock).toHaveBeenCalledWith("Item", [data.toObject()]);
+        });
+        test('should update the state of the forget talent and return the talent', async () => {
+            const data = createTalentData("1", {name: 'talent-1'});
+            const existingTalents = [data];
+            const actor = createActor({items: existingTalents});
+
+            const updateMock = vi.fn()
+                .mockResolvedValue({});
+            actor.update = updateMock;
+
+            const deleteEmbeddedDocumentsMock = vi.fn()
+                .mockResolvedValue(["1"]);
+            actor.deleteEmbeddedDocuments = deleteEmbeddedDocumentsMock;
+
+            const params = {
+                action: "forget",
+                isCreation: true,
+            };
+            const options = {};
+
+            const trainedFreeTalent = new RankedTrainedTalent(actor, data, params, options);
+            const processedTrainedTalent = trainedFreeTalent.process();
+            await processedTrainedTalent.updateState();
+
+            expect(updateMock).toHaveBeenCalledTimes(1);
+            expect(updateMock).toHaveBeenNthCalledWith(1, {
+                "system.progression.experience.spent": -5,
+            });
+            expect(deleteEmbeddedDocumentsMock).toHaveBeenCalledWith("Item", ["1"]);
         });
         describe('should return an Error Talent if any update fails', () => {
             test('create embedded fails', async () => {
@@ -203,7 +233,37 @@ describe('Ranked Trained Talent', () => {
                 expect(updateMock).toHaveBeenCalledTimes(1);
                 expect(result).toBeInstanceOf(ErrorTalent);
                 expect(result.options.message).toContain('Erreur sur update');
+            });
+            test('forget talent rank update fails', async () => {
+                const data = createTalentData("1", {name: 'talent-1'});
+                const existingTalents = [data];
+                const actor = createActor({items: existingTalents});
 
+                const updateMock = vi.fn()
+                    .mockResolvedValue({});
+                actor.update = updateMock;
+
+                const deleteEmbeddedDocumentsMock = vi.fn()
+                    .mockRejectedValueOnce(new Error('Erreur sur deleteEmbeddedDocuments'));
+                actor.deleteEmbeddedDocuments = deleteEmbeddedDocumentsMock;
+
+                const params = {
+                    action: "forget",
+                    isCreation: true,
+                };
+                const options = {};
+
+                const trainedFreeTalent = new TrainedTalent(actor, data, params, options);
+                const processedTrainedTalent = trainedFreeTalent.process();
+                const result = await processedTrainedTalent.updateState();
+
+                expect(updateMock).toHaveBeenCalledTimes(1);
+                expect(updateMock).toHaveBeenNthCalledWith(1, {
+                    "system.progression.experience.spent": -5,
+                });
+                expect(deleteEmbeddedDocumentsMock).toHaveBeenCalledWith("Item", ["1"]);
+                expect(result).toBeInstanceOf(ErrorTalent);
+                expect(result.options.message).toContain('Erreur sur deleteEmbeddedDocuments');
             });
         });
     });
