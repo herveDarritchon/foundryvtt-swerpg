@@ -158,9 +158,12 @@ export default class SwerpgItem extends Item {
      *
      * Logs the name of the talent and its data to the console.
      *
+     * Cette méthode est appelé dynamiquement lors de l'appel de la méthode
+     * SwerpgBaseActorSheet.#onItemDelete puis item.deleteDialog?.({...})
+     *
      * @return {void} No return value.
      */
-    async deleteTalent(){
+    async deleteTalent() {
         // Build the skill class depending on the context
         const talentClass = TalentFactory.build(this.actor, this, {
             action: "forget",
