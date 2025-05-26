@@ -372,143 +372,143 @@
 <span class="cstat-no" title="statement not covered" > */</span>
 <span class="cstat-no" title="statement not covered" >export default class SwerpgTalentHUD extends Application {</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @inheritdoc */</span>
-<span class="cstat-no" title="statement not covered" >  static get defaultOptions() {</span>
-<span class="cstat-no" title="statement not covered" >    return foundry.utils.mergeObject(super.defaultOptions, {</span>
-<span class="cstat-no" title="statement not covered" >      id: "swerpg-talent-hud",</span>
-<span class="cstat-no" title="statement not covered" >      popOut: false</span>
-<span class="cstat-no" title="statement not covered" >    });</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * The target of the HUD, either a Node or a Talent</span>
-<span class="cstat-no" title="statement not covered" >   * @type {SwerpgTalentTreeNode|SwerpgTalentTreeTalent}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  target;</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @override */</span>
-<span class="cstat-no" title="statement not covered" >  get template() {</span>
-<span class="cstat-no" title="statement not covered" >    const path = "systems/swerpg/templates/hud"</span>
-<span class="cstat-no" title="statement not covered" >    const template = this.target instanceof SwerpgTalentTreeNode ? "talent-tree-node.hbs" : "talent-tree-talent.hbs";</span>
-<span class="cstat-no" title="statement not covered" >    return `${path}/${template}`;</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @inheritdoc */</span>
-<span class="cstat-no" title="statement not covered" >  getData(options = {}) {</span>
-<span class="cstat-no" title="statement not covered" >    if ( this.target instanceof SwerpgTalentTreeNode ) return this.#getNodeContext();</span>
-<span class="cstat-no" title="statement not covered" >    else return this.#getTalentContext();</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Prepare rendering context data for a Node.</span>
-<span class="cstat-no" title="statement not covered" >   * @returns {object}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  #getNodeContext() {</span>
-<span class="cstat-no" title="statement not covered" >    const actor = game.system.tree.actor;</span>
-<span class="cstat-no" title="statement not covered" >    const node = this.target.node;</span>
-<span class="cstat-no" title="statement not covered" >    const state = game.system.tree.state.get(node);</span>
-<span class="cstat-no" title="statement not covered" >    const tags = [</span>
-<span class="cstat-no" title="statement not covered" >      {label: `Tier ${node.tier}`},</span>
-<span class="cstat-no" title="statement not covered" >      {label: game.i18n.localize(`TALENT.Node${node.type.titleCase()}`)}</span>
-<span class="cstat-no" title="statement not covered" >    ];</span>
-<span class="cstat-no" title="statement not covered" >    if ( state.banned ) tags.push({label: "Banned", class: "unmet"});</span>
-<span class="cstat-no" title="statement not covered" >    else if ( !state.unlocked ) tags.push({label: "Locked", class: "unmet"});</span>
-<span class="cstat-no" title="statement not covered" >    const reqs = SwerpgTalentNode.preparePrerequisites(node.requirements);</span>
-<span class="cstat-no" title="statement not covered" >    return {</span>
-<span class="cstat-no" title="statement not covered" >      id: node.id,</span>
-<span class="cstat-no" title="statement not covered" >      tags,</span>
-<span class="cstat-no" title="statement not covered" >      prerequisites: SwerpgTalent.testPrerequisites(actor, reqs)</span>
-<span class="cstat-no" title="statement not covered" >    };</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Prepare rendering context data for a Talent.</span>
-<span class="cstat-no" title="statement not covered" >   * @returns {object}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  #getTalentContext() {</span>
-<span class="cstat-no" title="statement not covered" >    const actor = game.system.tree.actor;</span>
-<span class="cstat-no" title="statement not covered" >    const talent = this.target.talent;</span>
-<span class="cstat-no" title="statement not covered" >    const node = talent.system.node;</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    // Talent Tags</span>
-<span class="cstat-no" title="statement not covered" >    const reqs = SwerpgTalent.testPrerequisites(actor, talent.system.prerequisites);</span>
-<span class="cstat-no" title="statement not covered" >    const state = game.system.tree.state.get(node);</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    // Banned Signature</span>
-<span class="cstat-no" title="statement not covered" >    if ( node.type === "signature" ) {</span>
-<span class="cstat-no" title="statement not covered" >      if ( state.banned &amp;&amp; !state.purchased ) reqs.signature = {tag: "Banned", met: false};</span>
+<span class="cstat-no" title="statement not covered" >    /** @inheritdoc */</span>
+<span class="cstat-no" title="statement not covered" >    static get defaultOptions() {</span>
+<span class="cstat-no" title="statement not covered" >        return foundry.utils.mergeObject(super.defaultOptions, {</span>
+<span class="cstat-no" title="statement not covered" >            id: "swerpg-talent-hud",</span>
+<span class="cstat-no" title="statement not covered" >            popOut: false</span>
+<span class="cstat-no" title="statement not covered" >        });</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    // Return context</span>
-<span class="cstat-no" title="statement not covered" >    return {</span>
-<span class="cstat-no" title="statement not covered" >      source: talent.toObject(),</span>
-<span class="cstat-no" title="statement not covered" >      actions: TalentSheet.prepareActions(talent.system.actions),</span>
-<span class="cstat-no" title="statement not covered" >      prerequisites: reqs</span>
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * The target of the HUD, either a Node or a Talent</span>
+<span class="cstat-no" title="statement not covered" >     * @type {SwerpgTalentTreeNode|SwerpgTalentTreeTalent}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    target;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /** @override */</span>
+<span class="cstat-no" title="statement not covered" >    get template() {</span>
+<span class="cstat-no" title="statement not covered" >        const path = "systems/swerpg/templates/hud"</span>
+<span class="cstat-no" title="statement not covered" >        const template = this.target instanceof SwerpgTalentTreeNode ? "talent-tree-node.hbs" : "talent-tree-talent.hbs";</span>
+<span class="cstat-no" title="statement not covered" >        return `${path}/${template}`;</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @override */</span>
-<span class="cstat-no" title="statement not covered" >  _injectHTML(html) {</span>
-<span class="cstat-no" title="statement not covered" >    const hud = document.getElementById("hud");</span>
-<span class="cstat-no" title="statement not covered" >    hud.appendChild(html[0]);</span>
-<span class="cstat-no" title="statement not covered" >    this._element = html;</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @override */</span>
-<span class="cstat-no" title="statement not covered" >  setPosition({left, top}={}) {</span>
-<span class="cstat-no" title="statement not covered" >    const position = {</span>
-<span class="cstat-no" title="statement not covered" >      height: undefined,</span>
-<span class="cstat-no" title="statement not covered" >      left: left,</span>
-<span class="cstat-no" title="statement not covered" >      top: top</span>
-<span class="cstat-no" title="statement not covered" >    };</span>
-<span class="cstat-no" title="statement not covered" >    this.element.css(position);</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Activate this HUD element, binding it to a target.</span>
-<span class="cstat-no" title="statement not covered" >   * @param {SwerpgTalentTreeNode|SwerpgTalentTreeTalent} target    The target for the HUD</span>
-<span class="cstat-no" title="statement not covered" >   * @returns {Promise&lt;*&gt;}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  async activate(target) {</span>
-<span class="cstat-no" title="statement not covered" >    this.target = target;</span>
-<span class="cstat-no" title="statement not covered" >    const options = {</span>
-<span class="cstat-no" title="statement not covered" >      left: target.x + (target.width / 2) + 10,</span>
-<span class="cstat-no" title="statement not covered" >      top: target.y + - (target.height / 2)</span>
-<span class="cstat-no" title="statement not covered" >    };</span>
-<span class="cstat-no" title="statement not covered" >    if ( target instanceof SwerpgTalentTreeTalent ) {</span>
-<span class="cstat-no" title="statement not covered" >      options.left += target.node.x;</span>
-<span class="cstat-no" title="statement not covered" >      options.top += target.node.y;</span>
+<span class="cstat-no" title="statement not covered" >    /** @inheritdoc */</span>
+<span class="cstat-no" title="statement not covered" >    getData(options = {}) {</span>
+<span class="cstat-no" title="statement not covered" >        if (this.target instanceof SwerpgTalentTreeNode) return this.#getNodeContext();</span>
+<span class="cstat-no" title="statement not covered" >        else return this.#getTalentContext();</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >    return this._render(true, options);</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Clear the HUD</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  clear() {</span>
-<span class="cstat-no" title="statement not covered" >    let states = this.constructor.RENDER_STATES;</span>
-<span class="cstat-no" title="statement not covered" >    if ( this._state &lt;= states.NONE ) return;</span>
-<span class="cstat-no" title="statement not covered" >    this._state = states.CLOSING;</span>
-<span class="cstat-no" title="statement not covered" >    this.element.hide();</span>
-<span class="cstat-no" title="statement not covered" >    this._element = null;</span>
-<span class="cstat-no" title="statement not covered" >    this._state = states.NONE;</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Prepare rendering context data for a Node.</span>
+<span class="cstat-no" title="statement not covered" >     * @returns {object}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    #getNodeContext() {</span>
+<span class="cstat-no" title="statement not covered" >        const actor = game.system.tree.actor;</span>
+<span class="cstat-no" title="statement not covered" >        const node = this.target.node;</span>
+<span class="cstat-no" title="statement not covered" >        const state = game.system.tree.state.get(node);</span>
+<span class="cstat-no" title="statement not covered" >        const tags = [</span>
+<span class="cstat-no" title="statement not covered" >            {label: `Tier ${node.tier}`},</span>
+<span class="cstat-no" title="statement not covered" >            {label: game.i18n.localize(`TALENT.Node${node.type.titleCase()}`)}</span>
+<span class="cstat-no" title="statement not covered" >        ];</span>
+<span class="cstat-no" title="statement not covered" >        if (state.banned) tags.push({label: "Banned", class: "unmet"});</span>
+<span class="cstat-no" title="statement not covered" >        else if (!state.unlocked) tags.push({label: "Locked", class: "unmet"});</span>
+<span class="cstat-no" title="statement not covered" >        const reqs = SwerpgTalentNode.preparePrerequisites(node.requirements);</span>
+<span class="cstat-no" title="statement not covered" >        return {</span>
+<span class="cstat-no" title="statement not covered" >            id: node.id,</span>
+<span class="cstat-no" title="statement not covered" >            tags,</span>
+<span class="cstat-no" title="statement not covered" >            prerequisites: SwerpgTalent.testPrerequisites(actor, reqs)</span>
+<span class="cstat-no" title="statement not covered" >        };</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Prepare rendering context data for a Talent.</span>
+<span class="cstat-no" title="statement not covered" >     * @returns {object}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    #getTalentContext() {</span>
+<span class="cstat-no" title="statement not covered" >        const actor = game.system.tree.actor;</span>
+<span class="cstat-no" title="statement not covered" >        const talent = this.target.talent;</span>
+<span class="cstat-no" title="statement not covered" >        const node = talent.system.node;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Talent Tags</span>
+<span class="cstat-no" title="statement not covered" >        const reqs = SwerpgTalent.testPrerequisites(actor, talent.system.prerequisites);</span>
+<span class="cstat-no" title="statement not covered" >        const state = game.system.tree.state.get(node);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Banned Signature</span>
+<span class="cstat-no" title="statement not covered" >        if (node.type === "signature") {</span>
+<span class="cstat-no" title="statement not covered" >            if (state.banned &amp;&amp; !state.purchased) reqs.signature = {tag: "Banned", met: false};</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Return context</span>
+<span class="cstat-no" title="statement not covered" >        return {</span>
+<span class="cstat-no" title="statement not covered" >            source: talent.toObject(),</span>
+<span class="cstat-no" title="statement not covered" >            actions: TalentSheet.prepareActions(talent.system.actions),</span>
+<span class="cstat-no" title="statement not covered" >            prerequisites: reqs</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /** @override */</span>
+<span class="cstat-no" title="statement not covered" >    _injectHTML(html) {</span>
+<span class="cstat-no" title="statement not covered" >        const hud = document.getElementById("hud");</span>
+<span class="cstat-no" title="statement not covered" >        hud.appendChild(html[0]);</span>
+<span class="cstat-no" title="statement not covered" >        this._element = html;</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /** @override */</span>
+<span class="cstat-no" title="statement not covered" >    setPosition({left, top} = {}) {</span>
+<span class="cstat-no" title="statement not covered" >        const position = {</span>
+<span class="cstat-no" title="statement not covered" >            height: undefined,</span>
+<span class="cstat-no" title="statement not covered" >            left: left,</span>
+<span class="cstat-no" title="statement not covered" >            top: top</span>
+<span class="cstat-no" title="statement not covered" >        };</span>
+<span class="cstat-no" title="statement not covered" >        this.element.css(position);</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Activate this HUD element, binding it to a target.</span>
+<span class="cstat-no" title="statement not covered" >     * @param {SwerpgTalentTreeNode|SwerpgTalentTreeTalent} target    The target for the HUD</span>
+<span class="cstat-no" title="statement not covered" >     * @returns {Promise&lt;*&gt;}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    async activate(target) {</span>
+<span class="cstat-no" title="statement not covered" >        this.target = target;</span>
+<span class="cstat-no" title="statement not covered" >        const options = {</span>
+<span class="cstat-no" title="statement not covered" >            left: target.x + (target.width / 2) + 10,</span>
+<span class="cstat-no" title="statement not covered" >            top: target.y + -(target.height / 2)</span>
+<span class="cstat-no" title="statement not covered" >        };</span>
+<span class="cstat-no" title="statement not covered" >        if (target instanceof SwerpgTalentTreeTalent) {</span>
+<span class="cstat-no" title="statement not covered" >            options.left += target.node.x;</span>
+<span class="cstat-no" title="statement not covered" >            options.top += target.node.y;</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >        return this._render(true, options);</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Clear the HUD</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    clear() {</span>
+<span class="cstat-no" title="statement not covered" >        let states = this.constructor.RENDER_STATES;</span>
+<span class="cstat-no" title="statement not covered" >        if (this._state &lt;= states.NONE) return;</span>
+<span class="cstat-no" title="statement not covered" >        this._state = states.CLOSING;</span>
+<span class="cstat-no" title="statement not covered" >        this.element.hide();</span>
+<span class="cstat-no" title="statement not covered" >        this._element = null;</span>
+<span class="cstat-no" title="statement not covered" >        this._state = states.NONE;</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;</pre></td></tr></table></pre>
 
@@ -517,7 +517,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-05-11T08:34:16.200Z
+                at 2025-05-26T14:10:38.209Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/941</span>
+                <span class='fraction'>0/954</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/941</span>
+                <span class='fraction'>0/954</span>
             </div>
         
             
@@ -1125,12 +1125,31 @@
 <a name='L1060'></a><a href='#L1060'>1060</a>
 <a name='L1061'></a><a href='#L1061'>1061</a>
 <a name='L1062'></a><a href='#L1062'>1062</a>
-<a name='L1063'></a><a href='#L1063'>1063</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<a name='L1063'></a><a href='#L1063'>1063</a>
+<a name='L1064'></a><a href='#L1064'>1064</a>
+<a name='L1065'></a><a href='#L1065'>1065</a>
+<a name='L1066'></a><a href='#L1066'>1066</a>
+<a name='L1067'></a><a href='#L1067'>1067</a>
+<a name='L1068'></a><a href='#L1068'>1068</a>
+<a name='L1069'></a><a href='#L1069'>1069</a>
+<a name='L1070'></a><a href='#L1070'>1070</a>
+<a name='L1071'></a><a href='#L1071'>1071</a>
+<a name='L1072'></a><a href='#L1072'>1072</a>
+<a name='L1073'></a><a href='#L1073'>1073</a>
+<a name='L1074'></a><a href='#L1074'>1074</a>
+<a name='L1075'></a><a href='#L1075'>1075</a>
+<a name='L1076'></a><a href='#L1076'>1076</a>
+<a name='L1077'></a><a href='#L1077'>1077</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -1145,6 +1164,7 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -2161,6 +2181,7 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -2180,6 +2201,13 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -2187,10 +2215,16 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" >import SwerpgTalent from "../models/talent.mjs";</span></span></span>
+<span class="cline-any cline-no">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" >import SwerpgTalent from "../models/talent.mjs";</span></span></span>
 <span class="cstat-no" title="statement not covered" >import {CHARACTERISTICS} from "./attributes.mjs";</span>
+<span class="cstat-no" title="statement not covered" >import Enum from "./enum.mjs";</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >export default class SwerpgTalentNode {</span>
+<span class="cstat-no" title="statement not covered" >    static ACTIVATION = Object.freeze({</span>
+<span class="cstat-no" title="statement not covered" >        ACTIVE: "active",</span>
+<span class="cstat-no" title="statement not covered" >        PASSIVE: "passive",</span>
+<span class="cstat-no" title="statement not covered" >    });</span>
+&nbsp;
 <span class="cstat-no" title="statement not covered" >    constructor({</span>
 <span class="cstat-no" title="statement not covered" >                    id,</span>
 <span class="cstat-no" title="statement not covered" >                    tier = 0,</span>
@@ -2359,7 +2393,7 @@
 <span class="cstat-no" title="statement not covered" >        angle ??= n * SwerpgTalentNode.TIER_ANGLES[tier];</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >        // Create a Ray</span>
-<span class="cstat-no" title="statement not covered" >        if (!point) point = Ray.fromAngle(0, 0, Math.toRadians(angle), distance * (tier + 1)).B;</span>
+<span class="cstat-no" title="statement not covered" >        if (!point) point = foundry.canvas.geometry.Ray.fromAngle(0, 0, Math.toRadians(angle), distance * (tier + 1)).B;</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >        // Define node attributes</span>
 <span class="cstat-no" title="statement not covered" >        Object.defineProperties(this, {</span>
@@ -3249,14 +3283,22 @@
 <span class="cstat-no" title="statement not covered" >        SwerpgTalentNode.nodes.get("intdex4").connect(SwerpgTalentNode.nodes.get("int4d"));</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
 <span class="cstat-no" title="statement not covered" >}</span>
-&nbsp;</pre></td></tr></table></pre>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >/**</span>
+<span class="cstat-no" title="statement not covered" > * Designate which equipped slot the weapon is used in.</span>
+<span class="cstat-no" title="statement not covered" > * @type {Enum&lt;number&gt;}</span>
+<span class="cstat-no" title="statement not covered" > */</span>
+<span class="cstat-no" title="statement not covered" >export const ACTIVATION = new Enum({</span>
+<span class="cstat-no" title="statement not covered" >    PASSIVE: {value: 0, label: "TALENT.ACTIVATION.PASSIVE"},</span>
+<span class="cstat-no" title="statement not covered" >    ACTIVE: {value: 1, label: "TALENT.ACTIVATION.ACTIVE"},</span>
+<span class="cstat-no" title="statement not covered" >});</span></pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-05-11T08:34:16.353Z
+                at 2025-05-26T14:10:38.370Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

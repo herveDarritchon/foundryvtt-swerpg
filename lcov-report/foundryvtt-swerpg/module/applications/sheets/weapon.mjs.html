@@ -182,54 +182,54 @@
 <span class="cstat-no" title="statement not covered" > */</span>
 <span class="cstat-no" title="statement not covered" >export default class WeaponSheet extends SwerpgBaseItemSheet {</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @inheritDoc */</span>
-<span class="cstat-no" title="statement not covered" >  static DEFAULT_OPTIONS = {</span>
-<span class="cstat-no" title="statement not covered" >    item: {</span>
-<span class="cstat-no" title="statement not covered" >      type: "weapon",</span>
-<span class="cstat-no" title="statement not covered" >      includesActions: true,</span>
-<span class="cstat-no" title="statement not covered" >      advancedDescription: true</span>
+<span class="cstat-no" title="statement not covered" >    /** @inheritDoc */</span>
+<span class="cstat-no" title="statement not covered" >    static DEFAULT_OPTIONS = {</span>
+<span class="cstat-no" title="statement not covered" >        item: {</span>
+<span class="cstat-no" title="statement not covered" >            type: "weapon",</span>
+<span class="cstat-no" title="statement not covered" >            includesActions: true,</span>
+<span class="cstat-no" title="statement not covered" >            advancedDescription: true</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >    };</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    // Initialize subclass options</span>
+<span class="cstat-no" title="statement not covered" >    static {</span>
+<span class="cstat-no" title="statement not covered" >        this._initializeItemSheetClass()</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  };</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  // Initialize subclass options</span>
-<span class="cstat-no" title="statement not covered" >  static {</span>
-<span class="cstat-no" title="statement not covered" >    this._initializeItemSheetClass()</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /** @inheritDoc */</span>
+<span class="cstat-no" title="statement not covered" >    async _prepareContext(options) {</span>
+<span class="cstat-no" title="statement not covered" >        const context = await super._prepareContext(options);</span>
+<span class="cstat-no" title="statement not covered" >        const allowedSlots = this.document.system.getAllowedEquipmentSlots();</span>
+<span class="cstat-no" title="statement not covered" >        Object.assign(context, {</span>
+<span class="cstat-no" title="statement not covered" >            equipmentSlots: Object.entries(SYSTEM.WEAPON.SLOTS.choices).reduce((arr, [value, label]) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >                arr.push({value, label, disabled: !allowedSlots.includes(Number(value))});</span>
+<span class="cstat-no" title="statement not covered" >                return arr;</span>
+<span class="cstat-no" title="statement not covered" >            }, []),</span>
+<span class="cstat-no" title="statement not covered" >            usesReload: this.document.config.category.reload,</span>
+<span class="cstat-no" title="statement not covered" >            propertiesWidget: this.#propertiesWidget.bind(this),</span>
+<span class="cstat-no" title="statement not covered" >            scaledPrice: new foundry.data.fields.StringField({label: game.i18n.localize("ARMOR.SHEET.SCALED_PRICE")}),</span>
+<span class="cstat-no" title="statement not covered" >            animations: SYSTEM.WEAPON.ANIMATION_TYPES.reduce((obj, v) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >                obj[v] = v;</span>
+<span class="cstat-no" title="statement not covered" >                return obj;</span>
+<span class="cstat-no" title="statement not covered" >            }, {})</span>
+<span class="cstat-no" title="statement not covered" >        });</span>
+<span class="cstat-no" title="statement not covered" >        return context;</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @inheritDoc */</span>
-<span class="cstat-no" title="statement not covered" >  async _prepareContext(options) {</span>
-<span class="cstat-no" title="statement not covered" >    const context = await super._prepareContext(options);</span>
-<span class="cstat-no" title="statement not covered" >    const allowedSlots = this.document.system.getAllowedEquipmentSlots();</span>
-<span class="cstat-no" title="statement not covered" >    Object.assign(context, {</span>
-<span class="cstat-no" title="statement not covered" >      equipmentSlots: Object.entries(SYSTEM.WEAPON.SLOTS.choices).reduce((arr, [value, label]) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >        arr.push({value, label, disabled: !allowedSlots.includes(Number(value))});</span>
-<span class="cstat-no" title="statement not covered" >        return arr;</span>
-<span class="cstat-no" title="statement not covered" >      }, []),</span>
-<span class="cstat-no" title="statement not covered" >      usesReload: this.document.config.category.reload,</span>
-<span class="cstat-no" title="statement not covered" >      propertiesWidget: this.#propertiesWidget.bind(this),</span>
-<span class="cstat-no" title="statement not covered" >      scaledPrice: new foundry.data.fields.StringField({label: game.i18n.localize("ARMOR.SHEET.SCALED_PRICE")}),</span>
-<span class="cstat-no" title="statement not covered" >      animations: SYSTEM.WEAPON.ANIMATION_TYPES.reduce((obj, v) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >        obj[v] = v;</span>
-<span class="cstat-no" title="statement not covered" >        return obj;</span>
-<span class="cstat-no" title="statement not covered" >      }, {})</span>
-<span class="cstat-no" title="statement not covered" >    });</span>
-<span class="cstat-no" title="statement not covered" >    return context;</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Render the properties field as a multi-checkboxes element.</span>
-<span class="cstat-no" title="statement not covered" >   * @returns {HTMLMultiCheckboxElement}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  #propertiesWidget(field, groupConfig, inputConfig) {</span>
-<span class="cstat-no" title="statement not covered" >    inputConfig.name = field.fieldPath;</span>
-<span class="cstat-no" title="statement not covered" >    inputConfig.options = Object.entries(SYSTEM.WEAPON.PROPERTIES).map(([k, v]) =&gt; ({value: k, label: v.label}));</span>
-<span class="cstat-no" title="statement not covered" >    inputConfig.type = "checkboxes";</span>
-<span class="cstat-no" title="statement not covered" >    return foundry.applications.fields.createMultiSelectInput(inputConfig);</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Render the properties field as a multi-checkboxes element.</span>
+<span class="cstat-no" title="statement not covered" >     * @returns {HTMLMultiCheckboxElement}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    #propertiesWidget(field, groupConfig, inputConfig) {</span>
+<span class="cstat-no" title="statement not covered" >        inputConfig.name = field.fieldPath;</span>
+<span class="cstat-no" title="statement not covered" >        inputConfig.options = Object.entries(SYSTEM.WEAPON.PROPERTIES).map(([k, v]) =&gt; ({value: k, label: v.label}));</span>
+<span class="cstat-no" title="statement not covered" >        inputConfig.type = "checkboxes";</span>
+<span class="cstat-no" title="statement not covered" >        return foundry.applications.fields.createMultiSelectInput(inputConfig);</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;</pre></td></tr></table></pre>
 
@@ -238,7 +238,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-05-11T08:34:16.200Z
+                at 2025-05-26T14:10:38.209Z
             </div>
         <script src="../../../../prettify.js"></script>
         <script>

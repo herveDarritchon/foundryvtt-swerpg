@@ -130,32 +130,9 @@
 <a name='L65'></a><a href='#L65'>65</a>
 <a name='L66'></a><a href='#L66'>66</a>
 <a name='L67'></a><a href='#L67'>67</a>
-<a name='L68'></a><a href='#L68'>68</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<a name='L68'></a><a href='#L68'>68</a>
+<a name='L69'></a><a href='#L69'>69</a>
+<a name='L70'></a><a href='#L70'>70</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -173,6 +150,21 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -186,7 +178,19 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -202,67 +206,69 @@
 <span class="cstat-no" title="statement not covered" > */</span>
 <span class="cstat-no" title="statement not covered" >export default class SwerpgTaxonomy extends foundry.abstract.TypeDataModel {</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-<span class="cstat-no" title="statement not covered" >  /*  Data Schema                                 */</span>
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /*  Data Schema                                 */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @inheritDoc */</span>
-<span class="cstat-no" title="statement not covered" >  static defineSchema() {</span>
-<span class="cstat-no" title="statement not covered" >    const fields = foundry.data.fields;</span>
-<span class="cstat-no" title="statement not covered" >    const nullableInteger = {required: true, nullable: true, integer: true};</span>
-<span class="cstat-no" title="statement not covered" >    const requiredInteger = {required: true, nullable: false, integer: true};</span>
-<span class="cstat-no" title="statement not covered" >    return {</span>
-<span class="cstat-no" title="statement not covered" >      description: new fields.HTMLField({required: false, initial: undefined}),</span>
-<span class="cstat-no" title="statement not covered" >      size: new fields.NumberField({required: true, integer: true, nullable: false, min: 1, initial: 3}),</span>
-<span class="cstat-no" title="statement not covered" >      stride: new fields.NumberField({required: true, integer: true, nullable: false, min: 1, initial: 10}),</span>
-<span class="cstat-no" title="statement not covered" >      category: new fields.StringField({choices: SYSTEM.ADVERSARY.TAXONOMY_CATEGORIES, initial: "humanoid"}),</span>
-<span class="cstat-no" title="statement not covered" >      abilities: new fields.SchemaField(Object.values(SYSTEM.CHARACTERISTICS).reduce((obj, ability) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >        obj[ability.id] = new fields.NumberField({...nullableInteger, initial: 3, min: 0, max: 6})</span>
-<span class="cstat-no" title="statement not covered" >        return obj;</span>
-<span class="cstat-no" title="statement not covered" >      }, {}), {validate: SwerpgTaxonomy.#validateAbilities}),</span>
-<span class="cstat-no" title="statement not covered" >      resistances: new fields.SchemaField(Object.values(SYSTEM.DAMAGE_TYPES).reduce((obj, damageType) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >        obj[damageType.id] = new fields.NumberField({...requiredInteger, initial: 0, min: -3, max: 3});</span>
-<span class="cstat-no" title="statement not covered" >        return obj;</span>
-<span class="cstat-no" title="statement not covered" >      }, {}), {validate: SwerpgTaxonomy.#validateResistances})</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /** @inheritDoc */</span>
+<span class="cstat-no" title="statement not covered" >    static defineSchema() {</span>
+<span class="cstat-no" title="statement not covered" >        const fields = foundry.data.fields;</span>
+<span class="cstat-no" title="statement not covered" >        const nullableInteger = {required: true, nullable: true, integer: true};</span>
+<span class="cstat-no" title="statement not covered" >        const requiredInteger = {required: true, nullable: false, integer: true};</span>
+<span class="cstat-no" title="statement not covered" >        return {</span>
+<span class="cstat-no" title="statement not covered" >            description: new fields.HTMLField({required: false, initial: undefined}),</span>
+<span class="cstat-no" title="statement not covered" >            size: new fields.NumberField({required: true, integer: true, nullable: false, min: 1, initial: 3}),</span>
+<span class="cstat-no" title="statement not covered" >            stride: new fields.NumberField({required: true, integer: true, nullable: false, min: 1, initial: 10}),</span>
+<span class="cstat-no" title="statement not covered" >            category: new fields.StringField({choices: SYSTEM.ADVERSARY.TAXONOMY_CATEGORIES, initial: "humanoid"}),</span>
+<span class="cstat-no" title="statement not covered" >            abilities: new fields.SchemaField(Object.values(SYSTEM.CHARACTERISTICS).reduce((obj, ability) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >                obj[ability.id] = new fields.NumberField({...nullableInteger, initial: 3, min: 0, max: 6})</span>
+<span class="cstat-no" title="statement not covered" >                return obj;</span>
+<span class="cstat-no" title="statement not covered" >            }, {}), {validate: SwerpgTaxonomy.#validateAbilities}),</span>
+<span class="cstat-no" title="statement not covered" >            resistances: new fields.SchemaField(Object.values(SYSTEM.DAMAGE_TYPES).reduce((obj, damageType) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >                obj[damageType.id] = new fields.NumberField({...requiredInteger, initial: 0, min: -3, max: 3});</span>
+<span class="cstat-no" title="statement not covered" >                return obj;</span>
+<span class="cstat-no" title="statement not covered" >            }, {}), {validate: SwerpgTaxonomy.#validateResistances})</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @override */</span>
-<span class="cstat-no" title="statement not covered" >  static LOCALIZATION_PREFIXES = ["TAXONOMY"];</span>
+<span class="cstat-no" title="statement not covered" >    /** @override */</span>
+<span class="cstat-no" title="statement not covered" >    static LOCALIZATION_PREFIXES = ["TAXONOMY"];</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Validate that ability scaling for the Taxonomy is balanced.</span>
-<span class="cstat-no" title="statement not covered" >   * @param {Object&lt;number&gt;} abilities</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  static #validateAbilities(abilities) {</span>
-<span class="cstat-no" title="statement not covered" >    const sum = Object.values(abilities).reduce((t, n) =&gt; t + n, 0);</span>
-<span class="cstat-no" title="statement not covered" >    if ( sum !== 18 ) throw new Error(`The sum of initial ability values must equal 18. Currently ${sum}`);</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Validate that ability scaling for the Taxonomy is balanced.</span>
+<span class="cstat-no" title="statement not covered" >     * @param {Object&lt;number&gt;} abilities</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    static #validateAbilities(abilities) {</span>
+<span class="cstat-no" title="statement not covered" >        const sum = Object.values(abilities).reduce((t, n) =&gt; t + n, 0);</span>
+<span class="cstat-no" title="statement not covered" >        if (sum !== 18) throw new Error(`The sum of initial ability values must equal 18. Currently ${sum}`);</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Validate that resistance scaling for the Taxonomy is balanced.</span>
-<span class="cstat-no" title="statement not covered" >   * @param {Object&lt;number&gt;} resistances</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  static #validateResistances(resistances) {</span>
-<span class="cstat-no" title="statement not covered" >    const sum = Object.values(resistances).reduce((t, n) =&gt; t + n, 0);</span>
-<span class="cstat-no" title="statement not covered" >    if ( sum !== 0 ) throw new Error(`The sum of resistance scaling values must equal zero. Currently ${sum}`);</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Validate that resistance scaling for the Taxonomy is balanced.</span>
+<span class="cstat-no" title="statement not covered" >     * @param {Object&lt;number&gt;} resistances</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    static #validateResistances(resistances) {</span>
+<span class="cstat-no" title="statement not covered" >        const sum = Object.values(resistances).reduce((t, n) =&gt; t + n, 0);</span>
+<span class="cstat-no" title="statement not covered" >        if (sum !== 0) throw new Error(`The sum of resistance scaling values must equal zero. Currently ${sum}`);</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-<span class="cstat-no" title="statement not covered" >  /*  Properties                                  */</span>
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /*  Properties                                  */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * A convenience reference to the SwerpgActor to which this Taxonomy belongs.</span>
-<span class="cstat-no" title="statement not covered" >   * @type {SwerpgActor}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  get actor() {</span>
-<span class="cstat-no" title="statement not covered" >    return this.parent.parent;</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * A convenience reference to the SwerpgActor to which this Taxonomy belongs.</span>
+<span class="cstat-no" title="statement not covered" >     * @type {SwerpgActor}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    get actor() {</span>
+<span class="cstat-no" title="statement not covered" >        return this.parent.parent;</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;</pre></td></tr></table></pre>
 
@@ -271,7 +277,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-05-11T08:34:16.200Z
+                at 2025-05-26T14:10:38.209Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

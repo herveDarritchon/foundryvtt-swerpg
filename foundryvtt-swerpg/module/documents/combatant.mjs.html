@@ -220,76 +220,76 @@
 &nbsp;
 <span class="cstat-no" title="statement not covered" >export default class SwerpgCombatant extends Combatant {</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @inheritDoc */</span>
-<span class="cstat-no" title="statement not covered" >  prepareBaseData() {</span>
-<span class="cstat-no" title="statement not covered" >    super.prepareBaseData();</span>
-<span class="cstat-no" title="statement not covered" >    if ( this.parent.round === 0 ) this.initiative = null;</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @override */</span>
-<span class="cstat-no" title="statement not covered" >  getInitiativeRoll(formula) {</span>
-<span class="cstat-no" title="statement not covered" >    const actor = this.actor;</span>
-<span class="cstat-no" title="statement not covered" >    const {weapons, armor} = actor.equipment;</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    // Initiative boons and banes</span>
-<span class="cstat-no" title="statement not covered" >    const boons = {};</span>
-<span class="cstat-no" title="statement not covered" >    const banes = {};</span>
-<span class="cstat-no" title="statement not covered" >    const action = this.actor.system.resources.action.value;</span>
-<span class="cstat-no" title="statement not covered" >    if ( this.parent.round &amp;&amp; action ) {</span>
-<span class="cstat-no" title="statement not covered" >      boons.action = {label: "Reserved Action", number: action};</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >    if ( weapons.slow ) banes.slow = {label: "Slow Weaponry", number: weapons.slow};</span>
-<span class="cstat-no" title="statement not covered" >    if ( actor.statuses.has("broken") ) banes.broken = {label: "Broken", number: 2};</span>
-<span class="cstat-no" title="statement not covered" >    if ( armor.system.properties.has("bulky") ) banes.bulky = {label: "Bulky Armor", number: 2};</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    // Prepare roll data</span>
-<span class="cstat-no" title="statement not covered" >    const rollData = {</span>
-<span class="cstat-no" title="statement not covered" >      ability: this.actor.getAbilityBonus(["dexterity", "intellect"]),</span>
-<span class="cstat-no" title="statement not covered" >      skill: 0,</span>
-<span class="cstat-no" title="statement not covered" >      enchantment: 0,</span>
-<span class="cstat-no" title="statement not covered" >      boons: boons,</span>
-<span class="cstat-no" title="statement not covered" >      banes: banes</span>
+<span class="cstat-no" title="statement not covered" >    /** @inheritDoc */</span>
+<span class="cstat-no" title="statement not covered" >    prepareBaseData() {</span>
+<span class="cstat-no" title="statement not covered" >        super.prepareBaseData();</span>
+<span class="cstat-no" title="statement not covered" >        if (this.parent.round === 0) this.initiative = null;</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    // Call talent hooks</span>
-<span class="cstat-no" title="statement not covered" >    actor.callActorHooks("prepareStandardCheck", rollData);</span>
-<span class="cstat-no" title="statement not covered" >    actor.callActorHooks("prepareInitiativeCheck", rollData);</span>
+<span class="cstat-no" title="statement not covered" >    /** @override */</span>
+<span class="cstat-no" title="statement not covered" >    getInitiativeRoll(formula) {</span>
+<span class="cstat-no" title="statement not covered" >        const actor = this.actor;</span>
+<span class="cstat-no" title="statement not covered" >        const {weapons, armor} = actor.equipment;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    // Construct Initiative Check</span>
-<span class="cstat-no" title="statement not covered" >    // TODO this needs to be an InitiativeCheck with custom rendering</span>
-<span class="cstat-no" title="statement not covered" >    return new StandardCheck(rollData);</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >        // Initiative boons and banes</span>
+<span class="cstat-no" title="statement not covered" >        const boons = {};</span>
+<span class="cstat-no" title="statement not covered" >        const banes = {};</span>
+<span class="cstat-no" title="statement not covered" >        const action = this.actor.system.resources.action.value;</span>
+<span class="cstat-no" title="statement not covered" >        if (this.parent.round &amp;&amp; action) {</span>
+<span class="cstat-no" title="statement not covered" >            boons.action = {label: "Reserved Action", number: action};</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >        if (weapons.slow) banes.slow = {label: "Slow Weaponry", number: weapons.slow};</span>
+<span class="cstat-no" title="statement not covered" >        if (actor.statuses.has("broken")) banes.broken = {label: "Broken", number: 2};</span>
+<span class="cstat-no" title="statement not covered" >        if (armor.system.properties.has("bulky")) banes.bulky = {label: "Bulky Armor", number: 2};</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >        // Prepare roll data</span>
+<span class="cstat-no" title="statement not covered" >        const rollData = {</span>
+<span class="cstat-no" title="statement not covered" >            ability: this.actor.getAbilityBonus(["dexterity", "intellect"]),</span>
+<span class="cstat-no" title="statement not covered" >            skill: 0,</span>
+<span class="cstat-no" title="statement not covered" >            enchantment: 0,</span>
+<span class="cstat-no" title="statement not covered" >            boons: boons,</span>
+<span class="cstat-no" title="statement not covered" >            banes: banes</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Get the maximum initiative values is eligible as a delay.</span>
-<span class="cstat-no" title="statement not covered" >   * @returns {number|null}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  getDelayMaximum() {</span>
-<span class="cstat-no" title="statement not covered" >    const position = this.parent.turns.indexOf(this);</span>
-<span class="cstat-no" title="statement not covered" >    const nextCombatant = this.parent.turns.find((c, i) =&gt; (i &gt; position) &amp;&amp; c.initiative);</span>
-<span class="cstat-no" title="statement not covered" >    return nextCombatant ? nextCombatant.initiative - 1 : null;</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >        // Call talent hooks</span>
+<span class="cstat-no" title="statement not covered" >        actor.callActorHooks("prepareStandardCheck", rollData);</span>
+<span class="cstat-no" title="statement not covered" >        actor.callActorHooks("prepareInitiativeCheck", rollData);</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @inheritDoc */</span>
-<span class="cstat-no" title="statement not covered" >  _onCreate(data, options, userId) {</span>
-<span class="cstat-no" title="statement not covered" >    super._onCreate(data, options, userId);</span>
-<span class="cstat-no" title="statement not covered" >    if ( this.actor ) {</span>
-<span class="cstat-no" title="statement not covered" >      this.actor.reset();</span>
-<span class="cstat-no" title="statement not covered" >      this.actor._sheet?.render(false);</span>
+<span class="cstat-no" title="statement not covered" >        // Construct Initiative Check</span>
+<span class="cstat-no" title="statement not covered" >        // TODO this needs to be an InitiativeCheck with custom rendering</span>
+<span class="cstat-no" title="statement not covered" >        return new StandardCheck(rollData);</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @inheritDoc */</span>
-<span class="cstat-no" title="statement not covered" >  _onDelete(options, userId) {</span>
-<span class="cstat-no" title="statement not covered" >    super._onDelete(options, userId);</span>
-<span class="cstat-no" title="statement not covered" >    if ( this.actor ) this.actor.onLeaveCombat();</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Get the maximum initiative values is eligible as a delay.</span>
+<span class="cstat-no" title="statement not covered" >     * @returns {number|null}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    getDelayMaximum() {</span>
+<span class="cstat-no" title="statement not covered" >        const position = this.parent.turns.indexOf(this);</span>
+<span class="cstat-no" title="statement not covered" >        const nextCombatant = this.parent.turns.find((c, i) =&gt; (i &gt; position) &amp;&amp; c.initiative);</span>
+<span class="cstat-no" title="statement not covered" >        return nextCombatant ? nextCombatant.initiative - 1 : null;</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /** @inheritDoc */</span>
+<span class="cstat-no" title="statement not covered" >    _onCreate(data, options, userId) {</span>
+<span class="cstat-no" title="statement not covered" >        super._onCreate(data, options, userId);</span>
+<span class="cstat-no" title="statement not covered" >        if (this.actor) {</span>
+<span class="cstat-no" title="statement not covered" >            this.actor.reset();</span>
+<span class="cstat-no" title="statement not covered" >            this.actor._sheet?.render(false);</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /** @inheritDoc */</span>
+<span class="cstat-no" title="statement not covered" >    _onDelete(options, userId) {</span>
+<span class="cstat-no" title="statement not covered" >        super._onDelete(options, userId);</span>
+<span class="cstat-no" title="statement not covered" >        if (this.actor) this.actor.onLeaveCombat();</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;</pre></td></tr></table></pre>
 
@@ -298,7 +298,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-05-11T08:34:16.353Z
+                at 2025-05-26T14:10:38.370Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

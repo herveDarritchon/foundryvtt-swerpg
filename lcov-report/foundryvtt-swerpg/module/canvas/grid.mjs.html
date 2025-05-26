@@ -206,37 +206,37 @@
 <span class="cstat-no" title="statement not covered" > * @returns {GridOffset[]}</span>
 <span class="cstat-no" title="statement not covered" > */</span>
 <span class="cstat-no" title="statement not covered" >export function getTargetAreaOffsets(origin, shape) {</span>
-<span class="cstat-no" title="statement not covered" >  const originOffset = canvas.grid.getOffset(origin);</span>
-<span class="cstat-no" title="statement not covered" >  const k0 = (originOffset.i &lt;&lt; 16) | originOffset.j;</span>
-<span class="cstat-no" title="statement not covered" >  if ( !shape.contains(origin.x, origin.y) ) {</span>
-<span class="cstat-no" title="statement not covered" >    throw new Error("The origin point must be contained within the shape.");</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-<span class="cstat-no" title="statement not covered" >  const offsets = [originOffset];</span>
-<span class="cstat-no" title="statement not covered" >  const tested = new Set([k0]);</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  const quadrants = [[-1,-1], [1,-1], [1,1], [-1, 1]];</span>
-<span class="cstat-no" title="statement not covered" >  for ( const [si, sj] of quadrants ) {</span>
-<span class="cstat-no" title="statement not covered" >    for ( let di=0; di&lt;Infinity; di++ ) {</span>
-<span class="cstat-no" title="statement not covered" >      const i = originOffset.i + (di * si);</span>
-<span class="cstat-no" title="statement not covered" >      let hit = false;</span>
-<span class="cstat-no" title="statement not covered" >      for ( let dj=0; dj&lt;Infinity; dj++ ) {</span>
-<span class="cstat-no" title="statement not covered" >        const j = originOffset.j + (dj * sj);</span>
-<span class="cstat-no" title="statement not covered" >        const o = {i,j};</span>
-<span class="cstat-no" title="statement not covered" >        const k = (i &lt;&lt; 16) | j;</span>
-<span class="cstat-no" title="statement not covered" >        if ( tested.has(k) ) {</span>
-<span class="cstat-no" title="statement not covered" >          hit = true;</span>
-<span class="cstat-no" title="statement not covered" >          continue;</span>
-<span class="cstat-no" title="statement not covered" >        }</span>
-<span class="cstat-no" title="statement not covered" >        tested.add(k);</span>
-<span class="cstat-no" title="statement not covered" >        const c = canvas.grid.getCenterPoint(o);</span>
-<span class="cstat-no" title="statement not covered" >        if ( !shape.contains(c.x, c.y) ) break;</span>
-<span class="cstat-no" title="statement not covered" >        offsets.push(o);</span>
-<span class="cstat-no" title="statement not covered" >        hit = true;</span>
-<span class="cstat-no" title="statement not covered" >      }</span>
-<span class="cstat-no" title="statement not covered" >      if ( !hit ) break;</span>
+<span class="cstat-no" title="statement not covered" >    const originOffset = canvas.grid.getOffset(origin);</span>
+<span class="cstat-no" title="statement not covered" >    const k0 = (originOffset.i &lt;&lt; 16) | originOffset.j;</span>
+<span class="cstat-no" title="statement not covered" >    if (!shape.contains(origin.x, origin.y)) {</span>
+<span class="cstat-no" title="statement not covered" >        throw new Error("The origin point must be contained within the shape.");</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-<span class="cstat-no" title="statement not covered" >  return offsets;</span>
+<span class="cstat-no" title="statement not covered" >    const offsets = [originOffset];</span>
+<span class="cstat-no" title="statement not covered" >    const tested = new Set([k0]);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    const quadrants = [[-1, -1], [1, -1], [1, 1], [-1, 1]];</span>
+<span class="cstat-no" title="statement not covered" >    for (const [si, sj] of quadrants) {</span>
+<span class="cstat-no" title="statement not covered" >        for (let di = 0; di &lt; Infinity; di++) {</span>
+<span class="cstat-no" title="statement not covered" >            const i = originOffset.i + (di * si);</span>
+<span class="cstat-no" title="statement not covered" >            let hit = false;</span>
+<span class="cstat-no" title="statement not covered" >            for (let dj = 0; dj &lt; Infinity; dj++) {</span>
+<span class="cstat-no" title="statement not covered" >                const j = originOffset.j + (dj * sj);</span>
+<span class="cstat-no" title="statement not covered" >                const o = {i, j};</span>
+<span class="cstat-no" title="statement not covered" >                const k = (i &lt;&lt; 16) | j;</span>
+<span class="cstat-no" title="statement not covered" >                if (tested.has(k)) {</span>
+<span class="cstat-no" title="statement not covered" >                    hit = true;</span>
+<span class="cstat-no" title="statement not covered" >                    continue;</span>
+<span class="cstat-no" title="statement not covered" >                }</span>
+<span class="cstat-no" title="statement not covered" >                tested.add(k);</span>
+<span class="cstat-no" title="statement not covered" >                const c = canvas.grid.getCenterPoint(o);</span>
+<span class="cstat-no" title="statement not covered" >                if (!shape.contains(c.x, c.y)) break;</span>
+<span class="cstat-no" title="statement not covered" >                offsets.push(o);</span>
+<span class="cstat-no" title="statement not covered" >                hit = true;</span>
+<span class="cstat-no" title="statement not covered" >            }</span>
+<span class="cstat-no" title="statement not covered" >            if (!hit) break;</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+<span class="cstat-no" title="statement not covered" >    return offsets;</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;
 &nbsp;
@@ -258,13 +258,13 @@
 <span class="cstat-no" title="statement not covered" > * @returns {number} The linear distance between attacker and target</span>
 <span class="cstat-no" title="statement not covered" > */</span>
 <span class="cstat-no" title="statement not covered" >export function getLinearRangeCost(attacker, target) {</span>
-<span class="cstat-no" title="statement not covered" >  const ab = attacker.bounds;</span>
-<span class="cstat-no" title="statement not covered" >  const tb = target.bounds;</span>
-<span class="cstat-no" title="statement not covered" >  if ( ab.overlaps(tb) ) return 0;</span>
-<span class="cstat-no" title="statement not covered" >  const r = new Ray(attacker.center, target.center);</span>
-<span class="cstat-no" title="statement not covered" >  const xAttacker = ab.segmentIntersections(r.A, r.B)[0];</span>
-<span class="cstat-no" title="statement not covered" >  const xTarget = tb.segmentIntersections(r.A, r.B)[0];</span>
-<span class="cstat-no" title="statement not covered" >  return canvas.grid.measurePath([xAttacker, xTarget]).distance;</span>
+<span class="cstat-no" title="statement not covered" >    const ab = attacker.bounds;</span>
+<span class="cstat-no" title="statement not covered" >    const tb = target.bounds;</span>
+<span class="cstat-no" title="statement not covered" >    if (ab.overlaps(tb)) return 0;</span>
+<span class="cstat-no" title="statement not covered" >    const r = new Ray(attacker.center, target.center);</span>
+<span class="cstat-no" title="statement not covered" >    const xAttacker = ab.segmentIntersections(r.A, r.B)[0];</span>
+<span class="cstat-no" title="statement not covered" >    const xTarget = tb.segmentIntersections(r.A, r.B)[0];</span>
+<span class="cstat-no" title="statement not covered" >    return canvas.grid.measurePath([xAttacker, xTarget]).distance;</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;
 &nbsp;</pre></td></tr></table></pre>
@@ -274,7 +274,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-05-11T08:34:16.200Z
+                at 2025-05-26T14:10:38.209Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

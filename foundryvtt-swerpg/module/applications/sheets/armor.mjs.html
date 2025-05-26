@@ -252,89 +252,89 @@
 <span class="cstat-no" title="statement not covered" > */</span>
 <span class="cstat-no" title="statement not covered" >export default class ArmorSheet extends SwerpgBaseItemSheet {</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @inheritDoc */</span>
-<span class="cstat-no" title="statement not covered" >  static DEFAULT_OPTIONS = {</span>
-<span class="cstat-no" title="statement not covered" >    item: {</span>
-<span class="cstat-no" title="statement not covered" >      type: "armor",</span>
-<span class="cstat-no" title="statement not covered" >      includesActions: true,</span>
-<span class="cstat-no" title="statement not covered" >      advancedDescription: true</span>
+<span class="cstat-no" title="statement not covered" >    /** @inheritDoc */</span>
+<span class="cstat-no" title="statement not covered" >    static DEFAULT_OPTIONS = {</span>
+<span class="cstat-no" title="statement not covered" >        item: {</span>
+<span class="cstat-no" title="statement not covered" >            type: "armor",</span>
+<span class="cstat-no" title="statement not covered" >            includesActions: true,</span>
+<span class="cstat-no" title="statement not covered" >            advancedDescription: true</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >    };</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    // Initialize subclass options</span>
+<span class="cstat-no" title="statement not covered" >    static {</span>
+<span class="cstat-no" title="statement not covered" >        this._initializeItemSheetClass()</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  };</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  // Initialize subclass options</span>
-<span class="cstat-no" title="statement not covered" >  static {</span>
-<span class="cstat-no" title="statement not covered" >    this._initializeItemSheetClass()</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /** @inheritDoc */</span>
+<span class="cstat-no" title="statement not covered" >    async _prepareContext(options) {</span>
+<span class="cstat-no" title="statement not covered" >        const context = await super._prepareContext(options);</span>
+<span class="cstat-no" title="statement not covered" >        Object.assign(context, {</span>
+<span class="cstat-no" title="statement not covered" >            armorWidget: this.#armorWidget.bind(this),</span>
+<span class="cstat-no" title="statement not covered" >            dodgeWidget: this.#dodgeWidget.bind(this),</span>
+<span class="cstat-no" title="statement not covered" >            propertiesWidget: this.#propertiesWidget.bind(this),</span>
+<span class="cstat-no" title="statement not covered" >            scaledPrice: new foundry.data.fields.StringField({label: game.i18n.localize("ARMOR.SHEET.SCALED_PRICE")})</span>
+<span class="cstat-no" title="statement not covered" >        });</span>
+<span class="cstat-no" title="statement not covered" >        return context;</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @inheritDoc */</span>
-<span class="cstat-no" title="statement not covered" >  async _prepareContext(options) {</span>
-<span class="cstat-no" title="statement not covered" >    const context = await super._prepareContext(options);</span>
-<span class="cstat-no" title="statement not covered" >    Object.assign(context, {</span>
-<span class="cstat-no" title="statement not covered" >      armorWidget: this.#armorWidget.bind(this),</span>
-<span class="cstat-no" title="statement not covered" >      dodgeWidget: this.#dodgeWidget.bind(this),</span>
-<span class="cstat-no" title="statement not covered" >      propertiesWidget: this.#propertiesWidget.bind(this),</span>
-<span class="cstat-no" title="statement not covered" >      scaledPrice: new foundry.data.fields.StringField({label: game.i18n.localize("ARMOR.SHEET.SCALED_PRICE")})</span>
-<span class="cstat-no" title="statement not covered" >    });</span>
-<span class="cstat-no" title="statement not covered" >    return context;</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * A custom form field widget for rendering armor defense.</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    #armorWidget(field, groupConfig, inputConfig) {</span>
+<span class="cstat-no" title="statement not covered" >        const config = this.document.system.config.category.armor;</span>
+<span class="cstat-no" title="statement not covered" >        const {widget, fields} = ArmorSheet.#createDefenseWidget(field, groupConfig, inputConfig, config);</span>
+<span class="cstat-no" title="statement not covered" >        fields.appendChild(ArmorSheet._createElement("label", {innerText: game.i18n.localize("ARMOR.SHEET.ARMOR_BONUS")}));</span>
+<span class="cstat-no" title="statement not covered" >        const armorBonus = this.document.system.armor.bonus;</span>
+<span class="cstat-no" title="statement not covered" >        fields.appendChild(foundry.applications.fields.createNumberInput({value: armorBonus, disabled: true}));</span>
+<span class="cstat-no" title="statement not covered" >        return widget;</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * A custom form field widget for rendering armor defense.</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  #armorWidget(field, groupConfig, inputConfig) {</span>
-<span class="cstat-no" title="statement not covered" >    const config = this.document.system.config.category.armor;</span>
-<span class="cstat-no" title="statement not covered" >    const {widget, fields} = ArmorSheet.#createDefenseWidget(field, groupConfig, inputConfig, config);</span>
-<span class="cstat-no" title="statement not covered" >    fields.appendChild(ArmorSheet._createElement("label", {innerText: game.i18n.localize("ARMOR.SHEET.ARMOR_BONUS")}));</span>
-<span class="cstat-no" title="statement not covered" >    const armorBonus = this.document.system.armor.bonus;</span>
-<span class="cstat-no" title="statement not covered" >    fields.appendChild(foundry.applications.fields.createNumberInput({value: armorBonus, disabled: true}));</span>
-<span class="cstat-no" title="statement not covered" >    return widget;</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * A custom form field widget for rendering dodge defense.</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    #dodgeWidget(field, groupConfig, inputConfig) {</span>
+<span class="cstat-no" title="statement not covered" >        const config = this.document.system.config.category.dodge;</span>
+<span class="cstat-no" title="statement not covered" >        const {widget, fields} = ArmorSheet.#createDefenseWidget(field, groupConfig, inputConfig, config);</span>
+<span class="cstat-no" title="statement not covered" >        fields.appendChild(ArmorSheet._createElement("label", {innerText: game.i18n.localize("ARMOR.SHEET.DODGE_SCALING")}));</span>
+<span class="cstat-no" title="statement not covered" >        const dodgeStart = `${this.document.system.dodge.start} ${swerpg.CONST.CHARACTERISTICS.dexterity.abbreviation}`;</span>
+<span class="cstat-no" title="statement not covered" >        fields.appendChild(foundry.applications.fields.createTextInput({value: dodgeStart, disabled: true}));</span>
+<span class="cstat-no" title="statement not covered" >        return widget;</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * A custom form field widget for rendering dodge defense.</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  #dodgeWidget(field, groupConfig, inputConfig) {</span>
-<span class="cstat-no" title="statement not covered" >    const config = this.document.system.config.category.dodge;</span>
-<span class="cstat-no" title="statement not covered" >    const {widget, fields} = ArmorSheet.#createDefenseWidget(field, groupConfig, inputConfig, config);</span>
-<span class="cstat-no" title="statement not covered" >    fields.appendChild(ArmorSheet._createElement("label", {innerText: game.i18n.localize("ARMOR.SHEET.DODGE_SCALING")}));</span>
-<span class="cstat-no" title="statement not covered" >    const dodgeStart = `${this.document.system.dodge.start} ${swerpg.CONST.CHARACTERISTICS.dexterity.abbreviation}`;</span>
-<span class="cstat-no" title="statement not covered" >    fields.appendChild(foundry.applications.fields.createTextInput({value: dodgeStart, disabled: true}));</span>
-<span class="cstat-no" title="statement not covered" >    return widget;</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Render the properties field as a multi-checkboxes element.</span>
+<span class="cstat-no" title="statement not covered" >     * @returns {HTMLMultiCheckboxElement}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    #propertiesWidget(field, groupConfig, inputConfig) {</span>
+<span class="cstat-no" title="statement not covered" >        inputConfig.name = field.fieldPath;</span>
+<span class="cstat-no" title="statement not covered" >        inputConfig.options = Object.entries(SYSTEM.ARMOR.PROPERTIES).map(([k, v]) =&gt; ({value: k, label: v.label}));</span>
+<span class="cstat-no" title="statement not covered" >        inputConfig.type = "checkboxes";</span>
+<span class="cstat-no" title="statement not covered" >        return foundry.applications.fields.createMultiSelectInput(inputConfig);</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Render the properties field as a multi-checkboxes element.</span>
-<span class="cstat-no" title="statement not covered" >   * @returns {HTMLMultiCheckboxElement}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  #propertiesWidget(field, groupConfig, inputConfig) {</span>
-<span class="cstat-no" title="statement not covered" >    inputConfig.name = field.fieldPath;</span>
-<span class="cstat-no" title="statement not covered" >    inputConfig.options = Object.entries(SYSTEM.ARMOR.PROPERTIES).map(([k, v]) =&gt; ({value: k, label: v.label}));</span>
-<span class="cstat-no" title="statement not covered" >    inputConfig.type = "checkboxes";</span>
-<span class="cstat-no" title="statement not covered" >    return foundry.applications.fields.createMultiSelectInput(inputConfig);</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Logic common to both the armor and dodge widgets.</span>
-<span class="cstat-no" title="statement not covered" >   * @returns {widget: HTMLDivElement, fields: HTMLDivElement}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  static #createDefenseWidget(field, groupConfig, inputConfig, config) {</span>
-<span class="cstat-no" title="statement not covered" >    const widget = ArmorSheet._createElement("div", {className: "form-group slim defense"});</span>
-<span class="cstat-no" title="statement not covered" >    widget.appendChild(ArmorSheet._createElement("label", {innerText: field.label}));</span>
-<span class="cstat-no" title="statement not covered" >    const fields = widget.appendChild(ArmorSheet._createElement("div", {className: "form-fields"}));</span>
-<span class="cstat-no" title="statement not covered" >    fields.appendChild(ArmorSheet._createElement("label", {innerText: field.fields.base.label}));</span>
-<span class="cstat-no" title="statement not covered" >    fields.appendChild(field.fields.base.toInput({value: inputConfig.value.base}));</span>
-<span class="cstat-no" title="statement not covered" >    return {widget, fields}</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Logic common to both the armor and dodge widgets.</span>
+<span class="cstat-no" title="statement not covered" >     * @returns {widget: HTMLDivElement, fields: HTMLDivElement}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    static #createDefenseWidget(field, groupConfig, inputConfig, config) {</span>
+<span class="cstat-no" title="statement not covered" >        const widget = ArmorSheet._createElement("div", {className: "form-group slim defense"});</span>
+<span class="cstat-no" title="statement not covered" >        widget.appendChild(ArmorSheet._createElement("label", {innerText: field.label}));</span>
+<span class="cstat-no" title="statement not covered" >        const fields = widget.appendChild(ArmorSheet._createElement("div", {className: "form-fields"}));</span>
+<span class="cstat-no" title="statement not covered" >        fields.appendChild(ArmorSheet._createElement("label", {innerText: field.fields.base.label}));</span>
+<span class="cstat-no" title="statement not covered" >        fields.appendChild(field.fields.base.toInput({value: inputConfig.value.base}));</span>
+<span class="cstat-no" title="statement not covered" >        return {widget, fields}</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;</pre></td></tr></table></pre>
 
@@ -343,7 +343,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-05-11T08:34:16.353Z
+                at 2025-05-26T14:10:38.370Z
             </div>
         <script src="../../../../prettify.js"></script>
         <script>

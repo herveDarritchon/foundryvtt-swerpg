@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/439</span>
+                <span class='fraction'>0/443</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/439</span>
+                <span class='fraction'>0/443</span>
             </div>
         
             
@@ -582,7 +582,15 @@
 <a name='L517'></a><a href='#L517'>517</a>
 <a name='L518'></a><a href='#L518'>518</a>
 <a name='L519'></a><a href='#L519'>519</a>
-<a name='L520'></a><a href='#L520'>520</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<a name='L520'></a><a href='#L520'>520</a>
+<a name='L521'></a><a href='#L521'>521</a>
+<a name='L522'></a><a href='#L522'>522</a>
+<a name='L523'></a><a href='#L523'>523</a>
+<a name='L524'></a><a href='#L524'>524</a>
+<a name='L525'></a><a href='#L525'>525</a>
+<a name='L526'></a><a href='#L526'>526</a>
+<a name='L527'></a><a href='#L527'>527</a>
+<a name='L528'></a><a href='#L528'>528</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -621,6 +629,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -769,6 +778,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -965,6 +975,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -1013,6 +1024,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -1039,6 +1051,10 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1101,524 +1117,532 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" >export default class SwerpgTokenObject extends Token {<span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ></span></span></span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" >export default class SwerpgTokenObject extends foundry.canvas.placeables.Token {<span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ></span></span></span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @inheritDoc */</span>
-<span class="cstat-no" title="statement not covered" >  static RENDER_FLAGS = Object.assign({}, super.RENDER_FLAGS, {</span>
-<span class="cstat-no" title="statement not covered" >    refreshFlanking: {}</span>
-<span class="cstat-no" title="statement not covered" >  });</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * @typedef {Object} SwerpgTokenEngagement</span>
-<span class="cstat-no" title="statement not covered" >   * @property {Set&lt;Token&gt;} allies      Allied tokens which are adjacent</span>
-<span class="cstat-no" title="statement not covered" >   * @property {Set&lt;Token&gt;} enemies     Enemy tokens which are adjacent</span>
-<span class="cstat-no" title="statement not covered" >   * @property {PIXI.Rectangle} engagementBounds</span>
-<span class="cstat-no" title="statement not covered" >   * @property {PIXI.Polygon} movePolygon</span>
-<span class="cstat-no" title="statement not covered" >   * @property {number} allyBonus</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Current engagement status for the Token.</span>
-<span class="cstat-no" title="statement not covered" >   * @type {SwerpgTokenEngagement}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  engagement = {</span>
-<span class="cstat-no" title="statement not covered" >    allies: new Set(),</span>
-<span class="cstat-no" title="statement not covered" >    enemies: new Set()</span>
-<span class="cstat-no" title="statement not covered" >  };</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Should the next flanking update be responsible for committing Active Effect changes?</span>
-<span class="cstat-no" title="statement not covered" >   * @type {boolean}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  #commitFlanking = false;</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * A Graphics object in the debug layer which displays engagement for this token.</span>
-<span class="cstat-no" title="statement not covered" >   * @type {PIXI.Graphics}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  #engagementDebug;</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-<span class="cstat-no" title="statement not covered" >  /*  Rendering                                   */</span>
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @inheritDoc */</span>
-<span class="cstat-no" title="statement not covered" >  _applyRenderFlags(flags) {</span>
-<span class="cstat-no" title="statement not covered" >    super._applyRenderFlags(flags);</span>
-<span class="cstat-no" title="statement not covered" >    if ( flags.refreshFlanking ) this.#updateFlanking();</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * @override</span>
-<span class="cstat-no" title="statement not covered" >   * TODO remove in V13+ if core supports better UI scale</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  _drawTarget(options={}) {</span>
-<span class="cstat-no" title="statement not covered" >    return super._drawTarget({...options, size: 0.5});</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @override */</span>
-<span class="cstat-no" title="statement not covered" >  drawBars() {</span>
-<span class="cstat-no" title="statement not covered" >    super.drawBars();</span>
-<span class="cstat-no" title="statement not covered" >    if ( !this.actor || (this.document.displayBars === CONST.TOKEN_DISPLAY_MODES.NONE) ) return;</span>
-<span class="cstat-no" title="statement not covered" >    this.#drawResources();</span>
-<span class="cstat-no" title="statement not covered" >    if ( !this.bars.alphaFilter ) {</span>
-<span class="cstat-no" title="statement not covered" >      this.bars.alphaFilter = new PIXI.filters.AlphaFilter();</span>
-<span class="cstat-no" title="statement not covered" >      this.bars.filters = [this.bars.alphaFilter];</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >    this.bars.alphaFilter.alpha = 0.6;</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * @override</span>
-<span class="cstat-no" title="statement not covered" >   * TODO remove in V13+ if core supports better UI scale</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  _drawBar(number, bar, data) {</span>
-<span class="cstat-no" title="statement not covered" >    const val = Number(data.value);</span>
-<span class="cstat-no" title="statement not covered" >    const pct = Math.clamp(val, 0, data.max) / data.max;</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    // Determine sizing</span>
-<span class="cstat-no" title="statement not covered" >    const {width, height} = this.getSize();</span>
-<span class="cstat-no" title="statement not covered" >    const bw = width;</span>
-<span class="cstat-no" title="statement not covered" >    const bh = number === 0 ? 8 : 6;</span>
-<span class="cstat-no" title="statement not covered" >    const bs = 1;</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    // Determine the color to use</span>
-<span class="cstat-no" title="statement not covered" >    const colors = number === 0 ? SYSTEM.RESOURCES.health.color : SYSTEM.RESOURCES.morale.color;</span>
-<span class="cstat-no" title="statement not covered" >    const color = colors.low.mix(colors.high, pct);</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    // Draw bar</span>
-<span class="cstat-no" title="statement not covered" >    bar.clear();</span>
-<span class="cstat-no" title="statement not covered" >    bar.lineStyle(bs, 0x000000, 1.0);</span>
-<span class="cstat-no" title="statement not covered" >    bar.beginFill(0x000000, 0.5).drawRect(0, 0, bw, bh, 3);</span>
-<span class="cstat-no" title="statement not covered" >    bar.beginFill(color, 1.0).drawRect(0, 0, pct * bw, bh, 2);</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    // Set position</span>
-<span class="cstat-no" title="statement not covered" >    const posY = number === 0 ? height - 8: height - 14;</span>
-<span class="cstat-no" title="statement not covered" >    bar.position.set(0, posY);</span>
-<span class="cstat-no" title="statement not covered" >    return true;</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Draw resource pips as part of the token bars.</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  #drawResources() {</span>
-<span class="cstat-no" title="statement not covered" >    if ( !this.bars.resources ) {</span>
-<span class="cstat-no" title="statement not covered" >      this.bars.resources = this.bars.addChild(new PIXI.Graphics());</span>
-<span class="cstat-no" title="statement not covered" >      this.bars.resources.position.set(0, 0);</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >    const r = this.bars.resources;</span>
-<span class="cstat-no" title="statement not covered" >    r.clear();</span>
-<span class="cstat-no" title="statement not covered" >    const {action, focus} = this.actor.system.resources;</span>
-<span class="cstat-no" title="statement not covered" >    const {width, height} = this.getSize();</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    // Action Pips</span>
-<span class="cstat-no" title="statement not covered" >    const ac = SYSTEM.RESOURCES.action.color;</span>
-<span class="cstat-no" title="statement not covered" >    r.beginFill(ac, 1.0).lineStyle({color: 0x000000, width: 1});</span>
-<span class="cstat-no" title="statement not covered" >    for ( let i=0; i&lt;action.value; i++ ) {</span>
-<span class="cstat-no" title="statement not covered" >      r.drawCircle(6 + (i * 10), height - 8, 3);</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >    r.endFill();</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    // Focus Pips</span>
-<span class="cstat-no" title="statement not covered" >    const fc = SYSTEM.RESOURCES.focus.color;</span>
-<span class="cstat-no" title="statement not covered" >    r.beginFill(fc, 1.0).lineStyle({color: 0x000000, width: 1});</span>
-<span class="cstat-no" title="statement not covered" >    for ( let i=0; i&lt;focus.value; i++ ) {</span>
-<span class="cstat-no" title="statement not covered" >      r.drawCircle(width - 6 - (i * 10), height - 14, 3);</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >    r.endFill();</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * @override</span>
-<span class="cstat-no" title="statement not covered" >   * TODO remove in V13+ if core supports better UI scale</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  _refreshEffects() {</span>
-<span class="cstat-no" title="statement not covered" >    let i = 0;</span>
-<span class="cstat-no" title="statement not covered" >    const size = Math.round(canvas.scene._source.grid.size / 10) * 2; // Unmodified grid size</span>
-<span class="cstat-no" title="statement not covered" >    const rows = Math.floor(this.h / size);</span>
-<span class="cstat-no" title="statement not covered" >    const bg = this.effects.bg.clear().beginFill(0x000000, 0.40).lineStyle(1.0, 0x000000);</span>
-<span class="cstat-no" title="statement not covered" >    for ( const effect of this.effects.children ) {</span>
-<span class="cstat-no" title="statement not covered" >      if ( effect === bg ) continue;</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >      // Overlay effect</span>
-<span class="cstat-no" title="statement not covered" >      if ( effect === this.effects.overlay ) {</span>
-<span class="cstat-no" title="statement not covered" >        const {width, height} = this.getSize();</span>
-<span class="cstat-no" title="statement not covered" >        const size = Math.min(width * 0.6, height * 0.6);</span>
-<span class="cstat-no" title="statement not covered" >        effect.width = effect.height = size;</span>
-<span class="cstat-no" title="statement not covered" >        effect.position = this.getCenterPoint({x: 0, y: 0});</span>
-<span class="cstat-no" title="statement not covered" >        effect.anchor.set(0.5, 0.5);</span>
-<span class="cstat-no" title="statement not covered" >      }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >      // Status effect</span>
-<span class="cstat-no" title="statement not covered" >      else {</span>
-<span class="cstat-no" title="statement not covered" >        effect.width = effect.height = size;</span>
-<span class="cstat-no" title="statement not covered" >        effect.x = Math.floor(i / rows) * size;</span>
-<span class="cstat-no" title="statement not covered" >        effect.y = (i % rows) * size;</span>
-<span class="cstat-no" title="statement not covered" >        bg.drawRoundedRect(effect.x + 1, effect.y + 1, size - 2, size - 2, 2);</span>
-<span class="cstat-no" title="statement not covered" >        i++;</span>
-<span class="cstat-no" title="statement not covered" >      }</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @inheritDoc */</span>
-<span class="cstat-no" title="statement not covered" >  _onControl(options) {</span>
-<span class="cstat-no" title="statement not covered" >    super._onControl(options);</span>
-<span class="cstat-no" title="statement not covered" >    if ( CONFIG.debug.flanking ) this._visualizeEngagement(this.engagement);</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @inheritDoc */</span>
-<span class="cstat-no" title="statement not covered" >  _onRelease(options) {</span>
-<span class="cstat-no" title="statement not covered" >    super._onRelease(options);</span>
-<span class="cstat-no" title="statement not covered" >    this._clearEngagementVisualization();</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-<span class="cstat-no" title="statement not covered" >  /*  Engagement and Flanking                     */</span>
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Compute the rectangular area which represents a "hit" against this Token.</span>
-<span class="cstat-no" title="statement not covered" >   * @returns {Rectangle}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  getHitRectangle() {</span>
-<span class="cstat-no" title="statement not covered" >    const s = canvas.scene.dimensions.size;</span>
-<span class="cstat-no" title="statement not covered" >    return this.bounds.pad(-s/4);</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Compute the rectangular area of engagement for the token on a square grid.</span>
-<span class="cstat-no" title="statement not covered" >   * @param {number} distance</span>
-<span class="cstat-no" title="statement not covered" >   * @returns {Rectangle}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  getEngagementRectangle(distance=1) {</span>
-<span class="cstat-no" title="statement not covered" >    const s = canvas.scene.dimensions.size * distance;</span>
-<span class="cstat-no" title="statement not covered" >    const p0 = canvas.grid.getTopLeftPoint(this.document._source); // Non-animated?</span>
-<span class="cstat-no" title="statement not covered" >    const {w, h} = this;</span>
-<span class="cstat-no" title="statement not covered" >    return new PIXI.Rectangle(p0.x - s, p0.y - s, w + (2 * s), h + (2 * s));</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Update the flanking status of the Token.</span>
-<span class="cstat-no" title="statement not covered" >   * @returns {SwerpgTokenEngagement}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  #computeEngagement() {</span>
-<span class="cstat-no" title="statement not covered" >    if ( this.isPreview || !this.actor || this.actor?.isIncapacitated || this.actor?.isBroken || !canvas.grid.isSquare ) {</span>
-<span class="cstat-no" title="statement not covered" >      return {allies: new Set(), enemies: new Set()};</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >    const {engagementBounds, movePolygon} = this.#computeEngagementSquareGrid();</span>
-<span class="cstat-no" title="statement not covered" >    const {ally, enemy} = this.#getDispositions();</span>
-<span class="cstat-no" title="statement not covered" >    const enemies = new Set();</span>
-<span class="cstat-no" title="statement not covered" >    const allies = new Set();</span>
-<span class="cstat-no" title="statement not covered" >    const value = this.actor.system.movement.engagement;</span>
-<span class="cstat-no" title="statement not covered" >    const engagement = {allies, enemies, engagementBounds, movePolygon, value};</span>
-<span class="cstat-no" title="statement not covered" >    canvas.tokens.quadtree.getObjects(engagementBounds, {</span>
-<span class="cstat-no" title="statement not covered" >      collisionTest: ({t: token}) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >        if ( token.id === this.id ) return false; // Ignore yourself</span>
-<span class="cstat-no" title="statement not covered" >        if ( token.actor?.isBroken || token.actor?.isIncapacitated ) return false;</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >        // Identify friend or foe</span>
-<span class="cstat-no" title="statement not covered" >        let targetSet;</span>
-<span class="cstat-no" title="statement not covered" >        if ( enemy.includes(token.document.disposition) ) targetSet = enemies;</span>
-<span class="cstat-no" title="statement not covered" >        else if ( ally.includes(token.document.disposition) ) targetSet = allies;</span>
-<span class="cstat-no" title="statement not covered" >        if ( !targetSet ) return false;</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >        // Confirm collision against the hit rectangle</span>
-<span class="cstat-no" title="statement not covered" >        const hit = token.getHitRectangle();</span>
-<span class="cstat-no" title="statement not covered" >        const ix = movePolygon.intersectRectangle(hit); // TODO do something more efficient in the future</span>
-<span class="cstat-no" title="statement not covered" >        if (ix.points.length &gt; 0) {</span>
-<span class="cstat-no" title="statement not covered" >          targetSet.add(token);</span>
-<span class="cstat-no" title="statement not covered" >          return true;</span>
-<span class="cstat-no" title="statement not covered" >        }</span>
-<span class="cstat-no" title="statement not covered" >      }</span>
+<span class="cstat-no" title="statement not covered" >    /** @inheritDoc */</span>
+<span class="cstat-no" title="statement not covered" >    static RENDER_FLAGS = Object.assign({}, super.RENDER_FLAGS, {</span>
+<span class="cstat-no" title="statement not covered" >        refreshFlanking: {}</span>
 <span class="cstat-no" title="statement not covered" >    });</span>
-<span class="cstat-no" title="statement not covered" >    this.constructor.computeFlanking(engagement);</span>
-<span class="cstat-no" title="statement not covered" >    return engagement;</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * @typedef {Object} SwerpgTokenEngagement</span>
+<span class="cstat-no" title="statement not covered" >     * @property {Set&lt;Token&gt;} allies      Allied tokens which are adjacent</span>
+<span class="cstat-no" title="statement not covered" >     * @property {Set&lt;Token&gt;} enemies     Enemy tokens which are adjacent</span>
+<span class="cstat-no" title="statement not covered" >     * @property {PIXI.Rectangle} engagementBounds</span>
+<span class="cstat-no" title="statement not covered" >     * @property {PIXI.Polygon} movePolygon</span>
+<span class="cstat-no" title="statement not covered" >     * @property {number} allyBonus</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Process engagement updates applying them symmetrically to other affected tokens.</span>
-<span class="cstat-no" title="statement not covered" >   * @param {SwerpgTokenEngagement} oldEngagement   Prior engagement for this Token</span>
-<span class="cstat-no" title="statement not covered" >   * @param {SwerpgTokenEngagement} newEngagement   New engagement for this Token</span>
-<span class="cstat-no" title="statement not covered" >   * @returns {Set&lt;SwerpgTokenObject&gt;}              The set of Tokens whose flanking status changed</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  #applyEngagementUpdates(oldEngagement, newEngagement) {</span>
-<span class="cstat-no" title="statement not covered" >    const updated = new Set();</span>
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Current engagement status for the Token.</span>
+<span class="cstat-no" title="statement not covered" >     * @type {SwerpgTokenEngagement}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    engagement = {</span>
+<span class="cstat-no" title="statement not covered" >        allies: new Set(),</span>
+<span class="cstat-no" title="statement not covered" >        enemies: new Set()</span>
+<span class="cstat-no" title="statement not covered" >    };</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    // Prior engaged allies</span>
-<span class="cstat-no" title="statement not covered" >    for ( const ally of oldEngagement.allies ) {</span>
-<span class="cstat-no" title="statement not covered" >      updated.add(ally);</span>
-<span class="cstat-no" title="statement not covered" >      if ( newEngagement.allies.has(ally) ) continue;</span>
-<span class="cstat-no" title="statement not covered" >      ally.engagement.allies.delete(this);</span>
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Should the next flanking update be responsible for committing Active Effect changes?</span>
+<span class="cstat-no" title="statement not covered" >     * @type {boolean}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    #commitFlanking = false;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * A Graphics object in the debug layer which displays engagement for this token.</span>
+<span class="cstat-no" title="statement not covered" >     * @type {PIXI.Graphics}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    #engagementDebug;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /*  Rendering                                   */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /** @inheritDoc */</span>
+<span class="cstat-no" title="statement not covered" >    _applyRenderFlags(flags) {</span>
+<span class="cstat-no" title="statement not covered" >        super._applyRenderFlags(flags);</span>
+<span class="cstat-no" title="statement not covered" >        if (flags.refreshFlanking) this.#updateFlanking();</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    // Prior engaged enemies</span>
-<span class="cstat-no" title="statement not covered" >    for ( const enemy of oldEngagement.enemies ) {</span>
-<span class="cstat-no" title="statement not covered" >      updated.add(enemy);</span>
-<span class="cstat-no" title="statement not covered" >      if ( newEngagement.enemies.has(enemy) ) continue;</span>
-<span class="cstat-no" title="statement not covered" >      enemy.engagement.enemies.delete(this);</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * @override</span>
+<span class="cstat-no" title="statement not covered" >     * TODO remove in V13+ if core supports better UI scale</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    _drawTarget(options = {}) {</span>
+<span class="cstat-no" title="statement not covered" >        return super._drawTarget({...options, size: 0.5});</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    // New engaged allies</span>
-<span class="cstat-no" title="statement not covered" >    for ( const ally of newEngagement.allies ) {</span>
-<span class="cstat-no" title="statement not covered" >      updated.add(ally);</span>
-<span class="cstat-no" title="statement not covered" >      if ( oldEngagement.allies.has(ally) ) continue;</span>
-<span class="cstat-no" title="statement not covered" >      ally.engagement.allies.add(this);</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /** @override */</span>
+<span class="cstat-no" title="statement not covered" >    drawBars() {</span>
+<span class="cstat-no" title="statement not covered" >        super.drawBars();</span>
+<span class="cstat-no" title="statement not covered" >        if (!this.actor || (this.document.displayBars === CONST.TOKEN_DISPLAY_MODES.NONE)) return;</span>
+<span class="cstat-no" title="statement not covered" >        this.#drawResources();</span>
+<span class="cstat-no" title="statement not covered" >        if (!this.bars.alphaFilter) {</span>
+<span class="cstat-no" title="statement not covered" >            this.bars.alphaFilter = new PIXI.filters.AlphaFilter();</span>
+<span class="cstat-no" title="statement not covered" >            this.bars.filters = [this.bars.alphaFilter];</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >        this.bars.alphaFilter.alpha = 0.6;</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    // New engaged enemies</span>
-<span class="cstat-no" title="statement not covered" >    for ( const enemy of newEngagement.enemies ) {</span>
-<span class="cstat-no" title="statement not covered" >      updated.add(enemy);</span>
-<span class="cstat-no" title="statement not covered" >      if ( oldEngagement.enemies.has(enemy) ) continue;</span>
-<span class="cstat-no" title="statement not covered" >      enemy.engagement.enemies.add(this);</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * @override</span>
+<span class="cstat-no" title="statement not covered" >     * TODO remove in V13+ if core supports better UI scale</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    _drawBar(number, bar, data) {</span>
+<span class="cstat-no" title="statement not covered" >        const val = Number(data.value);</span>
+<span class="cstat-no" title="statement not covered" >        const pct = Math.clamp(val, 0, data.max) / data.max;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Determine sizing</span>
+<span class="cstat-no" title="statement not covered" >        const {width, height} = this.getSize();</span>
+<span class="cstat-no" title="statement not covered" >        const bw = width;</span>
+<span class="cstat-no" title="statement not covered" >        const bh = number === 0 ? 8 : 6;</span>
+<span class="cstat-no" title="statement not covered" >        const bs = 1;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Determine the color to use</span>
+<span class="cstat-no" title="statement not covered" >        const colors = number === 0 ? SYSTEM.RESOURCES.health.color : SYSTEM.RESOURCES.morale.color;</span>
+<span class="cstat-no" title="statement not covered" >        const color = colors.low.mix(colors.high, pct);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Draw bar</span>
+<span class="cstat-no" title="statement not covered" >        bar.clear();</span>
+<span class="cstat-no" title="statement not covered" >        bar.lineStyle(bs, 0x000000, 1.0);</span>
+<span class="cstat-no" title="statement not covered" >        bar.beginFill(0x000000, 0.5).drawRect(0, 0, bw, bh, 3);</span>
+<span class="cstat-no" title="statement not covered" >        bar.beginFill(color, 1.0).drawRect(0, 0, pct * bw, bh, 2);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Set position</span>
+<span class="cstat-no" title="statement not covered" >        const posY = number === 0 ? height - 8 : height - 14;</span>
+<span class="cstat-no" title="statement not covered" >        bar.position.set(0, posY);</span>
+<span class="cstat-no" title="statement not covered" >        return true;</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    // Recompute flanked state</span>
-<span class="cstat-no" title="statement not covered" >    for ( const token of updated ) this.constructor.computeFlanking(token.engagement);</span>
-<span class="cstat-no" title="statement not covered" >    return updated;</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Draw resource pips as part of the token bars.</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    #drawResources() {</span>
+<span class="cstat-no" title="statement not covered" >        if (!this.bars.resources) {</span>
+<span class="cstat-no" title="statement not covered" >            this.bars.resources = this.bars.addChild(new PIXI.Graphics());</span>
+<span class="cstat-no" title="statement not covered" >            this.bars.resources.position.set(0, 0);</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >        const r = this.bars.resources;</span>
+<span class="cstat-no" title="statement not covered" >        r.clear();</span>
+<span class="cstat-no" title="statement not covered" >        const {action, focus} = this.actor.system.resources;</span>
+<span class="cstat-no" title="statement not covered" >        const {width, height} = this.getSize();</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Compute the bounds and eligible polygon for flanking on a square grid.</span>
-<span class="cstat-no" title="statement not covered" >   * @returns {{engagementBounds: PIXI.Rectangle, movePolygon: PointSourcePolygon}}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  #computeEngagementSquareGrid() {</span>
-<span class="cstat-no" title="statement not covered" >    const c = this.center;</span>
-<span class="cstat-no" title="statement not covered" >    const engagementBounds = this.getEngagementRectangle();</span>
-<span class="cstat-no" title="statement not covered" >    const movePolygon = ClockwiseSweepPolygon.create(c, {type: "move", boundaryShapes: [engagementBounds]});</span>
-<span class="cstat-no" title="statement not covered" >    return {engagementBounds, movePolygon};</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >        // Action Pips</span>
+<span class="cstat-no" title="statement not covered" >        const ac = SYSTEM.RESOURCES.action.color;</span>
+<span class="cstat-no" title="statement not covered" >        r.beginFill(ac, 1.0).lineStyle({color: 0x000000, width: 1});</span>
+<span class="cstat-no" title="statement not covered" >        for (let i = 0; i &lt; action.value; i++) {</span>
+<span class="cstat-no" title="statement not covered" >            r.drawCircle(6 + (i * 10), height - 8, 3);</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >        r.endFill();</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Classify Token dispositions into allied and enemy groups.</span>
-<span class="cstat-no" title="statement not covered" >   * @returns {{ally: number[], enemy: number[]}}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  #getDispositions() {</span>
-<span class="cstat-no" title="statement not covered" >    const D = CONST.TOKEN_DISPOSITIONS;</span>
-<span class="cstat-no" title="statement not covered" >    switch ( this.document.disposition ) {</span>
-<span class="cstat-no" title="statement not covered" >      case D.SECRET:</span>
-<span class="cstat-no" title="statement not covered" >        return {ally: [], enemy: []}</span>
-<span class="cstat-no" title="statement not covered" >      case D.HOSTILE:</span>
-<span class="cstat-no" title="statement not covered" >        return {ally: [D.HOSTILE], enemy: [D.NEUTRAL, D.FRIENDLY]}</span>
-<span class="cstat-no" title="statement not covered" >      case D.NEUTRAL:</span>
-<span class="cstat-no" title="statement not covered" >        return {ally: [D.NEUTRAL, D.FRIENDLY], enemy: [D.HOSTILE]}</span>
-<span class="cstat-no" title="statement not covered" >      case D.FRIENDLY:</span>
-<span class="cstat-no" title="statement not covered" >        return {ally: [D.NEUTRAL, D.FRIENDLY], enemy: [D.HOSTILE]}</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Set the render flag to schedule a flanking refresh.</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  refreshFlanking(commit) {</span>
-<span class="cstat-no" title="statement not covered" >    const activeGM = game.users.activeGM;</span>
-<span class="cstat-no" title="statement not covered" >    commit ??= (activeGM === game.user) &amp;&amp; (activeGM?.viewedScene === canvas.id);</span>
-<span class="cstat-no" title="statement not covered" >    if ( commit ) this.#commitFlanking = true;</span>
-<span class="cstat-no" title="statement not covered" >    this.renderFlags.set({refreshFlanking: true});</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Update flanking conditions for all actors affected by a Token change.</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  #updateFlanking() {</span>
-<span class="cstat-no" title="statement not covered" >    const engagement = this.#computeEngagement();</span>
-<span class="cstat-no" title="statement not covered" >    const toUpdate = this.#applyEngagementUpdates(this.engagement, engagement);</span>
-<span class="cstat-no" title="statement not covered" >    this.engagement = engagement; // Save the new state</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    // Debug visualize enemies</span>
-<span class="cstat-no" title="statement not covered" >    this._visualizeEngagement(engagement);</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    // Update other Actors</span>
-<span class="cstat-no" title="statement not covered" >    if ( !this.#commitFlanking ) return;</span>
-<span class="cstat-no" title="statement not covered" >    this.#commitFlanking = false;</span>
-<span class="cstat-no" title="statement not covered" >    for ( const token of toUpdate ) {</span>
-<span class="cstat-no" title="statement not covered" >      token.actor.commitFlanking(token.engagement);</span>
+<span class="cstat-no" title="statement not covered" >        // Focus Pips</span>
+<span class="cstat-no" title="statement not covered" >        const fc = SYSTEM.RESOURCES.focus.color;</span>
+<span class="cstat-no" title="statement not covered" >        r.beginFill(fc, 1.0).lineStyle({color: 0x000000, width: 1});</span>
+<span class="cstat-no" title="statement not covered" >        for (let i = 0; i &lt; focus.value; i++) {</span>
+<span class="cstat-no" title="statement not covered" >            r.drawCircle(width - 6 - (i * 10), height - 14, 3);</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >        r.endFill();</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    // Update our own actor</span>
-<span class="cstat-no" title="statement not covered" >    if ( this.actor ) this.actor.commitFlanking(this.engagement);</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * @override</span>
+<span class="cstat-no" title="statement not covered" >     * TODO remove in V13+ if core supports better UI scale</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    _refreshEffects() {</span>
+<span class="cstat-no" title="statement not covered" >        let i = 0;</span>
+<span class="cstat-no" title="statement not covered" >        const size = Math.round(canvas.scene._source.grid.size / 10) * 2; // Unmodified grid size</span>
+<span class="cstat-no" title="statement not covered" >        const rows = Math.floor(this.h / size);</span>
+<span class="cstat-no" title="statement not covered" >        const bg = this.effects.bg.clear().beginFill(0x000000, 0.40).lineStyle(1.0, 0x000000);</span>
+<span class="cstat-no" title="statement not covered" >        for (const effect of this.effects.children) {</span>
+<span class="cstat-no" title="statement not covered" >            if (effect === bg) continue;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Compute the Flanked stage for a certain engagement state.</span>
-<span class="cstat-no" title="statement not covered" >   * @param {SwerpgTokenEngagement} engagement</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  static computeFlanking(engagement) {</span>
-<span class="cstat-no" title="statement not covered" >    engagement.allyBonus = engagement.allies.reduce((bonus, ally) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >      const mutual = ally.engagement.enemies.intersection(engagement.enemies);</span>
-<span class="cstat-no" title="statement not covered" >      if ( !mutual.size ) return bonus;</span>
-<span class="cstat-no" title="statement not covered" >      bonus += Math.min((ally?.actor.system.movement.engagement ?? 1), mutual.size);</span>
-<span class="cstat-no" title="statement not covered" >      return bonus;</span>
-<span class="cstat-no" title="statement not covered" >    }, 0);</span>
-<span class="cstat-no" title="statement not covered" >    engagement.flanked = Math.max(engagement.enemies.size - engagement.allyBonus - engagement.value, 0);</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >            // Overlay effect</span>
+<span class="cstat-no" title="statement not covered" >            if (effect === this.effects.overlay) {</span>
+<span class="cstat-no" title="statement not covered" >                const {width, height} = this.getSize();</span>
+<span class="cstat-no" title="statement not covered" >                const size = Math.min(width * 0.6, height * 0.6);</span>
+<span class="cstat-no" title="statement not covered" >                effect.width = effect.height = size;</span>
+<span class="cstat-no" title="statement not covered" >                effect.position = this.getCenterPoint({x: 0, y: 0});</span>
+<span class="cstat-no" title="statement not covered" >                effect.anchor.set(0.5, 0.5);</span>
+<span class="cstat-no" title="statement not covered" >            }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-<span class="cstat-no" title="statement not covered" >  /*  Socket Listeners and Handlers               */</span>
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @inheritDoc */</span>
-<span class="cstat-no" title="statement not covered" >  _onCreate(data, options, userId) {</span>
-<span class="cstat-no" title="statement not covered" >    super._onCreate(data, options, userId);</span>
-<span class="cstat-no" title="statement not covered" >    this.engagement = {allies: new Set(), enemies: new Set()}; // "Prior" engagement</span>
-<span class="cstat-no" title="statement not covered" >    this.refreshFlanking();</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @inheritDoc */</span>
-<span class="cstat-no" title="statement not covered" >  _onUpdate(data, options, userId) {</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    // Token movement speed</span>
-<span class="cstat-no" title="statement not covered" >    const positionChange = ("x" in data) || ("y" in data);</span>
-<span class="cstat-no" title="statement not covered" >    if ( positionChange &amp;&amp; this.actor ) {</span>
-<span class="cstat-no" title="statement not covered" >      options.animation ||= {};</span>
-<span class="cstat-no" title="statement not covered" >      options.animation.movementSpeed = (this.actor.system.movement.stride * 2);</span>
+<span class="cstat-no" title="statement not covered" >            // Status effect</span>
+<span class="cstat-no" title="statement not covered" >            else {</span>
+<span class="cstat-no" title="statement not covered" >                effect.width = effect.height = size;</span>
+<span class="cstat-no" title="statement not covered" >                effect.x = Math.floor(i / rows) * size;</span>
+<span class="cstat-no" title="statement not covered" >                effect.y = (i % rows) * size;</span>
+<span class="cstat-no" title="statement not covered" >                bg.drawRoundedRect(effect.x + 1, effect.y + 1, size - 2, size - 2, 2);</span>
+<span class="cstat-no" title="statement not covered" >                i++;</span>
+<span class="cstat-no" title="statement not covered" >            }</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    // Standard Token update workflow</span>
-<span class="cstat-no" title="statement not covered" >    super._onUpdate(data, options, userId);</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    // Flanking Updates</span>
-<span class="cstat-no" title="statement not covered" >    const flankingChange = ["x", "y", "width", "height", "disposition", "actorId", "actorLink"].some(k =&gt; k in data);</span>
-<span class="cstat-no" title="statement not covered" >    if ( flankingChange ) this.refreshFlanking();</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @inheritDoc */</span>
-<span class="cstat-no" title="statement not covered" >  _onDelete(options, userId) {</span>
-<span class="cstat-no" title="statement not covered" >    super._onDelete(options, userId);</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    // Apply flanking updates</span>
-<span class="cstat-no" title="statement not covered" >    const activeGM = game.users.activeGM;</span>
-<span class="cstat-no" title="statement not covered" >    const commit = (activeGM === game.user) &amp;&amp; (activeGM?.viewedScene === canvas.id);</span>
-<span class="cstat-no" title="statement not covered" >    const newEngagement = {allies: new Set(), enemies: new Set()};</span>
-<span class="cstat-no" title="statement not covered" >    const toUpdate = this.#applyEngagementUpdates(this.engagement, newEngagement);</span>
-<span class="cstat-no" title="statement not covered" >    if ( commit ) {</span>
-<span class="cstat-no" title="statement not covered" >      for ( const token of toUpdate ) token.actor.commitFlanking(token.engagement);</span>
+<span class="cstat-no" title="statement not covered" >    /** @inheritDoc */</span>
+<span class="cstat-no" title="statement not covered" >    _onControl(options) {</span>
+<span class="cstat-no" title="statement not covered" >        super._onControl(options);</span>
+<span class="cstat-no" title="statement not covered" >        if (CONFIG.debug.flanking) this._visualizeEngagement(this.engagement);</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >    this.engagement = newEngagement;</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-<span class="cstat-no" title="statement not covered" >  /*  Debugging and Visualization                 */</span>
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Draw the visualization of Token engagement.</span>
-<span class="cstat-no" title="statement not covered" >   * @param engagement</span>
-<span class="cstat-no" title="statement not covered" >   * @internal</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  _visualizeEngagement(engagement) {</span>
-<span class="cstat-no" title="statement not covered" >    if ( !CONFIG.debug.flanking ) return;</span>
-<span class="cstat-no" title="statement not covered" >    if ( !this.#engagementDebug ) {</span>
-<span class="cstat-no" title="statement not covered" >      this.#engagementDebug = canvas.controls.debug.addChild(new PIXI.Graphics());</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >      // Enemies Text</span>
-<span class="cstat-no" title="statement not covered" >      this.#engagementDebug.enemies = this.#engagementDebug.addChild(new PreciseText("", PreciseText.getTextStyle({fontSize: 20})));</span>
-<span class="cstat-no" title="statement not covered" >      this.#engagementDebug.enemies.anchor.set(0.5, 1);</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >      // Engagement Text</span>
-<span class="cstat-no" title="statement not covered" >      this.#engagementDebug.engagement = this.#engagementDebug.addChild(new PreciseText("", PreciseText.getTextStyle({fontSize: 20})));</span>
-<span class="cstat-no" title="statement not covered" >      this.#engagementDebug.engagement.anchor.set(0.5, 0);</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >      // Flanked Text</span>
-<span class="cstat-no" title="statement not covered" >      this.#engagementDebug.flanked = this.#engagementDebug.addChild(new PreciseText("", PreciseText.getTextStyle({fontSize: 32})));</span>
-<span class="cstat-no" title="statement not covered" >      this.#engagementDebug.flanked.anchor.set(0.5, 0.5);</span>
+<span class="cstat-no" title="statement not covered" >    /** @inheritDoc */</span>
+<span class="cstat-no" title="statement not covered" >    _onRelease(options) {</span>
+<span class="cstat-no" title="statement not covered" >        super._onRelease(options);</span>
+<span class="cstat-no" title="statement not covered" >        this._clearEngagementVisualization();</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >    const e = this.#engagementDebug.clear();</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    // Movement polygon</span>
-<span class="cstat-no" title="statement not covered" >    e.beginFill(0x00FFFF, 0.1).lineStyle({width: 3, color: 0x00FFFF, alpha: 1.0}).drawShape(engagement.movePolygon).endFill();</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /*  Engagement and Flanking                     */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    // Enemy bounds</span>
-<span class="cstat-no" title="statement not covered" >    e.beginFill(0xFF0000, 0.1).lineStyle({width: 2, color: 0xFF0000, alpha: 1.0});</span>
-<span class="cstat-no" title="statement not covered" >    for ( const enemy of engagement.enemies ) e.drawShape(enemy.bounds);</span>
-<span class="cstat-no" title="statement not covered" >    e.endFill();</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    // Ally bounds</span>
-<span class="cstat-no" title="statement not covered" >    e.beginFill(0x00FF00, 0.1).lineStyle({width: 2, color: 0x00FF00, alpha: 1.0});</span>
-<span class="cstat-no" title="statement not covered" >    for ( const ally of engagement.allies ) e.drawShape(ally.bounds);</span>
-<span class="cstat-no" title="statement not covered" >    e.endFill();</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    // Flanking State</span>
-<span class="cstat-no" title="statement not covered" >    const {x, y} = this.document._source;</span>
-<span class="cstat-no" title="statement not covered" >    const {x: cx, y: cy} = this.getCenterPoint({x, y});</span>
-<span class="cstat-no" title="statement not covered" >    this.#engagementDebug.enemies.text = `${engagement.enemies.size} Enemies`;</span>
-<span class="cstat-no" title="statement not covered" >    this.#engagementDebug.enemies.position.set(cx, y);</span>
-<span class="cstat-no" title="statement not covered" >    this.#engagementDebug.enemies.visible = true;</span>
-<span class="cstat-no" title="statement not covered" >    this.#engagementDebug.engagement.text = `Engagement ${engagement.value + engagement.allyBonus}`;</span>
-<span class="cstat-no" title="statement not covered" >    this.#engagementDebug.engagement.position.set(cx, y + this.h);</span>
-<span class="cstat-no" title="statement not covered" >    this.#engagementDebug.engagement.visible = true;</span>
-<span class="cstat-no" title="statement not covered" >    this.#engagementDebug.flanked.text = `Flanked ${engagement.flanked}`;</span>
-<span class="cstat-no" title="statement not covered" >    this.#engagementDebug.flanked.position.set(cx, cy);</span>
-<span class="cstat-no" title="statement not covered" >    this.#engagementDebug.flanked.visible = true;</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Clear the visualization of Token engagement.</span>
-<span class="cstat-no" title="statement not covered" >   * @internal</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  _clearEngagementVisualization() {</span>
-<span class="cstat-no" title="statement not covered" >    if ( !this.#engagementDebug ) return;</span>
-<span class="cstat-no" title="statement not covered" >    this.#engagementDebug.clear();</span>
-<span class="cstat-no" title="statement not covered" >    this.#engagementDebug.enemies.visible = false;</span>
-<span class="cstat-no" title="statement not covered" >    this.#engagementDebug.engagement.visible = false;</span>
-<span class="cstat-no" title="statement not covered" >    this.#engagementDebug.flanked.visible = false;</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * TODO: figure out how to use this</span>
-<span class="cstat-no" title="statement not covered" >   * @param g</span>
-<span class="cstat-no" title="statement not covered" >   * @private</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  _visualizeOffensiveRange(g) {</span>
-<span class="cstat-no" title="statement not covered" >    const c = this.center;</span>
-<span class="cstat-no" title="statement not covered" >    const r = this.actor.equipment.weapons.maxRange + Math.floor(this.actor.size / 2);</span>
-<span class="cstat-no" title="statement not covered" >    const range = new PIXI.Polygon(canvas.grid.getCircle(c, r));</span>
-<span class="cstat-no" title="statement not covered" >    const offsets = swerpg.api.grid.getTargetAreaOffsets(c, range);</span>
-<span class="cstat-no" title="statement not covered" >    g.beginFill(0xFF0000, 0.1);</span>
-<span class="cstat-no" title="statement not covered" >    const s = canvas.dimensions.size;</span>
-<span class="cstat-no" title="statement not covered" >    for ( const o of offsets ) {</span>
-<span class="cstat-no" title="statement not covered" >      const {x, y} = canvas.grid.getTopLeftPoint(o);</span>
-<span class="cstat-no" title="statement not covered" >      g.drawRect(x, y, s, s);</span>
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Compute the rectangular area which represents a "hit" against this Token.</span>
+<span class="cstat-no" title="statement not covered" >     * @returns {Rectangle}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    getHitRectangle() {</span>
+<span class="cstat-no" title="statement not covered" >        const s = canvas.scene.dimensions.size;</span>
+<span class="cstat-no" title="statement not covered" >        return this.bounds.pad(-s / 4);</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >    g.endFill();</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Compute the rectangular area of engagement for the token on a square grid.</span>
+<span class="cstat-no" title="statement not covered" >     * @param {number} distance</span>
+<span class="cstat-no" title="statement not covered" >     * @returns {Rectangle}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    getEngagementRectangle(distance = 1) {</span>
+<span class="cstat-no" title="statement not covered" >        const s = canvas.scene.dimensions.size * distance;</span>
+<span class="cstat-no" title="statement not covered" >        const p0 = canvas.grid.getTopLeftPoint(this.document._source); // Non-animated?</span>
+<span class="cstat-no" title="statement not covered" >        const {w, h} = this;</span>
+<span class="cstat-no" title="statement not covered" >        return new PIXI.Rectangle(p0.x - s, p0.y - s, w + (2 * s), h + (2 * s));</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Update the flanking status of the Token.</span>
+<span class="cstat-no" title="statement not covered" >     * @returns {SwerpgTokenEngagement}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    #computeEngagement() {</span>
+<span class="cstat-no" title="statement not covered" >        if (this.isPreview || !this.actor || this.actor?.isIncapacitated || this.actor?.isBroken || !canvas.grid.isSquare) {</span>
+<span class="cstat-no" title="statement not covered" >            return {allies: new Set(), enemies: new Set()};</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >        const {engagementBounds, movePolygon} = this.#computeEngagementSquareGrid();</span>
+<span class="cstat-no" title="statement not covered" >        const {ally, enemy} = this.#getDispositions();</span>
+<span class="cstat-no" title="statement not covered" >        const enemies = new Set();</span>
+<span class="cstat-no" title="statement not covered" >        const allies = new Set();</span>
+<span class="cstat-no" title="statement not covered" >        const value = this.actor.system.movement.engagement;</span>
+<span class="cstat-no" title="statement not covered" >        const engagement = {allies, enemies, engagementBounds, movePolygon, value};</span>
+<span class="cstat-no" title="statement not covered" >        canvas.tokens.quadtree.getObjects(engagementBounds, {</span>
+<span class="cstat-no" title="statement not covered" >            collisionTest: ({t: token}) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >                if (token.id === this.id) return false; // Ignore yourself</span>
+<span class="cstat-no" title="statement not covered" >                if (token.actor?.isBroken || token.actor?.isIncapacitated) return false;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                // Identify friend or foe</span>
+<span class="cstat-no" title="statement not covered" >                let targetSet;</span>
+<span class="cstat-no" title="statement not covered" >                if (enemy.includes(token.document.disposition)) targetSet = enemies;</span>
+<span class="cstat-no" title="statement not covered" >                else if (ally.includes(token.document.disposition)) targetSet = allies;</span>
+<span class="cstat-no" title="statement not covered" >                if (!targetSet) return false;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                // Confirm collision against the hit rectangle</span>
+<span class="cstat-no" title="statement not covered" >                const hit = token.getHitRectangle();</span>
+<span class="cstat-no" title="statement not covered" >                const ix = movePolygon.intersectRectangle(hit); // TODO do something more efficient in the future</span>
+<span class="cstat-no" title="statement not covered" >                if (ix.points.length &gt; 0) {</span>
+<span class="cstat-no" title="statement not covered" >                    targetSet.add(token);</span>
+<span class="cstat-no" title="statement not covered" >                    return true;</span>
+<span class="cstat-no" title="statement not covered" >                }</span>
+<span class="cstat-no" title="statement not covered" >            }</span>
+<span class="cstat-no" title="statement not covered" >        });</span>
+<span class="cstat-no" title="statement not covered" >        this.constructor.computeFlanking(engagement);</span>
+<span class="cstat-no" title="statement not covered" >        return engagement;</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Process engagement updates applying them symmetrically to other affected tokens.</span>
+<span class="cstat-no" title="statement not covered" >     * @param {SwerpgTokenEngagement} oldEngagement   Prior engagement for this Token</span>
+<span class="cstat-no" title="statement not covered" >     * @param {SwerpgTokenEngagement} newEngagement   New engagement for this Token</span>
+<span class="cstat-no" title="statement not covered" >     * @returns {Set&lt;SwerpgTokenObject&gt;}              The set of Tokens whose flanking status changed</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    #applyEngagementUpdates(oldEngagement, newEngagement) {</span>
+<span class="cstat-no" title="statement not covered" >        const updated = new Set();</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Prior engaged allies</span>
+<span class="cstat-no" title="statement not covered" >        for (const ally of oldEngagement.allies) {</span>
+<span class="cstat-no" title="statement not covered" >            updated.add(ally);</span>
+<span class="cstat-no" title="statement not covered" >            if (newEngagement.allies.has(ally)) continue;</span>
+<span class="cstat-no" title="statement not covered" >            ally.engagement.allies.delete(this);</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Prior engaged enemies</span>
+<span class="cstat-no" title="statement not covered" >        for (const enemy of oldEngagement.enemies) {</span>
+<span class="cstat-no" title="statement not covered" >            updated.add(enemy);</span>
+<span class="cstat-no" title="statement not covered" >            if (newEngagement.enemies.has(enemy)) continue;</span>
+<span class="cstat-no" title="statement not covered" >            enemy.engagement.enemies.delete(this);</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // New engaged allies</span>
+<span class="cstat-no" title="statement not covered" >        for (const ally of newEngagement.allies) {</span>
+<span class="cstat-no" title="statement not covered" >            updated.add(ally);</span>
+<span class="cstat-no" title="statement not covered" >            if (oldEngagement.allies.has(ally)) continue;</span>
+<span class="cstat-no" title="statement not covered" >            ally.engagement.allies.add(this);</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // New engaged enemies</span>
+<span class="cstat-no" title="statement not covered" >        for (const enemy of newEngagement.enemies) {</span>
+<span class="cstat-no" title="statement not covered" >            updated.add(enemy);</span>
+<span class="cstat-no" title="statement not covered" >            if (oldEngagement.enemies.has(enemy)) continue;</span>
+<span class="cstat-no" title="statement not covered" >            enemy.engagement.enemies.add(this);</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Recompute flanked state</span>
+<span class="cstat-no" title="statement not covered" >        for (const token of updated) this.constructor.computeFlanking(token.engagement);</span>
+<span class="cstat-no" title="statement not covered" >        return updated;</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Compute the bounds and eligible polygon for flanking on a square grid.</span>
+<span class="cstat-no" title="statement not covered" >     * @returns {{engagementBounds: PIXI.Rectangle, movePolygon: PointSourcePolygon}}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    #computeEngagementSquareGrid() {</span>
+<span class="cstat-no" title="statement not covered" >        const c = this.center;</span>
+<span class="cstat-no" title="statement not covered" >        const engagementBounds = this.getEngagementRectangle();</span>
+<span class="cstat-no" title="statement not covered" >        const movePolygon = ClockwiseSweepPolygon.create(c, {type: "move", boundaryShapes: [engagementBounds]});</span>
+<span class="cstat-no" title="statement not covered" >        return {engagementBounds, movePolygon};</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Classify Token dispositions into allied and enemy groups.</span>
+<span class="cstat-no" title="statement not covered" >     * @returns {{ally: number[], enemy: number[]}}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    #getDispositions() {</span>
+<span class="cstat-no" title="statement not covered" >        const D = CONST.TOKEN_DISPOSITIONS;</span>
+<span class="cstat-no" title="statement not covered" >        switch (this.document.disposition) {</span>
+<span class="cstat-no" title="statement not covered" >            case D.SECRET:</span>
+<span class="cstat-no" title="statement not covered" >                return {ally: [], enemy: []}</span>
+<span class="cstat-no" title="statement not covered" >            case D.HOSTILE:</span>
+<span class="cstat-no" title="statement not covered" >                return {ally: [D.HOSTILE], enemy: [D.NEUTRAL, D.FRIENDLY]}</span>
+<span class="cstat-no" title="statement not covered" >            case D.NEUTRAL:</span>
+<span class="cstat-no" title="statement not covered" >                return {ally: [D.NEUTRAL, D.FRIENDLY], enemy: [D.HOSTILE]}</span>
+<span class="cstat-no" title="statement not covered" >            case D.FRIENDLY:</span>
+<span class="cstat-no" title="statement not covered" >                return {ally: [D.NEUTRAL, D.FRIENDLY], enemy: [D.HOSTILE]}</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Set the render flag to schedule a flanking refresh.</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    refreshFlanking(commit) {</span>
+<span class="cstat-no" title="statement not covered" >        const activeGM = game.users.activeGM;</span>
+<span class="cstat-no" title="statement not covered" >        commit ??= (activeGM === game.user) &amp;&amp; (activeGM?.viewedScene === canvas.id);</span>
+<span class="cstat-no" title="statement not covered" >        if (commit) this.#commitFlanking = true;</span>
+<span class="cstat-no" title="statement not covered" >        this.renderFlags.set({refreshFlanking: true});</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Update flanking conditions for all actors affected by a Token change.</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    #updateFlanking() {</span>
+<span class="cstat-no" title="statement not covered" >        const engagement = this.#computeEngagement();</span>
+<span class="cstat-no" title="statement not covered" >        const toUpdate = this.#applyEngagementUpdates(this.engagement, engagement);</span>
+<span class="cstat-no" title="statement not covered" >        this.engagement = engagement; // Save the new state</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Debug visualize enemies</span>
+<span class="cstat-no" title="statement not covered" >        this._visualizeEngagement(engagement);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Update other Actors</span>
+<span class="cstat-no" title="statement not covered" >        if (!this.#commitFlanking) return;</span>
+<span class="cstat-no" title="statement not covered" >        this.#commitFlanking = false;</span>
+<span class="cstat-no" title="statement not covered" >        for (const token of toUpdate) {</span>
+<span class="cstat-no" title="statement not covered" >            token.actor.commitFlanking(token.engagement);</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Update our own actor</span>
+<span class="cstat-no" title="statement not covered" >        if (this.actor) this.actor.commitFlanking(this.engagement);</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Compute the Flanked stage for a certain engagement state.</span>
+<span class="cstat-no" title="statement not covered" >     * @param {SwerpgTokenEngagement} engagement</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    static computeFlanking(engagement) {</span>
+<span class="cstat-no" title="statement not covered" >        engagement.allyBonus = engagement.allies.reduce((bonus, ally) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >            const mutual = ally.engagement.enemies.intersection(engagement.enemies);</span>
+<span class="cstat-no" title="statement not covered" >            if (!mutual.size) return bonus;</span>
+<span class="cstat-no" title="statement not covered" >            bonus += Math.min((ally?.actor.system.movement.engagement ?? 1), mutual.size);</span>
+<span class="cstat-no" title="statement not covered" >            return bonus;</span>
+<span class="cstat-no" title="statement not covered" >        }, 0);</span>
+<span class="cstat-no" title="statement not covered" >        engagement.flanked = Math.max(engagement.enemies.size - engagement.allyBonus - engagement.value, 0);</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /*  Socket Listeners and Handlers               */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /** @inheritDoc */</span>
+<span class="cstat-no" title="statement not covered" >    _onCreate(data, options, userId) {</span>
+<span class="cstat-no" title="statement not covered" >        super._onCreate(data, options, userId);</span>
+<span class="cstat-no" title="statement not covered" >        this.engagement = {allies: new Set(), enemies: new Set()}; // "Prior" engagement</span>
+<span class="cstat-no" title="statement not covered" >        this.refreshFlanking();</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /** @inheritDoc */</span>
+<span class="cstat-no" title="statement not covered" >    _onUpdate(data, options, userId) {</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Token movement speed</span>
+<span class="cstat-no" title="statement not covered" >        const positionChange = ("x" in data) || ("y" in data);</span>
+<span class="cstat-no" title="statement not covered" >        if (positionChange &amp;&amp; this.actor) {</span>
+<span class="cstat-no" title="statement not covered" >            options.animation ||= {};</span>
+<span class="cstat-no" title="statement not covered" >            options.animation.movementSpeed = (this.actor.system.movement.stride * 2);</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Standard Token update workflow</span>
+<span class="cstat-no" title="statement not covered" >        super._onUpdate(data, options, userId);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Flanking Updates</span>
+<span class="cstat-no" title="statement not covered" >        const flankingChange = ["x", "y", "width", "height", "disposition", "actorId", "actorLink"].some(k =&gt; k in data);</span>
+<span class="cstat-no" title="statement not covered" >        if (flankingChange) this.refreshFlanking();</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /** @inheritDoc */</span>
+<span class="cstat-no" title="statement not covered" >    _onDelete(options, userId) {</span>
+<span class="cstat-no" title="statement not covered" >        super._onDelete(options, userId);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Apply flanking updates</span>
+<span class="cstat-no" title="statement not covered" >        const activeGM = game.users.activeGM;</span>
+<span class="cstat-no" title="statement not covered" >        const commit = (activeGM === game.user) &amp;&amp; (activeGM?.viewedScene === canvas.id);</span>
+<span class="cstat-no" title="statement not covered" >        const newEngagement = {allies: new Set(), enemies: new Set()};</span>
+<span class="cstat-no" title="statement not covered" >        const toUpdate = this.#applyEngagementUpdates(this.engagement, newEngagement);</span>
+<span class="cstat-no" title="statement not covered" >        if (commit) {</span>
+<span class="cstat-no" title="statement not covered" >            for (const token of toUpdate) token.actor.commitFlanking(token.engagement);</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >        this.engagement = newEngagement;</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /*  Debugging and Visualization                 */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Draw the visualization of Token engagement.</span>
+<span class="cstat-no" title="statement not covered" >     * @param engagement</span>
+<span class="cstat-no" title="statement not covered" >     * @internal</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    _visualizeEngagement(engagement) {</span>
+<span class="cstat-no" title="statement not covered" >        if (!CONFIG.debug.flanking) return;</span>
+<span class="cstat-no" title="statement not covered" >        if (!this.#engagementDebug) {</span>
+<span class="cstat-no" title="statement not covered" >            this.#engagementDebug = canvas.controls.debug.addChild(new PIXI.Graphics());</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            // Enemies Text</span>
+<span class="cstat-no" title="statement not covered" >            this.#engagementDebug.enemies = this.#engagementDebug.addChild(new PreciseText("", PreciseText.getTextStyle({fontSize: 20})));</span>
+<span class="cstat-no" title="statement not covered" >            this.#engagementDebug.enemies.anchor.set(0.5, 1);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            // Engagement Text</span>
+<span class="cstat-no" title="statement not covered" >            this.#engagementDebug.engagement = this.#engagementDebug.addChild(new PreciseText("", PreciseText.getTextStyle({fontSize: 20})));</span>
+<span class="cstat-no" title="statement not covered" >            this.#engagementDebug.engagement.anchor.set(0.5, 0);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            // Flanked Text</span>
+<span class="cstat-no" title="statement not covered" >            this.#engagementDebug.flanked = this.#engagementDebug.addChild(new PreciseText("", PreciseText.getTextStyle({fontSize: 32})));</span>
+<span class="cstat-no" title="statement not covered" >            this.#engagementDebug.flanked.anchor.set(0.5, 0.5);</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >        const e = this.#engagementDebug.clear();</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Movement polygon</span>
+<span class="cstat-no" title="statement not covered" >        e.beginFill(0x00FFFF, 0.1).lineStyle({</span>
+<span class="cstat-no" title="statement not covered" >            width: 3,</span>
+<span class="cstat-no" title="statement not covered" >            color: 0x00FFFF,</span>
+<span class="cstat-no" title="statement not covered" >            alpha: 1.0</span>
+<span class="cstat-no" title="statement not covered" >        }).drawShape(engagement.movePolygon).endFill();</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Enemy bounds</span>
+<span class="cstat-no" title="statement not covered" >        e.beginFill(0xFF0000, 0.1).lineStyle({width: 2, color: 0xFF0000, alpha: 1.0});</span>
+<span class="cstat-no" title="statement not covered" >        for (const enemy of engagement.enemies) e.drawShape(enemy.bounds);</span>
+<span class="cstat-no" title="statement not covered" >        e.endFill();</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Ally bounds</span>
+<span class="cstat-no" title="statement not covered" >        e.beginFill(0x00FF00, 0.1).lineStyle({width: 2, color: 0x00FF00, alpha: 1.0});</span>
+<span class="cstat-no" title="statement not covered" >        for (const ally of engagement.allies) e.drawShape(ally.bounds);</span>
+<span class="cstat-no" title="statement not covered" >        e.endFill();</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Flanking State</span>
+<span class="cstat-no" title="statement not covered" >        const {x, y} = this.document._source;</span>
+<span class="cstat-no" title="statement not covered" >        const {x: cx, y: cy} = this.getCenterPoint({x, y});</span>
+<span class="cstat-no" title="statement not covered" >        this.#engagementDebug.enemies.text = `${engagement.enemies.size} Enemies`;</span>
+<span class="cstat-no" title="statement not covered" >        this.#engagementDebug.enemies.position.set(cx, y);</span>
+<span class="cstat-no" title="statement not covered" >        this.#engagementDebug.enemies.visible = true;</span>
+<span class="cstat-no" title="statement not covered" >        this.#engagementDebug.engagement.text = `Engagement ${engagement.value + engagement.allyBonus}`;</span>
+<span class="cstat-no" title="statement not covered" >        this.#engagementDebug.engagement.position.set(cx, y + this.h);</span>
+<span class="cstat-no" title="statement not covered" >        this.#engagementDebug.engagement.visible = true;</span>
+<span class="cstat-no" title="statement not covered" >        this.#engagementDebug.flanked.text = `Flanked ${engagement.flanked}`;</span>
+<span class="cstat-no" title="statement not covered" >        this.#engagementDebug.flanked.position.set(cx, cy);</span>
+<span class="cstat-no" title="statement not covered" >        this.#engagementDebug.flanked.visible = true;</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Clear the visualization of Token engagement.</span>
+<span class="cstat-no" title="statement not covered" >     * @internal</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    _clearEngagementVisualization() {</span>
+<span class="cstat-no" title="statement not covered" >        if (!this.#engagementDebug) return;</span>
+<span class="cstat-no" title="statement not covered" >        this.#engagementDebug.clear();</span>
+<span class="cstat-no" title="statement not covered" >        this.#engagementDebug.enemies.visible = false;</span>
+<span class="cstat-no" title="statement not covered" >        this.#engagementDebug.engagement.visible = false;</span>
+<span class="cstat-no" title="statement not covered" >        this.#engagementDebug.flanked.visible = false;</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * TODO: figure out how to use this</span>
+<span class="cstat-no" title="statement not covered" >     * @param g</span>
+<span class="cstat-no" title="statement not covered" >     * @private</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    _visualizeOffensiveRange(g) {</span>
+<span class="cstat-no" title="statement not covered" >        const c = this.center;</span>
+<span class="cstat-no" title="statement not covered" >        const r = this.actor.equipment.weapons.maxRange + Math.floor(this.actor.size / 2);</span>
+<span class="cstat-no" title="statement not covered" >        const range = new PIXI.Polygon(canvas.grid.getCircle(c, r));</span>
+<span class="cstat-no" title="statement not covered" >        const offsets = swerpg.api.grid.getTargetAreaOffsets(c, range);</span>
+<span class="cstat-no" title="statement not covered" >        g.beginFill(0xFF0000, 0.1);</span>
+<span class="cstat-no" title="statement not covered" >        const s = canvas.dimensions.size;</span>
+<span class="cstat-no" title="statement not covered" >        for (const o of offsets) {</span>
+<span class="cstat-no" title="statement not covered" >            const {x, y} = canvas.grid.getTopLeftPoint(o);</span>
+<span class="cstat-no" title="statement not covered" >            g.drawRect(x, y, s, s);</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >        g.endFill();</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;</pre></td></tr></table></pre>
 
@@ -1627,7 +1651,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-05-11T08:34:16.200Z
+                at 2025-05-26T14:10:38.209Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

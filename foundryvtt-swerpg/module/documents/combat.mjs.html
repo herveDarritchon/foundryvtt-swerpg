@@ -291,7 +291,9 @@
 <a name='L226'></a><a href='#L226'>226</a>
 <a name='L227'></a><a href='#L227'>227</a>
 <a name='L228'></a><a href='#L228'>228</a>
-<a name='L229'></a><a href='#L229'>229</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<a name='L229'></a><a href='#L229'>229</a>
+<a name='L230'></a><a href='#L230'>230</a>
+<a name='L231'></a><a href='#L231'>231</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -300,16 +302,6 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -325,7 +317,19 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -521,212 +525,214 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" >export default class SwerpgCombat extends Combat {<span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ></span></span></span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * The prior amount of Heroism that has already been awarded.</span>
-<span class="cstat-no" title="statement not covered" >   * TODO this needs to move to be a combat flag, but it cannot until I fix a bug with combat audio alerts</span>
-<span class="cstat-no" title="statement not covered" >   * @type {number}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  #priorHeroism = game.settings.get("swerpg", "heroism") || 0;</span>
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * The prior amount of Heroism that has already been awarded.</span>
+<span class="cstat-no" title="statement not covered" >     * TODO this needs to move to be a combat flag, but it cannot until I fix a bug with combat audio alerts</span>
+<span class="cstat-no" title="statement not covered" >     * @type {number}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    #priorHeroism = game.settings.get("swerpg", "heroism") || 0;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-<span class="cstat-no" title="statement not covered" >  /*  Document Methods                            */</span>
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /*  Document Methods                            */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @inheritDoc */</span>
-<span class="cstat-no" title="statement not covered" >  async previousRound() {</span>
-<span class="cstat-no" title="statement not covered" >    if ( !game.user.isGM ) {</span>
-<span class="cstat-no" title="statement not covered" >      ui.notifications.warn("COMBAT.WarningCannotChangeRound", {localize: true});</span>
-<span class="cstat-no" title="statement not covered" >      return this;</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >    return super.previousRound();</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @inheritDoc */</span>
-<span class="cstat-no" title="statement not covered" >  async nextRound() {</span>
-<span class="cstat-no" title="statement not covered" >    if ( !game.user.isGM ) {</span>
-<span class="cstat-no" title="statement not covered" >      ui.notifications.warn("COMBAT.WarningCannotChangeRound", {localize: true});</span>
-<span class="cstat-no" title="statement not covered" >      return this;</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >    return super.nextRound();</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-<span class="cstat-no" title="statement not covered" >  /*  Database Update Workflows                   */</span>
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @override */</span>
-<span class="cstat-no" title="statement not covered" >  async _preUpdate(data, options, user) {</span>
-<span class="cstat-no" title="statement not covered" >    const advanceRound = ("round" in data) &amp;&amp; (data.round &gt; this.current.round);</span>
-<span class="cstat-no" title="statement not covered" >    await super._preUpdate(data, options, user);</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    // Update Initiative scores for all Combatants</span>
-<span class="cstat-no" title="statement not covered" >    if ( !advanceRound ) return;</span>
-<span class="cstat-no" title="statement not covered" >    data.combatants = [];</span>
-<span class="cstat-no" title="statement not covered" >    const results = [];</span>
-<span class="cstat-no" title="statement not covered" >    for ( const c of this.combatants ) {</span>
-<span class="cstat-no" title="statement not covered" >      const roll = c.getInitiativeRoll();</span>
-<span class="cstat-no" title="statement not covered" >      await roll.evaluate();</span>
-<span class="cstat-no" title="statement not covered" >      if ( c.actor.isIncapacitated ) roll._total = 0;</span>
-<span class="cstat-no" title="statement not covered" >      data.combatants.push({_id: c.id, initiative: roll.total});</span>
-<span class="cstat-no" title="statement not covered" >      results.push({</span>
-<span class="cstat-no" title="statement not covered" >        id: c.id,</span>
-<span class="cstat-no" title="statement not covered" >        name: c.name,</span>
-<span class="cstat-no" title="statement not covered" >        combatant: c,</span>
-<span class="cstat-no" title="statement not covered" >        initiative: roll.total,</span>
-<span class="cstat-no" title="statement not covered" >        roll</span>
-<span class="cstat-no" title="statement not covered" >      });</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >    data.turn = 0; // Force starting at the top of the round, ignoring defeated combatant adjustments</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    // Post new round Initiative summary</span>
-<span class="cstat-no" title="statement not covered" >    await this.#postInitiativeMessage(data.round, results);</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @inheritDoc */</span>
-<span class="cstat-no" title="statement not covered" >  _onDelete(options, userId) {</span>
-<span class="cstat-no" title="statement not covered" >    super._onDelete(options, userId);</span>
-<span class="cstat-no" title="statement not covered" >    for ( const c of this.combatants ) {</span>
-<span class="cstat-no" title="statement not covered" >      if ( c.actor ) {</span>
-<span class="cstat-no" title="statement not covered" >        c.actor.reset();</span>
-<span class="cstat-no" title="statement not covered" >        c.actor._sheet?.render(false);</span>
-<span class="cstat-no" title="statement not covered" >      }</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @override */</span>
-<span class="cstat-no" title="statement not covered" >  async _onStartTurn(combatant) {</span>
-<span class="cstat-no" title="statement not covered" >    await super._onStartTurn(combatant);</span>
-<span class="cstat-no" title="statement not covered" >    return combatant.actor.onStartTurn();</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @override */</span>
-<span class="cstat-no" title="statement not covered" >  async _onStartRound() {</span>
-<span class="cstat-no" title="statement not covered" >    await super._onStartRound();</span>
-<span class="cstat-no" title="statement not covered" >    if ( this.turns.length &lt; 2 ) return;</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    // Identify the first combatant to act in the round</span>
-<span class="cstat-no" title="statement not covered" >    const firstCombatant = this.turns[0];</span>
-<span class="cstat-no" title="statement not covered" >    const firstActor = firstCombatant?.actor;</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    // Identify the last non-incapacitated combatant to act in the round</span>
-<span class="cstat-no" title="statement not covered" >    let lastCombatant;</span>
-<span class="cstat-no" title="statement not covered" >    for ( let i=this.turns.length-1; i&gt;0; i-- ) {</span>
-<span class="cstat-no" title="statement not covered" >      if ( this.turns[i].actor?.isIncapacitated !== true ) {</span>
-<span class="cstat-no" title="statement not covered" >        lastCombatant = this.turns[i];</span>
-<span class="cstat-no" title="statement not covered" >        break;</span>
-<span class="cstat-no" title="statement not covered" >      }</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >    const lastActor = lastCombatant?.actor;</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    // Impetus</span>
-<span class="cstat-no" title="statement not covered" >    const impetusId = "impetus000000000";</span>
-<span class="cstat-no" title="statement not covered" >    if ( firstActor?.talentIds.has(impetusId) ) {</span>
-<span class="cstat-no" title="statement not covered" >      const impetus = {</span>
-<span class="cstat-no" title="statement not covered" >        _id: impetusId,</span>
-<span class="cstat-no" title="statement not covered" >        name: "Impetus",</span>
-<span class="cstat-no" title="statement not covered" >        icon: "icons/magic/movement/trail-streak-zigzag-yellow.webp",</span>
-<span class="cstat-no" title="statement not covered" >        changes: [{key: "system.status.impetus", value: 1, mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE}],</span>
-<span class="cstat-no" title="statement not covered" >        duration: {</span>
-<span class="cstat-no" title="statement not covered" >          combat: this.id,</span>
-<span class="cstat-no" title="statement not covered" >          rounds: 0,</span>
-<span class="cstat-no" title="statement not covered" >          turns: 1,</span>
-<span class="cstat-no" title="statement not covered" >          startRound: 1,</span>
-<span class="cstat-no" title="statement not covered" >          startTurn: 0</span>
+<span class="cstat-no" title="statement not covered" >    /** @inheritDoc */</span>
+<span class="cstat-no" title="statement not covered" >    async previousRound() {</span>
+<span class="cstat-no" title="statement not covered" >        if (!game.user.isGM) {</span>
+<span class="cstat-no" title="statement not covered" >            ui.notifications.warn("COMBAT.WarningCannotChangeRound", {localize: true});</span>
+<span class="cstat-no" title="statement not covered" >            return this;</span>
 <span class="cstat-no" title="statement not covered" >        }</span>
-<span class="cstat-no" title="statement not covered" >      }</span>
-<span class="cstat-no" title="statement not covered" >      if ( firstActor.effects.has(impetusId) ) await firstActor.updateEmbeddedDocuments("ActiveEffect", [impetus]);</span>
-<span class="cstat-no" title="statement not covered" >      else await ActiveEffect.create(impetus, {parent: firstActor, keepId: true});</span>
-<span class="cstat-no" title="statement not covered" >      firstCombatant.updateResource();</span>
+<span class="cstat-no" title="statement not covered" >        return super.previousRound();</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    // Focused Anticipation</span>
-<span class="cstat-no" title="statement not covered" >    if ( firstActor?.talentIds.has("focusedanticipat") ) {</span>
-<span class="cstat-no" title="statement not covered" >      await firstActor.alterResources({focus: 1}, {}, {statusText: "Focused Anticipation"});</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /** @inheritDoc */</span>
+<span class="cstat-no" title="statement not covered" >    async nextRound() {</span>
+<span class="cstat-no" title="statement not covered" >        if (!game.user.isGM) {</span>
+<span class="cstat-no" title="statement not covered" >            ui.notifications.warn("COMBAT.WarningCannotChangeRound", {localize: true});</span>
+<span class="cstat-no" title="statement not covered" >            return this;</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >        return super.nextRound();</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    // Morale Escalation</span>
-<span class="cstat-no" title="statement not covered" >    if ( this.round &gt; 6 ) {</span>
-<span class="cstat-no" title="statement not covered" >      await firstActor?.alterResources({morale: this.round}, {}, {statusText: "Escalation"});</span>
-<span class="cstat-no" title="statement not covered" >      await lastActor?.alterResources({morale: -this.round}, {}, {statusText: "Escalation"});</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /*  Database Update Workflows                   */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /** @override */</span>
+<span class="cstat-no" title="statement not covered" >    async _preUpdate(data, options, user) {</span>
+<span class="cstat-no" title="statement not covered" >        const advanceRound = ("round" in data) &amp;&amp; (data.round &gt; this.current.round);</span>
+<span class="cstat-no" title="statement not covered" >        await super._preUpdate(data, options, user);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Update Initiative scores for all Combatants</span>
+<span class="cstat-no" title="statement not covered" >        if (!advanceRound) return;</span>
+<span class="cstat-no" title="statement not covered" >        data.combatants = [];</span>
+<span class="cstat-no" title="statement not covered" >        const results = [];</span>
+<span class="cstat-no" title="statement not covered" >        for (const c of this.combatants) {</span>
+<span class="cstat-no" title="statement not covered" >            const roll = c.getInitiativeRoll();</span>
+<span class="cstat-no" title="statement not covered" >            await roll.evaluate();</span>
+<span class="cstat-no" title="statement not covered" >            if (c.actor.isIncapacitated) roll._total = 0;</span>
+<span class="cstat-no" title="statement not covered" >            data.combatants.push({_id: c.id, initiative: roll.total});</span>
+<span class="cstat-no" title="statement not covered" >            results.push({</span>
+<span class="cstat-no" title="statement not covered" >                id: c.id,</span>
+<span class="cstat-no" title="statement not covered" >                name: c.name,</span>
+<span class="cstat-no" title="statement not covered" >                combatant: c,</span>
+<span class="cstat-no" title="statement not covered" >                initiative: roll.total,</span>
+<span class="cstat-no" title="statement not covered" >                roll</span>
+<span class="cstat-no" title="statement not covered" >            });</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >        data.turn = 0; // Force starting at the top of the round, ignoring defeated combatant adjustments</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Post new round Initiative summary</span>
+<span class="cstat-no" title="statement not covered" >        await this.#postInitiativeMessage(data.round, results);</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    // Award Heroism!</span>
-<span class="cstat-no" title="statement not covered" >    await this.#awardHeroism();</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @inheritDoc */</span>
-<span class="cstat-no" title="statement not covered" >  async _onEndTurn(combatant) {</span>
-<span class="cstat-no" title="statement not covered" >    await super._onEndTurn(combatant);</span>
-<span class="cstat-no" title="statement not covered" >    await combatant.actor.onEndTurn();</span>
-<span class="cstat-no" title="statement not covered" >    combatant.updateResource();</span>
-<span class="cstat-no" title="statement not covered" >    this.debounceSetup(); // TODO wish this wasn't needed</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * As a Gamemaster, award Heroism points to the party, if applicable.</span>
-<span class="cstat-no" title="statement not covered" >   * @returns {Promise&lt;void&gt;}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  async #awardHeroism() {</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    // Reset Heroism</span>
-<span class="cstat-no" title="statement not covered" >    if ( this.round === 1 ) {</span>
-<span class="cstat-no" title="statement not covered" >      this.#priorHeroism = 0;</span>
-<span class="cstat-no" title="statement not covered" >      return game.settings.set("swerpg", "heroism", 0);</span>
+<span class="cstat-no" title="statement not covered" >    /** @inheritDoc */</span>
+<span class="cstat-no" title="statement not covered" >    _onDelete(options, userId) {</span>
+<span class="cstat-no" title="statement not covered" >        super._onDelete(options, userId);</span>
+<span class="cstat-no" title="statement not covered" >        for (const c of this.combatants) {</span>
+<span class="cstat-no" title="statement not covered" >            if (c.actor) {</span>
+<span class="cstat-no" title="statement not covered" >                c.actor.reset();</span>
+<span class="cstat-no" title="statement not covered" >                c.actor._sheet?.render(false);</span>
+<span class="cstat-no" title="statement not covered" >            }</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    const protagonistLevels = this.combatants.reduce((arr, c) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >      if ( c.actor?.type === "character" ) arr.push(c.actor.level);</span>
-<span class="cstat-no" title="statement not covered" >      return arr;</span>
-<span class="cstat-no" title="statement not covered" >    }, []);</span>
-<span class="cstat-no" title="statement not covered" >    const heroismRequired = protagonistLevels.reduce((h, l) =&gt; h + l * 12, 0);</span>
-<span class="cstat-no" title="statement not covered" >    const priorAwarded = Math.floor(this.#priorHeroism / heroismRequired);</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    const heroism = game.settings.get("swerpg", "heroism") || 0;</span>
-<span class="cstat-no" title="statement not covered" >    this.#priorHeroism = heroism;</span>
-<span class="cstat-no" title="statement not covered" >    const earned = Math.floor(heroism / heroismRequired);</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    const toAward = earned - priorAwarded;</span>
-<span class="cstat-no" title="statement not covered" >    if ( toAward &lt;= 0 ) return;</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    // Award</span>
-<span class="cstat-no" title="statement not covered" >    for ( const c of this.combatants ) {</span>
-<span class="cstat-no" title="statement not covered" >      if ( c.actor?.type !== "character" ) continue;</span>
-<span class="cstat-no" title="statement not covered" >      await c.actor.alterResources({heroism: toAward}, {}, {statusText: "Heroism!"});</span>
+<span class="cstat-no" title="statement not covered" >    /** @override */</span>
+<span class="cstat-no" title="statement not covered" >    async _onStartTurn(combatant) {</span>
+<span class="cstat-no" title="statement not covered" >        await super._onStartTurn(combatant);</span>
+<span class="cstat-no" title="statement not covered" >        return combatant.actor.onStartTurn();</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  #postInitiativeMessage(round, results) {</span>
-<span class="cstat-no" title="statement not covered" >    results.sort(this._sortCombatants);</span>
-<span class="cstat-no" title="statement not covered" >    const rolls = results.map(e =&gt; e.roll);</span>
+<span class="cstat-no" title="statement not covered" >    /** @override */</span>
+<span class="cstat-no" title="statement not covered" >    async _onStartRound() {</span>
+<span class="cstat-no" title="statement not covered" >        await super._onStartRound();</span>
+<span class="cstat-no" title="statement not covered" >        if (this.turns.length &lt; 2) return;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    // Format table rows</span>
-<span class="cstat-no" title="statement not covered" >    const rows = results.map(i =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >      const rd = i.roll.data;</span>
-<span class="cstat-no" title="statement not covered" >      const modifiers = [</span>
-<span class="cstat-no" title="statement not covered" >        rd.ability.signedString(),</span>
-<span class="cstat-no" title="statement not covered" >        rd.boons &gt; 0 ? `${rd.boons} Boons` : "",</span>
-<span class="cstat-no" title="statement not covered" >        rd.banes &gt; 0 ? `${rd.banes} Banes` : ""</span>
-<span class="cstat-no" title="statement not covered" >      ].filterJoin(", ");</span>
-<span class="cstat-no" title="statement not covered" >      return `&lt;tr&gt;&lt;td&gt;${i.name}&lt;/td&gt;&lt;td&gt;${modifiers}&lt;/td&gt;&lt;td&gt;${i.initiative}&lt;/td&gt;&lt;/tr&gt;`;</span>
-<span class="cstat-no" title="statement not covered" >    }).join("");</span>
+<span class="cstat-no" title="statement not covered" >        // Identify the first combatant to act in the round</span>
+<span class="cstat-no" title="statement not covered" >        const firstCombatant = this.turns[0];</span>
+<span class="cstat-no" title="statement not covered" >        const firstActor = firstCombatant?.actor;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    // Create the Chat Message</span>
-<span class="cstat-no" title="statement not covered" >    return ChatMessage.create({</span>
-<span class="cstat-no" title="statement not covered" >      content: `</span>
+<span class="cstat-no" title="statement not covered" >        // Identify the last non-incapacitated combatant to act in the round</span>
+<span class="cstat-no" title="statement not covered" >        let lastCombatant;</span>
+<span class="cstat-no" title="statement not covered" >        for (let i = this.turns.length - 1; i &gt; 0; i--) {</span>
+<span class="cstat-no" title="statement not covered" >            if (this.turns[i].actor?.isIncapacitated !== true) {</span>
+<span class="cstat-no" title="statement not covered" >                lastCombatant = this.turns[i];</span>
+<span class="cstat-no" title="statement not covered" >                break;</span>
+<span class="cstat-no" title="statement not covered" >            }</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >        const lastActor = lastCombatant?.actor;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Impetus</span>
+<span class="cstat-no" title="statement not covered" >        const impetusId = "impetus000000000";</span>
+<span class="cstat-no" title="statement not covered" >        if (firstActor?.talentIds.has(impetusId)) {</span>
+<span class="cstat-no" title="statement not covered" >            const impetus = {</span>
+<span class="cstat-no" title="statement not covered" >                _id: impetusId,</span>
+<span class="cstat-no" title="statement not covered" >                name: "Impetus",</span>
+<span class="cstat-no" title="statement not covered" >                icon: "icons/magic/movement/trail-streak-zigzag-yellow.webp",</span>
+<span class="cstat-no" title="statement not covered" >                changes: [{key: "system.status.impetus", value: 1, mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE}],</span>
+<span class="cstat-no" title="statement not covered" >                duration: {</span>
+<span class="cstat-no" title="statement not covered" >                    combat: this.id,</span>
+<span class="cstat-no" title="statement not covered" >                    rounds: 0,</span>
+<span class="cstat-no" title="statement not covered" >                    turns: 1,</span>
+<span class="cstat-no" title="statement not covered" >                    startRound: 1,</span>
+<span class="cstat-no" title="statement not covered" >                    startTurn: 0</span>
+<span class="cstat-no" title="statement not covered" >                }</span>
+<span class="cstat-no" title="statement not covered" >            }</span>
+<span class="cstat-no" title="statement not covered" >            if (firstActor.effects.has(impetusId)) await firstActor.updateEmbeddedDocuments("ActiveEffect", [impetus]);</span>
+<span class="cstat-no" title="statement not covered" >            else await ActiveEffect.create(impetus, {parent: firstActor, keepId: true});</span>
+<span class="cstat-no" title="statement not covered" >            firstCombatant.updateResource();</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Focused Anticipation</span>
+<span class="cstat-no" title="statement not covered" >        if (firstActor?.talentIds.has("focusedanticipat")) {</span>
+<span class="cstat-no" title="statement not covered" >            await firstActor.alterResources({focus: 1}, {}, {statusText: "Focused Anticipation"});</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Morale Escalation</span>
+<span class="cstat-no" title="statement not covered" >        if (this.round &gt; 6) {</span>
+<span class="cstat-no" title="statement not covered" >            await firstActor?.alterResources({morale: this.round}, {}, {statusText: "Escalation"});</span>
+<span class="cstat-no" title="statement not covered" >            await lastActor?.alterResources({morale: -this.round}, {}, {statusText: "Escalation"});</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Award Heroism!</span>
+<span class="cstat-no" title="statement not covered" >        await this.#awardHeroism();</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /** @inheritDoc */</span>
+<span class="cstat-no" title="statement not covered" >    async _onEndTurn(combatant) {</span>
+<span class="cstat-no" title="statement not covered" >        await super._onEndTurn(combatant);</span>
+<span class="cstat-no" title="statement not covered" >        await combatant.actor.onEndTurn();</span>
+<span class="cstat-no" title="statement not covered" >        combatant.updateResource();</span>
+<span class="cstat-no" title="statement not covered" >        this.debounceSetup(); // TODO wish this wasn't needed</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * As a Gamemaster, award Heroism points to the party, if applicable.</span>
+<span class="cstat-no" title="statement not covered" >     * @returns {Promise&lt;void&gt;}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    async #awardHeroism() {</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Reset Heroism</span>
+<span class="cstat-no" title="statement not covered" >        if (this.round === 1) {</span>
+<span class="cstat-no" title="statement not covered" >            this.#priorHeroism = 0;</span>
+<span class="cstat-no" title="statement not covered" >            return game.settings.set("swerpg", "heroism", 0);</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        const protagonistLevels = this.combatants.reduce((arr, c) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >            if (c.actor?.type === "character") arr.push(c.actor.level);</span>
+<span class="cstat-no" title="statement not covered" >            return arr;</span>
+<span class="cstat-no" title="statement not covered" >        }, []);</span>
+<span class="cstat-no" title="statement not covered" >        const heroismRequired = protagonistLevels.reduce((h, l) =&gt; h + l * 12, 0);</span>
+<span class="cstat-no" title="statement not covered" >        const priorAwarded = Math.floor(this.#priorHeroism / heroismRequired);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        const heroism = game.settings.get("swerpg", "heroism") || 0;</span>
+<span class="cstat-no" title="statement not covered" >        this.#priorHeroism = heroism;</span>
+<span class="cstat-no" title="statement not covered" >        const earned = Math.floor(heroism / heroismRequired);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        const toAward = earned - priorAwarded;</span>
+<span class="cstat-no" title="statement not covered" >        if (toAward &lt;= 0) return;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Award</span>
+<span class="cstat-no" title="statement not covered" >        for (const c of this.combatants) {</span>
+<span class="cstat-no" title="statement not covered" >            if (c.actor?.type !== "character") continue;</span>
+<span class="cstat-no" title="statement not covered" >            await c.actor.alterResources({heroism: toAward}, {}, {statusText: "Heroism!"});</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    #postInitiativeMessage(round, results) {</span>
+<span class="cstat-no" title="statement not covered" >        results.sort(this._sortCombatants);</span>
+<span class="cstat-no" title="statement not covered" >        const rolls = results.map(e =&gt; e.roll);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Format table rows</span>
+<span class="cstat-no" title="statement not covered" >        const rows = results.map(i =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >            const rd = i.roll.data;</span>
+<span class="cstat-no" title="statement not covered" >            const modifiers = [</span>
+<span class="cstat-no" title="statement not covered" >                rd.ability.signedString(),</span>
+<span class="cstat-no" title="statement not covered" >                rd.boons &gt; 0 ? `${rd.boons} Boons` : "",</span>
+<span class="cstat-no" title="statement not covered" >                rd.banes &gt; 0 ? `${rd.banes} Banes` : ""</span>
+<span class="cstat-no" title="statement not covered" >            ].filterJoin(", ");</span>
+<span class="cstat-no" title="statement not covered" >            return `&lt;tr&gt;&lt;td&gt;${i.name}&lt;/td&gt;&lt;td&gt;${modifiers}&lt;/td&gt;&lt;td&gt;${i.initiative}&lt;/td&gt;&lt;/tr&gt;`;</span>
+<span class="cstat-no" title="statement not covered" >        }).join("");</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Create the Chat Message</span>
+<span class="cstat-no" title="statement not covered" >        return ChatMessage.create({</span>
+<span class="cstat-no" title="statement not covered" >            content: `</span>
 <span class="cstat-no" title="statement not covered" >      &lt;section class="swerpg dice-roll initiative"&gt;</span>
 <span class="cstat-no" title="statement not covered" >      &lt;table class="initiative-table"&gt;</span>
 <span class="cstat-no" title="statement not covered" >        &lt;thead&gt;</span>
@@ -741,11 +747,11 @@
 <span class="cstat-no" title="statement not covered" >        &lt;/tbody&gt;</span>
 <span class="cstat-no" title="statement not covered" >      &lt;/table&gt;</span>
 <span class="cstat-no" title="statement not covered" >      &lt;/section&gt;`,</span>
-<span class="cstat-no" title="statement not covered" >      rolls,</span>
-<span class="cstat-no" title="statement not covered" >      speaker: {user: game.user, alias: `Initiative - Round ${round}`},</span>
-<span class="cstat-no" title="statement not covered" >      "flags.swerpg.isInitiativeReport": true</span>
-<span class="cstat-no" title="statement not covered" >    });</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >            rolls,</span>
+<span class="cstat-no" title="statement not covered" >            speaker: {user: game.user, alias: `Initiative - Round ${round}`},</span>
+<span class="cstat-no" title="statement not covered" >            "flags.swerpg.isInitiativeReport": true</span>
+<span class="cstat-no" title="statement not covered" >        });</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;</pre></td></tr></table></pre>
 
@@ -754,7 +760,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-05-11T08:34:16.353Z
+                at 2025-05-26T14:10:38.370Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

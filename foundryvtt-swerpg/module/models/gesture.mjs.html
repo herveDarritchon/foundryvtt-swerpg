@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/76</span>
+                <span class='fraction'>0/78</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/76</span>
+                <span class='fraction'>0/78</span>
             </div>
         
             
@@ -154,8 +154,12 @@
 <a name='L89'></a><a href='#L89'>89</a>
 <a name='L90'></a><a href='#L90'>90</a>
 <a name='L91'></a><a href='#L91'>91</a>
-<a name='L92'></a><a href='#L92'>92</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<a name='L92'></a><a href='#L92'>92</a>
+<a name='L93'></a><a href='#L93'>93</a>
+<a name='L94'></a><a href='#L94'>94</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -251,90 +255,92 @@
 <span class="cstat-no" title="statement not covered" > * The data structure and functionality of a Somatic Gesture in the Swerpg spellcraft system.</span>
 <span class="cstat-no" title="statement not covered" > */</span>
 <span class="cstat-no" title="statement not covered" >export default class SwerpgGesture extends foundry.abstract.DataModel {</span>
-<span class="cstat-no" title="statement not covered" >  static defineSchema() {</span>
-<span class="cstat-no" title="statement not covered" >    const fields = foundry.data.fields;</span>
-<span class="cstat-no" title="statement not covered" >    const actionSchema = SwerpgAction.defineSchema();</span>
-<span class="cstat-no" title="statement not covered" >    return {</span>
-<span class="cstat-no" title="statement not covered" >      id: new fields.StringField({required: true, blank: false}),</span>
-<span class="cstat-no" title="statement not covered" >      name: new fields.StringField(),</span>
-<span class="cstat-no" title="statement not covered" >      nameFormat: new fields.NumberField({required: false, choices: Object.values(SYSTEM.SPELL.NAME_FORMATS),</span>
-<span class="cstat-no" title="statement not covered" >        initial: undefined}),</span>
-<span class="cstat-no" title="statement not covered" >      img: new fields.FilePathField({categories: ["IMAGE"]}),</span>
-<span class="cstat-no" title="statement not covered" >      description: new fields.HTMLField({required: false, initial: undefined}),</span>
-<span class="cstat-no" title="statement not covered" >      cost: actionSchema.cost,</span>
-<span class="cstat-no" title="statement not covered" >      damage: new fields.SchemaField({</span>
-<span class="cstat-no" title="statement not covered" >        base: new fields.NumberField({required: true, integer: true, min: 0})</span>
-<span class="cstat-no" title="statement not covered" >      }),</span>
-<span class="cstat-no" title="statement not covered" >      hands: new fields.NumberField({required: true, integer: true, min: 0, max: 2}),</span>
-<span class="cstat-no" title="statement not covered" >      range: actionSchema.range,</span>
-<span class="cstat-no" title="statement not covered" >      scaling: new fields.StringField({required: true, choices: SYSTEM.CHARACTERISTICS}),</span>
-<span class="cstat-no" title="statement not covered" >      target: actionSchema.target</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @inheritDoc */</span>
-<span class="cstat-no" title="statement not covered" >  _initialize() {</span>
-<span class="cstat-no" title="statement not covered" >    super._initialize();</span>
-<span class="cstat-no" title="statement not covered" >    this.name = game.i18n.localize(this.name);</span>
-<span class="cstat-no" title="statement not covered" >    this.target.scope = SYSTEM.ACTION.TARGET_TYPES[this.target.type].scope;</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * One-time initialization to instantiate SYSTEM.SPELL.GESTURES.</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  static initialize() {</span>
-<span class="cstat-no" title="statement not covered" >    const gestures = SYSTEM.SPELL.GESTURES;</span>
-<span class="cstat-no" title="statement not covered" >    for ( const [k, v] of Object.entries(gestures) ) {</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >      try {</span>
-<span class="cstat-no" title="statement not covered" >        gestures[k] = new SwerpgGesture(v);</span>
-<span class="cstat-no" title="statement not covered" >      } catch (e) {</span>
-<span class="cstat-no" title="statement not covered" >        console.error(e);</span>
-<span class="cstat-no" title="statement not covered" >      }</span>
+<span class="cstat-no" title="statement not covered" >    static defineSchema() {</span>
+<span class="cstat-no" title="statement not covered" >        const fields = foundry.data.fields;</span>
+<span class="cstat-no" title="statement not covered" >        const actionSchema = SwerpgAction.defineSchema();</span>
+<span class="cstat-no" title="statement not covered" >        return {</span>
+<span class="cstat-no" title="statement not covered" >            id: new fields.StringField({required: true, blank: false}),</span>
+<span class="cstat-no" title="statement not covered" >            name: new fields.StringField(),</span>
+<span class="cstat-no" title="statement not covered" >            nameFormat: new fields.NumberField({</span>
+<span class="cstat-no" title="statement not covered" >                required: false, choices: Object.values(SYSTEM.SPELL.NAME_FORMATS),</span>
+<span class="cstat-no" title="statement not covered" >                initial: undefined</span>
+<span class="cstat-no" title="statement not covered" >            }),</span>
+<span class="cstat-no" title="statement not covered" >            img: new fields.FilePathField({categories: ["IMAGE"]}),</span>
+<span class="cstat-no" title="statement not covered" >            description: new fields.HTMLField({required: false, initial: undefined}),</span>
+<span class="cstat-no" title="statement not covered" >            cost: actionSchema.cost,</span>
+<span class="cstat-no" title="statement not covered" >            damage: new fields.SchemaField({</span>
+<span class="cstat-no" title="statement not covered" >                base: new fields.NumberField({required: true, integer: true, min: 0})</span>
+<span class="cstat-no" title="statement not covered" >            }),</span>
+<span class="cstat-no" title="statement not covered" >            hands: new fields.NumberField({required: true, integer: true, min: 0, max: 2}),</span>
+<span class="cstat-no" title="statement not covered" >            range: actionSchema.range,</span>
+<span class="cstat-no" title="statement not covered" >            scaling: new fields.StringField({required: true, choices: SYSTEM.CHARACTERISTICS}),</span>
+<span class="cstat-no" title="statement not covered" >            target: actionSchema.target</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    Object.freeze(gestures);</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @override */</span>
-<span class="cstat-no" title="statement not covered" >  toString() {</span>
-<span class="cstat-no" title="statement not covered" >    return this.name;</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Tags used to annotate this Gesture.</span>
-<span class="cstat-no" title="statement not covered" >   * @returns {string[]}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  get tags() {</span>
-<span class="cstat-no" title="statement not covered" >    const tags = [SYSTEM.CHARACTERISTICS[this.scaling].label];</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    // Damage</span>
-<span class="cstat-no" title="statement not covered" >    if ( this.damage.base ) tags.push(`${this.damage.base} Damage`);</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    // Target</span>
-<span class="cstat-no" title="statement not covered" >    if ( this.target.type !== "none" ) {</span>
-<span class="cstat-no" title="statement not covered" >      let target = SYSTEM.ACTION.TARGET_TYPES[this.target.type].label;</span>
-<span class="cstat-no" title="statement not covered" >      if ( this.target.number &gt; 1 ) target += ` ${this.target.number}`;</span>
-<span class="cstat-no" title="statement not covered" >      tags.push(target);</span>
+<span class="cstat-no" title="statement not covered" >    /** @inheritDoc */</span>
+<span class="cstat-no" title="statement not covered" >    _initialize() {</span>
+<span class="cstat-no" title="statement not covered" >        super._initialize();</span>
+<span class="cstat-no" title="statement not covered" >        this.name = game.i18n.localize(this.name);</span>
+<span class="cstat-no" title="statement not covered" >        this.target.scope = SYSTEM.ACTION.TARGET_TYPES[this.target.type].scope;</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    // Range</span>
-<span class="cstat-no" title="statement not covered" >    if ( this.range.maximum ) tags.push(`Range ${this.range.maximum}`);</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    // Cost</span>
-<span class="cstat-no" title="statement not covered" >    if ( this.cost.action !== 0 ) tags.push(`${this.cost.action}A`);</span>
-<span class="cstat-no" title="statement not covered" >    if ( this.cost.focus !== 0 ) tags.push(`${this.cost.focus}F`);</span>
-<span class="cstat-no" title="statement not covered" >    if ( this.cost.heroism !== 0 ) tags.push(`${this.cost.heroism}H`);</span>
-<span class="cstat-no" title="statement not covered" >    return tags;</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * One-time initialization to instantiate SYSTEM.SPELL.GESTURES.</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    static initialize() {</span>
+<span class="cstat-no" title="statement not covered" >        const gestures = SYSTEM.SPELL.GESTURES;</span>
+<span class="cstat-no" title="statement not covered" >        for (const [k, v] of Object.entries(gestures)) {</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            try {</span>
+<span class="cstat-no" title="statement not covered" >                gestures[k] = new SwerpgGesture(v);</span>
+<span class="cstat-no" title="statement not covered" >            } catch (e) {</span>
+<span class="cstat-no" title="statement not covered" >                console.error(e);</span>
+<span class="cstat-no" title="statement not covered" >            }</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        Object.freeze(gestures);</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /** @override */</span>
+<span class="cstat-no" title="statement not covered" >    toString() {</span>
+<span class="cstat-no" title="statement not covered" >        return this.name;</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Tags used to annotate this Gesture.</span>
+<span class="cstat-no" title="statement not covered" >     * @returns {string[]}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    get tags() {</span>
+<span class="cstat-no" title="statement not covered" >        const tags = [SYSTEM.CHARACTERISTICS[this.scaling].label];</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Damage</span>
+<span class="cstat-no" title="statement not covered" >        if (this.damage.base) tags.push(`${this.damage.base} Damage`);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Target</span>
+<span class="cstat-no" title="statement not covered" >        if (this.target.type !== "none") {</span>
+<span class="cstat-no" title="statement not covered" >            let target = SYSTEM.ACTION.TARGET_TYPES[this.target.type].label;</span>
+<span class="cstat-no" title="statement not covered" >            if (this.target.number &gt; 1) target += ` ${this.target.number}`;</span>
+<span class="cstat-no" title="statement not covered" >            tags.push(target);</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Range</span>
+<span class="cstat-no" title="statement not covered" >        if (this.range.maximum) tags.push(`Range ${this.range.maximum}`);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Cost</span>
+<span class="cstat-no" title="statement not covered" >        if (this.cost.action !== 0) tags.push(`${this.cost.action}A`);</span>
+<span class="cstat-no" title="statement not covered" >        if (this.cost.focus !== 0) tags.push(`${this.cost.focus}F`);</span>
+<span class="cstat-no" title="statement not covered" >        if (this.cost.heroism !== 0) tags.push(`${this.cost.heroism}H`);</span>
+<span class="cstat-no" title="statement not covered" >        return tags;</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;</pre></td></tr></table></pre>
 
@@ -343,7 +349,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-05-11T08:34:16.353Z
+                at 2025-05-26T14:10:38.370Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

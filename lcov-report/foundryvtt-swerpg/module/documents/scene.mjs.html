@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/45</span>
+                <span class='fraction'>0/49</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/45</span>
+                <span class='fraction'>0/49</span>
             </div>
         
             
@@ -114,7 +114,11 @@
 <a name='L49'></a><a href='#L49'>49</a>
 <a name='L50'></a><a href='#L50'>50</a>
 <a name='L51'></a><a href='#L51'>51</a>
-<a name='L52'></a><a href='#L52'>52</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<a name='L52'></a><a href='#L52'>52</a>
+<a name='L53'></a><a href='#L53'>53</a>
+<a name='L54'></a><a href='#L54'>54</a>
+<a name='L55'></a><a href='#L55'>55</a>
+<a name='L56'></a><a href='#L56'>56</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -141,6 +145,10 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -170,51 +178,55 @@
 <span class="cstat-no" title="statement not covered" > */</span>
 <span class="cstat-no" title="statement not covered" >export default class SwerpgScene extends Scene {</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @inheritDoc */</span>
-<span class="cstat-no" title="statement not covered" >  prepareBaseData() {</span>
-<span class="cstat-no" title="statement not covered" >    if ( !(this.grid instanceof foundry.grid.BaseGrid) ) {</span>
-<span class="cstat-no" title="statement not covered" >      const g = this._source.grid;</span>
-<span class="cstat-no" title="statement not covered" >      if ( (g.units === "ft") &amp;&amp; (g.distance === 5) ) {</span>
-<span class="cstat-no" title="statement not covered" >        this.grid.size = g.size / 5;</span>
-<span class="cstat-no" title="statement not covered" >        this.grid.distance = 1;</span>
-<span class="cstat-no" title="statement not covered" >      }</span>
+<span class="cstat-no" title="statement not covered" >    /** @inheritDoc */</span>
+<span class="cstat-no" title="statement not covered" >    prepareBaseData() {</span>
+<span class="cstat-no" title="statement not covered" >        if (!(this.grid instanceof foundry.grid.BaseGrid)) {</span>
+<span class="cstat-no" title="statement not covered" >            const g = this._source.grid;</span>
+<span class="cstat-no" title="statement not covered" >            if ((g.units === "ft") &amp;&amp; (g.distance === 5)) {</span>
+<span class="cstat-no" title="statement not covered" >                this.grid.size = g.size / 5;</span>
+<span class="cstat-no" title="statement not covered" >                this.grid.distance = 1;</span>
+<span class="cstat-no" title="statement not covered" >            }</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >        super.prepareBaseData();</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >    super.prepareBaseData();</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @override */</span>
-<span class="cstat-no" title="statement not covered" >  getDimensions() {</span>
+<span class="cstat-no" title="statement not covered" >    /** @override */</span>
+<span class="cstat-no" title="statement not covered" >    getDimensions() {</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    // Get Scene data</span>
-<span class="cstat-no" title="statement not covered" >    const grid = this.grid;</span>
-<span class="cstat-no" title="statement not covered" >    const sceneWidth = this.width;</span>
-<span class="cstat-no" title="statement not covered" >    const sceneHeight = this.height;</span>
+<span class="cstat-no" title="statement not covered" >        // Get Scene data</span>
+<span class="cstat-no" title="statement not covered" >        const grid = this.grid;</span>
+<span class="cstat-no" title="statement not covered" >        const sceneWidth = this.width;</span>
+<span class="cstat-no" title="statement not covered" >        const sceneHeight = this.height;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    // Compute the correct grid sizing</span>
-<span class="cstat-no" title="statement not covered" >    const sourceGrid = new grid.constructor({...grid, size: this._source.grid.size, distance: this._source.grid.distance});</span>
-<span class="cstat-no" title="statement not covered" >    const dimensions = sourceGrid.calculateDimensions(sceneWidth, sceneHeight, this.padding);</span>
-<span class="cstat-no" title="statement not covered" >    const {width, height} = dimensions;</span>
-<span class="cstat-no" title="statement not covered" >    const sceneX = dimensions.x - this.background.offsetX;</span>
-<span class="cstat-no" title="statement not covered" >    const sceneY = dimensions.y - this.background.offsetY;</span>
+<span class="cstat-no" title="statement not covered" >        // Compute the correct grid sizing</span>
+<span class="cstat-no" title="statement not covered" >        const sourceGrid = new grid.constructor({</span>
+<span class="cstat-no" title="statement not covered" >            ...grid,</span>
+<span class="cstat-no" title="statement not covered" >            size: this._source.grid.size,</span>
+<span class="cstat-no" title="statement not covered" >            distance: this._source.grid.distance</span>
+<span class="cstat-no" title="statement not covered" >        });</span>
+<span class="cstat-no" title="statement not covered" >        const dimensions = sourceGrid.calculateDimensions(sceneWidth, sceneHeight, this.padding);</span>
+<span class="cstat-no" title="statement not covered" >        const {width, height} = dimensions;</span>
+<span class="cstat-no" title="statement not covered" >        const sceneX = dimensions.x - this.background.offsetX;</span>
+<span class="cstat-no" title="statement not covered" >        const sceneY = dimensions.y - this.background.offsetY;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    // Define Scene dimensions</span>
-<span class="cstat-no" title="statement not covered" >    return {</span>
-<span class="cstat-no" title="statement not covered" >      width, height,</span>
-<span class="cstat-no" title="statement not covered" >      size: grid.size,</span>
-<span class="cstat-no" title="statement not covered" >      uiSize: sourceGrid.size,</span>
-<span class="cstat-no" title="statement not covered" >      rect: {x: 0, y: 0, width, height},</span>
-<span class="cstat-no" title="statement not covered" >      sceneX, sceneY, sceneWidth, sceneHeight,</span>
-<span class="cstat-no" title="statement not covered" >      sceneRect: {x: sceneX, y: sceneY, width: sceneWidth, height: sceneHeight},</span>
-<span class="cstat-no" title="statement not covered" >      distance: grid.distance,</span>
-<span class="cstat-no" title="statement not covered" >      distancePixels: grid.size / grid.distance,</span>
-<span class="cstat-no" title="statement not covered" >      ratio: sceneWidth / sceneHeight,</span>
-<span class="cstat-no" title="statement not covered" >      maxR: Math.hypot(width, height),</span>
-<span class="cstat-no" title="statement not covered" >      rows: dimensions.rows * 5,</span>
-<span class="cstat-no" title="statement not covered" >      columns: dimensions.columns * 5</span>
-<span class="cstat-no" title="statement not covered" >    };</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >        // Define Scene dimensions</span>
+<span class="cstat-no" title="statement not covered" >        return {</span>
+<span class="cstat-no" title="statement not covered" >            width, height,</span>
+<span class="cstat-no" title="statement not covered" >            size: grid.size,</span>
+<span class="cstat-no" title="statement not covered" >            uiSize: sourceGrid.size,</span>
+<span class="cstat-no" title="statement not covered" >            rect: {x: 0, y: 0, width, height},</span>
+<span class="cstat-no" title="statement not covered" >            sceneX, sceneY, sceneWidth, sceneHeight,</span>
+<span class="cstat-no" title="statement not covered" >            sceneRect: {x: sceneX, y: sceneY, width: sceneWidth, height: sceneHeight},</span>
+<span class="cstat-no" title="statement not covered" >            distance: grid.distance,</span>
+<span class="cstat-no" title="statement not covered" >            distancePixels: grid.size / grid.distance,</span>
+<span class="cstat-no" title="statement not covered" >            ratio: sceneWidth / sceneHeight,</span>
+<span class="cstat-no" title="statement not covered" >            maxR: Math.hypot(width, height),</span>
+<span class="cstat-no" title="statement not covered" >            rows: dimensions.rows * 5,</span>
+<span class="cstat-no" title="statement not covered" >            columns: dimensions.columns * 5</span>
+<span class="cstat-no" title="statement not covered" >        };</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;</pre></td></tr></table></pre>
 
@@ -223,7 +235,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-05-11T08:34:16.200Z
+                at 2025-05-26T14:10:38.209Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

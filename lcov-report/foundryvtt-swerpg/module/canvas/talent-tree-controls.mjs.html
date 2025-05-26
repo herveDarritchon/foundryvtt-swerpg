@@ -152,42 +152,42 @@
 <span class="cstat-no" title="statement not covered" > */</span>
 <span class="cstat-no" title="statement not covered" >export default class SwerpgTalentTreeControls extends Application {</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @inheritdoc */</span>
-<span class="cstat-no" title="statement not covered" >  static get defaultOptions() {</span>
-<span class="cstat-no" title="statement not covered" >    return foundry.utils.mergeObject(super.defaultOptions, {</span>
-<span class="cstat-no" title="statement not covered" >      id: "swerpg-talent-controls",</span>
-<span class="cstat-no" title="statement not covered" >      template: "systems/swerpg/templates/hud/talent-tree-controls.hbs",</span>
-<span class="cstat-no" title="statement not covered" >      popOut: false</span>
-<span class="cstat-no" title="statement not covered" >    });</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    /** @inheritdoc */</span>
+<span class="cstat-no" title="statement not covered" >    static get defaultOptions() {</span>
+<span class="cstat-no" title="statement not covered" >        return foundry.utils.mergeObject(super.defaultOptions, {</span>
+<span class="cstat-no" title="statement not covered" >            id: "swerpg-talent-controls",</span>
+<span class="cstat-no" title="statement not covered" >            template: "systems/swerpg/templates/hud/talent-tree-controls.hbs",</span>
+<span class="cstat-no" title="statement not covered" >            popOut: false</span>
+<span class="cstat-no" title="statement not covered" >        });</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * A convenience reference to the tree instance.</span>
-<span class="cstat-no" title="statement not covered" >   * @returns {SwerpgTalentTree}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  get tree() {</span>
-<span class="cstat-no" title="statement not covered" >    return game.system.tree;</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * A convenience reference to the tree instance.</span>
+<span class="cstat-no" title="statement not covered" >     * @returns {SwerpgTalentTree}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    get tree() {</span>
+<span class="cstat-no" title="statement not covered" >        return game.system.tree;</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @override */</span>
-<span class="cstat-no" title="statement not covered" >  getData(options = {}) {</span>
-<span class="cstat-no" title="statement not covered" >    return {</span>
-<span class="cstat-no" title="statement not covered" >      actor: this.tree.actor,</span>
-<span class="cstat-no" title="statement not covered" >      cssClass: this.options.classes.join(" ")</span>
-<span class="cstat-no" title="statement not covered" >    };</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    /** @override */</span>
+<span class="cstat-no" title="statement not covered" >    getData(options = {}) {</span>
+<span class="cstat-no" title="statement not covered" >        return {</span>
+<span class="cstat-no" title="statement not covered" >            actor: this.tree.actor,</span>
+<span class="cstat-no" title="statement not covered" >            cssClass: this.options.classes.join(" ")</span>
+<span class="cstat-no" title="statement not covered" >        };</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @override */</span>
-<span class="cstat-no" title="statement not covered" >  activateListeners(html) {</span>
-<span class="cstat-no" title="statement not covered" >    html.find("button.reset").click(() =&gt; this.tree.actor.resetTalents({dialog: true}));</span>
-<span class="cstat-no" title="statement not covered" >    html.find("button.close").click(() =&gt; this.tree.close());</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    /** @override */</span>
+<span class="cstat-no" title="statement not covered" >    activateListeners(html) {</span>
+<span class="cstat-no" title="statement not covered" >        html.find("button.reset").click(() =&gt; this.tree.actor.resetTalents({dialog: true}));</span>
+<span class="cstat-no" title="statement not covered" >        html.find("button.close").click(() =&gt; this.tree.close());</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;</pre></td></tr></table></pre>
 
@@ -196,7 +196,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-05-11T08:34:16.200Z
+                at 2025-05-26T14:10:38.209Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

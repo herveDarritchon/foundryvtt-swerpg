@@ -256,91 +256,91 @@
 <span class="cstat-no" title="statement not covered" > */</span>
 <span class="cstat-no" title="statement not covered" >export default class ArchetypeSheet extends BackgroundSheet {</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @inheritDoc */</span>
-<span class="cstat-no" title="statement not covered" >  static DEFAULT_OPTIONS = {</span>
-<span class="cstat-no" title="statement not covered" >    item: {</span>
-<span class="cstat-no" title="statement not covered" >      type: "archetype"</span>
+<span class="cstat-no" title="statement not covered" >    /** @inheritDoc */</span>
+<span class="cstat-no" title="statement not covered" >    static DEFAULT_OPTIONS = {</span>
+<span class="cstat-no" title="statement not covered" >        item: {</span>
+<span class="cstat-no" title="statement not covered" >            type: "archetype"</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >    };</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    // Initialize subclass options</span>
+<span class="cstat-no" title="statement not covered" >    static {</span>
+<span class="cstat-no" title="statement not covered" >        this._initializeItemSheetClass()</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  };</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  // Initialize subclass options</span>
-<span class="cstat-no" title="statement not covered" >  static {</span>
-<span class="cstat-no" title="statement not covered" >    this._initializeItemSheetClass()</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @inheritDoc */</span>
-<span class="cstat-no" title="statement not covered" >  async _prepareContext(options) {</span>
-<span class="cstat-no" title="statement not covered" >    const context = await super._prepareContext(options);</span>
-<span class="cstat-no" title="statement not covered" >    return Object.assign(context, {</span>
-<span class="cstat-no" title="statement not covered" >      abilities: Object.values(SYSTEM.CHARACTERISTICS).map(ability =&gt; ({</span>
-<span class="cstat-no" title="statement not covered" >        field: context.fields.abilities.fields[ability.id],</span>
-<span class="cstat-no" title="statement not covered" >        id: ability.id,</span>
-<span class="cstat-no" title="statement not covered" >        label: ability.label,</span>
-<span class="cstat-no" title="statement not covered" >        value: context.source.system.abilities[ability.id]</span>
-<span class="cstat-no" title="statement not covered" >      }))</span>
-<span class="cstat-no" title="statement not covered" >    });</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @inheritdoc */</span>
-<span class="cstat-no" title="statement not covered" >  _onRender(context, options) {</span>
-<span class="cstat-no" title="statement not covered" >    super._onRender(context, options);</span>
-<span class="cstat-no" title="statement not covered" >    this.#updateAbilitySum();</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @inheritDoc */</span>
-<span class="cstat-no" title="statement not covered" >  _onChangeForm(formConfig, event) {</span>
-<span class="cstat-no" title="statement not covered" >    super._onChangeForm(formConfig, event);</span>
-<span class="cstat-no" title="statement not covered" >    const group = event.target.closest(".form-group");</span>
-<span class="cstat-no" title="statement not covered" >    if ( group?.classList.contains("abilities") )  this.#updateAbilitySum();</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Update the indicator for whether the ability configuration for the Archetype is valid.</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  #updateAbilitySum() {</span>
-<span class="cstat-no" title="statement not covered" >    const abilities = this.element.querySelector(".abilities");</span>
-<span class="cstat-no" title="statement not covered" >    const inputs = abilities.querySelectorAll("input[type=number]");</span>
-<span class="cstat-no" title="statement not covered" >    const total = Array.from(inputs).reduce((t, input) =&gt; t + input.valueAsNumber, 0);</span>
-<span class="cstat-no" title="statement not covered" >    const valid = total === 18;</span>
-<span class="cstat-no" title="statement not covered" >    const icon = valid ? "fa-solid fa-check" : "fa-solid fa-times";</span>
-<span class="cstat-no" title="statement not covered" >    const span = abilities.querySelector(".sum");</span>
-<span class="cstat-no" title="statement not covered" >    span.innerHTML = `${total} &lt;i class="${icon}"&gt;&lt;/i&gt;`;</span>
-<span class="cstat-no" title="statement not covered" >    span.classList.toggle("invalid", !valid);</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @inheritDoc */</span>
-<span class="cstat-no" title="statement not covered" >  _processFormData(event, form, formData) {</span>
-<span class="cstat-no" title="statement not covered" >    const submitData = super._processFormData(event, form, formData);</span>
-<span class="cstat-no" title="statement not covered" >    const fields = this.document.system.schema.fields;</span>
-<span class="cstat-no" title="statement not covered" >    if ( fields.abilities.validate(submitData.system.abilities) !== undefined ) {</span>
-<span class="cstat-no" title="statement not covered" >      delete submitData.system.abilities;</span>
+<span class="cstat-no" title="statement not covered" >    /** @inheritDoc */</span>
+<span class="cstat-no" title="statement not covered" >    async _prepareContext(options) {</span>
+<span class="cstat-no" title="statement not covered" >        const context = await super._prepareContext(options);</span>
+<span class="cstat-no" title="statement not covered" >        return Object.assign(context, {</span>
+<span class="cstat-no" title="statement not covered" >            abilities: Object.values(SYSTEM.CHARACTERISTICS).map(ability =&gt; ({</span>
+<span class="cstat-no" title="statement not covered" >                field: context.fields.abilities.fields[ability.id],</span>
+<span class="cstat-no" title="statement not covered" >                id: ability.id,</span>
+<span class="cstat-no" title="statement not covered" >                label: ability.label,</span>
+<span class="cstat-no" title="statement not covered" >                value: context.source.system.abilities[ability.id]</span>
+<span class="cstat-no" title="statement not covered" >            }))</span>
+<span class="cstat-no" title="statement not covered" >        });</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >    const talents = form.querySelectorAll(".talents .talent");</span>
-<span class="cstat-no" title="statement not covered" >    submitData.system.talents = Array.from(talents).map(t =&gt; t.dataset.uuid);</span>
-<span class="cstat-no" title="statement not covered" >    return submitData;</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @inheritDoc */</span>
-<span class="cstat-no" title="statement not covered" >  async _processSubmitData(event, form, submitData) {</span>
-<span class="cstat-no" title="statement not covered" >    if ( this.document.parent instanceof Actor ) {</span>
-<span class="cstat-no" title="statement not covered" >      const diff = this.document.updateSource(submitData, {dryRun: true});</span>
-<span class="cstat-no" title="statement not covered" >      if ( !foundry.utils.isEmpty(diff) ) await this.actor.system.applyArchetype(this.document);</span>
-<span class="cstat-no" title="statement not covered" >      return;</span>
+<span class="cstat-no" title="statement not covered" >    /** @inheritdoc */</span>
+<span class="cstat-no" title="statement not covered" >    _onRender(context, options) {</span>
+<span class="cstat-no" title="statement not covered" >        super._onRender(context, options);</span>
+<span class="cstat-no" title="statement not covered" >        this.#updateAbilitySum();</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >    return super._processSubmitData(event, form, submitData);</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /** @inheritDoc */</span>
+<span class="cstat-no" title="statement not covered" >    _onChangeForm(formConfig, event) {</span>
+<span class="cstat-no" title="statement not covered" >        super._onChangeForm(formConfig, event);</span>
+<span class="cstat-no" title="statement not covered" >        const group = event.target.closest(".form-group");</span>
+<span class="cstat-no" title="statement not covered" >        if (group?.classList.contains("abilities")) this.#updateAbilitySum();</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Update the indicator for whether the ability configuration for the Archetype is valid.</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    #updateAbilitySum() {</span>
+<span class="cstat-no" title="statement not covered" >        const abilities = this.element.querySelector(".abilities");</span>
+<span class="cstat-no" title="statement not covered" >        const inputs = abilities.querySelectorAll("input[type=number]");</span>
+<span class="cstat-no" title="statement not covered" >        const total = Array.from(inputs).reduce((t, input) =&gt; t + input.valueAsNumber, 0);</span>
+<span class="cstat-no" title="statement not covered" >        const valid = total === 18;</span>
+<span class="cstat-no" title="statement not covered" >        const icon = valid ? "fa-solid fa-check" : "fa-solid fa-times";</span>
+<span class="cstat-no" title="statement not covered" >        const span = abilities.querySelector(".sum");</span>
+<span class="cstat-no" title="statement not covered" >        span.innerHTML = `${total} &lt;i class="${icon}"&gt;&lt;/i&gt;`;</span>
+<span class="cstat-no" title="statement not covered" >        span.classList.toggle("invalid", !valid);</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /** @inheritDoc */</span>
+<span class="cstat-no" title="statement not covered" >    _processFormData(event, form, formData) {</span>
+<span class="cstat-no" title="statement not covered" >        const submitData = super._processFormData(event, form, formData);</span>
+<span class="cstat-no" title="statement not covered" >        const fields = this.document.system.schema.fields;</span>
+<span class="cstat-no" title="statement not covered" >        if (fields.abilities.validate(submitData.system.abilities) !== undefined) {</span>
+<span class="cstat-no" title="statement not covered" >            delete submitData.system.abilities;</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >        const talents = form.querySelectorAll(".talents .talent");</span>
+<span class="cstat-no" title="statement not covered" >        submitData.system.talents = Array.from(talents).map(t =&gt; t.dataset.uuid);</span>
+<span class="cstat-no" title="statement not covered" >        return submitData;</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /** @inheritDoc */</span>
+<span class="cstat-no" title="statement not covered" >    async _processSubmitData(event, form, submitData) {</span>
+<span class="cstat-no" title="statement not covered" >        if (this.document.parent instanceof Actor) {</span>
+<span class="cstat-no" title="statement not covered" >            const diff = this.document.updateSource(submitData, {dryRun: true});</span>
+<span class="cstat-no" title="statement not covered" >            if (!foundry.utils.isEmpty(diff)) await this.actor.system.applyArchetype(this.document);</span>
+<span class="cstat-no" title="statement not covered" >            return;</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >        return super._processSubmitData(event, form, submitData);</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;</pre></td></tr></table></pre>
 
@@ -349,7 +349,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-05-11T08:34:16.200Z
+                at 2025-05-26T14:10:38.209Z
             </div>
         <script src="../../../../prettify.js"></script>
         <script>

@@ -372,149 +372,149 @@
 <span class="cstat-no" title="statement not covered" > * Only one choice wheel is displayed at a given time. The wheel is a singleton at canvas.tree.wheel.</span>
 <span class="cstat-no" title="statement not covered" > */</span>
 <span class="cstat-no" title="statement not covered" >export default class SwerpgTalentChoiceWheel extends PIXI.Container {</span>
-<span class="cstat-no" title="statement not covered" >  constructor() {</span>
-<span class="cstat-no" title="statement not covered" >    super();</span>
+<span class="cstat-no" title="statement not covered" >    constructor() {</span>
+<span class="cstat-no" title="statement not covered" >        super();</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        /**</span>
+<span class="cstat-no" title="statement not covered" >         * Background graphics for the wheel</span>
+<span class="cstat-no" title="statement not covered" >         * @type {PIXI.Sprite}</span>
+<span class="cstat-no" title="statement not covered" >         */</span>
+<span class="cstat-no" title="statement not covered" >        this.bg = this.addChild(new PIXI.Sprite());</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        /**</span>
+<span class="cstat-no" title="statement not covered" >         * Edges for showing connections</span>
+<span class="cstat-no" title="statement not covered" >         * @type {PIXI.Graphics}</span>
+<span class="cstat-no" title="statement not covered" >         */</span>
+<span class="cstat-no" title="statement not covered" >        this.edges = this.addChild(new PIXI.Graphics());</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        /**</span>
+<span class="cstat-no" title="statement not covered" >         * Talents available within this wheel</span>
+<span class="cstat-no" title="statement not covered" >         * @type {PIXI.Container}</span>
+<span class="cstat-no" title="statement not covered" >         */</span>
+<span class="cstat-no" title="statement not covered" >        this.talents = this.addChild(new PIXI.Container());</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >    /**</span>
-<span class="cstat-no" title="statement not covered" >     * Background graphics for the wheel</span>
-<span class="cstat-no" title="statement not covered" >     * @type {PIXI.Sprite}</span>
+<span class="cstat-no" title="statement not covered" >     * The node which the wheel is currently bound to, or null</span>
+<span class="cstat-no" title="statement not covered" >     * @type {SwerpgTalentTreeNode|null}</span>
 <span class="cstat-no" title="statement not covered" >     */</span>
-<span class="cstat-no" title="statement not covered" >    this.bg = this.addChild(new PIXI.Sprite());</span>
+<span class="cstat-no" title="statement not covered" >    node = null;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >    /**</span>
-<span class="cstat-no" title="statement not covered" >     * Edges for showing connections</span>
-<span class="cstat-no" title="statement not covered" >     * @type {PIXI.Graphics}</span>
+<span class="cstat-no" title="statement not covered" >     * Activate the talent tree choice wheel for a given node</span>
+<span class="cstat-no" title="statement not covered" >     * @param {SwerpgTalentTreeNode} node</span>
+<span class="cstat-no" title="statement not covered" >     * @returns {Promise&lt;void&gt;}</span>
 <span class="cstat-no" title="statement not covered" >     */</span>
-<span class="cstat-no" title="statement not covered" >    this.edges = this.addChild(new PIXI.Graphics());</span>
+<span class="cstat-no" title="statement not covered" >    async activate(node) {</span>
+<span class="cstat-no" title="statement not covered" >        const tree = game.system.tree;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Swap the node</span>
+<span class="cstat-no" title="statement not covered" >        this.node = node;</span>
+<span class="cstat-no" title="statement not covered" >        tree.nodes.removeChild(node);</span>
+<span class="cstat-no" title="statement not covered" >        tree.foreground.addChild(node);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Set position</span>
+<span class="cstat-no" title="statement not covered" >        this.position.set(node.x, node.y);</span>
+<span class="cstat-no" title="statement not covered" >        this.radius = node.config.size + 50;</span>
+<span class="cstat-no" title="statement not covered" >        this.#drawBackground();</span>
+<span class="cstat-no" title="statement not covered" >        this.#drawEdges();</span>
+<span class="cstat-no" title="statement not covered" >        await this.#drawTalents();</span>
+<span class="cstat-no" title="statement not covered" >        this.refresh(); // Set initial display</span>
+<span class="cstat-no" title="statement not covered" >        this.visible = true;</span>
+<span class="cstat-no" title="statement not covered" >        this.eventMode = "passive";</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >    /**</span>
-<span class="cstat-no" title="statement not covered" >     * Talents available within this wheel</span>
-<span class="cstat-no" title="statement not covered" >     * @type {PIXI.Container}</span>
+<span class="cstat-no" title="statement not covered" >     * Activate the talent tree choice wheel.</span>
 <span class="cstat-no" title="statement not covered" >     */</span>
-<span class="cstat-no" title="statement not covered" >    this.talents = this.addChild(new PIXI.Container());</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * The node which the wheel is currently bound to, or null</span>
-<span class="cstat-no" title="statement not covered" >   * @type {SwerpgTalentTreeNode|null}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  node = null;</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Activate the talent tree choice wheel for a given node</span>
-<span class="cstat-no" title="statement not covered" >   * @param {SwerpgTalentTreeNode} node</span>
-<span class="cstat-no" title="statement not covered" >   * @returns {Promise&lt;void&gt;}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  async activate(node) {</span>
-<span class="cstat-no" title="statement not covered" >    const tree = game.system.tree;</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    // Swap the node</span>
-<span class="cstat-no" title="statement not covered" >    this.node = node;</span>
-<span class="cstat-no" title="statement not covered" >    tree.nodes.removeChild(node);</span>
-<span class="cstat-no" title="statement not covered" >    tree.foreground.addChild(node);</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    // Set position</span>
-<span class="cstat-no" title="statement not covered" >    this.position.set(node.x, node.y);</span>
-<span class="cstat-no" title="statement not covered" >    this.radius = node.config.size + 50;</span>
-<span class="cstat-no" title="statement not covered" >    this.#drawBackground();</span>
-<span class="cstat-no" title="statement not covered" >    this.#drawEdges();</span>
-<span class="cstat-no" title="statement not covered" >    await this.#drawTalents();</span>
-<span class="cstat-no" title="statement not covered" >    this.refresh(); // Set initial display</span>
-<span class="cstat-no" title="statement not covered" >    this.visible = true;</span>
-<span class="cstat-no" title="statement not covered" >    this.eventMode = "passive";</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Activate the talent tree choice wheel.</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  deactivate() {</span>
-<span class="cstat-no" title="statement not covered" >    const tree = game.system.tree;</span>
-<span class="cstat-no" title="statement not covered" >    if ( this.node ) {</span>
-<span class="cstat-no" title="statement not covered" >      tree.foreground.removeChild(this.node);</span>
-<span class="cstat-no" title="statement not covered" >      tree.nodes.addChild(this.node);</span>
+<span class="cstat-no" title="statement not covered" >    deactivate() {</span>
+<span class="cstat-no" title="statement not covered" >        const tree = game.system.tree;</span>
+<span class="cstat-no" title="statement not covered" >        if (this.node) {</span>
+<span class="cstat-no" title="statement not covered" >            tree.foreground.removeChild(this.node);</span>
+<span class="cstat-no" title="statement not covered" >            tree.nodes.addChild(this.node);</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >        this.visible = false;</span>
+<span class="cstat-no" title="statement not covered" >        this.node = null;</span>
+<span class="cstat-no" title="statement not covered" >        this.talents.removeChildren().forEach(t =&gt; t.destroy());</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >    this.visible = false;</span>
-<span class="cstat-no" title="statement not covered" >    this.node = null;</span>
-<span class="cstat-no" title="statement not covered" >    this.talents.removeChildren().forEach(t =&gt; t.destroy());</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Draw the wheel background.</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  #drawBackground() {</span>
-<span class="cstat-no" title="statement not covered" >    this.bg.texture = getTexture("systems/swerpg/ui/tree/wheel.webp");</span>
-<span class="cstat-no" title="statement not covered" >    this.bg.anchor.set(0.5, 0.5);</span>
-<span class="cstat-no" title="statement not covered" >    this.bg.width = this.bg.height = this.radius * 2;</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Draw connecting edges within the wheel</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  #drawEdges() {</span>
-<span class="cstat-no" title="statement not covered" >    this.edges.clear()</span>
-<span class="cstat-no" title="statement not covered" >      .lineStyle({color: this.node.config.borderColor, width: 3})</span>
-<span class="cstat-no" title="statement not covered" >      .drawCircle(0, 0, this.radius)</span>
-<span class="cstat-no" title="statement not covered" >      .endFill();</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    // Set line style for later connecting lines</span>
-<span class="cstat-no" title="statement not covered" >    this.edges.lineStyle({color: 0x444444, width: 4});</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Draw TalentIcon containers to the wheel</span>
-<span class="cstat-no" title="statement not covered" >   * @returns {Promise&lt;void&gt;}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  async #drawTalents() {</span>
-<span class="cstat-no" title="statement not covered" >    const talents = this.node.node.talents;</span>
-<span class="cstat-no" title="statement not covered" >    const tier1 = new PIXI.Circle(0, 0, this.radius);</span>
-<span class="cstat-no" title="statement not covered" >    const a = 2 * Math.PI / talents.size;</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    // Iterate over talents</span>
-<span class="cstat-no" title="statement not covered" >    let i = 0;</span>
-<span class="cstat-no" title="statement not covered" >    for ( const talent of talents ) {</span>
-<span class="cstat-no" title="statement not covered" >      const position = tier1.pointAtAngle((i * a) - (Math.PI / 2));</span>
-<span class="cstat-no" title="statement not covered" >      const icon = new SwerpgTalentTreeTalent(this.node, talent, position, {</span>
-<span class="cstat-no" title="statement not covered" >        borderColor: this.node.node.color,</span>
-<span class="cstat-no" title="statement not covered" >        texture: await loadTexture(talent.img)</span>
-<span class="cstat-no" title="statement not covered" >      });</span>
-<span class="cstat-no" title="statement not covered" >      this.talents.addChild(icon);</span>
-<span class="cstat-no" title="statement not covered" >      i++;</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >      // Draw connecting line</span>
-<span class="cstat-no" title="statement not covered" >      this.edges.moveTo(0, 0).lineTo(icon.x, icon.y);</span>
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Draw the wheel background.</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    #drawBackground() {</span>
+<span class="cstat-no" title="statement not covered" >        this.bg.texture = getTexture("systems/swerpg/ui/tree/wheel.webp");</span>
+<span class="cstat-no" title="statement not covered" >        this.bg.anchor.set(0.5, 0.5);</span>
+<span class="cstat-no" title="statement not covered" >        this.bg.width = this.bg.height = this.radius * 2;</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Refresh the display of the Talent wheel when the Actor's purchased Talents change.</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  refresh() {</span>
-<span class="cstat-no" title="statement not covered" >    const tree = game.system.tree;</span>
-<span class="cstat-no" title="statement not covered" >    const actor = tree.actor;</span>
-<span class="cstat-no" title="statement not covered" >    if ( !actor ) return;</span>
-<span class="cstat-no" title="statement not covered" >    for ( const talentIcon of this.talents.children ) {</span>
-<span class="cstat-no" title="statement not covered" >      const {node, talent} = talentIcon;</span>
-<span class="cstat-no" title="statement not covered" >      const active = actor.talentIds.has(talent.id);</span>
-<span class="cstat-no" title="statement not covered" >      talentIcon.draw({</span>
-<span class="cstat-no" title="statement not covered" >        accessible: active || (tree.state.get(node.node) &amp;&amp; talent.system.assertPrerequisites(actor, false)),</span>
-<span class="cstat-no" title="statement not covered" >        active</span>
-<span class="cstat-no" title="statement not covered" >      });</span>
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Draw connecting edges within the wheel</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    #drawEdges() {</span>
+<span class="cstat-no" title="statement not covered" >        this.edges.clear()</span>
+<span class="cstat-no" title="statement not covered" >            .lineStyle({color: this.node.config.borderColor, width: 3})</span>
+<span class="cstat-no" title="statement not covered" >            .drawCircle(0, 0, this.radius)</span>
+<span class="cstat-no" title="statement not covered" >            .endFill();</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Set line style for later connecting lines</span>
+<span class="cstat-no" title="statement not covered" >        this.edges.lineStyle({color: 0x444444, width: 4});</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Draw TalentIcon containers to the wheel</span>
+<span class="cstat-no" title="statement not covered" >     * @returns {Promise&lt;void&gt;}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    async #drawTalents() {</span>
+<span class="cstat-no" title="statement not covered" >        const talents = this.node.node.talents;</span>
+<span class="cstat-no" title="statement not covered" >        const tier1 = new PIXI.Circle(0, 0, this.radius);</span>
+<span class="cstat-no" title="statement not covered" >        const a = 2 * Math.PI / talents.size;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Iterate over talents</span>
+<span class="cstat-no" title="statement not covered" >        let i = 0;</span>
+<span class="cstat-no" title="statement not covered" >        for (const talent of talents) {</span>
+<span class="cstat-no" title="statement not covered" >            const position = tier1.pointAtAngle((i * a) - (Math.PI / 2));</span>
+<span class="cstat-no" title="statement not covered" >            const icon = new SwerpgTalentTreeTalent(this.node, talent, position, {</span>
+<span class="cstat-no" title="statement not covered" >                borderColor: this.node.node.color,</span>
+<span class="cstat-no" title="statement not covered" >                texture: await loadTexture(talent.img)</span>
+<span class="cstat-no" title="statement not covered" >            });</span>
+<span class="cstat-no" title="statement not covered" >            this.talents.addChild(icon);</span>
+<span class="cstat-no" title="statement not covered" >            i++;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            // Draw connecting line</span>
+<span class="cstat-no" title="statement not covered" >            this.edges.moveTo(0, 0).lineTo(icon.x, icon.y);</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Refresh the display of the Talent wheel when the Actor's purchased Talents change.</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    refresh() {</span>
+<span class="cstat-no" title="statement not covered" >        const tree = game.system.tree;</span>
+<span class="cstat-no" title="statement not covered" >        const actor = tree.actor;</span>
+<span class="cstat-no" title="statement not covered" >        if (!actor) return;</span>
+<span class="cstat-no" title="statement not covered" >        for (const talentIcon of this.talents.children) {</span>
+<span class="cstat-no" title="statement not covered" >            const {node, talent} = talentIcon;</span>
+<span class="cstat-no" title="statement not covered" >            const active = actor.talentIds.has(talent.id);</span>
+<span class="cstat-no" title="statement not covered" >            talentIcon.draw({</span>
+<span class="cstat-no" title="statement not covered" >                accessible: active || (tree.state.get(node.node) &amp;&amp; talent.system.assertPrerequisites(actor, false)),</span>
+<span class="cstat-no" title="statement not covered" >                active</span>
+<span class="cstat-no" title="statement not covered" >            });</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;</pre></td></tr></table></pre>
 
@@ -523,7 +523,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-05-11T08:34:16.200Z
+                at 2025-05-26T14:10:38.209Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

@@ -198,62 +198,62 @@
 <span class="cstat-no" title="statement not covered" > */</span>
 <span class="cstat-no" title="statement not covered" >export default class SpellCastDialog extends ActionUseDialog {</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @override */</span>
-<span class="cstat-no" title="statement not covered" >  static TEMPLATE = "systems/swerpg/templates/dice/spell-cast-dialog.hbs";</span>
+<span class="cstat-no" title="statement not covered" >    /** @override */</span>
+<span class="cstat-no" title="statement not covered" >    static TEMPLATE = "systems/swerpg/templates/dice/spell-cast-dialog.hbs";</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @inheritDoc */</span>
-<span class="cstat-no" title="statement not covered" >  async _prepareContext(options) {</span>
-<span class="cstat-no" title="statement not covered" >    const context = await super._prepareContext(options);</span>
-<span class="cstat-no" title="statement not covered" >    const spell = this.action;</span>
-<span class="cstat-no" title="statement not covered" >    const actor = spell.actor;</span>
+<span class="cstat-no" title="statement not covered" >    /** @inheritDoc */</span>
+<span class="cstat-no" title="statement not covered" >    async _prepareContext(options) {</span>
+<span class="cstat-no" title="statement not covered" >        const context = await super._prepareContext(options);</span>
+<span class="cstat-no" title="statement not covered" >        const spell = this.action;</span>
+<span class="cstat-no" title="statement not covered" >        const actor = spell.actor;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    // Spellcraft Components</span>
-<span class="cstat-no" title="statement not covered" >    const runes = Array.from(actor.grimoire.runes);</span>
-<span class="cstat-no" title="statement not covered" >    runes.sort((a, b) =&gt; a.name.localeCompare(b.name));</span>
-<span class="cstat-no" title="statement not covered" >    const gestures = Array.from(actor.grimoire.gestures);</span>
-<span class="cstat-no" title="statement not covered" >    gestures.sort((a, b) =&gt; a.name.localeCompare(b.name));</span>
-<span class="cstat-no" title="statement not covered" >    const inflections = Array.from(actor.grimoire.inflections);</span>
-<span class="cstat-no" title="statement not covered" >    inflections.sort((a, b) =&gt; a.name.localeCompare(b.name));</span>
+<span class="cstat-no" title="statement not covered" >        // Spellcraft Components</span>
+<span class="cstat-no" title="statement not covered" >        const runes = Array.from(actor.grimoire.runes);</span>
+<span class="cstat-no" title="statement not covered" >        runes.sort((a, b) =&gt; a.name.localeCompare(b.name));</span>
+<span class="cstat-no" title="statement not covered" >        const gestures = Array.from(actor.grimoire.gestures);</span>
+<span class="cstat-no" title="statement not covered" >        gestures.sort((a, b) =&gt; a.name.localeCompare(b.name));</span>
+<span class="cstat-no" title="statement not covered" >        const inflections = Array.from(actor.grimoire.inflections);</span>
+<span class="cstat-no" title="statement not covered" >        inflections.sort((a, b) =&gt; a.name.localeCompare(b.name));</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    // Scaling</span>
-<span class="cstat-no" title="statement not covered" >    const ability = actor.getAbilityBonus([...spell.scaling]);</span>
+<span class="cstat-no" title="statement not covered" >        // Scaling</span>
+<span class="cstat-no" title="statement not covered" >        const ability = actor.getAbilityBonus([...spell.scaling]);</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    // Merge context</span>
-<span class="cstat-no" title="statement not covered" >    return foundry.utils.mergeObject(context, {</span>
-<span class="cstat-no" title="statement not covered" >      ability, runes, gestures, inflections,</span>
-<span class="cstat-no" title="statement not covered" >      chooseDamageType: spell.rune.damageType === "physical",</span>
-<span class="cstat-no" title="statement not covered" >      damageTypes: {</span>
-<span class="cstat-no" title="statement not covered" >        bludgeoning: SYSTEM.DAMAGE_TYPES.bludgeoning.label,</span>
-<span class="cstat-no" title="statement not covered" >        piercing: SYSTEM.DAMAGE_TYPES.piercing.label,</span>
-<span class="cstat-no" title="statement not covered" >        slashing: SYSTEM.DAMAGE_TYPES.slashing.label,</span>
-<span class="cstat-no" title="statement not covered" >      }</span>
-<span class="cstat-no" title="statement not covered" >    });</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @inheritDoc */</span>
-<span class="cstat-no" title="statement not covered" >  _onChangeForm(formConfig, event) {</span>
-<span class="cstat-no" title="statement not covered" >    super._onChangeForm(formConfig, event);</span>
-<span class="cstat-no" title="statement not covered" >    if ( ["rune", "gesture", "inflection"].includes(event.target.name) ) {</span>
-<span class="cstat-no" title="statement not covered" >      this.action.updateSource({[event.target.name]: event.target.value});</span>
-<span class="cstat-no" title="statement not covered" >      this._clearTargetTemplate();</span>
-<span class="cstat-no" title="statement not covered" >      this.render({window: {title: this.title}});</span>
+<span class="cstat-no" title="statement not covered" >        // Merge context</span>
+<span class="cstat-no" title="statement not covered" >        return foundry.utils.mergeObject(context, {</span>
+<span class="cstat-no" title="statement not covered" >            ability, runes, gestures, inflections,</span>
+<span class="cstat-no" title="statement not covered" >            chooseDamageType: spell.rune.damageType === "physical",</span>
+<span class="cstat-no" title="statement not covered" >            damageTypes: {</span>
+<span class="cstat-no" title="statement not covered" >                bludgeoning: SYSTEM.DAMAGE_TYPES.bludgeoning.label,</span>
+<span class="cstat-no" title="statement not covered" >                piercing: SYSTEM.DAMAGE_TYPES.piercing.label,</span>
+<span class="cstat-no" title="statement not covered" >                slashing: SYSTEM.DAMAGE_TYPES.slashing.label,</span>
+<span class="cstat-no" title="statement not covered" >            }</span>
+<span class="cstat-no" title="statement not covered" >        });</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @override */</span>
-<span class="cstat-no" title="statement not covered" >  _onRoll(event, button, dialog) {</span>
-<span class="cstat-no" title="statement not covered" >    const form = event.target;</span>
-<span class="cstat-no" title="statement not covered" >    const {rune, gesture, inflection} = (new FormDataExtended(form)).object;</span>
-<span class="cstat-no" title="statement not covered" >    const composition = this.action.constructor.COMPOSITION_STATES.COMPOSED;</span>
-<span class="cstat-no" title="statement not covered" >    this.action.updateSource({composition, rune, gesture, inflection});</span>
-<span class="cstat-no" title="statement not covered" >    return super._onRoll(event, button, dialog);</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    /** @inheritDoc */</span>
+<span class="cstat-no" title="statement not covered" >    _onChangeForm(formConfig, event) {</span>
+<span class="cstat-no" title="statement not covered" >        super._onChangeForm(formConfig, event);</span>
+<span class="cstat-no" title="statement not covered" >        if (["rune", "gesture", "inflection"].includes(event.target.name)) {</span>
+<span class="cstat-no" title="statement not covered" >            this.action.updateSource({[event.target.name]: event.target.value});</span>
+<span class="cstat-no" title="statement not covered" >            this._clearTargetTemplate();</span>
+<span class="cstat-no" title="statement not covered" >            this.render({window: {title: this.title}});</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /** @override */</span>
+<span class="cstat-no" title="statement not covered" >    _onRoll(event, button, dialog) {</span>
+<span class="cstat-no" title="statement not covered" >        const form = event.target;</span>
+<span class="cstat-no" title="statement not covered" >        const {rune, gesture, inflection} = (new FormDataExtended(form)).object;</span>
+<span class="cstat-no" title="statement not covered" >        const composition = this.action.constructor.COMPOSITION_STATES.COMPOSED;</span>
+<span class="cstat-no" title="statement not covered" >        this.action.updateSource({composition, rune, gesture, inflection});</span>
+<span class="cstat-no" title="statement not covered" >        return super._onRoll(event, button, dialog);</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;</pre></td></tr></table></pre>
 
@@ -262,7 +262,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-05-11T08:34:16.200Z
+                at 2025-05-26T14:10:38.209Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

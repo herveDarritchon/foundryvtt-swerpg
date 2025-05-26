@@ -1860,12 +1860,12 @@
 <span class="cline-any cline-no">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" >/* -------------------------------------------- */</span></span></span>
 <span class="cstat-no" title="statement not covered" >export const ACTOR_TYPE = Object.freeze({</span>
 <span class="cstat-no" title="statement not covered" >    adversary: {</span>
-<span class="cstat-no" title="statement not covered" >        id : "adversary",</span>
+<span class="cstat-no" title="statement not covered" >        id: "adversary",</span>
 <span class="cstat-no" title="statement not covered" >        type: "adversary",</span>
 <span class="cstat-no" title="statement not covered" >        label: "Adversary",</span>
 <span class="cstat-no" title="statement not covered" >    },</span>
 <span class="cstat-no" title="statement not covered" >    character: {</span>
-<span class="cstat-no" title="statement not covered" >        id : "character",</span>
+<span class="cstat-no" title="statement not covered" >        id: "character",</span>
 <span class="cstat-no" title="statement not covered" >        type: "character",</span>
 <span class="cstat-no" title="statement not covered" >        label: "Character"</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
@@ -1874,13 +1874,13 @@
 <span class="cstat-no" title="statement not covered" >/* -------------------------------------------- */</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >export const CARACTERISTIC_TYPE = Object.freeze({</span>
-<span class="cstat-no" title="statement not covered" >    physical:{</span>
+<span class="cstat-no" title="statement not covered" >    physical: {</span>
 <span class="cstat-no" title="statement not covered" >        id: "physical",</span>
 <span class="cstat-no" title="statement not covered" >        label: "SKILL_TYPE.Physical",</span>
 <span class="cstat-no" title="statement not covered" >        abbreviation: "SKILL_TYPE.PhysicalAbbr",</span>
 <span class="cstat-no" title="statement not covered" >        color: Color.from("#1d32b1"),</span>
 <span class="cstat-no" title="statement not covered" >    },</span>
-<span class="cstat-no" title="statement not covered" >    mental:{</span>
+<span class="cstat-no" title="statement not covered" >    mental: {</span>
 <span class="cstat-no" title="statement not covered" >        id: "mental",</span>
 <span class="cstat-no" title="statement not covered" >        label: "SKILL_TYPE.Mental",</span>
 <span class="cstat-no" title="statement not covered" >        abbreviation: "SKILL_TYPE.MentalAbbr",</span>
@@ -1961,19 +1961,19 @@
 <span class="cstat-no" title="statement not covered" >/* -------------------------------------------- */</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >export const SKILL_TYPE = Object.freeze({</span>
-<span class="cstat-no" title="statement not covered" >    general:{</span>
+<span class="cstat-no" title="statement not covered" >    general: {</span>
 <span class="cstat-no" title="statement not covered" >        id: "general",</span>
 <span class="cstat-no" title="statement not covered" >        label: "SKILL_TYPE.General",</span>
 <span class="cstat-no" title="statement not covered" >        abbreviation: "SKILL_TYPE.GeneralAbbr",</span>
 <span class="cstat-no" title="statement not covered" >        color: Color.from("#1d32b1"),</span>
 <span class="cstat-no" title="statement not covered" >    },</span>
-<span class="cstat-no" title="statement not covered" >    knowledge:{</span>
+<span class="cstat-no" title="statement not covered" >    knowledge: {</span>
 <span class="cstat-no" title="statement not covered" >        id: "knowledge",</span>
 <span class="cstat-no" title="statement not covered" >        label: "SKILL_TYPE.Knowledge",</span>
 <span class="cstat-no" title="statement not covered" >        abbreviation: "SKILL_TYPE.KnowledgeAbbr",</span>
 <span class="cstat-no" title="statement not covered" >        color: Color.from("#4354b8"),</span>
 <span class="cstat-no" title="statement not covered" >    },</span>
-<span class="cstat-no" title="statement not covered" >    combat:{</span>
+<span class="cstat-no" title="statement not covered" >    combat: {</span>
 <span class="cstat-no" title="statement not covered" >        id: "combat",</span>
 <span class="cstat-no" title="statement not covered" >        label: "SKILL_TYPE.Combat",</span>
 <span class="cstat-no" title="statement not covered" >        abbreviation: "SKILL_TYPE.CombatAbbr",</span>
@@ -2708,16 +2708,16 @@
 <span class="cstat-no" title="statement not covered" >/* -------------------------------------------- */</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >export const TALENT_ACTIVATION = Object.freeze({</span>
-<span class="cstat-no" title="statement not covered" >    passive:{</span>
+<span class="cstat-no" title="statement not covered" >    passive: {</span>
 <span class="cstat-no" title="statement not covered" >        id: "passive",</span>
 <span class="cstat-no" title="statement not covered" >        label: "TALENT_ACTIVATION.Passive",</span>
 <span class="cstat-no" title="statement not covered" >        abbreviation: "TALENT_ACTIVATION.PassiveAbbr",</span>
 <span class="cstat-no" title="statement not covered" >        color: Color.from("#1d32b1"),</span>
 <span class="cstat-no" title="statement not covered" >    },</span>
-<span class="cstat-no" title="statement not covered" >    mental:{</span>
-<span class="cstat-no" title="statement not covered" >        id: "mental",</span>
-<span class="cstat-no" title="statement not covered" >        label: "SKILL_TYPE.Mental",</span>
-<span class="cstat-no" title="statement not covered" >        abbreviation: "SKILL_TYPE.MentalAbbr",</span>
+<span class="cstat-no" title="statement not covered" >    active: {</span>
+<span class="cstat-no" title="statement not covered" >        id: "active",</span>
+<span class="cstat-no" title="statement not covered" >        label: "TALENT_ACTIVATION.Active",</span>
+<span class="cstat-no" title="statement not covered" >        abbreviation: "TALENT_ACTIVATION.ActiveAbbr",</span>
 <span class="cstat-no" title="statement not covered" >        color: Color.from("#4354b8"),</span>
 <span class="cstat-no" title="statement not covered" >    },</span>
 <span class="cstat-no" title="statement not covered" >});</span>
@@ -2740,7 +2740,7 @@
 <span class="cstat-no" title="statement not covered" >        color: Color.from("#d6d30c"),</span>
 <span class="cstat-no" title="statement not covered" >        sheetOrder: 1,</span>
 <span class="cstat-no" title="statement not covered" >        activation: TALENT_ACTIVATION.passive,</span>
-<span class="cstat-no" title="statement not covered" >        ranked: true,</span>
+<span class="cstat-no" title="statement not covered" >        isRanked: true,</span>
 <span class="cstat-no" title="statement not covered" >        nodeId: "adv"</span>
 <span class="cstat-no" title="statement not covered" >    },</span>
 <span class="cstat-no" title="statement not covered" >    convincingDemeanor: {</span>
@@ -2750,7 +2750,7 @@
 <span class="cstat-no" title="statement not covered" >        color: Color.from("#d6d30c"),</span>
 <span class="cstat-no" title="statement not covered" >        sheetOrder: 3,</span>
 <span class="cstat-no" title="statement not covered" >        activation: TALENT_ACTIVATION.passive,</span>
-<span class="cstat-no" title="statement not covered" >        ranked: true,</span>
+<span class="cstat-no" title="statement not covered" >        isRanked: true,</span>
 <span class="cstat-no" title="statement not covered" >        nodeId: "cdr"</span>
 <span class="cstat-no" title="statement not covered" >    },</span>
 &nbsp;
@@ -2761,7 +2761,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-05-11T08:34:16.353Z
+                at 2025-05-26T14:10:38.370Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

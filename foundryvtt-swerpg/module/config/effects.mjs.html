@@ -543,245 +543,245 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" >/**</span></span></span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" >/**<span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ></span></span></span>
 <span class="cstat-no" title="statement not covered" > * Get a standardized 16 character ID that can be used for the ActiveEffect.</span>
 <span class="cstat-no" title="statement not covered" > * @param {string} label    The active effect label</span>
 <span class="cstat-no" title="statement not covered" > * @returns {string}        The standardized ID</span>
 <span class="cstat-no" title="statement not covered" > */</span>
 <span class="cstat-no" title="statement not covered" >export function getEffectId(label) {</span>
-<span class="cstat-no" title="statement not covered" >  return label.slugify({replacement: "", lowercase: false, strict: true}).slice(0, 16).padEnd(16, "0");</span>
+<span class="cstat-no" title="statement not covered" >    return label.slugify({replacement: "", lowercase: false, strict: true}).slice(0, 16).padEnd(16, "0");</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >export function bleeding(actor, target, {ability="dexterity", damageType="piercing"}={}) {</span>
-<span class="cstat-no" title="statement not covered" >  return {</span>
-<span class="cstat-no" title="statement not covered" >    _id: getEffectId("Bleeding"),</span>
-<span class="cstat-no" title="statement not covered" >    name: "Bleeding",</span>
-<span class="cstat-no" title="statement not covered" >    icon: "icons/skills/wounds/blood-spurt-spray-red.webp",</span>
-<span class="cstat-no" title="statement not covered" >    duration: {turns: 1},</span>
-<span class="cstat-no" title="statement not covered" >    origin: actor.uuid,</span>
-<span class="cstat-no" title="statement not covered" >    flags: {</span>
-<span class="cstat-no" title="statement not covered" >      swerpg: {</span>
-<span class="cstat-no" title="statement not covered" >        dot: {</span>
-<span class="cstat-no" title="statement not covered" >          health: actor.system.abilities[ability].value,</span>
-<span class="cstat-no" title="statement not covered" >          damageType</span>
+<span class="cstat-no" title="statement not covered" >export function bleeding(actor, target, {ability = "dexterity", damageType = "piercing"} = {}) {</span>
+<span class="cstat-no" title="statement not covered" >    return {</span>
+<span class="cstat-no" title="statement not covered" >        _id: getEffectId("Bleeding"),</span>
+<span class="cstat-no" title="statement not covered" >        name: "Bleeding",</span>
+<span class="cstat-no" title="statement not covered" >        icon: "icons/skills/wounds/blood-spurt-spray-red.webp",</span>
+<span class="cstat-no" title="statement not covered" >        duration: {turns: 1},</span>
+<span class="cstat-no" title="statement not covered" >        origin: actor.uuid,</span>
+<span class="cstat-no" title="statement not covered" >        flags: {</span>
+<span class="cstat-no" title="statement not covered" >            swerpg: {</span>
+<span class="cstat-no" title="statement not covered" >                dot: {</span>
+<span class="cstat-no" title="statement not covered" >                    health: actor.system.abilities[ability].value,</span>
+<span class="cstat-no" title="statement not covered" >                    damageType</span>
+<span class="cstat-no" title="statement not covered" >                }</span>
+<span class="cstat-no" title="statement not covered" >            }</span>
 <span class="cstat-no" title="statement not covered" >        }</span>
-<span class="cstat-no" title="statement not covered" >      }</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >export function burning(actor, target) {</span>
-<span class="cstat-no" title="statement not covered" >  return {</span>
-<span class="cstat-no" title="statement not covered" >    _id: getEffectId("Burning"),</span>
-<span class="cstat-no" title="statement not covered" >    name: "Burning",</span>
-<span class="cstat-no" title="statement not covered" >    icon: "icons/magic/fire/projectile-smoke-swirl-red.webp",</span>
-<span class="cstat-no" title="statement not covered" >    duration: {turns: 1},</span>
-<span class="cstat-no" title="statement not covered" >    origin: actor.uuid,</span>
-<span class="cstat-no" title="statement not covered" >    flags: {</span>
-<span class="cstat-no" title="statement not covered" >      swerpg: {</span>
-<span class="cstat-no" title="statement not covered" >        dot: {</span>
-<span class="cstat-no" title="statement not covered" >          health: actor.system.abilities.intellect.value,</span>
-<span class="cstat-no" title="statement not covered" >          morale: actor.system.abilities.intellect.value,</span>
-<span class="cstat-no" title="statement not covered" >          damageType: "fire"</span>
+<span class="cstat-no" title="statement not covered" >    return {</span>
+<span class="cstat-no" title="statement not covered" >        _id: getEffectId("Burning"),</span>
+<span class="cstat-no" title="statement not covered" >        name: "Burning",</span>
+<span class="cstat-no" title="statement not covered" >        icon: "icons/magic/fire/projectile-smoke-swirl-red.webp",</span>
+<span class="cstat-no" title="statement not covered" >        duration: {turns: 1},</span>
+<span class="cstat-no" title="statement not covered" >        origin: actor.uuid,</span>
+<span class="cstat-no" title="statement not covered" >        flags: {</span>
+<span class="cstat-no" title="statement not covered" >            swerpg: {</span>
+<span class="cstat-no" title="statement not covered" >                dot: {</span>
+<span class="cstat-no" title="statement not covered" >                    health: actor.system.abilities.intellect.value,</span>
+<span class="cstat-no" title="statement not covered" >                    morale: actor.system.abilities.intellect.value,</span>
+<span class="cstat-no" title="statement not covered" >                    damageType: "fire"</span>
+<span class="cstat-no" title="statement not covered" >                }</span>
+<span class="cstat-no" title="statement not covered" >            }</span>
 <span class="cstat-no" title="statement not covered" >        }</span>
-<span class="cstat-no" title="statement not covered" >      }</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >export function chilled(actor, target) {</span>
-<span class="cstat-no" title="statement not covered" >  return {</span>
-<span class="cstat-no" title="statement not covered" >    _id: getEffectId("Chilled"),</span>
-<span class="cstat-no" title="statement not covered" >    name: "Chilled",</span>
-<span class="cstat-no" title="statement not covered" >    icon: "icons/magic/water/orb-ice-web.webp",</span>
-<span class="cstat-no" title="statement not covered" >    duration: {turns: 1},</span>
-<span class="cstat-no" title="statement not covered" >    origin: actor.uuid,</span>
-<span class="cstat-no" title="statement not covered" >    statuses: ["slowed"],</span>
-<span class="cstat-no" title="statement not covered" >    flags: {</span>
-<span class="cstat-no" title="statement not covered" >      swerpg: {</span>
-<span class="cstat-no" title="statement not covered" >        dot: {</span>
-<span class="cstat-no" title="statement not covered" >          health: Math.floor(actor.system.abilities.wisdom.value / 2),</span>
-<span class="cstat-no" title="statement not covered" >          damageType: "cold"</span>
+<span class="cstat-no" title="statement not covered" >    return {</span>
+<span class="cstat-no" title="statement not covered" >        _id: getEffectId("Chilled"),</span>
+<span class="cstat-no" title="statement not covered" >        name: "Chilled",</span>
+<span class="cstat-no" title="statement not covered" >        icon: "icons/magic/water/orb-ice-web.webp",</span>
+<span class="cstat-no" title="statement not covered" >        duration: {turns: 1},</span>
+<span class="cstat-no" title="statement not covered" >        origin: actor.uuid,</span>
+<span class="cstat-no" title="statement not covered" >        statuses: ["slowed"],</span>
+<span class="cstat-no" title="statement not covered" >        flags: {</span>
+<span class="cstat-no" title="statement not covered" >            swerpg: {</span>
+<span class="cstat-no" title="statement not covered" >                dot: {</span>
+<span class="cstat-no" title="statement not covered" >                    health: Math.floor(actor.system.abilities.wisdom.value / 2),</span>
+<span class="cstat-no" title="statement not covered" >                    damageType: "cold"</span>
+<span class="cstat-no" title="statement not covered" >                }</span>
+<span class="cstat-no" title="statement not covered" >            }</span>
 <span class="cstat-no" title="statement not covered" >        }</span>
-<span class="cstat-no" title="statement not covered" >      }</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >export function confusion(actor, target) {</span>
-<span class="cstat-no" title="statement not covered" >  return {</span>
-<span class="cstat-no" title="statement not covered" >    _id: getEffectId("Confusion"),</span>
-<span class="cstat-no" title="statement not covered" >    name: "Confusion",</span>
-<span class="cstat-no" title="statement not covered" >    icon: "icons/magic/air/air-burst-spiral-pink.webp",</span>
-<span class="cstat-no" title="statement not covered" >    duration: {turns: 1},</span>
-<span class="cstat-no" title="statement not covered" >    origin: actor.uuid,</span>
-<span class="cstat-no" title="statement not covered" >    statuses: ["disoriented"],</span>
-<span class="cstat-no" title="statement not covered" >    flags: {</span>
-<span class="cstat-no" title="statement not covered" >      swerpg: {</span>
-<span class="cstat-no" title="statement not covered" >        dot: {</span>
-<span class="cstat-no" title="statement not covered" >          morale: Math.floor(actor.system.abilities.intellect.value / 2),</span>
-<span class="cstat-no" title="statement not covered" >          damageType: "psychic"</span>
+<span class="cstat-no" title="statement not covered" >    return {</span>
+<span class="cstat-no" title="statement not covered" >        _id: getEffectId("Confusion"),</span>
+<span class="cstat-no" title="statement not covered" >        name: "Confusion",</span>
+<span class="cstat-no" title="statement not covered" >        icon: "icons/magic/air/air-burst-spiral-pink.webp",</span>
+<span class="cstat-no" title="statement not covered" >        duration: {turns: 1},</span>
+<span class="cstat-no" title="statement not covered" >        origin: actor.uuid,</span>
+<span class="cstat-no" title="statement not covered" >        statuses: ["disoriented"],</span>
+<span class="cstat-no" title="statement not covered" >        flags: {</span>
+<span class="cstat-no" title="statement not covered" >            swerpg: {</span>
+<span class="cstat-no" title="statement not covered" >                dot: {</span>
+<span class="cstat-no" title="statement not covered" >                    morale: Math.floor(actor.system.abilities.intellect.value / 2),</span>
+<span class="cstat-no" title="statement not covered" >                    damageType: "psychic"</span>
+<span class="cstat-no" title="statement not covered" >                }</span>
+<span class="cstat-no" title="statement not covered" >            }</span>
 <span class="cstat-no" title="statement not covered" >        }</span>
-<span class="cstat-no" title="statement not covered" >      }</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >export function corroding(actor, target) {</span>
-<span class="cstat-no" title="statement not covered" >  return {</span>
-<span class="cstat-no" title="statement not covered" >    _id: getEffectId("Corroding"),</span>
-<span class="cstat-no" title="statement not covered" >    name: "Corroding",</span>
-<span class="cstat-no" title="statement not covered" >    icon: "icons/magic/earth/orb-stone-smoke-teal.webp",</span>
-<span class="cstat-no" title="statement not covered" >    duration: {turns: 3},</span>
-<span class="cstat-no" title="statement not covered" >    origin: actor.uuid,</span>
-<span class="cstat-no" title="statement not covered" >    flags: {</span>
-<span class="cstat-no" title="statement not covered" >      swerpg: {</span>
-<span class="cstat-no" title="statement not covered" >        dot: {</span>
-<span class="cstat-no" title="statement not covered" >          health: actor.system.abilities.wisdom.value,</span>
-<span class="cstat-no" title="statement not covered" >          damageType: "acid"</span>
+<span class="cstat-no" title="statement not covered" >    return {</span>
+<span class="cstat-no" title="statement not covered" >        _id: getEffectId("Corroding"),</span>
+<span class="cstat-no" title="statement not covered" >        name: "Corroding",</span>
+<span class="cstat-no" title="statement not covered" >        icon: "icons/magic/earth/orb-stone-smoke-teal.webp",</span>
+<span class="cstat-no" title="statement not covered" >        duration: {turns: 3},</span>
+<span class="cstat-no" title="statement not covered" >        origin: actor.uuid,</span>
+<span class="cstat-no" title="statement not covered" >        flags: {</span>
+<span class="cstat-no" title="statement not covered" >            swerpg: {</span>
+<span class="cstat-no" title="statement not covered" >                dot: {</span>
+<span class="cstat-no" title="statement not covered" >                    health: actor.system.abilities.wisdom.value,</span>
+<span class="cstat-no" title="statement not covered" >                    damageType: "acid"</span>
+<span class="cstat-no" title="statement not covered" >                }</span>
+<span class="cstat-no" title="statement not covered" >            }</span>
 <span class="cstat-no" title="statement not covered" >        }</span>
-<span class="cstat-no" title="statement not covered" >      }</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >export function decay(actor, target) {</span>
-<span class="cstat-no" title="statement not covered" >  return {</span>
-<span class="cstat-no" title="statement not covered" >    _id: getEffectId("Decay"),</span>
-<span class="cstat-no" title="statement not covered" >    name: "Decay",</span>
-<span class="cstat-no" title="statement not covered" >    icon: "icons/magic/unholy/strike-beam-blood-red-purple.webp",</span>
-<span class="cstat-no" title="statement not covered" >    duration: {turns: 3},</span>
-<span class="cstat-no" title="statement not covered" >    origin: actor.uuid,</span>
-<span class="cstat-no" title="statement not covered" >    flags: {</span>
-<span class="cstat-no" title="statement not covered" >      swerpg: {</span>
-<span class="cstat-no" title="statement not covered" >        dot: {</span>
-<span class="cstat-no" title="statement not covered" >          health: actor.system.abilities.intellect.value,</span>
-<span class="cstat-no" title="statement not covered" >          damageType: "corruption"</span>
+<span class="cstat-no" title="statement not covered" >    return {</span>
+<span class="cstat-no" title="statement not covered" >        _id: getEffectId("Decay"),</span>
+<span class="cstat-no" title="statement not covered" >        name: "Decay",</span>
+<span class="cstat-no" title="statement not covered" >        icon: "icons/magic/unholy/strike-beam-blood-red-purple.webp",</span>
+<span class="cstat-no" title="statement not covered" >        duration: {turns: 3},</span>
+<span class="cstat-no" title="statement not covered" >        origin: actor.uuid,</span>
+<span class="cstat-no" title="statement not covered" >        flags: {</span>
+<span class="cstat-no" title="statement not covered" >            swerpg: {</span>
+<span class="cstat-no" title="statement not covered" >                dot: {</span>
+<span class="cstat-no" title="statement not covered" >                    health: actor.system.abilities.intellect.value,</span>
+<span class="cstat-no" title="statement not covered" >                    damageType: "corruption"</span>
+<span class="cstat-no" title="statement not covered" >                }</span>
+<span class="cstat-no" title="statement not covered" >            }</span>
 <span class="cstat-no" title="statement not covered" >        }</span>
-<span class="cstat-no" title="statement not covered" >      }</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >export function entropy(actor, target) {</span>
-<span class="cstat-no" title="statement not covered" >  return {</span>
-<span class="cstat-no" title="statement not covered" >    _id: getEffectId("Entropy"),</span>
-<span class="cstat-no" title="statement not covered" >    name: "Entropy",</span>
-<span class="cstat-no" title="statement not covered" >    icon: "icons/magic/unholy/orb-swirling-teal.webp",</span>
-<span class="cstat-no" title="statement not covered" >    duration: {turns: 1},</span>
-<span class="cstat-no" title="statement not covered" >    origin: actor.uuid,</span>
-<span class="cstat-no" title="statement not covered" >    statuses: ["frightened"],</span>
-<span class="cstat-no" title="statement not covered" >    flags: {</span>
-<span class="cstat-no" title="statement not covered" >      swerpg: {</span>
-<span class="cstat-no" title="statement not covered" >        dot: {</span>
-<span class="cstat-no" title="statement not covered" >          health: Math.floor(actor.system.abilities.presence.value / 2),</span>
-<span class="cstat-no" title="statement not covered" >          damageType: "void"</span>
+<span class="cstat-no" title="statement not covered" >    return {</span>
+<span class="cstat-no" title="statement not covered" >        _id: getEffectId("Entropy"),</span>
+<span class="cstat-no" title="statement not covered" >        name: "Entropy",</span>
+<span class="cstat-no" title="statement not covered" >        icon: "icons/magic/unholy/orb-swirling-teal.webp",</span>
+<span class="cstat-no" title="statement not covered" >        duration: {turns: 1},</span>
+<span class="cstat-no" title="statement not covered" >        origin: actor.uuid,</span>
+<span class="cstat-no" title="statement not covered" >        statuses: ["frightened"],</span>
+<span class="cstat-no" title="statement not covered" >        flags: {</span>
+<span class="cstat-no" title="statement not covered" >            swerpg: {</span>
+<span class="cstat-no" title="statement not covered" >                dot: {</span>
+<span class="cstat-no" title="statement not covered" >                    health: Math.floor(actor.system.abilities.presence.value / 2),</span>
+<span class="cstat-no" title="statement not covered" >                    damageType: "void"</span>
+<span class="cstat-no" title="statement not covered" >                }</span>
+<span class="cstat-no" title="statement not covered" >            }</span>
 <span class="cstat-no" title="statement not covered" >        }</span>
-<span class="cstat-no" title="statement not covered" >      }</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >export function irradiated(actor, target) {</span>
-<span class="cstat-no" title="statement not covered" >  return {</span>
-<span class="cstat-no" title="statement not covered" >    _id: getEffectId("Irradiated"),</span>
-<span class="cstat-no" title="statement not covered" >    name: "Irradiated",</span>
-<span class="cstat-no" title="statement not covered" >    icon: "icons/magic/light/beams-rays-orange-purple-large.webp",</span>
-<span class="cstat-no" title="statement not covered" >    duration: {turns: 1},</span>
-<span class="cstat-no" title="statement not covered" >    origin: actor.uuid,</span>
-<span class="cstat-no" title="statement not covered" >    flags: {</span>
-<span class="cstat-no" title="statement not covered" >      swerpg: {</span>
-<span class="cstat-no" title="statement not covered" >        dot: {</span>
-<span class="cstat-no" title="statement not covered" >          health: actor.system.abilities.presence.value,</span>
-<span class="cstat-no" title="statement not covered" >          morale: actor.system.abilities.presence.value,</span>
-<span class="cstat-no" title="statement not covered" >          damageType: "radiant"</span>
+<span class="cstat-no" title="statement not covered" >    return {</span>
+<span class="cstat-no" title="statement not covered" >        _id: getEffectId("Irradiated"),</span>
+<span class="cstat-no" title="statement not covered" >        name: "Irradiated",</span>
+<span class="cstat-no" title="statement not covered" >        icon: "icons/magic/light/beams-rays-orange-purple-large.webp",</span>
+<span class="cstat-no" title="statement not covered" >        duration: {turns: 1},</span>
+<span class="cstat-no" title="statement not covered" >        origin: actor.uuid,</span>
+<span class="cstat-no" title="statement not covered" >        flags: {</span>
+<span class="cstat-no" title="statement not covered" >            swerpg: {</span>
+<span class="cstat-no" title="statement not covered" >                dot: {</span>
+<span class="cstat-no" title="statement not covered" >                    health: actor.system.abilities.presence.value,</span>
+<span class="cstat-no" title="statement not covered" >                    morale: actor.system.abilities.presence.value,</span>
+<span class="cstat-no" title="statement not covered" >                    damageType: "radiant"</span>
+<span class="cstat-no" title="statement not covered" >                }</span>
+<span class="cstat-no" title="statement not covered" >            }</span>
 <span class="cstat-no" title="statement not covered" >        }</span>
-<span class="cstat-no" title="statement not covered" >      }</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >export function mending(actor, target) {</span>
-<span class="cstat-no" title="statement not covered" >  return {</span>
-<span class="cstat-no" title="statement not covered" >    _id: getEffectId("Mending"),</span>
-<span class="cstat-no" title="statement not covered" >    name: "Mending",</span>
-<span class="cstat-no" title="statement not covered" >    icon: "icons/magic/life/cross-beam-green.webp",</span>
-<span class="cstat-no" title="statement not covered" >    duration: {turns: 1},</span>
-<span class="cstat-no" title="statement not covered" >    origin: actor.uuid,</span>
-<span class="cstat-no" title="statement not covered" >    flags: {</span>
-<span class="cstat-no" title="statement not covered" >      swerpg: {</span>
-<span class="cstat-no" title="statement not covered" >        dot: {</span>
-<span class="cstat-no" title="statement not covered" >          health: -actor.system.abilities.wisdom.value</span>
+<span class="cstat-no" title="statement not covered" >    return {</span>
+<span class="cstat-no" title="statement not covered" >        _id: getEffectId("Mending"),</span>
+<span class="cstat-no" title="statement not covered" >        name: "Mending",</span>
+<span class="cstat-no" title="statement not covered" >        icon: "icons/magic/life/cross-beam-green.webp",</span>
+<span class="cstat-no" title="statement not covered" >        duration: {turns: 1},</span>
+<span class="cstat-no" title="statement not covered" >        origin: actor.uuid,</span>
+<span class="cstat-no" title="statement not covered" >        flags: {</span>
+<span class="cstat-no" title="statement not covered" >            swerpg: {</span>
+<span class="cstat-no" title="statement not covered" >                dot: {</span>
+<span class="cstat-no" title="statement not covered" >                    health: -actor.system.abilities.wisdom.value</span>
+<span class="cstat-no" title="statement not covered" >                }</span>
+<span class="cstat-no" title="statement not covered" >            }</span>
 <span class="cstat-no" title="statement not covered" >        }</span>
-<span class="cstat-no" title="statement not covered" >      }</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >export function inspired(actor, target) {</span>
-<span class="cstat-no" title="statement not covered" >  return {</span>
-<span class="cstat-no" title="statement not covered" >    _id: getEffectId("Inspired"),</span>
-<span class="cstat-no" title="statement not covered" >    name: "Inspired",</span>
-<span class="cstat-no" title="statement not covered" >    icon: "icons/magic/light/explosion-star-glow-silhouette.webp",</span>
-<span class="cstat-no" title="statement not covered" >    duration: {turns: 1},</span>
-<span class="cstat-no" title="statement not covered" >    origin: actor.uuid,</span>
-<span class="cstat-no" title="statement not covered" >    flags: {</span>
-<span class="cstat-no" title="statement not covered" >      swerpg: {</span>
-<span class="cstat-no" title="statement not covered" >        dot: {</span>
-<span class="cstat-no" title="statement not covered" >          morale: -actor.system.abilities.presence.value</span>
+<span class="cstat-no" title="statement not covered" >    return {</span>
+<span class="cstat-no" title="statement not covered" >        _id: getEffectId("Inspired"),</span>
+<span class="cstat-no" title="statement not covered" >        name: "Inspired",</span>
+<span class="cstat-no" title="statement not covered" >        icon: "icons/magic/light/explosion-star-glow-silhouette.webp",</span>
+<span class="cstat-no" title="statement not covered" >        duration: {turns: 1},</span>
+<span class="cstat-no" title="statement not covered" >        origin: actor.uuid,</span>
+<span class="cstat-no" title="statement not covered" >        flags: {</span>
+<span class="cstat-no" title="statement not covered" >            swerpg: {</span>
+<span class="cstat-no" title="statement not covered" >                dot: {</span>
+<span class="cstat-no" title="statement not covered" >                    morale: -actor.system.abilities.presence.value</span>
+<span class="cstat-no" title="statement not covered" >                }</span>
+<span class="cstat-no" title="statement not covered" >            }</span>
 <span class="cstat-no" title="statement not covered" >        }</span>
-<span class="cstat-no" title="statement not covered" >      }</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;
 &nbsp;
 <span class="cstat-no" title="statement not covered" >export function poisoned(actor, target) {</span>
-<span class="cstat-no" title="statement not covered" >  return {</span>
-<span class="cstat-no" title="statement not covered" >    _id: getEffectId("Poisoned"),</span>
-<span class="cstat-no" title="statement not covered" >    name: "Poisoned",</span>
-<span class="cstat-no" title="statement not covered" >    icon: "icons/magic/unholy/orb-smoking-green.webp",</span>
-<span class="cstat-no" title="statement not covered" >    duration: {turns: 6},</span>
-<span class="cstat-no" title="statement not covered" >    origin: actor.uuid,</span>
-<span class="cstat-no" title="statement not covered" >    flags: {</span>
-<span class="cstat-no" title="statement not covered" >      swerpg: {</span>
-<span class="cstat-no" title="statement not covered" >        dot: {</span>
-<span class="cstat-no" title="statement not covered" >          health: actor.system.abilities.intellect.value,</span>
-<span class="cstat-no" title="statement not covered" >          damageType: "poison"</span>
+<span class="cstat-no" title="statement not covered" >    return {</span>
+<span class="cstat-no" title="statement not covered" >        _id: getEffectId("Poisoned"),</span>
+<span class="cstat-no" title="statement not covered" >        name: "Poisoned",</span>
+<span class="cstat-no" title="statement not covered" >        icon: "icons/magic/unholy/orb-smoking-green.webp",</span>
+<span class="cstat-no" title="statement not covered" >        duration: {turns: 6},</span>
+<span class="cstat-no" title="statement not covered" >        origin: actor.uuid,</span>
+<span class="cstat-no" title="statement not covered" >        flags: {</span>
+<span class="cstat-no" title="statement not covered" >            swerpg: {</span>
+<span class="cstat-no" title="statement not covered" >                dot: {</span>
+<span class="cstat-no" title="statement not covered" >                    health: actor.system.abilities.intellect.value,</span>
+<span class="cstat-no" title="statement not covered" >                    damageType: "poison"</span>
+<span class="cstat-no" title="statement not covered" >                }</span>
+<span class="cstat-no" title="statement not covered" >            }</span>
 <span class="cstat-no" title="statement not covered" >        }</span>
-<span class="cstat-no" title="statement not covered" >      }</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >export function shocked(actor, target) {</span>
-<span class="cstat-no" title="statement not covered" >  return {</span>
-<span class="cstat-no" title="statement not covered" >    _id: getEffectId("Shocked"),</span>
-<span class="cstat-no" title="statement not covered" >    name: "Shocked",</span>
-<span class="cstat-no" title="statement not covered" >    icon: "icons/magic/lightning/bolt-strike-forked-blue.webp",</span>
-<span class="cstat-no" title="statement not covered" >    duration: {turns: 1},</span>
-<span class="cstat-no" title="statement not covered" >    origin: actor.uuid,</span>
-<span class="cstat-no" title="statement not covered" >    statuses: ["staggered"],</span>
-<span class="cstat-no" title="statement not covered" >    flags: {</span>
-<span class="cstat-no" title="statement not covered" >      swerpg: {</span>
-<span class="cstat-no" title="statement not covered" >        dot: {</span>
-<span class="cstat-no" title="statement not covered" >          morale: Math.floor(actor.system.abilities.intellect.value / 2),</span>
-<span class="cstat-no" title="statement not covered" >          damageType: "electricity"</span>
+<span class="cstat-no" title="statement not covered" >    return {</span>
+<span class="cstat-no" title="statement not covered" >        _id: getEffectId("Shocked"),</span>
+<span class="cstat-no" title="statement not covered" >        name: "Shocked",</span>
+<span class="cstat-no" title="statement not covered" >        icon: "icons/magic/lightning/bolt-strike-forked-blue.webp",</span>
+<span class="cstat-no" title="statement not covered" >        duration: {turns: 1},</span>
+<span class="cstat-no" title="statement not covered" >        origin: actor.uuid,</span>
+<span class="cstat-no" title="statement not covered" >        statuses: ["staggered"],</span>
+<span class="cstat-no" title="statement not covered" >        flags: {</span>
+<span class="cstat-no" title="statement not covered" >            swerpg: {</span>
+<span class="cstat-no" title="statement not covered" >                dot: {</span>
+<span class="cstat-no" title="statement not covered" >                    morale: Math.floor(actor.system.abilities.intellect.value / 2),</span>
+<span class="cstat-no" title="statement not covered" >                    damageType: "electricity"</span>
+<span class="cstat-no" title="statement not covered" >                }</span>
+<span class="cstat-no" title="statement not covered" >            }</span>
 <span class="cstat-no" title="statement not covered" >        }</span>
-<span class="cstat-no" title="statement not covered" >      }</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >export function staggered(actor, target) {</span>
-<span class="cstat-no" title="statement not covered" >  return {</span>
-<span class="cstat-no" title="statement not covered" >    _id: getEffectId("Staggered"),</span>
-<span class="cstat-no" title="statement not covered" >    name: "Staggered",</span>
-<span class="cstat-no" title="statement not covered" >    icon: "icons/skills/melee/strike-hammer-destructive-orange.webp",</span>
-<span class="cstat-no" title="statement not covered" >    duration: {turns: 1},</span>
-<span class="cstat-no" title="statement not covered" >    origin: actor.uuid,</span>
-<span class="cstat-no" title="statement not covered" >    statuses: ["staggered"]</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    return {</span>
+<span class="cstat-no" title="statement not covered" >        _id: getEffectId("Staggered"),</span>
+<span class="cstat-no" title="statement not covered" >        name: "Staggered",</span>
+<span class="cstat-no" title="statement not covered" >        icon: "icons/skills/melee/strike-hammer-destructive-orange.webp",</span>
+<span class="cstat-no" title="statement not covered" >        duration: {turns: 1},</span>
+<span class="cstat-no" title="statement not covered" >        origin: actor.uuid,</span>
+<span class="cstat-no" title="statement not covered" >        statuses: ["staggered"]</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;</pre></td></tr></table></pre>
 
@@ -790,7 +790,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-05-11T08:34:16.353Z
+                at 2025-05-26T14:10:38.370Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

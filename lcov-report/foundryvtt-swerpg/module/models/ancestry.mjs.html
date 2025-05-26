@@ -110,13 +110,15 @@
 <a name='L45'></a><a href='#L45'>45</a>
 <a name='L46'></a><a href='#L46'>46</a>
 <a name='L47'></a><a href='#L47'>47</a>
-<a name='L48'></a><a href='#L48'>48</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<a name='L48'></a><a href='#L48'>48</a>
+<a name='L49'></a><a href='#L49'>49</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -162,47 +164,48 @@
 <span class="cstat-no" title="statement not covered" > */</span>
 <span class="cstat-no" title="statement not covered" >export default class SwerpgAncestry extends foundry.abstract.TypeDataModel {</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-<span class="cstat-no" title="statement not covered" >  /*  Data Schema                                 */</span>
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /*  Data Schema                                 */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @inheritDoc */</span>
-<span class="cstat-no" title="statement not covered" >  static defineSchema() {</span>
-<span class="cstat-no" title="statement not covered" >    const fields = foundry.data.fields;</span>
-<span class="cstat-no" title="statement not covered" >    return {</span>
-<span class="cstat-no" title="statement not covered" >      description: new fields.HTMLField({required: false, initial: undefined}),</span>
-<span class="cstat-no" title="statement not covered" >      size: new fields.NumberField({required: true, integer: true, nullable: false, min: 1, initial: 3}),</span>
-<span class="cstat-no" title="statement not covered" >      stride: new fields.NumberField({required: true, integer: true, nullable: false, min: 1, initial: 10}),</span>
-<span class="cstat-no" title="statement not covered" >      primary: new fields.StringField({required: false, initial: undefined, choices: SYSTEM.CHARACTERISTICS}),</span>
-<span class="cstat-no" title="statement not covered" >      secondary: new fields.StringField({required: false, initial: undefined, choices: SYSTEM.CHARACTERISTICS}),</span>
-<span class="cstat-no" title="statement not covered" >      resistance: new fields.StringField({blank: true, choices: SYSTEM.DAMAGE_TYPES}),</span>
-<span class="cstat-no" title="statement not covered" >      vulnerability: new fields.StringField({blank: true, choices: SYSTEM.DAMAGE_TYPES})</span>
-<span class="cstat-no" title="statement not covered" >    };</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @override */</span>
-<span class="cstat-no" title="statement not covered" >  static LOCALIZATION_PREFIXES = ["ANCESTRY"];</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @inheritdoc */</span>
-<span class="cstat-no" title="statement not covered" >  static validateJoint(data) {</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    // Skip validation if this is a newly created item that has not yet been populated</span>
-<span class="cstat-no" title="statement not covered" >    const isNew = !data.primary &amp;&amp; !data.secondary;</span>
-<span class="cstat-no" title="statement not covered" >    if ( isNew ) return;</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    // Validate Abilities</span>
-<span class="cstat-no" title="statement not covered" >    if ( data.primary === data.secondary ) {</span>
-<span class="cstat-no" title="statement not covered" >      throw new Error(game.i18n.localize("ANCESTRY.WARNINGS.ABILITIES"));</span>
+<span class="cstat-no" title="statement not covered" >    /** @inheritDoc */</span>
+<span class="cstat-no" title="statement not covered" >    static defineSchema() {</span>
+<span class="cstat-no" title="statement not covered" >        const fields = foundry.data.fields;</span>
+<span class="cstat-no" title="statement not covered" >        return {</span>
+<span class="cstat-no" title="statement not covered" >            description: new fields.HTMLField({required: false, initial: undefined}),</span>
+<span class="cstat-no" title="statement not covered" >            size: new fields.NumberField({required: true, integer: true, nullable: false, min: 1, initial: 3}),</span>
+<span class="cstat-no" title="statement not covered" >            stride: new fields.NumberField({required: true, integer: true, nullable: false, min: 1, initial: 10}),</span>
+<span class="cstat-no" title="statement not covered" >            primary: new fields.StringField({required: false, initial: undefined, choices: SYSTEM.CHARACTERISTICS}),</span>
+<span class="cstat-no" title="statement not covered" >            secondary: new fields.StringField({required: false, initial: undefined, choices: SYSTEM.CHARACTERISTICS}),</span>
+<span class="cstat-no" title="statement not covered" >            resistance: new fields.StringField({blank: true, choices: SYSTEM.DAMAGE_TYPES}),</span>
+<span class="cstat-no" title="statement not covered" >            vulnerability: new fields.StringField({blank: true, choices: SYSTEM.DAMAGE_TYPES})</span>
+<span class="cstat-no" title="statement not covered" >        };</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    // Validate Resistances</span>
-<span class="cstat-no" title="statement not covered" >    if ( (data.resistance &amp;&amp; (!data.vulnerability || (data.vulnerability === data.resistance)))</span>
-<span class="cstat-no" title="statement not covered" >      || (data.vulnerability &amp;&amp; (!data.resistance || (data.resistance === data.vulnerability)))) {</span>
-<span class="cstat-no" title="statement not covered" >      throw new Error(game.i18n.localize("ANCESTRY.WARNINGS.RESISTANCES"));</span>
+<span class="cstat-no" title="statement not covered" >    /** @override */</span>
+<span class="cstat-no" title="statement not covered" >    static LOCALIZATION_PREFIXES = ["ANCESTRY"];</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /** @inheritdoc */</span>
+<span class="cstat-no" title="statement not covered" >    static validateJoint(data) {</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Skip validation if this is a newly created item that has not yet been populated</span>
+<span class="cstat-no" title="statement not covered" >        const isNew = !data.primary &amp;&amp; !data.secondary;</span>
+<span class="cstat-no" title="statement not covered" >        if (isNew) return;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Validate Abilities</span>
+<span class="cstat-no" title="statement not covered" >        if (data.primary === data.secondary) {</span>
+<span class="cstat-no" title="statement not covered" >            throw new Error(game.i18n.localize("ANCESTRY.WARNINGS.ABILITIES"));</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Validate Resistances</span>
+<span class="cstat-no" title="statement not covered" >        if ((data.resistance &amp;&amp; (!data.vulnerability || (data.vulnerability === data.resistance)))</span>
+<span class="cstat-no" title="statement not covered" >            || (data.vulnerability &amp;&amp; (!data.resistance || (data.resistance === data.vulnerability)))) {</span>
+<span class="cstat-no" title="statement not covered" >            throw new Error(game.i18n.localize("ANCESTRY.WARNINGS.RESISTANCES"));</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;</pre></td></tr></table></pre>
 
@@ -211,7 +214,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-05-11T08:34:16.200Z
+                at 2025-05-26T14:10:38.209Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

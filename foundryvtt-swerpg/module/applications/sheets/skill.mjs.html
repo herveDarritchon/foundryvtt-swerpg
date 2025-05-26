@@ -227,78 +227,78 @@
 <span class="cstat-no" title="statement not covered" >/**</span>
 <span class="cstat-no" title="statement not covered" > * The application used to view and edit a skill page in the system journal.</span>
 <span class="cstat-no" title="statement not covered" > */</span>
-<span class="cstat-no" title="statement not covered" >export default class SkillPageSheet extends JournalPageSheet {</span>
+<span class="cstat-no" title="statement not covered" >export default class SkillPageSheet extends foundry.appv1.sheets.JournalPageSheet {</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @inheritDoc */</span>
-<span class="cstat-no" title="statement not covered" >  static get defaultOptions() {</span>
-<span class="cstat-no" title="statement not covered" >    const options = super.defaultOptions;</span>
-<span class="cstat-no" title="statement not covered" >    options.viewClasses.push("swerpg", "skill");</span>
-<span class="cstat-no" title="statement not covered" >    options.scrollY = [".scrollable"];</span>
-<span class="cstat-no" title="statement not covered" >    return options;</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @inheritDoc */</span>
-<span class="cstat-no" title="statement not covered" >  get template() {</span>
-<span class="cstat-no" title="statement not covered" >    return `systems/swerpg/templates/sheets/skill-${this.isEditable ? "edit" : "view"}.hbs`;</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @inheritDoc */</span>
-<span class="cstat-no" title="statement not covered" >  async getData(options={}) {</span>
-<span class="cstat-no" title="statement not covered" >    const context = await super.getData(options);</span>
-<span class="cstat-no" title="statement not covered" >    context.skills = SKILL.SKILLS;</span>
-<span class="cstat-no" title="statement not covered" >    context.skill = SKILL.SKILLS[context.data.system.skillId];</span>
-<span class="cstat-no" title="statement not covered" >    context.tags = this.#getTags(context.skill);</span>
-<span class="cstat-no" title="statement not covered" >    context.ranks = this.#prepareRanks(context.data.system.ranks);</span>
-<span class="cstat-no" title="statement not covered" >    context.paths = this.#preparePaths(context.data.system.paths);</span>
-<span class="cstat-no" title="statement not covered" >    return context;</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  #getTags(skill) {</span>
-<span class="cstat-no" title="statement not covered" >    if ( !skill?.category ) return {};</span>
-<span class="cstat-no" title="statement not covered" >    const c = SKILL.CATEGORIES[skill.category];</span>
-<span class="cstat-no" title="statement not covered" >    const a1 = CHARACTERISTICS[skill.abilities[0]];</span>
-<span class="cstat-no" title="statement not covered" >    const a2 = CHARACTERISTICS[skill.abilities[1]];</span>
-<span class="cstat-no" title="statement not covered" >    return [</span>
-<span class="cstat-no" title="statement not covered" >      {type: "category", label: c.label, color: c.color.css + "50"},</span>
-<span class="cstat-no" title="statement not covered" >      {type: "ability", label: a1.label, color: a1.color.css + "50"},</span>
-<span class="cstat-no" title="statement not covered" >      {type: "ability", label: a2.label, color: a2.color.css + "50"}</span>
-<span class="cstat-no" title="statement not covered" >    ]</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Prepare skill rank data for rendering.</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  #prepareRanks(rankData) {</span>
-<span class="cstat-no" title="statement not covered" >    const ranks = foundry.utils.deepClone(SKILL.RANKS);</span>
-<span class="cstat-no" title="statement not covered" >    for ( const [rankId, {description}] of Object.entries(rankData) ) {</span>
-<span class="cstat-no" title="statement not covered" >      const r = ranks[SKILL.RANK_IDS[rankId]];</span>
-<span class="cstat-no" title="statement not covered" >      r.title = `${r.label} (Rank ${r.rank})`;</span>
-<span class="cstat-no" title="statement not covered" >      r.description = description;</span>
+<span class="cstat-no" title="statement not covered" >    /** @inheritDoc */</span>
+<span class="cstat-no" title="statement not covered" >    static get defaultOptions() {</span>
+<span class="cstat-no" title="statement not covered" >        const options = super.defaultOptions;</span>
+<span class="cstat-no" title="statement not covered" >        options.viewClasses.push("swerpg", "skill");</span>
+<span class="cstat-no" title="statement not covered" >        options.scrollY = [".scrollable"];</span>
+<span class="cstat-no" title="statement not covered" >        return options;</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >    return ranks;</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Prepare specialization path data for rendering.</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  #preparePaths(pathData) {</span>
-<span class="cstat-no" title="statement not covered" >    for ( const [i, path] of Object.values(pathData).entries() ) {</span>
-<span class="cstat-no" title="statement not covered" >      path.title = `Specialization Path ${i+1}`;</span>
-<span class="cstat-no" title="statement not covered" >      for ( const [rankId, rank] of Object.entries(path.ranks) ) {</span>
-<span class="cstat-no" title="statement not covered" >        const {label, rank:n} = SKILL.RANKS[SKILL.RANK_IDS[rankId]];</span>
-<span class="cstat-no" title="statement not covered" >        rank.title = `${label} (Rank ${n})`;</span>
-<span class="cstat-no" title="statement not covered" >      }</span>
+<span class="cstat-no" title="statement not covered" >    /** @inheritDoc */</span>
+<span class="cstat-no" title="statement not covered" >    get template() {</span>
+<span class="cstat-no" title="statement not covered" >        return `systems/swerpg/templates/sheets/skill-${this.isEditable ? "edit" : "view"}.hbs`;</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >    return pathData;</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /** @inheritDoc */</span>
+<span class="cstat-no" title="statement not covered" >    async getData(options = {}) {</span>
+<span class="cstat-no" title="statement not covered" >        const context = await super.getData(options);</span>
+<span class="cstat-no" title="statement not covered" >        context.skills = SKILL.SKILLS;</span>
+<span class="cstat-no" title="statement not covered" >        context.skill = SKILL.SKILLS[context.data.system.skillId];</span>
+<span class="cstat-no" title="statement not covered" >        context.tags = this.#getTags(context.skill);</span>
+<span class="cstat-no" title="statement not covered" >        context.ranks = this.#prepareRanks(context.data.system.ranks);</span>
+<span class="cstat-no" title="statement not covered" >        context.paths = this.#preparePaths(context.data.system.paths);</span>
+<span class="cstat-no" title="statement not covered" >        return context;</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    #getTags(skill) {</span>
+<span class="cstat-no" title="statement not covered" >        if (!skill?.category) return {};</span>
+<span class="cstat-no" title="statement not covered" >        const c = SKILL.CATEGORIES[skill.category];</span>
+<span class="cstat-no" title="statement not covered" >        const a1 = CHARACTERISTICS[skill.abilities[0]];</span>
+<span class="cstat-no" title="statement not covered" >        const a2 = CHARACTERISTICS[skill.abilities[1]];</span>
+<span class="cstat-no" title="statement not covered" >        return [</span>
+<span class="cstat-no" title="statement not covered" >            {type: "category", label: c.label, color: c.color.css + "50"},</span>
+<span class="cstat-no" title="statement not covered" >            {type: "ability", label: a1.label, color: a1.color.css + "50"},</span>
+<span class="cstat-no" title="statement not covered" >            {type: "ability", label: a2.label, color: a2.color.css + "50"}</span>
+<span class="cstat-no" title="statement not covered" >        ]</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Prepare skill rank data for rendering.</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    #prepareRanks(rankData) {</span>
+<span class="cstat-no" title="statement not covered" >        const ranks = foundry.utils.deepClone(SKILL.RANKS);</span>
+<span class="cstat-no" title="statement not covered" >        for (const [rankId, {description}] of Object.entries(rankData)) {</span>
+<span class="cstat-no" title="statement not covered" >            const r = ranks[SKILL.RANK_IDS[rankId]];</span>
+<span class="cstat-no" title="statement not covered" >            r.title = `${r.label} (Rank ${r.rank})`;</span>
+<span class="cstat-no" title="statement not covered" >            r.description = description;</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >        return ranks;</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Prepare specialization path data for rendering.</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    #preparePaths(pathData) {</span>
+<span class="cstat-no" title="statement not covered" >        for (const [i, path] of Object.values(pathData).entries()) {</span>
+<span class="cstat-no" title="statement not covered" >            path.title = `Specialization Path ${i + 1}`;</span>
+<span class="cstat-no" title="statement not covered" >            for (const [rankId, rank] of Object.entries(path.ranks)) {</span>
+<span class="cstat-no" title="statement not covered" >                const {label, rank: n} = SKILL.RANKS[SKILL.RANK_IDS[rankId]];</span>
+<span class="cstat-no" title="statement not covered" >                rank.title = `${label} (Rank ${n})`;</span>
+<span class="cstat-no" title="statement not covered" >            }</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >        return pathData;</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;</pre></td></tr></table></pre>
 
@@ -307,7 +307,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-05-11T08:34:16.353Z
+                at 2025-05-26T14:10:38.370Z
             </div>
         <script src="../../../../prettify.js"></script>
         <script>

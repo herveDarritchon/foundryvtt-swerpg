@@ -431,7 +431,9 @@
 <a name='L366'></a><a href='#L366'>366</a>
 <a name='L367'></a><a href='#L367'>367</a>
 <a name='L368'></a><a href='#L368'>368</a>
-<a name='L369'></a><a href='#L369'>369</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<a name='L369'></a><a href='#L369'>369</a>
+<a name='L370'></a><a href='#L370'>370</a>
+<a name='L371'></a><a href='#L371'>371</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -556,6 +558,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -585,6 +588,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -806,366 +810,368 @@
 <span class="cstat-no" title="statement not covered" > * @extends {StandardCheckDialog}</span>
 <span class="cstat-no" title="statement not covered" > */</span>
 <span class="cstat-no" title="statement not covered" >export default class ActionUseDialog extends StandardCheckDialog {</span>
-<span class="cstat-no" title="statement not covered" >  constructor({action, actor, targets, ...options}) {</span>
-<span class="cstat-no" title="statement not covered" >    super(options);</span>
-<span class="cstat-no" title="statement not covered" >    this.action = action;</span>
-<span class="cstat-no" title="statement not covered" >    this.actor = actor;</span>
-<span class="cstat-no" title="statement not covered" >    this.targets = targets;</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @inheritDoc */</span>
-<span class="cstat-no" title="statement not covered" >  static DEFAULT_OPTIONS = {</span>
-<span class="cstat-no" title="statement not covered" >    classes: ["action-roll"],</span>
-<span class="cstat-no" title="statement not covered" >    position: {</span>
-<span class="cstat-no" title="statement not covered" >      width: 400</span>
-<span class="cstat-no" title="statement not covered" >    },</span>
-<span class="cstat-no" title="statement not covered" >    window: {</span>
-<span class="cstat-no" title="statement not covered" >      minimizable: true</span>
-<span class="cstat-no" title="statement not covered" >    },</span>
-<span class="cstat-no" title="statement not covered" >    actions: {</span>
-<span class="cstat-no" title="statement not covered" >      placeTemplate: ActionUseDialog.#onPlaceTemplate</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  };</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @override */</span>
-<span class="cstat-no" title="statement not covered" >  static TEMPLATE = "systems/swerpg/templates/dice/action-use-dialog.hbs";</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Track data related to a MeasuredTemplate preview for this Action.</span>
-<span class="cstat-no" title="statement not covered" >   * @type {{object: MeasuredTemplate, activeLayer: CanvasLayer, minimizedSheets: Application[], config: object}}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  #targetTemplate = {</span>
-<span class="cstat-no" title="statement not covered" >    activeLayer: undefined,</span>
-<span class="cstat-no" title="statement not covered" >    document: undefined,</span>
-<span class="cstat-no" title="statement not covered" >    object: undefined,</span>
-<span class="cstat-no" title="statement not covered" >    minimizedSheets: [],</span>
-<span class="cstat-no" title="statement not covered" >    config: undefined,</span>
-<span class="cstat-no" title="statement not covered" >    targets: undefined</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Is a MeasuredTemplate required before this dialog can be submitted?</span>
-<span class="cstat-no" title="statement not covered" >   * @type {boolean}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  #requiresTemplate = false;</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * The Action being performed</span>
-<span class="cstat-no" title="statement not covered" >   * @type {SwerpgAction}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  action;</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * The Actor performing the action.</span>
-<span class="cstat-no" title="statement not covered" >   * @type {SwerpgActor}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  actor;</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * The Tokens which are targeted by the action.</span>
-<span class="cstat-no" title="statement not covered" >   * @type {SwerpgToken[]}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  targets;</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @override */</span>
-<span class="cstat-no" title="statement not covered" >  get title() {</span>
-<span class="cstat-no" title="statement not covered" >    return `[${this.actor.name}] ${this.action.name}`</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @override */</span>
-<span class="cstat-no" title="statement not covered" >  async _prepareContext(options) {</span>
-<span class="cstat-no" title="statement not covered" >    const context = await super._prepareContext(options);</span>
-<span class="cstat-no" title="statement not covered" >    const tags = this._getTags();</span>
-<span class="cstat-no" title="statement not covered" >    const targetConfig = SYSTEM.ACTION.TARGET_TYPES[this.action.target.type];</span>
-<span class="cstat-no" title="statement not covered" >    this.#requiresTemplate = !!targetConfig?.template &amp;&amp; !this.action.template</span>
-<span class="cstat-no" title="statement not covered" >    return foundry.utils.mergeObject(context, {</span>
-<span class="cstat-no" title="statement not covered" >      action: this.action,</span>
-<span class="cstat-no" title="statement not covered" >      actor: this.actor,</span>
-<span class="cstat-no" title="statement not covered" >      activationTags: tags.activation,</span>
-<span class="cstat-no" title="statement not covered" >      actionTags: tags.action,</span>
-<span class="cstat-no" title="statement not covered" >      hasActionTags: !foundry.utils.isEmpty(tags.action),</span>
-<span class="cstat-no" title="statement not covered" >      hasContextTags: this.action.usage.context?.tags.size &gt; 0,</span>
-<span class="cstat-no" title="statement not covered" >      hasDice: this.action.usage.hasDice ?? false,</span>
-<span class="cstat-no" title="statement not covered" >      hasTargets: !["self", "none"].includes(this.action.target.type),</span>
-<span class="cstat-no" title="statement not covered" >      requiresTemplate: this.#requiresTemplate,</span>
-<span class="cstat-no" title="statement not covered" >      targets: this.#prepareTargets()</span>
-<span class="cstat-no" title="statement not covered" >    });</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   *</span>
-<span class="cstat-no" title="statement not covered" >   * @returns {ActionUseTarget[]}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  #prepareTargets() {</span>
-<span class="cstat-no" title="statement not covered" >    const targets = this.#targetTemplate.targets ?? this.action.acquireTargets({strict: false});</span>
-<span class="cstat-no" title="statement not covered" >    for ( const t of targets ) {</span>
-<span class="cstat-no" title="statement not covered" >      t.cssClass = t.error ? "unmet" : "";</span>
-<span class="cstat-no" title="statement not covered" >      t.tooltip = t.error ?? null;</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >    return targets;</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Get the tags that apply to this dialog.</span>
-<span class="cstat-no" title="statement not covered" >   * @returns {ActionTags}</span>
-<span class="cstat-no" title="statement not covered" >   * @protected</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  _getTags() {</span>
-<span class="cstat-no" title="statement not covered" >    return this.action.getTags();</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-<span class="cstat-no" title="statement not covered" >  /*  Event Listeners and Handlers                */</span>
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Resolve dialog submission to enact a Roll.</span>
-<span class="cstat-no" title="statement not covered" >   * @returns {StandardCheck}</span>
-<span class="cstat-no" title="statement not covered" >   * @protected</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  _onRoll(_event, _button, _dialog) {</span>
-<span class="cstat-no" title="statement not covered" >    this.action.usage.rollMode = this.rollMode;</span>
-<span class="cstat-no" title="statement not covered" >    if ( "special" in this.roll.data.boons ) this.action.usage.boons.special = this.roll.data.boons.special;</span>
-<span class="cstat-no" title="statement not covered" >    if ( "special" in this.roll.data.banes ) this.action.usage.banes.special = this.roll.data.banes.special;</span>
-<span class="cstat-no" title="statement not covered" >    return this.action;</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-<span class="cstat-no" title="statement not covered" >  /*  Target Management                           */</span>
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Respond when the set of User Targets changes by re-rendering currently visible action use apps.</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  static debounceChangeTarget = foundry.utils.debounce(() =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    for ( const app of foundry.applications.instances.values() ) {</span>
-<span class="cstat-no" title="statement not covered" >      if ( app instanceof ActionUseDialog ) app.render();</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  }, 20);</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-<span class="cstat-no" title="statement not covered" >  /*  Measured Template Management                */</span>
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Handle left-click events to begin the template targeting workflow</span>
-<span class="cstat-no" title="statement not covered" >   * @this {ActionUseDialog}</span>
-<span class="cstat-no" title="statement not covered" >   * @param {Event} event</span>
-<span class="cstat-no" title="statement not covered" >   * @returns {Promise&lt;void&gt;}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  static async #onPlaceTemplate(event) {</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    // Deactivate any previous template preview</span>
-<span class="cstat-no" title="statement not covered" >    this.#deactivateTemplate(event);</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    // Reference required data</span>
-<span class="cstat-no" title="statement not covered" >    const {actor, range, target} = this.action;</span>
-<span class="cstat-no" title="statement not covered" >    const targetConfig = SYSTEM.ACTION.TARGET_TYPES[target.type]?.template;</span>
-<span class="cstat-no" title="statement not covered" >    if ( !targetConfig ) return;</span>
-<span class="cstat-no" title="statement not covered" >    const tokens = actor.getActiveTokens();</span>
-<span class="cstat-no" title="statement not covered" >    const token = tokens[0] || null;</span>
-<span class="cstat-no" title="statement not covered" >    const activeLayer = canvas.activeLayer;</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    // TODO find a better place for this?</span>
-<span class="cstat-no" title="statement not covered" >    if ( target.type === "summon" ) {</span>
-<span class="cstat-no" title="statement not covered" >      const summon = await fromUuid(this.action.usage.summon);</span>
-<span class="cstat-no" title="statement not covered" >      if ( summon ) target.size = summon.size;</span>
+<span class="cstat-no" title="statement not covered" >    constructor({action, actor, targets, ...options}) {</span>
+<span class="cstat-no" title="statement not covered" >        super(options);</span>
+<span class="cstat-no" title="statement not covered" >        this.action = action;</span>
+<span class="cstat-no" title="statement not covered" >        this.actor = actor;</span>
+<span class="cstat-no" title="statement not covered" >        this.targets = targets;</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    // Create a temporary Measured Template document and PlaceableObject</span>
-<span class="cstat-no" title="statement not covered" >    const templateData = await this.#getTemplateData(token, range, target, targetConfig);</span>
-<span class="cstat-no" title="statement not covered" >    const template = await canvas.templates._createPreview(templateData, {renderSheet: false});</span>
-<span class="cstat-no" title="statement not covered" >    template.document._object = template; // FIXME this is a bit of a hack</span>
+<span class="cstat-no" title="statement not covered" >    /** @inheritDoc */</span>
+<span class="cstat-no" title="statement not covered" >    static DEFAULT_OPTIONS = {</span>
+<span class="cstat-no" title="statement not covered" >        classes: ["action-roll"],</span>
+<span class="cstat-no" title="statement not covered" >        position: {</span>
+<span class="cstat-no" title="statement not covered" >            width: 400</span>
+<span class="cstat-no" title="statement not covered" >        },</span>
+<span class="cstat-no" title="statement not covered" >        window: {</span>
+<span class="cstat-no" title="statement not covered" >            minimizable: true</span>
+<span class="cstat-no" title="statement not covered" >        },</span>
+<span class="cstat-no" title="statement not covered" >        actions: {</span>
+<span class="cstat-no" title="statement not covered" >            placeTemplate: ActionUseDialog.#onPlaceTemplate</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >    };</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    // Minimize open windows</span>
-<span class="cstat-no" title="statement not covered" >    const minimizedWindows = [];</span>
-<span class="cstat-no" title="statement not covered" >    for ( const app of Object.values(ui.windows) ) {</span>
-<span class="cstat-no" title="statement not covered" >      if ( !app.minimized ) {</span>
-<span class="cstat-no" title="statement not covered" >        app.minimize();</span>
-<span class="cstat-no" title="statement not covered" >        minimizedWindows.push(app);</span>
-<span class="cstat-no" title="statement not covered" >      }</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >    for ( const app of foundry.applications.instances.values() ) {</span>
-<span class="cstat-no" title="statement not covered" >      if ( !app.minimized ) {</span>
-<span class="cstat-no" title="statement not covered" >        app.minimize();</span>
-<span class="cstat-no" title="statement not covered" >        minimizedWindows.push(app);</span>
-<span class="cstat-no" title="statement not covered" >      }</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
+<span class="cstat-no" title="statement not covered" >    /** @override */</span>
+<span class="cstat-no" title="statement not covered" >    static TEMPLATE = "systems/swerpg/templates/dice/action-use-dialog.hbs";</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    // Store preview template data</span>
-<span class="cstat-no" title="statement not covered" >    this.#targetTemplate = {</span>
-<span class="cstat-no" title="statement not covered" >      activeLayer,</span>
-<span class="cstat-no" title="statement not covered" >      config: Object.assign({}, targetConfig, target),</span>
-<span class="cstat-no" title="statement not covered" >      document: template.document,</span>
-<span class="cstat-no" title="statement not covered" >      object: template,</span>
-<span class="cstat-no" title="statement not covered" >      origin: {x: template.document.x, y: template.document.y},</span>
-<span class="cstat-no" title="statement not covered" >      minimizedWindows</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >    this.#activateTemplate(template);</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Prepare Measured Template data for a certain candidate action</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  #getTemplateData(token, range, target, targetTemplateConfig) {</span>
-<span class="cstat-no" title="statement not covered" >    const {x, y} = token?.center ?? canvas.dimensions.rect.center;</span>
-<span class="cstat-no" title="statement not covered" >    const {id: userId, color: fillColor} = game.user;</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    // Prepare Template Data</span>
-<span class="cstat-no" title="statement not covered" >    let maxRange = range.maximum ?? 0;</span>
-<span class="cstat-no" title="statement not covered" >    let addRange = 0;</span>
-<span class="cstat-no" title="statement not covered" >    if ( token &amp;&amp; targetTemplateConfig.addSize ) addRange = (token.actor.size / 2);</span>
-<span class="cstat-no" title="statement not covered" >    const templateData = {user: userId, x, y, fillColor, ...targetTemplateConfig};</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    // Shape Specific Overrides</span>
-<span class="cstat-no" title="statement not covered" >    switch ( targetTemplateConfig.t ) {</span>
-<span class="cstat-no" title="statement not covered" >      case "circle":</span>
-<span class="cstat-no" title="statement not covered" >        templateData.distance = (target.size ?? maxRange) + addRange;</span>
-<span class="cstat-no" title="statement not covered" >        break;</span>
-<span class="cstat-no" title="statement not covered" >      case "cone":</span>
-<span class="cstat-no" title="statement not covered" >        templateData.distance = (target.size ?? maxRange) + addRange;</span>
-<span class="cstat-no" title="statement not covered" >        break;</span>
-<span class="cstat-no" title="statement not covered" >      case "ray":</span>
-<span class="cstat-no" title="statement not covered" >        templateData.distance = maxRange + addRange;</span>
-<span class="cstat-no" title="statement not covered" >        templateData.width = target.size ?? targetTemplateConfig.width;</span>
-<span class="cstat-no" title="statement not covered" >        break;</span>
-<span class="cstat-no" title="statement not covered" >      case "rect":</span>
-<span class="cstat-no" title="statement not covered" >        templateData.distance = Math.sqrt(2) * ((target.size ?? 1) + addRange);</span>
-<span class="cstat-no" title="statement not covered" >        break;</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >    return templateData;</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Register interactivity for the preview template placement</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  #activateTemplate() {</span>
-<span class="cstat-no" title="statement not covered" >    this.#targetTemplate.events = {</span>
-<span class="cstat-no" title="statement not covered" >      contextmenu: this.#cancelTemplate.bind(this),</span>
-<span class="cstat-no" title="statement not covered" >      mousedown: this.#confirmTemplate.bind(this),</span>
-<span class="cstat-no" title="statement not covered" >      mousemove: this.#moveTemplate.bind(this),</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >    canvas.stage.on("mousemove", this.#targetTemplate.events.mousemove);</span>
-<span class="cstat-no" title="statement not covered" >    canvas.stage.on("mousedown", this.#targetTemplate.events.mousedown);</span>
-<span class="cstat-no" title="statement not covered" >    canvas.app.view.addEventListener("contextmenu", this.#targetTemplate.events.contextmenu);</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Deactivate the preview template placement workflow.</span>
-<span class="cstat-no" title="statement not covered" >   * @param {Event} event     An initiating event that leads to workflow deactivation</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  #deactivateTemplate(event) {</span>
-<span class="cstat-no" title="statement not covered" >    const {document, object, events, activeLayer} = this.#targetTemplate;</span>
-<span class="cstat-no" title="statement not covered" >    if ( !object ) return;</span>
-<span class="cstat-no" title="statement not covered" >    canvas.templates._onDragLeftCancel(event);</span>
-<span class="cstat-no" title="statement not covered" >    document._object = object; // FIXME workaround</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    // Deactivate mouse events</span>
-<span class="cstat-no" title="statement not covered" >    canvas.stage.off("mousemove", events.mousemove);</span>
-<span class="cstat-no" title="statement not covered" >    canvas.stage.off("mousedown", events.mousedown);</span>
-<span class="cstat-no" title="statement not covered" >    canvas.app.view.removeEventListener("contextmenu", events.contextmenu);</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    // Restore the original canvas layer</span>
-<span class="cstat-no" title="statement not covered" >    activeLayer.activate(event);</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    // Maximize prior UI windows</span>
-<span class="cstat-no" title="statement not covered" >    for ( const app of this.#targetTemplate.minimizedWindows ) app.maximize();</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Cancel the template placement workflow on right-click.</span>
-<span class="cstat-no" title="statement not covered" >   * @param {Event} event     The contextmenu event</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  #cancelTemplate(event) {</span>
-<span class="cstat-no" title="statement not covered" >    event.preventDefault();</span>
-<span class="cstat-no" title="statement not covered" >    this.#deactivateTemplate(event);</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Conclude the template placement workflow on left-click.</span>
-<span class="cstat-no" title="statement not covered" >   * @param {Event} event     The mousedown event</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  #confirmTemplate(event) {</span>
-<span class="cstat-no" title="statement not covered" >    event.stopPropagation();</span>
-<span class="cstat-no" title="statement not covered" >    this.action.template = this.#targetTemplate.document;</span>
-<span class="cstat-no" title="statement not covered" >    const targets = this.#targetTemplate.targets = this.action.acquireTargets({strict: false});</span>
-<span class="cstat-no" title="statement not covered" >    if ( targets.length ) {</span>
-<span class="cstat-no" title="statement not covered" >      for ( const [i, {token}] of targets.entries() ) {</span>
-<span class="cstat-no" title="statement not covered" >        token.setTarget(true, {releaseOthers: i === 0, groupSelection: i &lt; targets.length - 1});</span>
-<span class="cstat-no" title="statement not covered" >      }</span>
-<span class="cstat-no" title="statement not covered" >    } else game.user.targets.clear();</span>
-<span class="cstat-no" title="statement not covered" >    this.#deactivateTemplate(event);</span>
-<span class="cstat-no" title="statement not covered" >    this.render();</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Move the position of the template during mousemove</span>
-<span class="cstat-no" title="statement not covered" >   * @param {Event} event     The mousemove event</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  #moveTemplate(event) {</span>
-<span class="cstat-no" title="statement not covered" >    event.stopPropagation();</span>
-<span class="cstat-no" title="statement not covered" >    const {config, moveTime, object, origin} = this.#targetTemplate;</span>
-<span class="cstat-no" title="statement not covered" >    const s = canvas.dimensions.size;</span>
-<span class="cstat-no" title="statement not covered" >    const update = {};</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    // Apply a 16ms throttle</span>
-<span class="cstat-no" title="statement not covered" >    const now = Date.now();</span>
-<span class="cstat-no" title="statement not covered" >    if ( now - (moveTime || 0) &lt;= 16 ) return;</span>
-<span class="cstat-no" title="statement not covered" >    this.#targetTemplate.moveTime = now;</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    // Identify the mouse cursor position</span>
-<span class="cstat-no" title="statement not covered" >    let cursor = event.getLocalPosition(canvas.templates);</span>
-<span class="cstat-no" title="statement not covered" >    const ray = new Ray(origin, {x: cursor.x, y: cursor.y});</span>
-<span class="cstat-no" title="statement not covered" >    if ( Number.isNumeric(config.distance) ) {</span>
-<span class="cstat-no" title="statement not covered" >      const maxDistance = (config.distance * s);</span>
-<span class="cstat-no" title="statement not covered" >      if ( ray.distance &gt; maxDistance ) cursor = ray.project((config.distance * s) / ray.distance);</span>
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Track data related to a MeasuredTemplate preview for this Action.</span>
+<span class="cstat-no" title="statement not covered" >     * @type {{object: MeasuredTemplate, activeLayer: CanvasLayer, minimizedSheets: Application[], config: object}}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    #targetTemplate = {</span>
+<span class="cstat-no" title="statement not covered" >        activeLayer: undefined,</span>
+<span class="cstat-no" title="statement not covered" >        document: undefined,</span>
+<span class="cstat-no" title="statement not covered" >        object: undefined,</span>
+<span class="cstat-no" title="statement not covered" >        minimizedSheets: [],</span>
+<span class="cstat-no" title="statement not covered" >        config: undefined,</span>
+<span class="cstat-no" title="statement not covered" >        targets: undefined</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    // Identify the resulting template coordinates</span>
-<span class="cstat-no" title="statement not covered" >    let p;</span>
-<span class="cstat-no" title="statement not covered" >    if ( config.anchor === "vertex" ) p = canvas.grid.getTopLeftPoint(cursor);</span>
-<span class="cstat-no" title="statement not covered" >    else if ( config.anchor === "center" ) p = canvas.grid.getCenterPoint(cursor);</span>
-<span class="cstat-no" title="statement not covered" >    if ( p !== undefined ) Object.assign(update, p);</span>
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Is a MeasuredTemplate required before this dialog can be submitted?</span>
+<span class="cstat-no" title="statement not covered" >     * @type {boolean}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    #requiresTemplate = false;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    // Update the pending template and re-render</span>
-<span class="cstat-no" title="statement not covered" >    if ( config.directionDelta ) update.direction = Math.toDegrees(ray.angle).toNearest(config.directionDelta);</span>
-<span class="cstat-no" title="statement not covered" >    object.document.updateSource(update);</span>
-<span class="cstat-no" title="statement not covered" >    object.renderFlags.set({refreshShape: true});</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * The Action being performed</span>
+<span class="cstat-no" title="statement not covered" >     * @type {SwerpgAction}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    action;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * The Actor performing the action.</span>
+<span class="cstat-no" title="statement not covered" >     * @type {SwerpgActor}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    actor;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Expose an internal method that subclasses can use to clear a target template.</span>
-<span class="cstat-no" title="statement not covered" >   * @internal</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  _clearTargetTemplate() {</span>
-<span class="cstat-no" title="statement not covered" >    if ( this.action.template ) {</span>
-<span class="cstat-no" title="statement not covered" >      this.#targetTemplate = {};</span>
-<span class="cstat-no" title="statement not covered" >      this.action.template = null;</span>
-<span class="cstat-no" title="statement not covered" >      game.user.targets.clear();</span>
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * The Tokens which are targeted by the action.</span>
+<span class="cstat-no" title="statement not covered" >     * @type {SwerpgToken[]}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    targets;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /** @override */</span>
+<span class="cstat-no" title="statement not covered" >    get title() {</span>
+<span class="cstat-no" title="statement not covered" >        return `[${this.actor.name}] ${this.action.name}`</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /** @override */</span>
+<span class="cstat-no" title="statement not covered" >    async _prepareContext(options) {</span>
+<span class="cstat-no" title="statement not covered" >        const context = await super._prepareContext(options);</span>
+<span class="cstat-no" title="statement not covered" >        const tags = this._getTags();</span>
+<span class="cstat-no" title="statement not covered" >        const targetConfig = SYSTEM.ACTION.TARGET_TYPES[this.action.target.type];</span>
+<span class="cstat-no" title="statement not covered" >        this.#requiresTemplate = !!targetConfig?.template &amp;&amp; !this.action.template</span>
+<span class="cstat-no" title="statement not covered" >        return foundry.utils.mergeObject(context, {</span>
+<span class="cstat-no" title="statement not covered" >            action: this.action,</span>
+<span class="cstat-no" title="statement not covered" >            actor: this.actor,</span>
+<span class="cstat-no" title="statement not covered" >            activationTags: tags.activation,</span>
+<span class="cstat-no" title="statement not covered" >            actionTags: tags.action,</span>
+<span class="cstat-no" title="statement not covered" >            hasActionTags: !foundry.utils.isEmpty(tags.action),</span>
+<span class="cstat-no" title="statement not covered" >            hasContextTags: this.action.usage.context?.tags.size &gt; 0,</span>
+<span class="cstat-no" title="statement not covered" >            hasDice: this.action.usage.hasDice ?? false,</span>
+<span class="cstat-no" title="statement not covered" >            hasTargets: !["self", "none"].includes(this.action.target.type),</span>
+<span class="cstat-no" title="statement not covered" >            requiresTemplate: this.#requiresTemplate,</span>
+<span class="cstat-no" title="statement not covered" >            targets: this.#prepareTargets()</span>
+<span class="cstat-no" title="statement not covered" >        });</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     *</span>
+<span class="cstat-no" title="statement not covered" >     * @returns {ActionUseTarget[]}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    #prepareTargets() {</span>
+<span class="cstat-no" title="statement not covered" >        const targets = this.#targetTemplate.targets ?? this.action.acquireTargets({strict: false});</span>
+<span class="cstat-no" title="statement not covered" >        for (const t of targets) {</span>
+<span class="cstat-no" title="statement not covered" >            t.cssClass = t.error ? "unmet" : "";</span>
+<span class="cstat-no" title="statement not covered" >            t.tooltip = t.error ?? null;</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >        return targets;</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Get the tags that apply to this dialog.</span>
+<span class="cstat-no" title="statement not covered" >     * @returns {ActionTags}</span>
+<span class="cstat-no" title="statement not covered" >     * @protected</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    _getTags() {</span>
+<span class="cstat-no" title="statement not covered" >        return this.action.getTags();</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /*  Event Listeners and Handlers                */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Resolve dialog submission to enact a Roll.</span>
+<span class="cstat-no" title="statement not covered" >     * @returns {StandardCheck}</span>
+<span class="cstat-no" title="statement not covered" >     * @protected</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    _onRoll(_event, _button, _dialog) {</span>
+<span class="cstat-no" title="statement not covered" >        this.action.usage.rollMode = this.rollMode;</span>
+<span class="cstat-no" title="statement not covered" >        if ("special" in this.roll.data.boons) this.action.usage.boons.special = this.roll.data.boons.special;</span>
+<span class="cstat-no" title="statement not covered" >        if ("special" in this.roll.data.banes) this.action.usage.banes.special = this.roll.data.banes.special;</span>
+<span class="cstat-no" title="statement not covered" >        return this.action;</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /*  Target Management                           */</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Respond when the set of User Targets changes by re-rendering currently visible action use apps.</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    static debounceChangeTarget = foundry.utils.debounce(() =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >        for (const app of foundry.applications.instances.values()) {</span>
+<span class="cstat-no" title="statement not covered" >            if (app instanceof ActionUseDialog) app.render();</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >    }, 20);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /*  Measured Template Management                */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Handle left-click events to begin the template targeting workflow</span>
+<span class="cstat-no" title="statement not covered" >     * @this {ActionUseDialog}</span>
+<span class="cstat-no" title="statement not covered" >     * @param {Event} event</span>
+<span class="cstat-no" title="statement not covered" >     * @returns {Promise&lt;void&gt;}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    static async #onPlaceTemplate(event) {</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Deactivate any previous template preview</span>
+<span class="cstat-no" title="statement not covered" >        this.#deactivateTemplate(event);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Reference required data</span>
+<span class="cstat-no" title="statement not covered" >        const {actor, range, target} = this.action;</span>
+<span class="cstat-no" title="statement not covered" >        const targetConfig = SYSTEM.ACTION.TARGET_TYPES[target.type]?.template;</span>
+<span class="cstat-no" title="statement not covered" >        if (!targetConfig) return;</span>
+<span class="cstat-no" title="statement not covered" >        const tokens = actor.getActiveTokens();</span>
+<span class="cstat-no" title="statement not covered" >        const token = tokens[0] || null;</span>
+<span class="cstat-no" title="statement not covered" >        const activeLayer = canvas.activeLayer;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // TODO find a better place for this?</span>
+<span class="cstat-no" title="statement not covered" >        if (target.type === "summon") {</span>
+<span class="cstat-no" title="statement not covered" >            const summon = await fromUuid(this.action.usage.summon);</span>
+<span class="cstat-no" title="statement not covered" >            if (summon) target.size = summon.size;</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Create a temporary Measured Template document and PlaceableObject</span>
+<span class="cstat-no" title="statement not covered" >        const templateData = await this.#getTemplateData(token, range, target, targetConfig);</span>
+<span class="cstat-no" title="statement not covered" >        const template = await canvas.templates._createPreview(templateData, {renderSheet: false});</span>
+<span class="cstat-no" title="statement not covered" >        template.document._object = template; // FIXME this is a bit of a hack</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Minimize open windows</span>
+<span class="cstat-no" title="statement not covered" >        const minimizedWindows = [];</span>
+<span class="cstat-no" title="statement not covered" >        for (const app of Object.values(ui.windows)) {</span>
+<span class="cstat-no" title="statement not covered" >            if (!app.minimized) {</span>
+<span class="cstat-no" title="statement not covered" >                app.minimize();</span>
+<span class="cstat-no" title="statement not covered" >                minimizedWindows.push(app);</span>
+<span class="cstat-no" title="statement not covered" >            }</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >        for (const app of foundry.applications.instances.values()) {</span>
+<span class="cstat-no" title="statement not covered" >            if (!app.minimized) {</span>
+<span class="cstat-no" title="statement not covered" >                app.minimize();</span>
+<span class="cstat-no" title="statement not covered" >                minimizedWindows.push(app);</span>
+<span class="cstat-no" title="statement not covered" >            }</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Store preview template data</span>
+<span class="cstat-no" title="statement not covered" >        this.#targetTemplate = {</span>
+<span class="cstat-no" title="statement not covered" >            activeLayer,</span>
+<span class="cstat-no" title="statement not covered" >            config: Object.assign({}, targetConfig, target),</span>
+<span class="cstat-no" title="statement not covered" >            document: template.document,</span>
+<span class="cstat-no" title="statement not covered" >            object: template,</span>
+<span class="cstat-no" title="statement not covered" >            origin: {x: template.document.x, y: template.document.y},</span>
+<span class="cstat-no" title="statement not covered" >            minimizedWindows</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >        this.#activateTemplate(template);</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Prepare Measured Template data for a certain candidate action</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    #getTemplateData(token, range, target, targetTemplateConfig) {</span>
+<span class="cstat-no" title="statement not covered" >        const {x, y} = token?.center ?? canvas.dimensions.rect.center;</span>
+<span class="cstat-no" title="statement not covered" >        const {id: userId, color: fillColor} = game.user;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Prepare Template Data</span>
+<span class="cstat-no" title="statement not covered" >        let maxRange = range.maximum ?? 0;</span>
+<span class="cstat-no" title="statement not covered" >        let addRange = 0;</span>
+<span class="cstat-no" title="statement not covered" >        if (token &amp;&amp; targetTemplateConfig.addSize) addRange = (token.actor.size / 2);</span>
+<span class="cstat-no" title="statement not covered" >        const templateData = {user: userId, x, y, fillColor, ...targetTemplateConfig};</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Shape Specific Overrides</span>
+<span class="cstat-no" title="statement not covered" >        switch (targetTemplateConfig.t) {</span>
+<span class="cstat-no" title="statement not covered" >            case "circle":</span>
+<span class="cstat-no" title="statement not covered" >                templateData.distance = (target.size ?? maxRange) + addRange;</span>
+<span class="cstat-no" title="statement not covered" >                break;</span>
+<span class="cstat-no" title="statement not covered" >            case "cone":</span>
+<span class="cstat-no" title="statement not covered" >                templateData.distance = (target.size ?? maxRange) + addRange;</span>
+<span class="cstat-no" title="statement not covered" >                break;</span>
+<span class="cstat-no" title="statement not covered" >            case "ray":</span>
+<span class="cstat-no" title="statement not covered" >                templateData.distance = maxRange + addRange;</span>
+<span class="cstat-no" title="statement not covered" >                templateData.width = target.size ?? targetTemplateConfig.width;</span>
+<span class="cstat-no" title="statement not covered" >                break;</span>
+<span class="cstat-no" title="statement not covered" >            case "rect":</span>
+<span class="cstat-no" title="statement not covered" >                templateData.distance = Math.sqrt(2) * ((target.size ?? 1) + addRange);</span>
+<span class="cstat-no" title="statement not covered" >                break;</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >        return templateData;</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Register interactivity for the preview template placement</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    #activateTemplate() {</span>
+<span class="cstat-no" title="statement not covered" >        this.#targetTemplate.events = {</span>
+<span class="cstat-no" title="statement not covered" >            contextmenu: this.#cancelTemplate.bind(this),</span>
+<span class="cstat-no" title="statement not covered" >            mousedown: this.#confirmTemplate.bind(this),</span>
+<span class="cstat-no" title="statement not covered" >            mousemove: this.#moveTemplate.bind(this),</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >        canvas.stage.on("mousemove", this.#targetTemplate.events.mousemove);</span>
+<span class="cstat-no" title="statement not covered" >        canvas.stage.on("mousedown", this.#targetTemplate.events.mousedown);</span>
+<span class="cstat-no" title="statement not covered" >        canvas.app.view.addEventListener("contextmenu", this.#targetTemplate.events.contextmenu);</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Deactivate the preview template placement workflow.</span>
+<span class="cstat-no" title="statement not covered" >     * @param {Event} event     An initiating event that leads to workflow deactivation</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    #deactivateTemplate(event) {</span>
+<span class="cstat-no" title="statement not covered" >        const {document, object, events, activeLayer} = this.#targetTemplate;</span>
+<span class="cstat-no" title="statement not covered" >        if (!object) return;</span>
+<span class="cstat-no" title="statement not covered" >        canvas.templates._onDragLeftCancel(event);</span>
+<span class="cstat-no" title="statement not covered" >        document._object = object; // FIXME workaround</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Deactivate mouse events</span>
+<span class="cstat-no" title="statement not covered" >        canvas.stage.off("mousemove", events.mousemove);</span>
+<span class="cstat-no" title="statement not covered" >        canvas.stage.off("mousedown", events.mousedown);</span>
+<span class="cstat-no" title="statement not covered" >        canvas.app.view.removeEventListener("contextmenu", events.contextmenu);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Restore the original canvas layer</span>
+<span class="cstat-no" title="statement not covered" >        activeLayer.activate(event);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Maximize prior UI windows</span>
+<span class="cstat-no" title="statement not covered" >        for (const app of this.#targetTemplate.minimizedWindows) app.maximize();</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Cancel the template placement workflow on right-click.</span>
+<span class="cstat-no" title="statement not covered" >     * @param {Event} event     The contextmenu event</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    #cancelTemplate(event) {</span>
+<span class="cstat-no" title="statement not covered" >        event.preventDefault();</span>
+<span class="cstat-no" title="statement not covered" >        this.#deactivateTemplate(event);</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Conclude the template placement workflow on left-click.</span>
+<span class="cstat-no" title="statement not covered" >     * @param {Event} event     The mousedown event</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    #confirmTemplate(event) {</span>
+<span class="cstat-no" title="statement not covered" >        event.stopPropagation();</span>
+<span class="cstat-no" title="statement not covered" >        this.action.template = this.#targetTemplate.document;</span>
+<span class="cstat-no" title="statement not covered" >        const targets = this.#targetTemplate.targets = this.action.acquireTargets({strict: false});</span>
+<span class="cstat-no" title="statement not covered" >        if (targets.length) {</span>
+<span class="cstat-no" title="statement not covered" >            for (const [i, {token}] of targets.entries()) {</span>
+<span class="cstat-no" title="statement not covered" >                token.setTarget(true, {releaseOthers: i === 0, groupSelection: i &lt; targets.length - 1});</span>
+<span class="cstat-no" title="statement not covered" >            }</span>
+<span class="cstat-no" title="statement not covered" >        } else game.user.targets.clear();</span>
+<span class="cstat-no" title="statement not covered" >        this.#deactivateTemplate(event);</span>
+<span class="cstat-no" title="statement not covered" >        this.render();</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Move the position of the template during mousemove</span>
+<span class="cstat-no" title="statement not covered" >     * @param {Event} event     The mousemove event</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    #moveTemplate(event) {</span>
+<span class="cstat-no" title="statement not covered" >        event.stopPropagation();</span>
+<span class="cstat-no" title="statement not covered" >        const {config, moveTime, object, origin} = this.#targetTemplate;</span>
+<span class="cstat-no" title="statement not covered" >        const s = canvas.dimensions.size;</span>
+<span class="cstat-no" title="statement not covered" >        const update = {};</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Apply a 16ms throttle</span>
+<span class="cstat-no" title="statement not covered" >        const now = Date.now();</span>
+<span class="cstat-no" title="statement not covered" >        if (now - (moveTime || 0) &lt;= 16) return;</span>
+<span class="cstat-no" title="statement not covered" >        this.#targetTemplate.moveTime = now;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Identify the mouse cursor position</span>
+<span class="cstat-no" title="statement not covered" >        let cursor = event.getLocalPosition(canvas.templates);</span>
+<span class="cstat-no" title="statement not covered" >        const ray = new Ray(origin, {x: cursor.x, y: cursor.y});</span>
+<span class="cstat-no" title="statement not covered" >        if (Number.isNumeric(config.distance)) {</span>
+<span class="cstat-no" title="statement not covered" >            const maxDistance = (config.distance * s);</span>
+<span class="cstat-no" title="statement not covered" >            if (ray.distance &gt; maxDistance) cursor = ray.project((config.distance * s) / ray.distance);</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Identify the resulting template coordinates</span>
+<span class="cstat-no" title="statement not covered" >        let p;</span>
+<span class="cstat-no" title="statement not covered" >        if (config.anchor === "vertex") p = canvas.grid.getTopLeftPoint(cursor);</span>
+<span class="cstat-no" title="statement not covered" >        else if (config.anchor === "center") p = canvas.grid.getCenterPoint(cursor);</span>
+<span class="cstat-no" title="statement not covered" >        if (p !== undefined) Object.assign(update, p);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Update the pending template and re-render</span>
+<span class="cstat-no" title="statement not covered" >        if (config.directionDelta) update.direction = Math.toDegrees(ray.angle).toNearest(config.directionDelta);</span>
+<span class="cstat-no" title="statement not covered" >        object.document.updateSource(update);</span>
+<span class="cstat-no" title="statement not covered" >        object.renderFlags.set({refreshShape: true});</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Expose an internal method that subclasses can use to clear a target template.</span>
+<span class="cstat-no" title="statement not covered" >     * @internal</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    _clearTargetTemplate() {</span>
+<span class="cstat-no" title="statement not covered" >        if (this.action.template) {</span>
+<span class="cstat-no" title="statement not covered" >            this.#targetTemplate = {};</span>
+<span class="cstat-no" title="statement not covered" >            this.action.template = null;</span>
+<span class="cstat-no" title="statement not covered" >            game.user.targets.clear();</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;</pre></td></tr></table></pre>
 
@@ -1174,7 +1180,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-05-11T08:34:16.200Z
+                at 2025-05-26T14:10:38.209Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

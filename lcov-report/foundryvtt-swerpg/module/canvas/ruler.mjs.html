@@ -25,28 +25,28 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/164</span>
+                <span class='fraction'>0/162</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>1/1</span>
+                <span class='fraction'>0/1</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>1/1</span>
+                <span class='fraction'>0/1</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/164</span>
+                <span class='fraction'>0/162</span>
             </div>
         
             
@@ -253,11 +253,7 @@
 <a name='L188'></a><a href='#L188'>188</a>
 <a name='L189'></a><a href='#L189'>189</a>
 <a name='L190'></a><a href='#L190'>190</a>
-<a name='L191'></a><a href='#L191'>191</a>
-<a name='L192'></a><a href='#L192'>192</a>
-<a name='L193'></a><a href='#L193'>193</a>
-<a name='L194'></a><a href='#L194'>194</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<a name='L191'></a><a href='#L191'>191</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -312,11 +308,9 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -449,198 +443,195 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">&nbsp;
-<span class="cstat-no" title="statement not covered" >export default class SwerpgRuler extends Ruler {</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" >export default class SwerpgRuler extends foundry.canvas.interaction.Ruler {<span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ></span></span></span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * The Movement action being measured, or null.</span>
-<span class="cstat-no" title="statement not covered" >   * @type {SwerpgAction|null}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  #action = null;</span>
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * The Movement action being measured, or null.</span>
+<span class="cstat-no" title="statement not covered" >     * @type {SwerpgAction|null}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    #action = null;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * A reference to the Actor who is moving, or null.</span>
-<span class="cstat-no" title="statement not covered" >   * @type {SwerpgActor|null}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  #actor = null;</span>
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * A reference to the Actor who is moving, or null.</span>
+<span class="cstat-no" title="statement not covered" >     * @type {SwerpgActor|null}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    #actor = null;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * String labels applied to the measured distance</span>
-<span class="cstat-no" title="statement not covered" >   * @type {{cost: string, distance: string}}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  #labels = {</span>
-<span class="cstat-no" title="statement not covered" >    distance: undefined,</span>
-<span class="cstat-no" title="statement not covered" >    cost: undefined</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * An array of offsets relative to the grid position of the token center which define the full base size of the token.</span>
-<span class="cstat-no" title="statement not covered" >   * @type {[number, number][]}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  #footprint = [];</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * A set of grid offsets which have already been highlighted.</span>
-<span class="cstat-no" title="statement not covered" >   * @type {Set&lt;number&gt;}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  #highlighted = new Set();</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  get cost() {</span>
-<span class="cstat-no" title="statement not covered" >    return this.#action?.cost.action || 0;</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Identify measurement origin.</span>
-<span class="cstat-no" title="statement not covered" >   * Measurement origin is either (1) unsnapped, (2) a Token center, or (3) a grid space center.</span>
-<span class="cstat-no" title="statement not covered" >   * @override</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  _getMeasurementOrigin(point, {snap=true}={}) {</span>
-<span class="cstat-no" title="statement not covered" >    if ( !snap ) return {x: point.x, y: point.y};</span>
-<span class="cstat-no" title="statement not covered" >    if ( this.token?.actor ) {</span>
-<span class="cstat-no" title="statement not covered" >      point = this.token.center;</span>
-<span class="cstat-no" title="statement not covered" >      const isEven = this.token.actor.size % 2 === 0;</span>
-<span class="cstat-no" title="statement not covered" >      const mode = CONST.GRID_SNAPPING_MODES[isEven ? "VERTEX" : "CENTER"];</span>
-<span class="cstat-no" title="statement not covered" >      return canvas.grid.getSnappedPoint(point, {mode})</span>
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * String labels applied to the measured distance</span>
+<span class="cstat-no" title="statement not covered" >     * @type {{cost: string, distance: string}}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    #labels = {</span>
+<span class="cstat-no" title="statement not covered" >        distance: undefined,</span>
+<span class="cstat-no" title="statement not covered" >        cost: undefined</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >    else return canvas.grid.getCenterPoint(point);</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * An array of offsets relative to the grid position of the token center which define the full base size of the token.</span>
+<span class="cstat-no" title="statement not covered" >     * @type {[number, number][]}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    #footprint = [];</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Identify measurement origin.</span>
-<span class="cstat-no" title="statement not covered" >   * Measurement destination is either (1) unsnapped, (2) a Token center, or (3) a grid space center.</span>
-<span class="cstat-no" title="statement not covered" >   * @override</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  _getMeasurementDestination(point, {snap=true}={}) {</span>
-<span class="cstat-no" title="statement not covered" >    if ( !snap ) return {x: point.x, y: point.y};</span>
-<span class="cstat-no" title="statement not covered" >    if ( this.token?.actor ) {</span>
-<span class="cstat-no" title="statement not covered" >      const isEven = this.token.actor.size % 2 === 0;</span>
-<span class="cstat-no" title="statement not covered" >      const mode = CONST.GRID_SNAPPING_MODES[isEven ? "VERTEX" : "CENTER"];</span>
-<span class="cstat-no" title="statement not covered" >      return canvas.grid.getSnappedPoint(point, {mode})</span>
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * A set of grid offsets which have already been highlighted.</span>
+<span class="cstat-no" title="statement not covered" >     * @type {Set&lt;number&gt;}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    #highlighted = new Set();</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    get cost() {</span>
+<span class="cstat-no" title="statement not covered" >        return this.#action?.cost.action || 0;</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >    else return canvas.grid.getCenterPoint(point);</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @inheritDoc */</span>
-<span class="cstat-no" title="statement not covered" >  _startMeasurement(origin, options={}) {</span>
-<span class="cstat-no" title="statement not covered" >    super._startMeasurement(origin, options);</span>
-<span class="cstat-no" title="statement not covered" >    this.#footprint.length = 0;</span>
-<span class="cstat-no" title="statement not covered" >    this.#actor = null;</span>
-<span class="cstat-no" title="statement not covered" >    this.#action = null;</span>
-<span class="cstat-no" title="statement not covered" >    if ( this.token?.actor ) {</span>
-<span class="cstat-no" title="statement not covered" >      this.#actor = this.token.actor;</span>
-<span class="cstat-no" title="statement not covered" >      this.#action = this.#actor.actions.move.clone();</span>
-<span class="cstat-no" title="statement not covered" >      this.#identifyFootprint();</span>
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Identify measurement origin.</span>
+<span class="cstat-no" title="statement not covered" >     * Measurement origin is either (1) unsnapped, (2) a Token center, or (3) a grid space center.</span>
+<span class="cstat-no" title="statement not covered" >     * @override</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    _getMeasurementOrigin(point, {snap = true} = {}) {</span>
+<span class="cstat-no" title="statement not covered" >        if (!snap) return {x: point.x, y: point.y};</span>
+<span class="cstat-no" title="statement not covered" >        if (this.token?.actor) {</span>
+<span class="cstat-no" title="statement not covered" >            point = this.token.center;</span>
+<span class="cstat-no" title="statement not covered" >            const isEven = this.token.actor.size % 2 === 0;</span>
+<span class="cstat-no" title="statement not covered" >            const mode = CONST.GRID_SNAPPING_MODES[isEven ? "VERTEX" : "CENTER"];</span>
+<span class="cstat-no" title="statement not covered" >            return canvas.grid.getSnappedPoint(point, {mode})</span>
+<span class="cstat-no" title="statement not covered" >        } else return canvas.grid.getCenterPoint(point);</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Identify the grid offsets which comprise the token footprint relative to the measurement origin.</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  #identifyFootprint() {</span>
-<span class="cstat-no" title="statement not covered" >    this.#footprint.length = 0;</span>
-<span class="cstat-no" title="statement not covered" >    const {width, height} = this.token.document;</span>
-<span class="cstat-no" title="statement not covered" >    const center = canvas.grid.getOffset(this.waypoints[0]);</span>
-<span class="cstat-no" title="statement not covered" >    const origin = canvas.grid.getOffset(this.token);</span>
-<span class="cstat-no" title="statement not covered" >    const i0 = origin.i - center.i;</span>
-<span class="cstat-no" title="statement not covered" >    const j0 = origin.j - center.j;</span>
-<span class="cstat-no" title="statement not covered" >    for ( let i=i0; i&lt;i0+height; i++ ) {</span>
-<span class="cstat-no" title="statement not covered" >      for ( let j=j0; j&lt;j0+width; j++ ) {</span>
-<span class="cstat-no" title="statement not covered" >        this.#footprint.push([i, j]);</span>
-<span class="cstat-no" title="statement not covered" >      }</span>
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Identify measurement origin.</span>
+<span class="cstat-no" title="statement not covered" >     * Measurement destination is either (1) unsnapped, (2) a Token center, or (3) a grid space center.</span>
+<span class="cstat-no" title="statement not covered" >     * @override</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    _getMeasurementDestination(point, {snap = true} = {}) {</span>
+<span class="cstat-no" title="statement not covered" >        if (!snap) return {x: point.x, y: point.y};</span>
+<span class="cstat-no" title="statement not covered" >        if (this.token?.actor) {</span>
+<span class="cstat-no" title="statement not covered" >            const isEven = this.token.actor.size % 2 === 0;</span>
+<span class="cstat-no" title="statement not covered" >            const mode = CONST.GRID_SNAPPING_MODES[isEven ? "VERTEX" : "CENTER"];</span>
+<span class="cstat-no" title="statement not covered" >            return canvas.grid.getSnappedPoint(point, {mode})</span>
+<span class="cstat-no" title="statement not covered" >        } else return canvas.grid.getCenterPoint(point);</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @inheritDoc */</span>
-<span class="cstat-no" title="statement not covered" >  _computeDistance(gridSpaces) {</span>
-<span class="cstat-no" title="statement not covered" >    super._computeDistance(gridSpaces);</span>
-<span class="cstat-no" title="statement not covered" >    this.#computeCost()</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Compute the cost of the measured move</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  #computeCost() {</span>
-<span class="cstat-no" title="statement not covered" >    this.#labels.distance = `${this.totalDistance.toFixed(2)} ${canvas.scene.grid.units}`;</span>
-<span class="cstat-no" title="statement not covered" >    if ( !this.#action ) return;</span>
-<span class="cstat-no" title="statement not covered" >    this.#action.usage.distance = this.totalDistance;</span>
-<span class="cstat-no" title="statement not covered" >    SYSTEM.ACTION.TAGS.movement.prepare.call(this.#action);</span>
-<span class="cstat-no" title="statement not covered" >    const ap = this.#action.cost.action;</span>
-<span class="cstat-no" title="statement not covered" >    if ( ap === 0 ) this.#labels.cost = "Free";</span>
-<span class="cstat-no" title="statement not covered" >    else if ( ap === Infinity ) this.#labels.cost = "Impossible";</span>
-<span class="cstat-no" title="statement not covered" >    else this.#labels.cost = `${ap}AP`;</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @override */</span>
-<span class="cstat-no" title="statement not covered" >  _getSegmentLabel(segment, totalDistance) {</span>
-<span class="cstat-no" title="statement not covered" >    if ( !segment.last ) return null;</span>
-<span class="cstat-no" title="statement not covered" >    if ( !this.#action ) return this.#labels.distance;</span>
-<span class="cstat-no" title="statement not covered" >    return `${this.#labels.distance} [${this.#labels.cost}]`;</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @inheritDoc */</span>
-<span class="cstat-no" title="statement not covered" >  _drawMeasuredPath() {</span>
-<span class="cstat-no" title="statement not covered" >    super._drawMeasuredPath();</span>
-<span class="cstat-no" title="statement not covered" >    if ( this.#actor?.isOwner &amp;&amp; this.segments.length ) {</span>
-<span class="cstat-no" title="statement not covered" >      const label = this.segments.at(-1).label;</span>
-<span class="cstat-no" title="statement not covered" >      label.tint = this.cost &gt; this.#actor.system.resources.action.value ? 0xDD0011 : 0xFFFFFF;</span>
+<span class="cstat-no" title="statement not covered" >    /** @inheritDoc */</span>
+<span class="cstat-no" title="statement not covered" >    _startMeasurement(origin, options = {}) {</span>
+<span class="cstat-no" title="statement not covered" >        super._startMeasurement(origin, options);</span>
+<span class="cstat-no" title="statement not covered" >        this.#footprint.length = 0;</span>
+<span class="cstat-no" title="statement not covered" >        this.#actor = null;</span>
+<span class="cstat-no" title="statement not covered" >        this.#action = null;</span>
+<span class="cstat-no" title="statement not covered" >        if (this.token?.actor) {</span>
+<span class="cstat-no" title="statement not covered" >            this.#actor = this.token.actor;</span>
+<span class="cstat-no" title="statement not covered" >            this.#action = this.#actor.actions.move.clone();</span>
+<span class="cstat-no" title="statement not covered" >            this.#identifyFootprint();</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >    this.#highlighted.clear();</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @override */</span>
-<span class="cstat-no" title="statement not covered" >  _highlightMeasurementSegment(segment) {</span>
-<span class="cstat-no" title="statement not covered" >    if ( !this.token || segment.teleport ) return; // No highlight</span>
-<span class="cstat-no" title="statement not covered" >    const path = canvas.grid.getDirectPath([segment.ray.A, segment.ray.B]);</span>
-<span class="cstat-no" title="statement not covered" >    for ( const offset of path ) {</span>
-<span class="cstat-no" title="statement not covered" >      for ( const d of this.#footprint ) {</span>
-<span class="cstat-no" title="statement not covered" >        const o = {i: offset.i + d[0], j: offset.j + d[1]};</span>
-<span class="cstat-no" title="statement not covered" >        const k = (o.i &lt;&lt; 16) + o.j;</span>
-<span class="cstat-no" title="statement not covered" >        if ( this.#highlighted.has(k) ) continue;</span>
-<span class="cstat-no" title="statement not covered" >        this.#highlighted.add(k);</span>
-<span class="cstat-no" title="statement not covered" >        const p = canvas.grid.getTopLeftPoint(o);</span>
-<span class="cstat-no" title="statement not covered" >        canvas.interface.grid.highlightPosition(this.name, {...p, color: this.color});</span>
-<span class="cstat-no" title="statement not covered" >      }</span>
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Identify the grid offsets which comprise the token footprint relative to the measurement origin.</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    #identifyFootprint() {</span>
+<span class="cstat-no" title="statement not covered" >        this.#footprint.length = 0;</span>
+<span class="cstat-no" title="statement not covered" >        const {width, height} = this.token.document;</span>
+<span class="cstat-no" title="statement not covered" >        const center = canvas.grid.getOffset(this.waypoints[0]);</span>
+<span class="cstat-no" title="statement not covered" >        const origin = canvas.grid.getOffset(this.token);</span>
+<span class="cstat-no" title="statement not covered" >        const i0 = origin.i - center.i;</span>
+<span class="cstat-no" title="statement not covered" >        const j0 = origin.j - center.j;</span>
+<span class="cstat-no" title="statement not covered" >        for (let i = i0; i &lt; i0 + height; i++) {</span>
+<span class="cstat-no" title="statement not covered" >            for (let j = j0; j &lt; j0 + width; j++) {</span>
+<span class="cstat-no" title="statement not covered" >                this.#footprint.push([i, j]);</span>
+<span class="cstat-no" title="statement not covered" >            }</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @inheritDoc */</span>
-<span class="cstat-no" title="statement not covered" >  _canMove(token) {</span>
-<span class="cstat-no" title="statement not covered" >    super._canMove(token);</span>
-<span class="cstat-no" title="statement not covered" >    if ( this.#action ) this.#action._canUse();</span>
-<span class="cstat-no" title="statement not covered" >    return true;</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    /** @inheritDoc */</span>
+<span class="cstat-no" title="statement not covered" >    _computeDistance(gridSpaces) {</span>
+<span class="cstat-no" title="statement not covered" >        super._computeDistance(gridSpaces);</span>
+<span class="cstat-no" title="statement not covered" >        this.#computeCost()</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @override */</span>
-<span class="cstat-no" title="statement not covered" >  async _preMove(token) {</span>
-<span class="cstat-no" title="statement not covered" >    if ( !this.totalDistance || !this.#action ) return;</span>
-<span class="cstat-no" title="statement not covered" >    this.#action.updateSource({</span>
-<span class="cstat-no" title="statement not covered" >      name: `Move ${this.#labels.distance}`,</span>
-<span class="cstat-no" title="statement not covered" >      cost: this.#action.cost</span>
-<span class="cstat-no" title="statement not covered" >    });</span>
-<span class="cstat-no" title="statement not covered" >    await this.#action.use({token, chatMessage: true, dialog: false});</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Compute the cost of the measured move</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    #computeCost() {</span>
+<span class="cstat-no" title="statement not covered" >        this.#labels.distance = `${this.totalDistance.toFixed(2)} ${canvas.scene.grid.units}`;</span>
+<span class="cstat-no" title="statement not covered" >        if (!this.#action) return;</span>
+<span class="cstat-no" title="statement not covered" >        this.#action.usage.distance = this.totalDistance;</span>
+<span class="cstat-no" title="statement not covered" >        SYSTEM.ACTION.TAGS.movement.prepare.call(this.#action);</span>
+<span class="cstat-no" title="statement not covered" >        const ap = this.#action.cost.action;</span>
+<span class="cstat-no" title="statement not covered" >        if (ap === 0) this.#labels.cost = "Free";</span>
+<span class="cstat-no" title="statement not covered" >        else if (ap === Infinity) this.#labels.cost = "Impossible";</span>
+<span class="cstat-no" title="statement not covered" >        else this.#labels.cost = `${ap}AP`;</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /** @override */</span>
+<span class="cstat-no" title="statement not covered" >    _getSegmentLabel(segment, totalDistance) {</span>
+<span class="cstat-no" title="statement not covered" >        if (!segment.last) return null;</span>
+<span class="cstat-no" title="statement not covered" >        if (!this.#action) return this.#labels.distance;</span>
+<span class="cstat-no" title="statement not covered" >        return `${this.#labels.distance} [${this.#labels.cost}]`;</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /** @inheritDoc */</span>
+<span class="cstat-no" title="statement not covered" >    _drawMeasuredPath() {</span>
+<span class="cstat-no" title="statement not covered" >        super._drawMeasuredPath();</span>
+<span class="cstat-no" title="statement not covered" >        if (this.#actor?.isOwner &amp;&amp; this.segments.length) {</span>
+<span class="cstat-no" title="statement not covered" >            const label = this.segments.at(-1).label;</span>
+<span class="cstat-no" title="statement not covered" >            label.tint = this.cost &gt; this.#actor.system.resources.action.value ? 0xDD0011 : 0xFFFFFF;</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >        this.#highlighted.clear();</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /** @override */</span>
+<span class="cstat-no" title="statement not covered" >    _highlightMeasurementSegment(segment) {</span>
+<span class="cstat-no" title="statement not covered" >        if (!this.token || segment.teleport) return; // No highlight</span>
+<span class="cstat-no" title="statement not covered" >        const path = canvas.grid.getDirectPath([segment.ray.A, segment.ray.B]);</span>
+<span class="cstat-no" title="statement not covered" >        for (const offset of path) {</span>
+<span class="cstat-no" title="statement not covered" >            for (const d of this.#footprint) {</span>
+<span class="cstat-no" title="statement not covered" >                const o = {i: offset.i + d[0], j: offset.j + d[1]};</span>
+<span class="cstat-no" title="statement not covered" >                const k = (o.i &lt;&lt; 16) + o.j;</span>
+<span class="cstat-no" title="statement not covered" >                if (this.#highlighted.has(k)) continue;</span>
+<span class="cstat-no" title="statement not covered" >                this.#highlighted.add(k);</span>
+<span class="cstat-no" title="statement not covered" >                const p = canvas.grid.getTopLeftPoint(o);</span>
+<span class="cstat-no" title="statement not covered" >                canvas.interface.grid.highlightPosition(this.name, {...p, color: this.color});</span>
+<span class="cstat-no" title="statement not covered" >            }</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /** @inheritDoc */</span>
+<span class="cstat-no" title="statement not covered" >    _canMove(token) {</span>
+<span class="cstat-no" title="statement not covered" >        super._canMove(token);</span>
+<span class="cstat-no" title="statement not covered" >        if (this.#action) this.#action._canUse();</span>
+<span class="cstat-no" title="statement not covered" >        return true;</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /** @override */</span>
+<span class="cstat-no" title="statement not covered" >    async _preMove(token) {</span>
+<span class="cstat-no" title="statement not covered" >        if (!this.totalDistance || !this.#action) return;</span>
+<span class="cstat-no" title="statement not covered" >        this.#action.updateSource({</span>
+<span class="cstat-no" title="statement not covered" >            name: `Move ${this.#labels.distance}`,</span>
+<span class="cstat-no" title="statement not covered" >            cost: this.#action.cost</span>
+<span class="cstat-no" title="statement not covered" >        });</span>
+<span class="cstat-no" title="statement not covered" >        await this.#action.use({token, chatMessage: true, dialog: false});</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;</pre></td></tr></table></pre>
 
@@ -649,7 +640,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-05-11T08:34:16.200Z
+                at 2025-05-26T14:10:38.209Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

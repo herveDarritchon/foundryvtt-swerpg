@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/74</span>
+                <span class='fraction'>0/88</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/74</span>
+                <span class='fraction'>0/88</span>
             </div>
         
             
@@ -151,7 +151,21 @@
 <a name='L86'></a><a href='#L86'>86</a>
 <a name='L87'></a><a href='#L87'>87</a>
 <a name='L88'></a><a href='#L88'>88</a>
-<a name='L89'></a><a href='#L89'>89</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<a name='L89'></a><a href='#L89'>89</a>
+<a name='L90'></a><a href='#L90'>90</a>
+<a name='L91'></a><a href='#L91'>91</a>
+<a name='L92'></a><a href='#L92'>92</a>
+<a name='L93'></a><a href='#L93'>93</a>
+<a name='L94'></a><a href='#L94'>94</a>
+<a name='L95'></a><a href='#L95'>95</a>
+<a name='L96'></a><a href='#L96'>96</a>
+<a name='L97'></a><a href='#L97'>97</a>
+<a name='L98'></a><a href='#L98'>98</a>
+<a name='L99'></a><a href='#L99'>99</a>
+<a name='L100'></a><a href='#L100'>100</a>
+<a name='L101'></a><a href='#L101'>101</a>
+<a name='L102'></a><a href='#L102'>102</a>
+<a name='L103'></a><a href='#L103'>103</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -170,6 +184,20 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -263,11 +291,25 @@
 <span class="cstat-no" title="statement not covered" >            // Skills Scores</span>
 <span class="cstat-no" title="statement not covered" >            skillModifierDraft: new fields.SchemaField({</span>
 <span class="cstat-no" title="statement not covered" >                skillId: new fields.StringField({required: true}),</span>
-<span class="cstat-no" title="statement not covered" >                modifierValue: new fields.NumberField({required: true, integer: true, initial: 0, min: -20, max: 20, step: 5})</span>
+<span class="cstat-no" title="statement not covered" >                modifierValue: new fields.NumberField({</span>
+<span class="cstat-no" title="statement not covered" >                    required: true,</span>
+<span class="cstat-no" title="statement not covered" >                    integer: true,</span>
+<span class="cstat-no" title="statement not covered" >                    initial: 0,</span>
+<span class="cstat-no" title="statement not covered" >                    min: -20,</span>
+<span class="cstat-no" title="statement not covered" >                    max: 20,</span>
+<span class="cstat-no" title="statement not covered" >                    step: 5</span>
+<span class="cstat-no" title="statement not covered" >                })</span>
 <span class="cstat-no" title="statement not covered" >            }),</span>
 <span class="cstat-no" title="statement not covered" >            skills: new fields.ArrayField(new fields.SchemaField({</span>
 <span class="cstat-no" title="statement not covered" >                skillId: new fields.StringField({required: true}),</span>
-<span class="cstat-no" title="statement not covered" >                modifier: new fields.NumberField({required: true, integer: true, initial: 0, min: -20, max: 20, step: 5})</span>
+<span class="cstat-no" title="statement not covered" >                modifier: new fields.NumberField({</span>
+<span class="cstat-no" title="statement not covered" >                    required: true,</span>
+<span class="cstat-no" title="statement not covered" >                    integer: true,</span>
+<span class="cstat-no" title="statement not covered" >                    initial: 0,</span>
+<span class="cstat-no" title="statement not covered" >                    min: -20,</span>
+<span class="cstat-no" title="statement not covered" >                    max: 20,</span>
+<span class="cstat-no" title="statement not covered" >                    step: 5</span>
+<span class="cstat-no" title="statement not covered" >                })</span>
 <span class="cstat-no" title="statement not covered" >            })),</span>
 <span class="cstat-no" title="statement not covered" >            secondaryAttributes: new fields.SchemaField(Object.values(SYSTEM.SECONDARY_ATTRIBUTES).reduce((obj, attribute) =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >                obj[attribute.id] = new fields.SchemaField({</span>
@@ -334,7 +376,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-05-11T08:34:16.200Z
+                at 2025-05-26T14:10:38.209Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/1016</span>
+                <span class='fraction'>0/997</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/1016</span>
+                <span class='fraction'>0/997</span>
             </div>
         
             
@@ -1181,29 +1181,7 @@
 <a name='L1116'></a><a href='#L1116'>1116</a>
 <a name='L1117'></a><a href='#L1117'>1117</a>
 <a name='L1118'></a><a href='#L1118'>1118</a>
-<a name='L1119'></a><a href='#L1119'>1119</a>
-<a name='L1120'></a><a href='#L1120'>1120</a>
-<a name='L1121'></a><a href='#L1121'>1121</a>
-<a name='L1122'></a><a href='#L1122'>1122</a>
-<a name='L1123'></a><a href='#L1123'>1123</a>
-<a name='L1124'></a><a href='#L1124'>1124</a>
-<a name='L1125'></a><a href='#L1125'>1125</a>
-<a name='L1126'></a><a href='#L1126'>1126</a>
-<a name='L1127'></a><a href='#L1127'>1127</a>
-<a name='L1128'></a><a href='#L1128'>1128</a>
-<a name='L1129'></a><a href='#L1129'>1129</a>
-<a name='L1130'></a><a href='#L1130'>1130</a>
-<a name='L1131'></a><a href='#L1131'>1131</a>
-<a name='L1132'></a><a href='#L1132'>1132</a>
-<a name='L1133'></a><a href='#L1133'>1133</a>
-<a name='L1134'></a><a href='#L1134'>1134</a>
-<a name='L1135'></a><a href='#L1135'>1135</a>
-<a name='L1136'></a><a href='#L1136'>1136</a>
-<a name='L1137'></a><a href='#L1137'>1137</a>
-<a name='L1138'></a><a href='#L1138'>1138</a>
-<a name='L1139'></a><a href='#L1139'>1139</a>
-<a name='L1140'></a><a href='#L1140'>1140</a>
-<a name='L1141'></a><a href='#L1141'>1141</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<a name='L1119'></a><a href='#L1119'>1119</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -2195,28 +2173,6 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -2564,9 +2520,9 @@
 <span class="cstat-no" title="statement not covered" >        const biography = this.document.system.details.biography;</span>
 <span class="cstat-no" title="statement not covered" >        const context = {relativeTo: this.document, secrets: this.document.isOwner};</span>
 <span class="cstat-no" title="statement not covered" >        return {</span>
-<span class="cstat-no" title="statement not covered" >            appearance: await TextEditor.enrichHTML(biography.appearance, context),</span>
-<span class="cstat-no" title="statement not covered" >            public: await TextEditor.enrichHTML(biography.public, context),</span>
-<span class="cstat-no" title="statement not covered" >            private: await TextEditor.enrichHTML(biography.private, context)</span>
+<span class="cstat-no" title="statement not covered" >            appearance: await foundry.applications.ux.TextEditor.enrichHTML(biography.appearance, context),</span>
+<span class="cstat-no" title="statement not covered" >            public: await foundry.applications.ux.TextEditor.enrichHTML(biography.public, context),</span>
+<span class="cstat-no" title="statement not covered" >            private: await foundry.applications.ux.TextEditor.enrichHTML(biography.private, context)</span>
 <span class="cstat-no" title="statement not covered" >        }</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
@@ -3279,7 +3235,7 @@
 &nbsp;
 <span class="cstat-no" title="statement not covered" >    /** @override */</span>
 <span class="cstat-no" title="statement not covered" >    _onRender(_context, _options) {</span>
-<span class="cstat-no" title="statement not covered" >        new DragDrop({</span>
+<span class="cstat-no" title="statement not covered" >        new foundry.applications.ux.DragDrop({</span>
 <span class="cstat-no" title="statement not covered" >            dragSelector: '.draggable',</span>
 <span class="cstat-no" title="statement not covered" >            dropSelector: null,</span>
 <span class="cstat-no" title="statement not covered" >            callbacks: {</span>
@@ -3343,28 +3299,6 @@
 <span class="cstat-no" title="statement not covered" >     * @protected</span>
 <span class="cstat-no" title="statement not covered" >     */</span>
 <span class="cstat-no" title="statement not covered" >    _onDragOver(event) {</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    /**</span>
-<span class="cstat-no" title="statement not covered" >     * An event that occurs when data is dropped into a drop target.</span>
-<span class="cstat-no" title="statement not covered" >     * @param {DragEvent} event</span>
-<span class="cstat-no" title="statement not covered" >     * @returns {Promise&lt;void&gt;}</span>
-<span class="cstat-no" title="statement not covered" >     * @protected</span>
-<span class="cstat-no" title="statement not covered" >     */</span>
-<span class="cstat-no" title="statement not covered" >    async _onDrop(event) {</span>
-<span class="cstat-no" title="statement not covered" >        const data = TextEditor.getDragEventData(event);</span>
-<span class="cstat-no" title="statement not covered" >        const actor = this.actor;</span>
-<span class="cstat-no" title="statement not covered" >        const allowed = Hooks.call("dropActorSheetData", actor, this, data);</span>
-<span class="cstat-no" title="statement not covered" >        if (allowed === false) return;</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >        // Dropped Documents</span>
-<span class="cstat-no" title="statement not covered" >        const documentClass = getDocumentClass(data.type);</span>
-<span class="cstat-no" title="statement not covered" >        if (documentClass) {</span>
-<span class="cstat-no" title="statement not covered" >            const document = await documentClass.fromDropData(data);</span>
-<span class="cstat-no" title="statement not covered" >            await this._onDropDocument(event, document);</span>
-<span class="cstat-no" title="statement not covered" >        }</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
@@ -3490,7 +3424,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-05-11T08:34:16.200Z
+                at 2025-05-26T14:10:38.209Z
             </div>
         <script src="../../../../prettify.js"></script>
         <script>

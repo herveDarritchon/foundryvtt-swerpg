@@ -126,26 +126,9 @@
 <a name='L61'></a><a href='#L61'>61</a>
 <a name='L62'></a><a href='#L62'>62</a>
 <a name='L63'></a><a href='#L63'>63</a>
-<a name='L64'></a><a href='#L64'>64</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<a name='L64'></a><a href='#L64'>64</a>
+<a name='L65'></a><a href='#L65'>65</a>
+<a name='L66'></a><a href='#L66'>66</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -163,6 +146,26 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -179,6 +182,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -194,63 +198,65 @@
 <span class="cstat-no" title="statement not covered" > */</span>
 <span class="cstat-no" title="statement not covered" >export default class SwerpgArchetype extends foundry.abstract.TypeDataModel {</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-<span class="cstat-no" title="statement not covered" >  /*  Data Schema                                 */</span>
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /*  Data Schema                                 */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @inheritDoc */</span>
-<span class="cstat-no" title="statement not covered" >  static defineSchema() {</span>
-<span class="cstat-no" title="statement not covered" >    const fields = foundry.data.fields;</span>
-<span class="cstat-no" title="statement not covered" >    const nullableInteger = {required: true, nullable: true, integer: true};</span>
-<span class="cstat-no" title="statement not covered" >    return {</span>
-<span class="cstat-no" title="statement not covered" >      description: new fields.HTMLField({required: false, initial: undefined}),</span>
-<span class="cstat-no" title="statement not covered" >      abilities: new fields.SchemaField(Object.values(SYSTEM.CHARACTERISTICS).reduce((obj, ability) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >        obj[ability.id] = new fields.NumberField({...nullableInteger, initial: 3, min: 0, max: 8})</span>
-<span class="cstat-no" title="statement not covered" >        return obj;</span>
-<span class="cstat-no" title="statement not covered" >      }, {}), {validate: SwerpgArchetype.#validateAbilities}),</span>
-<span class="cstat-no" title="statement not covered" >      talents: new fields.SetField(new fields.StringField({required: true},</span>
-<span class="cstat-no" title="statement not covered" >        {validate: SwerpgArchetype.#validateUuid}))</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /** @inheritDoc */</span>
+<span class="cstat-no" title="statement not covered" >    static defineSchema() {</span>
+<span class="cstat-no" title="statement not covered" >        const fields = foundry.data.fields;</span>
+<span class="cstat-no" title="statement not covered" >        const nullableInteger = {required: true, nullable: true, integer: true};</span>
+<span class="cstat-no" title="statement not covered" >        return {</span>
+<span class="cstat-no" title="statement not covered" >            description: new fields.HTMLField({required: false, initial: undefined}),</span>
+<span class="cstat-no" title="statement not covered" >            abilities: new fields.SchemaField(Object.values(SYSTEM.CHARACTERISTICS).reduce((obj, ability) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >                obj[ability.id] = new fields.NumberField({...nullableInteger, initial: 3, min: 0, max: 8})</span>
+<span class="cstat-no" title="statement not covered" >                return obj;</span>
+<span class="cstat-no" title="statement not covered" >            }, {}), {validate: SwerpgArchetype.#validateAbilities}),</span>
+<span class="cstat-no" title="statement not covered" >            talents: new fields.SetField(new fields.StringField({required: true},</span>
+<span class="cstat-no" title="statement not covered" >                {validate: SwerpgArchetype.#validateUuid}))</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @override */</span>
-<span class="cstat-no" title="statement not covered" >  static LOCALIZATION_PREFIXES = ["ARCHETYPE"];</span>
+<span class="cstat-no" title="statement not covered" >    /** @override */</span>
+<span class="cstat-no" title="statement not covered" >    static LOCALIZATION_PREFIXES = ["ARCHETYPE"];</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Validate that ability scaling for the Archetype is balanced.</span>
-<span class="cstat-no" title="statement not covered" >   * @param {Object&lt;number&gt;} abilities</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  static #validateAbilities(abilities) {</span>
-<span class="cstat-no" title="statement not covered" >    const sum = Object.values(abilities).reduce((t, n) =&gt; t + n, 0);</span>
-<span class="cstat-no" title="statement not covered" >    if ( sum !== 18 ) throw new Error(`The sum of ability scaling values must equal 18. Currently ${sum}`);</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Validate that each entry in the talents Set is a UUID.</span>
-<span class="cstat-no" title="statement not covered" >   * @param {string} uuid     The candidate value</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  static #validateUuid(uuid) {</span>
-<span class="cstat-no" title="statement not covered" >    const {documentType, documentId} = foundry.utils.parseUuid(uuid);</span>
-<span class="cstat-no" title="statement not covered" >    if ( CONST.DOCUMENT_TYPES.includes(documentType) || !foundry.data.validators.isValidId(documentId) ) {</span>
-<span class="cstat-no" title="statement not covered" >      throw new Error(`"${uuid}" is not a valid Talent UUID string`);</span>
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Validate that ability scaling for the Archetype is balanced.</span>
+<span class="cstat-no" title="statement not covered" >     * @param {Object&lt;number&gt;} abilities</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    static #validateAbilities(abilities) {</span>
+<span class="cstat-no" title="statement not covered" >        const sum = Object.values(abilities).reduce((t, n) =&gt; t + n, 0);</span>
+<span class="cstat-no" title="statement not covered" >        if (sum !== 18) throw new Error(`The sum of ability scaling values must equal 18. Currently ${sum}`);</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-<span class="cstat-no" title="statement not covered" >  /*  Properties                                  */</span>
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * A convenience reference to the SwerpgActor to which this Taxonomy belongs.</span>
-<span class="cstat-no" title="statement not covered" >   * @type {SwerpgActor}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  get actor() {</span>
-<span class="cstat-no" title="statement not covered" >    return this.parent.parent;</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Validate that each entry in the talents Set is a UUID.</span>
+<span class="cstat-no" title="statement not covered" >     * @param {string} uuid     The candidate value</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    static #validateUuid(uuid) {</span>
+<span class="cstat-no" title="statement not covered" >        const {documentType, documentId} = foundry.utils.parseUuid(uuid);</span>
+<span class="cstat-no" title="statement not covered" >        if (CONST.DOCUMENT_TYPES.includes(documentType) || !foundry.data.validators.isValidId(documentId)) {</span>
+<span class="cstat-no" title="statement not covered" >            throw new Error(`"${uuid}" is not a valid Talent UUID string`);</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /*  Properties                                  */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * A convenience reference to the SwerpgActor to which this Taxonomy belongs.</span>
+<span class="cstat-no" title="statement not covered" >     * @type {SwerpgActor}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    get actor() {</span>
+<span class="cstat-no" title="statement not covered" >        return this.parent.parent;</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;</pre></td></tr></table></pre>
 
@@ -259,7 +265,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-05-11T08:34:16.200Z
+                at 2025-05-26T14:10:38.209Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

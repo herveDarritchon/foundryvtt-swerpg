@@ -238,82 +238,82 @@
 <span class="cstat-no" title="statement not covered" > */</span>
 <span class="cstat-no" title="statement not covered" >export default class SwerpgSkill extends foundry.abstract.TypeDataModel {</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @override */</span>
-<span class="cstat-no" title="statement not covered" >  static defineSchema() {</span>
-<span class="cstat-no" title="statement not covered" >    const fields = foundry.data.fields;</span>
-<span class="cstat-no" title="statement not covered" >    return {</span>
-<span class="cstat-no" title="statement not covered" >      skillId: new fields.StringField({required: true, nullable: true, initial: null, choices: SKILL.SKILLS}),</span>
-<span class="cstat-no" title="statement not covered" >      overview: new fields.HTMLField(),</span>
-<span class="cstat-no" title="statement not covered" >      ranks: new fields.SchemaField(Object.values(SKILL.RANKS).reduce((ranks, rank) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >        ranks[rank.id] = new fields.SchemaField({</span>
-<span class="cstat-no" title="statement not covered" >          description: new fields.HTMLField()</span>
-<span class="cstat-no" title="statement not covered" >        });</span>
-<span class="cstat-no" title="statement not covered" >        return ranks;</span>
-<span class="cstat-no" title="statement not covered" >      }, {})),</span>
-<span class="cstat-no" title="statement not covered" >      paths: new fields.SchemaField(Array.fromRange(3, 1).reduce((paths, i) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >        paths[`path${i}`] = new fields.SchemaField({</span>
-<span class="cstat-no" title="statement not covered" >          id: new fields.StringField(),</span>
-<span class="cstat-no" title="statement not covered" >          name: new fields.StringField(),</span>
-<span class="cstat-no" title="statement not covered" >          overview: new fields.HTMLField(),</span>
-<span class="cstat-no" title="statement not covered" >          ranks: new fields.SchemaField(["specialist", "master"].reduce((ranks, rank) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >            ranks[rank] = new fields.SchemaField({</span>
-<span class="cstat-no" title="statement not covered" >              description: new fields.HTMLField()</span>
-<span class="cstat-no" title="statement not covered" >            });</span>
-<span class="cstat-no" title="statement not covered" >            return ranks;</span>
-<span class="cstat-no" title="statement not covered" >          }, {}))</span>
-<span class="cstat-no" title="statement not covered" >        });</span>
-<span class="cstat-no" title="statement not covered" >        return paths;</span>
-<span class="cstat-no" title="statement not covered" >      }, {}))</span>
-<span class="cstat-no" title="statement not covered" >    };</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Initialize skill configuration for the game system using defined skill data from the SKILL.JOURNAL_ID entry.</span>
-<span class="cstat-no" title="statement not covered" >   * @returns {Promise&lt;void&gt;}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  static async initialize() {</span>
-<span class="cstat-no" title="statement not covered" >    const entry = await fromUuid(SKILL.JOURNAL_ID);</span>
-<span class="cstat-no" title="statement not covered" >    game.i18n.translations.SKILLS ||= {};</span>
-<span class="cstat-no" title="statement not covered" >    if (entry == null) {</span>
-<span class="cstat-no" title="statement not covered" >      return;</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >    for ( const page of entry.pages ) {</span>
-<span class="cstat-no" title="statement not covered" >      if ( page.type !== "skill" ) continue;</span>
-<span class="cstat-no" title="statement not covered" >      const {skillId, overview, paths, ranks} = page.system;</span>
-<span class="cstat-no" title="statement not covered" >      const skill = SKILL.SKILLS[skillId];</span>
-<span class="cstat-no" title="statement not covered" >      if ( !skill ) {</span>
-<span class="cstat-no" title="statement not covered" >        console.error(`JournalEntryPage skill configuration "${page.id}" does not configure a valid Skill ID.`);</span>
-<span class="cstat-no" title="statement not covered" >        continue;</span>
-<span class="cstat-no" title="statement not covered" >      }</span>
-<span class="cstat-no" title="statement not covered" >      Object.assign(skill, {overview, ranks, name: page.name, page: page.uuid, paths: {}});</span>
-<span class="cstat-no" title="statement not covered" >      for ( const p of Object.values(paths) ) skill.paths[p.id] = p;</span>
-<span class="cstat-no" title="statement not covered" >      SYSTEM.ACTION.TAGS[skillId].label = page.name;</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    // Iterate over all skills making sure that none are undefined</span>
-<span class="cstat-no" title="statement not covered" >    for ( const skill of Object.values(SKILL.SKILLS) ) {</span>
-<span class="cstat-no" title="statement not covered" >      foundry.utils.mergeObject(skill, {</span>
-<span class="cstat-no" title="statement not covered" >        icon: `systems/swerpg/icons/skills/${skill.id}.jpg`,</span>
-<span class="cstat-no" title="statement not covered" >        overview: "Missing skill overview.",</span>
-<span class="cstat-no" title="statement not covered" >        ranks: Object.values(SKILL.RANKS).reduce((ranks, rank) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >          ranks[rank.id] = {description: `Missing rank ${rank.rank} description.`}</span>
-<span class="cstat-no" title="statement not covered" >          return ranks;</span>
-<span class="cstat-no" title="statement not covered" >        }, {}),</span>
-<span class="cstat-no" title="statement not covered" >      }, {inplace: true, overwrite: false});</span>
-<span class="cstat-no" title="statement not covered" >      if ( foundry.utils.isEmpty(skill.paths) ) skill.paths = Array.fromRange(3, 1).reduce((paths, i) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >        paths[`path${i}`] = {</span>
-<span class="cstat-no" title="statement not covered" >          id: `path${i}`,</span>
-<span class="cstat-no" title="statement not covered" >          name: `Specialization ${i}`,</span>
-<span class="cstat-no" title="statement not covered" >          overview: "Missing specialization overview.",</span>
-<span class="cstat-no" title="statement not covered" >          ranks: ["specialist", "master"].reduce((ranks, rank) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >            ranks[rank] = {description: "Missing rank description"};</span>
-<span class="cstat-no" title="statement not covered" >            return ranks;</span>
-<span class="cstat-no" title="statement not covered" >          }, {})</span>
+<span class="cstat-no" title="statement not covered" >    /** @override */</span>
+<span class="cstat-no" title="statement not covered" >    static defineSchema() {</span>
+<span class="cstat-no" title="statement not covered" >        const fields = foundry.data.fields;</span>
+<span class="cstat-no" title="statement not covered" >        return {</span>
+<span class="cstat-no" title="statement not covered" >            skillId: new fields.StringField({required: true, nullable: true, initial: null, choices: SKILL.SKILLS}),</span>
+<span class="cstat-no" title="statement not covered" >            overview: new fields.HTMLField(),</span>
+<span class="cstat-no" title="statement not covered" >            ranks: new fields.SchemaField(Object.values(SKILL.RANKS).reduce((ranks, rank) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >                ranks[rank.id] = new fields.SchemaField({</span>
+<span class="cstat-no" title="statement not covered" >                    description: new fields.HTMLField()</span>
+<span class="cstat-no" title="statement not covered" >                });</span>
+<span class="cstat-no" title="statement not covered" >                return ranks;</span>
+<span class="cstat-no" title="statement not covered" >            }, {})),</span>
+<span class="cstat-no" title="statement not covered" >            paths: new fields.SchemaField(Array.fromRange(3, 1).reduce((paths, i) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >                paths[`path${i}`] = new fields.SchemaField({</span>
+<span class="cstat-no" title="statement not covered" >                    id: new fields.StringField(),</span>
+<span class="cstat-no" title="statement not covered" >                    name: new fields.StringField(),</span>
+<span class="cstat-no" title="statement not covered" >                    overview: new fields.HTMLField(),</span>
+<span class="cstat-no" title="statement not covered" >                    ranks: new fields.SchemaField(["specialist", "master"].reduce((ranks, rank) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >                        ranks[rank] = new fields.SchemaField({</span>
+<span class="cstat-no" title="statement not covered" >                            description: new fields.HTMLField()</span>
+<span class="cstat-no" title="statement not covered" >                        });</span>
+<span class="cstat-no" title="statement not covered" >                        return ranks;</span>
+<span class="cstat-no" title="statement not covered" >                    }, {}))</span>
+<span class="cstat-no" title="statement not covered" >                });</span>
+<span class="cstat-no" title="statement not covered" >                return paths;</span>
+<span class="cstat-no" title="statement not covered" >            }, {}))</span>
 <span class="cstat-no" title="statement not covered" >        };</span>
-<span class="cstat-no" title="statement not covered" >        return paths;</span>
-<span class="cstat-no" title="statement not covered" >      }, {});</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Initialize skill configuration for the game system using defined skill data from the SKILL.JOURNAL_ID entry.</span>
+<span class="cstat-no" title="statement not covered" >     * @returns {Promise&lt;void&gt;}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    static async initialize() {</span>
+<span class="cstat-no" title="statement not covered" >        const entry = await fromUuid(SKILL.JOURNAL_ID);</span>
+<span class="cstat-no" title="statement not covered" >        game.i18n.translations.SKILLS ||= {};</span>
+<span class="cstat-no" title="statement not covered" >        if (entry == null) {</span>
+<span class="cstat-no" title="statement not covered" >            return;</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >        for (const page of entry.pages) {</span>
+<span class="cstat-no" title="statement not covered" >            if (page.type !== "skill") continue;</span>
+<span class="cstat-no" title="statement not covered" >            const {skillId, overview, paths, ranks} = page.system;</span>
+<span class="cstat-no" title="statement not covered" >            const skill = SKILL.SKILLS[skillId];</span>
+<span class="cstat-no" title="statement not covered" >            if (!skill) {</span>
+<span class="cstat-no" title="statement not covered" >                console.error(`JournalEntryPage skill configuration "${page.id}" does not configure a valid Skill ID.`);</span>
+<span class="cstat-no" title="statement not covered" >                continue;</span>
+<span class="cstat-no" title="statement not covered" >            }</span>
+<span class="cstat-no" title="statement not covered" >            Object.assign(skill, {overview, ranks, name: page.name, page: page.uuid, paths: {}});</span>
+<span class="cstat-no" title="statement not covered" >            for (const p of Object.values(paths)) skill.paths[p.id] = p;</span>
+<span class="cstat-no" title="statement not covered" >            SYSTEM.ACTION.TAGS[skillId].label = page.name;</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Iterate over all skills making sure that none are undefined</span>
+<span class="cstat-no" title="statement not covered" >        for (const skill of Object.values(SKILL.SKILLS)) {</span>
+<span class="cstat-no" title="statement not covered" >            foundry.utils.mergeObject(skill, {</span>
+<span class="cstat-no" title="statement not covered" >                icon: `systems/swerpg/icons/skills/${skill.id}.jpg`,</span>
+<span class="cstat-no" title="statement not covered" >                overview: "Missing skill overview.",</span>
+<span class="cstat-no" title="statement not covered" >                ranks: Object.values(SKILL.RANKS).reduce((ranks, rank) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >                    ranks[rank.id] = {description: `Missing rank ${rank.rank} description.`}</span>
+<span class="cstat-no" title="statement not covered" >                    return ranks;</span>
+<span class="cstat-no" title="statement not covered" >                }, {}),</span>
+<span class="cstat-no" title="statement not covered" >            }, {inplace: true, overwrite: false});</span>
+<span class="cstat-no" title="statement not covered" >            if (foundry.utils.isEmpty(skill.paths)) skill.paths = Array.fromRange(3, 1).reduce((paths, i) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >                paths[`path${i}`] = {</span>
+<span class="cstat-no" title="statement not covered" >                    id: `path${i}`,</span>
+<span class="cstat-no" title="statement not covered" >                    name: `Specialization ${i}`,</span>
+<span class="cstat-no" title="statement not covered" >                    overview: "Missing specialization overview.",</span>
+<span class="cstat-no" title="statement not covered" >                    ranks: ["specialist", "master"].reduce((ranks, rank) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >                        ranks[rank] = {description: "Missing rank description"};</span>
+<span class="cstat-no" title="statement not covered" >                        return ranks;</span>
+<span class="cstat-no" title="statement not covered" >                    }, {})</span>
+<span class="cstat-no" title="statement not covered" >                };</span>
+<span class="cstat-no" title="statement not covered" >                return paths;</span>
+<span class="cstat-no" title="statement not covered" >            }, {});</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;</pre></td></tr></table></pre>
 
@@ -322,7 +322,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-05-11T08:34:16.200Z
+                at 2025-05-26T14:10:38.209Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

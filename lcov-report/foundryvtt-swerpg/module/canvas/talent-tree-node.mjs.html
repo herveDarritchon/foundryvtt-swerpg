@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/122</span>
+                <span class='fraction'>0/121</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/122</span>
+                <span class='fraction'>0/121</span>
             </div>
         
             
@@ -209,8 +209,7 @@
 <a name='L144'></a><a href='#L144'>144</a>
 <a name='L145'></a><a href='#L145'>145</a>
 <a name='L146'></a><a href='#L146'>146</a>
-<a name='L147'></a><a href='#L147'>147</a>
-<a name='L148'></a><a href='#L148'>148</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<a name='L147'></a><a href='#L147'>147</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -319,7 +318,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -360,148 +358,147 @@
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" >import SwerpgTalentIcon from "./talent-icon.mjs";</span></span></span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >export default class SwerpgTalentTreeNode extends SwerpgTalentIcon {</span>
-<span class="cstat-no" title="statement not covered" >  constructor(node, config) {</span>
-<span class="cstat-no" title="statement not covered" >    super(config);</span>
-<span class="cstat-no" title="statement not covered" >    this.node = node;</span>
-<span class="cstat-no" title="statement not covered" >    this.position.set(node.point.x, node.point.y);</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  static NODE_TYPES = {</span>
-<span class="cstat-no" title="statement not covered" >    attack: "Attack",</span>
-<span class="cstat-no" title="statement not covered" >    defense: "Defense",</span>
-<span class="cstat-no" title="statement not covered" >    heal: "Healing",</span>
-<span class="cstat-no" title="statement not covered" >    magic: "Spellcraft",</span>
-<span class="cstat-no" title="statement not covered" >    move: "Movement",</span>
-<span class="cstat-no" title="statement not covered" >    utility: "Utility",</span>
-<span class="cstat-no" title="statement not covered" >    signature: "Signature"</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Is this node currently active?</span>
-<span class="cstat-no" title="statement not covered" >   * @type {boolean}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  get isActive() {</span>
-<span class="cstat-no" title="statement not covered" >    return game.system.tree.active === this;</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @override */</span>
-<span class="cstat-no" title="statement not covered" >  async draw({state, ...config}={}) {</span>
-<span class="cstat-no" title="statement not covered" >    const variety = state.purchased ? this.node.abilities.first() : "inactive";</span>
-<span class="cstat-no" title="statement not covered" >    config.texture = getTexture(`systems/swerpg/ui/tree/nodes/${this.node.type}-${variety}.webp`);</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    // Signature nodes</span>
-<span class="cstat-no" title="statement not covered" >    if ( this.node.type === "signature" ) {</span>
-<span class="cstat-no" title="statement not covered" >      config.size = 80;</span>
-<span class="cstat-no" title="statement not covered" >      config.borderRadius = 80;</span>
+<span class="cstat-no" title="statement not covered" >    constructor(node, config) {</span>
+<span class="cstat-no" title="statement not covered" >        super(config);</span>
+<span class="cstat-no" title="statement not covered" >        this.node = node;</span>
+<span class="cstat-no" title="statement not covered" >        this.position.set(node.point.x, node.point.y);</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    // Is the node accessible or not?</span>
-<span class="cstat-no" title="statement not covered" >    if ( state.accessible ) {</span>
-<span class="cstat-no" title="statement not covered" >      config.alpha = 0.4;</span>
-<span class="cstat-no" title="statement not covered" >      config.borderColor = 0x827f7d;</span>
-<span class="cstat-no" title="statement not covered" >      config.borderWidth = 2;</span>
-<span class="cstat-no" title="statement not covered" >    } else {</span>
-<span class="cstat-no" title="statement not covered" >      config.alpha = 0.1;</span>
-<span class="cstat-no" title="statement not covered" >      config.borderColor = 0x262322;</span>
-<span class="cstat-no" title="statement not covered" >      config.borderWidth = 2;</span>
+<span class="cstat-no" title="statement not covered" >    static NODE_TYPES = {</span>
+<span class="cstat-no" title="statement not covered" >        attack: "Attack",</span>
+<span class="cstat-no" title="statement not covered" >        defense: "Defense",</span>
+<span class="cstat-no" title="statement not covered" >        heal: "Healing",</span>
+<span class="cstat-no" title="statement not covered" >        magic: "Spellcraft",</span>
+<span class="cstat-no" title="statement not covered" >        move: "Movement",</span>
+<span class="cstat-no" title="statement not covered" >        utility: "Utility",</span>
+<span class="cstat-no" title="statement not covered" >        signature: "Signature"</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    // Has the node been purchased?</span>
-<span class="cstat-no" title="statement not covered" >    if ( state.purchased ) {</span>
-<span class="cstat-no" title="statement not covered" >      config.alpha = 1.0;</span>
-<span class="cstat-no" title="statement not covered" >      config.borderColor = this.node.color;</span>
-<span class="cstat-no" title="statement not covered" >      config.borderWidth = 3;</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Is this node currently active?</span>
+<span class="cstat-no" title="statement not covered" >     * @type {boolean}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    get isActive() {</span>
+<span class="cstat-no" title="statement not covered" >        return game.system.tree.active === this;</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    // Has the node been banned?</span>
-<span class="cstat-no" title="statement not covered" >    else if ( state.banned ) {</span>
-<span class="cstat-no" title="statement not covered" >      config.borderColor = 0x330000;</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /** @override */</span>
+<span class="cstat-no" title="statement not covered" >    async draw({state, ...config} = {}) {</span>
+<span class="cstat-no" title="statement not covered" >        const variety = state.purchased ? this.node.abilities.first() : "inactive";</span>
+<span class="cstat-no" title="statement not covered" >        config.texture = getTexture(`systems/swerpg/ui/tree/nodes/${this.node.type}-${variety}.webp`);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Signature nodes</span>
+<span class="cstat-no" title="statement not covered" >        if (this.node.type === "signature") {</span>
+<span class="cstat-no" title="statement not covered" >            config.size = 80;</span>
+<span class="cstat-no" title="statement not covered" >            config.borderRadius = 80;</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Is the node accessible or not?</span>
+<span class="cstat-no" title="statement not covered" >        if (state.accessible) {</span>
+<span class="cstat-no" title="statement not covered" >            config.alpha = 0.4;</span>
+<span class="cstat-no" title="statement not covered" >            config.borderColor = 0x827f7d;</span>
+<span class="cstat-no" title="statement not covered" >            config.borderWidth = 2;</span>
+<span class="cstat-no" title="statement not covered" >        } else {</span>
+<span class="cstat-no" title="statement not covered" >            config.alpha = 0.1;</span>
+<span class="cstat-no" title="statement not covered" >            config.borderColor = 0x262322;</span>
+<span class="cstat-no" title="statement not covered" >            config.borderWidth = 2;</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Has the node been purchased?</span>
+<span class="cstat-no" title="statement not covered" >        if (state.purchased) {</span>
+<span class="cstat-no" title="statement not covered" >            config.alpha = 1.0;</span>
+<span class="cstat-no" title="statement not covered" >            config.borderColor = this.node.color;</span>
+<span class="cstat-no" title="statement not covered" >            config.borderWidth = 3;</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Has the node been banned?</span>
+<span class="cstat-no" title="statement not covered" >        else if (state.banned) {</span>
+<span class="cstat-no" title="statement not covered" >            config.borderColor = 0x330000;</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Draw Icon</span>
+<span class="cstat-no" title="statement not covered" >        await super.draw(config);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Node interaction</span>
+<span class="cstat-no" title="statement not covered" >        this.#activateInteraction();</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    // Draw Icon</span>
-<span class="cstat-no" title="statement not covered" >    await super.draw(config);</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    // Node interaction</span>
-<span class="cstat-no" title="statement not covered" >    this.#activateInteraction();</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    /** @override */</span>
+<span class="cstat-no" title="statement not covered" >    _getShape() {</span>
+<span class="cstat-no" title="statement not covered" >        const size = this.config.size;</span>
+<span class="cstat-no" title="statement not covered" >        const hs = size / 2;</span>
+<span class="cstat-no" title="statement not covered" >        const borders = [[0, 0.5], [0.25, 0], [0.75, 0], [1, 0.5], [0.75, 1], [0.25, 1]];</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >        // Signature nodes = Hexagon</span>
+<span class="cstat-no" title="statement not covered" >        if (this.node.type === "signature") {</span>
+<span class="cstat-no" title="statement not covered" >            const width = size;</span>
+<span class="cstat-no" title="statement not covered" >            const height = size * Math.sqrt(3) / 2;</span>
+<span class="cstat-no" title="statement not covered" >            const points = borders.reduce((arr, [ox, oy]) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >                arr.push((ox * width) - (width / 2));</span>
+<span class="cstat-no" title="statement not covered" >                arr.push((oy * height) - (height / 2));</span>
+<span class="cstat-no" title="statement not covered" >                return arr;</span>
+<span class="cstat-no" title="statement not covered" >            }, []);</span>
+<span class="cstat-no" title="statement not covered" >            return new PIXI.Polygon(points);</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @override */</span>
-<span class="cstat-no" title="statement not covered" >  _getShape() {</span>
-<span class="cstat-no" title="statement not covered" >    const size = this.config.size;</span>
-<span class="cstat-no" title="statement not covered" >    const hs = size / 2;</span>
-<span class="cstat-no" title="statement not covered" >    const borders = [[0, 0.5], [0.25, 0], [0.75, 0], [1, 0.5], [0.75, 1], [0.25, 1]];</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    // Signature nodes = Hexagon</span>
-<span class="cstat-no" title="statement not covered" >    if ( this.node.type === "signature" ) {</span>
-<span class="cstat-no" title="statement not covered" >      const width = size;</span>
-<span class="cstat-no" title="statement not covered" >      const height = size * Math.sqrt(3) / 2;</span>
-<span class="cstat-no" title="statement not covered" >      const points = borders.reduce((arr, [ox, oy]) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >        arr.push((ox * width) - (width / 2));</span>
-<span class="cstat-no" title="statement not covered" >        arr.push((oy * height) - (height / 2));</span>
-<span class="cstat-no" title="statement not covered" >        return arr;</span>
-<span class="cstat-no" title="statement not covered" >      }, []);</span>
-<span class="cstat-no" title="statement not covered" >      return new PIXI.Polygon(points);</span>
+<span class="cstat-no" title="statement not covered" >        // Regular talent nodes = Circle</span>
+<span class="cstat-no" title="statement not covered" >        return new PIXI.Circle(0, 0, hs);</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    // Regular talent nodes = Circle</span>
-<span class="cstat-no" title="statement not covered" >    return new PIXI.Circle(0, 0, hs);</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  #activateInteraction() {</span>
-<span class="cstat-no" title="statement not covered" >    this.removeAllListeners();</span>
-<span class="cstat-no" title="statement not covered" >    this.on("pointerover", this.#onPointerOver.bind(this));</span>
-<span class="cstat-no" title="statement not covered" >    this.on("pointerout", this.#onPointerOut.bind(this));</span>
-<span class="cstat-no" title="statement not covered" >    this.on("pointerdown", this.#onClickLeft.bind(this));</span>
-<span class="cstat-no" title="statement not covered" >    this.eventMode = "static";</span>
-<span class="cstat-no" title="statement not covered" >    this.cursor = "pointer";</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  #onClickLeft(event) {</span>
-<span class="cstat-no" title="statement not covered" >    event.stopPropagation();</span>
-<span class="cstat-no" title="statement not covered" >    if ( event.data.originalEvent.button !== 0 ) return; // Only support standard left-click</span>
-<span class="cstat-no" title="statement not covered" >    const tree = game.system.tree;</span>
-<span class="cstat-no" title="statement not covered" >    if ( this.isActive ) {</span>
-<span class="cstat-no" title="statement not covered" >      tree.deactivateNode();</span>
-<span class="cstat-no" title="statement not covered" >      this.#onPointerOut(event);</span>
+<span class="cstat-no" title="statement not covered" >    #activateInteraction() {</span>
+<span class="cstat-no" title="statement not covered" >        this.removeAllListeners();</span>
+<span class="cstat-no" title="statement not covered" >        this.on("pointerover", this.#onPointerOver.bind(this));</span>
+<span class="cstat-no" title="statement not covered" >        this.on("pointerout", this.#onPointerOut.bind(this));</span>
+<span class="cstat-no" title="statement not covered" >        this.on("pointerdown", this.#onClickLeft.bind(this));</span>
+<span class="cstat-no" title="statement not covered" >        this.eventMode = "static";</span>
+<span class="cstat-no" title="statement not covered" >        this.cursor = "pointer";</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >    else {</span>
-<span class="cstat-no" title="statement not covered" >      this.#onPointerOver(event);</span>
-<span class="cstat-no" title="statement not covered" >      tree.activateNode(this);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    #onClickLeft(event) {</span>
+<span class="cstat-no" title="statement not covered" >        event.stopPropagation();</span>
+<span class="cstat-no" title="statement not covered" >        if (event.data.originalEvent.button !== 0) return; // Only support standard left-click</span>
+<span class="cstat-no" title="statement not covered" >        const tree = game.system.tree;</span>
+<span class="cstat-no" title="statement not covered" >        if (this.isActive) {</span>
+<span class="cstat-no" title="statement not covered" >            tree.deactivateNode();</span>
+<span class="cstat-no" title="statement not covered" >            this.#onPointerOut(event);</span>
+<span class="cstat-no" title="statement not covered" >        } else {</span>
+<span class="cstat-no" title="statement not covered" >            this.#onPointerOver(event);</span>
+<span class="cstat-no" title="statement not covered" >            tree.activateNode(this);</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  #onPointerOver(event) {</span>
-<span class="cstat-no" title="statement not covered" >    const tree = game.system.tree;</span>
-<span class="cstat-no" title="statement not covered" >    // TODO why are these safeguards necessary?</span>
-<span class="cstat-no" title="statement not covered" >    if ( !tree.app.renderer.enabled ) return;</span>
-<span class="cstat-no" title="statement not covered" >    if ( document.elementFromPoint(event.globalX, event.globalY)?.id !== "swerpg-talent-tree" ) return;</span>
-<span class="cstat-no" title="statement not covered" >    tree.hud.activate(this);</span>
-<span class="cstat-no" title="statement not covered" >    this.scale.set(1.2, 1.2);</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    #onPointerOver(event) {</span>
+<span class="cstat-no" title="statement not covered" >        const tree = game.system.tree;</span>
+<span class="cstat-no" title="statement not covered" >        // TODO why are these safeguards necessary?</span>
+<span class="cstat-no" title="statement not covered" >        if (!tree.app.renderer.enabled) return;</span>
+<span class="cstat-no" title="statement not covered" >        if (document.elementFromPoint(event.globalX, event.globalY)?.id !== "swerpg-talent-tree") return;</span>
+<span class="cstat-no" title="statement not covered" >        tree.hud.activate(this);</span>
+<span class="cstat-no" title="statement not covered" >        this.scale.set(1.2, 1.2);</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  #onPointerOut(event) {</span>
-<span class="cstat-no" title="statement not covered" >    const tree = game.system.tree;</span>
-<span class="cstat-no" title="statement not covered" >    // TODO why are these safeguards necessary?</span>
-<span class="cstat-no" title="statement not covered" >    if ( !tree.app.renderer.enabled ) return;</span>
-<span class="cstat-no" title="statement not covered" >    if ( document.elementFromPoint(event.globalX, event.globalY)?.id !== "swerpg-talent-tree" ) return;</span>
-<span class="cstat-no" title="statement not covered" >    tree.hud.clear();</span>
-<span class="cstat-no" title="statement not covered" >    if ( this.isActive ) return; // Don't un-hover an active node</span>
-<span class="cstat-no" title="statement not covered" >    this.scale.set(1.0, 1.0);</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    #onPointerOut(event) {</span>
+<span class="cstat-no" title="statement not covered" >        const tree = game.system.tree;</span>
+<span class="cstat-no" title="statement not covered" >        // TODO why are these safeguards necessary?</span>
+<span class="cstat-no" title="statement not covered" >        if (!tree.app.renderer.enabled) return;</span>
+<span class="cstat-no" title="statement not covered" >        if (document.elementFromPoint(event.globalX, event.globalY)?.id !== "swerpg-talent-tree") return;</span>
+<span class="cstat-no" title="statement not covered" >        tree.hud.clear();</span>
+<span class="cstat-no" title="statement not covered" >        if (this.isActive) return; // Don't un-hover an active node</span>
+<span class="cstat-no" title="statement not covered" >        this.scale.set(1.0, 1.0);</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;
 &nbsp;</pre></td></tr></table></pre>
@@ -511,7 +508,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-05-11T08:34:16.200Z
+                at 2025-05-26T14:10:38.209Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

@@ -221,77 +221,77 @@
 &nbsp;
 &nbsp;
 <span class="cstat-no" title="statement not covered" >export default class SwerpgTalentTreeTalent extends SwerpgTalentIcon {</span>
-<span class="cstat-no" title="statement not covered" >  constructor(node, talent, position, config) {</span>
-<span class="cstat-no" title="statement not covered" >    super(config);</span>
-<span class="cstat-no" title="statement not covered" >    this.node = node;</span>
-<span class="cstat-no" title="statement not covered" >    this.talent = talent;</span>
-<span class="cstat-no" title="statement not covered" >    this.position.set(position.x, position.y);</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    constructor(node, talent, position, config) {</span>
+<span class="cstat-no" title="statement not covered" >        super(config);</span>
+<span class="cstat-no" title="statement not covered" >        this.node = node;</span>
+<span class="cstat-no" title="statement not covered" >        this.talent = talent;</span>
+<span class="cstat-no" title="statement not covered" >        this.position.set(position.x, position.y);</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @override */</span>
-<span class="cstat-no" title="statement not covered" >  async draw({active, accessible, ...config}={}) {</span>
+<span class="cstat-no" title="statement not covered" >    /** @override */</span>
+<span class="cstat-no" title="statement not covered" >    async draw({active, accessible, ...config} = {}) {</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    // Talent State</span>
-<span class="cstat-no" title="statement not covered" >    config.borderRadius = 8;</span>
-<span class="cstat-no" title="statement not covered" >    config.borderColor = active ? this.node.node.color : 0x444444;</span>
-<span class="cstat-no" title="statement not covered" >    config.alpha = active ? 1.0 : 0.6;</span>
+<span class="cstat-no" title="statement not covered" >        // Talent State</span>
+<span class="cstat-no" title="statement not covered" >        config.borderRadius = 8;</span>
+<span class="cstat-no" title="statement not covered" >        config.borderColor = active ? this.node.node.color : 0x444444;</span>
+<span class="cstat-no" title="statement not covered" >        config.alpha = active ? 1.0 : 0.6;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    // Draw Icon</span>
-<span class="cstat-no" title="statement not covered" >    await super.draw(config);</span>
-<span class="cstat-no" title="statement not covered" >    this.icon.filters = accessible ? [] : [this.constructor.greyscaleFilter];</span>
-<span class="cstat-no" title="statement not covered" >    this.#activateInteraction();</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >        // Draw Icon</span>
+<span class="cstat-no" title="statement not covered" >        await super.draw(config);</span>
+<span class="cstat-no" title="statement not covered" >        this.icon.filters = accessible ? [] : [this.constructor.greyscaleFilter];</span>
+<span class="cstat-no" title="statement not covered" >        this.#activateInteraction();</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  #activateInteraction() {</span>
-<span class="cstat-no" title="statement not covered" >    this.removeAllListeners();</span>
-<span class="cstat-no" title="statement not covered" >    this.on("pointerover", this.#onPointerOver.bind(this));</span>
-<span class="cstat-no" title="statement not covered" >    this.on("pointerout", this.#onPointerOut.bind(this));</span>
-<span class="cstat-no" title="statement not covered" >    this.on("pointerdown", this.#onClickLeft.bind(this));</span>
-<span class="cstat-no" title="statement not covered" >    this.on("rightdown", this.#onClickRight.bind(this));</span>
-<span class="cstat-no" title="statement not covered" >    this.eventMode = "static";</span>
-<span class="cstat-no" title="statement not covered" >    this.cursor = "pointer";</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    #activateInteraction() {</span>
+<span class="cstat-no" title="statement not covered" >        this.removeAllListeners();</span>
+<span class="cstat-no" title="statement not covered" >        this.on("pointerover", this.#onPointerOver.bind(this));</span>
+<span class="cstat-no" title="statement not covered" >        this.on("pointerout", this.#onPointerOut.bind(this));</span>
+<span class="cstat-no" title="statement not covered" >        this.on("pointerdown", this.#onClickLeft.bind(this));</span>
+<span class="cstat-no" title="statement not covered" >        this.on("rightdown", this.#onClickRight.bind(this));</span>
+<span class="cstat-no" title="statement not covered" >        this.eventMode = "static";</span>
+<span class="cstat-no" title="statement not covered" >        this.cursor = "pointer";</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  async #onClickLeft(event) {</span>
-<span class="cstat-no" title="statement not covered" >    event.stopPropagation();</span>
-<span class="cstat-no" title="statement not covered" >    if ( event.data.originalEvent.button !== 0 ) return; // Only support standard left-click</span>
-<span class="cstat-no" title="statement not covered" >    const tree = game.system.tree;</span>
-<span class="cstat-no" title="statement not covered" >    if ( !tree.actor || tree.actor.talentIds.has(this.talent.id) ) return;</span>
-<span class="cstat-no" title="statement not covered" >    const response = await tree.actor.addTalent(this.talent, {dialog: true});</span>
-<span class="cstat-no" title="statement not covered" >    if ( response ) tree.playClick();</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    async #onClickLeft(event) {</span>
+<span class="cstat-no" title="statement not covered" >        event.stopPropagation();</span>
+<span class="cstat-no" title="statement not covered" >        if (event.data.originalEvent.button !== 0) return; // Only support standard left-click</span>
+<span class="cstat-no" title="statement not covered" >        const tree = game.system.tree;</span>
+<span class="cstat-no" title="statement not covered" >        if (!tree.actor || tree.actor.talentIds.has(this.talent.id)) return;</span>
+<span class="cstat-no" title="statement not covered" >        const response = await tree.actor.addTalent(this.talent, {dialog: true});</span>
+<span class="cstat-no" title="statement not covered" >        if (response) tree.playClick();</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  async #onClickRight(event) {</span>
-<span class="cstat-no" title="statement not covered" >    event.stopPropagation();</span>
-<span class="cstat-no" title="statement not covered" >    const tree = game.system.tree;</span>
-<span class="cstat-no" title="statement not covered" >    const actor = tree.actor;</span>
-<span class="cstat-no" title="statement not covered" >    if ( !actor || !actor.talentIds.has(this.talent.id) || actor.permanentTalentIds.has(this.talent.id) ) return;</span>
-<span class="cstat-no" title="statement not covered" >    const talent = tree.actor.items.get(this.talent.id);</span>
-<span class="cstat-no" title="statement not covered" >    const response = await talent.deleteDialog();</span>
-<span class="cstat-no" title="statement not covered" >    if ( response ) tree.playClick();</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    async #onClickRight(event) {</span>
+<span class="cstat-no" title="statement not covered" >        event.stopPropagation();</span>
+<span class="cstat-no" title="statement not covered" >        const tree = game.system.tree;</span>
+<span class="cstat-no" title="statement not covered" >        const actor = tree.actor;</span>
+<span class="cstat-no" title="statement not covered" >        if (!actor || !actor.talentIds.has(this.talent.id) || actor.permanentTalentIds.has(this.talent.id)) return;</span>
+<span class="cstat-no" title="statement not covered" >        const talent = tree.actor.items.get(this.talent.id);</span>
+<span class="cstat-no" title="statement not covered" >        const response = await talent.deleteDialog();</span>
+<span class="cstat-no" title="statement not covered" >        if (response) tree.playClick();</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  #onPointerOver(event) {</span>
-<span class="cstat-no" title="statement not covered" >    event.stopPropagation();</span>
-<span class="cstat-no" title="statement not covered" >    this.scale.set(1.2, 1.2);</span>
-<span class="cstat-no" title="statement not covered" >    game.system.tree.hud.activate(this);</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    #onPointerOver(event) {</span>
+<span class="cstat-no" title="statement not covered" >        event.stopPropagation();</span>
+<span class="cstat-no" title="statement not covered" >        this.scale.set(1.2, 1.2);</span>
+<span class="cstat-no" title="statement not covered" >        game.system.tree.hud.activate(this);</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  #onPointerOut(event) {</span>
-<span class="cstat-no" title="statement not covered" >    event.stopPropagation();</span>
-<span class="cstat-no" title="statement not covered" >    this.scale.set(1.0, 1.0);</span>
-<span class="cstat-no" title="statement not covered" >    game.system.tree.hud.clear();</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    #onPointerOut(event) {</span>
+<span class="cstat-no" title="statement not covered" >        event.stopPropagation();</span>
+<span class="cstat-no" title="statement not covered" >        this.scale.set(1.0, 1.0);</span>
+<span class="cstat-no" title="statement not covered" >        game.system.tree.hud.clear();</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;
 &nbsp;</pre></td></tr></table></pre>
@@ -301,7 +301,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-05-11T08:34:16.353Z
+                at 2025-05-26T14:10:38.370Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

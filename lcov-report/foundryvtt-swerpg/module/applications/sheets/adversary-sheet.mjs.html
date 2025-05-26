@@ -205,7 +205,9 @@
 <a name='L140'></a><a href='#L140'>140</a>
 <a name='L141'></a><a href='#L141'>141</a>
 <a name='L142'></a><a href='#L142'>142</a>
-<a name='L143'></a><a href='#L143'>143</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<a name='L143'></a><a href='#L143'>143</a>
+<a name='L144'></a><a href='#L144'>144</a>
+<a name='L145'></a><a href='#L145'>145</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -273,17 +275,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -299,11 +290,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -332,7 +318,25 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -354,140 +358,142 @@
 <span class="cstat-no" title="statement not covered" > */</span>
 <span class="cstat-no" title="statement not covered" >export default class AdversarySheet extends SwerpgBaseActorSheet {</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @inheritDoc */</span>
-<span class="cstat-no" title="statement not covered" >  static DEFAULT_OPTIONS = {</span>
-<span class="cstat-no" title="statement not covered" >    actor: {</span>
-<span class="cstat-no" title="statement not covered" >      type: "adversary"</span>
-<span class="cstat-no" title="statement not covered" >    },</span>
-<span class="cstat-no" title="statement not covered" >    actions: {</span>
-<span class="cstat-no" title="statement not covered" >      editArchetype: AdversarySheet.#onEditArchetype,</span>
-<span class="cstat-no" title="statement not covered" >      editTaxonomy: AdversarySheet.#onEditTaxonomy,</span>
-<span class="cstat-no" title="statement not covered" >      levelDecrease: AdversarySheet.#onLevelDecrease,</span>
-<span class="cstat-no" title="statement not covered" >      levelIncrease: AdversarySheet.#onLevelIncrease</span>
+<span class="cstat-no" title="statement not covered" >    /** @inheritDoc */</span>
+<span class="cstat-no" title="statement not covered" >    static DEFAULT_OPTIONS = {</span>
+<span class="cstat-no" title="statement not covered" >        actor: {</span>
+<span class="cstat-no" title="statement not covered" >            type: "adversary"</span>
+<span class="cstat-no" title="statement not covered" >        },</span>
+<span class="cstat-no" title="statement not covered" >        actions: {</span>
+<span class="cstat-no" title="statement not covered" >            editArchetype: AdversarySheet.#onEditArchetype,</span>
+<span class="cstat-no" title="statement not covered" >            editTaxonomy: AdversarySheet.#onEditTaxonomy,</span>
+<span class="cstat-no" title="statement not covered" >            levelDecrease: AdversarySheet.#onLevelDecrease,</span>
+<span class="cstat-no" title="statement not covered" >            levelIncrease: AdversarySheet.#onLevelIncrease</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >    };</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    static {</span>
+<span class="cstat-no" title="statement not covered" >        this._initializeActorSheetClass();</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  };</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  static {</span>
-<span class="cstat-no" title="statement not covered" >    this._initializeActorSheetClass();</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /** @override */</span>
+<span class="cstat-no" title="statement not covered" >    async _prepareContext(options) {</span>
+<span class="cstat-no" title="statement not covered" >        const context = await super._prepareContext(options);</span>
+<span class="cstat-no" title="statement not covered" >        const {actor: a, source: s, incomplete: i} = context;</span>
+<span class="cstat-no" title="statement not covered" >        const {threat, level} = a.system.advancement;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @override */</span>
-<span class="cstat-no" title="statement not covered" >  async _prepareContext(options) {</span>
-<span class="cstat-no" title="statement not covered" >    const context = await super._prepareContext(options);</span>
-<span class="cstat-no" title="statement not covered" >    const {actor: a, source: s, incomplete: i} = context;</span>
-<span class="cstat-no" title="statement not covered" >    const {threat, level} = a.system.advancement;</span>
+<span class="cstat-no" title="statement not covered" >        // Expand Context</span>
+<span class="cstat-no" title="statement not covered" >        Object.assign(context, {</span>
+<span class="cstat-no" title="statement not covered" >            archetypeName: a.system.details.archetype?.name || game.i18n.localize("ARCHETYPE.SHEET.CHOOSE"),</span>
+<span class="cstat-no" title="statement not covered" >            taxonomyName: a.system.details.taxonomy?.name || game.i18n.localize("TAXONOMY.SHEET.CHOOSE"),</span>
+<span class="cstat-no" title="statement not covered" >            canPurchaseTalents: false,</span>
+<span class="cstat-no" title="statement not covered" >            canPurchaseSkills: false,</span>
+<span class="cstat-no" title="statement not covered" >            threats: SYSTEM.THREAT_LEVELS,</span>
+<span class="cstat-no" title="statement not covered" >            threat: SYSTEM.THREAT_LEVELS[threat],</span>
+<span class="cstat-no" title="statement not covered" >            levelDisplay: this.#getLevelDisplay(level),</span>
+<span class="cstat-no" title="statement not covered" >            canLevelUp: level &lt; 24,</span>
+<span class="cstat-no" title="statement not covered" >            canLevelDown: level &gt; -5,</span>
+<span class="cstat-no" title="statement not covered" >        });</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    // Expand Context</span>
-<span class="cstat-no" title="statement not covered" >    Object.assign(context, {</span>
-<span class="cstat-no" title="statement not covered" >      archetypeName: a.system.details.archetype?.name || game.i18n.localize("ARCHETYPE.SHEET.CHOOSE"),</span>
-<span class="cstat-no" title="statement not covered" >      taxonomyName: a.system.details.taxonomy?.name || game.i18n.localize("TAXONOMY.SHEET.CHOOSE"),</span>
-<span class="cstat-no" title="statement not covered" >      canPurchaseTalents: false,</span>
-<span class="cstat-no" title="statement not covered" >      canPurchaseSkills: false,</span>
-<span class="cstat-no" title="statement not covered" >      threats: SYSTEM.THREAT_LEVELS,</span>
-<span class="cstat-no" title="statement not covered" >      threat: SYSTEM.THREAT_LEVELS[threat],</span>
-<span class="cstat-no" title="statement not covered" >      levelDisplay: this.#getLevelDisplay(level),</span>
-<span class="cstat-no" title="statement not covered" >      canLevelUp: level &lt; 24,</span>
-<span class="cstat-no" title="statement not covered" >      canLevelDown: level &gt; -5,</span>
-<span class="cstat-no" title="statement not covered" >    });</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    // Incomplete Tasks</span>
-<span class="cstat-no" title="statement not covered" >    Object.assign(i, {</span>
-<span class="cstat-no" title="statement not covered" >      taxonomy: !s.system.details.taxonomy?.name,</span>
-<span class="cstat-no" title="statement not covered" >      archetype: !s.system.details.archetype?.name</span>
-<span class="cstat-no" title="statement not covered" >    })</span>
-<span class="cstat-no" title="statement not covered" >    return context;</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Get the display string for the Adversary level.</span>
-<span class="cstat-no" title="statement not covered" >   * @param {number} level    The true numerical level</span>
-<span class="cstat-no" title="statement not covered" >   * @returns {string}        The displayed string level</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  #getLevelDisplay(level) {</span>
-<span class="cstat-no" title="statement not covered" >    if ( level &gt; 0 ) return String(level);</span>
-<span class="cstat-no" title="statement not covered" >    if ( level === 0 ) return "0";</span>
-<span class="cstat-no" title="statement not covered" >    return `1/${1 - level}`;</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-<span class="cstat-no" title="statement not covered" >  /*  Event Listeners and Handlers                */</span>
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Handle click action to choose or edit the Archetype of this Adversary.</span>
-<span class="cstat-no" title="statement not covered" >   * @this {AdversarySheet}</span>
-<span class="cstat-no" title="statement not covered" >   * @param {PointerEvent} event</span>
-<span class="cstat-no" title="statement not covered" >   * @returns {Promise&lt;void&gt;}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  static async #onEditArchetype(event) {</span>
-<span class="cstat-no" title="statement not covered" >    await this.actor._viewDetailItem("archetype", {editable: false});</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Handle click action to choose or edit the Taxonomy of this Adversary.</span>
-<span class="cstat-no" title="statement not covered" >   * @this {AdversarySheet}</span>
-<span class="cstat-no" title="statement not covered" >   * @param {PointerEvent} event</span>
-<span class="cstat-no" title="statement not covered" >   * @returns {Promise&lt;void&gt;}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  static async #onEditTaxonomy(event) {</span>
-<span class="cstat-no" title="statement not covered" >    await this.actor._viewDetailItem("taxonomy", {editable: false});</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Handle click action to decrease the level of the Adversary.</span>
-<span class="cstat-no" title="statement not covered" >   * @this {AdversarySheet}</span>
-<span class="cstat-no" title="statement not covered" >   * @param {PointerEvent} event</span>
-<span class="cstat-no" title="statement not covered" >   * @returns {Promise&lt;void&gt;}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  static async #onLevelDecrease(event) {</span>
-<span class="cstat-no" title="statement not covered" >    const l = this.actor.system.advancement.level;</span>
-<span class="cstat-no" title="statement not covered" >    let next;</span>
-<span class="cstat-no" title="statement not covered" >    if ( l === 1 ) next = -1;</span>
-<span class="cstat-no" title="statement not covered" >    else if ( l === -11 ) next = 0;</span>
-<span class="cstat-no" title="statement not covered" >    else next = Math.max(l - 1, -11);</span>
-<span class="cstat-no" title="statement not covered" >    return this.actor.update({"system.advancement.level": next});</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Handle click action to increase the level of the Adversary.</span>
-<span class="cstat-no" title="statement not covered" >   * @this {AdversarySheet}</span>
-<span class="cstat-no" title="statement not covered" >   * @param {PointerEvent} event</span>
-<span class="cstat-no" title="statement not covered" >   * @returns {Promise&lt;void&gt;}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  static async #onLevelIncrease(event) {</span>
-<span class="cstat-no" title="statement not covered" >    const l = this.actor.system.advancement.level;</span>
-<span class="cstat-no" title="statement not covered" >    let next;</span>
-<span class="cstat-no" title="statement not covered" >    if ( l === 0 ) next = -11;</span>
-<span class="cstat-no" title="statement not covered" >    else if ( l === -1 ) next = 1;</span>
-<span class="cstat-no" title="statement not covered" >    else next = Math.min(l + 1, 24);</span>
-<span class="cstat-no" title="statement not covered" >    return this.actor.update({"system.advancement.level": next});</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-<span class="cstat-no" title="statement not covered" >  /*  Drag and Drop                               */</span>
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @inheritDoc */</span>
-<span class="cstat-no" title="statement not covered" >  async _onDropItem(event, item) {</span>
-<span class="cstat-no" title="statement not covered" >    if ( !this.actor.isOwner ) return;</span>
-<span class="cstat-no" title="statement not covered" >    switch (item.type) {</span>
-<span class="cstat-no" title="statement not covered" >      case "archetype":</span>
-<span class="cstat-no" title="statement not covered" >        return this.actor.system.applyArchetype(item);</span>
-<span class="cstat-no" title="statement not covered" >      case "taxonomy":</span>
-<span class="cstat-no" title="statement not covered" >        return this.actor.system.applyTaxonomy(item);</span>
+<span class="cstat-no" title="statement not covered" >        // Incomplete Tasks</span>
+<span class="cstat-no" title="statement not covered" >        Object.assign(i, {</span>
+<span class="cstat-no" title="statement not covered" >            taxonomy: !s.system.details.taxonomy?.name,</span>
+<span class="cstat-no" title="statement not covered" >            archetype: !s.system.details.archetype?.name</span>
+<span class="cstat-no" title="statement not covered" >        })</span>
+<span class="cstat-no" title="statement not covered" >        return context;</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >    return super._onDropItem(event, item);</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Get the display string for the Adversary level.</span>
+<span class="cstat-no" title="statement not covered" >     * @param {number} level    The true numerical level</span>
+<span class="cstat-no" title="statement not covered" >     * @returns {string}        The displayed string level</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    #getLevelDisplay(level) {</span>
+<span class="cstat-no" title="statement not covered" >        if (level &gt; 0) return String(level);</span>
+<span class="cstat-no" title="statement not covered" >        if (level === 0) return "0";</span>
+<span class="cstat-no" title="statement not covered" >        return `1/${1 - level}`;</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /*  Event Listeners and Handlers                */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Handle click action to choose or edit the Archetype of this Adversary.</span>
+<span class="cstat-no" title="statement not covered" >     * @this {AdversarySheet}</span>
+<span class="cstat-no" title="statement not covered" >     * @param {PointerEvent} event</span>
+<span class="cstat-no" title="statement not covered" >     * @returns {Promise&lt;void&gt;}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    static async #onEditArchetype(event) {</span>
+<span class="cstat-no" title="statement not covered" >        await this.actor._viewDetailItem("archetype", {editable: false});</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Handle click action to choose or edit the Taxonomy of this Adversary.</span>
+<span class="cstat-no" title="statement not covered" >     * @this {AdversarySheet}</span>
+<span class="cstat-no" title="statement not covered" >     * @param {PointerEvent} event</span>
+<span class="cstat-no" title="statement not covered" >     * @returns {Promise&lt;void&gt;}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    static async #onEditTaxonomy(event) {</span>
+<span class="cstat-no" title="statement not covered" >        await this.actor._viewDetailItem("taxonomy", {editable: false});</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Handle click action to decrease the level of the Adversary.</span>
+<span class="cstat-no" title="statement not covered" >     * @this {AdversarySheet}</span>
+<span class="cstat-no" title="statement not covered" >     * @param {PointerEvent} event</span>
+<span class="cstat-no" title="statement not covered" >     * @returns {Promise&lt;void&gt;}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    static async #onLevelDecrease(event) {</span>
+<span class="cstat-no" title="statement not covered" >        const l = this.actor.system.advancement.level;</span>
+<span class="cstat-no" title="statement not covered" >        let next;</span>
+<span class="cstat-no" title="statement not covered" >        if (l === 1) next = -1;</span>
+<span class="cstat-no" title="statement not covered" >        else if (l === -11) next = 0;</span>
+<span class="cstat-no" title="statement not covered" >        else next = Math.max(l - 1, -11);</span>
+<span class="cstat-no" title="statement not covered" >        return this.actor.update({"system.advancement.level": next});</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Handle click action to increase the level of the Adversary.</span>
+<span class="cstat-no" title="statement not covered" >     * @this {AdversarySheet}</span>
+<span class="cstat-no" title="statement not covered" >     * @param {PointerEvent} event</span>
+<span class="cstat-no" title="statement not covered" >     * @returns {Promise&lt;void&gt;}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    static async #onLevelIncrease(event) {</span>
+<span class="cstat-no" title="statement not covered" >        const l = this.actor.system.advancement.level;</span>
+<span class="cstat-no" title="statement not covered" >        let next;</span>
+<span class="cstat-no" title="statement not covered" >        if (l === 0) next = -11;</span>
+<span class="cstat-no" title="statement not covered" >        else if (l === -1) next = 1;</span>
+<span class="cstat-no" title="statement not covered" >        else next = Math.min(l + 1, 24);</span>
+<span class="cstat-no" title="statement not covered" >        return this.actor.update({"system.advancement.level": next});</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /*  Drag and Drop                               */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /** @inheritDoc */</span>
+<span class="cstat-no" title="statement not covered" >    async _onDropItem(event, item) {</span>
+<span class="cstat-no" title="statement not covered" >        if (!this.actor.isOwner) return;</span>
+<span class="cstat-no" title="statement not covered" >        switch (item.type) {</span>
+<span class="cstat-no" title="statement not covered" >            case "archetype":</span>
+<span class="cstat-no" title="statement not covered" >                return this.actor.system.applyArchetype(item);</span>
+<span class="cstat-no" title="statement not covered" >            case "taxonomy":</span>
+<span class="cstat-no" title="statement not covered" >                return this.actor.system.applyTaxonomy(item);</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >        return super._onDropItem(event, item);</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;</pre></td></tr></table></pre>
 
@@ -496,7 +502,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-05-11T08:34:16.200Z
+                at 2025-05-26T14:10:38.209Z
             </div>
         <script src="../../../../prettify.js"></script>
         <script>

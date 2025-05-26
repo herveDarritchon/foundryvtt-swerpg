@@ -972,8 +972,8 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" >export const NAME_FORMATS = Object.freeze({<span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ></span></span></span>
-<span class="cstat-no" title="statement not covered" >  NOUN: 1,</span>
-<span class="cstat-no" title="statement not covered" >  ADJ: 2</span>
+<span class="cstat-no" title="statement not covered" >    NOUN: 1,</span>
+<span class="cstat-no" title="statement not covered" >    ADJ: 2</span>
 <span class="cstat-no" title="statement not covered" >});</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >/**</span>
@@ -982,140 +982,140 @@
 <span class="cstat-no" title="statement not covered" > * @enum {SwerpgRune}</span>
 <span class="cstat-no" title="statement not covered" > */</span>
 <span class="cstat-no" title="statement not covered" >export const RUNES = Object.seal({</span>
-<span class="cstat-no" title="statement not covered" >  death: {</span>
-<span class="cstat-no" title="statement not covered" >    id: "death",</span>
-<span class="cstat-no" title="statement not covered" >    name: "SPELL.RUNES.Death",</span>
-<span class="cstat-no" title="statement not covered" >    img: "icons/magic/unholy/hand-claw-fire-blue.webp",</span>
-<span class="cstat-no" title="statement not covered" >    resource: "health",</span>
-<span class="cstat-no" title="statement not covered" >    damageType: "corruption",</span>
-<span class="cstat-no" title="statement not covered" >    opposed: "life",</span>
-<span class="cstat-no" title="statement not covered" >    defense: "fortitude",</span>
-<span class="cstat-no" title="statement not covered" >    scaling: "intellect",</span>
-<span class="cstat-no" title="statement not covered" >    nameFormat: NAME_FORMATS.NOUN</span>
-<span class="cstat-no" title="statement not covered" >  },</span>
-<span class="cstat-no" title="statement not covered" >  earth: {</span>
-<span class="cstat-no" title="statement not covered" >    id: "earth",</span>
-<span class="cstat-no" title="statement not covered" >    name: "SPELL.RUNES.Earth",</span>
-<span class="cstat-no" title="statement not covered" >    img: "icons/magic/earth/projectile-boulder-debris.webp",</span>
-<span class="cstat-no" title="statement not covered" >    resource: "health",</span>
-<span class="cstat-no" title="statement not covered" >    damageType: "acid",</span>
-<span class="cstat-no" title="statement not covered" >    opposed: "lightning",</span>
-<span class="cstat-no" title="statement not covered" >    defense: "reflex",</span>
-<span class="cstat-no" title="statement not covered" >    scaling: "wisdom",</span>
-<span class="cstat-no" title="statement not covered" >    nameFormat: NAME_FORMATS.ADJ</span>
-<span class="cstat-no" title="statement not covered" >  },</span>
-<span class="cstat-no" title="statement not covered" >  flame: {</span>
-<span class="cstat-no" title="statement not covered" >    id: "flame",</span>
-<span class="cstat-no" title="statement not covered" >    name: "SPELL.RUNES.Flame",</span>
-<span class="cstat-no" title="statement not covered" >    img: "icons/magic/fire/barrier-wall-flame-ring-yellow.webp",</span>
-<span class="cstat-no" title="statement not covered" >    resource: "health",</span>
-<span class="cstat-no" title="statement not covered" >    damageType: "fire",</span>
-<span class="cstat-no" title="statement not covered" >    opposed: "frost",</span>
-<span class="cstat-no" title="statement not covered" >    defense: "reflex",</span>
-<span class="cstat-no" title="statement not covered" >    scaling: "intellect",</span>
-<span class="cstat-no" title="statement not covered" >    nameFormat: NAME_FORMATS.NOUN</span>
-<span class="cstat-no" title="statement not covered" >  },</span>
-<span class="cstat-no" title="statement not covered" >  frost: {</span>
-<span class="cstat-no" title="statement not covered" >    id: "frost",</span>
-<span class="cstat-no" title="statement not covered" >    name: "SPELL.RUNES.Frost",</span>
-<span class="cstat-no" title="statement not covered" >    img: "icons/magic/water/snowflake-ice-snow-white.webp",</span>
-<span class="cstat-no" title="statement not covered" >    resource: "health",</span>
-<span class="cstat-no" title="statement not covered" >    damageType: "cold",</span>
-<span class="cstat-no" title="statement not covered" >    opposed: "flame",</span>
-<span class="cstat-no" title="statement not covered" >    defense: "fortitude",</span>
-<span class="cstat-no" title="statement not covered" >    scaling: "wisdom",</span>
-<span class="cstat-no" title="statement not covered" >    nameFormat: NAME_FORMATS.NOUN</span>
-<span class="cstat-no" title="statement not covered" >  },</span>
-<span class="cstat-no" title="statement not covered" >  illumination: {</span>
-<span class="cstat-no" title="statement not covered" >    id: "illumination",</span>
-<span class="cstat-no" title="statement not covered" >    name: "SPELL.RUNES.Illumination",</span>
-<span class="cstat-no" title="statement not covered" >    img: "icons/magic/light/projectile-beam-yellow.webp",</span>
-<span class="cstat-no" title="statement not covered" >    resource: "health",</span>
-<span class="cstat-no" title="statement not covered" >    damageType: "radiant",</span>
-<span class="cstat-no" title="statement not covered" >    opposed: "shadow",</span>
-<span class="cstat-no" title="statement not covered" >    defense: "willpower",</span>
-<span class="cstat-no" title="statement not covered" >    scaling: "presence",</span>
-<span class="cstat-no" title="statement not covered" >    nameFormat: NAME_FORMATS.ADJ</span>
-<span class="cstat-no" title="statement not covered" >  },</span>
-<span class="cstat-no" title="statement not covered" >  kinesis: {</span>
-<span class="cstat-no" title="statement not covered" >    id: "kinesis",</span>
-<span class="cstat-no" title="statement not covered" >    name: "SPELL.RUNES.Kinesis",</span>
-<span class="cstat-no" title="statement not covered" >    img: "icons/magic/movement/pinwheel-turning-blue.webp",</span>
-<span class="cstat-no" title="statement not covered" >    resource: "health",</span>
-<span class="cstat-no" title="statement not covered" >    damageType: "physical",</span>
-<span class="cstat-no" title="statement not covered" >    opposed: "stasis",</span>
-<span class="cstat-no" title="statement not covered" >    defense: "physical",</span>
-<span class="cstat-no" title="statement not covered" >    scaling: "presence",</span>
-<span class="cstat-no" title="statement not covered" >    nameFormat: NAME_FORMATS.ADJ</span>
-<span class="cstat-no" title="statement not covered" >  },</span>
-<span class="cstat-no" title="statement not covered" >  life: {</span>
-<span class="cstat-no" title="statement not covered" >    id: "life",</span>
-<span class="cstat-no" title="statement not covered" >    name: "SPELL.RUNES.Life",</span>
-<span class="cstat-no" title="statement not covered" >    img: "icons/magic/life/heart-shadow-red.webp",</span>
-<span class="cstat-no" title="statement not covered" >    resource: "health",</span>
-<span class="cstat-no" title="statement not covered" >    restoration: true,</span>
-<span class="cstat-no" title="statement not covered" >    damageType: "poison",</span>
-<span class="cstat-no" title="statement not covered" >    opposed: "death",</span>
-<span class="cstat-no" title="statement not covered" >    defense: "fortitude",</span>
-<span class="cstat-no" title="statement not covered" >    scaling: "wisdom",</span>
-<span class="cstat-no" title="statement not covered" >    nameFormat: NAME_FORMATS.NOUN</span>
-<span class="cstat-no" title="statement not covered" >  },</span>
-<span class="cstat-no" title="statement not covered" >  lightning: {</span>
-<span class="cstat-no" title="statement not covered" >    id: "lightning",</span>
-<span class="cstat-no" title="statement not covered" >    name: "SPELL.RUNES.Lightning",</span>
-<span class="cstat-no" title="statement not covered" >    img: "icons/magic/lightning/bolt-strike-blue.webp",</span>
-<span class="cstat-no" title="statement not covered" >    resource: "health",</span>
-<span class="cstat-no" title="statement not covered" >    damageType: "electricity",</span>
-<span class="cstat-no" title="statement not covered" >    opposed: "earth",</span>
-<span class="cstat-no" title="statement not covered" >    defense: "reflex",</span>
-<span class="cstat-no" title="statement not covered" >    scaling: "intellect",</span>
-<span class="cstat-no" title="statement not covered" >    nameFormat: NAME_FORMATS.ADJ</span>
-<span class="cstat-no" title="statement not covered" >  },</span>
-<span class="cstat-no" title="statement not covered" >  control: {</span>
-<span class="cstat-no" title="statement not covered" >    id: "control",</span>
-<span class="cstat-no" title="statement not covered" >    name: "SPELL.RUNES.Control",</span>
-<span class="cstat-no" title="statement not covered" >    img: "icons/magic/control/hypnosis-mesmerism-eye.webp",</span>
-<span class="cstat-no" title="statement not covered" >    resource: "morale",</span>
-<span class="cstat-no" title="statement not covered" >    damageType: "psychic",</span>
-<span class="cstat-no" title="statement not covered" >    opposed: "spirit",</span>
-<span class="cstat-no" title="statement not covered" >    defense: "willpower",</span>
-<span class="cstat-no" title="statement not covered" >    scaling: "intellect",</span>
-<span class="cstat-no" title="statement not covered" >    nameFormat: NAME_FORMATS.NOUN</span>
-<span class="cstat-no" title="statement not covered" >  },</span>
-<span class="cstat-no" title="statement not covered" >  shadow: {</span>
-<span class="cstat-no" title="statement not covered" >    id: "shadow",</span>
-<span class="cstat-no" title="statement not covered" >    name: "SPELL.RUNES.Shadow",</span>
-<span class="cstat-no" title="statement not covered" >    img: "icons/magic/unholy/orb-rays-blue.webp",</span>
-<span class="cstat-no" title="statement not covered" >    resource: "morale",</span>
-<span class="cstat-no" title="statement not covered" >    damageType: "void",</span>
-<span class="cstat-no" title="statement not covered" >    opposed: "illumination",</span>
-<span class="cstat-no" title="statement not covered" >    defense: "fortitude",</span>
-<span class="cstat-no" title="statement not covered" >    scaling: "presence",</span>
-<span class="cstat-no" title="statement not covered" >    nameFormat: NAME_FORMATS.ADJ</span>
-<span class="cstat-no" title="statement not covered" >  },</span>
-<span class="cstat-no" title="statement not covered" >  spirit: {</span>
-<span class="cstat-no" title="statement not covered" >    id: "spirit",</span>
-<span class="cstat-no" title="statement not covered" >    name: "SPELL.RUNES.Spirit",</span>
-<span class="cstat-no" title="statement not covered" >    img: "icons/magic/control/fear-fright-white.webp",</span>
-<span class="cstat-no" title="statement not covered" >    resource: "morale",</span>
-<span class="cstat-no" title="statement not covered" >    restoration: true,</span>
-<span class="cstat-no" title="statement not covered" >    damageType: "psychic",</span>
-<span class="cstat-no" title="statement not covered" >    opposed: "control",</span>
-<span class="cstat-no" title="statement not covered" >    defense: "willpower",</span>
-<span class="cstat-no" title="statement not covered" >    scaling: "presence",</span>
-<span class="cstat-no" title="statement not covered" >    nameFormat: NAME_FORMATS.NOUN</span>
-<span class="cstat-no" title="statement not covered" >  },</span>
-<span class="cstat-no" title="statement not covered" >  stasis: {</span>
-<span class="cstat-no" title="statement not covered" >    id: "stasis",</span>
-<span class="cstat-no" title="statement not covered" >    name: "SPELL.RUNES.Stasis",</span>
-<span class="cstat-no" title="statement not covered" >    img: "icons/magic/time/clock-spinning-gold-pink.webp",</span>
-<span class="cstat-no" title="statement not covered" >    resource: "morale",</span>
-<span class="cstat-no" title="statement not covered" >    damageType: "physical",</span>
-<span class="cstat-no" title="statement not covered" >    opposed: "kinesis",</span>
-<span class="cstat-no" title="statement not covered" >    defense: "willpower",</span>
-<span class="cstat-no" title="statement not covered" >    scaling: "wisdom",</span>
-<span class="cstat-no" title="statement not covered" >    nameFormat: NAME_FORMATS.ADJ</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    death: {</span>
+<span class="cstat-no" title="statement not covered" >        id: "death",</span>
+<span class="cstat-no" title="statement not covered" >        name: "SPELL.RUNES.Death",</span>
+<span class="cstat-no" title="statement not covered" >        img: "icons/magic/unholy/hand-claw-fire-blue.webp",</span>
+<span class="cstat-no" title="statement not covered" >        resource: "health",</span>
+<span class="cstat-no" title="statement not covered" >        damageType: "corruption",</span>
+<span class="cstat-no" title="statement not covered" >        opposed: "life",</span>
+<span class="cstat-no" title="statement not covered" >        defense: "fortitude",</span>
+<span class="cstat-no" title="statement not covered" >        scaling: "intellect",</span>
+<span class="cstat-no" title="statement not covered" >        nameFormat: NAME_FORMATS.NOUN</span>
+<span class="cstat-no" title="statement not covered" >    },</span>
+<span class="cstat-no" title="statement not covered" >    earth: {</span>
+<span class="cstat-no" title="statement not covered" >        id: "earth",</span>
+<span class="cstat-no" title="statement not covered" >        name: "SPELL.RUNES.Earth",</span>
+<span class="cstat-no" title="statement not covered" >        img: "icons/magic/earth/projectile-boulder-debris.webp",</span>
+<span class="cstat-no" title="statement not covered" >        resource: "health",</span>
+<span class="cstat-no" title="statement not covered" >        damageType: "acid",</span>
+<span class="cstat-no" title="statement not covered" >        opposed: "lightning",</span>
+<span class="cstat-no" title="statement not covered" >        defense: "reflex",</span>
+<span class="cstat-no" title="statement not covered" >        scaling: "wisdom",</span>
+<span class="cstat-no" title="statement not covered" >        nameFormat: NAME_FORMATS.ADJ</span>
+<span class="cstat-no" title="statement not covered" >    },</span>
+<span class="cstat-no" title="statement not covered" >    flame: {</span>
+<span class="cstat-no" title="statement not covered" >        id: "flame",</span>
+<span class="cstat-no" title="statement not covered" >        name: "SPELL.RUNES.Flame",</span>
+<span class="cstat-no" title="statement not covered" >        img: "icons/magic/fire/barrier-wall-flame-ring-yellow.webp",</span>
+<span class="cstat-no" title="statement not covered" >        resource: "health",</span>
+<span class="cstat-no" title="statement not covered" >        damageType: "fire",</span>
+<span class="cstat-no" title="statement not covered" >        opposed: "frost",</span>
+<span class="cstat-no" title="statement not covered" >        defense: "reflex",</span>
+<span class="cstat-no" title="statement not covered" >        scaling: "intellect",</span>
+<span class="cstat-no" title="statement not covered" >        nameFormat: NAME_FORMATS.NOUN</span>
+<span class="cstat-no" title="statement not covered" >    },</span>
+<span class="cstat-no" title="statement not covered" >    frost: {</span>
+<span class="cstat-no" title="statement not covered" >        id: "frost",</span>
+<span class="cstat-no" title="statement not covered" >        name: "SPELL.RUNES.Frost",</span>
+<span class="cstat-no" title="statement not covered" >        img: "icons/magic/water/snowflake-ice-snow-white.webp",</span>
+<span class="cstat-no" title="statement not covered" >        resource: "health",</span>
+<span class="cstat-no" title="statement not covered" >        damageType: "cold",</span>
+<span class="cstat-no" title="statement not covered" >        opposed: "flame",</span>
+<span class="cstat-no" title="statement not covered" >        defense: "fortitude",</span>
+<span class="cstat-no" title="statement not covered" >        scaling: "wisdom",</span>
+<span class="cstat-no" title="statement not covered" >        nameFormat: NAME_FORMATS.NOUN</span>
+<span class="cstat-no" title="statement not covered" >    },</span>
+<span class="cstat-no" title="statement not covered" >    illumination: {</span>
+<span class="cstat-no" title="statement not covered" >        id: "illumination",</span>
+<span class="cstat-no" title="statement not covered" >        name: "SPELL.RUNES.Illumination",</span>
+<span class="cstat-no" title="statement not covered" >        img: "icons/magic/light/projectile-beam-yellow.webp",</span>
+<span class="cstat-no" title="statement not covered" >        resource: "health",</span>
+<span class="cstat-no" title="statement not covered" >        damageType: "radiant",</span>
+<span class="cstat-no" title="statement not covered" >        opposed: "shadow",</span>
+<span class="cstat-no" title="statement not covered" >        defense: "willpower",</span>
+<span class="cstat-no" title="statement not covered" >        scaling: "presence",</span>
+<span class="cstat-no" title="statement not covered" >        nameFormat: NAME_FORMATS.ADJ</span>
+<span class="cstat-no" title="statement not covered" >    },</span>
+<span class="cstat-no" title="statement not covered" >    kinesis: {</span>
+<span class="cstat-no" title="statement not covered" >        id: "kinesis",</span>
+<span class="cstat-no" title="statement not covered" >        name: "SPELL.RUNES.Kinesis",</span>
+<span class="cstat-no" title="statement not covered" >        img: "icons/magic/movement/pinwheel-turning-blue.webp",</span>
+<span class="cstat-no" title="statement not covered" >        resource: "health",</span>
+<span class="cstat-no" title="statement not covered" >        damageType: "physical",</span>
+<span class="cstat-no" title="statement not covered" >        opposed: "stasis",</span>
+<span class="cstat-no" title="statement not covered" >        defense: "physical",</span>
+<span class="cstat-no" title="statement not covered" >        scaling: "presence",</span>
+<span class="cstat-no" title="statement not covered" >        nameFormat: NAME_FORMATS.ADJ</span>
+<span class="cstat-no" title="statement not covered" >    },</span>
+<span class="cstat-no" title="statement not covered" >    life: {</span>
+<span class="cstat-no" title="statement not covered" >        id: "life",</span>
+<span class="cstat-no" title="statement not covered" >        name: "SPELL.RUNES.Life",</span>
+<span class="cstat-no" title="statement not covered" >        img: "icons/magic/life/heart-shadow-red.webp",</span>
+<span class="cstat-no" title="statement not covered" >        resource: "health",</span>
+<span class="cstat-no" title="statement not covered" >        restoration: true,</span>
+<span class="cstat-no" title="statement not covered" >        damageType: "poison",</span>
+<span class="cstat-no" title="statement not covered" >        opposed: "death",</span>
+<span class="cstat-no" title="statement not covered" >        defense: "fortitude",</span>
+<span class="cstat-no" title="statement not covered" >        scaling: "wisdom",</span>
+<span class="cstat-no" title="statement not covered" >        nameFormat: NAME_FORMATS.NOUN</span>
+<span class="cstat-no" title="statement not covered" >    },</span>
+<span class="cstat-no" title="statement not covered" >    lightning: {</span>
+<span class="cstat-no" title="statement not covered" >        id: "lightning",</span>
+<span class="cstat-no" title="statement not covered" >        name: "SPELL.RUNES.Lightning",</span>
+<span class="cstat-no" title="statement not covered" >        img: "icons/magic/lightning/bolt-strike-blue.webp",</span>
+<span class="cstat-no" title="statement not covered" >        resource: "health",</span>
+<span class="cstat-no" title="statement not covered" >        damageType: "electricity",</span>
+<span class="cstat-no" title="statement not covered" >        opposed: "earth",</span>
+<span class="cstat-no" title="statement not covered" >        defense: "reflex",</span>
+<span class="cstat-no" title="statement not covered" >        scaling: "intellect",</span>
+<span class="cstat-no" title="statement not covered" >        nameFormat: NAME_FORMATS.ADJ</span>
+<span class="cstat-no" title="statement not covered" >    },</span>
+<span class="cstat-no" title="statement not covered" >    control: {</span>
+<span class="cstat-no" title="statement not covered" >        id: "control",</span>
+<span class="cstat-no" title="statement not covered" >        name: "SPELL.RUNES.Control",</span>
+<span class="cstat-no" title="statement not covered" >        img: "icons/magic/control/hypnosis-mesmerism-eye.webp",</span>
+<span class="cstat-no" title="statement not covered" >        resource: "morale",</span>
+<span class="cstat-no" title="statement not covered" >        damageType: "psychic",</span>
+<span class="cstat-no" title="statement not covered" >        opposed: "spirit",</span>
+<span class="cstat-no" title="statement not covered" >        defense: "willpower",</span>
+<span class="cstat-no" title="statement not covered" >        scaling: "intellect",</span>
+<span class="cstat-no" title="statement not covered" >        nameFormat: NAME_FORMATS.NOUN</span>
+<span class="cstat-no" title="statement not covered" >    },</span>
+<span class="cstat-no" title="statement not covered" >    shadow: {</span>
+<span class="cstat-no" title="statement not covered" >        id: "shadow",</span>
+<span class="cstat-no" title="statement not covered" >        name: "SPELL.RUNES.Shadow",</span>
+<span class="cstat-no" title="statement not covered" >        img: "icons/magic/unholy/orb-rays-blue.webp",</span>
+<span class="cstat-no" title="statement not covered" >        resource: "morale",</span>
+<span class="cstat-no" title="statement not covered" >        damageType: "void",</span>
+<span class="cstat-no" title="statement not covered" >        opposed: "illumination",</span>
+<span class="cstat-no" title="statement not covered" >        defense: "fortitude",</span>
+<span class="cstat-no" title="statement not covered" >        scaling: "presence",</span>
+<span class="cstat-no" title="statement not covered" >        nameFormat: NAME_FORMATS.ADJ</span>
+<span class="cstat-no" title="statement not covered" >    },</span>
+<span class="cstat-no" title="statement not covered" >    spirit: {</span>
+<span class="cstat-no" title="statement not covered" >        id: "spirit",</span>
+<span class="cstat-no" title="statement not covered" >        name: "SPELL.RUNES.Spirit",</span>
+<span class="cstat-no" title="statement not covered" >        img: "icons/magic/control/fear-fright-white.webp",</span>
+<span class="cstat-no" title="statement not covered" >        resource: "morale",</span>
+<span class="cstat-no" title="statement not covered" >        restoration: true,</span>
+<span class="cstat-no" title="statement not covered" >        damageType: "psychic",</span>
+<span class="cstat-no" title="statement not covered" >        opposed: "control",</span>
+<span class="cstat-no" title="statement not covered" >        defense: "willpower",</span>
+<span class="cstat-no" title="statement not covered" >        scaling: "presence",</span>
+<span class="cstat-no" title="statement not covered" >        nameFormat: NAME_FORMATS.NOUN</span>
+<span class="cstat-no" title="statement not covered" >    },</span>
+<span class="cstat-no" title="statement not covered" >    stasis: {</span>
+<span class="cstat-no" title="statement not covered" >        id: "stasis",</span>
+<span class="cstat-no" title="statement not covered" >        name: "SPELL.RUNES.Stasis",</span>
+<span class="cstat-no" title="statement not covered" >        img: "icons/magic/time/clock-spinning-gold-pink.webp",</span>
+<span class="cstat-no" title="statement not covered" >        resource: "morale",</span>
+<span class="cstat-no" title="statement not covered" >        damageType: "physical",</span>
+<span class="cstat-no" title="statement not covered" >        opposed: "kinesis",</span>
+<span class="cstat-no" title="statement not covered" >        defense: "willpower",</span>
+<span class="cstat-no" title="statement not covered" >        scaling: "wisdom",</span>
+<span class="cstat-no" title="statement not covered" >        nameFormat: NAME_FORMATS.ADJ</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 <span class="cstat-no" title="statement not covered" >});</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >/**</span>
@@ -1124,216 +1124,216 @@
 <span class="cstat-no" title="statement not covered" > * @enum {SwerpgGesture}</span>
 <span class="cstat-no" title="statement not covered" > */</span>
 <span class="cstat-no" title="statement not covered" >export const GESTURES = Object.seal({</span>
-<span class="cstat-no" title="statement not covered" >  arrow: {</span>
-<span class="cstat-no" title="statement not covered" >    id: "arrow",</span>
-<span class="cstat-no" title="statement not covered" >    name: "SPELL.GESTURES.Arrow",</span>
-<span class="cstat-no" title="statement not covered" >    cost: {</span>
-<span class="cstat-no" title="statement not covered" >      action: 3,</span>
-<span class="cstat-no" title="statement not covered" >      focus: 1</span>
+<span class="cstat-no" title="statement not covered" >    arrow: {</span>
+<span class="cstat-no" title="statement not covered" >        id: "arrow",</span>
+<span class="cstat-no" title="statement not covered" >        name: "SPELL.GESTURES.Arrow",</span>
+<span class="cstat-no" title="statement not covered" >        cost: {</span>
+<span class="cstat-no" title="statement not covered" >            action: 3,</span>
+<span class="cstat-no" title="statement not covered" >            focus: 1</span>
+<span class="cstat-no" title="statement not covered" >        },</span>
+<span class="cstat-no" title="statement not covered" >        damage: {</span>
+<span class="cstat-no" title="statement not covered" >            base: 8</span>
+<span class="cstat-no" title="statement not covered" >        },</span>
+<span class="cstat-no" title="statement not covered" >        hands: 1,</span>
+<span class="cstat-no" title="statement not covered" >        range: {</span>
+<span class="cstat-no" title="statement not covered" >            minimum: 1,</span>
+<span class="cstat-no" title="statement not covered" >            maximum: 60</span>
+<span class="cstat-no" title="statement not covered" >        },</span>
+<span class="cstat-no" title="statement not covered" >        scaling: "intellect",</span>
+<span class="cstat-no" title="statement not covered" >        target: {</span>
+<span class="cstat-no" title="statement not covered" >            type: "single",</span>
+<span class="cstat-no" title="statement not covered" >            number: 1</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
 <span class="cstat-no" title="statement not covered" >    },</span>
-<span class="cstat-no" title="statement not covered" >    damage: {</span>
-<span class="cstat-no" title="statement not covered" >      base: 8</span>
+<span class="cstat-no" title="statement not covered" >    aspect: {</span>
+<span class="cstat-no" title="statement not covered" >        id: "aspect",</span>
+<span class="cstat-no" title="statement not covered" >        name: "SPELL.GESTURES.Aspect",</span>
+<span class="cstat-no" title="statement not covered" >        cost: {</span>
+<span class="cstat-no" title="statement not covered" >            action: 2,</span>
+<span class="cstat-no" title="statement not covered" >            focus: 1</span>
+<span class="cstat-no" title="statement not covered" >        },</span>
+<span class="cstat-no" title="statement not covered" >        hands: 1,</span>
+<span class="cstat-no" title="statement not covered" >        nameFormat: NAME_FORMATS.NOUN,</span>
+<span class="cstat-no" title="statement not covered" >        scaling: "wisdom",</span>
+<span class="cstat-no" title="statement not covered" >        target: {</span>
+<span class="cstat-no" title="statement not covered" >            type: "self"</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
 <span class="cstat-no" title="statement not covered" >    },</span>
-<span class="cstat-no" title="statement not covered" >    hands: 1,</span>
-<span class="cstat-no" title="statement not covered" >    range: {</span>
-<span class="cstat-no" title="statement not covered" >      minimum: 1,</span>
-<span class="cstat-no" title="statement not covered" >      maximum: 60</span>
+<span class="cstat-no" title="statement not covered" >    create: {</span>
+<span class="cstat-no" title="statement not covered" >        id: "create",</span>
+<span class="cstat-no" title="statement not covered" >        name: "SPELL.GESTURES.Create",</span>
+<span class="cstat-no" title="statement not covered" >        cost: {</span>
+<span class="cstat-no" title="statement not covered" >            action: 4,</span>
+<span class="cstat-no" title="statement not covered" >            focus: 1</span>
+<span class="cstat-no" title="statement not covered" >        },</span>
+<span class="cstat-no" title="statement not covered" >        hands: 2,</span>
+<span class="cstat-no" title="statement not covered" >        range: {</span>
+<span class="cstat-no" title="statement not covered" >            maximum: 10</span>
+<span class="cstat-no" title="statement not covered" >        },</span>
+<span class="cstat-no" title="statement not covered" >        nameFormat: NAME_FORMATS.ADJ,</span>
+<span class="cstat-no" title="statement not covered" >        scaling: "wisdom",</span>
+<span class="cstat-no" title="statement not covered" >        target: {</span>
+<span class="cstat-no" title="statement not covered" >            type: "summon"</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
 <span class="cstat-no" title="statement not covered" >    },</span>
-<span class="cstat-no" title="statement not covered" >    scaling: "intellect",</span>
-<span class="cstat-no" title="statement not covered" >    target: {</span>
-<span class="cstat-no" title="statement not covered" >      type: "single",</span>
-<span class="cstat-no" title="statement not covered" >      number: 1</span>
+<span class="cstat-no" title="statement not covered" >    fan: {</span>
+<span class="cstat-no" title="statement not covered" >        id: "fan",</span>
+<span class="cstat-no" title="statement not covered" >        name: "SPELL.GESTURES.Fan",</span>
+<span class="cstat-no" title="statement not covered" >        cost: {</span>
+<span class="cstat-no" title="statement not covered" >            action: 3,</span>
+<span class="cstat-no" title="statement not covered" >            focus: 1</span>
+<span class="cstat-no" title="statement not covered" >        },</span>
+<span class="cstat-no" title="statement not covered" >        damage: {</span>
+<span class="cstat-no" title="statement not covered" >            base: 6</span>
+<span class="cstat-no" title="statement not covered" >        },</span>
+<span class="cstat-no" title="statement not covered" >        hands: 1,</span>
+<span class="cstat-no" title="statement not covered" >        range: {</span>
+<span class="cstat-no" title="statement not covered" >            maximum: 6</span>
+<span class="cstat-no" title="statement not covered" >        },</span>
+<span class="cstat-no" title="statement not covered" >        scaling: "intellect",</span>
+<span class="cstat-no" title="statement not covered" >        target: {</span>
+<span class="cstat-no" title="statement not covered" >            type: "fan"</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >    },</span>
+<span class="cstat-no" title="statement not covered" >    influence: {</span>
+<span class="cstat-no" title="statement not covered" >        id: "influence",</span>
+<span class="cstat-no" title="statement not covered" >        name: "SPELL.GESTURES.Influence",</span>
+<span class="cstat-no" title="statement not covered" >        cost: {</span>
+<span class="cstat-no" title="statement not covered" >            action: 3,</span>
+<span class="cstat-no" title="statement not covered" >            focus: 1</span>
+<span class="cstat-no" title="statement not covered" >        },</span>
+<span class="cstat-no" title="statement not covered" >        damage: {</span>
+<span class="cstat-no" title="statement not covered" >            base: 10</span>
+<span class="cstat-no" title="statement not covered" >        },</span>
+<span class="cstat-no" title="statement not covered" >        hands: 1,</span>
+<span class="cstat-no" title="statement not covered" >        range: {</span>
+<span class="cstat-no" title="statement not covered" >            maximum: 1</span>
+<span class="cstat-no" title="statement not covered" >        },</span>
+<span class="cstat-no" title="statement not covered" >        nameFormat: NAME_FORMATS.ADJ,</span>
+<span class="cstat-no" title="statement not covered" >        scaling: "presence",</span>
+<span class="cstat-no" title="statement not covered" >        target: {</span>
+<span class="cstat-no" title="statement not covered" >            type: "single"</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >    },</span>
+<span class="cstat-no" title="statement not covered" >    pulse: {</span>
+<span class="cstat-no" title="statement not covered" >        id: "pulse",</span>
+<span class="cstat-no" title="statement not covered" >        name: "SPELL.GESTURES.Pulse",</span>
+<span class="cstat-no" title="statement not covered" >        cost: {</span>
+<span class="cstat-no" title="statement not covered" >            action: 4,</span>
+<span class="cstat-no" title="statement not covered" >            focus: 1</span>
+<span class="cstat-no" title="statement not covered" >        },</span>
+<span class="cstat-no" title="statement not covered" >        damage: {</span>
+<span class="cstat-no" title="statement not covered" >            base: 6</span>
+<span class="cstat-no" title="statement not covered" >        },</span>
+<span class="cstat-no" title="statement not covered" >        hands: 2,</span>
+<span class="cstat-no" title="statement not covered" >        range: {</span>
+<span class="cstat-no" title="statement not covered" >            maximum: 0</span>
+<span class="cstat-no" title="statement not covered" >        },</span>
+<span class="cstat-no" title="statement not covered" >        scaling: "presence",</span>
+<span class="cstat-no" title="statement not covered" >        target: {</span>
+<span class="cstat-no" title="statement not covered" >            type: "pulse",</span>
+<span class="cstat-no" title="statement not covered" >            size: 6</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >    },</span>
+<span class="cstat-no" title="statement not covered" >    ray: {</span>
+<span class="cstat-no" title="statement not covered" >        id: "ray",</span>
+<span class="cstat-no" title="statement not covered" >        name: "SPELL.GESTURES.Ray",</span>
+<span class="cstat-no" title="statement not covered" >        cost: {</span>
+<span class="cstat-no" title="statement not covered" >            action: 4,</span>
+<span class="cstat-no" title="statement not covered" >            focus: 1</span>
+<span class="cstat-no" title="statement not covered" >        },</span>
+<span class="cstat-no" title="statement not covered" >        damage: {</span>
+<span class="cstat-no" title="statement not covered" >            base: 6</span>
+<span class="cstat-no" title="statement not covered" >        },</span>
+<span class="cstat-no" title="statement not covered" >        hands: 1,</span>
+<span class="cstat-no" title="statement not covered" >        range: {</span>
+<span class="cstat-no" title="statement not covered" >            maximum: 30</span>
+<span class="cstat-no" title="statement not covered" >        },</span>
+<span class="cstat-no" title="statement not covered" >        scaling: "wisdom",</span>
+<span class="cstat-no" title="statement not covered" >        target: {</span>
+<span class="cstat-no" title="statement not covered" >            type: "ray",</span>
+<span class="cstat-no" title="statement not covered" >            size: 1</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >    },</span>
+<span class="cstat-no" title="statement not covered" >    step: {</span>
+<span class="cstat-no" title="statement not covered" >        id: "step",</span>
+<span class="cstat-no" title="statement not covered" >        name: "SPELL.GESTURES.Step",</span>
+<span class="cstat-no" title="statement not covered" >        cost: {</span>
+<span class="cstat-no" title="statement not covered" >            action: 1,</span>
+<span class="cstat-no" title="statement not covered" >            focus: 1</span>
+<span class="cstat-no" title="statement not covered" >        },</span>
+<span class="cstat-no" title="statement not covered" >        damage: {</span>
+<span class="cstat-no" title="statement not covered" >            base: 2</span>
+<span class="cstat-no" title="statement not covered" >        },</span>
+<span class="cstat-no" title="statement not covered" >        hands: 0,</span>
+<span class="cstat-no" title="statement not covered" >        range: {</span>
+<span class="cstat-no" title="statement not covered" >            maximum: 0</span>
+<span class="cstat-no" title="statement not covered" >        },</span>
+<span class="cstat-no" title="statement not covered" >        nameFormat: NAME_FORMATS.ADJ,</span>
+<span class="cstat-no" title="statement not covered" >        scaling: "dexterity",</span>
+<span class="cstat-no" title="statement not covered" >        target: {</span>
+<span class="cstat-no" title="statement not covered" >            type: "ray",</span>
+<span class="cstat-no" title="statement not covered" >            distance: 20</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >    },</span>
+<span class="cstat-no" title="statement not covered" >    strike: {</span>
+<span class="cstat-no" title="statement not covered" >        id: "strike",</span>
+<span class="cstat-no" title="statement not covered" >        name: "SPELL.GESTURES.Strike",</span>
+<span class="cstat-no" title="statement not covered" >        cost: {</span>
+<span class="cstat-no" title="statement not covered" >            action: 0,</span>
+<span class="cstat-no" title="statement not covered" >            focus: 1,</span>
+<span class="cstat-no" title="statement not covered" >            weapon: true</span>
+<span class="cstat-no" title="statement not covered" >        },</span>
+<span class="cstat-no" title="statement not covered" >        damage: {</span>
+<span class="cstat-no" title="statement not covered" >            base: 12</span>
+<span class="cstat-no" title="statement not covered" >        },</span>
+<span class="cstat-no" title="statement not covered" >        hands: 0,</span>
+<span class="cstat-no" title="statement not covered" >        range: {</span>
+<span class="cstat-no" title="statement not covered" >            weapon: true</span>
+<span class="cstat-no" title="statement not covered" >        },</span>
+<span class="cstat-no" title="statement not covered" >        nameFormat: NAME_FORMATS.ADJ,</span>
+<span class="cstat-no" title="statement not covered" >        scaling: "strength",</span>
+<span class="cstat-no" title="statement not covered" >        target: {</span>
+<span class="cstat-no" title="statement not covered" >            type: "single"</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >    },</span>
+<span class="cstat-no" title="statement not covered" >    touch: {</span>
+<span class="cstat-no" title="statement not covered" >        id: "touch",</span>
+<span class="cstat-no" title="statement not covered" >        name: "SPELL.GESTURES.Touch",</span>
+<span class="cstat-no" title="statement not covered" >        img: "icons/magic/light/hand-sparks-smoke-teal.webp",</span>
+<span class="cstat-no" title="statement not covered" >        description: "&lt;p&gt;Touch is one of the most universal somatic gestures. This gesture is easily performed and is typically the first gesture learned by novice spellcasters.&lt;/p&gt;&lt;p&gt;Touch-based spells cause a small amount of damage or healing, but can be performed quickly requiring less Action than more complex gestures.&lt;/p&gt;",</span>
+<span class="cstat-no" title="statement not covered" >        cost: {</span>
+<span class="cstat-no" title="statement not covered" >            action: 2,</span>
+<span class="cstat-no" title="statement not covered" >            focus: 1</span>
+<span class="cstat-no" title="statement not covered" >        },</span>
+<span class="cstat-no" title="statement not covered" >        damage: {</span>
+<span class="cstat-no" title="statement not covered" >            base: 6</span>
+<span class="cstat-no" title="statement not covered" >        },</span>
+<span class="cstat-no" title="statement not covered" >        hands: 1,</span>
+<span class="cstat-no" title="statement not covered" >        range: {</span>
+<span class="cstat-no" title="statement not covered" >            maximum: 1</span>
+<span class="cstat-no" title="statement not covered" >        },</span>
+<span class="cstat-no" title="statement not covered" >        scaling: "dexterity",</span>
+<span class="cstat-no" title="statement not covered" >        target: {</span>
+<span class="cstat-no" title="statement not covered" >            type: "single"</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >    },</span>
+<span class="cstat-no" title="statement not covered" >    ward: {</span>
+<span class="cstat-no" title="statement not covered" >        id: "ward",</span>
+<span class="cstat-no" title="statement not covered" >        name: "SPELL.GESTURES.Ward",</span>
+<span class="cstat-no" title="statement not covered" >        cost: {</span>
+<span class="cstat-no" title="statement not covered" >            action: 2,</span>
+<span class="cstat-no" title="statement not covered" >            focus: 1</span>
+<span class="cstat-no" title="statement not covered" >        },</span>
+<span class="cstat-no" title="statement not covered" >        damage: {</span>
+<span class="cstat-no" title="statement not covered" >            base: 6</span>
+<span class="cstat-no" title="statement not covered" >        },</span>
+<span class="cstat-no" title="statement not covered" >        hands: 1,</span>
+<span class="cstat-no" title="statement not covered" >        scaling: "toughness",</span>
+<span class="cstat-no" title="statement not covered" >        target: {</span>
+<span class="cstat-no" title="statement not covered" >            type: "self"</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  },</span>
-<span class="cstat-no" title="statement not covered" >  aspect: {</span>
-<span class="cstat-no" title="statement not covered" >    id: "aspect",</span>
-<span class="cstat-no" title="statement not covered" >    name: "SPELL.GESTURES.Aspect",</span>
-<span class="cstat-no" title="statement not covered" >    cost: {</span>
-<span class="cstat-no" title="statement not covered" >      action: 2,</span>
-<span class="cstat-no" title="statement not covered" >      focus: 1</span>
-<span class="cstat-no" title="statement not covered" >    },</span>
-<span class="cstat-no" title="statement not covered" >    hands: 1,</span>
-<span class="cstat-no" title="statement not covered" >    nameFormat: NAME_FORMATS.NOUN,</span>
-<span class="cstat-no" title="statement not covered" >    scaling: "wisdom",</span>
-<span class="cstat-no" title="statement not covered" >    target: {</span>
-<span class="cstat-no" title="statement not covered" >      type: "self"</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  },</span>
-<span class="cstat-no" title="statement not covered" >  create: {</span>
-<span class="cstat-no" title="statement not covered" >    id: "create",</span>
-<span class="cstat-no" title="statement not covered" >    name: "SPELL.GESTURES.Create",</span>
-<span class="cstat-no" title="statement not covered" >    cost: {</span>
-<span class="cstat-no" title="statement not covered" >      action: 4,</span>
-<span class="cstat-no" title="statement not covered" >      focus: 1</span>
-<span class="cstat-no" title="statement not covered" >    },</span>
-<span class="cstat-no" title="statement not covered" >    hands: 2,</span>
-<span class="cstat-no" title="statement not covered" >    range: {</span>
-<span class="cstat-no" title="statement not covered" >      maximum: 10</span>
-<span class="cstat-no" title="statement not covered" >    },</span>
-<span class="cstat-no" title="statement not covered" >    nameFormat: NAME_FORMATS.ADJ,</span>
-<span class="cstat-no" title="statement not covered" >    scaling: "wisdom",</span>
-<span class="cstat-no" title="statement not covered" >    target: {</span>
-<span class="cstat-no" title="statement not covered" >      type: "summon"</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  },</span>
-<span class="cstat-no" title="statement not covered" >  fan: {</span>
-<span class="cstat-no" title="statement not covered" >    id: "fan",</span>
-<span class="cstat-no" title="statement not covered" >    name: "SPELL.GESTURES.Fan",</span>
-<span class="cstat-no" title="statement not covered" >    cost: {</span>
-<span class="cstat-no" title="statement not covered" >      action: 3,</span>
-<span class="cstat-no" title="statement not covered" >      focus: 1</span>
-<span class="cstat-no" title="statement not covered" >    },</span>
-<span class="cstat-no" title="statement not covered" >    damage: {</span>
-<span class="cstat-no" title="statement not covered" >      base: 6</span>
-<span class="cstat-no" title="statement not covered" >    },</span>
-<span class="cstat-no" title="statement not covered" >    hands: 1,</span>
-<span class="cstat-no" title="statement not covered" >    range: {</span>
-<span class="cstat-no" title="statement not covered" >      maximum: 6</span>
-<span class="cstat-no" title="statement not covered" >    },</span>
-<span class="cstat-no" title="statement not covered" >    scaling: "intellect",</span>
-<span class="cstat-no" title="statement not covered" >    target: {</span>
-<span class="cstat-no" title="statement not covered" >      type: "fan"</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  },</span>
-<span class="cstat-no" title="statement not covered" >  influence: {</span>
-<span class="cstat-no" title="statement not covered" >    id: "influence",</span>
-<span class="cstat-no" title="statement not covered" >    name: "SPELL.GESTURES.Influence",</span>
-<span class="cstat-no" title="statement not covered" >    cost: {</span>
-<span class="cstat-no" title="statement not covered" >      action: 3,</span>
-<span class="cstat-no" title="statement not covered" >      focus: 1</span>
-<span class="cstat-no" title="statement not covered" >    },</span>
-<span class="cstat-no" title="statement not covered" >    damage: {</span>
-<span class="cstat-no" title="statement not covered" >      base: 10</span>
-<span class="cstat-no" title="statement not covered" >    },</span>
-<span class="cstat-no" title="statement not covered" >    hands: 1,</span>
-<span class="cstat-no" title="statement not covered" >    range: {</span>
-<span class="cstat-no" title="statement not covered" >      maximum: 1</span>
-<span class="cstat-no" title="statement not covered" >    },</span>
-<span class="cstat-no" title="statement not covered" >    nameFormat: NAME_FORMATS.ADJ,</span>
-<span class="cstat-no" title="statement not covered" >    scaling: "presence",</span>
-<span class="cstat-no" title="statement not covered" >    target: {</span>
-<span class="cstat-no" title="statement not covered" >      type: "single"</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  },</span>
-<span class="cstat-no" title="statement not covered" >  pulse: {</span>
-<span class="cstat-no" title="statement not covered" >    id: "pulse",</span>
-<span class="cstat-no" title="statement not covered" >    name: "SPELL.GESTURES.Pulse",</span>
-<span class="cstat-no" title="statement not covered" >    cost: {</span>
-<span class="cstat-no" title="statement not covered" >      action: 4,</span>
-<span class="cstat-no" title="statement not covered" >      focus: 1</span>
-<span class="cstat-no" title="statement not covered" >    },</span>
-<span class="cstat-no" title="statement not covered" >    damage: {</span>
-<span class="cstat-no" title="statement not covered" >      base: 6</span>
-<span class="cstat-no" title="statement not covered" >    },</span>
-<span class="cstat-no" title="statement not covered" >    hands: 2,</span>
-<span class="cstat-no" title="statement not covered" >    range: {</span>
-<span class="cstat-no" title="statement not covered" >      maximum: 0</span>
-<span class="cstat-no" title="statement not covered" >    },</span>
-<span class="cstat-no" title="statement not covered" >    scaling: "presence",</span>
-<span class="cstat-no" title="statement not covered" >    target: {</span>
-<span class="cstat-no" title="statement not covered" >      type: "pulse",</span>
-<span class="cstat-no" title="statement not covered" >      size: 6</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  },</span>
-<span class="cstat-no" title="statement not covered" >  ray: {</span>
-<span class="cstat-no" title="statement not covered" >    id: "ray",</span>
-<span class="cstat-no" title="statement not covered" >    name: "SPELL.GESTURES.Ray",</span>
-<span class="cstat-no" title="statement not covered" >    cost: {</span>
-<span class="cstat-no" title="statement not covered" >      action: 4,</span>
-<span class="cstat-no" title="statement not covered" >      focus: 1</span>
-<span class="cstat-no" title="statement not covered" >    },</span>
-<span class="cstat-no" title="statement not covered" >    damage: {</span>
-<span class="cstat-no" title="statement not covered" >      base: 6</span>
-<span class="cstat-no" title="statement not covered" >    },</span>
-<span class="cstat-no" title="statement not covered" >    hands: 1,</span>
-<span class="cstat-no" title="statement not covered" >    range: {</span>
-<span class="cstat-no" title="statement not covered" >      maximum: 30</span>
-<span class="cstat-no" title="statement not covered" >    },</span>
-<span class="cstat-no" title="statement not covered" >    scaling: "wisdom",</span>
-<span class="cstat-no" title="statement not covered" >    target: {</span>
-<span class="cstat-no" title="statement not covered" >      type: "ray",</span>
-<span class="cstat-no" title="statement not covered" >      size: 1</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  },</span>
-<span class="cstat-no" title="statement not covered" >  step: {</span>
-<span class="cstat-no" title="statement not covered" >    id: "step",</span>
-<span class="cstat-no" title="statement not covered" >    name: "SPELL.GESTURES.Step",</span>
-<span class="cstat-no" title="statement not covered" >    cost: {</span>
-<span class="cstat-no" title="statement not covered" >      action: 1,</span>
-<span class="cstat-no" title="statement not covered" >      focus: 1</span>
-<span class="cstat-no" title="statement not covered" >    },</span>
-<span class="cstat-no" title="statement not covered" >    damage: {</span>
-<span class="cstat-no" title="statement not covered" >      base: 2</span>
-<span class="cstat-no" title="statement not covered" >    },</span>
-<span class="cstat-no" title="statement not covered" >    hands: 0,</span>
-<span class="cstat-no" title="statement not covered" >    range: {</span>
-<span class="cstat-no" title="statement not covered" >      maximum: 0</span>
-<span class="cstat-no" title="statement not covered" >    },</span>
-<span class="cstat-no" title="statement not covered" >    nameFormat: NAME_FORMATS.ADJ,</span>
-<span class="cstat-no" title="statement not covered" >    scaling: "dexterity",</span>
-<span class="cstat-no" title="statement not covered" >    target: {</span>
-<span class="cstat-no" title="statement not covered" >      type: "ray",</span>
-<span class="cstat-no" title="statement not covered" >      distance: 20</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  },</span>
-<span class="cstat-no" title="statement not covered" >  strike: {</span>
-<span class="cstat-no" title="statement not covered" >    id: "strike",</span>
-<span class="cstat-no" title="statement not covered" >    name: "SPELL.GESTURES.Strike",</span>
-<span class="cstat-no" title="statement not covered" >    cost: {</span>
-<span class="cstat-no" title="statement not covered" >      action: 0,</span>
-<span class="cstat-no" title="statement not covered" >      focus: 1,</span>
-<span class="cstat-no" title="statement not covered" >      weapon: true</span>
-<span class="cstat-no" title="statement not covered" >    },</span>
-<span class="cstat-no" title="statement not covered" >    damage: {</span>
-<span class="cstat-no" title="statement not covered" >      base: 12</span>
-<span class="cstat-no" title="statement not covered" >    },</span>
-<span class="cstat-no" title="statement not covered" >    hands: 0,</span>
-<span class="cstat-no" title="statement not covered" >    range: {</span>
-<span class="cstat-no" title="statement not covered" >      weapon: true</span>
-<span class="cstat-no" title="statement not covered" >    },</span>
-<span class="cstat-no" title="statement not covered" >    nameFormat: NAME_FORMATS.ADJ,</span>
-<span class="cstat-no" title="statement not covered" >    scaling: "strength",</span>
-<span class="cstat-no" title="statement not covered" >    target: {</span>
-<span class="cstat-no" title="statement not covered" >      type: "single"</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  },</span>
-<span class="cstat-no" title="statement not covered" >  touch: {</span>
-<span class="cstat-no" title="statement not covered" >    id: "touch",</span>
-<span class="cstat-no" title="statement not covered" >    name: "SPELL.GESTURES.Touch",</span>
-<span class="cstat-no" title="statement not covered" >    img: "icons/magic/light/hand-sparks-smoke-teal.webp",</span>
-<span class="cstat-no" title="statement not covered" >    description: "&lt;p&gt;Touch is one of the most universal somatic gestures. This gesture is easily performed and is typically the first gesture learned by novice spellcasters.&lt;/p&gt;&lt;p&gt;Touch-based spells cause a small amount of damage or healing, but can be performed quickly requiring less Action than more complex gestures.&lt;/p&gt;",</span>
-<span class="cstat-no" title="statement not covered" >    cost: {</span>
-<span class="cstat-no" title="statement not covered" >      action: 2,</span>
-<span class="cstat-no" title="statement not covered" >      focus: 1</span>
-<span class="cstat-no" title="statement not covered" >    },</span>
-<span class="cstat-no" title="statement not covered" >    damage: {</span>
-<span class="cstat-no" title="statement not covered" >      base: 6</span>
-<span class="cstat-no" title="statement not covered" >    },</span>
-<span class="cstat-no" title="statement not covered" >    hands: 1,</span>
-<span class="cstat-no" title="statement not covered" >    range: {</span>
-<span class="cstat-no" title="statement not covered" >      maximum: 1</span>
-<span class="cstat-no" title="statement not covered" >    },</span>
-<span class="cstat-no" title="statement not covered" >    scaling: "dexterity",</span>
-<span class="cstat-no" title="statement not covered" >    target: {</span>
-<span class="cstat-no" title="statement not covered" >      type: "single"</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  },</span>
-<span class="cstat-no" title="statement not covered" >  ward: {</span>
-<span class="cstat-no" title="statement not covered" >    id: "ward",</span>
-<span class="cstat-no" title="statement not covered" >    name: "SPELL.GESTURES.Ward",</span>
-<span class="cstat-no" title="statement not covered" >    cost: {</span>
-<span class="cstat-no" title="statement not covered" >      action: 2,</span>
-<span class="cstat-no" title="statement not covered" >      focus: 1</span>
-<span class="cstat-no" title="statement not covered" >    },</span>
-<span class="cstat-no" title="statement not covered" >    damage: {</span>
-<span class="cstat-no" title="statement not covered" >      base: 6</span>
-<span class="cstat-no" title="statement not covered" >    },</span>
-<span class="cstat-no" title="statement not covered" >    hands: 1,</span>
-<span class="cstat-no" title="statement not covered" >    scaling: "toughness",</span>
-<span class="cstat-no" title="statement not covered" >    target: {</span>
-<span class="cstat-no" title="statement not covered" >      type: "self"</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
 <span class="cstat-no" title="statement not covered" >});</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >/**</span>
@@ -1342,88 +1342,88 @@
 <span class="cstat-no" title="statement not covered" > * @enum {SwerpgInflection}</span>
 <span class="cstat-no" title="statement not covered" > */</span>
 <span class="cstat-no" title="statement not covered" >export const INFLECTIONS = Object.seal({</span>
-<span class="cstat-no" title="statement not covered" >  compose: {</span>
-<span class="cstat-no" title="statement not covered" >    id: "compose",</span>
-<span class="cstat-no" title="statement not covered" >    name: "SPELL.INFLECTIONS.Compose",</span>
-<span class="cstat-no" title="statement not covered" >    cost: {</span>
-<span class="cstat-no" title="statement not covered" >      action: 1,</span>
-<span class="cstat-no" title="statement not covered" >      focus: -1</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  },</span>
-<span class="cstat-no" title="statement not covered" >  determine: {</span>
-<span class="cstat-no" title="statement not covered" >    id: "determine",</span>
-<span class="cstat-no" title="statement not covered" >    name: "SPELL.INFLECTIONS.Determine",</span>
-<span class="cstat-no" title="statement not covered" >    cost: {</span>
-<span class="cstat-no" title="statement not covered" >      focus: 1</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  },</span>
-<span class="cstat-no" title="statement not covered" >  quicken: {</span>
-<span class="cstat-no" title="statement not covered" >    id: "quicken",</span>
-<span class="cstat-no" title="statement not covered" >    name: "SPELL.INFLECTIONS.Quicken",</span>
-<span class="cstat-no" title="statement not covered" >    cost: {</span>
-<span class="cstat-no" title="statement not covered" >      action: -1,</span>
-<span class="cstat-no" title="statement not covered" >      focus: 1</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  },</span>
-<span class="cstat-no" title="statement not covered" >  extend: {</span>
-<span class="cstat-no" title="statement not covered" >    id: "extend",</span>
-<span class="cstat-no" title="statement not covered" >    name: "SPELL.INFLECTIONS.Extend",</span>
-<span class="cstat-no" title="statement not covered" >    cost: {</span>
-<span class="cstat-no" title="statement not covered" >      action: 1,</span>
-<span class="cstat-no" title="statement not covered" >      focus: 1</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  },</span>
-<span class="cstat-no" title="statement not covered" >  eluding: {</span>
-<span class="cstat-no" title="statement not covered" >    id: "eluding",</span>
-<span class="cstat-no" title="statement not covered" >    name: "SPELL.INFLECTIONS.Elude",</span>
-<span class="cstat-no" title="statement not covered" >    cost: {</span>
-<span class="cstat-no" title="statement not covered" >      focus: 1</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  },</span>
-<span class="cstat-no" title="statement not covered" >  negate: {</span>
-<span class="cstat-no" title="statement not covered" >    id: "negate",</span>
-<span class="cstat-no" title="statement not covered" >    name: "SPELL.INFLECTIONS.Negate",</span>
-<span class="cstat-no" title="statement not covered" >    cost: {</span>
-<span class="cstat-no" title="statement not covered" >      focus: 1</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  },</span>
-<span class="cstat-no" title="statement not covered" >  pull: {</span>
-<span class="cstat-no" title="statement not covered" >    id: "pull",</span>
-<span class="cstat-no" title="statement not covered" >    name: "SPELL.INFLECTIONS.Pull",</span>
-<span class="cstat-no" title="statement not covered" >    cost: {</span>
-<span class="cstat-no" title="statement not covered" >      focus: 1</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  },</span>
-<span class="cstat-no" title="statement not covered" >  push: {</span>
-<span class="cstat-no" title="statement not covered" >    id: "push",</span>
-<span class="cstat-no" title="statement not covered" >    name: "SPELL.INFLECTIONS.Push",</span>
-<span class="cstat-no" title="statement not covered" >    cost: {</span>
-<span class="cstat-no" title="statement not covered" >      focus: 1</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  },</span>
-<span class="cstat-no" title="statement not covered" >  reshape: {</span>
-<span class="cstat-no" title="statement not covered" >    id: "reshape",</span>
-<span class="cstat-no" title="statement not covered" >    name: "SPELL.INFLECTIONS.Reshape",</span>
-<span class="cstat-no" title="statement not covered" >    cost: {</span>
-<span class="cstat-no" title="statement not covered" >      focus: 2</span>
+<span class="cstat-no" title="statement not covered" >    compose: {</span>
+<span class="cstat-no" title="statement not covered" >        id: "compose",</span>
+<span class="cstat-no" title="statement not covered" >        name: "SPELL.INFLECTIONS.Compose",</span>
+<span class="cstat-no" title="statement not covered" >        cost: {</span>
+<span class="cstat-no" title="statement not covered" >            action: 1,</span>
+<span class="cstat-no" title="statement not covered" >            focus: -1</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
 <span class="cstat-no" title="statement not covered" >    },</span>
-<span class="cstat-no" title="statement not covered" >    hooks: {</span>
-<span class="cstat-no" title="statement not covered" >      prepare() {</span>
-<span class="cstat-no" title="statement not covered" >        if ( this.damage.restoration ) this.target.scope = SYSTEM.ACTION.TARGET_SCOPES.ALLIES;</span>
-<span class="cstat-no" title="statement not covered" >        else this.target.scope = SYSTEM.ACTION.TARGET_SCOPES.ENEMIES;</span>
-<span class="cstat-no" title="statement not covered" >      }</span>
+<span class="cstat-no" title="statement not covered" >    determine: {</span>
+<span class="cstat-no" title="statement not covered" >        id: "determine",</span>
+<span class="cstat-no" title="statement not covered" >        name: "SPELL.INFLECTIONS.Determine",</span>
+<span class="cstat-no" title="statement not covered" >        cost: {</span>
+<span class="cstat-no" title="statement not covered" >            focus: 1</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >    },</span>
+<span class="cstat-no" title="statement not covered" >    quicken: {</span>
+<span class="cstat-no" title="statement not covered" >        id: "quicken",</span>
+<span class="cstat-no" title="statement not covered" >        name: "SPELL.INFLECTIONS.Quicken",</span>
+<span class="cstat-no" title="statement not covered" >        cost: {</span>
+<span class="cstat-no" title="statement not covered" >            action: -1,</span>
+<span class="cstat-no" title="statement not covered" >            focus: 1</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >    },</span>
+<span class="cstat-no" title="statement not covered" >    extend: {</span>
+<span class="cstat-no" title="statement not covered" >        id: "extend",</span>
+<span class="cstat-no" title="statement not covered" >        name: "SPELL.INFLECTIONS.Extend",</span>
+<span class="cstat-no" title="statement not covered" >        cost: {</span>
+<span class="cstat-no" title="statement not covered" >            action: 1,</span>
+<span class="cstat-no" title="statement not covered" >            focus: 1</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >    },</span>
+<span class="cstat-no" title="statement not covered" >    eluding: {</span>
+<span class="cstat-no" title="statement not covered" >        id: "eluding",</span>
+<span class="cstat-no" title="statement not covered" >        name: "SPELL.INFLECTIONS.Elude",</span>
+<span class="cstat-no" title="statement not covered" >        cost: {</span>
+<span class="cstat-no" title="statement not covered" >            focus: 1</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >    },</span>
+<span class="cstat-no" title="statement not covered" >    negate: {</span>
+<span class="cstat-no" title="statement not covered" >        id: "negate",</span>
+<span class="cstat-no" title="statement not covered" >        name: "SPELL.INFLECTIONS.Negate",</span>
+<span class="cstat-no" title="statement not covered" >        cost: {</span>
+<span class="cstat-no" title="statement not covered" >            focus: 1</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >    },</span>
+<span class="cstat-no" title="statement not covered" >    pull: {</span>
+<span class="cstat-no" title="statement not covered" >        id: "pull",</span>
+<span class="cstat-no" title="statement not covered" >        name: "SPELL.INFLECTIONS.Pull",</span>
+<span class="cstat-no" title="statement not covered" >        cost: {</span>
+<span class="cstat-no" title="statement not covered" >            focus: 1</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >    },</span>
+<span class="cstat-no" title="statement not covered" >    push: {</span>
+<span class="cstat-no" title="statement not covered" >        id: "push",</span>
+<span class="cstat-no" title="statement not covered" >        name: "SPELL.INFLECTIONS.Push",</span>
+<span class="cstat-no" title="statement not covered" >        cost: {</span>
+<span class="cstat-no" title="statement not covered" >            focus: 1</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >    },</span>
+<span class="cstat-no" title="statement not covered" >    reshape: {</span>
+<span class="cstat-no" title="statement not covered" >        id: "reshape",</span>
+<span class="cstat-no" title="statement not covered" >        name: "SPELL.INFLECTIONS.Reshape",</span>
+<span class="cstat-no" title="statement not covered" >        cost: {</span>
+<span class="cstat-no" title="statement not covered" >            focus: 2</span>
+<span class="cstat-no" title="statement not covered" >        },</span>
+<span class="cstat-no" title="statement not covered" >        hooks: {</span>
+<span class="cstat-no" title="statement not covered" >            prepare() {</span>
+<span class="cstat-no" title="statement not covered" >                if (this.damage.restoration) this.target.scope = SYSTEM.ACTION.TARGET_SCOPES.ALLIES;</span>
+<span class="cstat-no" title="statement not covered" >                else this.target.scope = SYSTEM.ACTION.TARGET_SCOPES.ENEMIES;</span>
+<span class="cstat-no" title="statement not covered" >            }</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
 <span class="cstat-no" title="statement not covered" >});</span>
 &nbsp;
 &nbsp;
-<span class="cstat-no" title="statement not covered" >export const CREATION_SUMMONS =  {</span>
-<span class="cstat-no" title="statement not covered" >  death: "Compendium.swerpg.summons.Actor.56puGK932Qc0cowe",</span>
-<span class="cstat-no" title="statement not covered" >  earth: "Compendium.swerpg.summons.Actor.xTFgTg5Rh2s0s5gZ",</span>
-<span class="cstat-no" title="statement not covered" >  flame: "Compendium.swerpg.summons.Actor.RuNh1bFGiHKdHeKI",</span>
-<span class="cstat-no" title="statement not covered" >  frost: "Compendium.swerpg.summons.Actor.me5glbOshiijlVUH",</span>
-<span class="cstat-no" title="statement not covered" >  lightning: "Compendium.swerpg.summons.Actor.Ne25xsSqYijgcrm0",</span>
-<span class="cstat-no" title="statement not covered" >  fallback: "Compendium.swerpg.summons.Actor.RuNh1bFGiHKdHeKI" // FIXME temporary</span>
+<span class="cstat-no" title="statement not covered" >export const CREATION_SUMMONS = {</span>
+<span class="cstat-no" title="statement not covered" >    death: "Compendium.swerpg.summons.Actor.56puGK932Qc0cowe",</span>
+<span class="cstat-no" title="statement not covered" >    earth: "Compendium.swerpg.summons.Actor.xTFgTg5Rh2s0s5gZ",</span>
+<span class="cstat-no" title="statement not covered" >    flame: "Compendium.swerpg.summons.Actor.RuNh1bFGiHKdHeKI",</span>
+<span class="cstat-no" title="statement not covered" >    frost: "Compendium.swerpg.summons.Actor.me5glbOshiijlVUH",</span>
+<span class="cstat-no" title="statement not covered" >    lightning: "Compendium.swerpg.summons.Actor.Ne25xsSqYijgcrm0",</span>
+<span class="cstat-no" title="statement not covered" >    fallback: "Compendium.swerpg.summons.Actor.RuNh1bFGiHKdHeKI" // FIXME temporary</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;</pre></td></tr></table></pre>
 
@@ -1432,7 +1432,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-05-11T08:34:16.200Z
+                at 2025-05-26T14:10:38.209Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

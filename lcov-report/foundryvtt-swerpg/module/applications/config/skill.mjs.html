@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/123</span>
+                <span class='fraction'>0/122</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/123</span>
+                <span class='fraction'>0/122</span>
             </div>
         
             
@@ -295,10 +295,10 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -355,139 +355,139 @@
 <span class="cstat-no" title="statement not covered" > * @mixes {HandlebarsApplication}</span>
 <span class="cstat-no" title="statement not covered" > */</span>
 <span class="cstat-no" title="statement not covered" >export default class SkillConfig extends api.HandlebarsApplicationMixin(api.DocumentSheetV2) {</span>
-<span class="cstat-no" title="statement not covered" >  constructor({skillId, ...options}={}) {</span>
-<span class="cstat-no" title="statement not covered" >    super(options);</span>
-<span class="cstat-no" title="statement not covered" >    this.skillId = skillId;</span>
-<span class="cstat-no" title="statement not covered" >    this.config = foundry.utils.deepClone(SYSTEM.SKILLS[skillId]);</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @inheritDoc */</span>
-<span class="cstat-no" title="statement not covered" >  static DEFAULT_OPTIONS = {</span>
-<span class="cstat-no" title="statement not covered" >    classes: ["swerpg", "skill", "standard-form"],</span>
-<span class="cstat-no" title="statement not covered" >    tag: "form",</span>
-<span class="cstat-no" title="statement not covered" >    position: {width: 600, height: "auto"},</span>
-<span class="cstat-no" title="statement not covered" >    actions: {</span>
-<span class="cstat-no" title="statement not covered" >      choosePath: this.#onChoosePath,</span>
-<span class="cstat-no" title="statement not covered" >      rules: this.#onRules,</span>
-<span class="cstat-no" title="statement not covered" >      decrease: this.#onDecrease,</span>
-<span class="cstat-no" title="statement not covered" >      increase: this.#onIncrease,</span>
-<span class="cstat-no" title="statement not covered" >    },</span>
-<span class="cstat-no" title="statement not covered" >    sheetConfig: false,</span>
-<span class="cstat-no" title="statement not covered" >    form: {</span>
-<span class="cstat-no" title="statement not covered" >      submitOnChange: true</span>
-<span class="cstat-no" title="statement not covered" >    },</span>
-<span class="cstat-no" title="statement not covered" >  };</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @override */</span>
-<span class="cstat-no" title="statement not covered" >  static PARTS = {</span>
-<span class="cstat-no" title="statement not covered" >    skill: {</span>
-<span class="cstat-no" title="statement not covered" >      root: true,</span>
-<span class="cstat-no" title="statement not covered" >      template: "systems/swerpg/templates/sheets/actor/skill.hbs",</span>
-<span class="cstat-no" title="statement not covered" >      scrollable: [".sheet-body"]</span>
+<span class="cstat-no" title="statement not covered" >    constructor({skillId, ...options} = {}) {</span>
+<span class="cstat-no" title="statement not covered" >        super(options);</span>
+<span class="cstat-no" title="statement not covered" >        this.skillId = skillId;</span>
+<span class="cstat-no" title="statement not covered" >        this.config = foundry.utils.deepClone(SYSTEM.SKILLS[skillId]);</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  };</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * A convenience reference to the Actor Document.</span>
-<span class="cstat-no" title="statement not covered" >   * @returns {SwerpgActor}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  get actor() {</span>
-<span class="cstat-no" title="statement not covered" >    return this.document;</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @override */</span>
-<span class="cstat-no" title="statement not covered" >  get title() {</span>
-<span class="cstat-no" title="statement not covered" >    return game.i18n.format("SKILL.SheetTitle", {actor: this.document.name, skill: this.config.name});</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @override */</span>
-<span class="cstat-no" title="statement not covered" >  async _prepareContext(options) {</span>
-<span class="cstat-no" title="statement not covered" >    const skill = this.actor.skills[this.skillId];</span>
-<span class="cstat-no" title="statement not covered" >    const context = {</span>
-<span class="cstat-no" title="statement not covered" >      skill,</span>
-<span class="cstat-no" title="statement not covered" >      config: this.config,</span>
-<span class="cstat-no" title="statement not covered" >      path: skill.path ? this.config.paths[skill.path] : null,</span>
-<span class="cstat-no" title="statement not covered" >      choosePath: skill.rank === 3,</span>
-<span class="cstat-no" title="statement not covered" >      showPaths: !skill.path &amp;&amp; skill.rank &lt; 3,</span>
-<span class="cstat-no" title="statement not covered" >      displayPath: skill.path &amp;&amp; (skill.rank &gt; 3),</span>
-<span class="cstat-no" title="statement not covered" >      trainedRanks: [],</span>
-<span class="cstat-no" title="statement not covered" >      untrainedRanks: []</span>
+<span class="cstat-no" title="statement not covered" >    /** @inheritDoc */</span>
+<span class="cstat-no" title="statement not covered" >    static DEFAULT_OPTIONS = {</span>
+<span class="cstat-no" title="statement not covered" >        classes: ["swerpg", "skill", "standard-form"],</span>
+<span class="cstat-no" title="statement not covered" >        tag: "form",</span>
+<span class="cstat-no" title="statement not covered" >        position: {width: 600, height: "auto"},</span>
+<span class="cstat-no" title="statement not covered" >        actions: {</span>
+<span class="cstat-no" title="statement not covered" >            choosePath: this.#onChoosePath,</span>
+<span class="cstat-no" title="statement not covered" >            rules: this.#onRules,</span>
+<span class="cstat-no" title="statement not covered" >            decrease: this.#onDecrease,</span>
+<span class="cstat-no" title="statement not covered" >            increase: this.#onIncrease,</span>
+<span class="cstat-no" title="statement not covered" >        },</span>
+<span class="cstat-no" title="statement not covered" >        sheetConfig: false,</span>
+<span class="cstat-no" title="statement not covered" >        form: {</span>
+<span class="cstat-no" title="statement not covered" >            submitOnChange: true</span>
+<span class="cstat-no" title="statement not covered" >        },</span>
 <span class="cstat-no" title="statement not covered" >    };</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    // Specialization Choice</span>
-<span class="cstat-no" title="statement not covered" >    for ( const path of Object.values(this.config.paths) ) {</span>
-<span class="cstat-no" title="statement not covered" >      path.actionIcon = skill.path === path.id ? "fa-regular fa-circle-check" : "fa-regular fa-circle";</span>
-<span class="cstat-no" title="statement not covered" >      path.actionTooltip = skill.path === path.id ? "Clear Specialization" : "Choose Specialization";</span>
+<span class="cstat-no" title="statement not covered" >    /** @override */</span>
+<span class="cstat-no" title="statement not covered" >    static PARTS = {</span>
+<span class="cstat-no" title="statement not covered" >        skill: {</span>
+<span class="cstat-no" title="statement not covered" >            root: true,</span>
+<span class="cstat-no" title="statement not covered" >            template: "systems/swerpg/templates/sheets/actor/skill.hbs",</span>
+<span class="cstat-no" title="statement not covered" >            scrollable: [".sheet-body"]</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >    };</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * A convenience reference to the Actor Document.</span>
+<span class="cstat-no" title="statement not covered" >     * @returns {SwerpgActor}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    get actor() {</span>
+<span class="cstat-no" title="statement not covered" >        return this.document;</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    // Categorize skill ranks as trained or untrained</span>
-<span class="cstat-no" title="statement not covered" >    for ( const rank of Object.values(SYSTEM.SKILL.RANKS) ) {</span>
-<span class="cstat-no" title="statement not covered" >      const r = foundry.utils.deepClone(rank);</span>
-<span class="cstat-no" title="statement not covered" >      r.label = `${r.label} ${this.config.name}`;</span>
-<span class="cstat-no" title="statement not covered" >      r.description = this.config.ranks[r.id].description;</span>
-<span class="cstat-no" title="statement not covered" >      if ( skill.rank &gt;= r.rank ) {</span>
-<span class="cstat-no" title="statement not covered" >        if ( !skill.rank || r.rank ) context.trainedRanks[r.rank] = r; // No longer show untrained once trained</span>
-<span class="cstat-no" title="statement not covered" >      }</span>
-<span class="cstat-no" title="statement not covered" >      else context.untrainedRanks[r.rank] = r;</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /** @override */</span>
+<span class="cstat-no" title="statement not covered" >    get title() {</span>
+<span class="cstat-no" title="statement not covered" >        return game.i18n.format("SKILL.SheetTitle", {actor: this.document.name, skill: this.config.name});</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >    return context;</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-<span class="cstat-no" title="statement not covered" >  /*  Event Listeners and Handlers                */</span>
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * @this {SkillConfig}</span>
-<span class="cstat-no" title="statement not covered" >   * @param {PointerEvent} event</span>
-<span class="cstat-no" title="statement not covered" >   * @returns {Promise&lt;void&gt;}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  static async #onChoosePath(event) {</span>
-<span class="cstat-no" title="statement not covered" >    const pathId = event.target.dataset.path;</span>
-<span class="cstat-no" title="statement not covered" >    const skill = this.actor.skills[this.skillId];</span>
-<span class="cstat-no" title="statement not covered" >    const path = skill.path === pathId ? null : pathId;</span>
-<span class="cstat-no" title="statement not covered" >    await this.actor.update({[`system.skills.${this.skillId}.path`]: path});</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    /** @override */</span>
+<span class="cstat-no" title="statement not covered" >    async _prepareContext(options) {</span>
+<span class="cstat-no" title="statement not covered" >        const skill = this.actor.skills[this.skillId];</span>
+<span class="cstat-no" title="statement not covered" >        const context = {</span>
+<span class="cstat-no" title="statement not covered" >            skill,</span>
+<span class="cstat-no" title="statement not covered" >            config: this.config,</span>
+<span class="cstat-no" title="statement not covered" >            path: skill.path ? this.config.paths[skill.path] : null,</span>
+<span class="cstat-no" title="statement not covered" >            choosePath: skill.rank === 3,</span>
+<span class="cstat-no" title="statement not covered" >            showPaths: !skill.path &amp;&amp; skill.rank &lt; 3,</span>
+<span class="cstat-no" title="statement not covered" >            displayPath: skill.path &amp;&amp; (skill.rank &gt; 3),</span>
+<span class="cstat-no" title="statement not covered" >            trainedRanks: [],</span>
+<span class="cstat-no" title="statement not covered" >            untrainedRanks: []</span>
+<span class="cstat-no" title="statement not covered" >        };</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >        // Specialization Choice</span>
+<span class="cstat-no" title="statement not covered" >        for (const path of Object.values(this.config.paths)) {</span>
+<span class="cstat-no" title="statement not covered" >            path.actionIcon = skill.path === path.id ? "fa-regular fa-circle-check" : "fa-regular fa-circle";</span>
+<span class="cstat-no" title="statement not covered" >            path.actionTooltip = skill.path === path.id ? "Clear Specialization" : "Choose Specialization";</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * @this {SkillConfig}</span>
-<span class="cstat-no" title="statement not covered" >   * @param {PointerEvent} event</span>
-<span class="cstat-no" title="statement not covered" >   * @returns {Promise&lt;void&gt;}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  static async #onRules(event) {</span>
-<span class="cstat-no" title="statement not covered" >    const rulesPage = await fromUuid(this.config.page);</span>
-<span class="cstat-no" title="statement not covered" >    rulesPage.parent.sheet.render(true, {pageId: rulesPage.id}); // TODO move to app v2</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >        // Categorize skill ranks as trained or untrained</span>
+<span class="cstat-no" title="statement not covered" >        for (const rank of Object.values(SYSTEM.SKILL.RANKS)) {</span>
+<span class="cstat-no" title="statement not covered" >            const r = foundry.utils.deepClone(rank);</span>
+<span class="cstat-no" title="statement not covered" >            r.label = `${r.label} ${this.config.name}`;</span>
+<span class="cstat-no" title="statement not covered" >            r.description = this.config.ranks[r.id].description;</span>
+<span class="cstat-no" title="statement not covered" >            if (skill.rank &gt;= r.rank) {</span>
+<span class="cstat-no" title="statement not covered" >                if (!skill.rank || r.rank) context.trainedRanks[r.rank] = r; // No longer show untrained once trained</span>
+<span class="cstat-no" title="statement not covered" >            } else context.untrainedRanks[r.rank] = r;</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >        return context;</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /*  Event Listeners and Handlers                */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * @this {SkillConfig}</span>
-<span class="cstat-no" title="statement not covered" >   * @param {PointerEvent} event</span>
-<span class="cstat-no" title="statement not covered" >   * @returns {Promise&lt;void&gt;}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  static #onDecrease(event) {</span>
-<span class="cstat-no" title="statement not covered" >    this.actor.purchaseSkill(this.skillId, -1);</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * @this {SkillConfig}</span>
+<span class="cstat-no" title="statement not covered" >     * @param {PointerEvent} event</span>
+<span class="cstat-no" title="statement not covered" >     * @returns {Promise&lt;void&gt;}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    static async #onChoosePath(event) {</span>
+<span class="cstat-no" title="statement not covered" >        const pathId = event.target.dataset.path;</span>
+<span class="cstat-no" title="statement not covered" >        const skill = this.actor.skills[this.skillId];</span>
+<span class="cstat-no" title="statement not covered" >        const path = skill.path === pathId ? null : pathId;</span>
+<span class="cstat-no" title="statement not covered" >        await this.actor.update({[`system.skills.${this.skillId}.path`]: path});</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * @this {SkillConfig}</span>
-<span class="cstat-no" title="statement not covered" >   * @param {PointerEvent} event</span>
-<span class="cstat-no" title="statement not covered" >   * @returns {Promise&lt;void&gt;}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  static #onIncrease(event) {</span>
-<span class="cstat-no" title="statement not covered" >    this.actor.purchaseSkill(this.skillId, 1);</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * @this {SkillConfig}</span>
+<span class="cstat-no" title="statement not covered" >     * @param {PointerEvent} event</span>
+<span class="cstat-no" title="statement not covered" >     * @returns {Promise&lt;void&gt;}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    static async #onRules(event) {</span>
+<span class="cstat-no" title="statement not covered" >        const rulesPage = await fromUuid(this.config.page);</span>
+<span class="cstat-no" title="statement not covered" >        rulesPage.parent.sheet.render(true, {pageId: rulesPage.id}); // TODO move to app v2</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * @this {SkillConfig}</span>
+<span class="cstat-no" title="statement not covered" >     * @param {PointerEvent} event</span>
+<span class="cstat-no" title="statement not covered" >     * @returns {Promise&lt;void&gt;}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    static #onDecrease(event) {</span>
+<span class="cstat-no" title="statement not covered" >        this.actor.purchaseSkill(this.skillId, -1);</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * @this {SkillConfig}</span>
+<span class="cstat-no" title="statement not covered" >     * @param {PointerEvent} event</span>
+<span class="cstat-no" title="statement not covered" >     * @returns {Promise&lt;void&gt;}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    static #onIncrease(event) {</span>
+<span class="cstat-no" title="statement not covered" >        this.actor.purchaseSkill(this.skillId, 1);</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;</pre></td></tr></table></pre>
 
@@ -496,7 +496,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-05-11T08:34:16.200Z
+                at 2025-05-26T14:10:38.209Z
             </div>
         <script src="../../../../prettify.js"></script>
         <script>

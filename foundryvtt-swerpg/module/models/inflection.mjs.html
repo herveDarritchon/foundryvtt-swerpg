@@ -209,72 +209,72 @@
 <span class="cstat-no" title="statement not covered" > * The data structure and functionality of a Metamagic Inflection in the Swerpg spellcraft system.</span>
 <span class="cstat-no" title="statement not covered" > */</span>
 <span class="cstat-no" title="statement not covered" >export default class SwerpgInflection extends foundry.abstract.DataModel {</span>
-<span class="cstat-no" title="statement not covered" >  constructor({hooks={}, ...data}, options) {</span>
-<span class="cstat-no" title="statement not covered" >    super(data, options);</span>
-<span class="cstat-no" title="statement not covered" >    this.hooks = Object.freeze(hooks);</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  static defineSchema() {</span>
-<span class="cstat-no" title="statement not covered" >    const fields = foundry.data.fields;</span>
-<span class="cstat-no" title="statement not covered" >    return {</span>
-<span class="cstat-no" title="statement not covered" >      id: new fields.StringField({required: true, blank: false}),</span>
-<span class="cstat-no" title="statement not covered" >      name: new fields.StringField(),</span>
-<span class="cstat-no" title="statement not covered" >      img: new fields.FilePathField({categories: ["IMAGE"]}),</span>
-<span class="cstat-no" title="statement not covered" >      adjective: new fields.StringField(),</span>
-<span class="cstat-no" title="statement not covered" >      cost: new fields.SchemaField({</span>
-<span class="cstat-no" title="statement not covered" >        action: new fields.NumberField({required: true, nullable: false, integer: true, initial: 0}),</span>
-<span class="cstat-no" title="statement not covered" >        focus: new fields.NumberField({required: true, nullable: false, integer: true, initial: 0})</span>
-<span class="cstat-no" title="statement not covered" >      })</span>
+<span class="cstat-no" title="statement not covered" >    constructor({hooks = {}, ...data}, options) {</span>
+<span class="cstat-no" title="statement not covered" >        super(data, options);</span>
+<span class="cstat-no" title="statement not covered" >        this.hooks = Object.freeze(hooks);</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Action Hooks which applied to spells with this Inflection</span>
-<span class="cstat-no" title="statement not covered" >   * @type {Record&lt;string, function&gt;}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  hooks;</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @inheritDoc */</span>
-<span class="cstat-no" title="statement not covered" >  _initialize() {</span>
-<span class="cstat-no" title="statement not covered" >    super._initialize();</span>
-<span class="cstat-no" title="statement not covered" >    this.adjective = game.i18n.localize(`${this.name}Adj`);</span>
-<span class="cstat-no" title="statement not covered" >    this.name = game.i18n.localize(this.name);</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * One-time initialization to instantiate SYSTEM.SPELL.INFLECTIONS.</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  static initialize() {</span>
-<span class="cstat-no" title="statement not covered" >    const inflections = SYSTEM.SPELL.INFLECTIONS;</span>
-<span class="cstat-no" title="statement not covered" >    for ( const [k, v] of Object.entries(inflections) ) {</span>
-<span class="cstat-no" title="statement not covered" >      inflections[k] = new SwerpgInflection(v);</span>
+<span class="cstat-no" title="statement not covered" >    static defineSchema() {</span>
+<span class="cstat-no" title="statement not covered" >        const fields = foundry.data.fields;</span>
+<span class="cstat-no" title="statement not covered" >        return {</span>
+<span class="cstat-no" title="statement not covered" >            id: new fields.StringField({required: true, blank: false}),</span>
+<span class="cstat-no" title="statement not covered" >            name: new fields.StringField(),</span>
+<span class="cstat-no" title="statement not covered" >            img: new fields.FilePathField({categories: ["IMAGE"]}),</span>
+<span class="cstat-no" title="statement not covered" >            adjective: new fields.StringField(),</span>
+<span class="cstat-no" title="statement not covered" >            cost: new fields.SchemaField({</span>
+<span class="cstat-no" title="statement not covered" >                action: new fields.NumberField({required: true, nullable: false, integer: true, initial: 0}),</span>
+<span class="cstat-no" title="statement not covered" >                focus: new fields.NumberField({required: true, nullable: false, integer: true, initial: 0})</span>
+<span class="cstat-no" title="statement not covered" >            })</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >    Object.freeze(inflections);</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Action Hooks which applied to spells with this Inflection</span>
+<span class="cstat-no" title="statement not covered" >     * @type {Record&lt;string, function&gt;}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    hooks;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @override */</span>
-<span class="cstat-no" title="statement not covered" >  toString() {</span>
-<span class="cstat-no" title="statement not covered" >    return this.name;</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /** @inheritDoc */</span>
+<span class="cstat-no" title="statement not covered" >    _initialize() {</span>
+<span class="cstat-no" title="statement not covered" >        super._initialize();</span>
+<span class="cstat-no" title="statement not covered" >        this.adjective = game.i18n.localize(`${this.name}Adj`);</span>
+<span class="cstat-no" title="statement not covered" >        this.name = game.i18n.localize(this.name);</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Tags used to annotate this Gesture.</span>
-<span class="cstat-no" title="statement not covered" >   * @returns {string[]}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  get tags() {</span>
-<span class="cstat-no" title="statement not covered" >    const tags = [];</span>
-<span class="cstat-no" title="statement not covered" >    if ( this.cost.action !== 0 ) tags.push(`${this.cost.action}A`);</span>
-<span class="cstat-no" title="statement not covered" >    if ( this.cost.focus !== 0 ) tags.push(`${this.cost.focus}F`);</span>
-<span class="cstat-no" title="statement not covered" >    return tags;</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * One-time initialization to instantiate SYSTEM.SPELL.INFLECTIONS.</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    static initialize() {</span>
+<span class="cstat-no" title="statement not covered" >        const inflections = SYSTEM.SPELL.INFLECTIONS;</span>
+<span class="cstat-no" title="statement not covered" >        for (const [k, v] of Object.entries(inflections)) {</span>
+<span class="cstat-no" title="statement not covered" >            inflections[k] = new SwerpgInflection(v);</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >        Object.freeze(inflections);</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /** @override */</span>
+<span class="cstat-no" title="statement not covered" >    toString() {</span>
+<span class="cstat-no" title="statement not covered" >        return this.name;</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Tags used to annotate this Gesture.</span>
+<span class="cstat-no" title="statement not covered" >     * @returns {string[]}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    get tags() {</span>
+<span class="cstat-no" title="statement not covered" >        const tags = [];</span>
+<span class="cstat-no" title="statement not covered" >        if (this.cost.action !== 0) tags.push(`${this.cost.action}A`);</span>
+<span class="cstat-no" title="statement not covered" >        if (this.cost.focus !== 0) tags.push(`${this.cost.focus}F`);</span>
+<span class="cstat-no" title="statement not covered" >        return tags;</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;</pre></td></tr></table></pre>
 
@@ -283,7 +283,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-05-11T08:34:16.353Z
+                at 2025-05-26T14:10:38.370Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

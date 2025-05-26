@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/148</span>
+                <span class='fraction'>0/147</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/148</span>
+                <span class='fraction'>0/147</span>
             </div>
         
             
@@ -229,8 +229,7 @@
 <a name='L164'></a><a href='#L164'>164</a>
 <a name='L165'></a><a href='#L165'>165</a>
 <a name='L166'></a><a href='#L166'>166</a>
-<a name='L167'></a><a href='#L167'>167</a>
-<a name='L168'></a><a href='#L168'>168</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<a name='L167'></a><a href='#L167'>167</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -324,7 +323,6 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -400,63 +398,63 @@
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" >import SwerpgAction from "./models/action.mjs";</span></span></span>
 &nbsp;
 &nbsp;
-<span class="cstat-no" title="statement not covered" >export function addChatMessageContextOptions(html, options)  {</span>
-<span class="cstat-no" title="statement not covered" >  if ( !game.user.isGM ) return;</span>
+<span class="cstat-no" title="statement not covered" >export function addChatMessageContextOptions(html, options) {</span>
+<span class="cstat-no" title="statement not covered" >    if (!game.user.isGM) return;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  // Assign difficulty for skill checks</span>
-<span class="cstat-no" title="statement not covered" >  options.push({</span>
-<span class="cstat-no" title="statement not covered" >    name: game.i18n.localize("DICE.SetDifficulty"),</span>
-<span class="cstat-no" title="statement not covered" >    icon: '&lt;i class="fas fa-bullseye"&gt;&lt;/i&gt;',</span>
-<span class="cstat-no" title="statement not covered" >    condition: li =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >      const message = game.messages.get(li.data("messageId"));</span>
-<span class="cstat-no" title="statement not covered" >      const flags = message.flags.swerpg || {};</span>
-<span class="cstat-no" title="statement not covered" >      return message.isRoll &amp;&amp; flags.skill;</span>
-<span class="cstat-no" title="statement not covered" >    },</span>
-<span class="cstat-no" title="statement not covered" >    callback: li =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >      const message = game.messages.get(li.data("messageId"));</span>
-<span class="cstat-no" title="statement not covered" >      Dialog.prompt({</span>
-<span class="cstat-no" title="statement not covered" >        title: game.i18n.localize("DICE.SetDifficulty"),</span>
-<span class="cstat-no" title="statement not covered" >        content: `&lt;form&gt;&lt;div class="form-group"&gt;&lt;label&gt;DC Target&lt;/label&gt;&lt;input type="text" name="dc" value="15" data-dtype="Number"/&gt;&lt;/div&gt;&lt;/form&gt;`,</span>
-<span class="cstat-no" title="statement not covered" >        callback: html =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >          const roll = message.roll;</span>
-<span class="cstat-no" title="statement not covered" >          roll.data.dc = parseInt(html[0].querySelector('input').value);</span>
-<span class="cstat-no" title="statement not covered" >          message.update({roll: JSON.stringify(roll)});</span>
+<span class="cstat-no" title="statement not covered" >    // Assign difficulty for skill checks</span>
+<span class="cstat-no" title="statement not covered" >    options.push({</span>
+<span class="cstat-no" title="statement not covered" >        name: game.i18n.localize("DICE.SetDifficulty"),</span>
+<span class="cstat-no" title="statement not covered" >        icon: '&lt;i class="fas fa-bullseye"&gt;&lt;/i&gt;',</span>
+<span class="cstat-no" title="statement not covered" >        condition: li =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >            const message = game.messages.get(li.data("messageId"));</span>
+<span class="cstat-no" title="statement not covered" >            const flags = message.flags.swerpg || {};</span>
+<span class="cstat-no" title="statement not covered" >            return message.isRoll &amp;&amp; flags.skill;</span>
 <span class="cstat-no" title="statement not covered" >        },</span>
-<span class="cstat-no" title="statement not covered" >        options: {width: 260}</span>
-<span class="cstat-no" title="statement not covered" >      })</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  });</span>
+<span class="cstat-no" title="statement not covered" >        callback: li =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >            const message = game.messages.get(li.data("messageId"));</span>
+<span class="cstat-no" title="statement not covered" >            Dialog.prompt({</span>
+<span class="cstat-no" title="statement not covered" >                title: game.i18n.localize("DICE.SetDifficulty"),</span>
+<span class="cstat-no" title="statement not covered" >                content: `&lt;form&gt;&lt;div class="form-group"&gt;&lt;label&gt;DC Target&lt;/label&gt;&lt;input type="text" name="dc" value="15" data-dtype="Number"/&gt;&lt;/div&gt;&lt;/form&gt;`,</span>
+<span class="cstat-no" title="statement not covered" >                callback: html =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >                    const roll = message.roll;</span>
+<span class="cstat-no" title="statement not covered" >                    roll.data.dc = parseInt(html[0].querySelector('input').value);</span>
+<span class="cstat-no" title="statement not covered" >                    message.update({roll: JSON.stringify(roll)});</span>
+<span class="cstat-no" title="statement not covered" >                },</span>
+<span class="cstat-no" title="statement not covered" >                options: {width: 260}</span>
+<span class="cstat-no" title="statement not covered" >            })</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >    });</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  // Confirm Action usage</span>
-<span class="cstat-no" title="statement not covered" >  options.push({</span>
-<span class="cstat-no" title="statement not covered" >    name: game.i18n.localize("DICE.Confirm"),</span>
-<span class="cstat-no" title="statement not covered" >    icon: '&lt;i class="fas fa-hexagon-check"&gt;&lt;/i&gt;',</span>
-<span class="cstat-no" title="statement not covered" >    condition: li =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >      const message = game.messages.get(li.data("messageId"));</span>
-<span class="cstat-no" title="statement not covered" >      const flags = message.flags.swerpg || {};</span>
-<span class="cstat-no" title="statement not covered" >      return flags.action &amp;&amp; !flags.confirmed;</span>
-<span class="cstat-no" title="statement not covered" >    },</span>
-<span class="cstat-no" title="statement not covered" >    callback: async li =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >      const message = game.messages.get(li.data("messageId"));</span>
-<span class="cstat-no" title="statement not covered" >      return SwerpgAction.confirm(message);</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  });</span>
+<span class="cstat-no" title="statement not covered" >    // Confirm Action usage</span>
+<span class="cstat-no" title="statement not covered" >    options.push({</span>
+<span class="cstat-no" title="statement not covered" >        name: game.i18n.localize("DICE.Confirm"),</span>
+<span class="cstat-no" title="statement not covered" >        icon: '&lt;i class="fas fa-hexagon-check"&gt;&lt;/i&gt;',</span>
+<span class="cstat-no" title="statement not covered" >        condition: li =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >            const message = game.messages.get(li.data("messageId"));</span>
+<span class="cstat-no" title="statement not covered" >            const flags = message.flags.swerpg || {};</span>
+<span class="cstat-no" title="statement not covered" >            return flags.action &amp;&amp; !flags.confirmed;</span>
+<span class="cstat-no" title="statement not covered" >        },</span>
+<span class="cstat-no" title="statement not covered" >        callback: async li =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >            const message = game.messages.get(li.data("messageId"));</span>
+<span class="cstat-no" title="statement not covered" >            return SwerpgAction.confirm(message);</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >    });</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  // Reverse damage</span>
-<span class="cstat-no" title="statement not covered" >  options.push({</span>
-<span class="cstat-no" title="statement not covered" >    name: game.i18n.localize("DICE.Reverse"),</span>
-<span class="cstat-no" title="statement not covered" >    icon: '&lt;i class="fas fa-hexagon-xmark"&gt;&lt;/i&gt;',</span>
-<span class="cstat-no" title="statement not covered" >    condition: li =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >      const message = game.messages.get(li.data("messageId"));</span>
-<span class="cstat-no" title="statement not covered" >      const flags = message.flags.swerpg || {};</span>
-<span class="cstat-no" title="statement not covered" >      return flags.action &amp;&amp; flags.confirmed;</span>
-<span class="cstat-no" title="statement not covered" >    },</span>
-<span class="cstat-no" title="statement not covered" >    callback: async li =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >      const message = game.messages.get(li.data("messageId"));</span>
-<span class="cstat-no" title="statement not covered" >      return SwerpgAction.confirm(message, {reverse: true});</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  });</span>
-<span class="cstat-no" title="statement not covered" >  return options;</span>
+<span class="cstat-no" title="statement not covered" >    // Reverse damage</span>
+<span class="cstat-no" title="statement not covered" >    options.push({</span>
+<span class="cstat-no" title="statement not covered" >        name: game.i18n.localize("DICE.Reverse"),</span>
+<span class="cstat-no" title="statement not covered" >        icon: '&lt;i class="fas fa-hexagon-xmark"&gt;&lt;/i&gt;',</span>
+<span class="cstat-no" title="statement not covered" >        condition: li =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >            const message = game.messages.get(li.data("messageId"));</span>
+<span class="cstat-no" title="statement not covered" >            const flags = message.flags.swerpg || {};</span>
+<span class="cstat-no" title="statement not covered" >            return flags.action &amp;&amp; flags.confirmed;</span>
+<span class="cstat-no" title="statement not covered" >        },</span>
+<span class="cstat-no" title="statement not covered" >        callback: async li =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >            const message = game.messages.get(li.data("messageId"));</span>
+<span class="cstat-no" title="statement not covered" >            return SwerpgAction.confirm(message, {reverse: true});</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >    });</span>
+<span class="cstat-no" title="statement not covered" >    return options;</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >/* -------------------------------------------- */</span>
@@ -469,17 +467,17 @@
 <span class="cstat-no" title="statement not covered" > * @param {string} userId           The creating user ID</span>
 <span class="cstat-no" title="statement not covered" > */</span>
 <span class="cstat-no" title="statement not covered" >export async function onCreateChatMessage(message, data, options, userId) {</span>
-<span class="cstat-no" title="statement not covered" >  if ( game.user !== game.users.activeGM ) return;</span>
-<span class="cstat-no" title="statement not covered" >  const flags = message.flags.swerpg || {};</span>
-<span class="cstat-no" title="statement not covered" >  if ( !flags.action || flags.confirmed ) return;</span>
+<span class="cstat-no" title="statement not covered" >    if (game.user !== game.users.activeGM) return;</span>
+<span class="cstat-no" title="statement not covered" >    const flags = message.flags.swerpg || {};</span>
+<span class="cstat-no" title="statement not covered" >    if (!flags.action || flags.confirmed) return;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  // Wait for DSN animation if applicable</span>
-<span class="cstat-no" title="statement not covered" >  if ( message.rolls.length &amp;&amp; ("dice3d" in game) ) await game.dice3d.waitFor3DAnimationByMessageID(message.id);</span>
+<span class="cstat-no" title="statement not covered" >    // Wait for DSN animation if applicable</span>
+<span class="cstat-no" title="statement not covered" >    if (message.rolls.length &amp;&amp; ("dice3d" in game)) await game.dice3d.waitFor3DAnimationByMessageID(message.id);</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  // Confirm the message</span>
-<span class="cstat-no" title="statement not covered" >  const action = SwerpgAction.fromChatMessage(message);</span>
-<span class="cstat-no" title="statement not covered" >  const canConfirm = action.canAutoConfirm();</span>
-<span class="cstat-no" title="statement not covered" >  if ( canConfirm ) await SwerpgAction.confirm(message, {action});</span>
+<span class="cstat-no" title="statement not covered" >    // Confirm the message</span>
+<span class="cstat-no" title="statement not covered" >    const action = SwerpgAction.fromChatMessage(message);</span>
+<span class="cstat-no" title="statement not covered" >    const canConfirm = action.canAutoConfirm();</span>
+<span class="cstat-no" title="statement not covered" >    if (canConfirm) await SwerpgAction.confirm(message, {action});</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >/* -------------------------------------------- */</span>
@@ -488,33 +486,32 @@
 <span class="cstat-no" title="statement not covered" > * Custom alterations to apply when rendering chat message HTML</span>
 <span class="cstat-no" title="statement not covered" > */</span>
 <span class="cstat-no" title="statement not covered" >export function renderChatMessage(message, html, data, options) {</span>
-<span class="cstat-no" title="statement not covered" >  const flags = message.flags.swerpg || {};</span>
-<span class="cstat-no" title="statement not covered" >  if ( flags.action || (message.rolls[0] instanceof swerpg.api.dice.StandardCheck) ) html.addClass("swerpg");</span>
+<span class="cstat-no" title="statement not covered" >    const flags = message.flags.swerpg || {};</span>
+<span class="cstat-no" title="statement not covered" >    if (flags.action || (message.rolls[0] instanceof swerpg.api.dice.StandardCheck)) html.addClass("swerpg");</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  // Action Cards</span>
-<span class="cstat-no" title="statement not covered" >  if ( flags.action ) {</span>
-<span class="cstat-no" title="statement not covered" >    if ( flags.confirmed ) {</span>
-<span class="cstat-no" title="statement not covered" >      html.find(".damage-result .target").addClass("applied");</span>
-<span class="cstat-no" title="statement not covered" >      html.find(".message-metadata").prepend(`&lt;i class="confirmed fa-solid fa-hexagon-check" data-tooltip="ACTION.Confirmed"&gt;&lt;/i&gt;`);</span>
+<span class="cstat-no" title="statement not covered" >    // Action Cards</span>
+<span class="cstat-no" title="statement not covered" >    if (flags.action) {</span>
+<span class="cstat-no" title="statement not covered" >        if (flags.confirmed) {</span>
+<span class="cstat-no" title="statement not covered" >            html.find(".damage-result .target").addClass("applied");</span>
+<span class="cstat-no" title="statement not covered" >            html.find(".message-metadata").prepend(`&lt;i class="confirmed fa-solid fa-hexagon-check" data-tooltip="ACTION.Confirmed"&gt;&lt;/i&gt;`);</span>
+<span class="cstat-no" title="statement not covered" >        } else {</span>
+<span class="cstat-no" title="statement not covered" >            html.find(".message-metadata").prepend(`&lt;i class="unconfirmed fa-solid fa-hexagon-xmark" data-tooltip="ACTION.Unconfirmed"&gt;&lt;/i&gt;`);</span>
+<span class="cstat-no" title="statement not covered" >            if (!game.user.isGM) return;</span>
+<span class="cstat-no" title="statement not covered" >            const confirm = $(`&lt;button class="confirm frame-brown" type="button"&gt;&lt;i class="fas fa-hexagon-check"&gt;&lt;/i&gt;Confirm&lt;/button&gt;`)</span>
+<span class="cstat-no" title="statement not covered" >            html.append(confirm);</span>
+<span class="cstat-no" title="statement not covered" >            confirm.click(event =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >                const button = event.currentTarget;</span>
+<span class="cstat-no" title="statement not covered" >                button.disabled = true;</span>
+<span class="cstat-no" title="statement not covered" >                button.firstElementChild.className = "fa-solid fa-spinner fa-spin";</span>
+<span class="cstat-no" title="statement not covered" >                SwerpgAction.confirm(message);</span>
+<span class="cstat-no" title="statement not covered" >            })</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >    else {</span>
-<span class="cstat-no" title="statement not covered" >      html.find(".message-metadata").prepend(`&lt;i class="unconfirmed fa-solid fa-hexagon-xmark" data-tooltip="ACTION.Unconfirmed"&gt;&lt;/i&gt;`);</span>
-<span class="cstat-no" title="statement not covered" >      if ( !game.user.isGM ) return;</span>
-<span class="cstat-no" title="statement not covered" >      const confirm = $(`&lt;button class="confirm frame-brown" type="button"&gt;&lt;i class="fas fa-hexagon-check"&gt;&lt;/i&gt;Confirm&lt;/button&gt;`)</span>
-<span class="cstat-no" title="statement not covered" >      html.append(confirm);</span>
-<span class="cstat-no" title="statement not covered" >      confirm.click(event =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >        const button = event.currentTarget;</span>
-<span class="cstat-no" title="statement not covered" >        button.disabled = true;</span>
-<span class="cstat-no" title="statement not covered" >        button.firstElementChild.className = "fa-solid fa-spinner fa-spin";</span>
-<span class="cstat-no" title="statement not covered" >        SwerpgAction.confirm(message);</span>
-<span class="cstat-no" title="statement not covered" >      })</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  // Initiative Report</span>
-<span class="cstat-no" title="statement not covered" >  if ( flags.isInitiativeReport ) {</span>
-<span class="cstat-no" title="statement not covered" >    html.find(".dice-rolls").remove();</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    // Initiative Report</span>
+<span class="cstat-no" title="statement not covered" >    if (flags.isInitiativeReport) {</span>
+<span class="cstat-no" title="statement not covered" >        html.find(".dice-rolls").remove();</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >/* -------------------------------------------- */</span>
@@ -525,24 +522,24 @@
 <span class="cstat-no" title="statement not covered" > * @returns {Promise&lt;void&gt;}</span>
 <span class="cstat-no" title="statement not covered" > */</span>
 <span class="cstat-no" title="statement not covered" >export async function onChatTargetLinkHover(event) {</span>
-<span class="cstat-no" title="statement not covered" >  const link = event.currentTarget;</span>
-<span class="cstat-no" title="statement not covered" >  const isActive = event.type === "mouseenter";</span>
+<span class="cstat-no" title="statement not covered" >    const link = event.currentTarget;</span>
+<span class="cstat-no" title="statement not covered" >    const isActive = event.type === "mouseenter";</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  // Get the target Token object;</span>
-<span class="cstat-no" title="statement not covered" >  const target = await fromUuid(link.dataset.uuid);</span>
-<span class="cstat-no" title="statement not covered" >  let token;</span>
-<span class="cstat-no" title="statement not covered" >  if ( target instanceof TokenDocument ) {</span>
-<span class="cstat-no" title="statement not covered" >    if ( !target.parent.isView ) return;</span>
-<span class="cstat-no" title="statement not covered" >    token = target.object;</span>
-<span class="cstat-no" title="statement not covered" >  } else {</span>
-<span class="cstat-no" title="statement not covered" >    const tokens = target.getActiveTokens(true);</span>
-<span class="cstat-no" title="statement not covered" >    if ( !tokens.length ) return;</span>
-<span class="cstat-no" title="statement not covered" >    token = tokens[0];</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    // Get the target Token object;</span>
+<span class="cstat-no" title="statement not covered" >    const target = await fromUuid(link.dataset.uuid);</span>
+<span class="cstat-no" title="statement not covered" >    let token;</span>
+<span class="cstat-no" title="statement not covered" >    if (target instanceof TokenDocument) {</span>
+<span class="cstat-no" title="statement not covered" >        if (!target.parent.isView) return;</span>
+<span class="cstat-no" title="statement not covered" >        token = target.object;</span>
+<span class="cstat-no" title="statement not covered" >    } else {</span>
+<span class="cstat-no" title="statement not covered" >        const tokens = target.getActiveTokens(true);</span>
+<span class="cstat-no" title="statement not covered" >        if (!tokens.length) return;</span>
+<span class="cstat-no" title="statement not covered" >        token = tokens[0];</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  // Toggle hover display</span>
-<span class="cstat-no" title="statement not covered" >  if ( isActive ) token._onHoverIn(event, {hoverOutOthers: false});</span>
-<span class="cstat-no" title="statement not covered" >  else token._onHoverOut(event);</span>
+<span class="cstat-no" title="statement not covered" >    // Toggle hover display</span>
+<span class="cstat-no" title="statement not covered" >    if (isActive) token._onHoverIn(event, {hoverOutOthers: false});</span>
+<span class="cstat-no" title="statement not covered" >    else token._onHoverOut(event);</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >/* -------------------------------------------- */</span>
@@ -552,17 +549,17 @@
 <span class="cstat-no" title="statement not covered" > * @param {KeyboardEventContext} context    The context data of the event</span>
 <span class="cstat-no" title="statement not covered" > */</span>
 <span class="cstat-no" title="statement not covered" >export async function onKeyboardConfirmAction(context) {</span>
-<span class="cstat-no" title="statement not covered" >  const messageIds = Array.from(game.messages.keys()).reverse();</span>
-<span class="cstat-no" title="statement not covered" >  const now = Date.now();</span>
-<span class="cstat-no" title="statement not covered" >  const toConfirm = [];</span>
-<span class="cstat-no" title="statement not covered" >  for ( const id of messageIds ) {</span>
-<span class="cstat-no" title="statement not covered" >    const message = game.messages.get(id);</span>
-<span class="cstat-no" title="statement not covered" >    const seconds = (now - message.timestamp) / 1000;</span>
-<span class="cstat-no" title="statement not covered" >    if ( seconds &gt; 60 ) break;</span>
-<span class="cstat-no" title="statement not covered" >    const {action, confirmed} = message.flags.swerpg || {};</span>
-<span class="cstat-no" title="statement not covered" >    if ( action &amp;&amp; !confirmed ) toConfirm.unshift(message);</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-<span class="cstat-no" title="statement not covered" >  if ( toConfirm.length ) return SwerpgAction.confirm(toConfirm[0]);</span>
+<span class="cstat-no" title="statement not covered" >    const messageIds = Array.from(game.messages.keys()).reverse();</span>
+<span class="cstat-no" title="statement not covered" >    const now = Date.now();</span>
+<span class="cstat-no" title="statement not covered" >    const toConfirm = [];</span>
+<span class="cstat-no" title="statement not covered" >    for (const id of messageIds) {</span>
+<span class="cstat-no" title="statement not covered" >        const message = game.messages.get(id);</span>
+<span class="cstat-no" title="statement not covered" >        const seconds = (now - message.timestamp) / 1000;</span>
+<span class="cstat-no" title="statement not covered" >        if (seconds &gt; 60) break;</span>
+<span class="cstat-no" title="statement not covered" >        const {action, confirmed} = message.flags.swerpg || {};</span>
+<span class="cstat-no" title="statement not covered" >        if (action &amp;&amp; !confirmed) toConfirm.unshift(message);</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+<span class="cstat-no" title="statement not covered" >    if (toConfirm.length) return SwerpgAction.confirm(toConfirm[0]);</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;</pre></td></tr></table></pre>
 
@@ -571,7 +568,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-05-11T08:34:16.353Z
+                at 2025-05-26T14:10:38.370Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

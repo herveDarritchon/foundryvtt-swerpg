@@ -200,7 +200,8 @@
 <a name='L135'></a><a href='#L135'>135</a>
 <a name='L136'></a><a href='#L136'>136</a>
 <a name='L137'></a><a href='#L137'>137</a>
-<a name='L138'></a><a href='#L138'>138</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<a name='L138'></a><a href='#L138'>138</a>
+<a name='L139'></a><a href='#L139'>139</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -289,6 +290,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -370,109 +372,110 @@
 <span class="cstat-no" title="statement not covered" > */</span>
 <span class="cstat-no" title="statement not covered" >export default class AttackRoll extends StandardCheck {</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @override */</span>
-<span class="cstat-no" title="statement not covered" >  static defaultData = foundry.utils.mergeObject(StandardCheck.defaultData, {</span>
-<span class="cstat-no" title="statement not covered" >    target: undefined,</span>
-<span class="cstat-no" title="statement not covered" >    defenseType: "physical",</span>
-<span class="cstat-no" title="statement not covered" >    result: undefined,</span>
-<span class="cstat-no" title="statement not covered" >    damage: undefined,</span>
-<span class="cstat-no" title="statement not covered" >    index: undefined,</span>
-<span class="cstat-no" title="statement not covered" >    newTarget: false  // FIXME it would be good to handle this a different way</span>
-<span class="cstat-no" title="statement not covered" >  });</span>
+<span class="cstat-no" title="statement not covered" >    /** @override */</span>
+<span class="cstat-no" title="statement not covered" >    static defaultData = foundry.utils.mergeObject(StandardCheck.defaultData, {</span>
+<span class="cstat-no" title="statement not covered" >        target: undefined,</span>
+<span class="cstat-no" title="statement not covered" >        defenseType: "physical",</span>
+<span class="cstat-no" title="statement not covered" >        result: undefined,</span>
+<span class="cstat-no" title="statement not covered" >        damage: undefined,</span>
+<span class="cstat-no" title="statement not covered" >        index: undefined,</span>
+<span class="cstat-no" title="statement not covered" >        newTarget: false  // FIXME it would be good to handle this a different way</span>
+<span class="cstat-no" title="statement not covered" >    });</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Which Dialog subclass should display a prompt for this Roll type?</span>
-<span class="cstat-no" title="statement not covered" >   * @type {ActionUseDialog}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  static dialogClass = ActionUseDialog;</span>
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Which Dialog subclass should display a prompt for this Roll type?</span>
+<span class="cstat-no" title="statement not covered" >     * @type {ActionUseDialog}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    static dialogClass = ActionUseDialog;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * The possible result types which can occur from an attack roll</span>
-<span class="cstat-no" title="statement not covered" >   * @enum {number}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  static RESULT_TYPES = {</span>
-<span class="cstat-no" title="statement not covered" >    MISS: 0,</span>
-<span class="cstat-no" title="statement not covered" >    DODGE: 1,</span>
-<span class="cstat-no" title="statement not covered" >    PARRY: 2,</span>
-<span class="cstat-no" title="statement not covered" >    BLOCK: 3,</span>
-<span class="cstat-no" title="statement not covered" >    ARMOR: 4,</span>
-<span class="cstat-no" title="statement not covered" >    RESIST: 5,</span>
-<span class="cstat-no" title="statement not covered" >    GLANCE: 6,</span>
-<span class="cstat-no" title="statement not covered" >    HIT: 7</span>
-<span class="cstat-no" title="statement not covered" >  };</span>
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * The possible result types which can occur from an attack roll</span>
+<span class="cstat-no" title="statement not covered" >     * @enum {number}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    static RESULT_TYPES = {</span>
+<span class="cstat-no" title="statement not covered" >        MISS: 0,</span>
+<span class="cstat-no" title="statement not covered" >        DODGE: 1,</span>
+<span class="cstat-no" title="statement not covered" >        PARRY: 2,</span>
+<span class="cstat-no" title="statement not covered" >        BLOCK: 3,</span>
+<span class="cstat-no" title="statement not covered" >        ARMOR: 4,</span>
+<span class="cstat-no" title="statement not covered" >        RESIST: 5,</span>
+<span class="cstat-no" title="statement not covered" >        GLANCE: 6,</span>
+<span class="cstat-no" title="statement not covered" >        HIT: 7</span>
+<span class="cstat-no" title="statement not covered" >    };</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * The localization labels used for each result in RESULT_TYPES</span>
-<span class="cstat-no" title="statement not covered" >   * @enum {string}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  static RESULT_TYPE_LABELS = {</span>
-<span class="cstat-no" title="statement not covered" >    [this.RESULT_TYPES.MISS]: "ATTACK.RESULT_TYPES.MISS",</span>
-<span class="cstat-no" title="statement not covered" >    [this.RESULT_TYPES.DODGE]: "ATTACK.RESULT_TYPES.DODGE",</span>
-<span class="cstat-no" title="statement not covered" >    [this.RESULT_TYPES.PARRY]: "ATTACK.RESULT_TYPES.PARRY",</span>
-<span class="cstat-no" title="statement not covered" >    [this.RESULT_TYPES.BLOCK]: "ATTACK.RESULT_TYPES.BLOCK",</span>
-<span class="cstat-no" title="statement not covered" >    [this.RESULT_TYPES.ARMOR]: "ATTACK.RESULT_TYPES.ARMOR",</span>
-<span class="cstat-no" title="statement not covered" >    [this.RESULT_TYPES.RESIST]: "ATTACK.RESULT_TYPES.RESIST",</span>
-<span class="cstat-no" title="statement not covered" >    [this.RESULT_TYPES.GLANCE]: "ATTACK.RESULT_TYPES.GLANCE",</span>
-<span class="cstat-no" title="statement not covered" >    [this.RESULT_TYPES.HIT]: "ATTACK.RESULT_TYPES.HIT",</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * The overflow damage amount produced by this attack roll</span>
-<span class="cstat-no" title="statement not covered" >   * @returns {number}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  get overflow() {</span>
-<span class="cstat-no" title="statement not covered" >    return this.total - this.data.dc;</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-<span class="cstat-no" title="statement not covered" >  /*  Helpers                                     */</span>
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @inheritdoc */</span>
-<span class="cstat-no" title="statement not covered" >  async _prepareChatRenderContext({flavor, isPrivate=false}={}) {</span>
-<span class="cstat-no" title="statement not covered" >    const cardData = await super._prepareChatRenderContext();</span>
-<span class="cstat-no" title="statement not covered" >    cardData.cssClass += ` ${this.#getResultClass()}`;</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    // Target</span>
-<span class="cstat-no" title="statement not covered" >    if ( this.data.target ) {</span>
-<span class="cstat-no" title="statement not covered" >      const target = fromUuidSync(this.data.target);</span>
-<span class="cstat-no" title="statement not covered" >      cardData.target = {uuid: this.data.target, name: target?.name ?? "Unknown"};</span>
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * The localization labels used for each result in RESULT_TYPES</span>
+<span class="cstat-no" title="statement not covered" >     * @enum {string}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    static RESULT_TYPE_LABELS = {</span>
+<span class="cstat-no" title="statement not covered" >        [this.RESULT_TYPES.MISS]: "ATTACK.RESULT_TYPES.MISS",</span>
+<span class="cstat-no" title="statement not covered" >        [this.RESULT_TYPES.DODGE]: "ATTACK.RESULT_TYPES.DODGE",</span>
+<span class="cstat-no" title="statement not covered" >        [this.RESULT_TYPES.PARRY]: "ATTACK.RESULT_TYPES.PARRY",</span>
+<span class="cstat-no" title="statement not covered" >        [this.RESULT_TYPES.BLOCK]: "ATTACK.RESULT_TYPES.BLOCK",</span>
+<span class="cstat-no" title="statement not covered" >        [this.RESULT_TYPES.ARMOR]: "ATTACK.RESULT_TYPES.ARMOR",</span>
+<span class="cstat-no" title="statement not covered" >        [this.RESULT_TYPES.RESIST]: "ATTACK.RESULT_TYPES.RESIST",</span>
+<span class="cstat-no" title="statement not covered" >        [this.RESULT_TYPES.GLANCE]: "ATTACK.RESULT_TYPES.GLANCE",</span>
+<span class="cstat-no" title="statement not covered" >        [this.RESULT_TYPES.HIT]: "ATTACK.RESULT_TYPES.HIT",</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    // Defense label</span>
-<span class="cstat-no" title="statement not covered" >    const dt = this.data.defenseType;</span>
-<span class="cstat-no" title="statement not covered" >    if ( dt in SYSTEM.DEFENSES ) cardData.defenseType = SYSTEM.DEFENSES[dt].label;</span>
-<span class="cstat-no" title="statement not covered" >    else if ( dt in SYSTEM.SKILLS ) cardData.defenseType = SYSTEM.SKILLS[dt].label;</span>
-<span class="cstat-no" title="statement not covered" >    else cardData.defenseType = "DC";</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    // Outcome label</span>
-<span class="cstat-no" title="statement not covered" >    cardData.outcome = game.i18n.localize(this.constructor.RESULT_TYPE_LABELS[this.data.result]);</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    // Damage type</span>
-<span class="cstat-no" title="statement not covered" >    const damage = this.data.damage || {};</span>
-<span class="cstat-no" title="statement not covered" >    damage.display = (damage.total &gt; 0) || Number.isNumeric(damage.overflow);</span>
-<span class="cstat-no" title="statement not covered" >    if ( damage.display ) {</span>
-<span class="cstat-no" title="statement not covered" >      cardData.damageLabel = game.i18n.localize(damage.restoration ? "DICE.Healing" : "DICE.Damage");</span>
-<span class="cstat-no" title="statement not covered" >      cardData.baseLabel = game.i18n.format("DICE.DamageBase", {type: cardData.damageLabel});</span>
-<span class="cstat-no" title="statement not covered" >      if ( damage.restoration ) cardData.damageType = SYSTEM.RESOURCES[damage.resource].label;</span>
-<span class="cstat-no" title="statement not covered" >      else if ( damage.type ) cardData.damageType = SYSTEM.DAMAGE_TYPES[damage.type].label;</span>
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * The overflow damage amount produced by this attack roll</span>
+<span class="cstat-no" title="statement not covered" >     * @returns {number}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    get overflow() {</span>
+<span class="cstat-no" title="statement not covered" >        return this.total - this.data.dc;</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >    cardData.hasMultiplier = damage?.multiplier !== 1;</span>
-<span class="cstat-no" title="statement not covered" >    return cardData;</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /*  Helpers                                     */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Get the attack roll result CSS class.</span>
-<span class="cstat-no" title="statement not covered" >   * @returns {string}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  #getResultClass() {</span>
-<span class="cstat-no" title="statement not covered" >    const results = this.constructor.RESULT_TYPES;</span>
-<span class="cstat-no" title="statement not covered" >    const result = Object.entries(results).find(e =&gt; e[1] === this.data.result);</span>
-<span class="cstat-no" title="statement not covered" >    if ( (result[1] === results.GLANCE) &amp;&amp; !this.data.damage.total )  return "miss";</span>
-<span class="cstat-no" title="statement not covered" >    else return result[0].toLowerCase();</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /** @inheritdoc */</span>
+<span class="cstat-no" title="statement not covered" >    async _prepareChatRenderContext({flavor, isPrivate = false} = {}) {</span>
+<span class="cstat-no" title="statement not covered" >        const cardData = await super._prepareChatRenderContext();</span>
+<span class="cstat-no" title="statement not covered" >        cardData.cssClass += ` ${this.#getResultClass()}`;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Target</span>
+<span class="cstat-no" title="statement not covered" >        if (this.data.target) {</span>
+<span class="cstat-no" title="statement not covered" >            const target = fromUuidSync(this.data.target);</span>
+<span class="cstat-no" title="statement not covered" >            cardData.target = {uuid: this.data.target, name: target?.name ?? "Unknown"};</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Defense label</span>
+<span class="cstat-no" title="statement not covered" >        const dt = this.data.defenseType;</span>
+<span class="cstat-no" title="statement not covered" >        if (dt in SYSTEM.DEFENSES) cardData.defenseType = SYSTEM.DEFENSES[dt].label;</span>
+<span class="cstat-no" title="statement not covered" >        else if (dt in SYSTEM.SKILLS) cardData.defenseType = SYSTEM.SKILLS[dt].label;</span>
+<span class="cstat-no" title="statement not covered" >        else cardData.defenseType = "DC";</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Outcome label</span>
+<span class="cstat-no" title="statement not covered" >        cardData.outcome = game.i18n.localize(this.constructor.RESULT_TYPE_LABELS[this.data.result]);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Damage type</span>
+<span class="cstat-no" title="statement not covered" >        const damage = this.data.damage || {};</span>
+<span class="cstat-no" title="statement not covered" >        damage.display = (damage.total &gt; 0) || Number.isNumeric(damage.overflow);</span>
+<span class="cstat-no" title="statement not covered" >        if (damage.display) {</span>
+<span class="cstat-no" title="statement not covered" >            cardData.damageLabel = game.i18n.localize(damage.restoration ? "DICE.Healing" : "DICE.Damage");</span>
+<span class="cstat-no" title="statement not covered" >            cardData.baseLabel = game.i18n.format("DICE.DamageBase", {type: cardData.damageLabel});</span>
+<span class="cstat-no" title="statement not covered" >            if (damage.restoration) cardData.damageType = SYSTEM.RESOURCES[damage.resource].label;</span>
+<span class="cstat-no" title="statement not covered" >            else if (damage.type) cardData.damageType = SYSTEM.DAMAGE_TYPES[damage.type].label;</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >        cardData.hasMultiplier = damage?.multiplier !== 1;</span>
+<span class="cstat-no" title="statement not covered" >        return cardData;</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Get the attack roll result CSS class.</span>
+<span class="cstat-no" title="statement not covered" >     * @returns {string}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    #getResultClass() {</span>
+<span class="cstat-no" title="statement not covered" >        const results = this.constructor.RESULT_TYPES;</span>
+<span class="cstat-no" title="statement not covered" >        const result = Object.entries(results).find(e =&gt; e[1] === this.data.result);</span>
+<span class="cstat-no" title="statement not covered" >        if ((result[1] === results.GLANCE) &amp;&amp; !this.data.damage.total) return "miss";</span>
+<span class="cstat-no" title="statement not covered" >        else return result[0].toLowerCase();</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;</pre></td></tr></table></pre>
 
@@ -481,7 +484,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-05-11T08:34:16.353Z
+                at 2025-05-26T14:10:38.370Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

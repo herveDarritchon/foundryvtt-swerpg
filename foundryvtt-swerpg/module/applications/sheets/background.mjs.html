@@ -206,7 +206,8 @@
 <a name='L141'></a><a href='#L141'>141</a>
 <a name='L142'></a><a href='#L142'>142</a>
 <a name='L143'></a><a href='#L143'>143</a>
-<a name='L144'></a><a href='#L144'>144</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<a name='L144'></a><a href='#L144'>144</a>
+<a name='L145'></a><a href='#L145'>145</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -302,6 +303,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -356,141 +358,142 @@
 <span class="cstat-no" title="statement not covered" > */</span>
 <span class="cstat-no" title="statement not covered" >export default class BackgroundSheet extends SwerpgBaseItemSheet {</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @inheritDoc */</span>
-<span class="cstat-no" title="statement not covered" >  static DEFAULT_OPTIONS = {</span>
-<span class="cstat-no" title="statement not covered" >    actions: {</span>
-<span class="cstat-no" title="statement not covered" >      removeTalent: BackgroundSheet.#onRemoveTalent</span>
-<span class="cstat-no" title="statement not covered" >    },</span>
-<span class="cstat-no" title="statement not covered" >    item: {</span>
-<span class="cstat-no" title="statement not covered" >      type: "background"</span>
+<span class="cstat-no" title="statement not covered" >    /** @inheritDoc */</span>
+<span class="cstat-no" title="statement not covered" >    static DEFAULT_OPTIONS = {</span>
+<span class="cstat-no" title="statement not covered" >        actions: {</span>
+<span class="cstat-no" title="statement not covered" >            removeTalent: BackgroundSheet.#onRemoveTalent</span>
+<span class="cstat-no" title="statement not covered" >        },</span>
+<span class="cstat-no" title="statement not covered" >        item: {</span>
+<span class="cstat-no" title="statement not covered" >            type: "background"</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >    };</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    // Initialize subclass options</span>
+<span class="cstat-no" title="statement not covered" >    static {</span>
+<span class="cstat-no" title="statement not covered" >        this._initializeItemSheetClass()</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  };</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  // Initialize subclass options</span>
-<span class="cstat-no" title="statement not covered" >  static {</span>
-<span class="cstat-no" title="statement not covered" >    this._initializeItemSheetClass()</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * The partial template used to render an included talent.</span>
+<span class="cstat-no" title="statement not covered" >     * @type {string}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    static talentPartial = "systems/swerpg/templates/sheets/partials/included-talent.hbs";</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * The partial template used to render an included talent.</span>
-<span class="cstat-no" title="statement not covered" >   * @type {string}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  static talentPartial = "systems/swerpg/templates/sheets/partials/included-talent.hbs";</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @inheritDoc */</span>
-<span class="cstat-no" title="statement not covered" >  async _prepareContext(options) {</span>
-<span class="cstat-no" title="statement not covered" >    const context = await super._prepareContext(options);</span>
-<span class="cstat-no" title="statement not covered" >    return Object.assign(context, {</span>
-<span class="cstat-no" title="statement not covered" >      skillsInput: this.#skillsInput.bind(this),</span>
-<span class="cstat-no" title="statement not covered" >      talents: await this.#prepareTalents()</span>
-<span class="cstat-no" title="statement not covered" >    });</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Render the skills as a multi-checkbox element.</span>
-<span class="cstat-no" title="statement not covered" >   * @returns {HTMLMultiCheckboxElement}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  #skillsInput(field, inputConfig) {</span>
-<span class="cstat-no" title="statement not covered" >    const skills = foundry.utils.deepClone(SYSTEM.SKILLS);</span>
-<span class="cstat-no" title="statement not covered" >    inputConfig.name = field.fieldPath;</span>
-<span class="cstat-no" title="statement not covered" >    inputConfig.options = Object.entries(skills).map(([id, s]) =&gt; ({value: id, label: s.name}));</span>
-<span class="cstat-no" title="statement not covered" >    inputConfig.type = "checkboxes";</span>
-<span class="cstat-no" title="statement not covered" >    return foundry.applications.fields.createMultiSelectInput(inputConfig);</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Prepare talent data for the Background.</span>
-<span class="cstat-no" title="statement not covered" >   * @returns {Promise&lt;{uuid: string, name: string, img: string}[]&gt;}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  async #prepareTalents() {</span>
-<span class="cstat-no" title="statement not covered" >    const uuids = this.document.system.talents;</span>
-<span class="cstat-no" title="statement not covered" >    const talents = [];</span>
-<span class="cstat-no" title="statement not covered" >    for ( const uuid of uuids ) {</span>
-<span class="cstat-no" title="statement not covered" >      const talent = await fromUuid(uuid)</span>
-<span class="cstat-no" title="statement not covered" >      if ( !talent ) continue;</span>
-<span class="cstat-no" title="statement not covered" >      const talentHTML = await this.#renderTalentHTML(talent);</span>
-<span class="cstat-no" title="statement not covered" >      talents.push(talentHTML);</span>
+<span class="cstat-no" title="statement not covered" >    /** @inheritDoc */</span>
+<span class="cstat-no" title="statement not covered" >    async _prepareContext(options) {</span>
+<span class="cstat-no" title="statement not covered" >        const context = await super._prepareContext(options);</span>
+<span class="cstat-no" title="statement not covered" >        return Object.assign(context, {</span>
+<span class="cstat-no" title="statement not covered" >            skillsInput: this.#skillsInput.bind(this),</span>
+<span class="cstat-no" title="statement not covered" >            talents: await this.#prepareTalents()</span>
+<span class="cstat-no" title="statement not covered" >        });</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >    return talents;</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Construct the HTML for a talent displayed on the Background sheet.</span>
-<span class="cstat-no" title="statement not covered" >   * @param {SwerpgItem} talent     The talent item being displayed</span>
-<span class="cstat-no" title="statement not covered" >   * @param {boolean} editable        Is the sheet currently editable?</span>
-<span class="cstat-no" title="statement not covered" >   * @returns {Promise&lt;string&gt;}       The rendered HTML string</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  async #renderTalentHTML(talent) {</span>
-<span class="cstat-no" title="statement not covered" >    const tags = talent.system.getTags();</span>
-<span class="cstat-no" title="statement not covered" >    return renderTemplate(this.constructor.talentPartial, {talent, tags, editable: this.isEditable});</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @inheritDoc */</span>
-<span class="cstat-no" title="statement not covered" >  _onRender(context, options) {</span>
-<span class="cstat-no" title="statement not covered" >    super._onRender(context, options);</span>
-<span class="cstat-no" title="statement not covered" >    if ( !this.isEditable ) return;</span>
-<span class="cstat-no" title="statement not covered" >    const dropZone = this.element.querySelector(".talent-drop");</span>
-<span class="cstat-no" title="statement not covered" >    dropZone?.addEventListener("drop", this.#onDropTalent.bind(this));</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-<span class="cstat-no" title="statement not covered" >  /*  Event Listeners and Handlers                */</span>
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Handle drop events for a talent added to the Background sheet.</span>
-<span class="cstat-no" title="statement not covered" >   * @param {DragEvent} event</span>
-<span class="cstat-no" title="statement not covered" >   * @returns {Promise&lt;*&gt;}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  async #onDropTalent(event) {</span>
-<span class="cstat-no" title="statement not covered" >    const dropZone = event.currentTarget;</span>
-<span class="cstat-no" title="statement not covered" >    const data = TextEditor.getDragEventData(event);</span>
-<span class="cstat-no" title="statement not covered" >    if ( data.type !== "Item" ) return;</span>
-<span class="cstat-no" title="statement not covered" >    const talent = await fromUuid(data.uuid);</span>
-<span class="cstat-no" title="statement not covered" >    if ( talent?.type !== "talent" ) return;</span>
-<span class="cstat-no" title="statement not covered" >    if ( talent.system.node?.tier &amp;&amp; (talent.system.node.tier !== 0 ) ) {</span>
-<span class="cstat-no" title="statement not covered" >      return ui.notifications.error("BACKGROUND.ERRORS.TALENT_TIER", {localize: true});</span>
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Render the skills as a multi-checkbox element.</span>
+<span class="cstat-no" title="statement not covered" >     * @returns {HTMLMultiCheckboxElement}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    #skillsInput(field, inputConfig) {</span>
+<span class="cstat-no" title="statement not covered" >        const skills = foundry.utils.deepClone(SYSTEM.SKILLS);</span>
+<span class="cstat-no" title="statement not covered" >        inputConfig.name = field.fieldPath;</span>
+<span class="cstat-no" title="statement not covered" >        inputConfig.options = Object.entries(skills).map(([id, s]) =&gt; ({value: id, label: s.name}));</span>
+<span class="cstat-no" title="statement not covered" >        inputConfig.type = "checkboxes";</span>
+<span class="cstat-no" title="statement not covered" >        return foundry.applications.fields.createMultiSelectInput(inputConfig);</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >    const talentHTML = await this.#renderTalentHTML(talent);</span>
-<span class="cstat-no" title="statement not covered" >    dropZone.insertAdjacentHTML("beforebegin", talentHTML);</span>
-<span class="cstat-no" title="statement not covered" >    dropZone.remove();</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Handle removing a talent from the Background sheet.</span>
-<span class="cstat-no" title="statement not covered" >   * @this {BackgroundSheet}</span>
-<span class="cstat-no" title="statement not covered" >   * @param {PointerEvent} event</span>
-<span class="cstat-no" title="statement not covered" >   * @returns {Promise&lt;void&gt;}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  static async #onRemoveTalent(event) {</span>
-<span class="cstat-no" title="statement not covered" >    const talent = event.target.closest(".talent");</span>
-<span class="cstat-no" title="statement not covered" >    talent.remove();</span>
-<span class="cstat-no" title="statement not covered" >    const submitData = this._getSubmitData(event);</span>
-<span class="cstat-no" title="statement not covered" >    await this.document.update(submitData);</span>
-<span class="cstat-no" title="statement not covered" >    this.render(); // TODO why is this necessary, shouldn't the document update do it?</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Prepare talent data for the Background.</span>
+<span class="cstat-no" title="statement not covered" >     * @returns {Promise&lt;{uuid: string, name: string, img: string}[]&gt;}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    async #prepareTalents() {</span>
+<span class="cstat-no" title="statement not covered" >        const uuids = this.document.system.talents;</span>
+<span class="cstat-no" title="statement not covered" >        const talents = [];</span>
+<span class="cstat-no" title="statement not covered" >        for (const uuid of uuids) {</span>
+<span class="cstat-no" title="statement not covered" >            const talent = await fromUuid(uuid)</span>
+<span class="cstat-no" title="statement not covered" >            if (!talent) continue;</span>
+<span class="cstat-no" title="statement not covered" >            const talentHTML = await this.#renderTalentHTML(talent);</span>
+<span class="cstat-no" title="statement not covered" >            talents.push(talentHTML);</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >        return talents;</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @inheritDoc */</span>
-<span class="cstat-no" title="statement not covered" >  _processFormData(event, form, formData) {</span>
-<span class="cstat-no" title="statement not covered" >    const submitData = super._processFormData(event, form, formData);</span>
-<span class="cstat-no" title="statement not covered" >    const talents = form.querySelectorAll(".talents .talent");</span>
-<span class="cstat-no" title="statement not covered" >    submitData.system.talents = Array.from(talents).map(t =&gt; t.dataset.uuid);</span>
-<span class="cstat-no" title="statement not covered" >    return submitData;</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Construct the HTML for a talent displayed on the Background sheet.</span>
+<span class="cstat-no" title="statement not covered" >     * @param {SwerpgItem} talent     The talent item being displayed</span>
+<span class="cstat-no" title="statement not covered" >     * @param {boolean} editable        Is the sheet currently editable?</span>
+<span class="cstat-no" title="statement not covered" >     * @returns {Promise&lt;string&gt;}       The rendered HTML string</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    async #renderTalentHTML(talent) {</span>
+<span class="cstat-no" title="statement not covered" >        const tags = talent.system.getTags();</span>
+<span class="cstat-no" title="statement not covered" >        return renderTemplate(this.constructor.talentPartial, {talent, tags, editable: this.isEditable});</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /** @inheritDoc */</span>
+<span class="cstat-no" title="statement not covered" >    _onRender(context, options) {</span>
+<span class="cstat-no" title="statement not covered" >        super._onRender(context, options);</span>
+<span class="cstat-no" title="statement not covered" >        if (!this.isEditable) return;</span>
+<span class="cstat-no" title="statement not covered" >        const dropZone = this.element.querySelector(".talent-drop");</span>
+<span class="cstat-no" title="statement not covered" >        dropZone?.addEventListener("drop", this.#onDropTalent.bind(this));</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /*  Event Listeners and Handlers                */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Handle drop events for a talent added to the Background sheet.</span>
+<span class="cstat-no" title="statement not covered" >     * @param {DragEvent} event</span>
+<span class="cstat-no" title="statement not covered" >     * @returns {Promise&lt;*&gt;}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    async #onDropTalent(event) {</span>
+<span class="cstat-no" title="statement not covered" >        const dropZone = event.currentTarget;</span>
+<span class="cstat-no" title="statement not covered" >        const data = foundry.applications.ux.TextEditor.getDragEventData(event);</span>
+<span class="cstat-no" title="statement not covered" >        if (data.type !== "Item") return;</span>
+<span class="cstat-no" title="statement not covered" >        const talent = await fromUuid(data.uuid);</span>
+<span class="cstat-no" title="statement not covered" >        if (talent?.type !== "talent") return;</span>
+<span class="cstat-no" title="statement not covered" >        if (talent.system.node?.tier &amp;&amp; (talent.system.node.tier !== 0)) {</span>
+<span class="cstat-no" title="statement not covered" >            return ui.notifications.error("BACKGROUND.ERRORS.TALENT_TIER", {localize: true});</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >        const talentHTML = await this.#renderTalentHTML(talent);</span>
+<span class="cstat-no" title="statement not covered" >        dropZone.insertAdjacentHTML("beforebegin", talentHTML);</span>
+<span class="cstat-no" title="statement not covered" >        dropZone.remove();</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Handle removing a talent from the Background sheet.</span>
+<span class="cstat-no" title="statement not covered" >     * @this {BackgroundSheet}</span>
+<span class="cstat-no" title="statement not covered" >     * @param {PointerEvent} event</span>
+<span class="cstat-no" title="statement not covered" >     * @returns {Promise&lt;void&gt;}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    static async #onRemoveTalent(event) {</span>
+<span class="cstat-no" title="statement not covered" >        const talent = event.target.closest(".talent");</span>
+<span class="cstat-no" title="statement not covered" >        talent.remove();</span>
+<span class="cstat-no" title="statement not covered" >        const submitData = this._getSubmitData(event);</span>
+<span class="cstat-no" title="statement not covered" >        await this.document.update(submitData);</span>
+<span class="cstat-no" title="statement not covered" >        this.render(); // TODO why is this necessary, shouldn't the document update do it?</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /** @inheritDoc */</span>
+<span class="cstat-no" title="statement not covered" >    _processFormData(event, form, formData) {</span>
+<span class="cstat-no" title="statement not covered" >        const submitData = super._processFormData(event, form, formData);</span>
+<span class="cstat-no" title="statement not covered" >        const talents = form.querySelectorAll(".talents .talent");</span>
+<span class="cstat-no" title="statement not covered" >        submitData.system.talents = Array.from(talents).map(t =&gt; t.dataset.uuid);</span>
+<span class="cstat-no" title="statement not covered" >        return submitData;</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;</pre></td></tr></table></pre>
 
@@ -499,7 +502,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-05-11T08:34:16.353Z
+                at 2025-05-26T14:10:38.370Z
             </div>
         <script src="../../../../prettify.js"></script>
         <script>

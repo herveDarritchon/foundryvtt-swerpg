@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/493</span>
+                <span class='fraction'>0/495</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/493</span>
+                <span class='fraction'>0/495</span>
             </div>
         
             
@@ -659,7 +659,13 @@
 <a name='L594'></a><a href='#L594'>594</a>
 <a name='L595'></a><a href='#L595'>595</a>
 <a name='L596'></a><a href='#L596'>596</a>
-<a name='L597'></a><a href='#L597'>597</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<a name='L597'></a><a href='#L597'>597</a>
+<a name='L598'></a><a href='#L598'>598</a>
+<a name='L599'></a><a href='#L599'>599</a>
+<a name='L600'></a><a href='#L600'>600</a>
+<a name='L601'></a><a href='#L601'>601</a>
+<a name='L602'></a><a href='#L602'>602</a>
+<a name='L603'></a><a href='#L603'>603</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -793,6 +799,8 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -803,6 +811,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -952,6 +961,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -1080,6 +1090,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -1162,6 +1173,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -1272,584 +1284,590 @@
 &nbsp;
 <span class="cstat-no" title="statement not covered" >class SwerpgTalentNodeStates extends Map {</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * The default Talent node state.</span>
-<span class="cstat-no" title="statement not covered" >   * @type {SwerpgTalentNodeState}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  static DEFAULT_STATE = Object.freeze({accessible: false, unlocked: false, purchased: false, banned: false});</span>
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * The default Talent node state.</span>
+<span class="cstat-no" title="statement not covered" >     * @type {SwerpgTalentNodeState}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    static DEFAULT_STATE = Object.freeze({accessible: false, unlocked: false, purchased: false, banned: false});</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * @inheritDoc</span>
-<span class="cstat-no" title="statement not covered" >   * @returns {SwerpgTalentNodeState}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  get(key) {</span>
-<span class="cstat-no" title="statement not covered" >    /** @type {SwerpgTalentNodeState} */</span>
-<span class="cstat-no" title="statement not covered" >    const state = super.get(key);</span>
-<span class="cstat-no" title="statement not covered" >    return state || SwerpgTalentNodeStates.DEFAULT_STATE;</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * @inheritDoc</span>
+<span class="cstat-no" title="statement not covered" >     * @returns {SwerpgTalentNodeState}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    get(key) {</span>
+<span class="cstat-no" title="statement not covered" >        /** @type {SwerpgTalentNodeState} */</span>
+<span class="cstat-no" title="statement not covered" >        const state = super.get(key);</span>
+<span class="cstat-no" title="statement not covered" >        return state || SwerpgTalentNodeStates.DEFAULT_STATE;</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >/* -------------------------------------------- */</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >export default class SwerpgTalentTree extends PIXI.Container {</span>
-<span class="cstat-no" title="statement not covered" >  constructor() {</span>
-<span class="cstat-no" title="statement not covered" >    super();</span>
-<span class="cstat-no" title="statement not covered" >    this.#initialize();</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Has the talent tree been drawn yet?</span>
-<span class="cstat-no" title="statement not covered" >   * @type {boolean}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  #drawn = false;</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * The canvas element used to draw the tree.</span>
-<span class="cstat-no" title="statement not covered" >   * @type {HTMLCanvasElement}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  canvas;</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * The PIXI Application that controls the secondary canvas.</span>
-<span class="cstat-no" title="statement not covered" >   * @type {PIXI.Application}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  app;</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * A reference to the Actor which is currently bound to the talent tree.</span>
-<span class="cstat-no" title="statement not covered" >   * @type {SwerpgActor|null}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  actor = null;</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * A reference to the active node</span>
-<span class="cstat-no" title="statement not covered" >   * @type {SwerpgTalentTreeNode}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  active;</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * A reference to the talent tree HUD</span>
-<span class="cstat-no" title="statement not covered" >   * @type {SwerpgTalentHUD}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  hud = new SwerpgTalentHUD();</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * A reference to the talent tree choice wheel</span>
-<span class="cstat-no" title="statement not covered" >   * @type {SwerpgTalentChoiceWheel}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  wheel;</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * A mapping which tracks the current node states</span>
-<span class="cstat-no" title="statement not covered" >   * @type {Map&lt;SwerpgTalentNode,SwerpgTalentNodeState&gt;}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  state = new SwerpgTalentNodeStates();</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * The set of sound files used for UI clicks.</span>
-<span class="cstat-no" title="statement not covered" >   * @type {string[]}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  static clickSounds = [</span>
-<span class="cstat-no" title="statement not covered" >    "systems/swerpg/audio/click1.wav",</span>
-<span class="cstat-no" title="statement not covered" >    "systems/swerpg/audio/click2.wav",</span>
-<span class="cstat-no" title="statement not covered" >    "systems/swerpg/audio/click3.wav",</span>
-<span class="cstat-no" title="statement not covered" >    "systems/swerpg/audio/click4.wav",</span>
-<span class="cstat-no" title="statement not covered" >    "systems/swerpg/audio/click5.wav"</span>
-<span class="cstat-no" title="statement not covered" >  ]</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  get tree() {</span>
-<span class="cstat-no" title="statement not covered" >    return SwerpgTalentNode.nodes;</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Initialize the secondary canvas used for the talent tree.</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  #initialize() {</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    // Create the HTML canvas element</span>
-<span class="cstat-no" title="statement not covered" >    Object.defineProperty(this, "canvas", {value: document.createElement("canvas"), writable: false});</span>
-<span class="cstat-no" title="statement not covered" >    this.canvas.id = "swerpg-talent-tree";</span>
-<span class="cstat-no" title="statement not covered" >    this.canvas.hidden = true;</span>
-<span class="cstat-no" title="statement not covered" >    document.body.appendChild(this.canvas);</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    // Create the PIXI Application</span>
-<span class="cstat-no" title="statement not covered" >    Object.defineProperty(this, "app", {value: new PIXI.Application({</span>
-<span class="cstat-no" title="statement not covered" >        view: this.canvas,</span>
-<span class="cstat-no" title="statement not covered" >        width: window.innerWidth,</span>
-<span class="cstat-no" title="statement not covered" >        height: window.innerHeight,</span>
-<span class="cstat-no" title="statement not covered" >        transparent: false,</span>
-<span class="cstat-no" title="statement not covered" >        resolution: 1,</span>
-<span class="cstat-no" title="statement not covered" >        autoDensity: true,</span>
-<span class="cstat-no" title="statement not covered" >        background: 0x0b0909,</span>
-<span class="cstat-no" title="statement not covered" >        antialias: false, // Not needed because we use SmoothGraphics</span>
-<span class="cstat-no" title="statement not covered" >        powerPreference: "high-performance" // Prefer high performance GPU for devices with dual graphics cards</span>
-<span class="cstat-no" title="statement not covered" >    }), writable: false});</span>
-<span class="cstat-no" title="statement not covered" >    Object.defineProperty(this, "stage", {value: this.app.stage, writable: false});</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    // Create the controls app</span>
-<span class="cstat-no" title="statement not covered" >    Object.defineProperty(this, "controls", {value: new SwerpgTalentTreeControls(), writable: false});</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    // Add this class to the canvas stage</span>
-<span class="cstat-no" title="statement not covered" >    this.stage.addChild(this);</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-<span class="cstat-no" title="statement not covered" >  /*  Drawing                                     */</span>
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Draw the Talent Tree to the secondary canvas.</span>
-<span class="cstat-no" title="statement not covered" >   * @returns {Promise&lt;void&gt;}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  async draw() {</span>
-<span class="cstat-no" title="statement not covered" >    if ( this.#drawn ) return;</span>
-<span class="cstat-no" title="statement not covered" >    this.background = this.addChild(new PIXI.Container());</span>
-<span class="cstat-no" title="statement not covered" >    this.foreground = this.addChild(new PIXI.Container());</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    // Load Textures</span>
-<span class="cstat-no" title="statement not covered" >    await this.#loadTextures();</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    // Draw Background</span>
-<span class="cstat-no" title="statement not covered" >    this.backdrop = this.background.addChild(await this.#drawBackdrop());</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    // Draw Center</span>
-<span class="cstat-no" title="statement not covered" >    this.character = this.foreground.addChild(new PIXI.Sprite());</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    // Background connections</span>
-<span class="cstat-no" title="statement not covered" >    this.edges = this.background.addChild(new PIXI.Graphics());</span>
-<span class="cstat-no" title="statement not covered" >    this.edges.lineStyle({color: 0x000000, alpha: 0.35, width: 3});</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    // Active connections</span>
-<span class="cstat-no" title="statement not covered" >    this.connections = this.background.addChild(new PIXI.Graphics());</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    // Draw Nodes and Edges</span>
-<span class="cstat-no" title="statement not covered" >    this.nodes = this.background.addChild(new PIXI.Container());</span>
-<span class="cstat-no" title="statement not covered" >    const origin = SwerpgTalentNode.nodes.get("origin");</span>
-<span class="cstat-no" title="statement not covered" >    await this.#drawNodes(origin.connected, new Set([origin]));</span>
-<span class="cstat-no" title="statement not covered" >    this.#drawCircles();</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    // Background fade and filter</span>
-<span class="cstat-no" title="statement not covered" >    this.background.darken = this.background.addChild(new PIXI.Graphics());</span>
-<span class="cstat-no" title="statement not covered" >    this.background.blurFilter = new PIXI.filters.BlurFilter(1);</span>
-<span class="cstat-no" title="statement not covered" >    this.background.filters = [this.background.blurFilter];</span>
-<span class="cstat-no" title="statement not covered" >    this.background.blurFilter.enabled = false;</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    // Create Choice Wheel</span>
-<span class="cstat-no" title="statement not covered" >    this.wheel = this.foreground.addChild(new SwerpgTalentChoiceWheel());</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    // Enable interactivity</span>
-<span class="cstat-no" title="statement not covered" >    this.#activateInteractivity();</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    // Ensure the main Canvas HUD is rendered</span>
-<span class="cstat-no" title="statement not covered" >    canvas.hud.render(true);</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    // Draw initial conditions</span>
-<span class="cstat-no" title="statement not covered" >    this.refresh();</span>
-<span class="cstat-no" title="statement not covered" >    this.#drawn = true;</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Load all necessary textures for rendering the talent tree.</span>
-<span class="cstat-no" title="statement not covered" >   * @returns {Promise&lt;void[]&gt;}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  async #loadTextures() {</span>
-<span class="cstat-no" title="statement not covered" >    const toLoad = [</span>
-<span class="cstat-no" title="statement not covered" >      "systems/swerpg/ui/tree/background.webp",</span>
-<span class="cstat-no" title="statement not covered" >      "systems/swerpg/ui/tree/wheel.webp"</span>
-<span class="cstat-no" title="statement not covered" >    ];</span>
-<span class="cstat-no" title="statement not covered" >    const varities = Object.keys(SYSTEM.CHARACTERISTICS).concat(["inactive"]);</span>
-<span class="cstat-no" title="statement not covered" >    for ( const nodeType in SwerpgTalentTreeNode.NODE_TYPES ) {</span>
-<span class="cstat-no" title="statement not covered" >      for ( const variety of varities ) {</span>
-<span class="cstat-no" title="statement not covered" >        toLoad.push(`systems/swerpg/ui/tree/nodes/${nodeType}-${variety}.webp`);</span>
-<span class="cstat-no" title="statement not covered" >      }</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >    return TextureLoader.loader.load(toLoad, {</span>
-<span class="cstat-no" title="statement not covered" >      message: game.i18n.format("SCENES.Loading", {name: "Talent Tree"})</span>
-<span class="cstat-no" title="statement not covered" >    });</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  async #drawBackdrop() {</span>
-<span class="cstat-no" title="statement not covered" >    const tex = getTexture("systems/swerpg/ui/tree/background.webp");</span>
-<span class="cstat-no" title="statement not covered" >    const bd = new PIXI.Sprite(tex);</span>
-<span class="cstat-no" title="statement not covered" >    bd.anchor.set(0.5, 0.5);</span>
-<span class="cstat-no" title="statement not covered" >    return bd;</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  #drawCharacter(texture) {</span>
-<span class="cstat-no" title="statement not covered" >    if ( !this.actor ) return this.character.visible = false;</span>
-<span class="cstat-no" title="statement not covered" >    if ( texture ) this.character.texture = texture;</span>
-<span class="cstat-no" title="statement not covered" >    this.character.height = 200;</span>
-<span class="cstat-no" title="statement not covered" >    this.character.scale.x = this.character.scale.y;</span>
-<span class="cstat-no" title="statement not covered" >    this.character.anchor.set(0.5, 0.5);</span>
-<span class="cstat-no" title="statement not covered" >    this.character.visible = true;</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  #drawConnections(node, seen) {</span>
-<span class="cstat-no" title="statement not covered" >    for ( const c of node.connected ) {</span>
-<span class="cstat-no" title="statement not covered" >      if ( seen.has(c) || (c.tier &lt; 0) || !this.state.get(c).purchased ) continue;</span>
-<span class="cstat-no" title="statement not covered" >      this.connections.lineStyle({color: c.color, width: 3, alpha: 1.0})</span>
-<span class="cstat-no" title="statement not covered" >        .moveTo(node.point.x, node.point.y)</span>
-<span class="cstat-no" title="statement not covered" >        .lineTo(c.point.x, c.point.y);</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  async #drawNodes(nodes, seen=new Set()) {</span>
-<span class="cstat-no" title="statement not covered" >    const next = [];</span>
-<span class="cstat-no" title="statement not covered" >    for ( const node of nodes ) {</span>
-<span class="cstat-no" title="statement not covered" >      if ( seen.has(node) ) continue;</span>
-<span class="cstat-no" title="statement not covered" >      await this.#drawNode(node);</span>
-<span class="cstat-no" title="statement not covered" >      this.#drawEdges(node, seen);</span>
-<span class="cstat-no" title="statement not covered" >      seen.add(node);</span>
-<span class="cstat-no" title="statement not covered" >      next.push(...node.connected);</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >    if ( next.length ) await this.#drawNodes(next, seen);</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  async #drawNode(node) {</span>
-<span class="cstat-no" title="statement not covered" >    const config = {};</span>
-<span class="cstat-no" title="statement not covered" >    config.borderColor = node.color;</span>
-<span class="cstat-no" title="statement not covered" >    const icon = node.icon = new SwerpgTalentTreeNode(node, config);</span>
-<span class="cstat-no" title="statement not covered" >    this.nodes.addChild(icon);</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  #drawEdges(node, seen) {</span>
-<span class="cstat-no" title="statement not covered" >    for ( const c of node.connected ) {</span>
-<span class="cstat-no" title="statement not covered" >      if ( seen.has(c) ) continue;</span>
-<span class="cstat-no" title="statement not covered" >      this.edges.moveTo(node.point.x, node.point.y);</span>
-<span class="cstat-no" title="statement not covered" >      this.edges.lineTo(c.point.x, c.point.y);</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  #drawCircles() {</span>
-<span class="cstat-no" title="statement not covered" >    // this.edges.drawCircle(0, 0, 800);</span>
-<span class="cstat-no" title="statement not covered" >    this.edges.drawCircle(0, 0, 1400);</span>
-<span class="cstat-no" title="statement not covered" >    this.edges.drawCircle(0, 0, 2000);</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-<span class="cstat-no" title="statement not covered" >  /*  Tree Management                             */</span>
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Open the Talent Tree, binding it to a certain Actor</span>
-<span class="cstat-no" title="statement not covered" >   * @param {SwerpgActor} actor         The Actor to bind to the talent tree</span>
-<span class="cstat-no" title="statement not covered" >   * @param {object} [options]            Options which modify how the talent tree is opened</span>
-<span class="cstat-no" title="statement not covered" >   * @param {boolean} [options.resetView]   Reset the view coordinates of the tree to the center?</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  async open(actor, {resetView=true}={}) {</span>
-<span class="cstat-no" title="statement not covered" >    if ( !(actor instanceof Actor) ) throw new Error("You must provide an actor to bind to the Talent Tree.");</span>
-<span class="cstat-no" title="statement not covered" >    this.developmentMode = !!CONFIG.debug.talentTree;</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    // Draw the tree (once only)</span>
-<span class="cstat-no" title="statement not covered" >    await this.draw();</span>
-<span class="cstat-no" title="statement not covered" >    for ( const layer of canvas.layers ) {</span>
-<span class="cstat-no" title="statement not covered" >      if ( layer.hud ) layer.hud.close();</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >    this.darkenBackground(false);</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    // Associate Actor</span>
-<span class="cstat-no" title="statement not covered" >    this.actor = actor;</span>
-<span class="cstat-no" title="statement not covered" >    const actorTexture = this.actor ? await loadTexture(this.actor.img) : undefined;</span>
-<span class="cstat-no" title="statement not covered" >    this.#drawCharacter(actorTexture);</span>
-<span class="cstat-no" title="statement not covered" >    await actor.sheet.render({force: false, left: 20, top: 20});</span>
-<span class="cstat-no" title="statement not covered" >    if ( actor.sheet.rendered ) {</span>
-<span class="cstat-no" title="statement not covered" >      actor.sheet.setPosition({left: 20, top: 20});</span>
-<span class="cstat-no" title="statement not covered" >      actor.sheet.minimize();</span>
+<span class="cstat-no" title="statement not covered" >    constructor() {</span>
+<span class="cstat-no" title="statement not covered" >        super();</span>
+<span class="cstat-no" title="statement not covered" >        this.#initialize();</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    // Refresh tree state</span>
-<span class="cstat-no" title="statement not covered" >    this.pan(resetView ? {x: 0, y: 0, scale: 1.0} : {});</span>
-<span class="cstat-no" title="statement not covered" >    this.refresh();</span>
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Has the talent tree been drawn yet?</span>
+<span class="cstat-no" title="statement not covered" >     * @type {boolean}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    #drawn = false;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    // Enable the talent tree canvas</span>
-<span class="cstat-no" title="statement not covered" >    this.app.renderer.enabled = true;</span>
-<span class="cstat-no" title="statement not covered" >    canvas.stage.eventMode = "none";</span>
-<span class="cstat-no" title="statement not covered" >    this.stage.eventMode = "static";</span>
-<span class="cstat-no" title="statement not covered" >    this.stage.interactiveChildren = true;</span>
-<span class="cstat-no" title="statement not covered" >    this.canvas.hidden = false;</span>
-<span class="cstat-no" title="statement not covered" >    if ( this.developmentMode ) this.canvas.style.zIndex = 0;</span>
-<span class="cstat-no" title="statement not covered" >    else canvas.hud.element.style.zIndex = 9999;  // Move HUD above our canvas</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * The canvas element used to draw the tree.</span>
+<span class="cstat-no" title="statement not covered" >     * @type {HTMLCanvasElement}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    canvas;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * The PIXI Application that controls the secondary canvas.</span>
+<span class="cstat-no" title="statement not covered" >     * @type {PIXI.Application}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    app;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /** @override */</span>
-<span class="cstat-no" title="statement not covered" >  async close() {</span>
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * A reference to the Actor which is currently bound to the talent tree.</span>
+<span class="cstat-no" title="statement not covered" >     * @type {SwerpgActor|null}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    actor = null;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    // Disassociate Actor</span>
-<span class="cstat-no" title="statement not covered" >    const actor = this.actor;</span>
-<span class="cstat-no" title="statement not covered" >    this.actor = null;</span>
-<span class="cstat-no" title="statement not covered" >    await actor?.sheet.render(false);</span>
-<span class="cstat-no" title="statement not covered" >    actor.sheet.maximize();</span>
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * A reference to the active node</span>
+<span class="cstat-no" title="statement not covered" >     * @type {SwerpgTalentTreeNode}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    active;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    // Deactivate UI</span>
-<span class="cstat-no" title="statement not covered" >    this.wheel.deactivate();</span>
-<span class="cstat-no" title="statement not covered" >    this.hud.clear();</span>
-<span class="cstat-no" title="statement not covered" >    this.controls.close();</span>
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * A reference to the talent tree HUD</span>
+<span class="cstat-no" title="statement not covered" >     * @type {SwerpgTalentHUD}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    hud = new SwerpgTalentHUD();</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    // Disable the talent tree canvas</span>
-<span class="cstat-no" title="statement not covered" >    this.app.renderer.enabled = false;</span>
-<span class="cstat-no" title="statement not covered" >    this.canvas.hidden = true;</span>
-<span class="cstat-no" title="statement not covered" >    this.stage.eventMode = "none";</span>
-<span class="cstat-no" title="statement not covered" >    this.stage.interactiveChildren = false;</span>
-<span class="cstat-no" title="statement not covered" >    canvas.stage.eventMode = "static";</span>
-<span class="cstat-no" title="statement not covered" >    canvas.hud.element.style.zIndex = ""; // Move HUD back to normal</span>
-<span class="cstat-no" title="statement not covered" >    canvas.hud.align();</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * A reference to the talent tree choice wheel</span>
+<span class="cstat-no" title="statement not covered" >     * @type {SwerpgTalentChoiceWheel}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    wheel;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * A mapping which tracks the current node states</span>
+<span class="cstat-no" title="statement not covered" >     * @type {Map&lt;SwerpgTalentNode,SwerpgTalentNodeState&gt;}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    state = new SwerpgTalentNodeStates();</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Refresh display of the talent tree, incorporating updated data about the Actor's purchased Talents.</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  refresh() {</span>
-<span class="cstat-no" title="statement not covered" >    if ( !this.actor ) return;</span>
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * The set of sound files used for UI clicks.</span>
+<span class="cstat-no" title="statement not covered" >     * @type {string[]}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    static clickSounds = [</span>
+<span class="cstat-no" title="statement not covered" >        "systems/swerpg/audio/click1.wav",</span>
+<span class="cstat-no" title="statement not covered" >        "systems/swerpg/audio/click2.wav",</span>
+<span class="cstat-no" title="statement not covered" >        "systems/swerpg/audio/click3.wav",</span>
+<span class="cstat-no" title="statement not covered" >        "systems/swerpg/audio/click4.wav",</span>
+<span class="cstat-no" title="statement not covered" >        "systems/swerpg/audio/click5.wav"</span>
+<span class="cstat-no" title="statement not covered" >    ]</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    // Draw node changes</span>
-<span class="cstat-no" title="statement not covered" >    this.getActiveNodes();</span>
-<span class="cstat-no" title="statement not covered" >    this.connections.clear();</span>
-<span class="cstat-no" title="statement not covered" >    const seen = new Set();</span>
-<span class="cstat-no" title="statement not covered" >    for ( const node of SwerpgTalentNode.nodes.values() ) {</span>
-<span class="cstat-no" title="statement not covered" >      if ( node.tier &lt; 0 ) continue;</span>
-<span class="cstat-no" title="statement not covered" >      const state = this.state.get(node);</span>
-<span class="cstat-no" title="statement not covered" >      const nPurchased = state.purchased &amp;&amp; node.talents.reduce((n, t) =&gt; n + this.actor.talentIds.has(t.id), 0);</span>
-<span class="cstat-no" title="statement not covered" >      let text = nPurchased &gt; 1 ? nPurchased : "";</span>
-<span class="cstat-no" title="statement not covered" >      if ( this.developmentMode ) text = node.talents.size;</span>
-<span class="cstat-no" title="statement not covered" >      node.icon?.draw({state, text});</span>
-<span class="cstat-no" title="statement not covered" >      if ( state.purchased ) this.#drawConnections(node, seen);</span>
-<span class="cstat-no" title="statement not covered" >      seen.add(node);</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    get tree() {</span>
+<span class="cstat-no" title="statement not covered" >        return SwerpgTalentNode.nodes;</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    // Refresh talent wheel</span>
-<span class="cstat-no" title="statement not covered" >    this.wheel.refresh();</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    // Refresh controls</span>
-<span class="cstat-no" title="statement not covered" >    this.controls.render(true);</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Initialize the secondary canvas used for the talent tree.</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    #initialize() {</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >        // Create the HTML canvas element</span>
+<span class="cstat-no" title="statement not covered" >        Object.defineProperty(this, "canvas", {value: document.createElement("canvas"), writable: false});</span>
+<span class="cstat-no" title="statement not covered" >        this.canvas.id = "swerpg-talent-tree";</span>
+<span class="cstat-no" title="statement not covered" >        this.canvas.hidden = true;</span>
+<span class="cstat-no" title="statement not covered" >        document.body.appendChild(this.canvas);</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Pan the visual position of the talent tree canvas.</span>
-<span class="cstat-no" title="statement not covered" >   * @param {number} x</span>
-<span class="cstat-no" title="statement not covered" >   * @param {number} y</span>
-<span class="cstat-no" title="statement not covered" >   * @param {number} scale</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  pan({x, y, scale}={}) {</span>
-<span class="cstat-no" title="statement not covered" >    x ??= this.stage.pivot.x;</span>
-<span class="cstat-no" title="statement not covered" >    y ??= this.stage.pivot.y;</span>
-<span class="cstat-no" title="statement not covered" >    scale ??= this.stage.scale.x;</span>
-<span class="cstat-no" title="statement not covered" >    this.stage.pivot.set(x, y);</span>
-<span class="cstat-no" title="statement not covered" >    this.stage.scale.set(scale, scale);</span>
-<span class="cstat-no" title="statement not covered" >    this.#alignHUD();</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >        // Create the PIXI Application</span>
+<span class="cstat-no" title="statement not covered" >        Object.defineProperty(this, "app", {</span>
+<span class="cstat-no" title="statement not covered" >            value: new PIXI.Application({</span>
+<span class="cstat-no" title="statement not covered" >                view: this.canvas,</span>
+<span class="cstat-no" title="statement not covered" >                width: window.innerWidth,</span>
+<span class="cstat-no" title="statement not covered" >                height: window.innerHeight,</span>
+<span class="cstat-no" title="statement not covered" >                transparent: false,</span>
+<span class="cstat-no" title="statement not covered" >                resolution: 1,</span>
+<span class="cstat-no" title="statement not covered" >                autoDensity: true,</span>
+<span class="cstat-no" title="statement not covered" >                background: 0x0b0909,</span>
+<span class="cstat-no" title="statement not covered" >                antialias: false, // Not needed because we use SmoothGraphics</span>
+<span class="cstat-no" title="statement not covered" >                powerPreference: "high-performance" // Prefer high performance GPU for devices with dual graphics cards</span>
+<span class="cstat-no" title="statement not covered" >            }), writable: false</span>
+<span class="cstat-no" title="statement not covered" >        });</span>
+<span class="cstat-no" title="statement not covered" >        Object.defineProperty(this, "stage", {value: this.app.stage, writable: false});</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >        // Create the controls app</span>
+<span class="cstat-no" title="statement not covered" >        Object.defineProperty(this, "controls", {value: new SwerpgTalentTreeControls(), writable: false});</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Play a UI click sound.</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  playClick() {</span>
-<span class="cstat-no" title="statement not covered" >    const src = this.constructor.clickSounds[Math.floor(Math.random() * this.constructor.clickSounds.length)];</span>
-<span class="cstat-no" title="statement not covered" >    game.audio.play(src, {volume: 0.2, loop: false, context: game.audio.interface});</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >        // Add this class to the canvas stage</span>
+<span class="cstat-no" title="statement not covered" >        this.stage.addChild(this);</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-<span class="cstat-no" title="statement not covered" >  /*  Talent Management                           */</span>
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /*  Drawing                                     */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  activateNode(node) {</span>
-<span class="cstat-no" title="statement not covered" >    if ( this.active ) this.deactivateNode({click: false});</span>
-<span class="cstat-no" title="statement not covered" >    this.active = node;</span>
-<span class="cstat-no" title="statement not covered" >    this.wheel.activate(node);</span>
-<span class="cstat-no" title="statement not covered" >    this.darkenBackground(true);</span>
-<span class="cstat-no" title="statement not covered" >    this.playClick();</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Draw the Talent Tree to the secondary canvas.</span>
+<span class="cstat-no" title="statement not covered" >     * @returns {Promise&lt;void&gt;}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    async draw() {</span>
+<span class="cstat-no" title="statement not covered" >        if (this.#drawn) return;</span>
+<span class="cstat-no" title="statement not covered" >        this.background = this.addChild(new PIXI.Container());</span>
+<span class="cstat-no" title="statement not covered" >        this.foreground = this.addChild(new PIXI.Container());</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  deactivateNode({click=true}={}) {</span>
-<span class="cstat-no" title="statement not covered" >    if ( !this.active ) return;</span>
-<span class="cstat-no" title="statement not covered" >    this.wheel.deactivate();</span>
-<span class="cstat-no" title="statement not covered" >    this.active.scale.set(1.0, 1.0);</span>
-<span class="cstat-no" title="statement not covered" >    this.active = null;</span>
-<span class="cstat-no" title="statement not covered" >    this.darkenBackground(false);</span>
-<span class="cstat-no" title="statement not covered" >    if ( click ) this.playClick();</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >        // Load Textures</span>
+<span class="cstat-no" title="statement not covered" >        await this.#loadTextures();</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >        // Draw Background</span>
+<span class="cstat-no" title="statement not covered" >        this.backdrop = this.background.addChild(await this.#drawBackdrop());</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  darkenBackground(fade=true) {</span>
-<span class="cstat-no" title="statement not covered" >    this.background.darken.clear();</span>
-<span class="cstat-no" title="statement not covered" >    const w = 12000;</span>
-<span class="cstat-no" title="statement not covered" >    if ( fade ) this.background.darken.beginFill(0x000000, 0.5).drawRect(-w/2, -w/2, w, w).endFill();</span>
-<span class="cstat-no" title="statement not covered" >    this.background.blurFilter.enabled = fade;</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >        // Draw Center</span>
+<span class="cstat-no" title="statement not covered" >        this.character = this.foreground.addChild(new PIXI.Sprite());</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >        // Background connections</span>
+<span class="cstat-no" title="statement not covered" >        this.edges = this.background.addChild(new PIXI.Graphics());</span>
+<span class="cstat-no" title="statement not covered" >        this.edges.lineStyle({color: 0x000000, alpha: 0.35, width: 3});</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Traverse the talent tree, acquiring a Set of nodes which are currently accessible.</span>
-<span class="cstat-no" title="statement not covered" >   * @returns {Map&lt;SwerpgTalentNode, number&gt;}</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  getActiveNodes() {</span>
-<span class="cstat-no" title="statement not covered" >    const state = this.state;</span>
-<span class="cstat-no" title="statement not covered" >    const actor = this.actor;</span>
-<span class="cstat-no" title="statement not covered" >    state.clear();</span>
+<span class="cstat-no" title="statement not covered" >        // Active connections</span>
+<span class="cstat-no" title="statement not covered" >        this.connections = this.background.addChild(new PIXI.Graphics());</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    // Classify the number of signature nodes that have been purchased</span>
-<span class="cstat-no" title="statement not covered" >    const signatures = SwerpgTalentNode.getSignatureTalents(actor);</span>
+<span class="cstat-no" title="statement not covered" >        // Draw Nodes and Edges</span>
+<span class="cstat-no" title="statement not covered" >        this.nodes = this.background.addChild(new PIXI.Container());</span>
+<span class="cstat-no" title="statement not covered" >        const origin = SwerpgTalentNode.nodes.get("origin");</span>
+<span class="cstat-no" title="statement not covered" >        await this.#drawNodes(origin.connected, new Set([origin]));</span>
+<span class="cstat-no" title="statement not covered" >        this.#drawCircles();</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    // Recursive testing function</span>
-<span class="cstat-no" title="statement not covered" >    function updateBatch(nodes, accessible=false) {</span>
-<span class="cstat-no" title="statement not covered" >      const next = [];</span>
-<span class="cstat-no" title="statement not covered" >      for ( const node of nodes ) {</span>
+<span class="cstat-no" title="statement not covered" >        // Background fade and filter</span>
+<span class="cstat-no" title="statement not covered" >        this.background.darken = this.background.addChild(new PIXI.Graphics());</span>
+<span class="cstat-no" title="statement not covered" >        this.background.blurFilter = new PIXI.filters.BlurFilter(1);</span>
+<span class="cstat-no" title="statement not covered" >        this.background.filters = [this.background.blurFilter];</span>
+<span class="cstat-no" title="statement not covered" >        this.background.blurFilter.enabled = false;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        // Record Node state</span>
-<span class="cstat-no" title="statement not covered" >        if ( state.has(node) ) continue;</span>
-<span class="cstat-no" title="statement not covered" >        const s = node.getState(actor, signatures);</span>
-<span class="cstat-no" title="statement not covered" >        s.accessible = accessible;</span>
-<span class="cstat-no" title="statement not covered" >        state.set(node, s);</span>
+<span class="cstat-no" title="statement not covered" >        // Create Choice Wheel</span>
+<span class="cstat-no" title="statement not covered" >        this.wheel = this.foreground.addChild(new SwerpgTalentChoiceWheel());</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        // Traverse Outwards</span>
-<span class="cstat-no" title="statement not covered" >        if ( (node.id === "origin") || s.purchased ) {</span>
-<span class="cstat-no" title="statement not covered" >          next.push(...node.connected);</span>
+<span class="cstat-no" title="statement not covered" >        // Enable interactivity</span>
+<span class="cstat-no" title="statement not covered" >        this.#activateInteractivity();</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >          // Signature Teleport Nodes</span>
-<span class="cstat-no" title="statement not covered" >          if ( node.type === "signature" ) {</span>
-<span class="cstat-no" title="statement not covered" >            for ( const t of node.talents ) {</span>
-<span class="cstat-no" title="statement not covered" >              // next.push(t.system.teleportNode);</span>
+<span class="cstat-no" title="statement not covered" >        // Ensure the main Canvas HUD is rendered</span>
+<span class="cstat-no" title="statement not covered" >        canvas.hud.render(true);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Draw initial conditions</span>
+<span class="cstat-no" title="statement not covered" >        this.refresh();</span>
+<span class="cstat-no" title="statement not covered" >        this.#drawn = true;</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Load all necessary textures for rendering the talent tree.</span>
+<span class="cstat-no" title="statement not covered" >     * @returns {Promise&lt;void[]&gt;}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    async #loadTextures() {</span>
+<span class="cstat-no" title="statement not covered" >        const toLoad = [</span>
+<span class="cstat-no" title="statement not covered" >            "systems/swerpg/ui/tree/background.webp",</span>
+<span class="cstat-no" title="statement not covered" >            "systems/swerpg/ui/tree/wheel.webp"</span>
+<span class="cstat-no" title="statement not covered" >        ];</span>
+<span class="cstat-no" title="statement not covered" >        const varities = Object.keys(SYSTEM.CHARACTERISTICS).concat(["inactive"]);</span>
+<span class="cstat-no" title="statement not covered" >        for (const nodeType in SwerpgTalentTreeNode.NODE_TYPES) {</span>
+<span class="cstat-no" title="statement not covered" >            for (const variety of varities) {</span>
+<span class="cstat-no" title="statement not covered" >                toLoad.push(`systems/swerpg/ui/tree/nodes/${nodeType}-${variety}.webp`);</span>
 <span class="cstat-no" title="statement not covered" >            }</span>
-<span class="cstat-no" title="statement not covered" >          }</span>
 <span class="cstat-no" title="statement not covered" >        }</span>
-<span class="cstat-no" title="statement not covered" >      }</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >      // Recursively test</span>
-<span class="cstat-no" title="statement not covered" >      if ( next.length ) updateBatch(next, true);</span>
+<span class="cstat-no" title="statement not covered" >        return TextureLoader.loader.load(toLoad, {</span>
+<span class="cstat-no" title="statement not covered" >            message: game.i18n.format("SCENES.Loading", {name: "Talent Tree"})</span>
+<span class="cstat-no" title="statement not covered" >        });</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    // Explore outwards from the origin node</span>
-<span class="cstat-no" title="statement not covered" >    updateBatch([SwerpgTalentNode.nodes.get("origin")], true);</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    // Specifically record the state of all signature nodes</span>
-<span class="cstat-no" title="statement not covered" >    updateBatch(SwerpgTalentNode.signature, false);</span>
-<span class="cstat-no" title="statement not covered" >    return state;</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    async #drawBackdrop() {</span>
+<span class="cstat-no" title="statement not covered" >        const tex = getTexture("systems/swerpg/ui/tree/background.webp");</span>
+<span class="cstat-no" title="statement not covered" >        const bd = new PIXI.Sprite(tex);</span>
+<span class="cstat-no" title="statement not covered" >        bd.anchor.set(0.5, 0.5);</span>
+<span class="cstat-no" title="statement not covered" >        return bd;</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
-<span class="cstat-no" title="statement not covered" >  /*  Event Listeners and Handlers                */</span>
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  #activateInteractivity() {</span>
-<span class="cstat-no" title="statement not covered" >    this.background.eventMode = "passive";</span>
-<span class="cstat-no" title="statement not covered" >    this.background.children.forEach(c =&gt; c.eventMode = "none");</span>
-<span class="cstat-no" title="statement not covered" >    this.nodes.eventMode = "passive";       // Capture hover/click events on nodes</span>
-<span class="cstat-no" title="statement not covered" >    this.backdrop.eventMode = "static";     // Capture drag events on the backdrop</span>
-<span class="cstat-no" title="statement not covered" >    this.foreground.eventMode = "passive";  // Capture hover/click events on the wheel</span>
+<span class="cstat-no" title="statement not covered" >    #drawCharacter(texture) {</span>
+<span class="cstat-no" title="statement not covered" >        if (!this.actor) return this.character.visible = false;</span>
+<span class="cstat-no" title="statement not covered" >        if (texture) this.character.texture = texture;</span>
+<span class="cstat-no" title="statement not covered" >        this.character.height = 200;</span>
+<span class="cstat-no" title="statement not covered" >        this.character.scale.x = this.character.scale.y;</span>
+<span class="cstat-no" title="statement not covered" >        this.character.anchor.set(0.5, 0.5);</span>
+<span class="cstat-no" title="statement not covered" >        this.character.visible = true;</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    // Mouse Interaction Manager</span>
-<span class="cstat-no" title="statement not covered" >    this.interactionManager = new MouseInteractionManager(this, this, {}, {</span>
-<span class="cstat-no" title="statement not covered" >      clickLeft: this.#onClickLeft,</span>
-<span class="cstat-no" title="statement not covered" >      dragRightStart: null,</span>
-<span class="cstat-no" title="statement not covered" >      dragRightMove: this.#onDragRightMove,</span>
-<span class="cstat-no" title="statement not covered" >      dragRightDrop: null,</span>
-<span class="cstat-no" title="statement not covered" >      dragRightCancel: null</span>
-<span class="cstat-no" title="statement not covered" >    }, {</span>
-<span class="cstat-no" title="statement not covered" >      application: this.app,</span>
-<span class="cstat-no" title="statement not covered" >      dragResistance: 25</span>
-<span class="cstat-no" title="statement not covered" >    }).activate();</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    // Window Events</span>
-<span class="cstat-no" title="statement not covered" >    window.addEventListener("resize", this.#onResize.bind(this));</span>
-<span class="cstat-no" title="statement not covered" >    window.addEventListener("wheel", this.#onWheel.bind(this), {passive: false});</span>
-<span class="cstat-no" title="statement not covered" >    this.#onResize();  // set initial dimensions</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    #drawConnections(node, seen) {</span>
+<span class="cstat-no" title="statement not covered" >        for (const c of node.connected) {</span>
+<span class="cstat-no" title="statement not covered" >            if (seen.has(c) || (c.tier &lt; 0) || !this.state.get(c).purchased) continue;</span>
+<span class="cstat-no" title="statement not covered" >            this.connections.lineStyle({color: c.color, width: 3, alpha: 1.0})</span>
+<span class="cstat-no" title="statement not covered" >                .moveTo(node.point.x, node.point.y)</span>
+<span class="cstat-no" title="statement not covered" >                .lineTo(c.point.x, c.point.y);</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Handle left-click events on the talent tree</span>
-<span class="cstat-no" title="statement not covered" >   * @param {PIXI.FederatedEvent}   event</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  #onClickLeft(event) {</span>
-<span class="cstat-no" title="statement not covered" >    event.stopPropagation();</span>
-<span class="cstat-no" title="statement not covered" >    this.deactivateNode();</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    async #drawNodes(nodes, seen = new Set()) {</span>
+<span class="cstat-no" title="statement not covered" >        const next = [];</span>
+<span class="cstat-no" title="statement not covered" >        for (const node of nodes) {</span>
+<span class="cstat-no" title="statement not covered" >            if (seen.has(node)) continue;</span>
+<span class="cstat-no" title="statement not covered" >            await this.#drawNode(node);</span>
+<span class="cstat-no" title="statement not covered" >            this.#drawEdges(node, seen);</span>
+<span class="cstat-no" title="statement not covered" >            seen.add(node);</span>
+<span class="cstat-no" title="statement not covered" >            next.push(...node.connected);</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >        if (next.length) await this.#drawNodes(next, seen);</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Handle right-mouse drag events occurring on the Canvas.</span>
-<span class="cstat-no" title="statement not covered" >   * @param {PIXI.FederatedEvent} event</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  #onDragRightMove(event) {</span>
-<span class="cstat-no" title="statement not covered" >    const DRAG_SPEED_MODIFIER = 0.8;</span>
-<span class="cstat-no" title="statement not covered" >    const {origin, destination} = event.interactionData;</span>
-<span class="cstat-no" title="statement not covered" >    const dx = destination.x - origin.x;</span>
-<span class="cstat-no" title="statement not covered" >    const dy = destination.y - origin.y;</span>
-<span class="cstat-no" title="statement not covered" >    this.pan({</span>
-<span class="cstat-no" title="statement not covered" >      x: this.stage.pivot.x - (dx * DRAG_SPEED_MODIFIER),</span>
-<span class="cstat-no" title="statement not covered" >      y: this.stage.pivot.y - (dy * DRAG_SPEED_MODIFIER)</span>
-<span class="cstat-no" title="statement not covered" >    });</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    async #drawNode(node) {</span>
+<span class="cstat-no" title="statement not covered" >        const config = {};</span>
+<span class="cstat-no" title="statement not covered" >        config.borderColor = node.color;</span>
+<span class="cstat-no" title="statement not covered" >        const icon = node.icon = new SwerpgTalentTreeNode(node, config);</span>
+<span class="cstat-no" title="statement not covered" >        this.nodes.addChild(icon);</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Handle window resize events.</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  #onResize() {</span>
-<span class="cstat-no" title="statement not covered" >    this.app.renderer.resize(window.innerWidth, window.innerHeight);</span>
-<span class="cstat-no" title="statement not covered" >    const {width, height} = this.app.renderer.screen;</span>
-<span class="cstat-no" title="statement not covered" >    this.stage.position.set(width/2, height/2);</span>
-<span class="cstat-no" title="statement not covered" >    this.pan(this.stage.pivot);</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    #drawEdges(node, seen) {</span>
+<span class="cstat-no" title="statement not covered" >        for (const c of node.connected) {</span>
+<span class="cstat-no" title="statement not covered" >            if (seen.has(c)) continue;</span>
+<span class="cstat-no" title="statement not covered" >            this.edges.moveTo(node.point.x, node.point.y);</span>
+<span class="cstat-no" title="statement not covered" >            this.edges.lineTo(c.point.x, c.point.y);</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Handle mousewheel events on the Talent Tree canvas.</span>
-<span class="cstat-no" title="statement not covered" >   * @param {WheelEvent} event      The mousewheel event</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  #onWheel(event) {</span>
-<span class="cstat-no" title="statement not covered" >    if ( this.canvas.hidden || (event.target?.id !== "swerpg-talent-tree") ) return;</span>
-<span class="cstat-no" title="statement not covered" >    let dz = ( event.delta &lt; 0 ) ? 1.05 : 0.95;</span>
-<span class="cstat-no" title="statement not covered" >    this.pan({scale: dz * this.stage.scale.x});</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    #drawCircles() {</span>
+<span class="cstat-no" title="statement not covered" >        // this.edges.drawCircle(0, 0, 800);</span>
+<span class="cstat-no" title="statement not covered" >        this.edges.drawCircle(0, 0, 1400);</span>
+<span class="cstat-no" title="statement not covered" >        this.edges.drawCircle(0, 0, 2000);</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /*  Tree Management                             */</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Align the position of the HUD layer to the current position of the canvas</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  #alignHUD() {</span>
-<span class="cstat-no" title="statement not covered" >    const hud = canvas.hud.element;</span>
-<span class="cstat-no" title="statement not covered" >    const {x, y} = this.getGlobalPosition();</span>
-<span class="cstat-no" title="statement not covered" >    const scale = this.stage.scale.x;</span>
-<span class="cstat-no" title="statement not covered" >    hud.style.left = `${x}px`;</span>
-<span class="cstat-no" title="statement not covered" >    hud.style.top = `${y}px`;</span>
-<span class="cstat-no" title="statement not covered" >    hud.style.transform = `scale(${scale})`;</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Open the Talent Tree, binding it to a certain Actor</span>
+<span class="cstat-no" title="statement not covered" >     * @param {SwerpgActor} actor         The Actor to bind to the talent tree</span>
+<span class="cstat-no" title="statement not covered" >     * @param {object} [options]            Options which modify how the talent tree is opened</span>
+<span class="cstat-no" title="statement not covered" >     * @param {boolean} [options.resetView]   Reset the view coordinates of the tree to the center?</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    async open(actor, {resetView = true} = {}) {</span>
+<span class="cstat-no" title="statement not covered" >        if (!(actor instanceof Actor)) throw new Error("You must provide an actor to bind to the Talent Tree.");</span>
+<span class="cstat-no" title="statement not covered" >        this.developmentMode = !!CONFIG.debug.talentTree;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Draw the tree (once only)</span>
+<span class="cstat-no" title="statement not covered" >        await this.draw();</span>
+<span class="cstat-no" title="statement not covered" >        for (const layer of canvas.layers) {</span>
+<span class="cstat-no" title="statement not covered" >            if (layer.hud) layer.hud.close();</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+<span class="cstat-no" title="statement not covered" >        this.darkenBackground(false);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Associate Actor</span>
+<span class="cstat-no" title="statement not covered" >        this.actor = actor;</span>
+<span class="cstat-no" title="statement not covered" >        const actorTexture = this.actor ? await loadTexture(this.actor.img) : undefined;</span>
+<span class="cstat-no" title="statement not covered" >        this.#drawCharacter(actorTexture);</span>
+<span class="cstat-no" title="statement not covered" >        await actor.sheet.render({force: false, left: 20, top: 20});</span>
+<span class="cstat-no" title="statement not covered" >        if (actor.sheet.rendered) {</span>
+<span class="cstat-no" title="statement not covered" >            actor.sheet.setPosition({left: 20, top: 20});</span>
+<span class="cstat-no" title="statement not covered" >            actor.sheet.minimize();</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Refresh tree state</span>
+<span class="cstat-no" title="statement not covered" >        this.pan(resetView ? {x: 0, y: 0, scale: 1.0} : {});</span>
+<span class="cstat-no" title="statement not covered" >        this.refresh();</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Enable the talent tree canvas</span>
+<span class="cstat-no" title="statement not covered" >        this.app.renderer.enabled = true;</span>
+<span class="cstat-no" title="statement not covered" >        canvas.stage.eventMode = "none";</span>
+<span class="cstat-no" title="statement not covered" >        this.stage.eventMode = "static";</span>
+<span class="cstat-no" title="statement not covered" >        this.stage.interactiveChildren = true;</span>
+<span class="cstat-no" title="statement not covered" >        this.canvas.hidden = false;</span>
+<span class="cstat-no" title="statement not covered" >        if (this.developmentMode) this.canvas.style.zIndex = 0;</span>
+<span class="cstat-no" title="statement not covered" >        else canvas.hud.element.style.zIndex = 9999;  // Move HUD above our canvas</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /** @override */</span>
+<span class="cstat-no" title="statement not covered" >    async close() {</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Disassociate Actor</span>
+<span class="cstat-no" title="statement not covered" >        const actor = this.actor;</span>
+<span class="cstat-no" title="statement not covered" >        this.actor = null;</span>
+<span class="cstat-no" title="statement not covered" >        await actor?.sheet.render(false);</span>
+<span class="cstat-no" title="statement not covered" >        actor.sheet.maximize();</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Deactivate UI</span>
+<span class="cstat-no" title="statement not covered" >        this.wheel.deactivate();</span>
+<span class="cstat-no" title="statement not covered" >        this.hud.clear();</span>
+<span class="cstat-no" title="statement not covered" >        this.controls.close();</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Disable the talent tree canvas</span>
+<span class="cstat-no" title="statement not covered" >        this.app.renderer.enabled = false;</span>
+<span class="cstat-no" title="statement not covered" >        this.canvas.hidden = true;</span>
+<span class="cstat-no" title="statement not covered" >        this.stage.eventMode = "none";</span>
+<span class="cstat-no" title="statement not covered" >        this.stage.interactiveChildren = false;</span>
+<span class="cstat-no" title="statement not covered" >        canvas.stage.eventMode = "static";</span>
+<span class="cstat-no" title="statement not covered" >        canvas.hud.element.style.zIndex = ""; // Move HUD back to normal</span>
+<span class="cstat-no" title="statement not covered" >        canvas.hud.align();</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Refresh display of the talent tree, incorporating updated data about the Actor's purchased Talents.</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    refresh() {</span>
+<span class="cstat-no" title="statement not covered" >        if (!this.actor) return;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Draw node changes</span>
+<span class="cstat-no" title="statement not covered" >        this.getActiveNodes();</span>
+<span class="cstat-no" title="statement not covered" >        this.connections.clear();</span>
+<span class="cstat-no" title="statement not covered" >        const seen = new Set();</span>
+<span class="cstat-no" title="statement not covered" >        for (const node of SwerpgTalentNode.nodes.values()) {</span>
+<span class="cstat-no" title="statement not covered" >            if (node.tier &lt; 0) continue;</span>
+<span class="cstat-no" title="statement not covered" >            const state = this.state.get(node);</span>
+<span class="cstat-no" title="statement not covered" >            const nPurchased = state.purchased &amp;&amp; node.talents.reduce((n, t) =&gt; n + this.actor.talentIds.has(t.id), 0);</span>
+<span class="cstat-no" title="statement not covered" >            let text = nPurchased &gt; 1 ? nPurchased : "";</span>
+<span class="cstat-no" title="statement not covered" >            if (this.developmentMode) text = node.talents.size;</span>
+<span class="cstat-no" title="statement not covered" >            node.icon?.draw({state, text});</span>
+<span class="cstat-no" title="statement not covered" >            if (state.purchased) this.#drawConnections(node, seen);</span>
+<span class="cstat-no" title="statement not covered" >            seen.add(node);</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Refresh talent wheel</span>
+<span class="cstat-no" title="statement not covered" >        this.wheel.refresh();</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Refresh controls</span>
+<span class="cstat-no" title="statement not covered" >        this.controls.render(true);</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Pan the visual position of the talent tree canvas.</span>
+<span class="cstat-no" title="statement not covered" >     * @param {number} x</span>
+<span class="cstat-no" title="statement not covered" >     * @param {number} y</span>
+<span class="cstat-no" title="statement not covered" >     * @param {number} scale</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    pan({x, y, scale} = {}) {</span>
+<span class="cstat-no" title="statement not covered" >        x ??= this.stage.pivot.x;</span>
+<span class="cstat-no" title="statement not covered" >        y ??= this.stage.pivot.y;</span>
+<span class="cstat-no" title="statement not covered" >        scale ??= this.stage.scale.x;</span>
+<span class="cstat-no" title="statement not covered" >        this.stage.pivot.set(x, y);</span>
+<span class="cstat-no" title="statement not covered" >        this.stage.scale.set(scale, scale);</span>
+<span class="cstat-no" title="statement not covered" >        this.#alignHUD();</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Play a UI click sound.</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    playClick() {</span>
+<span class="cstat-no" title="statement not covered" >        const src = this.constructor.clickSounds[Math.floor(Math.random() * this.constructor.clickSounds.length)];</span>
+<span class="cstat-no" title="statement not covered" >        game.audio.play(src, {volume: 0.2, loop: false, context: game.audio.interface});</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /*  Talent Management                           */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    activateNode(node) {</span>
+<span class="cstat-no" title="statement not covered" >        if (this.active) this.deactivateNode({click: false});</span>
+<span class="cstat-no" title="statement not covered" >        this.active = node;</span>
+<span class="cstat-no" title="statement not covered" >        this.wheel.activate(node);</span>
+<span class="cstat-no" title="statement not covered" >        this.darkenBackground(true);</span>
+<span class="cstat-no" title="statement not covered" >        this.playClick();</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    deactivateNode({click = true} = {}) {</span>
+<span class="cstat-no" title="statement not covered" >        if (!this.active) return;</span>
+<span class="cstat-no" title="statement not covered" >        this.wheel.deactivate();</span>
+<span class="cstat-no" title="statement not covered" >        this.active.scale.set(1.0, 1.0);</span>
+<span class="cstat-no" title="statement not covered" >        this.active = null;</span>
+<span class="cstat-no" title="statement not covered" >        this.darkenBackground(false);</span>
+<span class="cstat-no" title="statement not covered" >        if (click) this.playClick();</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    darkenBackground(fade = true) {</span>
+<span class="cstat-no" title="statement not covered" >        this.background.darken.clear();</span>
+<span class="cstat-no" title="statement not covered" >        const w = 12000;</span>
+<span class="cstat-no" title="statement not covered" >        if (fade) this.background.darken.beginFill(0x000000, 0.5).drawRect(-w / 2, -w / 2, w, w).endFill();</span>
+<span class="cstat-no" title="statement not covered" >        this.background.blurFilter.enabled = fade;</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Traverse the talent tree, acquiring a Set of nodes which are currently accessible.</span>
+<span class="cstat-no" title="statement not covered" >     * @returns {Map&lt;SwerpgTalentNode, number&gt;}</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    getActiveNodes() {</span>
+<span class="cstat-no" title="statement not covered" >        const state = this.state;</span>
+<span class="cstat-no" title="statement not covered" >        const actor = this.actor;</span>
+<span class="cstat-no" title="statement not covered" >        state.clear();</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Classify the number of signature nodes that have been purchased</span>
+<span class="cstat-no" title="statement not covered" >        const signatures = SwerpgTalentNode.getSignatureTalents(actor);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Recursive testing function</span>
+<span class="cstat-no" title="statement not covered" >        function updateBatch(nodes, accessible = false) {</span>
+<span class="cstat-no" title="statement not covered" >            const next = [];</span>
+<span class="cstat-no" title="statement not covered" >            for (const node of nodes) {</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                // Record Node state</span>
+<span class="cstat-no" title="statement not covered" >                if (state.has(node)) continue;</span>
+<span class="cstat-no" title="statement not covered" >                const s = node.getState(actor, signatures);</span>
+<span class="cstat-no" title="statement not covered" >                s.accessible = accessible;</span>
+<span class="cstat-no" title="statement not covered" >                state.set(node, s);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                // Traverse Outwards</span>
+<span class="cstat-no" title="statement not covered" >                if ((node.id === "origin") || s.purchased) {</span>
+<span class="cstat-no" title="statement not covered" >                    next.push(...node.connected);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                    // Signature Teleport Nodes</span>
+<span class="cstat-no" title="statement not covered" >                    if (node.type === "signature") {</span>
+<span class="cstat-no" title="statement not covered" >                        for (const t of node.talents) {</span>
+<span class="cstat-no" title="statement not covered" >                            // next.push(t.system.teleportNode);</span>
+<span class="cstat-no" title="statement not covered" >                        }</span>
+<span class="cstat-no" title="statement not covered" >                    }</span>
+<span class="cstat-no" title="statement not covered" >                }</span>
+<span class="cstat-no" title="statement not covered" >            }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            // Recursively test</span>
+<span class="cstat-no" title="statement not covered" >            if (next.length) updateBatch(next, true);</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Explore outwards from the origin node</span>
+<span class="cstat-no" title="statement not covered" >        updateBatch([SwerpgTalentNode.nodes.get("origin")], true);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Specifically record the state of all signature nodes</span>
+<span class="cstat-no" title="statement not covered" >        updateBatch(SwerpgTalentNode.signature, false);</span>
+<span class="cstat-no" title="statement not covered" >        return state;</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+<span class="cstat-no" title="statement not covered" >    /*  Event Listeners and Handlers                */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    #activateInteractivity() {</span>
+<span class="cstat-no" title="statement not covered" >        this.background.eventMode = "passive";</span>
+<span class="cstat-no" title="statement not covered" >        this.background.children.forEach(c =&gt; c.eventMode = "none");</span>
+<span class="cstat-no" title="statement not covered" >        this.nodes.eventMode = "passive";       // Capture hover/click events on nodes</span>
+<span class="cstat-no" title="statement not covered" >        this.backdrop.eventMode = "static";     // Capture drag events on the backdrop</span>
+<span class="cstat-no" title="statement not covered" >        this.foreground.eventMode = "passive";  // Capture hover/click events on the wheel</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Mouse Interaction Manager</span>
+<span class="cstat-no" title="statement not covered" >        this.interactionManager = new MouseInteractionManager(this, this, {}, {</span>
+<span class="cstat-no" title="statement not covered" >            clickLeft: this.#onClickLeft,</span>
+<span class="cstat-no" title="statement not covered" >            dragRightStart: null,</span>
+<span class="cstat-no" title="statement not covered" >            dragRightMove: this.#onDragRightMove,</span>
+<span class="cstat-no" title="statement not covered" >            dragRightDrop: null,</span>
+<span class="cstat-no" title="statement not covered" >            dragRightCancel: null</span>
+<span class="cstat-no" title="statement not covered" >        }, {</span>
+<span class="cstat-no" title="statement not covered" >            application: this.app,</span>
+<span class="cstat-no" title="statement not covered" >            dragResistance: 25</span>
+<span class="cstat-no" title="statement not covered" >        }).activate();</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        // Window Events</span>
+<span class="cstat-no" title="statement not covered" >        window.addEventListener("resize", this.#onResize.bind(this));</span>
+<span class="cstat-no" title="statement not covered" >        window.addEventListener("wheel", this.#onWheel.bind(this), {passive: false});</span>
+<span class="cstat-no" title="statement not covered" >        this.#onResize();  // set initial dimensions</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Handle left-click events on the talent tree</span>
+<span class="cstat-no" title="statement not covered" >     * @param {PIXI.FederatedEvent}   event</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    #onClickLeft(event) {</span>
+<span class="cstat-no" title="statement not covered" >        event.stopPropagation();</span>
+<span class="cstat-no" title="statement not covered" >        this.deactivateNode();</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Handle right-mouse drag events occurring on the Canvas.</span>
+<span class="cstat-no" title="statement not covered" >     * @param {PIXI.FederatedEvent} event</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    #onDragRightMove(event) {</span>
+<span class="cstat-no" title="statement not covered" >        const DRAG_SPEED_MODIFIER = 0.8;</span>
+<span class="cstat-no" title="statement not covered" >        const {origin, destination} = event.interactionData;</span>
+<span class="cstat-no" title="statement not covered" >        const dx = destination.x - origin.x;</span>
+<span class="cstat-no" title="statement not covered" >        const dy = destination.y - origin.y;</span>
+<span class="cstat-no" title="statement not covered" >        this.pan({</span>
+<span class="cstat-no" title="statement not covered" >            x: this.stage.pivot.x - (dx * DRAG_SPEED_MODIFIER),</span>
+<span class="cstat-no" title="statement not covered" >            y: this.stage.pivot.y - (dy * DRAG_SPEED_MODIFIER)</span>
+<span class="cstat-no" title="statement not covered" >        });</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Handle window resize events.</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    #onResize() {</span>
+<span class="cstat-no" title="statement not covered" >        this.app.renderer.resize(window.innerWidth, window.innerHeight);</span>
+<span class="cstat-no" title="statement not covered" >        const {width, height} = this.app.renderer.screen;</span>
+<span class="cstat-no" title="statement not covered" >        this.stage.position.set(width / 2, height / 2);</span>
+<span class="cstat-no" title="statement not covered" >        this.pan(this.stage.pivot);</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Handle mousewheel events on the Talent Tree canvas.</span>
+<span class="cstat-no" title="statement not covered" >     * @param {WheelEvent} event      The mousewheel event</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    #onWheel(event) {</span>
+<span class="cstat-no" title="statement not covered" >        if (this.canvas.hidden || (event.target?.id !== "swerpg-talent-tree")) return;</span>
+<span class="cstat-no" title="statement not covered" >        let dz = (event.delta &lt; 0) ? 1.05 : 0.95;</span>
+<span class="cstat-no" title="statement not covered" >        this.pan({scale: dz * this.stage.scale.x});</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    /**</span>
+<span class="cstat-no" title="statement not covered" >     * Align the position of the HUD layer to the current position of the canvas</span>
+<span class="cstat-no" title="statement not covered" >     */</span>
+<span class="cstat-no" title="statement not covered" >    #alignHUD() {</span>
+<span class="cstat-no" title="statement not covered" >        const hud = canvas.hud.element;</span>
+<span class="cstat-no" title="statement not covered" >        const {x, y} = this.getGlobalPosition();</span>
+<span class="cstat-no" title="statement not covered" >        const scale = this.stage.scale.x;</span>
+<span class="cstat-no" title="statement not covered" >        hud.style.left = `${x}px`;</span>
+<span class="cstat-no" title="statement not covered" >        hud.style.top = `${y}px`;</span>
+<span class="cstat-no" title="statement not covered" >        hud.style.transform = `scale(${scale})`;</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;</pre></td></tr></table></pre>
 
@@ -1858,7 +1876,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-05-11T08:34:16.200Z
+                at 2025-05-26T14:10:38.209Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>
