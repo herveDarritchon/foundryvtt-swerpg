@@ -27,6 +27,17 @@ import ErrorTalent from "../../lib/talents/error-talent.mjs";
  */
 
 /**
+ * @typedef {Object} ObligationDisplayData
+ * Represents the data structure used to render an Obligation on the character sheet.
+ *
+ * @property {string} id - Unique ID of the Talent Item.
+ * @property {string} name - Name of the Obligation.
+ * @property {string} img - Image path used for the Obligation icon.
+ * @property {string} [cssClass] - Optional CSS class applied to the container (e.g., "highlighted", "disabled").
+ * @property {boolean} isExtra - Indicates if the Obligation is an extra obligation by any mean.
+ */
+
+/**
  * A SwerpgBaseActorSheet subclass used to configure Actors of the "character" type.
  */
 export default class CharacterSheet extends SwerpgBaseActorSheet {
@@ -105,6 +116,8 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
         }
 
         context.talents = this.#buildTalentList();
+
+        context.obligations = this.#buildObligationList();
 
         console.debug("[CharacterSheet] context", context);
         return context;
@@ -493,4 +506,23 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
             };
         });
     }
+
+    /**
+     * Builds a list of obligations for the character sheet.
+     * @returns {ObligationDisplayData[]}
+     */
+    #buildObligationList() {
+        return this.actor.items.filter(item => item.type === 'obligation').map(obligation => this.#buildObligationDisplayData(obligation));
+    }
+
+    #buildObligationDisplayData(obligation) {
+        return {
+            id: obligation.id,
+            name: obligation.name,
+            img: obligation.img,
+            cssClass: obligation.system.isExtra ? "extra" : "",
+            isExtra: obligation.system.isExtra
+        };
+    }
+
 }

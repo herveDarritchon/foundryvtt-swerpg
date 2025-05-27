@@ -167,13 +167,11 @@ export default class SwerpgCharacter extends SwerpgActorType {
                 img: new fields.StringField(),
                 ...SwerpgCareer.defineSchema()
             }, {required: true, nullable: true, initial: null}),
-            specializations: new fields.SetField(
-                new fields.SchemaField({
+            specializations: new fields.SetField(new fields.SchemaField({
                     name: new fields.StringField({blank: false}),
                     img: new fields.StringField(),
                     ...SwerpgSpecialization.defineSchema()
-                }, {required: true, nullable: true, initial: null}),
-            ),
+                }, {required: true, nullable: true, initial: null}),),
             specialities: new fields.ArrayField(new fields.SchemaField({
                 ...SwerpgSpeciality.defineSchema()
             }), {required: true, nullable: true, initial: null}),
@@ -181,15 +179,18 @@ export default class SwerpgCharacter extends SwerpgActorType {
                 notableFeatures: new fields.HTMLField({
                     required: false,
                     initial: undefined
-                }, {label: "BIOGRAPHY.notableFeatures"}),
-                age: new fields.StringField({required: false, initial: undefined}, {label: "BIOGRAPHY.age"}),
-                gender: new fields.StringField({required: false, initial: undefined}, {label: "BIOGRAPHY.gender"}),
-                height: new fields.StringField({required: false, initial: undefined}, {label: "BIOGRAPHY.height"}),
-                build: new fields.StringField({required: false, initial: undefined}, {label: "BIOGRAPHY.build"}),
-                hair: new fields.HTMLField({required: false, initial: undefined}, {label: "BIOGRAPHY.hair"}),
-                eyes: new fields.HTMLField({required: false, initial: undefined}, {label: "BIOGRAPHY.eyes"}),
+                }),
+                age: new fields.StringField({required: false, initial: undefined}),
+                gender: new fields.StringField({required: false, initial: undefined}),
+                height: new fields.StringField({required: false, initial: undefined}),
+                build: new fields.StringField({required: false, initial: undefined}),
+                hair: new fields.StringField({required: false, initial: undefined}),
+                eyes: new fields.StringField({required: false, initial: undefined}),
+                public: new fields.HTMLField(),
+                private: new fields.HTMLField()
             })
         });
+
         return schema;
     }
 

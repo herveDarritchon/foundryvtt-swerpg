@@ -84,6 +84,10 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
         biography: {
             id: "biography",
             template: undefined  // Defined during _initializeActorSheetClass
+        },
+        commitments: {
+            id: "commitments",
+            template: undefined  // Defined during _initializeActorSheetClass
         }
     };
 
@@ -100,7 +104,8 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
             {id: "talents", group: "sheet", label: "ACTOR.TABS.TALENTS"},
             {id: "spells", group: "sheet", label: "ACTOR.TABS.SPELLS"},
             {id: "effects", group: "sheet", label: "ACTOR.TABS.EFFECTS"},
-            {id: "biography", group: "sheet", label: "ACTOR.TABS.BIOGRAPHY"}
+            {id: "biography", group: "sheet", label: "ACTOR.TABS.BIOGRAPHY"},
+            {id: "commitments", group: "sheet", label: "ACTOR.TABS.COMMITMENTS"}
         ]
     }
 
@@ -122,6 +127,7 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
         this.PARTS.header.template = `systems/swerpg/templates/sheets/actor/${actor.type}-header.hbs`;
         this.PARTS.attributes.template = `systems/swerpg/templates/sheets/actor/${actor.type}-attributes.hbs`;
         this.PARTS.biography.template = `systems/swerpg/templates/sheets/actor/${actor.type}-biography.hbs`;
+        this.PARTS.commitments.template = `systems/swerpg/templates/sheets/actor/${actor.type}-commitments.hbs`;
         this.TABS = foundry.utils.deepClone(this.TABS);
         this.DEFAULT_OPTIONS.classes = [actor.type];
     }
@@ -142,6 +148,7 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
             actions: actions ?? [],
             actor: this.document,
             biography: await this.#prepareBiography(),
+            commitments: await this.#prepareCommitments(),
             canPurchaseTalents: true,
             canPurchaseSkills: true,
             defenses: this.#prepareDefenses(),
@@ -274,6 +281,19 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
             appearance: await foundry.applications.ux.TextEditor.enrichHTML(biography.appearance, context),
             public: await foundry.applications.ux.TextEditor.enrichHTML(biography.public, context),
             private: await foundry.applications.ux.TextEditor.enrichHTML(biography.private, context)
+        }
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Prepare enriched commitments HTML for the actor.
+     * @returns {Promise<{private: string, public: string}>}
+     */
+    async #prepareCommitments() {
+        const commitments = this.document.system.details.commitments;
+        const context = {relativeTo: this.document, secrets: this.document.isOwner};
+        return {
         }
     }
 
