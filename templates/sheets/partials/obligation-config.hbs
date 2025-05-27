@@ -1,0 +1,12 @@
+<section class="tab sheet-body flexcol {{tabs.config.cssClass}}"
+         data-tab="{{tabs.config.id}}" data-group="{{tabs.config.group}}">
+
+        {{formField @root.fields.value value=source.system.value localize=true rootId=partId}}
+
+    <fieldset>
+        <legend>Extra bonus</legend>
+        {{formField @root.fields.extraXp value=source.system.extraXp localize=true rootId=partId}}
+        {{formField @root.fields.extraMoney value=source.system.extraMoney localize=true rootId=partId}}
+    </fieldset>
+
+</section>

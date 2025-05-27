@@ -110,6 +110,7 @@ Hooks.once("init", async function () {
         background: models.SwerpgBackground,
         species: models.SwerpgSpecies,
         career: models.SwerpgCareer,
+        obligation: models.SwerpgObligation,
         specialization: models.SwerpgSpecialization,
         spell: models.SwerpgSpell,
         talent: models.SwerpgTalent,
@@ -148,6 +149,10 @@ Hooks.once("init", async function () {
     });
     foundry.documents.collections.Items.registerSheet(SYSTEM.id, applications.CareerSheet, {
         types: ["career"],
+        makeDefault: true
+    });
+    foundry.documents.collections.Items.registerSheet(SYSTEM.id, applications.ObligationSheet, {
+        types: ["obligation"],
         makeDefault: true
     });
     foundry.documents.collections.Items.registerSheet(SYSTEM.id, applications.SpecializationSheet, {

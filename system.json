@@ -148,6 +148,11 @@
           "description"
         ]
       },
+      "obligation": {
+        "htmlFields": [
+          "description"
+        ]
+      },
       "origin": {
         "htmlFields": [
           "description"
