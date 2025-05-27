@@ -2036,6 +2036,25 @@ a.button.increase {
   font-size: var(--font-size-13);
   font-family: var(--font-serif);
 }
+.sw-toggle {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  border: 2px solid #666;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+.sw-toggle.active {
+  background-image: url("../assets/icons/emblems/rebel.svg");
+  background-color: rgba(255, 255, 255, 0.75);
+}
+.sw-toggle:not(.active) {
+  background-image: url("../assets/icons/emblems/empire.svg");
+  background-color: rgba(255, 255, 255, 0.15);
+}
 /* ----------------------------------------- */
 /*  All Items                                */
 /* ----------------------------------------- */

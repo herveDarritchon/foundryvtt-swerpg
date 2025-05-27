@@ -168,6 +168,16 @@
           "eyes": {
             "label": "Eyes"
           }
+        },
+        "commitments": {
+          "obligations": {
+            "label": "Obligations",
+            "hint": "Configure the obligations which this character has taken on, including any extra obligations which provide additional experience or money."
+          },
+          "motivations": {
+            "label": "Motivations",
+            "hint": "Configure the motivations which drive this character, including any extra motivations which provide additional experience or money."
+          }
         }
       },
       "movement": {
@@ -639,9 +649,9 @@
         "label": "Extra Obligation",
         "hint": "Is this an extra obligation which the character has taken on in addition to their normal obligations?"
       },
-      "extraMoney": {
-        "label": "Extra Money",
-        "hint": "The amount of extra money which the character receives for taking on this obligation."
+      "extraCredits": {
+        "label": "Extra Credits",
+        "hint": "The amount of extra credits which the character receives for taking on this obligation."
       },
       "extraXp": {
         "label": "Extra Experience",

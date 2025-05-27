@@ -1,11 +1,43 @@
+{{log "Rendering character commitments" this}}
 <section class="tab flexcol {{tabs.commitments.id}} {{tabs.commitments.cssClass}}"
          data-tab="{{tabs.commitments.id}}" data-group="{{tabs.commitments.group}}">
     <div class="sheet-section obligations">
-        <h3>{{fields.details.fields.commitments.fields.obligations.label}}</h3>
+        <h3>Obligations ({{obligationPoints}})</h3>
+
+        {{#each obligations as |obligation s|}}
+            <div class="line-item {{obligation.cssClass}} obligation" data-item-id="{{obligation.id}}">
+                <div class="title">
+                    <img class="icon" src="{{obligation.img}}" alt="{{obligation.name}}">
+                    <h4 class="item-header">{{obligation.name}}</h4>
+                </div>
+
+                <div class="value">{{obligation.value}}</div>
+
+                <div class="sw-toggle {{#if obligation.isExtra}}active{{/if}}" data-item-id="{{obligation.id}}"
+                     data-action="toggleObligationExtraState"
+                     title="Toggle Extra Obligation">
+                </div>
+
+                {{#if obligation.isExtra}}
+                    <div class="value">{{obligation.extraXp}}</div>
+                    <div class="value">{{obligation.extraCredits}}</div>
+                {{/if}}
+
+                <div class="controls">
+                    {{#unless obligation.isExtra}}
+                        <a class="button icon fa-solid fa-trash" data-action="itemDelete"
+                           data-tooltip="Delete Obligation"></a>
+                    {{/unless}}
+                    <a class="button icon fa-solid fa-edit" data-action="itemEdit"
+                       data-tooltip="Edit Obligation"></a>
+                </div>
+            </div>
+        {{/each}}
+
     </div>
 
     <div class="sheet-section motivations">
-        <h3>{{fields.details.fields.commitments.fields.motivations.label}}</h3>
+        <h3>Motivations</h3>
     </div>
 
 </section>

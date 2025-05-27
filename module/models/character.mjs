@@ -197,6 +197,32 @@ export default class SwerpgCharacter extends SwerpgActorType {
     /* -------------------------------------------- */
 
     /**
+     * @override jsdoc
+     */
+    _prepareExperience() {
+        super._prepareExperience();
+        const e = this.progression.experience;
+        e.obligationXpBonus = SwerpgCharacter.#computeObligationBonusExperience(this.parent);
+        e.total = e.total + e.obligationXpBonus;
+        e.available = e.total - e.spent;
+        console.log(`[character-sheet] _prepareExperience - experience for ${this.parent.name} is :`, this.progression.experience);
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Validate an attribute field
+     * @param actor
+     */
+    static #computeObligationBonusExperience(actor) {
+        return actor.items
+            .filter(item => item.type === "obligation" && item.system.isExtra === true)
+            .reduce((total, item) => total + item.system.extraXp, 0);
+    }
+
+    /* -------------------------------------------- */
+
+    /**
      * Validate an attribute field
      * @param {{base: number, trained: number, bonus: number}} attr     The attribute value
      */
