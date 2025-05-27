@@ -11,6 +11,7 @@
       "armor": "Armor",
       "background": "Background",
       "career": "Career",
+      "obligation": "Obligation",
       "origin": "Origin",
       "specialization": "Specialization",
       "species": "Species",
@@ -618,6 +619,26 @@
   "ITEM.QualityMasterwork": "Masterwork",
   "KEYBINDINGS.ConfirmAction": "Confirm Action",
   "KEYBINDINGS.ConfirmActionHint": "Confirm actions recorded within the last 60 seconds in the order in which they were taken.",
+  "OBLIGATION": {
+    "FIELDS": {
+      "value": {
+        "label": "Obligation Value",
+        "hint": "The value of the obligation which must be paid off before the character can advance in level."
+      },
+      "isExtra": {
+        "label": "Extra Obligation",
+        "hint": "Is this an extra obligation which the character has taken on in addition to their normal obligations?"
+      },
+      "extraMoney": {
+        "label": "Extra Money",
+        "hint": "The amount of extra money which the character receives for taking on this obligation."
+      },
+      "extraXp": {
+        "label": "Extra Experience",
+        "hint": "The amount of extra experience which the character receives for taking on this obligation."
+      }
+    }
+  },
   "ORIGIN": {
     "SHEET": {
       "CHOOSE": "Choose Origin",
