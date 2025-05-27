@@ -30,11 +30,24 @@ import ErrorTalent from "../../lib/talents/error-talent.mjs";
  * @typedef {Object} ObligationDisplayData
  * Represents the data structure used to render an Obligation on the character sheet.
  *
- * @property {string} id - Unique ID of the Talent Item.
+ * @property {string} id - Unique ID of the Obligation Item.
  * @property {string} name - Name of the Obligation.
  * @property {string} img - Image path used for the Obligation icon.
+ * @property {number} value - A value representing the Obligation.
  * @property {string} [cssClass] - Optional CSS class applied to the container (e.g., "highlighted", "disabled").
  * @property {boolean} isExtra - Indicates if the Obligation is an extra obligation by any mean.
+ * @property {number} extraXp - Optional extra experience points associated with the Obligation.
+ * @property {number} extraCredits - Optional extra credits associated with the Obligation.
+ */
+
+/**
+ * @typedef {Object} MotivationDisplayData
+ * Represents the data structure used to render a Motivation on the character sheet.
+ *
+ * @property {string} id - Unique ID of the Motivation Item.
+ * @property {string} name - Name of the Motivation.
+ * @property {string} img - Image path used for the Motivation icon.
+ * @property {string} [cssClass] - Optional CSS class applied to the container (e.g., "highlighted", "disabled").
  */
 
 /**
@@ -61,6 +74,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
             editSpecializations: CharacterSheet.#onEditSpecializations,
             editBackground: CharacterSheet.#onEditBackground,
             toggleTrainedSkill: CharacterSheet.#onToggleTrainedSkill,
+            toggleObligationExtraState: CharacterSheet.#onToggleOblligationExtraState,
         }
     };
 
@@ -118,6 +132,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
         context.talents = this.#buildTalentList();
 
         context.obligations = this.#buildObligationList();
+        context.obligationPoints = this.#computeObligationPoints(context.obligations);
 
         console.debug("[CharacterSheet] context", context);
         return context;
@@ -176,6 +191,25 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
     static async #onLevelUp(event) {
         game.tooltip.deactivate();
         await this.actor.levelUp(1);
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle click action to toggle the Obligation extra state.
+     * @this {CharacterSheet}
+     * @param {PointerEvent} event
+     * @returns {Promise<void>}
+     */
+    static async #onToggleOblligationExtraState(event) {
+        const element = event.target.closest(".obligation");
+        const itemId = element.dataset.itemId;
+        const item = this.actor.items.get(itemId);
+
+        console.log(`[CharacterSheet] toggleOblligationExtraState of ${item.name}`);
+
+        item.update({"system.isExtra": !item.system.isExtra});
+
     }
 
     /* -------------------------------------------- */
@@ -426,7 +460,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
      * @returns {TalentDisplayData}
      */
     #buildTalentDisplayData(item) {
-        const tags = this.#buidTags(item);
+        const tags = this.#buildTags(item);
 
         return {
             id: item.id,
@@ -445,7 +479,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
      * @param item {Item} - A Foundry VTT Item of type "talent".
      * @returns {*[]} A list of tags to display under the talent.
      */
-    #buidTags(item) {
+    #buildTags(item) {
         const tags = [];
 
         if (item.system.activation === "active") {
@@ -493,7 +527,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
             const maxRankTalent = group.reduce((a, b) => (a.idx > b.idx ? a : b));
 
             // Exemple de génération de tags — à adapter à ton système
-            const tags = this.#buidTags(maxRankTalent); // ← Ajoute ici une logique si nécessaire
+            const tags = this.#buildTags(maxRankTalent); // ← Ajoute ici une logique si nécessaire
 
             return {
                 id: maxRankTalent.id,
@@ -521,8 +555,37 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
             name: obligation.name,
             img: obligation.img,
             cssClass: obligation.system.isExtra ? "extra" : "",
-            isExtra: obligation.system.isExtra
+            value: obligation.system.value,
+            isExtra: obligation.system.isExtra,
+            extraXp: obligation.system.extraXp || 0,
+            extraCredits: obligation.system.extraCredits || 0,
         };
     }
 
+    /**
+     * Compute obligation points for the character sheet.
+     * @param obligations {MotivationDisplayData[]}
+     * @returns {number} The total obligation points.
+     */
+    #computeObligationPoints(obligations) {
+        return obligations
+            .reduce((total, obligation) => total + obligation.value, 0);
+    }
+
+    /**
+     * Builds a list of motivations for the character sheet.
+     * @returns {MotivationDisplayData[]}
+     */
+    #buildMotivationList() {
+        return this.actor.items.filter(item => item.type === 'motivation').map(obligation => this.#buildMotivationDisplayData(obligation));
+    }
+
+    #buildMotivationDisplayData(motivation) {
+        return {
+            id: motivation.id,
+            name: motivation.name,
+            img: motivation.img,
+            cssClass: motivation.system.isExtra ? "extra" : "",
+        };
+    }
 }

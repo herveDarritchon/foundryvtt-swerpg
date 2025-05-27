@@ -52,6 +52,13 @@
   }
 }
 
+// Variables de chemins si tu veux les centraliser
+@empire-logo: "../assets/icons/emblems/empire.svg";
+@first-order-logo: "../assets/icons/emblems/first_order.svg";
+@republic-logo: "../assets/icons/emblems/republic.svg";
+@rebel-logo: "../assets/icons/emblems/rebel.svg";
+@jedi-logo: "../assets/icons/emblems/jedi.svg";
+
 /* ----------------------------------------- */
 /*  Actor Sheet                              */
 /* ----------------------------------------- */
@@ -1273,9 +1280,9 @@ a.button {
       flex: 0.5;
     }
 
-    .controls{
-        flex: 0.5;
-        justify-content: flex-end;
+    .controls {
+      flex: 0.5;
+      justify-content: flex-end;
     }
   }
 }
@@ -1554,4 +1561,27 @@ a.button {
   text-align: left;
   font-size: var(--font-size-13);
   font-family: var(--font-serif);
+}
+
+
+.sw-toggle {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  border: 2px solid #666;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+
+  &.active {
+    background-image: url(@rebel-logo);
+    background-color: rgba(255, 255, 255, 0.75); // fond discret
+  }
+
+  &:not(.active) {
+    background-image: url(@empire-logo);
+    background-color: rgba(255, 255, 255, 0.15); // fond discret
+  }
 }

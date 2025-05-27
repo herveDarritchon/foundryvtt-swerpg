@@ -41,7 +41,7 @@ export default class SwerpgObligation extends foundry.abstract.TypeDataModel {
             step: 5
         });
 
-        schema.extraMoney = new fields.NumberField({
+        schema.extraCredits = new fields.NumberField({
             required: true,
             integer: true,
             nullable: false,

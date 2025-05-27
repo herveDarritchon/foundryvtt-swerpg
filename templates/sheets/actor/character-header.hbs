@@ -1,3 +1,4 @@
+{{log "Rendering character header" this}}
 <section class="sheet-header flexcol">
     <header class="title flexrow">
         <input class="charname" name="name" type="text" value="{{source.name}}" placeholder="Actor Name">
@@ -6,19 +7,10 @@
                data-tooltip="{{incomplete.creationTooltip}}" data-tooltip-class="creation-steps"></a>
         {{/if}}
         <div class="experience flexrow">
-            <label for="gained" class="experience">Experience</label>
+            <div  class="experience">Experience
             <span>{{progression.experience.available}}</span>
             /<span>{{progression.experience.total}}</span>
-        </div>
-
-        <div class="flexrow">
-            {{formField fields.progression.fields.experience.fields.spent
-                        value=source.system.progression.experience.spent type="number"
-                        localize="true"}}
-            {{formField fields.progression.fields.experience.fields.gained
-                        value=source.system.progression.experience.gained type="number"
-                        localize="true"}}
-        </div>
+            </div>
         </div>
     </header>
 
