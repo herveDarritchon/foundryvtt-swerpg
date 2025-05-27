@@ -141,8 +141,8 @@
     "FIELDS": {
       "details": {
         "biography": {
-          "appearance": {
-            "label": "Appearance"
+          "notableFeatures": {
+            "label": "Notable Features"
           },
           "public": {
             "label": "Public Biography"
@@ -150,14 +150,23 @@
           "private": {
             "label": "Private Biography"
           },
+          "gender": {
+            "label": "Gender"
+          },
           "age": {
             "label": "Age"
           },
           "height": {
             "label": "Height"
           },
-          "weight": {
-            "label": "Weight"
+          "build": {
+            "label": "Build"
+          },
+          "hair": {
+            "label": "Hair"
+          },
+          "eyes": {
+            "label": "Eyes"
           }
         }
       },
@@ -197,7 +206,8 @@
       "TALENTS": "Talents",
       "INVENTORY": "Inventory",
       "SPELLS": "Spells",
-      "BIOGRAPHY": "Biography"
+      "BIOGRAPHY": "Biography",
+      "COMMITMENTS": "Commitments"
     },
     "LABELS": {
       "CURRENT_EQUIPMENT": "Current Equipment",
