@@ -1720,6 +1720,26 @@ a.button.increase {
 /* ----------------------------------------- */
 /*  Commitments Tab                            */
 /* ----------------------------------------- */
+.tab.commitments .sheet-section {
+  flex: 1;
+  padding: 0.5rem;
+}
+.tab.commitments .sheet-section prose-mirror {
+  flex: 1;
+  width: 100%;
+}
+.tab.commitments .sheet-section prose-mirror.active {
+  margin-top: 0.5rem;
+}
+.tab.commitments .sheet-section prose-mirror menu {
+  padding: 0;
+}
+.tab.commitments .sheet-section prose-mirror button.toggle {
+  right: 1rem;
+  background: var(--color-frame-bg);
+  border-color: var(--color-frame);
+  color: var(--color-secondary);
+}
 .tab.commitments .header {
   display: flex;
   justify-content: space-between;

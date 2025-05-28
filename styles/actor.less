@@ -1181,6 +1181,31 @@ a.button {
 
 .tab.commitments {
 
+  .sheet-section {
+    flex: 1;
+    padding: 0.5rem;
+
+    prose-mirror {
+      flex: 1;
+      width: 100%;
+
+      &.active {
+        margin-top: 0.5rem;
+      }
+
+      menu {
+        padding: 0;
+      }
+
+      button.toggle {
+        right: 1rem;
+        background: var(--color-frame-bg);
+        border-color: var(--color-frame);
+        color: var(--color-secondary);
+      }
+    }
+  }
+
   .header {
     display: flex;
     justify-content: space-between;

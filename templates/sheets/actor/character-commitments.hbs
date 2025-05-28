@@ -36,7 +36,8 @@
                     <div class="sw-toggle {{#if obligation.isExtra}}active{{/if}}"
                          data-item-id="{{obligation.id}}"
                          data-action="toggleObligationExtraState"
-                         title="Toggle Extra Obligation">
+                         title="Toggle Extra Obligation"
+                         data-tooltip="Toggle Extra Obligation State">
                     </div>
                 </div>
 
@@ -59,8 +60,12 @@
 
     </div>
 
-    <div class="sheet-section motivations">
-        <h3>Motivations</h3>
+    <div class="sheet-section flexcol">
+        {{log "Commitments" source.system.details.commitments}}
+        <h3>{{fields.details.fields.commitments.fields.motivation.label}}</h3>
+        {{formInput fields.details.fields.commitments.fields.motivation value=source.system.details.commitments.motivation
+                    enriched=commitments.motivation toggled=true}}
+
     </div>
 
 </section>
