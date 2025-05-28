@@ -12,6 +12,21 @@
  */
 
 /**
+ * @typedef {Object} DefenseAttributes
+ * @property {number} melee Difficulty to hit a character with a melee attack.
+ * @property {number} ranged Difficulty to hit a character with a ranged attack.
+ */
+
+/**
+ * @typedef {Object} DerivedAttributes
+ * @property {number} woundThreshold Amount of Wounds a character can withstand before being knocked out.
+ * @property {number} strainThreshold Amount of Strain a character can withstand before being stunned.
+ * @property {number} encumbranceThreshold Amount of Encumbrance a character can carry before being encumbered.
+ * @property {DefenseAttributes} defense Determines how difficult it is to hit a character with an attack.
+ * @property {number} soakValue Determines how much incoming damage a character can shrug off before being seriously wounded.
+ */
+
+/**
  * This class defines data schema, methods, and properties shared by all Actor subtypes in the Swerpg system.
  *
  * @property {Object<string, SwerpgActorSkill>} skills
@@ -188,6 +203,7 @@ export default class SwerpgActorType extends foundry.abstract.TypeDataModel {
         // Resource pools
         this._prepareResources();
         this._prepareExperience();
+        this._prepareDerivedAttributes();
         this._prepareFreeSkillRanks();
         this.parent.callActorHooks("prepareResources", this.resources);
 
@@ -225,6 +241,21 @@ export default class SwerpgActorType extends foundry.abstract.TypeDataModel {
         const e = this.progression.experience;
         e.total = e.startingExperience + e.gained
         e.available = e.total - e.spent;
+    }
+
+    /**
+     * Prepare derived attributes for all Actor subtypes.
+     * @returns {DerivedAttributes}
+     * @private
+     */
+    _prepareDerivedAttributes() {
+        return {
+            woundThreshold: SwerpgActorType.#calculateWoundThreshold(this),
+            strainThreshold: SwerpgActorType.#calculateStrainThreshold(this),
+            encumbranceThreshold: SwerpgActorType.#calculateEncumbranceThreshold(this),
+            defense: SwerpgActorType.#calculateDefense(this),
+            soakValue: SwerpgActorType.#calculateSoakValue(this)
+        }
     }
 
     /* -------------------------------------------- */
@@ -282,6 +313,96 @@ export default class SwerpgActorType extends foundry.abstract.TypeDataModel {
     }
 
     /* -------------------------------------------- */
+
+    /**
+     * The wound threshold determines how much damage a character can take
+     * before experiencing significant negative effects.
+     *
+     * This is a private method and meant to be accessed only within the class.
+     *
+     * @private
+     * @method
+     * @returns {number} The calculated wound threshold value.
+     */
+    static #calculateWoundThreshold(actor) {
+        const {characteristics, thresholds} = actor;
+        const brawn = characteristics?.brawn?.rank?.value ?? 0;
+        const wounds = thresholds?.wounds ?? 0;
+        const result = brawn + wounds;
+        console.log(`Calculating Wound Threshold for actor: ${result}`, actor);
+        return result;
+    }
+
+    /**
+     * The strain threshold determines how much strain a character can take
+     * before experiencing significant negative effects.
+     *
+     * This is a private method and meant to be accessed only within the class.
+     *
+     * @private
+     * @method
+     * @returns {number} The calculated strain threshold value.
+     */
+    static #calculateStrainThreshold(actor) {
+        const {characteristics, thresholds} = actor;
+        const willpower = characteristics?.willpower?.rank?.value ?? 0;
+        const strain = thresholds?.strain ?? 0;
+        const result = willpower + strain;
+        console.log(`Calculating Strain Threshold for actor: ${result}`, actor);
+        return result;
+    }
+
+    /**
+     * The encumbrance threshold determines how much weight a character can carry
+     * before being encumbered.
+     *
+     * This is a private method and meant to be accessed only within the class.
+     *
+     * @private
+     * @method
+     * @returns {number} The calculated encumbrance threshold value.
+     */
+    static #calculateEncumbranceThreshold(actor) {
+        const {characteristics} = actor;
+        const brawn = characteristics?.brawn?.rank?.value ?? 0;
+        const result = brawn + 5;
+        console.log(`Calculating Encumbrance Threshold for actor: ${result}`, actor);
+        return result;
+    }
+
+    /**
+     * The defense value determines how difficult it is to hit a character with an attack.
+     *
+     * This is a private method and meant to be accessed only within the class.
+     *
+     * @private
+     * @method
+     * @returns {DefenseAttributes} The calculated defense value.
+     */
+    static #calculateDefense(actor) {
+        const defense = {
+            melee: 0,
+            ranged: 0
+        };
+        console.log(`Calculating Defense for actor: ${defense}`, actor);
+        return defense
+    }
+
+    /**
+     * The soak value determines how much incoming damage a character can shrug off
+     *
+     * This is a private method and meant to be accessed only within the class.
+     *
+     * @private
+     * @method
+     * @returns {number} The calculated soak value.
+     */
+    static #calculateSoakValue(actor) {
+        const {characteristics} = actor;
+        const brawn = characteristics?.brawn?.rank?.value ?? 0;
+        console.log(`Calculating Soak Value for actor: ${brawn}`, actor);
+        return brawn;
+    }
 
     /**
      * Prepare Physical Defenses.
