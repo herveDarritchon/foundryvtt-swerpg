@@ -175,6 +175,7 @@ export default class SwerpgCharacter extends SwerpgActorType {
             specialities: new fields.ArrayField(new fields.SchemaField({
                 ...SwerpgSpeciality.defineSchema()
             }), {required: true, nullable: true, initial: null}),
+
             biography: new fields.SchemaField({
                 notableFeatures: new fields.HTMLField({
                     required: false,
@@ -188,6 +189,10 @@ export default class SwerpgCharacter extends SwerpgActorType {
                 eyes: new fields.StringField({required: false, initial: undefined}),
                 public: new fields.HTMLField(),
                 private: new fields.HTMLField()
+            }),
+
+            commitments: new fields.SchemaField({
+                motivation: new fields.HTMLField()
             })
         });
 

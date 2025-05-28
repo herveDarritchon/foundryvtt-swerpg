@@ -290,6 +290,7 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
         const commitments = this.document.system.details.commitments;
         const context = {relativeTo: this.document, secrets: this.document.isOwner};
         return {
+            motivation: await foundry.applications.ux.TextEditor.enrichHTML(commitments.motivation, context),
         }
     }
 

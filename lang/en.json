@@ -174,7 +174,7 @@
             "label": "Obligations",
             "hint": "Configure the obligations which this character has taken on, including any extra obligations which provide additional experience or money."
           },
-          "motivations": {
+          "motivation": {
             "label": "Motivations",
             "hint": "Configure the motivations which drive this character, including any extra motivations which provide additional experience or money."
           }
