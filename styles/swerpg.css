@@ -1718,6 +1718,58 @@ a.button.increase {
   padding: 0 1rem;
 }
 /* ----------------------------------------- */
+/*  Commitments Tab                            */
+/* ----------------------------------------- */
+.tab.commitments .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.15rem 0.25rem;
+  background: var(--color-frame-bg);
+  border-bottom: 1px solid var(--color-frame);
+}
+.tab.commitments .header .shifted {
+  margin-left: 5rem;
+}
+.tab.commitments .header .title {
+  font-family: var(--font-h1);
+  font-weight: normal;
+  color: var(--color-h1);
+  border: none;
+}
+.tab.commitments .centered {
+  flex: 1.5;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  align-content: center;
+}
+.tab.commitments .column {
+  flex: 1.5;
+  text-align: center;
+}
+.tab.commitments .slim.column {
+  flex: 1;
+}
+.tab.commitments .principal.column {
+  flex: 3;
+  text-align: left;
+}
+.tab.commitments img.header-icon {
+  margin-right: auto;
+  margin-left: auto;
+  width: 28px;
+  height: 28px;
+}
+.tab.commitments .controls {
+  flex: none;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  text-align: center;
+}
+/* ----------------------------------------- */
 /*  Inventory, Talents, Skills               */
 /* ----------------------------------------- */
 .tab.secondary .header-section {

@@ -1,33 +1,56 @@
-{{log "Rendering character commitments" this}}
 <section class="tab flexcol {{tabs.commitments.id}} {{tabs.commitments.cssClass}}"
          data-tab="{{tabs.commitments.id}}" data-group="{{tabs.commitments.group}}">
     <div class="sheet-section obligations">
         <h3>Obligations ({{obligationPoints}})</h3>
 
+        <div class="header flexrow">
+            <div class="column principal">
+                <span class="title shifted">name</span>
+            </div>
+
+            <div class="column">
+                <span class="title" title="Toggle Extra Obligation">extra</span>
+            </div>
+
+            <div class="column slim">
+                <img class="header-icon" src="/systems/swerpg/ui/symbols/xp.webp" alt="Xp"/>
+            </div>
+
+            <div class="column slim">
+                <img class="header-icon" src="/systems/swerpg/ui/symbols/credits.webp" alt="Credits"/>
+            </div>
+
+            <div class="column slim">
+                <span class="title">actions</span>
+            </div>
+        </div>
+
         {{#each obligations as |obligation s|}}
             <div class="line-item {{obligation.cssClass}} obligation" data-item-id="{{obligation.id}}">
-                <div class="title">
+                <div class="title column principal">
                     <img class="icon" src="{{obligation.img}}" alt="{{obligation.name}}">
-                    <h4 class="item-header">{{obligation.name}}</h4>
+                    <h4 class="item-header">{{obligation.name}} ({{obligation.value}})</h4>
                 </div>
 
-                <div class="value">{{obligation.value}}</div>
-
-                <div class="sw-toggle {{#if obligation.isExtra}}active{{/if}}" data-item-id="{{obligation.id}}"
-                     data-action="toggleObligationExtraState"
-                     title="Toggle Extra Obligation">
+                <div class="column centered">
+                    <div class="sw-toggle {{#if obligation.isExtra}}active{{/if}}"
+                         data-item-id="{{obligation.id}}"
+                         data-action="toggleObligationExtraState"
+                         title="Toggle Extra Obligation">
+                    </div>
                 </div>
 
                 {{#if obligation.isExtra}}
-                    <div class="value">{{obligation.extraXp}}</div>
-                    <div class="value">{{obligation.extraCredits}}</div>
+                    <div class="column slim">{{obligation.extraXp}}</div>
+                    <div class="column slim">{{obligation.extraCredits}}</div>
+                {{else}}
+                    <div class="column slim">-</div>
+                    <div class="column slim">-</div>
                 {{/if}}
 
-                <div class="controls">
-                    {{#unless obligation.isExtra}}
-                        <a class="button icon fa-solid fa-trash" data-action="itemDelete"
-                           data-tooltip="Delete Obligation"></a>
-                    {{/unless}}
+                <div class="controls column slim">
+                    <a class="button icon fa-solid fa-trash" data-action="itemDelete"
+                       data-tooltip="Delete Obligation"></a>
                     <a class="button icon fa-solid fa-edit" data-action="itemEdit"
                        data-tooltip="Edit Obligation"></a>
                 </div>
