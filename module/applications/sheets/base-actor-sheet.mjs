@@ -538,10 +538,32 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
 
     /**
      * Prepare and format the display of resource attributes on the actor sheet.
-     * @returns {Record<string, {id: string, pct: number, color: {bg: string, fill: string}}>}
+     * @returns {Record<string, {id: string, current: number, max: number, pct: number, color: {bg: string, fill: string}}>}
      */
     #prepareResources() {
-        return {};
+        const resources = this.document.system.resources;
+        const woundCurrent = resources.wounds.value;
+        const woundMax = resources.wounds.threshold;
+
+        const strainCurrent = resources.strain.value;
+        const strainMax = resources.strain.threshold;
+
+        const encCurrent = resources.encumbrance.value;
+        const encMax = resources.encumbrance.threshold;
+
+        const makeResource = (id, current, max, bg, fill) => ({
+            id,
+            current,
+            max,
+            pct: max > 0 ? current / max : 0,
+            color: { bg, fill }
+        });
+
+        return {
+            wounds: makeResource("wounds", woundCurrent, woundMax, "#440000", "#ff0000"),
+            strain: makeResource("strain", strainCurrent, strainMax, "#004400", "#00ff00"),
+            encumbrance: makeResource("encumbrance", encCurrent, encMax, "#444400", "#ffff00")
+        };
     }
 
     /* -------------------------------------------- */

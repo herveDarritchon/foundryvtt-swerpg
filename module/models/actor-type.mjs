@@ -79,7 +79,8 @@ export default class SwerpgActorType extends foundry.abstract.TypeDataModel {
         // Resource Pools
         schema.resources = new fields.SchemaField(Object.values(SYSTEM.RESOURCES).reduce((obj, resource) => {
             obj[resource.id] = new fields.SchemaField({
-                value: new fields.NumberField({...requiredInteger, initial: 0, min: 0, max: resource.max})
+                value: new fields.NumberField({...requiredInteger, initial: 0, min: 0, max: resource.max}),
+                threshold: new fields.NumberField({...requiredInteger, initial: 0, min: 0, max: resource.max})
             }, {label: resource.label});
             return obj
         }, {}));
@@ -249,13 +250,21 @@ export default class SwerpgActorType extends foundry.abstract.TypeDataModel {
      * @private
      */
     _prepareDerivedAttributes() {
-        return {
-            woundThreshold: SwerpgActorType.#calculateWoundThreshold(this),
-            strainThreshold: SwerpgActorType.#calculateStrainThreshold(this),
-            encumbranceThreshold: SwerpgActorType.#calculateEncumbranceThreshold(this),
-            defense: SwerpgActorType.#calculateDefense(this),
-            soakValue: SwerpgActorType.#calculateSoakValue(this)
-        }
+        const c = this.combat = {};
+        const r = this.resources;
+
+        const woundThreshold = SwerpgActorType.#calculateWoundThreshold(this);
+        const strainThreshold = SwerpgActorType.#calculateStrainThreshold(this);
+        const encumbranceThreshold = SwerpgActorType.#calculateEncumbranceThreshold(this);
+        const defense = SwerpgActorType.#calculateDefense(this);
+        const soakValue = SwerpgActorType.#calculateSoakValue(this);
+
+        r.wounds.threshold = woundThreshold;
+        r.strain.threshold = strainThreshold;
+        r.encumbrance.threshold = encumbranceThreshold;
+
+        c.defense = defense;
+        c.soakValue = soakValue;
     }
 
     /* -------------------------------------------- */
@@ -271,16 +280,6 @@ export default class SwerpgActorType extends foundry.abstract.TypeDataModel {
         const r = this.resources;
         const a = this.characteristics;
 
-        // Health
-        // TODO remettre value à la place de base dans les calculs ci-dessous
-        let levelBase = Math.max(Math.ceil(6 * l), 6);
-        r.health.max = (levelBase + (4 * a.brawn.base) + (2 * a.agility.base)) * threatFactor;
-        r.health.value = Math.clamp(r.health.value, 0, r.health.max);
-
-        // Morale
-        r.morale.max = (levelBase + (4 * a.presence.base) + (2 * a.willpower.base)) * threatFactor;
-        r.morale.value = Math.clamp(r.morale.value, 0, r.morale.max);
-
         // Action
         r.action.max = maxAction;
         if (statuses.has("stunned")) r.action.max -= 4;
@@ -290,14 +289,6 @@ export default class SwerpgActorType extends foundry.abstract.TypeDataModel {
         if (isIncapacitated) r.action.max = 0;
         r.action.max = Math.max(r.action.max, 0);
         r.action.value = Math.clamp(r.action.value, 0, r.action.max);
-
-        // Focus
-        r.focus.max = Math.ceil((a.willpower.base + a.presence.base + a.intellect.base) / 2);
-        r.focus.value = Math.clamp(r.focus.value, 0, 3);
-
-        // Heroism
-        r.heroism.max = 3;
-        r.heroism.value = Math.clamp(r.heroism.value, 0, 3);
     }
 
     /* -------------------------------------------- */

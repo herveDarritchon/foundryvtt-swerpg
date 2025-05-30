@@ -701,49 +701,35 @@ export const DAMAGE_TYPES = Object.freeze({
  * @enum {SwerpgResource}
  */
 export const RESOURCES = Object.freeze({
-    health: {
-        id: "health",
-        label: "RESOURCES.HEALTH",
-        type: "active",
-        tooltip: "(6 &times; Level) + (4 &times; Toughness) + (2 &times; Strength)",
-        color: {
-            high: Color.from("#d72828"),
-            low: Color.from("#5e0000"),
-            heal: Color.from("#48c248")
-        },
-    },
     wounds: {
         id: "wounds",
         label: "RESOURCES.WOUNDS",
         type: "reserve",
-        tooltip: "Health &times; 1.5",
+        tooltip: "brawn + species bonus",
         color: {
             high: Color.from("#d72828"),
             low: Color.from("#5e0000"),
             heal: Color.from("#48c248")
         },
     },
-    morale: {
-        id: "morale",
-        label: "RESOURCES.MORALE",
-        type: "active",
-        tooltip: "(6 &times; Level) + (4 &times; Presence) + (2 &times; Wisdom)",
-        color: {
-            high: Color.from("#7550ff"),
-            low: Color.from("#3c037e"),
-            heal: Color.from("#cd4fff")
-        }
-    },
-    madness: {
-        id: "madness",
-        label: "RESOURCES.MADNESS",
-        tooltip: "Morale &times; 1.5",
+    strain: {
+        id: "strain",
+        label: "RESOURCES.STRAIN",
+        tooltip: "willpower + species bonus",
         type: "reserve",
         color: {
             high: Color.from("#7550ff"),
             low: Color.from("#3c037e"),
             heal: Color.from("#cd4fff")
         }
+    },
+    encumbrance: {
+        id: "encumbrance",
+        label: "RESOURCES.ENCUMBRANCE",
+        tooltip: "brawn",
+        type: "active",
+        color: Color.from("#3385ff"),
+        max: 24
     },
     action: {
         id: "action",
@@ -752,22 +738,6 @@ export const RESOURCES = Object.freeze({
         type: "active",
         color: Color.from("#FF9900"),
         max: 12
-    },
-    focus: {
-        id: "focus",
-        label: "RESOURCES.FOCUS",
-        tooltip: "(Wisdom + Presence + Intellect) / 2",
-        type: "active",
-        color: Color.from("#3385ff"),
-        max: 24
-    },
-    heroism: {
-        id: "heroism",
-        label: "RESOURCES.HEROISM",
-        tooltip: "Maximum 3",
-        type: "active",
-        color: Color.from("#ff0059"),
-        max: 3
     }
 });
 

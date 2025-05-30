@@ -241,8 +241,8 @@ export default class SwerpgActor extends Actor {
      * Is this Actor weakened?
      * @type {boolean}
      */
-    get isWeakened() {
-        return this.system.resources.health.value === 0;
+    get isKnockedOut() {
+        return this.system.resources.wounds.value === 0;
     }
 
     /**
@@ -250,7 +250,7 @@ export default class SwerpgActor extends Actor {
      * @type {boolean}
      */
     get isBroken() {
-        return this.system.resources.morale.value === 0;
+        return this.system.resources.strain.value === 0;
     }
 
     /**
@@ -258,8 +258,8 @@ export default class SwerpgActor extends Actor {
      * @type {boolean}
      */
     get isDead() {
-        if (this.type === "adversary") return this.system.resources.health.value === 0;
-        return this.system.resources.wounds.value === this.system.resources.wounds.max;
+        if (this.type === "adversary") return this.system.resources.wounds.value === 0;
+        return this.system.resources.wounds.value === this.system.resources.wounds.threshold;
     }
 
     /**
@@ -268,7 +268,7 @@ export default class SwerpgActor extends Actor {
      */
     get isInsane() {
         if (this.type === "adversary") return false;
-        return this.system.resources.madness.value === this.system.resources.madness.max;
+        return this.system.resources.strain.value === this.system.resources.strain.threshold;
     }
 
     /**
