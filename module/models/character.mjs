@@ -531,12 +531,12 @@ export default class SwerpgCharacter extends SwerpgActorType {
         const r = this.resources;
 
         // Wounds
-        r.wounds.max = Math.ceil(1.5 * r.health.max);
+        r.wounds.max = Math.ceil(1.5 * r.wounds.threshold);
         r.wounds.value = Math.clamp(r.wounds.value, 0, r.wounds.max);
 
         // Madness
-        r.madness.max = Math.ceil(1.5 * r.morale.max);
-        r.madness.value = Math.clamp(r.madness.value, 0, r.madness.max);
+        r.strain.max = Math.ceil(1.5 * r.strain.threshold);
+        r.strain.value = Math.clamp(r.strain.value, 0, r.strain.max);
     }
 
     /* -------------------------------------------- */
