@@ -1,3 +1,10 @@
+## [1.0.2](https://github.com/herveDarritchon/foundryvtt-swerpg/compare/v1.0.1...v1.0.2) (2025-06-03)
+
+
+### Bug Fixes
+
+* change dependency installation command to use frozen lockfile ([e533e4e](https://github.com/herveDarritchon/foundryvtt-swerpg/commit/e533e4e168856490e397de1c3c8c2e79cb19d258))
+
 ## [1.0.1](https://github.com/herveDarritchon/foundryvtt-swerpg/compare/v1.0.0...v1.0.1) (2025-06-03)
 
 
