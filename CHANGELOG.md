@@ -1,3 +1,11 @@
+## [1.0.4](https://github.com/herveDarritchon/foundryvtt-swerpg/compare/v1.0.3...v1.0.4) (2025-06-03)
+
+
+### Bug Fixes
+
+* update release configuration for system.json path and include custom script ([f851d96](https://github.com/herveDarritchon/foundryvtt-swerpg/commit/f851d96e81030b017ff1652d7c4a2dda65e55f28))
+* update release configuration to include exec plugin for custom script ([f8dae4b](https://github.com/herveDarritchon/foundryvtt-swerpg/commit/f8dae4be4c32144bc767680b25d8169934c6813f))
+
 ## [1.0.3](https://github.com/herveDarritchon/foundryvtt-swerpg/compare/v1.0.2...v1.0.3) (2025-06-03)
 
 
