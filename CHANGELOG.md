@@ -1,3 +1,10 @@
+## [1.0.6](https://github.com/herveDarritchon/foundryvtt-swerpg/compare/v1.0.5...v1.0.6) (2025-06-03)
+
+
+### Bug Fixes
+
+* update success command in release configuration to use .cjs file for appending links to CHANGELOG ([a5229e6](https://github.com/herveDarritchon/foundryvtt-swerpg/commit/a5229e6f7760d0c14cb2acc7d3b9ce7ebb855454))
+
 ## [1.0.5](https://github.com/herveDarritchon/foundryvtt-swerpg/compare/v1.0.4...v1.0.5) (2025-06-03)
 
 
