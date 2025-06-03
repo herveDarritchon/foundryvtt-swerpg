@@ -1362,9 +1362,7 @@ input[type=range] {
   grid-column: 1;
   grid-row: 2;
   display: flex;
-  /*      grid-template-columns: 1fr 1fr;
-          grid-template-rows: repeat(3, 1fr);*/
-  justify-items: center;
+  justify-content: center;
   padding: 1.5rem 0 0;
 }
 .swerpg.sheet.actor .characteristics .characteristics-wrapper {
