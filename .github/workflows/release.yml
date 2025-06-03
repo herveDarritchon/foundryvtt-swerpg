@@ -25,11 +25,10 @@ jobs:
           node-version: '20'
           cache: 'pnpm'
 
-      - name: 📦 Install pnpm globally
-        run: npm install -g pnpm
-
-      - name: 📦 Install dependencies
-        run: pnpm install --frozen-lockfile
+      - name: 📦 Setup pnpm and install dependencies
+        run: |
+          npm install -g pnpm
+          pnpm install --frozen-lockfile
 
       - name: ✨ Run semantic-release
         env:
