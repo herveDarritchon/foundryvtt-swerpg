@@ -17,16 +17,17 @@ const linkLine = `\n🔗 [Voir les changements entre v${oldVersion} et v${newVer
 
 let changelog = fs.readFileSync(changelogPath, 'utf8');
 
-// Recherche plus flexible : ligne de titre avec la version
-const versionHeaderRegex = new RegExp(`^#{1,6} ?v?${newVersion}\\b`, 'm');
-const match = changelog.match(versionHeaderRegex);
+// Supporte :
+// ## [0.1.1](...) (...)
+// ## [0.1.1] (...)
+// ## 0.1.1 (...)
+const regex = new RegExp(`^##\\s+(\\[)?${newVersion}(\\])?.*`, 'm');
 
-if (!match) {
+if (!regex.test(changelog)) {
     console.error(`❌ Impossible de trouver l'entrée pour la version "${newVersion}" dans le CHANGELOG.md`);
     process.exit(1);
 }
 
-changelog = changelog.replace(versionHeaderRegex, match[0] + linkLine);
+changelog = changelog.replace(regex, match => `${match}${linkLine}`);
 fs.writeFileSync(changelogPath, changelog);
-
-console.log(`✅ Lien de diff ajouté entre v${oldVersion} et v${newVersion}`);
+console.log(`✅ Lien de diff ajouté au CHANGELOG.md`);
