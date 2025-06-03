@@ -1,3 +1,5 @@
+## [0.1.1](https://github.com/herveDarritchon/foundryvtt-swerpg/compare/v0.1.0...v0.1.1) (2025-06-03)
+
 v0.1.0
 
 # What's Changed
