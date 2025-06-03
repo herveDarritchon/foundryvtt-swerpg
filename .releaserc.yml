@@ -32,7 +32,7 @@ plugins:
   - - '@semantic-release/exec'
     - prepareCmd: node ./update-system-json.cjs
   - - '@semantic-release/exec'
-    - successCmd: node ./append-links-to-changelog.js
+    - successCmd: node ./append-links-to-changelog.cjs
   - - '@semantic-release/git'
     - assets:
         - CHANGELOG.md
