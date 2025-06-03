@@ -1,3 +1,10 @@
+## [1.0.3](https://github.com/herveDarritchon/foundryvtt-swerpg/compare/v1.0.2...v1.0.3) (2025-06-03)
+
+
+### Bug Fixes
+
+* update system.json version and download links ([c85fe02](https://github.com/herveDarritchon/foundryvtt-swerpg/commit/c85fe02884f36967508a75737245e2fb9704ac84))
+
 ## [1.0.2](https://github.com/herveDarritchon/foundryvtt-swerpg/compare/v1.0.1...v1.0.2) (2025-06-03)
 
 
