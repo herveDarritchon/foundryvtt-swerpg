@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/herveDarritchon/foundryvtt-swerpg/compare/v1.0.0...v1.0.1) (2025-06-03)
+
+
+### Bug Fixes
+
+* update file path for system.json in update-system-json.cjs ([0a781a7](https://github.com/herveDarritchon/foundryvtt-swerpg/commit/0a781a7473531f316a5a5b8436f40da571b0dd71))
+
 # 1.0.0 (2025-06-03)
 
 
