@@ -27,7 +27,7 @@ jobs:
           version: 10 # ou "latest" si tu préfères
 
       - name: Install dependencies
-        run: pnpm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Run tests with coverage
         run: pnpm run test -- --coverage
