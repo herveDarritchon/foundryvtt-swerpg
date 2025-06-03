@@ -1,6 +1,6 @@
 ## [0.1.1](https://github.com/herveDarritchon/foundryvtt-swerpg/compare/v0.1.0...v0.1.1) (2025-06-03)
 
-v0.1.0
+## [0.1.0] (2025-06-03)
 
 # What's Changed
 Feature/refactoring skills during character creation by @herveDarritchon in #1
