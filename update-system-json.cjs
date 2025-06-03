@@ -8,7 +8,7 @@ module.exports = async function updateSystemJson(_, context = {}) {
     logger.log('🔢 Version à publier :', nextRelease?.version ?? 'inconnue');
 
     const dryRun = process.env.SEMANTIC_RELEASE_DRY === 'true';
-    const filePath = path.join(__dirname, 'src', 'system.json');
+    const filePath = path.join(__dirname, 'system.json');
     const json = JSON.parse(fs.readFileSync(filePath, 'utf8'));
 
     const newVersion = `${nextRelease.version}`;

@@ -31,16 +31,26 @@ jobs:
           esmodules: "[\"swerpg.mjs\"]"
           styles: "[\"swerpg.css\"]"
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20' # adapte à ta version
+
+      - name: 📦 Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10 # ou "latest" si tu préfères
+
       - name: 🛠 Install Dependencies
-        run: npm install
+        run: pnpm install
 
       - name: ⚖️ Verify package signatures
-        run: npm audit signatures || true
+        run: pnpm audit signatures || true
 
       - name: 📚 Build All
         run: |
-          npm run db:pack
-          npm run build
+          pnpm run db:pack
+          pnpm run build
           mv --force public/swerpg.mjs swerpg.mjs
 
       - name: 📋 Create ZIP archive

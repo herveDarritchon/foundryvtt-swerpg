@@ -20,13 +20,17 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20' # adapte à ta version
-          cache: 'npm'
+
+      - name: 📦 Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10 # ou "latest" si tu préfères
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm ci
 
       - name: Run tests with coverage
-        run: npm run test -- --coverage
+        run: pnpm run test -- --coverage
 
       - name: Upload coverage to GitHub Pages
         if: github.ref == 'refs/heads/main'
