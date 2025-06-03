@@ -1,3 +1,10 @@
+## [1.0.7](https://github.com/herveDarritchon/foundryvtt-swerpg/compare/v1.0.6...v1.0.7) (2025-06-03)
+
+
+### Bug Fixes
+
+* update script reference in release configuration to use .cjs file for appending links to CHANGELOG ([693b514](https://github.com/herveDarritchon/foundryvtt-swerpg/commit/693b514d1385613c1a756334e1cb4200189f53f5))
+
 ## [1.0.6](https://github.com/herveDarritchon/foundryvtt-swerpg/compare/v1.0.5...v1.0.6) (2025-06-03)
 
 
