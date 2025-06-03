@@ -1,163 +1,77 @@
-{{log "Character" this}}
 <section class="tab {{tabs.attributes.id}} {{tabs.attributes.cssClass}}"
          data-tab="{{tabs.attributes.id}}" data-group="{{tabs.attributes.group}}">
 
-    <div class="sheet-section resources flexrow">
-        <h3>Resources</h3>
-
-        <!--        <div class="first flexcol">
-                    <div class="resource-wrapper flexrow">
-                        <div class="octagon">
-                            <p class="label">Wounds</p>
-                        </div>
-                    </div>
-
-                    <div class="resource-wrapper flexrow">
-                        <div class="beveled-rectangle">
-                            <p class="label">Brawn</p>
-                        </div>
-                    </div>
-
-                    <div class="resource-wrapper flexrow">
-                        <div class="beveled-frame">
-                            <div class="empty-rectangle">
-                                <p class="label">Defense</p>
+    <div class="first-row-split">
+        <div class=" sheet-section resources left-half flexcol">
+            <h3>Resources</h3>
+            <div class="resources-wrapper flexrow">
+                {{#each jauges as |jauge|}}
+                    <div class="jauge-wrapper" data-jauge-type="{{jauge.type}}">
+                        <div class="resource-bar-container {{jauge.extraCss}}">
+                            <div class="icon">
+                                <img src="systems/swerpg/assets/icons/jauges/{{jauge.type}}-icon.svg"
+                                     alt="{{jauge.type}}"/>
                             </div>
-                        </div>
-                    </div>
-                </div>-->
-
-        <div class="examples flexrow">
-
-            <div class="second flexcol">
-                <div class="resource-wrapper flexrow">
-                    <div class="king-sized-beveled-frame">
-                        <div class="empty-rectangle flexcol">
-                            <div class="octagon">
-                                <p class="label">Wounds</p>
+                            <div class="jauge">
+                                {{#each jauge.blocks as |i|}}
+                                    <div class="block {{i.cssClass}}"></div>
+                                {{/each}}
                             </div>
-                            <div class="column-wrapper flexrow">
-                                <div class="column_1">
-                                    <p>{{actor.system.resources.wounds.threshold}}</p>
-                                </div>
-                                <div class="column_2">
-                                    {{formGroup fields.resources.fields.wounds.fields.value
-                                                value=source.system.resources.wounds.value
-                                                type="number" classes="slim" hint=false}}
-
+                            <div>
+                                <span class="title {{jauge.extraCss}}">{{jauge.label}}</span>
+                                <div class="label">
+                                    <a class="button icon fa-solid fa-circle-caret-down decrease"
+                                       data-action="resourceDecrease"
+                                       data-tooltip="Decrease {{jauge.label}}"
+                                       data-tooltip-direction="LEFT">
+                                    </a>
+                                    <span class="values"> {{jauge.value}}/{{jauge.max}}</span>
+                                    <a class="button icon fa-solid fa-circle-caret-up increase"
+                                       data-action="resourceIncrease"
+                                       data-tooltip="Increase {{jauge.label}}"
+                                       data-tooltip-direction="RIGHT">
+                                    </a>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                {{/each}}
+            </div>
+        </div>
+        <div class="sheet-section defenses right-half flexcol">
+            <h3>defenses</h3>
+            <div class="defenses-wrapper flexrow">
+
+                <div class="defense-wrapper" data-defense-type="{{soak.type}}">
+                    <div class="defense-bar-container {{soak.extraCss}}">
+                        <div class="icon">
+                            <img src="systems/swerpg/assets/icons/combat/{{soak.type}}-icon.svg"
+                                 alt="{{soak.type}}"/>
+                        </div>
+                        <div>
+                            <div class="label">
+                                <span class="values {{soak.extraCss}}"> {{soak.value}}</span>
+                            </div>
+                            <span class="title {{soak.extraCss}}">{{soak.label}}</span>
                         </div>
                     </div>
                 </div>
-
-            </div>
-
-            <div class="third flexcol">
-                <div class="resource-wrapper flexrow">
-                    <div class="king-sized-beveled-frame">
-                        <div class="empty-rectangle flexcol">
-                            <div class="octagon">
-                                <p class="label">Stress</p>
+                {{#each defenses as |defense|}}
+                    <div class="defense-wrapper" data-defense-type="{{defense.type}}">
+                        <div class="defense-bar-container {{defense.extraCss}}">
+                            <div class="icon">
+                                <img src="systems/swerpg/assets/icons/combat/defense-{{defense.type}}-icon.svg"
+                                     alt="{{defense.type}}"/>
                             </div>
-                            <div class="column-wrapper flexrow">
-                                <div class="column_1">
-                                    <p>{{actor.system.resources.strain.threshold}}</p>
+                            <div>
+                                <div class="label">
+                                    <span class="values {{defense.extraCss}}"> {{defense.value}}</span>
                                 </div>
-                                <div class="column_2">
-                                    {{formGroup fields.resources.fields.strain.fields.value
-                                                value=source.system.resources.strain.value
-                                                type="number" classes="slim" hint=false}}
-
-                                </div>
+                                <span class="title {{defense.extraCss}}">{{defense.label}}</span>
                             </div>
                         </div>
                     </div>
-                </div>
-
-            </div>
-
-            <div class="third flexcol">
-                <div class="resource-wrapper flexrow">
-                    <div class="king-sized-beveled-frame">
-                        <div class="empty-rectangle flexcol">
-                            <div class="octagon">
-                                <p class="label">Encumbrance</p>
-                            </div>
-                            <div class="column-wrapper flexrow">
-                                <div class="column_1">
-                                    <p>{{actor.system.resources.encumbrance.threshold}}</p>
-                                </div>
-                                <div class="column_2">
-                                    {{formGroup fields.resources.fields.encumbrance.fields.value
-                                                value=source.system.resources.encumbrance.value
-                                                type="number" classes="slim" hint=false}}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <div class="resource morale flexcol" style="{{resources.morale.cssPct}}">
-        <h4 class="label above" data-tooltip="{{resources.morale.tooltip}}">{{resources.morale.label}}</h4>
-        <div class="pool short flexrow">
-            {{!--{{formInput fields.resources.fields.morale.fields.value value=resources.morale.value type="number"}}--}}
-            <span class="sep">/</span>
-            <span class="total value">{{resources.morale.max}}</span>
-        </div>
-        <div class="pool long flexrow">
-            {{!--{{formInput fields.resources.fields.madness.fields.value value=resources.madness.value
-                        type="number"}}--}}
-            <span class="sep">/</span>
-            <span class="total value">{{resources.madness.max}}</span>
-        </div>
-        <h4 class="label below"
-            data-tooltip="{{resources.madness.tooltip}}">{{resources.madness.label}}</h4>
-        <div class="threshold madness" data-tooltip="{{defenses.madness.tooltip}}">
-            <span class="value">{{defenses.madness.total}}</span>
-        </div>
-    </div>
-
-    </div> -->
-    --}}
-    <div class="sheet-section defenses">
-        <h3>Defenses</h3>
-        <div class="physical flexrow">
-            <div class="defense total">
-                <h4 class="label">{{defenses.physical.label}}</h4>
-                <span class="value">{{defenses.physical.value}}</span>
-            </div>
-        </div>
-        <div class="magical flexrow">
-            <div class="defense extra engagement">
-                <span class="value">{{actor.system.movement.engagement}}</span>
-                <h4 class="label" data-tooltip="ACTOR.FIELDS.movement.engagement.tooltip">
-                    {{localize "ACTOR.FIELDS.movement.engagement.labelShort"}}
-                </h4>
-            </div>
-            <div class="defense fortitude">
-                <h4 class="label" data-tooltip="{{defenses.fortitude.tooltip}}">{{defenses.fortitude.label}}</h4>
-                <span class="value">{{defenses.fortitude.total}}</span>
-            </div>
-            <div class="defense willpower">
-                <h4 class="label" data-tooltip="{{defenses.willpower.tooltip}}">{{defenses.willpower.label}}</h4>
-                <span class="value">{{defenses.willpower.total}}</span>
-            </div>
-            <div class="defense reflex">
-                <h4 class="label" data-tooltip="{{defenses.reflex.tooltip}}">{{defenses.reflex.label}}</h4>
-                <span class="value">{{defenses.reflex.total}}</span>
-            </div>
-            <div class="defense extra stride">
-                <span class="value">{{actor.system.movement.stride}}</span>
-                <h4 class="label" data-tooltip="ACTOR.FIELDS.movement.stride.tooltip">
-                    {{localize "ACTOR.FIELDS.movement.stride.label"}}
-                </h4>
+                {{/each}}
             </div>
         </div>
     </div>

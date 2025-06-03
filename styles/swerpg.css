@@ -92,6 +92,33 @@
   --color-border-inactive: #831010;
   /* Rouge sombre pour les borders des éléments inactifs */
   --color-blue-tern: #2a84c5;
+  --color-background-dark: #121212;
+  --color-border-default: #333;
+  --color-font-default: #e0e0e0;
+  --color-soak: #ffcc33;
+  --color-soak-shadow: #ffaa00;
+  --color-soak-bg: #332200;
+  --color-defense: #00ccff;
+  --color-defense-melee: #00aaff;
+  /* ou #ff4444 pour une version rouge */
+  --color-defense-ranged: #00ddff;
+  --color-defense-general: #3399ff;
+  --color-defense-shadow: rgba(0, 255, 255, 0.4);
+  --color-wounds: #ff3c3c;
+  --color-wounds-glow: #ff6666;
+  --color-wounds-gradient: linear-gradient(to bottom, #ff4a3e, #a40000);
+  --color-wounds-border: #5a0000;
+  --color-strain: #00d4ff;
+  --color-strain-glow: #66f0ff;
+  --color-strain-gradient: linear-gradient(to bottom, #48e8ff, #007f99);
+  --color-strain-border: #003344;
+  --color-encumbrance: #ff9900;
+  --color-encumbrance-glow: #ffc266;
+  --color-encumbrance-gradient: linear-gradient(to bottom, #ffc64d, #a65b00);
+  --color-encumbrance-border: #5a2f00;
+  --color-success: #00ff99;
+  --color-warning: #ffaa00;
+  --color-danger: #ff3333;
   --font-h1: "Star Jedi", sans-serif;
   --font-h2: "Star Jedi", sans-serif;
   --font-h3: "Star Jedi", sans-serif;
@@ -1062,7 +1089,7 @@ input[type=range] {
   opacity: 1;
 }
 .swerpg.sheet.actor .tab.attributes {
-  grid-template-rows: 140px 200px 1fr;
+  grid-template-rows: 200px 200px 1fr;
   grid-template-columns: 1fr;
   padding-bottom: var(--margin-size);
   /** Resources */
@@ -1075,16 +1102,16 @@ input[type=range] {
   grid-row: 1;
   justify-content: center;
   padding: 0 0.5rem;
-  /* HTML: <div class="octagon"></div> */
+  min-height: 200px;
   /** Pool Resources */
   /** Economy Resources */
 }
-.swerpg.sheet.actor .tab.attributes .resources .examples .resource-wrapper {
+.swerpg.sheet.actor .tab.attributes .resources .resource-wrapper {
   margin: 0.5em 1em;
   width: 100px;
   flex: none;
 }
-.swerpg.sheet.actor .tab.attributes .resources .examples .resource-wrapper .beveled-rectangle {
+.swerpg.sheet.actor .tab.attributes .resources .resource-wrapper .beveled-rectangle {
   background-color: var(--color-accent);
   padding: 0;
   margin: 0;
@@ -1093,7 +1120,7 @@ input[type=range] {
   height: 25px;
   display: flex;
 }
-.swerpg.sheet.actor .tab.attributes .resources .examples .resource-wrapper .beveled-frame {
+.swerpg.sheet.actor .tab.attributes .resources .resource-wrapper .beveled-frame {
   background-color: white;
   padding: 2px 3px;
   margin: 0;
@@ -1102,7 +1129,7 @@ input[type=range] {
   height: 25px;
   display: flex;
 }
-.swerpg.sheet.actor .tab.attributes .resources .examples .resource-wrapper .beveled-frame .empty-rectangle {
+.swerpg.sheet.actor .tab.attributes .resources .resource-wrapper .beveled-frame .empty-rectangle {
   background-color: var(--color-frame-bg-75);
   padding: 0;
   margin: 0;
@@ -1112,7 +1139,7 @@ input[type=range] {
   width: 100%;
   display: flex;
 }
-.swerpg.sheet.actor .tab.attributes .resources .examples .resource-wrapper .king-sized-beveled-frame {
+.swerpg.sheet.actor .tab.attributes .resources .resource-wrapper .king-sized-beveled-frame {
   background-color: white;
   padding: 2px 3px;
   margin: 0;
@@ -1121,7 +1148,7 @@ input[type=range] {
   height: 75px;
   display: flex;
 }
-.swerpg.sheet.actor .tab.attributes .resources .examples .resource-wrapper .king-sized-beveled-frame .empty-rectangle {
+.swerpg.sheet.actor .tab.attributes .resources .resource-wrapper .king-sized-beveled-frame .empty-rectangle {
   background-color: var(--color-frame-bg-75);
   padding: 0;
   margin: 0;
@@ -1131,7 +1158,7 @@ input[type=range] {
   width: 100%;
   display: flex;
 }
-.swerpg.sheet.actor .tab.attributes .resources .examples .resource-wrapper .king-sized-beveled-frame .empty-rectangle .octagon {
+.swerpg.sheet.actor .tab.attributes .resources .resource-wrapper .king-sized-beveled-frame .empty-rectangle .octagon {
   background-color: var(--color-accent);
   padding: 0;
   margin: 3px 3px 0 7px;
@@ -1141,22 +1168,22 @@ input[type=range] {
   width: 79px;
   display: flex;
 }
-.swerpg.sheet.actor .tab.attributes .resources .examples .resource-wrapper .king-sized-beveled-frame .empty-rectangle .column-wrapper {
+.swerpg.sheet.actor .tab.attributes .resources .resource-wrapper .king-sized-beveled-frame .empty-rectangle .column-wrapper {
   height: 100%;
 }
-.swerpg.sheet.actor .tab.attributes .resources .examples .resource-wrapper .king-sized-beveled-frame .empty-rectangle .column-wrapper .column_1,
-.swerpg.sheet.actor .tab.attributes .resources .examples .resource-wrapper .king-sized-beveled-frame .empty-rectangle .column-wrapper .column_2 {
+.swerpg.sheet.actor .tab.attributes .resources .resource-wrapper .king-sized-beveled-frame .empty-rectangle .column-wrapper .column_1,
+.swerpg.sheet.actor .tab.attributes .resources .resource-wrapper .king-sized-beveled-frame .empty-rectangle .column-wrapper .column_2 {
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   align-content: center;
 }
-.swerpg.sheet.actor .tab.attributes .resources .examples .resource-wrapper .king-sized-beveled-frame .empty-rectangle .column-wrapper .column_1 {
+.swerpg.sheet.actor .tab.attributes .resources .resource-wrapper .king-sized-beveled-frame .empty-rectangle .column-wrapper .column_1 {
   border-right: 1px solid white;
   margin-right: 0.25em;
 }
-.swerpg.sheet.actor .tab.attributes .resources .examples .resource-wrapper .octagon {
+.swerpg.sheet.actor .tab.attributes .resources .resource-wrapper .octagon {
   background-color: var(--color-accent);
   padding: 0;
   margin: 0;
@@ -1165,10 +1192,10 @@ input[type=range] {
   height: 20px;
   display: flex;
 }
-.swerpg.sheet.actor .tab.attributes .resources .examples .resource-wrapper .octagon .label,
-.swerpg.sheet.actor .tab.attributes .resources .examples .resource-wrapper .beveled-rectangle .label,
-.swerpg.sheet.actor .tab.attributes .resources .examples .resource-wrapper .beveled-frame .label,
-.swerpg.sheet.actor .tab.attributes .resources .examples .resource-wrapper .king-sized-beveled-frame .label {
+.swerpg.sheet.actor .tab.attributes .resources .resource-wrapper .octagon .label,
+.swerpg.sheet.actor .tab.attributes .resources .resource-wrapper .beveled-rectangle .label,
+.swerpg.sheet.actor .tab.attributes .resources .resource-wrapper .beveled-frame .label,
+.swerpg.sheet.actor .tab.attributes .resources .resource-wrapper .king-sized-beveled-frame .label {
   text-transform: uppercase;
   font-size: var(--font-size-10);
   font-weight: bold;
@@ -1176,10 +1203,10 @@ input[type=range] {
   padding: 0;
   margin: auto;
 }
-.swerpg.sheet.actor .tab.attributes .resources .examples .resource-wrapper .octagon .label,
-.swerpg.sheet.actor .tab.attributes .resources .examples .resource-wrapper .beveled-rectangle .label,
-.swerpg.sheet.actor .tab.attributes .resources .examples .resource-wrapper .beveled-frame .label,
-.swerpg.sheet.actor .tab.attributes .resources .examples .resource-wrapper .king-sized-beveled-frame .label {
+.swerpg.sheet.actor .tab.attributes .resources .resource-wrapper .octagon .label,
+.swerpg.sheet.actor .tab.attributes .resources .resource-wrapper .beveled-rectangle .label,
+.swerpg.sheet.actor .tab.attributes .resources .resource-wrapper .beveled-frame .label,
+.swerpg.sheet.actor .tab.attributes .resources .resource-wrapper .king-sized-beveled-frame .label {
   color: var(--color-primary);
 }
 .swerpg.sheet.actor .tab.attributes .resources .resource {
@@ -1505,11 +1532,12 @@ a.button.increase {
 /** Defenses */
 .defenses {
   display: flex;
-  grid-column: 1;
-  grid-row: 3;
+  grid-column: 2;
+  grid-row: 1;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  min-height: 200px;
 }
 .defenses .defense {
   display: flex;
@@ -3109,6 +3137,221 @@ a.button.increase {
 #swerpg-talent-controls div.controls {
   flex: 0 0 240px;
   gap: 0.5rem;
+}
+.swerpg.sheet.actor .first-row-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  /* Deux colonnes égales */
+  gap: 1rem;
+  /* optionnel : espace entre les colonnes */
+  height: 100%;
+}
+.swerpg.sheet.actor .first-row-split div.sheet-section {
+  margin: 0;
+  padding: 0;
+}
+.left-half,
+.right-half {
+  width: 100%;
+  height: 100%;
+}
+.left-half {
+  background-color: #7c7dff;
+}
+.right-half {
+  background-color: #ff00ff;
+}
+.resources-wrapper {
+  justify-content: space-evenly;
+  align-content: flex-end;
+  align-items: end;
+  flex: 1;
+  width: 100%;
+}
+.resources-wrapper .jauge-wrapper {
+  flex: none;
+}
+.resources-wrapper .resource-bar-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 6px;
+  width: 60px;
+  border: 2px solid #2a2a2a;
+  border-radius: 8px;
+  gap: 0.5rem;
+  background-color: #1b1b1b;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.4);
+}
+.resources-wrapper .resource-bar-container .icon {
+  flex-direction: column;
+  display: flex;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  gap: 0.3rem;
+}
+.resources-wrapper .resource-bar-container .icon img {
+  width: 32px;
+  height: 32px;
+  filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.2));
+}
+.resources-wrapper .resource-bar-container .jauge {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 3px;
+  width: 100%;
+}
+.resources-wrapper .resource-bar-container .block {
+  height: 10px;
+  width: 100%;
+  border: 1px solid #555;
+  border-radius: 2px;
+  background-color: #111;
+  opacity: 0.3;
+  transition: background-color 0.3s, opacity 0.3s;
+}
+.resources-wrapper .resource-bar-container .label {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+}
+.resources-wrapper .resource-bar-container .label .values {
+  flex: none;
+}
+.resources-wrapper .resource-bar-container .title {
+  text-transform: uppercase;
+  font-size: 0.5rem;
+  font-family: 'Orbitron', sans-serif;
+  color: white;
+  text-shadow: 0 0 2px black;
+  font-weight: 700;
+}
+.resources-wrapper .resource-bar-container .title.wounds {
+  border-color: #700;
+  color: #ff0000;
+  box-shadow: 0 0 4px #ff3c3c;
+  opacity: 1;
+}
+.resources-wrapper .resource-bar-container .title.strain {
+  border-color: #046;
+  color: #00bfff;
+  box-shadow: 0 0 4px #00eaff;
+  opacity: 1;
+}
+.resources-wrapper .resource-bar-container .title.encumbrance {
+  border-color: #a50;
+  color: #ff9900;
+  box-shadow: 0 0 4px #ffc266;
+  opacity: 1;
+}
+.resources-wrapper .resource-bar-container.wounds {
+  border-color: #700;
+}
+.resources-wrapper .resource-bar-container.wounds .block.active {
+  background-color: #ff0000;
+  box-shadow: 0 0 4px #ff3c3c;
+  opacity: 1;
+}
+.resources-wrapper .resource-bar-container.strain {
+  border-color: #046;
+}
+.resources-wrapper .resource-bar-container.strain .block.active {
+  background-color: #00bfff;
+  box-shadow: 0 0 4px #00eaff;
+  opacity: 1;
+}
+.resources-wrapper .resource-bar-container.encumbrance {
+  border-color: #a50;
+}
+.resources-wrapper .resource-bar-container.encumbrance .block.active {
+  background-color: #ff9900;
+  box-shadow: 0 0 4px #ffc266;
+  opacity: 1;
+}
+.defenses-wrapper {
+  justify-content: space-evenly;
+  align-content: flex-end;
+  align-items: end;
+  flex: 1;
+  width: 100%;
+}
+.defenses-wrapper .defense-wrapper {
+  flex: none;
+}
+.defenses-wrapper .defense-bar-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 6px;
+  width: 60px;
+  border: 2px solid #2a2a2a;
+  border-radius: 8px;
+  gap: 0.5rem;
+  background-color: #1b1b1b;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.4);
+}
+.defenses-wrapper .defense-bar-container .icon {
+  flex-direction: column;
+  display: flex;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  gap: 0.3rem;
+}
+.defenses-wrapper .defense-bar-container .icon img {
+  width: 32px;
+  height: 32px;
+  filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.2));
+}
+.defenses-wrapper .defense-bar-container .label {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+}
+.defenses-wrapper .defense-bar-container .label .values {
+  flex: none;
+}
+.defenses-wrapper .defense-bar-container .values {
+  text-transform: uppercase;
+  font-size: 3rem;
+  font-family: 'Orbitron', sans-serif;
+  color: white;
+  text-shadow: 0 0 2px black;
+  font-weight: 700;
+}
+.defenses-wrapper .defense-bar-container .title {
+  text-transform: uppercase;
+  font-size: 1rem;
+  font-family: 'Orbitron', sans-serif;
+  color: white;
+  text-shadow: 0 0 2px black;
+  font-weight: 700;
+}
+.defenses-wrapper .defense-bar-container .title.ranged,
+.defenses-wrapper .defense-bar-container .title.melee {
+  border-color: #046;
+  box-shadow: 0 0 4px #00eaff;
+  opacity: 1;
+}
+.defenses-wrapper .defense-bar-container .title.soak {
+  border-color: #a50;
+  box-shadow: 0 0 4px #ffc266;
+  opacity: 1;
+}
+.defenses-wrapper .defense-bar-container .title.ranged,
+.defenses-wrapper .defense-bar-container .values.ranged,
+.defenses-wrapper .defense-bar-container .title.melee,
+.defenses-wrapper .defense-bar-container .values.melee {
+  color: #00bfff;
+}
+.defenses-wrapper .defense-bar-container .title.soak,
+.defenses-wrapper .defense-bar-container .values.soak {
+  color: #ff9900;
 }
 /**
  * TODO: A collection of temporary rules that should be removed in V13

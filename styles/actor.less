@@ -349,7 +349,7 @@
   /* ----------------------------------------- */
 
   .tab.attributes {
-    grid-template-rows: 140px 200px 1fr;
+    grid-template-rows: 200px 200px 1fr;
     grid-template-columns: 1fr;
     padding-bottom: var(--margin-size);
 
@@ -364,138 +364,127 @@
       grid-row: 1;
       justify-content: center;
       padding: 0 0.5rem;
+      min-height: 200px;
 
-      /* HTML: <div class="octagon"></div> */
+      .resource-wrapper {
+        margin: 0.5em 1em;
+        width: 100px;
+        flex: none;
 
-      .examples {
-
-        .first {
-
+        .beveled-rectangle {
+          background-color: var(--color-accent);
+          padding: 0;
+          margin: 0;
+          --notchSize: 5px;
+          clip-path: polygon(0% var(--notchSize), var(--notchSize) 0%, calc(100% - var(--notchSize)) 0%, 100% var(--notchSize), 100% calc(100% - var(--notchSize)), calc(100% - var(--notchSize)) 100%, var(--notchSize) 100%, 0% calc(100% - var(--notchSize)));
+          height: 25px;
+          display: flex;
         }
 
-        .second {
+        .beveled-frame {
+          background-color: white;
+          padding: 2px 3px;
+          margin: 0;
+          --notchSize: 5px;
+          clip-path: polygon(0% var(--notchSize), var(--notchSize) 0%, calc(100% - var(--notchSize)) 0%, 100% var(--notchSize), 100% calc(100% - var(--notchSize)), calc(100% - var(--notchSize)) 100%, var(--notchSize) 100%, 0% calc(100% - var(--notchSize)));
+          height: 25px;
+          display: flex;
 
-        }
-
-        .resource-wrapper {
-          margin: 0.5em 1em;
-          width: 100px;
-          flex: none;
-
-          .beveled-rectangle {
-            background-color: var(--color-accent);
+          .empty-rectangle {
+            background-color: var(--color-frame-bg-75);
             padding: 0;
             margin: 0;
-            --notchSize: 5px;
+            --notchSize: 4px;
             clip-path: polygon(0% var(--notchSize), var(--notchSize) 0%, calc(100% - var(--notchSize)) 0%, 100% var(--notchSize), 100% calc(100% - var(--notchSize)), calc(100% - var(--notchSize)) 100%, var(--notchSize) 100%, 0% calc(100% - var(--notchSize)));
-            height: 25px;
+            height: 21px;
+            width: 100%;
             display: flex;
           }
+        }
 
-          .beveled-frame {
-            background-color: white;
-            padding: 2px 3px;
+        .king-sized-beveled-frame {
+          background-color: white;
+          padding: 2px 3px;
+          margin: 0;
+          --notchSize: 17px;
+          clip-path: polygon(0% var(--notchSize), var(--notchSize) 0%, calc(100% - var(--notchSize)) 0%, 100% var(--notchSize), 100% calc(100% - var(--notchSize)), calc(100% - var(--notchSize)) 100%, var(--notchSize) 100%, 0% calc(100% - var(--notchSize)));
+          height: 75px;
+          display: flex;
+
+          .empty-rectangle {
+            background-color: var(--color-frame-bg-75);
+            padding: 0;
             margin: 0;
-            --notchSize: 5px;
+            --notchSize: 16px;
             clip-path: polygon(0% var(--notchSize), var(--notchSize) 0%, calc(100% - var(--notchSize)) 0%, 100% var(--notchSize), 100% calc(100% - var(--notchSize)), calc(100% - var(--notchSize)) 100%, var(--notchSize) 100%, 0% calc(100% - var(--notchSize)));
-            height: 25px;
+            height: 70px;
+            width: 100%;
             display: flex;
 
-            .empty-rectangle {
-              background-color: var(--color-frame-bg-75);
+            .octagon {
+              background-color: var(--color-accent);
               padding: 0;
-              margin: 0;
-              --notchSize: 4px;
+              margin: 3px 3px 0 7px;
+              --notchSize: 8px;
               clip-path: polygon(0% var(--notchSize), var(--notchSize) 0%, calc(100% - var(--notchSize)) 0%, 100% var(--notchSize), 100% calc(100% - var(--notchSize)), calc(100% - var(--notchSize)) 100%, var(--notchSize) 100%, 0% calc(100% - var(--notchSize)));
-              height: 21px;
-              width: 100%;
+              height: 16px;
+              width: 79px;
               display: flex;
             }
-          }
 
-          .king-sized-beveled-frame {
-            background-color: white;
-            padding: 2px 3px;
-            margin: 0;
-            --notchSize: 17px;
-            clip-path: polygon(0% var(--notchSize), var(--notchSize) 0%, calc(100% - var(--notchSize)) 0%, 100% var(--notchSize), 100% calc(100% - var(--notchSize)), calc(100% - var(--notchSize)) 100%, var(--notchSize) 100%, 0% calc(100% - var(--notchSize)));
-            height: 75px;
-            display: flex;
+            .column-wrapper {
+              height: 100%;
 
-            .empty-rectangle {
-              background-color: var(--color-frame-bg-75);
-              padding: 0;
-              margin: 0;
-              --notchSize: 16px;
-              clip-path: polygon(0% var(--notchSize), var(--notchSize) 0%, calc(100% - var(--notchSize)) 0%, 100% var(--notchSize), 100% calc(100% - var(--notchSize)), calc(100% - var(--notchSize)) 100%, var(--notchSize) 100%, 0% calc(100% - var(--notchSize)));
-              height: 70px;
-              width: 100%;
-              display: flex;
-
-              .octagon {
-                background-color: var(--color-accent);
-                padding: 0;
-                margin: 3px 3px 0 7px;
-                --notchSize: 8px;
-                clip-path: polygon(0% var(--notchSize), var(--notchSize) 0%, calc(100% - var(--notchSize)) 0%, 100% var(--notchSize), 100% calc(100% - var(--notchSize)), calc(100% - var(--notchSize)) 100%, var(--notchSize) 100%, 0% calc(100% - var(--notchSize)));
-                height: 16px;
-                width: 79px;
-                display: flex;
-              }
-
-              .column-wrapper {
+              .column_1, .column_2 {
                 height: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                align-content: center;
 
-                .column_1, .column_2 {
-                  height: 100%;
-                  display: flex;
-                  justify-content: center;
-                  align-items: center;
-                  align-content: center;
-
-                  p {
-
-                  }
+                p {
 
                 }
 
-                .column_1 {
-                  border-right: 1px solid white;
-                  margin-right: 0.25em;
-                }
+              }
+
+              .column_1 {
+                border-right: 1px solid white;
+                margin-right: 0.25em;
               }
             }
           }
-
-          .octagon {
-            background-color: var(--color-accent);
-            padding: 0;
-            margin: 0;
-            --notchSize: 10px;
-            clip-path: polygon(0% var(--notchSize), var(--notchSize) 0%, calc(100% - var(--notchSize)) 0%, 100% var(--notchSize), 100% calc(100% - var(--notchSize)), calc(100% - var(--notchSize)) 100%, var(--notchSize) 100%, 0% calc(100% - var(--notchSize)));
-            height: 20px;
-            display: flex;
-          }
-
-          .octagon, .beveled-rectangle, .beveled-frame, .king-sized-beveled-frame {
-            .label {
-              text-transform: uppercase;
-              font-size: var(--font-size-10);
-              font-weight: bold;
-              align-items: center;
-              padding: 0;
-              margin: auto;
-            }
-          }
-
-          .octagon, .beveled-rectangle, .beveled-frame, .king-sized-beveled-frame {
-            .label {
-              color: var(--color-primary);
-            }
-          }
-
         }
+
+        .octagon {
+          background-color: var(--color-accent);
+          padding: 0;
+          margin: 0;
+          --notchSize: 10px;
+          clip-path: polygon(0% var(--notchSize), var(--notchSize) 0%, calc(100% - var(--notchSize)) 0%, 100% var(--notchSize), 100% calc(100% - var(--notchSize)), calc(100% - var(--notchSize)) 100%, var(--notchSize) 100%, 0% calc(100% - var(--notchSize)));
+          height: 20px;
+          display: flex;
+        }
+
+        .octagon, .beveled-rectangle, .beveled-frame, .king-sized-beveled-frame {
+          .label {
+            text-transform: uppercase;
+            font-size: var(--font-size-10);
+            font-weight: bold;
+            align-items: center;
+            padding: 0;
+            margin: auto;
+          }
+        }
+
+        .octagon, .beveled-rectangle, .beveled-frame, .king-sized-beveled-frame {
+          .label {
+            color: var(--color-primary);
+          }
+        }
+
       }
+
 
       /** Pool Resources */
 
@@ -910,11 +899,12 @@ a.button {
 
 .defenses {
   display: flex;
-  grid-column: 1;
-  grid-row: 3;
+  grid-column: 2;
+  grid-row: 1;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  min-height: 200px;
 
   .defense {
     display: flex;
@@ -1227,14 +1217,14 @@ a.button {
 
   }
 
-    .centered {
-      flex: 1.5;
-      text-align: center;
-      justify-content: center;
-      align-items: center;
-      display: flex;
-      align-content: center;
-    }
+  .centered {
+    flex: 1.5;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    align-content: center;
+  }
 
   .column {
     flex: 1.5;

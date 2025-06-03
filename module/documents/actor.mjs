@@ -1253,7 +1253,7 @@ export default class SwerpgActor extends Actor {
             const cfg = SYSTEM.RESOURCES[id];
             updates[`system.resources.${id}.value`] = cfg.type === "reserve" ? 0 : resource.max;
         }
-        updates["system.resources.heroism.value"] = 0;
+        //updates["system.resources.heroism.value"] = 0;
         updates["system.status"] = null;
         return updates;
     }
@@ -1818,6 +1818,38 @@ export default class SwerpgActor extends Actor {
     /* -------------------------------------------- */
 
     /**
+     * Modify a jauge value increase or decrease for the Actor
+     * @param {string} jaugeType      The jauge type to increase or decrease
+     * @param {string} action        A string in ['increase', 'decrease'] for the action to perform on the jauge value.
+     * @return {Promise}
+     */
+    async modifyResource(jaugeType, action) {
+        const resource = this.system.resources[jaugeType];
+
+        const value = this.#computeResourceValue(resource, action);
+        console.log(`modifyResource(${jaugeType}, ${action}) with new value (${value}) from values`, resource, this.system.resources);
+
+        resource.value = value;
+
+        const updateData = {[`system.resources.${jaugeType}`]: resource};
+
+        console.log(`[Before] modifyResource with value:`, updateData);
+        const updatedActor = await this.update(updateData);
+        console.log(`[After] modifyResource with value:`, updatedActor?.system?.resources[jaugeType]);
+    }
+
+    #computeResourceValue(resource, action) {
+        if (action === "increase") {
+            return Math.min(resource.value + 1, resource.threshold);
+        } else if (action === "decrease") {
+            return Math.max(resource.value - 1, 0);
+        }
+        throw new Error(`Invalid action "${action}" for jauge type "${resource.type}"`);
+    }
+
+    /* -------------------------------------------- */
+
+    /**
      * Test whether this Actor can modify an ability score in a certain direction.
      * @param {string} ability      A value in ABILITIES
      * @param {number} delta        A number in [-1, 1] for the direction of the purchase
@@ -2223,7 +2255,7 @@ export default class SwerpgActor extends Actor {
         await super._preCreate(data, options, user);
 
         // Automatic Prototype Token configuration
-        const prototypeToken = {bar1: {attribute: "resources.health"}, bar2: {attribute: "resources.morale"}};
+        const prototypeToken = {bar1: {attribute: "resources.wounds"}, bar2: {attribute: "resources.strain"}};
         switch (data.type) {
             case SYSTEM.ACTOR_TYPE.character.type:
                 Object.assign(prototypeToken, {vision: true, actorLink: true, disposition: 1});
@@ -2268,8 +2300,8 @@ export default class SwerpgActor extends Actor {
         if (game.userId === userId) {
             this.#updateSize();
             // TODO update size of active tokens
-            this.#replenishResources(data);
-            this.#applyResourceStatuses(data);
+            //this.#replenishResources(data);
+            //this.#applyResourceStatuses(data);
         }
 
         // Update flanking

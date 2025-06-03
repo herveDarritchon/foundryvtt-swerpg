@@ -4,6 +4,17 @@ import SkillFactory from "../../lib/skills/skill-factory.mjs";
 import ErrorSkill from "../../lib/skills/error-skill.mjs";
 import TalentFactory from "../../lib/talents/talent-factory.mjs";
 import ErrorTalent from "../../lib/talents/error-talent.mjs";
+import JaugeFactory from "../../lib/jauges/jauge-factory.mjs";
+
+/**
+ * @typedef {Object} DefenseDisplayData
+ * Represents the data structure used to render defense on the character sheet.
+ *
+ * @property {string} extraCss - The type of defense (e.g., "melee", "ranged").
+ * @property {string} type - The type of defense, which is typically the same as `extraCss`.
+ * @property {string} label - The label for the defense, typically the same as the type.
+ * @property {number} value - The current value of the jauge.
+ */
 
 /**
  * @typedef {Object} TalentTag
@@ -74,7 +85,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
             editSpecializations: CharacterSheet.#onEditSpecializations,
             editBackground: CharacterSheet.#onEditBackground,
             toggleTrainedSkill: CharacterSheet.#onToggleTrainedSkill,
-            toggleObligationExtraState: CharacterSheet.#onToggleOblligationExtraState,
+            toggleObligationExtraState: CharacterSheet.#onToggleObligationExtraState,
         }
     };
 
@@ -134,8 +145,64 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
         context.obligations = this.#buildObligationList();
         context.obligationPoints = this.#computeObligationPoints(context.obligations);
 
+        context.jauges = this.#buildJaugeDisplayData(a.system.resources);
+        context.soak = this.#buildSoakDisplayData(a.system.characteristics.brawn);
+        context.defenses = this.#buildDefenseDisplayData();
+
         console.debug("[CharacterSheet] context", context);
         return context;
+    }
+
+    /**
+     * Builds the data structure for the jauge display.
+     * @returns {DefenseDisplayData} Soak display data objects.
+     */
+    #buildSoakDisplayData(brawn) {
+        const type = "soak";
+
+            return {
+                extraCss: type,
+                type: type,
+                label: type,
+                value: brawn.rank.value,
+            };
+    }
+
+    /**
+     * Builds the data structure for the jauge display.
+     * @returns {[DefenseDisplayData]} An array of defense display data objects.
+     */
+    #buildDefenseDisplayData() {
+        const types = ["melee", "ranged"];
+
+        return types.map(type => {
+            return {
+                extraCss: type,
+                type: type,
+                label: type,
+                value: 0,
+            };
+        });
+    }
+
+    /**
+     * Builds the data structure for the jauge display.
+     * @returns {[JaugeDisplayData]} An array of jauge display data objects.
+     */
+    #buildJaugeDisplayData(resources) {
+        const types = ["wounds", "strain", "encumbrance"];
+
+        const jauges = types.map(type => {
+            const resource = resources[type];
+            console.log(`[character-sheet] #buildJaugeDisplayData - resource ${type}`, resource);
+            const {value, threshold} = resource;
+            console.log(`[character-sheet] #buildJaugeDisplayData - jauge ${type} value/threshold: ${value}/${threshold}`);
+            return JaugeFactory.build(type, value, threshold).create();
+        });
+
+        console.log(`[character-sheet] #buildJaugeDisplayData - jauges`, jauges);
+
+        return jauges;
     }
 
     /* -------------------------------------------- */
@@ -160,6 +227,10 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
                 return this.actor.purchaseCharacteristic(target.closest(".characteristic-wrapper").dataset.characteristic, 'forget');
             case "characteristicIncrease":
                 return this.actor.purchaseCharacteristic(target.closest(".characteristic-wrapper").dataset.characteristic, 'train');
+            case "resourceDecrease":
+                return this.actor.modifyResource(target.closest(".jauge-wrapper").dataset.jaugeType, 'decrease');
+            case "resourceIncrease":
+                return this.actor.modifyResource(target.closest(".jauge-wrapper").dataset.jaugeType, 'increase');
             case "skillConfig":
                 const skillConfig = new SkillConfig({
                     document: this.actor,
@@ -201,7 +272,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
      * @param {PointerEvent} event
      * @returns {Promise<void>}
      */
-    static async #onToggleOblligationExtraState(event) {
+    static async #onToggleObligationExtraState(event) {
         const element = event.target.closest(".obligation");
         const itemId = element.dataset.itemId;
         const item = this.actor.items.get(itemId);
