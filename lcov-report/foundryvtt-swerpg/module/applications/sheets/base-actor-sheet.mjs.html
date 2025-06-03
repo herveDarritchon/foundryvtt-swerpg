@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/904</span>
+                <span class='fraction'>0/922</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/904</span>
+                <span class='fraction'>0/922</span>
             </div>
         
             
@@ -1094,7 +1094,29 @@
 <a name='L1029'></a><a href='#L1029'>1029</a>
 <a name='L1030'></a><a href='#L1030'>1030</a>
 <a name='L1031'></a><a href='#L1031'>1031</a>
-<a name='L1032'></a><a href='#L1032'>1032</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<a name='L1032'></a><a href='#L1032'>1032</a>
+<a name='L1033'></a><a href='#L1033'>1033</a>
+<a name='L1034'></a><a href='#L1034'>1034</a>
+<a name='L1035'></a><a href='#L1035'>1035</a>
+<a name='L1036'></a><a href='#L1036'>1036</a>
+<a name='L1037'></a><a href='#L1037'>1037</a>
+<a name='L1038'></a><a href='#L1038'>1038</a>
+<a name='L1039'></a><a href='#L1039'>1039</a>
+<a name='L1040'></a><a href='#L1040'>1040</a>
+<a name='L1041'></a><a href='#L1041'>1041</a>
+<a name='L1042'></a><a href='#L1042'>1042</a>
+<a name='L1043'></a><a href='#L1043'>1043</a>
+<a name='L1044'></a><a href='#L1044'>1044</a>
+<a name='L1045'></a><a href='#L1045'>1045</a>
+<a name='L1046'></a><a href='#L1046'>1046</a>
+<a name='L1047'></a><a href='#L1047'>1047</a>
+<a name='L1048'></a><a href='#L1048'>1048</a>
+<a name='L1049'></a><a href='#L1049'>1049</a>
+<a name='L1050'></a><a href='#L1050'>1050</a>
+<a name='L1051'></a><a href='#L1051'>1051</a>
+<a name='L1052'></a><a href='#L1052'>1052</a>
+<a name='L1053'></a><a href='#L1053'>1053</a>
+<a name='L1054'></a><a href='#L1054'>1054</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -1633,6 +1655,28 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -2288,7 +2332,7 @@
 <span class="cstat-no" title="statement not covered" >            inventory,</span>
 <span class="cstat-no" title="statement not covered" >            isEditable: this.isEditable,</span>
 <span class="cstat-no" title="statement not covered" >            resistances: this.#prepareResistances(),</span>
-<span class="cstat-no" title="statement not covered" >            resources: this.#prepareResources(),</span>
+<span class="cstat-no" title="statement not covered" >            //resources: this.#prepareResources(),</span>
 <span class="cstat-no" title="statement not covered" >            skillCategories: this.#prepareSkills(),</span>
 <span class="cstat-no" title="statement not covered" >            source: this.document.toObject(),</span>
 <span class="cstat-no" title="statement not covered" >            spells: this.#prepareSpells(iconicSpells),</span>
@@ -2665,10 +2709,32 @@
 &nbsp;
 <span class="cstat-no" title="statement not covered" >    /**</span>
 <span class="cstat-no" title="statement not covered" >     * Prepare and format the display of resource attributes on the actor sheet.</span>
-<span class="cstat-no" title="statement not covered" >     * @returns {Record&lt;string, {id: string, pct: number, color: {bg: string, fill: string}}&gt;}</span>
+<span class="cstat-no" title="statement not covered" >     * @returns {Record&lt;string, {id: string, current: number, max: number, pct: number, color: {bg: string, fill: string}}&gt;}</span>
 <span class="cstat-no" title="statement not covered" >     */</span>
 <span class="cstat-no" title="statement not covered" >    #prepareResources() {</span>
-<span class="cstat-no" title="statement not covered" >        return {};</span>
+<span class="cstat-no" title="statement not covered" >        const resources = this.document.system.resources;</span>
+<span class="cstat-no" title="statement not covered" >        const woundCurrent = resources.wounds.value;</span>
+<span class="cstat-no" title="statement not covered" >        const woundMax = resources.wounds.threshold;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        const strainCurrent = resources.strain.value;</span>
+<span class="cstat-no" title="statement not covered" >        const strainMax = resources.strain.threshold;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        const encCurrent = resources.encumbrance.value;</span>
+<span class="cstat-no" title="statement not covered" >        const encMax = resources.encumbrance.threshold;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        const makeResource = (id, current, max, bg, fill) =&gt; ({</span>
+<span class="cstat-no" title="statement not covered" >            id,</span>
+<span class="cstat-no" title="statement not covered" >            current,</span>
+<span class="cstat-no" title="statement not covered" >            max,</span>
+<span class="cstat-no" title="statement not covered" >            pct: max &gt; 0 ? current / max : 0,</span>
+<span class="cstat-no" title="statement not covered" >            color: { bg, fill }</span>
+<span class="cstat-no" title="statement not covered" >        });</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        return {</span>
+<span class="cstat-no" title="statement not covered" >            wounds: makeResource("wounds", woundCurrent, woundMax, "#440000", "#ff0000"),</span>
+<span class="cstat-no" title="statement not covered" >            strain: makeResource("strain", strainCurrent, strainMax, "#004400", "#00ff00"),</span>
+<span class="cstat-no" title="statement not covered" >            encumbrance: makeResource("encumbrance", encCurrent, encMax, "#444400", "#ffff00")</span>
+<span class="cstat-no" title="statement not covered" >        };</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >    /* -------------------------------------------- */</span>
@@ -3163,7 +3229,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-05-28T08:02:32.256Z
+                at 2025-06-03T17:34:39.397Z
             </div>
         <script src="../../../../prettify.js"></script>
         <script>
