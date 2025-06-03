@@ -26,11 +26,14 @@ jobs:
           node-version: '20'
           cache: 'pnpm'
 
+      - name: 🛠 Enable Corepack
+        run: corepack enable
+
+      - name: 📦 Install pnpm
+        run: corepack prepare pnpm@latest --activate
+
       - name: 📦 Install dependencies
-        run: |
-          corepack enable
-          corepack prepare pnpm@latest --activate
-          pnpm install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
 
       - name: ✨ Run semantic-release
         env:
