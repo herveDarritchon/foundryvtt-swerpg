@@ -168,10 +168,10 @@ export default class SwerpgCharacter extends SwerpgActorType {
                 ...SwerpgCareer.defineSchema()
             }, {required: true, nullable: true, initial: null}),
             specializations: new fields.SetField(new fields.SchemaField({
-                    name: new fields.StringField({blank: false}),
-                    img: new fields.StringField(),
-                    ...SwerpgSpecialization.defineSchema()
-                }, {required: true, nullable: true, initial: null}),),
+                name: new fields.StringField({blank: false}),
+                img: new fields.StringField(),
+                ...SwerpgSpecialization.defineSchema()
+            }, {required: true, nullable: true, initial: null}),),
             specialities: new fields.ArrayField(new fields.SchemaField({
                 ...SwerpgSpeciality.defineSchema()
             }), {required: true, nullable: true, initial: null}),

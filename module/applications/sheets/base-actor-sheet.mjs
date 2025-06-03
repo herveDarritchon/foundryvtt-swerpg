@@ -161,7 +161,7 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
             inventory,
             isEditable: this.isEditable,
             resistances: this.#prepareResistances(),
-            resources: this.#prepareResources(),
+            //resources: this.#prepareResources(),
             skillCategories: this.#prepareSkills(),
             source: this.document.toObject(),
             spells: this.#prepareSpells(iconicSpells),

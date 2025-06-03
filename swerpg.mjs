@@ -237,6 +237,16 @@ Hooks.once("init", async function () {
 });
 
 /* -------------------------------------------- */
+/*  Handlebars Helpers                          */
+/* -------------------------------------------- */
+
+Handlebars.registerHelper("range", function(start, end) {
+    let result = [];
+    for (let i = start; i <= end; i++) result.push(i);
+    return result;
+});
+
+/* -------------------------------------------- */
 /*  Localization                                */
 /* -------------------------------------------- */
 
