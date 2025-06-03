@@ -23,12 +23,14 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'pnpm'
 
-      - name: 📦 Setup pnpm and install dependencies
-        run: |
-          npm install -g pnpm
-          pnpm install --frozen-lockfile
+      - name: 📦 Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10 # ou "latest" si tu préfères
+
+      - name: 📦 Install dependencies
+        run: pnpm install --frozen-lockfile
 
       - name: ✨ Run semantic-release
         env:
