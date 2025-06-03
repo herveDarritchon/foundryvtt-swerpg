@@ -29,10 +29,11 @@ plugins:
   - '@semantic-release/release-notes-generator'
   - - '@semantic-release/changelog'
     - changelogFile: CHANGELOG.md
+  - './update-system-json.cjs'  # 👈 Ton script custom ici
   - - '@semantic-release/git'
     - assets:
         - CHANGELOG.md
-        - src/system.json
+        - system.json      # 👈 Attention, si le fichier est à la racine, ne mets pas src/
       message: |
         chore(release): ${nextRelease.version} [skip ci]
 
@@ -41,16 +42,3 @@ plugins:
     - successComment: false
       failComment: false
       assets: [ ]
-
-prepare:
-  - path: '@semantic-release/changelog'
-    changelogFile: CHANGELOG.md
-  - path: './update-system-json.cjs'
-  - path: '@semantic-release/git'
-    assets:
-      - src/system.json
-      - CHANGELOG.md
-    message: |
-      chore(release): ${nextRelease.version} [skip ci]
-
-      ${nextRelease.notes}
