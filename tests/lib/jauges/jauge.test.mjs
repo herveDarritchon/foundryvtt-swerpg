@@ -18,6 +18,8 @@ describe('Jauge Unit Tests', () => {
 
             expect(data).toEqual({
                 extraCss: 'wounds',
+                type: 'wounds',
+                label: 'wounds',
                 value: 3,
                 max: 5,
                 blocks: [
