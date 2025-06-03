@@ -1,3 +1,10 @@
+## [1.0.5](https://github.com/herveDarritchon/foundryvtt-swerpg/compare/v1.0.4...v1.0.5) (2025-06-03)
+
+
+### Bug Fixes
+
+* update release process to append GitHub diff link to CHANGELOG.md ([316d19d](https://github.com/herveDarritchon/foundryvtt-swerpg/commit/316d19dd87b243277f04772b20c5552aabcfdf2f))
+
 ## [1.0.4](https://github.com/herveDarritchon/foundryvtt-swerpg/compare/v1.0.3...v1.0.4) (2025-06-03)
 
 
