@@ -77,14 +77,12 @@ jobs:
       - name: 📦 Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: 🔍 Dry run to get next version
+      - name: 🔍 Dry run to get next version (via script)
         id: next_version
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          VERSION=$(npx semantic-release --dry-run --debug | grep -Eo "The next release version is [0-9]+\.[0-9]+\.[0-9]+")
+          VERSION=$(node ./get-next-version.mjs)
+          echo "Next version: $VERSION"
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
-          echo "Next release will be $VERSION"
 
       # Modify "module.json" with values specific to the release.
       # Since the values for the "version" and "url" keys aren't known ahead of
