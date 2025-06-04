@@ -77,12 +77,16 @@ jobs:
       - name: 📦 Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: 🔍 Dry run to get next version
-        id: next_version
+      - name: 🔍 Get next version
+        id: get_next_version
         run: |
-          VERSION=$(node ./get-next-version.mjs)
+          VERSION=$(node ./get-next-version.mjs | tail -n 1)
           echo "version=$VERSION" >> $GITHUB_OUTPUT
-          echo "Next release will be $VERSION"
+
+      - name: 🧪 Echo the next version
+        run: |
+          echo "Semantic Release would produce version: ${{ steps.get_next_version.outputs.version }}"
+      
 
       # Modify "module.json" with values specific to the release.
       # Since the values for the "version" and "url" keys aren't known ahead of
