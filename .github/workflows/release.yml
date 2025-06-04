@@ -139,6 +139,11 @@ jobs:
           # Don't forget to add a backslash at the end of the line for any
           # additional files or directories!
 
+      - name: 𝌚 Run semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx semantic-release
+
       # Update the GitHub release with the manifest and module archive files.
       - name: 𝌚 Update Release With Files
         id: create_version_release
@@ -152,11 +157,6 @@ jobs:
           artifacts: './system.json, ./system.zip'
           tag: ${{ github.event.release.tag_name }}
           body: ${{ github.event.release.body }}
-
-      - name: 𝌚 Run semantic-release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npx semantic-release
 
       - name: 📝 Append GitHub diff link to CHANGELOG.md
         run: node ./append-links-to-changelog.cjs
