@@ -103,7 +103,7 @@ jobs:
           MANIFEST: ${{ env.latest_manifest_url }}
           # The URL to the module archive associated with the module release being
           # processed by this workflow.
-          DOWNLOAD: "https://github.com/${{github.repository}}/releases/download/${{ steps.get_next_version.outputs.version }}/system.zip"
+          DOWNLOAD: "https://github.com/${{github.repository}}/releases/download/v${{ steps.get_next_version.outputs.version }}/system.zip"
 
       - name: 🏗️ Build system assets
         run: pnpm run build
