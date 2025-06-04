@@ -144,20 +144,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npx semantic-release
 
-      # Update the GitHub release with the manifest and module archive files.
-      - name: 𝌚 Update Release With Files
-        id: create_version_release
-        uses: ncipollo/release-action@v1
-        with:
-          allowUpdates: true
-          name: ${{ github.event.release.name }}
-          draft: ${{ github.event.release.unpublished }}
-          prerelease: ${{ github.event.release.prerelease }}
-          token: ${{ secrets.GITHUB_TOKEN }}
-          artifacts: './system.json, ./system.zip'
-          tag: ${{ github.event.release.tag_name }}
-          body: ${{ github.event.release.body }}
-
       - name: 📝 Append GitHub diff link to CHANGELOG.md
         run: node ./append-links-to-changelog.cjs
         env:
