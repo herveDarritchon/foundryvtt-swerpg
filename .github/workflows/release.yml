@@ -151,7 +151,8 @@ jobs:
       - name: 𝌚 Run semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npx semantic-release
+          DEBUG: semantic-release:*
+        run: npx semantic-release --extends ./release.js
 
       - name: 📝 Append GitHub diff link to CHANGELOG.md
         run: node ./append-links-to-changelog.cjs
