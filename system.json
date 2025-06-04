@@ -2,9 +2,9 @@
   "id": "swerpg",
   "title": "Star Wars Edge RPG",
   "description": "Enjoy thrilling adventures in the Star Wars™ galaxy with any or all of three different Star Wars roleplaying systems — Age of Rebellion, Edge of the Empire, and Force and Destiny.",
-  "manifest": "https://github.com/herveDarritchon/foundryvtt-swerpg/releases/latest/download/system.json",
-  "download": "https://github.com/herveDarritchon/foundryvtt-swerpg/releases/latest/download/system.zip",
-  "version": "0.0.0-semantic",
+  "manifest": "#{MANIFEST}#",
+  "download": "#{DOWNLOAD}#",
+  "version": "#{VERSION}#",
   "url": "https://github.com/herveDarritchon/foundryvtt-swerpg",
   "bugs": "https://github.com/herveDarritchon/foundryvtt-swerpg/issues",
   "background": "systems/swerpg/assets/images/star-wars-edge.webp",
@@ -201,6 +201,6 @@
     "diagonals": 1
   },
   "socket": true,
-  "primaryTokenAttribute": "resources.health",
-  "secondaryTokenAttribute": "resources.morale"
+  "primaryTokenAttribute": "resources.wounds",
+  "secondaryTokenAttribute": "resources.strain"
 }
