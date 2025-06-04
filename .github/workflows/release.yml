@@ -131,6 +131,7 @@ jobs:
             CHANGELOG.md                         \
             LICENSE                              \
             assets/                              \
+            styles/                              \
             css/                                 \
             packs/                               \
             fonts/                               \
