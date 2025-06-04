@@ -1,3 +1,10 @@
+## [0.1.11](https://github.com/herveDarritchon/foundryvtt-swerpg/compare/v0.1.10...v0.1.11) (2025-06-04)
+
+
+### Bug Fixes
+
+* update release.yml to extend semantic-release configuration for improved functionality ([60f95d6](https://github.com/herveDarritchon/foundryvtt-swerpg/commit/60f95d6af2cbf27afed1483544e6ac211ec6c432))
+
 ## [0.1.9](https://github.com/herveDarritchon/foundryvtt-swerpg/compare/v0.1.8...v0.1.9) (2025-06-04)
 
 ## [0.1.8](https://github.com/herveDarritchon/foundryvtt-swerpg/compare/v0.1.7...v0.1.8) (2025-06-04)
