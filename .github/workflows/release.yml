@@ -42,10 +42,6 @@ env:
   # otherwise FoundryVTT won't be able to perform this check.
   latest_manifest_url: "https://github.com/${{github.repository}}/releases/latest/download/system.json"
 
-  # The URL to the module archive associated with the module release being
-  # processed by this workflow.
-  release_module_url: "https://github.com/${{github.repository}}/releases/download/${{github.event.release.tag_name}}/system.zip"
-
 on:
   push:
     branches:
@@ -102,6 +98,9 @@ jobs:
         with:
           files: 'system.json'
         env:
+          # The URL to the module archive associated with the module release being
+          # processed by this workflow.
+          release_module_url: "https://github.com/${{github.repository}}/releases/download/${{ steps.get_next_version.outputs.version }}/system.zip"
           VERSION: ${{ steps.get_next_version.outputs.version }}
           URL: ${{ env.project_url }}
           MANIFEST: ${{ env.latest_manifest_url }}
