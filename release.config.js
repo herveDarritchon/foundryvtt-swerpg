@@ -22,6 +22,12 @@ module.exports = {
             }
         ],
         [
+            '@semantic-release/exec',
+            {
+                prepareCmd: 'echo RELEASE_VERSION=${nextRelease.version} >> $GITHUB_ENV && echo PREV_RELEASE_VERSION=${lastRelease.version} >> $GITHUB_ENV'
+            }
+        ],
+        [
             '@semantic-release/github',
             {
                 assets: [
