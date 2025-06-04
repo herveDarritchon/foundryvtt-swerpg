@@ -1,53 +1,89 @@
-name: 🚀 Semantic Release
+name: Create System Files For GitHub Release
+
+env:
+  project_url: "https://github.com/${{github.repository}}"
+  latest_manifest_url: "https://github.com/${{github.repository}}/releases/latest/download/system.json"
+  release_module_url: "https://github.com/${{github.repository}}/releases/download/${{github.event.release.tag_name}}/system.zip"
 
 on:
-  push:
-    branches:
-      - main
-  workflow_dispatch:
+  release:
+    types: [published]
 
 jobs:
-  release:
+  build:
     runs-on: ubuntu-latest
-
     permissions:
       contents: write
-      issues: write
-      pull-requests: write
 
     steps:
-      - name: 📆 Checkout
-        uses: actions/checkout@v4
+      - name: Checkout Repository
+        uses: actions/checkout@v3
 
-      - name: 🔧 Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Extract Version From Tag
+        id: get_version
+        uses: battila7/get-version-action@v2
+
+      - name: Modify system.json With Release-Specific Values
+        uses: cschleiden/replace-tokens@v1
         with:
-          node-version: '20'
-
-      - name: 📦 Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10
-
-      - name: 📦 Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: ✨ Run semantic-release
-        id: semantic
+          files: 'system.json'
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npx semantic-release
+          VERSION: ${{ steps.get_version.outputs.version-without-v }}
+          URL: ${{ env.project_url }}
+          MANIFEST: ${{ env.latest_manifest_url }}
+          DOWNLOAD: ${{ env.release_module_url }}
 
-      - name: 🔁 Get previous and current tags
-        id: tags
+      - name: Install Dependencies
+        run: npm ci
+
+      # Si tu as une étape de build spécifique, ajoute-la ici
+      # - name: Build System Assets
+      #   run: npm run build
+
+      - name: Create System Archive
         run: |
-          export RELEASE_VERSION=$(git describe --tags --abbrev=0)
-          export PREV_RELEASE_VERSION=$(git describe --tags --abbrev=0 $(git rev-list --tags --skip=1 --max-count=1))
-          echo "RELEASE_VERSION=$RELEASE_VERSION" >> $GITHUB_ENV
-          echo "PREV_RELEASE_VERSION=$PREV_RELEASE_VERSION" >> $GITHUB_ENV
+          zip -r system.zip \
+            system.json \
+            swerpg.mjs \
+            README.md \
+            CHANGELOG.md \
+            LICENSE \
+            assets/ \
+            styles/ \
+            lang/ \
+            templates/ \
+            packs/
 
-      - name: 📝 Append GitHub diff link to CHANGELOG.md
-        run: node ./append-links-to-changelog.cjs
-        env:
-          RELEASE_VERSION: ${{ env.RELEASE_VERSION }}
-          PREV_RELEASE_VERSION: ${{ env.PREV_RELEASE_VERSION }}
+      - name: Upload Release Assets
+        uses: ncipollo/release-action@v1
+        with:
+          allowUpdates: true
+          name: ${{ github.event.release.name }}
+          draft: ${{ github.event.release.unpublished }}
+          prerelease: ${{ github.event.release.prerelease }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          artifacts: './system.json, ./system.zip'
+          tag: ${{ github.event.release.tag_name }}
+          body: ${{ github.event.release.body }}
+
+      # Optionnel : ping l'API FoundryVTT si tu as un token FVTT_PACKAGE_RELEASE_TOKEN
+      # - name: Deploy to Foundry Package Listing
+      #   uses: fjogeleit/http-request-action@v1
+      #   with:
+      #     url: 'https://api.foundryvtt.com/_api/packages/release_version'
+      #     method: 'POST'
+      #     contentType: 'application/json'
+      #     customHeaders: '{"Authorization": "${{ secrets.FVTT_PACKAGE_RELEASE_TOKEN }}"}'
+      #     data: '{
+      #       "id": "swerpg",
+      #       "dry-run": false,
+      #       "release": {
+      #         "version": "${{ github.event.release.tag_name }}",
+      #         "manifest": "https://github.com/herveDarritchon/foundryvtt-swerpg/releases/download/${{ github.event.release.tag_name }}/system.json",
+      #         "notes": "https://github.com/herveDarritchon/foundryvtt-swerpg/blob/main/CHANGELOG.md",
+      #         "compatibility": {
+      #           "minimum": "12",
+      #           "verified": "13.334"
+      #         }
+      #       }
+      #     }'
