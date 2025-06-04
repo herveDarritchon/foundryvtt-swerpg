@@ -31,10 +31,11 @@ module.exports = {
             '@semantic-release/github',
             {
                 assets: [
-                    { path: 'system.json' },
-                    { path: 'system.zip' }
+                    { path: 'system.json', label: 'system.json' },
+                    { path: 'system.zip', label: 'system.zip' }
                 ]
             }
         ]
+
     ]
 };
