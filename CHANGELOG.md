@@ -1,3 +1,5 @@
+## [0.1.7](https://github.com/herveDarritchon/foundryvtt-swerpg/compare/v0.1.6...v0.1.7) (2025-06-04)
+
 ## [0.1.6](https://github.com/herveDarritchon/foundryvtt-swerpg/compare/v0.1.5...v0.1.6) (2025-06-04)
 
 ## [0.1.5](https://github.com/herveDarritchon/foundryvtt-swerpg/compare/v0.1.4...v0.1.5) (2025-06-04)
