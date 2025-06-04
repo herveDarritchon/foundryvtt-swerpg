@@ -4,7 +4,10 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "build": "npm run compilePacks && npm run compileCSS",
+    "build": "pnpm run compile && pnpm run rollup && pnpm run less",
+    "rollup": "npx rollup --config",
+    "compile": "node build.mjs compile",
+    "extract": "node build.mjs extract",
     "less": "lessc styles/swerpg.less styles/swerpg.css",
     "compilePacks": "node build.mjs compile",
     "extractPacks": "node build.mjs extract",
@@ -28,7 +31,8 @@
     "gulp-touch-cmd": "^0.0.1",
     "less": "^4.2.0",
     "semantic-release": "^24.2.5",
-    "vitest": "^3.1.1"
+    "vitest": "^3.1.1",
+    "rollup": "^4.41.1"
   },
   "author": "Foundry Gaming, LLC",
   "license": "UNLICENSED"
