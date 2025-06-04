@@ -1,3 +1,10 @@
+## [0.1.12](https://github.com/herveDarritchon/foundryvtt-swerpg/compare/v0.1.11...v0.1.12) (2025-06-04)
+
+
+### Bug Fixes
+
+* add styles directory to release.yml for asset inclusion ([dc805ad](https://github.com/herveDarritchon/foundryvtt-swerpg/commit/dc805adb3cfd2cbfe84cbe1c30513a87e91e14c6))
+
 ## [0.1.11](https://github.com/herveDarritchon/foundryvtt-swerpg/compare/v0.1.10...v0.1.11) (2025-06-04)
 
 
