@@ -8,16 +8,11 @@ const result = await semanticRelease({
         '@semantic-release/commit-analyzer',
         '@semantic-release/release-notes-generator',
         '@semantic-release/changelog',
-    ],
-}, {
-    cwd: process.cwd(),
-    env: process.env,
-    stdout: null, // 👈 désactive les logs parasites
-    stderr: null,
+    ]
 });
 
 if (result?.nextRelease?.version) {
-    console.log(result.nextRelease.version); // 👈 seule sortie attendue
+    console.log(result.nextRelease.version); // seule sortie
 } else {
-    console.log('NO_RELEASE');
+    console.log('NO_RELEASE'); // seule sortie
 }
