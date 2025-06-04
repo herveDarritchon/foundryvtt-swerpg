@@ -1,3 +1,10 @@
+## [0.1.18](https://github.com/herveDarritchon/foundryvtt-swerpg/compare/v0.1.17...v0.1.18) (2025-06-04)
+
+
+### Bug Fixes
+
+* **release:** correct DOWNLOAD URL format in release.yml ([7f5ebe0](https://github.com/herveDarritchon/foundryvtt-swerpg/commit/7f5ebe06d5b1c0b78922a5cbc1f8198e687c5298))
+
 ## [0.1.17](https://github.com/herveDarritchon/foundryvtt-swerpg/compare/v0.1.16...v0.1.17) (2025-06-04)
 
 
