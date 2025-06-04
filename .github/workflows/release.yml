@@ -82,7 +82,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          VERSION=$(npx semantic-release --dry-run | grep -Eo "The next release version is [0-9]+\.[0-9]+\.[0-9]+")
+          VERSION=$(npx semantic-release --dry-run --debug | grep -Eo "The next release version is [0-9]+\.[0-9]+\.[0-9]+")
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "Next release will be $VERSION"
 
