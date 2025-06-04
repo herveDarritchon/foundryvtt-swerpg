@@ -1,3 +1,10 @@
+## [0.1.17](https://github.com/herveDarritchon/foundryvtt-swerpg/compare/v0.1.16...v0.1.17) (2025-06-04)
+
+
+### Bug Fixes
+
+* **release:** update release.yml to set DOWNLOAD URL directly in environment variables ([373129f](https://github.com/herveDarritchon/foundryvtt-swerpg/commit/373129fc656da94e60130705d7cc8bc89388260e))
+
 ## [0.1.16](https://github.com/herveDarritchon/foundryvtt-swerpg/compare/v0.1.15...v0.1.16) (2025-06-04)
 
 
