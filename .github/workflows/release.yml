@@ -79,6 +79,8 @@ jobs:
 
       - name: 🔍 Dry run to get next version
         id: next_version
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           VERSION=$(npx semantic-release --dry-run | grep -Eo "The next release version is [0-9]+\.[0-9]+\.[0-9]+")
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
