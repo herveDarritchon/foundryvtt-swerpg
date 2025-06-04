@@ -31,8 +31,8 @@ export default {
             '@semantic-release/github',
             {
                 assets: [
-                    { path: 'system.json', label: 'System Manifest' },
-                    { path: 'system.zip', label: 'System Archive' }
+                    {path: 'system.json', label: 'System Manifest'},
+                    {path: 'system.zip', label: 'System Archive'}
                 ]
             }
         ]
