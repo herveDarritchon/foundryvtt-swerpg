@@ -2,6 +2,7 @@ import semanticRelease from 'semantic-release';
 
 const result = await semanticRelease({
     dryRun: true,
+    debug: true,
     branches: ['main'],
     repositoryUrl: 'https://github.com/herveDarritchon/foundryvtt-swerpg',
     plugins: [
