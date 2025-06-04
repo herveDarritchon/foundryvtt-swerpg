@@ -1,3 +1,10 @@
+## [0.1.16](https://github.com/herveDarritchon/foundryvtt-swerpg/compare/v0.1.15...v0.1.16) (2025-06-04)
+
+
+### Bug Fixes
+
+* **release:** move release_module_url to environment variables in release.yml ([3842d4a](https://github.com/herveDarritchon/foundryvtt-swerpg/commit/3842d4adca4182286de436b29299e6a295147874))
+
 ## [0.1.15](https://github.com/herveDarritchon/foundryvtt-swerpg/compare/v0.1.14...v0.1.15) (2025-06-04)
 
 
