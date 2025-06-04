@@ -1,3 +1,10 @@
+## [0.1.13](https://github.com/herveDarritchon/foundryvtt-swerpg/compare/v0.1.12...v0.1.13) (2025-06-04)
+
+
+### Bug Fixes
+
+* **system:** update system.json to use placeholders for manifest, download, and version ([00f7213](https://github.com/herveDarritchon/foundryvtt-swerpg/commit/00f7213cadfa297f5917262e5155fa022cfbf12b))
+
 ## [0.1.12](https://github.com/herveDarritchon/foundryvtt-swerpg/compare/v0.1.11...v0.1.12) (2025-06-04)
 
 
