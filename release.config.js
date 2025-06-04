@@ -1,17 +1,34 @@
-// release.config.js
 module.exports = {
     branches: ['main'],
     plugins: [
         '@semantic-release/commit-analyzer',
         '@semantic-release/release-notes-generator',
-        '@semantic-release/changelog',
+        [
+            '@semantic-release/changelog',
+            {
+                changelogFile: 'CHANGELOG.md'
+            }
+        ],
         [
             '@semantic-release/git',
             {
-                assets: ['CHANGELOG.md', 'package.json', 'pnpm-lock.yaml'],
+                assets: [
+                    'CHANGELOG.md',
+                    'package.json',
+                    'pnpm-lock.yaml',
+                    'system.json'
+                ],
                 message: 'chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}'
             }
         ],
-        '@semantic-release/github'
+        [
+            '@semantic-release/github',
+            {
+                assets: [
+                    { path: 'system.json' },
+                    { path: 'system.zip' }
+                ]
+            }
+        ]
     ]
 };
