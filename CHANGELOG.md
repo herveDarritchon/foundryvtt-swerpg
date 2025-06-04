@@ -1,3 +1,10 @@
+## [0.1.15](https://github.com/herveDarritchon/foundryvtt-swerpg/compare/v0.1.14...v0.1.15) (2025-06-04)
+
+
+### Bug Fixes
+
+* **release:** correct syntax for VERSION environment variable in release.yml ([cf8c408](https://github.com/herveDarritchon/foundryvtt-swerpg/commit/cf8c408e2011b57cfd64b513498eec9445837540))
+
 ## [0.1.14](https://github.com/herveDarritchon/foundryvtt-swerpg/compare/v0.1.13...v0.1.14) (2025-06-04)
 
 
