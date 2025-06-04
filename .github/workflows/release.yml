@@ -98,13 +98,12 @@ jobs:
         with:
           files: 'system.json'
         env:
-          # The URL to the module archive associated with the module release being
-          # processed by this workflow.
-          release_module_url: "https://github.com/${{github.repository}}/releases/download/${{ steps.get_next_version.outputs.version }}/system.zip"
           VERSION: ${{ steps.get_next_version.outputs.version }}
           URL: ${{ env.project_url }}
           MANIFEST: ${{ env.latest_manifest_url }}
-          DOWNLOAD: ${{ env.release_module_url }}
+          # The URL to the module archive associated with the module release being
+          # processed by this workflow.
+          DOWNLOAD: "https://github.com/${{github.repository}}/releases/download/${{ steps.get_next_version.outputs.version }}/system.zip"
 
       - name: 🏗️ Build system assets
         run: pnpm run build
