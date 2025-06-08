@@ -49,52 +49,67 @@
   "styles": [
     "styles/swerpg.css"
   ],
-  "packs": [],
+  "packs": [
+    {
+      "name": "careers",
+      "label": "Careers",
+      "path": "packs/careers",
+      "type": "Item"
+    },
+    {
+      "name": "species",
+      "label": "Species",
+      "path": "packs/species",
+      "type": "Item"
+    },
+    {
+      "name": "specializations",
+      "label": "Specializations",
+      "path": "packs/specializations",
+      "type": "Item"
+    },
+    {
+      "name": "obligations",
+      "label": "Obligations",
+      "path": "packs/obligations",
+      "type": "Item"
+    },
+    {
+      "name": "talents",
+      "label": "Talents",
+      "path": "packs/talents",
+      "type": "Item"
+    },
+    {
+      "name": "pregens",
+      "label": "Pregenerated Heroes",
+      "path": "packs/pregens",
+      "type": "Actor"
+    }
+  ],
   "packFolders": [
     {
-      "name": "Swerpg",
-      "color": "#561206",
+      "name": "SWERPG System",
+      "color": "#031d59",
       "folders": [
         {
-          "name": "Adversary Options",
-          "color": "#380d05",
+          "name": "Actors Options",
+          "color": "#032f96",
           "packs": [
-            "adversary-talents",
-            "archetype",
-            "taxonomy"
-          ]
-        },
-        {
-          "name": "Character Options",
-          "color": "#380d05",
-          "packs": [
-            "ancestry",
-            "background",
-            "origin",
-            "spell",
-            "talent"
+            "species",
+            "careers",
+            "specializations",
+            "obligations",
+            "talents"
           ]
         },
         {
           "name": "Actors",
           "color": "#380d05",
           "packs": [
-            "pregens",
-            "summons"
-          ]
-        },
-        {
-          "name": "Equipment",
-          "color": "#380d05",
-          "packs": [
-            "armor",
-            "weapon"
+            "pregens"
           ]
         }
-      ],
-      "packs": [
-        "rules",
-        "playtest"
       ]
     }
   ],

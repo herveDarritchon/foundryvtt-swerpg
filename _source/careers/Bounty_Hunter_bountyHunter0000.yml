@@ -1,0 +1,38 @@
+name: Bounty Hunter
+type: career
+img: worlds/swerpg-test/assets/bouty-hunter.jpg
+system:
+  careerSkills:
+    - id: brawl
+    - id: perception
+    - id: xenology
+    - id: pilotingspace
+    - id: rangedheavy
+    - id: streetwise
+    - id: vigilance
+    - id: athletics
+  freeSkillRank: 4
+  description: >-
+    <p>The name says it all: this is a hunter who seeks to collect bounties for
+    his work. Bounty Hunters tend to be feared, reviled, looked down upon - and
+    in great demand throughout the galaxy.</p>
+effects: []
+folder: null
+ownership:
+  default: 0
+  8VADnEoyDM8awtMQ: 3
+flags: {}
+_stats:
+  compendiumSource: null
+  duplicateSource: null
+  exportSource: null
+  coreVersion: '13.344'
+  systemId: swerpg
+  systemVersion: '#{VERSION}#'
+  createdTime: 1749388776175
+  modifiedTime: 1749388776175
+  lastModifiedBy: 8VADnEoyDM8awtMQ
+_id: bountyHunter0000
+sort: 0
+_key: '!items!bountyHunter0000'
+

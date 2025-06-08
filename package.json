@@ -9,8 +9,6 @@
     "compile": "node build.mjs compile",
     "extract": "node build.mjs extract",
     "less": "lessc styles/swerpg.less styles/swerpg.css",
-    "compilePacks": "node build.mjs compile",
-    "extractPacks": "node build.mjs extract",
     "test": "vitest",
     "test:watch": "vitest --watch",
     "test:coverage": "pnpm vitest run --coverage"

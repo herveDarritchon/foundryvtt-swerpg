@@ -1,0 +1,38 @@
+name: Gadgeteer
+type: specialization
+img: worlds/swerpg-test/assets/gadgeteer.webp
+system:
+  freeSkillRank: 2
+  description: >-
+    <p>Considering how often a single Bounty Hunter finds himself faced with
+    terrible odds (more often than not an acquisition has friends or employees
+    who work hard to protect him), it's not surprising how many specialize in
+    high-tech gear and weapons. The Gadgeteer excels a t presenting himself a s
+    a one-person battle force, at least for a short time. Using both the latest
+    tech and his own personally-modified gear, a Bounty Hunter with this
+    specialization can be hard to stop.</p>
+  specializationSkills:
+    - id: brawl
+    - id: coercion
+    - id: mechanics
+    - id: rangedlight
+effects: []
+folder: null
+ownership:
+  default: 0
+  8VADnEoyDM8awtMQ: 3
+flags: {}
+_stats:
+  compendiumSource: null
+  duplicateSource: null
+  exportSource: null
+  coreVersion: '13.344'
+  systemId: swerpg
+  systemVersion: '#{VERSION}#'
+  createdTime: 1749388794886
+  modifiedTime: 1749388794886
+  lastModifiedBy: 8VADnEoyDM8awtMQ
+_id: gadgeteer0000000
+sort: 0
+_key: '!items!gadgeteer0000000'
+
