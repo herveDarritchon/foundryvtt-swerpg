@@ -1,0 +1,35 @@
+folder: null
+name: Dutybound
+type: obligation
+img: worlds/swerpg-test/assets/obligation.webp
+system:
+  value: 5
+  extraXp: 0
+  description: >-
+    <p>The PC has a deep sense of duty that he feels compelled to fulfill, such
+    as military service making good on a contract, or following some sort of
+    thieves code. Unlike the Oath Obligation (see below).</p><p>A Dutybound
+    character has some legal or ritualistic bind to an organization or cause
+    making it extremely difficult or detrimental if h e fails to live u p to
+    that commitment.</p>
+  isExtra: false
+  extraCredits: 0
+effects: []
+ownership:
+  default: 0
+  8VADnEoyDM8awtMQ: 3
+flags: {}
+_stats:
+  compendiumSource: null
+  duplicateSource: null
+  exportSource: null
+  coreVersion: '13.344'
+  systemId: swerpg
+  systemVersion: '#{VERSION}#'
+  createdTime: 1749388780459
+  modifiedTime: 1749388780459
+  lastModifiedBy: 8VADnEoyDM8awtMQ
+_id: dutybound0000000
+sort: 0
+_key: '!items!dutybound0000000'
+

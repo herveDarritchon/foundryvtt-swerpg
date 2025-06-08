@@ -1,0 +1,38 @@
+name: Test Talent Item
+type: talent
+img: worlds/swerpg-test/assets/talent.webp
+system:
+  description: ''
+  trees:
+    - Item.assassin00000000
+    - Item.gadgeteerCopy000
+  activation: active
+  isRanked: true
+  row: 2
+  node: ''
+  rank:
+    idx: 0
+    cost: 0
+  isFree: false
+  actions: []
+  actorHooks: []
+effects: []
+folder: null
+ownership:
+  default: 0
+  8VADnEoyDM8awtMQ: 3
+flags: {}
+_stats:
+  compendiumSource: null
+  duplicateSource: null
+  exportSource: null
+  coreVersion: '13.344'
+  systemId: swerpg
+  systemVersion: '#{VERSION}#'
+  createdTime: 1749388805292
+  modifiedTime: 1749388805292
+  lastModifiedBy: 8VADnEoyDM8awtMQ
+_id: testTalentItem00
+sort: 0
+_key: '!items!testTalentItem00'
+

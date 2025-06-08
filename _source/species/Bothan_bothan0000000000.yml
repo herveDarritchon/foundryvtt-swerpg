@@ -1,0 +1,43 @@
+name: Bothan
+type: species
+img: worlds/swerpg-test/assets/Bothan.webp
+system:
+  characteristics:
+    brawn: 1
+    agility: 2
+    intellect: 3
+    cunning: 3
+    willpower: 2
+    presence: 2
+  woundThreshold:
+    modifier: 10
+    abilityKey: brawn
+  strainThreshold:
+    modifier: 11
+    abilityKey: willpower
+  startingExperience: 100
+  freeSkills:
+    - streetwise
+  freeTalents:
+    - Item.convincingDemean
+  description: ''
+effects: []
+folder: null
+ownership:
+  default: 0
+  8VADnEoyDM8awtMQ: 3
+flags: {}
+_stats:
+  compendiumSource: null
+  duplicateSource: null
+  exportSource: null
+  coreVersion: '13.344'
+  systemId: swerpg
+  systemVersion: '#{VERSION}#'
+  createdTime: 1749388789327
+  modifiedTime: 1749388789327
+  lastModifiedBy: 8VADnEoyDM8awtMQ
+_id: bothan0000000000
+sort: 0
+_key: '!items!bothan0000000000'
+

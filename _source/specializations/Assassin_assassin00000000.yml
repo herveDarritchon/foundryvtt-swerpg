@@ -1,0 +1,42 @@
+name: Assassin
+type: specialization
+img: worlds/swerpg-test/assets/assassin.webp
+system:
+  specializationSkills:
+    - id: rangedheavy
+    - id: stealth
+    - id: skulduggery
+    - id: melee
+  freeSkillRank: 4
+  description: >-
+    <p>Whereas most Bounty Hunters focus primarily on the capture of quarry,
+    those who specialize a s Assassins are generally tasked with the
+    straightforward proposition of terminating their targets. Assassins tend to
+    prefer getting in quietly, taking out targets (either u p close or sniping
+    from afar), and leaving just as silently as they entered. Their talents are
+    very appropriate for this kind of work.</p><p>Despite their different
+    methods. Assassins still adhere to many of the same ethics and practices of
+    other Bounty Hunters. They take their work very seriously, avoid all
+    needless bloodshed, and honor their contracts t o the letter. Some treat
+    their methods with reverence , even assigning a certain mystique to it.
+    Others simply see themselves as cold killers, and are just fine with it.</p>
+effects: []
+folder: null
+ownership:
+  default: 0
+  8VADnEoyDM8awtMQ: 3
+flags: {}
+_stats:
+  compendiumSource: null
+  duplicateSource: null
+  exportSource: null
+  coreVersion: '13.344'
+  systemId: swerpg
+  systemVersion: '#{VERSION}#'
+  createdTime: 1749388793831
+  modifiedTime: 1749388793831
+  lastModifiedBy: 8VADnEoyDM8awtMQ
+_id: assassin00000000
+sort: 0
+_key: '!items!assassin00000000'
+

@@ -1,0 +1,40 @@
+name: Anatomy Lessons
+type: talent
+img: worlds/swerpg-test/assets/talent.webp
+system:
+  node: ''
+  activation: active
+  trees:
+    - Item.assassin00000000
+  actions: []
+  actorHooks: []
+  description: >-
+    <p>After a successful attack with a non-starship/vehicle weapon, the
+    character may spend one Destiny Point to add damage equal to his Intellect
+    to one hit of the attack.</p>
+  isRanked: false
+  row: 2
+  rank:
+    idx: 0
+    cost: 0
+  isFree: false
+effects: []
+folder: null
+ownership:
+  default: 0
+  8VADnEoyDM8awtMQ: 3
+flags: {}
+_stats:
+  compendiumSource: null
+  duplicateSource: null
+  exportSource: null
+  coreVersion: '13.344'
+  systemId: swerpg
+  systemVersion: '#{VERSION}#'
+  createdTime: 1749388807086
+  modifiedTime: 1749388807086
+  lastModifiedBy: 8VADnEoyDM8awtMQ
+_id: anatomyLessons00
+sort: 0
+_key: '!items!anatomyLessons00'
+

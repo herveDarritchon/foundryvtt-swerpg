@@ -1,0 +1,42 @@
+name: Convincing Demeanor
+type: talent
+img: worlds/swerpg-test/assets/talent.webp
+system:
+  node: ''
+  trees:
+    - Item.gadgeteerCopy000
+  activation: passive
+  actions: []
+  actorHooks: []
+  description: >-
+    <p>Remove one Setback die per rank of <span
+    style="text-decoration:underline"><strong><span
+    style="text-decoration:underline">Convincing Demeanor</span></strong></span>
+    from any <strong>Deception</strong> or <strong>Skulduggery</strong>
+    check.</p>
+  isRanked: false
+  row: 1
+  rank:
+    idx: 0
+    cost: 0
+  isFree: false
+effects: []
+folder: null
+ownership:
+  default: 0
+  8VADnEoyDM8awtMQ: 3
+flags: {}
+_stats:
+  compendiumSource: null
+  duplicateSource: null
+  exportSource: null
+  coreVersion: '13.344'
+  systemId: swerpg
+  systemVersion: '#{VERSION}#'
+  createdTime: 1749388803857
+  modifiedTime: 1749388803857
+  lastModifiedBy: 8VADnEoyDM8awtMQ
+_id: convincingDemean
+sort: 0
+_key: '!items!convincingDemean'
+

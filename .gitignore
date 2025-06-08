@@ -258,3 +258,8 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
+# Foundry VTT
+swerpg.lock
+signature.json
+packs/
+swerpg-compiled.mjs

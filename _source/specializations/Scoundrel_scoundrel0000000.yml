@@ -1,0 +1,37 @@
+name: Scoundrel
+type: specialization
+img: worlds/swerpg-test/assets/scoundrel.webp
+system:
+  freeSkillRank: 2
+  description: >-
+    <p>Part con artist, part gunslinger, and part cantina brawler. the Scoundrel
+    is quick-witted, quick on his feet, and quick to get himself into a great
+    deal of trouble at the drop of a hat. He doesn't care one whit for rules or
+    laws, except where h e can use them to work an angle that either nets him a
+    lot of credits o r brings down an enemy. If he's really lucky-and h e tends
+    to have an unshakable faith in his luck—he'll manage both.</p>
+  specializationSkills:
+    - id: rangedlight
+    - id: charm
+    - id: cool
+    - id: deception
+effects: []
+folder: null
+ownership:
+  default: 0
+  8VADnEoyDM8awtMQ: 3
+flags: {}
+_stats:
+  compendiumSource: null
+  duplicateSource: null
+  exportSource: null
+  coreVersion: '13.344'
+  systemId: swerpg
+  systemVersion: '#{VERSION}#'
+  createdTime: 1749388796267
+  modifiedTime: 1749388796267
+  lastModifiedBy: 8VADnEoyDM8awtMQ
+_id: scoundrel0000000
+sort: 0
+_key: '!items!scoundrel0000000'
+

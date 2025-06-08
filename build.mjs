@@ -15,14 +15,18 @@ const CONFIG = {
         "archetype",
         "armor",
         "career",
+        "careers",
         "background",
         "origin",
+        "obligations",
         "playtest",
         "pregens",
         "rules",
         "species",
+        "specializations",
         "summons",
         "talent",
+        "talents",
         "taxonomy",
         "weapon"
     ],
@@ -54,6 +58,7 @@ export async function compile() {
     for (const db of CONFIG.databases) {
         const dbPath = path.join(CONFIG.dataPath, db);
         const sourcePath = path.join(CONFIG.sourcePath, db);
+        console.log(`Compiled database for db path ${dbPath} and source path ${sourcePath}`);
         await compilePack(sourcePath, dbPath, {yaml: CONFIG.yaml});
         console.log(`Compiled database: ${db}`);
     }
