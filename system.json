@@ -81,6 +81,12 @@
       "type": "Item"
     },
     {
+      "name": "armors",
+      "label": "Armors",
+      "path": "packs/armors",
+      "type": "Item"
+    },
+    {
       "name": "pregens",
       "label": "Pregenerated Heroes",
       "path": "packs/pregens",
@@ -101,6 +107,13 @@
             "specializations",
             "obligations",
             "talents"
+          ]
+        },
+        {
+          "name": "Equipments",
+          "color": "#360c55",
+          "packs": [
+            "armors"
           ]
         },
         {

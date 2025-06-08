@@ -25,8 +25,8 @@ export default class ArmorSheet extends SwerpgBaseItemSheet {
     async _prepareContext(options) {
         const context = await super._prepareContext(options);
         Object.assign(context, {
-            armorWidget: this.#armorWidget.bind(this),
-            dodgeWidget: this.#dodgeWidget.bind(this),
+            defenseWidget: this.#defenseWidget.bind(this),
+            soakWidget: this.#soakWidget.bind(this),
             propertiesWidget: this.#propertiesWidget.bind(this),
             scaledPrice: new foundry.data.fields.StringField({label: game.i18n.localize("ARMOR.SHEET.SCALED_PRICE")})
         });
@@ -38,12 +38,12 @@ export default class ArmorSheet extends SwerpgBaseItemSheet {
     /**
      * A custom form field widget for rendering armor defense.
      */
-    #armorWidget(field, groupConfig, inputConfig) {
-        const config = this.document.system.config.category.armor;
-        const {widget, fields} = ArmorSheet.#createDefenseWidget(field, groupConfig, inputConfig, config);
+    #defenseWidget(field, groupConfig, inputConfig) {
+        const config = this.document.system.config.category.defense;
+        const {widget, fields} = ArmorSheet.#createWidget(field, groupConfig, inputConfig, config);
         fields.appendChild(ArmorSheet._createElement("label", {innerText: game.i18n.localize("ARMOR.SHEET.ARMOR_BONUS")}));
-        const armorBonus = this.document.system.armor.bonus;
-        fields.appendChild(foundry.applications.fields.createNumberInput({value: armorBonus, disabled: true}));
+        const defenseBonus = this.document.system.defense.bonus;
+        fields.appendChild(foundry.applications.fields.createNumberInput({value: defenseBonus, disabled: true}));
         return widget;
     }
 
@@ -52,12 +52,12 @@ export default class ArmorSheet extends SwerpgBaseItemSheet {
     /**
      * A custom form field widget for rendering dodge defense.
      */
-    #dodgeWidget(field, groupConfig, inputConfig) {
-        const config = this.document.system.config.category.dodge;
-        const {widget, fields} = ArmorSheet.#createDefenseWidget(field, groupConfig, inputConfig, config);
+    #soakWidget(field, groupConfig, inputConfig) {
+        const config = this.document.system.config.category.soak;
+        const {widget, fields} = ArmorSheet.#createWidget(field, groupConfig, inputConfig, config);
         fields.appendChild(ArmorSheet._createElement("label", {innerText: game.i18n.localize("ARMOR.SHEET.DODGE_SCALING")}));
-        const dodgeStart = `${this.document.system.dodge.start} ${swerpg.CONST.CHARACTERISTICS.dexterity.abbreviation}`;
-        fields.appendChild(foundry.applications.fields.createTextInput({value: dodgeStart, disabled: true}));
+        const soakStart = `${this.document.system.soak.start} ${swerpg.CONST.CHARACTERISTICS.agility.abbreviation}`;
+        fields.appendChild(foundry.applications.fields.createTextInput({value: soakStart, disabled: true}));
         return widget;
     }
 
@@ -80,7 +80,7 @@ export default class ArmorSheet extends SwerpgBaseItemSheet {
      * Logic common to both the armor and dodge widgets.
      * @returns {widget: HTMLDivElement, fields: HTMLDivElement}
      */
-    static #createDefenseWidget(field, groupConfig, inputConfig, config) {
+    static #createWidget(field, groupConfig, inputConfig, config) {
         const widget = ArmorSheet._createElement("div", {className: "form-group slim defense"});
         widget.appendChild(ArmorSheet._createElement("label", {innerText: field.label}));
         const fields = widget.appendChild(ArmorSheet._createElement("div", {className: "form-fields"}));
