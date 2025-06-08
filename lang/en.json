@@ -398,16 +398,16 @@
   },
   "ARMOR": {
     "FIELDS": {
-      "armor": {
-        "label": "Armor",
+      "defense": {
+        "label": "Defense",
         "base": {
-          "label": "Base Armor"
+          "label": "Armor Defense"
         }
       },
-      "dodge": {
-        "label": "Dodge",
+      "soak": {
+        "label": "Soak",
         "base": {
-          "label": "Base Dodge"
+          "label": "Armor Soak"
         }
       },
       "properties": {
@@ -580,6 +580,15 @@
     "FIELDS": {
       "category": {
         "label": "Category"
+      },
+      "hardPoints": {
+        "label": "Hard Points"
+      },
+      "encumbrance": {
+        "label": "Encumbrance"
+      },
+      "rarity": {
+        "label": "Rarity"
       },
       "quantity": {
         "label": "Quantity"
