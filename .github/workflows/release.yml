@@ -110,7 +110,7 @@ jobs:
 
       # Pull YAML to LDB packs
       - name: 🧰 Build Packs
-        run: pnpm run extractPacks
+        run: pnpm run compile
 
       # Create a "system.zip" archive containing all the module's required files.
       # If you have other directories or files that will need to be added to
