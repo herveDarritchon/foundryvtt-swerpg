@@ -1,3 +1,10 @@
+## [0.2.1](https://github.com/herveDarritchon/foundryvtt-swerpg/compare/v0.2.0...v0.2.1) (2025-06-08)
+
+
+### Bug Fixes
+
+* **changelog:** update changelog format and add introductory description ([54be664](https://github.com/herveDarritchon/foundryvtt-swerpg/commit/54be664e866a94e63bde6b8cf64ea1c4511eca14))
+
 # Changelog for FoundryVTT SWRPG System
 > This file contains the changelog for the FoundryVTT SWRPG system, detailing all changes, bug fixes, and new features introduced in each version.
 
