@@ -1,3 +1,18 @@
+# [0.2.0](https://github.com/herveDarritchon/foundryvtt-swerpg/compare/v0.1.18...v0.2.0) (2025-06-08)
+
+
+### Bug Fixes
+
+* **build:** remove unused database entries from build configuration ([a8b7f67](https://github.com/herveDarritchon/foundryvtt-swerpg/commit/a8b7f67c26ba93d3965916d413a668f1845aa8e7))
+* **main:** update build command from pullYMLtoLDB to compile ([8c5ab2b](https://github.com/herveDarritchon/foundryvtt-swerpg/commit/8c5ab2bf18e8cdbd95b0803e0e0172d3bb4d37d0))
+* **release:** update build command from extractPacks to compile in release.yml ([61658a6](https://github.com/herveDarritchon/foundryvtt-swerpg/commit/61658a6c8c4219ff3f2ba45b9326720cf9879c2d))
+
+
+### Features
+
+* **system:** enhance system configuration with additional options and updates for compendiums ([57ad131](https://github.com/herveDarritchon/foundryvtt-swerpg/commit/57ad131188b2a0cbd593fc9e753645f93c720b93))
+* **system:** enhance system configuration with additional options and updates for compendiums ([5ea56dc](https://github.com/herveDarritchon/foundryvtt-swerpg/commit/5ea56dc74c6ab984a9c3758a76d4a6326be6cb45))
+
 ## [0.1.18](https://github.com/herveDarritchon/foundryvtt-swerpg/compare/v0.1.17...v0.1.18) (2025-06-04)
 
 
