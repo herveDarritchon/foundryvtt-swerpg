@@ -27,10 +27,10 @@ export default class SwerpgArmor extends SwerpgPhysicalItem {
     static defineSchema() {
         const fields = foundry.data.fields;
         return foundry.utils.mergeObject(super.defineSchema(), {
-            armor: new fields.SchemaField({
+            defense: new fields.SchemaField({
                 base: new fields.NumberField({integer: true, nullable: false, initial: 0, min: 0}),
             }),
-            dodge: new fields.SchemaField({
+            soak: new fields.SchemaField({
                 base: new fields.NumberField({integer: true, nullable: false, initial: 0, min: 0}),
             }),
         });
@@ -67,21 +67,17 @@ export default class SwerpgArmor extends SwerpgPhysicalItem {
         const qualities = SYSTEM.QUALITY_TIERS;
         const quality = qualities[this.quality] || qualities.standard;
 
-        // Enchantment Level
-        const enchantments = SYSTEM.ENCHANTMENT_TIERS;
-        const enchantment = enchantments[this.enchantment] || enchantments.mundane;
-
         // Armor Configuration
-        this.config = {category, quality, enchantment};
-        this.rarity = quality.rarity + enchantment.rarity;
+        this.config = {category, quality};
+        this.rarity = quality.rarity;
 
         // Armor Defense
-        this.armor.base = Math.clamp(this.armor.base, category.armor.min, category.armor.max);
-        this.armor.bonus = quality.bonus + enchantment.bonus;
+        this.defense.base = Math.clamp(this.defense.base, category.defense.min, category.defense.max);
+        this.defense.bonus = quality.bonus;
 
         // Dodge Defense
-        this.dodge.base = Math.clamp(this.dodge.base, category.dodge.min, category.dodge.max);
-        this.dodge.start = category.dodge.start;
+        this.soak.base = Math.clamp(this.soak.base, category.soak.min, category.soak.max);
+        this.soak.start = category.soak.start;
 
         // Armor Properties
         for (let p of this.properties) {
@@ -95,8 +91,8 @@ export default class SwerpgArmor extends SwerpgPhysicalItem {
     /** @inheritDoc */
     prepareDerivedData() {
         if (this.broken) {
-            this.armor.base = Math.floor(this.armor.base / 2);
-            this.armor.bonus = Math.floor(this.armor.bonus / 2);
+            this.defense.base = Math.floor(this.defense.base / 2);
+            this.defense.bonus = Math.floor(this.defense.bonus / 2);
             this.rarity -= 2;
         }
         this.price = this._preparePrice();
@@ -118,13 +114,13 @@ export default class SwerpgArmor extends SwerpgPhysicalItem {
         for (let p of this.properties) {
             tags[p] = SYSTEM.ARMOR.PROPERTIES[p].label;
         }
-        tags.armor = `${this.armor.base + this.armor.bonus} Armor`;
+        tags.defense = `${this.defense.base + this.defense.bonus} Armor`;
         const actor = this.parent.parent;
-        if (!actor) tags.dodge = `${this.dodge.base}+ Dodge`;
+        if (!actor) tags.soak = `${this.soak.base}+ Dodge`;
         else {
-            const dodgeBonus = Math.max(actor.system.abilities.dexterity.value - this.dodge.start, 0);
-            tags.dodge = `${this.dodge.base + dodgeBonus} Dodge`;
-            tags.total = `${this.armor.base + this.armor.bonus + this.dodge.base + dodgeBonus} Defense`;
+            const soakBonus = Math.max(actor.system.characteristics.agility.value - this.soak.start, 0);
+            tags.soak = `${this.soak.base + soakBonus} Dodge`;
+            tags.total = `${this.defense.base + this.defense.bonus + this.soak.base + soakBonus} Defense`;
         }
         return tags;
     }
