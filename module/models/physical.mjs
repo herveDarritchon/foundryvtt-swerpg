@@ -13,15 +13,12 @@ export default class SwerpgPhysicalItem extends foundry.abstract.TypeDataModel {
                 initial: this.DEFAULT_CATEGORY
             }),
             quantity: new fields.NumberField({required: true, nullable: false, integer: true, initial: 1, min: 0}),
-            weight: new fields.NumberField({required: true, nullable: false, integer: true, initial: 0, min: 0}),
             price: new fields.NumberField({required: true, nullable: false, integer: true, initial: 0, min: 0}),
             quality: new fields.StringField({required: true, choices: SYSTEM.QUALITY_TIERS, initial: "standard"}),
+            encumbrance: new fields.NumberField({required: true, nullable: false, integer: true, initial: 1, min: 0}),
+            rarity: new fields.NumberField({required: true, nullable: false, integer: true, initial: 1, min: 0}),
+            hardPoints: new fields.NumberField({required: true, nullable: false, integer: true, initial: 0, min: 0}),
             broken: new fields.BooleanField({initial: false}),
-            enchantment: new fields.StringField({
-                required: true,
-                choices: SYSTEM.ENCHANTMENT_TIERS,
-                initial: "mundane"
-            }),
             equipped: new fields.BooleanField(),
             properties: new fields.SetField(new fields.StringField({required: true, choices: this.ITEM_PROPERTIES})),
             description: new fields.SchemaField({
