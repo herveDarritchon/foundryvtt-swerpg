@@ -10,23 +10,10 @@ export default {
             }
         ],
         [
-            '@semantic-release/exec',
-            {
-                // 👉 placé AVANT git
-                prepareCmd: [
-                    'echo RELEASE_VERSION=${nextRelease.version} >> $GITHUB_ENV',
-                    'echo PREV_RELEASE_VERSION=${lastRelease.version} >> $GITHUB_ENV',
-                    'node ./update-system-json.cjs',
-                    'node ./append-links-to-changelog.cjs'
-                ].join(' && ')
-            }
-        ],
-        [
             '@semantic-release/git',
             {
                 assets: [
                     'CHANGELOG.md',
-                    'system.json',
                     'package.json',
                     'pnpm-lock.yaml'
                 ],
@@ -34,11 +21,17 @@ export default {
             }
         ],
         [
+            '@semantic-release/exec',
+            {
+                prepareCmd: 'echo RELEASE_VERSION=${nextRelease.version} >> $GITHUB_ENV && echo PREV_RELEASE_VERSION=${lastRelease.version} >> $GITHUB_ENV'
+            }
+        ],
+        [
             '@semantic-release/github',
             {
                 assets: [
-                    { path: 'system.json', label: 'System Manifest' },
-                    { path: 'system.zip', label: 'System Archive' }
+                    {path: 'system.json', label: 'System Manifest'},
+                    {path: 'system.zip', label: 'System Archive'}
                 ]
             }
         ]
