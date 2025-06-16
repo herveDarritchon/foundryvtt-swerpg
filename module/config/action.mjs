@@ -130,17 +130,16 @@ function weaponAttack(type = "mainhand") {
             if (!w) return;
 
             // Increase action cost
-            if (this.cost.weapon) this.cost.action += (w?.system.actionCost || 0);
+            this.cost.action +=  0;
 
             // Increase action range
             if (this.range.weapon) {
-                const baseMaximum = this._source.range.maximum ?? 0;
-                this.range.maximum = Math.max(this.range.maximum, baseMaximum + w.system.range);
+                const baseMaximum =  0;
+                this.range.maximum = 0;
             }
 
             // Configure usage data
             Object.assign(this.usage, {weapon: w, hasDice: true, defenseType: "physical"});
-            Object.assign(this.usage.bonuses, w.system.actionBonuses);
             Object.assign(this.usage.context, {type: "weapons", label: "Weapon Tags", icon: "fa-solid fa-swords"});
             this.usage.context.tags.add(w.name);
         },

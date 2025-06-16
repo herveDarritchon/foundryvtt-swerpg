@@ -16,7 +16,8 @@ const CONFIG = {
         "species",
         "specializations",
         "talents",
-        "armors"
+        "armors",
+        "weapons",
     ],
     yaml: true
 };

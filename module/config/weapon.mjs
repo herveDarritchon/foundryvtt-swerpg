@@ -1,347 +1,380 @@
 /**
- * @typedef {Object} WeaponCategory       A category of weapon which can exist in the system
- * @property {string} id                  The category id
- * @property {string} label               The localized label for the category
- * @property {number} hands               The number of hands required, 1 or 2
- * @property {boolean} main               Can this weapon be used in the main-hand
- * @property {boolean} off                Can this weapon be used in the off-hand
- * @property {string} scaling             What scaling formula does this weapon use?
- * @property {number} damage              Base damage for the weapon category
- * @property {number} actionCost          The action point cost to strike with this weapon
+ * @typedef {Object} ActivationType    A weapon quality activation type
+ * @property {string} id               The activation type id
+ * @property {string} abrev            The activation type abbreviation
+ * @property {string} label            The localized label for the activation type
  */
-
-import Enum from "./enum.mjs";
 
 /**
- * Enumerate the weapon categories which are allowed by the system.
- * Record certain mechanical metadata which applies to weapons in each category.
- * @enum {WeaponCategory}
+ * @typedef {Object} RangeCategory     A weapon range category
+ * @property {string} id               The range category id
+ * @property {string} abrev            The range category abbreviation
+ * @property {string} label            The localized label for the range category
  */
-export const CATEGORIES = {
+
+/**
+ * @typedef {Object} RangeType     A weapon range type
+ * @property {string} id               The range category id
+ * @property {string} abrev            The range category abbreviation
+ * @property {string} label            The localized label for the range category
+ * @property {RangeCategory} rangeCategory   The range category of the weapon, used for attack rolls ("ranged" or "melee")
+ */
+
+/**
+ * @typedef {Object} WeaponSkill                A skill used of with a weapon
+ * @property {string} id                        The skill id
+ * @property {string} abrev                     The skill abbreviation
+ * @property {string} label                     The localized label for the skill
+ * @property {RangeCategory} rangeCategory      The range category of the skill, used for attack rolls ("ranged" or "melee")
+ */
+
+/**
+ * @typedef {Object} Quality                    A weapon quality
+ * @property {string} id                            The quality id
+ * @property {string} abrev                         The quality abbreviation
+ * @property {string} label                          The localized label for the quality
+ * @property {string} tooltip                        The localized tooltip for the quality
+ * @property {ActivationType} activationType               The activation type of the quality, used for attack rolls
+ */
+
+/**
+ * Enumerate the weapon quality activation type that is used by the system.
+ * Record certain mechanical metadata which applies to skill.
+ * @enum {ActivationType}
+ */
+export const ACTIVATION_TYPE = {
+
+    active: {
+        id: "active",
+        abrev: "ACT",
+        label: "WEAPON.ACTIVATION_TYPE.ACTIVE",
+    },
+    passive: {
+        id: "passive",
+        abrev: "PAS",
+        label: "WEAPON.ACTIVATION_TYPE.PASSIVE",
+    },
+
+};
+
+/**
+ * Enumerate the weapon range category that is used by the system.
+ * Record certain mechanical metadata which applies to skill.
+ * @enum {RangeCategory}
+ */
+export const RANGE_CATEGORY = {
+
+    melee: {
+        id: "melee",
+        abrev: "MEL",
+        label: "WEAPON.RANGE_CATEGORY.MELEE",
+    },
+    distant: {
+        id: "distant",
+        abrev: "DIS",
+        label: "WEAPON.RANGE_CATEGORY.DISTANT",
+    },
+
+};
+
+/**
+ * Enumerate the weapon range category that is used by the system.
+ * Record certain mechanical metadata which applies to skill.
+ * @enum {RangeType}
+ */
+export const RANGETYPES = {
+
+    engaged: {
+        id: "engaged",
+        abrev: "ENG",
+        label: "WEAPON.RANGE_TYPES.Engaged",
+        rangeCategory: RANGE_CATEGORY.melee,
+    },
+    short: {
+        id: "short",
+        abrev: "SHO",
+        label: "WEAPON.RANGE_TYPES.Short",
+        rangeCategory: RANGE_CATEGORY.distant,
+    },
+    medium: {
+        id: "medium",
+        abrev: "MED",
+        label: "WEAPON.RANGE_TYPES.Medium",
+        rangeCategory: RANGE_CATEGORY.distant,
+    },
+    long: {
+        id: "long",
+        abrev: "LON",
+        label: "WEAPON.RANGE_TYPES.Long",
+        rangeCategory: RANGE_CATEGORY.distant,
+    },
+    extreme: {
+        id: "extreme",
+        abrev: "EXT",
+        label: "WEAPON.RANGE_TYPES.Extreme",
+        rangeCategory: RANGE_CATEGORY.distant,
+    },
+
+};
+
+/**
+ * Enumerate the weapon skills which are used to roll an attack by the system.
+ * Record certain mechanical metadata which applies to skill.
+ * @enum {WeaponSkill}
+ */
+export const SKILLS = {
 
     // Natural Attacks
-    natural: {
-        id: "natural",
-        label: "WEAPON.CATEGORIES.NATURAL",
-        hands: 0,
-        main: true,
-        off: true,
-        scaling: "strength",
-        actionCost: 2,
-        damage: 3,
-        range: 1,
-        training: "natural"
+    rangedLight: {
+        id: "rangedLight",
+        abrev: "RAL",
+        label: "WEAPON.SKILLS.RangedLight",
+        rangeCategory: RANGE_CATEGORY.distant,
+    },
+    rangedHeavy: {
+        id: "rangedHeavy",
+        abrev: "RAH",
+        label: "WEAPON.SKILLS.RangedHeavy",
+        rangeCategory: RANGE_CATEGORY.distant,
+    },
+    gunnery: {
+        id: "gunnery",
+        abrev: "GUN",
+        label: "WEAPON.SKILLS.Gunnery",
+        rangeCategory: RANGE_CATEGORY.distant,
     },
 
-    // One-Handed Melee
-    unarmed: {
-        id: "unarmed",
-        label: "WEAPON.CATEGORIES.UNARMED",
-        hands: 1,
-        main: true,
-        off: true,
-        scaling: "strength.dexterity",
-        actionCost: 2,
-        damage: 3,
-        range: 1,
-        training: "unarmed"
-    },
-    light1: {
-        id: "light1",
-        label: "WEAPON.CATEGORIES.LIGHT1",
-        hands: 1,
-        main: true,
-        off: true,
-        scaling: "dexterity",
-        actionCost: 2,
-        damage: 3,
-        range: 1,
-        training: "finesse"
-    },
-    simple1: {
-        id: "simple1",
-        label: "WEAPON.CATEGORIES.SIMPLE1",
-        hands: 1,
-        main: true,
-        off: true,
-        scaling: "strength",
-        damage: 4,
-        actionCost: 2,
-        range: 1,
-        training: "heavy"
-    },
-    balanced1: {
-        id: "balanced1",
-        label: "WEAPON.CATEGORIES.BALANCED1",
-        hands: 1,
-        main: true,
-        off: true,
-        scaling: "strength.dexterity",
-        damage: 4,
-        actionCost: 2,
-        range: 2,
-        training: "balanced"
-    },
-    heavy1: {
-        id: "heavy1",
-        label: "WEAPON.CATEGORIES.HEAVY1",
-        hands: 1,
-        main: true,
-        off: false,
-        scaling: "strength",
-        damage: 6,
-        actionCost: 3,
-        range: 2,
-        training: "heavy"
+    brawl: {
+        id: "brawl",
+        abrev: "BRA",
+        label: "WEAPON.SKILLS.Brawl",
+        rangeCategory: RANGE_CATEGORY.melee,
     },
 
-    // Two-Handed Melee
-    simple2: {
-        id: "simple2",
-        label: "WEAPON.CATEGORIES.SIMPLE2",
-        hands: 2,
-        main: true,
-        off: false,
-        scaling: "strength",
-        actionCost: 3,
-        damage: 6,
-        range: 2,
-        training: "heavy"
+    melee:{
+        id: "melee",
+        abrev: "MEL",
+        label: "WEAPON.SKILLS.Melee",
+        rangeCategory: RANGE_CATEGORY.melee,
     },
-    balanced2: {
-        id: "balanced2",
-        label: "WEAPON.CATEGORIES.BALANCED2",
-        hands: 2,
-        main: true,
-        off: false,
-        scaling: "strength.dexterity",
-        damage: 6,
-        actionCost: 3,
-        range: 3,
-        training: "balanced"
-    },
-    heavy2: {
-        id: "heavy2",
-        label: "WEAPON.CATEGORIES.HEAVY2",
-        hands: 2,
-        main: true,
-        off: false,
-        scaling: "strength",
-        damage: 8,
-        actionCost: 4,
-        range: 3,
-        training: "heavy"
-    },
-
-    // One-Handed Ranged
-    projectile1: {
-        id: "projectile1",
-        label: "WEAPON.CATEGORIES.PROJECTILE1",
-        hands: 1,
-        main: true,
-        off: true,
-        ranged: true,
-        scaling: "strength.dexterity",
-        actionCost: 2,
-        damage: 4,
-        range: 60,
-        training: "projectile"
-    },
-    talisman1: {
-        id: "talisman1",
-        label: "WEAPON.CATEGORIES.TALISMAN1",
-        hands: 1,
-        main: true,
-        off: true,
-        ranged: false,
-        scaling: "presence",
-        actionCost: 2,
-        damage: 2,
-        range: 30,
-        training: "talisman"
-    },
-    mechanical1: {
-        id: "mechanical1",
-        label: "WEAPON.CATEGORIES.MECHANICAL1",
-        hands: 1,
-        main: true,
-        off: true,
-        ranged: true,
-        reload: true,
-        scaling: "dexterity",
-        actionCost: 2,
-        damage: 4,
-        range: 60,
-        training: "mechanical"
-    },
-
-    // Two-Handed Ranged
-    projectile2: {
-        id: "projectile2",
-        label: "WEAPON.CATEGORIES.PROJECTILE2",
-        hands: 2,
-        main: true,
-        off: false,
-        ranged: true,
-        scaling: "strength.dexterity",
-        actionCost: 3,
-        damage: 6,
-        range: 120,
-        training: "projectile"
-    },
-    talisman2: {
-        id: "talisman2",
-        label: "WEAPON.CATEGORIES.TALISMAN2",
-        hands: 2,
-        main: true,
-        off: false,
-        ranged: false,
-        scaling: "presence",
-        actionCost: 3,
-        damage: 3,
-        range: 30,
-        training: "talisman"
-    },
-    mechanical2: {
-        id: "mechanical2",
-        label: "WEAPON.CATEGORIES.MECHANICAL2",
-        hands: 2,
-        main: true,
-        off: false,
-        ranged: true,
-        reload: true,
-        scaling: "dexterity",
-        actionCost: 2,
-        damage: 6,
-        range: 120,
-        training: "mechanical"
-    },
-
-    // Shields
-    shieldLight: {
-        id: "shieldLight",
-        label: "WEAPON.CATEGORIES.SHIELD_LIGHT",
-        hands: 1,
-        main: false,
-        off: true,
-        ranged: false,
-        scaling: "dexterity",
-        actionCost: 2,
-        damage: 2,
-        defense: {
-            block: 2
-        },
-        range: 1,
-        training: "shield"
-    },
-    shieldHeavy: {
-        id: "shieldHeavy",
-        label: "WEAPON.CATEGORIES.SHIELD_HEAVY",
-        hands: 1,
-        main: false,
-        off: true,
-        ranged: false,
-        scaling: "strength",
-        actionCost: 2,
-        damage: 3,
-        range: 1,
-        defense: {
-            block: 4
-        },
-        training: "shield"
-    },
+    lightSaber:{
+        id: "lightSaber",
+        abrev: "LIS",
+        label: "WEAPON.SKILLS.LightSaber",
+        rangeCategory: RANGE_CATEGORY.melee,
+    }
 
 };
 
 /**
  * The boolean properties which a Weapon may have.
- * @enum {object}
+ * @enum {Quality}
  */
-export const PROPERTIES = {
-    ambush: {
-        label: "WEAPON.TAGS.Ambush",
-        tooltip: "WEAPON.TAGS.AmbushTooltip"
+export const QUALITIES = {
+    accurate: {
+        id: "accurate",
+        abrev: "ACC",
+        label: "WEAPON.QUALITIES.Accurate",
+        tooltip: "WEAPON.QUALITIES.AccurateTooltip",
+        activationType: ACTIVATION_TYPE.passive,
     },
-    blocking: {
-        label: "WEAPON.TAGS.Blocking",
-        tooltip: "WEAPON.TAGS.BlockingTooltip"
+    autoFire: {
+        id: "autoFire",
+        abrev: "AUF",
+        label: "WEAPON.QUALITIES.AutoFire",
+        tooltip: "WEAPON.QUALITIES.AutoFireTooltip",
+        activationType: ACTIVATION_TYPE.active,
     },
-    engaging: {
-        label: "WEAPON.TAGS.Engaging",
-        tooltip: "WEAPON.TAGS.EngagingTooltip"
+    breach: {
+        id: "breach",
+        abrev: "BRE",
+        label: "WEAPON.QUALITIES.Breach",
+        tooltip: "WEAPON.QUALITIES.BreachTooltip",
+        activationType: ACTIVATION_TYPE.passive,
     },
-    keen: {
-        label: "WEAPON.TAGS.Keen",
-        tooltip: "WEAPON.TAGS.KeenTooltip"
+    burn: {
+        id: "burn",
+        abrev: "BUR",
+        label: "WEAPON.QUALITIES.Burn",
+        tooltip: "WEAPON.QUALITIES.BurnTooltip",
+        activationType: ACTIVATION_TYPE.active,
     },
-    oversized: {
-        label: "WEAPON.TAGS.Oversized",
-        tooltip: "WEAPON.TAGS.OversizedTooltip"
+    blast: {
+        id: "blast",
+        abrev: "BLA",
+        label: "WEAPON.QUALITIES.Blast",
+        tooltip: "WEAPON.QUALITIES.BlastTooltip",
+        activationType: ACTIVATION_TYPE.active,
     },
-    parrying: {
-        label: "WEAPON.TAGS.Parrying",
-        tooltip: "WEAPON.TAGS.ParryingTooltip"
+    concussive: {
+        id: "concussive",
+        abrev: "CON",
+        label: "WEAPON.QUALITIES.Concussive",
+        tooltip: "WEAPON.QUALITIES.ConcussiveTooltip",
+        activationType: ACTIVATION_TYPE.active,
     },
-    reach: {
-        label: "WEAPON.TAGS.Reach",
-        tooltip: "WEAPON.TAGS.ReachTooltip"
+    cortosis: {
+        id: "cortosis",
+        abrev: "COR",
+        label: "WEAPON.QUALITIES.Cortosis",
+        tooltip: "WEAPON.QUALITIES.CortosisTooltip",
+        activationType: ACTIVATION_TYPE.passive,
     },
-    reliable: {
-        label: "WEAPON.TAGS.Reliable",
-        tooltip: "WEAPON.TAGS.ReliableTooltip"
+    cumbersome: {
+        id: "cumbersome",
+        abrev: "CUM",
+        label: "WEAPON.QUALITIES.Cumbersome",
+        tooltip: "WEAPON.QUALITIES.CumbersomeTooltip",
+        activationType: ACTIVATION_TYPE.passive,
     },
-    thrown: {
-        label: "WEAPON.TAGS.Thrown",
-        tooltip: "WEAPON.TAGS.ThrownTooltip"
+    defensive: {
+        id: "defensive",
+        abrev: "DEF",
+        label: "WEAPON.QUALITIES.Defensive",
+        tooltip: "WEAPON.QUALITIES.DefensiveTooltip",
+        activationType: ACTIVATION_TYPE.passive,
     },
-    versatile: {
-        label: "WEAPON.TAGS.Versatile",
-        tooltip: "WEAPON.TAGS.VersatileTooltip"
-    }
+    deflection: {
+        id: "deflection",
+        abrev: "DEF",
+        label: "WEAPON.QUALITIES.Deflection",
+        tooltip: "WEAPON.QUALITIES.DeflectionTooltip",
+        activationType: ACTIVATION_TYPE.passive,
+    },
+    disorient: {
+        id: "disorient",
+        abrev: "DIS",
+        label: "WEAPON.QUALITIES.Disorient",
+        tooltip: "WEAPON.QUALITIES.DisorientTooltip",
+        activationType: ACTIVATION_TYPE.active,
+    },
+    ensnare: {
+        id: "ensnare",
+        abrev: "ENS",
+        label: "WEAPON.QUALITIES.Ensnare",
+        tooltip: "WEAPON.QUALITIES.EnsnareTooltip",
+        activationType: ACTIVATION_TYPE.active,
+    },
+    guided: {
+        id: "guided",
+        abrev: "GUI",
+        label: "WEAPON.QUALITIES.Guided",
+        tooltip: "WEAPON.QUALITIES.GuidedTooltip",
+        activationType: ACTIVATION_TYPE.active,
+    },
+    knockdown: {
+        id: "knockdown",
+        abrev: "KNO",
+        label: "WEAPON.QUALITIES.Knockdown",
+        tooltip: "WEAPON.QUALITIES.KnockdownTooltip",
+        activationType: ACTIVATION_TYPE.active,
+    },
+    inaccurate: {
+        id: "inaccurate",
+        abrev: "INA",
+        label: "WEAPON.QUALITIES.Inaccurate",
+        tooltip: "WEAPON.QUALITIES.InaccurateTooltip",
+        activationType: ACTIVATION_TYPE.passive,
+    },
+    inferior: {
+        id: "inferior",
+        abrev: "INF",
+        label: "WEAPON.QUALITIES.Inferior",
+        tooltip: "WEAPON.QUALITIES.InferiorTooltip",
+        activationType: ACTIVATION_TYPE.passive,
+    },
+    ion: {
+        id: "ion",
+        abrev: "ION",
+        label: "WEAPON.QUALITIES.Ion",
+        tooltip: "WEAPON.QUALITIES.IonTooltip",
+        activationType: ACTIVATION_TYPE.passive,
+    },
+    limitedAmmo: {
+        id: "limitedAmmo",
+        abrev: "LIA",
+        label: "WEAPON.QUALITIES.LimitedAmmo",
+        tooltip: "WEAPON.QUALITIES.LimitedAmmoTooltip",
+        activationType: ACTIVATION_TYPE.passive,
+    },
+    linked: {
+        id: "linked",
+        abrev: "LIN",
+        label: "WEAPON.QUALITIES.Linked",
+        tooltip: "WEAPON.QUALITIES.LinkedTooltip",
+        activationType: ACTIVATION_TYPE.passive,
+    },
+    pierce: {
+        id: "pierce",
+        abrev: "PIE",
+        label: "WEAPON.QUALITIES.Pierce",
+        tooltip: "WEAPON.QUALITIES.PierceTooltip",
+        activationType: ACTIVATION_TYPE.passive,
+    },
+    prepare: {
+        id: "prepare",
+        abrev: "PRE",
+        label: "WEAPON.QUALITIES.Prepare",
+        tooltip: "WEAPON.QUALITIES.PrepareTooltip",
+        activationType: ACTIVATION_TYPE.passive,
+    },
+    slowFiring: {
+        id: "slowFiring",
+        abrev: "SLF",
+        label: "WEAPON.QUALITIES.SlowFiring",
+        tooltip: "WEAPON.QUALITIES.SlowFiringTooltip",
+        activationType: ACTIVATION_TYPE.passive,
+    },
+    stun: {
+        id: "stun",
+        abrev: "STU",
+        label: "WEAPON.QUALITIES.Stun",
+        tooltip: "WEAPON.QUALITIES.StunTooltip",
+        activationType: ACTIVATION_TYPE.active,
+    },
+    stunSetting: {
+        id: "stunSetting",
+        abrev: "STD",
+        label: "WEAPON.QUALITIES.StunSetting",
+        tooltip: "WEAPON.QUALITIES.StunSettingTooltip",
+        activationType: ACTIVATION_TYPE.active,
+    },
+    stunDamage: {
+        id: "stunDamage",
+        abrev: "STD",
+        label: "WEAPON.QUALITIES.StunDamage",
+        tooltip: "WEAPON.QUALITIES.StunDamageTooltip",
+        activationType: ACTIVATION_TYPE.passive,
+    },
+    sunder: {
+        id: "sunder",
+        abrev: "SUN",
+        label: "WEAPON.QUALITIES.Sunder",
+        tooltip: "WEAPON.QUALITIES.SunderTooltip",
+        activationType: ACTIVATION_TYPE.active,
+    },
+    superior: {
+        id: "superior",
+        abrev: "SUP",
+        label: "WEAPON.QUALITIES.Superior",
+        tooltip: "WEAPON.QUALITIES.SuperiorTooltip",
+        activationType: ACTIVATION_TYPE.passive,
+    },
+    tractor: {
+        id: "tractor",
+        abrev: "TRA",
+        label: "WEAPON.QUALITIES.Tractor",
+        tooltip: "WEAPON.QUALITIES.TractorTooltip",
+        activationType: ACTIVATION_TYPE.passive,
+    },
+    vicious: {
+        id: "vicious",
+        abrev: "VIC",
+        label: "WEAPON.QUALITIES.Vicious",
+        tooltip: "WEAPON.QUALITIES.ViciousTooltip",
+        activationType: ACTIVATION_TYPE.passive,
+    },
 };
-
-/**
- * Designate which equipped slot the weapon is used in.
- * @type {Enum<number>}
- */
-export const SLOTS = new Enum({
-    EITHER: {value: 0, label: "WEAPON.SLOTS.EITHER"},
-    MAINHAND: {value: 1, label: "WEAPON.SLOTS.MAINHAND"},
-    OFFHAND: {value: 2, label: "WEAPON.SLOTS.OFFHAND"},
-    TWOHAND: {value: 3, label: "WEAPON.SLOTS.TWOHAND"}
-});
-
-/**
- * The configuration of the default unarmed Weapon.
- * @type {object}
- */
-export const UNARMED_DATA = {
-    name: "Unarmed",
-    type: "weapon",
-    img: "icons/skills/melee/unarmed-punch-fist.webp",
-    system: {
-        category: "unarmed",
-        quality: "standard",
-        enchantment: "mundane",
-        damageType: "bludgeoning"
-    }
-}
-
-/**
- * A special weapon configuration used for Nosferatu bite attack.
- * @type {SwerpgWeapon}
- */
-export const VAMPIRE_BITE = {
-    name: "Vampire Bite",
-    type: "weapon",
-    img: "icons/magic/death/mouth-bite-fangs-vampire.webp",
-    system: {
-        category: "natural",
-        quality: "superior",
-        enchantment: "mundane",
-        damageType: "piercing"
-    }
-}
 
 /* -------------------------------------------- */
 
@@ -350,33 +383,9 @@ export const VAMPIRE_BITE = {
  * @type {string[]}
  */
 export const ANIMATION_TYPES = Object.freeze([
-    "arrow",
-    "bolt",
-    "boomerang",
-    "bullet",
-    "club",
-    "dagger",
-    "dagger",
-    "falchion",
-    "glaive",
-    "greataxe",
-    "greatclub",
-    "greatsword",
-    "halberd",
-    "hammer",
-    "handaxe",
-    "katana",
-    "mace",
-    "maul",
-    "quarterstaff",
-    "rapier",
-    "scimitar",
-    "shortsword",
-    "spear",
-    "sword",
-    "unarmed_strike",
-    "warhammer",
-    "wrench",
-    "bite",
-    "claws"
+    "explosion",
+    "laser_shot",
+    "laser_sword",
+    "double_bladed_laser_sword",
+    "throwable"
 ]);

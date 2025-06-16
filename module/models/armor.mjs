@@ -30,6 +30,7 @@ export default class SwerpgArmor extends SwerpgPhysicalItem {
             defense: new fields.SchemaField({
                 base: new fields.NumberField({integer: true, nullable: false, initial: 0, min: 0}),
             }),
+            properties: new fields.SetField(new fields.StringField({required: true, choices: this.ITEM_PROPERTIES})),
             soak: new fields.SchemaField({
                 base: new fields.NumberField({integer: true, nullable: false, initial: 0, min: 0}),
             }),

@@ -506,60 +506,29 @@ export default class SwerpgActor extends Actor {
         // Final weapon preparation
         if (!weapons.mainhand) weapons.mainhand = this._getUnarmedWeapon();
         const mh = weapons.mainhand;
-        const mhCategory = mh.config.category;
-        if (!weapons.offhand) weapons.offhand = mhCategory.hands < 2 ? this._getUnarmedWeapon() : null;
         const oh = weapons.offhand;
-        const ohCategory = oh?.config.category || {};
-        mh.system.prepareEquippedData();
-        oh?.system.prepareEquippedData();
+        const ohCategory =  {};
+        //mh.system.prepareEquippedData();
+        //oh?.system.prepareEquippedData();
 
         // Range
-        const ranges = [mh.system.range];
-        if (oh) ranges.push(oh.system.range);
-        weapons.maxRange = Math.max(...ranges);
 
         // Free Hand or Unarmed
-        const mhFree = ["unarmed", "natural"].includes(mhCategory.id);
-        const ohFree = ["unarmed", "natural"].includes(ohCategory.id);
-        weapons.freehand = mhFree || ohFree;
-        weapons.unarmed = mhFree && ohFree;
 
         // Hands available for spellcasting
-        weapons.spellHands = mhFree + ohFree;
-        if (["talisman1", "talisman2"].includes(mhCategory.id)) {
-            weapons.spellHands += mhCategory.hands;
-            weapons.talisman = true;
-        }
-        if ("talisman1" === ohCategory.id) {
-            weapons.spellHands += 1;
-            weapons.talisman = true;
-        }
 
         // Shield
-        weapons.shield = (ohCategory.id === "shieldLight") || (ohCategory.id === "shieldHeavy");
 
         // Two-Handed
-        weapons.twoHanded = weapons.mainhand.system.slot === slots.TWOHAND;
 
         // Melee vs. Ranged
-        weapons.melee = !mhCategory.ranged;
-        weapons.ranged = !!mhCategory.ranged;
 
         // Dual Wielding
-        weapons.dualWield = weapons.unarmed || ((mhCategory.hands === 1) && mh.id && (oh.id && !weapons.shield));
-        weapons.dualMelee = weapons.dualWield && !(mhCategory.ranged || ohCategory.ranged);
-        weapons.dualRanged = (mhCategory.hands === 1) && mhCategory.ranged && ohCategory.ranged;
 
         // Special Properties
-        weapons.reload = mhCategory.reload || ohCategory.reload;
-        weapons.slow = mh.system.properties.has("oversized") ? 1 : 0;
-        weapons.slow += oh?.system.properties.has("oversized") ? 1 : 0;
 
         // Strong Grip
-        if (this.talentIds.has("stronggrip000000") && weapons.twoHanded) {
-            weapons.freehand = true;
-            if (mhCategory.id !== "talisman2") weapons.spellHands += 1;
-        }
+
         return weapons;
     }
 
@@ -571,12 +540,7 @@ export default class SwerpgActor extends Actor {
      * @private
      */
     _getUnarmedWeapon() {
-        const itemCls = getDocumentClass("Item");
-        const data = foundry.utils.deepClone(SYSTEM.WEAPON.UNARMED_DATA);
-        if (this.talentIds.has("martialartist000")) data.system.quality = "fine";
-        const unarmed = new itemCls(data, {parent: this});
-        unarmed.prepareData(); // Needs to be explicitly called since we are in the middle of Actor preparation
-        return unarmed;
+        return {};
     }
 
     /* -------------------------------------------- */

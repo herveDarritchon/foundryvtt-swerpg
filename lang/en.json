@@ -1129,37 +1129,105 @@
     }
   },
   "WEAPON": {
-    "CATEGORIES": {
-      "LIGHT1": "Light (1h)",
-      "SIMPLE1": "Simple (1h)",
-      "BALANCED1": "Balanced (1h)",
-      "HEAVY1": "Heavy (1h)",
-      "SIMPLE2": "Simple (2h)",
-      "BALANCED2": "Balanced (2h)",
-      "HEAVY2": "Heavy (2h)",
-      "PROJECTILE1": "Projectile (1h)",
-      "PROJECTILE2": "Projectile (2h)",
-      "MECHANICAL1": "Mechanical (1h)",
-      "MECHANICAL2": "Mechanical (2h)",
-      "NATURAL": "Natural",
-      "UNARMED": "Unarmed",
-      "SHIELD_LIGHT": "Light Shield",
-      "SHIELD_HEAVY": "Heavy Shield",
-      "TALISMAN1": "Talisman (1h)",
-      "TALISMAN2": "Talisman (2h)"
+    "QUALITIES": {
+      "Accurate": "Accurate",
+      "AccurateTooltip": "This weapon is particularly accurate, granting +1 bonus to the attack roll.",
+      "AutoFire": "Auto-Fire",
+      "AutoFireTooltip": "This weapon can be fired in automatic mode, allowing you to make multiple attacks at once.",
+      "Breach": "Breach",
+      "BreachTooltip": "This weapon is designed to penetrate armor, ignoring a portion of the target's armor rating.",
+      "Burn": "Burn",
+      "BurnTooltip": "This weapon deals burn damage, which continues to affect the target over time.",
+      "Blast": "Blast",
+      "BlastTooltip": "This weapon has an area of effect, allowing it to hit multiple targets within a specified radius.",
+      "Concussive": "Concussive",
+      "ConcussiveTooltip": "This weapon can cause concussive damage, potentially stunning or disorienting the target.",
+      "Cortosis": "Cortosis",
+      "CortosisTooltip": "This weapon is made with cortosis, allowing it to resist damage from lightsabers and other energy weapons.",
+      "Cumbersome": "Cumbersome",
+      "CumbersomeTooltip": "This weapon is over-sized or otherwise cumbersome to wield, preventing you from acting quickly. You have +2 banes to Initiative while this item is equipped.",
+      "Defensive": "Defensive",
+      "DefensiveTooltip": "This weapon provides a bonus to your defense, making it harder for enemies to hit you.",
+      "Deflection": "Deflection",
+      "DeflectionTooltip": "This weapon can deflect incoming attacks, providing a bonus to your defense against ranged attacks.",
+      "Disorient": "Disorient",
+      "DisorientTooltip": "This weapon can disorient the target, causing them to suffer penalties to their actions.",
+      "Ensnare": "Ensnare",
+      "EnsnareTooltip": "This weapon can ensnare the target, preventing them from moving or acting for a period of time.",
+      "Guided": "Guided",
+      "GuidedTooltip": "This weapon is designed to be guided, allowing it to hit targets more accurately.",
+      "Knockdown": "Knockdown",
+      "KnockdownTooltip": "This weapon can knock down the target, causing them to fall prone and suffer penalties to their actions.",
+      "Inaccurate": "Inaccurate",
+      "InaccurateTooltip": "This weapon is particularly inaccurate, imposing a -1 penalty to the attack roll.",
+      "Inferior": "Inferior",
+      "InferiorTooltip": "This weapon is of poor quality, reducing its effectiveness in combat.",
+      "Ion": "Ion",
+      "IonTooltip": "This weapon deals ion damage, which is effective against droids and electronic devices.",
+      "LimitedAmmo": "Limited Ammo",
+      "LimitedAmmoTooltip": "This weapon has a limited amount of ammunition, requiring careful management of resources.",
+      "Linked": "Linked",
+      "LinkedTooltip": "This weapon can be linked with other weapons, allowing for coordinated attacks.",
+      "Pierce": "Pierce",
+      "PierceTooltip": "This weapon can pierce through armor, reducing the target's armor rating by a certain amount.",
+      "Prepare": "Prepare",
+      "PrepareTooltip": "This weapon requires preparation before use, increasing the action cost to strike.",
+      "SlowFiring": "Slow Firing",
+      "SlowFiringTooltip": "This weapon has a slow firing rate, increasing the action cost to strike.",
+      "Stun": "Stun",
+      "StunTooltip": "This weapon can deal stun damage, incapacitating the target without causing permanent harm.",
+      "StunDamage": "Stun Damage",
+      "StunSetting": "Stun Setting",
+      "StunSettingTooltip": "This weapon has a stun setting, allowing it to deal non-lethal damage to living targets.",
+      "StunDamageTooltip": "This weapon deals stun damage, which is effective against living targets and can incapacitate them.",
+      "Sunder": "Sunder",
+      "SunderTooltip": "This weapon can sunder the target's equipment, causing it to break or become unusable.",
+      "Superior": "Superior",
+      "SuperiorTooltip": "This weapon is of superior quality, providing a bonus to the attack roll and damage.",
+      "Tractor": "Tractor",
+      "TractorTooltip": "This weapon can create a tractor beam effect, allowing it to pull or push targets within a certain range.",
+      "Vicious": "Vicious",
+      "ViciousTooltip": "This weapon is particularly deadly, dealing additional damage on a successful hit."
+    },
+    "RANGE_TYPES": {
+      "Engaged": "Engaged",
+      "Short": "Short",
+      "Medium": "Medium",
+      "Long": "Long",
+      "Extreme": "Extreme"
+    },
+    "SKILLS": {
+      "Brawl": "Brawl",
+      "Melee": "Melee",
+      "RangedLight": "Ranged Light",
+      "RangedHeavy": "Ranged Heavy",
+      "Gunnery": "Gunnery",
+      "LightSaber": "Light Saber"
     },
     "FIELDS": {
-      "damageType": {
-        "label": "Damage Type",
-        "hint": "Configure the type of damage dealt by this weapon."
+      "damage": {
+        "label": "Damage",
+        "hint": "Configure the amount of damage dealt by this weapon."
+      },
+      "crit": {
+        "label": "Critical Hit",
+        "hint": "Configure the amount of critical damage dealt by this weapon."
       },
       "loaded": {
         "label": "Loaded",
         "hint": "If this weapon requires loading, track whether it is currently loaded."
       },
-      "slot": {
-        "label": "Equipped Slot",
-        "hint": "Specify which equipment slot this weapon is equipped in."
+      "skill": {
+        "label": "Weapon Skill",
+        "hint": "Specify which sill this weapon is associated with. This will determine which skill is used to make attacks with this weapon."
+      },
+      "quality": {
+        "label": "Weapon Quality",
+        "hint": "Select the quality of this weapon. This will determine the base attack and damage bonuses."
+      },
+      "range": {
+        "label": "Range",
+        "hint": "The effective range of this weapon, expressed in grid spaces. This will determine the maximum distance at which the weapon can be used to make attacks."
       },
       "animation": {
         "label": "Weapon Animation Prefix",
