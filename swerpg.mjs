@@ -254,13 +254,13 @@ Hooks.once("i18nInit", function () {
 
     // Apply localizations
     const toLocalize = [
-        "CHARACTERISTICS", "ARMOR.CATEGORIES", "ARMOR.PROPERTIES", "DAMAGE_CATEGORIES", "DEFENSES",
+        "CHARACTERISTICS", "ARMOR.CATEGORIES", "DAMAGE_CATEGORIES", "DEFENSES",
         "RESOURCES", "THREAT_LEVELS",
         "SKILLS", "SECONDARY_ATTRIBUTES",
         "QUALITY_TIERS", "ENCHANTMENT_TIERS",
         "ADVERSARY.TAXONOMY_CATEGORIES",
         "SKILL.CATEGORIES", "SKILL.RANKS",
-        "WEAPON.CATEGORIES", "WEAPON.PROPERTIES", "WEAPON.SLOTS",
+        "WEAPON.SKILLS", "WEAPON.QUALITIES", "WEAPON.RANGE_CATEGORY", "WEAPON.ACTIVATION_TYPE",
     ];
     for (let c of toLocalize) {
         const conf = foundry.utils.getProperty(SYSTEM, c);

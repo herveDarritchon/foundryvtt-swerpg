@@ -20,7 +20,6 @@ export default class SwerpgPhysicalItem extends foundry.abstract.TypeDataModel {
             hardPoints: new fields.NumberField({required: true, nullable: false, integer: true, initial: 0, min: 0}),
             broken: new fields.BooleanField({initial: false}),
             equipped: new fields.BooleanField(),
-            properties: new fields.SetField(new fields.StringField({required: true, choices: this.ITEM_PROPERTIES})),
             description: new fields.SchemaField({
                 public: new fields.HTMLField(),
                 secret: new fields.HTMLField()

@@ -1,0 +1,43 @@
+folder: null
+name: Holdout Blaster
+type: weapon
+img: systems/swerpg/assets/images/icons/weapon.svg
+system:
+  category: balanced1
+  quantity: 1
+  price: 200
+  quality: standard
+  encumbrance: 1
+  rarity: 4
+  hardPoints: 1
+  broken: false
+  equipped: false
+  description:
+    public: ''
+    secret: ''
+  actions: []
+  qualities:
+    - stunSetting
+  range: short
+  skill: rangedLight
+  damage: 5
+  crit: 4
+effects: []
+ownership:
+  default: 0
+  8VADnEoyDM8awtMQ: 3
+flags: {}
+_stats:
+  compendiumSource: null
+  duplicateSource: null
+  exportSource: null
+  coreVersion: '13.344'
+  systemId: swerpg
+  systemVersion: '#{VERSION}#'
+  createdTime: 1750076026568
+  modifiedTime: 1750076026568
+  lastModifiedBy: 8VADnEoyDM8awtMQ
+_id: holdoutBlaster00
+sort: 0
+_key: '!items!holdoutBlaster00'
+
