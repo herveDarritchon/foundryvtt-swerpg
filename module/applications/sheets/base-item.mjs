@@ -55,7 +55,6 @@ export default class SwerpgBaseItemSheet extends api.HandlebarsApplicationMixin(
         config: {
             id: "config",
             template: undefined, // Populated during _initializeItemSheetClass
-            scrollable: [".sheet-body"]
         }
     };
 
@@ -90,6 +89,7 @@ export default class SwerpgBaseItemSheet extends api.HandlebarsApplicationMixin(
         // Item Type Configuration
         this.DEFAULT_OPTIONS.classes = [this.DEFAULT_OPTIONS.item.type];
         this.PARTS.config.template = `systems/swerpg/templates/sheets/partials/${item.type}-config.hbs`;
+        this.PARTS.config.scrollable = [""] ;
 
         // Includes Actions
         if (item.includesActions) {

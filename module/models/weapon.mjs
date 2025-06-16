@@ -1,4 +1,3 @@
-import SwerpgPhysicalItem from "./physical.mjs";
 import {SYSTEM} from "../config/system.mjs";
 import SwerpgCombatItem from "./combat.mjs";
 
