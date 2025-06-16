@@ -132,7 +132,7 @@ export default class SwerpgWeapon extends SwerpgPhysicalItem {
 
         // Action bonuses and cost
         this.actionBonuses = this.parent.actor ? {
-            ability: this.parent.actor.getAbilityBonus(category.scaling.split(".")),
+            ability: "",
             skill: 0,
             enchantment: enchantment.bonus
         } : {}
@@ -219,10 +219,11 @@ export default class SwerpgWeapon extends SwerpgPhysicalItem {
 
     /**
      * Prepare the effective range of the Weapon.
-     * @returns {number}
+     * @returns {string}
      */
     #prepareRange() {
-        return 1;
+        const range = SYSTEM.WEAPON.RANGETYPES[this.range] || SYSTEM.WEAPON.RANGETYPES.medium;
+        return  game.i18n.localize(range.label);
     }
 
     /* -------------------------------------------- */
@@ -285,8 +286,12 @@ export default class SwerpgWeapon extends SwerpgPhysicalItem {
         tags.range = `Range ${this.range}`;
 
         // Weapon Category
-        const category = this.config.quality;
-        tags.category = category.label;
+        const qualities = this.qualities;
+
+        qualities.forEach((quality) => {
+            const q = SYSTEM.WEAPON.QUALITIES[quality];
+            if (q) tags[q.id] = q.label;
+        })
 
         // Equipment Slot
 
