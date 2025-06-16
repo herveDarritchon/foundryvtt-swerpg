@@ -87,6 +87,12 @@
       "type": "Item"
     },
     {
+      "name": "gears",
+      "label": "Gears",
+      "path": "packs/gears",
+      "type": "Item"
+    },
+    {
       "name": "weapons",
       "label": "Weapons",
       "path": "packs/weapons",
@@ -119,7 +125,9 @@
           "name": "Equipments",
           "color": "#360c55",
           "packs": [
-            "armors"
+            "armors",
+            "gear",
+            "weapons"
           ]
         },
         {
@@ -180,6 +188,12 @@
       "career": {
         "htmlFields": [
           "description"
+        ]
+      },
+      "gear": {
+        "htmlFields": [
+          "description.public",
+          "description.secret"
         ]
       },
       "obligation": {
