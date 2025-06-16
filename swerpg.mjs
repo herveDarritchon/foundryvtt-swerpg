@@ -106,6 +106,7 @@ Hooks.once("init", async function () {
         ancestry: models.SwerpgAncestry,
         archetype: models.SwerpgArchetype,
         armor: models.SwerpgArmor,
+        gear: models.SwerpgGear,
         origin: models.SwerpgOrigin,
         background: models.SwerpgBackground,
         species: models.SwerpgSpecies,
@@ -137,6 +138,10 @@ Hooks.once("init", async function () {
     });
     foundry.documents.collections.Items.registerSheet(SYSTEM.id, applications.BackgroundSheet, {
         types: ["background"],
+        makeDefault: true
+    });
+    foundry.documents.collections.Items.registerSheet(SYSTEM.id, applications.GearSheet, {
+        types: ["gear"],
         makeDefault: true
     });
     foundry.documents.collections.Items.registerSheet(SYSTEM.id, applications.OriginSheet, {
@@ -254,13 +259,13 @@ Hooks.once("i18nInit", function () {
 
     // Apply localizations
     const toLocalize = [
-        "CHARACTERISTICS", "ARMOR.CATEGORIES", "ARMOR.PROPERTIES", "DAMAGE_CATEGORIES", "DEFENSES",
+        "CHARACTERISTICS", "ARMOR.CATEGORIES", "DAMAGE_CATEGORIES", "DEFENSES",
         "RESOURCES", "THREAT_LEVELS",
         "SKILLS", "SECONDARY_ATTRIBUTES",
         "QUALITY_TIERS", "ENCHANTMENT_TIERS",
         "ADVERSARY.TAXONOMY_CATEGORIES",
         "SKILL.CATEGORIES", "SKILL.RANKS",
-        "WEAPON.CATEGORIES", "WEAPON.PROPERTIES", "WEAPON.SLOTS",
+        "WEAPON.SKILLS", "WEAPON.QUALITIES", "WEAPON.RANGE_CATEGORY", "WEAPON.ACTIVATION_TYPE",
     ];
     for (let c of toLocalize) {
         const conf = foundry.utils.getProperty(SYSTEM, c);

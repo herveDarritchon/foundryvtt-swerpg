@@ -7,22 +7,9 @@
         {{formField fields.encumbrance value=source.system.encumbrance}}
     </fieldset>
 
-    <fieldset {{fieldDisabled}}>
-        <legend>{{localize "ARMOR.SHEET.DEFENSES"}}</legend>
-        {{formField fields.defense value=source.system.defense widget=defenseWidget}}
-        {{formField fields.soak value=source.system.soak widget=soakWidget}}
-    </fieldset>
-
-    <fieldset class="item-properties" {{fieldDisabled}}>
-        <legend>{{fields.properties.label}}</legend>
-        {{formField fields.properties value=item.system.properties widget=propertiesWidget}}
-    </fieldset>
-
     <fieldset class="item-equipment" {{fieldDisabled}}>
         <legend>{{localize "ARMOR.SHEET.EQUIPMENT"}}</legend>
-        {{formField fields.equipped value=source.system.equipped}}
         {{formField fields.broken value=source.system.broken}}
-        {{formField fields.hardPoints value=source.system.hardPoints classes="slim"}}
         {{formField fields.quantity value=source.system.quantity classes="slim"}}
         {{formField fields.rarity value=source.system.rarity classes="slim"}}
         {{formField fields.price value=source.system.price classes="slim"}}

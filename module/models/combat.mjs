@@ -1,23 +1,15 @@
 import SwerpgAction from "./action.mjs";
+import SwerpgPhysicalItem from "./physical.mjs";
 
 /**
  * A data structure which is shared by all physical items.
  */
-export default class SwerpgPhysicalItem extends foundry.abstract.TypeDataModel {
+export default class SwerpgCombatItem extends SwerpgPhysicalItem {
     static defineSchema() {
         const fields = foundry.data.fields;
         return {
-            category: new fields.StringField({
-                required: true,
-                choices: this.ITEM_CATEGORIES,
-                initial: this.DEFAULT_CATEGORY
-            }),
-            quantity: new fields.NumberField({required: true, nullable: false, integer: true, initial: 1, min: 0}),
-            price: new fields.NumberField({required: true, nullable: false, integer: true, initial: 0, min: 0}),
-            quality: new fields.StringField({required: true, choices: SYSTEM.QUALITY_TIERS, initial: "standard"}),
-            encumbrance: new fields.NumberField({required: true, nullable: false, integer: true, initial: 1, min: 0}),
-            rarity: new fields.NumberField({required: true, nullable: false, integer: true, initial: 1, min: 0}),
-            broken: new fields.BooleanField({initial: false}),
+            hardPoints: new fields.NumberField({required: true, nullable: false, integer: true, initial: 0, min: 0}),
+            equipped: new fields.BooleanField(),
             description: new fields.SchemaField({
                 public: new fields.HTMLField(),
                 secret: new fields.HTMLField()

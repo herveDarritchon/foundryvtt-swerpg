@@ -10,12 +10,15 @@ const CONFIG = {
     dataPath: "packs",
     sourcePath: "_source",
     databases: [
+        "armors",
         "careers",
+        "gears",
         "obligations",
         "pregens",
         "species",
         "specializations",
         "talents",
+        "weapons",
     ],
     yaml: true
 };

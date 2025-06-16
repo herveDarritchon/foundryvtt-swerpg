@@ -1,19 +1,20 @@
 import SwerpgPhysicalItem from "./physical.mjs";
 import {SYSTEM} from "../config/system.mjs";
+import SwerpgCombatItem from "./combat.mjs";
 
 /**
  * Data schema, attributes, and methods specific to Weapon type Items.
  */
-export default class SwerpgWeapon extends SwerpgPhysicalItem {
+export default class SwerpgWeapon extends SwerpgCombatItem {
 
     /** @override */
-    static ITEM_CATEGORIES = SYSTEM.WEAPON.CATEGORIES;
+    static ITEM_QUALITIES = SYSTEM.WEAPON.QUALITIES;
 
     /** @override */
-    static DEFAULT_CATEGORY = "simple1";
+    static QUALITY = "simple1";
 
     /** @override */
-    static ITEM_PROPERTIES = SYSTEM.WEAPON.PROPERTIES;
+    static ITEM_SKILLS = SYSTEM.WEAPON.SKILLS;
 
     /** @override */
     static LOCALIZATION_PREFIXES = ["ITEM", "WEAPON"];
@@ -27,9 +28,25 @@ export default class SwerpgWeapon extends SwerpgPhysicalItem {
     static defineSchema() {
         const fields = foundry.data.fields;
         return foundry.utils.mergeObject(super.defineSchema(), {
-            damageType: new fields.StringField({required: true, choices: SYSTEM.DAMAGE_TYPES, initial: "bludgeoning"}),
-            loaded: new fields.BooleanField({required: false, initial: undefined}),
-            slot: new fields.NumberField({required: true, choices: () => SYSTEM.WEAPON.SLOTS.choices, initial: 0}),
+            skill: new fields.StringField({required: true, choices: SYSTEM.WEAPON.SKILLS, initial: "rangedLight"}),
+            range: new fields.StringField({required: true, choices: SYSTEM.WEAPON.RANGETYPES, initial: "medium"}),
+            damage: new fields.NumberField({
+                required: true,
+                integer: true,
+                initial: 0,
+                min: 0,
+                max: 20,
+                step: 1
+            }),
+            crit: new fields.NumberField({
+                required: true,
+                integer: true,
+                initial: 0,
+                min: 0,
+                max: 20,
+                step: 1
+            }),
+            qualities: new fields.SetField(new fields.StringField({required: true, choices: this.ITEM_QUALITIES})),
             animation: new fields.StringField({
                 required: false,
                 choices: SYSTEM.WEAPON.ANIMATION_TYPES,
@@ -86,8 +103,8 @@ export default class SwerpgWeapon extends SwerpgPhysicalItem {
     prepareBaseData() {
 
         // Weapon Category
-        const categories = SYSTEM.WEAPON.CATEGORIES;
-        const category = categories[this.category] || categories[this.constructor.DEFAULT_CATEGORY];
+        const skills = SYSTEM.WEAPON.SKILLS;
+        const category = skills[this.category] || skills[this.constructor.QUALITY];
 
         // Weapon Quality
         const qualities = SYSTEM.QUALITY_TIERS;
@@ -116,21 +133,21 @@ export default class SwerpgWeapon extends SwerpgPhysicalItem {
 
         // Action bonuses and cost
         this.actionBonuses = this.parent.actor ? {
-            ability: this.parent.actor.getAbilityBonus(category.scaling.split(".")),
+            ability: "",
             skill: 0,
             enchantment: enchantment.bonus
         } : {}
-        this.actionCost = category.actionCost;
+        this.actionCost = 0;
 
         // Weapon Properties
-        for (let p of this.properties) {
-            const prop = SYSTEM.WEAPON.PROPERTIES[p];
+        for (let p of this.qualities) {
+            const prop = SYSTEM.WEAPON.QUALITIES[p];
             if (prop.actionCost) this.actionCost += prop.actionCost;
             if (prop.rarity) this.rarity += prop.rarity;
         }
 
         // Versatile Two-Handed
-        if (this.properties.has("versatile") && this.slot === SYSTEM.WEAPON.SLOTS.TWOHAND) {
+        if (this.qualities.has("versatile") && this.slot === SYSTEM.WEAPON.SLOTS.TWOHAND) {
             this.damage.base += 2;
             this.actionCost += 1;
         }
@@ -177,14 +194,12 @@ export default class SwerpgWeapon extends SwerpgPhysicalItem {
      * @returns {{weapon: number, base: number, quality: number}}
      */
     #prepareDamage() {
-        const {category, quality} = this.config;
         const damage = {
-            base: category.damage,
+            base: 0,
             bonus: 0,
-            quality: quality.bonus,
+            quality: 0,
             weapon: 0
         };
-        if (this.properties.has("oversized")) damage.base += 2;
         return damage;
     }
 
@@ -197,37 +212,19 @@ export default class SwerpgWeapon extends SwerpgPhysicalItem {
     #prepareDefense() {
 
         // Broken weapons cannot defend
-        if (this.broken) return {block: 0, parry: 0};
+        return {block: 0, parry: 0};
 
-        // Base defense for the category
-        const category = this.config.category;
-        const defense = {
-            block: category.defense?.block ?? 0,
-            parry: category.defense?.parry ?? 0
-        };
-
-        // Parrying and Blocking properties
-        if (this.properties.has("parrying")) {
-            defense.parry += (category.hands + this.config.enchantment.bonus);
-        }
-        if (this.properties.has("blocking")) {
-            defense.block += (category.hands + this.config.enchantment.bonus);
-        }
-        return defense;
     }
 
     /* -------------------------------------------- */
 
     /**
      * Prepare the effective range of the Weapon.
-     * @returns {number}
+     * @returns {string}
      */
     #prepareRange() {
-        const category = this.config.category;
-        let range = category.range;
-        if (this.properties.has("reach")) range += category.ranged ? 20 : 2;
-        if (this.properties.has("ambush")) range = Math.max(range - (category.ranged ? 10 : 1), 1);
-        return range;
+        const range = SYSTEM.WEAPON.RANGETYPES[this.range] || SYSTEM.WEAPON.RANGETYPES.medium;
+        return  game.i18n.localize(range.label);
     }
 
     /* -------------------------------------------- */
@@ -268,17 +265,7 @@ export default class SwerpgWeapon extends SwerpgPhysicalItem {
      * @returns {number[]}
      */
     getAllowedEquipmentSlots() {
-        const SLOTS = SYSTEM.WEAPON.SLOTS;
-        const category = this.config.category;
-        const slots = [];
-        if (category.main) {
-            if (category.hands === 2) return [SLOTS.TWOHAND];
-            if (category.off) slots.unshift(SLOTS.EITHER);
-            slots.push(SLOTS.MAINHAND);
-            if (this.properties.has("versatile")) slots.push(SLOTS.TWOHAND);
-        }
-        if (category.off) slots.push(SLOTS.OFFHAND);
-        return slots;
+        return [];
     }
 
     /* -------------------------------------------- */
@@ -293,19 +280,21 @@ export default class SwerpgWeapon extends SwerpgPhysicalItem {
 
         // Damage
         tags.damage = `${this.damage.weapon} Damage`;
-        if (this.config.category.reload && !this.loaded) tags.damage = "Reload";
+        tags.damage = "Reload";
         if (scope === "short") return tags;
 
         // Range
         tags.range = `Range ${this.range}`;
 
         // Weapon Category
-        const category = this.config.category;
-        tags.category = category.label;
+        const qualities = this.qualities;
+
+        qualities.forEach((quality) => {
+            const q = SYSTEM.WEAPON.QUALITIES[quality];
+            if (q) tags[q.id] = q.label;
+        })
 
         // Equipment Slot
-        const slotKey = Object.entries(SYSTEM.WEAPON.SLOTS).find(([k, v]) => v === this.slot)[0];
-        tags.slot = game.i18n.localize(`WEAPON.SLOTS.${slotKey}`);
 
         // Weapon Properties
         if (this.broken) tags.broken = this.schema.fields.broken.label;

@@ -14,6 +14,7 @@ export {default as SpeciesSheet} from "./sheets/species.mjs";
 export {default as OriginSheet} from "./sheets/origin.mjs";
 export {default as ArchetypeSheet} from "./sheets/archetype.mjs";
 export {default as ArmorSheet} from "./sheets/armor.mjs";
+export {default as GearSheet} from "./sheets/gear.mjs";
 export {default as BackgroundSheet} from "./sheets/background.mjs";
 export {default as HeroSheet} from "./sheets/hero-sheet.mjs";
 export {default as CharacterSheet} from "./sheets/character-sheet.mjs";
