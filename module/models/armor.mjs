@@ -1,10 +1,11 @@
 import SwerpgPhysicalItem from "./physical.mjs";
 import {SYSTEM} from "../config/system.mjs";
+import SwerpgCombatItem from "./combat.mjs";
 
 /**
  * Data schema, attributes, and methods specific to Armor type Items.
  */
-export default class SwerpgArmor extends SwerpgPhysicalItem {
+export default class SwerpgArmor extends SwerpgCombatItem {
 
     /** @override */
     static ITEM_CATEGORIES = SYSTEM.ARMOR.CATEGORIES;

@@ -106,6 +106,7 @@ Hooks.once("init", async function () {
         ancestry: models.SwerpgAncestry,
         archetype: models.SwerpgArchetype,
         armor: models.SwerpgArmor,
+        gear: models.SwerpgGear,
         origin: models.SwerpgOrigin,
         background: models.SwerpgBackground,
         species: models.SwerpgSpecies,
@@ -137,6 +138,10 @@ Hooks.once("init", async function () {
     });
     foundry.documents.collections.Items.registerSheet(SYSTEM.id, applications.BackgroundSheet, {
         types: ["background"],
+        makeDefault: true
+    });
+    foundry.documents.collections.Items.registerSheet(SYSTEM.id, applications.GearSheet, {
+        types: ["gear"],
         makeDefault: true
     });
     foundry.documents.collections.Items.registerSheet(SYSTEM.id, applications.OriginSheet, {
