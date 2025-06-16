@@ -1,0 +1,35 @@
+folder: null
+name: Comlink (handheld)
+type: gear
+img: worlds/swerpg-test/assets/comlink-handheld.png
+system:
+  category: ''
+  quantity: 1
+  price: 200
+  quality: standard
+  encumbrance: 2
+  rarity: 1
+  broken: false
+  description:
+    public: ''
+    secret: ''
+  actions: []
+effects: []
+ownership:
+  default: 0
+  8VADnEoyDM8awtMQ: 3
+flags: {}
+_stats:
+  compendiumSource: null
+  duplicateSource: null
+  exportSource: null
+  coreVersion: '13.344'
+  systemId: swerpg
+  systemVersion: '#{VERSION}#'
+  createdTime: 1750080733507
+  modifiedTime: 1750080733507
+  lastModifiedBy: 8VADnEoyDM8awtMQ
+_id: comlinkHandheld0
+sort: 0
+_key: '!items!comlinkHandheld0'
+

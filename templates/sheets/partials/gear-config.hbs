@@ -1,0 +1,17 @@
+<section class="tab sheet-body flexcol {{tabs.config.cssClass}}"
+         data-tab="{{tabs.config.id}}" data-group="{{tabs.config.group}}">
+    <fieldset {{fieldDisabled}}>
+        <legend>{{localize "ARMOR.SHEET.TYPE"}}</legend>
+        {{formField fields.category value=source.system.category}}
+        {{formField fields.quality value=source.system.quality}}
+        {{formField fields.encumbrance value=source.system.encumbrance}}
+    </fieldset>
+
+    <fieldset class="item-equipment" {{fieldDisabled}}>
+        <legend>{{localize "ARMOR.SHEET.EQUIPMENT"}}</legend>
+        {{formField fields.broken value=source.system.broken}}
+        {{formField fields.quantity value=source.system.quantity classes="slim"}}
+        {{formField fields.rarity value=source.system.rarity classes="slim"}}
+        {{formField fields.price value=source.system.price classes="slim"}}
+    </fieldset>
+</section>
