@@ -21,4 +21,5 @@ export {default as SwerpgSpellAction} from "./spell-action.mjs";
 export {default as SwerpgTalent} from "./talent.mjs";
 export {default as SwerpgTaxonomy} from "./taxonomy.mjs";
 export {default as SwerpgWeapon} from "./weapon.mjs";
+export {default as SwerpgCombatItem} from "./combat.mjs"
 export {default as SwerpgPhysicalItem} from "./physical.mjs"
