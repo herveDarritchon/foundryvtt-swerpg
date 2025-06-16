@@ -1,3 +1,13 @@
+# [0.3.0](https://github.com/herveDarritchon/foundryvtt-swerpg/compare/v0.2.1...v0.3.0) (2025-06-16)
+
+
+### Features
+
+* **armor:** modify armor to be valid with SW rules (migration from crucible). ([689bec2](https://github.com/herveDarritchon/foundryvtt-swerpg/commit/689bec250c24877b4638cb057d9fd7851123ddea))
+* **weapon:** add gear to system. ([ddf81ed](https://github.com/herveDarritchon/foundryvtt-swerpg/commit/ddf81eda3397af06527d3647487b922f06360e21))
+* **weapon:** add weapon to be valid with SW rules (migration from crucible). ([1fb0ee1](https://github.com/herveDarritchon/foundryvtt-swerpg/commit/1fb0ee1f5f979444d8f40d82462ffedd9b45073f))
+* **weapon:** add weapon to compendium. ([3ebe282](https://github.com/herveDarritchon/foundryvtt-swerpg/commit/3ebe28207a564205dd9f7db747788a5270aa8ef8))
+
 ## [0.2.1](https://github.com/herveDarritchon/foundryvtt-swerpg/compare/v0.2.0...v0.2.1) (2025-06-08)
 
 
