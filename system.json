@@ -87,6 +87,12 @@
       "type": "Item"
     },
     {
+      "name": "weapons",
+      "label": "Weapons",
+      "path": "packs/weapons",
+      "type": "Item"
+    },
+    {
       "name": "pregens",
       "label": "Pregenerated Heroes",
       "path": "packs/pregens",
