@@ -185,7 +185,6 @@ Hooks.once("init", async function () {
     CONFIG.ChatMessage.documentClass = documents.SwerpgChatMessage;
     CONFIG.Combat.documentClass = documents.SwerpgCombat;
     CONFIG.Combatant.documentClass = documents.SwerpgCombatant;
-    CONFIG.Scene.documentClass = documents.SwerpgScene;
     CONFIG.Token.documentClass = documents.SwerpgToken;
     CONFIG.Token.objectClass = SwerpgTokenObject;
 
