@@ -39,8 +39,9 @@
     }
   ],
   "compatibility": {
-    "minimum": 12,
-    "verified": 13.334
+    "minimum": 13.347,
+    "verified": 13.350,
+    "maximum": 13
   },
   "license": "LICENSE",
   "esmodules": [
