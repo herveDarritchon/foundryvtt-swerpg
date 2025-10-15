@@ -990,7 +990,12 @@ input[type=range] {
   border-radius: 4px;
 }
 .swerpg.sheet.actor .sheet-header div.subtitle h2.incomplete {
-  border-color: var(--color-warm-1);
+  border-color: var(--color-warm-3);
+  color: var(--color-warm-2);
+}
+.swerpg.sheet.actor .sheet-header div.subtitle h2.incomplete:hover {
+  border-color: var(--color-warm-2);
+  color: var(--color-warm-1);
 }
 .swerpg.sheet.actor .sheet-header div.metadata {
   justify-content: flex-end;
