@@ -3166,6 +3166,10 @@ a.button.increase {
   align-items: end;
   flex: 1;
   width: 100%;
+  /* Espace en haut pour empêcher les jauges de remonter sous le titre (h3).
+     padding-top crée un tampon à l'intérieur du conteneur pour que les jauges
+     commencent bien en dessous du titre. */
+  padding-top: 1.5rem;
 }
 .resources-wrapper .jauge-wrapper {
   flex: none;
@@ -3181,6 +3185,8 @@ a.button.increase {
   gap: 0.5rem;
   background-color: #1b1b1b;
   box-shadow: 0 0 6px rgba(0, 0, 0, 0.4);
+  /* Hauteur commune des jauges : changez la valeur si besoin. */
+  --jauge-height: 85px;
 }
 .resources-wrapper .resource-bar-container .icon {
   flex-direction: column;
@@ -3200,9 +3206,14 @@ a.button.increase {
   flex-direction: column-reverse;
   gap: 3px;
   width: 100%;
+  /* Fixe la hauteur totale de la zone des blocks pour que toutes les jauges aient la même taille. */
+  height: var(--jauge-height);
+  /* Permettre aux blocks de s'étirer pour remplir l'espace disponible. */
+  align-items: stretch;
 }
 .resources-wrapper .resource-bar-container .block {
-  height: 10px;
+  /* Les blocks prennent une part égale de la hauteur définie par .jauge. */
+  flex: 1 1 0;
   width: 100%;
   border: 1px solid #555;
   border-radius: 2px;
@@ -3269,6 +3280,10 @@ a.button.increase {
   background-color: #ff9900;
   box-shadow: 0 0 4px #ffc266;
   opacity: 1;
+}
+/* S'assurer que le titre est au-dessus des jauges */
+.swerpg.sheet.actor .sheet-section > h3 {
+  z-index: 2;
 }
 .defenses-wrapper {
   justify-content: space-evenly;
