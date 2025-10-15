@@ -3246,6 +3246,12 @@ a.button.increase {
   color: white;
   text-shadow: 0 0 2px black;
   font-weight: 700;
+  width: 85px;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  background: #0c0f17;
+  text-align: center;
 }
 .resources-wrapper .resource-bar-container .title.wounds {
   border-color: #700;
