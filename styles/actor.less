@@ -805,22 +805,32 @@
 
       .button.icon {
         position: absolute;
-        font-size: 1rem;
-        color: @color-glow;
-        background: none;
-        border: none;
-        padding: 2px;
+        color: #00b0ff;
+        border-radius: 5px;
         transition: transform 0.2s ease;
+        height: 10px;
+        width: 25px;
+        padding: 0;
+        margin: 0;
+        z-index: 5;
+        background: rgba(12, 15, 23, 0.5);
+        opacity: 1;
+        border: 1px solid rgba(0, 176, 255, 0.5);
 
         &.increase {
-          top: -15px;
+          top: 20px;
           right: -5px;
         }
 
         &.decrease {
-          top: -15px;
+          top: 20px;
           left: -5px;
         }
+      }
+
+      .button.icon:hover {
+        background: @background-dark;
+        border: 1px solid #00b0ff;
       }
     }
 
@@ -964,7 +974,7 @@ a.button {
       }
 
       &.inactive {
-        opacity: 0.5;
+        background: rgba(12, 15, 23, 0.5);
       }
     }
   }
