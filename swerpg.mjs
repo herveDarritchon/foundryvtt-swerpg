@@ -1,6 +1,6 @@
 /**
  * Swerpg Game System
- * Author: Atropos of Foundry Virtual Tabletop
+ * Author:Hervé Darritchon of Behaska
  * Software License: MIT
  * Repository: https://github.com/foundryvtt/swerpg
  */
@@ -15,6 +15,7 @@ import * as applications from "./module/applications/_module.mjs";
 import * as dice from "./module/dice/_module.mjs";
 import * as documents from "./module/documents/_module.mjs";
 import * as models from "./module/models/_module.mjs";
+import * as hooks from "./module/hooks/_module.mjs";
 
 // Canvas
 import SwerpgRuler from "./module/canvas/ruler.mjs";
@@ -40,21 +41,22 @@ Hooks.once("init", async function () {
     // Register System Settings
     registerSystemSettings();
 
-    globalThis.swerpg = game.system;
-    game.system.CONST = SYSTEM;
+    const swerpg = globalThis.swerpg = game.system;
+    swerpg.CONST = SYSTEM;
+    //TODO Fix these comments to restore the features.
+    //SwerpgTalentNode.defineTree();
+    //swerpg.developmentMode = game.data.options.debug;
+    swerpg.developmentMode = detectDevelopmentMode();
+    //swerpg.vfxEnabled = !!game.modules.get("foundryvtt-vfx")?.active;
 
-    SYSTEM.DEV_MODE = detectDevelopmentMode();
-    if (SYSTEM.DEV_MODE) {
+    if (swerpg.developmentMode) {
         console.info(SYSTEM.ASCII_DEV_MODE);
     } else {
         console.info(SYSTEM.ASCII);
     }
 
-    //TODO Fix these comments to restore the features.
-    SwerpgTalentNode.defineTree();
-
     // Expose the system API
-    game.system.api = {
+    swerpg.api = {
         applications,
         canvas: {
             SwerpgTalentTree
@@ -73,8 +75,68 @@ Hooks.once("init", async function () {
         talents: {
             SwerpgTalentNode,
             nodes: SwerpgTalentNode.nodes
-        }
+        },
+        hooks
     }
+
+    //     /**
+    //  * Configurable properties of the system which affect its behavior.
+    //  */
+    // crucible.CONFIG = {
+    //     /**
+    //      * Configured setting-specific currency denominations.
+    //      * @type {Record{string, CrucibleCurrencyDenomination}
+    //      * @see @link{SYSTEM.ACTOR.CURRENCY_DENOMINATIONS}
+    //      */
+    //     currency: foundry.utils.deepClone(SYSTEM.ACTOR.CURRENCY_DENOMINATIONS),
+    //
+    //     /**
+    //      * Configuration of compendium packs which are used as sources for system workflows.
+    //      * @type {Record<string, Set<string>>}
+    //      */
+    //     packs: {
+    //         ancestry: new Set([SYSTEM.COMPENDIUM_PACKS.ancestry]),
+    //         background: new Set([SYSTEM.COMPENDIUM_PACKS.background]),
+    //         spell: new Set([SYSTEM.COMPENDIUM_PACKS.spell]),
+    //         talent: new Set([SYSTEM.COMPENDIUM_PACKS.talent]),
+    //     },
+    //     /**
+    //      * The character creation sheet class which should be registered
+    //      * @type {typeof applications.CrucibleHeroCreationSheet}
+    //      */
+    //     heroCreationSheet: applications.CrucibleHeroCreationSheet,
+    //
+    //     /**
+    //      * The knowledge topics configured for the system.
+    //      * @type {Record<string, CrucibleKnowledgeConfig>}
+    //      */
+    //     knowledge: foundry.utils.deepClone(SYSTEM.SKILL.DEFAULT_KNOWLEDGE),
+    //
+    //     /**
+    //      * The categories a language can belong to.
+    //      * @type {Record<string, {label: string}}
+    //      */
+    //     languageCategories: foundry.utils.deepClone(SYSTEM.ACTOR.LANGUAGE_CATEGORIES),
+    //
+    //     /**
+    //      * The languages a creature can know.
+    //      * @type {Record<string, {label: string, category?: string}>}
+    //      */
+    //     languages: foundry.utils.deepClone(SYSTEM.ACTOR.LANGUAGES)
+    // };
+    // /** @deprecated */
+    // crucible.CONFIG.ancestryPacks = crucible.CONFIG.packs.ancestry;
+    //
+    // /**
+    //  * The primary party of player characters.
+    //  * @type {CrucibleActor|null}
+    //  */
+    // Object.defineProperty(crucible, "party", {
+    //     get() {
+    //         return party;
+    //     }
+    // });
+
 
     // Actor document configuration
     CONFIG.Actor.documentClass = documents.SwerpgActor;
@@ -86,14 +148,17 @@ Hooks.once("init", async function () {
     foundry.documents.collections.Actors.unregisterSheet("core", foundry.appv1.sheets.ActorSheet);
     foundry.documents.collections.Actors.registerSheet(SYSTEM.id, applications.HeroSheet, {
         types: ["character"],
+        label: "SWERPG.SHEETS.Character",
         makeDefault: true
     });
     foundry.documents.collections.Actors.registerSheet(SYSTEM.id, applications.CharacterSheet, {
         types: ["character"],
+        label: "SWERPG.SHEETS.Character",
         makeDefault: true
     });
     foundry.documents.collections.Actors.registerSheet(SYSTEM.id, applications.AdversarySheet, {
         types: ["adversary"],
+        label: "SWERPG.SHEETS.Adversary",
         makeDefault: true
     });
 
@@ -115,66 +180,79 @@ Hooks.once("init", async function () {
         taxonomy: models.SwerpgTaxonomy,
         weapon: models.SwerpgWeapon
     };
-    foundry.documents.collections.Items.unregisterSheet("core", foundry.appv1.sheets.ItemSheet);
 
+    foundry.documents.collections.Items.unregisterSheet("core", foundry.appv1.sheets.ItemSheet);
     // V2 Registrations
     foundry.applications.apps.DocumentSheetConfig.registerSheet(Item, "swerpg", applications.ArmorSheet, {
         types: ["armor"],
+        label: "SWERPG.SHEETS.Armor",
         makeDefault: true,
-        label: "SWERPG.SHEETS.Armor"
     });
 
     // V1 Registrations
     foundry.documents.collections.Items.registerSheet(SYSTEM.id, applications.AncestrySheet, {
         types: ["ancestry"],
+        label: "SWERPG.SHEETS.Ancestry",
         makeDefault: true
     });
     foundry.documents.collections.Items.registerSheet(SYSTEM.id, applications.ArchetypeSheet, {
         types: ["archetype"],
+        label: "SWERPG.SHEETS.Archetype",
         makeDefault: true
     });
     foundry.documents.collections.Items.registerSheet(SYSTEM.id, applications.BackgroundSheet, {
         types: ["background"],
+        label: "SWERPG.SHEETS.Background",
         makeDefault: true
     });
     foundry.documents.collections.Items.registerSheet(SYSTEM.id, applications.GearSheet, {
         types: ["gear"],
+        label: "SWERPG.SHEETS.Gear",
         makeDefault: true
     });
     foundry.documents.collections.Items.registerSheet(SYSTEM.id, applications.OriginSheet, {
         types: ["origin"],
+        label: "SWERPG.SHEETS.Origin",
         makeDefault: true
     });
     foundry.documents.collections.Items.registerSheet(SYSTEM.id, applications.SpeciesSheet, {
         types: ["species"],
+        label: "SWERPG.SHEETS.Species",
         makeDefault: true
     });
     foundry.documents.collections.Items.registerSheet(SYSTEM.id, applications.CareerSheet, {
         types: ["career"],
+        label: "SWERPG.SHEETS.Career",
         makeDefault: true
     });
     foundry.documents.collections.Items.registerSheet(SYSTEM.id, applications.ObligationSheet, {
         types: ["obligation"],
+        label: "SWERPG.SHEETS.Obligation",
         makeDefault: true
     });
     foundry.documents.collections.Items.registerSheet(SYSTEM.id, applications.SpecializationSheet, {
         types: ["specialization"],
+        label: "SWERPG.SHEETS.Specialization",
         makeDefault: true
     });
     foundry.documents.collections.Items.registerSheet(SYSTEM.id, applications.SpellSheet, {
         types: ["spell"],
+        label: "SWERPG.SHEETS.Spell",
         makeDefault: true
     });
     foundry.documents.collections.Items.registerSheet(SYSTEM.id, applications.TalentSheet, {
         types: ["talent"],
+        label: "SWERPG.SHEETS.Talent",
         makeDefault: true
     });
     foundry.documents.collections.Items.registerSheet(SYSTEM.id, applications.TaxonomySheet, {
         types: ["taxonomy"],
+        label: "SWERPG.SHEETS.Taxonomy",
         makeDefault: true
     });
     foundry.documents.collections.Items.registerSheet(SYSTEM.id, applications.WeaponSheet, {
         types: ["weapon"],
+        label: "SWERPG.SHEETS.Weapon",
         makeDefault: true
     });
 
@@ -212,6 +290,9 @@ Hooks.once("init", async function () {
     CONFIG.Canvas.rulerClass = SwerpgRuler;
     CONFIG.Token.hudClass = applications.SwerpgTokenHUD;
 
+    /*    // Canvas Configuration
+        canvas.configure();*/
+
     /**
      * Is animation enabled for the system?
      * @type {boolean}
@@ -234,7 +315,7 @@ Hooks.once("init", async function () {
     // preload handlebars templates
     await preloadHandlebarsTemplates();
 
-    if (SYSTEM.DEV_MODE) registerDevelopmentHooks();
+    if (swerpg.developmentMode) registerDevelopmentHooks();
 });
 
 /* -------------------------------------------- */
@@ -567,3 +648,14 @@ async function resetAllActorTalents() {
         await actor.deleteEmbeddedDocuments("Item", deleteIds);
     }
 }
+
+/* -------------------------------------------- */
+/*  ESModules API                               */
+/* -------------------------------------------- */
+
+export {SYSTEM} from "./module/config/system.mjs";
+export * as applications from "./module/applications/_module.mjs";
+export * as dice from "./module/dice/_module.mjs";
+export * as documents from "./module/documents/_module.mjs";
+export * as models from "./module/models/_module.mjs";
+export * as chat from "./module/chat.mjs";
