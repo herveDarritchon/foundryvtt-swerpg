@@ -101,17 +101,72 @@
 
     .label {
       position: relative;
+      /* Use flex layout to place decrease button, value and increase button on one line
+         Buttons will be at the edges and the value centered. */
+      /* Small default nudge to correct FontAwesome vertical baseline issues; tweak if needed */
+      --icon-nudge: -1px;
       display: flex;
-      justify-content: center;
-      align-items: center;
-      align-content: center;
+      align-items: center; /* vertical centering */
+      justify-content: space-between; /* buttons at each side */
+      width: 100%;
+      padding: 0 6px;
+      margin-top: 4px
+    ;
 
       .values {
-        flex: none;
+        /* Allow the value to take remaining space and be centered */
+        flex: 1 1 auto;
+        text-align: center;
         /* Valeurs plus lisibles */
         font-size: 0.85rem;
         font-weight: 700;
         color: #e6e6e6;
+      }
+
+      /* Style the small icon buttons so they remain compact and centered */
+      a.button.icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+        height: 24px;
+        padding: 0;
+        border-radius: 4px;
+        font-size: 12px;
+        /* Prevent baseline offsets from FontAwesome pseudo-elements */
+        line-height: 0;
+        margin: 0;
+        vertical-align: middle;
+      }
+
+      /* Place the decrease/increase buttons absolutely so they do not shift the .values span
+         and can be perfectly vertically centered with top:50% + translateY(-50%). */
+      a.button.icon.decrease {
+        position: absolute;
+        left: 6px; /* matches .label padding */
+        top: 50%;
+        /* Allow a small manual nudge if icons need micro-adjustment */
+        transform: translateY(calc(-50% + var(--icon-nudge, 0px)));
+        z-index: 2;
+      }
+
+      a.button.icon.increase {
+        position: absolute;
+        right: 6px; /* matches .label padding */
+        top: 50%;
+        /* Allow a small manual nudge if icons need micro-adjustment */
+        transform: translateY(calc(-50% + var(--icon-nudge, 0px)));
+        z-index: 2;
+      }
+
+      /* Ensure the icon glyph (usually rendered with ::before) is block-level and centered */
+      a.button.icon::before {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%; /* fill the anchor so centering is exact */
+        line-height: 1;
+        font-size: 14px; /* tweak if icon appears too small/large */
       }
 
     }
