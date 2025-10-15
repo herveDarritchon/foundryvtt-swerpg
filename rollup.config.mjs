@@ -1,7 +1,7 @@
 export default {
     input: "swerpg.mjs",
     output: {
-        file: "crucible-swerpg.mjs",
+        file: "dist/swerpg.bundle.js",
         format: "es",
         compact: true
     }

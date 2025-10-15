@@ -6,7 +6,7 @@
  */
 
 // Configuration
-import {SYSTEM} from "./module/config/system.mjs";
+import {detectDevelopmentMode, SYSTEM} from "./module/config/system.mjs";
 import SwerpgTalentNode from "./module/config/talent-tree.mjs";
 import {statusEffects} from "./module/config/statuses.mjs";
 
@@ -34,8 +34,6 @@ globalThis.SYSTEM = SYSTEM;
 /*  Foundry VTT Initialization                  */
 /* -------------------------------------------- */
 
-const DEVELOPMENT_MODE = true;
-
 Hooks.once("init", async function () {
     console.log(`Initializing Swerpg Game System`);
 
@@ -45,12 +43,11 @@ Hooks.once("init", async function () {
     globalThis.swerpg = game.system;
     game.system.CONST = SYSTEM;
 
-    SYSTEM.DEV_MODE = game.settings.get("swerpg", "devMode");
-
+    SYSTEM.DEV_MODE = detectDevelopmentMode();
     if (SYSTEM.DEV_MODE) {
         console.info(SYSTEM.ASCII_DEV_MODE);
     } else {
-        console.info(SYSTEM.ASCII)
+        console.info(SYSTEM.ASCII);
     }
 
     //TODO Fix these comments to restore the features.
@@ -237,14 +234,14 @@ Hooks.once("init", async function () {
     // preload handlebars templates
     await preloadHandlebarsTemplates();
 
-    if (DEVELOPMENT_MODE) registerDevelopmentHooks();
+    if (SYSTEM.DEV_MODE) registerDevelopmentHooks();
 });
 
 /* -------------------------------------------- */
 /*  Handlebars Helpers                          */
 /* -------------------------------------------- */
 
-Handlebars.registerHelper("range", function(start, end) {
+Handlebars.registerHelper("range", function (start, end) {
     let result = [];
     for (let i = start; i <= end; i++) result.push(i);
     return result;
