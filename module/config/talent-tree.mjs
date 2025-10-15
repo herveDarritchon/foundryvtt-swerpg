@@ -149,7 +149,7 @@ export default class SwerpgTalentNode {
         for (const packId of packs) {
             if (!packId) continue;
             const pack = game.packs.get(packId);
-            const talents = await pack.getDocuments();
+            const talents = await pack?.getDocuments() ?? [];
             for (const talent of talents) {
                 if (talent.type !== "talent") continue;
                 try {
