@@ -234,3 +234,23 @@ export const SYSTEM = {
     activeCheckFormula: "3d8",
     dice: dice,
 };
+
+/**
+ * Détecte dynamiquement si le système est en mode développement.
+ * Compatible Node (build/test) et Foundry (runtime navigateur).
+ */
+export function detectDevelopmentMode() {
+    try {
+
+        // Mode Foundry (environnement navigateur)
+        if (typeof game !== "undefined" && game.settings?.get) {
+            return Boolean(game.settings.get(SYSTEM.id, "devMode"));
+        }
+
+    } catch (err) {
+        console.warn("⚠️ Impossible de déterminer le mode développement :", err);
+    }
+
+    // Fallback
+    return false;
+}
