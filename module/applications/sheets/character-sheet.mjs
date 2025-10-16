@@ -72,7 +72,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
             type: "character"
         },
         position: {
-            width: 900,
+            width: 950,
             height: "auto",
         },
         window: {
