@@ -67,6 +67,12 @@
   /* Bleu néon */
   --color-accent-yellow: #ffe81f;
   /* jaune sabre */
+  --color-box-warm-1: #ee9b3a;
+  /* Orange lumineux */
+  --color-box-warm-2: #c9593f;
+  /* Rouge lumineux */
+  --color-box-warm-3: #5d142b;
+  /* Rouge sombre */
   --color-damage-vulnerability: #640A0A;
   /* Rouge sombre pour les faiblesses */
   --color-damage-vulnerability-border: #D92E2E;
@@ -990,12 +996,12 @@ input[type=range] {
   border-radius: 4px;
 }
 .swerpg.sheet.actor .sheet-header div.subtitle h2.incomplete {
-  border-color: var(--color-warm-3);
-  color: var(--color-warm-2);
+  border-color: var(--color-box-warm-3);
+  color: var(--color-box-warm-2);
 }
 .swerpg.sheet.actor .sheet-header div.subtitle h2.incomplete:hover {
-  border-color: var(--color-warm-2);
-  color: var(--color-warm-1);
+  border-color: var(--color-box-warm-2);
+  color: var(--color-box-warm-1);
 }
 .swerpg.sheet.actor .sheet-header div.metadata {
   justify-content: flex-end;
@@ -1602,6 +1608,7 @@ a.button.increase {
   font-family: var(--font-sans);
 }
 .defenses .physical .component.inactive {
+  opacity: 0.75;
   background: rgba(12, 15, 23, 0.5);
 }
 .defenses .magical {
