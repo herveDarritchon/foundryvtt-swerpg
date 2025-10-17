@@ -1,22 +1,51 @@
 <section class="tab secondary {{tabs.skills.id}} flexcol {{tabs.skills.cssClass}} scrollable"
          data-tab="{{tabs.skills.id}}" data-group="{{tabs.skills.group}}">
 
-    {{#if incomplete.skills}}
-        <div>
-            <div class="point-pools flexrow">
-                <span class="label">Career Free Skill(s) left</span>
-                <span class="value">{{progression.freeSkillRanks.career.available}}</span>
-                <span class="label">Specialization Free Skill(s) left</span>
-                <span class="value">{{progression.freeSkillRanks.specialization.available}}</span>
-            </div>
-            <div class="point-pools flexrow">
-                <span class="label">Experience Spent</span>
-                <span class="value">{{progression.experience.available}}</span>
-                <span class="label">Available</span>
-                <span class="value">{{progression.experience.total}}</span>
+    {{!-- Nouveau bloc : XP / Skills holographique --}}
+    <div class="skills-xp-panel swerpg-holo-panel">
+        <div class="panel-header">
+            <h3 class="panel-title">⚙️ SKILL & EXPERIENCE STATUS</h3>
+        </div>
+        <div class="panel-body">
+            <div class="rows">
+                <div class="row skill-row">
+                    <div class="label">Career Skills</div>
+                    <div class="meter skill-pips" aria-hidden="true">
+                        <div class="pips">
+                            <span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span>
+                            <span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span>
+                        </div>
+                    </div>
+                    <div class="value remaining career">{{progression.freeSkillRanks.career.available}} remaining</div>
+                </div>
+
+                <div class="row skill-row">
+                    <div class="label">Spec. Skills</div>
+                    <div class="meter skill-pips" aria-hidden="true">
+                        <div class="pips">
+                            <span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span>
+                            <span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span>
+                        </div>
+                    </div>
+                    <div class="value remaining spec">{{progression.freeSkillRanks.specialization.available}} remaining</div>
+                </div>
+
+                <div class="row xp-row">
+                    <div class="label">XP Spent</div>
+                    <div class="meter xp-bar" title="{{progression.experience.spent}} / {{progression.experience.total}}"
+                         style="--xp-percent: {{progression.experience.percent}};">
+                        <div class="xp-fill"></div>
+                    </div>
+                    <div class="value xp-numbers">{{progression.experience.spent}} / {{progression.experience.total}}</div>
+                </div>
+
+                <div class="row xp-available-row">
+                    <div class="label">XP Available</div>
+                    <div class="value xp-available"><span class="icon hex"></span> <span class="xp-amount">{{progression.experience.available}}</span></div>
+                </div>
             </div>
         </div>
-    {{/if}}
+    </div>
 
     <div class="skills-wrapper">
 

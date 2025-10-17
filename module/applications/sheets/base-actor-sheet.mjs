@@ -241,7 +241,17 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
      * @return {object[]}
      */
     #prepareExperience() {
-        return this.actor.system.progression.experience;
+        const e = this.actor.system.progression.experience;
+        const experience = foundry.utils.deepClone(e);
+        experience.total = (Number(e.startingExperience) || 0) + (Number(e.gained) || 0);
+        experience.available = experience.total - (Number(e.spent) || 0);
+        const spent = Number(e.spent) || 0;
+        const total = experience.total || 0;
+        let pct = 0;
+        if (total > 0) pct = Math.round((spent / total) * 100);
+        pct = Math.max(0, Math.min(100, pct));
+        experience.percent = `${pct}%`;
+        return experience;
     }
 
     /**

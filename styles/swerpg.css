@@ -2176,6 +2176,154 @@ a.button.increase {
   background-color: rgba(255, 255, 255, 0.15);
 }
 /* ----------------------------------------- */
+/*  Skills / XP Holographic Panel             */
+/* ----------------------------------------- */
+.skills-xp-panel {
+  position: relative;
+  width: 100%;
+  max-width: 760px;
+  margin: 0 auto 1rem;
+  border-radius: 10px;
+  padding: 0.5rem;
+  background: rgba(16, 22, 34, 0.8);
+  border: 1px solid rgba(0, 170, 255, 0.12);
+  box-shadow: 0 0 18px rgba(0, 170, 255, 0.12), inset 0 0 30px rgba(0, 170, 255, 0.02);
+  backdrop-filter: blur(4px) saturate(120%);
+  overflow: hidden;
+  animation: holo-fade-in 240ms ease both;
+  border-image: none;
+  /* Pips for skill ranks */
+  /* XP bar */
+  /* icon hex */
+  /* holo ring accent */
+  /* small responsive tweaks */
+}
+.skills-xp-panel .panel-header {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+.skills-xp-panel .panel-title {
+  margin: 0;
+  font-family: var(--font-h1);
+  color: #66ccff;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 0.95rem;
+  padding: 0.15rem 0.5rem;
+}
+.skills-xp-panel .panel-body {
+  padding: 0.75rem;
+  display: flex;
+  gap: 0.5rem;
+  align-items: stretch;
+}
+.skills-xp-panel .rows {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+}
+.skills-xp-panel .row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.skills-xp-panel .label {
+  width: 120px;
+  color: #b0c9e8;
+  font-size: 0.85rem;
+  flex: none;
+}
+.skills-xp-panel .value {
+  margin-left: auto;
+  color: var(--color-text);
+  font-weight: 600;
+}
+.skills-xp-panel .remaining.career,
+.skills-xp-panel .remaining.spec {
+  color: #00ffff;
+  font-weight: 700;
+  margin-left: 0.5rem;
+}
+.skills-xp-panel .meter.skill-pips {
+  flex: 1 1 auto;
+  --pip-size: 10px;
+}
+.skills-xp-panel .meter.skill-pips .pips {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.skills-xp-panel .meter.skill-pips .pip {
+  width: var(--pip-size);
+  height: var(--pip-size);
+  background: linear-gradient(180deg, #00aaff 0%, #003355 100%);
+  border-radius: 2px;
+  box-shadow: 0 0 6px rgba(0, 170, 255, 0.25) inset;
+  opacity: 0.65;
+  transition: opacity 180ms ease, transform 160ms ease;
+}
+.skills-xp-panel .meter.skill-pips .pip.active {
+  opacity: 1;
+  transform: translateY(-2px);
+}
+.skills-xp-panel .meter.xp-bar {
+  flex: 1 1 360px;
+  height: 14px;
+  background: linear-gradient(90deg, rgba(0, 170, 255, 0.08), rgba(0, 0, 0, 0.12));
+  border-radius: 8px;
+  padding: 2px;
+  border: 1px solid rgba(0, 170, 255, 0.12);
+  position: relative;
+  overflow: hidden;
+}
+.skills-xp-panel .meter.xp-bar .xp-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: var(--xp-percent, 40%);
+  background: linear-gradient(90deg, #00aaff 0%, #003355 100%);
+  box-shadow: 0 0 12px rgba(0, 170, 255, 0.22);
+  transition: width 450ms cubic-bezier(0.2, 0.9, 0.2, 1);
+}
+.skills-xp-panel .meter.xp-bar:hover .xp-fill {
+  filter: brightness(1.1) saturate(1.1);
+  transform: translateZ(0);
+}
+.skills-xp-panel .xp-numbers {
+  color: #ffcc66;
+  font-weight: 700;
+  margin-left: 0.5rem;
+}
+.skills-xp-panel .xp-available .xp-amount {
+  color: #00ffff;
+  font-weight: 800;
+}
+.skills-xp-panel .icon.hex {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  background: url('../ui/elements/hex-plain.svg') no-repeat center / contain;
+  margin-right: 6px;
+  filter: drop-shadow(0 0 2px rgba(0, 170, 255, 0.25));
+}
+.skills-xp-panel.swerpg-holo-panel,
+.skills-xp-panel .swerpg-holo-panel {
+  box-shadow: 0 0 12px rgba(0, 170, 255, 0.12), 0 0 28px rgba(0, 170, 255, 0.06) inset;
+  border: 1px solid rgba(102, 204, 255, 0.18);
+}
+@media (max-width: 720px) {
+  .skills-xp-panel .label {
+    width: 110px;
+  }
+  .skills-xp-panel .meter.xp-bar {
+    flex-basis: 220px;
+  }
+}
+/* ----------------------------------------- */
 /*  All Items                                */
 /* ----------------------------------------- */
 .swerpg.item,
