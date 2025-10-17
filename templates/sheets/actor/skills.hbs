@@ -12,8 +12,9 @@
                     <div class="label">Career Skills</div>
                     <div class="meter skill-pips" aria-hidden="true">
                         <div class="pips">
-                            <span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span>
-                            <span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span>
+                            {{#each progression.freeSkillRanks.career.pips}}
+                              <span class="pip {{#if active}}active{{/if}}" data-index="{{index}}"></span>
+                            {{/each}}
                         </div>
                     </div>
                     <div class="value remaining career">{{progression.freeSkillRanks.career.available}} remaining</div>
@@ -23,8 +24,9 @@
                     <div class="label">Spec. Skills</div>
                     <div class="meter skill-pips" aria-hidden="true">
                         <div class="pips">
-                            <span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span>
-                            <span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span>
+                            {{#each progression.freeSkillRanks.specialization.pips}}
+                              <span class="pip {{#if active}}active{{/if}}" data-index="{{index}}"></span>
+                            {{/each}}
                         </div>
                     </div>
                     <div class="value remaining spec">{{progression.freeSkillRanks.specialization.available}} remaining</div>

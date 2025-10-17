@@ -264,11 +264,16 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
         let c = this.actor.system.progression.freeSkillRanks.career;
         const freeSkillRanksCareer = foundry.utils.deepClone(c);
         freeSkillRanksCareer.available = freeSkillRanksCareer.gained - c.spent;
+        // Construire un tableau de 10 pips dynamiques pour l'affichage
+        const careerAvailable = Math.max(0, Math.min(10, Number(freeSkillRanksCareer.available) || 0));
+        freeSkillRanksCareer.pips = Array.from({length: 10}, (_, i) => ({ index: i + 1, active: i < careerAvailable }));
         freeSkillRanks.career = freeSkillRanksCareer;
 
         let s = this.actor.system.progression.freeSkillRanks.specialization;
         const freeSkillRanksSpecialization = foundry.utils.deepClone(s);
         freeSkillRanksSpecialization.available = freeSkillRanksSpecialization.gained - s.spent;
+        const specAvailable = Math.max(0, Math.min(10, Number(freeSkillRanksSpecialization.available) || 0));
+        freeSkillRanksSpecialization.pips = Array.from({length: 10}, (_, i) => ({ index: i + 1, active: i < specAvailable }));
         freeSkillRanks.specialization = freeSkillRanksSpecialization;
 
         return freeSkillRanks;
