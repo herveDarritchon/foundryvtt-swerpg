@@ -2,7 +2,6 @@
   "TYPES": {
     "Actor": {
       "adversary": "Adversaire",
-      "character": "Protagonist",
       "character": "Personnage-Joueur",
       "npc": "Personnage Non-Joueur"
     },
@@ -955,4 +954,5 @@
   "WALKTHROUGH.LevelOne": "Set your character to Level 1 and begin your adventure!",
   "WALKTHROUGH.LevelUp": "You have made enough progress to advance to a new level. Increase your level by one when you are ready!",
   "WALKTHROUGH.LevelZeroIncomplete": "You may not advance to Level 1 until you have finished all character creation steps!"
+  }
 }

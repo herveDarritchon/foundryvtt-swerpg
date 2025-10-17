@@ -4,12 +4,12 @@
     {{!-- Nouveau bloc : XP / Skills holographique --}}
     <div class="skills-xp-panel swerpg-holo-panel">
         <div class="panel-header">
-            <h3 class="panel-title">⚙️ SKILL & EXPERIENCE STATUS</h3>
+            <h3 class="panel-title">⚙️ {{localize "ACTOR.SKILL_EXPERIENCE_STATUS"}}</h3>
         </div>
         <div class="panel-body">
             <div class="rows">
                 <div class="row skill-row">
-                    <div class="label">Career Skills</div>
+                    <div class="label">{{localize "ACTOR.FREE_SKILLS.CareerSkills"}}</div>
                     <div class="meter skill-pips" aria-hidden="true">
                         <div class="pips">
                             {{#each progression.freeSkillRanks.career.pips}}
@@ -17,11 +17,11 @@
                             {{/each}}
                         </div>
                     </div>
-                    <div class="value remaining career">{{progression.freeSkillRanks.career.available}} remaining</div>
+                    <div class="value remaining career">{{progression.freeSkillRanks.career.available}} {{localize "ACTOR.FREE_SKILLS.remaining"}}</div>
                 </div>
 
                 <div class="row skill-row">
-                    <div class="label">Spec. Skills</div>
+                    <div class="label">{{localize "ACTOR.FREE_SKILLS.SpecializationSkills"}}</div>
                     <div class="meter skill-pips" aria-hidden="true">
                         <div class="pips">
                             {{#each progression.freeSkillRanks.specialization.pips}}
@@ -29,11 +29,11 @@
                             {{/each}}
                         </div>
                     </div>
-                    <div class="value remaining spec">{{progression.freeSkillRanks.specialization.available}} remaining</div>
+                    <div class="value remaining spec">{{progression.freeSkillRanks.specialization.available}} {{localize "ACTOR.FREE_SKILLS.remaining"}}</div>
                 </div>
 
                 <div class="row xp-row">
-                    <div class="label">XP Spent</div>
+                    <div class="label">{{localize "ACTOR.FREE_SKILLS.XPSpent"}}</div>
                     <div class="meter xp-bar" title="{{progression.experience.spent}} / {{progression.experience.total}}"
                          style="--xp-percent: {{progression.experience.percent}};">
                         <div class="xp-fill"></div>
@@ -42,7 +42,7 @@
                 </div>
 
                 <div class="row xp-available-row">
-                    <div class="label">XP Available</div>
+                    <div class="label">{{localize "ACTOR.FREE_SKILLS.XPAvailable"}}</div>
                     <div class="value xp-available"><span class="icon hex"></span> <span class="xp-amount">{{progression.experience.available}}</span></div>
                 </div>
             </div>
@@ -52,7 +52,7 @@
     <div class="skills-wrapper">
 
         <section class="general-skills">
-            <h4>General Skills</h4>
+            <h4>{{localize "ACTOR.FREE_SKILLS.GeneralSkills"}}</h4>
             {{#each skills.general as |skill|}}
                 {{> "systems/swerpg/templates/sheets/partials/character-skill.hbs" skill}}
             {{/each}}
@@ -60,13 +60,13 @@
 
         <section class="non-general-skills">
             <div class="combat-skills">
-                <h4>Combat Skills</h4>
+                <h4>{{localize "ACTOR.FREE_SKILLS.CombatSkills"}}</h4>
                 {{#each skills.combat as |skill|}}
                     {{> "systems/swerpg/templates/sheets/partials/character-skill.hbs" skill}}
                 {{/each}}
             </div>
             <div class="knowledge-skills">
-                <h4>Lore Skills</h4>
+                <h4>{{localize "ACTOR.FREE_SKILLS.LoreSkills"}}</h4>
                 {{#each skills.knowledge as |skill|}}
                     {{> "systems/swerpg/templates/sheets/partials/character-skill.hbs" skill}}
                 {{/each}}
