@@ -710,7 +710,7 @@ input[type=range] {
 .swerpg.sheet .form-group.slim .form-fields input {
   text-align: center;
 }
-.swerpg.sheet prose-mirror {
+.swerpg.sheet .prose-mirror {
   font-size: 13px;
 }
 /* ----------------------------------------- */
@@ -1738,17 +1738,17 @@ a.button.increase {
   flex: 1;
   padding: 0.5rem;
 }
-.tab.biography .sheet-section prose-mirror {
+.tab.biography .sheet-section .prose-mirror {
   flex: 1;
   width: 100%;
 }
-.tab.biography .sheet-section prose-mirror.active {
+.tab.biography .sheet-section .prose-mirror.active {
   margin-top: 0.5rem;
 }
-.tab.biography .sheet-section prose-mirror menu {
+.tab.biography .sheet-section .prose-mirror menu {
   padding: 0;
 }
-.tab.biography .sheet-section prose-mirror button.toggle {
+.tab.biography .sheet-section .prose-mirror button.toggle {
   right: 1rem;
   background: var(--color-frame-bg);
   border-color: var(--color-frame);
@@ -1772,17 +1772,17 @@ a.button.increase {
   flex: 1;
   padding: 0.5rem;
 }
-.tab.commitments .sheet-section prose-mirror {
+.tab.commitments .sheet-section .prose-mirror {
   flex: 1;
   width: 100%;
 }
-.tab.commitments .sheet-section prose-mirror.active {
+.tab.commitments .sheet-section .prose-mirror.active {
   margin-top: 0.5rem;
 }
-.tab.commitments .sheet-section prose-mirror menu {
+.tab.commitments .sheet-section .prose-mirror menu {
   padding: 0;
 }
-.tab.commitments .sheet-section prose-mirror button.toggle {
+.tab.commitments .sheet-section .prose-mirror button.toggle {
   right: 1rem;
   background: var(--color-frame-bg);
   border-color: var(--color-frame);
@@ -3610,14 +3610,14 @@ a.button.increase {
 /**
  * TODO: A collection of temporary rules that should be removed in V13
  */
-.swerpg prose-mirror menu {
+.swerpg .prose-mirror menu {
   padding: 0;
 }
-.swerpg prose-mirror menu .pm-dropdown {
+.swerpg .prose-mirror menu .pm-dropdown {
   background: var(--color-control-bg);
   color: var(--color-cool-5);
 }
-.swerpg prose-mirror menu .pm-dropdown > span {
+.swerpg .prose-mirror menu .pm-dropdown > span {
   text-align: left;
   align-self: unset;
 }
