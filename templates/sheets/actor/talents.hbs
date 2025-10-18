@@ -1,6 +1,33 @@
 <section class="tab secondary {{tabs.talents.id}} flexcol scrollable {{tabs.talents.cssClass}}"
          data-tab="{{tabs.talents.id}}" data-group="{{tabs.talents.group}}">
 
+    {{!-- XP panel (seule la progression XP, calquée sur skills.hbs) --}}
+    <div class="skills-xp-panel swerpg-holo-panel talents-xp-panel">
+        <div class="panel-header">
+            <h3 class="panel-title">⚙️ {{localize "ACTOR.SKILL_EXPERIENCE_STATUS"}}</h3>
+        </div>
+        <div class="panel-body">
+            <div class="rows">
+                <div class="row xp-row">
+                    <div class="label" title="{{localize "ACTOR.FREE_SKILLS.XPTooltip"}}">{{localize "ACTOR.FREE_SKILLS.XPProgressLabel"}}</div>
+                    <div class="meter xp-bar"
+                         role="progressbar"
+                         aria-valuemin="0"
+                         aria-valuemax="{{progression.experience.total}}"
+                         aria-valuenow="{{progression.experience.spent}}"
+                         aria-valuetext="{{progression.experience.spent}} / {{progression.experience.total}}"
+                         data-xp-spent="{{progression.experience.spent}}"
+                         data-xp-total="{{progression.experience.total}}"
+                         data-tooltip="{{progression.experience.spent}} {{localize 'ACTOR.FREE_SKILLS.XPSpentShort'}} / {{progression.experience.total}}" data-tooltip-direction="DOWN"
+                         style="--xp-percent: {{progression.experience.percent}};">
+                        <div class="xp-fill" aria-hidden="true"></div>
+                        <div class="xp-center-label">{{progression.experience.available}} XP</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     {{#each talents as |talent s|}}
         <div class="line-item {{talent.cssClass}}" data-item-id="{{talent.id}}" data-delete-action="deleteTalent"
              data-item-type="talent">
