@@ -3000,9 +3000,10 @@ a.button.increase {
 }
 .swerpg .skills-xp-panel .meter.skill-pips .pips .pip.active {
   background: transparent;
-  border: 1px solid rgba(102, 170, 255, 0.4);
-  /* soft blue-gray contour */
   opacity: 0.95;
+  border: 2px solid rgba(0, 170, 255, 0.3);
+  box-shadow: inset 0 0 4px rgba(0, 170, 255, 0.2);
+  transition: border-color 0.3s, box-shadow 0.3s;
 }
 .swerpg .skills-xp-panel .skills-xp-panel .value.remaining {
   color: #66ddee;

@@ -11,12 +11,11 @@
                 <div class="row skill-row">
                     <div class="label">{{localize "ACTOR.FREE_SKILLS.CareerSkills"}}</div>
                     <div class="meter skill-pips" aria-hidden="true" data-pips-type="career">
-                        <div class="pips" role="list">
+                        <div class="pips" role="list" data-tooltip="({{math (subtract progression.freeSkillRanks.career.gained progression.freeSkillRanks.career.available)}} / {{progression.freeSkillRanks.career.gained}})">
                             {{#each progression.freeSkillRanks.career.pips}}
                               <span class="pip {{#if active}}active{{else}}used{{/if}}" data-index="{{index}}" role="listitem" aria-checked="{{#if active}}true{{else}}false{{/if}}"></span>
                             {{/each}}
                         </div>
-                        <span class="pips-ratio" aria-hidden="true">({{math (subtract progression.freeSkillRanks.career.gained progression.freeSkillRanks.career.available)}} / {{progression.freeSkillRanks.career.gained}})</span>
                     </div>
                     <div class="value remaining career muted-remaining">{{progression.freeSkillRanks.career.available}} {{localize "ACTOR.FREE_SKILLS.remaining"}}</div>
                 </div>
@@ -24,12 +23,11 @@
                 <div class="row skill-row">
                     <div class="label">{{localize "ACTOR.FREE_SKILLS.SpecializationSkills"}}</div>
                     <div class="meter skill-pips" aria-hidden="true" data-pips-type="specialization">
-                        <div class="pips" role="list">
+                        <div class="pips" role="list" data-tooltip="({{math (subtract progression.freeSkillRanks.specialization.gained progression.freeSkillRanks.specialization.available)}} / {{progression.freeSkillRanks.specialization.gained}})">
                             {{#each progression.freeSkillRanks.specialization.pips}}
                               <span class="pip {{#if active}}active{{else}}used{{/if}}" data-index="{{index}}" role="listitem" aria-checked="{{#if active}}true{{else}}false{{/if}}"></span>
                             {{/each}}
                         </div>
-                        <span class="pips-ratio" aria-hidden="true">({{math (subtract progression.freeSkillRanks.specialization.gained progression.freeSkillRanks.specialization.available)}} / {{progression.freeSkillRanks.specialization.gained}})</span>
                     </div>
                     <div class="value remaining spec muted-remaining">{{progression.freeSkillRanks.specialization.available}} {{localize "ACTOR.FREE_SKILLS.remaining"}}</div>
                 </div>
