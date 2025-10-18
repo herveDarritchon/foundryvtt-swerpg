@@ -166,16 +166,16 @@
 
 /* Tag-specific colors to match the requested design (more specific selectors so they win over generic .pill rules) */
 .swerpg-talent-card .card-header .card-tags .pill.tag-active {
-  background: rgba(181,102,255,0.14) !important;
-  border-color: var(--color-accent-purple, #B566FF) !important;
-  color: var(--color-accent-purple, #B566FF) !important;
-  box-shadow: 0 0 14px rgba(181,102,255,0.12) !important;
+  background: rgba(218,23,23,0.14) !important; /* #da1717 14% */
+  border-color: var(--color-inactive, #da1717) !important;
+  color: var(--color-inactive, #da1717) !important;
+  box-shadow: 0 0 14px rgba(218,23,23,0.12) !important;
 }
 .swerpg-talent-card .card-header .card-tags .pill.tag-passive {
-  background: rgba(255,179,64,0.14) !important;
-  border-color: var(--color-box-warm-1, rgba(255,179,64,0.6)) !important;
-  color: var(--color-box-warm-1, rgba(255,179,64,0.95)) !important;
-  box-shadow: 0 0 12px rgba(255,179,64,0.10) !important;
+  background: rgba(0,176,255,0.14) !important; /* #00b0ff 14% */
+  border-color: var(--color-accent-blue, #00b0ff) !important;
+  color: var(--color-accent-blue, #00b0ff) !important;
+  box-shadow: 0 0 12px rgba(0,176,255,0.10) !important;
 }
 .swerpg-talent-card .card-header .card-tags .pill.tag-free {
   background: rgba(0,200,120,0.12) !important;
@@ -186,44 +186,54 @@
 
 /* Ensure pills get a slightly stronger border on focus/hover to match filter buttons (specific) */
 .swerpg-talent-card .card-header .card-tags .pill.tag-active:hover,
+.swerpg-talent-card .card-header .card-tags .pill.tag-active:focus {
+  transform: translateY(-1px) !important;
+  /* Rouge pour actif */
+  box-shadow: 0 0 28px rgba(218,23,23,0.16) !important;
+  border-width: 1px !important;
+}
 .swerpg-talent-card .card-header .card-tags .pill.tag-passive:hover,
+.swerpg-talent-card .card-header .card-tags .pill.tag-passive:focus {
+  transform: translateY(-1px) !important;
+  /* Bleu pour passif */
+  box-shadow: 0 0 28px rgba(0,176,255,0.16) !important;
+  border-width: 1px !important;
+}
 .swerpg-talent-card .card-header .card-tags .pill.tag-free:hover,
-.swerpg-talent-card .card-header .card-tags .pill.tag-active:focus,
-.swerpg-talent-card .card-header .card-tags .pill.tag-passive:focus,
 .swerpg-talent-card .card-header .card-tags .pill.tag-free:focus {
   transform: translateY(-1px) !important;
-  /* Intensify hover glow */
-  box-shadow: 0 0 28px rgba(181,102,255,0.16) !important;
+  /* Vert pour free */
+  box-shadow: 0 0 28px rgba(0,200,120,0.16) !important;
   border-width: 1px !important;
 }
 
 /* Filter button variants: match pill colors for the three main filters */
 .talent-filters .filter-btn[data-filter="active"],
 .talent-filters .filter-btn[data-filter="active"].active {
-  color: var(--color-accent-purple, #B566FF);
-  border-color: var(--color-accent-purple, #B566FF);
-  background: linear-gradient(180deg, rgba(181,102,255,0.14), rgba(0,0,0,0.06));
-  box-shadow: 0 0 28px rgba(181,102,255,0.14), inset 0 0 0 1px rgba(181,102,255,0.10);
+  color: var(--color-inactive, #da1717);
+  border-color: var(--color-inactive, #da1717);
+  background: linear-gradient(180deg, rgba(218,23,23,0.14), rgba(0,0,0,0.06));
+  box-shadow: 0 0 28px rgba(218,23,23,0.14), inset 0 0 0 1px rgba(218,23,23,0.10);
 }
 .talent-filters .filter-btn[data-filter="active"]:hover,
 .talent-filters .filter-btn[data-filter="active"].active:hover,
 .talent-filters .filter-btn[data-filter="active"]:focus {
   transform: translateY(-2px);
-  box-shadow: 0 0 34px rgba(181,102,255,0.16), inset 0 0 0 1px rgba(181,102,255,0.12);
+  box-shadow: 0 0 34px rgba(218,23,23,0.16), inset 0 0 0 1px rgba(218,23,23,0.12);
 }
 
 .talent-filters .filter-btn[data-filter="passive"],
 .talent-filters .filter-btn[data-filter="passive"].active {
-  color: var(--color-box-warm-1, rgba(255,179,64,0.95));
-  border-color: var(--color-box-warm-1, rgba(255,179,64,0.6));
-  background: linear-gradient(180deg, rgba(255,179,64,0.14), rgba(0,0,0,0.06));
-  box-shadow: 0 0 22px rgba(255,179,64,0.12), inset 0 0 0 1px rgba(255,179,64,0.08);
+  color: var(--color-accent-blue, #00b0ff);
+  border-color: var(--color-accent-blue, #00b0ff);
+  background: linear-gradient(180deg, rgba(0,176,255,0.14), rgba(0,0,0,0.06));
+  box-shadow: 0 0 22px rgba(0,176,255,0.12), inset 0 0 0 1px rgba(0,176,255,0.08);
 }
 .talent-filters .filter-btn[data-filter="passive"]:hover,
 .talent-filters .filter-btn[data-filter="passive"].active:hover,
 .talent-filters .filter-btn[data-filter="passive"]:focus {
   transform: translateY(-2px);
-  box-shadow: 0 0 28px rgba(255,179,64,0.14), inset 0 0 0 1px rgba(255,179,64,0.10);
+  box-shadow: 0 0 28px rgba(0,176,255,0.14), inset 0 0 0 1px rgba(0,176,255,0.10);
 }
 
 .talent-filters .filter-btn[data-filter="free"],
@@ -243,13 +253,13 @@
 /* More specific selectors to override the generic .filter-btn.active styles when necessary */
 .talent-filters .filters-body .filter-buttons .filter-btn[data-filter="active"],
 .talent-filters .filters-body .filter-buttons .filter-btn[data-filter="active"].active {
-  color: var(--color-accent-purple, #B566FF) !important;
-  border-color: var(--color-accent-purple, #B566FF) !important;
+  color: var(--color-inactive, #da1717) !important;
+  border-color: var(--color-inactive, #da1717) !important;
 }
 .talent-filters .filters-body .filter-buttons .filter-btn[data-filter="passive"],
 .talent-filters .filters-body .filter-buttons .filter-btn[data-filter="passive"].active {
-  color: var(--color-box-warm-1, rgba(255,179,64,0.95)) !important;
-  border-color: var(--color-box-warm-1, rgba(255,179,64,0.6)) !important;
+  color: var(--color-accent-blue, #00b0ff) !important;
+  border-color: var(--color-accent-blue, #00b0ff) !important;
 }
 .talent-filters .filters-body .filter-buttons .filter-btn[data-filter="free"],
 .talent-filters .filters-body .filter-buttons .filter-btn[data-filter="free"].active {
@@ -265,16 +275,16 @@
   background: transparent !important;
 }
 .swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags .pill.tag-active {
-  background: rgba(181,102,255,0.14) !important;
-  border-color: var(--color-accent-purple, #B566FF) !important;
-  color: var(--color-accent-purple, #B566FF) !important;
-  box-shadow: 0 0 18px rgba(181,102,255,0.14) !important;
+  background: rgba(218,23,23,0.14) !important;
+  border-color: var(--color-inactive, #da1717) !important;
+  color: var(--color-inactive, #da1717) !important;
+  box-shadow: 0 0 18px rgba(218,23,23,0.14) !important;
 }
 .swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags .pill.tag-passive {
-  background: rgba(255,179,64,0.14) !important;
-  border-color: var(--color-box-warm-1, rgba(255,179,64,0.6)) !important;
-  color: var(--color-box-warm-1, rgba(255,179,64,0.95)) !important;
-  box-shadow: 0 0 14px rgba(255,179,64,0.12) !important;
+  background: rgba(0,176,255,0.14) !important;
+  border-color: var(--color-accent-blue, #00b0ff) !important;
+  color: var(--color-accent-blue, #00b0ff) !important;
+  box-shadow: 0 0 14px rgba(0,176,255,0.12) !important;
 }
 .swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags .pill.tag-free {
   background: rgba(0,200,120,0.12) !important;
@@ -285,16 +295,16 @@
 
 /* Attribute-based highest-specificity overrides (use data-tag from the template) */
 .swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags span.pill[data-tag="tag-active"] {
-  background: rgba(181,102,255,0.14) !important;
-  border-color: var(--color-accent-purple, #B566FF) !important;
-  color: var(--color-accent-purple, #B566FF) !important;
-  box-shadow: 0 0 18px rgba(181,102,255,0.16) !important;
+  background: rgba(218,23,23,0.14) !important;
+  border-color: var(--color-inactive, #da1717) !important;
+  color: var(--color-inactive, #da1717) !important;
+  box-shadow: 0 0 18px rgba(218,23,23,0.16) !important;
 }
 .swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags span.pill[data-tag="tag-passive"] {
-  background: rgba(255,179,64,0.14) !important;
-  border-color: var(--color-box-warm-1, rgba(255,179,64,0.6)) !important;
-  color: var(--color-box-warm-1, rgba(255,179,64,0.95)) !important;
-  box-shadow: 0 0 16px rgba(255,179,64,0.14) !important;
+  background: rgba(0,176,255,0.14) !important;
+  border-color: var(--color-accent-blue, #00b0ff) !important;
+  color: var(--color-accent-blue, #00b0ff) !important;
+  box-shadow: 0 0 16px rgba(0,176,255,0.14) !important;
 }
 .swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags span.pill[data-tag="tag-free"] {
   background: rgba(0,200,120,0.12) !important;
@@ -305,10 +315,19 @@
 
 /* Hover for attribute-based selectors */
 .swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags span.pill[data-tag="tag-active"]:hover,
-.swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags span.pill[data-tag="tag-passive"]:hover,
-.swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags span.pill[data-tag="tag-free"]:hover {
+.swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags span.pill[data-tag="tag-active"]:focus {
   transform: translateY(-1px) !important;
-  box-shadow: 0 0 28px rgba(181,102,255,0.16) !important;
+  box-shadow: 0 0 28px rgba(218,23,23,0.16) !important;
+}
+.swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags span.pill[data-tag="tag-passive"]:hover,
+.swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags span.pill[data-tag="tag-passive"]:focus {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 0 28px rgba(0,176,255,0.16) !important;
+}
+.swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags span.pill[data-tag="tag-free"]:hover,
+.swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags span.pill[data-tag="tag-free"]:focus {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 0 28px rgba(0,200,120,0.16) !important;
 }
 
 /* Small responsive tweaks */
