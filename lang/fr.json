@@ -820,6 +820,7 @@
       "HOOK_ADD": "Add Hook",
       "HOOK_DELETE": "Delete Hook"
     },
+    "Delete": "Suppr",
     "WARNINGS": {
       "AlreadyOwned": "You already own {name} and cannot add it a second time.",
       "Banned": "You cannot purchase additional Signature talents at this node or tier.",
