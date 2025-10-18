@@ -4111,21 +4111,127 @@ a.button.increase {
   color: #00b0ff;
   transform: translateY(-1px);
 }
-/* Tag-specific colors to match the requested design */
-.pill.tag-active {
-  background: rgba(0, 198, 255, 0.06);
-  border-color: rgba(0, 176, 255, 0.6);
-  color: #00b0ff;
+/* Tag-specific colors to match the requested design (more specific selectors so they win over generic .pill rules) */
+.swerpg-talent-card .card-header .card-tags .pill.tag-active {
+  background: rgba(0, 198, 255, 0.14) !important;
+  border-color: var(--color-accent-blue, #00b0ff) !important;
+  color: var(--color-accent-blue, #00b0ff) !important;
+  box-shadow: 0 0 14px rgba(0, 176, 255, 0.12) !important;
 }
-.pill.tag-passive {
-  background: rgba(255, 179, 64, 0.06);
-  border-color: rgba(255, 179, 64, 0.6);
-  color: rgba(255, 179, 64, 0.95);
+.swerpg-talent-card .card-header .card-tags .pill.tag-passive {
+  background: rgba(255, 179, 64, 0.14) !important;
+  border-color: var(--color-box-warm-1, rgba(255, 179, 64, 0.6)) !important;
+  color: var(--color-box-warm-1, rgba(255, 179, 64, 0.95)) !important;
+  box-shadow: 0 0 12px rgba(255, 179, 64, 0.1) !important;
 }
-.pill.tag-free {
-  background: rgba(0, 200, 120, 0.04);
-  border-color: rgba(0, 200, 120, 0.5);
-  color: rgba(0, 200, 120, 0.95);
+.swerpg-talent-card .card-header .card-tags .pill.tag-free {
+  background: rgba(0, 200, 120, 0.12) !important;
+  border-color: var(--color-active, rgba(0, 200, 120, 0.5)) !important;
+  color: var(--color-active, rgba(0, 200, 120, 0.95)) !important;
+  box-shadow: 0 0 12px rgba(0, 200, 120, 0.1) !important;
+}
+/* Ensure pills get a slightly stronger border on focus/hover to match filter buttons (specific) */
+.swerpg-talent-card .card-header .card-tags .pill.tag-active:hover,
+.swerpg-talent-card .card-header .card-tags .pill.tag-passive:hover,
+.swerpg-talent-card .card-header .card-tags .pill.tag-free:hover,
+.swerpg-talent-card .card-header .card-tags .pill.tag-active:focus,
+.swerpg-talent-card .card-header .card-tags .pill.tag-passive:focus,
+.swerpg-talent-card .card-header .card-tags .pill.tag-free:focus {
+  transform: translateY(-1px) !important;
+  /* Intensify hover glow */
+  box-shadow: 0 0 28px rgba(0, 176, 255, 0.16) !important;
+  border-width: 1px !important;
+}
+/* Filter button variants: match pill colors for the three main filters */
+.talent-filters .filter-btn[data-filter="active"],
+.talent-filters .filter-btn[data-filter="active"].active {
+  color: var(--color-accent-blue, #00b0ff);
+  border-color: var(--color-accent-blue, #00b0ff);
+  background: linear-gradient(180deg, rgba(0, 198, 255, 0.14), rgba(0, 0, 0, 0.06));
+  box-shadow: 0 0 28px rgba(0, 176, 255, 0.14), inset 0 0 0 1px rgba(0, 198, 255, 0.1);
+}
+.talent-filters .filter-btn[data-filter="active"]:hover,
+.talent-filters .filter-btn[data-filter="active"].active:hover,
+.talent-filters .filter-btn[data-filter="active"]:focus {
+  transform: translateY(-2px);
+  box-shadow: 0 0 34px rgba(0, 176, 255, 0.16), inset 0 0 0 1px rgba(0, 198, 255, 0.12);
+}
+.talent-filters .filter-btn[data-filter="passive"],
+.talent-filters .filter-btn[data-filter="passive"].active {
+  color: var(--color-box-warm-1, rgba(255, 179, 64, 0.95));
+  border-color: var(--color-box-warm-1, rgba(255, 179, 64, 0.6));
+  background: linear-gradient(180deg, rgba(255, 179, 64, 0.14), rgba(0, 0, 0, 0.06));
+  box-shadow: 0 0 22px rgba(255, 179, 64, 0.12), inset 0 0 0 1px rgba(255, 179, 64, 0.08);
+}
+.talent-filters .filter-btn[data-filter="passive"]:hover,
+.talent-filters .filter-btn[data-filter="passive"].active:hover,
+.talent-filters .filter-btn[data-filter="passive"]:focus {
+  transform: translateY(-2px);
+  box-shadow: 0 0 28px rgba(255, 179, 64, 0.14), inset 0 0 0 1px rgba(255, 179, 64, 0.1);
+}
+.talent-filters .filter-btn[data-filter="free"],
+.talent-filters .filter-btn[data-filter="free"].active {
+  color: var(--color-active, rgba(0, 200, 120, 0.95));
+  border-color: var(--color-active, rgba(0, 200, 120, 0.5));
+  background: linear-gradient(180deg, rgba(0, 200, 120, 0.12), rgba(0, 0, 0, 0.06));
+  box-shadow: 0 0 22px rgba(0, 200, 120, 0.12), inset 0 0 0 1px rgba(0, 200, 120, 0.08);
+}
+.talent-filters .filter-btn[data-filter="free"]:hover,
+.talent-filters .filter-btn[data-filter="free"].active:hover,
+.talent-filters .filter-btn[data-filter="free"]:focus {
+  transform: translateY(-2px);
+  box-shadow: 0 0 28px rgba(0, 200, 120, 0.16), inset 0 0 0 1px rgba(0, 200, 120, 0.1);
+}
+/* Extra-high-specificity fallbacks to beat any competing rule in the stylesheet
+   (scoped to the talents tab and using an attribute selector to increase specificity) */
+.swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags .pill.tag-active,
+.swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags .pill.tag-passive,
+.swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags .pill.tag-free {
+  background: transparent !important;
+}
+.swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags .pill.tag-active {
+  background: rgba(0, 198, 255, 0.14) !important;
+  border-color: var(--color-accent-blue, #00b0ff) !important;
+  color: var(--color-accent-blue, #00b0ff) !important;
+  box-shadow: 0 0 18px rgba(0, 176, 255, 0.14) !important;
+}
+.swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags .pill.tag-passive {
+  background: rgba(255, 179, 64, 0.14) !important;
+  border-color: var(--color-box-warm-1, rgba(255, 179, 64, 0.6)) !important;
+  color: var(--color-box-warm-1, rgba(255, 179, 64, 0.95)) !important;
+  box-shadow: 0 0 14px rgba(255, 179, 64, 0.12) !important;
+}
+.swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags .pill.tag-free {
+  background: rgba(0, 200, 120, 0.12) !important;
+  border-color: var(--color-active, rgba(0, 200, 120, 0.5)) !important;
+  color: var(--color-active, rgba(0, 200, 120, 0.95)) !important;
+  box-shadow: 0 0 14px rgba(0, 200, 120, 0.12) !important;
+}
+/* Attribute-based highest-specificity overrides (use data-tag from the template) */
+.swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags span.pill[data-tag="tag-active"] {
+  background: rgba(0, 198, 255, 0.14) !important;
+  border-color: var(--color-accent-blue, #00b0ff) !important;
+  color: var(--color-accent-blue, #00b0ff) !important;
+  box-shadow: 0 0 18px rgba(0, 176, 255, 0.16) !important;
+}
+.swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags span.pill[data-tag="tag-passive"] {
+  background: rgba(255, 179, 64, 0.14) !important;
+  border-color: var(--color-box-warm-1, rgba(255, 179, 64, 0.6)) !important;
+  color: var(--color-box-warm-1, rgba(255, 179, 64, 0.95)) !important;
+  box-shadow: 0 0 16px rgba(255, 179, 64, 0.14) !important;
+}
+.swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags span.pill[data-tag="tag-free"] {
+  background: rgba(0, 200, 120, 0.12) !important;
+  border-color: var(--color-active, rgba(0, 200, 120, 0.5)) !important;
+  color: var(--color-active, rgba(0, 200, 120, 0.95)) !important;
+  box-shadow: 0 0 16px rgba(0, 200, 120, 0.14) !important;
+}
+/* Hover for attribute-based selectors */
+.swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags span.pill[data-tag="tag-active"]:hover,
+.swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags span.pill[data-tag="tag-passive"]:hover,
+.swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags span.pill[data-tag="tag-free"]:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 0 28px rgba(0, 176, 255, 0.16) !important;
 }
 /* Small responsive tweaks */
 @media (max-width: 540px) {
