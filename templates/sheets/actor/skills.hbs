@@ -33,17 +33,19 @@
                 </div>
 
                 <div class="row xp-row">
-                    <div class="label">{{localize "ACTOR.FREE_SKILLS.XPSpent"}}</div>
-                    <div class="meter xp-bar" title="{{progression.experience.spent}} / {{progression.experience.total}}"
-                         style="--xp-percent: {{progression.experience.remainingPercent}};">
-                        <div class="xp-fill"><span class="xp-fill-text">{{progression.experience.available}}</span></div>
-                    </div>
-                    <div class="value xp-numbers">{{progression.experience.spent}} / {{progression.experience.total}}</div>
-                </div>
-
-                <div class="row xp-available-row">
                     <div class="label">{{localize "ACTOR.FREE_SKILLS.XPAvailable"}}</div>
-                    <div class="value xp-available"><span class="icon hex"></span> <span class="xp-amount">{{progression.experience.available}}</span></div>
+                    <div class="meter xp-bar"
+                         role="progressbar"
+                         aria-valuemin="0"
+                         aria-valuemax="{{progression.experience.total}}"
+                         aria-valuenow="{{progression.experience.spent}}"
+                         aria-valuetext="{{progression.experience.spent}} / {{progression.experience.total}}"
+                         title="{{progression.experience.spent}} / {{progression.experience.total}}"
+                         style="--xp-percent: {{progression.experience.remainingPercent}};">
+                        <div class="xp-fill" aria-hidden="true"></div>
+                        <!-- Label centered independent of the fill width -->
+                        <div class="xp-center-label">{{progression.experience.available}} / {{progression.experience.total}}</div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -186,3 +186,33 @@
   text-overflow: ellipsis;
   color: inherit;
 }
+
+/* Label centré indépendant du remplissage */
+.meter.xp-bar .xp-center-label {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2; /* au dessus du remplissage */
+  pointer-events: none;
+  color: var(--color-text);
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-shadow: 0 0 6px rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.35);
+  padding: 2px 8px;
+  border-radius: 6px;
+  max-width: calc(100% - 12px);
+  box-sizing: border-box;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Ensure the fill sits below the centered label */
+.meter.xp-bar .xp-fill {
+  z-index: 1;
+}
