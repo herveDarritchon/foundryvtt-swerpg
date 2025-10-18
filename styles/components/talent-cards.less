@@ -166,10 +166,10 @@
 
 /* Tag-specific colors to match the requested design (more specific selectors so they win over generic .pill rules) */
 .swerpg-talent-card .card-header .card-tags .pill.tag-active {
-  background: rgba(0,198,255,0.14) !important;
-  border-color: var(--color-accent-blue, @color-glow) !important;
-  color: var(--color-accent-blue, @color-glow) !important;
-  box-shadow: 0 0 14px rgba(0, 176, 255, 0.12) !important;
+  background: rgba(181,102,255,0.14) !important;
+  border-color: var(--color-accent-purple, #B566FF) !important;
+  color: var(--color-accent-purple, #B566FF) !important;
+  box-shadow: 0 0 14px rgba(181,102,255,0.12) !important;
 }
 .swerpg-talent-card .card-header .card-tags .pill.tag-passive {
   background: rgba(255,179,64,0.14) !important;
@@ -193,23 +193,23 @@
 .swerpg-talent-card .card-header .card-tags .pill.tag-free:focus {
   transform: translateY(-1px) !important;
   /* Intensify hover glow */
-  box-shadow: 0 0 28px rgba(0,176,255,0.16) !important;
+  box-shadow: 0 0 28px rgba(181,102,255,0.16) !important;
   border-width: 1px !important;
 }
 
 /* Filter button variants: match pill colors for the three main filters */
 .talent-filters .filter-btn[data-filter="active"],
 .talent-filters .filter-btn[data-filter="active"].active {
-  color: var(--color-accent-blue, @color-glow);
-  border-color: var(--color-accent-blue, @color-glow);
-  background: linear-gradient(180deg, rgba(0,198,255,0.14), rgba(0,0,0,0.06));
-  box-shadow: 0 0 28px rgba(0,176,255,0.14), inset 0 0 0 1px rgba(0,198,255,0.10);
+  color: var(--color-accent-purple, #B566FF);
+  border-color: var(--color-accent-purple, #B566FF);
+  background: linear-gradient(180deg, rgba(181,102,255,0.14), rgba(0,0,0,0.06));
+  box-shadow: 0 0 28px rgba(181,102,255,0.14), inset 0 0 0 1px rgba(181,102,255,0.10);
 }
 .talent-filters .filter-btn[data-filter="active"]:hover,
 .talent-filters .filter-btn[data-filter="active"].active:hover,
 .talent-filters .filter-btn[data-filter="active"]:focus {
   transform: translateY(-2px);
-  box-shadow: 0 0 34px rgba(0,176,255,0.16), inset 0 0 0 1px rgba(0,198,255,0.12);
+  box-shadow: 0 0 34px rgba(181,102,255,0.16), inset 0 0 0 1px rgba(181,102,255,0.12);
 }
 
 .talent-filters .filter-btn[data-filter="passive"],
@@ -243,8 +243,8 @@
 /* More specific selectors to override the generic .filter-btn.active styles when necessary */
 .talent-filters .filters-body .filter-buttons .filter-btn[data-filter="active"],
 .talent-filters .filters-body .filter-buttons .filter-btn[data-filter="active"].active {
-  color: var(--color-accent-blue, @color-glow) !important;
-  border-color: var(--color-accent-blue, @color-glow) !important;
+  color: var(--color-accent-purple, #B566FF) !important;
+  border-color: var(--color-accent-purple, #B566FF) !important;
 }
 .talent-filters .filters-body .filter-buttons .filter-btn[data-filter="passive"],
 .talent-filters .filters-body .filter-buttons .filter-btn[data-filter="passive"].active {
@@ -265,10 +265,10 @@
   background: transparent !important;
 }
 .swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags .pill.tag-active {
-  background: rgba(0,198,255,0.14) !important;
-  border-color: var(--color-accent-blue, @color-glow) !important;
-  color: var(--color-accent-blue, @color-glow) !important;
-  box-shadow: 0 0 18px rgba(0, 176, 255, 0.14) !important;
+  background: rgba(181,102,255,0.14) !important;
+  border-color: var(--color-accent-purple, #B566FF) !important;
+  color: var(--color-accent-purple, #B566FF) !important;
+  box-shadow: 0 0 18px rgba(181,102,255,0.14) !important;
 }
 .swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags .pill.tag-passive {
   background: rgba(255,179,64,0.14) !important;
@@ -285,10 +285,10 @@
 
 /* Attribute-based highest-specificity overrides (use data-tag from the template) */
 .swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags span.pill[data-tag="tag-active"] {
-  background: rgba(0,198,255,0.14) !important;
-  border-color: var(--color-accent-blue, @color-glow) !important;
-  color: var(--color-accent-blue, @color-glow) !important;
-  box-shadow: 0 0 18px rgba(0, 176, 255, 0.16) !important;
+  background: rgba(181,102,255,0.14) !important;
+  border-color: var(--color-accent-purple, #B566FF) !important;
+  color: var(--color-accent-purple, #B566FF) !important;
+  box-shadow: 0 0 18px rgba(181,102,255,0.16) !important;
 }
 .swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags span.pill[data-tag="tag-passive"] {
   background: rgba(255,179,64,0.14) !important;
@@ -308,7 +308,7 @@
 .swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags span.pill[data-tag="tag-passive"]:hover,
 .swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags span.pill[data-tag="tag-free"]:hover {
   transform: translateY(-1px) !important;
-  box-shadow: 0 0 28px rgba(0,176,255,0.16) !important;
+  box-shadow: 0 0 28px rgba(181,102,255,0.16) !important;
 }
 
 /* Small responsive tweaks */
