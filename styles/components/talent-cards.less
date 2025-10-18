@@ -240,6 +240,23 @@
   box-shadow: 0 0 28px rgba(0,200,120,0.16), inset 0 0 0 1px rgba(0,200,120,0.10);
 }
 
+/* More specific selectors to override the generic .filter-btn.active styles when necessary */
+.talent-filters .filters-body .filter-buttons .filter-btn[data-filter="active"],
+.talent-filters .filters-body .filter-buttons .filter-btn[data-filter="active"].active {
+  color: var(--color-accent-blue, @color-glow) !important;
+  border-color: var(--color-accent-blue, @color-glow) !important;
+}
+.talent-filters .filters-body .filter-buttons .filter-btn[data-filter="passive"],
+.talent-filters .filters-body .filter-buttons .filter-btn[data-filter="passive"].active {
+  color: var(--color-box-warm-1, rgba(255,179,64,0.95)) !important;
+  border-color: var(--color-box-warm-1, rgba(255,179,64,0.6)) !important;
+}
+.talent-filters .filters-body .filter-buttons .filter-btn[data-filter="free"],
+.talent-filters .filters-body .filter-buttons .filter-btn[data-filter="free"].active {
+  color: var(--color-active, rgba(0,200,120,0.95)) !important;
+  border-color: var(--color-active, rgba(0,200,120,0.5)) !important;
+}
+
 /* Extra-high-specificity fallbacks to beat any competing rule in the stylesheet
    (scoped to the talents tab and using an attribute selector to increase specificity) */
 .swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags .pill.tag-active,
