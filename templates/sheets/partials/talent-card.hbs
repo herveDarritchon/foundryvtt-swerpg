@@ -2,15 +2,15 @@
     <div class="card-inner">
         <header class="card-header">
             <div class="header-left">
-                <h3 class="talent-title">{{talent.name}}</h3>
-            </div>
-            <div class="card-tags header-right">
-                {{#each talent.tags as |tag|}}
-                    <span class="pill {{tag.cssClass}}">{{tag.label}}</span>
-                {{/each}}
-                {{#if talent.rank}}
-                    <span class="pill rank">RANG {{talent.rank}}</span>
-                {{/if}}
+                <h3 class="talent-title" title="{{talent.name}}">{{talent.name}}</h3>
+                <div class="card-tags">
+                    {{#each talent.tags as |tag|}}
+                        <span class="pill {{tag.cssClass}}">{{tag.label}}</span>
+                    {{/each}}
+                    {{#if talent.rank}}
+                        <span class="pill rank">RANG {{talent.rank}}</span>
+                    {{/if}}
+                </div>
             </div>
         </header>
 
