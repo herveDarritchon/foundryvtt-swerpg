@@ -99,6 +99,14 @@
       display: block;
       white-space: normal;
       word-break: break-word;
+
+      /* Limit title to two lines and show an ellipsis for overflow */
+      /* Using -webkit-line-clamp for broad browser support in Chromium-based and WebKit browsers */
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .card-tags {
       display: flex;
