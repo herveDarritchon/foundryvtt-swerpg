@@ -133,6 +133,59 @@
     text-align: end;
   }
 
+  /* Align whole skill rows and ensure consistent vertical centering */
+  .skill-row {
+    margin-bottom: 0.35rem;
+    display: flex;           /* force a single horizontal row */
+    align-items: center;     /* vertically center label, pips and values */
+    gap: 0.6rem;             /* small gap between groups */
+  }
+
+  /* Keep the label at a stable width but allow shrinking on very small screens */
+  .label {
+    flex: 3 0 180px;         /* reserve consistent space for labels */
+    min-width: 110px;        /* floor for very narrow screens */
+    max-width: 40%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    /* Ensure label text is vertically centered to match pip centering */
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  /* For meters that are not the XP bar, align their inner content to the end */
+  .meter:not(.xp-bar),
+  .value {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    min-width: 0; /* allow them to shrink in tight containers */
+  }
+
+  /* Ensure pip meters layout items in a single centered row */
+  .meter.skill-pips {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    justify-content: flex-start; /* push pips to the right side of the meter area */
+  }
+
+  .meter.skill-pips .pips {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .meter.skill-pips .pips .pip {
+    flex: 0 0 12px; /* make width/height strictly enforced to avoid jumping */
+    width: 12px;
+    height: 12px;
+    line-height: 12px;
+    vertical-align: middle;
+  }
+
   /* Tone down the cyan on the right-side numeric indicators to reduce visual weight */
   .value.remaining.career,
   .value.remaining.spec {
@@ -198,9 +251,7 @@
   }
 
   /* Add a small vertical separation between the two pip groups and the XP bar to create grouped visual units */
-  .skills-xp-panel .skill-row {
-    margin-bottom: 0.35rem;
-  }
+  /* .skills-xp-panel .skill-row { margin-bottom: 0.35rem; } */
 }
 
 /* Responsive tweak: allow labels to shrink on narrow screens but keep single-line where possible */
