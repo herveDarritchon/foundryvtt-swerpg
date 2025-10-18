@@ -10,41 +10,53 @@
             <div class="rows">
                 <div class="row skill-row">
                     <div class="label">{{localize "ACTOR.FREE_SKILLS.CareerSkills"}}</div>
-                    <div class="meter skill-pips" aria-hidden="true">
-                        <div class="pips">
+                    <div class="meter skill-pips" aria-hidden="true" data-pips-type="career">
+                        <div class="pips" role="list">
                             {{#each progression.freeSkillRanks.career.pips}}
-                              <span class="pip {{#if active}}active{{/if}}" data-index="{{index}}"></span>
+                              <span class="pip {{#if active}}active{{/if}}" data-index="{{index}}" role="listitem" aria-checked="{{#if active}}true{{else}}false{{/if}}"></span>
                             {{/each}}
                         </div>
                     </div>
-                    <div class="value remaining career">{{progression.freeSkillRanks.career.available}} {{localize "ACTOR.FREE_SKILLS.remaining"}}</div>
+                    <div class="value remaining career muted-remaining">{{progression.freeSkillRanks.career.available}} {{localize "ACTOR.FREE_SKILLS.remaining"}}</div>
                 </div>
 
                 <div class="row skill-row">
                     <div class="label">{{localize "ACTOR.FREE_SKILLS.SpecializationSkills"}}</div>
-                    <div class="meter skill-pips" aria-hidden="true">
-                        <div class="pips">
+                    <div class="meter skill-pips" aria-hidden="true" data-pips-type="specialization">
+                        <div class="pips" role="list">
                             {{#each progression.freeSkillRanks.specialization.pips}}
-                              <span class="pip {{#if active}}active{{/if}}" data-index="{{index}}"></span>
+                              <span class="pip {{#if active}}active{{/if}}" data-index="{{index}}" role="listitem" aria-checked="{{#if active}}true{{else}}false{{/if}}"></span>
                             {{/each}}
                         </div>
                     </div>
-                    <div class="value remaining spec">{{progression.freeSkillRanks.specialization.available}} {{localize "ACTOR.FREE_SKILLS.remaining"}}</div>
+                    <div class="value remaining spec muted-remaining">{{progression.freeSkillRanks.specialization.available}} {{localize "ACTOR.FREE_SKILLS.remaining"}}</div>
+                </div>
+
+                {{!-- Micro-labels under pips to make "chosen / total" explicit --}}
+                <div class="row pips-summary-row">
+                    <div class="label small-label">&nbsp;</div>
+                    <div class="pips-summary">
+                        <div class="summary career-summary" aria-hidden="true">{{localize "ACTOR.FREE_SKILLS.ChosenShort"}}: {{math (subtract progression.freeSkillRanks.career.gained progression.freeSkillRanks.career.available)}} / {{progression.freeSkillRanks.career.gained}}</div>
+                        <div class="summary spec-summary" aria-hidden="true">{{localize "ACTOR.FREE_SKILLS.ChosenShort"}}: {{math (subtract progression.freeSkillRanks.specialization.gained progression.freeSkillRanks.specialization.available)}} / {{progression.freeSkillRanks.specialization.gained}}</div>
+                    </div>
                 </div>
 
                 <div class="row xp-row">
-                    <div class="label">{{localize "ACTOR.FREE_SKILLS.XPAvailable"}}</div>
+                    {{!-- Changed label to be clearer about the bar meaning --}}
+                    <div class="label" title="{{localize "ACTOR.FREE_SKILLS.XPTooltip"}}">{{localize "ACTOR.FREE_SKILLS.XPProgressLabel"}}</div>
                     <div class="meter xp-bar"
                          role="progressbar"
                          aria-valuemin="0"
                          aria-valuemax="{{progression.experience.total}}"
                          aria-valuenow="{{progression.experience.spent}}"
                          aria-valuetext="{{progression.experience.spent}} / {{progression.experience.total}}"
-                         title="{{progression.experience.spent}} / {{progression.experience.total}}"
-                         style="--xp-percent: {{progression.experience.remainingPercent}};">
+                         data-xp-spent="{{progression.experience.spent}}"
+                         data-xp-total="{{progression.experience.total}}"
+                         data-tooltip="{{progression.experience.spent}} {{localize 'ACTOR.FREE_SKILLS.XPSpentShort'}} / {{progression.experience.total}}" data-tooltip-direction="DOWN"
+                         style="--xp-percent: {{progression.experience.percent}};">
                         <div class="xp-fill" aria-hidden="true"></div>
-                        <!-- Label centered independent of the fill width -->
-                        <div class="xp-center-label">{{progression.experience.available}} / {{progression.experience.total}}</div>
+                        <!-- Center label made explicit: "spent / total" and a clearer text for assistive tech -->
+                        <div class="xp-center-label">{{progression.experience.available}} XP</div>
                     </div>
                 </div>
             </div>

@@ -328,6 +328,51 @@ Handlebars.registerHelper("range", function (start, end) {
     return result;
 });
 
+// Ajout des helpers manquants utilisés dans les templates.
+// subtract: retourne (a - b) en s'assurant que les entrées sont numériques.
+Handlebars.registerHelper("subtract", function (a, b) {
+    const na = Number(a) || 0;
+    const nb = Number(b) || 0;
+    return na - nb;
+});
+
+// math: helper générique minimal pour effectuer des opérations simples.
+// Usage possibles:
+//  {{math value}} -> retourne value
+//  {{math a "+" b}} -> addition
+//  {{math a "-" b}} -> soustraction
+//  {{math a "*" b}} -> multiplication
+//  {{math a "/" b}} -> division (retourne 0 si division par zéro)
+Handlebars.registerHelper("math", function () {
+    // Les derniers arguments de Handlebars incluent un objet options; on l'ignore.
+    const args = Array.from(arguments);
+    const params = args.slice(0, -1);
+
+    if (params.length === 0) return 0;
+    if (params.length === 1) return params[0];
+
+    const a = Number(params[0]) || 0;
+    const operator = params[1];
+    const b = Number(params[2]) || 0;
+
+    switch (operator) {
+        case "+":
+            return a + b;
+        case "-":
+            return a - b;
+        case "*":
+        case "x":
+            return a * b;
+        case "/":
+            return b === 0 ? 0 : a / b;
+        case "%":
+            return b === 0 ? 0 : a % b;
+        default:
+            // Si l'opérateur n'est pas fourni, retourner la première valeur (compatibilité).
+            return params[0];
+    }
+});
+
 /* -------------------------------------------- */
 /*  Localization                                */
 /* -------------------------------------------- */
@@ -659,3 +704,4 @@ export * as dice from "./module/dice/_module.mjs";
 export * as documents from "./module/documents/_module.mjs";
 export * as models from "./module/models/_module.mjs";
 export * as chat from "./module/chat.mjs";
+

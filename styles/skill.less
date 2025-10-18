@@ -117,8 +117,8 @@
 /* Fix: prevent XP/Skills panel labels from wrapping and increase their available width */
 .swerpg .skills-xp-panel {
   .label {
-    /* Allow more room for long localized strings like "Compétences de carrière" */
-    min-width: 220px;
+    /* Reduced slightly to improve balance between columns (was 220px) */
+    min-width: 180px;
     width: auto;
     white-space: nowrap;
     overflow: visible;
@@ -131,6 +131,33 @@
   .value {
     flex: 1 1 auto;
     text-align: end;
+  }
+
+  /* Tone down the cyan on the right-side numeric indicators to reduce visual weight */
+  .value.remaining.career,
+  .value.remaining.spec {
+    color: #66ddee; /* slightly less saturated cyan */
+    font-weight: 600;
+  }
+
+  /* Micro-labels under pips */
+  .pips-summary {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    .summary {
+      font-size: 0.75rem;
+      color: #bcd1e8; /* slightly lighter gray-blue for legibility */
+      margin-top: 4px;
+      white-space: nowrap;
+    }
+  }
+
+  /* Give active pips a subtle gradient to indicate "filled" state */
+  .meter.skill-pips .pip.active {
+    background: linear-gradient(180deg, #003355 0%, #00aaff 100%);
+    box-shadow: 0 0 8px rgba(0,170,255,0.14);
+    border-color: rgba(255,255,255,0.06);
   }
 }
 
@@ -167,7 +194,7 @@
   width: var(--xp-percent, 40%);
   background: linear-gradient(90deg, #00aaff 0%, #003355 100%);
   box-shadow: 0 0 12px rgba(0,170,255,0.22);
-  transition: width 450ms cubic-bezier(.2,.9,.2,1);
+  transition: width 450ms cubic-bezier(.2,.9,.2,1), filter 220ms ease;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -175,6 +202,7 @@
   font-weight: 700;
   font-size: 0.85rem;
   text-shadow: 0 0 4px rgba(0,0,0,0.6);
+  will-change: width;
 }
 
 .meter.xp-bar:hover .xp-fill { filter: brightness(1.1) saturate(1.1); transform: translateZ(0); }
@@ -195,14 +223,11 @@
   transform: translate(-50%, -50%);
   z-index: 2; /* au dessus du remplissage */
   pointer-events: none;
-  color: var(--color-text);
-  font-weight: 700;
-  font-size: 0.9rem;
-  text-shadow: 0 0 6px rgba(0,0,0,0.6);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0,0,0,0.35);
+  color: #ffffff; /* pure white for better contrast */
+  font-weight: 800;
+  font-size: 0.95rem; /* slightly larger */
+  text-shadow: 0 1px 0 rgba(0,0,0,0.65);
+  background: rgba(0,0,0,0.45);
   padding: 2px 8px;
   border-radius: 6px;
   max-width: calc(100% - 12px);

@@ -210,6 +210,22 @@
       "EQUIPMENT_HINT": "Equip weapons and armor from your Backpack toggling the shield icon.",
       "BACKPACK_HINT": "Add Armor or Weapons by dropping them from the provided Swerpg system compendium packs.",
       "SIZE": "Size"
+    },
+    "SKILL_EXPERIENCE_STATUS": "Statut des Compétences et de l'Expérience",
+    "FREE_SKILLS": {
+      "CareerSkills": "Compétences de carrière",
+      "SpecializationSkills": "Compétences de spécialisation",
+      "remaining": "restantes",
+      "Chosen": "Choisi",
+      "XPSpent": "XP dépensés",
+      "XPAvailable": "XP disponibles",
+      "XPTooltip": "Affiche les XP dépensés sur le total alloué lors de la création du personnage.",
+      "GeneralSkills": "Compétences générales",
+      "CombatSkills": "Compétences de combat",
+      "LoreSkills": "Compétences de savoir",
+      "XPProgressLabel": "Progression de création",
+      "XPSpentShort": "XP dép.",
+      "ChosenShort": "Choisi"
     }
   },
   "ACTOR.AppliedDetailItem": "Applied the {name} {type} to {actor}.",
@@ -954,5 +970,4 @@
   "WALKTHROUGH.LevelOne": "Set your character to Level 1 and begin your adventure!",
   "WALKTHROUGH.LevelUp": "You have made enough progress to advance to a new level. Increase your level by one when you are ready!",
   "WALKTHROUGH.LevelZeroIncomplete": "You may not advance to Level 1 until you have finished all character creation steps!"
-  }
 }

@@ -232,11 +232,16 @@
       "CareerSkills": "Compétences de carrière",
       "SpecializationSkills": "Compétences de spécialisation",
       "remaining": "restantes",
+      "Chosen": "Chosen",
       "XPSpent": "XP dépensés",
       "XPAvailable": "XP disponibles",
+      "XPTooltip": "Shows experience spent out of the total allocated during character creation.",
       "GeneralSkills": "Compétences générales",
       "CombatSkills": "Compétences de combat",
-      "LoreSkills": "Compétences de savoir"
+      "LoreSkills": "Compétences de savoir",
+      "XPProgressLabel": "XP Progression",
+      "XPSpentShort": "XP Spent",
+      "ChosenShort": "Choisi"
     }
   },
   "ACTOR.AppliedDetailItem": "Applied the {name} {type} to {actor}.",
