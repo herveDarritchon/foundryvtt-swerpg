@@ -2888,7 +2888,11 @@ a.button.increase {
   /* Make the pip meter and right-side values stay aligned when label grows */
   /* Tone down the cyan on the right-side numeric indicators to reduce visual weight */
   /* Micro-labels under pips */
+  /* New: clearly visible used pip style (transparent with soft blue-gray outline) */
   /* Give active pips a subtle gradient to indicate "filled" state */
+  /* Slightly reduce the weight of the "remaining" numeric indicators and keep their cyan tone */
+  /* Ratio (chosen / total) positioned inline with pips for quick reading */
+  /* Add a small vertical separation between the two pip groups and the XP bar to create grouped visual units */
 }
 .swerpg .skills-xp-panel .label {
   /* Reduced slightly to improve balance between columns (was 220px) */
@@ -2922,10 +2926,45 @@ a.button.increase {
   margin-top: 4px;
   white-space: nowrap;
 }
-.swerpg .skills-xp-panel .meter.skill-pips .pip.active {
+.swerpg .skills-xp-panel .meter.skill-pips .pips .pip {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  margin: 0 3px;
+  display: inline-block;
+  background: transparent;
+  border: 1px solid transparent;
+  transition: border-color 160ms ease, box-shadow 160ms ease, transform 140ms ease;
+  box-sizing: border-box;
+  vertical-align: middle;
+}
+.swerpg .skills-xp-panel .meter.skill-pips .pip.used {
   background: linear-gradient(180deg, #003355 0%, #00aaff 100%);
   box-shadow: 0 0 8px rgba(0, 170, 255, 0.14);
   border-color: rgba(255, 255, 255, 0.06);
+}
+.swerpg .skills-xp-panel .meter.skill-pips .pips .pip.active {
+  background: transparent;
+  border: 1px solid rgba(102, 170, 255, 0.4);
+  /* soft blue-gray contour */
+  opacity: 0.95;
+}
+.swerpg .skills-xp-panel .skills-xp-panel .value.remaining {
+  color: #66ddee;
+  font-weight: 600;
+  font-size: 0.9rem;
+  /* ~90% visual scale */
+}
+.swerpg .skills-xp-panel .meter.skill-pips .pips-ratio {
+  margin-left: 0.5rem;
+  color: #bfeeff;
+  font-size: 0.9rem;
+  font-weight: 700;
+  align-self: center;
+  white-space: nowrap;
+}
+.swerpg .skills-xp-panel .skills-xp-panel .skill-row {
+  margin-bottom: 0.35rem;
 }
 /* Responsive tweak: allow labels to shrink on narrow screens but keep single-line where possible */
 @media (max-width: 720px) {
