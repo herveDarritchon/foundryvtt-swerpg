@@ -57,7 +57,7 @@ import JaugeFactory from "../../lib/jauges/jauge-factory.mjs";
  *
  * @property {string} id - Unique ID of the Motivation Item.
  * @property {string} name - Name of the Motivation.
- * @property {string} img - Image path used for the Motivation icon.
+ * @property {string} img - Image path used to render the Motivation icon.
  * @property {string} [cssClass] - Optional CSS class applied to the container (e.g., "highlighted", "disabled").
  */
 
@@ -269,7 +269,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
 
     /**
      * Filtre côté client la liste de talents affichée.
-     * @param {string} filter one of 'all'|'active'|'passive'|'specialization'
+     * @param {string} filter one of 'all'|'active'|'passive'|'ranked'
      */
     _filterTalents(filter) {
         const wrappers = this.element.querySelectorAll('.talent-card-wrapper');
@@ -286,10 +286,9 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
                 case 'passive':
                     show = tags.includes('passive');
                     break;
-                case 'specialization':
-                case 'spécialité':
-                    // Some talents have a category tag with specialization name; also check for 'specialization' text
-                    show = tags.includes('specialization') || tags.some(t => t.includes('special'));
+                case 'ranked':
+                    // Show ranked talents: accept exact 'ranked' tag OR any tag containing the word 'rank'
+                    show = tags.includes('ranked') || tags.some(t => t.includes('rank'));
                     break;
                 default:
                     show = true;

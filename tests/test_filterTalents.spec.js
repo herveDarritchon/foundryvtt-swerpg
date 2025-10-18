@@ -18,9 +18,9 @@ function _filterTalents(element, filter) {
       case 'passive':
         show = tags.includes('passive');
         break;
-      case 'specialization':
-      case 'spécialité':
-        show = tags.includes('specialization') || tags.some(t => t.includes('special'));
+      case 'ranked':
+        // Accepte le tag exact 'ranked' ou n'importe quel tag contenant la chaîne 'rank' (ex: 'Elite Ranked Forces')
+        show = tags.includes('ranked') || tags.some(t => t.includes('rank'));
         break;
       default:
         show = true;
@@ -50,7 +50,7 @@ describe('_filterTalents', () => {
   it('shows all when filter is all', () => {
     createWrapper('active');
     createWrapper('passive');
-    createWrapper('specialization');
+    createWrapper('ranked');
 
     root.querySelectorAll('.talent-card-wrapper').forEach(w => w.style.display = 'none');
 
@@ -79,28 +79,17 @@ describe('_filterTalents', () => {
     expect(passive.style.display).toBe('');
   });
 
-  it('filters specialization by keyword and accepts alias "spécialité"', () => {
-    const s1 = createWrapper('specialization');
-    const s2 = createWrapper('Elite Special Forces');
+  it('filters ranked talents by tag and accepts "ranked" or tags containing "rank"', () => {
+    const s1 = createWrapper('ranked');
+    const s2 = createWrapper('Elite Ranked Forces');
     const s3 = createWrapper('spécialité');
     const other = createWrapper('active');
 
-    _filterTalents(root, 'specialization');
+    _filterTalents(root, 'ranked');
 
     expect(s1.style.display).toBe('');
     expect(s2.style.display).toBe('');
-    // Note: the implementation matches the word 'special' or the tag 'specialization'.
-    // A tag containing the French accented word 'spécialité' does not match 'special',
-    // so it remains hidden for the 'specialization' filter.
-    expect(s3.style.display).toBe('none');
-    expect(other.style.display).toBe('none');
-
-    // alias with accent
-    root.querySelectorAll('.talent-card-wrapper').forEach(w => w.style.display = '');
-    _filterTalents(root, 'spécialité');
-
-    expect(s1.style.display).toBe('');
-    expect(s2.style.display).toBe('');
+    // A tag containing the French accented word 'spécialité' should NOT match 'ranked'
     expect(s3.style.display).toBe('none');
     expect(other.style.display).toBe('none');
   });
