@@ -1,22 +1,28 @@
 .talent-filters {
-  margin: 0 0 12px 0;
+  margin: 0 0 18px 0;
   .filters-body {
     .filter-buttons {
       display: flex;
-      gap: 10px;
+      gap: 12px;
+      flex-wrap: wrap;
       .filter-btn {
-        padding: 10px 16px;
-        border-radius: 8px;
+        padding: 10px 18px;
+        border-radius: 10px;
         background: transparent;
-        border: 1px solid fade(#00c6ff, 10%);
-        color: @holo-blue;
-        font-weight: 700;
+        border: 1px solid fade(@color-glow, 12%);
+        color: @color-glow;
+        font-weight: 800;
         letter-spacing: 1px;
+        text-transform: uppercase;
         cursor: pointer;
+        transition: all .15s ease-in-out;
+        box-shadow: none;
         &.active {
-          box-shadow: 0 0 12px fade(@holo-blue, 40%), inset 0 0 0 1px fade(#00c6ff, 20%);
-          background: linear-gradient(180deg, fade(#012, 10%), transparent);
+          box-shadow: 0 0 18px fade(@color-glow, 32%), inset 0 0 0 1px fade(@color-glow, 30%);
+          background: linear-gradient(180deg, fade(@color-glow, 6%), rgba(0,0,0,0.04));
+          transform: translateY(-1px);
         }
+        &:hover { transform: translateY(-2px); }
       }
     }
   }
@@ -25,63 +31,92 @@
 .talent-cards {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 16px;
 }
 
 .swerpg-talent-card {
-  border-radius: 8px;
-  padding: 14px;
-  border: 1px solid fade(@holo-blue, 20%);
-  box-shadow: 0 0 24px fade(@holo-blue, 8%);
+  border-radius: 12px;
+  padding: 16px;
+  border: 1px solid fade(@color-glow, 12%);
+  background: linear-gradient(180deg, rgba(0,0,0,0.18), rgba(0,0,0,0.06));
+  box-shadow: 0 6px 30px fade(@color-glow, 6%);
+  position: relative;
+  overflow: visible;
   .card-inner {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
   }
   .card-header {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: center;
+    gap: 12px;
+    .header-left { flex: 1 1 auto; }
     .talent-title {
       margin: 0;
-      font-size: 1.5rem;
-      color: @holo-blue;
-      font-weight: 800;
+      font-size: 1.6rem;
+      color: @color-glow;
+      font-weight: 900;
       letter-spacing: 1px;
+      text-transform: uppercase;
     }
     .card-tags {
       display: flex;
       gap: 8px;
       align-items: center;
+      flex-shrink: 0;
       .pill {
         padding: 6px 10px;
-        border-radius: 6px;
-        border: 1px solid fade(@holo-blue, 20%);
-        background: rgba(0,0,0,0.08);
-        color: @holo-blue;
-        font-weight: 700;
-        font-size: 0.85rem;
+        border-radius: 8px;
+        border: 1px solid fade(@color-glow, 18%);
+        background: rgba(0,0,0,0.06);
+        color: @color-glow;
+        font-weight: 800;
+        font-size: 0.76rem;
+        text-transform: uppercase;
+        letter-spacing: .8px;
       }
-      .rank { background: transparent; border-color: fade(@holo-blue,40%); }
+      .rank {
+        background: transparent;
+        border-color: fade(@color-glow,40%);
+        color: @color-glow;
+        padding: 6px 12px;
+      }
     }
   }
   .card-body {
     .talent-desc {
-      color: lighten(@holo-blue, 10%);
-      line-height: 1.35;
+      color: lighten(@color-glow, 12%);
+      line-height: 1.45;
+      font-size: 0.98rem;
       max-width: 100%;
+      white-space: pre-wrap;
     }
   }
   .card-footer {
     display:flex;
     justify-content: space-between;
     align-items:center;
-    .talent-origin { color: fade(@holo-blue,40%); font-weight:700; }
-    .talent-meta { display:flex; gap:10px; align-items:center; .cost { color:@holo-blue; font-weight:800; } }
+    gap: 12px;
+    .footer-left { flex: 1 1 auto; }
+    .talent-origin { color: fade(@color-glow,40%); font-weight:800; text-transform: uppercase; font-size: .78rem; }
+    .talent-meta { display:flex; gap:10px; align-items:center; flex-shrink:0;
+      .cost { color:@color-glow; font-weight:900; font-size: .95rem; }
+      .meta-delete { padding:6px 8px; border-radius:6px; background: transparent; color: fade(@color-glow,60%); border: 1px solid fade(@color-glow,8%); font-weight:700; cursor:pointer; transition: all .12s ease-in-out; }
+      .meta-delete:hover { box-shadow: 0 0 10px fade(@color-glow,16%); color:@color-glow; transform: translateY(-1px); }
+    }
   }
 }
 
 /* Tag-specific colors to match the requested design */
-.pill.tag-active { background: rgba(0,198,255,0.06); border-color: fade(@holo-blue,60%); color: @holo-blue; }
+.pill.tag-active { background: rgba(0,198,255,0.06); border-color: fade(@color-glow,60%); color: @color-glow; }
 .pill.tag-passive { background: rgba(255,179,64,0.06); border-color: rgba(255,179,64,0.6); color: rgba(255,179,64,0.95); }
 .pill.tag-free { background: rgba(0,200,120,0.04); border-color: rgba(0,200,120,0.5); color: rgba(0,200,120,0.95); }
+
+/* Small responsive tweaks */
+@media (max-width: 540px) {
+  .swerpg-talent-card { padding: 12px; }
+  .talent-filters .filter-btn { padding: 8px 12px; font-size: .85rem; }
+  .card-header .talent-title { font-size: 1.25rem; }
+}

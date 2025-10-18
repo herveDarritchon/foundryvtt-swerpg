@@ -3915,6 +3915,171 @@ a.button.increase {
 .defenses-wrapper .defense-bar-container .values.soak {
   color: #ff9900;
 }
+.talent-filters {
+  margin: 0 0 18px 0;
+}
+.talent-filters .filters-body .filter-buttons {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.talent-filters .filters-body .filter-buttons .filter-btn {
+  padding: 10px 18px;
+  border-radius: 10px;
+  background: transparent;
+  border: 1px solid rgba(0, 176, 255, 0.12);
+  color: #00b0ff;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+  box-shadow: none;
+}
+.talent-filters .filters-body .filter-buttons .filter-btn.active {
+  box-shadow: 0 0 18px rgba(0, 176, 255, 0.32), inset 0 0 0 1px rgba(0, 176, 255, 0.3);
+  background: linear-gradient(180deg, rgba(0, 176, 255, 0.06), rgba(0, 0, 0, 0.04));
+  transform: translateY(-1px);
+}
+.talent-filters .filters-body .filter-buttons .filter-btn:hover {
+  transform: translateY(-2px);
+}
+.talent-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.swerpg-talent-card {
+  border-radius: 12px;
+  padding: 16px;
+  border: 1px solid rgba(0, 176, 255, 0.12);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.06));
+  box-shadow: 0 6px 30px rgba(0, 176, 255, 0.06);
+  position: relative;
+  overflow: visible;
+}
+.swerpg-talent-card .card-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.swerpg-talent-card .card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+.swerpg-talent-card .card-header .header-left {
+  flex: 1 1 auto;
+}
+.swerpg-talent-card .card-header .talent-title {
+  margin: 0;
+  font-size: 1.6rem;
+  color: #00b0ff;
+  font-weight: 900;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.swerpg-talent-card .card-header .card-tags {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-shrink: 0;
+}
+.swerpg-talent-card .card-header .card-tags .pill {
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 176, 255, 0.18);
+  background: rgba(0, 0, 0, 0.06);
+  color: #00b0ff;
+  font-weight: 800;
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+.swerpg-talent-card .card-header .card-tags .rank {
+  background: transparent;
+  border-color: rgba(0, 176, 255, 0.4);
+  color: #00b0ff;
+  padding: 6px 12px;
+}
+.swerpg-talent-card .card-body .talent-desc {
+  color: #3dc3ff;
+  line-height: 1.45;
+  font-size: 0.98rem;
+  max-width: 100%;
+  white-space: pre-wrap;
+}
+.swerpg-talent-card .card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+.swerpg-talent-card .card-footer .footer-left {
+  flex: 1 1 auto;
+}
+.swerpg-talent-card .card-footer .talent-origin {
+  color: rgba(0, 176, 255, 0.4);
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: 0.78rem;
+}
+.swerpg-talent-card .card-footer .talent-meta {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-shrink: 0;
+}
+.swerpg-talent-card .card-footer .talent-meta .cost {
+  color: #00b0ff;
+  font-weight: 900;
+  font-size: 0.95rem;
+}
+.swerpg-talent-card .card-footer .talent-meta .meta-delete {
+  padding: 6px 8px;
+  border-radius: 6px;
+  background: transparent;
+  color: rgba(0, 176, 255, 0.6);
+  border: 1px solid rgba(0, 176, 255, 0.08);
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.12s ease-in-out;
+}
+.swerpg-talent-card .card-footer .talent-meta .meta-delete:hover {
+  box-shadow: 0 0 10px rgba(0, 176, 255, 0.16);
+  color: #00b0ff;
+  transform: translateY(-1px);
+}
+/* Tag-specific colors to match the requested design */
+.pill.tag-active {
+  background: rgba(0, 198, 255, 0.06);
+  border-color: rgba(0, 176, 255, 0.6);
+  color: #00b0ff;
+}
+.pill.tag-passive {
+  background: rgba(255, 179, 64, 0.06);
+  border-color: rgba(255, 179, 64, 0.6);
+  color: rgba(255, 179, 64, 0.95);
+}
+.pill.tag-free {
+  background: rgba(0, 200, 120, 0.04);
+  border-color: rgba(0, 200, 120, 0.5);
+  color: rgba(0, 200, 120, 0.95);
+}
+/* Small responsive tweaks */
+@media (max-width: 540px) {
+  .swerpg-talent-card {
+    padding: 12px;
+  }
+  .talent-filters .filter-btn {
+    padding: 8px 12px;
+    font-size: 0.85rem;
+  }
+  .card-header .talent-title {
+    font-size: 1.25rem;
+  }
+}
 /**
  * TODO: A collection of temporary rules that should be removed in V13
  */
