@@ -145,6 +145,8 @@
       /* Reduce cost size slightly */
       .cost { color:@color-glow; font-weight:900; font-size: .7rem; }
       .meta-delete { padding:6px 8px; border-radius:6px; background: transparent; color: fade(@color-glow,60%); border: 1px solid fade(@color-glow,8%); font-weight:700; cursor:pointer; transition: all .12s ease-in-out; }
+      /* Align SVG inside the delete button and add a small gap from the label */
+      .meta-delete .icon { display: inline-block; width: 14px; height: 14px; vertical-align: middle; margin-right: 6px; }
       .meta-delete:hover { box-shadow: 0 0 10px fade(@color-glow,16%); color:@color-glow; transform: translateY(-1px); }
     }
   }

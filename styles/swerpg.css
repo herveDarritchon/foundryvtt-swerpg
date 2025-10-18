@@ -4070,6 +4070,7 @@ a.button.increase {
   align-items: center;
   flex-shrink: 0;
   /* Reduce cost size slightly */
+  /* Align SVG inside the delete button and add a small gap from the label */
 }
 .swerpg-talent-card .card-footer .talent-meta .cost {
   color: #00b0ff;
@@ -4085,6 +4086,13 @@ a.button.increase {
   font-weight: 700;
   cursor: pointer;
   transition: all 0.12s ease-in-out;
+}
+.swerpg-talent-card .card-footer .talent-meta .meta-delete .icon {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  vertical-align: middle;
+  margin-right: 6px;
 }
 .swerpg-talent-card .card-footer .talent-meta .meta-delete:hover {
   box-shadow: 0 0 10px rgba(0, 176, 255, 0.16);
