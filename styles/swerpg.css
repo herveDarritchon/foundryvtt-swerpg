@@ -4007,12 +4007,15 @@ a.button.increase {
 .swerpg-talent-card .card-header .talent-title {
   margin: 0;
   /* Final tuning: smaller, lighter title with wrapping to avoid overflow */
-  font-size: 0.9rem;
-  color: #00b0ff;
-  font-weight: 700;
-  letter-spacing: 0.4px;
+  /* Rendre le titre plus discret : plus petit, plus léger et moins contrasté */
+  font-size: 0.78rem;
+  color: rgba(0, 176, 255, 0.64);
+  /* atténuation de la couleur pour réduire le contraste */
+  font-weight: 500;
+  letter-spacing: 0.2px;
   line-height: 1.15;
-  text-transform: uppercase;
+  text-transform: none;
+  /* éviter les MAJUSCULES qui alourdissent le visuel */
   display: block;
   white-space: normal;
   word-break: break-word;
@@ -4125,9 +4128,12 @@ a.button.increase {
     font-size: 0.85rem;
   }
   /* Keep mobile title size equal/smaller than desktop to avoid oversized headings */
+  /* Mobile: keep title compact and light */
   .card-header .talent-title {
-    font-size: 0.9rem;
-    font-weight: 700;
+    font-size: 0.76rem;
+    font-weight: 500;
+    color: rgba(0, 176, 255, 0.64);
+    text-transform: none;
   }
   /* When stacking cards vertically, let each card keep its natural height */
   .talent-cards {
