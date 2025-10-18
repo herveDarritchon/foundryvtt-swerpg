@@ -29,23 +29,48 @@
 }
 
 .talent-cards {
-  display: flex;
-  flex-direction: column;
+  /* Responsive grid: cards will flow side-by-side on wide viewports
+     and stack on narrow screens. Use auto-fit + minmax to create
+     fluid columns that adapt to available width. */
+  display: grid;
+  /* Slightly smaller min width to allow two columns on medium screens */
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  /* Make each grid row distribute available height so cards in the
+     same row can have equal heights. Combined with card height:100%
+     this produces consistent footers across cards. */
+  grid-auto-rows: 1fr;
   gap: 16px;
+  align-items: stretch;
+}
+
+/* Force a 2-column layout on large viewports to match the requested design */
+@media (min-width: 900px) {
+  .talent-cards { grid-template-columns: repeat(2, 1fr); }
 }
 
 .swerpg-talent-card {
+  /* Make the card a flex column so its inner content can stretch
+     and the footer can be pinned to the bottom for consistent heights */
+  display: flex;
+  flex-direction: column;
+  /* Force the card to fill the grid cell height created by grid-auto-rows */
+  height: 100%;
   border-radius: 12px;
-  padding: 16px;
+  /* Reduce padding for a denser, more harmonious two-column layout */
+  padding: 12px 14px;
   border: 1px solid fade(@color-glow, 12%);
   background: linear-gradient(180deg, rgba(0,0,0,0.18), rgba(0,0,0,0.06));
   box-shadow: 0 6px 30px fade(@color-glow, 6%);
   position: relative;
   overflow: visible;
   .card-inner {
+    /* Allow the inner area to grow so footer stays aligned */
     display: flex;
     flex-direction: column;
     gap: 12px;
+    flex: 1 1 auto;
+    /* Allow flex children to shrink properly inside the grid item */
+    min-height: 0;
   }
   .card-header {
     display: flex;
@@ -55,11 +80,16 @@
     .header-left { flex: 1 1 auto; }
     .talent-title {
       margin: 0;
-      font-size: 1.6rem;
+      /* Final tuning: smaller, lighter title with wrapping to avoid overflow */
+      font-size: 0.9rem;
       color: @color-glow;
-      font-weight: 900;
-      letter-spacing: 1px;
+      font-weight: 700;
+      letter-spacing: .4px;
+      line-height: 1.15;
       text-transform: uppercase;
+      display: block;
+      white-space: normal;
+      word-break: break-word;
     }
     .card-tags {
       display: flex;
@@ -67,13 +97,14 @@
       align-items: center;
       flex-shrink: 0;
       .pill {
-        padding: 6px 10px;
+        padding: 3px 6px;
         border-radius: 8px;
         border: 1px solid fade(@color-glow, 18%);
         background: rgba(0,0,0,0.06);
         color: @color-glow;
         font-weight: 800;
-        font-size: 0.76rem;
+        /* Slightly smaller pill text for harmony */
+        font-size: 0.56rem;
         text-transform: uppercase;
         letter-spacing: .8px;
       }
@@ -89,7 +120,8 @@
     .talent-desc {
       color: lighten(@color-glow, 12%);
       line-height: 1.45;
-      font-size: 0.98rem;
+      /* Slightly smaller description for compact two-column layout */
+      font-size: 0.8rem;
       max-width: 100%;
       white-space: pre-wrap;
     }
@@ -100,9 +132,10 @@
     align-items:center;
     gap: 12px;
     .footer-left { flex: 1 1 auto; }
-    .talent-origin { color: fade(@color-glow,40%); font-weight:800; text-transform: uppercase; font-size: .78rem; }
+    .talent-origin { color: fade(@color-glow,40%); font-weight:800; text-transform: uppercase; font-size: .54rem; }
     .talent-meta { display:flex; gap:10px; align-items:center; flex-shrink:0;
-      .cost { color:@color-glow; font-weight:900; font-size: .95rem; }
+      /* Reduce cost size slightly */
+      .cost { color:@color-glow; font-weight:900; font-size: .7rem; }
       .meta-delete { padding:6px 8px; border-radius:6px; background: transparent; color: fade(@color-glow,60%); border: 1px solid fade(@color-glow,8%); font-weight:700; cursor:pointer; transition: all .12s ease-in-out; }
       .meta-delete:hover { box-shadow: 0 0 10px fade(@color-glow,16%); color:@color-glow; transform: translateY(-1px); }
     }
@@ -118,5 +151,8 @@
 @media (max-width: 540px) {
   .swerpg-talent-card { padding: 12px; }
   .talent-filters .filter-btn { padding: 8px 12px; font-size: .85rem; }
-  .card-header .talent-title { font-size: 1.25rem; }
+  /* Keep mobile title size equal/smaller than desktop to avoid oversized headings */
+  .card-header .talent-title { font-size: 0.9rem; font-weight:700; }
+  /* When stacking cards vertically, let each card keep its natural height */
+  .talent-cards { grid-auto-rows: auto; }
 }

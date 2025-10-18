@@ -3945,13 +3945,35 @@ a.button.increase {
   transform: translateY(-2px);
 }
 .talent-cards {
-  display: flex;
-  flex-direction: column;
+  /* Responsive grid: cards will flow side-by-side on wide viewports
+     and stack on narrow screens. Use auto-fit + minmax to create
+     fluid columns that adapt to available width. */
+  display: grid;
+  /* Slightly smaller min width to allow two columns on medium screens */
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  /* Make each grid row distribute available height so cards in the
+     same row can have equal heights. Combined with card height:100%
+     this produces consistent footers across cards. */
+  grid-auto-rows: 1fr;
   gap: 16px;
+  align-items: stretch;
+}
+/* Force a 2-column layout on large viewports to match the requested design */
+@media (min-width: 900px) {
+  .talent-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 .swerpg-talent-card {
+  /* Make the card a flex column so its inner content can stretch
+     and the footer can be pinned to the bottom for consistent heights */
+  display: flex;
+  flex-direction: column;
+  /* Force the card to fill the grid cell height created by grid-auto-rows */
+  height: 100%;
   border-radius: 12px;
-  padding: 16px;
+  /* Reduce padding for a denser, more harmonious two-column layout */
+  padding: 12px 14px;
   border: 1px solid rgba(0, 176, 255, 0.12);
   background: linear-gradient(180deg, rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.06));
   box-shadow: 0 6px 30px rgba(0, 176, 255, 0.06);
@@ -3959,9 +3981,13 @@ a.button.increase {
   overflow: visible;
 }
 .swerpg-talent-card .card-inner {
+  /* Allow the inner area to grow so footer stays aligned */
   display: flex;
   flex-direction: column;
   gap: 12px;
+  flex: 1 1 auto;
+  /* Allow flex children to shrink properly inside the grid item */
+  min-height: 0;
 }
 .swerpg-talent-card .card-header {
   display: flex;
@@ -3974,11 +4000,16 @@ a.button.increase {
 }
 .swerpg-talent-card .card-header .talent-title {
   margin: 0;
-  font-size: 1.6rem;
+  /* Final tuning: smaller, lighter title with wrapping to avoid overflow */
+  font-size: 0.9rem;
   color: #00b0ff;
-  font-weight: 900;
-  letter-spacing: 1px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  line-height: 1.15;
   text-transform: uppercase;
+  display: block;
+  white-space: normal;
+  word-break: break-word;
 }
 .swerpg-talent-card .card-header .card-tags {
   display: flex;
@@ -3987,13 +4018,14 @@ a.button.increase {
   flex-shrink: 0;
 }
 .swerpg-talent-card .card-header .card-tags .pill {
-  padding: 6px 10px;
+  padding: 3px 6px;
   border-radius: 8px;
   border: 1px solid rgba(0, 176, 255, 0.18);
   background: rgba(0, 0, 0, 0.06);
   color: #00b0ff;
   font-weight: 800;
-  font-size: 0.76rem;
+  /* Slightly smaller pill text for harmony */
+  font-size: 0.56rem;
   text-transform: uppercase;
   letter-spacing: 0.8px;
 }
@@ -4006,7 +4038,8 @@ a.button.increase {
 .swerpg-talent-card .card-body .talent-desc {
   color: #3dc3ff;
   line-height: 1.45;
-  font-size: 0.98rem;
+  /* Slightly smaller description for compact two-column layout */
+  font-size: 0.8rem;
   max-width: 100%;
   white-space: pre-wrap;
 }
@@ -4023,18 +4056,19 @@ a.button.increase {
   color: rgba(0, 176, 255, 0.4);
   font-weight: 800;
   text-transform: uppercase;
-  font-size: 0.78rem;
+  font-size: 0.54rem;
 }
 .swerpg-talent-card .card-footer .talent-meta {
   display: flex;
   gap: 10px;
   align-items: center;
   flex-shrink: 0;
+  /* Reduce cost size slightly */
 }
 .swerpg-talent-card .card-footer .talent-meta .cost {
   color: #00b0ff;
   font-weight: 900;
-  font-size: 0.95rem;
+  font-size: 0.7rem;
 }
 .swerpg-talent-card .card-footer .talent-meta .meta-delete {
   padding: 6px 8px;
@@ -4076,8 +4110,14 @@ a.button.increase {
     padding: 8px 12px;
     font-size: 0.85rem;
   }
+  /* Keep mobile title size equal/smaller than desktop to avoid oversized headings */
   .card-header .talent-title {
-    font-size: 1.25rem;
+    font-size: 0.9rem;
+    font-weight: 700;
+  }
+  /* When stacking cards vertically, let each card keep its natural height */
+  .talent-cards {
+    grid-auto-rows: auto;
   }
 }
 /**
