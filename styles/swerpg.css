@@ -3958,11 +3958,17 @@ a.button.increase {
   gap: 16px;
   align-items: stretch;
 }
-/* Force a 2-column layout on large viewports to match the requested design */
-@media (min-width: 900px) {
-  .talent-cards {
-    grid-template-columns: repeat(2, 1fr);
-  }
+/* Ensure the wrapper produced by the template becomes the grid item
+   that stretches to the row height and lets the inner .swerpg-talent-card
+   fill it. This prevents card content from collapsing and keeps footers aligned. */
+.talent-card-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  /* Fill the grid cell height set by .talent-cards grid-auto-rows */
+  height: 100%;
+  /* Allow children to correctly shrink inside flex/grid */
+  min-height: 0;
 }
 .swerpg-talent-card {
   /* Make the card a flex column so its inner content can stretch
