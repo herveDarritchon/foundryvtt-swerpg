@@ -2826,6 +2826,96 @@ a.button.increase {
   top: 3px;
 }
 /* -------------------------------------------- */
+/*  Skills two-column layout and label sizing   */
+/* -------------------------------------------- */
+.swerpg .skills-wrapper .skills-two-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  align-items: start;
+  margin-top: 0.5rem;
+}
+.swerpg .skills-wrapper .skills-column {
+  background: transparent;
+  padding: 0.25rem 0.5rem;
+}
+.swerpg .skills-wrapper .skills-column h4 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
+  /* légèrement plus grand pour tenir sur une ligne */
+  font-weight: 600;
+  color: var(--color-header);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.swerpg .skills-wrapper .skills-column .skill {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0;
+}
+.swerpg .skills-wrapper .skills-column .skill .name {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: 0;
+  /* pour permettre ellipsis */
+}
+.swerpg .skills-wrapper .skills-column .skill .name .label {
+  font-size: 0.95rem;
+  /* augmenter la taille des labels */
+  font-weight: 600;
+  color: var(--color-primary);
+  white-space: nowrap;
+  /* forcer sur une seule ligne */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
+  max-width: 100%;
+}
+.swerpg .skills-wrapper .skills-column .skill .name .abbreviation {
+  font-size: 0.8rem;
+  color: var(--color-secondary);
+}
+.swerpg .skills-wrapper .skills-column .skill .pips {
+  margin-left: auto;
+  display: flex;
+  gap: 0.25rem;
+}
+/* Fix: prevent XP/Skills panel labels from wrapping and increase their available width */
+.swerpg .skills-xp-panel {
+  /* Make the pip meter and right-side values stay aligned when label grows */
+}
+.swerpg .skills-xp-panel .label {
+  /* Allow more room for long localized strings like "Compétences de carrière" */
+  min-width: 220px;
+  width: auto;
+  white-space: nowrap;
+  overflow: visible;
+  text-overflow: clip;
+  color: var(--color-secondary);
+}
+.swerpg .skills-xp-panel .meter,
+.swerpg .skills-xp-panel .value {
+  flex: 1 1 auto;
+  text-align: end;
+}
+/* Responsive tweak: allow labels to shrink on narrow screens but keep single-line where possible */
+@media (max-width: 720px) {
+  .swerpg .skills-xp-panel .label {
+    min-width: 110px;
+    white-space: normal;
+    /* allow wrapping if absolutely necessary on very small screens */
+  }
+}
+/* Responsive: stack columns on narrow screens */
+@media (max-width: 900px) {
+  .swerpg .skills-wrapper .skills-two-columns {
+    grid-template-columns: 1fr;
+  }
+}
+/* -------------------------------------------- */
 /*  Chat Cards                                  */
 /* -------------------------------------------- */
 .swerpg.chat-message {

@@ -163,6 +163,7 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
             resistances: this.#prepareResistances(),
             //resources: this.#prepareResources(),
             skillCategories: this.#prepareSkills(),
+            skills: this.#prepareSkills(), // Alias ajouté pour templates qui attendent `skills` (career / specialization split)
             source: this.document.toObject(),
             spells: this.#prepareSpells(iconicSpells),
             tabGroups,
