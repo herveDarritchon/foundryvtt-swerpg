@@ -806,6 +806,39 @@ input[type=range] {
   font-family: monospace;
   font-size: 12px;
 }
+.tab.skills .pips {
+  /* Provide a per-pip color variable so hover glow matches pip type */
+  /* Changed to softer tones so the glow n'est pas trop choquant */
+  /* Slightly stronger, still subdued, when the pip itself is trained/untrained (hover only) */
+  /* Keyboard focus ring for accessibility */
+  /* Ensure active pips that are NOT hovered remain visually unchanged */
+}
+.tab.skills .pips .pip.trained {
+  --pip-glow: rgba(0, 120, 170, 0.42);
+  --pip-glow-strong: rgba(0, 120, 170, 0.62);
+}
+.tab.skills .pips .pip.untrained {
+  --pip-glow: rgba(200, 150, 60, 0.3);
+  --pip-glow-strong: rgba(220, 170, 80, 0.52);
+}
+.tab.skills .pips .pip.trained:hover,
+.tab.skills .pips .pip.trained:focus,
+.tab.skills .pips .pip.trained:focus-visible,
+.tab.skills .pips .pip.untrained:hover,
+.tab.skills .pips .pip.untrained:focus,
+.tab.skills .pips .pip.untrained:focus-visible {
+  transform: scale(1.08);
+  filter: drop-shadow(0 0 10px var(--pip-glow-strong, var(--pip-glow))) drop-shadow(0 0 3px rgba(0, 0, 0, 0.25));
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.06);
+  z-index: 4;
+}
+.tab.skills .pips .pip:focus-visible {
+  box-shadow: 0 0 0 3px rgba(77, 200, 255, 0.08), 0 0 8px rgba(77, 200, 255, 0.06);
+  transform: scale(1.06);
+}
+.tab.skills .pips .pip.active {
+  /* intentionally empty: do not alter transform/filter/opacity by default */
+}
 @keyframes fade-in-holo {
   from {
     opacity: 0;
@@ -2208,7 +2241,6 @@ a.button.increase {
   margin: 0;
   font-family: var(--font-h1);
   color: #66ccff;
-  text-transform: uppercase;
   letter-spacing: 2px;
   font-size: 0.95rem;
   padding: 0.15rem 0.5rem;

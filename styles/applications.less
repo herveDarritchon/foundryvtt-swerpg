@@ -305,3 +305,39 @@
     }
   }
 }
+
+// Hover / focus animation for skill pips
+// Applies to both the main Skills tab pips and the XP panel pips
+.tab.skills {
+  .pips {
+    /* Provide a per-pip color variable so hover glow matches pip type */
+    /* Changed to softer tones so the glow n'est pas trop choquant */
+    .pip.trained { --pip-glow: rgba(0,120,170,0.42); --pip-glow-strong: rgba(0,120,170,0.62); }
+    .pip.untrained { --pip-glow: rgba(200,150,60,0.30); --pip-glow-strong: rgba(220,170,80,0.52); }
+
+    /* Slightly stronger, still subdued, when the pip itself is trained/untrained (hover only) */
+    .pip.trained:hover,
+    .pip.trained:focus,
+    .pip.trained:focus-visible,
+    .pip.untrained:hover,
+    .pip.untrained:focus,
+    .pip.untrained:focus-visible {
+      transform: scale(1.08);
+      filter: drop-shadow(0 0 10px var(--pip-glow-strong, var(--pip-glow))) drop-shadow(0 0 3px rgba(0,0,0,0.25));
+      box-shadow: 0 0 12px rgba(0,0,0,0.06);
+      z-index: 4;
+    }
+
+    /* Keyboard focus ring for accessibility */
+    .pip:focus-visible {
+      box-shadow: 0 0 0 3px rgba(77,200,255,0.08), 0 0 8px rgba(77,200,255,0.06);
+      transform: scale(1.06);
+    }
+
+    /* Ensure active pips that are NOT hovered remain visually unchanged */
+    .pip.active {
+      /* intentionally empty: do not alter transform/filter/opacity by default */
+    }
+  }
+}
+
