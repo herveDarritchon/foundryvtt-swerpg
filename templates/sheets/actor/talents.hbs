@@ -28,27 +28,32 @@
         </div>
     </div>
 
-    {{#each talents as |talent s|}}
-        <div class="line-item {{talent.cssClass}}" data-item-id="{{talent.id}}" data-delete-action="deleteTalent"
-             data-item-type="talent">
-            <div class="title">
-                <img class="icon" src="{{talent.img}}" alt="{{talent.name}}">
-                <h4 class="item-header">{{talent.name}}</h4>
-                <div class="tags">
-                    {{#each talent.tags as |tag i|}}
-                        <span class="tag {{tag.cssClass}}" data-tooltip="{{tag.tooltip}}">{{tag.label}}</span>
-                    {{/each}}
-                </div>
-            </div>
-            <div class="value">{{talent.rank}}</div>
-            <div class="controls">
-                {{#unless talent.isFree}}
-                    <a class="button icon fa-solid fa-trash" data-action="itemDelete"
-                       data-tooltip="Delete Talent"></a>
-                {{/unless}}
-                <a class="button icon fa-solid fa-edit" data-action="itemEdit"
-                   data-tooltip="Edit Talent"></a>
+    {{!-- Barre de filtres pour les talents --}}
+    <div class="talent-filters swerpg-holo-panel">
+        <div class="panel-body filters-body">
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-action="talentFilter" data-filter="all">TOUS</button>
+                <button class="filter-btn" data-action="talentFilter" data-filter="active">ACTIFS</button>
+                <button class="filter-btn" data-action="talentFilter" data-filter="passive">PASSIFS</button>
+                <button class="filter-btn" data-action="talentFilter" data-filter="specialization">SPÉCIALITÉ</button>
             </div>
         </div>
-    {{/each}}
+    </div>
+
+    {{!-- Conteneur de cartes de talents --}}
+    <div class="talent-cards">
+        {{#each talents as |talent s|}}
+            {{!-- Construire un attribut data-tags (labels séparés par des virgules) pour le filtrage côté client --}}
+            <div class="talent-card-wrapper" data-item-id="{{talent.id}}" data-tags="{{#each talent.tags}}{{label}}{{#unless @last}},{{/unless}}{{/each}}">
+                {{> "systems/swerpg/templates/sheets/partials/talent-card.hbs" talent=talent}}
+            </div>
+        {{/each}}
+    </div>
+
+    <div class="talent-actions swerpg-holo-panel">
+        <div class="panel-body">
+            <button class="button large" data-action="talentAdd">+ AJOUTER UN TALENT</button>
+        </div>
+    </div>
+
 </section>

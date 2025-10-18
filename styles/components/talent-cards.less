@@ -1,0 +1,87 @@
+.talent-filters {
+  margin: 0 0 12px 0;
+  .filters-body {
+    .filter-buttons {
+      display: flex;
+      gap: 10px;
+      .filter-btn {
+        padding: 10px 16px;
+        border-radius: 8px;
+        background: transparent;
+        border: 1px solid fade(#00c6ff, 10%);
+        color: @holo-blue;
+        font-weight: 700;
+        letter-spacing: 1px;
+        cursor: pointer;
+        &.active {
+          box-shadow: 0 0 12px fade(@holo-blue, 40%), inset 0 0 0 1px fade(#00c6ff, 20%);
+          background: linear-gradient(180deg, fade(#012, 10%), transparent);
+        }
+      }
+    }
+  }
+}
+
+.talent-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.swerpg-talent-card {
+  border-radius: 8px;
+  padding: 14px;
+  border: 1px solid fade(@holo-blue, 20%);
+  box-shadow: 0 0 24px fade(@holo-blue, 8%);
+  .card-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    .talent-title {
+      margin: 0;
+      font-size: 1.5rem;
+      color: @holo-blue;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+    .card-tags {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      .pill {
+        padding: 6px 10px;
+        border-radius: 6px;
+        border: 1px solid fade(@holo-blue, 20%);
+        background: rgba(0,0,0,0.08);
+        color: @holo-blue;
+        font-weight: 700;
+        font-size: 0.85rem;
+      }
+      .rank { background: transparent; border-color: fade(@holo-blue,40%); }
+    }
+  }
+  .card-body {
+    .talent-desc {
+      color: lighten(@holo-blue, 10%);
+      line-height: 1.35;
+      max-width: 100%;
+    }
+  }
+  .card-footer {
+    display:flex;
+    justify-content: space-between;
+    align-items:center;
+    .talent-origin { color: fade(@holo-blue,40%); font-weight:700; }
+    .talent-meta { display:flex; gap:10px; align-items:center; .cost { color:@holo-blue; font-weight:800; } }
+  }
+}
+
+/* Tag-specific colors to match the requested design */
+.pill.tag-active { background: rgba(0,198,255,0.06); border-color: fade(@holo-blue,60%); color: @holo-blue; }
+.pill.tag-passive { background: rgba(255,179,64,0.06); border-color: rgba(255,179,64,0.6); color: rgba(255,179,64,0.95); }
+.pill.tag-free { background: rgba(0,200,120,0.04); border-color: rgba(0,200,120,0.5); color: rgba(0,200,120,0.95); }

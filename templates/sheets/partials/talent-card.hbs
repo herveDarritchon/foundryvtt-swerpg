@@ -1,0 +1,34 @@
+<article class="swerpg-talent-card swerpg-holo-panel {{talent.cssClass}}" data-item-id="{{talent.id}}">
+    <div class="card-inner">
+        <header class="card-header">
+            <h3 class="talent-title">{{talent.name}}</h3>
+            <div class="card-tags">
+                {{#each talent.tags as |tag|}}
+                    <span class="pill {{tag.cssClass}}">{{tag.label}}</span>
+                {{/each}}
+                {{#if talent.rank}}
+                    <span class="pill rank">RANG {{talent.rank}}</span>
+                {{/if}}
+            </div>
+        </header>
+
+        <div class="card-body">
+            {{#if talent.description}}
+                <div class="talent-desc">{{{talent.description}}}</div>
+            {{else}}
+                <div class="talent-desc">—</div>
+            {{/if}}
+        </div>
+
+        <footer class="card-footer">
+            <div class="talent-origin">{{#if talent.origin}}&lt;{{talent.origin}}&gt;{{/if}}</div>
+            <div class="talent-meta">
+                {{#if talent.cost}}<span class="cost">{{talent.cost}} XP</span>{{/if}}
+                {{#unless talent.isFree}}
+                    <button class="button tiny" data-action="itemDelete" title="Supprimer">Suppr</button>
+                {{/unless}}
+            </div>
+        </footer>
+    </div>
+</article>
+

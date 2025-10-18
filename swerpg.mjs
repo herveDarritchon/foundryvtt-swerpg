@@ -553,12 +553,46 @@ async function preloadHandlebarsTemplates() {
         `systems/${SYSTEM.id}/templates/dice/partials/standard-check-roll.hbs`,
         `systems/${SYSTEM.id}/templates/dice/partials/standard-check-details.hbs`,
 
-        // Sheet Templates
-        `systems/${SYSTEM.id}/templates/sheets/partials/talent-summary.hbs`,
-        `systems/${SYSTEM.id}/templates/sheets/partials/skill-modifier-tag.hbs`,
+        // Sheet Partials (preload whole partials folder to be safe)
+        `systems/${SYSTEM.id}/templates/sheets/partials/ancestry-config.hbs`,
+        `systems/${SYSTEM.id}/templates/sheets/partials/archetype-config.hbs`,
+        `systems/${SYSTEM.id}/templates/sheets/partials/armor-config.hbs`,
+        `systems/${SYSTEM.id}/templates/sheets/partials/background-config.hbs`,
+        `systems/${SYSTEM.id}/templates/sheets/partials/career-config.hbs`,
         `systems/${SYSTEM.id}/templates/sheets/partials/character-skill.hbs`,
+        `systems/${SYSTEM.id}/templates/sheets/partials/gear-config.hbs`,
+        `systems/${SYSTEM.id}/templates/sheets/partials/included-action.hbs`,
+        `systems/${SYSTEM.id}/templates/sheets/partials/included-talent.hbs`,
+        `systems/${SYSTEM.id}/templates/sheets/partials/item-actions.hbs`,
+        `systems/${SYSTEM.id}/templates/sheets/partials/item-description-advanced.hbs`,
+        `systems/${SYSTEM.id}/templates/sheets/partials/item-description.hbs`,
+        `systems/${SYSTEM.id}/templates/sheets/partials/item-header.hbs`,
+        `systems/${SYSTEM.id}/templates/sheets/partials/item-hooks.hbs`,
+        `systems/${SYSTEM.id}/templates/sheets/partials/obligation-config.hbs`,
+        `systems/${SYSTEM.id}/templates/sheets/partials/origin-config.hbs`,
+        `systems/${SYSTEM.id}/templates/sheets/partials/skill-modifier-tag.hbs`,
+        `systems/${SYSTEM.id}/templates/sheets/partials/specialization-config.hbs`,
+        `systems/${SYSTEM.id}/templates/sheets/partials/species-config.hbs`,
+        `systems/${SYSTEM.id}/templates/sheets/partials/spell-config.hbs`,
+        `systems/${SYSTEM.id}/templates/sheets/partials/talent-card.hbs`,
+        `systems/${SYSTEM.id}/templates/sheets/partials/talent-config.hbs`,
+        `systems/${SYSTEM.id}/templates/sheets/partials/talent-summary.hbs`,
+        `systems/${SYSTEM.id}/templates/sheets/partials/taxonomy-config.hbs`,
+        `systems/${SYSTEM.id}/templates/sheets/partials/weapon-config.hbs`,
     ];
-    return foundry.applications.handlebars.loadTemplates(templatePaths);
+    // Await loading so we can log diagnostics in the browser console during init
+    const templates = await loadTemplates(templatePaths);
+    // Diagnostic: confirm which partials were requested and which are registered.
+    // Inspect Handlebars.partials (may vary by Foundry version) and foundry handlebar registry
+    try {
+        const partials = Handlebars && Handlebars.partials ? Object.keys(Handlebars.partials) : [];
+        console.debug("Swerpg | preloadHandlebarsTemplates requested:", templatePaths);
+        console.debug("Swerpg | Handlebars.partials registered:", partials);
+        if (foundry?.applications?.handlebars?.templates) console.debug("Swerpg | foundry.templates:", Object.keys(foundry.applications.handlebars.templates));
+    } catch (err) {
+        console.debug("Swerpg | preloadHandlebarsTemplates diagnostic failed:", err);
+    }
+    return templates;
 }
 
 /**

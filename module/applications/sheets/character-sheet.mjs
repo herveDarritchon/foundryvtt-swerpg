@@ -246,9 +246,56 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
                 return this.actor.rollSkill(target.closest(".skill").dataset.skill, {dialog: true});
             case "talentTree":
                 return this.actor.toggleTalentTree();
+            case "talentFilter": {
+                const filter = target.dataset.filter;
+                // Update button active state
+                const container = this.element.querySelector('.talent-filters');
+                if (container) {
+                    container.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                }
+                target.classList.add('active');
+                this._filterTalents(filter);
+                break;
+            }
+            case "talentAdd": {
+                // Create a minimal talent item for the actor; caller can edit after
+                await this.actor.createEmbeddedDocuments('Item', [{ name: game.i18n.localize('ADD_TALENT') || 'Nouvel Talent', type: 'talent' }]);
+                break;
+            }
             // case "talentReset":
             //   return this.actor.resetTalents();
         }
+    }
+
+    /**
+     * Filtre côté client la liste de talents affichée.
+     * @param {string} filter one of 'all'|'active'|'passive'|'specialization'
+     */
+    _filterTalents(filter) {
+        const wrappers = this.element.querySelectorAll('.talent-card-wrapper');
+        wrappers.forEach(w => {
+            const tags = (w.dataset.tags || '').toLowerCase().split(',').map(s => s.trim());
+            let show = true;
+            switch (filter) {
+                case 'all':
+                    show = true;
+                    break;
+                case 'active':
+                    show = tags.includes('active');
+                    break;
+                case 'passive':
+                    show = tags.includes('passive');
+                    break;
+                case 'specialization':
+                case 'spécialité':
+                    // Some talents have a category tag with specialization name; also check for 'specialization' text
+                    show = tags.includes('specialization') || tags.some(t => t.includes('special'));
+                    break;
+                default:
+                    show = true;
+            }
+            w.style.display = show ? '' : 'none';
+        });
     }
 
     /* -------------------------------------------- */
@@ -533,6 +580,11 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
     #buildTalentDisplayData(item) {
         const tags = this.#buildTags(item);
 
+        // Description can be stored in different shapes; fallback to empty string
+        const description = item.system?.description || item.system?.description?.public || "";
+        const origin = item.system?.category || item.system?.origin || "";
+        const cost = item.system?.rank?.cost ?? item.system?.cost ?? null;
+
         return {
             id: item.id,
             name: item.name,
@@ -540,7 +592,10 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
             isFree: item.system.isFree,
             cssClass: item.system.disabled ? "disabled" : "",
             tags,
-            rank: "-"
+            rank: "-",
+            description,
+            origin,
+            cost
         };
     }
 
@@ -600,6 +655,10 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
             // Exemple de génération de tags — à adapter à ton système
             const tags = this.#buildTags(maxRankTalent); // ← Ajoute ici une logique si nécessaire
 
+            const description = maxRankTalent.system?.description || maxRankTalent.system?.description?.public || "";
+            const origin = maxRankTalent.system?.category || maxRankTalent.system?.origin || "";
+            const cost = maxRankTalent.system?.rank?.cost ?? maxRankTalent.system?.cost ?? null;
+
             return {
                 id: maxRankTalent.id,
                 name: maxRankTalent.name,
@@ -607,7 +666,10 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
                 isFree: maxRankTalent.system.isFree,
                 cssClass: maxRankTalent.system.disabled ? "disabled" : "",
                 tags,
-                rank: maxRankTalent.system.rank.idx
+                rank: maxRankTalent.system.rank?.idx ?? maxRankTalent.system?.rank ?? "-",
+                description,
+                origin,
+                cost
             };
         });
     }
