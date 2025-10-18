@@ -35,8 +35,8 @@
                 <div class="row xp-row">
                     <div class="label">{{localize "ACTOR.FREE_SKILLS.XPSpent"}}</div>
                     <div class="meter xp-bar" title="{{progression.experience.spent}} / {{progression.experience.total}}"
-                         style="--xp-percent: {{progression.experience.percent}};">
-                        <div class="xp-fill"></div>
+                         style="--xp-percent: {{progression.experience.remainingPercent}};">
+                        <div class="xp-fill"><span class="xp-fill-text">{{progression.experience.available}}</span></div>
                     </div>
                     <div class="value xp-numbers">{{progression.experience.spent}} / {{progression.experience.total}}</div>
                 </div>

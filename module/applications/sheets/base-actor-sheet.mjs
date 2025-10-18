@@ -251,8 +251,11 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
         let pct = 0;
         if (total > 0) pct = Math.round((spent / total) * 100);
         pct = Math.max(0, Math.min(100, pct));
+        // percent = proportion of XP spent (for compatibility)
         experience.percent = `${pct}%`;
-        return experience;
+        const remainingPercent = Math.max(0, Math.min(100, 100 - pct));
+        experience.remainingPercent = `${remainingPercent}%`;
+         return experience;
     }
 
     /**

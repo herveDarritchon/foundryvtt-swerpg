@@ -2915,6 +2915,45 @@ a.button.increase {
     grid-template-columns: 1fr;
   }
 }
+/* XP Bar Styles */
+.meter.xp-bar {
+  flex: 1 1 360px;
+  height: 14px;
+  background: linear-gradient(90deg, rgba(0, 170, 255, 0.08), rgba(0, 0, 0, 0.12));
+  border-radius: 8px;
+  padding: 2px;
+  border: 1px solid rgba(0, 170, 255, 0.12);
+  position: relative;
+  overflow: hidden;
+}
+.meter.xp-bar .xp-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: var(--xp-percent, 40%);
+  background: linear-gradient(90deg, #00aaff 0%, #003355 100%);
+  box-shadow: 0 0 12px rgba(0, 170, 255, 0.22);
+  transition: width 450ms cubic-bezier(0.2, 0.9, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text);
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-shadow: 0 0 4px rgba(0, 0, 0, 0.6);
+}
+.meter.xp-bar:hover .xp-fill {
+  filter: brightness(1.1) saturate(1.1);
+  transform: translateZ(0);
+}
+.meter.xp-bar .xp-fill-text {
+  padding: 0 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: inherit;
+}
 /* -------------------------------------------- */
 /*  Chat Cards                                  */
 /* -------------------------------------------- */
