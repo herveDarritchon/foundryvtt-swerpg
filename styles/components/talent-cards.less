@@ -1,10 +1,13 @@
 .talent-filters {
   margin: 0 0 18px 0;
+
   .filters-body {
     .filter-buttons {
       display: flex;
       gap: 12px;
       flex-wrap: wrap;
+      margin-left: 1rem;
+
       .filter-btn {
         padding: 10px 18px;
         border-radius: 10px;
@@ -17,12 +20,16 @@
         cursor: pointer;
         transition: all .15s ease-in-out;
         box-shadow: none;
+
         &.active {
           box-shadow: 0 0 18px fade(@color-glow, 32%), inset 0 0 0 1px fade(@color-glow, 30%);
-          background: linear-gradient(180deg, fade(@color-glow, 6%), rgba(0,0,0,0.04));
+          background: linear-gradient(180deg, fade(@color-glow, 6%), rgba(0, 0, 0, 0.04));
           transform: translateY(-1px);
         }
-        &:hover { transform: translateY(-2px); }
+
+        &:hover {
+          transform: translateY(-2px);
+        }
       }
     }
   }
@@ -69,10 +76,11 @@
   /* Reduce padding for a denser, more harmonious two-column layout */
   padding: 12px 14px;
   border: 1px solid fade(@color-glow, 12%);
-  background: linear-gradient(180deg, rgba(0,0,0,0.18), rgba(0,0,0,0.06));
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.06));
   box-shadow: 0 6px 30px fade(@color-glow, 6%);
   position: relative;
   overflow: visible;
+
   .card-inner {
     /* Allow the inner area to grow so footer stays aligned */
     display: flex;
@@ -82,11 +90,13 @@
     /* Allow flex children to shrink properly inside the grid item */
     min-height: 0;
   }
+
   .card-header {
     display: flex;
     justify-content: space-between;
     align-items: flex-start; /* tags are now below the title so align to start */
     gap: 12px;
+
     .header-left {
       flex: 1 1 auto;
       /* Make the left column a vertical stack: title then tags */
@@ -94,6 +104,7 @@
       flex-direction: column;
       align-items: flex-start;
     }
+
     .talent-title {
       margin: 0;
       /* Force the title to a single line with ellipsis */
@@ -109,6 +120,7 @@
       text-overflow: ellipsis;
       max-width: 100%;
     }
+
     .card-tags {
       /* Tags should sit on their own line under the title */
       margin-top: 6px;
@@ -117,12 +129,13 @@
       align-items: center;
       flex-wrap: wrap;
       flex-shrink: 0;
+
       .pill {
         /* Smaller, denser pills as requested */
         padding: 2px 6px;
         border-radius: 6px;
         border: 1px solid fade(@color-glow, 18%);
-        background: rgba(0,0,0,0.04);
+        background: rgba(0, 0, 0, 0.04);
         color: @color-glow;
         font-weight: 800;
         font-size: 0.48rem; /* reduced size */
@@ -139,17 +152,19 @@
         overflow: hidden;
         text-overflow: ellipsis;
       }
+
       /* Style spécifique pour le pill "RANG" afin qu'il soit distinct du tag-passive */
+
       .rank {
         /* Couleur dorée pour distinguer le rang */
-        background: rgba(245,197,66,0.12); /* #F5C542 à 12% */
-        border-color: rgba(245,197,66,0.28);
-        color: rgba(245,197,66,0.95);
+        background: rgba(245, 197, 66, 0.12); /* #F5C542 à 12% */
+        border-color: rgba(245, 197, 66, 0.28);
+        color: rgba(245, 197, 66, 0.95);
         /* Taille unifiée avec .pill */
         padding: 2px 6px;
         font-size: 0.48rem;
         font-weight: 800;
-        box-shadow: 0 0 10px rgba(245,197,66,0.08);
+        box-shadow: 0 0 10px rgba(245, 197, 66, 0.08);
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -163,6 +178,7 @@
       }
     }
   }
+
   .card-body {
     .talent-desc {
       color: lighten(@color-glow, 12%);
@@ -173,20 +189,63 @@
       white-space: pre-wrap;
     }
   }
+
   .card-footer {
-    display:flex;
+    display: flex;
     justify-content: space-between;
-    align-items:center;
+    align-items: center;
     gap: 12px;
-    .footer-left { flex: 1 1 auto; }
-    .talent-origin { color: fade(@color-glow,40%); font-weight:800; text-transform: uppercase; font-size: .54rem; }
-    .talent-meta { display:flex; gap:10px; align-items:center; flex-shrink:0;
+
+    .footer-left {
+      flex: 1 1 auto;
+    }
+
+    .talent-origin {
+      color: fade(@color-glow, 40%);
+      font-weight: 800;
+      text-transform: uppercase;
+      font-size: .54rem;
+    }
+
+    .talent-meta {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-shrink: 0;
       /* Reduce cost size slightly */
-      .cost { color:@color-glow; font-weight:900; font-size: .7rem; }
-      .meta-delete { padding:6px 8px; border-radius:6px; background: transparent; color: fade(@color-glow,60%); border: 1px solid fade(@color-glow,8%); font-weight:700; cursor:pointer; transition: all .12s ease-in-out; }
+
+      .cost {
+        color: @color-glow;
+        font-weight: 900;
+        font-size: .7rem;
+      }
+
+      .meta-delete {
+        padding: 6px 8px;
+        border-radius: 6px;
+        background: transparent;
+        color: fade(@color-glow, 60%);
+        border: 1px solid fade(@color-glow, 8%);
+        font-weight: 700;
+        cursor: pointer;
+        transition: all .12s ease-in-out;
+      }
+
       /* Align SVG inside the delete button and add a small gap from the label */
-      .meta-delete .icon { display: inline-block; width: 14px; height: 14px; vertical-align: middle; margin-right: 6px; }
-      .meta-delete:hover { box-shadow: 0 0 10px fade(@color-glow,16%); color:@color-glow; transform: translateY(-1px); }
+
+      .meta-delete .icon {
+        display: inline-block;
+        width: 14px;
+        height: 14px;
+        vertical-align: middle;
+        margin-right: 6px;
+      }
+
+      .meta-delete:hover {
+        box-shadow: 0 0 10px fade(@color-glow, 16%);
+        color: @color-glow;
+        transform: translateY(-1px);
+      }
     }
   }
 }
@@ -198,18 +257,21 @@
   color: var(--talent-color-active) !important;
   box-shadow: 0 0 14px var(--talent-shadow-active) !important;
 }
+
 .swerpg-talent-card .card-header .card-tags .pill.tag-passive {
   background: var(--talent-bg-passive) !important;
   border-color: var(--talent-border-passive) !important;
   color: var(--talent-color-passive) !important;
   box-shadow: 0 0 12px var(--talent-shadow-passive) !important;
 }
+
 .swerpg-talent-card .card-header .card-tags .pill.tag-free {
   background: var(--talent-bg-free) !important;
   border-color: var(--talent-border-free) !important;
   color: var(--talent-color-free) !important;
   box-shadow: 0 0 12px var(--talent-shadow-free) !important;
 }
+
 /* Nouveau: style violet pour le tag "ranked" */
 .swerpg-talent-card .card-header .card-tags .pill.tag-ranked,
 .swerpg-talent-card .card-header .card-tags .pill.ranked {
@@ -227,6 +289,7 @@
   box-shadow: 0 0 28px var(--talent-shadow-active-hover) !important;
   border-width: 1px !important;
 }
+
 .swerpg-talent-card .card-header .card-tags .pill.tag-passive:hover,
 .swerpg-talent-card .card-header .card-tags .pill.tag-passive:focus {
   transform: translateY(-1px) !important;
@@ -234,6 +297,7 @@
   box-shadow: 0 0 28px var(--talent-shadow-passive-hover) !important;
   border-width: 1px !important;
 }
+
 .swerpg-talent-card .card-header .card-tags .pill.tag-free:hover,
 .swerpg-talent-card .card-header .card-tags .pill.tag-free:focus {
   transform: translateY(-1px) !important;
@@ -241,6 +305,7 @@
   box-shadow: 0 0 28px var(--talent-shadow-free-hover) !important;
   border-width: 1px !important;
 }
+
 /* Hover pour ranked */
 .swerpg-talent-card .card-header .card-tags .pill.tag-ranked:hover,
 .swerpg-talent-card .card-header .card-tags .pill.tag-ranked:focus,
@@ -256,56 +321,60 @@
 .talent-filters .filter-btn[data-filter="active"].active {
   color: var(--talent-color-active);
   border-color: var(--talent-border-active);
-  background: linear-gradient(180deg, var(--talent-bg-active), rgba(0,0,0,0.06));
-  box-shadow: 0 0 28px var(--talent-shadow-active), inset 0 0 0 1px rgba(218,23,23,0.10);
+  background: linear-gradient(180deg, var(--talent-bg-active), rgba(0, 0, 0, 0.06));
+  box-shadow: 0 0 28px var(--talent-shadow-active), inset 0 0 0 1px rgba(218, 23, 23, 0.10);
 }
+
 .talent-filters .filter-btn[data-filter="active"]:hover,
 .talent-filters .filter-btn[data-filter="active"].active:hover,
 .talent-filters .filter-btn[data-filter="active"]:focus {
   transform: translateY(-2px);
-  box-shadow: 0 0 34px var(--talent-shadow-active-hover), inset 0 0 0 1px rgba(218,23,23,0.12);
+  box-shadow: 0 0 34px var(--talent-shadow-active-hover), inset 0 0 0 1px rgba(218, 23, 23, 0.12);
 }
 
 .talent-filters .filter-btn[data-filter="passive"],
 .talent-filters .filter-btn[data-filter="passive"].active {
   color: var(--talent-color-passive);
   border-color: var(--talent-border-passive);
-  background: linear-gradient(180deg, var(--talent-bg-passive), rgba(0,0,0,0.06));
-  box-shadow: 0 0 22px var(--talent-shadow-passive), inset 0 0 0 1px rgba(0,176,255,0.08);
+  background: linear-gradient(180deg, var(--talent-bg-passive), rgba(0, 0, 0, 0.06));
+  box-shadow: 0 0 22px var(--talent-shadow-passive), inset 0 0 0 1px rgba(0, 176, 255, 0.08);
 }
+
 .talent-filters .filter-btn[data-filter="passive"]:hover,
 .talent-filters .filter-btn[data-filter="passive"].active:hover,
 .talent-filters .filter-btn[data-filter="passive"]:focus {
   transform: translateY(-2px);
-  box-shadow: 0 0 28px var(--talent-shadow-passive-hover), inset 0 0 0 1px rgba(0,176,255,0.10);
+  box-shadow: 0 0 28px var(--talent-shadow-passive-hover), inset 0 0 0 1px rgba(0, 176, 255, 0.10);
 }
 
 .talent-filters .filter-btn[data-filter="free"],
 .talent-filters .filter-btn[data-filter="free"].active {
   color: var(--talent-color-free);
   border-color: var(--talent-border-free);
-  background: linear-gradient(180deg, var(--talent-bg-free), rgba(0,0,0,0.06));
-  box-shadow: 0 0 22px var(--talent-shadow-free), inset 0 0 0 1px rgba(0,200,120,0.08);
+  background: linear-gradient(180deg, var(--talent-bg-free), rgba(0, 0, 0, 0.06));
+  box-shadow: 0 0 22px var(--talent-shadow-free), inset 0 0 0 1px rgba(0, 200, 120, 0.08);
 }
+
 .talent-filters .filter-btn[data-filter="free"]:hover,
 .talent-filters .filter-btn[data-filter="free"].active:hover,
 .talent-filters .filter-btn[data-filter="free"]:focus {
   transform: translateY(-2px);
-  box-shadow: 0 0 28px var(--talent-shadow-free-hover), inset 0 0 0 1px rgba(0,200,120,0.10);
+  box-shadow: 0 0 28px var(--talent-shadow-free-hover), inset 0 0 0 1px rgba(0, 200, 120, 0.10);
 }
 
 .talent-filters .filter-btn[data-filter="ranked"],
 .talent-filters .filter-btn[data-filter="ranked"].active {
   color: var(--talent-color-ranked);
   border-color: var(--talent-border-ranked);
-  background: linear-gradient(180deg, var(--talent-bg-ranked), rgba(0,0,0,0.06));
-  box-shadow: 0 0 22px var(--talent-shadow-ranked), inset 0 0 0 1px rgba(150,109,255,0.10);
+  background: linear-gradient(180deg, var(--talent-bg-ranked), rgba(0, 0, 0, 0.06));
+  box-shadow: 0 0 22px var(--talent-shadow-ranked), inset 0 0 0 1px rgba(150, 109, 255, 0.10);
 }
+
 .talent-filters .filter-btn[data-filter="ranked"]:hover,
 .talent-filters .filter-btn[data-filter="ranked"].active:hover,
 .talent-filters .filter-btn[data-filter="ranked"]:focus {
   transform: translateY(-2px);
-  box-shadow: 0 0 28px var(--talent-shadow-ranked-hover), inset 0 0 0 1px rgba(150,109,255,0.12);
+  box-shadow: 0 0 28px var(--talent-shadow-ranked-hover), inset 0 0 0 1px rgba(150, 109, 255, 0.12);
 }
 
 /* More specific selectors to override the generic .filter-btn.active styles when necessary */
@@ -314,16 +383,19 @@
   color: var(--talent-color-active) !important;
   border-color: var(--talent-border-active) !important;
 }
+
 .talent-filters .filters-body .filter-buttons .filter-btn[data-filter="passive"],
 .talent-filters .filters-body .filter-buttons .filter-btn[data-filter="passive"].active {
   color: var(--talent-color-passive) !important;
   border-color: var(--talent-border-passive) !important;
 }
+
 .talent-filters .filters-body .filter-buttons .filter-btn[data-filter="free"],
 .talent-filters .filters-body .filter-buttons .filter-btn[data-filter="free"].active {
   color: var(--talent-color-free) !important;
   border-color: var(--talent-border-free) !important;
 }
+
 .talent-filters .filters-body .filter-buttons .filter-btn[data-filter="ranked"],
 .talent-filters .filters-body .filter-buttons .filter-btn[data-filter="ranked"].active {
   color: var(--talent-color-ranked) !important;
@@ -337,44 +409,66 @@
 .swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags .pill.tag-free,
 .swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags .pill.tag-ranked,
 .swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags .pill.ranked {
-   background: transparent !important;
- }
- .swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags .pill.tag-active {
-   background: var(--talent-bg-active) !important;
-   border-color: var(--talent-border-active) !important;
-   color: var(--talent-color-active) !important;
-   box-shadow: 0 0 18px var(--talent-shadow-active) !important;
- }
- .swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags .pill.tag-passive {
-   background: var(--talent-bg-passive) !important;
-   border-color: var(--talent-border-passive) !important;
-   color: var(--talent-color-passive) !important;
-   box-shadow: 0 0 14px var(--talent-shadow-passive) !important;
- }
- .swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags .pill.tag-free {
-   background: var(--talent-bg-free) !important;
-   border-color: var(--talent-border-free) !important;
-   color: var(--talent-color-free) !important;
-   box-shadow: 0 0 14px var(--talent-shadow-free) !important;
- }
- /* High-specificity violet for ranked */
- .swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags .pill.tag-ranked,
- .swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags .pill.ranked {
-   background: var(--talent-bg-ranked) !important;
-   border-color: var(--talent-border-ranked) !important;
-   color: var(--talent-color-ranked) !important;
-   box-shadow: 0 0 14px var(--talent-shadow-ranked) !important;
- }
+  background: transparent !important;
+}
+
+.swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags .pill.tag-active {
+  background: var(--talent-bg-active) !important;
+  border-color: var(--talent-border-active) !important;
+  color: var(--talent-color-active) !important;
+  box-shadow: 0 0 18px var(--talent-shadow-active) !important;
+}
+
+.swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags .pill.tag-passive {
+  background: var(--talent-bg-passive) !important;
+  border-color: var(--talent-border-passive) !important;
+  color: var(--talent-color-passive) !important;
+  box-shadow: 0 0 14px var(--talent-shadow-passive) !important;
+}
+
+.swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags .pill.tag-free {
+  background: var(--talent-bg-free) !important;
+  border-color: var(--talent-border-free) !important;
+  color: var(--talent-color-free) !important;
+  box-shadow: 0 0 14px var(--talent-shadow-free) !important;
+}
+
+/* High-specificity violet for ranked */
+.swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags .pill.tag-ranked,
+.swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags .pill.ranked {
+  background: var(--talent-bg-ranked) !important;
+  border-color: var(--talent-border-ranked) !important;
+  color: var(--talent-color-ranked) !important;
+  box-shadow: 0 0 14px var(--talent-shadow-ranked) !important;
+}
 
 /* Small responsive tweaks */
 @media (max-width: 540px) {
-  .swerpg-talent-card { padding: 12px; }
+  .swerpg-talent-card {
+    padding: 12px;
+  }
+
   /* Reduce pill width on small screens for better fit */
-  .swerpg-talent-card { --swerpg-pill-width: 64px; }
-  .talent-filters .filter-btn { padding: 8px 12px; font-size: .85rem; }
+  .swerpg-talent-card {
+    --swerpg-pill-width: 64px;
+  }
+
+  .talent-filters .filter-btn {
+    padding: 8px 12px;
+    font-size: .85rem;
+  }
+
   /* Keep mobile title size equal/smaller than desktop to avoid oversized headings */
   /* Mobile: keep title compact and light */
-  .card-header .talent-title { font-size: 0.76rem; font-weight:500; color: fade(@color-glow, 64%); text-transform: none; }
+  .card-header .talent-title {
+    font-size: 0.76rem;
+    font-weight: 500;
+    color: fade(@color-glow, 64%);
+    text-transform: none;
+  }
+
   /* When stacking cards vertically, let each card keep its natural height */
-  .talent-cards { grid-auto-rows: auto; }
+  .talent-cards {
+    grid-auto-rows: auto;
+  }
 }
