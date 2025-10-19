@@ -654,33 +654,54 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
             acc[key].push(talent);
             return acc;
         }, {});
+
+        // Helper: retourne l'indice max (number) du champ rank pour un item donné.
+        // Gère les cas où `system.rank` est absent, un objet unique ou un tableau d'objets.
+        const getMaxIdx = (item) => {
+            const r = item?.system?.rank;
+            if (!r) return -Infinity;
+            if (Array.isArray(r)) {
+                return r.reduce((m, rr) => {
+                    const v = (typeof rr?.idx === 'number') ? rr.idx : -Infinity;
+                    return Math.max(m, v);
+                }, -Infinity);
+            }
+            return (typeof r.idx === 'number') ? r.idx : -Infinity;
+        };
+
         return Object.entries(groupedByName).map(([name, group], index) => {
-            // Construire un tableau trié des objets "rank" provenant de chaque item du groupe
+            // Normaliser et trier tous les objets "rank" présents dans le groupe
             const ranks = group
-                .map(t => t.system?.rank)
-                .filter(r => !!r)
-                .sort((r1, r2) => ( (r1.idx ?? 0) - (r2.idx ?? 0) ));
+                .flatMap(t => {
+                    const r = t.system?.rank;
+                    if (!r) return [];
+                    return Array.isArray(r) ? r : [r];
+                })
+                .filter(r => r != null)
+                .sort((r1, r2) => ((r1.idx ?? 0) - (r2.idx ?? 0)));
 
             // Trouver l'item associé au rang maximal (utilisé pour récupérer activation/catégorie/etc.)
-            const maxRankItem = group.reduce((a, b) => {
-                const ai = a?.system?.rank?.idx ?? 0;
-                const bi = b?.system?.rank?.idx ?? 0;
-                return ai > bi ? a : b;
-            });
+            const maxRankItem = group.reduce((best, item) => {
+                if (!best) return item;
+                return getMaxIdx(item) > getMaxIdx(best) ? item : best;
+            }, null);
+
+            // Si pour une raison quelconque aucun item n'a été obtenu, on prend le premier du groupe
+            const representative = maxRankItem || group[0];
 
             // Génération des tags à partir de l'item au rang maximal
-            const tags = this.#buildTags(maxRankItem);
+            const tags = this.#buildTags(representative);
 
-            const description = maxRankItem.system?.description || maxRankItem.system?.description?.public || "";
-            const origin = maxRankItem.system?.category || maxRankItem.system?.origin || "";
-            const cost = (ranks.length ? ranks[ranks.length - 1].cost : null) ?? maxRankItem.system?.cost ?? null;
+            const description = representative.system?.description || representative.system?.description?.public || "";
+            const origin = representative.system?.category || representative.system?.origin || "";
+            const cost = (ranks.length ? ranks[ranks.length - 1].cost : null) ?? representative.system?.cost ?? null;
 
             return {
-                id: maxRankItem.id,
-                name: maxRankItem.name,
-                img: maxRankItem.img,
-                isFree: maxRankItem.system.isFree,
-                cssClass: maxRankItem.system.disabled ? "disabled" : "",
+                id: representative.id,
+                name: representative.name,
+                img: representative.img,
+                isFree: representative.system.isFree,
+                cssClass: representative.system.disabled ? "disabled" : "",
                 tags,
                 // Fournir un tableau de rangs trié : le template prendra le dernier élément pour afficher l'idx
                 rank: ranks.length ? ranks : null,
