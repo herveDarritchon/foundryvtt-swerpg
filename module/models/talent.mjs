@@ -230,18 +230,26 @@ export default class SwerpgTalent extends foundry.abstract.TypeDataModel {
      */
     assertPrerequisites(actor, strict = true) {
 
-        // Ensure the Talent is not already owned
-        if (actor.items.find(i => (i.type === "talent") && (i.name === this.parent.name))) {
+        // Ensure the Talent is not already owned — but allow multiple acquisitions for ranked talents.
+        const owned = actor.items?.filter?.(i => (i.type === "talent") && (i.name === this.parent.name)) || [];
+        if (owned.length > 0 && !this.isRanked) {
             if (strict) throw new Error(game.i18n.format("TALENT.WARNINGS.AlreadyOwned", {name: this.parent.name}));
             else return false;
         }
 
+        // Determine required talent points for acquisition.
+        // If a rank cost is available use it, otherwise fall back to 1.
+        const requiredPoints = (this.isRanked && this.rank && (typeof this.rank.cost === "number"))
+            ? this.rank.cost
+            : 1;
+
         // Require available talent points
-        const points = actor.points.talent;
-        if (points.available < 1) {
+        const points = actor.points?.talent;
+        const availablePoints = points?.available ?? 0;
+        if (availablePoints < requiredPoints) {
             if (strict) throw new Error(game.i18n.format("TALENT.WARNINGS.CannotAfford", {
                 name: this.parent.name,
-                cost: 1
+                cost: requiredPoints
             }));
             else return false;
         }
