@@ -593,7 +593,8 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
             isFree: item.system.isFree,
             cssClass: item.system.disabled ? "disabled" : "",
             tags,
-            rank: "-",
+            // Non-ranked (simple) talents should not expose a `rank` array/object
+            rank: null,
             description,
             origin,
             cost
@@ -654,24 +655,35 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
             return acc;
         }, {});
         return Object.entries(groupedByName).map(([name, group], index) => {
-            // Trouver le talent avec le rank maximal
-            const maxRankTalent = group.reduce((a, b) => (a.idx > b.idx ? a : b));
+            // Construire un tableau trié des objets "rank" provenant de chaque item du groupe
+            const ranks = group
+                .map(t => t.system?.rank)
+                .filter(r => !!r)
+                .sort((r1, r2) => ( (r1.idx ?? 0) - (r2.idx ?? 0) ));
 
-            // Exemple de génération de tags — à adapter à ton système
-            const tags = this.#buildTags(maxRankTalent); // ← Ajoute ici une logique si nécessaire
+            // Trouver l'item associé au rang maximal (utilisé pour récupérer activation/catégorie/etc.)
+            const maxRankItem = group.reduce((a, b) => {
+                const ai = a?.system?.rank?.idx ?? 0;
+                const bi = b?.system?.rank?.idx ?? 0;
+                return ai > bi ? a : b;
+            });
 
-            const description = maxRankTalent.system?.description || maxRankTalent.system?.description?.public || "";
-            const origin = maxRankTalent.system?.category || maxRankTalent.system?.origin || "";
-            const cost = maxRankTalent.system?.rank?.cost ?? maxRankTalent.system?.cost ?? null;
+            // Génération des tags à partir de l'item au rang maximal
+            const tags = this.#buildTags(maxRankItem);
+
+            const description = maxRankItem.system?.description || maxRankItem.system?.description?.public || "";
+            const origin = maxRankItem.system?.category || maxRankItem.system?.origin || "";
+            const cost = (ranks.length ? ranks[ranks.length - 1].cost : null) ?? maxRankItem.system?.cost ?? null;
 
             return {
-                id: maxRankTalent.id,
-                name: maxRankTalent.name,
-                img: maxRankTalent.img,
-                isFree: maxRankTalent.system.isFree,
-                cssClass: maxRankTalent.system.disabled ? "disabled" : "",
+                id: maxRankItem.id,
+                name: maxRankItem.name,
+                img: maxRankItem.img,
+                isFree: maxRankItem.system.isFree,
+                cssClass: maxRankItem.system.disabled ? "disabled" : "",
                 tags,
-                rank: maxRankTalent.system.rank?.idx ?? maxRankTalent.system?.rank ?? "-",
+                // Fournir un tableau de rangs trié : le template prendra le dernier élément pour afficher l'idx
+                rank: ranks.length ? ranks : null,
                 description,
                 origin,
                 cost
