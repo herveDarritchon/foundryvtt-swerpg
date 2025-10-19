@@ -61,6 +61,8 @@
      and the footer can be pinned to the bottom for consistent heights */
   display: flex;
   flex-direction: column;
+  /* Default pill width for tags inside talent cards (modifiable via CSS var) */
+  --swerpg-pill-width: 78px;
   /* Force the card to fill the grid cell height created by grid-auto-rows */
   height: 100%;
   border-radius: 12px;
@@ -126,13 +128,38 @@
         font-size: 0.48rem; /* reduced size */
         text-transform: uppercase;
         letter-spacing: .6px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box; /* ensure border is included in width */
+        min-width: var(--swerpg-pill-width);
+        width: var(--swerpg-pill-width);
+        /* Prevent long labels from breaking the layout */
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
+      /* Style spécifique pour le pill "RANG" afin qu'il soit distinct du tag-passive */
       .rank {
-        background: transparent;
-        border-color: fade(@color-glow,40%);
-        color: @color-glow;
-        padding: 4px 10px;
-        font-size: 0.56rem;
+        /* Couleur dorée pour distinguer le rang */
+        background: rgba(245,197,66,0.12); /* #F5C542 à 12% */
+        border-color: rgba(245,197,66,0.28);
+        color: rgba(245,197,66,0.95);
+        /* Taille unifiée avec .pill */
+        padding: 2px 6px;
+        font-size: 0.48rem;
+        font-weight: 800;
+        box-shadow: 0 0 10px rgba(245,197,66,0.08);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        min-width: var(--swerpg-pill-width);
+        width: var(--swerpg-pill-width);
+        /* Prevent overflow inside the fixed-width pill */
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
     }
   }
@@ -183,6 +210,14 @@
   color: var(--color-active, rgba(0,200,120,0.95)) !important;
   box-shadow: 0 0 12px rgba(0,200,120,0.10) !important;
 }
+/* Nouveau: style violet pour le tag "ranked" */
+.swerpg-talent-card .card-header .card-tags .pill.tag-ranked,
+.swerpg-talent-card .card-header .card-tags .pill.ranked {
+  background: rgba(150,109,255,0.14) !important; /* violet clair */
+  border-color: rgba(150,109,255,0.28) !important;
+  color: rgba(200,185,255,0.95) !important; /* texte clair pour contraste */
+  box-shadow: 0 0 14px rgba(150,109,255,0.10) !important;
+}
 
 /* Ensure pills get a slightly stronger border on focus/hover to match filter buttons (specific) */
 .swerpg-talent-card .card-header .card-tags .pill.tag-active:hover,
@@ -204,6 +239,15 @@
   transform: translateY(-1px) !important;
   /* Vert pour free */
   box-shadow: 0 0 28px rgba(0,200,120,0.16) !important;
+  border-width: 1px !important;
+}
+/* Hover pour ranked */
+.swerpg-talent-card .card-header .card-tags .pill.tag-ranked:hover,
+.swerpg-talent-card .card-header .card-tags .pill.tag-ranked:focus,
+.swerpg-talent-card .card-header .card-tags .pill.ranked:hover,
+.swerpg-talent-card .card-header .card-tags .pill.ranked:focus {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 0 28px rgba(150,109,255,0.18) !important;
   border-width: 1px !important;
 }
 
@@ -271,68 +315,43 @@
    (scoped to the talents tab and using an attribute selector to increase specificity) */
 .swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags .pill.tag-active,
 .swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags .pill.tag-passive,
-.swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags .pill.tag-free {
-  background: transparent !important;
-}
-.swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags .pill.tag-active {
-  background: rgba(218,23,23,0.14) !important;
-  border-color: var(--color-inactive, #da1717) !important;
-  color: var(--color-inactive, #da1717) !important;
-  box-shadow: 0 0 18px rgba(218,23,23,0.14) !important;
-}
-.swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags .pill.tag-passive {
-  background: rgba(0,176,255,0.14) !important;
-  border-color: var(--color-accent-blue, #00b0ff) !important;
-  color: var(--color-accent-blue, #00b0ff) !important;
-  box-shadow: 0 0 14px rgba(0,176,255,0.12) !important;
-}
-.swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags .pill.tag-free {
-  background: rgba(0,200,120,0.12) !important;
-  border-color: var(--color-active, rgba(0,200,120,0.5)) !important;
-  color: var(--color-active, rgba(0,200,120,0.95)) !important;
-  box-shadow: 0 0 14px rgba(0,200,120,0.12) !important;
-}
-
-/* Attribute-based highest-specificity overrides (use data-tag from the template) */
-.swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags span.pill[data-tag="tag-active"] {
-  background: rgba(218,23,23,0.14) !important;
-  border-color: var(--color-inactive, #da1717) !important;
-  color: var(--color-inactive, #da1717) !important;
-  box-shadow: 0 0 18px rgba(218,23,23,0.16) !important;
-}
-.swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags span.pill[data-tag="tag-passive"] {
-  background: rgba(0,176,255,0.14) !important;
-  border-color: var(--color-accent-blue, #00b0ff) !important;
-  color: var(--color-accent-blue, #00b0ff) !important;
-  box-shadow: 0 0 16px rgba(0,176,255,0.14) !important;
-}
-.swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags span.pill[data-tag="tag-free"] {
-  background: rgba(0,200,120,0.12) !important;
-  border-color: var(--color-active, rgba(0,200,120,0.5)) !important;
-  color: var(--color-active, rgba(0,200,120,0.95)) !important;
-  box-shadow: 0 0 16px rgba(0,200,120,0.14) !important;
-}
-
-/* Hover for attribute-based selectors */
-.swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags span.pill[data-tag="tag-active"]:hover,
-.swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags span.pill[data-tag="tag-active"]:focus {
-  transform: translateY(-1px) !important;
-  box-shadow: 0 0 28px rgba(218,23,23,0.16) !important;
-}
-.swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags span.pill[data-tag="tag-passive"]:hover,
-.swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags span.pill[data-tag="tag-passive"]:focus {
-  transform: translateY(-1px) !important;
-  box-shadow: 0 0 28px rgba(0,176,255,0.16) !important;
-}
-.swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags span.pill[data-tag="tag-free"]:hover,
-.swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags span.pill[data-tag="tag-free"]:focus {
-  transform: translateY(-1px) !important;
-  box-shadow: 0 0 28px rgba(0,200,120,0.16) !important;
-}
+.swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags .pill.tag-free,
+.swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags .pill.tag-ranked,
+.swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags .pill.ranked {
+   background: transparent !important;
+ }
+ .swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags .pill.tag-active {
+   background: rgba(218,23,23,0.14) !important;
+   border-color: var(--color-inactive, #da1717) !important;
+   color: var(--color-inactive, #da1717) !important;
+   box-shadow: 0 0 18px rgba(218,23,23,0.14) !important;
+ }
+ .swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags .pill.tag-passive {
+   background: rgba(0,176,255,0.14) !important;
+   border-color: var(--color-accent-blue, #00b0ff) !important;
+   color: var(--color-accent-blue, #00b0ff) !important;
+   box-shadow: 0 0 14px rgba(0,176,255,0.12) !important;
+ }
+ .swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags .pill.tag-free {
+   background: rgba(0,200,120,0.12) !important;
+   border-color: var(--color-active, rgba(0,200,120,0.5)) !important;
+   color: var(--color-active, rgba(0,200,120,0.95)) !important;
+   box-shadow: 0 0 14px rgba(0,200,120,0.12) !important;
+ }
+ /* High-specificity violet for ranked */
+ .swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags .pill.tag-ranked,
+ .swerpg .tab.talents .swerpg-talent-card[data-item-id] .card-header .card-tags .pill.ranked {
+   background: rgba(150,109,255,0.14) !important;
+   border-color: rgba(150,109,255,0.28) !important;
+   color: rgba(200,185,255,0.95) !important;
+   box-shadow: 0 0 14px rgba(150,109,255,0.12) !important;
+ }
 
 /* Small responsive tweaks */
 @media (max-width: 540px) {
   .swerpg-talent-card { padding: 12px; }
+  /* Reduce pill width on small screens for better fit */
+  .swerpg-talent-card { --swerpg-pill-width: 64px; }
   .talent-filters .filter-btn { padding: 8px 12px; font-size: .85rem; }
   /* Keep mobile title size equal/smaller than desktop to avoid oversized headings */
   /* Mobile: keep title compact and light */

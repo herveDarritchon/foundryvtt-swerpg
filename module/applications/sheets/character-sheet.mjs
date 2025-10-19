@@ -160,12 +160,12 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
     #buildSoakDisplayData(brawn) {
         const type = "soak";
 
-            return {
-                extraCss: type,
-                type: type,
-                label: type,
-                value: brawn.rank.value,
-            };
+        return {
+            extraCss: type,
+            type: type,
+            label: type,
+            value: brawn.rank.value,
+        };
     }
 
     /**
@@ -259,7 +259,10 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
             }
             case "talentAdd": {
                 // Create a minimal talent item for the actor; caller can edit after
-                await this.actor.createEmbeddedDocuments('Item', [{ name: game.i18n.localize('ADD_TALENT') || 'Nouvel Talent', type: 'talent' }]);
+                await this.actor.createEmbeddedDocuments('Item', [{
+                    name: game.i18n.localize('ADD_TALENT') || 'Nouvel Talent',
+                    type: 'talent'
+                }]);
                 break;
             }
             // case "talentReset":
@@ -287,8 +290,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
                     show = tags.includes('passive');
                     break;
                 case 'ranked':
-                    // Show ranked talents: accept exact 'ranked' tag OR any tag containing the word 'rank'
-                    show = tags.includes('ranked') || tags.some(t => t.includes('rank'));
+                    show = tags.includes('ranked');
                     break;
                 default:
                     show = true;
@@ -608,17 +610,21 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
         const tags = [];
 
         if (item.system.activation === "active") {
-            tags.push({label: "Active", cssClass: "tag-active"});
+            tags.push({label: "Active", cssClass: "tag-active", tooltip: "Talent is active"});
         } else {
-            tags.push({label: "Passive", cssClass: "tag-passive"});
+            tags.push({label: "Passive", cssClass: "tag-passive", tooltip: "Talent is passive"});
         }
 
         if (item.system.isRanked) {
-            tags.push({label: "Ranked"});
+            tags.push({label: "Ranked", cssClass: "tag-ranked", tooltip: "Talent is ranked"});
         }
 
         if (item.system.category) {
-            tags.push({label: item.system.category});
+            tags.push({
+                label: item.system.category,
+                cssClass: `tag-${item.system.category.toLowerCase()}`,
+                tooltip: "Talent is of a specific category"
+            });
         }
 
         if (item.system.isFree) {
