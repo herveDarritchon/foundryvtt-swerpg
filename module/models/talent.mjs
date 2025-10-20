@@ -307,9 +307,4 @@ export default class SwerpgTalent extends foundry.abstract.TypeDataModel {
 
 /* *************** HELPERS AND UTILITIES ***************** */
 
-export function getMaxRankTalent(group) {
-    return group.reduce((best, item) => {
-        if (!best) return item;
-        return (Number(item?.system?.row) || 0) > (Number(best?.system?.row) || 0) ? item : best;
-    }, null);
-}
+export { getMaxRankTalent } from './talent-utils.mjs';

@@ -87,16 +87,46 @@ function mergeObject(original, other) {
     return merged;
 }
 
-global.foundry = {
-    utils: {
-        deepClone: vi.fn((original, options = {}) => {
-            return deepClone(original, options);
-        }),
-        getProperty: vi.fn((object, key) => {
-            return getProperty(object, key);
-        }),
-        mergeObject: vi.fn((original, other) => {
-            return mergeObject(original, other);
-        })
+// Provide a minimal global `foundry` used by modules during import
+global.foundry = global.foundry || {};
+
+// Utilities used throughout the codebase
+global.foundry.utils = global.foundry.utils || {
+    deepClone: vi.fn((original, options = {}) => {
+        return deepClone(original, options);
+    }),
+    getProperty: vi.fn((object, key) => {
+        return getProperty(object, key);
+    }),
+    mergeObject: vi.fn((original, other) => {
+        return mergeObject(original, other);
+    }),
+    isEmpty: (v) => {
+        if (v == null) return true;
+        if (Array.isArray(v)) return v.length === 0;
+        if (typeof v === 'object') return Object.keys(v).length === 0;
+        return false;
+    },
+    AsyncFunction: (async function() { }).constructor
+};
+
+// Minimal application API expected by some modules
+global.foundry.applications = global.foundry.applications || {
+    api: {
+        DialogV2: class {
+            constructor() {}
+        }
     }
 };
+
+// Minimal other namespaces often expected
+global.foundry.data = global.foundry.data || { fields: {} };
+global.foundry.abstract = global.foundry.abstract || { DataModel: class {}, TypeDataModel: class {} };
+
+// Minimal game/config objects to avoid errors during rendering logic
+global.game = global.game || {
+    user: { isGM: false },
+    settings: { get: () => undefined },
+};
+
+global.CONFIG = global.CONFIG || { Dice: { rollModes: {} } };
