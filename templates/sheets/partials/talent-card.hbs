@@ -43,6 +43,12 @@
                     {{/if}}
                 {{else if talent.cost}}<span class="cost">{{talent.cost}} XP</span>{{/if}}
 
+                <button class="button tiny meta-display" data-action="itemDisplay"
+                        title="{{localize "TALENT.Display"}}">
+                    <i class="icon fa-solid fa-display" aria-hidden="true"></i>
+                    {{localize "TALENT.Display"}}
+                </button>
+
                 {{#unless talent.isFree}}
                     <button class="button tiny meta-delete" data-action="itemDelete"
                             title="{{localize "TALENT.Delete"}}">

@@ -21,6 +21,7 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
             itemEdit: SwerpgBaseActorSheet.#onItemEdit,
             itemEquip: SwerpgBaseActorSheet.#onItemEquip,
             itemDelete: SwerpgBaseActorSheet.#onItemDelete,
+            itemDisplay: SwerpgBaseActorSheet.#onItemDisplay,
             effectCreate: SwerpgBaseActorSheet.#onEffectCreate,
             effectEdit: SwerpgBaseActorSheet.#onEffectEdit,
             effectDelete: SwerpgBaseActorSheet.#onEffectDelete,
@@ -788,6 +789,18 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
         });
     }
 
+    /* -------------------------------------------- */
+
+    /**
+     * Gère l'affichage du talent dans le chat.
+     * @param {PointerEvent} event
+     */
+    static async #onItemDisplay(event) {
+        const displayAction = this.#getEventItemDisplayAction(event);
+        await displayAction();
+
+    }
+
 
     /* -------------------------------------------- */
 
@@ -842,6 +855,7 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
         return this.actor.items.get(itemId, {strict: true});
     }
 
+
     /* -------------------------------------------- */
 
     /**
@@ -864,6 +878,30 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
 
         // fallback : appel par défaut
         return () => item.delete?.(); // ou toute méthode alternative si delete() n'existe pas
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Retourne la fonction de suppression à exécuter en fonction du dataset.
+     * @param {PointerEvent} event
+     * @returns {function(): Promise<void>}
+     */
+     #getEventItemDisplayAction(event) {
+        const item = this.#getEventItem(event);
+        const target = event.target.closest(".line-item");
+        const actionName = target?.dataset.displayAction;
+        const itemType = target?.dataset.itemType;
+
+        const isTalent = itemType === item.type;
+        const action = item[actionName];
+
+        if (isTalent && actionName && typeof action === "function") {
+            return () => action.call(item);
+        }
+
+        // fallback : appel par défaut
+        return async ( ) => await item.sheet.render(true); // ou toute méthode alternative si display() n'existe pas
     }
 
     /* -------------------------------------------- */
