@@ -1010,6 +1010,8 @@ input[type=range] {
 .swerpg.sheet.actor .sheet-header header.title {
   gap: var(--margin-half);
   /* XP pill placed inline in the title */
+  /* Style immersif pour le label "XP" */
+  /* Valeurs (disponible / total) centrées et stylées pour la variante immersive */
   /* By default hide the numeric values (inputs) to show only the XP label */
   /* Inputs inside the pill: keep compact styling */
   /* Reveal values subtly when hovering or focus; limiter la largeur révélée */
@@ -1053,7 +1055,6 @@ input[type=range] {
   background: linear-gradient(135deg, rgba(2, 12, 18, 0.35), rgba(6, 24, 36, 0.36));
   border: 1px solid rgba(255, 255, 255, 0.04);
   /* Réduire fortement le padding pour être plus discret */
-  padding: 0.06rem 0.28rem;
   border-radius: 999px;
   color: var(--color-text);
   font-size: 0.72rem;
@@ -1072,11 +1073,84 @@ input[type=range] {
 }
 .swerpg.sheet.actor .sheet-header header.title .xp-pill.immersive {
   /* Ton plus discret pour la variante immersive */
-  background: linear-gradient(135deg, rgba(6, 20, 40, 0.45), rgba(2, 6, 16, 0.36));
-  border: 1px solid rgba(80, 160, 255, 0.04);
-  box-shadow: 0 1px 6px rgba(0, 176, 255, 0.02) inset;
-  /* très léger */
+  background: linear-gradient(135deg, rgba(6, 20, 40, 0.55), rgba(2, 6, 16, 0.44));
+  border: 1px solid rgba(80, 160, 255, 0.08);
+  box-shadow: 0 2px 18px rgba(0, 176, 255, 0.06) inset;
+  /* léger glow interne */
   color: #e6f4ff;
+  /* adopter des dimensions compactes mais suffisantes pour un centrage agréable */
+  min-width: 84px;
+  min-height: 64px;
+  padding: 0.5rem 0.6rem;
+  flex: none;
+  /* Centrer le contenu à la fois horizontalement et verticalement */
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  border-radius: 12px;
+  /* forme arrondie mais pas complètement circulaire */
+  transition: transform 140ms ease, box-shadow 140ms ease, background 160ms ease;
+  margin-left: 0.4rem;
+}
+.swerpg.sheet.actor .sheet-header header.title .xp-pill.immersive .xp-pill-label {
+  margin-top: 0.5rem;
+  font-family: var(--font-h1);
+  /* Star Jedi (titre/iconique Star Wars) */
+  font-weight: 700;
+  font-size: 0.98rem;
+  /* un peu plus grand pour être lisible */
+  letter-spacing: 0.06rem;
+  color: var(--color-accent-blue);
+  text-shadow: 0 0 8px rgba(0, 176, 255, 0.24), 0 0 14px rgba(0, 176, 255, 0.1);
+  display: block;
+  line-height: 1;
+  margin-bottom: 0.06rem;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.swerpg.sheet.actor .sheet-header header.title .xp-pill.immersive .xp-pill-values {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.28rem;
+  /* Hidden by default - will reveal on hover/focus-within */
+  opacity: 0;
+  max-width: 0;
+  overflow: hidden;
+  transform: translateY(0.5px) scale(0.98);
+  transition: opacity 150ms ease, max-width 180ms ease, transform 150ms ease;
+  pointer-events: none;
+  /* Forcer le ratio XP ("60 / 100") sur une seule ligne */
+  flex-wrap: nowrap;
+  white-space: nowrap;
+}
+.swerpg.sheet.actor .sheet-header header.title .xp-pill.immersive .xp-number {
+  font-family: var(--font-body);
+  /* Orbitron - moderne, lisible */
+  font-size: 0.86rem;
+  color: #e8fbff;
+  text-shadow: 0 0 6px rgba(0, 176, 255, 0.08);
+  font-weight: 600;
+}
+.swerpg.sheet.actor .sheet-header header.title .xp-pill.immersive .xp-slash {
+  color: #88cfff;
+  opacity: 0;
+  transition: opacity 120ms ease;
+}
+.swerpg.sheet.actor .sheet-header header.title .xp-pill.immersive:hover,
+.swerpg.sheet.actor .sheet-header header.title .xp-pill.immersive:focus-within {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 30px rgba(0, 176, 255, 0.06);
+}
+.swerpg.sheet.actor .sheet-header header.title .xp-pill.immersive:hover .xp-pill-values,
+.swerpg.sheet.actor .sheet-header header.title .xp-pill.immersive:focus-within .xp-pill-values {
+  opacity: 1;
+  max-width: 12ch;
+  /* laisse la place pour "50 / 100" */
+  transform: scale(1) translateY(0);
+  pointer-events: auto;
 }
 .swerpg.sheet.actor .sheet-header header.title .xp-pill .xp-pill-values {
   display: inline-flex;
@@ -1089,6 +1163,9 @@ input[type=range] {
   transform: scale(0.995);
   transition: opacity 150ms ease, max-width 180ms ease, transform 150ms ease;
   pointer-events: none;
+  /* Empêcher tout retour à la ligne dans le ratio XP */
+  flex-wrap: nowrap;
+  white-space: nowrap;
 }
 .swerpg.sheet.actor .sheet-header header.title .xp-input {
   background: transparent;
@@ -1098,7 +1175,6 @@ input[type=range] {
   margin: 0;
   width: 2ch;
   /* réduire la largeur des inputs */
-  min-width: 1.6ch;
   text-align: center;
   font-family: var(--font-sans);
   font-size: 0.78rem;
@@ -4482,4 +4558,108 @@ a.button.increase {
 .swerpg .prose-mirror menu .pm-dropdown > span {
   text-align: left;
   align-self: unset;
+}
+:root {
+  /* Fallbacks in case project variables aren't available */
+  --xp-input-bg: rgba(0, 0, 0, 0.35);
+  --xp-input-border: rgba(255, 255, 255, 0.08);
+  --xp-input-color: #fff;
+}
+/* XP cell: default shows .xp-view (icon or value), on hover/focus shows .xp-edit (inputs) */
+.xp-cell {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 48px;
+  height: 36px;
+  padding: 4px 8px;
+  box-sizing: border-box;
+  border-radius: 10px;
+  background: linear-gradient(180deg, rgba(10, 20, 30, 0.35), rgba(6, 12, 22, 0.45));
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.45), inset 0 0 10px rgba(0, 0, 0, 0.35);
+  transition: transform 160ms cubic-bezier(0.2, 0.9, 0.2, 1), box-shadow 160ms ease, border-color 160ms ease;
+}
+.xp-cell .xp-view,
+.xp-cell .xp-edit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  height: 100%;
+}
+.xp-cell .xp-view {
+  opacity: 1;
+  transition: opacity 120ms ease-in-out, transform 160ms ease;
+}
+.xp-cell .xp-edit {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  right: 2px;
+  bottom: 2px;
+  opacity: 0;
+  pointer-events: none;
+  /* disabled when hidden */
+  transition: opacity 120ms ease-in-out, transform 160ms ease;
+  padding: 2px 6px;
+  border-radius: 8px;
+}
+/* Hover/focus state: stronger blue glow and reveal inputs */
+.xp-cell:hover,
+.xp-cell:focus-within {
+  transform: translateY(-1px);
+  border-color: var(--color-border-highlight, #00b0ff);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5), 0 0 18px var(--color-shadow, rgba(0, 176, 255, 0.25));
+}
+.xp-cell:hover .xp-view,
+.xp-cell:focus-within .xp-view {
+  opacity: 0;
+  transform: scale(0.98);
+}
+.xp-cell:hover .xp-edit,
+.xp-cell:focus-within .xp-edit {
+  opacity: 1;
+  pointer-events: auto;
+  transform: none;
+}
+/* Input styling tuned to the theme */
+.xp-input {
+  width: 52px;
+  min-width: 40px;
+  height: 26px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: linear-gradient(180deg, rgba(6, 12, 22, 0.6), rgba(6, 12, 22, 0.4));
+  color: var(--color-text, #d0e6f6);
+  font-size: 12px;
+  text-align: center;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.45), inset 0 0 6px rgba(0, 0, 0, 0.25);
+  outline: none;
+  transition: box-shadow 140ms ease, border-color 140ms ease, background 140ms ease;
+}
+.xp-input:focus {
+  border-color: var(--color-border-highlight, #00b0ff);
+  box-shadow: 0 0 10px var(--color-shadow, rgba(0, 176, 255, 0.22));
+  background: linear-gradient(180deg, rgba(6, 12, 22, 0.75), rgba(6, 12, 22, 0.45));
+}
+/* Header icon variant (bigger, centered, with inner glow) */
+.xp-cell .header-icon {
+  width: 28px;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 6px 14px rgba(0, 176, 255, 0.12));
+}
+/* Value view style for numeric XP display */
+.xp-cell .xp-view {
+  font-weight: 700;
+  color: var(--color-accent-blue, #00b0ff);
+  text-shadow: 0 2px 8px rgba(0, 176, 255, 0.12);
+}
+/* Ensure small containers keep consistent spacing */
+.xp-cell .xp-edit .xp-input {
+  box-sizing: border-box;
 }

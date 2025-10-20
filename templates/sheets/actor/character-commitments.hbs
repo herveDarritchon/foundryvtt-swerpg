@@ -13,7 +13,16 @@
             </div>
 
             <div class="column slim">
-                <img class="header-icon" src="/systems/swerpg/ui/symbols/xp.webp" alt="Xp"/>
+                <div class="xp-cell">
+                    <div class="xp-view">
+                        <img class="header-icon" src="/systems/swerpg/ui/symbols/xp.webp" alt="Xp"/>
+                    </div>
+
+                    <div class="xp-edit" aria-hidden="true">
+                        <input class="xp-input xp-spend" type="number" min="0" placeholder="spend"/>
+                        <input class="xp-input xp-gain" type="number" min="0" placeholder="gained"/>
+                    </div>
+                </div>
             </div>
 
             <div class="column slim">
@@ -42,10 +51,26 @@
                 </div>
 
                 {{#if obligation.isExtra}}
-                    <div class="column slim">{{obligation.extraXp}}</div>
+                    <div class="column slim">
+                        <div class="xp-cell">
+                            <div class="xp-view">{{obligation.extraXp}}</div>
+                            <div class="xp-edit" aria-hidden="true">
+                                <input class="xp-input xp-spend" type="number" min="0" value="0" data-item-id="{{obligation.id}}" data-field="extraXpSpend" placeholder="spend"/>
+                                <input class="xp-input xp-gain" type="number" min="0" value="{{obligation.extraXp}}" data-item-id="{{obligation.id}}" data-field="extraXpGained" placeholder="gained"/>
+                            </div>
+                        </div>
+                    </div>
                     <div class="column slim">{{obligation.extraCredits}}</div>
                 {{else}}
-                    <div class="column slim">-</div>
+                    <div class="column slim">
+                        <div class="xp-cell">
+                            <div class="xp-view">-</div>
+                            <div class="xp-edit" aria-hidden="true">
+                                <input class="xp-input xp-spend" type="number" min="0" placeholder="spend"/>
+                                <input class="xp-input xp-gain" type="number" min="0" placeholder="gained"/>
+                            </div>
+                        </div>
+                    </div>
                     <div class="column slim">-</div>
                 {{/if}}
 

@@ -1,0 +1,115 @@
+:root {
+  /* Fallbacks in case project variables aren't available */
+  --xp-input-bg: rgba(0,0,0,0.35);
+  --xp-input-border: rgba(255,255,255,0.08);
+  --xp-input-color: #fff;
+}
+
+/* XP cell: default shows .xp-view (icon or value), on hover/focus shows .xp-edit (inputs) */
+.xp-cell {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 48px;
+  height: 36px;
+  padding: 4px 8px;
+  box-sizing: border-box;
+  border-radius: 10px;
+  background: linear-gradient(180deg, rgba(10,20,30,0.35), rgba(6,12,22,0.45));
+  border: 1px solid rgba(255,255,255,0.04);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.45), inset 0 0 10px rgba(0,0,0,0.35);
+  transition: transform 160ms cubic-bezier(.2,.9,.2,1), box-shadow 160ms ease, border-color 160ms ease;
+}
+
+.xp-cell .xp-view,
+.xp-cell .xp-edit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  height: 100%;
+}
+
+.xp-cell .xp-view {
+  opacity: 1;
+  transition: opacity 120ms ease-in-out, transform 160ms ease;
+}
+
+.xp-cell .xp-edit {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  right: 2px;
+  bottom: 2px;
+  opacity: 0;
+  pointer-events: none; /* disabled when hidden */
+  transition: opacity 120ms ease-in-out, transform 160ms ease;
+  padding: 2px 6px;
+  border-radius: 8px;
+}
+
+/* Hover/focus state: stronger blue glow and reveal inputs */
+.xp-cell:hover,
+.xp-cell:focus-within {
+  transform: translateY(-1px);
+  border-color: var(--color-border-highlight, #00b0ff);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.5), 0 0 18px var(--color-shadow, rgba(0,176,255,0.25));
+}
+
+.xp-cell:hover .xp-view,
+.xp-cell:focus-within .xp-view {
+  opacity: 0;
+  transform: scale(0.98);
+}
+
+.xp-cell:hover .xp-edit,
+.xp-cell:focus-within .xp-edit {
+  opacity: 1;
+  pointer-events: auto;
+  transform: none;
+}
+
+/* Input styling tuned to the theme */
+.xp-input {
+  width: 52px;
+  min-width: 40px;
+  height: 26px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.06);
+  background: linear-gradient(180deg, rgba(6,12,22,0.6), rgba(6,12,22,0.4));
+  color: var(--color-text, #d0e6f6);
+  font-size: 12px;
+  text-align: center;
+  box-shadow: 0 0 8px rgba(0,0,0,0.45), inset 0 0 6px rgba(0,0,0,0.25);
+  outline: none;
+  transition: box-shadow 140ms ease, border-color 140ms ease, background 140ms ease;
+}
+
+.xp-input:focus {
+  border-color: var(--color-border-highlight, #00b0ff);
+  box-shadow: 0 0 10px var(--color-shadow, rgba(0,176,255,0.22));
+  background: linear-gradient(180deg, rgba(6,12,22,0.75), rgba(6,12,22,0.45));
+}
+
+/* Header icon variant (bigger, centered, with inner glow) */
+.xp-cell .header-icon {
+  width: 28px;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 6px 14px rgba(0,176,255,0.12));
+}
+
+/* Value view style for numeric XP display */
+.xp-cell .xp-view {
+  font-weight: 700;
+  color: var(--color-accent-blue, #00b0ff);
+  text-shadow: 0 2px 8px rgba(0,176,255,0.12);
+}
+
+/* Ensure small containers keep consistent spacing */
+.xp-cell .xp-edit .xp-input {
+  box-sizing: border-box;
+}

@@ -210,7 +210,6 @@
         background: linear-gradient(135deg, rgba(2,12,18,0.35), rgba(6,24,36,0.36));
         border: 1px solid rgba(255,255,255,0.04);
         /* Réduire fortement le padding pour être plus discret */
-        padding: 0.06rem 0.28rem;
         border-radius: 999px;
         color: var(--color-text);
         font-size: 0.72rem; /* réduit comme demandé */
@@ -229,14 +228,88 @@
 
       .xp-pill.immersive {
         /* Ton plus discret pour la variante immersive */
-        background: linear-gradient(135deg, rgba(6,20,40,0.45), rgba(2,6,16,0.36));
-        border: 1px solid rgba(80,160,255,0.04);
-        box-shadow: 0 1px 6px rgba(0,176,255,0.02) inset; /* très léger */
+        background: linear-gradient(135deg, rgba(6,20,40,0.55), rgba(2,6,16,0.44));
+        border: 1px solid rgba(80,160,255,0.08);
+        box-shadow: 0 2px 18px rgba(0,176,255,0.06) inset; /* léger glow interne */
         color: #e6f4ff;
-        width: 100px;
+        /* adopter des dimensions compactes mais suffisantes pour un centrage agréable */
+        min-width: 84px;
+        min-height: 64px;
+        padding: 0.5rem 0.6rem;
         flex: none;
+
+        /* Centrer le contenu à la fois horizontalement et verticalement */
+        display: inline-flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
         text-align: center;
-        height: 100px;
+
+        border-radius: 12px; /* forme arrondie mais pas complètement circulaire */
+        transition: transform 140ms ease, box-shadow 140ms ease, background 160ms ease;
+        margin-left: 0.4rem;
+      }
+
+      /* Style immersif pour le label "XP" */
+      .xp-pill.immersive .xp-pill-label {
+        margin-top: 0.5rem;
+        font-family: var(--font-h1); /* Star Jedi (titre/iconique Star Wars) */
+        font-weight: 700;
+        font-size: 0.98rem; /* un peu plus grand pour être lisible */
+        letter-spacing: 0.06rem;
+        color: var(--color-accent-blue);
+        text-shadow: 0 0 8px rgba(0,176,255,0.24), 0 0 14px rgba(0,176,255,0.10);
+        display: block;
+        line-height: 1;
+        margin-bottom: 0.06rem;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      /* Valeurs (disponible / total) centrées et stylées pour la variante immersive */
+      .xp-pill.immersive .xp-pill-values {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.28rem;
+
+        /* Hidden by default - will reveal on hover/focus-within */
+        opacity: 0;
+        max-width: 0;
+        overflow: hidden;
+        transform: translateY(0.5px) scale(0.98);
+        transition: opacity 150ms ease, max-width 180ms ease, transform 150ms ease;
+        pointer-events: none;
+        /* Forcer le ratio XP ("60 / 100") sur une seule ligne */
+        flex-wrap: nowrap;
+        white-space: nowrap;
+      }
+
+      .xp-pill.immersive .xp-number {
+        font-family: var(--font-body); /* Orbitron - moderne, lisible */
+        font-size: 0.86rem;
+        color: #e8fbff;
+        text-shadow: 0 0 6px rgba(0,176,255,0.08);
+        font-weight: 600;
+      }
+
+      .xp-pill.immersive .xp-slash {
+        color: #88cfff;
+        opacity: 0;
+        transition: opacity 120ms ease;
+      }
+
+      .xp-pill.immersive:hover,
+      .xp-pill.immersive:focus-within {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 30px rgba(0,176,255,0.06);
+      }
+      .xp-pill.immersive:hover .xp-pill-values,
+      .xp-pill.immersive:focus-within .xp-pill-values {
+        opacity: 1;
+        max-width: 12ch; /* laisse la place pour "50 / 100" */
+        transform: scale(1) translateY(0);
+        pointer-events: auto;
       }
 
       /* By default hide the numeric values (inputs) to show only the XP label */
@@ -252,6 +325,9 @@
         transform: scale(0.995);
         transition: opacity 150ms ease, max-width 180ms ease, transform 150ms ease;
         pointer-events: none;
+        /* Empêcher tout retour à la ligne dans le ratio XP */
+        flex-wrap: nowrap;
+        white-space: nowrap;
       }
 
       /* Inputs inside the pill: keep compact styling */
@@ -262,7 +338,6 @@
         padding: 0;
         margin: 0;
         width: 2ch; /* réduire la largeur des inputs */
-        min-width: 1.6ch;
         text-align: center;
         font-family: var(--font-sans);
         font-size: 0.78rem; /* plus petit */
