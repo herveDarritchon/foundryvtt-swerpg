@@ -23,7 +23,8 @@
             {{/if}}
         </div>
 
-        <span class="cost">{{talent.cost}} XP</span>
+        {{!-- Affichage du coût via costDisplay calculée côté JS (gère 0 et free correctement) --}}
+        <span class="cost">Coût: {{talent.costDisplay}}</span>
 
         <footer class="card-footer">
             <div class="footer-left">

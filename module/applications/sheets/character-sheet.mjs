@@ -585,7 +585,9 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
         // Description can be stored in different shapes; fallback to empty string
         const description = item.system?.description || item.system?.description?.public || "";
         const origin = item.system?.category || item.system?.origin || "";
-        const cost = item.system?.rank?.cost ?? item.system?.cost ?? null;
+        // If the talent is free, display '-' otherwise compute raw cost (number or null)
+        const rawCost = item.system?.isFree ? "-" : (item.system?.row ?? 0) * 5;
+        const costDisplay = (rawCost === "-") ? "-" : (rawCost == null ? "—" : `${rawCost} XP`);
 
         return {
             id: item.id,
@@ -598,7 +600,8 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
             rank: null,
             description,
             origin,
-            cost
+            cost: rawCost,
+            costDisplay
         };
     }
 
@@ -668,7 +671,10 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
 
             const description = representative.system?.description || representative.system?.description?.public || "";
             const origin = representative.system?.category || representative.system?.origin || "";
-            const cost = representative.system?.cost ?? null;
+            let rawCost = null;
+            const maxItem = maxRankItem || representative;
+            rawCost = maxItem?.system?.rank?.cost ?? maxItem?.system?.cost ?? null;
+            const costDisplay = (rawCost === "-") ? "-" : (rawCost == null ? "—" : `${rawCost} XP`);
 
             return {
                 id: representative.id,
@@ -681,7 +687,8 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
                 row: representative.system.row,
                 description,
                 origin,
-                cost
+                cost: rawCost,
+                costDisplay
             };
         });
     }
@@ -691,10 +698,10 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
      * @returns {ObligationDisplayData[]}
      */
     #buildObligationList() {
-        return this.actor.items.filter(item => item.type === 'obligation').map(obligation => this.#buildObligationDisplayData(obligation));
+        return this.actor.items.filter(item => item.type === 'obligation').map(obligation => this._buildObligationDisplayData(obligation));
     }
 
-    #buildObligationDisplayData(obligation) {
+    _buildObligationDisplayData(obligation) {
         return {
             id: obligation.id,
             name: obligation.name,
@@ -721,11 +728,11 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
      * Builds a list of motivations for the character sheet.
      * @returns {MotivationDisplayData[]}
      */
-    #buildMotivationList() {
-        return this.actor.items.filter(item => item.type === 'motivation').map(obligation => this.#buildMotivationDisplayData(obligation));
+    _buildMotivationList() {
+        return this.actor.items.filter(item => item.type === 'motivation').map(obligation => this._buildMotivationDisplayData(obligation));
     }
 
-    #buildMotivationDisplayData(motivation) {
+    _buildMotivationDisplayData(motivation) {
         return {
             id: motivation.id,
             name: motivation.name,
