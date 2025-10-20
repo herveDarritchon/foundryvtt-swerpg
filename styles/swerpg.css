@@ -1009,6 +1009,12 @@ input[type=range] {
 }
 .swerpg.sheet.actor .sheet-header header.title {
   gap: var(--margin-half);
+  /* XP pill placed inline in the title */
+  /* Keep hover subtle but do not hide/show content */
+  /* Immersive modifier: stronger Star Wars feel */
+  /* Remove hover-based reveal rules: keep values visible by default */
+  /* (Previous hover rules intentionally removed) */
+  /* Compact when space is tight: keep a tiny badge rather than hiding completely */
 }
 .swerpg.sheet.actor .sheet-header header.title input {
   height: var(--sheet-header-height);
@@ -1038,6 +1044,133 @@ input[type=range] {
   flex: 0 0 var(--sheet-header-height);
   padding: 0;
   text-align: center;
+}
+.swerpg.sheet.actor .sheet-header header.title .xp-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  /* immersive darker glass background with subtle glow */
+  background: linear-gradient(135deg, rgba(2, 12, 18, 0.55), rgba(6, 24, 36, 0.6));
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  color: var(--color-text);
+  font-size: 0.9rem;
+  min-height: 28px;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25) inset, 0 2px 14px rgba(0, 176, 255, 0.04);
+  transition: transform 160ms ease;
+  margin-left: 0.5rem;
+  /* Always show expanded padding (no compact/hover hide) */
+  --expanded-padding: 0.15rem 0.5rem;
+  padding: var(--expanded-padding);
+  width: auto;
+  /* Ensure the whole pill stays on a single line */
+  white-space: nowrap;
+}
+.swerpg.sheet.actor .sheet-header header.title .xp-pill:hover,
+.swerpg.sheet.actor .sheet-header header.title .xp-pill:focus-within,
+.swerpg.sheet.actor .sheet-header header.title .xp-pill:focus {
+  transform: translateY(-1px);
+}
+.swerpg.sheet.actor .sheet-header header.title .xp-pill.immersive {
+  background: linear-gradient(135deg, rgba(6, 20, 40, 0.6), rgba(2, 6, 16, 0.6));
+  border: 1px solid rgba(80, 160, 255, 0.06);
+  box-shadow: 0 2px 18px rgba(3, 37, 60, 0.45), 0 0 8px rgba(0, 176, 255, 0.06) inset;
+  color: #dfefff;
+  letter-spacing: 0.04em;
+}
+.swerpg.sheet.actor .sheet-header header.title .xp-pill-label {
+  font-weight: 700;
+  font-size: 0.78rem;
+  color: #bcd6ff;
+  letter-spacing: 0.08em;
+  opacity: 0.95;
+  /* Always visible and inline */
+  width: auto;
+  margin: 0 0.25rem 0 0;
+  overflow: visible;
+  transition: none;
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  text-transform: uppercase;
+}
+.swerpg.sheet.actor .sheet-header header.title .xp-pill-values {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  /* Always visible */
+  opacity: 1;
+  width: auto;
+  overflow: visible;
+  transition: none;
+  flex: none;
+}
+.swerpg.sheet.actor .sheet-header header.title .xp-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.12);
+  color: var(--color-text);
+  border-radius: 999px;
+  padding: 0.1rem 0.4rem;
+  font-weight: 700;
+  font-size: 0.85rem;
+  min-width: 1.6ch;
+  height: 1.6rem;
+  box-shadow: none;
+  white-space: nowrap;
+}
+.swerpg.sheet.actor .sheet-header header.title .xp-pill-label + .xp-pill-values {
+  display: inline-flex;
+}
+.swerpg.sheet.actor .sheet-header header.title .xp-input {
+  background: transparent;
+  border: none;
+  color: var(--color-text);
+  padding: 0;
+  margin: 0;
+  width: 3.2ch;
+  min-width: 2ch;
+  text-align: center;
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  appearance: textfield;
+  white-space: nowrap;
+}
+.swerpg.sheet.actor .sheet-header header.title .xp-input::-webkit-outer-spin-button,
+.swerpg.sheet.actor .sheet-header header.title .xp-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.swerpg.sheet.actor .sheet-header header.title .xp-input:focus {
+  outline: none;
+  box-shadow: 0 0 8px rgba(0, 176, 255, 0.12);
+  border-radius: 3px;
+}
+.swerpg.sheet.actor .sheet-header header.title .xp-slash {
+  color: #8fb7ff;
+  opacity: 0.95;
+  font-weight: 700;
+  white-space: nowrap;
+}
+@media (max-width: 520px) {
+  .swerpg.sheet.actor .sheet-header header.title {
+    /* On very small screens, show a compact badge to avoid layout breaks */
+  }
+  .swerpg.sheet.actor .sheet-header header.title .xp-pill {
+    padding: 0.08rem 0.28rem;
+    margin-left: 0.35rem;
+  }
+  .swerpg.sheet.actor .sheet-header header.title .xp-pill-label,
+  .swerpg.sheet.actor .sheet-header header.title .xp-pill-values {
+    display: none;
+  }
+  .swerpg.sheet.actor .sheet-header header.title .xp-badge {
+    font-size: 0.85rem;
+    padding: 0.08rem 0.32rem;
+    height: 1.4rem;
+  }
 }
 .swerpg.sheet.actor .sheet-header div.subtitle {
   gap: var(--margin-half);

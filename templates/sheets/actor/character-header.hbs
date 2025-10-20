@@ -1,37 +1,40 @@
 <section class="sheet-header flexcol">
     <header class="title flexrow">
-        <input class="charname" name="name" type="text" value="{{source.name}}" placeholder="Actor Name">
+        <input class="charname" name="name" type="text" value="{{source.name}}" placeholder="Actor Name" aria-label="Name">
         {{#if incomplete.creation}}
             <a class="button icon level-up fa-solid fa-triangle-exclamation incomplete" data-action="levelUp"
                data-tooltip="{{incomplete.creationTooltip}}" data-tooltip-class="creation-steps"></a>
         {{/if}}
-        <div class="experience flexrow">
-            <div class="experience">Experience
-                <input class="xp-input xp-available" type="text" value="{{progression.experience.available}}" data-xp-field="available" title="{{localize "ACTOR.EXP.Available"}}">
-                /
-                <input class="xp-input xp-total" type="text" value="{{progression.experience.total}}" data-xp-field="total" title="{{localize "ACTOR.EXP.Total"}}">
+        {{#if progression.experience}}
+        <div class="xp-pill immersive" role="group" aria-label="Experience" title="Exp disponible: {{progression.experience.available}} / {{progression.experience.total}}">
+            <!-- Toujours afficher l'étiquette et les valeurs sur une seule ligne : "XP 50 / 100" -->
+            <span class="xp-pill-label">XP</span>
+            <div class="xp-pill-values flexrow">
+                <span class="xp-number xp-available" data-xp-field="available" title="Available XP" aria-label="Available XP">{{progression.experience.available}}</span>
+                <span class="xp-slash">/</span>
+                <span class="xp-number xp-total" data-xp-field="total" title="Total XP" aria-label="Total XP">{{progression.experience.total}}</span>
             </div>
         </div>
+        {{/if}}
     </header>
 
     <div class="subtitle flexrow">
         <h2 class="species flexrow {{#if incomplete.species}}incomplete{{/if}}" data-action="editSpecies"
             {{#if incomplete.species}}data-tooltip="WALKTHROUGH.AddSpecies"{{/if}}>
-            <a>{{#if incomplete.species}}<i class="fa-solid fa-circle-plus"></i> {{/if}}{{speciesName}}</a>
+            <a aria-label="Species: {{speciesName}}">{{#if incomplete.species}}<i class="fa-solid fa-circle-plus"></i> {{/if}}{{speciesName}}</a>
         </h2>
         <h2 class="career flexrow {{#if incomplete.career}}incomplete{{/if}}" data-action="editCareer"
             {{#if incomplete.career}}data-tooltip="WALKTHROUGH.AddCareer"{{/if}}>
-            <a>{{#if incomplete.career}}<i class="fa-solid fa-circle-plus"></i> {{/if}}{{careerName}}</a>
+            <a aria-label="Career: {{careerName}}">{{#if incomplete.career}}<i class="fa-solid fa-circle-plus"></i> {{/if}}{{careerName}}</a>
         </h2>
         <h2 class="specialization flexrow {{#if incomplete.specialization}}incomplete{{/if}}"
             data-action="editSpecialization"
             {{#if incomplete.specialization}}data-tooltip="WALKTHROUGH.AddSpecialization"{{/if}}>
-            <a>{{#if incomplete.specialization}}<i class="fa-solid fa-circle-plus"></i> {{/if}}{{specializationName}}
-            </a>
+            <a aria-label="Specialization: {{specializationName}}">{{#if incomplete.specialization}}<i class="fa-solid fa-circle-plus"></i> {{/if}}{{specializationName}}</a>
         </h2>
         <h2 class="background flexrow {{#if incomplete.background}}incomplete{{/if}}" data-action="editBackground"
             {{#if incomplete.background}}data-tooltip="WALKTHROUGH.AddBackground"{{/if}}>
-            <a>{{#if incomplete.background}}<i class="fa-solid fa-circle-plus"></i> {{/if}}{{backgroundName}}</a>
+            <a aria-label="Background: {{backgroundName}}">{{#if incomplete.background}}<i class="fa-solid fa-circle-plus"></i> {{/if}}{{backgroundName}}</a>
         </h2>
         {{#if actor.system.details.signatureName}}
             <h2 class="signature">{{actor.system.details.signatureName}}</h2>
@@ -41,7 +44,7 @@
                 <div class="bar">
                     <div class="fill" style="width:{{actor.system.advancement.pct}}%"></div>
                 </div>
-                <input type="number" name="system.advancement.progress" value="{{actor.system.advancement.progress}}">
+                <input type="number" name="system.advancement.progress" value="{{actor.system.advancement.progress}}" aria-label="Advancement progress">
                 <span class="slash"></span>
                 <span class="input">{{actor.system.advancement.next}}</span>
             </div>

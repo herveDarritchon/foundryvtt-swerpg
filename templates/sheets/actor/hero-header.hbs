@@ -1,6 +1,6 @@
 <section class="sheet-header flexcol">
     <header class="title flexrow">
-        <input class="charname" name="name" type="text" value="{{source.name}}" placeholder="Actor Name">
+        <input class="charname" name="name" type="text" value="{{source.name}}" placeholder="Actor Name" aria-label="Name">
         {{#if incomplete.level}}
             <a class="button icon level-up fa-solid fa-plus incomplete" data-action="levelUp"
                data-tooltip="Level Up!"></a>
@@ -11,6 +11,18 @@
         <label class="level">Level</label>
         {{formInput fields.advancement.fields.level value=source.system.advancement.level type="number"
                     disabled=incomplete.isL0}}
+
+        {{#if progression.experience}}
+        <div class="xp-pill immersive" role="group" aria-label="Experience">
+            <!-- Toujours afficher l'étiquette et les valeurs sur une seule ligne : "XP 50 / 100" -->
+            <span class="xp-pill-label">XP</span>
+            <div class="xp-pill-values flexrow">
+                <span class="xp-number xp-available" data-xp-field="available" title="Available XP" aria-label="Available XP">{{progression.experience.available}}</span>
+                <span class="xp-slash">/</span>
+                <span class="xp-number xp-total" data-xp-field="total" title="Total XP" aria-label="Total XP">{{progression.experience.total}}</span>
+            </div>
+        </div>
+        {{/if}}
     </header>
 
     <div class="subtitle flexrow">
