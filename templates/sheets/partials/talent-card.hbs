@@ -23,26 +23,12 @@
             {{/if}}
         </div>
 
+        <span class="cost">{{talent.cost}} XP</span>
         <footer class="card-footer">
             <div class="footer-left">
                 <div class="talent-origin">{{#if talent.origin}}&lt;{{talent.origin}}&gt;{{/if}}</div>
             </div>
             <div class="talent-meta footer-right">
-                {{!-- Display cost: prefer cost on last rank if rank is array; otherwise use talent.rank.cost; fallback to talent.cost --}}
-                {{#if talent.rank}}
-                    {{#if talent.rank.length}}
-                        {{#each talent.rank as |r|}}
-                            {{#if @last}}
-                                {{#if r.cost}}<span class="cost">{{r.cost}} XP</span>{{else if talent.cost}}
-                                    <span class="cost">{{talent.cost}} XP</span>{{/if}}
-                            {{/if}}
-                        {{/each}}
-                    {{else}}
-                        {{#if talent.rank.cost}}<span class="cost">{{talent.rank.cost}} XP</span>{{else if talent.cost}}
-                            <span class="cost">{{talent.cost}} XP</span>{{/if}}
-                    {{/if}}
-                {{else if talent.cost}}<span class="cost">{{talent.cost}} XP</span>{{/if}}
-
                 <button class="button tiny meta-display" data-action="itemDisplay"
                         title="{{localize "TALENT.Display"}}">
                     <i class="icon fa-solid fa-display" aria-hidden="true"></i>
