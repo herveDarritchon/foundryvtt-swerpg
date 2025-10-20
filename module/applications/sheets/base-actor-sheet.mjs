@@ -766,7 +766,9 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
      * @returns {SwerpgItem}
      */
     #getEventItem(event) {
-        const itemId = event.target.closest(".line-item")?.dataset.itemId;
+        // Support multiple markup patterns: prefer any element that exposes a data-item-id attribute
+        const el = event.target.closest("[data-item-id], .line-item");
+        const itemId = el?.dataset?.itemId;
         return this.actor.items.get(itemId, {strict: true});
     }
 

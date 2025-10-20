@@ -581,7 +581,7 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
 
     /**
      * Prepare and format the display of resource attributes on the actor sheet.
-     * @returns {Record<string, {id: string, pct: number, color: {bg: string, fill: string}}>}
+     * @returns {Record<string, {id: string, pct: number, color: {bg: string, fill: string}}}
      */
     #prepareResources() {
         const resources = {};
@@ -833,7 +833,9 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
      * @returns {SwerpgItem}
      */
     #getEventItem(event) {
-        const itemId = event.target.closest(".line-item")?.dataset.itemId;
+        // Support templates that use data-item-id without the .line-item class
+        const el = event.target.closest("[data-item-id], .line-item");
+        const itemId = el?.dataset?.itemId;
         return this.actor.items.get(itemId, {strict: true});
     }
 
