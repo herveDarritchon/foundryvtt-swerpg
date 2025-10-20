@@ -49,9 +49,13 @@
                          data-tooltip="{{progression.experience.spent}} {{localize 'ACTOR.FREE_SKILLS.XPSpentShort'}} / {{progression.experience.total}}" data-tooltip-direction="DOWN"
                          style="--xp-percent: {{progression.experience.percent}};">
                         <div class="xp-fill" aria-hidden="true"></div>
-                        <!-- Center label made explicit: "spent / total" and a clearer text for assistive tech -->
-                        <div class="xp-center-label">{{progression.experience.available}} XP</div>
-                    </div>
+                        <!-- Center label replaced by editable inputs -->
+                        <div class="xp-center-label">
+                            <input class="xp-input xp-available" type="text" value="{{progression.experience.available}}" data-xp-field="available" title="{{localize "ACTOR.EXP.Available"}}">
+                            /
+                            <input class="xp-input xp-total" type="text" value="{{progression.experience.total}}" data-xp-field="total" title="{{localize "ACTOR.EXP.Total"}}">
+                        </div>
+                     </div>
                 </div>
             </div>
         </div>

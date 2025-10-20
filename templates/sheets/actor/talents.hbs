@@ -10,8 +10,7 @@
             <div class="rows">
                 <div class="row xp-row">
                     <div class="label" title="{{localize "ACTOR.FREE_SKILLS.XPTooltip"}}">{{localize "ACTOR.FREE_SKILLS.XPProgressLabel"}}</div>
-                    <div class="meter xp-bar"
-                         role="progressbar"
+                    <div class="meter xp-bar" role="progressbar"
                          aria-valuemin="0"
                          aria-valuemax="{{progression.experience.total}}"
                          aria-valuenow="{{progression.experience.spent}}"
@@ -21,7 +20,11 @@
                          data-tooltip="{{progression.experience.spent}} {{localize 'ACTOR.FREE_SKILLS.XPSpentShort'}} / {{progression.experience.total}}" data-tooltip-direction="DOWN"
                          style="--xp-percent: {{progression.experience.percent}};">
                         <div class="xp-fill" aria-hidden="true"></div>
-                        <div class="xp-center-label">{{progression.experience.available}} XP</div>
+                        <div class="xp-center-label">
+                            <input class="xp-input xp-available" type="text" value="{{progression.experience.available}}" data-xp-field="available" title="{{localize "ACTOR.EXP.Available"}}">
+                            /
+                            <input class="xp-input xp-total" type="text" value="{{progression.experience.total}}" data-xp-field="total" title="{{localize "ACTOR.EXP.Total"}}">
+                        </div>
                     </div>
                 </div>
             </div>

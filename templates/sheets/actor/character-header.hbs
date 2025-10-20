@@ -6,9 +6,10 @@
                data-tooltip="{{incomplete.creationTooltip}}" data-tooltip-class="creation-steps"></a>
         {{/if}}
         <div class="experience flexrow">
-            <div  class="experience">Experience
-            <span>{{progression.experience.available}}</span>
-            /<span>{{progression.experience.total}}</span>
+            <div class="experience">Experience
+                <input class="xp-input xp-available" type="text" value="{{progression.experience.available}}" data-xp-field="available" title="{{localize "ACTOR.EXP.Available"}}">
+                /
+                <input class="xp-input xp-total" type="text" value="{{progression.experience.total}}" data-xp-field="total" title="{{localize "ACTOR.EXP.Total"}}">
             </div>
         </div>
     </header>

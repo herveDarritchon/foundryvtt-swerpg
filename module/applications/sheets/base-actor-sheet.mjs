@@ -178,6 +178,8 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
     _attachFrameListeners() {
         super._attachFrameListeners();
         this.element.addEventListener("focusin", this.#onFocusIn.bind(this));
+        // Listen for changes on XP inputs (available / total)
+        this.element.addEventListener("change", this._onXpChange.bind(this));
     }
 
     /* -------------------------------------------- */
@@ -646,6 +648,74 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
             }
         }
         super._onChangeForm(formConfig, event);
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle changes to experience input fields rendered on the sheet.
+     * Supports relative inputs like +5, -3 and =100 (absolute) as in other number fields.
+     * @param {Event} event
+     */
+    async _onXpChange(event) {
+        const el = event.target;
+        if (!el || !(el instanceof HTMLInputElement) || !el.classList.contains("xp-input")) return;
+        if (this.actor.type !== (this.constructor.DEFAULT_OPTIONS.actor.type)) return; // only characters
+
+        const field = el.dataset.xpField; // "available" or "total"
+        if (!field) return;
+
+        const e = this.actor.system.progression.experience || {startingExperience: 0, gained: 0, spent: 0};
+        const starting = Number(e.startingExperience || 0);
+        const gained = Number(e.gained || 0);
+        const spent = Number(e.spent || 0);
+        const total = starting + gained;
+        const available = total - spent;
+
+        const raw = (el.value || "").trim();
+        if (raw.length === 0) return;
+        let newNumber = Number(raw);
+        if (isNaN(newNumber)) {
+            const first = raw[0];
+            if ((first === "+") || (first === "-")) {
+                const delta = Number(raw);
+                if (isNaN(delta)) return;
+                newNumber = (field === "available") ? (available + delta) : (total + delta);
+            } else if (first === "=") {
+                const v = Number(raw.slice(1));
+                if (isNaN(v)) return;
+                newNumber = v;
+            } else return; // not a number
+        }
+
+        const updates = {};
+        if (field === "available") {
+            let newAvailable = Math.max(0, Math.floor(newNumber));
+            let newSpent = total - newAvailable;
+            if (newSpent < 0) {
+                // increase gained to match requested available
+                const needed = newAvailable - total;
+                const newGained = gained + needed;
+                updates["system.progression.experience.gained"] = newGained;
+                updates["system.progression.experience.spent"] = 0;
+            } else {
+                updates["system.progression.experience.spent"] = Math.max(0, Math.floor(newSpent));
+            }
+        } else if (field === "total") {
+            let newTotal = Math.max(0, Math.floor(newNumber));
+            const newGained = Math.max(0, newTotal - starting);
+            const boundedSpent = Math.min(spent, newTotal);
+            updates["system.progression.experience.gained"] = newGained;
+            updates["system.progression.experience.spent"] = boundedSpent;
+        }
+
+        if (Object.keys(updates).length) {
+            try {
+                await this.actor.update(updates);
+            } catch (err) {
+                console.error("Failed to update experience fields:", err);
+            }
+        }
     }
 
     /* -------------------------------------------- */
