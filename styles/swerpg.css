@@ -4294,19 +4294,33 @@ a.button.increase {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.swerpg-talent-card .card-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .swerpg-talent-card .card-body .talent-desc {
   color: #3dc3ff;
-  line-height: 1.45;
-  /* Slightly smaller description for compact two-column layout */
-  font-size: 0.8rem;
+  line-height: 1.4;
+  font-size: 0.7rem;
   max-width: 100%;
-  white-space: pre-wrap;
+  white-space: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 8;
+  /* adjust number of visible lines here */
+  -webkit-box-orient: vertical;
 }
 .swerpg-talent-card .card-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 12px;
+  /* Ensure footer is always at the bottom of the card */
+  margin-top: auto;
 }
 .swerpg-talent-card .card-footer .footer-left {
   flex: 1 1 auto;
@@ -4399,7 +4413,6 @@ a.button.increase {
   transform: translateY(-1px) !important;
   /* Vert pour free */
   box-shadow: 0 0 28px var(--talent-shadow-free-hover) !important;
-  border-width: 1px !important;
 }
 /* Hover pour ranked */
 .swerpg-talent-card .card-header .card-tags .pill.tag-ranked:hover,
