@@ -1079,8 +1079,8 @@ input[type=range] {
   /* léger glow interne */
   color: #e6f4ff;
   /* adopter des dimensions compactes mais suffisantes pour un centrage agréable */
-  min-width: 84px;
-  min-height: 64px;
+  width: 84px;
+  height: 64px;
   padding: 0.5rem 0.6rem;
   flex: none;
   /* Centrer le contenu à la fois horizontalement et verticalement */

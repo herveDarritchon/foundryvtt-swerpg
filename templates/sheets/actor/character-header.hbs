@@ -10,9 +10,9 @@
             <!-- Toujours afficher l'étiquette et les valeurs sur une seule ligne : "XP 50 / 100" -->
             <span class="xp-pill-label">XP</span>
             <div class="xp-pill-values flexrow">
-                <input class="xp-input xp-available" type="number" name="system.progression.experience.available" data-xp-field="available" title="Available XP" aria-label="Available XP" value="{{progression.experience.available}}">
+                <input class="xp-input xp-available" data-dtype="Number" name="system.progression.experience.available" data-xp-field="available" title="Available XP" aria-label="Available XP" value="{{progression.experience.available}}">
                 <span class="xp-slash">/</span>
-                <input class="xp-input xp-total" type="number" name="system.progression.experience.total" data-xp-field="total" title="Total XP" aria-label="Total XP" value="{{progression.experience.total}}">
+                <input class="xp-input xp-total" data-dtype="Number" name="system.progression.experience.total" data-xp-field="total" title="Total XP" aria-label="Total XP" value="{{progression.experience.total}}">
             </div>
         </div>
         {{/if}}
