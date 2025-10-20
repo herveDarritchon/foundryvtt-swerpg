@@ -303,3 +303,13 @@ export default class SwerpgTalent extends foundry.abstract.TypeDataModel {
         return trees.map(uuid => fromUuidSync(uuid)).every(item => item.type === 'specialization' || item.type === 'career');
     }
 }
+
+
+/* *************** HELPERS AND UTILITIES ***************** */
+
+export function getMaxRankTalent(group) {
+    return group.reduce((best, item) => {
+        if (!best) return item;
+        return (Number(item?.system?.row) || 0) > (Number(best?.system?.row) || 0) ? item : best;
+    }, null);
+}

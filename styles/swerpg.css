@@ -4085,7 +4085,7 @@ a.button.increase {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.swerpg-talent-card .card-header .card-tags .rank {
+.swerpg-talent-card .card-header .card-tags .tag-rank {
   /* Couleur dorée pour distinguer le rang */
   background: rgba(245, 197, 66, 0.12);
   /* #F5C542 à 12% */

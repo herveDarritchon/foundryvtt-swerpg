@@ -5,6 +5,7 @@ import ErrorSkill from "../../lib/skills/error-skill.mjs";
 import TalentFactory from "../../lib/talents/talent-factory.mjs";
 import ErrorTalent from "../../lib/talents/error-talent.mjs";
 import JaugeFactory from "../../lib/jauges/jauge-factory.mjs";
+import {getMaxRankTalent} from "../../models/talent.mjs";
 
 /**
  * @typedef {Object} DefenseDisplayData
@@ -655,36 +656,9 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
             return acc;
         }, {});
 
-        // Helper: retourne l'indice max (number) du champ rank pour un item donné.
-        // Gère les cas où `system.rank` est absent, un objet unique ou un tableau d'objets.
-        const getMaxIdx = (item) => {
-            const r = item?.system?.rank;
-            if (!r) return -Infinity;
-            if (Array.isArray(r)) {
-                return r.reduce((m, rr) => {
-                    const v = (typeof rr?.idx === 'number') ? rr.idx : -Infinity;
-                    return Math.max(m, v);
-                }, -Infinity);
-            }
-            return (typeof r.idx === 'number') ? r.idx : -Infinity;
-        };
-
         return Object.entries(groupedByName).map(([name, group], index) => {
-            // Normaliser et trier tous les objets "rank" présents dans le groupe
-            const ranks = group
-                .flatMap(t => {
-                    const r = t.system?.rank;
-                    if (!r) return [];
-                    return Array.isArray(r) ? r : [r];
-                })
-                .filter(r => r != null)
-                .sort((r1, r2) => ((r1.idx ?? 0) - (r2.idx ?? 0)));
-
             // Trouver l'item associé au rang maximal (utilisé pour récupérer activation/catégorie/etc.)
-            const maxRankItem = group.reduce((best, item) => {
-                if (!best) return item;
-                return getMaxIdx(item) > getMaxIdx(best) ? item : best;
-            }, null);
+            const maxRankItem = getMaxRankTalent(group);
 
             // Si pour une raison quelconque aucun item n'a été obtenu, on prend le premier du groupe
             const representative = maxRankItem || group[0];
@@ -694,7 +668,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
 
             const description = representative.system?.description || representative.system?.description?.public || "";
             const origin = representative.system?.category || representative.system?.origin || "";
-            const cost = (ranks.length ? ranks[ranks.length - 1].cost : null) ?? representative.system?.cost ?? null;
+            const cost = representative.system?.cost ?? null;
 
             return {
                 id: representative.id,
@@ -703,8 +677,8 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
                 isFree: representative.system.isFree,
                 cssClass: representative.system.disabled ? "disabled" : "",
                 tags,
-                // Fournir un tableau de rangs trié : le template prendra le dernier élément pour afficher l'idx
-                rank: ranks.length ? ranks : null,
+                rank: representative.system.rank,
+                row: representative.system.row,
                 description,
                 origin,
                 cost

@@ -8,17 +8,8 @@
                     {{#each talent.tags as |tag|}}
                         <span class="pill {{tag.cssClass}}" data-tag="{{tag.cssClass}}">{{tag.label}}</span>
                     {{/each}}
-                    {{!-- Show rank: if talent.rank is an array, iterate and render only the last element; otherwise assume it's an object with .idx --}}
                     {{#if talent.rank}}
-                        {{#if talent.rank.length}}
-                            {{#each talent.rank as |r|}}
-                                {{#if @last}}
-                                    <span class="pill rank" data-tag="rank-{{r.idx}}">RANG {{r.idx}}</span>
-                                {{/if}}
-                            {{/each}}
-                        {{else}}
-                            <span class="pill tag-rank" data-tag="rank-{{talent.rank.idx}}">RANG {{talent.rank.idx}}</span>
-                        {{/if}}
+                        <span class="pill tag-rank" data-tag="rank-{{talent.row}}">RANG {{talent.row}}</span>
                     {{/if}}
                 </div>
             </div>
@@ -42,16 +33,19 @@
                     {{#if talent.rank.length}}
                         {{#each talent.rank as |r|}}
                             {{#if @last}}
-                                {{#if r.cost}}<span class="cost">{{r.cost}} XP</span>{{else if talent.cost}}<span class="cost">{{talent.cost}} XP</span>{{/if}}
+                                {{#if r.cost}}<span class="cost">{{r.cost}} XP</span>{{else if talent.cost}}
+                                    <span class="cost">{{talent.cost}} XP</span>{{/if}}
                             {{/if}}
                         {{/each}}
                     {{else}}
-                        {{#if talent.rank.cost}}<span class="cost">{{talent.rank.cost}} XP</span>{{else if talent.cost}}<span class="cost">{{talent.cost}} XP</span>{{/if}}
+                        {{#if talent.rank.cost}}<span class="cost">{{talent.rank.cost}} XP</span>{{else if talent.cost}}
+                            <span class="cost">{{talent.cost}} XP</span>{{/if}}
                     {{/if}}
                 {{else if talent.cost}}<span class="cost">{{talent.cost}} XP</span>{{/if}}
 
                 {{#unless talent.isFree}}
-                    <button class="button tiny meta-delete" data-action="itemDelete" title="{{localize "TALENT.Delete"}}">
+                    <button class="button tiny meta-delete" data-action="itemDelete"
+                            title="{{localize "TALENT.Delete"}}">
                         <i class="icon fa-solid fa-trash" aria-hidden="true"></i>
                         {{localize "TALENT.Delete"}}
                     </button>
