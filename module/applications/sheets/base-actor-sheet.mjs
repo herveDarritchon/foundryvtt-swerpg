@@ -868,7 +868,19 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
                                 icon: "fa-solid fa-trash",
                                 label: game.i18n.localize("Delete"),
                                 callback: async (html) => {
-                                    const checked = Array.from(html.querySelectorAll('input[name="toDelete"]:checked')).map(el => el.value);
+                                    // Foundry may pass either a raw DOM element or a jQuery-wrapped element depending on version.
+                                    // Normalize to a DOM root that supports querySelectorAll.
+                                    let root = null;
+                                    try {
+                                        if (html && typeof html.querySelectorAll === "function") root = html;
+                                        else if (html && typeof html.find === "function" && html.length && html[0]) root = html[0];
+                                    } catch (e) {
+                                        root = null;
+                                    }
+
+                                    if (!root) return ui.notifications.error(game.i18n.localize("TALENT.DeleteFailed"));
+
+                                    const checked = Array.from(root.querySelectorAll('input[name="toDelete"]:checked')).map(el => el.value);
                                     if (!checked.length) return ui.notifications.info(game.i18n.localize("TALENT.DeleteNoneSelected"));
 
                                     // Perform deletion
