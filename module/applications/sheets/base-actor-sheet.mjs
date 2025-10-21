@@ -815,8 +815,9 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
                             resizable: true
                         },
                         content, // ton HTML avec les cases à cocher name="toDelete"
-                        ok:
+                        buttons: [
                             {
+                                action: "ok",
                                 label: game.i18n.localize("Delete"),
                                 icon: "fa-solid fa-trash",
                                 default: true,
@@ -837,12 +838,13 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
                                     return {checked};
                                 }
                             },
-                        cancel:
                             {
+                                action: "cancel",
                                 label: game.i18n.localize("Cancel"),
                                 icon: "fa-solid fa-times",
                                 callback: () => null
-                            },
+                            }
+                        ],
                         default: "ok"
                     });
 
