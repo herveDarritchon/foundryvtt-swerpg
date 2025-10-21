@@ -878,7 +878,7 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
                         // Rien à faire ici
                     }
 
-                    d.render(true);
+                    //d.render(true);
                 } else {
                     // Default behavior: forward to the item's delete dialog (if available)
                     await item.deleteDialog?.();
