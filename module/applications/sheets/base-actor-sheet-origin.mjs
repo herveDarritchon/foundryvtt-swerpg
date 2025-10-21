@@ -783,7 +783,91 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
      */
     static async #onItemDelete(event) {
         const item = this.#getEventItem(event);
-        await item.deleteDialog();
+
+        // If this is a ranked Talent with multiple owned versions, prompt the user to select which to delete.
+        try {
+            if ((item.type === "talent") && item.system?.isRanked) {
+                const actor = this.actor;
+                const allVersions = actor.items.filter(i => (i.type === "talent") && (i.name === item.name));
+                const deletable = allVersions.filter(i => !actor.permanentTalentIds.has(i.id));
+                if (deletable.length > 1) {
+                    const lines = deletable.map(i => {
+                        const rankIdx = i.system?.rank?.idx ?? i.system?.rank?.index ?? "?";
+                        return `<div class=\"form-field\"><label><input type=\"checkbox\" name=\"toDelete\" value=\"${i.id}\"> ${i.name} (rank ${rankIdx})</label></div>`;
+                    }).join("");
+
+                    const content = `<form><p>Select which versions of <strong>${item.name}</strong> to delete from ${actor.name}.</p>${lines}</form>`;
+
+                    try {
+                        const DialogV2 = foundry.applications?.ux?.DialogV2;
+                        if (DialogV2?.input && typeof DialogV2.input === "function") {
+                            const inputs = deletable.map(i => {
+                                const rankIdx = i.system?.rank?.idx ?? i.system?.rank?.index ?? "?";
+                                return { type: "checkbox", name: i.id, label: `${i.name} (rank ${rankIdx})`, value: false };
+                            });
+
+                            const result = await DialogV2.input({
+                                title: game.i18n.format("TALENT.DeleteVersions", {name: item.name}),
+                                content: `<p>${game.i18n.format("TALENT.DeleteVersionsDescription", {name: item.name, actor: actor.name})}</p>`,
+                                inputs
+                            });
+
+                            const checked = [];
+                            if (result && typeof result === "object") {
+                                for (const [k, v] of Object.entries(result)) if (v) checked.push(k);
+                            }
+
+                            if (!checked.length) ui.notifications.info(game.i18n.localize("TALENT.DeleteNoneSelected"));
+                            else {
+                                try {
+                                    await actor.deleteEmbeddedDocuments("Item", checked);
+                                    ui.notifications.info(game.i18n.format("TALENT.DeletedVersions", {name: item.name}));
+                                } catch (err) {
+                                    console.error(err);
+                                    ui.notifications.error(game.i18n.localize("TALENT.DeleteFailed"));
+                                }
+                            }
+
+                            return;
+                        }
+                    } catch (err) {
+                        console.warn("DialogV2.input unavailable or failed, falling back to Dialog:", err);
+                    }
+
+                    const d = new Dialog({
+                        title: game.i18n.format("TALENT.DeleteVersions", {name: item.name}),
+                        content,
+                        buttons: {
+                            delete: {
+                                icon: "fa-solid fa-trash",
+                                label: game.i18n.localize("Delete"),
+                                callback: async (html) => {
+                                    const checked = Array.from(html.querySelectorAll('input[name="toDelete"]:checked')).map(el => el.value);
+                                    if (!checked.length) return ui.notifications.info(game.i18n.localize("TALENT.DeleteNoneSelected"));
+                                    try {
+                                        await actor.deleteEmbeddedDocuments("Item", checked);
+                                        ui.notifications.info(game.i18n.format("TALENT.DeletedVersions", {name: item.name}));
+                                    } catch (err) {
+                                        console.error(err);
+                                        ui.notifications.error(game.i18n.localize("TALENT.DeleteFailed"));
+                                    }
+                                }
+                            },
+                            cancel: { icon: "fa-solid fa-chevron-left", label: game.i18n.localize("Cancel") }
+                        },
+                        default: "delete"
+                    });
+                    d.render(true);
+                    return;
+                }
+            }
+        } catch (err) {
+            console.error("Error preparing ranked-talent delete dialog:", err);
+        }
+
+        // Fallback: call the item's own delete dialog (preserves custom behaviors)
+        const deleteAction = this.#getEventItemDeleteAction(event);
+        await item.deleteDialog?.({ yes: { callback: () => deleteAction() } });
     }
 
     /* -------------------------------------------- */

@@ -36,15 +36,11 @@
 }
 
 .talent-cards {
-  /* Responsive grid: cards will flow side-by-side on wide viewports
-     and stack on narrow screens. Use auto-fit + minmax to create
-     fluid columns that adapt to available width. */
+  /* Fixed 3-column grid as requested: each talent card will occupy 1/3 of the section width
+     regardless of the number of talents. On very small screens we fall back to a single column. */
   display: grid;
-  /* Slightly smaller min width to allow two columns on medium screens */
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  /* Make each grid row distribute available height so cards in the
-     same row can have equal heights. Combined with card height:100%
-     this produces consistent footers across cards. */
+  grid-template-columns: repeat(3, 1fr);
+  /* Keep equal row heights so cards align nicely */
   grid-auto-rows: 1fr;
   gap: 16px;
   align-items: stretch;
@@ -480,6 +476,33 @@
 
   /* When stacking cards vertically, let each card keep its natural height */
   .talent-cards {
+    grid-auto-rows: auto;
+  }
+}
+
+@media (max-width: 720px) {
+  .swerpg-talent-card {
+    padding: 12px;
+  }
+  /* Reduce pill width on small screens for better fit */
+  .swerpg-talent-card {
+    --swerpg-pill-width: 64px;
+  }
+  .talent-filters .filter-btn {
+    padding: 8px 12px;
+    font-size: 0.85rem;
+  }
+  /* Keep mobile title size equal/smaller than desktop to avoid oversized headings */
+  /* Mobile: keep title compact and light */
+  .card-header .talent-title {
+    font-size: 0.76rem;
+    font-weight: 500;
+    color: rgba(0, 176, 255, 0.64);
+    text-transform: none;
+  }
+  /* When stacking cards vertically on small screens, use a single column */
+  .talent-cards {
+    grid-template-columns: 1fr;
     grid-auto-rows: auto;
   }
 }
