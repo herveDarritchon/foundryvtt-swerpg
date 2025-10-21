@@ -258,7 +258,7 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
         experience.percent = `${pct}%`;
         const remainingPercent = Math.max(0, Math.min(100, 100 - pct));
         experience.remainingPercent = `${remainingPercent}%`;
-         return experience;
+        return experience;
     }
 
     /**
@@ -274,7 +274,10 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
         // Limiter à 8 pips pour Career
         const CAREER_MAX_PIPS = freeSkillRanksCareer.gained;
         const careerAvailable = Math.max(0, Math.min(CAREER_MAX_PIPS, Number(freeSkillRanksCareer.available) || 0));
-        freeSkillRanksCareer.pips = Array.from({length: CAREER_MAX_PIPS}, (_, i) => ({ index: i + 1, active: i < careerAvailable }));
+        freeSkillRanksCareer.pips = Array.from({length: CAREER_MAX_PIPS}, (_, i) => ({
+            index: i + 1,
+            active: i < careerAvailable
+        }));
         freeSkillRanks.career = freeSkillRanksCareer;
 
         let s = this.actor.system.progression.freeSkillRanks.specialization;
@@ -283,7 +286,10 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
         // Limiter à 4 pips pour Specialization
         const SPEC_MAX_PIPS = freeSkillRanksSpecialization.gained;
         const specAvailable = Math.max(0, Math.min(SPEC_MAX_PIPS, Number(freeSkillRanksSpecialization.available) || 0));
-        freeSkillRanksSpecialization.pips = Array.from({length: SPEC_MAX_PIPS}, (_, i) => ({ index: i + 1, active: i < specAvailable }));
+        freeSkillRanksSpecialization.pips = Array.from({length: SPEC_MAX_PIPS}, (_, i) => ({
+            index: i + 1,
+            active: i < specAvailable
+        }));
         freeSkillRanks.specialization = freeSkillRanksSpecialization;
 
         return freeSkillRanks;
@@ -581,7 +587,7 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
             current,
             max,
             pct: max > 0 ? current / max : 0,
-            color: { bg, fill }
+            color: {bg, fill}
         });
 
         return {
@@ -810,98 +816,72 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
                         </form>
                     `;
 
-                    // Prefer DialogV2.input when available, but fall back to the classic Dialog for compatibility.
-                    try {
-                        const DialogV2 = foundry.applications?.ux?.DialogV2;
-                        if (DialogV2?.input && typeof DialogV2.input === "function") {
-                            // Build inputs for DialogV2.input
-                            const inputs = deletable.map(i => {
-                                const rankIdx = i.system?.rank?.idx ?? i.system?.rank?.index ?? "?";
-                                return {
-                                    type: "checkbox",
-                                    name: i.id,
-                                    label: `${i.name} (rank ${rankIdx})`,
-                                    value: false
-                                };
-                            });
-
-                            // Show DialogV2.input and wait for result
-                            const result = await DialogV2.input({
-                                title: game.i18n.format("TALENT.DeleteVersions", {name: item.name}),
-                                content: `<p>${game.i18n.format("TALENT.DeleteVersionsDescription", {name: item.name, actor: actor.name})}</p>`,
-                                inputs
-                            });
-
-                            // Normalize result -> array of ids to delete
-                            const checked = [];
-                            if (result && typeof result === "object") {
-                                for (const [k, v] of Object.entries(result)) {
-                                    if (v) checked.push(k);
-                                }
-                            }
-
-                            if (!checked.length) {
-                                ui.notifications.info(game.i18n.localize("TALENT.DeleteNoneSelected"));
-                            } else {
-                                try {
-                                    await actor.deleteEmbeddedDocuments("Item", checked);
-                                    ui.notifications.info(game.i18n.format("TALENT.DeletedVersions", {name: item.name}));
-                                } catch (err) {
-                                    console.error(err);
-                                    ui.notifications.error(game.i18n.localize("TALENT.DeleteFailed"));
-                                }
-                            }
-
-                            return; // handled
-                        }
-                    } catch (err) {
-                        // If DialogV2 fails for any reason, continue to the classic Dialog fallback below
-                        console.warn("DialogV2.input unavailable or failed, falling back to Dialog:", err);
-                    }
-
-                    // Show a classic Foundry Dialog (robust across versions)
-                    const d = new Dialog({
-                        title: game.i18n.format("TALENT.DeleteVersions", {name: item.name}),
-                        content,
-                        buttons: {
-                            delete: {
-                                icon: "fa-solid fa-trash",
+                    const result = await foundry.applications.api.DialogV2.prompt({
+                        window: {
+                            title: game.i18n.format("TALENT.DeleteVersions", {name: item.name}),
+                            icon: "fa-solid fa-trash",
+                            width: 600,
+                            resizable: true
+                        },
+                        content, // ton HTML avec les cases à cocher name="toDelete"
+                        buttons: [
+                            {
+                                action: "ok",
                                 label: game.i18n.localize("Delete"),
-                                callback: async (html) => {
-                                    // Foundry may pass either a raw DOM element or a jQuery-wrapped element depending on version.
-                                    // Normalize to a DOM root that supports querySelectorAll.
+                                icon: "fa-solid fa-trash",
+                                default: true,
+                                callback: (event, button, dialog) => {
+                                    const form = button.form ?? dialog.element[0];
+
                                     let root = null;
                                     try {
-                                        if (html && typeof html.querySelectorAll === "function") root = html;
-                                        else if (html && typeof html.find === "function" && html.length && html[0]) root = html[0];
+                                        if (form && typeof form.querySelectorAll === "function") root = form;
+                                        else if (form && typeof form.find === "function" && form.length && form[0]) root = form[0];
                                     } catch (e) {
                                         root = null;
                                     }
 
-                                    if (!root) return ui.notifications.error(game.i18n.localize("TALENT.DeleteFailed"));
+                                    if (!root) return {error: "root-not-found"};
 
                                     const checked = Array.from(root.querySelectorAll('input[name="toDelete"]:checked')).map(el => el.value);
-                                    if (!checked.length) return ui.notifications.info(game.i18n.localize("TALENT.DeleteNoneSelected"));
-
-                                    // Perform deletion
-                                    try {
-                                        await actor.deleteEmbeddedDocuments("Item", checked);
-                                        ui.notifications.info(game.i18n.format("TALENT.DeletedVersions", {name: item.name}));
-                                    } catch (err) {
-                                        console.error(err);
-                                        ui.notifications.error(game.i18n.localize("TALENT.DeleteFailed"));
-                                    }
+                                    return {checked};
                                 }
                             },
-                            cancel: {
-                                icon: "fa-solid fa-chevron-left",
-                                label: game.i18n.localize("Cancel")
+                            {
+                                action: "cancel",
+                                label: game.i18n.localize("Cancel"),
+                                icon: "fa-solid fa-times",
+                                callback: () => null
                             }
-                        },
-                        default: "delete"
+                        ],
+                        default: "ok"
                     });
+
+                    if (result && typeof result === "object" && result.checked) {
+                        const checked = result.checked;
+
+                        if (!checked.length) {
+                            ui.notifications.info(game.i18n.localize("TALENT.DeleteNoneSelected"));
+                        } else {
+                            try {
+                                await actor.deleteEmbeddedDocuments("Item", checked);
+                                ui.notifications.info(game.i18n.format("TALENT.DeletedVersions", {name: item.name}));
+                            } catch (err) {
+                                console.error(err);
+                                ui.notifications.error(game.i18n.localize("TALENT.DeleteFailed"));
+                            }
+                        }
+                    } else if (result?.error === "root-not-found") {
+                        ui.notifications.error(game.i18n.localize("TALENT.DeleteFailed"));
+                    } else {
+                        // Annulation ou aucune action
+                        // Rien à faire ici
+                    }
+
                     d.render(true);
-                    return;
+                } else {
+                    // Default behavior: forward to the item's delete dialog (if available)
+                    await item.deleteDialog?.();
                 }
             }
         } catch (err) {
@@ -909,8 +889,6 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
             console.error("Error preparing ranked-talent delete dialog:", err);
         }
 
-        // Default behavior: forward to the item's delete dialog (if available)
-        await item.deleteDialog?.();
     }
 
     /* -------------------------------------------- */
@@ -1011,7 +989,7 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
      * @param {PointerEvent} event
      * @returns {function(): Promise<void>}
      */
-     #getEventItemDisplayAction(event) {
+    #getEventItemDisplayAction(event) {
         const item = this.#getEventItem(event);
         const target = event.target.closest(".line-item");
         const actionName = target?.dataset.displayAction;
@@ -1025,7 +1003,7 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
         }
 
         // fallback : appel par défaut
-        return async ( ) => await item.sheet.render(true); // ou toute méthode alternative si display() n'existe pas
+        return async () => await item.sheet.render(true); // ou toute méthode alternative si display() n'existe pas
     }
 
     /* -------------------------------------------- */
