@@ -4713,3 +4713,330 @@ a.button.increase {
 .swerpg-dialog.swerpg-confirm-delete-action .dialog-content strong {
   color: var(--color-primary);
 }
+dialog.swerpg-dialog.swerpg-confirm-delete-talents section.window-content,
+.swerpg-dialog.swerpg-confirm-delete-talents section.window-content,
+dialog.swerpg-dialog.swerpg-confirm-delete-talents .window-content,
+.swerpg-dialog.swerpg-confirm-delete-talents .window-content {
+  border-left: 4px solid var(--color-primary);
+  padding: 0.6rem;
+}
+dialog.swerpg-dialog.swerpg-confirm-delete-talents .swerpg-dialog-content strong,
+.swerpg-dialog.swerpg-confirm-delete-talents .swerpg-dialog-content strong {
+  color: var(--color-primary);
+}
+dialog.swerpg-dialog.swerpg-confirm-delete-talents footer.form-footer button[data-action="ok"],
+.swerpg-dialog.swerpg-confirm-delete-talents footer.form-footer button[data-action="ok"],
+dialog.swerpg-dialog.swerpg-confirm-delete-talents .form-footer button[data-action="ok"],
+.swerpg-dialog.swerpg-confirm-delete-talents .form-footer button[data-action="ok"] {
+  border-left: 3px solid var(--color-warm-1);
+  background: linear-gradient(180deg, rgba(44, 18, 10, 0.52), rgba(28, 12, 6, 0.44));
+  color: var(--color-text);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5) inset;
+}
+dialog.swerpg-dialog.swerpg-confirm-delete-talents footer.form-footer button[data-action="ok"]:hover,
+.swerpg-dialog.swerpg-confirm-delete-talents footer.form-footer button[data-action="ok"]:hover,
+dialog.swerpg-dialog.swerpg-confirm-delete-talents .form-footer button[data-action="ok"]:hover,
+.swerpg-dialog.swerpg-confirm-delete-talents .form-footer button[data-action="ok"]:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 6px 18px rgba(255, 160, 120, 0.04);
+}
+dialog.swerpg-dialog.swerpg-confirm-delete-talents header.window-header .header-control.icon.fa-xmark,
+.swerpg-dialog.swerpg-confirm-delete-talents header.window-header .header-control.icon.fa-xmark,
+dialog.swerpg-dialog.swerpg-confirm-delete-talents .header-control.icon.fa-xmark,
+.swerpg-dialog.swerpg-confirm-delete-talents .header-control.icon.fa-xmark {
+  color: rgba(255, 255, 255, 0.55);
+  background: transparent;
+  border: none;
+  padding: 0.12rem 0.4rem;
+  border-radius: 6px;
+}
+dialog.swerpg-dialog.swerpg-confirm-delete-talents header.window-header .header-control.icon.fa-xmark:hover,
+.swerpg-dialog.swerpg-confirm-delete-talents header.window-header .header-control.icon.fa-xmark:hover,
+dialog.swerpg-dialog.swerpg-confirm-delete-talents .header-control.icon.fa-xmark:hover,
+.swerpg-dialog.swerpg-confirm-delete-talents .header-control.icon.fa-xmark:hover {
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--color-text);
+}
+/* ------------------------------------------------------------------ */
+/*  Immersive & discrete dialog styles (harmonized with actor sheet)   */
+/* ------------------------------------------------------------------ */
+dialog.swerpg-dialog,
+.swerpg-dialog {
+  /* Appliquer le style directement sur l'élément <dialog class="... swerpg-dialog ..."> */
+  border-radius: 8px;
+  background: linear-gradient(180deg, rgba(8, 14, 20, 0.88), rgba(2, 6, 10, 0.92));
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  box-shadow: 0 6px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 176, 255, 0.1);
+  color: var(--color-text);
+  font-size: 0.95rem;
+  overflow: hidden;
+}
+dialog.swerpg-dialog header.window-header,
+.swerpg-dialog header.window-header,
+dialog.swerpg-dialog .window-header,
+.swerpg-dialog .window-header {
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+  border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+  padding: 0.36rem 0.6rem;
+}
+dialog.swerpg-dialog header.window-header .window-title,
+.swerpg-dialog header.window-header .window-title,
+dialog.swerpg-dialog .window-header .window-title,
+.swerpg-dialog .window-header .window-title {
+  font-family: var(--font-h1);
+  color: var(--color-primary);
+  font-size: 1rem;
+  line-height: 1.1;
+  letter-spacing: 0.02rem;
+}
+dialog.swerpg-dialog section.window-content,
+.swerpg-dialog section.window-content,
+dialog.swerpg-dialog .window-content,
+.swerpg-dialog .window-content {
+  padding: 0.6rem;
+  background: transparent;
+}
+dialog.swerpg-dialog .swerpg-dialog-content,
+.swerpg-dialog .swerpg-dialog-content {
+  background: linear-gradient(135deg, rgba(6, 12, 20, 0.42), rgba(2, 4, 8, 0.62));
+  border-radius: 6px;
+  padding: 0.6rem 0.75rem;
+  color: var(--color-text);
+  border: 1px solid rgba(255, 255, 255, 0.02);
+  box-shadow: 0 2px 14px rgba(0, 0, 0, 0.5) inset;
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+dialog.swerpg-dialog .dialog-content .form-field,
+.swerpg-dialog .dialog-content .form-field,
+dialog.swerpg-dialog form.dialog-form .form-field,
+.swerpg-dialog form.dialog-form .form-field,
+dialog.swerpg-dialog form.standard-form .form-field,
+.swerpg-dialog form.standard-form .form-field,
+dialog.swerpg-dialog .dialog-content label,
+.swerpg-dialog .dialog-content label,
+dialog.swerpg-dialog form.dialog-form label,
+.swerpg-dialog form.dialog-form label,
+dialog.swerpg-dialog form.standard-form label,
+.swerpg-dialog form.standard-form label,
+dialog.swerpg-dialog .dialog-content input[type="text"],
+.swerpg-dialog .dialog-content input[type="text"],
+dialog.swerpg-dialog form.dialog-form input[type="text"],
+.swerpg-dialog form.dialog-form input[type="text"],
+dialog.swerpg-dialog form.standard-form input[type="text"],
+.swerpg-dialog form.standard-form input[type="text"],
+dialog.swerpg-dialog .dialog-content input[type="checkbox"],
+.swerpg-dialog .dialog-content input[type="checkbox"],
+dialog.swerpg-dialog form.dialog-form input[type="checkbox"],
+.swerpg-dialog form.dialog-form input[type="checkbox"],
+dialog.swerpg-dialog form.standard-form input[type="checkbox"],
+.swerpg-dialog form.standard-form input[type="checkbox"],
+dialog.swerpg-dialog .dialog-content textarea,
+.swerpg-dialog .dialog-content textarea,
+dialog.swerpg-dialog form.dialog-form textarea,
+.swerpg-dialog form.dialog-form textarea,
+dialog.swerpg-dialog form.standard-form textarea,
+.swerpg-dialog form.standard-form textarea,
+dialog.swerpg-dialog .dialog-content select,
+.swerpg-dialog .dialog-content select,
+dialog.swerpg-dialog form.dialog-form select,
+.swerpg-dialog form.dialog-form select,
+dialog.swerpg-dialog form.standard-form select,
+.swerpg-dialog form.standard-form select {
+  color: var(--color-text);
+}
+dialog.swerpg-dialog .dialog-content input[type="text"],
+.swerpg-dialog .dialog-content input[type="text"],
+dialog.swerpg-dialog form.dialog-form input[type="text"],
+.swerpg-dialog form.dialog-form input[type="text"],
+dialog.swerpg-dialog form.standard-form input[type="text"],
+.swerpg-dialog form.standard-form input[type="text"],
+dialog.swerpg-dialog .dialog-content textarea,
+.swerpg-dialog .dialog-content textarea,
+dialog.swerpg-dialog form.dialog-form textarea,
+.swerpg-dialog form.dialog-form textarea,
+dialog.swerpg-dialog form.standard-form textarea,
+.swerpg-dialog form.standard-form textarea,
+dialog.swerpg-dialog .dialog-content select,
+.swerpg-dialog .dialog-content select,
+dialog.swerpg-dialog form.dialog-form select,
+.swerpg-dialog form.dialog-form select,
+dialog.swerpg-dialog form.standard-form select,
+.swerpg-dialog form.standard-form select {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  padding: 0.35rem 0.5rem;
+  border-radius: 6px;
+  box-shadow: none;
+  transition: box-shadow 120ms ease, transform 120ms ease;
+}
+dialog.swerpg-dialog .dialog-content input[type="text"]:focus,
+.swerpg-dialog .dialog-content input[type="text"]:focus,
+dialog.swerpg-dialog form.dialog-form input[type="text"]:focus,
+.swerpg-dialog form.dialog-form input[type="text"]:focus,
+dialog.swerpg-dialog form.standard-form input[type="text"]:focus,
+.swerpg-dialog form.standard-form input[type="text"]:focus,
+dialog.swerpg-dialog .dialog-content textarea:focus,
+.swerpg-dialog .dialog-content textarea:focus,
+dialog.swerpg-dialog form.dialog-form textarea:focus,
+.swerpg-dialog form.dialog-form textarea:focus,
+dialog.swerpg-dialog form.standard-form textarea:focus,
+.swerpg-dialog form.standard-form textarea:focus,
+dialog.swerpg-dialog .dialog-content select:focus,
+.swerpg-dialog .dialog-content select:focus,
+dialog.swerpg-dialog form.dialog-form select:focus,
+.swerpg-dialog form.dialog-form select:focus,
+dialog.swerpg-dialog form.standard-form select:focus,
+.swerpg-dialog form.standard-form select:focus {
+  box-shadow: 0 0 10px rgba(0, 176, 255, 0.06);
+  outline: none;
+  transform: translateY(-1px);
+}
+dialog.swerpg-dialog .dialog-buttons,
+.swerpg-dialog .dialog-buttons,
+dialog.swerpg-dialog .dialog-footer,
+.swerpg-dialog .dialog-footer,
+dialog.swerpg-dialog .dialog-button-group,
+.swerpg-dialog .dialog-button-group,
+dialog.swerpg-dialog footer.form-footer,
+.swerpg-dialog footer.form-footer,
+dialog.swerpg-dialog .form-footer,
+.swerpg-dialog .form-footer {
+  margin-top: 0.6rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+dialog.swerpg-dialog .dialog-buttons button,
+.swerpg-dialog .dialog-buttons button,
+dialog.swerpg-dialog .dialog-footer button,
+.swerpg-dialog .dialog-footer button,
+dialog.swerpg-dialog .dialog-button-group button,
+.swerpg-dialog .dialog-button-group button,
+dialog.swerpg-dialog footer.form-footer button,
+.swerpg-dialog footer.form-footer button,
+dialog.swerpg-dialog .form-footer button,
+.swerpg-dialog .form-footer button,
+dialog.swerpg-dialog .dialog-buttons .button,
+.swerpg-dialog .dialog-buttons .button,
+dialog.swerpg-dialog .dialog-footer .button,
+.swerpg-dialog .dialog-footer .button,
+dialog.swerpg-dialog .dialog-button-group .button,
+.swerpg-dialog .dialog-button-group .button,
+dialog.swerpg-dialog footer.form-footer .button,
+.swerpg-dialog footer.form-footer .button,
+dialog.swerpg-dialog .form-footer .button,
+.swerpg-dialog .form-footer .button {
+  background: linear-gradient(180deg, rgba(20, 30, 40, 0.58), rgba(6, 12, 20, 0.58));
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  color: var(--color-text);
+  padding: 0.36rem 0.7rem;
+  border-radius: 6px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.45) inset;
+  transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease;
+  font-size: 0.9rem;
+  line-height: 1;
+  min-width: 72px;
+  text-align: center;
+}
+dialog.swerpg-dialog .dialog-buttons button:hover,
+.swerpg-dialog .dialog-buttons button:hover,
+dialog.swerpg-dialog .dialog-footer button:hover,
+.swerpg-dialog .dialog-footer button:hover,
+dialog.swerpg-dialog .dialog-button-group button:hover,
+.swerpg-dialog .dialog-button-group button:hover,
+dialog.swerpg-dialog footer.form-footer button:hover,
+.swerpg-dialog footer.form-footer button:hover,
+dialog.swerpg-dialog .form-footer button:hover,
+.swerpg-dialog .form-footer button:hover,
+dialog.swerpg-dialog .dialog-buttons .button:hover,
+.swerpg-dialog .dialog-buttons .button:hover,
+dialog.swerpg-dialog .dialog-footer .button:hover,
+.swerpg-dialog .dialog-footer .button:hover,
+dialog.swerpg-dialog .dialog-button-group .button:hover,
+.swerpg-dialog .dialog-button-group .button:hover,
+dialog.swerpg-dialog footer.form-footer .button:hover,
+.swerpg-dialog footer.form-footer .button:hover,
+dialog.swerpg-dialog .form-footer .button:hover,
+.swerpg-dialog .form-footer .button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 26px rgba(0, 176, 255, 0.04);
+}
+dialog.swerpg-dialog .dialog-buttons .button.danger,
+.swerpg-dialog .dialog-buttons .button.danger,
+dialog.swerpg-dialog .dialog-footer .button.danger,
+.swerpg-dialog .dialog-footer .button.danger,
+dialog.swerpg-dialog .dialog-button-group .button.danger,
+.swerpg-dialog .dialog-button-group .button.danger,
+dialog.swerpg-dialog footer.form-footer .button.danger,
+.swerpg-dialog footer.form-footer .button.danger,
+dialog.swerpg-dialog .form-footer .button.danger,
+.swerpg-dialog .form-footer .button.danger,
+dialog.swerpg-dialog .dialog-buttons button.danger,
+.swerpg-dialog .dialog-buttons button.danger,
+dialog.swerpg-dialog .dialog-footer button.danger,
+.swerpg-dialog .dialog-footer button.danger,
+dialog.swerpg-dialog .dialog-button-group button.danger,
+.swerpg-dialog .dialog-button-group button.danger,
+dialog.swerpg-dialog footer.form-footer button.danger,
+.swerpg-dialog footer.form-footer button.danger,
+dialog.swerpg-dialog .form-footer button.danger,
+.swerpg-dialog .form-footer button.danger {
+  border-left: 3px solid var(--color-warm-1);
+}
+dialog.swerpg-dialog .dialog-buttons .button.primary,
+.swerpg-dialog .dialog-buttons .button.primary,
+dialog.swerpg-dialog .dialog-footer .button.primary,
+.swerpg-dialog .dialog-footer .button.primary,
+dialog.swerpg-dialog .dialog-button-group .button.primary,
+.swerpg-dialog .dialog-button-group .button.primary,
+dialog.swerpg-dialog footer.form-footer .button.primary,
+.swerpg-dialog footer.form-footer .button.primary,
+dialog.swerpg-dialog .form-footer .button.primary,
+.swerpg-dialog .form-footer .button.primary,
+dialog.swerpg-dialog .dialog-buttons button.primary,
+.swerpg-dialog .dialog-buttons button.primary,
+dialog.swerpg-dialog .dialog-footer button.primary,
+.swerpg-dialog .dialog-footer button.primary,
+dialog.swerpg-dialog .dialog-button-group button.primary,
+.swerpg-dialog .dialog-button-group button.primary,
+dialog.swerpg-dialog footer.form-footer button.primary,
+.swerpg-dialog footer.form-footer button.primary,
+dialog.swerpg-dialog .form-footer button.primary,
+.swerpg-dialog .form-footer button.primary {
+  border-left: 3px solid var(--color-primary);
+}
+dialog.swerpg-dialog.compact section.window-content,
+.swerpg-dialog.compact section.window-content,
+dialog.swerpg-dialog[data-size="small"] section.window-content,
+.swerpg-dialog[data-size="small"] section.window-content {
+  padding: 0.35rem;
+}
+dialog.swerpg-dialog.compact .window-content,
+.swerpg-dialog.compact .window-content,
+dialog.swerpg-dialog[data-size="small"] .window-content,
+.swerpg-dialog[data-size="small"] .window-content {
+  padding: 0.35rem;
+}
+dialog.swerpg-dialog.compact .swerpg-dialog-content,
+.swerpg-dialog.compact .swerpg-dialog-content,
+dialog.swerpg-dialog[data-size="small"] .swerpg-dialog-content,
+.swerpg-dialog[data-size="small"] .swerpg-dialog-content {
+  padding: 0.35rem;
+  font-size: 0.9rem;
+}
+dialog.swerpg-dialog.compact .dialog-buttons .button,
+.swerpg-dialog.compact .dialog-buttons .button,
+dialog.swerpg-dialog[data-size="small"] .dialog-buttons .button,
+.swerpg-dialog[data-size="small"] .dialog-buttons .button,
+dialog.swerpg-dialog.compact footer.form-footer button,
+.swerpg-dialog.compact footer.form-footer button,
+dialog.swerpg-dialog[data-size="small"] footer.form-footer button,
+.swerpg-dialog[data-size="small"] footer.form-footer button,
+dialog.swerpg-dialog.compact .form-footer button,
+.swerpg-dialog.compact .form-footer button,
+dialog.swerpg-dialog[data-size="small"] .form-footer button,
+.swerpg-dialog[data-size="small"] .form-footer button {
+  padding: 0.28rem 0.5rem;
+  min-width: 60px;
+}

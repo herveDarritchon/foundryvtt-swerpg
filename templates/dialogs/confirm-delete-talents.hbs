@@ -1,19 +1,21 @@
-<form class="dialog-form standard-form">
-    <p>
-        Select which versions of <strong>{{item.name}}</strong> to delete from {{actor.name}}.
-    </p>
+<div class="swerpg-dialog-content swerpg-confirm-delete-talents">
+    <form class="dialog-form standard-form">
+        <p>
+            Select which versions of <strong>{{item.name}}</strong> to delete from {{actor.name}}.
+        </p>
 
-    {{#each deletable as |i|}}
-        <div class="form-field">
-            <label>
-                <input type="checkbox" name="toDelete" value="{{i.id}}">
-                {{i.name}} (rank {{i.system.rank.idx}} )
-                {{{i.system.description}}}
-            </label>
-        </div>
-    {{/each}}
+        {{#each deletable as |i|}}
+            <div class="form-field">
+                <label>
+                    <input type="checkbox" name="toDelete" value="{{i.id}}">
+                    {{i.name}} (rank {{i.system.rank.idx}} )
+                    {{{i.system.description}}}
+                </label>
+            </div>
+        {{/each}}
 
-    {{#unless deletable.length}}
-        <p><em>No deletable versions found.</em></p>
-    {{/unless}}
-</form>
+        {{#unless deletable.length}}
+            <p><em>No deletable versions found.</em></p>
+        {{/unless}}
+    </form>
+</div>

@@ -52,3 +52,179 @@
     color: var(--color-primary);
   }
 }
+
+// Delete talents confirmation dialog (specific styling for the confirm-delete-talents popup)
+dialog.swerpg-dialog.swerpg-confirm-delete-talents,
+.swerpg-dialog.swerpg-confirm-delete-talents {
+  section.window-content,
+  .window-content {
+    border-left: 4px solid var(--color-primary);
+    padding: 0.6rem;
+  }
+
+  .swerpg-dialog-content strong {
+    color: var(--color-primary);
+  }
+
+  // Make the primary "Delete" button visually distinct using the data-action attribute
+  footer.form-footer button[data-action="ok"],
+  .form-footer button[data-action="ok"] {
+    border-left: 3px solid var(--color-warm-1);
+    background: linear-gradient(180deg, rgba(44,18,10,0.52), rgba(28,12,6,0.44));
+    color: var(--color-text);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.5) inset;
+  }
+
+  footer.form-footer button[data-action="ok"]:hover,
+  .form-footer button[data-action="ok"]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6), 0 6px 18px rgba(255,160,120,0.04);
+  }
+
+  // Header close button styling for a subtle look
+  header.window-header .header-control.icon.fa-xmark,
+  .header-control.icon.fa-xmark {
+    color: rgba(255,255,255,0.55);
+    background: transparent;
+    border: none;
+    padding: 0.12rem 0.4rem;
+    border-radius: 6px;
+  }
+
+  header.window-header .header-control.icon.fa-xmark:hover,
+  .header-control.icon.fa-xmark:hover {
+    background: rgba(255,255,255,0.02);
+    color: var(--color-text);
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/*  Immersive & discrete dialog styles (harmonized with actor sheet)   */
+/* ------------------------------------------------------------------ */
+
+// Global wrapper applied to DialogV2 via window.classes or to dialog container
+dialog.swerpg-dialog,
+.swerpg-dialog {
+  /* Appliquer le style directement sur l'élément <dialog class="... swerpg-dialog ..."> */
+  border-radius: 8px;
+  background: linear-gradient(180deg, rgba(8,14,20,0.88), rgba(2,6,10,0.92));
+  border: 1px solid rgba(255,255,255,0.04);
+  box-shadow: 0 6px 30px rgba(0,0,0,0.6), 0 0 20px fade(@color-glow, 10%);
+  color: var(--color-text);
+  font-size: 0.95rem;
+  overflow: hidden;
+
+  header.window-header,
+  .window-header {
+    background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border-bottom: 1px solid rgba(255,255,255,0.02);
+    padding: 0.36rem 0.6rem;
+
+    .window-title {
+      font-family: var(--font-h1);
+      color: var(--color-primary);
+      font-size: 1rem;
+      line-height: 1.1;
+      letter-spacing: 0.02rem;
+    }
+  }
+
+  section.window-content,
+  .window-content {
+    padding: 0.6rem;
+    background: transparent;
+  }
+
+  // Content wrapper used inside the Handlebars templates (we keep this class on templates)
+  .swerpg-dialog-content {
+    background: linear-gradient(135deg, rgba(6,12,20,0.42), rgba(2,4,8,0.62));
+    border-radius: 6px;
+    padding: 0.6rem 0.75rem;
+    color: var(--color-text);
+    border: 1px solid rgba(255,255,255,0.02);
+    box-shadow: 0 2px 14px rgba(0,0,0,0.5) inset;
+    font-size: 0.95rem;
+    line-height: 1.45;
+  }
+
+  // Small tweaks for form fields inside dialogs to match sheet inputs
+  .dialog-content,
+  form.dialog-form,
+  form.standard-form {
+    .form-field,
+    label,
+    input[type="text"],
+    input[type="checkbox"],
+    textarea,
+    select {
+      color: var(--color-text);
+    }
+
+    input[type="text"], textarea, select {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.03);
+      padding: 0.35rem 0.5rem;
+      border-radius: 6px;
+      box-shadow: none;
+      transition: box-shadow 120ms ease, transform 120ms ease;
+    }
+
+    input[type="text"]:focus, textarea:focus, select:focus {
+      box-shadow: 0 0 10px rgba(0,176,255,0.06);
+      outline: none;
+      transform: translateY(-1px);
+    }
+  }
+
+  // Dialog buttons area - align with actor sheet button visuals
+  .dialog-buttons,
+  .dialog-footer,
+  .dialog-button-group,
+  footer.form-footer,
+  .form-footer {
+    margin-top: 0.6rem;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+
+    button,
+    .button {
+      background: linear-gradient(180deg, rgba(20,30,40,0.58), rgba(6,12,20,0.58));
+      border: 1px solid rgba(255,255,255,0.04);
+      color: var(--color-text);
+      padding: 0.36rem 0.7rem;
+      border-radius: 6px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.45) inset;
+      transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease;
+      font-size: 0.9rem;
+      line-height: 1;
+      min-width: 72px;
+      text-align: center;
+    }
+
+    button:hover,
+    .button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 26px rgba(0,176,255,0.04);
+    }
+
+    .button.danger,
+    button.danger {
+      border-left: 3px solid var(--color-warm-1);
+    }
+
+    .button.primary,
+    button.primary {
+      border-left: 3px solid var(--color-primary);
+    }
+  }
+
+  // Make small dialogs more compact and discreet
+  &.compact,
+  &[data-size="small"] {
+    section.window-content { padding: 0.35rem; }
+    .window-content { padding: 0.35rem; }
+    .swerpg-dialog-content { padding: 0.35rem; font-size: 0.9rem; }
+    .dialog-buttons .button, footer.form-footer button, .form-footer button { padding: 0.28rem 0.5rem; min-width: 60px; }
+  }
+}

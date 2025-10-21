@@ -807,7 +807,7 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
                     });
 
                     const result = await foundry.applications.api.DialogV2.prompt({
-                        classes: ["swerpg-dialog", "swerpg-confirm-reset-talents"],
+                        classes: ["swerpg", "swerpg-dialog", "swerpg-confirm-delete-talents"],
                         window: {
                             title: game.i18n.format("TALENT.DeleteVersions", {name: item.name}),
                             icon: "fa-solid fa-trash",
