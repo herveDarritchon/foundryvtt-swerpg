@@ -1155,7 +1155,7 @@ export default class SwerpgAction extends foundry.abstract.DataModel {
 
         // Render HTML template
         const tags = this.getTags();
-        const content = await renderTemplate("systems/swerpg/templates/dice/action-use-chat.hbs", {
+        const content = awaitfoundry.applications.handlebars.renderTemplate("systems/swerpg/templates/dice/action-use-chat.hbs", {
             action: this,
             actionTags: tags.action,
             activationTags: tags.activation,

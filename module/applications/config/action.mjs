@@ -326,7 +326,7 @@ export default class ActionConfig extends api.HandlebarsApplicationMixin(api.Doc
      * @returns {Promise<void>}
      */
     static async #onAddEffect(event) {
-        const html = await renderTemplate(this.constructor.ACTIVE_EFFECT_PARTIAL, {
+        const html = awaitfoundry.applications.handlebars.renderTemplate(this.constructor.ACTIVE_EFFECT_PARTIAL, {
             i: foundry.utils.randomID(), // Could be anything
             effect: {
                 scope: SYSTEM.ACTION.TARGET_SCOPES.ENEMIES,
@@ -369,7 +369,7 @@ export default class ActionConfig extends api.HandlebarsApplicationMixin(api.Doc
      */
     static async #onAddHook(event) {
         const hookId = event.target.previousElementSibling.value;
-        const html = await renderTemplate(this.constructor.HOOK_PARTIAL, {
+        const html = awaitfoundry.applications.handlebars.renderTemplate(this.constructor.HOOK_PARTIAL, {
             i: foundry.utils.randomID(), // Could be anything
             hook: {
                 label: this.#getHookLabel(hookId, SYSTEM.ACTION_HOOKS[hookId]),

@@ -579,6 +579,9 @@ async function preloadHandlebarsTemplates() {
         `systems/${SYSTEM.id}/templates/sheets/partials/talent-summary.hbs`,
         `systems/${SYSTEM.id}/templates/sheets/partials/taxonomy-config.hbs`,
         `systems/${SYSTEM.id}/templates/sheets/partials/weapon-config.hbs`,
+        // Dialog templates (externalized to separate .hbs files)
+        `systems/${SYSTEM.id}/templates/dialogs/confirm-reset-talents.hbs`,
+        `systems/${SYSTEM.id}/templates/dialogs/confirm-delete-action.hbs`,
     ];
     // Await loading so we can log diagnostics in the browser console during init
     const templates = await loadTemplates(templatePaths);

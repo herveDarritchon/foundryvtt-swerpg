@@ -4698,3 +4698,18 @@ a.button.increase {
 .xp-cell .xp-edit .xp-input {
   box-sizing: border-box;
 }
+.swerpg-dialog.swerpg-confirm-reset-talents .window-content {
+  background-color: rgba(12, 15, 23, 0.95);
+  padding: 0.6rem;
+}
+.swerpg-dialog.swerpg-confirm-reset-talents .dialog-content {
+  font-size: 1rem;
+  color: var(--color-text);
+}
+.swerpg-dialog.swerpg-confirm-delete-action .window-content {
+  border-left: 4px solid var(--color-primary);
+  padding: 0.6rem;
+}
+.swerpg-dialog.swerpg-confirm-delete-action .dialog-content strong {
+  color: var(--color-primary);
+}

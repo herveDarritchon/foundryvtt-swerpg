@@ -225,7 +225,7 @@ export default class StandardCheck extends Roll {
      */
     async render(chatOptions) {
         const chatData = await this._prepareChatRenderContext(chatOptions);
-        return renderTemplate(this.constructor.CHAT_TEMPLATE, chatData);
+        returnfoundry.applications.handlebars.renderTemplate(this.constructor.CHAT_TEMPLATE, chatData);
     }
 
     /* -------------------------------------------- */

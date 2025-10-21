@@ -1,0 +1,21 @@
+<form class="dialog-form standard-form">
+    <p>
+        base-actor-sheet - Select which versions of
+        <strong>{{item.name}}</strong>
+        to delete from {{actor.name}}.
+    </p>
+
+    {{#each deletable as |i|}}
+        <div class="form-field">
+            <label>
+                <input type="checkbox" name="toDelete" value="{{i.id}}">
+                {{i.name}} (rank {{i.system.rank.idx}} )
+                {{{i.system.description}}}
+            </label>
+        </div>
+    {{/each}}
+
+    {{#unless deletable.length}}
+        <p><em>No deletable versions found.</em></p>
+    {{/unless}}
+</form>

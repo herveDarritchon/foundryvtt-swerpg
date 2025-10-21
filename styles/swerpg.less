@@ -21,3 +21,34 @@
 
 // XP hover/edit cell styles
 @import "./components/xp-cell.less";
+
+// Dialog customizations for externalized DialogV2 templates
+// These selectors target the Dialog window via the classes we add using DialogV2.window.classes
+.swerpg-dialog {
+  // Scope any generic dialog customizations here
+}
+
+// Reset talents confirmation dialog
+.swerpg-dialog.swerpg-confirm-reset-talents {
+  .window-content {
+    background-color: fade(@background-dark, 95%);
+    padding: 0.6rem;
+  }
+
+  .dialog-content {
+    font-size: 1rem;
+    color: var(--color-text);
+  }
+}
+
+// Delete action confirmation dialog
+.swerpg-dialog.swerpg-confirm-delete-action {
+  .window-content {
+    border-left: 4px solid var(--color-primary);
+    padding: 0.6rem;
+  }
+
+  .dialog-content strong {
+    color: var(--color-primary);
+  }
+}

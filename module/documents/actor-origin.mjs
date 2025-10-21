@@ -1593,15 +1593,15 @@ export default class SwerpgActor extends Actor {
 
         // Prompt for confirmation
         if (dialog) {
-            const confirm = await DialogV2.confirm({
+            const content = awaitfoundry.applications.handlebars.renderTemplate(`systems/${SYSTEM.id}/templates/dialogs/confirm-reset-talents.hbs`, {actorName: this.name});
+            const confirm = await DialogV2.prompt({
+                classes: ["swerpg-dialog", "swerpg-confirm-reset-talents"],
                 window: {
                     title: `Reset Talents: ${this.name}`,
-                    icon: "fa-solid fa-undo"
+                    icon: "fa-solid fa-undo",
                 },
-                content: `<p>Are you sure you wish to reset all Talents?</p>`,
-                yes: {
-                    default: true
-                }
+                content,
+                yes: {default: true}
             });
             if (!confirm) return;
         }

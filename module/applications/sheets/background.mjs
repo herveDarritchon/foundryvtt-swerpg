@@ -79,7 +79,7 @@ export default class BackgroundSheet extends SwerpgBaseItemSheet {
      */
     async #renderTalentHTML(talent) {
         const tags = talent.system.getTags();
-        return renderTemplate(this.constructor.talentPartial, {talent, tags, editable: this.isEditable});
+        returnfoundry.applications.handlebars.renderTemplate(this.constructor.talentPartial, {talent, tags, editable: this.isEditable});
     }
 
     /* -------------------------------------------- */

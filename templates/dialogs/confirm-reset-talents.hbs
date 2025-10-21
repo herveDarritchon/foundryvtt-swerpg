@@ -1,0 +1,14 @@
+<div class="swerpg-dialog-content swerpg-confirm-reset-talents">
+  <p>
+    {{#if actorName}}
+      {{localize "DIALOG.ConfirmResetTalents"}} <!-- fallback key if available -->
+      {{!-- If localization isn't available, include a sensible default --}}
+    {{/if}}
+  </p>
+  {{#if actorName}}
+    <p>confirm-reset-talents - Are you sure you wish to reset all Talents for <strong>{{actorName}}</strong>?</p>
+  {{else}}
+    <p>Are you sure you wish to reset all Talents?</p>
+  {{/if}}
+</div>
+

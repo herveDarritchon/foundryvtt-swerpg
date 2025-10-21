@@ -353,13 +353,19 @@ export default class SwerpgBaseItemSheet extends api.HandlebarsApplicationMixin(
         if (!action) throw new Error(`Invalid Action id "${actionId}" requested for deletion`);
 
         // Prompt for confirmation
+        // Use an external Handlebars template so markup is separated from JS logic
+        const content = awaitfoundry.applications.handlebars.renderTemplate(`systems/${SYSTEM.id}/templates/dialogs/confirm-delete-action.hbs`, {
+            actionName: action.name,
+            parentName: this.document.name,
+            typeLabel: game.i18n.localize(CONFIG.Item.typeLabels[this.document.type])
+        });
         const confirm = await api.DialogV2.confirm({
             title: game.i18n.format("ACTION.ACTIONS.DELETE", {name: action.name}),
-            content: `<p>${game.i18n.format("ACTION.ACTIONS.DELETE_CONFIRM", {
-                name: action.name,
-                parent: this.document.name,
-                type: game.i18n.localize(CONFIG.Item.typeLabels[this.document.type])
-            })}</p>`
+            window: {
+                // Allow CSS targeting for this specific dialog instance
+                classes: ["swerpg-dialog", "swerpg-confirm-delete-action"]
+            },
+            content
         });
         if (!confirm) return;
         if (action.sheet.rendered) action.sheet.close();

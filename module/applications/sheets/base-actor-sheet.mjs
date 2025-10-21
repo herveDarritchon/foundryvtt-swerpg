@@ -1,3 +1,5 @@
+import {SYSTEM} from "../../config/system.mjs";
+
 const {api, sheets} = foundry.applications;
 
 /**
@@ -800,23 +802,12 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
 
                 // If there is more than one deletable version, ask the user which to remove
                 if (deletable.length > 1) {
-                    // Build dialog content with checkboxes
-                    const lines = deletable.map(i => {
-                        const rankIdx = i.system?.rank?.idx ?? i.system?.rank?.index ?? "?";
-                        const info = i.system?.description ? "" : "";
-                        return `<div class=\"form-field\">` +
-                            `<label><input type=\"checkbox\" name=\"toDelete\" value=\"${i.id}\"> ${i.name} (rank ${rankIdx}) ${info}</label>` +
-                            `</div>`;
-                    }).join("");
-
-                    const content = `
-                        <form>
-                            <p>Select which versions of <strong>${item.name}</strong> to delete from ${actor.name}.</p>
-                            ${lines}
-                        </form>
-                    `;
+                    const content = await foundry.applications.handlebars.renderTemplate(`systems/${SYSTEM.id}/templates/dialogs/confirm-delete-talents.hbs`, {
+                        actor: this, item: item, deletable: deletable
+                    });
 
                     const result = await foundry.applications.api.DialogV2.prompt({
+                        classes: ["swerpg-dialog", "swerpg-confirm-reset-talents"],
                         window: {
                             title: game.i18n.format("TALENT.DeleteVersions", {name: item.name}),
                             icon: "fa-solid fa-trash",
@@ -824,9 +815,8 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
                             resizable: true
                         },
                         content, // ton HTML avec les cases à cocher name="toDelete"
-                        buttons: [
+                        ok:
                             {
-                                action: "ok",
                                 label: game.i18n.localize("Delete"),
                                 icon: "fa-solid fa-trash",
                                 default: true,
@@ -847,13 +837,12 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
                                     return {checked};
                                 }
                             },
+                        cancel:
                             {
-                                action: "cancel",
                                 label: game.i18n.localize("Cancel"),
                                 icon: "fa-solid fa-times",
                                 callback: () => null
-                            }
-                        ],
+                            },
                         default: "ok"
                     });
 
@@ -877,8 +866,6 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
                         // Annulation ou aucune action
                         // Rien à faire ici
                     }
-
-                    //d.render(true);
                 } else {
                     // Default behavior: forward to the item's delete dialog (if available)
                     await item.deleteDialog?.();
