@@ -1,4 +1,5 @@
 import * as chat from "../../chat.mjs";
+import {OggDudeDataImporter} from "../../settings/OggDudeDataImporter.mjs";
 
 export const registerSystemSettings = function () {
 
@@ -28,6 +29,18 @@ export const registerSystemSettings = function () {
         type: Boolean,
         default: false,
     })
+
+    // OggDude Data Importer settings
+    game.settings.registerMenu("swerpg", "oggDudeDataImporter", {
+        name: game.i18n.localize("SETTINGS.OggDudeDataImporter.name"),
+        hint: game.i18n.localize("SETTINGS.OggDudeDataImporter.hint"),
+        label: game.i18n.localize("SETTINGS.OggDudeDataImporter.label"),
+        icon: "fa-solid fa-book-journal-whills",
+        type: OggDudeDataImporter,
+        scope: "world",
+        config: true,
+        restricted: true
+    });
 
     // Register settings
     game.settings.register("swerpg", "actionAnimations", {
