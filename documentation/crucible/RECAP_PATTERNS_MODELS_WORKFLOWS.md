@@ -22,22 +22,22 @@ Suite à votre demande d'enrichir la documentation avec les **Patterns**, **Mode
 
 #### Patterns Comportementaux (4)
 
-4. **Command Pattern** - CrucibleAction encapsule toute la logique d'action
-5. **Strategy Pattern** - Tests de dés (AttackRoll, DamageRoll, etc.)
-6. **Observer Pattern** - Hooks Foundry et hooks personnalisés Crucible
-7. **State Pattern** - Hero creation sheet avec 3 étapes
+1. **Command Pattern** - CrucibleAction encapsule toute la logique d'action
+2. **Strategy Pattern** - Tests de dés (AttackRoll, DamageRoll, etc.)
+3. **Observer Pattern** - Hooks Foundry et hooks personnalisés Crucible
+4. **State Pattern** - Hero creation sheet avec 3 étapes
 
 #### Patterns de Création (3)
 
-8. **Factory Pattern** - Méthodes de création configurées
-9. **Builder Pattern** - Construction d'actions via prepare()
-10. **Prototype Pattern** - Clonage d'actions avant usage
+1. **Factory Pattern** - Méthodes de création configurées
+2. **Builder Pattern** - Construction d'actions via prepare()
+3. **Prototype Pattern** - Clonage d'actions avant usage
 
 #### Patterns Foundry VTT (3)
 
-11. **Document-Model Separation** - Documents (persistance) vs Models (logique)
-12. **Configuration Hierarchy** - SYSTEM → CONST → CONFIG → Settings
-13. **Enum Pattern** - Objects.freeze() pour enums typés
+1. **Document-Model Separation** - Documents (persistance) vs Models (logique)
+2. **Configuration Hierarchy** - SYSTEM → CONST → CONFIG → Settings
+3. **Enum Pattern** - Objects.freeze() pour enums typés
 
 **Diagrammes** : 13 diagrammes Mermaid (classes, séquences)
 
@@ -119,7 +119,7 @@ Suite à votre demande d'enrichir la documentation avec les **Patterns**, **Mode
 2. **Utilisation d'Action** - Workflow complet en 5 phases
    - Phase 1 : Validation (_canUse)
    - Phase 2 : Configuration (dialog, targets)
-   - Phase 3 : Activation (_preActivate, _roll)
+   - Phase 3 : Activation (_preActivate,_roll)
    - Phase 4 : Finalisation (_post, outcomes)
    - Phase 5 : Confirmation (applyOutcome, reverse possible)
    - Hooks du cycle de vie
@@ -296,15 +296,15 @@ Si vous souhaitez poursuivre la documentation :
 
 ### Moyen terme
 
-4. **Chat System** - Documenter enrichers et messages de chat
-5. **Audio System** - Documenter le système audio
-6. **API Reference** - Créer référence complète de `crucible.api`
+1. **Chat System** - Documenter enrichers et messages de chat
+2. **Audio System** - Documenter le système audio
+3. **API Reference** - Créer référence complète de `crucible.api`
 
 ### Long terme
 
-7. **Testing Guide** - Créer guide de test basé sur workflows
-8. **Migration Guide** - Documenter migrations de versions
-9. **Performance Guide** - Best practices performance
+1. **Testing Guide** - Créer guide de test basé sur workflows
+2. **Migration Guide** - Documenter migrations de versions
+3. **Performance Guide** - Best practices performance
 
 ---
 
