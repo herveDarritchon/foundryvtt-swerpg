@@ -1,155 +1,196 @@
-# Copilot / AI instructions for Star Wars Edge RPG (short)
+# Copilot Instructions - Swerpg (Star Wars Edge RPG for FoundryVTT)
 
-Keep guidance concise and actionable. When creating or modifying code, reference the exact files below and follow the project’s conventions.
+## Project Overview
 
----
+Swerpg is a Foundry Virtual Tabletop game system for Star Wars Edge RPG built on modern ES modules. The system leverages Foundry's V2 application architecture and provides:
 
-## Key concepts (big picture)
+## Architecture Essentials
 
-- This repository implements a **Foundry VTT Game System** for *Star Wars: Edge of the Empire* (FFG/Edge Studio).
-- The browser entry point is `swerpg.mjs` (bundled via Rollup).
-- System metadata and compendium configuration live in `system.json` (packs, document types, compatibility, grid).
-- Runtime code resides in `module/` (applications, canvas, documents, models, utils, hooks, etc.).
-- UI templates live in `templates/`; styles in `styles/` with the compiled output `styles/swerpg.css`.
-- Data packs are binary LevelDB files stored in `packs/`, with editable sources in `_source/`.  
-  Use `build.mjs` to **compile** or **extract** pack data.
+- **Core Entry point**: `swerpg.mjs` - Main system initialization and API exposure
+- **Module Structure**: `/module/` - Organized by functional areas (documents, applications, models, config)
+- **Data Management**: YAML-based compendium packs with build pipeline (`_source/` → `packs/`)
+- **Styling**: LESS-based CSS compilation with component architecture
+- **Configuration**: `module/config/system.mjs` - Central system constants and enums
+- **Documents**: Foundry document extensions in `module/documents/`
+- **Data Models**: TypeDataModel subclasses in `module/models/` define item/actor schemas
+- **Applications**: UI components in `module/applications/` following Foundry's ApplicationV2 pattern
 
----
+### Key Foundry Integrations
 
-## Developer workflows (commands you can run)
+- **Data Models**: Use `foundry.abstract.TypeDataModel` for all item/actor data schemas
+- **Applications**: Extend `ApplicationV2` with `HandlebarsApplicationMixin` for sheets
+- **Actions**: `swerpgAction` is the core mechanic - encapsulates dice rolls, targeting, and effects
 
-- **Build the system bundle and assets (local development):**
-
-```bash
-  pnpm run build
-````
-
-Runs sequentially:
-
-* `pnpm run compile` → `node build.mjs compile` (compile packs)
-* `pnpm run rollup` → bundle `swerpg.mjs` via Rollup
-* `pnpm run less` → compile `styles/swerpg.less` → `styles/swerpg.css`
-* **Compile packs only:**
+### Content Management Workflow
 
 ```bash
-  pnpm run compile
+# Extract binary packs to YAML for editing
+npm run extract
+
+# Compile YAML back to binary packs
+npm run compile
+
+# Full build (compile + rollup + less)
+npm run build
+
+# LESS → CSS compilation
+pnpm run less
 ```
 
-Compiles `_source/*.yml` → `packs/*.db`.
-
-* **Extract packs back to source:**
-
+### Testing & Coverage
 ```bash
-  pnpm run extract
+pnpm test               # Run vitest tests
+pnpm test:coverage      # Generate coverage reports
 ```
 
-Extracts `packs/*.db` → `_source/*.yml`.
+**Critical**: 
+- Game content lives in `_source/` as YAML files, compiled to `packs/` LevelDB. Never edit binary packs directly.
+- System must remain compatible with Foundry VTT v13.
 
-* **Run tests and coverage:**
-
-```bash
-  pnpm run test
-  pnpm run test:coverage
+### Action System
+Actions are the heart of Crucible mechanics:
+```javascript
+// Actions are bound to actors and contain all logic for execution
+const action = item.actions[0].bind(actor);
+await action.use(); // Full workflow: preparation → execution → confirmation
 ```
 
----
+### Compendium Integration
+- **Settings**: `swerpg.CONFIG.packs` defines which compendia provide content
+- **UUIDs**: Use `Compendium.swerpg.talent.Item.{id}` format for references
+- **Migration**: System maintains content IDs across versions via `generateId()`
 
-## Project-specific conventions and patterns
+### Sheet Architecture
+- Base classes: `SwerpgBaseActorSheet`, `SwerpgBaseItemSheet`
+- Type-specific extensions: `HeroSheet`, `SwerpgTalentItemSheet`, etc.
+- Use `HandlebarsApplicationMixin(ApplicationV2)` pattern consistently
 
-* **System namespace:**
-  Expose the API during initialization as `swerpg.api` in `swerpg.mjs`.
-  Use `swerpg.api.*` for cross-module helpers (e.g. `swerpg.api.rollEdgeDice()`).
+### Data Management
+- Source data in `_source/` as YAML files (e.g., `_source/armors/Armoured_Clothing_armouredClothing.yml`)
+- Compiled to LevelDB packs in `packs/` directory
+- Use `build.mjs` script with `@foundryvtt/foundryvtt-cli` for pack operations
 
-* **Document registration:**
-  Custom document classes and data models are registered in `swerpg.mjs` via
-  `CONFIG.Actor.documentClass`, `CONFIG.Item.documentClass`, and `CONFIG.Item.dataModels`.
-  Define new models under `module/models/` and wire them in this file.
+## Project-Specific Patterns
 
-* **Packs / data flow:**
-    * Editable YAML sources → `_source/<pack-name>/*.yml`.
-    * Compiled binary packs → `packs/<pack-name>.db`.
-    * Run `pnpm run compile` after editing `_source` to rebuild packs.
-    * `system.json` must list all declared packs (ensure names match folder structure).
+### Document Models
+- Extend Foundry base classes: `SwerpgActor`, `SwerpgItem`, `SwerpgChatMessage`
+- Data models in `/module/models/` use `foundry.abstract.TypeDataModel`
+- Schema definition pattern: `static defineSchema()` with field validation
 
-* **Localization:**
-  Add strings to `lang/fr.json` or `lang/en.json`.
-  Reference them in code via `game.i18n.localize("swerpg.<Key>")`.
-  System-level config objects are localized during init in `swerpg.mjs`.
+### Application Architecture
+- ApplicationV2 + Handlebars: `api.HandlebarsApplicationMixin(sheets.ActorSheetV2)`
+- Base classes: `SwerpgBaseActorSheet` for common functionality
+- Context preparation: `_prepareContext()` → build display data objects
 
-* **UI and styles:**
-    * Handlebars templates under `templates/` follow Foundry conventions.
-    * Use scoped CSS selectors under `.swerpg` or `.swerpg-sheet` to prevent collisions.
-    * LESS sources in `styles/`, compiled via `pnpm run less`.
+### Configuration System
+- Central config in `/module/config/system.mjs` exports `SYSTEM` constant
+- Modular config files: `attributes.mjs`, `skills.mjs`, `spellcraft.mjs`, etc.
+- Compendium pack references: `SYSTEM.COMPENDIUM_PACKS`
 
-* **Dice roller pattern:**
-  Implement core dice logic under `module/dice/`.
-  Export functions like `rollEdgeDice()` and `parseSymbols()` with well-defined outputs.
+### Development Mode Features
+- Debug hooks: `CONFIG.debug.hooks = true` in console
+- Development detection: `detectDevelopmentMode()` function
+- Hot reload support for templates, styles, and language files
 
-* **Assets and design:**
-    * `assets/icons` → icons for actions, combat, etc.
-    * `fonts/` → Star Wars-inspired typefaces (Aurebesh, Orbitron).
-    * Maintain a dark, high-contrast aesthetic consistent with the Star Wars universe.
+## Critical Integration Points
 
----
+### Compendium Pack Integration
+- Pack IDs defined in `SYSTEM.COMPENDIUM_PACKS` (ancestry, archetype, etc.)
+- Runtime pack loading via `game.packs.get(packId)`
+- Export/import workflow through `packageCompendium()` function
 
-## Integration & cross-component notes
+### Talent Tree System
+- `SwerpgTalentNode` manages talent relationships and prerequisites
+- Nodes tracked in global registry: `SwerpgTalentNode.nodes`
+- Tree initialization from talent compendium packs
 
-* **Socket communications:**
-  System events are handled through `game.socket.on('system.swerpg', ...)`.
-  Implement new actions in `module/socket.mjs` and maintain backward compatibility.
+### UI Components
+- Custom Handlebars components in `/ui/` directory
+- Jauge (gauge) system for resources with factory pattern
+- Defense display with percentage calculations and CSS states
 
-* **Template loading:**
-  Templates are preloaded in `swerpg.mjs` during `init` or `ready`.
-  Template paths follow `systems/swerpg/templates/...`.
+## Common Patterns
 
-* **Compendiums:**
-  Each new pack added to `_source` should be declared in both:
+### Error Handling in Actions
+Always wrap action execution in try-catch and provide user feedback through UI.notifications (ui.notifications.error() si erreur bloquante et ui.notifications.warn() si erreur non bloquante, ui.notifications.info() pour les messages d'information si traitement asynchrone).
 
-    * `build.mjs` (`CONFIG.databases`)
-    * `system.json` (`"packs"` array)
+## Foundry VTT Conventions
+- **IDs**: Use `generateId(name, length)` for consistent document IDs
+- **Localization**: All user-facing strings use `game.i18n.localize()`
+- **Stylesheets**: LESS files in `styles/` compiled to `styles/crucible.css`
+- **Templates**: Handlebars templates in `templates/` with partials for reusable components
 
-* **Testing:**
-
-    * Use **Vitest**.
-    * Tests live in `tests/` with mirrors of core folders (`lib/`, `utils/`, etc.).
-    * Follow naming: `test_<feature>_<case>.spec.js`.
-    * Mock Foundry objects where needed.
-
----
-
-## Examples to reference in PRs
-
-* **Adding a new Item model:**
-  Create a class in `module/models/` (e.g. `EdgeWeaponModel.js`),
-  register it in `swerpg.mjs` under `CONFIG.Item.dataModels.weapon`.
-
-* **Adding a new compendium pack:**
-    1. Create YAML files under `_source/<pack-name>/`.
-    2. Add the pack name to `build.mjs` databases.
-    3. Add it to the `system.json` pack list.
-    4. Run `pnpm run compile` to generate the `.db`.
+## Sources pour approfondir Foundry VTT v13
+- Foundry VTT Knowledge Base: https://foundryvtt.com/kb/
+- Foundry VTT v13 API Reference: https://foundryvtt.com/api/
+- Foundry VTT Release Notes: https://foundryvtt.com/releases/
 
 ---
 
-## Small rules for AI contributions
-
-* **Do not break public APIs** (`swerpg.api`, `CONFIG.*`) without coordinated migration.
-* **When editing `_source` data**, include in PR description how pack compilation was validated (`pnpm run compile`).
-* **Commit granularity:** keep code, templates, styles, and data changes separate for easier review.
-
----
-
-## Files to inspect for deeper context
-
-* `swerpg.mjs`, `build.mjs`, `system.json`, `rollup.config.mjs`, `package.json`, and `lang/en.json`
-* Key directories:
-
-    * `module/` → main system logic
-    * `_source/` → pack sources (YAML)
-    * `packs/` → compiled compendiums
-    * `templates/` → UI
-    * `styles/` → LESS/CSS
+## 📌 Règles JavaScript
+- **Syntaxe** : ES6+ modules (modules `import`/`export`, arrow functions, async/await), destructuring, async/await, éviter `var`
+- **Nommage** : `camelCase` pour variables et fonctions, `PascalCase` pour classes et composants  
+- **Sécurité** : Toujours utiliser `foundry.utils.mergeObject()` au lieu d'Object.assign, valider les entrées utilisateur, éviter le `innerHTML` direct.
+- **Performance** : Privilégier `const` over `let`, éviter les boucles dans les getters, mise en cache des sélecteurs DOM, Privilégier le lazy loading des modules, déstructuration, spread operator.
+- **Documentation** : JSDoc obligatoire pour toutes les méthodes publiques, typage avec `@param` et `@returns`
 
 ---
 
-If anything in this file is unclear or more examples are needed (component lifecycle, Foundry hooks, dice workflow, or data model integration), ask for specific snippets and they will be provided.
+## 🏷️ Règles HTML
+- **Structure sémantique** : Utiliser `<section>`, `<header>`, `<nav>` appropriés, pas de `<div>` génériques
+- **Accessibilité (a11y)** : `data-tooltip` pour les infobulles, `aria-label` si nécessaire, contraste WCAG AA
+- **Balisage** : Hiérarchie respectée `h1` → `h2` → `h3` ordonnées, une seule `h1` par sheet, `<title>`
+
+---
+
+## 🎨 Règles CSS
+- **Organisation** : méthodologie CSS Modules.
+- **Responsive** : Mobile-first, media queries basées sur `min-width`.
+- **Flexbox & Grid** : privilégier ces modules pour la mise en page.
+- **Variables CSS** : déclarer les couleurs, espacements et typographies dans `:root`.
+- **Préprocesseur** (optionnel) : less pour gérer les mixins, fonctions, et imports.
+
+---
+
+## 🚫 À ne pas faire
+- **Modifier** directement les packs binaires dans `packs/` - utiliser le workflow YAML dans `_source/`
+- **Ignorer la hiérarchie** des configurations `SYSTEM` → `crucible.CONST` → `crucible.CONFIG`
+- **Oublier l'internationalisation** avec `game.i18n.localize()`
+- **Mélanger les patterns ApplicationV1 et ApplicationV2** - toujours utiliser ApplicationV2
+- **Inline styles** dans le HTML.
+- **Variables globales** non encapsulées.
+- Utilisation de **jQuery** pour de la manipulation DOM simple (utiliser Vanilla JS).
+- Ignorer les **erreurs ESLint** ou warnings de **Prettier**.
+
+---
+
+## 🔗 Références utiles en dehors de Foundry VTT
+- Prettier : https://prettier.io
+- ESLint Airbnb : https://github.com/airbnb/javascript
+- BEM : http://getbem.com
+- WCAG : https://www.w3.org/WAI/standards-guidelines/wcag/
+
+## My Rules for AI Assistance
+- Always prioritize clarity, conciseness, and maintainability in code suggestions and explanations.
+- Ensure all code adheres to Foundry VTT's best practices and Crucible's architecture.
+- when responding, always respond in French.
+- Use technical terminology appropriate for experienced Foundry VTT developers.
+
+## Common Development Tasks
+
+When adding new item types:
+1. Create data model in `/module/models/`
+2. Add to document type registrations
+3. Create sheet class extending base sheet
+4. Add YAML source data in `_source/`
+5. Update build configuration if new pack needed
+
+When modifying spells:
+- Update component definitions in `/module/config/spellcraft.mjs`
+- Spell composition logic in `SwerpgSpellAction._prepareData()`
+- Dialog components for spell building interface
+
+When styling:
+- Use LESS with component-based imports in `styles/swerpg.less`
+- Follow established CSS class patterns (`active`/`inactive`, percentage-based layouts)
+- Leverage system CSS variables in `variables.less`

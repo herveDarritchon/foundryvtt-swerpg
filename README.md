@@ -13,7 +13,7 @@ See https://foundryvtt.com/packages/swerpg
 
 # Local Development Process
 
-```
+```bash
 cd {FOUNDRY_VTT_DATA_DIR}/systems
 git clone https://github.com/foundryvtt/swerpg.git
 cd swerpg
@@ -32,6 +32,6 @@ time. Such a policy will be added as the system progresses.
 To activate the hook display, you need to set the `debug` flag in the devtools console. You can do this by opening the
 devtools console (F12) and entering the following command:
 
-```
+```bash
 CONFIG.debug.hooks = true;
 ```
