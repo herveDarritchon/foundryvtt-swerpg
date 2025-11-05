@@ -1,428 +1,292 @@
-# Architecture Overview - Système Star Wars Edge RPG (swerpg)
+# Architecture Overview - Système Star Wars Edge RPG (swerpg)# Architecture Overview - Système Star Wars Edge RPG (swerpg)
 
-## Introduction
 
-Star Wars Edge RPG (swerpg) est un système de jeu de rôle narratif conçu exclusivement pour Foundry Virtual Tabletop v13+. L'architecture tire parti des capacités uniques de Foundry VTT pour offrir une automatisation riche du système de dés narratifs tout en maintenant l'esprit cinématographique de Star Wars.
 
-## Architecture Globale
+## 🎯 Vision## 🎯 Vision
 
-```mermaid
-graph TB
-    subgraph "Entry Point"
-        MAIN[swerpg.mjs]
-    end
-    
-    subgraph "Core Configuration"
-        SYSTEM[module/config/system.mjs]
-        CONFIG[SYSTEM.CONST & swerpg.CONFIG]
-    end
-    
-    subgraph "Documents Layer"
-        ACTOR_DOC[SwerpgActor]
-        ITEM_DOC[SwerpgItem]
-        COMBAT_DOC[SwerpgCombat]
-        EFFECT_DOC[SwerpgActiveEffect]
-        TOKEN_DOC[SwerpgToken]
-        MESSAGE_DOC[SwerpgChatMessage]
-    end
-    
-    subgraph "Data Models Layer"
-        ACTOR_MODELS["Actor Models<br/>Hero, Adversary, Vehicle"]
-        ITEM_MODELS["Item Models<br/>Talent, Weapon, Armor, Gear..."]
-        DICE_MODELS["Dice Models<br/>Narrative Dice Pool"]
-        OBLIGATION_MODEL[Obligation/Duty System]
-    end
-    
-    subgraph "Applications Layer"
-        SHEETS["Sheets<br/>Actor and Item Sheets"]
-        CONFIG_APPS[Configuration Apps]
-        HUD[HUD Components]
-        ELEMENTS[Custom HTML Elements]
-    end
-    
-    subgraph "Game Systems"
-        TALENT_TREE[Talent Tree System]
-        DICE_SYSTEM[Narrative Dice System]
-        OBLIGATION_SYSTEM[Obligation/Duty System]
-        FORCE_SYSTEM[Force Power System]
-    end
-    
-    subgraph "Canvas & Visualization"
-        TALENT_CANVAS[Talent Tree Canvas]
-        TOKEN_SYSTEM[Token Extensions]
-        RULER[Distance Measurement]
-    end
-    
-    subgraph "Data Management"
-        COMPENDIUMS[15+ Compendium Packs]
-        YAML_SOURCE[YAML Source Data]
-        BUILD_PIPELINE[Build Pipeline]
-    end
 
-    MAIN --> SYSTEM
-    SYSTEM --> CONFIG
-    CONFIG --> ACTOR_DOC
-    CONFIG --> ITEM_DOC
-    ACTOR_DOC --> ACTOR_MODELS
-    ITEM_DOC --> ITEM_MODELS
-    ACTOR_MODELS --> SHEETS
-    ITEM_MODELS --> SHEETS
-    SHEETS --> ELEMENTS
-    TALENT_TREE --> TALENT_CANVAS
-    DICE_SYSTEM --> DICE_MODELS
-    YAML_SOURCE --> BUILD_PIPELINE
-    BUILD_PIPELINE --> COMPENDIUMS
+
+Star Wars Edge RPG (swerpg) est un système narratif pour Foundry VTT v13+ qui automatise les mécaniques complexes tout en préservant l'esprit cinématographique de Star Wars.Star Wars Edge RPG (swerpg) est un système narratif pour Foundry VTT v13+ qui automatise les mécaniques complexes tout en préservant l'esprit cinématographique de Star Wars.
+
+
+
+## 🏗️ Architecture en Couches## 🏗️ Architecture en Couches
+
+
+
+```mermaid```mermaid
+
+graph TBgraph TB
+
+    subgraph "🎮 Game Systems Layer"    subgraph "🎮 Game Systems Layer"
+
+        DICE[Dés Narratifs]        DICE[Dés Narratifs]
+
+        TALENTS[Arbres de Talents]        TALENTS[Arbres de Talents]
+
+        OBLIGATIONS[Obligations/Devoirs]        OBLIGATIONS[Obligations/Devoirs]
+
+        FORCE[Pouvoirs de la Force]        FORCE[Pouvoirs de la Force]
+
+    end    end
+
+        
+
+    subgraph "🎨 Presentation Layer"    subgraph "🎨 Presentation Layer"
+
+        SHEETS[Feuilles de Personnage]        SHEETS[Feuilles de Personnage]
+
+        CANVAS[Canvas Extensions]        CANVAS[Canvas Extensions]
+
+        HUD[Composants HUD]        HUD[Composants HUD]
+
+    end    end
+
+        
+
+    subgraph "📊 Data Layer"    subgraph "📊 Data Layer"
+
+        MODELS[Data Models]        MODELS[Data Models]
+
+        DOCUMENTS[Document Extensions]        DOCUMENTS[Document Extensions]
+
+        COMPENDIUMS[15+ Compendium Packs]        COMPENDIUMS[15+ Compendium Packs]
+
+    end    end
+
+        
+
+    subgraph "⚙️ Core Layer"    subgraph "⚙️ Core Layer"
+
+        CONFIG[Configuration System]        CONFIG[Configuration System]
+
+        API[Public API]        API[Public API]
+
+        HOOKS[Event System]        HOOKS[Event System]
+
+    end    end
+
+        
+
+    subgraph "🗄️ Data Sources"    subgraph "🗄️ Data Sources"
+
+        YAML[Sources YAML]        YAML[Sources YAML]
+
+        BUILD[Build Pipeline]        BUILD[Build Pipeline]
+
+    end    end
+
+``````
+
+
+
+## 🎨 Principes Directeurs## 🎨 Principes Directeurs
+
+
+
+### 1. **Séparation Claire des Responsabilités**### 1. **Séparation Claire des Responsabilités**
+
+- **Core** : Configuration et initialisation → [Configuration](./core/)
+
+- **Core** : Configuration et initialisation → [Configuration](./core/)- **Data** : Modèles et persistence → [Data Management](./data/)
+
+- **Data** : Modèles et persistence → [Data Management](./data/)- **UI** : Interfaces et interactions → [User Interface](./ui/)
+
+- **UI** : Interfaces et interactions → [User Interface](./ui/)- **Systems** : Mécaniques de jeu → [Game Systems](./systems/)
+
+- **Systems** : Mécaniques de jeu → [Game Systems](./systems/)- **Integration** : Intégration Foundry → [Integration](./integration/)
+
+- **Integration** : Intégration Foundry → [Integration](./integration/)
+
+### 2. **Configuration Hiérarchique**
+
+### 2. **Configuration Hiérarchique**```
+
+SYSTEM (statique) → swerpg.CONST → swerpg.CONFIG → User Settings
+
+```text```
+
+SYSTEM (statique) → swerpg.CONST → swerpg.CONFIG → User Settings
+
+```### 3. **Pattern TypeDataModel**
+
+Tous les modèles utilisent `foundry.abstract.TypeDataModel` pour la validation et la structure.
+
+### 3. **Pattern TypeDataModel**
+
+### 4. **ApplicationV2 + Handlebars**
+
+Tous les modèles utilisent `foundry.abstract.TypeDataModel` pour la validation et la structure.Interface moderne avec `HandlebarsApplicationMixin(ApplicationV2)`.
+
+
+
+### 4. **ApplicationV2 + Handlebars**## 🔄 Flux Principaux
+
+
+
+Interface moderne avec `HandlebarsApplicationMixin(ApplicationV2)`.### Initialisation
+
 ```
 
-## Principes Architecturaux
+## 🔄 Flux Principauxswerpg.mjs → Configuration → Models → Applications → Game Systems
 
-### 1. Séparation des Préoccupations
-
-L'architecture sépare clairement :
-
-- **Documents** : Extensions des classes de base Foundry
-- **Configuration** : Toutes les constantes dans `/module/config/`
-- **Data Models** : Logique métier dans `/module/models/` utilisant `TypeDataModel`
-- **Interface** : Composants UI dans `/module/applications/` implémentant `ApplicationV2`
-- **Données** : Sources YAML dans `/_source/`, compilées vers `/packs/`
-
-### 2. Hiérarchie de Configuration
-
-```mermaid
-graph TB
-    subgraph "Configuration"
-        T1[SYSTEM: constants statiques]
-        T2[crucible.CONST: exposé globalement]
-        T3[crucible.CONFIG: runtime configurable]
-        T4[User Settings: paramètres utilisateur]
-
-        T1 --> T2
-        T2 --> T3
-        T3 --> T4
-    end
 ```
 
-### 3. Pattern de Données
+### Initialisation
 
-Swerpg utilise le pattern **TypeDataModel** de Foundry v13 :
+### Action Workflow
 
-```javascript
-// Définition du schéma
-static defineSchema() {
-  return {
-    fieldName: new fields.StringField({...options})
-  }
-}
+```text```
 
-// Préparation des données
-prepareBaseData() { /* Données brutes */ }
-prepareDerivedData() { /* Données calculées */ }
+swerpg.mjs → Configuration → Models → Applications → Game SystemsUser Input → Sheet → Action.use() → Dialog → Roll → Chat → Effects
+
+``````
+
+
+
+### Action Workflow### Data Workflow
+
 ```
 
-## Composants Principaux
+```textYAML Sources → Build Pipeline → Compendium Packs → Runtime Models
 
-### Configuration Système (`/module/config/`)
+User Input → Sheet → Action.use() → Dialog → Roll → Chat → Effects```
 
-```javascript
-// Structure principale de configuration
-export const SYSTEM = {
-    id: "swerpg",
-    CONST: {
-        DICE: { /* Types de dés narratifs */ },
-        SKILLS: { /* Compétences par catégorie */ },
-        CHARACTERISTICS: { /* 6 caractéristiques */ },
-        OBLIGATIONS: { /* Types d'obligations */ }
-    }
-};
 ```
 
-#### Fichiers de Configuration Clés
+## 🎯 Points d'Extension
 
-- **`system.mjs`** : Configuration centrale et constantes
-- **`dice.mjs`** : Définition des dés narratifs et symboles
-- **`skills.mjs`** : Compétences organisées par catégories
-- **`attributes.mjs`** : Caractéristiques et dérivées
-- **`talent-tree.mjs`** : Structure des arbres de talents
+### Data Workflow
 
-### Documents Foundry (`/module/documents/`)
+| Domaine | Extension Points | Documentation |
 
-### Document Extensions
+```text|---------|------------------|---------------|
 
-| Document | Classe | Responsabilité |
-|----------|--------|----------------|
-| Actor | `SwerpgActor` | Gestion des personnages et adversaires |
-| Item | `SwerpgItem` | Gestion des objets, talents, sorts |
-| Combat | `SwerpgCombat` | Gestion des rencontres de combat |
-| ActiveEffect | `SwerpgActiveEffect` | Gestion des effets actifs |
-| Token | `SwerpgToken` | Représentation canvas des acteurs |
-| ChatMessage | `SwerpgChatMessage` | Messages de chat enrichis |
+YAML Sources → Build Pipeline → Compendium Packs → Runtime Models| **Data Models** | `TypeDataModel` subclasses | [DATA/MODELS.md](./data/MODELS.md) |
 
-### Data Models
+```| **UI Components** | `ApplicationV2` sheets | [UI/APPLICATIONS.md](./ui/APPLICATIONS.md) |
 
-#### Actor Models
+| **Game Mechanics** | Action system hooks | [SYSTEMS/*.md](./systems/) |
 
-- **SwerpgCharacter** : Personnages joueurs avec progression et talents
-- **SwerpgAdversary** : Adversaires avec threat ranks
+## 🎯 Points d'Extension| **Canvas** | Canvas layers/tools | [UI/CANVAS.md](./ui/CANVAS.md) |
 
-#### Item Models
 
-- **SwerpgTalent** : Talents avec système d'arbre
-- **SwerpgSpell** : Sorts iconiques
-- **SwerpgWeapon** : Armes avec actions d'attaque
-- **SwerpgArmor** : Armures avec défenses
-- **SwerpgSpecies** : Espèces de personnages
-- **SwerpgCareer** : Carrières de personnages
-- **SwerpgSpecialization** : Spécialisations
-- **SwerpgBackground** : Historiques de personnages
-- **SwerpgGear** : Équipements génériques
 
-## Flux de Données
+| Domaine | Extension Points | Documentation |## 🔗 Intégrations Clés
 
-### 1. Initialisation du Système
+|---------|------------------|---------------|
 
-```mermaid
-sequenceDiagram
-    participant F as Foundry Core
-    participant S as swerpg.mjs
-    participant C as Configuration
-    participant M as Models
-    participant A as Applications
+| **Data Models** | `TypeDataModel` subclasses | [DATA/MODELS.md](./data/MODELS.md) |- **Foundry Core** : Documents, Applications, Canvas
 
-    F->>S: Hook 'init'
-    S->>C: Load SYSTEM config
-    S->>M: Register data models
-    S->>A: Register applications
-    S->>F: Register document types
-```
+| **UI Components** | `ApplicationV2` sheets | [UI/APPLICATIONS.md](./ui/APPLICATIONS.md) |- **TypeDataModel** : Validation et structure des données
 
-### 2. Création de Personnage
+| **Game Mechanics** | Action system hooks | [SYSTEMS/*.md](./systems/) |- **Handlebars** : Templates et composants UI
 
-```mermaid
-sequenceDiagram
-    participant U as User
-    participant S as Sheet
-    participant A as Actor
-    participant C as Compendiums
+| **Canvas** | Canvas layers/tools | [UI/CANVAS.md](./ui/CANVAS.md) |- **LevelDB** : Stockage compendium optimisé
 
-    U->>S: Open character sheet
-    S->>C: Load species/careers
-    U->>S: Select options
-    S->>A: Update actor data
-    A->>A: Calculate derived stats
-    A->>S: Refresh display
-```
 
-### 3. Utilisation d'une Action
 
-```mermaid
-sequenceDiagram
-    participant U as User
-    participant S as Sheet
-    participant A as Action
-    participant D as Dialog
-    participant R as Roll
-    participant C as Chat
-    
-    U->>S: Click Action Button
-    S->>A: action.use()
-    A->>A: initialize()
-    A->>A: prepare()
-    A->>D: Show Configuration Dialog
-    D->>U: User Configures
-    U->>D: Confirm
-    D->>A: preActivate(targets)
-    A->>R: Roll Dice
-    R->>A: roll(outcome)
-    A->>A: postActivate(outcome)
-    A->>C: Create Chat Message
-    A->>A: confirm()
-```
+## 🔗 Intégrations Clés## 📚 Documentation Détaillée
 
-## Patterns de Code
 
-### 1. Configuration Hiérarchique
 
-```javascript
-// Hiérarchie de configuration claire
-globalThis.SYSTEM = SYSTEM;           // Configuration globale
-game.system.swerpg.CONST = SYSTEM;    // Accès via game
-CONFIG.SWERPG = SYSTEM;               // Intégration Foundry
-```
+- **Foundry Core** : Documents, Applications, CanvasPour approfondir un domaine spécifique :
 
-### 2. Action Binding
+- **TypeDataModel** : Validation et structure des données
 
-```javascript
-// Les actions sont liées à un acteur
-const action = item.actions[0].bind(actor);
-await action.use();
-```
+- **Handlebars** : Templates et composants UI### 🏗️ Architecture Core
 
-### 3. Data Access
+- **LevelDB** : Stockage compendium optimisé- [Configuration System](./core/CONFIGURATION.md)
 
-```javascript
-// Accès au modèle de données typé
-item.system // Type-specific data model
-item.actions // Array of SwerpgAction
-item.config.category.id // Configuration
-```
+- [System Initialization](./core/INITIALIZATION.md)
 
-## Points d'Extension
+## 📚 Documentation Détaillée- [Public API](./core/API.md)
 
-### 4. Localisation
 
-```javascript
-// Toujours utiliser l'internationalisation
-game.i18n.localize("SWERPG.ActionUse")
-```
 
-### 5. Fusion d'Objets
+Pour approfondir un domaine spécifique :### 📊 Gestion des Données
 
-```javascript
-// Utiliser les utilitaires Foundry
-foundry.utils.mergeObject(target, source);
-// Jamais Object.assign() directement !
-```
+- [Document Extensions](./data/DOCUMENTS.md)
 
-## Intégrations Foundry
+### 🏗️ Architecture Core- [Data Models](./data/MODELS.md)
 
-### 1. ApplicationV2 et Handlebars
+- [Compendium Management](./data/COMPENDIUMS.md)
 
-```javascript
-class SwerpgActorSheet extends api.HandlebarsApplicationMixin(sheets.ActorSheetV2) {
-    static DEFAULT_OPTIONS = {
-        classes: ["swerpg", "actor", "sheet"],
-        position: { width: 720, height: 800 },
-        window: { title: "SWERPG.ActorSheet" }
-    };
-}
-```
+- [Configuration System](./core/CONFIGURATION.md)
 
-### 2. Compendium Management
+- [System Initialization](./core/INITIALIZATION.md)### 🎨 Interface Utilisateur
 
-```javascript
-// Gestion automatisée des packs
-export const COMPENDIUM_PACKS = {
-    ancestry: "swerpg.ancestry",
-    archetype: "swerpg.archetype",
-    background: "swerpg.background",
-    species: "swerpg.species",
-    career: "swerpg.careers",
-    specialization: "swerpg.specializations",
-    talent: "swerpg.talents"
-    // ...
-};
-```
+- [Public API](./core/API.md)- [Application Architecture](./ui/APPLICATIONS.md)
 
-### 3. Socket Integration
+- [Template System](./ui/HANDLEBARS.md)
 
-```javascript
-// Communication temps réel
-game.socket.on("system.swerpg", handleSocketEvent);
+### 📊 Gestion des Données- [Canvas Extensions](./ui/CANVAS.md)
 
-function handleSocketEvent(data) {
-    // Synchronisation multi-joueurs
-    // Effets globaux (Destinée)
-    // Notifications système
-}
-```
 
-## Sécurité et Performance
 
-### 1. Validation des Données
+- [Document Extensions](./data/DOCUMENTS.md)### 🎮 Systèmes de Jeu
 
-```javascript
-// Validation stricte des entrées
-static defineSchema() {
-    return {
-        characteristics: new foundry.data.fields.SchemaField({
-            brawn: new foundry.data.fields.NumberField({
-                required: true,
-                initial: 2,
-                min: 1,
-                max: 6,
-                integer: true
-            })
-        })
-    };
-}
-```
+- [Data Models](./data/MODELS.md)- [Dice System Architecture](./systems/DICE_ARCHITECTURE.md)
 
-### 2. Lazy Loading
+- [Compendium Management](./data/COMPENDIUMS.md)- [Talent Tree Architecture](./systems/TALENTS_ARCHITECTURE.md)
 
-```javascript
-// Chargement différé des assets
-async _loadCompendiumData() {
-    if (!this._compendiumCache) {
-        this._compendiumCache = await this._fetchCompendiumData();
-    }
-    return this._compendiumCache;
-}
-```
+- [Obligation System Architecture](./systems/OBLIGATIONS_ARCHITECTURE.md)
 
-### 3. Mise en Cache
+### 🎨 Interface Utilisateur- [Force Powers Architecture](./systems/FORCE_ARCHITECTURE.md)
 
-```javascript
-// Cache intelligent des calculs
-get derivedAttributes() {
-    if (!this._derivedCache || this._needsRecalculation) {
-        this._derivedCache = this._calculateDerived();
-        this._needsRecalculation = false;
-    }
-    return this._derivedCache;
-}
-```
 
-## Évolution et Maintenance
 
-### 1. Versioning des Données
+- [Application Architecture](./ui/APPLICATIONS.md)### 🔧 Intégration et Performance
 
-```javascript
-// Migration automatique des données
-static migrateData(data, version) {
-    if (version < "1.2.0") {
-        // Migration vers nouveau format
-    }
-    return data;
-}
-```
+- [Template System](./ui/HANDLEBARS.md)- [Foundry Integration Patterns](./integration/FOUNDRY_INTEGRATION.md)
 
-### 2. Backward Compatibility
+- [Canvas Extensions](./ui/CANVAS.md)- [Performance Optimization](./integration/PERFORMANCE.md)
 
-```javascript
-// Compatibilité avec anciennes versions
-static getCompat(property) {
-    return this[property] ?? this[`legacy_${property}`];
-}
-```
+- [Security Guidelines](./integration/SECURITY.md)
 
-### API Publique
+### 🎮 Systèmes de Jeu
 
-```javascript
-swerpg.api = {
-  applications,  // Classes d'applications
-  canvas: {      // Canvas components
-    SwerpgTalentTree
-  },
-  dice,          // Dice system
-  documents,     // Document classes
-  models,        // Data models
-  methods: {     // Utility methods
-    generateId,
-    packageCompendium,
-    resetAllActorTalents,
-    standardizeItemIds,
-    syncTalents
-  },
-  talents: {     // Talent system
-    SwerpgTalentNode,
-    nodes: SwerpgTalentNode.nodes
-  },
-  hooks          // Hook handlers
-}
-```
+## 🚀 Démarrage Rapide
 
-## Conclusion
+- [Dice System Architecture](./systems/DICE_ARCHITECTURE.md)
 
-L'architecture de swerpg privilégie la robustesse, l'extensibilité et l'intégration harmonieuse avec Foundry VTT. Le système d'actions unifie les mécaniques de jeu tout en maintenant les performances et la facilité d'utilisation.
+- [Talent Tree Architecture](./systems/TALENTS_ARCHITECTURE.md)### Pour les Développeurs
 
-Les développeurs peuvent étendre le système en suivant les patterns établis et en utilisant les hooks fournis, garantissant une évolution cohérente du système.
+- [Obligation System Architecture](./systems/OBLIGATIONS_ARCHITECTURE.md)1. Lisez cette vue d'ensemble
+
+- [Force Powers Architecture](./systems/FORCE_ARCHITECTURE.md)2. Consultez [CONFIGURATION.md](./core/CONFIGURATION.md) pour comprendre la structure
+
+3. Explorez [MODELS.md](./data/MODELS.md) pour les patterns de données
+
+### 🔧 Intégration et Performance
+
+### Pour les Contributeurs
+
+- [Foundry Integration Patterns](./integration/FOUNDRY_INTEGRATION.md)1. Vérifiez [FOUNDRY_INTEGRATION.md](./integration/FOUNDRY_INTEGRATION.md) pour les standards
+
+- [Performance Optimization](./integration/PERFORMANCE.md)2. Consultez le domaine spécifique à votre contribution
+
+- [Security Guidelines](./integration/SECURITY.md)3. Respectez les patterns établis dans chaque couche
+
+
+
+## 🚀 Démarrage Rapide---
+
+
+
+### Pour les Développeurs> 💡 **Note** : Cette architecture évolue avec Foundry VTT. Consultez régulièrement la documentation pour les mises à jour.
+
+
+1. Lisez cette vue d'ensemble
+2. Consultez [CONFIGURATION.md](./core/CONFIGURATION.md) pour comprendre la structure
+3. Explorez [MODELS.md](./data/MODELS.md) pour les patterns de données
+
+### Pour les Contributeurs
+
+1. Vérifiez [FOUNDRY_INTEGRATION.md](./integration/FOUNDRY_INTEGRATION.md) pour les standards
+2. Consultez le domaine spécifique à votre contribution
+3. Respectez les patterns établis dans chaque couche
+
+---
+
+> 💡 **Note** : Cette architecture évolue avec Foundry VTT. Consultez régulièrement la documentation pour les mises à jour.
