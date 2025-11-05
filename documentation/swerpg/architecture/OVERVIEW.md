@@ -1,291 +1,161 @@
-# Architecture Overview - Système Star Wars Edge RPG (swerpg)# Architecture Overview - Système Star Wars Edge RPG (swerpg)
+# Architecture Overview - Système Star Wars Edge RPG (swerpg)
 
+## 🎯 Vision
 
+> Star Wars Edge RPG (swerpg) est un système narratif pour Foundry VTT v13+ qui automatise les mécaniques complexes tout en préservant l'esprit cinématographique de Star Wars.
 
-## 🎯 Vision## 🎯 Vision
+## 🏗️ Architecture en Couches
 
+```mermaid
+graph TB
 
+    subgraph "🎮 Game Systems Layer"
+        DICE[Dés Narratifs]
+        TALENTS[Arbres de Talents]
+        OBLIGATIONS[Obligations/Devoirs]
+        FORCE[Pouvoirs de la Force]
+    end
 
-Star Wars Edge RPG (swerpg) est un système narratif pour Foundry VTT v13+ qui automatise les mécaniques complexes tout en préservant l'esprit cinématographique de Star Wars.Star Wars Edge RPG (swerpg) est un système narratif pour Foundry VTT v13+ qui automatise les mécaniques complexes tout en préservant l'esprit cinématographique de Star Wars.
+    subgraph "🎨 Presentation Layer"
+        SHEETS[Feuilles de Personnage]
+        CANVAS[Canvas Extensions]
+        HUD[Composants HUD]
+    end
 
+    subgraph "📊 Data Layer"
+        MODELS[Data Models]
+        DOCUMENTS[Document Extensions]
+        COMPENDIUMS[15+ Compendium Packs]
+    end
 
+    subgraph "⚙️ Core Layer"
+        CONFIG[Configuration System]
+        API[Public API]
+        HOOKS[Event System]
+    end
 
-## 🏗️ Architecture en Couches## 🏗️ Architecture en Couches
+    subgraph "🗄️ Data Sources"
+        YAML[Sources YAML]
+        BUILD[Build Pipeline]
+    end
+````
 
+## 🎨 Principes Directeurs
 
+### 1. Séparation Claire des Responsabilités
 
-```mermaid```mermaid
-
-graph TBgraph TB
-
-    subgraph "🎮 Game Systems Layer"    subgraph "🎮 Game Systems Layer"
-
-        DICE[Dés Narratifs]        DICE[Dés Narratifs]
-
-        TALENTS[Arbres de Talents]        TALENTS[Arbres de Talents]
-
-        OBLIGATIONS[Obligations/Devoirs]        OBLIGATIONS[Obligations/Devoirs]
-
-        FORCE[Pouvoirs de la Force]        FORCE[Pouvoirs de la Force]
-
-    end    end
-
-        
-
-    subgraph "🎨 Presentation Layer"    subgraph "🎨 Presentation Layer"
-
-        SHEETS[Feuilles de Personnage]        SHEETS[Feuilles de Personnage]
-
-        CANVAS[Canvas Extensions]        CANVAS[Canvas Extensions]
-
-        HUD[Composants HUD]        HUD[Composants HUD]
-
-    end    end
-
-        
-
-    subgraph "📊 Data Layer"    subgraph "📊 Data Layer"
-
-        MODELS[Data Models]        MODELS[Data Models]
-
-        DOCUMENTS[Document Extensions]        DOCUMENTS[Document Extensions]
-
-        COMPENDIUMS[15+ Compendium Packs]        COMPENDIUMS[15+ Compendium Packs]
-
-    end    end
-
-        
-
-    subgraph "⚙️ Core Layer"    subgraph "⚙️ Core Layer"
-
-        CONFIG[Configuration System]        CONFIG[Configuration System]
-
-        API[Public API]        API[Public API]
-
-        HOOKS[Event System]        HOOKS[Event System]
-
-    end    end
-
-        
-
-    subgraph "🗄️ Data Sources"    subgraph "🗄️ Data Sources"
-
-        YAML[Sources YAML]        YAML[Sources YAML]
-
-        BUILD[Build Pipeline]        BUILD[Build Pipeline]
-
-    end    end
-
-``````
-
-
-
-## 🎨 Principes Directeurs## 🎨 Principes Directeurs
-
-
-
-### 1. **Séparation Claire des Responsabilités**### 1. **Séparation Claire des Responsabilités**
-
-- **Core** : Configuration et initialisation → [Configuration](./core/)
-
-- **Core** : Configuration et initialisation → [Configuration](./core/)- **Data** : Modèles et persistence → [Data Management](./data/)
-
-- **Data** : Modèles et persistence → [Data Management](./data/)- **UI** : Interfaces et interactions → [User Interface](./ui/)
-
-- **UI** : Interfaces et interactions → [User Interface](./ui/)- **Systems** : Mécaniques de jeu → [Game Systems](./systems/)
-
-- **Systems** : Mécaniques de jeu → [Game Systems](./systems/)- **Integration** : Intégration Foundry → [Integration](./integration/)
-
-- **Integration** : Intégration Foundry → [Integration](./integration/)
+* **Core** : Configuration et initialisation → [Configuration](./core/)
+* **Data** : Modèles et persistance → [Data Management](./data/)
+* **UI** : Interfaces et interactions → [User Interface](./ui/)
+* **Systems** : Mécaniques de jeu → [Game Systems](./systems/)
+* **Integration** : Intégration Foundry → [Integration](./integration/)
 
 ### 2. **Configuration Hiérarchique**
 
-### 2. **Configuration Hiérarchique**```
-
+```text
 SYSTEM (statique) → swerpg.CONST → swerpg.CONFIG → User Settings
-
-```text```
-
-SYSTEM (statique) → swerpg.CONST → swerpg.CONFIG → User Settings
-
-```### 3. **Pattern TypeDataModel**
-
-Tous les modèles utilisent `foundry.abstract.TypeDataModel` pour la validation et la structure.
+```
 
 ### 3. **Pattern TypeDataModel**
 
+Tous les modèles utilisent `foundry.abstract.TypeDataModel` pour la validation et la structure.
+
 ### 4. **ApplicationV2 + Handlebars**
 
-Tous les modèles utilisent `foundry.abstract.TypeDataModel` pour la validation et la structure.Interface moderne avec `HandlebarsApplicationMixin(ApplicationV2)`.
+Interface moderne avec `HandlebarsApplicationMixin(ApplicationV2)` pour toutes les feuilles et composants UI.
 
-
-
-### 4. **ApplicationV2 + Handlebars**## 🔄 Flux Principaux
-
-
-
-Interface moderne avec `HandlebarsApplicationMixin(ApplicationV2)`.### Initialisation
-
-```
-
-## 🔄 Flux Principauxswerpg.mjs → Configuration → Models → Applications → Game Systems
-
-```
+## 🔄 Flux Principaux
 
 ### Initialisation
 
-### Action Workflow
-
-```text```
-
-swerpg.mjs → Configuration → Models → Applications → Game SystemsUser Input → Sheet → Action.use() → Dialog → Roll → Chat → Effects
-
-``````
-
-
-
-### Action Workflow### Data Workflow
-
+```text
+swerpg.mjs → Configuration → Models → Applications → Game Systems
 ```
 
-```textYAML Sources → Build Pipeline → Compendium Packs → Runtime Models
+### Action Workflow
 
-User Input → Sheet → Action.use() → Dialog → Roll → Chat → Effects```
+```text
+User Input → Sheet → Action.use() → Dialog → Roll → Chat → Effects
+```
 
+### Data Workflow
+
+```text
+YAML Sources → Build Pipeline → Compendium Packs → Runtime Models
 ```
 
 ## 🎯 Points d'Extension
 
-### Data Workflow
+| Domaine            | Extension Points           | Documentation                              |
+| ------------------ | -------------------------- | ------------------------------------------ |
+| **Data Models**    | `TypeDataModel` subclasses | [DATA/MODELS.md](./data/MODELS.md)         |
+| **UI Components**  | `ApplicationV2` sheets     | [UI/APPLICATIONS.md](./ui/APPLICATIONS.md) |
+| **Game Mechanics** | Action system hooks        | [SYSTEMS/*.md](./systems/)                 |
+| **Canvas**         | Canvas layers/tools        | [UI/CANVAS.md](./ui/CANVAS.md)             |
 
-| Domaine | Extension Points | Documentation |
+## 🔗 Intégrations Clés
 
-```text|---------|------------------|---------------|
+* **Foundry Core** : Documents, Applications, Canvas
+* **TypeDataModel** : Validation et structure des données
+* **Handlebars** : Templates et composants UI
+* **LevelDB** : Stockage compendium optimisé
 
-YAML Sources → Build Pipeline → Compendium Packs → Runtime Models| **Data Models** | `TypeDataModel` subclasses | [DATA/MODELS.md](./data/MODELS.md) |
+## 📚 Documentation Détaillée
 
-```| **UI Components** | `ApplicationV2` sheets | [UI/APPLICATIONS.md](./ui/APPLICATIONS.md) |
+### 🏗️ Architecture Core
 
-| **Game Mechanics** | Action system hooks | [SYSTEMS/*.md](./systems/) |
+Ce répertoire décrit le cœur technique du système : comment `swerpg` se charge, se configure et expose une API stable. Il sert de point de référence pour comprendre le cycle de vie du système et les contrats que le noyau impose au reste de l’architecture.
 
-## 🎯 Points d'Extension| **Canvas** | Canvas layers/tools | [UI/CANVAS.md](./ui/CANVAS.md) |
+* [Configuration System](./core/CONFIGURATION.md)
+* [System Initialization](./core/INITIALIZATION.md)
+* [Public API](./core/API.md)
 
+### 📊 Gestion des Données
 
+Cette partie documente la manière dont les données sont structurées, stockées et distribuées : modèles, documents Foundry et compendiums. Elle permet de savoir où vivent réellement les informations de jeu et comment les faire évoluer sans tout casser.
 
-| Domaine | Extension Points | Documentation |## 🔗 Intégrations Clés
+* [Document Extensions](./data/DOCUMENTS.md)
+* [Data Models](./data/MODELS.md)
+* [Compendium Management](./data/COMPENDIUMS.md)
 
-|---------|------------------|---------------|
+### 🎨 Interface Utilisateur
 
-| **Data Models** | `TypeDataModel` subclasses | [DATA/MODELS.md](./data/MODELS.md) |- **Foundry Core** : Documents, Applications, Canvas
+Ce répertoire couvre tout ce que voient et manipulent les utilisateurs : feuilles, applications, templates et extensions canvas. Il sert à concevoir des interfaces cohérentes, maintenables et alignées avec l’expérience Star Wars voulue.
 
-| **UI Components** | `ApplicationV2` sheets | [UI/APPLICATIONS.md](./ui/APPLICATIONS.md) |- **TypeDataModel** : Validation et structure des données
-
-| **Game Mechanics** | Action system hooks | [SYSTEMS/*.md](./systems/) |- **Handlebars** : Templates et composants UI
-
-| **Canvas** | Canvas layers/tools | [UI/CANVAS.md](./ui/CANVAS.md) |- **LevelDB** : Stockage compendium optimisé
-
-
-
-## 🔗 Intégrations Clés## 📚 Documentation Détaillée
-
-
-
-- **Foundry Core** : Documents, Applications, CanvasPour approfondir un domaine spécifique :
-
-- **TypeDataModel** : Validation et structure des données
-
-- **Handlebars** : Templates et composants UI### 🏗️ Architecture Core
-
-- **LevelDB** : Stockage compendium optimisé- [Configuration System](./core/CONFIGURATION.md)
-
-- [System Initialization](./core/INITIALIZATION.md)
-
-## 📚 Documentation Détaillée- [Public API](./core/API.md)
-
-
-
-Pour approfondir un domaine spécifique :### 📊 Gestion des Données
-
-- [Document Extensions](./data/DOCUMENTS.md)
-
-### 🏗️ Architecture Core- [Data Models](./data/MODELS.md)
-
-- [Compendium Management](./data/COMPENDIUMS.md)
-
-- [Configuration System](./core/CONFIGURATION.md)
-
-- [System Initialization](./core/INITIALIZATION.md)### 🎨 Interface Utilisateur
-
-- [Public API](./core/API.md)- [Application Architecture](./ui/APPLICATIONS.md)
-
-- [Template System](./ui/HANDLEBARS.md)
-
-### 📊 Gestion des Données- [Canvas Extensions](./ui/CANVAS.md)
-
-
-
-- [Document Extensions](./data/DOCUMENTS.md)### 🎮 Systèmes de Jeu
-
-- [Data Models](./data/MODELS.md)- [Dice System Architecture](./systems/DICE_ARCHITECTURE.md)
-
-- [Compendium Management](./data/COMPENDIUMS.md)- [Talent Tree Architecture](./systems/TALENTS_ARCHITECTURE.md)
-
-- [Obligation System Architecture](./systems/OBLIGATIONS_ARCHITECTURE.md)
-
-### 🎨 Interface Utilisateur- [Force Powers Architecture](./systems/FORCE_ARCHITECTURE.md)
-
-
-
-- [Application Architecture](./ui/APPLICATIONS.md)### 🔧 Intégration et Performance
-
-- [Template System](./ui/HANDLEBARS.md)- [Foundry Integration Patterns](./integration/FOUNDRY_INTEGRATION.md)
-
-- [Canvas Extensions](./ui/CANVAS.md)- [Performance Optimization](./integration/PERFORMANCE.md)
-
-- [Security Guidelines](./integration/SECURITY.md)
+* [Application Architecture](./ui/APPLICATIONS.md)
+* [Template System](./ui/HANDLEBARS.md)
+* [Canvas Extensions](./ui/CANVAS.md)
 
 ### 🎮 Systèmes de Jeu
 
-## 🚀 Démarrage Rapide
+Ici sont détaillées les mécaniques de jeu propres à Star Wars Edge : dés narratifs, arbres de talents, obligations, Force, etc. Cette documentation explique comment les systèmes sont modélisés et comment les étendre ou les rééquilibrer.
 
-- [Dice System Architecture](./systems/DICE_ARCHITECTURE.md)
-
-- [Talent Tree Architecture](./systems/TALENTS_ARCHITECTURE.md)### Pour les Développeurs
-
-- [Obligation System Architecture](./systems/OBLIGATIONS_ARCHITECTURE.md)1. Lisez cette vue d'ensemble
-
-- [Force Powers Architecture](./systems/FORCE_ARCHITECTURE.md)2. Consultez [CONFIGURATION.md](./core/CONFIGURATION.md) pour comprendre la structure
-
-3. Explorez [MODELS.md](./data/MODELS.md) pour les patterns de données
+* [Dice System Architecture](./systems/DICE_ARCHITECTURE.md)
+* [Talent Tree Architecture](./systems/TALENTS_ARCHITECTURE.md)
+* [Obligation System Architecture](./systems/OBLIGATIONS_ARCHITECTURE.md)
+* [Force Powers Architecture](./systems/FORCE_ARCHITECTURE.md)
 
 ### 🔧 Intégration et Performance
 
-### Pour les Contributeurs
+Ce dossier décrit la façon dont swerpg s’intègre à Foundry et comment le système reste performant et sécurisé. On y trouve les bonnes pratiques pour brancher de nouvelles fonctionnalités sans dégrader les temps de chargement ni ouvrir de failles.
 
-- [Foundry Integration Patterns](./integration/FOUNDRY_INTEGRATION.md)1. Vérifiez [FOUNDRY_INTEGRATION.md](./integration/FOUNDRY_INTEGRATION.md) pour les standards
+* [Foundry Integration Patterns](./integration/FOUNDRY_INTEGRATION.md)
+* [Performance Optimization](./integration/PERFORMANCE.md)
+* [Security Guidelines](./integration/SECURITY.md)
 
-- [Performance Optimization](./integration/PERFORMANCE.md)2. Consultez le domaine spécifique à votre contribution
+## 🚀 Démarrage Rapide
 
-- [Security Guidelines](./integration/SECURITY.md)3. Respectez les patterns établis dans chaque couche
+### Pour les Développeurs
 
-
-
-## 🚀 Démarrage Rapide---
-
-
-
-### Pour les Développeurs> 💡 **Note** : Cette architecture évolue avec Foundry VTT. Consultez régulièrement la documentation pour les mises à jour.
-
-
-1. Lisez cette vue d'ensemble
-2. Consultez [CONFIGURATION.md](./core/CONFIGURATION.md) pour comprendre la structure
-3. Explorez [MODELS.md](./data/MODELS.md) pour les patterns de données
+1. Lisez cette vue d'ensemble.
+2. Consultez [CONFIGURATION.md](./core/CONFIGURATION.md) pour comprendre la structure.
+3. Explorez [MODELS.md](./data/MODELS.md) pour les patterns de données.
 
 ### Pour les Contributeurs
 
-1. Vérifiez [FOUNDRY_INTEGRATION.md](./integration/FOUNDRY_INTEGRATION.md) pour les standards
-2. Consultez le domaine spécifique à votre contribution
-3. Respectez les patterns établis dans chaque couche
+1. Vérifiez [FOUNDRY_INTEGRATION.md](./integration/FOUNDRY_INTEGRATION.md) pour les standards.
+2. Consultez le domaine spécifique à votre contribution.
+3. Respectez les patterns établis dans chaque couche.
 
 ---
 
