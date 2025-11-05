@@ -102,13 +102,22 @@ graph TB
     end
 ```
 
-### 3. Mécaniques Narratives
+### 3. Pattern de Données
 
-L'architecture privilégie :
+Swerpg utilise le pattern **TypeDataModel** de Foundry v13 :
 
-- **Dés Narratifs** : Système unique avec symboles multiples [Système de Dés](../rules/NARRATIVE_DICE.md)
-- **Interprétation** : Résultats riches en possibilités narratives
-- **Flexibilité** : Adaptation aux situations diverses
+```javascript
+// Définition du schéma
+static defineSchema() {
+  return {
+    fieldName: new fields.StringField({...options})
+  }
+}
+
+// Préparation des données
+prepareBaseData() { /* Données brutes */ }
+prepareDerivedData() { /* Données calculées */ }
+```
 
 ## Composants Principaux
 
@@ -137,39 +146,35 @@ export const SYSTEM = {
 
 ### Documents Foundry (`/module/documents/`)
 
-Extensions des classes de base Foundry pour intégrer les mécaniques Star Wars :
+### Document Extensions
 
-```javascript
-class SwerpgActor extends Actor {
-    // Gestion des caractéristiques, compétences, stress, obligations
-    // Calculs automatiques de défense, seuil de blessure, etc.
-}
+| Document | Classe | Responsabilité |
+|----------|--------|----------------|
+| Actor | `SwerpgActor` | Gestion des personnages et adversaires |
+| Item | `SwerpgItem` | Gestion des objets, talents, sorts |
+| Combat | `SwerpgCombat` | Gestion des rencontres de combat |
+| ActiveEffect | `SwerpgActiveEffect` | Gestion des effets actifs |
+| Token | `SwerpgToken` | Représentation canvas des acteurs |
+| ChatMessage | `SwerpgChatMessage` | Messages de chat enrichis |
 
-class SwerpgItem extends Item {
-    // Talents, équipements, pouvoirs de Force
-    // Actions automatisées, effets passifs
-}
-```
+### Data Models
 
-### Modèles de Données (`/module/models/`)
+#### Actor Models
 
-Utilisation des `TypeDataModel` de Foundry v13 :
+- **SwerpgCharacter** : Personnages joueurs avec progression et talents
+- **SwerpgAdversary** : Adversaires avec threat ranks
 
-```javascript
-class CharacterModel extends SwerpgBaseActor {
-    static defineSchema() {
-        return {
-            characteristics: new foundry.data.fields.SchemaField({
-                brawn: new foundry.data.fields.NumberField(),
-                agility: new foundry.data.fields.NumberField(),
-                // ...
-            }),
-            obligations: new foundry.data.fields.ArrayField(),
-            // ...
-        };
-    }
-}
-```
+#### Item Models
+
+- **SwerpgTalent** : Talents avec système d'arbre
+- **SwerpgSpell** : Sorts iconiques
+- **SwerpgWeapon** : Armes avec actions d'attaque
+- **SwerpgArmor** : Armures avec défenses
+- **SwerpgSpecies** : Espèces de personnages
+- **SwerpgCareer** : Carrières de personnages
+- **SwerpgSpecialization** : Spécialisations
+- **SwerpgBackground** : Historiques de personnages
+- **SwerpgGear** : Équipements génériques
 
 ## Flux de Données
 
@@ -207,22 +212,30 @@ sequenceDiagram
     A->>S: Refresh display
 ```
 
-### 3. Résolution de Jet de Dés
+### 3. Utilisation d'une Action
 
 ```mermaid
 sequenceDiagram
     participant U as User
-    participant D as Dice System
-    participant P as Pool Builder
-    participant R as Roll Handler
+    participant S as Sheet
+    participant A as Action
+    participant D as Dialog
+    participant R as Roll
     participant C as Chat
-
-    U->>D: Initiate roll
-    D->>P: Build dice pool
-    P->>R: Execute roll
-    R->>R: Interpret symbols
-    R->>C: Display results
-    C->>U: Show narrative outcome
+    
+    U->>S: Click Action Button
+    S->>A: action.use()
+    A->>A: initialize()
+    A->>A: prepare()
+    A->>D: Show Configuration Dialog
+    D->>U: User Configures
+    U->>D: Confirm
+    D->>A: preActivate(targets)
+    A->>R: Roll Dice
+    R->>A: roll(outcome)
+    A->>A: postActivate(outcome)
+    A->>C: Create Chat Message
+    A->>A: confirm()
 ```
 
 ## Patterns de Code
@@ -236,70 +249,38 @@ game.system.swerpg.CONST = SYSTEM;    // Accès via game
 CONFIG.SWERPG = SYSTEM;               // Intégration Foundry
 ```
 
-### 2. Factory Pattern pour les Dés
+### 2. Action Binding
 
 ```javascript
-class SwerpgDicePool {
-    static create(characteristic, skill, difficulty) {
-        // Construction intelligente du pool
-        // Gestion automatique des upgrades
-        // Ajout de dés spécialisés
-    }
-}
+// Les actions sont liées à un acteur
+const action = item.actions[0].bind(actor);
+await action.use();
 ```
 
-### 3. Observer Pattern pour les Talents
+### 3. Data Access
 
 ```javascript
-class SwerpgTalent {
-    static observeChanges(actor) {
-        // Surveillance des changements de talents
-        // Recalcul automatique des bonus
-        // Mise à jour des capacités
-    }
-}
+// Accès au modèle de données typé
+item.system // Type-specific data model
+item.actions // Array of SwerpgAction
+item.config.category.id // Configuration
 ```
 
 ## Points d'Extension
 
-### 1. Nouveaux Types d'Acteurs
+### 4. Localisation
 
 ```javascript
-// Exemple : Droïdes
-class DroidDataModel extends SwerpgActorModel {
-    static defineSchema() {
-        return foundry.utils.mergeObject(super.defineSchema(), {
-            droidType: new foundry.data.fields.StringField(),
-            // Spécificités des droïdes
-        });
-    }
-}
+// Toujours utiliser l'internationalisation
+game.i18n.localize("SWERPG.ActionUse")
 ```
 
-### 2. Nouveaux Systèmes de Dés
+### 5. Fusion d'Objets
 
 ```javascript
-// Extension pour nouveaux dés spécialisés
-export const CUSTOM_DICE = {
-    force: {
-        class: "SwerpgForceDie",
-        denomination: "f",
-        faces: 12
-    }
-};
-```
-
-### 3. Modules de Règles
-
-```javascript
-// Hooks pour modules tiers
-Hooks.on("swerpg.beforeRoll", (actor, rollData) => {
-    // Modifications avant jet
-});
-
-Hooks.on("swerpg.afterRoll", (actor, result) => {
-    // Traitement après jet
-});
+// Utiliser les utilitaires Foundry
+foundry.utils.mergeObject(target, source);
+// Jamais Object.assign() directement !
 ```
 
 ## Intégrations Foundry
@@ -321,7 +302,10 @@ class SwerpgActorSheet extends api.HandlebarsApplicationMixin(sheets.ActorSheetV
 ```javascript
 // Gestion automatisée des packs
 export const COMPENDIUM_PACKS = {
-    ancestry: "swerpg.species",
+    ancestry: "swerpg.ancestry",
+    archetype: "swerpg.archetype",
+    background: "swerpg.background",
+    species: "swerpg.species",
     career: "swerpg.careers",
     specialization: "swerpg.specializations",
     talent: "swerpg.talents"
@@ -411,17 +395,34 @@ static getCompat(property) {
 }
 ```
 
-### 3. Extensibilité Future
+### API Publique
 
 ```javascript
-// Hooks pour futures extensions
-Hooks.call("swerpg.systemReady", game.system);
-Hooks.call("swerpg.actorPrepared", actor);
-Hooks.call("swerpg.rollComplete", result);
+swerpg.api = {
+  applications,  // Classes d'applications
+  canvas: {      // Canvas components
+    SwerpgTalentTree
+  },
+  dice,          // Dice system
+  documents,     // Document classes
+  models,        // Data models
+  methods: {     // Utility methods
+    generateId,
+    packageCompendium,
+    resetAllActorTalents,
+    standardizeItemIds,
+    syncTalents
+  },
+  talents: {     // Talent system
+    SwerpgTalentNode,
+    nodes: SwerpgTalentNode.nodes
+  },
+  hooks          // Hook handlers
+}
 ```
 
 ## Conclusion
 
-L'architecture de swerpg privilégie la robustesse, l'extensibilité et l'intégration harmonieuse avec Foundry VTT. Le système de dés narratifs unique de Star Wars Edge RPG est parfaitement supporté tout en maintenant les performances et la facilité d'utilisation.
+L'architecture de swerpg privilégie la robustesse, l'extensibilité et l'intégration harmonieuse avec Foundry VTT. Le système d'actions unifie les mécaniques de jeu tout en maintenant les performances et la facilité d'utilisation.
 
 Les développeurs peuvent étendre le système en suivant les patterns établis et en utilisant les hooks fournis, garantissant une évolution cohérente du système.
