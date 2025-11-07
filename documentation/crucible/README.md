@@ -120,21 +120,21 @@ Cette documentation utilise **Mermaid** pour les diagrammes. Vous pouvez les vis
 
 ### Par Domaine Fonctionnel
 
-| Domaine | Document Principal | Documents Liés |
-|---------|-------------------|----------------|
-| Architecture Globale | OVERVIEW.md | DOCUMENTATION_PROCESS.md |
-| Actions & Combat | ACTION_SYSTEM.md | FUNCTIONAL_REQUIREMENTS.md (M2, M5) |
-| Talents & Progression | TALENT_SYSTEM.md | FUNCTIONAL_REQUIREMENTS.md (M4) |
-| Qualité & Performance | NON_FUNCTIONAL_REQUIREMENTS.md | OVERVIEW.md (Conventions) |
+| Domaine               | Document Principal             | Documents Liés                      |
+| --------------------- | ------------------------------ | ----------------------------------- |
+| Architecture Globale  | OVERVIEW.md                    | DOCUMENTATION_PROCESS.md            |
+| Actions & Combat      | ACTION_SYSTEM.md               | FUNCTIONAL_REQUIREMENTS.md (M2, M5) |
+| Talents & Progression | TALENT_SYSTEM.md               | FUNCTIONAL_REQUIREMENTS.md (M4)     |
+| Qualité & Performance | NON_FUNCTIONAL_REQUIREMENTS.md | OVERVIEW.md (Conventions)           |
 
 ### Par Type de Développeur
 
-| Profil | Documents Recommandés |
-|--------|----------------------|
-| Nouveau contributeur | OVERVIEW.md → FUNCTIONAL_REQUIREMENTS.md → DOCUMENTATION_PROCESS.md |
-| Développeur système | ACTION_SYSTEM.md → TALENT_SYSTEM.md → NON_FUNCTIONAL_REQUIREMENTS.md |
-| Architecte | OVERVIEW.md → NON_FUNCTIONAL_REQUIREMENTS.md → DOCUMENTATION_PROCESS.md |
-| Testeur/QA | FUNCTIONAL_REQUIREMENTS.md → NON_FUNCTIONAL_REQUIREMENTS.md |
+| Profil               | Documents Recommandés                                                   |
+| -------------------- | ----------------------------------------------------------------------- |
+| Nouveau contributeur | OVERVIEW.md → FUNCTIONAL_REQUIREMENTS.md → DOCUMENTATION_PROCESS.md     |
+| Développeur système  | ACTION_SYSTEM.md → TALENT_SYSTEM.md → NON_FUNCTIONAL_REQUIREMENTS.md    |
+| Architecte           | OVERVIEW.md → NON_FUNCTIONAL_REQUIREMENTS.md → DOCUMENTATION_PROCESS.md |
+| Testeur/QA           | FUNCTIONAL_REQUIREMENTS.md → NON_FUNCTIONAL_REQUIREMENTS.md             |
 
 ## 📈 Couverture
 

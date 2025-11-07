@@ -29,33 +29,33 @@ Le workflow de création de héros suit un processus en 3 étapes géré par `Cr
 flowchart TD
     Start([Nouveau Héros]) --> Init[Initialisation Sheet]
     Init --> Step1{Étape 1: Ancestry}
-    
+
     Step1 --> LoadAnc[Charger Ancestries]
     LoadAnc --> DispAnc[Afficher choix]
     DispAnc --> SelAnc{Sélection}
     SelAnc -->|Choisir| ApplyAnc[Appliquer Ancestry]
-    
+
     ApplyAnc --> Step2{Étape 2: Background}
     Step2 --> LoadBg[Charger Backgrounds]
     LoadBg --> DispBg[Afficher choix]
     DispBg --> SelBg{Sélection}
     SelBg -->|Choisir| ApplyBg[Appliquer Background]
-    
+
     ApplyBg --> AllocAb[Allocation Abilities]
     AllocAb --> CheckAb{Pool = 0?}
     CheckAb -->|Non| AllocAb
     CheckAb -->|Oui| Step3{Étape 3: Talents}
-    
+
     Step3 --> DispTree[Afficher Talent Tree]
     DispTree --> SelTal{Sélection Talents}
     SelTal -->|Choisir| CheckPts{Points OK?}
     CheckPts -->|Non| DispTree
     CheckPts -->|Oui| Complete[Complete Hero]
-    
+
     Complete --> SaveHero[Sauvegarder]
     SaveHero --> CloseSheet[Fermer Sheet]
     CloseSheet --> End([Héros Créé])
-    
+
     style Start fill:#90EE90
     style End fill:#90EE90
     style Step1 fill:#FFD700
@@ -72,53 +72,53 @@ sequenceDiagram
     participant State as CreationState
     participant Pack as Compendium
     participant Actor
-    
+
     User->>Sheet: Ouvrir création
     Sheet->>Sheet: _initializeApplicationState()
-    
+
     Note over Sheet: ÉTAPE 1 - ANCESTRY
     Sheet->>Pack: Charger ancestries
     Pack-->>Sheet: Liste ancestries
     Sheet->>Sheet: #initializeAncestries()
     Sheet->>User: Afficher sélection
-    
+
     User->>Sheet: Choisir ancestry
     Sheet->>State: ancestryId = selected
     Sheet->>Actor: Appliquer ancestry data
     Note over Actor: abilities.primary/secondary<br/>resistances<br/>movement
-    
+
     Sheet->>Sheet: Transition Step 2
-    
+
     Note over Sheet: ÉTAPE 2 - BACKGROUND
     Sheet->>Pack: Charger backgrounds
     Pack-->>Sheet: Liste backgrounds
     Sheet->>Sheet: #initializeBackgrounds()
     Sheet->>User: Afficher sélection
-    
+
     User->>Sheet: Choisir background
     Sheet->>State: backgroundId = selected
     Sheet->>Actor: Appliquer background data
     Note over Actor: skills<br/>knowledge<br/>languages<br/>equipment
-    
+
     Sheet->>User: Afficher allocation abilities
     User->>Sheet: +/- abilities
     Sheet->>State: Mettre à jour pool
-    
+
     loop Tant que pool > 0
         User->>Sheet: Augmenter ability
         Sheet->>State: pool--
         Sheet->>Actor: abilities[x].base++
     end
-    
+
     User->>Sheet: Confirmer abilities
     Sheet->>Sheet: Transition Step 3
-    
+
     Note over Sheet: ÉTAPE 3 - TALENTS
     Sheet->>Sheet: Afficher talent tree
     User->>Sheet: Sélectionner talents
     Sheet->>State: talents.add(nodeId)
     Sheet->>Actor: advancement.talentNodes
-    
+
     User->>Sheet: Complete
     Sheet->>Actor: update(finalData)
     Actor-->>Sheet: Sauvegarde OK
@@ -132,15 +132,15 @@ sequenceDiagram
 ```javascript
 {
   name: string,
-  
+
   // Ancestry
   ancestries: Record<string, CrucibleHeroCreationItem>,
   ancestryId: string,
-  
+
   // Background
   backgrounds: Record<string, CrucibleHeroCreationItem>,
   backgroundId: string,
-  
+
   // Talents
   talents: Set<string>
 }
@@ -166,14 +166,14 @@ sequenceDiagram
 
 ### Actions utilisateur
 
-| Action | Handler | Étape |
-|--------|---------|-------|
-| Choisir Ancestry | `#onChooseAncestry` | 1 |
-| Choisir Background | `#onChooseBackground` | 2 |
-| +1 Ability | `#onAbilityIncrease` | 2 |
-| -1 Ability | `#onAbilityDecrease` | 2 |
-| Restart | `#onRestart` | Toutes |
-| Complete | `#onComplete` | 3 |
+| Action             | Handler               | Étape  |
+| ------------------ | --------------------- | ------ |
+| Choisir Ancestry   | `#onChooseAncestry`   | 1      |
+| Choisir Background | `#onChooseBackground` | 2      |
+| +1 Ability         | `#onAbilityIncrease`  | 2      |
+| -1 Ability         | `#onAbilityDecrease`  | 2      |
+| Restart            | `#onRestart`          | Toutes |
+| Complete           | `#onComplete`         | 3      |
 
 ### Source
 
@@ -194,56 +194,56 @@ flowchart TD
     Start([Action.use]) --> Prepare{Action préparée?}
     Prepare -->|Non| Error1[Error: Not prepared]
     Prepare -->|Oui| CheckCast{ID = 'cast'?}
-    
+
     CheckCast -->|Oui| SpellFlow[Workflow Spellcasting]
     CheckCast -->|Non| FindToken[Trouver Token]
-    
+
     FindToken --> Clone[Cloner Action]
     Clone --> CanUse{_canUse?}
     CanUse -->|Non| Error2[Warn + return null]
     CanUse -->|Oui| AcqTargets1[acquireTargets strict=false]
-    
+
     AcqTargets1 --> ConfigOutcomes1[configureOutcomes]
     ConfigOutcomes1 --> Dialog{dialog=true?}
-    
+
     Dialog -->|Oui| ShowDialog[configureDialog]
     ShowDialog --> UserConfig{Confirmation?}
     UserConfig -->|Annulé| Return1[return null]
     UserConfig -->|OK| AcqTargets2[acquireTargets strict=true]
     AcqTargets2 --> ConfigOutcomes2[configureOutcomes]
-    
+
     Dialog -->|Non| PreActivate[_preActivate]
     ConfigOutcomes2 --> PreActivate
-    
+
     PreActivate --> CheckPre{Succès?}
     CheckPre -->|Non| Return2[return null]
     CheckPre -->|Oui| RollLoop{Pour chaque target}
-    
+
     RollLoop --> Roll[_roll outcome]
     Roll --> NextTarget{Autre target?}
     NextTarget -->|Oui| RollLoop
     NextTarget -->|Non| PostLoop{Pour chaque outcome}
-    
+
     PostLoop --> Post[_post outcome]
     Post --> Update[#updateOutcome]
     Update --> Finalize[#finalizeOutcome]
     Finalize --> NextOutcome{Autre outcome?}
     NextOutcome -->|Oui| PostLoop
     NextOutcome -->|Non| Template{Template?}
-    
+
     Template -->|Oui| CreateTemplate[Créer MeasuredTemplate]
     Template -->|Non| Message[toMessage]
     CreateTemplate --> Message
-    
+
     Message --> Return3[return outcomes]
-    
+
     Note1[Confirmation séparée]
     Return3 -.-> Confirm[confirm]
     Confirm --> ApplyOutcomes[Appliquer effets]
     ApplyOutcomes --> DeleteTemplate[Supprimer template]
     DeleteTemplate --> RecordHistory[Enregistrer historique]
     RecordHistory --> End([Terminé])
-    
+
     style Start fill:#90EE90
     style End fill:#90EE90
     style Error1 fill:#FF6B6B
@@ -263,9 +263,9 @@ sequenceDiagram
     participant Dice
     participant Outcome
     participant ChatMsg as ChatMessage
-    
+
     Actor->>Action: use(options)
-    
+
     rect rgb(200, 200, 255)
         Note over Action: Phase 1: Validation
         Action->>Action: _canUse()
@@ -273,13 +273,13 @@ sequenceDiagram
             Action-->>Actor: Error
         end
     end
-    
+
     rect rgb(255, 200, 200)
         Note over Action: Phase 2: Configuration
         Action->>Targets: acquireTargets(strict=false)
         Targets-->>Action: initial targets
         Action->>Outcome: configureOutcomes(targets)
-        
+
         alt dialog = true
             Action->>Dialog: configureDialog(targets)
             Dialog->>Dialog: render()
@@ -291,12 +291,12 @@ sequenceDiagram
             Action->>Outcome: configureOutcomes(targets)
         end
     end
-    
+
     rect rgb(200, 255, 200)
         Note over Action: Phase 3: Activation
         Action->>Action: _preActivate(targets)
         Note over Action: Vérifications finales<br/>Coûts en ressources
-        
+
         loop Pour chaque target
             Action->>Dice: _roll(outcome)
             alt Action has attack
@@ -311,7 +311,7 @@ sequenceDiagram
             end
         end
     end
-    
+
     rect rgb(255, 255, 200)
         Note over Action: Phase 4: Finalisation
         loop Pour chaque outcome
@@ -320,38 +320,38 @@ sequenceDiagram
             Note over Outcome: Calcul:<br/>- Resources delta<br/>- Status changes<br/>- Effects
             Action->>Outcome: #finalizeOutcome(outcome)
         end
-        
+
         alt Template action
             Action->>canvas: Créer MeasuredTemplate
         end
-        
+
         Action->>ChatMsg: toMessage()
         ChatMsg-->>Action: message created
     end
-    
+
     Action-->>Actor: outcomes
-    
+
     rect rgb(255, 220, 200)
         Note over Actor: Phase 5: Confirmation (différée)
         Actor->>Action: confirm()
-        
+
         loop Pour chaque test
             Action->>Action: test.confirm()
         end
-        
+
         Action->>Actor: onDealDamage(outcomes)
-        
+
         alt Template exists
             Action->>canvas: template.delete()
         end
-        
+
         loop Pour chaque outcome
             Action->>Outcome: target.applyActionOutcome()
             Outcome->>Outcome: Appliquer resources
             Outcome->>Outcome: Appliquer effects
             Outcome->>Outcome: Créer summons
         end
-        
+
         Action->>Action: #recordHeroism(reverse=false)
     end
 ```
@@ -418,15 +418,15 @@ sequenceDiagram
     participant ChatMsg
     participant Action
     participant Outcome
-    
+
     User->>ChatMsg: Clic "Reverse"
     ChatMsg->>Action: confirm({reverse: true})
-    
+
     loop Pour chaque outcome
         Action->>Outcome: applyActionOutcome(reverse=true)
         Note over Outcome: Inverse les deltas:<br/>health: +10<br/>focus: +2
     end
-    
+
     Action->>Action: #recordHeroism(reverse=true)
     Note over Action: Retire les actions<br/>du compteur heroism
 ```
@@ -451,19 +451,19 @@ flowchart TD
     Init --> Roll[Jet Initiative]
     Roll --> Order[Ordre combattants]
     Order --> Round1[Round 1]
-    
+
     Round1 --> TurnStart{Début Tour}
     TurnStart --> CheckStatus[Vérifier statuts]
     CheckStatus --> Expire[Expirer effets]
     Expire --> Regen[Régénération]
     Regen --> Actions[Pool d'actions]
-    
+
     Actions --> PlayerAction{Action joueur}
     PlayerAction -->|Attack| UseAction[Action.use]
     PlayerAction -->|Move| Movement[Mouvement]
     PlayerAction -->|Item| UseItem[Utiliser item]
     PlayerAction -->|End| TurnEnd
-    
+
     UseAction --> RecordAction[Enregistrer action]
     RecordAction --> HeroismCheck{Action héroïque?}
     HeroismCheck -->|Oui| UpdateHeroism[heroism.actions++]
@@ -472,25 +472,25 @@ flowchart TD
     CheckThreshold -->|Non| PlayerAction
     AwardHeroism --> PlayerAction
     HeroismCheck -->|Non| PlayerAction
-    
+
     Movement --> PlayerAction
     UseItem --> PlayerAction
-    
+
     TurnEnd --> Cleanup[Cleanup effets]
     Cleanup --> NextCombatant{Autre combattant?}
     NextCombatant -->|Oui| TurnStart
     NextCombatant -->|Non| RoundEnd{Fin Round?}
-    
+
     RoundEnd -->|Continuer| NextRound[Round++]
     NextRound --> TurnStart
     RoundEnd -->|Terminé| Victory{Victoire?}
-    
+
     Victory -->|Héros| VictoryReward[Récompenses]
     Victory -->|Défaite| Defeat[Défaite]
-    
+
     VictoryReward --> End([Fin Combat])
     Defeat --> End
-    
+
     style Start fill:#90EE90
     style End fill:#90EE90
 ```
@@ -503,30 +503,30 @@ sequenceDiagram
     participant Combatant
     participant Actor
     participant Action
-    
+
     Note over Combat: Début Round
     Combat->>Combat: Round++
     Combat->>Combat: heroism.previous = heroism.next
-    
+
     loop Pour chaque Combatant (ordre initiative)
         Combat->>Combatant: Activer tour
         Combatant->>Actor: turnStart()
-        
+
         Note over Actor: Turn Start Workflow
         Actor->>Actor: Expirer effets (duration)
         Actor->>Actor: Régénérer ressources
         Actor->>Actor: Restaurer action pool
         Actor->>Actor: Appliquer effets continus
-        
+
         Note over Combatant: Actions du tour
         loop Tant que actions disponibles
             Actor->>Action: use()
             Action-->>Actor: outcomes
-            
+
             alt Action coûte action points
                 Actor->>Combat: Incrémenter heroism.actions
                 Combat->>Combat: Check threshold
-                
+
                 alt Threshold atteint
                     Combat->>Combat: heroism.awarded++
                     loop Tous les héros
@@ -535,14 +535,14 @@ sequenceDiagram
                 end
             end
         end
-        
+
         Combatant->>Actor: turnEnd()
         Note over Actor: Turn End Workflow
         Actor->>Actor: Appliquer dégâts continus
         Actor->>Actor: Décrémenter durées effets
         Actor->>Actor: Vérifier conditions de défaite
     end
-    
+
     Note over Combat: Fin Round
     Combat->>Combat: Vérifier conditions victoire
 ```
@@ -559,14 +559,14 @@ graph LR
     D --> E[heroism.awarded++]
     E --> F[Tous héros +1 heroism]
     C -->|Non| A
-    
+
     style D fill:#FFD700
 ```
 
 **Calcul du seuil** :
 
 ```javascript
-heroism.next = heroism.previous + (2 * numHeroes)
+heroism.next = heroism.previous + 2 * numHeroes
 ```
 
 ### Turn Start Workflow
@@ -610,57 +610,57 @@ Le spellcasting utilise un système de construction dynamique : Gesture + Rune +
 flowchart TD
     Start([Cast Spell]) --> OpenDialog[Ouvrir Spell Dialog]
     OpenDialog --> SelectGesture{Sélection Gesture}
-    
+
     SelectGesture --> Touch[Touch]
     SelectGesture --> Blast[Blast]
     SelectGesture --> Ray[Ray]
     SelectGesture --> Aura[Aura]
-    
+
     Touch --> SelectRune{Sélection Rune}
     Blast --> SelectRune
     Ray --> SelectRune
     Aura --> SelectRune
-    
+
     SelectRune --> Fire[Fire]
     SelectRune --> Cold[Cold]
     SelectRune --> Lightning[Lightning]
     SelectRune --> Acid[Acid]
-    
+
     Fire --> SelectInflections{Inflections?}
     Cold --> SelectInflections
     Lightning --> SelectInflections
     Acid --> SelectInflections
-    
+
     SelectInflections -->|Enhance| Inflect1[+Damage]
     SelectInflections -->|Extend| Inflect2[+Duration]
     SelectInflections -->|Enlarge| Inflect3[+Area]
     SelectInflections -->|Quicken| Inflect4[-Action Cost]
     SelectInflections -->|Aucune| BuildSpell
-    
+
     Inflect1 --> BuildSpell[Construire SpellAction]
     Inflect2 --> BuildSpell
     Inflect3 --> BuildSpell
     Inflect4 --> BuildSpell
-    
+
     BuildSpell --> CalcCost[Calculer coût total]
     CalcCost --> CheckFocus{Focus suffisant?}
-    
+
     CheckFocus -->|Non| ErrorFocus[Erreur: Pas assez focus]
     CheckFocus -->|Oui| UseAction[Action.use workflow]
-    
+
     UseAction --> RollAttack[Jet d'attaque]
     RollAttack --> Hit{Touche?}
-    
+
     Hit -->|Oui| RollDamage[Jet de dégâts]
     Hit -->|Non| Miss[Raté]
-    
+
     RollDamage --> ApplyEffects[Appliquer effets]
     ApplyEffects --> SpendFocus[Dépenser focus]
     SpendFocus --> End([Sort lancé])
-    
+
     Miss --> SpendFocus
     ErrorFocus --> End
-    
+
     style Start fill:#90EE90
     style End fill:#90EE90
     style ErrorFocus fill:#FF6B6B
@@ -676,36 +676,36 @@ sequenceDiagram
     participant Rune
     participant Inflection
     participant Action
-    
+
     Actor->>SpellAction: use()
     SpellAction->>SpellAction: Ouvrir dialog
-    
+
     Note over SpellAction: Sélection composants
     User->>SpellAction: Choisir gesture
     SpellAction->>Gesture: Charger gesture data
     Gesture-->>SpellAction: {cost, range, target}
-    
+
     User->>SpellAction: Choisir rune
     SpellAction->>Rune: Charger rune data
     Rune-->>SpellAction: {element, effects, damage}
-    
+
     User->>SpellAction: Choisir inflections
     loop Pour chaque inflection
         SpellAction->>Inflection: Charger inflection data
         Inflection-->>SpellAction: {modifiers, cost}
     end
-    
+
     Note over SpellAction: Construction
     SpellAction->>SpellAction: _prepareData()
     SpellAction->>SpellAction: Merger gesture + rune
     SpellAction->>SpellAction: Appliquer inflections
-    
+
     Note over SpellAction: Calcul final
     SpellAction->>SpellAction: cost.focus = base + inflections
     SpellAction->>SpellAction: damage = rune + enhance
     SpellAction->>SpellAction: range = gesture + extend
     SpellAction->>SpellAction: area = gesture + enlarge
-    
+
     SpellAction->>Actor: Vérifier focus
     alt Focus insuffisant
         Actor-->>SpellAction: Error
@@ -750,38 +750,38 @@ const fireball = {
 
 ### Gestures
 
-| ID | Name | Type | Cost | Range | Target |
-|----|------|------|------|-------|--------|
-| touch | Touch | Single | 2 action | Touch | Single |
-| blast | Blast | Area | 3 action | 30ft | Area 10ft |
-| ray | Ray | Line | 3 action | 60ft | Line 60ft |
-| aura | Aura | Self | 2 action | Self | Aura 10ft |
-| wall | Wall | Barrier | 3 action | 60ft | Wall 20ft |
-| zone | Zone | Terrain | 4 action | 120ft | Area 20ft |
+| ID    | Name  | Type    | Cost     | Range | Target    |
+| ----- | ----- | ------- | -------- | ----- | --------- |
+| touch | Touch | Single  | 2 action | Touch | Single    |
+| blast | Blast | Area    | 3 action | 30ft  | Area 10ft |
+| ray   | Ray   | Line    | 3 action | 60ft  | Line 60ft |
+| aura  | Aura  | Self    | 2 action | Self  | Aura 10ft |
+| wall  | Wall  | Barrier | 3 action | 60ft  | Wall 20ft |
+| zone  | Zone  | Terrain | 4 action | 120ft | Area 20ft |
 
 ### Runes
 
-| ID | Element | Damage Type | Effects |
-|----|---------|-------------|---------|
-| fire | Fire | Fire | Burning |
-| cold | Cold | Cold | Slowed |
-| lightning | Lightning | Electricity | Stunned |
-| acid | Acid | Acid | Corrode |
-| poison | Poison | Poison | Poisoned |
-| force | Force | Force | Push |
-| radiant | Radiant | Radiant | Blinded |
-| necrotic | Necrotic | Necrotic | Weakened |
+| ID        | Element   | Damage Type | Effects  |
+| --------- | --------- | ----------- | -------- |
+| fire      | Fire      | Fire        | Burning  |
+| cold      | Cold      | Cold        | Slowed   |
+| lightning | Lightning | Electricity | Stunned  |
+| acid      | Acid      | Acid        | Corrode  |
+| poison    | Poison    | Poison      | Poisoned |
+| force     | Force     | Force       | Push     |
+| radiant   | Radiant   | Radiant     | Blinded  |
+| necrotic  | Necrotic  | Necrotic    | Weakened |
 
 ### Inflections
 
-| ID | Effect | Cost Modifier |
-|----|--------|---------------|
-| enhance | +1d6 damage | +1 focus |
-| extend | +1 round duration | +1 focus |
-| enlarge | +5ft area/range | +1 focus |
-| quicken | -1 action cost | +2 focus |
-| empower | Reroll 1s | +1 focus |
-| persist | +2 rounds duration | +2 focus |
+| ID      | Effect             | Cost Modifier |
+| ------- | ------------------ | ------------- |
+| enhance | +1d6 damage        | +1 focus      |
+| extend  | +1 round duration  | +1 focus      |
+| enlarge | +5ft area/range    | +1 focus      |
+| quicken | -1 action cost     | +2 focus      |
+| empower | Reroll 1s          | +1 focus      |
+| persist | +2 rounds duration | +2 focus      |
 
 ### Source
 
@@ -805,49 +805,49 @@ flowchart TD
     Start([Gain XP/Milestone]) --> CheckCurrent[Vérifier niveau actuel]
     CheckCurrent --> AddMilestone[milestones++]
     AddMilestone --> CalcProgress[Calculer progress]
-    
+
     CalcProgress --> CheckReq{progress >= required?}
     CheckReq -->|Non| UpdateUI[Mettre à jour UI]
     CheckReq -->|Oui| LevelUp[Level Up!]
-    
+
     LevelUp --> IncrLevel[level++]
     IncrLevel --> GrantPoints[Accorder points]
     GrantPoints --> TalentPts[talent points +3]
     TalentPts --> AbilityPts[ability points +1]
     AbilityPts --> NotifyPlayer[Notification joueur]
-    
+
     NotifyPlayer --> OpenSheet[Ouvrir character sheet]
     OpenSheet --> SpendTalents{Dépenser Talents?}
-    
+
     SpendTalents -->|Oui| SelectNode[Sélectionner talent node]
     SelectNode --> CheckPrereq{Prérequis OK?}
     CheckPrereq -->|Non| ErrorPrereq[Erreur prérequis]
     CheckPrereq -->|Oui| CheckTier{Tier accessible?}
-    
+
     CheckTier -->|Non| ErrorTier[Erreur tier]
     CheckTier -->|Oui| UnlockTalent[Débloquer talent]
     UnlockTalent --> GrantTalent[Ajouter talent à acteur]
     GrantTalent --> DeductPts[points.spent++]
     DeductPts --> SpendTalents
-    
+
     SpendTalents -->|Non| SpendAbilities{Dépenser Abilities?}
-    
+
     SpendAbilities -->|Oui| SelectAbility[Choisir ability]
     SelectAbility --> CheckMax{ability < 12?}
     CheckMax -->|Non| ErrorMax[Erreur max]
     CheckMax -->|Oui| IncreaseAbility[increases++]
     IncreaseAbility --> DeductAbPts[ability.points.spent++]
     DeductAbPts --> SpendAbilities
-    
+
     SpendAbilities -->|Non| Complete[Progression terminée]
     Complete --> SaveActor[Sauvegarder Actor]
     SaveActor --> End([Terminé])
-    
+
     ErrorPrereq --> SelectNode
     ErrorTier --> SelectNode
     ErrorMax --> SelectAbility
     UpdateUI --> End
-    
+
     style Start fill:#90EE90
     style End fill:#90EE90
     style LevelUp fill:#FFD700
@@ -862,39 +862,39 @@ sequenceDiagram
     participant Sheet
     participant TalentTree
     participant Points
-    
+
     Note over GM,Actor: Gain Milestone
     GM->>Actor: alterResources({milestones: +1})
     Actor->>Actor: advancement.milestones++
     Actor->>Actor: prepareBaseData()
-    
+
     Note over Actor: Calcul progression
     Actor->>Actor: progress = milestones - level.start
     Actor->>Actor: required = level.required
     Actor->>Actor: pct = progress / required * 100
-    
+
     alt progress >= required
         Actor->>Actor: Level Up!
         Actor->>Actor: advancement.level++
         Actor->>Points: talent.total += 3
         Actor->>Points: ability.total += 1
         Actor->>Actor: prepareBaseData() // Recalc
-        
+
         Note over Actor: Mise à jour dérivée
         Actor->>Actor: defenses recalc
         Actor->>Actor: resources.max recalc
-        
+
         Actor->>Sheet: render(force=true)
         Sheet-->>User: Notification level up
     end
-    
+
     Note over User: Dépenser Talent Points
     User->>Sheet: Ouvrir Talent Tree
     Sheet->>TalentTree: render()
-    
+
     User->>TalentTree: Clic sur node
     TalentTree->>TalentTree: Vérifier prérequis
-    
+
     alt Prérequis non rempli
         TalentTree-->>User: Error: Parent requis
     else Tier trop élevé
@@ -909,7 +909,7 @@ sequenceDiagram
         Actor->>Actor: prepareBaseData()
         TalentTree->>TalentTree: render()
     end
-    
+
     Note over User: Dépenser Ability Points
     User->>Sheet: Clic +1 ability
     Sheet->>Actor: abilities[x].increases++
@@ -942,11 +942,11 @@ total = level - 1
 ### Talent Tree Tiers
 
 | Tier | Level Required | Node Cost |
-|------|----------------|-----------|
-| 1 | 1+ | 1 point |
-| 2 | 5+ | 1 point |
-| 3 | 10+ | 1 point |
-| 4 | 15+ | 1 point |
+| ---- | -------------- | --------- |
+| 1    | 1+             | 1 point   |
+| 2    | 5+             | 1 point   |
+| 3    | 10+            | 1 point   |
+| 4    | 15+            | 1 point   |
 
 **Contraintes** :
 
@@ -997,14 +997,14 @@ Le système de repos restaure les ressources et soigne les blessures.
 ```mermaid
 flowchart TD
     Start([Initier Repos]) --> TypeChoice{Type de repos?}
-    
+
     TypeChoice -->|Short| ShortRest[Short Rest]
     TypeChoice -->|Long| LongRest[Long Rest]
-    
+
     ShortRest --> RestoreFocusS[focus = max * 0.5]
     RestoreFocusS --> RestoreActionS[action = max]
     RestoreActionS --> EndS[Fin Short Rest]
-    
+
     LongRest --> RestoreFocusL[focus = max]
     RestoreFocusL --> RestoreActionL[action = max]
     RestoreActionL --> RestoreHealth[health = max]
@@ -1012,15 +1012,15 @@ flowchart TD
     RollRecovery --> ReduceWounds[wounds -= 1d4]
     ReduceWounds --> RemoveEffects[Supprimer effets temporaires]
     RemoveEffects --> CheckInterruption{Interruption?}
-    
+
     CheckInterruption -->|Combat| CancelRest[Annuler repos]
     CheckInterruption -->|Non| EndL[Fin Long Rest]
-    
+
     EndS --> Notify[Notifier joueurs]
     EndL --> Notify
     CancelRest --> Notify
     Notify --> End([Terminé])
-    
+
     style Start fill:#90EE90
     style End fill:#90EE90
     style CancelRest fill:#FF6B6B
@@ -1035,10 +1035,10 @@ sequenceDiagram
     participant Dialog
     participant Recovery
     participant Effects
-    
+
     User->>Actor: Initier repos
     Actor->>Dialog: Afficher choix repos
-    
+
     alt Short Rest
         Dialog-->>Actor: Type = short
         Actor->>Actor: resources.focus += max * 0.5
@@ -1046,18 +1046,18 @@ sequenceDiagram
         Actor->>Actor: Hooks.call("crucible.actorRest", "short")
     else Long Rest
         Dialog-->>Actor: Type = long
-        
+
         Note over Actor: Restauration complète
         Actor->>Actor: resources.focus = max
         Actor->>Actor: resources.action = max
         Actor->>Actor: resources.health = max
-        
+
         Note over Actor: Récupération wounds
         Actor->>Recovery: Roll 1d4
         Recovery-->>Actor: result
         Actor->>Actor: wounds.value -= result
         Actor->>Actor: wounds.value = max(0, value)
-        
+
         Note over Actor: Cleanup effets
         Actor->>Effects: getActiveEffects()
         loop Pour chaque effet
@@ -1065,10 +1065,10 @@ sequenceDiagram
                 Actor->>Effects: delete(effect)
             end
         end
-        
+
         Actor->>Actor: Hooks.call("crucible.actorRest", "long")
     end
-    
+
     Actor->>Actor: update(resources)
     Actor-->>User: Notification repos terminé
 ```
@@ -1083,12 +1083,12 @@ sequenceDiagram
 
 ```javascript
 // Hook sur début combat
-Hooks.on("combatStart", (combat) => {
+Hooks.on('combatStart', (combat) => {
   if (actor.isResting) {
-    actor.cancelRest();
-    ui.notifications.warn("Repos interrompu!");
+    actor.cancelRest()
+    ui.notifications.warn('Repos interrompu!')
   }
-});
+})
 ```
 
 ### Source
@@ -1108,28 +1108,28 @@ Gestion de l'équipement, encombrement et équipement/déséquipement.
 ```mermaid
 flowchart TD
     Start([Action Inventaire]) --> ActionType{Type action?}
-    
+
     ActionType -->|Équiper| Equip[Équiper item]
     ActionType -->|Déséquiper| Unequip[Déséquiper item]
     ActionType -->|Utiliser| UseItem[Utiliser item]
     ActionType -->|Drop| DropItem[Lâcher item]
-    
+
     Equip --> CheckSlot{Slot disponible?}
     CheckSlot -->|Non| UnequipOld[Déséquiper ancien]
     UnequipOld --> EquipNew[equipped = true]
     CheckSlot -->|Oui| EquipNew
     EquipNew --> Attune{Requiert attunement?}
-    
+
     Attune -->|Oui| CheckAttuned{Déjà attuné?}
     CheckAttuned -->|Non| AttuneDialog[Dialog attunement]
     AttuneDialog --> DoAttune[attuned = true]
     DoAttune --> CalcEncumbrance
     CheckAttuned -->|Oui| CalcEncumbrance
     Attune -->|Non| CalcEncumbrance
-    
+
     Unequip --> SetUnequipped[equipped = false]
     SetUnequipped --> CalcEncumbrance
-    
+
     UseItem --> CheckConsumable{Consumable?}
     CheckConsumable -->|Oui| Consume[Trigger action]
     CheckConsumable -->|Non| ErrorUse[Cannot use]
@@ -1138,21 +1138,21 @@ flowchart TD
     CheckEmpty -->|Oui| DeleteItem[Supprimer item]
     CheckEmpty -->|Non| CalcEncumbrance
     DeleteItem --> CalcEncumbrance
-    
+
     DropItem --> Transfer[Transférer vers monde]
     Transfer --> CreateToken[Créer loot token]
     CreateToken --> RemoveFromActor[Retirer de l'acteur]
     RemoveFromActor --> CalcEncumbrance
-    
+
     CalcEncumbrance[Recalculer encumbrance]
     CalcEncumbrance --> CheckOverload{Surcharge?}
     CheckOverload -->|Oui| WarnOverload[Warning: encumbré!]
     CheckOverload -->|Non| UpdateSheet[Mettre à jour sheet]
     WarnOverload --> UpdateSheet
     UpdateSheet --> End([Terminé])
-    
+
     ErrorUse --> End
-    
+
     style Start fill:#90EE90
     style End fill:#90EE90
     style ErrorUse fill:#FF6B6B
@@ -1166,28 +1166,26 @@ flowchart TD
 capacity.max = abilities.str.value * 10
 
 // Poids total
-capacity.value = items
-  .filter(i => i.type === "physical")
-  .reduce((sum, i) => sum + (i.system.weight * i.system.quantity), 0)
+capacity.value = items.filter((i) => i.type === 'physical').reduce((sum, i) => sum + i.system.weight * i.system.quantity, 0)
 
 // Statuts
 if (capacity.value > capacity.max) {
-  status = "overloaded"        // -2 DEX, -10ft speed
+  status = 'overloaded' // -2 DEX, -10ft speed
 } else if (capacity.value > capacity.max * 0.75) {
-  status = "encumbered"        // -1 DEX, -5ft speed
+  status = 'encumbered' // -1 DEX, -5ft speed
 } else {
-  status = "normal"
+  status = 'normal'
 }
 ```
 
 ### Équipement par slot
 
-| Slot | Type | Limit |
-|------|------|-------|
-| mainHand | Weapon, Shield | 1 |
-| offHand | Weapon, Shield | 1 |
-| armor | Armor | 1 |
-| accessory | Accessory | 3 |
+| Slot      | Type           | Limit |
+| --------- | -------------- | ----- |
+| mainHand  | Weapon, Shield | 1     |
+| offHand   | Weapon, Shield | 1     |
+| armor     | Armor          | 1     |
+| accessory | Accessory      | 3     |
 
 **Règles** :
 
@@ -1214,32 +1212,32 @@ flowchart TD
     Start([Modification Contenu]) --> EditYAML[Éditer _source/*.yml]
     EditYAML --> RunCompile[npm run compile]
     RunCompile --> ReadYAML[Lire fichiers YAML]
-    
+
     ReadYAML --> ParseYAML[Parser YAML]
     ParseYAML --> Validate[Valider schéma]
     Validate --> ValidOK{Valide?}
-    
+
     ValidOK -->|Non| ShowErrors[Afficher erreurs]
     ShowErrors --> FixYAML[Corriger YAML]
     FixYAML --> RunCompile
-    
+
     ValidOK -->|Oui| GenerateID[Générer/Vérifier IDs]
     GenerateID --> ToJSON[Convertir en JSON]
     ToJSON --> WriteLDB[Écrire dans packs/ LevelDB]
     WriteLDB --> Complete[Compilation terminée]
-    
+
     Complete --> TestFoundry[Tester dans Foundry]
     TestFoundry --> WorksOK{Fonctionne?}
-    
+
     WorksOK -->|Non| Debug[Débugger]
     Debug --> EditYAML
     WorksOK -->|Oui| Commit[Commit changements]
-    
+
     Commit --> CommitYAML[git add _source/]
     CommitYAML --> CommitLDB[git add packs/]
     CommitLDB --> Push[git push]
     Push --> End([Terminé])
-    
+
     style Start fill:#90EE90
     style End fill:#90EE90
     style ShowErrors fill:#FF6B6B
@@ -1263,7 +1261,7 @@ npm run build
 **Exemple** : Talent
 
 ```yaml
-name: "Power Strike"
+name: 'Power Strike'
 type: talent
 _id: powerStrike00000
 system:
@@ -1279,7 +1277,7 @@ system:
       y: 200
   actions:
     - id: powerStrike
-      name: "Power Strike"
+      name: 'Power Strike'
       cost:
         action: 3
         focus: 2
@@ -1288,7 +1286,7 @@ system:
         - melee
         - damage
       effects:
-        - name: "Extra Damage"
+        - name: 'Extra Damage'
           statuses: []
           scope: 1
 ```
@@ -1302,15 +1300,15 @@ sequenceDiagram
     participant YAML as _source/
     participant Validator
     participant LDB as packs/
-    
+
     Dev->>Script: npm run compile
     Script->>YAML: Lire tous les .yml
-    
+
     loop Pour chaque fichier
         YAML-->>Script: Contenu YAML
         Script->>Script: yaml.parse()
         Script->>Validator: Valider schéma
-        
+
         alt Invalide
             Validator-->>Script: Errors
             Script-->>Dev: Console errors
@@ -1321,7 +1319,7 @@ sequenceDiagram
             Script->>LDB: Écrire document
         end
     end
-    
+
     Script-->>Dev: Compilation terminée
 ```
 
@@ -1334,10 +1332,10 @@ function generateId(name, length = 16) {
   const slug = name
     .toLowerCase()
     .replace(/\s+/g, '')
-    .replace(/[^a-z0-9]/g, '');
-  
-  const padding = '0'.repeat(Math.max(0, length - slug.length));
-  return slug + padding;
+    .replace(/[^a-z0-9]/g, '')
+
+  const padding = '0'.repeat(Math.max(0, length - slug.length))
+  return slug + padding
 }
 ```
 
@@ -1351,16 +1349,16 @@ function generateId(name, length = 16) {
 
 ## Résumé des Workflows
 
-| Workflow | Complexité | Fichiers Clés | User Facing |
-|----------|------------|---------------|-------------|
-| Création Héros | Haute | hero-creation-sheet.mjs | ✅ Oui |
-| Utilisation Action | Très Haute | action.mjs, action-use-dialog.mjs | ✅ Oui |
-| Combat | Haute | combat.mjs, actor.mjs | ✅ Oui |
-| Spellcasting | Haute | spell-action.mjs, spellcraft-*.mjs | ✅ Oui |
-| Progression | Moyenne | actor-hero.mjs, talent-tree.mjs | ✅ Oui |
-| Repos | Basse | actor.mjs (rest methods) | ✅ Oui |
-| Inventaire | Moyenne | actor.mjs (equipItem, etc.) | ✅ Oui |
-| Compendium | Moyenne | build.mjs | ❌ Dev only |
+| Workflow           | Complexité | Fichiers Clés                       | User Facing |
+| ------------------ | ---------- | ----------------------------------- | ----------- |
+| Création Héros     | Haute      | hero-creation-sheet.mjs             | ✅ Oui      |
+| Utilisation Action | Très Haute | action.mjs, action-use-dialog.mjs   | ✅ Oui      |
+| Combat             | Haute      | combat.mjs, actor.mjs               | ✅ Oui      |
+| Spellcasting       | Haute      | spell-action.mjs, spellcraft-\*.mjs | ✅ Oui      |
+| Progression        | Moyenne    | actor-hero.mjs, talent-tree.mjs     | ✅ Oui      |
+| Repos              | Basse      | actor.mjs (rest methods)            | ✅ Oui      |
+| Inventaire         | Moyenne    | actor.mjs (equipItem, etc.)         | ✅ Oui      |
+| Compendium         | Moyenne    | build.mjs                           | ❌ Dev only |
 
 ---
 

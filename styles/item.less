@@ -1,4 +1,4 @@
-@import "variables.less";
+@import 'variables.less';
 
 /* ----------------------------------------- */
 /*  All Items                                */
@@ -27,10 +27,12 @@
 /*  Career                        */
 /* ----------------------------------------- */
 
-.careers, .specializations {
+.careers,
+.specializations {
   column-count: 3;
 
-  .career, .specialization {
+  .career,
+  .specialization {
     cursor: pointer;
     text-align: center;
     border-radius: 5px 20px;
@@ -39,38 +41,50 @@
     align-items: center;
   }
 
-  .career.inactive, .specialization.inactive {
+  .career.inactive,
+  .specialization.inactive {
     border: 3px solid var(--color-border);
     color: var(--color-text);
     background: var(--color-frame-bg-25);
   }
 
-  .career.active, .specialization.active {
+  .career.active,
+  .specialization.active {
     border: 3px solid var(--color-frame-bg-25);
     color: var(--color-text);
     background: var(--color-border);
   }
 
-  .career:hover, .specialization:hover {
+  .career:hover,
+  .specialization:hover {
     background: var(--color-link-text);
     border-color: var(--color-accent);
   }
 
-  .career::before, .career::after, .specialization::before, .specialization::after {
+  .career::before,
+  .career::after,
+  .specialization::before,
+  .specialization::after {
     display: flex;
-    content: "";
+    content: '';
     width: 0.7em;
     height: 0.7em;
     border-radius: 5px;
   }
 
-  .career.inactive::before, .career.inactive::after, .specialization.inactive::before, .specialization.inactive::after {
+  .career.inactive::before,
+  .career.inactive::after,
+  .specialization.inactive::before,
+  .specialization.inactive::after {
     background: var(--color-inactive);
     mask-image: linear-gradient(270deg, transparent 0%, var(--color-border-inactive) 100%);
     border: 1px solid var(--color-border-inactive);
   }
 
-  .career.active::before, .career.active::after, .specialization.active::before, .specialization.active::after {
+  .career.active::before,
+  .career.active::after,
+  .specialization.active::before,
+  .specialization.active::after {
     background: var(--color-active);
     mask-image: linear-gradient(270deg, transparent 0%, var(--color-border-active) 100%);
     border: 1px solid var(--color-border-active);
@@ -113,7 +127,7 @@
   }
 
   // Tabbed descriptions
-  .tab[data-tab=description] {
+  .tab[data-tab='description'] {
     padding: 0;
     gap: 0;
 
@@ -207,7 +221,6 @@
  * ------------------------------------------ */
 
 .swerpg.origin {
-
   .skill-modifiers-list {
     display: flex;
     width: 100%;
@@ -258,13 +271,10 @@
     .delete-tag:hover {
       color: #ff6347;
     }
-
   }
 
   .skills {
-
     .add-skill {
-
       .select-skill {
         flex: 3;
         margin-left: 1rem;

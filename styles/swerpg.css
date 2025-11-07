@@ -2,26 +2,26 @@
 /*  Font Faces                               */
 /* ----------------------------------------- */
 @font-face {
-  font-family: "Audiowide";
-  src: url("../fonts/Audiowide/Audiowide-Regular.ttf");
+  font-family: 'Audiowide';
+  src: url('../fonts/Audiowide/Audiowide-Regular.ttf');
 }
 @font-face {
-  font-family: "Star Jedi";
-  src: url("../fonts/Star_Jedi/STJEDISE.TTF");
+  font-family: 'Star Jedi';
+  src: url('../fonts/Star_Jedi/STJEDISE.TTF');
 }
 @font-face {
-  font-family: "Orbitron";
-  src: url("../fonts/Orbitron/Orbitron-VariableFont_wght.ttf");
+  font-family: 'Orbitron';
+  src: url('../fonts/Orbitron/Orbitron-VariableFont_wght.ttf');
 }
 @font-face {
   font-family: 'Exo 2';
   font-style: normal;
   font-weight: 300 800;
-  src: url("../fonts/Exo_2/Exo2-Italic-VariableFont_wght.ttf") format('truetype');
+  src: url('../fonts/Exo_2/Exo2-Italic-VariableFont_wght.ttf') format('truetype');
 }
 @font-face {
   font-family: 'Rajdhani';
-  src: url("../fonts/Rajdhani/Rajdhani-Regular.ttf") format('truetype');
+  src: url('../fonts/Rajdhani/Rajdhani-Regular.ttf') format('truetype');
 }
 /* ----------------------------------------- */
 /*  CSS Variables                            */
@@ -35,18 +35,18 @@
   --color-background: #0c0f17;
   --color-frame: #3a3f48;
   --color-accent: #00b0ff;
-  --background: #0A1F44;
+  --background: #0a1f44;
   /* Bleu nuit */
   --background-dark: #0c0f17;
   /* Bleu nuit profond */
-  --background-element: #5A5F67;
+  --background-element: #5a5f67;
   /* Bleu nuit profond */
   --color-primary: var(--color-text);
-  --color-secondary: #7C8A9E;
+  --color-secondary: #7c8a9e;
   /* Gris bleuté pour les textes secondaires */
-  --color-tertiary: #5A5F67;
+  --color-tertiary: #5a5f67;
   /* Gris acier pour les détails */
-  --color-header: #26C6DA;
+  --color-header: #26c6da;
   /* Cyan lumineux pour les titres */
   --color-h1: #72a4ea;
   /* Bleu électrique pour les titres H1 */
@@ -57,7 +57,7 @@
   --color-frame-bg-75: rgba(18, 25, 35, 0.75);
   --color-tern: #063a5e;
   /* Bleu néon pour les éléments interactifs */
-  --color-link-text: #26C6DA;
+  --color-link-text: #26c6da;
   /* Cyan éclatant pour les liens */
   --color-border-highlight: var(--color-accent);
   /* Bordures lumineuses */
@@ -73,19 +73,19 @@
   /* Rouge lumineux */
   --color-box-warm-3: #5d142b;
   /* Rouge sombre */
-  --color-damage-vulnerability: #640A0A;
+  --color-damage-vulnerability: #640a0a;
   /* Rouge sombre pour les faiblesses */
-  --color-damage-vulnerability-border: #D92E2E;
+  --color-damage-vulnerability-border: #d92e2e;
   /* Rouge vif pour accentuer */
-  --color-damage-resistance: #0F4C75;
+  --color-damage-resistance: #0f4c75;
   /* Bleu profond pour la résistance */
-  --color-damage-resistance-border: #2FA8FF;
+  --color-damage-resistance-border: #2fa8ff;
   /* Bleu clair lumineux */
-  --color-result-bad: #640A0A;
+  --color-result-bad: #640a0a;
   /* Rouge sombre pour les mauvais résultats */
-  --color-result-good: #0F4C75;
+  --color-result-good: #0f4c75;
   /* Bleu profond pour les bons résultats */
-  --color-result-warn: #A98D0B;
+  --color-result-warn: #a98d0b;
   /* Doré vieilli pour les avertissements */
   --color-active: #1ab82a;
   /* Vert pour les éléments actifs */
@@ -125,12 +125,12 @@
   --color-success: #00ff99;
   --color-warning: #ffaa00;
   --color-danger: #ff3333;
-  --font-h1: "Star Jedi", sans-serif;
-  --font-h2: "Star Jedi", sans-serif;
-  --font-h3: "Star Jedi", sans-serif;
-  --font-body: "Orbitron", sans-serif;
-  --font-quote: "Exo 2", sans-serif;
-  --font-sans: "Rajdhani", sans-serif;
+  --font-h1: 'Star Jedi', sans-serif;
+  --font-h2: 'Star Jedi', sans-serif;
+  --font-h3: 'Star Jedi', sans-serif;
+  --font-body: 'Orbitron', sans-serif;
+  --font-quote: 'Exo 2', sans-serif;
+  --font-sans: 'Rajdhani', sans-serif;
   --color-fieldset-border: var(--color-frame);
 }
 .swerpg input,
@@ -206,7 +206,7 @@
 .swerpg h3.divider::before,
 .swerpg h4.divider::before {
   flex: 1;
-  content: "";
+  content: '';
   margin-right: 0.5rem;
   border-top: 2px ridge var(--color-h1);
   -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 100%);
@@ -217,7 +217,7 @@
 .swerpg h3.divider::after,
 .swerpg h4.divider::after {
   flex: 1;
-  content: "";
+  content: '';
   margin-left: 0.5rem;
   border-top: 2px ridge var(--color-h1);
   -webkit-mask-image: linear-gradient(270deg, transparent 0%, black 100%);
@@ -335,7 +335,7 @@
   left: 0;
   display: block;
   font-family: var(--font-awesome);
-  content: "\f7d9";
+  content: '\f7d9';
   font-size: 48px;
   text-align: center;
   line-height: 80px;
@@ -353,10 +353,10 @@
   left: 0;
   top: 0;
   display: block;
-  content: "";
+  content: '';
   width: 120px;
   height: 100%;
-  background: url("/icons/vtt-512.png") no-repeat;
+  background: url('/icons/vtt-512.png') no-repeat;
   background-size: 100px;
   background-position: center;
 }
@@ -373,8 +373,8 @@
   height: 12px;
   position: absolute;
   left: -6px;
-  content: "";
-  background: url("../ui/journal/divider-border.png") no-repeat center;
+  content: '';
+  background: url('../ui/journal/divider-border.png') no-repeat center;
   background-size: cover;
 }
 .swerpg section.gameplay::before {
@@ -402,7 +402,7 @@
 .swerpg section.formula {
   margin: 1rem 0;
   padding: 0.5rem 3rem 0.5rem 1.5rem;
-  background: url("../ui/journal/math-full.png") no-repeat center left;
+  background: url('../ui/journal/math-full.png') no-repeat center left;
   background-size: 100% 100%;
   color: #30030b;
   font-weight: bold;
@@ -426,7 +426,7 @@
   color: var(--color-text);
 }
 .swerpg .hex {
-  --hex-bg: url("../ui/elements/hex-plain.svg");
+  --hex-bg: url('../ui/elements/hex-plain.svg');
   --hex-rotation: 0;
   position: relative;
   display: flex;
@@ -435,7 +435,7 @@
   z-index: 0;
 }
 .swerpg .hex::before {
-  content: "";
+  content: '';
   position: absolute;
   width: 100%;
   height: 100%;
@@ -445,46 +445,46 @@
   z-index: -1;
 }
 .swerpg .hex.filled {
-  --hex-bg: url("../ui/elements/hex-plain-filled.svg");
+  --hex-bg: url('../ui/elements/hex-plain-filled.svg');
 }
 .swerpg .hex.dexterity-intellect {
-  --hex-bg: url("../ui/elements/hex-accent-2b.svg");
+  --hex-bg: url('../ui/elements/hex-accent-2b.svg');
   --hex-rotation: -120deg;
 }
 .swerpg .hex.dexterity-strength {
-  --hex-bg: url("../ui/elements/hex-accent-2c.svg");
+  --hex-bg: url('../ui/elements/hex-accent-2c.svg');
   --hex-rotation: -60deg;
 }
 .swerpg .hex.dexterity-presence {
-  --hex-bg: url("../ui/elements/hex-accent-2c.svg");
+  --hex-bg: url('../ui/elements/hex-accent-2c.svg');
   --hex-rotation: 180deg;
 }
 .swerpg .hex.intellect-presence {
-  --hex-bg: url("../ui/elements/hex-accent-2b.svg");
+  --hex-bg: url('../ui/elements/hex-accent-2b.svg');
   --hex-rotation: 180deg;
 }
 .swerpg .hex.intellect-toughness {
-  --hex-bg: url("../ui/elements/hex-accent-2c.svg");
+  --hex-bg: url('../ui/elements/hex-accent-2c.svg');
   --hex-rotation: -120deg;
 }
 .swerpg .hex.intellect-wisdom {
-  --hex-bg: url("../ui/elements/hex-accent-2c.svg");
+  --hex-bg: url('../ui/elements/hex-accent-2c.svg');
   --hex-rotation: 120deg;
 }
 .swerpg .hex.presence-strength {
-  --hex-bg: url("../ui/elements/hex-accent-2c.svg");
+  --hex-bg: url('../ui/elements/hex-accent-2c.svg');
   --hex-rotation: 60deg;
 }
 .swerpg .hex.presence-wisdom {
-  --hex-bg: url("../ui/elements/hex-accent-2b.svg");
+  --hex-bg: url('../ui/elements/hex-accent-2b.svg');
   --hex-rotation: 120deg;
 }
 .swerpg .hex.strength-wisdom {
-  --hex-bg: url("../ui/elements/hex-accent-2c.svg");
+  --hex-bg: url('../ui/elements/hex-accent-2c.svg');
   --hex-rotation: 0;
 }
 .swerpg .hex.toughness-wisdom {
-  --hex-bg: url("../ui/elements/hex-accent-2c.svg");
+  --hex-bg: url('../ui/elements/hex-accent-2c.svg');
   --hex-rotation: 0;
 }
 /* Tooltips */
@@ -498,7 +498,7 @@
   top: 120%;
   padding: 2px 5px;
   background: rgba(0, 0, 0, 0.95);
-  font-family: "Signika", serif;
+  font-family: 'Signika', serif;
   font-size: 12px;
   font-weight: normal;
   text-align: left;
@@ -542,7 +542,7 @@
   opacity: 65%;
 }
 .swerpg-separator:after {
-  content: "\f0e3";
+  content: '\f0e3';
   display: inline-block;
   position: relative;
   padding: 0 1rem;
@@ -553,7 +553,7 @@
   font-size: 1rem;
   border: 0;
 }
-input[type=range] {
+input[type='range'] {
   --range-thumb-border-color: var(--color-blue-tern);
 }
 /* ----------------------------------------- */
@@ -565,14 +565,14 @@ input[type=range] {
   --color-form-label-hover: var(--color-primary);
   --color-form-hint: var(--color-tertiary);
   --color-form-hint-hover: var(--color-secondary);
-  --background-texture: url("../ui/journal/background-texture.webp");
-  --background-overlay: url("../ui/journal/overlay-dark.webp");
+  --background-texture: url('../ui/journal/background-texture.webp');
+  --background-overlay: url('../ui/journal/overlay-dark.webp');
   background: var(--background-texture) no-repeat;
   background-size: cover;
   gap: 0;
 }
 .swerpg.application::before {
-  content: "";
+  content: '';
   display: block;
   width: 100%;
   height: 100%;
@@ -1018,7 +1018,7 @@ input[type=range] {
 .swerpg.sheet.actor .sheet-header div.metadata div.size span.value {
   flex: none;
   width: 24px;
-  background: url("../ui/elements/hex-plain.svg") no-repeat center;
+  background: url('../ui/elements/hex-plain.svg') no-repeat center;
   background-size: 24px;
   font-family: var(--font-h1);
   font-size: var(--font-size-16);
@@ -1277,7 +1277,7 @@ input[type=range] {
   display: block;
   position: absolute;
   pointer-events: none;
-  content: "";
+  content: '';
   width: 100%;
   height: 100%;
   background: var(--resource-fill) no-repeat center;
@@ -1296,7 +1296,7 @@ input[type=range] {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: url("../ui/elements/hex-plain.svg") no-repeat center;
+  background: url('../ui/elements/hex-plain.svg') no-repeat center;
   background-size: auto 32px;
 }
 .swerpg.sheet.actor .tab.attributes .resources .resource .threshold .value {
@@ -1311,12 +1311,12 @@ input[type=range] {
   left: -12px;
 }
 .swerpg.sheet.actor .tab.attributes .resources .resource.health {
-  --resource-bg: url("../ui/resources/health-bg.png");
-  --resource-fill: url("../ui/resources/health-fill.png");
+  --resource-bg: url('../ui/resources/health-bg.png');
+  --resource-fill: url('../ui/resources/health-fill.png');
 }
 .swerpg.sheet.actor .tab.attributes .resources .resource.morale {
-  --resource-bg: url("../ui/resources/morale-bg.png");
-  --resource-fill: url("../ui/resources/morale-fill.png");
+  --resource-bg: url('../ui/resources/morale-bg.png');
+  --resource-fill: url('../ui/resources/morale-fill.png');
 }
 .swerpg.sheet.actor .tab.attributes .resources .economy {
   height: 100%;
@@ -1353,7 +1353,7 @@ input[type=range] {
 }
 .swerpg.sheet.actor .tab.attributes .resources .economy .currency .full::before {
   display: block;
-  content: "";
+  content: '';
   width: 8px;
   height: 8px;
   margin: 2px;
@@ -1361,10 +1361,10 @@ input[type=range] {
   border-radius: 4px;
 }
 .swerpg.sheet.actor .tab.attributes .resources .action {
-  --resource-color: #FF9900;
+  --resource-color: #ff9900;
 }
 .swerpg.sheet.actor .tab.attributes .resources .focus {
-  --resource-color: #0066FF;
+  --resource-color: #0066ff;
 }
 .swerpg.sheet.actor .tab.attributes .resources .heroism {
   --resource-color: #ff0059;
@@ -1498,22 +1498,22 @@ input[type=range] {
   border: 1px solid #00b0ff;
 }
 .strength {
-  --ability-icon: url("../ui/abilities/strength.svg");
+  --ability-icon: url('../ui/abilities/strength.svg');
 }
 .toughness {
-  --ability-icon: url("../ui/abilities/toughness.svg");
+  --ability-icon: url('../ui/abilities/toughness.svg');
 }
 .dexterity {
-  --ability-icon: url("../ui/abilities/dexterity.svg");
+  --ability-icon: url('../ui/abilities/dexterity.svg');
 }
 .wisdom {
-  --ability-icon: url("../ui/abilities/wisdom.svg");
+  --ability-icon: url('../ui/abilities/wisdom.svg');
 }
 .presence {
-  --ability-icon: url("../ui/abilities/presence.svg");
+  --ability-icon: url('../ui/abilities/presence.svg');
 }
 .intellect {
-  --ability-icon: url("../ui/abilities/intellect.svg");
+  --ability-icon: url('../ui/abilities/intellect.svg');
 }
 a.button {
   position: absolute;
@@ -1587,7 +1587,7 @@ a.button.increase {
 .defenses .physical .total {
   width: 60px;
   height: 100px;
-  background: url("../ui/elements/hex-willpower.svg") no-repeat center;
+  background: url('../ui/elements/hex-willpower.svg') no-repeat center;
   background-size: 60px;
 }
 .defenses .physical .sep {
@@ -1597,7 +1597,7 @@ a.button.increase {
 .defenses .physical .component {
   width: 40px;
   height: 80px;
-  background: url("../ui/elements/hex-plain.svg") no-repeat center;
+  background: url('../ui/elements/hex-plain.svg') no-repeat center;
   background-size: 40px;
 }
 .defenses .physical .component .value {
@@ -1626,16 +1626,16 @@ a.button.increase {
   background-size: auto 64px;
 }
 .defenses .magical .defense.fortitude {
-  --defense-icon: url("../ui/elements/hex-fortitude.svg");
+  --defense-icon: url('../ui/elements/hex-fortitude.svg');
 }
 .defenses .magical .defense.willpower {
-  --defense-icon: url("../ui/elements/hex-willpower.svg");
+  --defense-icon: url('../ui/elements/hex-willpower.svg');
 }
 .defenses .magical .defense.reflex {
-  --defense-icon: url("../ui/elements/hex-reflex.svg");
+  --defense-icon: url('../ui/elements/hex-reflex.svg');
 }
 .defenses .magical .extra {
-  --defense-icon: url("../ui/elements/hex-plain.svg");
+  --defense-icon: url('../ui/elements/hex-plain.svg');
   width: 32px;
   height: 64px;
   align-self: flex-end;
@@ -1676,7 +1676,7 @@ a.button.increase {
   border-right: 1px solid var(--color-frame);
 }
 .resistances .resistance .resistance-bar::before {
-  content: "";
+  content: '';
   display: block;
   width: 100%;
   position: absolute;
@@ -1686,7 +1686,7 @@ a.button.increase {
 .resistances .resistance .resistance-bar .value {
   flex: 0 0 24px;
   height: 24px;
-  background: url("../ui/elements/hex-plain-filled.svg") no-repeat center;
+  background: url('../ui/elements/hex-plain-filled.svg') no-repeat center;
   background-size: auto 24px;
   line-height: 24px;
   text-align: center;
@@ -1708,7 +1708,7 @@ a.button.increase {
   display: none;
 }
 .resistances .resistance.res .value {
-  background: url("../ui/elements/hex-resistance.svg") no-repeat center;
+  background: url('../ui/elements/hex-resistance.svg') no-repeat center;
   background-size: auto 24px;
 }
 .resistances .resistance.res .bar {
@@ -1718,7 +1718,7 @@ a.button.increase {
   border-left: none;
 }
 .resistances .resistance.vuln .value {
-  background: url("../ui/elements/hex-vulnerability.svg") no-repeat center;
+  background: url('../ui/elements/hex-vulnerability.svg') no-repeat center;
   background-size: auto 24px;
 }
 .resistances .resistance.vuln .bar {
@@ -1866,7 +1866,7 @@ a.button.increase {
 .tab.secondary .point-pools .value {
   flex: 0 0 24px;
   height: 24px;
-  background: url("../ui/elements/hex-plain.svg") no-repeat center;
+  background: url('../ui/elements/hex-plain.svg') no-repeat center;
   background-size: auto 24px;
   line-height: 24px;
   text-align: center;
@@ -1961,7 +1961,7 @@ a.button.increase {
   height: 15px;
   width: 15px;
   display: block;
-  content: " ";
+  content: ' ';
 }
 .tab.skills .skills-wrapper .skill .career .career-and-speciality.active {
   background-image: url(../ui/actor/career-and-speciality-icon-small.webp);
@@ -1994,32 +1994,32 @@ a.button.increase {
   cursor: pointer;
 }
 .tab.skills .skills-wrapper .pips .pip.untrained {
-  background: url("../ui/skills/central-pips.png") no-repeat center;
+  background: url('../ui/skills/central-pips.png') no-repeat center;
   background-size: 25px;
   position: relative;
 }
 .tab.skills .skills-wrapper .pips .pip.untrained:nth-child(1) {
-  background: url("../ui/skills/first-pip.png") no-repeat center;
+  background: url('../ui/skills/first-pip.png') no-repeat center;
   background-size: 25px;
   position: relative;
 }
 .tab.skills .skills-wrapper .pips .pip.untrained:nth-child(5) {
-  background: url("../ui/skills/fifth-pip.png") no-repeat center;
+  background: url('../ui/skills/fifth-pip.png') no-repeat center;
   background-size: 25px;
   position: relative;
 }
 .tab.skills .skills-wrapper .pips .pip.trained {
-  background: url("../ui/skills/central-trained-pips.png") no-repeat center;
+  background: url('../ui/skills/central-trained-pips.png') no-repeat center;
   background-size: 25px;
   position: relative;
 }
 .tab.skills .skills-wrapper .pips .pip.trained:nth-child(1) {
-  background: url("../ui/skills/first-trained-pip.png") no-repeat center;
+  background: url('../ui/skills/first-trained-pip.png') no-repeat center;
   background-size: 25px;
   position: relative;
 }
 .tab.skills .skills-wrapper .pips .pip.trained:nth-child(5) {
-  background: url("../ui/skills/fifth-trained-pip.png") no-repeat center;
+  background: url('../ui/skills/fifth-trained-pip.png') no-repeat center;
   background-size: 25px;
   position: relative;
 }
@@ -2141,7 +2141,7 @@ a.button.increase {
   text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
 }
 .skill-container .skill-box span::after {
-  content: "%";
+  content: '%';
   font-size: 14px;
   position: absolute;
   right: -12px;
@@ -2168,11 +2168,11 @@ a.button.increase {
   transition: all 0.2s ease-in-out;
 }
 .sw-toggle.active {
-  background-image: url("../assets/icons/emblems/rebel.svg");
+  background-image: url('../assets/icons/emblems/rebel.svg');
   background-color: rgba(255, 255, 255, 0.75);
 }
 .sw-toggle:not(.active) {
-  background-image: url("../assets/icons/emblems/empire.svg");
+  background-image: url('../assets/icons/emblems/empire.svg');
   background-color: rgba(255, 255, 255, 0.15);
 }
 /* ----------------------------------------- */
@@ -2246,7 +2246,7 @@ a.button.increase {
 .careers .specialization::after,
 .specializations .specialization::after {
   display: flex;
-  content: "";
+  content: '';
   width: 0.7em;
   height: 0.7em;
   border-radius: 5px;
@@ -2304,17 +2304,17 @@ a.button.increase {
 .swerpg.armor .item-equipment .reload {
   grid-column: 2;
 }
-.swerpg.weapon .tab[data-tab=description],
-.swerpg.armor .tab[data-tab=description] {
+.swerpg.weapon .tab[data-tab='description'],
+.swerpg.armor .tab[data-tab='description'] {
   padding: 0;
   gap: 0;
 }
-.swerpg.weapon .tab[data-tab=description] .sheet-tabs,
-.swerpg.armor .tab[data-tab=description] .sheet-tabs {
+.swerpg.weapon .tab[data-tab='description'] .sheet-tabs,
+.swerpg.armor .tab[data-tab='description'] .sheet-tabs {
   border-top: none;
 }
-.swerpg.weapon .tab[data-tab=description] section.tab,
-.swerpg.armor .tab[data-tab=description] section.tab {
+.swerpg.weapon .tab[data-tab='description'] section.tab,
+.swerpg.armor .tab[data-tab='description'] section.tab {
   padding: 1rem;
 }
 /** ----------------------------------------- *
@@ -2487,15 +2487,15 @@ a.button.increase {
  *  Journal Sheet                             *
  * ------------------------------------------ */
 .swerpg.journal-sheet {
-  --background-overlay: url("../ui/journal/overlay-dark.webp");
-  --background-texture: url("../ui/journal/background-texture.webp");
+  --background-overlay: url('../ui/journal/overlay-dark.webp');
+  --background-texture: url('../ui/journal/background-texture.webp');
   background: var(--background-texture) repeat;
   /** Journal Entry Header */
   /** Journal Sidebar TOC */
 }
 .swerpg.journal-sheet::before {
   display: block;
-  content: "";
+  content: '';
   position: absolute;
   width: 100%;
   height: 100%;
@@ -2517,7 +2517,7 @@ a.button.increase {
   position: relative;
   padding-bottom: 60px;
   margin-bottom: 20px;
-  background-image: url("../ui/journal/h1-separator.png");
+  background-image: url('../ui/journal/h1-separator.png');
   background-repeat: no-repeat;
   background-position: bottom center;
 }
@@ -2535,20 +2535,20 @@ a.button.increase {
 .swerpg.journal-sheet .journal-sidebar .action-buttons button.previous {
   color: transparent;
   border: none;
-  background: url("../ui/journal/arrow-left.png") no-repeat;
+  background: url('../ui/journal/arrow-left.png') no-repeat;
   background-size: contain;
   background-position: center;
 }
 .swerpg.journal-sheet .journal-sidebar .action-buttons button.next {
-  background-image: url("../ui/journal/arrow-right.png");
+  background-image: url('../ui/journal/arrow-right.png');
 }
 /** ----------------------------------------- *
  *  Single Page Styles                        *
  * ------------------------------------------ */
 .swerpg.journal-sheet .journal-entry-page {
-  --font-h1: "AwerySmallcaps", serif;
-  --font-h2: "AwerySmallcaps", serif;
-  --font-h3: "AwerySmallcaps", serif;
+  --font-h1: 'AwerySmallcaps', serif;
+  --font-h2: 'AwerySmallcaps', serif;
+  --font-h3: 'AwerySmallcaps', serif;
   /* Page Headers */
   /* Page Content */
 }
@@ -2556,7 +2556,7 @@ a.button.increase {
   position: relative;
   padding-bottom: 40px;
   margin-bottom: 20px;
-  background-image: url("../ui/journal/h2-separator.png");
+  background-image: url('../ui/journal/h2-separator.png');
   background-repeat: no-repeat;
   background-position: bottom center;
 }
@@ -2649,7 +2649,7 @@ a.button.increase {
 /*  Chat Cards                                  */
 /* -------------------------------------------- */
 .swerpg.chat-message {
-  --background-texture: url("../ui/journal/background-texture.webp");
+  --background-texture: url('../ui/journal/background-texture.webp');
   background: var(--background-texture) repeat;
   border: none;
   margin: 0.5rem 0.25rem;
@@ -2797,7 +2797,7 @@ a.button.increase {
 }
 .swerpg.dice-roll .dice-total .applied::after {
   float: right;
-  content: "\f00c";
+  content: '\f00c';
   font-family: var(--font-awesome);
   font-weight: 900;
   margin-right: 0.25rem;
@@ -2808,7 +2808,7 @@ a.button.increase {
   border: 1px solid var(--check-border-color);
 }
 .swerpg.dice-roll .check-result .result {
-  --hex-bg: url("../ui/elements/hex-plain-filled-flat.svg");
+  --hex-bg: url('../ui/elements/hex-plain-filled-flat.svg');
   font-size: var(--font-size-16);
   flex: 0 0 32px;
   height: 32px;
@@ -2915,7 +2915,7 @@ a.button.increase {
 .swerpg.dice-roll .pool .die::before {
   display: block;
   position: absolute;
-  content: "";
+  content: '';
   width: 100%;
   height: 100%;
   background: var(--die-bg) no-repeat;
@@ -2935,19 +2935,19 @@ a.button.increase {
   line-height: 1em;
 }
 .swerpg.dice-roll .pool .die.d4 {
-  --die-bg: url("/icons/svg/d4-grey.svg");
+  --die-bg: url('/icons/svg/d4-grey.svg');
 }
 .swerpg.dice-roll .pool .die.d6 {
-  --die-bg: url("/icons/svg/d6-grey.svg");
+  --die-bg: url('/icons/svg/d6-grey.svg');
 }
 .swerpg.dice-roll .pool .die.d8 {
-  --die-bg: url("/icons/svg/d8-grey.svg");
+  --die-bg: url('/icons/svg/d8-grey.svg');
 }
 .swerpg.dice-roll .pool .die.d10 {
-  --die-bg: url("/icons/svg/d10-grey.svg");
+  --die-bg: url('/icons/svg/d10-grey.svg');
 }
 .swerpg.dice-roll .pool .die.d12 {
-  --die-bg: url("/icons/svg/d12-grey.svg");
+  --die-bg: url('/icons/svg/d12-grey.svg');
 }
 .swerpg.dice-roll .bonuses {
   justify-content: space-evenly;
@@ -3073,7 +3073,7 @@ a.button.increase {
 .swerpg.hud,
 .swerpg .hud {
   padding: 1rem;
-  background: url("../ui/journal/background-texture.webp");
+  background: url('../ui/journal/background-texture.webp');
   border: 1px solid var(--color-frame);
   border-radius: 8px;
   z-index: var(--z-index-tooltip);
@@ -3258,8 +3258,7 @@ a.button.increase {
   /* buttons at each side */
   width: 100%;
   padding: 0 6px;
-  margin-top: 4px
-    ;
+  margin-top: 4px;
   /* Style the small icon buttons so they remain compact and centered */
   /* Place the decrease/increase buttons absolutely so they do not shift the .values span
          and can be perfectly vertically centered with top:50% + translateY(-50%). */

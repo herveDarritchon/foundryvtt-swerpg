@@ -20,10 +20,10 @@ Le système utilise un design cohérent inspiré de l'esthétique fantasy médi�
 
 ```less
 // styles/variables.less
-@color-primary: #8b4513;      // Brun sombre
-@color-secondary: #d4af37;    // Or
-@color-background: #2b2520;   // Fond sombre
-@color-text: #e8e6e3;         // Texte clair
+@color-primary: #8b4513; // Brun sombre
+@color-secondary: #d4af37; // Or
+@color-background: #2b2520; // Fond sombre
+@color-text: #e8e6e3; // Texte clair
 ```
 
 ### 1.2 Navigation Intuitive
@@ -67,13 +67,13 @@ Organisation par onglets :
 
 ```javascript
 // Succès
-ui.notifications.info("Action successfully used!");
+ui.notifications.info('Action successfully used!')
 
 // Avertissement
-ui.notifications.warn("Not enough action points");
+ui.notifications.warn('Not enough action points')
 
 // Erreur
-ui.notifications.error("Cannot use this action");
+ui.notifications.error('Cannot use this action')
 ```
 
 **Placement** : En haut de l'écran, auto-dismiss après 3-5 secondes
@@ -159,10 +159,10 @@ ui.notifications.error("Cannot use this action");
 ```javascript
 // module/audio.mjs
 export function playActionSound(action) {
-  if (!game.settings.get("crucible", "soundEnabled")) return;
-  
-  const soundPath = action.config.sound || "systems/crucible/audio/default.ogg";
-  AudioHelper.play({ src: soundPath, volume: 0.5 });
+  if (!game.settings.get('crucible', 'soundEnabled')) return
+
+  const soundPath = action.config.sound || 'systems/crucible/audio/default.ogg'
+  AudioHelper.play({ src: soundPath, volume: 0.5 })
 }
 ```
 
@@ -173,10 +173,7 @@ export function playActionSound(action) {
 **Exemple d'implémentation** :
 
 ```html
-<button 
-  aria-label="Use Action: Strike against selected target"
-  data-action="use-action"
-  data-action-id="strike">
+<button aria-label="Use Action: Strike against selected target" data-action="use-action" data-action-id="strike">
   <i class="fa-solid fa-sword" aria-hidden="true"></i>
   <span>Strike</span>
 </button>
@@ -529,17 +526,17 @@ graph LR
 
 ```javascript
 // Macro: Use Strike Action
-const actor = canvas.tokens.controlled[0]?.actor;
+const actor = canvas.tokens.controlled[0]?.actor
 if (!actor) {
-  ui.notifications.warn("Select a token first");
-  return;
+  ui.notifications.warn('Select a token first')
+  return
 }
 
-const strikeAction = actor.actions.find(a => a.id === "strike");
+const strikeAction = actor.actions.find((a) => a.id === 'strike')
 if (strikeAction) {
-  await strikeAction.use({ dialog: false });
+  await strikeAction.use({ dialog: false })
 } else {
-  ui.notifications.error("Strike action not found");
+  ui.notifications.error('Strike action not found')
 }
 ```
 
@@ -570,9 +567,7 @@ if (strikeAction) {
 ```html
 <h3>
   Talents
-  <i class="fa-solid fa-circle-question" 
-     data-tooltip="Talents are special abilities you unlock by spending talent points...">
-  </i>
+  <i class="fa-solid fa-circle-question" data-tooltip="Talents are special abilities you unlock by spending talent points..."> </i>
 </h3>
 ```
 
@@ -592,10 +587,10 @@ if (strikeAction) {
 
 ```javascript
 // ❌ Mauvais
-"Error"
+'Error'
 
 // ✅ Bon
-"Cannot use action: not enough action points (need 3, have 1)"
+'Cannot use action: not enough action points (need 3, have 1)'
 ```
 
 ### 12.2 Suggestions
@@ -604,7 +599,7 @@ if (strikeAction) {
 
 ```javascript
 // Erreur avec suggestion
-"Cannot equip heavy armor: requires Armor Training II. 
+"Cannot equip heavy armor: requires Armor Training II.
 You can unlock this talent in the Warrior tree."
 ```
 

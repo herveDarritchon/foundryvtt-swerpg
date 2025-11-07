@@ -10,61 +10,61 @@
  * }}
  */
 export const CHARACTERISTICS = Object.freeze({
-    brawn: {
-        id: "brawn",
-        label: "CHARACTERISTICS.Brawn",
-        abbreviation: "CHARACTERISTICS.BrawnAbbr",
-        type: "physical",
-        color: Color.from("#870321"),
-        sheetOrder: 1,
-        nodeId: "bra"
-    },
-    agility: {
-        id: "agility",
-        label: "CHARACTERISTICS.Agility",
-        abbreviation: "CHARACTERISTICS.AgilityAbbr",
-        type: "physical",
-        color: Color.from("#113c1b"),
-        sheetOrder: 2,
-        nodeId: "agi"
-    },
-    intellect: {
-        id: "intellect",
-        label: "CHARACTERISTICS.Intellect",
-        abbreviation: "CHARACTERISTICS.IntellectAbbr",
-        type: "mental",
-        color: Color.from("#00FFFF"),
-        sheetOrder: 3,
-        nodeId: "int"
-    },
-    cunning: {
-        id: "cunning",
-        label: "CHARACTERISTICS.Cunning",
-        abbreviation: "CHARACTERISTICS.CunningAbbr",
-        type: "mental",
-        color: Color.from("#dc7818"),
-        sheetOrder: 4,
-        nodeId: "cun"
-    },
-    willpower: {
-        id: "willpower",
-        label: "CHARACTERISTICS.Willpower",
-        abbreviation: "CHARACTERISTICS.WillpowerAbbr",
-        type: "mental",
-        color: Color.from("#8a8a17"),
-        sheetOrder: 5,
-        nodeId: "wil"
-    },
-    presence: {
-        id: "presence",
-        label: "CHARACTERISTICS.Presence",
-        abbreviation: "CHARACTERISTICS.PresenceAbbr",
-        type: "mental",
-        color: Color.from("#640c88"),
-        sheetOrder: 5,
-        nodeId: "pre"
-    }
-});
+  brawn: {
+    id: 'brawn',
+    label: 'CHARACTERISTICS.Brawn',
+    abbreviation: 'CHARACTERISTICS.BrawnAbbr',
+    type: 'physical',
+    color: Color.from('#870321'),
+    sheetOrder: 1,
+    nodeId: 'bra',
+  },
+  agility: {
+    id: 'agility',
+    label: 'CHARACTERISTICS.Agility',
+    abbreviation: 'CHARACTERISTICS.AgilityAbbr',
+    type: 'physical',
+    color: Color.from('#113c1b'),
+    sheetOrder: 2,
+    nodeId: 'agi',
+  },
+  intellect: {
+    id: 'intellect',
+    label: 'CHARACTERISTICS.Intellect',
+    abbreviation: 'CHARACTERISTICS.IntellectAbbr',
+    type: 'mental',
+    color: Color.from('#00FFFF'),
+    sheetOrder: 3,
+    nodeId: 'int',
+  },
+  cunning: {
+    id: 'cunning',
+    label: 'CHARACTERISTICS.Cunning',
+    abbreviation: 'CHARACTERISTICS.CunningAbbr',
+    type: 'mental',
+    color: Color.from('#dc7818'),
+    sheetOrder: 4,
+    nodeId: 'cun',
+  },
+  willpower: {
+    id: 'willpower',
+    label: 'CHARACTERISTICS.Willpower',
+    abbreviation: 'CHARACTERISTICS.WillpowerAbbr',
+    type: 'mental',
+    color: Color.from('#8a8a17'),
+    sheetOrder: 5,
+    nodeId: 'wil',
+  },
+  presence: {
+    id: 'presence',
+    label: 'CHARACTERISTICS.Presence',
+    abbreviation: 'CHARACTERISTICS.PresenceAbbr',
+    type: 'mental',
+    color: Color.from('#640c88'),
+    sheetOrder: 5,
+    nodeId: 'pre',
+  },
+})
 
 /* -------------------------------------------- */
 
@@ -89,269 +89,268 @@ export const CHARACTERISTICS = Object.freeze({
  * }}
  */
 export const SKILLS = Object.freeze({
-    cool: {
-        id: "cool",
-        label: "SKILLS.Cool",
-        abbreviation: "SKILLS.CoolAbbr",
-        color: Color.from("#ec7bf1"),
-        sheetOrder: 1,
-        nodeId: "coo",
-        characteristic: CHARACTERISTICS.presence
-    },
-    discipline: {
-        id: "discipline",
-        label: "SKILLS.Discipline",
-        abbreviation: "SKILLS.DisciplineAbbr",
-        color: Color.from("#00FFFF"),
-        sheetOrder: 2,
-        nodeId: "dis",
-        characteristic: CHARACTERISTICS.willpower
-    },
-    negotiation: {
-        id: "negotiation",
-        label: "SKILLS.Negotiation",
-        abbreviation: "SKILLS.NegotiationAbbr",
-        color: Color.from("#8032d8"),
-        sheetOrder: 3,
-        nodeId: "neg",
-        characteristic: CHARACTERISTICS.presence
-    },
-    perception: {
-        id: "perception",
-        label: "SKILLS.Perception",
-        abbreviation: "SKILLS.PerceptionAbbr",
-        color: Color.from("#0e55d3"),
-        sheetOrder: 4,
-        nodeId: "per",
-        characteristic: CHARACTERISTICS.cunning
-    },
-    vigilance: {
-        id: "vigilance",
-        label: "SKILLS.Vigilance",
-        abbreviation: "SKILLS.VigilanceAbbr",
-        color: Color.from("#4090c1"),
-        sheetOrder: 5,
-        nodeId: "vig",
-        characteristic: CHARACTERISTICS.willpower
-    },
-    brawl: {
-        id: "brawl",
-        label: "SKILLS.Brawl",
-        abbreviation: "SKILLS.BrawlAbbr",
-        color: Color.from("#dc7818"),
-        sheetOrder: 6,
-        nodeId: "bra",
-        characteristic: CHARACTERISTICS.brawn
-    },
-    melee: {
-        id: "melee",
-        label: "SKILLS.Melee",
-        abbreviation: "SKILLS.MeleeAbbr",
-        color: Color.from("#00FF00"),
-        sheetOrder: 7,
-        nodeId: "mel",
-        characteristics: CHARACTERISTICS.brawn
-    },
-    rangedlight: {
-        id: "rangedlight",
-        label: "SKILLS.RangedLight",
-        abbreviation: "SKILLS.RangedLightAbbr",
-        color: Color.from("#f61c1c"),
-        sheetOrder: 8,
-        nodeId: "rgl",
-        characteristics: CHARACTERISTICS.agility
-    },
-    rangedheavy: {
-        id: "rangedheavy",
-        label: "SKILLS.RangedHeavy",
-        abbreviation: "SKILLS.RangedHeavyAbbr",
-        color: Color.from("#7e0808"),
-        sheetOrder: 9,
-        nodeId: "rgh",
-        characteristics: CHARACTERISTICS.agility
-    },
-    gunnery: {
-        id: "gunnery",
-        label: "SKILLS.Gunnery",
-        abbreviation: "SKILLS.GunneryAbbr",
-        color: Color.from("#2c0303"),
-        sheetOrder: 10,
-        nodeId: "gun",
-        characteristics: CHARACTERISTICS.agility
-    },
-    astrogation: {
-        id: "astrogation",
-        label: "SKILLS.Astrogation",
-        abbreviation: "SKILLS.AstrogationAbbr",
-        color: Color.from("#085560"),
-        sheetOrder: 11,
-        nodeId: "ast",
-        characteristics: CHARACTERISTICS.intellect
-    },
-    athletics: {
-        id: "athletics",
-        label: "SKILLS.Athletics",
-        abbreviation: "SKILLS.AthleticsAbbr",
-        color: Color.from("#47331f"),
-        sheetOrder: 12,
-        nodeId: "ath",
-        characteristics: CHARACTERISTICS.brawn
-    },
-    charm: {
-        id: "charm",
-        label: "SKILLS.Charm",
-        abbreviation: "SKILLS.CharmAbbr",
-        color: Color.from("#ecbd6c"),
-        sheetOrder: 13,
-        nodeId: "cha",
-        characteristics: CHARACTERISTICS.presence
-    },
-    coercion: {
-        id: "coercion",
-        label: "SKILLS.Coercion",
-        abbreviation: "SKILLS.CoercionAbbr",
-        color: Color.from("#350963"),
-        sheetOrder: 14,
-        nodeId: "coe",
-        characteristics: CHARACTERISTICS.willpower
-    },
-    computers: {
-        id: "computers",
-        label: "SKILLS.Computers",
-        abbreviation: "SKILLS.ComputersAbbr",
-        color: Color.from("#350963"),
-        sheetOrder: 15,
-        nodeId: "com",
-        characteristics: CHARACTERISTICS.intellect
-    },
-    coordination: {
-        id: "coordination",
-        label: "SKILLS.Coordination",
-        abbreviation: "SKILLS.CoordinationAbbr",
-        color: Color.from("#350963"),
-        sheetOrder: 16,
-        nodeId: "coo",
-        characteristics: CHARACTERISTICS.agility
-    },
-    deception: {
-        id: "deception",
-        label: "SKILLS.Deception",
-        abbreviation: "SKILLS.DeceptionAbbr",
-        color: Color.from("#350963"),
-        sheetOrder: 17,
-        nodeId: "dec",
-        characteristics: CHARACTERISTICS.cunning
-    },
-    leadership: {
-        id: "leadership",
-        label: "SKILLS.Leadership",
-        abbreviation: "SKILLS.LeadershipAbbr",
-        color: Color.from("#350963"),
-        sheetOrder: 18,
-        nodeId: "lea",
-        characteristics: CHARACTERISTICS.presence
-    },
-    mechanics: {
-        id: "mechanics",
-        label: "SKILLS.Mechanics",
-        abbreviation: "SKILLS.MechanicsAbbr",
-        color: Color.from("#350963"),
-        sheetOrder: 19,
-        nodeId: "mec",
-        characteristics: CHARACTERISTICS.intellect
-    },
-    medicine: {
-        id: "medicine",
-        label: "SKILLS.Medicine",
-        abbreviation: "SKILLS.MedicineAbbr",
-        color: Color.from("#350963"),
-        sheetOrder: 20,
-        nodeId: "med",
-        characteristics: CHARACTERISTICS.intellect
-    },
-    pilotingplanetary: {
-        id: "pilotingplanetary",
-        label: "SKILLS.PilotingPlanetary",
-        abbreviation: "SKILLS.PilotingPlanetaryAbbr",
-        color: Color.from("#350963"),
-        sheetOrder: 21,
-        nodeId: "pip",
-        characteristics: CHARACTERISTICS.agility
-    },
-    pilotingspace: {
-        id: "pilotingspace",
-        label: "SKILLS.PilotingSpace",
-        abbreviation: "SKILLS.PilotingSpaceAbbr",
-        color: Color.from("#350963"),
-        sheetOrder: 22,
-        nodeId: "pis",
-        characteristics: CHARACTERISTICS.agility
-    },
-    resilience: {
-        id: "resilience",
-        label: "SKILLS.Resilience",
-        abbreviation: "SKILLS.ResilienceAbbr",
-        color: Color.from("#350963"),
-        sheetOrder: 23,
-        nodeId: "res",
-        characteristics: CHARACTERISTICS.brawn
-    },
-    skulduggery: {
-        id: "skulduggery",
-        label: "SKILLS.Skulduggery",
-        abbreviation: "SKILLS.SkulduggeryAbbr",
-        color: Color.from("#350963"),
-        sheetOrder: 24,
-        nodeId: "sku",
-        characteristics: CHARACTERISTICS.cunning
-    },
-    stealth: {
-        id: "stealth",
-        label: "SKILLS.Stealth",
-        abbreviation: "SKILLS.StealthAbbr",
-        color: Color.from("#350963"),
-        sheetOrder: 25,
-        nodeId: "ste",
-        characteristics: CHARACTERISTICS.agility
-    },
-    streetwise: {
-        id: "streetwise",
-        label: "SKILLS.StreetWise",
-        abbreviation: "SKILLS.StreetWiseAbbr",
-        color: Color.from("#350963"),
-        sheetOrder: 26,
-        nodeId: "stw",
-        characteristics: CHARACTERISTICS.cunning
-    },
-    survival: {
-        id: "survival",
-        label: "SKILLS.Survival",
-        abbreviation: "SKILLS.SurvivalAbbr",
-        color: Color.from("#0b3514"),
-        sheetOrder: 27,
-        nodeId: "sur",
-        characteristics: CHARACTERISTICS.cunning
-    },
-    lightsaber: {
-        id: "lightsaber",
-        label: "SKILLS.Lightsaber",
-        abbreviation: "SKILLS.LightsaberAbbr",
-        color: Color.from("#0b3514"),
-        sheetOrder: 28,
-        nodeId: "lig",
-        characteristic: CHARACTERISTICS.brawn
-    },
-    coreworlds: {
-        id: "coreworlds",
-        label: "SKILLS.CoreWorlds",
-        abbreviation: "SKILLS.CoreWorldsAbbr",
-        color: Color.from("#0b3514"),
-        sheetOrder: 29,
-        nodeId: "cow",
-        characteristic: CHARACTERISTICS.intellect
-    },
-
-});
+  cool: {
+    id: 'cool',
+    label: 'SKILLS.Cool',
+    abbreviation: 'SKILLS.CoolAbbr',
+    color: Color.from('#ec7bf1'),
+    sheetOrder: 1,
+    nodeId: 'coo',
+    characteristic: CHARACTERISTICS.presence,
+  },
+  discipline: {
+    id: 'discipline',
+    label: 'SKILLS.Discipline',
+    abbreviation: 'SKILLS.DisciplineAbbr',
+    color: Color.from('#00FFFF'),
+    sheetOrder: 2,
+    nodeId: 'dis',
+    characteristic: CHARACTERISTICS.willpower,
+  },
+  negotiation: {
+    id: 'negotiation',
+    label: 'SKILLS.Negotiation',
+    abbreviation: 'SKILLS.NegotiationAbbr',
+    color: Color.from('#8032d8'),
+    sheetOrder: 3,
+    nodeId: 'neg',
+    characteristic: CHARACTERISTICS.presence,
+  },
+  perception: {
+    id: 'perception',
+    label: 'SKILLS.Perception',
+    abbreviation: 'SKILLS.PerceptionAbbr',
+    color: Color.from('#0e55d3'),
+    sheetOrder: 4,
+    nodeId: 'per',
+    characteristic: CHARACTERISTICS.cunning,
+  },
+  vigilance: {
+    id: 'vigilance',
+    label: 'SKILLS.Vigilance',
+    abbreviation: 'SKILLS.VigilanceAbbr',
+    color: Color.from('#4090c1'),
+    sheetOrder: 5,
+    nodeId: 'vig',
+    characteristic: CHARACTERISTICS.willpower,
+  },
+  brawl: {
+    id: 'brawl',
+    label: 'SKILLS.Brawl',
+    abbreviation: 'SKILLS.BrawlAbbr',
+    color: Color.from('#dc7818'),
+    sheetOrder: 6,
+    nodeId: 'bra',
+    characteristic: CHARACTERISTICS.brawn,
+  },
+  melee: {
+    id: 'melee',
+    label: 'SKILLS.Melee',
+    abbreviation: 'SKILLS.MeleeAbbr',
+    color: Color.from('#00FF00'),
+    sheetOrder: 7,
+    nodeId: 'mel',
+    characteristics: CHARACTERISTICS.brawn,
+  },
+  rangedlight: {
+    id: 'rangedlight',
+    label: 'SKILLS.RangedLight',
+    abbreviation: 'SKILLS.RangedLightAbbr',
+    color: Color.from('#f61c1c'),
+    sheetOrder: 8,
+    nodeId: 'rgl',
+    characteristics: CHARACTERISTICS.agility,
+  },
+  rangedheavy: {
+    id: 'rangedheavy',
+    label: 'SKILLS.RangedHeavy',
+    abbreviation: 'SKILLS.RangedHeavyAbbr',
+    color: Color.from('#7e0808'),
+    sheetOrder: 9,
+    nodeId: 'rgh',
+    characteristics: CHARACTERISTICS.agility,
+  },
+  gunnery: {
+    id: 'gunnery',
+    label: 'SKILLS.Gunnery',
+    abbreviation: 'SKILLS.GunneryAbbr',
+    color: Color.from('#2c0303'),
+    sheetOrder: 10,
+    nodeId: 'gun',
+    characteristics: CHARACTERISTICS.agility,
+  },
+  astrogation: {
+    id: 'astrogation',
+    label: 'SKILLS.Astrogation',
+    abbreviation: 'SKILLS.AstrogationAbbr',
+    color: Color.from('#085560'),
+    sheetOrder: 11,
+    nodeId: 'ast',
+    characteristics: CHARACTERISTICS.intellect,
+  },
+  athletics: {
+    id: 'athletics',
+    label: 'SKILLS.Athletics',
+    abbreviation: 'SKILLS.AthleticsAbbr',
+    color: Color.from('#47331f'),
+    sheetOrder: 12,
+    nodeId: 'ath',
+    characteristics: CHARACTERISTICS.brawn,
+  },
+  charm: {
+    id: 'charm',
+    label: 'SKILLS.Charm',
+    abbreviation: 'SKILLS.CharmAbbr',
+    color: Color.from('#ecbd6c'),
+    sheetOrder: 13,
+    nodeId: 'cha',
+    characteristics: CHARACTERISTICS.presence,
+  },
+  coercion: {
+    id: 'coercion',
+    label: 'SKILLS.Coercion',
+    abbreviation: 'SKILLS.CoercionAbbr',
+    color: Color.from('#350963'),
+    sheetOrder: 14,
+    nodeId: 'coe',
+    characteristics: CHARACTERISTICS.willpower,
+  },
+  computers: {
+    id: 'computers',
+    label: 'SKILLS.Computers',
+    abbreviation: 'SKILLS.ComputersAbbr',
+    color: Color.from('#350963'),
+    sheetOrder: 15,
+    nodeId: 'com',
+    characteristics: CHARACTERISTICS.intellect,
+  },
+  coordination: {
+    id: 'coordination',
+    label: 'SKILLS.Coordination',
+    abbreviation: 'SKILLS.CoordinationAbbr',
+    color: Color.from('#350963'),
+    sheetOrder: 16,
+    nodeId: 'coo',
+    characteristics: CHARACTERISTICS.agility,
+  },
+  deception: {
+    id: 'deception',
+    label: 'SKILLS.Deception',
+    abbreviation: 'SKILLS.DeceptionAbbr',
+    color: Color.from('#350963'),
+    sheetOrder: 17,
+    nodeId: 'dec',
+    characteristics: CHARACTERISTICS.cunning,
+  },
+  leadership: {
+    id: 'leadership',
+    label: 'SKILLS.Leadership',
+    abbreviation: 'SKILLS.LeadershipAbbr',
+    color: Color.from('#350963'),
+    sheetOrder: 18,
+    nodeId: 'lea',
+    characteristics: CHARACTERISTICS.presence,
+  },
+  mechanics: {
+    id: 'mechanics',
+    label: 'SKILLS.Mechanics',
+    abbreviation: 'SKILLS.MechanicsAbbr',
+    color: Color.from('#350963'),
+    sheetOrder: 19,
+    nodeId: 'mec',
+    characteristics: CHARACTERISTICS.intellect,
+  },
+  medicine: {
+    id: 'medicine',
+    label: 'SKILLS.Medicine',
+    abbreviation: 'SKILLS.MedicineAbbr',
+    color: Color.from('#350963'),
+    sheetOrder: 20,
+    nodeId: 'med',
+    characteristics: CHARACTERISTICS.intellect,
+  },
+  pilotingplanetary: {
+    id: 'pilotingplanetary',
+    label: 'SKILLS.PilotingPlanetary',
+    abbreviation: 'SKILLS.PilotingPlanetaryAbbr',
+    color: Color.from('#350963'),
+    sheetOrder: 21,
+    nodeId: 'pip',
+    characteristics: CHARACTERISTICS.agility,
+  },
+  pilotingspace: {
+    id: 'pilotingspace',
+    label: 'SKILLS.PilotingSpace',
+    abbreviation: 'SKILLS.PilotingSpaceAbbr',
+    color: Color.from('#350963'),
+    sheetOrder: 22,
+    nodeId: 'pis',
+    characteristics: CHARACTERISTICS.agility,
+  },
+  resilience: {
+    id: 'resilience',
+    label: 'SKILLS.Resilience',
+    abbreviation: 'SKILLS.ResilienceAbbr',
+    color: Color.from('#350963'),
+    sheetOrder: 23,
+    nodeId: 'res',
+    characteristics: CHARACTERISTICS.brawn,
+  },
+  skulduggery: {
+    id: 'skulduggery',
+    label: 'SKILLS.Skulduggery',
+    abbreviation: 'SKILLS.SkulduggeryAbbr',
+    color: Color.from('#350963'),
+    sheetOrder: 24,
+    nodeId: 'sku',
+    characteristics: CHARACTERISTICS.cunning,
+  },
+  stealth: {
+    id: 'stealth',
+    label: 'SKILLS.Stealth',
+    abbreviation: 'SKILLS.StealthAbbr',
+    color: Color.from('#350963'),
+    sheetOrder: 25,
+    nodeId: 'ste',
+    characteristics: CHARACTERISTICS.agility,
+  },
+  streetwise: {
+    id: 'streetwise',
+    label: 'SKILLS.StreetWise',
+    abbreviation: 'SKILLS.StreetWiseAbbr',
+    color: Color.from('#350963'),
+    sheetOrder: 26,
+    nodeId: 'stw',
+    characteristics: CHARACTERISTICS.cunning,
+  },
+  survival: {
+    id: 'survival',
+    label: 'SKILLS.Survival',
+    abbreviation: 'SKILLS.SurvivalAbbr',
+    color: Color.from('#0b3514'),
+    sheetOrder: 27,
+    nodeId: 'sur',
+    characteristics: CHARACTERISTICS.cunning,
+  },
+  lightsaber: {
+    id: 'lightsaber',
+    label: 'SKILLS.Lightsaber',
+    abbreviation: 'SKILLS.LightsaberAbbr',
+    color: Color.from('#0b3514'),
+    sheetOrder: 28,
+    nodeId: 'lig',
+    characteristic: CHARACTERISTICS.brawn,
+  },
+  coreworlds: {
+    id: 'coreworlds',
+    label: 'SKILLS.CoreWorlds',
+    abbreviation: 'SKILLS.CoreWorldsAbbr',
+    color: Color.from('#0b3514'),
+    sheetOrder: 29,
+    nodeId: 'cow',
+    characteristic: CHARACTERISTICS.intellect,
+  },
+})
 
 /**
  * Secondary attributes complete the character: Initiative, Vitality, Composure, and Fate.
@@ -364,52 +363,51 @@ export const SKILLS = Object.freeze({
  * }}
  */
 export const SECONDARY_ATTRIBUTES = Object.freeze({
-    initiative: {
-        id: "initiative",
-        label: "SECONDARY_ATTRIBUTES.Initiative",
-        abbreviation: "SECONDARY_ATTRIBUTES.InitiativeAbbr",
-        color: Color.from("#d6d30c"),
-        sheetOrder: 1,
-        nodeId: "ini"
-    },
-    soak: {
-        id: "soak",
-        label: "SECONDARY_ATTRIBUTES.Soak",
-        abbreviation: "SECONDARY_ATTRIBUTES.SoakAbbr",
-        color: Color.from("#e62b4c"),
-        sheetOrder: 1,
-        hasThreshold: false,
-        nodeId: "soa"
-    },
-    wounds: {
-        id: "wounds",
-        label: "SECONDARY_ATTRIBUTES.Wounds",
-        abbreviation: "SECONDARY_ATTRIBUTES.WoundsAbbr",
-        color: Color.from("#460b87"),
-        sheetOrder: 2,
-        hasThreshold: true,
-        nodeId: "wou"
-    },
-    strain: {
-        id: "strain",
-        label: "SECONDARY_ATTRIBUTES.Strain",
-        abbreviation: "SECONDARY_ATTRIBUTES.StrainAbbr",
-        color: Color.from("#8ac6ec"),
-        sheetOrder: 3,
-        hasThreshold: true,
-        nodeId: "str"
-    },
-    defense: {
-        id: "defense",
-        label: "SECONDARY_ATTRIBUTES.Defense",
-        abbreviation: "SECONDARY_ATTRIBUTES.DefenseAbbr",
-        color: Color.from("#8ac6ec"),
-        sheetOrder: 4,
-        hasThreshold: false,
-        nodeId: "def"
-    },
-
-});
+  initiative: {
+    id: 'initiative',
+    label: 'SECONDARY_ATTRIBUTES.Initiative',
+    abbreviation: 'SECONDARY_ATTRIBUTES.InitiativeAbbr',
+    color: Color.from('#d6d30c'),
+    sheetOrder: 1,
+    nodeId: 'ini',
+  },
+  soak: {
+    id: 'soak',
+    label: 'SECONDARY_ATTRIBUTES.Soak',
+    abbreviation: 'SECONDARY_ATTRIBUTES.SoakAbbr',
+    color: Color.from('#e62b4c'),
+    sheetOrder: 1,
+    hasThreshold: false,
+    nodeId: 'soa',
+  },
+  wounds: {
+    id: 'wounds',
+    label: 'SECONDARY_ATTRIBUTES.Wounds',
+    abbreviation: 'SECONDARY_ATTRIBUTES.WoundsAbbr',
+    color: Color.from('#460b87'),
+    sheetOrder: 2,
+    hasThreshold: true,
+    nodeId: 'wou',
+  },
+  strain: {
+    id: 'strain',
+    label: 'SECONDARY_ATTRIBUTES.Strain',
+    abbreviation: 'SECONDARY_ATTRIBUTES.StrainAbbr',
+    color: Color.from('#8ac6ec'),
+    sheetOrder: 3,
+    hasThreshold: true,
+    nodeId: 'str',
+  },
+  defense: {
+    id: 'defense',
+    label: 'SECONDARY_ATTRIBUTES.Defense',
+    abbreviation: 'SECONDARY_ATTRIBUTES.DefenseAbbr',
+    color: Color.from('#8ac6ec'),
+    sheetOrder: 4,
+    hasThreshold: false,
+    nodeId: 'def',
+  },
+})
 
 /**
  * Secondary attributes complete the character: Initiative, Vitality, Composure, and Fate.
@@ -422,52 +420,51 @@ export const SECONDARY_ATTRIBUTES = Object.freeze({
  * }}
  */
 export const DERIVED_CHARACTERISTICS = Object.freeze({
-    initiative: {
-        id: "initiative",
-        label: "SECONDARY_CHARACTERISTICS.Initiative",
-        abbreviation: "SECONDARY_CHARACTERISTICS.InitiativeAbbr",
-        color: Color.from("#d6d30c"),
-        sheetOrder: 1,
-        nodeId: "ini"
-    },
-    soak: {
-        id: "soak",
-        label: "SECONDARY_CHARACTERISTICS.Soak",
-        abbreviation: "SECONDARY_CHARACTERISTICS.SoakAbbr",
-        color: Color.from("#e62b4c"),
-        sheetOrder: 1,
-        hasThreshold: false,
-        nodeId: "soa"
-    },
-    wounds: {
-        id: "wounds",
-        label: "SECONDARY_CHARACTERISTICS.Wounds",
-        abbreviation: "SECONDARY_CHARACTERISTICS.WoundsAbbr",
-        color: Color.from("#460b87"),
-        sheetOrder: 2,
-        hasThreshold: true,
-        nodeId: "wou"
-    },
-    strain: {
-        id: "strain",
-        label: "SECONDARY_CHARACTERISTICS.Strain",
-        abbreviation: "SECONDARY_CHARACTERISTICS.StrainAbbr",
-        color: Color.from("#8ac6ec"),
-        sheetOrder: 3,
-        hasThreshold: true,
-        nodeId: "str"
-    },
-    defense: {
-        id: "defense",
-        label: "SECONDARY_CHARACTERISTICS.Defense",
-        abbreviation: "SECONDARY_CHARACTERISTICS.DefenseAbbr",
-        color: Color.from("#8ac6ec"),
-        sheetOrder: 4,
-        hasThreshold: false,
-        nodeId: "def"
-    },
-
-});
+  initiative: {
+    id: 'initiative',
+    label: 'SECONDARY_CHARACTERISTICS.Initiative',
+    abbreviation: 'SECONDARY_CHARACTERISTICS.InitiativeAbbr',
+    color: Color.from('#d6d30c'),
+    sheetOrder: 1,
+    nodeId: 'ini',
+  },
+  soak: {
+    id: 'soak',
+    label: 'SECONDARY_CHARACTERISTICS.Soak',
+    abbreviation: 'SECONDARY_CHARACTERISTICS.SoakAbbr',
+    color: Color.from('#e62b4c'),
+    sheetOrder: 1,
+    hasThreshold: false,
+    nodeId: 'soa',
+  },
+  wounds: {
+    id: 'wounds',
+    label: 'SECONDARY_CHARACTERISTICS.Wounds',
+    abbreviation: 'SECONDARY_CHARACTERISTICS.WoundsAbbr',
+    color: Color.from('#460b87'),
+    sheetOrder: 2,
+    hasThreshold: true,
+    nodeId: 'wou',
+  },
+  strain: {
+    id: 'strain',
+    label: 'SECONDARY_CHARACTERISTICS.Strain',
+    abbreviation: 'SECONDARY_CHARACTERISTICS.StrainAbbr',
+    color: Color.from('#8ac6ec'),
+    sheetOrder: 3,
+    hasThreshold: true,
+    nodeId: 'str',
+  },
+  defense: {
+    id: 'defense',
+    label: 'SECONDARY_CHARACTERISTICS.Defense',
+    abbreviation: 'SECONDARY_CHARACTERISTICS.DefenseAbbr',
+    color: Color.from('#8ac6ec'),
+    sheetOrder: 4,
+    hasThreshold: false,
+    nodeId: 'def',
+  },
+})
 
 /* -------------------------------------------- */
 
@@ -476,19 +473,19 @@ export const DERIVED_CHARACTERISTICS = Object.freeze({
  * @enum {{id: string, label: string}}
  */
 export const DAMAGE_CATEGORIES = Object.freeze({
-    physical: {
-        id: "physical",
-        label: "DAMAGE.Physical"
-    },
-    elemental: {
-        id: "elemental",
-        label: "DAMAGE.Elemental"
-    },
-    spiritual: {
-        id: "spiritual",
-        label: "DAMAGE.Spiritual"
-    }
-});
+  physical: {
+    id: 'physical',
+    label: 'DAMAGE.Physical',
+  },
+  elemental: {
+    id: 'elemental',
+    label: 'DAMAGE.Elemental',
+  },
+  spiritual: {
+    id: 'spiritual',
+    label: 'DAMAGE.Spiritual',
+  },
+})
 
 /* -------------------------------------------- */
 
@@ -497,68 +494,67 @@ export const DAMAGE_CATEGORIES = Object.freeze({
  * @enum {{id: string, label: string, type: string}}
  */
 export const DAMAGE_TYPES = Object.freeze({
-    bludgeoning: {
-        id: "bludgeoning",
-        label: "DAMAGE.Bludgeoning",
-        type: "physical"
-    },
-    corruption: {
-        id: "corruption",
-        label: "DAMAGE.Corruption",
-        type: "spiritual"
-    },
-    piercing: {
-        id: "piercing",
-        label: "DAMAGE.Piercing",
-        type: "physical"
-    },
-    slashing: {
-        id: "slashing",
-        label: "DAMAGE.Slashing",
-        type: "physical"
-    },
-    poison: {
-        id: "poison",
-        label: "DAMAGE.Poison",
-        type: "physical"
-    },
-    acid: {
-        id: "acid",
-        label: "DAMAGE.Acid",
-        type: "elemental"
-    },
-    fire: {
-        id: "fire",
-        label: "DAMAGE.Fire",
-        type: "elemental"
-    },
-    cold: {
-        id: "cold",
-        label: "DAMAGE.Cold",
-        type: "elemental"
-    },
-    electricity: {
-        id: "electricity",
-        label: "DAMAGE.Electricity",
-        type: "elemental"
-    },
-    psychic: {
-        id: "psychic",
-        label: "DAMAGE.Psychic",
-        type: "spiritual"
-    },
-    radiant: {
-        id: "radiant",
-        label: "DAMAGE.Radiant",
-        type: "spiritual"
-    },
-    void: {
-        id: "void",
-        label: "DAMAGE.Void",
-        type: "spiritual"
-    }
-});
-
+  bludgeoning: {
+    id: 'bludgeoning',
+    label: 'DAMAGE.Bludgeoning',
+    type: 'physical',
+  },
+  corruption: {
+    id: 'corruption',
+    label: 'DAMAGE.Corruption',
+    type: 'spiritual',
+  },
+  piercing: {
+    id: 'piercing',
+    label: 'DAMAGE.Piercing',
+    type: 'physical',
+  },
+  slashing: {
+    id: 'slashing',
+    label: 'DAMAGE.Slashing',
+    type: 'physical',
+  },
+  poison: {
+    id: 'poison',
+    label: 'DAMAGE.Poison',
+    type: 'physical',
+  },
+  acid: {
+    id: 'acid',
+    label: 'DAMAGE.Acid',
+    type: 'elemental',
+  },
+  fire: {
+    id: 'fire',
+    label: 'DAMAGE.Fire',
+    type: 'elemental',
+  },
+  cold: {
+    id: 'cold',
+    label: 'DAMAGE.Cold',
+    type: 'elemental',
+  },
+  electricity: {
+    id: 'electricity',
+    label: 'DAMAGE.Electricity',
+    type: 'elemental',
+  },
+  psychic: {
+    id: 'psychic',
+    label: 'DAMAGE.Psychic',
+    type: 'spiritual',
+  },
+  radiant: {
+    id: 'radiant',
+    label: 'DAMAGE.Radiant',
+    type: 'spiritual',
+  },
+  void: {
+    id: 'void',
+    label: 'DAMAGE.Void',
+    type: 'spiritual',
+  },
+})
 
 /* -------------------------------------------- */
 
@@ -577,75 +573,75 @@ export const DAMAGE_TYPES = Object.freeze({
  * @enum {SwerpgResource}
  */
 export const RESOURCES = Object.freeze({
-    health: {
-        id: "health",
-        label: "RESOURCES.HEALTH",
-        type: "active",
-        tooltip: "(6 &times; Level) + (4 &times; Toughness) + (2 &times; Strength)",
-        color: {
-            high: Color.from("#d72828"),
-            low: Color.from("#5e0000"),
-            heal: Color.from("#48c248")
-        },
+  health: {
+    id: 'health',
+    label: 'RESOURCES.HEALTH',
+    type: 'active',
+    tooltip: '(6 &times; Level) + (4 &times; Toughness) + (2 &times; Strength)',
+    color: {
+      high: Color.from('#d72828'),
+      low: Color.from('#5e0000'),
+      heal: Color.from('#48c248'),
     },
-    wounds: {
-        id: "wounds",
-        label: "RESOURCES.WOUNDS",
-        type: "reserve",
-        tooltip: "Health &times; 1.5",
-        color: {
-            high: Color.from("#d72828"),
-            low: Color.from("#5e0000"),
-            heal: Color.from("#48c248")
-        },
+  },
+  wounds: {
+    id: 'wounds',
+    label: 'RESOURCES.WOUNDS',
+    type: 'reserve',
+    tooltip: 'Health &times; 1.5',
+    color: {
+      high: Color.from('#d72828'),
+      low: Color.from('#5e0000'),
+      heal: Color.from('#48c248'),
     },
-    morale: {
-        id: "morale",
-        label: "RESOURCES.MORALE",
-        type: "active",
-        tooltip: "(6 &times; Level) + (4 &times; Presence) + (2 &times; Wisdom)",
-        color: {
-            high: Color.from("#7550ff"),
-            low: Color.from("#3c037e"),
-            heal: Color.from("#cd4fff")
-        }
+  },
+  morale: {
+    id: 'morale',
+    label: 'RESOURCES.MORALE',
+    type: 'active',
+    tooltip: '(6 &times; Level) + (4 &times; Presence) + (2 &times; Wisdom)',
+    color: {
+      high: Color.from('#7550ff'),
+      low: Color.from('#3c037e'),
+      heal: Color.from('#cd4fff'),
     },
-    madness: {
-        id: "madness",
-        label: "RESOURCES.MADNESS",
-        tooltip: "Morale &times; 1.5",
-        type: "reserve",
-        color: {
-            high: Color.from("#7550ff"),
-            low: Color.from("#3c037e"),
-            heal: Color.from("#cd4fff")
-        }
+  },
+  madness: {
+    id: 'madness',
+    label: 'RESOURCES.MADNESS',
+    tooltip: 'Morale &times; 1.5',
+    type: 'reserve',
+    color: {
+      high: Color.from('#7550ff'),
+      low: Color.from('#3c037e'),
+      heal: Color.from('#cd4fff'),
     },
-    action: {
-        id: "action",
-        label: "RESOURCES.ACTION",
-        tooltip: "3 + Action Bonus",
-        type: "active",
-        color: Color.from("#FF9900"),
-        max: 12
-    },
-    focus: {
-        id: "focus",
-        label: "RESOURCES.FOCUS",
-        tooltip: "(Wisdom + Presence + Intellect) / 2",
-        type: "active",
-        color: Color.from("#3385ff"),
-        max: 24
-    },
-    heroism: {
-        id: "heroism",
-        label: "RESOURCES.HEROISM",
-        tooltip: "Maximum 3",
-        type: "active",
-        color: Color.from("#ff0059"),
-        max: 3
-    }
-});
+  },
+  action: {
+    id: 'action',
+    label: 'RESOURCES.ACTION',
+    tooltip: '3 + Action Bonus',
+    type: 'active',
+    color: Color.from('#FF9900'),
+    max: 12,
+  },
+  focus: {
+    id: 'focus',
+    label: 'RESOURCES.FOCUS',
+    tooltip: '(Wisdom + Presence + Intellect) / 2',
+    type: 'active',
+    color: Color.from('#3385ff'),
+    max: 24,
+  },
+  heroism: {
+    id: 'heroism',
+    label: 'RESOURCES.HEROISM',
+    tooltip: 'Maximum 3',
+    type: 'active',
+    color: Color.from('#ff0059'),
+    max: 3,
+  },
+})
 
 /* -------------------------------------------- */
 
@@ -653,7 +649,7 @@ export const RESOURCES = Object.freeze({
  * The base threshold for passive checks onto which bonuses are added.
  * @type {number}
  */
-export const PASSIVE_BASE = 12;
+export const PASSIVE_BASE = 12
 
 /* -------------------------------------------- */
 
@@ -662,63 +658,62 @@ export const PASSIVE_BASE = 12;
  * @type {object}
  */
 export const DEFENSES = {
-    physical: {
-        id: "physical",
-        label: "DEFENSES.Physical",
-        type: "physical"
-    },
-    armor: {
-        id: "armor",
-        label: "DEFENSES.Armor",
-        type: "physical"
-    },
-    block: {
-        id: "block",
-        label: "DEFENSES.Block",
-        type: "physical"
-    },
-    dodge: {
-        id: "dodge",
-        label: "DEFENSES.Dodge",
-        type: "physical"
-    },
-    parry: {
-        id: "parry",
-        label: "DEFENSES.Parry",
-        type: "physical"
-    },
-    fortitude: {
-        id: "fortitude",
-        label: "DEFENSES.Fortitude",
-        abilities: ["strength", "wisdom"],
-        tooltip: `${PASSIVE_BASE} + Strength + Wisdom`,
-        type: "save"
-    },
-    willpower: {
-        id: "willpower",
-        label: "DEFENSES.Willpower",
-        abilities: ["toughness", "presence"],
-        tooltip: `${PASSIVE_BASE} + Toughness + Presence`,
-        type: "save"
-    },
-    reflex: {
-        id: "reflex",
-        label: "DEFENSES.Reflex",
-        abilities: ["dexterity", "intellect"],
-        tooltip: `${PASSIVE_BASE} + Dexterity + Intellect`,
-        type: "save"
-    },
-    wounds: {
-        id: "wounds",
-        label: "DEFENSES.Wounds",
-        tooltip: `${PASSIVE_BASE} + (Wounds / 10)`,
-        type: "threshold"
-    },
-    madness: {
-        id: "madness",
-        label: "DEFENSES.Madness",
-        tooltip: `${PASSIVE_BASE} + (Madness / 10)`,
-        type: "threshold"
-    }
+  physical: {
+    id: 'physical',
+    label: 'DEFENSES.Physical',
+    type: 'physical',
+  },
+  armor: {
+    id: 'armor',
+    label: 'DEFENSES.Armor',
+    type: 'physical',
+  },
+  block: {
+    id: 'block',
+    label: 'DEFENSES.Block',
+    type: 'physical',
+  },
+  dodge: {
+    id: 'dodge',
+    label: 'DEFENSES.Dodge',
+    type: 'physical',
+  },
+  parry: {
+    id: 'parry',
+    label: 'DEFENSES.Parry',
+    type: 'physical',
+  },
+  fortitude: {
+    id: 'fortitude',
+    label: 'DEFENSES.Fortitude',
+    abilities: ['strength', 'wisdom'],
+    tooltip: `${PASSIVE_BASE} + Strength + Wisdom`,
+    type: 'save',
+  },
+  willpower: {
+    id: 'willpower',
+    label: 'DEFENSES.Willpower',
+    abilities: ['toughness', 'presence'],
+    tooltip: `${PASSIVE_BASE} + Toughness + Presence`,
+    type: 'save',
+  },
+  reflex: {
+    id: 'reflex',
+    label: 'DEFENSES.Reflex',
+    abilities: ['dexterity', 'intellect'],
+    tooltip: `${PASSIVE_BASE} + Dexterity + Intellect`,
+    type: 'save',
+  },
+  wounds: {
+    id: 'wounds',
+    label: 'DEFENSES.Wounds',
+    tooltip: `${PASSIVE_BASE} + (Wounds / 10)`,
+    type: 'threshold',
+  },
+  madness: {
+    id: 'madness',
+    label: 'DEFENSES.Madness',
+    tooltip: `${PASSIVE_BASE} + (Madness / 10)`,
+    type: 'threshold',
+  },
 }
-

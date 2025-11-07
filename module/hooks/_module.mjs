@@ -1,2 +1,2 @@
-export const weapon = {};
-export const armor = {};
+export const weapon = {}
+export const armor = {}

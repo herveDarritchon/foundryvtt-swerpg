@@ -5,6 +5,7 @@ Documentation du système de templates et composants Handlebars.
 ## 🎭 Architecture Templates
 
 ### Structure
+
 - Base templates
 - Composants réutilisables
 - Partials spécialisés

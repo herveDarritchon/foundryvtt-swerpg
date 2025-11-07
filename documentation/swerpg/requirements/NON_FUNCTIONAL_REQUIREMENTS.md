@@ -30,24 +30,24 @@ Ce document décrit les exigences non-fonctionnelles du système Star Wars Edge 
 ```javascript
 // Cache spécialisé pour les mécaniques Star Wars
 class SwerpgCache {
-    #talentTreeCache = new Map();
-    #dicePoolCache = new Map();
-    #forceRatingCache = new Map();
+  #talentTreeCache = new Map()
+  #dicePoolCache = new Map()
+  #forceRatingCache = new Map()
 
-    getTalentTree(specializationId) {
-        if (!this.#talentTreeCache.has(specializationId)) {
-            this.#talentTreeCache.set(specializationId, this.#buildTalentTree(specializationId));
-        }
-        return this.#talentTreeCache.get(specializationId);
+  getTalentTree(specializationId) {
+    if (!this.#talentTreeCache.has(specializationId)) {
+      this.#talentTreeCache.set(specializationId, this.#buildTalentTree(specializationId))
     }
+    return this.#talentTreeCache.get(specializationId)
+  }
 
-    getDicePool(characteristic, skill, difficulty) {
-        const key = `${characteristic}-${skill}-${difficulty}`;
-        if (!this.#dicePoolCache.has(key)) {
-            this.#dicePoolCache.set(key, this.#calculateDicePool(characteristic, skill, difficulty));
-        }
-        return this.#dicePoolCache.get(key);
+  getDicePool(characteristic, skill, difficulty) {
+    const key = `${characteristic}-${skill}-${difficulty}`
+    if (!this.#dicePoolCache.has(key)) {
+      this.#dicePoolCache.set(key, this.#calculateDicePool(characteristic, skill, difficulty))
     }
+    return this.#dicePoolCache.get(key)
+  }
 }
 ```
 
@@ -73,13 +73,13 @@ class SwerpgCache {
 ```javascript
 // Optimisation des calculs de pools de dés
 class DicePoolOptimizer {
-    static calculatePoolAsync(characteristics, skills, modifiers) {
-        return new Promise((resolve) => {
-            const worker = new Worker('/systems/swerpg/workers/dice-calculator.js');
-            worker.postMessage({ characteristics, skills, modifiers });
-            worker.onmessage = (e) => resolve(e.data);
-        });
-    }
+  static calculatePoolAsync(characteristics, skills, modifiers) {
+    return new Promise((resolve) => {
+      const worker = new Worker('/systems/swerpg/workers/dice-calculator.js')
+      worker.postMessage({ characteristics, skills, modifiers })
+      worker.onmessage = (e) => resolve(e.data)
+    })
+  }
 }
 ```
 
@@ -99,22 +99,25 @@ class DicePoolOptimizer {
 ```javascript
 // Gestion automatique du cache avec TTL
 class TTLCache {
-    #cache = new Map();
-    #timers = new Map();
-    #ttl = 30 * 60 * 1000; // 30 minutes
+  #cache = new Map()
+  #timers = new Map()
+  #ttl = 30 * 60 * 1000 // 30 minutes
 
-    set(key, value) {
-        this.#cache.set(key, value);
-        
-        if (this.#timers.has(key)) {
-            clearTimeout(this.#timers.get(key));
-        }
-        
-        this.#timers.set(key, setTimeout(() => {
-            this.#cache.delete(key);
-            this.#timers.delete(key);
-        }, this.#ttl));
+  set(key, value) {
+    this.#cache.set(key, value)
+
+    if (this.#timers.has(key)) {
+      clearTimeout(this.#timers.get(key))
     }
+
+    this.#timers.set(
+      key,
+      setTimeout(() => {
+        this.#cache.delete(key)
+        this.#timers.delete(key)
+      }, this.#ttl),
+    )
+  }
 }
 ```
 
@@ -136,19 +139,19 @@ class TTLCache {
 
 ```javascript
 class SwerpgValidator {
-    static validateCharacteristic(value, hasEnhancement = false) {
-        const min = 1;
-        const max = hasEnhancement ? 7 : 6;
-        return Number.isInteger(value) && value >= min && value <= max;
-    }
+  static validateCharacteristic(value, hasEnhancement = false) {
+    const min = 1
+    const max = hasEnhancement ? 7 : 6
+    return Number.isInteger(value) && value >= min && value <= max
+  }
 
-    static validateSkillRank(rank, characteristic) {
-        return Number.isInteger(rank) && rank >= 0 && rank <= Math.max(5, characteristic);
-    }
+  static validateSkillRank(rank, characteristic) {
+    return Number.isInteger(rank) && rank >= 0 && rank <= Math.max(5, characteristic)
+  }
 
-    static validateXpCost(current, spent, earned) {
-        return spent >= 0 && spent <= earned && current >= 0;
-    }
+  static validateXpCost(current, spent, earned) {
+    return spent >= 0 && spent <= earned && current >= 0
+  }
 }
 ```
 
@@ -166,22 +169,22 @@ class SwerpgValidator {
 
 ```javascript
 class SecurityManager {
-    static auditCharacterChange(actor, field, oldValue, newValue, user) {
-        const audit = {
-            timestamp: Date.now(),
-            actor: actor.id,
-            user: user.id,
-            field: field,
-            oldValue: oldValue,
-            newValue: newValue,
-            ip: user.ip
-        };
-        
-        game.socket.emit("system.swerpg", {
-            type: "audit",
-            data: audit
-        });
+  static auditCharacterChange(actor, field, oldValue, newValue, user) {
+    const audit = {
+      timestamp: Date.now(),
+      actor: actor.id,
+      user: user.id,
+      field: field,
+      oldValue: oldValue,
+      newValue: newValue,
+      ip: user.ip,
     }
+
+    game.socket.emit('system.swerpg', {
+      type: 'audit',
+      data: audit,
+    })
+  }
 }
 ```
 
@@ -235,12 +238,12 @@ class SecurityManager {
 
 ```javascript
 // Hook pour modules externes
-Hooks.on("swerpg.diceRolled", (roll, actor, data) => {
-    // Permet aux modules externes de réagir aux jets de dés Star Wars
-    if (game.modules.get("custom-dice-module")?.active) {
-        game.modules.get("custom-dice-module").api.processSWRoll(roll, data);
-    }
-});
+Hooks.on('swerpg.diceRolled', (roll, actor, data) => {
+  // Permet aux modules externes de réagir aux jets de dés Star Wars
+  if (game.modules.get('custom-dice-module')?.active) {
+    game.modules.get('custom-dice-module').api.processSWRoll(roll, data)
+  }
+})
 ```
 
 ## 4. Maintenabilité
@@ -286,7 +289,7 @@ module/
  * @returns {SwerpgDicePool} Pool de dés configuré
  */
 function calculateDicePool(characteristic, skill, difficulty, modifiers = {}) {
-    // Implementation...
+  // Implementation...
 }
 ```
 
@@ -306,20 +309,20 @@ function calculateDicePool(characteristic, skill, difficulty, modifiers = {}) {
 
 ```javascript
 // Tests spécialisés pour les mécaniques Star Wars
-describe("Force System", () => {
-    test("should generate correct Force points from dice", () => {
-        const result = SwerpgForce.rollForcePool(3);
-        expect(result.lightPoints).toBeGreaterThanOrEqual(0);
-        expect(result.darkPoints).toBeGreaterThanOrEqual(0);
-        expect(result.totalPoints).toBe(result.lightPoints + result.darkPoints);
-    });
-    
-    test("should apply morality changes correctly", () => {
-        const character = createTestCharacter({ morality: 50 });
-        SwerpgForce.addConflict(character, 3);
-        expect(character.system.force.conflict).toBe(3);
-    });
-});
+describe('Force System', () => {
+  test('should generate correct Force points from dice', () => {
+    const result = SwerpgForce.rollForcePool(3)
+    expect(result.lightPoints).toBeGreaterThanOrEqual(0)
+    expect(result.darkPoints).toBeGreaterThanOrEqual(0)
+    expect(result.totalPoints).toBe(result.lightPoints + result.darkPoints)
+  })
+
+  test('should apply morality changes correctly', () => {
+    const character = createTestCharacter({ morality: 50 })
+    SwerpgForce.addConflict(character, 3)
+    expect(character.system.force.conflict).toBe(3)
+  })
+})
 ```
 
 ## 5. Utilisabilité
@@ -338,17 +341,17 @@ describe("Force System", () => {
 ```css
 /* Thème Star Wars */
 :root {
-    --sw-primary: #00a8ff;      /* Bleu hyperespace */
-    --sw-secondary: #ffc312;    /* Jaune-orange */
-    --sw-danger: #c23616;       /* Rouge Sith */
-    --sw-dark: #2f3640;         /* Gris spatial */
-    --sw-light: #f5f6fa;        /* Blanc Imperial */
+  --sw-primary: #00a8ff; /* Bleu hyperespace */
+  --sw-secondary: #ffc312; /* Jaune-orange */
+  --sw-danger: #c23616; /* Rouge Sith */
+  --sw-dark: #2f3640; /* Gris spatial */
+  --sw-light: #f5f6fa; /* Blanc Imperial */
 }
 
 .swerpg-sheet {
-    background: linear-gradient(135deg, var(--sw-dark) 0%, #1e1e1e 100%);
-    border: 2px solid var(--sw-primary);
-    color: var(--sw-light);
+  background: linear-gradient(135deg, var(--sw-dark) 0%, #1e1e1e 100%);
+  border: 2px solid var(--sw-primary);
+  color: var(--sw-light);
 }
 ```
 
@@ -366,17 +369,11 @@ describe("Force System", () => {
 
 ```html
 <!-- Exemple d'élément accessible -->
-<button 
-    class="dice-roll-button"
-    aria-label="Lancer les dés pour Tir à distance (Agilité + Ranged Light)"
-    aria-describedby="dice-pool-description"
-    tabindex="0">
-    <i class="fas fa-dice" aria-hidden="true"></i>
-    Lancer les dés
+<button class="dice-roll-button" aria-label="Lancer les dés pour Tir à distance (Agilité + Ranged Light)" aria-describedby="dice-pool-description" tabindex="0">
+  <i class="fas fa-dice" aria-hidden="true"></i>
+  Lancer les dés
 </button>
-<div id="dice-pool-description" class="sr-only">
-    Pool actuel: 2 dés d'Aptitude, 1 dé de Maîtrise, 2 dés de Difficulté
-</div>
+<div id="dice-pool-description" class="sr-only">Pool actuel: 2 dés d'Aptitude, 1 dé de Maîtrise, 2 dés de Difficulté</div>
 ```
 
 ### 5.3 Aide Contextuelle
@@ -394,29 +391,29 @@ describe("Force System", () => {
 ```javascript
 // Système de tooltips contextuels
 class SwerpgTooltips {
-    static init() {
-        $(document).on('mouseenter', '[data-swerpg-tooltip]', function() {
-            const type = $(this).data('swerpg-tooltip');
-            const content = SwerpgTooltips.getTooltipContent(type, $(this));
-            
-            $(this).tooltipster({
-                content: content,
-                theme: 'swerpg-tooltip',
-                side: 'top',
-                delay: 500
-            });
-        });
+  static init() {
+    $(document).on('mouseenter', '[data-swerpg-tooltip]', function () {
+      const type = $(this).data('swerpg-tooltip')
+      const content = SwerpgTooltips.getTooltipContent(type, $(this))
+
+      $(this).tooltipster({
+        content: content,
+        theme: 'swerpg-tooltip',
+        side: 'top',
+        delay: 500,
+      })
+    })
+  }
+
+  static getTooltipContent(type, element) {
+    switch (type) {
+      case 'force-rating':
+        return 'Évaluation de Force détermine le nombre de dés de Force lancés pour les pouvoirs'
+      case 'morality':
+        return "Échelle de 1-100 représentant l'alignement moral du personnage"
+      // ... autres types
     }
-    
-    static getTooltipContent(type, element) {
-        switch(type) {
-            case 'force-rating':
-                return "Évaluation de Force détermine le nombre de dés de Force lancés pour les pouvoirs";
-            case 'morality':
-                return "Échelle de 1-100 représentant l'alignement moral du personnage";
-            // ... autres types
-        }
-    }
+  }
 }
 ```
 
@@ -437,21 +434,21 @@ class SwerpgTooltips {
 ```javascript
 // API d'extension pour modules tiers
 class SwerpgExtensionAPI {
-    static registerSpecies(speciesData) {
-        SwerpgSpecies.register(speciesData);
-    }
-    
-    static registerCareer(careerData) {
-        SwerpgCareer.register(careerData);
-    }
-    
-    static registerForcePower(powerData) {
-        SwerpgForcePowers.register(powerData);
-    }
+  static registerSpecies(speciesData) {
+    SwerpgSpecies.register(speciesData)
+  }
+
+  static registerCareer(careerData) {
+    SwerpgCareer.register(careerData)
+  }
+
+  static registerForcePower(powerData) {
+    SwerpgForcePowers.register(powerData)
+  }
 }
 
 // Export pour modules externes
-window.SwerpgAPI = SwerpgExtensionAPI;
+window.SwerpgAPI = SwerpgExtensionAPI
 ```
 
 ### 6.2 Versioning et Migration
@@ -467,16 +464,16 @@ window.SwerpgAPI = SwerpgExtensionAPI;
 
 ```javascript
 class SwerpgMigration {
-    static async migrateToVersion(targetVersion) {
-        const currentVersion = game.settings.get("swerpg", "version");
-        const migrations = this.getMigrationPath(currentVersion, targetVersion);
-        
-        for (const migration of migrations) {
-            await this.runMigration(migration);
-        }
-        
-        await game.settings.set("swerpg", "version", targetVersion);
+  static async migrateToVersion(targetVersion) {
+    const currentVersion = game.settings.get('swerpg', 'version')
+    const migrations = this.getMigrationPath(currentVersion, targetVersion)
+
+    for (const migration of migrations) {
+      await this.runMigration(migration)
     }
+
+    await game.settings.set('swerpg', 'version', targetVersion)
+  }
 }
 ```
 
@@ -500,16 +497,16 @@ class SwerpgMigration {
 
 ```javascript
 class SwerpgLogger {
-    static log(level, message, context = {}) {
-        if (game.settings.get("swerpg", "debugMode")) {
-            console[level](`[SWERPG] ${message}`, context);
-        }
-        
-        // Envoi vers service de monitoring si configuré
-        if (game.settings.get("swerpg", "telemetryEnabled")) {
-            this.sendTelemetry(level, message, context);
-        }
+  static log(level, message, context = {}) {
+    if (game.settings.get('swerpg', 'debugMode')) {
+      console[level](`[SWERPG] ${message}`, context)
     }
+
+    // Envoi vers service de monitoring si configuré
+    if (game.settings.get('swerpg', 'telemetryEnabled')) {
+      this.sendTelemetry(level, message, context)
+    }
+  }
 }
 ```
 

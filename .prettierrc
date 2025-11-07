@@ -1,8 +1,10 @@
 {
   "semi": false,
-  "eslintIntegration": true,
   "printWidth": 160,
   "tabWidth": 2,
   "singleQuote": true,
-  "trailingComma": "all"
+  "arrowParens": "always",
+  "trailingComma": "all",
+  "plugins": ["prettier-plugin-handlebars"],
+  "overrides": [{ "files": ["*.hbs", "*.handlebars"], "options": { "singleQuote": false } }]
 }

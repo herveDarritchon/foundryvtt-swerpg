@@ -155,13 +155,13 @@ Ce dossier contient la documentation architecturale du système Crucible pour Fo
 
 ## Statistiques
 
-| Document | Lignes | Diagrammes | Sections | Models/Patterns/Workflows |
-|----------|--------|------------|----------|---------------------------|
-| OVERVIEW.md | ~500 | 5+ | 10+ | Vue globale |
-| PATTERNS.md | ~650 | 13 | 13 | 13 patterns |
-| MODELS.md | ~1100 | 10 | 24+ | 24+ models |
-| WORKFLOWS.md | ~1200 | 30+ | 8 | 8 workflows |
-| **Total** | **~3450** | **58+** | **55+** | **45 éléments** |
+| Document     | Lignes    | Diagrammes | Sections | Models/Patterns/Workflows |
+| ------------ | --------- | ---------- | -------- | ------------------------- |
+| OVERVIEW.md  | ~500      | 5+         | 10+      | Vue globale               |
+| PATTERNS.md  | ~650      | 13         | 13       | 13 patterns               |
+| MODELS.md    | ~1100     | 10         | 24+      | 24+ models                |
+| WORKFLOWS.md | ~1200     | 30+        | 8        | 8 workflows               |
+| **Total**    | **~3450** | **58+**    | **55+**  | **45 éléments**           |
 
 ---
 

@@ -1,6 +1,6 @@
 # UI Applications – Architecture des feuilles et composants - Interface Utilisateur
 
-Ce document décrit comment sont conçues, structurées et étendues les applications UI du système **Star Wars Edge RPG (swerpg)** : principalement les feuilles d’acteur et d’item. Les autres applications (dialogues, écrans métiers) seront détaillées dans des documents séparés. 
+Ce document décrit comment sont conçues, structurées et étendues les applications UI du système **Star Wars Edge RPG (swerpg)** : principalement les feuilles d’acteur et d’item. Les autres applications (dialogues, écrans métiers) seront détaillées dans des documents séparés.
 
 Il s’adresse à la fois :
 
@@ -33,8 +33,8 @@ Si tu es un agent AI/copilot, utilise-le comme référence pour proposer du code
 
 #### 1.1 Feuilles dérivées de `SwerpgBaseActorSheet`
 
-| Type d’acteur / variante | Classe           | Fichier                                                  |
-|--------------------------|------------------|----------------------------------------------------------|
+| Type d’acteur / variante | Classe           | Fichier                                                 |
+| ------------------------ | ---------------- | ------------------------------------------------------- |
 | Adversaire               | `AdversarySheet` | `module/applications/sheets/adversary-sheet.mjs`        |
 | Personnage (origin)      | `CharacterSheet` | `module/applications/sheets/character-sheet-origin.mjs` |
 | Personnage (swerpg)      | `CharacterSheet` | `module/applications/sheets/character-sheet-swerpg.mjs` |
@@ -43,22 +43,22 @@ Si tu es un agent AI/copilot, utilise-le comme référence pour proposer du code
 
 #### 1.2 Spécialisations de `SwerpgBaseItemSheet`
 
-| Type d’élément   | Classe de feuille         | Fichier                                             |
-|------------------|---------------------------|-----------------------------------------------------|
-| Ascendance       | `AncestrySheet`           | `module/applications/sheets/ancestry-sheet.mjs`          |
-| Archétype        | `ArchetypeSheet`          | `module/applications/sheets/archetype-sheet.mjs`         |
-| Armure           | `ArmorSheet`              | `module/applications/sheets/armor-sheet.mjs`             |
-| Historique       | `BackgroundSheet`         | `module/applications/sheets/background-sheet.mjs`        |
-| Carrière         | `CareerSheet`             | `module/applications/sheets/career-sheet.mjs`            |
-| Équipement       | `GearSheet`               | `module/applications/sheets/gear-sheet.mjs`              |
-| Obligation       | `ObligationSheet`         | `module/applications/sheets/obligation-sheet.mjs`        |
-| Origine          | `OriginSheet`             | `module/applications/sheets/origin-sheet.mjs`            |
-| Spécialisation   | `SpecializationSheet`     | `module/applications/sheets/specialization-sheet.mjs`    |
-| Espèce           | `SpeciesSheet`            | `module/applications/sheets/species-sheet.mjs`           |
-| Sort/Pouvoir     | `SpellSheet`              | `module/applications/sheets/spell-sheet.mjs`             |
-| Talent           | `TalentSheet`             | `module/applications/sheets/talent-sheet.mjs`            |
-| Taxonomie        | `TaxonomySheet`           | `module/applications/sheets/taxonomy-sheet.mjs`          |
-| Arme             | `WeaponSheet`             | `module/applications/sheets/weapon-sheet.mjs`            |
+| Type d’élément | Classe de feuille     | Fichier                                               |
+| -------------- | --------------------- | ----------------------------------------------------- |
+| Ascendance     | `AncestrySheet`       | `module/applications/sheets/ancestry-sheet.mjs`       |
+| Archétype      | `ArchetypeSheet`      | `module/applications/sheets/archetype-sheet.mjs`      |
+| Armure         | `ArmorSheet`          | `module/applications/sheets/armor-sheet.mjs`          |
+| Historique     | `BackgroundSheet`     | `module/applications/sheets/background-sheet.mjs`     |
+| Carrière       | `CareerSheet`         | `module/applications/sheets/career-sheet.mjs`         |
+| Équipement     | `GearSheet`           | `module/applications/sheets/gear-sheet.mjs`           |
+| Obligation     | `ObligationSheet`     | `module/applications/sheets/obligation-sheet.mjs`     |
+| Origine        | `OriginSheet`         | `module/applications/sheets/origin-sheet.mjs`         |
+| Spécialisation | `SpecializationSheet` | `module/applications/sheets/specialization-sheet.mjs` |
+| Espèce         | `SpeciesSheet`        | `module/applications/sheets/species-sheet.mjs`        |
+| Sort/Pouvoir   | `SpellSheet`          | `module/applications/sheets/spell-sheet.mjs`          |
+| Talent         | `TalentSheet`         | `module/applications/sheets/talent-sheet.mjs`         |
+| Taxonomie      | `TaxonomySheet`       | `module/applications/sheets/taxonomy-sheet.mjs`       |
+| Arme           | `WeaponSheet`         | `module/applications/sheets/weapon-sheet.mjs`         |
 
 #### 1.3 Enregistrer une sheet pour un type de document
 
@@ -66,28 +66,28 @@ Définir la classe ne suffit pas : tu dois l’enregistrer auprès de Foundry po
 Dans swerpg, cet enregistrement se fait dans le fichier d’init du système (par exemple `module/system/registration.mjs`), au moment du hook init.
 
 ```js
-Hooks.once("init", function () {
+Hooks.once('init', function () {
   // Exemple pour un acteur "character"
-  Actors.registerSheet("swerpg", CharacterSheet, {
-    types: ["character"],
+  Actors.registerSheet('swerpg', CharacterSheet, {
+    types: ['character'],
     makeDefault: true,
-    label: "SWERPG.Sheets.Character"
-  });
+    label: 'SWERPG.Sheets.Character',
+  })
 
   // Exemple pour un item "weapon"
-  Items.registerSheet("swerpg", WeaponSheet, {
-    types: ["weapon"],
+  Items.registerSheet('swerpg', WeaponSheet, {
+    types: ['weapon'],
     makeDefault: true,
-    label: "SWERPG.Sheets.Weapon"
-  });
-});
+    label: 'SWERPG.Sheets.Weapon',
+  })
+})
 ```
 
-##### Points importants 
+##### Points importants
 
 - Le premier argument ("swerpg") est l’ID du système : ne le change pas.
 - La clé de sheet exposée aux modules externes est dérivée de la classe et du système
-(ex. swerpg.CharacterSheet) : considère-la comme stable pour permettre aux modules d’accrocher des hooks (renderCharacterSheet, etc.).
+  (ex. swerpg.CharacterSheet) : considère-la comme stable pour permettre aux modules d’accrocher des hooks (renderCharacterSheet, etc.).
 - Utilise makeDefault: true uniquement pour la variante principale d’un type (ex. la feuille de personnage que tu veux pour 90% des cas) et enregistre les variantes comme feuilles alternatives sans makeDefault.
 
 **En résumé :** toute nouvelle feuille doit avoir sa classe, son fichier et son enregistrement explicite dans le bootstrap du système, sinon elle n’existe tout simplement pas aux yeux de Foundry.
@@ -112,12 +112,12 @@ En résumé : si tu crées `MyNewThingSheet`, on s’attend à la trouver dans
 
 ## ❓ Guides de mise en œuvre – Développer une Sheet (Foundry VTT v13, JS)
 
-Ce qui suit n’est pas optionnel si tu veux un système maintenable.  
+Ce qui suit n’est pas optionnel si tu veux un système maintenable.
 
 ### 1. Architecture & Classes
 
-- **Toujours étendre la bonne base**  
-  - Acteurs → base système (`SwerpgBaseActorSheet`, etc.).  
+- **Toujours étendre la bonne base**
+  - Acteurs → base système (`SwerpgBaseActorSheet`, etc.).
   - Items → base système (`SwerpgBaseItemSheet`, etc.).
 
 ### 1.1 `defaultOptions` – Déclarer les options d’interface
@@ -251,8 +251,8 @@ Si tu utilises des **tabs** déclarés dans `PARTS` ou via la config de l’appl
 
 - Ne pas surcharger `getData()` : c’est du monde v1, tu es en v2.
 - Ne pas faire de « calculs intelligents » dans le template Handlebars :
-
   - si tu te surprends à écrire des `{{#if ...}}` complexes ou des grosses chaînes de `lookup`, c’est que tu dois remonter la logique dans `_prepareContext()` / `_preparePartContext()`.
+
 - Ne pas bricoler le contexte dans `_onRender()` ou `_postRender()` : ces hooks sont pour la **gestion du DOM**, pas pour fabriquer les données.
 
 #### Exemple complet – Feuille d’item + template
@@ -281,16 +281,15 @@ Et côté template :
 ```hbs
 <h1>{{item.name}}</h1>
 
-<section class="grid">
-  <div class="field">
+<section class='grid'>
+  <div class='field'>
     <label>Bravoure</label>
-    <input type="number" name="system.attributes.bravery"
-           value="{{system.attributes.bravery}}" />
+    <input type='number' name='system.attributes.bravery' value='{{system.attributes.bravery}}' />
   </div>
 
-  <div class="field">
+  <div class='field'>
     <label>Description</label>
-    <textarea name="system.description">{{system.description}}</textarea>
+    <textarea name='system.description'>{{system.description}}</textarea>
   </div>
 </section>
 ```
@@ -357,9 +356,9 @@ Pour le drag & drop et les interactions avancées, reste strict : tout doit êtr
 - Branche les événements dans `activateListeners(html)`
 
 ```js
-html.on("dragstart", "[data-drag-source=talent]", this._onDragTalentStart.bind(this));
-html.on("drop", "[data-drop-target=inventory-slot]", this._onDropToInventory.bind(this));
-html.on("contextmenu", "[data-has-context=talent]", this._onTalentContextMenu.bind(this));
+html.on('dragstart', '[data-drag-source=talent]', this._onDragTalentStart.bind(this))
+html.on('drop', '[data-drop-target=inventory-slot]', this._onDropToInventory.bind(this))
+html.on('contextmenu', '[data-has-context=talent]', this._onTalentContextMenu.bind(this))
 ```
 
 Dans les handlers, travaille uniquement avec html / this.element et les dataset des éléments (`event.currentTarget.dataset.*`), pas avec `document.querySelector`.
@@ -377,7 +376,7 @@ Le contrat est simple :
 **Règle d’or** : ne mute jamais `this.document.system` directement (`this.document.system.foo = 42`).
 Passe toujours par l’API de Foundry : `update()` ou `updateSource()`.
 
-##### `document.update(data, options)` – Pour les *vraies* mises à jour
+##### `document.update(data, options)` – Pour les _vraies_ mises à jour
 
 À utiliser quand :
 
@@ -403,7 +402,7 @@ Effets :
 
 ---
 
-##### `document.updateSource(data)` – Pour préparer / manipuler la source *sans* persister
+##### `document.updateSource(data)` – Pour préparer / manipuler la source _sans_ persister
 
 À utiliser quand :
 
@@ -420,9 +419,9 @@ Exemples typiques :
 
 ```js
 // Préparation d'une source d'item avant création
-const source = duplicate(item.toObject());
-source.system.attributes.bravery = 3;
-item.updateSource(source.system); // pas de persistance directe ici
+const source = duplicate(item.toObject())
+source.system.attributes.bravery = 3
+item.updateSource(source.system) // pas de persistance directe ici
 ```
 
 Effet :
@@ -494,10 +493,9 @@ Pour des variations de feuille internes au système :
 - Étends la feuille de base (`SwerpgBaseActorSheet`, `SwerpgBaseItemSheet`)
   ou une feuille existante (`HeroSheet`, `WeaponSheet`, etc.).
 - Surcharge principalement :
-
-  * `_prepareContext()` ou `_preparePartContext` pour enrichir le contexte ;
-  * `activateListeners(html)` pour brancher les handlers DOM ;
-  * d’éventuelles méthodes utilitaires fournies par les classes de base
+  - `_prepareContext()` ou `_preparePartContext` pour enrichir le contexte ;
+  - `activateListeners(html)` pour brancher les handlers DOM ;
+  - d’éventuelles méthodes utilitaires fournies par les classes de base
     (ex. `_prepareAttributes`, `_registerRollHandlers`, etc. si définies).
 
 Exemple :
@@ -543,19 +541,19 @@ Exemple :
 
 ```js
 // Ajout d'un bouton personnalisé sur toutes les feuilles de talents
-Hooks.on("renderTalentSheet", (app, html, data) => {
-  const footer = html.find(".sheet-footer");
-  if (!footer.length) return;
+Hooks.on('renderTalentSheet', (app, html, data) => {
+  const footer = html.find('.sheet-footer')
+  if (!footer.length) return
 
   const button = $(
     `<button type="button" data-action="export-talent">
        <i class="fas fa-file-export"></i> Exporter
-     </button>`
-  );
-  footer.append(button);
+     </button>`,
+  )
+  footer.append(button)
 
-  button.on("click", (event) => app.exportTalent?.(event));
-});
+  button.on('click', (event) => app.exportTalent?.(event))
+})
 ```
 
 Autres hooks utiles côté UI :
@@ -616,8 +614,8 @@ Chaque feuille doit au minimum inclure :
 Exemples :
 
 ```js
-options.classes = ["swerpg", "sheet", "actor", "character"];
-options.classes = ["swerpg", "sheet", "item", "talent"];
+options.classes = ['swerpg', 'sheet', 'actor', 'character']
+options.classes = ['swerpg', 'sheet', 'item', 'talent']
 ```
 
 ### 9.2 Structure HTML recommandée
@@ -625,20 +623,20 @@ options.classes = ["swerpg", "sheet", "item", "talent"];
 Les templates suivent une structure commune :
 
 ```hbs
-<div class="swerpg sheet actor character">
-  <header class="sheet-header">
+<div class='swerpg sheet actor character'>
+  <header class='sheet-header'>
     <!-- Nom, image, résumé -->
   </header>
 
-  <nav class="sheet-tabs" data-group="primary">
+  <nav class='sheet-tabs' data-group='primary'>
     <!-- Onglets -->
   </nav>
 
-  <section class="sheet-body">
+  <section class='sheet-body'>
     <!-- Contenu tabulé -->
   </section>
 
-  <footer class="sheet-footer">
+  <footer class='sheet-footer'>
     <!-- Boutons d'action, infos secondaires -->
   </footer>
 </div>

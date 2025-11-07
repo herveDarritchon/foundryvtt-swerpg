@@ -1,4 +1,4 @@
-export const SYSTEM_ID = "swerpg"
+export const SYSTEM_ID = 'swerpg'
 export const DEV_MODE = false
 
 export const ASCII = `
@@ -20,4 +20,3 @@ export const ASCII_DEV_MODE = `
  ░ ░  ░    ░       ░░     ░     ░ ░   ░ ░ ░ ▒  ░░       ░      ░      ░      ░   ░ ░   ░         ░      ░   ░ ░ ░ ▒   ░ ░  ░    ░   
    ░       ░  ░     ░     ░  ░    ░  ░    ░ ░                  ░      ░  ░         ░                    ░       ░ ░     ░       ░  ░
  ░                 ░                                                                                                  ░`
-

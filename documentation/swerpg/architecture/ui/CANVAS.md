@@ -5,6 +5,7 @@ Documentation des extensions canvas pour les visualisations spécialisées.
 ## 🎨 Layers Canvas
 
 ### SwerpgTalentTreeLayer
+
 - Visualisation des arbres de talents
 - Interactions utilisateur
 - Gestion des nœuds

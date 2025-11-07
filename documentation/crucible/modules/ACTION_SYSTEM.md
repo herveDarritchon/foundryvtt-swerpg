@@ -19,7 +19,7 @@ classDiagram
         +ActionUsage usage
         +CrucibleActor actor
         +CrucibleItem item
-        
+
         +initialize()
         +prepare()
         +canUse() boolean
@@ -30,25 +30,25 @@ classDiagram
         +postActivate(outcome) Promise
         +confirm(reverse) Promise
     }
-    
+
     class CrucibleSpellAction {
         +SpellComponents components
         +configureDynamicSpell()
     }
-    
+
     class ActionCost {
         +number action
         +number focus
         +number hands
     }
-    
+
     class ActionTarget {
         +string type
         +number number
         +number distance
         +number scope
     }
-    
+
     class ActionUsage {
         +object actorStatus
         +object actorUpdates
@@ -57,7 +57,7 @@ classDiagram
         +string skillId
         +CrucibleItem weapon
     }
-    
+
     CrucibleSpellAction --|> CrucibleAction
     CrucibleAction --> ActionCost
     CrucibleAction --> ActionTarget
@@ -77,55 +77,55 @@ sequenceDiagram
     participant Dice
     participant Actor
     participant Chat
-    
+
     User->>Sheet: Clic sur action
     Sheet->>Action: bind(actor)
     activate Action
-    
+
     Action->>Action: initialize()
     Note over Action: Initialisation des données
-    
+
     Action->>Action: prepare()
     Note over Action: Préparation du contexte
-    
+
     Action->>Action: canUse()
     alt Cannot Use
         Action-->>User: Error notification
     end
-    
+
     opt Dialog Enabled
         Action->>Dialog: show()
         Dialog->>User: Configuration UI
         User->>Dialog: Configure & Confirm
         Dialog->>Action: configuration data
     end
-    
+
     Action->>Action: configure()
     Note over Action: Application configuration
-    
+
     Action->>Action: preActivate(targets)
     Note over Action: Validation des cibles
-    
+
     opt Has Dice Roll
         Action->>Dice: Roll attack/check
         Dice-->>Action: Roll result
     end
-    
+
     Action->>Action: roll(outcome)
     Note over Action: Calcul des résultats
-    
+
     Action->>Actor: Apply effects
     Actor-->>Action: Updated state
-    
+
     Action->>Action: postActivate(outcome)
     Note over Action: Post-traitement
-    
+
     Action->>Chat: Create message
     Chat-->>User: Chat card displayed
-    
+
     Action->>Action: confirm()
     Note over Action: Finalisation
-    
+
     deactivate Action
 ```
 
@@ -137,36 +137,36 @@ Chaque étape du cycle de vie expose un hook personnalisable :
 const ACTION_HOOKS = {
   initialize: {
     argNames: [],
-    async: false
+    async: false,
   },
   prepare: {
     argNames: [],
-    async: false
+    async: false,
   },
   canUse: {
     argNames: [],
-    async: false
+    async: false,
   },
   configure: {
     argNames: [],
-    async: false
+    async: false,
   },
   preActivate: {
-    argNames: ["targets"],
-    async: true
+    argNames: ['targets'],
+    async: true,
   },
   roll: {
-    argNames: ["outcome"],
-    async: true
+    argNames: ['outcome'],
+    async: true,
   },
   postActivate: {
-    argNames: ["outcome"],
-    async: true
+    argNames: ['outcome'],
+    async: true,
   },
   confirm: {
-    argNames: ["reverse"],
-    async: true
-  }
+    argNames: ['reverse'],
+    async: true,
+  },
 }
 ```
 
@@ -180,41 +180,41 @@ graph TD
     TARGET --> SELF[Self]
     TARGET --> SINGLE[Single Target]
     TARGET --> AOE[Area of Effect]
-    
+
     AOE --> CONE[Cone]
     AOE --> FAN[Fan]
     AOE --> PULSE[Pulse]
     AOE --> BLAST[Blast]
     AOE --> RAY[Ray]
     AOE --> WALL[Wall]
-    
+
     TARGET --> SUMMON[Summon]
 ```
 
 #### Configuration des Templates
 
-| Type | Template | Anchor | Scope |
-|------|----------|--------|-------|
-| `none` | null | - | NONE |
-| `self` | null | - | SELF |
-| `single` | null | - | ALL |
-| `cone` | cone, 60° | self | ALL |
-| `fan` | cone, 210° | self | ALL |
-| `pulse` | circle | self | ALL |
-| `blast` | circle | vertex | ALL |
-| `ray` | ray, width 1 | self | ALL |
-| `summon` | rect | vertex | SELF |
-| `wall` | rect | edge | ALL |
+| Type     | Template     | Anchor | Scope |
+| -------- | ------------ | ------ | ----- |
+| `none`   | null         | -      | NONE  |
+| `self`   | null         | -      | SELF  |
+| `single` | null         | -      | ALL   |
+| `cone`   | cone, 60°    | self   | ALL   |
+| `fan`    | cone, 210°   | self   | ALL   |
+| `pulse`  | circle       | self   | ALL   |
+| `blast`  | circle       | vertex | ALL   |
+| `ray`    | ray, width 1 | self   | ALL   |
+| `summon` | rect         | vertex | SELF  |
+| `wall`   | rect         | edge   | ALL   |
 
 ### Target Scopes
 
 ```javascript
 TARGET_SCOPES = {
-  NONE: 0,    // Aucune cible
-  SELF: 1,    // Uniquement soi-même
-  ALLIES: 2,  // Alliés seulement
+  NONE: 0, // Aucune cible
+  SELF: 1, // Uniquement soi-même
+  ALLIES: 2, // Alliés seulement
   ENEMIES: 3, // Ennemis seulement
-  ALL: 4      // Tous les types
+  ALL: 4, // Tous les types
 }
 ```
 
@@ -250,14 +250,14 @@ TARGET_SCOPES = {
   actorUpdates: object,          // Mises à jour de l'acteur
   effects: ActionEffect[],       // Effets actifs à créer
   metadata: object,              // Données métier
-  
+
   // Flags de statut
   weakened: boolean,
   broken: boolean,
   incapacitated: boolean,
   criticalSuccess: boolean,
   criticalFailure: boolean,
-  
+
   statusText: object[]           // Texte de statut affiché
 }
 ```
@@ -289,44 +289,44 @@ TARGET_SCOPES = {
 async use(options = {}) {
   // 1. Initialize
   this.initialize();
-  
+
   // 2. Prepare
   this.prepare();
-  
+
   // 3. Check if can use
   if (!this.canUse()) {
     throw new Error("Cannot use this action");
   }
-  
+
   // 4. Show dialog (optional)
   if (options.dialog) {
     await this.#showDialog();
   }
-  
+
   // 5. Configure
   this.configure();
-  
+
   // 6. Pre-activate with targets
   const targets = await this.preActivate(options);
-  
+
   // 7. Roll dice
   const outcomes = new Map();
   for (const target of targets) {
     const outcome = await this.roll(target);
     outcomes.set(target, outcome);
   }
-  
+
   // 8. Post-activate
   for (const [target, outcome] of outcomes) {
     await this.postActivate(outcome);
   }
-  
+
   // 9. Create chat message
   await this.#createChatMessage(outcomes);
-  
+
   // 10. Confirm
   await this.confirm(false);
-  
+
   return outcomes;
 }
 ```
@@ -337,17 +337,17 @@ Les actions doivent être liées à un acteur avant utilisation :
 
 ```javascript
 // Récupérer une action depuis un item
-const item = actor.items.get(itemId);
-const actionData = item.actions[0];
+const item = actor.items.get(itemId)
+const actionData = item.actions[0]
 
 // Lier l'action à l'acteur
-const action = actionData.bind(actor);
+const action = actionData.bind(actor)
 
 // Utiliser l'action
 await action.use({
   dialog: true,
-  rollMode: "publicroll"
-});
+  rollMode: 'publicroll',
+})
 ```
 
 ## Actions de Combat
@@ -362,11 +362,11 @@ sequenceDiagram
     participant AttackRoll
     participant Defense
     participant Damage
-    
+
     Action->>AttackRoll: new AttackRoll(config)
     AttackRoll->>AttackRoll: Roll attack dice
     AttackRoll->>Defense: Compare vs defense
-    
+
     alt Hit
         AttackRoll->>Damage: Calculate damage
         Damage->>Damage: Apply resistances
@@ -374,11 +374,11 @@ sequenceDiagram
     else Miss
         AttackRoll-->>Action: Miss
     end
-    
+
     opt Critical Hit
         AttackRoll->>Damage: Double damage dice
     end
-    
+
     opt Critical Miss
         AttackRoll-->>Action: Weapon broken
     end
@@ -420,22 +420,21 @@ Sous-classe spécialisée pour les sorts :
 
 ```javascript
 class CrucibleSpellAction extends CrucibleAction {
-  
   /**
    * Configuration des composants de sort
    */
   configureDynamicSpell() {
-    const {rune, gesture, inflection} = this.components;
-    
+    const { rune, gesture, inflection } = this.components
+
     // Rune détermine le type de dégâts
-    this.damageType = rune.damageType;
-    
+    this.damageType = rune.damageType
+
     // Gesture détermine la forme
-    this.target.type = gesture.targetType;
-    this.target.number = gesture.size;
-    
+    this.target.type = gesture.targetType
+    this.target.number = gesture.size
+
     // Inflection modifie l'effet
-    this.applyInflection(inflection);
+    this.applyInflection(inflection)
   }
 }
 ```
@@ -447,7 +446,7 @@ graph LR
     RUNE[Rune<br/>Fire/Ice/etc] --> SPELL[Spell Action]
     GESTURE[Gesture<br/>Cone/Blast/etc] --> SPELL
     INFLECTION[Inflection<br/>Damage/Heal/etc] --> SPELL
-    
+
     SPELL --> DAMAGE[Damage Type]
     SPELL --> SHAPE[Target Shape]
     SPELL --> EFFECT[Effect Type]
@@ -461,20 +460,19 @@ Système de tags pour décrire le contexte d'utilisation :
 
 ```javascript
 class CrucibleActionTags extends Set {
-  
   groups = {
     activation: new ActionTagGroup({
-      icon: "fa-bolt",
-      tooltip: "Activation Requirements"
+      icon: 'fa-bolt',
+      tooltip: 'Activation Requirements',
     }),
     action: new ActionTagGroup({
-      icon: "fa-hand-fist",
-      tooltip: "Action Properties"
+      icon: 'fa-hand-fist',
+      tooltip: 'Action Properties',
     }),
     context: new ActionTagGroup({
-      icon: "fa-circle-info",
-      tooltip: "Usage Context"
-    })
+      icon: 'fa-circle-info',
+      tooltip: 'Usage Context',
+    }),
   }
 }
 ```
@@ -493,21 +491,20 @@ Dialog de configuration avant utilisation :
 
 ```javascript
 class ActionUseDialog extends foundry.applications.api.DialogV2 {
-  
   static DEFAULT_OPTIONS = {
-    classes: ["crucible", "action-use-dialog"],
+    classes: ['crucible', 'action-use-dialog'],
     window: {
-      title: "Configure Action Use"
-    }
+      title: 'Configure Action Use',
+    },
   }
-  
+
   async _prepareContext() {
     return {
       action: this.action,
       skills: this.#getAvailableSkills(),
       weapons: this.#getAvailableWeapons(),
       boons: this.#getAvailableBoons(),
-      banes: this.#getAvailableBanes()
+      banes: this.#getAvailableBanes(),
     }
   }
 }
@@ -535,16 +532,16 @@ Chaque acteur maintient un historique des actions effectuées :
 
 ```javascript
 // Récupérer l'historique
-const history = actor.getFlag("crucible", "actionHistory");
+const history = actor.getFlag('crucible', 'actionHistory')
 
 // Dernière action
-const lastAction = history[history.length - 1];
+const lastAction = history[history.length - 1]
 
 // Filtrer par type
-const attacks = history.filter(h => {
-  const action = actor.actions.get(h.id);
-  return action?.type === "strike";
-});
+const attacks = history.filter((h) => {
+  const action = actor.actions.get(h.id)
+  return action?.type === 'strike'
+})
 ```
 
 ## Intégration VFX
@@ -553,16 +550,16 @@ const attacks = history.filter(h => {
 
 ```javascript
 function configureStrikeVFXEffect(action, outcome) {
-  if (!crucible.vfxEnabled) return;
-  
+  if (!crucible.vfxEnabled) return
+
   const config = {
     from: action.actor.token,
     to: outcome.target.token,
-    effect: outcome.criticalSuccess ? "criticalHit" : "hit",
-    damageType: action.damageType
-  };
-  
-  game.modules.get("foundryvtt-vfx").api.playEffect(config);
+    effect: outcome.criticalSuccess ? 'criticalHit' : 'hit',
+    damageType: action.damageType,
+  }
+
+  game.modules.get('foundryvtt-vfx').api.playEffect(config)
 }
 ```
 
@@ -572,21 +569,21 @@ function configureStrikeVFXEffect(action, outcome) {
 
 ```javascript
 // ✅ Correct
-const action = item.actions[0].bind(actor);
-await action.use();
+const action = item.actions[0].bind(actor)
+await action.use()
 
 // ❌ Incorrect
-await item.actions[0].use(); // Pas d'acteur !
+await item.actions[0].use() // Pas d'acteur !
 ```
 
 ### 2. Gérer les Erreurs
 
 ```javascript
 try {
-  await action.use();
-} catch(err) {
-  ui.notifications.error(`Cannot use action: ${err.message}`);
-  console.error(err);
+  await action.use()
+} catch (err) {
+  ui.notifications.error(`Cannot use action: ${err.message}`)
+  console.error(err)
 }
 ```
 
@@ -594,21 +591,21 @@ try {
 
 ```javascript
 if (!action.canUse()) {
-  ui.notifications.warn("Action cannot be used");
-  return;
+  ui.notifications.warn('Action cannot be used')
+  return
 }
-await action.use();
+await action.use()
 ```
 
 ### 4. Utiliser les Hooks
 
 ```javascript
 // Hook personnalisé pour modifier l'outcome
-Hooks.on("crucible.action.postActivate", (action, outcome) => {
-  if (action.type === "strike") {
+Hooks.on('crucible.action.postActivate', (action, outcome) => {
+  if (action.type === 'strike') {
     // Logique personnalisée
   }
-});
+})
 ```
 
 ## Exemples Complets
@@ -617,75 +614,74 @@ Hooks.on("crucible.action.postActivate", (action, outcome) => {
 
 ```javascript
 const strikeAction = {
-  id: "basicStrike",
-  name: "Basic Strike",
-  type: "strike",
-  cost: {action: 2, focus: 0, hands: 1},
+  id: 'basicStrike',
+  name: 'Basic Strike',
+  type: 'strike',
+  cost: { action: 2, focus: 0, hands: 1 },
   target: {
-    type: "single",
+    type: 'single',
     scope: TARGET_SCOPES.ENEMIES,
-    distance: 5
+    distance: 5,
   },
   hooks: {
-    canUse: function() {
-      return this.actor.resources.action.value >= this.cost.action;
+    canUse: function () {
+      return this.actor.resources.action.value >= this.cost.action
     },
-    
-    roll: async function(outcome) {
+
+    roll: async function (outcome) {
       const roll = new AttackRoll({
         actor: this.actor,
         weapon: this.usage.weapon,
         target: outcome.target,
-        skillId: this.usage.skillId
-      });
-      
-      await roll.evaluate();
-      outcome.rolls.push(roll);
-      
+        skillId: this.usage.skillId,
+      })
+
+      await roll.evaluate()
+      outcome.rolls.push(roll)
+
       if (roll.isHit) {
-        outcome.resources.wounds = roll.totalDamage;
+        outcome.resources.wounds = roll.totalDamage
       }
     },
-    
-    confirm: async function() {
+
+    confirm: async function () {
       await this.actor.update({
-        "system.resources.action.value": 
-          this.actor.resources.action.value - this.cost.action
-      });
-    }
-  }
-};
+        'system.resources.action.value': this.actor.resources.action.value - this.cost.action,
+      })
+    },
+  },
+}
 ```
 
 ### Action de Soin
 
 ```javascript
 const healAction = {
-  id: "heal",
-  name: "Heal",
-  type: "utility",
-  cost: {action: 2, focus: 1, hands: 0},
+  id: 'heal',
+  name: 'Heal',
+  type: 'utility',
+  cost: { action: 2, focus: 1, hands: 0 },
   target: {
-    type: "single",
+    type: 'single',
     scope: TARGET_SCOPES.ALLIES,
-    distance: 30
+    distance: 30,
   },
   hooks: {
-    roll: async function(outcome) {
-      const healRoll = new Roll("2d6 + @healing", {
-        healing: this.actor.abilities.presence.value
-      });
-      await healRoll.evaluate();
-      
-      const healing = healRoll.total;
-      outcome.resources.wounds = -healing; // Négatif pour guérison
+    roll: async function (outcome) {
+      const healRoll = new Roll('2d6 + @healing', {
+        healing: this.actor.abilities.presence.value,
+      })
+      await healRoll.evaluate()
+
+      const healing = healRoll.total
+      outcome.resources.wounds = -healing // Négatif pour guérison
       outcome.statusText.push({
         text: `+${healing} HP`,
-        color: "green"
-      });
-    }
-  }
-};
+        color: 'green',
+      })
+    },
+  },
+}
 ```
 
 ## Références

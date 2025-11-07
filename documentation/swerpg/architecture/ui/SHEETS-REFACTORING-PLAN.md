@@ -49,13 +49,13 @@
 
 ```javascript
 // ❌ À SUPPRIMER
-console.log(`ObligationSheet._prepareContext ${context.name}:`, context);
-console.log(`[character-sheet] #buildJaugeDisplayData - resource ${type}`, resource);
-console.debug("[CharacterSheet] context", context);
+console.log(`ObligationSheet._prepareContext ${context.name}:`, context)
+console.log(`[character-sheet] #buildJaugeDisplayData - resource ${type}`, resource)
+console.debug('[CharacterSheet] context', context)
 
 // ✅ Si logging nécessaire, utiliser un mécanisme conditionnel
 if (CONFIG.debug?.sheets) {
-    console.debug(`[${this.constructor.name}] Context prepared:`, context);
+  console.debug(`[${this.constructor.name}] Context prepared:`, context)
 }
 ```
 
@@ -122,7 +122,7 @@ static DEFAULT_OPTIONS = {
 4. Mettre à jour toutes les sheets qui étendent l'ancienne base
 5. Supprimer `base-actor-sheet-origin.mjs`
 
-#### 2.2 Standardiser _prepareContext()
+#### 2.2 Standardiser \_prepareContext()
 
 **Template obligatoire pour toutes les sheets:**
 
@@ -134,16 +134,16 @@ static DEFAULT_OPTIONS = {
  */
 async _prepareContext(options) {
     const context = await super._prepareContext(options);
-    
+
     // ✅ Standard minimum OBLIGATOIRE
     context.document = this.document;
     context.system = this.document.system;
     context.config = game.system.config;
     context.isOwner = this.document.isOwner;
-    
+
     // Préparation spécifique à la sheet
     // (toute logique métier pour le template va ICI)
-    
+
     return context;
 }
 ```
@@ -223,18 +223,18 @@ static DEFAULT_OPTIONS = {
 
 ```html
 <div class="swerpg sheet actor {type}">
-    <header class="sheet-header">
-        <!-- En-tête de la feuille -->
-    </header>
-    <nav class="sheet-tabs">
-        <!-- Navigation par onglets -->
-    </nav>
-    <section class="sheet-body">
-        <!-- Contenu principal -->
-    </section>
-    <footer class="sheet-footer">
-        <!-- Actions de pied de page -->
-    </footer>
+  <header class="sheet-header">
+    <!-- En-tête de la feuille -->
+  </header>
+  <nav class="sheet-tabs">
+    <!-- Navigation par onglets -->
+  </nav>
+  <section class="sheet-body">
+    <!-- Contenu principal -->
+  </section>
+  <footer class="sheet-footer">
+    <!-- Actions de pied de page -->
+  </footer>
 </div>
 ```
 
@@ -335,16 +335,16 @@ static DEFAULT_OPTIONS = {
 2. **Corriger les commentaires JSDoc:**
 
 ```javascript
-   // Dans ObligationSheet, SpecializationSheet, CareerSheet
-   // ❌ Remplacer
-   /**
-    * A SwerpgBaseItemSheet subclass used to configure Items of the "ancestry" type.
-    */
-   
-   // ✅ Par
-   /**
-    * A SwerpgBaseItemSheet subclass used to configure Items of the "obligation" type.
-    */
+// Dans ObligationSheet, SpecializationSheet, CareerSheet
+// ❌ Remplacer
+/**
+ * A SwerpgBaseItemSheet subclass used to configure Items of the "ancestry" type.
+ */
+
+// ✅ Par
+/**
+ * A SwerpgBaseItemSheet subclass used to configure Items of the "obligation" type.
+ */
 ```
 
 3. **Linter tout le code:**
@@ -426,6 +426,6 @@ find module/applications/sheets -name "*.mjs" -exec grep -l "DEFAULT_OPTIONS\|de
 
 ---
 
-*Plan créé le : 6 novembre 2025*  
-*Révision : 1.0*  
-*Statut : En attente d'approbation*
+_Plan créé le : 6 novembre 2025_  
+_Révision : 1.0_  
+_Statut : En attente d'approbation_

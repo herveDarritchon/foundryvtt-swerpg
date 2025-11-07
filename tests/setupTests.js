@@ -1,5 +1,5 @@
 // setupTests.js
-import {vi} from 'vitest';
+import { vi } from 'vitest'
 
 /**
  * Quickly clone a simple piece of data, returning a copy which can be mutated safely.
@@ -12,33 +12,33 @@ import {vi} from 'vitest';
  * @param {number} [options._d]             An internal depth tracker
  * @return {*}                             The clone of that data
  */
-function deepClone(original, {strict = false, _d = 0} = {}) {
-    if (_d > 100) {
-        throw new Error("Maximum depth exceeded. Be sure your object does not contain cyclical data structures.");
-    }
-    _d++;
+function deepClone(original, { strict = false, _d = 0 } = {}) {
+  if (_d > 100) {
+    throw new Error('Maximum depth exceeded. Be sure your object does not contain cyclical data structures.')
+  }
+  _d++
 
-    // Simple types
-    if ((typeof original !== "object") || (original === null)) return original;
+  // Simple types
+  if (typeof original !== 'object' || original === null) return original
 
-    // Arrays
-    if (original instanceof Array) return original.map(o => deepClone(o, {strict, _d}));
+  // Arrays
+  if (original instanceof Array) return original.map((o) => deepClone(o, { strict, _d }))
 
-    // Dates
-    if (original instanceof Date) return new Date(original);
+  // Dates
+  if (original instanceof Date) return new Date(original)
 
-    // Unsupported advanced objects
-    if (original.constructor && (original.constructor !== Object)) {
-        if (strict) throw new Error("deepClone cannot clone advanced objects");
-        return original;
-    }
+  // Unsupported advanced objects
+  if (original.constructor && original.constructor !== Object) {
+    if (strict) throw new Error('deepClone cannot clone advanced objects')
+    return original
+  }
 
-    // Other objects
-    const clone = {};
-    for (let k of Object.keys(original)) {
-        clone[k] = deepClone(original[k], {strict, _d});
-    }
-    return clone;
+  // Other objects
+  const clone = {}
+  for (let k of Object.keys(original)) {
+    clone[k] = deepClone(original[k], { strict, _d })
+  }
+  return clone
 }
 
 /**
@@ -50,15 +50,15 @@ function deepClone(original, {strict = false, _d = 0} = {}) {
  * @return {*}              The value of the found property
  */
 function getProperty(object, key) {
-    if (!key || !object) return undefined;
-    if (key in object) return object[key];
-    let target = object;
-    for (let p of key.split('.')) {
-        if (!target || (typeof target !== "object")) return undefined;
-        if (p in target) target = target[p];
-        else return undefined;
-    }
-    return target;
+  if (!key || !object) return undefined
+  if (key in object) return object[key]
+  let target = object
+  for (let p of key.split('.')) {
+    if (!target || typeof target !== 'object') return undefined
+    if (p in target) target = target[p]
+    else return undefined
+  }
+  return target
 }
 
 /**
@@ -69,34 +69,34 @@ function getProperty(object, key) {
  * @returns {object}          A new merged object
  */
 function mergeObject(original, other) {
-    const isObject = obj => obj && typeof obj === 'object' && obj.constructor === Object;
+  const isObject = (obj) => obj && typeof obj === 'object' && obj.constructor === Object
 
-    if (!isObject(original)) return deepClone(other);
-    if (!isObject(other)) return deepClone(original);
+  if (!isObject(original)) return deepClone(other)
+  if (!isObject(other)) return deepClone(original)
 
-    const merged = deepClone(original);
+  const merged = deepClone(original)
 
-    for (const [key, value] of Object.entries(other)) {
-        if (isObject(value) && isObject(merged[key])) {
-            merged[key] = mergeObject(merged[key], value);
-        } else {
-            merged[key] = deepClone(value);
-        }
+  for (const [key, value] of Object.entries(other)) {
+    if (isObject(value) && isObject(merged[key])) {
+      merged[key] = mergeObject(merged[key], value)
+    } else {
+      merged[key] = deepClone(value)
     }
+  }
 
-    return merged;
+  return merged
 }
 
 global.foundry = {
-    utils: {
-        deepClone: vi.fn((original, options = {}) => {
-            return deepClone(original, options);
-        }),
-        getProperty: vi.fn((object, key) => {
-            return getProperty(object, key);
-        }),
-        mergeObject: vi.fn((original, other) => {
-            return mergeObject(original, other);
-        })
-    }
-};
+  utils: {
+    deepClone: vi.fn((original, options = {}) => {
+      return deepClone(original, options)
+    }),
+    getProperty: vi.fn((object, key) => {
+      return getProperty(object, key)
+    }),
+    mergeObject: vi.fn((original, other) => {
+      return mergeObject(original, other)
+    }),
+  },
+}

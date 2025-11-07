@@ -30,16 +30,16 @@ classDiagram
         +prepareBaseData()
         +prepareDerivedData()
     }
-    
+
     class DataModel {
         <<Foundry Abstract>>
         +validate()
         +toObject()
         +clone()
     }
-    
+
     DataModel <|-- TypeDataModel
-    
+
     note for TypeDataModel "Base pour tous les\nmodels Actor/Item"
 ```
 
@@ -84,7 +84,7 @@ static defineSchema() {
       wis: new SchemaField({base, increases, bonus}),
       cha: new SchemaField({base, increases, bonus})
     }),
-    
+
     // Défenses
     defenses: new SchemaField({
       armor: new SchemaField({base, bonus, value}),
@@ -95,7 +95,7 @@ static defineSchema() {
       willpower: new SchemaField({base, bonus, value}),
       reflex: new SchemaField({base, bonus, value})
     }),
-    
+
     // Ressources
     resources: new SchemaField({
       health: new SchemaField({value, max, temp}),
@@ -105,22 +105,22 @@ static defineSchema() {
       focus: new SchemaField({value, max}),
       heroism: new SchemaField({value, max})
     }),
-    
+
     // Compétences
     skills: new SchemaField({
       [skillId]: new SchemaField({
         ability, rank, bonus, passive
       })
     }),
-    
+
     // Mouvement
     movement: new SchemaField({
       stride, tactical, travel
     }),
-    
+
     // Résistances
     resistances: new SchemaField({
-      physical, poison, fire, cold, 
+      physical, poison, fire, cold,
       electricity, acid, corruption
     })
   }
@@ -177,14 +177,14 @@ classDiagram
 ```javascript
 static defineSchema() {
   const schema = super.defineSchema();
-  
+
   // Advancement (progression)
   schema.advancement = new SchemaField({
     level: new NumberField({min: 0, max: 24}),
     milestones: new NumberField({min: 0}),
     talentNodes: new SetField(new StringField())
   });
-  
+
   // Détails narratifs
   schema.details = new SchemaField({
     ancestry: new SchemaField({
@@ -202,7 +202,7 @@ static defineSchema() {
     knowledge: new SetField(new StringField()),
     languages: new SetField(new StringField())
   });
-  
+
   return schema;
 }
 ```
@@ -239,21 +239,21 @@ sequenceDiagram
     participant Advancement
     participant Talents
     participant Abilities
-    
+
     Note over Hero: Level Up
     Hero->>Advancement: Gain Milestone
     Advancement->>Advancement: Check required milestones
-    
+
     alt Enough milestones
         Advancement->>Advancement: level++
         Advancement->>Talents: points.talent += 3
         Advancement->>Abilities: points.ability += 1
     end
-    
+
     Note over Hero: Spend Points
     Hero->>Talents: Select talent node
     Talents->>Talents: points.spent++
-    
+
     Hero->>Abilities: Increase ability
     Abilities->>Abilities: increases++
     Abilities->>Abilities: points.spent++
@@ -274,7 +274,7 @@ sequenceDiagram
 ```javascript
 static defineSchema() {
   const schema = super.defineSchema();
-  
+
   schema.details = new SchemaField({
     tier: new NumberField({min: 1, max: 10}),
     rank: new StringField({
@@ -283,7 +283,7 @@ static defineSchema() {
     taxonomy: new StringField(),
     biography: new HTMLField()
   });
-  
+
   return schema;
 }
 ```
@@ -299,18 +299,18 @@ actionMax = {
   minion: 4,
   normal: 6,
   elite: 8,
-  boss: 10
+  boss: 10,
 }[rank]
 ```
 
 **Scaling par Rank** :
 
-| Rank | Scaling | Action Max | Icon |
-|------|---------|------------|------|
-| Minion | 0.5x | 4 | fa-chevron-down |
-| Normal | 1.0x | 6 | fa-chevron-up |
-| Elite | 1.5x | 8 | fa-chevrons-up |
-| Boss | 2.0x | 10 | fa-skull |
+| Rank   | Scaling | Action Max | Icon            |
+| ------ | ------- | ---------- | --------------- |
+| Minion | 0.5x    | 4          | fa-chevron-down |
+| Normal | 1.0x    | 6          | fa-chevron-up   |
+| Elite  | 1.5x    | 8          | fa-chevrons-up  |
+| Boss   | 2.0x    | 10         | fa-skull        |
 
 **Source** : `module/models/actor-adversary.mjs`
 
@@ -350,27 +350,27 @@ classDiagram
     class TypeDataModel {
         <<Foundry>>
     }
-    
+
     class CruciblePhysicalItem {
         +quantity
         +weight
         +price
         +equipped
     }
-    
+
     class CrucibleWeaponItem {
         +damage
         +scaling
         +properties
         +actions
     }
-    
+
     class CrucibleArmorItem {
         +armor
         +speed
         +properties
     }
-    
+
     class CrucibleTalentItem {
         +category
         +tags
@@ -378,14 +378,14 @@ classDiagram
         +actions
         +effects
     }
-    
+
     class CrucibleSpellItem {
         +gesture
         +rune
         +inflections
         +actions
     }
-    
+
     TypeDataModel <|-- CruciblePhysicalItem
     CruciblePhysicalItem <|-- CrucibleWeaponItem
     CruciblePhysicalItem <|-- CrucibleArmorItem
@@ -409,13 +409,13 @@ static defineSchema() {
     equipped: new BooleanField(),
     attuned: new BooleanField(),
     identified: new BooleanField(),
-    
+
     price: new SchemaField({
       gold: new NumberField({min: 0}),
       silver: new NumberField({min: 0}),
       copper: new NumberField({min: 0})
     }),
-    
+
     rarity: new StringField({
       choices: ["common", "uncommon", "rare", "epic", "legendary"]
     })
@@ -450,15 +450,15 @@ totalValue = price (en copper)
 ```javascript
 static defineSchema() {
   const schema = super.defineSchema();
-  
+
   schema.category = new StringField({
     choices: SYSTEM.WEAPON.CATEGORIES
   });
-  
+
   schema.properties = new SetField(new StringField({
     choices: SYSTEM.WEAPON.PROPERTIES
   }));
-  
+
   schema.damage = new SchemaField({
     base: new StringField(),      // "2d6"
     type: new StringField(),       // "physical"
@@ -467,15 +467,15 @@ static defineSchema() {
       formula: new StringField()   // "@abilities.str.value"
     })
   });
-  
+
   schema.hands = new NumberField({choices: [0, 1, 2]});
-  
+
   schema.range = new SchemaField({
     reach: new NumberField(),
     thrown: new NumberField(),
     increment: new NumberField()
   });
-  
+
   return schema;
 }
 ```
@@ -501,24 +501,24 @@ static defineSchema() {
 ```javascript
 static defineSchema() {
   const schema = super.defineSchema();
-  
+
   schema.category = new StringField({
     choices: ["unarmored", "light", "medium", "heavy", "shield"]
   });
-  
+
   schema.armor = new SchemaField({
     value: new NumberField({min: 0}),
     soak: new NumberField({min: 0})
   });
-  
+
   schema.speed = new SchemaField({
     penalty: new NumberField({min: 0})
   });
-  
+
   schema.properties = new SetField(new StringField({
     choices: SYSTEM.ARMOR.PROPERTIES
   }));
-  
+
   return schema;
 }
 ```
@@ -546,24 +546,24 @@ static defineSchema() {
       primary: new StringField(),
       secondary: new StringField()
     }),
-    
+
     node: new SchemaField({
       id: new StringField(),
       tier: new NumberField({min: 1, max: 4}),
       parent: new StringField(),
       coordinate: new SchemaField({x, y})
     }),
-    
+
     prerequisite: new StringField(),
-    
+
     actions: new ArrayField(
       new EmbeddedDataField(CrucibleAction)
     ),
-    
+
     effects: new ArrayField(
       new ObjectField() // ActiveEffect data
     ),
-    
+
     tags: new SetField(new StringField())
   };
 }
@@ -586,7 +586,7 @@ graph TB
         T2[Tier 2: Advanced]
         T3[Tier 3: Expert]
         T4[Tier 4: Master]
-        
+
         T1 --> T2
         T2 --> T3
         T3 --> T4
@@ -609,17 +609,17 @@ static defineSchema() {
     gesture: new StringField({
       choices: SYSTEM.SPELL.GESTURES
     }),
-    
+
     rune: new StringField({
       choices: SYSTEM.SPELL.RUNES
     }),
-    
+
     inflections: new ArrayField(
       new StringField({choices: SYSTEM.SPELL.INFLECTIONS})
     ),
-    
+
     circle: new NumberField({min: 1, max: 9}),
-    
+
     actions: new ArrayField(
       new EmbeddedDataField(CrucibleAction)
     )
@@ -662,19 +662,19 @@ static defineSchema() {
       primary: new StringField({choices: ABILITIES}),
       secondary: new StringField({choices: ABILITIES})
     }),
-    
+
     resistances: new SchemaField({
       resistance: new StringField({choices: DAMAGE_TYPES}),
       vulnerability: new StringField({choices: DAMAGE_TYPES})
     }),
-    
+
     movement: new SchemaField({
       size: new NumberField({min: 1, max: 10}),
       stride: new NumberField({min: 5})
     }),
-    
+
     languages: new SetField(new StringField()),
-    
+
     gifts: new ArrayField(new StringField())
   };
 }
@@ -696,13 +696,13 @@ static defineSchema() {
     skills: new ArrayField(
       new StringField({choices: SKILLS})
     ),
-    
+
     knowledge: new SetField(new StringField()),
-    
+
     languages: new SetField(new StringField()),
-    
+
     equipment: new ArrayField(new ObjectField()),
-    
+
     currency: new SchemaField({
       gold, silver, copper
     })
@@ -726,14 +726,14 @@ static defineSchema() {
 static defineSchema() {
   return {
     round: new NumberField({min: 1}),
-    
+
     heroism: new SchemaField({
       actions: new NumberField({min: 0}),
       awarded: new NumberField({min: 0}),
       previous: new NumberField(),
       next: new NumberField()
     }),
-    
+
     status: new StringField({
       choices: ["active", "complete", "defeated"]
     })
@@ -764,7 +764,7 @@ graph LR
 static defineSchema() {
   return {
     turns: new NumberField({min: 0}),
-    
+
     progress: new SchemaField({
       value: new NumberField({min: 0}),
       max: new NumberField({min: 0})
@@ -814,20 +814,20 @@ static defineSchema() {
     img: new FilePathField({categories: ["IMAGE"]}),
     description: new HTMLField(),
     condition: new StringField(),
-    
+
     cost: new SchemaField({
       action: new NumberField({min: 0, integer: true}),
       focus: new NumberField({min: 0, integer: true}),
       heroism: new NumberField({min: 0, integer: true}),
       weapon: new BooleanField()
     }),
-    
+
     range: new SchemaField({
       minimum: new NumberField({min: 1, nullable: true}),
       maximum: new NumberField({min: 1, nullable: true}),
       weapon: new BooleanField()
     }),
-    
+
     target: new SchemaField({
       type: new StringField({
         choices: ["none", "single", "multiple", "area", "cone", "line"]
@@ -840,11 +840,11 @@ static defineSchema() {
       limit: new NumberField({min: 1, integer: true}),
       self: new BooleanField()
     }),
-    
+
     effects: new ArrayField(new ObjectField()),
-    
+
     tags: new SetField(new StringField()),
-    
+
     actionHooks: new ArrayField(new SchemaField({
       hook: new StringField({choices: ACTION_HOOKS}),
       fn: new JavaScriptField({async: true})
@@ -896,7 +896,7 @@ inflections: CrucibleSpellcraftInflection[]
 // Construction dynamique
 _prepareData() {
   super._prepareData();
-  
+
   // Combine gesture + rune + inflections
   this.#buildSpellProperties();
 }
@@ -919,15 +919,15 @@ static defineSchema() {
     name: new StringField(),
     description: new HTMLField(),
     icon: new StringField(),
-    
+
     cost: new SchemaField({
       action, focus
     }),
-    
+
     range: new SchemaField({
       minimum, maximum
     }),
-    
+
     target: new SchemaField({
       type, number, size
     })
@@ -953,7 +953,7 @@ static defineSchema() {
     description: new HTMLField(),
     icon: new StringField(),
     element: new StringField(),
-    
+
     effects: new ArrayField(new ObjectField())
   };
 }
@@ -976,9 +976,9 @@ static defineSchema() {
     name: new StringField(),
     description: new HTMLField(),
     icon: new StringField(),
-    
+
     modifiers: new ArrayField(new ObjectField()),
-    
+
     cost: new SchemaField({
       focus: new NumberField()
     })
@@ -1007,11 +1007,11 @@ Crucible définit des champs personnalisés réutilisables.
 class AbilityField extends SchemaField {
   constructor() {
     super({
-      base: new NumberField({min: 0, max: 12}),
-      increases: new NumberField({min: 0}),
+      base: new NumberField({ min: 0, max: 12 }),
+      increases: new NumberField({ min: 0 }),
       bonus: new NumberField(),
-      value: new NumberField({min: 0, max: 12})
-    });
+      value: new NumberField({ min: 0, max: 12 }),
+    })
   }
 }
 
@@ -1019,10 +1019,10 @@ class AbilityField extends SchemaField {
 class ResourceField extends SchemaField {
   constructor() {
     super({
-      value: new NumberField({min: 0}),
-      max: new NumberField({min: 0}),
-      temp: new NumberField({min: 0})
-    });
+      value: new NumberField({ min: 0 }),
+      max: new NumberField({ min: 0 }),
+      temp: new NumberField({ min: 0 }),
+    })
   }
 }
 ```
@@ -1036,13 +1036,13 @@ classDiagram
     class TypeDataModel {
         <<Foundry>>
     }
-    
+
     %% Actors
     class CrucibleBaseActor
     class CrucibleHeroActor
     class CrucibleAdversaryActor
     class CrucibleGroupActor
-    
+
     %% Items
     class CruciblePhysicalItem
     class CrucibleWeaponItem
@@ -1051,21 +1051,21 @@ classDiagram
     class CrucibleSpellItem
     class CrucibleAncestryItem
     class CrucibleBackgroundItem
-    
+
     %% Combat
     class CrucibleCombatChallenge
     class CrucibleExplorationChallenge
     class CrucibleSocialChallenge
-    
+
     %% Actions
     class CrucibleAction
     class CrucibleSpellAction
-    
+
     TypeDataModel <|-- CrucibleBaseActor
     CrucibleBaseActor <|-- CrucibleHeroActor
     CrucibleBaseActor <|-- CrucibleAdversaryActor
     TypeDataModel <|-- CrucibleGroupActor
-    
+
     TypeDataModel <|-- CruciblePhysicalItem
     CruciblePhysicalItem <|-- CrucibleWeaponItem
     CruciblePhysicalItem <|-- CrucibleArmorItem
@@ -1073,11 +1073,11 @@ classDiagram
     TypeDataModel <|-- CrucibleSpellItem
     TypeDataModel <|-- CrucibleAncestryItem
     TypeDataModel <|-- CrucibleBackgroundItem
-    
+
     TypeDataModel <|-- CrucibleCombatChallenge
     TypeDataModel <|-- CrucibleExplorationChallenge
     TypeDataModel <|-- CrucibleSocialChallenge
-    
+
     DataModel <|-- CrucibleAction
     CrucibleAction <|-- CrucibleSpellAction
 ```
@@ -1086,38 +1086,38 @@ classDiagram
 
 ## Résumé des Models
 
-| Model | Type | Fichier | Hérite de |
-|-------|------|---------|-----------|
-| **Actors** |
-| CrucibleBaseActor | Abstract | actor-base.mjs | TypeDataModel |
-| CrucibleHeroActor | Concrete | actor-hero.mjs | BaseActor |
-| CrucibleAdversaryActor | Concrete | actor-adversary.mjs | BaseActor |
-| CrucibleGroupActor | Concrete | actor-group.mjs | TypeDataModel |
-| **Items** |
-| CruciblePhysicalItem | Abstract | item-physical.mjs | TypeDataModel |
-| CrucibleWeaponItem | Concrete | item-weapon.mjs | PhysicalItem |
-| CrucibleArmorItem | Concrete | item-armor.mjs | PhysicalItem |
-| CrucibleAccessoryItem | Concrete | item-accessory.mjs | PhysicalItem |
-| CrucibleConsumableItem | Concrete | item-consumable.mjs | PhysicalItem |
-| CrucibleTalentItem | Concrete | item-talent.mjs | TypeDataModel |
-| CrucibleSpellItem | Concrete | item-spell.mjs | TypeDataModel |
-| CrucibleAncestryItem | Concrete | item-ancestry.mjs | TypeDataModel |
-| CrucibleBackgroundItem | Concrete | item-background.mjs | TypeDataModel |
-| CrucibleArchetypeItem | Concrete | item-archetype.mjs | TypeDataModel |
-| CrucibleTaxonomyItem | Concrete | item-taxonomy.mjs | TypeDataModel |
-| CrucibleSchematicItem | Concrete | item-schematic.mjs | PhysicalItem |
-| CrucibleLootItem | Concrete | item-loot.mjs | PhysicalItem |
-| **Combat** |
-| CrucibleCombatChallenge | Concrete | combat-combat.mjs | TypeDataModel |
-| CrucibleExplorationChallenge | Concrete | combat-exploration.mjs | TypeDataModel |
-| CrucibleSocialChallenge | Concrete | combat-social.mjs | TypeDataModel |
-| **Actions** |
-| CrucibleAction | Concrete | action.mjs | DataModel |
-| CrucibleSpellAction | Concrete | spell-action.mjs | CrucibleAction |
-| **Spellcraft** |
-| CrucibleSpellcraftGesture | Concrete | spellcraft-gesture.mjs | TypeDataModel |
-| CrucibleSpellcraftRune | Concrete | spellcraft-rune.mjs | TypeDataModel |
-| CrucibleSpellcraftInflection | Concrete | spellcraft-inflection.mjs | TypeDataModel |
+| Model                        | Type     | Fichier                   | Hérite de      |
+| ---------------------------- | -------- | ------------------------- | -------------- |
+| **Actors**                   |
+| CrucibleBaseActor            | Abstract | actor-base.mjs            | TypeDataModel  |
+| CrucibleHeroActor            | Concrete | actor-hero.mjs            | BaseActor      |
+| CrucibleAdversaryActor       | Concrete | actor-adversary.mjs       | BaseActor      |
+| CrucibleGroupActor           | Concrete | actor-group.mjs           | TypeDataModel  |
+| **Items**                    |
+| CruciblePhysicalItem         | Abstract | item-physical.mjs         | TypeDataModel  |
+| CrucibleWeaponItem           | Concrete | item-weapon.mjs           | PhysicalItem   |
+| CrucibleArmorItem            | Concrete | item-armor.mjs            | PhysicalItem   |
+| CrucibleAccessoryItem        | Concrete | item-accessory.mjs        | PhysicalItem   |
+| CrucibleConsumableItem       | Concrete | item-consumable.mjs       | PhysicalItem   |
+| CrucibleTalentItem           | Concrete | item-talent.mjs           | TypeDataModel  |
+| CrucibleSpellItem            | Concrete | item-spell.mjs            | TypeDataModel  |
+| CrucibleAncestryItem         | Concrete | item-ancestry.mjs         | TypeDataModel  |
+| CrucibleBackgroundItem       | Concrete | item-background.mjs       | TypeDataModel  |
+| CrucibleArchetypeItem        | Concrete | item-archetype.mjs        | TypeDataModel  |
+| CrucibleTaxonomyItem         | Concrete | item-taxonomy.mjs         | TypeDataModel  |
+| CrucibleSchematicItem        | Concrete | item-schematic.mjs        | PhysicalItem   |
+| CrucibleLootItem             | Concrete | item-loot.mjs             | PhysicalItem   |
+| **Combat**                   |
+| CrucibleCombatChallenge      | Concrete | combat-combat.mjs         | TypeDataModel  |
+| CrucibleExplorationChallenge | Concrete | combat-exploration.mjs    | TypeDataModel  |
+| CrucibleSocialChallenge      | Concrete | combat-social.mjs         | TypeDataModel  |
+| **Actions**                  |
+| CrucibleAction               | Concrete | action.mjs                | DataModel      |
+| CrucibleSpellAction          | Concrete | spell-action.mjs          | CrucibleAction |
+| **Spellcraft**               |
+| CrucibleSpellcraftGesture    | Concrete | spellcraft-gesture.mjs    | TypeDataModel  |
+| CrucibleSpellcraftRune       | Concrete | spellcraft-rune.mjs       | TypeDataModel  |
+| CrucibleSpellcraftInflection | Concrete | spellcraft-inflection.mjs | TypeDataModel  |
 
 ---
 

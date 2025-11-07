@@ -117,10 +117,10 @@ Suite à votre demande d'enrichir la documentation avec les **Patterns**, **Mode
    - Validations à chaque étape
 
 2. **Utilisation d'Action** - Workflow complet en 5 phases
-   - Phase 1 : Validation (_canUse)
+   - Phase 1 : Validation (\_canUse)
    - Phase 2 : Configuration (dialog, targets)
-   - Phase 3 : Activation (_preActivate,_roll)
-   - Phase 4 : Finalisation (_post, outcomes)
+   - Phase 3 : Activation (\_preActivate,\_roll)
+   - Phase 4 : Finalisation (\_post, outcomes)
    - Phase 5 : Confirmation (applyOutcome, reverse possible)
    - Hooks du cycle de vie
 
@@ -153,7 +153,7 @@ Suite à votre demande d'enrichir la documentation avec les **Patterns**, **Mode
    - Drop items
 
 8. **Compendium** - Workflow de compilation
-   - Édition YAML dans _source/
+   - Édition YAML dans \_source/
    - npm run compile
    - Validation schémas
    - Génération IDs
@@ -174,18 +174,18 @@ Suite à votre demande d'enrichir la documentation avec les **Patterns**, **Mode
 
 ### Analyse approfondie
 
-| Fichier | Lignes lues | Analyse |
-|---------|-------------|---------|
-| `module/models/action.mjs` | 1-1734 (complet) | Workflow action, Command pattern |
-| `module/models/actor-hero.mjs` | 1-324 (complet) | Advancement, progression |
-| `module/models/actor-base.mjs` | 1-800+ | Template Method pattern |
-| `module/applications/sheets/hero-creation-sheet.mjs` | 1-868 (complet) | State pattern, workflow création |
-| `module/models/spell-action.mjs` | 1-150 | Spellcasting workflow |
-| `module/models/spellcraft-*.mjs` | Tous | Spellcraft models |
-| `module/models/item-*.mjs` | 15 fichiers | Tous les item models |
-| `module/models/combat-*.mjs` | 3 fichiers | Combat models |
-| `module/config/system.mjs` | 1-183 (complet) | Configuration hierarchy, enums |
-| `crucible.mjs` | 1-200 / 768 total | Initialisation, API exposure |
+| Fichier                                              | Lignes lues       | Analyse                          |
+| ---------------------------------------------------- | ----------------- | -------------------------------- |
+| `module/models/action.mjs`                           | 1-1734 (complet)  | Workflow action, Command pattern |
+| `module/models/actor-hero.mjs`                       | 1-324 (complet)   | Advancement, progression         |
+| `module/models/actor-base.mjs`                       | 1-800+            | Template Method pattern          |
+| `module/applications/sheets/hero-creation-sheet.mjs` | 1-868 (complet)   | State pattern, workflow création |
+| `module/models/spell-action.mjs`                     | 1-150             | Spellcasting workflow            |
+| `module/models/spellcraft-*.mjs`                     | Tous              | Spellcraft models                |
+| `module/models/item-*.mjs`                           | 15 fichiers       | Tous les item models             |
+| `module/models/combat-*.mjs`                         | 3 fichiers        | Combat models                    |
+| `module/config/system.mjs`                           | 1-183 (complet)   | Configuration hierarchy, enums   |
+| `crucible.mjs`                                       | 1-200 / 768 total | Initialisation, API exposure     |
 
 ### Recherches grep
 
@@ -208,13 +208,13 @@ grep "workflow" → 20+ références
 
 ### Documents créés
 
-| Document | Lignes | Diagrammes | Éléments Documentés |
-|----------|--------|------------|---------------------|
-| PATTERNS.md | 653 | 13 | 13 patterns |
-| MODELS.md | 1127 | 10 | 24+ models |
-| WORKFLOWS.md | 1370 | 30+ | 8 workflows |
-| README.md (architecture) | 234 | 0 | Guide lecture |
-| **TOTAL** | **3384** | **53** | **45 éléments** |
+| Document                 | Lignes   | Diagrammes | Éléments Documentés |
+| ------------------------ | -------- | ---------- | ------------------- |
+| PATTERNS.md              | 653      | 13         | 13 patterns         |
+| MODELS.md                | 1127     | 10         | 24+ models          |
+| WORKFLOWS.md             | 1370     | 30+        | 8 workflows         |
+| README.md (architecture) | 234      | 0          | Guide lecture       |
+| **TOTAL**                | **3384** | **53**     | **45 éléments**     |
 
 ### Couverture codebase
 
@@ -244,7 +244,7 @@ Mise à jour des sections :
 
 - **Documents Disponibles** : Ajout PATTERNS.md, MODELS.md, WORKFLOWS.md
 - **Recherche par Concept** : 12 entrées (ajout Patterns, Workflows, Models)
-- **Recherche par Fichier** : 15 entrées (ajout models/*, applications/sheets/*)
+- **Recherche par Fichier** : 15 entrées (ajout models/_, applications/sheets/_)
 - **Recherche par Tâche** : 9 entrées (ajout "Comprendre un pattern/workflow/model")
 - **Statistiques** : Mise à jour (11 docs, 60+ diagrammes, 7000+ lignes)
 

@@ -3,6 +3,7 @@
 You are writing commit messages for a professional project in English, following the semantic commit convention.
 
 ## 🎯 Objective
+
 Generate informative and consistent commit messages using the following structure.
 
 ## 📌 Expected Format

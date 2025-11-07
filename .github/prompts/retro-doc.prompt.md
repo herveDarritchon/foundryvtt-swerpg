@@ -13,7 +13,7 @@ Look at all the project #search/codebase :
 - Identify all the major Workflows implemented in the code, and document them.
 
 - when you write functional requirements, use the format:
-- **Requirement**:  Short description of the requirement.
+- **Requirement**: Short description of the requirement.
 - **Type**: Must/Should/Could/Won't
 - **Rationale**: Explanation of why this requirement is needed.
 - **Source**: Reference to the code or module that implements this requirement.

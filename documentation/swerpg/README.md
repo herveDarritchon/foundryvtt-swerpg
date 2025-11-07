@@ -201,4 +201,4 @@ swerpg/
 
 ---
 
-*Cette documentation est maintenue par Hervé Darritchon et la communauté des contributeurs.*
+_Cette documentation est maintenue par Hervé Darritchon et la communauté des contributeurs._

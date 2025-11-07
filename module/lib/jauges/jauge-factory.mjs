@@ -1,6 +1,6 @@
-import WoundsJauge from "./wounds-jauge.mjs";
-import StrainJauge from "./strain-jauge.mjs";
-import EncumbranceJauge from "./encumbrance-jauge.mjs";
+import WoundsJauge from './wounds-jauge.mjs'
+import StrainJauge from './strain-jauge.mjs'
+import EncumbranceJauge from './encumbrance-jauge.mjs'
 
 /**
  * @typedef {WoundsJauge | StrainJauge | EncumbranceJauge} JaugeInstance
@@ -27,23 +27,23 @@ import EncumbranceJauge from "./encumbrance-jauge.mjs";
  */
 
 export default class JaugeFactory {
-    /**
-     * Creates a jauge display data object based on the provided parameters.
-     * @param {string} type - The type of jauge (e.g., "wounds", "strain", "encumbrance").
-     * @param {number} value - The current value of the jauge.
-     * @param {number} max - The maximum value of the jauge.
-     * @returns {JaugeInstance} The jauge display data object.
-     */
-    static build(type, value, max) {
-        switch (type) {
-            case "wounds":
-                return new WoundsJauge(value, max);
-            case "strain":
-                return new StrainJauge(value, max);
-            case "encumbrance":
-                return new EncumbranceJauge(value, max);
-            default:
-                throw new Error(`Unknown jauge type: ${type}`);
-        }
+  /**
+   * Creates a jauge display data object based on the provided parameters.
+   * @param {string} type - The type of jauge (e.g., "wounds", "strain", "encumbrance").
+   * @param {number} value - The current value of the jauge.
+   * @param {number} max - The maximum value of the jauge.
+   * @returns {JaugeInstance} The jauge display data object.
+   */
+  static build(type, value, max) {
+    switch (type) {
+      case 'wounds':
+        return new WoundsJauge(value, max)
+      case 'strain':
+        return new StrainJauge(value, max)
+      case 'encumbrance':
+        return new EncumbranceJauge(value, max)
+      default:
+        throw new Error(`Unknown jauge type: ${type}`)
     }
+  }
 }

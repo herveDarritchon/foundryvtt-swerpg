@@ -5,6 +5,7 @@ Documentation de l'architecture des arbres de talents et du système de progress
 ## 🌳 Architecture des Talents
 
 ### SwerpgTalentNode
+
 - Registre global des nœuds
 - Gestion des prérequis
 - Relations hiérarchiques
