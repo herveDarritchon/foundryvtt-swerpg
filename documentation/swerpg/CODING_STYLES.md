@@ -1,33 +1,28 @@
-# SWERPG — Guide de Style de Code (Foundry VTT v13+)
+# SWERPG — Coding Style (Foundry VTT v13+, JavaScript)
 
-> **Objectif** : établir un cadre clair, cohérent et « Star Wars‑friendly » pour tout le code du système **SWERPG** (Star Wars Edge RPG) basé sur les systèmes Edge of the Empire, Age of Rebellion et Force and Destiny. Ce document vivant accompagne la base de code et sert de checklist lors des PR.
-
----
-
-## 1) Philosophie
-
-* **Lisibilité avant tout** : privilégier la clarté au code « clever ». Chaque module doit être compréhensible en 5 minutes.
-* **API Foundry idiomatique** : utiliser `ApplicationV2`, `HandlebarsApplicationMixin`, `TypeDataModel`, `foundry.utils` selon les standards v13.
-* **Architecture modulaire** : séparation claire entre *Data Models* (`/models/`), *UI* (`/applications/`), *Configuration* (`/config/`), *Hooks* (`/hooks/`).
-* **Principes SOLID** : responsabilité unique pour chaque classe, composabilité, injection de dépendances via utilitaires.
-* **Code testable** : logique métier testée avec Vitest, séparation des préoccupations pour faciliter les mocks.
-* **Identité Star Wars** : variables CSS thématiques, terminologie appropriée (wounds/strain, characteristics, etc.).
+> **Objectif** : un style guide court, actionnable, et **enforcé par les outils**. Il doit réduire la friction, rendre le code prévisible, faciliter l’onboarding, brancher ESLint/Prettier/tests sur des règles claires et limiter les débats sans fin. Si ce doc ne sert pas à ça, il est décoratif.
 
 ---
 
-## 2) Stack & Outils
+## 1) À quoi sert vraiment un coding‑style ?
 
-* **Langage** : **JavaScript ES2022** (modules `.mjs`) + **JSDoc** pour la documentation.
-* **Build System** : Scripts npm avec Rollup, LESS, et `@foundryvtt/foundryvtt-cli` pour les compendiums.
-* **Gestionnaire de paquets** : **pnpm** (lockfile : `pnpm-lock.yaml`).
-* **Tests** : **Vitest** avec couverture via `@vitest/coverage-v8`, environnement jsdom.
-* **Workflow de contenu** : YAML source (`_source/`) → LevelDB compilé (`packs/`) via `build.mjs`.
-* **Styles** : **LESS** → CSS avec variables thématiques Star Wars.
-* **Hot Reload** : Support intégré pour `.less`, `.css`, `.hbs`, `.json` via `system.json`.
+* **Réduire la friction** en review.
+* **Rendre le code prévisible** quelle que soit la zone.
+* **Faciliter l’onboarding** d’un nouveau.
+* **Outiller le projet** (lint/format/tests/CI) avec des règles nettes.
+* **Couper court aux débats** : on tranche une fois, on applique.
 
 ---
 
-## 3) Architecture du Projet
+## 2) Périmètre & philosophie
+
+* **Langage** : JavaScript **ES2022**, **pas de TypeScript** (JSDoc & `// @ts-check` facultatifs).
+* **Cible** : Foundry VTT **v13+**, navigateur moderne.
+* **Principes** : lisibilité > concision ; cohérence > préférences perso ; code testable ; zéro magie.
+
+---
+
+## 3) Organisation du code
 
 ```text
 module/
@@ -52,654 +47,250 @@ packs/                # Compendiums LevelDB compilés
 tests/                # Tests Vitest
 ```
 
-### Conventions de nommage
+### **Règles**
 
-* **Fichiers** : `kebab-case.mjs` pour les modules, `PascalCase.mjs` pour les classes principales.
-* **Classes** : `Swerpg{Type}` (ex: `SwerpgActor`, `SwerpgHero`, `SwerpgBaseActorSheet`).
-* **Exports** : `camelCase` pour les fonctions, `PascalCase` pour les classes.
-* **Templates** : `kebab-case.hbs`, partials avec préfixe `_partial-name.hbs`.
-* **Styles** : classes CSS avec préfixe `swerpg` ou `sw-`.
+* **Pas de logique métier** dans les templates Handlebars (vue = rendu).
+* **Une feuille = un fichier .mjs + un .hbs** ; événements via `data-action` ; aucun querySelector global.
+* **Données dérivées** dans `prepareDerivedData()` **sans effet de bord** (pas d’updates).
 
 ---
 
-## 4) Modules & Imports
+## 4) Nommage
 
-* **Extensions** : `.mjs` pour tous les modules JavaScript (respect de `"type": "module"`).
-* **Imports relatifs** : utiliser les chemins relatifs depuis la racine du module.
-* **Barrels** : `_module.mjs` dans chaque dossier principal pour les exports groupés.
-* **Exports par défaut** : privilégiés pour les classes principales, exports nommés pour les utilitaires.
-* **Structure d'imports** :
-
-  ```javascript
-  // Configuration et constants d'abord
-  import {SYSTEM} from "./config/system.mjs";
-  
-  // Modules internes
-  import * as applications from "./applications/_module.mjs";
-  import * as models from "./models/_module.mjs";
-  
-  // Classes spécifiques
-  import SwerpgActor from "./documents/actor.mjs";
-  ```
+* **Fichiers** : `kebab-case.mjs` ; **classes** : `PascalCase` ; **fonctions/vars** : `camelCase`.
+* **Fonctions** : verbe d’action (`createActor`, `updateTalentTree`).
+* **Constantes** : `SCREAMING_SNAKE_CASE` pour des invariants globaux.
+* **Suffixes** : `*Schema`, `*Config`, `*Model`, `*Service` ; booléens `is*/has*`.
+* **Templates** : `actor-sheet.hbs`, partials `_stats.hbs` (underscore pour partials).
 
 ---
 
-## 5) Data Models (TypeDataModel)
+## 5) Formatage & syntaxe (automatisés)
 
-Exemple basé sur votre architecture existante :
+> Le **formatage est 100% géré par Prettier**. Pas de débat en review.
 
-```javascript
-// module/models/hero.mjs
-export default class SwerpgHero extends foundry.abstract.TypeDataModel {
-  static defineSchema() {
-    const { fields } = foundry.data;
-    return {
-      // Caractéristiques de base Star Wars
-      characteristics: new fields.SchemaField({
-        brawn:     new fields.NumberField({ initial: 2, integer: true, min: 1, max: 6 }),
-        agility:   new fields.NumberField({ initial: 2, integer: true, min: 1, max: 6 }),
-        intellect: new fields.NumberField({ initial: 2, integer: true, min: 1, max: 6 }),
-        cunning:   new fields.NumberField({ initial: 2, integer: true, min: 1, max: 6 }),
-        willpower: new fields.NumberField({ initial: 2, integer: true, min: 1, max: 6 }),
-        presence:  new fields.NumberField({ initial: 2, integer: true, min: 1, max: 6 }),
-      }),
+* Indentation 2 espaces ; largeur 160 ; **guillemets simples** ; trailing commas **toujours**.
+* ESLint doit passer **sans erreur** ; sinon la PR ne merge pas.
 
-      // Seuils et défenses
-      wounds: new fields.SchemaField({
-        value: new fields.NumberField({ initial: 0, integer: true, min: 0 }),
-        threshold: new fields.NumberField({ initial: 10, integer: true, min: 0 }),
-      }),
-      strain: new fields.SchemaField({
-        value: new fields.NumberField({ initial: 0, integer: true, min: 0 }),
-        threshold: new fields.NumberField({ initial: 10, integer: true, min: 0 }),
-      }),
-      
-      // XP et progression
-      experience: new fields.SchemaField({
-        total: new fields.NumberField({ initial: 0, integer: true, min: 0 }),
-        available: new fields.NumberField({ initial: 0, integer: true, min: 0 }),
-      }),
-
-      // Compétences (référence aux IDs du système)
-      skills: new fields.ObjectField({ initial: {} }),
-      
-      // Obligations et motivations
-      obligations: new fields.ArrayField(new fields.StringField()),
-      motivations: new fields.ObjectField({ initial: {} }),
-    };
-  }
-
-  /** Calculs dérivés pour les seuils et défenses */
-  prepareDerivedData() {
-    // Seuil de blessures = Brawn + racial bonus
-    this.wounds.threshold = 10 + this.characteristics.brawn;
-    
-    // Seuil de fatigue = Willpower + racial bonus  
-    this.strain.threshold = 10 + this.characteristics.willpower;
-    
-    // Valeur d'absorption basée sur Brawn + armure
-    this.soak = this.characteristics.brawn + (this.parent?.system?.armor?.soak ?? 0);
-  }
-
-  /** Migration des données entre versions */
-  static migrateData(source) {
-    // Exemple : migration d'anciennes structures de données
-    if (source.wounds && typeof source.wounds === 'number') {
-      source.wounds = { value: 0, threshold: source.wounds };
-    }
-    return source;
-  }
-}
-```
-
-### Règles pour les Data Models
-
-* `prepareDerivedData()` : **calculs purs uniquement**, aucune modification de base de données.
-* **Validation** : utiliser les contraintes des `fields` (min, max, choices).
-* **Migrations** : toujours idempotentes, testées, documentées.
-* **Performance** : éviter les calculs coûteux, privilégier la mise en cache.
-* **Nommage** : correspondre aux termes Star Wars (wounds/strain vs HP/MP).
-
----
-
-## 6) Applications & Feuilles (ApplicationV2)
-
-Basé sur votre `SwerpgBaseActorSheet` existante :
-
-```javascript
-// module/applications/sheets/hero-sheet.mjs
-const {api, sheets} = foundry.applications;
-
-export default class HeroSheet extends api.HandlebarsApplicationMixin(sheets.ActorSheetV2) {
-  
-  static DEFAULT_OPTIONS = {
-    classes: ["swerpg", "actor", "hero", "standard-form"],
-    tag: "form",
-    position: { width: 900, height: 750 },
-    actions: {
-      rollSkill: HeroSheet.#onRollSkill,
-      itemCreate: HeroSheet.#onItemCreate,
-      itemEdit: HeroSheet.#onItemEdit,
-      itemDelete: HeroSheet.#onItemDelete,
-    },
-    form: { submitOnChange: true }
-  };
-
-  /** @override */
-  static PARTS = {
-    sidebar: {
-      id: "sidebar",
-      template: "systems/swerpg/templates/sheets/actor/sidebar.hbs"
-    },
-    characteristics: {
-      id: "characteristics", 
-      template: "systems/swerpg/templates/sheets/actor/characteristics.hbs"
-    },
-    skills: {
-      id: "skills",
-      template: "systems/swerpg/templates/sheets/actor/skills.hbs"
-    },
-    inventory: {
-      id: "inventory",
-      template: "systems/swerpg/templates/sheets/actor/inventory.hbs"
-    }
-  };
-
-  /** @override */
-  async _prepareContext(options) {
-    const context = await super._prepareContext(options);
-    const system = this.actor.system;
-    
-    return foundry.utils.mergeObject(context, {
-      // Données du système Star Wars
-      characteristics: system.characteristics,
-      wounds: system.wounds,
-      strain: system.strain,
-      soak: system.soak,
-      
-      // Compétences organisées par caractéristique
-      skillsByCharacteristic: this.#organizeSkillsByCharacteristic(),
-      
-      // Items catégorisés
-      weapons: this.actor.itemTypes.weapon,
-      armor: this.actor.itemTypes.armor,
-      talents: this.actor.itemTypes.talent,
-      
-      // Flags d'état
-      isOwner: this.actor.isOwner,
-      editable: this.isEditable
-    });
-  }
-
-  /** Organise les compétences par caractéristique liée */
-  #organizeSkillsByCharacteristic() {
-    const skills = this.actor.itemTypes.skill;
-    const organized = {};
-    
-    for (const skill of skills) {
-      const char = skill.system.characteristic;
-      if (!organized[char]) organized[char] = [];
-      organized[char].push(skill);
-    }
-    
-    return organized;
-  }
-
-  /** @param {Event} event */
-  static async #onRollSkill(event, target) {
-    const skillId = target.dataset.skillId;
-    const skill = this.actor.items.get(skillId);
-    if (!skill) return;
-    
-    // Utilisation du système d'action existant
-    const action = skill.actions?.[0]?.bind(this.actor);
-    if (action) await action.use();
-  }
-
-  /** @param {Event} event */
-  static async #onItemCreate(event, target) {
-    const type = target.dataset.type;
-    const itemData = {
-      type,
-      name: game.i18n.format("SWERPG.Item.New", { type: type.titleCase() }),
-      system: {}
-    };
-    
-    return this.actor.createEmbeddedDocuments("Item", [itemData]);
-  }
-}
-```
-
-### Règles pour les Applications
-
-* **Actions** : définir via `DEFAULT_OPTIONS.actions` et méthodes statiques privées `#onX`.
-* **Contexte** : préparer toutes les données dans `_prepareContext()`, pas dans les templates.
-* **Performance** : éviter les calculs répétés, utiliser la mise en cache.
-* **Accessibilité** : `aria-label`, `data-tooltip`, navigation clavier.
-* **Réactivité** : `form.submitOnChange` pour la persistance automatique.
-
----
-
-## 7) Configuration Système
-
-Centralisation dans `module/config/system.mjs` :
-
-```javascript
-// module/config/system.mjs
-import * as SKILL from "./skills.mjs";
-import * as WEAPON from "./weapon.mjs";
-import * as ARMOR from "./armor.mjs";
-
-export const SYSTEM_ID = "swerpg";
-
-/**
- * Configuration des packs de compendium
- * @enum {string}
- */
-export const COMPENDIUM_PACKS = {
-  species: "swerpg.species",
-  careers: "swerpg.careers", 
-  specializations: "swerpg.specializations",
-  talents: "swerpg.talents",
-  weapons: "swerpg.weapons",
-  armor: "swerpg.armor",
-  gear: "swerpg.gears"
-};
-
-/**
- * Caractéristiques de base Star Wars
- * @enum {string}
- */
-export const CHARACTERISTICS = {
-  brawn: "SWERPG.Characteristics.Brawn",
-  agility: "SWERPG.Characteristics.Agility", 
-  intellect: "SWERPG.Characteristics.Intellect",
-  cunning: "SWERPG.Characteristics.Cunning",
-  willpower: "SWERPG.Characteristics.Willpower",
-  presence: "SWERPG.Characteristics.Presence"
-};
-
-/**
- * Configuration système complète
- */
-export const SYSTEM = {
-  ID: SYSTEM_ID,
-  COMPENDIUM_PACKS,
-  CHARACTERISTICS,
-  SKILL,
-  WEAPON,
-  ARMOR
-};
-```
-
----
-
-## 8) Gestion du Contenu (Compendiums)
-
-Workflow YAML → LevelDB :
-
-```bash
-# Extraction des packs binaires vers YAML
-npm run extract
-
-# Compilation YAML → packs binaires  
-npm run compile
-
-# Build complet (compile + rollup + less)
-npm run build
-```
-
-Structure des fichiers source :
-
-```text
-_source/
-  species/
-    Human_human000000000.yml
-    Twi_lek_twilek0000000.yml
-  careers/
-    Bounty_Hunter_bountyHunter0000.yml
-  weapons/
-    Blaster_Pistol_blasterPistol.yml
-```
-
-### Règles de contenu
-
-* **IDs stables** : utiliser `generateId(name, length)` pour la cohérence.
-* **Validation** : schémas stricts dans les modèles TypeDataModel.
-* **Références** : utiliser les UUIDs compendium `Compendium.swerpg.{pack}.Item.{id}`.
-* **Traduction** : séparer le contenu statique de l'i18n.
-
----
-
-## 9) Internationalisation (i18n)
-
-Structure des clés selon la hiérarchie fonctionnelle :
+`.prettierrc`
 
 ```json
-{
-  "SWERPG": {
-    "Actor": {
-      "Types": {
-        "hero": "Héros",
-        "character": "Personnage",
-        "adversary": "Adversaire"
-      }
-    },
-    "Characteristics": {
-      "Brawn": "Vigueur",
-      "Agility": "Agilité", 
-      "Intellect": "Intelligence",
-      "Cunning": "Ruse",
-      "Willpower": "Volonté",
-      "Presence": "Présence"
-    },
-    "Skills": {
-      "Categories": {
-        "general": "Générales",
-        "combat": "Combat", 
-        "social": "Sociales"
-      }
-    }
-  }
-}
-```
-
-### Conventions i18n
-
-* **Clés** : `SWERPG.Domain.Subdomain.Key` (hiérarchie claire).
-* **Pluriels** : utiliser `game.i18n.format()` avec des variables.
-* **Templates** : helper `{{t "SWERPG.Key" data=context}}`.
-* **Cohérence** : révision systématique des chaînes lors des PR.
-
----
-
-## 10) Styles & Thématique Star Wars
-
-Variables CSS dans `styles/variables.less` :
-
-```less
-// Palette thématique Star Wars
-:root {
-  // Couleurs principales
-  --swerpg-blue-holo: #00d4ff;        // Hologramme bleu
-  --swerpg-red-imperial: #cc0000;     // Rouge Impérial
-  --swerpg-orange-rebel: #ff6600;     // Orange Rebelle
-  --swerpg-yellow-jedi: #ffcc00;      // Jaune Jedi
-  
-  // Tons neutres
-  --swerpg-gray-dark: #1a1a1a;        // Fond sombre
-  --swerpg-gray-medium: #404040;      // Éléments UI
-  --swerpg-gray-light: #cccccc;       // Texte secondaire
-  --swerpg-white: #ffffff;            // Texte principal
-  
-  // Métriques
-  --swerpg-border-radius: 4px;
-  --swerpg-spacing-sm: 8px;
-  --swerpg-spacing-md: 16px;
-  --swerpg-spacing-lg: 32px;
-}
-
-// Classes utilitaires
-.swerpg {
-  &.sheet {
-    background: linear-gradient(135deg, var(--swerpg-gray-dark) 0%, #000 100%);
-    color: var(--swerpg-white);
-    border: 1px solid var(--swerpg-blue-holo);
-  }
-  
-  .characteristic-block {
-    background: rgba(0, 212, 255, 0.1);
-    border-left: 3px solid var(--swerpg-blue-holo);
-    padding: var(--swerpg-spacing-md);
-  }
-  
-  .imperial-red { color: var(--swerpg-red-imperial); }
-  .rebel-orange { color: var(--swerpg-orange-rebel); }
-  .jedi-yellow { color: var(--swerpg-yellow-jedi); }
-}
-```
-
-### Guidelines UX
-
-* **Animations** : < 200ms, respecter `prefers-reduced-motion`.
-* **Contraste** : minimum WCAG AA (4.5:1).
-* **Focus** : indicateurs visuels clairs pour la navigation clavier.
-* **Responsive** : adaptation mobile via flexbox/grid.
-
----
-
-## 11) Actions & Système de Dés
-
-Encapsulation des mécaniques de jeu :
-
-```javascript
-// module/dice/swerpg-roll.mjs
-export class SwerpgRoll extends Roll {
-  
-  constructor(formula, data = {}, options = {}) {
-    super(formula, data, options);
-    this.swerpgData = {
-      difficulty: options.difficulty || "average",
-      characteristic: options.characteristic,
-      skill: options.skill,
-      upgrades: options.upgrades || 0
-    };
-  }
-  
-  /** Construction de la pool de dés Star Wars */
-  static buildDicePool(characteristic, skill, difficulty = "average", upgrades = 0) {
-    const pool = {
-      ability: Math.max(characteristic, skill),
-      proficiency: Math.min(characteristic, skill),
-      difficulty: DIFFICULTY_DICE[difficulty] || 2,
-      challenge: upgrades
-    };
-    
-    // Upgrade logic: ability → proficiency, difficulty → challenge
-    pool.proficiency += Math.min(pool.ability, upgrades);
-    pool.ability = Math.max(0, pool.ability - upgrades);
-    
-    return pool;
-  }
-  
-  /** Évaluation avec symbolisme Star Wars */
-  async evaluate(options = {}) {
-    await super.evaluate(options);
-    
-    this.swerpgResult = {
-      success: this.countSymbol("success"),
-      advantage: this.countSymbol("advantage"), 
-      triumph: this.countSymbol("triumph"),
-      failure: this.countSymbol("failure"),
-      threat: this.countSymbol("threat"),
-      despair: this.countSymbol("despair")
-    };
-    
-    return this;
-  }
-}
+{ "printWidth": 160, "tabWidth": 2, "singleQuote": true, "trailingComma": "all" }
 ```
 
 ---
 
-## 12) Tests avec Vitest
+## 6) Usage du langage
 
-Structure des tests par domaine fonctionnel :
+* `const` par défaut ; `let` si mutation ; **jamais** `var`.
+* **`===` obligatoire** (`eqeqeq`) ; **pas** de mutation de paramètres (copie défensive si besoin).
+* Modules **ES** (`import/export`) ; pas de `require`.
+* Préférer **`async/await`** aux `.then()` ; toujours gérer les rejets.
+* Gestion d’erreur : `try/catch` + **logger** central ; pas de `console.log` en prod.
+* Foundry : pas d’accès sauvage aux globaux ; wrappers minces quand utile (flags, i18n, logs).
 
-```javascript
-// tests/lib/characteristics/characteristic-calculator.test.mjs
-import { describe, it, expect } from 'vitest';
-import CharacteristicCalculator from '@/module/lib/characteristics/characteristic-calculator.mjs';
+---
 
-describe('CharacteristicCalculator', () => {
-  
-  it('calcule le coût d\'amélioration correct', () => {
-    // Coût pour passer de 2 à 3 = 30 XP
-    const cost = CharacteristicCalculator.getUpgradeCost(2, 3);
-    expect(cost).toBe(30);
-  });
-  
-  it('applique les bonus raciaux', () => {
-    const base = { brawn: 2, agility: 2 };
-    const racial = { brawn: 1, agility: 0 };
-    
-    const result = CharacteristicCalculator.applyRacialBonuses(base, racial);
-    expect(result.brawn).toBe(3);
-    expect(result.agility).toBe(2);
-  });
-  
-  it('respecte les limites maximales', () => {
-    const result = CharacteristicCalculator.applyUpgrade(5, 2); // Tentative 5→7
-    expect(result).toBe(6); // Plafonné à 6
-  });
+## 7) Commentaires & documentation
+
+* **Commenter l’intention**, pas l’évidence.
+* **JSDoc** pour les APIs publiques/complexes (services, actions, hooks exposés).
+* Documenter : points d’extension, hooks, schémas de données et helpers non triviaux.
+
+---
+
+## 8) Tests (Vitest)
+
+* **Unit** : `utils/`, `rules/`, `data/` (derived data, formules de jets).
+* **Contract minimal** : existence d’une feuille, handlers, hooks (sans tester le DOM en profondeur).
+* **Toujours** tester : formules de jets, calculs de difficultés, règles centrales.
+
+`vitest.config.mjs`
+
+```js
+import { defineConfig } from 'vitest/config';
+export default defineConfig({
+  test: { environment: 'jsdom', globals: true, coverage: { reporter: ['text', 'lcov'] } }
 });
 ```
 
-### Stratégie de tests
+---
 
-* **Units** : logique pure (calculateurs, utilitaires, modèles).
-* **Integration** : interaction entre modules (actions, rolls).
-* **Contract** : validation des interfaces publiques.
-* **Couverture** : ≥ 80% sur la logique critique.
+## 9) Git & revue de code
+
+* **Conventional Commits** : `feat:`, `fix:`, `refactor:`, `docs:`, `test:`, `build:` …
+* **PR** : petite, focalisée, avec **checklist** ci‑dessous ; capture d’écran si UI.
+
+Checklist PR
+
+* [ ] Lint/format OK (CI)
+* [ ] Tests verts + couverture stable
+* [ ] Pas de chaînes en dur (i18n)
+* [ ] Accessibilité minimale (focus, contraste)
+* [ ] Changelog
 
 ---
 
-## 13) Workflow de Développement
+## 10) Règles **enforcées par l’outillage** (non négociables)
 
-### Scripts npm essentiels
+* Prettier formatte tout (CI).
+* ESLint : `eqeqeq`, `no-unused-vars`, `no-var`, `no-param-reassign`, `no-console` (sauf debug gate), `import/order`.
+* Imports cycliques interdits (si plugin mis en place) ; dead code supprimé.
+* Build Vite : erreurs = PR bloquée.
+
+`.eslintrc.cjs`
+
+```js
+module.exports = {
+  root: true,
+  parserOptions: { ecmaVersion: 2022, sourceType: 'module' },
+  plugins: ['import'],
+  extends: ['eslint:recommended', 'plugin:import/recommended', 'prettier'],
+  env: { browser: true, es2022: true },
+  globals: { game: 'readonly', ui: 'readonly', canvas: 'readonly', foundry: 'readonly', Hooks: 'readonly', CONFIG: 'readonly' },
+  rules: {
+    curly: ['error', 'all'],
+    eqeqeq: ['error', 'always'],
+    'no-var': 'error',
+    'no-param-reassign': ['error', { props: true }],
+    'no-console': ['error', { allow: ['warn', 'error'] }],
+    'import/order': ['warn', { 'newlines-between': 'always', alphabetize: { order: 'asc' } }]
+  }
+};
+```
+
+---
+
+## 11) Règles à **ne pas** mettre (anti‑brouillard)
+
+* Détails esthétiques que Prettier gère déjà (espaces, accolades, alignements).
+* Règles invérifiables ou extrêmes ("jamais > 10 lignes", "toujours optimal perf").
+* Interdictions dogmatiques sans raison ("pas d`async/await", "pas de classes").
+* Procédures d’équipe (vendredi, RH, etc.) → autre doc.
+* Vocabulaire métier → mettre dans un **glossaire** séparé.
+
+---
+
+## Annexe A — Patterns Foundry minimaux (JS)
+
+### A.1 Data Model (TypeDataModel)
+
+```js
+// module/data/actor/actor-model.mjs
+export class SwerpgActorModel extends foundry.abstract.TypeDataModel {
+  static defineSchema() {
+    const { fields } = foundry.data;
+    return {
+      characteristics: new fields.SchemaField({
+        agility:   new fields.NumberField({ initial: 2, integer: true, min: 0, max: 6 }),
+        brawn:     new fields.NumberField({ initial: 2, integer: true, min: 0, max: 6 }),
+        intellect: new fields.NumberField({ initial: 2, integer: true, min: 0, max: 6 }),
+        cunning:   new fields.NumberField({ initial: 2, integer: true, min: 0, max: 6 }),
+        willpower: new fields.NumberField({ initial: 2, integer: true, min: 0, max: 6 }),
+        presence:  new fields.NumberField({ initial: 2, integer: true, min: 0, max: 6 }),
+      }),
+      thresholds: new fields.SchemaField({
+        wounds: new fields.NumberField({ initial: 10, integer: true, min: 0 }),
+        strain: new fields.NumberField({ initial: 10, integer: true, min: 0 }),
+        soak:   new fields.NumberField({ initial: 0, integer: true, min: 0 }),
+      }),
+      skills: new fields.ObjectField({ initial: {} }),
+    };
+  }
+  prepareDerivedData() {
+    const data = this;
+    const armorSoak = this.parent?.system?.armor?.soak ?? 0;
+    data.thresholds.soak = Math.max(0, (data.characteristics?.brawn ?? 0) + armorSoak);
+  }
+  static migrateData(source) {
+    const s = source;
+    if (s.characteristics?.vigor) {
+      s.characteristics.willpower = s.characteristics.vigor;
+      delete s.characteristics.vigor;
+    }
+  }
+}
+```
+
+### A.2 Feuille (ApplicationV2 + Handlebars)
+
+```js
+// module/applications/actor/actor-sheet.mjs
+export class SwerpgActorSheet extends HandlebarsApplicationMixin(ApplicationV2) {
+  static DEFAULT_OPTIONS = {
+    tag: 'form',
+    classes: ['swerpg', 'sheet', 'actor'],
+    window: { title: 'SWERPG.ActorSheet.Title' },
+    position: { width: 860, height: 640 },
+    form: { submitOnChange: true }
+  };
+  #actor;
+  constructor(actor, options = {}) { super(options); this.#actor = actor; }
+  get title() { return game.i18n.format('SWERPG.ActorSheet.Title', { name: this.#actor.name }); }
+  async _prepareContext() { const system = this.#actor.system; return { actor: this.#actor, system, characteristics: system.characteristics }; }
+  static PARTS = {
+    header: { template: 'templates/actor/_header.hbs' },
+    stats:  { template: 'templates/actor/_stats.hbs' },
+    skills: { template: 'templates/actor/_skills.hbs' }
+  };
+  activateListeners(html) {
+    html.querySelectorAll("[data-action='roll']").forEach((el) => el.addEventListener('click', (ev) => this.#onRoll(ev)) );
+  }
+  async #onRoll(ev) {
+    const key = ev.currentTarget?.dataset?.skill ?? 'cool';
+    const roll = await new Roll(`1d20 + @skills[\"${key}\"]`, this.#actor.getRollData()).evaluate({ async: true });
+    return roll.toMessage({ speaker: ChatMessage.getSpeaker({ actor: this.#actor }) });
+  }
+}
+```
+
+### A.3 Action de jet
+
+```js
+// module/rules/actions/skill-check.mjs
+export class SkillCheck {
+  constructor(actor, skill, modifier = 0) { this.actor = actor; this.skill = skill; this.modifier = modifier; }
+  async execute() {
+    const data = this.actor.getRollData();
+    const roll = await new Roll(`1d20 + @skills[\"${this.skill}\"] + ${this.modifier}`, data).evaluate({ async: true });
+    return roll.toMessage({ speaker: ChatMessage.getSpeaker({ actor: this.actor }), flavor: game.i18n.format('SWERPG.Roll.Skill', { skill: this.skill }) });
+  }
+}
+```
+
+---
+
+## Annexe B — Configs minimales
+
+**ESLint** et **Prettier** : voir sections 5 et 10.
+
+`stylelint.config.cjs`
+
+```js
+module.exports = { extends: ['stylelint-config-standard-scss', 'stylelint-config-prettier-scss'], rules: { 'selector-class-pattern': '^sw-[a-z]+(?:__[a-z]+)?(?:--[a-z]+)?$', 'declaration-no-important': true } };
+```
+
+`scripts` (package.json)
 
 ```json
 {
   "scripts": {
-    "build": "pnpm run compile && pnpm run rollup && pnpm run less",
-    "dev": "pnpm run rollup:watch & pnpm run less:watch",
-    "compile": "node build.mjs compile", 
-    "extract": "node build.mjs extract",
-    "test": "vitest",
-    "test:coverage": "pnpm vitest run --coverage",
-    "lint": "eslint module/ --ext .mjs",
-    "format": "prettier --write module/"
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint . --ext .mjs,.js && stylelint 'styles/**/*.scss'",
+    "fmt": "prettier --write .",
+    "test": "vitest run"
   }
 }
 ```
 
-### Checklist PR
-
-#### Développement
-
-* [ ] Code conforme aux conventions de nommage
-* [ ] JSDoc complet sur les APIs publiques
-* [ ] Tests unitaires pour la nouvelle logique
-* [ ] Migration de données si nécessaire
-
-#### Contenu
-
-* [ ] Compendiums compilés (`npm run compile`)
-* [ ] Traductions FR/EN complètes
-* [ ] IDs stables pour les nouveaux éléments
-
-#### UX/UI
-
-* [ ] Thème Star Wars respecté
-* [ ] Accessibilité (contraste, navigation)
-* [ ] Responsive sur mobile
-
-#### Performance
-
-* [ ] Hot reload fonctionnel
-* [ ] Aucun calcul coûteux dans prepareDerivedData
-* [ ] Mise en cache appropriée
-
 ---
 
-## 14) Bonnes Pratiques par Domaine
+## Annexe C — Adoption rapide
 
-### Data Models
-```javascript
-// ✅ Bon
-static defineSchema() {
-  return {
-    characteristic: new fields.StringField({ 
-      choices: Object.keys(SYSTEM.CHARACTERISTICS),
-      initial: "brawn" 
-    })
-  };
-}
+1. **Outillage** : ajouter configs ESLint/Prettier/Stylelint/Vitest + scripts.
+2. **Pilote** : migrer **une** feuille & **une** action en suivant les patterns.
+3. **CI** : bloquer la PR si lint/test échouent.
+4. **Vocabulaire métier** : créer un **glossaire** séparé (pas dans le style guide).
 
-// ❌ Éviter
-static defineSchema() {
-  return {
-    characteristic: new fields.StringField({ initial: "brawn" }) // Pas de validation
-  };
-}
-```
-
-### Applications
-```javascript
-// ✅ Bon
-static async #onSkillRoll(event, target) {
-  const skillId = target.dataset.skillId;
-  const skill = this.actor.items.get(skillId);
-  if (!skill) return ui.notifications.warn("Compétence introuvable");
-  
-  await skill.roll();
-}
-
-// ❌ Éviter  
-static #onSkillRoll(event, target) {
-  // Pas de validation, pas d'async pour les rolls
-  this.actor.items.get(target.dataset.skillId).roll();
-}
-```
-
-### Configuration
-```javascript
-// ✅ Bon
-export const SKILL_TYPES = {
-  general: "SWERPG.Skills.Types.General",
-  combat: "SWERPG.Skills.Types.Combat", 
-  knowledge: "SWERPG.Skills.Types.Knowledge"
-};
-
-// ❌ Éviter
-export const SKILL_TYPES = {
-  general: "Général", // Chaîne harcodée
-  combat: "Combat",
-  knowledge: "Connaissance"
-};
-```
-
----
-
-## 15) Ressources & Références
-
-### Documentation Foundry VTT v13
-
-* [ApplicationV2 API](https://foundryvtt.com/api/v13/classes/foundry.applications.api.ApplicationV2.html)
-* [TypeDataModel](https://foundryvtt.com/api/v13/classes/foundry.abstract.TypeDataModel.html)
-* [HandlebarsApplicationMixin](https://foundryvtt.com/api/v13/modules/foundry.applications.api.html#HandlebarsApplicationMixin)
-
-### Outils de développement
-
-* [Vitest](https://vitest.dev/) - Framework de test moderne
-* [LESS](https://lesscss.org/) - Préprocesseur CSS
-* [pnpm](https://pnpm.io/) - Gestionnaire de paquets rapide
-
-### Star Wars RPG
-
-* [Edge of the Empire](https://www.fantasyflightgames.com/en/products/star-wars-edge-of-the-empire/) - Système de base
-* [Dice Mechanics](https://images-cdn.fantasyflightgames.com/ffg_content/star-wars/edge-of-the-empire/edge-news/fad-system-overview.pdf) - Mécaniques des dés narratifs
-
----
-
-## 16) Migration et Évolution
-
-Ce guide évolue avec le projet. Pour proposer des améliorations :
-
-1. **Issue** : ouvir une discussion sur les changements proposés
-2. **Branch** : `docs/coding-style-update-YYYY-MM`  
-3. **PR** : inclure les exemples et la justification
-4. **Review** : validation par l'équipe de développement
-
-**Version actuelle** : v1.0 (novembre 2025)  
-**Prochaine révision** : lors de la migration vers Foundry v14
+> Ce document doit tenir en quelques pages. Toute nouvelle feature majeure peut ajouter un **pattern** en annexe, mais les **règles** restent courtes, enforcées et à jour.
