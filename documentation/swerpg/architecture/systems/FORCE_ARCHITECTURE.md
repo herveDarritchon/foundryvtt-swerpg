@@ -5,6 +5,7 @@ Documentation de l'architecture des pouvoirs de la Force.
 ## 🌌 Architecture Force
 
 ### Mécaniques Force
+
 - Points de Force
 - Côté Lumineux/Obscur
 - Pouvoirs et effets

@@ -81,7 +81,7 @@ Ce document classe les exigences fonctionnelles selon la méthode MoSCoW :
 **Implémentation** :
 
 - Classes : [`CrucibleCombat`](../../module/documents/combat.mjs#L4), [`CrucibleCombatant`](../../module/documents/combatant.mjs#L4)
-- Fichiers : 
+- Fichiers :
   - [`module/documents/combat.mjs`](../../module/documents/combat.mjs)
   - [`module/documents/combatant.mjs`](../../module/documents/combatant.mjs)
 - Models : `CrucibleCombatChallenge`, `CrucibleExplorationChallenge`, `CrucibleSocialChallenge`
@@ -169,7 +169,7 @@ Ce document classe les exigences fonctionnelles selon la méthode MoSCoW :
 **Implémentation** :
 
 - Document : [`CrucibleItem`](../../module/documents/item.mjs#L4)
-- Models : 
+- Models :
   - [`CrucibleWeaponItem`](../../module/models/item-weapon.mjs#L7)
   - [`CrucibleArmorItem`](../../module/models/item-armor.mjs#L7)
   - `CrucibleAccessoryItem`
@@ -203,7 +203,7 @@ Ce document classe les exigences fonctionnelles selon la méthode MoSCoW :
 
 - Classe : [`CrucibleSpellAction`](../../module/models/spell-action.mjs#L13)
 - Fichier : [`module/models/spell-action.mjs`](../../module/models/spell-action.mjs)
-- Configuration : 
+- Configuration :
   - [`module/config/spellcraft.mjs`](../../module/config/spellcraft.mjs)
   - `module/models/spellcraft-rune.mjs`
   - `module/models/spellcraft-gesture.mjs`

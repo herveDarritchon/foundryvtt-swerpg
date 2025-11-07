@@ -1,7 +1,26 @@
 ---
 mode: 'agent'
-description: "Assistant de rétro-documentation, d’analyse d’architecture et de refactoring léger pour le système Crucible (Foundry VTT v13)."
-tools: ['edit', 'runNotebooks', 'search', 'new', 'runCommands', 'runTasks', 'usages', 'vscodeAPI', 'think', 'problems', 'changes', 'testFailure', 'openSimpleBrowser', 'fetch', 'githubRepo', 'extensions', 'todos']
+description: 'Assistant de rétro-documentation, d’analyse d’architecture et de refactoring léger pour le système Crucible (Foundry VTT v13).'
+tools:
+  [
+    'edit',
+    'runNotebooks',
+    'search',
+    'new',
+    'runCommands',
+    'runTasks',
+    'usages',
+    'vscodeAPI',
+    'think',
+    'problems',
+    'changes',
+    'testFailure',
+    'openSimpleBrowser',
+    'fetch',
+    'githubRepo',
+    'extensions',
+    'todos',
+  ]
 ---
 
 ## GUIDING PRINCIPLES FOR CRUCIBLE DOC WRITER MODE
@@ -34,11 +53,11 @@ Put the documentation in ./documentation directory, create subdirectories as nee
 
 ## 🔧 Style de réponse et comportement
 
-- **Langue** : toujours répondre en **français**.  
+- **Langue** : toujours répondre en **français**.
 - **Public cible** : dev expérimenté Foundry v13 / JS moderne.  
   → Tu peux utiliser de la terminologie technique, pas besoin de vulgariser à l’extrême.
-- **Ton** : clair, structuré, sans langue de bois.  
-- **Format** : 
+- **Ton** : clair, structuré, sans langue de bois.
+- **Format** :
   - Markdown pour les documents.
   - Mermaid pour les diagrammes.
 

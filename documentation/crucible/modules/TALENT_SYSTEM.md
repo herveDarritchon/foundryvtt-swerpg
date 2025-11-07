@@ -19,12 +19,12 @@ classDiagram
         +object position
         +string[] parents
         +string[] children
-        
+
         +static defineTree()
         +static getChoices()
         +static preparePrerequisites()
     }
-    
+
     class CrucibleTalentItem {
         +Set~CrucibleTalentNode~ nodes
         +string description
@@ -34,13 +34,13 @@ classDiagram
         +string inflection
         +object training
         +object[] actorHooks
-        
+
         +TalentRankData currentRank
         +TalentRankData nextRank
         +AdvancementPrerequisites prerequisites
         +boolean isSignature
     }
-    
+
     class TalentRankData {
         +string description
         +number tier
@@ -49,18 +49,18 @@ classDiagram
         +CrucibleAction[] actions
         +object[] passives
     }
-    
+
     class CrucibleTalentTree {
         +CrucibleActor actor
         +Map nodes
         +PIXI.Container container
-        
+
         +render()
         +refresh()
         +unlock(nodeId)
         +purchase(talentId)
     }
-    
+
     CrucibleTalentNode --> CrucibleTalentItem
     CrucibleTalentItem --> TalentRankData
     CrucibleTalentItem --> CrucibleAction
@@ -75,22 +75,25 @@ Les nœuds de l'arbre de talents sont définis dans `module/config/talent-node.m
 
 ```javascript
 class CrucibleTalentNode {
-  constructor(id, {
-    name,           // Nom du nœud
-    type,           // Type: archetype, signature, standard
-    parents = [],   // IDs des nœuds parents
-    children = [],  // IDs des nœuds enfants
-    requirements = {},  // Prérequis pour débloquer
-    position = {}   // Position x,y dans l'arbre
-  }) {
-    this.id = id;
-    this.name = name;
-    this.type = type;
-    this.parents = parents;
-    this.children = children;
-    this.requirements = requirements;
-    this.position = position;
-    this.talents = new Set(); // Talents associés
+  constructor(
+    id,
+    {
+      name, // Nom du nœud
+      type, // Type: archetype, signature, standard
+      parents = [], // IDs des nœuds parents
+      children = [], // IDs des nœuds enfants
+      requirements = {}, // Prérequis pour débloquer
+      position = {}, // Position x,y dans l'arbre
+    },
+  ) {
+    this.id = id
+    this.name = name
+    this.type = type
+    this.parents = parents
+    this.children = children
+    this.requirements = requirements
+    this.position = position
+    this.talents = new Set() // Talents associés
   }
 }
 ```
@@ -101,10 +104,10 @@ class CrucibleTalentNode {
 graph TD
     ROOT[Root Node] --> ARCHETYPE[Archetype Node]
     ROOT --> STANDARD[Standard Node]
-    
+
     ARCHETYPE --> SIG[Signature Node]
     STANDARD --> CHILD[Child Nodes]
-    
+
     style ARCHETYPE fill:#ff6b6b
     style SIG fill:#ffd93d
     style STANDARD fill:#6bcf7f
@@ -124,12 +127,12 @@ L'arbre de talents est défini statiquement via `defineTree()` :
 static defineTree() {
   // Effacer les nœuds existants
   CrucibleTalentNode.nodes.clear();
-  
+
   // Définir les nœuds
   for (const [id, config] of Object.entries(SYSTEM.TALENT.TREE)) {
     new CrucibleTalentNode(id, config);
   }
-  
+
   // Établir les connexions parent-enfant
   for (const node of CrucibleTalentNode.nodes.values()) {
     for (const parentId of node.parents) {
@@ -150,24 +153,24 @@ static defineTree() {
 const prerequisites = {
   level: {
     value: 5,
-    label: "Level",
-    tag: "Level 5",
-    met: false
+    label: 'Level',
+    tag: 'Level 5',
+    met: false,
   },
   archetype: {
-    value: "warrior",
-    label: "Archetype",
-    tag: "Warrior",
-    met: false
+    value: 'warrior',
+    label: 'Archetype',
+    tag: 'Warrior',
+    met: false,
   },
   training: {
     weapons: {
       value: 2,
-      label: "Weapon Training",
-      tag: "Weapon Training II",
-      met: false
-    }
-  }
+      label: 'Weapon Training',
+      tag: 'Weapon Training II',
+      met: false,
+    },
+  },
 }
 ```
 
@@ -183,7 +186,7 @@ const prerequisites = {
 ```javascript
 static preparePrerequisites(requirements) {
   const prerequisites = {};
-  
+
   // Level
   if (requirements.level) {
     prerequisites.level = {
@@ -192,7 +195,7 @@ static preparePrerequisites(requirements) {
       tag: `Level ${requirements.level}`
     };
   }
-  
+
   // Archetype
   if (requirements.archetype) {
     prerequisites.archetype = {
@@ -201,7 +204,7 @@ static preparePrerequisites(requirements) {
       tag: game.i18n.localize(SYSTEM.ARCHETYPE[requirements.archetype])
     };
   }
-  
+
   // Training
   if (requirements.training) {
     prerequisites.training = {};
@@ -213,7 +216,7 @@ static preparePrerequisites(requirements) {
       };
     }
   }
-  
+
   return prerequisites;
 }
 ```
@@ -230,21 +233,21 @@ static defineSchema() {
     ),
     description: new HTMLField(),
     actions: new ArrayField(new EmbeddedDataField(CrucibleAction)),
-    
+
     // Spellcraft components
     rune: new StringField({choices: SYSTEM.SPELL.RUNES}),
     gesture: new StringField({choices: SYSTEM.SPELL.GESTURES}),
     inflection: new StringField({choices: SYSTEM.SPELL.INFLECTIONS}),
-    
+
     // Iconic spells
     iconicSpells: new NumberField({initial: 0, min: 0}),
-    
+
     // Training
     training: new SchemaField({
       type: new StringField({choices: SYSTEM.TALENT.TRAINING_TYPES}),
       rank: new NumberField({min: 1, max: 4})
     }),
-    
+
     // Actor hooks
     actorHooks: new ArrayField(new SchemaField({
       hook: new StringField({choices: SYSTEM.ACTOR.HOOKS}),
@@ -285,17 +288,17 @@ graph LR
 ```javascript
 initializeTree() {
   const talent = this.parent;
-  
+
   // Vérifier que le talent a des nœuds
   if (!this.nodes.size) {
     throw new Error(`Talent "${talent.name}" has no valid tree nodes.`);
   }
-  
+
   // Enregistrer le talent sur ses nœuds
   for (const node of this.nodes) {
     node.talents.add(talent);
   }
-  
+
   // Mettre à jour les métadonnées de spellcraft
   if (this.rune) {
     SYSTEM.SPELL.RUNES[this.rune].img = talent.img;
@@ -315,9 +318,9 @@ initializeTree() {
 
 ```javascript
 TRAINING_TYPES = {
-  weapons: "Weapon Training",
-  armor: "Armor Training",
-  magic: "Magic Training"
+  weapons: 'Weapon Training',
+  armor: 'Armor Training',
+  magic: 'Magic Training',
 }
 ```
 
@@ -336,18 +339,21 @@ graph LR
 #### Effets par Rang
 
 **Weapon Training** :
+
 - Rank I : Armes simples
 - Rank II : Armes de guerre
 - Rank III : Bonus +1 aux attaques
 - Rank IV : Bonus +2 aux attaques
 
 **Armor Training** :
+
 - Rank I : Armures légères
 - Rank II : Armures intermédiaires
 - Rank III : Armures lourdes
 - Rank IV : Réduction pénalités d'armure
 
 **Magic Training** :
+
 - Rank I : Sorts de niveau 1
 - Rank II : Sorts de niveau 2
 - Rank III : Sorts de niveau 3
@@ -361,9 +367,9 @@ Les personnages gagnent des points de talent en progressant :
 
 ```javascript
 points.talent = {
-  total: 3 + (effectiveLevel * 3),  // 3 + 3 par niveau
-  spent: 0,                          // Points dépensés
-  available: 0                       // Points disponibles
+  total: 3 + effectiveLevel * 3, // 3 + 3 par niveau
+  spent: 0, // Points dépensés
+  available: 0, // Points disponibles
 }
 ```
 
@@ -375,18 +381,18 @@ sequenceDiagram
     participant UI as Talent Tree UI
     participant Actor
     participant Item as Talent Item
-    
+
     Player->>UI: Click on talent
     UI->>Actor: Check prerequisites
-    
+
     alt Prerequisites Not Met
         Actor-->>Player: Error: Prerequisites not met
     end
-    
+
     alt Not Enough Points
         Actor-->>Player: Error: Not enough talent points
     end
-    
+
     UI->>Item: Create/Update talent item
     Item->>Actor: Add to actor
     Actor->>Actor: Spend talent points
@@ -400,17 +406,17 @@ sequenceDiagram
 ```javascript
 async canPurchaseTalent(talent, rank = 1) {
   const prerequisites = talent.system.prerequisites;
-  
+
   // Vérifier le niveau
   if (prerequisites.level && this.advancement.level < prerequisites.level.value) {
     return {can: false, reason: "Level too low"};
   }
-  
+
   // Vérifier l'archétype
   if (prerequisites.archetype && this.archetype !== prerequisites.archetype.value) {
     return {can: false, reason: "Wrong archetype"};
   }
-  
+
   // Vérifier la formation
   if (prerequisites.training) {
     for (const [type, req] of Object.entries(prerequisites.training)) {
@@ -420,13 +426,13 @@ async canPurchaseTalent(talent, rank = 1) {
       }
     }
   }
-  
+
   // Vérifier les points disponibles
   const cost = talent.system.currentRank?.cost || 1;
   if (this.points.talent.available < cost) {
     return {can: false, reason: "Not enough talent points"};
   }
-  
+
   return {can: true};
 }
 ```
@@ -439,35 +445,38 @@ Les talents peuvent enregistrer des hooks sur l'acteur pour modifier son comport
 
 ```javascript
 ACTOR_HOOKS = {
-  "prepareBaseData": "Prepare Base Data",
-  "prepareDerivedData": "Prepare Derived Data",
-  "preRoll": "Before Roll",
-  "postRoll": "After Roll",
-  "preDamage": "Before Damage",
-  "postDamage": "After Damage",
-  "preRest": "Before Rest",
-  "postRest": "After Rest"
+  prepareBaseData: 'Prepare Base Data',
+  prepareDerivedData: 'Prepare Derived Data',
+  preRoll: 'Before Roll',
+  postRoll: 'After Roll',
+  preDamage: 'Before Damage',
+  postDamage: 'After Damage',
+  preRest: 'Before Rest',
+  postRest: 'After Rest',
 }
 ```
 
 ### Exemple de Hook
 
 ```javascript
-actorHooks: [{
-  hook: "prepareDerivedData",
-  fn: async function() {
-    // 'this' est l'acteur
-    this.system.defenses.parry.bonus += 2;
-  }
-}, {
-  hook: "preRoll",
-  fn: async function(roll) {
-    // Ajouter un bonus aux jets d'attaque
-    if (roll.type === "attack") {
-      roll.bonuses.attack += 1;
-    }
-  }
-}]
+actorHooks: [
+  {
+    hook: 'prepareDerivedData',
+    fn: async function () {
+      // 'this' est l'acteur
+      this.system.defenses.parry.bonus += 2
+    },
+  },
+  {
+    hook: 'preRoll',
+    fn: async function (roll) {
+      // Ajouter un bonus aux jets d'attaque
+      if (roll.type === 'attack') {
+        roll.bonuses.attack += 1
+      }
+    },
+  },
+]
 ```
 
 ## Interface Canvas
@@ -478,44 +487,43 @@ Composant PIXI.Container pour afficher l'arbre de talents :
 
 ```javascript
 class CrucibleTalentTree extends PIXI.Container {
-  
   constructor(actor) {
-    super();
-    this.actor = actor;
-    this.nodes = new Map();
+    super()
+    this.actor = actor
+    this.nodes = new Map()
   }
-  
+
   async render() {
     // Nettoyer l'arbre existant
-    this.removeChildren();
-    
+    this.removeChildren()
+
     // Créer les nœuds
     for (const [id, node] of CrucibleTalentNode.nodes) {
-      const nodeSprite = new CrucibleTalentTreeNode(node, this.actor);
-      this.nodes.set(id, nodeSprite);
-      this.addChild(nodeSprite);
+      const nodeSprite = new CrucibleTalentTreeNode(node, this.actor)
+      this.nodes.set(id, nodeSprite)
+      this.addChild(nodeSprite)
     }
-    
+
     // Dessiner les connexions
-    this.#drawConnections();
+    this.#drawConnections()
   }
-  
+
   #drawConnections() {
-    const graphics = new PIXI.Graphics();
-    
+    const graphics = new PIXI.Graphics()
+
     for (const node of this.nodes.values()) {
       for (const childId of node.data.children) {
-        const child = this.nodes.get(childId);
-        if (!child) continue;
-        
+        const child = this.nodes.get(childId)
+        if (!child) continue
+
         // Dessiner une ligne entre parent et enfant
-        graphics.lineStyle(2, node.unlocked ? 0x00ff00 : 0x666666);
-        graphics.moveTo(node.x, node.y);
-        graphics.lineTo(child.x, child.y);
+        graphics.lineStyle(2, node.unlocked ? 0x00ff00 : 0x666666)
+        graphics.moveTo(node.x, node.y)
+        graphics.lineTo(child.x, child.y)
       }
     }
-    
-    this.addChildAt(graphics, 0);
+
+    this.addChildAt(graphics, 0)
   }
 }
 ```
@@ -524,36 +532,33 @@ class CrucibleTalentTree extends PIXI.Container {
 
 ```javascript
 class CrucibleTalentNodeStates extends Map {
-  
   /**
    * États possibles d'un nœud
    */
   static STATES = {
-    LOCKED: 0,      // Verrouillé (prérequis non satisfaits)
-    AVAILABLE: 1,   // Disponible (prérequis satisfaits)
-    UNLOCKED: 2,    // Débloqué (au moins un talent acheté)
-    MASTERED: 3     // Maîtrisé (tous les talents au max)
+    LOCKED: 0, // Verrouillé (prérequis non satisfaits)
+    AVAILABLE: 1, // Disponible (prérequis satisfaits)
+    UNLOCKED: 2, // Débloqué (au moins un talent acheté)
+    MASTERED: 3, // Maîtrisé (tous les talents au max)
   }
-  
+
   getState(nodeId) {
-    const node = CrucibleTalentNode.nodes.get(nodeId);
-    const talents = Array.from(node.talents);
-    
+    const node = CrucibleTalentNode.nodes.get(nodeId)
+    const talents = Array.from(node.talents)
+
     // Vérifier si tous les talents sont maîtrisés
-    if (talents.every(t => this.actor.items.has(t.id) && t.system.currentRank.tier === 4)) {
-      return CrucibleTalentNodeStates.STATES.MASTERED;
+    if (talents.every((t) => this.actor.items.has(t.id) && t.system.currentRank.tier === 4)) {
+      return CrucibleTalentNodeStates.STATES.MASTERED
     }
-    
+
     // Vérifier si au moins un talent est débloqué
-    if (talents.some(t => this.actor.items.has(t.id))) {
-      return CrucibleTalentNodeStates.STATES.UNLOCKED;
+    if (talents.some((t) => this.actor.items.has(t.id))) {
+      return CrucibleTalentNodeStates.STATES.UNLOCKED
     }
-    
+
     // Vérifier les prérequis
-    const prereqsMet = this.#checkPrerequisites(node);
-    return prereqsMet ? 
-      CrucibleTalentNodeStates.STATES.AVAILABLE : 
-      CrucibleTalentNodeStates.STATES.LOCKED;
+    const prereqsMet = this.#checkPrerequisites(node)
+    return prereqsMet ? CrucibleTalentNodeStates.STATES.AVAILABLE : CrucibleTalentNodeStates.STATES.LOCKED
   }
 }
 ```
@@ -614,7 +619,7 @@ Les talents peuvent débloquer des composants de spellcraft :
 
 ```javascript
 {
-  gesture: "cone"  // Débloque le geste cone
+  gesture: 'cone' // Débloque le geste cone
 }
 ```
 
@@ -622,7 +627,7 @@ Les talents peuvent débloquer des composants de spellcraft :
 
 ```javascript
 {
-  inflection: "damage"  // Débloque l'inflection de dégâts
+  inflection: 'damage' // Débloque l'inflection de dégâts
 }
 ```
 
@@ -634,15 +639,13 @@ Les talents sont stockés comme items dans l'acteur :
 
 ```javascript
 // Récupérer tous les talents
-const talents = actor.items.filter(i => i.type === "talent");
+const talents = actor.items.filter((i) => i.type === 'talent')
 
 // Récupérer un talent spécifique
-const talent = actor.items.getName("Power Strike");
+const talent = actor.items.getName('Power Strike')
 
 // Vérifier la possession d'un talent
-const hasTalent = actor.items.some(i => 
-  i.type === "talent" && i.system.nodes.has("warrior_01")
-);
+const hasTalent = actor.items.some((i) => i.type === 'talent' && i.system.nodes.has('warrior_01'))
 ```
 
 ### Synchronisation
@@ -652,15 +655,15 @@ Méthode pour synchroniser les talents avec les compendia :
 ```javascript
 async syncTalents() {
   const updates = [];
-  
+
   for (const talent of this.items.filter(i => i.type === "talent")) {
     // Trouver la version du compendium
     const compendiumTalent = await fromUuid(
       `Compendium.crucible.talent.Item.${talent.id}`
     );
-    
+
     if (!compendiumTalent) continue;
-    
+
     // Vérifier si une mise à jour est nécessaire
     if (talent.system.actions.length !== compendiumTalent.system.actions.length) {
       updates.push({
@@ -669,7 +672,7 @@ async syncTalents() {
       });
     }
   }
-  
+
   if (updates.length) {
     await this.updateEmbeddedDocuments("Item", updates);
   }
@@ -683,16 +686,19 @@ Les talents peuvent fournir des effets passifs :
 ### Structure
 
 ```javascript
-passives: [{
-  type: "bonus",
-  target: "defenses.parry",
-  value: 2,
-  condition: "wielding shield"
-}, {
-  type: "resistance",
-  damageType: "fire",
-  value: 5
-}]
+passives: [
+  {
+    type: 'bonus',
+    target: 'defenses.parry',
+    value: 2,
+    condition: 'wielding shield',
+  },
+  {
+    type: 'resistance',
+    damageType: 'fire',
+    value: 5,
+  },
+]
 ```
 
 ### Application
@@ -703,7 +709,7 @@ _prepareDerivedData() {
   for (const talent of this.items.filter(i => i.type === "talent")) {
     const rank = talent.system.currentRank;
     if (!rank?.passives) continue;
-    
+
     for (const passive of rank.passives) {
       this.#applyPassiveEffect(passive);
     }
@@ -716,7 +722,7 @@ _prepareDerivedData() {
       const current = foundry.utils.getProperty(this, passive.target);
       foundry.utils.setProperty(this, passive.target, current + passive.value);
       break;
-      
+
     case "resistance":
       this.resistances[passive.damageType] ||= 0;
       this.resistances[passive.damageType] += passive.value;
@@ -731,16 +737,16 @@ _prepareDerivedData() {
 
 ```javascript
 // Au chargement du système
-CrucibleTalentNode.defineTree();
+CrucibleTalentNode.defineTree()
 ```
 
 ### 2. Vérifier les Prérequis
 
 ```javascript
-const {can, reason} = await actor.canPurchaseTalent(talent);
+const { can, reason } = await actor.canPurchaseTalent(talent)
 if (!can) {
-  ui.notifications.warn(reason);
-  return;
+  ui.notifications.warn(reason)
+  return
 }
 ```
 
@@ -748,18 +754,18 @@ if (!can) {
 
 ```javascript
 // Après une mise à jour du système
-await actor.syncTalents();
+await actor.syncTalents()
 ```
 
 ### 4. Utiliser les Hooks
 
 ```javascript
 // Hook pour modifications post-achat
-Hooks.on("createItem", (item, options, userId) => {
-  if (item.type === "talent" && item.isOwned) {
+Hooks.on('createItem', (item, options, userId) => {
+  if (item.type === 'talent' && item.isOwned) {
     // Logique personnalisée
   }
-});
+})
 ```
 
 ## Références

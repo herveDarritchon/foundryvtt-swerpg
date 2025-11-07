@@ -11,12 +11,12 @@ graph TB
     subgraph "Entry Point"
         MAIN[crucible.mjs]
     end
-    
+
     subgraph "Core Configuration"
         SYSTEM[module/config/system.mjs]
         CONFIG[SYSTEM.CONST & crucible.CONFIG]
     end
-    
+
     subgraph "Documents Layer"
         ACTOR_DOC[CrucibleActor]
         ITEM_DOC[CrucibleItem]
@@ -25,68 +25,68 @@ graph TB
         TOKEN_DOC[CrucibleToken]
         MESSAGE_DOC[CrucibleChatMessage]
     end
-    
+
     subgraph "Data Models Layer"
         ACTOR_MODELS["Actor Models<br/>Hero, Adversary, Group"]
         ITEM_MODELS["Item Models<br/>Talent, Spell, Weapon, Armor..."]
         COMBAT_MODELS["Combat Models<br/>Combat, Exploration, Social"]
         ACTION_MODEL[CrucibleAction]
     end
-    
+
     subgraph "Applications Layer"
         SHEETS["Sheets<br/>Actor and Item Sheets"]
         CONFIG_APPS[Configuration Apps]
         HUD[HUD Components]
         ELEMENTS[Custom HTML Elements]
     end
-    
+
     subgraph "Game Systems"
         TALENT_TREE[Talent Tree System]
         SPELLCRAFT[Spellcraft System]
         ACTION_SYSTEM[Action System]
         DICE_SYSTEM[Dice System]
     end
-    
+
     subgraph "Canvas & Visualization"
         TOKEN_OBJ[CrucibleTokenObject]
         GRID[Grid Layer]
         VFX[VFX Integration]
         TREE_CANVAS[Talent Tree Canvas]
     end
-    
+
     subgraph "Content Management"
         YAML["_source/ YAML Files"]
         PACKS["packs/ LevelDB"]
         COMPENDIUM[Compendium System]
     end
-    
+
     MAIN --> SYSTEM
     MAIN --> CONFIG
-    
+
     SYSTEM --> ACTOR_DOC
     SYSTEM --> ITEM_DOC
     SYSTEM --> COMBAT_DOC
-    
+
     ACTOR_DOC --> ACTOR_MODELS
     ITEM_DOC --> ITEM_MODELS
     COMBAT_DOC --> COMBAT_MODELS
-    
+
     ACTOR_MODELS --> ACTION_MODEL
     ITEM_MODELS --> ACTION_MODEL
-    
+
     ACTOR_DOC --> SHEETS
     ITEM_DOC --> SHEETS
-    
+
     ACTION_SYSTEM --> ACTION_MODEL
     ACTION_SYSTEM --> DICE_SYSTEM
-    
+
     TALENT_TREE --> TREE_CANVAS
     SPELLCRAFT --> ACTION_MODEL
-    
+
     TOKEN_DOC --> TOKEN_OBJ
     TOKEN_OBJ --> GRID
     TOKEN_OBJ --> VFX
-    
+
     YAML --> PACKS
     PACKS --> COMPENDIUM
 ```
@@ -135,23 +135,25 @@ prepareDerivedData() { /* Données calculées */ }
 
 ### Document Extensions
 
-| Document | Classe | Responsabilité |
-|----------|--------|----------------|
-| Actor | `CrucibleActor` | Gestion des créatures et personnages |
-| Item | `CrucibleItem` | Gestion des objets, talents, sorts |
-| Combat | `CrucibleCombat` | Gestion des rencontres de combat |
-| ActiveEffect | `CrucibleActiveEffect` | Gestion des effets actifs |
-| Token | `CrucibleToken` | Représentation canvas des acteurs |
-| ChatMessage | `CrucibleChatMessage` | Messages de chat enrichis |
+| Document     | Classe                 | Responsabilité                       |
+| ------------ | ---------------------- | ------------------------------------ |
+| Actor        | `CrucibleActor`        | Gestion des créatures et personnages |
+| Item         | `CrucibleItem`         | Gestion des objets, talents, sorts   |
+| Combat       | `CrucibleCombat`       | Gestion des rencontres de combat     |
+| ActiveEffect | `CrucibleActiveEffect` | Gestion des effets actifs            |
+| Token        | `CrucibleToken`        | Représentation canvas des acteurs    |
+| ChatMessage  | `CrucibleChatMessage`  | Messages de chat enrichis            |
 
 ### Data Models
 
 #### Actor Models
+
 - **CrucibleHeroActor** : Personnages joueurs avec progression, talents
 - **CrucibleAdversaryActor** : Adversaires avec threat ranks
 - **CrucibleGroupActor** : Groupes de personnages (party)
 
 #### Item Models
+
 - **CrucibleTalentItem** : Talents avec système d'arbre
 - **CrucibleSpellItem** : Sorts iconiques
 - **CrucibleWeaponItem** : Armes avec actions d'attaque
@@ -187,7 +189,7 @@ graph LR
     RANKS --> ACTIONS[Actions]
     RANKS --> PASSIVES[Passive Effects]
     RANKS --> PREREQ[Prerequisites]
-    
+
     PREREQ --> LEVEL[Level]
     PREREQ --> ARCHETYPE[Archetype]
     PREREQ --> TRAINING[Training Rank]
@@ -196,6 +198,7 @@ graph LR
 ### Système de Spellcraft
 
 Composition dynamique de sorts via :
+
 - **Runes** : Type de sort (feu, glace, etc.)
 - **Gestures** : Forme de l'effet (cone, blast, etc.)
 - **Inflections** : Modificateurs (damage, healing, etc.)
@@ -219,7 +222,7 @@ sequenceDiagram
     participant S as SYSTEM Config
     participant D as Documents
     participant A as Applications
-    
+
     F->>M: Hook: init
     M->>S: Load Configuration
     M->>D: Register Document Classes
@@ -239,7 +242,7 @@ sequenceDiagram
     participant D as Dialog
     participant R as Roll
     participant C as Chat
-    
+
     U->>S: Click Action Button
     S->>A: action.use()
     A->>A: initialize()
@@ -276,8 +279,8 @@ graph LR
 
 ```javascript
 // Les actions sont liées à un acteur
-const action = item.actions[0].bind(actor);
-await action.use();
+const action = item.actions[0].bind(actor)
+await action.use()
 ```
 
 ### 2. Data Access
@@ -293,14 +296,14 @@ item.config.category.id // Configuration
 
 ```javascript
 // Toujours utiliser l'internationalisation
-game.i18n.localize("CRUCIBLE.ActionUse")
+game.i18n.localize('CRUCIBLE.ActionUse')
 ```
 
 ### 4. Fusion d'Objets
 
 ```javascript
 // Utiliser les utilitaires Foundry
-foundry.utils.mergeObject(target, source);
+foundry.utils.mergeObject(target, source)
 // Jamais Object.assign() directement !
 ```
 
@@ -311,7 +314,7 @@ foundry.utils.mergeObject(target, source);
 Détection automatique du module `foundryvtt-vfx` :
 
 ```javascript
-crucible.vfxEnabled = !!game.modules.get("foundryvtt-vfx")?.active;
+crucible.vfxEnabled = !!game.modules.get('foundryvtt-vfx')?.active
 ```
 
 Active les effets visuels améliorés pour les actions de frappe.
@@ -355,6 +358,7 @@ Le système doit rester compatible avec Foundry VTT v13.
 ### Hooks Personnalisés
 
 Le système expose des hooks à différentes étapes :
+
 - `crucible.action.*` : Lifecycle des actions
 - `crucible.talent.*` : Gestion des talents
 - `crucible.combat.*` : Combat encounters
@@ -363,15 +367,15 @@ Le système expose des hooks à différentes étapes :
 
 ```javascript
 crucible.api = {
-  applications,  // Classes d'applications
-  audio,         // Audio helpers
-  canvas,        // Canvas components
-  dice,          // Dice system
-  documents,     // Document classes
-  models,        // Data models
-  methods,       // Utility methods
-  talents,       // Talent system
-  hooks          // Hook handlers
+  applications, // Classes d'applications
+  audio, // Audio helpers
+  canvas, // Canvas components
+  dice, // Dice system
+  documents, // Document classes
+  models, // Data models
+  methods, // Utility methods
+  talents, // Talent system
+  hooks, // Hook handlers
 }
 ```
 
@@ -381,4 +385,3 @@ crucible.api = {
 - [Foundry VTT Knowledge Base](https://foundryvtt.com/kb/)
 - [TypeDataModel Documentation](https://foundryvtt.com/api/classes/foundry.abstract.TypeDataModel.html)
 - [ApplicationV2 Guide](https://foundryvtt.com/api/classes/foundry.applications.api.ApplicationV2.html)
-

@@ -843,8 +843,7 @@
     "XenologyAbbr": "Xen"
   },
   "SPECIALIZATION": {
-    "FIELDS": {
-    },
+    "FIELDS": {},
     "SHEET": {
       "CHOOSE": "Choose Specialization",
       "CLEAR": "Clear Specialization"

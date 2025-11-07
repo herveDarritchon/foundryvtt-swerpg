@@ -1,7 +1,6 @@
-@import "../variables.less";
+@import '../variables.less';
 
 .swerpg.sheet.actor {
-
   .first-row-split {
     display: grid;
     grid-template-columns: 1fr 1fr; /* Deux colonnes égales */
@@ -96,7 +95,9 @@
       border-radius: 2px;
       background-color: #111;
       opacity: 0.3;
-      transition: background-color 0.3s, opacity 0.3s;
+      transition:
+        background-color 0.3s,
+        opacity 0.3s;
     }
 
     .label {
@@ -110,8 +111,7 @@
       justify-content: space-between; /* buttons at each side */
       width: 100%;
       padding: 0 6px;
-      margin-top: 4px
-    ;
+      margin-top: 4px;
 
       .values {
         /* Allow the value to take remaining space and be centered */
@@ -168,7 +168,6 @@
         line-height: 1;
         font-size: 14px; /* tweak if icon appears too small/large */
       }
-
     }
 
     .title {

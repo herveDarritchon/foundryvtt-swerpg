@@ -21,13 +21,13 @@ Le système utilise un design cohérent inspiré de l'esthétique de l'univers S
 
 ```less
 // styles/variables.less
-@color-primary: #00a8ff;      // Bleu hyperespace
-@color-secondary: #ffc312;    // Orange rebelle
-@color-danger: #c23616;       // Rouge Sith
-@color-empire: #2f3640;       // Gris Imperial
-@color-jedi: #4cd137;         // Vert sabre laser
-@color-background: #1e1e1e;   // Noir spatial
-@color-text: #f5f6fa;         // Blanc brillant
+@color-primary: #00a8ff; // Bleu hyperespace
+@color-secondary: #ffc312; // Orange rebelle
+@color-danger: #c23616; // Rouge Sith
+@color-empire: #2f3640; // Gris Imperial
+@color-jedi: #4cd137; // Vert sabre laser
+@color-background: #1e1e1e; // Noir spatial
+@color-text: #f5f6fa; // Blanc brillant
 ```
 
 ### 1.2 Navigation Intuitive
@@ -66,17 +66,17 @@ Le système s'adapte aux différentes tailles d'écran tout en préservant l'acc
 ```css
 /* Adaptation responsive pour Star Wars */
 @media (max-width: 768px) {
-    .swerpg-sheet {
-        .talent-tree {
-            grid-template-columns: repeat(2, 1fr);
-            font-size: 0.8em;
-        }
-        
-        .dice-pool {
-            flex-direction: column;
-            gap: 0.5rem;
-        }
+  .swerpg-sheet {
+    .talent-tree {
+      grid-template-columns: repeat(2, 1fr);
+      font-size: 0.8em;
     }
+
+    .dice-pool {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+  }
 }
 ```
 
@@ -98,17 +98,17 @@ Le système s'adapte aux différentes tailles d'écran tout en préservant l'acc
 ```javascript
 // Guide de création interactif
 class CharacterCreationGuide {
-    static showSpeciesBonus(species) {
-        const tooltip = `
+  static showSpeciesBonus(species) {
+    const tooltip = `
             <div class="species-preview">
                 <h4>${species.name}</h4>
                 <p><strong>Bonus:</strong> ${species.characteristics}</p>
-                <p><strong>Capacités:</strong> ${species.abilities.join(", ")}</p>
+                <p><strong>Capacités:</strong> ${species.abilities.join(', ')}</p>
                 <p><strong>XP de départ:</strong> ${species.startingXP}</p>
             </div>
-        `;
-        ui.notifications.info(tooltip, {permanent: true});
-    }
+        `
+    ui.notifications.info(tooltip, { permanent: true })
+  }
 }
 ```
 
@@ -132,24 +132,24 @@ class CharacterCreationGuide {
 ```javascript
 // Interface de pool de dés intelligente
 class SmartDiceInterface {
-    static suggestPool(characteristic, skill, difficulty, situation) {
-        const base = this.calculateBasePool(characteristic, skill, difficulty);
-        const modifiers = this.analyzeSituation(situation);
-        
-        return {
-            pool: base,
-            suggestions: modifiers.suggestions,
-            explanation: modifiers.reasoning
-        };
+  static suggestPool(characteristic, skill, difficulty, situation) {
+    const base = this.calculateBasePool(characteristic, skill, difficulty)
+    const modifiers = this.analyzeSituation(situation)
+
+    return {
+      pool: base,
+      suggestions: modifiers.suggestions,
+      explanation: modifiers.reasoning,
     }
-    
-    static formatResult(roll) {
-        return {
-            success: roll.total >= 0,
-            narrative: this.generateNarrative(roll.symbols),
-            mechanical: this.calculateEffects(roll.symbols)
-        };
+  }
+
+  static formatResult(roll) {
+    return {
+      success: roll.total >= 0,
+      narrative: this.generateNarrative(roll.symbols),
+      mechanical: this.calculateEffects(roll.symbols),
     }
+  }
 }
 ```
 
@@ -184,19 +184,12 @@ class SmartDiceInterface {
 
 ```html
 <!-- Exemple d'élément accessible pour dés de Force -->
-<button 
-    class="force-die-button"
-    aria-label="Lancer dé de Force - Rating 3"
-    aria-describedby="force-explanation"
-    role="button"
-    tabindex="0">
-    <i class="sw-icon sw-force-die" aria-hidden="true"></i>
-    <span class="sr-only">Dé de Force</span>
+<button class="force-die-button" aria-label="Lancer dé de Force - Rating 3" aria-describedby="force-explanation" role="button" tabindex="0">
+  <i class="sw-icon sw-force-die" aria-hidden="true"></i>
+  <span class="sr-only">Dé de Force</span>
 </button>
 
-<div id="force-explanation" class="tooltip" role="tooltip">
-    Lance 3 dés de Force (d12) pour générer des points lumineux ou obscurs
-</div>
+<div id="force-explanation" class="tooltip" role="tooltip">Lance 3 dés de Force (d12) pour générer des points lumineux ou obscurs</div>
 ```
 
 ### 3.2 Support Multi-langue
@@ -213,15 +206,15 @@ class SmartDiceInterface {
 ```javascript
 // Localisation contextuelle
 class SwerpgI18n {
-    static localizeWithContext(key, context = {}) {
-        const base = game.i18n.localize(key);
-        return this.interpolateContext(base, context);
-    }
-    
-    static getSpeciesName(species, gender = "neutral") {
-        const key = `SPECIES.${species}.name.${gender}`;
-        return game.i18n.has(key) ? game.i18n.localize(key) : species;
-    }
+  static localizeWithContext(key, context = {}) {
+    const base = game.i18n.localize(key)
+    return this.interpolateContext(base, context)
+  }
+
+  static getSpeciesName(species, gender = 'neutral') {
+    const key = `SPECIES.${species}.name.${gender}`
+    return game.i18n.has(key) ? game.i18n.localize(key) : species
+  }
 }
 ```
 
@@ -251,24 +244,24 @@ class SwerpgI18n {
 ```javascript
 // Assistant contextuel pour règles complexes
 class RulesAssistant {
-    static explainMechanic(mechanic, userLevel = "beginner") {
-        const explanations = {
-            beginner: this.getSimpleExplanation(mechanic),
-            intermediate: this.getDetailedExplanation(mechanic),
-            expert: this.getReferenceOnly(mechanic)
-        };
-        
-        return explanations[userLevel];
+  static explainMechanic(mechanic, userLevel = 'beginner') {
+    const explanations = {
+      beginner: this.getSimpleExplanation(mechanic),
+      intermediate: this.getDetailedExplanation(mechanic),
+      expert: this.getReferenceOnly(mechanic),
     }
-    
-    static suggestTutorial(context) {
-        if (context.firstTimeUser) {
-            return this.getGettingStartedTutorial();
-        }
-        if (context.strugglingWithMechanic) {
-            return this.getTargetedHelp(context.mechanic);
-        }
+
+    return explanations[userLevel]
+  }
+
+  static suggestTutorial(context) {
+    if (context.firstTimeUser) {
+      return this.getGettingStartedTutorial()
     }
+    if (context.strugglingWithMechanic) {
+      return this.getTargetedHelp(context.mechanic)
+    }
+  }
 }
 ```
 
@@ -330,15 +323,13 @@ class RulesAssistant {
 ```javascript
 // Système de personnalisation
 class SwerpgCustomization {
-    static saveLayout(userId, layoutConfig) {
-        return game.settings.set("swerpg", `layout.${userId}`, layoutConfig);
-    }
-    
-    static applyTheme(themeName) {
-        document.documentElement.className = 
-            document.documentElement.className.replace(/theme-\w+/, '') + 
-            ` theme-${themeName}`;
-    }
+  static saveLayout(userId, layoutConfig) {
+    return game.settings.set('swerpg', `layout.${userId}`, layoutConfig)
+  }
+
+  static applyTheme(themeName) {
+    document.documentElement.className = document.documentElement.className.replace(/theme-\w+/, '') + ` theme-${themeName}`
+  }
 }
 ```
 
@@ -407,15 +398,15 @@ class SwerpgCustomization {
 ```javascript
 // Chat enrichi pour Star Wars
 class SwerpgChat {
-    static enhanceMessage(message, roll) {
-        return {
-            ...message,
-            starWarsFormatting: true,
-            diceResult: this.formatDiceForChat(roll),
-            narrativeSuggestion: this.generateNarrative(roll),
-            soundEffect: this.getSoundForAction(roll.action)
-        };
+  static enhanceMessage(message, roll) {
+    return {
+      ...message,
+      starWarsFormatting: true,
+      diceResult: this.formatDiceForChat(roll),
+      narrativeSuggestion: this.generateNarrative(roll),
+      soundEffect: this.getSoundForAction(roll.action),
     }
+  }
 }
 ```
 

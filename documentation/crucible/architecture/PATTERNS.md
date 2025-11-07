@@ -38,23 +38,24 @@ classDiagram
     class ApplicationV2 {
         <<Foundry>>
     }
-    
+
     class HandlebarsApplicationMixin {
         <<Mixin>>
         +render()
         +_prepareContext()
     }
-    
+
     class CrucibleBaseActorSheet {
         +_prepareContext()
         +_onRender()
     }
-    
+
     ApplicationV2 <|-- HandlebarsApplicationMixin
     HandlebarsApplicationMixin <|-- CrucibleBaseActorSheet
 ```
 
 **Avantages** :
+
 - Réutilisation du code de templating
 - Séparation des préoccupations
 - Composition flexible
@@ -77,7 +78,7 @@ sequenceDiagram
     participant TypeDataModel
     participant BaseActor
     participant HeroActor
-    
+
     Document->>TypeDataModel: prepareData()
     TypeDataModel->>BaseActor: prepareBaseData()
     BaseActor->>HeroActor: prepareBaseData()
@@ -137,28 +138,28 @@ classDiagram
         +prepareBaseData()
         +prepareDerivedData()
     }
-    
+
     class CrucibleBaseActor {
         +abilities
         +resources
         +skills
     }
-    
+
     class CrucibleHeroActor {
         +advancement
         +points
         +capacity
     }
-    
+
     class CrucibleAdversaryActor {
         +threat
         +tier
     }
-    
+
     class CrucibleGroupActor {
         +members
     }
-    
+
     TypeDataModel <|-- CrucibleBaseActor
     CrucibleBaseActor <|-- CrucibleHeroActor
     CrucibleBaseActor <|-- CrucibleAdversaryActor
@@ -218,7 +219,7 @@ classDiagram
         #_roll(outcome)
         #_post(outcome)
     }
-    
+
     class ActionUsage {
         +actorStatus: object
         +actorUpdates: object
@@ -229,7 +230,7 @@ classDiagram
         +skillId: string
         +weapon: CrucibleItem
     }
-    
+
     class ActionOutcome {
         +target: CrucibleActor
         +rolls: AttackRoll[]
@@ -239,7 +240,7 @@ classDiagram
         +broken: boolean
         +criticalSuccess: boolean
     }
-    
+
     CrucibleAction --> ActionUsage
     CrucibleAction --> ActionOutcome
 ```
@@ -253,33 +254,33 @@ sequenceDiagram
     participant Dialog
     participant Targets
     participant Outcome
-    
+
     Actor->>Action: use(options)
     Action->>Action: _canUse()
     Action->>Targets: acquireTargets()
     Action->>Outcome: configureOutcomes()
-    
+
     alt dialog=true
         Action->>Dialog: configureDialog()
         Dialog-->>Action: configuration
         Action->>Targets: acquireTargets(strict)
         Action->>Outcome: configureOutcomes()
     end
-    
+
     Action->>Action: _preActivate()
-    
+
     loop Pour chaque target
         Action->>Outcome: _roll(outcome)
     end
-    
+
     loop Pour chaque outcome
         Action->>Outcome: _post(outcome)
         Action->>Outcome: #finalizeOutcome()
     end
-    
+
     Action->>Action: toMessage()
     Action-->>Actor: outcomes
-    
+
     Note over Actor,Outcome: Confirmation séparée (peut être différée)
     Actor->>Action: confirm()
     Action->>Outcome: target.applyActionOutcome()
@@ -315,7 +316,7 @@ sequenceDiagram
 // Chaque action définit ses tests via _tests()
 _tests() {
   const tests = [];
-  
+
   if (this.tags.has("attack")) {
     tests.push({
       type: "attack",
@@ -323,14 +324,14 @@ _tests() {
       postActivate: this._applyDamage
     });
   }
-  
+
   if (this.tags.has("spell")) {
     tests.push({
       type: "spell",
       roll: this._rollSpell
     });
   }
-  
+
   return tests;
 }
 ```
@@ -354,12 +355,12 @@ _tests() {
 
 ```javascript
 // Enregistrement
-Hooks.on("crucible.dealDamage", (actor, action, outcomes) => {
-  console.log(`${actor.name} inflige des dégâts`);
-});
+Hooks.on('crucible.dealDamage', (actor, action, outcomes) => {
+  console.log(`${actor.name} inflige des dégâts`)
+})
 
 // Déclenchement
-this.actor.callActorHooks("dealDamage", this, this.outcomes);
+this.actor.callActorHooks('dealDamage', this, this.outcomes)
 ```
 
 **Source** : `module/hooks/_module.mjs`, `module/documents/actor.mjs`
@@ -403,23 +404,23 @@ stateDiagram-v2
     Ancestry --> Background: chooseAncestry
     Background --> Talents: chooseBackground
     Talents --> Complete: complete
-    
+
     state Ancestry {
         [*] --> SelectAncestry
         SelectAncestry --> ConfirmAncestry
     }
-    
+
     state Background {
         [*] --> SelectBackground
         SelectBackground --> AllocateAbilities
         AllocateAbilities --> ConfirmBackground
     }
-    
+
     state Talents {
         [*] --> SelectTalents
         SelectTalents --> ConfirmTalents
     }
-    
+
     Complete --> [*]
 ```
 
@@ -468,16 +469,16 @@ static getDefault(actor) {
 
 ```javascript
 // 1. Création brute
-const action = new CrucibleAction(data);
+const action = new CrucibleAction(data)
 
 // 2. Binding à un acteur (builder)
-const boundAction = action.bind(actor);
+const boundAction = action.bind(actor)
 
 // 3. Préparation (finalisation)
-boundAction.prepare();
+boundAction.prepare()
 
 // 4. Usage
-await boundAction.use();
+await boundAction.use()
 ```
 
 **Source** : `module/models/action.mjs`
@@ -503,6 +504,7 @@ async use(options) {
 ```
 
 **Avantages** :
+
 - Isolation des mutations
 - Permet l'annulation (reverse)
 - Préserve l'action originale
@@ -525,19 +527,20 @@ graph TB
         ActorDoc[CrucibleActor Document]
         ItemDoc[CrucibleItem Document]
     end
-    
+
     subgraph "Model Layer (Logique)"
         BaseModel[CrucibleBaseActor Model]
         HeroModel[CrucibleHeroActor Model]
         TalentModel[CrucibleTalentItem Model]
     end
-    
+
     ActorDoc -->|system| BaseModel
     ActorDoc -->|system| HeroModel
     ItemDoc -->|system| TalentModel
 ```
 
 **Séparation** :
+
 - **Documents** (`module/documents/`) : Gèrent la persistance, les opérations DB, les hooks Foundry
 - **Models** (`module/models/`) : Définissent les schémas de données, la logique métier
 
@@ -554,7 +557,7 @@ graph LR
     A[SYSTEM constants] --> B[crucible.CONST]
     B --> C[crucible.CONFIG]
     C --> D[User Settings]
-    
+
     style A fill:#ff6b6b
     style B fill:#ffd93d
     style C fill:#6bcf7f
@@ -573,18 +576,18 @@ graph LR
 ```javascript
 // 1. Définition statique
 export const COMPENDIUM_PACKS = {
-  talent: "crucible.talent"
-};
+  talent: 'crucible.talent',
+}
 
 // 2. Exposition globale
-crucible.CONST = SYSTEM;
+crucible.CONST = SYSTEM
 
 // 3. Configuration runtime
 crucible.CONFIG = {
   packs: {
-    talent: new Set([SYSTEM.COMPENDIUM_PACKS.talent])
-  }
-};
+    talent: new Set([SYSTEM.COMPENDIUM_PACKS.talent]),
+  },
+}
 
 // 4. Settings utilisateur permettent de surcharger CONFIG
 ```
@@ -602,32 +605,32 @@ crucible.CONFIG = {
 ```javascript
 export const THREAT_RANKS = Object.freeze({
   minion: {
-    id: "minion",
+    id: 'minion',
     scaling: 0.5,
-    actionMax: 4
+    actionMax: 4,
   },
   normal: {
-    id: "normal", 
+    id: 'normal',
     scaling: 1.0,
-    actionMax: 6
+    actionMax: 6,
   },
   elite: {
-    id: "elite",
+    id: 'elite',
     scaling: 1.5,
-    actionMax: 8
-  }
-});
+    actionMax: 8,
+  },
+})
 ```
 
 **Utilisation avec la classe Enum** :
 
 ```javascript
-import Enum from "./module/config/enum.mjs";
+import Enum from './module/config/enum.mjs'
 
 const myEnum = new Enum({
-  FOO: {label: "Foo", value: 1},
-  BAR: {label: "Bar", value: 2}
-});
+  FOO: { label: 'Foo', value: 1 },
+  BAR: { label: 'Bar', value: 2 },
+})
 ```
 
 **Source** : `module/config/*.mjs`, `module/config/enum.mjs`
@@ -636,21 +639,21 @@ const myEnum = new Enum({
 
 ## Résumé des Patterns
 
-| Pattern | Type | Usage Principal | Fichiers Clés |
-|---------|------|----------------|---------------|
-| Mixin | Structurel | Composition UI avec Handlebars | `applications/**/*.mjs` |
-| Template Method | Comportemental | Préparation de données | `models/actor-*.mjs` |
-| Type Object | Structurel | Modèles Actor/Item | `models/*.mjs` |
-| Command | Comportemental | Système d'actions | `models/action.mjs` |
-| Strategy | Comportemental | Tests de dés | `dice/*.mjs` |
-| Observer | Comportemental | Système de hooks | `hooks/*.mjs` |
-| State | Comportemental | Création de personnage | `hero-creation-sheet.mjs` |
-| Factory | Création | Instanciation configurée | `dice/standard-check.mjs` |
-| Builder | Création | Construction d'actions | `models/action.mjs` |
-| Prototype | Création | Clonage d'actions | `models/action.mjs` |
-| Document-Model | Foundry | Séparation persistance/logique | `documents/`, `models/` |
-| Config Hierarchy | Foundry | Configuration en couches | `config/system.mjs` |
-| Enum | Foundry | Énumérations typées | `config/*.mjs` |
+| Pattern          | Type           | Usage Principal                | Fichiers Clés             |
+| ---------------- | -------------- | ------------------------------ | ------------------------- |
+| Mixin            | Structurel     | Composition UI avec Handlebars | `applications/**/*.mjs`   |
+| Template Method  | Comportemental | Préparation de données         | `models/actor-*.mjs`      |
+| Type Object      | Structurel     | Modèles Actor/Item             | `models/*.mjs`            |
+| Command          | Comportemental | Système d'actions              | `models/action.mjs`       |
+| Strategy         | Comportemental | Tests de dés                   | `dice/*.mjs`              |
+| Observer         | Comportemental | Système de hooks               | `hooks/*.mjs`             |
+| State            | Comportemental | Création de personnage         | `hero-creation-sheet.mjs` |
+| Factory          | Création       | Instanciation configurée       | `dice/standard-check.mjs` |
+| Builder          | Création       | Construction d'actions         | `models/action.mjs`       |
+| Prototype        | Création       | Clonage d'actions              | `models/action.mjs`       |
+| Document-Model   | Foundry        | Séparation persistance/logique | `documents/`, `models/`   |
+| Config Hierarchy | Foundry        | Configuration en couches       | `config/system.mjs`       |
+| Enum             | Foundry        | Énumérations typées            | `config/*.mjs`            |
 
 ---
 

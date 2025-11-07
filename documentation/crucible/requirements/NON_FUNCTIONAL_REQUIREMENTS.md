@@ -68,10 +68,10 @@ get resources() {
 async _onClose(options) {
   // Nettoyer les listeners
   this.#removeEventListeners();
-  
+
   // Libérer les références
   this.actor = null;
-  
+
   await super._onClose(options);
 }
 ```
@@ -216,13 +216,15 @@ async _preUpdate(data, options, user) {
 **Implémentation** :
 
 ```javascript
-actorHooks: new fields.ArrayField(new fields.SchemaField({
-  hook: new fields.StringField({required: true}),
-  fn: new fields.JavaScriptField({
-    async: true,
-    gmOnly: true  // Uniquement éditable par le GM
-  })
-}))
+actorHooks: new fields.ArrayField(
+  new fields.SchemaField({
+    hook: new fields.StringField({ required: true }),
+    fn: new fields.JavaScriptField({
+      async: true,
+      gmOnly: true, // Uniquement éditable par le GM
+    }),
+  }),
+)
 ```
 
 ### 3.4 Sanitization HTML
@@ -364,10 +366,10 @@ async use(options = {}) {
 
 ```javascript
 // Notification de succès
-ui.notifications.info("Action used successfully");
+ui.notifications.info('Action used successfully')
 
 // Notification d'erreur
-ui.notifications.error("Cannot use action: not enough action points");
+ui.notifications.error('Cannot use action: not enough action points')
 ```
 
 ### 5.3 Accessibilité
@@ -504,15 +506,15 @@ generateId(name, length = 16) {
 
 ```javascript
 crucible.api = {
-  applications,  // Classes d'UI
-  audio,         // Helpers audio
-  canvas,        // Composants canvas
-  dice,          // Système de dés
-  documents,     // Classes de documents
-  models,        // Data models
-  methods,       // Méthodes utilitaires
-  talents,       // Système de talents
-  hooks          // Handlers de hooks
+  applications, // Classes d'UI
+  audio, // Helpers audio
+  canvas, // Composants canvas
+  dice, // Système de dés
+  documents, // Classes de documents
+  models, // Data models
+  methods, // Méthodes utilitaires
+  talents, // Système de talents
+  hooks, // Handlers de hooks
 }
 ```
 
@@ -529,9 +531,9 @@ crucible.api = {
 **Exemple** :
 
 ```javascript
-Hooks.on("crucible.action.postActivate", (action, outcome) => {
+Hooks.on('crucible.action.postActivate', (action, outcome) => {
   // Extension custom
-});
+})
 ```
 
 ### 7.3 Configuration Personnalisable
@@ -550,9 +552,9 @@ Hooks.on("crucible.action.postActivate", (action, outcome) => {
 ```javascript
 // Ajouter une langue personnalisée
 crucible.CONFIG.languages.elvish = {
-  label: "Elvish",
-  category: "ancient"
-};
+  label: 'Elvish',
+  category: 'ancient',
+}
 ```
 
 ### 7.4 Extensibilité des Items
@@ -581,7 +583,7 @@ crucible.CONFIG.languages.elvish = {
 
 ```javascript
 // Toujours utiliser i18n
-const label = game.i18n.localize("CRUCIBLE.ActionUse");
+const label = game.i18n.localize('CRUCIBLE.ActionUse')
 ```
 
 ### 8.2 Format de Nombres
@@ -591,9 +593,9 @@ const label = game.i18n.localize("CRUCIBLE.ActionUse");
 **Exemple** :
 
 ```javascript
-const formatted = game.i18n.format("CRUCIBLE.DamageAmount", {
-  amount: 25
-});
+const formatted = game.i18n.format('CRUCIBLE.DamageAmount', {
+  amount: 25,
+})
 // "25 damage"
 ```
 
@@ -613,7 +615,7 @@ const formatted = game.i18n.format("CRUCIBLE.DamageAmount", {
 
 ```javascript
 if (crucible.developmentMode) {
-  console.log("Debug: Action initialized", action);
+  console.log('Debug: Action initialized', action)
 }
 ```
 

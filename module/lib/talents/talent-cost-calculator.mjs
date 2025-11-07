@@ -1,4 +1,4 @@
-import TrainedTalent from "./trained-talent.mjs";
+import TrainedTalent from './trained-talent.mjs'
 
 /**
  * TalentCostCalculator class
@@ -6,34 +6,33 @@ import TrainedTalent from "./trained-talent.mjs";
  *
  */
 export default class TalentCostCalculator {
-    constructor(talent) {
-        this.talent = foundry.utils.deepClone(talent);
-    }
+  constructor(talent) {
+    this.talent = foundry.utils.deepClone(talent)
+  }
 
-    /**
-     * Calculate the cost of the talent.
-     * @param {string} action - The action to perform.
-     * @param {number} rank - The rank of the talent in the tree (row).
-     * @returns {number} - The cost of the talent.
-     */
-    calculateCost(action, rank) {
-        let cost = 0;
-        if (this.talent instanceof TrainedTalent) {
-            if (action === "train") {
-                cost = this.#calculateTrainCost(rank);
-            } else if (action === "forget") {
-                cost = this.#calculateForgetCost(rank);
-            }
-        }
-        return cost;
+  /**
+   * Calculate the cost of the talent.
+   * @param {string} action - The action to perform.
+   * @param {number} rank - The rank of the talent in the tree (row).
+   * @returns {number} - The cost of the talent.
+   */
+  calculateCost(action, rank) {
+    let cost = 0
+    if (this.talent instanceof TrainedTalent) {
+      if (action === 'train') {
+        cost = this.#calculateTrainCost(rank)
+      } else if (action === 'forget') {
+        cost = this.#calculateForgetCost(rank)
+      }
     }
+    return cost
+  }
 
-    #calculateTrainCost(rank) {
-        return rank * 5;
-    }
+  #calculateTrainCost(rank) {
+    return rank * 5
+  }
 
-    #calculateForgetCost(rank) {
-        return this.#calculateTrainCost(rank);
-    }
-
+  #calculateForgetCost(rank) {
+    return this.#calculateTrainCost(rank)
+  }
 }

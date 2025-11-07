@@ -46,22 +46,19 @@ Ce document décrit les différents scénarios de déploiement du système Star 
 ```javascript
 // Script de vérification automatique
 const verifyInstallation = async () => {
-    const requiredPacks = [
-        "swerpg.species", "swerpg.careers", "swerpg.specializations",
-        "swerpg.talents", "swerpg.weapons", "swerpg.armor"
-    ];
-    
-    for (const packId of requiredPacks) {
-        const pack = game.packs.get(packId);
-        if (!pack) {
-            ui.notifications.error(`Compendium manquant: ${packId}`);
-            return false;
-        }
+  const requiredPacks = ['swerpg.species', 'swerpg.careers', 'swerpg.specializations', 'swerpg.talents', 'swerpg.weapons', 'swerpg.armor']
+
+  for (const packId of requiredPacks) {
+    const pack = game.packs.get(packId)
+    if (!pack) {
+      ui.notifications.error(`Compendium manquant: ${packId}`)
+      return false
     }
-    
-    ui.notifications.info("Installation SWERPG vérifiée avec succès!");
-    return true;
-};
+  }
+
+  ui.notifications.info('Installation SWERPG vérifiée avec succès!')
+  return true
+}
 ```
 
 ## 2. Installation Développeur (Environnement Local)
@@ -103,15 +100,15 @@ pnpm run dev
 ```json
 // .vscode/settings.json
 {
-    "javascript.preferences.importModuleSpecifier": "relative",
-    "typescript.preferences.importModuleSpecifier": "relative",
-    "emmet.includeLanguages": {
-        "handlebars": "html"
-    },
-    "files.associations": {
-        "*.hbs": "handlebars",
-        "*.mjs": "javascript"
-    }
+  "javascript.preferences.importModuleSpecifier": "relative",
+  "typescript.preferences.importModuleSpecifier": "relative",
+  "emmet.includeLanguages": {
+    "handlebars": "html"
+  },
+  "files.associations": {
+    "*.hbs": "handlebars",
+    "*.mjs": "javascript"
+  }
 }
 ```
 
@@ -120,18 +117,18 @@ pnpm run dev
 ```json
 // package.json - scripts principaux
 {
-    "scripts": {
-        "build": "rollup -c && npm run less",
-        "dev": "concurrently \"rollup -c -w\" \"npm run less:watch\"",
-        "less": "lessc styles/swerpg.less styles/swerpg.css",
-        "less:watch": "nodemon --watch styles --ext less --exec \"npm run less\"",
-        "extract": "fvtt package unpack --in packs --out _source",
-        "compile": "fvtt package pack --in _source --out packs",
-        "test": "vitest",
-        "test:coverage": "vitest --coverage",
-        "lint": "eslint . --ext .mjs,.js",
-        "lint:fix": "eslint . --ext .mjs,.js --fix"
-    }
+  "scripts": {
+    "build": "rollup -c && npm run less",
+    "dev": "concurrently \"rollup -c -w\" \"npm run less:watch\"",
+    "less": "lessc styles/swerpg.less styles/swerpg.css",
+    "less:watch": "nodemon --watch styles --ext less --exec \"npm run less\"",
+    "extract": "fvtt package unpack --in packs --out _source",
+    "compile": "fvtt package pack --in _source --out packs",
+    "test": "vitest",
+    "test:coverage": "vitest --coverage",
+    "lint": "eslint . --ext .mjs,.js",
+    "lint:fix": "eslint . --ext .mjs,.js --fix"
+  }
 }
 ```
 
@@ -197,7 +194,7 @@ services:
   swerpg-foundry:
     build: .
     ports:
-      - "30000:30000"
+      - '30000:30000'
     volumes:
       - foundry-data:/data/Data
       - ./backups:/data/backups
@@ -205,12 +202,12 @@ services:
       - FOUNDRY_ADMIN_KEY=${FOUNDRY_ADMIN_KEY}
       - FOUNDRY_LICENSE_KEY=${FOUNDRY_LICENSE_KEY}
     restart: unless-stopped
-    
+
   nginx:
     image: nginx:alpine
     ports:
-      - "80:80"
-      - "443:443"
+      - '80:80'
+      - '443:443'
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
       - ./certs:/etc/nginx/certs
@@ -250,18 +247,18 @@ volumes:
 server {
     listen 443 ssl http2;
     server_name your-star-wars-game.com;
-    
+
     # Certificats SSL
     ssl_certificate /etc/nginx/certs/fullchain.pem;
     ssl_certificate_key /etc/nginx/certs/privkey.pem;
-    
+
     # Optimisations pour assets SWERPG
     location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2)$ {
         expires 1y;
         add_header Cache-Control "public, immutable";
         gzip_static on;
     }
-    
+
     # WebSocket pour Foundry
     location /socket.io/ {
         proxy_pass http://localhost:30000;
@@ -271,7 +268,7 @@ server {
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
     }
-    
+
     # Application principale
     location / {
         proxy_pass http://localhost:30000;
@@ -323,24 +320,24 @@ echo "Sauvegarde SWERPG terminée: swerpg-backup-$DATE.tar.gz"
 ```javascript
 // Monitoring spécialisé pour SWERPG
 class SwerpgMonitoring {
-    static init() {
-        // Métriques de performance
-        this.trackDiceRollPerformance();
-        this.trackTalentTreeLoading();
-        this.trackForceCalculations();
-        
-        // Métriques d'usage
-        this.trackPlayerActions();
-        this.trackSystemErrors();
-    }
-    
-    static trackDiceRollPerformance() {
-        Hooks.on("swerpg.diceRolled", (roll, duration) => {
-            if (duration > 1000) {
-                console.warn(`Jet de dés lent détecté: ${duration}ms`);
-            }
-        });
-    }
+  static init() {
+    // Métriques de performance
+    this.trackDiceRollPerformance()
+    this.trackTalentTreeLoading()
+    this.trackForceCalculations()
+
+    // Métriques d'usage
+    this.trackPlayerActions()
+    this.trackSystemErrors()
+  }
+
+  static trackDiceRollPerformance() {
+    Hooks.on('swerpg.diceRolled', (roll, duration) => {
+      if (duration > 1000) {
+        console.warn(`Jet de dés lent détecté: ${duration}ms`)
+      }
+    })
+  }
 }
 ```
 
@@ -374,21 +371,11 @@ git push origin feature/mon-ajout
 ```javascript
 // sync-config.js - Configuration de synchronisation
 const syncConfig = {
-    sharedElements: [
-        "compendia.species",
-        "compendia.talents", 
-        "compendia.equipment",
-        "world.npcs",
-        "world.locations"
-    ],
-    gmSpecific: [
-        "world.plots",
-        "world.secret-npcs",
-        "journal.gm-notes"
-    ],
-    syncInterval: 300000, // 5 minutes
-    conflictResolution: "timestamp" // ou "manual"
-};
+  sharedElements: ['compendia.species', 'compendia.talents', 'compendia.equipment', 'world.npcs', 'world.locations'],
+  gmSpecific: ['world.plots', 'world.secret-npcs', 'journal.gm-notes'],
+  syncInterval: 300000, // 5 minutes
+  conflictResolution: 'timestamp', // ou "manual"
+}
 ```
 
 ## 6. Résolution de Problèmes
@@ -400,20 +387,20 @@ const syncConfig = {
 ```javascript
 // Script de diagnostic
 async function diagnosePacks() {
-    const requiredPacks = ["swerpg.species", "swerpg.careers", "swerpg.talents"];
-    const results = {};
-    
-    for (const packId of requiredPacks) {
-        const pack = game.packs.get(packId);
-        results[packId] = {
-            exists: !!pack,
-            loaded: pack?.loaded,
-            size: pack?.index?.size || 0
-        };
+  const requiredPacks = ['swerpg.species', 'swerpg.careers', 'swerpg.talents']
+  const results = {}
+
+  for (const packId of requiredPacks) {
+    const pack = game.packs.get(packId)
+    results[packId] = {
+      exists: !!pack,
+      loaded: pack?.loaded,
+      size: pack?.index?.size || 0,
     }
-    
-    console.table(results);
-    return results;
+  }
+
+  console.table(results)
+  return results
 }
 ```
 

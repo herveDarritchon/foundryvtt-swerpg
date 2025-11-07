@@ -36,13 +36,13 @@ Documentation technique **rétroactive** basée sur l'analyse du code source exi
 
 #### Fichiers Analysés
 
-| Fichier | Lignes | Objectif |
-|---------|--------|----------|
-| `crucible.mjs` | 1-200 / 768 total | Point d'entrée du système, initialisation |
-| `system.json` | 1-100 / 228 total | Manifeste du système |
-| `package.json` | 1-100 / 100 total | Configuration npm et scripts de build |
-| `README.md` | Complet | Introduction au projet |
-| `CONTRIBUTING.md` | Complet | Politique de contribution |
+| Fichier           | Lignes            | Objectif                                  |
+| ----------------- | ----------------- | ----------------------------------------- |
+| `crucible.mjs`    | 1-200 / 768 total | Point d'entrée du système, initialisation |
+| `system.json`     | 1-100 / 228 total | Manifeste du système                      |
+| `package.json`    | 1-100 / 100 total | Configuration npm et scripts de build     |
+| `README.md`       | Complet           | Introduction au projet                    |
+| `CONTRIBUTING.md` | Complet           | Politique de contribution                 |
 
 #### Informations Extraites
 
@@ -56,13 +56,13 @@ Documentation technique **rétroactive** basée sur l'analyse du code source exi
 
 #### Fichiers Analysés
 
-| Fichier | Lignes | Objectif |
-|---------|--------|----------|
-| `module/config/system.mjs` | 1-150 / 183 total | Configuration centrale du système |
-| `module/config/action.mjs` | 1-100 / 1278 total | Configuration des actions |
-| `module/config/talents.mjs` | Référencé | Configuration des talents |
-| `module/config/spellcraft.mjs` | Référencé | Configuration du spellcraft |
-| `module/config/skills.mjs` | Référencé | Configuration des compétences |
+| Fichier                        | Lignes             | Objectif                          |
+| ------------------------------ | ------------------ | --------------------------------- |
+| `module/config/system.mjs`     | 1-150 / 183 total  | Configuration centrale du système |
+| `module/config/action.mjs`     | 1-100 / 1278 total | Configuration des actions         |
+| `module/config/talents.mjs`    | Référencé          | Configuration des talents         |
+| `module/config/spellcraft.mjs` | Référencé          | Configuration du spellcraft       |
+| `module/config/skills.mjs`     | Référencé          | Configuration des compétences     |
 
 #### Informations Extraites
 
@@ -76,14 +76,14 @@ Documentation technique **rétroactive** basée sur l'analyse du code source exi
 
 #### Fichiers Analysés
 
-| Fichier | Lignes | Objectif |
-|---------|--------|----------|
-| `module/documents/actor.mjs` | 1-100 / 2385 total | Extension CrucibleActor |
-| `module/documents/item.mjs` | 1-100 / 170 total | Extension CrucibleItem |
-| `module/documents/combat.mjs` | Référencé | Extension CrucibleCombat |
-| `module/documents/active-effect.mjs` | Référencé | Extension CrucibleActiveEffect |
-| `module/documents/token.mjs` | Référencé | Extension CrucibleToken |
-| `module/documents/chat-message.mjs` | Référencé | Extension CrucibleChatMessage |
+| Fichier                              | Lignes             | Objectif                       |
+| ------------------------------------ | ------------------ | ------------------------------ |
+| `module/documents/actor.mjs`         | 1-100 / 2385 total | Extension CrucibleActor        |
+| `module/documents/item.mjs`          | 1-100 / 170 total  | Extension CrucibleItem         |
+| `module/documents/combat.mjs`        | Référencé          | Extension CrucibleCombat       |
+| `module/documents/active-effect.mjs` | Référencé          | Extension CrucibleActiveEffect |
+| `module/documents/token.mjs`         | Référencé          | Extension CrucibleToken        |
+| `module/documents/chat-message.mjs`  | Référencé          | Extension CrucibleChatMessage  |
 
 #### Informations Extraites
 
@@ -97,13 +97,13 @@ Documentation technique **rétroactive** basée sur l'analyse du code source exi
 
 #### Fichiers Analysés
 
-| Fichier | Lignes | Objectif |
-|---------|--------|----------|
-| `module/models/action.mjs` | 1-150 / 1734 total | Modèle CrucibleAction |
-| `module/models/actor-hero.mjs` | 1-150 / 324 total | Modèle Hero Actor |
-| `module/models/item-talent.mjs` | 1-150 / 319 total | Modèle Talent Item |
-| `module/models/actor-base.mjs` | Référencé | Modèle de base pour actors |
-| `module/models/spell-action.mjs` | Référencé | Actions de sort |
+| Fichier                          | Lignes             | Objectif                   |
+| -------------------------------- | ------------------ | -------------------------- |
+| `module/models/action.mjs`       | 1-150 / 1734 total | Modèle CrucibleAction      |
+| `module/models/actor-hero.mjs`   | 1-150 / 324 total  | Modèle Hero Actor          |
+| `module/models/item-talent.mjs`  | 1-150 / 319 total  | Modèle Talent Item         |
+| `module/models/actor-base.mjs`   | Référencé          | Modèle de base pour actors |
+| `module/models/spell-action.mjs` | Référencé          | Actions de sort            |
 
 #### Informations Extraites
 
@@ -117,13 +117,13 @@ Documentation technique **rétroactive** basée sur l'analyse du code source exi
 
 #### Dossiers Explorés
 
-| Dossier | Contenu |
-|---------|---------|
-| `module/applications/sheets/` | Feuilles de personnage et d'objet |
-| `module/applications/config/` | Applications de configuration |
-| `module/applications/hud/` | HUD personnalisés |
-| `module/applications/elements/` | Éléments HTML personnalisés |
-| `module/applications/sidebar/` | Composants de sidebar |
+| Dossier                         | Contenu                           |
+| ------------------------------- | --------------------------------- |
+| `module/applications/sheets/`   | Feuilles de personnage et d'objet |
+| `module/applications/config/`   | Applications de configuration     |
+| `module/applications/hud/`      | HUD personnalisés                 |
+| `module/applications/elements/` | Éléments HTML personnalisés       |
+| `module/applications/sidebar/`  | Composants de sidebar             |
 
 #### Informations Extraites
 
@@ -136,12 +136,12 @@ Documentation technique **rétroactive** basée sur l'analyse du code source exi
 
 #### Fichiers Analysés
 
-| Fichier | Objectif |
-|---------|----------|
-| `module/hooks/_module.mjs` | Module d'export des hooks |
-| `module/hooks/accessory.mjs` | Hooks pour accessoires |
-| `module/hooks/action.mjs` | Hooks pour actions |
-| `module/hooks/talent.mjs` | Hooks pour talents |
+| Fichier                      | Objectif                  |
+| ---------------------------- | ------------------------- |
+| `module/hooks/_module.mjs`   | Module d'export des hooks |
+| `module/hooks/accessory.mjs` | Hooks pour accessoires    |
+| `module/hooks/action.mjs`    | Hooks pour actions        |
+| `module/hooks/talent.mjs`    | Hooks pour talents        |
 
 #### Informations Extraites
 
@@ -153,11 +153,11 @@ Documentation technique **rétroactive** basée sur l'analyse du code source exi
 
 #### Dossiers Explorés
 
-| Dossier | Contenu |
-|---------|---------|
-| `module/canvas/tree/` | Arbre de talents canvas |
+| Dossier               | Contenu                  |
+| --------------------- | ------------------------ |
+| `module/canvas/tree/` | Arbre de talents canvas  |
 | `module/canvas/grid/` | Grid layer personnalisée |
-| `module/canvas/` | Token object et ruler |
+| `module/canvas/`      | Token object et ruler    |
 
 #### Informations Extraites
 
@@ -170,13 +170,13 @@ Documentation technique **rétroactive** basée sur l'analyse du code source exi
 
 #### Dossiers Explorés
 
-| Dossier | Contenu |
-|---------|---------|
-| `_source/` | Fichiers YAML sources |
-| `packs/` | LevelDB compilés |
-| `assets/` | Assets graphiques |
-| `templates/` | Templates Handlebars |
-| `styles/` | Fichiers LESS/CSS |
+| Dossier      | Contenu               |
+| ------------ | --------------------- |
+| `_source/`   | Fichiers YAML sources |
+| `packs/`     | LevelDB compilés      |
+| `assets/`    | Assets graphiques     |
+| `templates/` | Templates Handlebars  |
+| `styles/`    | Fichiers LESS/CSS     |
 
 #### Informations Extraites
 
@@ -375,7 +375,7 @@ documentation/
 - **Fichiers principaux analysés** : ~30
 - **Lignes de code examinées** : ~3,000+ lignes
 - **Modules explorés** : 8 (config, documents, models, applications, hooks, canvas, dice, interaction)
-- **Types de composants identifiés** : 
+- **Types de composants identifiés** :
   - Documents : 6
   - Data Models : 15+
   - Applications : 20+
@@ -667,12 +667,12 @@ Lecture ciblée des fichiers clés :
 
 ### Statistiques de Documentation
 
-| Document | Lignes | Diagrammes | Tables | Sections |
-|----------|--------|------------|--------|----------|
-| PATTERNS.md | ~650 | 13 | 2 | 13 patterns |
-| MODELS.md | ~1100 | 10 | 5 | 24 models |
-| WORKFLOWS.md | ~1200 | 15 | 8 | 8 workflows |
-| **Total** | **~2950** | **38** | **15** | **45** |
+| Document     | Lignes    | Diagrammes | Tables | Sections    |
+| ------------ | --------- | ---------- | ------ | ----------- |
+| PATTERNS.md  | ~650      | 13         | 2      | 13 patterns |
+| MODELS.md    | ~1100     | 10         | 5      | 24 models   |
+| WORKFLOWS.md | ~1200     | 15         | 8      | 8 workflows |
+| **Total**    | **~2950** | **38**     | **15** | **45**      |
 
 ### Couverture de la Codebase
 

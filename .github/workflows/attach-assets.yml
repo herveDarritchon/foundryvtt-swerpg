@@ -3,7 +3,7 @@ name: 📆 Attach System Assets
 
 on:
   release:
-    types: [ published ]
+    types: [published]
 
 jobs:
   build-and-upload:
@@ -23,13 +23,13 @@ jobs:
       - name: 🔧 Modify Manifest to remove HotReload
         uses: microsoft/variable-substitution@v1
         with:
-          files: "system.json"
+          files: 'system.json'
         env:
           flags.hotReload: false
           version: ${{ steps.version.outputs.version-without-v }}
           download: https://github.com/${{ github.repository }}/releases/download/${{ github.event.release.tag_name }}/system.zip
-          esmodules: "[\"swerpg.mjs\"]"
-          styles: "[\"swerpg.css\"]"
+          esmodules: '["swerpg.mjs"]'
+          styles: '["swerpg.css"]'
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -61,7 +61,7 @@ jobs:
         with:
           allowUpdates: true
           token: ${{ secrets.GITHUB_TOKEN }}
-          artifacts: "./system.zip, ./system.json"
+          artifacts: './system.zip, ./system.json'
           tag: ${{ github.event.release.tag_name }}
           body: ${{ github.event.release.body }}
           name: ${{ github.event.release.name }}

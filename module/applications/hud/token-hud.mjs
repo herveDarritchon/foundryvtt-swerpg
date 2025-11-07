@@ -4,11 +4,10 @@
  * Eventually it will add custom resource management, action HUD, etc...
  */
 export default class SwerpgTokenHUD extends foundry.applications.hud.TokenHUD {
-
-    /** @override */
-    setPosition(_position) {
-        const {bounds, w: width, h: height} = this.object;
-        const position = {width, height, left: bounds.left, top: bounds.top};
-        this.element.css(position);
-    }
+  /** @override */
+  setPosition(_position) {
+    const { bounds, w: width, h: height } = this.object
+    const position = { width, height, left: bounds.left, top: bounds.top }
+    this.element.css(position)
+  }
 }

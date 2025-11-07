@@ -34,18 +34,17 @@ name: Create System Files For GitHub Release
 
 env:
   # The URL used for the module's "Project URL" link on FoundryVTT's website.
-  project_url: "https://github.com/${{github.repository}}"
+  project_url: 'https://github.com/${{github.repository}}'
 
   # A URL that will always point to the latest manifest.
   # FoundryVTT uses this URL to check whether the current module version that
   # is installed is the latest version. This URL should NOT change,
   # otherwise FoundryVTT won't be able to perform this check.
-  latest_manifest_url: "https://github.com/${{github.repository}}/releases/latest/download/system.json"
+  latest_manifest_url: 'https://github.com/${{github.repository}}/releases/latest/download/system.json'
 
   # The URL to the module archive associated with the module release being
   # processed by this workflow.
-  release_module_url: "https://github.com/${{github.repository}}/releases/download/${{github.event.release.tag_name}}/system.zip"
-
+  release_module_url: 'https://github.com/${{github.repository}}/releases/download/${{github.event.release.tag_name}}/system.zip'
 
 on:
   # Only run this workflow when a release is published.
@@ -60,7 +59,6 @@ on:
   release:
     types: [published]
 
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -70,7 +68,6 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
-
 
       # Extract version embedded in the tag.
       # This step expects the tag to be one of the following formats:
@@ -82,7 +79,6 @@ jobs:
       - name: Extract Version From Tag
         id: get_version
         uses: battila7/get-version-action@v2
-
 
       # Modify "module.json" with values specific to the release.
       # Since the values for the "version" and "url" keys aren't known ahead of
@@ -105,11 +101,11 @@ jobs:
       # https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
       - name: Install Dependencies
         run: npm ci
-      
+
       # Pull YAML to LDB packs
       - name: Build Packs
         run: npm run compile
-          
+
       # Create a "system.zip" archive containing all the module's required files.
       # If you have other directories or files that will need to be added to
       # your packaged module, add them here.
@@ -161,7 +157,4 @@ jobs:
           method: 'POST'
           contentType: 'application/json'
           customHeaders: '{"Authorization": "${{ secrets.FVTT_PACKAGE_RELEASE_TOKEN }}"}'
-          data: '{"id": "tenebris","dry-run":false,"release":{"version":"${{github.event.release.tag_name}}","manifest":"https://github.com/12-Monkeys-Developers/tenebris/releases/download/${{github.event.release.tag_name}}/system.json","notes":"https://github.com/12-Monkeys-Developers/tenebris/blob/main/CHANGELOG.md","compatibility":{"minimum":"12","verified":"12","maximum":"12"}}}'          
-
-  
-      
+          data: '{"id": "tenebris","dry-run":false,"release":{"version":"${{github.event.release.tag_name}}","manifest":"https://github.com/12-Monkeys-Developers/tenebris/releases/download/${{github.event.release.tag_name}}/system.json","notes":"https://github.com/12-Monkeys-Developers/tenebris/blob/main/CHANGELOG.md","compatibility":{"minimum":"12","verified":"12","maximum":"12"}}}'

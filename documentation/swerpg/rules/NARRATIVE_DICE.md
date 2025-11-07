@@ -5,47 +5,44 @@ The custom dice enable results on two axes. Success / Failure determines how eff
 ## Contents
 
 - [1 The Dice](https://star-wars-rpg-ffg.fandom.com/wiki/Narrative_Dice#The_Dice)
-    - [1.1 Positive](https://star-wars-rpg-ffg.fandom.com/wiki/Narrative_Dice#Positive)
-        - [1.1.1 Boost (Blue)](https://star-wars-rpg-ffg.fandom.com/wiki/Narrative_Dice#Boost_\(Blue\))
-        - [1.1.2 Ability (Green)](https://star-wars-rpg-ffg.fandom.com/wiki/Narrative_Dice#Ability_\(Green\))
-        - [1.1.3 Proficiency (Yellow)](https://star-wars-rpg-ffg.fandom.com/wiki/Narrative_Dice#Proficiency_\(Yellow\))
-    - [1.2 Force (White)](https://star-wars-rpg-ffg.fandom.com/wiki/Narrative_Dice#Force_\(White\))
-    - [1.3 Negative](https://star-wars-rpg-ffg.fandom.com/wiki/Narrative_Dice#Negative)
-        - [1.3.1 Setback (Black)](https://star-wars-rpg-ffg.fandom.com/wiki/Narrative_Dice#Setback_\(Black\))
-        - [1.3.2 Difficulty (Purple)](https://star-wars-rpg-ffg.fandom.com/wiki/Narrative_Dice#Difficulty_\(Purple\))
-            - [1.3.2.1 Standard Difficulties](https://star-wars-rpg-ffg.fandom.com/wiki/Narrative_Dice#Standard_Difficulties)
-            - [1.3.2.2 Expanded Difficulty Options](https://star-wars-rpg-ffg.fandom.com/wiki/Narrative_Dice#Expanded_Difficulty_Options)
-        - [1.3.3 Challenge (Red)](https://star-wars-rpg-ffg.fandom.com/wiki/Narrative_Dice#Challenge_\(Red\))
+  - [1.1 Positive](https://star-wars-rpg-ffg.fandom.com/wiki/Narrative_Dice#Positive)
+    - [1.1.1 Boost (Blue)](<https://star-wars-rpg-ffg.fandom.com/wiki/Narrative_Dice#Boost_(Blue)>)
+    - [1.1.2 Ability (Green)](<https://star-wars-rpg-ffg.fandom.com/wiki/Narrative_Dice#Ability_(Green)>)
+    - [1.1.3 Proficiency (Yellow)](<https://star-wars-rpg-ffg.fandom.com/wiki/Narrative_Dice#Proficiency_(Yellow)>)
+  - [1.2 Force (White)](<https://star-wars-rpg-ffg.fandom.com/wiki/Narrative_Dice#Force_(White)>)
+  - [1.3 Negative](https://star-wars-rpg-ffg.fandom.com/wiki/Narrative_Dice#Negative)
+    - [1.3.1 Setback (Black)](<https://star-wars-rpg-ffg.fandom.com/wiki/Narrative_Dice#Setback_(Black)>)
+    - [1.3.2 Difficulty (Purple)](<https://star-wars-rpg-ffg.fandom.com/wiki/Narrative_Dice#Difficulty_(Purple)>)
+      - [1.3.2.1 Standard Difficulties](https://star-wars-rpg-ffg.fandom.com/wiki/Narrative_Dice#Standard_Difficulties)
+      - [1.3.2.2 Expanded Difficulty Options](https://star-wars-rpg-ffg.fandom.com/wiki/Narrative_Dice#Expanded_Difficulty_Options)
+    - [1.3.3 Challenge (Red)](<https://star-wars-rpg-ffg.fandom.com/wiki/Narrative_Dice#Challenge_(Red)>)
 - [2 The Symbols](https://star-wars-rpg-ffg.fandom.com/wiki/Narrative_Dice#The_Symbols)
-    - [2.1 Success](https://star-wars-rpg-ffg.fandom.com/wiki/Narrative_Dice#Success)
-    - [2.2 Advantage](https://star-wars-rpg-ffg.fandom.com/wiki/Narrative_Dice#Advantage)
-    - [2.3 Triumph](https://star-wars-rpg-ffg.fandom.com/wiki/Narrative_Dice#Triumph)
-    - [2.4 Failure](https://star-wars-rpg-ffg.fandom.com/wiki/Narrative_Dice#Failure)
-    - [2.5 Threat](https://star-wars-rpg-ffg.fandom.com/wiki/Narrative_Dice#Threat)
-    - [2.6 Despair](https://star-wars-rpg-ffg.fandom.com/wiki/Narrative_Dice#Despair)
-    - [2.7 Light Point](https://star-wars-rpg-ffg.fandom.com/wiki/Narrative_Dice#Light_Point)
-    - [2.8 Dark Point](https://star-wars-rpg-ffg.fandom.com/wiki/Narrative_Dice#Dark_Point)
+  - [2.1 Success](https://star-wars-rpg-ffg.fandom.com/wiki/Narrative_Dice#Success)
+  - [2.2 Advantage](https://star-wars-rpg-ffg.fandom.com/wiki/Narrative_Dice#Advantage)
+  - [2.3 Triumph](https://star-wars-rpg-ffg.fandom.com/wiki/Narrative_Dice#Triumph)
+  - [2.4 Failure](https://star-wars-rpg-ffg.fandom.com/wiki/Narrative_Dice#Failure)
+  - [2.5 Threat](https://star-wars-rpg-ffg.fandom.com/wiki/Narrative_Dice#Threat)
+  - [2.6 Despair](https://star-wars-rpg-ffg.fandom.com/wiki/Narrative_Dice#Despair)
+  - [2.7 Light Point](https://star-wars-rpg-ffg.fandom.com/wiki/Narrative_Dice#Light_Point)
+  - [2.8 Dark Point](https://star-wars-rpg-ffg.fandom.com/wiki/Narrative_Dice#Dark_Point)
 - [3 Accessories](https://star-wars-rpg-ffg.fandom.com/wiki/Narrative_Dice#Accessories)
-    - [3.1 Dice Rollers](https://star-wars-rpg-ffg.fandom.com/wiki/Narrative_Dice#Dice_Rollers)
+  - [3.1 Dice Rollers](https://star-wars-rpg-ffg.fandom.com/wiki/Narrative_Dice#Dice_Rollers)
 
 ## The Dice
 
-[![Boost & Setback](https://static.wikia.nocookie.net/star-wars-rpg-ffg/images/f/f9/Dice_Boost_Setback.png/revision/latest/scale-to-width-down/185?cb=20240811010247 "Dice Boost Setback.png (85 KB)")
-
+[![Boost & Setback](https://static.wikia.nocookie.net/star-wars-rpg-ffg/images/f/f9/Dice_Boost_Setback.png/revision/latest/scale-to-width-down/185?cb=20240811010247 'Dice Boost Setback.png (85 KB)')
 
 Boost & Setback
 
-[![Ability & Difficulty](https://static.wikia.nocookie.net/star-wars-rpg-ffg/images/0/0d/Dice_Ability_Difficulty.png/revision/latest/scale-to-width-down/185?cb=20240811010128 "Dice Ability Difficulty.png (77 KB)")
-
+[![Ability & Difficulty](https://static.wikia.nocookie.net/star-wars-rpg-ffg/images/0/0d/Dice_Ability_Difficulty.png/revision/latest/scale-to-width-down/185?cb=20240811010128 'Dice Ability Difficulty.png (77 KB)')
 
 Ability & Difficulty
 
-[![Proficiency & Challenge](https://static.wikia.nocookie.net/star-wars-rpg-ffg/images/9/9b/Dice_Proficiency_Challenge.png/revision/latest/scale-to-width-down/185?cb=20240811010029 "Dice Proficiency Challenge.png (88 KB)")
-
+[![Proficiency & Challenge](https://static.wikia.nocookie.net/star-wars-rpg-ffg/images/9/9b/Dice_Proficiency_Challenge.png/revision/latest/scale-to-width-down/185?cb=20240811010029 'Dice Proficiency Challenge.png (88 KB)')
 
 Proficiency & Challenge
 
-[![Force](https://static.wikia.nocookie.net/star-wars-rpg-ffg/images/0/0b/Dice_Force.png/revision/latest/scale-to-width-down/185?cb=20240811005926 "Dice Force.png (43 KB)")
+[![Force](https://static.wikia.nocookie.net/star-wars-rpg-ffg/images/0/0b/Dice_Force.png/revision/latest/scale-to-width-down/185?cb=20240811005926 'Dice Force.png (43 KB)')
 
 Force
 
@@ -73,7 +70,7 @@ The proficiency die is the pinnacle of positive dice and granted when a characte
 
 ### Force (White)
 
-The Force die represents the flow of the Force in the Star Wars narrative. All games use this to assemble the [Destiny Point](https://star-wars-rpg-ffg.fandom.com/wiki/Destiny_Tokens "Destiny Tokens") pool. Characters with sensitivity to the Force will roll this die to determine the nature of the Force available to them in the moment. It has twelve sides (d12) and is sometimes referred to as the 'white die'.
+The Force die represents the flow of the Force in the Star Wars narrative. All games use this to assemble the [Destiny Point](https://star-wars-rpg-ffg.fandom.com/wiki/Destiny_Tokens 'Destiny Tokens') pool. Characters with sensitivity to the Force will roll this die to determine the nature of the Force available to them in the moment. It has twelve sides (d12) and is sometimes referred to as the 'white die'.
 
 > It is notable that unlike the other dice, this one has no blank faces. The Force die exemplifies the words of Yoda to Luke on Dagobah, that the dark side is not more powerful (as there are the same number of dark and light points across its faces) but that it is faster and easier (as more faces have dark points).
 

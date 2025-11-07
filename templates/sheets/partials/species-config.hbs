@@ -1,44 +1,41 @@
-<section class="tab sheet-body flexcol {{tabs.config.cssClass}} scrollable"
-         data-tab="{{tabs.config.id}}" data-group="{{tabs.config.group}}">
+<section class="tab sheet-body flexcol {{tabs.config.cssClass}} scrollable" data-tab="{{tabs.config.id}}" data-group="{{tabs.config.group}}">
+
+  <fieldset {{fieldDisabled}}>
+    <legend>{{localize "SPECIES.SHEET.SpecialAbility"}}</legend>
 
     <fieldset {{fieldDisabled}}>
-        <legend>{{localize "SPECIES.SHEET.SpecialAbility"}}</legend>
+      <legend>{{localize "SPECIES.SHEET.FreeSkill"}}</legend>
 
-        <fieldset {{fieldDisabled}}>
-            <legend>{{localize "SPECIES.SHEET.FreeSkill"}}</legend>
-
-            {{formField @root.fields.freeSkills value=source.system.freeSkills localize=true rootId=partId}}
-        </fieldset>
-
-        <fieldset {{fieldDisabled}}>
-            <legend>{{localize "SPECIES.SHEET.FreeTalent"}}</legend>
-
-            {{formField @root.fields.freeTalents value=source.system.freeTalents localize=true rootId=partId}}
-        </fieldset>
-
+      {{formField @root.fields.freeSkills value=source.system.freeSkills localize=true rootId=partId}}
     </fieldset>
 
     <fieldset {{fieldDisabled}}>
-        <legend>{{localize "SPECIES.SHEET.Characteristics"}}</legend>
-        {{formField fields.characteristics.fields.brawn value=source.system.characteristics.brawn localize=true}}
-        {{formField fields.characteristics.fields.agility value=source.system.characteristics.agility localize=true}}
-        {{formField fields.characteristics.fields.intellect value=source.system.characteristics.intellect
-                    localize=true}}
-        {{formField fields.characteristics.fields.cunning value=source.system.characteristics.cunning localize=true}}
-        {{formField fields.characteristics.fields.willpower value=source.system.characteristics.willpower
-                    localize=true}}
-        {{formField fields.characteristics.fields.presence value=source.system.characteristics.presence localize=true}}
+      <legend>{{localize "SPECIES.SHEET.FreeTalent"}}</legend>
+
+      {{formField @root.fields.freeTalents value=source.system.freeTalents localize=true rootId=partId}}
     </fieldset>
 
-    <fieldset {{fieldDisabled}}>
-        <legend>{{localize "SPECIES.SHEET.Threshold"}}</legend>
-        {{formField fields.woundThreshold.fields.modifier value=source.system.woundThreshold.modifier  localize=true}}
-        {{formField fields.strainThreshold.fields.modifier value=source.system.strainThreshold.modifier  localize=true}}
-    </fieldset>
+  </fieldset>
 
-    <fieldset {{fieldDisabled}}>
-        <legend>{{localize "SPECIES.SHEET.StartingExperience"}}</legend>
-        {{formField fields.startingExperience value=source.system.startingExperience localize=true}}
-    </fieldset>
+  <fieldset {{fieldDisabled}}>
+    <legend>{{localize "SPECIES.SHEET.Characteristics"}}</legend>
+    {{formField fields.characteristics.fields.brawn value=source.system.characteristics.brawn localize=true}}
+    {{formField fields.characteristics.fields.agility value=source.system.characteristics.agility localize=true}}
+    {{formField fields.characteristics.fields.intellect value=source.system.characteristics.intellect localize=true}}
+    {{formField fields.characteristics.fields.cunning value=source.system.characteristics.cunning localize=true}}
+    {{formField fields.characteristics.fields.willpower value=source.system.characteristics.willpower localize=true}}
+    {{formField fields.characteristics.fields.presence value=source.system.characteristics.presence localize=true}}
+  </fieldset>
+
+  <fieldset {{fieldDisabled}}>
+    <legend>{{localize "SPECIES.SHEET.Threshold"}}</legend>
+    {{formField fields.woundThreshold.fields.modifier value=source.system.woundThreshold.modifier localize=true}}
+    {{formField fields.strainThreshold.fields.modifier value=source.system.strainThreshold.modifier localize=true}}
+  </fieldset>
+
+  <fieldset {{fieldDisabled}}>
+    <legend>{{localize "SPECIES.SHEET.StartingExperience"}}</legend>
+    {{formField fields.startingExperience value=source.system.startingExperience localize=true}}
+  </fieldset>
 
 </section>

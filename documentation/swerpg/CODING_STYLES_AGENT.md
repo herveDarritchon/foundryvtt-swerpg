@@ -6,10 +6,10 @@
 
 ## 0) Mode opératoire de l’agent
 
-* **Langage** : JavaScript ES2022 **uniquement** (aucun TypeScript). Ext. `.mjs`/`.js` selon le dossier (code : `.mjs`).
-* **Cible** : Foundry VTT **v13+** (utiliser `ApplicationV2`, `HandlebarsApplicationMixin`, `TypeDataModel`).
-* **Style** : Prettier & ESLint **doivent** passer. Ne jamais insérer de `console.log` (utiliser `logger`).
-* **Sécurité** : pas d’effets de bord dans `prepareDerivedData`; migrations **idempotentes**; pas d’accès DOM global (scoper à l’app).
+- **Langage** : JavaScript ES2022 **uniquement** (aucun TypeScript). Ext. `.mjs`/`.js` selon le dossier (code : `.mjs`).
+- **Cible** : Foundry VTT **v13+** (utiliser `ApplicationV2`, `HandlebarsApplicationMixin`, `TypeDataModel`).
+- **Style** : Prettier & ESLint **doivent** passer. Ne jamais insérer de `console.log` (utiliser `logger`).
+- **Sécurité** : pas d’effets de bord dans `prepareDerivedData`; migrations **idempotentes**; pas d’accès DOM global (scoper à l’app).
 
 **Contrat de réponse** (ordre strict) :
 
@@ -28,16 +28,16 @@
 
 **Si la demande touche…**
 
-* **Données d’acteur/item** → créer/étendre un **`TypeDataModel`** dans `module/data/**` + migration si renommage.
-* **Interface (feuille, dialog, app)** → `ApplicationV2` + `HandlebarsApplicationMixin` dans `module/applications/**` + template `.hbs` dans `templates/**`.
-* **Règles/jet/effet** → classe d’**action** isolée dans `module/rules/actions/**` consommée par la feuille ou un service.
-* **Utilitaire transverse** (i18n, flags, logger, roll) → `module/services/**` ou `module/utils/**` (purs si possible).
+- **Données d’acteur/item** → créer/étendre un **`TypeDataModel`** dans `module/data/**` + migration si renommage.
+- **Interface (feuille, dialog, app)** → `ApplicationV2` + `HandlebarsApplicationMixin` dans `module/applications/**` + template `.hbs` dans `templates/**`.
+- **Règles/jet/effet** → classe d’**action** isolée dans `module/rules/actions/**` consommée par la feuille ou un service.
+- **Utilitaire transverse** (i18n, flags, logger, roll) → `module/services/**` ou `module/utils/**` (purs si possible).
 
 **Toujours** :
 
-* Les handlers UI utilisent `data-action` et des méthodes privées `#onX`.
-* `prepareDerivedData()` **ne met à jour** aucun Document.
-* Les chaînes sont **i18n** (jamais en dur dans le code/template) ; clés `SWERPG.Domain.Sub.Key`.
+- Les handlers UI utilisent `data-action` et des méthodes privées `#onX`.
+- `prepareDerivedData()` **ne met à jour** aucun Document.
+- Les chaînes sont **i18n** (jamais en dur dans le code/template) ; clés `SWERPG.Domain.Sub.Key`.
 
 ---
 
@@ -66,21 +66,21 @@ packs/                # Compendiums LevelDB compilés
 tests/                # Tests Vitest
 ```
 
-* Fichiers JS : `kebab-case.mjs`. Classes : `PascalCase`. Fonctions/vars : `camelCase`.
-* Partials Handlebars : `_partial.hbs` (underscore).
-* Booléens : `is*/has*`. Suffixes standard : `*Model`, `*Service`, `*Config`.
+- Fichiers JS : `kebab-case.mjs`. Classes : `PascalCase`. Fonctions/vars : `camelCase`.
+- Partials Handlebars : `_partial.hbs` (underscore).
+- Booléens : `is*/has*`. Suffixes standard : `*Model`, `*Service`, `*Config`.
 
 ---
 
 ## 3) Règles de code **enforcées**
 
-* `===` obligatoire (`eqeqeq`).
-* `const` par défaut; `let` si mutation; **jamais** `var`.
-* `no-param-reassign`: interdit la mutation de paramètres (copie défensive).
-* Imports ES (`import/export`), pas de `require`.
-* `async/await` préféré; gérer tous les rejets.
-* `no-console` (sauf `warn`/`error` via `logger`).
-* `import/order` alphabétique + lignes blanches.
+- `===` obligatoire (`eqeqeq`).
+- `const` par défaut; `let` si mutation; **jamais** `var`.
+- `no-param-reassign`: interdit la mutation de paramètres (copie défensive).
+- Imports ES (`import/export`), pas de `require`.
+- `async/await` préféré; gérer tous les rejets.
+- `no-console` (sauf `warn`/`error` via `logger`).
+- `import/order` alphabétique + lignes blanches.
 
 **Logger minimal** (à utiliser par l’agent) :
 
@@ -88,10 +88,10 @@ tests/                # Tests Vitest
 // path: module/utils/logger.mjs
 export const logger = {
   debug: (...a) => console.debug('[SWERPG]', ...a),
-  info:  (...a) => console.info('[SWERPG]', ...a),
-  warn:  (...a) => console.warn('[SWERPG]', ...a),
+  info: (...a) => console.info('[SWERPG]', ...a),
+  warn: (...a) => console.warn('[SWERPG]', ...a),
   error: (...a) => console.error('[SWERPG]', ...a),
-};
+}
 ```
 
 ---
@@ -104,34 +104,34 @@ export const logger = {
 // path: module/data/actor/actor-model.mjs
 export class SwerpgActorModel extends foundry.abstract.TypeDataModel {
   static defineSchema() {
-    const { fields } = foundry.data;
+    const { fields } = foundry.data
     return {
       characteristics: new fields.SchemaField({
-        agility:   new fields.NumberField({ initial: 2, integer: true, min: 0, max: 6 }),
-        brawn:     new fields.NumberField({ initial: 2, integer: true, min: 0, max: 6 }),
+        agility: new fields.NumberField({ initial: 2, integer: true, min: 0, max: 6 }),
+        brawn: new fields.NumberField({ initial: 2, integer: true, min: 0, max: 6 }),
         intellect: new fields.NumberField({ initial: 2, integer: true, min: 0, max: 6 }),
-        cunning:   new fields.NumberField({ initial: 2, integer: true, min: 0, max: 6 }),
+        cunning: new fields.NumberField({ initial: 2, integer: true, min: 0, max: 6 }),
         willpower: new fields.NumberField({ initial: 2, integer: true, min: 0, max: 6 }),
-        presence:  new fields.NumberField({ initial: 2, integer: true, min: 0, max: 6 }),
+        presence: new fields.NumberField({ initial: 2, integer: true, min: 0, max: 6 }),
       }),
       thresholds: new fields.SchemaField({
         wounds: new fields.NumberField({ initial: 10, integer: true, min: 0 }),
         strain: new fields.NumberField({ initial: 10, integer: true, min: 0 }),
-        soak:   new fields.NumberField({ initial: 0, integer: true, min: 0 }),
+        soak: new fields.NumberField({ initial: 0, integer: true, min: 0 }),
       }),
       skills: new fields.ObjectField({ initial: {} }),
-    };
+    }
   }
   prepareDerivedData() {
-    const data = this;
-    const armorSoak = this.parent?.system?.armor?.soak ?? 0;
-    data.thresholds.soak = Math.max(0, (data.characteristics?.brawn ?? 0) + armorSoak);
+    const data = this
+    const armorSoak = this.parent?.system?.armor?.soak ?? 0
+    data.thresholds.soak = Math.max(0, (data.characteristics?.brawn ?? 0) + armorSoak)
   }
   static migrateData(source) {
-    const s = source;
+    const s = source
     if (s.characteristics?.vigor) {
-      s.characteristics.willpower = s.characteristics.vigor;
-      delete s.characteristics.vigor;
+      s.characteristics.willpower = s.characteristics.vigor
+      delete s.characteristics.vigor
     }
   }
 }
@@ -147,30 +147,32 @@ export class SwerpgActorSheet extends HandlebarsApplicationMixin(ApplicationV2) 
     classes: ['swerpg', 'sheet', 'actor'],
     window: { title: 'SWERPG.ActorSheet.Title' },
     position: { width: 860, height: 640 },
-    form: { submitOnChange: true }
-  };
-  #actor;
-  constructor(actor, options = {}) { super(options); this.#actor = actor; }
-  get title() { return game.i18n.format('SWERPG.ActorSheet.Title', { name: this.#actor.name }); }
+    form: { submitOnChange: true },
+  }
+  #actor
+  constructor(actor, options = {}) {
+    super(options)
+    this.#actor = actor
+  }
+  get title() {
+    return game.i18n.format('SWERPG.ActorSheet.Title', { name: this.#actor.name })
+  }
   async _prepareContext() {
-    const system = this.#actor.system;
-    return { actor: this.#actor, system, characteristics: system.characteristics };
+    const system = this.#actor.system
+    return { actor: this.#actor, system, characteristics: system.characteristics }
   }
   static PARTS = {
     header: { template: 'templates/actor/_header.hbs' },
-    stats:  { template: 'templates/actor/_stats.hbs' },
-    skills: { template: 'templates/actor/_skills.hbs' }
-  };
+    stats: { template: 'templates/actor/_stats.hbs' },
+    skills: { template: 'templates/actor/_skills.hbs' },
+  }
   activateListeners(html) {
-    html.querySelectorAll("[data-action='roll']").forEach((el) =>
-      el.addEventListener('click', (ev) => this.#onRoll(ev))
-    );
+    html.querySelectorAll("[data-action='roll']").forEach((el) => el.addEventListener('click', (ev) => this.#onRoll(ev)))
   }
   async #onRoll(ev) {
-    const key = ev.currentTarget?.dataset?.skill ?? 'cool';
-    const roll = await new Roll(`1d20 + @skills[\"${key}\"]`, this.#actor.getRollData())
-      .evaluate({ async: true });
-    return roll.toMessage({ speaker: ChatMessage.getSpeaker({ actor: this.#actor }) });
+    const key = ev.currentTarget?.dataset?.skill ?? 'cool'
+    const roll = await new Roll(`1d20 + @skills[\"${key}\"]`, this.#actor.getRollData()).evaluate({ async: true })
+    return roll.toMessage({ speaker: ChatMessage.getSpeaker({ actor: this.#actor }) })
   }
 }
 ```
@@ -180,12 +182,15 @@ export class SwerpgActorSheet extends HandlebarsApplicationMixin(ApplicationV2) 
 ```js
 // path: module/rules/actions/skill-check.mjs
 export class SkillCheck {
-  constructor(actor, skill, modifier = 0) { this.actor = actor; this.skill = skill; this.modifier = modifier; }
+  constructor(actor, skill, modifier = 0) {
+    this.actor = actor
+    this.skill = skill
+    this.modifier = modifier
+  }
   async execute() {
-    const data = this.actor.getRollData();
-    const roll = await new Roll(`1d20 + @skills[\"${this.skill}\"] + ${this.modifier}`, data)
-      .evaluate({ async: true });
-    return roll.toMessage({ speaker: ChatMessage.getSpeaker({ actor: this.actor }), flavor: game.i18n.format('SWERPG.Roll.Skill', { skill: this.skill }) });
+    const data = this.actor.getRollData()
+    const roll = await new Roll(`1d20 + @skills[\"${this.skill}\"] + ${this.modifier}`, data).evaluate({ async: true })
+    return roll.toMessage({ speaker: ChatMessage.getSpeaker({ actor: this.actor }), flavor: game.i18n.format('SWERPG.Roll.Skill', { skill: this.skill }) })
   }
 }
 ```
@@ -194,49 +199,49 @@ export class SkillCheck {
 
 ## 5) i18n : règles de génération
 
-* **Jamais** de chaînes brutes dans le code. Utiliser `game.i18n.localize/format`.
-* Clés : `SWERPG.Domain.Sub.Key` (ex. `SWERPG.Actor.Chars.Agility`).
-* L’agent **ajoute** les clés manquantes dans `lang/en.json` et `lang/fr.json` avec une traduction FR basique.
-* Dans les templates : `{{t "SWERPG.ActorSheet.Title" name=actor.name}}` (helper `t` via service).
+- **Jamais** de chaînes brutes dans le code. Utiliser `game.i18n.localize/format`.
+- Clés : `SWERPG.Domain.Sub.Key` (ex. `SWERPG.Actor.Chars.Agility`).
+- L’agent **ajoute** les clés manquantes dans `lang/en.json` et `lang/fr.json` avec une traduction FR basique.
+- Dans les templates : `{{t "SWERPG.ActorSheet.Title" name=actor.name}}` (helper `t` via service).
 
 Helper i18n minimal :
 
 ```js
 // path: module/services/i18n.mjs
-export const t = (k, data) => (data ? game.i18n.format(k, data) : game.i18n.localize(k));
+export const t = (k, data) => (data ? game.i18n.format(k, data) : game.i18n.localize(k))
 ```
 
 ---
 
 ## 6) Accessibilité & CSS
 
-* Préfixe BEM : `sw-Block__elem--mod`. Contraste ≥ 4.5:1 ; focus visible.
-* Pas d’`!important` sauf correctif ciblé Foundry. Animations < 200ms et respect de `prefers-reduced-motion`.
-* Les classes CSS introduites par l’agent doivent être **définies** dans `styles/**` ou réutiliser les tokens existants.
+- Préfixe BEM : `sw-Block__elem--mod`. Contraste ≥ 4.5:1 ; focus visible.
+- Pas d’`!important` sauf correctif ciblé Foundry. Animations < 200ms et respect de `prefers-reduced-motion`.
+- Les classes CSS introduites par l’agent doivent être **définies** dans `styles/**` ou réutiliser les tokens existants.
 
 ---
 
 ## 7) Tests générés par l’agent
 
-* **Toujours** tester : calculs de règles, formules de jets, chemins heureux/erreurs.
-* Pour les feuilles : test de construction, handlers, au moins un event `data-action`.
+- **Toujours** tester : calculs de règles, formules de jets, chemins heureux/erreurs.
+- Pour les feuilles : test de construction, handlers, au moins un event `data-action`.
 
 Exemple Vitest (JS) :
 
 ```js
 // path: tests/rules/skill-check.test.js
-import { describe, it, expect, vi } from 'vitest';
-import { SkillCheck } from '@/module/rules/actions/skill-check.mjs';
+import { describe, it, expect, vi } from 'vitest'
+import { SkillCheck } from '@/module/rules/actions/skill-check.mjs'
 
 describe('SkillCheck', () => {
   it('sends a chat message with the built roll', async () => {
-    const actor = { getRollData: () => ({ skills: { cool: 3 } }) };
-    const toMessage = vi.fn();
-    vi.spyOn(global, 'Roll').mockImplementation(() => ({ evaluate: async () => ({ toMessage }) }));
-    await new SkillCheck(actor, 'cool', 2).execute();
-    expect(toMessage).toHaveBeenCalled();
-  });
-});
+    const actor = { getRollData: () => ({ skills: { cool: 3 } }) }
+    const toMessage = vi.fn()
+    vi.spyOn(global, 'Roll').mockImplementation(() => ({ evaluate: async () => ({ toMessage }) }))
+    await new SkillCheck(actor, 'cool', 2).execute()
+    expect(toMessage).toHaveBeenCalled()
+  })
+})
 ```
 
 ---
@@ -245,23 +250,23 @@ describe('SkillCheck', () => {
 
 **Poser des questions si** :
 
-* Ambiguïté bloquante sur le **type de Document** à modifier (Actor vs Item),
-* Conflit de **clé i18n** existante/attendue,
-* Risque de **breaking change** (migration de données) non couvert.
+- Ambiguïté bloquante sur le **type de Document** à modifier (Actor vs Item),
+- Conflit de **clé i18n** existante/attendue,
+- Risque de **breaking change** (migration de données) non couvert.
 
 **Sinon** :
 
-* Prendre une **hypothèse raisonnable**, la consigner en section **Assumptions**, et **paramétrer** (setting/flag) quand c’est pertinent.
+- Prendre une **hypothèse raisonnable**, la consigner en section **Assumptions**, et **paramétrer** (setting/flag) quand c’est pertinent.
 
 ---
 
 ## 9) Checklists de l’agent (avant d’envoyer)
 
-* [ ] Code **JS** uniquement, Foundry v13, patterns conformes.
-* [ ] Aucune chaîne brute (i18n OK). Pas de `console.log`.
-* [ ] `prepareDerivedData` sans side effects; migrations idempotentes si présentes.
-* [ ] Tests Vitest fournis/MAJ; scripts et commandes listés.
-* [ ] Commit Conventional prêt; changelog si nécessaire.
+- [ ] Code **JS** uniquement, Foundry v13, patterns conformes.
+- [ ] Aucune chaîne brute (i18n OK). Pas de `console.log`.
+- [ ] `prepareDerivedData` sans side effects; migrations idempotentes si présentes.
+- [ ] Tests Vitest fournis/MAJ; scripts et commandes listés.
+- [ ] Commit Conventional prêt; changelog si nécessaire.
 
 ---
 
@@ -309,10 +314,10 @@ feat(actor): add soak auto‑calc from armor to derived data
 
 ## 11) Anti‑patterns (refus explicites)
 
-* TS, d.ts, `require`, `var`, `console.log`, requêtes DOM globales hors composant.
-* Logique métier lourde dans un template `.hbs`.
-* Écriture de Documents dans `prepareDerivedData`.
-* Dés 3D appelés directement depuis la logique de règles (passer par une action/service).
+- TS, d.ts, `require`, `var`, `console.log`, requêtes DOM globales hors composant.
+- Logique métier lourde dans un template `.hbs`.
+- Écriture de Documents dans `prepareDerivedData`.
+- Dés 3D appelés directement depuis la logique de règles (passer par une action/service).
 
 > Si la demande force un anti‑pattern, l’agent **propose une alternative** et documente le risque.
 
@@ -320,7 +325,7 @@ feat(actor): add soak auto‑calc from armor to derived data
 
 ## 12) Adoption CI
 
-* Scripts npm attendus :
+- Scripts npm attendus :
 
 ```json
 {
@@ -334,7 +339,7 @@ feat(actor): add soak auto‑calc from armor to derived data
 }
 ```
 
-* La PR est bloquée si lint/test échouent.
+- La PR est bloquée si lint/test échouent.
 
 ---
 

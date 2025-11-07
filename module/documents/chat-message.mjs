@@ -1,22 +1,20 @@
-import StandardCheck from "../dice/standard-check.mjs";
-
+import StandardCheck from '../dice/standard-check.mjs'
 
 export default class SwerpgChatMessage extends ChatMessage {
-
-    /** @inheritdoc */
-    async _renderRollContent(messageData) {
-        const data = messageData.message;
-        if (this.rolls[0] instanceof StandardCheck) {
-            const isPrivate = !this.isContentVisible;
-            const rollHTML = await this._renderRollHTML(isPrivate);
-            if (isPrivate) {
-                data.flavor = game.i18n.format("CHAT.PrivateRollContent", {user: this.user.name});
-                messageData.isWhisper = false;
-                messageData.alias = this.user.name;
-            }
-            data.content += `<section class="dice-rolls">${rollHTML}</section>`;
-            return;
-        }
-        return super._renderRollContent(messageData);
+  /** @inheritdoc */
+  async _renderRollContent(messageData) {
+    const data = messageData.message
+    if (this.rolls[0] instanceof StandardCheck) {
+      const isPrivate = !this.isContentVisible
+      const rollHTML = await this._renderRollHTML(isPrivate)
+      if (isPrivate) {
+        data.flavor = game.i18n.format('CHAT.PrivateRollContent', { user: this.user.name })
+        messageData.isWhisper = false
+        messageData.alias = this.user.name
+      }
+      data.content += `<section class="dice-rolls">${rollHTML}</section>`
+      return
     }
+    return super._renderRollContent(messageData)
+  }
 }

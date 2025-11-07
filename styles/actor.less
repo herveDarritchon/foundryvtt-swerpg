@@ -1,4 +1,4 @@
-@import "variables.less";
+@import 'variables.less';
 
 // Ajouté en haut du fichier si besoin
 @keyframes fade-in-holo {
@@ -15,15 +15,18 @@
 }
 
 @keyframes pulse-glow {
-  0%, 100% {
-    box-shadow: 0 0 6px fade(@color-glow, 50%),
-    0 0 12px fade(@color-glow, 25%),
-    inset 0 0 6px fade(@color-glow, 10%);
+  0%,
+  100% {
+    box-shadow:
+      0 0 6px fade(@color-glow, 50%),
+      0 0 12px fade(@color-glow, 25%),
+      inset 0 0 6px fade(@color-glow, 10%);
   }
   50% {
-    box-shadow: 0 0 10px fade(@color-glow, 80%),
-    0 0 18px fade(@color-glow, 40%),
-    inset 0 0 10px fade(@color-glow, 25%);
+    box-shadow:
+      0 0 10px fade(@color-glow, 80%),
+      0 0 18px fade(@color-glow, 40%),
+      inset 0 0 10px fade(@color-glow, 25%);
   }
 }
 
@@ -53,11 +56,11 @@
 }
 
 // Variables de chemins si tu veux les centraliser
-@empire-logo: "../assets/icons/emblems/empire.svg";
-@first-order-logo: "../assets/icons/emblems/first_order.svg";
-@republic-logo: "../assets/icons/emblems/republic.svg";
-@rebel-logo: "../assets/icons/emblems/rebel.svg";
-@jedi-logo: "../assets/icons/emblems/jedi.svg";
+@empire-logo: '../assets/icons/emblems/empire.svg';
+@first-order-logo: '../assets/icons/emblems/first_order.svg';
+@republic-logo: '../assets/icons/emblems/republic.svg';
+@rebel-logo: '../assets/icons/emblems/rebel.svg';
+@jedi-logo: '../assets/icons/emblems/jedi.svg';
 
 /* ----------------------------------------- */
 /*  Actor Sheet                              */
@@ -190,7 +193,7 @@
       }
 
       a.level-up {
-        opacity: 1.0;
+        opacity: 1;
         height: 28px;
         border: 1px solid var(--color-warm-1);
       }
@@ -221,7 +224,7 @@
         color: var(--color-box-warm-2);
       }
 
-      h2.incomplete:hover{
+      h2.incomplete:hover {
         border-color: var(--color-box-warm-2);
         color: var(--color-box-warm-1);
       }
@@ -243,7 +246,7 @@
         span.value {
           flex: none;
           width: 24px;
-          background: url("../ui/elements/hex-plain.svg") no-repeat center;
+          background: url('../ui/elements/hex-plain.svg') no-repeat center;
           background-size: 24px;
           font-family: var(--font-h1);
           font-size: var(--font-size-16);
@@ -344,7 +347,7 @@
         box-shadow: 0 0 4px var(--color-link-text);
 
         .tab-icon {
-          opacity: 1.0;
+          opacity: 1;
         }
       }
     }
@@ -382,7 +385,16 @@
           padding: 0;
           margin: 0;
           --notchSize: 5px;
-          clip-path: polygon(0% var(--notchSize), var(--notchSize) 0%, calc(100% - var(--notchSize)) 0%, 100% var(--notchSize), 100% calc(100% - var(--notchSize)), calc(100% - var(--notchSize)) 100%, var(--notchSize) 100%, 0% calc(100% - var(--notchSize)));
+          clip-path: polygon(
+            0% var(--notchSize),
+            var(--notchSize) 0%,
+            calc(100% - var(--notchSize)) 0%,
+            100% var(--notchSize),
+            100% calc(100% - var(--notchSize)),
+            calc(100% - var(--notchSize)) 100%,
+            var(--notchSize) 100%,
+            0% calc(100% - var(--notchSize))
+          );
           height: 25px;
           display: flex;
         }
@@ -392,7 +404,16 @@
           padding: 2px 3px;
           margin: 0;
           --notchSize: 5px;
-          clip-path: polygon(0% var(--notchSize), var(--notchSize) 0%, calc(100% - var(--notchSize)) 0%, 100% var(--notchSize), 100% calc(100% - var(--notchSize)), calc(100% - var(--notchSize)) 100%, var(--notchSize) 100%, 0% calc(100% - var(--notchSize)));
+          clip-path: polygon(
+            0% var(--notchSize),
+            var(--notchSize) 0%,
+            calc(100% - var(--notchSize)) 0%,
+            100% var(--notchSize),
+            100% calc(100% - var(--notchSize)),
+            calc(100% - var(--notchSize)) 100%,
+            var(--notchSize) 100%,
+            0% calc(100% - var(--notchSize))
+          );
           height: 25px;
           display: flex;
 
@@ -401,7 +422,16 @@
             padding: 0;
             margin: 0;
             --notchSize: 4px;
-            clip-path: polygon(0% var(--notchSize), var(--notchSize) 0%, calc(100% - var(--notchSize)) 0%, 100% var(--notchSize), 100% calc(100% - var(--notchSize)), calc(100% - var(--notchSize)) 100%, var(--notchSize) 100%, 0% calc(100% - var(--notchSize)));
+            clip-path: polygon(
+              0% var(--notchSize),
+              var(--notchSize) 0%,
+              calc(100% - var(--notchSize)) 0%,
+              100% var(--notchSize),
+              100% calc(100% - var(--notchSize)),
+              calc(100% - var(--notchSize)) 100%,
+              var(--notchSize) 100%,
+              0% calc(100% - var(--notchSize))
+            );
             height: 21px;
             width: 100%;
             display: flex;
@@ -413,7 +443,16 @@
           padding: 2px 3px;
           margin: 0;
           --notchSize: 17px;
-          clip-path: polygon(0% var(--notchSize), var(--notchSize) 0%, calc(100% - var(--notchSize)) 0%, 100% var(--notchSize), 100% calc(100% - var(--notchSize)), calc(100% - var(--notchSize)) 100%, var(--notchSize) 100%, 0% calc(100% - var(--notchSize)));
+          clip-path: polygon(
+            0% var(--notchSize),
+            var(--notchSize) 0%,
+            calc(100% - var(--notchSize)) 0%,
+            100% var(--notchSize),
+            100% calc(100% - var(--notchSize)),
+            calc(100% - var(--notchSize)) 100%,
+            var(--notchSize) 100%,
+            0% calc(100% - var(--notchSize))
+          );
           height: 75px;
           display: flex;
 
@@ -422,7 +461,16 @@
             padding: 0;
             margin: 0;
             --notchSize: 16px;
-            clip-path: polygon(0% var(--notchSize), var(--notchSize) 0%, calc(100% - var(--notchSize)) 0%, 100% var(--notchSize), 100% calc(100% - var(--notchSize)), calc(100% - var(--notchSize)) 100%, var(--notchSize) 100%, 0% calc(100% - var(--notchSize)));
+            clip-path: polygon(
+              0% var(--notchSize),
+              var(--notchSize) 0%,
+              calc(100% - var(--notchSize)) 0%,
+              100% var(--notchSize),
+              100% calc(100% - var(--notchSize)),
+              calc(100% - var(--notchSize)) 100%,
+              var(--notchSize) 100%,
+              0% calc(100% - var(--notchSize))
+            );
             height: 70px;
             width: 100%;
             display: flex;
@@ -432,7 +480,16 @@
               padding: 0;
               margin: 3px 3px 0 7px;
               --notchSize: 8px;
-              clip-path: polygon(0% var(--notchSize), var(--notchSize) 0%, calc(100% - var(--notchSize)) 0%, 100% var(--notchSize), 100% calc(100% - var(--notchSize)), calc(100% - var(--notchSize)) 100%, var(--notchSize) 100%, 0% calc(100% - var(--notchSize)));
+              clip-path: polygon(
+                0% var(--notchSize),
+                var(--notchSize) 0%,
+                calc(100% - var(--notchSize)) 0%,
+                100% var(--notchSize),
+                100% calc(100% - var(--notchSize)),
+                calc(100% - var(--notchSize)) 100%,
+                var(--notchSize) 100%,
+                0% calc(100% - var(--notchSize))
+              );
               height: 16px;
               width: 79px;
               display: flex;
@@ -441,7 +498,8 @@
             .column-wrapper {
               height: 100%;
 
-              .column_1, .column_2 {
+              .column_1,
+              .column_2 {
                 height: 100%;
                 display: flex;
                 justify-content: center;
@@ -449,9 +507,7 @@
                 align-content: center;
 
                 p {
-
                 }
-
               }
 
               .column_1 {
@@ -467,12 +523,24 @@
           padding: 0;
           margin: 0;
           --notchSize: 10px;
-          clip-path: polygon(0% var(--notchSize), var(--notchSize) 0%, calc(100% - var(--notchSize)) 0%, 100% var(--notchSize), 100% calc(100% - var(--notchSize)), calc(100% - var(--notchSize)) 100%, var(--notchSize) 100%, 0% calc(100% - var(--notchSize)));
+          clip-path: polygon(
+            0% var(--notchSize),
+            var(--notchSize) 0%,
+            calc(100% - var(--notchSize)) 0%,
+            100% var(--notchSize),
+            100% calc(100% - var(--notchSize)),
+            calc(100% - var(--notchSize)) 100%,
+            var(--notchSize) 100%,
+            0% calc(100% - var(--notchSize))
+          );
           height: 20px;
           display: flex;
         }
 
-        .octagon, .beveled-rectangle, .beveled-frame, .king-sized-beveled-frame {
+        .octagon,
+        .beveled-rectangle,
+        .beveled-frame,
+        .king-sized-beveled-frame {
           .label {
             text-transform: uppercase;
             font-size: var(--font-size-10);
@@ -483,14 +551,15 @@
           }
         }
 
-        .octagon, .beveled-rectangle, .beveled-frame, .king-sized-beveled-frame {
+        .octagon,
+        .beveled-rectangle,
+        .beveled-frame,
+        .king-sized-beveled-frame {
           .label {
             color: var(--color-primary);
           }
         }
-
       }
-
 
       /** Pool Resources */
 
@@ -564,7 +633,7 @@
           display: block;
           position: absolute;
           pointer-events: none;
-          content: "";
+          content: '';
           width: 100%;
           height: 100%;
           background: var(--resource-fill) no-repeat center;
@@ -584,7 +653,7 @@
           flex-direction: column;
           align-items: center;
           justify-content: center;
-          background: url("../ui/elements/hex-plain.svg") no-repeat center;
+          background: url('../ui/elements/hex-plain.svg') no-repeat center;
           background-size: auto 32px;
 
           .value {
@@ -604,13 +673,13 @@
       }
 
       .resource.health {
-        --resource-bg: url("../ui/resources/health-bg.png");
-        --resource-fill: url("../ui/resources/health-fill.png");
+        --resource-bg: url('../ui/resources/health-bg.png');
+        --resource-fill: url('../ui/resources/health-fill.png');
       }
 
       .resource.morale {
-        --resource-bg: url("../ui/resources/morale-bg.png");
-        --resource-fill: url("../ui/resources/morale-fill.png");
+        --resource-bg: url('../ui/resources/morale-bg.png');
+        --resource-fill: url('../ui/resources/morale-fill.png');
       }
 
       /** Economy Resources */
@@ -653,7 +722,7 @@
 
           .full::before {
             display: block;
-            content: "";
+            content: '';
             width: 8px;
             height: 8px;
             margin: 2px;
@@ -664,11 +733,11 @@
       }
 
       .action {
-        --resource-color: #FF9900;
+        --resource-color: #ff9900;
       }
 
       .focus {
-        --resource-color: #0066FF;
+        --resource-color: #0066ff;
       }
 
       .heroism {
@@ -724,22 +793,22 @@
             border-radius: 50%;
             border: 4px solid var(--color-glow);
 
-            background: radial-gradient(ellipse at center,
-            lighten(@background-dark, 5%) 0%,
-            darken(@background-dark, 20%) 60%,
-            transparent 100%);
+            background: radial-gradient(ellipse at center, lighten(@background-dark, 5%) 0%, darken(@background-dark, 20%) 60%, transparent 100%);
 
-            box-shadow: 0 0 4px var(--color-glow),
-            0 0 10px fade(@color-glow, 60%),
-            0 0 20px fade(@color-glow, 30%),
-            inset 0 0 8px fade(@color-glow, 15%);
+            box-shadow:
+              0 0 4px var(--color-glow),
+              0 0 10px fade(@color-glow, 60%),
+              0 0 20px fade(@color-glow, 30%),
+              inset 0 0 8px fade(@color-glow, 15%);
 
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             position: relative;
-            transition: box-shadow 0.3s ease, transform 0.3s ease;
+            transition:
+              box-shadow 0.3s ease,
+              transform 0.3s ease;
             animation: pulse-glow 2s infinite ease-in-out;
 
             //animation: pulse-ring 2.5s infinite ease-in-out;
@@ -774,10 +843,11 @@
             font-weight: bold;
             //text-shadow: 0 0 3px #efe58b, 0 0 6px rgba(239, 229, 139, 0.5), 0 0 12px rgba(239, 229, 139, 0.2);
             color: var(--color-accent-yellow);
-            text-shadow: 0 0 2px @color-glow-yellow,
-            0 0 4px fade(@color-glow-yellow, 50%),
-            0 0 8px fade(@color-glow-yellow, 20%),
-            5px 5px 5px black; // ajout : ombre contrastée nette
+            text-shadow:
+              0 0 2px @color-glow-yellow,
+              0 0 4px fade(@color-glow-yellow, 50%),
+              0 0 8px fade(@color-glow-yellow, 20%),
+              5px 5px 5px black; // ajout : ombre contrastée nette
           }
 
           .icon-svg {
@@ -797,7 +867,9 @@
       }
 
       &:hover .circle-content {
-        box-shadow: 0 0 12px @color-glow-hover, 0 0 24px fade(@color-glow, 20%);
+        box-shadow:
+          0 0 12px @color-glow-hover,
+          0 0 24px fade(@color-glow, 20%);
       }
 
       .label {
@@ -839,33 +911,31 @@
         border: 1px solid #00b0ff;
       }
     }
-
   }
-
 }
 
 .strength {
-  --ability-icon: url("../ui/abilities/strength.svg");
+  --ability-icon: url('../ui/abilities/strength.svg');
 }
 
 .toughness {
-  --ability-icon: url("../ui/abilities/toughness.svg");
+  --ability-icon: url('../ui/abilities/toughness.svg');
 }
 
 .dexterity {
-  --ability-icon: url("../ui/abilities/dexterity.svg");
+  --ability-icon: url('../ui/abilities/dexterity.svg');
 }
 
 .wisdom {
-  --ability-icon: url("../ui/abilities/wisdom.svg");
+  --ability-icon: url('../ui/abilities/wisdom.svg');
 }
 
 .presence {
-  --ability-icon: url("../ui/abilities/presence.svg");
+  --ability-icon: url('../ui/abilities/presence.svg');
 }
 
 .intellect {
-  --ability-icon: url("../ui/abilities/intellect.svg");
+  --ability-icon: url('../ui/abilities/intellect.svg');
 }
 
 // Control Buttons
@@ -874,7 +944,7 @@ a.button {
   height: 20px;
   width: 20px;
   top: -10px;
-  opacity: 1.0;
+  opacity: 1;
 
   &.decrease {
     left: -10px;
@@ -908,7 +978,6 @@ a.button {
     margin: -2px -12px -2px 0;
   }
 }
-
 
 /** Defenses */
 
@@ -955,7 +1024,7 @@ a.button {
     .total {
       width: 60px;
       height: 100px;
-      background: url("../ui/elements/hex-willpower.svg") no-repeat center;
+      background: url('../ui/elements/hex-willpower.svg') no-repeat center;
       background-size: 60px;
     }
 
@@ -967,7 +1036,7 @@ a.button {
     .component {
       width: 40px;
       height: 80px;
-      background: url("../ui/elements/hex-plain.svg") no-repeat center;
+      background: url('../ui/elements/hex-plain.svg') no-repeat center;
       background-size: 40px;
 
       .value {
@@ -1003,21 +1072,21 @@ a.button {
       background-size: auto 64px;
 
       &.fortitude {
-        --defense-icon: url("../ui/elements/hex-fortitude.svg");
+        --defense-icon: url('../ui/elements/hex-fortitude.svg');
       }
 
       &.willpower {
-        --defense-icon: url("../ui/elements/hex-willpower.svg");
+        --defense-icon: url('../ui/elements/hex-willpower.svg');
       }
 
       &.reflex {
-        --defense-icon: url("../ui/elements/hex-reflex.svg");
+        --defense-icon: url('../ui/elements/hex-reflex.svg');
       }
     }
 
     // Stride and Engagement
     .extra {
-      --defense-icon: url("../ui/elements/hex-plain.svg");
+      --defense-icon: url('../ui/elements/hex-plain.svg');
       width: 32px;
       height: 64px;
       align-self: flex-end;
@@ -1065,7 +1134,7 @@ a.button {
       border-right: 1px solid var(--color-frame);
 
       &::before {
-        content: "";
+        content: '';
         display: block;
         width: 100%;
         position: absolute;
@@ -1076,7 +1145,7 @@ a.button {
       .value {
         flex: 0 0 24px;
         height: 24px;
-        background: url("../ui/elements/hex-plain-filled.svg") no-repeat center;
+        background: url('../ui/elements/hex-plain-filled.svg') no-repeat center;
         background-size: auto 24px;
         line-height: 24px;
         text-align: center;
@@ -1104,7 +1173,7 @@ a.button {
 
     &.res {
       .value {
-        background: url("../ui/elements/hex-resistance.svg") no-repeat center;
+        background: url('../ui/elements/hex-resistance.svg') no-repeat center;
         background-size: auto 24px;
       }
 
@@ -1114,12 +1183,11 @@ a.button {
         border: 1px solid var(--color-damage-resistance-border);
         border-left: none;
       }
-
     }
 
     &.vuln {
       .value {
-        background: url("../ui/elements/hex-vulnerability.svg") no-repeat center;
+        background: url('../ui/elements/hex-vulnerability.svg') no-repeat center;
         background-size: auto 24px;
       }
 
@@ -1186,7 +1254,6 @@ a.button {
 /* ----------------------------------------- */
 
 .tab.commitments {
-
   .sheet-section {
     flex: 1;
     padding: 0.5rem;
@@ -1230,7 +1297,6 @@ a.button {
       color: var(--color-h1);
       border: none;
     }
-
   }
 
   .centered {
@@ -1272,7 +1338,6 @@ a.button {
   }
 }
 
-
 /* ----------------------------------------- */
 /*  Inventory, Talents, Skills               */
 /* ----------------------------------------- */
@@ -1308,7 +1373,7 @@ a.button {
     .value {
       flex: 0 0 24px;
       height: 24px;
-      background: url("../ui/elements/hex-plain.svg") no-repeat center;
+      background: url('../ui/elements/hex-plain.svg') no-repeat center;
       background-size: auto 24px;
       line-height: 24px;
       text-align: center;
@@ -1390,7 +1455,6 @@ a.button {
 /* ----------------------------------------- */
 
 .tab.skills {
-
   // Skill categories
   .skills-wrapper {
     display: grid;
@@ -1431,7 +1495,7 @@ a.button {
           height: 15px;
           width: 15px;
           display: block;
-          content: " ";
+          content: ' ';
         }
 
         .career-and-speciality.active {
@@ -1440,9 +1504,7 @@ a.button {
           background-repeat: no-repeat;
           background-position: bottom center;
         }
-
       }
-
     }
 
     .general-skills {
@@ -1457,7 +1519,6 @@ a.button {
     }
 
     .knowledge-skills {
-
     }
 
     .pips {
@@ -1480,37 +1541,37 @@ a.button {
       }
 
       .pip.untrained {
-        background: url("../ui/skills/central-pips.png") no-repeat center;
+        background: url('../ui/skills/central-pips.png') no-repeat center;
         background-size: 25px;
         position: relative;
       }
 
       .pip.untrained:nth-child(1) {
-        background: url("../ui/skills/first-pip.png") no-repeat center;
+        background: url('../ui/skills/first-pip.png') no-repeat center;
         background-size: 25px;
         position: relative;
       }
 
       .pip.untrained:nth-child(5) {
-        background: url("../ui/skills/fifth-pip.png") no-repeat center;
+        background: url('../ui/skills/fifth-pip.png') no-repeat center;
         background-size: 25px;
         position: relative;
       }
 
       .pip.trained {
-        background: url("../ui/skills/central-trained-pips.png") no-repeat center;
+        background: url('../ui/skills/central-trained-pips.png') no-repeat center;
         background-size: 25px;
         position: relative;
       }
 
       .pip.trained:nth-child(1) {
-        background: url("../ui/skills/first-trained-pip.png") no-repeat center;
+        background: url('../ui/skills/first-trained-pip.png') no-repeat center;
         background-size: 25px;
         position: relative;
       }
 
       .pip.trained:nth-child(5) {
-        background: url("../ui/skills/fifth-trained-pip.png") no-repeat center;
+        background: url('../ui/skills/fifth-trained-pip.png') no-repeat center;
         background-size: 25px;
         position: relative;
       }
@@ -1521,7 +1582,6 @@ a.button {
         }
       });
     }
-
   }
 
   // Special case display for available and spent
@@ -1602,7 +1662,9 @@ a.button {
     border-right: 1px solid #8a644f;
     /*      box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5),
             -4px -4px 10px rgba(255, 255, 255, 0.1);*/ /* Ombre principale */
-    transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
+    transition:
+      box-shadow 0.3s ease-in-out,
+      transform 0.3s ease-in-out;
 
     span {
       font-size: 16px; /* Première lettre plus grande */
@@ -1630,7 +1692,9 @@ a.button {
     border-bottom: 1px solid #2b221b;
     /*box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5),
       -4px -4px 10px rgba(255, 255, 255, 0.1);*/ /* Ombre principale */
-    transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
+    transition:
+      box-shadow 0.3s ease-in-out,
+      transform 0.3s ease-in-out;
 
     span {
       position: relative;
@@ -1639,16 +1703,14 @@ a.button {
     }
 
     span::after {
-      content: "%";
+      content: '%';
       font-size: 14px;
       position: absolute;
       right: -12px;
       top: 6px;
     }
   }
-
 }
-
 
 /* ----------------------------------------- */
 /*  Character Creation Tooltip               */
@@ -1660,7 +1722,6 @@ a.button {
   font-size: var(--font-size-13);
   font-family: var(--font-serif);
 }
-
 
 .sw-toggle {
   width: 24px;
