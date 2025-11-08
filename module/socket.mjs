@@ -11,8 +11,7 @@ export function handleSocketEvent({ action = null, data = {} } = {}) {
     case 'diceCheck':
       return StandardCheck.handle(data)
     case 'diceContest':
-      
+
     case 'diceGroupCheck':
-      
   }
 }

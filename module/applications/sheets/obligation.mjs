@@ -7,7 +7,6 @@ import SwerpgBaseItemSheet from './base-item.mjs'
 export default class ObligationSheet extends SwerpgBaseItemSheet {
   /** @inheritDoc */
   static DEFAULT_OPTIONS = {
-    classes: ['swerpg', 'sheet', 'item', 'obligation'],
     position: {
       width: 600,
       height: 'auto',

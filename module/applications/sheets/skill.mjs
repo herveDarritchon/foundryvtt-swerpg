@@ -39,9 +39,9 @@ export default class SkillPageSheet extends foundry.appv1.sheets.JournalPageShee
     const a1 = CHARACTERISTICS[skill.abilities[0]]
     const a2 = CHARACTERISTICS[skill.abilities[1]]
     return [
-      { type: 'category', label: c.label, color: `${c.color.css  }50` },
-      { type: 'ability', label: a1.label, color: `${a1.color.css  }50` },
-      { type: 'ability', label: a2.label, color: `${a2.color.css  }50` },
+      { type: 'category', label: c.label, color: `${c.color.css}50` },
+      { type: 'ability', label: a1.label, color: `${a1.color.css}50` },
+      { type: 'ability', label: a2.label, color: `${a2.color.css}50` },
     ]
   }
 

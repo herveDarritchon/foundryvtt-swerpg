@@ -85,8 +85,11 @@ export default class SwerpgBaseItemSheet extends api.HandlebarsApplicationMixin(
     this.PARTS = foundry.utils.deepClone(this.PARTS)
     this.TABS = foundry.utils.deepClone(this.TABS)
 
-    // Item Type Configuration
-    this.DEFAULT_OPTIONS.classes = [this.DEFAULT_OPTIONS.item.type]
+    // Item Type Configuration - Merge with base classes instead of replacing
+    const baseClasses = this.DEFAULT_OPTIONS.classes || ['swerpg', 'item', 'standard-form']
+    const itemTypeClass = this.DEFAULT_OPTIONS.item.type
+    // Ensure we don't duplicate classes and always include the item type
+    this.DEFAULT_OPTIONS.classes = [...new Set([...baseClasses, 'sheet', 'item', itemTypeClass])]
     this.PARTS.config.template = `systems/swerpg/templates/sheets/partials/${item.type}-config.hbs`
     this.PARTS.config.scrollable = ['']
 
@@ -209,7 +212,7 @@ export default class SwerpgBaseItemSheet extends api.HandlebarsApplicationMixin(
       const group = {}
       for (const t of config) {
         const active = this.tabGroups[t.group] === t.id
-        group[t.id] = {active, cssClass: active ? 'active' : '', ...t}
+        group[t.id] = { active, cssClass: active ? 'active' : '', ...t }
       }
       tabs[groupId] = group
     }

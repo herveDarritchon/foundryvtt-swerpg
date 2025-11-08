@@ -153,7 +153,6 @@ export default class SwerpgSpecies extends foundry.abstract.TypeDataModel {
 
   static #validatefreeTalents(freeTalents) {
     // If (freeSkills.size > 2) throw new Error(`Skill list must contain between 0 and 2 skills`);
-    
   }
 
   static #skillChoices(a) {

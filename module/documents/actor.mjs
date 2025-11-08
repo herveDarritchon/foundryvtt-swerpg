@@ -1064,13 +1064,7 @@ export default class SwerpgActor extends Actor {
       defenseType = skillId
       dc = target.skills[skillId].passive
     }
-    const rollData = { ...bonuses, actorId: this.id,
-      type: skillId,
-      target: target.uuid,
-      boons,
-      banes,
-      defenseType,
-      dc,}
+    const rollData = { ...bonuses, actorId: this.id, type: skillId, target: target.uuid, boons, banes, defenseType, dc }
 
     // Apply talent hooks
     this.callActorHooks('prepareStandardCheck', rollData)

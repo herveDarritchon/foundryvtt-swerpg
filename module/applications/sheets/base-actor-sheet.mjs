@@ -122,13 +122,20 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
   static _initializeActorSheetClass() {
     const actor = this.DEFAULT_OPTIONS.actor
     this.PARTS = foundry.utils.deepClone(this.PARTS)
-    console.debug('[base-actor-sheet] initializeActorSheetClass with type', actor.type)
+    // ✅ Debug conditionnel uniquement si nécessaire
+    if (CONFIG.debug?.sheets) {
+      console.debug('[base-actor-sheet] initializeActorSheetClass with type', actor.type)
+    }
     this.PARTS.header.template = `systems/swerpg/templates/sheets/actor/${actor.type}-header.hbs`
     this.PARTS.attributes.template = `systems/swerpg/templates/sheets/actor/${actor.type}-attributes.hbs`
     this.PARTS.biography.template = `systems/swerpg/templates/sheets/actor/${actor.type}-biography.hbs`
     this.PARTS.commitments.template = `systems/swerpg/templates/sheets/actor/${actor.type}-commitments.hbs`
     this.TABS = foundry.utils.deepClone(this.TABS)
-    this.DEFAULT_OPTIONS.classes = [actor.type]
+    // Actor Type Configuration - Merge with base classes instead of replacing
+    const baseClasses = this.DEFAULT_OPTIONS.classes || ['swerpg', 'actor', 'standard-form']
+    const actorTypeClass = actor.type
+    // Ensure we don't duplicate classes and always include the actor type
+    this.DEFAULT_OPTIONS.classes = [...new Set([...baseClasses, 'sheet', 'actor', actorTypeClass])]
   }
 
   /* -------------------------------------------- */
@@ -191,7 +198,7 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
       for (const t of config) {
         const active = this.tabGroups[t.group] === t.id
         const icon = `systems/swerpg/ui/tabs/${t.id}.webp`
-        group[t.id] = {active, cssClass: active ? 'active' : '', icon, ...t}
+        group[t.id] = { active, cssClass: active ? 'active' : '', icon, ...t }
       }
       tabs[groupId] = group
     }
@@ -218,7 +225,10 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
       return characteristic
     })
     characteristics.sort((a, b) => a.sheetOrder - b.sheetOrder)
-    console.debug('[base-actor-sheet] prepareCharacteristics', characteristics)
+    // ✅ Debug conditionnel uniquement si nécessaire
+    if (CONFIG.debug?.sheets) {
+      console.debug('[base-actor-sheet] prepareCharacteristics', characteristics)
+    }
     return characteristics
   }
 
@@ -353,7 +363,7 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
           if (i.system.isSignature) section = sections.talents.signature
           if (action) {
             const tags = action.getTags()
-            d.tags = { ...tags.action, ...tags.activation}
+            d.tags = { ...tags.action, ...tags.activation }
             section ||= sections.talents.active
           } else if (spellComp) section ||= sections.talents.spell
           else section ||= sections.talents.passive

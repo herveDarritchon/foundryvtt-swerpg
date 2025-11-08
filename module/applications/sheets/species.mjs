@@ -7,7 +7,6 @@ import SwerpgBaseItemSheet from './base-item.mjs'
 export default class SpeciesSheet extends SwerpgBaseItemSheet {
   /** @inheritDoc */
   static DEFAULT_OPTIONS = {
-    classes: ['swerpg', 'sheet', 'item', 'species'],
     position: {
       width: 600,
       height: 'auto',
