@@ -1,16 +1,16 @@
 import * as SKILL from '../../config/skills.mjs'
 import { CHARACTERISTICS } from '../../config/attributes.mjs'
 
+const { api, sheets } = foundry.applications
+
 /**
  * The application used to view and edit a skill page in the system journal.
  */
-export default class SkillPageSheet extends foundry.appv1.sheets.JournalPageSheet {
+export default class SkillPageSheet extends api.HandlebarsApplicationMixin(sheets.JournalPageSheetV2) {
   /** @inheritDoc */
-  static get defaultOptions() {
-    const options = super.defaultOptions
-    options.viewClasses.push('swerpg', 'skill')
-    options.scrollY = ['.scrollable']
-    return options
+  static DEFAULT_OPTIONS = {
+    classes: ['swerpg', 'skill'],
+    scrollable: ['.scrollable'],
   }
 
   /** @inheritDoc */
@@ -21,13 +21,21 @@ export default class SkillPageSheet extends foundry.appv1.sheets.JournalPageShee
   /* -------------------------------------------- */
 
   /** @inheritDoc */
-  async getData(options = {}) {
-    const context = await super.getData(options)
+  async _prepareContext(options = {}) {
+    const context = await super._prepareContext(options)
+
+    // ✅ Standard minimum OBLIGATOIRE selon le plan Phase 2.2
+    context.document = this.document
+    context.system = this.document.system
+    context.config = game.system.config
+    context.isOwner = this.document.isOwner
+
+    // Préparation spécifique à la skill page
     context.skills = SKILL.SKILLS
-    context.skill = SKILL.SKILLS[context.data.system.skillId]
+    context.skill = SKILL.SKILLS[context.document.system.skillId]
     context.tags = this.#getTags(context.skill)
-    context.ranks = this.#prepareRanks(context.data.system.ranks)
-    context.paths = this.#preparePaths(context.data.system.paths)
+    context.ranks = this.#prepareRanks(context.document.system.ranks)
+    context.paths = this.#preparePaths(context.document.system.paths)
     return context
   }
 
