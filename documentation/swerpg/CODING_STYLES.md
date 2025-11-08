@@ -24,6 +24,8 @@
 
 ## 3) Organisation du code
 
+### 3.1) Organisation des Folders du projet
+
 ```text
 module/
   applications/       # ApplicationV2 & feuilles (sheets/, config/, sidebar/)
@@ -46,6 +48,19 @@ _source/              # Données YAML source pour compendiums
 packs/                # Compendiums LevelDB compilés
 tests/                # Tests Vitest
 ```
+
+### 3.2) Organisation et séparation du code
+
+Les règles suivantes visent à garder un code prévisible, testable et facile à faire évoluer. En particulier, on sépare strictement le **métier du système** (les règles qui implémentent le jeu) du **code dépendant de Foundry VTT**. Le but est que tout le cœur métier soit écrit en **code “pur”** (sans aucun appel à l’API Foundry), pour pouvoir le couvrir avec des tests unitaires Vitest sans se battre avec du mocking lourd sur `game`, `canvas`, `ui`, etc.
+
+- **Pas de logique métier** dans les templates Handlebars (vue = rendu).
+- **Une feuille = un fichier .mjs + un .hbs** ; événements via `data-action` ; aucun `querySelector` global.
+- **Données dérivées** dans `prepareDerivedData()` **sans effet de bord** (pas d’updates).
+- **Séparation métier / Foundry** :
+
+  - Le **métier** (règles du système, calculs, validations, conversions de données) vit dans des modules JS “purs” qui ne connaissent ni `game`, ni `Actor`, ni `Item`, ni aucune méthode Foundry.
+  - Le **code Foundry** joue le rôle d’**adaptateur** : il lit/écrit dans les documents, prépare les données d’entrée, appelle les fonctions métier, puis applique le résultat sur les acteurs, items, jets, etc.
+  - Toute nouvelle fonctionnalité doit d’abord être pensée comme une fonction/méthode de domaine testable avec Vitest, puis branchée sur Foundry via une couche d’intégration minimale.
 
 ### **Règles**
 
