@@ -148,6 +148,12 @@ export default class SwerpgBaseItemSheet extends api.HandlebarsApplicationMixin(
 
     const tabGroups = this._getTabs()
     return {
+      // ✅ Standard minimum OBLIGATOIRE selon le plan Phase 2.2
+      document: this.document,
+      system: this.document.system,
+      config: game.system.config,
+      isOwner: this.document.isOwner,
+      // Propriétés existantes conservées pour compatibilité
       item: this.document,
       isEditable: this.isEditable,
       fieldDisabled: this.isEditable ? '' : 'disabled',
