@@ -2,25 +2,23 @@
 mode: 'agent'
 description: 'Assistant de rétro-documentation, d’analyse d’architecture et de refactoring léger pour le système Crucible (Foundry VTT v13).'
 tools:
-  [
-    'edit',
-    'runNotebooks',
-    'search',
-    'new',
-    'runCommands',
-    'runTasks',
-    'usages',
-    'vscodeAPI',
-    'think',
-    'problems',
-    'changes',
-    'testFailure',
-    'openSimpleBrowser',
-    'fetch',
-    'githubRepo',
-    'extensions',
-    'todos',
-  ]
+  - edit
+  - runNotebooks
+  - search
+  - new
+  - runCommands
+  - runTasks
+  - usages
+  - vscodeAPI
+  - think
+  - problems
+  - changes
+  - testFailure
+  - openSimpleBrowser
+  - fetch
+  - githubRepo
+  - extensions
+  - todos
 ---
 
 ## GUIDING PRINCIPLES FOR CRUCIBLE DOC WRITER MODE
