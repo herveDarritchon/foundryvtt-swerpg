@@ -1,6 +1,7 @@
-// talent-cost-calculator.test.mjs
+// Talent-cost-calculator.test.mjs
 import '../../setupTests.js'
 import { describe, expect, test } from 'vitest'
+
 import { createTalentData } from '../../utils/talents/talent.mjs'
 import TrainedTalent from '../../../module/lib/talents/trained-talent.mjs'
 import ErrorTalent from '../../../module/lib/talents/error-talent.mjs'

@@ -5,7 +5,7 @@ import { SYSTEM } from '../config/system.mjs'
 /**
  * @typedef {Object} ActorHook
  * @property {string} hook
- * @property {function} fn
+ * @property {Function} fn
  */
 
 /**

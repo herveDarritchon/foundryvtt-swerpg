@@ -152,7 +152,7 @@ export default class ActionConfig extends api.HandlebarsApplicationMixin(api.Doc
       const group = {}
       for (const t of config) {
         const active = this.tabGroups[t.group] === t.id
-        group[t.id] = Object.assign({ active, cssClass: active ? 'active' : '' }, t)
+        group[t.id] = {active, cssClass: active ? 'active' : '', ...t}
       }
       tabs[groupId] = group
     }

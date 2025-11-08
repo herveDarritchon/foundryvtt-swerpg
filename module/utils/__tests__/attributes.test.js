@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+
 import { shiftValue } from '../attributes.mjs'
 
 describe('shiftValue tests', () => {

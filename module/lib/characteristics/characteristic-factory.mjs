@@ -14,6 +14,7 @@ import ErrorCharacteristic from './error-characteristic.mjs'
 
 /**
  * @typedef {Object} CharacteristicOptions
+ * @property
  **/
 
 /**
@@ -28,6 +29,8 @@ export default class CharacteristicFactory {
    * @param actor {SwerpgActor} an Actor instance
    * @param characteristicId {string} a characteristic id from the list of characteristics
    * @param params {CharacteristicParams} the params to be used to build the characteristic
+   * @param params.action
+   * @param params.isCreation
    * @param options {CharacteristicOptions} additional options
    * @returns {TrainedCharacteristic|ErrorCharacteristic} a characteristic object
    */

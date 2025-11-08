@@ -8,7 +8,7 @@ const result = await semanticRelease({
 })
 
 if (result?.nextRelease?.version) {
-  console.log(result.nextRelease.version) // seule sortie
+  console.log(result.nextRelease.version) // Seule sortie
 } else {
-  console.log('NO_RELEASE') // seule sortie
+  console.log('NO_RELEASE') // Seule sortie
 }

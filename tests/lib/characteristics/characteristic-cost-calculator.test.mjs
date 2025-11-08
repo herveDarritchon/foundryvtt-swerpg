@@ -1,6 +1,7 @@
-// characteristic-cost-calculator.test.mjs
+// Characteristic-cost-calculator.test.mjs
 import '../../setupTests.js'
 import { describe, expect, test } from 'vitest'
+
 import { createCharacteristicData } from '../../utils/characteristics/characteristic.mjs'
 import TrainedCharacteristic from '../../../module/lib/characteristics/trained-characteristic.mjs'
 import ErrorCharacteristic from '../../../module/lib/characteristics/error-characteristic.mjs'

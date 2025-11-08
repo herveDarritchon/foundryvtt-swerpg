@@ -9,6 +9,7 @@
  * @param {number} [passive]
  * @param {number} [spent]
  * @param {number} [cost]
+ * @property
  */
 
 /**
@@ -178,7 +179,7 @@ export default class SwerpgActorType extends foundry.abstract.TypeDataModel {
   prepareBaseData() {
     this.status ||= {}
     this._prepareDetails()
-    //this._prepareSkills();
+    // This._prepareSkills();
   }
 
   /* -------------------------------------------- */
@@ -226,7 +227,7 @@ export default class SwerpgActorType extends foundry.abstract.TypeDataModel {
    * @override
    */
   prepareDerivedData() {
-    //TODO Reactive if necessary
+    // TODO Reactive if necessary
 
     // Resource pools
     this._prepareResources()
@@ -236,22 +237,22 @@ export default class SwerpgActorType extends foundry.abstract.TypeDataModel {
     this.parent.callActorHooks('prepareResources', this.resources)
 
     // Defenses
-    //this.#prepareDefenses();
-    //this.parent.callActorHooks("prepareDefenses", this.defenses);
-    //this.#prepareTotalDefenses();
+    // this.#prepareDefenses();
+    // this.parent.callActorHooks("prepareDefenses", this.defenses);
+    // this.#prepareTotalDefenses();
 
     // Resistances
-    //this.parent.callActorHooks("prepareResistances", this.resistances);
-    //this.#prepareTotalResistances();
+    // this.parent.callActorHooks("prepareResistances", this.resistances);
+    // this.#prepareTotalResistances();
 
     // Movement
-    //this._prepareMovement();
-    //this.parent.callActorHooks("prepareMovement", this.movement);
+    // this._prepareMovement();
+    // this.parent.callActorHooks("prepareMovement", this.movement);
   }
 
   /**
    * Prepare formatted experience scores for display on the Actor sheet.
-   * @return {object[]}
+   * @returns {object[]}
    */
   _prepareFreeSkillRanks() {
     const freeSkillRanks = this.progression.freeSkillRanks
@@ -302,7 +303,7 @@ export default class SwerpgActorType extends foundry.abstract.TypeDataModel {
    */
   _prepareResources() {
     const { isIncapacitated, isWeakened, statuses } = this.parent
-    //const {level: l, threatFactor, maxAction=6} = this.advancement;
+    // Const {level: l, threatFactor, maxAction=6} = this.advancement;
     const { level: l, threatFactor, maxAction = 6 } = { level: 1, threatFactor: 1, maxAction: 6 }
     const r = this.resources
     const a = this.characteristics
@@ -338,8 +339,9 @@ export default class SwerpgActorType extends foundry.abstract.TypeDataModel {
    *
    * This is a private method and meant to be accessed only within the class.
    *
+   * @param actor
    * @private
-   * @method
+   * @function
    * @returns {number} The calculated wound threshold value.
    */
   static #calculateWoundThreshold(actor) {
@@ -357,8 +359,9 @@ export default class SwerpgActorType extends foundry.abstract.TypeDataModel {
    *
    * This is a private method and meant to be accessed only within the class.
    *
+   * @param actor
    * @private
-   * @method
+   * @function
    * @returns {number} The calculated strain threshold value.
    */
   static #calculateStrainThreshold(actor) {
@@ -376,8 +379,9 @@ export default class SwerpgActorType extends foundry.abstract.TypeDataModel {
    *
    * This is a private method and meant to be accessed only within the class.
    *
+   * @param actor
    * @private
-   * @method
+   * @function
    * @returns {number} The calculated encumbrance threshold value.
    */
   static #calculateEncumbranceThreshold(actor) {
@@ -393,8 +397,9 @@ export default class SwerpgActorType extends foundry.abstract.TypeDataModel {
    *
    * This is a private method and meant to be accessed only within the class.
    *
+   * @param actor
    * @private
-   * @method
+   * @function
    * @returns {DefenseAttributes} The calculated defense value.
    */
   static #calculateDefense(actor) {
@@ -411,8 +416,9 @@ export default class SwerpgActorType extends foundry.abstract.TypeDataModel {
    *
    * This is a private method and meant to be accessed only within the class.
    *
+   * @param actor
    * @private
-   * @method
+   * @function
    * @returns {number} The calculated soak value.
    */
   static #calculateSoakValue(actor) {

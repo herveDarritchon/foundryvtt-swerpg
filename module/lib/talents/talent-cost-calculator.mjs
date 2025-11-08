@@ -12,8 +12,8 @@ export default class TalentCostCalculator {
 
   /**
    * Calculate the cost of the talent.
-   * @param {string} action - The action to perform.
-   * @param {number} rank - The rank of the talent in the tree (row).
+   * @param {string} action The action to perform.
+   * @param {number} rank The rank of the talent in the tree (row).
    * @returns {number} - The cost of the talent.
    */
   calculateCost(action, rank) {

@@ -1,6 +1,7 @@
-// specialization-free-skill.test.mjs
+// Specialization-free-skill.test.mjs
 import '../../setupTests.js'
 import { describe, expect, test, vi } from 'vitest'
+
 import { createActor } from '../../utils/actors/actor.mjs'
 import { createSkillData } from '../../utils/skills/skill.mjs'
 import SpecializationFreeSkill from '../../../module/lib/skills/specialization-free-skill.mjs'

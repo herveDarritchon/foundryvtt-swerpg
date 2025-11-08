@@ -6,9 +6,8 @@ export default class SwerpgTalentIcon extends PIXI.Container {
      * Configuration for this icon
      * @type {object}
      */
-    this.config = Object.assign(
-      {
-        alpha: 1.0,
+    this.config = {
+      alpha: 1.0,
         backgroundColor: 0x000000,
         borderColor: undefined,
         borderWidth: 3,
@@ -17,9 +16,8 @@ export default class SwerpgTalentIcon extends PIXI.Container {
         text: undefined,
         texture: undefined,
         tint: 0xffffff,
-      },
-      config,
-    )
+      ...config,
+    }
 
     // Background
     this.bg = this.addChild(new PIXI.Graphics())

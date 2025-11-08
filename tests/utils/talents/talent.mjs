@@ -1,6 +1,7 @@
 /**
- * create a talent object to be used in tests
+ * Create a talent object to be used in tests
  * @param id id of the talent
+ * @param name.name
  * @param name name of the talent
  * @param type type of the talent
  * @param isRanked whether the talent is ranked or not
@@ -8,6 +9,12 @@
  * @param idxRank index of the rank in case of a ranked talent
  * @param cost cost of the talent
  * @param trees array of trees the talent belongs to
+ * @param name.type
+ * @param name.isRanked
+ * @param name.row
+ * @param name.idxRank
+ * @param name.cost
+ * @param name.trees
  * @returns {SwerpgTalent} a talent object
  */
 export function createTalentData(
@@ -36,8 +43,8 @@ export function createTalentData(
     },
     flags: {},
   }
-  baseData._source = foundry.utils.deepClone(baseData) // simule _source
-  baseData.source = foundry.utils.deepClone(baseData) // accessible pour les assertions
+  baseData._source = foundry.utils.deepClone(baseData) // Simule _source
+  baseData.source = foundry.utils.deepClone(baseData) // Accessible pour les assertions
 
   baseData.updateSource = function (changes = {}) {
     // `this` ici est bien `baseData`
@@ -46,7 +53,7 @@ export function createTalentData(
     this._source = foundry.utils.mergeObject(this._source, expanded)
     this.source = foundry.utils.deepClone(this._source)
 
-    return expanded // simulate diff
+    return expanded // Simulate diff
   }
 
   baseData.toObject = () => JSON.parse(JSON.stringify(baseData))

@@ -13,7 +13,7 @@ export default class SkillCostCalculator {
 
   /**
    * Calculate the cost of the skill.
-   * @param {string} action - The action to perform.
+   * @param {string} action The action to perform.
    * @param value
    * @returns {number} - The cost of the skill.
    */

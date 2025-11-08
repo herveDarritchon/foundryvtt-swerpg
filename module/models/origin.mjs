@@ -3,7 +3,9 @@
  */
 export default class SwerpgOrigin extends foundry.abstract.TypeDataModel {
   static MODIFIER_MIN_VALUE = -20
+
   static MODIFIER_MAX_VALUE = 20
+
   static MODIFIER_STEP = 5
 
   /* -------------------------------------------- */

@@ -1,6 +1,7 @@
-// skill-factory.test.mjs
+// Skill-factory.test.mjs
 import '../../setupTests.js'
 import { describe, expect, test } from 'vitest'
+
 import SkillFactory from '../../../module/lib/skills/skill-factory.mjs'
 import { createActor } from '../../utils/actors/actor.mjs'
 import CareerFreeSkill from '../../../module/lib/skills/career-free-skill.mjs'

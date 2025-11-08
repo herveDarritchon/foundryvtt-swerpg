@@ -12,7 +12,7 @@ export default class CharacteristicCostCalculator {
 
   /**
    * Calculate the cost of the characteristic.
-   * @param {string} action - The action to perform.
+   * @param {string} action The action to perform.
    * @param value
    * @returns {number} - The cost of the characteristic.
    */

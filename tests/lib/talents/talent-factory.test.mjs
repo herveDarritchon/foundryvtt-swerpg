@@ -1,6 +1,7 @@
-// talent-factory.test.mjs
+// Talent-factory.test.mjs
 import '../../setupTests.js'
 import { describe, expect, test } from 'vitest'
+
 import TalentFactory from '../../../module/lib/talents/talent-factory.mjs'
 import { createActor } from '../../utils/actors/actor.mjs'
 import TrainedTalent from '../../../module/lib/talents/trained-talent.mjs'

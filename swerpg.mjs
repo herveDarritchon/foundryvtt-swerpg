@@ -43,11 +43,11 @@ Hooks.once('init', async function () {
 
   const swerpg = (globalThis.swerpg = game.system)
   swerpg.CONST = SYSTEM
-  //TODO Fix these comments to restore the features.
-  //SwerpgTalentNode.defineTree();
-  //swerpg.developmentMode = game.data.options.debug;
+  // TODO Fix these comments to restore the features.
+  // SwerpgTalentNode.defineTree();
+  // swerpg.developmentMode = game.data.options.debug;
   swerpg.developmentMode = detectDevelopmentMode()
-  //swerpg.vfxEnabled = !!game.modules.get("foundryvtt-vfx")?.active;
+  // Swerpg.vfxEnabled = !!game.modules.get("foundryvtt-vfx")?.active;
 
   if (swerpg.developmentMode) {
     console.info(SYSTEM.ASCII_DEV_MODE)
@@ -312,7 +312,7 @@ Hooks.once('init', async function () {
   CONFIG.debug.talentTree = false
   CONFIG.debug.flanking = false
 
-  // preload handlebars templates
+  // Preload handlebars templates
   await preloadHandlebarsTemplates()
 
   if (swerpg.developmentMode) registerDevelopmentHooks()
@@ -379,9 +379,9 @@ Hooks.once('i18nInit', function () {
 
   // Initialize Spellcraft Components
   // TODO Fix these comments
-  //models.SwerpgGesture.initialize();
-  //models.SwerpgInflection.initialize();
-  //models.SwerpgRune.initialize();
+  // models.SwerpgGesture.initialize();
+  // models.SwerpgInflection.initialize();
+  // models.SwerpgRune.initialize();
 })
 
 /* -------------------------------------------- */
@@ -507,6 +507,9 @@ Hooks.on('getSceneControlButtons', (controls) => {
 /*  Convenience Functions                       */
 
 /* -------------------------------------------- */
+/**
+ *
+ */
 async function preloadHandlebarsTemplates() {
   const templatePaths = [
     // Dice Templates
@@ -593,6 +596,9 @@ async function standardizeItemIds() {
   await Item.createDocuments(creations, { keepId: true })
 }
 
+/**
+ *
+ */
 function registerDevelopmentHooks() {
   Hooks.on('preCreateItem', (item, data, options, user) => {
     if (!item.parent && !item.id) {
@@ -641,6 +647,9 @@ async function syncTalents(force = false) {
 
 /* -------------------------------------------- */
 
+/**
+ *
+ */
 async function resetAllActorTalents() {
   for (const actor of game.actors) {
     const deleteIds = []

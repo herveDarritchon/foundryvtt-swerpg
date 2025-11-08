@@ -1,6 +1,7 @@
-// career-free-skill.test.mjs
+// Career-free-skill.test.mjs
 import '../../setupTests.js'
 import { describe, expect, test, vi } from 'vitest'
+
 import { createActor } from '../../utils/actors/actor.mjs'
 import { createSkillData } from '../../utils/skills/skill.mjs'
 import CareerFreeSkill from '../../../module/lib/skills/career-free-skill.mjs'

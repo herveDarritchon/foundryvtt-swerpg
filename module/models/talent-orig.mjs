@@ -9,7 +9,7 @@ import SwerpgTalentNode from '../config/talent-tree.mjs'
  * @property {string} [rune]
  * @property {string} [gesture]
  * @property {string} [inflection]
- * @property {{hook: string, fn: function}} actorHooks
+ * @property {{hook: string, fn: Function}} actorHooks
  */
 
 /**

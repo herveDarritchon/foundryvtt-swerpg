@@ -14,6 +14,7 @@ import RankedTrainedTalent from './ranked-trained-talent.mjs'
 
 /**
  * @typedef {Object} TalentOptions
+ * @property
  **/
 
 /**
@@ -30,6 +31,8 @@ export default class TalentFactory {
    * @param actor {SwerpgActor} an Actor instance
    * @param item {Item} a Swerpg Item instance
    * @param params {TalentParams} the params to be used to build the talent
+   * @param params.action
+   * @param params.isCreation
    * @param options {TalentOptions} additional options
    * @returns {TrainedTalent|RankedTrainedTalent|ErrorTalent} a talent object
    */

@@ -40,6 +40,8 @@ export default class BackgroundSheet extends SwerpgBaseItemSheet {
 
   /**
    * Render the skills as a multi-checkbox element.
+   * @param field
+   * @param inputConfig
    * @returns {HTMLMultiCheckboxElement}
    */
   #skillsInput(field, inputConfig) {

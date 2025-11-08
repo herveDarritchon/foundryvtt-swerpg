@@ -1120,7 +1120,7 @@ export default class SwerpgAction extends foundry.abstract.DataModel {
     } else tags.activation.ap = `${ap}A`
     if (Number.isFinite(cost.focus) && cost.focus !== 0) tags.activation.fp = `${cost.focus}F`
     if (Number.isFinite(cost.heroism) && cost.heroism) tags.activation.hp = `${cost.heroism}H`
-    if (Number.isFinite(cost.health) && cost.health !== 0) tags.activation.health = `${cost.health}HP` // e.g. Blood Magic
+    if (Number.isFinite(cost.health) && cost.health !== 0) tags.activation.health = `${cost.health}HP` // E.g. Blood Magic
     if (!(tags.activation.ap || tags.activation.fp || tags.activation.hp || tags.activation.health)) tags.activation.ap = 'Free'
     if (cost.hands) tags.activation.hands = cost.hands > 1 ? `${cost.hands} Hands` : `1 Hand`
 
@@ -1198,6 +1198,10 @@ export default class SwerpgAction extends foundry.abstract.DataModel {
 
   /**
    * Confirm the result of an Action that was recorded as a ChatMessage.
+   * @param message
+   * @param root0
+   * @param root0.action
+   * @param root0.reverse
    */
   static async confirm(message, { action, reverse = false } = {}) {
     action ||= this.fromChatMessage(message)

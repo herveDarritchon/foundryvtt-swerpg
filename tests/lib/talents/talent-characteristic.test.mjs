@@ -1,6 +1,7 @@
-// error-talent.test.mjs
+// Error-talent.test.mjs
 import '../../setupTests.js'
 import { describe, expect, test } from 'vitest'
+
 import { createActor } from '../../utils/actors/actor.mjs'
 import { createTalentData } from '../../utils/talents/talent.mjs'
 import ErrorTalent from '../../../module/lib/talents/error-talent.mjs'

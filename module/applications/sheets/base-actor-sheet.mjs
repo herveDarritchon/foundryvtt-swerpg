@@ -160,7 +160,7 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
       inventory,
       isEditable: this.isEditable,
       resistances: this.#prepareResistances(),
-      //resources: this.#prepareResources(),
+      // Resources: this.#prepareResources(),
       skillCategories: this.#prepareSkills(),
       source: this.document.toObject(),
       spells: this.#prepareSpells(iconicSpells),
@@ -191,7 +191,7 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
       for (const t of config) {
         const active = this.tabGroups[t.group] === t.id
         const icon = `systems/swerpg/ui/tabs/${t.id}.webp`
-        group[t.id] = Object.assign({ active, cssClass: active ? 'active' : '', icon }, t)
+        group[t.id] = {active, cssClass: active ? 'active' : '', icon, ...t}
       }
       tabs[groupId] = group
     }
@@ -202,7 +202,7 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
 
   /**
    * Prepare formatted ability scores for display on the Actor sheet.
-   * @return {object[]}
+   * @returns {object[]}
    */
   #prepareCharacteristics() {
     const c = this.actor.system.characteristics
@@ -224,7 +224,7 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
 
   /**
    * Prepare formatted experience scores for display on the Actor sheet.
-   * @return {object[]}
+   * @returns {object[]}
    */
   #prepareProgression() {
     const progression = {}
@@ -235,7 +235,7 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
 
   /**
    * Prepare formatted experience scores for display on the Actor sheet.
-   * @return {object[]}
+   * @returns {object[]}
    */
   #prepareExperience() {
     return this.actor.system.progression.experience
@@ -243,7 +243,7 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
 
   /**
    * Prepare formatted experience scores for display on the Actor sheet.
-   * @return {object[]}
+   * @returns {object[]}
    */
   #prepareFreeSkillRanks() {
     const freeSkillRanks = {}
@@ -353,7 +353,7 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
           if (i.system.isSignature) section = sections.talents.signature
           if (action) {
             const tags = action.getTags()
-            d.tags = Object.assign({}, tags.action, tags.activation)
+            d.tags = { ...tags.action, ...tags.activation}
             section ||= sections.talents.active
           } else if (spellComp) section ||= sections.talents.spell
           else section ||= sections.talents.passive
@@ -523,7 +523,7 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
 
   /**
    * Prepare and format resistance data for rendering.
-   * @return {{physical: object[], elemental: object[], spiritual: object[]}}
+   * @returns {{physical: object[], elemental: object[], spiritual: object[]}}
    */
   #prepareResistances() {
     return {}
@@ -565,7 +565,7 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
 
   /**
    * Organize skills by category in alphabetical order.
-   * @return {Record<string, {
+   * @returns {Record<string, {
    *   label: string,
    *   defaultIcon: string,
    *   color: Color,
@@ -761,8 +761,8 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
       return () => action.call(item)
     }
 
-    // fallback : appel par défaut
-    return () => item.delete?.() // ou toute méthode alternative si delete() n'existe pas
+    // Fallback : appel par défaut
+    return () => item.delete?.() // Ou toute méthode alternative si delete() n'existe pas
   }
 
   /* -------------------------------------------- */

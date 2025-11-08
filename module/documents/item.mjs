@@ -160,7 +160,7 @@ export default class SwerpgItem extends Item {
    * Cette méthode est appelé dynamiquement lors de l'appel de la méthode
    * SwerpgBaseActorSheet.#onItemDelete puis item.deleteDialog?.({...})
    *
-   * @return {void} No return value.
+   * @returns {void} No return value.
    */
   async deleteTalent() {
     // Build the skill class depending on the context
@@ -222,6 +222,7 @@ export default class SwerpgItem extends Item {
 
   /**
    * Display changes to the Item as scrolling combat text.
+   * @param changed
    * @private
    */
   _displayScrollingStatus(changed) {
