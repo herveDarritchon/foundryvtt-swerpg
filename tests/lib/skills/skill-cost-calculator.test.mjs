@@ -1,6 +1,7 @@
-// skill-cost-calculator.test.mjs
+// Skill-cost-calculator.test.mjs
 import '../../setupTests.js'
 import { describe, expect, test } from 'vitest'
+
 import { createSkillData } from '../../utils/skills/skill.mjs'
 import TrainedSkill from '../../../module/lib/skills/trained-skill.mjs'
 import CareerFreeSkill from '../../../module/lib/skills/career-free-skill.mjs'

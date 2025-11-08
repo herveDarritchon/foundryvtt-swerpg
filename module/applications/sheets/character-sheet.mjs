@@ -164,6 +164,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
 
   /**
    * Builds the data structure for the jauge display.
+   * @param brawn
    * @returns {DefenseDisplayData} Soak display data objects.
    */
   #buildSoakDisplayData(brawn) {
@@ -196,6 +197,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
 
   /**
    * Builds the data structure for the jauge display.
+   * @param resources
    * @returns {[JaugeDisplayData]} An array of jauge display data objects.
    */
   #buildJaugeDisplayData(resources) {
@@ -256,7 +258,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
         return this.actor.rollSkill(target.closest('.skill').dataset.skill, { dialog: true })
       case 'talentTree':
         return this.actor.toggleTalentTree()
-      // case "talentReset":
+      // Case "talentReset":
       //   return this.actor.resetTalents();
     }
   }
@@ -488,6 +490,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
 
   /**
    * Prepare the skills for the context
+   * @param actor
    * @returns {undefined}
    */
   static #prepareSkills(actor) {
@@ -521,6 +524,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
   /**
    * Prepare the skill Ranks for the context
    * If skill rank is equal or greater of the current pip value then it is filled otherwise it is empty
+   * @param skill
    * @returns {undefined}
    */
   static _prepareSkillRanks(skill) {
@@ -531,6 +535,8 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
 
   /**
    * Prepare the skill Ranks for the context
+   * @param actor
+   * @param skillKey
    * @returns {undefined}
    */
   static _prepareFreeSkill(actor, skillKey) {
@@ -567,7 +573,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
 
   /**
    * Builds the display-ready data for a talent item.
-   * @param {Item} item - A Foundry VTT Item of type "talent".
+   * @param {Item} item A Foundry VTT Item of type "talent".
    * @returns {TalentDisplayData}
    */
   #buildTalentDisplayData(item) {

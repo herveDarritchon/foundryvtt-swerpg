@@ -23,7 +23,7 @@ export default class SwerpgInflection extends foundry.abstract.DataModel {
 
   /**
    * Action Hooks which applied to spells with this Inflection
-   * @type {Record<string, function>}
+   * @type {Record<string, Function>}
    */
   hooks
 

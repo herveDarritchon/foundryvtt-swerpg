@@ -3,7 +3,7 @@
  * @typedef {Object} AbstractJauge
  * @property {number} value
  * @property {number} max
- * @method create() => JaugeDisplayData
+ * @function create() => JaugeDisplayData
  */
 export class AbstractJauge {
   constructor(value, max) {

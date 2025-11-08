@@ -209,7 +209,7 @@ export default class SwerpgBaseItemSheet extends api.HandlebarsApplicationMixin(
       const group = {}
       for (const t of config) {
         const active = this.tabGroups[t.group] === t.id
-        group[t.id] = Object.assign({ active, cssClass: active ? 'active' : '' }, t)
+        group[t.id] = {active, cssClass: active ? 'active' : '', ...t}
       }
       tabs[groupId] = group
     }
@@ -245,6 +245,10 @@ export default class SwerpgBaseItemSheet extends api.HandlebarsApplicationMixin(
 
   /**
    * A helper for quickly creating HTML elements.
+   * @param tagName
+   * @param root0
+   * @param root0.innerText
+   * @param root0.className
    * @returns {HTMLElement}
    * @internal
    */

@@ -7,6 +7,14 @@ export function getEffectId(label) {
   return label.slugify({ replacement: '', lowercase: false, strict: true }).slice(0, 16).padEnd(16, '0')
 }
 
+/**
+ *
+ * @param actor
+ * @param target
+ * @param root0
+ * @param root0.ability
+ * @param root0.damageType
+ */
 export function bleeding(actor, target, { ability = 'dexterity', damageType = 'piercing' } = {}) {
   return {
     _id: getEffectId('Bleeding'),
@@ -25,6 +33,11 @@ export function bleeding(actor, target, { ability = 'dexterity', damageType = 'p
   }
 }
 
+/**
+ *
+ * @param actor
+ * @param target
+ */
 export function burning(actor, target) {
   return {
     _id: getEffectId('Burning'),
@@ -44,6 +57,11 @@ export function burning(actor, target) {
   }
 }
 
+/**
+ *
+ * @param actor
+ * @param target
+ */
 export function chilled(actor, target) {
   return {
     _id: getEffectId('Chilled'),
@@ -63,6 +81,11 @@ export function chilled(actor, target) {
   }
 }
 
+/**
+ *
+ * @param actor
+ * @param target
+ */
 export function confusion(actor, target) {
   return {
     _id: getEffectId('Confusion'),
@@ -82,6 +105,11 @@ export function confusion(actor, target) {
   }
 }
 
+/**
+ *
+ * @param actor
+ * @param target
+ */
 export function corroding(actor, target) {
   return {
     _id: getEffectId('Corroding'),
@@ -100,6 +128,11 @@ export function corroding(actor, target) {
   }
 }
 
+/**
+ *
+ * @param actor
+ * @param target
+ */
 export function decay(actor, target) {
   return {
     _id: getEffectId('Decay'),
@@ -118,6 +151,11 @@ export function decay(actor, target) {
   }
 }
 
+/**
+ *
+ * @param actor
+ * @param target
+ */
 export function entropy(actor, target) {
   return {
     _id: getEffectId('Entropy'),
@@ -137,6 +175,11 @@ export function entropy(actor, target) {
   }
 }
 
+/**
+ *
+ * @param actor
+ * @param target
+ */
 export function irradiated(actor, target) {
   return {
     _id: getEffectId('Irradiated'),
@@ -156,6 +199,11 @@ export function irradiated(actor, target) {
   }
 }
 
+/**
+ *
+ * @param actor
+ * @param target
+ */
 export function mending(actor, target) {
   return {
     _id: getEffectId('Mending'),
@@ -173,6 +221,11 @@ export function mending(actor, target) {
   }
 }
 
+/**
+ *
+ * @param actor
+ * @param target
+ */
 export function inspired(actor, target) {
   return {
     _id: getEffectId('Inspired'),
@@ -190,6 +243,11 @@ export function inspired(actor, target) {
   }
 }
 
+/**
+ *
+ * @param actor
+ * @param target
+ */
 export function poisoned(actor, target) {
   return {
     _id: getEffectId('Poisoned'),
@@ -208,6 +266,11 @@ export function poisoned(actor, target) {
   }
 }
 
+/**
+ *
+ * @param actor
+ * @param target
+ */
 export function shocked(actor, target) {
   return {
     _id: getEffectId('Shocked'),
@@ -227,6 +290,11 @@ export function shocked(actor, target) {
   }
 }
 
+/**
+ *
+ * @param actor
+ * @param target
+ */
 export function staggered(actor, target) {
   return {
     _id: getEffectId('Staggered'),

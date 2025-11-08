@@ -39,6 +39,9 @@ export default class WeaponSheet extends SwerpgBaseItemSheet {
 
   /**
    * Render the properties field as a multi-checkboxes element.
+   * @param field
+   * @param groupConfig
+   * @param inputConfig
    * @returns {HTMLMultiCheckboxElement}
    */
   #qualitiesWidget(field, groupConfig, inputConfig) {

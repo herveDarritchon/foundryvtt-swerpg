@@ -97,7 +97,7 @@ export default class HeroSheet extends SwerpgBaseActorSheet {
         return this.actor.rollSkill(target.closest('.skill').dataset.skill, { dialog: true })
       case 'talentTree':
         return this.actor.toggleTalentTree()
-      // case "talentReset":
+      // Case "talentReset":
       //   return this.actor.resetTalents();
     }
   }

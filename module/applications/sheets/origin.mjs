@@ -117,7 +117,7 @@ export default class OriginSheet extends SwerpgBaseItemSheet {
         }
         break
       }
-      /*                const actor = game.actors.get(rollData.actorId);
+      /*                Const actor = game.actors.get(rollData.actorId);
                             ui.notifications.info(`Requested a ${rollData.type} check be made by ${actor.name}.`);
                             return this.close();*/
     }

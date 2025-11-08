@@ -1,6 +1,7 @@
-// characteristic-factory.test.mjs
+// Characteristic-factory.test.mjs
 import '../../setupTests.js'
 import { describe, expect, test } from 'vitest'
+
 import CharacteristicFactory from '../../../module/lib/characteristics/characteristic-factory.mjs'
 import { createActor } from '../../utils/actors/actor.mjs'
 import TrainedCharacteristic from '../../../module/lib/characteristics/trained-characteristic.mjs'

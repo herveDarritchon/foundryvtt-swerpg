@@ -128,6 +128,9 @@ export default class ActionUseDialog extends StandardCheckDialog {
 
   /**
    * Resolve dialog submission to enact a Roll.
+   * @param _event
+   * @param _button
+   * @param _dialog
    * @returns {StandardCheck}
    * @protected
    */
@@ -203,7 +206,7 @@ export default class ActionUseDialog extends StandardCheckDialog {
     // Store preview template data
     this.#targetTemplate = {
       activeLayer,
-      config: Object.assign({}, targetConfig, target),
+      config: { ...targetConfig, ...target},
       document: template.document,
       object: template,
       origin: { x: template.document.x, y: template.document.y },
@@ -216,6 +219,10 @@ export default class ActionUseDialog extends StandardCheckDialog {
 
   /**
    * Prepare Measured Template data for a certain candidate action
+   * @param token
+   * @param range
+   * @param target
+   * @param targetTemplateConfig
    */
   #getTemplateData(token, range, target, targetTemplateConfig) {
     const { x, y } = token?.center ?? canvas.dimensions.rect.center

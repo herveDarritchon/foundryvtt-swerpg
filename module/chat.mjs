@@ -1,5 +1,10 @@
 import SwerpgAction from './models/action.mjs'
 
+/**
+ *
+ * @param html
+ * @param options
+ */
 export function addChatMessageContextOptions(html, options) {
   if (!game.user.isGM) return
 
@@ -86,6 +91,10 @@ export async function onCreateChatMessage(message, data, options, userId) {
 
 /**
  * Custom alterations to apply when rendering chat message HTML
+ * @param message
+ * @param html
+ * @param data
+ * @param options
  */
 export function renderChatMessage(message, html, data, options) {
   const flags = message.flags.swerpg || {}

@@ -75,8 +75,7 @@ export default class StandardCheckDialog extends DialogV2 {
   /** @override */
   async _prepareContext(options) {
     const data = this.roll.data
-    return Object.assign({}, data, {
-      dice: this.roll.dice.map((d) => `d${d.faces}`),
+    return { ...data, dice: this.roll.dice.map((d) => `d${d.faces}`),
       difficulty: this._getDifficulty(data.dc),
       difficulties: Object.entries(SYSTEM.dice.checkDifficulties).map((d) => ({
         dc: d[0],
@@ -89,8 +88,7 @@ export default class StandardCheckDialog extends DialogV2 {
       canIncreaseBoons: data.totalBoons < SYSTEM.dice.MAX_BOONS,
       canDecreaseBoons: data.totalBoons > 0,
       canIncreaseBanes: data.totalBanes < SYSTEM.dice.MAX_BOONS,
-      canDecreaseBanes: data.totalBanes > 0,
-    })
+      canDecreaseBanes: data.totalBanes > 0,}
   }
 
   /* -------------------------------------------- */
@@ -112,7 +110,7 @@ export default class StandardCheckDialog extends DialogV2 {
   /**
    * Get the text label for a roll DC.
    * @param {number} dc    The difficulty check for the test
-   * @return {{dc: number, label: string, tier: number}}
+   * @returns {{dc: number, label: string, tier: number}}
    * @private
    */
   _getDifficulty(dc) {
@@ -146,6 +144,9 @@ export default class StandardCheckDialog extends DialogV2 {
 
   /**
    * Resolve dialog submission to enact a Roll.
+   * @param _event
+   * @param _button
+   * @param _dialog
    * @returns {StandardCheck}
    * @protected
    */
@@ -158,6 +159,9 @@ export default class StandardCheckDialog extends DialogV2 {
 
   /**
    * Resolve dialog submission to request a Roll.
+   * @param _event
+   * @param _button
+   * @param _dialog
    * @returns {StandardCheck}
    * @protected
    */

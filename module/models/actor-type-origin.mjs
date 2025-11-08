@@ -9,6 +9,7 @@
  * @param {number} [passive]
  * @param {number} [spent]
  * @param {number} [cost]
+ * @property
  */
 
 /**

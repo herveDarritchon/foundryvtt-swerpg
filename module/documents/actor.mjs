@@ -61,7 +61,7 @@ export default class SwerpgActor extends Actor {
    * Track the Actions which this Actor has available to use
    * @type {Object<string, SwerpgAction>}
    */
-  actions = this['actions']
+  actions = this.actions
 
   /**
    * Temporary roll bonuses this actor has outside the fields of its data model.
@@ -365,7 +365,7 @@ export default class SwerpgActor extends Actor {
       mechanical: 0,
       shield: 0,
       talisman: 0,
-      //            natural: Math.clamp(Math.floor((this.system.advancement.level + 1) / 4), 0, 3) // TODO temporary
+      //            Natural: Math.clamp(Math.floor((this.system.advancement.level + 1) / 4), 0, 3) // TODO temporary
     }
     this.callActorHooks('prepareTraining', training)
     return training
@@ -510,8 +510,8 @@ export default class SwerpgActor extends Actor {
     const mh = weapons.mainhand
     const oh = weapons.offhand
     const ohCategory = {}
-    //mh.system.prepareEquippedData();
-    //oh?.system.prepareEquippedData();
+    // Mh.system.prepareEquippedData();
+    // oh?.system.prepareEquippedData();
 
     // Range
 
@@ -762,7 +762,7 @@ export default class SwerpgActor extends Actor {
   getAbilityBonus(scaling) {
     const abilities = this.system.abilities
     if (scaling == null || scaling.length === 0) return 0
-    /*        return Math.round(scaling.reduce((x, t) => x + abilities[t].value, 0) / (scaling.length * 2));*/
+    /*        Return Math.round(scaling.reduce((x, t) => x + abilities[t].value, 0) / (scaling.length * 2));*/
     return 1
   }
 
@@ -868,7 +868,7 @@ export default class SwerpgActor extends Actor {
    * @param {string} [rollMode]   The roll visibility mode to use, default is the current dropdown choice
    * @param {boolean} [dialog]    Display a dialog window to further configure the roll. Default is false.
    *
-   * @return {StandardCheck}      The StandardCheck roll instance which was produced.
+   * @returns {StandardCheck}      The StandardCheck roll instance which was produced.
    */
   async rollSkill(skillId, { banes = 0, boons = 0, dc, rollMode, dialog = false } = {}) {
     const skill = this.system.skills[skillId]
@@ -1064,15 +1064,13 @@ export default class SwerpgActor extends Actor {
       defenseType = skillId
       dc = target.skills[skillId].passive
     }
-    const rollData = Object.assign({}, bonuses, {
-      actorId: this.id,
+    const rollData = { ...bonuses, actorId: this.id,
       type: skillId,
       target: target.uuid,
       boons,
       banes,
       defenseType,
-      dc,
-    })
+      dc,}
 
     // Apply talent hooks
     this.callActorHooks('prepareStandardCheck', rollData)
@@ -1225,7 +1223,7 @@ export default class SwerpgActor extends Actor {
       const cfg = SYSTEM.RESOURCES[id]
       updates[`system.resources.${id}.value`] = cfg.type === 'reserve' ? 0 : resource.max
     }
-    //updates["system.resources.heroism.value"] = 0;
+    // Updates["system.resources.heroism.value"] = 0;
     updates['system.status'] = null
     return updates
   }
@@ -1603,6 +1601,7 @@ export default class SwerpgActor extends Actor {
 
   /**
    * Toggle display of the Talent Tree.
+   * @param active
    */
   async toggleTalentTree(active) {
     if (this.type !== SYSTEM.ACTOR_TYPE.character.type) return
@@ -1742,7 +1741,7 @@ export default class SwerpgActor extends Actor {
    * Purchase an characteristic score increase or decrease for the Actor
    * @param {string} characteristicId      The characteristic id to increase or decrease
    * @param {string} action        A string in ['forget', 'train'] for the direction of the purchase
-   * @return {Promise}
+   * @returns {Promise}
    */
   async purchaseCharacteristic(characteristicId, action) {
     console.debug(`purchaseCharacteristic(${characteristicId}, ${action})`)
@@ -1791,7 +1790,7 @@ export default class SwerpgActor extends Actor {
    * Modify a jauge value increase or decrease for the Actor
    * @param {string} jaugeType      The jauge type to increase or decrease
    * @param {string} action        A string in ['increase', 'decrease'] for the action to perform on the jauge value.
-   * @return {Promise}
+   * @returns {Promise}
    */
   async modifyResource(jaugeType, action) {
     const resource = this.system.resources[jaugeType]
@@ -1853,7 +1852,7 @@ export default class SwerpgActor extends Actor {
    * Purchase a skill rank increase or decrease for the Actor
    * @param {string} skillId      The skill id to increase
    * @param {number} delta        A number in [-1, 1] for the direction of the purchase
-   * @return {Promise}
+   * @returns {Promise}
    */
   async purchaseSkill(skillId, delta = 1) {
     delta = Math.sign(delta)
@@ -1937,6 +1936,8 @@ export default class SwerpgActor extends Actor {
    * @param {object} [options]                Options which affect how details are applied
    * @param {boolean} [options.canApply]        Allow new detail data to be applied?
    * @param {boolean} [options.canClear]        Allow the prior data to be cleared if null is passed?
+   * @param options.isCollection
+   * @param options.collectionKey
    * @returns {Promise<void>}
    * @internal
    */
@@ -2050,7 +2051,7 @@ export default class SwerpgActor extends Actor {
    * @param {string} itemId       The owned Item id of the Armor to equip
    * @param {object} [options]    Options which configure how armor is equipped
    * @param {boolean} [options.equipped]  Is the armor being equipped (true), or unequipped (false)
-   * @return {Promise}            A Promise which resolves once the armor has been equipped or un-equipped
+   * @returns {Promise}            A Promise which resolves once the armor has been equipped or un-equipped
    */
   async equipArmor(itemId, { equipped = true } = {}) {
     const current = this.equipment.armor
@@ -2085,7 +2086,7 @@ export default class SwerpgActor extends Actor {
    * @param {object} [options]    Options which configure how the weapon is equipped.
    * @param {number} [options.slot]       A specific equipment slot in SYSTEM.WEAPON.SLOTS
    * @param {boolean} [options.equipped]  Whether the weapon should be equipped (true) or unequipped (false)
-   * @return {Promise}            A Promise which resolves once the weapon has been equipped or un-equipped
+   * @returns {Promise}            A Promise which resolves once the weapon has been equipped or un-equipped
    */
   async equipWeapon(itemId, { slot, equipped = true } = {}) {
     // Identify changes
@@ -2272,8 +2273,8 @@ export default class SwerpgActor extends Actor {
     if (game.userId === userId) {
       this.#updateSize()
       // TODO update size of active tokens
-      //this.#replenishResources(data);
-      //this.#applyResourceStatuses(data);
+      // this.#replenishResources(data);
+      // this.#applyResourceStatuses(data);
     }
 
     // Update flanking
@@ -2318,6 +2319,9 @@ export default class SwerpgActor extends Actor {
 
   /**
    * Display changes to the Actor as scrolling combat text.
+   * @param changed
+   * @param root0
+   * @param root0.statusText
    */
   #displayScrollingStatus(changed, { statusText } = {}) {
     const resources = changed.system?.resources || {}
@@ -2412,7 +2416,7 @@ export default class SwerpgActor extends Actor {
 
   /**
    * Add a Talent item to the actor with XP check and duplicate prevention.
-   * @param {Item} item - The Talent item to add.
+   * @param {Item} item The Talent item to add.
    * @returns {Promise<boolean>} - Whether the talent was added successfully.
    */
   async addTalentWithXpCheck(item) {

@@ -1,4 +1,5 @@
 import path from 'path'
+
 import { Command } from 'commander'
 import { compilePack, extractPack } from '@foundryvtt/foundryvtt-cli'
 

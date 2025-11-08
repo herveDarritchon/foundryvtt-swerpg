@@ -1,4 +1,8 @@
 /**
+ * @param root0
+ * @param root0.careerSpent
+ * @param root0.specializationSpent
+ * @param root0.items
  * @returns {SwerpgActor} an actor object
  */
 export function createActor({ careerSpent = 0, specializationSpent = 0, items = [] } = {}) {
@@ -383,6 +387,11 @@ export function createActor({ careerSpent = 0, specializationSpent = 0, items = 
   return baseData
 }
 
+/**
+ *
+ * @param actor
+ * @param updates
+ */
 export function updateActor(actor, updates) {
   for (const [key, value] of Object.entries(updates)) {
     if (key in actor) {

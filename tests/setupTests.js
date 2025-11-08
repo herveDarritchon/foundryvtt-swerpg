@@ -1,4 +1,4 @@
-// setupTests.js
+// SetupTests.js
 import { vi } from 'vitest'
 
 /**
@@ -10,7 +10,7 @@ import { vi } from 'vitest'
  * @param {boolean} [options.strict=false]  Throw an Error if deepClone is unable to clone something instead of
  *                                          returning the original
  * @param {number} [options._d]             An internal depth tracker
- * @return {*}                             The clone of that data
+ * @returns {*}                             The clone of that data
  */
 function deepClone(original, { strict = false, _d = 0 } = {}) {
   if (_d > 100) {
@@ -47,7 +47,7 @@ function deepClone(original, { strict = false, _d = 0 } = {}) {
  * The string key supports the notation a.b.c which would return object[a][b][c]
  * @param {object} object   The object to traverse
  * @param {string} key      An object property with notation a.b.c
- * @return {*}              The value of the found property
+ * @returns {*}              The value of the found property
  */
 function getProperty(object, key) {
   if (!key || !object) return undefined

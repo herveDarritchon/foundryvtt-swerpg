@@ -280,7 +280,7 @@ export default class SwerpgTalentTree extends PIXI.Container {
   /* -------------------------------------------- */
 
   #drawCircles() {
-    // this.edges.drawCircle(0, 0, 800);
+    // This.edges.drawCircle(0, 0, 800);
     this.edges.drawCircle(0, 0, 1400)
     this.edges.drawCircle(0, 0, 2000)
   }
@@ -465,6 +465,11 @@ export default class SwerpgTalentTree extends PIXI.Container {
     const signatures = SwerpgTalentNode.getSignatureTalents(actor)
 
     // Recursive testing function
+    /**
+     *
+     * @param nodes
+     * @param accessible
+     */
     function updateBatch(nodes, accessible = false) {
       const next = []
       for (const node of nodes) {
@@ -481,7 +486,7 @@ export default class SwerpgTalentTree extends PIXI.Container {
           // Signature Teleport Nodes
           if (node.type === 'signature') {
             for (const t of node.talents) {
-              // next.push(t.system.teleportNode);
+              // Next.push(t.system.teleportNode);
             }
           }
         }
@@ -532,7 +537,7 @@ export default class SwerpgTalentTree extends PIXI.Container {
     // Window Events
     window.addEventListener('resize', this.#onResize.bind(this))
     window.addEventListener('wheel', this.#onWheel.bind(this), { passive: false })
-    this.#onResize() // set initial dimensions
+    this.#onResize() // Set initial dimensions
   }
 
   /* -------------------------------------------- */

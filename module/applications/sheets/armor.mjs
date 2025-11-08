@@ -36,6 +36,9 @@ export default class ArmorSheet extends SwerpgBaseItemSheet {
 
   /**
    * A custom form field widget for rendering armor defense.
+   * @param field
+   * @param groupConfig
+   * @param inputConfig
    */
   #defenseWidget(field, groupConfig, inputConfig) {
     const config = this.document.system.config.category.defense
@@ -50,6 +53,9 @@ export default class ArmorSheet extends SwerpgBaseItemSheet {
 
   /**
    * A custom form field widget for rendering dodge defense.
+   * @param field
+   * @param groupConfig
+   * @param inputConfig
    */
   #soakWidget(field, groupConfig, inputConfig) {
     const config = this.document.system.config.category.soak
@@ -64,6 +70,9 @@ export default class ArmorSheet extends SwerpgBaseItemSheet {
 
   /**
    * Render the properties field as a multi-checkboxes element.
+   * @param field
+   * @param groupConfig
+   * @param inputConfig
    * @returns {HTMLMultiCheckboxElement}
    */
   #propertiesWidget(field, groupConfig, inputConfig) {
@@ -77,6 +86,10 @@ export default class ArmorSheet extends SwerpgBaseItemSheet {
 
   /**
    * Logic common to both the armor and dodge widgets.
+   * @param field
+   * @param groupConfig
+   * @param inputConfig
+   * @param config
    * @returns {widget: HTMLDivElement, fields: HTMLDivElement}
    */
   static #createWidget(field, groupConfig, inputConfig, config) {

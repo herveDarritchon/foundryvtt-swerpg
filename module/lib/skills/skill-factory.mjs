@@ -18,6 +18,7 @@ import ErrorSkill from './error-skill.mjs'
 
 /**
  * @typedef {Object} SkillOptions
+ * @property
  **/
 
 /**
@@ -34,7 +35,11 @@ export default class SkillFactory {
    * @param actor {SwerpgActor} an Actor instance
    * @param skillId {string} a skill id from the list of skills
    * @param params {SkillParams} the params to be used to build the skill
+   * @param params.action
+   * @param params.isCreation
    * @param options {SkillOptions} additional options
+   * @param params.isCareer
+   * @param params.isSpecialization
    * @returns {CareerFreeSkill|SpecializationFreeSkill|TrainedSkill|ErrorSkill} a skill object
    */
   static build(

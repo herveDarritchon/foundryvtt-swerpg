@@ -1,6 +1,7 @@
-// error-skill.test.mjs
+// Error-skill.test.mjs
 import '../../setupTests.js'
 import { describe, expect, test } from 'vitest'
+
 import { createActor } from '../../utils/actors/actor.mjs'
 import { createSkillData } from '../../utils/skills/skill.mjs'
 import ErrorSkill from '../../../module/lib/skills/error-skill.mjs'

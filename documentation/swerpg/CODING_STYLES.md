@@ -104,6 +104,8 @@ tests/                # Tests Vitest
 - **JSDoc** pour les APIs publiques/complexes (services, actions, hooks exposés).
 - Documenter : points d’extension, hooks, schémas de données et helpers non triviaux.
 
+Nous utilisons **JSDoc comme source de vérité pour les types et les contrats publics**. Toute fonction/export non trivial (API, hooks, handlers, data models, classes d’applications Foundry, etc.) doit être documenté avec `/** … */` incluant au minimum `@param`, `@returns` et, si besoin, `@throws`. Les types complexes sont décrits via `@typedef` / `@template` plutôt que dans le texte. La doc doit expliquer l’intention et les effets de bord, pas réécrire le code ligne par ligne. On évite les commentaires décoratifs : si la JSDoc ne sert ni à comprendre l’API, ni à guider l’autocomplétion/les outils (Copilot, agents, TS), on ne l’écrit pas.
+
 ---
 
 ## 8) Tests (Vitest)

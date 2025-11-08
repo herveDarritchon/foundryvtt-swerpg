@@ -233,7 +233,7 @@ export default class SwerpgCharacter extends SwerpgActorType {
   /* -------------------------------------------- */
 
   /**
-   * @override jsdoc
+   * @override
    */
   _prepareExperience() {
     super._prepareExperience()
@@ -291,8 +291,8 @@ export default class SwerpgCharacter extends SwerpgActorType {
 
   /** @override */
   prepareBaseData() {
-    //this.#prepareAdvancement();
-    //this.#prepareExperience();
+    // This.#prepareAdvancement();
+    // this.#prepareExperience();
     this.size = (this.details?.ancestry?.size || 3) + (this.details?.size || 0)
     this.#prepareSpecies()
     this.#prepareCareer()
@@ -335,7 +335,7 @@ export default class SwerpgCharacter extends SwerpgActorType {
    * Compute the experience points which can be spent to advance this character
    */
   #prepareExperience() {
-    /*        this.points = {
+    /*        This.points = {
                     ability: {pool: 9, total: effectiveLevel, bought: null, spent: null, available: null},
                     skill: {total: 2 + (effectiveLevel * 2), spent: null, available: null},
                     talent: {total: 2 + (effectiveLevel * 2), spent: 0, available: null}
@@ -360,7 +360,7 @@ export default class SwerpgCharacter extends SwerpgActorType {
       this.details.career = this.schema.getField('details.career').initialize(careerDefaults)
     }
 
-    //this.details.background ||= this.schema.getField("details.background").initialize({});
+    // This.details.background ||= this.schema.getField("details.background").initialize({});
 
     // Threat level
     /*        this.advancement.threatLevel = this.advancement.level;
@@ -380,7 +380,7 @@ export default class SwerpgCharacter extends SwerpgActorType {
    * @override
    */
   #prepareSpecies() {
-    //        const points = this.points.ability;
+    //        Const points = this.points.ability;
     const species = this.details.species
     const thresholds = this.thresholds
 
@@ -437,7 +437,7 @@ export default class SwerpgCharacter extends SwerpgActorType {
    * @param {Set<Object>} skills The skills object to prepare
    */
   _prepareSkills(skills) {
-    /*        for (const skill of Object.entries(skills)) {
+    /*        For (const skill of Object.entries(skills)) {
                     this._prepareSkill(...skill);
                 }*/
   }
@@ -468,7 +468,7 @@ export default class SwerpgCharacter extends SwerpgActorType {
 
     return skill
     // Standard skill preparation
-    //super._prepareSkill(skillId, skill);
+    // super._prepareSkill(skillId, skill);
 
     // Record point cost
     /*        const ranks = SYSTEM.SKILL.RANKS;
@@ -577,9 +577,9 @@ export default class SwerpgCharacter extends SwerpgActorType {
     const actor = this.parent
     await actor._applyDetailItem(species, {
       // TODO Change this when points are used for experience
-      //canApply: actor.isL0 && !actor.points.ability.spent,
+      // canApply: actor.isL0 && !actor.points.ability.spent,
       canApply: true,
-      //canClear: actor.isL0
+      // CanClear: actor.isL0
       canClear: true,
     })
   }
@@ -593,9 +593,9 @@ export default class SwerpgCharacter extends SwerpgActorType {
     const actor = this.parent
     await actor._applyDetailItem(career, {
       // TODO Change this when points are used for experience
-      //canApply: actor.isL0 && !actor.points.ability.spent,
+      // canApply: actor.isL0 && !actor.points.ability.spent,
       canApply: true,
-      //canClear: actor.isL0
+      // CanClear: actor.isL0
       canClear: true,
     })
   }
@@ -609,9 +609,9 @@ export default class SwerpgCharacter extends SwerpgActorType {
     const actor = this.parent
     await actor._applyDetailItem(specialization, {
       // TODO Change this when points are used for experience
-      //canApply: actor.isL0 && !actor.points.ability.spent,
+      // canApply: actor.isL0 && !actor.points.ability.spent,
       canApply: true,
-      //canClear: actor.isL0
+      // CanClear: actor.isL0
       canClear: true,
       isCollection: true,
       collectionKey: 'specializations',

@@ -1,6 +1,7 @@
-// error-characteristic.test.mjs
+// Error-characteristic.test.mjs
 import '../../setupTests.js'
 import { describe, expect, test } from 'vitest'
+
 import { createActor } from '../../utils/actors/actor.mjs'
 import { createCharacteristicData } from '../../utils/characteristics/characteristic.mjs'
 import ErrorCharacteristic from '../../../module/lib/characteristics/error-characteristic.mjs'
