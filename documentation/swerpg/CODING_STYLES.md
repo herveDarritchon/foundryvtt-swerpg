@@ -26,6 +26,8 @@
 
 ### 3.1) Organisation des Folders du projet
 
+Arborescence de référence :
+
 ```text
 module/
   applications/       # ApplicationV2 & feuilles (sheets/, config/, sidebar/)
@@ -36,9 +38,9 @@ module/
   canvas/             # Éléments canvas (ruler, token, talent-tree)
   dice/               # Système de dés spécialisé Star Wars
   helpers/            # Utilitaires génériques
-  lib/                # Bibliothèques de logique métier
+  lib/                # Logique métier pure (règles, calculs, conversions)
   ui/                 # Composants UI réutilisables
-  utils/              # Helpers système (flags, i18n, etc.)
+  utils/              # Helpers système (flags, i18n, logger, etc.)
   chat.mjs            # Gestion des messages de chat
   socket.mjs          # Communication WebSocket
 styles/               # LESS + variables thématiques
