@@ -1,4 +1,5 @@
 const { api, sheets } = foundry.applications
+import JaugeFactory from '../../lib/jauges/jauge-factory.mjs'
 
 /**
  * A base ActorSheet built on top of ApplicationV2 and the Handlebars rendering backend.
@@ -600,6 +601,106 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
   }
 
   /* -------------------------------------------- */
+  /*  Data Display Helper Methods                 */
+
+  /* -------------------------------------------- */
+
+  /**
+   * Builds the data structure for the jauge display.
+   * @param {Object} resources - The actor's resources (wounds, strain, encumbrance)
+   * @returns {Array} An array of jauge display data objects.
+   */
+  buildJaugeDisplayData(resources) {
+    const types = ['wounds', 'strain', 'encumbrance']
+
+    const jauges = types.map((type) => {
+      const resource = resources[type]
+      const { value, threshold } = resource
+      return JaugeFactory.build(type, value, threshold).create()
+    })
+
+    // ✅ Debug conditionnel uniquement si nécessaire
+    if (CONFIG.debug?.sheets) {
+      console.debug(`[${this.constructor.name}] Jauges built:`, jauges)
+    }
+
+    return jauges
+  }
+
+  /**
+   * Builds the data structure for the defense display.
+   * @returns {Array} An array of defense display data objects.
+   */
+  buildDefenseDisplayData() {
+    const types = ['melee', 'ranged']
+
+    return types.map((type) => {
+      return {
+        extraCss: type,
+        type: type,
+        label: type,
+        value: 0,
+      }
+    })
+  }
+
+  /**
+   * Builds a filtered list of items by type for display.
+   * @param {string} itemType - The type of items to filter (e.g., 'motivation', 'talent', 'skill')
+   * @param {Function} [mapFunction] - Optional mapping function to transform each item
+   * @returns {Array} An array of items of the specified type
+   */
+  buildItemListByType(itemType, mapFunction = null) {
+    const items = this.actor.items.filter((item) => item.type === itemType)
+
+    if (mapFunction && typeof mapFunction === 'function') {
+      return items.map(mapFunction)
+    }
+
+    return items.map((item) => ({
+      id: item.id,
+      name: item.name,
+      img: item.img,
+      cssClass: item.system?.isExtra ? 'extra' : '',
+    }))
+  }
+
+  /* -------------------------------------------- */
+  /*  Performance Optimization                    */
+
+  /* -------------------------------------------- */
+
+  /**
+   * A Map to store debounce timers for input fields.
+   * @type {Map<string, number>}
+   */
+  static #debounceTimers = new Map()
+
+  /**
+   * Debounces form changes for numeric inputs to improve performance.
+   * @param {Event} event - The input event
+   * @param {number} delay - Delay in milliseconds (default: 300ms)
+   */
+  #debounceFormChange(event, delay = 300) {
+    const fieldName = event.target.name
+    if (!fieldName) return
+
+    // Clear existing timer for this field
+    const existingTimer = SwerpgBaseActorSheet.#debounceTimers.get(fieldName)
+    if (existingTimer) {
+      clearTimeout(existingTimer)
+    }
+
+    // Set new timer
+    const timer = setTimeout(() => {
+      this._onChangeForm(this.options.form, event)
+      SwerpgBaseActorSheet.#debounceTimers.delete(fieldName)
+    }, delay)
+
+    SwerpgBaseActorSheet.#debounceTimers.set(fieldName, timer)
+  }
+
+  /* -------------------------------------------- */
   /*  Action Event Handlers                       */
 
   /* -------------------------------------------- */
@@ -633,6 +734,13 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
         event.target.valueAsNumber = value
       }
     }
+
+    // Apply debouncing for numeric inputs to improve performance
+    if (event.target.type === 'number' && event.type === 'input') {
+      this.#debounceFormChange(event)
+      return
+    }
+
     super._onChangeForm(formConfig, event)
   }
 

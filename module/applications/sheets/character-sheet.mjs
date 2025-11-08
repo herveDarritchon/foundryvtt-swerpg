@@ -4,7 +4,6 @@ import SkillFactory from '../../lib/skills/skill-factory.mjs'
 import ErrorSkill from '../../lib/skills/error-skill.mjs'
 import TalentFactory from '../../lib/talents/talent-factory.mjs'
 import ErrorTalent from '../../lib/talents/error-talent.mjs'
-import JaugeFactory from '../../lib/jauges/jauge-factory.mjs'
 
 /**
  * @typedef {Object} DefenseDisplayData
@@ -148,9 +147,9 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
     context.obligations = this.#buildObligationList()
     context.obligationPoints = this.#computeObligationPoints(context.obligations)
 
-    context.jauges = this.#buildJaugeDisplayData(a.system.resources)
+    context.jauges = this.buildJaugeDisplayData(a.system.resources)
     context.soak = this.#buildSoakDisplayData(a.system.characteristics.brawn)
-    context.defenses = this.#buildDefenseDisplayData()
+    context.defenses = this.buildDefenseDisplayData()
 
     // ✅ Debug conditionnel uniquement si nécessaire
     if (CONFIG.debug?.sheets) {
@@ -174,45 +173,6 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
       label: type,
       value: brawn.rank.value,
     }
-  }
-
-  /**
-   * Builds the data structure for the jauge display.
-   * @returns {[DefenseDisplayData]} An array of defense display data objects.
-   */
-  #buildDefenseDisplayData() {
-    const types = ['melee', 'ranged']
-
-    return types.map((type) => {
-      return {
-        extraCss: type,
-        type: type,
-        label: type,
-        value: 0,
-      }
-    })
-  }
-
-  /**
-   * Builds the data structure for the jauge display.
-   * @param resources
-   * @returns {[JaugeDisplayData]} An array of jauge display data objects.
-   */
-  #buildJaugeDisplayData(resources) {
-    const types = ['wounds', 'strain', 'encumbrance']
-
-    const jauges = types.map((type) => {
-      const resource = resources[type]
-      const { value, threshold } = resource
-      return JaugeFactory.build(type, value, threshold).create()
-    })
-
-    // ✅ Debug conditionnel uniquement si nécessaire
-    if (CONFIG.debug?.sheets) {
-      console.debug(`[${this.constructor.name}] Jauges built:`, jauges)
-    }
-
-    return jauges
   }
 
   /* -------------------------------------------- */
@@ -690,15 +650,11 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
    * @returns {MotivationDisplayData[]}
    */
   #buildMotivationList() {
-    return this.actor.items.filter((item) => item.type === 'motivation').map((obligation) => this.#buildMotivationDisplayData(obligation))
-  }
-
-  #buildMotivationDisplayData(motivation) {
-    return {
+    return this.buildItemListByType('motivation', (motivation) => ({
       id: motivation.id,
       name: motivation.name,
       img: motivation.img,
       cssClass: motivation.system.isExtra ? 'extra' : '',
-    }
+    }))
   }
 }
