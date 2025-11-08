@@ -1,6 +1,6 @@
 export default class SwerpgTokenObject extends foundry.canvas.placeables.Token {
   /** @inheritDoc */
-  static RENDER_FLAGS = ({ ...super.RENDER_FLAGS, refreshFlanking: {},})
+  static RENDER_FLAGS = { ...super.RENDER_FLAGS, refreshFlanking: {} }
 
   /**
    * @typedef {Object} SwerpgTokenEngagement

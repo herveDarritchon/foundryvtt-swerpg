@@ -8,14 +8,14 @@ export default class SwerpgTalentIcon extends PIXI.Container {
      */
     this.config = {
       alpha: 1.0,
-        backgroundColor: 0x000000,
-        borderColor: undefined,
-        borderWidth: 3,
-        borderRadius: undefined,
-        size: 50,
-        text: undefined,
-        texture: undefined,
-        tint: 0xffffff,
+      backgroundColor: 0x000000,
+      borderColor: undefined,
+      borderWidth: 3,
+      borderRadius: undefined,
+      size: 50,
+      text: undefined,
+      texture: undefined,
+      tint: 0xffffff,
       ...config,
     }
 

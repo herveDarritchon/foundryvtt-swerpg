@@ -7,7 +7,6 @@ import SwerpgBaseItemSheet from './base-item.mjs'
 export default class CareerSheet extends SwerpgBaseItemSheet {
   /** @inheritDoc */
   static DEFAULT_OPTIONS = {
-    classes: ['swerpg', 'sheet', 'item', 'career'],
     position: {
       width: 600,
       height: 'auto',

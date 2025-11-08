@@ -7,7 +7,6 @@ import SwerpgBaseItemSheet from './base-item.mjs'
 export default class SpecializationSheet extends SwerpgBaseItemSheet {
   /** @inheritDoc */
   static DEFAULT_OPTIONS = {
-    classes: ['swerpg', 'sheet', 'item', 'specialization'],
     position: {
       width: 600,
       height: 'auto',

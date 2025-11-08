@@ -75,7 +75,9 @@ export default class StandardCheckDialog extends DialogV2 {
   /** @override */
   async _prepareContext(options) {
     const data = this.roll.data
-    return { ...data, dice: this.roll.dice.map((d) => `d${d.faces}`),
+    return {
+      ...data,
+      dice: this.roll.dice.map((d) => `d${d.faces}`),
       difficulty: this._getDifficulty(data.dc),
       difficulties: Object.entries(SYSTEM.dice.checkDifficulties).map((d) => ({
         dc: d[0],
@@ -88,7 +90,8 @@ export default class StandardCheckDialog extends DialogV2 {
       canIncreaseBoons: data.totalBoons < SYSTEM.dice.MAX_BOONS,
       canDecreaseBoons: data.totalBoons > 0,
       canIncreaseBanes: data.totalBanes < SYSTEM.dice.MAX_BOONS,
-      canDecreaseBanes: data.totalBanes > 0,}
+      canDecreaseBanes: data.totalBanes > 0,
+    }
   }
 
   /* -------------------------------------------- */

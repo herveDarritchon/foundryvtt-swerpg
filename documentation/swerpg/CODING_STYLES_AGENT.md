@@ -12,29 +12,27 @@ Quand tu réponds à une demande de code, tu respectes ce contrat, dans cet ordr
 6. **Commandes** (scripts npm, build, tests à lancer).
 7. **Commit message** (Conventional Commit) + mention **BREAKING** si nécessaire.
 8. **Assumptions & Follow-ups** :
-
-   * *Assumptions* : décisions prises en cas d’ambiguïté.
-   * *Follow-ups* : TODO non bloquants pour la PR (issue/PR ultérieure).
+   - _Assumptions_ : décisions prises en cas d’ambiguïté.
+   - _Follow-ups_ : TODO non bloquants pour la PR (issue/PR ultérieure).
 
 ---
 
 ## 1) Périmètre & philosophie
 
-* **Langage** : JavaScript **ES2022** uniquement.
+- **Langage** : JavaScript **ES2022** uniquement.
+  - Pas de TypeScript, pas de `.d.ts`, pas de `require`.
 
-  * Pas de TypeScript, pas de `.d.ts`, pas de `require`.
-* **Cible** : Foundry VTT **v13+** :
+- **Cible** : Foundry VTT **v13+** :
+  - `ApplicationV2`, `HandlebarsApplicationMixin`, `TypeDataModel`.
 
-  * `ApplicationV2`, `HandlebarsApplicationMixin`, `TypeDataModel`.
-* **Principe clé** :
+- **Principe clé** :
+  - **Séparation stricte** entre **métier pur** (sans Foundry) et **adaptateurs Foundry**.
 
-  * **Séparation stricte** entre **métier pur** (sans Foundry) et **adaptateurs Foundry**.
-* **Priorités** :
-
-  * lisibilité > concision,
-  * cohérence > préférences perso,
-  * code testable > bricolage rapide,
-  * zéro logique métier dans les `.hbs`.
+- **Priorités** :
+  - lisibilité > concision,
+  - cohérence > préférences perso,
+  - code testable > bricolage rapide,
+  - zéro logique métier dans les `.hbs`.
 
 ---
 
@@ -67,12 +65,12 @@ tests/                # Tests Vitest
 
 **Nommage :**
 
-* Fichiers JS : `kebab-case.mjs`.
-* Classes : `PascalCase`.
-* Fonctions/variables : `camelCase`.
-* Partials Handlebars : `_partial-name.hbs` (underscore).
-* Booléens : `isSomething`, `hasSomething`.
-* Suffixes standard : `*Model`, `*Service`, `*Config`, `*Action`.
+- Fichiers JS : `kebab-case.mjs`.
+- Classes : `PascalCase`.
+- Fonctions/variables : `camelCase`.
+- Partials Handlebars : `_partial-name.hbs` (underscore).
+- Booléens : `isSomething`, `hasSomething`.
+- Suffixes standard : `*Model`, `*Service`, `*Config`, `*Action`.
 
 ---
 
@@ -81,26 +79,24 @@ tests/                # Tests Vitest
 Tu dois **toujours** réfléchir en deux couches :
 
 1. **Métier pur** (dans `module/lib/` ou `module/rules/` par ex.) :
+   - fonctions/classes **sans aucune dépendance** à Foundry :
+     - pas de `game`, `Actor`, `Item`, `ChatMessage`, `CONFIG`, `Hooks`…
 
-   * fonctions/classes **sans aucune dépendance** à Foundry :
-
-     * pas de `game`, `Actor`, `Item`, `ChatMessage`, `CONFIG`, `Hooks`…
-   * code déterministe : entrée → sortie, sans effets de bord globaux.
-   * utilisable directement dans des **tests Vitest** sans mocking de Foundry.
+   - code déterministe : entrée → sortie, sans effets de bord globaux.
+   - utilisable directement dans des **tests Vitest** sans mocking de Foundry.
 
 2. **Adaptateurs Foundry** (dans `applications/`, `documents/`, `hooks/`, etc.) :
-
-   * lisent / écrivent les `Documents`,
-   * préparent des données simples pour le métier,
-   * appellent les fonctions métier, puis réappliquent le résultat dans Foundry,
-   * gèrent les hooks, le DOM, les événements, les jets, les messages de chat.
+   - lisent / écrivent les `Documents`,
+   - préparent des données simples pour le métier,
+   - appellent les fonctions métier, puis réappliquent le résultat dans Foundry,
+   - gèrent les hooks, le DOM, les événements, les jets, les messages de chat.
 
 **Règles à suivre :**
 
-* **Pas de logique métier** dans les templates Handlebars (vue = rendu).
-* **Une feuille = un `.mjs` + un `.hbs`** ; événements via `data-action`; aucun `querySelector` global hors périmètre de l’app.
-* **Données dérivées** dans `prepareDerivedData()` **sans effet de bord** (aucune écriture sur d’autres documents).
-* Toute nouvelle feature = **d’abord une fonction/méthode métier testable**, ensuite un adaptateur Foundry minimal.
+- **Pas de logique métier** dans les templates Handlebars (vue = rendu).
+- **Une feuille = un `.mjs` + un `.hbs`** ; événements via `data-action`; aucun `querySelector` global hors périmètre de l’app.
+- **Données dérivées** dans `prepareDerivedData()` **sans effet de bord** (aucune écriture sur d’autres documents).
+- Toute nouvelle feature = **d’abord une fonction/méthode métier testable**, ensuite un adaptateur Foundry minimal.
 
 Si ton code métier a besoin d’un jet, de i18n ou de flags → **fais passer ça par l’adaptateur**, pas par un appel direct à Foundry.
 
@@ -110,26 +106,25 @@ Si ton code métier a besoin d’un jet, de i18n ou de flags → **fais passer �
 
 L’agent doit produire du code qui respecte implicitement les règles suivantes :
 
-* `===` obligatoire (`eqeqeq`).
-* `const` par défaut ; `let` si mutation ; **jamais** `var`.
-* `no-param-reassign` : interdiction de modifier les paramètres (copie défensive).
-* `no-unused-vars` : aucune variable déclarée non utilisée.
-* `no-console` :
+- `===` obligatoire (`eqeqeq`).
+- `const` par défaut ; `let` si mutation ; **jamais** `var`.
+- `no-param-reassign` : interdiction de modifier les paramètres (copie défensive).
+- `no-unused-vars` : aucune variable déclarée non utilisée.
+- `no-console` :
+  - **Seul** `module/utils/logger.mjs` peut utiliser `console.xxx`.
+  - Partout ailleurs, utiliser `logger.xxx`.
 
-  * **Seul** `module/utils/logger.mjs` peut utiliser `console.xxx`.
-  * Partout ailleurs, utiliser `logger.xxx`.
-* Imports ES modules uniquement (`import` / `export`).
-* `import/order` :
-
-  * groupes logiques,
-  * ordre alphabétique,
-  * lignes blanches entre groupes.
+- Imports ES modules uniquement (`import` / `export`).
+- `import/order` :
+  - groupes logiques,
+  - ordre alphabétique,
+  - lignes blanches entre groupes.
 
 Exemple d’intention d’ESLint (pour l’agent) :
 
 ```js
 // globals typiques (déclarés côté config ESLint humaine)
-game, ui, canvas, foundry, Hooks, CONFIG
+;(game, ui, canvas, foundry, Hooks, CONFIG)
 ```
 
 Tu dois **spontanément éviter** tout ce qui déclencherait ces règles.
@@ -140,10 +135,10 @@ Tu dois **spontanément éviter** tout ce qui déclencherait ces règles.
 
 Le formatage est **100% géré par Prettier**. L’agent doit écrire du code qui s’aligne naturellement avec :
 
-* indentation **2 espaces**,
-* `printWidth`: **160**,
-* `singleQuote`: **true** en JS,
-* `trailingComma`: `"all"`.
+- indentation **2 espaces**,
+- `printWidth`: **160**,
+- `singleQuote`: **true** en JS,
+- `trailingComma`: `"all"`.
 
 Tu ne joues pas avec les espaces / retours à la ligne pour “faire joli” : tu laisses Prettier décider.
 
@@ -151,10 +146,10 @@ Tu ne joues pas avec les espaces / retours à la ligne pour “faire joli” : t
 
 ## 6) Usage du langage
 
-* `async/await` préféré aux chaînes de `.then()`.
-* Gérer **tous** les rejets de promesse (try/catch ou `.catch` explicite).
-* Préférer **fonctions pures** pour le métier.
-* Pas de mutation cachée d’objets d’entrée métier : retourner une **nouvelle structure** ou documenter clairement les effets de bord quand ils sont voulus (rare).
+- `async/await` préféré aux chaînes de `.then()`.
+- Gérer **tous** les rejets de promesse (try/catch ou `.catch` explicite).
+- Préférer **fonctions pures** pour le métier.
+- Pas de mutation cachée d’objets d’entrée métier : retourner une **nouvelle structure** ou documenter clairement les effets de bord quand ils sont voulus (rare).
 
 ---
 
@@ -162,11 +157,11 @@ Tu ne joues pas avec les espaces / retours à la ligne pour “faire joli” : t
 
 ### 7.1 Principe
 
-* Aucun `console.xxx` **direct** dans le code de système (hors `logger.mjs`).
-* Tous les logs passent par un **logger central**.
-* Tous les messages sont préfixés par :
+- Aucun `console.xxx` **direct** dans le code de système (hors `logger.mjs`).
+- Tous les logs passent par un **logger central**.
+- Tous les messages sont préfixés par :
   `SWERPG || `
-* Le logger permet de **désactiver/activer** les logs en fonction d’un mode debug, tout en laissant **passer au minimum les erreurs**.
+- Le logger permet de **désactiver/activer** les logs en fonction d’un mode debug, tout en laissant **passer au minimum les erreurs**.
 
 ### 7.2 Logger de référence pour l’agent
 
@@ -269,33 +264,32 @@ logger.error('Impossible de charger le pack', packId)
 **À ne pas faire :**
 
 ```js
-console.log('Debug');        // interdit
-console.warn('Oops');        // interdit en dehors de logger.mjs
-console.error('Aïe', err);   // interdit en dehors de logger.mjs
+console.log('Debug') // interdit
+console.warn('Oops') // interdit en dehors de logger.mjs
+console.error('Aïe', err) // interdit en dehors de logger.mjs
 ```
 
 ---
 
 ## 8) Commentaires & documentation (JSDoc)
 
-* Commenter **l’intention**, pas l’évidence :
+- Commenter **l’intention**, pas l’évidence :
+  - pourquoi ce choix, quelle règle métier, quels effets de bord.
 
-  * pourquoi ce choix, quelle règle métier, quels effets de bord.
-* Utiliser **JSDoc** pour :
-
-  * APIs publiques (services, actions, helpers exposés),
-  * data models non triviaux,
-  * fonctions métier complexes.
+- Utiliser **JSDoc** pour :
+  - APIs publiques (services, actions, helpers exposés),
+  - data models non triviaux,
+  - fonctions métier complexes.
 
 **Règles pour l’agent :**
 
-* Toute fonction/export non triviale (API, hooks, handlers, modèles, classes d’applications) doit avoir une JSDoc avec au minimum :
+- Toute fonction/export non triviale (API, hooks, handlers, modèles, classes d’applications) doit avoir une JSDoc avec au minimum :
+  - `@param`,
+  - `@returns`,
+  - `@throws` si pertinent.
 
-  * `@param`,
-  * `@returns`,
-  * `@throws` si pertinent.
-* Types complexes via `@typedef` / `@template` plutôt que du texte vague.
-* Pas de commentaires décoratifs.
+- Types complexes via `@typedef` / `@template` plutôt que du texte vague.
+- Pas de commentaires décoratifs.
 
 ---
 
@@ -307,21 +301,19 @@ L’agent **doit** penser les tests d’abord pour le **métier pur**.
 
 Objectif : verrouiller les **règles du système**, pas refaire Foundry en miniature.
 
-* Toute règle de jeu, tout calcul, toute transformation de données doit pouvoir être testée avec un import direct d’un module **pur** dans Vitest.
-* Aucun test unitaire ne doit dépendre de `game`, `Actor`, `Item`, `canvas`, etc.
-* Cas à tester en priorité :
-
-  * formules de jets,
-  * dérivées de données (soak, seuils, etc.),
-  * règles d’état (blessures, stress, etc.),
-  * cas limites (0, valeurs extrêmes, seuils exacts).
+- Toute règle de jeu, tout calcul, toute transformation de données doit pouvoir être testée avec un import direct d’un module **pur** dans Vitest.
+- Aucun test unitaire ne doit dépendre de `game`, `Actor`, `Item`, `canvas`, etc.
+- Cas à tester en priorité :
+  - formules de jets,
+  - dérivées de données (soak, seuils, etc.),
+  - règles d’état (blessures, stress, etc.),
+  - cas limites (0, valeurs extrêmes, seuils exacts).
 
 **Règles :**
 
-* Si un test a besoin de `game` ou `Actor` → la logique est mal isolée.
-* Les données de test sont de **simples objets** (factories/helpers), pas des Documents Foundry.
-* En cas de bug fonctionnel :
-
+- Si un test a besoin de `game` ou `Actor` → la logique est mal isolée.
+- Les données de test sont de **simples objets** (factories/helpers), pas des Documents Foundry.
+- En cas de bug fonctionnel :
   1. écrire un test qui **échoue** et reproduit le bug ;
   2. corriger le métier jusqu’à ce que le test passe.
 
@@ -364,18 +356,17 @@ describe('calcSoak', () => {
 
 ## 10) i18n
 
-* **Jamais** de chaîne en dur dans le code ou les templates.
-* Utiliser `game.i18n.localize/format` côté JS, et un helper `t` côté HBS.
+- **Jamais** de chaîne en dur dans le code ou les templates.
+- Utiliser `game.i18n.localize/format` côté JS, et un helper `t` côté HBS.
 
 Clés :
 
-* structure : `SWERPG.Domain.Sub.Key`
+- structure : `SWERPG.Domain.Sub.Key`
+  - ex. `SWERPG.ActorSheet.Title`, `SWERPG.Actor.Chars.Agility`.
 
-  * ex. `SWERPG.ActorSheet.Title`, `SWERPG.Actor.Chars.Agility`.
-* L’agent ajoute les clés manquantes dans :
-
-  * `lang/en.json`,
-  * `lang/fr.json` (avec une traduction FR simple mais correcte).
+- L’agent ajoute les clés manquantes dans :
+  - `lang/en.json`,
+  - `lang/fr.json` (avec une traduction FR simple mais correcte).
 
 Exemple côté JS :
 
@@ -389,14 +380,13 @@ Helper minimal :
 
 ```js
 // path: module/services/i18n.mjs
-export const t = (key, data) =>
-  data ? game.i18n.format(key, data) : game.i18n.localize(key)
+export const t = (key, data) => (data ? game.i18n.format(key, data) : game.i18n.localize(key))
 ```
 
 Exemple côté template :
 
 ```hbs
-<h1>{{t "SWERPG.ActorSheet.Title" name=actor.name}}</h1>
+<h1>{{t 'SWERPG.ActorSheet.Title' name=actor.name}}</h1>
 ```
 
 ---
@@ -486,17 +476,12 @@ export class SwerpgActorSheet extends HandlebarsApplicationMixin(ApplicationV2) 
   }
 
   activateListeners(html) {
-    html
-      .querySelectorAll('[data-action="roll"]')
-      .forEach((el) => el.addEventListener('click', (event) => this.#onRoll(event)))
+    html.querySelectorAll('[data-action="roll"]').forEach((el) => el.addEventListener('click', (event) => this.#onRoll(event)))
   }
 
   async #onRoll(event) {
     const key = event.currentTarget?.dataset?.skill ?? 'cool'
-    const roll = await new Roll(
-      `1d20 + @skills["${key}"]`,
-      this.#actor.getRollData(),
-    ).evaluate({ async: true })
+    const roll = await new Roll(`1d20 + @skills["${key}"]`, this.#actor.getRollData()).evaluate({ async: true })
 
     return roll.toMessage({
       speaker: ChatMessage.getSpeaker({ actor: this.#actor }),
@@ -509,20 +494,18 @@ export class SwerpgActorSheet extends HandlebarsApplicationMixin(ApplicationV2) 
 
 ## 12) Git, revue & CI (pour ce que produit l’agent)
 
-* Commits : **Conventional Commits** :
+- Commits : **Conventional Commits** :
+  - `feat:`, `fix:`, `refactor:`, `docs:`, `test:`, `build:`, etc.
 
-  * `feat:`, `fix:`, `refactor:`, `docs:`, `test:`, `build:`, etc.
-* PR :
-
-  * petite et focalisée,
-  * liée à une feature ou un bug précis,
-  * checklist type :
-
-    * lint/format OK,
-    * tests verts + couverture stable,
-    * pas de chaînes en dur,
-    * accessibilité minimale si UI,
-    * changelog si besoin.
+- PR :
+  - petite et focalisée,
+  - liée à une feature ou un bug précis,
+  - checklist type :
+    - lint/format OK,
+    - tests verts + couverture stable,
+    - pas de chaînes en dur,
+    - accessibilité minimale si UI,
+    - changelog si besoin.
 
 Scripts attendus :
 
@@ -544,12 +527,12 @@ Scripts attendus :
 
 L’agent doit **refuser / contourner** les demandes qui impliquent :
 
-* TypeScript, `require`, `var`, manipulation d’ES5.
-* `console.log` (ou `console.xxx`) en dehors de `logger.mjs`.
-* Logique métier lourde dans un `.hbs`.
-* Écriture de Documents dans `prepareDerivedData`.
-* Accès DOM global (hors périmètre de l’application et sans `data-action`).
-* Règles non testables mélangeant directement Foundry + métier.
+- TypeScript, `require`, `var`, manipulation d’ES5.
+- `console.log` (ou `console.xxx`) en dehors de `logger.mjs`.
+- Logique métier lourde dans un `.hbs`.
+- Écriture de Documents dans `prepareDerivedData`.
+- Accès DOM global (hors périmètre de l’application et sans `data-action`).
+- Règles non testables mélangeant directement Foundry + métier.
 
 Si la demande force un anti-pattern, l’agent propose une **alternative propre** et documente le risque dans la section **Assumptions**.
 
@@ -559,12 +542,12 @@ Si la demande force un anti-pattern, l’agent propose une **alternative propre*
 
 Avant d’envoyer une réponse :
 
-* [ ] Code JS ES2022, pas de TS, pas de `require`.
-* [ ] Séparation métier / Foundry respectée.
-* [ ] Logger central utilisé, aucun `console.xxx` direct.
-* [ ] Pas de side effects dans `prepareDerivedData`.
-* [ ] i18n OK (aucune chaîne brute).
-* [ ] Tests Vitest fournis/MAJ pour la logique métier.
-* [ ] Structure de réponse respectée (Résumé → Arborescence → Patches → i18n → Tests → Commandes → Commit → Assumptions/Follow-ups).
+- [ ] Code JS ES2022, pas de TS, pas de `require`.
+- [ ] Séparation métier / Foundry respectée.
+- [ ] Logger central utilisé, aucun `console.xxx` direct.
+- [ ] Pas de side effects dans `prepareDerivedData`.
+- [ ] i18n OK (aucune chaîne brute).
+- [ ] Tests Vitest fournis/MAJ pour la logique métier.
+- [ ] Structure de réponse respectée (Résumé → Arborescence → Patches → i18n → Tests → Commandes → Commit → Assumptions/Follow-ups).
 
 Ce guide est désormais aligné sur le **coding-style humain SWERPG** et doit être la référence pour tout code généré par l’agent.

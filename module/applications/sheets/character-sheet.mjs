@@ -67,8 +67,6 @@ import JaugeFactory from '../../lib/jauges/jauge-factory.mjs'
 export default class CharacterSheet extends SwerpgBaseActorSheet {
   /** @inheritDoc */
   static DEFAULT_OPTIONS = {
-    classes: ['swerpg', 'sheet', 'actor', 'character'],
-    tag: 'form',
     position: {
       width: 950,
       height: 'auto',

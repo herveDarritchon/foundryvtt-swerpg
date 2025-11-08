@@ -206,7 +206,7 @@ export default class ActionUseDialog extends StandardCheckDialog {
     // Store preview template data
     this.#targetTemplate = {
       activeLayer,
-      config: { ...targetConfig, ...target},
+      config: { ...targetConfig, ...target },
       document: template.document,
       object: template,
       origin: { x: template.document.x, y: template.document.y },
