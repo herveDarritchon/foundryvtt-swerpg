@@ -87,19 +87,6 @@ Les règles suivantes visent à garder un code prévisible, testable et facile �
 - Indentation 2 espaces ; largeur 160 ; **guillemets simples** ; trailing commas **toujours**.
 - ESLint doit passer **sans erreur** ; sinon la PR ne merge pas.
 
-`.prettierrc`
-
-```json
-{
-  "semi": false,
-  "eslintIntegration": true,
-  "printWidth": 160,
-  "tabWidth": 2,
-  "singleQuote": true,
-  "trailingComma": "all"
-}
-```
-
 ---
 
 ## 6) Usage du langage
@@ -110,6 +97,23 @@ Les règles suivantes visent à garder un code prévisible, testable et facile �
 - Préférer **`async/await`** aux `.then()` ; toujours gérer les rejets.
 - Gestion d’erreur : `try/catch` + **logger** central ; pas de `console.log` en prod.
 - Foundry : pas d’accès sauvage aux globaux ; wrappers minces quand utile (flags, i18n, logs).
+
+### 6.1) Logging
+
+Tous les appels à `console.xxx` doivent passer par un logger central. L’objectif est double :
+
+- Activer/Désactiver facilement les logs selon qu’on est en mode debug ou non.
+- Pouvoir, demain, changer la stratégie de logging (enregistrer ailleurs, colorer, filtrer par niveau…) sans refactoriser tout le code.
+
+**A ne pas faire**: Faire un appel directe à `console.xxx` dans le code du système en dehors de `logger.mjs`.
+
+```js
+import { logger } from './module/utils/logger.mjs'
+
+logger.log('Initialisation du système')
+logger.warn('Jet sans compétence associée', rollData)
+logger.error('Impossible de charger le pack', packId)
+```
 
 ---
 
