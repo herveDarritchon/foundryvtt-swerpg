@@ -149,6 +149,12 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
     const { inventory, talents, iconicSpells } = this.#prepareItems()
     const { sections: actions, favorites: favoriteActions } = this.#prepareActions()
     return {
+      // ✅ Standard minimum OBLIGATOIRE selon le plan Phase 2.2
+      document: this.document,
+      system: this.document.system,
+      config: game.system.config,
+      isOwner: this.document.isOwner,
+      // Propriétés existantes conservées pour compatibilité
       characteristicScores: this.#prepareCharacteristics(),
       progression: this.#prepareProgression(),
       actions: actions ?? [],
