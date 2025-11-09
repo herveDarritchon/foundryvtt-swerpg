@@ -1,12 +1,13 @@
 import * as SKILL from '../../config/skills.mjs'
 import { CHARACTERISTICS } from '../../config/attributes.mjs'
+import SwerpgBaseItemSheet from './base-item.mjs'
 
 const { api, sheets } = foundry.applications
 
 /**
  * The application used to view and edit a skill page in the system journal.
  */
-export default class SkillPageSheet extends api.HandlebarsApplicationMixin(sheets.JournalPageSheetV2) {
+export default class SkillSheet extends SwerpgBaseItemSheet {
   /** @inheritDoc */
   static DEFAULT_OPTIONS = {
     classes: ['swerpg', 'skill'],
