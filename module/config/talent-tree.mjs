@@ -1,10 +1,7 @@
 import SwerpgTalent from '../models/talent.mjs'
 import { logger } from '../utils/logger.mjs'
 import { CHARACTERISTICS } from './attributes.mjs'
-import { logger } from '../utils/logger.mjs'
 import Enum from './enum.mjs'
-import { logger } from '../utils/logger.mjs'
-
 export default class SwerpgTalentNode {
   static ACTIVATION = Object.freeze({
     ACTIVE: 'active',

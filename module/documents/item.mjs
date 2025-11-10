@@ -1,7 +1,6 @@
 import TalentFactory from '../lib/talents/talent-factory.mjs'
 import { logger } from '../utils/logger.mjs'
 import ErrorTalent from '../lib/talents/error-talent.mjs'
-import { logger } from '../utils/logger.mjs'
 
 /**
  * An Item subclass which handles system specific logic for the Item document type.

@@ -1,9 +1,7 @@
 import ErrorTalent from './error-talent.mjs'
-import { logger } from '../utils/logger.mjs'
+import { logger } from '../../utils/logger.mjs'
 import TalentCostCalculator from './talent-cost-calculator.mjs'
-import { logger } from '../utils/logger.mjs'
 import TrainedTalent from './trained-talent.mjs'
-import { logger } from '../utils/logger.mjs'
 
 export default class RankedTrainedTalent extends TrainedTalent {
   constructor(actor, data, params, options) {
