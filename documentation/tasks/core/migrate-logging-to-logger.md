@@ -3,14 +3,17 @@
 ## 🎯 Contexte et Objectifs
 
 ### Contexte
+
 Le projet utilise actuellement des appels de logging legacy avec des conditions `CONFIG.debug` et des appels directs à `console.xxx`. Une lib centralisée `logger.mjs` existe dans `module/utils/logger.mjs` mais n'est pas utilisée de manière cohérente dans le codebase.
 
 ### Objectifs
+
 - **Primaire** : Migrer tous les appels de logging legacy vers `logger.mjs`
 - **Secondaire** : Unifier la gestion du debug dans le système
 - **Tertiaire** : Améliorer la traçabilité et la maintenabilité des logs
 
 ### Portée
+
 - **Dans le périmètre** :
   - Remplacement des patterns `if (CONFIG.debug?.xxx) { console.xxx(...) }`
   - Remplacement des appels directs `console.xxx()` dans le module
@@ -25,17 +28,20 @@ Le projet utilise actuellement des appels de logging legacy avec des conditions 
 ## 🔒 Contraintes
 
 ### Technique
+
 - **Foundry VTT v13** : Compatibilité avec les APIs ApplicationV2, DocumentSheetV2
 - **Performance** : Éviter la création d'objets inutiles en mode non-debug
 - **Rétrocompatibilité** : Les fonctionnalités existantes ne doivent pas être altérées
 
 ### Architecture
+
 - Respect des standards du projet (`CODING_STYLES_AGENT.md`)
 - Import/export ES6 modules
 - Nommage cohérent (`camelCase`)
 - Documentation JSDoc obligatoire pour méthodes publiques
 
 ### Qualité
+
 - Tests Vitest pour les nouvelles fonctionnalités
 - Couverture des cas d'erreur
 - A11y : Pas d'impact sur l'accessibilité
@@ -44,6 +50,7 @@ Le projet utilise actuellement des appels de logging legacy avec des conditions 
 ## 🗺️ Dépendances et Intégration
 
 ### Modules impactés
+
 - `module/utils/logger.mjs` (existant, intégration système)
 - `swerpg.mjs` (initialisation du logger)
 - `module/applications/sheets/*.mjs` (migration des appels)
@@ -53,6 +60,7 @@ Le projet utilise actuellement des appels de logging legacy avec des conditions 
 - `module/canvas/*.mjs` (migration des appels)
 
 ### Hooks Foundry
+
 - `init` : Initialisation du logger avec le mode debug du système
 - Aucun nouveau hook requis
 
@@ -74,10 +82,11 @@ flowchart TD
 ### Phase 1 : Préparation et Configuration
 
 #### **Task 1.1** : Intégration du logger au système
+
 - **Type** : js
 - **Files** : `swerpg.mjs`
 - **Refs** : Hook `init`, `detectDevelopmentMode()`
-- **Acceptance** : 
+- **Acceptance** :
   - Given le système démarre
   - When `detectDevelopmentMode()` retourne true/false
   - Then `logger.setDebug()` est appelé avec la bonne valeur
@@ -86,6 +95,7 @@ flowchart TD
 - **Estimate** : S
 
 #### **Task 1.2** : Audit complet des appels de logging
+
 - **Type** : docs
 - **Files** : `documentation/tasks/core/logging-audit.md`
 - **Refs** : N/A
@@ -100,6 +110,7 @@ flowchart TD
 ### Phase 2 : Migration des Application Sheets
 
 #### **Task 2.1** : Migration base-actor-sheet.mjs
+
 - **Type** : js
 - **Files** : `module/applications/sheets/base-actor-sheet.mjs`
 - **Refs** : `_prepareContext()`, méthodes de construction de contexte
@@ -112,6 +123,7 @@ flowchart TD
 - **Estimate** : S
 
 #### **Task 2.2** : Migration base-item.mjs
+
 - **Type** : js
 - **Files** : `module/applications/sheets/base-item.mjs`
 - **Refs** : `_prepareContext()`
@@ -124,6 +136,7 @@ flowchart TD
 - **Estimate** : S
 
 #### **Task 2.3** : Migration character-sheet.mjs
+
 - **Type** : js
 - **Files** : `module/applications/sheets/character-sheet.mjs`
 - **Refs** : `_prepareContext()`, handlers d'événements
@@ -136,6 +149,7 @@ flowchart TD
 - **Estimate** : M
 
 #### **Task 2.4** : Migration origin.mjs
+
 - **Type** : js
 - **Files** : `module/applications/sheets/origin.mjs`
 - **Refs** : `_prepareContext()`, handlers skills
@@ -148,6 +162,7 @@ flowchart TD
 - **Estimate** : M
 
 #### **Task 2.5** : Migration sheets simples (obligation, taxonomy)
+
 - **Type** : js
 - **Files** : `module/applications/sheets/obligation.mjs`, `module/applications/sheets/taxonomy.mjs`
 - **Refs** : `_prepareContext()`
@@ -162,6 +177,7 @@ flowchart TD
 ### Phase 3 : Migration des Documents
 
 #### **Task 3.1** : Migration actor.mjs et actor-origin.mjs
+
 - **Type** : js
 - **Files** : `module/documents/actor.mjs`, `module/documents/actor-origin.mjs`
 - **Refs** : Méthodes de gestion talents, flanking
@@ -174,6 +190,7 @@ flowchart TD
 - **Estimate** : M
 
 #### **Task 3.2** : Migration item.mjs
+
 - **Type** : js
 - **Files** : `module/documents/item.mjs`
 - **Refs** : Méthodes debug d'items
@@ -188,6 +205,7 @@ flowchart TD
 ### Phase 4 : Migration des autres modules
 
 #### **Task 4.1** : Migration config et lib
+
 - **Type** : js
 - **Files** : `module/config/system.mjs`, `module/config/talent-tree.mjs`, `module/lib/talents/ranked-trained-talent.mjs`
 - **Refs** : Fonctions utilitaires, configuration système
@@ -200,6 +218,7 @@ flowchart TD
 - **Estimate** : M
 
 #### **Task 4.2** : Migration canvas
+
 - **Type** : js
 - **Files** : `module/canvas/token.mjs`
 - **Refs** : Logique de flanking, visualisation
@@ -214,6 +233,7 @@ flowchart TD
 ### Phase 5 : Tests et Validation
 
 #### **Task 5.1** : Tests unitaires logger integration
+
 - **Type** : test
 - **Files** : `tests/utils/logger-integration.spec.js`
 - **Refs** : Intégration système, configuration debug
@@ -226,6 +246,7 @@ flowchart TD
 - **Estimate** : M
 
 #### **Task 5.2** : Tests de régression sheets
+
 - **Type** : test
 - **Files** : `tests/applications/sheets/sheets-logging.spec.js`
 - **Refs** : Fonctionnalités sheets existantes
@@ -240,6 +261,7 @@ flowchart TD
 ### Phase 6 : Documentation et Release
 
 #### **Task 6.1** : Mise à jour documentation
+
 - **Type** : docs
 - **Files** : `documentation/swerpg/CODING_STYLES_AGENT.md`, changelog
 - **Refs** : Standards de coding
@@ -252,6 +274,7 @@ flowchart TD
 - **Estimate** : S
 
 #### **Task 6.2** : Migration validation finale
+
 - **Type** : test
 - **Files** : Script de validation
 - **Refs** : Codebase complet
@@ -268,6 +291,7 @@ flowchart TD
 ### Tests Unitaires
 
 #### **File** : `tests/utils/logger-integration.spec.js`
+
 - **Scenario 1** : Logger init avec mode debug
   - **Given** : Système en mode développement
   - **When** : `logger.setDebug(true)` appelé
@@ -280,13 +304,14 @@ flowchart TD
 - **Coverage target** : 100% du logger utilisé
 
 #### **File** : `tests/applications/sheets/sheets-logging.spec.js`
+
 - **Scenario 1** : Sheet debug logs en mode développement
   - **Given** : Sheet avec logger.debug() et mode debug on
   - **When** : `_prepareContext()` appelée
   - **Then** : Messages de debug affichés avec préfixe SWERPG
 - **Scenario 2** : Sheet sans logs en production
   - **Given** : Sheet avec logger.debug() et mode debug off
-  - **When** : `_prepareContext()` appelée  
+  - **When** : `_prepareContext()` appelée
   - **Then** : Aucun log debug affiché
 - **Mocks** : Foundry ApplicationV2, logger
 - **Coverage target** : 90% des sheets migrées
@@ -294,6 +319,7 @@ flowchart TD
 ### Tests d'Intégration
 
 #### **File** : `tests/integration/logging-migration.spec.js`
+
 - **Scenario** : Migration end-to-end
   - **Given** : Système initialisé avec mode debug
   - **When** : Utilisation normale des features (sheets, combat, etc.)
@@ -304,35 +330,43 @@ flowchart TD
 ## 🔄 Migration de Données
 
 ### Pas de migration de données nécessaire
+
 Cette tâche est purement technique et n'impacte pas les données utilisateur.
 
 ### Configuration système
+
 - Aucun nouveau setting requis
 - Le mode debug reste basé sur `detectDevelopmentMode()`
 
 ## 🚀 Release et Communication
 
 ### Settings et flags
+
 - Aucun nouveau setting utilisateur
 - Flag interne possible : `swerpg.loggingMigrated = true`
 
 ### Changelog
+
 ```markdown
 ### Changed
+
 - Migration du système de logging vers logger centralisé
 - Amélioration de la cohérence des messages de debug
 - Suppression des appels directs à console.xxx
 
 ### Technical
+
 - Tous les modules utilisent désormais `logger.mjs`
 - Configuration debug unifiée via `detectDevelopmentMode()`
 ```
 
 ### Documentation utilisateur
+
 - Aucun impact visible pour les utilisateurs finaux
 - Documentation développeur mise à jour
 
 ### Risques et rollback
+
 - **Risque faible** : Migration technique sans impact fonctionnel
 - **Rollback** : Restauration des appels console.xxx si nécessaire
 - **Validation** : Tests de régression exhaustifs
@@ -348,7 +382,7 @@ Cette tâche est purement technique et n'impacte pas les données utilisateur.
 ## 🏁 Définition of Done Globale
 
 - [ ] Tous les appels `if (CONFIG.debug?.xxx) { console.xxx() }` migrés
-- [ ] Tous les appels directs `console.xxx()` dans `/module/` migrés  
+- [ ] Tous les appels directs `console.xxx()` dans `/module/` migrés
 - [ ] Logger intégré au cycle d'initialisation système
 - [ ] Tests unitaires et d'intégration passants
 - [ ] Documentation mise à jour

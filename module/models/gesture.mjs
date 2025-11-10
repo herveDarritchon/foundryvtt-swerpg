@@ -1,4 +1,5 @@
 import SwerpgAction from './action.mjs'
+import { logger } from '../utils/logger.mjs'
 
 /**
  * The data structure and functionality of a Somatic Gesture in the Swerpg spellcraft system.
@@ -48,7 +49,7 @@ export default class SwerpgGesture extends foundry.abstract.DataModel {
       try {
         gestures[k] = new SwerpgGesture(v)
       } catch (e) {
-        console.error(e)
+        logger.error(e)
       }
     }
 

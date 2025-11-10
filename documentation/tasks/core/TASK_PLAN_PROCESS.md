@@ -9,6 +9,7 @@ Ce document détaille les étapes suivies pour créer le plan de tâches de migr
 ### 1. Exploration du Système de Logger Existant
 
 **Fichiers inspectés :**
+
 - `module/utils/logger.mjs` : Analyse complète de l'implémentation du logger centralisé
 - Découverte des méthodes disponibles : `log()`, `info()`, `warn()`, `error()`, `debug()`, `group()`, etc.
 - Identification du système de contrôle debug via `shouldLog()` et `debugEnabled`
@@ -16,6 +17,7 @@ Ce document détaille les étapes suivies pour créer le plan de tâches de migr
 ### 2. Audit des Appels de Logging Legacy
 
 **Commandes de recherche utilisées :**
+
 ```bash
 # Recherche des patterns CONFIG.debug
 grep -r "if.*CONFIG.*debug" module/
@@ -28,6 +30,7 @@ grep -r "import.*logger" .
 ```
 
 **Résultats de l'audit :**
+
 - **20+ fichiers** avec patterns `if (CONFIG.debug?.sheets) { console.xxx() }`
 - **40+ appels directs** à `console.xxx()` dans le module
 - **Aucun usage actuel** du logger dans le codebase de production
@@ -36,6 +39,7 @@ grep -r "import.*logger" .
 ### 3. Analyse de l'Architecture Existante
 
 **Fichiers d'architecture inspectés :**
+
 - `swerpg.mjs` : Point d'entrée principal, hook `init`
 - `module/config/system.mjs` : Configuration système et `detectDevelopmentMode()`
 - `module/applications/sheets/*.mjs` : Sheets avec appels debug
@@ -45,6 +49,7 @@ grep -r "import.*logger" .
 ### 4. Identification des Contraintes
 
 **Contraintes du projet identifiées :**
+
 - **Foundry VTT v13** : Compatibilité ApplicationV2, DocumentSheetV2
 - **Standards de coding** : `CODING_STYLES_AGENT.md` spécifie l'usage obligatoire du logger
 - **Tests existants** : Framework Vitest en place
@@ -55,11 +60,13 @@ grep -r "import.*logger" .
 ### 1. Définition de la Portée
 
 **Inclus :**
+
 - Migration de tous les patterns `if (CONFIG.debug?.xxx) { console.xxx() }`
 - Migration des appels directs `console.xxx()` dans `/module/`
 - Intégration du logger au cycle d'initialisation
 
 **Exclus :**
+
 - Scripts de build (hors système Foundry)
 - Documentation (conservation des exemples)
 - Le logger lui-même
@@ -67,6 +74,7 @@ grep -r "import.*logger" .
 ### 2. Architecture de Migration
 
 **Flux identifié :**
+
 1. Configuration du logger dans `swerpg.mjs` hook `init`
 2. Import du logger dans chaque module concerné
 3. Remplacement systématique des appels legacy
@@ -75,6 +83,7 @@ grep -r "import.*logger" .
 ### 3. Priorisation des Tâches
 
 **Ordre de migration choisi :**
+
 1. **Configuration système** : Intégration logger dans `init`
 2. **Application Sheets** : Plus nombreux et uniformes
 3. **Documents** : Logique métier critique
@@ -161,16 +170,19 @@ grep -r "import.*logger" .
 ## 🔧 Outils et Méthodes Utilisés
 
 ### Recherche de Code
+
 - `grep_search` avec regex pour patterns de logging
 - `file_search` pour localiser les fichiers
 - `read_file` pour analyse détaillée du contenu
 
 ### Analyse d'Architecture
+
 - Exploration de la structure de dossiers
 - Identification des points d'intégration Foundry
 - Mappage des dépendances entre modules
 
 ### Documentation
+
 - Format Markdown avec Mermaid pour les diagrammes
 - Structure claire avec Acceptance Criteria
 - Estimation et priorisation des tâches
@@ -178,14 +190,17 @@ grep -r "import.*logger" .
 ## 📈 Métriques de Validation
 
 ### Couverture de Migration
+
 - **Cible** : 100% des appels `if (CONFIG.debug?.xxx)`
 - **Cible** : 100% des appels directs `console.xxx()` dans `/module/`
 
 ### Qualité
+
 - **Tests** : >90% de couverture pour les nouveaux codes
 - **Performance** : Aucune dégradation mesurable
 - **Fonctionnalité** : 0 régression sur les features existantes
 
 ### Documentation
+
 - **Standards** : 100% de conformité CODING_STYLES_AGENT.md
 - **JSDoc** : Toutes les méthodes publiques documentées

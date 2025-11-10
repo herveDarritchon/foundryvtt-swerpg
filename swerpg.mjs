@@ -28,6 +28,7 @@ import { handleSocketEvent } from './module/socket.mjs'
 import * as chat from './module/chat.mjs'
 import Enum from './module/config/enum.mjs'
 import { registerSystemSettings } from './module/applications/settings/settings.js'
+import { logger } from './module/utils/logger.mjs'
 
 globalThis.SYSTEM = SYSTEM
 
@@ -49,6 +50,9 @@ Hooks.once('init', async function () {
   swerpg.developmentMode = detectDevelopmentMode()
   // Swerpg.vfxEnabled = !!game.modules.get("foundryvtt-vfx")?.active;
 
+  // Configure logger with development mode
+  logger.setDebug(swerpg.developmentMode)
+
   if (swerpg.developmentMode) {
     console.info(SYSTEM.ASCII_DEV_MODE)
   } else {
@@ -65,6 +69,7 @@ Hooks.once('init', async function () {
     grid,
     models,
     documents,
+    logger,
     methods: {
       generateId,
       packageCompendium,

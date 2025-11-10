@@ -1,4 +1,5 @@
 import SwerpgBaseItemSheet from './base-item.mjs'
+import { logger } from '../../utils/logger.mjs'
 
 /**
  * A SwerpgBaseItemSheet subclass used to configure Items of the "taxonomy" type.
@@ -37,8 +38,7 @@ export default class TaxonomySheet extends SwerpgBaseItemSheet {
     })
 
     // ✅ Debug conditionnel uniquement si nécessaire
-    if (CONFIG.debug?.sheets) {
-      console.debug(`[${this.constructor.name}] Context prepared:`, assign)
+      logger.debug(`[${this.constructor.name}] Context prepared:`, assign)
     }
 
     return assign

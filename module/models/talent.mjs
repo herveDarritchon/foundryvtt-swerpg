@@ -1,6 +1,9 @@
 import SwerpgAction from './action.mjs'
+import { logger } from '../utils/logger.mjs'
 import SwerpgTalentNode from '../config/talent-tree.mjs'
+import { logger } from '../utils/logger.mjs'
 import { SYSTEM } from '../config/system.mjs'
+import { logger } from '../utils/logger.mjs'
 
 /**
  * @typedef {Object} ActorHook
@@ -295,7 +298,7 @@ export default class SwerpgTalent extends foundry.abstract.TypeDataModel {
     if (game.items == null) {
       return true
     }
-    console.debug(`[SWERPG] - talents (${trees.length}):`, trees)
+    logger.debug(`[SWERPG] - talents (${trees.length}):`, trees)
     return trees.map((uuid) => fromUuidSync(uuid)).every((item) => item.type === 'specialization' || item.type === 'career')
   }
 }

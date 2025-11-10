@@ -1,4 +1,5 @@
 import StandardCheckDialog from './standard-check-dialog.mjs'
+import { logger } from '../utils/logger.mjs'
 
 /**
  * @typedef {Object} DiceBoon
@@ -132,12 +133,12 @@ export default class StandardCheck extends Roll {
   /** @override */
   _prepareData(data = {}) {
     if ('boons' in data && typeof data.boons !== 'object') {
-      console.warn('StandardCheck received boons passed as a number instead of an object')
+      logger.warn('StandardCheck received boons passed as a number instead of an object')
       data.boons = { special: { label: 'Special', number: Number.isNumeric(data.boons) ? data.boons : 0 } }
     }
     if ('banes' in data && typeof data.banes !== 'object') {
       data.banes = { special: { label: 'Special', number: Number.isNumeric(data.banes) ? data.banes : 0 } }
-      console.warn('StandardCheck received boons passed as a number instead of an object')
+      logger.warn('StandardCheck received boons passed as a number instead of an object')
     }
     const current = this.data || foundry.utils.deepClone(this.constructor.defaultData)
     for (let [k, v] of Object.entries(data)) {

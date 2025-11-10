@@ -2,6 +2,10 @@
 const PREFIX = 'SWERPG ||'
 let debugEnabled = false
 
+/**
+ *
+ * @param level
+ */
 function shouldLog(level) {
   if (debugEnabled) return true
   // Même sans debug, on laisse passer les erreurs (et éventuellement les warnings)

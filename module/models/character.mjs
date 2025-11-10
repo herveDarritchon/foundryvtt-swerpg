@@ -1,8 +1,13 @@
 import SwerpgActorType from './actor-type.mjs'
+import { logger } from '../utils/logger.mjs'
 import SwerpgSpeciality from './speciality.mjs'
+import { logger } from '../utils/logger.mjs'
 import { SwerpgSpecies } from './_module.mjs'
+import { logger } from '../utils/logger.mjs'
 import SwerpgCareer from './career.mjs'
+import { logger } from '../utils/logger.mjs'
 import SwerpgSpecialization from './specialization.mjs'
+import { logger } from '../utils/logger.mjs'
 
 /**
  * @typedef {Object} Thresholds
@@ -241,7 +246,7 @@ export default class SwerpgCharacter extends SwerpgActorType {
     e.obligationXpBonus = SwerpgCharacter.#computeObligationBonusExperience(this.parent)
     e.total = e.total + e.obligationXpBonus
     e.available = e.total - e.spent
-    console.log(`[character-sheet] _prepareExperience - experience for ${this.parent.name} is :`, this.progression.experience)
+    logger.debug(`[character-sheet] _prepareExperience - experience for ${this.parent.name} is :`, this.progression.experience)
   }
 
   /* -------------------------------------------- */

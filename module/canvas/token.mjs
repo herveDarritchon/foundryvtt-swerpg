@@ -170,7 +170,7 @@ export default class SwerpgTokenObject extends foundry.canvas.placeables.Token {
   /** @inheritDoc */
   _onControl(options) {
     super._onControl(options)
-    if (CONFIG.debug.flanking) this._visualizeEngagement(this.engagement)
+    if (logger.isDebugEnabled()) this._visualizeEngagement(this.engagement)
   }
 
   /* -------------------------------------------- */
@@ -438,7 +438,7 @@ export default class SwerpgTokenObject extends foundry.canvas.placeables.Token {
    * @internal
    */
   _visualizeEngagement(engagement) {
-    if (!CONFIG.debug.flanking) return
+    if (!logger.isDebugEnabled()) return
     if (!this.#engagementDebug) {
       this.#engagementDebug = canvas.controls.debug.addChild(new PIXI.Graphics())
 

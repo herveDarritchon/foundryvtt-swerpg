@@ -1,6 +1,7 @@
 import SwerpgBaseItemSheet from './base-item.mjs'
 import { shiftValue } from '../../utils/attributes.mjs'
 import SwerpgOrigin from '../../models/origin.mjs'
+import { logger } from '../../utils/logger.mjs'
 
 /**
  * A SwerpgBaseItemSheet subclass used to configure Items of the "origin" type.
@@ -23,8 +24,7 @@ export default class OriginSheet extends SwerpgBaseItemSheet {
     const context = await super._prepareContext(options)
 
     // ✅ Debug conditionnel uniquement si nécessaire
-    if (CONFIG.debug?.sheets) {
-      console.debug(`[${this.constructor.name}] Context prepared:`, context)
+      logger.debug(`[${this.constructor.name}] Context prepared:`, context)
     }
     const draftSkillId = context.source.system.skillModifierDraft.skillId
     const skillModifierDraftValue = context.source.system.skillModifierDraft.modifierValue ?? 0
@@ -53,8 +53,7 @@ export default class OriginSheet extends SwerpgBaseItemSheet {
     })
 
     // ✅ Debug conditionnel uniquement si nécessaire
-    if (CONFIG.debug?.sheets) {
-      console.debug(`[${this.constructor.name}] Final context assigned:`, assign)
+      logger.debug(`[${this.constructor.name}] Final context assigned:`, assign)
     }
 
     return assign
@@ -69,8 +68,7 @@ export default class OriginSheet extends SwerpgBaseItemSheet {
     switch (action) {
       case 'add-skill': {
         // ✅ Debug conditionnel uniquement si nécessaire
-        if (CONFIG.debug?.sheets) {
-          console.debug(`[${this.constructor.name}] Adding skill:`, { skill, modifier: initialValue })
+          logger.debug(`[${this.constructor.name}] Adding skill:`, { skill, modifier: initialValue })
         }
 
         let skillsToBeAdded = this.item.system.skills
@@ -78,15 +76,13 @@ export default class OriginSheet extends SwerpgBaseItemSheet {
         const originAfterAdd = await this.#addSkillToOrigin(skillsToBeAdded)
         await this.#reinitializeSkillModifierDraft()
 
-        if (CONFIG.debug?.sheets) {
-          console.debug(`[${this.constructor.name}] Origin after added skill:`, originAfterAdd)
+          logger.debug(`[${this.constructor.name}] Origin after added skill:`, originAfterAdd)
         }
         break
       }
       case 'decrease-skill-modification':
         // ✅ Debug conditionnel uniquement si nécessaire
-        if (CONFIG.debug?.sheets) {
-          console.debug(`[${this.constructor.name}] Decreasing skill modification:`, { initialValue })
+          logger.debug(`[${this.constructor.name}] Decreasing skill modification:`, { initialValue })
         }
 
         newValue = shiftValue(initialValue, -SwerpgOrigin.MODIFIER_STEP, SwerpgOrigin.MODIFIER_MIN_VALUE, SwerpgOrigin.MODIFIER_MAX_VALUE)
@@ -94,8 +90,7 @@ export default class OriginSheet extends SwerpgBaseItemSheet {
         break
       case 'increase-skill-modification':
         // ✅ Debug conditionnel uniquement si nécessaire
-        if (CONFIG.debug?.sheets) {
-          console.debug(`[${this.constructor.name}] Increasing skill modification:`, { initialValue })
+          logger.debug(`[${this.constructor.name}] Increasing skill modification:`, { initialValue })
         }
 
         newValue = shiftValue(initialValue, SwerpgOrigin.MODIFIER_STEP, SwerpgOrigin.MODIFIER_MIN_VALUE, SwerpgOrigin.MODIFIER_MAX_VALUE)
@@ -105,15 +100,13 @@ export default class OriginSheet extends SwerpgBaseItemSheet {
         const skillId = event.target.closest('[data-item-id]').dataset.itemId
 
         // ✅ Debug conditionnel uniquement si nécessaire
-        if (CONFIG.debug?.sheets) {
-          console.debug(`[${this.constructor.name}] Deleting skill tag:`, { skillId })
+          logger.debug(`[${this.constructor.name}] Deleting skill tag:`, { skillId })
         }
 
         let skillsWithOutDeletedSkill = this.item.system.skills.filter((skill) => skill.skillId !== skillId)
         const originAfterDelete = await this.#addSkillToOrigin(skillsWithOutDeletedSkill)
 
-        if (CONFIG.debug?.sheets) {
-          console.debug(`[${this.constructor.name}] Origin after deleted skill:`, originAfterDelete)
+          logger.debug(`[${this.constructor.name}] Origin after deleted skill:`, originAfterDelete)
         }
         break
       }

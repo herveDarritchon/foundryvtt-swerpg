@@ -1,4 +1,5 @@
 import { CHARACTERISTICS } from '../config/attributes.mjs'
+import { logger } from '../utils/logger.mjs'
 
 /**
  * Data schema, attributes, and methods specific to Ancestry type Items.
@@ -174,7 +175,7 @@ export default class SwerpgSpecies extends foundry.abstract.TypeDataModel {
     if (game.items == null) {
       return true
     }
-    console.debug(`[SWERPG] - talents (${talents.length}):`, talents)
+    logger.debug(`[SWERPG] - talents (${talents.length}):`, talents)
     return talents.map((uuid) => fromUuidSync(uuid)).every((item) => item.type === 'talent')
   }
 }

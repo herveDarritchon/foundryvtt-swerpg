@@ -298,7 +298,7 @@ export default class SwerpgTalentTree extends PIXI.Container {
    */
   async open(actor, { resetView = true } = {}) {
     if (!(actor instanceof Actor)) throw new Error('You must provide an actor to bind to the Talent Tree.')
-    this.developmentMode = !!CONFIG.debug.talentTree
+    this.developmentMode = logger.isDebugEnabled()
 
     // Draw the tree (once only)
     await this.draw()

@@ -1,4 +1,5 @@
 import SwerpgBaseItemSheet from './base-item.mjs'
+import { logger } from '../../utils/logger.mjs'
 
 /**
  * A SwerpgBaseItemSheet subclass used to configure Items of the "obligation" type.
@@ -35,8 +36,7 @@ export default class ObligationSheet extends SwerpgBaseItemSheet {
     const context = await super._prepareContext(options)
 
     // ✅ Debug conditionnel uniquement si nécessaire
-    if (CONFIG.debug?.sheets) {
-      console.debug(`[${this.constructor.name}] Context prepared:`, context)
+      logger.debug(`[${this.constructor.name}] Context prepared:`, context)
     }
 
     return context

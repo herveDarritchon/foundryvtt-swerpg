@@ -1,5 +1,6 @@
 const { api, sheets } = foundry.applications
 import JaugeFactory from '../../lib/jauges/jauge-factory.mjs'
+import { logger } from '../../utils/logger.mjs'
 
 /**
  * A base ActorSheet built on top of ApplicationV2 and the Handlebars rendering backend.
@@ -123,10 +124,8 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
   static _initializeActorSheetClass() {
     const actor = this.DEFAULT_OPTIONS.actor
     this.PARTS = foundry.utils.deepClone(this.PARTS)
-    // ✅ Debug conditionnel uniquement si nécessaire
-    if (CONFIG.debug?.sheets) {
-      console.debug('[base-actor-sheet] initializeActorSheetClass with type', actor.type)
-    }
+    // Debug d'initialisation de la classe d'acteur
+    logger.debug('[base-actor-sheet] initializeActorSheetClass with type', actor.type)
     this.PARTS.header.template = `systems/swerpg/templates/sheets/actor/${actor.type}-header.hbs`
     this.PARTS.attributes.template = `systems/swerpg/templates/sheets/actor/${actor.type}-attributes.hbs`
     this.PARTS.biography.template = `systems/swerpg/templates/sheets/actor/${actor.type}-biography.hbs`
@@ -233,9 +232,7 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
     })
     characteristics.sort((a, b) => a.sheetOrder - b.sheetOrder)
     // ✅ Debug conditionnel uniquement si nécessaire
-    if (CONFIG.debug?.sheets) {
-      console.debug('[base-actor-sheet] prepareCharacteristics', characteristics)
-    }
+    logger.debug('[base-actor-sheet] prepareCharacteristics', characteristics)
     return characteristics
   }
 
@@ -607,7 +604,7 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
 
   /**
    * Builds the data structure for the jauge display.
-   * @param {Object} resources - The actor's resources (wounds, strain, encumbrance)
+   * @param {Object} resources The actor's resources (wounds, strain, encumbrance)
    * @returns {Array} An array of jauge display data objects.
    */
   buildJaugeDisplayData(resources) {
@@ -620,9 +617,7 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
     })
 
     // ✅ Debug conditionnel uniquement si nécessaire
-    if (CONFIG.debug?.sheets) {
-      console.debug(`[${this.constructor.name}] Jauges built:`, jauges)
-    }
+    logger.debug(`[${this.constructor.name}] Jauges built:`, jauges)
 
     return jauges
   }
@@ -646,8 +641,8 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
 
   /**
    * Builds a filtered list of items by type for display.
-   * @param {string} itemType - The type of items to filter (e.g., 'motivation', 'talent', 'skill')
-   * @param {Function} [mapFunction] - Optional mapping function to transform each item
+   * @param {string} itemType The type of items to filter (e.g., 'motivation', 'talent', 'skill')
+   * @param {Function} [mapFunction] Optional mapping function to transform each item
    * @returns {Array} An array of items of the specified type
    */
   buildItemListByType(itemType, mapFunction = null) {
@@ -678,8 +673,8 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
 
   /**
    * Debounces form changes for numeric inputs to improve performance.
-   * @param {Event} event - The input event
-   * @param {number} delay - Delay in milliseconds (default: 300ms)
+   * @param {Event} event The input event
+   * @param {number} delay Delay in milliseconds (default: 300ms)
    */
   #debounceFormChange(event, delay = 300) {
     const fieldName = event.target.name

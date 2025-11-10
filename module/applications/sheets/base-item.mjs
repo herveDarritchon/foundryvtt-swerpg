@@ -1,4 +1,5 @@
 const { api, sheets } = foundry.applications
+import { logger } from '../../utils/logger.mjs'
 
 /**
  * A base ItemSheet built on top of ApplicationV2 and the Handlebars rendering backend.
@@ -141,10 +142,8 @@ export default class SwerpgBaseItemSheet extends api.HandlebarsApplicationMixin(
 
   /** @override */
   async _prepareContext(options) {
-    // ✅ Debug conditionnel uniquement si nécessaire
-    if (CONFIG.debug?.sheets) {
-      console.debug(`[${this.constructor.name}] Preparing context:`, options)
-    }
+    // Debug de préparation du contexte
+    logger.debug(`[${this.constructor.name}] Preparing context:`, options)
 
     const tabGroups = this._getTabs()
     return {

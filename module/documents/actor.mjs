@@ -5,6 +5,7 @@ import SwerpgSpellAction from '../models/spell-action.mjs'
 import { SYSTEM } from '../config/system.mjs'
 import CharacteristicFactory from '../lib/characteristics/characteristic-factory.mjs'
 import ErrorCharacteristic from '../lib/characteristics/error-characteristic.mjs'
+import { logger } from '../utils/logger.mjs'
 
 const { DialogV2 } = foundry.applications.api
 
@@ -453,7 +454,7 @@ export default class SwerpgActor extends Actor {
     const slotInUse = (item, type) => {
       item.updateSource({ 'system.equipped': false })
       const w = game.i18n.format('WARNING.CannotEquipSlotInUse', { actor: this.name, item: item.name, type })
-      console.warn(w)
+      logger.warn(w)
     }
 
     // Identify equipped weapons which may populate weapon slots
@@ -739,12 +740,12 @@ export default class SwerpgActor extends Actor {
     if (!hookConfig) throw new Error(`Invalid Actor hook function "${hook}"`)
     const hooks = (this.actorHooks[hook] ||= [])
     for (const { talent, fn } of hooks) {
-      console.debug(`Calling ${hook} hook for Talent ${talent.name}`)
+      logger.debug(`Calling ${hook} hook for Talent ${talent.name}`)
       try {
         fn(this, ...args)
       } catch (err) {
         const msg = `The "${hook}" hook defined for Talent "${talent.name}" failed evaluation in Actor [${this.id}]`
-        console.error(msg, err)
+        logger.error(msg, err)
       }
     }
   }
@@ -827,7 +828,7 @@ export default class SwerpgActor extends Actor {
     if (target.statuses.has('flanked') && isAttack && !ranged) {
       const ae = target.effects.get(SYSTEM.EFFECTS.getEffectId('flanked'))
       if (ae) boons.flanked = { label: 'Flanked', number: ae.getFlag('swerpg', 'flanked') ?? 1 }
-      else console.warn(`Missing expected Flanked effect on Actor ${target.id} with flanked status`)
+      else logger.warn(`Missing expected Flanked effect on Actor ${target.id} with flanked status`)
     }
     return { boons, banes }
   }
@@ -1738,7 +1739,7 @@ export default class SwerpgActor extends Actor {
    * @returns {Promise}
    */
   async purchaseCharacteristic(characteristicId, action) {
-    console.debug(`purchaseCharacteristic(${characteristicId}, ${action})`)
+    logger.debug(`purchaseCharacteristic(${characteristicId}, ${action})`)
     const c = this.system.characteristics[characteristicId]
 
     // Build the characteristic class depending on the context
@@ -1757,7 +1758,7 @@ export default class SwerpgActor extends Actor {
       return
     }
 
-    console.debug(`[Before] purchaseCharacteristic characteristic with id '${characteristicId}' and values:`, characteristicClass, this.actor)
+    logger.debug(`[Before] purchaseCharacteristic characteristic with id '${characteristicId}' and values:`, characteristicClass, this.actor)
 
     // Evaluate the characteristic following the action processed
     const characteristicEvaluated = characteristicClass.process()
@@ -1771,7 +1772,7 @@ export default class SwerpgActor extends Actor {
     // Update the characteristic state in the Database
     const characteristicUpdated = await characteristicEvaluated.updateState()
 
-    console.debug(
+    logger.debug(
       `[After] purchaseCharacteristic characteristic with id '${characteristicId}' and values:`,
       characteristicUpdated.actor,
       characteristicUpdated.data.rank,
@@ -1790,15 +1791,15 @@ export default class SwerpgActor extends Actor {
     const resource = this.system.resources[jaugeType]
 
     const value = this.#computeResourceValue(resource, action)
-    console.log(`modifyResource(${jaugeType}, ${action}) with new value (${value}) from values`, resource, this.system.resources)
+    logger.debug(`modifyResource(${jaugeType}, ${action}) with new value (${value}) from values`, resource, this.system.resources)
 
     resource.value = value
 
     const updateData = { [`system.resources.${jaugeType}`]: resource }
 
-    console.log(`[Before] modifyResource with value:`, updateData)
+    logger.debug(`[Before] modifyResource with value:`, updateData)
     const updatedActor = await this.update(updateData)
-    console.log(`[After] modifyResource with value:`, updatedActor?.system?.resources[jaugeType])
+    logger.debug(`[After] modifyResource with value:`, updatedActor?.system?.resources[jaugeType])
   }
 
   #computeResourceValue(resource, action) {
