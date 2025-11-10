@@ -1,7 +1,6 @@
 import SwerpgAction from './action.mjs'
 import { logger } from '../utils/logger.mjs'
 import SpellCastDialog from '../dice/spell-cast-dialog.mjs'
-import { logger } from '../utils/logger.mjs'
 
 /**
  * Data and functionality that represents a Spell in the Swerpg spellcraft system.

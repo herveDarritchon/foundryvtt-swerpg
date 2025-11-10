@@ -37,7 +37,7 @@ export default class ObligationSheet extends SwerpgBaseItemSheet {
 
     // ✅ Debug conditionnel uniquement si nécessaire
       logger.debug(`[${this.constructor.name}] Context prepared:`, context)
-    }
+
 
     return context
   }

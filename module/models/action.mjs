@@ -1,9 +1,7 @@
 import StandardCheck from '../dice/standard-check.mjs'
 import { logger } from '../utils/logger.mjs'
 import ActionUseDialog from '../dice/action-use-dialog.mjs'
-import { logger } from '../utils/logger.mjs'
 import ActionConfig from '../applications/config/action.mjs'
-import { logger } from '../utils/logger.mjs'
 
 /**
  * @typedef {Object} ActionContext
