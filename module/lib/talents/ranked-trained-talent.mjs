@@ -1,6 +1,9 @@
 import ErrorTalent from './error-talent.mjs'
+import { logger } from '../utils/logger.mjs'
 import TalentCostCalculator from './talent-cost-calculator.mjs'
+import { logger } from '../utils/logger.mjs'
 import TrainedTalent from './trained-talent.mjs'
+import { logger } from '../utils/logger.mjs'
 
 export default class RankedTrainedTalent extends TrainedTalent {
   constructor(actor, data, params, options) {
@@ -13,7 +16,7 @@ export default class RankedTrainedTalent extends TrainedTalent {
     const talent = this.data
     const row = talent.system.row
 
-    console.debug(`[process] start - talent ${talent.name} wit row ${row} and initial experience points`, experiencePointsSpent)
+    logger.debug(`[process] start - talent ${talent.name} wit row ${row} and initial experience points`, experiencePointsSpent)
 
     const ranks = this.actor.items.filter((i) => i.name === talent.name)
     if (this.action === 'train' && this.actor.hasItem(talent.id)) {
@@ -53,7 +56,7 @@ export default class RankedTrainedTalent extends TrainedTalent {
       },
     })
 
-    console.debug(`[process] talent ${talent.name} wit rank and cost ${cost}`, talent.system.rank)
+    logger.debug(`[process] talent ${talent.name} wit rank and cost ${cost}`, talent.system.rank)
     this.evaluated = true
     return this
   }

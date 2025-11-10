@@ -349,7 +349,7 @@ export default class SwerpgActorType extends foundry.abstract.TypeDataModel {
     const brawn = characteristics?.brawn?.rank?.value ?? 0
     const wounds = thresholds?.wounds ?? 0
     const result = brawn + wounds
-    console.log(`Calculating Wound Threshold for actor: ${result}`, actor)
+    logger.debug(`Calculating Wound Threshold for actor: ${result}`, actor)
     return result
   }
 
@@ -369,7 +369,7 @@ export default class SwerpgActorType extends foundry.abstract.TypeDataModel {
     const willpower = characteristics?.willpower?.rank?.value ?? 0
     const strain = thresholds?.strain ?? 0
     const result = willpower + strain
-    console.log(`Calculating Strain Threshold for actor: ${result}`, actor)
+    logger.debug(`Calculating Strain Threshold for actor: ${result}`, actor)
     return result
   }
 
@@ -388,7 +388,7 @@ export default class SwerpgActorType extends foundry.abstract.TypeDataModel {
     const { characteristics } = actor
     const brawn = characteristics?.brawn?.rank?.value ?? 0
     const result = brawn + 5
-    console.log(`Calculating Encumbrance Threshold for actor: ${result}`, actor)
+    logger.debug(`Calculating Encumbrance Threshold for actor: ${result}`, actor)
     return result
   }
 
@@ -407,7 +407,7 @@ export default class SwerpgActorType extends foundry.abstract.TypeDataModel {
       melee: 0,
       ranged: 0,
     }
-    console.log(`Calculating Defense for actor: ${defense}`, actor)
+    logger.debug(`Calculating Defense for actor: ${defense}`, actor)
     return defense
   }
 
@@ -424,7 +424,7 @@ export default class SwerpgActorType extends foundry.abstract.TypeDataModel {
   static #calculateSoakValue(actor) {
     const { characteristics } = actor
     const brawn = characteristics?.brawn?.rank?.value ?? 0
-    console.log(`Calculating Soak Value for actor: ${brawn}`, actor)
+    logger.debug(`Calculating Soak Value for actor: ${brawn}`, actor)
     return brawn
   }
 

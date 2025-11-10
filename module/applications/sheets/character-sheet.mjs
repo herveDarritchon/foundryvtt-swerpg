@@ -4,6 +4,7 @@ import SkillFactory from '../../lib/skills/skill-factory.mjs'
 import ErrorSkill from '../../lib/skills/error-skill.mjs'
 import TalentFactory from '../../lib/talents/talent-factory.mjs'
 import ErrorTalent from '../../lib/talents/error-talent.mjs'
+import { logger } from '../../utils/logger.mjs'
 
 /**
  * @typedef {Object} DefenseDisplayData
@@ -151,10 +152,8 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
     context.soak = this.#buildSoakDisplayData(a.system.characteristics.brawn)
     context.defenses = this.buildDefenseDisplayData()
 
-    // ✅ Debug conditionnel uniquement si nécessaire
-    if (CONFIG.debug?.sheets) {
-      console.debug(`[${this.constructor.name}] Context prepared:`, context)
-    }
+    // Debug de préparation du contexte
+    logger.debug(`[${this.constructor.name}] Context prepared:`, context)
 
     return context
   }
@@ -247,10 +246,8 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
     const itemId = element.dataset.itemId
     const item = this.actor.items.get(itemId)
 
-    // ✅ Debug conditionnel uniquement si nécessaire
-    if (CONFIG.debug?.sheets) {
-      console.debug(`[CharacterSheet] Toggling obligation extra state for ${item.name}`)
-    }
+    // Debug de toggle obligation
+    logger.debug(`[CharacterSheet] Toggling obligation extra state for ${item.name}`)
 
     await item.update({ 'system.isExtra': !item.system.isExtra })
   }
@@ -289,10 +286,8 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
       return
     }
 
-    // ✅ Debug conditionnel uniquement si nécessaire
-    if (CONFIG.debug?.sheets) {
-      console.debug(`[${this.constructor.name}] onToggleTrainedSkill - Before: skill '${skillId}', isCareer: ${isCareer}`, skillClass)
-    }
+    // Debug de toggle skill avant
+    logger.debug(`[${this.constructor.name}] onToggleTrainedSkill - Before: skill '${skillId}', isCareer: ${isCareer}`, skillClass)
 
     // Evaluate the skill following the action processed
     const skillEvaluated = skillClass.process()
@@ -306,10 +301,8 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
     // Update the skill state in the Database
     const skillUpdated = await skillEvaluated.updateState()
 
-    // ✅ Debug conditionnel uniquement si nécessaire
-    if (CONFIG.debug?.sheets) {
-      console.debug(`[${this.constructor.name}] onToggleTrainedSkill - After: skill '${skillId}' updated`, skillUpdated)
-    }
+    // Debug de toggle skill après
+    logger.debug(`[${this.constructor.name}] onToggleTrainedSkill - After: skill '${skillId}' updated`, skillUpdated)
   }
 
   /* -------------------------------------------- */
@@ -406,14 +399,12 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
           return
         }
 
-        // ✅ Debug conditionnel uniquement si nécessaire
-        if (CONFIG.debug?.sheets) {
-          console.debug(`[${this.constructor.name}] onToggleTrainedTalent - talent '${item.name}' with id '${item.id}'`, {
-            isRanked: item.system.isRanked,
-            currentRank: item.system.rank,
-            actor: this.actor,
-          })
-        }
+        // Debug de toggle talent
+        logger.debug(`[${this.constructor.name}] onToggleTrainedTalent - talent '${item.name}' with id '${item.id}'`, {
+          isRanked: item.system.isRanked,
+          currentRank: item.system.rank,
+          actor: this.actor,
+        })
 
         // Evaluate the talent following the action processed
         const talentEvaluated = talentClass.process()
@@ -433,7 +424,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
           return
         }
 
-        console.debug(
+        logger.debug(
           `[After] onToggleTrainedTalent talent with id '${talentUpdated.data.id}', is ranked ${talentUpdated.data.system.isRanked} and values:`,
           talentUpdated.actor,
           talentUpdated.data.system.rank,

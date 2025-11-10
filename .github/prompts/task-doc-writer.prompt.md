@@ -6,9 +6,9 @@ Look at all the project #search/codebase :
 - Locate all **impacted areas** in the codebase: modules, hooks, controllers, DataModels, Document/Item Sheets, templates (HBS), styles (LESS), i18n, packs/compendia, migrations.
 - Map **integration points** with Foundry v13 lifecycle and APIs (init/setup/ready, ApplicationV2/DocumentSheetV2, TypeDataModel, i18n).
 - Define **constraints** to respect:
-    - Foundry VTT v13 best practices per artifact type (HBS, JS/TS, LESS, i18n, migration, packs).
-    - Project coding style: `CODING_STYLES_AGENT.md`.
-    - A11y (ARIA, focus UX clavier), performance (minimal re-render, event delegation), logging (debug only), clean-up (listeners).
+  - Foundry VTT v13 best practices per artifact type (HBS, JS/TS, LESS, i18n, migration, packs).
+  - Project coding style: `CODING_STYLES_AGENT.md`.
+  - A11y (ARIA, focus UX clavier), performance (minimal re-render, event delegation), logging (debug only), clean-up (listeners).
 - Draft a **high-level flow** of the feature with a Mermaid diagram (flowchart or sequence) showing user actions, hooks, controllers, DataModel updates, and UI refreshes.
 - Produce a **Task Plan**: an executable checklist covering analysis, UI, logic, data, tests, migration, release and documentation.
 - Specify a **test plan** (Vitest) with file names and Given/When/Then scenarios; define mocks/stubs for Foundry APIs.
@@ -16,7 +16,6 @@ Look at all the project #search/codebase :
 - Define **release steps** (settings, flags, changelog, screenshots, user docs) and **risk/rollback** considerations.
 
 - when you write **task items**, use the format:
-
   - **Task**: Short actionable description.
   - **Type**: hbs/js/less/i18n/migration/test/docs/data.
   - **Files**: Precise relative paths to create/modify.

@@ -3,6 +3,7 @@ import * as ACTION from './action.mjs'
 import * as ADVERSARY from './adversaries.mjs'
 import * as ARMOR from './armor.mjs'
 import * as dice from './dice.mjs'
+import { logger } from '../utils/logger.mjs'
 import * as EFFECTS from './effects.mjs'
 import * as SKILL from './skills.mjs'
 import * as SPELL from './spellcraft.mjs'
@@ -244,7 +245,7 @@ export function detectDevelopmentMode() {
       return Boolean(game.settings.get(SYSTEM.id, 'devMode'))
     }
   } catch (err) {
-    console.warn('⚠️ Impossible de déterminer le mode développement :', err)
+    logger.warn('⚠️ Impossible de déterminer le mode développement :', err)
   }
 
   // Fallback

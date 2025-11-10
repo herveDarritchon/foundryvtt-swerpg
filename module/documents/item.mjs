@@ -1,5 +1,7 @@
 import TalentFactory from '../lib/talents/talent-factory.mjs'
+import { logger } from '../utils/logger.mjs'
 import ErrorTalent from '../lib/talents/error-talent.mjs'
+import { logger } from '../utils/logger.mjs'
 
 /**
  * An Item subclass which handles system specific logic for the Item document type.
@@ -179,7 +181,7 @@ export default class SwerpgItem extends Item {
       return
     }
 
-    console.debug(
+    logger.debug(
       `[Before] onToggleTrainedTalent talent ('${talentClass}') with id '${this.id}', is Career ${this.system.isRanked} and values:`,
       this.actor,
       this.system.rank,
@@ -203,7 +205,7 @@ export default class SwerpgItem extends Item {
       return
     }
 
-    console.debug(
+    logger.debug(
       `[After] onToggleTrainedTalent talent with id '${talentUpdated.data.id}', is ranked ${talentUpdated.data.system.isRanked} and values:`,
       talentUpdated.actor,
       talentUpdated.data.system.rank,

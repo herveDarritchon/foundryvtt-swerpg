@@ -1,6 +1,9 @@
 import StandardCheck from '../dice/standard-check.mjs'
+import { logger } from '../utils/logger.mjs'
 import ActionUseDialog from '../dice/action-use-dialog.mjs'
+import { logger } from '../utils/logger.mjs'
 import ActionConfig from '../applications/config/action.mjs'
+import { logger } from '../utils/logger.mjs'
 
 /**
  * @typedef {Object} ActionContext
@@ -297,7 +300,7 @@ export default class SwerpgAction extends foundry.abstract.DataModel {
         const config = SYSTEM.ACTION_HOOKS[hook]
         const fnClass = config.async ? foundry.utils.AsyncFunction : Function
         if (config) obj[hook] = new fnClass(...config.argNames, fn)
-        else console.warn(`Invalid Action hook "${hook}" defined by Action "${this.id}"`)
+        else logger.warn(`Invalid Action hook "${hook}" defined by Action "${this.id}"`)
         return obj
       }, {}),
       writable: false,
@@ -858,7 +861,7 @@ export default class SwerpgAction extends foundry.abstract.DataModel {
     foundry.utils.mergeObject(u, foundry.utils.expandObject(this.usage.actorUpdates))
     u.system ||= {}
     if (u.system.status) {
-      console.error(`Swerpg | "system.status" key present in action.usage.actorUpdates: ${this.name}`)
+      logger.error(`Swerpg | "system.status" key present in action.usage.actorUpdates: ${this.name}`)
     }
     u.system.status = Object.assign(u.system.status || {}, { lastAction: this.id }, foundry.utils.expandObject(this.usage.actorStatus))
 

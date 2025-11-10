@@ -1,4 +1,5 @@
 import * as SKILL from '../config/skills.mjs'
+import { logger } from '../utils/logger.mjs'
 
 /**
  * A JournalEntryPage data model for the Skill page type.
@@ -54,7 +55,7 @@ export default class SwerpgSkill extends foundry.abstract.TypeDataModel {
       const { skillId, overview, paths, ranks } = page.system
       const skill = SKILL.SKILLS[skillId]
       if (!skill) {
-        console.error(`JournalEntryPage skill configuration "${page.id}" does not configure a valid Skill ID.`)
+        logger.error(`JournalEntryPage skill configuration "${page.id}" does not configure a valid Skill ID.`)
         continue
       }
       Object.assign(skill, { overview, ranks, name: page.name, page: page.uuid, paths: {} })

@@ -2,6 +2,7 @@ import StandardCheck from '../dice/standard-check.mjs'
 import AttackRoll from '../dice/attack-roll.mjs'
 import SwerpgAction from '../models/action.mjs'
 import SwerpgSpellAction from '../models/spell-action.mjs'
+import { logger } from '../utils/logger.mjs'
 
 const { DialogV2 } = foundry.applications.api
 
@@ -388,7 +389,7 @@ export default class SwerpgActor extends Actor {
     const slotInUse = (item, type) => {
       item.updateSource({ 'system.equipped': false })
       const w = game.i18n.format('WARNING.CannotEquipSlotInUse', { actor: this.name, item: item.name, type })
-      console.warn(w)
+      logger.warn(w)
     }
 
     // Identify equipped weapons which may populate weapon slots
@@ -710,12 +711,12 @@ export default class SwerpgActor extends Actor {
     if (!hookConfig) throw new Error(`Invalid Actor hook function "${hook}"`)
     const hooks = (this.actorHooks[hook] ||= [])
     for (const { talent, fn } of hooks) {
-      console.debug(`Calling ${hook} hook for Talent ${talent.name}`)
+      logger.debug(`Calling ${hook} hook for Talent ${talent.name}`)
       try {
         fn(this, ...args)
       } catch (err) {
         const msg = `The "${hook}" hook defined for Talent "${talent.name}" failed evaluation in Actor [${this.id}]`
-        console.error(msg, err)
+        logger.error(msg, err)
       }
     }
   }
@@ -797,7 +798,7 @@ export default class SwerpgActor extends Actor {
     if (target.statuses.has('flanked') && isAttack && !ranged) {
       const ae = target.effects.get(SYSTEM.EFFECTS.getEffectId('flanked'))
       if (ae) boons.flanked = { label: 'Flanked', number: ae.getFlag('swerpg', 'flanked') ?? 1 }
-      else console.warn(`Missing expected Flanked effect on Actor ${target.id} with flanked status`)
+      else logger.warn(`Missing expected Flanked effect on Actor ${target.id} with flanked status`)
     }
     return { boons, banes }
   }
