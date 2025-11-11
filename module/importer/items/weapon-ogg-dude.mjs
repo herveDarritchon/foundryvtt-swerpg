@@ -2,7 +2,7 @@ import {buildArmorImgWorldPath, buildItemImgSystemPath} from "../../settings/dir
 import OggDudeImporter from "../oggDude.mjs";
 import {buildMod, buildWeaponModifiers} from "./combat-item-mapper.mjs";
 import OggDudeDataElement from "../../settings/models/OggDudeDataElement.mjs";
-import logger from "../../utils/logger.mjs";
+import {logger} from "../../utils/logger.mjs";
 
 
 /**
