@@ -1,5 +1,6 @@
 // base-actor-sheet.test.mjs
 import { describe, expect, test, vi, beforeEach, afterEach } from 'vitest'
+import { setupFoundryMock, teardownFoundryMock } from '../../helpers/mock-foundry.mjs'
 
 // Mock du logger
 vi.mock('../../../module/utils/logger.mjs', () => ({
@@ -10,41 +11,8 @@ vi.mock('../../../module/utils/logger.mjs', () => ({
   }
 }))
 
-// Mock des dépendances globales de Foundry
-globalThis.foundry = {
-  applications: {
-    api: {
-      HandlebarsApplicationMixin: (base) => base,
-    },
-    sheets: {
-      ActorSheetV2: class MockActorSheetV2 {},
-    },
-  },
-}
-
-globalThis.game = {
-  i18n: {
-    localize: vi.fn((key) => {
-      const translations = {
-        'SWERPG.ERRORS.InvalidEvent': 'Invalid event: Unable to process the UI interaction.',
-        'SWERPG.ERRORS.InvalidActor': 'Invalid actor: Unable to access character data.',
-        'SWERPG.ERRORS.NoItemId': 'No item selected: Please click on a valid item.',
-        'SWERPG.ERRORS.NoItemsCollection': 'Character data error: Items collection is missing.',
-        'SWERPG.ERRORS.ItemNotFound': 'Item not found: The selected item may have been deleted.',
-        'SWERPG.ERRORS.UnexpectedError': 'An unexpected error occurred. Please check the console for details.'
-      }
-      return translations[key] || key
-    })
-  }
-}
-
-globalThis.ui = {
-  notifications: {
-    error: vi.fn(),
-    warn: vi.fn(),
-    info: vi.fn()
-  }
-}
+// Initialisation centralisée des mocks Foundry (inclut i18n + ui.notifications)
+setupFoundryMock()
 
 // Mock JaugeFactory
 vi.mock('../../../module/lib/jauges/jauge-factory.mjs', () => ({
@@ -120,6 +88,9 @@ describe('SwerpgBaseActorSheet Bug Fix Integration Tests', () => {
 
   afterEach(() => {
     vi.restoreAllMocks()
+    teardownFoundryMock()
+    // Recrée un mock frais pour le prochain test (isolation complète)
+    setupFoundryMock()
   })
 
   describe('Integration test for #onItemEdit with error handling', () => {

@@ -1,0 +1,87 @@
+/**
+ * Central helper to mock the minimal Foundry VTT globals required by unit tests.
+ * Fail-fast philosophy: production code assumes presence of Foundry; tests must provide it.
+ */
+import { vi } from 'vitest'
+
+const defaultTranslations = {
+  'SWERPG.ERRORS.InvalidEvent': 'Invalid event: Unable to process the UI interaction.',
+  'SWERPG.ERRORS.InvalidActor': 'Invalid actor: Unable to access character data.',
+  'SWERPG.ERRORS.NoItemId': 'No item selected: Please click on a valid item.',
+  'SWERPG.ERRORS.NoItemsCollection': 'Character data error: Items collection is missing.',
+  'SWERPG.ERRORS.ItemNotFound': 'Item not found: The selected item may have been deleted.',
+  'SWERPG.ERRORS.UnexpectedError': 'An unexpected error occurred. Please check the console for details.'
+}
+
+let previous = null
+
+/**
+ * Setup Foundry mock environment.
+ * @param {object} [options]
+ * @param {Record<string,string>} [options.translations] Additional/override translations.
+ * @param {object} [options.foundryPatch] Extra properties merged into globalThis.foundry.
+ * @returns {void}
+ */
+export function setupFoundryMock(options = {}) {
+  const { translations = {}, foundryPatch = {} } = options
+  // Preserve any existing globals (unlikely in test but defensive for nested usage).
+  previous = {
+    foundry: globalThis.foundry,
+    game: globalThis.game,
+    ui: globalThis.ui
+  }
+
+  const mergedTranslations = { ...defaultTranslations, ...translations }
+
+  globalThis.foundry = {
+    applications: {
+      api: {
+        HandlebarsApplicationMixin: (base) => base
+      },
+      sheets: {
+        ActorSheetV2: class MockActorSheetV2 {}
+      }
+    },
+    ...foundryPatch
+  }
+
+  globalThis.game = {
+    i18n: {
+      localize: vi.fn((key) => mergedTranslations[key] || key)
+    },
+    system: {
+      config: {}
+    },
+    combat: undefined
+  }
+
+  globalThis.ui = {
+    notifications: {
+      error: vi.fn(),
+      warn: vi.fn(),
+      info: vi.fn()
+    }
+  }
+}
+
+/**
+ * Teardown Foundry mock environment, restoring previous globals if they existed.
+ * @returns {void}
+ */
+export function teardownFoundryMock() {
+  if (previous) {
+    if (previous.foundry === undefined) delete globalThis.foundry; else globalThis.foundry = previous.foundry
+    if (previous.game === undefined) delete globalThis.game; else globalThis.game = previous.game
+    if (previous.ui === undefined) delete globalThis.ui; else globalThis.ui = previous.ui
+  }
+  previous = null
+}
+
+/**
+ * Utility to extend the existing mock (e.g., add combat object mid-test).
+ * @param {object} patch
+ */
+export function extendFoundryMock(patch) {
+  if (!globalThis.foundry) throw new Error('Foundry mock not initialized')
+  Object.assign(globalThis.foundry, patch)
+}
