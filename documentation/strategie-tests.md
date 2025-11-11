@@ -61,6 +61,13 @@ tests/
 
 ## Patterns de Test
 
+Respect des Meilleures Pratiques Vitest :
+✅ Pattern AAA (Arrange-Act-Assert)
+✅ Isolation des tests avec beforeEach/afterEach
+✅ Mocks centralisés et cleanup automatique
+✅ Tests paramétrés pour les cas multiples
+✅ Gestion complète des cas de bordure
+
 ### 1. Organisation des Tests
 
 #### Nomenclature

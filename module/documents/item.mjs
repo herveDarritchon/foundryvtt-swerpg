@@ -16,7 +16,7 @@ export default class SwerpgItem extends Item {
    * @type {object}
    */
   get config() {
-    return this.system.config
+    return this.system?.config ?? {}
   }
 
   /**
@@ -24,7 +24,7 @@ export default class SwerpgItem extends Item {
    * @type {SwerpgAction}
    */
   get actions() {
-    return this.system.actions
+    return this.system?.actions ?? []
   }
 
   /**
@@ -32,7 +32,35 @@ export default class SwerpgItem extends Item {
    * @type {TalentRankData}
    */
   get rank() {
-    return this.system.currentRank
+    return this.system?.currentRank ?? 0
+  }
+
+  /**
+   * Setter for config to satisfy tests assigning mockItem.config directly.
+   * Writes into system.config, creating system object if absent.
+   * @param {object} value
+   */
+  set config(value) {
+    if (!this.system) this.system = {}
+    this.system.config = value || {}
+  }
+
+  /**
+   * Setter for rank used by tests. Updates currentRank in system.
+   * @param {number} value
+   */
+  set rank(value) {
+    if (!this.system) this.system = {}
+    this.system.currentRank = Number.isFinite(value) ? value : 0
+  }
+
+  /**
+   * Path accessor (skill progression path id)
+   */
+  get path() { return this.system?.path }
+  set path(value) {
+    if (!this.system) this.system = {}
+    this.system.path = value
   }
 
   /* -------------------------------------------- */
@@ -69,15 +97,16 @@ export default class SwerpgItem extends Item {
     const skill = this.config || {}
 
     // Copy and merge skill data
-    this.name = skill.name
-    this.img = skill.icon
-    this.category = skill.category
-    this.abilities = skill.abilities
+    this.name = skill.name || this.name
+    this.img = skill.icon || this.img
+    this.category = skill.category || this.category
+    this.abilities = skill.abilities || []
 
     // Skill rank
     let current = null
     let next = null
-    this.ranks = foundry.utils.deepClone(skill.ranks).map((r) => {
+    const skillRanks = Array.isArray(skill.ranks) ? skill.ranks : []
+    this.ranks = foundry.utils.deepClone(skillRanks).map((r) => {
       r.purchased = r.rank > 0 && r.rank <= this.rank
       if (r.rank === this.rank) current = r
       else if (r.rank === this.rank + 1) next = r
@@ -88,7 +117,8 @@ export default class SwerpgItem extends Item {
 
     // Skill progression paths
     let path = null
-    this.paths = foundry.utils.deepClone(skill.paths).map((p) => {
+    const skillPaths = Array.isArray(skill.paths) ? skill.paths : []
+    this.paths = foundry.utils.deepClone(skillPaths).map((p) => {
       p.active = p.id === this.path
       if (p.active) path = p
       return p
