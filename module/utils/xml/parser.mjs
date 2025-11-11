@@ -1,3 +1,5 @@
+import { logger } from '../logger.mjs'
+
 /**
  * Parse a XML data string to JSON string.
  * @module module/utils/xml/parser
@@ -15,6 +17,7 @@ export async function parseXmlToJson(data) {
         trim: true,
         mergeAttrs: true
     });
-    console.debug("Data XML:", jsonData);
+    // Logging debug (niveau debug uniquement)
+    logger.debug('[XMLParser] Data XML parsed', jsonData)
     return jsonData;
 }

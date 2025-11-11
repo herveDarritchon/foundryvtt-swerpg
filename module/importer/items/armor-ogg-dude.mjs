@@ -2,6 +2,7 @@ import {buildArmorImgWorldPath, buildItemImgSystemPath} from "../../settings/dir
 import OggDudeImporter from "../oggDude.mjs";
 import {buildMod, buildWeaponModifiers} from "./combat-item-mapper.mjs";
 import OggDudeDataElement from "../../settings/models/OggDudeDataElement.mjs";
+import { logger } from '../../utils/logger.mjs'
 
 /**
  * Armor Array Mapper : Map the Armor XML data to the SwerpgArmor object array.
@@ -69,7 +70,7 @@ export function armorMapper(armors) {
  */
 export async function buildArmorContext(zip, groupByDirectory, groupByType) {
 
-    console.debug("Building Armor with Zip, GroupByDirectory, GroupByType", zip, groupByDirectory, groupByType);
+    logger.debug('[ArmorImporter] Building Armor context', { groupByDirectoryCount: groupByDirectory.length, groupByType, hasZip: !!zip });
 
     return {
         jsonData: await OggDudeDataElement.buildJsonDataFromFile(zip, groupByDirectory, "Armor.xml",  "Armors.Armor"),
