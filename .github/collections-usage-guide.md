@@ -9,25 +9,23 @@
 - Rendre traçables décisions, spécifications, plans et validations (support aux rétros, audits et onboardings).
 
 ## 2. Vue d'ensemble rapide
- 
+
 ### Collections & Domaines
- 
+
 - Testing & Test Automation: TDD, Vitest, Playwright (unitaire + E2E).
 - Project Planning & Management: idéation, PRD, découpage, plan d'implémentation, tâches, révision.
 - Technical Spike: recherche expérimentale cadrée avant engagement.
 - Tasks (edge-ai): pilotage granulaire des tâches & enregistrements de progression.
 - Security & Code Quality: OWASP, Accessibilité, Performance, Object Calisthenics, Commentaires auto-explicatifs.
 
- 
 ### Types d'assets
- 
+
 - Chat Modes (`.chatmode.md`): Contextes de session (ex: `tdd-red`, `implementation-plan`).
 - Prompts (`.prompt.md`): Demandes ciblées (ex: `breakdown-feature-prd`, `playwright-generate-test`).
 - Instructions (`.instructions.md`): Standards permanents (sécurité, performance, a11y, etc.).
 
- 
 ## 3. Workflow recommandé (chaîne complète)
- 
+
 1. Idéation & Contexte initial
    - Chat mode: `planner.chatmode.md` ou `prd.chatmode.md`.
    - Prompt: `breakdown-feature-prd.prompt.md` pour générer un PRD structuré.
@@ -69,7 +67,7 @@
 ## 4. Usages détaillés par asset
 
 ### Chat Modes (séances conversationnelles)
- 
+
 - `tdd-red.chatmode.md`: Focaliser sur écriture du test qui échoue (clarification exigences + edge cases).
 - `tdd-green.chatmode.md`: Produire l'implémentation minimale passant les tests.
 - `tdd-refactor.chatmode.md`: Améliorer structure sans casser le vert. Vérifier complexité, duplication, empreinte performance.
@@ -81,7 +79,7 @@
 - `task-planner.chatmode.md` / `task-researcher.chatmode.md`: Raffiner tâches granularité vs risques.
 
 ### Prompts (déclencheurs ciblés)
- 
+
 Utilisation: Collez votre contexte (extraits code, objectifs) puis le contenu du prompt.
 
 - `breakdown-feature-prd`: Structure PRD → Sections (Problème, Utilisateurs, Scénarios, KPIs, Risques).
@@ -96,7 +94,7 @@ Utilisation: Collez votre contexte (extraits code, objectifs) puis le contenu du
 - `retro-doc`: Produire synthèse amélioration continue.
 
 ### Instructions (standards persistants)
- 
+
 Toujours considérées implicites; relire ponctuellement en cas de doute.
 
 - Accessibilité: `a11y.instructions.md` (WCAG 2.2 AA; roles, contrastes, focus).
@@ -109,7 +107,7 @@ Toujours considérées implicites; relire ponctuellement en cas de doute.
 ## 5. Exemples pratiques
 
 ### Exemple TDD rapide
- 
+
 1. Ouvrez chat avec `tdd-red`. Fournissez: objectif fonction + cas limites.
 2. Génère test Vitest (prompt `javascript-typescript-vitest`).
 3. Passez à `tdd-green` avec test rouge pour implémentation.
@@ -117,19 +115,19 @@ Toujours considérées implicites; relire ponctuellement en cas de doute.
 5. Basculez `tdd-refactor` pour supprimer duplication / améliorer noms.
 
 ### Exemple Playwright
- 
+
 1. Exploration: prompt `playwright-explore-website` avec URL locale.
 2. Génération scénario login: `playwright-generate-test` (ajouter contexte rôles accessibles).
 3. Sauvegarde fichier test sous `tests/applications/login.spec.ts`.
 4. Exécutez: `npx playwright test --project=chromium` (optionnel si config présente).
 
 ### Exemple Performance Review
- 
+
 1. Après feature: collez hot path + métriques (ms, mémoire). Demandez suggestions selon `performance-optimization.instructions.md`.
 2. Implémentez micro-optimisations mesurées, reprofilez pour vérifier gain.
 
 ### Exemple Accessibilité
- 
+
 1. Indiquer snippet HTML/CSS/TS généré.
 2. Demander correction focus & alternatives graphiques (référencer `a11y.instructions.md`).
 3. Vérifier manuellement avec un lecteur d'écran + axe DevTools.
@@ -140,7 +138,6 @@ Toujours considérées implicites; relire ponctuellement en cas de doute.
 - Gate sécurité: Script custom qui scanne prompts de PR via `ai-prompt-engineering-safety-review` (manuel ou automatisé).
 - Gate accessibilité: Audits Lighthouse + tests Playwright avec assertions ARIA (snapshot si adopté).
 - Performance Budget: Échec pipeline si LCP > budget défini ou temps scénario critique > X ms (outils externes).
-
 
 ## 7. Checklist par phase
 
@@ -176,12 +173,12 @@ npm run compile
 ## 10. Personnalisation VS Code (suggestion)
 
 Dans `settings.json` (manuel):
- 
+
 ```json
 {
-   "copilot.customPrompts.paths": [".github/prompts"],
-   "copilot.customChatModes.paths": [".github/chatmodes"],
-   "copilot.customInstructions.paths": [".github/instructions"]
+  "copilot.customPrompts.paths": [".github/prompts"],
+  "copilot.customChatModes.paths": [".github/chatmodes"],
+  "copilot.customInstructions.paths": [".github/instructions"]
 }
 ```
 
@@ -197,4 +194,5 @@ Ce guide propose un cadre; il ne remplace pas tests manuels, revue de code humai
 - Mettre en place budget performance chiffré (LCP, CLS, temps action critique).
 
 ---
+
 Rédigé avec accessibilité & sécurité en tête; une revue manuelle reste indispensable. Utilisez des outils comme Accessibility Insights et des analyseurs SAST/DAST pour compléter.

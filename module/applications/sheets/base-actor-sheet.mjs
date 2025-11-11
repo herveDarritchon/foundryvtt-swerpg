@@ -948,16 +948,14 @@ export default class SwerpgBaseActorSheet extends HBMixin(BaseActorSheetV2) {
     }
 
     // Resolve the closest line-item element only once.
-      const target = (event.target && typeof event.target.closest === 'function')
-        ? event.target.closest(this.LINE_ITEM_SELECTOR)
-        : null
+    const target = event.target && typeof event.target.closest === 'function' ? event.target.closest(this.LINE_ITEM_SELECTOR) : null
     if (!target) {
       logger.warn('No .line-item ancestor found in event target chain')
       ui.notifications.warn(game.i18n.localize(this.ERROR_KEYS.NO_ITEM_ID))
       return null
     }
 
-  const { [this.DATA_KEYS.ITEM_ID]: itemId } = target.dataset
+    const { [this.DATA_KEYS.ITEM_ID]: itemId } = target.dataset
     if (!itemId) {
       logger.warn('Missing itemId dataset on .line-item element')
       ui.notifications.warn(game.i18n.localize(this.ERROR_KEYS.NO_ITEM_ID))
@@ -998,9 +996,7 @@ export default class SwerpgBaseActorSheet extends HBMixin(BaseActorSheetV2) {
   static #getEventItemDeleteAction(event, actor) {
     const item = SwerpgBaseActorSheet.#getEventItem(event, actor)
     if (!item) return null
-    const target = (event.target && typeof event.target.closest === 'function')
-      ? event.target.closest(this.LINE_ITEM_SELECTOR)
-      : null
+    const target = event.target && typeof event.target.closest === 'function' ? event.target.closest(this.LINE_ITEM_SELECTOR) : null
     if (!target) return null
     const { [this.DATA_KEYS.DELETE_ACTION]: actionName, [this.DATA_KEYS.ITEM_TYPE]: itemType } = target.dataset
 

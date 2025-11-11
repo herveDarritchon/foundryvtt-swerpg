@@ -14,7 +14,11 @@ function ensureFoundryUtils() {
       if (Array.isArray(original)) return original.map((o) => deepClone(o, { strict, _d }))
       if (original instanceof Date) return new Date(original)
       if (original.constructor && original.constructor !== Object) {
-        return strict ? (() => { throw new Error('deepClone cannot clone advanced objects') })() : original
+        return strict
+          ? (() => {
+              throw new Error('deepClone cannot clone advanced objects')
+            })()
+          : original
       }
       const clone = {}
       for (const k of Object.keys(original)) clone[k] = deepClone(original[k], { strict, _d })

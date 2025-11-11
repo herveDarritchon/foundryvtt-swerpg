@@ -95,14 +95,14 @@ Chaque phase est atomique. Validation = toutes tâches complétées + critères 
 
 - GOAL-005: Validation, performance, documentation.
 
-| Task     | Description                                                                                                                                                              | Completed | Date |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------- | ---- |
-| TASK-021 | Script de mesure (console) du temps `performance.now()` autour render sidebar pour confirmer <50ms.                                                                      |           |      |
-| TASK-022 | Vérification accessibilité: contraste tags (calcul ratio >= AA) et focus visible sur `button.icon-button`.                                                               |           |      |
+| Task     | Description                                                                                                                                                              | Completed | Date       |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------- | ---------- |
+| TASK-021 | Script de mesure (console) du temps `performance.now()` autour render sidebar pour confirmer <50ms.                                                                      |           |            |
+| TASK-022 | Vérification accessibilité: contraste tags (calcul ratio >= AA) et focus visible sur `button.icon-button`.                                                               |           |            |
 | TASK-023 | Ajouter commentaire JSDoc sur `#applyFeaturedEquipmentCompactMode` expliquant raison (WHY) uniquement.                                                                   | ✅        | 2025-11-11 |
-| TASK-024 | Mettre à jour `/docs/README.md` section UI avec sous-section "Sidebar Current Equipment Responsive" listant nouvelles classes & variables.                               | ⬜        |      |
+| TASK-024 | Mettre à jour `/docs/README.md` section UI avec sous-section "Sidebar Current Equipment Responsive" listant nouvelles classes & variables.                               | ⬜        |            |
 | TASK-025 | Ajouter tests Vitest (nouveau fichier `tests/applications/actor-sheet-responsive.test.mjs`) mock contexte => vérifier activation compactMode avec 4 items et non avec 2. | ✅        | 2025-11-11 |
-| TASK-026 | Finaliser status plan -> In progress puis Completed après vérification automatique des critères.                                                                         |           |      |
+| TASK-026 | Finaliser status plan -> In progress puis Completed après vérification automatique des critères.                                                                         |           |            |
 
 ## 3. Alternatives
 
