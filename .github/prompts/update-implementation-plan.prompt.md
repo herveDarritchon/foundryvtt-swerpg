@@ -1,13 +1,13 @@
 ---
 mode: 'agent'
-description: 'Create a new implementation plan file for new features, refactoring existing code or upgrading packages, design, architecture or infrastructure.'
+description: 'Update an existing implementation plan file with new or update requirements to provide new features, refactoring existing code or upgrading packages, design, architecture or infrastructure.'
 tools: ['changes', 'search/codebase', 'edit/editFiles', 'extensions', 'fetch', 'githubRepo', 'openSimpleBrowser', 'problems', 'runTasks', 'search', 'search/searchResults', 'runCommands/terminalLastCommand', 'runCommands/terminalSelection', 'testFailure', 'usages', 'vscodeAPI']
 ---
-# Create Implementation Plan
+# Update Implementation Plan
 
 ## Primary Directive
 
-Your goal is to create a new implementation plan file for `${input:PlanPurpose}`. Your output must be machine-readable, deterministic, and structured for autonomous execution by other AI systems or humans.
+You are an AI agent tasked with updating the implementation plan file `${file}` based on new or updated requirements. Your output must be machine-readable, deterministic, and structured for autonomous execution by other AI systems or humans.
 
 ## Execution Context
 
