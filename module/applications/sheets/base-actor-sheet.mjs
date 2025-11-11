@@ -1,17 +1,18 @@
-// Defensive access to global Foundry object for test environments where it may be undefined.
-const _foundry = globalThis.foundry || {}
-const { api = {}, sheets = {} } = (_foundry.applications || {})
 import JaugeFactory from '../../lib/jauges/jauge-factory.mjs'
 import { logger } from '../../utils/logger.mjs'
 import { computeFeaturedEquipment } from '../../lib/featured-equipment.mjs'
+// Foundry API attendu présent dans l'environnement runtime (v13). Les tests doivent fournir un mock
+// explicite de `globalThis.foundry.applications`. On retire les accès défensifs pour détecter tôt une
+// absence de contexte Foundry et éviter la dilution des erreurs.
+const { applications } = globalThis.foundry
+const { api, sheets } = applications
 
 /**
  * A base ActorSheet built on top of ApplicationV2 and the Handlebars rendering backend.
  */
-// Fallbacks for test environments lacking full Foundry API implementations.
-const _BaseActorSheetV2 = sheets.ActorSheetV2 || class {}
-const _HBMixin = typeof api.HandlebarsApplicationMixin === 'function' ? api.HandlebarsApplicationMixin : (b) => b
-export default class SwerpgBaseActorSheet extends _HBMixin(_BaseActorSheetV2) {
+const BaseActorSheetV2 = sheets.ActorSheetV2
+const HBMixin = api.HandlebarsApplicationMixin
+export default class SwerpgBaseActorSheet extends HBMixin(BaseActorSheetV2) {
   /** @inheritDoc */
   static DEFAULT_OPTIONS = {
     classes: ['swerpg', 'actor', 'standard-form'],
