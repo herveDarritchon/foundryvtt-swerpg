@@ -1,6 +1,7 @@
 import {buildArmorImgWorldPath, buildItemImgSystemPath} from "../../settings/directories.mjs";
 import OggDudeImporter from "../oggDude.mjs";
 import OggDudeDataElement from "../../settings/models/OggDudeDataElement.mjs";
+import { logger } from '../../utils/logger.mjs'
 
 /**
  * Species Array Mapper : Map the Species XML data to the SwerpgArmor object array.
@@ -280,7 +281,7 @@ export function speciesMapper(species) {
  */
 export async function buildSpeciesContext(zip, groupByDirectory, groupByType) {
 
-    console.debug("Building Species with Zip, GroupByDirectory, GroupByType", zip, groupByDirectory, groupByType);
+    logger.debug('[SpeciesImporter] Building Species context', { groupByDirectoryCount: groupByDirectory.length, groupByType, hasZip: !!zip });
 
     return {
         jsonData: await OggDudeDataElement.buildJsonDataFromDirectory(zip, groupByType.xml, "Species", "Species"),

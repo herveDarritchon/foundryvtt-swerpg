@@ -1,6 +1,7 @@
 import {checkFileExists, createPathIfNecessary, uploadFileOnTheServer} from "../../helpers/server/directory/file.mjs";
 import {createFoundryFolder} from "../../helpers/foundry/folder.mjs";
 import {parseXmlToJson} from "../../utils/xml/parser.mjs";
+import { logger } from '../../utils/logger.mjs'
 
 /**
  * @typedef {object} ZipEntry
@@ -293,11 +294,11 @@ class OggDudeDataElement {
         const imageFiles = imageContext.images.filter(image => {
             return image.fullPath.startsWith(imageContext.criteria);
         });
-        console.debug("Image files:", imageFiles);
+    logger.debug('[OggDudeDataElement] Image files filtered', { imageFiles });
 
         for (const file of imageFiles) {
             const imgData = await zip.files[file.fullPath].async('blob');
-            console.debug("Item Image Data before upload:", file);
+            logger.debug('[OggDudeDataElement] Item image data before upload', { file });
             await uploadFileOnTheServer({data: imgData, element: file}, imageContext.worldPath);
         }
     }
@@ -315,14 +316,14 @@ class OggDudeDataElement {
     static  _getItemImage = async (key, imageWorldPath, prefix, imgSystemPath) => {
         // get the item image path
         const image = `${imageWorldPath}/${prefix}${key}.png`;
-        console.debug(`Item image ${image} for item ${key} to be checked.`);
+    logger.debug('[OggDudeDataElement] Item image to be checked', { key, image });
         const found = await checkFileExists(image);
         if (found) {
-            console.debug(`Image ${image} for item ${key} found. Using specific item image.`);
+            logger.debug('[OggDudeDataElement] Specific item image found', { key, image });
             return image;
         } else {
             const image = `${imgSystemPath}`;
-            console.debug(`image ${image} for item ${key} not found. Using default armor image.`)
+            logger.debug('[OggDudeDataElement] Specific item image not found, using default', { key, image });
             return image;
         }
     }
@@ -343,9 +344,9 @@ class OggDudeDataElement {
     static _storeItems = async (items, folder, elementType, imageWorldPath, imgSystemPath, prefix) => {
         let itemPromises = await Promise.all(items.map(async item => {
             const key = (item.key != null && item.key !== "") ? item.key : item.name.toUpperCase();
-            console.debug("Items %s: Item image to be returned by method _getItemImage.", key);
+            logger.debug('[OggDudeDataElement] Item image to be returned by method _getItemImage', { key });
             const img = await OggDudeDataElement._getItemImage(key, imageWorldPath, prefix, imgSystemPath);
-            console.debug("Items %s: Items image returned by method _getItemsImage is %s.", key, img);
+            logger.debug('[OggDudeDataElement] Item image resolved by _getItemImage', { key, img });
             return {
                 name: item.name,
                 img: img,
@@ -355,21 +356,21 @@ class OggDudeDataElement {
             };
         }));
 
-        console.debug("Items to be created from Promises:", itemPromises);
+    logger.debug('[OggDudeDataElement] Items mapped before creation', { itemPromises });
 
         let promiseResolved = Promise.all(itemPromises).then(async item => {
-            console.log("Item to be created:", item)
+            logger.info('[OggDudeDataElement] Creating items batch', { item });
             Item.createDocuments(item)
                 .then((item) => {
-                    console.debug("Item created:", item);
+                    logger.debug('[OggDudeDataElement] Item created', { item });
                 }).catch((error, item) => {
-                console.error("Error while creating item:", item, error);
+                logger.error('[OggDudeDataElement] Error while creating item', { item, error });
             });
         }).catch(error => {
-            console.error("Error while resolving creation item promises:", error);
+            logger.error('[OggDudeDataElement] Error while resolving item creation promises', { error });
         });
 
-        console.debug("Items to be created in FVTT:", promiseResolved);
+    logger.debug('[OggDudeDataElement] Items creation promises resolved', { promiseResolved });
         return promiseResolved;
     }
 
@@ -386,7 +387,7 @@ class OggDudeDataElement {
     static  _buildItemElements = (jsonData, mapperFn) => {
         //const elements = foundry.utils.getProperty(jsonData, elementCriteria);
         let items = mapperFn(jsonData);
-        console.debug("Items to be created in FVTT", items);
+    logger.debug('[OggDudeDataElement] Items to be created in FVTT', { items });
         return items;
     }
 
@@ -400,27 +401,27 @@ class OggDudeDataElement {
      * @name processElements
      */
     static processElements = async (context) => {
-        console.debug("[ProcessElements] - Step Initial", context);
+    logger.debug('[OggDudeDataElement] ProcessElements - Step Initial', { context });
 
         // Step 4: Create the folder
         let folder = await createFoundryFolder(context.folder.name, context.folder.type);
-        console.debug("[ProcessElements] - Step 4: Folder >", folder);
+    logger.debug('[OggDudeDataElement] ProcessElements - Step 4 Folder', { folder });
 
         // Step 5-1: Create the folder in the FVTT tab
         const imgPath = await createPathIfNecessary(context.image.worldPath);
-        console.debug("[ProcessElements] - Step 5-1: Image Path >", imgPath);
+    logger.debug('[OggDudeDataElement] ProcessElements - Step 5-1 Image Path', { imgPath });
 
         // Step 5-2: Upload the images to the server
         await OggDudeDataElement._uploadImagesOnTheServer(context.image, context.zip.content);
-        console.debug("[ProcessElements] - Step 5-2: Images uploaded to the server.");
+    logger.debug('[OggDudeDataElement] ProcessElements - Step 5-2 Images uploaded');
 
         // Step 6-4 : Create the Items
         const items = OggDudeDataElement._buildItemElements(context.jsonData, context.element.mapper);
-        console.debug("[ProcessElements] - Step 6-4: Items >", items);
+    logger.debug('[OggDudeDataElement] ProcessElements - Step 6-4 Items', { items });
 
         // Step 6-5: Store the Items in the server database
         await OggDudeDataElement._storeItems(items, folder, context.element.type, context.image.worldPath, context.image.systemPath, context.image.prefix);
-        console.debug("[ProcessElements] - Step 6-5: Items stored in the server database.");
+    logger.debug('[OggDudeDataElement] ProcessElements - Step 6-5 Items stored');
 
     }
 
@@ -435,16 +436,16 @@ class OggDudeDataElement {
     static async buildJsonDataFromFile(zip, groupByDirectory, elementFileName, elementCriteria) {
         // Step 6-1: Get the item File from the Data directory
         const itemFile = OggDudeDataElement.getElementsFrom(groupByDirectory, "Data", elementFileName);
-        console.debug("[BuildJsonDataFromFile] - Step 6-1: Item File >", itemFile);
+    logger.debug('[OggDudeDataElement] BuildJsonDataFromFile - Step 6-1 Item File', { itemFile });
 
         // Step 6-2: Get the item Data from the itemFile
         const itemData = await zip.files[itemFile.fullPath].async('text');
-        console.debug("[BuildJsonDataFromFile] - Step 6-2: Item Data >", itemData);
+    logger.debug('[OggDudeDataElement] BuildJsonDataFromFile - Step 6-2 Item Data', { itemDataLength: itemData.length });
 
         // Step 6-3: Parse the XML itemData
         const jsonRawData = await parseXmlToJson(itemData);
         const jsonData = foundry.utils.getProperty(jsonRawData, elementCriteria);
-        console.debug("[BuildJsonDataFromFile] - Step 6-3: JSON Data >", jsonData);
+    logger.debug('[OggDudeDataElement] BuildJsonDataFromFile - Step 6-3 JSON Data', { jsonData });
 
         return jsonData;
     }
@@ -458,20 +459,20 @@ class OggDudeDataElement {
      * @returns {Promise<string>} A Promise that resolves when the data has been processed in the format of a json structure.
      */
     static async buildJsonDataFromDirectory(zip, xmlOggDudeElement, elementDirectoryName, elementCriteria) {
-        console.debug("[BuildJsonDataFromDirectory] - xmlOggDudeElement", xmlOggDudeElement);
+    logger.debug('[OggDudeDataElement] BuildJsonDataFromDirectory - xmlOggDudeElement', { count: xmlOggDudeElement.length });
         const fullPathSearched = `Data/${elementDirectoryName}`;
         const oggDudeElementsSelected = xmlOggDudeElement.filter(xmlElement => xmlElement.relativePath === fullPathSearched);
         // Step 6-1: Get the item Data from the itemFile
 
         // Step 6-2: Parse the XML itemData
-        console.debug("[BuildJsonDataFromDirectory] - Step 6-1: Files >", oggDudeElementsSelected);
+    logger.debug('[OggDudeDataElement] BuildJsonDataFromDirectory - Step 6-1 Files', { filesCount: oggDudeElementsSelected.length });
         const jsonData = await Promise.all(oggDudeElementsSelected.map(async element => {
             const fileData = await zip.files[element.fullPath].async('text');
             const rawData = await parseXmlToJson(fileData);
             return foundry.utils.getProperty(rawData, elementCriteria)
         }));
 
-        console.debug("[ProcessElements] - Step 6-2: JSON Data >", jsonData);
+    logger.debug('[OggDudeDataElement] BuildJsonDataFromDirectory - Step 6-2 JSON Data', { jsonData });
         return jsonData;
     }
 

@@ -1,6 +1,7 @@
 import {buildArmorImgWorldPath, buildItemImgSystemPath} from "../../settings/directories.mjs";
 import OggDudeImporter from "../oggDude.mjs";
 import OggDudeDataElement from "../../settings/models/OggDudeDataElement.mjs";
+import { logger } from '../../utils/logger.mjs'
 
 /**
  * Species Array Mapper : Map the Species XML data to the SwerpgArmor object array.
@@ -67,7 +68,7 @@ export function careerMapper(careers) {
  */
 export async function buildCareerContext(zip, groupByDirectory, groupByType) {
 
-    console.debug("Building Career with Zip, GroupByDirectory, GroupByType", zip, groupByDirectory, groupByType);
+    logger.debug('[CareerImporter] Building Career context', { groupByDirectoryCount: groupByDirectory.length, groupByType, hasZip: !!zip });
 
     return {
         jsonData: await OggDudeDataElement.buildJsonDataFromDirectory(zip, groupByType.xml, "Careers", "Career"),

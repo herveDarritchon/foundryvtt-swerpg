@@ -5,6 +5,7 @@
  */
 
 import OggDudeImporter from "../importer/oggDude.mjs";
+import { logger } from '../utils/logger.mjs'
 // Similar syntax to importing, mais c'est du destructuring et peut être indisponible en environnement de test.
 
 // Fournit des fallbacks légers si l'API Foundry n'est pas initialisée (exécution tests).
@@ -84,7 +85,7 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
 
     _prepareContext(options) {
         //const setting = game.settings.get("swerpgSettings", "config");
-        console.log(`Preparing context: ${options}`, this);
+    logger.debug('[OggDudeDataImporter] Preparing context', { options, instance: this });
         return {
             domains: this.domains,
             domainSelectionDisabled: this.noZipFileSelected(),
@@ -115,7 +116,7 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
     /* -------------------------------------------- */
 
     static async loadAction(_event, target) {
-        console.log(`Load OggDude Data: {}`, this);
+    logger.info('[OggDudeDataImporter] Load OggDude Data', { instance: this });
         await OggDudeImporter.processOggDudeData(this.zipFile, this.domains);
     }
 
@@ -138,7 +139,7 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
         }
         const name = target.dataset.domainName;
         const value = OggDudeDataImporter.toBoolean(target.dataset.domainChecked);
-        console.log(`Toggle Domain [${name}/${value}]: {}`, _event, target);
+    logger.info(`[OggDudeDataImporter] Toggle Domain [${name}/${value}]`, { event: _event, target });
         this.domains = this.domains.map(domain => {
             if (domain.id === name) {
                 domain.checked = !value;
@@ -155,14 +156,14 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
         /*await Promise.all(
             Object.entries(settings).map(([key, value]) => game.settings.set("foo", key, value))
         );*/
-        console.log(`Saving settings: ${settings}`, this);
+    logger.info('[OggDudeDataImporter] Saving settings', { settings, instance: this });
     }
 
     /* -------------------------------------------- */
 
     static async resetAction(_event, target) {
         //await game.settings.set("foo", "config", {});
-        console.log(`Resetting settings: {}`, this);
+    logger.info('[OggDudeDataImporter] Resetting settings', { instance: this });
         this.zipFile = null;
         this.domains = this._initializeDomains(this._domainNames);
         await this.render();
@@ -180,7 +181,7 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
     /** @inheritdoc */
     async _onOggdudeZipFileChange(event) {
         this.zipFile = event.target.files[0];
-        console.log(`File changed: {}`, event, this.zipFile);
+    logger.info('[OggDudeDataImporter] File changed', { event, zipFile: this.zipFile });
         await this.render();
     }
 
