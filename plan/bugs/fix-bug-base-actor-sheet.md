@@ -33,34 +33,34 @@ Ce plan d'implémentation vise à corriger le bug TypeError qui se produit dans 
 
 - GOAL-001: Identifier la cause racine du bug et comprendre le contexte d'exécution
 
-| Task     | Description                                                                                           | Completed | Date |
-| -------- | ----------------------------------------------------------------------------------------------------- | --------- | ---- |
-| TASK-001 | Analyser le code dans `#getEventItem` à la ligne 911 pour identifier l'origine de l'erreur         | ✅        | 2025-11-11 |
-| TASK-002 | Examiner la méthode `#onItemEquip` pour comprendre le flux d'appel                                  | ✅        | 2025-11-11 |
-| TASK-003 | Identifier les conditions qui causent `items` à être undefined                                       | ✅        | 2025-11-11 |
-| TASK-004 | Reproduire le bug en local pour valider le diagnostic                                               | ✅        | 2025-11-11 |
+| Task     | Description                                                                                | Completed | Date       |
+| -------- | ------------------------------------------------------------------------------------------ | --------- | ---------- |
+| TASK-001 | Analyser le code dans `#getEventItem` à la ligne 911 pour identifier l'origine de l'erreur | ✅        | 2025-11-11 |
+| TASK-002 | Examiner la méthode `#onItemEquip` pour comprendre le flux d'appel                         | ✅        | 2025-11-11 |
+| TASK-003 | Identifier les conditions qui causent `items` à être undefined                             | ✅        | 2025-11-11 |
+| TASK-004 | Reproduire le bug en local pour valider le diagnostic                                      | ✅        | 2025-11-11 |
 
 ### Implementation Phase 2 - Correction du Bug
 
 - GOAL-002: Implémenter les corrections nécessaires avec gestion d'erreur appropriée
 
-| Task     | Description                                                                                           | Completed | Date |
-| -------- | ----------------------------------------------------------------------------------------------------- | --------- | ---- |
-| TASK-005 | Ajouter une validation défensive dans `#getEventItem` pour vérifier l'existence de `items`          | ✅        | 2025-11-11 |
-| TASK-006 | Implémenter une gestion d'erreur gracieuse avec notification utilisateur appropriée                 | ✅        | 2025-11-11 |
-| TASK-007 | Ajouter des logs de debug pour faciliter le débogage futur                                          | ✅        | 2025-11-11 |
-| TASK-008 | Mettre à jour les JSDoc des méthodes affectées                                                      | ✅        | 2025-11-11 |
+| Task     | Description                                                                                | Completed | Date       |
+| -------- | ------------------------------------------------------------------------------------------ | --------- | ---------- |
+| TASK-005 | Ajouter une validation défensive dans `#getEventItem` pour vérifier l'existence de `items` | ✅        | 2025-11-11 |
+| TASK-006 | Implémenter une gestion d'erreur gracieuse avec notification utilisateur appropriée        | ✅        | 2025-11-11 |
+| TASK-007 | Ajouter des logs de debug pour faciliter le débogage futur                                 | ✅        | 2025-11-11 |
+| TASK-008 | Mettre à jour les JSDoc des méthodes affectées                                             | ✅        | 2025-11-11 |
 
 ### Implementation Phase 3 - Tests et Validation
 
 - GOAL-003: Valider la correction et s'assurer qu'aucune régression n'est introduite
 
-| Task     | Description                                                                                           | Completed | Date |
-| -------- | ----------------------------------------------------------------------------------------------------- | --------- | ---- |
-| TASK-009 | Créer des tests unitaires pour `#getEventItem` avec différents scénarios d'erreur                   | ✅        | 2025-11-11 |
-| TASK-010 | Tester manuellement les fonctionnalités d'équipement/déséquipement                                  | ✅        | 2025-11-11 |
-| TASK-011 | Vérifier le comportement sur différents types d'acteurs (Hero, NPC, etc.)                          | ✅        | 2025-11-11 |
-| TASK-012 | Valider que les notifications d'erreur sont correctement affichées                                   | ✅        | 2025-11-11 |
+| Task     | Description                                                                       | Completed | Date       |
+| -------- | --------------------------------------------------------------------------------- | --------- | ---------- |
+| TASK-009 | Créer des tests unitaires pour `#getEventItem` avec différents scénarios d'erreur | ✅        | 2025-11-11 |
+| TASK-010 | Tester manuellement les fonctionnalités d'équipement/déséquipement                | ✅        | 2025-11-11 |
+| TASK-011 | Vérifier le comportement sur différents types d'acteurs (Hero, NPC, etc.)         | ✅        | 2025-11-11 |
+| TASK-012 | Valider que les notifications d'erreur sont correctement affichées                | ✅        | 2025-11-11 |
 
 ## 3. Alternatives
 

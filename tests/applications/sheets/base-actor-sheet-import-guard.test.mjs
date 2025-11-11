@@ -12,8 +12,7 @@ describe('Import guard for SwerpgBaseActorSheet', () => {
       delete globalThis.foundry
       // Reset module cache to force a fresh evaluation of the target module.
       vi.resetModules()
-      await expect(import('../../../module/applications/sheets/base-actor-sheet.mjs'))
-        .rejects.toThrow(/foundry|applications/i)
+      await expect(import('../../../module/applications/sheets/base-actor-sheet.mjs')).rejects.toThrow(/foundry|applications/i)
     } finally {
       // Restore for other tests.
       globalThis.foundry = previous

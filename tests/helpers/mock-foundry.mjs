@@ -10,7 +10,7 @@ const defaultTranslations = {
   'SWERPG.ERRORS.NoItemId': 'No item selected: Please click on a valid item.',
   'SWERPG.ERRORS.NoItemsCollection': 'Character data error: Items collection is missing.',
   'SWERPG.ERRORS.ItemNotFound': 'Item not found: The selected item may have been deleted.',
-  'SWERPG.ERRORS.UnexpectedError': 'An unexpected error occurred. Please check the console for details.'
+  'SWERPG.ERRORS.UnexpectedError': 'An unexpected error occurred. Please check the console for details.',
 }
 
 let previous = null
@@ -28,7 +28,7 @@ export function setupFoundryMock(options = {}) {
   previous = {
     foundry: globalThis.foundry,
     game: globalThis.game,
-    ui: globalThis.ui
+    ui: globalThis.ui,
   }
 
   const mergedTranslations = { ...defaultTranslations, ...translations }
@@ -36,37 +36,39 @@ export function setupFoundryMock(options = {}) {
   globalThis.foundry = {
     applications: {
       api: {
-        HandlebarsApplicationMixin: (base) => base
+        HandlebarsApplicationMixin: (base) => base,
       },
       sheets: {
         ActorSheetV2: class MockActorSheetV2 {
           constructor(options = {}) {
             this.options = options
           }
-          render() { /* noop stub */ }
-        }
-      }
+          render() {
+            /* noop stub */
+          }
+        },
+      },
     },
-    ...foundryPatch
+    ...foundryPatch,
   }
 
   globalThis.game = {
     i18n: {
-      localize: vi.fn((key) => mergedTranslations[key] || key)
+      localize: vi.fn((key) => mergedTranslations[key] || key),
     },
     system: {
-      config: {}
+      config: {},
     },
     combat: undefined,
-    packs: new Map()
+    packs: new Map(),
   }
 
   globalThis.ui = {
     notifications: {
       error: vi.fn(),
       warn: vi.fn(),
-      info: vi.fn()
-    }
+      info: vi.fn(),
+    },
   }
 }
 
@@ -76,9 +78,12 @@ export function setupFoundryMock(options = {}) {
  */
 export function teardownFoundryMock() {
   if (previous) {
-    if (previous.foundry === undefined) delete globalThis.foundry; else globalThis.foundry = previous.foundry
-    if (previous.game === undefined) delete globalThis.game; else globalThis.game = previous.game
-    if (previous.ui === undefined) delete globalThis.ui; else globalThis.ui = previous.ui
+    if (previous.foundry === undefined) delete globalThis.foundry
+    else globalThis.foundry = previous.foundry
+    if (previous.game === undefined) delete globalThis.game
+    else globalThis.game = previous.game
+    if (previous.ui === undefined) delete globalThis.ui
+    else globalThis.ui = previous.ui
   }
   previous = null
 }
@@ -103,7 +108,7 @@ export function setCombatMock({ round = 1, combatants = [] } = {}) {
   if (!globalThis.game) throw new Error('Game mock not initialized')
   globalThis.game.combat = {
     round,
-    getCombatantByActor: (actor) => combatants.find((c) => c.actor === actor) ?? null
+    getCombatantByActor: (actor) => combatants.find((c) => c.actor === actor) ?? null,
   }
 }
 
@@ -120,7 +125,7 @@ export function addPacksMock(packs = []) {
     const packObj = {
       metadata: { id },
       index: documents.map((d) => ({ _id: d.id, name: d.name })),
-      getDocument: vi.fn(async (docId) => documents.find((d) => d.id === docId) ?? null)
+      getDocument: vi.fn(async (docId) => documents.find((d) => d.id === docId) ?? null),
     }
     map.set(id, packObj)
   }
@@ -132,6 +137,5 @@ export const foundryTestUtils = {
   teardownFoundryMock,
   extendFoundryMock,
   setCombatMock,
-  addPacksMock
+  addPacksMock,
 }
-

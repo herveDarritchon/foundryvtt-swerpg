@@ -25,8 +25,12 @@ globalThis.foundry = {
     },
     sheets: {
       // Classes minimales avec méthode statique pour éviter la règle lint "Unexpected empty class"
-      ActorSheetV2: class MockActorSheetV2 { static noop() {} },
-      ItemSheetV2: class MockItemSheetV2 { static noop() {} },
+      ActorSheetV2: class MockActorSheetV2 {
+        static noop() {}
+      },
+      ItemSheetV2: class MockItemSheetV2 {
+        static noop() {}
+      },
     },
   },
 }

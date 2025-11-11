@@ -22,7 +22,7 @@ The bug was caused by the static method `#getEventItem` using `this.actor.items.
 The following methods were calling `#getEventItem` and were susceptible to the same error:
 
 - `#onItemDelete` (line 825)
-- `#onItemEdit` (line 843)  
+- `#onItemEdit` (line 843)
 - `#onItemEquip` (line 855)
 - `#getEventItemDeleteAction` (line 922)
 
@@ -54,7 +54,7 @@ From project analysis, the following error handling patterns were identified and
 ### UI Notifications
 
 - `ui.notifications.error()` - For blocking errors
-- `ui.notifications.warn()` - For non-blocking warnings  
+- `ui.notifications.warn()` - For non-blocking warnings
 - `ui.notifications.info()` - For informational messages
 
 ### Error Logging
@@ -74,6 +74,7 @@ From project analysis, the following error handling patterns were identified and
 ### 1. Method Signature Change
 
 **Before:**
+
 ```javascript
 static #getEventItem(event) {
   const itemId = event.target.closest('.line-item')?.dataset.itemId
@@ -82,6 +83,7 @@ static #getEventItem(event) {
 ```
 
 **After:**
+
 ```javascript
 static #getEventItem(event, actor) {
   // Comprehensive error handling implementation
@@ -91,7 +93,7 @@ static #getEventItem(event, actor) {
 ### 2. Defensive Validation Added
 
 - **Event validation**: Check if event parameter is provided
-- **Actor validation**: Check if actor parameter is provided  
+- **Actor validation**: Check if actor parameter is provided
 - **DOM validation**: Check if itemId exists in dataset
 - **Items collection validation**: Check if actor has items collection
 - **Item existence validation**: Check if item exists in collection
@@ -112,7 +114,7 @@ Updated all callers to pass the actor parameter:
 // Before
 const item = SwerpgBaseActorSheet.#getEventItem(event)
 
-// After  
+// After
 const item = SwerpgBaseActorSheet.#getEventItem(event, this.actor)
 if (!item) return
 ```
@@ -122,6 +124,7 @@ if (!item) return
 Added error messages in both English and French:
 
 **English (`/lang/en.json`):**
+
 ```json
 "ERRORS": {
   "InvalidEvent": "Invalid event: Unable to process the UI interaction.",
@@ -134,6 +137,7 @@ Added error messages in both English and French:
 ```
 
 **French (`/lang/fr.json`):**
+
 ```json
 "ERRORS": {
   "InvalidEvent": "Événement invalide : Impossible de traiter l'interaction d'interface.",
@@ -168,7 +172,7 @@ Created comprehensive integration tests in `/tests/applications/sheets/base-acto
 
 - Valid item editing/equipping operations
 - Missing itemId in DOM dataset
-- Non-existent item IDs  
+- Non-existent item IDs
 - Actor without items collection
 - Broken items collection (throws errors)
 - Malformed DOM events
@@ -177,16 +181,19 @@ Created comprehensive integration tests in `/tests/applications/sheets/base-acto
 ## Code Quality Measures
 
 ### Defensive Programming
+
 - Parameter validation at method entry
 - Null checks before property access
 - Graceful error handling with user feedback
 
 ### Error Messages
+
 - Specific, actionable error messages
 - Localized for international users
 - Different severity levels (error vs warning)
 
 ### Logging
+
 - Detailed logging for debugging
 - Structured error information
 - Follows project logging patterns
@@ -194,16 +201,19 @@ Created comprehensive integration tests in `/tests/applications/sheets/base-acto
 ## Deployment Considerations
 
 ### Backward Compatibility
+
 - No breaking changes to public API
 - Internal method signature change only affects internal callers
 - All existing functionality preserved
 
 ### Performance Impact
+
 - Minimal performance impact from additional validation
-- Error handling only executes on error conditions  
+- Error handling only executes on error conditions
 - No impact on success path performance
 
 ### Monitoring
+
 - Enhanced error logging for better debugging
 - User-friendly error messages reduce support burden
 - Clear error categorization for issue triage
@@ -211,12 +221,14 @@ Created comprehensive integration tests in `/tests/applications/sheets/base-acto
 ## Future Improvements
 
 ### Potential Enhancements
+
 1. **Centralized Error Handling**: Create a shared error handler for common sheet errors
 2. **Error Analytics**: Track error frequency and types for proactive fixes
 3. **Automated Testing**: Add e2e tests for user interaction scenarios
 4. **Documentation Updates**: Update JSDoc with error handling details
 
 ### Prevention Measures
+
 1. **Code Review Checklist**: Include static method context checks
 2. **Linting Rules**: Consider custom ESLint rules for static method patterns
 3. **Developer Education**: Document common pitfalls with static methods
@@ -226,6 +238,7 @@ Created comprehensive integration tests in `/tests/applications/sheets/base-acto
 The bug fix successfully addresses the root cause while implementing comprehensive error handling that follows project patterns. The solution is defensive, user-friendly, and maintainable, with proper test coverage to prevent regressions.
 
 ### Key Success Metrics
+
 - ✅ Bug eliminated - no more TypeError crashes
 - ✅ Graceful error handling with user feedback
 - ✅ Comprehensive test coverage
@@ -234,9 +247,10 @@ The bug fix successfully addresses the root cause while implementing comprehensi
 - ✅ No breaking changes or performance impact
 
 ### Files Modified
+
 - `module/applications/sheets/base-actor-sheet.mjs` - Main bug fix
 - `lang/en.json` - English error messages
-- `lang/fr.json` - French error messages  
+- `lang/fr.json` - French error messages
 - `tests/applications/sheets/base-actor-sheet.test.mjs` - New test file
 - `documentation/DEVELOPMENT_PROCESS.md` - This documentation
 
