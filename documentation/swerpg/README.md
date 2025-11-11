@@ -2,6 +2,15 @@
 
 Bienvenue dans la documentation technique du système Star Wars Edge RPG pour Foundry Virtual Tabletop v13+.
 
+## 🆕 Mise à Jour Novembre 2025
+
+**Migration Logger Centralisé Complétée** ✅
+
+- **[DEVELOPER_GUIDE_LOGGING.md](./DEVELOPER_GUIDE_LOGGING.md)** - ⭐ **NOUVEAU** - Guide complet du logging centralisé
+- **Interdiction stricte** des appels `console.xxx` directs
+- **API logger unifiée** avec contrôle debug automatique
+- **Patterns d'utilisation** par contexte (applications, documents, helpers)
+
 ## 📚 Table des Matières
 
 ### 🏗️ Architecture
@@ -121,9 +130,10 @@ Cette documentation est destinée à :
 
 ### Pour Contribuer
 
-1. Lisez le **[CONTRIBUTING.md](../CONTRIBUTING.md)** à la racine du projet
-2. Consultez **[FUNCTIONAL_REQUIREMENTS.md](./requirements/FUNCTIONAL_REQUIREMENTS.md)** pour voir ce qui est implémenté
-3. Vérifiez **[NON_FUNCTIONAL_REQUIREMENTS.md](./requirements/NON_FUNCTIONAL_REQUIREMENTS.md)** pour les standards de qualité
+1. **OBLIGATOIRE** : Lisez **[DEVELOPER_GUIDE_LOGGING.md](./DEVELOPER_GUIDE_LOGGING.md)** - Logging centralisé
+2. Consultez **[CODING_STYLES.md](./CODING_STYLES.md)** - Standards de code
+3. Référez-vous à **[FUNCTIONAL_REQUIREMENTS.md](./requirements/FUNCTIONAL_REQUIREMENTS.md)** pour voir ce qui est implémenté
+4. Vérifiez **[NON_FUNCTIONAL_REQUIREMENTS.md](./requirements/NON_FUNCTIONAL_REQUIREMENTS.md)** pour les standards de qualité
 
 ### Pour Étendre le Système
 
@@ -191,6 +201,22 @@ swerpg/
 2. **Compilation** : `npm run compile` - Packs binaires depuis YAML
 3. **Build** : `npm run build` - Compilation complète
 4. **Test** : `pnpm test` - Suite de tests
+5. **Lint** : `npm run lint` - Vérification coding standards
+
+### ⚠️ Règles Obligatoires Novembre 2025
+
+```javascript
+// ❌ INTERDIT - Appels console directs
+console.log('message')
+console.debug('debug')
+
+// ✅ OBLIGATOIRE - Logger centralisé
+import { logger } from '../utils/logger.mjs'
+logger.info('message')
+logger.debug('debug')
+```
+
+**Référence complète** : [DEVELOPER_GUIDE_LOGGING.md](./DEVELOPER_GUIDE_LOGGING.md)
 
 ## 📞 Support et Communauté
 

@@ -190,10 +190,25 @@ static DEFAULT_OPTIONS = {
 }
 ```
 
-### Pattern de Debug Conditionnel
+### Pattern de Logging Centralisé
 
 ```javascript
-// ✅ Logs conditionnels obligatoires
+// ✅ Utilisation du logger centralisé (NOUVEAU - Nov 2025)
+import { logger } from '../../utils/logger.mjs'
+
+export class SwerpgActorSheet extends HandlebarsApplicationMixin(ApplicationV2) {
+  async _prepareContext() {
+    logger.debug(`[${this.constructor.name}] Message`, data)
+    // Le logger gère automatiquement le debug mode
+    return context
+  }
+}
+```
+
+### Pattern de Debug Conditionnel (OBSOLÈTE)
+
+```javascript
+// ❌ OBSOLÈTE : Remplacé par le logger centralisé
 if (CONFIG.debug?.sheets) {
   console.debug(`[${this.constructor.name}] Message`, data)
 }

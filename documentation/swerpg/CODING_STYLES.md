@@ -101,20 +101,32 @@ Les règles suivantes visent à garder un code prévisible, testable et facile �
 
 ### 6.1) Logging
 
-Tous les appels à `console.xxx` doivent passer par un logger central. L’objectif est double :
+**MISE À JOUR NOVEMBRE 2025** : Migration vers logger centralisé complétée.
 
-- Activer/Désactiver facilement les logs selon qu’on est en mode debug ou non.
+Tous les appels à `console.xxx` doivent passer par un logger central. L'objectif est double :
+
+- Activer/Désactiver facilement les logs selon qu'on est en mode debug ou non.
 - Pouvoir, demain, changer la stratégie de logging (enregistrer ailleurs, colorer, filtrer par niveau…) sans refactoriser tout le code.
 
-**A ne pas faire**: Faire un appel directe à `console.xxx` dans le code du système en dehors de `logger.mjs`.
+**❌ INTERDIT** : Faire un appel direct à `console.xxx` dans le code du système en dehors de `logger.mjs`.
+
+**✅ OBLIGATOIRE** : Utiliser le logger centralisé avec import approprié.
 
 ```js
-import { logger } from './module/utils/logger.mjs'
+import { logger } from '../utils/logger.mjs'
 
-logger.log('Initialisation du système')
-logger.warn('Jet sans compétence associée', rollData)
+logger.info('Initialisation du système')
+logger.warn('Jet sans compétence associée', rollData)  
 logger.error('Impossible de charger le pack', packId)
+logger.debug('Données de debug détaillées', context)
+
+// Pour les opérations coûteuses
+if (logger.isDebugEnabled()) {
+  this._performExpensiveDebugOperation()
+}
 ```
+
+**Référence complète** : Voir `documentation/swerpg/DEVELOPER_GUIDE_LOGGING.md` pour le guide complet des bonnes pratiques de logging.
 
 ---
 
