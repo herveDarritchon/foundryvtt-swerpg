@@ -1,0 +1,49 @@
+{{log "Importer Form" this}}
+<div class="standard-form oggDude-data-importer">
+    <h2>{{localize "SETTINGS.OggDudeDataImporter.loadWindow.title"}}</h2>
+    <section class="form-group file-picker flexcol">
+        <h4>{{localize "SETTINGS.OggDudeDataImporter.loadWindow.message"}}</h4>
+        <div class="form-fields flexrow">
+            {{#if this.zipFile}}
+                <p>{{localize "SETTINGS.OggDudeDataImporter.loadWindow.selectFile"}}</p>
+                <p data-tooltip="{{zipFile.path}}"><i class="fa-solid fa-file"></i>{{zipFile.name}}</p>
+            {{else}}
+                <label for="oggdude-zip-file">{{localize "SETTINGS.OggDudeDataImporter.loadWindow.selectFile"}}</label>
+                <input id="oggdude-zip-file" type="file" name="oggdude-zip-file" accept=".zip" value="{{zipFile.path}}"
+                       data-zip-file="{{zipFile}}"/>
+            {{/if}}
+        </div>
+    </section>
+
+    <section class="domain-selection flexcol">
+        <h4>{{localize "SETTINGS.OggDudeDataImporter.loadWindow.selectDomains"}}</h4>
+        <div class="domains flexcol">
+            {{#each this.domains as |domain|}}
+                <div class="domain{{#if ../domainSelectionDisabled}} not-allowed{{/if}}">
+                    <label data-action="toggleDomainAction"
+                           data-domain-checked="{{domain.checked}}"
+                           data-domain-name="{{domain.id}}">
+                        <input id="{{domain.id}}" type="checkbox" {{#if
+                                domain.checked}}checked{{/if}} {{#if
+                                ../domainSelectionDisabled}}disabled{{/if}}>
+                        <span>{{localize domain.label}}</span>
+                    </label>
+                </div>
+            {{/each}}
+        </div>
+    </section>
+
+    <section class="actions flexrow">
+        <div class="load-button{{#if loadButtonDisabled}} not-allowed{{/if}}">
+            <button type="button" class="control reset-button" data-action="loadAction"
+                    {{#if loadButtonDisabled}}disabled{{/if}}>
+                <i class="fa-solid fa-jedi"></i>
+                {{localize "SETTINGS.OggDudeDataImporter.loadWindow.load"}}
+            </button>
+        </div>
+        <button type="button" class="control reset-button" data-action="resetAction">
+            <i class="fa-solid fa-refresh"></i>
+            {{localize "SETTINGS.OggDudeDataImporter.loadWindow.reset"}}
+        </button>
+    </section>
+</div>

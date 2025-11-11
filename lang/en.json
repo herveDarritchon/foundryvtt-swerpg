@@ -725,11 +725,36 @@
     "Resolve": "Resolve",
     "Fortune": "Fortune"
   },
-  "SETTINGS.AutoConfirmName": "Action Auto-Confirmation",
-  "SETTINGS.AutoConfirmHint": "Enable auto-confirmation of actions in combat which do not deal damage or cause active effects. This can speed things up but is not recommended during play-testing.",
-  "SETTINGS.AutoConfirmNone": "No Auto-Confirmation",
-  "SETTINGS.AutoConfirmSelf": "Self-Target Actions Only",
-  "SETTINGS.AutoConfirmAll": "Auto-Confirm All Actions",
+  "SETTINGS": {
+    "Auto": {
+      "ConfirmName": "Action Auto-Confirmation",
+      "ConfirmHint": "Enable auto-confirmation of actions in combat which do not deal damage or cause active effects. This can speed things up but is not recommended during play-testing.",
+      "ConfirmNone": "No Auto-Confirmation",
+      "ConfirmSelf": "Self-Target Actions Only",
+      "ConfirmAll": "Auto-Confirm All Actions"
+    },
+    "OggDudeDataImporter": {
+      "name": "OggDude Data Importer",
+      "label": "Import data from OggDude",
+      "hint": "Allow SWERPG to import data directly into it based on OggDude Data (like vehicles, characters, ship ...).",
+      "loadWindow": {
+        "menuLabel": "Import OggDude Data",
+        "title": "Import OggDude Data",
+        "message": "Please select the OggDude Data file you want to import.",
+        "selectFile": "OggDude Zip Data File",
+        "load": "Load",
+        "reset": "Reset",
+        "selectDomains": "Select the domains you want to import",
+        "domains": {
+          "armor": "Load Armor data",
+          "career": "Load Career data",
+          "gear": "Load Gear data",
+          "species": "Load Species data",
+          "weapon": "Load Weapons data"
+        }
+      }
+    }
+  },
   "SKILL": {
     "CATEGORY": {
       "EXPLORATION": {
