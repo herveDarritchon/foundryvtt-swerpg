@@ -29,17 +29,19 @@ export const registerSystemSettings = function () {
         default: false,
     })
 
-    // OggDude Data Importer settings
-    game.settings.registerMenu("swerpg", "oggDudeDataImporter", {
-        name: game.i18n.localize("SETTINGS.OggDudeDataImporter.name"),
-        hint: game.i18n.localize("SETTINGS.OggDudeDataImporter.hint"),
-        label: game.i18n.localize("SETTINGS.OggDudeDataImporter.label"),
-        icon: "fa-solid fa-book-journal-whills",
-        type: OggDudeDataImporter,
-        scope: "world",
-        config: true,
-        restricted: true
-    });
+    // OggDude Data Importer settings (protégé si registerMenu indisponible dans l'environnement de test)
+    if (typeof game.settings.registerMenu === 'function') {
+        game.settings.registerMenu("swerpg", "oggDudeDataImporter", {
+            name: game.i18n.localize("SETTINGS.OggDudeDataImporter.name"),
+            hint: game.i18n.localize("SETTINGS.OggDudeDataImporter.hint"),
+            label: game.i18n.localize("SETTINGS.OggDudeDataImporter.label"),
+            icon: "fa-solid fa-book-journal-whills",
+            type: OggDudeDataImporter,
+            scope: "world",
+            config: true,
+            restricted: true
+        });
+    }
 
     // Register settings
     game.settings.register('swerpg', 'actionAnimations', {

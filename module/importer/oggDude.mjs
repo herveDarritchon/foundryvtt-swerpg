@@ -4,6 +4,7 @@ import {buildArmorContext} from "./items/armor-ogg-dude.mjs";
 import {buildWeaponContext} from "./items/weapon-ogg-dude.mjs";
 import {buildSpeciesContext} from "./items/species-ogg-dude.mjs";
 import {buildCareerContext} from "./items/career-ogg-dude.mjs";
+import { logger } from '../utils/logger.mjs'
 
 export default class OggDudeImporter {
 
@@ -18,7 +19,7 @@ export default class OggDudeImporter {
      */
     static mapMandatoryString(label, value) {
         if (value == null || typeof value !== "string") {
-            console.warn(`Value ${label} is mandatory !`);
+            logger.warn(`Value ${label} is mandatory !`);
             return "";
         }
         return value;
@@ -47,7 +48,7 @@ export default class OggDudeImporter {
      */
     static mapMandatoryNumber(label, value) {
         if (value == null || typeof value !== "string") {
-            console.warn(`Value ${label} is mandatory !`);
+            logger.warn(`Value ${label} is mandatory !`);
             return 0;
         }
         return parseInt(value) || 0;
@@ -76,7 +77,7 @@ export default class OggDudeImporter {
      */
     static mapMandatoryBoolean(label, value) {
         if (value == null || typeof value !== "string") {
-            console.warn(`Value ${label} is mandatory !`);
+            logger.warn(`Value ${label} is mandatory !`);
             return false;
         }
         return (value === 'true');
@@ -109,7 +110,8 @@ export default class OggDudeImporter {
                 return mapper(v)
             });
         }
-        if (typeof value === "object" && value != null && value !== {}) {
+        // Single object case (non-null, non-array)
+        if (value && typeof value === 'object' && !Array.isArray(value)) {
             return [mapper(value)];
         }
         return [];
@@ -125,7 +127,7 @@ export default class OggDudeImporter {
      * @name mapOptionalObject
      */
     static mapOptionalObject(value, mapper) {
-        if (typeof value === "object" && value !== {}) {
+        if (value && typeof value === 'object' && !Array.isArray(value)) {
             return [mapper(value)];
         }
         return {};
@@ -155,19 +157,19 @@ export default class OggDudeImporter {
 
         // Step 1: Load the zip file
         const zip = await new OggDudeImporter().load(importedFile);
-        console.debug("[ProcessOggDudeData] - Step 1: Zip >", zip);
+    logger.debug("[ProcessOggDudeData] - Step 1: Zip >", zip);
 
         // Step 2: Load the data elements from the zip
         let allDataElements = OggDudeDataElement.from(zip);
-        console.debug("[ProcessOggDudeData] - Step 2: All Data Elements >", allDataElements);
+    logger.debug("[ProcessOggDudeData] - Step 2: All Data Elements >", allDataElements);
 
         // Step 3.1: Group the data elements by directory
         let groupByDirectory = OggDudeDataElement.groupByDirectory(allDataElements);
-        console.debug("[ProcessOggDudeData] - Step 3.1: Group By Directory >", groupByDirectory);
+    logger.debug("[ProcessOggDudeData] - Step 3.1: Group By Directory >", groupByDirectory);
 
         // Step 3.2: Group the data elements by type
         let groupByType = OggDudeDataElement.groupByType(allDataElements);
-        console.debug("[ProcessOggDudeData] - Step 3.2: Group By Type >", groupByType);
+    logger.debug("[ProcessOggDudeData] - Step 3.2: Group By Type >", groupByType);
 
         /* --------------------------------------------- SPÉCIFIQUE ------------------------------------------------------------------- */
         const buildContextMap = new Map();
@@ -178,13 +180,13 @@ export default class OggDudeImporter {
         buildContextMap.set("career", {type: "career", contextBuilder: buildCareerContext});
 
         const domainsToImport = domains.filter(domain => domain.checked).map(domain => domain.id);
-        console.debug("[ProcessOggDudeData] -Step 3.3: Domains to Import >", domainsToImport);
+    logger.debug("[ProcessOggDudeData] -Step 3.3: Domains to Import >", domainsToImport);
 
         await Promise.all(Array.from(buildContextMap.values())
             .map(async (contextMapElement) => {
                 if (domainsToImport.includes(contextMapElement.type)) {
                     const context = await contextMapElement.contextBuilder(zip, groupByDirectory, groupByType);
-                    console.debug("[ProcessOggDudeData] - Step 3.4: Context >", context);
+                    logger.debug("[ProcessOggDudeData] - Step 3.4: Context >", context);
                     await OggDudeDataElement.processElements(context);
                 }
             }));
