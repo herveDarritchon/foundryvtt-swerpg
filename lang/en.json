@@ -229,6 +229,10 @@
     }
   },
   "ACTOR.AppliedDetailItem": "Applied the {name} {type} to {actor}.",
+  "EQUIPMENT": {
+    "NO_EQUIPMENT": "No equipped items",
+    "TOGGLE": "Toggle Equipment"
+  },
   "ANCESTRY": {
     "FIELDS": {
       "description": {

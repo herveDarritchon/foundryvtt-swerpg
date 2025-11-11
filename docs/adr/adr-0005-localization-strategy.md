@@ -1,11 +1,11 @@
 ---
-title: "ADR-0005: Stratégie de Localisation Français/Anglais"
-status: "Accepted"
-date: "2025-11-10"
-authors: "Hervé Darritchon, Localization Team"
-tags: ["architecture", "i18n", "localization", "multilingual", "foundry"]
-supersedes: ""
-superseded_by: ""
+title: 'ADR-0005: Stratégie de Localisation Français/Anglais'
+status: 'Accepted'
+date: '2025-11-10'
+authors: 'Hervé Darritchon, Localization Team'
+tags: ['architecture', 'i18n', 'localization', 'multilingual', 'foundry']
+supersedes: ''
+superseded_by: ''
 ---
 
 ## Status
@@ -53,7 +53,7 @@ Implémentation d'une stratégie de localisation bilingue français-prioritaire 
 lang/
 ├── fr.json          (référence, ~2000 clés)
 │   ├── ACTOR.*      (acteurs, classes, espèces)
-│   ├── ITEM.*       (équipements, talents, pouvoirs)  
+│   ├── ITEM.*       (équipements, talents, pouvoirs)
 │   ├── DICE.*       (dés narratifs, résultats)
 │   └── UI.*         (interface, dialogs, sheets)
 └── en.json          (traduction complète)
@@ -65,7 +65,7 @@ lang/
 ### Positive
 
 - **POS-001**: **Accessibilité francophone** - Expérience native pour la communauté française prioritaire
-- **POS-002": **Portée internationale** - Ouverture vers l'audience anglophone mondiale
+- **POS-002": **Portée internationale\*\* - Ouverture vers l'audience anglophone mondiale
 - **POS-003**: **Cohérence terminologique** - Vocabulaire Star Wars unifié et professionnel
 - **POS-004**: **Maintenance facilitée** - Structure claire pour évolutions multilingues
 - **POS-005**: **Performance optimale** - Chargement conditionnel sans surcoût runtime

@@ -36,8 +36,7 @@ export default class ObligationSheet extends SwerpgBaseItemSheet {
     const context = await super._prepareContext(options)
 
     // ✅ Debug conditionnel uniquement si nécessaire
-      logger.debug(`[${this.constructor.name}] Context prepared:`, context)
-
+    logger.debug(`[${this.constructor.name}] Context prepared:`, context)
 
     return context
   }

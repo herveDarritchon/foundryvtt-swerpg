@@ -1,11 +1,11 @@
 ---
-title: "ADR-0001: Adoption de FoundryVTT ApplicationV2 et TypeDataModel"
-status: "Accepted"
-date: "2025-11-10"
-authors: "Hervé Darritchon, Architecture Team"
-tags: ["architecture", "foundry", "migration", "data-models"]
-supersedes: ""
-superseded_by: ""
+title: 'ADR-0001: Adoption de FoundryVTT ApplicationV2 et TypeDataModel'
+status: 'Accepted'
+date: '2025-11-10'
+authors: 'Hervé Darritchon, Architecture Team'
+tags: ['architecture', 'foundry', 'migration', 'data-models']
+supersedes: ''
+superseded_by: ''
 ---
 
 ## Status

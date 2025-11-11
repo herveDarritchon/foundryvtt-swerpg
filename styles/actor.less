@@ -261,6 +261,8 @@
   /* ----------------------------------------- */
 
   .sheet-sidebar {
+    /* Responsive equipment icon sizing variable */
+    --equipment-icon-size: 32px;
     flex: 0 0 var(--sidebar-width);
     height: 100%;
     gap: var(--margin-half);
@@ -282,7 +284,7 @@
       overflow: hidden auto;
       display: flex;
       flex-direction: column;
-      gap: var(--margin-half);
+      gap: 4px; /* compacted vertical gap */
 
       &.equipment {
         flex: none;
@@ -299,6 +301,138 @@
       .title {
         font-size: var(--font-size-12);
         line-height: 1rem;
+      }
+    }
+
+    /* Featured Equipment Display */
+    .item-list.equipped {
+      .equipped.line-item {
+        position: relative;
+        display: flex;
+        align-items: stretch;
+        gap: 0.5rem;
+        /* Reduced padding for horizontal space optimization */
+        padding: 0.3rem 0.4rem;
+        background: linear-gradient(135deg, var(--color-frame-bg-75) 0%, var(--color-frame-bg-50) 60%);
+        border: 1px solid var(--color-frame);
+        border-radius: 4px;
+        animation: fade-in-holo 180ms ease-out;
+        /* Reduced vertical footprint for higher density */
+        min-height: 38px;
+
+        &.broken {
+          filter: grayscale(70%) brightness(80%);
+          opacity: 0.75;
+        }
+
+        &:hover {
+          border-color: var(--color-accent);
+          box-shadow: 0 0 6px var(--color-accent);
+        }
+
+        img.icon {
+          flex: 0 0 var(--equipment-icon-size);
+          width: var(--equipment-icon-size);
+          height: var(--equipment-icon-size);
+          object-fit: cover;
+          border-radius: 3px;
+          border: 1px solid var(--color-frame);
+          background: var(--color-frame-bg-75);
+        }
+
+        .title {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          gap: 2px; /* compact gap */
+
+          h4 {
+            margin: 0;
+            font-size: var(--font-size-12);
+            line-height: 1.1rem;
+            font-family: var(--font-sans);
+            /* Truncation to keep within narrow sidebar */
+            max-width: 120px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            a {
+              text-decoration: none;
+              color: var(--color-text-light-primary);
+            }
+          }
+
+          .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2px 4px;
+            max-height: calc(2 * 1.1em + 6px); /* two lines of tags incl. gaps */
+            overflow: hidden;
+            .tag {
+              flex: none;
+              font-size: var(--font-size-9);
+              text-transform: uppercase;
+              letter-spacing: 0.5px;
+              background: var(--color-frame-bg-50);
+              padding: 2px 4px;
+              border-radius: 3px;
+              border: 1px solid var(--color-frame);
+              color: var(--color-secondary);
+              max-width: 45px;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+            }
+          }
+          /* Compact mode overrides */
+          &.equipped.line-item--compact {
+            padding: 0.25rem 0.35rem;
+            min-height: 34px;
+            h4 {
+              font-size: calc(var(--font-size-12) - 1px);
+            }
+            .tags .tag {
+              font-size: calc(var(--font-size-9) - 1px);
+            }
+          }
+        }
+
+        .controls {
+          flex: 0 0 24px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          button.icon-button {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            border: 1px solid var(--color-frame);
+            background: var(--color-frame-bg-50);
+            border-radius: 4px;
+            cursor: pointer;
+            color: var(--color-link-text);
+
+            &:hover {
+              border-color: var(--color-accent);
+              color: var(--color-accent);
+            }
+          }
+        }
+      }
+
+      .empty.equipped-empty {
+        font-size: var(--font-size-11);
+        text-align: center;
+        padding: 0.5rem;
+        background: var(--color-frame-bg-50);
+        border: 1px dashed var(--color-frame);
+        border-radius: 4px;
+        color: var(--color-text-light-secondary);
       }
     }
   }

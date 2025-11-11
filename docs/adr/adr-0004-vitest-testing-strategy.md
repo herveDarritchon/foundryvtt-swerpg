@@ -1,11 +1,11 @@
 ---
-title: "ADR-0004: Pattern de Test avec Vitest et Stratégie de Couverture"
-status: "Accepted"
-date: "2025-11-10"
-authors: "Hervé Darritchon, Quality Team"
-tags: ["architecture", "testing", "quality", "vitest", "coverage"]
-supersedes: ""
-superseded_by: ""
+title: 'ADR-0004: Pattern de Test avec Vitest et Stratégie de Couverture'
+status: 'Accepted'
+date: '2025-11-10'
+authors: 'Hervé Darritchon, Quality Team'
+tags: ['architecture', 'testing', 'quality', 'vitest', 'coverage']
+supersedes: ''
+superseded_by: ''
 ---
 
 ## Status
@@ -19,7 +19,7 @@ Le projet Star Wars Edge RPG nécessite une stratégie de test robuste pour gara
 **Exigences de qualité :**
 
 - Validation des mécaniques de dés narratifs avec toutes leurs combinaisons
-- Tests de régression pour les migrations ApplicationV1→ApplicationV2  
+- Tests de régression pour les migrations ApplicationV1→ApplicationV2
 - Couverture des modèles de données TypeDataModel complexes
 - Tests d'intégration avec l'écosystème FoundryVTT
 - Performance des calculs temps réel (jets de dés, résolution talents)
@@ -63,11 +63,11 @@ export default defineConfig({
           branches: 80,
           functions: 80,
           lines: 80,
-          statements: 80
-        }
-      }
-    }
-  }
+          statements: 80,
+        },
+      },
+    },
+  },
 })
 ```
 

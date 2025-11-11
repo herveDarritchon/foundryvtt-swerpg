@@ -1,11 +1,11 @@
 ---
-title: "ADR-0002: Système de Build YAML vers LevelDB pour les Compendiums"
-status: "Accepted"
-date: "2025-11-10"
-authors: "Hervé Darritchon, Architecture Team"
-tags: ["architecture", "build", "data-management", "compendium"]
-supersedes: ""
-superseded_by: ""
+title: 'ADR-0002: Système de Build YAML vers LevelDB pour les Compendiums'
+status: 'Accepted'
+date: '2025-11-10'
+authors: 'Hervé Darritchon, Architecture Team'
+tags: ['architecture', 'build', 'data-management', 'compendium']
+supersedes: ''
+superseded_by: ''
 ---
 
 ## Status
@@ -100,7 +100,7 @@ _source/                    build.mjs                 packs/
 
 ## Implementation Notes
 
-- **IMP-001**: **Structure de dossiers** - Organisation _source/ par type de contenu avec nomenclature cohérente
+- **IMP-001**: **Structure de dossiers** - Organisation \_source/ par type de contenu avec nomenclature cohérente
 - **IMP-002**: **Scripts npm intégrés** - `extract`, `compile`, et `build` dans package.json
 - **IMP-003**: **Validation pré-commit** - Hooks Git pour vérifier la cohérence avant commit
 - **IMP-004**: **Documentation contributeurs** - Guide pour création de contenu en YAML

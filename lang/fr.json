@@ -214,6 +214,10 @@
     }
   },
   "ACTOR.AppliedDetailItem": "Applied the {name} {type} to {actor}.",
+  "EQUIPMENT": {
+    "NO_EQUIPMENT": "Aucun équipement équipé",
+    "TOGGLE": "Changer état équipement"
+  },
   "ANCESTRY": {
     "FIELDS": {
       "description": {
