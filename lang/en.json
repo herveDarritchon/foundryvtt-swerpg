@@ -1294,5 +1294,13 @@
   "WALKTHROUGH.LevelZero": "Complete all character creation steps before advancing your character to Level 1.",
   "WALKTHROUGH.LevelOne": "Set your character to Level 1 and begin your adventure!",
   "WALKTHROUGH.LevelUp": "You have made enough progress to advance to a new level. Increase your level by one when you are ready!",
-  "WALKTHROUGH.LevelZeroIncomplete": "You may not advance to Level 1 until you have finished all character creation steps!"
+  "WALKTHROUGH.LevelZeroIncomplete": "You may not advance to Level 1 until you have finished all character creation steps!",
+  "ERRORS": {
+    "InvalidEvent": "Invalid event: Unable to process the UI interaction.",
+    "InvalidActor": "Invalid actor: Unable to access character data.",
+    "NoItemId": "No item selected: Please click on a valid item.",
+    "NoItemsCollection": "Character data error: Items collection is missing.",
+    "ItemNotFound": "Item not found: The selected item may have been deleted.",
+    "UnexpectedError": "An unexpected error occurred. Please check the console for details."
+  }
 }

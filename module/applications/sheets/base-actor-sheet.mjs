@@ -1,4 +1,6 @@
-const { api, sheets } = foundry.applications
+// Defensive access to global Foundry object for test environments where it may be undefined.
+const _foundry = globalThis.foundry || {}
+const { api = {}, sheets = {} } = (_foundry.applications || {})
 import JaugeFactory from '../../lib/jauges/jauge-factory.mjs'
 import { logger } from '../../utils/logger.mjs'
 import { computeFeaturedEquipment } from '../../lib/featured-equipment.mjs'
@@ -6,7 +8,10 @@ import { computeFeaturedEquipment } from '../../lib/featured-equipment.mjs'
 /**
  * A base ActorSheet built on top of ApplicationV2 and the Handlebars rendering backend.
  */
-export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin(sheets.ActorSheetV2) {
+// Fallbacks for test environments lacking full Foundry API implementations.
+const _BaseActorSheetV2 = sheets.ActorSheetV2 || class {}
+const _HBMixin = typeof api.HandlebarsApplicationMixin === 'function' ? api.HandlebarsApplicationMixin : (b) => b
+export default class SwerpgBaseActorSheet extends _HBMixin(_BaseActorSheetV2) {
   /** @inheritDoc */
   static DEFAULT_OPTIONS = {
     classes: ['swerpg', 'actor', 'standard-form'],
@@ -37,6 +42,21 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
       type: undefined, // Defined by subclass
     },
   }
+
+  // Static constants (avoid magic strings)
+  static LINE_ITEM_SELECTOR = '.line-item'
+  static DATA_KEYS = Object.freeze({
+    ITEM_ID: 'itemId',
+    DELETE_ACTION: 'deleteAction',
+    ITEM_TYPE: 'itemType',
+  })
+  static ERROR_KEYS = Object.freeze({
+    INVALID_EVENT: 'SWERPG.ERRORS.InvalidEvent',
+    INVALID_ACTOR: 'SWERPG.ERRORS.InvalidActor',
+    NO_ITEM_ID: 'SWERPG.ERRORS.NoItemId',
+    NO_ITEMS_COLLECTION: 'SWERPG.ERRORS.NoItemsCollection',
+    ITEM_NOT_FOUND: 'SWERPG.ERRORS.ItemNotFound',
+  })
 
   /** @override */
   static PARTS = {
@@ -822,8 +842,9 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
    * @param {PointerEvent} event
    */
   static async #onItemDelete(event) {
-    const item = SwerpgBaseActorSheet.#getEventItem(event)
-    const deleteAction = SwerpgBaseActorSheet.#getEventItemDeleteAction(event)
+    const item = SwerpgBaseActorSheet.#getEventItem(event, this.actor)
+    if (!item) return
+    const deleteAction = SwerpgBaseActorSheet.#getEventItemDeleteAction(event, this.actor)
 
     await item.deleteDialog?.({
       yes: {
@@ -840,7 +861,8 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
    * @returns {Promise<void>}
    */
   static async #onItemEdit(event) {
-    const item = SwerpgBaseActorSheet.#getEventItem(event)
+    const item = SwerpgBaseActorSheet.#getEventItem(event, this.actor)
+    if (!item) return
     await item.sheet.render({ force: true })
   }
 
@@ -852,7 +874,8 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
    * @returns {Promise<void>}
    */
   static async #onItemEquip(event) {
-    const item = SwerpgBaseActorSheet.#getEventItem(event)
+    const item = SwerpgBaseActorSheet.#getEventItem(event, this.actor)
+    if (!item) return
     switch (item.type) {
       case 'armor':
         try {
@@ -904,11 +927,64 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
   /**
    * Get the Item document associated with an action event.
    * @param {PointerEvent} event
-   * @returns {SwerpgItem}
+   * @param {SwerpgActor} actor - The actor that owns the items
+   * @returns {SwerpgItem|null}
+   * @since 0.0.0
+   * @throws {Error} Never throws – returns null and emits UI notifications instead.
+   * @private
    */
-  static #getEventItem(event) {
-    const itemId = event.target.closest('.line-item')?.dataset.itemId
-    return this.actor.items.get(itemId, { strict: true })
+  static #getEventItem(event, actor) {
+    // Fast parameter validation – fail early without throwing.
+    if (!event) {
+      logger.error('getEventItem called without event parameter')
+      ui.notifications.error(game.i18n.localize(this.ERROR_KEYS.INVALID_EVENT))
+      return null
+    }
+    if (!actor) {
+      logger.error('getEventItem called without actor parameter')
+      ui.notifications.error(game.i18n.localize(this.ERROR_KEYS.INVALID_ACTOR))
+      return null
+    }
+
+    // Resolve the closest line-item element only once.
+      const target = (event.target && typeof event.target.closest === 'function')
+        ? event.target.closest(this.LINE_ITEM_SELECTOR)
+        : null
+    if (!target) {
+      logger.warn('No .line-item ancestor found in event target chain')
+      ui.notifications.warn(game.i18n.localize(this.ERROR_KEYS.NO_ITEM_ID))
+      return null
+    }
+
+  const { [this.DATA_KEYS.ITEM_ID]: itemId } = target.dataset
+    if (!itemId) {
+      logger.warn('Missing itemId dataset on .line-item element')
+      ui.notifications.warn(game.i18n.localize(this.ERROR_KEYS.NO_ITEM_ID))
+      return null
+    }
+
+    // Ensure actor has an items collection (Foundry guarantees but defensive here).
+    const collection = actor.items
+    if (!collection) {
+      logger.error(`Actor ${actor.name} (${actor.id}) has no items collection`)
+      ui.notifications.error(game.i18n.localize(this.ERROR_KEYS.NO_ITEMS_COLLECTION))
+      return null
+    }
+
+    let item
+    try {
+      item = collection.get(itemId)
+    } catch (error) {
+      logger.error('Unexpected error in getEventItem:', error)
+      ui.notifications.error(game.i18n.localize('SWERPG.ERRORS.UnexpectedError'))
+      return null
+    }
+    if (!item) {
+      logger.warn(`Item with id ${itemId} not found in actor ${actor.name}`)
+      ui.notifications.warn(game.i18n.localize(this.ERROR_KEYS.ITEM_NOT_FOUND))
+      return null
+    }
+    return item
   }
 
   /* -------------------------------------------- */
@@ -918,21 +994,22 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
    * @param {PointerEvent} event
    * @returns {function(): Promise<void>}
    */
-  static #getEventItemDeleteAction(event) {
-    const item = SwerpgBaseActorSheet.#getEventItem(event)
-    const target = event.target.closest('.line-item')
-    const actionName = target?.dataset.deleteAction
-    const itemType = target?.dataset.itemType
+  static #getEventItemDeleteAction(event, actor) {
+    const item = SwerpgBaseActorSheet.#getEventItem(event, actor)
+    if (!item) return null
+    const target = (event.target && typeof event.target.closest === 'function')
+      ? event.target.closest(this.LINE_ITEM_SELECTOR)
+      : null
+    if (!target) return null
+    const { [this.DATA_KEYS.DELETE_ACTION]: actionName, [this.DATA_KEYS.ITEM_TYPE]: itemType } = target.dataset
 
-    const isTalent = itemType === item.type
-    const action = item[actionName]
-
-    if (isTalent && actionName && typeof action === 'function') {
+    const isSameType = itemType === item.type
+    const action = actionName && item[actionName]
+    if (isSameType && typeof action === 'function') {
       return () => action.call(item)
     }
-
-    // Fallback : appel par défaut
-    return () => item.delete?.() // Ou toute méthode alternative si delete() n'existe pas
+    // Fallback: default delete (if provided by document)
+    return () => item.delete?.()
   }
 
   /* -------------------------------------------- */
