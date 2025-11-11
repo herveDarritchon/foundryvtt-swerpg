@@ -6,7 +6,8 @@ Bienvenue dans la documentation technique du système Star Wars Edge RPG pour Fo
 
 **Migration Logger Centralisé Complétée** ✅
 
-- **[DEVELOPER_GUIDE_LOGGING.md](./DEVELOPER_GUIDE_LOGGING.md)** - ⭐ **NOUVEAU** - Guide complet du logging centralisé
+- **[DEVELOPER_GUIDE_LOGGING.md](./DEVELOPER_GUIDE_LOGGING.md)** - ⭐ Guide complet du logging centralisé
+- **[MIGRATION_LOGGING_PROGRESSIVE.md](./MIGRATION_LOGGING_PROGRESSIVE.md)** - 📈 Stratégie de migration incrémentale pour PR
 - **Interdiction stricte** des appels `console.xxx` directs
 - **API logger unifiée** avec contrôle debug automatique
 - **Patterns d'utilisation** par contexte (applications, documents, helpers)
@@ -131,9 +132,10 @@ Cette documentation est destinée à :
 ### Pour Contribuer
 
 1. **OBLIGATOIRE** : Lisez **[DEVELOPER_GUIDE_LOGGING.md](./DEVELOPER_GUIDE_LOGGING.md)** - Logging centralisé
-2. Consultez **[CODING_STYLES.md](./CODING_STYLES.md)** - Standards de code
-3. Référez-vous à **[FUNCTIONAL_REQUIREMENTS.md](./requirements/FUNCTIONAL_REQUIREMENTS.md)** pour voir ce qui est implémenté
-4. Vérifiez **[NON_FUNCTIONAL_REQUIREMENTS.md](./requirements/NON_FUNCTIONAL_REQUIREMENTS.md)** pour les standards de qualité
+2. Suivez **[MIGRATION_LOGGING_PROGRESSIVE.md](./MIGRATION_LOGGING_PROGRESSIVE.md)** avant toute PR de migration
+3. Consultez **[CODING_STYLES.md](./CODING_STYLES.md)** - Standards de code
+4. Référez-vous à **[FUNCTIONAL_REQUIREMENTS.md](./requirements/FUNCTIONAL_REQUIREMENTS.md)** pour voir ce qui est implémenté
+5. Vérifiez **[NON_FUNCTIONAL_REQUIREMENTS.md](./requirements/NON_FUNCTIONAL_REQUIREMENTS.md)** pour les standards de qualité
 
 ### Pour Étendre le Système
 

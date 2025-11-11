@@ -475,4 +475,4 @@ Le logger respecte les conventions Foundry tout en ajoutant une couche de contr�
 ---
 
 **Dernière mise à jour** : 11 novembre 2025  
-**Status** : Migration logger centralisé complétée ✅
+**Status** : Migration logger centralisé complétée ✅ (voir aussi MIGRATION_LOGGING_PROGRESSIVE.md pour stratégie incrémentale PR)

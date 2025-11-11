@@ -37,7 +37,7 @@ globalThis.SYSTEM = SYSTEM
 /* -------------------------------------------- */
 
 Hooks.once('init', async function () {
-  console.log(`Initializing Swerpg Game System`)
+  logger.info(`[Init] Initializing Swerpg Game System`)
 
   // Register System Settings
   registerSystemSettings()
@@ -54,9 +54,9 @@ Hooks.once('init', async function () {
   logger.setDebug(swerpg.developmentMode)
 
   if (swerpg.developmentMode) {
-    console.info(SYSTEM.ASCII_DEV_MODE)
+    logger.info(SYSTEM.ASCII_DEV_MODE)
   } else {
-    console.info(SYSTEM.ASCII)
+    logger.info(SYSTEM.ASCII)
   }
 
   // Expose the system API
@@ -628,7 +628,7 @@ function registerDevelopmentHooks() {
  * @returns {Promise<void>}
  */
 async function syncTalents(force = false) {
-  console.groupCollapsed('Swerpg | Talent Data Synchronization')
+  logger.groupCollapsed('Swerpg | Talent Data Synchronization')
   const total = game.actors.size
   let n = 0
   let synced = 0
@@ -637,17 +637,17 @@ async function syncTalents(force = false) {
     if (force || foundry.utils.isNewerVersion(game.system.version, actor._stats.systemVersion)) {
       try {
         await actor.syncTalents()
-        console.log(`Swerpg | Synchronized talents for Actor "${actor.name}"`)
+  logger.info(`Swerpg | Synchronized talents for Actor "${actor.name}"`)
         synced++
       } catch (err) {
-        console.warn(`Swerpg | Talent synchronization failed for Actor "${actor.name}": ${err.message}`)
+  logger.warn(`Swerpg | Talent synchronization failed for Actor "${actor.name}": ${err.message}`)
       }
       SceneNavigation.displayProgressBar({ label: 'Synchronizing Talent Data', pct: Math.round((n * 100) / total) })
     }
   }
   if (synced) SceneNavigation.displayProgressBar({ label: 'Synchronizing Talent Data', pct: 100 })
-  console.log(`Swerpg | Complete talent synchronization for ${synced} Actors`)
-  console.groupEnd()
+  logger.info(`Swerpg | Complete talent synchronization for ${synced} Actors`)
+  logger.groupEnd()
 }
 
 /* -------------------------------------------- */

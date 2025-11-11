@@ -5,10 +5,11 @@
  */
 
 import OggDudeImporter from "../importer/oggDude.mjs";
-// Similar syntax to importing, but note that
-// this is object destructuring rather than an actual import
+// Similar syntax to importing, mais c'est du destructuring et peut être indisponible en environnement de test.
 
-const {ApplicationV2, HandlebarsApplicationMixin} = foundry.applications.api
+// Fournit des fallbacks légers si l'API Foundry n'est pas initialisée (exécution tests).
+const ApplicationV2 = foundry?.applications?.api?.ApplicationV2 ?? class {};
+const HandlebarsApplicationMixin = foundry?.applications?.api?.HandlebarsApplicationMixin ?? (Base => Base);
 
 
 /**

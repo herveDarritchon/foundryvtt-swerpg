@@ -2,6 +2,7 @@ import {buildArmorImgWorldPath, buildItemImgSystemPath} from "../../settings/dir
 import OggDudeImporter from "../oggDude.mjs";
 import {buildMod, buildWeaponModifiers} from "./combat-item-mapper.mjs";
 import OggDudeDataElement from "../../settings/models/OggDudeDataElement.mjs";
+import logger from "../../utils/logger.mjs";
 
 
 /**
@@ -93,7 +94,7 @@ export function weaponMapper(weapons) {
  */
 export async function buildWeaponContext(zip, groupByDirectory, groupByType) {
 
-    console.debug("Building Weapon with Zip, GroupByDirectory, GroupByType", zip, groupByDirectory, groupByType);
+    logger.debug("Building Weapon with Zip, GroupByDirectory, GroupByType", zip, groupByDirectory, groupByType);
 
     return {
         jsonData: await OggDudeDataElement.buildJsonDataFromFile(zip, groupByDirectory, "Weapons.xml", 'Weapons.Weapon'),
