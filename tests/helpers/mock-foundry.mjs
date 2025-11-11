@@ -39,7 +39,12 @@ export function setupFoundryMock(options = {}) {
         HandlebarsApplicationMixin: (base) => base
       },
       sheets: {
-        ActorSheetV2: class MockActorSheetV2 {}
+        ActorSheetV2: class MockActorSheetV2 {
+          constructor(options = {}) {
+            this.options = options
+          }
+          render() { /* noop stub */ }
+        }
       }
     },
     ...foundryPatch
@@ -52,7 +57,8 @@ export function setupFoundryMock(options = {}) {
     system: {
       config: {}
     },
-    combat: undefined
+    combat: undefined,
+    packs: new Map()
   }
 
   globalThis.ui = {
@@ -85,3 +91,47 @@ export function extendFoundryMock(patch) {
   if (!globalThis.foundry) throw new Error('Foundry mock not initialized')
   Object.assign(globalThis.foundry, patch)
 }
+
+/**
+ * Configure (or reconfigure) a simple combat mock.
+ * @param {object} [options]
+ * @param {number} [options.round=1] Current combat round
+ * @param {Array<{id:string,actor:any}>} [options.combatants=[]] Combatant like objects
+ * @returns {void}
+ */
+export function setCombatMock({ round = 1, combatants = [] } = {}) {
+  if (!globalThis.game) throw new Error('Game mock not initialized')
+  globalThis.game.combat = {
+    round,
+    getCombatantByActor: (actor) => combatants.find((c) => c.actor === actor) ?? null
+  }
+}
+
+/**
+ * Add mock compendium packs to game.packs.
+ * Each pack definition: { id, documents: Array<{id,name}> }
+ * @param {Array<{id:string, documents?:Array<object>}>} packs
+ */
+export function addPacksMock(packs = []) {
+  if (!globalThis.game) throw new Error('Game mock not initialized')
+  const map = globalThis.game.packs
+  for (const { id, documents = [] } of packs) {
+    if (!id) continue
+    const packObj = {
+      metadata: { id },
+      index: documents.map((d) => ({ _id: d.id, name: d.name })),
+      getDocument: vi.fn(async (docId) => documents.find((d) => d.id === docId) ?? null)
+    }
+    map.set(id, packObj)
+  }
+}
+
+// Expose a convenience aggregate for tests wanting programmatic access
+export const foundryTestUtils = {
+  setupFoundryMock,
+  teardownFoundryMock,
+  extendFoundryMock,
+  setCombatMock,
+  addPacksMock
+}
+

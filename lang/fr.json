@@ -31,6 +31,12 @@
       "Journal": "Swerpg Journal Sheet"
     }
   },
+  "SWERPG.ERRORS.InvalidEvent": "Événement invalide: impossible de traiter l'interaction.",
+  "SWERPG.ERRORS.InvalidActor": "Acteur invalide: impossible d'accéder aux données du personnage.",
+  "SWERPG.ERRORS.NoItemId": "Aucun objet sélectionné: cliquez sur un objet valide.",
+  "SWERPG.ERRORS.NoItemsCollection": "Erreur de données personnage: collection d'objets manquante.",
+  "SWERPG.ERRORS.ItemNotFound": "Objet introuvable: il a peut-être été supprimé.",
+  "SWERPG.ERRORS.UnexpectedError": "Erreur système inattendue: veuillez réessayer.",
   "ABILITIES.Strength": "Strength",
   "ABILITIES.StrengthAbbr": "Str",
   "ABILITIES.Toughness": "Toughness",

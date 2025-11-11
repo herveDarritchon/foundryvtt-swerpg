@@ -1,6 +1,5 @@
 // base-actor-sheet.test.mjs
-import { describe, expect, test, vi, beforeEach, afterEach } from 'vitest'
-import { setupFoundryMock, teardownFoundryMock } from '../../helpers/mock-foundry.mjs'
+import { describe, expect, test, vi, beforeEach } from 'vitest'
 
 // Mock du logger
 vi.mock('../../../module/utils/logger.mjs', () => ({
@@ -11,8 +10,7 @@ vi.mock('../../../module/utils/logger.mjs', () => ({
   }
 }))
 
-// Initialisation centralisée des mocks Foundry (inclut i18n + ui.notifications)
-setupFoundryMock()
+// Le setup Foundry est maintenant géré globalement dans vitest-setup.js
 
 // Mock JaugeFactory
 vi.mock('../../../module/lib/jauges/jauge-factory.mjs', () => ({
@@ -24,7 +22,11 @@ vi.mock('../../../module/lib/featured-equipment.mjs', () => ({
   computeFeaturedEquipment: vi.fn()
 }))
 
-import SwerpgBaseActorSheet from '../../../module/applications/sheets/base-actor-sheet.mjs'
+// ATTENTION: Après refactor, le module `base-actor-sheet.mjs` accède immédiatement à
+// `globalThis.foundry`. Les mocks Foundry (installés dans vitest-setup.js via beforeEach)
+// ne sont pas encore en place au moment des imports statiques. On passe donc à un import
+// dynamique post-mock dans le beforeEach pour éviter une erreur d'initialisation.
+let SwerpgBaseActorSheet
 import { logger } from '../../../module/utils/logger.mjs'
 
 describe('SwerpgBaseActorSheet Bug Fix Integration Tests', () => {
@@ -33,9 +35,12 @@ describe('SwerpgBaseActorSheet Bug Fix Integration Tests', () => {
   let mockEvent
   let sheetInstance
 
-  beforeEach(() => {
+  beforeEach(async () => {
     // Reset des mocks
     vi.clearAllMocks()
+    // Import dynamique après installation des mocks Foundry (effectuée par vitest-setup.js)
+    // Garantit que `globalThis.foundry` existe avant l'évaluation du module.
+    SwerpgBaseActorSheet = (await import('../../../module/applications/sheets/base-actor-sheet.mjs')).default
 
     // Mock d'un item
     mockItem = {
@@ -86,17 +91,12 @@ describe('SwerpgBaseActorSheet Bug Fix Integration Tests', () => {
     }
   })
 
-  afterEach(() => {
-    vi.restoreAllMocks()
-    teardownFoundryMock()
-    // Recrée un mock frais pour le prochain test (isolation complète)
-    setupFoundryMock()
-  })
+  // plus besoin de teardown ici, géré globalement
 
   describe('Integration test for #onItemEdit with error handling', () => {
     test('should handle item edit without crashing when item exists', async () => {
       // Simuler l'appel à #onItemEdit en utilisant call pour définir 'this'
-      await SwerpgBaseActorSheet.DEFAULT_OPTIONS.actions.itemEdit.call(sheetInstance, mockEvent)
+  await SwerpgBaseActorSheet.DEFAULT_OPTIONS.actions.itemEdit.call(sheetInstance, mockEvent)
       
       expect(mockActor.items.get).toHaveBeenCalledWith('test-item-id')
       expect(mockItem.sheet.render).toHaveBeenCalledWith({ force: true })
@@ -113,7 +113,7 @@ describe('SwerpgBaseActorSheet Bug Fix Integration Tests', () => {
         }
       }
       
-      await SwerpgBaseActorSheet.DEFAULT_OPTIONS.actions.itemEdit.call(sheetInstance, eventWithoutItemId)
+  await SwerpgBaseActorSheet.DEFAULT_OPTIONS.actions.itemEdit.call(sheetInstance, eventWithoutItemId)
       
       expect(logger.warn).toHaveBeenCalledWith('Missing itemId dataset on .line-item element')
       expect(ui.notifications.warn).toHaveBeenCalledWith('No item selected: Please click on a valid item.')
@@ -131,7 +131,7 @@ describe('SwerpgBaseActorSheet Bug Fix Integration Tests', () => {
         }
       }
       
-      await SwerpgBaseActorSheet.DEFAULT_OPTIONS.actions.itemEdit.call(sheetInstance, eventWithInvalidItemId)
+  await SwerpgBaseActorSheet.DEFAULT_OPTIONS.actions.itemEdit.call(sheetInstance, eventWithInvalidItemId)
       
       expect(mockActor.items.get).toHaveBeenCalledWith('non-existent-item-id')
       expect(logger.warn).toHaveBeenCalledWith('Item with id non-existent-item-id not found in actor Test Actor')
@@ -142,7 +142,7 @@ describe('SwerpgBaseActorSheet Bug Fix Integration Tests', () => {
 
   describe('Integration test for #onItemEquip with error handling', () => {
     test('should handle item equip without crashing when item exists', async () => {
-      await SwerpgBaseActorSheet.DEFAULT_OPTIONS.actions.itemEquip.call(sheetInstance, mockEvent)
+  await SwerpgBaseActorSheet.DEFAULT_OPTIONS.actions.itemEquip.call(sheetInstance, mockEvent)
       
       expect(mockActor.items.get).toHaveBeenCalledWith('test-item-id')
       expect(mockActor.equipWeapon).toHaveBeenCalledWith('test-item-id', { equipped: true })
@@ -161,7 +161,7 @@ describe('SwerpgBaseActorSheet Bug Fix Integration Tests', () => {
         }
       }
       
-      await SwerpgBaseActorSheet.DEFAULT_OPTIONS.actions.itemEquip.call(sheetInstance, eventWithInvalidItemId)
+  await SwerpgBaseActorSheet.DEFAULT_OPTIONS.actions.itemEquip.call(sheetInstance, eventWithInvalidItemId)
       
       expect(mockActor.items.get).toHaveBeenCalledWith('non-existent-item-id')
       expect(logger.warn).toHaveBeenCalledWith('Item with id non-existent-item-id not found in actor Test Actor')
@@ -183,7 +183,7 @@ describe('SwerpgBaseActorSheet Bug Fix Integration Tests', () => {
         actor: actorWithoutItems
       }
       
-      await SwerpgBaseActorSheet.DEFAULT_OPTIONS.actions.itemEdit.call(sheetWithBrokenActor, mockEvent)
+  await SwerpgBaseActorSheet.DEFAULT_OPTIONS.actions.itemEdit.call(sheetWithBrokenActor, mockEvent)
       
       expect(logger.error).toHaveBeenCalledWith('Actor Test Actor (test-actor-id) has no items collection')
       expect(ui.notifications.error).toHaveBeenCalledWith('Character data error: Items collection is missing.')
