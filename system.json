@@ -18,8 +18,17 @@
   ],
   "flags": {
     "hotReload": {
-      "extensions": ["less", "css", "hbs", "json"],
-      "paths": ["lang/en.json", "styles", "templates"]
+      "extensions": [
+        "less",
+        "css",
+        "hbs",
+        "json"
+      ],
+      "paths": [
+        "lang/en.json",
+        "styles",
+        "templates"
+      ]
     }
   },
   "media": [
@@ -35,8 +44,16 @@
     "maximum": 13
   },
   "license": "LICENSE",
-  "esmodules": ["swerpg.mjs"],
-  "styles": ["styles/swerpg.css"],
+  "esmodules": [
+    "swerpg.mjs"
+  ],
+  "styles": [
+    "styles/swerpg.css"
+  ],
+  "scripts": [
+    "./vendors/jszip.min.js",
+    "./vendors/xml2js.min.js"
+  ],
   "packs": [
     {
       "name": "careers",
@@ -101,17 +118,29 @@
         {
           "name": "Actors Options",
           "color": "#032f96",
-          "packs": ["species", "careers", "specializations", "obligations", "talents"]
+          "packs": [
+            "species",
+            "careers",
+            "specializations",
+            "obligations",
+            "talents"
+          ]
         },
         {
           "name": "Equipments",
           "color": "#360c55",
-          "packs": ["armors", "gear", "weapons"]
+          "packs": [
+            "armors",
+            "gear",
+            "weapons"
+          ]
         },
         {
           "name": "Actors",
           "color": "#380d05",
-          "packs": ["pregens"]
+          "packs": [
+            "pregens"
+          ]
         }
       ]
     }
@@ -131,52 +160,87 @@
   "documentTypes": {
     "Actor": {
       "character": {
-        "htmlFields": ["details.biography.public", "details.biography.private", "details.biography.appearance"]
+        "htmlFields": [
+          "details.biography.public",
+          "details.biography.private",
+          "details.biography.appearance"
+        ]
       },
       "adversary": {}
     },
     "Item": {
       "ancestry": {
-        "htmlFields": ["description"]
+        "htmlFields": [
+          "description"
+        ]
       },
       "archetype": {
-        "htmlFields": ["description"]
+        "htmlFields": [
+          "description"
+        ]
       },
       "armor": {
-        "htmlFields": ["description.public", "description.secret"]
+        "htmlFields": [
+          "description.public",
+          "description.secret"
+        ]
       },
       "background": {
-        "htmlFields": ["description"]
+        "htmlFields": [
+          "description"
+        ]
       },
       "career": {
-        "htmlFields": ["description"]
+        "htmlFields": [
+          "description"
+        ]
       },
       "gear": {
-        "htmlFields": ["description.public", "description.secret"]
+        "htmlFields": [
+          "description.public",
+          "description.secret"
+        ]
       },
       "obligation": {
-        "htmlFields": ["description"]
+        "htmlFields": [
+          "description"
+        ]
       },
       "origin": {
-        "htmlFields": ["description"]
+        "htmlFields": [
+          "description"
+        ]
       },
       "specialization": {
-        "htmlFields": ["description"]
+        "htmlFields": [
+          "description"
+        ]
       },
       "species": {
-        "htmlFields": ["description"]
+        "htmlFields": [
+          "description"
+        ]
       },
       "spell": {
-        "htmlFields": ["description"]
+        "htmlFields": [
+          "description"
+        ]
       },
       "talent": {
-        "htmlFields": ["description"]
+        "htmlFields": [
+          "description"
+        ]
       },
       "taxonomy": {
-        "htmlFields": ["description"]
+        "htmlFields": [
+          "description"
+        ]
       },
       "weapon": {
-        "htmlFields": ["description.public", "description.secret"]
+        "htmlFields": [
+          "description.public",
+          "description.secret"
+        ]
       }
     },
     "JournalEntryPage": {
