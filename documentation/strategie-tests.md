@@ -87,7 +87,13 @@ describe('Career Free Skill', () => {
 
 ### 2. Mocking Foundry VTT
 
+Toujours utiliser un mock pour les appels aux APIs de FoundryVtt lorsque que l'on exécute via un Tests Unitaires.
+
+Ne jamais faire de `// Defensive access to global Foundry object for test environments where it may be undefined.` sur les appels d'API de FoundryVTT pour éviter des problèmes lorsque l'on exécute du code dans un contexte de Test Unitaire qui n'a pas accès à Foundry VTT.
+
 #### Mock Centralisé (`tests/helpers/mock-foundry.mjs`)
+
+Enrichir les mocks si besoin. Si les mocks sont enrichis alors il faut enrichir ce document.
 
 ```javascript
 export function setupFoundryMock(options = {}) {
@@ -123,6 +129,8 @@ export function setupFoundryMock(options = {}) {
 ### 3. Factories de Test
 
 #### Factory Acteur (`tests/utils/actors/actor.mjs`)
+
+Enrichir si nécessaire les Factory d'objet Foundry VTT. Si c'est enrichi, il faut les rajouter dans ce document.
 
 ```javascript
 export function createActor({ careerSpent = 0, specializationSpent = 0, items = [] } = {}) {
