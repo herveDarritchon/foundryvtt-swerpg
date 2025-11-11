@@ -1,7 +1,11 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 
-// Mock logger avant d'importer les modules qui l'utilisent
-vi.mock('../../module/utils/logger.mjs', () => ({
+// IMPORTANT: chemin corrigé vers le module logger (3 niveaux pour revenir à la racine du projet)
+// Avant: '../../module/utils/logger.mjs' (aboutissait à tests/module/... inexistant) => tests échouaient avec module introuvable.
+// Maintenant: '../../../module/utils/logger.mjs'
+// SECURITY: aucune donnée sensible, simple mock.
+// PERF: mock léger sans surcharge.
+vi.mock('../../../module/utils/logger.mjs', () => ({
   logger: {
     debug: vi.fn(),
     info: vi.fn(),
@@ -20,8 +24,9 @@ globalThis.foundry = {
       HandlebarsApplicationMixin: (base) => base,
     },
     sheets: {
-      ActorSheetV2: class MockActorSheetV2 {},
-      ItemSheetV2: class MockItemSheetV2 {},
+      // Classes minimales avec méthode statique pour éviter la règle lint "Unexpected empty class"
+      ActorSheetV2: class MockActorSheetV2 { static noop() {} },
+      ItemSheetV2: class MockItemSheetV2 { static noop() {} },
     },
   },
 }
@@ -34,7 +39,8 @@ describe('Sheets Logging Migration', () => {
   let mockLogger
 
   beforeEach(async () => {
-    const { logger } = await import('../../module/utils/logger.mjs')
+    // Import corrigé avec le même chemin que le mock pour que Vitest applique la substitution
+    const { logger } = await import('../../../module/utils/logger.mjs')
     mockLogger = logger
     vi.clearAllMocks()
   })
