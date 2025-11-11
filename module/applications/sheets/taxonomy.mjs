@@ -38,7 +38,7 @@ export default class TaxonomySheet extends SwerpgBaseItemSheet {
     })
 
     // ✅ Debug conditionnel uniquement si nécessaire
-      logger.debug(`[${this.constructor.name}] Context prepared:`, assign)
+    logger.debug(`[${this.constructor.name}] Context prepared:`, assign)
 
     return assign
   }

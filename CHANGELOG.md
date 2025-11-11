@@ -8,6 +8,8 @@
 
 ### Features
 
+- **actor-sheet:** display currently equipped armor and weapons in sidebar with tags and toggle control (planned feature implementation)
+
 - **armor:** modify armor to be valid with SW rules (migration from crucible). ([689bec2](https://github.com/herveDarritchon/foundryvtt-swerpg/commit/689bec250c24877b4638cb057d9fd7851123ddea))
 - **weapon:** add gear to system. ([ddf81ed](https://github.com/herveDarritchon/foundryvtt-swerpg/commit/ddf81eda3397af06527d3647487b922f06360e21))
 - **weapon:** add weapon to be valid with SW rules (migration from crucible). ([1fb0ee1](https://github.com/herveDarritchon/foundryvtt-swerpg/commit/1fb0ee1f5f979444d8f40d82462ffedd9b45073f))

@@ -1,11 +1,11 @@
 ---
-title: "ADR-0003: Architecture des Dés Narratifs Star Wars Edge"
-status: "Accepted"
-date: "2025-11-10"
-authors: "Hervé Darritchon, Game Design Team"
-tags: ["architecture", "dice", "narrative", "star-wars", "gameplay"]
-supersedes: ""
-superseded_by: ""
+title: 'ADR-0003: Architecture des Dés Narratifs Star Wars Edge'
+status: 'Accepted'
+date: '2025-11-10'
+authors: 'Hervé Darritchon, Game Design Team'
+tags: ['architecture', 'dice', 'narrative', 'star-wars', 'gameplay']
+supersedes: ''
+superseded_by: ''
 ---
 
 ## Status
@@ -20,7 +20,7 @@ Le système Star Wars Edge RPG utilise un système de dés narratifs unique qui 
 
 - **Dés de Capacité** (Ability) : Succès, Avantages
 - **Dés de Compétence** (Proficiency) : Succès, Avantages, Triomphes
-- **Dés de Difficulté** (Difficulty) : Échecs, Menaces  
+- **Dés de Difficulté** (Difficulty) : Échecs, Menaces
 - **Dés de Challenge** (Challenge) : Échecs, Menaces, Désespoirs
 - **Dés d'Amélioration** (Boost) : Succès, Avantages
 - **Dés de Complication** (Setback) : Échecs, Menaces

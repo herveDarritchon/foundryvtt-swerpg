@@ -1,6 +1,7 @@
 const { api, sheets } = foundry.applications
 import JaugeFactory from '../../lib/jauges/jauge-factory.mjs'
 import { logger } from '../../utils/logger.mjs'
+import { computeFeaturedEquipment } from '../../lib/featured-equipment.mjs'
 
 /**
  * A base ActorSheet built on top of ApplicationV2 and the Handlebars rendering backend.
@@ -27,6 +28,7 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
       effectDelete: SwerpgBaseActorSheet.#onEffectDelete,
       effectToggle: SwerpgBaseActorSheet.#onEffectToggle,
       editImage: SwerpgBaseActorSheet.#onEditImage, // TODO remove in v13
+      equipToggle: SwerpgBaseActorSheet.#onSidebarEquipToggle,
     },
     form: {
       submitOnChange: true,
@@ -148,7 +150,8 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
     const tabGroups = this.#getTabs()
     const { inventory, talents, iconicSpells } = this.#prepareItems()
     const { sections: actions, favorites: favoriteActions } = this.#prepareActions()
-    return {
+    const featuredEquipment = this.#prepareFeaturedEquipment()
+    const context = {
       // ✅ Standard minimum OBLIGATOIRE selon le plan Phase 2.2
       document: this.document,
       system: this.document.system,
@@ -166,7 +169,7 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
       defenses: this.#prepareDefenses(),
       effects: this.#prepareActiveEffects(),
       favoriteActions,
-      featuredEquipment: this.#prepareFeaturedEquipment(),
+      featuredEquipment,
       fieldDisabled: this.isEditable ? '' : 'disabled',
       fields: this.document.system.schema.fields,
       incomplete: {},
@@ -181,6 +184,20 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
       tabs: tabGroups.sheet,
       talents,
     }
+    // Phase 4: déléguer calcul du mode compact à méthode dédiée pour respecter PAT-001
+    this.#applyFeaturedEquipmentCompactMode(context)
+    return context
+  }
+
+  /**
+   * Détermine si le mode compact doit être activé selon le nombre d'éléments d'équipement affichés.
+   * WHY: Réduire la densité visuelle quand la sidebar aurait sinon un empilement trop haut pour lisibilité.
+   * @param {object} context Contexte déjà construit contenant featuredEquipment
+   * @private
+   */
+  #applyFeaturedEquipmentCompactMode(context) {
+    const count = context.featuredEquipment?.length ?? 0
+    context.compactMode = count > 3
   }
 
   /* -------------------------------------------- */
@@ -318,11 +335,17 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
   /* -------------------------------------------- */
 
   /**
-   * Prepare the items of equipment which are showcased at the top of the sidebar.
-   * @returns {{name: string, img: string, tags: string[]}[]}
+   * Prépare les données d'affichage de l'équipement (armes + armure) en lecture seule pour la sidebar.
+   * Aucune mutation des documents.
+   * @returns {Array<{id:string,name:string,img:string,type:string,slot:string,tags:string[],cssClass:string,isEquipped:boolean,system:object}>}
    */
   #prepareFeaturedEquipment() {
-    return {}
+    const armor = this.actor.items.find((i) => i.type === 'armor' && i.system?.equipped) || null
+    // On limite aux armes équipées (filtrage métier dans computeFeaturedEquipment)
+    const weapons = this.actor.items.filter((i) => i.type === 'weapon' && i.system?.equipped)
+    const featured = computeFeaturedEquipment({ armor, weapons })
+    logger.debug('[base-actor-sheet] featuredEquipment', featured)
+    return featured
   }
 
   /* -------------------------------------------- */
@@ -799,8 +822,8 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
    * @param {PointerEvent} event
    */
   static async #onItemDelete(event) {
-    const item = this.#getEventItem(event)
-    const deleteAction = this.#getEventItemDeleteAction(event)
+    const item = SwerpgBaseActorSheet.#getEventItem(event)
+    const deleteAction = SwerpgBaseActorSheet.#getEventItemDeleteAction(event)
 
     await item.deleteDialog?.({
       yes: {
@@ -817,7 +840,7 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
    * @returns {Promise<void>}
    */
   static async #onItemEdit(event) {
-    const item = this.#getEventItem(event)
+    const item = SwerpgBaseActorSheet.#getEventItem(event)
     await item.sheet.render({ force: true })
   }
 
@@ -829,7 +852,7 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
    * @returns {Promise<void>}
    */
   static async #onItemEquip(event) {
-    const item = this.#getEventItem(event)
+    const item = SwerpgBaseActorSheet.#getEventItem(event)
     switch (item.type) {
       case 'armor':
         try {
@@ -848,6 +871,34 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
     }
   }
 
+  /**
+   * Toggle équipement depuis la sidebar (bouton action equipToggle).
+   * @this {SwerpgBaseActorSheet}
+   * @param {PointerEvent} event
+   */
+  static async #onSidebarEquipToggle(event) {
+    const equippedEl = event.target.closest('.equipped')
+    if (!equippedEl) return
+    const itemId = equippedEl.dataset.itemId
+    const item = this.actor.items.get(itemId)
+    if (!item) return
+    try {
+      switch (item.type) {
+        case 'armor':
+          await this.actor.equipArmor(item.id, { equipped: !item.system.equipped })
+          break
+        case 'weapon':
+          await this.actor.equipWeapon(item.id, { equipped: !item.system.equipped })
+          break
+        default:
+          return
+      }
+    } catch (err) {
+      ui.notifications.warn(err.message)
+    }
+    this.render() // rafraîchit immédiatement la sidebar
+  }
+
   /* -------------------------------------------- */
 
   /**
@@ -855,7 +906,7 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
    * @param {PointerEvent} event
    * @returns {SwerpgItem}
    */
-  #getEventItem(event) {
+  static #getEventItem(event) {
     const itemId = event.target.closest('.line-item')?.dataset.itemId
     return this.actor.items.get(itemId, { strict: true })
   }
@@ -867,8 +918,8 @@ export default class SwerpgBaseActorSheet extends api.HandlebarsApplicationMixin
    * @param {PointerEvent} event
    * @returns {function(): Promise<void>}
    */
-  #getEventItemDeleteAction(event) {
-    const item = this.#getEventItem(event)
+  static #getEventItemDeleteAction(event) {
+    const item = SwerpgBaseActorSheet.#getEventItem(event)
     const target = event.target.closest('.line-item')
     const actionName = target?.dataset.deleteAction
     const itemType = target?.dataset.itemType

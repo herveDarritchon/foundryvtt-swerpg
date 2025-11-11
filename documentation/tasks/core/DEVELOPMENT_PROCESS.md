@@ -13,11 +13,13 @@ Ce document décrit les étapes suivies pour migrer tous les appels de logging l
 ### Phase 1 : Analyse et Préparation
 
 #### 1.1 Audit du logger existant
+
 - **Fichier analysé** : `module/utils/logger.mjs`
 - **Constat** : Logger complet avec API `setDebug()`, `isDebugEnabled()` et tous les niveaux de log
 - **API disponible** : `debug`, `info`, `warn`, `error`, `log` + méthodes avancées
 
 #### 1.2 Audit des appels de logging legacy
+
 - **Méthode** : Recherche grep dans `/module/` avec patterns `console.xxx` et `CONFIG.debug`
 - **Résultat** : 40+ appels répartis dans 20+ fichiers
 - **Documentation** : `documentation/tasks/core/logging-audit.md` (existait déjà)
@@ -25,6 +27,7 @@ Ce document décrit les étapes suivies pour migrer tous les appels de logging l
 ### Phase 2 : Intégration Système
 
 #### 2.1 Configuration du logger dans swerpg.mjs
+
 - **Fichier modifié** : `swerpg.mjs`
 - **Modifications** :
   - Import du logger : `import { logger } from './module/utils/logger.mjs'`
@@ -46,6 +49,7 @@ swerpg.api = {
 ### Phase 3 : Migration des Application Sheets
 
 #### 3.1 Base Actor Sheet
+
 - **Fichier** : `module/applications/sheets/base-actor-sheet.mjs`
 - **Changements** :
   - Import ajouté : `import { logger } from '../../utils/logger.mjs'`
@@ -53,19 +57,22 @@ swerpg.api = {
   - Suppression des conditions `if (CONFIG.debug?.sheets)`
 
 #### 3.2 Base Item Sheet
+
 - **Fichier** : `module/applications/sheets/base-item.mjs`
 - **Changements** :
   - Import ajouté : `import { logger } from '../../utils/logger.mjs'`
   - 1 appel migré : `console.debug()` → `logger.debug()`
 
 #### 3.3 Character Sheet
+
 - **Fichier** : `module/applications/sheets/character-sheet.mjs`
 - **Changements** :
-  - Import ajouté : `import { logger } from '../../utils/logger.mjs'`  
+  - Import ajouté : `import { logger } from '../../utils/logger.mjs'`
   - 6 appels migrés : tous les `console.debug()` → `logger.debug()`
   - Logs détaillés pour skills et talents préservés
 
 #### 3.4 Autres Sheets
+
 - **Fichiers** : `origin.mjs`, `obligation.mjs`, `taxonomy.mjs`
 - **Méthode** : Script sed pour remplacement automatisé
 - **Commande** : `sed -i '' 's/console\.debug(/logger.debug(/g'`
@@ -73,6 +80,7 @@ swerpg.api = {
 ### Phase 4 : Migration des Documents
 
 #### 4.1 Documents Actor
+
 - **Fichiers** : `module/documents/actor.mjs`, `module/documents/actor-origin.mjs`
 - **Changements** :
   - Import ajouté : `import { logger } from '../utils/logger.mjs'`
@@ -82,7 +90,9 @@ swerpg.api = {
 ### Phase 5 : Migration des Autres Modules
 
 #### 5.1 Migration automatisée en masse
+
 - **Commande utilisée** :
+
 ```bash
 find /Users/hervedarritchon/Workspace/Perso/FoundryVTT/foundryvtt-sw-edge/module -name "*.mjs" -not -name "logger.mjs" -exec grep -l "console\." {} \; | while read file; do
   if ! grep -q "import.*logger" "$file"; then
@@ -95,6 +105,7 @@ done
 ```
 
 #### 5.2 Cas particuliers CONFIG.debug
+
 - **Fichier** : `module/canvas/token.mjs`
   - `CONFIG.debug.flanking` → `logger.isDebugEnabled()`
 - **Fichier** : `module/canvas/talent-tree.mjs`
@@ -103,6 +114,7 @@ done
 ### Phase 6 : Tests et Validation
 
 #### 6.1 Tests unitaires créés
+
 - **Fichier** : `tests/utils/logger-integration.spec.js`
   - Tests de configuration du logger
   - Tests des niveaux de logging selon le mode debug
@@ -115,6 +127,7 @@ done
   - Validation du niveau de détail maintenu
 
 #### 6.2 Validation finale
+
 - **Vérification console.xxx** : `grep -r "console\." /module/ --exclude="*/logger.mjs"`
   - **Résultat** : Seule référence dans commentaire JSDoc ✅
 - **Vérification CONFIG.debug** : `grep -r "CONFIG\.debug" /module/`
@@ -123,16 +136,19 @@ done
 ### Phase 7 : Nettoyage
 
 #### 7.1 Suppression des conditions CONFIG.debug restantes
+
 - **Commande** : `find /module/applications/sheets -name "*.mjs" -exec sed -i '' -e '/if (CONFIG\.debug/d' {} \;`
 - **Résultat** : Toutes les conditions legacy supprimées
 
 ## 📁 Fichiers Modifiés
 
 ### Fichiers principaux
+
 - `swerpg.mjs` - Configuration système du logger
 - `module/utils/logger.mjs` - Aucune modification (déjà optimal)
 
 ### Application Sheets (8 fichiers)
+
 - `module/applications/sheets/base-actor-sheet.mjs`
 - `module/applications/sheets/base-item.mjs`
 - `module/applications/sheets/character-sheet.mjs`
@@ -141,10 +157,12 @@ done
 - `module/applications/sheets/taxonomy.mjs`
 
 ### Documents (2 fichiers)
+
 - `module/documents/actor.mjs`
 - `module/documents/actor-origin.mjs`
 
 ### Autres modules (12+ fichiers)
+
 - `module/config/system.mjs`
 - `module/config/talent-tree.mjs`
 - `module/canvas/token.mjs`
@@ -154,12 +172,14 @@ done
 - `module/lib/talents/ranked-trained-talent.mjs`
 
 ### Tests créés (2 fichiers)
+
 - `tests/utils/logger-integration.spec.js`
 - `tests/applications/sheets/sheets-logging.spec.js`
 
 ## 🔧 Patterns de Migration
 
 ### Pattern 1 : Conditions CONFIG.debug
+
 ```javascript
 // AVANT
 if (CONFIG.debug?.sheets) {
@@ -171,17 +191,19 @@ logger.debug('Message de debug')
 ```
 
 ### Pattern 2 : Appels directs console
+
 ```javascript
 // AVANT
-console.warn('Message d\'avertissement')
-console.error('Message d\'erreur')
+console.warn("Message d'avertissement")
+console.error("Message d'erreur")
 
 // APRÈS
-logger.warn('Message d\'avertissement')
-logger.error('Message d\'erreur')
+logger.warn("Message d'avertissement")
+logger.error("Message d'erreur")
 ```
 
 ### Pattern 3 : Conditions CONFIG.debug spécialisées
+
 ```javascript
 // AVANT
 if (CONFIG.debug.flanking) this._visualizeEngagement()
@@ -193,6 +215,7 @@ if (logger.isDebugEnabled()) this._visualizeEngagement()
 ## ✅ Résultats
 
 ### Statistiques finales
+
 - **40+ appels migrés** vers le logger centralisé
 - **20+ fichiers modifiés** dans `/module/`
 - **0 appel console.xxx restant** (hors logger.mjs)
@@ -201,6 +224,7 @@ if (logger.isDebugEnabled()) this._visualizeEngagement()
 - **Migration non-breaking** : fonctionnalités préservées
 
 ### Bénéfices
+
 1. **Logging unifié** : Tous les logs passent par le même système
 2. **Configuration centralisée** : Mode debug contrôlé par `detectDevelopmentMode()`
 3. **Maintenabilité améliorée** : Un seul point de configuration du logging
@@ -208,6 +232,7 @@ if (logger.isDebugEnabled()) this._visualizeEngagement()
 5. **Traçabilité** : Préfixe `SWERPG ||` sur tous les messages
 
 ### Régression
+
 - **Aucune régression fonctionnelle** détectée
 - **Même niveau de détail** dans les logs
 - **Performance** : Aucun impact measurable
@@ -215,11 +240,13 @@ if (logger.isDebugEnabled()) this._visualizeEngagement()
 ## 🚀 Mise en Production
 
 ### Prérequis
+
 - Tests passants : ✅
 - Build successful : ⚠️ (erreur non liée à la migration)
 - Lint clean : ⚠️ (warnings cosmétiques uniquement)
 
 ### Communication
+
 - Migration transparente pour les utilisateurs finaux
 - Documentation développeur mise à jour
 - Pas de changement d'API externe
