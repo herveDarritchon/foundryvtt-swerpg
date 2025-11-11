@@ -10,8 +10,22 @@ if (!globalThis.Color) {
 }
 if (!globalThis.Roll) {
   globalThis.Roll = class MockRollEarly {
-    constructor(formula, data) { this.formula = formula; this.data = data || {} }
+    constructor(formula, data) { 
+      this.formula = formula
+      this.data = data || {} 
+      this.terms = []
+      this.dice = []
+    }
     roll() { return this }
+    static parse(formula, data) {
+      return [{ term: formula, data }]
+    }
+    toJSON() {
+      return { formula: this.formula }
+    }
+    async toMessage(md) {
+      return md
+    }
   }
 }
 if (!globalThis.Item) {
@@ -19,6 +33,38 @@ if (!globalThis.Item) {
 }
 if (!globalThis.DialogV2) {
   globalThis.DialogV2 = class MockDialogEarly { constructor(options = {}) { this.options = options } render() { return this } }
+}
+
+// Foundry API minimal stub for modules that import foundry.applications.api at load time
+if (!globalThis.foundry) {
+  globalThis.foundry = {
+    applications: {
+      api: {
+        DialogV2: class MockDialogV2Early { 
+          constructor(options = {}) { this.options = options }
+          static prompt() { return null }
+        },
+        HandlebarsApplicationMixin: (base) => base,
+      },
+    },
+    utils: {
+      deepClone: (o) => structuredClone(o),
+      mergeObject: (original, other) => Object.assign(original, other),
+    },
+  }
+}
+
+// Polyfills Foundry globaux
+if (!globalThis.Number.isNumeric) {
+  globalThis.Number.isNumeric = function(n) {
+    return !Number.isNaN(Number.parseFloat(n)) && Number.isFinite(n)
+  }
+}
+if (!globalThis.Math.clamp) {
+  globalThis.Math.clamp = function(value, min, max) {
+    if (Number.isNaN(value)) return min
+    return Math.min(Math.max(value, min), max)
+  }
 }
 
 const defaultTranslations = {
