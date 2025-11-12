@@ -3,6 +3,7 @@ import OggDudeImporter from "../oggDude.mjs";
 import OggDudeDataElement from "../../settings/models/OggDudeDataElement.mjs";
 import { logger } from '../../utils/logger.mjs'
 import { SYSTEM } from '../../config/system.mjs'
+import { mapOggDudeSkillCodes } from '../mappings/oggdude-skill-map.mjs'
 
 /**
  * Species Array Mapper : Map the Species XML data to the SwerpgArmor object array.
@@ -36,19 +37,23 @@ export function speciesMapper(species) {
     const startingExperience = OggDudeImporter.mapMandatoryNumber("species.StartingAttrs.Experience", xmlSpecies?.StartingAttrs?.Experience)
 
     // Free skills: choose modifiers where rankStart>0 OR rankAdd>0 OR isCareer true
-    const skillModifiers = OggDudeImporter.mapOptionalArray(
+    const skillModifiersRaw = OggDudeImporter.mapOptionalArray(
       xmlSpecies?.SkillModifiers?.SkillModifier,
       (skill) => ({
-        key: OggDudeImporter.mapOptionalString(skill?.Key),
+        rawKey: OggDudeImporter.mapOptionalString(skill?.Key),
         rankStart: OggDudeImporter.mapOptionalNumber(skill?.RankStart),
         rankAdd: OggDudeImporter.mapOptionalNumber(skill?.RankAdd),
         isCareer: OggDudeImporter.mapOptionalBoolean(skill?.IsCareer)
       })
     )
-    const freeSkills = [...new Set(skillModifiers
+    // Détermination des codes à transformer (conditions de gratuité)
+    const oggCodes = skillModifiersRaw
       .filter((s) => (s.rankStart > 0 || s.rankAdd > 0 || s.isCareer))
-      .map((s) => s.key)
-      .filter((k) => !!k))]
+      .map((s) => s.rawKey)
+      .filter((k) => !!k)
+    const freeSkills = mapOggDudeSkillCodes(oggCodes)
+  // Validation finale par rapport au set de choix du modèle (SYSTEM.SKILLS). On garde seulement les ids connus.
+  const validFreeSkills = freeSkills.filter((id) => SYSTEM.SKILLS[id])
 
     // Free talents: map keys to UUIDs if available
     const talentModifiers = OggDudeImporter.mapOptionalArray(
@@ -74,7 +79,7 @@ export function speciesMapper(species) {
       woundThreshold,
       strainThreshold,
       startingExperience,
-      freeSkills,
+  freeSkills: validFreeSkills,
       freeTalents
     }
   })
@@ -87,29 +92,23 @@ export function speciesMapper(species) {
  * @returns {string[]}
  */
 function resolveTalentUUIDs(keys) {
-  if (typeof game === 'undefined') return []
-  const uuids = []
-  for (const key of keys) {
-    if (!key) continue
-    // Search in loaded items first
-    const found = game.items?.find((i) => i.type === 'talent' && (i.getFlag?.('swerpg', 'oggdudeKey') === key || i.system?.key === key || i.name === key))
-    if (found) {
-      uuids.push(found.uuid)
-      continue
+  if (typeof game === 'undefined' || !Array.isArray(keys)) return []
+  return keys.reduce((acc, key) => {
+    if (!key) return acc
+    const direct = game.items?.find((i) => i.type === 'talent' && (i.getFlag?.('swerpg', 'oggdudeKey') === key || i.system?.key === key || i.name === key))
+    if (direct) {
+      acc.push(direct.uuid)
+      return acc
     }
-    // Search packs
-    for (const pack of game.packs?.values?.() || []) {
-      if (pack.documentName !== 'Item') continue
-      // Only search talent packs
-      if (!/talent/i.test(pack.title)) continue
-      const index = pack.index?.find((e) => e.type === 'talent' && (e.flags?.swerpg?.oggdudeKey === key || e.name === key))
-      if (index) {
-        uuids.push(`Compendium.${pack.collection}.${index._id}`)
-        break
-      }
+    const packMatch = [...(game.packs?.values?.() || [])]
+      .filter((p) => p.documentName === 'Item' && /talent/i.test(p.title))
+      .find((p) => p.index?.find((e) => e.type === 'talent' && (e.flags?.swerpg?.oggdudeKey === key || e.name === key)))
+    if (packMatch) {
+      const idx = packMatch.index.find((e) => e.type === 'talent' && (e.flags?.swerpg?.oggdudeKey === key || e.name === key))
+      if (idx) acc.push(`Compendium.${packMatch.collection}.${idx._id}`)
     }
-  }
-  return uuids
+    return acc
+  }, [])
 }
 
 
