@@ -637,10 +637,10 @@ async function syncTalents(force = false) {
     if (force || foundry.utils.isNewerVersion(game.system.version, actor._stats.systemVersion)) {
       try {
         await actor.syncTalents()
-  logger.info(`Swerpg | Synchronized talents for Actor "${actor.name}"`)
+        logger.info(`Swerpg | Synchronized talents for Actor "${actor.name}"`)
         synced++
       } catch (err) {
-  logger.warn(`Swerpg | Talent synchronization failed for Actor "${actor.name}": ${err.message}`)
+        logger.warn(`Swerpg | Talent synchronization failed for Actor "${actor.name}": ${err.message}`)
       }
       SceneNavigation.displayProgressBar({ label: 'Synchronizing Talent Data', pct: Math.round((n * 100) / total) })
     }

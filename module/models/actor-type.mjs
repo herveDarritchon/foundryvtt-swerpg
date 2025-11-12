@@ -1,4 +1,4 @@
-import { logger } from "../utils/logger.mjs"
+import { logger } from '../utils/logger.mjs'
 /**
  * @typedef {Object} SwerpgActorSkill
  * @param {number} rank

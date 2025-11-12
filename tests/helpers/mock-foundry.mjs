@@ -10,13 +10,15 @@ if (!globalThis.Color) {
 }
 if (!globalThis.Roll) {
   globalThis.Roll = class MockRollEarly {
-    constructor(formula, data) { 
+    constructor(formula, data) {
       this.formula = formula
-      this.data = data || {} 
+      this.data = data || {}
       this.terms = []
       this.dice = []
     }
-    roll() { return this }
+    roll() {
+      return this
+    }
     static parse(formula, data) {
       return [{ term: formula, data }]
     }
@@ -29,10 +31,23 @@ if (!globalThis.Roll) {
   }
 }
 if (!globalThis.Item) {
-  globalThis.Item = class MockItemEarly { constructor(data = {}) { this.system = data.system || {}; this.name = data.name || 'Mock Item'; this.type = data.type || 'item' } }
+  globalThis.Item = class MockItemEarly {
+    constructor(data = {}) {
+      this.system = data.system || {}
+      this.name = data.name || 'Mock Item'
+      this.type = data.type || 'item'
+    }
+  }
 }
 if (!globalThis.DialogV2) {
-  globalThis.DialogV2 = class MockDialogEarly { constructor(options = {}) { this.options = options } render() { return this } }
+  globalThis.DialogV2 = class MockDialogEarly {
+    constructor(options = {}) {
+      this.options = options
+    }
+    render() {
+      return this
+    }
+  }
 }
 
 // Foundry API minimal stub for modules that import foundry.applications.api at load time
@@ -40,9 +55,13 @@ if (!globalThis.foundry) {
   globalThis.foundry = {
     applications: {
       api: {
-        DialogV2: class MockDialogV2Early { 
-          constructor(options = {}) { this.options = options }
-          static prompt() { return null }
+        DialogV2: class MockDialogV2Early {
+          constructor(options = {}) {
+            this.options = options
+          }
+          static prompt() {
+            return null
+          }
         },
         HandlebarsApplicationMixin: (base) => base,
       },
@@ -56,12 +75,12 @@ if (!globalThis.foundry) {
 
 // Polyfills Foundry globaux
 if (!globalThis.Number.isNumeric) {
-  globalThis.Number.isNumeric = function(n) {
+  globalThis.Number.isNumeric = function (n) {
     return !Number.isNaN(Number.parseFloat(n)) && Number.isFinite(n)
   }
 }
 if (!globalThis.Math.clamp) {
-  globalThis.Math.clamp = function(value, min, max) {
+  globalThis.Math.clamp = function (value, min, max) {
     if (Number.isNaN(value)) return min
     return Math.min(Math.max(value, min), max)
   }
@@ -99,65 +118,137 @@ export function setupFoundryMock(options = {}) {
   const mergedTranslations = { ...defaultTranslations, ...translations }
 
   globalThis.foundry = {
-      applications: {
-        api: {
-          HandlebarsApplicationMixin: (base) => base,
-          // Minimal DocumentSheetV2 stub to satisfy sheets extending it in tests
-          DocumentSheetV2: class DocumentSheetV2Mock {
-            constructor({ document, ...options } = {}) {
-              this.document = document || { system: { actions: [] } }
-              this.options = options
-              this.element = {}
-              this.isEditable = true
-            }
-            async render() { return this }
-            async _onRender(_context, _options) { /* noop */ }
-            _onChangeForm(_formConfig, _event) { /* noop */ }
-            _processFormData(_event, _form, _formData) { return {} }
-          },
-          DialogV2: class DialogV2Mock {
-            constructor(options = {}) { this.options = options }
-            static TEMPLATE = ''
-            render() { return this }
-            _initializeApplicationOptions(o) { return o }
-            async _preFirstRender() { /* noop */ }
-            async _prepareContext() { return {} }
-            async _renderHTML() { return '' }
-            _replaceHTML() { /* noop */ }
-          },
+    applications: {
+      api: {
+        HandlebarsApplicationMixin: (base) => base,
+        // Minimal DocumentSheetV2 stub to satisfy sheets extending it in tests
+        DocumentSheetV2: class DocumentSheetV2Mock {
+          constructor({ document, ...options } = {}) {
+            this.document = document || { system: { actions: [] } }
+            this.options = options
+            this.element = {}
+            this.isEditable = true
+          }
+          async render() {
+            return this
+          }
+          async _onRender(_context, _options) {
+            /* noop */
+          }
+          _onChangeForm(_formConfig, _event) {
+            /* noop */
+          }
+          _processFormData(_event, _form, _formData) {
+            return {}
+          }
         },
-        sheets: {
-          ActorSheetV2: class MockActorSheetV2 {
-            constructor(options = {}) {
-              this.options = options
-            }
-            render() {
-              /* noop stub */
-            }
-          },
+        DialogV2: class DialogV2Mock {
+          constructor(options = {}) {
+            this.options = options
+          }
+          static TEMPLATE = ''
+          render() {
+            return this
+          }
+          _initializeApplicationOptions(o) {
+            return o
+          }
+          async _preFirstRender() {
+            /* noop */
+          }
+          async _prepareContext() {
+            return {}
+          }
+          async _renderHTML() {
+            return ''
+          }
+          _replaceHTML() {
+            /* noop */
+          }
         },
       },
+      sheets: {
+        ActorSheetV2: class MockActorSheetV2 {
+          constructor(options = {}) {
+            this.options = options
+          }
+          render() {
+            /* noop stub */
+          }
+        },
+      },
+    },
     abstract: {
       DataModel: class MockDataModel {
-        static defineSchema() { return {} }
-        static get schema() { return { fields: {} } }
-        constructor(data = {}) { this._source = data }
-        clone() { return this }
-        updateSource(_data) { /* noop */ }
-        toObject() { return this._source || {} }
+        static defineSchema() {
+          return {}
+        }
+        static get schema() {
+          return { fields: {} }
+        }
+        constructor(data = {}) {
+          this._source = data
+        }
+        clone() {
+          return this
+        }
+        updateSource(_data) {
+          /* noop */
+        }
+        toObject() {
+          return this._source || {}
+        }
       },
     },
     data: {
       fields: {
-        StringField: class { constructor(cfg = {}) { this.config = cfg } },
-        FilePathField: class { constructor(cfg = {}) { this.config = cfg } },
-        HTMLField: class { constructor(cfg = {}) { this.config = cfg } },
-        NumberField: class { constructor(cfg = {}) { this.config = cfg } },
-        BooleanField: class { constructor(cfg = {}) { this.config = cfg } },
-        ObjectField: class { constructor(cfg = {}) { this.config = cfg } },
-        ArrayField: class { constructor(field, cfg = {}) { this.field = field; this.config = cfg } },
-        SetField: class { constructor(field, cfg = {}) { this.field = field; this.config = cfg } },
-        SchemaField: class { constructor(schema = {}) { this.schema = schema } },
+        StringField: class {
+          constructor(cfg = {}) {
+            this.config = cfg
+          }
+        },
+        FilePathField: class {
+          constructor(cfg = {}) {
+            this.config = cfg
+          }
+        },
+        HTMLField: class {
+          constructor(cfg = {}) {
+            this.config = cfg
+          }
+        },
+        NumberField: class {
+          constructor(cfg = {}) {
+            this.config = cfg
+          }
+        },
+        BooleanField: class {
+          constructor(cfg = {}) {
+            this.config = cfg
+          }
+        },
+        ObjectField: class {
+          constructor(cfg = {}) {
+            this.config = cfg
+          }
+        },
+        ArrayField: class {
+          constructor(field, cfg = {}) {
+            this.field = field
+            this.config = cfg
+          }
+        },
+        SetField: class {
+          constructor(field, cfg = {}) {
+            this.field = field
+            this.config = cfg
+          }
+        },
+        SchemaField: class {
+          constructor(schema = {}) {
+            this.schema = schema
+          }
+        },
       },
     },
     utils: {
@@ -173,17 +264,17 @@ export function setupFoundryMock(options = {}) {
         if (value instanceof RegExp) return new RegExp(value.source, value.flags)
         if (value instanceof Map) {
           const m = new Map()
-            ;[...value.entries()].forEach(([k, v]) => m.set(k, deepClone(v, seen)))
+          ;[...value.entries()].forEach(([k, v]) => m.set(k, deepClone(v, seen)))
           return m
         }
         if (value instanceof Set) {
           const s = new Set()
-            ;[...value.values()].forEach((v) => s.add(deepClone(v, seen)))
+          ;[...value.values()].forEach((v) => s.add(deepClone(v, seen)))
           return s
         }
 
-  // Preserve prototype for non-array objects so instanceof checks survive cloning
-  const clone = Array.isArray(value) ? [] : Object.create(Object.getPrototypeOf(value))
+        // Preserve prototype for non-array objects so instanceof checks survive cloning
+        const clone = Array.isArray(value) ? [] : Object.create(Object.getPrototypeOf(value))
         seen.set(value, clone)
         for (const key of Object.keys(value)) {
           try {
@@ -206,15 +297,15 @@ export function setupFoundryMock(options = {}) {
             expanded[k] = v
             continue
           }
-            ;(function assign(path, value, target) {
-              const [head, ...rest] = path
-              if (!rest.length) {
-                target[head] = value
-                return
-              }
-              if (!(head in target) || typeof target[head] !== 'object') target[head] = {}
-              assign(rest, value, target[head])
-            })(k.split('.'), v, expanded)
+          ;(function assign(path, value, target) {
+            const [head, ...rest] = path
+            if (!rest.length) {
+              target[head] = value
+              return
+            }
+            if (!(head in target) || typeof target[head] !== 'object') target[head] = {}
+            assign(rest, value, target[head])
+          })(k.split('.'), v, expanded)
         }
         return expanded
       }),
@@ -228,7 +319,7 @@ export function setupFoundryMock(options = {}) {
           const exists = Object.prototype.hasOwnProperty.call(target, key)
           if (!exists && !insertKeys) continue
 
-            const oldVal = target[key]
+          const oldVal = target[key]
           if (isPlain(oldVal) && isPlain(newVal)) {
             // Deep merge nested objects without overwriting missing keys
             target[key] = globalThis.foundry.utils.mergeObject(oldVal, newVal, { insertKeys, overwrite, inplace: false })
@@ -316,14 +407,28 @@ export function setupFoundryMock(options = {}) {
   }
 
   globalThis.DialogV2 = class MockDialogV2 {
-    constructor(options = {}) { this.options = options }
+    constructor(options = {}) {
+      this.options = options
+    }
     static TEMPLATE = ''
-    render() { return this }
-    _initializeApplicationOptions(o) { return o }
-    async _preFirstRender() { /* noop */ }
-    async _prepareContext() { return {} }
-    async _renderHTML() { return '' }
-    _replaceHTML() { /* noop */ }
+    render() {
+      return this
+    }
+    _initializeApplicationOptions(o) {
+      return o
+    }
+    async _preFirstRender() {
+      /* noop */
+    }
+    async _prepareContext() {
+      return {}
+    }
+    async _renderHTML() {
+      return ''
+    }
+    _replaceHTML() {
+      /* noop */
+    }
   }
 
   // FilePicker stub used by ActionConfig
@@ -333,12 +438,19 @@ export function setupFoundryMock(options = {}) {
       this.type = type
       this.callback = callback || (() => {})
     }
-    async browse() { /* simulate immediate browse */ return { files: [], current: this.current } }
+    async browse() {
+      /* simulate immediate browse */ return { files: [], current: this.current }
+    }
   }
 
   // CONFIG global partials consumed by ActionConfig (statusEffects)
   if (!globalThis.CONFIG) {
-    globalThis.CONFIG = { statusEffects: [ { id: 'status1', label: 'Status 1' }, { id: 'status2', label: 'Status 2' } ] }
+    globalThis.CONFIG = {
+      statusEffects: [
+        { id: 'status1', label: 'Status 1' },
+        { id: 'status2', label: 'Status 2' },
+      ],
+    }
   }
 
   // Minimal SYSTEM constants required by action data model defineSchema
@@ -399,7 +511,7 @@ export function teardownFoundryMock() {
  */
 export function extendFoundryMock(patch) {
   if (!globalThis.foundry) throw new Error('Foundry mock not initialized')
-  
+
   // Deep merge for better extension support
   const mergeDeep = (target, source) => {
     for (const key in source) {
@@ -411,7 +523,7 @@ export function extendFoundryMock(patch) {
       }
     }
   }
-  
+
   mergeDeep(globalThis.foundry, patch)
 }
 
@@ -445,7 +557,7 @@ export function addPacksMock(packs = {}) {
     globalThis.game = { packs: new Map() }
   }
   if (!globalThis.game.packs) globalThis.game.packs = new Map()
-  if (!packs || (typeof packs !== 'object')) return
+  if (!packs || typeof packs !== 'object') return
 
   // Support object map form: { 'id': { name, type, documents? } }
   for (const [id, def] of Object.entries(packs)) {

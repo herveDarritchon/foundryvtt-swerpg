@@ -7,21 +7,7 @@ const PREFIX = 'SWERPG ||'
 let debugEnabled = false
 
 // Niveaux supportés (ordre informatif)
-const LEVELS = [
-  'log',
-  'info',
-  'warn',
-  'error',
-  'debug',
-  'group',
-  'groupCollapsed',
-  'groupEnd',
-  'table',
-  'time',
-  'timeEnd',
-  'trace',
-  'assert',
-]
+const LEVELS = ['log', 'info', 'warn', 'error', 'debug', 'group', 'groupCollapsed', 'groupEnd', 'table', 'time', 'timeEnd', 'trace', 'assert']
 
 // Niveaux toujours actifs hors debug
 const ALWAYS_ON_LEVELS = new Set(['warn', 'error'])
@@ -74,9 +60,11 @@ function applyLogPolicy() {
           break
         case 'assert':
           // Assertion uniquement en mode debug (comportement historique)
-          getter = () => (condition, ...args) => {
-            if (!condition) console.assert(condition, PREFIX, ...args)
-          }
+          getter =
+            () =>
+            (condition, ...args) => {
+              if (!condition) console.assert(condition, PREFIX, ...args)
+            }
           break
         default:
           getter = () => noop

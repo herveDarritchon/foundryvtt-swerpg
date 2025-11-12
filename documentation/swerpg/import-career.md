@@ -76,7 +76,7 @@ const xml = {
   Key: 'soldier',
   Description: 'Desc',
   CareerSkills: { CareerSkill: [{ Key: 'ATHL' }, { Key: 'PERC' }] },
-  FreeRanks: '3'
+  FreeRanks: '3',
 }
 const [mapped] = careerMapper([xml])
 // mapped.system.careerSkills => [{id:'athletics'},{id:'perception'}]

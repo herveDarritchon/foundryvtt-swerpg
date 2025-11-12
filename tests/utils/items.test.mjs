@@ -9,7 +9,7 @@ describe('Items Utils', () => {
           { type: 'weapon', name: 'Lightsaber' },
           { type: 'armor', name: 'Padded Armor' },
           { type: 'weapon', name: 'Blaster Pistol' },
-          { type: 'gear', name: 'Comlink' }
+          { type: 'gear', name: 'Comlink' },
         ]
 
         const weapons = getItemsOf(items, 'weapon')
@@ -21,7 +21,7 @@ describe('Items Utils', () => {
       test('should return empty array when no items match the type', () => {
         const items = [
           { type: 'weapon', name: 'Lightsaber' },
-          { type: 'armor', name: 'Padded Armor' }
+          { type: 'armor', name: 'Padded Armor' },
         ]
 
         const talents = getItemsOf(items, 'talent')
@@ -33,7 +33,7 @@ describe('Items Utils', () => {
         const items = [
           { type: 'weapon', name: 'Lightsaber' },
           { type: 'weapon', name: 'Blaster Pistol' },
-          { type: 'weapon', name: 'Vibrosword' }
+          { type: 'weapon', name: 'Vibrosword' },
         ]
 
         const weapons = getItemsOf(items, 'weapon')
@@ -47,7 +47,7 @@ describe('Items Utils', () => {
         const items = [
           { type: 'weapon', name: 'Lightsaber' },
           { type: 'Weapon', name: 'Blaster Pistol' },
-          { type: 'WEAPON', name: 'Vibrosword' }
+          { type: 'WEAPON', name: 'Vibrosword' },
         ]
 
         const lowerCaseWeapons = getItemsOf(items, 'weapon')
@@ -64,7 +64,7 @@ describe('Items Utils', () => {
           { type: 1, name: 'Item 1' },
           { type: '1', name: 'Item 2' },
           { type: true, name: 'Item 3' },
-          { type: 'true', name: 'Item 4' }
+          { type: 'true', name: 'Item 4' },
         ]
 
         expect(getItemsOf(items, 1)).toHaveLength(1)
@@ -79,7 +79,7 @@ describe('Items Utils', () => {
           { name: 'Item without type' },
           { type: undefined, name: 'Item with undefined type' },
           { type: null, name: 'Item with null type' },
-          { type: 'armor', name: 'Padded Armor' }
+          { type: 'armor', name: 'Padded Armor' },
         ]
 
         const weapons = getItemsOf(items, 'weapon')
@@ -88,8 +88,8 @@ describe('Items Utils', () => {
 
         const undefinedItems = getItemsOf(items, undefined)
         expect(undefinedItems).toHaveLength(2)
-        
-        const itemNames = undefinedItems.map(item => item.name)
+
+        const itemNames = undefinedItems.map((item) => item.name)
         expect(itemNames).toContain('Item with undefined type')
         expect(itemNames).toContain('Item without type')
 
@@ -133,20 +133,20 @@ describe('Items Utils', () => {
             type: 'weapon',
             name: 'Lightsaber',
             stats: { damage: 10, crit: 2 },
-            properties: ['Deadly', 'Superior']
+            properties: ['Deadly', 'Superior'],
           },
           {
             type: 'armor',
             name: 'Padded Armor',
             stats: { defense: 1, encumbrance: 2 },
-            properties: ['Lightweight']
+            properties: ['Lightweight'],
           },
           {
             type: 'weapon',
             name: 'Blaster Pistol',
             stats: { damage: 6, crit: 3 },
-            properties: ['Ranged', 'Stun Setting']
-          }
+            properties: ['Ranged', 'Stun Setting'],
+          },
         ]
 
         const weapons = getItemsOf(items, 'weapon')
@@ -172,7 +172,7 @@ describe('Items Utils', () => {
           1: { type: 'armor', name: 'Shield' },
           2: { type: 'weapon', name: 'Bow' },
           length: 3,
-          filter: Array.prototype.filter
+          filter: Array.prototype.filter,
         }
 
         const weapons = getItemsOf(arrayLike, 'weapon')
@@ -184,7 +184,7 @@ describe('Items Utils', () => {
       test('should handle items without filter method gracefully', () => {
         const notAnArray = {
           0: { type: 'weapon', name: 'Sword' },
-          length: 1
+          length: 1,
         }
 
         // Should throw error for non-array input
@@ -199,7 +199,7 @@ describe('Items Utils', () => {
         for (let index = 0; index < 10000; index++) {
           largeItems.push({
             type: index % 2 === 0 ? 'weapon' : 'armor',
-            name: `Item ${index}`
+            name: `Item ${index}`,
           })
         }
 
@@ -218,7 +218,7 @@ describe('Items Utils', () => {
           { type: 1, name: 'Numeric 1' },
           { type: '1', name: 'String 1' },
           { type: true, name: 'Boolean true' },
-          { type: 'true', name: 'String true' }
+          { type: 'true', name: 'String true' },
         ]
 
         // Should not match different types even if they coerce to the same value
@@ -237,7 +237,7 @@ describe('Items Utils', () => {
           { type: 'armor', name: 'Padded Armor', system: { defense: { melee: 0, ranged: 1 } } },
           { type: 'gear', name: 'Comlink', system: { encumbrance: 0 } },
           { type: 'skill', name: 'Lightsaber', system: { characteristic: 'Brawn' } },
-          { type: 'talent', name: 'Lethal Blows', system: { isRanked: true } }
+          { type: 'talent', name: 'Lethal Blows', system: { isRanked: true } },
         ]
 
         expect(getItemsOf(items, 'talent')).toHaveLength(2)

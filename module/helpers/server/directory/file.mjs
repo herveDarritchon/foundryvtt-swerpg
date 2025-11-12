@@ -19,8 +19,8 @@
 import { logger } from '../../../utils/logger.mjs'
 
 async function _createDirectory(path, target) {
-    logger.debug(`Create Path ${path} with target ${target}.`);
-    return await foundry.applications.apps.FilePicker.createDirectory("data", path + "/" + target, {bucket: "data"});
+  logger.debug(`Create Path ${path} with target ${target}.`)
+  return await foundry.applications.apps.FilePicker.createDirectory('data', path + '/' + target, { bucket: 'data' })
 }
 
 /**
@@ -33,19 +33,19 @@ async function _createDirectory(path, target) {
  * @name _checkPathExists
  */
 async function _checkPathExists(path) {
-    logger.debug(`Check that Path ${path} exists.`);
-    let result;
-    try {
-        result = await foundry.applications.apps.FilePicker.browse("data", path, {activeSource: "data", recursive: true});
-    } catch (e) {
-        // Swallow browse errors (permissions or missing path) -> treat as non-existent
-        logger.debug(`Browse failed for path ${path}: treating as non-existent`, e.message)
-        return false;
-    }
-    const target = result.target;
-    const isExisting = target !== null;
-    logger.debug(`Path ${path} with result ${target} exists ?`, isExisting);
-    return isExisting;
+  logger.debug(`Check that Path ${path} exists.`)
+  let result
+  try {
+    result = await foundry.applications.apps.FilePicker.browse('data', path, { activeSource: 'data', recursive: true })
+  } catch (e) {
+    // Swallow browse errors (permissions or missing path) -> treat as non-existent
+    logger.debug(`Browse failed for path ${path}: treating as non-existent`, e.message)
+    return false
+  }
+  const target = result.target
+  const isExisting = target !== null
+  logger.debug(`Path ${path} with result ${target} exists ?`, isExisting)
+  return isExisting
 }
 
 /**
@@ -59,22 +59,22 @@ async function _checkPathExists(path) {
  * @name _createPath
  */
 async function _createPath(path) {
-    logger.debug(`Create Path ${path} if necessary.`);
-    let pathParts = path.split('/');
-    let currentPath = '';
-    let fullPath = '';
+  logger.debug(`Create Path ${path} if necessary.`)
+  let pathParts = path.split('/')
+  let currentPath = ''
+  let fullPath = ''
 
-    for (let part of pathParts) {
-        fullPath += part + '/';
-        const found = await _checkPathExists(fullPath);
-    logger.debug(`Sub-path ${fullPath} exists ?`, found);
-        if (!found) {
-            logger.debug(`Sub-path ${fullPath} does not exist. Let's create it. CurrentPath ${currentPath} with part ${part}.`)
-            const result = await _createDirectory(currentPath, part);
-            logger.debug(`Sub-path ${fullPath} created !`, result);
-        }
-        currentPath = fullPath;
+  for (let part of pathParts) {
+    fullPath += part + '/'
+    const found = await _checkPathExists(fullPath)
+    logger.debug(`Sub-path ${fullPath} exists ?`, found)
+    if (!found) {
+      logger.debug(`Sub-path ${fullPath} does not exist. Let's create it. CurrentPath ${currentPath} with part ${part}.`)
+      const result = await _createDirectory(currentPath, part)
+      logger.debug(`Sub-path ${fullPath} created !`, result)
     }
+    currentPath = fullPath
+  }
 }
 
 /* ------------------------------------------------------------------------------------------------------------------------------------ */
@@ -89,7 +89,7 @@ async function _createPath(path) {
  * @name checkFileExists
  */
 export async function checkFileExists(file) {
-    return _checkPathExists(file);
+  return _checkPathExists(file)
 }
 
 /**
@@ -102,13 +102,13 @@ export async function checkFileExists(file) {
  * @name createPathIfNecessary
  */
 export async function createPathIfNecessary(path) {
-    if (await _checkPathExists(path)) {
-    logger.debug(`Path ${path} exists on the server !`);
-    } else {
-    logger.warn(`Path ${path} does not exist on the server ! Let's create it.`);
-        await _createPath(path);
-    }
-    return path;
+  if (await _checkPathExists(path)) {
+    logger.debug(`Path ${path} exists on the server !`)
+  } else {
+    logger.warn(`Path ${path} does not exist on the server ! Let's create it.`)
+    await _createPath(path)
+  }
+  return path
 }
 
 /**
@@ -122,7 +122,7 @@ export async function createPathIfNecessary(path) {
  * @name uploadFile
  */
 export async function uploadFile(path, file) {
-    return await foundry.applications.apps.FilePicker.upload("data", path, file, {}, {notify: false});
+  return await foundry.applications.apps.FilePicker.upload('data', path, file, {}, { notify: false })
 }
 
 /**
@@ -136,8 +136,8 @@ export async function uploadFile(path, file) {
  * @name uploadFileOnTheServer
  */
 export async function uploadFileOnTheServer(dataFile, path) {
-        const file = new File([dataFile.data], dataFile.element.name, {type: dataFile.element.getMimeType()});
-    logger.debug(`Image to be stored ${path}/`, file);
-        const result = await uploadFile(path, file)
-    logger.debug(`Image ${file.name} has been uploaded ?`, result);
+  const file = new File([dataFile.data], dataFile.element.name, { type: dataFile.element.getMimeType() })
+  logger.debug(`Image to be stored ${path}/`, file)
+  const result = await uploadFile(path, file)
+  logger.debug(`Image ${file.name} has been uploaded ?`, result)
 }

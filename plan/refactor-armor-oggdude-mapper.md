@@ -5,7 +5,7 @@ date_created: 2025-11-12
 last_updated: 2025-11-12
 owner: herve.darritchon
 status: 'Planned'
-tags: ['feature','refactor','migration','data-import','oggdude','armor']
+tags: ['feature', 'refactor', 'migration', 'data-import', 'oggdude', 'armor']
 ---
 
 # Introduction
@@ -23,7 +23,7 @@ Ce plan décrit la refonte complète de `armor-ogg-dude.mjs` pour produire des o
 - **REQ-005**: Normaliser la catégorie via table déterministe `ARMOR_CATEGORY_MAP` (ex: OggDude codes / noms → keys `light`, `medium`, `heavy`, etc.). Défaut = `SwerpgArmor.DEFAULT_CATEGORY` si inconnu.
 - **REQ-006**: Distinguer catégories et propriétés: `xmlArmor.Categories.Category[]` peut contenir à la fois la catégorie primaire et des tags supplémentaires. Utiliser deux tables: `ARMOR_CATEGORY_MAP` et `ARMOR_PROPERTY_MAP`.
 - **REQ-007**: Construire `properties` Set en filtrant chaque entrée mappée via `ARMOR_PROPERTY_MAP`; ignorer inconnues avec `logger.warn`.
-- **REQ-008**: Clamp `price >= 0`; si manquant → 0.  
+- **REQ-008**: Clamp `price >= 0`; si manquant → 0.
 - **REQ-009**: Clamp `rarity` dans [0,20]; défaut = 0 si absent.
 - **REQ-010**: `restricted` → booléen dans `system.restricted` (valeur falsy => false).
 - **REQ-011**: Sanitiser `name` et `description` (trim + neutraliser `<script`).
@@ -51,103 +51,103 @@ Ce plan décrit la refonte complète de `armor-ogg-dude.mjs` pour produire des o
 
 - GOAL-001: Introduire tables de correspondance et helpers génériques.
 
-| Task     | Description                                                                                                                     | Completed | Date |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------- | --------- | ---- |
-| TASK-001 | Créer `module/importer/mappings/oggdude-armor-category-map.mjs` export `ARMOR_CATEGORY_MAP`                                     |           |      |
-| TASK-002 | Créer `module/importer/mappings/oggdude-armor-property-map.mjs` export `ARMOR_PROPERTY_MAP`                                    |           |      |
-| TASK-003 | Ajouter `module/importer/mappings/index-armor.mjs` re-export catégories & propriétés                                            |           |      |
-| TASK-004 | Implémenter util `clampNumber(value,min,max,defaultValue)` dans mapper ou util partagé                                          |           |      |
-| TASK-005 | Implémenter `sanitizeText(str)` (remplacer `<script` → `&lt;script`, trim)                                                      |           |      |
-| TASK-006 | Définir constante `FLAG_STRICT_ARMOR_VALIDATION = false` (exportable)                                                           |           |      |
-| TASK-007 | Tests unitaires pour les deux tables de mapping (catégorie & propriété)                                                         |           |      |
-| TASK-008 | Ajouter doc inline (WHY) sur choix clamp (pas d’expansion auto par rareté ici)                                                 |           |      |
+| Task     | Description                                                                                 | Completed | Date |
+| -------- | ------------------------------------------------------------------------------------------- | --------- | ---- |
+| TASK-001 | Créer `module/importer/mappings/oggdude-armor-category-map.mjs` export `ARMOR_CATEGORY_MAP` |           |      |
+| TASK-002 | Créer `module/importer/mappings/oggdude-armor-property-map.mjs` export `ARMOR_PROPERTY_MAP` |           |      |
+| TASK-003 | Ajouter `module/importer/mappings/index-armor.mjs` re-export catégories & propriétés        |           |      |
+| TASK-004 | Implémenter util `clampNumber(value,min,max,defaultValue)` dans mapper ou util partagé      |           |      |
+| TASK-005 | Implémenter `sanitizeText(str)` (remplacer `<script` → `&lt;script`, trim)                  |           |      |
+| TASK-006 | Définir constante `FLAG_STRICT_ARMOR_VALIDATION = false` (exportable)                       |           |      |
+| TASK-007 | Tests unitaires pour les deux tables de mapping (catégorie & propriété)                     |           |      |
+| TASK-008 | Ajouter doc inline (WHY) sur choix clamp (pas d’expansion auto par rareté ici)              |           |      |
 
 ### Implementation Phase 2 - Refactor Mapper Principal
 
 - GOAL-002: Réécrire `armorMapper` pour schéma conforme.
 
 | Task     | Description                                                                                                                     | Completed | Date |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------- | -------- | ---- |
-| TASK-009 | Extraire logique dans fonction `mapOggDudeArmor(xmlArmor)`                                                                      |          |      |
-| TASK-010 | Construire structure root `{ name, type: 'armor', img, system: {} }`                                                            |          |      |
-| TASK-011 | Mapper catégorie: parcourir `xmlArmor.Categories.Category[]` → première catégorie résolue via `ARMOR_CATEGORY_MAP` sinon défaut |          |      |
-| TASK-012 | Collecter propriétés: toutes entrées mappées via `ARMOR_PROPERTY_MAP` → Set                                                     |          |      |
-| TASK-013 | Mapper `Defense` → entier (parse), clamp [0,100] pré-validation, assign `system.defense = { base }`                             |          |      |
-| TASK-014 | Mapper `Soak` → entier, clamp [0,100], assign `system.soak = { base }`                                                          |          |      |
-| TASK-015 | Mapper `Encumbrance` → `system.encumbrance` (≥0)                                                                                |          |      |
-| TASK-016 | Mapper `Rarity` (clamp [0,20])                                                                                                  |          |      |
-| TASK-017 | Mapper `Price` (≥0 sinon 0)                                                                                                     |          |      |
-| TASK-018 | Mapper `HP` → `system.hp` si supporté par parent (sinon ignorer après vérif)                                                    |          |      |
-| TASK-019 | Mapper `Restricted` → bool `system.restricted`                                                                                  |          |      |
-| TASK-020 | Sanitize `name`, `description`                                                                                                  |          |      |
-| TASK-021 | Tri alphabétique final des propriétés                                                                                           |          |      |
-| TASK-022 | Supprimer champs extraits non supportés du résultat final                                                                      |          |      |
-| TASK-023 | Accumuler stats (total++, unknownCategory++, unknownProperties += n, rejected++)                                               |          |      |
-| TASK-024 | Exporter fonction `getArmorImportStats()` et `resetArmorImportStats()`                                                          |          |      |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------- | --------- | ---- |
+| TASK-009 | Extraire logique dans fonction `mapOggDudeArmor(xmlArmor)`                                                                      |           |      |
+| TASK-010 | Construire structure root `{ name, type: 'armor', img, system: {} }`                                                            |           |      |
+| TASK-011 | Mapper catégorie: parcourir `xmlArmor.Categories.Category[]` → première catégorie résolue via `ARMOR_CATEGORY_MAP` sinon défaut |           |      |
+| TASK-012 | Collecter propriétés: toutes entrées mappées via `ARMOR_PROPERTY_MAP` → Set                                                     |           |      |
+| TASK-013 | Mapper `Defense` → entier (parse), clamp [0,100] pré-validation, assign `system.defense = { base }`                             |           |      |
+| TASK-014 | Mapper `Soak` → entier, clamp [0,100], assign `system.soak = { base }`                                                          |           |      |
+| TASK-015 | Mapper `Encumbrance` → `system.encumbrance` (≥0)                                                                                |           |      |
+| TASK-016 | Mapper `Rarity` (clamp [0,20])                                                                                                  |           |      |
+| TASK-017 | Mapper `Price` (≥0 sinon 0)                                                                                                     |           |      |
+| TASK-018 | Mapper `HP` → `system.hp` si supporté par parent (sinon ignorer après vérif)                                                    |           |      |
+| TASK-019 | Mapper `Restricted` → bool `system.restricted`                                                                                  |           |      |
+| TASK-020 | Sanitize `name`, `description`                                                                                                  |           |      |
+| TASK-021 | Tri alphabétique final des propriétés                                                                                           |           |      |
+| TASK-022 | Supprimer champs extraits non supportés du résultat final                                                                       |           |      |
+| TASK-023 | Accumuler stats (total++, unknownCategory++, unknownProperties += n, rejected++)                                                |           |      |
+| TASK-024 | Exporter fonction `getArmorImportStats()` et `resetArmorImportStats()`                                                          |           |      |
 
 ### Implementation Phase 3 - Validation & Mode Strict
 
 - GOAL-003: Ajouter validation systémique.
 
-| Task     | Description                                                                                                         | Completed | Date |
-| -------- | ------------------------------------------------------------------------------------------------------------------- | --------- | ---- |
-| TASK-025 | Implémenter `validateArmorSystem(system)` retourne `{ valid, errors }`                                              |           |      |
-| TASK-026 | Validation: `category` string non vide, `defense.base` et `soak.base` entiers ≥0                                    |           |      |
-| TASK-027 | Check `properties` ⊆ `SYSTEM.ARMOR.PROPERTIES` (filtrer sinon)                                                      |           |      |
-| TASK-028 | Mode strict: rejet si `category` inconnue ou defense/soak NaN                                                       |           |      |
-| TASK-029 | Log warn détaillé pour chaque rejet (`ARMOR_IMPORT_INVALID`)                                                        |           |      |
-| TASK-030 | Empêcher insertion d’objet si `validateArmorSystem` retourne `valid=false`                                          |           |      |
-| TASK-031 | Test interne sur nombre de propriétés > 12 → tronquer + warn `ARMOR_PROPERTIES_TRUNCATED`                           |           |      |
-| TASK-032 | Instrumentation: enregistrer motifs de rejet (array codes)                                                          |           |      |
+| Task     | Description                                                                               | Completed | Date |
+| -------- | ----------------------------------------------------------------------------------------- | --------- | ---- |
+| TASK-025 | Implémenter `validateArmorSystem(system)` retourne `{ valid, errors }`                    |           |      |
+| TASK-026 | Validation: `category` string non vide, `defense.base` et `soak.base` entiers ≥0          |           |      |
+| TASK-027 | Check `properties` ⊆ `SYSTEM.ARMOR.PROPERTIES` (filtrer sinon)                            |           |      |
+| TASK-028 | Mode strict: rejet si `category` inconnue ou defense/soak NaN                             |           |      |
+| TASK-029 | Log warn détaillé pour chaque rejet (`ARMOR_IMPORT_INVALID`)                              |           |      |
+| TASK-030 | Empêcher insertion d’objet si `validateArmorSystem` retourne `valid=false`                |           |      |
+| TASK-031 | Test interne sur nombre de propriétés > 12 → tronquer + warn `ARMOR_PROPERTIES_TRUNCATED` |           |      |
+| TASK-032 | Instrumentation: enregistrer motifs de rejet (array codes)                                |           |      |
 
 ### Implementation Phase 4 - Tests Unitaires & Intégration
 
 - GOAL-004: Couverture >95% branche.
 
-| Task     | Description                                                                                          | Completed | Date |
-| -------- | ---------------------------------------------------------------------------------------------------- | --------- | ---- |
-| TASK-033 | Créer `tests/importer/armor-oggdude.spec.mjs`                                                        |           |      |
-| TASK-034 | TEST: catégorie connue mappée correctement                                                           |           |      |
-| TASK-035 | TEST: catégorie inconnue → défaut medium (non strict)                                                |           |      |
-| TASK-036 | TEST: mode strict + catégorie inconnue → rejet                                                       |           |      |
-| TASK-037 | TEST: propriétés connues dédupliquées                                                                |           |      |
-| TASK-038 | TEST: propriété inconnue → warn + exclusion                                                          |           |      |
-| TASK-039 | TEST: Defense/Soak NaN → 0 + warn                                                                    |           |      |
-| TASK-040 | TEST: Defense/Soak aberrants (>100) → clamp + warn                                                   |           |      |
-| TASK-041 | TEST: Rarity hors borne → clamp                                                                      |           |      |
-| TASK-042 | TEST: Price négatif → 0                                                                              |           |      |
-| TASK-043 | TEST: Sanitize description `<script>alert()` retiré                                                  |           |      |
-| TASK-044 | TEST: Tri alphabétique propriétés                                                                    |           |      |
-| TASK-045 | TEST: Instrumentation stats (unknownProperties++, unknownCategory++)                                 |           |      |
-| TASK-046 | TEST: Rejet item invalid (strict sans catégorie)                                                     |           |      |
-| TASK-047 | TEST: Troncature >12 propriétés                                                                      |           |      |
-| TASK-048 | TEST: resetArmorImportStats() remet compteurs à 0                                                    |           |      |
-| TASK-049 | TEST: Performance (500 armors synthétiques < seuil X ms)                                             |           |      |
+| Task     | Description                                                          | Completed | Date |
+| -------- | -------------------------------------------------------------------- | --------- | ---- |
+| TASK-033 | Créer `tests/importer/armor-oggdude.spec.mjs`                        |           |      |
+| TASK-034 | TEST: catégorie connue mappée correctement                           |           |      |
+| TASK-035 | TEST: catégorie inconnue → défaut medium (non strict)                |           |      |
+| TASK-036 | TEST: mode strict + catégorie inconnue → rejet                       |           |      |
+| TASK-037 | TEST: propriétés connues dédupliquées                                |           |      |
+| TASK-038 | TEST: propriété inconnue → warn + exclusion                          |           |      |
+| TASK-039 | TEST: Defense/Soak NaN → 0 + warn                                    |           |      |
+| TASK-040 | TEST: Defense/Soak aberrants (>100) → clamp + warn                   |           |      |
+| TASK-041 | TEST: Rarity hors borne → clamp                                      |           |      |
+| TASK-042 | TEST: Price négatif → 0                                              |           |      |
+| TASK-043 | TEST: Sanitize description `<script>alert()` retiré                  |           |      |
+| TASK-044 | TEST: Tri alphabétique propriétés                                    |           |      |
+| TASK-045 | TEST: Instrumentation stats (unknownProperties++, unknownCategory++) |           |      |
+| TASK-046 | TEST: Rejet item invalid (strict sans catégorie)                     |           |      |
+| TASK-047 | TEST: Troncature >12 propriétés                                      |           |      |
+| TASK-048 | TEST: resetArmorImportStats() remet compteurs à 0                    |           |      |
+| TASK-049 | TEST: Performance (500 armors synthétiques < seuil X ms)             |           |      |
 
 ### Implementation Phase 5 - Documentation & Traçabilité
 
 - GOAL-005: Documenter nouveau flux.
 
-| Task     | Description                                                                                           | Completed | Date |
-| -------- | ----------------------------------------------------------------------------------------------------- | --------- | ---- |
-| TASK-050 | Créer `documentation/swerpg/import-armor.md` (mapping, strict mode, limitations propriétés)           |           |      |
-| TASK-051 | Mettre à jour `CHANGELOG.md` (section Unreleased Added/Changed/Removed)                               |           |      |
-| TASK-052 | Ajouter exemple avant/après mapping dans doc                                                          |           |      |
-| TASK-053 | Mention sécurité sanitisation texte                                                                   |           |      |
-| TASK-054 | Lier aux plans species/career/weapon                                                                  |           |      |
+| Task     | Description                                                                                 | Completed | Date |
+| -------- | ------------------------------------------------------------------------------------------- | --------- | ---- |
+| TASK-050 | Créer `documentation/swerpg/import-armor.md` (mapping, strict mode, limitations propriétés) |           |      |
+| TASK-051 | Mettre à jour `CHANGELOG.md` (section Unreleased Added/Changed/Removed)                     |           |      |
+| TASK-052 | Ajouter exemple avant/après mapping dans doc                                                |           |      |
+| TASK-053 | Mention sécurité sanitisation texte                                                         |           |      |
+| TASK-054 | Lier aux plans species/career/weapon                                                        |           |      |
 
 ### Implementation Phase 6 - Observabilité & Optimisation
 
 - GOAL-006: Metrics & robustesse.
 
-| Task     | Description                                                                                                 | Completed | Date |
-| -------- | ----------------------------------------------------------------------------------------------------------- | --------- | ---- |
-| TASK-055 | Export JSON final stats dans log debug après import batch                                                   |           |      |
-| TASK-056 | Ajouter tag PERF sur boucle propriétés si future optimisation possible                                      |           |      |
-| TASK-057 | Audit mémoire (absence de références persistantes sur arrays temporaires)                                   |           |      |
-| TASK-058 | Évaluer fusion catégorie + propriété dans une seule passe map/reduce (ADR si gain)                          |           |      |
-| TASK-059 | Mettre statut plan → In progress après début dev                                                            |           |      |
-| TASK-060 | Marquer plan Completed après validation manuelle en instance Foundry                                        |           |      |
+| Task     | Description                                                                        | Completed | Date |
+| -------- | ---------------------------------------------------------------------------------- | --------- | ---- |
+| TASK-055 | Export JSON final stats dans log debug après import batch                          |           |      |
+| TASK-056 | Ajouter tag PERF sur boucle propriétés si future optimisation possible             |           |      |
+| TASK-057 | Audit mémoire (absence de références persistantes sur arrays temporaires)          |           |      |
+| TASK-058 | Évaluer fusion catégorie + propriété dans une seule passe map/reduce (ADR si gain) |           |      |
+| TASK-059 | Mettre statut plan → In progress après début dev                                   |           |      |
+| TASK-060 | Marquer plan Completed après validation manuelle en instance Foundry               |           |      |
 
 ## 3. Alternatives
 

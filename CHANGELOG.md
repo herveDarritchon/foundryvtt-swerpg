@@ -37,6 +37,7 @@
 
 - **build:** remove unused database entries from build configuration ([a8b7f67](https://github.com/herveDarritchon/foundryvtt-swerpg/commit/a8b7f67c26ba93d3965916d413a668f1845aa8e7))
 - **main:** update build command from pullYMLtoLDB to compile ([8c5ab2b](https://github.com/herveDarritchon/foundryvtt-swerpg/commit/8c5ab2bf18e8cdbd95b0803e0e0172d3bb4d37d0))
+
 ## [0.1.9](https://github.com/herveDarritchon/foundryvtt-swerpg/compare/v0.1.8...v0.1.9) (2025-06-04)
 
 ## [0.1.8](https://github.com/herveDarritchon/foundryvtt-swerpg/compare/v0.1.7...v0.1.8) (2025-06-04)
@@ -58,6 +59,7 @@
 ## [0.1.1](https://github.com/herveDarritchon/foundryvtt-swerpg/compare/v0.1.0...v0.1.1) (2025-06-03)
 
 ## [0.1.0] (2025-06-03)
+
 ## [0.1.17](https://github.com/herveDarritchon/foundryvtt-swerpg/compare/v0.1.16...v0.1.17) (2025-06-04)
 
 ### Bug Fixes (0.1.17)

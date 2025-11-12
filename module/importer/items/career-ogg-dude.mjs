@@ -1,6 +1,6 @@
-import { buildArmorImgWorldPath, buildItemImgSystemPath } from "../../settings/directories.mjs";
-import OggDudeImporter from "../oggDude.mjs";
-import OggDudeDataElement from "../../settings/models/OggDudeDataElement.mjs";
+import { buildArmorImgWorldPath, buildItemImgSystemPath } from '../../settings/directories.mjs'
+import OggDudeImporter from '../oggDude.mjs'
+import OggDudeDataElement from '../../settings/models/OggDudeDataElement.mjs'
 import { logger } from '../../utils/logger.mjs'
 import { SYSTEM } from '../../config/system.mjs'
 import { mapOggDudeSkillCodes, mapOggDudeSkillCode } from '../mappings/oggdude-skill-map.mjs'
@@ -12,41 +12,41 @@ import { mapOggDudeSkillCodes, mapOggDudeSkillCode } from '../mappings/oggdude-s
  * @returns {Array} Array of item source objects { name, type, system }
  */
 export function careerMapper(careers, { strictSkills = false } = {}) {
-    return careers.map((xmlCareer) => {
-        const name = OggDudeImporter.mapMandatoryString("career.Name", xmlCareer?.Name)
-        const key = OggDudeImporter.mapMandatoryString("career.Key", xmlCareer?.Key)
-        const description = OggDudeImporter.mapOptionalString(xmlCareer?.Description)
-        const freeSkillRank = normalizeFreeSkillRank(xmlCareer?.FreeRanks)
+  return careers.map((xmlCareer) => {
+    const name = OggDudeImporter.mapMandatoryString('career.Name', xmlCareer?.Name)
+    const key = OggDudeImporter.mapMandatoryString('career.Key', xmlCareer?.Key)
+    const description = OggDudeImporter.mapOptionalString(xmlCareer?.Description)
+    const freeSkillRank = normalizeFreeSkillRank(xmlCareer?.FreeRanks)
 
-        // Raw skill codes extraction (structure may be array or object); we accept either xmlCareer.CareerSkills?.CareerSkill?.Key or direct array
-        const rawCareerSkills = extractRawCareerSkillCodes(xmlCareer)
-        const careerSkills = mapCareerSkills(rawCareerSkills, { strict: strictSkills })
+    // Raw skill codes extraction (structure may be array or object); we accept either xmlCareer.CareerSkills?.CareerSkill?.Key or direct array
+    const rawCareerSkills = extractRawCareerSkillCodes(xmlCareer)
+    const careerSkills = mapCareerSkills(rawCareerSkills, { strict: strictSkills })
 
-        logger.debug('[CareerImporter] Mapped career', {
-            key,
-            name,
-            descriptionLength: description?.length || 0,
-            freeSkillRank,
-            skillCount: careerSkills.length,
-            strictSkills,
-            rawSkillCount: rawCareerSkills.length,
-            ignoredSkillCodes: rawCareerSkills.filter((c) => !mapOggDudeSkillCode(c, { warnOnUnknown: false }))
-        })
-
-        return {
-            name,
-            type: 'career',
-            system: {
-                description,
-                freeSkillRank,
-                careerSkills
-            },
-            // conserver la clé d'origine comme flag interne éventuel
-            flags: {
-                swerpg: { oggdudeKey: key }
-            }
-        }
+    logger.debug('[CareerImporter] Mapped career', {
+      key,
+      name,
+      descriptionLength: description?.length || 0,
+      freeSkillRank,
+      skillCount: careerSkills.length,
+      strictSkills,
+      rawSkillCount: rawCareerSkills.length,
+      ignoredSkillCodes: rawCareerSkills.filter((c) => !mapOggDudeSkillCode(c, { warnOnUnknown: false })),
     })
+
+    return {
+      name,
+      type: 'career',
+      system: {
+        description,
+        freeSkillRank,
+        careerSkills,
+      },
+      // conserver la clé d'origine comme flag interne éventuel
+      flags: {
+        swerpg: { oggdudeKey: key },
+      },
+    }
+  })
 }
 
 /**
@@ -55,11 +55,11 @@ export function careerMapper(careers, { strictSkills = false } = {}) {
  * @returns {number}
  */
 function normalizeFreeSkillRank(raw) {
-    let n = Number.parseInt(raw, 10)
-    if (Number.isNaN(n)) n = 4
-    if (n < 0) n = 0
-    if (n > 8) n = 8
-    return n
+  let n = Number.parseInt(raw, 10)
+  if (Number.isNaN(n)) n = 4
+  if (n < 0) n = 0
+  if (n > 8) n = 8
+  return n
 }
 
 /**
@@ -69,17 +69,17 @@ function normalizeFreeSkillRank(raw) {
  * @returns {string[]} raw codes
  */
 function extractRawCareerSkillCodes(xmlCareer) {
-    if (!xmlCareer) return []
-    // Possible nested structure CareerSkills.CareerSkill
-    const cs = xmlCareer.CareerSkills
-    if (!cs) return []
-    // If already array of strings
-    if (Array.isArray(cs)) return cs.filter((c) => typeof c === 'string')
-    // If object with CareerSkill list
-    const list = cs.CareerSkill || cs.Skill || cs.Skills || cs
-    if (!list) return []
-    const arr = Array.isArray(list) ? list : [list]
-    return arr.map((e) => (typeof e === 'string' ? e : e?.Key)).filter(Boolean)
+  if (!xmlCareer) return []
+  // Possible nested structure CareerSkills.CareerSkill
+  const cs = xmlCareer.CareerSkills
+  if (!cs) return []
+  // If already array of strings
+  if (Array.isArray(cs)) return cs.filter((c) => typeof c === 'string')
+  // If object with CareerSkill list
+  const list = cs.CareerSkill || cs.Skill || cs.Skills || cs
+  if (!list) return []
+  const arr = Array.isArray(list) ? list : [list]
+  return arr.map((e) => (typeof e === 'string' ? e : e?.Key)).filter(Boolean)
 }
 
 /**
@@ -92,44 +92,41 @@ function extractRawCareerSkillCodes(xmlCareer) {
  * @returns {{id:string}[]}
  */
 export function mapCareerSkills(rawCodes = [], { strict = false } = {}) {
-    if (!Array.isArray(rawCodes) || rawCodes.length === 0) return []
+  if (!Array.isArray(rawCodes) || rawCodes.length === 0) return []
 
-    // map codes -> ids (unknown codes are filtered internally by mapOggDudeSkillCodes)
-    const mappedIds = mapOggDudeSkillCodes(rawCodes).filter(Boolean)
+  // map codes -> ids (unknown codes are filtered internally by mapOggDudeSkillCodes)
+  const mappedIds = mapOggDudeSkillCodes(rawCodes).filter(Boolean)
 
-    // Déterminer le registre de compétences en fusionnant la config runtime et le mock éventuel de test
-    const skillsRegistry = { ...(SYSTEM?.SKILLS || {}), ...(globalThis.SYSTEM?.SKILLS || {}) }
+  // Déterminer le registre de compétences en fusionnant la config runtime et le mock éventuel de test
+  const skillsRegistry = { ...(SYSTEM?.SKILLS || {}), ...(globalThis.SYSTEM?.SKILLS || {}) }
 
-    // optional strict mode: retain only ids that exist in skillsRegistry
-    const validated = strict
-        ? mappedIds.filter((id) => !!skillsRegistry[id])
-        : mappedIds
+  // optional strict mode: retain only ids that exist in skillsRegistry
+  const validated = strict ? mappedIds.filter((id) => !!skillsRegistry[id]) : mappedIds
 
-    // deduplicate preserving order
-    const seen = new Set()
-    const unique = []
-    for (const id of validated) {
-        if (!id || seen.has(id)) continue
-        seen.add(id)
-        unique.push(id)
-    }
+  // deduplicate preserving order
+  const seen = new Set()
+  const unique = []
+  for (const id of validated) {
+    if (!id || seen.has(id)) continue
+    seen.add(id)
+    unique.push(id)
+  }
 
-    // truncate to 8
-    const truncated = unique.slice(0, 8)
+  // truncate to 8
+  const truncated = unique.slice(0, 8)
 
-    // final filtering: no falsy id objects to respect DataModel schema
-    const result = truncated.filter((id) => typeof id === 'string' && id.length > 0).map((id) => ({ id }))
+  // final filtering: no falsy id objects to respect DataModel schema
+  const result = truncated.filter((id) => typeof id === 'string' && id.length > 0).map((id) => ({ id }))
 
-    if (result.length !== truncated.length) {
-        logger.warn('[CareerImporter] Filtered out invalid skill ids', {
-            before: truncated,
-            after: result.map((o) => o.id)
-        })
-    }
+  if (result.length !== truncated.length) {
+    logger.warn('[CareerImporter] Filtered out invalid skill ids', {
+      before: truncated,
+      after: result.map((o) => o.id),
+    })
+  }
 
-    return result
+  return result
 }
-
 
 /**
  * Create the Species Context for the OggDude Data Import
@@ -141,29 +138,29 @@ export function mapCareerSkills(rawCodes = [], { strict = false } = {}) {
  * @function
  */
 export async function buildCareerContext(zip, groupByDirectory, groupByType) {
-    logger.debug('[CareerImporter] Building Career context', { groupByDirectoryCount: groupByDirectory.length, groupByType, hasZip: !!zip })
-    return {
-        jsonData: await OggDudeDataElement.buildJsonDataFromDirectory(zip, groupByType.xml, "Careers", "Career"),
-        zip: {
-            folderName: "Career",
-            elementFileName: "*.xml",
-            content: zip,
-            directories: groupByDirectory
-        },
-        image: {
-            worldPath: buildArmorImgWorldPath("careers"),
-            systemPath: buildItemImgSystemPath("career.svg"),
-            images: groupByType.image,
-            prefix: ''
-        },
-        folder: {
-            name: 'Swerpg - Careers',
-            type: 'Item'
-        },
-        element: {
-            jsonCriteria: 'Careers.Career',
-            mapper: careerMapper,
-            type: 'career'
-        }
-    }
+  logger.debug('[CareerImporter] Building Career context', { groupByDirectoryCount: groupByDirectory.length, groupByType, hasZip: !!zip })
+  return {
+    jsonData: await OggDudeDataElement.buildJsonDataFromDirectory(zip, groupByType.xml, 'Careers', 'Career'),
+    zip: {
+      folderName: 'Career',
+      elementFileName: '*.xml',
+      content: zip,
+      directories: groupByDirectory,
+    },
+    image: {
+      worldPath: buildArmorImgWorldPath('careers'),
+      systemPath: buildItemImgSystemPath('career.svg'),
+      images: groupByType.image,
+      prefix: '',
+    },
+    folder: {
+      name: 'Swerpg - Careers',
+      type: 'Item',
+    },
+    element: {
+      jsonCriteria: 'Careers.Career',
+      mapper: careerMapper,
+      type: 'career',
+    },
+  }
 }

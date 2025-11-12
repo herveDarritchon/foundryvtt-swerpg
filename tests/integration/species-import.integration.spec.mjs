@@ -37,8 +37,8 @@ describe('Intégration OggDude -> speciesMapper', () => {
     expect(Array.isArray(mapped.freeTalents)).toBe(true)
   })
 
-  it('Twi\'lek.xml - SkillModifiers imbriqués dans OptionChoices', async () => {
-    const xml = await fs.readFile('resources/integration/Species/Twi\'lek.xml', 'utf8')
+  it("Twi'lek.xml - SkillModifiers imbriqués dans OptionChoices", async () => {
+    const xml = await fs.readFile("resources/integration/Species/Twi'lek.xml", 'utf8')
     const raw = await parseXmlToJson(xml)
     const speciesNode = raw.Species
     const [mapped] = speciesMapper([speciesNode])

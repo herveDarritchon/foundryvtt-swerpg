@@ -39,86 +39,86 @@ Le mapper OggDude pour les Careers (`career-ogg-dude.mjs`) n’est pas aligné a
 
 - GOAL-001: Adapter la sortie du mapper pour ne retourner que les champs supportés (`system.description`, `system.careerSkills`, `system.freeSkillRank`)
 
-| Task     | Description | Completed | Date |
-| -------- | ----------- | --------- | ---- |
-| TASK-001 | Ajouter construction `system` et déplacer `description` dedans | ✅ | 2025-11-12 |
-| TASK-002 | Supprimer champs obsolètes (`sources`, `attributes`, `careerSpecializations`, `freeRanks` direct) | ✅ | 2025-11-12 |
-| TASK-003 | Implémenter normalisation valeur `freeSkillRank` depuis `xmlCareer.FreeRanks` (borne 0–8, défaut 4) | ✅ | 2025-11-12 |
-| TASK-004 | Ajouter whitelist des clés retournées (root: name, type, system, img, folder) | ✅ | 2025-11-12 |
-| TASK-005 | Ajouter logs debug pour chaque carrière importée avec récap des skills retenues | ✅ | 2025-11-12 |
+| Task     | Description                                                                                         | Completed | Date       |
+| -------- | --------------------------------------------------------------------------------------------------- | --------- | ---------- |
+| TASK-001 | Ajouter construction `system` et déplacer `description` dedans                                      | ✅        | 2025-11-12 |
+| TASK-002 | Supprimer champs obsolètes (`sources`, `attributes`, `careerSpecializations`, `freeRanks` direct)   | ✅        | 2025-11-12 |
+| TASK-003 | Implémenter normalisation valeur `freeSkillRank` depuis `xmlCareer.FreeRanks` (borne 0–8, défaut 4) | ✅        | 2025-11-12 |
+| TASK-004 | Ajouter whitelist des clés retournées (root: name, type, system, img, folder)                       | ✅        | 2025-11-12 |
+| TASK-005 | Ajouter logs debug pour chaque carrière importée avec récap des skills retenues                     | ✅        | 2025-11-12 |
 
 ### Implementation Phase 2 - Mapping & Validation des compétences
 
 - GOAL-002: Mettre en place table de correspondance codes OggDude → IDs de compétences système + validation Set
 
-| Task     | Description | Completed | Date |
-| -------- | ----------- | --------- | ---- |
-| TASK-006 | Créer ou réutiliser fichier `module/importer/mappings/oggdude-career-skill-map.mjs` (structure export const CAREER_SKILL_MAP = {...}) | ✅ | 2025-11-12 |
-| TASK-007 | Extraire `xmlCareer.CareerSkills` et transformer via la table de correspondance | ✅ | 2025-11-12 |
-| TASK-008 | Filtrer doublons avec `new Set()` puis re-projeter en tableau ordonné stable | ✅ | 2025-11-12 |
-| TASK-009 | Exclure codes inconnus (log.warn + compteur) | ✅ | 2025-11-12 |
-| TASK-010 | Tronquer à 8 entrées max (slice(0,8)) avant packaging `{id}` | ✅ | 2025-11-12 |
-| TASK-011 | Construire `careerSkills` = array d’objets `{id}` pour compatibilité schema SetField/SchemaField | ✅ | 2025-11-12 |
-| TASK-012 | Ajouter fonction util interne `mapCareerSkills(rawCodes)` testable séparément | ✅ | 2025-11-12 |
-| TASK-013 | Ajouter validation post-mapping (longueur 0–8 + IDs présents dans `SYSTEM.SKILLS`) | ✅ | 2025-11-12 |
+| Task     | Description                                                                                                                           | Completed | Date       |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------- | --------- | ---------- |
+| TASK-006 | Créer ou réutiliser fichier `module/importer/mappings/oggdude-career-skill-map.mjs` (structure export const CAREER_SKILL_MAP = {...}) | ✅        | 2025-11-12 |
+| TASK-007 | Extraire `xmlCareer.CareerSkills` et transformer via la table de correspondance                                                       | ✅        | 2025-11-12 |
+| TASK-008 | Filtrer doublons avec `new Set()` puis re-projeter en tableau ordonné stable                                                          | ✅        | 2025-11-12 |
+| TASK-009 | Exclure codes inconnus (log.warn + compteur)                                                                                          | ✅        | 2025-11-12 |
+| TASK-010 | Tronquer à 8 entrées max (slice(0,8)) avant packaging `{id}`                                                                          | ✅        | 2025-11-12 |
+| TASK-011 | Construire `careerSkills` = array d’objets `{id}` pour compatibilité schema SetField/SchemaField                                      | ✅        | 2025-11-12 |
+| TASK-012 | Ajouter fonction util interne `mapCareerSkills(rawCodes)` testable séparément                                                         | ✅        | 2025-11-12 |
+| TASK-013 | Ajouter validation post-mapping (longueur 0–8 + IDs présents dans `SYSTEM.SKILLS`)                                                    | ✅        | 2025-11-12 |
 
 ### Implementation Phase 3 - Tests & Robustesse
 
 - GOAL-003: Couvrir intégralement le mapping et la validation
 
-| Task     | Description | Completed | Date |
-| -------- | ----------- | --------- | ---- |
-| TASK-014 | Test unitaire: freeSkillRank défaut (absence `FreeRanks`) => 4 | ✅ | 2025-11-12 |
-| TASK-015 | Test unitaire: freeSkillRank hors borne (>8) => clamp à 8 | ✅ | 2025-11-12 |
-| TASK-016 | Test unitaire: careerSkills avec doublons => déduplication | ✅ | 2025-11-12 |
-| TASK-017 | Test unitaire: exclusion code inconnu + log.warn détecté | ✅ | 2025-11-12 |
-| TASK-018 | Test unitaire: carrière avec >8 compétences => tronquage | ✅ | 2025-11-12 |
-| TASK-019 | Test intégration: objet final ne contient que clés autorisées | ✅ | 2025-11-12 |
-| TASK-020 | Test intégration: chaque entrée `careerSkills` format `{id}` uniquement | ✅ | 2025-11-12 |
-| TASK-021 | Test erreur: si transformation retourne >8 avant tronquage, confirmer non crash + longueur = 8 | ✅ | 2025-11-12 |
-| TASK-022 | Test validation: passer carrière contenant 0 skill => accepte | ✅ | 2025-11-12 |
+| Task     | Description                                                                                    | Completed | Date       |
+| -------- | ---------------------------------------------------------------------------------------------- | --------- | ---------- |
+| TASK-014 | Test unitaire: freeSkillRank défaut (absence `FreeRanks`) => 4                                 | ✅        | 2025-11-12 |
+| TASK-015 | Test unitaire: freeSkillRank hors borne (>8) => clamp à 8                                      | ✅        | 2025-11-12 |
+| TASK-016 | Test unitaire: careerSkills avec doublons => déduplication                                     | ✅        | 2025-11-12 |
+| TASK-017 | Test unitaire: exclusion code inconnu + log.warn détecté                                       | ✅        | 2025-11-12 |
+| TASK-018 | Test unitaire: carrière avec >8 compétences => tronquage                                       | ✅        | 2025-11-12 |
+| TASK-019 | Test intégration: objet final ne contient que clés autorisées                                  | ✅        | 2025-11-12 |
+| TASK-020 | Test intégration: chaque entrée `careerSkills` format `{id}` uniquement                        | ✅        | 2025-11-12 |
+| TASK-021 | Test erreur: si transformation retourne >8 avant tronquage, confirmer non crash + longueur = 8 | ✅        | 2025-11-12 |
+| TASK-022 | Test validation: passer carrière contenant 0 skill => accepte                                  | ✅        | 2025-11-12 |
 
 ### Implementation Phase 4 - Nettoyage & Documentation
 
 - GOAL-004: Finaliser qualité et traçabilité
 
-| Task     | Description | Completed | Date |
-| -------- | ----------- | --------- | ---- |
-| TASK-023 | Ajouter section dans `documentation/swerpg/` décrivant logique importer Career | ✅ | 2025-11-12 |
-| TASK-024 | Mettre à jour `CHANGELOG.md` (section Unreleased) | ✅ | 2025-11-12 |
-| TASK-025 | Vérifier conformité ESLint & absence code mort |  |  |
-| TASK-026 | Ajouter commentaires de contexte uniquement (WHY) dans mapper | ✅ | 2025-11-12 |
-| TASK-027 | Ajouter métrique #skills ignorées dans log.debug récap final | ✅ | 2025-11-12 |
+| Task     | Description                                                                    | Completed | Date       |
+| -------- | ------------------------------------------------------------------------------ | --------- | ---------- |
+| TASK-023 | Ajouter section dans `documentation/swerpg/` décrivant logique importer Career | ✅        | 2025-11-12 |
+| TASK-024 | Mettre à jour `CHANGELOG.md` (section Unreleased)                              | ✅        | 2025-11-12 |
+| TASK-025 | Vérifier conformité ESLint & absence code mort                                 |           |            |
+| TASK-026 | Ajouter commentaires de contexte uniquement (WHY) dans mapper                  | ✅        | 2025-11-12 |
+| TASK-027 | Ajouter métrique #skills ignorées dans log.debug récap final                   | ✅        | 2025-11-12 |
 
 ### Implementation Phase 5 - Remédiation erreurs de validation runtime
 
 - GOAL-005: Corriger les erreurs "careerSkills: 0: id may not be undefined" observées en environnement Foundry (cf. captures)
 
-| Task     | Description | Completed | Date |
-| -------- | ----------- | --------- | ---- |
-| TASK-028 | Ajouter filtre final `careerSkills = careerSkills.filter(o => o && typeof o.id === 'string' && o.id.length > 0)` |  |  |
-| TASK-029 | Instrumenter logging détaillé: codes bruts, mappés, rejetés, résultat final (logger.debug + warn si rejet) |  |  |
-| TASK-030 | Option "strictSkillValidation" (config ou flag interne) pour activer filtrage sur `SYSTEM.SKILLS` si disponible |  |  |
-| TASK-031 | Re-générer tests: ajouter cas avec codes inconnus + code vide + null pour vérifier exclusion silencieuse |  |  |
-| TASK-032 | Ajouter test régression: entrée contenant ['', 'ATHL', undefined] => résultat uniquement athletics |  |  |
-| TASK-033 | Ajouter test strict mode (mock SYSTEM) => exclusion d'un id absent de SYSTEM.SKILLS |  |  |
-| TASK-034 | Mettre à jour doc `import-career.md` avec section Validation Avancée & strict mode |  |  |
-| TASK-035 | Mettre à jour CHANGELOG (complément mention filtrage undefined) |  |  |
-| TASK-036 | Repasser lint + tests complets après modifications |  |  |
-| TASK-037 | Mettre à jour ce plan (status des tâches phase 5) |  |  |
+| Task     | Description                                                                                                      | Completed | Date |
+| -------- | ---------------------------------------------------------------------------------------------------------------- | --------- | ---- |
+| TASK-028 | Ajouter filtre final `careerSkills = careerSkills.filter(o => o && typeof o.id === 'string' && o.id.length > 0)` |           |      |
+| TASK-029 | Instrumenter logging détaillé: codes bruts, mappés, rejetés, résultat final (logger.debug + warn si rejet)       |           |      |
+| TASK-030 | Option "strictSkillValidation" (config ou flag interne) pour activer filtrage sur `SYSTEM.SKILLS` si disponible  |           |      |
+| TASK-031 | Re-générer tests: ajouter cas avec codes inconnus + code vide + null pour vérifier exclusion silencieuse         |           |      |
+| TASK-032 | Ajouter test régression: entrée contenant ['', 'ATHL', undefined] => résultat uniquement athletics               |           |      |
+| TASK-033 | Ajouter test strict mode (mock SYSTEM) => exclusion d'un id absent de SYSTEM.SKILLS                              |           |      |
+| TASK-034 | Mettre à jour doc `import-career.md` avec section Validation Avancée & strict mode                               |           |      |
+| TASK-035 | Mettre à jour CHANGELOG (complément mention filtrage undefined)                                                  |           |      |
+| TASK-036 | Repasser lint + tests complets après modifications                                                               |           |      |
+| TASK-037 | Mettre à jour ce plan (status des tâches phase 5)                                                                |           |      |
 
 ### Implementation Phase 6 - Stabilisation & Observabilité
 
 - GOAL-006: Assurer robustesse long terme et visibilité des problèmes futurs
 
-| Task     | Description | Completed | Date |
-| -------- | ----------- | --------- | ---- |
-| TASK-038 | Ajouter compteur global import carrière (#carrières, #skills totaux, #skills rejetés) exporté dans log final |  |  |
-| TASK-039 | Créer test d'intégration simulant import multi-carrières avec mélange codes valides/inconnus |  |  |
-| TASK-040 | Ajouter guard: si après filtrage >8 skills, tronquer et logger un warn spécifique "TRUNCATED_SKILLS" |  |  |
-| TASK-041 | Ajout d'un hook interne (facultatif) ou fonction pour obtenir stats dernières importations (pour debugging) |  |  |
-| TASK-042 | Vérifier absence de fuite mémoire: arrays temporaires libérés (revue code) |  |  |
-| TASK-043 | Passer statut plan à 'Completed' après validation manuelle en instance Foundry |  |  |
+| Task     | Description                                                                                                  | Completed | Date |
+| -------- | ------------------------------------------------------------------------------------------------------------ | --------- | ---- |
+| TASK-038 | Ajouter compteur global import carrière (#carrières, #skills totaux, #skills rejetés) exporté dans log final |           |      |
+| TASK-039 | Créer test d'intégration simulant import multi-carrières avec mélange codes valides/inconnus                 |           |      |
+| TASK-040 | Ajouter guard: si après filtrage >8 skills, tronquer et logger un warn spécifique "TRUNCATED_SKILLS"         |           |      |
+| TASK-041 | Ajout d'un hook interne (facultatif) ou fonction pour obtenir stats dernières importations (pour debugging)  |           |      |
+| TASK-042 | Vérifier absence de fuite mémoire: arrays temporaires libérés (revue code)                                   |           |      |
+| TASK-043 | Passer statut plan à 'Completed' après validation manuelle en instance Foundry                               |           |      |
 
 ## 3. Alternatives
 

@@ -22,7 +22,7 @@ describe('Logger Utils', () => {
   beforeEach(() => {
     // Reset debug state to default
     logger.disableDebug()
-    
+
     // Mock all console methods
     for (const method of Object.keys(consoleMocks)) {
       consoleMocks[method].mockClear()
@@ -59,13 +59,13 @@ describe('Logger Utils', () => {
       test('should set debug to false when passed falsy value', () => {
         logger.setDebug(false)
         expect(logger.isDebugEnabled()).toBe(false)
-        
+
         logger.setDebug(0)
         expect(logger.isDebugEnabled()).toBe(false)
-        
+
         logger.setDebug('')
         expect(logger.isDebugEnabled()).toBe(false)
-        
+
         logger.setDebug(null)
         expect(logger.isDebugEnabled()).toBe(false)
       })
@@ -125,7 +125,7 @@ describe('Logger Utils', () => {
     test('should handle multiple arguments in log methods', () => {
       const testObj = { key: 'value' }
       const testArray = [1, 2, 3]
-      
+
       logger.info('Multiple args:', testObj, testArray, 'string')
       expect(consoleMocks.info).toHaveBeenCalledWith('SWERPG ||', 'Multiple args:', testObj, testArray, 'string')
     })
@@ -148,7 +148,10 @@ describe('Logger Utils', () => {
     })
 
     test('should handle table method', () => {
-      const testData = [{ name: 'John', age: 30 }, { name: 'Jane', age: 25 }]
+      const testData = [
+        { name: 'John', age: 30 },
+        { name: 'Jane', age: 25 },
+      ]
       logger.table(testData)
       expect(consoleMocks.table).toHaveBeenCalledWith(testData)
     })

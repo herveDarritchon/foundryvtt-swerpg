@@ -48,13 +48,13 @@ if (logger.isDebugEnabled()) {
 
 ### Méthodes de Base
 
-| Méthode | Niveau | Toujours visible | Usage recommandé |
-|---------|--------|------------------|------------------|
-| `logger.error()` | Error | ✅ Oui | Erreurs critiques, exceptions |
-| `logger.warn()` | Warning | ✅ Oui | Avertissements, configurations manquantes |
-| `logger.info()` | Info | ❌ Debug only | Messages informatifs système |
-| `logger.debug()` | Debug | ❌ Debug only | Debug détaillé, données complexes |
-| `logger.log()` | Log | ❌ Debug only | Usage général debug |
+| Méthode          | Niveau  | Toujours visible | Usage recommandé                          |
+| ---------------- | ------- | ---------------- | ----------------------------------------- |
+| `logger.error()` | Error   | ✅ Oui           | Erreurs critiques, exceptions             |
+| `logger.warn()`  | Warning | ✅ Oui           | Avertissements, configurations manquantes |
+| `logger.info()`  | Info    | ❌ Debug only    | Messages informatifs système              |
+| `logger.debug()` | Debug   | ❌ Debug only    | Debug détaillé, données complexes         |
+| `logger.log()`   | Log     | ❌ Debug only    | Usage général debug                       |
 
 ### Méthodes Avancées
 
@@ -73,7 +73,7 @@ logger.timeEnd('CharacterSheet.render')
 // Affichage de données tabulaires
 logger.table([
   { name: 'Actor1', level: 5 },
-  { name: 'Actor2', level: 3 }
+  { name: 'Actor2', level: 3 },
 ])
 
 // Trace de pile (debugging)
@@ -87,10 +87,10 @@ logger.assert(actor.system, 'Actor doit avoir un système')
 
 ```javascript
 // Contrôle du mode debug (généralement géré automatiquement)
-logger.setDebug(true)           // Active le debug
-logger.disableDebug()           // Désactive le debug
-logger.enableDebug()            // Active le debug
-logger.isDebugEnabled()         // Retourne true/false
+logger.setDebug(true) // Active le debug
+logger.disableDebug() // Désactive le debug
+logger.enableDebug() // Active le debug
+logger.isDebugEnabled() // Retourne true/false
 
 // Le logger est automatiquement configuré via detectDevelopmentMode()
 // dans swerpg.mjs
@@ -108,9 +108,9 @@ import { logger } from '../../utils/logger.mjs'
 export class SwerpgActorSheet extends HandlebarsApplicationMixin(ApplicationV2) {
   async _prepareContext() {
     logger.debug(`[${this.constructor.name}] Preparing context for actor`, this.actor.name)
-    
+
     const context = await super._prepareContext()
-    
+
     logger.debug(`[${this.constructor.name}] Context prepared:`, context)
     return context
   }
@@ -130,9 +130,9 @@ import { logger } from '../utils/logger.mjs'
 export class SwerpgActor extends Actor {
   prepareDerivedData() {
     super.prepareDerivedData()
-    
+
     logger.debug('Preparing derived data for actor', this.name)
-    
+
     try {
       this._calculateThresholds()
       logger.debug('Thresholds calculated', this.system.thresholds)
@@ -151,11 +151,11 @@ import { logger } from '../utils/logger.mjs'
 
 export function importOggDudeData(zipFile) {
   logger.info('Starting OggDude import', { filename: zipFile.name })
-  
+
   try {
     const data = processZipFile(zipFile)
     logger.debug('Zip file processed', { entries: data.length })
-    
+
     return data
   } catch (error) {
     logger.error('OggDude import failed', error)
@@ -170,22 +170,22 @@ export function importOggDudeData(zipFile) {
 import { logger } from '../../utils/logger.mjs'
 
 export function calculateTalentCost(talent, character) {
-  logger.debug('Calculating talent cost', { 
-    talent: talent.name, 
-    character: character.name 
+  logger.debug('Calculating talent cost', {
+    talent: talent.name,
+    character: character.name,
   })
-  
+
   const baseCost = talent.system.cost
   const modifier = character.system.talentCostModifier || 1
-  
+
   const finalCost = baseCost * modifier
-  
-  logger.debug('Talent cost calculated', { 
-    baseCost, 
-    modifier, 
-    finalCost 
+
+  logger.debug('Talent cost calculated', {
+    baseCost,
+    modifier,
+    finalCost,
   })
-  
+
   return finalCost
 }
 ```
@@ -229,9 +229,9 @@ if (!settings.customRules) {
 
 // Données incohérentes mais récupérables
 if (actor.system.experience < 0) {
-  logger.warn('Negative experience detected, setting to 0', { 
-    actor: actor.name, 
-    experience: actor.system.experience 
+  logger.warn('Negative experience detected, setting to 0', {
+    actor: actor.name,
+    experience: actor.system.experience,
   })
   actor.system.experience = 0
 }
@@ -247,14 +247,14 @@ if (actor.system.experience < 0) {
 logger.info('Talent tree initialized', { nodes: nodeCount })
 
 // Opérations importantes réussies
-logger.info('Character sheet rendered successfully', { 
-  actor: actor.name, 
-  renderTime: performance.now() - startTime 
+logger.info('Character sheet rendered successfully', {
+  actor: actor.name,
+  renderTime: performance.now() - startTime,
 })
 
 // État du système
-logger.info('Development mode detected', { 
-  features: developmentFeatures 
+logger.info('Development mode detected', {
+  features: developmentFeatures,
 })
 ```
 
@@ -268,14 +268,14 @@ logger.info('Development mode detected', {
 logger.debug('Processing talent prerequisites', {
   talent: talent.name,
   prerequisites: talent.system.prerequisites,
-  characterTalents: character.items.filter(i => i.type === 'talent')
+  characterTalents: character.items.filter((i) => i.type === 'talent'),
 })
 
 // États intermédiaires
 logger.debug('Dice roll calculation steps', {
   basePool: basePool,
   modifiers: modifiers,
-  finalPool: finalPool
+  finalPool: finalPool,
 })
 
 // Données de contexte étendues
@@ -306,8 +306,8 @@ swerpg.api = {
 
 ```javascript
 // Dans la console du navigateur
-swerpg.api.logger.enableDebug()   // Active tous les logs
-swerpg.api.logger.disableDebug()  // Ne garde que warn/error
+swerpg.api.logger.enableDebug() // Active tous les logs
+swerpg.api.logger.disableDebug() // Ne garde que warn/error
 swerpg.api.logger.isDebugEnabled() // Vérifie l'état
 ```
 
@@ -364,11 +364,11 @@ describe('My Business Logic', () => {
   test('should log appropriately', () => {
     // Mock du logger pour les tests
     const logSpy = vi.spyOn(logger, 'debug')
-    
+
     myBusinessFunction()
-    
+
     expect(logSpy).toHaveBeenCalledWith('Expected debug message', expectedData)
-    
+
     logSpy.mockRestore()
   })
 })
@@ -381,11 +381,11 @@ describe('Logger Integration', () => {
   test('should respect debug mode', () => {
     logger.setDebug(false)
     const debugSpy = vi.spyOn(console, 'debug')
-    
+
     logger.debug('This should not appear')
-    
+
     expect(debugSpy).not.toHaveBeenCalled()
-    
+
     debugSpy.mockRestore()
   })
 })

@@ -123,7 +123,7 @@ describe('Attributes Utils', () => {
         // Starting at max boundary
         expect(shiftValue(10, 1, 0, 10)).toBe(10)
         expect(shiftValue(10, -1, 0, 10)).toBe(9)
-        
+
         // Starting at min boundary
         expect(shiftValue(0, -1, 0, 10)).toBe(0)
         expect(shiftValue(0, 1, 0, 10)).toBe(1)
@@ -134,7 +134,7 @@ describe('Attributes Utils', () => {
       test('should handle NaN inputs gracefully', () => {
         // When initialValue is NaN, result should be NaN
         expect(shiftValue(Number.NaN, 5)).toBeNaN()
-        
+
         // When step is NaN, result should be NaN
         expect(shiftValue(5, Number.NaN)).toBeNaN()
       })
