@@ -36,8 +36,8 @@ export function speciesMapper(species) {
     }
     const startingExperience = OggDudeImporter.mapMandatoryNumber("species.StartingAttrs.Experience", xmlSpecies?.StartingAttrs?.Experience)
 
-    // Free skills: choose modifiers where rankStart>0 OR rankAdd>0 OR isCareer true
-    const skillModifiersRaw = OggDudeImporter.mapOptionalArray(
+    // Free skills: top-level SkillModifiers + SkillModifiers imbriqués dans OptionChoices.Options.Option
+    const topLevelSkillModifiers = OggDudeImporter.mapOptionalArray(
       xmlSpecies?.SkillModifiers?.SkillModifier,
       (skill) => ({
         rawKey: OggDudeImporter.mapOptionalString(skill?.Key),
@@ -46,6 +46,11 @@ export function speciesMapper(species) {
         isCareer: OggDudeImporter.mapOptionalBoolean(skill?.IsCareer)
       })
     )
+
+    // Parcours des OptionChoices pour extraire d'éventuels SkillModifiers
+    const nestedSkillModifiers = collectNestedOptionSkillModifiers(xmlSpecies)
+
+    const skillModifiersRaw = [...topLevelSkillModifiers, ...nestedSkillModifiers]
     // Détermination des codes à transformer (conditions de gratuité)
     const oggCodes = skillModifiersRaw
       .filter((s) => (s.rankStart > 0 || s.rankAdd > 0 || s.isCareer))
@@ -83,6 +88,38 @@ export function speciesMapper(species) {
       freeTalents
     }
   })
+}
+
+/**
+ * Extrait tous les SkillModifiers imbriqués dans OptionChoices.Options.Option
+ * en retournant un tableau uniforme d'objets {rawKey, rankStart, rankAdd, isCareer}
+ * @param {object} xmlSpecies
+ * @returns {Array<{rawKey:string,rankStart:number,rankAdd:number,isCareer:boolean}>}
+ */
+function collectNestedOptionSkillModifiers(xmlSpecies) {
+  const rawChoices = xmlSpecies?.OptionChoices?.OptionChoice
+  if (!rawChoices) return []
+  const choiceArray = Array.isArray(rawChoices) ? rawChoices : [rawChoices]
+  return choiceArray.flatMap(extractOptionsSkillModifiers)
+}
+
+function extractOptionsSkillModifiers(choice) {
+  const rawOptions = choice?.Options?.Option
+  if (!rawOptions) return []
+  const optArray = Array.isArray(rawOptions) ? rawOptions : [rawOptions]
+  return optArray.flatMap(extractSkillModifiersFromOption)
+}
+
+function extractSkillModifiersFromOption(opt) {
+  const rawSkillMods = opt?.SkillModifiers?.SkillModifier
+  if (!rawSkillMods) return []
+  const modsArray = Array.isArray(rawSkillMods) ? rawSkillMods : [rawSkillMods]
+  return modsArray.map((mod) => ({
+    rawKey: OggDudeImporter.mapOptionalString(mod?.Key),
+    rankStart: OggDudeImporter.mapOptionalNumber(mod?.RankStart),
+    rankAdd: OggDudeImporter.mapOptionalNumber(mod?.RankAdd),
+    isCareer: OggDudeImporter.mapOptionalBoolean(mod?.IsCareer)
+  }))
 }
 
 /**
