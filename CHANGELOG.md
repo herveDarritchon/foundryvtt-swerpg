@@ -4,6 +4,25 @@
 
 ## [Unreleased]
 
+### Added
+
+- **importer:** new armor OggDude mapper with deterministic category/property mapping tables
+- **importer:** armor import validation system with strict mode support
+- **importer:** armor import statistics and instrumentation (total, rejected, unknown categories/properties)
+- **importer:** comprehensive test coverage for armor mapper (>95% branch coverage)
+- **docs:** complete armor import documentation with examples and troubleshooting
+
+### Changed
+
+- **importer:** refactor armor-ogg-dude.mjs to produce SwerpgArmor-compatible objects
+- **importer:** sanitize armor descriptions to prevent HTML injection
+- **importer:** clamp armor defense/soak values to [0,100] with abnormal value warnings
+- **importer:** sort armor properties alphabetically and limit to 12 properties max
+
+### Removed
+
+- **importer:** removed unsupported armor fields (sources, mods, weaponModifiers, eraPricing) from output
+
 ### Fixes
 
 - **importer:** refactor career OggDude mapper to align with `SwerpgCareer` schema (description, freeSkillRank clamp, careerSkills normalization, logging)
