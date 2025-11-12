@@ -116,7 +116,7 @@ Tous les appels à `console.xxx` doivent passer par un logger central. L'objecti
 import { logger } from '../utils/logger.mjs'
 
 logger.info('Initialisation du système')
-logger.warn('Jet sans compétence associée', rollData)  
+logger.warn('Jet sans compétence associée', rollData)
 logger.error('Impossible de charger le pack', packId)
 logger.debug('Données de debug détaillées', context)
 

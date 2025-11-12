@@ -50,7 +50,6 @@ function make(evaluatedTotal, dc = 20, thresholds = {}) {
 }
 
 describe('StandardCheck getters success/failure/critical', () => {
-
   it('isSuccess true si total > dc', () => {
     expect(make(21).isSuccess).toBe(true)
     expect(make(20).isSuccess).toBe(false)

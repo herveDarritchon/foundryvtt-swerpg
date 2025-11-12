@@ -31,34 +31,34 @@ graph TB
         A[Applications UI] --> B[Sheet Components]
         B --> C[User Actions]
     end
-    
+
     subgraph "Logging Layer"
         D[logger.mjs] --> E[Console Output]
         D --> F[Debug Gate Logic]
         F --> G[shouldLog Function]
     end
-    
+
     subgraph "System Layer"
         H[swerpg.mjs] --> I[System Init]
         J[Documents] --> K[Actor/Item Logic]
         L[Helpers] --> M[Utility Functions]
     end
-    
+
     subgraph "Migration Targets"
         N[Direct console.xxx] --> O[Legacy Debug Conditions]
         P[CONFIG.debug checks] --> Q[Mixed Logging Patterns]
     end
-    
+
     A --> D
     H --> D
     J --> D
     L --> D
-    
+
     N -.->|Migration| D
     O -.->|Migration| D
     P -.->|Migration| D
     Q -.->|Migration| D
-    
+
     style D fill:#e1f5fe
     style N fill:#ffebee
     style O fill:#ffebee
@@ -88,7 +88,7 @@ graph TB
 
 ### Schéma de Conception Base de Données
 
-*Non applicable - cette migration ne concerne que le code JavaScript.*
+_Non applicable - cette migration ne concerne que le code JavaScript._
 
 ### Conception API
 
@@ -101,14 +101,14 @@ interface SwerpgLogger {
   disableDebug(): void
   setDebug(value: boolean): void
   isDebugEnabled(): boolean
-  
+
   // Basic logging methods
   log(...args: any[]): void
   info(...args: any[]): void
   warn(...args: any[]): void
   error(...args: any[]): void
   debug(...args: any[]): void
-  
+
   // Advanced logging methods
   group(...args: any[]): void
   groupCollapsed(...args: any[]): void
@@ -128,7 +128,7 @@ interface SwerpgLogger {
 ```javascript
 // AVANT
 console.log('Message informationnel')
-console.warn('Avertissement')  
+console.warn('Avertissement')
 console.error('Erreur critique')
 
 // APRÈS
@@ -278,16 +278,16 @@ Aucun changement requis au niveau des composants UI. La migration est transparen
 describe('Logger Migration Validation', () => {
   test('should have no direct console calls in system files', async () => {
     const systemFiles = await glob('module/**/*.mjs', { ignore: ['**/logger.mjs', '**/tests/**'] })
-    
+
     for (const file of systemFiles) {
       const content = await fs.readFile(file, 'utf8')
       expect(content).not.toMatch(/console\.(log|warn|error|info|debug)/)
     }
   })
-  
+
   test('should import logger in files with logging', async () => {
     const systemFiles = await glob('module/**/*.mjs', { ignore: ['**/logger.mjs'] })
-    
+
     for (const file of systemFiles) {
       const content = await fs.readFile(file, 'utf8')
       if (content.match(/logger\.(log|warn|error|info|debug)/)) {
@@ -328,7 +328,7 @@ echo "🔄 Migration console.xxx vers logger..."
 # Find all .mjs files except logger and tests
 find "$MODULES_DIR" -name "*.mjs" | grep -Ev "$EXCLUDE_PATTERN" | while read -r file; do
   echo "Processing: $file"
-  
+
   # Add logger import if not present and file has console calls
   if grep -q "console\.\(log\|warn\|error\|info\|debug\)" "$file" && ! grep -q "import.*logger" "$file"; then
     # Determine relative path to logger
@@ -336,13 +336,13 @@ find "$MODULES_DIR" -name "*.mjs" | grep -Ev "$EXCLUDE_PATTERN" | while read -r 
     depth=$((depth - 1))  # Remove one for module/ prefix
     logger_path=$(printf "%*s" $depth | tr ' ' '.')
     logger_path="${logger_path}../utils/logger.mjs"
-    
+
     # Add import after existing imports
     sed -i '' "/^import.*from/a\\
 import { logger } from '$logger_path'
 " "$file"
   fi
-  
+
   # Replace console calls
   sed -i '' -e 's/console\.debug(/logger.debug(/g' \
             -e 's/console\.log(/logger.info(/g' \
@@ -384,12 +384,12 @@ echo "✅ Validation terminée"
 
 ### Risques Identifiés
 
-| Risque | Probabilité | Impact | Mitigation |
-|--------|-------------|---------|------------|
-| Régression fonctionnelle | Faible | Élevé | Tests de régression exhaustifs + rollback Git |
-| Performance dégradée | Très faible | Moyen | Profiling avant/après + optimisation logger |
-| Messages debug perdus | Faible | Faible | Validation manuelle des logs critiques |
-| Import paths incorrects | Moyen | Moyen | Script d'import automatique + validation |
+| Risque                   | Probabilité | Impact | Mitigation                                    |
+| ------------------------ | ----------- | ------ | --------------------------------------------- |
+| Régression fonctionnelle | Faible      | Élevé  | Tests de régression exhaustifs + rollback Git |
+| Performance dégradée     | Très faible | Moyen  | Profiling avant/après + optimisation logger   |
+| Messages debug perdus    | Faible      | Faible | Validation manuelle des logs critiques        |
+| Import paths incorrects  | Moyen       | Moyen  | Script d'import automatique + validation      |
 
 ### Plan de Rollback
 

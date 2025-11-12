@@ -32,10 +32,7 @@ describe('System Configuration', () => {
 
   describe('COMPENDIUM_PACKS configuration', () => {
     test('should have all required compendium packs defined', () => {
-      const expectedPacks = [
-        'ancestry', 'archetype', 'background', 'origin', 
-        'spell', 'spellExtensions', 'talent', 'talentExtensions', 'taxonomy'
-      ]
+      const expectedPacks = ['ancestry', 'archetype', 'background', 'origin', 'spell', 'spellExtensions', 'talent', 'talentExtensions', 'taxonomy']
 
       for (const packKey of expectedPacks) {
         expect(SystemConfig.COMPENDIUM_PACKS).toHaveProperty(packKey)
@@ -61,7 +58,7 @@ describe('System Configuration', () => {
   describe('THREAT_LEVELS configuration', () => {
     test('should have all threat levels defined', () => {
       const expectedLevels = ['minion', 'normal', 'elite', 'boss']
-      
+
       for (const level of expectedLevels) {
         expect(SystemConfig.THREAT_LEVELS).toHaveProperty(level)
       }
@@ -70,7 +67,7 @@ describe('System Configuration', () => {
     describe('Threat level properties', () => {
       test('should have consistent structure for all threat levels', () => {
         const requiredProperties = ['id', 'actionMax', 'label', 'scaling', 'icon']
-        
+
         for (const [levelKey, levelData] of Object.entries(SystemConfig.THREAT_LEVELS)) {
           for (const prop of requiredProperties) {
             expect(levelData).toHaveProperty(prop)
@@ -117,15 +114,15 @@ describe('System Configuration', () => {
 
       test('should have ascending actionMax values', () => {
         const levels = Object.values(SystemConfig.THREAT_LEVELS)
-        const actionMaxValues = levels.map(level => level.actionMax).sort((a, b) => a - b)
-        
+        const actionMaxValues = levels.map((level) => level.actionMax).sort((a, b) => a - b)
+
         expect(actionMaxValues).toEqual([4, 6, 8, 10])
       })
 
       test('should have ascending scaling values', () => {
         const levels = Object.values(SystemConfig.THREAT_LEVELS)
-        const scalingValues = levels.map(level => level.scaling).sort((a, b) => a - b)
-        
+        const scalingValues = levels.map((level) => level.scaling).sort((a, b) => a - b)
+
         expect(scalingValues).toEqual([0.5, 1, 1.5, 2])
       })
     })
@@ -139,12 +136,12 @@ describe('System Configuration', () => {
     test('should have action group hooks', () => {
       const actionHooks = [
         'prepareStandardCheck',
-        'prepareWeaponAttack', 
+        'prepareWeaponAttack',
         'applyCriticalEffects',
         'defendSkillAttack',
         'defendSpellAttack',
         'defendWeaponAttack',
-        'applyActionOutcome'
+        'applyActionOutcome',
       ]
 
       for (const hookName of actionHooks) {
@@ -164,7 +161,7 @@ describe('System Configuration', () => {
         'prepareMovement',
         'prepareResistances',
         'prepareSkillCheck',
-        'prepareSkillAttack'
+        'prepareSkillAttack',
       ]
 
       for (const hookName of preparationHooks) {
@@ -200,13 +197,7 @@ describe('System Configuration', () => {
 
   describe('Configuration completeness', () => {
     test('should export all expected top-level constants', () => {
-      const expectedExports = [
-        'SYSTEM_ID',
-        'ANCESTRIES', 
-        'COMPENDIUM_PACKS',
-        'THREAT_LEVELS',
-        'ACTOR_HOOKS'
-      ]
+      const expectedExports = ['SYSTEM_ID', 'ANCESTRIES', 'COMPENDIUM_PACKS', 'THREAT_LEVELS', 'ACTOR_HOOKS']
 
       for (const exportName of expectedExports) {
         expect(SystemConfig).toHaveProperty(exportName)
@@ -215,7 +206,7 @@ describe('System Configuration', () => {
 
     test('should have no undefined exports', () => {
       const exportValues = Object.values(SystemConfig)
-      
+
       for (const value of exportValues) {
         expect(value).toBeDefined()
       }
@@ -226,10 +217,10 @@ describe('System Configuration', () => {
     test('should have immutable threat level data structure', () => {
       // Test that we cannot modify the threat level configuration
       const originalMinion = { ...SystemConfig.THREAT_LEVELS.minion }
-      
+
       // Try to modify (should not affect original)
       const modifiedMinion = { ...SystemConfig.THREAT_LEVELS.minion, actionMax: 999 }
-      
+
       expect(SystemConfig.THREAT_LEVELS.minion).toEqual(originalMinion)
       expect(SystemConfig.THREAT_LEVELS.minion.actionMax).toBe(4)
       expect(modifiedMinion.actionMax).toBe(999)
@@ -238,7 +229,7 @@ describe('System Configuration', () => {
     test('should have consistent label naming convention', () => {
       // All threat level labels should follow the ADVERSARY.Threat* pattern
       const labelPattern = /^ADVERSARY\.Threat\w+$/
-      
+
       for (const levelData of Object.values(SystemConfig.THREAT_LEVELS)) {
         expect(levelData.label).toMatch(labelPattern)
       }
@@ -247,7 +238,7 @@ describe('System Configuration', () => {
     test('should have consistent icon naming convention', () => {
       // All icons should use FontAwesome solid classes
       const iconPattern = /^fa-solid fa-/
-      
+
       for (const levelData of Object.values(SystemConfig.THREAT_LEVELS)) {
         expect(levelData.icon).toMatch(iconPattern)
       }
@@ -257,7 +248,7 @@ describe('System Configuration', () => {
   describe('Compendium pack naming conventions', () => {
     test('should follow swerpg.* naming pattern for non-null packs', () => {
       const packPattern = /^swerpg\./
-      
+
       for (const [packKey, packId] of Object.entries(SystemConfig.COMPENDIUM_PACKS)) {
         if (packId !== null) {
           expect(packId).toMatch(packPattern)

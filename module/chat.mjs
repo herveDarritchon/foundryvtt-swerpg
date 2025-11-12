@@ -15,7 +15,7 @@ export function addChatMessageContextOptions(html, options) {
     condition: (li) => {
       const message = game.messages.get(li.data('messageId'))
       const flags = message.flags.swerpg || {}
-  return !!(message.isRoll && flags.skill)
+      return !!(message.isRoll && flags.skill)
     },
     callback: (li) => {
       const message = game.messages.get(li.data('messageId'))

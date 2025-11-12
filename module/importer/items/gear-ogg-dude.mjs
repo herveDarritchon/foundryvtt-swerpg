@@ -1,7 +1,7 @@
-import {buildArmorImgWorldPath, buildItemImgSystemPath} from "../../settings/directories.mjs";
-import OggDudeImporter from "../oggDude.mjs";
-import {buildMod, buildWeaponModifiers} from "./combat-item-mapper.mjs";
-import OggDudeDataElement from "../../settings/models/OggDudeDataElement.mjs";
+import { buildArmorImgWorldPath, buildItemImgSystemPath } from '../../settings/directories.mjs'
+import OggDudeImporter from '../oggDude.mjs'
+import { buildMod, buildWeaponModifiers } from './combat-item-mapper.mjs'
+import OggDudeDataElement from '../../settings/models/OggDudeDataElement.mjs'
 import { logger } from '../../utils/logger.mjs'
 
 /**
@@ -13,49 +13,43 @@ import { logger } from '../../utils/logger.mjs'
  * @name gearMapper
  */
 export function gearMapper(gears) {
-    return gears.map((xmlGear) => {
+  return gears.map((xmlGear) => {
+    return {
+      short: OggDudeImporter.mapOptionalString(xmlGear.Short),
+
+      // FIXME il faudrait refactorer tout ça pour ne pas avoir de duplication avec les autres combat-item
+      name: OggDudeImporter.mapMandatoryString('gear.Name', xmlGear.Name),
+      key: OggDudeImporter.mapMandatoryString('gear.Key', xmlGear.Key),
+      description: OggDudeImporter.mapMandatoryString('gear.Description', xmlGear.Description),
+      restricted: OggDudeImporter.mapOptionalBoolean(xmlGear.Restricted),
+      encumbrance: OggDudeImporter.mapOptionalNumber(xmlGear.Encumbrance),
+      price: OggDudeImporter.mapOptionalNumber(xmlGear.Price),
+      rarity: OggDudeImporter.mapOptionalNumber(xmlGear.Rarity),
+      hp: OggDudeImporter.mapOptionalNumber(xmlGear.HP),
+      type: OggDudeImporter.mapMandatoryString('gear.Type', xmlGear.Type),
+
+      sources: OggDudeImporter.mapOptionalArray(xmlGear?.Sources?.Source, (source) => {
+        return { description: source._, page: source.Page }
+      }),
+
+      categories: OggDudeImporter.mapOptionalArray(xmlGear?.Categories?.Category, (category) => category),
+
+      mods: OggDudeImporter.mapOptionalArray(xmlGear?.BaseMods?.Mod, (mod) => {
+        return buildMod(mod)
+      }),
+
+      weaponModifiers: OggDudeImporter.mapOptionalArray(xmlGear?.WeaponModifiers?.WeaponModifier, (weaponModifier) => buildWeaponModifiers(weaponModifier)),
+
+      eraPricing: OggDudeImporter.mapOptionalArray(xmlGear?.EraPricing?.Era, (eraPrice) => {
         return {
-            short: OggDudeImporter.mapOptionalString(xmlGear.Short),
-
-            // FIXME il faudrait refactorer tout ça pour ne pas avoir de duplication avec les autres combat-item
-            name: OggDudeImporter.mapMandatoryString("gear.Name", xmlGear.Name),
-            key: OggDudeImporter.mapMandatoryString("gear.Key", xmlGear.Key),
-            description: OggDudeImporter.mapMandatoryString("gear.Description", xmlGear.Description),
-            restricted: OggDudeImporter.mapOptionalBoolean(xmlGear.Restricted),
-            encumbrance: OggDudeImporter.mapOptionalNumber(xmlGear.Encumbrance),
-            price: OggDudeImporter.mapOptionalNumber(xmlGear.Price),
-            rarity: OggDudeImporter.mapOptionalNumber(xmlGear.Rarity),
-            hp: OggDudeImporter.mapOptionalNumber(xmlGear.HP),
-            type: OggDudeImporter.mapMandatoryString("gear.Type", xmlGear.Type),
-
-            sources: OggDudeImporter.mapOptionalArray(
-                xmlGear?.Sources?.Source,
-                (source) => {
-                    return {description: source._, page: source.Page}
-                }),
-
-            categories: OggDudeImporter.mapOptionalArray(xmlGear?.Categories?.Category, (category) => category),
-
-            mods: OggDudeImporter.mapOptionalArray(
-                xmlGear?.BaseMods?.Mod,
-                (mod) => {
-                    return buildMod(mod)
-                }
-            ),
-
-            weaponModifiers: OggDudeImporter.mapOptionalArray(xmlGear?.WeaponModifiers?.WeaponModifier, (weaponModifier) => buildWeaponModifiers(weaponModifier)),
-
-            eraPricing: OggDudeImporter.mapOptionalArray(xmlGear?.EraPricing?.Era, (eraPrice) => {
-                return {
-                    name: OggDudeImporter.mapMandatoryString("gear.EraPrice.Name", eraPrice.Name),
-                    price: OggDudeImporter.mapMandatoryString("gear.EraPrice.Price", eraPrice.Price),
-                    rarity: OggDudeImporter.mapMandatoryString("gear.EraPrice.Rarity", eraPrice.Rarity),
-                    restricted: OggDudeImporter.mapMandatoryBoolean("gear.EraPrice.Restricted", eraPrice.Restricted)
-                }
-            })
-
+          name: OggDudeImporter.mapMandatoryString('gear.EraPrice.Name', eraPrice.Name),
+          price: OggDudeImporter.mapMandatoryString('gear.EraPrice.Price', eraPrice.Price),
+          rarity: OggDudeImporter.mapMandatoryString('gear.EraPrice.Rarity', eraPrice.Rarity),
+          restricted: OggDudeImporter.mapMandatoryBoolean('gear.EraPrice.Restricted', eraPrice.Restricted),
         }
-    });
+      }),
+    }
+  })
 }
 
 /**
@@ -68,31 +62,30 @@ export function gearMapper(gears) {
  * @function
  */
 export async function buildGearContext(zip, groupByDirectory, groupByType) {
+  logger.debug('[GearImporter] Building Gear context', { groupByDirectoryCount: groupByDirectory.length, groupByType, hasZip: !!zip })
 
-    logger.debug('[GearImporter] Building Gear context', { groupByDirectoryCount: groupByDirectory.length, groupByType, hasZip: !!zip });
-
-    return {
-        jsonData: await OggDudeDataElement.buildJsonDataFromFile(zip, groupByDirectory, "Gear.xml", "Gears.Gear"),
-        zip: {
-            elementFileName: "Gear.xml",
-            content: zip,
-            directories: groupByDirectory
-        },
-        image: {
-            criteria: "Data/EquipmentImages/Gear",
-            worldPath: buildArmorImgWorldPath("gears"),
-            systemPath: buildItemImgSystemPath("gear.svg"),
-            images: groupByType.image,
-            prefix: 'Gear'
-        },
-        folder: {
-            name: 'Swerpg - Gears',
-            type: 'Item'
-        },
-        element: {
-            jsonCriteria: 'Gears.Gear',
-            mapper: gearMapper,
-            type: 'gear'
-        }
-    };
+  return {
+    jsonData: await OggDudeDataElement.buildJsonDataFromFile(zip, groupByDirectory, 'Gear.xml', 'Gears.Gear'),
+    zip: {
+      elementFileName: 'Gear.xml',
+      content: zip,
+      directories: groupByDirectory,
+    },
+    image: {
+      criteria: 'Data/EquipmentImages/Gear',
+      worldPath: buildArmorImgWorldPath('gears'),
+      systemPath: buildItemImgSystemPath('gear.svg'),
+      images: groupByType.image,
+      prefix: 'Gear',
+    },
+    folder: {
+      name: 'Swerpg - Gears',
+      type: 'Item',
+    },
+    element: {
+      jsonCriteria: 'Gears.Gear',
+      mapper: gearMapper,
+      type: 'gear',
+    },
+  }
 }

@@ -38,12 +38,12 @@ Fournir aux contributeurs une méthode incrémentale, sûre et vérifiable pour 
 
 ## 🔁 Correspondance & Ajustements
 
-| Avant (`console`) | Après (`logger`) | Visible hors debug | Action supplémentaire |
-|-------------------|------------------|--------------------|-----------------------|
+| Avant (`console`) | Après (`logger`) | Visible hors debug | Action supplémentaire          |
+| ----------------- | ---------------- | ------------------ | ------------------------------ |
 | `error`           | `error`          | Oui                | Conserver stack / error object |
-| `warn`            | `warn`           | Oui                | Ajouter contexte fonctionnel |
-| `info`/`log`      | `info`           | Non (debug only)   | Vérifier utilité du message |
-| `debug`           | `debug`          | Non (debug only)   | Ajouter données structurées |
+| `warn`            | `warn`           | Oui                | Ajouter contexte fonctionnel   |
+| `info`/`log`      | `info`           | Non (debug only)   | Vérifier utilité du message    |
+| `debug`           | `debug`          | Non (debug only)   | Ajouter données structurées    |
 
 ---
 
@@ -103,13 +103,13 @@ Copier la checklist dans la description PR et cocher chaque item.
 
 ## ⚠️ Erreurs Fréquentes & Corrections
 
-| Problème | Cause | Solution rapide |
-|----------|-------|-----------------|
-| Import relatif incorrect | Mauvaise profondeur `../` | Comparer avec autre fichier du dossier utilisant logger |
-| Log verbeux en production | Utilisation de `logger.info` pour spam | Requalifier en `logger.debug` ou supprimer |
-| Garde manquante coûteuse | Boucle lourde toujours exécutée | Envelopper avec `if (logger.isDebugEnabled())` |
-| Données sensibles loggées | Ajout d'objet complet (token) | Filtrer avant log / supprimer clé sensible |
-| Tests cassés (spy sur console) | Ancien mock console non mis à jour | Adapter tests pour espionner `logger.*` |
+| Problème                       | Cause                                  | Solution rapide                                         |
+| ------------------------------ | -------------------------------------- | ------------------------------------------------------- |
+| Import relatif incorrect       | Mauvaise profondeur `../`              | Comparer avec autre fichier du dossier utilisant logger |
+| Log verbeux en production      | Utilisation de `logger.info` pour spam | Requalifier en `logger.debug` ou supprimer              |
+| Garde manquante coûteuse       | Boucle lourde toujours exécutée        | Envelopper avec `if (logger.isDebugEnabled())`          |
+| Données sensibles loggées      | Ajout d'objet complet (token)          | Filtrer avant log / supprimer clé sensible              |
+| Tests cassés (spy sur console) | Ancien mock console non mis à jour     | Adapter tests pour espionner `logger.*`                 |
 
 ---
 

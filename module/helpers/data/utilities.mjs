@@ -1,11 +1,11 @@
-const optionalBoolean = {required: false, nullable: false, initial: false};
-const requiredBoolean = {required: true, nullable: false};
-const optionalInteger = {required: false, nullable: false, integer: true, initial: 0};
-const requiredInteger = {required: true, nullable: false, integer: true};
-const optionalString = {required: false, blank: true, trim: true, nullable: false, initial: ""};
-const requiredString = {required: true, blank: false, trim: true, nullable: false};
-const optionalHtml = {required: false, blank: true, initial: "", textSearch: true};
-const mandatoryHtml = {required: true, blank: false, textSearch: true};
+const optionalBoolean = { required: false, nullable: false, initial: false }
+const requiredBoolean = { required: true, nullable: false }
+const optionalInteger = { required: false, nullable: false, integer: true, initial: 0 }
+const requiredInteger = { required: true, nullable: false, integer: true }
+const optionalString = { required: false, blank: true, trim: true, nullable: false, initial: '' }
+const requiredString = { required: true, blank: false, trim: true, nullable: false }
+const optionalHtml = { required: false, blank: true, initial: '', textSearch: true }
+const mandatoryHtml = { required: true, blank: false, textSearch: true }
 
 /**
  * Enrich the initialization schema with the initial value if it is not null or empty
@@ -16,12 +16,12 @@ const mandatoryHtml = {required: true, blank: false, textSearch: true};
  * @function
  * @name _enrichDataFieldConfiguration
  */
-export function _enrichDataFieldConfiguration({initial = undefined, dataFieldConfiguration}) {
-    if (isNullOrEmpty(initial)) {
-        return {...(dataFieldConfiguration)};
-    } else {
-        return {...(dataFieldConfiguration), initial};
-    }
+export function _enrichDataFieldConfiguration({ initial = undefined, dataFieldConfiguration }) {
+  if (isNullOrEmpty(initial)) {
+    return { ...dataFieldConfiguration }
+  } else {
+    return { ...dataFieldConfiguration, initial }
+  }
 }
 
 /**
@@ -30,19 +30,19 @@ export function _enrichDataFieldConfiguration({initial = undefined, dataFieldCon
  * @returns {boolean} True if the initial value is not null or empty
  */
 export function isNullOrEmpty(initial) {
-    if (initial == null) {
-        return true;
-    }
+  if (initial == null) {
+    return true
+  }
 
-    if (typeof initial === "boolean") {
-        return false;
-    }
+  if (typeof initial === 'boolean') {
+    return false
+  }
 
-    if (typeof initial === "number") {
-        return isNaN(initial);
-    } else {
-        return initial !== "" && initial.trim.length > 0;
-    }
+  if (typeof initial === 'number') {
+    return isNaN(initial)
+  } else {
+    return initial !== '' && initial.trim.length > 0
+  }
 }
 
 /**
@@ -58,8 +58,8 @@ export function isNullOrEmpty(initial) {
  * _buildLocalizationPrefix({itemType: 'Base-Item', key: 'sources.page'})
  * returns ['SWERPG.Base-Item.FIELDS.sources.page']
  */
-export function _buildLocalizationPrefix({itemType, key}) {
-    return [`SWERPG.${itemType}.FIELDS.${key}`];
+export function _buildLocalizationPrefix({ itemType, key }) {
+  return [`SWERPG.${itemType}.FIELDS.${key}`]
 }
 
 /**
@@ -73,20 +73,20 @@ export function _buildLocalizationPrefix({itemType, key}) {
  * @function
  * @name buildOptionalStringField
  */
-export function buildOptionalStringField({initial = "", itemType, key}) {
-    const fields = foundry.data.fields;
-    const prefix = _buildLocalizationPrefix({itemType, key});
-    let objectValues = _enrichDataFieldConfiguration({
-        initial,
-        dataFieldConfiguration: optionalString
-    });
+export function buildOptionalStringField({ initial = '', itemType, key }) {
+  const fields = foundry.data.fields
+  const prefix = _buildLocalizationPrefix({ itemType, key })
+  let objectValues = _enrichDataFieldConfiguration({
+    initial,
+    dataFieldConfiguration: optionalString,
+  })
 
-    return new fields.StringField({
-        ...(objectValues),
-        label: `${prefix}.label`,
-        hint: `${prefix}.hint`,
-        placeholder: `${prefix}.placeholder`
-    });
+  return new fields.StringField({
+    ...objectValues,
+    label: `${prefix}.label`,
+    hint: `${prefix}.hint`,
+    placeholder: `${prefix}.placeholder`,
+  })
 }
 
 /**
@@ -99,19 +99,19 @@ export function buildOptionalStringField({initial = "", itemType, key}) {
  * @function
  * @name buildMandatoryStringField
  */
-export function buildMandatoryStringField({itemType, key}) {
-    const fields = foundry.data.fields;
-    const prefix = _buildLocalizationPrefix({itemType, key});
-    let dataFieldConfiguration = _enrichDataFieldConfiguration({
-        dataFieldConfiguration: requiredString
-    });
+export function buildMandatoryStringField({ itemType, key }) {
+  const fields = foundry.data.fields
+  const prefix = _buildLocalizationPrefix({ itemType, key })
+  let dataFieldConfiguration = _enrichDataFieldConfiguration({
+    dataFieldConfiguration: requiredString,
+  })
 
-    return new fields.StringField({
-        ...(dataFieldConfiguration),
-        label: `${prefix}.label`,
-        hint: `${prefix}.hint`,
-        placeholder: `${prefix}.placeholder`
-    });
+  return new fields.StringField({
+    ...dataFieldConfiguration,
+    label: `${prefix}.label`,
+    hint: `${prefix}.hint`,
+    placeholder: `${prefix}.placeholder`,
+  })
 }
 
 /**
@@ -127,20 +127,21 @@ export function buildMandatoryStringField({itemType, key}) {
  * @function
  * @name buildOptionalIntegerField
  */
-export function buildOptionalIntegerField({itemType, key, initial = 0, min = 0, max = 10}) {
-    const fields = foundry.data.fields;
-    const prefix = _buildLocalizationPrefix({itemType, key});
-    let dataFieldConfiguration = _enrichDataFieldConfiguration({
-        initial, dataFieldConfiguration: optionalInteger
-    });
+export function buildOptionalIntegerField({ itemType, key, initial = 0, min = 0, max = 10 }) {
+  const fields = foundry.data.fields
+  const prefix = _buildLocalizationPrefix({ itemType, key })
+  let dataFieldConfiguration = _enrichDataFieldConfiguration({
+    initial,
+    dataFieldConfiguration: optionalInteger,
+  })
 
-    return new fields.NumberField({
-        ...(dataFieldConfiguration),
-        min,
-        max,
-        label: `${prefix}.label`,
-        hint: `${prefix}.hint`
-    });
+  return new fields.NumberField({
+    ...dataFieldConfiguration,
+    min,
+    max,
+    label: `${prefix}.label`,
+    hint: `${prefix}.hint`,
+  })
 }
 
 /**
@@ -156,21 +157,21 @@ export function buildOptionalIntegerField({itemType, key, initial = 0, min = 0, 
  * @function
  * @name buildMandatoryIntegerField
  */
-export function buildMandatoryIntegerField({itemType, key, initial = 0, min = 0, max = 10}) {
-    const fields = foundry.data.fields;
-    const prefix = _buildLocalizationPrefix({itemType, key});
-    let dataFieldConfiguration = _enrichDataFieldConfiguration({
-        initial,
-        dataFieldConfiguration: requiredInteger
-    });
+export function buildMandatoryIntegerField({ itemType, key, initial = 0, min = 0, max = 10 }) {
+  const fields = foundry.data.fields
+  const prefix = _buildLocalizationPrefix({ itemType, key })
+  let dataFieldConfiguration = _enrichDataFieldConfiguration({
+    initial,
+    dataFieldConfiguration: requiredInteger,
+  })
 
-    return new fields.NumberField({
-        ...(dataFieldConfiguration),
-        min,
-        max,
-        label: `${prefix}.label`,
-        hint: `${prefix}.hint`
-    });
+  return new fields.NumberField({
+    ...dataFieldConfiguration,
+    min,
+    max,
+    label: `${prefix}.label`,
+    hint: `${prefix}.hint`,
+  })
 }
 
 /**
@@ -184,19 +185,19 @@ export function buildMandatoryIntegerField({itemType, key, initial = 0, min = 0,
  * @function
  * @name buildOptionalBooleanField
  */
-export function buildOptionalBooleanField({initial = false, itemType, key}) {
-    const fields = foundry.data.fields;
-    const prefix = _buildLocalizationPrefix({itemType, key});
-    let dataFieldConfiguration = _enrichDataFieldConfiguration({
-        initial,
-        dataFieldConfiguration: optionalBoolean
-    });
+export function buildOptionalBooleanField({ initial = false, itemType, key }) {
+  const fields = foundry.data.fields
+  const prefix = _buildLocalizationPrefix({ itemType, key })
+  let dataFieldConfiguration = _enrichDataFieldConfiguration({
+    initial,
+    dataFieldConfiguration: optionalBoolean,
+  })
 
-    return new fields.BooleanField({
-        ...(dataFieldConfiguration),
-        label: `${prefix}.label`,
-        hint: `${prefix}.hint`
-    });
+  return new fields.BooleanField({
+    ...dataFieldConfiguration,
+    label: `${prefix}.label`,
+    hint: `${prefix}.hint`,
+  })
 }
 
 /**
@@ -210,18 +211,18 @@ export function buildOptionalBooleanField({initial = false, itemType, key}) {
  * @function
  * @name buildMandatoryBooleanField
  */
-export function buildMandatoryBooleanField({itemType, key}) {
-    const fields = foundry.data.fields;
-    const prefix = _buildLocalizationPrefix({itemType, key});
-    let dataFieldConfiguration = _enrichDataFieldConfiguration({
-        dataFieldConfiguration: requiredBoolean
-    });
+export function buildMandatoryBooleanField({ itemType, key }) {
+  const fields = foundry.data.fields
+  const prefix = _buildLocalizationPrefix({ itemType, key })
+  let dataFieldConfiguration = _enrichDataFieldConfiguration({
+    dataFieldConfiguration: requiredBoolean,
+  })
 
-    return new fields.BooleanField({
-        ...(dataFieldConfiguration),
-        label: `${prefix}.label`,
-        hint: `${prefix}.hint`
-    });
+  return new fields.BooleanField({
+    ...dataFieldConfiguration,
+    label: `${prefix}.label`,
+    hint: `${prefix}.hint`,
+  })
 }
 
 /**
@@ -229,33 +230,33 @@ export function buildMandatoryBooleanField({itemType, key}) {
  *
  * @returns {fields.HTMLField}
  */
-export function buildOptionalHtmlField({initial = "", itemType, key}) {
-    const fields = foundry.data.fields;
-    const prefix = _buildLocalizationPrefix({itemType, key});
-    let dataFieldConfiguration = _enrichDataFieldConfiguration({
-        initial,
-        dataFieldConfiguration: optionalHtml
-    });
+export function buildOptionalHtmlField({ initial = '', itemType, key }) {
+  const fields = foundry.data.fields
+  const prefix = _buildLocalizationPrefix({ itemType, key })
+  let dataFieldConfiguration = _enrichDataFieldConfiguration({
+    initial,
+    dataFieldConfiguration: optionalHtml,
+  })
 
-    return new fields.HTMLField({
-        ...(dataFieldConfiguration),
-        label: `${prefix}.label`,
-        hint: `${prefix}.hint`
-    });
+  return new fields.HTMLField({
+    ...dataFieldConfiguration,
+    label: `${prefix}.label`,
+    hint: `${prefix}.hint`,
+  })
 }
 
-export function buildMandatoryHtmlField({itemType, key}) {
-    const fields = foundry.data.fields;
-    const prefix = _buildLocalizationPrefix({itemType, key});
-    let dataFieldConfiguration = _enrichDataFieldConfiguration({
-        dataFieldConfiguration: mandatoryHtml
-    });
+export function buildMandatoryHtmlField({ itemType, key }) {
+  const fields = foundry.data.fields
+  const prefix = _buildLocalizationPrefix({ itemType, key })
+  let dataFieldConfiguration = _enrichDataFieldConfiguration({
+    dataFieldConfiguration: mandatoryHtml,
+  })
 
-    return new fields.HTMLField({
-        ...(dataFieldConfiguration),
-        label: `${prefix}.label`,
-        hint: `${prefix}.hint`
-    });
+  return new fields.HTMLField({
+    ...dataFieldConfiguration,
+    label: `${prefix}.label`,
+    hint: `${prefix}.hint`,
+  })
 }
 
 /* ******************************************************************************************************* */
@@ -267,8 +268,8 @@ export function buildMandatoryHtmlField({itemType, key}) {
  * @returns {fields.SchemaField} A schema Field used to describe the structure and type of the data
  */
 export function buildOptionalSchemaField(field = {}) {
-    const fields = foundry.data.fields;
-    return new fields.SchemaField(field, {required: false, initial: {}});
+  const fields = foundry.data.fields
+  return new fields.SchemaField(field, { required: false, initial: {} })
 }
 
 /**
@@ -281,13 +282,13 @@ export function buildOptionalSchemaField(field = {}) {
  * @name mandatorySchemaField
  */
 export function mandatorySchemaField(field = {}) {
-    const fields = foundry.data.fields;
-    return new fields.SchemaField(field, {required: true})
+  const fields = foundry.data.fields
+  return new fields.SchemaField(field, { required: true })
 }
 
-export function buildOptionalSetField({initial = [], field = {}}) {
-    const fields = foundry.data.fields;
-    return new fields.SetField(field, {required: false, initial});
+export function buildOptionalSetField({ initial = [], field = {} }) {
+  const fields = foundry.data.fields
+  return new fields.SetField(field, { required: false, initial })
 }
 
 /**
@@ -300,8 +301,8 @@ export function buildOptionalSetField({initial = [], field = {}}) {
  * @name mandatorySetField
  */
 export function mandatorySetField(field = {}) {
-    const fields = foundry.data.fields;
-    return new fields.SetField(field, {required: true});
+  const fields = foundry.data.fields
+  return new fields.SetField(field, { required: true })
 }
 
 /**
@@ -311,8 +312,8 @@ export function mandatorySetField(field = {}) {
  * @param field {DataField} The field object inside the ArrayField
  * @returns {fields.ArrayField} A schema Field used to describe the structure and type of the data
  */
-export function buildOptionalArrayField({initial = [], field}) {
-    return new fields.ArrayField(field, {required: false, initial,});
+export function buildOptionalArrayField({ initial = [], field }) {
+  return new fields.ArrayField(field, { required: false, initial })
 }
 
 /**
@@ -322,6 +323,6 @@ export function buildOptionalArrayField({initial = [], field}) {
  * @param field {DataField} The field object
  * @returns {fields.ArrayField} A schema Field used to describe the structure and type of the data
  */
-export function buildMandatoryArrayField({field}) {
-    return new fields.ArrayField(field, {required: true});
+export function buildMandatoryArrayField({ field }) {
+  return new fields.ArrayField(field, { required: true })
 }

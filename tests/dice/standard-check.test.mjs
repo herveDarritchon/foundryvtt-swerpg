@@ -3,7 +3,7 @@ import { setupFoundryMock } from '../helpers/mock-foundry.mjs'
 
 // Mock en amont des imports pour que StandardCheck utilise bien les versions mockées
 vi.mock('../../module/dice/standard-check-dialog.mjs', () => ({
-  default: class MockStandardCheckDialog {}
+  default: class MockStandardCheckDialog {},
 }))
 
 vi.mock('../../module/utils/logger.mjs', () => ({
@@ -11,8 +11,8 @@ vi.mock('../../module/utils/logger.mjs', () => ({
     debug: vi.fn(),
     info: vi.fn(),
     warn: vi.fn(),
-    error: vi.fn()
-  }
+    error: vi.fn(),
+  },
 }))
 
 // Import après définition des mocks
@@ -21,12 +21,12 @@ import StandardCheck from '../../module/dice/standard-check.mjs'
 describe('StandardCheck', () => {
   beforeEach(() => {
     setupFoundryMock()
-    
+
     // Mock global SYSTEM
     globalThis.SYSTEM = {
       dice: {
-        MAX_BOONS: 6
-      }
+        MAX_BOONS: 6,
+      },
     }
 
     // Mock global Roll class
@@ -49,7 +49,7 @@ describe('StandardCheck', () => {
     test('should handle formula as object parameter', () => {
       const data = { actorId: 'actor1', dc: 15 }
       const check = new StandardCheck(data)
-      
+
       expect(check.data).toEqual(data)
       expect(check.formula).toBe('')
     })
@@ -58,7 +58,7 @@ describe('StandardCheck', () => {
       const formula = '3d8'
       const data = { actorId: 'actor1', dc: 15 }
       const check = new StandardCheck(formula, data)
-      
+
       expect(check.formula).toBe(formula)
       expect(check.data).toEqual(data)
     })
@@ -77,7 +77,7 @@ describe('StandardCheck', () => {
         type: 'general',
         criticalSuccessThreshold: undefined,
         criticalFailureThreshold: undefined,
-        rollMode: undefined
+        rollMode: undefined,
       })
     })
   })
@@ -120,7 +120,7 @@ describe('StandardCheck', () => {
       })
 
       test('should use default threshold of 6 when not specified', () => {
-        check.total = 22 // 15 + 6 + 1  
+        check.total = 22 // 15 + 6 + 1
         expect(check.isCriticalSuccess).toBe(true)
       })
 
@@ -188,7 +188,7 @@ describe('StandardCheck', () => {
 
     beforeEach(() => {
       check = new StandardCheck({})
-      
+
       // Mock foundry utils
       globalThis.foundry.utils.deepClone = vi.fn((obj) => JSON.parse(JSON.stringify(obj)))
       globalThis.foundry.utils.mergeObject = vi.fn((original, other, options) => ({ ...original, ...other }))
@@ -200,7 +200,7 @@ describe('StandardCheck', () => {
 
         const result = check._prepareData(data)
         expect(result.boons).toEqual({
-          special: { label: 'Special', number: 3 }
+          special: { label: 'Special', number: 3 },
         })
       })
 
@@ -209,38 +209,38 @@ describe('StandardCheck', () => {
 
         const result = check._prepareData(data)
         expect(result.banes).toEqual({
-          special: { label: 'Special', number: 2 }
+          special: { label: 'Special', number: 2 },
         })
       })
 
       test('should handle non-numeric boons gracefully', () => {
         const data = { boons: 'invalid' }
         globalThis.Number.isNumeric.mockReturnValue(false)
-        
+
         const result = check._prepareData(data)
-        
+
         expect(result.boons).toEqual({
-          special: { label: 'Special', number: 0 }
+          special: { label: 'Special', number: 0 },
         })
       })
 
       test('should preserve object format for boons and banes', () => {
         const data = {
           boons: { talent: { label: 'Talent Bonus', number: 2 } },
-          banes: { condition: { label: 'Wounded', number: 1 } }
+          banes: { condition: { label: 'Wounded', number: 1 } },
         }
-        
+
         const result = check._prepareData(data)
-        
+
         expect(result.boons).toEqual(data.boons)
         expect(result.banes).toEqual(data.banes)
       })
 
       test('should remove undefined values', () => {
         const data = { ability: 5, skill: undefined, enchantment: 2 }
-        
+
         check._prepareData(data)
-        
+
         // Verify undefined values are filtered out before merge
         expect('skill' in data).toBe(false)
       })
@@ -248,14 +248,10 @@ describe('StandardCheck', () => {
       test('should merge with existing data', () => {
         check.data = { ability: 3, dc: 18 }
         const data = { skill: 5 }
-        
+
         const result = check._prepareData(data)
-        
-        expect(foundry.utils.mergeObject).toHaveBeenCalledWith(
-          check.data,
-          data,
-          { insertKeys: false }
-        )
+
+        expect(foundry.utils.mergeObject).toHaveBeenCalledWith(check.data, data, { insertKeys: false })
       })
     })
 
@@ -266,7 +262,7 @@ describe('StandardCheck', () => {
           { input: 0, expected: 0 },
           { input: 6, expected: 6 },
           { input: 12, expected: 12 },
-          { input: 15, expected: 12 }
+          { input: 15, expected: 12 },
         ]
 
         for (const { input, expected } of testCases) {
@@ -283,7 +279,7 @@ describe('StandardCheck', () => {
           { input: 0, expected: 0 },
           { input: 8, expected: 8 },
           { input: 12, expected: 12 },
-          { input: 15, expected: 12 }
+          { input: 15, expected: 12 },
         ]
 
         for (const { input, expected } of testCases) {
@@ -299,7 +295,7 @@ describe('StandardCheck', () => {
           { input: 0, expected: 0 },
           { input: 3, expected: 3 },
           { input: 6, expected: 6 },
-          { input: 10, expected: 6 }
+          { input: 10, expected: 6 },
         ]
 
         for (const { input, expected } of testCases) {
@@ -314,7 +310,7 @@ describe('StandardCheck', () => {
           { input: -5, expected: 0 },
           { input: 0, expected: 0 },
           { input: 15, expected: 15 },
-          { input: 25, expected: 25 }
+          { input: 25, expected: 25 },
         ]
 
         for (const { input, expected } of testCases) {
@@ -329,12 +325,12 @@ describe('StandardCheck', () => {
           boons: {
             talent: { label: 'Talent', number: 2 },
             equipment: { label: 'Equipment', number: 1 },
-            condition: { label: 'Condition', number: 3 }
-          }
+            condition: { label: 'Condition', number: 3 },
+          },
         }
-        
+
         const result = check._prepareData(data)
-        
+
         expect(result.totalBoons).toBe(6) // 2 + 1 + 3
       })
 
@@ -343,28 +339,28 @@ describe('StandardCheck', () => {
           boons: {
             talent: { label: 'Talent', number: 4 },
             equipment: { label: 'Equipment', number: 3 }, // Should be clamped to 2
-            condition: { label: 'Condition', number: 2 }   // Should be clamped to 0
-          }
+            condition: { label: 'Condition', number: 2 }, // Should be clamped to 0
+          },
         }
-        
+
         const result = check._prepareData(data)
-        
+
         expect(result.totalBoons).toBe(6) // Maximum allowed
         expect(result.boons.talent.number).toBe(4)
         expect(result.boons.equipment.number).toBe(2) // Clamped
-        expect(result.boons.condition.number).toBe(0)  // Clamped
+        expect(result.boons.condition.number).toBe(0) // Clamped
       })
 
       test('should assign IDs to boons and set default number', () => {
         const data = {
           boons: {
             talent: { label: 'Talent' }, // No number provided
-            equipment: { label: 'Equipment', number: 2 }
-          }
+            equipment: { label: 'Equipment', number: 2 },
+          },
         }
-        
+
         const result = check._prepareData(data)
-        
+
         expect(result.boons.talent.id).toBe('talent')
         expect(result.boons.talent.number).toBe(1) // Default value
         expect(result.boons.equipment.id).toBe('equipment')
@@ -398,7 +394,7 @@ describe('StandardCheck', () => {
       const data = { ability: 5 }
       const check = new StandardCheck({})
       const result = check._prepareData(data)
-      
+
       expect(result.totalBoons).toBe(0)
       expect(result.totalBanes).toBe(0)
     })
@@ -407,7 +403,7 @@ describe('StandardCheck', () => {
       const data = { boons: {}, banes: {} }
       const check = new StandardCheck({})
       const result = check._prepareData(data)
-      
+
       expect(result.totalBoons).toBe(0)
       expect(result.totalBanes).toBe(0)
     })
@@ -423,17 +419,17 @@ describe('StandardCheck', () => {
         enchantment: 1,
         boons: {
           talent: { label: 'Combat Expertise', number: 1 },
-          equipment: { label: 'Masterwork Weapon', number: 1 }
+          equipment: { label: 'Masterwork Weapon', number: 1 },
         },
         banes: {
-          condition: { label: 'Wounded', number: 1 }
+          condition: { label: 'Wounded', number: 1 },
         },
-        type: 'attack'
+        type: 'attack',
       }
-      
+
       const check = new StandardCheck(data)
       const result = check._prepareData(data)
-      
+
       expect(result.actorId).toBe('actor123')
       expect(result.dc).toBe(15)
       expect(result.ability).toBe(3)

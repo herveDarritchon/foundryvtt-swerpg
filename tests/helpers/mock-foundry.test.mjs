@@ -9,32 +9,32 @@ describe('Mock Foundry Helpers', () => {
     originalGlobals = {
       foundry: globalThis.foundry,
       game: globalThis.game,
-      ui: globalThis.ui
+      ui: globalThis.ui,
     }
   })
 
   afterEach(() => {
     // Clean up and restore original globals
     teardownFoundryMock()
-    
+
     if (originalGlobals.foundry === undefined) {
       delete globalThis.foundry
     } else {
       globalThis.foundry = originalGlobals.foundry
     }
-    
+
     if (originalGlobals.game === undefined) {
       delete globalThis.game
     } else {
       globalThis.game = originalGlobals.game
     }
-    
+
     if (originalGlobals.ui === undefined) {
       delete globalThis.ui
     } else {
       globalThis.ui = originalGlobals.ui
     }
-    
+
     // Clean up additional mock globals
     delete globalThis.Color
     delete globalThis.Roll
@@ -65,7 +65,7 @@ describe('Mock Foundry Helpers', () => {
       setupFoundryMock()
 
       expect(globalThis.foundry.applications.api.HandlebarsApplicationMixin).toBeTypeOf('function')
-      
+
       // Test that mixin returns the base class
       const BaseClass = class {}
       const MixedClass = globalThis.foundry.applications.api.HandlebarsApplicationMixin(BaseClass)
@@ -98,7 +98,7 @@ describe('Mock Foundry Helpers', () => {
     test('should merge custom translations', () => {
       const customTranslations = {
         'CUSTOM.KEY': 'Custom Value',
-        'SWERPG.ERRORS.InvalidEvent': 'Override Message'
+        'SWERPG.ERRORS.InvalidEvent': 'Override Message',
       }
 
       setupFoundryMock({ translations: customTranslations })
@@ -117,8 +117,8 @@ describe('Mock Foundry Helpers', () => {
     test('should apply foundry patches', () => {
       const patch = {
         custom: {
-          feature: 'test-value'
-        }
+          feature: 'test-value',
+        },
       }
 
       setupFoundryMock({ foundryPatch: patch })
@@ -131,7 +131,7 @@ describe('Mock Foundry Helpers', () => {
 
       const MockSheet = globalThis.foundry.applications.sheets.ActorSheetV2
       const sheet = new MockSheet({ test: 'option' })
-      
+
       expect(sheet.options.test).toBe('option')
       expect(() => sheet.render()).not.toThrow()
     })
@@ -140,10 +140,10 @@ describe('Mock Foundry Helpers', () => {
   describe('teardownFoundryMock', () => {
     test('should restore previous globals', () => {
       const previousFoundry = globalThis.foundry
-      
+
       setupFoundryMock()
       expect(globalThis.foundry).not.toBe(previousFoundry)
-      
+
       teardownFoundryMock()
       expect(globalThis.foundry).toBe(previousFoundry)
     })
@@ -152,9 +152,9 @@ describe('Mock Foundry Helpers', () => {
       setupFoundryMock()
       const mockFn = vi.fn()
       globalThis.game.i18n.localize = mockFn
-      
+
       teardownFoundryMock()
-      
+
       expect(vi.isMockFunction(mockFn)).toBe(true)
       // vi.clearAllMocks should have been called
     })
@@ -168,8 +168,8 @@ describe('Mock Foundry Helpers', () => {
     test('should extend existing foundry mock', () => {
       const extension = {
         custom: {
-          newFeature: 'extended'
-        }
+          newFeature: 'extended',
+        },
       }
 
       extendFoundryMock(extension)
@@ -179,11 +179,11 @@ describe('Mock Foundry Helpers', () => {
 
     test('should merge deeply with existing properties', () => {
       globalThis.foundry.existing = { prop: 'original' }
-      
+
       const extension = {
         existing: {
-          newProp: 'added'
-        }
+          newProp: 'added',
+        },
       }
 
       extendFoundryMock(extension)
@@ -216,7 +216,7 @@ describe('Mock Foundry Helpers', () => {
       setCombatMock()
 
       expect(globalThis.game.combat.combatant).toBeNull()
-      
+
       // Test setting current combatant
       const mockCombatant = { id: 'test-combatant' }
       globalThis.game.combat.combatant = mockCombatant
@@ -233,12 +233,12 @@ describe('Mock Foundry Helpers', () => {
       const packDefinitions = {
         'swerpg.talents': {
           name: 'Talents',
-          type: 'Item'
+          type: 'Item',
         },
         'swerpg.skills': {
-          name: 'Skills', 
-          type: 'Item'
-        }
+          name: 'Skills',
+          type: 'Item',
+        },
       }
 
       addPacksMock(packDefinitions)
@@ -251,8 +251,8 @@ describe('Mock Foundry Helpers', () => {
       const packDefinitions = {
         'swerpg.test': {
           name: 'Test Pack',
-          type: 'Actor'
-        }
+          type: 'Actor',
+        },
       }
 
       addPacksMock(packDefinitions)
@@ -266,14 +266,14 @@ describe('Mock Foundry Helpers', () => {
 
     test('should return undefined for non-existent document', async () => {
       const packDefinitions = {
-        'swerpg.test': { name: 'Test', type: 'Item' }
+        'swerpg.test': { name: 'Test', type: 'Item' },
       }
 
       addPacksMock(packDefinitions)
 
       const pack = globalThis.game.packs.get('swerpg.test')
       const result = await pack.getDocument('non-existent')
-      
+
       expect(result).toBeUndefined()
     })
   })
@@ -287,10 +287,10 @@ describe('Mock Foundry Helpers', () => {
       const original = {
         level1: {
           level2: {
-            value: 'test'
+            value: 'test',
           },
-          array: [1, 2, 3]
-        }
+          array: [1, 2, 3],
+        },
       }
 
       const cloned = globalThis.foundry.utils.deepClone(original)
@@ -307,10 +307,10 @@ describe('Mock Foundry Helpers', () => {
         system: {
           attributes: {
             health: {
-              value: 10
-            }
-          }
-        }
+              value: 10,
+            },
+          },
+        },
       }
 
       expect(globalThis.foundry.utils.getProperty(obj, 'system.attributes.health.value')).toBe(10)
@@ -321,15 +321,15 @@ describe('Mock Foundry Helpers', () => {
       const original = {
         a: 1,
         b: {
-          c: 2
-        }
+          c: 2,
+        },
       }
 
       const update = {
         b: {
-          d: 3
+          d: 3,
         },
-        e: 4
+        e: 4,
       }
 
       const result = globalThis.foundry.utils.mergeObject(original, update)
@@ -338,9 +338,9 @@ describe('Mock Foundry Helpers', () => {
         a: 1,
         b: {
           c: 2,
-          d: 3
+          d: 3,
         },
-        e: 4
+        e: 4,
       })
     })
 
@@ -362,10 +362,10 @@ describe('Mock Foundry Helpers', () => {
     test('should handle setupFoundryMock called multiple times', () => {
       setupFoundryMock()
       const firstFoundry = globalThis.foundry
-      
+
       setupFoundryMock()
       const secondFoundry = globalThis.foundry
-      
+
       // Should have replaced the first mock
       expect(secondFoundry).not.toBe(firstFoundry)
       expect(secondFoundry).toBeDefined()
@@ -380,7 +380,7 @@ describe('Mock Foundry Helpers', () => {
 
     test('should handle invalid pack definitions', () => {
       setupFoundryMock()
-      
+
       expect(() => addPacksMock({})).not.toThrow()
       expect(() => addPacksMock(null)).not.toThrow()
       expect(() => addPacksMock(undefined)).not.toThrow()
@@ -391,14 +391,14 @@ describe('Mock Foundry Helpers', () => {
     test('should support typical test setup pattern', () => {
       setupFoundryMock({
         translations: {
-          'TEST.Message': 'Test successful'
-        }
+          'TEST.Message': 'Test successful',
+        },
       })
 
       // Simulate typical test usage
       expect(globalThis.game.i18n.localize('TEST.Message')).toBe('Test successful')
       expect(() => globalThis.ui.notifications.info('Test')).not.toThrow()
-      
+
       const obj = { nested: { value: 42 } }
       const cloned = globalThis.foundry.utils.deepClone(obj)
       expect(cloned.nested.value).toBe(42)

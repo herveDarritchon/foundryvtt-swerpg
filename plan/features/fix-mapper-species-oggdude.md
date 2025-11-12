@@ -5,7 +5,7 @@ date_created: 2025-11-12
 last_updated: 2025-11-12
 owner: herve.darritchon
 status: 'In progress'
-tags: [ 'feature', 'migration', 'data-import', 'oggdude' ]
+tags: ['feature', 'migration', 'data-import', 'oggdude']
 ---
 
 # Introduction
@@ -38,35 +38,35 @@ compatibles avec le schéma défini dans SwerpgSpecies.
 - GOAL-001: Restructurer le mapping des données de base pour correspondre au schéma SwerpgSpecies
 
 | Task     | Description                                                                                             | Completed | Date       |
-|----------|---------------------------------------------------------------------------------------------------------|-----------|------------|
-| TASK-001 | Mapper `StartingChars` vers `characteristics` (brawn, agility, intellect, cunning, willpower, presence) | ✅         | 2025-11-12 |
-| TASK-002 | Mapper `StartingAttrs.WoundThreshold` vers `woundThreshold.modifier` avec `abilityKey: 'brawn'`         | ✅         | 2025-11-12 |
-| TASK-003 | Mapper `StartingAttrs.StrainThreshold` vers `strainThreshold.modifier` avec `abilityKey: 'willpower'`   | ✅         | 2025-11-12 |
-| TASK-004 | Mapper `StartingAttrs.Experience` vers `startingExperience`                                             | ✅         | 2025-11-12 |
+| -------- | ------------------------------------------------------------------------------------------------------- | --------- | ---------- |
+| TASK-001 | Mapper `StartingChars` vers `characteristics` (brawn, agility, intellect, cunning, willpower, presence) | ✅        | 2025-11-12 |
+| TASK-002 | Mapper `StartingAttrs.WoundThreshold` vers `woundThreshold.modifier` avec `abilityKey: 'brawn'`         | ✅        | 2025-11-12 |
+| TASK-003 | Mapper `StartingAttrs.StrainThreshold` vers `strainThreshold.modifier` avec `abilityKey: 'willpower'`   | ✅        | 2025-11-12 |
+| TASK-004 | Mapper `StartingAttrs.Experience` vers `startingExperience`                                             | ✅        | 2025-11-12 |
 
 ### Implementation Phase 2 - Mapping des compétences et talents
 
 - GOAL-002: Implémenter le mapping des compétences et talents gratuits
 
 | Task     | Description                                                                                                                 | Completed | Date       |
-|----------|-----------------------------------------------------------------------------------------------------------------------------|-----------|------------|
-| TASK-005 | Extraire les compétences gratuites depuis `SkillModifiers` vers `freeSkills` (Set)                                          | ✅         | 2025-11-12 |
-| TASK-006 | Extraire les talents gratuits depuis `TalentModifiers` vers `freeTalents` (Set d'UUIDs)                                     | ✅         | 2025-11-12 |
-| TASK-007 | Implémenter la résolution des UUIDs de talents basée sur les keys OggDude                                                   | ✅         | 2025-11-12 |
-| TASK-011 | Créer la table de correspondance codes OggDude -> SKILLS système dans `module/importer/mappings/oggdude-skill-map.mjs`      | ✅         | 2025-11-12 |
-| TASK-012 | Adapter `species-ogg-dude.mjs` pour transformer chaque code avant validation (utiliser map, ignorer inconnus avec log warn) | ✅         | 2025-11-12 |
-| TASK-013 | Mettre à jour tests pour couvrir: mapping réussi, code inconnu ignoré, duplication éliminée                                 | ✅         | 2025-11-12 |
+| -------- | --------------------------------------------------------------------------------------------------------------------------- | --------- | ---------- |
+| TASK-005 | Extraire les compétences gratuites depuis `SkillModifiers` vers `freeSkills` (Set)                                          | ✅        | 2025-11-12 |
+| TASK-006 | Extraire les talents gratuits depuis `TalentModifiers` vers `freeTalents` (Set d'UUIDs)                                     | ✅        | 2025-11-12 |
+| TASK-007 | Implémenter la résolution des UUIDs de talents basée sur les keys OggDude                                                   | ✅        | 2025-11-12 |
+| TASK-011 | Créer la table de correspondance codes OggDude -> SKILLS système dans `module/importer/mappings/oggdude-skill-map.mjs`      | ✅        | 2025-11-12 |
+| TASK-012 | Adapter `species-ogg-dude.mjs` pour transformer chaque code avant validation (utiliser map, ignorer inconnus avec log warn) | ✅        | 2025-11-12 |
+| TASK-013 | Mettre à jour tests pour couvrir: mapping réussi, code inconnu ignoré, duplication éliminée                                 | ✅        | 2025-11-12 |
 
 ### Implementation Phase 3 - Nettoyage et optimisation
 
 - GOAL-003: Supprimer les mappings obsolètes et optimiser la structure
 
 | Task     | Description                                                                 | Completed | Date       |
-|----------|-----------------------------------------------------------------------------|-----------|------------|
-| TASK-008 | Supprimer les mappings non utilisés (SubSpecies, OptionChoices complexes)   | ✅         | 2025-11-12 |
-| TASK-009 | Simplifier la structure de retour pour correspondre exactement au schéma    | ✅         | 2025-11-12 |
-| TASK-010 | Ajouter la validation des données mappées                                   | ✅         | 2025-11-12 |
-| TASK-014 | Retirer tout code mort résiduel après intégration mapping codes compétences | ✅         | 2025-11-12 |
+| -------- | --------------------------------------------------------------------------- | --------- | ---------- |
+| TASK-008 | Supprimer les mappings non utilisés (SubSpecies, OptionChoices complexes)   | ✅        | 2025-11-12 |
+| TASK-009 | Simplifier la structure de retour pour correspondre exactement au schéma    | ✅        | 2025-11-12 |
+| TASK-010 | Ajouter la validation des données mappées                                   | ✅        | 2025-11-12 |
+| TASK-014 | Retirer tout code mort résiduel après intégration mapping codes compétences | ✅        | 2025-11-12 |
 
 ## 3. Alternatives
 
@@ -102,7 +102,7 @@ compatibles avec le schéma défini dans SwerpgSpecies.
 ### Table de correspondance prévue (draft)
 
 | Code OggDude | Système SKILL ID | Justification / Assomption                                      |
-|--------------|------------------|-----------------------------------------------------------------|
+| ------------ | ---------------- | --------------------------------------------------------------- |
 | ATHL         | athletics        | Correspondance directe (Athletics)                              |
 | PERC         | awareness        | PERC ~ Perception -> Awareness dans système                     |
 | DECEP        | deception        | Correspondance directe (Deception)                              |

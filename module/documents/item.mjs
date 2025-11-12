@@ -57,7 +57,9 @@ export default class SwerpgItem extends Item {
   /**
    * Path accessor (skill progression path id)
    */
-  get path() { return this.system?.path }
+  get path() {
+    return this.system?.path
+  }
   set path(value) {
     if (!this.system) this.system = {}
     this.system.path = value

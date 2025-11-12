@@ -5,7 +5,7 @@ date_created: 2025-11-12
 last_updated: 2025-11-12
 owner: herve.darritchon
 status: 'Planned'
-tags: ['feature','refactor','migration','data-import','oggdude','weapon']
+tags: ['feature', 'refactor', 'migration', 'data-import', 'oggdude', 'weapon']
 ---
 
 # Introduction
@@ -51,100 +51,100 @@ Ce plan définit la refonte du mapper `weapon-ogg-dude.mjs` pour produire des ob
 
 - GOAL-001: Créer les tables et helpers déterministes pour skills, range, qualities, slot/hands, numeric clamps.
 
-| Task     | Description                                                                                                          | Completed | Date |
-| -------- | -------------------------------------------------------------------------------------------------------------------- | --------- | ---- |
-| TASK-001 | Créer `module/importer/mappings/oggdude-weapon-skill-map.mjs` export `WEAPON_SKILL_MAP` (codes → skill IDs système)  |           |      |
-| TASK-002 | Créer `module/importer/mappings/oggdude-weapon-range-map.mjs` export `WEAPON_RANGE_MAP` (codes OggDude → range IDs)  |           |      |
-| TASK-003 | Créer `module/importer/mappings/oggdude-weapon-quality-map.mjs` si divergences de nommage (codes → qualité système) |           |      |
-| TASK-004 | Créer `module/importer/mappings/oggdude-weapon-hands-map.mjs` (ex: '1','One','Single'→ONE_HAND / '2','Two'→TWO_HAND) |           |      |
-| TASK-005 | Implémenter `clampNumber(value,min,max,defaultValue)` utilitaire local réutilisable                                  |           |      |
-| TASK-006 | Implémenter `sanitizeText(str)` (trim, remplacer `<script` → `&lt;script`)                                            |           |      |
-| TASK-007 | Ajouter fichier `module/importer/mappings/index-weapon.mjs` centralisant re-export des tables                        |           |      |
-| TASK-008 | Rédiger tests unitaires mappages (1 spec par table)                                                                  |           |      |
+| Task     | Description                                                                                                          | Completed | Date       |
+| -------- | -------------------------------------------------------------------------------------------------------------------- | --------- | ---------- |
+| TASK-001 | Créer `module/importer/mappings/oggdude-weapon-skill-map.mjs` export `WEAPON_SKILL_MAP` (codes → skill IDs système)  | ✅        | 2024-12-11 |
+| TASK-002 | Créer `module/importer/mappings/oggdude-weapon-range-map.mjs` export `WEAPON_RANGE_MAP` (codes OggDude → range IDs)  | ✅        | 2024-12-11 |
+| TASK-003 | Créer `module/importer/mappings/oggdude-weapon-quality-map.mjs` si divergences de nommage (codes → qualité système)  | ✅        | 2024-12-11 |
+| TASK-004 | Créer `module/importer/mappings/oggdude-weapon-hands-map.mjs` (ex: '1','One','Single'→ONE_HAND / '2','Two'→TWO_HAND) | ✅        | 2024-12-11 |
+| TASK-005 | Implémenter `clampNumber(value,min,max,defaultValue)` utilitaire local réutilisable                                  | ✅        | 2024-12-11 |
+| TASK-006 | Implémenter `sanitizeText(str)` (trim, remplacer `<script` → `&lt;script`)                                           | ✅        | 2024-12-11 |
+| TASK-007 | Ajouter fichier `module/importer/mappings/index-weapon.mjs` centralisant re-export des tables                        | ✅        | 2024-12-11 |
+| TASK-008 | Rédiger tests unitaires mappages (1 spec par table)                                                                  |           |            |
 
 ### Implementation Phase 2 - Refactor Mapper Principal
 
 - GOAL-002: Réécrire `weaponMapper` pour qu'il produise un objet conforme au schéma.
 
-| Task     | Description                                                                                                                         | Completed | Date |
-| -------- | ----------------------------------------------------------------------------------------------------------------------------------- | --------- | ---- |
-| TASK-009 | Renommer fonction interne vers `mapOggDudeWeapon(xmlWeapon)` pour clarté                                                            |           |      |
-| TASK-010 | Construire structure root `{ name, type:'weapon', img, system:{...} }`                                                              |           |      |
-| TASK-011 | Mapper `SkillKey` via `WEAPON_SKILL_MAP` → `system.skill`; warn si inconnu                                                          |           |      |
-| TASK-012 | Mapper Range (préférence `RangeValue` si présent sinon `Range`) via `WEAPON_RANGE_MAP` → `system.range`                             |           |      |
-| TASK-013 | Calculer `damage = clampNumber(Damage + (DamageAdd||0),0,20,0)`                                                                    |           |      |
-| TASK-014 | Calculer `crit = clampNumber(Crit,0,20,0)`                                                                                          |           |      |
-| TASK-015 | Mapper `Qualities.Quality[].Key` → transformer via QUALITY_MAP; filtrer duplicats avec Set                                          |           |      |
-| TASK-016 | Exclure qualité inconnue (warn); ignorer `Count` >1 (log debug mention "MULTI_COUNT_IGNORED")                                        |           |      |
-| TASK-017 | Mapper `restricted`, `price`, `rarity`, `encumbrance`, `hp` (clamp ≥0 / clamp 0–20 pour rarity)                                     |           |      |
-| TASK-018 | Mapper `Hands` via `WEAPON_HANDS_MAP` → `system.slot`                                                                              |           |      |
-| TASK-019 | Exclure champs non supportés listés REQ-011                                                                                        |           |      |
-| TASK-020 | Appliquer `sanitizeText` sur `name` et `description`                                                                               |           |      |
-| TASK-021 | Ignorer item si `system.skill` ou `system.range` indéfinis en mode strict                                                          |           |      |
-| TASK-022 | Ajouter instrumentation accumulation stats dans module (objet `weaponImportStats`)                                                 |           |      |
-| TASK-023 | Tri final `system.qualities = Array.from(set).sort()`                                                                             |           |      |
-| TASK-024 | Ajouter export des stats via fonction `getWeaponImportStats()`                                                                     |           |      |
+| Task     | Description                                                                                             | Completed | Date       |
+| -------- | ------------------------------------------------------------------------------------------------------- | --------- | ---------- |
+| TASK-009 | Renommer fonction interne vers `mapOggDudeWeapon(xmlWeapon)` pour clarté                                | ✅        | 2024-12-27 |
+| TASK-010 | Construire structure root `{ name, type:'weapon', img, system:{...} }`                                  | ✅        | 2024-12-27 |
+| TASK-011 | Mapper `SkillKey` via `WEAPON_SKILL_MAP` → `system.skill`; warn si inconnu                              | ✅        | 2024-12-27 |
+| TASK-012 | Mapper Range (préférence `RangeValue` si présent sinon `Range`) via `WEAPON_RANGE_MAP` → `system.range` | ✅        | 2024-12-27 |
+| TASK-013 | Calculer `damage = clampNumber(Damage + (DamageAdd or 0),0,20,0)`                                       | ✅        | 2024-12-27 |
+| TASK-014 | Calculer `crit = clampNumber(Crit,0,20,0)`                                                              | ✅        | 2024-12-27 |
+| TASK-015 | Mapper `Qualities.Quality[].Key` → transformer via QUALITY_MAP; filtrer duplicats avec Set              | ✅        | 2024-12-27 |
+| TASK-016 | Exclure qualité inconnue (warn); ignorer `Count` >1 (log debug mention "MULTI_COUNT_IGNORED")           | ✅        | 2024-12-27 |
+| TASK-017 | Mapper `restricted`, `price`, `rarity`, `encumbrance`, `hp` (clamp ≥0 / clamp 0–20 pour rarity)         | ✅        | 2024-12-27 |
+| TASK-018 | Mapper `Hands` via `WEAPON_HANDS_MAP` → `system.slot`                                                   | ✅        | 2024-12-27 |
+| TASK-019 | Exclure champs non supportés listés REQ-011                                                             |           |            |
+| TASK-020 | Appliquer `sanitizeText` sur `name` et `description`                                                    |           |            |
+| TASK-021 | Ignorer item si `system.skill` ou `system.range` indéfinis en mode strict                               |           |            |
+| TASK-022 | Ajouter instrumentation accumulation stats dans module (objet `weaponImportStats`)                      |           |            |
+| TASK-023 | Tri final `system.qualities = Array.from(set).sort()`                                                   |           |            |
+| TASK-024 | Ajouter export des stats via fonction `getWeaponImportStats()`                                          |           |            |
 
 ### Implementation Phase 3 - Validation & Filtrages Avancés
 
 - GOAL-003: Ajouter couche validation & mode strict.
 
-| Task     | Description                                                                                                                        | Completed | Date |
-| -------- | ---------------------------------------------------------------------------------------------------------------------------------- | --------- | ---- |
-| TASK-025 | Implémenter `validateWeaponSystem(system)` : retourne {valid:boolean, errors:string[]}                                              |           |      |
-| TASK-026 | Conditions: damage, crit entiers; skill/range string non vide; qualities array ≤ 12 (borne décorative anti-surplus)                 |           |      |
-| TASK-027 | Mode strict: vérifier `system.skill ∈ Object.keys(SYSTEM.WEAPON.SKILLS)`                                                           |           |      |
-| TASK-028 | Mode strict: vérifier `system.range ∈ Object.keys(SYSTEM.WEAPON.RANGETYPES)`                                                       |           |      |
-| TASK-029 | Filtrer toute qualité hors `SYSTEM.WEAPON.QUALITIES` (compteur rejet)                                                              |           |      |
-| TASK-030 | Logger résumé par arme: skillInconnues, qualitiesRejetees, validité                                                                |           |      |
-| TASK-031 | Si invalid → ne pas inclure dans résultat final `weaponMapper` + incrémenter stats.rejected                                        |           |      |
-| TASK-032 | Ajouter test pour invalidation volontaire (skill inconnu en strict)                                                               |           |      |
+| Task     | Description                                                                                                         | Completed | Date |
+| -------- | ------------------------------------------------------------------------------------------------------------------- | --------- | ---- |
+| TASK-025 | Implémenter `validateWeaponSystem(system)` : retourne {valid:boolean, errors:string[]}                              |           |      |
+| TASK-026 | Conditions: damage, crit entiers; skill/range string non vide; qualities array ≤ 12 (borne décorative anti-surplus) |           |      |
+| TASK-027 | Mode strict: vérifier `system.skill ∈ Object.keys(SYSTEM.WEAPON.SKILLS)`                                            |           |      |
+| TASK-028 | Mode strict: vérifier `system.range ∈ Object.keys(SYSTEM.WEAPON.RANGETYPES)`                                        |           |      |
+| TASK-029 | Filtrer toute qualité hors `SYSTEM.WEAPON.QUALITIES` (compteur rejet)                                               |           |      |
+| TASK-030 | Logger résumé par arme: skillInconnues, qualitiesRejetees, validité                                                 |           |      |
+| TASK-031 | Si invalid → ne pas inclure dans résultat final `weaponMapper` + incrémenter stats.rejected                         |           |      |
+| TASK-032 | Ajouter test pour invalidation volontaire (skill inconnu en strict)                                                 |           |      |
 
 ### Implementation Phase 4 - Tests Unitaires & d’Intégration
 
 - GOAL-004: Couverture >95% branches mapping & validation.
 
-| Task     | Description                                                                                                        | Completed | Date |
-| -------- | ------------------------------------------------------------------------------------------------------------------ | --------- | ---- |
-| TASK-033 | Créer fichier `tests/importer/weapon-oggdude.spec.mjs`                                                             |           |      |
-| TASK-034 | TEST: skill mapping connu                                                                                          |           |      |
-| TASK-035 | TEST: skill code inconnu → warn + exclusion strict                                                                 |           |      |
-| TASK-036 | TEST: range mapping (RangeValue prioritaire)                                                                       |           |      |
-| TASK-037 | TEST: damage + damageAdd clamp                                                                                     |           |      |
-| TASK-038 | TEST: qualities déduplication + rejet inconnue                                                                     |           |      |
-| TASK-039 | TEST: Count>1 log MULTI_COUNT_IGNORED                                                                              |           |      |
-| TASK-040 | TEST: Hands mapping → slot TWO_HAND                                                                                 |           |      |
-| TASK-041 | TEST: restricted boolean conservé                                                                                  |           |      |
-| TASK-042 | TEST: invalid system (missing skill strict) rejeté                                                                 |           |      |
-| TASK-043 | TEST: stats accumulation (total, rejected, unknownSkills, unknownQualities)                                        |           |      |
-| TASK-044 | TEST: sanitation name/description (injection `<script`)                                                            |           |      |
-| TASK-045 | TEST: qualities triées alphabétiquement                                                                            |           |      |
-| TASK-046 | TEST: performance (mapper sur 500 armes synthétiques < seuil temps défini)                                         |           |      |
+| Task     | Description                                                                 | Completed | Date |
+| -------- | --------------------------------------------------------------------------- | --------- | ---- |
+| TASK-033 | Créer fichier `tests/importer/weapon-oggdude.spec.mjs`                      |           |      |
+| TASK-034 | TEST: skill mapping connu                                                   |           |      |
+| TASK-035 | TEST: skill code inconnu → warn + exclusion strict                          |           |      |
+| TASK-036 | TEST: range mapping (RangeValue prioritaire)                                |           |      |
+| TASK-037 | TEST: damage + damageAdd clamp                                              |           |      |
+| TASK-038 | TEST: qualities déduplication + rejet inconnue                              |           |      |
+| TASK-039 | TEST: Count>1 log MULTI_COUNT_IGNORED                                       |           |      |
+| TASK-040 | TEST: Hands mapping → slot TWO_HAND                                         |           |      |
+| TASK-041 | TEST: restricted boolean conservé                                           |           |      |
+| TASK-042 | TEST: invalid system (missing skill strict) rejeté                          |           |      |
+| TASK-043 | TEST: stats accumulation (total, rejected, unknownSkills, unknownQualities) |           |      |
+| TASK-044 | TEST: sanitation name/description (injection `<script`)                     |           |      |
+| TASK-045 | TEST: qualities triées alphabétiquement                                     |           |      |
+| TASK-046 | TEST: performance (mapper sur 500 armes synthétiques < seuil temps défini)  |           |      |
 
 ### Implementation Phase 5 - Documentation & Changelog
 
 - GOAL-005: Documenter le nouveau flux et enregistrer changements.
 
-| Task     | Description                                                                                             | Completed | Date |
-| -------- | ------------------------------------------------------------------------------------------------------- | --------- | ---- |
-| TASK-047 | Créer `documentation/swerpg/import-weapon.md` (flux mapping, tables, strict mode, exemples)             |           |      |
-| TASK-048 | Mettre à jour `CHANGELOG.md` section Unreleased (Added/Changed/Removed)                                 |           |      |
-| TASK-049 | Ajouter mention sécurité (sanitisation) dans doc import weapon                                          |           |      |
-| TASK-050 | Ajouter section "Limitations" (Count ignoré, qualities Set)                                             |           |      |
+| Task     | Description                                                                                 | Completed | Date |
+| -------- | ------------------------------------------------------------------------------------------- | --------- | ---- |
+| TASK-047 | Créer `documentation/swerpg/import-weapon.md` (flux mapping, tables, strict mode, exemples) |           |      |
+| TASK-048 | Mettre à jour `CHANGELOG.md` section Unreleased (Added/Changed/Removed)                     |           |      |
+| TASK-049 | Ajouter mention sécurité (sanitisation) dans doc import weapon                              |           |      |
+| TASK-050 | Ajouter section "Limitations" (Count ignoré, qualities Set)                                 |           |      |
 
 ### Implementation Phase 6 - Observabilité & Optimisation
 
 - GOAL-006: Ajouter métriques et vérifier absence régression.
 
-| Task     | Description                                                                                         | Completed | Date |
-| -------- | --------------------------------------------------------------------------------------------------- | --------- | ---- |
-| TASK-051 | Ajouter fonction `resetWeaponImportStats()`                                                         |           |      |
-| TASK-052 | Exporter stats après import massif (log final format JSON)                                          |           |      |
-| TASK-053 | Ajouter tag PERF dans code si boucle critique (qualités)                                            |           |      |
-| TASK-054 | Audit mémoire (pas de rétention arrays temporaires)                                                 |           |      |
-| TASK-055 | Ajouter test charge: importer 1000 armes synthétiques (mesure durée + pas d’augmentation mémoire)   |           |      |
-| TASK-056 | Évaluer éventuelle fusion des maps dans un seul objet (décision ADR si gain minimal)                |           |      |
-| TASK-057 | Statut plan → In progress après démarrage impl                                                       |           |      |
+| Task     | Description                                                                                       | Completed | Date |
+| -------- | ------------------------------------------------------------------------------------------------- | --------- | ---- |
+| TASK-051 | Ajouter fonction `resetWeaponImportStats()`                                                       |           |      |
+| TASK-052 | Exporter stats après import massif (log final format JSON)                                        |           |      |
+| TASK-053 | Ajouter tag PERF dans code si boucle critique (qualités)                                          |           |      |
+| TASK-054 | Audit mémoire (pas de rétention arrays temporaires)                                               |           |      |
+| TASK-055 | Ajouter test charge: importer 1000 armes synthétiques (mesure durée + pas d’augmentation mémoire) |           |      |
+| TASK-056 | Évaluer éventuelle fusion des maps dans un seul objet (décision ADR si gain minimal)              |           |      |
+| TASK-057 | Statut plan → In progress après démarrage impl                                                    |           |      |
 
 ## 3. Alternatives
 

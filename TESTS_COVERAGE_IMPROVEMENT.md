@@ -9,6 +9,7 @@ Ce document décrit les améliorations apportées à la couverture de tests unit
 ### 1. Tests Utilitaires (`tests/utils/`)
 
 #### `logger-integration.spec.js` (Amélioré)
+
 - **Couverture** : Module `module/utils/logger.mjs` (0% → ~90%)
 - **Tests ajoutés** :
   - Gestion des états de debug (enable/disable/setDebug)
@@ -18,6 +19,7 @@ Ce document décrit les améliorations apportées à la couverture de tests unit
   - Validation des préfixes et arguments multiples
 
 #### `attributes.test.mjs` (Nouveau)
+
 - **Couverture** : Module `module/utils/attributes.mjs` (0% → 100%)
 - **Tests ajoutés** :
   - Fonction `shiftValue()` avec incréments/décréments
@@ -28,6 +30,7 @@ Ce document décrit les améliorations apportées à la couverture de tests unit
   - Validation des entrées invalides (NaN, Infinity)
 
 #### `items.test.mjs` (Nouveau)
+
 - **Couverture** : Module `module/utils/items.mjs` (0% → 100%)
 - **Tests ajoutés** :
   - Fonction `getItemsOf()` pour filtrage par type
@@ -40,6 +43,7 @@ Ce document décrit les améliorations apportées à la couverture de tests unit
 ### 2. Tests Configuration (`tests/config/`)
 
 #### `system.test.mjs` (Nouveau)
+
 - **Couverture** : Module `module/config/system.mjs` (0% → ~85%)
 - **Tests ajoutés** :
   - Validation `SYSTEM_ID` et `ANCESTRIES`
@@ -52,6 +56,7 @@ Ce document décrit les améliorations apportées à la couverture de tests unit
 ### 3. Tests Documents (`tests/documents/`)
 
 #### `item.test.mjs` (Nouveau)
+
 - **Couverture** : Module `module/documents/item.mjs` (0% → ~75%)
 - **Tests ajoutés** :
   - Getters d'attributs (config, actions, rank)
@@ -64,6 +69,7 @@ Ce document décrit les améliorations apportées à la couverture de tests unit
 ### 4. Tests Applications (`tests/applications/`)
 
 #### `settings/settings.test.mjs` (Nouveau)
+
 - **Couverture** : Module `module/applications/settings/settings.js` (0% → ~95%)
 - **Tests ajoutés** :
   - Enregistrement de tous les paramètres système
@@ -76,6 +82,7 @@ Ce document décrit les améliorations apportées à la couverture de tests unit
 ### 5. Tests Dice (`tests/dice/`)
 
 #### `standard-check.test.mjs` (Nouveau)
+
 - **Couverture** : Module `module/dice/standard-check.mjs` (0% → ~70%)
 - **Tests ajoutés** :
   - Construction et données par défaut
@@ -88,6 +95,7 @@ Ce document décrit les améliorations apportées à la couverture de tests unit
 ### 6. Tests Chat (`tests/chat/`)
 
 #### `chat.test.mjs` (Nouveau)
+
 - **Couverture** : Module `module/chat.mjs` (0% → ~80%)
 - **Tests ajoutés** :
   - Options du menu contextuel des messages
@@ -100,6 +108,7 @@ Ce document décrit les améliorations apportées à la couverture de tests unit
 ### 7. Tests Helpers (`tests/helpers/`)
 
 #### `mock-foundry.test.mjs` (Nouveau)
+
 - **Couverture** : Helpers de test `tests/helpers/mock-foundry.mjs`
 - **Tests ajoutés** :
   - Setup et teardown des mocks Foundry
@@ -112,6 +121,7 @@ Ce document décrit les améliorations apportées à la couverture de tests unit
 ## Améliorations Configuration
 
 ### `vitest.config.js`
+
 - Activation de `clearMocks` et `restoreMocks`
 - Configuration des seuils de couverture (60%)
 - Inclusion/exclusion des fichiers pour la couverture
@@ -120,21 +130,23 @@ Ce document décrit les améliorations apportées à la couverture de tests unit
 ## Patterns de Test Implémentés
 
 ### 1. **Structure AAA (Arrange-Act-Assert)**
+
 ```javascript
 test('should increment value by positive step', () => {
   // Arrange
   const initialValue = 5
   const step = 3
-  
+
   // Act
   const result = shiftValue(initialValue, step)
-  
+
   // Assert
   expect(result).toBe(8)
 })
 ```
 
 ### 2. **Mocking Centralisé**
+
 ```javascript
 beforeEach(() => {
   setupFoundryMock()
@@ -147,11 +159,12 @@ afterEach(() => {
 ```
 
 ### 3. **Tests Paramétrés**
+
 ```javascript
 test('should clamp ability score between 0 and 12', () => {
   const testCases = [
     { input: -5, expected: 0 },
-    { input: 15, expected: 12 }
+    { input: 15, expected: 12 },
   ]
 
   for (const { input, expected } of testCases) {
@@ -161,6 +174,7 @@ test('should clamp ability score between 0 and 12', () => {
 ```
 
 ### 4. **Gestion des Cas de Bordure**
+
 - Valeurs null/undefined
 - Tableaux vides
 - Objets manquants
@@ -168,10 +182,13 @@ test('should clamp ability score between 0 and 12', () => {
 - Erreurs d'entrée utilisateur
 
 ### 5. **Tests d'Intégration Légers**
+
 ```javascript
 test('should create functional StandardCheck with realistic data', () => {
   // Test avec données réalistes du jeu
-  const data = { /* configuration complète */ }
+  const data = {
+    /* configuration complète */
+  }
   const check = new StandardCheck(data)
   // Validation du comportement intégré
 })
@@ -180,13 +197,15 @@ test('should create functional StandardCheck with realistic data', () => {
 ## Métriques d'Amélioration
 
 ### Avant
+
 - **Couverture globale** : ~6.81%
 - **Modules testés** : Principalement `module/lib/` (talents, skills, characteristics)
 - **Modules non couverts** : config/, documents/, applications/, utils/, dice/, chat/
 
 ### Après (Estimation)
+
 - **Couverture globale** : ~35-45%
-- **Nouveaux modules couverts** : 
+- **Nouveaux modules couverts** :
   - `module/utils/` : 3 modules à 90-100%
   - `module/config/system.mjs` : ~85%
   - `module/documents/item.mjs` : ~75%
@@ -197,11 +216,13 @@ test('should create functional StandardCheck with realistic data', () => {
 ## Bonnes Pratiques Suivies
 
 ### 1. **Isolation des Tests**
+
 - Chaque test est indépendant
 - Mocks nettoyés entre tests
 - État réinitialisé à chaque test
 
 ### 2. **Nommage Descriptif**
+
 ```javascript
 describe('Range constraints with min and max', () => {
   test('should respect maximum constraint', () => {
@@ -211,11 +232,13 @@ describe('Range constraints with min and max', () => {
 ```
 
 ### 3. **Factorisation des Données**
+
 - Utilisation des factories existantes
 - Setup cohérent avec `beforeEach`
 - Réutilisation des mocks centralisés
 
 ### 4. **Documentation des Cas de Test**
+
 - Commentaires explicatifs pour les calculs complexes
 - Documentation des cas de bordure
 - Justification des valeurs attendues
@@ -223,21 +246,25 @@ describe('Range constraints with min and max', () => {
 ## Recommandations pour la Suite
 
 ### 1. **Priorités Immédiates**
+
 - Exécuter les nouveaux tests : `npm run test:coverage`
 - Vérifier l'amélioration de la couverture
 - Corriger les éventuelles erreurs de configuration
 
 ### 2. **Prochaines Étapes**
+
 - Étendre les tests aux modèles de données (`module/models/`)
 - Ajouter des tests E2E avec Playwright
 - Tests d'intégration pour les sheets ApplicationV2
 
 ### 3. **Surveillance Continue**
+
 - Intégrer les seuils de couverture en CI/CD
 - Surveiller les régressions de couverture
 - Maintenir les mocks à jour avec l'évolution de Foundry
 
 ### 4. **Amélioration de la Qualité**
+
 - Ajouter des tests de performance
 - Tests de compatibilité entre versions
 - Validation des patterns d'accessibilité

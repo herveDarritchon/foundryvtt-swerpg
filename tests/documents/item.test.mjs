@@ -5,8 +5,8 @@ import SwerpgItem from '../../module/documents/item.mjs'
 // Mock dependencies
 vi.mock('../../module/lib/talents/talent-factory.mjs', () => ({
   default: {
-    build: vi.fn()
-  }
+    build: vi.fn(),
+  },
 }))
 
 vi.mock('../../module/utils/logger.mjs', () => ({
@@ -14,8 +14,8 @@ vi.mock('../../module/utils/logger.mjs', () => ({
     debug: vi.fn(),
     info: vi.fn(),
     warn: vi.fn(),
-    error: vi.fn()
-  }
+    error: vi.fn(),
+  },
 }))
 
 vi.mock('../../module/lib/talents/error-talent.mjs', () => ({
@@ -23,7 +23,7 @@ vi.mock('../../module/lib/talents/error-talent.mjs', () => ({
     constructor(options) {
       this.options = options
     }
-  }
+  },
 }))
 
 describe('SwerpgItem Document', () => {
@@ -33,7 +33,7 @@ describe('SwerpgItem Document', () => {
 
   beforeEach(() => {
     setupFoundryMock()
-    
+
     // Setup global SYSTEM mock
     globalThis.SYSTEM = {
       skills: {
@@ -46,41 +46,41 @@ describe('SwerpgItem Document', () => {
             ranks: [
               { rank: 0, purchased: false },
               { rank: 1, purchased: false },
-              { rank: 2, purchased: false }
+              { rank: 2, purchased: false },
             ],
             paths: [
               { id: 'path1', active: false },
-              { id: 'path2', active: false }
-            ]
-          }
-        }
-      }
+              { id: 'path2', active: false },
+            ],
+          },
+        },
+      },
     }
 
     mockSystem = {
       config: {
         name: 'Test Config',
-        type: 'test'
+        type: 'test',
       },
       actions: [],
       currentRank: { rank: 1, cost: 5 },
       skill: 'testSkill',
       isRanked: true,
       rank: { idx: 1, cost: 10 },
-      getTags: vi.fn().mockReturnValue({ tag1: 'value1', tag2: 'value2' })
+      getTags: vi.fn().mockReturnValue({ tag1: 'value1', tag2: 'value2' }),
     }
 
     mockActor = {
       type: 'character',
       system: {
         applyAncestry: vi.fn(),
-        applyArchetype: vi.fn(), 
+        applyArchetype: vi.fn(),
         applyBackground: vi.fn(),
         applyOrigin: vi.fn(),
-        applyTaxonomy: vi.fn()
+        applyTaxonomy: vi.fn(),
       },
       canLearnIconicSpell: vi.fn(),
-      getActiveTokens: vi.fn().mockReturnValue([])
+      getActiveTokens: vi.fn().mockReturnValue([]),
     }
 
     // Create a mock SwerpgItem that extends our base
@@ -113,13 +113,13 @@ describe('SwerpgItem Document', () => {
     test('should configure skill items correctly', () => {
       mockItem.type = 'skill'
       mockItem.system.skill = 'testSkill'
-      
+
       // Mock the super method
       const superPrepareBaseData = vi.fn()
       mockItem.__proto__.__proto__ = { prepareBaseData: superPrepareBaseData }
-      
+
       SwerpgItem.prototype.prepareBaseData.call(mockItem)
-      
+
       expect(mockItem.system.config).toEqual(globalThis.SYSTEM.skills.skills.testSkill)
       expect(superPrepareBaseData).toHaveBeenCalled()
     })
@@ -127,24 +127,24 @@ describe('SwerpgItem Document', () => {
     test('should handle unknown skill gracefully', () => {
       mockItem.type = 'skill'
       mockItem.system.skill = 'unknownSkill'
-      
+
       const superPrepareBaseData = vi.fn()
       mockItem.__proto__.__proto__ = { prepareBaseData: superPrepareBaseData }
-      
+
       SwerpgItem.prototype.prepareBaseData.call(mockItem)
-      
+
       expect(mockItem.system.config).toEqual({})
       expect(superPrepareBaseData).toHaveBeenCalled()
     })
 
     test('should call super for non-skill items', () => {
       mockItem.type = 'weapon'
-      
+
       const superPrepareBaseData = vi.fn()
       mockItem.__proto__.__proto__ = { prepareBaseData: superPrepareBaseData }
-      
+
       SwerpgItem.prototype.prepareBaseData.call(mockItem)
-      
+
       expect(superPrepareBaseData).toHaveBeenCalled()
     })
   })
@@ -153,18 +153,18 @@ describe('SwerpgItem Document', () => {
     test('should call _prepareSkillData for skill items', () => {
       mockItem.type = 'skill'
       const prepareSkillDataSpy = vi.spyOn(SwerpgItem.prototype, '_prepareSkillData')
-      
+
       SwerpgItem.prototype.prepareDerivedData.call(mockItem)
-      
+
       expect(prepareSkillDataSpy).toHaveBeenCalled()
     })
 
     test('should not call _prepareSkillData for non-skill items', () => {
       mockItem.type = 'weapon'
       const prepareSkillDataSpy = vi.spyOn(SwerpgItem.prototype, '_prepareSkillData')
-      
+
       SwerpgItem.prototype.prepareDerivedData.call(mockItem)
-      
+
       expect(prepareSkillDataSpy).not.toHaveBeenCalled()
     })
   })
@@ -175,14 +175,14 @@ describe('SwerpgItem Document', () => {
       mockItem.config = globalThis.SYSTEM.skills.skills.testSkill
       mockItem.rank = 1
       mockItem.path = 'path1'
-      
+
       // Mock foundry.utils.deepClone
-      globalThis.foundry.utils.deepClone = vi.fn().mockImplementation(obj => JSON.parse(JSON.stringify(obj)))
+      globalThis.foundry.utils.deepClone = vi.fn().mockImplementation((obj) => JSON.parse(JSON.stringify(obj)))
     })
 
     test('should set basic skill properties', () => {
       SwerpgItem.prototype._prepareSkillData.call(mockItem)
-      
+
       expect(mockItem.name).toBe('Test Skill')
       expect(mockItem.img).toBe('test-icon.png')
       expect(mockItem.category).toBe('general')
@@ -191,7 +191,7 @@ describe('SwerpgItem Document', () => {
 
     test('should process ranks correctly', () => {
       SwerpgItem.prototype._prepareSkillData.call(mockItem)
-      
+
       expect(mockItem.ranks).toHaveLength(3)
       expect(mockItem.ranks[1].purchased).toBe(true) // rank 1 should be purchased
       expect(mockItem.ranks[0].purchased).toBe(false) // rank 0 should not be purchased
@@ -201,7 +201,7 @@ describe('SwerpgItem Document', () => {
 
     test('should process paths correctly', () => {
       SwerpgItem.prototype._prepareSkillData.call(mockItem)
-      
+
       expect(mockItem.paths).toHaveLength(2)
       expect(mockItem.paths[0].active).toBe(true) // path1 should be active
       expect(mockItem.paths[1].active).toBe(false) // path2 should not be active
@@ -210,7 +210,7 @@ describe('SwerpgItem Document', () => {
 
     test('should handle missing config gracefully', () => {
       mockItem.config = {}
-      
+
       expect(() => {
         SwerpgItem.prototype._prepareSkillData.call(mockItem)
       }).not.toThrow()
@@ -220,22 +220,22 @@ describe('SwerpgItem Document', () => {
   describe('getTags', () => {
     test('should return system getTags result when available', () => {
       const result = SwerpgItem.prototype.getTags.call(mockItem, 'full')
-      
+
       expect(mockSystem.getTags).toHaveBeenCalledWith('full')
       expect(result).toEqual({ tag1: 'value1', tag2: 'value2' })
     })
 
     test('should use default scope when not provided', () => {
       SwerpgItem.prototype.getTags.call(mockItem)
-      
+
       expect(mockSystem.getTags).toHaveBeenCalledWith('full')
     })
 
     test('should return empty object when system.getTags is not available', () => {
       mockItem.system.getTags = undefined
-      
+
       const result = SwerpgItem.prototype.getTags.call(mockItem)
-      
+
       expect(result).toEqual({})
     })
   })
@@ -247,7 +247,7 @@ describe('SwerpgItem Document', () => {
       mockData = { type: 'talent' }
       mockOptions = {}
       mockUser = { id: 'user-id' }
-      
+
       // Mock super method
       const superPreCreate = vi.fn().mockResolvedValue(true)
       mockItem.__proto__.__proto__ = { _preCreate: superPreCreate }
@@ -256,9 +256,9 @@ describe('SwerpgItem Document', () => {
     test('should handle ancestry type for character', async () => {
       mockData.type = 'ancestry'
       mockActor.type = 'character'
-      
+
       const result = await SwerpgItem.prototype._preCreate.call(mockItem, mockData, mockOptions, mockUser)
-      
+
       expect(mockActor.system.applyAncestry).toHaveBeenCalledWith(mockItem)
       expect(result).toBe(false) // Should prevent creation
     })
@@ -266,9 +266,9 @@ describe('SwerpgItem Document', () => {
     test('should handle archetype type for adversary', async () => {
       mockData.type = 'archetype'
       mockActor.type = 'adversary'
-      
+
       const result = await SwerpgItem.prototype._preCreate.call(mockItem, mockData, mockOptions, mockUser)
-      
+
       expect(mockActor.system.applyArchetype).toHaveBeenCalledWith(mockItem)
       expect(result).toBe(false) // Should prevent creation
     })
@@ -276,9 +276,9 @@ describe('SwerpgItem Document', () => {
     test('should handle background type for character', async () => {
       mockData.type = 'background'
       mockActor.type = 'character'
-      
+
       const result = await SwerpgItem.prototype._preCreate.call(mockItem, mockData, mockOptions, mockUser)
-      
+
       expect(mockActor.system.applyBackground).toHaveBeenCalledWith(mockItem)
       expect(result).toBe(false) // Should prevent creation
     })
@@ -286,9 +286,9 @@ describe('SwerpgItem Document', () => {
     test('should handle origin type for character', async () => {
       mockData.type = 'origin'
       mockActor.type = 'character'
-      
+
       const result = await SwerpgItem.prototype._preCreate.call(mockItem, mockData, mockOptions, mockUser)
-      
+
       expect(mockActor.system.applyOrigin).toHaveBeenCalledWith(mockItem)
       expect(result).toBe(false) // Should prevent creation
     })
@@ -296,30 +296,30 @@ describe('SwerpgItem Document', () => {
     test('should handle spell type with successful validation', async () => {
       mockData.type = 'spell'
       mockActor.canLearnIconicSpell.mockImplementation(() => {}) // No error
-      
+
       await SwerpgItem.prototype._preCreate.call(mockItem, mockData, mockOptions, mockUser)
-      
+
       expect(mockActor.canLearnIconicSpell).toHaveBeenCalledWith(mockItem)
       expect(mockOptions.keepId).toBe(true)
     })
 
     test('should handle spell type with validation error', async () => {
       mockData.type = 'spell'
-      mockActor.canLearnIconicSpell.mockImplementation(() => { 
-        throw new Error('Cannot learn spell') 
+      mockActor.canLearnIconicSpell.mockImplementation(() => {
+        throw new Error('Cannot learn spell')
       })
-      
+
       const result = await SwerpgItem.prototype._preCreate.call(mockItem, mockData, mockOptions, mockUser)
-      
+
       expect(mockActor.canLearnIconicSpell).toHaveBeenCalledWith(mockItem)
       expect(result).toBe(false) // Should prevent creation
     })
 
     test('should handle talent type', async () => {
       mockData.type = 'talent'
-      
+
       await SwerpgItem.prototype._preCreate.call(mockItem, mockData, mockOptions, mockUser)
-      
+
       expect(mockOptions.keepId).toBe(true)
       expect(mockOptions.keepEmbeddedIds).toBe(true)
     })
@@ -327,9 +327,9 @@ describe('SwerpgItem Document', () => {
     test('should handle taxonomy type for adversary', async () => {
       mockData.type = 'taxonomy'
       mockActor.type = 'adversary'
-      
+
       const result = await SwerpgItem.prototype._preCreate.call(mockItem, mockData, mockOptions, mockUser)
-      
+
       expect(mockActor.system.applyTaxonomy).toHaveBeenCalledWith(mockItem)
       expect(result).toBe(false) // Should prevent creation
     })
@@ -340,7 +340,7 @@ describe('SwerpgItem Document', () => {
       // Mock super method
       const superOnUpdate = vi.fn().mockReturnValue(true)
       mockItem.__proto__.__proto__ = { _onUpdate: superOnUpdate }
-      
+
       // Mock _displayScrollingStatus
       mockItem._displayScrollingStatus = vi.fn()
     })
@@ -349,9 +349,9 @@ describe('SwerpgItem Document', () => {
       const data = { system: { equipped: true } }
       const options = {}
       const userId = 'user-id'
-      
+
       SwerpgItem.prototype._onUpdate.call(mockItem, data, options, userId)
-      
+
       expect(mockItem._displayScrollingStatus).toHaveBeenCalledWith(data)
     })
   })
@@ -361,82 +361,79 @@ describe('SwerpgItem Document', () => {
       // Mock canvas
       globalThis.canvas = {
         interface: {
-          createScrollingText: vi.fn()
-        }
+          createScrollingText: vi.fn(),
+        },
       }
-      
+
       globalThis.CONST = {
         TEXT_ANCHOR_POINTS: {
           CENTER: 0,
           TOP: 1,
-          BOTTOM: 2
-        }
+          BOTTOM: 2,
+        },
       }
-      
-      mockActor.getActiveTokens.mockReturnValue([
-        { center: { x: 100, y: 100 } },
-        { center: { x: 200, y: 200 } }
-      ])
-      
+
+      mockActor.getActiveTokens.mockReturnValue([{ center: { x: 100, y: 100 } }, { center: { x: 200, y: 200 } }])
+
       mockItem.name = 'Test Weapon'
     })
 
     test('should not display for unowned items', () => {
       mockItem.isOwned = false
-      
+
       SwerpgItem.prototype._displayScrollingStatus.call(mockItem, { system: { equipped: true } })
-      
+
       expect(canvas.interface.createScrollingText).not.toHaveBeenCalled()
     })
 
     test('should not display for non-equipment items', () => {
       mockItem.type = 'talent'
-      
+
       SwerpgItem.prototype._displayScrollingStatus.call(mockItem, { system: { equipped: true } })
-      
+
       expect(canvas.interface.createScrollingText).not.toHaveBeenCalled()
     })
 
     test('should display equipped status for armor', () => {
       mockItem.type = 'armor'
       const changed = { system: { equipped: true } }
-      
+
       SwerpgItem.prototype._displayScrollingStatus.call(mockItem, changed)
-      
+
       expect(canvas.interface.createScrollingText).toHaveBeenCalledTimes(2) // One per token
       expect(canvas.interface.createScrollingText).toHaveBeenCalledWith(
         { x: 100, y: 100 },
         '+(Test Weapon)',
         expect.objectContaining({
           anchor: CONST.TEXT_ANCHOR_POINTS.CENTER,
-          direction: CONST.TEXT_ANCHOR_POINTS.TOP
-        })
+          direction: CONST.TEXT_ANCHOR_POINTS.TOP,
+        }),
       )
     })
 
     test('should display unequipped status for weapon', () => {
       mockItem.type = 'weapon'
       const changed = { system: { equipped: false } }
-      
+
       SwerpgItem.prototype._displayScrollingStatus.call(mockItem, changed)
-      
+
       expect(canvas.interface.createScrollingText).toHaveBeenCalledTimes(2) // One per token
       expect(canvas.interface.createScrollingText).toHaveBeenCalledWith(
         { x: 100, y: 100 },
         '-(Test Weapon)',
         expect.objectContaining({
           anchor: CONST.TEXT_ANCHOR_POINTS.CENTER,
-          direction: CONST.TEXT_ANCHOR_POINTS.BOTTOM
-        })
+          direction: CONST.TEXT_ANCHOR_POINTS.BOTTOM,
+        }),
       )
     })
 
     test('should not display if equipped status unchanged', () => {
       mockItem.type = 'weapon'
       const changed = { system: { damage: 10 } } // No equipped change
-      
+
       SwerpgItem.prototype._displayScrollingStatus.call(mockItem, changed)
-      
+
       expect(canvas.interface.createScrollingText).not.toHaveBeenCalled()
     })
   })

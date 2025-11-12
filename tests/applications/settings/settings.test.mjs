@@ -4,7 +4,7 @@ import { registerSystemSettings } from '../../../module/applications/settings/se
 
 // Mock the chat module
 vi.mock('../../../module/chat.mjs', () => ({
-  onKeyboardConfirmAction: vi.fn()
+  onKeyboardConfirmAction: vi.fn(),
 }))
 
 describe('System Settings Registration', () => {
@@ -14,23 +14,23 @@ describe('System Settings Registration', () => {
   beforeEach(() => {
     // Setup mock game object
     mockGameSettings = {
-      register: vi.fn()
+      register: vi.fn(),
     }
-    
+
     mockKeybindings = {
-      register: vi.fn()
+      register: vi.fn(),
     }
 
     setupFoundryMock({
       game: {
         settings: mockGameSettings,
-        keybindings: mockKeybindings
-      }
+        keybindings: mockKeybindings,
+      },
     })
 
     // Setup global SYSTEM
     globalThis.SYSTEM = {
-      id: 'swerpg'
+      id: 'swerpg',
     }
   })
 
@@ -52,7 +52,7 @@ describe('System Settings Registration', () => {
           scope: 'world',
           config: false,
           type: String,
-          default: ''
+          default: '',
         })
       })
 
@@ -64,7 +64,7 @@ describe('System Settings Registration', () => {
           scope: 'world',
           config: false,
           type: String,
-          default: ''
+          default: '',
         })
       })
 
@@ -76,7 +76,7 @@ describe('System Settings Registration', () => {
           scope: 'world',
           config: false,
           type: Boolean,
-          default: false
+          default: false,
         })
       })
     })
@@ -91,7 +91,7 @@ describe('System Settings Registration', () => {
           scope: 'world',
           config: true,
           type: Boolean,
-          default: true
+          default: true,
         })
       })
 
@@ -107,8 +107,8 @@ describe('System Settings Registration', () => {
           choices: {
             0: 'SETTINGS.AutoConfirmNone',
             1: 'SETTINGS.AutoConfirmSelf',
-            2: 'SETTINGS.AutoConfirmAll'
-          }
+            2: 'SETTINGS.AutoConfirmAll',
+          },
         })
       })
 
@@ -119,7 +119,7 @@ describe('System Settings Registration', () => {
           scope: 'client',
           config: false,
           type: Boolean,
-          default: false
+          default: false,
         })
       })
 
@@ -130,7 +130,7 @@ describe('System Settings Registration', () => {
           scope: 'world',
           config: false,
           type: Number,
-          default: 0
+          default: 0,
         })
       })
     })
@@ -144,7 +144,7 @@ describe('System Settings Registration', () => {
           hint: 'KEYBINDINGS.ConfirmActionHint',
           editable: [{ key: 'KeyX' }],
           restricted: true,
-          onDown: expect.any(Function)
+          onDown: expect.any(Function),
         })
       })
     })
@@ -156,11 +156,11 @@ describe('System Settings Registration', () => {
         const calls = mockGameSettings.register.mock.calls
 
         // World-scoped settings
-        const worldSettings = calls.filter(call => call[2].scope === 'world')
+        const worldSettings = calls.filter((call) => call[2].scope === 'world')
         expect(worldSettings).toHaveLength(6)
 
         // Client-scoped settings
-        const clientSettings = calls.filter(call => call[2].scope === 'client')
+        const clientSettings = calls.filter((call) => call[2].scope === 'client')
         expect(clientSettings).toHaveLength(1)
         expect(clientSettings[0][1]).toBe('welcome') // Should be the welcome setting
       })
@@ -171,15 +171,15 @@ describe('System Settings Registration', () => {
         const calls = mockGameSettings.register.mock.calls
 
         // Hidden settings (config: false)
-        const hiddenSettings = calls.filter(call => call[2].config === false)
+        const hiddenSettings = calls.filter((call) => call[2].config === false)
         expect(hiddenSettings).toHaveLength(5)
 
         // Visible settings (config: true)
-        const visibleSettings = calls.filter(call => call[2].config === true)
+        const visibleSettings = calls.filter((call) => call[2].config === true)
         expect(visibleSettings).toHaveLength(2)
-        
+
         // Check that actionAnimations and autoConfirm are visible
-        const visibleSettingNames = visibleSettings.map(call => call[1])
+        const visibleSettingNames = visibleSettings.map((call) => call[1])
         expect(visibleSettingNames).toContain('actionAnimations')
         expect(visibleSettingNames).toContain('autoConfirm')
       })
@@ -190,19 +190,19 @@ describe('System Settings Registration', () => {
         const calls = mockGameSettings.register.mock.calls
 
         // String settings
-        const stringSettings = calls.filter(call => call[2].type === String)
+        const stringSettings = calls.filter((call) => call[2].type === String)
         expect(stringSettings).toHaveLength(2)
-        expect(stringSettings.map(call => call[1])).toEqual(expect.arrayContaining(['systemMigrationVersion', 'worldKey']))
+        expect(stringSettings.map((call) => call[1])).toEqual(expect.arrayContaining(['systemMigrationVersion', 'worldKey']))
 
         // Boolean settings
-        const booleanSettings = calls.filter(call => call[2].type === Boolean)
+        const booleanSettings = calls.filter((call) => call[2].type === Boolean)
         expect(booleanSettings).toHaveLength(3)
-        expect(booleanSettings.map(call => call[1])).toEqual(expect.arrayContaining(['devMode', 'actionAnimations', 'welcome']))
+        expect(booleanSettings.map((call) => call[1])).toEqual(expect.arrayContaining(['devMode', 'actionAnimations', 'welcome']))
 
         // Number settings
-        const numberSettings = calls.filter(call => call[2].type === Number)
+        const numberSettings = calls.filter((call) => call[2].type === Number)
         expect(numberSettings).toHaveLength(2)
-        expect(numberSettings.map(call => call[1])).toEqual(expect.arrayContaining(['autoConfirm', 'heroism']))
+        expect(numberSettings.map((call) => call[1])).toEqual(expect.arrayContaining(['autoConfirm', 'heroism']))
       })
 
       test('should have correct default values', () => {
@@ -230,14 +230,14 @@ describe('System Settings Registration', () => {
       test('should have correct choice options for autoConfirm', () => {
         registerSystemSettings()
 
-        const autoConfirmCall = mockGameSettings.register.mock.calls.find(call => call[1] === 'autoConfirm')
+        const autoConfirmCall = mockGameSettings.register.mock.calls.find((call) => call[1] === 'autoConfirm')
         expect(autoConfirmCall).toBeDefined()
 
         const choices = autoConfirmCall[2].choices
         expect(choices).toEqual({
           0: 'SETTINGS.AutoConfirmNone',
           1: 'SETTINGS.AutoConfirmSelf',
-          2: 'SETTINGS.AutoConfirmAll'
+          2: 'SETTINGS.AutoConfirmAll',
         })
 
         // Verify all choice keys are numbers
@@ -276,16 +276,8 @@ describe('System Settings Registration', () => {
       test('should register all expected setting keys', () => {
         registerSystemSettings()
 
-        const registeredKeys = mockGameSettings.register.mock.calls.map(call => call[1])
-        const expectedKeys = [
-          'systemMigrationVersion',
-          'worldKey', 
-          'devMode',
-          'actionAnimations',
-          'autoConfirm',
-          'welcome',
-          'heroism'
-        ]
+        const registeredKeys = mockGameSettings.register.mock.calls.map((call) => call[1])
+        const expectedKeys = ['systemMigrationVersion', 'worldKey', 'devMode', 'actionAnimations', 'autoConfirm', 'welcome', 'heroism']
 
         for (const key of expectedKeys) {
           expect(registeredKeys).toContain(key)
@@ -295,8 +287,8 @@ describe('System Settings Registration', () => {
       test('should use consistent system ID across all registrations', () => {
         registerSystemSettings()
 
-        const systemIds = mockGameSettings.register.mock.calls.map(call => call[0])
-        
+        const systemIds = mockGameSettings.register.mock.calls.map((call) => call[0])
+
         // All system settings should use 'swerpg' as the namespace
         for (const systemId of systemIds) {
           expect(systemId).toBe('swerpg')

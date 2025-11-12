@@ -39,34 +39,34 @@ Objectif : modifier l’implémentation du logger (`module/utils/logger.mjs`) po
 
 - GOAL-001: Restructurer `logger.mjs` pour supprimer les wrappers source tout en maintenant la logique de filtrage.
 
-| Task     | Description                                                                                                                    | Completed | Date |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------ | --------- | ---- |
-| TASK-001 | Sauvegarder contenu actuel de `module/utils/logger.mjs` (copie locale interne avant refactor).                                |           |      |
-| TASK-002 | Supprimer les fonctions anonymes ligne 16–84 et remplacer par une fabrique + réassignation dynamique des méthodes.            |           |      |
+| Task     | Description                                                                                                                                                            | Completed | Date |
+| -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | ---- |
+| TASK-001 | Sauvegarder contenu actuel de `module/utils/logger.mjs` (copie locale interne avant refactor).                                                                         |           |      |
+| TASK-002 | Supprimer les fonctions anonymes ligne 16–84 et remplacer par une fabrique + réassignation dynamique des méthodes.                                                     |           |      |
 | TASK-003 | Implémenter tableau des niveaux: `const LEVELS = ['log','info','warn','error','debug','group','groupCollapsed','groupEnd','table','time','timeEnd','trace','assert']`. |           |      |
-| TASK-004 | Créer fonction interne `applyLogPolicy()` qui assigne pour chaque niveau soit `console[n]` (pass-through), soit `noop`.        |           |      |
-| TASK-005 | Garantir que `warn` et `error` restent actifs hors debug (mapping explicite).                                                  |           |      |
-| TASK-006 | Décider pour le préfixe: tester solution `logger.log = (...a)=>console.log(PREFIX, ...a)` vs pass-through pur; mesurer callsite. |           |      |
-| TASK-007 | Si préfixe garde le callsite incorrect, basculer vers pass-through sans préfixe et ajouter option `logger.withPrefix()` helper. |           |      |
-| TASK-008 | Mettre à jour export pour conserver signatures: `enableDebug`, etc.                                                            |           |      |
-| TASK-009 | Ajouter `noop` constant (`const noop = () => {}`) pour niveaux désactivés.                                                      |           |      |
+| TASK-004 | Créer fonction interne `applyLogPolicy()` qui assigne pour chaque niveau soit `console[n]` (pass-through), soit `noop`.                                                |           |      |
+| TASK-005 | Garantir que `warn` et `error` restent actifs hors debug (mapping explicite).                                                                                          |           |      |
+| TASK-006 | Décider pour le préfixe: tester solution `logger.log = (...a)=>console.log(PREFIX, ...a)` vs pass-through pur; mesurer callsite.                                       |           |      |
+| TASK-007 | Si préfixe garde le callsite incorrect, basculer vers pass-through sans préfixe et ajouter option `logger.withPrefix()` helper.                                        |           |      |
+| TASK-008 | Mettre à jour export pour conserver signatures: `enableDebug`, etc.                                                                                                    |           |      |
+| TASK-009 | Ajouter `noop` constant (`const noop = () => {}`) pour niveaux désactivés.                                                                                             |           |      |
 
 ### Implementation Phase 2
 
 - GOAL-002: Couvrir la fonctionnalité par des tests, documentation et mise à jour du changelog.
 
-| Task     | Description                                                                                             | Completed | Date |
-| -------- | ------------------------------------------------------------------------------------------------------- | --------- | ---- |
+| Task     | Description                                                                                                 | Completed | Date |
+| -------- | ----------------------------------------------------------------------------------------------------------- | --------- | ---- |
 | TASK-010 | Créer fichier test `tests/utils/logger.spec.mjs` couvrant activation, désactivation, permanence warn/error. |           |      |
-| TASK-011 | Mock `console` dans tests pour vérifier référence directe (pas d’appel via wrapper).                    |           |      |
-| TASK-012 | Test: hors debug `logger.log` doit être `noop` (aucun appel console).                                   |           |      |
-| TASK-013 | Test: hors debug `logger.error` appelle `console.error`.                                                |           |      |
-| TASK-014 | Test: en debug `logger.debug` appelle `console.debug`.                                                  |           |      |
-| TASK-015 | Ajouter section dans `README.md` usage du nouveau logger (avertissement sur préfixe si retiré).         |           |      |
-| TASK-016 | Mettre à jour `CHANGELOG.md` (tag `[Refactor] Logger callsite pass-through`).                           |           |      |
-| TASK-017 | Vérifier absence de régression sur modules existants (`grep 'logger.'`).                                |           |      |
-| TASK-018 | Validation manuelle dans DevTools (callsite cliquable).                                                 |           |      |
-| TASK-019 | Ajouter commentaire JSDoc public décrivant stratégie callsite.                                          |           |      |
+| TASK-011 | Mock `console` dans tests pour vérifier référence directe (pas d’appel via wrapper).                        |           |      |
+| TASK-012 | Test: hors debug `logger.log` doit être `noop` (aucun appel console).                                       |           |      |
+| TASK-013 | Test: hors debug `logger.error` appelle `console.error`.                                                    |           |      |
+| TASK-014 | Test: en debug `logger.debug` appelle `console.debug`.                                                      |           |      |
+| TASK-015 | Ajouter section dans `README.md` usage du nouveau logger (avertissement sur préfixe si retiré).             |           |      |
+| TASK-016 | Mettre à jour `CHANGELOG.md` (tag `[Refactor] Logger callsite pass-through`).                               |           |      |
+| TASK-017 | Vérifier absence de régression sur modules existants (`grep 'logger.'`).                                    |           |      |
+| TASK-018 | Validation manuelle dans DevTools (callsite cliquable).                                                     |           |      |
+| TASK-019 | Ajouter commentaire JSDoc public décrivant stratégie callsite.                                              |           |      |
 
 ## 3. Alternatives
 
@@ -74,7 +74,7 @@ Objectif : modifier l’implémentation du logger (`module/utils/logger.mjs`) po
 - **ALT-002**: Monkey-patch global `console` pour injecter le préfixe — risque collisions, effet de bord global.
 - **ALT-003**: Générateur Babel transformant `logger.log(...)` en `console.log(...)` à build-time — ajoute complexité outillage.
 - **ALT-004**: Utiliser Proxy pour intercepter appels — toujours un wrapper, ne résout pas callsite DevTools.
-- **ALT-005**: Source maps artificielles ciblant wrapper — non standard pour runtime natif console.*.
+- **ALT-005**: Source maps artificielles ciblant wrapper — non standard pour runtime natif console.\*.
 
 Choisi: Pass-through par réassignation dynamique (faible complexité, performant, conforme REQ-001).
 

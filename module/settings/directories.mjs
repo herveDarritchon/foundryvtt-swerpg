@@ -8,7 +8,7 @@
  * @memberof OggDudeDataImporter
  */
 export function buildItemImgSystemPath(imageFileName) {
-    return `systems/${game.system.id}/assets/images/icons/${imageFileName}`;
+  return `systems/${game.system.id}/assets/images/icons/${imageFileName}`
 }
 
 /**
@@ -21,5 +21,5 @@ export function buildItemImgSystemPath(imageFileName) {
  * @memberof OggDudeDataImporter
  */
 export function buildArmorImgWorldPath(type) {
-    return `worlds/${game.world.id}/swerpg-assets/images/${type}`;
+  return `worlds/${game.world.id}/swerpg-assets/images/${type}`
 }
