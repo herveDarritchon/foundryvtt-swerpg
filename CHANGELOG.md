@@ -11,6 +11,10 @@
 - **importer:** armor import statistics and instrumentation (total, rejected, unknown categories/properties)
 - **importer:** comprehensive test coverage for armor mapper (>95% branch coverage)
 - **docs:** complete armor import documentation with examples and troubleshooting
+- **importer:** gear OggDude mapper refactored for SwerpgGear schema compliance
+- **importer:** gear import validation functions with numeric and boolean normalization
+- **tests:** comprehensive unit and integration tests for gear mapping (13 tests total)
+- **docs:** complete gear import technical documentation
 
 ### Changed
 
