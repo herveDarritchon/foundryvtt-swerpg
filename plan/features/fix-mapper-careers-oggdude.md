@@ -4,7 +4,7 @@ version: 1.0
 date_created: 2025-11-12
 last_updated: 2025-11-12
 owner: herve.darritchon
-status: 'Planned'
+status: 'In progress'
 tags: ['feature', 'migration', 'data-import', 'oggdude', 'career']
 ---
 
@@ -23,6 +23,10 @@ Le mapper OggDude pour les Careers (`career-ogg-dude.mjs`) n’est pas aligné a
 - **REQ-005**: Ignorer toute compétence inconnue avec log `logger.warn` et exclusion de la liste
 - **REQ-006**: Garantir que `careerSkills.length <= freeSkillRank` n’est PAS une contrainte implicite (seule la borne 0–8 s’applique)
 - **REQ-007**: Exclure tous les champs non définis dans le schéma (sources, attributes, careerSpecializations, etc.)
+- **REQ-008**: Filtrer toute entrée de `careerSkills` dont l'id est falsy (undefined, empty) avant validation finale
+- **REQ-009**: Réintroduire une validation stricte optionnelle (mode strict) vérifiant l'appartenance de chaque id à `SYSTEM.SKILLS`; en mode non strict, seulement exclure les ids falsy
+- **REQ-010**: Journaliser (niveau warn) la liste des codes sources et leur mapping lorsqu'au moins un id est filtré
+- **REQ-011**: Garantir qu'aucun objet partiel (`{}` ou `{id:undefined}`) n'est inséré dans le Set afin d'éviter l'erreur "id: may not be undefined"
 - **SEC-001**: Empêcher injection de données inattendues dans l’objet retourné (validation de whitelist des clés)
 - **CON-001**: Ne pas modifier le modèle `SwerpgCareer` (alignement côté importer uniquement)
 - **CON-002**: Préserver le pattern actuel du contexte d’import (structure `element`, `folder`, `image`)
@@ -86,6 +90,36 @@ Le mapper OggDude pour les Careers (`career-ogg-dude.mjs`) n’est pas aligné a
 | TASK-026 | Ajouter commentaires de contexte uniquement (WHY) dans mapper | ✅ | 2025-11-12 |
 | TASK-027 | Ajouter métrique #skills ignorées dans log.debug récap final | ✅ | 2025-11-12 |
 
+### Implementation Phase 5 - Remédiation erreurs de validation runtime
+
+- GOAL-005: Corriger les erreurs "careerSkills: 0: id may not be undefined" observées en environnement Foundry (cf. captures)
+
+| Task     | Description | Completed | Date |
+| -------- | ----------- | --------- | ---- |
+| TASK-028 | Ajouter filtre final `careerSkills = careerSkills.filter(o => o && typeof o.id === 'string' && o.id.length > 0)` |  |  |
+| TASK-029 | Instrumenter logging détaillé: codes bruts, mappés, rejetés, résultat final (logger.debug + warn si rejet) |  |  |
+| TASK-030 | Option "strictSkillValidation" (config ou flag interne) pour activer filtrage sur `SYSTEM.SKILLS` si disponible |  |  |
+| TASK-031 | Re-générer tests: ajouter cas avec codes inconnus + code vide + null pour vérifier exclusion silencieuse |  |  |
+| TASK-032 | Ajouter test régression: entrée contenant ['', 'ATHL', undefined] => résultat uniquement athletics |  |  |
+| TASK-033 | Ajouter test strict mode (mock SYSTEM) => exclusion d'un id absent de SYSTEM.SKILLS |  |  |
+| TASK-034 | Mettre à jour doc `import-career.md` avec section Validation Avancée & strict mode |  |  |
+| TASK-035 | Mettre à jour CHANGELOG (complément mention filtrage undefined) |  |  |
+| TASK-036 | Repasser lint + tests complets après modifications |  |  |
+| TASK-037 | Mettre à jour ce plan (status des tâches phase 5) |  |  |
+
+### Implementation Phase 6 - Stabilisation & Observabilité
+
+- GOAL-006: Assurer robustesse long terme et visibilité des problèmes futurs
+
+| Task     | Description | Completed | Date |
+| -------- | ----------- | --------- | ---- |
+| TASK-038 | Ajouter compteur global import carrière (#carrières, #skills totaux, #skills rejetés) exporté dans log final |  |  |
+| TASK-039 | Créer test d'intégration simulant import multi-carrières avec mélange codes valides/inconnus |  |  |
+| TASK-040 | Ajouter guard: si après filtrage >8 skills, tronquer et logger un warn spécifique "TRUNCATED_SKILLS" |  |  |
+| TASK-041 | Ajout d'un hook interne (facultatif) ou fonction pour obtenir stats dernières importations (pour debugging) |  |  |
+| TASK-042 | Vérifier absence de fuite mémoire: arrays temporaires libérés (revue code) |  |  |
+| TASK-043 | Passer statut plan à 'Completed' après validation manuelle en instance Foundry |  |  |
+
 ## 3. Alternatives
 
 - **ALT-001**: Étendre le modèle `SwerpgCareer` pour inclure attributes et specializations (rejeté: augmentation complexité / hors scope)
@@ -128,13 +162,23 @@ Le mapper OggDude pour les Careers (`career-ogg-dude.mjs`) n’est pas aligné a
 - **RISK-001**: Structure réelle XML pourrait contenir `CareerSkills.Skill` au lieu de liste directe (nécessite adaptation)
 - **RISK-002**: Table de mapping incomplète provoquant exclusions massives
 - **RISK-003**: Réutilisation future des champs supprimés (attributes) => besoin de migration ultérieure
+- **RISK-004**: Re-filtrage trop agressif en mode strict supprimant des compétences valides non encore chargées dans `SYSTEM.SKILLS` (ordre d'initialisation)
+- **RISK-005**: Performances: logging détaillé sur gros imports peut ralentir (atténuer via debug mode)
 - **ASSUMPTION-001**: Les codes compétences carrière suivent mêmes conventions que species
 - **ASSUMPTION-002**: `FreeRanks` est déjà borné côté source mais nécessite défense côté importer
 - **ASSUMPTION-003**: Le logger est thread-safe et ne nécessite pas d’adaptation
+- **ASSUMPTION-004**: Les erreurs observées proviennent d'objets partiels sans `id` plutôt que d'une corruption externe dans DataModel
+
+## 9. Validation Criteria Additionnels (Phase 5+)
+
+- VC-001: Aucun item carrière importé ne déclenche "id may not be undefined" dans 100 carrières de test.
+- VC-002: Logs contiennent le total et le nombre rejeté quand au moins un rejet survient.
+- VC-003: Mode strict: un code absent de `SYSTEM.SKILLS` est exclu et log.warn émis.
+- VC-004: Couverture tests `career-ogg-dude.spec.mjs` ≥ 95% des branches dans `mapCareerSkills`.
 
 ## 8. Related Specifications / Further Reading
 
 - Plan Species: `plan/features/fix-mapper-species-oggdude.md`
-- Foundry VTT DataModel API: https://foundryvtt.com/api/classes/foundry.abstract.TypeDataModel.html
-- Fields API: https://foundryvtt.com/api/modules/foundry.data.fields.html
+- Foundry VTT DataModel API: <https://foundryvtt.com/api/classes/foundry.abstract.TypeDataModel.html>
+- Fields API: <https://foundryvtt.com/api/modules/foundry.data.fields.html>
 - Documentation interne import OggDude (si disponible)

@@ -1,0 +1,11 @@
+<Career>
+  <Name>Scholar</Name>
+  <Key>scholar</Key>
+  <Description>Desc Scholar</Description>
+  <FreeRanks>5</FreeRanks>
+  <CareerSkills>
+    <CareerSkill><Key>SCI</Key></CareerSkill>
+    <CareerSkill><Key>ARCANA</Key></CareerSkill>
+    <CareerSkill><Key>ATHL</Key></CareerSkill>
+  </CareerSkills>
+</Career>

@@ -1,0 +1,11 @@
+<Career>
+  <Name>Soldier</Name>
+  <Key>soldier</Key>
+  <Description>Desc Soldier</Description>
+  <FreeRanks>3</FreeRanks>
+  <CareerSkills>
+    <CareerSkill><Key>ATHL</Key></CareerSkill>
+    <CareerSkill><Key>PERC</Key></CareerSkill>
+    <CareerSkill><Key>DECEP</Key></CareerSkill>
+  </CareerSkills>
+</Career>

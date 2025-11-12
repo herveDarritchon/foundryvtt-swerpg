@@ -5,14 +5,16 @@ date_created: 2025-11-12
 last_updated: 2025-11-12
 owner: herve.darritchon
 status: 'In progress'
-tags: ['feature', 'migration', 'data-import', 'oggdude']
+tags: [ 'feature', 'migration', 'data-import', 'oggdude' ]
 ---
 
 # Introduction
 
 ![Status: In progress](https://img.shields.io/badge/status-In%20progress-yellow)
 
-Le mapper OggDude pour les Species n'est pas aligné avec le modèle de données SwerpgSpecies, ce qui empêche l'import correct des données depuis les fichiers XML d'OggDude. Ce plan vise à corriger le mapper pour qu'il génère des objets compatibles avec le schéma défini dans SwerpgSpecies.
+Le mapper OggDude pour les Species n'est pas aligné avec le modèle de données SwerpgSpecies, ce qui empêche l'import
+correct des données depuis les fichiers XML d'OggDude. Ce plan vise à corriger le mapper pour qu'il génère des objets
+compatibles avec le schéma défini dans SwerpgSpecies.
 
 ## 1. Requirements & Constraints
 
@@ -22,7 +24,8 @@ Le mapper OggDude pour les Species n'est pas aligné avec le modèle de données
 - **REQ-004**: Mapper l'expérience de départ vers `startingExperience`
 - **REQ-005**: Mapper les compétences gratuites vers `freeSkills` (Set de strings)
 - **REQ-006**: Mapper les talents gratuits vers `freeTalents` (Set d'UUIDs)
-- **REQ-007**: Traduire les codes de compétences OggDude (ex: ATHL, PERC, DECEP, EDU) en identifiants de compétences du système (athletics, awareness, deception, science, etc.) via une table de correspondance déterministe
+- **REQ-007**: Traduire les codes de compétences OggDude (ex: ATHL, PERC, DECEP, EDU) en identifiants de compétences du
+  système (athletics, awareness, deception, science, etc.) via une table de correspondance déterministe
 - **CON-001**: Maintenir la compatibilité avec les données XML OggDude existantes
 - **CON-002**: Préserver la structure du système d'import existant
 - **SEC-001**: Valider les données mappées selon les contraintes du modèle
@@ -34,40 +37,41 @@ Le mapper OggDude pour les Species n'est pas aligné avec le modèle de données
 
 - GOAL-001: Restructurer le mapping des données de base pour correspondre au schéma SwerpgSpecies
 
-| Task     | Description           | Completed | Date       |
-| -------- | --------------------- | --------- | ---------- |
-| TASK-001 | Mapper `StartingChars` vers `characteristics` (brawn, agility, intellect, cunning, willpower, presence) | ✅ | 2025-11-12 |
-| TASK-002 | Mapper `StartingAttrs.WoundThreshold` vers `woundThreshold.modifier` avec `abilityKey: 'brawn'` | ✅ | 2025-11-12 |
-| TASK-003 | Mapper `StartingAttrs.StrainThreshold` vers `strainThreshold.modifier` avec `abilityKey: 'willpower'` | ✅ | 2025-11-12 |
-| TASK-004 | Mapper `StartingAttrs.Experience` vers `startingExperience` | ✅ | 2025-11-12 |
+| Task     | Description                                                                                             | Completed | Date       |
+|----------|---------------------------------------------------------------------------------------------------------|-----------|------------|
+| TASK-001 | Mapper `StartingChars` vers `characteristics` (brawn, agility, intellect, cunning, willpower, presence) | ✅         | 2025-11-12 |
+| TASK-002 | Mapper `StartingAttrs.WoundThreshold` vers `woundThreshold.modifier` avec `abilityKey: 'brawn'`         | ✅         | 2025-11-12 |
+| TASK-003 | Mapper `StartingAttrs.StrainThreshold` vers `strainThreshold.modifier` avec `abilityKey: 'willpower'`   | ✅         | 2025-11-12 |
+| TASK-004 | Mapper `StartingAttrs.Experience` vers `startingExperience`                                             | ✅         | 2025-11-12 |
 
 ### Implementation Phase 2 - Mapping des compétences et talents
 
 - GOAL-002: Implémenter le mapping des compétences et talents gratuits
 
-| Task     | Description           | Completed | Date       |
-| -------- | --------------------- | --------- | ---------- |
-| TASK-005 | Extraire les compétences gratuites depuis `SkillModifiers` vers `freeSkills` (Set) | ✅ | 2025-11-12 |
-| TASK-006 | Extraire les talents gratuits depuis `TalentModifiers` vers `freeTalents` (Set d'UUIDs) | ✅ | 2025-11-12 |
-| TASK-007 | Implémenter la résolution des UUIDs de talents basée sur les keys OggDude | ✅ | 2025-11-12 |
-| TASK-011 | Créer la table de correspondance codes OggDude -> SKILLS système dans `module/importer/mappings/oggdude-skill-map.mjs` | ✅ | 2025-11-12 |
-| TASK-012 | Adapter `species-ogg-dude.mjs` pour transformer chaque code avant validation (utiliser map, ignorer inconnus avec log warn) | ✅ | 2025-11-12 |
-| TASK-013 | Mettre à jour tests pour couvrir: mapping réussi, code inconnu ignoré, duplication éliminée | ✅ | 2025-11-12 |
+| Task     | Description                                                                                                                 | Completed | Date       |
+|----------|-----------------------------------------------------------------------------------------------------------------------------|-----------|------------|
+| TASK-005 | Extraire les compétences gratuites depuis `SkillModifiers` vers `freeSkills` (Set)                                          | ✅         | 2025-11-12 |
+| TASK-006 | Extraire les talents gratuits depuis `TalentModifiers` vers `freeTalents` (Set d'UUIDs)                                     | ✅         | 2025-11-12 |
+| TASK-007 | Implémenter la résolution des UUIDs de talents basée sur les keys OggDude                                                   | ✅         | 2025-11-12 |
+| TASK-011 | Créer la table de correspondance codes OggDude -> SKILLS système dans `module/importer/mappings/oggdude-skill-map.mjs`      | ✅         | 2025-11-12 |
+| TASK-012 | Adapter `species-ogg-dude.mjs` pour transformer chaque code avant validation (utiliser map, ignorer inconnus avec log warn) | ✅         | 2025-11-12 |
+| TASK-013 | Mettre à jour tests pour couvrir: mapping réussi, code inconnu ignoré, duplication éliminée                                 | ✅         | 2025-11-12 |
 
 ### Implementation Phase 3 - Nettoyage et optimisation
 
 - GOAL-003: Supprimer les mappings obsolètes et optimiser la structure
 
-| Task     | Description           | Completed | Date       |
-| -------- | --------------------- | --------- | ---------- |
-| TASK-008 | Supprimer les mappings non utilisés (SubSpecies, OptionChoices complexes) | ✅ | 2025-11-12 |
-| TASK-009 | Simplifier la structure de retour pour correspondre exactement au schéma | ✅ | 2025-11-12 |
-| TASK-010 | Ajouter la validation des données mappées | ✅ | 2025-11-12 |
-| TASK-014 | Retirer tout code mort résiduel après intégration mapping codes compétences | ✅ | 2025-11-12 |
+| Task     | Description                                                                 | Completed | Date       |
+|----------|-----------------------------------------------------------------------------|-----------|------------|
+| TASK-008 | Supprimer les mappings non utilisés (SubSpecies, OptionChoices complexes)   | ✅         | 2025-11-12 |
+| TASK-009 | Simplifier la structure de retour pour correspondre exactement au schéma    | ✅         | 2025-11-12 |
+| TASK-010 | Ajouter la validation des données mappées                                   | ✅         | 2025-11-12 |
+| TASK-014 | Retirer tout code mort résiduel après intégration mapping codes compétences | ✅         | 2025-11-12 |
 
 ## 3. Alternatives
 
-- **ALT-001**: Modifier le modèle SwerpgSpecies pour s'adapter aux données OggDude - Rejetée car cela casserait la compatibilité existante
+- **ALT-001**: Modifier le modèle SwerpgSpecies pour s'adapter aux données OggDude - Rejetée car cela casserait la
+  compatibilité existante
 - **ALT-002**: Créer un adaptateur intermédiaire - Rejetée car trop complexe pour ce cas d'usage
 - **ALT-003**: Implémenter une migration post-import - Rejetée car le mapping direct est plus efficace
 
@@ -90,27 +94,28 @@ Le mapper OggDude pour les Species n'est pas aligné avec le modèle de données
 - **TEST-003**: Test de mapping des compétences gratuites avec validation Set
 - **TEST-004**: Test de résolution des UUIDs de talents
 - **TEST-005**: Test d'intégration complète avec un fichier XML Species d'exemple
-- **TEST-006**: Test de transformation des codes (ATHL->athletics, PERC->awareness, DECEP->deception, EDU->science) et rejet logué d'un code inconnu (ex: UNKNOWN)
+- **TEST-006**: Test de transformation des codes (ATHL->athletics, PERC->awareness, DECEP->deception, EDU->science) et
+  rejet logué d'un code inconnu (ex: UNKNOWN)
 - **TEST-007**: Test de non inclusion d'un code inconnu dans freeSkills
 - **TEST-008**: Test que la déduplication fonctionne si le même code apparaît plusieurs fois
 
 ### Table de correspondance prévue (draft)
 
-| Code OggDude | Système SKILL ID | Justification / Assomption |
-|--------------|------------------|----------------------------|
-| ATHL | athletics | Correspondance directe (Athletics) |
-| PERC | awareness | PERC ~ Perception -> Awareness dans système |
-| DECEP | deception | Correspondance directe (Deception) |
-| STEA | stealth | Code abrégé classique |
-| WILD | wilderness | Abréviation supposée (Survival/Wilderness) |
-| ARCA | arcana | Arcana magique |
-| MEDI | medicine | Médecine |
-| SCI | science | Science générale |
-| SOCI | society | Société / Culture |
-| DIPL | diplomacy | Diplomacy social |
-| INTIM | intimidation | Intimidation |
-| PERFO | performance | Performance artistique |
-| EDU | science | Assomption: Education orientée connaissance générale => science |
+| Code OggDude | Système SKILL ID | Justification / Assomption                                      |
+|--------------|------------------|-----------------------------------------------------------------|
+| ATHL         | athletics        | Correspondance directe (Athletics)                              |
+| PERC         | awareness        | PERC ~ Perception -> Awareness dans système                     |
+| DECEP        | deception        | Correspondance directe (Deception)                              |
+| STEA         | stealth          | Code abrégé classique                                           |
+| WILD         | wilderness       | Abréviation supposée (Survival/Wilderness)                      |
+| ARCA         | arcana           | Arcana magique                                                  |
+| MEDI         | medicine         | Médecine                                                        |
+| SCI          | science          | Science générale                                                |
+| SOCI         | society          | Société / Culture                                               |
+| DIPL         | diplomacy        | Diplomacy social                                                |
+| INTIM        | intimidation     | Intimidation                                                    |
+| PERFO        | performance      | Performance artistique                                          |
+| EDU          | science          | Assomption: Education orientée connaissance générale => science |
 
 Inconnus: log.warn et exclusion.
 

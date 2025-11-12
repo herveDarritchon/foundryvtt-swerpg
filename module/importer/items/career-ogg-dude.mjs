@@ -11,7 +11,7 @@ import { mapOggDudeSkillCodes, mapOggDudeSkillCode } from '../mappings/oggdude-s
  * @param careers {Array} Raw XML career entries.
  * @returns {Array} Array of item source objects { name, type, system }
  */
-export function careerMapper(careers) {
+export function careerMapper(careers, { strictSkills = false } = {}) {
     return careers.map((xmlCareer) => {
         const name = OggDudeImporter.mapMandatoryString("career.Name", xmlCareer?.Name)
         const key = OggDudeImporter.mapMandatoryString("career.Key", xmlCareer?.Key)
@@ -20,7 +20,7 @@ export function careerMapper(careers) {
 
         // Raw skill codes extraction (structure may be array or object); we accept either xmlCareer.CareerSkills?.CareerSkill?.Key or direct array
         const rawCareerSkills = extractRawCareerSkillCodes(xmlCareer)
-        const careerSkills = mapCareerSkills(rawCareerSkills)
+        const careerSkills = mapCareerSkills(rawCareerSkills, { strict: strictSkills })
 
         logger.debug('[CareerImporter] Mapped career', {
             key,
@@ -28,6 +28,8 @@ export function careerMapper(careers) {
             descriptionLength: description?.length || 0,
             freeSkillRank,
             skillCount: careerSkills.length,
+            strictSkills,
+            rawSkillCount: rawCareerSkills.length,
             ignoredSkillCodes: rawCareerSkills.filter((c) => !mapOggDudeSkillCode(c, { warnOnUnknown: false }))
         })
 
@@ -89,11 +91,43 @@ function extractRawCareerSkillCodes(xmlCareer) {
  * @param {string[]} rawCodes
  * @returns {{id:string}[]}
  */
-export function mapCareerSkills(rawCodes = []) {
-    const mappedIds = mapOggDudeSkillCodes(rawCodes)
-    // Conserver tous les ids mappés même si la config SYSTEM.SKILLS ne les expose pas dans le contexte de test.
-    const truncated = mappedIds.slice(0, 8)
-    return truncated.map((id) => ({ id }))
+export function mapCareerSkills(rawCodes = [], { strict = false } = {}) {
+    if (!Array.isArray(rawCodes) || rawCodes.length === 0) return []
+
+    // map codes -> ids (unknown codes are filtered internally by mapOggDudeSkillCodes)
+    const mappedIds = mapOggDudeSkillCodes(rawCodes).filter(Boolean)
+
+    // Déterminer le registre de compétences en fusionnant la config runtime et le mock éventuel de test
+    const skillsRegistry = { ...(SYSTEM?.SKILLS || {}), ...(globalThis.SYSTEM?.SKILLS || {}) }
+
+    // optional strict mode: retain only ids that exist in skillsRegistry
+    const validated = strict
+        ? mappedIds.filter((id) => !!skillsRegistry[id])
+        : mappedIds
+
+    // deduplicate preserving order
+    const seen = new Set()
+    const unique = []
+    for (const id of validated) {
+        if (!id || seen.has(id)) continue
+        seen.add(id)
+        unique.push(id)
+    }
+
+    // truncate to 8
+    const truncated = unique.slice(0, 8)
+
+    // final filtering: no falsy id objects to respect DataModel schema
+    const result = truncated.filter((id) => typeof id === 'string' && id.length > 0).map((id) => ({ id }))
+
+    if (result.length !== truncated.length) {
+        logger.warn('[CareerImporter] Filtered out invalid skill ids', {
+            before: truncated,
+            after: result.map((o) => o.id)
+        })
+    }
+
+    return result
 }
 
 
