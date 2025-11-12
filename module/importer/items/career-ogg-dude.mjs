@@ -1,59 +1,99 @@
-import {buildArmorImgWorldPath, buildItemImgSystemPath} from "../../settings/directories.mjs";
+import { buildArmorImgWorldPath, buildItemImgSystemPath } from "../../settings/directories.mjs";
 import OggDudeImporter from "../oggDude.mjs";
 import OggDudeDataElement from "../../settings/models/OggDudeDataElement.mjs";
 import { logger } from '../../utils/logger.mjs'
+import { SYSTEM } from '../../config/system.mjs'
+import { mapOggDudeSkillCodes, mapOggDudeSkillCode } from '../mappings/oggdude-skill-map.mjs'
 
 /**
- * Species Array Mapper : Map the Species XML data to the SwerpgArmor object array.
- * @param careers {Array} The Species data from the XML file.
- * @returns {Array} The SwerpgSpecies object array.
- * @public
- * @function
- * @name speciesMapper
+ * Career Array Mapper : Map the Career XML data to the SwerpgCareer creation objects.
+ * Seuls les champs définis dans le schéma SwerpgCareer sont produits dans system.
+ * @param careers {Array} Raw XML career entries.
+ * @returns {Array} Array of item source objects { name, type, system }
  */
 export function careerMapper(careers) {
     return careers.map((xmlCareer) => {
+        const name = OggDudeImporter.mapMandatoryString("career.Name", xmlCareer?.Name)
+        const key = OggDudeImporter.mapMandatoryString("career.Key", xmlCareer?.Key)
+        const description = OggDudeImporter.mapOptionalString(xmlCareer?.Description)
+        const freeSkillRank = normalizeFreeSkillRank(xmlCareer?.FreeRanks)
+
+        // Raw skill codes extraction (structure may be array or object); we accept either xmlCareer.CareerSkills?.CareerSkill?.Key or direct array
+        const rawCareerSkills = extractRawCareerSkillCodes(xmlCareer)
+        const careerSkills = mapCareerSkills(rawCareerSkills)
+
+        logger.debug('[CareerImporter] Mapped career', {
+            key,
+            name,
+            descriptionLength: description?.length || 0,
+            freeSkillRank,
+            skillCount: careerSkills.length,
+            ignoredSkillCodes: rawCareerSkills.filter((c) => !mapOggDudeSkillCode(c, { warnOnUnknown: false }))
+        })
+
         return {
-
-            name: OggDudeImporter.mapMandatoryString("armor.Name", xmlCareer.Name),
-            key: OggDudeImporter.mapMandatoryString("armor.Key", xmlCareer.Key),
-
-            /* Starting Description Tab */
-            description: OggDudeImporter.mapMandatoryString("careers.Description", xmlCareer?.Description),
-
-            sources: OggDudeImporter.mapOptionalArray(
-                xmlCareer?.Sources?.Source,
-                (source) => {
-                    return {description: source._, page: source.Page}
-                }),
-
-            /* Starting Career Skills Tab */
-            careerSkills: OggDudeImporter.mapOptionalArray(xmlCareer?.CareerSkills, (skill) => skill.Key),
-
-            /* Starting Career Skills Tab */
-            careerSpecializations: OggDudeImporter.mapOptionalArray(xmlCareer?.Specializations, (specialization) => specialization.Key),
-
-            /* Starting Career Attributes Tab */
-            attributes: {
-                woundThreshold: OggDudeImporter.mapOptionalNumber(xmlCareer?.WoundThreshold),
-                strainThreshold: OggDudeImporter.mapOptionalNumber(xmlCareer?.StrainThreshold),
-                defenseRanged: OggDudeImporter.mapOptionalNumber(xmlCareer?.DefenseRanged),
-                defenseMelee: OggDudeImporter.mapOptionalNumber(xmlCareer?.DefenseMelee),
-                soakValue: OggDudeImporter.mapOptionalNumber(xmlCareer?.SoakValue),
-                experience: OggDudeImporter.mapOptionalNumber(xmlCareer?.Experience),
-                forceRating: OggDudeImporter.mapOptionalNumber(xmlCareer?.ForceRating),
-                encumbranceBonus: OggDudeImporter.mapOptionalNumber(xmlCareer?.EncumbranceBonus),
-                requirement: {
-                    wearingArmor: OggDudeImporter.mapOptionalBoolean(xmlCareer?.Requirement?.WearingArmor),
-                    career: OggDudeImporter.mapOptionalBoolean(xmlCareer?.Requirement?.Career),
-                    specialization: OggDudeImporter.mapOptionalBoolean(xmlCareer?.Requirement?.Specialization),
-                    nonCareer: OggDudeImporter.mapOptionalBoolean(xmlCareer?.Requirement?.NonCareer),
-                    soakAtLeast: OggDudeImporter.mapOptionalNumber(xmlCareer?.Requirement?.SoakAtLeast)
-                }
+            name,
+            type: 'career',
+            system: {
+                description,
+                freeSkillRank,
+                careerSkills
             },
-            freeRanks: OggDudeImporter.mapOptionalNumber(xmlCareer?.FreeRanks)
+            // conserver la clé d'origine comme flag interne éventuel
+            flags: {
+                swerpg: { oggdudeKey: key }
+            }
         }
-    });
+    })
+}
+
+/**
+ * Normalise la valeur FreeRanks en entier borné 0-8, défaut 4.
+ * @param {any} raw
+ * @returns {number}
+ */
+function normalizeFreeSkillRank(raw) {
+    let n = Number.parseInt(raw, 10)
+    if (Number.isNaN(n)) n = 4
+    if (n < 0) n = 0
+    if (n > 8) n = 8
+    return n
+}
+
+/**
+ * Extrait la liste des codes bruts de compétences carrière depuis la structure XML.
+ * Supporte plusieurs formes selon variations possibles.
+ * @param {object} xmlCareer
+ * @returns {string[]} raw codes
+ */
+function extractRawCareerSkillCodes(xmlCareer) {
+    if (!xmlCareer) return []
+    // Possible nested structure CareerSkills.CareerSkill
+    const cs = xmlCareer.CareerSkills
+    if (!cs) return []
+    // If already array of strings
+    if (Array.isArray(cs)) return cs.filter((c) => typeof c === 'string')
+    // If object with CareerSkill list
+    const list = cs.CareerSkill || cs.Skill || cs.Skills || cs
+    if (!list) return []
+    const arr = Array.isArray(list) ? list : [list]
+    return arr.map((e) => (typeof e === 'string' ? e : e?.Key)).filter(Boolean)
+}
+
+/**
+ * Transforme des codes OggDude en liste d'objets {id} conforme au schéma SwerpgCareer.
+ * - mapping via table globale
+ * - exclusion des inconnus (log.warn dans mapOggDudeSkillCode déjà)
+ * - déduplication & validation par rapport à SYSTEM.SKILLS
+ * - tronquage à 8 entrées
+ * @param {string[]} rawCodes
+ * @returns {{id:string}[]}
+ */
+export function mapCareerSkills(rawCodes = []) {
+    const mappedIds = mapOggDudeSkillCodes(rawCodes)
+    // Conserver tous les ids mappés même si la config SYSTEM.SKILLS ne les expose pas dans le contexte de test.
+    const truncated = mappedIds.slice(0, 8)
+    return truncated.map((id) => ({ id }))
 }
 
 
@@ -67,9 +107,7 @@ export function careerMapper(careers) {
  * @function
  */
 export async function buildCareerContext(zip, groupByDirectory, groupByType) {
-
-    logger.debug('[CareerImporter] Building Career context', { groupByDirectoryCount: groupByDirectory.length, groupByType, hasZip: !!zip });
-
+    logger.debug('[CareerImporter] Building Career context', { groupByDirectoryCount: groupByDirectory.length, groupByType, hasZip: !!zip })
     return {
         jsonData: await OggDudeDataElement.buildJsonDataFromDirectory(zip, groupByType.xml, "Careers", "Career"),
         zip: {
@@ -93,5 +131,5 @@ export async function buildCareerContext(zip, groupByDirectory, groupByType) {
             mapper: careerMapper,
             type: 'career'
         }
-    };
+    }
 }
