@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<Vehicle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Key>SC2MTANK</Key>
+  <Name>SC2-M Repulsor Tank</Name>
+  <Description>[H3]SC2-M Repulsor Tank[h3]
+Please see page 60 of the Forged in Battle Sourcebook for details.</Description>
+  <Source Page="60">Forged in Battle</Source>
+  <Type>Repulsor Tank</Type>
+  <Categories>
+    <Category>Land Vehicle</Category>
+  </Categories>
+  <HP>2</HP>
+  <Price>65000</Price>
+  <Rarity>5</Rarity>
+  <Restricted>true</Restricted>
+  <BaseMods>
+    <Mod>
+      <Count>1</Count>
+      <MiscDesc>[B][U]Salvo Fire[u][b]: As a maneuver, if the SC2-M's current speed is 0, pilot may prime guns for salvo fire.  Until the vehicle moves, increase the value of the Linked quality of its light blaster cannons to 4.</MiscDesc>
+    </Mod>
+  </BaseMods>
+  <MaxAltitude>3 meters</MaxAltitude>
+  <SensorRangeValue>srShort</SensorRangeValue>
+  <Crew>One pilot, one gunner</Crew>
+  <EncumbranceCapacity>25</EncumbranceCapacity>
+  <Passengers>1</Passengers>
+  <Silhouette>3</Silhouette>
+  <Speed>2</Speed>
+  <DefFore>1</DefFore>
+  <DefAft>1</DefAft>
+  <Armor>1</Armor>
+  <HullTrauma>8</HullTrauma>
+  <SystemStrain>4</SystemStrain>
+  <VehicleWeapons>
+    <VehicleWeapon>
+      <FiringArcs>
+        <Fore>true</Fore>
+      </FiringArcs>
+      <Location>Forward</Location>
+      <Qualities>
+        <Quality>
+          <Key>LINKED</Key>
+          <Count>1</Count>
+        </Quality>
+      </Qualities>
+      <Key>BLASTCANLT</Key>
+    </VehicleWeapon>
+  </VehicleWeapons>
+  <SensorRange>Short</SensorRange>
+</Vehicle>

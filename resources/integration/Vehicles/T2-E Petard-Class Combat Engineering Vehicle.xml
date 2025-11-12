@@ -1,0 +1,119 @@
+<?xml version="1.0"?>
+<Vehicle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Key>T2EPETARD</Key>
+  <Name>T2-E Petard-Class Combat Engineering Vehicle</Name>
+  <Description>[H3]T2-E [I]Petard[i]-Class Combat Engineering Vehicle[h3]
+Please see page 54 of the Fully Operational Sourcebook for details.</Description>
+  <Source Page="54">Fully Operational</Source>
+  <Type>Repulsor Tank</Type>
+  <Categories>
+    <Category>Land Vehicle</Category>
+  </Categories>
+  <HP>2</HP>
+  <Price>88000</Price>
+  <Rarity>7</Rarity>
+  <Restricted>true</Restricted>
+  <WeaponModifiers>
+    <WeaponModifier>
+      <UnarmedName>Demolition Gun</UnarmedName>
+      <SkillKey>GUNN</SkillKey>
+      <Damage>8</Damage>
+      <Crit>3</Crit>
+      <Qualities>
+        <Quality>
+          <Key>BLAST</Key>
+          <Count>8</Count>
+        </Quality>
+        <Quality>
+          <Key>BREACH</Key>
+          <Count>4</Count>
+        </Quality>
+        <Quality>
+          <Key>INACCURATE</Key>
+          <Count>2</Count>
+        </Quality>
+        <Quality>
+          <Key>SLOWFIRING</Key>
+          <Count>3</Count>
+        </Quality>
+        <Quality>
+          <Key>VICIOUS</Key>
+          <Count>2</Count>
+        </Quality>
+      </Qualities>
+      <VehicleWeaponProperties>
+        <Turret>true</Turret>
+        <FiringArcs>
+          <Fore>true</Fore>
+          <Aft>true</Aft>
+          <Port>true</Port>
+          <Starboard>true</Starboard>
+        </FiringArcs>
+      </VehicleWeaponProperties>
+      <VehicleWeaponCount>1</VehicleWeaponCount>
+      <RangeValue>wrShort</RangeValue>
+      <Range>Short</Range>
+    </WeaponModifier>
+    <WeaponModifier>
+      <UnarmedName>Heavy Flame Projector (instead of Autoblaster)</UnarmedName>
+      <SkillKey>GUNN</SkillKey>
+      <Damage>4</Damage>
+      <Crit>2</Crit>
+      <Qualities>
+        <Quality>
+          <Key>BLAST</Key>
+          <Count>4</Count>
+        </Quality>
+        <Quality>
+          <Key>BURN</Key>
+          <Count>5</Count>
+        </Quality>
+        <Quality>
+          <Key>SLOWFIRING</Key>
+          <Count>1</Count>
+        </Quality>
+        <Quality>
+          <Key>VICIOUS</Key>
+          <Count>2</Count>
+        </Quality>
+      </Qualities>
+      <VehicleWeaponProperties>
+        <Location>Forward</Location>
+        <FiringArcs>
+          <Fore>true</Fore>
+        </FiringArcs>
+      </VehicleWeaponProperties>
+      <VehicleWeaponCount>1</VehicleWeaponCount>
+      <RangeValue>wrClose</RangeValue>
+      <Range>Close</Range>
+    </WeaponModifier>
+  </WeaponModifiers>
+  <MaxAltitude>3 meters</MaxAltitude>
+  <SensorRangeValue>srShort</SensorRangeValue>
+  <Crew>One pilot, one commander, one gunner</Crew>
+  <EncumbranceCapacity>20</EncumbranceCapacity>
+  <Silhouette>3</Silhouette>
+  <Speed>2</Speed>
+  <Handling>-1</Handling>
+  <DefFore>1</DefFore>
+  <Armor>3</Armor>
+  <HullTrauma>14</HullTrauma>
+  <SystemStrain>12</SystemStrain>
+  <VehicleWeapons>
+    <VehicleWeapon>
+      <FiringArcs>
+        <Fore>true</Fore>
+      </FiringArcs>
+      <Location>Forward</Location>
+      <Key>AUTOBLAST</Key>
+    </VehicleWeapon>
+    <VehicleWeapon>
+      <FiringArcs>
+        <Fore>true</Fore>
+      </FiringArcs>
+      <Location>Forward</Location>
+      <Key>TRACTLT</Key>
+    </VehicleWeapon>
+  </VehicleWeapons>
+  <SensorRange>Short</SensorRange>
+</Vehicle>

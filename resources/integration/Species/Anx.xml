@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Species>
+  <Key>ANX</Key>
+  <Name>Anx</Name>
+  <Description>
+    [H4]Anx[h4]
+    Please see page 18 of the Savage Spirits Sourcebook for details.
+  </Description>
+  <Source Page="18">Savage Spirits</Source>
+  <StartingChars>
+    <Brawn>3</Brawn>
+    <Agility>1</Agility>
+    <Intellect>2</Intellect>
+    <Cunning>2</Cunning>
+    <Willpower>2</Willpower>
+    <Presence>2</Presence>
+  </StartingChars>
+  <StartingAttrs>
+    <WoundThreshold>13</WoundThreshold>
+    <StrainThreshold>10</StrainThreshold>
+    <Experience>85</Experience>
+  </StartingAttrs>
+  <SkillModifiers>
+  </SkillModifiers>
+  <TalentModifiers>
+    <TalentModifier>
+      <Key>KILL</Key>
+      <RankAdd>1</RankAdd>
+    </TalentModifier>
+    <TalentModifier>
+      <Key>LETHALBL</Key>
+      <RankAdd>1</RankAdd>
+    </TalentModifier>
+  </TalentModifiers>
+  <OptionChoices>
+    <OptionChoice>
+      <Key>ANXOC1</Key>
+      <Name>Skill Checks</Name>
+      <Options>
+        <Option>
+          <Key>ANXOC1OP1</Key>
+          <Name>Mood Indicator</Name>
+          <Description>If an Anx's head-crest is not covered, the character upgrades the difficulty of Deception checks once.</Description>
+        </Option>
+      </Options>
+    </OptionChoice>
+  </OptionChoices>
+</Species>

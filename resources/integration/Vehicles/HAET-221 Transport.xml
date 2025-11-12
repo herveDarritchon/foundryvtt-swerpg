@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<Vehicle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Key>HAET221</Key>
+  <Name>HAET-221 Transport</Name>
+  <Description>[H3]HAET-221 Transport[h3]
+Please see page 63 of the Forged in Battle Sourcebook for details.</Description>
+  <Source Page="63">Forged in Battle</Source>
+  <Type>Recon Airspeeder</Type>
+  <Categories>
+    <Category>Air Vehicle</Category>
+  </Categories>
+  <HP>1</HP>
+  <Price>50000</Price>
+  <Rarity>4</Rarity>
+  <MaxAltitude>100 kilometers</MaxAltitude>
+  <SensorRangeValue>srLong</SensorRangeValue>
+  <Crew>One pilot, one co-pilot, one gunner</Crew>
+  <EncumbranceCapacity>20</EncumbranceCapacity>
+  <Passengers>5</Passengers>
+  <Silhouette>3</Silhouette>
+  <Speed>4</Speed>
+  <Armor>2</Armor>
+  <HullTrauma>8</HullTrauma>
+  <SystemStrain>10</SystemStrain>
+  <VehicleWeapons>
+    <VehicleWeapon>
+      <FiringArcs>
+        <Fore>true</Fore>
+      </FiringArcs>
+      <Location>Dorsal</Location>
+      <Key>LASERMED</Key>
+    </VehicleWeapon>
+    <VehicleWeapon>
+      <FiringArcs>
+        <Fore>true</Fore>
+        <Aft>true</Aft>
+        <Port>true</Port>
+        <Starboard>true</Starboard>
+      </FiringArcs>
+      <Key>BLASTCANLT</Key>
+      <Count>2</Count>
+    </VehicleWeapon>
+  </VehicleWeapons>
+</Vehicle>

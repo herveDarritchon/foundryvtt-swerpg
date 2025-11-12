@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<Vehicle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Key>64YSWIFT</Key>
+  <Name>64-Y Swift 3 Repulsorsled</Name>
+  <Description>[H3]64-Y Swift 3 Repulsorsled[h3]
+Please see page 53 of the Savage Spirits Sourcebook for details.
+    </Description>
+  <Source Page="53">Savage Spirits</Source>
+  <Type>Repulsorsled</Type>
+  <Categories>
+    <Category>Land Vehicle</Category>
+  </Categories>
+  <HP>4</HP>
+  <Price>8000</Price>
+  <Rarity>7</Rarity>
+  <BaseMods>
+    <Mod>
+      <Count>1</Count>
+      <MiscDesc>Using the magnetic grapnel launcher to control or tow a piloted vehicle requires a [B]Hard ([DI][DI][DI]) Piloting - Planetary check[b].</MiscDesc>
+    </Mod>
+  </BaseMods>
+  <WeaponModifiers>
+    <WeaponModifier>
+      <UnarmedName>Magnetic Grapnel Launcher</UnarmedName>
+      <SkillKey>GUNN</SkillKey>
+      <Qualities>
+        <Quality>
+          <Key>KNOCKDOWN</Key>
+        </Quality>
+        <Quality>
+          <Key>LIMITEDAMMO</Key>
+          <Count>1</Count>
+        </Quality>
+        <Quality>
+          <Key>TRACTOR</Key>
+          <Count>3</Count>
+        </Quality>
+      </Qualities>
+      <VehicleWeaponProperties>
+        <Location>Forward</Location>
+        <FiringArcs>
+          <Fore>true</Fore>
+        </FiringArcs>
+      </VehicleWeaponProperties>
+      <VehicleWeaponCount>1</VehicleWeaponCount>
+      <RangeValue>wrClose</RangeValue>
+      <Range>Close</Range>
+    </WeaponModifier>
+  </WeaponModifiers>
+  <MaxAltitude>25 meters</MaxAltitude>
+  <Crew>One pilot</Crew>
+  <EncumbranceCapacity>20</EncumbranceCapacity>
+  <Silhouette>2</Silhouette>
+  <Speed>3</Speed>
+  <Armor>1</Armor>
+  <HullTrauma>4</HullTrauma>
+  <SystemStrain>6</SystemStrain>
+  <SinglePilot>true</SinglePilot>
+  <VehicleWeapons>
+    <VehicleWeapon>
+      <FiringArcs>
+        <Fore>true</Fore>
+      </FiringArcs>
+      <Location>Forward</Location>
+      <Key>AUTOBLAST</Key>
+    </VehicleWeapon>
+  </VehicleWeapons>
+  <SensorRange>Close</SensorRange>
+</Vehicle>

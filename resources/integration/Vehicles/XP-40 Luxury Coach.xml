@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<Vehicle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Key>XP40COACH</Key>
+  <Name>XP-40 Luxury Coach</Name>
+  <Description>[H3]SoroSuub Corporation XP-40 Luxury Coach[h3]
+Please see page 57 of the Unlimited Power Sourcebook for details.</Description>
+  <Source Page="57">Unlimited Power</Source>
+  <Type>Landspeeder</Type>
+  <Categories>
+    <Category>Land Vehicle</Category>
+  </Categories>
+  <HP>2</HP>
+  <Price>45000</Price>
+  <Rarity>7</Rarity>
+  <SensorRangeValue>srNone</SensorRangeValue>
+  <Crew>One chauffeur</Crew>
+  <EncumbranceCapacity>25</EncumbranceCapacity>
+  <Passengers>6</Passengers>
+  <Silhouette>3</Silhouette>
+  <Speed>3</Speed>
+  <Armor>1</Armor>
+  <HullTrauma>10</HullTrauma>
+  <SystemStrain>8</SystemStrain>
+  <SinglePilot>true</SinglePilot>
+  <SensorRange>No Sensors</SensorRange>
+</Vehicle>

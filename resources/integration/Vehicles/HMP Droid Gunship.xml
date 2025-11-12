@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<Vehicle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Key>HMPDROIDGUN</Key>
+  <Name>HMP Droid Gunship</Name>
+  <Description>[H3]HMP Droid Gunship[h3]
+Please see page 64 of the Collapse of the Republic Sourcebook for details.</Description>
+  <Source Page="64">Collapse of the Republic</Source>
+  <Type>Droid Gunship</Type>
+  <Categories>
+    <Category>Air Vehicle</Category>
+  </Categories>
+  <HP>1</HP>
+  <Price>60000</Price>
+  <Rarity>8</Rarity>
+  <Restricted>true</Restricted>
+  <BaseMods>
+    <Mod>
+      <Count>1</Count>
+      <MiscDesc>[B]Flex Ordnance Launcher[b]:  May carry a mix of ordnance types, sensors, or even external fuel takes.  Each launcher has seven mount points, each capable of carrying a single round of ordnance.</MiscDesc>
+    </Mod>
+  </BaseMods>
+  <WeaponModifiers>
+    <WeaponModifier>
+      <UnarmedName>Flex Ordnance Launcher</UnarmedName>
+      <SkillKey>GUNN</SkillKey>
+      <Qualities>
+        <Quality>
+          <Key>LIMITEDAMMO</Key>
+          <Count>7</Count>
+        </Quality>
+      </Qualities>
+      <VehicleWeaponProperties>
+        <Location>Wingtip</Location>
+        <FiringArcs>
+          <Fore>true</Fore>
+        </FiringArcs>
+      </VehicleWeaponProperties>
+      <VehicleWeaponCount>2</VehicleWeaponCount>
+      <RangeValue>wrNoRange</RangeValue>
+      <Range>None</Range>
+    </WeaponModifier>
+  </WeaponModifiers>
+  <MaxAltitude>100 meters</MaxAltitude>
+  <SensorRangeValue>srShort</SensorRangeValue>
+  <Crew>None (Integrated Droid Brain)</Crew>
+  <Passengers>12</Passengers>
+  <Silhouette>3</Silhouette>
+  <Speed>3</Speed>
+  <DefFore>2</DefFore>
+  <DefAft>1</DefAft>
+  <Armor>4</Armor>
+  <HullTrauma>20</HullTrauma>
+  <SystemStrain>16</SystemStrain>
+  <VehicleWeapons>
+    <VehicleWeapon>
+      <FiringArcs>
+        <Fore>true</Fore>
+      </FiringArcs>
+      <Location>Forward</Location>
+      <Key>LASERHVY</Key>
+    </VehicleWeapon>
+    <VehicleWeapon>
+      <FiringArcs>
+        <Fore>true</Fore>
+      </FiringArcs>
+      <Location>Wingtip</Location>
+      <Qualities>
+        <Quality>
+          <Key>LINKED</Key>
+          <Count>1</Count>
+        </Quality>
+      </Qualities>
+      <Key>LASERMED</Key>
+    </VehicleWeapon>
+    <VehicleWeapon>
+      <FiringArcs>
+        <Fore>true</Fore>
+      </FiringArcs>
+      <Turret>true</Turret>
+      <Location>Forward</Location>
+      <Qualities>
+        <Quality>
+          <Key>LINKED</Key>
+          <Count>1</Count>
+        </Quality>
+      </Qualities>
+      <Key>LASERLT</Key>
+      <Count>2</Count>
+    </VehicleWeapon>
+  </VehicleWeapons>
+  <SensorRange>Short</SensorRange>
+</Vehicle>

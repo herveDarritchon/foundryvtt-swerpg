@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Species>
+  <Key>COSIAN</Key>
+  <Name>Cosian</Name>
+  <Description>
+    [H4]Cosian[h4]
+    Please see page 18 of the Disciples of Harmony Sourcebook for details.
+  </Description>
+  <Source Page="18">Disciples of Harmony</Source>
+  <StartingChars>
+    <Brawn>1</Brawn>
+    <Agility>2</Agility>
+    <Intellect>3</Intellect>
+    <Cunning>2</Cunning>
+    <Willpower>2</Willpower>
+    <Presence>2</Presence>
+  </StartingChars>
+  <StartingAttrs>
+    <WoundThreshold>10</WoundThreshold>
+    <StrainThreshold>11</StrainThreshold>
+    <Experience>95</Experience>
+    <EncumbranceBonus>5</EncumbranceBonus>
+  </StartingAttrs>
+  <SkillModifiers>
+    <SkillModifier>
+      <Key>LORE</Key>
+      <RankStart>1</RankStart>
+      <RankLimit>2</RankLimit>
+    </SkillModifier>
+  </SkillModifiers>
+  <OptionChoices>
+    <OptionChoice>
+      <Key>COSIANOC1</Key>
+      <Name>Encumbrance</Name>
+      <Options>
+        <Option>
+          <Key>COSIANOC1OP1</Key>
+          <Name>Strong Backed</Name>
+          <Description>Cosians gain +5 to their encumbrance threshold.</Description>
+        </Option>
+      </Options>
+    </OptionChoice>
+  </OptionChoices>
+</Species>

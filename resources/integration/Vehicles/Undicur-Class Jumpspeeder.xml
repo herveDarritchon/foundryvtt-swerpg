@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<Vehicle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Key>UNDICURJUMP</Key>
+  <Name>Undicur-Class Jumpspeeder</Name>
+  <Description>[H3][I]Undicur[i] - Class Jumpspeeder[h3]
+Please see page 62 of the Endless Vigil Sourcebook, or page 72 of the Rise of the Separatists Sourcebook for details.</Description>
+  <Sources>
+    <Source Page="62">Endless Vigil</Source>
+    <Source Page="72">Rise of the Separatists</Source>
+  </Sources>
+  <Type>Swoop</Type>
+  <Categories>
+    <Category>Land Vehicle</Category>
+  </Categories>
+  <Price>3000</Price>
+  <Rarity>6</Rarity>
+  <MaxAltitude>150 meters</MaxAltitude>
+  <SensorRangeValue>srNone</SensorRangeValue>
+  <Crew>One pilot</Crew>
+  <EncumbranceCapacity>2</EncumbranceCapacity>
+  <Silhouette>2</Silhouette>
+  <Speed>2</Speed>
+  <HullTrauma>2</HullTrauma>
+  <SystemStrain>2</SystemStrain>
+  <SinglePilot>true</SinglePilot>
+  <SensorRange>No Sensors</SensorRange>
+</Vehicle>

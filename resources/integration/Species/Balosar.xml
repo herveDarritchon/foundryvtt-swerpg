@@ -1,0 +1,51 @@
+﻿<?xml version="1.0"?>
+<Species xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Key>BALOSAR</Key>
+  <Name>Balosar</Name>
+  <Description>
+    [H4]Balosar[h4]
+    See page 19 of the Cyphers and Masks Sourcebook for details.
+  </Description>
+  <Source Page="19">Cyphers and Masks</Source>
+  <StartingChars>
+    <Brawn>2</Brawn>
+    <Agility>2</Agility>
+    <Intellect>2</Intellect>
+    <Cunning>3</Cunning>
+    <Willpower>1</Willpower>
+    <Presence>2</Presence>
+  </StartingChars>
+  <StartingAttrs>
+    <WoundThreshold>10</WoundThreshold>
+    <StrainThreshold>10</StrainThreshold>
+    <Experience>100</Experience>
+  </StartingAttrs>
+  <SkillModifiers>
+    <SkillModifier>
+      <Key>SW</Key>
+      <RankStart>1</RankStart>
+      <RankLimit>2</RankLimit>
+    </SkillModifier>
+  </SkillModifiers>
+  <TalentModifiers>
+  </TalentModifiers>
+  <OptionChoices>
+    <OptionChoice>
+      <Key>BALOSARCH1</Key>
+      <Name>Physiology</Name>
+      <Options>
+        <Option>
+          <Key>BALOSARCH1OP1</Key>
+          <Name>Antennapalps</Name>
+          <Description>Balosars add automatic [AD][AD] to all Vigilance checks.</Description>
+          <DieModifiers>
+            <DieModifier>
+              <SkillKey>VIGIL</SkillKey>
+              <AdvantageCount>2</AdvantageCount>
+            </DieModifier>
+          </DieModifiers>
+        </Option>
+      </Options>
+    </OptionChoice>
+  </OptionChoices>
+</Species>

@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<Vehicle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Key>WHELIKAT</Key>
+  <Name>Whelik All-Terrain Explorer</Name>
+  <Description>[H3]Whelik All-Terrain Explorer[h3]
+Please see page 59 of the Disciples of Harmony Sourcebook for details.
+</Description>
+  <Source Page="59">Disciples of Harmony</Source>
+  <Type>Walker</Type>
+  <Categories>
+    <Category>Walker</Category>
+  </Categories>
+  <HP>4</HP>
+  <Price>50000</Price>
+  <Rarity>6</Rarity>
+  <SensorRangeValue>srLong</SensorRangeValue>
+  <Crew>One pilot, one co-pilot, one sensor/comms operator</Crew>
+  <EncumbranceCapacity>100</EncumbranceCapacity>
+  <Passengers>2</Passengers>
+  <Consumables>1 month</Consumables>
+  <Silhouette>4</Silhouette>
+  <Speed>1</Speed>
+  <Handling>-1</Handling>
+  <Armor>2</Armor>
+  <HullTrauma>20</HullTrauma>
+  <SystemStrain>12</SystemStrain>
+  <SensorRange>Long</SensorRange>
+</Vehicle>

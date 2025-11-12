@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Species>
+  <Key>THOLOTHIAN</Key>
+  <Name>Tholothian</Name>
+  <Description>
+    [H4]Tholothian[h4]
+    Please see page 20 of the Unlimited Power Sourcebook for details.
+  </Description>
+  <Source Page="20">Unlimited Power</Source>
+  <StartingChars>
+    <Brawn>2</Brawn>
+    <Agility>2</Agility>
+    <Intellect>2</Intellect>
+    <Cunning>2</Cunning>
+    <Willpower>2</Willpower>
+    <Presence>2</Presence>
+  </StartingChars>
+  <StartingAttrs>
+    <WoundThreshold>10</WoundThreshold>
+    <StrainThreshold>10</StrainThreshold>
+    <Experience>95</Experience>
+  </StartingAttrs>
+  <SkillModifiers>
+    <SkillModifier>
+      <Key>XEN</Key>
+      <RankStart>1</RankStart>
+      <RankLimit>2</RankLimit>
+    </SkillModifier>
+  </SkillModifiers>
+  <TalentModifiers>
+  </TalentModifiers>
+  <OptionChoices>
+    <OptionChoice>
+      <Key>THOLOTHIANAB1</Key>
+      <Name>Social</Name>
+      <Options>
+        <Option>
+          <Key>THOLOTHIANAB1OP1</Key>
+          <Name>Cultural Adopters</Name>
+          <Description>Tholothians add an automatic [AD] when making social skill checks to interact with non-Tholothians.</Description>
+          <DieModifiers>
+            <DieModifier>
+              <SkillKey>CHARM</SkillKey>
+              <AdvantageCount>1</AdvantageCount>
+            </DieModifier>
+            <DieModifier>
+              <SkillKey>COERC</SkillKey>
+              <AdvantageCount>1</AdvantageCount>
+            </DieModifier>
+            <DieModifier>
+              <SkillKey>DECEP</SkillKey>
+              <AdvantageCount>1</AdvantageCount>
+            </DieModifier>
+            <DieModifier>
+              <SkillKey>LEAD</SkillKey>
+              <AdvantageCount>1</AdvantageCount>
+            </DieModifier>
+            <DieModifier>
+              <SkillKey>NEG</SkillKey>
+              <AdvantageCount>1</AdvantageCount>
+            </DieModifier>
+          </DieModifiers>
+        </Option>
+      </Options>
+    </OptionChoice>
+    <OptionChoice>
+      <Key>THOLOTHIANAB2</Key>
+      <Name>Healing</Name>
+      <Options>
+        <Option>
+          <Key>THOLOTHIANAB2OP1</Key>
+          <Name>Natural Roots</Name>
+          <Description>When making a check to heal strain in a natural or wild setting, Tholothians heal one additional strain.</Description>
+        </Option>
+      </Options>
+    </OptionChoice>
+  </OptionChoices>
+</Species>

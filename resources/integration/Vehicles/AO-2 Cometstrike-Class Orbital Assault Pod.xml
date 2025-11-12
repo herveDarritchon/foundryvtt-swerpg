@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<Vehicle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Key>AO2ORBASPOD</Key>
+  <Name>AO-2 Cometstrike-Class Orbital Assault Pod</Name>
+  <Description>[H3]AO-2 [I]Cometstrike[i] -Class Orbital Assault Pod[h3]
+Please see page 56 of the Knights of Fate Sourcebook for details.</Description>
+  <Source Page="56">Knights of Fate</Source>
+  <Type>Orbital Assault Pod</Type>
+  <Categories>
+    <Category>Starship</Category>
+    <Category>Non-Fighter Starship</Category>
+  </Categories>
+  <HP>1</HP>
+  <Price>30000</Price>
+  <Rarity>5</Rarity>
+  <BaseMods>
+    <Mod>
+      <Count>1</Count>
+      <MiscDesc>[B]Orbital Assault[b]: During initial descent, the pod is speed 8, but it cannot alter its trajectory.</MiscDesc>
+    </Mod>
+  </BaseMods>
+  <SensorRangeValue>srShort</SensorRangeValue>
+  <Crew>One pilot</Crew>
+  <Passengers>14</Passengers>
+  <Consumables>Two days</Consumables>
+  <Silhouette>4</Silhouette>
+  <Speed>2</Speed>
+  <Handling>-5</Handling>
+  <Armor>5</Armor>
+  <HullTrauma>12</HullTrauma>
+  <SystemStrain>6</SystemStrain>
+  <Starship>true</Starship>
+  <SinglePilot>true</SinglePilot>
+  <VehicleWeapons>
+    <VehicleWeapon>
+      <FiringArcs>
+        <Fore>true</Fore>
+      </FiringArcs>
+      <Location>Forward</Location>
+      <Key>BLASTHVYREP</Key>
+    </VehicleWeapon>
+    <VehicleWeapon>
+      <FiringArcs>
+        <Aft>true</Aft>
+      </FiringArcs>
+      <Location>Aft</Location>
+      <Key>BLASTHVYREP</Key>
+    </VehicleWeapon>
+  </VehicleWeapons>
+  <SensorRange>Short</SensorRange>
+</Vehicle>

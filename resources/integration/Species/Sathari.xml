@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<Species xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Key>SATHARI</Key>
+  <Name>Sathari</Name>
+  <Description>[H4]Sathari[h4]
+Please see page 15 of the Chronicles of the Gatekeeper adventure module for details.
+</Description>
+  <Source Page="15">Chronicles of the Gatekeeper</Source>
+  <Sources />
+  <StartingChars>
+    <Brawn>1</Brawn>
+    <Agility>3</Agility>
+    <Intellect>2</Intellect>
+    <Cunning>2</Cunning>
+    <Willpower>2</Willpower>
+    <Presence>2</Presence>
+  </StartingChars>
+  <StartingAttrs>
+    <WoundThreshold>8</WoundThreshold>
+    <StrainThreshold>10</StrainThreshold>
+    <Experience>100</Experience>
+  </StartingAttrs>
+  <SkillModifiers>
+    <SkillModifier>
+      <Key>COORD</Key>
+      <RankStart>1</RankStart>
+      <RankLimit>2</RankLimit>
+    </SkillModifier>
+  </SkillModifiers>
+  <OptionChoices>
+    <OptionChoice>
+      <Key>SATHARICH1</Key>
+      <Name>Avian</Name>
+      <Options>
+        <Option>
+          <Key>SATHARICH1OP1</Key>
+          <Name>Glider</Name>
+          <Description>A Sathari can fall safely from any height and can glide over small gaps or distances while falling.  While conscious, a Sathari character does not suffer damage from falling (see page 221 of the [B]Force and Destiny[b] Core Rulebook).</Description>
+        </Option>
+      </Options>
+    </OptionChoice>
+  </OptionChoices>
+</Species>

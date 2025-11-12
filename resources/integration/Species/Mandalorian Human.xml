@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Species>
+  <Key>MANDOHUMAN</Key>
+  <Name>Mandalorian Human</Name>
+  <Description>
+    [H4]Mandalorian Human[h4]
+    Please see page 7 of the Friends Like These Adventure Module for details.
+  </Description>
+  <Sources>
+    <Source Page="7">Friends Like These</Source>
+  </Sources>
+  <StartingChars>
+    <Brawn>2</Brawn>
+    <Agility>2</Agility>
+    <Intellect>2</Intellect>
+    <Cunning>2</Cunning>
+    <Willpower>2</Willpower>
+    <Presence>2</Presence>
+  </StartingChars>
+  <StartingAttrs>
+    <WoundThreshold>11</WoundThreshold>
+    <StrainThreshold>10</StrainThreshold>
+    <Experience>105</Experience>
+  </StartingAttrs>
+  <OptionChoices>
+    <OptionChoice>
+      <Key>MANDOHUMANOC1</Key>
+      <Name>Skills</Name>
+      <Options>
+        <Option>
+          <Key>MANDOHUMANOC1OP1</Key>
+          <Name>Combat Skill</Name>
+          <Description>Mandalorian Humans start the game with one rank in a combat skill of their choice.</Description>
+          <StartingSkillTraining>
+            <SkillTraining>
+              <SkillCount>1</SkillCount>
+              <Requirement>
+                <FromSkillType>true</FromSkillType>
+                <SkillType>stCombat</SkillType>
+              </Requirement>
+            </SkillTraining>
+          </StartingSkillTraining>
+        </Option>
+        <Option>
+          <Key>MANDOHUMANOC1OP2</Key>
+          <Name>Knowledge Skills</Name>
+          <Description>Mandalorian Humans start the game with one rank in two knowledge skills of their choice.</Description>
+          <StartingSkillTraining>
+            <SkillTraining>
+              <SkillCount>2</SkillCount>
+              <Requirement>
+                <FromSkillType>true</FromSkillType>
+                <SkillType>stKnowledge</SkillType>
+              </Requirement>
+            </SkillTraining>
+          </StartingSkillTraining>
+        </Option>
+      </Options>
+    </OptionChoice>
+  </OptionChoices>
+</Species>

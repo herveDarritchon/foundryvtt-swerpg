@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<Species xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Key>HARCH</Key>
+  <Name>Harch</Name>
+  <Description>[H4]Harch[h4]
+Please see page 14 of the Collapse of the Republic Sourcebook for details.</Description>
+  <Source Page="14">Collapse of the Republic</Source>
+  <StartingChars>
+    <Brawn>2</Brawn>
+    <Agility>2</Agility>
+    <Intellect>2</Intellect>
+    <Cunning>3</Cunning>
+    <Willpower>2</Willpower>
+    <Presence>3</Presence>
+  </StartingChars>
+  <StartingAttrs>
+    <WoundThreshold>11</WoundThreshold>
+    <StrainThreshold>11</StrainThreshold>
+    <Experience>75</Experience>
+  </StartingAttrs>
+  <SkillModifiers>
+    <SkillModifier>
+      <Key>PERC</Key>
+      <RankStart>1</RankStart>
+    </SkillModifier>
+  </SkillModifiers>
+  <OptionChoices>
+    <OptionChoice>
+      <Key>HARCHCH1</Key>
+      <Name>Combat</Name>
+      <Options>
+        <Option>
+          <Key>HARCHCH1OP1</Key>
+          <Name>Additional Limbs</Name>
+          <Description>Harches have multiple sets of arms.  As a result, they gain an additional free maneuver per turn, though they still may not perform more than two maneuvers per turn.</Description>
+        </Option>
+      </Options>
+    </OptionChoice>
+    <OptionChoice>
+      <Key>HARCHCH2</Key>
+      <Name>Offensive</Name>
+      <Options>
+        <Option>
+          <Key>HARCHCH2OP1</Key>
+          <Name>Venomous Fangs</Name>
+          <Description>When a Harch makes a Brawl check to deal damage to an opponent, the attack gains the Stun 3 item quality.</Description>
+        </Option>
+      </Options>
+    </OptionChoice>
+  </OptionChoices>
+  <WeaponModifiers>
+    <WeaponModifier>
+      <AllSkillKey>BRAWL</AllSkillKey>
+      <Qualities>
+        <Quality>
+          <Key>STUN</Key>
+          <Count>3</Count>
+        </Quality>
+      </Qualities>
+      <RangeValue>wrNoRange</RangeValue>
+      <Range>None</Range>
+    </WeaponModifier>
+  </WeaponModifiers>
+</Species>

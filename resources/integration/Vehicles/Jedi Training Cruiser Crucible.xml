@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<Vehicle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Key>JEDICRUCIBLE</Key>
+  <Name>Jedi Training Cruiser Crucible</Name>
+  <Description>[H3]Jedi Training Cruiser [I]Crucible[i][h3]
+Please see page 64 of the Disciples of Harmony Sourcebook for details.
+</Description>
+  <Source Page="64">Disciples of Harmony</Source>
+  <Type>Patrol Cruiser</Type>
+  <Categories>
+    <Category>Starship</Category>
+    <Category>Non-Fighter Starship</Category>
+    <Category>Capital Ship</Category>
+  </Categories>
+  <HP>6</HP>
+  <Price>2000000</Price>
+  <Rarity>10</Rarity>
+  <Restricted>true</Restricted>
+  <BaseMods>
+    <Mod>
+      <Count>1</Count>
+      <MiscDesc>[B]Workshops[b]: When making Mechanics checks, PCs always count has having the right tool for the job.  Once per session, each character may make a [B]Hard ([DI][DI][DI]) Perception check[b].  If successful, may find one part for constructing a lightsaber worth 1,000 credits or less.</MiscDesc>
+    </Mod>
+    <Mod>
+      <Count>1</Count>
+      <MiscDesc>[B]Ancient Databanks[b]: Add [SU][AD] to all Lore or Astrogation checks.</MiscDesc>
+    </Mod>
+  </BaseMods>
+  <HyperdrivePrimary>3</HyperdrivePrimary>
+  <NaviComputer>true</NaviComputer>
+  <SensorRangeValue>srNone</SensorRangeValue>
+  <Crew>One pilot, one engineer</Crew>
+  <EncumbranceCapacity>300</EncumbranceCapacity>
+  <Passengers>10</Passengers>
+  <Consumables>One year</Consumables>
+  <Silhouette>5</Silhouette>
+  <Speed>3</Speed>
+  <Handling>-1</Handling>
+  <DefFore>2</DefFore>
+  <DefAft>2</DefAft>
+  <DefPort>1</DefPort>
+  <DefStarboard>1</DefStarboard>
+  <Armor>3</Armor>
+  <HullTrauma>44</HullTrauma>
+  <SystemStrain>28</SystemStrain>
+  <Starship>true</Starship>
+  <SensorRange>No Sensors</SensorRange>
+</Vehicle>

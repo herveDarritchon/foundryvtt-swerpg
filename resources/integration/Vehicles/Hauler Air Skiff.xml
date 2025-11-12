@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<Vehicle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Key>HAULERAIRSKIFF</Key>
+  <Name>Hauler Air Skiff</Name>
+  <Description>[H3]Ubrikkian Industries Hauler Air Skiff[h3]
+Please see page 57 of the Unlimited Power Sourcebook for details.</Description>
+  <Source Page="57">Unlimited Power</Source>
+  <Type>Air Skiff/Hauler</Type>
+  <Categories>
+    <Category>Air Vehicle</Category>
+  </Categories>
+  <HP>3</HP>
+  <Price>10000</Price>
+  <Rarity>4</Rarity>
+  <MaxAltitude>100 kilometers</MaxAltitude>
+  <SensorRangeValue>srShort</SensorRangeValue>
+  <Crew>One pilot</Crew>
+  <EncumbranceCapacity>100</EncumbranceCapacity>
+  <Passengers>20</Passengers>
+  <Silhouette>2</Silhouette>
+  <Speed>3</Speed>
+  <HullTrauma>6</HullTrauma>
+  <SystemStrain>8</SystemStrain>
+  <SinglePilot>true</SinglePilot>
+  <SensorRange>Short</SensorRange>
+</Vehicle>

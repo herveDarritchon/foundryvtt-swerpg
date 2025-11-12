@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<Vehicle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Key>A11BURR</Key>
+  <Name>A-11 Model III "Burrower"</Name>
+  <Description>
+    [H3]A-11 Model III "Burrower"[h3]
+    Please see page 106 of the Suns of Fortune Sourcebook for details.
+</Description>
+  <Source Page="106">Suns of Fortune</Source>
+  <Type>Tunneling Vehicle</Type>
+  <Categories>
+    <Category>Land Vehicle</Category>
+    <Category>Wheeled Vehicle</Category>
+  </Categories>
+  <Encumbrance>0</Encumbrance>
+  <HP>2</HP>
+  <Price>45000</Price>
+  <Rarity>7</Rarity>
+  <SensorRangeValue>srClose</SensorRangeValue>
+  <Crew>One pilot, one co-pilot/engineer</Crew>
+  <EncumbranceCapacity>25</EncumbranceCapacity>
+  <Passengers>3</Passengers>
+  <Silhouette>3</Silhouette>
+  <Speed>1</Speed>
+  <Handling>-3</Handling>
+  <Armor>1</Armor>
+  <HullTrauma>18</HullTrauma>
+  <SystemStrain>12</SystemStrain>
+  <WeaponModifiers>
+    <WeaponModifier>
+      <Unarmed>false</Unarmed>
+      <UnarmedName>Heavy Beamdrill</UnarmedName>
+      <SkillKey>GUNN</SkillKey>
+      <Damage>5</Damage>
+      <DamageAdd>0</DamageAdd>
+      <Crit>3</Crit>
+      <CritSub>0</CritSub>
+      <Scale>wsPersonalRange</Scale>
+      <Qualities>
+        <Quality>
+          <Key>BREACH</Key>
+          <Count>3</Count>
+        </Quality>
+        <Quality>
+          <Key>INACCURATE</Key>
+          <Count>3</Count>
+        </Quality>
+      </Qualities>
+      <BaseMods />
+      <VehicleWeaponProperties>
+        <FiringArcs>
+          <Fore>true</Fore>
+        </FiringArcs>
+        <Location>Forward</Location>
+      </VehicleWeaponProperties>
+      <VehicleWeaponCount>1</VehicleWeaponCount>
+      <RangeValue>wrShort</RangeValue>
+    </WeaponModifier>
+  </WeaponModifiers>
+</Vehicle>

@@ -1,0 +1,135 @@
+<?xml version="1.0"?>
+<Vehicle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Key>ACCLAMATORASSAULT</Key>
+  <Name>Acclamator-Class Planetary Assault Ship</Name>
+  <Description>[H3][I]Acclamator[i] - Class Planetary Assault Ship[h3]
+Please see page 74 of the Collapse of the Republic Sourcebook for details.</Description>
+  <Source Page="74">Collapse of the Republic</Source>
+  <Type>Planetary Assault Ship</Type>
+  <Categories>
+    <Category>Capital Ship</Category>
+    <Category>Starship</Category>
+    <Category>Non-Fighter Starship</Category>
+  </Categories>
+  <HP>2</HP>
+  <Price>110000000</Price>
+  <Rarity>8</Rarity>
+  <Restricted>true</Restricted>
+  <WeaponModifiers>
+    <WeaponModifier>
+      <UnarmedName>Assault Proton Torpedo Launcher</UnarmedName>
+      <SkillKey>GUNN</SkillKey>
+      <Damage>12</Damage>
+      <Crit>2</Crit>
+      <Qualities>
+        <Quality>
+          <Key>BLAST</Key>
+          <Count>10</Count>
+        </Quality>
+        <Quality>
+          <Key>BREACH</Key>
+          <Count>8</Count>
+        </Quality>
+        <Quality>
+          <Key>GUIDED</Key>
+          <Count>1</Count>
+        </Quality>
+        <Quality>
+          <Key>SLOWFIRING</Key>
+          <Count>2</Count>
+        </Quality>
+      </Qualities>
+      <VehicleWeaponProperties>
+        <Location>Forward</Location>
+        <FiringArcs>
+          <Fore>true</Fore>
+        </FiringArcs>
+      </VehicleWeaponProperties>
+      <VehicleWeaponCount>4</VehicleWeaponCount>
+      <RangeValue>wrShort</RangeValue>
+      <Range>Short</Range>
+    </WeaponModifier>
+  </WeaponModifiers>
+  <HyperdrivePrimary>0.6</HyperdrivePrimary>
+  <HyperdriveBackup>10</HyperdriveBackup>
+  <StarFighters>320 speeder bikes, 66 LAAT/i, 14 LAAT/c, 48 AT-TE, 36 SPHA Walkers</StarFighters>
+  <NaviComputer>true</NaviComputer>
+  <SensorRangeValue>srLong</SensorRangeValue>
+  <Crew>700 officers and enlisted crew</Crew>
+  <EncumbranceCapacity>10000</EncumbranceCapacity>
+  <Passengers>15000</Passengers>
+  <Consumables>Six months</Consumables>
+  <Silhouette>7</Silhouette>
+  <Speed>2</Speed>
+  <Handling>-1</Handling>
+  <DefFore>3</DefFore>
+  <DefAft>2</DefAft>
+  <DefPort>2</DefPort>
+  <DefStarboard>2</DefStarboard>
+  <Armor>6</Armor>
+  <HullTrauma>80</HullTrauma>
+  <SystemStrain>65</SystemStrain>
+  <Starship>true</Starship>
+  <Massive>1</Massive>
+  <VehicleWeapons>
+    <VehicleWeapon>
+      <FiringArcs>
+        <Port>true</Port>
+      </FiringArcs>
+      <Location>Port</Location>
+      <Qualities>
+        <Quality>
+          <Key>LINKED</Key>
+          <Count>3</Count>
+        </Quality>
+      </Qualities>
+      <Key>TURBOLT</Key>
+      <Count>3</Count>
+    </VehicleWeapon>
+    <VehicleWeapon>
+      <FiringArcs>
+        <Starboard>true</Starboard>
+      </FiringArcs>
+      <Location>Starboard</Location>
+      <Qualities>
+        <Quality>
+          <Key>LINKED</Key>
+          <Count>3</Count>
+        </Quality>
+      </Qualities>
+      <Key>TURBOLT</Key>
+      <Count>3</Count>
+    </VehicleWeapon>
+    <VehicleWeapon>
+      <FiringArcs>
+        <Fore>true</Fore>
+      </FiringArcs>
+      <Location>Forward</Location>
+      <Qualities>
+        <Quality>
+          <Key>LINKED</Key>
+          <Count>3</Count>
+        </Quality>
+      </Qualities>
+      <Key>TURBOLT</Key>
+      <Count>6</Count>
+    </VehicleWeapon>
+    <VehicleWeapon>
+      <FiringArcs>
+        <Port>true</Port>
+      </FiringArcs>
+      <Location>Port</Location>
+      <Key>LASERHVY</Key>
+      <Count>12</Count>
+    </VehicleWeapon>
+    <VehicleWeapon>
+      <FiringArcs>
+        <Starboard>true</Starboard>
+      </FiringArcs>
+      <Location>Starboard</Location>
+      <Key>LASERHVY</Key>
+      <Count>12</Count>
+    </VehicleWeapon>
+  </VehicleWeapons>
+  <SensorRange>Long</SensorRange>
+</Vehicle>

@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<Vehicle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Key>T85JOBEN</Key>
+  <Name>Joben T-85 Speeder Bik</Name>
+  <Description>[H3]Joben T-85 Speeder Bik[h3]
+Please see page 54 of the Savage Spirits Sourcebook for details.
+    </Description>
+  <Source Page="54">Savage Spirits</Source>
+  <Type>Speeder Bike</Type>
+  <Categories>
+    <Category>Land Vehicle</Category>
+  </Categories>
+  <HP>5</HP>
+  <Price>1500</Price>
+  <Rarity>4</Rarity>
+  <MaxAltitude>25 meters</MaxAltitude>
+  <Crew>One pilot</Crew>
+  <EncumbranceCapacity>5</EncumbranceCapacity>
+  <Passengers>1</Passengers>
+  <Silhouette>2</Silhouette>
+  <Speed>2</Speed>
+  <HullTrauma>4</HullTrauma>
+  <SystemStrain>6</SystemStrain>
+  <SinglePilot>true</SinglePilot>
+  <SensorRange>Close</SensorRange>
+</Vehicle>

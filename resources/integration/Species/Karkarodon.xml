@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<Species xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Key>KARKARODON</Key>
+  <Name>Karkarodon</Name>
+  <Description>[H4]Karkarodon[h4]
+Please see page 15 of the Collapse of the Republic Sourcebook for details.</Description>
+  <Source Page="15">Collapse of the Republic</Source>
+  <StartingChars>
+    <Brawn>3</Brawn>
+    <Agility>2</Agility>
+    <Intellect>1</Intellect>
+    <Cunning>2</Cunning>
+    <Willpower>2</Willpower>
+    <Presence>2</Presence>
+  </StartingChars>
+  <StartingAttrs>
+    <WoundThreshold>12</WoundThreshold>
+    <StrainThreshold>10</StrainThreshold>
+    <Experience>90</Experience>
+  </StartingAttrs>
+  <SkillModifiers>
+    <SkillModifier>
+      <Key>ATHL</Key>
+      <RankStart>1</RankStart>
+    </SkillModifier>
+  </SkillModifiers>
+  <OptionChoices>
+    <OptionChoice>
+      <Key>KARKARODONCH1</Key>
+      <Name>Environment</Name>
+      <Options>
+        <Option>
+          <Key>KARKARODONCH1OP1</Key>
+          <Name>Amphibious</Name>
+          <Description>Karkarodons may breathe underwater without penalty and never suffer movement penalties for traveling through water.</Description>
+        </Option>
+      </Options>
+    </OptionChoice>
+    <OptionChoice>
+      <Key>KARKARODONCH2</Key>
+      <Name>Combat</Name>
+      <Options>
+        <Option>
+          <Key>KARKARODONCH2OP1</Key>
+          <Name>Jaws</Name>
+          <Description>When a Karkarodon makes a Brawl check to deal damage to an opponent, they deal +1 damage and the attack has a critical rating of 3.</Description>
+        </Option>
+      </Options>
+    </OptionChoice>
+  </OptionChoices>
+  <WeaponModifiers>
+    <WeaponModifier>
+      <AllSkillKey>BRAWL</AllSkillKey>
+      <DamageAdd>1</DamageAdd>
+      <Crit>3</Crit>
+      <RangeValue>wrNoRange</RangeValue>
+      <Range>None</Range>
+    </WeaponModifier>
+  </WeaponModifiers>
+</Species>

@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<Vehicle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Key>JT12CJETPACK</Key>
+  <Name>JT-12C Jet Pack</Name>
+  <Description>
+    [H3]JT-12C Jet Pack[h3]
+    Please see page 58 of the Collapse of the Republic Sourcebook for details.
+    [P][I]Note:  This is the vehicle profile of the JT-12C Jetpack gear item.[i]
+  </Description>
+  <Source Page="58">Collapse of the Republic</Source>
+  <Type>Jet Pack</Type>
+  <Categories>
+    <Category>Air Vehicle</Category>
+  </Categories>
+  <Encumbrance>0</Encumbrance>
+  <HP>0</HP>
+  <Price>4750</Price>
+  <Rarity>7</Rarity>
+  <Restricted>false</Restricted>
+  <BaseMods />
+  <WeaponModifiers />
+  <MaxAltitude>70 meters</MaxAltitude>
+  <NaviComputer>false</NaviComputer>
+  <SensorRangeValue>srNone</SensorRangeValue>
+  <Crew>One pilot</Crew>
+  <Silhouette>1</Silhouette>
+  <Speed>2</Speed>
+  <Handling>0</Handling>
+  <DefFore>0</DefFore>
+  <DefAft>0</DefAft>
+  <DefPort>0</DefPort>
+  <DefStarboard>0</DefStarboard>
+  <Armor>0</Armor>
+  <HullTrauma>0</HullTrauma>
+  <SystemStrain>4</SystemStrain>
+  <Starship>false</Starship>
+  <Massive>0</Massive>
+  <SinglePilot>true</SinglePilot>
+</Vehicle>

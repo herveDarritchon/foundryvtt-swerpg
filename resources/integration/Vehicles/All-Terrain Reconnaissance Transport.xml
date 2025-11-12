@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<Vehicle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Key>ATRT2</Key>
+  <Name>All-Terrain Reconnaissance Transport</Name>
+  <Description>[H3]All-Terrain Reconnaissance Transport[h3]
+Please see page 56 of the Savage Spirits Sourcebook, or page 69 of the Collapse of the Republic Sourcebook, for details.
+</Description>
+  <Sources>
+    <Source Page="56">Savage Spirits</Source>
+    <Source Page="69">Collapse of the Republic</Source>
+  </Sources>
+  <Type>Walker</Type>
+  <Categories />
+  <HP>2</HP>
+  <Price>8000</Price>
+  <Rarity>8</Rarity>
+  <Restricted>true</Restricted>
+  <EraPricing>
+    <Era>
+      <Name>Clone Wars</Name>
+      <Rarity>4</Rarity>
+      <Price>20000</Price>
+      <Restricted>true</Restricted>
+    </Era>
+  </EraPricing>
+  <SensorRangeValue>srNone</SensorRangeValue>
+  <Crew>One pilot</Crew>
+  <EncumbranceCapacity>7</EncumbranceCapacity>
+  <Silhouette>2</Silhouette>
+  <Speed>3</Speed>
+  <Handling>1</Handling>
+  <DefFore>1</DefFore>
+  <HullTrauma>4</HullTrauma>
+  <SystemStrain>8</SystemStrain>
+  <SinglePilot>true</SinglePilot>
+  <VehicleWeapons>
+    <VehicleWeapon>
+      <FiringArcs>
+        <Fore>true</Fore>
+      </FiringArcs>
+      <Location>Forward</Location>
+      <Key>BLASTHVYREP</Key>
+    </VehicleWeapon>
+  </VehicleWeapons>
+  <SensorRange>No Sensors</SensorRange>
+</Vehicle>

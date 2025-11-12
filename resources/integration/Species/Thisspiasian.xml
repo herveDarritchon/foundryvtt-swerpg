@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Species>
+  <Key>THISSPIASIAN</Key>
+  <Name>Thisspiasian</Name>
+  <Description>
+    [H4]Thisspiasian[h4]
+    Please see page 18 of the Unlimited Power Sourcebook for details.
+  </Description>
+  <Source Page="18">Unlimited Power</Source>
+  <StartingChars>
+    <Brawn>2</Brawn>
+    <Agility>3</Agility>
+    <Intellect>2</Intellect>
+    <Cunning>2</Cunning>
+    <Willpower>2</Willpower>
+    <Presence>1</Presence>
+  </StartingChars>
+  <StartingAttrs>
+    <WoundThreshold>10</WoundThreshold>
+    <StrainThreshold>8</StrainThreshold>
+    <Experience>100</Experience>
+  </StartingAttrs>
+  <SkillModifiers>
+    <SkillModifier>
+      <Key>DISC</Key>
+      <RankStart>1</RankStart>
+      <RankLimit>2</RankLimit>
+    </SkillModifier>
+  </SkillModifiers>
+  <TalentModifiers>
+  </TalentModifiers>
+  <OptionChoices>
+    <OptionChoice>
+      <Key>THISSPIASIANAB1</Key>
+      <Name>Healing</Name>
+      <Options>
+        <Option>
+          <Key>THISSPIASIANAB1OP1</Key>
+          <Name>Rest</Name>
+          <Description>Thisspiasians only need two hours sleep to heal all strain.</Description>
+        </Option>
+      </Options>
+    </OptionChoice>
+    <OptionChoice>
+      <Key>THISSPIASIANAB2</Key>
+      <Name>Healing</Name>
+      <Options>
+        <Option>
+          <Key>THISSPIASIANAB2OP1</Key>
+          <Name>Meditation</Name>
+          <Description>Once per session, Thisspiasians may spend ten minutes meditating to heal strain equal to twice their ranks in Discipline.</Description>
+        </Option>
+      </Options>
+    </OptionChoice>
+  </OptionChoices>
+</Species>

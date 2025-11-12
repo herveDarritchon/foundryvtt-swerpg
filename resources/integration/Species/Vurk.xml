@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Species>
+  <Key>VURK</Key>
+  <Name>Vurk</Name>
+  <Description>
+    [H4]Vurk[h4]
+    Please see page 22 of the Unlimited Power Sourcebook for details.
+  </Description>
+  <Source Page="22">Unlimited Power</Source>
+  <StartingChars>
+    <Brawn>2</Brawn>
+    <Agility>2</Agility>
+    <Intellect>2</Intellect>
+    <Cunning>1</Cunning>
+    <Willpower>2</Willpower>
+    <Presence>3</Presence>
+  </StartingChars>
+  <StartingAttrs>
+    <WoundThreshold>11</WoundThreshold>
+    <StrainThreshold>11</StrainThreshold>
+    <Experience>100</Experience>
+  </StartingAttrs>
+  <SkillModifiers>
+    <SkillModifier>
+      <Key>NEG</Key>
+      <RankStart>1</RankStart>
+      <RankLimit>2</RankLimit>
+    </SkillModifier>
+  </SkillModifiers>
+  <TalentModifiers>
+  </TalentModifiers>
+  <OptionChoices>
+    <OptionChoice>
+      <Key>VURKAB1</Key>
+      <Name>Environmental</Name>
+      <Options>
+        <Option>
+          <Key>VURKAB1OP1</Key>
+          <Name>Amphibious</Name>
+          <Description>Vurk can breathe and move underwater without penalty.</Description>
+        </Option>
+      </Options>
+    </OptionChoice>
+    <OptionChoice>
+      <Key>VURKAB2</Key>
+      <Name>Environmental</Name>
+      <Options>
+        <Option>
+          <Key>VURKAB2OP1</Key>
+          <Name>Cold Blooded</Name>
+          <Description>Vurk take an additional [SE] in cold environments.</Description>
+        </Option>
+      </Options>
+    </OptionChoice>
+  </OptionChoices>
+</Species>
