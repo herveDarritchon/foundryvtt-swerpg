@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<Vehicle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Key>AA5M</Key>
+  <Name>A-A5m Emergency Response Vehicle</Name>
+  <Description>[H3]A-A5m Emergency Response Vehicle[h3]
+Please see page 58 of the Disciples of Harmony Sourcebook for details.
+ </Description>
+  <Source Page="58">Disciples of Harmony</Source>
+  <Type>Speeder Truck</Type>
+  <Categories>
+    <Category>Land Vehicle</Category>
+  </Categories>
+  <HP>4</HP>
+  <Price>10000</Price>
+  <Rarity>5</Rarity>
+  <SensorRangeValue>srLong</SensorRangeValue>
+  <Crew>One pilot, one medic/medical droid, one liaison officer</Crew>
+  <EncumbranceCapacity>100</EncumbranceCapacity>
+  <Passengers>6</Passengers>
+  <Silhouette>3</Silhouette>
+  <Speed>3</Speed>
+  <Handling>-1</Handling>
+  <HullTrauma>10</HullTrauma>
+  <SystemStrain>8</SystemStrain>
+  <SinglePilot>true</SinglePilot>
+  <SensorRange>Long</SensorRange>
+</Vehicle>

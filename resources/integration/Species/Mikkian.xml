@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Species>
+  <Key>MIKKIAN</Key>
+  <Name>Mikkian</Name>
+  <Description>
+    [H4]Mikkian[h4]
+    Please see page 20 of the Knights of Fate Sourcebook for details.
+  </Description>
+  <Source Page="20">Knights of Fate</Source>
+  <StartingChars>
+    <Brawn>1</Brawn>
+    <Agility>2</Agility>
+    <Intellect>2</Intellect>
+    <Cunning>2</Cunning>
+    <Willpower>3</Willpower>
+    <Presence>2</Presence>
+  </StartingChars>
+  <StartingAttrs>
+    <WoundThreshold>10</WoundThreshold>
+    <StrainThreshold>11</StrainThreshold>
+    <Experience>100</Experience>
+  </StartingAttrs>
+  <SkillModifiers>
+    <SkillModifier>
+      <Key>DISC</Key>
+      <RankStart>1</RankStart>
+      <RankLimit>2</RankLimit>
+    </SkillModifier>
+  </SkillModifiers>
+  <TalentModifiers>
+  </TalentModifiers>
+  <OptionChoices>
+    <OptionChoice>
+      <Key>MIKKIANAB1</Key>
+      <Name>Senses</Name>
+      <Options>
+        <Option>
+          <Key>MIKKIANAB1OP1</Key>
+          <Name>Sensory Tendrils</Name>
+          <Description>Mikkians add [BO] to all Perception checks.</Description>
+          <DieModifiers>
+            <DieModifier>
+              <SkillKey>PERC</SkillKey>
+              <BoostCount>1</BoostCount>
+            </DieModifier>
+          </DieModifiers>
+        </Option>
+      </Options>
+    </OptionChoice>
+  </OptionChoices>
+</Species>

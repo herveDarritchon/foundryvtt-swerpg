@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<Vehicle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Key>RX200IONTANK</Key>
+  <Name>RX-200 "Falchion" Ion Tank</Name>
+  <Description>[H3]RX-200 "Falchion" Ion Tank[h3]
+Please see page 53 of the Knights of Fate Sourcebook for details.</Description>
+  <Source Page="53">Knights of Fate</Source>
+  <Type>Repulsor Tank</Type>
+  <Categories>
+    <Category>Land Vehicle</Category>
+  </Categories>
+  <HP>2</HP>
+  <Price>75000</Price>
+  <Rarity>6</Rarity>
+  <Restricted>true</Restricted>
+  <MaxAltitude>25 meters</MaxAltitude>
+  <SensorRangeValue>srLong</SensorRangeValue>
+  <Crew>One pilot, one gunner, one vehicle commander</Crew>
+  <EncumbranceCapacity>25</EncumbranceCapacity>
+  <Passengers>2</Passengers>
+  <Silhouette>3</Silhouette>
+  <Speed>3</Speed>
+  <DefFore>2</DefFore>
+  <DefAft>1</DefAft>
+  <Armor>2</Armor>
+  <HullTrauma>30</HullTrauma>
+  <SystemStrain>25</SystemStrain>
+  <VehicleWeapons>
+    <VehicleWeapon>
+      <FiringArcs>
+        <Fore>true</Fore>
+        <Aft>true</Aft>
+        <Port>true</Port>
+        <Starboard>true</Starboard>
+      </FiringArcs>
+      <Turret>true</Turret>
+      <Key>IONHVY</Key>
+    </VehicleWeapon>
+    <VehicleWeapon>
+      <FiringArcs>
+        <Port>true</Port>
+      </FiringArcs>
+      <Turret>true</Turret>
+      <Location>Port</Location>
+      <Key>AUTOBLAST</Key>
+    </VehicleWeapon>
+    <VehicleWeapon>
+      <FiringArcs>
+        <Starboard>true</Starboard>
+      </FiringArcs>
+      <Turret>true</Turret>
+      <Location>Starboard</Location>
+      <Key>AUTOBLAST</Key>
+    </VehicleWeapon>
+  </VehicleWeapons>
+  <SensorRange>Long</SensorRange>
+</Vehicle>

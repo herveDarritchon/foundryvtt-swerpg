@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<Vehicle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Key>AA8BACK</Key>
+  <Name>A-A8 BackCountry Speeder Truck</Name>
+  <Description>[H3]A-A8 BackCountry Speeder Truck[h3]
+Please see page 54 of the Savage Spirits Sourcebook for details.
+    </Description>
+  <Source Page="54">Savage Spirits</Source>
+  <Type>Speeder Truck</Type>
+  <Categories>
+    <Category>Land Vehicle</Category>
+  </Categories>
+  <HP>6</HP>
+  <Price>8500</Price>
+  <Rarity>4</Rarity>
+  <MaxAltitude>5 meters</MaxAltitude>
+  <Crew>Onen Pilot</Crew>
+  <EncumbranceCapacity>40</EncumbranceCapacity>
+  <Passengers>5</Passengers>
+  <Silhouette>3</Silhouette>
+  <Speed>1</Speed>
+  <Handling>-1</Handling>
+  <HullTrauma>12</HullTrauma>
+  <SystemStrain>8</SystemStrain>
+  <SinglePilot>true</SinglePilot>
+  <SensorRange>Close</SensorRange>
+</Vehicle>

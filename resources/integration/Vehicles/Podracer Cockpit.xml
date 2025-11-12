@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<Vehicle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Key>PODCOCK</Key>
+  <Name>Podracer Cockpit</Name>
+  <Description>[H3]Podracer Cockpit[h3]
+Please see page 60 of the Endless Vigil Sourcebook for details.</Description>
+  <Source Page="61">Endless Vigil</Source>
+  <Type>Podracer</Type>
+  <Categories>
+    <Category>Land Vehicle</Category>
+  </Categories>
+  <HP>8</HP>
+  <Price>2000</Price>
+  <Rarity>6</Rarity>
+  <MaxAltitude>40 meters</MaxAltitude>
+  <Crew>One pilot</Crew>
+  <EncumbranceCapacity>2</EncumbranceCapacity>
+  <Silhouette>3</Silhouette>
+  <HullTrauma>4</HullTrauma>
+  <SystemStrain>4</SystemStrain>
+  <SinglePilot>true</SinglePilot>
+  <SensorRange>Close</SensorRange>
+</Vehicle>

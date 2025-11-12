@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<Vehicle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Key>HAVRA9</Key>
+  <Name>HAVr A9 Floating Fortress</Name>
+  <Description>[H3]HAVr A9 Floating Fortress[h3]
+Please see page 59 of the Forged in Battle Sourcebook for details.</Description>
+  <Source Page="59">Forged in Battle</Source>
+  <Type>Armored Transport</Type>
+  <Categories>
+    <Category>Land Vehicle</Category>
+  </Categories>
+  <HP>1</HP>
+  <Price>130000</Price>
+  <Rarity>5</Rarity>
+  <Restricted>true</Restricted>
+  <MaxAltitude>20 meters</MaxAltitude>
+  <SensorRangeValue>srMedium</SensorRangeValue>
+  <Crew>One pilot, two gunners, one sensor operator</Crew>
+  <EncumbranceCapacity>40</EncumbranceCapacity>
+  <Passengers>10</Passengers>
+  <Silhouette>3</Silhouette>
+  <Speed>1</Speed>
+  <Handling>-1</Handling>
+  <DefFore>2</DefFore>
+  <Armor>4</Armor>
+  <HullTrauma>22</HullTrauma>
+  <SystemStrain>20</SystemStrain>
+  <VehicleWeapons>
+    <VehicleWeapon>
+      <FiringArcs>
+        <Fore>true</Fore>
+        <Aft>true</Aft>
+        <Port>true</Port>
+        <Starboard>true</Starboard>
+      </FiringArcs>
+      <Turret>true</Turret>
+      <Qualities>
+        <Quality>
+          <Key>LINKED</Key>
+          <Count>1</Count>
+        </Quality>
+      </Qualities>
+      <Key>LASERMED</Key>
+    </VehicleWeapon>
+  </VehicleWeapons>
+</Vehicle>

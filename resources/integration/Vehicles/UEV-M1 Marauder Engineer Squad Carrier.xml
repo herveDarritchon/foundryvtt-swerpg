@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<Vehicle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Key>UEVM1MAR</Key>
+  <Name>UEV-M1 Marauder Engineer Squad Carrier</Name>
+  <Description>[H3]UEV-M1 Marauder Engineer Squad Carrier[h3]
+Please see page 55 of the Fully Operational Sourcebook for details.</Description>
+  <Source Page="55">Fully Operational</Source>
+  <Type>Armored Personnel Carrier</Type>
+  <Categories>
+    <Category>Land Vehicle</Category>
+  </Categories>
+  <HP>2</HP>
+  <Price>98000</Price>
+  <Rarity>8</Rarity>
+  <Restricted>true</Restricted>
+  <MaxAltitude>3 meters</MaxAltitude>
+  <SensorRangeValue>srNone</SensorRangeValue>
+  <Crew>One pilot, one co-pilot</Crew>
+  <EncumbranceCapacity>60</EncumbranceCapacity>
+  <Passengers>12</Passengers>
+  <Silhouette>3</Silhouette>
+  <Speed>2</Speed>
+  <DefFore>2</DefFore>
+  <Armor>5</Armor>
+  <HullTrauma>15</HullTrauma>
+  <SystemStrain>8</SystemStrain>
+  <VehicleWeapons>
+    <VehicleWeapon>
+      <FiringArcs>
+        <Fore>true</Fore>
+      </FiringArcs>
+      <Location>Forward</Location>
+      <Key>AUTOBLAST</Key>
+    </VehicleWeapon>
+    <VehicleWeapon>
+      <FiringArcs>
+        <Fore>true</Fore>
+        <Aft>true</Aft>
+        <Port>true</Port>
+        <Starboard>true</Starboard>
+      </FiringArcs>
+      <Location>Dorsal</Location>
+      <Key>BLASTHVYREP</Key>
+    </VehicleWeapon>
+    <VehicleWeapon>
+      <FiringArcs>
+        <Fore>true</Fore>
+        <Aft>true</Aft>
+        <Port>true</Port>
+        <Starboard>true</Starboard>
+      </FiringArcs>
+      <Turret>true</Turret>
+      <Location>Dorsal</Location>
+      <Key>CONGRENLAUNCH</Key>
+    </VehicleWeapon>
+  </VehicleWeapons>
+  <SensorRange>No Sensors</SensorRange>
+</Vehicle>

@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Species>
+  <Key>MELITTO</Key>
+  <Name>Melitto</Name>
+  <Description>
+    [H4]Melitto[h4]
+    Please see page 21 of the Cyphers and Masks Sourcebook for details.
+  </Description>
+  <Sources>
+    <Source Page="21">Cyphers and Masks</Source>
+  </Sources>
+  <StartingChars>
+    <Brawn>3</Brawn>
+    <Agility>2</Agility>
+    <Intellect>2</Intellect>
+    <Cunning>2</Cunning>
+    <Willpower>1</Willpower>
+    <Presence>2</Presence>
+  </StartingChars>
+  <StartingAttrs>
+    <WoundThreshold>9</WoundThreshold>
+    <StrainThreshold>11</StrainThreshold>
+    <Experience>100</Experience>
+  </StartingAttrs>
+  <SkillModifiers>
+    <SkillModifier>
+      <Key>PERC</Key>
+      <RankStart>1</RankStart>
+      <RankLimit>2</RankLimit>
+    </SkillModifier>
+  </SkillModifiers>
+  <OptionChoices>
+    <OptionChoice>
+      <Key>MELITTOOC1</Key>
+      <Name>Vision</Name>
+      <Options>
+        <Option>
+          <Key>MELITTOOC1OP1</Key>
+          <Name>Sightless Vision</Name>
+          <Description>Melittos can perceive their surroundings without needing light and never suffer penalties on combat or Perception checks due to darkness or other factors that affect vision.</Description>
+        </Option>
+      </Options>
+    </OptionChoice>
+    <OptionChoice>
+      <Key>MELITTOOC2</Key>
+      <Name>Physiology</Name>
+      <Options>
+        <Option>
+          <Key>MELITTOOC2OP1</Key>
+          <Name>Reliant on Toxins</Name>
+          <Description>Melittos require toxins of their native atmosphere to live.  Offworld, they gain a free respirator that emulates this environment.  They treat standard air as corrosive with a rating of 6.</Description>
+        </Option>
+      </Options>
+    </OptionChoice>
+  </OptionChoices>
+</Species>

@@ -1,0 +1,145 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CraftDroidTraits>
+  
+    <!-- Positive Traits -->
+  
+  <CraftDroidTrait>
+    <Key>POS1</Key>
+    <Name>Loyal</Name>
+    <Description>
+    Please see page 83 of the Special Modifications Sourcebook for details</Description>
+    <Source Page="83">Special Modifications</Source>
+  </CraftDroidTrait>
+  <CraftDroidTrait>
+    <Key>POS2</Key>
+    <Name>Resourceful</Name>
+    <Description>
+Please see page 83 of the Special Modifications Sourcebook for details</Description>
+    <Source Page="83">Special Modifications</Source>
+  </CraftDroidTrait>
+  <CraftDroidTrait>
+    <Key>POS3</Key>
+    <Name>Patient</Name>
+    <Description>
+Please see page 83 of the Special Modifications Sourcebook for details</Description>
+    <Source Page="83">Special Modifications</Source>
+  </CraftDroidTrait>
+  <CraftDroidTrait>
+    <Key>POS4</Key>
+    <Name>Enthusiastic</Name>
+    <Description>
+Please see page 83 of the Special Modifications Sourcebook for details</Description>
+    <Source Page="83">Special Modifications</Source>
+  </CraftDroidTrait>
+  <CraftDroidTrait>
+    <Key>POS5</Key>
+    <Name>Compassionate</Name>
+    <Description>
+Please see page 83 of the Special Modifications Sourcebook for details</Description>
+    <Source Page="83">Special Modifications</Source>
+  </CraftDroidTrait>
+  <CraftDroidTrait>
+    <Key>POS6</Key>
+    <Name>Efficient</Name>
+    <Description>
+Please see page 83 of the Special Modifications Sourcebook for details</Description>
+    <Source Page="83">Special Modifications</Source>
+  </CraftDroidTrait>
+  <CraftDroidTrait>
+    <Key>POS7</Key>
+    <Name>Well-Mannered</Name>
+    <Description>
+Please see page 83 of the Special Modifications Sourcebook for details</Description>
+    <Source Page="83">Special Modifications</Source>
+  </CraftDroidTrait>
+  <CraftDroidTrait>
+    <Key>POS8</Key>
+    <Name>Cheerful</Name>
+    <Description>
+Please see page 83 of the Special Modifications Sourcebook for details</Description>
+    <Source Page="83">Special Modifications</Source>
+  </CraftDroidTrait>
+  <CraftDroidTrait>
+    <Key>POS9</Key>
+    <Name>Reliable</Name>
+    <Description>
+Please see page 83 of the Special Modifications Sourcebook for details</Description>
+    <Source Page="83">Special Modifications</Source>
+  </CraftDroidTrait>
+
+<!-- Negative Traits -->
+
+  <CraftDroidTrait>
+    <Key>NEG1</Key>
+    <Name>Cowardly</Name>
+    <Description>
+Please see page 83 of the Special Modifications Sourcebook for details</Description>
+    <Source Page="83">Special Modifications</Source>
+    <IsNegative>true</IsNegative>
+  </CraftDroidTrait>
+  <CraftDroidTrait>
+    <Key>NEG2</Key>
+    <Name>Overly Literal</Name>
+    <Description>
+Please see page 83 of the Special Modifications Sourcebook for details</Description>
+    <Source Page="83">Special Modifications</Source>
+    <IsNegative>true</IsNegative>
+  </CraftDroidTrait>
+  <CraftDroidTrait>
+    <Key>NEG3</Key>
+    <Name>Arrogant</Name>
+    <Description>
+Please see page 83 of the Special Modifications Sourcebook for details</Description>
+    <Source Page="83">Special Modifications</Source>
+    <IsNegative>true</IsNegative>
+  </CraftDroidTrait>
+  <CraftDroidTrait>
+    <Key>NEG4</Key>
+    <Name>Impulsive</Name>
+    <Description>
+Please see page 83 of the Special Modifications Sourcebook for details</Description>
+    <Source Page="83">Special Modifications</Source>
+    <IsNegative>true</IsNegative>
+  </CraftDroidTrait>
+  <CraftDroidTrait>
+    <Key>NEG5</Key>
+    <Name>Ruthless</Name>
+    <Description>
+Please see page 83 of the Special Modifications Sourcebook for details</Description>
+    <Source Page="83">Special Modifications</Source>
+    <IsNegative>true</IsNegative>
+  </CraftDroidTrait>
+  <CraftDroidTrait>
+    <Key>NEG6</Key>
+    <Name>Lazy</Name>
+    <Description>
+Please see page 83 of the Special Modifications Sourcebook for details</Description>
+    <Source Page="83">Special Modifications</Source>
+    <IsNegative>true</IsNegative>
+  </CraftDroidTrait>
+  <CraftDroidTrait>
+    <Key>NEG7</Key>
+    <Name>Abrasive</Name>
+    <Description>
+Please see page 83 of the Special Modifications Sourcebook for details</Description>
+    <Source Page="83">Special Modifications</Source>
+    <IsNegative>true</IsNegative>
+  </CraftDroidTrait>
+  <CraftDroidTrait>
+    <Key>NEG8</Key>
+    <Name>Pessimistic</Name>
+    <Description>
+Please see page 83 of the Special Modifications Sourcebook for details</Description>
+    <Source Page="83">Special Modifications</Source>
+    <IsNegative>true</IsNegative>
+  </CraftDroidTrait>
+  <CraftDroidTrait>
+    <Key>NEG9</Key>
+    <Name>Unhinged</Name>
+    <Description>
+Please see page 83 of the Special Modifications Sourcebook for details</Description>
+    <Source Page="83">Special Modifications</Source>
+    <IsNegative>true</IsNegative>
+  </CraftDroidTrait>
+
+</CraftDroidTraits>

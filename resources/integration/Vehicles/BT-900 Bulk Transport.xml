@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+<Vehicle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Key>BT900</Key>
+  <Name>BT-900 Bulk Transport</Name>
+  <Description>[H3]Corellian Engineering BT-900 Bulk Transport[h3]
+Please see page 16 of the Friends Like These Adventure Module for details.</Description>
+  <Source Page="16">Friends Like These</Source>
+  <Type>Bulk Transport</Type>
+  <Categories>
+    <Category>Bulk Transport</Category>
+    <Category>Capital Ship</Category>
+    <Category>Starship</Category>
+    <Category>Non-Fighter Starship</Category>
+  </Categories>
+  <HP>5</HP>
+  <Price>9900000</Price>
+  <Rarity>4</Rarity>
+  <HyperdrivePrimary>1</HyperdrivePrimary>
+  <HyperdriveBackup>15</HyperdriveBackup>
+  <StarFighters>Four shuttles of silhouette 4</StarFighters>
+  <NaviComputer>true</NaviComputer>
+  <SensorRangeValue>srLong</SensorRangeValue>
+  <Crew>129</Crew>
+  <EncumbranceCapacity>70000</EncumbranceCapacity>
+  <Passengers>65</Passengers>
+  <Consumables>Two years</Consumables>
+  <Silhouette>6</Silhouette>
+  <Speed>2</Speed>
+  <Handling>-2</Handling>
+  <DefFore>2</DefFore>
+  <DefAft>2</DefAft>
+  <DefPort>2</DefPort>
+  <DefStarboard>2</DefStarboard>
+  <Armor>7</Armor>
+  <HullTrauma>70</HullTrauma>
+  <SystemStrain>50</SystemStrain>
+  <Starship>true</Starship>
+  <VehicleWeapons>
+    <VehicleWeapon>
+      <FiringArcs>
+        <Fore>true</Fore>
+        <Port>true</Port>
+        <Starboard>true</Starboard>
+        <Dorsal>true</Dorsal>
+      </FiringArcs>
+      <Location>Dorsal</Location>
+      <Key>TURBOMED</Key>
+      <Count>8</Count>
+    </VehicleWeapon>
+    <VehicleWeapon>
+      <FiringArcs>
+        <Fore>true</Fore>
+        <Port>true</Port>
+      </FiringArcs>
+      <Location>Port</Location>
+      <Key>TURBOMED</Key>
+      <Count>6</Count>
+    </VehicleWeapon>
+    <VehicleWeapon>
+      <FiringArcs>
+        <Fore>true</Fore>
+        <Starboard>true</Starboard>
+      </FiringArcs>
+      <Location>Starboard</Location>
+      <Key>TURBOMED</Key>
+      <Count>6</Count>
+    </VehicleWeapon>
+    <VehicleWeapon>
+      <FiringArcs>
+        <Fore>true</Fore>
+      </FiringArcs>
+      <Location>Forward</Location>
+      <Key>IONHVY</Key>
+      <Count>5</Count>
+    </VehicleWeapon>
+    <VehicleWeapon>
+      <FiringArcs>
+        <Fore>true</Fore>
+        <Aft>true</Aft>
+        <Port>true</Port>
+      </FiringArcs>
+      <Location>Port</Location>
+      <Key>LASERQUAD</Key>
+      <Count>10</Count>
+    </VehicleWeapon>
+    <VehicleWeapon>
+      <FiringArcs>
+        <Fore>true</Fore>
+        <Aft>true</Aft>
+        <Starboard>true</Starboard>
+      </FiringArcs>
+      <Location>Starboard</Location>
+      <Key>LASERQUAD</Key>
+      <Count>10</Count>
+    </VehicleWeapon>
+  </VehicleWeapons>
+  <SensorRange>Long</SensorRange>
+</Vehicle>

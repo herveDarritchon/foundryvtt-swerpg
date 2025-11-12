@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<Vehicle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Key>HTYPEYACHT</Key>
+  <Name>H-Type Nubian Yacht</Name>
+  <Description>[H3]H-Type Nubian Yacht[h3]
+Please see page 60 of the Unlimited Power Sourcebook for details.</Description>
+  <Source Page="60">Unlimited Power</Source>
+  <Type>Yacht</Type>
+  <Categories>
+    <Category>Non-Fighter Starship</Category>
+    <Category>Starship</Category>
+  </Categories>
+  <Price>800000</Price>
+  <Rarity>7</Rarity>
+  <HyperdrivePrimary>1</HyperdrivePrimary>
+  <HyperdriveBackup>7</HyperdriveBackup>
+  <NaviComputer>true</NaviComputer>
+  <SensorRangeValue>srShort</SensorRangeValue>
+  <Crew>One pilot, one copilot</Crew>
+  <EncumbranceCapacity>75</EncumbranceCapacity>
+  <Passengers>8</Passengers>
+  <Consumables>Two months</Consumables>
+  <Silhouette>4</Silhouette>
+  <Speed>5</Speed>
+  <Handling>1</Handling>
+  <DefFore>2</DefFore>
+  <DefAft>2</DefAft>
+  <Armor>3</Armor>
+  <HullTrauma>30</HullTrauma>
+  <SystemStrain>20</SystemStrain>
+  <Starship>true</Starship>
+  <SensorRange>Short</SensorRange>
+</Vehicle>

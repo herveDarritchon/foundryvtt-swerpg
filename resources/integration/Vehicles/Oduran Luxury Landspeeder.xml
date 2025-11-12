@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<Vehicle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Key>ODURANLAND</Key>
+  <Name>Oduran Luxury Landspeeder</Name>
+  <Description>[H3]Oduran Luxury Landspeeder[h3]
+Please see page 59 of the Disciples of Harmony Sourcebook for details.
+</Description>
+  <Source Page="59">Disciples of Harmony</Source>
+  <Type>Landspeeder</Type>
+  <Categories>
+    <Category>Land Vehicle</Category>
+  </Categories>
+  <Price>25000</Price>
+  <Rarity>4</Rarity>
+  <Crew>One pilot</Crew>
+  <EncumbranceCapacity>25</EncumbranceCapacity>
+  <Passengers>5</Passengers>
+  <Silhouette>2</Silhouette>
+  <Speed>2</Speed>
+  <HullTrauma>4</HullTrauma>
+  <SystemStrain>6</SystemStrain>
+  <SinglePilot>true</SinglePilot>
+  <SensorRange>Close</SensorRange>
+</Vehicle>

@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<Vehicle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Key>Z6JETPACK</Key>
+  <Name>Z-6 Jetpack</Name>
+  <Description>
+    [H3]Z-6 Jetpack[h3]
+    Please see page 59 of the Collapse of the Republic Sourcebook for details.
+    [P][I]Note:  This is the vehicle profile of the Z-6 Jetpack gear item.[i]
+  </Description>
+  <Source Page="181">Edge of the Empire Core Rulebook</Source>
+  <Type>Jet Pack</Type>
+  <Categories>
+    <Category>Air Vehicle</Category>
+  </Categories>
+  <Encumbrance>0</Encumbrance>
+  <HP>0</HP>
+  <Price>4500</Price>
+  <Rarity>7</Rarity>
+  <Restricted>false</Restricted>
+  <BaseMods />
+  <WeaponModifiers />
+  <MaxAltitude>70 meters</MaxAltitude>
+  <NaviComputer>false</NaviComputer>
+  <SensorRangeValue>srNone</SensorRangeValue>
+  <Crew>One pilot</Crew>
+  <Silhouette>1</Silhouette>
+  <Speed>2</Speed>
+  <Handling>0</Handling>
+  <DefFore>0</DefFore>
+  <DefAft>0</DefAft>
+  <DefPort>0</DefPort>
+  <DefStarboard>0</DefStarboard>
+  <Armor>0</Armor>
+  <HullTrauma>0</HullTrauma>
+  <SystemStrain>3</SystemStrain>
+  <Starship>false</Starship>
+  <Massive>0</Massive>
+  <SinglePilot>true</SinglePilot>
+  <WeaponModifiers>
+    <WeaponModifier>
+      <UnarmedName>Integrated Missile Launcher</UnarmedName>
+      <SkillKey>RANGHVY</SkillKey>
+      <Damage>15</Damage>
+      <Crit>3</Crit>
+      <Scale>wsPersonal</Scale>
+      <Qualities>
+        <Quality>
+          <Key>BLAST</Key>
+          <Count>10</Count>
+        </Quality>
+        <Quality>
+          <Key>BREACH</Key>
+          <Count>1</Count>
+        </Quality>
+        <Quality>
+          <Key>INACCURATE</Key>
+          <Count>1</Count>
+        </Quality>
+        <Quality>
+          <Key>LIMITEDAMMO</Key>
+          <Count>1</Count>
+        </Quality>
+        <Quality>
+          <Key>PREPARE</Key>
+          <Count>1</Count>
+        </Quality>
+      </Qualities>
+      <VehicleWeaponProperties>
+        <Location>Forward</Location>
+        <FiringArcs>
+          <Fore>true</Fore>
+        </FiringArcs>
+      </VehicleWeaponProperties>
+      <VehicleWeaponCount>1</VehicleWeaponCount>
+      <RangeValue>wrLong</RangeValue>
+    </WeaponModifier>
+  </WeaponModifiers>
+</Vehicle>

@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<Vehicle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Key>ATAP</Key>
+  <Name>All Terrain Attack Pod</Name>
+  <Description>[H4]All Terrain Attack Pod[h3]
+Please see page 55 of the Knights of Fate Sourcebook for details.</Description>
+  <Source Page="55">Knights of Fate</Source>
+  <Type>Walker</Type>
+  <Categories>
+    <Category>Land Vehicle</Category>
+    <Category>Walker</Category>
+  </Categories>
+  <HP>2</HP>
+  <Price>100000</Price>
+  <Rarity>6</Rarity>
+  <Restricted>true</Restricted>
+  <WeaponModifiers>
+    <WeaponModifier>
+      <UnarmedName>Heavy Mass Driver</UnarmedName>
+      <SkillKey>GUNN</SkillKey>
+      <Damage>8</Damage>
+      <Crit>3</Crit>
+      <Scale>wsPlanetary</Scale>
+      <Qualities>
+        <Quality>
+          <Key>BREACH</Key>
+          <Count>4</Count>
+        </Quality>
+        <Quality>
+          <Key>SLOWFIRING</Key>
+          <Count>1</Count>
+        </Quality>
+      </Qualities>
+      <VehicleWeaponProperties>
+        <Location>Forward</Location>
+        <FiringArcs>
+          <Fore>true</Fore>
+        </FiringArcs>
+      </VehicleWeaponProperties>
+      <VehicleWeaponCount>1</VehicleWeaponCount>
+      <RangeValue>wrExtreme</RangeValue>
+      <Range>Extreme</Range>
+    </WeaponModifier>
+  </WeaponModifiers>
+  <SensorRangeValue>srMedium</SensorRangeValue>
+  <Crew>One pilot, two gunners</Crew>
+  <EncumbranceCapacity>12</EncumbranceCapacity>
+  <Silhouette>3</Silhouette>
+  <Speed>2</Speed>
+  <Armor>2</Armor>
+  <HullTrauma>15</HullTrauma>
+  <SystemStrain>10</SystemStrain>
+  <VehicleWeapons>
+    <VehicleWeapon>
+      <FiringArcs>
+        <Fore>true</Fore>
+        <Aft>true</Aft>
+        <Port>true</Port>
+        <Starboard>true</Starboard>
+        <Dorsal>true</Dorsal>
+      </FiringArcs>
+      <Turret>true</Turret>
+      <Location>Dorsal</Location>
+      <Key>LASERMED</Key>
+    </VehicleWeapon>
+    <VehicleWeapon>
+      <FiringArcs>
+        <Fore>true</Fore>
+      </FiringArcs>
+      <Turret>true</Turret>
+      <Location>Ventral</Location>
+      <Key>BLASTHVYREP</Key>
+    </VehicleWeapon>
+  </VehicleWeapons>
+  <SensorRange>Medium</SensorRange>
+</Vehicle>

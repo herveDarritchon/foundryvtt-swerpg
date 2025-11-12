@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<Vehicle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Key>ASCENDFLY</Key>
+  <Name>Ascendant Personal Stealth Flyer</Name>
+  <Description>[H3]Ascendant Personal Stealth Flyer[h3]
+Please see page 57 of the Disciples of Harmony Sourcebook for details.
+  </Description>
+  <Source Page="57">Disciples of Harmony</Source>
+  <Type>Airspeeder</Type>
+  <Categories>
+    <Category>Air Vehicle</Category>
+  </Categories>
+  <HP>2</HP>
+  <Price>35000</Price>
+  <Rarity>9</Rarity>
+  <BaseMods>
+    <Mod>
+      <Count>1</Count>
+      <MiscDesc>[B]Stealth Systems[b]: Vessel will not register on passive scanners at short range or farther.  Increase difficulty of any checks made to detect vessel by two.</MiscDesc>
+    </Mod>
+  </BaseMods>
+  <MaxAltitude>6000 meters</MaxAltitude>
+  <SensorRangeValue>srLong</SensorRangeValue>
+  <Crew>One pilot, one observer</Crew>
+  <EncumbranceCapacity>20</EncumbranceCapacity>
+  <Silhouette>2</Silhouette>
+  <Speed>3</Speed>
+  <HullTrauma>5</HullTrauma>
+  <SystemStrain>5</SystemStrain>
+  <SinglePilot>true</SinglePilot>
+  <SensorRange>Long</SensorRange>
+</Vehicle>

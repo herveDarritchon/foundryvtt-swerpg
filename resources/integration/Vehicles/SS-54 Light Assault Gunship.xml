@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<Vehicle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Key>SS54GUN</Key>
+  <Name>SS-54 Light Assault Gunship</Name>
+  <Description>[H3]SS-54 Light Assault Gunship[h3]
+Please see page 58 of the Knights of Fate Sourcebook for details.</Description>
+  <Source Page="58">Knights of Fate</Source>
+  <Type>Gunship</Type>
+  <Categories>
+    <Category>Starship</Category>
+    <Category>Non-Fighter Starship</Category>
+  </Categories>
+  <HP>2</HP>
+  <Price>110000</Price>
+  <Rarity>6</Rarity>
+  <HyperdrivePrimary>2</HyperdrivePrimary>
+  <HyperdriveBackup>12</HyperdriveBackup>
+  <NaviComputer>true</NaviComputer>
+  <SensorRangeValue>srShort</SensorRangeValue>
+  <Crew>One pilot, one co-pilot</Crew>
+  <EncumbranceCapacity>30</EncumbranceCapacity>
+  <Passengers>10</Passengers>
+  <Consumables>Two weeks</Consumables>
+  <Silhouette>3</Silhouette>
+  <Speed>3</Speed>
+  <Handling>1</Handling>
+  <DefFore>1</DefFore>
+  <Armor>2</Armor>
+  <HullTrauma>18</HullTrauma>
+  <SystemStrain>14</SystemStrain>
+  <Starship>true</Starship>
+  <VehicleWeapons>
+    <VehicleWeapon>
+      <FiringArcs>
+        <Fore>true</Fore>
+      </FiringArcs>
+      <Location>Forward</Location>
+      <Qualities>
+        <Quality>
+          <Key>LINKED</Key>
+          <Count>3</Count>
+        </Quality>
+      </Qualities>
+      <Key>LASERMED</Key>
+    </VehicleWeapon>
+    <VehicleWeapon>
+      <FiringArcs>
+        <Aft>true</Aft>
+        <Dorsal>true</Dorsal>
+      </FiringArcs>
+      <Turret>true</Turret>
+      <Location>Dorsal</Location>
+      <Qualities>
+        <Quality>
+          <Key>LINKED</Key>
+          <Count>1</Count>
+        </Quality>
+      </Qualities>
+      <Key>LASERLT</Key>
+    </VehicleWeapon>
+  </VehicleWeapons>
+  <SensorRange>Short</SensorRange>
+</Vehicle>

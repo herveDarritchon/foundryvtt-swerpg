@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Species>
+  <Key>PHYDOLON</Key>
+  <Name>Phydolon</Name>
+  <Description>
+    [H4]Phydolon[h4]
+    Please see page 21 of the Knights of Fate Sourcebook for details.
+  </Description>
+  <Source Page="21">Knights of Fate</Source>
+  <StartingChars>
+    <Brawn>2</Brawn>
+    <Agility>2</Agility>
+    <Intellect>2</Intellect>
+    <Cunning>2</Cunning>
+    <Willpower>3</Willpower>
+    <Presence>1</Presence>
+  </StartingChars>
+  <StartingAttrs>
+    <WoundThreshold>10</WoundThreshold>
+    <StrainThreshold>10</StrainThreshold>
+    <Experience>100</Experience>
+  </StartingAttrs>
+  <SkillModifiers>
+  </SkillModifiers>
+  <TalentModifiers>
+  </TalentModifiers>
+  <OptionChoices>
+    <OptionChoice>
+      <Key>PHYDOLONAB1</Key>
+      <Name>Skills</Name>
+      <Options>
+        <Option>
+          <Key>PHYDOLONAB1OP1</Key>
+          <Name>Cool</Name>
+          <Description>Phydolons may begin the game with one rank in Cool.</Description>
+          <SkillModifiers>
+            <SkillModifier>
+              <Key>COOL</Key>
+              <RankStart>1</RankStart>
+            </SkillModifier>
+          </SkillModifiers>
+        </Option>
+        <Option>
+          <Key>PHYDOLONAB1OP2</Key>
+          <Name>Discipline</Name>
+          <Description>Phydolons may begin the game with one rank in Discipline.</Description>
+          <SkillModifiers>
+            <SkillModifier>
+              <Key>DISC</Key>
+              <RankStart>1</RankStart>
+            </SkillModifier>
+          </SkillModifiers>
+        </Option>
+      </Options>
+    </OptionChoice>    
+    <OptionChoice>
+      <Key>PHYDOLONAB2</Key>
+      <Name>Wound Recovery</Name>
+      <Options>
+        <Option>
+          <Key>PHYDOLONAB2OP1</Key>
+          <Name>Symbiotic Resilience</Name>
+          <Description>When recovering wounds naturally, Phydolons heal 1 extra wound per full night's rest. When critially injured, Phydolons may attempt to recover from one Critical Injury after a full night's rest, instead of a full week's.</Description>
+        </Option>
+      </Options>
+    </OptionChoice>
+    <OptionChoice>
+      <Key>PHYDOLONAB3</Key>
+      <Name>Strain Recovery</Name>
+      <Options>
+        <Option>
+          <Key>PHYDOLONAB3OP1</Key>
+          <Name>Symbiont Isolation</Name>
+          <Description>When recovering from strain at the end of an encounter, Phydolons recover 1 less strain if no other Phydolons are present (to a minimum of 1).</Description>
+        </Option>
+      </Options>
+    </OptionChoice>
+  </OptionChoices>
+</Species>

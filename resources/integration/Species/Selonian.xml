@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<Species xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Key>SELONIAN</Key>
+  <Name>Selonian</Name>
+  <Description>[H4]Selonian[h4]
+Please see page 91 of the Suns of Fortune Sourcebook for details.
+</Description>
+  <Source Page="91">Suns of Fortune</Source>
+  <StartingChars>
+    <Brawn>2</Brawn>
+    <Agility>3</Agility>
+    <Intellect>2</Intellect>
+    <Cunning>1</Cunning>
+    <Willpower>3</Willpower>
+    <Presence>1</Presence>
+  </StartingChars>
+  <StartingAttrs>
+    <WoundThreshold>11</WoundThreshold>
+    <StrainThreshold>10</StrainThreshold>
+    <Experience>80</Experience>
+  </StartingAttrs>
+  <SkillModifiers>
+    <SkillModifier>
+      <Key>COORD</Key>
+      <RankStart>1</RankStart>
+      <RankLimit>2</RankLimit>
+    </SkillModifier>
+  </SkillModifiers>
+  <OptionChoices>
+    <OptionChoice>
+      <Key>SELONIANCH1</Key>
+      <Name>Sight</Name>
+      <Options>
+        <Option>
+          <Key>SELONIANCH1OP1</Key>
+          <Name>Sees in Darkness</Name>
+          <Description>Selonians see in almost total darkness.  Remove all [SETBACK] added due to darkness.</Description>
+        </Option>
+      </Options>
+    </OptionChoice>
+  </OptionChoices>
+  <WeaponModifiers>
+    <WeaponModifier>
+      <UnarmedName>Tail</UnarmedName>
+      <SkillKey>BRAWL</SkillKey>
+      <DamageAdd>1</DamageAdd>
+      <Crit>5</Crit>
+      <RangeValue>wrEngaged</RangeValue>
+      <Qualities>
+        <Quality>
+          <Key>DISORIENT</Key>
+          <Count>2</Count>
+        </Quality>
+        <Quality>
+          <Key>KNOCKDOWN</Key>
+        </Quality>
+      </Qualities>
+    </WeaponModifier>
+  </WeaponModifiers>
+</Species>

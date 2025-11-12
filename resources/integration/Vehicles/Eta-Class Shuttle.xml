@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<Vehicle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Key>ETASHUTTLE</Key>
+  <Name>Eta-Class Shuttle</Name>
+  <Description>[H3]Cygnus Spaceworks [I]Eta[i]-Class Shuttle[h3]
+Please see page 61 of the Endless Vigil Sourcebook, or page 72 of the Rise of the Separatsts Sourcebook, for details.</Description>
+  <Sources>
+    <Source Page="61">Endless Vigil</Source>
+    <Source Page="72">Rise of the Separatists</Source>
+  </Sources>
+  <Type>Shuttle</Type>
+  <Categories>
+    <Category>Non-Fighter Starship</Category>
+  </Categories>
+  <HP>2</HP>
+  <Price>100000</Price>
+  <Rarity>6</Rarity>
+  <BaseMods>
+    <Mod>
+      <Count>1</Count>
+      <MiscDesc>[B]Undicurs Aboard[b]: Two Undicur Jumpspeeders are included with purchase.  [I]Eta[i]-class shuttles can carry up to four.</MiscDesc>
+    </Mod>
+  </BaseMods>
+  <HyperdrivePrimary>2</HyperdrivePrimary>
+  <HyperdriveBackup>12</HyperdriveBackup>
+  <NaviComputer>true</NaviComputer>
+  <SensorRangeValue>srShort</SensorRangeValue>
+  <Crew>One pilot, one co-pilot</Crew>
+  <EncumbranceCapacity>100</EncumbranceCapacity>
+  <Passengers>10</Passengers>
+  <Consumables>Two months</Consumables>
+  <Silhouette>4</Silhouette>
+  <Speed>3</Speed>
+  <DefFore>2</DefFore>
+  <DefAft>1</DefAft>
+  <Armor>3</Armor>
+  <HullTrauma>17</HullTrauma>
+  <SystemStrain>12</SystemStrain>
+  <Starship>true</Starship>
+  <VehicleWeapons>
+    <VehicleWeapon>
+      <FiringArcs>
+        <Fore>true</Fore>
+      </FiringArcs>
+      <Location>Forward</Location>
+      <Qualities>
+        <Quality>
+          <Key>LINKED</Key>
+          <Count>2</Count>
+        </Quality>
+      </Qualities>
+      <Key>LASERLT</Key>
+    </VehicleWeapon>
+  </VehicleWeapons>
+  <SensorRange>Short</SensorRange>
+</Vehicle>

@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<Species xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Key>DRALL</Key>
+  <Name>Drall</Name>
+  <Description>[H4]Drall[h4]
+Please see page 90 of the Suns of Fortune Sourcebook for details.
+</Description>
+  <Source Page="90">Suns of Fortune</Source>
+  <StartingChars>
+    <Brawn>1</Brawn>
+    <Agility>1</Agility>
+    <Intellect>4</Intellect>
+    <Cunning>2</Cunning>
+    <Willpower>2</Willpower>
+    <Presence>2</Presence>
+  </StartingChars>
+  <StartingAttrs>
+    <WoundThreshold>8</WoundThreshold>
+    <StrainThreshold>12</StrainThreshold>
+    <Experience>90</Experience>
+  </StartingAttrs>
+  <SkillModifiers>
+    <SkillModifier>
+      <Key>EDU</Key>
+      <RankStart>1</RankStart>
+      <RankLimit>2</RankLimit>
+    </SkillModifier>
+  </SkillModifiers>
+  <TalentModifiers />
+  <OptionChoices>
+    <OptionChoice>
+      <Key>DRALLCH1</Key>
+      <Name>Checks</Name>
+      <Description />
+      <Source />
+      <Custom>Base</Custom>
+      <Options>
+        <Option>
+          <Key>DRALLCH1OP1</Key>
+          <Name>Skilled Assistance</Name>
+          <Description>Drall add [BOOST] when providing skilled assistance.</Description>
+        </Option>
+      </Options>
+    </OptionChoice>
+  </OptionChoices>
+</Species>

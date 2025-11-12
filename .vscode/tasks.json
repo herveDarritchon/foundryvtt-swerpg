@@ -1,0 +1,30 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "run vitest integration species",
+			"type": "shell",
+			"command": "pnpm vitest run tests/integration/species-import.integration.spec.mjs"
+		},
+		{
+			"label": "run vitest integration species after xml2js fix",
+			"type": "shell",
+			"command": "pnpm vitest run tests/integration/species-import.integration.spec.mjs"
+		},
+		{
+			"label": "run integration species after fix",
+			"type": "shell",
+			"command": "pnpm vitest run tests/integration/species-import.integration.spec.mjs"
+		},
+		{
+			"label": "run integration species after shim",
+			"type": "shell",
+			"command": "pnpm vitest run tests/integration/species-import.integration.spec.mjs"
+		},
+		{
+			"label": "run integration species suite",
+			"type": "shell",
+			"command": "pnpm vitest run tests/integration/species-import.integration.spec.mjs"
+		}
+	]
+}

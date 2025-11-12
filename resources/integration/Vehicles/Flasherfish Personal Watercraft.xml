@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<Vehicle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Key>FLASHWATER</Key>
+  <Name>Flasherfish Personal Watercraft</Name>
+  <Description>[H3]Flasherfish Personal Watercraft[h3]
+Please see page 57 of the Disciples of Harmony Sourcebook for details.
+  </Description>
+  <Source Page="57">Disciples of Harmony</Source>
+  <Type>Airspeeder</Type>
+  <Categories>
+    <Category>Air Vehicle</Category>
+    <Category>Watercraft</Category>
+  </Categories>
+  <HP>2</HP>
+  <Price>5000</Price>
+  <Rarity>5</Rarity>
+  <MaxAltitude>20 meters</MaxAltitude>
+  <SensorRangeValue>srMedium</SensorRangeValue>
+  <Crew>One pilot</Crew>
+  <EncumbranceCapacity>5</EncumbranceCapacity>
+  <Passengers>1</Passengers>
+  <Silhouette>1</Silhouette>
+  <Speed>4</Speed>
+  <Handling>2</Handling>
+  <HullTrauma>3</HullTrauma>
+  <SystemStrain>4</SystemStrain>
+  <SensorRange>Medium</SensorRange>
+</Vehicle>

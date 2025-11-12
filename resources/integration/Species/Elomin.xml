@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<Species xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Key>ELOMIN</Key>
+  <Name>Elomin</Name>
+  <Description>[H4]Elomin[h4]
+  Please see page 18 of the Forged in Battle Sourcebook for details.
+  </Description>
+  <Source Page="18">Forged in Battle</Source>
+  <StartingChars>
+    <Brawn>2</Brawn>
+    <Agility>2</Agility>
+    <Intellect>3</Intellect>
+    <Cunning>2</Cunning>
+    <Willpower>1</Willpower>
+    <Presence>2</Presence>
+  </StartingChars>
+  <StartingAttrs>
+    <WoundThreshold>9</WoundThreshold>
+    <StrainThreshold>10</StrainThreshold>
+    <DefenseRanged>0</DefenseRanged>
+    <DefenseMelee>0</DefenseMelee>
+    <SoakValue>0</SoakValue>
+    <Experience>105</Experience>
+    <ForceRating>0</ForceRating>
+  </StartingAttrs>
+  <SkillModifiers>
+    <SkillModifier>
+      <Key>CHARM</Key>
+      <RankStart>1</RankStart>
+    </SkillModifier>
+    <SkillModifier>
+      <Key>EDU</Key>
+      <RankStart>1</RankStart>
+    </SkillModifier>
+  </SkillModifiers>
+</Species>

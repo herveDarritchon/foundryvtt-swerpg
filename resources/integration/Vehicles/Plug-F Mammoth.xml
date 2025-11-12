@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<Vehicle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Key>PLUGFMAM</Key>
+  <Name>Plug-F Mammoth</Name>
+  <Description>[H3]Collor Pondrat Plug-F Mammoth[h3]
+Please see page 55 of the Endless Vigil Sourcebook for details.</Description>
+  <Source Page="55">Endless Vigil</Source>
+  <Type>Podracer</Type>
+  <Categories>
+    <Category>Land Vehicle</Category>
+  </Categories>
+  <HP>3</HP>
+  <Price>15600</Price>
+  <Rarity>8</Rarity>
+  <MaxAltitude>60 meters</MaxAltitude>
+  <Crew>One pilot</Crew>
+  <EncumbranceCapacity>1</EncumbranceCapacity>
+  <Silhouette>3</Silhouette>
+  <Speed>5</Speed>
+  <Handling>-1</Handling>
+  <HullTrauma>6</HullTrauma>
+  <SystemStrain>9</SystemStrain>
+  <SinglePilot>true</SinglePilot>
+  <SensorRange>Close</SensorRange>
+</Vehicle>

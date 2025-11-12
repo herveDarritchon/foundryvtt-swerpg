@@ -1,0 +1,2148 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<SigAbilityNodes>
+  <SigAbilityNode>
+    <Key>SUDDISCBASIC</Key>
+    <Name>Sudden Discovery Base Ability</Name>
+    <Description>Please see page 34 of Enter the Unknown for details.</Description>
+    <Source Page="34">Enter the Unknown</Source>
+    <SigAbility>Sudden Discovery</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>SUDDISCADDBOOST</Key>
+    <Name>Add Boost</Name>
+    <Description>Please see page 34 of Enter the Unknown for details.</Description>
+    <Source Page="34">Enter the Unknown</Source>
+    <SigAbility>Sudden Discovery</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>SUDDISCREDUCESETBACK</Key>
+    <Name>Reduce Setback</Name>
+    <Description>Please see page 34 of Enter the Unknown for details.</Description>
+    <Source Page="34">Enter the Unknown</Source>
+    <SigAbility>Sudden Discovery</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>SUDDISCCHANGESKILL</Key>
+    <Name>Change Skill</Name>
+    <Description>Please see page 34 of Enter the Unknown for details.</Description>
+    <Source Page="34">Enter the Unknown</Source>
+    <SigAbility>Sudden Discovery</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>SUDDISCREDUCEDIFF</Key>
+    <Name>Reduce Difficulty</Name>
+    <Description>Please see page 34 of Enter the Unknown for details.</Description>
+    <Source Page="34">Enter the Unknown</Source>
+    <SigAbility>Sudden Discovery</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>SUDDISCFREQ</Key>
+    <Name>Frequency</Name>
+    <Description>Please see page 34 of Enter the Unknown for details.</Description>
+    <Source Page="34">Enter the Unknown</Source>
+    <SigAbility>Sudden Discovery</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>SUDDISCDEST</Key>
+    <Name>Destiny</Name>
+    <Description>Please see page 34 of Enter the Unknown for details.</Description>
+    <Source Page="34">Enter the Unknown</Source>
+    <SigAbility>Sudden Discovery</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMOBBASIC</Key>
+    <Name>Unmatched Mobility Base Ability</Name>
+    <Description>Please see page 35 of Enter the Unknown for details.</Description>
+    <Source Page="35">Enter the Unknown</Source>
+    <SigAbility>Unmatched Mobility</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMOBDUR</Key>
+    <Name>Duration</Name>
+    <Description>Please see page 35 of Enter the Unknown for details.</Description>
+    <Source Page="35">Enter the Unknown</Source>
+    <SigAbility>Unmatched Mobility</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMOBFREEMAN</Key>
+    <Name>Free Maneuver</Name>
+    <Description>Please see page 35 of Enter the Unknown for details.</Description>
+    <Source Page="35">Enter the Unknown</Source>
+    <SigAbility>Unmatched Mobility</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMOBDEST</Key>
+    <Name>Destiny</Name>
+    <Description>Please see page 35 of Enter the Unknown for details.</Description>
+    <Source Page="35">Enter the Unknown</Source>
+    <SigAbility>Unmatched Mobility</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMOBMDEF</Key>
+    <Name>Melee Defense</Name>
+    <Description>Please see page 35 of Enter the Unknown for details.</Description>
+    <Source Page="35">Enter the Unknown</Source>
+    <SigAbility>Unmatched Mobility</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMOBRDEF</Key>
+    <Name>Ranged Defense</Name>
+    <Description>Please see page 35 of Enter the Unknown for details.</Description>
+    <Source Page="35">Enter the Unknown</Source>
+    <SigAbility>Unmatched Mobility</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>LOSBASIC</Key>
+    <Name>Last One Standing Base Ability</Name>
+    <Description>Please see page 36 of Dangerous Covenants for details.</Description>
+    <Source Page="36">Dangerous Covenants</Source>
+    <SigAbility>Last One Standing</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>LOSREDUCESETBACK</Key>
+    <Name>Reduce Setback</Name>
+    <Description>Please see page 36 of Dangerous Covenants for details.</Description>
+    <Source Page="36">Dangerous Covenants</Source>
+    <SigAbility>Last One Standing</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>LOSADDBOOST</Key>
+    <Name>Add Boost</Name>
+    <Description>Please see page 36 of Dangerous Covenants for details.</Description>
+    <Source Page="36">Dangerous Covenants</Source>
+    <SigAbility>Last One Standing</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>LOSREDUCEDIFF</Key>
+    <Name>Reduce Difficulty</Name>
+    <Description>Please see page 36 of Dangerous Covenants for details.</Description>
+    <Source Page="36">Dangerous Covenants</Source>
+    <SigAbility>Last One Standing</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>LOSINCREASEEFFECT</Key>
+    <Name>Increase Effect</Name>
+    <Description>Please see page 36 of Dangerous Covenants for details.</Description>
+    <Source Page="36">Dangerous Covenants</Source>
+    <SigAbility>Last One Standing</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>LOSDEST</Key>
+    <Name>Destiny</Name>
+    <Description>Please see page 36 of Dangerous Covenants for details.</Description>
+    <Source Page="36">Dangerous Covenants</Source>
+    <SigAbility>Last One Standing</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNPROTBASIC</Key>
+    <Name>Unmatched Protection Base Ability</Name>
+    <Description>Please see page 37 of Dangerous Covenants for details.</Description>
+    <Source Page="37">Dangerous Covenants</Source>
+    <SigAbility>Unmatched Protection</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNPROTDURATION</Key>
+    <Name>Duration</Name>
+    <Description>Please see page 37 of Dangerous Covenants for details.</Description>
+    <Source Page="37">Dangerous Covenants</Source>
+    <SigAbility>Unmatched Protection</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNPROTSOAK</Key>
+    <Name>Soak</Name>
+    <Description>Please see page 37 of Dangerous Covenants for details.</Description>
+    <Source Page="37">Dangerous Covenants</Source>
+    <SigAbility>Unmatched Protection</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNPROTALLY</Key>
+    <Name>Protect Ally</Name>
+    <Description>Please see page 37 of Dangerous Covenants for details.</Description>
+    <Source Page="37">Dangerous Covenants</Source>
+    <SigAbility>Unmatched Protection</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNPROTADDRED</Key>
+    <Name>Additional Reduction</Name>
+    <Description>Please see page 37 of Dangerous Covenants for details.</Description>
+    <Source Page="37">Dangerous Covenants</Source>
+    <SigAbility>Unmatched Protection</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNPROTDEST</Key>
+    <Name>Destiny</Name>
+    <Description>Please see page 37 of Dangerous Covenants for details.</Description>
+    <Source Page="37">Dangerous Covenants</Source>
+    <SigAbility>Unmatched Protection</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>INSIGHTFULBASIC</Key>
+    <Name>Insightful Revelation Base Ability</Name>
+    <Description>
+        Please see page 36 of the Far Horizons Sourcebook for details.
+      </Description>
+    <Source Page="36">Far Horizons</Source>
+    <SigAbility>Insighful Revelation</SigAbility>
+    <DieModifiers />
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>INSIGHTFULADDBOOST</Key>
+    <Name>Add Boost</Name>
+    <Description>
+        Please see page 36 of the Far Horizons Sourcebook for details.
+      </Description>
+    <Source Page="36">Far Horizons</Source>
+    <SigAbility>Insightful Revelation</SigAbility>
+    <DieModifiers />
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>INSIGHTFULADDSKILL</Key>
+    <Name>Additional Skills</Name>
+    <Description>
+        Please see page 36 of the Far Horizons Sourcebook for details.
+      </Description>
+    <Source Page="36">Far Horizons</Source>
+    <SigAbility>Insightful Revelations</SigAbility>
+    <DieModifiers />
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>INSIGHTFULDESTINY</Key>
+    <Name>Destiny</Name>
+    <Description>
+        Please see page 36 of the Far Horizons Sourcebook for details.
+      </Description>
+    <Source Page="36">Far Horizons</Source>
+    <SigAbility>Insightful Revelation</SigAbility>
+    <DieModifiers />
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>INSIGHTFULINCEFF</Key>
+    <Name>Increase Effect</Name>
+    <Description>
+        Please see page 36 of the Far Horizons Sourcebook for details.
+      </Description>
+    <Source Page="36">Far Horizons</Source>
+    <SigAbility>Insightful Revelation</SigAbility>
+    <DieModifiers />
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>INSIGHTFULREDDIFF</Key>
+    <Name>Reduce Difficulty</Name>
+    <Description>
+        Please see page 36 of the Far Horizons Sourcebook for details.
+      </Description>
+    <Source Page="36">Far Horizons</Source>
+    <SigAbility>Insightful Revelation</SigAbility>
+    <DieModifiers />
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>INSIGHTFULSETBACK</Key>
+    <Name>Reduce Setback</Name>
+    <Description>
+        Please see page 36 of the Far Horizons Sourcebook for details.
+      </Description>
+    <Source Page="36">Far Horizons</Source>
+    <SigAbility>Insightful Revelation</SigAbility>
+    <DieModifiers />
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>INSIGHTFULDURATION</Key>
+    <Name>Duration</Name>
+    <Description>
+        Please see page 36 of the Far Horizons Sourcebook for details.
+      </Description>
+    <Source Page="36">Far Horizons</Source>
+    <SigAbility>Insightful Revelation</SigAbility>
+    <DieModifiers />
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEXPERT</Key>
+    <Name>Unmatched Expertise Base Ability</Name>
+    <Description>
+        Please see page 37 of the Far Horizons Sourcebook for details.
+      </Description>
+    <Source Page="37">Far Horizons</Source>
+    <SigAbility>Unmatched Expertise</SigAbility>
+    <DieModifiers />
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEXPERTACT</Key>
+    <Name>Activation</Name>
+    <Description>
+        Please see page 37 of the Far Horizons Sourcebook for details.
+      </Description>
+    <Source Page="37">Far Horizons</Source>
+    <SigAbility>Unmatched Expertise</SigAbility>
+    <DieModifiers />
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEXPERTACT2</Key>
+    <Name>Activation</Name>
+    <Description>
+      Please see page 37 of the Far Horizons Sourcebook for details.
+    </Description>
+    <Source Page="37">Far Horizons</Source>
+    <SigAbility>Unmatched Expertise</SigAbility>
+    <DieModifiers />
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEXPDESTINY</Key>
+    <Name>Destiny</Name>
+    <Description>
+        Please see page 37 of the Far Horizons Sourcebook for details.
+      </Description>
+    <Source Page="37">Far Horizons</Source>
+    <SigAbility>Unmatched Expertise</SigAbility>
+    <DieModifiers />
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEXPERTREDSETBK</Key>
+    <Name>Reduce Setback</Name>
+    <Description>
+        Please see page 37 of the Far Horizons Sourcebook for details.
+      </Description>
+    <Source Page="37">Far Horizons</Source>
+    <SigAbility>Unmatched Expertise</SigAbility>
+    <DieModifiers />
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEXPERTSUPRED</Key>
+    <Name>Superior Reduction</Name>
+    <Description>
+        Please see page 37 of the Far Horizons Sourcebook for details.
+      </Description>
+    <Source Page="37">Far Horizons</Source>
+    <SigAbility>Unmatched Expertise</SigAbility>
+    <DieModifiers />
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEXPERTREDDIFF</Key>
+    <Name>Reduce Difficulty</Name>
+    <Description>
+        Please see page 37 of the Far Horizons Sourcebook for details.
+      </Description>
+    <Source Page="37">Far Horizons</Source>
+    <SigAbility>Unmatched Expertise</SigAbility>
+    <DieModifiers />
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEXPERTREDDIFF2</Key>
+    <Name>Reduce Difficulty</Name>
+    <Description>
+      Please see page 37 of the Far Horizons Sourcebook for details.
+    </Description>
+    <Source Page="37">Far Horizons</Source>
+    <SigAbility>Unmatched Expertise</SigAbility>
+    <DieModifiers />
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>THISONEISMINEBASE</Key>
+    <Name>This One is Mine Base Ability</Name>
+    <Description>
+      Please see page 36 of the Stay on Target Sourcebook for details
+    </Description>
+    <Source Page="36">Stay on Target</Source>
+    <Sources />
+    <SigAbility>This One is Mine</SigAbility>
+    <DieModifiers />
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>THISONEISMINESIL</Key>
+    <Name>Change Silhouette</Name>
+    <Description>
+      Please see page 36 of the Stay on Target Sourcebook for details
+    </Description>
+    <Source Page="36">Stay on Target</Source>
+    <Sources />
+    <SigAbility>This One is Mine</SigAbility>
+    <DieModifiers />
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>THISONEISMINEDUR</Key>
+    <Name>Duration</Name>
+    <Description>
+      Please see page 36 of the Stay on Target Sourcebook for details
+    </Description>
+    <Source Page="36">Stay on Target</Source>
+    <Sources />
+    <SigAbility>This One is Mine</SigAbility>
+    <DieModifiers />
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>THISONEISMINEEVA</Key>
+    <Name>Evasion</Name>
+    <Description>
+      Please see page 36 of the Stay on Target Sourcebook for details
+    </Description>
+    <Source Page="36">Stay on Target</Source>
+    <Sources />
+    <SigAbility>This One is Mine</SigAbility>
+    <DieModifiers />
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>THISONEISMINEFREQ</Key>
+    <Name>Frequency</Name>
+    <Description>
+      Please see page 36 of the Stay on Target Sourcebook for details
+    </Description>
+    <Source Page="36">Stay on Target</Source>
+    <Sources />
+    <SigAbility>This One is Mine</SigAbility>
+    <DieModifiers />
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>THISONEISMINEDEST</Key>
+    <Name>Destiny</Name>
+    <Description>
+      Please see page 36 of the Stay on Target Sourcebook for details
+    </Description>
+    <Source Page="36">Stay on Target</Source>
+    <Sources />
+    <SigAbility>This One is Mine</SigAbility>
+    <DieModifiers />
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDSURVBASE</Key>
+    <Name>Unmatched Survivability Base Ability</Name>
+    <Description>
+      Please see page 37 of the Stay on Target Sourcebook for details
+    </Description>
+    <Source Page="37">Stay on Target</Source>
+    <Sources />
+    <SigAbility>Unmatched Survivability</SigAbility>
+    <DieModifiers />
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDSURVSIL</Key>
+    <Name>Change Silhouette</Name>
+    <Description>Please see page 37 of the Stay on Target Sourcebook for details</Description>
+    <Source Page="37">Stay on Target</Source>
+    <Sources />
+    <SigAbility>Unmatched Survivability</SigAbility>
+    <DieModifiers />
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDSURVFREQ</Key>
+    <Name>Frequency</Name>
+    <Description>Please see page 37 of the Stay on Target Sourcebook for details</Description>
+    <Source Page="37">Stay on Target</Source>
+    <Sources />
+    <SigAbility>Unmatched Survivability</SigAbility>
+    <DieModifiers />
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDSURVDUR</Key>
+    <Name>Durability</Name>
+    <Description>
+      Please see page 37 of the Stay on Target Sourcebook for details
+    </Description>
+    <Source Page="37">Stay on Target</Source>
+    <Sources />
+    <SigAbility>Unmatched Survivability</SigAbility>
+    <DieModifiers />
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDSURVDEST</Key>
+    <Name>Destiny</Name>
+    <Description>
+      Please see page 37 of the Stay on Target Sourcebook for details
+    </Description>
+    <Source Page="37">Stay on Target</Source>
+    <Sources />
+    <SigAbility>Unmatched Survivability</SigAbility>
+    <DieModifiers />
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDSURVDURA</Key>
+    <Name>Duration</Name>
+    <Description>
+      Please see page 37 of the Stay on Target Sourcebook for details
+    </Description>
+    <Source Page="37">Stay on Target</Source>
+    <Sources />
+    <SigAbility>Unmatched Survivability</SigAbility>
+    <DieModifiers />
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDSURVREINF</Key>
+    <Name>Reinforcement</Name>
+    <Description>
+      Please see page 37 of the Stay on Target Sourcebook for details
+    </Description>
+    <Source Page="37">Stay on Target</Source>
+    <Sources />
+    <SigAbility>Unmatched Survivability</SigAbility>
+    <DieModifiers />
+  </SigAbilityNode>
+  <!-- Fly Casual -->
+  <SigAbilityNode>
+    <Key>NARROWESCAPEBASE</Key>
+    <Name>Narrow Escape Base Ability</Name>
+    <Description>
+      Please see page 37 of the Fly Casual Sourcebook for details.
+    </Description>
+    <Source Page="37">Fly Casual</Source>
+    <Sources />
+    <SigAbility>Narrow Escape</SigAbility>
+    <DieModifiers />
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>REDUCESBNE</Key>
+    <Name>Reduce Setback</Name>
+    <Description>
+      Please see page 38 of the Fly Casual Sourcebook for details.
+    </Description>
+    <Source Page="38">Fly Casual</Source>
+    <SigAbility>Narrow Escape</SigAbility>
+    <DieModifiers />
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>REDUCEDIFFNE</Key>
+    <Name>Reduce Difficulty</Name>
+    <Description>
+      Please see page 38 of the Fly Casual Sourcebook for details.
+    </Description>
+    <Source Page="38">Fly Casual</Source>
+    <SigAbility>Narrow Escape</SigAbility>
+    <DieModifiers />
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>INCREASEEFFNE</Key>
+    <Name>Increase Effect</Name>
+    <Description>
+      Please see page 38 of the Fly Casual Sourcebook for details.
+    </Description>
+    <Source Page="38">Fly Casual</Source>
+    <SigAbility>Narrow Escape</SigAbility>
+    <DieModifiers />
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>ADDBOOSTNE</Key>
+    <Name>Add Boost</Name>
+    <Description>
+      Please see page 38 of the Fly Casual Sourcebook for details.
+    </Description>
+    <Source Page="38">Fly Casual</Source>
+    <SigAbility>Narrow Escape</SigAbility>
+    <DieModifiers />
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>CHANGESCALENE</Key>
+    <Name>Change Scale</Name>
+    <Description>
+      Please see page 38 of the Fly Casual Sourcebook for details.
+    </Description>
+    <Source Page="38">Fly Casual</Source>
+    <SigAbility>Narrow Escape</SigAbility>
+    <DieModifiers />
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>CHANGESKILLNE</Key>
+    <Name>Change Skill</Name>
+    <Description>
+      Please see page 38 of the Fly Casual Sourcebook for details.
+    </Description>
+    <Source Page="38">Fly Casual</Source>
+    <SigAbility>Narrow Escape</SigAbility>
+    <DieModifiers />
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>DESTINYNE</Key>
+    <Name>Destiny</Name>
+    <Description>
+      Please see page 38 of the Fly Casual Sourcebook for details.
+    </Description>
+    <Source Page="38">Fly Casual</Source>
+    <SigAbility>Narrow Escape</SigAbility>
+    <DieModifiers />
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHFORTUNEBASE</Key>
+    <Name>Unmatched Fortune Base Ability</Name>
+    <Description>
+      Please see page 39 of the Fly Casual Sourcebook for details.
+    </Description>
+    <Source Page="39">Fly Casual</Source>
+    <SigAbility>Unmatched Fortune</SigAbility>
+    <DieModifiers />
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>FREQUENCYUF</Key>
+    <Name>Frequency</Name>
+    <Description>
+      Please see page 39 of the Fly Casual Sourcebook for details.
+    </Description>
+    <Source Page="39">Fly Casual</Source>
+    <SigAbility>Unmatched Fortune</SigAbility>
+    <DieModifiers />
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>DESTINYUF</Key>
+    <Name>Destiny</Name>
+    <Description>
+      Please see page 39 of the Fly Casual Sourcebook for details.
+    </Description>
+    <Source Page="39">Fly Casual</Source>
+    <SigAbility>Unmatched Fortune</SigAbility>
+    <DieModifiers />
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>INCREASENUMBERUF</Key>
+    <Name>Increase Number</Name>
+    <Description>
+      Please see page 39 of the Fly Casual Sourcebook for details.
+    </Description>
+    <Source Page="39">Fly Casual</Source>
+    <SigAbility>Unmatched Fortune</SigAbility>
+    <DieModifiers />
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>INCREASEEFFECTUF</Key>
+    <Name>Increase Effect</Name>
+    <Description>
+      Please see page 39 of the Fly Casual Sourcebook for details.
+    </Description>
+    <Source Page="39">Fly Casual</Source>
+    <SigAbility>Unmatched Fortune</SigAbility>
+    <DieModifiers />
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>SHAREDLUCKUF</Key>
+    <Name>Shared Luck</Name>
+    <Description>
+      Please see page 39 of the Fly Casual Sourcebook for details.
+    </Description>
+    <Source Page="39">Fly Casual</Source>
+    <SigAbility>Unmatched Fortune</SigAbility>
+    <DieModifiers />
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>INCREASERANGEUF</Key>
+    <Name>Increase Range</Name>
+    <Description>
+      Please see page 39 of the Fly Casual Sourcebook for details.
+    </Description>
+    <Source Page="39">Fly Casual</Source>
+    <SigAbility>Unmatched Fortune</SigAbility>
+    <DieModifiers />
+  </SigAbilityNode>
+  <!-- Diplomatic Solution (Desperate Allies) -->
+  <SigAbilityNode>
+    <Key>DIPLOMATICSOLUTIONBASE</Key>
+    <Name>Diplomatic Solution Base Ability</Name>
+    <Description>
+      Please see page 38 of the Desperate Allies Sourcebook for details.
+    </Description>
+    <Source Page="38">Desperate Allies</Source>
+    <SigAbility>Diplomatic Solution</SigAbility>
+    <DieModifiers />
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>CHANGESKILL1DS</Key>
+    <Name>Change Skill (Coercion)</Name>
+    <Description>
+      Please see page 38 of the Desperate Allies Sourcebook for details.
+    </Description>
+    <Source Page="38">Desperate Allies</Source>
+    <SigAbility>Diplomatic Solution</SigAbility>
+    <DieModifiers />
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>CHANGESKILL2DS</Key>
+    <Name>Change Skill (Leadership)</Name>
+    <Description>
+      Please see page 38 of the Desperate Allies Sourcebook for details.
+    </Description>
+    <Source Page="38">Desperate Allies</Source>
+    <SigAbility>Diplomatic Solution</SigAbility>
+    <DieModifiers />
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>REDUCESETBACKDS</Key>
+    <Name>Reduce Setback</Name>
+    <Description>
+      Please see page 38 of the Desperate Allies Sourcebook for details.
+    </Description>
+    <Source Page="38">Desperate Allies</Source>
+    <SigAbility>Diplomatic Solution</SigAbility>
+    <DieModifiers />
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>BOOSTALLIESDS</Key>
+    <Name>Boost Allies</Name>
+    <Description>
+      Please see page 38 of the Desperate Allies Sourcebook for details.
+    </Description>
+    <Source Page="38">Desperate Allies</Source>
+    <SigAbility>Diplomatic Solution</SigAbility>
+    <DieModifiers />
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>ACTIVATIONDS</Key>
+    <Name>Activation</Name>
+    <Description>
+      Please see page 38 of the Desperate Allies Sourcebook for details.
+    </Description>
+    <Source Page="38">Desperate Allies</Source>
+    <SigAbility>Diplomatic Solution</SigAbility>
+    <DieModifiers />
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>REDUCEDIFFICULTYDS</Key>
+    <Name>Reduce Difficulty</Name>
+    <Description>
+      Please see page 38 of the Desperate Allies Sourcebook for details.
+    </Description>
+    <Source Page="38">Desperate Allies</Source>
+    <SigAbility>Diplomatic Solution</SigAbility>
+    <DieModifiers />
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>DESTINYDS</Key>
+    <Name>Destiny</Name>
+    <Description>
+      Please see page 38 of the Desperate Allies Sourcebook for details.
+    </Description>
+    <Source Page="38">Desperate Allies</Source>
+    <SigAbility>Diplomatic Solution</SigAbility>
+    <DieModifiers />
+  </SigAbilityNode>
+  <!-- Unmatched Insight (Desperate Allies) -->
+  <SigAbilityNode>
+    <Key>UNMATCHEDINSIGHTBASE</Key>
+    <Name>Unmatched Insight Base Ability</Name>
+    <Description>
+      Please see page 40 of the Desperate Allies Sourcebook for details.
+    </Description>
+    <Source Page="40">Desperate Allies</Source>
+    <SigAbility>Unmatched Insight</SigAbility>
+    <DieModifiers />
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>DISCERNMOTIVESUI</Key>
+    <Name>Discern Motives</Name>
+    <Description>
+      Please see page 40 of the Desperate Allies Sourcebook for details.
+    </Description>
+    <Source Page="40">Desperate Allies</Source>
+    <SigAbility>Unmatched Insight</SigAbility>
+    <DieModifiers />
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>INCREASENUMBERUI</Key>
+    <Name>Increase Number</Name>
+    <Description>
+      Please see page 40 of the Desperate Allies Sourcebook for details.
+    </Description>
+    <Source Page="40">Desperate Allies</Source>
+    <SigAbility>Unmatched Insight</SigAbility>
+    <DieModifiers />
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>FREQUENCYUI</Key>
+    <Name>Frequency</Name>
+    <Description>
+      Please see page 40 of the Desperate Allies Sourcebook for details.
+    </Description>
+    <Source Page="40">Desperate Allies</Source>
+    <SigAbility>Unmatched Insight</SigAbility>
+    <DieModifiers />
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>LEVERAGEUI</Key>
+    <Name>Leverage</Name>
+    <Description>
+      Please see page 40 of the Desperate Allies Sourcebook for details.
+    </Description>
+    <Source Page="40">Desperate Allies</Source>
+    <SigAbility>Unmatched Insight</SigAbility>
+    <DieModifiers />
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>DESTINYUI</Key>
+    <Name>Destiny</Name>
+    <Description>
+      Please see page 40 of the Desperate Allies Sourcebook for details.
+    </Description>
+    <Source Page="40">Desperate Allies</Source>
+    <SigAbility>Unmatched Insight</SigAbility>
+    <DieModifiers />
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>SECRETUI</Key>
+    <Name>Secret</Name>
+    <Description>
+      Please see page 40 of the Desperate Allies Sourcebook for details.
+    </Description>
+    <Source Page="40">Desperate Allies</Source>
+    <SigAbility>Unmatched Insight</SigAbility>
+    <DieModifiers />
+  </SigAbilityNode>
+  <!-- Keeping the Peace -->
+  <SigAbilityNode>
+    <Key>FATDUELBASIC</Key>
+    <Name>Fated Duel Base Ability</Name>
+    <Description>Please see page 35 of the Keeping the Peace sourcebook for details.</Description>
+    <Source Page="35">Keeping the Peace</Source>
+    <SigAbility>Fated Duel</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>FATDUELREDUCEDIFF</Key>
+    <Name>Reduce Difficulty</Name>
+    <Description>Please see page 35 of the Keeping the Peace sourcebook for details.</Description>
+    <Source Page="35">Keeping the Peace</Source>
+    <SigAbility>Fated Duel</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>FATDUELINSPIRE</Key>
+    <Name>Inspiration</Name>
+    <Description>Please see page 35 of the Keeping the Peace sourcebook for details.</Description>
+    <Source Page="35">Keeping the Peace</Source>
+    <SigAbility>Fated Duel</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>FATDUELDURATION</Key>
+    <Name>Duration</Name>
+    <Description>Please see page 35 of the Keeping the Peace sourcebook for details.</Description>
+    <Source Page="35">Keeping the Peace</Source>
+    <SigAbility>Fated Duel</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>FATDUELSTANDFIRM</Key>
+    <Name>Stand Firm</Name>
+    <Description>Please see page 35 of the Keeping the Peace sourcebook for details.</Description>
+    <Source Page="35">Keeping the Peace</Source>
+    <SigAbility>Fated Duel</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>FATDUELBALANCE</Key>
+    <Name>Cosmic Balance</Name>
+    <Description>Please see page 35 of the Keeping the Peace sourcebook for details.</Description>
+    <Source Page="35">Keeping the Peace</Source>
+    <SigAbility>Fated Duel</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHHEROBASIC</Key>
+    <Name>Unmatched Heroism Base Ability</Name>
+    <Description>Please see page 37 of the Keeping the Peace sourcebook for details.</Description>
+    <Source Page="37">Keeping the Peace</Source>
+    <SigAbility>Unmatched Heroism</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHHERODURATION</Key>
+    <Name>Duration</Name>
+    <Description>Please see page 37 of the Keeping the Peace sourcebook for details.</Description>
+    <Source Page="37">Keeping the Peace</Source>
+    <SigAbility>Unmatched Heroism</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHHEROFREQUENCY</Key>
+    <Name>Frequency</Name>
+    <Description>Please see page 37 of the Keeping the Peace sourcebook for details.</Description>
+    <Source Page="37">Keeping the Peace</Source>
+    <SigAbility>Unmatched Heroism</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHHEROENDURANCE</Key>
+    <Name>Endurance</Name>
+    <Description>Please see page 37 of the Keeping the Peace sourcebook for details.</Description>
+    <Source Page="37">Keeping the Peace</Source>
+    <SigAbility>Unmatched Heroism</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHHERORANGE</Key>
+    <Name>Increase Range</Name>
+    <Description>Please see page 37 of the Keeping the Peace sourcebook for details.</Description>
+    <Source Page="37">Keeping the Peace</Source>
+    <SigAbility>Unmatched Heroism</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHHERODESTINY</Key>
+    <Name>Destiny</Name>
+    <Description>Please see page 37 of the Keeping the Peace sourcebook for details.</Description>
+    <Source Page="37">Keeping the Peace</Source>
+    <SigAbility>Unmatched Heroism</SigAbility>
+  </SigAbilityNode>
+  <!-- Lead by Example -->
+  <SigAbilityNode>
+    <Key>ROUSORBASIC</Key>
+    <Name>Rousing Oratory Base Ability</Name>
+    <Description>Please see page 38 of the Lead by Example Sourcebook for details.</Description>
+    <Source Page="38">Lead by Example</Source>
+    <SigAbility>Rousing Oratory</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>ROUSORREDUCEDIFF</Key>
+    <Name>Reduce Difficulty</Name>
+    <Description>Please see page 38 of the Lead by Example Sourcebook for details.</Description>
+    <Source Page="38">Lead by Example</Source>
+    <SigAbility>Rousing Oratory</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>ROUSORCHANGESKILL</Key>
+    <Name>Change Skill: Discipline</Name>
+    <Description>Please see page 38 of the Lead by Example Sourcebook for details.</Description>
+    <Source Page="38">Lead by Example</Source>
+    <SigAbility>Rousing Oratory</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>ROUSORCHANGESKILL2</Key>
+    <Name>Change Skill: Cool</Name>
+    <Description>Please see page 38 of the Lead by Example Sourcebook for details.</Description>
+    <Source Page="38">Lead by Example</Source>
+    <SigAbility>Rousing Oratory</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>ROUSORREDUCESETBACK</Key>
+    <Name>Reduce Setback</Name>
+    <Description>Please see page 38 of the Lead by Example Sourcebook for details.</Description>
+    <Source Page="38">Lead by Example</Source>
+    <SigAbility>Rousing Oratory</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>ROUSORRECOVERSTRAIN</Key>
+    <Name>Recover Strain</Name>
+    <Description>Please see page 38 of the Lead by Example Sourcebook for details.</Description>
+    <Source Page="38">Lead by Example</Source>
+    <SigAbility>Rousing Oratory</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>ROUSORBOOSTALLIES</Key>
+    <Name>Boost Allies</Name>
+    <Description>Please see page 38 of the Lead by Example Sourcebook for details.</Description>
+    <Source Page="38">Lead by Example</Source>
+    <SigAbility>Rousing Oratory</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>ROUSORTURNINGPOINT</Key>
+    <Name>Turning Point</Name>
+    <Description>Please see page 38 of the Lead by Example Sourcebook for details.</Description>
+    <Source Page="38">Lead by Example</Source>
+    <SigAbility>Rousing Oratory</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>ROUSORDESTINY</Key>
+    <Name>Destiny</Name>
+    <Description>Please see page 38 of the Lead by Example Sourcebook for details.</Description>
+    <Source Page="38">Lead by Example</Source>
+    <SigAbility>Rousing Oratory</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHAUTHBASIC</Key>
+    <Name>Unmatched Authority Base Ability</Name>
+    <Description>Please see page 40 of the Lead by Example Sourcebook for details.</Description>
+    <Source Page="40">Lead by Example</Source>
+    <SigAbility>Unmatched Authority</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHAUTHDURATION</Key>
+    <Name>Duration</Name>
+    <Description>Please see page 40 of the Lead by Example Sourcebook for details.</Description>
+    <Source Page="40">Lead by Example</Source>
+    <SigAbility>Unmatched Authority</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHAUTHFIRMRESOLVE</Key>
+    <Name>Firm Resolve</Name>
+    <Description>Please see page 40 of the Lead by Example Sourcebook for details.</Description>
+    <Source Page="40">Lead by Example</Source>
+    <SigAbility>Unmatched Authority</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHAUTHENDURANCE</Key>
+    <Name>Endurance</Name>
+    <Description>Please see page 40 of the Lead by Example Sourcebook for details.</Description>
+    <Source Page="40">Lead by Example</Source>
+    <SigAbility>Unmatched Authority</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHAUTHMASSCOMBAT</Key>
+    <Name>Mass Combat</Name>
+    <Description>Please see page 40 of the Lead by Example Sourcebook for details.</Description>
+    <Source Page="40">Lead by Example</Source>
+    <SigAbility>Unmatched Authority</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHAUTHINCREASEEFFECT</Key>
+    <Name>Increase Effect: Remove Setback</Name>
+    <Description>Please see page 40 of the Lead by Example Sourcebook for details.</Description>
+    <Source Page="40">Lead by Example</Source>
+    <SigAbility>Unmatched Authority</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHAUTHINCREASEEFFECT2</Key>
+    <Name>Increase Effect: Reduce Difficulty</Name>
+    <Description>Please see page 40 of the Lead by Example Sourcebook for details.</Description>
+    <Source Page="40">Lead by Example</Source>
+    <SigAbility>Unmatched Authority</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHAUTHDESTINY</Key>
+    <Name>Destiny</Name>
+    <Description>Please see page 40 of the Lead by Example Sourcebook for details.</Description>
+    <Source Page="40">Lead by Example</Source>
+    <SigAbility>Unmatched Authority</SigAbility>
+  </SigAbilityNode>
+
+  <!-- Special Modifications -->
+  <SigAbilityNode>
+    <Key>INVENTIVECREATIONBASIC</Key>
+    <Name>Inventive Creation Base Ability</Name>
+    <Description>Please see page 39 of the Special Modifications Sourcebook for details.</Description>
+    <Source Page="39">Special Modifications</Source>
+    <SigAbility>Inventive Creation</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>INVENTIVECREATIONSETBACK</Key>
+    <Name>Reduce Setback</Name>
+    <Description>Please see page 39 of the Special Modifications Sourcebook for details.</Description>
+    <Source Page="39">Special Modifications</Source>
+    <SigAbility>Inventive Creation</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>INVENTIVECREATIONRARITY</Key>
+    <Name>Increase Rarity</Name>
+    <Description>Please see page 39 of the Special Modifications Sourcebook for details.</Description>
+    <Source Page="39">Special Modifications</Source>
+    <SigAbility>Inventive Creation</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>INVENTIVECREATIONDIFF</Key>
+    <Name>Reduce Difficulty</Name>
+    <Description>Please see page 39 of the Special Modifications Sourcebook for details.</Description>
+    <Source Page="39">Special Modifications</Source>
+    <SigAbility>Inventive Creation</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>INVENTIVECREATIONDESTINY</Key>
+    <Name>Destiny</Name>
+    <Description>Please see page 39 of the Special Modifications Sourcebook for details.</Description>
+    <Source Page="39">Special Modifications</Source>
+    <SigAbility>Inventive Creation</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>INVENTIVECREATIONSCALE</Key>
+    <Name>Change Scale</Name>
+    <Description>Please see page 39 of the Special Modifications Sourcebook for details.</Description>
+    <Source Page="39">Special Modifications</Source>
+    <SigAbility>Inventive Creation</SigAbility>
+  </SigAbilityNode>
+  
+  <SigAbilityNode>
+    <Key>UNMATCHEDCALIBRATIONBASIC</Key>
+    <Name>Unmatched Calibration Base Ability</Name>
+    <Description>Please see page 40 of the Special Modifications Sourcebook for details.</Description>
+    <Source Page="40">Special Modifications</Source>
+    <SigAbility>Unmatched Calibration</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDCALIBRATIONSETBACK</Key>
+    <Name>Remove Setback</Name>
+    <Description>Please see page 40 of the Special Modifications Sourcebook for details.</Description>
+    <Source Page="40">Special Modifications</Source>
+    <SigAbility>Unmatched Calibration</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDCALIBRATIONNUMBER</Key>
+    <Name>Increase Number</Name>
+    <Description>Please see page 40 of the Special Modifications Sourcebook for details.</Description>
+    <Source Page="40">Special Modifications</Source>
+    <SigAbility>Unmatched Calibration</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDCALIBRATIONFREQUENCY</Key>
+    <Name>Frequency</Name>
+    <Description>Please see page 40 of the Special Modifications Sourcebook for details.</Description>
+    <Source Page="40">Special Modifications</Source>
+    <SigAbility>Unmatched Calibration</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDCALIBRATIONDESTINY</Key>
+    <Name>Destiny</Name>
+    <Description>Please see page 40 of the Special Modifications Sourcebook for details.</Description>
+    <Source Page="40">Special Modifications</Source>
+    <SigAbility>Unmatched Calibration</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDCALIBRATIONRISK</Key>
+    <Name>Minimize Risk</Name>
+    <Description>Please see page 40 of the Special Modifications Sourcebook for details.</Description>
+    <Source Page="40">Special Modifications</Source>
+    <SigAbility>Unmatched Calibration</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDCALIBRATIONOPTIMIZE</Key>
+    <Name>Optimization</Name>
+    <Description>Please see page 40 of the Special Modifications Sourcebook for details.</Description>
+    <Source Page="40">Special Modifications</Source>
+    <SigAbility>Unmatched Calibration</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDCALIBRATIONACUMEN</Key>
+    <Name>Shared Acumen</Name>
+    <Description>Please see page 40 of the Special Modifications Sourcebook for details.</Description>
+    <Source Page="40">Special Modifications</Source>
+    <SigAbility>Unmatched Calibration</SigAbility>
+  </SigAbilityNode>
+
+  <SigAbilityNode>
+    <Key>UNEXPECTEDDEMISEBASIC</Key>
+    <Name>Unexpected Demise Base Ability</Name>
+    <Description>Please see page 34 of the Savage Spirits Sourcebook for details.</Description>
+    <Source Page="34">Savage Spirits</Source>
+    <SigAbility>Unexpected Demise</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNEXPECTEDDEMISESETBACK</Key>
+    <Name>Reduce Setback</Name>
+    <Description>Please see page 34 of the Savage Spirits Sourcebook for details.</Description>
+    <Source Page="34">Savage Spirits</Source>
+    <SigAbility>Unexpected Demise</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNEXPECTEDDEMISEDURATION</Key>
+    <Name>Duration</Name>
+    <Description>Please see page 34 of the Savage Spirits Sourcebook for details.</Description>
+    <Source Page="34">Savage Spirits</Source>
+    <SigAbility>Unexpected Demise</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNEXPECTEDDEMISEDIFFICULTY</Key>
+    <Name>Reduce Difficulty</Name>
+    <Description>Please see page 34 of the Savage Spirits Sourcebook for details.</Description>
+    <Source Page="34">Savage Spirits</Source>
+    <SigAbility>Unexpected Demise</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNEXPECTEDDEMISEDESTINY</Key>
+    <Name>Destiny</Name>
+    <Description>Please see page 34 of the Savage Spirits Sourcebook for details.</Description>
+    <Source Page="34">Savage Spirits</Source>
+    <SigAbility>Unexpected Demise</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNEXPECTEDDEMISESKILL</Key>
+    <Name>Change Skill</Name>
+    <Description>Please see page 34 of the Savage Spirits Sourcebook for details.</Description>
+    <Source Page="34">Savage Spirits</Source>
+    <SigAbility>Unexpected Demise</SigAbility>
+  </SigAbilityNode>
+
+  <SigAbilityNode>
+    <Key>UNMATCHEDPURSUITBASIC</Key>
+    <Name>Unmatched Pursuit Base Ability</Name>
+    <Description>Please see page 35 of the Savage Spirits Sourcebook for details.</Description>
+    <Source Page="35">Savage Spirits</Source>
+    <SigAbility>Unmatched Pursuit</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDPURSUITDURATION</Key>
+    <Name>Duration</Name>
+    <Description>Please see page 35 of the Savage Spirits Sourcebook for details.</Description>
+    <Source Page="35">Savage Spirits</Source>
+    <SigAbility>Unmatched Pursuit</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDPURSUITRANGE</Key>
+    <Name>Increase Range</Name>
+    <Description>Please see page 35 of the Savage Spirits Sourcebook for details.</Description>
+    <Source Page="35">Savage Spirits</Source>
+    <SigAbility>Unmatched Pursuit</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDPURSUITENDURANCE</Key>
+    <Name>Endurance</Name>
+    <Description>Please see page 35 of the Savage Spirits Sourcebook for details.</Description>
+    <Source Page="35">Savage Spirits</Source>
+    <SigAbility>Unmatched Pursuit</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDPURSUITDESTINY</Key>
+    <Name>Destiny</Name>
+    <Description>Please see page 35 of the Savage Spirits Sourcebook for details.</Description>
+    <Source Page="35">Savage Spirits</Source>
+    <SigAbility>Unmatched Pursuit</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDPURSUITMANEUVER</Key>
+    <Name>Maneuver</Name>
+    <Description>Please see page 35 of the Savage Spirits Sourcebook for details.</Description>
+    <Source Page="35">Savage Spirits</Source>
+    <SigAbility>Unmatched Pursuit</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDPURSUITFREQUENCY</Key>
+    <Name>Frequency</Name>
+    <Description>Please see page 35 of the Savage Spirits Sourcebook for details.</Description>
+    <Source Page="35">Savage Spirits</Source>
+    <SigAbility>Unmatched Pursuit</SigAbility>
+  </SigAbilityNode>
+
+  <!-- Forged in Battle -->
+  <SigAbilityNode>
+    <Key>BIGGERTHEYAREBASIC</Key>
+    <Name>The Bigger They Are... Base Ability</Name>
+    <Description>Please see page 38 of the Forged in Battle Sourcebook for details.</Description>
+    <Source Page="38">Forged in Battle</Source>
+    <SigAbility>The Bigger They Are...</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>BIGGERTHEYARESILHOUETTE</Key>
+    <Name>Increase Silhouette</Name>
+    <Description>Please see page 38 of the Forged in Battle Sourcebook for details.</Description>
+    <Source Page="38">Forged in Battle</Source>
+    <SigAbility>The Bigger They Are...</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>BIGGERTHEYARESKILL1</Key>
+    <Name>Change Skill (Survival)</Name>
+    <Description>Please see page 38 of the Forged in Battle Sourcebook for details.</Description>
+    <Source Page="38">Forged in Battle</Source>
+    <SigAbility>The Bigger They Are...</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>BIGGERTHEYARESKILL2</Key>
+    <Name>Change Skill (Athletics)</Name>
+    <Description>Please see page 38 of the Forged in Battle Sourcebook for details.</Description>
+    <Source Page="38">Forged in Battle</Source>
+    <SigAbility>The Bigger They Are...</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>BIGGERTHEYAREDURATION</Key>
+    <Name>Duration</Name>
+    <Description>Please see page 38 of the Forged in Battle Sourcebook for details.</Description>
+    <Source Page="38">Forged in Battle</Source>
+    <SigAbility>The Bigger They Are...</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>BIGGERTHEYARESALVO</Key>
+    <Name>Ongoing Salvo</Name>
+    <Description>Please see page 38 of the Forged in Battle Sourcebook for details.</Description>
+    <Source Page="38">Forged in Battle</Source>
+    <SigAbility>The Bigger They Are...</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>BIGGERTHEYAREDESTINY</Key>
+    <Name>Destiny</Name>
+    <Description>Please see page 38 of the Forged in Battle Sourcebook for details.</Description>
+    <Source Page="38">Forged in Battle</Source>
+    <SigAbility>The Bigger They Are...</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>BIGGERTHEYAREDIFFICULTY</Key>
+    <Name>Reduce Difficulty</Name>
+    <Description>Please see page 38 of the Forged in Battle Sourcebook for details.</Description>
+    <Source Page="38">Forged in Battle</Source>
+    <SigAbility>The Bigger They Are...</SigAbility>
+  </SigAbilityNode>
+
+  <SigAbilityNode>
+    <Key>UNMATCHEDCOURAGEBASIC</Key>
+    <Name>Unmatched Courage Base Ability</Name>
+    <Description>Please see page 39 of the Forged in Battle Sourcebook for details.</Description>
+    <Source Page="39">Forged in Battle</Source>
+    <SigAbility>Unmatched Courage</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDCOURAGEEFFECT</Key>
+    <Name>Increase Effect</Name>
+    <Description>Please see page 39 of the Forged in Battle Sourcebook for details.</Description>
+    <Source Page="39">Forged in Battle</Source>
+    <SigAbility>Unmatched Courage</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDCOURAGEDURATION</Key>
+    <Name>Duration</Name>
+    <Description>Please see page 39 of the Forged in Battle Sourcebook for details.</Description>
+    <Source Page="39">Forged in Battle</Source>
+    <SigAbility>Unmatched Courage</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDCOURAGESURVIVOR</Key>
+    <Name>Survivor</Name>
+    <Description>Please see page 39 of the Forged in Battle Sourcebook for details.</Description>
+    <Source Page="39">Forged in Battle</Source>
+    <SigAbility>Unmatched Courage</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDCOURAGETHROUGH</Key>
+    <Name>See It Through</Name>
+    <Description>Please see page 39 of the Forged in Battle Sourcebook for details.</Description>
+    <Source Page="39">Forged in Battle</Source>
+    <SigAbility>Unmatched Courage</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDCOURAGEFINISH</Key>
+    <Name>Finish the Job</Name>
+    <Description>Please see page 39 of the Forged in Battle Sourcebook for details.</Description>
+    <Source Page="39">Forged in Battle</Source>
+    <SigAbility>Unmatched Courage</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDCOURAGETOUGH</Key>
+    <Name>Too Tough To Die</Name>
+    <Description>Please see page 39 of the Forged in Battle Sourcebook for details.</Description>
+    <Source Page="39">Forged in Battle</Source>
+    <SigAbility>Unmatched Courage</SigAbility>
+  </SigAbilityNode>
+
+  <SigAbilityNode>
+    <Key>MYCITYBASIC</Key>
+    <Name>My City Base Ability</Name>
+    <Description>Please see page 34 of the Endless Vigil Sourcebook for details.</Description>
+    <Source Page="34">Endless Vigil</Source>
+    <SigAbility>My City</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>MYCITYBOOSTSKILL1</Key>
+    <Name>Boost Skill: Streetwise and Survival</Name>
+    <Description>Please see page 34 of the Endless Vigil Sourcebook for details.</Description>
+    <Source Page="34">Endless Vigil</Source>
+    <SigAbility>My City</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>MYCITYBOOSTSKILL2</Key>
+    <Name>Boost Skill: Skulduggery and Stealth</Name>
+    <Description>Please see page 34 of the Endless Vigil Sourcebook for details.</Description>
+    <Source Page="34">Endless Vigil</Source>
+    <SigAbility>My City</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>MYCITYCHANGESKILL1</Key>
+    <Name>Change Skill: Streetwise</Name>
+    <Description>Please see page 34 of the Endless Vigil Sourcebook for details.</Description>
+    <Source Page="34">Endless Vigil</Source>
+    <SigAbility>My City</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>MYCITYCHANGESKILL2</Key>
+    <Name>Change Skill: Underworld</Name>
+    <Description>Please see page 34 of the Endless Vigil Sourcebook for details.</Description>
+    <Source Page="34">Endless Vigil</Source>
+    <SigAbility>My City</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>MYCITYREDUCEDIFFICULTY</Key>
+    <Name>Reduce Difficulty</Name>
+    <Description>Please see page 34 of the Endless Vigil Sourcebook for details.</Description>
+    <Source Page="34">Endless Vigil</Source>
+    <SigAbility>My City</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>MYCITYCOVERUPGRADE</Key>
+    <Name>Cover Upgrade</Name>
+    <Description>Please see page 34 of the Endless Vigil Sourcebook for details.</Description>
+    <Source Page="34">Endless Vigil</Source>
+    <SigAbility>My City</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>MYCITYDESTINY</Key>
+    <Name>Destiny</Name>
+    <Description>Please see page 34 of the Endless Vigil Sourcebook for details.</Description>
+    <Source Page="34">Endless Vigil</Source>
+    <SigAbility>My City</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>MYCITYDOWNGRADE</Key>
+    <Name>Downgrade</Name>
+    <Description>Please see page 34 of the Endless Vigil Sourcebook for details.</Description>
+    <Source Page="34">Endless Vigil</Source>
+    <SigAbility>My City</SigAbility>
+  </SigAbilityNode>
+
+  <SigAbilityNode>
+    <Key>UNMATCHEDVIGILANCEBASIC</Key>
+    <Name>Unmatched Vigilance Base Ability</Name>
+    <Description>Please see page 35 of the Endless Vigil Sourcebook for details.</Description>
+    <Source Page="35">Endless Vigil</Source>
+    <SigAbility>Unmatched Vigilance</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDVIGILANCEALWAYSALERT</Key>
+    <Name>Always Alert</Name>
+    <Description>Please see page 35 of the Endless Vigil Sourcebook for details.</Description>
+    <Source Page="35">Endless Vigil</Source>
+    <SigAbility>Unmatched Vigilance</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDVIGILANCEGROUPVIGILANCE</Key>
+    <Name>Group Vigilance</Name>
+    <Description>Please see page 35 of the Endless Vigil Sourcebook for details.</Description>
+    <Source Page="35">Endless Vigil</Source>
+    <SigAbility>Unmatched Vigilance</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDVIGILANCEGROUPPREPARATION</Key>
+    <Name>Group Preparation</Name>
+    <Description>Please see page 35 of the Endless Vigil Sourcebook for details.</Description>
+    <Source Page="35">Endless Vigil</Source>
+    <SigAbility>Unmatched Vigilance</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDVIGILANCEDURATION</Key>
+    <Name>Duration</Name>
+    <Description>Please see page 35 of the Endless Vigil Sourcebook for details.</Description>
+    <Source Page="35">Endless Vigil</Source>
+    <SigAbility>Unmatched Vigilance</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDVIGILANCECOMBATPREPARATION</Key>
+    <Name>Combat Preparation</Name>
+    <Description>Please see page 35 of the Endless Vigil Sourcebook for details.</Description>
+    <Source Page="35">Endless Vigil</Source>
+    <SigAbility>Unmatched Vigilance</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDVIGILANCECOMBATREADINESS</Key>
+    <Name>Combat Readiness</Name>
+    <Description>Please see page 35 of the Endless Vigil Sourcebook for details.</Description>
+    <Source Page="35">Endless Vigil</Source>
+    <SigAbility>Unmatched Vigilance</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDVIGILANCEDESTINY</Key>
+    <Name>Destiny</Name>
+    <Description>Please see page 35 of the Endless Vigil Sourcebook for details.</Description>
+    <Source Page="35">Endless Vigil</Source>
+    <SigAbility>Unmatched Vigilance</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>ALWAYSGETMYMARKBASIC</Key>
+    <Name>Always Get My Mark Base Ability</Name>
+    <Description>Please see page 39 of the No Disintegrations Sourcebook for details.</Description>
+    <Source Page="39">No Disintegrations</Source>
+    <SigAbility>Always Get My Mark</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>ALWAYSGETMYMARKCHANGESKILL1</Key>
+    <Name>Change Skill: Underworld</Name>
+    <Description>Please see page 39 of the No Disintegrations Sourcebook for details.</Description>
+    <Source Page="39">No Disintegrations</Source>
+    <SigAbility>Always Get My Mark</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>ALWAYSGETMYMARKCHANGESKILL2</Key>
+    <Name>Change Skill: Survival</Name>
+    <Description>Please see page 39 of the No Disintegrations Sourcebook for details.</Description>
+    <Source Page="39">No Disintegrations</Source>
+    <SigAbility>Always Get My Mark</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>ALWAYSGETMYMARKDESTINY</Key>
+    <Name>Destiny</Name>
+    <Description>Please see page 39 of the No Disintegrations Sourcebook for details.</Description>
+    <Source Page="39">No Disintegrations</Source>
+    <SigAbility>Always Get My Mark</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>ALWAYSGETMYMARKINCREASEEFFECT1</Key>
+    <Name>Increase Effect: Rival</Name>
+    <Description>Please see page 39 of the No Disintegrations Sourcebook for details.</Description>
+    <Source Page="39">No Disintegrations</Source>
+    <SigAbility>Always Get My Mark</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>ALWAYSGETMYMARKINCREASEEFFECT2</Key>
+    <Name>Increase Effect: Nemesis</Name>
+    <Description>Please see page 39 of the No Disintegrations Sourcebook for details.</Description>
+    <Source Page="39">No Disintegrations</Source>
+    <SigAbility>Always Get My Mark</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>ALWAYSGETMYMARKREDUCEDIFFICULTY</Key>
+    <Name>Reduce Difficulty</Name>
+    <Description>Please see page 39 of the No Disintegrations Sourcebook for details.</Description>
+    <Source Page="39">No Disintegrations</Source>
+    <SigAbility>Always Get My Mark</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>ALWAYSGETMYMARKTAKEDOWN</Key>
+    <Name>Takedown</Name>
+    <Description>Please see page 39 of the No Disintegrations Sourcebook for details.</Description>
+    <Source Page="39">No Disintegrations</Source>
+    <SigAbility>Always Get My Mark</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>ALWAYSGETMYMARKINCREASERANGE</Key>
+    <Name>Increase Range</Name>
+    <Description>Please see page 39 of the No Disintegrations Sourcebook for details.</Description>
+    <Source Page="39">No Disintegrations</Source>
+    <SigAbility>Always Get My Mark</SigAbility>
+  </SigAbilityNode>
+
+  <SigAbilityNode>
+    <Key>UNMATCHEDDEVASTATIONBASIC</Key>
+    <Name>Unmatched Devastation Base Ability</Name>
+    <Description>Please see page 41 of the No Disintegrations Sourcebook for details.</Description>
+    <Source Page="41">No Disintegrations</Source>
+    <SigAbility>Unmatched Devastation</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDDEVASTATIONINCREASENUMBER</Key>
+    <Name>Increase Number</Name>
+    <Description>Please see page 41 of the No Disintegrations Sourcebook for details.</Description>
+    <Source Page="41">No Disintegrations</Source>
+    <SigAbility>Unmatched Devastation</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDDEVASTATIONDRAWANDFIRE</Key>
+    <Name>Draw and Fire</Name>
+    <Description>Please see page 41 of the No Disintegrations Sourcebook for details.</Description>
+    <Source Page="41">No Disintegrations</Source>
+    <SigAbility>Unmatched Devastation</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDDEVASTATIONTARGETPRIORITY</Key>
+    <Name>Target Priority</Name>
+    <Description>Please see page 41 of the No Disintegrations Sourcebook for details.</Description>
+    <Source Page="41">No Disintegrations</Source>
+    <SigAbility>Unmatched Devastation</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDDEVASTATIONREMOVESETBACK</Key>
+    <Name>Remove Setback</Name>
+    <Description>Please see page 41 of the No Disintegrations Sourcebook for details.</Description>
+    <Source Page="41">No Disintegrations</Source>
+    <SigAbility>Unmatched Devastation</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDDEVASTATIONIMPROVEMOBILITY</Key>
+    <Name>Improve Mobility</Name>
+    <Description>Please see page 41 of the No Disintegrations Sourcebook for details.</Description>
+    <Source Page="41">No Disintegrations</Source>
+    <SigAbility>Unmatched Devastation</SigAbility>
+  </SigAbilityNode>
+
+    <SigAbilityNode>
+    <Key>MUCHTOLEARNBASIC</Key>
+    <Name>Much to Learn Base Ability</Name>
+    <Description>Please see page 34 of the Disciples of Harmony Sourcebook for details.</Description>
+    <Source Page="34">Disciples of Harmony</Source>
+    <SigAbility>Much to Learn</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>MUCHTOLEARNINCREASENUMBER</Key>
+    <Name>Increase Number</Name>
+    <Description>Please see page 34 of the Disciples of Harmony Sourcebook for details.</Description>
+    <Source Page="34">Disciples of Harmony</Source>
+    <SigAbility>Much to Learn</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>MUCHTOLEARNREDUCEDIFFICULTY</Key>
+    <Name>Reduce Difficulty</Name>
+    <Description>Please see page 34 of the Disciples of Harmony Sourcebook for details.</Description>
+    <Source Page="34">Disciples of Harmony</Source>
+    <SigAbility>Much to Learn</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>MUCHTOLEARNDESTINY</Key>
+    <Name>Destiny</Name>
+    <Description>Please see page 34 of the Disciples of Harmony Sourcebook for details.</Description>
+    <Source Page="34">Disciples of Harmony</Source>
+    <SigAbility>Much to Learn</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>MUCHTOLEARNCHANGESKILL1</Key>
+    <Name>Change Skill: Leadership</Name>
+    <Description>Please see page 34 of the Disciples of Harmony Sourcebook for details.</Description>
+    <Source Page="34">Disciples of Harmony</Source>
+    <SigAbility>Much to Learn</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>MUCHTOLEARNCHANGESKILL2</Key>
+    <Name>Change Skill: Knowledge</Name>
+    <Description>Please see page 34 of the Disciples of Harmony Sourcebook for details.</Description>
+    <Source Page="34">Disciples of Harmony</Source>
+    <SigAbility>Much to Learn</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>MUCHTOLEARNIMPROVE</Key>
+    <Name>Improve Talent</Name>
+    <Description>Please see page 34 of the Disciples of Harmony Sourcebook for details.</Description>
+    <Source Page="34">Disciples of Harmony</Source>
+    <SigAbility>Much to Learn</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>MUCHTOLEARNSUPREME</Key>
+    <Name>Supreme Talent</Name>
+    <Description>Please see page 34 of the Disciples of Harmony Sourcebook for details.</Description>
+    <Source Page="34">Disciples of Harmony</Source>
+    <SigAbility>Much to Learn</SigAbility>
+  </SigAbilityNode>
+
+  <SigAbilityNode>
+    <Key>UNMATCHEDNEGOTIATIONBASIC</Key>
+    <Name>Unmatched Negotiation Base Ability</Name>
+    <Description>Please see page 35 of the Disciples of Harmony Sourcebook for details.</Description>
+    <Source Page="35">Disciples of Harmony</Source>
+    <SigAbility>Unmatched Negotiation</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDNEGOTIATIONDURATION</Key>
+    <Name>Duration</Name>
+    <Description>Please see page 35 of the Disciples of Harmony Sourcebook for details.</Description>
+    <Source Page="35">Disciples of Harmony</Source>
+    <SigAbility>Unmatched Negotiation</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDNEGOTIATIONINCREASEEFFECT</Key>
+    <Name>Increase Effect</Name>
+    <Description>Please see page 35 of the Disciples of Harmony Sourcebook for details.</Description>
+    <Source Page="35">Disciples of Harmony</Source>
+    <SigAbility>Unmatched Negotiation</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDNEGOTIATIONDESTINY</Key>
+    <Name>Destiny</Name>
+    <Description>Please see page 35 of the Disciples of Harmony Sourcebook for details.</Description>
+    <Source Page="35">Disciples of Harmony</Source>
+    <SigAbility>Unmatched Negotiation</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDNEGOTIATIONREMOVESETBACK</Key>
+    <Name>Remove Setback</Name>
+    <Description>Please see page 35 of the Disciples of Harmony Sourcebook for details.</Description>
+    <Source Page="35">Disciples of Harmony</Source>
+    <SigAbility>Unmatched Negotiation</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDNEGOTIATIONINCREASERANGE</Key>
+    <Name>Increase Range</Name>
+    <Description>Please see page 35 of the Disciples of Harmony Sourcebook for details.</Description>
+    <Source Page="35">Disciples of Harmony</Source>
+    <SigAbility>Unmatched Negotiation</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDNEGOTIATIONADDTRIUMPH</Key>
+    <Name>Add Triumph</Name>
+    <Description>Please see page 35 of the Disciples of Harmony Sourcebook for details.</Description>
+    <Source Page="35">Disciples of Harmony</Source>
+    <SigAbility>Unmatched Negotiation</SigAbility>
+  </SigAbilityNode>
+
+  <SigAbilityNode>
+    <Key>HARDERTHEYFALLBASE</Key>
+    <Name>The Harder They Fall Base Ability</Name>
+    <Description>Please see page 34 of the Fully Operational Sourcebook for details.</Description>
+    <Source Page="34">Fully Operational</Source>
+    <SigAbility>The Harder They Fall</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>HARDERTHEYFALINCNUMBERL</Key>
+    <Name>Increase Number</Name>
+    <Description>Please see page 34 of the Fully Operational Sourcebook for details.</Description>
+    <Source Page="34">Fully Operational</Source>
+    <SigAbility>The Harder They Fall</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>HARDERTHEYFALLCHANGESKILL</Key>
+    <Name>Change Skill</Name>
+    <Description>Please see page 34 of the Fully Operational Sourcebook for details.</Description>
+    <Source Page="34">Fully Operational</Source>
+    <SigAbility>The Harder They Fall</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>HARDERTHEYFALLIGNOREDEF</Key>
+    <Name>Ignore Defenses</Name>
+    <Description>Please see page 34 of the Fully Operational Sourcebook for details.</Description>
+    <Source Page="34">Fully Operational</Source>
+    <SigAbility>The Harder They Fall</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>HARDERTHEYFALLDESTINY</Key>
+    <Name>Destiny</Name>
+    <Description>Please see page 34 of the Fully Operational Sourcebook for details.</Description>
+    <Source Page="34">Fully Operational</Source>
+    <SigAbility>The Harder They Fall</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>HARDERTHEYFALLREDUCEDIFF</Key>
+    <Name>Reduce Difficulty</Name>
+    <Description>Please see page 34 of the Fully Operational Sourcebook for details.</Description>
+    <Source Page="34">Fully Operational</Source>
+    <SigAbility>The Harder They Fall</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>HARDERTHEYFALLFREQ</Key>
+    <Name>Frequency</Name>
+    <Description>Please see page 34 of the Fully Operational Sourcebook for details.</Description>
+    <Source Page="34">Fully Operational</Source>
+    <SigAbility>The Harder They Fall</SigAbility>
+  </SigAbilityNode>
+
+    <SigAbilityNode>
+    <Key>UNMATCHEDINGENBASE</Key>
+    <Name>Unmatched Ingenuity Base Ability</Name>
+    <Description>Please see page 35 of the Fully Operational Sourcebook for details.</Description>
+    <Source Page="35">Fully Operational</Source>
+    <SigAbility>Unmatched Ingenuity</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDINGENADDBOOST</Key>
+    <Name>Add Boost</Name>
+    <Description>Please see page 35 of the Fully Operational Sourcebook for details.</Description>
+    <Source Page="35">Fully Operational</Source>
+    <SigAbility>Unmatched Ingenuity</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDINGENDURATION</Key>
+    <Name>Duration</Name>
+    <Description>Please see page 35 of the Fully Operational Sourcebook for details.</Description>
+    <Source Page="35">Fully Operational</Source>
+    <SigAbility>Unmatched Ingenuity</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDINGENQUALITY</Key>
+    <Name>Quality (Breach)</Name>
+    <Description>Please see page 35 of the Fully Operational Sourcebook for details.</Description>
+    <Source Page="35">Fully Operational</Source>
+    <SigAbility>Unmatched Ingenuity</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDINGENQUALITY2</Key>
+    <Name>Quality (Concussive)</Name>
+    <Description>Please see page 35 of the Fully Operational Sourcebook for details.</Description>
+    <Source Page="35">Fully Operational</Source>
+    <SigAbility>Unmatched Ingenuity</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDINGENDESTINY</Key>
+    <Name>Destiny</Name>
+    <Description>Please see page 35 of the Fully Operational Sourcebook for details.</Description>
+    <Source Page="35">Fully Operational</Source>
+    <SigAbility>Unmatched Ingenuity</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDINGENREDUCEDIFF</Key>
+    <Name>Reduced Difficulty</Name>
+    <Description>Please see page 35 of the Fully Operational Sourcebook for details.</Description>
+    <Source Page="35">Fully Operational</Source>
+    <SigAbility>Unmatched Ingenuity</SigAbility>
+  </SigAbilityNode>
+
+    <SigAbilityNode>
+    <Key>PROPHECYBASE</Key>
+    <Name>Prophecy Base Ability</Name>
+    <Description>Please see page 37 of the Unlimited Power Sourcebook for details.</Description>
+    <Source Page="37">Unlimited Power</Source>
+    <SigAbility>Prophecy</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>PROPHECYREDUCESETBACK</Key>
+    <Name>Reduce Setback</Name>
+    <Description>Please see page 37 of the Unlimited Power Sourcebook for details.</Description>
+    <Source Page="37">Unlimited Power</Source>
+    <SigAbility>Prophecy</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>PROPHECYFLOWOFUNIVERSE</Key>
+    <Name>Flow of the Universe</Name>
+    <Description>Please see page 37 of the Unlimited Power Sourcebook for details.</Description>
+    <Source Page="37">Unlimited Power</Source>
+    <SigAbility>Prophecy</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>PROPHECYSHAREDREV</Key>
+    <Name>Shared Revelation</Name>
+    <Description>Please see page 37 of the Unlimited Power Sourcebook for details.</Description>
+    <Source Page="37">Unlimited Power</Source>
+    <SigAbility>Prophecy</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>PROPHECYRECUR</Key>
+    <Name>Recurrence</Name>
+    <Description>Please see page 37 of the Unlimited Power Sourcebook for details.</Description>
+    <Source Page="37">Unlimited Power</Source>
+    <SigAbility>Prophecy</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>PROPHECYREDUCEDIFF</Key>
+    <Name>Reduce Difficulty</Name>
+    <Description>Please see page 37 of the Unlimited Power Sourcebook for details.</Description>
+    <Source Page="37">Unlimited Power</Source>
+    <SigAbility>Prophecy</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>PROPHECYDOOM</Key>
+    <Name>Doom</Name>
+    <Description>Please see page 37 of the Unlimited Power Sourcebook for details.</Description>
+    <Source Page="37">Unlimited Power</Source>
+    <SigAbility>Prophecy</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>PROPHECYDESTINY</Key>
+    <Name>Destiny</Name>
+    <Description>Please see page 37 of the Unlimited Power Sourcebook for details.</Description>
+    <Source Page="37">Unlimited Power</Source>
+    <SigAbility>Prophecy</SigAbility>
+  </SigAbilityNode>
+
+  <SigAbilityNode>
+    <Key>UNMATCHEDDESTINYBASE</Key>
+    <Name>Unmatched Destiny Base Ability</Name>
+    <Description>Please see page 38 of the Unlimited Power Sourcebook for details.</Description>
+    <Source Page="38">Unlimited Power</Source>
+    <SigAbility>Unmatched Destiny</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDDESTINYINCREASENUMBER</Key>
+    <Name>Increase Number</Name>
+    <Description>Please see page 38 of the Unlimited Power Sourcebook for details.</Description>
+    <Source Page="38">Unlimited Power</Source>
+    <SigAbility>Unmatched Destiny</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDDESTINYDESTINY</Key>
+    <Name>Destiny</Name>
+    <Description>Please see page 38 of the Unlimited Power Sourcebook for details.</Description>
+    <Source Page="38">Unlimited Power</Source>
+    <SigAbility>Unmatched Destiny</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDDESTINYSHAREDDESTINY</Key>
+    <Name>Shared Destiny</Name>
+    <Description>Please see page 38 of the Unlimited Power Sourcebook for details.</Description>
+    <Source Page="38">Unlimited Power</Source>
+    <SigAbility>Unmatched Destiny</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDDESTINYFREQUENCY</Key>
+    <Name>Frequency</Name>
+    <Description>Please see page 38 of the Unlimited Power Sourcebook for details.</Description>
+    <Source Page="38">Unlimited Power</Source>
+    <SigAbility>Unmatched Destiny</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDDESTINYUNLEASHEDPOWER</Key>
+    <Name>Unleashed Power</Name>
+    <Description>Please see page 38 of the Unlimited Power Sourcebook for details.</Description>
+    <Source Page="38">Unlimited Power</Source>
+    <SigAbility>Unmatched Destiny</SigAbility>
+  </SigAbilityNode>
+
+
+  <SigAbilityNode>
+    <Key>DEADLYREPBASE</Key>
+    <Name>Deadly Reputation Base Ability</Name>
+    <Description>Please see page 34 of the Knights of Fate Sourcebook for details.</Description>
+    <Source Page="34">Knights of Fate</Source>
+    <SigAbility>Deady Reputation</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>DEADLYREPDURATION</Key>
+    <Name>Increase Duration</Name>
+    <Description>Please see page 34 of the Knights of Fate Sourcebook for details.</Description>
+    <Source Page="34">Knights of Fate</Source>
+    <SigAbility>Deady Reputation</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>DEADLYREPASSOCIATION</Key>
+    <Name>Deadly By Association</Name>
+    <Description>Please see page 34 of the Knights of Fate Sourcebook for details.</Description>
+    <Source Page="34">Knights of Fate</Source>
+    <SigAbility>Deady Reputation</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>DEADLYREPADDSETBACK</Key>
+    <Name>Add Setback</Name>
+    <Description>Please see page 34 of the Knights of Fate Sourcebook for details.</Description>
+    <Source Page="34">Knights of Fate</Source>
+    <SigAbility>Deady Reputation</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>DEADLYREPINCREASEEFFECT</Key>
+    <Name>Increase Effect</Name>
+    <Description>Please see page 34 of the Knights of Fate Sourcebook for details.</Description>
+    <Source Page="34">Knights of Fate</Source>
+    <SigAbility>Deady Reputation</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>DEADLYREPDESTINY</Key>
+    <Name>Destiny</Name>
+    <Description>Please see page 34 of the Knights of Fate Sourcebook for details.</Description>
+    <Source Page="34">Knights of Fate</Source>
+    <SigAbility>Deady Reputation</SigAbility>
+  </SigAbilityNode>
+
+  <SigAbilityNode>
+    <Key>UNMATCHEDFEROCITYBASE</Key>
+    <Name>Unmatched Ferocity Base Ability</Name>
+    <Description>Please see page 35 of the Knights of Fate Sourcebook for details.</Description>
+    <Source Page="35">Knights of Fate</Source>
+    <SigAbility>Unmatched Ferocity</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDFEROCITYREDUCESTRAIN</Key>
+    <Name>Reduce Strain</Name>
+    <Description>Please see page 35 of the Knights of Fate Sourcebook for details.</Description>
+    <Source Page="35">Knights of Fate</Source>
+    <SigAbility>Unmatched Ferocity</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDFEROCITYSKILL1</Key>
+    <Name>Change Skill - Brawl</Name>
+    <Description>Please see page 35 of the Knights of Fate Sourcebook for details.</Description>
+    <Source Page="35">Knights of Fate</Source>
+    <SigAbility>Unmatched Ferocity</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDFEROCITYSKILL2</Key>
+    <Name>Change Skill - Lightsaber</Name>
+    <Description>Please see page 35 of the Knights of Fate Sourcebook for details.</Description>
+    <Source Page="35">Knights of Fate</Source>
+    <SigAbility>Unmatched Ferocity</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDFEROCITYREDUCESTRAIN</Key>
+    <Name>Reduce Strain</Name>
+    <Description>Please see page 35 of the Knights of Fate Sourcebook for details.</Description>
+    <Source Page="35">Knights of Fate</Source>
+    <SigAbility>Unmatched Ferocity</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDFEROCITYDESTINY</Key>
+    <Name>Destiny</Name>
+    <Description>Please see page 35 of the Knights of Fate Sourcebook for details.</Description>
+    <Source Page="35">Knights of Fate</Source>
+    <SigAbility>Unmatched Ferocity</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDFEROCITYCHANGETARGET</Key>
+    <Name>Change Target</Name>
+    <Description>Please see page 35 of the Knights of Fate Sourcebook for details.</Description>
+    <Source Page="35">Knights of Fate</Source>
+    <SigAbility>Unmatched Ferocity</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDFEROCITYREDUCECONFLICT</Key>
+    <Name>Reduce Conflict</Name>
+    <Description>Please see page 35 of the Knights of Fate Sourcebook for details.</Description>
+    <Source Page="35">Knights of Fate</Source>
+    <SigAbility>Unmatched Ferocity</SigAbility>
+  </SigAbilityNode>
+
+  <SigAbilityNode>
+    <Key>COUNTERESPBASE</Key>
+    <Name>Counterespionage Base Ability</Name>
+    <Description>Please see page 34 of the Cyphers and Masks Sourcebook for details.</Description>
+    <Source Page="34">Cyphers and Masks</Source>
+    <SigAbility>Counterespionage</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>COUNTERESPBOOST</Key>
+    <Name>Add Boost</Name>
+    <Description>Please see page 34 of the Cyphers and Masks Sourcebook for details.</Description>
+    <Source Page="34">Cyphers and Masks</Source>
+    <SigAbility>Counterespionage</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>COUNTERESPSKILL1</Key>
+    <Name>Change Skill (Charm)</Name>
+    <Description>Please see page 34 of the Cyphers and Masks Sourcebook for details.</Description>
+    <Source Page="34">Cyphers and Masks</Source>
+    <SigAbility>Counterespionage</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>COUNTERESPREDUCESETBACK</Key>
+    <Name>Reduce Setback</Name>
+    <Description>Please see page 34 of the Cyphers and Masks Sourcebook for details.</Description>
+    <Source Page="34">Cyphers and Masks</Source>
+    <SigAbility>Counterespionage</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>COUNTERESPSKILL2</Key>
+    <Name>Change Skill (Negotiation)</Name>
+    <Description>Please see page 34 of the Cyphers and Masks Sourcebook for details.</Description>
+    <Source Page="34">Cyphers and Masks</Source>
+    <SigAbility>Counterespionage</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>COUNTERESPDESTINY</Key>
+    <Name>Destiny</Name>
+    <Description>Please see page 34 of the Cyphers and Masks Sourcebook for details.</Description>
+    <Source Page="34">Cyphers and Masks</Source>
+    <SigAbility>Counterespionage</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>COUNTERESPTURNAGENT</Key>
+    <Name>Turn Agent</Name>
+    <Description>Please see page 34 of the Cyphers and Masks Sourcebook for details.</Description>
+    <Source Page="34">Cyphers and Masks</Source>
+    <SigAbility>Counterespionage</SigAbility>
+  </SigAbilityNode>
+
+
+  <SigAbilityNode>
+    <Key>UNMATCHEDTRADEBASE</Key>
+    <Name>Unmatched Tradecraft Base Ability</Name>
+    <Description>Please see page 35 of the Cyphers and Masks Sourcebook for details.</Description>
+    <Source Page="35">Cyphers and Masks</Source>
+    <SigAbility>Unmatched Tradecraft</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDTRADEINCREASEEFFECT1</Key>
+    <Name>Increase Effect (Setback)</Name>
+    <Description>Please see page 35 of the Cyphers and Masks Sourcebook for details.</Description>
+    <Source Page="35">Cyphers and Masks</Source>
+    <SigAbility>Unmatched Tradecraft</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDTRADEINCREASEEFFECT2</Key>
+    <Name>Increase Effect (Challenge)</Name>
+    <Description>Please see page 35 of the Cyphers and Masks Sourcebook for details.</Description>
+    <Source Page="35">Cyphers and Masks</Source>
+    <SigAbility>Unmatched Tradecraft</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDTRADEINCREASENUMBER</Key>
+    <Name>Increase Number</Name>
+    <Description>Please see page 35 of the Cyphers and Masks Sourcebook for details.</Description>
+    <Source Page="35">Cyphers and Masks</Source>
+    <SigAbility>Unmatched Tradecraft</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDTRADESKILL1</Key>
+    <Name>Change Skill (Stealth)</Name>
+    <Description>Please see page 35 of the Cyphers and Masks Sourcebook for details.</Description>
+    <Source Page="35">Cyphers and Masks</Source>
+    <SigAbility>Unmatched Tradecraft</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDTRADESKILL2</Key>
+    <Name>Change Skill (Skulduggery)</Name>
+    <Description>Please see page 35 of the Cyphers and Masks Sourcebook for details.</Description>
+    <Source Page="35">Cyphers and Masks</Source>
+    <SigAbility>Unmatched Tradecraft</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDTRADEDESTINY</Key>
+    <Name>Destiny</Name>
+    <Description>Please see page 35 of the Cyphers and Masks Sourcebook for details.</Description>
+    <Source Page="35">Cyphers and Masks</Source>
+    <SigAbility>Unmatched Tradecraft</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>FREQUENCY</Key>
+    <Name>Frequency</Name>
+    <Description>Please see page 35 of the Cyphers and Masks Sourcebook for details.</Description>
+    <Source Page="35">Cyphers and Masks</Source>
+    <SigAbility>Unmatched Tradecraft</SigAbility>
+  </SigAbilityNode>
+
+
+  <SigAbilityNode>
+    <Key>UNMATCHEDTEAMBASE</Key>
+    <Name>Unmatched Teamwork Base Ability</Name>
+    <Description>Please see page 46 of the Collapse of the Republic Sourcebook for details.</Description>
+    <Source Page="46">Collapse of the Republic</Source>
+    <SigAbility>Unmatched Teamwork</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDTEAMINCREASESUC</Key>
+    <Name>Increase Effect:  Success</Name>
+    <Description>Please see page 46 of the Collapse of the Republic Sourcebook for details.</Description>
+    <Source Page="46">Collapse of the Republic</Source>
+    <SigAbility>Unmatched Teamwork</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDTEAMINCREASESUCADV</Key>
+    <Name>Increase Effect:  Success and Advantage</Name>
+    <Description>Please see page 46 of the Collapse of the Republic Sourcebook for details.</Description>
+    <Source Page="46">Collapse of the Republic</Source>
+    <SigAbility>Unmatched Teamwork</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDTEAMINCREASETRI</Key>
+    <Name>Increase Effect:  Triumph</Name>
+    <Description>Please see page 46 of the Collapse of the Republic Sourcebook for details.</Description>
+    <Source Page="46">Collapse of the Republic</Source>
+    <SigAbility>Unmatched Teamwork</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDTEAMREMSETBACK</Key>
+    <Name>Remove Setback</Name>
+    <Description>Please see page 46 of the Collapse of the Republic Sourcebook for details.</Description>
+    <Source Page="46">Collapse of the Republic</Source>
+    <SigAbility>Unmatched Teamwork</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDTEAMINCREASERANGE</Key>
+    <Name>Increase Range</Name>
+    <Description>Please see page 46 of the Collapse of the Republic Sourcebook for details.</Description>
+    <Source Page="46">Collapse of the Republic</Source>
+    <SigAbility>Unmatched Teamwork</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDTEAMCAMARADERIE</Key>
+    <Name>Camaraderie</Name>
+    <Description>Please see page 46 of the Collapse of the Republic Sourcebook for details.</Description>
+    <Source Page="46">Collapse of the Republic</Source>
+    <SigAbility>Unmatched Teamwork</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>UNMATCHEDTEAMDESTINY</Key>
+    <Name>Destiny</Name>
+    <Description>Please see page 46 of the Collapse of the Republic Sourcebook for details.</Description>
+    <Source Page="46">Collapse of the Republic</Source>
+    <SigAbility>Unmatched Teamwork</SigAbility>
+  </SigAbilityNode>
+
+
+  <SigAbilityNode>
+    <Key>PEERLESSINTERCEPBASE</Key>
+    <Name>Peerless Interception Base Ability</Name>
+    <Description>Please see page 47 of the Collapse of the Republic Sourcebook for details.</Description>
+    <Source Page="47">Collapse of the Republic</Source>
+    <SigAbility>Peerless Interception</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>PEERLESSINTERCEPDESTINY</Key>
+    <Name>Destiny</Name>
+    <Description>Please see page 47 of the Collapse of the Republic Sourcebook for details.</Description>
+    <Source Page="47">Collapse of the Republic</Source>
+    <SigAbility>Peerless Interception</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>PEERLESSINTERCEPINCREASEDUR</Key>
+    <Name>Increase Duration</Name>
+    <Description>Please see page 47 of the Collapse of the Republic Sourcebook for details.</Description>
+    <Source Page="47">Collapse of the Republic</Source>
+    <SigAbility>Peerless Interception</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>PEERLESSINTERCEPCRITCOUNT</Key>
+    <Name>Critical Counter</Name>
+    <Description>Please see page 47 of the Collapse of the Republic Sourcebook for details.</Description>
+    <Source Page="47">Collapse of the Republic</Source>
+    <SigAbility>Peerless Interception</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>PEERLESSINTERCEPREDUCESTR</Key>
+    <Name>Reduce Strain</Name>
+    <Description>Please see page 47 of the Collapse of the Republic Sourcebook for details.</Description>
+    <Source Page="47">Collapse of the Republic</Source>
+    <SigAbility>Peerless Interception</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>PEERLESSINTERCEPACTIVATEQUAL</Key>
+    <Name>Activate Quality</Name>
+    <Description>Please see page 47 of the Collapse of the Republic Sourcebook for details.</Description>
+    <Source Page="47">Collapse of the Republic</Source>
+    <SigAbility>Peerless Interception</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>PEERLESSINTERCEPEFFORTCOUNT</Key>
+    <Name>Effortless Counter</Name>
+    <Description>Please see page 47 of the Collapse of the Republic Sourcebook for details.</Description>
+    <Source Page="47">Collapse of the Republic</Source>
+    <SigAbility>Peerless Interception</SigAbility>
+  </SigAbilityNode>
+  <SigAbilityNode>
+    <Key>PEERLESSINTERCEPINCFREQU</Key>
+    <Name>Increase Frequency</Name>
+    <Description>Please see page 47 of the Collapse of the Republic Sourcebook for details.</Description>
+    <Source Page="47">Collapse of the Republic</Source>
+    <SigAbility>Peerless Interception</SigAbility>
+  </SigAbilityNode>
+
+</SigAbilityNodes>

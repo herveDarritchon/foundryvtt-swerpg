@@ -1,0 +1,143 @@
+<?xml version="1.0"?>
+<Vehicle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Key>MKIXORBDEPOT</Key>
+  <Name>MK IX Orbital Maintenance Depot</Name>
+  <Description>[H3]MK IX Orbital Maintenance Depot[h3]
+Please see page 60 of the Fully Operational Sourcebook for details.</Description>
+  <Source Page="60">Fully Operational</Source>
+  <Type>Space Station</Type>
+  <Categories>
+    <Category>Capital Ship</Category>
+    <Category>Non-Fighter Starship</Category>
+    <Category>Starship</Category>
+    <Category>Station</Category>
+  </Categories>
+  <HP>9</HP>
+  <Price>22000000</Price>
+  <Rarity>7</Rarity>
+  <BaseMods>
+    <Mod>
+      <Count>1</Count>
+      <MiscDesc>[B]Depot Resources:[b] Reduce difficulty of repair and construction checks perfomed using this station by one.</MiscDesc>
+    </Mod>
+  </BaseMods>
+  <StarFighters>Six gunboats, six shuttles, numerous runabouts.</StarFighters>
+  <SensorRangeValue>srLong</SensorRangeValue>
+  <Crew>20,000 officers, enlisted crew, and technicians</Crew>
+  <Consumables>Two years</Consumables>
+  <Silhouette>8</Silhouette>
+  <Handling>-4</Handling>
+  <DefFore>2</DefFore>
+  <DefAft>2</DefAft>
+  <DefPort>2</DefPort>
+  <DefStarboard>2</DefStarboard>
+  <Armor>4</Armor>
+  <HullTrauma>250</HullTrauma>
+  <SystemStrain>200</SystemStrain>
+  <Starship>true</Starship>
+  <Massive>3</Massive>
+  <VehicleWeapons>
+    <VehicleWeapon>
+      <FiringArcs>
+        <Fore>true</Fore>
+        <Aft>true</Aft>
+        <Port>true</Port>
+      </FiringArcs>
+      <Turret>true</Turret>
+      <Location>Port</Location>
+      <Key>TURBOLT</Key>
+      <Count>8</Count>
+    </VehicleWeapon>
+    <VehicleWeapon>
+      <FiringArcs>
+        <Fore>true</Fore>
+        <Aft>true</Aft>
+        <Starboard>true</Starboard>
+      </FiringArcs>
+      <Turret>true</Turret>
+      <Location>Starboard</Location>
+      <Key>TURBOLT</Key>
+      <Count>8</Count>
+    </VehicleWeapon>
+    <VehicleWeapon>
+      <FiringArcs>
+        <Fore>true</Fore>
+        <Aft>true</Aft>
+        <Port>true</Port>
+      </FiringArcs>
+      <Turret>true</Turret>
+      <Location>Port</Location>
+      <Qualities>
+        <Quality>
+          <Key>LINKED</Key>
+          <Count>1</Count>
+        </Quality>
+      </Qualities>
+      <Key>LASERMED</Key>
+      <Count>4</Count>
+    </VehicleWeapon>
+    <VehicleWeapon>
+      <FiringArcs>
+        <Fore>true</Fore>
+        <Aft>true</Aft>
+        <Starboard>true</Starboard>
+      </FiringArcs>
+      <Turret>true</Turret>
+      <Location>Starboard</Location>
+      <Qualities>
+        <Quality>
+          <Key>LINKED</Key>
+          <Count>1</Count>
+        </Quality>
+      </Qualities>
+      <Key>LASERMED</Key>
+      <Count>4</Count>
+    </VehicleWeapon>
+    <VehicleWeapon>
+      <FiringArcs>
+        <Fore>true</Fore>
+        <Aft>true</Aft>
+        <Port>true</Port>
+      </FiringArcs>
+      <Turret>true</Turret>
+      <Location>Port</Location>
+      <Qualities>
+        <Quality>
+          <Key>LINKED</Key>
+          <Count>1</Count>
+        </Quality>
+      </Qualities>
+      <Key>IONLT</Key>
+      <Count>4</Count>
+    </VehicleWeapon>
+    <VehicleWeapon>
+      <FiringArcs>
+        <Fore>true</Fore>
+        <Aft>true</Aft>
+        <Starboard>true</Starboard>
+      </FiringArcs>
+      <Turret>true</Turret>
+      <Location>Starboard</Location>
+      <Qualities>
+        <Quality>
+          <Key>LINKED</Key>
+          <Count>1</Count>
+        </Quality>
+      </Qualities>
+      <Key>IONLT</Key>
+      <Count>4</Count>
+    </VehicleWeapon>
+    <VehicleWeapon>
+      <FiringArcs>
+        <Fore>true</Fore>
+        <Aft>true</Aft>
+        <Port>true</Port>
+        <Starboard>true</Starboard>
+      </FiringArcs>
+      <Location>Hull</Location>
+      <Key>TRACTHVY</Key>
+      <Count>10</Count>
+    </VehicleWeapon>
+  </VehicleWeapons>
+  <SensorRange>Long</SensorRange>
+</Vehicle>

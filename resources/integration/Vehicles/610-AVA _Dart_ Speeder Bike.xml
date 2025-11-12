@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<Vehicle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Key>610AVA</Key>
+  <Name>610-AVA "Dart" Speeder Bike</Name>
+  <Description>[H3]610-AVA "Dart" Speeder Bike[h3]
+Please see page 53 of the Savage Spirits Sourcebook for details.
+    </Description>
+  <Source Page="53">Savage Spirits</Source>
+  <Type>Speeder Bike</Type>
+  <Categories>
+    <Category>Land Vehicle</Category>
+  </Categories>
+  <HP>4</HP>
+  <Price>2400</Price>
+  <Rarity>6</Rarity>
+  <BaseMods>
+    <Mod>
+      <Count>1</Count>
+      <MiscDesc>Collapsing or expanding the Dart requires a maneuver.  When collapsed, the vehicle is silhouette 1 and cannot be used.</MiscDesc>
+    </Mod>
+  </BaseMods>
+  <MaxAltitude>20 meters</MaxAltitude>
+  <Crew>One pilot</Crew>
+  <EncumbranceCapacity>9</EncumbranceCapacity>
+  <Passengers>1</Passengers>
+  <Silhouette>2</Silhouette>
+  <Speed>2</Speed>
+  <Handling>1</Handling>
+  <HullTrauma>2</HullTrauma>
+  <SystemStrain>5</SystemStrain>
+  <SinglePilot>true</SinglePilot>
+  <SensorRange>Close</SensorRange>
+</Vehicle>

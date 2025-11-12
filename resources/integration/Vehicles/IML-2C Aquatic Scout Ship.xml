@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<Vehicle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Key>IML2C</Key>
+  <Name>IML-2C Aquatic Scout Ship</Name>
+  <Description>[H3]IML-2C Aquatic Scout Ship[h3]
+Please see page 58 of the Disciples of Harmony Sourcebook for details.
+  </Description>
+  <Source Page="58">Disciples of Harmony</Source>
+  <Type>Submersible</Type>
+  <Categories>
+    <Category>Watercraft</Category>
+  </Categories>
+  <HP>4</HP>
+  <Price>10000</Price>
+  <Rarity>5</Rarity>
+  <SensorRangeValue>srMedium</SensorRangeValue>
+  <Crew>One pilot, one co-pilot, one comms technician</Crew>
+  <EncumbranceCapacity>20</EncumbranceCapacity>
+  <Passengers>2</Passengers>
+  <Silhouette>3</Silhouette>
+  <Speed>3</Speed>
+  <Handling>1</Handling>
+  <Armor>1</Armor>
+  <HullTrauma>5</HullTrauma>
+  <SystemStrain>7</SystemStrain>
+  <SensorRange>Medium</SensorRange>
+</Vehicle>

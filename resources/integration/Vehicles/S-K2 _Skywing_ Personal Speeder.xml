@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<Vehicle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Key>SK2SKYWING</Key>
+  <Name>S-K2 "Skywing" Personal Speeder</Name>
+  <Description>[H3]S-K2 "Skywing" Personal Speeder[h3]
+Please see page 53 of the Knights of Fate Sourcebook for details.</Description>
+  <Source Page="53">Knights of Fate</Source>
+  <Type>Personal Speeder</Type>
+  <Categories>
+    <Category>Air Vehicle</Category>
+  </Categories>
+  <Price>1000</Price>
+  <Rarity>4</Rarity>
+  <BaseMods>
+    <Mod>
+      <Count>1</Count>
+      <MiscDesc>[B]Rapid Debarkation[b]: The pilot of a Skywing may dismount as an out-of-turn incidental.</MiscDesc>
+    </Mod>
+  </BaseMods>
+  <MaxAltitude>500 meters</MaxAltitude>
+  <SensorRangeValue>srNone</SensorRangeValue>
+  <Crew>One pilot</Crew>
+  <EncumbranceCapacity>5</EncumbranceCapacity>
+  <Silhouette>2</Silhouette>
+  <Speed>3</Speed>
+  <Handling>2</Handling>
+  <HullTrauma>3</HullTrauma>
+  <SystemStrain>3</SystemStrain>
+  <SinglePilot>true</SinglePilot>
+  <SensorRange>No Sensors</SensorRange>
+</Vehicle>

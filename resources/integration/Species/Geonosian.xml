@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Species>
+  <Key>GEONOSIAN</Key>
+  <Name>Geonosian</Name>
+  <Description>
+    [H4]Geonosian[h4]
+    Please see page 12 of the Rise of the Separatists Sourcebook for details.
+  </Description>
+  <Source Page="12">Rise of the Separatists</Source>
+  <StartingChars>
+    <Brawn>2</Brawn>
+    <Agility>2</Agility>
+    <Intellect>2</Intellect>
+    <Cunning>1</Cunning>
+    <Willpower>1</Willpower>
+    <Presence>1</Presence>
+  </StartingChars>
+  <StartingAttrs>
+    <WoundThreshold>9</WoundThreshold>
+    <StrainThreshold>9</StrainThreshold>
+    <Experience>140</Experience>
+  </StartingAttrs>
+  <SkillModifiers>
+  </SkillModifiers>
+  <TalentModifiers>
+  </TalentModifiers>
+  <OptionChoices>
+    <OptionChoice>
+      <Key>GEONOSIANOC1</Key>
+      <Name>Skill</Name>
+      <Options>
+        <Option>
+          <Key>GEONOSIANOC1OP1</Key>
+          <Name>Skill Choice</Name>
+          <Description>
+            Geonisians start the game with one rank in any skill of their choice.
+          </Description>
+          <StartingSkillTraining>
+            <SkillTraining>
+              <SkillCount>1</SkillCount>
+              <Requirement>
+                <FromSkillType>true</FromSkillType>
+                <SkillType>stAll</SkillType>
+              </Requirement>
+            </SkillTraining>
+          </StartingSkillTraining>
+        </Option>
+      </Options>
+    </OptionChoice>
+    <OptionChoice>
+      <Key>GEONOSIANOC2</Key>
+      <Name>Assistance</Name>
+      <Options>
+        <Option>
+          <Key>GEONOSIANOC2OP1</Key>
+          <Name>Industrious</Name>
+          <Description>
+            A Geonosian who provides assistance adds [BO] to the check, in addition to the normal benefits of assistance, and the Geonosian heals 1 strain.
+          </Description>
+        </Option>
+      </Options>
+    </OptionChoice>
+    <OptionChoice>
+      <Key>GEONOSIANOC3</Key>
+      <Name>Flight</Name>
+      <Options>
+        <Option>
+          <Key>GEONOSIANOC3OP1</Key>
+          <Name>Winged</Name>
+          <Description>
+            Geonosians can fly.
+          </Description>
+        </Option>
+      </Options>
+    </OptionChoice>
+  </OptionChoices>
+</Species>

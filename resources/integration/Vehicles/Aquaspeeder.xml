@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<Vehicle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Key>AQUASPEEDER</Key>
+  <Name>Aquaspeeder</Name>
+  <Description>[H3]Aquaspeeder[h3]
+Please see page 58 of the Unlimited Power Sourcebook for details.</Description>
+  <Source Page="58">Unlimited Power</Source>
+  <Type>Aquaspeeder</Type>
+  <Categories>
+    <Category>Watercraft</Category>
+  </Categories>
+  <HP>2</HP>
+  <Price>7000</Price>
+  <Rarity>2</Rarity>
+  <MaxAltitude>1 meter</MaxAltitude>
+  <Crew>One pilot</Crew>
+  <EncumbranceCapacity>20</EncumbranceCapacity>
+  <Passengers>4</Passengers>
+  <Silhouette>3</Silhouette>
+  <Speed>2</Speed>
+  <HullTrauma>8</HullTrauma>
+  <SystemStrain>6</SystemStrain>
+  <SinglePilot>true</SinglePilot>
+  <SensorRange>Close</SensorRange>
+</Vehicle>

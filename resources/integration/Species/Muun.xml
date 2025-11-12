@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Species>
+  <Key>MUUN</Key>
+  <Name>Muun</Name>
+  <Description>
+    [H4]Muun[h4]
+    Please see page 20 of the Endless Vigil Sourcebook for details.
+  </Description>
+  <Source Page="20">Endless Vigil</Source>
+  <StartingChars>
+    <Brawn>2</Brawn>
+    <Agility>2</Agility>
+    <Intellect>3</Intellect>
+    <Cunning>3</Cunning>
+    <Willpower>1</Willpower>
+    <Presence>1</Presence>
+  </StartingChars>
+  <StartingAttrs>
+    <WoundThreshold>9</WoundThreshold>
+    <StrainThreshold>9</StrainThreshold>
+    <Experience>90</Experience>
+  </StartingAttrs>
+  <SkillModifiers>
+    <SkillModifier>
+      <Key>EDU</Key>
+      <RankStart>1</RankStart>
+      <RankLimit>2</RankLimit>
+    </SkillModifier>
+    <SkillModifier>
+      <Key>CORE</Key>
+      <RankStart>1</RankStart>
+      <RankLimit>2</RankLimit>
+    </SkillModifier>
+  </SkillModifiers>
+  <OptionChoices>
+    <OptionChoice>
+      <Key>MUUNOC1</Key>
+      <Name>Credits</Name>
+      <Options>
+        <Option>
+          <Key>MUUNOC1OP1</Key>
+          <Name>Deep Pockets</Name>
+          <Description>
+            Muun characters start the game with an additional 1,000 credits.  They may not be spend during character creation.
+          </Description>
+        </Option>
+      </Options>
+    </OptionChoice>
+  </OptionChoices>
+</Species>

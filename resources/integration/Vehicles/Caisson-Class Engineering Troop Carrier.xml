@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<Vehicle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Key>CAISSONCAR</Key>
+  <Name>Caisson-Class Engineering Troop Carrier</Name>
+  <Description>[H3][I]Caisson[i]-Class Engineering Troop Carrier[h3]
+Please see page 58 of the Fully Operational Sourcebook for details.</Description>
+  <Source Page="58">Fully Operational</Source>
+  <Type>Shuttle</Type>
+  <Categories>
+    <Category>Non-Fighter Starship</Category>
+    <Category>Starship</Category>
+  </Categories>
+  <HP>2</HP>
+  <Price>190000</Price>
+  <Rarity>6</Rarity>
+  <HyperdrivePrimary>3</HyperdrivePrimary>
+  <HyperdriveBackup>12</HyperdriveBackup>
+  <NaviComputer>true</NaviComputer>
+  <SensorRangeValue>srShort</SensorRangeValue>
+  <Crew>One pilot, one co-pilot, one comms operator</Crew>
+  <EncumbranceCapacity>110</EncumbranceCapacity>
+  <Passengers>40</Passengers>
+  <Consumables>Two months</Consumables>
+  <Silhouette>4</Silhouette>
+  <Speed>3</Speed>
+  <Handling>-1</Handling>
+  <DefFore>1</DefFore>
+  <DefAft>1</DefAft>
+  <Armor>5</Armor>
+  <HullTrauma>25</HullTrauma>
+  <SystemStrain>15</SystemStrain>
+  <Starship>true</Starship>
+  <VehicleWeapons>
+    <VehicleWeapon>
+      <FiringArcs>
+        <Fore>true</Fore>
+        <Aft>true</Aft>
+        <Port>true</Port>
+      </FiringArcs>
+      <Turret>true</Turret>
+      <Location>Ventral</Location>
+      <Qualities>
+        <Quality>
+          <Key>LINKED</Key>
+          <Count>1</Count>
+        </Quality>
+      </Qualities>
+      <Key>LASERMED</Key>
+    </VehicleWeapon>
+    <VehicleWeapon>
+      <FiringArcs>
+        <Fore>true</Fore>
+        <Aft>true</Aft>
+        <Starboard>true</Starboard>
+      </FiringArcs>
+      <Turret>true</Turret>
+      <Location>Ventral</Location>
+      <Qualities>
+        <Quality>
+          <Key>LINKED</Key>
+          <Count>1</Count>
+        </Quality>
+      </Qualities>
+      <Key>LASERMED</Key>
+    </VehicleWeapon>
+    <VehicleWeapon>
+      <FiringArcs>
+        <Aft>true</Aft>
+      </FiringArcs>
+      <Location>Aft</Location>
+      <Qualities>
+        <Quality>
+          <Key>LINKED</Key>
+          <Count>1</Count>
+        </Quality>
+      </Qualities>
+      <Key>AUTOBLAST</Key>
+    </VehicleWeapon>
+  </VehicleWeapons>
+  <SensorRange>Short</SensorRange>
+</Vehicle>

@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<Vehicle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Key>FG8T8T</Key>
+  <Name>FG 8T8-T</Name>
+  <Description>[H3]FG 8T8-T[h3]
+Please see page 56 of the Endless Vigil Sourcebook for details.</Description>
+  <Source Page="56">Endless Vigil</Source>
+  <Type>Podracer</Type>
+  <Categories>
+    <Category>Land Vehicle</Category>
+  </Categories>
+  <HP>2</HP>
+  <Price>16200</Price>
+  <Rarity>7</Rarity>
+  <MaxAltitude>45 meters</MaxAltitude>
+  <Crew>One pilot</Crew>
+  <EncumbranceCapacity>2</EncumbranceCapacity>
+  <Silhouette>3</Silhouette>
+  <Speed>4</Speed>
+  <HullTrauma>4</HullTrauma>
+  <SystemStrain>7</SystemStrain>
+  <SinglePilot>true</SinglePilot>
+  <BuiltInAttachments>
+    <Key>PODEJECT</Key>
+  </BuiltInAttachments>
+  <SensorRange>Close</SensorRange>
+</Vehicle>

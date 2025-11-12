@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<Vehicle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Key>STAPASSAULT</Key>
+  <Name>STAP Assault Platform</Name>
+  <Description>[H3]STAP Assault Platform[h3]
+Please see User Data for details.</Description>
+  <Source>User Data</Source>
+  <Type>Landspeeder</Type>
+  <Categories>
+    <Category>Land Vehicle</Category>
+  </Categories>
+  <HP>1</HP>
+  <Price>2500</Price>
+  <Rarity>4</Rarity>
+  <MaxAltitude>75 meters</MaxAltitude>
+  <Crew>One pilot</Crew>
+  <EncumbranceCapacity>4</EncumbranceCapacity>
+  <Silhouette>2</Silhouette>
+  <Speed>3</Speed>
+  <HullTrauma>2</HullTrauma>
+  <SystemStrain>3</SystemStrain>
+  <SinglePilot>true</SinglePilot>
+  <VehicleWeapons>
+    <VehicleWeapon>
+      <FiringArcs>
+        <Fore>true</Fore>
+      </FiringArcs>
+      <Location>Forward</Location>
+      <Qualities>
+        <Quality>
+          <Key>LINKED</Key>
+          <Count>1</Count>
+        </Quality>
+      </Qualities>
+      <Key>BLASTLTREP</Key>
+    </VehicleWeapon>
+  </VehicleWeapons>
+  <SensorRange>Close</SensorRange>
+</Vehicle>

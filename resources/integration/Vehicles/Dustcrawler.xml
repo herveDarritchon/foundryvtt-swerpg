@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<Vehicle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Key>DUSTCRAWLER</Key>
+  <Name>Dustcrawler</Name>
+  <Description>[H3]Tagge Dustcrawler[h3]
+Please see page 60 of the Unlimited Power Sourcebook for details.</Description>
+  <Source Page="60">Unlimited Power</Source>
+  <Type>Groundcar</Type>
+  <Categories>
+    <Category>Wheeled Vehicle</Category>
+  </Categories>
+  <HP>6</HP>
+  <Price>60000</Price>
+  <Rarity>5</Rarity>
+  <Crew>One pilot, one copilot</Crew>
+  <EncumbranceCapacity>300</EncumbranceCapacity>
+  <Passengers>30</Passengers>
+  <Silhouette>4</Silhouette>
+  <Speed>2</Speed>
+  <Handling>-3</Handling>
+  <Armor>4</Armor>
+  <HullTrauma>35</HullTrauma>
+  <SystemStrain>30</SystemStrain>
+  <SinglePilot>true</SinglePilot>
+  <SensorRange>Close</SensorRange>
+  <BuiltInAttachments>
+    <Key>DUSTCRAWLER</Key>
+  </BuiltInAttachments>
+</Vehicle>

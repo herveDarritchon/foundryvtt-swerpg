@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<Vehicle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Key>YV666</Key>
+  <Name>YV-666 Light Freighter</Name>
+  <Description>[H3]YV-666 Light Freighter[h3]
+Please see page 62 of the No Disintegrations Sourcebook for details.</Description>
+  <Source Page="62">No Disintegrations</Source>
+  <Type>Light Freighter</Type>
+  <Categories>
+    <Category>Starship</Category>
+    <Category>Non-Fighter Starship</Category>
+  </Categories>
+  <HP>6</HP>
+  <Price>132000</Price>
+  <Rarity>6</Rarity>
+  <HyperdrivePrimary>3</HyperdrivePrimary>
+  <HyperdriveBackup>14</HyperdriveBackup>
+  <NaviComputer>true</NaviComputer>
+  <SensorRangeValue>srShort</SensorRangeValue>
+  <Crew>On pilot, one co-pilot</Crew>
+  <EncumbranceCapacity>200</EncumbranceCapacity>
+  <Passengers>6</Passengers>
+  <Consumables>Three months</Consumables>
+  <Silhouette>4</Silhouette>
+  <Speed>3</Speed>
+  <Handling>-2</Handling>
+  <DefFore>2</DefFore>
+  <DefAft>1</DefAft>
+  <Armor>3</Armor>
+  <HullTrauma>30</HullTrauma>
+  <SystemStrain>12</SystemStrain>
+  <Starship>true</Starship>
+  <VehicleWeapons>
+    <VehicleWeapon>
+      <FiringArcs>
+        <Fore>true</Fore>
+        <Aft>true</Aft>
+        <Port>true</Port>
+        <Starboard>true</Starboard>
+        <Dorsal>true</Dorsal>
+      </FiringArcs>
+      <Location>Dorsal</Location>
+      <Retractable>true</Retractable>
+      <Key>LASERQUAD</Key>
+    </VehicleWeapon>
+    <VehicleWeapon>
+      <FiringArcs>
+        <Fore>true</Fore>
+      </FiringArcs>
+      <Location>Forward</Location>
+      <Qualities>
+        <Quality>
+          <Key>LINKED</Key>
+          <Count>1</Count>
+        </Quality>
+      </Qualities>
+      <Key>LASERLT</Key>
+    </VehicleWeapon>
+  </VehicleWeapons>
+  <SensorRange>Short</SensorRange>
+</Vehicle>

@@ -1,0 +1,1855 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ItemDescriptors>
+  <ItemDescriptor>
+    <Key>DAMADD</Key>
+    <Name>Additional Damage Mod</Name>
+    <Description></Description>
+    <Type>Weapon</Type>
+    <ModDesc>Damage +1</ModDesc>
+    <QualDesc>Damage +{0}</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>DAMADDCRYS</Key>
+    <Name>Additional Damage for Crystal Mod</Name>
+    <Description></Description>
+    <Type>Weapon</Type>
+    <ModDesc>Damage for Crystal +1</ModDesc>
+    <QualDesc>Damage for Crystal +{0}</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>DAMSUB</Key>
+    <Name>Reduced Damage Mod</Name>
+    <Description></Description>
+    <Type>Weapon</Type>
+    <ModDesc>Damage -1</ModDesc>
+    <QualDesc>Damage -{0}</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>DAMSUBCRYS</Key>
+    <Name>Reduced Damage for Crystal Mod</Name>
+    <Description></Description>
+    <Type>Weapon</Type>
+    <ModDesc>Damage for Crystal -1</ModDesc>
+    <QualDesc>Damage for Crystal -{0}</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>DAMSET</Key>
+    <Name>Base Damage Mod</Name>
+    <Description></Description>
+    <Type>Weapon</Type>
+    <ModDesc>Changes Base Damage</ModDesc>
+    <QualDesc>Changes Base Damage to {0}</QualDesc>
+    <IsBase>true</IsBase>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>RESDOSE</Key>
+    <Name>Increase doses by 1 Mod</Name>
+    <Description></Description>
+    <Type>Weapon</Type>
+    <ModDesc>Increase doses by 1</ModDesc>
+    <QualDesc>Increase doses by {0}</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>HOLSTER3</Key>
+    <Name>Hoster Weapon up to Encumbrance 3 Mod</Name>
+    <Description></Description>
+    <Type>Armor</Type>
+    <ModDesc>Holster Weapon up to Encumbrance 3</ModDesc>
+    <QualDesc>Holster {0} Weapon(s) up to Encumbrance 3</QualDesc>
+    <ChooseItemsForStorage>true</ChooseItemsForStorage>
+    <ItemsForStorage>
+      <EncLimit>3</EncLimit>
+      <TypeLimit>
+        <Type>Weapon</Type>
+      </TypeLimit>
+    </ItemsForStorage>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>MOUNT3</Key>
+    <Name>Mount Weapon up to Encumbrance 3 Mod</Name>
+    <Description></Description>
+    <Type>Armor</Type>
+    <ModDesc>Mount Weapon up to Encumbrance 3</ModDesc>
+    <QualDesc>Mount {0} Weapon(s) up to Encumbrance 3</QualDesc>
+    <ChooseItemsForStorage>true</ChooseItemsForStorage>
+    <ItemsForStorage>
+      <EncLimit>3</EncLimit>
+      <TypeLimit>
+        <Type>Weapon</Type>
+      </TypeLimit>
+    </ItemsForStorage>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>MOUNTRANGED4</Key>
+    <Name>Mount Ranged Weapon up to Encumbrance 4 Mod</Name>
+    <Description></Description>
+    <Type>Armor</Type>
+    <ModDesc>Mount Ranged Weapon up to Encumbrance 4</ModDesc>
+    <QualDesc>Mount {0} Ranged Weapon(s) up to Encumbrance 4</QualDesc>
+    <ChooseItemsForStorage>true</ChooseItemsForStorage>
+    <ItemsForStorage>
+      <EncLimit>4</EncLimit>
+      <TypeLimit>
+        <Type>Weapon</Type>
+      </TypeLimit>
+      <SkillLimit>
+        <Skill>RANGHVY</Skill>
+        <Skill>RANGLT</Skill>
+      </SkillLimit>
+    </ItemsForStorage>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>MOUNTADDL</Key>
+    <Name>Increase Allowable Mounted Weapon Encumbrance by 1 Mod</Name>
+    <Description></Description>
+    <Type>Armor</Type>
+    <ModDesc>Increase Allowable Weapon Encumbrance by 1</ModDesc>
+    <QualDesc>Increase Allowable Weapon Encumbrance by {0}</QualDesc>
+    <ItemsForStorage>
+      <AddlEnc>1</AddlEnc>
+    </ItemsForStorage>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>CARRY1</Key>
+    <Name>Carry Items up to Encumbrance 1 Mod</Name>
+    <Description></Description>
+    <Type>Armor</Type>
+    <ModDesc>Carry Items up to Encumbrance 1</ModDesc>
+    <QualDesc>Carry {0} Item(s) up to Encumbrance 1</QualDesc>
+    <ChooseItemsForStorage>true</ChooseItemsForStorage>
+    <ItemsForStorage>
+      <EncLimit>1</EncLimit>
+    </ItemsForStorage>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>CARRY0</Key>
+    <Name>Carry Items of Encumbrance 0 Mod</Name>
+    <Description></Description>
+    <Type>Armor</Type>
+    <ModDesc>Carry Items of Encumbrance 0</ModDesc>
+    <QualDesc>Carry {0} Item(s) of Encumbrance 0</QualDesc>
+    <ChooseItemsForStorage>true</ChooseItemsForStorage>
+    <ItemsForStorage>
+      <EncLimit>0</EncLimit>
+    </ItemsForStorage>
+  </ItemDescriptor>
+
+  <ItemDescriptor>
+    <Key>DFPADD</Key>
+    <Name>Add Dark Force Point to Force Power Check Mod</Name>
+    <Description></Description>
+    <ModDesc>Add One [DA] to Force Power Check</ModDesc>
+    <QualDesc>Add {0} [DA] to Force Power Check</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>LFPADD</Key>
+    <Name>Add Light Force Point to Force Power Check Mod</Name>
+    <Description></Description>
+    <ModDesc>Add One [LI] to Force Power Check</ModDesc>
+    <QualDesc>Add {0} [LI] to Force Power Check</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>FPADD</Key>
+    <Name>Add Force Point to Force Power Check Mod</Name>
+    <Description></Description>
+    <ModDesc>Add One [FP] to Force Power Check</ModDesc>
+    <QualDesc>Add {0} [FP] to Force Power Check</QualDesc>
+  </ItemDescriptor>
+
+
+
+  <ItemDescriptor>
+    <Key>ADVADD</Key>
+    <Name>Add Advantage to Successful Check Mod</Name>
+    <Description></Description>
+    <Type>Weapon</Type>
+    <ModDesc>Add One [ADVANTAGE] to Successful Check</ModDesc>
+    <QualDesc>Add {0} [ADVANTAGE] to Successful Check</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>SUCCADD</Key>
+    <Name>Add Success to Check Mod</Name>
+    <Description></Description>
+    <Type>Weapon</Type>
+    <ModDesc>Add One [SU] to Check</ModDesc>
+    <QualDesc>Add {0} [SU] to Check</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>ADVADDCOM</Key>
+    <Name>Add Advantage to Combat Check Mod</Name>
+    <Description></Description>
+    <Type>Weapon</Type>
+    <ModDesc>Add One [ADVANTAGE] to Combat Check</ModDesc>
+    <QualDesc>Add {0} [ADVANTAGE] to Combat Check</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>THRADD</Key>
+    <Name>Add Threat to Check Mod</Name>
+    <Description></Description>
+    <Type>Weapon</Type>
+    <ModDesc>Add One [THREAT] to Check</ModDesc>
+    <QualDesc>Add {0} [THREAT] to Check</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>THRCANCEL</Key>
+    <Name>Cancel Threat from Check Mod</Name>
+    <Description></Description>
+    <Type>Weapon</Type>
+    <ModDesc>Cancel One [THREAT] from Check</ModDesc>
+    <QualDesc>Cancel {0} [THREAT] from Check</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>UPGRADEDIFF</Key>
+    <Name>Upgrade Difficulty of Check Mod</Name>
+    <Description></Description>
+    <Type>Weapon</Type>
+    <ModDesc>Upgrade Difficulty of Check Once</ModDesc>
+    <QualDesc>Upgrade Difficulty of Check {0} time(s)</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>ADVADDINIT</Key>
+    <Name>Add Advantage to Initiative Check Mod</Name>
+    <Description></Description>
+    <Type></Type>
+    <ModDesc>Add One [ADVANTAGE] to Initiative Check</ModDesc>
+    <QualDesc>Add {0} [ADVANTAGE] to Initiative Check</QualDesc>
+  </ItemDescriptor>
+
+
+  <ItemDescriptor>
+    <Key>HPADD</Key>
+    <Name>Add Hard Points Mod</Name>
+    <Description></Description>
+    <Type></Type>
+    <ModDesc>Add One Hard Point</ModDesc>
+    <QualDesc>Add {0} Hard Point(s)</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>HPADD2</Key>
+    <Name>Add 2 Hard Points to Vehicle Mod</Name>
+    <Description></Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Add 2 Hard Points to Vehicle</ModDesc>
+    <QualDesc>Add 2 Hard Point to Vehicle</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>HPSUB</Key>
+    <Name>Remove Hard Points from Item Mod</Name>
+    <Description></Description>
+    <Type></Type>
+    <ModDesc>Remove One Hard Point from Item</ModDesc>
+    <QualDesc>Remove {0} Hard Point(s) from Item</QualDesc>
+  </ItemDescriptor>
+
+
+
+
+  <ItemDescriptor>
+    <Key>CRITSET</Key>
+    <Name>Base Critical Rating Mod</Name>
+    <Description>Changes Critical Rating</Description>
+    <Type>Weapon</Type>
+    <ModDesc>Changes Base Critical Rating</ModDesc>
+    <QualDesc>Changes Base Critical Rating to {0}</QualDesc>
+    <IsBase>true</IsBase>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>STRAINADD</Key>
+    <Name>Additional Strain Mod</Name>
+    <Description></Description>
+    <Type></Type>
+    <ModDesc>Increases user's strain by one</ModDesc>
+    <QualDesc>Increases user's strain by {0}</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>RANGEADD</Key>
+    <Name>Additional Range Mod</Name>
+    <Description></Description>
+    <Type>Weapon</Type>
+    <ModDesc>Increases weapon's range by one Range Band</ModDesc>
+    <QualDesc>Increases weapon's range by {0} Range Band(s)</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>RANGESUB</Key>
+    <Name>Reduced Range Mod</Name>
+    <Description></Description>
+    <Type>Weapon</Type>
+    <ModDesc>Decreases weapon's range by one Range Band</ModDesc>
+    <QualDesc>Decreases weapon's range by {0} Range Band(s)</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>ENCTOTSUB</Key>
+    <Name>Decreases Total Encumbrance Mod</Name>
+    <Description></Description>
+    <ModDesc>Decrease Total Encumbrance by 1</ModDesc>
+    <QualDesc>Decrease Total Encumbrance by {0}</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>ENCSUB</Key>
+    <Name>Decreases Encumbrance Mod</Name>
+    <Description></Description>
+    <ModDesc>Decrease Encumbrance by 1</ModDesc>
+    <QualDesc>Decrease Encumbrance by {0}</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>ENCSUB2</Key>
+    <Name>Decreases Encumbrance by 2 Mod</Name>
+    <Description></Description>
+    <ModDesc>Decrease Encumbrance by 2</ModDesc>
+    <QualDesc>Decrease Encumbrance by 2</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>ENCADD</Key>
+    <Name>Increases Encumbrance Mod</Name>
+    <Description></Description>
+    <ModDesc>Increase Encumbrance by 1</ModDesc>
+    <QualDesc>Increase Encumbrance by {0}</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>ENCTADD</Key>
+    <Name>Increases Encumbrance Threshold Mod</Name>
+    <Description></Description>
+    <ModDesc>Increase Encumbrance Threshold by 1</ModDesc>
+    <QualDesc>Increase Encumbrance Threshold by {0}</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>ENCTBRADD</Key>
+    <Name>Increases Brawn for Determining Encumbrance Threshold Mod</Name>
+    <Description></Description>
+    <ModDesc>Increase Brawn for Determining Encumbrance Threshold by 1</ModDesc>
+    <QualDesc>Increase Brawn for Determining Encumbrance Threshold by {0}</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>ENCTADD3</Key>
+    <Name>Increases Encumbrance Threshold by 3 Mod</Name>
+    <Description></Description>
+    <ModDesc>Increase Encumbrance Threshold by 3</ModDesc>
+    <QualDesc>Increase Encumbrance Threshold by 3</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>ENCTSUB</Key>
+    <Name>Decreases Encumbrance Threshold Mod</Name>
+    <Description></Description>
+    <ModDesc>Decrease Encumbrance Threshold by 1</ModDesc>
+    <QualDesc>Decrease Encumbrance Threshold by {0}</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>CRITSUB</Key>
+    <Name>Decrease Critical Mod</Name>
+    <Description>Decreases the weapon's Crit Rating by 1 to a minimum of 1</Description>
+    <Type>Weapon</Type>
+    <ModDesc>Decreases Critical by 1</ModDesc>
+    <QualDesc>Decreases Critical by {0}</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>SOAKADD</Key>
+    <Name>Increase Soak Mod</Name>
+    <Description>
+      Increases Soak value by 1
+    </Description>
+    <Type>Armor</Type>
+    <ModDesc>Increases Soak value by 1</ModDesc>
+    <QualDesc>Increases Soak value by {0}</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>SOAKSET</Key>
+    <Name>Set Soak Mod</Name>
+    <Description>
+      Set Soak value
+    </Description>
+    <Type>Armor</Type>
+    <ModDesc>Set Soak value</ModDesc>
+    <QualDesc>Set Soak value {0}</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>MELEEDEFADD</Key>
+    <Name>Increase Melee Defense Mod</Name>
+    <Description>
+      Increases Melee Defense value by 1
+    </Description>
+    <Type>Armor</Type>
+    <ModDesc>Increases Melee Defense value by 1</ModDesc>
+    <QualDesc>Increases Melee Defense value by {0}</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>RANGEDEFADD</Key>
+    <Name>Increase Ranged Defense Mod</Name>
+    <Description>
+      Increases Ranged Defense value by 1
+    </Description>
+    <Type>Armor</Type>
+    <ModDesc>Increases Ranged Defense value by 1</ModDesc>
+    <QualDesc>Increases Ranged Defense value by {0}</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>DEFADD</Key>
+    <Name>Increase Defense Mod</Name>
+    <Description>
+      Increases Defense value by 1
+    </Description>
+    <Type>Armor</Type>
+    <ModDesc>Increases Defense value by 1</ModDesc>
+    <QualDesc>Increases Defense value by {0}</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>DEFSET</Key>
+    <Name>Set Defense Mod</Name>
+    <Description>
+      Set Defense value
+    </Description>
+    <Type>Armor</Type>
+    <ModDesc>Set Defense value</ModDesc>
+    <QualDesc>Set Defense value to {0}</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>DEFADDFORCE</Key>
+    <Name>Increase Defense when Force User Mod</Name>
+    <Description>
+      Increases Defense value by 1 when Force User
+    </Description>
+    <Type>Armor</Type>
+    <ModDesc>Increases Defense value by 1 when Force User</ModDesc>
+    <QualDesc>Increases Defense value by {0} when Force User</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>SETBACKADD</Key>
+    <Name>Add Setback Mod</Name>
+    <Description>
+      Add [SETBACK] to all attack checks when using this weapon
+    </Description>
+    <Type>Weapon</Type>
+    <ModDesc>Add [SETBACK] to all attack checks when using this weapon</ModDesc>
+    <QualDesc>Add {0} [SETBACK] to all attack checks when using this weapon</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>SETBACKSUB</Key>
+    <Name>Remove Setback Mod</Name>
+    <Description>
+      Remove [SETBACK] from all attack checks when using this weapon
+    </Description>
+    <Type>Weapon</Type>
+    <ModDesc>Remove [SETBACK] from all attack checks when using this weapon</ModDesc>
+    <QualDesc>Remove {0} [SETBACK] from all attack checks when using this weapon</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>BOOSTADD</Key>
+    <Name>Add Boost Mod</Name>
+    <Description>
+      Add [BOOST] to all attack checks when using this weapon
+    </Description>
+    <Type>Weapon</Type>
+    <ModDesc>Add [BOOST] to all attack checks when using this weapon</ModDesc>
+    <QualDesc>Add [BOOST] to all attack checks when using this weapon</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>DIFFSUBLONG</Key>
+    <Name>Decrease Long Range Difficulty Mod</Name>
+    <Description>
+      Decrease the difficulty of combat checks at long range by.
+    </Description>
+    <Type>Weapon</Type>
+    <ModDesc>Decrease the difficulty of combat checks at long range by 1</ModDesc>
+    <QualDesc>Decrease the difficulty of combat checks at long range by {0}</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>DIFFSUBLONGEXT</Key>
+    <Name>Decrease Long and Extreme Range Difficulty Mod</Name>
+    <Description>
+      Decrease the difficulty of combat checks at long and extreme range.
+    </Description>
+    <Type>Weapon</Type>
+    <ModDesc>Decrease the difficulty of combat checks at long and extreme range by 1</ModDesc>
+    <QualDesc>Decrease the difficulty of combat checks at long and extreme range by {0}</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>NOSTUN</Key>
+    <Name>Cannot deal strain damage</Name>
+    <Description>Cannot deal strain damage</Description>
+    <Type>Weapon</Type>
+    <ModDesc>Cannot deal strain damage</ModDesc>
+    <QualDesc>Cannot deal strain damage</QualDesc>
+    <IsBoolean>true</IsBoolean>
+  </ItemDescriptor>
+
+  <ItemDescriptor>
+    <Key>HEALPLUSONE</Key>
+    <Name>Successful Medicine checks heal +1 wound Mod</Name>
+    <Description>
+      Successful Medicine checks heal +1 wound.
+    </Description>
+    <ModDesc>Successful Medicine checks heal +1 wound</ModDesc>
+    <QualDesc>Successful Medicine checks heal +{0} wound</QualDesc>
+  </ItemDescriptor>
+
+  <ItemDescriptor>
+    <Key>USERANGLT</Key>
+    <Name>Weapon's skill changes to Ranged-Light Mod</Name>
+    <Description>
+      Weapon's skill changes to Ranged-Light
+    </Description>
+    <Type>Weapon</Type>
+    <ModDesc>Weapon's skill changes to Ranged-Light</ModDesc>
+    <QualDesc>Weapon's skill changes to Ranged-Light</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>USERANGHVY</Key>
+    <Name>Weapon's skill changes to Ranged-Heavy Mod</Name>
+    <Description>
+      Weapon's skill changes to Ranged-Heavy
+    </Description>
+    <Type>Weapon</Type>
+    <ModDesc>Weapon's skill changes to Ranged-Heavy</ModDesc>
+    <QualDesc>Weapon's skill changes to Ranged-Heavy</QualDesc>
+  </ItemDescriptor>
+
+  <ItemDescriptor>
+    <Key>ADDCRYSTNC</Key>
+    <Name>Add Additional Crystal with no HP Cost Mod</Name>
+    <Description>Add additional crystal with no HP cost</Description>
+    <Type>Weapon</Type>
+    <ModDesc>Add Additional Crystal with no HP Cost</ModDesc>
+    <QualDesc>Add {0} Additional Crystal(s) with no HP Cost</QualDesc>
+  </ItemDescriptor>
+
+
+  <ItemDescriptor>
+    <Key>PRICEHALF</Key>
+    <Name>Item is Half Price Mod</Name>
+    <Description>Item costs half its asking price</Description>
+    <ModDesc>Item costs half its asking price</ModDesc>
+    <QualDesc>Item costs half its asking price</QualDesc>
+    <IsBoolean>true</IsBoolean>
+  </ItemDescriptor>
+
+  <ItemDescriptor>
+    <Key>PRICE20000</Key>
+    <Name>Add 20,000 Credits to Price Mod</Name>
+    <Description>Add 20,000 Credits to Price</Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Add 20,000 Credits to Price</ModDesc>
+    <QualDesc>Add 20,000 Credits to Price</QualDesc>
+    <IsBoolean>true</IsBoolean>
+  </ItemDescriptor>
+
+
+  <!-- Nexus of Power -->
+  
+  <ItemDescriptor>
+    <Key>SEAL</Key>
+    <Name>Sealable Mod</Name>
+    <Description>Armor is Sealable</Description>
+    <Type>Armor</Type>
+    <ModDesc>Armor is Sealable</ModDesc>
+    <QualDesc>Armor is Sealable</QualDesc>
+  </ItemDescriptor>
+
+  <ItemDescriptor>
+    <Key>SEALED</Key>
+    <Name>Sealed Mod</Name>
+    <Description>Armor is Sealed</Description>
+    <Type>Armor</Type>
+    <ModDesc>Armor is Sealed</ModDesc>
+    <QualDesc>Armor is Sealed</QualDesc>
+  </ItemDescriptor>
+
+
+  <!--<ItemDescriptor>
+    <Key>SPEMBCHARM</Key>
+    <Name>Special Embelishment (Charm) Mod</Name>
+    <Description>Add </Description>
+    <Type>Armor</Type>
+    <ModDesc>Add automatic [ADVANTAGE] to Charm checks.</ModDesc>
+    <QualDesc>Add automatic [ADVANTAGE] to Charm checks.</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>SPEMBCOERC</Key>
+    <Name>Special Embelishment (Coercion) Mod</Name>
+    <Description>Add </Description>
+    <Type>Armor</Type>
+    <ModDesc>Add automatic [ADVANTAGE] to Coercion checks.</ModDesc>
+    <QualDesc>Add automatic [ADVANTAGE] to Coercion checks.</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>SPEMBNEG</Key>
+    <Name>Special Embelishment (Negotiations) Mod</Name>
+    <Description>Add </Description>
+    <Type>Armor</Type>
+    <ModDesc>Add automatic [ADVANTAGE] to Negotiations checks.</ModDesc>
+    <QualDesc>Add automatic [ADVANTAGE] to Negotiations checks.</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>SPEMBLEAD</Key>
+    <Name>Special Embelishment (Leadership) Mod</Name>
+    <Description>Add </Description>
+    <Type>Armor</Type>
+    <ModDesc>Add automatic [ADVANTAGE] to Leadership checks.</ModDesc>
+    <QualDesc>Add automatic [ADVANTAGE] to Leadership checks.</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>SPEMBRESIL</Key>
+    <Name>Special Embelishment (Resilience) Mod</Name>
+    <Description>Add </Description>
+    <Type>Armor</Type>
+    <ModDesc>Add automatic [ADVANTAGE] to Resilience checks.</ModDesc>
+    <QualDesc>Add automatic [ADVANTAGE] to Resilience checks.</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>SPEMBSTEAL</Key>
+    <Name>Special Embelishment (Stealth) Mod</Name>
+    <Description>Add </Description>
+    <Type>Armor</Type>
+    <ModDesc>Add automatic [ADVANTAGE] to Stealth checks.</ModDesc>
+    <QualDesc>Add automatic [ADVANTAGE] to Stealth checks.</QualDesc>
+  </ItemDescriptor>-->
+
+  <!--<ItemDescriptor>
+    <Key>RESTARMATHL</Key>
+    <Name>Restrictive (Athletics) Mod</Name>
+    <Description>Add </Description>
+    <Type>Armor</Type>
+    <ModDesc>Add automatic [TH] to Athletics checks.</ModDesc>
+    <QualDesc>Add automatic [TH] to Athletics checks.</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>RESTARMCOORD</Key>
+    <Name>Restrictive (Coordination) Mod</Name>
+    <Description>Add </Description>
+    <Type>Armor</Type>
+    <ModDesc>Add automatic [TH] to Coordination checks.</ModDesc>
+    <QualDesc>Add automatic [TH] to Coordination checks.</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>RESTARMPERC</Key>
+    <Name>Restrictive (Perception) Mod</Name>
+    <Description>Add </Description>
+    <Type>Armor</Type>
+    <ModDesc>Add automatic [TH] to Perception checks.</ModDesc>
+    <QualDesc>Add automatic [TH] to Perception checks.</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>RESTARMSKUL</Key>
+    <Name>Restrictive (Skulduggery) Mod</Name>
+    <Description>Add </Description>
+    <Type>Armor</Type>
+    <ModDesc>Add automatic [TH] to Skulduggery checks.</ModDesc>
+    <QualDesc>Add automatic [TH] to Skulduggery checks.</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>RESTARMVIGIL</Key>
+    <Name>Restrictive (Vigilance) Mod</Name>
+    <Description>Add </Description>
+    <Type>Armor</Type>
+    <ModDesc>Add automatic [TH] to Vigilance checks.</ModDesc>
+    <QualDesc>Add automatic [TH] to Vigilance checks.</QualDesc>
+  </ItemDescriptor>-->
+
+  <ItemDescriptor>
+    <Key>RANGEREDMED</Key>
+    <Name>Reduce Range to Medium Mod</Name>
+    <Description></Description>
+    <Type>Weapon</Type>
+    <ModDesc>Reduces weapon's range to Medium, if longer</ModDesc>
+    <QualDesc>Reduces weapon's range to Medium, if longer</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>DEMONMASK</Key>
+    <Name>Demon Mask</Name>
+    <Description></Description>
+    <Type>Gear</Type>
+    <IsBoolean>true</IsBoolean>
+    <ModDesc>Increase wound threshold by 2 if dark side Force user</ModDesc>
+    <QualDesc>Increase wound threshold by 2 if dark side Force user</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>MEDFOCUS</Key>
+    <Name>Meditation Focus</Name>
+    <Description></Description>
+    <Type>Gear</Type>
+    <IsBoolean>true</IsBoolean>
+    <ModDesc>Increase strain threshold by 2 if light side paragon</ModDesc>
+    <QualDesc>Increase strain threshold by 2 if light side paragon</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>IRONFIST</Key>
+    <Name>Iron Fists</Name>
+    <Description></Description>
+    <Type>Gear</Type>
+    <IsBoolean>true</IsBoolean>
+    <ModDesc>Armor and Brawl attacks gain Cortosis quality.  Brawl attacks gain Pierce ranks equal to Force rating</ModDesc>
+    <QualDesc>Armor and Brawl attacks gain Cortosis quality.  Brawl attacks gain Pierce ranks equal to Force rating</QualDesc>
+  </ItemDescriptor>
+  
+  <ItemDescriptor>
+    <Key>FORCEADD</Key>
+    <Name>Add Force Rating Mod</Name>
+    <Description></Description>
+    <ModDesc>Add 1 to Force Rating</ModDesc>
+    <QualDesc>Add {0} to Force Rating</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>FORCESUB</Key>
+    <Name>Subtract from Force Rating Mod</Name>
+    <Description></Description>
+    <ModDesc>Subtract 1 from Force Rating</ModDesc>
+    <QualDesc>Subtract {0} from Force Rating</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>CYBERADD</Key>
+    <Name>Add to Cybernetics Cap Mod</Name>
+    <Description></Description>
+    <ModDesc>Add 1 to Cybernetics Cap</ModDesc>
+    <QualDesc>Add {0} to Cybernetics Cap</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>CYBERSUB</Key>
+    <Name>Subtract from Cybernetics Cap Mod</Name>
+    <Description></Description>
+    <ModDesc>Subtract 1 from Cybernetics Cap</ModDesc>
+    <QualDesc>Subtract {0} from Cybernetics Cap</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>CYBERNONE</Key>
+    <Name>Does not count toward Cybernetics Cap Mod</Name>
+    <Description></Description>
+    <ModDesc>Does not count toward Cybernetics Cap</ModDesc>
+    <QualDesc>Does not count toward Cybernetics Cap</QualDesc>
+    <IsBoolean>true</IsBoolean>
+  </ItemDescriptor>
+  
+  <!-- Special Modifications -->
+  <ItemDescriptor>
+    <Key>JURYADD</Key>
+    <Name>May Select Additional Jury Rigged Option Mod</Name>
+    <Description></Description>
+    <Type>Weapon</Type>
+    <ModDesc>May select 1 additional Jury Rigged option</ModDesc>
+    <QualDesc>May select {0} additional Jury Rigged option(s)</QualDesc>
+  </ItemDescriptor>
+
+
+  <!--Vehicles-->
+
+  <ItemDescriptor>
+    <Key>SILHADD</Key>
+    <Name>Increase Silhouette Mod</Name>
+    <Description>
+      Increases Silhouette value by 1
+    </Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Increases Silhouette value by 1</ModDesc>
+    <QualDesc>Increases Silhouette value by {0}</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>ARMORADD</Key>
+    <Name>Increase Armor Mod</Name>
+    <Description>
+      Increases Armor value by 1
+    </Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Increases Armor value by 1</ModDesc>
+    <QualDesc>Increases Armor value by {0}</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>HANDLINGSUB</Key>
+    <Name>Decreases Handling Mod</Name>
+    <Description>
+      Decreases Handling by 1
+    </Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Decreases Handling by 1</ModDesc>
+    <QualDesc>Decreases Handling by {0}</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>HANDLINGADD</Key>
+    <Name>Increases Handling Mod</Name>
+    <Description>
+      Increases Handling by 1
+    </Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Increases Handling by 1</ModDesc>
+    <QualDesc>Increases Handling by {0}</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>SSTRAINSUB</Key>
+    <Name>Decreases System Strain Mod</Name>
+    <Description>
+      Decreases System Strain by 1
+    </Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Decreases System Strain by 1</ModDesc>
+    <QualDesc>Decreases System Strain by {0}</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>SSTRAINSUB2</Key>
+    <Name>Decreases System Strain by 2 Mod</Name>
+    <Description>
+      Decreases System Strain by 2
+    </Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Decreases System Strain by 2</ModDesc>
+    <QualDesc>Decreases System Strain by 2</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>SSTRAINADD</Key>
+    <Name>Increases System Strain Mod</Name>
+    <Description>
+      Increases System Strain by 1
+    </Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Increases System Strain by 1</ModDesc>
+    <QualDesc>Increases System Strain by {0}</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>SSTRAINADDSIL</Key>
+    <Name>Increases System Strain by Silhouette Mod</Name>
+    <Description>
+      Increases System Strain by Silhouette
+    </Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Increases System Strain by Silhouette</ModDesc>
+    <QualDesc>Increases System Strain by {0} x Silhouette</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>DEFZONEADD</Key>
+    <Name>Increase Defense Zone Mod</Name>
+    <Description>
+      Increases Defense Zone by 1
+    </Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Increases Defense Zone by 1</ModDesc>
+    <QualDesc>Increases Defense Zone by {0}</QualDesc>
+    <ChooseDefZone>true</ChooseDefZone>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>SMUGENC</Key>
+    <Name>Convert 25 encumbrance capacity to smuggling compartment Mod</Name>
+    <Description>
+      Convert 25 encumbrance capacity to smuggling compartment
+    </Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Convert 25 encumbrance capacity to smuggling compartment</ModDesc>
+    <QualDesc>Convert 25 encumbrance capacity to smuggling compartment</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>HANGER</Key>
+    <Name>Retrofits Hangar Bay Mod</Name>
+    <Description>
+      Retrofits Hangar Bay
+    </Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Retrofits Hangar Bay</ModDesc>
+    <QualDesc>Retrofits Hangar Bay</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>HANGERSIZE</Key>
+    <Name>Increase Silhouette Capacity of Hangar Bay by 1 Mod</Name>
+    <Description>
+      Increase Silhouette Capacity of Hangar Bay by 1
+    </Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Increase Silhouette Capacity of Hangar Bay by 1</ModDesc>
+    <QualDesc>Increase Silhouette Capacity of Hangar Bay by {0}</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>HYPERDRIVESUB</Key>
+    <Name>Decreases Hyperdrive Class by 1, to a minimum of 1 Mod</Name>
+    <Description>
+      Decreases Hyperdrive Class by 1
+    </Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Decreases Hyperdrive Class by 1, to a minimum of 1</ModDesc>
+    <QualDesc>Decreases Hyperdrive Class by {0}, to a minimum of 1</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>HYPERDRIVESUB5</Key>
+    <Name>Decreases Hyperdrive Class by 1, to a minimum of .5 Mod</Name>
+    <Description>
+      Decreases Hyperdrive Class by 1
+    </Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Decreases Hyperdrive Class by 1, to a minimum of .5</ModDesc>
+    <QualDesc>Decreases Hyperdrive Class by {0}, to a minimum of .5</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>HYPERDRIVEBACKSUB5</Key>
+    <Name>Decreases Backup Hyperdrive Class by 1, to a minimum of .5 Mod</Name>
+    <Description>
+      Decreases Backup Hyperdrive Class by 1
+    </Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Decreases Backup Hyperdrive Class by 1, to a minimum of .5</ModDesc>
+    <QualDesc>Decreases Backup Hyperdrive Class by {0}, to a minimum of .5</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>HYPERDRIVEBACKSUB</Key>
+    <Name>Decreases Backup Hyperdrive Class by 1, to a minimum of 1 Mod</Name>
+    <Description>
+      Decreases Backup Hyperdrive Class by 1
+    </Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Decreases Backup Hyperdrive Class by 1, to a minimum of 1</ModDesc>
+    <QualDesc>Decreases Backup Hyperdrive Class by {0}, to a minimum of 1</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>HYPERDRIVEADD8</Key>
+    <Name>Add Class 8 Hyperdrive Mod</Name>
+    <Description>
+      Add Class 8 Hyperdrive
+    </Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Add Class 8 Hyperdrive</ModDesc>
+    <QualDesc>Add Class 8 Hyperdrive</QualDesc>
+    <IsBoolean>true</IsBoolean>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>HYPERDRIVEADD4</Key>
+    <Name>Add Class 4 Hyperdrive Mod</Name>
+    <Description>
+      Add Class 4 Hyperdrive
+    </Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Add Class 4 Hyperdrive</ModDesc>
+    <QualDesc>Add Class 4 Hyperdrive</QualDesc>
+    <IsBoolean>true</IsBoolean>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>HYPERDRIVEADDBACK14</Key>
+    <Name>Add Class 14 Backup Hyperdrive Mod</Name>
+    <Description>
+      Add Class 14 Backup Hyperdrive
+    </Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Add Class 14 Backup Hyperdrive</ModDesc>
+    <QualDesc>Add Class 14 Backup Hyperdrive</QualDesc>
+    <IsBoolean>true</IsBoolean>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>MASSIVEADD</Key>
+    <Name>Add to Massive Mod</Name>
+    <Description></Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Add to Massive Setting</ModDesc>
+    <QualDesc>Add {0} to Massive Setting</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>MASSIVESET</Key>
+    <Name>Change Massive Mod</Name>
+    <Description></Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Changes Massive Setting</ModDesc>
+    <QualDesc>Changes Massive Setting to {0}</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>ADDALT50</Key>
+    <Name>Increase Altitude by 50 Mod</Name>
+    <Description></Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Increases Altitude by 50</ModDesc>
+    <QualDesc>Increases Altitude by 50</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>SETDEFFORE</Key>
+    <Name>Sets Forward Defense Mod</Name>
+    <Description></Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Sets Forward Defense</ModDesc>
+    <QualDesc>Sets Forward Defense to {0}</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>SETDEFAFT</Key>
+    <Name>Sets Aft Defense Mod</Name>
+    <Description></Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Sets Aft Defense</ModDesc>
+    <QualDesc>Sets Aft Defense to {0}</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>SETDEFPORT</Key>
+    <Name>Sets Port Defense Mod</Name>
+    <Description></Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Sets Port Defense</ModDesc>
+    <QualDesc>Sets Port Defense to {0}</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>SETDEFSTAR</Key>
+    <Name>Sets Starboard Defense Mod</Name>
+    <Description></Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Sets Starboard Defense</ModDesc>
+    <QualDesc>Sets Starboard Defense to {0}</QualDesc>
+  </ItemDescriptor>
+
+  <ItemDescriptor>
+    <Key>SETDEFFORECRAFT</Key>
+    <Name>Sets Forward Defense When Crafting Mod</Name>
+    <Description></Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Sets Forward Defense When Crafting</ModDesc>
+    <QualDesc>Sets Forward Defense When Crafting to {0}</QualDesc>
+    <ForCrafting>true</ForCrafting>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>SETDEFAFTCRAFT</Key>
+    <Name>Sets Aft Defense When Crafting Mod</Name>
+    <Description></Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Sets Aft Defense When Crafting</ModDesc>
+    <QualDesc>Sets Aft Defense When Crafting to {0}</QualDesc>
+    <ForCrafting>true</ForCrafting>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>SETDEFPORTCRAFT</Key>
+    <Name>Sets Port Defense When Crafting Mod</Name>
+    <Description></Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Sets Port Defense When Crafting</ModDesc>
+    <QualDesc>Sets Port Defense When Crafting to {0}</QualDesc>
+    <ForCrafting>true</ForCrafting>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>SETDEFSTARCRAFT</Key>
+    <Name>Sets Starboard Defense When Crafting Mod</Name>
+    <Description></Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Sets Starboard Defense When Crafting</ModDesc>
+    <QualDesc>Sets Starboard Defense When Crafting to {0}</QualDesc>
+    <ForCrafting>true</ForCrafting>
+  </ItemDescriptor>
+
+
+
+  <ItemDescriptor>
+    <Key>SETHAND</Key>
+    <Name>Sets Handling Mod</Name>
+    <Description></Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Sets Handling</ModDesc>
+    <QualDesc>Sets Handling to {0}</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>SETHANDCRAFT</Key>
+    <Name>Sets Handling When Crafting Mod</Name>
+    <Description></Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Sets Handling When Crafting</ModDesc>
+    <QualDesc>Sets Handling When Crafting to {0}</QualDesc>
+    <ForCrafting>true</ForCrafting>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>SETSSTRAIN</Key>
+    <Name>Sets System Strain Mod</Name>
+    <Description></Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Sets System Strain</ModDesc>
+    <QualDesc>Sets System Strain to {0}</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>SETSSTRAINSIL</Key>
+    <Name>Sets System Strain to Silhouette Mod</Name>
+    <Description></Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Sets System Strain to Silhouette</ModDesc>
+    <QualDesc>Sets System Strain to {0} x Silhouette</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>SETSSTRAINSILCRAFT</Key>
+    <Name>Sets System Strain When Crafting to Silhouette Mod</Name>
+    <Description></Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Sets System Strain When Crafting to Silhouette</ModDesc>
+    <QualDesc>Sets System Strain When Crafting to {0} x Silhouette</QualDesc>
+    <ForCrafting>true</ForCrafting>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>SETSPEED</Key>
+    <Name>Sets Speed Mod</Name>
+    <Description></Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Sets Speed</ModDesc>
+    <QualDesc>Sets Speed to {0}</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>SETSPEEDCRAFT</Key>
+    <Name>Sets Speed When Crafting Mod</Name>
+    <Description></Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Sets Speed When Crafting</ModDesc>
+    <QualDesc>Sets Speed When Crafting to {0}</QualDesc>
+    <ForCrafting>true</ForCrafting>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>SETARMOR</Key>
+    <Name>Sets Armor Mod</Name>
+    <Type>Vehicle</Type>
+    <ModDesc>Sets Armor value</ModDesc>
+    <QualDesc>Sets Armor value to {0}</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>SETARMORCRAFT</Key>
+    <Name>Sets Armor Value When Crafting Mod</Name>
+    <Type>Vehicle</Type>
+    <ModDesc>Sets Armor Value</ModDesc>
+    <QualDesc>Sets Armor Value When Crafting to {0}</QualDesc>
+    <ForCrafting>true</ForCrafting>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>ADDDEFFORE</Key>
+    <Name>Increase Forward Defense Mod</Name>
+    <Type>Vehicle</Type>
+    <ModDesc>Increase Forward Defense by 1</ModDesc>
+    <QualDesc>Increase Forward Defense by {0}</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>ADDDEFPORT</Key>
+    <Name>Increase Port Defense Mod</Name>
+    <Type>Vehicle</Type>
+    <ModDesc>Increase Port Defense by 1</ModDesc>
+    <QualDesc>Increase Port Defense by {0}</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>ADDDEFSTAR</Key>
+    <Name>Increase Starboard Defense Mod</Name>
+    <Type>Vehicle</Type>
+    <ModDesc>Increase Starboard Defense by 1</ModDesc>
+    <QualDesc>Increase Starboard Defense by {0}</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>ADDDEFAFT</Key>
+    <Name>Increase Aft Defense Mod</Name>
+    <Type>Vehicle</Type>
+    <ModDesc>Increase Aft Defense by 1</ModDesc>
+    <QualDesc>Increase Aft Defense by {0}</QualDesc>
+  </ItemDescriptor>
+
+
+  <ItemDescriptor>
+    <Key>SPEEDSUB</Key>
+    <Name>Decrease Speed Mod</Name>
+    <Description>
+      Decreases Speed by 1
+    </Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Decrease Speed by 1</ModDesc>
+    <QualDesc>Decrease Speed by {0}</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>SPEEDADD</Key>
+    <Name>Increase Speed Mod</Name>
+    <Description>
+      Increase Speed by 1
+    </Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Increase Speed by 1</ModDesc>
+    <QualDesc>Increase Speed by {0}</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>SPEEDADD2</Key>
+    <Name>Increases Speed by 2 Mod</Name>
+    <Description>
+      Increases Speed by 2
+    </Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Increase Speed by 2</ModDesc>
+    <QualDesc>Increase Speed by 2</QualDesc>
+  </ItemDescriptor>
+
+  <ItemDescriptor>
+    <Key>SRANGEADD</Key>
+    <Name>Additional Sensor Range Mod</Name>
+    <Description></Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Increase vehicle's sensor range by one Range Band</ModDesc>
+    <QualDesc>Increase vehicle's sensor range by {0} Range Band(s)</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>SRANGESUB</Key>
+    <Name>Reduced Sensor Range Mod</Name>
+    <Description></Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Decrease vehicle's sensor range by one Range Band</ModDesc>
+    <QualDesc>Decrease vehicle's sensor range by {0} Range Band(s)</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>CRANGEADD</Key>
+    <Name>Additional Comms Range Mod</Name>
+    <Description></Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Increase vehicle's communications range by one Range Band</ModDesc>
+    <QualDesc>Increase vehicle's communications range by {0} Range Band(s)</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>CRANGESUB</Key>
+    <Name>Reduced Comms Range Mod</Name>
+    <Description></Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Decrease vehicle's communications range by one Range Band</ModDesc>
+    <QualDesc>Decrease vehicle's communications range by {0} Range Band(s)</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>HULLADDSIL</Key>
+    <Name>Increase Hull Trauma by Silhouette Mod</Name>
+    <Description>
+      Increase Hull Trauma by Silhouette
+    </Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Increase Hull Trauma by Silhouette</ModDesc>
+    <QualDesc>Increase Hull Trauma by {0} x Silhouette</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>HULLADD</Key>
+    <Name>Increase Hull Trauma Mod</Name>
+    <Description>
+      Increases Hull Trauma by 1
+    </Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Increase Hull Trauma by 1</ModDesc>
+    <QualDesc>Increase Hull Trauma by {0}</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>HULLADD3</Key>
+    <Name>Increase Hull Trauma by 3 Mod</Name>
+    <Description>
+      Increase Hull Trauma by 3
+    </Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Increase Hull Trauma by 3</ModDesc>
+    <QualDesc>Increase Hull Trauma by 3</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>HULLSUB</Key>
+    <Name>Decrease Hull Trauma Mod</Name>
+    <Description>
+      Decreases Hull Trauma by 1
+    </Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Decrease Hull Trauma by 1</ModDesc>
+    <QualDesc>Decrease Hull Trauma by {0}</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>PASSADD</Key>
+    <Name>Increase Passenger Capacity Mod</Name>
+    <Description>
+      Increase Passenger Capacity by 1
+    </Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Increase Passenger Capacity by 1</ModDesc>
+    <QualDesc>Increases Passenger Capacity by {0}</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>PASSADDCRAFT</Key>
+    <Name>Increase Passenger Capacity When Crafting Mod</Name>
+    <Description>
+      Increase Passenger Capacity When Crafting by 1
+    </Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Increase Passenger Capacity When Crafting by 1</ModDesc>
+    <QualDesc>Increases Passenger Capacity When Crafting by {0}</QualDesc>
+    <ForCrafting>true</ForCrafting>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>PASSADD2</Key>
+    <Name>Increase Passenger Capacity by 2 Mod</Name>
+    <Description>
+      Increase Passenger Capacity by 2
+    </Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Increase Passenger Capacity by 2</ModDesc>
+    <QualDesc>Increases Passenger Capacity by 2</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>PASSADD10</Key>
+    <Name>Increase Passenger Capacity by 10 Mod</Name>
+    <Description>
+      Increase Passenger Capacity by 10
+    </Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Increase Passenger Capacity by 10</ModDesc>
+    <QualDesc>Increases Passenger Capacity by 10</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>PASSADDSIL</Key>
+    <Name>Increase Passenger Capacity by Silhouette Mod</Name>
+    <Description>
+      Increase Passenger Capacity by Silhouette
+    </Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Increase Passenger Capacity by Silhouette</ModDesc>
+    <QualDesc>Increases Passenger Capacity by {0} x Silhouette</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>PASSSUB</Key>
+    <Name>Decrease Passenger Capacity Mod</Name>
+    <Description>
+      Decrease Passenger Capacity by 1
+    </Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Decrease Passenger Capacity by 1</ModDesc>
+    <QualDesc>Decreases Passenger Capacity by {0}</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>ADDSILWEAP</Key>
+    <Name>Vehicle can carry a weapon for craft 1 silhouette larger Mod</Name>
+    <Description>
+      Vehicle can carry a weapon for craft 1 silhouette larger
+    </Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Vehicle can carry a weapon for craft 1 silhouette larger</ModDesc>
+    <QualDesc>Vehicle can carry a weapon for craft {0} silhouette larger</QualDesc>
+    <ChooseVehicleWeapon>true</ChooseVehicleWeapon>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>BOARDTUBETIME</Key>
+    <Name>Decrease time to cut through hull by 1 round Mod</Name>
+    <Description>
+      Decrease time to cut through hull by 1 round
+    </Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Decrease time to cut through hull by 1 round</ModDesc>
+    <QualDesc>Decrease time to cut through hull by {0} round(s)</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>DAMWEAPSYSADD</Key>
+    <Name>Increase damage of weapon system by one Mod</Name>
+    <Description>
+      Increase damage of weapon system by one
+    </Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Increase damage of weapon system by 1</ModDesc>
+    <QualDesc>Increase damage of weapon system by {0}</QualDesc>
+    <ChooseExistingVehicleWeapon>true</ChooseExistingVehicleWeapon>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>RETRACTWEAPSYSTEM</Key>
+    <Name>Retractable Weapon System</Name>
+    <Description>
+      Retractable Weapon System
+    </Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Retractable Weapon System</ModDesc>
+    <QualDesc>Retractable Weapon System</QualDesc>
+    <ChooseExistingVehicleWeapon>true</ChooseExistingVehicleWeapon>
+  </ItemDescriptor>
+
+  <ItemDescriptor>
+    <Key>ENCCADDSIL</Key>
+    <Name>Increases Encumbrance Capacity by Silhouette Mod</Name>
+    <Description></Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Increase Encumbrance Capacity by Silhouette</ModDesc>
+    <QualDesc>Increase Encumbrance Capacity by {0} x Silhouette</QualDesc>
+  </ItemDescriptor>
+
+  <ItemDescriptor>
+    <Key>ENCCADD</Key>
+    <Name>Increases Encumbrance Capacity Mod</Name>
+    <Description></Description>
+      <Type>Vehicle</Type>
+      <ModDesc>Increase Encumbrance Capacity by 1</ModDesc>
+    <QualDesc>Increase Encumbrance Capacity by {0}</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>ENCCADDCRAFT</Key>
+    <Name>Increases Encumbrance Capacity When Crafting Mod</Name>
+    <Description></Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Increase Encumbrance Capacity When Crafting by 1</ModDesc>
+    <QualDesc>Increase Encumbrance Capacity When Crafting by {0}</QualDesc>
+    <ForCrafting>true</ForCrafting>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>ENCCADD100</Key>
+    <Name>Increases Encumbrance Capacity by 100 Mod</Name>
+    <Description></Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Increase Encumbrance Capacity by 100</ModDesc>
+    <QualDesc>Increase Encumbrance Capacity by 100</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>ENCCSUB</Key>
+    <Name>Decreases Encumbrance Capacity Mod</Name>
+    <Description></Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Decrease Encumbrance Capacity by 1</ModDesc>
+    <QualDesc>Decrease Encumbrance Capacity by {0}</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>UPGUNN</Key>
+    <Name>Upgrade ability of Gunnery checks Mod</Name>
+    <Description></Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Upgrade ability of Gunnery checks by 1</ModDesc>
+    <QualDesc>Upgrade ability of Gunnery checks {0}</QualDesc>
+  </ItemDescriptor>
+
+  <ItemDescriptor>
+    <Key>VAKSAI</Key>
+    <Name>Replace Light Blaster Cannons with Light Laser Cannons Mod</Name>
+    <Description></Description>
+    <Type>Vehicle</Type>
+    <ModDesc>Replace Light Blaster Cannons with Light Laser Cannons</ModDesc>
+    <QualDesc>Replace Light Blaster Cannons with Light Laser Cannons</QualDesc>
+    <WeaponUpgrades>
+      <WeaponUpgrade>
+        <AttachKey />
+        <WeapKey>LASERLT</WeapKey>
+        <ReplacementIndex>0</ReplacementIndex>
+        <Properties>
+          <Location>WingMounted</Location>
+          <Qualities>
+            <Quality>
+              <Key>LINKED</Key>
+              <Count>1</Count>
+            </Quality>
+          </Qualities>
+        </Properties>
+      </WeaponUpgrade>
+    </WeaponUpgrades>
+
+  </ItemDescriptor>
+  
+  
+  <!-- Qualities -->
+  
+  <ItemDescriptor>
+    <Key>ACCURATE</Key>
+    <Name>Accurate Quality</Name>
+    <Description></Description>
+    <Sources>
+      <Source>Edge of the Empire Core Rulebook</Source>
+      <Source>Age of Rebellion Core Rulebook</Source>
+      <Source>Force and Destiny Core Rulebook</Source>
+    </Sources>
+    <Type>Weapon</Type>
+    <ModDesc>Accurate {0}</ModDesc>
+    <QualDesc>Accurate {0}</QualDesc>
+    <IsQuality>true</IsQuality>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>AUTOFIRE</Key>
+    <Name>Auto-Fire Quality</Name>
+    <Description></Description>
+    <Type>Weapon</Type>
+    <ModDesc>Auto Fire</ModDesc>
+    <QualDesc>Auto Fire</QualDesc>
+    <IsBoolean>true</IsBoolean>
+    <IsQuality>true</IsQuality>
+    <IsActiveQuality>true</IsActiveQuality>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>BREACH</Key>
+    <Name>Breach Quality</Name>
+    <Type>Weapon</Type>
+    <Description></Description>
+    <ModDesc>Breach {0}</ModDesc>
+    <QualDesc>Breach {0}</QualDesc>
+    <IsQuality>true</IsQuality>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>BURN</Key>
+    <Name>Burn Quality</Name>
+    <Type>Weapon</Type>
+    <Description></Description>
+    <ModDesc>Burn {0}</ModDesc>
+    <QualDesc>Burn {0}</QualDesc>
+    <IsQuality>true</IsQuality>
+    <IsActiveQuality>true</IsActiveQuality>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>BLAST</Key>
+    <Name>Blast Quality</Name>
+    <Description></Description>
+    <Type>Weapon</Type>
+    <ModDesc>Blast {0}</ModDesc>
+    <QualDesc>Blast {0}</QualDesc>
+    <IsQuality>true</IsQuality>
+    <IsActiveQuality>true</IsActiveQuality>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>CONCUSSIVE</Key>
+    <Name>Concussive Quality</Name>
+    <Description></Description>
+    <Type>Weapon</Type>
+    <ModDesc>Concussive {0}</ModDesc>
+    <QualDesc>Concussive {0}</QualDesc>
+    <IsQuality>true</IsQuality>
+    <IsActiveQuality>true</IsActiveQuality>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>CORTOSIS</Key>
+    <Name>Cortosis Quality</Name>
+    <Description></Description>
+    <ModDesc>Cortosis</ModDesc>
+    <QualDesc>Cortosis</QualDesc>
+    <IsBoolean>true</IsBoolean>
+    <IsQuality>true</IsQuality>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>CUMBERSOME</Key>
+    <Name>Cumbersome Quality</Name>
+    <Description></Description>
+    <Type>Weapon</Type>
+    <ModDesc>Cumbersome {0}</ModDesc>
+    <QualDesc>Cumbersome {0}</QualDesc>
+    <IsQuality>true</IsQuality>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>DEFENSIVE</Key>
+    <Name>Defensive Quality</Name>
+    <Description></Description>
+    <ModDesc>Defensive {0}</ModDesc>
+    <QualDesc>Defensive {0}</QualDesc>
+    <IsQuality>true</IsQuality>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>DEFLECTION</Key>
+    <Name>Deflection Quality</Name>
+    <Description></Description>
+    <ModDesc>Deflection {0}</ModDesc>
+    <QualDesc>Deflection {0}</QualDesc>
+    <IsQuality>true</IsQuality>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>DISORIENT</Key>
+    <Name>Disorient Quality</Name>
+    <Description></Description>
+    <Type>Weapon</Type>
+    <ModDesc>Disorient {0}</ModDesc>
+    <QualDesc>Disorient {0}</QualDesc>
+    <IsQuality>true</IsQuality>
+    <IsActiveQuality>true</IsActiveQuality>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>ENSNARE</Key>
+    <Name>Ensnare Quality</Name>
+    <Description></Description>
+    <Type>Weapon</Type>
+    <ModDesc>Ensnare {0}</ModDesc>
+    <QualDesc>Ensnare {0}</QualDesc>
+    <IsQuality>true</IsQuality>
+    <IsActiveQuality>true</IsActiveQuality>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>GUIDED</Key>
+    <Name>Guided Quality</Name>
+    <Description></Description>
+    <Type>Weapon</Type>
+    <ModDesc>Guided {0}</ModDesc>
+    <QualDesc>Guided {0}</QualDesc>
+    <IsQuality>true</IsQuality>
+    <IsActiveQuality>true</IsActiveQuality>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>KNOCKDOWN</Key>
+    <Name>Knockdown Quality</Name>
+    <Description></Description>
+    <Type>Weapon</Type>
+    <ModDesc>Knockdown</ModDesc>
+    <QualDesc>Knockdown</QualDesc>
+    <IsBoolean>true</IsBoolean>
+    <IsQuality>true</IsQuality>
+    <IsActiveQuality>true</IsActiveQuality>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>INACCURATE</Key>
+    <Name>Inaccurate Quality</Name>
+    <Description></Description>
+    <Type>Weapon</Type>
+    <ModDesc>Inaccurate {0}</ModDesc>
+    <QualDesc>Inaccurate {0}</QualDesc>
+    <IsQuality>true</IsQuality>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>INFERIOR</Key>
+    <Name>Inferior Quality</Name>
+    <Description></Description>
+    <ModDesc>Inferior</ModDesc>
+    <QualDesc>Inferior</QualDesc>
+    <IsBoolean>true</IsBoolean>
+    <IsQuality>true</IsQuality>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>ION</Key>
+    <Name>Ion Quality</Name>
+    <Description></Description>
+    <Type>Weapon</Type>
+    <ModDesc>Ion</ModDesc>
+    <QualDesc>Ion</QualDesc>
+    <IsBoolean>true</IsBoolean>
+    <IsQuality>true</IsQuality>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>LIMITEDAMMO</Key>
+    <Name>Limited Ammo Quality</Name>
+    <Description></Description>
+    <Type>Weapon</Type>
+    <ModDesc>Limited Ammo {0}</ModDesc>
+    <QualDesc>Limited Ammo {0}</QualDesc>
+    <IsQuality>true</IsQuality>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>LINKED</Key>
+    <Name>Linked Quality</Name>
+    <Description></Description>
+    <Type>Weapon</Type>
+    <ModDesc>Linked {0}</ModDesc>
+    <QualDesc>Linked {0}</QualDesc>
+    <IsBoolean>false</IsBoolean>
+    <IsQuality>true</IsQuality>
+    <IsActiveQuality>true</IsActiveQuality>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>PIERCE</Key>
+    <Name>Pierce Quality</Name>
+    <Description></Description>
+    <Type>Weapon</Type>
+    <ModDesc>Pierce {0}</ModDesc>
+    <QualDesc>Pierce {0}</QualDesc>
+    <IsQuality>true</IsQuality>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>PREPARE</Key>
+    <Name>Prepare Quality</Name>
+    <Description></Description>
+    <Type>Weapon</Type>
+    <ModDesc>Prepare {0}</ModDesc>
+    <QualDesc>Prepare {0}</QualDesc>
+    <IsQuality>true</IsQuality>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>SLOWFIRING</Key>
+    <Name>Slow Firing Quality</Name>
+    <Description></Description>
+    <Type>Weapon</Type>
+    <ModDesc>Slow Firing {0}</ModDesc>
+    <QualDesc>Slow Firing {0}</QualDesc>
+    <IsQuality>true</IsQuality>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>STAGGER</Key>
+    <Name>Stagger Quality</Name>
+    <Description></Description>
+    <Type>Weapon</Type>
+    <ModDesc>Stagger {0}</ModDesc>
+    <QualDesc>Stagger {0}</QualDesc>
+    <IsQuality>true</IsQuality>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>STUN</Key>
+    <Name>Stun Quality</Name>
+    <Description></Description>
+    <Type>Weapon</Type>
+    <ModDesc>Stun {0}</ModDesc>
+    <QualDesc>Stun {0}</QualDesc>
+    <IsQuality>true</IsQuality>
+    <IsActiveQuality>true</IsActiveQuality>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>STUNDROID</Key>
+    <Name>Stun (Droid Only) Quality</Name>
+    <Description></Description>
+    <Type>Weapon</Type>
+    <ModDesc>Stun {0} (Droid Only)</ModDesc>
+    <QualDesc>Stun {0} (Droid Only)</QualDesc>
+    <IsQuality>true</IsQuality>
+    <IsActiveQuality>true</IsActiveQuality>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>STUNSETTING</Key>
+    <Name>Stun Setting Quality</Name>
+    <Description></Description>
+    <Type>Weapon</Type>
+    <ModDesc>Stun Setting</ModDesc>
+    <QualDesc>Stun Setting</QualDesc>
+    <IsBoolean>true</IsBoolean>
+    <IsQuality>true</IsQuality>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>STUNDAMAGE</Key>
+    <Name>Stun Damage Quality</Name>
+    <Description></Description>
+    <Type>Weapon</Type>
+    <ModDesc>Stun Damage</ModDesc>
+    <QualDesc>Stun Damage</QualDesc>
+    <IsBoolean>true</IsBoolean>
+    <IsQuality>true</IsQuality>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>STUNDAMAGEDROID</Key>
+    <Name>Stun Damage (Droid Only) Quality</Name>
+    <Description></Description>
+    <Type>Weapon</Type>
+    <ModDesc>Stun Damage (Droid Only)</ModDesc>
+    <QualDesc>Stun Damage (Droid Only)</QualDesc>
+    <IsBoolean>true</IsBoolean>
+    <IsQuality>true</IsQuality>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>SUNDER</Key>
+    <Name>Sunder Quality</Name>
+    <Description></Description>
+    <Type>Weapon</Type>
+    <ModDesc>Sunder</ModDesc>
+    <QualDesc>Sunder</QualDesc>
+    <IsBoolean>true</IsBoolean>
+    <IsQuality>true</IsQuality>
+    <IsActiveQuality>true</IsActiveQuality>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>SUPERIOR</Key>
+    <Name>Superior Quality</Name>
+    <Description></Description>
+    <ModDesc>Superior</ModDesc>
+    <QualDesc>Superior</QualDesc>
+    <IsBoolean>true</IsBoolean>
+    <IsQuality>true</IsQuality>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>TRACTOR</Key>
+    <Name>Tractor Quality</Name>
+    <Description></Description>
+    <Type>Weapon</Type>
+    <ModDesc>Tractor {0}</ModDesc>
+    <QualDesc>Tractor {0}</QualDesc>
+    <IsQuality>true</IsQuality>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>VICIOUS</Key>
+    <Name>Vicious Quality</Name>
+    <Description></Description>
+    <Type>Weapon</Type>
+    <ModDesc>Vicious {0}</ModDesc>
+    <QualDesc>Vicious {0}</QualDesc>
+    <IsQuality>true</IsQuality>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>VICIOUSDROID</Key>
+    <Name>Vicious (Droid Only) Quality</Name>
+    <Description></Description>
+    <Type>Weapon</Type>
+    <ModDesc>Vicious (Droid Only) {0}</ModDesc>
+    <QualDesc>Vicious (Droid Only) {0}</QualDesc>
+    <IsQuality>true</IsQuality>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>UNWIELDY</Key>
+    <Name>Unwieldy Quality</Name>
+    <Description></Description>
+    <Type>Weapon</Type>
+    <ModDesc>Unwieldy {0}</ModDesc>
+    <QualDesc>Unwieldy {0}</QualDesc>
+    <IsQuality>true</IsQuality>
+  </ItemDescriptor>
+  
+  <!-- Quality Activators -->
+
+  <ItemDescriptor>
+    <Key>QUALADVSUB</Key>
+    <Name>Quality Takes One Less Advantage to Activate Mod</Name>
+    <Description>Quality Takes One Less [AD] to Activate</Description>
+    <Type>Weapon</Type>
+    <ModDesc>Quality Takes 1 Less [AD] to Activate</ModDesc>
+    <QualDesc>{1} Takes {0} Less [AD] to Activate</QualDesc>
+    <ChooseActiveQuality>true</ChooseActiveQuality>
+  </ItemDescriptor>
+
+
+
+  <ItemDescriptor>
+    <Key>AUTOFIREADV</Key>
+    <Name>Autofire Takes One Less Advantage to Activate Mod</Name>
+    <Description>Autofire Takes One Less [AD] to Activate</Description>
+    <Type>Weapon</Type>
+    <ModDesc>Autofire Takes 1 Less [AD] to Activate</ModDesc>
+    <QualDesc>Autofire Takes {0} Less [AD] to Activate</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>BURNADV</Key>
+    <Name>Burn Takes One Less Advantage to Activate Mod</Name>
+    <Description>Burn Takes One Less [AD] to Activate</Description>
+    <Type>Weapon</Type>
+    <ModDesc>Burn Takes 1 Less [AD] to Activate</ModDesc>
+    <QualDesc>Burn Takes {0} Less [AD] to Activate</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>BLASTADV</Key>
+    <Name>Blast Takes One Less Advantage to Activate Mod</Name>
+    <Description>Blast Takes One Less [AD] to Activate</Description>
+    <Type>Weapon</Type>
+    <ModDesc>Blast Takes 1 Less [AD] to Activate</ModDesc>
+    <QualDesc>Blast Takes {0} Less [AD] to Activate</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>CONCUSSIVEADV</Key>
+    <Name>Concussive Takes One Less Advantage to Activate Mod</Name>
+    <Description>Concussive Takes One Less [AD] to Activate</Description>
+    <Type>Weapon</Type>
+    <ModDesc>Concussive Takes 1 Less [AD] to Activate</ModDesc>
+    <QualDesc>Concussive Takes {0} Less [AD] to Activate</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>DISORIENTADV</Key>
+    <Name>Disorient Takes One Less Advantage to Activate Mod</Name>
+    <Description>Disorient Takes One Less [AD] to Activate</Description>
+    <Type>Weapon</Type>
+    <ModDesc>Disorient Takes 1 Less [AD] to Activate</ModDesc>
+    <QualDesc>Disorient Takes {0} Less [AD] to Activate</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>ENSNAREADV</Key>
+    <Name>Ensnare Takes One Less Advantage to Activate Mod</Name>
+    <Description>Ensnare Takes One Less [AD] to Activate</Description>
+    <Type>Weapon</Type>
+    <ModDesc>Ensnare Takes 1 Less [AD] to Activate</ModDesc>
+    <QualDesc>Ensnare Takes {0} Less [AD] to Activate</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>GUIDEDADV</Key>
+    <Name>Guided Takes One Less Advantage to Activate Mod</Name>
+    <Description>Guided Takes One Less [AD] to Activate</Description>
+    <Type>Weapon</Type>
+    <ModDesc>Guided Takes 1 Less [AD] to Activate</ModDesc>
+    <QualDesc>Guided Takes {0} Less [AD] to Activate</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>KNOCKDOWNADV</Key>
+    <Name>Knockdown Takes One Less Advantage to Activate Mod</Name>
+    <Description>Knockdown Takes One Less [AD] to Activate</Description>
+    <Type>Weapon</Type>
+    <ModDesc>Knockdown Takes 1 Less [AD] to Activate</ModDesc>
+    <QualDesc>Knockdown Takes {0} Less [AD] to Activate</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>LINKEDADV</Key>
+    <Name>Linked Takes One Less Advantage to Activate Mod</Name>
+    <Description>Linked Takes One Less [AD] to Activate</Description>
+    <Type>Weapon</Type>
+    <ModDesc>Linked Takes 1 Less [AD] to Activate</ModDesc>
+    <QualDesc>Linked Takes {0} Less [AD] to Activate</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>STUNADV</Key>
+    <Name>Stun Takes One Less Advantage to Activate Mod</Name>
+    <Description>Stun Takes One Less [AD] to Activate</Description>
+    <Type>Weapon</Type>
+    <ModDesc>Stun Takes 1 Less [AD] to Activate</ModDesc>
+    <QualDesc>Stun Takes {0} Less [AD] to Activate</QualDesc>
+  </ItemDescriptor>
+  <ItemDescriptor>
+    <Key>SUNDERADV</Key>
+    <Name>Sunder Takes One Less Advantage to Activate Mod</Name>
+    <Description>Sunder Takes One Less [AD] to Activate</Description>
+    <Type>Weapon</Type>
+    <ModDesc>Sunder Takes 1 Less [AD] to Activate</ModDesc>
+    <QualDesc>Sunder Takes {0} Less [AD] to Activate</QualDesc>
+  </ItemDescriptor>
+
+
+
+
+
+
+
+
+</ItemDescriptors>
+

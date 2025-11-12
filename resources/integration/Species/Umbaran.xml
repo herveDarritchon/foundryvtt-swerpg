@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Species>
+  <Key>UMBARAN</Key>
+  <Name>Umbaran</Name>
+  <Description>
+    [H4]Umbaran[h4]
+    Please see page 15 of the Rise of the Separatists Sourcebook for details.
+  </Description>
+  <Source Page="15">Rise of the Separatists</Source>
+  <StartingChars>
+    <Brawn>2</Brawn>
+    <Agility>2</Agility>
+    <Intellect>2</Intellect>
+    <Cunning>2</Cunning>
+    <Willpower>2</Willpower>
+    <Presence>2</Presence>
+  </StartingChars>
+  <StartingAttrs>
+    <WoundThreshold>10</WoundThreshold>
+    <StrainThreshold>10</StrainThreshold>
+    <Experience>100</Experience>
+  </StartingAttrs>
+  <SkillModifiers>
+    <SkillModifier>
+      <Key>DECEP</Key>
+      <RankStart>1</RankStart>
+      <RankLimit>2</RankLimit>
+    </SkillModifier>
+  </SkillModifiers>
+  <TalentModifiers>
+  </TalentModifiers>
+  <OptionChoices>
+    <OptionChoice>
+      <Key>UMBARANAB1</Key>
+      <Name>Skills</Name>
+      <Options>
+        <Option>
+          <Key>UMBARANAB1OP1</Key>
+          <Name>Entrancing Gaze</Name>
+          <Description>Umbarans add [BO] to all Charm, Deception, and Negotiation checks.</Description>
+          <DieModifiers>
+            <DieModifier>
+              <SkillKey>CHARM</SkillKey>
+              <BoostCount>1</BoostCount>
+            </DieModifier>
+            <DieModifier>
+              <SkillKey>DECEP</SkillKey>
+              <BoostCount>1</BoostCount>
+            </DieModifier>
+            <DieModifier>
+              <SkillKey>NEG</SkillKey>
+              <BoostCount>1</BoostCount>
+            </DieModifier>
+          </DieModifiers>
+        </Option>
+      </Options>
+    </OptionChoice>
+    <OptionChoice>
+      <Key>UMBARANAB2</Key>
+      <Name>Skills</Name>
+      <Options>
+        <Option>
+          <Key>UMBARANAB2OP1</Key>
+          <Name>Shadow Dweller</Name>
+          <Description>When making skill checks, Umbarans remove up to [SE][SE] due to darkness, and add [SE] to checks made in bright natural light.</Description>
+        </Option>
+      </Options>
+    </OptionChoice>
+  </OptionChoices>
+</Species>

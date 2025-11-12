@@ -1,0 +1,121 @@
+<?xml version="1.0"?>
+<Vehicle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Key>HYENADROIDBOMB</Key>
+  <Name>Hyena-Class Droid Bomber</Name>
+  <Description>[H3][I]Hyena[i] - Class Droid Bomber[h3]
+Please see page 71 of the Collapse of the Republic Sourcebook for details.</Description>
+  <Source Page="71">Collapse of the Republic</Source>
+  <Type>Droid Fighter</Type>
+  <Categories>
+    <Category>Starship</Category>
+  </Categories>
+  <HP>1</HP>
+  <Price>120000</Price>
+  <Rarity>7</Rarity>
+  <Restricted>true</Restricted>
+  <BaseMods>
+    <Mod>
+      <Count>1</Count>
+      <MiscDesc>[B]Variable Geometry[b]:  A hyena droid can change between its starfighter and walker configurations as a maneuver.  In its walker configuration, a hyena droid's speed becomes 2, and it can cling to starship hulls or scale sheer surfaces.  A hyena droid in its walker configuration can attack using its legs.</MiscDesc>
+    </Mod>
+  </BaseMods>
+  <WeaponModifiers>
+    <WeaponModifier>
+      <UnarmedName>Proton Bomb Release Mechanism</UnarmedName>
+      <SkillKey>GUNN</SkillKey>
+      <Damage>8</Damage>
+      <Crit>2</Crit>
+      <Scale>wsPlanetary</Scale>
+      <Qualities>
+        <Quality>
+          <Key>BLAST</Key>
+          <Count>8</Count>
+        </Quality>
+        <Quality>
+          <Key>BREACH</Key>
+          <Count>10</Count>
+        </Quality>
+        <Quality>
+          <Key>LIMITEDAMMO</Key>
+          <Count>4</Count>
+        </Quality>
+      </Qualities>
+      <VehicleWeaponProperties>
+        <Location>Ventral</Location>
+        <FiringArcs>
+          <Ventral>true</Ventral>
+        </FiringArcs>
+      </VehicleWeaponProperties>
+      <VehicleWeaponCount>1</VehicleWeaponCount>
+      <RangeValue>wrClose</RangeValue>
+      <Range>Close</Range>
+    </WeaponModifier>
+    <WeaponModifier>
+      <UnarmedName>Walker Legs (Walker Only)</UnarmedName>
+      <SkillKey>BRAWL</SkillKey>
+      <Damage>9</Damage>
+      <Crit>4</Crit>
+      <Scale>wsPersonal</Scale>
+      <Qualities>
+        <Quality>
+          <Key>ENSNARE</Key>
+          <Count>1</Count>
+        </Quality>
+        <Quality>
+          <Key>KNOCKDOWN</Key>
+        </Quality>
+      </Qualities>
+      <Range>Engaged</Range>
+    </WeaponModifier>
+  </WeaponModifiers>
+  <SensorRangeValue>srShort</SensorRangeValue>
+  <Crew>None, integrated droid brain</Crew>
+  <Consumables>48 hours</Consumables>
+  <Silhouette>3</Silhouette>
+  <Speed>4</Speed>
+  <Armor>3</Armor>
+  <HullTrauma>14</HullTrauma>
+  <SystemStrain>12</SystemStrain>
+  <Starship>true</Starship>
+  <SinglePilot>true</SinglePilot>
+  <VehicleWeapons>
+    <VehicleWeapon>
+      <FiringArcs>
+        <Fore>true</Fore>
+      </FiringArcs>
+      <Location>WingMounted</Location>
+      <Qualities>
+        <Quality>
+          <Key>LINKED</Key>
+          <Count>3</Count>
+        </Quality>
+      </Qualities>
+      <Key>LASERLT</Key>
+    </VehicleWeapon>
+    <VehicleWeapon>
+      <FiringArcs />
+      <Location>Forward</Location>
+      <Qualities>
+        <Quality>
+          <Key>LINKED</Key>
+          <Count>1</Count>
+        </Quality>
+      </Qualities>
+      <Key>CML</Key>
+    </VehicleWeapon>
+    <VehicleWeapon>
+      <FiringArcs>
+        <Fore>true</Fore>
+      </FiringArcs>
+      <Location>Forward</Location>
+      <Qualities>
+        <Quality>
+          <Key>LINKED</Key>
+          <Count>1</Count>
+        </Quality>
+      </Qualities>
+      <Key>PTL</Key>
+    </VehicleWeapon>
+  </VehicleWeapons>
+  <SensorRange>Short</SensorRange>
+</Vehicle>

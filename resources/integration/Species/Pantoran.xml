@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Species>
+  <Key>PANTORAN</Key>
+  <Name>Pantoran</Name>
+  <Description>
+    [H4]Pantoran[h4]
+    Please see page 22 of the Endless Vigil Sourcebook for details.
+  </Description>
+  <Sources>
+    <Source Page="22">Endless Vigil</Source>
+  </Sources>
+  <StartingChars>
+    <Brawn>2</Brawn>
+    <Agility>2</Agility>
+    <Intellect>2</Intellect>
+    <Cunning>2</Cunning>
+    <Willpower>1</Willpower>
+    <Presence>3</Presence>
+  </StartingChars>
+  <StartingAttrs>
+    <WoundThreshold>10</WoundThreshold>
+    <StrainThreshold>11</StrainThreshold>
+    <Experience>110</Experience>
+  </StartingAttrs>
+  <OptionChoices>
+    <OptionChoice>
+      <Key>PANTOC1</Key>
+      <Name>Skills</Name>
+      <Options>
+        <Option>
+          <Key>PANTOC1OP1</Key>
+          <Name>Cool</Name>
+          <Description>Pantorans may begin the game with one rank in Cool.</Description>
+          <SkillModifiers>
+            <SkillModifier>
+              <Key>COOL</Key>
+              <RankStart>1</RankStart>
+            </SkillModifier>
+          </SkillModifiers>
+        </Option>
+        <Option>
+          <Key>PANTAB1OP2</Key>
+          <Name>Negotiation</Name>
+          <Description>Pantorans may begin the game with one rank in Negotiation.</Description>
+          <SkillModifiers>
+            <SkillModifier>
+              <Key>NEG</Key>
+              <RankStart>1</RankStart>
+            </SkillModifier>
+          </SkillModifiers>
+        </Option>
+      </Options>
+    </OptionChoice>
+    <OptionChoice>
+      <Key>PANTOC2</Key>
+      <Name>Environmental</Name>
+      <Options>
+        <Option>
+          <Key>PANTOC2OP1</Key>
+          <Name>Tundra Dweller</Name>
+          <Description>
+            When making skill checks, Pantorans may remove [SETBACK] imposed due to cold environmental conditions.
+          </Description>
+        </Option>
+      </Options>
+    </OptionChoice>
+  </OptionChoices>
+</Species>

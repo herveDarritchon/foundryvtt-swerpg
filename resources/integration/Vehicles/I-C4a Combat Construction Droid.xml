@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<Vehicle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Key>IC4ADROID</Key>
+  <Name>I-C4a Combat Construction Droid</Name>
+  <Description>[H3]I-C4a Combat Construction Droid[h3]
+Please see page 56 of the Fully Operational Sourcebook for details.</Description>
+  <Source Page="56">Fully Operational</Source>
+  <Type>Droid-Operated Vehicle</Type>
+  <Categories>
+    <Category>Tracked Vehicle</Category>
+    <Category>Land Vehicle</Category>
+  </Categories>
+  <HP>1</HP>
+  <Price>750000</Price>
+  <Rarity>6</Rarity>
+  <Restricted>true</Restricted>
+  <BaseMods>
+    <Mod>
+      <Count>1</Count>
+      <MiscDesc>[B]Tracked:[b] Treats any terrain as if it were one step lower in difficulty.</MiscDesc>
+    </Mod>
+    <Mod>
+      <Count>1</Count>
+      <MiscDesc>[B]Construction in the Field:[b] Can be used to fashion crude defense structures, fortifications, and other constructions.  Droid brain must make a [B]Hard([DI][DI][DI]) Mechanics check[b].  These structures provide cover for up to 20 characters and adds [SE][SE] to Ranged combat checks made against them.</MiscDesc>
+    </Mod>
+  </BaseMods>
+  <Crew>None (Droid operated)</Crew>
+  <EncumbranceCapacity>150</EncumbranceCapacity>
+  <Passengers>2</Passengers>
+  <Silhouette>3</Silhouette>
+  <Speed>1</Speed>
+  <Handling>-2</Handling>
+  <Armor>2</Armor>
+  <HullTrauma>25</HullTrauma>
+  <SystemStrain>15</SystemStrain>
+  <VehicleWeapons>
+    <VehicleWeapon>
+      <FiringArcs>
+        <Fore>true</Fore>
+        <Aft>true</Aft>
+        <Port>true</Port>
+        <Starboard>true</Starboard>
+      </FiringArcs>
+      <Location>Dorsal</Location>
+      <Key>BLASTHVYREP</Key>
+    </VehicleWeapon>
+  </VehicleWeapons>
+  <SensorRange>Close</SensorRange>
+</Vehicle>

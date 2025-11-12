@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<Vehicle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Key>ROCKETBOOTS</Key>
+  <Name>Rocket Boots</Name>
+  <Description>
+    [H3]Rocket Boots[h3]
+    Please see page 53 of the No Disintegrations Sourcebook, or page 59 of the Collapse of the Republic Sourcebook, for details.
+    [P][I]Note:  This is the vehicle profile of the rocket boots gear item.[i]</Description>
+  <Sources>
+    <Source Page="53">No Disintegrations</Source>
+    <Source Page="59">Collapse of the Republic</Source>
+  </Sources>
+  <Type>Rocket Boots</Type>
+  <Categories>
+    <Category>Air Vehicle</Category>
+  </Categories>
+  <Price>2500</Price>
+  <Rarity>8</Rarity>
+  <BaseMods>
+    <Mod>
+      <Count>1</Count>
+      <MiscDesc>Suffer 1 system strain at the end of each round of activation.</MiscDesc>
+    </Mod>
+  </BaseMods>
+  <SensorRangeValue>srNone</SensorRangeValue>
+  <Crew>One wearer</Crew>
+  <Silhouette>1</Silhouette>
+  <Speed>1</Speed>
+  <Handling>-3</Handling>
+  <SystemStrain>3</SystemStrain>
+  <SensorRange>No Sensors</SensorRange>
+</Vehicle>
