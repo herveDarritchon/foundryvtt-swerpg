@@ -1,0 +1,11 @@
+<Career>
+  <Name>Spy</Name>
+  <Key>spy</Key>
+  <Description>Desc Spy</Description>
+  <FreeRanks>2</FreeRanks>
+  <CareerSkills>
+    <CareerSkill><Key>UNKNOWN</Key></CareerSkill>
+    <CareerSkill><Key>ATHL</Key></CareerSkill>
+    <CareerSkill><Key>PERC</Key></CareerSkill>
+  </CareerSkills>
+</Career>
