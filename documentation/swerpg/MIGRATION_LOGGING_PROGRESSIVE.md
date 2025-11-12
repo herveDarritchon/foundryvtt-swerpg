@@ -57,7 +57,7 @@ grep -r "console\.(log\|warn\|error\|info\|debug)" module/ --exclude="*/logger.m
 grep -r "import .*logger" module/ | grep MonDossier || echo "ATTENTION: import manquant"
 
 # 3. Lancer tests ciblés
-pnpm test --filter actor  # exemple
+pnpm test actor  # exemple
 
 # 4. Lint
 pnpm lint
