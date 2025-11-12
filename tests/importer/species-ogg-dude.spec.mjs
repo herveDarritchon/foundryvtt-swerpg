@@ -5,13 +5,13 @@ import { mapOggDudeSkillCode, mapOggDudeSkillCodes } from '../../module/importer
 // Minimal SYSTEM mock if not provided (for isolated test execution)
 if (globalThis.SYSTEM === undefined) {
   // Mock minimal SKILLS set with expected mapped ids for test context
-  globalThis.SYSTEM = { SKILLS: { athletics: { id: 'athletics', label: 'Athletics' }, awareness: { id: 'awareness', label: 'Awareness' }, deception: { id: 'deception', label: 'Deception' }, science: { id: 'science', label: 'Science' } } }
+  globalThis.SYSTEM = { SKILLS: { athletics: { id: 'athletics', label: 'Athletics' }, perception: { id: 'perception', label: 'Perception' }, deception: { id: 'deception', label: 'Deception' }, science: { id: 'science', label: 'Science' }, charm: { id: 'charm', label: 'Charm' }, brawl: { id: 'brawl', label: 'Brawl' } } }
 }
 
 describe('OggDude skill mapping', () => {
   it('mappe chaque code attendu vers l\'id système', () => {
     expect(mapOggDudeSkillCode('ATHL')).toBe('athletics')
-    expect(mapOggDudeSkillCode('perc')).toBe('awareness')
+  expect(mapOggDudeSkillCode('perc')).toBe('perception')
     expect(mapOggDudeSkillCode('DECEP')).toBe('deception')
     expect(mapOggDudeSkillCode('EDU')).toBe('science')
   })
@@ -19,8 +19,8 @@ describe('OggDude skill mapping', () => {
     expect(mapOggDudeSkillCode('UNKNOWN', { warnOnUnknown: false })).toBeNull()
   })
   it('déduplique correctement', () => {
-    const mapped = mapOggDudeSkillCodes(['ATHL', 'ATHL', 'PERC'])
-    expect(mapped).toEqual(['athletics', 'awareness'])
+  const mapped = mapOggDudeSkillCodes(['ATHL', 'ATHL', 'PERC'])
+  expect(mapped).toEqual(['athletics', 'perception'])
   })
 })
 
@@ -44,8 +44,8 @@ describe('speciesMapper', () => {
     expect(mapped.strainThreshold).toMatchObject({ modifier: 10, abilityKey: 'willpower' })
     expect(mapped.startingExperience).toBe(100)
     expect(mapped.freeSkills).toContain('athletics')
-    expect(mapped.freeSkills).toContain('awareness')
-    expect(mapped.freeSkills.length).toBe(2)
+  expect(mapped.freeSkills).toContain('perception')
+  expect(mapped.freeSkills.length).toBe(2)
     expect(Array.isArray(mapped.freeTalents)).toBe(true)
   })
 })

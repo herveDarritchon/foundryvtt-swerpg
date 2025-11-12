@@ -8,10 +8,14 @@ import { logger } from '../../utils/logger.mjs'
 export const OGG_DUDE_SKILL_MAP = Object.freeze({
   ATHL: 'athletics',
   ATHLETICS: 'athletics',
-  PERC: 'awareness', // Perception -> awareness
-  PERCEPTION: 'awareness',
+  // Perception dans OggDude correspond à la compétence système 'perception'
+  // (ancien mapping vers 'awareness' corrigé car 'awareness' n'existe pas dans SYSTEM.SKILLS)
+  PERC: 'perception',
+  PERCEPTION: 'perception',
   DECEP: 'deception',
   DECEPTION: 'deception',
+  CHARM: 'charm',
+  CHARMING: 'charm',
   STEA: 'stealth',
   STEALTH: 'stealth',
   WILD: 'wilderness',
