@@ -318,18 +318,20 @@ class OggDudeDataElement {
    * @name _buildItemImgSystemPath
    */
   static _getItemImage = async (key, imageWorldPath, prefix, imgSystemPath) => {
-    // get the item image path
-    const image = `${imageWorldPath}/${prefix}${key}.png`
-    logger.debug('[OggDudeDataElement] Item image to be checked', { key, image })
-    const found = await checkFileExists(image)
-    if (found) {
-      logger.debug('[OggDudeDataElement] Specific item image found', { key, image })
-      return image
-    } else {
-      const image = `${imgSystemPath}`
-      logger.debug('[OggDudeDataElement] Specific item image not found, using default', { key, image })
-      return image
+    // Cache interne pour éviter de refaire des accès disque répétés
+    if (!OggDudeDataElement._imageCache) {
+      OggDudeDataElement._imageCache = new Map()
     }
+    const specificPath = `${imageWorldPath}/${prefix}${key}.png`
+    if (OggDudeDataElement._imageCache.has(specificPath)) {
+      return OggDudeDataElement._imageCache.get(specificPath)
+    }
+    logger.debug('[OggDudeDataElement] Item image to be checked', { key, image: specificPath })
+    const found = await checkFileExists(specificPath)
+    const resolved = found ? specificPath : `${imgSystemPath}`
+    OggDudeDataElement._imageCache.set(specificPath, resolved)
+    logger.debug('[OggDudeDataElement] Item image resolved (cache updated)', { key, resolved })
+    return resolved
   }
 
   /**
@@ -364,16 +366,15 @@ class OggDudeDataElement {
 
     logger.debug('[OggDudeDataElement] Items mapped before creation', { itemPromises })
 
-    let promiseResolved = Promise.all(itemPromises)
-      .then(async (item) => {
-        logger.info('[OggDudeDataElement] Creating items batch', { item })
-        Item.createDocuments(item)
-          .then((item) => {
-            logger.debug('[OggDudeDataElement] Item created', { item })
-          })
-          .catch((error, item) => {
-            logger.error('[OggDudeDataElement] Error while creating item', { item, error })
-          })
+    let promiseResolved = Promise.resolve(itemPromises)
+      .then(async (items) => {
+        logger.info('[OggDudeDataElement] Creating items batch', { items })
+        try {
+          const created = await Item.createDocuments(items)
+          logger.debug('[OggDudeDataElement] Items created', { created })
+        } catch (error) {
+          logger.error('[OggDudeDataElement] Error while creating items batch', { error })
+        }
       })
       .catch((error) => {
         logger.error('[OggDudeDataElement] Error while resolving item creation promises', { error })
@@ -394,7 +395,6 @@ class OggDudeDataElement {
    * @name _buildItemElements
    */
   static _buildItemElements = (jsonData, mapperFn) => {
-    //const elements = foundry.utils.getProperty(jsonData, elementCriteria);
     let items = mapperFn(jsonData)
     logger.debug('[OggDudeDataElement] Items to be created in Foundry VTT database', { items })
     return items

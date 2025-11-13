@@ -5,6 +5,7 @@ import { buildWeaponContext } from './items/weapon-ogg-dude.mjs'
 import { buildSpeciesContext } from './items/species-ogg-dude.mjs'
 import { buildCareerContext } from './items/career-ogg-dude.mjs'
 import { logger } from '../utils/logger.mjs'
+import { withRetry } from './utils/retry.mjs'
 
 export default class OggDudeImporter {
   /**
@@ -50,7 +51,7 @@ export default class OggDudeImporter {
       logger.warn(`Value ${label} is mandatory !`)
       return 0
     }
-    return parseInt(value) || 0
+    return Number.parseInt(value) || 0
   }
 
   /**
@@ -62,7 +63,7 @@ export default class OggDudeImporter {
    * @name mapOptionalNumber
    */
   static mapOptionalNumber(value) {
-    return parseInt(value) || 0
+    return Number.parseInt(value) || 0
   }
 
   /**
@@ -149,7 +150,7 @@ export default class OggDudeImporter {
    * @function
    * @name _processOggDudeData
    */
-  static async processOggDudeData(importedFile, domains) {
+  static async processOggDudeData(importedFile, domains, { progressCallback } = {}) {
     /* --------------------------------------------- GÉNÉRIQUE ------------------------------------------------------------------- */
 
     // Step 1: Load the zip file
@@ -179,15 +180,33 @@ export default class OggDudeImporter {
     const domainsToImport = domains.filter((domain) => domain.checked).map((domain) => domain.id)
     logger.debug('[ProcessOggDudeData] -Step 3.3: Domains to Import >', domainsToImport)
 
-    await Promise.all(
-      Array.from(buildContextMap.values()).map(async (contextMapElement) => {
-        if (domainsToImport.includes(contextMapElement.type)) {
-          const context = await contextMapElement.contextBuilder(zip, groupByDirectory, groupByType)
-          logger.debug('[ProcessOggDudeData] - Step 3.4: Context >', context)
-          await OggDudeDataElement.processElements(context)
+    const contextEntries = Array.from(buildContextMap.values()).filter((e) => domainsToImport.includes(e.type))
+    const total = contextEntries.length
+    let processed = 0
+    for (const entry of contextEntries) {
+      const context = await withRetry(
+        () => entry.contextBuilder(zip, groupByDirectory, groupByType),
+        {
+          shouldRetry: (err) => /parse|XML|network/i.test(err?.message || ''),
+        },
+      )
+      logger.debug('[ProcessOggDudeData] - Step 3.4: Context >', context)
+      await withRetry(
+        () => OggDudeDataElement.processElements(context),
+        {
+          shouldRetry: (err) => /database|upload|parse/i.test(err?.message || ''),
+        },
+      )
+      processed += 1
+      if (typeof progressCallback === 'function') {
+        try {
+          progressCallback({ processed, total, domain: entry.type })
+        } catch (e) {
+          logger.warn('[ProcessOggDudeData] progressCallback error ignoré', { error: e })
         }
-      }),
-    )
+      }
+    }
+    Hooks.callAll('oggdudeImport.completed', { processed, total, domains: domainsToImport })
 
     /* ------------------------------------------------------------------------------------------------------------------------------------ */
   }
