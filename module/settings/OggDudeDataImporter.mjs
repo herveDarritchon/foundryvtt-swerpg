@@ -115,7 +115,17 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
 
   static async loadAction(_event, target) {
     logger.info('[OggDudeDataImporter] Load OggDude Data', { instance: this })
-    await OggDudeImporter.processOggDudeData(this.zipFile, this.domains)
+    this._progress = { processed: 0, total: 0 }
+    await OggDudeImporter.processOggDudeData(this.zipFile, this.domains, {
+      progressCallback: ({ processed, total, domain }) => {
+        this._progress = { processed, total, domain }
+        logger.debug('[OggDudeDataImporter] Progress', this._progress)
+        // Pas d'erreur si render indisponible (tests unitaires)
+        if (typeof this.render === 'function') {
+          this.render().catch((e) => logger.warn('[OggDudeDataImporter] render progress error', { e }))
+        }
+      },
+    })
   }
 
   /* -------------------------------------------- */
@@ -150,16 +160,12 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
 
   async _onSubmit(event, form, formData) {
     const settings = foundry.utils.expandObject(formData.object)
-    /*await Promise.all(
-            Object.entries(settings).map(([key, value]) => game.settings.set("foo", key, value))
-        );*/
     logger.info('[OggDudeDataImporter] Saving settings', { settings, instance: this })
   }
 
   /* -------------------------------------------- */
 
   static async resetAction(_event, target) {
-    //await game.settings.set("foo", "config", {});
     logger.info('[OggDudeDataImporter] Resetting settings', { instance: this })
     this.zipFile = null
     this.domains = this._initializeDomains(this._domainNames)
@@ -195,7 +201,16 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
     const form = $('form.oggDude-data-importer')[0]
     const importedFile = form['zip-file'].files[0]
 
-    await OggDudeImporter.processOggDudeData(importedFile, this.domains)
+    this._progress = { processed: 0, total: 0 }
+    await OggDudeImporter.processOggDudeData(importedFile, this.domains, {
+      progressCallback: ({ processed, total, domain }) => {
+        this._progress = { processed, total, domain }
+        logger.debug('[OggDudeDataImporter] Progress (button)', this._progress)
+        if (typeof this.render === 'function') {
+          this.render().catch(() => {})
+        }
+      },
+    })
 
     await this.close({})
   }
