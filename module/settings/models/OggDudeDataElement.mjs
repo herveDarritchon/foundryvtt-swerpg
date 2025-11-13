@@ -210,6 +210,11 @@ class OggDudeDataElement {
   }
 
   static getElementsFrom(directories, path, name) {
+    // Validation sécurité basique: empêcher traversal ou noms suspects
+    if (typeof name !== 'string' || name.includes('..') || name.includes('/') || name.includes('\\')) {
+      logger.warn('[OggDudeDataElement] getElementsFrom - invalid name rejected', { name })
+      return undefined
+    }
     const directory = directories[path] || []
     return directory.find((element) => element.name === name)
   }
