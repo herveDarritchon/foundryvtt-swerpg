@@ -1,0 +1,52 @@
+name: OggDude Import Focused Tests
+
+on:
+  push:
+    paths:
+      - 'module/importer/**'
+      - 'tests/importer/**'
+      - 'tests/integration/*-import.integration.spec.mjs'
+      - '.github/workflows/oggdude-import-tests.yml'
+  pull_request:
+    paths:
+      - 'module/importer/**'
+      - 'tests/importer/**'
+      - 'tests/integration/*-import.integration.spec.mjs'
+
+jobs:
+  import-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Install dependencies (frozen lockfile)
+        run: pnpm install --frozen-lockfile
+
+      - name: Run focused importer tests
+        run: pnpm vitest run tests/importer/*.spec.mjs tests/integration/armor-import.integration.spec.mjs tests/integration/weapon-import.integration.spec.mjs tests/integration/gear-import.integration.spec.mjs tests/integration/species-import.integration.spec.mjs --coverage
+
+      - name: Upload coverage artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: importer-tests-coverage
+          path: coverage
+          retention-days: 7
+
+      - name: Summary comment
+        if: github.event_name == 'pull_request'
+        run: |
+          echo "### Importer Tests Completed" >> $GITHUB_STEP_SUMMARY
+          echo "Verified importer & integration mapping logic with coverage." >> $GITHUB_STEP_SUMMARY
