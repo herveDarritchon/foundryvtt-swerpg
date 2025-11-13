@@ -43,7 +43,7 @@ Plan d'implémentation pour compléter la feature d'import OggDude en couvrant l
 
 | Task | Description | Completed | Date |
 |------|-------------|-----------|------|
-| TASK-001 | Créer `module/importer/utils/weapon-import-utils.mjs` avec `getWeaponImportStats()` | | |
+| TASK-001 | Créer `module/importer/utils/weapon-import-utils.mjs` avec `getWeaponImportStats()` | ✅ | 2025-11-13 |
 | TASK-002 | Créer `module/importer/utils/gear-import-utils.mjs` avec `getGearImportStats()` | ✅ | 2025-11-13 |
 | TASK-003 | Créer `module/importer/utils/species-import-utils.mjs` avec `getSpeciesImportStats()` | ✅ | 2025-11-13 |
 | TASK-004 | Créer `module/importer/utils/career-import-utils.mjs` avec `getCareerImportStats()` | ✅ | 2025-11-13 |
@@ -61,15 +61,15 @@ Plan d'implémentation pour compléter la feature d'import OggDude en couvrant l
 
 | Task | Description | Completed | Date |
 |------|-------------|-----------|------|
-| TASK-011 | Écrire tests unitaires `tests/importer/oggDudeDataImporter.spec.mjs` | | |
-| TASK-012 | Écrire tests unitaires `tests/importer/oggDudeImporter.spec.mjs` | | |
-| TASK-013 | Écrire tests unitaires `tests/importer/oggDudeDataElement.spec.mjs` | | |
-| TASK-014 | Créer tests intégration armor `tests/integration/armor-import.integration.spec.mjs` | | |
-| TASK-015 | Créer tests intégration weapon `tests/integration/weapon-import.integration.spec.mjs` | | |
-| TASK-016 | Créer tests intégration gear `tests/integration/gear-import.integration.spec.mjs` | | |
-| TASK-017 | Créer test sécurité chemins `tests/importer/path-validation.spec.mjs` | | |
-| TASK-018 | Ajouter script CI exécution ciblée tests import (workflow update) | | |
-| TASK-019 | Mettre à jour `TESTS_COVERAGE_IMPROVEMENT.md` avec nouvelles métriques | | |
+| TASK-011 | Écrire tests unitaires `tests/importer/oggDudeDataImporter.spec.mjs` | ✅ | 2025-11-13 |
+| TASK-012 | Écrire tests unitaires `tests/importer/oggDudeImporter.spec.mjs` | ✅ | 2025-11-13 |
+| TASK-013 | Écrire tests unitaires `tests/importer/oggDudeDataElement.spec.mjs` | ✅ | 2025-11-13 |
+| TASK-014 | Créer tests intégration armor `tests/integration/armor-import.integration.spec.mjs` | ✅ | 2025-11-13 |
+| TASK-015 | Créer tests intégration weapon `tests/integration/weapon-import.integration.spec.mjs` | ✅ | 2025-11-13 |
+| TASK-016 | Créer tests intégration gear `tests/integration/gear-import.integration.spec.mjs` | ✅ | 2025-11-13 |
+| TASK-017 | Créer test sécurité chemins `tests/importer/path-validation.spec.mjs` | ✅ | 2025-11-13 |
+| TASK-018 | Ajouter script CI exécution ciblée tests import (workflow update) | ✅ | 2025-11-13 |
+| TASK-019 | Mettre à jour `TESTS_COVERAGE_IMPROVEMENT.md` avec nouvelles métriques | ✅ | 2025-11-13 |
 
 ### Implementation Phase 3 - UX Prévisualisation & Progression
 

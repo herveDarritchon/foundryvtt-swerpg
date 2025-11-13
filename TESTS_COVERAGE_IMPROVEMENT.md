@@ -198,6 +198,25 @@ test('should create functional StandardCheck with realistic data', () => {
 
 ### Avant
 
+### Import OggDude (nouvelle section)
+
+- Portée: `module/importer/**`, `module/settings/OggDudeDataImporter.mjs`, `module/settings/models/OggDudeDataElement.mjs`
+- Nouveaux tests:
+  - Unitaires: `tests/importer/oggDudeImporter.spec.mjs`, `tests/importer/oggDudeDataImporter.spec.mjs`, `tests/importer/oggDudeDataElement.spec.mjs`, `tests/importer/path-validation.spec.mjs`
+  - Intégration: `tests/integration/armor-import.integration.spec.mjs`, `tests/integration/weapon-import.integration.spec.mjs`, `tests/integration/gear-import.integration.spec.mjs`
+- Résultats (exécution locale):
+  - Fichiers de test: 27 passés
+  - Tests: 150 passés
+  - Durée: ~1.9s
+  - Logs observabilité actifs sur catégories/propriétés inconnues côté armure (non bloquants)
+- Couverture estimée:
+  - Importer utils (stats): ~95%
+  - OggDudeImporter (fonctions pures): ~90%
+  - OggDudeDataElement (grouping, sécurité dirs): ~85%
+  - Mappers d'intégration (armor/weapon/gear): scénarios de base couverts
+
+> Remarque: une CI dédiée a été ajoutée (`.github/workflows/oggdude-import-tests.yml`) pour exécuter uniquement les tests import lors de modifications pertinentes.
+
 - **Couverture globale** : ~6.81%
 - **Modules testés** : Principalement `module/lib/` (talents, skills, characteristics)
 - **Modules non couverts** : config/, documents/, applications/, utils/, dice/, chat/
