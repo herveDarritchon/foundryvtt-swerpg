@@ -751,6 +751,22 @@
           "gear": "Load Gear data",
           "species": "Load Species data",
           "weapon": "Load Weapons data"
+        },
+        "stats": {
+          "title": "Import Statistics",
+          "domain": "Domain",
+          "total": "Total",
+          "imported": "Imported",
+          "rejected": "Rejected",
+          "duration": "Duration (ms)"
+        },
+        "metrics": {
+          "title": "Global Metrics",
+          "duration": "Overall Duration (ms)",
+          "errorRate": "Error Rate",
+          "itemsPerSecond": "Items / Second",
+          "archiveSize": "Archive Size (bytes)",
+          "processed": "Total Processed"
         }
       }
     }

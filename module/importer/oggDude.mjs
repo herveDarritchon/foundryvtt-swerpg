@@ -6,6 +6,13 @@ import { buildSpeciesContext } from './items/species-ogg-dude.mjs'
 import { buildCareerContext } from './items/career-ogg-dude.mjs'
 import { logger } from '../utils/logger.mjs'
 import { withRetry } from './utils/retry.mjs'
+import {
+  markGlobalStart,
+  markGlobalEnd,
+  markArchiveSize,
+  recordDomainStart,
+  recordDomainEnd,
+} from './utils/global-import-metrics.mjs'
 
 export default class OggDudeImporter {
   /**
@@ -154,8 +161,12 @@ export default class OggDudeImporter {
     /* --------------------------------------------- GÉNÉRIQUE ------------------------------------------------------------------- */
 
     // Step 1: Load the zip file
+    markGlobalStart()
     const zip = await new OggDudeImporter().load(importedFile)
     logger.debug('[ProcessOggDudeData] - Step 1: Zip >', zip)
+    if (importedFile?.size) {
+      markArchiveSize(importedFile.size)
+    }
 
     // Step 2: Load the data elements from the zip
     let allDataElements = OggDudeDataElement.from(zip)
@@ -184,6 +195,7 @@ export default class OggDudeImporter {
     const total = contextEntries.length
     let processed = 0
     for (const entry of contextEntries) {
+      recordDomainStart(entry.type)
       const context = await withRetry(
         () => entry.contextBuilder(zip, groupByDirectory, groupByType),
         {
@@ -198,6 +210,7 @@ export default class OggDudeImporter {
         },
       )
       processed += 1
+      recordDomainEnd(entry.type)
       if (typeof progressCallback === 'function') {
         try {
           progressCallback({ processed, total, domain: entry.type })
@@ -207,6 +220,7 @@ export default class OggDudeImporter {
       }
     }
     Hooks.callAll('oggdudeImport.completed', { processed, total, domains: domainsToImport })
+    markGlobalEnd()
 
     /* ------------------------------------------------------------------------------------------------------------------------------------ */
   }

@@ -45,4 +45,71 @@
             {{localize "SETTINGS.OggDudeDataImporter.loadWindow.reset"}}
         </button>
     </section>
+
+    {{!-- Statistiques d'import --}}
+    <section class="import-stats flexcol" aria-labelledby="import-stats-heading">
+        <h4 id="import-stats-heading">{{localize "SETTINGS.OggDudeDataImporter.loadWindow.stats.title"}}</h4>
+        <table class="stats-table" role="table" aria-describedby="import-stats-heading">
+            <thead>
+            <tr>
+                <th scope="col">{{localize "SETTINGS.OggDudeDataImporter.loadWindow.stats.domain"}}</th>
+                <th scope="col">{{localize "SETTINGS.OggDudeDataImporter.loadWindow.stats.total"}}</th>
+                <th scope="col">{{localize "SETTINGS.OggDudeDataImporter.loadWindow.stats.imported"}}</th>
+                <th scope="col">{{localize "SETTINGS.OggDudeDataImporter.loadWindow.stats.rejected"}}</th>
+                <th scope="col">{{localize "SETTINGS.OggDudeDataImporter.loadWindow.stats.duration"}}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#if importStats}}
+                <tr>
+                    <th scope="row">{{localize "SETTINGS.OggDudeDataImporter.loadWindow.domains.armor"}}</th>
+                    <td>{{importStats.armor.total}}</td>
+                    <td>{{importStats.armor.imported}}</td>
+                    <td>{{importStats.armor.rejected}}</td>
+                    <td>{{lookup importMetrics.domains "armor" "durationMs"}}</td>
+                </tr>
+                <tr>
+                    <th scope="row">{{localize "SETTINGS.OggDudeDataImporter.loadWindow.domains.weapon"}}</th>
+                    <td>{{importStats.weapon.total}}</td>
+                    <td>{{importStats.weapon.imported}}</td>
+                    <td>{{importStats.weapon.rejected}}</td>
+                    <td>{{lookup importMetrics.domains "weapon" "durationMs"}}</td>
+                </tr>
+                <tr>
+                    <th scope="row">{{localize "SETTINGS.OggDudeDataImporter.loadWindow.domains.gear"}}</th>
+                    <td>{{importStats.gear.total}}</td>
+                    <td>{{importStats.gear.imported}}</td>
+                    <td>{{importStats.gear.rejected}}</td>
+                    <td>{{lookup importMetrics.domains "gear" "durationMs"}}</td>
+                </tr>
+                <tr>
+                    <th scope="row">{{localize "SETTINGS.OggDudeDataImporter.loadWindow.domains.species"}}</th>
+                    <td>{{importStats.species.total}}</td>
+                    <td>{{importStats.species.imported}}</td>
+                    <td>{{importStats.species.rejected}}</td>
+                    <td>{{lookup importMetrics.domains "species" "durationMs"}}</td>
+                </tr>
+                <tr>
+                    <th scope="row">{{localize "SETTINGS.OggDudeDataImporter.loadWindow.domains.career"}}</th>
+                    <td>{{importStats.career.total}}</td>
+                    <td>{{importStats.career.imported}}</td>
+                    <td>{{importStats.career.rejected}}</td>
+                    <td>{{lookup importMetrics.domains "career" "durationMs"}}</td>
+                </tr>
+            {{/if}}
+            </tbody>
+        </table>
+    </section>
+
+    {{!-- Métriques globales --}}
+    <section class="import-metrics flexcol" aria-labelledby="import-metrics-heading">
+        <h4 id="import-metrics-heading">{{localize "SETTINGS.OggDudeDataImporter.loadWindow.metrics.title"}}</h4>
+        <ul class="metrics" role="list">
+            <li><strong>{{localize "SETTINGS.OggDudeDataImporter.loadWindow.metrics.duration"}}:</strong> {{importMetrics.overallDurationMs}}</li>
+            <li><strong>{{localize "SETTINGS.OggDudeDataImporter.loadWindow.metrics.errorRate"}}:</strong> {{importMetrics.errorRate}}</li>
+            <li><strong>{{localize "SETTINGS.OggDudeDataImporter.loadWindow.metrics.itemsPerSecond"}}:</strong> {{importMetrics.itemsPerSecond}}</li>
+            <li><strong>{{localize "SETTINGS.OggDudeDataImporter.loadWindow.metrics.archiveSize"}}:</strong> {{importMetrics.archiveSizeBytes}}</li>
+            <li><strong>{{localize "SETTINGS.OggDudeDataImporter.loadWindow.metrics.processed"}}:</strong> {{importMetrics.totalProcessed}}</li>
+        </ul>
+    </section>
 </div>

@@ -159,15 +159,15 @@ Ce document présente l'architecture d'import OggDude pour le système Foundry V
 - **FILE-004**: `templates/settings/oggDudeDataImporter.hbs` - Template interface (✅ IMPLEMENTED)
 - **FILE-005**: `module/importer/items/*.mjs` - Mappers par type (✅ IMPLEMENTED)
 - **FILE-006**: `module/importer/mappings/*.mjs` - Tables de mapping (✅ IMPLEMENTED)
-- **FILE-007**: `module/importer/utils/*.mjs` - Utilitaires observabilité (🔄 PARTIAL)
-- **FILE-008**: `lang/*.json` - Fichiers de localisation (✅ IMPLEMENTED EN, ❌ MISSING FR)
+- **FILE-007**: `module/importer/utils/*.mjs` - Utilitaires observabilité (✅ MÉTRIQUES & AGRÉGATEUR)
+- **FILE-008**: `lang/*.json` - Fichiers de localisation (✅ EN & FR étendus import)
 - **FILE-009**: `tests/importer/*.spec.mjs` - Tests d'intégration (🔄 PARTIAL)
 - **FILE-010**: `documentation/swerpg/architecture/oggdude/*.md` - Documentation (✅ IMPLEMENTED)
 
 ## 6. Testing
 
 - **TEST-001**: Tests d'intégration pour chaque mapper (species ✅, career ✅, autres ❌)
-- **TEST-002**: Tests unitaires pour utilitaires de mapping (❌ MISSING)
+- **TEST-002**: Tests unitaires pour utilitaires de mapping (✅ import-stats-utils.spec.mjs)
 - **TEST-003**: Tests d'interface pour OggDudeDataImporter (❌ MISSING)
 - **TEST-004**: Tests de performance pour gros fichiers ZIP (❌ MISSING)
 - **TEST-005**: Tests de sécurité pour validation chemins (❌ MISSING)
@@ -218,6 +218,58 @@ Cette section documente tous les types de données disponibles dans les fichiers
 | Specializations | `Specializations/*.xml` | 100+ spécialisations (Pilot, Assassin, etc.) | 📋 PLANNED | HIGH |
 
 ### Force & Abilities (🔄 IN PROGRESS)
+
+## Schéma des Statistiques & Métriques (Observabilité)
+
+### Statistiques par Domaine
+
+Chaque fonction `get<Domain>ImportStats()` retourne:
+
+```json
+{
+  total: number,
+  rejected: number,
+  imported: number, // total - rejected
+  unknown<Aspect>: number, // ex: unknownSkills, unknownProperties
+  <aspect>Details: string[] // ex: skillDetails
+}
+```json
+{
+  "total": "number",
+  "rejected": "number",
+  "imported": "number", // total - rejected
+  "unknown<Aspect>": "number", // ex: unknownSkills, unknownProperties
+  "<aspect>Details": ["string"] // ex: skillDetails
+}
+Spécificités par domaine: Armor ajoute unknownCategories, unknownProperties & rejectionReasons interne.
+
+### Métriques Globales
+
+`aggregateImportMetrics()` retourne:
+
+```json
+{
+  overallDurationMs: number,
+  domainsCount: number,
+  errorRate: number, // totalRejected / totalProcessed
+  archiveSizeBytes: number,
+  itemsPerSecond: number, // totalImported / (overallDurationMs/1000)
+  domains: { [domain: string]: { durationMs: number } },
+  totalProcessed: number,
+  totalRejected: number,
+  totalImported: number
+}
+```
+
+### Instrumentation Runtime
+
+Dans `OggDudeImporter.processOggDudeData`:
+
+- `markGlobalStart()` / `markGlobalEnd()`
+- `recordDomainStart()` / `recordDomainEnd()` pour chaque domaine sélectionné
+- `markArchiveSize(file.size)` pour la taille de l'archive
+
+Exposées à l'UI via `_prepareContext()` => rendu tableau + métriques globales.
 
 #### Force Powers & Abilities
 
