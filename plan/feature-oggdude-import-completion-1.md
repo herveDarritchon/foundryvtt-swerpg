@@ -45,9 +45,9 @@ Ce plan d'implémentation vise à finaliser la feature d'import OggDude en compl
 
 | Task | Description | Completed | Date |
 |------|-------------|-----------|------|
-| TASK-006 | Créer armor-import.integration.spec.mjs | | |
-| TASK-007 | Créer weapon-import.integration.spec.mjs | | |
-| TASK-008 | Créer gear-import.integration.spec.mjs | | |
+| TASK-006 | Créer armor-import.integration.spec.mjs | ✅ | 2025-11-13 |
+| TASK-007 | Créer weapon-import.integration.spec.mjs | ✅ | 2025-11-13 |
+| TASK-008 | Créer gear-import.integration.spec.mjs | ✅ (existant) | 2025-11-13 |
 | TASK-009 | Ajouter tests de sécurité pour validation des chemins de fichiers | | |
 | TASK-010 | Créer tests de performance pour gros fichiers ZIP (>10MB) | | |
 
