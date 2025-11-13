@@ -1,206 +1,191 @@
-# Documentation Process - Stratégie de Tests SweRPG
+# Documentation Process - Architecture OggDude Import
 
 ## Vue d'ensemble
 
-Ce document décrit le processus suivi pour créer la documentation complète de la stratégie de tests du système SweRPG, en suivant les instructions du prompt `retro-doc.prompt.md`.
+Ce document décrit le processus suivi pour créer la documentation complète de l'architecture d'import OggDude du système SweRPG, en suivant les instructions du prompt `retro-doc.prompt.md`.
 
 ## Objectif de Documentation
 
-Analyser et documenter l'architecture de test existante du système SweRPG pour :
+Analyser et documenter l'architecture d'import OggDude existante pour :
 
-- Comprendre les patterns et practices de test actuels
+- Comprendre les patterns et practices d'import actuels
 - Identifier les exigences fonctionnelles et non-fonctionnelles couvertes
-- Documenter les workflows et processus de test
-- Créer une référence technique pour les développeurs
+- Documenter les workflows et processus d'import
+- Créer un guide d'implémentation pour nouveaux types d'objets
+- Fournir une référence technique complète pour les développeurs
 
 ## Fichiers et Dossiers Analysés
 
-### Configuration de Test
+### Architecture d'Import OggDude
 
-#### Fichiers de Configuration Principaux
+#### Interface Utilisateur
 
-- **`vitest.config.js`** - Configuration principale du test runner Vitest
-  - Setup files, provider de couverture, répertoires de rapports
-- **`tests/vitest-setup.js`** - Setup global exécuté avant chaque test
-  - Mock de l'environnement Foundry, utilitaires globaux
-- **`package.json`** - Scripts NPM pour l'exécution des tests
-  - `test`, `test:watch`, `test:coverage`
+- **`module/settings/OggDudeDataImporter.mjs`** - Application principale d'import
+  - Interface de sélection fichier ZIP et domaines
+  - Gestion des états UI et événements utilisateur
+- **`templates/settings/oggDudeDataImporter.hbs`** - Template Handlebars
+  - Interface de sélection progressive (fichier → domaines → import)
 
-#### Infrastructure de Mock
+#### Système de Traitement
 
-- **`tests/helpers/mock-foundry.mjs`** - Mock centralisé de FoundryVTT
-  - `setupFoundryMock()`, `teardownFoundryMock()`, utilitaires d'extension
-  - Simulation des APIs game, foundry, ui.notifications
+- **`module/importer/oggDude.mjs`** - Classe principale d'import
+  - Orchestration du processus d'import générique
+  - Méthodes utilitaires de mapping (mapMandatoryString, mapOptionalNumber, etc.)
+- **`module/settings/models/OggDudeDataElement.mjs`** - Modèle de données
+  - Représentation des éléments dans l'archive ZIP
+  - Méthodes de groupement et traitement des fichiers
 
-### Utilitaires de Test (Test Factories)
+#### Mappers Spécialisés par Type
 
-#### Factories de Données
+- **`module/importer/items/armor-ogg-dude.mjs`** - Mapper armures
+  - `armorMapper()`, `buildArmorContext()`, statistiques d'import
+- **`module/importer/items/weapon-ogg-dude.mjs`** - Mapper armes
+  - `weaponMapper()`, `buildWeaponContext()`, validation métier
+- **`module/importer/items/gear-ogg-dude.mjs`** - Mapper équipements
+  - `gearMapper()`, `buildGearContext()`, mapping simplifié
+- **`module/importer/items/species-ogg-dude.mjs`** - Mapper espèces
+  - `speciesMapper()`, `buildSpeciesContext()`, gestion compétences/talents
+- **`module/importer/items/career-ogg-dude.mjs`** - Mapper carrières
+  - `careerMapper()`, `buildCareerContext()`, gestion spécialisations
 
-- **`tests/utils/actors/actor.mjs`** - Factory pour créer des acteurs de test
-  - `createActor()` avec paramètres configurables
-- **`tests/utils/skills/skill.mjs`** - Factory pour créer des compétences
-  - `createSkillData()` pour tests de progression
-- **`tests/utils/talents/talent.mjs`** - Factory pour créer des talents
-  - `createTalentData()` avec support des talents ranked/non-ranked
-- **`tests/utils/characteristics/characteristic.mjs`** - Factory caractéristiques
+#### Tables de Mapping
 
-### Tests Métier (Business Logic)
+- **`module/importer/mappings/oggdude-skill-map.mjs`** - Correspondances compétences
+  - `OGG_DUDE_SKILL_MAP`, `mapOggDudeSkillCode()` avec validation
+- **`module/importer/mappings/oggdude-armor-category-map.mjs`** - Catégories armures
+  - `ARMOR_CATEGORY_MAP`, `resolveArmorCategory()` avec fallbacks
+- **`module/importer/mappings/oggdude-armor-property-map.mjs`** - Propriétés armures
+  - `ARMOR_PROPERTY_MAP`, `resolveArmorProperties()` avec logging
+- **`module/importer/mappings/oggdude-weapon-*.mjs`** - Mappings armes
+  - Compétences, qualités, portées, maniement des armes
+- **`module/importer/mappings/index-*.mjs`** - Index centralisés
+  - Exports organisés par type d'objet
 
-#### Tests de Compétences
+#### Utilitaires d'Import
 
-- **`tests/lib/skills/career-free-skill.test.mjs`** - Tests rangs gratuits carrière
-- **`tests/lib/skills/specialization-free-skill.test.mjs`** - Tests rangs gratuits spé
-- **`tests/lib/skills/trained-skill.test.mjs`** - Tests compétences entraînées
-- **`tests/lib/skills/skill-cost-calculator.test.mjs`** - Tests calculs de coûts
-- **`tests/lib/skills/skill-factory.test.mjs`** - Tests factory de compétences
-- **`tests/lib/skills/error-skill.test.mjs`** - Tests gestion d'erreurs
-
-#### Tests de Talents
-
-- **`tests/lib/talents/trained-talent.test.mjs`** - Tests talents entraînés
-- **`tests/lib/talents/ranked-trained-talent.test.mjs`** - Tests talents ranked
-- **`tests/lib/talents/talent-factory.test.mjs`** - Tests factory de talents
-- **`tests/lib/talents/talent-cost-calculator.test.mjs`** - Tests calculs coûts
-- **`tests/lib/talents/talent-characteristic.test.mjs`** - Tests caractéristiques
-- **`tests/lib/talents/error-talent.test.mjs`** - Tests gestion d'erreurs
-
-#### Tests Système
-
-- **`tests/lib/jauges/jauge.test.mjs`** - Tests système de jauges
-
-### Tests d'Intégration
-
-#### Tests UI/Applications
-
-- **`tests/applications/sheets/sheets-logging.spec.js`** - Tests intégration logging
-- **`tests/utils/logger-integration.spec.js`** - Tests logger système
-
-### Documentation de Référence
-
-#### Architecture Decision Records
-
-- **`docs/adr/adr-0004-vitest-testing-strategy.md`** - ADR stratégie Vitest
-  - Contexte, décision, conséquences, alternatives considérées
-
-#### Dépendances
-
-- **`pnpm-lock.yaml`** - Lockfile avec versions exactes des dépendances de test
-  - Vitest, @vitest/coverage-v8, etc.
+- **`module/importer/utils/armor-import-utils.mjs`** - Statistiques armures
+  - `getArmorImportStats()`, `resetArmorImportStats()` pour observabilité
 
 ## Processus d'Analyse Suivi
 
 ### Étape 1 : Exploration de l'Architecture
 
-1. **Recherche sémantique** - Identification des fichiers de test et configuration
-2. **Analyse des patterns** - Extraction des structures récurrentes
-3. **Cartographie des dépendances** - Compréhension des relations entre composants
+1. **Recherche sémantique** - Identification des composants d'import OggDude
+2. **Analyse des patterns** - Extraction des structures récurrentes (mappers, contextes)
+3. **Cartographie des dépendances** - Compréhension des relations entre composants d'import
 
 ### Étape 2 : Identification des Patterns
 
-1. **Patterns de Mock** - Centralisation des mocks FoundryVTT
-2. **Patterns de Factory** - Réutilisation des factories de données
-3. **Patterns d'Organisation** - Structure miroir `/tests/` ↔ `/module/`
-4. **Patterns Async** - Gestion des tests asynchrones avec Vitest
+1. **Pattern Strategy** - Mappers spécialisés par type d'objet (armes, armures, etc.)
+2. **Pattern Builder** - Constructeurs de contexte pour chaque type d'import
+3. **Pattern Registry** - Registre des types d'import avec leurs builders
+4. **Pattern Template Method** - Processus d'import en phases (générique → spécifique)
 
 ### Étape 3 : Extraction des Exigences
 
-1. **Exigences Fonctionnelles** - À partir de l'analyse des test cases
-2. **Exigences Non-Fonctionnelles** - Performance, maintenabilité, fiabilité
-3. **Classification MOSCOW** - Must/Should/Could/Won't have
+1. **Exigences Fonctionnelles** - À partir de l'analyse des interfaces et workflows
+2. **Exigences Non-Fonctionnelles** - Performance, sécurité, maintenabilité
+3. **Classification MOSCOW** - Must/Should/Could/Won't have selon criticité
+4. **Analyse des contraintes** - Validation, sécurité, intégration Foundry
 
 ### Étape 4 : Documentation des Workflows
 
-1. **Workflows de développement** - Boucle de feedback développeur
-2. **Workflows CI/CD** - Intégration continue et déploiement
-3. **Workflows de test** - Stratégies d'exécution
+1. **Workflow utilisateur** - Sélection fichier → domaines → import
+2. **Workflow traitement** - Parse ZIP → groupement → mapping → stockage
+3. **Workflow extension** - Guide d'ajout de nouveaux types d'objets
 
 ### Étape 5 : Création des Diagrammes
 
-1. **Diagrammes de flux** - Workflows de développement et CI/CD
-2. **Diagrammes de séquence** - Exécution des tests avec mocks
-3. **Architecture générale** - Relations entre composants
+1. **Diagramme de classes UML** - Architecture des composants et relations
+2. **Diagrammes de séquence** - Processus d'import complet
+3. **Diagrammes de flux** - Workflows de sélection, traitement, mapping
 
 ## Résultats de l'Analyse
 
 ### Architecture Identifiée
 
-- **Test Runner** : Vitest avec configuration optimisée
-- **Mock Strategy** : Mock centralisé FoundryVTT avec lifecycle management
-- **Factory Pattern** : Factories réutilisables pour données de test
-- **Coverage Strategy** : Provider V8 avec rapports HTML/LCOV
+- **Interface utilisateur** : OggDudeDataImporter avec ApplicationV2 pattern
+- **Orchestrateur** : OggDudeImporter avec delegation aux mappers spécialisés
+- **Modèle de données** : OggDudeDataElement avec méthodes de traitement ZIP
+- **Mappers spécialisés** : Un mapper par type avec pattern strategy
 
 ### Patterns Documentés
 
-- **Setup/Teardown** : Isolation des tests avec beforeEach/afterEach
-- **Mocking** : vi.mock() pour modules, vi.fn() pour fonctions
-- **Assertions** : expect() avec matchers Vitest spécialisés
-- **Async Testing** : async/await avec gestion d'erreurs
+- **Strategy Pattern** : Mappers interchangeables par type d'objet
+- **Builder Pattern** : Construction de contextes d'import configurables
+- **Registry Pattern** : Registre des types avec leurs builders associés
+- **Template Method** : Processus standardisé avec points d'extension
 
 ### Exigences Couvertes
 
-- **Validation métier** : Règles de progression compétences/talents
-- **Intégration FoundryVTT** : Simulation complète environnement
-- **Performance** : Tests rapides avec feedback instantané
-- **Maintenabilité** : Structure claire et factories réutilisables
+- **Import sélectif** : Choix des domaines à importer
+- **Validation sécurisée** : Vérification structure ZIP et chemins
+- **Mapping robuste** : Tables de correspondance avec fallbacks
+- **Observabilité** : Statistiques et logging d'import détaillés
 
 ### Workflows Documentés
 
-- **Développement local** : Watch mode avec auto-reload
-- **CI/CD** : Pipeline intégré GitHub Actions
-- **Couverture** : Seuils de qualité avec enforcement
+- **Sélection progressive** : UX guidée pour import utilisateur
+- **Traitement par lots** : Performance optimisée pour gros volumes
+- **Extension système** : Guide step-by-step pour nouveaux types
 
 ## Livrables Créés
 
 ### Documentation Principale
 
-- **`documentation/strategie-tests.md`** - Documentation complète de la stratégie de tests
-  - Architecture, patterns, exigences, workflows, troubleshooting
+- **`documentation/swerpg/architecture/oggdude/oggdude-import.md`** - Documentation complète de l'architecture d'import OggDude
+  - Architecture UML, patterns, exigences MOSCOW, workflows, guide d'implémentation
 
 ### Structure de Documentation
 
 ```text
 documentation/
-├── strategie-tests.md           # Documentation complète
-└── DOCUMENTATION_PROCESS.md     # Ce fichier (processus suivi)
+├── swerpg/
+│   └── architecture/
+│       └── oggdude/
+│           └── oggdude-import.md    # Documentation architecture complète
+└── DOCUMENTATION_PROCESS.md         # Ce fichier (processus suivi)
 ```
 
 ## Métriques du Processus
 
 ### Couverture de l'Analyse
 
-- **48 fichiers de test** analysés (.mjs)
-- **4 fichiers d'intégration** analysés (.spec.js)
-- **5 factories utilitaires** documentées
-- **1 ADR** de référence consulté
+- **20 fichiers importer/** analysés (.mjs)
+- **15 tables de mapping** documentées
+- **5 mappers spécialisés** analysés (armor, weapon, gear, species, career)
+- **1 interface utilisateur** complète analysée
+- **3 plans de refactoring** existants consultés
 
 ### Patterns Identifiés
 
-- **12+ patterns de test** documentés
-- **3 workflows principaux** cartographiés
-- **4 types d'exigences** classifiées
-- **6 diagrammes** créés pour visualisation
+- **4 patterns architecturaux** documentés (Strategy, Builder, Registry, Template Method)
+- **3 workflows principaux** cartographiés (sélection, traitement, extension)
+- **6 types d'exigences** classifiées (fonctionnelles/non-fonctionnelles MOSCOW)
+- **3 diagrammes UML** créés pour visualisation
 
 ### Documentation Générée
 
-- **450+ lignes** de documentation technique
-- **15 sections structurées** avec exemples de code
-- **3 diagrammes Mermaid** pour workflows
-- **20+ exemples de code** pratiques
+- **650+ lignes** de documentation technique
+- **20+ sections structurées** avec exemples de code
+- **3 diagrammes Mermaid** (classes, séquence, flowchart)
+- **Guide complet d'implémentation** avec 6 étapes détaillées
+- **30+ exemples de code** pratiques pour extension
 
 ## Recommandations pour Maintenance
 
 ### Mise à Jour de la Documentation
 
-1. **Review périodique** - Mise à jour trimestrielle
-2. **Évolution patterns** - Documentation des nouveaux patterns
-3. **Metrics tracking** - Suivi des métriques de couverture
-4. **Team feedback** - Intégration retours équipe
+1. **Review périodique** - Mise à jour à chaque ajout de nouveau type d'import
+2. **Évolution patterns** - Documentation des nouveaux patterns de mapping
+3. **Validation guides** - Test des guides d'implémentation sur cas réels
+4. **Feedback développeurs** - Intégration retours équipe sur utilisabilité
 
-### Extension de la Stratégie
+### Extension de l'Architecture
 
-1. **Tests E2E** - Ajout Playwright pour tests bout-en-bout
-2. **Visual regression** - Tests de régression visuelle
-3. **Performance benchmarking** - Tests de performance automatisés
-4. **Mutation testing** - Amélioration qualité des tests
+1. **Nouveaux types OggDude** - Utilisation du guide d'implémentation documenté
+2. **Optimisations performance** - Traitement parallèle, streaming pour gros fichiers  
+3. **Amélioration UX** - Prévisualisation avant import, progress indicators
+4. **Tests d'intégration** - Couverture des workflows complets d'import
 
-Ce processus de documentation fournit une base solide pour comprendre, maintenir et faire évoluer la stratégie de test du système SweRPG, en suivant les meilleures pratiques de documentation technique et d'architecture logicielle.
+Ce processus de documentation fournit une base solide pour comprendre, maintenir et faire évoluer l'architecture d'import OggDude du système SweRPG, en suivant les meilleures pratiques de documentation technique et d'architecture logicielle. Le guide d'implémentation permet l'extension facile avec de nouveaux types d'objets tout en respectant les patterns établis.
