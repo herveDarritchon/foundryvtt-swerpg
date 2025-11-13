@@ -57,7 +57,7 @@ let armorImportStats = {
  * @returns {object} Les statistiques d'import
  */
 export function getArmorImportStats() {
-  return { ...armorImportStats }
+  return { ...armorImportStats, imported: armorImportStats.total - armorImportStats.rejected }
 }
 
 /**

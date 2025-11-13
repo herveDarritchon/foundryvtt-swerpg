@@ -144,8 +144,8 @@ export function weaponMapper(weapons) {
   return mappedWeapons
 }
 
-// Export stats util for global metrics
-export { getWeaponImportStats } from '../utils/weapon-import-utils.mjs'
+// Export stats utils for global metrics and test resets
+export { getWeaponImportStats, resetWeaponImportStats } from '../utils/weapon-import-utils.mjs'
 
 /**
  * Create the Weapon Context for the OggDude Data Importer.

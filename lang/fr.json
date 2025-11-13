@@ -50,6 +50,22 @@
           "gear": "Charger l'équipement",
           "species": "Charger les espèces",
           "weapon": "Charger les armes"
+        },
+        "stats": {
+          "title": "Statistiques d'import",
+          "domain": "Domaine",
+          "total": "Total",
+          "imported": "Importés",
+          "rejected": "Rejetés",
+          "duration": "Durée (ms)"
+        },
+        "metrics": {
+          "title": "Métriques globales",
+          "duration": "Durée totale (ms)",
+          "errorRate": "Taux d'erreur",
+          "itemsPerSecond": "Objets / Seconde",
+          "archiveSize": "Taille archive (octets)",
+          "processed": "Total traités"
         }
       }
     },

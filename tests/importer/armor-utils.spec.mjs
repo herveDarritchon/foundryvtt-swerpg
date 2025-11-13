@@ -121,7 +121,8 @@ describe('Statistics d\'import', () => {
         rejected: 0,
         unknownCategories: 0,
         unknownProperties: 0,
-        rejectionReasons: []
+        rejectionReasons: [],
+        imported: 0,
       })
     })
 
@@ -200,6 +201,7 @@ describe('Statistics d\'import', () => {
       expect(stats.unknownCategories).toBe(3)
       expect(stats.unknownProperties).toBe(7)
       expect(stats.rejectionReasons).toEqual(['TEST_REASON'])
+      expect(stats.imported).toBe(3)
 
       // Reset
       resetArmorImportStats()
@@ -210,7 +212,8 @@ describe('Statistics d\'import', () => {
         rejected: 0,
         unknownCategories: 0,
         unknownProperties: 0,
-        rejectionReasons: []
+        rejectionReasons: [],
+        imported: 0,
       })
     })
   })

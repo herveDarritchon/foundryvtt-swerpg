@@ -6,10 +6,15 @@
 
 import OggDudeImporter from '../importer/oggDude.mjs'
 import { logger } from '../utils/logger.mjs'
+import { getAllImportStats, aggregateImportMetrics } from '../importer/utils/global-import-metrics.mjs'
 // Similar syntax to importing, mais c'est du destructuring et peut être indisponible en environnement de test.
 
 // Fournit des fallbacks légers si l'API Foundry n'est pas initialisée (exécution tests).
-const ApplicationV2 = foundry?.applications?.api?.ApplicationV2 ?? class {}
+// Fallback minimal ApplicationV2 pour environnement de test (évite classe vide)
+const ApplicationV2 = foundry?.applications?.api?.ApplicationV2 ?? class {
+  // Méthode de rendu factice pour tests (évite erreur de classe vide)
+  render() { return null }
+}
 const HandlebarsApplicationMixin = foundry?.applications?.api?.HandlebarsApplicationMixin ?? ((Base) => Base)
 
 /**
@@ -82,13 +87,23 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
   /* -------------------------------------------- */
 
   _prepareContext(options) {
-    //const setting = game.settings.get("swerpgSettings", "config");
     logger.debug('[OggDudeDataImporter] Preparing context', { options, instance: this })
+    let stats = {}
+    let metrics = {}
+    try {
+      stats = getAllImportStats()
+      metrics = aggregateImportMetrics()
+    } catch (e) {
+      logger.debug('[OggDudeDataImporter] Stats indisponibles', { e })
+    }
     return {
       domains: this.domains,
       domainSelectionDisabled: this.noZipFileSelected(),
       loadButtonDisabled: this.noZipFileSelected() || this._noDomainSelected(),
       zipFile: this.zipFile,
+      progress: this._progress,
+      importStats: stats,
+      importMetrics: metrics,
     }
   }
 

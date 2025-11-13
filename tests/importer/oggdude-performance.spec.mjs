@@ -1,5 +1,10 @@
 import { describe, it, expect } from 'vitest'
 import OggDudeDataElement from '../../module/settings/models/OggDudeDataElement.mjs'
+import xml2jsModule from '../../vendors/xml2js.min.js'
+// Shim global xml2js comme dans autres tests d'intégration
+if (globalThis.xml2js === undefined) {
+  globalThis.xml2js = { js: xml2jsModule }
+}
 
 // Génère un gros XML >10MB pour test performance parsing/buildJsonDataFromFile
 function buildLargeWeaponsXml(count) {
@@ -15,10 +20,11 @@ describe('Performance import gros fichier XML', () => {
   it('parse Weapons.xml >10MB sous limite temps', async () => {
     // ~150 bytes per weapon; 75k weapons ~11.25MB
     const xml = buildLargeWeaponsXml(75000)
+    // Mock JSZip minimal interface: entry.async('text') => xml string
     const fakeZip = {
       files: {
         'Data/Weapons.xml': {
-          async text() { return xml }
+          async async(type) { if (type === 'text') return xml }
         }
       }
     }
