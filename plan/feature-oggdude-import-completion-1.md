@@ -33,11 +33,11 @@ Ce plan d'implémentation vise à finaliser la feature d'import OggDude en compl
 
 | Task | Description | Completed | Date |
 |------|-------------|-----------|------|
-| TASK-001 | Créer weapon-import-utils.mjs avec getWeaponImportStats() | | |
-| TASK-002 | Créer gear-import-utils.mjs avec getGearImportStats() | | |
-| TASK-003 | Créer species-import-utils.mjs avec getSpeciesImportStats() | | |
-| TASK-004 | Créer career-import-utils.mjs avec getCareerImportStats() | | |
-| TASK-005 | Créer global-import-metrics.mjs pour métriques d'import globales | | |
+| TASK-001 | Créer weapon-import-utils.mjs avec getWeaponImportStats() | ✅ | 2025-11-13 |
+| TASK-002 | Créer gear-import-utils.mjs avec getGearImportStats() | ✅ | 2025-11-13 |
+| TASK-003 | Créer species-import-utils.mjs avec getSpeciesImportStats() | ✅ | 2025-11-13 |
+| TASK-004 | Créer career-import-utils.mjs avec getCareerImportStats() | ✅ | 2025-11-13 |
+| TASK-005 | Créer global-import-metrics.mjs pour métriques d'import globales | ✅ | 2025-11-13 |
 
 ### Implementation Phase 2 - Tests d'Intégration Manquants
 
