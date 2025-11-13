@@ -2,6 +2,13 @@ import { buildArmorImgWorldPath, buildItemImgSystemPath } from '../../settings/d
 import OggDudeImporter from '../oggDude.mjs'
 import OggDudeDataElement from '../../settings/models/OggDudeDataElement.mjs'
 import { logger } from '../../utils/logger.mjs'
+import {
+  FLAG_STRICT_GEAR_VALIDATION,
+  resetGearImportStats,
+  incrementGearImportStat,
+  addGearUnknownCategory,
+  getGearImportStats,
+} from '../utils/gear-import-utils.mjs'
 
 /**
  * Normalize a numeric field value with validation and default fallback.
@@ -24,7 +31,7 @@ function normalizeGearNumericField(value, defaultValue, min = 0, max = undefined
   }
   
   // Check if string value would result in NaN when parsed
-  if (typeof value === 'string' && Number.isNaN(parseInt(value))) {
+  if (typeof value === 'string' && Number.isNaN(Number.parseInt(value))) {
     logger.debug('[GearImporter] Normalizing invalid string numeric value', { 
       originalValue: value, 
       defaultValue, 
@@ -163,35 +170,54 @@ function buildGearSystem(xmlGear) {
  * @name gearMapper
  */
 export function gearMapper(gears) {
-  return gears.map((xmlGear) => {
-    const name = OggDudeImporter.mapMandatoryString('gear.Name', xmlGear.Name)
-    const key = OggDudeImporter.mapMandatoryString('gear.Key', xmlGear.Key)
-    
-    logger.debug('[GearImporter] Mapping gear', { 
-      key, 
-      name,
-      hasType: !!xmlGear.Type,
-      hasDescription: !!xmlGear.Description,
-      hasPrice: !!xmlGear.Price,
-      hasEncumbrance: !!xmlGear.Encumbrance,
-      hasRarity: !!xmlGear.Rarity
-    })
-
-    const originalType = OggDudeImporter.mapOptionalString(xmlGear.Type)
-    
-    return {
-      name,
-      type: 'gear',
-      system: buildGearSystem(xmlGear),
-      flags: {
-        swerpg: { 
-          oggdudeKey: key,
-          ...(originalType && { originalType })
+  resetGearImportStats()
+  const mapped = []
+  for (const xmlGear of gears) {
+    incrementGearImportStat('total')
+    try {
+      const name = OggDudeImporter.mapMandatoryString('gear.Name', xmlGear.Name)
+      const key = OggDudeImporter.mapMandatoryString('gear.Key', xmlGear.Key)
+      logger.debug('[GearImporter] Mapping gear', {
+        key,
+        name,
+        hasType: !!xmlGear.Type,
+        hasDescription: !!xmlGear.Description,
+        hasPrice: !!xmlGear.Price,
+        hasEncumbrance: !!xmlGear.Encumbrance,
+        hasRarity: !!xmlGear.Rarity,
+      })
+      const originalType = OggDudeImporter.mapOptionalString(xmlGear.Type)
+      const system = buildGearSystem(xmlGear)
+      if (system.category === 'general' && originalType) {
+        addGearUnknownCategory(originalType)
+        if (FLAG_STRICT_GEAR_VALIDATION) {
+          incrementGearImportStat('rejected')
+          continue
         }
       }
+      mapped.push({
+        name,
+        type: 'gear',
+        system,
+        flags: {
+          swerpg: {
+            oggdudeKey: key,
+            ...(originalType && { originalType }),
+          },
+        },
+      })
+    } catch (e) {
+      logger.warn(`Gear mapping failed for: ${xmlGear?.Name || 'unnamed'} - ${e.message}`)
+      incrementGearImportStat('rejected')
     }
+  }
+  logger.info(`Gear import completed: ${mapped.length}/${getGearImportStats().total} gear imported`, {
+    stats: getGearImportStats(),
   })
+  return mapped
 }
+
+export { getGearImportStats } from '../utils/gear-import-utils.mjs'
 
 /**
  * Build the Gear context for the importer process.
