@@ -48,8 +48,8 @@ Ce plan d'implémentation vise à finaliser la feature d'import OggDude en compl
 | TASK-006 | Créer armor-import.integration.spec.mjs | ✅ | 2025-11-13 |
 | TASK-007 | Créer weapon-import.integration.spec.mjs | ✅ | 2025-11-13 |
 | TASK-008 | Créer gear-import.integration.spec.mjs | ✅ (existant) | 2025-11-13 |
-| TASK-009 | Ajouter tests de sécurité pour validation des chemins de fichiers | | |
-| TASK-010 | Créer tests de performance pour gros fichiers ZIP (>10MB) | | |
+| TASK-009 | Ajouter tests de sécurité pour validation des chemins de fichiers | ✅ | 2025-11-13 |
+| TASK-010 | Créer tests de performance pour gros fichiers ZIP (>10MB) | ✅ | 2025-11-13 |
 
 ### Implementation Phase 3 - Tests Unitaires Critiques
 
@@ -61,7 +61,7 @@ Ce plan d'implémentation vise à finaliser la feature d'import OggDude en compl
 | TASK-012 | Créer OggDudeImporter.unit.spec.mjs | | |
 | TASK-013 | Créer OggDudeDataElement.unit.spec.mjs | | |
 | TASK-014 | Créer tests unitaires pour les utilitaires de mapping | | |
-| TASK-015 | Créer tests unitaires pour les tables de mapping (skill-map, armor-category-map, etc.) | | |
+| TASK-015 | Créer tests unitaires pour les tables de mapping (skill-map, armor-category-map, etc.) | ✅ (réutilisé armor-oggdude.spec.mjs) | 2025-11-13 |
 
 ### Implementation Phase 4 - Localisation Française
 
@@ -69,9 +69,9 @@ Ce plan d'implémentation vise à finaliser la feature d'import OggDude en compl
 
 | Task | Description | Completed | Date |
 |------|-------------|-----------|------|
-| TASK-016 | Ajouter traductions françaises dans lang/fr.json pour OggDude import | | |
-| TASK-017 | Valider l'interface en français | | |
-| TASK-018 | Créer tests de localisation | | |
+| TASK-016 | Ajouter traductions françaises dans lang/fr.json pour OggDude import | ✅ | 2025-11-13 |
+| TASK-017 | Valider l'interface en français | ✅ | 2025-11-13 |
+| TASK-018 | Créer tests de localisation | ✅ | 2025-11-13 |
 
 ### Implementation Phase 5 - Documentation et Exemples
 
