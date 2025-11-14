@@ -100,6 +100,27 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
     } catch (e) {
       logger.debug('[OggDudeDataImporter] Stats indisponibles', { e })
     }
+    // Formatter pour rendre les durées lisibles par l'humain
+    const formatDuration = (ms) => {
+      if (!ms && ms !== 0) return ''
+      const n = Number(ms) || 0
+      if (n < 1000) return `${Math.round(n)} ms`
+      if (n < 60000) return `${(n / 1000).toFixed(2).replace(/\.00$|(?<=\.|\d*?)0+$/, '')} s`
+      const minutes = Math.floor(n / 60000)
+      const seconds = ((n % 60000) / 1000).toFixed(2).replace(/\.00$|(?<=\.|\d*?)0+$/, '')
+      return `${minutes}m ${seconds} s`
+    }
+
+    // Construire une version formatée des métriques pour l'affichage (évite d'ajouter des helpers Handlebars globaux)
+    const metricsFormatted = {
+      overallDuration: formatDuration(metrics?.overallDurationMs),
+      domains: {},
+    }
+    if (metrics?.domains) {
+      for (const [d, v] of Object.entries(metrics.domains)) {
+        metricsFormatted.domains[d] = { duration: formatDuration(v?.durationMs) }
+      }
+    }
     return {
       domains: this.domains,
       domainSelectionDisabled: this.noZipFileSelected(),
@@ -109,6 +130,7 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
       progressPercent: (this?._progress?.total ? Math.floor((this._progress.processed / this._progress.total) * 100) : 0),
       importStats: stats,
       importMetrics: metrics,
+      importMetricsFormatted: metricsFormatted,
       preview: this._buildPreviewContext(),
     }
   }
