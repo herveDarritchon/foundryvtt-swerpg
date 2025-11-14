@@ -133,7 +133,139 @@ export function setupFoundryMock(options = {}) {
 - **`addPacksMock()`** : Mock compendia
 - **`extendFoundryMock()`** : Extension dynamique
 
-### 3. Factories de Test
+### 3. Mocking des Librairies Externes (JSZip et xml2js)
+
+Les librairies JSZip et xml2js sont chargées via FoundryVTT (voir `system.json`) et ne sont pas disponibles dans l'environnement de test Node.js/Vitest. Il faut donc les mocker ou les shimer pour les tests.
+
+#### JSZip Mock pour Tests d'Import
+
+Le système utilise JSZip pour traiter les archives OggDude. En environnement de test, il faut fournir un mock minimal :
+
+```javascript
+// Mock JSZip global pour tests d'import
+globalThis.JSZip = {
+  loadAsync: async (file) => buildFakeZip(domains),
+}
+
+// Helper pour construire un faux zip avec structure OggDude
+function buildFakeZip(domains = ['armor']) {
+  const files = {}
+  
+  // Exemple pour domaine armor
+  if (domains.includes('armor')) {
+    const armorXml = fs.readFileSync(path.join('resources', 'integration', 'Armor.xml'), 'utf-8')
+    files['Data/Armor.xml'] = {
+      name: 'Data/Armor.xml',
+      dir: false,
+      async: async (type) => {
+        if (type === 'text') return armorXml
+        return armorXml
+      },
+    }
+  }
+  
+  return { files }
+}
+```
+
+**Structure minimale requise** : `fakeZip.files[path].async('text')` doit retourner le contenu XML.
+
+#### xml2js Shim pour Parsing XML
+
+Le parser XML utilise `globalThis.xml2js.js.parseStringPromise`. En environnement Vitest, il faut shimmer cette interface :
+
+```javascript
+// Import du vendor xml2js
+import xml2jsModule from '../../vendors/xml2js.min.js'
+
+// Shim global xml2js (une seule fois par test)
+if (globalThis.xml2js === undefined) {
+  globalThis.xml2js = { js: xml2jsModule }
+}
+```
+
+**Interface requise** : `globalThis.xml2js.js.parseStringPromise(xmlString)` doit retourner une Promise avec l'objet JSON.
+
+#### Pattern de Mock Unifié pour Tests d'Intégration
+
+```javascript
+import { describe, it, expect } from 'vitest'
+import fs from 'node:fs/promises'
+import xml2jsModule from '../../vendors/xml2js.min.js'
+
+// Shim xml2js global (obligatoire avant import du parser)
+if (globalThis.xml2js === undefined) {
+  globalThis.xml2js = { js: xml2jsModule }
+}
+
+// Mock SYSTEM si nécessaire pour les mappers
+if (!globalThis.SYSTEM) {
+  globalThis.SYSTEM = {
+    ARMOR: {
+      CATEGORIES: { light: {}, medium: {}, heavy: {} },
+      DEFAULT_CATEGORY: 'medium'
+    }
+  }
+}
+
+// Import des modules après shimming
+import { parseXmlToJson } from '../../module/utils/xml/parser.mjs'
+import { armorMapper } from '../../module/importer/items/armor-ogg-dude.mjs'
+
+describe('Intégration Import OggDude', () => {
+  it('parse et mappe les données correctement', async () => {
+    const xml = await fs.readFile('resources/integration/Armor.xml', 'utf8')
+    const raw = await parseXmlToJson(xml)
+    const mapped = armorMapper(raw.Armors.Armor)
+    
+    expect(mapped.length).toBeGreaterThan(0)
+    expect(mapped[0]).toHaveProperty('name')
+    expect(mapped[0]).toHaveProperty('type', 'armor')
+  })
+})
+```
+
+#### Gestion des Erreurs de Mock
+
+```javascript
+test('gère l\'absence de xml2js vendor', async () => {
+  const original = globalThis.xml2js
+  globalThis.xml2js = { js: { parseStringPromise: undefined } }
+  
+  await expect(parseXmlToJson('<test/>')).rejects.toThrow('xml2js vendor non chargé')
+  
+  globalThis.xml2js = original
+})
+```
+
+#### Performance avec Gros Fichiers XML
+
+Pour les tests de performance avec des fichiers XML volumineux :
+
+```javascript
+function buildLargeWeaponsXml(count) {
+  const parts = ['<Weapons>']
+  for (let i = 0; i < count; i++) {
+    parts.push(`<Weapon><Key>W${i}</Key><Name>Weapon ${i}</Name></Weapon>`)
+  }
+  parts.push('</Weapons>')
+  return parts.join('')
+}
+
+// Mock JSZip pour gros fichier
+const fakeZip = {
+  files: {
+    'Data/Weapons.xml': {
+      async async(type) {
+        if (type === 'text') return buildLargeWeaponsXml(75000) // ~11MB
+        return ''
+      }
+    }
+  }
+}
+```
+
+### 4. Factories de Test
 
 #### Factory Acteur (`tests/utils/actors/actor.mjs`)
 
@@ -184,7 +316,7 @@ export function createTalentData(id, { name = 'talent-name', type = 'talent', is
 }
 ```
 
-### 4. Patterns de Test Async
+### 5. Patterns de Test Async
 
 #### Test avec Mocks d'Actor
 
@@ -370,6 +502,115 @@ beforeEach(() => {
 const complexActor = createActor().withExperience(150).withSkills(['cool', 'discipline']).withTalents(['adversary', 'lethal-blows']).build()
 ```
 
+### Intégration des Vendors FoundryVTT
+
+#### Problématique
+
+FoundryVTT charge JSZip et xml2js via le `system.json` (`scripts: ["./vendors/jszip.min.js", "./vendors/xml2js.min.js"]`), mais ces librairies ne sont pas disponibles dans l'environnement de test Node.js. Le code de production accède à ces librairies via `globalThis.JSZip` et `globalThis.xml2js`.
+
+#### Solutions par Type de Test
+
+**Tests Unitaires** : Mock complet des interfaces
+
+```javascript
+// Mock JSZip pour tests unitaires isolés
+globalThis.JSZip = {
+  loadAsync: vi.fn().mockResolvedValue({
+    files: {
+      'Data/test.xml': {
+        async: vi.fn().mockResolvedValue('<test>data</test>')
+      }
+    }
+  })
+}
+
+// Mock xml2js pour tests unitaires
+globalThis.xml2js = {
+  js: {
+    parseStringPromise: vi.fn().mockResolvedValue({ test: 'data' })
+  }
+}
+```
+
+**Tests d'Intégration** : Shim avec vraies librairies
+
+```javascript
+// Import et shim des vraies librairies
+import xml2jsModule from '../../vendors/xml2js.min.js'
+
+if (globalThis.xml2js === undefined) {
+  globalThis.xml2js = { js: xml2jsModule }
+}
+
+// Construction de faux zips avec vraies données
+function buildFakeZip(filesMap) {
+  const files = {}
+  Object.entries(filesMap).forEach(([name, content]) => {
+    files[name] = {
+      name,
+      dir: false,
+      async: async (type) => type === 'text' ? content : content,
+    }
+  })
+  return { files }
+}
+```
+
+#### Ordre d'Initialisation Critique
+
+⚠️ **IMPORTANT** : Le shim doit être fait **AVANT** l'import des modules qui utilisent ces librairies.
+
+```javascript
+// ❌ INCORRECT - Import avant shim
+import { parseXmlToJson } from '../../module/utils/xml/parser.mjs'
+if (globalThis.xml2js === undefined) {
+  globalThis.xml2js = { js: xml2jsModule }
+}
+
+// ✅ CORRECT - Shim avant import
+if (globalThis.xml2js === undefined) {
+  globalThis.xml2js = { js: xml2jsModule }
+}
+import { parseXmlToJson } from '../../module/utils/xml/parser.mjs'
+```
+
+#### Centralisation des Shims
+
+Pour éviter la duplication, centraliser les shims dans `tests/helpers/vendor-shims.mjs` :
+
+```javascript
+// tests/helpers/vendor-shims.mjs
+import xml2jsModule from '../../vendors/xml2js.min.js'
+
+export function setupVendorShims() {
+  if (globalThis.xml2js === undefined) {
+    globalThis.xml2js = { js: xml2jsModule }
+  }
+  
+  if (globalThis.JSZip === undefined) {
+    globalThis.JSZip = {
+      loadAsync: async () => ({ files: {} })
+    }
+  }
+}
+
+export function teardownVendorShims() {
+  delete globalThis.xml2js
+  delete globalThis.JSZip
+}
+```
+
+#### Debugging des Mocks Vendors
+
+```javascript
+test('debug xml2js interface', () => {
+  console.log('xml2js available:', !!globalThis.xml2js)
+  console.log('parseStringPromise available:', !!globalThis.xml2js?.js?.parseStringPromise)
+  
+  expect(globalThis.xml2js.js.parseStringPromise).toBeTypeOf('function')
+})
+```
+
 ## Métriques et Monitoring
 
 ### Objectifs de Couverture
@@ -413,6 +654,41 @@ vi.mock('../../module/utils/logger.mjs')
 vi.mock('../../../module/utils/logger.mjs')
 ```
 
+#### Vendor Libraries Issues
+
+```javascript
+// ❌ xml2js non disponible
+ReferenceError: xml2js is not defined
+
+// ✅ Solution : Shim avant import
+import xml2jsModule from '../../vendors/xml2js.min.js'
+if (globalThis.xml2js === undefined) {
+  globalThis.xml2js = { js: xml2jsModule }
+}
+
+// ❌ JSZip loadAsync undefined
+TypeError: Cannot read property 'loadAsync' of undefined
+
+// ✅ Solution : Mock JSZip global
+globalThis.JSZip = {
+  loadAsync: async (file) => buildFakeZip()
+}
+```
+
+#### Interface Validation Errors
+
+```javascript
+// Erreur courante : interface xml2js incomplète
+// Error: xml2js vendor non chargé ou interface invalide
+
+// Validation de l'interface
+test('validate xml2js interface', () => {
+  expect(globalThis.xml2js).toBeDefined()
+  expect(globalThis.xml2js.js).toBeDefined()
+  expect(globalThis.xml2js.js.parseStringPromise).toBeTypeOf('function')
+})
+```
+
 #### Async Test Timeouts
 
 ```javascript
@@ -428,8 +704,24 @@ test('slow operation', async () => {
 afterEach(() => {
   vi.clearAllMocks()
   teardownFoundryMock()
+  // Nettoyage des vendors
+  delete globalThis.xml2js
+  delete globalThis.JSZip
   // Force garbage collection
   if (global.gc) global.gc()
+})
+```
+
+#### Import Order Issues
+
+```javascript
+// ❌ Module importé avant shim disponible
+// ReferenceError au moment de l'évaluation du module
+
+// ✅ Solution : Import dynamique après shim
+beforeEach(async () => {
+  setupVendorShims()
+  const { parseXmlToJson } = await import('../../module/utils/xml/parser.mjs')
 })
 ```
 
