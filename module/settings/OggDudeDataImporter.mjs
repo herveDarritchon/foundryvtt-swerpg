@@ -190,6 +190,16 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
                 }
             },
         })
+        
+        // Rafraîchir l'UI après l'import pour afficher les métriques globales finales
+        if (typeof this.render === 'function') {
+            try {
+                await this.render()
+                logger.debug('[OggDudeDataImporter] UI refreshed after import completion')
+            } catch (e) {
+                logger.warn('[OggDudeDataImporter] render after import error', {e})
+            }
+        }
     }
 
     /* -------------------------------------------- */
@@ -323,6 +333,16 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
                 }
             },
         })
+        
+        // Rafraîchir l'UI après l'import pour afficher les métriques globales finales
+        if (typeof this.render === 'function') {
+            try {
+                await this.render()
+                logger.debug('[OggDudeDataImporter] UI refreshed after import completion (button)')
+            } catch (e) {
+                logger.warn('[OggDudeDataImporter] render after import error (button)', {e})
+            }
+        }
 
         await this.close({})
     }

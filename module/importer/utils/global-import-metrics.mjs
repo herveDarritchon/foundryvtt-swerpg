@@ -13,23 +13,30 @@ const _runtime = {
   globalEnd: 0,
   archiveSizeBytes: 0,
   domains: new Map(), // domain -> { start:number, end:number }
+  lastImportStats: null, // Préserver les stats du dernier import réussi
 }
 
 // For tests and reset scenarios we expose a reset helper so consumers (tests) can
 // ensure a clean state between runs.
-export function resetRuntimeMetrics() {
+export function resetRuntimeMetrics(preserveLastImportStats = false) {
   _runtime.globalStart = 0
   _runtime.globalEnd = 0
   _runtime.archiveSizeBytes = 0
   _runtime.domains = new Map()
+  if (!preserveLastImportStats) {
+    _runtime.lastImportStats = null
+  }
 }
 
 export function markGlobalStart() {
   _runtime.globalStart = typeof performance !== 'undefined' && typeof performance.now === 'function' ? performance.now() : Date.now()
+  console.debug('[GlobalMetrics] markGlobalStart called, timestamp:', _runtime.globalStart)
 }
 
 export function markGlobalEnd() {
   _runtime.globalEnd = typeof performance !== 'undefined' && typeof performance.now === 'function' ? performance.now() : Date.now()
+  const duration = _runtime.globalEnd - _runtime.globalStart
+  console.debug('[GlobalMetrics] markGlobalEnd called, timestamp:', _runtime.globalEnd, 'duration:', duration)
 }
 
 export function markArchiveSize(size) {
@@ -90,9 +97,20 @@ function safeCall(fn) {
  * @returns {{overallDurationMs:number, domainsCount:number, errorRate:number, archiveSizeBytes:number, itemsPerSecond:number, domains: Object<string,{durationMs:number}>, totalProcessed:number, totalRejected:number, totalImported:number}}
  */
 export function aggregateImportMetrics(statsOverride) {
-  const stats = statsOverride || getAllImportStats()
+  const currentStats = statsOverride || getAllImportStats()
+  
+  // Si les stats actuelles sont vides mais qu'on a des stats de dernier import valides, les utiliser
+  const shouldUseLastImportStats = currentStats.totalImported === 0 && _runtime.lastImportStats && _runtime.lastImportStats.totalImported > 0
+  const stats = shouldUseLastImportStats ? _runtime.lastImportStats : currentStats
+  
+  // Si les stats actuelles ne sont pas vides, les sauvegarder comme dernier import réussi
+  if (currentStats.totalImported > 0) {
+    _runtime.lastImportStats = { ...currentStats }
+  }
+  
   const hasValidGlobal = Number.isFinite(_runtime.globalEnd) && Number.isFinite(_runtime.globalStart) && _runtime.globalEnd >= _runtime.globalStart
   const overallDurationMs = hasValidGlobal ? (_runtime.globalEnd - _runtime.globalStart) : 0
+  console.debug('[GlobalMetrics] aggregateImportMetrics - globalStart:', _runtime.globalStart, 'globalEnd:', _runtime.globalEnd, 'hasValidGlobal:', hasValidGlobal, 'overallDurationMs:', overallDurationMs, 'usingLastImportStats:', shouldUseLastImportStats)
   const domains = {}
   for (const [domain, timing] of _runtime.domains.entries()) {
     const hasValidDomain = Number.isFinite(timing?.end) && Number.isFinite(timing?.start) && timing.end >= timing.start

@@ -6,7 +6,7 @@ import * as metrics from '../../module/importer/utils/global-import-metrics.mjs'
 
 // Helper to reset runtime before each test
 beforeEach(() => {
-  if (typeof metrics.resetRuntimeMetrics === 'function') metrics.resetRuntimeMetrics()
+  if (typeof metrics.resetRuntimeMetrics === 'function') metrics.resetRuntimeMetrics(false) // Ne pas préserver les stats pour les tests unitaires
 })
 
 describe('aggregateImportMetrics', () => {
