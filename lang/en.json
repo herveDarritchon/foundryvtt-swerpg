@@ -750,7 +750,8 @@
           "career": "Load Career data",
           "gear": "Load Gear data",
           "species": "Load Species data",
-          "weapon": "Load Weapons data"
+          "weapon": "Load Weapons data",
+          "talent": "Load Talent data"
         },
         "stats": {
           "title": "Import Statistics",
