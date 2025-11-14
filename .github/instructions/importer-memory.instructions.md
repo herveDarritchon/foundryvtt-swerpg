@@ -48,5 +48,58 @@ Une seule conversion XML→JSON par fichier; si besoin de variantes, extraire so
 ## Test de réinitialisation stats
 Avant chaque test d'intégration multi-items, appeler `reset*ImportStats()` puis valider `stats.total === sample.length` et `stats.imported === mapped.length`. Empêche fuite de comptage entre tests.
 
+## Handlebars & Foundry template gotchas
+Foundry's Handlebars environment (V13) is restrictive compared to full Handlebars runtimes. Capture these recurring patterns to avoid runtime errors in UI templates:
+
+- Préférer l'accès direct aux propriétés du context plutôt que d'utiliser des helpers non standard ou multi-argument (ex: `lookup` multi-arg). Exemple sûr : `{{importMetrics.domains.weapon.durationMs}}` au lieu de `{{lookup importMetrics.domains "weapon" "durationMs"}}`.
+- Éviter les références implicites à `this.` dans les templates qui sont source d'incohérences; utiliser les clés exposées explicitement par `_prepareContext()`.
+- Pour des valeurs dynamiques non triviales, préparez-les dans `_prepareContext()` (ou dans le contexte JavaScript) plutôt que d'essayer de résoudre des chemins dynamiques via des helpers.
+
+Ces règles évitent erreurs du type `c.lookupProperty is not a function` observées en runtime.
+
+## Mapper: responsabilité des statistiques
+Les modules de mapping (`*-ogg-dude.mjs`) sont responsables d'initialiser et d'incrémenter leurs propres compteurs d'import:
+
+- Appeler `reset*ImportStats()` au début d'une session de mapping (comme `weaponMapper` le fait). Cela garantit que les statistiques ne fuient pas entre appels et simplifie les tests.
+- Incrémenter `increment*ImportStat('total')` pour chaque élément traité, et `increment*ImportStat('rejected')` quand un élément est rejeté par la validation stricte.
+- Exposer depuis le module mapper les utilitaires `get*ImportStats` et `reset*ImportStats` (ré-export depuis `utils/*-import-utils.mjs`) pour fournir un point d'entrée unique aux tests et à l'agrégateur global.
+
+Exemple minimal dans un mapper:
+
+```js
+import { resetSpeciesImportStats, incrementSpeciesImportStat, getSpeciesImportStats } from '../utils/species-import-utils.mjs'
+
+export function speciesMapper(species) {
+  resetSpeciesImportStats()
+  const mapped = species.map((xml) => {
+    incrementSpeciesImportStat('total')
+    // mapping ...
+    return mappedSpecies
+  })
+  logger.debug('species stats', getSpeciesImportStats())
+  return mapped
+}
+```
+
+## Tests: assertions et mocks pratiques
+Quelques patterns récurrents rencontrés pendant le debugging des TU :
+
+- Ne pas rendre les TU fragiles sur l'ordre des éléments produits par les mappers. Si l'ordre n'est pas contractuel, comparer des tableaux triés ou utiliser des assertions fondées sur `Set`/contient. Exemple : `expect(result.map(r=>r.id).sort()).toEqual(['a','b'].sort())`.
+- Mocker `globalThis.SYSTEM` (avec `SKILLS` minimal) en tout début de fichier de test lorsque le code importe des mappers qui lisent `SYSTEM` à l'import time. Le mock doit être défini avant d'importer les modules à tester.
+- Pour parser XML en Node/Vitest, shimmer `globalThis.xml2js = { js: xml2jsModule }` une seule fois au début du test d'intégration (le parser interne vérifie `xml2js.js.parseStringPromise`).
+- Mock JSZip minimal pour tests hors navigateur : fournir `fakeZip.files[path].async('text')`.
+- Toujours appeler `reset*ImportStats()` dans `beforeEach()` pour les tests unitaires/integ multi-items.
+
+## Tests: éviter de modifier le code de production pour faire passer les TU
+Règle d'or: corriger les TU (mocks, fixtures, assertions) plutôt que d'adapter la logique métier uniquement pour faire passer un test. Les exceptions doivent être discutées et documentées.
+
+## Exemple de checklist rapide avant soumettre une PR sur l'importer
+- Les mappers exposent `get*ImportStats` et `reset*ImportStats`.
+- Les mappers appellent `reset*ImportStats()` et incrémentent `total`/`rejected` correctement.
+- Les templates Foundry n'utilisent pas de helpers non supportés (multi-arg `lookup`) ni `this.`.
+- Les tests mockent `globalThis.SYSTEM` et `xml2js` si nécessaire et appellent `reset*ImportStats()` en `beforeEach`.
+- Les assertions des TU ne dépendent pas de l'ordre des collections quand l'ordre n'est pas contractuel.
+
+
 ## Extension future (caching/streaming)
 Préparer code pour streaming en gardant buildJsonDataFromFile isolé; introduction future d'un parseur SAX pourra remplacer juste l'étape 6-2 sans affecter mappers.
