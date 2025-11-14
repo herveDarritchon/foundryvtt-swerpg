@@ -4,13 +4,13 @@ version: 1.0
 date_created: 2025-01-14
 last_updated: 2025-01-14
 owner: FoundryVTT SweRPG Team
-status: 'Planned'
+status: 'Implemented'
 tags: ['bug', 'handlebars', 'oggdude', 'importer', 'ui', 'settings']
 ---
 
 # Résolution Bug Handlebars lookupProperty - OggDude Data Importer
 
-![Status: Planned](https://img.shields.io/badge/status-Planned-blue)
+![Status: Implemented](https://img.shields.io/badge/status-Implemented-green)
 
 Plan d'implémentation pour résoudre l'erreur `c.lookupProperty is not a function` qui se produit lors de l'ouverture de la fenêtre de configuration OggDude Data Importer dans FoundryVTT. Cette erreur est liée à une incompatibilité de version Handlebars et à l'utilisation de helpers ou expressions non supportés dans les templates.
 
@@ -58,10 +58,10 @@ Plan d'implémentation pour résoudre l'erreur `c.lookupProperty is not a functi
 
 | Task     | Description           | Completed | Date       |
 | -------- | --------------------- | --------- | ---------- |
-| TASK-001 | Analyser le template `oggDudeDataImporter.hbs` pour identifier les expressions Handlebars problématiques | | |
-| TASK-002 | Vérifier les helpers Handlebars utilisés et leur compatibilité avec Foundry v13 | | |
-| TASK-003 | Examiner le contexte de données passé depuis `_prepareContext()` dans `OggDudeDataImporter.mjs` | | |
-| TASK-004 | Identifier les références `this.` potentiellement problématiques dans le template | | |
+| TASK-001 | Analyser le template `oggDudeDataImporter.hbs` pour identifier les expressions Handlebars problématiques | ✅ | 2025-11-14 |
+| TASK-002 | Vérifier les helpers Handlebars utilisés et leur compatibilité avec Foundry v13 | ✅ | 2025-11-14 |
+| TASK-003 | Examiner le contexte de données passé depuis `_prepareContext()` dans `OggDudeDataImporter.mjs` | ✅ | 2025-11-14 |
+| TASK-004 | Identifier les références `this.` potentiellement problématiques dans le template | ✅ | 2025-11-14 |
 
 ### Implementation Phase 2 - Correction des Templates
 
@@ -69,10 +69,10 @@ Plan d'implémentation pour résoudre l'erreur `c.lookupProperty is not a functi
 
 | Task     | Description           | Completed | Date |
 | -------- | --------------------- | --------- | ---- |
-| TASK-005 | Remplacer les références `this.domains` par `domains` dans le template | | |
-| TASK-006 | Corriger les références `this.zipFile` par `zipFile` | | |
-| TASK-007 | Simplifier les expressions conditionnelles complexes | | |
-| TASK-008 | Valider que tous les helpers utilisés sont standard Foundry | | |
+| TASK-005 | Remplacer les références `this.domains` par `domains` dans le template | ✅ | 2025-11-14 |
+| TASK-006 | Corriger les références `this.zipFile` par `zipFile` | ✅ | 2025-11-14 |
+| TASK-007 | Simplifier les expressions conditionnelles complexes | ✅ | 2025-11-14 |
+| TASK-008 | Valider que tous les helpers utilisés sont standard Foundry | ✅ | 2025-11-14 |
 
 ### Implementation Phase 3 - Validation et Tests
 
@@ -80,10 +80,32 @@ Plan d'implémentation pour résoudre l'erreur `c.lookupProperty is not a functi
 
 | Task     | Description           | Completed | Date |
 | -------- | --------------------- | --------- | ---- |
-| TASK-009 | Tester l'ouverture de l'application OggDude Data Importer | | |
-| TASK-010 | Vérifier l'affichage correct de tous les éléments du formulaire | | |
-| TASK-011 | Tester les interactions (sélection de fichier, domaines, actions) | | |
-| TASK-012 | Valider que l'import OggDude fonctionne de bout en bout | | |
+| TASK-009 | Tester l'ouverture de l'application OggDude Data Importer | ☐ (manuel à effectuer dans Foundry) | |
+| TASK-010 | Vérifier l'affichage correct de tous les éléments du formulaire | ☐ (manuel à effectuer) | |
+| TASK-011 | Tester les interactions (sélection de fichier, domaines, actions) | ☐ (manuel à effectuer) | |
+| TASK-012 | Valider que l'import OggDude fonctionne de bout en bout | ☐ (manuel à effectuer) | |
+
+## 9. Modifications Appliquées
+
+- Suppression des préfixes `this.` dans `oggDudeDataImporter.hbs` pour `zipFile` et `domains`.
+- Uniformisation des expressions conditionnelles (checkbox domain) sur une seule ligne pour éviter artefacts de parsing.
+- Ajout de commentaires Handlebars indiquant la raison (compatibilité Handlebars Foundry v13).
+- Ajout d'un test Vitest `tests/settings/oggDudeDataImporter.template.spec.mjs` vérifiant l'absence des anciennes références et la présence des nouvelles.
+
+## 10. Validation Technique
+
+Les tests Vitest locaux confirment l'absence des références `this.domains` et `this.zipFile`. Un test supplémentaire vérifie le contexte `_prepareContext()` et l'action `toggleDomainAction`. Des tests manuels dans Foundry restent nécessaires pour confirmer la disparition de l'erreur `c.lookupProperty is not a function` lors du rendu.
+
+### Procédure de validation manuelle (à exécuter dans Foundry)
+
+1. Ouvrir `Configuration` → `Swerpg Settings` → `OggDude Data Importer` et vérifier absence d'erreur console.
+2. Charger un ZIP OggDude factice, vérifier que les domaines deviennent activables.
+3. Cocher/décocher plusieurs domaines, confirmer changement d'état sans erreur.
+4. Cliquer sur `Preview` après sélection d'au moins un domaine et présence d'un fichier ZIP → vérifier apparition de la section preview/table.
+5. Cliquer sur `Load` et observer progression (barre, métriques). Vérifier absence d'erreurs Handlebars.
+6. Utiliser `Reset` et vérifier réinitialisation (zipFile nul, domaines décochés, boutons désactivés).
+7. Vérifier accessibilité basique: focus sur inputs, aria-labels présents (progressbar, tableaux).
+8. Contrôler l'onglet `Console` pour confirmer absence d'appel à `lookupProperty`.
 
 ## 3. Alternatives
 

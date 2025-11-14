@@ -3,7 +3,8 @@
     <section class="form-group file-picker flexcol">
         <h4>{{localize "SETTINGS.OggDudeDataImporter.loadWindow.message"}}</h4>
         <div class="form-fields flexrow">
-            {{#if this.zipFile}}
+            {{!-- Utilisation directe de zipFile (suppression de this.) pour compatibilité Handlebars Foundry v13 --}}
+            {{#if zipFile}}
                 <p>{{localize "SETTINGS.OggDudeDataImporter.loadWindow.selectFile"}}</p>
                 <p data-tooltip="{{zipFile.path}}"><i class="fa-solid fa-file"></i>{{zipFile.name}}</p>
             {{else}}
@@ -17,14 +18,13 @@
     <section class="domain-selection flexcol">
         <h4>{{localize "SETTINGS.OggDudeDataImporter.loadWindow.selectDomains"}}</h4>
         <div class="domains flexcol">
-            {{#each this.domains as |domain|}}
+            {{!-- Suppression de this. pour chaque domaine --}}
+            {{#each domains as |domain|}}
                 <div class="domain{{#if ../domainSelectionDisabled}} not-allowed{{/if}}">
                     <label data-action="toggleDomainAction"
                            data-domain-checked="{{domain.checked}}"
                            data-domain-name="{{domain.id}}">
-                        <input id="{{domain.id}}" type="checkbox" {{#if
-                                domain.checked}}checked{{/if}} {{#if
-                                ../domainSelectionDisabled}}disabled{{/if}}>
+                        <input id="{{domain.id}}" type="checkbox" {{#if domain.checked}}checked{{/if}} {{#if ../domainSelectionDisabled}}disabled{{/if}}>
                         <span>{{localize domain.label}}</span>
                     </label>
                 </div>
@@ -133,7 +133,8 @@
                 <span>{{localize "SETTINGS.OggDudeDataImporter.loadWindow.preview.domain"}}</span>
                 <select name="preview-domain" aria-label="{{localize 'SETTINGS.OggDudeDataImporter.loadWindow.preview.domain'}}">
                     <option value="all">{{localize "SETTINGS.OggDudeDataImporter.loadWindow.preview.domainAll"}}</option>
-                    {{#each this.domains as |domain|}}
+                    {{!-- Suppression de this. dans la liste déroulante domaines preview --}}
+                    {{#each domains as |domain|}}
                         <option value="{{domain.id}}">{{localize domain.label}}</option>
                     {{/each}}
                 </select>
