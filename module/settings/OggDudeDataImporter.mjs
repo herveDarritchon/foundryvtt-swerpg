@@ -26,6 +26,9 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
 
   domains = this._initializeDomains(this._domainNames)
   zipFile = null
+  previewData = {}
+  previewFilters = { domain: 'all', text: '' }
+  pagination = { page: 1, size: 50 }
 
   /* -------------------------------------------- */
 
@@ -77,6 +80,7 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
     actions: {
       resetAction: OggDudeDataImporter.resetAction,
       loadAction: OggDudeDataImporter.loadAction,
+      preloadAction: OggDudeDataImporter.preloadAction,
       toggleDomainAction: OggDudeDataImporter.toggleDomainAction,
     },
     footer: {
@@ -102,8 +106,10 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
       loadButtonDisabled: this.noZipFileSelected() || this._noDomainSelected(),
       zipFile: this.zipFile,
       progress: this._progress,
+      progressPercent: (this?._progress?.total ? Math.floor((this._progress.processed / this._progress.total) * 100) : 0),
       importStats: stats,
       importMetrics: metrics,
+      preview: this._buildPreviewContext(),
     }
   }
 
@@ -124,6 +130,25 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
       this.element.querySelector('#oggdude-zip-file').addEventListener('change', this._onOggdudeZipFileChange.bind(this))
     }
     // We will deal with reset later
+    // Prévisualisation: liaisons filtres
+    const domainSelect = this.element.querySelector('select[name="preview-domain"]')
+    if (domainSelect) {
+      domainSelect.value = this.previewFilters.domain
+      domainSelect.addEventListener('change', async (e) => {
+        this.previewFilters.domain = e.target.value
+        await this.render()
+      })
+    }
+    const textInput = this.element.querySelector('input[name="preview-text"]')
+    if (textInput) {
+      textInput.value = this.previewFilters.text
+      textInput.addEventListener('input', async (e) => {
+        this.previewFilters.text = e.target.value
+        // reset page to 1 on filter change
+        this.pagination.page = 1
+        await this.render()
+      })
+    }
   }
 
   /* -------------------------------------------- */
@@ -141,6 +166,23 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
         }
       },
     })
+  }
+
+  /* -------------------------------------------- */
+  /**
+   * Précharge les données pour prévisualisation sans création d'items
+   */
+  static async preloadAction(_event, _target) {
+    logger.info('[OggDudeDataImporter] Preload OggDude Data (preview mode)', { instance: this })
+    if (this.noZipFileSelected() || this._noDomainSelected()) return
+    try {
+      this.previewData = await OggDudeImporter.preloadOggDudeData(this.zipFile, this.domains)
+      // Réinitialiser pagination
+      this.pagination = { page: 1, size: 50 }
+      if (typeof this.render === 'function') await this.render()
+    } catch (e) {
+      logger.error('[OggDudeDataImporter] Erreur lors du préchargement', { error: e })
+    }
   }
 
   /* -------------------------------------------- */
@@ -201,6 +243,36 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
     this.zipFile = event.target.files[0]
     logger.info('[OggDudeDataImporter] File changed', { event, zipFile: this.zipFile })
     await this.render()
+  }
+
+  /* -------------------------------------------- */
+  _buildPreviewContext() {
+    const domains = Object.keys(this.previewData || {})
+    const selectedDomain = this.previewFilters.domain === 'all' ? null : this.previewFilters.domain
+    const text = (this.previewFilters.text || '').toLowerCase()
+    let items = []
+    for (const d of domains) {
+      if (selectedDomain && d !== selectedDomain) continue
+      const arr = this.previewData[d] || []
+      items.push(...arr)
+    }
+    if (text) {
+      items = items.filter((it) => `${it.name}`.toLowerCase().includes(text))
+    }
+    const total = items.length
+    const size = this.pagination.size
+    const page = Math.max(1, Math.min(this.pagination.page, Math.ceil(total / size) || 1))
+    const start = (page - 1) * size
+    const pageItems = items.slice(start, start + size)
+    return {
+      hasData: total > 0,
+      total,
+      page,
+      pageSize: size,
+      totalPages: Math.max(1, Math.ceil(total / size)),
+      items: pageItems,
+      filters: this.previewFilters,
+    }
   }
 
   /* -------------------------------------------- */
