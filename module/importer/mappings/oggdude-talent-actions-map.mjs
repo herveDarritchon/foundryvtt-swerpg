@@ -6,6 +6,24 @@ import SwerpgAction from '../../models/action.mjs'
 import { logger } from '../../utils/logger.mjs'
 
 /**
+ * Génère un ID unique pour une action de talent
+ * @param {string} talentName - Nom du talent
+ * @returns {string} ID unique
+ */
+function generateActionId(talentName) {
+  const cleanName = String(talentName || 'talent')
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, '_')
+    .replace(/_+/g, '_')
+    .replace(/^_|_$/g, '')
+  
+  const timestamp = Date.now()
+  const random = Math.random().toString(36).substr(2, 5)
+  
+  return `${cleanName}_${timestamp}_${random}`
+}
+
+/**
  * Transforme les actions OggDude vers un tableau d'instances SwerpgAction
  * @param {object|Array} oggDudeActions - Actions depuis OggDude XML
  * @param {object} context - Contexte du talent (nom, type, etc.)
@@ -157,7 +175,11 @@ function extractActionCost(costData) {
  */
 export function createDefaultTalentAction(talentContext) {
   try {
+    // Générer un ID unique pour l'action
+    const actionId = generateActionId(talentContext.name || 'talent')
+    
     const actionConfig = {
+      id: actionId,
       type: 'talent',
       name: talentContext.name || 'Talent Effect',
       description: talentContext.description || 'This talent provides a passive benefit.',

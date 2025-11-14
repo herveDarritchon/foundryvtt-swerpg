@@ -11,9 +11,12 @@ import { logger } from '../../utils/logger.mjs'
  * @param {string} oggDudeNodeId - Identifiant de nœud depuis OggDude XML
  * @returns {SwerpgTalentNode|null} Nœud de talent correspondant ou null si non trouvé
  */
-export function resolveTalentNode(oggDudeNodeId) {
+export function resolveTalentNode(oggDudeNodeId, options = {}) {
   if (!oggDudeNodeId || typeof oggDudeNodeId !== 'string') {
-    logger.warn('[TalentNodeMap] Invalid node ID provided:', oggDudeNodeId)
+    // Log plus informatif uniquement si le talent a un nom
+    if (options.name) {
+      logger.debug(`[TalentNodeMap] No node ID provided for talent: ${options.name}, using fallback`)
+    }
     return null
   }
   
