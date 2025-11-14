@@ -6,6 +6,7 @@ import { getWeaponImportStats } from './weapon-import-utils.mjs'
 import { getGearImportStats } from './gear-import-utils.mjs'
 import { getSpeciesImportStats } from './species-import-utils.mjs'
 import { getCareerImportStats } from './career-import-utils.mjs'
+import { getTalentImportStats } from './talent-import-utils.mjs'
 
 // Runtime metrics (durations, sizes) – kept internal and exposed via aggregate function
 const _runtime = {
@@ -59,7 +60,7 @@ export function recordDomainEnd(domain) {
 
 /**
  * Récupère toutes les statistiques d'import par type.
- * @returns {{armor:Object,weapon:Object,gear:Object,species:Object,career:Object,totalImported:number,totalRejected:number,totalProcessed:number}}
+ * @returns {{armor:Object,weapon:Object,gear:Object,species:Object,career:Object,talent:Object,totalImported:number,totalRejected:number,totalProcessed:number}}
  */
 export function getAllImportStats() {
   const armor = safeCall(getArmorImportStats)
@@ -67,9 +68,10 @@ export function getAllImportStats() {
   const gear = safeCall(getGearImportStats)
   const species = safeCall(getSpeciesImportStats)
   const career = safeCall(getCareerImportStats)
+  const talent = safeCall(getTalentImportStats)
 
-  const totalProcessed = armor.total + weapon.total + gear.total + species.total + career.total
-  const totalRejected = armor.rejected + weapon.rejected + gear.rejected + species.rejected + career.rejected
+  const totalProcessed = armor.total + weapon.total + gear.total + species.total + career.total + talent.total
+  const totalRejected = armor.rejected + weapon.rejected + gear.rejected + species.rejected + career.rejected + talent.rejected
   const totalImported = totalProcessed - totalRejected
 
   return {
@@ -78,6 +80,7 @@ export function getAllImportStats() {
     gear,
     species,
     career,
+    talent,
     totalProcessed,
     totalRejected,
     totalImported,

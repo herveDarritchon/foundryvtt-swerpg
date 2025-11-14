@@ -103,6 +103,61 @@ Règle d'or: corriger les TU (mocks, fixtures, assertions) plutôt que d'adapter
 
 ## Extension future (caching/streaming)
 Préparer code pour streaming en gardant buildJsonDataFromFile isolé; introduction future d'un parseur SAX pourra remplacer juste l'étape 6-2 sans affecter mappers.
+
+## Architecture de nouveaux domaines d'import
+
+Quand ajouter un nouveau domaine d'import (ex: talent, obligation, force power), suivre systématiquement cette architecture éprouvée :
+
+### Structure de modules obligatoire
+- **Context Builder** : `module/importer/items/{domain}-ogg-dude.mjs` — Interface standard compatible avec `OggDudeDataElement.processElements()`
+- **Mapper Principal** : `module/importer/mappers/oggdude-{domain}-mapper.mjs` — Logic métier Template Method + Strategy
+- **Mappings Spécialisés** : `module/importer/mappings/oggdude-{domain}-{aspect}-map.mjs` — Transformations atomiques (activation, node, rank, etc.)
+- **Utilitaires Stats** : `module/importer/utils/{domain}-import-utils.mjs` — Stats + validation uniforme
+
+### Pattern Context Builder
+Le context builder doit retourner la structure exacte attendue par l'orchestrateur :
+```js
+export async function build{Domain}Context(zip, groupByDirectory, groupByType) {
+  return {
+    jsonData: await OggDudeDataElement.buildJsonDataFromFile(zip, groupByDirectory, '{Domain}.xml', '{Domains}.{Domain}'),
+    zip: { elementFileName: '{Domain}.xml', content: zip, directories: groupByDirectory },
+    image: { criteria: 'Data/{Domain}Images', worldPath: '...', systemPath: buildItemImgSystemPath('{domain}.svg'), images: groupByType.image, prefix: '{Domain}' },
+    folder: { name: 'Swerpg - {Domains}', type: 'Item' },
+    element: { jsonCriteria: '{Domains}.{Domain}', mapper: {domain}Mapper, type: '{domain}' }
+  }
+}
+```
+
+### Pattern Wrapper Mapper
+Le mapper individuel (`element.mapper`) doit être un wrapper simple vers le mapper principal :
+```js
+function {domain}Mapper(oggDudeData) {
+  const context = Ogg{Domain}Mapper.buildSingleTalentContext(oggDudeData, {})
+  return Ogg{Domain}Mapper.transform(context)
+}
+```
+
+### Pattern Registry Integration
+Enregistrer le nouveau domaine dans les deux `buildContextMap` de `OggDude.mjs` :
+```js
+buildContextMap.set('{domain}', { type: '{domain}', contextBuilder: build{Domain}Context })
+```
+
+### Pattern Métriques Globales
+Étendre `getAllImportStats()` dans `global-import-metrics.mjs` :
+```js
+import { get{Domain}ImportStats } from './{domain}-import-utils.mjs'
+// Dans getAllImportStats():
+{domain}: get{Domain}ImportStats()
+```
+
+### Pattern Modules de Mapping
+Chaque aspect complexe a son module dédié avec pattern uniforme :
+- Fonction de transformation principale
+- Validation des données transformées
+- Fallbacks gracieux pour données manquantes/invalides
+- Intégration stats via `increment{Domain}ImportStat()`
+- Logging structuré avec contexte
  
 ## UI & i18n gotchas — OggDude importer (nouvelle règle)
 
