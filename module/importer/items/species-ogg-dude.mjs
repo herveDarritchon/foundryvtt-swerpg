@@ -4,6 +4,12 @@ import OggDudeDataElement from '../../settings/models/OggDudeDataElement.mjs'
 import { logger } from '../../utils/logger.mjs'
 import { SYSTEM } from '../../config/system.mjs'
 import { mapOggDudeSkillCodes } from '../mappings/oggdude-skill-map.mjs'
+import {
+  resetSpeciesImportStats,
+  incrementSpeciesImportStat,
+  getSpeciesImportStats,
+  FLAG_STRICT_SPECIES_VALIDATION,
+} from '../utils/species-import-utils.mjs'
 
 /**
  * Species Array Mapper : Map the Species XML data to the SwerpgArmor object array.
@@ -14,7 +20,13 @@ import { mapOggDudeSkillCodes } from '../mappings/oggdude-skill-map.mjs'
  * @name speciesMapper
  */
 export function speciesMapper(species) {
-  return species.map((xmlSpecies) => {
+  // Réinitialiser les statistiques à chaque session de mapping (comportement identique à weaponMapper)
+  resetSpeciesImportStats()
+
+  const mapped = species.map((xmlSpecies) => {
+    // Incrémenter le compteur total dès le début du traitement de l'espèce
+    incrementSpeciesImportStat('total')
+
     // Base characteristics
     const characteristics = {
       brawn: OggDudeImporter.mapMandatoryNumber('species.StartingChars.Brawn', xmlSpecies?.StartingChars?.Brawn),
@@ -63,7 +75,7 @@ export function speciesMapper(species) {
     }))
     const freeTalents = resolveTalentUUIDs(talentModifiers.map((t) => t.key))
 
-    return {
+    const speciesObject = {
       key: OggDudeImporter.mapMandatoryString('species.Key', xmlSpecies.Key),
       name: OggDudeImporter.mapMandatoryString('species.Name', xmlSpecies?.Name),
       description: OggDudeImporter.mapOptionalString(xmlSpecies?.Description),
@@ -81,7 +93,17 @@ export function speciesMapper(species) {
       freeSkills: validFreeSkills,
       freeTalents,
     }
+
+    // (Extension future) Validation stricte éventuelle -> rejet (non implémenté pour le moment)
+    if (FLAG_STRICT_SPECIES_VALIDATION === true) {
+      // Place-holder pour logique de rejet configurable; si ajoutée on incrémentera 'rejected'
+    }
+
+    return speciesObject
   })
+
+  logger.debug('[SpeciesImporter] Statistiques après mapping', { stats: getSpeciesImportStats() })
+  return mapped
 }
 
 /**
@@ -180,3 +202,6 @@ export async function buildSpeciesContext(zip, groupByDirectory, groupByType) {
     },
   }
 }
+
+// Export utilitaires stats pour tests & agrégation (alignement avec armor/weapon)
+export { getSpeciesImportStats, resetSpeciesImportStats } from '../utils/species-import-utils.mjs'

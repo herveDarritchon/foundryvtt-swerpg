@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { speciesMapper } from '../../module/importer/items/species-ogg-dude.mjs'
+import { getSpeciesImportStats, resetSpeciesImportStats } from '../../module/importer/utils/species-import-utils.mjs'
 import { mapOggDudeSkillCode, mapOggDudeSkillCodes } from '../../module/importer/mappings/oggdude-skill-map.mjs'
 
 // Minimal SYSTEM mock if not provided (for isolated test execution)
@@ -53,6 +54,7 @@ describe('speciesMapper', () => {
       },
     ]
 
+    resetSpeciesImportStats()
     const [mapped] = speciesMapper(input)
     expect(mapped.key).toBe('human')
     expect(mapped.name).toBe('Humain')
@@ -64,5 +66,9 @@ describe('speciesMapper', () => {
     expect(mapped.freeSkills).toContain('perception')
     expect(mapped.freeSkills.length).toBe(2)
     expect(Array.isArray(mapped.freeTalents)).toBe(true)
+    const stats = getSpeciesImportStats()
+    expect(stats.total).toBe(1)
+    expect(stats.imported).toBe(1)
+    expect(stats.rejected).toBe(0)
   })
 })
