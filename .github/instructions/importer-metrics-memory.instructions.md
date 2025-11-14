@@ -46,10 +46,49 @@ spy.mockRestore()
 - Préférer corriger les TU (mocks, fixtures, spy) ou ajouter des paramètres non intrusifs (ex: statsOverride).
 - Documenter toute modification non triviale dans la PR.
 
+## Leçon: préservation des stats du dernier import réussi
+- **Problème identifié** : L'UI affichait `Overall Duration` et `Items/Second` à 0 car `aggregateImportMetrics()` était appelée après que les stats individuelles aient été réinitialisées.
+- **Solution** : Ajouter `lastImportStats` dans `_runtime` pour conserver les stats du dernier import réussi.
+- **Logique** : Si `currentStats.totalImported === 0` mais `lastImportStats.totalImported > 0`, utiliser les stats préservées.
+- **Test** : Vérifier que les métriques restent cohérentes entre l'import et l'affichage UI.
+
+## Leçon: rafraîchissement UI après opérations asynchrones FoundryVTT
+- **Problème identifié** : Les métriques globales (`Overall Duration`, `Items/Second`) restaient à 0 dans l'UI après l'import jusqu'à interaction utilisateur.
+- **Cause racine** : L'UI était rafraîchie **pendant** l'import (via `progressCallback`) mais **pas après** la fin de `processOggDudeData`.
+- **Pattern de solution** : Ajouter `render()` explicite après toute opération async qui modifie l'état UI.
+
+### Implementation dans OggDudeDataImporter
+```js
+// Après processOggDudeData, dans loadAction() et _onSubmit()
+if (typeof this.render === 'function') {
+  try {
+    await this.render()
+    logger.debug('[OggDudeDataImporter] UI refreshed after import completion')
+  } catch (e) {
+    logger.warn('[OggDudeDataImporter] render after import error', {e})
+  }
+}
+```
+
+### Caractéristiques du pattern sécurisé
+- ✅ **Vérification de disponibilité** : `typeof this.render === 'function'`
+- ✅ **Gestion d'erreur gracieuse** : `try/catch` pour éviter que render() bloque l'import
+- ✅ **Logs de debug** : Traçabilité pour diagnostic
+- ✅ **Tests de validation** : Vérifier présence du code via analyse de contenu fichier
+
+### Généralisation pour autres composants UI FoundryVTT
+- Toujours appeler `render()` après opérations async qui modifient l'état affiché
+- Ne jamais assumer que l'UI se rafraîchit automatiquement après operations métier
+- Préférer `await this.render()` plutôt que `this.render()` pour s'assurer de la completion
+- Toujours wrapper dans try/catch pour éviter impact sur logique métier
+
 ## Checklist PR / Revue
 - `resetRuntimeMetrics()` exposé et utilisé dans `beforeEach()`.
 - `aggregateImportMetrics()` robustifié (validation start/end, fallback timing).
 - Tests utilisent `statsOverride` ou `vi.spyOn` au lieu d'écrire sur exports.
+- Stats du dernier import préservées pour éviter valeurs zéro dans UI.
+- **Rafraîchissement UI automatique** : `render()` appelé après operations async qui modifient state UI.
+- Tests de validation UI incluent vérification code pattern (analyse contenu fichier).
 - Documenter la présence du fallback et du reset dans la description de la PR.
 
 ## Pourquoi ceci aide
