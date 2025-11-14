@@ -67,6 +67,25 @@
           "archiveSize": "Taille archive (octets)",
           "processed": "Total traités"
         }
+        ,
+        "preview": {
+          "title": "Aperçu des éléments",
+          "filters": "Filtres d'aperçu",
+          "domain": "Domaine",
+          "domainAll": "Tous",
+          "text": "Texte",
+          "textPlaceholder": "Filtrer par texte...",
+          "colName": "Nom",
+          "colType": "Type",
+          "colExists": "Existe",
+          "exists": "Existe",
+          "new": "Nouveau",
+          "pagination": "Pagination d'aperçu",
+          "noData": "Aucune donnée à prévisualiser"
+        },
+        "progress": {
+          "global": "Progression globale"
+        }
       }
     },
   "SWERPG.ERRORS.InvalidActor": "Acteur invalide: impossible d'accéder aux données du personnage.",

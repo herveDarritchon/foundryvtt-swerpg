@@ -767,6 +767,24 @@
           "itemsPerSecond": "Items / Second",
           "archiveSize": "Archive Size (bytes)",
           "processed": "Total Processed"
+        },
+        "preview": {
+          "title": "Preview Items",
+          "filters": "Preview Filters",
+          "domain": "Domain",
+          "domainAll": "All",
+          "text": "Text",
+          "textPlaceholder": "Filter text...",
+          "colName": "Name",
+          "colType": "Type",
+          "colExists": "Exists",
+          "exists": "Exists",
+          "new": "New",
+          "pagination": "Preview Pagination",
+          "noData": "No data to preview"
+        },
+        "progress": {
+          "global": "Overall Progress"
         }
       }
     }
