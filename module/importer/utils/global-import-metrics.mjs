@@ -15,12 +15,21 @@ const _runtime = {
   domains: new Map(), // domain -> { start:number, end:number }
 }
 
+// For tests and reset scenarios we expose a reset helper so consumers (tests) can
+// ensure a clean state between runs.
+export function resetRuntimeMetrics() {
+  _runtime.globalStart = 0
+  _runtime.globalEnd = 0
+  _runtime.archiveSizeBytes = 0
+  _runtime.domains = new Map()
+}
+
 export function markGlobalStart() {
-  _runtime.globalStart = performance.now()
+  _runtime.globalStart = typeof performance !== 'undefined' && typeof performance.now === 'function' ? performance.now() : Date.now()
 }
 
 export function markGlobalEnd() {
-  _runtime.globalEnd = performance.now()
+  _runtime.globalEnd = typeof performance !== 'undefined' && typeof performance.now === 'function' ? performance.now() : Date.now()
 }
 
 export function markArchiveSize(size) {
@@ -30,13 +39,14 @@ export function markArchiveSize(size) {
 }
 
 export function recordDomainStart(domain) {
-  _runtime.domains.set(domain, { start: performance.now(), end: 0 })
+  const now = typeof performance !== 'undefined' && typeof performance.now === 'function' ? performance.now() : Date.now()
+  _runtime.domains.set(domain, { start: now, end: 0 })
 }
 
 export function recordDomainEnd(domain) {
   const entry = _runtime.domains.get(domain)
   if (entry) {
-    entry.end = performance.now()
+    entry.end = typeof performance !== 'undefined' && typeof performance.now === 'function' ? performance.now() : Date.now()
   }
 }
 
@@ -79,27 +89,29 @@ function safeCall(fn) {
  * Agrège les métriques globales (durées, taux d'erreur, vitesse, taille archive)
  * @returns {{overallDurationMs:number, domainsCount:number, errorRate:number, archiveSizeBytes:number, itemsPerSecond:number, domains: Object<string,{durationMs:number}>, totalProcessed:number, totalRejected:number, totalImported:number}}
  */
-export function aggregateImportMetrics() {
-  const stats = getAllImportStats()
-  const overallDurationMs = (_runtime.globalEnd && _runtime.globalStart) ? (_runtime.globalEnd - _runtime.globalStart) : 0
+export function aggregateImportMetrics(statsOverride) {
+  const stats = statsOverride || getAllImportStats()
+  const hasValidGlobal = Number.isFinite(_runtime.globalEnd) && Number.isFinite(_runtime.globalStart) && _runtime.globalEnd >= _runtime.globalStart
+  const overallDurationMs = hasValidGlobal ? (_runtime.globalEnd - _runtime.globalStart) : 0
   const domains = {}
   for (const [domain, timing] of _runtime.domains.entries()) {
+    const hasValidDomain = Number.isFinite(timing?.end) && Number.isFinite(timing?.start) && timing.end >= timing.start
     domains[domain] = {
-      durationMs: (timing.end && timing.start) ? (timing.end - timing.start) : 0,
+      durationMs: hasValidDomain ? (timing.end - timing.start) : 0,
     }
   }
-  const errorRate = stats.totalProcessed ? stats.totalRejected / stats.totalProcessed : 0
-  const itemsPerSecond = overallDurationMs > 0 ? stats.totalImported / (overallDurationMs / 1000) : 0
+  const errorRate = stats && stats.totalProcessed ? (stats.totalRejected / stats.totalProcessed) : 0
+  const itemsPerSecond = overallDurationMs > 0 && stats ? (stats.totalImported / (overallDurationMs / 1000)) : 0
   return {
     overallDurationMs,
     domainsCount: Object.keys(domains).length,
     errorRate,
-    archiveSizeBytes: _runtime.archiveSizeBytes,
+    archiveSizeBytes: Number.isFinite(_runtime.archiveSizeBytes) ? _runtime.archiveSizeBytes : 0,
     itemsPerSecond,
     domains,
-    totalProcessed: stats.totalProcessed,
-    totalRejected: stats.totalRejected,
-    totalImported: stats.totalImported,
+    totalProcessed: stats?.totalProcessed || 0,
+    totalRejected: stats?.totalRejected || 0,
+    totalImported: stats?.totalImported || 0,
   }
 }
 
