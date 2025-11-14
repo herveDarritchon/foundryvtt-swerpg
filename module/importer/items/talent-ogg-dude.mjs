@@ -7,6 +7,7 @@ import OggDudeDataElement from '../../settings/models/OggDudeDataElement.mjs'
 import { OggDudeTalentMapper } from '../mappers/oggdude-talent-mapper.mjs'
 import { logger } from '../../utils/logger.mjs'
 import { buildItemImgSystemPath } from '../../settings/directories.mjs'
+import { resetTalentImportStats } from '../utils/talent-import-utils.mjs'
 
 /**
  * Mapper pour transformer les données talent OggDude en objets SwerpgTalent
@@ -14,24 +15,45 @@ import { buildItemImgSystemPath } from '../../settings/directories.mjs'
  * @param {object} oggDudeData - Données OggDude d'un talent individuel
  * @returns {object} Données formatées pour création Item Foundry
  */
-function talentMapper(oggDudeData) {
+function talentMapper(talents) {
   try {
-    // Créer un contexte minimal pour le mapper
-    const context = OggDudeTalentMapper.buildSingleTalentContext(oggDudeData, {})
-    if (!context) {
-      logger.warn('[TalentOggDude] Failed to build context for talent:', oggDudeData?.Name || 'Unknown')
-      return null
+    // Le mapper doit recevoir un tableau et retourner un tableau (pattern conforme aux autres mappers)
+    if (!Array.isArray(talents)) {
+      logger.warn('[TalentOggDude] Expected array of talents, got:', typeof talents)
+      return []
     }
     
-    // Transformer via le mapper principal
-    const transformedData = OggDudeTalentMapper.transform(context)
+    // Réinitialiser les stats pour cette session d'import
+    resetTalentImportStats()
     
-    logger.debug(`[TalentOggDude] Mapped talent: ${transformedData.name}`)
-    return transformedData
+    // Mapper chaque talent individuellement
+    const mappedTalents = talents.map(oggDudeData => {
+      try {
+        // Créer un contexte pour le mapper
+        const context = OggDudeTalentMapper.buildSingleTalentContext(oggDudeData, {})
+        if (!context) {
+          logger.warn('[TalentOggDude] Failed to build context for talent:', oggDudeData?.Name || 'Unknown')
+          return null
+        }
+        
+        // Transformer via le mapper principal
+        const transformedData = OggDudeTalentMapper.transform(context)
+        
+        logger.debug(`[TalentOggDude] Mapped talent: ${context.key}`)
+        return transformedData
+        
+      } catch (error) {
+        logger.error('[TalentOggDude] Error mapping individual talent:', error)
+        return null
+      }
+    }).filter(talent => talent !== null) // Filtrer les éléments null
+    
+    logger.info(`Talent import completed: ${mappedTalents.length}/${talents.length} talents imported`)
+    return mappedTalents
     
   } catch (error) {
-    logger.error('[TalentOggDude] Error mapping talent:', error)
-    return null
+    logger.error('[TalentOggDude] Error in talent mapper:', error)
+    return []
   }
 }
 
@@ -75,3 +97,6 @@ export async function buildTalentContext(zip, groupByDirectory, groupByType) {
     },
   }
 }
+
+// Export stats utils for global metrics and test resets
+export { getTalentImportStats, resetTalentImportStats } from '../utils/talent-import-utils.mjs'
