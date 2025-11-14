@@ -103,3 +103,29 @@ Règle d'or: corriger les TU (mocks, fixtures, assertions) plutôt que d'adapter
 
 ## Extension future (caching/streaming)
 Préparer code pour streaming en gardant buildJsonDataFromFile isolé; introduction future d'un parseur SAX pourra remplacer juste l'étape 6-2 sans affecter mappers.
+ 
+## UI & i18n gotchas — OggDude importer (nouvelle règle)
+
+Lors d'interventions sur l'interface d'importation (ex: fenêtre d'import OggDude), documenter et appliquer systématiquement ces règles :
+
+- Modifier uniquement les sources Less (.less) — ne pas patcher le CSS compilé (`styles/swerpg.css`). Les règles ajoutées dans les fichiers compilés seront écrasées par la chaîne de build et rendent les changements non reproductibles. Toujours ajouter les règles dans le fichier Less le plus spécifique (ex: `styles/applications.less`) et recompiler (`pnpm run less` / `pnpm run build`).
+
+- Scoper les règles CSS sur l'`id` de la fenêtre d'application (`Application.DEFAULT_OPTIONS.id`) pour éviter régressions globales. Exemple :
+
+  .app#swerpgSettings-form .window-content .standard-form { max-height: calc(100vh - 140px); overflow:auto; -webkit-overflow-scrolling:touch; }
+
+- Pour la scrollbar interne, préférer `max-height` + `overflow:auto` sur un conteneur interne plutôt que de modifier le `body` ou la `.window` globale.
+
+- I18n : éviter d'utiliser une même clé comme chaîne et comme objet. Si la template Handlebars référence `SETTINGS.OggDudeDataImporter.loadWindow.preview` comme libellé de bouton ET `SETTINGS.OggDudeDataImporter.loadWindow.preview.title` pour un groupe, vous créez une collision (la clé `preview` ne peut pas être à la fois une string et un objet).
+
+  - Solution recommandée : séparer les usages — utiliser `previewButton` pour le libellé du bouton et garder `preview.*` comme objet pour le panneau de prévisualisation.
+  - Toujours parcourir la template `.hbs` à la recherche de chemins i18n ambigus et maintenir la structure JSON dans `lang/*.json` cohérente avec les appels `localize`.
+
+- Processus :
+  1. Chercher toutes les occurrences `SETTINGS.OggDudeDataImporter` dans les templates avant d'ajouter des clés dans `lang/*.json`.
+  2. Leur ajouter des entrées claires et nominales (`previewButton`, `preview.title`, `preview.filters`, `progress.global`).
+  3. Recompiler les assets Less et vérifier en développement que la fenêtre est scrollable et que le bouton affiche le texte attendu.
+
+- Tests & CI : couvrir la présence des clés i18n critiques dans un test d'intégration léger (vérifier `lang/en.json` contient `SETTINGS.OggDudeDataImporter.loadWindow.previewButton` et `progress.global`) pour éviter que des PR cassent l'affichage de l'UI.
+
+- Ces règles viennent d'un cas concret où la fenêtre d'import était plus grande que la hauteur d'écran et le bouton/section de prévisualisation utilisait la même clé i18n, rendant le comportement non déterministe après compilation.
