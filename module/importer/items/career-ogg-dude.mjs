@@ -123,7 +123,9 @@ export function mapCareerSkills(rawCodes = [], { strict = false } = {}) {
   const mappedIds = mapOggDudeSkillCodes(rawCodes).filter(Boolean)
 
   // Déterminer le registre de compétences en fusionnant la config runtime et le mock éventuel de test
-  const skillsRegistry = SYSTEM?.SKILLS || globalThis.SYSTEM?.SKILLS || {}
+  // Merge both the static SYSTEM config and any runtime-provided globalThis.SYSTEM
+  // (tests may inject a lightweight globalThis.SYSTEM). Keep merge deterministic.
+  const skillsRegistry = { ...(SYSTEM?.SKILLS || {}), ...(globalThis.SYSTEM?.SKILLS || {}) }
 
   // optional strict mode: retain only ids that exist in skillsRegistry
   const validated = strict ? mappedIds.filter((id) => !!skillsRegistry[id]) : mappedIds

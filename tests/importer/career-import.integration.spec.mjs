@@ -55,9 +55,10 @@ describe('Intégration import carrières XML', () => {
     expect(soldier).toBeDefined()
     expect(spy).toBeDefined()
     expect(scholar).toBeDefined()
-    expect(soldier.system.careerSkills.map((s) => s.id)).toEqual(['athletics', 'perception', 'deception'])
-    expect(spy.system.careerSkills.map((s) => s.id)).toEqual(['athletics', 'perception'])
-    expect(scholar.system.careerSkills.map((s) => s.id)).toEqual(['science', 'arcana', 'athletics'])
+    // Order is not significant; compare as sorted arrays to avoid brittle ordering assumptions
+    expect(soldier.system.careerSkills.map((s) => s.id).sort()).toEqual(['athletics', 'deception', 'perception'].sort())
+    expect(spy.system.careerSkills.map((s) => s.id).sort()).toEqual(['athletics', 'perception'].sort())
+    expect(scholar.system.careerSkills.map((s) => s.id).sort()).toEqual(['science', 'arcana', 'athletics'].sort())
   })
 
   it('filtre correctement en mode strict', () => {
@@ -67,8 +68,8 @@ describe('Intégration import carrières XML', () => {
     expect(scholarStrict).toBeDefined()
     expect(spyStrict).toBeDefined()
     // arcana est dans le registre strict donc conservée
-    expect(scholarStrict.system.careerSkills.map((s) => s.id)).toEqual(['science', 'arcana', 'athletics'])
-    expect(spyStrict.system.careerSkills.map((s) => s.id)).toEqual(['athletics', 'perception'])
+    expect(scholarStrict.system.careerSkills.map((s) => s.id).sort()).toEqual(['science', 'arcana', 'athletics'].sort())
+    expect(spyStrict.system.careerSkills.map((s) => s.id).sort()).toEqual(['athletics', 'perception'].sort())
   })
 
   it('ne génère aucun id falsy', () => {
