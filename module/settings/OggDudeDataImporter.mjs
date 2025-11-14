@@ -6,7 +6,7 @@
 
 import OggDudeImporter from '../importer/oggDude.mjs'
 import {logger} from '../utils/logger.mjs'
-import {aggregateImportMetrics, getAllImportStats} from '../importer/utils/global-import-metrics.mjs'
+import {aggregateImportMetrics, getAllImportStats, formatGlobalMetrics} from '../importer/utils/global-import-metrics.mjs'
 // Similar syntax to importing, mais c'est du destructuring et peut être indisponible en environnement de test.
 
 // Fournit des fallbacks légers si l'API Foundry n'est pas initialisée (exécution tests).
@@ -102,27 +102,10 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
         } catch (e) {
             logger.debug('[OggDudeDataImporter] Stats indisponibles', {e})
         }
-        // Formatter pour rendre les durées lisibles par l'humain
-        const formatDuration = (ms) => {
-            if (!ms && ms !== 0) return ''
-            const n = Number(ms) || 0
-            if (n < 1000) return `${Math.round(n)} ms`
-            if (n < 60000) return `${(n / 1000).toFixed(2).replace(/\.00$|(?<=\.|\d*?)0+$/, '')} s`
-            const minutes = Math.floor(n / 60000)
-            const seconds = ((n % 60000) / 1000).toFixed(2).replace(/\.00$|(?<=\.|\d*?)0+$/, '')
-            return `${minutes}m ${seconds} s`
-        }
-
-        // Construire une version formatée des métriques pour l'affichage (évite d'ajouter des helpers Handlebars globaux)
-        const metricsFormatted = {
-            overallDuration: formatDuration(metrics?.overallDurationMs),
-            domains: {},
-        }
-        if (metrics?.domains) {
-            for (const [d, v] of Object.entries(metrics.domains)) {
-                metricsFormatted.domains[d] = {duration: formatDuration(v?.durationMs)}
-            }
-        }
+        // Construire une version formatée des métriques pour l'affichage
+        // Nous utilisons formatGlobalMetrics pour produire des champs lisibles
+        // (ex: overallDuration, errorRate, itemsPerSecond, archiveSize, totalProcessed)
+        const metricsFormatted = formatGlobalMetrics(metrics)
         return {
             domains: this.domains,
             domainSelectionDisabled: this.noZipFileSelected(),

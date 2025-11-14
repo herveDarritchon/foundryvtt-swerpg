@@ -118,7 +118,7 @@ export function aggregateImportMetrics(statsOverride) {
       durationMs: hasValidDomain ? (timing.end - timing.start) : 0,
     }
   }
-  const errorRate = stats && stats.totalProcessed ? (stats.totalRejected / stats.totalProcessed) : 0
+  const errorRate = stats?.totalProcessed ? (stats.totalRejected / stats.totalProcessed) : 0
   const itemsPerSecond = overallDurationMs > 0 && stats ? (stats.totalImported / (overallDurationMs / 1000)) : 0
   return {
     overallDurationMs,
@@ -135,3 +135,89 @@ export function aggregateImportMetrics(statsOverride) {
 
 // Alias pour compatibilité avec le plan (Task-005)
 export { aggregateImportMetrics as getGlobalImportMetrics }
+
+// ---- Format helpers (human readable) ---------------------------------
+
+function _formatBytes(bytes, decimals = 2) {
+  if (!Number.isFinite(bytes) || bytes <= 0) return '0 B'
+  const units = ['B', 'KB', 'MB', 'GB', 'TB']
+  const i = Math.floor(Math.log(bytes) / Math.log(1024))
+  const value = bytes / Math.pow(1024, i)
+  return `${value.toFixed(decimals)} ${units[i]}`
+}
+
+function _formatDurationMs(ms) {
+  if (!Number.isFinite(ms) || ms <= 0) return '0 ms'
+  if (ms >= 1000) {
+    const s = ms / 1000
+    return `${s.toFixed(2)} s (${Math.round(ms)} ms)`
+  }
+  return `${Math.round(ms)} ms`
+}
+
+function _formatPercent(value, decimals = 2) {
+  if (!Number.isFinite(value)) return '0%'
+  return `${(value * 100).toFixed(decimals)}%`
+}
+
+function _formatNumber(value, decimals = 2) {
+  if (!Number.isFinite(value)) return '0'
+  return Number.isInteger(value) ? String(value) : value.toFixed(decimals)
+}
+
+/**
+ * Retourne un objet contenant les mêmes métriques mais avec des champs lisibles
+ * par un humain (chaînes) en complément des valeurs brutes.
+ * @param {Object} rawMetrics - Résultat de `aggregateImportMetrics()`
+ * @returns {Object}
+ */
+export function formatGlobalMetrics(rawMetrics) {
+  const m = rawMetrics || aggregateImportMetrics()
+  const formattedDomains = {}
+  for (const [d, info] of Object.entries(m.domains || {})) {
+    formattedDomains[d] = {
+      durationMs: info.durationMs,
+      duration: _formatDurationMs(info.durationMs),
+    }
+  }
+
+  return {
+    // raw values preserved
+    raw: { ...m },
+    // human readable
+    overallDuration: _formatDurationMs(m.overallDurationMs),
+    domainsCount: _formatNumber(m.domainsCount, 0),
+    errorRate: _formatPercent(m.errorRate, 2),
+    archiveSize: _formatBytes(m.archiveSizeBytes, 2),
+    itemsPerSecond: _formatNumber(m.itemsPerSecond, 2),
+    domains: formattedDomains,
+    totalProcessed: _formatNumber(m.totalProcessed, 0),
+    totalRejected: _formatNumber(m.totalRejected, 0),
+    totalImported: _formatNumber(m.totalImported, 0),
+  }
+}
+
+/**
+ * Génère une chaîne multi-lignes prête à être affichée dans la sortie console/UI.
+ * @param {Object} rawMetrics - Résultat de `aggregateImportMetrics()`
+ * @returns {string}
+ */
+export function formatMetricsForDisplay(rawMetrics) {
+  const f = formatGlobalMetrics(rawMetrics)
+  const lines = [
+    'Global Metrics',
+    `Overall Duration: ${f.overallDuration}`,
+    `Error Rate: ${f.errorRate}`,
+    `Items / Second: ${f.itemsPerSecond}`,
+    `Archive Size: ${f.archiveSize}`,
+    `Total Processed: ${f.totalProcessed}`,
+  ]
+
+  const domainNames = Object.keys(f.domains || {})
+  if (domainNames.length) {
+    const domainLines = ['Domains:', ...domainNames.map(dn => `  - ${dn}: ${f.domains[dn].duration}`)]
+    lines.push(...domainLines)
+  }
+
+  return lines.join('\n')
+}
