@@ -20,7 +20,7 @@ if (globalThis.SYSTEM === undefined) {
 }
 
 import { careerMapper, mapCareerSkills } from '../../module/importer/items/career-ogg-dude.mjs'
-import { mapCareerOggDudeSkillCodes } from '../../module/importer/mappings/oggdude-career-skill-map.mjs'
+import { getCareerImportStats, resetCareerImportStats } from '../../module/importer/utils/career-import-utils.mjs'
 
 describe('mapCareerSkills util', () => {
   it('retourne un tableau vide si aucun code', () => {
@@ -48,12 +48,17 @@ describe('careerMapper', () => {
         FreeRanks: '3',
       },
     ]
+    resetCareerImportStats()
     const [mapped] = careerMapper(input)
     expect(mapped.name).toBe('Soldier')
     expect(mapped.type).toBe('career')
     expect(mapped.system.freeSkillRank).toBe(3)
     expect(mapped.system.careerSkills).toEqual([{ id: 'athletics' }, { id: 'perception' }, { id: 'deception' }])
     expect(mapped.system.description).toBe('Description soldier')
+    const stats = getCareerImportStats()
+    expect(stats.total).toBe(1)
+    expect(stats.imported).toBe(1)
+    expect(stats.rejected).toBe(0)
   })
   it('applique la valeur par défaut freeSkillRank = 4 si invalide', () => {
     const input = [{ Name: 'Scientist', Key: 'scientist', Description: 'Desc', CareerSkills: ['SCI'], FreeRanks: 'invalid' }]

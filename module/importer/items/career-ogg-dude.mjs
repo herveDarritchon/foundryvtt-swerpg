@@ -4,6 +4,13 @@ import OggDudeDataElement from '../../settings/models/OggDudeDataElement.mjs'
 import { logger } from '../../utils/logger.mjs'
 import { SYSTEM } from '../../config/system.mjs'
 import { mapOggDudeSkillCodes, mapOggDudeSkillCode } from '../mappings/oggdude-skill-map.mjs'
+import {
+  resetCareerImportStats,
+  incrementCareerImportStat,
+  addCareerUnknownSkill,
+  getCareerImportStats,
+  FLAG_STRICT_CAREER_VALIDATION,
+} from '../utils/career-import-utils.mjs'
 
 /**
  * Career Array Mapper : Map the Career XML data to the SwerpgCareer creation objects.
@@ -12,7 +19,10 @@ import { mapOggDudeSkillCodes, mapOggDudeSkillCode } from '../mappings/oggdude-s
  * @returns {Array} Array of item source objects { name, type, system }
  */
 export function careerMapper(careers, { strictSkills = false } = {}) {
-  return careers.map((xmlCareer) => {
+  // Réinitialiser stats à chaque nouvelle session
+  resetCareerImportStats()
+  const mapped = careers.map((xmlCareer) => {
+    incrementCareerImportStat('total')
     const name = OggDudeImporter.mapMandatoryString('career.Name', xmlCareer?.Name)
     const key = OggDudeImporter.mapMandatoryString('career.Key', xmlCareer?.Key)
     const description = OggDudeImporter.mapOptionalString(xmlCareer?.Description)
@@ -33,7 +43,7 @@ export function careerMapper(careers, { strictSkills = false } = {}) {
       ignoredSkillCodes: rawCareerSkills.filter((c) => !mapOggDudeSkillCode(c, { warnOnUnknown: false })),
     })
 
-    return {
+    const careerObject = {
       name,
       type: 'career',
       system: {
@@ -46,7 +56,22 @@ export function careerMapper(careers, { strictSkills = false } = {}) {
         swerpg: { oggdudeKey: key },
       },
     }
+
+    // Enregistrer les compétences inconnues (observabilité)
+    const unknown = rawCareerSkills.filter((c) => !mapOggDudeSkillCode(c, { warnOnUnknown: false }))
+    for (const code of unknown) {
+      addCareerUnknownSkill(code)
+    }
+
+    // Mode strict: pourrait rejeter la carrière si unknown skills détectés (placeholder)
+    if (FLAG_STRICT_CAREER_VALIDATION === true) {
+      // Si une logique de rejet est ajoutée, ajouter incrementCareerImportStat('rejected') ici
+    }
+
+    return careerObject
   })
+  logger.debug('[CareerImporter] Statistiques après mapping', { stats: getCareerImportStats() })
+  return mapped
 }
 
 /**
@@ -98,7 +123,7 @@ export function mapCareerSkills(rawCodes = [], { strict = false } = {}) {
   const mappedIds = mapOggDudeSkillCodes(rawCodes).filter(Boolean)
 
   // Déterminer le registre de compétences en fusionnant la config runtime et le mock éventuel de test
-  const skillsRegistry = { ...(SYSTEM?.SKILLS || {}), ...(globalThis.SYSTEM?.SKILLS || {}) }
+  const skillsRegistry = SYSTEM?.SKILLS || globalThis.SYSTEM?.SKILLS || {}
 
   // optional strict mode: retain only ids that exist in skillsRegistry
   const validated = strict ? mappedIds.filter((id) => !!skillsRegistry[id]) : mappedIds
@@ -164,3 +189,6 @@ export async function buildCareerContext(zip, groupByDirectory, groupByType) {
     },
   }
 }
+
+// Export utilitaires stats pour tests & agrégation
+export { getCareerImportStats, resetCareerImportStats } from '../utils/career-import-utils.mjs'
