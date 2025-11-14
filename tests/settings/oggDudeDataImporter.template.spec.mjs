@@ -21,4 +21,9 @@ describe('oggDudeDataImporter.hbs template compatibility', () => {
   it('contient la condition if zipFile', () => {
     expect(/#if\s+zipFile/.test(source)).toBe(true)
   })
+
+  it('ne contient plus le helper lookup multi-arguments', () => {
+    // Vérifie l'absence des appels legacy {{lookup importMetrics.domains "armor" "durationMs"}}
+    expect(source.includes('lookup importMetrics.domains')).toBe(false)
+  })
 })
