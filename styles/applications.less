@@ -47,6 +47,24 @@
     padding: 0;
   }
 
+  // Specific: make the OggDudeDataImporter form scrollable when content exceeds viewport
+  // The application window uses id 'swerpgSettings-form' (see OggDudeDataImporter.DEFAULT_OPTIONS)
+  .app#swerpgSettings-form {
+    .window-content {
+      .standard-form {
+        max-height: calc(100vh - 140px);
+        overflow: auto;
+        -webkit-overflow-scrolling: touch;
+        padding-right: 0.5rem;
+
+        table {
+          width: 100%;
+          border-collapse: collapse;
+        }
+      }
+    }
+  }
+
   // Buttons
   button,
   .button,
