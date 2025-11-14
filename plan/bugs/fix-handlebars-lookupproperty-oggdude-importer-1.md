@@ -91,6 +91,8 @@ Plan d'implémentation pour résoudre l'erreur `c.lookupProperty is not a functi
 - Uniformisation des expressions conditionnelles (checkbox domain) sur une seule ligne pour éviter artefacts de parsing.
 - Ajout de commentaires Handlebars indiquant la raison (compatibilité Handlebars Foundry v13).
 - Ajout d'un test Vitest `tests/settings/oggDudeDataImporter.template.spec.mjs` vérifiant l'absence des anciennes références et la présence des nouvelles.
+- Remplacement des appels Handlebars non compatibles `{{lookup importMetrics.domains "<domain>" "durationMs"}}` par accès direct `{{importMetrics.domains.<domain>.durationMs}}`.
+- Ajout d'un test Vitest pour confirmer l'absence du helper `lookup` multi-arguments.
 
 ## 10. Validation Technique
 
