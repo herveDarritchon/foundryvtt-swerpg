@@ -72,35 +72,35 @@
                     <td>{{importStats.armor.total}}</td>
                     <td>{{importStats.armor.imported}}</td>
                     <td>{{importStats.armor.rejected}}</td>
-                    <td>{{importMetrics.domains.armor.durationMs}}</td>
+                    <td>{{importMetricsFormatted.domains.armor.duration}}</td>
                 </tr>
                 <tr>
                     <th scope="row">{{localize "SETTINGS.OggDudeDataImporter.loadWindow.domains.weapon"}}</th>
                     <td>{{importStats.weapon.total}}</td>
                     <td>{{importStats.weapon.imported}}</td>
                     <td>{{importStats.weapon.rejected}}</td>
-                    <td>{{importMetrics.domains.weapon.durationMs}}</td>
+                    <td>{{importMetricsFormatted.domains.weapon.duration}}</td>
                 </tr>
                 <tr>
                     <th scope="row">{{localize "SETTINGS.OggDudeDataImporter.loadWindow.domains.gear"}}</th>
                     <td>{{importStats.gear.total}}</td>
                     <td>{{importStats.gear.imported}}</td>
                     <td>{{importStats.gear.rejected}}</td>
-                    <td>{{importMetrics.domains.gear.durationMs}}</td>
+                    <td>{{importMetricsFormatted.domains.gear.duration}}</td>
                 </tr>
                 <tr>
                     <th scope="row">{{localize "SETTINGS.OggDudeDataImporter.loadWindow.domains.species"}}</th>
                     <td>{{importStats.species.total}}</td>
                     <td>{{importStats.species.imported}}</td>
                     <td>{{importStats.species.rejected}}</td>
-                    <td>{{importMetrics.domains.species.durationMs}}</td>
+                    <td>{{importMetricsFormatted.domains.species.duration}}</td>
                 </tr>
                 <tr>
                     <th scope="row">{{localize "SETTINGS.OggDudeDataImporter.loadWindow.domains.career"}}</th>
                     <td>{{importStats.career.total}}</td>
                     <td>{{importStats.career.imported}}</td>
                     <td>{{importStats.career.rejected}}</td>
-                    <td>{{importMetrics.domains.career.durationMs}}</td>
+                    <td>{{importMetricsFormatted.domains.career.duration}}</td>
                 </tr>
             {{/if}}
             </tbody>
@@ -111,7 +111,7 @@
     <section class="import-metrics flexcol" aria-labelledby="import-metrics-heading">
         <h4 id="import-metrics-heading">{{localize "SETTINGS.OggDudeDataImporter.loadWindow.metrics.title"}}</h4>
         <ul class="metrics" role="list">
-            <li><strong>{{localize "SETTINGS.OggDudeDataImporter.loadWindow.metrics.duration"}}:</strong> {{importMetrics.overallDurationMs}}</li>
+            <li><strong>{{localize "SETTINGS.OggDudeDataImporter.loadWindow.metrics.duration"}}:</strong> {{importMetricsFormatted.overallDuration}}</li>
             <li><strong>{{localize "SETTINGS.OggDudeDataImporter.loadWindow.metrics.errorRate"}}:</strong> {{importMetrics.errorRate}}</li>
             <li><strong>{{localize "SETTINGS.OggDudeDataImporter.loadWindow.metrics.itemsPerSecond"}}:</strong> {{importMetrics.itemsPerSecond}}</li>
             <li><strong>{{localize "SETTINGS.OggDudeDataImporter.loadWindow.metrics.archiveSize"}}:</strong> {{importMetrics.archiveSizeBytes}}</li>
