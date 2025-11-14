@@ -21,5 +21,6 @@ export function buildItemImgSystemPath(imageFileName) {
  * @memberof OggDudeDataImporter
  */
 export function buildArmorImgWorldPath(type) {
-  return `worlds/${game.world.id}/swerpg-assets/images/${type}`
+  const worldId = game?.world?.id || 'test-world'
+  return `worlds/${worldId}/swerpg-assets/images/${type}`
 }

@@ -226,11 +226,67 @@ export default class OggDudeImporter {
   }
 
   /**
+   * Précharge les données OggDude sans créer d'Items Foundry.
+   * Retourne un aperçu des éléments mappés par domaine, avec indicateur d'existence.
+   * @param {File|ArrayBuffer|Buffer} importedFile Le fichier ZIP OggDude
+   * @param {Object[]} domains La sélection de domaines { id, checked }
+   * @returns {Promise<Record<string, Array<object>>>} Aperçu des éléments par domaine
+   */
+  static async preloadOggDudeData(importedFile, domains) {
+    // Chargement archive
+    const zip = await new OggDudeImporter().load(importedFile)
+    const allDataElements = OggDudeDataElement.from(zip)
+    const groupByDirectory = OggDudeDataElement.groupByDirectory(allDataElements)
+    const groupByType = OggDudeDataElement.groupByType(allDataElements)
+
+    // Build context map
+    const buildContextMap = new Map()
+    buildContextMap.set('armor', { type: 'armor', contextBuilder: buildArmorContext })
+    buildContextMap.set('weapon', { type: 'weapon', contextBuilder: buildWeaponContext })
+    buildContextMap.set('gear', { type: 'gear', contextBuilder: buildGearContext })
+    buildContextMap.set('species', { type: 'species', contextBuilder: buildSpeciesContext })
+    buildContextMap.set('career', { type: 'career', contextBuilder: buildCareerContext })
+
+    const domainsToImport = new Set(domains.filter((d) => d.checked).map((d) => d.id))
+    const contextEntries = Array.from(buildContextMap.values()).filter((e) => domainsToImport.has(e.type))
+
+    const previews = {}
+    for (const entry of contextEntries) {
+      const context = await entry.contextBuilder(zip, groupByDirectory, groupByType)
+      // Mapper uniquement, ne pas stocker
+      const items = OggDudeDataElement._buildItemElements(context.jsonData, context.element.mapper)
+      // Annoter existence (si environnement Foundry présent)
+      const existingSet = new Set()
+      try {
+        const existing = globalThis.game?.items?.contents ?? []
+        for (const it of existing) {
+          if (it?.type && it?.name) existingSet.add(`${it.type}::${it.name}`)
+        }
+      } catch (e) {
+        logger.debug('[OggDudeImporter] preload existence check skipped (no Foundry runtime)', { error: e })
+      }
+      previews[entry.type] = items.map((it) => ({
+        ...it,
+        preview: true,
+        exists: existingSet.has(`${it.type}::${it.name}`),
+      }))
+    }
+
+    return previews
+  }
+
+  /**
    * @param file : File (Zip file path) from OGGDude https://www.swrpgcommunity.com/gm-resources/apps-dice-utilities/oggdudes-generator
    * @returns {Promise<{[p: string]: JSZip.JSZipObject}>}
    */
   async load(file) {
-    return JSZip.loadAsync(file)
+    // Support global stub JSZip in tests
+    if (globalThis.JSZip && typeof globalThis.JSZip.loadAsync === 'function') {
+      return globalThis.JSZip.loadAsync(file)
+    }
+    // Dynamic import pour éviter échec de résolution statique dans certains environnements
+    const lib = await import('jszip').then((m) => m.default || m)
+    return lib.loadAsync(file)
   }
 
   /* -------------------------------------------- */

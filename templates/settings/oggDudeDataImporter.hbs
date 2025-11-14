@@ -40,6 +40,12 @@
                 {{localize "SETTINGS.OggDudeDataImporter.loadWindow.load"}}
             </button>
         </div>
+        <div class="preload-button{{#if loadButtonDisabled}} not-allowed{{/if}}">
+            <button type="button" class="control" data-action="preloadAction" {{#if loadButtonDisabled}}disabled{{/if}}>
+                <i class="fa-solid fa-eye"></i>
+                {{localize "SETTINGS.OggDudeDataImporter.loadWindow.preview"}}
+            </button>
+        </div>
         <button type="button" class="control reset-button" data-action="resetAction">
             <i class="fa-solid fa-refresh"></i>
             {{localize "SETTINGS.OggDudeDataImporter.loadWindow.reset"}}
@@ -111,5 +117,62 @@
             <li><strong>{{localize "SETTINGS.OggDudeDataImporter.loadWindow.metrics.archiveSize"}}:</strong> {{importMetrics.archiveSizeBytes}}</li>
             <li><strong>{{localize "SETTINGS.OggDudeDataImporter.loadWindow.metrics.processed"}}:</strong> {{importMetrics.totalProcessed}}</li>
         </ul>
+        {{#if progress.total}}
+            <div class="progress-global" aria-label="{{localize 'SETTINGS.OggDudeDataImporter.loadWindow.progress.global'}}" role="progressbar" aria-valuemin="0" aria-valuemax="{{progress.total}}" aria-valuenow="{{progress.processed}}">
+                <div class="bar" style="width: {{progressPercent}}%"></div>
+                <span class="sr-only">{{progress.processed}}/{{progress.total}}</span>
+            </div>
+        {{/if}}
+    </section>
+
+    {{!-- Prévisualisation des items --}}
+    <section class="preview-section flexcol" aria-labelledby="preview-heading">
+        <h4 id="preview-heading">{{localize "SETTINGS.OggDudeDataImporter.loadWindow.preview.title"}}</h4>
+        <div class="preview-controls flexrow" role="group" aria-label="{{localize 'SETTINGS.OggDudeDataImporter.loadWindow.preview.filters'}}">
+            <label>
+                <span>{{localize "SETTINGS.OggDudeDataImporter.loadWindow.preview.domain"}}</span>
+                <select name="preview-domain" aria-label="{{localize 'SETTINGS.OggDudeDataImporter.loadWindow.preview.domain'}}">
+                    <option value="all">{{localize "SETTINGS.OggDudeDataImporter.loadWindow.preview.domainAll"}}</option>
+                    {{#each this.domains as |domain|}}
+                        <option value="{{domain.id}}">{{localize domain.label}}</option>
+                    {{/each}}
+                </select>
+            </label>
+            <label>
+                <span>{{localize "SETTINGS.OggDudeDataImporter.loadWindow.preview.text"}}</span>
+                <input type="text" name="preview-text" placeholder="{{localize 'SETTINGS.OggDudeDataImporter.loadWindow.preview.textPlaceholder'}}"/>
+            </label>
+        </div>
+        {{#if preview.hasData}}
+            <table class="preview-table" role="table" aria-describedby="preview-heading">
+                <thead>
+                <tr>
+                    <th scope="col">{{localize "SETTINGS.OggDudeDataImporter.loadWindow.preview.colName"}}</th>
+                    <th scope="col">{{localize "SETTINGS.OggDudeDataImporter.loadWindow.preview.colType"}}</th>
+                    <th scope="col">{{localize "SETTINGS.OggDudeDataImporter.loadWindow.preview.colExists"}}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{#each preview.items as |item|}}
+                    <tr>
+                        <td>{{item.name}}</td>
+                        <td>{{item.type}}</td>
+                        <td>
+                            {{#if item.exists}}
+                                <span class="exists" aria-label="{{localize 'SETTINGS.OggDudeDataImporter.loadWindow.preview.exists'}}">✔</span>
+                            {{else}}
+                                <span class="new" aria-label="{{localize 'SETTINGS.OggDudeDataImporter.loadWindow.preview.new'}}">＋</span>
+                            {{/if}}
+                        </td>
+                    </tr>
+                {{/each}}
+                </tbody>
+            </table>
+            <div class="pagination" role="navigation" aria-label="{{localize 'SETTINGS.OggDudeDataImporter.loadWindow.preview.pagination'}}">
+                <span>{{preview.page}} / {{preview.totalPages}}</span>
+            </div>
+        {{else}}
+            <p>{{localize "SETTINGS.OggDudeDataImporter.loadWindow.preview.noData"}}</p>
+        {{/if}}
     </section>
 </div>
