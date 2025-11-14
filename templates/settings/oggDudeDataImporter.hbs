@@ -1,3 +1,4 @@
+{{log "Domains:" domains}}
 <div class="standard-form oggDude-data-importer scrollable">
     <h2>{{localize "SETTINGS.OggDudeDataImporter.loadWindow.title"}}</h2>
     <section class="form-group file-picker flexcol">
@@ -101,6 +102,13 @@
                     <td>{{importStats.career.imported}}</td>
                     <td>{{importStats.career.rejected}}</td>
                     <td>{{importMetricsFormatted.domains.career.duration}}</td>
+                </tr>
+                <tr>
+                    <th scope="row">{{localize "SETTINGS.OggDudeDataImporter.loadWindow.domains.talent"}}</th>
+                    <td>{{importStats.talent.total}}</td>
+                    <td>{{importStats.talent.imported}}</td>
+                    <td>{{importStats.talent.rejected}}</td>
+                    <td>{{importMetricsFormatted.domains.talent.duration}}</td>
                 </tr>
             {{/if}}
             </tbody>
