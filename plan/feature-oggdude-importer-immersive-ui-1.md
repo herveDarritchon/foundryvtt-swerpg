@@ -67,7 +67,7 @@ Rendre la fenêtre « Import OggDude Data » plus immersive (thème Star Wars) e
 | TASK-011 | Vérifier contraste texte / fond (>4.5:1) pour résumé compact | ✅ | 2025-11-15 |
 | TASK-012 | Ajouter icônes thématiques (sabres, data holocron) dans résumé & summaries (via FontAwesome existant) | ✅ | 2025-11-15 |
 
-### Implementation Phase 4 
+### Implementation Phase 4
 
 - GOAL-004: Tests & ajustements
 
