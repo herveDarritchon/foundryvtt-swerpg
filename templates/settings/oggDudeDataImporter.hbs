@@ -56,6 +56,15 @@
     {{!-- Statistiques d'import --}}
     <section class="import-stats flexcol" aria-labelledby="import-stats-heading">
         <h4 id="import-stats-heading">{{localize "SETTINGS.OggDudeDataImporter.loadWindow.stats.title"}}</h4>
+        {{!-- Jauge de progression globale des domaines importés (accessible) --}}
+        {{#if progress.total}}
+            <div class="import-progress-global" role="progressbar"
+                 aria-label="{{localize 'SETTINGS.OggDudeDataImporter.loadWindow.progress.global'}}"
+                 aria-valuemin="0" aria-valuemax="{{progress.total}}" aria-valuenow="{{progress.processed}}">
+                <div class="bar" style="width: {{progressPercentDomains}}%"></div>
+                <span class="sr-only">{{progress.processed}} / {{progress.total}}</span>
+            </div>
+        {{/if}}
         <table class="stats-table" role="table" aria-describedby="import-stats-heading">
             <thead>
             <tr>

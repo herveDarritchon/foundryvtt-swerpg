@@ -184,3 +184,18 @@ Lors d'interventions sur l'interface d'importation (ex: fenêtre d'import OggDud
 - Tests & CI : couvrir la présence des clés i18n critiques dans un test d'intégration léger (vérifier `lang/en.json` contient `SETTINGS.OggDudeDataImporter.loadWindow.previewButton` et `progress.global`) pour éviter que des PR cassent l'affichage de l'UI.
 
 - Ces règles viennent d'un cas concret où la fenêtre d'import était plus grande que la hauteur d'écran et le bouton/section de prévisualisation utilisait la même clé i18n, rendant le comportement non déterministe après compilation.
+
+## Jauge de progression domaines (nouvelle mémoire)
+Pattern établi pour afficher progression des domaines importés dans l'UI OggDudeDataImporter sans bruit ni régression :
+
+- Calcul du pourcentage côté JS dans `_prepareContext()` pour éviter logique Handlebars fragile: `progressPercentDomains = total ? Math.floor((processed/total)*100) : 0`.
+- Stocker `_progress = { processed:Number(p)||0, total:Number(t)||0, domain }` dans le callback `progressCallback` afin de garantir types numériques (évite propagation de chaînes venant d'environnements tests).
+- Rendu conditionnel uniquement si `progress.total > 0` — pas de barre vide initiale.
+- Accessibilité: conteneur `<div class="import-progress-global" role="progressbar" aria-valuemin="0" aria-valuemax="{{progress.total}}" aria-valuenow="{{progress.processed}}" aria-label="localize(progress.global)">` + texte masqué `sr-only`.
+- Styles: Ajouter `.import-progress-global` dans `styles/applications.less` (scopé sur `.app#swerpgSettings-form`) plutôt que dans un fichier global pour isoler. Couleurs dégradé vert (#0b5e0b → #19a319) + transition `width .25s ease`.
+- Ne pas supprimer autres barres liées à métriques globales; distinguer sémantiquement par nom de champ (`progressPercentDomains`).
+- Tests unitaires minimaux: vérifier valeurs 0/50/100, absence de barre quand `total=0`, casting numérique, et que `progressPercentDomains` alimente la width (ex: `style="width: 100%"`).
+- Pas d'accès `this.` dans template; référencer `progressPercentDomains` directement.
+- Sécurité: caster avec `Number()` dans callback; empêcher injection ou `NaN` silencieux.
+- Performance: éviter recalculs lourds; O(1) — accepter rerender Foundry par domaine (nombre faible). Pas de setInterval.
+- Évolutivité: conserver `progressPercent` historique si déjà utilisé par autres composants pour éviter coupling (nouveau champ explicite ajouté plutôt que renommage).

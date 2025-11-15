@@ -106,13 +106,18 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
         // Nous utilisons formatGlobalMetrics pour produire des champs lisibles
         // (ex: overallDuration, errorRate, itemsPerSecond, archiveSize, totalProcessed)
         const metricsFormatted = formatGlobalMetrics(metrics)
+        // Pourcentage global domaines (distinct de potentiels futurs pourcentages items)
+        const progressPercentDomains = (this?._progress?.total ? Math.floor((this._progress.processed / this._progress.total) * 100) : 0)
         return {
             domains: this.domains,
             domainSelectionDisabled: this.noZipFileSelected(),
             loadButtonDisabled: this.noZipFileSelected() || this._noDomainSelected(),
             zipFile: this.zipFile,
             progress: this._progress,
-            progressPercent: (this?._progress?.total ? Math.floor((this._progress.processed / this._progress.total) * 100) : 0),
+            // Valeur existante conservée pour compatibilité (ancienne barre éventuelle)
+            progressPercent: progressPercentDomains,
+            // Nouveau champ explicite pour jauge domaines
+            progressPercentDomains,
             importStats: stats,
             importMetrics: metrics,
             importMetricsFormatted: metricsFormatted,
@@ -165,7 +170,8 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
         this._progress = {processed: 0, total: 0}
         await OggDudeImporter.processOggDudeData(this.zipFile, this.domains, {
             progressCallback: ({processed, total, domain}) => {
-                this._progress = {processed, total, domain}
+                // Mise à jour atomic de la progression domaines
+                this._progress = {processed: Number(processed) || 0, total: Number(total) || 0, domain}
                 logger.debug('[OggDudeDataImporter] Progress', this._progress)
                 // Pas d'erreur si render indisponible (tests unitaires)
                 if (typeof this.render === 'function') {
