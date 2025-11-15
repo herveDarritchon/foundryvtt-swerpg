@@ -15,8 +15,8 @@ if (!globalThis.SYSTEM) {
     ARMOR: {
       CATEGORIES: { light: {}, medium: {}, heavy: {}, natural: {}, unarmored: {} },
       PROPERTIES: { bulky: {}, organic: {} },
-      DEFAULT_CATEGORY: 'medium'
-    }
+      DEFAULT_CATEGORY: 'medium',
+    },
   }
 }
 
@@ -60,7 +60,7 @@ describe('Intégration OggDude -> armorMapper', () => {
       Description: 'Test',
       Defense: '1',
       Soak: '1',
-      Categories: { Category: ['TotallyUnknownCategory'] }
+      Categories: { Category: ['TotallyUnknownCategory'] },
     }
     const mapped = armorMapper([fakeArmor])
     expect(mapped).toHaveLength(1) // fallback sur DEFAULT_CATEGORY

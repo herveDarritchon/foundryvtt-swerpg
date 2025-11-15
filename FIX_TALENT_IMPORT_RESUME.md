@@ -53,7 +53,7 @@ function createDefaultTalentAction() {
   return {
     // id: manquant! ❌
     name: 'Use Talent',
-    activation: SYSTEM.ACTIVATION.ACTION
+    activation: SYSTEM.ACTIVATION.ACTION,
   }
 }
 
@@ -66,7 +66,7 @@ function createDefaultTalentAction(talent) {
   return {
     id: generateActionId(), // ✅ ID généré
     name: talent?.Name ? `Use ${talent.Name}` : 'Use Talent',
-    activation: SYSTEM.ACTIVATION.ACTION
+    activation: SYSTEM.ACTIVATION.ACTION,
   }
 }
 ```
@@ -97,19 +97,21 @@ function talentMapper(talents) {
     logger.warn('[TalentOggDude] Expected array of talents, got:', typeof talents)
     return [] // ✅ Retourne toujours un tableau
   }
-  
+
   resetTalentImportStats()
-  
-  const mappedTalents = talents.map(oggDudeData => {
-    try {
-      const context = OggDudeTalentMapper.buildSingleTalentContext(oggDudeData, {})
-      return context ? OggDudeTalentMapper.transform(context) : null
-    } catch (error) {
-      logger.error('[TalentOggDude] Error mapping individual talent:', error)
-      return null
-    }
-  }).filter(talent => talent !== null) // ✅ Filtre les éléments null
-  
+
+  const mappedTalents = talents
+    .map((oggDudeData) => {
+      try {
+        const context = OggDudeTalentMapper.buildSingleTalentContext(oggDudeData, {})
+        return context ? OggDudeTalentMapper.transform(context) : null
+      } catch (error) {
+        logger.error('[TalentOggDude] Error mapping individual talent:', error)
+        return null
+      }
+    })
+    .filter((talent) => talent !== null) // ✅ Filtre les éléments null
+
   return mappedTalents // ✅ Toujours un tableau
 }
 ```
@@ -177,7 +179,7 @@ Pour reproduire les corrections, les erreurs originales étaient :
 
 ```text
 SWERPG || [TalentNode] Invalid node ID provided: undefined
-SwerpgAction validation errors: id: may not be undefined  
+SwerpgAction validation errors: id: may not be undefined
 TypeError: items.map is not a function at OggDudeDataElement._storeItems
 ```
 

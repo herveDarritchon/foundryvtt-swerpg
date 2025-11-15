@@ -3,7 +3,7 @@ import {
   resetSpeciesImportStats,
   incrementSpeciesImportStat,
   addSpeciesUnknownTalent,
-  getSpeciesImportStats
+  getSpeciesImportStats,
 } from '../../module/importer/utils/species-import-utils.mjs'
 
 describe('species-import-utils', () => {

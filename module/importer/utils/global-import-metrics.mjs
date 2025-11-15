@@ -101,28 +101,39 @@ function safeCall(fn) {
  */
 export function aggregateImportMetrics(statsOverride) {
   const currentStats = statsOverride || getAllImportStats()
-  
+
   // Si les stats actuelles sont vides mais qu'on a des stats de dernier import valides, les utiliser
   const shouldUseLastImportStats = currentStats.totalImported === 0 && _runtime.lastImportStats && _runtime.lastImportStats.totalImported > 0
   const stats = shouldUseLastImportStats ? _runtime.lastImportStats : currentStats
-  
+
   // Si les stats actuelles ne sont pas vides, les sauvegarder comme dernier import réussi
   if (currentStats.totalImported > 0) {
     _runtime.lastImportStats = { ...currentStats }
   }
-  
+
   const hasValidGlobal = Number.isFinite(_runtime.globalEnd) && Number.isFinite(_runtime.globalStart) && _runtime.globalEnd >= _runtime.globalStart
-  const overallDurationMs = hasValidGlobal ? (_runtime.globalEnd - _runtime.globalStart) : 0
-  console.debug('[GlobalMetrics] aggregateImportMetrics - globalStart:', _runtime.globalStart, 'globalEnd:', _runtime.globalEnd, 'hasValidGlobal:', hasValidGlobal, 'overallDurationMs:', overallDurationMs, 'usingLastImportStats:', shouldUseLastImportStats)
+  const overallDurationMs = hasValidGlobal ? _runtime.globalEnd - _runtime.globalStart : 0
+  console.debug(
+    '[GlobalMetrics] aggregateImportMetrics - globalStart:',
+    _runtime.globalStart,
+    'globalEnd:',
+    _runtime.globalEnd,
+    'hasValidGlobal:',
+    hasValidGlobal,
+    'overallDurationMs:',
+    overallDurationMs,
+    'usingLastImportStats:',
+    shouldUseLastImportStats,
+  )
   const domains = {}
   for (const [domain, timing] of _runtime.domains.entries()) {
     const hasValidDomain = Number.isFinite(timing?.end) && Number.isFinite(timing?.start) && timing.end >= timing.start
     domains[domain] = {
-      durationMs: hasValidDomain ? (timing.end - timing.start) : 0,
+      durationMs: hasValidDomain ? timing.end - timing.start : 0,
     }
   }
-  const errorRate = stats?.totalProcessed ? (stats.totalRejected / stats.totalProcessed) : 0
-  const itemsPerSecond = overallDurationMs > 0 && stats ? (stats.totalImported / (overallDurationMs / 1000)) : 0
+  const errorRate = stats?.totalProcessed ? stats.totalRejected / stats.totalProcessed : 0
+  const itemsPerSecond = overallDurationMs > 0 && stats ? stats.totalImported / (overallDurationMs / 1000) : 0
   return {
     overallDurationMs,
     domainsCount: Object.keys(domains).length,
@@ -218,7 +229,7 @@ export function formatMetricsForDisplay(rawMetrics) {
 
   const domainNames = Object.keys(f.domains || {})
   if (domainNames.length) {
-    const domainLines = ['Domains:', ...domainNames.map(dn => `  - ${dn}: ${f.domains[dn].duration}`)]
+    const domainLines = ['Domains:', ...domainNames.map((dn) => `  - ${dn}: ${f.domains[dn].duration}`)]
     lines.push(...domainLines)
   }
 

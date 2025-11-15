@@ -11,7 +11,7 @@ import {
   getWeaponImportStats,
   incrementWeaponImportStat,
   addWeaponUnknownSkill,
-  addWeaponUnknownQuality
+  addWeaponUnknownQuality,
 } from '../utils/weapon-import-utils.mjs'
 
 /**

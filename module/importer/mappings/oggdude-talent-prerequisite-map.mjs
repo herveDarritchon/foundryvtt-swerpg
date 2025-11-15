@@ -52,27 +52,27 @@ export function transformTalentPrerequisites(oggDudePrerequisites) {
 function mapOggDudeSkillToSystem(oggDudeSkillCode) {
   // Mapping basique des compétences courantes Star Wars FFG
   const skillMap = {
-    'MELEE': 'melee',
-    'RANGED': 'ranged', 
-    'ATHLETICS': 'athletics',
-    'COORDINATION': 'coordination',
-    'DISCIPLINE': 'discipline',
-    'LEADERSHIP': 'leadership',
-    'VIGILANCE': 'vigilance',
-    'COOL': 'cool',
-    'SURVIVAL': 'survival',
-    'MEDICINE': 'medicine',
-    'PILOTING': 'piloting',
-    'COMPUTERS': 'computers',
-    'MECHANICS': 'mechanics',
-    'STEALTH': 'stealth',
-    'SKULDUGGERY': 'skulduggery',
-    'DECEPTION': 'deception',
-    'CHARM': 'charm',
-    'NEGOTIATION': 'negotiation',
-    'COERCION': 'coercion'
+    MELEE: 'melee',
+    RANGED: 'ranged',
+    ATHLETICS: 'athletics',
+    COORDINATION: 'coordination',
+    DISCIPLINE: 'discipline',
+    LEADERSHIP: 'leadership',
+    VIGILANCE: 'vigilance',
+    COOL: 'cool',
+    SURVIVAL: 'survival',
+    MEDICINE: 'medicine',
+    PILOTING: 'piloting',
+    COMPUTERS: 'computers',
+    MECHANICS: 'mechanics',
+    STEALTH: 'stealth',
+    SKULDUGGERY: 'skulduggery',
+    DECEPTION: 'deception',
+    CHARM: 'charm',
+    NEGOTIATION: 'negotiation',
+    COERCION: 'coercion',
   }
-  
+
   const upperCode = String(oggDudeSkillCode || '').toUpperCase()
   return skillMap[upperCode] || null
 }
@@ -116,8 +116,8 @@ export function validateTalentPrerequisites(requirements) {
   }
 
   // Si aucune clé valide détectée, invalide
-  const hasContent = (requirements.characteristics && Object.keys(requirements.characteristics).length) ||
-    (requirements.skills && Object.keys(requirements.skills).length)
+  const hasContent =
+    (requirements.characteristics && Object.keys(requirements.characteristics).length) || (requirements.skills && Object.keys(requirements.skills).length)
   // Les TUs considèrent un objet vide {} comme valide (aucun prérequis requis)
   if (!hasContent) {
     // Objet vide accepté
@@ -142,16 +142,16 @@ export function prepareTalentPrerequisitesForDisplay(requirements) {
  */
 export function mergeTalentPrerequisites(...requirementSets) {
   const merged = {}
-  
+
   for (const requirements of requirementSets) {
     if (!requirements || typeof requirements !== 'object') continue
-    
+
     for (const [key, value] of Object.entries(requirements)) {
       if (Number.isFinite(value)) {
         merged[key] = Math.max(merged[key] || 0, value)
       }
     }
   }
-  
+
   return merged
 }

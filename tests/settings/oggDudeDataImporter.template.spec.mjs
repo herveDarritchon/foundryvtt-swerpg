@@ -26,4 +26,18 @@ describe('oggDudeDataImporter.hbs template compatibility', () => {
     // Vérifie l'absence des appels legacy {{lookup importMetrics.domains "armor" "durationMs"}}
     expect(source.includes('lookup importMetrics.domains')).toBe(false)
   })
+
+  it('ne contient plus de classe CSS .progress-global (legacy supprimée)', () => {
+    const classAttrRegex = /class\s*=\s*"([^"]+)"/g
+    let match
+    let found = false
+    while ((match = classAttrRegex.exec(source)) !== null) {
+      const classes = match[1].split(/\s+/)
+      if (classes.includes('progress-global')) {
+        found = true
+        break
+      }
+    }
+    expect(found).toBe(false)
+  })
 })

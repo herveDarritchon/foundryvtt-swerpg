@@ -80,27 +80,75 @@ if (!globalThis.foundry) {
     },
     abstract: {
       DataModel: class DataModelEarly {
-        static defineSchema() { return {} }
-        static get schema() { return { fields: {} } }
-        constructor(data = {}) { this._source = data; Object.assign(this, data) }
-        toObject() { return this._source }
+        static defineSchema() {
+          return {}
+        }
+        static get schema() {
+          return { fields: {} }
+        }
+        constructor(data = {}) {
+          this._source = data
+          Object.assign(this, data)
+        }
+        toObject() {
+          return this._source
+        }
       },
       TypeDataModel: class TypeDataModelEarly {
-        static defineSchema() { return {} }
-        static get schema() { return { fields: {} } }
-        constructor(data = {}) { this._source = data; Object.assign(this, data) }
-        toObject() { return this._source }
+        static defineSchema() {
+          return {}
+        }
+        static get schema() {
+          return { fields: {} }
+        }
+        constructor(data = {}) {
+          this._source = data
+          Object.assign(this, data)
+        }
+        toObject() {
+          return this._source
+        }
       },
     },
     data: {
       fields: {
-        StringField: class { constructor(cfg = {}) { this.config = cfg } },
-        NumberField: class { constructor(cfg = {}) { this.config = cfg } },
-        BooleanField: class { constructor(cfg = {}) { this.config = cfg } },
-        ObjectField: class { constructor(cfg = {}) { this.config = cfg } },
-        ArrayField: class { constructor(field, cfg = {}) { this.field = field; this.config = cfg } },
-        SetField: class { constructor(field, cfg = {}) { this.field = field; this.config = cfg } },
-        SchemaField: class { constructor(schema = {}) { this.schema = schema } },
+        StringField: class {
+          constructor(cfg = {}) {
+            this.config = cfg
+          }
+        },
+        NumberField: class {
+          constructor(cfg = {}) {
+            this.config = cfg
+          }
+        },
+        BooleanField: class {
+          constructor(cfg = {}) {
+            this.config = cfg
+          }
+        },
+        ObjectField: class {
+          constructor(cfg = {}) {
+            this.config = cfg
+          }
+        },
+        ArrayField: class {
+          constructor(field, cfg = {}) {
+            this.field = field
+            this.config = cfg
+          }
+        },
+        SetField: class {
+          constructor(field, cfg = {}) {
+            this.field = field
+            this.config = cfg
+          }
+        },
+        SchemaField: class {
+          constructor(schema = {}) {
+            this.schema = schema
+          }
+        },
       },
     },
     utils: {

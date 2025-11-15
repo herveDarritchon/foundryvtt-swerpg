@@ -19,39 +19,38 @@ export function resolveTalentNode(oggDudeNodeId, options = {}) {
     }
     return null
   }
-  
+
   const cleanNodeId = oggDudeNodeId.trim()
-  
+
   // Recherche directe par ID
   const node = SwerpgTalentNode.nodes.get(cleanNodeId)
   if (node) {
     return node
   }
-  
+
   // Recherche insensible à la casse
   for (const [nodeId, nodeInstance] of SwerpgTalentNode.nodes.entries()) {
     if (nodeId.toLowerCase() === cleanNodeId.toLowerCase()) {
       return nodeInstance
     }
   }
-  
+
   // Recherche par nom de groupe (signature talents)
   const choices = SwerpgTalentNode.getChoices()
   if (cleanNodeId in choices) {
     return SwerpgTalentNode.nodes.get(choices[cleanNodeId])
   }
-  
+
   // Tentative de résolution par correspondance partielle (patterns courants OggDude)
   const nodeResolution = tryResolveByPattern(cleanNodeId)
   if (nodeResolution) {
     return nodeResolution
   }
-  
+
   // Nœud inconnu - enregistrer pour statistiques
   addTalentUnknownNode(cleanNodeId)
-  logger.warn(`[TalentNodeMap] Unknown talent node: "${cleanNodeId}". Available nodes:`, 
-    Array.from(SwerpgTalentNode.nodes.keys()).slice(0, 10))
-  
+  logger.warn(`[TalentNodeMap] Unknown talent node: "${cleanNodeId}". Available nodes:`, Array.from(SwerpgTalentNode.nodes.keys()).slice(0, 10))
+
   return null
 }
 
@@ -63,31 +62,31 @@ export function resolveTalentNode(oggDudeNodeId, options = {}) {
  */
 function tryResolveByPattern(nodeId) {
   const lowerNodeId = nodeId.toLowerCase()
-  
+
   // Patterns de correspondance courants OggDude → Système
   const patterns = {
     // Exemples basés sur les patterns courants Star Wars FFG
-    'dedication': 'dedication',
-    'toughened': 'toughened',
-    'gutted': 'gutted',
-    'adversary': 'adversary',
-    'lethalblows': 'lethalblows',
-    'precisestrike': 'precisestrike',
-    'defensivestance': 'defensivestance',
-    'outdoorsman': 'outdoorsman',
-    'forager': 'forager',
-    
+    dedication: 'dedication',
+    toughened: 'toughened',
+    gutted: 'gutted',
+    adversary: 'adversary',
+    lethalblows: 'lethalblows',
+    precisestrike: 'precisestrike',
+    defensivestance: 'defensivestance',
+    outdoorsman: 'outdoorsman',
+    forager: 'forager',
+
     // Signature patterns (si différents)
-    'sig': 'signature',
-    'signature': 'signature'
+    sig: 'signature',
+    signature: 'signature',
   }
-  
+
   // Recherche exacte dans les patterns
   if (lowerNodeId in patterns) {
     const targetId = patterns[lowerNodeId]
     return SwerpgTalentNode.nodes.get(targetId)
   }
-  
+
   // Recherche par inclusion de motif
   for (const [pattern, target] of Object.entries(patterns)) {
     if (lowerNodeId.includes(pattern)) {
@@ -98,7 +97,7 @@ function tryResolveByPattern(nodeId) {
       }
     }
   }
-  
+
   return null
 }
 
@@ -114,7 +113,7 @@ export function createFallbackTalentNode(nodeId, options = {}) {
   // Retourner null force le traitement en tant que talent rejeté
   logger.warn(`[TalentNodeMap] Fallback node creation disabled for security. Node: "${nodeId}"`)
   return null
-  
+
   // Code de création commenté pour éviter les risques
   /*
   const fallbackNode = new SwerpgTalentNode({
@@ -154,11 +153,11 @@ export function isTalentNodeAvailable(nodeId) {
 export function getTalentNodeStats() {
   const nodes = SwerpgTalentNode.nodes
   const signature = SwerpgTalentNode.signature
-  
+
   return {
     totalNodes: nodes.size,
     signatureNodes: signature.size,
     regularNodes: nodes.size - signature.size,
-    availableChoices: Object.keys(SwerpgTalentNode.getChoices()).length
+    availableChoices: Object.keys(SwerpgTalentNode.getChoices()).length,
   }
 }

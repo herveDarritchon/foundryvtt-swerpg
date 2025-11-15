@@ -21,10 +21,7 @@ Le problème venait du fait que `aggregateImportMetrics()` était appelée par l
 lastImportStats: null
 
 // Logique dans aggregateImportMetrics()
-const shouldUseLastImportStats = 
-  currentStats.totalImported === 0 && 
-  _runtime.lastImportStats && 
-  _runtime.lastImportStats.totalImported > 0
+const shouldUseLastImportStats = currentStats.totalImported === 0 && _runtime.lastImportStats && _runtime.lastImportStats.totalImported > 0
 
 const stats = shouldUseLastImportStats ? _runtime.lastImportStats : currentStats
 
@@ -38,14 +35,14 @@ if (currentStats.totalImported > 0) {
 
 Maintenant l'UI affiche correctement :
 
-- **Overall Duration** : temps réel de l'import (ex: `2.35s`)  
+- **Overall Duration** : temps réel de l'import (ex: `2.35s`)
 - **Items/Second** : débit calculé (ex: `505 items/s`)
 - **Error Rate** : taux d'erreur préservé
 
 ## 🧪 Tests ajoutés
 
 - ✅ Test de préservation des stats après réinitialisation
-- ✅ Test de priorité des stats actuelles quand disponibles  
+- ✅ Test de priorité des stats actuelles quand disponibles
 - ✅ Tests existants mis à jour pour compatibilité
 
 ## 📝 Documentation

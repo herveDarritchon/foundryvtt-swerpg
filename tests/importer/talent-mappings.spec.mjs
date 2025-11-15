@@ -17,9 +17,9 @@ vi.mock('../../module/config/system.mjs', () => ({
       incidental: 'incidental',
       maneuver: 'maneuver',
       action: 'action',
-      reaction: 'reaction'
-    }
-  }
+      reaction: 'reaction',
+    },
+  },
 }))
 
 describe('Talent Mappings', () => {
@@ -63,11 +63,11 @@ describe('Talent Mappings', () => {
         CharacteristicRequirements: {
           CharacteristicRequirement: {
             CharacteristicKey: 'Brawn',
-            MinValue: '3'
-          }
-        }
+            MinValue: '3',
+          },
+        },
       }
-      
+
       const result = transformTalentPrerequisites(oggDudePrereqs)
       expect(result.characteristics).toBeDefined()
       expect(result.characteristics.brawn).toBe(3)
@@ -78,11 +78,11 @@ describe('Talent Mappings', () => {
         SkillRequirements: {
           SkillRequirement: {
             SkillKey: 'Lightsaber',
-            MinValue: '2'
-          }
-        }
+            MinValue: '2',
+          },
+        },
       }
-      
+
       const result = transformTalentPrerequisites(oggDudePrereqs)
       expect(result.skills).toBeDefined()
       expect(result.skills.lightsaber).toBe(2)
@@ -91,7 +91,7 @@ describe('Talent Mappings', () => {
     it('devrait valider les prérequis transformés', () => {
       const validPrereqs = { characteristics: { brawn: 3 }, skills: { lightsaber: 2 } }
       expect(validateTalentPrerequisites(validPrereqs)).toBe(true)
-      
+
       const invalidPrereqs = { characteristics: { brawn: 'invalid' } }
       expect(validateTalentPrerequisites(invalidPrereqs)).toBe(false)
     })
@@ -101,14 +101,14 @@ describe('Talent Mappings', () => {
     it('devrait transformer des données de rang simples', () => {
       const talentData = { Tier: '2', Cost: '10' }
       const result = transformTalentRank(talentData)
-      
+
       expect(result.idx).toBe(1)
       expect(result.cost).toBe(10)
     })
 
     it('devrait utiliser des valeurs par défaut', () => {
       const result = transformTalentRank({})
-      
+
       expect(result.idx).toBe(1)
       expect(result.cost).toBe(5)
     })
@@ -138,7 +138,7 @@ describe('Talent Mappings', () => {
     it('devrait créer une action par défaut', () => {
       const context = { name: 'Test Talent', description: 'Test description' }
       const action = createDefaultTalentAction(context)
-      
+
       expect(action).toBeDefined()
       expect(action.name).toBe('Test Talent')
       expect(action.activation.type).toBe('passive')
@@ -147,7 +147,7 @@ describe('Talent Mappings', () => {
     it('devrait valider les actions', () => {
       const validAction = createDefaultTalentAction({ name: 'Test' })
       expect(validateTalentActions([validAction])).toBe(true)
-      
+
       expect(validateTalentActions(null)).toBe(false)
       expect(validateTalentActions('not an array')).toBe(false)
       expect(validateTalentActions([{ name: null }])).toBe(false)

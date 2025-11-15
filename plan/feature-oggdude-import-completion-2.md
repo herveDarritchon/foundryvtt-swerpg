@@ -5,7 +5,7 @@ date_created: 2025-11-13
 last_updated: 2025-11-13
 owner: swerpg.core-team
 status: 'Planned'
-tags: ['feature','import','oggdude','observability','testing','performance','ux','documentation']
+tags: ['feature', 'import', 'oggdude', 'observability', 'testing', 'performance', 'ux', 'documentation']
 ---
 
 # Introduction
@@ -40,83 +40,78 @@ Plan d'implémentation pour compléter la feature d'import OggDude en couvrant l
 
 - GOAL-001: Implémenter statistiques par domaine, métriques globales, localisation FR. Critères: API `get<Domain>ImportStats()` disponibles, structure commune, rendu UI, 100% des clés FR ajoutées.
 
-
-| Task | Description | Completed | Date |
-|------|-------------|-----------|------|
-| TASK-001 | Créer `module/importer/utils/weapon-import-utils.mjs` avec `getWeaponImportStats()` | ✅ | 2025-11-13 |
-| TASK-002 | Créer `module/importer/utils/gear-import-utils.mjs` avec `getGearImportStats()` | ✅ | 2025-11-13 |
-| TASK-003 | Créer `module/importer/utils/species-import-utils.mjs` avec `getSpeciesImportStats()` | ✅ | 2025-11-13 |
-| TASK-004 | Créer `module/importer/utils/career-import-utils.mjs` avec `getCareerImportStats()` | ✅ | 2025-11-13 |
-| TASK-005 | Créer `module/importer/utils/global-import-metrics.mjs` exposant `aggregateImportMetrics()` | ✅ | 2025-11-13 |
-| TASK-006 | Étendre UI `OggDudeDataImporter` pour afficher tableau récap stats + section métriques globales | ✅ | 2025-11-13 |
-| TASK-007 | Ajouter instrumentation (timestamps, counters) dans `OggDudeImporter` (début/fin domaine) | ✅ | 2025-11-13 |
-| TASK-008 | Ajouter localisation FR manquante dans `lang/fr.json` (toutes clés import) | ✅ | 2025-11-13 |
-| TASK-009 | Ajouter tests unitaires basiques pour chaque utilitaire stats (retour structure attendue) | ✅ | 2025-11-13 |
-| TASK-010 | Mettre à jour documentation architecture pour inclure schéma métriques | ✅ | 2025-11-13 |
+| Task     | Description                                                                                     | Completed | Date       |
+| -------- | ----------------------------------------------------------------------------------------------- | --------- | ---------- |
+| TASK-001 | Créer `module/importer/utils/weapon-import-utils.mjs` avec `getWeaponImportStats()`             | ✅        | 2025-11-13 |
+| TASK-002 | Créer `module/importer/utils/gear-import-utils.mjs` avec `getGearImportStats()`                 | ✅        | 2025-11-13 |
+| TASK-003 | Créer `module/importer/utils/species-import-utils.mjs` avec `getSpeciesImportStats()`           | ✅        | 2025-11-13 |
+| TASK-004 | Créer `module/importer/utils/career-import-utils.mjs` avec `getCareerImportStats()`             | ✅        | 2025-11-13 |
+| TASK-005 | Créer `module/importer/utils/global-import-metrics.mjs` exposant `aggregateImportMetrics()`     | ✅        | 2025-11-13 |
+| TASK-006 | Étendre UI `OggDudeDataImporter` pour afficher tableau récap stats + section métriques globales | ✅        | 2025-11-13 |
+| TASK-007 | Ajouter instrumentation (timestamps, counters) dans `OggDudeImporter` (début/fin domaine)       | ✅        | 2025-11-13 |
+| TASK-008 | Ajouter localisation FR manquante dans `lang/fr.json` (toutes clés import)                      | ✅        | 2025-11-13 |
+| TASK-009 | Ajouter tests unitaires basiques pour chaque utilitaire stats (retour structure attendue)       | ✅        | 2025-11-13 |
+| TASK-010 | Mettre à jour documentation architecture pour inclure schéma métriques                          | ✅        | 2025-11-13 |
 
 ### Implementation Phase 2 - Couverture de Tests
 
 - GOAL-002: Atteindre 90% couverture sur composants clé + tests intégration manquants. Critères: rapport coverage ≥ 90%, tests intégration passent, sécurité chemins testée.
 
-
-| Task | Description | Completed | Date |
-|------|-------------|-----------|------|
-| TASK-011 | Écrire tests unitaires `tests/importer/oggDudeDataImporter.spec.mjs` | ✅ | 2025-11-13 |
-| TASK-012 | Écrire tests unitaires `tests/importer/oggDudeImporter.spec.mjs` | ✅ | 2025-11-13 |
-| TASK-013 | Écrire tests unitaires `tests/importer/oggDudeDataElement.spec.mjs` | ✅ | 2025-11-13 |
-| TASK-014 | Créer tests intégration armor `tests/integration/armor-import.integration.spec.mjs` | ✅ | 2025-11-13 |
-| TASK-015 | Créer tests intégration weapon `tests/integration/weapon-import.integration.spec.mjs` | ✅ | 2025-11-13 |
-| TASK-016 | Créer tests intégration gear `tests/integration/gear-import.integration.spec.mjs` | ✅ | 2025-11-13 |
-| TASK-017 | Créer test sécurité chemins `tests/importer/path-validation.spec.mjs` | ✅ | 2025-11-13 |
-| TASK-018 | Ajouter script CI exécution ciblée tests import (workflow update) | ✅ | 2025-11-13 |
-| TASK-019 | Mettre à jour `TESTS_COVERAGE_IMPROVEMENT.md` avec nouvelles métriques | ✅ | 2025-11-13 |
+| Task     | Description                                                                           | Completed | Date       |
+| -------- | ------------------------------------------------------------------------------------- | --------- | ---------- |
+| TASK-011 | Écrire tests unitaires `tests/importer/oggDudeDataImporter.spec.mjs`                  | ✅        | 2025-11-13 |
+| TASK-012 | Écrire tests unitaires `tests/importer/oggDudeImporter.spec.mjs`                      | ✅        | 2025-11-13 |
+| TASK-013 | Écrire tests unitaires `tests/importer/oggDudeDataElement.spec.mjs`                   | ✅        | 2025-11-13 |
+| TASK-014 | Créer tests intégration armor `tests/integration/armor-import.integration.spec.mjs`   | ✅        | 2025-11-13 |
+| TASK-015 | Créer tests intégration weapon `tests/integration/weapon-import.integration.spec.mjs` | ✅        | 2025-11-13 |
+| TASK-016 | Créer tests intégration gear `tests/integration/gear-import.integration.spec.mjs`     | ✅        | 2025-11-13 |
+| TASK-017 | Créer test sécurité chemins `tests/importer/path-validation.spec.mjs`                 | ✅        | 2025-11-13 |
+| TASK-018 | Ajouter script CI exécution ciblée tests import (workflow update)                     | ✅        | 2025-11-13 |
+| TASK-019 | Mettre à jour `TESTS_COVERAGE_IMPROVEMENT.md` avec nouvelles métriques                | ✅        | 2025-11-13 |
 
 ### Implementation Phase 3 - UX Prévisualisation & Progression
 
 - GOAL-003: Offrir prévisualisation filtrable et progression multi-domaines. Critères: UI affiche liste items par domaine avant import, boutons appliquer sélection, barres progression mises à jour en temps réel.
 
-
-| Task | Description | Completed | Date |
-|------|-------------|-----------|------|
-| TASK-020 | Ajouter mode "préchargement" pour parser XML sans créer d'items (stockage temporaire) | | |
-| TASK-021 | Créer composant UI prévisualisation dans template `oggDudeDataImporter.hbs` | | |
-| TASK-022 | Implémenter pagination (50 items/page) + filtres domaine/texte | | |
-| TASK-023 | Ajouter indicateur items existants vs nouveaux (comparaison par nom + type) | | |
-| TASK-024 | Implémenter barres de progression (domaine + globale) avec événements updates | | |
-| TASK-025 | Ajouter accessibilité (ARIA) pour tables et barres progression | | |
-| TASK-026 | Tests UI prévisualisation (structure DOM, nombres affichés) | | |
-| TASK-027 | Documentation utilisateur prévisualisation & progression | | |
+| Task     | Description                                                                           | Completed | Date |
+| -------- | ------------------------------------------------------------------------------------- | --------- | ---- |
+| TASK-020 | Ajouter mode "préchargement" pour parser XML sans créer d'items (stockage temporaire) |           |      |
+| TASK-021 | Créer composant UI prévisualisation dans template `oggDudeDataImporter.hbs`           |           |      |
+| TASK-022 | Implémenter pagination (50 items/page) + filtres domaine/texte                        |           |      |
+| TASK-023 | Ajouter indicateur items existants vs nouveaux (comparaison par nom + type)           |           |      |
+| TASK-024 | Implémenter barres de progression (domaine + globale) avec événements updates         |           |      |
+| TASK-025 | Ajouter accessibilité (ARIA) pour tables et barres progression                        |           |      |
+| TASK-026 | Tests UI prévisualisation (structure DOM, nombres affichés)                           |           |      |
+| TASK-027 | Documentation utilisateur prévisualisation & progression                              |           |      |
 
 ### Implementation Phase 4 - Performance & Résilience
 
 - GOAL-004: Optimiser traitement gros fichiers et ajouter cache/retry. Critères: démonstration bench interne (script) montrant réduction temps ≥ 30%, cache actif, retry fonctionnel.
 
-
-| Task | Description | Completed | Date |
-|------|-------------|-----------|------|
-| TASK-028 | Implémenter lecture ZIP streaming (JSZip async chunking) | | |
-| TASK-029 | Découper parsing en micro-tâches (setTimeout / queueMicrotask) | | |
-| TASK-030 | Implémenter pool de workers (Web Worker ou pseudo-parallélisme) pour domaines | | |
-| TASK-031 | Ajouter cache mapping (Map mémoire + clé normalisée) | | |
-| TASK-032 | Instrumenter mesures avant/après (bench script) | | |
-| TASK-033 | Implémenter logique retry (2 tentatives) sur erreurs transitoires | | |
-| TASK-034 | Ajouter tests pour cache (hit/miss) et retry | | |
-| TASK-035 | Ajouter doc performance & guide tuning (limites pool) | | |
+| Task     | Description                                                                   | Completed | Date |
+| -------- | ----------------------------------------------------------------------------- | --------- | ---- |
+| TASK-028 | Implémenter lecture ZIP streaming (JSZip async chunking)                      |           |      |
+| TASK-029 | Découper parsing en micro-tâches (setTimeout / queueMicrotask)                |           |      |
+| TASK-030 | Implémenter pool de workers (Web Worker ou pseudo-parallélisme) pour domaines |           |      |
+| TASK-031 | Ajouter cache mapping (Map mémoire + clé normalisée)                          |           |      |
+| TASK-032 | Instrumenter mesures avant/après (bench script)                               |           |      |
+| TASK-033 | Implémenter logique retry (2 tentatives) sur erreurs transitoires             |           |      |
+| TASK-034 | Ajouter tests pour cache (hit/miss) et retry                                  |           |      |
+| TASK-035 | Ajouter doc performance & guide tuning (limites pool)                         |           |      |
 
 ### Implementation Phase 5 - Documentation & Validation Guides
 
 - GOAL-005: Finaliser exemples pratiques et valider guides. Critères: exemples exécutables ajoutés, guide mis à jour, validation croisée par test type exemple.
 
-
-| Task | Description | Completed | Date |
-|------|-------------|-----------|------|
-| TASK-036 | Créer exemples extension nouveau type (ex: Specialization) doc pas-à-pas | | |
-| TASK-037 | Implémenter mini PoC mapper Specialization pour validation guide (sans import complet) | | |
-| TASK-038 | Mettre à jour `documentation/swerpg/architecture/oggdude/oggdude-import.md` (sections complétées) | | |
-| TASK-039 | Ajouter section "Troubleshooting Import" | | |
-| TASK-040 | Revue finale cohérence patterns (Strategy/Registry) décision record (ADR) | | |
-| TASK-041 | Générer checklist de validation pour nouveaux mappers | | |
-| TASK-042 | Ajout liens croisés vers tests et métriques dans doc | | |
+| Task     | Description                                                                                       | Completed | Date |
+| -------- | ------------------------------------------------------------------------------------------------- | --------- | ---- |
+| TASK-036 | Créer exemples extension nouveau type (ex: Specialization) doc pas-à-pas                          |           |      |
+| TASK-037 | Implémenter mini PoC mapper Specialization pour validation guide (sans import complet)            |           |      |
+| TASK-038 | Mettre à jour `documentation/swerpg/architecture/oggdude/oggdude-import.md` (sections complétées) |           |      |
+| TASK-039 | Ajouter section "Troubleshooting Import"                                                          |           |      |
+| TASK-040 | Revue finale cohérence patterns (Strategy/Registry) décision record (ADR)                         |           |      |
+| TASK-041 | Générer checklist de validation pour nouveaux mappers                                             |           |      |
+| TASK-042 | Ajout liens croisés vers tests et métriques dans doc                                              |           |      |
 
 ## 3. Alternatives
 

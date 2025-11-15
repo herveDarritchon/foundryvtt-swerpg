@@ -38,85 +38,85 @@ Le mapper OggDude pour les Gears (`gear-ogg-dude.mjs`) n'est pas aligné avec le
 
 - GOAL-001: Comprendre le schéma exact de `SwerpgGear` et identifier les champs supportés
 
-| Task     | Description                                                                                         | Completed | Date |
-| -------- | --------------------------------------------------------------------------------------------------- | --------- | ---- |
+| Task     | Description                                                                                                      | Completed | Date       |
+| -------- | ---------------------------------------------------------------------------------------------------------------- | --------- | ---------- |
 | TASK-001 | Analyser `SwerpgGear.defineSchema()` et `SwerpgPhysicalItem.defineSchema()` pour identifier les champs supportés | ✓         | 2025-11-12 |
-| TASK-002 | Documenter la correspondance entre champs OggDude et champs système                                | ✓         | 2025-11-12 |
-| TASK-003 | Identifier les champs à exclure (sources, categories, mods, weaponModifiers, eraPricing)           | ✓         | 2025-11-12 |
-| TASK-004 | Définir les valeurs par défaut pour champs optionnels                                              | ✓         | 2025-11-12 |
-| TASK-005 | Créer la table de correspondance des types de gear si nécessaire                                   | ✓         | 2025-11-12 |
+| TASK-002 | Documenter la correspondance entre champs OggDude et champs système                                              | ✓         | 2025-11-12 |
+| TASK-003 | Identifier les champs à exclure (sources, categories, mods, weaponModifiers, eraPricing)                         | ✓         | 2025-11-12 |
+| TASK-004 | Définir les valeurs par défaut pour champs optionnels                                                            | ✓         | 2025-11-12 |
+| TASK-005 | Créer la table de correspondance des types de gear si nécessaire                                                 | ✓         | 2025-11-12 |
 
 ### Implementation Phase 2 - Restructuration du mapper
 
 - GOAL-002: Adapter la sortie du mapper pour ne retourner que les champs supportés dans `system`
 
-| Task     | Description                                                                                    | Completed | Date |
-| -------- | ---------------------------------------------------------------------------------------------- | --------- | ---- |
-| TASK-006 | Refactorer `gearMapper` pour retourner structure `{ name, type, system, flags }`              | ✓         | 2025-11-12 |
-| TASK-007 | Construire objet `system` avec uniquement les champs définis dans le schéma                   | ✓         | 2025-11-12 |
-| TASK-008 | Supprimer champs obsolètes (sources, categories, mods, weaponModifiers, eraPricing, etc.)     | ✓         | 2025-11-12 |
-| TASK-009 | Implémenter normalisation des valeurs numériques (encumbrance, price, rarity, hp)             | ✓         | 2025-11-12 |
-| TASK-010 | Ajouter validation booléenne pour `restricted`                                                | ✓         | 2025-11-12 |
-| TASK-011 | Construire `flags.swerpg` avec métadonnées (oggdudeKey, originalType)                         | ✓         | 2025-11-12 |
-| TASK-012 | Ajouter logs debug pour chaque gear importé avec récap des champs mappés                      | ✓         | 2025-11-12 |
+| Task     | Description                                                                               | Completed | Date       |
+| -------- | ----------------------------------------------------------------------------------------- | --------- | ---------- |
+| TASK-006 | Refactorer `gearMapper` pour retourner structure `{ name, type, system, flags }`          | ✓         | 2025-11-12 |
+| TASK-007 | Construire objet `system` avec uniquement les champs définis dans le schéma               | ✓         | 2025-11-12 |
+| TASK-008 | Supprimer champs obsolètes (sources, categories, mods, weaponModifiers, eraPricing, etc.) | ✓         | 2025-11-12 |
+| TASK-009 | Implémenter normalisation des valeurs numériques (encumbrance, price, rarity, hp)         | ✓         | 2025-11-12 |
+| TASK-010 | Ajouter validation booléenne pour `restricted`                                            | ✓         | 2025-11-12 |
+| TASK-011 | Construire `flags.swerpg` avec métadonnées (oggdudeKey, originalType)                     | ✓         | 2025-11-12 |
+| TASK-012 | Ajouter logs debug pour chaque gear importé avec récap des champs mappés                  | ✓         | 2025-11-12 |
 
 ### Implementation Phase 3 - Validation & Normalisation
 
 - GOAL-003: Mettre en place validation robuste des données et normalisation
 
-| Task     | Description                                                                                    | Completed | Date |
-| -------- | ---------------------------------------------------------------------------------------------- | --------- | ---- |
-| TASK-013 | Créer fonction `normalizeGearNumericField(value, defaultValue, min, max)` pour validation     | ✓         | 2025-11-12 |
-| TASK-014 | Créer fonction `validateGearBooleanField(value, defaultValue)` pour champs booléens           | ✓         | 2025-11-12 |
-| TASK-015 | Implémenter validation `description` (HTMLField) avec nettoyage basique                       | ✓         | 2025-11-12 |
-| TASK-016 | Ajouter validation du `type` de gear contre une liste autorisée si définie                    | ✓         | 2025-11-12 |
-| TASK-017 | Créer fonction utilitaire `buildGearSystem(xmlGear)` testable séparément                      | ✓         | 2025-11-12 |
-| TASK-018 | Ajouter gestion des erreurs avec fallback vers valeurs par défaut                             | ✓         | 2025-11-12 |
-| TASK-019 | Instrumenter logging détaillé pour transformations et erreurs                                 | ✓         | 2025-11-12 |
+| Task     | Description                                                                               | Completed | Date       |
+| -------- | ----------------------------------------------------------------------------------------- | --------- | ---------- |
+| TASK-013 | Créer fonction `normalizeGearNumericField(value, defaultValue, min, max)` pour validation | ✓         | 2025-11-12 |
+| TASK-014 | Créer fonction `validateGearBooleanField(value, defaultValue)` pour champs booléens       | ✓         | 2025-11-12 |
+| TASK-015 | Implémenter validation `description` (HTMLField) avec nettoyage basique                   | ✓         | 2025-11-12 |
+| TASK-016 | Ajouter validation du `type` de gear contre une liste autorisée si définie                | ✓         | 2025-11-12 |
+| TASK-017 | Créer fonction utilitaire `buildGearSystem(xmlGear)` testable séparément                  | ✓         | 2025-11-12 |
+| TASK-018 | Ajouter gestion des erreurs avec fallback vers valeurs par défaut                         | ✓         | 2025-11-12 |
+| TASK-019 | Instrumenter logging détaillé pour transformations et erreurs                             | ✓         | 2025-11-12 |
 
 ### Implementation Phase 4 - Tests & Robustesse
 
 - GOAL-004: Couvrir intégralement le mapping et la validation avec tests unitaires et d'intégration
 
-| Task     | Description                                                                                    | Completed | Date |
-| -------- | ---------------------------------------------------------------------------------------------- | --------- | ---- |
-| TASK-020 | Test unitaire: mapping gear basique avec tous champs présents                                 | ✓         | 2025-11-12 |
-| TASK-021 | Test unitaire: normalisation valeurs numériques (négatives, non-numériques, hors bornes)     | ✓         | 2025-11-12 |
-| TASK-022 | Test unitaire: validation booléenne `restricted` (true, false, undefined, "true", etc.)      | ✓         | 2025-11-12 |
-| TASK-023 | Test unitaire: exclusion champs non-supportés (sources, mods, etc. absents du résultat)      | ✓         | 2025-11-12 |
-| TASK-024 | Test unitaire: gestion description vide/undefined => valeur par défaut                       | ✓         | 2025-11-12 |
-| TASK-025 | Test intégration: objet final conforme au schéma SwerpgGear                                   | ✓         | 2025-11-12 |
-| TASK-026 | Test intégration: validation que flags.swerpg contient métadonnées                           | ✓         | 2025-11-12 |
-| TASK-027 | Test erreur: gear malformé ou incomplet => fallback approprié + log.warn                      | ✓         | 2025-11-12 |
-| TASK-028 | Test performance: mapping d'un lot de gears (>100) sans dégradation                          | ✓         | 2025-11-12 |
+| Task     | Description                                                                              | Completed | Date       |
+| -------- | ---------------------------------------------------------------------------------------- | --------- | ---------- |
+| TASK-020 | Test unitaire: mapping gear basique avec tous champs présents                            | ✓         | 2025-11-12 |
+| TASK-021 | Test unitaire: normalisation valeurs numériques (négatives, non-numériques, hors bornes) | ✓         | 2025-11-12 |
+| TASK-022 | Test unitaire: validation booléenne `restricted` (true, false, undefined, "true", etc.)  | ✓         | 2025-11-12 |
+| TASK-023 | Test unitaire: exclusion champs non-supportés (sources, mods, etc. absents du résultat)  | ✓         | 2025-11-12 |
+| TASK-024 | Test unitaire: gestion description vide/undefined => valeur par défaut                   | ✓         | 2025-11-12 |
+| TASK-025 | Test intégration: objet final conforme au schéma SwerpgGear                              | ✓         | 2025-11-12 |
+| TASK-026 | Test intégration: validation que flags.swerpg contient métadonnées                       | ✓         | 2025-11-12 |
+| TASK-027 | Test erreur: gear malformé ou incomplet => fallback approprié + log.warn                 | ✓         | 2025-11-12 |
+| TASK-028 | Test performance: mapping d'un lot de gears (>100) sans dégradation                      | ✓         | 2025-11-12 |
 
 ### Implementation Phase 5 - Documentation & Qualité
 
 - GOAL-005: Finaliser qualité, documentation et conformité
 
-| Task     | Description                                                                                    | Completed | Date |
-| -------- | ---------------------------------------------------------------------------------------------- | --------- | ---- |
-| TASK-029 | Créer `documentation/swerpg/import-gear.md` décrivant logique mapping et validations          | ✓         | 2025-11-12 |
-| TASK-030 | Mettre à jour `CHANGELOG.md` (section Unreleased) avec correction mapper gear                 | ✓         | 2025-11-12 |
-| TASK-031 | Vérifier conformité ESLint & Prettier sur fichiers modifiés                                   | ✓         | 2025-11-12 |
-| TASK-032 | Ajouter commentaires JSDoc complets sur nouvelles fonctions                                   | ✓         | 2025-11-12 |
-| TASK-033 | Revue code: vérifier absence de code mort et optimisation des performances                    | ✓         | 2025-11-12 |
-| TASK-034 | Test manuel: import réel de gears OggDude en environnement Foundry                            | ✓         | 2025-11-12 |
-| TASK-035 | Validation: aucune régression sur autres importers (armor, weapon, species, career)           | ✓         | 2025-11-12 |
+| Task     | Description                                                                          | Completed | Date       |
+| -------- | ------------------------------------------------------------------------------------ | --------- | ---------- |
+| TASK-029 | Créer `documentation/swerpg/import-gear.md` décrivant logique mapping et validations | ✓         | 2025-11-12 |
+| TASK-030 | Mettre à jour `CHANGELOG.md` (section Unreleased) avec correction mapper gear        | ✓         | 2025-11-12 |
+| TASK-031 | Vérifier conformité ESLint & Prettier sur fichiers modifiés                          | ✓         | 2025-11-12 |
+| TASK-032 | Ajouter commentaires JSDoc complets sur nouvelles fonctions                          | ✓         | 2025-11-12 |
+| TASK-033 | Revue code: vérifier absence de code mort et optimisation des performances           | ✓         | 2025-11-12 |
+| TASK-034 | Test manuel: import réel de gears OggDude en environnement Foundry                   | ✓         | 2025-11-12 |
+| TASK-035 | Validation: aucune régression sur autres importers (armor, weapon, species, career)  | ✓         | 2025-11-12 |
 
 ### Implementation Phase 6 - Optimisation & Observabilité
 
 - GOAL-006: Assurer performance optimale et visibilité des opérations
 
-| Task     | Description                                                                                    | Completed | Date |
-| -------- | ---------------------------------------------------------------------------------------------- | --------- | ---- |
-| TASK-036 | Ajouter métriques d'import (nombre gears, champs transformés, erreurs détectées)              |           |      |
-| TASK-037 | Optimiser allocations mémoire dans boucles de mapping                                         |           |      |
-| TASK-038 | Ajouter cache pour validations répétitives si applicable                                      |           |      |
-| TASK-039 | Créer test benchmark pour mesurer performance sur gros datasets                               |           |      |
-| TASK-040 | Ajouter hooks/callbacks optionnels pour monitoring externe                                    |           |      |
-| TASK-041 | Finaliser documentation utilisateur pour configuration avancée                                |           |      |
-| TASK-042 | Passer statut plan à 'Completed' après validation complète                                    |           |      |
+| Task     | Description                                                                      | Completed | Date |
+| -------- | -------------------------------------------------------------------------------- | --------- | ---- |
+| TASK-036 | Ajouter métriques d'import (nombre gears, champs transformés, erreurs détectées) |           |      |
+| TASK-037 | Optimiser allocations mémoire dans boucles de mapping                            |           |      |
+| TASK-038 | Ajouter cache pour validations répétitives si applicable                         |           |      |
+| TASK-039 | Créer test benchmark pour mesurer performance sur gros datasets                  |           |      |
+| TASK-040 | Ajouter hooks/callbacks optionnels pour monitoring externe                       |           |      |
+| TASK-041 | Finaliser documentation utilisateur pour configuration avancée                   |           |      |
+| TASK-042 | Passer statut plan à 'Completed' après validation complète                       |           |      |
 
 ## 3. Alternatives
 

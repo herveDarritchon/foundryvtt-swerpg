@@ -22,40 +22,40 @@ function talentMapper(talents) {
       logger.warn('[TalentOggDude] Expected array of talents, got:', typeof talents)
       return []
     }
-    
+
     // Réinitialiser les stats pour cette session d'import
     resetTalentImportStats()
-    
+
     // Mapper chaque talent individuellement
-    const mappedTalents = talents.map(oggDudeData => {
-      try {
-        // Créer un contexte pour le mapper
-        const context = OggDudeTalentMapper.buildSingleTalentContext(oggDudeData, {})
-        if (!context) {
-          logger.warn('[TalentOggDude] Failed to build context for talent:', oggDudeData?.Name || 'Unknown')
+    const mappedTalents = talents
+      .map((oggDudeData) => {
+        try {
+          // Créer un contexte pour le mapper
+          const context = OggDudeTalentMapper.buildSingleTalentContext(oggDudeData, {})
+          if (!context) {
+            logger.warn('[TalentOggDude] Failed to build context for talent:', oggDudeData?.Name || 'Unknown')
+            return null
+          }
+
+          // Transformer via le mapper principal
+          const transformedData = OggDudeTalentMapper.transform(context)
+          // Incrémenter les stats « processed » seulement si le contexte est valide et transformé
+          incrementTalentImportStat('processed')
+
+          logger.debug(`[TalentOggDude] Mapped talent: ${context.key}`)
+          return transformedData
+        } catch (error) {
+          logger.error('[TalentOggDude] Error mapping individual talent:', error)
+          // Comptabiliser l'échec de transformation
+          incrementTalentImportStat('failed')
           return null
         }
-        
-        // Transformer via le mapper principal
-        const transformedData = OggDudeTalentMapper.transform(context)
-        // Incrémenter les stats « processed » seulement si le contexte est valide et transformé
-        incrementTalentImportStat('processed')
-        
-        logger.debug(`[TalentOggDude] Mapped talent: ${context.key}`)
-        return transformedData
-        
-      } catch (error) {
-        logger.error('[TalentOggDude] Error mapping individual talent:', error)
-        // Comptabiliser l'échec de transformation
-        incrementTalentImportStat('failed')
-        return null
-      }
-    }).filter(talent => talent !== null) // Filtrer les éléments null
+      })
+      .filter((talent) => talent !== null) // Filtrer les éléments null
     // Consolider métrique contextMaps (parité avec buildContextMap())
     incrementTalentImportStat('contextMaps', mappedTalents.length)
     logger.info(`Talent import completed: ${mappedTalents.length}/${talents.length} talents imported`)
     return mappedTalents
-    
   } catch (error) {
     logger.error('[TalentOggDude] Error in talent mapper:', error)
     return []
@@ -66,15 +66,15 @@ function talentMapper(talents) {
  * Construit le contexte d'import pour les talents OggDude
  * Compatible avec l'architecture de processOggDudeData()
  * @param {object} zip - Archive ZIP OggDude
- * @param {Array} groupByDirectory - Éléments groupés par répertoire  
+ * @param {Array} groupByDirectory - Éléments groupés par répertoire
  * @param {object} groupByType - Éléments groupés par type
  * @returns {Promise<object>} Contexte d'import structuré
  */
 export async function buildTalentContext(zip, groupByDirectory, groupByType) {
-  logger.debug('[TalentImporter] Building Talent context', { 
-    groupByDirectoryCount: groupByDirectory.length, 
-    groupByType: Object.keys(groupByType), 
-    hasZip: !!zip 
+  logger.debug('[TalentImporter] Building Talent context', {
+    groupByDirectoryCount: groupByDirectory.length,
+    groupByType: Object.keys(groupByType),
+    hasZip: !!zip,
   })
 
   return {

@@ -36,11 +36,11 @@ Ajout d'une barre de progression globale (domaines) dans l'interface `OggDudeDat
 
 ## Tests & Couverture
 
-| Test | Objectif |
-|------|----------|
-| `OggDudeDataImporter.progress.spec.mjs` | Calcul pourcentages & cas limites |
-| Contexte existant | Non modifié, toujours valide |
-| Intégration espèces | Pas d'impact direct sur import logique |
+| Test                                    | Objectif                               |
+| --------------------------------------- | -------------------------------------- |
+| `OggDudeDataImporter.progress.spec.mjs` | Calcul pourcentages & cas limites      |
+| Contexte existant                       | Non modifié, toujours valide           |
+| Intégration espèces                     | Pas d'impact direct sur import logique |
 
 ## Risques
 
