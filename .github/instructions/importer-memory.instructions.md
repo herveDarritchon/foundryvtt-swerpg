@@ -238,3 +238,28 @@ Pattern établi pour afficher progression des domaines importés dans l'UI OggDu
 - Sécurité: caster avec `Number()` dans callback; empêcher injection ou `NaN` silencieux.
 - Performance: éviter recalculs lourds; O(1) — accepter rerender Foundry par domaine (nombre faible). Pas de setInterval.
 - Évolutivité: conserver `progressPercent` historique si déjà utilisé par autres composants pour éviter coupling (nouveau champ explicite ajouté plutôt que renommage).
+
+## Icônes statut domaines (nouvelle mémoire)
+
+Pattern normalisé pour afficher un état synthétique par domaine dans la table des statistiques d'import OggDude sans logique dans le template :
+
+- Calcul pur: fonction `computeDomainStatus({ total, imported, rejected })` retourne `pending | success | mixed | error` selon règles déterministes (toutes les branches testées). Invariant forcé via clamp si `imported + rejected > total` avec log warn catégorisé.
+- Contexte pré-construit: `_prepareContext()` injecte `importDomainStatus[domain] = { code, labelI18n, class }` — la template ne fait que consommer ces valeurs (pas de conditions Handlebars complexes).
+- Classes CSS: `.domain-status--pending|--success|--mixed|--error` appliquées sur la cellule. Icône FontAwesome unique `<i class="fa-solid fa-circle">` pour éviter surcharge markup.
+- Couleurs: utiliser `var(--color-secondary|--color-success|--color-warning|--color-danger)` au lieu de `@color-*` quand le thème repose sur custom properties héritées (bug résolu: icônes grises initialement car variables Less inexistantes).
+- Accessibilité: cellule non interactive (`<td>` simple) avec `aria-label="{{localize importDomainStatus.domain.labelI18n}}"`. Ne pas ajouter `tabindex` ; focus clavier reste sur éléments interactifs.
+- Contraste: sélectionner uniquement variables système déjà validées WCAG (≥3:1) sur fond sombre; vérifier visuellement après build.
+- Tests: couvrir les 4 états + partiel (`pending`), clamp (validité invariant), présence des classes et des labels i18n. Un test de template vérifie existence de l'en-tête et placeholders `{{importDomainStatus.weapon.class}}`.
+- Extension future: possibilité d'ajouter un tooltip non bloquant (préparer clé i18n `stats.status.tooltip.mixed`) — garder logique dans `_prepareContext()` pour fournir un éventuel message.
+
+## I18n & JSON intégrité — importer (nouvelle mémoire)
+
+Règles tirées d'un incident (JSON cassé) lors de l'ajout des clés de statut :
+
+- Emplacement correct des nouvelles sous-clés: les statuts domaine doivent être insérés sous `loadWindow.stats.status` et non dans des objets sans rapport (`ACTION.FIELDS.target`).
+- Duplication contrôlée FR: fichier `fr.json` contient deux segments `SETTINGS.OggDudeDataImporter` et `OggDudeDataImporter`; ajouter la sous-structure dans les deux blocs pour cohérence tant que la double consommation persiste.
+- Validation immédiate: après modification d'un fichier `lang/*.json`, exécuter le test de localisation ciblé (`vitest run tests/importer/localization-oggdude.spec.mjs`) avant la suite complète pour réduire feedback loop.
+- Prévention collisions: éviter qu'une clé existante (string) devienne objet. Avant d'ajouter un sous-objet, rechercher usages template `{{localize ...}}` sur la clé parent — si utilisé comme texte brut, créer une nouvelle clé (`previewButton`).
+- Atomicité des patchs: ajouter virgule finale et sous-objet dans une seule opération pour ne pas laisser le JSON partiellement invalide entre commits.
+- Tests à renforcer: envisager d'étendre le test de localisation pour vérifier la structure `stats.status.title/pending/success/mixed/error` dans les deux langues pour prévenir régressions.
+

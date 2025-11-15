@@ -145,6 +145,8 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
           itemsPerSecond: metricsFormatted.itemsPerSecond,
         }
       : null
+    // Calcul des statuts domaine (fonction pur sans effet côté template) – logique testable séparément.
+    const importDomainStatus = this._buildImportDomainStatus(stats)
     return {
       domains: this.domains,
       domainSelectionDisabled: this.noZipFileSelected(),
@@ -167,6 +169,7 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
       hasMetrics,
       hasPreview,
       importSummary,
+      importDomainStatus,
     }
   }
 
@@ -419,5 +422,61 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
     }
 
     await this.close({})
+  }
+
+  /* -------------------------------------------- */
+  /**
+   * Calcule le statut d'import d'un domaine à partir du triplet {total, imported, rejected}.
+   * Invariants (spécification): imported + rejected <= total. Si violé, on clamp et log un warning.
+   * Règles:
+   *  - success: total>0 && imported===total && rejected===0
+   *  - error: total>0 && imported===0 && rejected===total
+   *  - mixed: imported>0 && rejected>0 && imported + rejected === total
+   *  - pending: tous les autres cas (inclut import partiel, total=0, ou mismatch des sommes)
+   * @param {Object} values
+   * @param {number} [values.total=0]
+   * @param {number} [values.imported=0]
+   * @param {number} [values.rejected=0]
+   * @returns {"pending"|"success"|"mixed"|"error"}
+   */
+  static computeDomainStatus({ total = 0, imported = 0, rejected = 0 } = {}) {
+    total = Number(total) || 0
+    imported = Number(imported) || 0
+    rejected = Number(rejected) || 0
+    if (imported < 0) imported = 0
+    if (rejected < 0) rejected = 0
+    if (total < 0) total = 0
+    if (imported + rejected > total) {
+      // Clamp et log warning (sécurité logique, évite classification incorrecte silencieuse)
+      logger.warn('[OggDudeDataImporter] Invariant violé (imported + rejected > total) – clamp', {
+        original: { total, imported, rejected },
+      })
+      total = imported + rejected
+    }
+    if (total > 0 && imported === total && rejected === 0) return 'success'
+    if (total > 0 && imported === 0 && rejected === total) return 'error'
+    if (imported > 0 && rejected > 0 && imported + rejected === total) return 'mixed'
+    return 'pending'
+  }
+
+  /**
+   * Construit l'objet de statuts par domaine pour le contexte template.
+   * @param {Object} stats
+   * @returns {Object<string,{code:string,labelI18n:string,class:string}>}
+   *   Ex: { armor: { code:'success', labelI18n:'SETTINGS.OggDudeDataImporter.loadWindow.stats.status.success', class:'domain-status domain-status--success' } }
+   * Les labels i18n sont résolus côté template via {{localize}}.
+   */
+  _buildImportDomainStatus(stats = {}) {
+    const result = {}
+    for (const name of this._domainNames) {
+      const domainStats = stats?.[name] || {}
+      const code = OggDudeDataImporter.computeDomainStatus(domainStats)
+      result[name] = {
+        code,
+        labelI18n: `SETTINGS.OggDudeDataImporter.loadWindow.stats.status.${code}`,
+        class: `domain-status domain-status--${code}`,
+      }
+    }
+    return result
   }
 }

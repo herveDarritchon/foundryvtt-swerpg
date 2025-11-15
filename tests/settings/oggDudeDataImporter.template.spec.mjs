@@ -57,4 +57,10 @@ describe('oggDudeDataImporter.hbs template compatibility', () => {
     // Vérifie que la clé i18n summary.title est référencée
     expect(source.includes('summary.title')).toBe(true)
   })
+
+  it('inclut entête colonne statut et classes domain-status', () => {
+    expect(source.includes('stats.status.title')).toBe(true)
+    // Les classes finales (domain-status--*) sont injectées dynamiquement via contexte; on vérifie présence du placeholder Handlebars
+    expect(source.includes('{{importDomainStatus.armor.class}}')).toBe(true)
+  })
 })

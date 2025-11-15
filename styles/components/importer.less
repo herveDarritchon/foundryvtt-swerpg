@@ -79,3 +79,13 @@
 .exists { color: @color-success; font-weight: 600; }
 .new { color: @color-accent; font-weight: 600; }
 
+// --- Statuts domaine (icône circulaire) ---
+// Couleurs sélectionnées pour contraste >=3:1 sur fonds sombres.
+// Couleurs statut: pending gris, success vert, mixed accent, error rouge #c62828.
+.stats-table td.domain-status { width: 1.2rem; text-align: center; }
+.domain-status .fa-circle { font-size: 0.7rem; }
+.domain-status--pending .fa-circle { color: var(--color-secondary); }
+.domain-status--success .fa-circle { color: var(--color-success); }
+.domain-status--mixed .fa-circle { color: var(--color-warning); }
+.domain-status--error .fa-circle { color: var(--color-danger); }
+
