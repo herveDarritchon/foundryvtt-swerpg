@@ -1,0 +1,81 @@
+// Styles spécifiques à la fenêtre Import OggDude Data (immersive UI)
+// Respecte performance (sélecteurs simples) et a11y (focus visible)
+
+.import-summary.sw-panel,
+.import-stats.sw-collapsible,
+.import-metrics.sw-collapsible,
+.preview-section.sw-collapsible {
+  margin: 0 0 0.75rem 0;
+  padding: 0.5rem 0.75rem;
+  background: fade(@color-dark, 15%);
+  border: 1px solid fade(@color-light, 25%);
+  border-radius: 4px;
+}
+
+.import-summary.sw-panel h4,
+.sw-collapsible > summary {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 600;
+  cursor: pointer;
+  list-style: none; // évite le triangle par défaut sur browsers non stylés
+}
+
+.sw-collapsible > summary::-webkit-details-marker { display: none; }
+
+.sw-collapsible[open] {
+  background: fade(@color-primary, 12%);
+  border-color: fade(@color-primary, 40%);
+}
+
+.stats-table,
+.preview-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+}
+.stats-table th,
+.stats-table td,
+.preview-table th,
+.preview-table td {
+  padding: 0.25rem 0.4rem;
+  border: 1px solid fade(@color-light, 20%);
+}
+.stats-table th[scope=row] { text-align: left; }
+
+.metrics,
+.summary {
+  margin: 0.4rem 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.85rem;
+}
+.metrics li,
+.summary li { line-height: 1.3; }
+
+.preview-controls {
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+.preview-controls label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1 1 0;
+}
+
+.pagination { margin-top: 0.4rem; font-size: 0.75rem; opacity: 0.8; }
+
+// Accessibilité focus
+.sw-collapsible > summary:focus,
+.preview-controls select:focus,
+.preview-controls input:focus {
+  outline: 2px solid @color-accent;
+  outline-offset: 2px;
+}
+
+.exists { color: @color-success; font-weight: 600; }
+.new { color: @color-accent; font-weight: 600; }
+

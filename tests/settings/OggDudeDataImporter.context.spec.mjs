@@ -43,6 +43,18 @@ describe('OggDudeDataImporter _prepareContext()', () => {
     expect(ctx.domainSelectionDisabled).toBe(false)
     expect(ctx.loadButtonDisabled).toBe(false)
   })
+
+  it('expose flags de sections repliables et résumé vide si absence de métriques', () => {
+    const app = buildInstance()
+    const ctx = app._prepareContext({})
+    expect(ctx.showStats).toBe(false)
+    expect(ctx.showMetrics).toBe(false)
+    expect(ctx.showPreview).toBe(false)
+    expect(ctx.hasStats).toBe(false)
+    expect(ctx.hasMetrics).toBe(false)
+    expect(ctx.hasPreview).toBe(false)
+    expect(ctx.importSummary).toBeNull()
+  })
 })
 
 describe('OggDudeDataImporter toggleDomainAction', () => {
@@ -64,5 +76,31 @@ describe('OggDudeDataImporter toggleDomainAction', () => {
     const target = { dataset: { domainName: app.domains[0].id, domainChecked: 'false' } }
     await OggDudeDataImporter.toggleDomainAction.call(app, {}, target)
     expect(app.domains.map((d) => d.checked)).toEqual(initial)
+  })
+})
+
+describe('OggDudeDataImporter toggle collapsible actions', () => {
+  it('toggleStatsAction bascule showStats', async () => {
+    const app = buildInstance()
+    await OggDudeDataImporter.toggleStatsAction.call(app, {}, { })
+    expect(app.showStats).toBe(true)
+    await OggDudeDataImporter.toggleStatsAction.call(app, {}, { })
+    expect(app.showStats).toBe(false)
+  })
+
+  it('toggleMetricsAction bascule showMetrics', async () => {
+    const app = buildInstance()
+    await OggDudeDataImporter.toggleMetricsAction.call(app, {}, { })
+    expect(app.showMetrics).toBe(true)
+    await OggDudeDataImporter.toggleMetricsAction.call(app, {}, { })
+    expect(app.showMetrics).toBe(false)
+  })
+
+  it('togglePreviewAction bascule showPreview', async () => {
+    const app = buildInstance()
+    await OggDudeDataImporter.togglePreviewAction.call(app, {}, { })
+    expect(app.showPreview).toBe(true)
+    await OggDudeDataImporter.togglePreviewAction.call(app, {}, { })
+    expect(app.showPreview).toBe(false)
   })
 })

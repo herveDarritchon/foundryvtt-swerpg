@@ -787,6 +787,9 @@
           "pagination": "Preview Pagination",
           "noData": "No data to preview"
         },
+        "summary": {
+          "title": "Import Summary"
+        },
         "progress": {
           "global": "Overall Progress"
         }
