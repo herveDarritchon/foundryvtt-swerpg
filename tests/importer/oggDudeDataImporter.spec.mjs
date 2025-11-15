@@ -18,7 +18,8 @@ describe('OggDudeDataImporter - logique interne basique', () => {
   })
 
   it('initialise les domaines', () => {
-    expect(importer.domains).toHaveLength(5)
+    // Mise à jour: nouveau domaine 'talent' ajouté à la liste => longueur attendue 6
+    expect(importer.domains).toHaveLength(6)
     expect(importer.domains[0]).toHaveProperty('id')
     expect(importer.domains[0]).toHaveProperty('checked')
   })
