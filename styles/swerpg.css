@@ -3621,6 +3621,108 @@ a.button.increase {
 .defenses-wrapper .defense-bar-container .values.soak {
   color: #ff9900;
 }
+.import-summary.sw-panel,
+.import-stats.sw-collapsible,
+.import-metrics.sw-collapsible,
+.preview-section.sw-collapsible {
+  margin: 0 0 0.75rem 0;
+  padding: 0.5rem 0.75rem;
+  background: rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 4px;
+}
+.import-summary.sw-panel h4,
+.sw-collapsible > summary {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 600;
+  cursor: pointer;
+  list-style: none;
+}
+.sw-collapsible > summary::-webkit-details-marker {
+  display: none;
+}
+.sw-collapsible[open] {
+  background: rgba(208, 230, 246, 0.12);
+  border-color: rgba(208, 230, 246, 0.4);
+}
+.stats-table,
+.preview-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+}
+.stats-table th,
+.stats-table td,
+.preview-table th,
+.preview-table td {
+  padding: 0.25rem 0.4rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+.stats-table th[scope=row] {
+  text-align: left;
+}
+.metrics,
+.summary {
+  margin: 0.4rem 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.85rem;
+}
+.metrics li,
+.summary li {
+  line-height: 1.3;
+}
+.preview-controls {
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+.preview-controls label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1 1 0;
+}
+.pagination {
+  margin-top: 0.4rem;
+  font-size: 0.75rem;
+  opacity: 0.8;
+}
+.sw-collapsible > summary:focus,
+.preview-controls select:focus,
+.preview-controls input:focus {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+.exists {
+  color: #00ff99;
+  font-weight: 600;
+}
+.new {
+  color: var(--color-accent);
+  font-weight: 600;
+}
+.stats-table td.domain-status {
+  width: 1.2rem;
+  text-align: center;
+}
+.domain-status .fa-circle {
+  font-size: 0.7rem;
+}
+.domain-status--pending .fa-circle {
+  color: #7c8a9e;
+}
+.domain-status--success .fa-circle {
+  color: #00ff99;
+}
+.domain-status--mixed .fa-circle {
+  color: #ffaa00;
+}
+.domain-status--error .fa-circle {
+  color: #ff3333;
+}
 /**
  * TODO: A collection of temporary rules that should be removed in V13
  */
