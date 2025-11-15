@@ -753,6 +753,9 @@
           "weapon": "Load Weapons data",
           "talent": "Load Talent data"
         },
+        "progress-bar": {
+          "title": "Import Progress"
+        },
         "stats": {
           "title": "Import Statistics",
           "domain": "Domain",
