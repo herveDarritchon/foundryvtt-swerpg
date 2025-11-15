@@ -23,13 +23,13 @@ Utiliser un fragment XML minimal couvrant :
 
 ## 3. Assertions recommandées
 
-| Contexte | Assertion | Raison |
-|----------|-----------|--------|
-| Mapping principal | `expect(item.system).toMatchObject({...})` | Vérifie intégrité schéma |
-| Statistiques | `expect(get<Type>ImportStats().total).toBe(n)` | Observabilité |
-| Performance (gros XML) | durée < seuil (ex 4000ms) | Régression parsing |
-| Sécurité | Rejet de nom invalide (".." etc.) | Protection path traversal |
-| Localisation | `game.i18n.localize(key)` ≠ key | Clé existante |
+| Contexte               | Assertion                                      | Raison                    |
+| ---------------------- | ---------------------------------------------- | ------------------------- |
+| Mapping principal      | `expect(item.system).toMatchObject({...})`     | Vérifie intégrité schéma  |
+| Statistiques           | `expect(get<Type>ImportStats().total).toBe(n)` | Observabilité             |
+| Performance (gros XML) | durée < seuil (ex 4000ms)                      | Régression parsing        |
+| Sécurité               | Rejet de nom invalide (".." etc.)              | Protection path traversal |
+| Localisation           | `game.i18n.localize(key)` ≠ key                | Clé existante             |
 
 ## 4. Techniques de simulation
 
@@ -45,13 +45,13 @@ Utiliser un fragment XML minimal couvrant :
 
 ## 6. Couverture minimale cible
 
-| Domaine | Intégration | Unitaire | Performance | Sécurité |
-|---------|-------------|----------|------------|----------|
-| Weapon | ✅ | ✅ | ✅ | ✅ |
-| Armor  | ✅ | (stats partagées) | ✅ | ✅ |
-| Gear   | ✅ | ✅ | ✅ | ✅ |
-| Species| ✅ | ✅ | (N/A) | ✅ |
-| Career | ✅ | ✅ | (N/A) | ✅ |
+| Domaine | Intégration | Unitaire          | Performance | Sécurité |
+| ------- | ----------- | ----------------- | ----------- | -------- |
+| Weapon  | ✅          | ✅                | ✅          | ✅       |
+| Armor   | ✅          | (stats partagées) | ✅          | ✅       |
+| Gear    | ✅          | ✅                | ✅          | ✅       |
+| Species | ✅          | ✅                | (N/A)       | ✅       |
+| Career  | ✅          | ✅                | (N/A)       | ✅       |
 
 ## 7. Extension future
 

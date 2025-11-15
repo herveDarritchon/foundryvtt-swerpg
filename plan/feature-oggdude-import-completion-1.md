@@ -31,69 +31,69 @@ Ce plan d'implémentation vise à finaliser la feature d'import OggDude en compl
 
 - GOAL-001: Compléter l'observabilité pour tous les types d'objets OggDude
 
-| Task | Description | Completed | Date |
-|------|-------------|-----------|------|
-| TASK-001 | Créer weapon-import-utils.mjs avec getWeaponImportStats() | ✅ | 2025-11-13 |
-| TASK-002 | Créer gear-import-utils.mjs avec getGearImportStats() | ✅ | 2025-11-13 |
-| TASK-003 | Créer species-import-utils.mjs avec getSpeciesImportStats() | ✅ | 2025-11-13 |
-| TASK-004 | Créer career-import-utils.mjs avec getCareerImportStats() | ✅ | 2025-11-13 |
-| TASK-005 | Créer global-import-metrics.mjs pour métriques d'import globales | ✅ | 2025-11-13 |
+| Task     | Description                                                      | Completed | Date       |
+| -------- | ---------------------------------------------------------------- | --------- | ---------- |
+| TASK-001 | Créer weapon-import-utils.mjs avec getWeaponImportStats()        | ✅        | 2025-11-13 |
+| TASK-002 | Créer gear-import-utils.mjs avec getGearImportStats()            | ✅        | 2025-11-13 |
+| TASK-003 | Créer species-import-utils.mjs avec getSpeciesImportStats()      | ✅        | 2025-11-13 |
+| TASK-004 | Créer career-import-utils.mjs avec getCareerImportStats()        | ✅        | 2025-11-13 |
+| TASK-005 | Créer global-import-metrics.mjs pour métriques d'import globales | ✅        | 2025-11-13 |
 
 ### Implementation Phase 2 - Tests d'Intégration Manquants
 
 - GOAL-002: Assurer la couverture de tests d'intégration pour tous les mappers
 
-| Task | Description | Completed | Date |
-|------|-------------|-----------|------|
-| TASK-006 | Créer armor-import.integration.spec.mjs | ✅ | 2025-11-13 |
-| TASK-007 | Créer weapon-import.integration.spec.mjs | ✅ | 2025-11-13 |
-| TASK-008 | Créer gear-import.integration.spec.mjs | ✅ (existant) | 2025-11-13 |
-| TASK-009 | Ajouter tests de sécurité pour validation des chemins de fichiers | ✅ | 2025-11-13 |
-| TASK-010 | Créer tests de performance pour gros fichiers ZIP (>10MB) | ✅ | 2025-11-13 |
+| Task     | Description                                                       | Completed     | Date       |
+| -------- | ----------------------------------------------------------------- | ------------- | ---------- |
+| TASK-006 | Créer armor-import.integration.spec.mjs                           | ✅            | 2025-11-13 |
+| TASK-007 | Créer weapon-import.integration.spec.mjs                          | ✅            | 2025-11-13 |
+| TASK-008 | Créer gear-import.integration.spec.mjs                            | ✅ (existant) | 2025-11-13 |
+| TASK-009 | Ajouter tests de sécurité pour validation des chemins de fichiers | ✅            | 2025-11-13 |
+| TASK-010 | Créer tests de performance pour gros fichiers ZIP (>10MB)         | ✅            | 2025-11-13 |
 
 ### Implementation Phase 3 - Tests Unitaires Critiques
 
 - GOAL-003: Implémenter les tests unitaires pour les composants core
 
-| Task | Description | Completed | Date |
-|------|-------------|-----------|------|
-| TASK-011 | Créer OggDudeDataImporter.unit.spec.mjs | ✅ | 2025-11-13 |
-| TASK-012 | Créer OggDudeImporter.unit.spec.mjs | ✅ | 2025-11-13 |
-| TASK-013 | Créer OggDudeDataElement.unit.spec.mjs | ✅ | 2025-11-13 |
-| TASK-014 | Créer tests unitaires pour les utilitaires de mapping | ✅ | 2025-11-13 |
+| Task     | Description                                                                            | Completed                             | Date       |
+| -------- | -------------------------------------------------------------------------------------- | ------------------------------------- | ---------- |
+| TASK-011 | Créer OggDudeDataImporter.unit.spec.mjs                                                | ✅                                    | 2025-11-13 |
+| TASK-012 | Créer OggDudeImporter.unit.spec.mjs                                                    | ✅                                    | 2025-11-13 |
+| TASK-013 | Créer OggDudeDataElement.unit.spec.mjs                                                 | ✅                                    | 2025-11-13 |
+| TASK-014 | Créer tests unitaires pour les utilitaires de mapping                                  | ✅                                    | 2025-11-13 |
 | TASK-015 | Créer tests unitaires pour les tables de mapping (skill-map, armor-category-map, etc.) | ✅ (réutilisé armor-oggdude.spec.mjs) | 2025-11-13 |
 
 ### Implementation Phase 4 - Localisation Française
 
 - GOAL-004: Compléter la localisation française de l'interface d'import
 
-| Task | Description | Completed | Date |
-|------|-------------|-----------|------|
-| TASK-016 | Ajouter traductions françaises dans lang/fr.json pour OggDude import | ✅ | 2025-11-13 |
-| TASK-017 | Valider l'interface en français | ✅ | 2025-11-13 |
-| TASK-018 | Créer tests de localisation | ✅ | 2025-11-13 |
+| Task     | Description                                                          | Completed | Date       |
+| -------- | -------------------------------------------------------------------- | --------- | ---------- |
+| TASK-016 | Ajouter traductions françaises dans lang/fr.json pour OggDude import | ✅        | 2025-11-13 |
+| TASK-017 | Valider l'interface en français                                      | ✅        | 2025-11-13 |
+| TASK-018 | Créer tests de localisation                                          | ✅        | 2025-11-13 |
 
 ### Implementation Phase 5 - Documentation et Exemples
 
 - GOAL-005: Finaliser la documentation avec des exemples pratiques
 
-| Task | Description | Completed | Date |
-|------|-------------|-----------|------|
-| TASK-019 | Créer exemple d'extension avec ItemAttachments comme cas pratique | ✅ | 2025-11-13 |
-| TASK-020 | Documenter les patterns de test pour futurs mappers | ✅ | 2025-11-13 |
-| TASK-021 | Créer guide de troubleshooting pour les erreurs d'import | ✅ | 2025-11-13 |
-| TASK-022 | Valider tous les guides avec implémentation réelle | ✅ | 2025-11-13 |
+| Task     | Description                                                       | Completed | Date       |
+| -------- | ----------------------------------------------------------------- | --------- | ---------- |
+| TASK-019 | Créer exemple d'extension avec ItemAttachments comme cas pratique | ✅        | 2025-11-13 |
+| TASK-020 | Documenter les patterns de test pour futurs mappers               | ✅        | 2025-11-13 |
+| TASK-021 | Créer guide de troubleshooting pour les erreurs d'import          | ✅        | 2025-11-13 |
+| TASK-022 | Valider tous les guides avec implémentation réelle                | ✅        | 2025-11-13 |
 
 ### Implementation Phase 6 - Optimisations et Robustesse
 
 - GOAL-006: Améliorer la robustesse et les performances du système d'import
 
-| Task | Description | Completed | Date |
-|------|-------------|-----------|------|
-| TASK-023 | Implémenter gestion d'erreurs robuste avec retry automatique | ✅ | 2025-11-13 |
-| TASK-024 | Ajouter indicateurs de progression pour gros imports | ✅ | 2025-11-13 |
-| TASK-025 | Optimiser performance mémoire pour fichiers volumineux | ✅ | 2025-11-13 |
-| TASK-026 | Implémenter cache pour résolutions de mapping répétées | ✅ | 2025-11-13 |
+| Task     | Description                                                  | Completed | Date       |
+| -------- | ------------------------------------------------------------ | --------- | ---------- |
+| TASK-023 | Implémenter gestion d'erreurs robuste avec retry automatique | ✅        | 2025-11-13 |
+| TASK-024 | Ajouter indicateurs de progression pour gros imports         | ✅        | 2025-11-13 |
+| TASK-025 | Optimiser performance mémoire pour fichiers volumineux       | ✅        | 2025-11-13 |
+| TASK-026 | Implémenter cache pour résolutions de mapping répétées       | ✅        | 2025-11-13 |
 
 ## 3. Alternatives
 

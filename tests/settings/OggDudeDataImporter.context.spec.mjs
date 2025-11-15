@@ -60,9 +60,9 @@ describe('OggDudeDataImporter toggleDomainAction', () => {
 
   it('ne modifie rien si pas de zipFile sélectionné', async () => {
     const app = buildInstance()
-    const initial = app.domains.map(d => d.checked)
+    const initial = app.domains.map((d) => d.checked)
     const target = { dataset: { domainName: app.domains[0].id, domainChecked: 'false' } }
     await OggDudeDataImporter.toggleDomainAction.call(app, {}, target)
-    expect(app.domains.map(d => d.checked)).toEqual(initial)
+    expect(app.domains.map((d) => d.checked)).toEqual(initial)
   })
 })

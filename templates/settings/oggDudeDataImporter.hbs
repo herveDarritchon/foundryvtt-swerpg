@@ -25,7 +25,8 @@
                     <label data-action="toggleDomainAction"
                            data-domain-checked="{{domain.checked}}"
                            data-domain-name="{{domain.id}}">
-                        <input id="{{domain.id}}" type="checkbox" {{#if domain.checked}}checked{{/if}} {{#if ../domainSelectionDisabled}}disabled{{/if}}>
+                        <input id="{{domain.id}}" type="checkbox" {{#if domain.checked}}checked{{/if}} {{#if
+                                ../domainSelectionDisabled}}disabled{{/if}}>
                         <span>{{localize domain.label}}</span>
                     </label>
                 </div>
@@ -57,14 +58,12 @@
     <section class="import-stats flexcol" aria-labelledby="import-stats-heading">
         <h4 id="import-stats-heading">{{localize "SETTINGS.OggDudeDataImporter.loadWindow.stats.title"}}</h4>
         {{!-- Jauge de progression globale des domaines importés (accessible) --}}
-        {{#if progress.total}}
-            <div class="import-progress-global" role="progressbar"
-                 aria-label="{{localize 'SETTINGS.OggDudeDataImporter.loadWindow.progress.global'}}"
-                 aria-valuemin="0" aria-valuemax="{{progress.total}}" aria-valuenow="{{progress.processed}}">
-                <div class="bar" style="width: {{progressPercentDomains}}%"></div>
-                <span class="sr-only">{{progress.processed}} / {{progress.total}}</span>
-            </div>
-        {{/if}}
+        <div class="import-progress-global" role="progressbar"
+             aria-label="{{localize 'SETTINGS.OggDudeDataImporter.loadWindow.progress.global'}}"
+             aria-valuemin="0" aria-valuemax="{{progress.total}}" aria-valuenow="{{progress.processed}}">
+            <div class="bar" style="width: {{progressPercentDomains}}%"></div>
+            <span class="sr-only">{{progress.processed}} / {{progress.total}}</span>
+        </div>
         <table class="stats-table" role="table" aria-describedby="import-stats-heading">
             <thead>
             <tr>
@@ -128,28 +127,31 @@
     <section class="import-metrics flexcol" aria-labelledby="import-metrics-heading">
         <h4 id="import-metrics-heading">{{localize "SETTINGS.OggDudeDataImporter.loadWindow.metrics.title"}}</h4>
         <ul class="metrics" role="list">
-            <li><strong>{{localize "SETTINGS.OggDudeDataImporter.loadWindow.metrics.duration"}}:</strong> {{importMetricsFormatted.overallDuration}}</li>
-            <li><strong>{{localize "SETTINGS.OggDudeDataImporter.loadWindow.metrics.errorRate"}}:</strong> {{importMetricsFormatted.errorRate}}</li>
-            <li><strong>{{localize "SETTINGS.OggDudeDataImporter.loadWindow.metrics.itemsPerSecond"}}:</strong> {{importMetricsFormatted.itemsPerSecond}}</li>
-            <li><strong>{{localize "SETTINGS.OggDudeDataImporter.loadWindow.metrics.archiveSize"}}:</strong> {{importMetricsFormatted.archiveSize}}</li>
-            <li><strong>{{localize "SETTINGS.OggDudeDataImporter.loadWindow.metrics.processed"}}:</strong> {{importMetricsFormatted.totalProcessed}}</li>
+            <li><strong>{{localize "SETTINGS.OggDudeDataImporter.loadWindow.metrics.duration"}}
+                :</strong> {{importMetricsFormatted.overallDuration}}</li>
+            <li><strong>{{localize "SETTINGS.OggDudeDataImporter.loadWindow.metrics.errorRate"}}
+                :</strong> {{importMetricsFormatted.errorRate}}</li>
+            <li><strong>{{localize "SETTINGS.OggDudeDataImporter.loadWindow.metrics.itemsPerSecond"}}
+                :</strong> {{importMetricsFormatted.itemsPerSecond}}</li>
+            <li><strong>{{localize "SETTINGS.OggDudeDataImporter.loadWindow.metrics.archiveSize"}}
+                :</strong> {{importMetricsFormatted.archiveSize}}</li>
+            <li><strong>{{localize "SETTINGS.OggDudeDataImporter.loadWindow.metrics.processed"}}
+                :</strong> {{importMetricsFormatted.totalProcessed}}</li>
         </ul>
-        {{#if progress.total}}
-            <div class="progress-global" aria-label="{{localize 'SETTINGS.OggDudeDataImporter.loadWindow.progress.global'}}" role="progressbar" aria-valuemin="0" aria-valuemax="{{progress.total}}" aria-valuenow="{{progress.processed}}">
-                <div class="bar" style="width: {{progressPercent}}%"></div>
-                <span class="sr-only">{{progress.processed}}/{{progress.total}}</span>
-            </div>
-        {{/if}}
+        {{!-- Barre legacy secondaire supprimée (voir plan feature-importer-global-progress-jauge-1.md RISK-001 résolu) --}}
     </section>
 
     {{!-- Prévisualisation des items --}}
     <section class="preview-section flexcol" aria-labelledby="preview-heading">
         <h4 id="preview-heading">{{localize "SETTINGS.OggDudeDataImporter.loadWindow.preview.title"}}</h4>
-        <div class="preview-controls flexrow" role="group" aria-label="{{localize 'SETTINGS.OggDudeDataImporter.loadWindow.preview.filters'}}">
+        <div class="preview-controls flexrow" role="group"
+             aria-label="{{localize 'SETTINGS.OggDudeDataImporter.loadWindow.preview.filters'}}">
             <label>
                 <span>{{localize "SETTINGS.OggDudeDataImporter.loadWindow.preview.domain"}}</span>
-                <select name="preview-domain" aria-label="{{localize 'SETTINGS.OggDudeDataImporter.loadWindow.preview.domain'}}">
-                    <option value="all">{{localize "SETTINGS.OggDudeDataImporter.loadWindow.preview.domainAll"}}</option>
+                <select name="preview-domain"
+                        aria-label="{{localize 'SETTINGS.OggDudeDataImporter.loadWindow.preview.domain'}}">
+                    <option value="all">{{localize
+                            "SETTINGS.OggDudeDataImporter.loadWindow.preview.domainAll"}}</option>
                     {{!-- Suppression de this. dans la liste déroulante domaines preview --}}
                     {{#each domains as |domain|}}
                         <option value="{{domain.id}}">{{localize domain.label}}</option>
@@ -158,7 +160,8 @@
             </label>
             <label>
                 <span>{{localize "SETTINGS.OggDudeDataImporter.loadWindow.preview.text"}}</span>
-                <input type="text" name="preview-text" placeholder="{{localize 'SETTINGS.OggDudeDataImporter.loadWindow.preview.textPlaceholder'}}"/>
+                <input type="text" name="preview-text"
+                       placeholder="{{localize 'SETTINGS.OggDudeDataImporter.loadWindow.preview.textPlaceholder'}}"/>
             </label>
         </div>
         {{#if preview.hasData}}
@@ -177,16 +180,19 @@
                         <td>{{item.type}}</td>
                         <td>
                             {{#if item.exists}}
-                                <span class="exists" aria-label="{{localize 'SETTINGS.OggDudeDataImporter.loadWindow.preview.exists'}}">✔</span>
+                                <span class="exists" aria-label="{{localize
+                                        'SETTINGS.OggDudeDataImporter.loadWindow.preview.exists'}}">✔</span>
                             {{else}}
-                                <span class="new" aria-label="{{localize 'SETTINGS.OggDudeDataImporter.loadWindow.preview.new'}}">＋</span>
+                                <span class="new" aria-label="{{localize
+                                        'SETTINGS.OggDudeDataImporter.loadWindow.preview.new'}}">＋</span>
                             {{/if}}
                         </td>
                     </tr>
                 {{/each}}
                 </tbody>
             </table>
-            <div class="pagination" role="navigation" aria-label="{{localize 'SETTINGS.OggDudeDataImporter.loadWindow.preview.pagination'}}">
+            <div class="pagination" role="navigation"
+                 aria-label="{{localize 'SETTINGS.OggDudeDataImporter.loadWindow.preview.pagination'}}">
                 <span>{{preview.page}} / {{preview.totalPages}}</span>
             </div>
         {{else}}

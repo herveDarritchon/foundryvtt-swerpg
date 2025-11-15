@@ -13,7 +13,7 @@ import {
 /**
  * Normalize a numeric field value with validation and default fallback.
  * @param {*} value Raw value from XML
- * @param {number} defaultValue Default fallback value  
+ * @param {number} defaultValue Default fallback value
  * @param {number} min Minimum allowed value
  * @param {number} max Maximum allowed value (optional)
  * @returns {number} Normalized valid number
@@ -21,40 +21,40 @@ import {
 function normalizeGearNumericField(value, defaultValue, min = 0, max = undefined) {
   // Check if original value is invalid before calling mapOptionalNumber
   if (value === undefined || value === null || value === '') {
-    logger.debug('[GearImporter] Normalizing missing numeric value', { 
-      originalValue: value, 
-      defaultValue, 
-      min, 
-      max 
+    logger.debug('[GearImporter] Normalizing missing numeric value', {
+      originalValue: value,
+      defaultValue,
+      min,
+      max,
     })
     return defaultValue
   }
-  
+
   // Check if string value would result in NaN when parsed
   if (typeof value === 'string' && Number.isNaN(Number.parseInt(value))) {
-    logger.debug('[GearImporter] Normalizing invalid string numeric value', { 
-      originalValue: value, 
-      defaultValue, 
-      min, 
-      max 
+    logger.debug('[GearImporter] Normalizing invalid string numeric value', {
+      originalValue: value,
+      defaultValue,
+      min,
+      max,
     })
     return defaultValue
   }
-  
+
   const numValue = OggDudeImporter.mapOptionalNumber(value)
-  
+
   // Check if parsed value is out of bounds (including when 0 is below minimum)
   if (numValue < min || (max !== undefined && numValue > max)) {
-    logger.debug('[GearImporter] Normalizing out-of-range numeric value', { 
-      originalValue: value, 
-      numValue, 
-      defaultValue, 
-      min, 
-      max 
+    logger.debug('[GearImporter] Normalizing out-of-range numeric value', {
+      originalValue: value,
+      numValue,
+      defaultValue,
+      min,
+      max,
     })
     return defaultValue
   }
-  
+
   return Math.floor(numValue) // Ensure integer
 }
 
@@ -85,7 +85,7 @@ function normalizeGearDescription(value) {
 
 /**
  * Validate gear category against available options.
- * @param {*} value Raw category/type value  
+ * @param {*} value Raw category/type value
  * @returns {string} Valid category string
  */
 function validateGearCategory(value) {
@@ -112,16 +112,16 @@ function buildGearSystem(xmlGear) {
     const encumbrance = normalizeGearNumericField(xmlGear.Encumbrance, 1)
     const rarity = normalizeGearNumericField(xmlGear.Rarity, 1)
     const broken = validateGearBooleanField(xmlGear.Broken, false)
-    
+
     logger.debug('[GearImporter] Built gear system object', {
       category,
       price,
-      encumbrance, 
+      encumbrance,
       rarity,
       broken,
-      descriptionLength: description.length
+      descriptionLength: description.length,
     })
-    
+
     return {
       category,
       quantity: 1, // Default for imported items
@@ -132,16 +132,16 @@ function buildGearSystem(xmlGear) {
       broken,
       description: {
         public: description,
-        secret: ''
+        secret: '',
       },
-      actions: [] // No actions defined in XML data
+      actions: [], // No actions defined in XML data
     }
   } catch (error) {
-    logger.warn('[GearImporter] Error building gear system object, using fallback values', { 
+    logger.warn('[GearImporter] Error building gear system object, using fallback values', {
       error: error.message,
-      xmlGear: xmlGear?.Key || 'unknown'
+      xmlGear: xmlGear?.Key || 'unknown',
     })
-    
+
     // Fallback to safe defaults on any error
     return {
       category: 'general',
@@ -153,9 +153,9 @@ function buildGearSystem(xmlGear) {
       broken: false,
       description: {
         public: '',
-        secret: ''
+        secret: '',
       },
-      actions: []
+      actions: [],
     }
   }
 }

@@ -1,8 +1,10 @@
 ---
-description: "Mémoire — Patterns UI FoundryVTT & bonnes pratiques de rafraîchissement"
-applyTo: "module/applications/**/*.mjs, module/settings/**/*.mjs, tests/**/*ui*.mjs"
+description: 'Mémoire — Patterns UI FoundryVTT & bonnes pratiques de rafraîchissement'
+applyTo: 'module/applications/**/*.mjs, module/settings/**/*.mjs, tests/**/*ui*.mjs'
 ---
+
 # FoundryVTT UI Patterns Memory
+
 Patterns éprouvés pour les composants UI FoundryVTT : rafraîchissement, gestion d'état, tests de validation.
 
 Tagline: UI responsive, état synchronisé, patterns de rendu fiables.
@@ -10,9 +12,11 @@ Tagline: UI responsive, état synchronisé, patterns de rendu fiables.
 ## Pattern: Rafraîchissement automatique après opérations async
 
 ### Problème courant
+
 L'UI FoundryVTT ne se rafraîchit **pas automatiquement** après les opérations asynchrones qui modifient l'état affiché. Les utilisateurs doivent interagir avec l'interface pour voir les changements.
 
 ### Solution éprouvée : render() explicite post-async
+
 ```javascript
 // Pattern standard après toute opération async modifiant l'état UI
 await someAsyncOperation()
@@ -23,12 +27,13 @@ if (typeof this.render === 'function') {
     await this.render()
     logger.debug('[ComponentName] UI refreshed after async operation')
   } catch (e) {
-    logger.warn('[ComponentName] render after operation error', {e})
+    logger.warn('[ComponentName] render after operation error', { e })
   }
 }
 ```
 
 ### Caractéristiques du pattern sécurisé
+
 - ✅ **Vérification de disponibilité** : `typeof this.render === 'function'`
 - ✅ **Gestion d'erreur non bloquante** : `try/catch` pour isolation
 - ✅ **Async/await complet** : Assurer completion avant suite
@@ -38,9 +43,11 @@ if (typeof this.render === 'function') {
 ## Pattern: Tests de validation de code UI
 
 ### Problème
+
 Valider que les patterns de rafraîchissement sont bien présents dans le code sans exécuter l'UI complète.
 
 ### Solution : Analyse de contenu fichier
+
 ```javascript
 import { readFileSync } from 'fs'
 import { join } from 'path'
@@ -48,13 +55,11 @@ import { join } from 'path'
 it('should have render() calls after async operations', () => {
   const filePath = join(process.cwd(), 'module/path/Component.mjs')
   const content = readFileSync(filePath, 'utf-8')
-  
+
   // Vérifier pattern post-async render
-  const renderAfterAsyncMatch = content.match(
-    /await\s+[\w.]+\([\s\S]*?\)[\s\S]*?render\(\)/
-  )
+  const renderAfterAsyncMatch = content.match(/await\s+[\w.]+\([\s\S]*?\)[\s\S]*?render\(\)/)
   expect(renderAfterAsyncMatch).toBeTruthy()
-  
+
   // Vérifier gestion d'erreur
   expect(content).toContain('try {')
   expect(content).toContain('} catch (e) {')
@@ -63,6 +68,7 @@ it('should have render() calls after async operations', () => {
 ```
 
 ### Avantages de l'approche
+
 - ✅ **Tests rapides** : Pas de setup UI complet
 - ✅ **Détection précoce** : Repère absence de pattern avant runtime
 - ✅ **Maintenance facile** : Fail si pattern retiré par erreur
@@ -71,6 +77,7 @@ it('should have render() calls after async operations', () => {
 ## Pattern: ApplicationV2 render lifecycle
 
 ### Timing critique des render()
+
 Dans FoundryVTT ApplicationV2, plusieurs moments nécessitent render() explicite :
 
 1. **Après modification de data model** : `this.object.update()` + `this.render()`
@@ -78,6 +85,7 @@ Dans FoundryVTT ApplicationV2, plusieurs moments nécessitent render() explicite
 3. **Après changement d'état interne** : Flags, settings, mode + `this.render()`
 
 ### Anti-pattern : Assumer auto-refresh
+
 ```javascript
 // ❌ MAUVAIS : Assumer que l'UI se met à jour seule
 await this.importData()
@@ -91,6 +99,7 @@ await this.render()
 ## Pattern: État partagé et observabilité
 
 ### Logs de debug UI systématiques
+
 Toujours logger les étapes critiques du cycle de vie UI :
 
 ```javascript
@@ -99,11 +108,12 @@ logger.debug(`[${this.constructor.name}] State: ${JSON.stringify(this.getCurrent
 ```
 
 ### Pattern de state validation
+
 ```javascript
 // Avant render, valider cohérence état
 const state = this.getCurrentState()
 if (!this.validateState(state)) {
-  logger.warn(`[${this.constructor.name}] Invalid state before render`, {state})
+  logger.warn(`[${this.constructor.name}] Invalid state before render`, { state })
   return // ou fallback state
 }
 await this.render()
@@ -121,6 +131,7 @@ await this.render()
 ## Debugging UI qui ne se met pas à jour
 
 ### Checklist diagnostic
+
 1. **Vérifier logs** : Y a-t-il des appels `render()` après l'opération ?
 2. **Inspecter state** : L'état interne a-t-il bien changé ?
 3. **Tracer async flow** : Tous les `await` sont-ils suivis de `render()` ?
@@ -128,6 +139,7 @@ await this.render()
 5. **Observer timing** : Y a-t-il des race conditions dans les render multiples ?
 
 ### Solutions communes
+
 - Ajouter `render()` après operations async qui modifient state
 - Wrapper `render()` dans try/catch pour isoler erreurs
 - Débouncer les renders multiples si nécessaire

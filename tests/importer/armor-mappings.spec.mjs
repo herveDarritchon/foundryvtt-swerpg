@@ -2,16 +2,12 @@
  * Tests pour les tables de mapping des armures OggDude
  */
 import { describe, it, expect } from 'vitest'
-import {
-  ARMOR_CATEGORY_MAP,
-  resolveArmorCategory,
-  getSupportedOggDudeCategories
-} from '../../module/importer/mappings/oggdude-armor-category-map.mjs'
+import { ARMOR_CATEGORY_MAP, resolveArmorCategory, getSupportedOggDudeCategories } from '../../module/importer/mappings/oggdude-armor-category-map.mjs'
 import {
   ARMOR_PROPERTY_MAP,
   resolveArmorProperty,
   resolveArmorProperties,
-  getSupportedOggDudeProperties
+  getSupportedOggDudeProperties,
 } from '../../module/importer/mappings/oggdude-armor-property-map.mjs'
 
 describe('ARMOR_CATEGORY_MAP', () => {
@@ -158,15 +154,15 @@ describe('resolveArmorProperties', () => {
   it('devrait gérer les entrées invalides', () => {
     expect(resolveArmorProperties(null)).toEqual({
       resolvedProperties: new Set(),
-      unknownProperties: []
+      unknownProperties: [],
     })
     expect(resolveArmorProperties(undefined)).toEqual({
       resolvedProperties: new Set(),
-      unknownProperties: []
+      unknownProperties: [],
     })
     expect(resolveArmorProperties([])).toEqual({
       resolvedProperties: new Set(),
-      unknownProperties: []
+      unknownProperties: [],
     })
   })
 

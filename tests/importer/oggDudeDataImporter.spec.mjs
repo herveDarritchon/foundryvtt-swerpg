@@ -5,8 +5,8 @@ if (!globalThis.foundry) {
     applications: { api: {} },
     utils: {
       expandObject: (o) => o,
-      getProperty: (obj, path) => path.split('.').reduce((acc, key) => acc?.[key], obj)
-    }
+      getProperty: (obj, path) => path.split('.').reduce((acc, key) => acc?.[key], obj),
+    },
   }
 }
 import { OggDudeDataImporter } from '../../module/settings/OggDudeDataImporter.mjs'

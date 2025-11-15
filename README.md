@@ -1,4 +1,3 @@
-
 # Swerpg — Système de jeu Foundry VTT
 
 [![Code Coverage](https://github.com/herveDarritchon/foundryvtt-swerpg/actions/workflows/test.yml/badge.svg?branch=main)](https://herdev.hervedarritchon.fr/foundryvtt-swerpg/index.html)

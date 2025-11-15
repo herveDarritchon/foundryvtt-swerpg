@@ -3,7 +3,7 @@ import {
   resetCareerImportStats,
   incrementCareerImportStat,
   addCareerUnknownSkill,
-  getCareerImportStats
+  getCareerImportStats,
 } from '../../module/importer/utils/career-import-utils.mjs'
 
 describe('career-import-utils', () => {

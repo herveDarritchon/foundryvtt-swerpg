@@ -26,9 +26,9 @@ let _talentStats = {
   unresolvedNodes: 0,
   invalidPrerequisites: 0,
   transformed: 0,
-  nodeDetails: new Set(),        // Ensemble des nodes inconnus
-  activationDetails: new Set(),  // Ensemble des activations inconnues
-  rejectionReasons: []          // Raisons de rejet détaillées
+  nodeDetails: new Set(), // Ensemble des nodes inconnus
+  activationDetails: new Set(), // Ensemble des activations inconnues
+  rejectionReasons: [], // Raisons de rejet détaillées
 }
 
 /**
@@ -51,7 +51,7 @@ export function resetTalentImportStats() {
     transformed: 0,
     nodeDetails: new Set(),
     activationDetails: new Set(),
-    rejectionReasons: []
+    rejectionReasons: [],
   }
 }
 
@@ -117,7 +117,7 @@ export function getTalentImportStats() {
     // Détails
     nodeDetails: Array.from(_talentStats.nodeDetails),
     activationDetails: Array.from(_talentStats.activationDetails),
-    rejectionReasons: [..._talentStats.rejectionReasons]
+    rejectionReasons: [..._talentStats.rejectionReasons],
   }
 }
 
@@ -147,9 +147,7 @@ export function sanitizeText(str) {
     return ''
   }
 
-  const text = String(str)
-    .trim()
-    .replaceAll(/\s+/g, ' ') // Normaliser les espaces multiples
+  const text = String(str).trim().replaceAll(/\s+/g, ' ') // Normaliser les espaces multiples
 
   // Limiter la longueur à 2000 caractères comme dans les tests
   return text.length > 2000 ? text.substring(0, 2000) : text
@@ -160,11 +158,11 @@ export function sanitizeText(str) {
  * @type {Object}
  */
 let talentImportStats = {
-    total: 0,
-    rejected: 0,
-    get imported() {
-        return this.total - this.rejected
-    }
+  total: 0,
+  rejected: 0,
+  get imported() {
+    return this.total - this.rejected
+  },
 }
 
 /**
@@ -173,8 +171,8 @@ let talentImportStats = {
  * @returns {number} Le tier limité entre 0 et 5
  */
 export function clampTalentTier(tier) {
-    const numTier = Number(tier) || 0
-    return Math.max(0, Math.min(5, numTier))
+  const numTier = Number(tier) || 0
+  return Math.max(0, Math.min(5, numTier))
 }
 
 /**
@@ -183,8 +181,8 @@ export function clampTalentTier(tier) {
  * @returns {number} Le coût validé (minimum 0)
  */
 export function validateTalentCost(cost) {
-    const numCost = Number(cost) || 0
-    return Math.max(0, numCost)
+  const numCost = Number(cost) || 0
+  return Math.max(0, numCost)
 }
 
 /**
@@ -193,11 +191,11 @@ export function validateTalentCost(cost) {
  * @returns {string} Clé unique
  */
 export function generateTalentKey(name) {
-    return name
-        .toLowerCase()
-        .replace(/[^a-z0-9]/g, '_')
-        .replace(/_+/g, '_')
-        .replace(/^_|_$/g, '')
+  return name
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, '_')
+    .replace(/_+/g, '_')
+    .replace(/^_|_$/g, '')
 }
 
 /**

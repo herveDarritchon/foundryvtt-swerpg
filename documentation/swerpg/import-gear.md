@@ -32,15 +32,15 @@ Champs exclus du mapping : `sources`, `categories`, `mods`, `weaponModifiers`, `
 
 ## Mapping des champs
 
-| XML | System | Transformation |
-|-----|--------|----------------|
-| Name | name | Validation obligatoire |
-| Key | flags.swerpg.oggdudeKey | Métadonnée |
-| Type | category + flags.swerpg.originalType | Direct ou 'general' |
-| Description | description.public | Nettoyage HTML |
-| Price | price | Normalisation numérique |
-| Encumbrance | encumbrance | Normalisation numérique |
-| Rarity | rarity | Normalisation numérique |
+| XML         | System                               | Transformation          |
+| ----------- | ------------------------------------ | ----------------------- |
+| Name        | name                                 | Validation obligatoire  |
+| Key         | flags.swerpg.oggdudeKey              | Métadonnée              |
+| Type        | category + flags.swerpg.originalType | Direct ou 'general'     |
+| Description | description.public                   | Nettoyage HTML          |
+| Price       | price                                | Normalisation numérique |
+| Encumbrance | encumbrance                          | Normalisation numérique |
+| Rarity      | rarity                               | Normalisation numérique |
 
 ## Validation et normalisation
 

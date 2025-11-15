@@ -12,34 +12,34 @@ import { addTalentUnknownActivation } from '../utils/talent-import-utils.mjs'
  */
 export const TALENT_ACTIVATION_MAP = Object.freeze({
   // Valeurs courantes dans OggDude
-  'passive': 'passive',
-  'Passive': 'passive',
-  'PASSIVE': 'passive',
-  
-  'active': 'active',
-  'Active': 'active',
-  'ACTIVE': 'active',
-  
+  passive: 'passive',
+  Passive: 'passive',
+  PASSIVE: 'passive',
+
+  active: 'active',
+  Active: 'active',
+  ACTIVE: 'active',
+
   // Variations possibles
-  'incidental': 'incidental',
-  'Incidental': 'incidental',
-  'INCIDENTAL': 'incidental',
-  
-  'maneuver': 'maneuver',
-  'Maneuver': 'maneuver',
-  'MANEUVER': 'maneuver',
-  
-  'action': 'action',
-  'Action': 'action',
-  'ACTION': 'action',
-  'reaction': 'reaction',
-  'Reaction': 'reaction',
-  'REACTION': 'reaction',
-  
+  incidental: 'incidental',
+  Incidental: 'incidental',
+  INCIDENTAL: 'incidental',
+
+  maneuver: 'maneuver',
+  Maneuver: 'maneuver',
+  MANEUVER: 'maneuver',
+
+  action: 'action',
+  Action: 'action',
+  ACTION: 'action',
+  reaction: 'reaction',
+  Reaction: 'reaction',
+  REACTION: 'reaction',
+
   // Fallback par défaut (vide ou undefined)
   '': 'passive',
-  'undefined': 'passive',
-  'null': 'passive',
+  undefined: 'passive',
+  null: 'passive',
 })
 
 /**
@@ -50,27 +50,25 @@ export const TALENT_ACTIVATION_MAP = Object.freeze({
 export function resolveTalentActivation(oggDudeCode) {
   // Nettoyer l'entrée
   const cleanCode = String(oggDudeCode || '').trim()
-  
+
   // Recherche directe dans la table
   if (cleanCode in TALENT_ACTIVATION_MAP) {
     return TALENT_ACTIVATION_MAP[cleanCode]
   }
-  
+
   // Recherche insensible à la casse
   const lowerCode = cleanCode.toLowerCase()
-  const foundEntry = Object.entries(TALENT_ACTIVATION_MAP).find(
-    ([key]) => key.toLowerCase() === lowerCode
-  )
-  
+  const foundEntry = Object.entries(TALENT_ACTIVATION_MAP).find(([key]) => key.toLowerCase() === lowerCode)
+
   if (foundEntry) {
     return foundEntry[1]
   }
-  
+
   // Code inconnu - enregistrer pour statistiques et utiliser fallback
   if (cleanCode !== '') {
     addTalentUnknownActivation(cleanCode)
   }
-  
+
   return 'passive' // Fallback sécurisé
 }
 
@@ -89,6 +87,5 @@ export function getSupportedTalentActivationCodes() {
  */
 export function isTalentActivationSupported(code) {
   const cleanCode = String(code || '').trim()
-  return cleanCode in TALENT_ACTIVATION_MAP || 
-         getSupportedTalentActivationCodes().some(key => key.toLowerCase() === cleanCode.toLowerCase())
+  return cleanCode in TALENT_ACTIVATION_MAP || getSupportedTalentActivationCodes().some((key) => key.toLowerCase() === cleanCode.toLowerCase())
 }

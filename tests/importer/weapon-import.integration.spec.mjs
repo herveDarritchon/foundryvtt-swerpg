@@ -13,8 +13,8 @@ if (globalThis.xml2js === undefined) {
 if (!globalThis.SYSTEM) {
   globalThis.SYSTEM = {
     WEAPON: {
-      QUALITIES: { stunsetting: {}, accurate: {}, vicious: {} }
-    }
+      QUALITIES: { stunsetting: {}, accurate: {}, vicious: {} },
+    },
   }
 }
 
@@ -64,7 +64,7 @@ describe('Intégration OggDude -> weaponMapper', () => {
       HP: '1',
       Price: '50',
       Rarity: '2',
-      Qualities: { Quality: { Key: 'UNKNOWN_QUALITY_X' } }
+      Qualities: { Quality: { Key: 'UNKNOWN_QUALITY_X' } },
     }
     const mapped = weaponMapper([fakeWeapon])
     expect(mapped).toHaveLength(1) // non strict -> arme conservée

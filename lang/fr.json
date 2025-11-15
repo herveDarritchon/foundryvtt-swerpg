@@ -32,63 +32,62 @@
     }
   },
   "SWERPG.ERRORS.InvalidEvent": "Événement invalide: impossible de traiter l'interaction.",
-    "OggDudeDataImporter": {
-      "name": "Importateur de Données OggDude",
-      "label": "Importer des données depuis OggDude",
-      "hint": "Permet à SWERPG d'importer des données directement depuis un export OggDude (véhicules, personnages, vaisseaux, etc.).",
-      "loadWindow": {
-        "menuLabel": "Importer des Données OggDude",
-        "title": "Importer des Données OggDude",
-        "message": "Veuillez sélectionner le fichier de données OggDude que vous souhaitez importer.",
-        "selectFile": "Fichier Zip OggDude",
-        "load": "Charger",
-        "reset": "Réinitialiser",
-        "selectDomains": "Sélectionnez les domaines à importer",
-        "domains": {
-          "armor": "Charger les armures",
-          "career": "Charger les carrières",
-          "gear": "Charger l'équipement",
-          "species": "Charger les espèces",
-          "weapon": "Charger les armes",
-          "talent": "Charger les talents"
-        },
-        "stats": {
-          "title": "Statistiques d'import",
-          "domain": "Domaine",
-          "total": "Total",
-          "imported": "Importés",
-          "rejected": "Rejetés",
-          "duration": "Durée (ms)"
-        },
-        "metrics": {
-          "title": "Métriques globales",
-          "duration": "Durée totale (ms)",
-          "errorRate": "Taux d'erreur",
-          "itemsPerSecond": "Objets / Seconde",
-          "archiveSize": "Taille archive (octets)",
-          "processed": "Total traités"
-        }
-        ,
-        "preview": {
-          "title": "Aperçu des éléments",
-          "filters": "Filtres d'aperçu",
-          "domain": "Domaine",
-          "domainAll": "Tous",
-          "text": "Texte",
-          "textPlaceholder": "Filtrer par texte...",
-          "colName": "Nom",
-          "colType": "Type",
-          "colExists": "Existe",
-          "exists": "Existe",
-          "new": "Nouveau",
-          "pagination": "Pagination d'aperçu",
-          "noData": "Aucune donnée à prévisualiser"
-        },
-        "progress": {
-          "global": "Progression globale"
-        }
+  "OggDudeDataImporter": {
+    "name": "Importateur de Données OggDude",
+    "label": "Importer des données depuis OggDude",
+    "hint": "Permet à SWERPG d'importer des données directement depuis un export OggDude (véhicules, personnages, vaisseaux, etc.).",
+    "loadWindow": {
+      "menuLabel": "Importer des Données OggDude",
+      "title": "Importer des Données OggDude",
+      "message": "Veuillez sélectionner le fichier de données OggDude que vous souhaitez importer.",
+      "selectFile": "Fichier Zip OggDude",
+      "load": "Charger",
+      "reset": "Réinitialiser",
+      "selectDomains": "Sélectionnez les domaines à importer",
+      "domains": {
+        "armor": "Charger les armures",
+        "career": "Charger les carrières",
+        "gear": "Charger l'équipement",
+        "species": "Charger les espèces",
+        "weapon": "Charger les armes",
+        "talent": "Charger les talents"
+      },
+      "stats": {
+        "title": "Statistiques d'import",
+        "domain": "Domaine",
+        "total": "Total",
+        "imported": "Importés",
+        "rejected": "Rejetés",
+        "duration": "Durée (ms)"
+      },
+      "metrics": {
+        "title": "Métriques globales",
+        "duration": "Durée totale (ms)",
+        "errorRate": "Taux d'erreur",
+        "itemsPerSecond": "Objets / Seconde",
+        "archiveSize": "Taille archive (octets)",
+        "processed": "Total traités"
+      },
+      "preview": {
+        "title": "Aperçu des éléments",
+        "filters": "Filtres d'aperçu",
+        "domain": "Domaine",
+        "domainAll": "Tous",
+        "text": "Texte",
+        "textPlaceholder": "Filtrer par texte...",
+        "colName": "Nom",
+        "colType": "Type",
+        "colExists": "Existe",
+        "exists": "Existe",
+        "new": "Nouveau",
+        "pagination": "Pagination d'aperçu",
+        "noData": "Aucune donnée à prévisualiser"
+      },
+      "progress": {
+        "global": "Progression globale"
       }
-    },
+    }
+  },
   "SWERPG.ERRORS.InvalidActor": "Acteur invalide: impossible d'accéder aux données du personnage.",
   "SWERPG.ERRORS.NoItemId": "Aucun objet sélectionné: cliquez sur un objet valide.",
   "SWERPG.ERRORS.NoItemsCollection": "Erreur de données personnage: collection d'objets manquante.",

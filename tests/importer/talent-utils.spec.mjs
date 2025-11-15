@@ -7,7 +7,7 @@ import {
   incrementTalentImportStat,
   getTalentImportStats,
   sanitizeText,
-  clampNumber
+  clampNumber,
 } from '../../module/importer/utils/talent-import-utils.mjs'
 
 describe('Talent Import Utils', () => {
@@ -37,7 +37,7 @@ describe('Talent Import Utils', () => {
     it('devrait incrémenter une statistique par défaut de 1', () => {
       incrementTalentImportStat('processed')
       expect(getTalentImportStats().processed).toBe(1)
-      
+
       incrementTalentImportStat('failed')
       expect(getTalentImportStats().failed).toBe(1)
     })
@@ -45,7 +45,7 @@ describe('Talent Import Utils', () => {
     it('devrait incrémenter une statistique par un montant personnalisé', () => {
       incrementTalentImportStat('created', 5)
       expect(getTalentImportStats().created).toBe(5)
-      
+
       incrementTalentImportStat('duplicates', 3)
       expect(getTalentImportStats().duplicates).toBe(3)
     })
@@ -53,7 +53,7 @@ describe('Talent Import Utils', () => {
     it('devrait ignorer les statistiques inconnues', () => {
       const initialStats = { ...getTalentImportStats() }
       incrementTalentImportStat('statistique_inexistante', 10)
-      
+
       expect(getTalentImportStats()).toEqual(initialStats)
     })
 
@@ -61,7 +61,7 @@ describe('Talent Import Utils', () => {
       incrementTalentImportStat('processed', 2)
       incrementTalentImportStat('processed', 3)
       incrementTalentImportStat('processed', 1)
-      
+
       expect(getTalentImportStats().processed).toBe(6)
     })
   })
@@ -69,10 +69,10 @@ describe('Talent Import Utils', () => {
   describe('getTalentImportStats', () => {
     it('devrait retourner une copie des statistiques', () => {
       incrementTalentImportStat('created', 5)
-      
+
       const stats1 = getTalentImportStats()
       const stats2 = getTalentImportStats()
-      
+
       expect(stats1).toEqual(stats2)
       expect(stats1).not.toBe(stats2) // Différentes instances
       expect(stats1.created).toBe(5)

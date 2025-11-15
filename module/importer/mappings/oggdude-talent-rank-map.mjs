@@ -53,8 +53,8 @@ export function extractIsRanked(oggDudeTalentData) {
   if (raw !== undefined) {
     if (typeof raw === 'string') {
       const v = raw.toLowerCase().trim()
-      if (['true','yes','1'].includes(v)) return true
-      if (['false','no','0'].includes(v)) return false
+      if (['true', 'yes', '1'].includes(v)) return true
+      if (['false', 'no', '0'].includes(v)) return false
       return Boolean(v)
     }
     return Boolean(raw)
@@ -73,7 +73,7 @@ function calculateDefaultTalentCost(rankIndex, tier = 0) {
   // Formule basique Star Wars FFG: coût croissant par rang
   const baseCost = Math.max(1, tier || 1)
   const rankMultiplier = Math.max(1, rankIndex + 1)
-  
+
   return baseCost * rankMultiplier
 }
 
@@ -86,21 +86,21 @@ export function validateTalentRank(rankData) {
   if (!rankData || typeof rankData !== 'object') {
     return false
   }
-  
+
   const { idx, cost } = rankData
-  
+
   // Vérifier idx
   if (!Number.isFinite(idx) || idx < 0) {
     logger.warn('[TalentRankMap] Invalid rank idx:', idx)
     return false
   }
-  
+
   // Vérifier cost
   if (!Number.isFinite(cost) || cost < 0) {
     logger.warn('[TalentRankMap] Invalid rank cost:', cost)
     return false
   }
-  
+
   return true
 }
 
@@ -112,7 +112,7 @@ export function validateTalentRank(rankData) {
 export function generateDefaultTalentRank(tier = 0) {
   return {
     idx: 0,
-    cost: calculateDefaultTalentCost(0, tier)
+    cost: calculateDefaultTalentCost(0, tier),
   }
 }
 
@@ -124,10 +124,10 @@ export function generateDefaultTalentRank(tier = 0) {
  */
 export function calculateCumulativeTalentCost(targetRank, tier = 0) {
   let totalCost = 0
-  
+
   for (let rank = 0; rank <= targetRank; rank++) {
     totalCost += calculateDefaultTalentCost(rank, tier)
   }
-  
+
   return totalCost
 }
