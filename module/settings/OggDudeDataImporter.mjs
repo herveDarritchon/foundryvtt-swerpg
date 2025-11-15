@@ -33,6 +33,10 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
   previewData = {}
   previewFilters = { domain: 'all', text: '' }
   pagination = { page: 1, size: 50 }
+  // États de visibilité des sections repliables (collapsibles). Masqués par défaut.
+  showStats = false
+  showMetrics = false
+  showPreview = false
 
   /* -------------------------------------------- */
 
@@ -86,6 +90,9 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
       loadAction: OggDudeDataImporter.loadAction,
       preloadAction: OggDudeDataImporter.preloadAction,
       toggleDomainAction: OggDudeDataImporter.toggleDomainAction,
+      toggleStatsAction: OggDudeDataImporter.toggleStatsAction,
+      toggleMetricsAction: OggDudeDataImporter.toggleMetricsAction,
+      togglePreviewAction: OggDudeDataImporter.togglePreviewAction,
     },
     footer: {
       template: 'templates/generic/form-footer.hbs',
@@ -121,6 +128,23 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
     const metricsFormatted = formatGlobalMetrics(metrics)
     // Pourcentage global domaines (distinct de potentiels futurs pourcentages items)
     const progressPercentDomains = progress.total ? Math.floor((progress.processed / progress.total) * 100) : 0
+    // Détermination présence de données pour sections conditionnelles
+    // Considère qu'il y a des stats seulement si au moins un domaine possède un total/import/reject > 0
+    const hasStats = Boolean(
+      stats &&
+      Object.values(stats).some((d) => (d?.total ?? 0) > 0 || (d?.imported ?? 0) > 0 || (d?.rejected ?? 0) > 0)
+    )
+    const hasMetrics = Boolean(metricsFormatted && metricsFormatted.totalProcessed > 0)
+    const hasPreview = Boolean(this.previewData && Object.keys(this.previewData).length > 0)
+    // Résumé compact post-import (affiché même si sections repliables fermées)
+    const importSummary = hasMetrics
+      ? {
+          overallDuration: metricsFormatted.overallDuration,
+          totalProcessed: metricsFormatted.totalProcessed,
+          errorRate: metricsFormatted.errorRate,
+          itemsPerSecond: metricsFormatted.itemsPerSecond,
+        }
+      : null
     return {
       domains: this.domains,
       domainSelectionDisabled: this.noZipFileSelected(),
@@ -135,6 +159,14 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
       importMetrics: metrics,
       importMetricsFormatted: metricsFormatted,
       preview: this._buildPreviewContext(),
+      // Flags & états UI immersifs
+      showStats: this.showStats,
+      showMetrics: this.showMetrics,
+      showPreview: this.showPreview,
+      hasStats,
+      hasMetrics,
+      hasPreview,
+      importSummary,
     }
   }
 
@@ -224,6 +256,7 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
       this.previewData = await OggDudeImporter.preloadOggDudeData(this.zipFile, this.domains)
       // Réinitialiser pagination
       this.pagination = { page: 1, size: 50 }
+      // Ne pas ouvrir automatiquement la section (doit rester immersive/optionnelle)
       if (typeof this.render === 'function') await this.render()
     } catch (e) {
       logger.error('[OggDudeDataImporter] Erreur lors du préchargement', { error: e })
@@ -255,6 +288,37 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
       }
       return domain
     })
+    await this.render()
+  }
+
+  /* -------------------------------------------- */
+  /**
+   * Bascule visibilité section Statistiques.
+   * @param _event {Event}
+   * @param _target {HTMLElement}
+   */
+  static async toggleStatsAction(_event, _target) {
+    this.showStats = !this.showStats
+    await this.render()
+  }
+
+  /**
+   * Bascule visibilité section Métriques globales.
+   * @param _event {Event}
+   * @param _target {HTMLElement}
+   */
+  static async toggleMetricsAction(_event, _target) {
+    this.showMetrics = !this.showMetrics
+    await this.render()
+  }
+
+  /**
+   * Bascule visibilité section Prévisualisation.
+   * @param _event {Event}
+   * @param _target {HTMLElement}
+   */
+  static async togglePreviewAction(_event, _target) {
+    this.showPreview = !this.showPreview
     await this.render()
   }
 

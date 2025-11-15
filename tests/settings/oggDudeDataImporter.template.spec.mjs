@@ -40,4 +40,21 @@ describe('oggDudeDataImporter.hbs template compatibility', () => {
     }
     expect(found).toBe(false)
   })
+
+  it('inclut sections repliables avec data-action toggles', () => {
+    expect(source.includes('data-action="toggleStatsAction"')).toBe(true)
+    expect(source.includes('data-action="toggleMetricsAction"')).toBe(true)
+    expect(source.includes('data-action="togglePreviewAction"')).toBe(true)
+  })
+
+  it('inclut utilisation de details/summary pour stats', () => {
+    expect(/<details[^>]*import-stats/.test(source)).toBe(true)
+    expect(/<summary[^>]*toggleStatsAction/.test(source)).toBe(true)
+  })
+
+  it('inclut résumé compact importSummary conditionnel', () => {
+    expect(source.includes('import-summary-heading')).toBe(true)
+    // Vérifie que la clé i18n summary.title est référencée
+    expect(source.includes('summary.title')).toBe(true)
+  })
 })

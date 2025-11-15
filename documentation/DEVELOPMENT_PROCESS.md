@@ -61,6 +61,59 @@ Ajout d'une barre de progression globale (domaines) dans l'interface `OggDudeDat
 
 ---
 
+## Feature: Interface immersive import OggDude (sections repliables + résumé)
+
+### Contexte (Immersive UI)
+
+Refactor UI de `OggDudeDataImporter` pour améliorer lisibilité post-import et réduire surcharge cognitive : ajout d'un résumé compact (durée, items traités, taux d'erreur, débit) et transformation des blocs Statistiques / Métriques / Prévisualisation en sections repliables (`<details>/<summary>`) avec états persistés en mémoire d'instance (`showStats`, `showMetrics`, `showPreview`). Objectifs : immersion, hiérarchisation visuelle, accessibilité (focus clair), performance (aucun recalcul lourd).
+
+### Fichiers Modifiés
+
+- `templates/settings/oggDudeDataImporter.hbs` (remplacement markup tableaux par `<details>` + résumé compact)
+- `module/settings/OggDudeDataImporter.mjs` (flags d'état + actions `toggle*Action` + `importSummary` dans contexte)
+- `lang/en.json` / `lang/fr.json` (clé `SETTINGS.OggDudeDataImporter.loadWindow.summary.title` + ajout section `SETTINGS` manquante côté FR)
+- `styles/components/importer.less` (nouveaux styles immersifs panels/collapsibles)
+- `styles/swerpg.less` (import du fichier LESS)
+- `tests/settings/OggDudeDataImporter.context.spec.mjs` (assertions flags + toggle)
+- `tests/settings/oggDudeDataImporter.template.spec.mjs` (assertions présence toggles & résumé)
+- `plan/feature-oggdude-importer-immersive-ui-1.md` (plan de travail préalable – inchangé depuis implémentation)
+
+### Décisions & Justification
+
+- Utilisation native `<details>/<summary>` : comportement accessible par défaut, évite JS supplémentaire; override léger pour icône + style thème.
+- Conservation logique existante d'agrégation métriques; le résumé réutilise valeurs formatées pour éviter duplication.
+- Ajout section `SETTINGS` dans `fr.json` au lieu de modifier usages pour homogénéiser chemins i18n (réduction risque d'incohérence futur).
+- Styles isolés dans `styles/components/importer.less` pour limiter diffusion sélecteurs et favoriser maintenance modulaire.
+- Tests ciblés (flags + actions + markup) plutôt que snapshot complet afin de rester robustes à évolutions mineures de formatage HTML.
+
+### Accessibilité
+
+- Focus visible renforcé (outline accent) sur `summary`, `select`, `input`.
+- Structure sémantique: tableau conserve `role="table"` + `scope="row"/"col"`.
+- Raccourci visuel (icônes) toujours accompagné de texte (pas de reliance couleur seule).
+
+### Performance
+
+- O(1) en toggling (mutation booléenne + `render()` déjà existant).
+- Aucune itération supplémentaire sur domaines; résumé réutilise métriques existantes.
+- Sélecteurs CSS simples (classes directes). Pas de nested deep selectors.
+
+### Risques / Mitigations
+
+| Risque | Impact | Mitigation |
+| ------ | ------ | ---------- |
+| Duplication partielle FR i18n (ancienne racine OggDudeDataImporter + nouvelle SETTINGS) | Confusion maintenance | Étape future: migration complète et suppression racine legacy après audit usages |
+| Navigateurs anciens (support `<details>`) | Dégradation UX (sections toujours ouvertes) | Accepté (cible Foundry v13 – Chrome/Electron récent) |
+| Style conflit futur avec panels génériques | Surcharge CSS | Préfixe spécifique `.sw-collapsible` + fichier dédié |
+
+### Améliorations Futures
+
+- Persistance ouverture sections (localStorage) entre sessions utilisateur.
+- Ajout badge indicateur erreurs dans résumé si `errorRate > 0`.
+- Filtrage preview côté contexte pour réduire DOM quand dataset volumineux.
+
+---
+
 ## Overview
 
 This document outlines the step-by-step process followed to fix the TypeError bug in `base-actor-sheet.mjs` where `Cannot read properties of undefined (reading 'items')` was occurring at line 911 in the `#getEventItem` method.
