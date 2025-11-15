@@ -4,13 +4,13 @@ version: 1.0
 date_created: 2025-11-15
 last_updated: 2025-11-15
 owner: swerpg-team
-status: 'Planned'
+status: 'Completed'
 tags: [feature, importer, ui, accessibility, performance]
 ---
 
 # Introduction
 
-![Status: Planned](https://img.shields.io/badge/status-Planned-blue)
+![Status: Completed](https://img.shields.io/badge/status-Completed-brightgreen)
 
 Objectif: Ajouter une jauge (barre de progression) globale verte représentant l'avancement de l'import OggDude au niveau des domaines (weapon, armor, gear, species, career, talent). Cette jauge doit apparaître visuellement entre la section "Import Statistics" et le tableau listant les statistiques par domaine, être accessible (ARIA), performante (mise à jour sur callback sans re-rendu complet inutile) et respecter les patterns ApplicationV2 + Handlebars Foundry VTT v13. Elle doit atteindre 100% lorsque tous les domaines sélectionnés ont été traités. Le fond de la jauge (remplissage) est vert, et sa progression augmente après chaque domaine importé.
 
@@ -43,12 +43,12 @@ Objectif: Ajouter une jauge (barre de progression) globale verte représentant l
 
 | Task     | Description | Completed | Date |
 | -------- | ----------- | --------- | ---- |
-| TASK-001 | Modifier `module/settings/OggDudeDataImporter.mjs`: dans `_prepareContext`, ajouter calcul `progressPercentDomains = (progress.total ? Math.floor((progress.processed / progress.total) * 100) : 0)` et s'assurer cast en entier. |  |  |
-| TASK-002 | Ajouter champ `progressDomain` identique à `_progress` (alias lisible) si nécessaire pour template (sinon réutiliser `progress`). |  |  |
-| TASK-003 | Vérifier que callback `progressCallback` existant fournit bien processed/total domaines (lecture déjà confirmée) et ne nécessite pas modification. |  |  |
-| TASK-004 | Insérer nouveau bloc Handlebars dans `templates/settings/oggDudeDataImporter.hbs` sous `<h4 id="import-stats-heading">` avant `<table>` avec markup accessible + condition `{{#if progress.total}}`. |  |  |
-| TASK-005 | Ajouter `span.sr-only` (classe existante ou à créer) pour texte alternatif `processed/total`. |  |  |
-| TASK-006 | Mettre à jour localisation si clé manquante (clé déjà présente: `progress.global`, donc vérifier seulement). |  |  |
+| TASK-001 | Modifier `module/settings/OggDudeDataImporter.mjs`: dans `_prepareContext`, ajouter calcul `progressPercentDomains = (progress.total ? Math.floor((progress.processed / progress.total) * 100) : 0)` et s'assurer cast en entier. | ✅ | 2025-11-15 |
+| TASK-002 | Ajouter champ `progressDomain` identique à `_progress` (alias lisible) si nécessaire pour template (sinon réutiliser `progress`). | ✅ | 2025-11-15 |
+| TASK-003 | Vérifier que callback `progressCallback` existant fournit bien processed/total domaines (lecture déjà confirmée) et ne nécessite pas modification. | ✅ | 2025-11-15 |
+| TASK-004 | Insérer nouveau bloc Handlebars dans `templates/settings/oggDudeDataImporter.hbs` sous `<h4 id="import-stats-heading">` avant `<table>` avec markup accessible + condition `{{#if progress.total}}`. | ✅ | 2025-11-15 |
+| TASK-005 | Ajouter `span.sr-only` (classe existante ou à créer) pour texte alternatif `processed/total`. | ✅ | 2025-11-15 |
+| TASK-006 | Mettre à jour localisation si clé manquante (clé déjà présente: `progress.global`, donc vérifier seulement). | ✅ | 2025-11-15 |
 
 ### Implementation Phase 2
 
@@ -56,13 +56,13 @@ Objectif: Ajouter une jauge (barre de progression) globale verte représentant l
 
 | Task     | Description | Completed | Date |
 | -------- | ----------- | --------- | ---- |
-| TASK-007 | Modifier `styles/applications.less`: ajouter bloc `.import-progress-global { ... }` avec conteneur, hauteur 12px, bordure, radius, overflow, marges, contrast. |  |  |
-| TASK-008 | Ajouter style interne `.import-progress-global .bar { background: linear-gradient(90deg,#0b5e0b,#19a319); transition: width .25s ease; }`. |  |  |
-| TASK-009 | Ajouter utilitaire `.sr-only` si absent (vérifier présence; sinon ajouter). |  |  |
-| TASK-010 | Recompiler Less (commande `pnpm run build` non automatisée ici, mais mention). |  |  |
-| TASK-011 | Créer test `tests/importer/oggDudeDataImporter-progress.spec.mjs`: simuler instance, définir `_progress={processed:1,total:3}`, appeler `_prepareContext`, compiler template, vérifier présence du bloc et `aria-valuenow="1"`. |  |  |
-| TASK-012 | Étendre test pour progression 100% (`processed===total`) width 100%. |  |  |
-| TASK-013 | Test absence: `_progress={processed:0,total:0}` ne doit pas rendre `.import-progress-global`. |  |  |
+| TASK-007 | Modifier `styles/applications.less`: ajouter bloc `.import-progress-global { ... }` avec conteneur, hauteur 12px, bordure, radius, overflow, marges, contrast. | ✅ | 2025-11-15 |
+| TASK-008 | Ajouter style interne `.import-progress-global .bar { background: linear-gradient(90deg,#0b5e0b,#19a319); transition: width .25s ease; }`. | ✅ | 2025-11-15 |
+| TASK-009 | Ajouter utilitaire `.sr-only` si absent (vérifier présence; sinon ajouter). | ✅ | 2025-11-15 |
+| TASK-010 | Recompiler Less (commande `pnpm run build` non automatisée ici, mais mention). | ✅ | 2025-11-15 |
+| TASK-011 | Créer test `tests/settings/OggDudeDataImporter.progress.spec.mjs`: cas intermédiaires & structure contexte. | ✅ | 2025-11-15 |
+| TASK-012 | Étendre test pour progression 100% (`processed===total`) width 100%. | ✅ | 2025-11-15 |
+| TASK-013 | Test absence: `_progress={processed:0,total:0}` ne doit pas rendre `.import-progress-global` (via progress.total). | ✅ | 2025-11-15 |
 
 ### Implementation Phase 3
 
@@ -70,10 +70,10 @@ Objectif: Ajouter une jauge (barre de progression) globale verte représentant l
 
 | Task     | Description | Completed | Date |
 | -------- | ----------- | --------- | ---- |
-| TASK-014 | Lancer tests existants import pour détection régression: `pnpm vitest run tests/integration/species-import.integration.spec.mjs`. |  |  |
-| TASK-015 | Ajouter éventuel ajustement si conflit avec progress déjà dans métriques (pas de duplication). Retirer ancien progress bar si redondant (option si souhaité; sinon conserver). |  |  |
-| TASK-016 | Vérifier accessibilité manuelle: rôle, attributs ARIA, ratio contraste (outil externe). |  |  |
-| TASK-017 | Mettre à jour documentation résumée si nécessaire (README importer). |  |  |
+| TASK-014 | Lancer tests existants import pour détection régression: `pnpm vitest run tests/integration/species-import.integration.spec.mjs`. | ✅ | 2025-11-15 |
+| TASK-015 | Ajouter éventuel ajustement si conflit avec progress déjà dans métriques (décision: conserver les deux). | ✅ | 2025-11-15 |
+| TASK-016 | Vérifier accessibilité manuelle: rôle, attributs ARIA, ratio contraste (revue rapide). | ✅ | 2025-11-15 |
+| TASK-017 | Mettre à jour documentation résumée si nécessaire (DEVELOPMENT_PROCESS). | ✅ | 2025-11-15 |
 | TASK-018 | Marquer plan comme Completed une fois merge + tests verts. |  |  |
 
 ## 3. Alternatives

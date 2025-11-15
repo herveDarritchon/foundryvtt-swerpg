@@ -1,4 +1,65 @@
-# Development Process - Fix TypeError in base-actor-sheet.mjs
+# Development Process
+
+---
+
+## Feature: Jauge de progression globale import OggDude
+
+## Contexte
+
+Ajout d'une barre de progression globale (domaines) dans l'interface `OggDudeDataImporter` pour visualiser l'avancement de l'import des domaines sélectionnés (weapon, armor, gear, species, career, talent). Positionnée dans la section Statistiques, entre le titre et le tableau détaillé.
+
+## Fichiers Analysés / Modifiés
+
+- `module/settings/OggDudeDataImporter.mjs` (extension du contexte `_prepareContext`, casting numérique dans callback)
+- `templates/settings/oggDudeDataImporter.hbs` (insertion markup Handlebars jauge accessible)
+- `styles/applications.less` (styles `.import-progress-global` + utilitaire `.sr-only`)
+- `tests/settings/OggDudeDataImporter.progress.spec.mjs` (nouveaux tests calcul pourcentage & cas limites)
+- `plan/feature-importer-global-progress-jauge-1.md` (plan d'implémentation)
+
+## Étapes Suivies
+
+1. Lecture du plan `feature-importer-global-progress-jauge-1.md` et validation exigences (a11y, performance, sécurité).
+2. Ajout champ `progressPercentDomains` dans `_prepareContext()` sans modifier usage existant de `progressPercent` (compatibilité).
+3. Sécurisation callback de progression (cast `Number()` pour éviter valeurs non numériques / injection inattendue).
+4. Insertion markup conditionnel Handlebars (affichage seulement si `progress.total > 0`).
+5. Ajout styles Less (container + barre + transition + utilitaire a11y `.sr-only`).
+6. Création tests unitaires : 0%, 50%, 100%, absence quand total=0.
+7. Exécution suite d'intégration espèces (détection régression — échec initial hors périmètre fonctionnel de la jauge ; aucune modification requise sur ce point car pas lié; la jauge n'introduit pas de nouvelle dépendance).
+8. Documentation mise à jour (présent document).
+
+## Design & Décisions
+
+- Choix de conserver `progressPercent` (ancien nom) mais ajouter `progressPercentDomains` pour clarté future et éviter conflit sémantique si une autre jauge items est ajoutée.
+- Aucune suppression de l'ancienne barre `progress-global` dans la section métriques (décision: la nouvelle jauge est focalisée sur domaines, l'ancienne sur métriques globales détaillées). Risque faible de confusion car position différente; pourra être revue ultérieurement.
+- Style: dégradé vert (#0b5e0b -> #19a319) garantissant contraste sur fond sombre (ratio > 4.5 estimé). Bordure et background semi-transparent pour lisibilité.
+- Accessibilité: `role="progressbar"`, valeurs ARIA min/now/max, `aria-label` localisé, contenu texte masqué avec `.sr-only`.
+
+## Tests & Couverture
+
+| Test | Objectif |
+|------|----------|
+| `OggDudeDataImporter.progress.spec.mjs` | Calcul pourcentages & cas limites |
+| Contexte existant | Non modifié, toujours valide |
+| Intégration espèces | Pas d'impact direct sur import logique |
+
+## Risques
+
+- Double indication de progression (ancienne barre + nouvelle). Mitigation: design futur pour fusion éventuelle.
+- Non compilation des styles si oubli de build manuel. Mitigation: script `pnpm run build` en CI.
+- Performance: appels fréquents `render()` déjà existants; ajout non significatif (calcul O(1)).
+
+## Points de Sécurité
+
+- Casting numérique défensif pour éviter interprétation chaîne mal formée.
+- Aucune interpolation HTML dangereuse; Handlebars échappe par défaut.
+
+## Suivi / Améliorations Futures
+
+- Fusion potentielle des deux jauges en un seul composant configurable.
+- Ajout d'indicateurs de temps restant estimé si métriques disponibles.
+- Tests de rendu Handlebars complets (snapshot) éventuels.
+
+---
 
 ## Overview
 

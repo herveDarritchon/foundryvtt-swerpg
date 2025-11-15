@@ -61,6 +61,39 @@
           width: 100%;
           border-collapse: collapse;
         }
+
+        // ------------------------------------------------------------
+        // Jauge de progression globale import OggDude (domaines)
+        // ------------------------------------------------------------
+        .import-progress-global {
+          position: relative;
+          width: 100%;
+          height: 12px;
+          background: var(--color-cool-5-50, rgba(255,255,255,0.1));
+          border: 1px solid var(--color-cool-5, #444);
+          border-radius: 4px;
+          margin: 0.5rem 0 0.75rem;
+          overflow: hidden;
+
+          .bar {
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, #0b5e0b, #19a319);
+            transition: width .25s ease;
+          }
+        }
+
+        // Utility a11y helper (utilisé par import-progress-global)
+        .sr-only:not(:focus):not(:active) {
+          clip: rect(0 0 0 0);
+          clip-path: inset(50%);
+          width: 1px;
+          height: 1px;
+          margin: -1px;
+          overflow: hidden;
+          position: absolute;
+          white-space: nowrap;
+        }
       }
     }
   }
