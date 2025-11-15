@@ -4,6 +4,12 @@
 
 ## Feature: Jauge de progression globale import OggDude
 
+## Feature: Icônes de statut domaine (Import Statistics)
+
+### Résumé rapide
+
+Ajout d'une colonne de statut (pending/success/mixed/error) dans le tableau Statistiques d'import de `OggDudeDataImporter` via une fonction pure `computeDomainStatus` (classification déterministe des domaines). Contexte enrichi (`importDomainStatus`) + i18n (EN/FR) + classes CSS (`.domain-status--*`). Tests unitaires couvrent règles, clamp invariant, structure mapping et placeholder template.
+
 ## Contexte
 
 Ajout d'une barre de progression globale (domaines) dans l'interface `OggDudeDataImporter` pour visualiser l'avancement de l'import des domaines sélectionnés (weapon, armor, gear, species, career, talent). Positionnée dans la section Statistiques, entre le titre et le tableau détaillé.

@@ -87,6 +87,7 @@
             <table class="stats-table" role="table" aria-describedby="import-stats-section">
                 <thead>
                 <tr>
+                    <th scope="col">{{localize "SETTINGS.OggDudeDataImporter.loadWindow.stats.status.title"}}</th>
                     <th scope="col">{{localize "SETTINGS.OggDudeDataImporter.loadWindow.stats.domain"}}</th>
                     <th scope="col">{{localize "SETTINGS.OggDudeDataImporter.loadWindow.stats.total"}}</th>
                     <th scope="col">{{localize "SETTINGS.OggDudeDataImporter.loadWindow.stats.imported"}}</th>
@@ -97,6 +98,7 @@
                 <tbody>
                 {{#if importStats}}
                     <tr>
+                        <td class="{{importDomainStatus.armor.class}}" aria-label="{{localize importDomainStatus.armor.labelI18n}}"><i class="fa-solid fa-circle" aria-hidden="true"></i></td>
                         <th scope="row">{{localize "SETTINGS.OggDudeDataImporter.loadWindow.domains.armor"}}</th>
                         <td>{{importStats.armor.total}}</td>
                         <td>{{importStats.armor.imported}}</td>
@@ -104,6 +106,7 @@
                         <td>{{importMetricsFormatted.domains.armor.duration}}</td>
                     </tr>
                     <tr>
+                        <td class="{{importDomainStatus.weapon.class}}" aria-label="{{localize importDomainStatus.weapon.labelI18n}}"><i class="fa-solid fa-circle" aria-hidden="true"></i></td>
                         <th scope="row">{{localize "SETTINGS.OggDudeDataImporter.loadWindow.domains.weapon"}}</th>
                         <td>{{importStats.weapon.total}}</td>
                         <td>{{importStats.weapon.imported}}</td>
@@ -111,6 +114,7 @@
                         <td>{{importMetricsFormatted.domains.weapon.duration}}</td>
                     </tr>
                     <tr>
+                        <td class="{{importDomainStatus.gear.class}}" aria-label="{{localize importDomainStatus.gear.labelI18n}}"><i class="fa-solid fa-circle" aria-hidden="true"></i></td>
                         <th scope="row">{{localize "SETTINGS.OggDudeDataImporter.loadWindow.domains.gear"}}</th>
                         <td>{{importStats.gear.total}}</td>
                         <td>{{importStats.gear.imported}}</td>
@@ -118,6 +122,7 @@
                         <td>{{importMetricsFormatted.domains.gear.duration}}</td>
                     </tr>
                     <tr>
+                        <td class="{{importDomainStatus.species.class}}" aria-label="{{localize importDomainStatus.species.labelI18n}}"><i class="fa-solid fa-circle" aria-hidden="true"></i></td>
                         <th scope="row">{{localize "SETTINGS.OggDudeDataImporter.loadWindow.domains.species"}}</th>
                         <td>{{importStats.species.total}}</td>
                         <td>{{importStats.species.imported}}</td>
@@ -125,6 +130,7 @@
                         <td>{{importMetricsFormatted.domains.species.duration}}</td>
                     </tr>
                     <tr>
+                        <td class="{{importDomainStatus.career.class}}" aria-label="{{localize importDomainStatus.career.labelI18n}}"><i class="fa-solid fa-circle" aria-hidden="true"></i></td>
                         <th scope="row">{{localize "SETTINGS.OggDudeDataImporter.loadWindow.domains.career"}}</th>
                         <td>{{importStats.career.total}}</td>
                         <td>{{importStats.career.imported}}</td>
@@ -132,6 +138,7 @@
                         <td>{{importMetricsFormatted.domains.career.duration}}</td>
                     </tr>
                     <tr>
+                        <td class="{{importDomainStatus.talent.class}}" aria-label="{{localize importDomainStatus.talent.labelI18n}}"><i class="fa-solid fa-circle" aria-hidden="true"></i></td>
                         <th scope="row">{{localize "SETTINGS.OggDudeDataImporter.loadWindow.domains.talent"}}</th>
                         <td>{{importStats.talent.total}}</td>
                         <td>{{importStats.talent.imported}}</td>

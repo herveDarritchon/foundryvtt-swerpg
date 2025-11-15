@@ -762,7 +762,14 @@
           "total": "Total",
           "imported": "Imported",
           "rejected": "Rejected",
-          "duration": "Duration (ms)"
+          "duration": "Duration (ms)",
+          "status": {
+            "title": "Status",
+            "pending": "Pending",
+            "success": "Success",
+            "mixed": "Mixed",
+            "error": "Error"
+          }
         },
         "metrics": {
           "title": "Global Metrics",

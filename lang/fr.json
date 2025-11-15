@@ -59,7 +59,14 @@
           "total": "Total",
           "imported": "Importés",
           "rejected": "Rejetés",
-          "duration": "Durée (ms)"
+          "duration": "Durée (ms)",
+          "status": {
+            "title": "Statut",
+            "pending": "En attente",
+            "success": "Succès",
+            "mixed": "Mixte",
+            "error": "Erreur"
+          }
         },
         "metrics": {
           "title": "Métriques globales",
@@ -119,7 +126,14 @@
         "total": "Total",
         "imported": "Importés",
         "rejected": "Rejetés",
-        "duration": "Durée (ms)"
+        "duration": "Durée (ms)",
+        "status": {
+          "title": "Statut",
+          "pending": "En attente",
+          "success": "Succès",
+          "mixed": "Mixte",
+          "error": "Erreur"
+        }
       },
       "metrics": {
         "title": "Métriques globales",
@@ -211,8 +225,8 @@
       "target": {
         "label": "Action Target",
         "scope": {
-          "label": "Affected Scope",
-          "hint": "Which disposition of targets are affected by this action?"
+          "label": "Portée affectée",
+          "hint": "Quelle disposition des cibles est affectée par cette action ?"
         },
         "type": {
           "label": "Target Type",
