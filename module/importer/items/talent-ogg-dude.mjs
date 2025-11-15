@@ -7,7 +7,7 @@ import OggDudeDataElement from '../../settings/models/OggDudeDataElement.mjs'
 import { OggDudeTalentMapper } from '../mappers/oggdude-talent-mapper.mjs'
 import { logger } from '../../utils/logger.mjs'
 import { buildItemImgSystemPath } from '../../settings/directories.mjs'
-import { resetTalentImportStats } from '../utils/talent-import-utils.mjs'
+import { resetTalentImportStats, incrementTalentImportStat } from '../utils/talent-import-utils.mjs'
 
 /**
  * Mapper pour transformer les données talent OggDude en objets SwerpgTalent
@@ -38,16 +38,21 @@ function talentMapper(talents) {
         
         // Transformer via le mapper principal
         const transformedData = OggDudeTalentMapper.transform(context)
+        // Incrémenter les stats « processed » seulement si le contexte est valide et transformé
+        incrementTalentImportStat('processed')
         
         logger.debug(`[TalentOggDude] Mapped talent: ${context.key}`)
         return transformedData
         
       } catch (error) {
         logger.error('[TalentOggDude] Error mapping individual talent:', error)
+        // Comptabiliser l'échec de transformation
+        incrementTalentImportStat('failed')
         return null
       }
     }).filter(talent => talent !== null) // Filtrer les éléments null
-    
+    // Consolider métrique contextMaps (parité avec buildContextMap())
+    incrementTalentImportStat('contextMaps', mappedTalents.length)
     logger.info(`Talent import completed: ${mappedTalents.length}/${talents.length} talents imported`)
     return mappedTalents
     
