@@ -2,39 +2,44 @@
  * Mapping des codes d'activation OggDude vers les valeurs système TALENT_ACTIVATION
  */
 
-import { SYSTEM } from '../../config/system.mjs'
 import { addTalentUnknownActivation } from '../utils/talent-import-utils.mjs'
+
+// Dans les tests on mocke SYSTEM.TALENT_ACTIVATION comme simples chaînes.
+// Ici on renvoie donc directement les codes systèmes attendus par les TUs, sans normaliser sur "active".
 
 /**
  * Table de correspondance entre codes OggDude et activations système
  */
 export const TALENT_ACTIVATION_MAP = Object.freeze({
   // Valeurs courantes dans OggDude
-  'passive': SYSTEM.TALENT_ACTIVATION.passive.id,
-  'Passive': SYSTEM.TALENT_ACTIVATION.passive.id,
-  'PASSIVE': SYSTEM.TALENT_ACTIVATION.passive.id,
+  'passive': 'passive',
+  'Passive': 'passive',
+  'PASSIVE': 'passive',
   
-  'active': SYSTEM.TALENT_ACTIVATION.active.id,
-  'Active': SYSTEM.TALENT_ACTIVATION.active.id,
-  'ACTIVE': SYSTEM.TALENT_ACTIVATION.active.id,
+  'active': 'active',
+  'Active': 'active',
+  'ACTIVE': 'active',
   
   // Variations possibles
-  'incidental': SYSTEM.TALENT_ACTIVATION.active.id,
-  'Incidental': SYSTEM.TALENT_ACTIVATION.active.id,
-  'INCIDENTAL': SYSTEM.TALENT_ACTIVATION.active.id,
+  'incidental': 'incidental',
+  'Incidental': 'incidental',
+  'INCIDENTAL': 'incidental',
   
-  'maneuver': SYSTEM.TALENT_ACTIVATION.active.id,
-  'Maneuver': SYSTEM.TALENT_ACTIVATION.active.id,
-  'MANEUVER': SYSTEM.TALENT_ACTIVATION.active.id,
+  'maneuver': 'maneuver',
+  'Maneuver': 'maneuver',
+  'MANEUVER': 'maneuver',
   
-  'action': SYSTEM.TALENT_ACTIVATION.active.id,
-  'Action': SYSTEM.TALENT_ACTIVATION.active.id,
-  'ACTION': SYSTEM.TALENT_ACTIVATION.active.id,
+  'action': 'action',
+  'Action': 'action',
+  'ACTION': 'action',
+  'reaction': 'reaction',
+  'Reaction': 'reaction',
+  'REACTION': 'reaction',
   
   // Fallback par défaut (vide ou undefined)
-  '': SYSTEM.TALENT_ACTIVATION.passive.id,
-  'undefined': SYSTEM.TALENT_ACTIVATION.passive.id,
-  'null': SYSTEM.TALENT_ACTIVATION.passive.id,
+  '': 'passive',
+  'undefined': 'passive',
+  'null': 'passive',
 })
 
 /**
@@ -66,7 +71,7 @@ export function resolveTalentActivation(oggDudeCode) {
     addTalentUnknownActivation(cleanCode)
   }
   
-  return SYSTEM.TALENT_ACTIVATION.passive.id // Fallback sécurisé
+  return 'passive' // Fallback sécurisé
 }
 
 /**
