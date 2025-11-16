@@ -342,4 +342,4 @@ function getConfigValue(path, fallback) {
 
 ---
 
-> 📖 **Voir aussi** : [System Initialization](./INITIALIZATION.md) | [Public API](./API.md)
+> 📖 **Voir aussi** : [System Initialization](INITIALIZATION.md) | [Public API](API.md)

@@ -109,7 +109,7 @@ _source/                    build.mjs                 packs/
 ## References
 
 - **REF-001**: [FoundryVTT CLI Documentation](https://github.com/foundryvtt/foundryvtt-cli)
-- **REF-002**: [Build Script Implementation](../../build.mjs)
+- **REF-002**: [Build Script Implementation](../../../build.mjs)
 - **REF-003**: [Source Content Structure](../../_source/)
-- **REF-004**: [Package.json Build Scripts](../../package.json)
+- **REF-004**: [Package.json Build Scripts](../../../package.json)
 - **REF-005**: [Content Management Workflow](../documentation/swerpg/architecture/WORKFLOWS.md)

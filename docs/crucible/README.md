@@ -6,7 +6,7 @@ Bienvenue dans la documentation technique du système Crucible pour Foundry Virt
 
 ### 🏗️ Architecture
 
-- **[OVERVIEW.md](./architecture/OVERVIEW.md)** - Vue d'ensemble complète de l'architecture du système
+- **[OVERVIEW.md](architecture/OVERVIEW.md)** - Vue d'ensemble complète de l'architecture du système
   - Architecture globale
   - Principes architecturaux
   - Composants principaux
@@ -16,14 +16,14 @@ Bienvenue dans la documentation technique du système Crucible pour Foundry Virt
 
 ### 🔧 Modules
 
-- **[ACTION_SYSTEM.md](./modules/ACTION_SYSTEM.md)** - Système d'actions détaillé
+- **[ACTION_SYSTEM.md](modules/ACTION_SYSTEM.md)** - Système d'actions détaillé
   - Cycle de vie des actions
   - Types de ciblage
   - Coûts et résultats
   - Actions de combat et sorts
   - Bonnes pratiques
 
-- **[TALENT_SYSTEM.md](./modules/TALENT_SYSTEM.md)** - Système de talents détaillé
+- **[TALENT_SYSTEM.md](modules/TALENT_SYSTEM.md)** - Système de talents détaillé
   - Arbre de talents
   - Prérequis et progression
   - Rangs et formation
@@ -32,13 +32,13 @@ Bienvenue dans la documentation technique du système Crucible pour Foundry Virt
 
 ### 📋 Exigences
 
-- **[FUNCTIONAL_REQUIREMENTS.md](./requirements/FUNCTIONAL_REQUIREMENTS.md)** - Exigences fonctionnelles (MOSCOW)
+- **[FUNCTIONAL_REQUIREMENTS.md](requirements/FUNCTIONAL_REQUIREMENTS.md)** - Exigences fonctionnelles (MOSCOW)
   - Must Have (10 exigences essentielles)
   - Should Have (10 exigences importantes)
   - Could Have (10 exigences souhaitables)
   - Won't Have (5 exclusions)
 
-- **[NON_FUNCTIONAL_REQUIREMENTS.md](./requirements/NON_FUNCTIONAL_REQUIREMENTS.md)** - Exigences non-fonctionnelles
+- **[NON_FUNCTIONAL_REQUIREMENTS.md](requirements/NON_FUNCTIONAL_REQUIREMENTS.md)** - Exigences non-fonctionnelles
   - Performance
   - Compatibilité
   - Sécurité
@@ -47,14 +47,14 @@ Bienvenue dans la documentation technique du système Crucible pour Foundry Virt
   - Fiabilité
   - Évolutivité
 
-- **[DEPLOYMENT_SCENARIOS.md](./requirements/DEPLOYMENT_SCENARIOS.md)** - Scénarios de déploiement
+- **[DEPLOYMENT_SCENARIOS.md](requirements/DEPLOYMENT_SCENARIOS.md)** - Scénarios de déploiement
   - Installation standard et développeur
   - Workflow de développement
   - Release et mise à jour
   - Configuration serveur
   - Dépannage
 
-- **[USABILITY_FEATURES.md](./requirements/USABILITY_FEATURES.md)** - Fonctionnalités d'utilisabilité
+- **[USABILITY_FEATURES.md](requirements/USABILITY_FEATURES.md)** - Fonctionnalités d'utilisabilité
   - Interface utilisateur
   - Feedback utilisateur
   - Accessibilité
@@ -63,7 +63,7 @@ Bienvenue dans la documentation technique du système Crucible pour Foundry Virt
 
 ### 📝 Processus
 
-- **[DOCUMENTATION_PROCESS.md](./DOCUMENTATION_PROCESS.md)** - Méthodologie de documentation
+- **[DOCUMENTATION_PROCESS.md](DOCUMENTATION_PROCESS.md)** - Méthodologie de documentation
   - Approche utilisée
   - Fichiers analysés
   - Documentation créée
@@ -85,19 +85,19 @@ Cette documentation est destinée à :
 
 ### Pour Comprendre l'Architecture
 
-1. Commencez par **[OVERVIEW.md](./architecture/OVERVIEW.md)** pour une vision globale
-2. Lisez **[ACTION_SYSTEM.md](./modules/ACTION_SYSTEM.md)** pour comprendre le cœur mécanique
-3. Consultez **[TALENT_SYSTEM.md](./modules/TALENT_SYSTEM.md)** pour la progression des personnages
+1. Commencez par **[OVERVIEW.md](architecture/OVERVIEW.md)** pour une vision globale
+2. Lisez **[ACTION_SYSTEM.md](modules/ACTION_SYSTEM.md)** pour comprendre le cœur mécanique
+3. Consultez **[TALENT_SYSTEM.md](modules/TALENT_SYSTEM.md)** pour la progression des personnages
 
 ### Pour Contribuer
 
 1. Lisez le **[CONTRIBUTING.md](../CONTRIBUTING.md)** à la racine du projet
-2. Consultez **[FUNCTIONAL_REQUIREMENTS.md](./requirements/FUNCTIONAL_REQUIREMENTS.md)** pour voir ce qui est implémenté
-3. Vérifiez **[NON_FUNCTIONAL_REQUIREMENTS.md](./requirements/NON_FUNCTIONAL_REQUIREMENTS.md)** pour les standards de qualité
+2. Consultez **[FUNCTIONAL_REQUIREMENTS.md](requirements/FUNCTIONAL_REQUIREMENTS.md)** pour voir ce qui est implémenté
+3. Vérifiez **[NON_FUNCTIONAL_REQUIREMENTS.md](requirements/NON_FUNCTIONAL_REQUIREMENTS.md)** pour les standards de qualité
 
 ### Pour Étendre le Système
 
-1. Consultez la section "Points d'Extension" dans **[OVERVIEW.md](./architecture/OVERVIEW.md)**
+1. Consultez la section "Points d'Extension" dans **[OVERVIEW.md](architecture/OVERVIEW.md)**
 2. Référez-vous à l'API publique exposée via `crucible.api`
 3. Utilisez les hooks personnalisés documentés
 
@@ -212,7 +212,7 @@ La documentation suit le versioning du système :
 
 Pour contribuer à cette documentation :
 
-1. Suivez le processus décrit dans [DOCUMENTATION_PROCESS.md](./DOCUMENTATION_PROCESS.md)
+1. Suivez le processus décrit dans [DOCUMENTATION_PROCESS.md](DOCUMENTATION_PROCESS.md)
 2. Maintenez le même niveau de détail et de qualité
 3. Incluez des diagrammes pour concepts complexes
 4. Ajoutez des exemples de code pratiques

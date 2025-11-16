@@ -184,13 +184,13 @@ d'implémentation de chaque composant.
 
 ## 8. Related Specifications / Further Reading
 
-- [Plan de Refactoring Armor Mapper](../../../plan/refactor-armor-oggdude-mapper.md)
-- [Plan de Refactoring Gear Mapper](../../../plan/refactor-gear-oggdude-mapper.md)
-- [Plan de Refactoring Weapon Mapper](../../../plan/refactor-weapon-oggdude-mapper.md)
-- [Fix Mapper Species OggDude](../../../plan/features/fix-mapper-species-oggdude.md)
-- [Import des Armures OggDude](../../import-armor.md)
-- [Import des Carrières OggDude](../../import-career.md)
-- [Import des Équipements OggDude](../../import-gear.md)
+- [Plan de Refactoring Armor Mapper](../../plan/refactor-armor-oggdude-mapper.md)
+- [Plan de Refactoring Gear Mapper](../../plan/refactor-gear-oggdude-mapper.md)
+- [Plan de Refactoring Weapon Mapper](../../plan/refactor-weapon-oggdude-mapper.md)
+- [Fix Mapper Species OggDude](../../plan/features/fix-mapper-species-oggdude.md)
+- [Import des Armures OggDude](../../importer/import-armor.md)
+- [Import des Carrières OggDude](../../importer/import-career.md)
+- [Import des Équipements OggDude](../../importer/import-gear.md)
 - [Foundry DataModel API](https://foundryvtt.com/api/classes/foundry.abstract.TypeDataModel.html)
 - [Logging Guidelines](../../../DEVELOPER_GUIDE_LOGGING.md)
 
@@ -1075,9 +1075,9 @@ function weaponMapper(weapons) {
 
 ## Liens Connexes
 
-- [Import des Armures OggDude](../../import-armor.md)
-- [Import des Carrières OggDude](../../import-career.md)
-- [Import des Équipements OggDude](../../import-gear.md)
+- [Import des Armures OggDude](../../importer/import-armor.md)
+- [Import des Carrières OggDude](../../importer/import-career.md)
+- [Import des Équipements OggDude](../../importer/import-gear.md)
 - [Foundry DataModel API](https://foundryvtt.com/api/classes/foundry.abstract.TypeDataModel.html)
 - [Logging Guidelines](../../../DEVELOPER_GUIDE_LOGGING.md)
 

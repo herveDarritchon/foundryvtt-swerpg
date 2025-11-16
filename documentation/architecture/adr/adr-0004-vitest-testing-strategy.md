@@ -123,7 +123,7 @@ export default defineConfig({
 ## References
 
 - **REF-001**: [Vitest Documentation](https://vitest.dev/)
-- **REF-002**: [Project Vitest Configuration](../../vitest.config.js)
-- **REF-003**: [Test Setup Files](../../tests/vitest-setup.js)
-- **REF-004**: [Package.json Test Scripts](../../package.json)
+- **REF-002**: [Project Vitest Configuration](../../../vitest.config.js)
+- **REF-003**: [Test Setup Files](../../../tests/vitest-setup.js)
+- **REF-004**: [Package.json Test Scripts](../../../package.json)
 - **REF-005**: [GitHub Actions CI](../../.github/workflows/)

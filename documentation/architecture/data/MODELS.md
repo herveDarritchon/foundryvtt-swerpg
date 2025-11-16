@@ -656,4 +656,4 @@ _onCharacteristicChange() {
 
 ---
 
-> 📖 **Voir aussi** : [Document Extensions](./DOCUMENTS.md) | [Compendium Management](./COMPENDIUMS.md)
+> 📖 **Voir aussi** : [Document Extensions](DOCUMENTS.md) | [Compendium Management](COMPENDIUMS.md)

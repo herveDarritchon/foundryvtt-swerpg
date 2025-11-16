@@ -142,10 +142,10 @@ Ce plan d'implémentation vise à finaliser la feature d'import OggDude en compl
 
 ## 8. Related Specifications / Further Reading
 
-- [Architecture d'Import OggDude](../documentation/swerpg/architecture/oggdude/oggdude-import.md)
-- [Tests d'Intégration Species](../tests/integration/species-import.integration.spec.mjs)
+- [Architecture d'Import OggDude](../docs/swerpg/architecture/oggdude/oggdude-import.md)
+- [Tests d'Intégration Species](../../tests/integration/species-import.integration.spec.mjs)
 - [Tests d'Intégration Career](../tests/integration/career-import.integration.spec.mjs)
-- [Stratégie de Tests](../documentation/strategie-tests.md)
-- [Vitest Configuration](../vitest.config.js)
+- [Stratégie de Tests](../strategie-tests.md)
+- [Vitest Configuration](../../vitest.config.js)
 - [Foundry VTT Testing Best Practices](https://foundryvtt.com/article/testing/)
 - [OWASP Security Testing Guide](https://owasp.org/www-project-web-security-testing-guide/)
