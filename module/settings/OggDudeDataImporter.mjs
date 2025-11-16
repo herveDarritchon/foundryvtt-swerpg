@@ -6,17 +6,23 @@
 
 import OggDudeImporter from '../importer/oggDude.mjs'
 import {logger} from '../utils/logger.mjs'
-import {aggregateImportMetrics, getAllImportStats, formatGlobalMetrics} from '../importer/utils/global-import-metrics.mjs'
+import {
+    aggregateImportMetrics,
+    formatGlobalMetrics,
+    getAllImportStats
+} from '../importer/utils/global-import-metrics.mjs'
 // Similar syntax to importing, mais c'est du destructuring et peut être indisponible en environnement de test.
 
 // Fournit des fallbacks légers si l'API Foundry n'est pas initialisée (exécution tests).
 // Fallback minimal ApplicationV2 pour environnement de test (évite classe vide)
-const ApplicationV2 = foundry?.applications?.api?.ApplicationV2 ?? class {
-    // Méthode de rendu factice pour tests (évite erreur de classe vide)
-    render() {
-        return null
+const ApplicationV2 =
+    foundry?.applications?.api?.ApplicationV2 ??
+    class {
+        // Méthode de rendu factice pour tests (évite erreur de classe vide)
+        render() {
+            return null
+        }
     }
-}
 const HandlebarsApplicationMixin = foundry?.applications?.api?.HandlebarsApplicationMixin ?? ((Base) => Base)
 
 /**
@@ -31,6 +37,10 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
     previewData = {}
     previewFilters = {domain: 'all', text: ''}
     pagination = {page: 1, size: 50}
+    // États de visibilité des sections repliables (collapsibles). Masqués par défaut.
+    showStats = false
+    showMetrics = false
+    showPreview = false
 
     /* -------------------------------------------- */
 
@@ -84,6 +94,9 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
             loadAction: OggDudeDataImporter.loadAction,
             preloadAction: OggDudeDataImporter.preloadAction,
             toggleDomainAction: OggDudeDataImporter.toggleDomainAction,
+            toggleStatsAction: OggDudeDataImporter.toggleStatsAction,
+            toggleMetricsAction: OggDudeDataImporter.toggleMetricsAction,
+            togglePreviewAction: OggDudeDataImporter.togglePreviewAction,
         },
         footer: {
             template: 'templates/generic/form-footer.hbs',
@@ -102,30 +115,82 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
         } catch (e) {
             logger.debug('[OggDudeDataImporter] Stats indisponibles', {e})
         }
+        // S'assurer qu'une structure de progression domaines existe même avant le premier callback
+        // (affichage immédiat de la barre à 0% une fois l'action lancée).
+        const selectedDomainsCount = this.domains.filter((d) => d.checked).length
+        let progress = this._progress
+        if (!progress) {
+            if (selectedDomainsCount > 0) {
+                progress = {processed: 0, total: selectedDomainsCount}
+            } else {
+                progress = {processed: 0, total: 0}
+            }
+        }
         // Construire une version formatée des métriques pour l'affichage
         // Nous utilisons formatGlobalMetrics pour produire des champs lisibles
         // (ex: overallDuration, errorRate, itemsPerSecond, archiveSize, totalProcessed)
         const metricsFormatted = formatGlobalMetrics(metrics)
+        // Pourcentage global domaines (distinct de potentiels futurs pourcentages items)
+        const progressPercentDomains = progress.total ? Math.floor((progress.processed / progress.total) * 100) : 0
+        // Détermination présence de données pour sections conditionnelles
+        // Considère qu'il y a des stats seulement si au moins un domaine possède un total/import/reject > 0
+        const hasStats = Boolean(
+            stats &&
+            Object.values(stats).some((d) => (d?.total ?? 0) > 0 || (d?.imported ?? 0) > 0 || (d?.rejected ?? 0) > 0)
+        )
+        const hasMetrics = Boolean(metricsFormatted && metricsFormatted.totalProcessed > 0)
+        const hasPreview = Boolean(this.previewData && Object.keys(this.previewData).length > 0)
+        // Résumé compact post-import (affiché même si sections repliables fermées)
+        const importSummary = hasMetrics
+            ? {
+                overallDuration: metricsFormatted.overallDuration,
+                totalProcessed: metricsFormatted.totalProcessed,
+                errorRate: metricsFormatted.errorRate,
+                itemsPerSecond: metricsFormatted.itemsPerSecond,
+            }
+            : null
+        // Calcul des statuts domaine (fonction pur sans effet côté template) – logique testable séparément.
+        const importDomainStatus = this._buildImportDomainStatus(stats)
         return {
             domains: this.domains,
             domainSelectionDisabled: this.noZipFileSelected(),
             loadButtonDisabled: this.noZipFileSelected() || this._noDomainSelected(),
             zipFile: this.zipFile,
-            progress: this._progress,
-            progressPercent: (this?._progress?.total ? Math.floor((this._progress.processed / this._progress.total) * 100) : 0),
+            progress,
+            // Valeur existante conservée pour compatibilité (ancienne barre éventuelle)
+            progressPercent: progressPercentDomains,
+            // Nouveau champ explicite pour jauge domaines
+            progressPercentDomains,
             importStats: stats,
             importMetrics: metrics,
             importMetricsFormatted: metricsFormatted,
             preview: this._buildPreviewContext(),
+            // Flags & états UI immersifs
+            showStats: this.showStats,
+            showMetrics: this.showMetrics,
+            showPreview: this.showPreview,
+            hasStats,
+            hasMetrics,
+            hasPreview,
+            importSummary,
+            importDomainStatus,
         }
     }
 
+    /**
+     * Checks if no ZIP file has been selected.
+     * @return {boolean} Returns true if the zipFile property is null, indicating no ZIP file has been selected; otherwise, false.
+     */
     noZipFileSelected() {
         return this.zipFile == null
     }
 
     /* -------------------------------------------- */
 
+    /**
+     * Checks if no domain is selected.
+     * @return {boolean} Returns true if no domain is selected; otherwise, false.
+     */
     _noDomainSelected() {
         return this.domains.filter((domain) => domain.checked).length === 0
     }
@@ -160,12 +225,29 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
 
     /* -------------------------------------------- */
 
+    /**
+     * LoadAction handler for the form submission.
+     * @this {OggDudeDataImporter} this is capture by the action handler
+     * @param _event
+     * @param target
+     * @returns {Promise<void>}
+     */
     static async loadAction(_event, target) {
         logger.info('[OggDudeDataImporter] Load OggDude Data', {instance: this})
-        this._progress = {processed: 0, total: 0}
+        // Initialiser immédiatement total avec le nombre de domaines sélectionnés
+        const totalDomains = this.domains.filter((d) => d.checked).length
+        this._progress = {processed: 0, total: totalDomains}
+        if (typeof this.render === 'function') {
+            try {
+                await this.render()
+            } catch (e) {
+                logger.warn('[OggDudeDataImporter] render initial progress error', {e})
+            }
+        }
         await OggDudeImporter.processOggDudeData(this.zipFile, this.domains, {
             progressCallback: ({processed, total, domain}) => {
-                this._progress = {processed, total, domain}
+                // Mise à jour atomique de la progression domaines (total constant)
+                this._progress = {processed: Number(processed) || 0, total: totalDomains, domain}
                 logger.debug('[OggDudeDataImporter] Progress', this._progress)
                 // Pas d'erreur si render indisponible (tests unitaires)
                 if (typeof this.render === 'function') {
@@ -173,7 +255,7 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
                 }
             },
         })
-        
+
         // Rafraîchir l'UI après l'import pour afficher les métriques globales finales
         if (typeof this.render === 'function') {
             try {
@@ -188,6 +270,9 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
     /* -------------------------------------------- */
     /**
      * Précharge les données pour prévisualisation sans création d'items
+     * @this {OggDudeDataImporter} this is capture by the action handler
+     * @param _event {Event} Event object triggering the action
+     * @param _target {HTMLElement} Target element of the action
      */
     static async preloadAction(_event, _target) {
         logger.info('[OggDudeDataImporter] Preload OggDude Data (preview mode)', {instance: this})
@@ -196,6 +281,7 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
             this.previewData = await OggDudeImporter.preloadOggDudeData(this.zipFile, this.domains)
             // Réinitialiser pagination
             this.pagination = {page: 1, size: 50}
+            // Ne pas ouvrir automatiquement la section (doit rester immersive/optionnelle)
             if (typeof this.render === 'function') await this.render()
         } catch (e) {
             logger.error('[OggDudeDataImporter] Erreur lors du préchargement', {error: e})
@@ -208,18 +294,24 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
      * @param value {string} The value to convert.
      * @returns {boolean|boolean} The converted value.
      */
-    static toBoolean(value) {
+    toBoolean(value) {
         return this ? value.toLowerCase() === 'true' : false
     }
 
     /* -------------------------------------------- */
 
+    /**
+     * Toggle the checked state of a domain.
+     * @this {OggDudeDataImporter} this is capture by the action handler
+     * @param _event {Event} The triggering event.
+     * @param target {HTMLElement} The target element of the action.
+     */
     static async toggleDomainAction(_event, target) {
         if (this.noZipFileSelected()) {
             return
         }
         const name = target.dataset.domainName
-        const value = OggDudeDataImporter.toBoolean(target.dataset.domainChecked)
+        const value = this.toBoolean(target.dataset.domainChecked)
         logger.info(`[OggDudeDataImporter] Toggle Domain [${name}/${value}]`, {event: _event, target})
         this.domains = this.domains.map((domain) => {
             if (domain.id === name) {
@@ -231,14 +323,63 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
     }
 
     /* -------------------------------------------- */
+    /**
+     * Bascule visibilité section Statistiques.
+     * @this {OggDudeDataImporter} this is capture by the action handler
+     * @param _event {Event}
+     * @param _target {HTMLElement}
+     */
+    static async toggleStatsAction(_event, _target) {
+        this.showStats = !this.showStats
+        await this.render()
+    }
 
-    async _onSubmit(event, form, formData) {
+    /**
+     * Bascule visibilité section Métriques globales.
+     * @this {OggDudeDataImporter} this is capture by the action handler
+     * @param _event {Event}
+     * @param _target {HTMLElement}
+     */
+    static async toggleMetricsAction(_event, _target) {
+        this.showMetrics = !this.showMetrics
+        await this.render()
+    }
+
+    /**
+     * Bascule visibilité section Prévisualisation.
+     * @this {OggDudeDataImporter} this is capture by the action handler
+     * @param _event {Event}
+     * @param _target {HTMLElement}
+     */
+    static async togglePreviewAction(_event, _target) {
+        this.showPreview = !this.showPreview
+        await this.render()
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle form submission.
+     * @this {OggDudeDataImporter} this is capture by the action handler
+     * @param event Event object for the form submission.
+     * @param form The form element that was submitted.
+     * @param formData The form data object containing the form fields and their values.
+     * @returns {Promise<void>} A promise that resolves when the form submission is handled.
+     * @private
+     */
+    static async _onSubmit(event, form, formData) {
         const settings = foundry.utils.expandObject(formData.object)
         logger.info('[OggDudeDataImporter] Saving settings', {settings, instance: this})
     }
 
     /* -------------------------------------------- */
 
+    /**
+     * Reset all settings to their default values.
+     * @this {OggDudeDataImporter} this is capture by the action handler
+     * @param _event {Event} The triggering event.
+     * @param target {HTMLElement} The target element of the action.
+     */
     static async resetAction(_event, target) {
         logger.info('[OggDudeDataImporter] Resetting settings', {instance: this})
         this.zipFile = null
@@ -316,7 +457,7 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
                 }
             },
         })
-        
+
         // Rafraîchir l'UI après l'import pour afficher les métriques globales finales
         if (typeof this.render === 'function') {
             try {
@@ -328,5 +469,61 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
         }
 
         await this.close({})
+    }
+
+    /* -------------------------------------------- */
+    /**
+     * Calcule le statut d'import d'un domaine à partir du triplet {total, imported, rejected}.
+     * Invariants (spécification): imported + rejected <= total. Si violé, on clamp et log un warning.
+     * Règles:
+     *  - success: total>0 && imported===total && rejected===0
+     *  - error: total>0 && imported===0 && rejected===total
+     *  - mixed: imported>0 && rejected>0 && imported + rejected === total
+     *  - pending: tous les autres cas (inclut import partiel, total=0, ou mismatch des sommes)
+     * @param {Object} values
+     * @param {number} [values.total=0]
+     * @param {number} [values.imported=0]
+     * @param {number} [values.rejected=0]
+     * @returns {"pending"|"success"|"mixed"|"error"}
+     */
+    static computeDomainStatus({total = 0, imported = 0, rejected = 0} = {}) {
+        total = Number(total) || 0
+        imported = Number(imported) || 0
+        rejected = Number(rejected) || 0
+        if (imported < 0) imported = 0
+        if (rejected < 0) rejected = 0
+        if (total < 0) total = 0
+        if (imported + rejected > total) {
+            // Clamp et log warning (sécurité logique, évite classification incorrecte silencieuse)
+            logger.warn('[OggDudeDataImporter] Invariant violé (imported + rejected > total) – clamp', {
+                original: {total, imported, rejected},
+            })
+            total = imported + rejected
+        }
+        if (total > 0 && imported === total && rejected === 0) return 'success'
+        if (total > 0 && imported === 0 && rejected === total) return 'error'
+        if (imported > 0 && rejected > 0 && imported + rejected === total) return 'mixed'
+        return 'pending'
+    }
+
+    /**
+     * Construit l'objet de statuts par domaine pour le contexte template.
+     * @param {Object} stats
+     * @returns {Object<string,{code:string,labelI18n:string,class:string}>}
+     *   Ex: { armor: { code:'success', labelI18n:'SETTINGS.OggDudeDataImporter.loadWindow.stats.status.success', class:'domain-status domain-status--success' } }
+     * Les labels i18n sont résolus côté template via {{localize}}.
+     */
+    _buildImportDomainStatus(stats = {}) {
+        const result = {}
+        for (const name of this._domainNames) {
+            const domainStats = stats?.[name] || {}
+            const code = OggDudeDataImporter.computeDomainStatus(domainStats)
+            result[name] = {
+                code,
+                labelI18n: `SETTINGS.OggDudeDataImporter.loadWindow.stats.status.${code}`,
+                class: `domain-status domain-status--${code}`,
+            }
+        }
+        return result
     }
 }

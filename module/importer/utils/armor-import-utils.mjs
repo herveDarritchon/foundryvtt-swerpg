@@ -27,7 +27,7 @@ export function sanitizeText(str) {
   if (!str || typeof str !== 'string') {
     return ''
   }
-  
+
   return str
     .trim()
     .replace(/<script/gi, '&lt;script')
@@ -49,7 +49,7 @@ let armorImportStats = {
   rejected: 0,
   unknownCategories: 0,
   unknownProperties: 0,
-  rejectionReasons: []
+  rejectionReasons: [],
 }
 
 /**
@@ -69,7 +69,7 @@ export function resetArmorImportStats() {
     rejected: 0,
     unknownCategories: 0,
     unknownProperties: 0,
-    rejectionReasons: []
+    rejectionReasons: [],
   }
 }
 

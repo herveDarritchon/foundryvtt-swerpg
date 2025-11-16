@@ -15,15 +15,15 @@ vi.mock('../../module/config/system.mjs', () => ({
         light: { id: 'light' },
         medium: { id: 'medium' },
         heavy: { id: 'heavy' },
-        natural: { id: 'natural' }
+        natural: { id: 'natural' },
       },
       PROPERTIES: {
         bulky: { label: 'Bulky' },
-        organic: { label: 'Organic' }
+        organic: { label: 'Organic' },
       },
-      DEFAULT_CATEGORY: 'medium'
-    }
-  }
+      DEFAULT_CATEGORY: 'medium',
+    },
+  },
 }))
 
 // Mock du logger
@@ -31,8 +31,8 @@ vi.mock('../../module/utils/logger.mjs', () => ({
   logger: {
     debug: vi.fn(),
     warn: vi.fn(),
-    error: vi.fn()
-  }
+    error: vi.fn(),
+  },
 }))
 
 // Mock des utilitaires OggDude
@@ -42,13 +42,13 @@ vi.mock('../../module/importer/oggDude.mjs', () => ({
     mapOptionalArray: vi.fn((array, mapper) => {
       if (!array) return []
       return Array.isArray(array) ? array.map(mapper) : [mapper(array)]
-    })
-  }
+    }),
+  },
 }))
 
 // Mock des settings
 vi.mock('../../module/settings/directories.mjs', () => ({
-  buildItemImgSystemPath: vi.fn(() => 'icons/armor.svg')
+  buildItemImgSystemPath: vi.fn(() => 'icons/armor.svg'),
 }))
 
 describe('Tables de mapping', () => {
@@ -139,16 +139,16 @@ describe('armorMapper', () => {
       Defense: '5',
       Soak: '3',
       Categories: {
-        Category: ['Light']
+        Category: ['Light'],
       },
       Encumbrance: '2',
       Price: '100',
       Rarity: '1',
-      Restricted: false
+      Restricted: false,
     }
 
     const result = armorMapper([xmlArmor])
-    
+
     expect(result).toHaveLength(1)
     expect(result[0]).toMatchObject({
       name: 'Test Armor',
@@ -161,8 +161,8 @@ describe('armorMapper', () => {
         price: 100,
         rarity: 1,
         restricted: false,
-        properties: expect.any(Set)
-      }
+        properties: expect.any(Set),
+      },
     })
   })
 
@@ -173,15 +173,15 @@ describe('armorMapper', () => {
       Defense: '5',
       Soak: '3',
       Categories: {
-        Category: ['UnknownCategory']
-      }
+        Category: ['UnknownCategory'],
+      },
     }
 
     const result = armorMapper([xmlArmor])
-    
+
     expect(result).toHaveLength(1)
     expect(result[0].system.category).toBe('medium') // DEFAULT_CATEGORY
-    
+
     const stats = getArmorImportStats()
     expect(stats.unknownCategories).toBe(1)
   })
@@ -193,12 +193,12 @@ describe('armorMapper', () => {
       Defense: '5',
       Soak: '3',
       Categories: {
-        Category: ['Light', 'Bulky', 'Organic']
-      }
+        Category: ['Light', 'Bulky', 'Organic'],
+      },
     }
 
     const result = armorMapper([xmlArmor])
-    
+
     expect(result).toHaveLength(1)
     expect(result[0].system.category).toBe('light')
     expect(result[0].system.properties).toEqual(new Set(['bulky', 'organic']))
@@ -211,14 +211,14 @@ describe('armorMapper', () => {
       Defense: '5',
       Soak: '3',
       Categories: {
-        Category: ['bulky', 'UnknownProperty']
-      }
+        Category: ['bulky', 'UnknownProperty'],
+      },
     }
 
     const result = armorMapper([xmlArmor])
-    
+
     expect(result).toHaveLength(1)
-    
+
     const stats = getArmorImportStats()
     expect(stats.unknownProperties).toBe(1)
   })
@@ -228,17 +228,17 @@ describe('armorMapper', () => {
       Name: 'Extreme Values Armor',
       Description: 'Test',
       Defense: '150', // > 100
-      Soak: '-5',    // < 0
+      Soak: '-5', // < 0
       Categories: {
-        Category: ['Light']
-      }
+        Category: ['Light'],
+      },
     }
 
     const result = armorMapper([xmlArmor])
-    
+
     expect(result).toHaveLength(1)
     expect(result[0].system.defense.base).toBe(100) // clamped
-    expect(result[0].system.soak.base).toBe(0)      // clamped
+    expect(result[0].system.soak.base).toBe(0) // clamped
   })
 
   it('devrait gérer les valeurs Defense et Soak NaN', () => {
@@ -248,15 +248,15 @@ describe('armorMapper', () => {
       Defense: 'not-a-number',
       Soak: 'also-not-a-number',
       Categories: {
-        Category: ['Light']
-      }
+        Category: ['Light'],
+      },
     }
 
     const result = armorMapper([xmlArmor])
-    
+
     expect(result).toHaveLength(1)
     expect(result[0].system.defense.base).toBe(0) // default
-    expect(result[0].system.soak.base).toBe(0)    // default
+    expect(result[0].system.soak.base).toBe(0) // default
   })
 
   it('devrait clamp les valeurs de rareté', () => {
@@ -267,12 +267,12 @@ describe('armorMapper', () => {
       Soak: '3',
       Rarity: '25', // > 20
       Categories: {
-        Category: ['Light']
-      }
+        Category: ['Light'],
+      },
     }
 
     const result = armorMapper([xmlArmor])
-    
+
     expect(result).toHaveLength(1)
     expect(result[0].system.rarity).toBe(20) // clamped
   })
@@ -285,12 +285,12 @@ describe('armorMapper', () => {
       Soak: '3',
       Price: '-100',
       Categories: {
-        Category: ['Light']
-      }
+        Category: ['Light'],
+      },
     }
 
     const result = armorMapper([xmlArmor])
-    
+
     expect(result).toHaveLength(1)
     expect(result[0].system.price).toBe(0) // clamped
   })
@@ -302,12 +302,12 @@ describe('armorMapper', () => {
       Defense: '5',
       Soak: '3',
       Categories: {
-        Category: ['Light']
-      }
+        Category: ['Light'],
+      },
     }
 
     const result = armorMapper([xmlArmor])
-    
+
     expect(result).toHaveLength(1)
     expect(result[0].system.description).toBe('&lt;script>alert("xss")&lt;/script&gt;Safe text')
   })
@@ -319,12 +319,12 @@ describe('armorMapper', () => {
       Defense: '5',
       Soak: '3',
       Categories: {
-        Category: ['Light', 'Organic', 'Bulky'] // Dans le désordre
-      }
+        Category: ['Light', 'Organic', 'Bulky'], // Dans le désordre
+      },
     }
 
     const result = armorMapper([xmlArmor])
-    
+
     expect(result).toHaveLength(1)
     expect(Array.from(result[0].system.properties)).toEqual(['bulky', 'organic']) // Trié
   })
@@ -332,19 +332,19 @@ describe('armorMapper', () => {
   it('devrait limiter le nombre de propriétés à 12', () => {
     // Créer une armure avec plus de 12 propriétés (simulation)
     const manyProperties = Array.from({ length: 15 }, (_, i) => `Property${i}`)
-    
+
     const xmlArmor = {
       Name: 'Many Properties Armor',
       Description: 'Test',
       Defense: '5',
       Soak: '3',
       Categories: {
-        Category: ['Light', ...manyProperties]
-      }
+        Category: ['Light', ...manyProperties],
+      },
     }
 
     const result = armorMapper([xmlArmor])
-    
+
     expect(result).toHaveLength(1)
     // Seules 'bulky' et 'organic' sont des propriétés valides dans notre mock
     // mais le test vérifie que la limitation fonctionne en principe
@@ -358,19 +358,19 @@ describe('armorMapper', () => {
         Description: 'Test',
         Defense: '5',
         Soak: '3',
-        Categories: { Category: ['Light'] }
+        Categories: { Category: ['Light'] },
       },
       {
         Name: 'Armor 2',
         Description: 'Test',
         Defense: '5',
         Soak: '3',
-        Categories: { Category: ['UnknownCategory'] }
-      }
+        Categories: { Category: ['UnknownCategory'] },
+      },
     ]
 
     armorMapper(xmlArmors)
-    
+
     const stats = getArmorImportStats()
     expect(stats.total).toBe(2)
     expect(stats.unknownCategories).toBe(1)
@@ -383,16 +383,16 @@ describe('armorMapper', () => {
       Description: 'Test',
       Defense: '5',
       Soak: '3',
-      Categories: { Category: ['UnknownCategory'] }
+      Categories: { Category: ['UnknownCategory'] },
     }
 
     armorMapper([xmlArmor])
-    
+
     let stats = getArmorImportStats()
     expect(stats.total).toBe(1)
-    
+
     resetArmorImportStats()
-    
+
     stats = getArmorImportStats()
     expect(stats.total).toBe(0)
     expect(stats.unknownCategories).toBe(0)
@@ -406,14 +406,14 @@ describe('armorMapper', () => {
         Description: 'Test',
         Defense: '5',
         Soak: '3',
-        Categories: { Category: ['Light'] }
+        Categories: { Category: ['Light'] },
       },
-      null // Simule un échec de parsing
+      null, // Simule un échec de parsing
     ]
 
     // On s'attend à ce que les armures nulles/invalides soient filtrées
     const result = armorMapper(xmlArmors.filter(Boolean))
-    
+
     expect(result).toHaveLength(1)
     expect(result[0].name).toBe('Valid Armor')
   })

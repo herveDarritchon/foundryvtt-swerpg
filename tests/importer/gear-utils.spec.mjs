@@ -1,10 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest'
-import {
-  resetGearImportStats,
-  incrementGearImportStat,
-  addGearUnknownCategory,
-  getGearImportStats
-} from '../../module/importer/utils/gear-import-utils.mjs'
+import { resetGearImportStats, incrementGearImportStat, addGearUnknownCategory, getGearImportStats } from '../../module/importer/utils/gear-import-utils.mjs'
 
 describe('gear-import-utils', () => {
   beforeEach(() => resetGearImportStats())

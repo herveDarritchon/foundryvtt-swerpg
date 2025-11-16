@@ -47,24 +47,6 @@
     padding: 0;
   }
 
-  // Specific: make the OggDudeDataImporter form scrollable when content exceeds viewport
-  // The application window uses id 'swerpgSettings-form' (see OggDudeDataImporter.DEFAULT_OPTIONS)
-  .app#swerpgSettings-form {
-    .window-content {
-      .standard-form {
-        max-height: calc(100vh - 140px);
-        overflow: auto;
-        -webkit-overflow-scrolling: touch;
-        padding-right: 0.5rem;
-
-        table {
-          width: 100%;
-          border-collapse: collapse;
-        }
-      }
-    }
-  }
-
   // Buttons
   button,
   .button,
@@ -103,6 +85,60 @@
   .header-control button {
     --button-text-color: var(--color-secondary);
     opacity: 1;
+  }
+}
+
+// Specific: make the OggDudeDataImporter form scrollable when content exceeds viewport
+// The application window uses id 'swerpgSettings-form' (see OggDudeDataImporter.DEFAULT_OPTIONS)
+// Le formulaire réel n'a pas la classe .app, on garde le bloc existant pour compat mais on ajoute un sélecteur direct plus permissif
+#swerpgSettings-form {
+  .window-content {
+    .standard-form {
+      max-height: calc(100vh - 140px);
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
+      padding-right: 0.5rem;
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      // ------------------------------------------------------------
+      // Jauge de progression globale import OggDude (domaines)
+      // (Sélecteur corrigé pour correspondre au form réel sans classe .app)
+      // ------------------------------------------------------------
+      .import-progress-global {
+        position: relative;
+        display: block;
+        width: 100%;
+        height: 12px;
+        background: var(--color-cool-5-50, rgba(255, 255, 255, 0.1));
+        border: 2px solid var(--color-cool-2, #444);
+        border-radius: 4px;
+        margin: 0.5rem 0 0.75rem;
+        overflow: hidden;
+      }
+
+      .import-progress-global .bar {
+        height: 100%;
+        width: 0;
+        background: linear-gradient(90deg, #0b5e0b, #19a319);
+        transition: width 0.25s ease;
+      }
+
+      // Utility a11y helper (utilisé par import-progress-global)
+      .sr-only:not(:focus):not(:active) {
+        clip: rect(0 0 0 0);
+        clip-path: inset(50%);
+        width: 1px;
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        position: absolute;
+        white-space: nowrap;
+      }
+    }
   }
 }
 

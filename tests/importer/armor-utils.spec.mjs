@@ -9,7 +9,7 @@ import {
   getArmorImportStats,
   resetArmorImportStats,
   incrementArmorImportStat,
-  addRejectionReason
+  addRejectionReason,
 } from '../../module/importer/utils/armor-import-utils.mjs'
 
 describe('clampNumber', () => {
@@ -58,12 +58,9 @@ describe('clampNumber', () => {
 
 describe('sanitizeText', () => {
   it('devrait nettoyer les balises script (case insensitive)', () => {
-    expect(sanitizeText('<script>alert("xss")</script>'))
-      .toBe('&lt;script>alert("xss")&lt;/script&gt;')
-    expect(sanitizeText('<SCRIPT>alert("xss")</SCRIPT>'))
-      .toBe('&lt;script>alert("xss")&lt;/script&gt;')
-    expect(sanitizeText('<Script>alert("xss")</Script>'))
-      .toBe('&lt;script>alert("xss")&lt;/script&gt;')
+    expect(sanitizeText('<script>alert("xss")</script>')).toBe('&lt;script>alert("xss")&lt;/script&gt;')
+    expect(sanitizeText('<SCRIPT>alert("xss")</SCRIPT>')).toBe('&lt;script>alert("xss")&lt;/script&gt;')
+    expect(sanitizeText('<Script>alert("xss")</Script>')).toBe('&lt;script>alert("xss")&lt;/script&gt;')
   })
 
   it('devrait préserver le texte normal', () => {
@@ -88,13 +85,11 @@ describe('sanitizeText', () => {
   })
 
   it('devrait nettoyer plusieurs balises script', () => {
-    expect(sanitizeText('<script>bad1</script>good<script>bad2</script>'))
-      .toBe('&lt;script>bad1&lt;/script&gt;good&lt;script>bad2&lt;/script&gt;')
+    expect(sanitizeText('<script>bad1</script>good<script>bad2</script>')).toBe('&lt;script>bad1&lt;/script&gt;good&lt;script>bad2&lt;/script&gt;')
   })
 
   it('devrait gérer les cas complexes', () => {
-    expect(sanitizeText('  <script>alert("test")</script>  Normal text  '))
-      .toBe('&lt;script>alert("test")&lt;/script&gt;  Normal text')
+    expect(sanitizeText('  <script>alert("test")</script>  Normal text  ')).toBe('&lt;script>alert("test")&lt;/script&gt;  Normal text')
   })
 })
 
@@ -108,7 +103,7 @@ describe('FLAG_STRICT_ARMOR_VALIDATION', () => {
   })
 })
 
-describe('Statistics d\'import', () => {
+describe("Statistics d'import", () => {
   beforeEach(() => {
     resetArmorImportStats()
   })
@@ -169,18 +164,15 @@ describe('Statistics d\'import', () => {
     it('devrait ajouter des raisons de rejet', () => {
       addRejectionReason('ARMOR_CATEGORY_UNKNOWN')
       addRejectionReason('ARMOR_SYSTEM_INVALID')
-      
+
       const stats = getArmorImportStats()
-      expect(stats.rejectionReasons).toEqual([
-        'ARMOR_CATEGORY_UNKNOWN',
-        'ARMOR_SYSTEM_INVALID'
-      ])
+      expect(stats.rejectionReasons).toEqual(['ARMOR_CATEGORY_UNKNOWN', 'ARMOR_SYSTEM_INVALID'])
     })
 
     it('devrait permettre les raisons dupliquées', () => {
       addRejectionReason('SAME_REASON')
       addRejectionReason('SAME_REASON')
-      
+
       const stats = getArmorImportStats()
       expect(stats.rejectionReasons).toEqual(['SAME_REASON', 'SAME_REASON'])
     })
@@ -236,7 +228,7 @@ describe('Statistics d\'import', () => {
 
       // Reset pour le prochain import
       resetArmorImportStats()
-      
+
       const resetStats = getArmorImportStats()
       expect(resetStats.total).toBe(0)
       expect(resetStats.rejectionReasons).toEqual([])

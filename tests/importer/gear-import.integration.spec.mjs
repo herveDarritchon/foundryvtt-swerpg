@@ -3,16 +3,18 @@ import { gearMapper, buildGearContext } from '../../module/importer/items/gear-o
 
 describe('Gear Import Integration', () => {
   it('should produce objects conforming to SwerpgGear schema', () => {
-    const xmlGears = [{
-      Name: 'Integration Test Gear',
-      Key: 'integrationTestGear',
-      Description: 'A gear for integration testing',
-      Type: 'tool',
-      Price: 250,
-      Encumbrance: 3,
-      Rarity: 4,
-      Restricted: false
-    }]
+    const xmlGears = [
+      {
+        Name: 'Integration Test Gear',
+        Key: 'integrationTestGear',
+        Description: 'A gear for integration testing',
+        Type: 'tool',
+        Price: 250,
+        Encumbrance: 3,
+        Rarity: 4,
+        Restricted: false,
+      },
+    ]
 
     const result = gearMapper(xmlGears)
     const gear = result[0]
@@ -27,7 +29,7 @@ describe('Gear Import Integration', () => {
     const system = gear.system
     expect(system).toHaveProperty('category')
     expect(system).toHaveProperty('quantity')
-    expect(system).toHaveProperty('price') 
+    expect(system).toHaveProperty('price')
     expect(system).toHaveProperty('quality')
     expect(system).toHaveProperty('encumbrance')
     expect(system).toHaveProperty('rarity')
@@ -40,7 +42,7 @@ describe('Gear Import Integration', () => {
     expect(typeof system.quantity).toBe('number')
     expect(typeof system.price).toBe('number')
     expect(typeof system.quality).toBe('string')
-    expect(typeof system.encumbrance).toBe('number') 
+    expect(typeof system.encumbrance).toBe('number')
     expect(typeof system.rarity).toBe('number')
     expect(typeof system.broken).toBe('boolean')
     expect(typeof system.description).toBe('object')
@@ -68,7 +70,7 @@ describe('Gear Import Integration', () => {
       Type: i % 2 === 0 ? 'tool' : 'utility',
       Price: (i + 1) * 10,
       Encumbrance: (i % 5) + 1,
-      Rarity: (i % 3) + 1
+      Rarity: (i % 3) + 1,
     }))
 
     const startTime = performance.now()
@@ -140,18 +142,18 @@ describe('Gear Import Integration', () => {
       {
         Name: 'Valid Gear',
         Key: 'validGear',
-        Price: 100
+        Price: 100,
       },
       // Invalid gear (missing required fields)
       {
-        Description: 'Invalid gear without name/key'
+        Description: 'Invalid gear without name/key',
       },
       // Another valid gear
       {
-        Name: 'Another Valid Gear', 
+        Name: 'Another Valid Gear',
         Key: 'anotherValidGear',
-        Encumbrance: 2
-      }
+        Encumbrance: 2,
+      },
     ]
 
     // Should not throw despite invalid data
@@ -165,7 +167,7 @@ describe('Gear Import Integration', () => {
     expect(result[2].name).toBe('Another Valid Gear')
 
     // All should have valid system objects even if some source data was invalid
-    result.forEach(gear => {
+    result.forEach((gear) => {
       expect(gear.system).toBeDefined()
       expect(gear.system.category).toBeDefined()
       expect(gear.system.price).toBeGreaterThanOrEqual(0)

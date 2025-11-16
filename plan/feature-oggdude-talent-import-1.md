@@ -5,7 +5,7 @@ date_created: 2025-11-14
 last_updated: 2025-11-14
 owner: swerpg-core-team
 status: 'Completed'
-tags: [ 'feature', 'import', 'oggdude', 'talent', 'architecture' ]
+tags: ['feature', 'import', 'oggdude', 'talent', 'architecture']
 ---
 
 # Introduction
@@ -44,105 +44,105 @@ Plan d'implémentation déterministe pour ajouter l'import OggDude des Talents d
 
 - GOAL-001: Introduire le domaine `talent` dans l'infrastructure d'import existante.
 
-| Task     | Description | Completed | Date |
-| -------- | ----------- | --------- | ---- |
-| TASK-001 | Ajouter constante domaine `talent` dans `module/importer/oggDude.mjs` (registry buildContextMap). |  |  |
-| TASK-002 | Étendre liste sélection UI (template `templates/settings/oggDudeDataImporter.hbs`) pour inclure checkbox `talent` avec attributs aria-label. |  |  |
-| TASK-003 | Ajouter clés i18n: `SETTINGS.OggDudeDataImporter.domain.talent` (label), `TALENT.IMPORT.ERRORS.*` dans `lang/en.json` & `lang/fr.json`. |  |  |
-| TASK-004 | Ajouter logique toggle domaine talent dans classe `OggDudeDataImporter` (`toggleDomainAction`). |  |  |
+| Task     | Description                                                                                                                                  | Completed | Date |
+| -------- | -------------------------------------------------------------------------------------------------------------------------------------------- | --------- | ---- |
+| TASK-001 | Ajouter constante domaine `talent` dans `module/importer/oggDude.mjs` (registry buildContextMap).                                            |           |      |
+| TASK-002 | Étendre liste sélection UI (template `templates/settings/oggDudeDataImporter.hbs`) pour inclure checkbox `talent` avec attributs aria-label. |           |      |
+| TASK-003 | Ajouter clés i18n: `SETTINGS.OggDudeDataImporter.domain.talent` (label), `TALENT.IMPORT.ERRORS.*` dans `lang/en.json` & `lang/fr.json`.      |           |      |
+| TASK-004 | Ajouter logique toggle domaine talent dans classe `OggDudeDataImporter` (`toggleDomainAction`).                                              |           |      |
 
 ### Implementation Phase 2 - Tables de Mapping OggDude → SwerpgTalent
 
 - GOAL-002: Créer modules de résolution dédiés pour champs spécifiques.
 
-| Task     | Description | Completed | Date |
-| -------- | ----------- | --------- | ---- |
-| TASK-005 | Créer `module/importer/mappings/oggdude-talent-activation-map.mjs` (map activation codes → `SYSTEM.TALENT_ACTIVATION`). | ✅ | 2025-11-14 |
-| TASK-006 | Créer `module/importer/mappings/oggdude-talent-node-map.mjs` (résolution node par nom ou id, création contrôlée). | ✅ | 2025-11-14 |
-| TASK-007 | Créer `module/importer/mappings/oggdude-talent-prerequisite-map.mjs` (transform XML prerequisites → structure requirements). | ✅ | 2025-11-14 |
-| TASK-008 | Créer `module/importer/mappings/oggdude-talent-rank-map.mjs` (map tiers, cost, idx). | ✅ | 2025-11-14 |
-| TASK-009 | Créer `module/importer/mappings/oggdude-talent-actions-map.mjs` (placeholder actions instanciées en `SwerpgAction` ou listes vides). | ✅ | 2025-11-14 |
+| Task     | Description                                                                                                                          | Completed | Date       |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------ | --------- | ---------- |
+| TASK-005 | Créer `module/importer/mappings/oggdude-talent-activation-map.mjs` (map activation codes → `SYSTEM.TALENT_ACTIVATION`).              | ✅        | 2025-11-14 |
+| TASK-006 | Créer `module/importer/mappings/oggdude-talent-node-map.mjs` (résolution node par nom ou id, création contrôlée).                    | ✅        | 2025-11-14 |
+| TASK-007 | Créer `module/importer/mappings/oggdude-talent-prerequisite-map.mjs` (transform XML prerequisites → structure requirements).         | ✅        | 2025-11-14 |
+| TASK-008 | Créer `module/importer/mappings/oggdude-talent-rank-map.mjs` (map tiers, cost, idx).                                                 | ✅        | 2025-11-14 |
+| TASK-009 | Créer `module/importer/mappings/oggdude-talent-actions-map.mjs` (placeholder actions instanciées en `SwerpgAction` ou listes vides). | ✅        | 2025-11-14 |
 
 ### Implementation Phase 3 - Utilitaires Statistiques Talent
 
 - GOAL-003: Implémenter comptage stats conforme aux autres domaines.
 
-| Task     | Description | Completed | Date |
-| -------- | ----------- | --------- | ---- |
-| TASK-010 | Créer `module/importer/utils/talent-import-utils.mjs` avec: `resetTalentImportStats`, `incrementTalentImportStat(type)`, `getTalentImportStats`. | ✅ | 2025-11-14 |
-| TASK-011 | Initialiser structure interne: `{ total, rejected, imported(getter) }`. | ✅ | 2025-11-14 |
-| TASK-012 | Ajouter ré-export dans mapper pour tests. | ✅ | 2025-11-14 |
-| TASK-013 | Intégrer domaine talent dans `getAllImportStats()` (`global-import-metrics.mjs`) + ajuster interface retour. | ✅ | 2025-11-14 |
-| TASK-014 | Mettre à jour tests existants qui consomment `getAllImportStats()` (adapter assertions). | ✅ | 2025-11-14 |
+| Task     | Description                                                                                                                                      | Completed | Date       |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------ | --------- | ---------- |
+| TASK-010 | Créer `module/importer/utils/talent-import-utils.mjs` avec: `resetTalentImportStats`, `incrementTalentImportStat(type)`, `getTalentImportStats`. | ✅        | 2025-11-14 |
+| TASK-011 | Initialiser structure interne: `{ total, rejected, imported(getter) }`.                                                                          | ✅        | 2025-11-14 |
+| TASK-012 | Ajouter ré-export dans mapper pour tests.                                                                                                        | ✅        | 2025-11-14 |
+| TASK-013 | Intégrer domaine talent dans `getAllImportStats()` (`global-import-metrics.mjs`) + ajuster interface retour.                                     | ✅        | 2025-11-14 |
+| TASK-014 | Mettre à jour tests existants qui consomment `getAllImportStats()` (adapter assertions).                                                         | ✅        | 2025-11-14 |
 
 ### Implementation Phase 4 - Mapper Talent
 
 - GOAL-004: Créer module de mapping principal pour talents.
 
-| Task     | Description | Completed | Date |
-| -------- | ----------- | --------- | ---- |
-| TASK-015 | Créer fichier `module/importer/mappers/oggdude-talent-mapper.mjs` avec logique Template Method + Strategy. | ✅ | 2025-11-14 |
-| TASK-016 | Appeler `resetTalentImportStats()` au début; `recordDomainStart('talent')` avant boucle; `recordDomainEnd('talent')` après. | ✅ | 2025-11-14 |
-| TASK-017 | Parser XML `Data/Talents.xml` depuis ZIP (sécurité: refuser chemins avec `..` ou séparateurs). | ✅ | 2025-11-14 |
-| TASK-018 | Pour chaque entrée: incrémenter `total`; effectuer mapping via tables; construire objet data conforme schema. | ✅ | 2025-11-14 |
-| TASK-019 | Validation: nom non vide unique, node résolu; tier ∈ [0..5]; cost ≥ 0; prerequisites structure valide; ranked flag cohérent. | ✅ | 2025-11-14 |
-| TASK-020 | Gestion signature: si tag signature présent, associer node.type='signature' et préparer `teleportNode`. | ✅ | 2025-11-14 |
-| TASK-021 | En cas d'échec validation: incrémenter `rejected`; `logger.warn` + message i18n; continuer. | ✅ | 2025-11-14 |
-| TASK-022 | Pousser items valides dans collection résultat (array). | ✅ | 2025-11-14 |
-| TASK-023 | Retourner tableau d'Items pré-formatés (prêts pour création via Foundry). | ✅ | 2025-11-14 |
+| Task     | Description                                                                                                                  | Completed | Date       |
+| -------- | ---------------------------------------------------------------------------------------------------------------------------- | --------- | ---------- |
+| TASK-015 | Créer fichier `module/importer/mappers/oggdude-talent-mapper.mjs` avec logique Template Method + Strategy.                   | ✅        | 2025-11-14 |
+| TASK-016 | Appeler `resetTalentImportStats()` au début; `recordDomainStart('talent')` avant boucle; `recordDomainEnd('talent')` après.  | ✅        | 2025-11-14 |
+| TASK-017 | Parser XML `Data/Talents.xml` depuis ZIP (sécurité: refuser chemins avec `..` ou séparateurs).                               | ✅        | 2025-11-14 |
+| TASK-018 | Pour chaque entrée: incrémenter `total`; effectuer mapping via tables; construire objet data conforme schema.                | ✅        | 2025-11-14 |
+| TASK-019 | Validation: nom non vide unique, node résolu; tier ∈ [0..5]; cost ≥ 0; prerequisites structure valide; ranked flag cohérent. | ✅        | 2025-11-14 |
+| TASK-020 | Gestion signature: si tag signature présent, associer node.type='signature' et préparer `teleportNode`.                      | ✅        | 2025-11-14 |
+| TASK-021 | En cas d'échec validation: incrémenter `rejected`; `logger.warn` + message i18n; continuer.                                  | ✅        | 2025-11-14 |
+| TASK-022 | Pousser items valides dans collection résultat (array).                                                                      | ✅        | 2025-11-14 |
+| TASK-023 | Retourner tableau d'Items pré-formatés (prêts pour création via Foundry).                                                    | ✅        | 2025-11-14 |
 
 ### Implementation Phase 5 - Intégration Orchestrateur
 
 - GOAL-005: Intégrer mapper Talent dans pipeline import.
 
-| Task     | Description | Completed | Date |
-| -------- | ----------- | --------- | ---- |
-| TASK-024 | Modifier `module/importer/oggDude.mjs`: inclure `talent` dans `buildContextMap` avec fonction `buildTalentContext()`. | ✅ | 2025-11-14 |
-| TASK-025 | Implémenter `buildTalentContext()` dans `module/importer/items/talent-ogg-dude.mjs` compatible avec architecture existante. | ✅ | 2025-11-14 |
-| TASK-026 | Assurer déclenchement via sélection UI (domaine actif). | ✅ | 2025-11-14 |
-| TASK-027 | Ajouter progression: callback `progressCb({ domain:'talent', processed, imported, rejected })`. | ✅ | 2025-11-14 |
-| TASK-028 | Après import global, `render()` UI pour rafraîchir métriques incluant talent. | ✅ | 2025-11-14 |
+| Task     | Description                                                                                                                 | Completed | Date       |
+| -------- | --------------------------------------------------------------------------------------------------------------------------- | --------- | ---------- |
+| TASK-024 | Modifier `module/importer/oggDude.mjs`: inclure `talent` dans `buildContextMap` avec fonction `buildTalentContext()`.       | ✅        | 2025-11-14 |
+| TASK-025 | Implémenter `buildTalentContext()` dans `module/importer/items/talent-ogg-dude.mjs` compatible avec architecture existante. | ✅        | 2025-11-14 |
+| TASK-026 | Assurer déclenchement via sélection UI (domaine actif).                                                                     | ✅        | 2025-11-14 |
+| TASK-027 | Ajouter progression: callback `progressCb({ domain:'talent', processed, imported, rejected })`.                             | ✅        | 2025-11-14 |
+| TASK-028 | Après import global, `render()` UI pour rafraîchir métriques incluant talent.                                               | ✅        | 2025-11-14 |
 
 ### Implementation Phase 6 - Tests & Validation
 
 - GOAL-006: Couverture tests intégration + unité.
 
-| Task     | Description | Completed | Date |
-| -------- | ----------- | --------- | ---- |
-| TASK-029 | Créer tests unitaires pour utilitaires (`tests/importer/talent-utils.spec.mjs`). | ✅ | 2025-11-14 |
-| TASK-030 | Créer tests unitaires pour mappings (`tests/importer/talent-mappings.spec.mjs`). | ✅ | 2025-11-14 |
-| TASK-031 | Créer tests unitaires mapper principal (`tests/importer/talent-mapper.spec.mjs`). | ✅ | 2025-11-14 |
-| TASK-032 | Test mapping activation, node, prerequisites, rank, actions avec mocks appropriés. | ✅ | 2025-11-14 |
-| TASK-033 | Test stats: `getTalentImportStats()` structure et méthodes reset/increment. | ✅ | 2025-11-14 |
-| TASK-034 | Test validation: contexte talent, transformation données, fallbacks gracieux. | ✅ | 2025-11-14 |
-| TASK-035 | Coverage complète: utilitaires, mappings, mapper principal avec cas d'erreur. | ✅ | 2025-11-14 |
-| TASK-036 | Tests intégration avec mocks SwerpgTalentNode et SYSTEM constants. | ✅ | 2025-11-14 |
-| TASK-037 | Tests validation données OggDude → SwerpgTalent avec edge cases. | ✅ | 2025-11-14 |
-| TASK-038 | Tests builder contexte et génération clés uniques talents. | ✅ | 2025-11-14 |
+| Task     | Description                                                                        | Completed | Date       |
+| -------- | ---------------------------------------------------------------------------------- | --------- | ---------- |
+| TASK-029 | Créer tests unitaires pour utilitaires (`tests/importer/talent-utils.spec.mjs`).   | ✅        | 2025-11-14 |
+| TASK-030 | Créer tests unitaires pour mappings (`tests/importer/talent-mappings.spec.mjs`).   | ✅        | 2025-11-14 |
+| TASK-031 | Créer tests unitaires mapper principal (`tests/importer/talent-mapper.spec.mjs`).  | ✅        | 2025-11-14 |
+| TASK-032 | Test mapping activation, node, prerequisites, rank, actions avec mocks appropriés. | ✅        | 2025-11-14 |
+| TASK-033 | Test stats: `getTalentImportStats()` structure et méthodes reset/increment.        | ✅        | 2025-11-14 |
+| TASK-034 | Test validation: contexte talent, transformation données, fallbacks gracieux.      | ✅        | 2025-11-14 |
+| TASK-035 | Coverage complète: utilitaires, mappings, mapper principal avec cas d'erreur.      | ✅        | 2025-11-14 |
+| TASK-036 | Tests intégration avec mocks SwerpgTalentNode et SYSTEM constants.                 | ✅        | 2025-11-14 |
+| TASK-037 | Tests validation données OggDude → SwerpgTalent avec edge cases.                   | ✅        | 2025-11-14 |
+| TASK-038 | Tests builder contexte et génération clés uniques talents.                         | ✅        | 2025-11-14 |
 
 ### Implementation Phase 7 - Documentation
 
 - GOAL-007: Mettre à jour docs architecture & guides.
 
-| Task     | Description | Completed | Date |
-| -------- | ----------- | --------- | ---- |
-| TASK-039 | Créer documentation architecture complète `docs/importer/talent-import-architecture.md`. | ✅ | 2025-11-14 |
-| TASK-040 | Documenter patterns Strategy + Template Method, Registry, modules spécialisés. | ✅ | 2025-11-14 |
-| TASK-041 | Documenter flux de données, gestion d'erreurs, métriques, extension future. | ✅ | 2025-11-14 |
-| TASK-042 | Documenter intégration écosystème, compatibilité SwerpgTalent, sécurité. | ✅ | 2025-11-14 |
+| Task     | Description                                                                              | Completed | Date       |
+| -------- | ---------------------------------------------------------------------------------------- | --------- | ---------- |
+| TASK-039 | Créer documentation architecture complète `docs/importer/talent-import-architecture.md`. | ✅        | 2025-11-14 |
+| TASK-040 | Documenter patterns Strategy + Template Method, Registry, modules spécialisés.           | ✅        | 2025-11-14 |
+| TASK-041 | Documenter flux de données, gestion d'erreurs, métriques, extension future.              | ✅        | 2025-11-14 |
+| TASK-042 | Documenter intégration écosystème, compatibilité SwerpgTalent, sécurité.                 | ✅        | 2025-11-14 |
 
 ### Implementation Phase 8 - Optimisations & Qualité
 
 - GOAL-008: Renforcer performance, sécurité, accessibilité.
 
-| Task     | Description | Completed | Date |
-| -------- | ----------- | --------- | ---- |
-| TASK-043 | Caching résolution node (Map nom→instance) dans mapper pour éviter recherches multiples. |  |  |
-| TASK-044 | Profilage allocations mémoire (console profiling) sur import volumétrique. |  |  |
-| TASK-045 | Vérifier absence de `innerHTML` injection depuis description OggDude (sanitisation si nécessaire). |  |  |
-| TASK-046 | Implémenter roving tabindex si ajout sous-liste interactive talent dans UI (préparé, conditionnel). |  |  |
-| TASK-047 | Ajouter logs niveau debug pour timings domaine talent. |  |  |
-| TASK-048 | Vérifier ratio errorRate < 0.1 sur dataset test (sinon améliorer validations). |  |  |
+| Task     | Description                                                                                         | Completed | Date |
+| -------- | --------------------------------------------------------------------------------------------------- | --------- | ---- |
+| TASK-043 | Caching résolution node (Map nom→instance) dans mapper pour éviter recherches multiples.            |           |      |
+| TASK-044 | Profilage allocations mémoire (console profiling) sur import volumétrique.                          |           |      |
+| TASK-045 | Vérifier absence de `innerHTML` injection depuis description OggDude (sanitisation si nécessaire).  |           |      |
+| TASK-046 | Implémenter roving tabindex si ajout sous-liste interactive talent dans UI (préparé, conditionnel). |           |      |
+| TASK-047 | Ajouter logs niveau debug pour timings domaine talent.                                              |           |      |
+| TASK-048 | Vérifier ratio errorRate < 0.1 sur dataset test (sinon améliorer validations).                      |           |      |
 
 ## 3. Alternatives
 
@@ -205,4 +205,3 @@ Plan d'implémentation déterministe pour ajouter l'import OggDude des Talents d
 - Performance Optimization instructions
 - Security & OWASP instructions
 - Security & OWASP instructions
-

@@ -40,7 +40,7 @@ if (typeof this.render === 'function') {
 await OggDudeImporter.processOggDudeData(importedFile, this.domains, {
   progressCallback: // ... callbacks pendant l'import
 })
-        
+
 // NOUVEAU : Rafraîchir l'UI avant fermeture
 if (typeof this.render === 'function') {
   try {
@@ -63,7 +63,7 @@ await this.close({})
 
 ## 🧪 Tests ajoutés
 
-- ✅ Validation que `render()` est appelé après `processOggDudeData`  
+- ✅ Validation que `render()` est appelé après `processOggDudeData`
 - ✅ Vérification de la gestion d'erreur gracieuse
 - ✅ Validation des logs de debug présents
 
@@ -72,13 +72,13 @@ await this.close({})
 Maintenant, **immédiatement après l'import** :
 
 - **Overall Duration** s'affiche automatiquement (ex: `6.69s`)
-- **Items/Second** s'affiche automatiquement (ex: `196.18 items/s`)  
+- **Items/Second** s'affiche automatiquement (ex: `196.18 items/s`)
 - **Aucun clic requis** pour voir les métriques finales
 
 ## 🔄 Workflow complet désormais
 
 1. **Début import** → Timing global commence (`markGlobalStart`)
-2. **Pendant import** → UI mise à jour via `progressCallback`  
+2. **Pendant import** → UI mise à jour via `progressCallback`
 3. **Fin import** → Timing global se termine (`markGlobalEnd`)
 4. **🆕 Rafraîchissement auto** → `render()` appelé automatiquement
 5. **Affichage final** → Métriques globales visibles immédiatement

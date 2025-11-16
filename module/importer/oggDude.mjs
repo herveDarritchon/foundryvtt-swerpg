@@ -7,13 +7,7 @@ import { buildCareerContext } from './items/career-ogg-dude.mjs'
 import { buildTalentContext } from './items/talent-ogg-dude.mjs'
 import { logger } from '../utils/logger.mjs'
 import { withRetry } from './utils/retry.mjs'
-import {
-  markGlobalStart,
-  markGlobalEnd,
-  markArchiveSize,
-  recordDomainStart,
-  recordDomainEnd,
-} from './utils/global-import-metrics.mjs'
+import { markGlobalStart, markGlobalEnd, markArchiveSize, recordDomainStart, recordDomainEnd } from './utils/global-import-metrics.mjs'
 
 export default class OggDudeImporter {
   /**
@@ -198,19 +192,13 @@ export default class OggDudeImporter {
     let processed = 0
     for (const entry of contextEntries) {
       recordDomainStart(entry.type)
-      const context = await withRetry(
-        () => entry.contextBuilder(zip, groupByDirectory, groupByType),
-        {
-          shouldRetry: (err) => /parse|XML|network/i.test(err?.message || ''),
-        },
-      )
+      const context = await withRetry(() => entry.contextBuilder(zip, groupByDirectory, groupByType), {
+        shouldRetry: (err) => /parse|XML|network/i.test(err?.message || ''),
+      })
       logger.debug('[ProcessOggDudeData] - Step 3.4: Context >', context)
-      await withRetry(
-        () => OggDudeDataElement.processElements(context),
-        {
-          shouldRetry: (err) => /database|upload|parse/i.test(err?.message || ''),
-        },
-      )
+      await withRetry(() => OggDudeDataElement.processElements(context), {
+        shouldRetry: (err) => /database|upload|parse/i.test(err?.message || ''),
+      })
       processed += 1
       recordDomainEnd(entry.type)
       if (typeof progressCallback === 'function') {

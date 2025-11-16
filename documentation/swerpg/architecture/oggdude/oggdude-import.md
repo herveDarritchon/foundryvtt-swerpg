@@ -5,7 +5,7 @@ date_created: 2025-11-13
 last_updated: 2025-11-13
 owner: herve.darritchon
 status: 'In progress'
-tags: [ 'architecture', 'import', 'oggdude', 'documentation', 'feature' ]
+tags: ['architecture', 'import', 'oggdude', 'documentation', 'feature']
 ---
 
 # Architecture d'Import OggDude - Plan d'Implémentation
@@ -32,65 +32,65 @@ d'implémentation de chaque composant.
 - GOAL-001: Implémenter l'infrastructure de base pour l'import OggDude
 
 | Task     | Description                                                                   | Completed | Date       |
-|----------|-------------------------------------------------------------------------------|-----------|------------|
-| TASK-001 | Créer OggDudeDataImporter (interface utilisateur)                             | ✅         | 2025-11-13 |
-| TASK-002 | Créer OggDudeImporter (orchestrateur principal)                               | ✅         | 2025-11-13 |
-| TASK-003 | Créer OggDudeDataElement (modèle de données ZIP)                              | ✅         | 2025-11-13 |
-| TASK-004 | Implémenter le template Handlebars pour l'interface                           | ✅         | 2025-11-13 |
-| TASK-005 | Implémenter les méthodes utilitaires de mapping (mapOptional*, mapMandatory*) | ✅         | 2025-11-13 |
+| -------- | ----------------------------------------------------------------------------- | --------- | ---------- |
+| TASK-001 | Créer OggDudeDataImporter (interface utilisateur)                             | ✅        | 2025-11-13 |
+| TASK-002 | Créer OggDudeImporter (orchestrateur principal)                               | ✅        | 2025-11-13 |
+| TASK-003 | Créer OggDudeDataElement (modèle de données ZIP)                              | ✅        | 2025-11-13 |
+| TASK-004 | Implémenter le template Handlebars pour l'interface                           | ✅        | 2025-11-13 |
+| TASK-005 | Implémenter les méthodes utilitaires de mapping (mapOptional*, mapMandatory*) | ✅        | 2025-11-13 |
 
 ### Implementation Phase 2 - Mappers Core Items (✅ COMPLETED)
 
 - GOAL-002: Implémenter les mappers pour les types d'objets principaux
 
 | Task     | Description                                    | Completed | Date       |
-|----------|------------------------------------------------|-----------|------------|
-| TASK-006 | Créer ArmorMapper avec buildArmorContext()     | ✅         | 2025-11-13 |
-| TASK-007 | Créer WeaponMapper avec buildWeaponContext()   | ✅         | 2025-11-13 |
-| TASK-008 | Créer GearMapper avec buildGearContext()       | ✅         | 2025-11-13 |
-| TASK-009 | Créer SpeciesMapper avec buildSpeciesContext() | ✅         | 2025-11-13 |
-| TASK-010 | Créer CareerMapper avec buildCareerContext()   | ✅         | 2025-11-13 |
+| -------- | ---------------------------------------------- | --------- | ---------- |
+| TASK-006 | Créer ArmorMapper avec buildArmorContext()     | ✅        | 2025-11-13 |
+| TASK-007 | Créer WeaponMapper avec buildWeaponContext()   | ✅        | 2025-11-13 |
+| TASK-008 | Créer GearMapper avec buildGearContext()       | ✅        | 2025-11-13 |
+| TASK-009 | Créer SpeciesMapper avec buildSpeciesContext() | ✅        | 2025-11-13 |
+| TASK-010 | Créer CareerMapper avec buildCareerContext()   | ✅        | 2025-11-13 |
 
 ### Implementation Phase 3 - Tables de Mapping (✅ COMPLETED)
 
 - GOAL-003: Implémenter les tables de correspondance OggDude vers système
 
 | Task     | Description                                                          | Completed | Date       |
-|----------|----------------------------------------------------------------------|-----------|------------|
-| TASK-011 | Créer oggdude-skill-map.mjs avec mapOggDudeSkillCode()               | ✅         | 2025-11-13 |
-| TASK-012 | Créer oggdude-armor-category-map.mjs avec resolveArmorCategory()     | ✅         | 2025-11-13 |
-| TASK-013 | Créer oggdude-armor-property-map.mjs avec resolveArmorProperties()   | ✅         | 2025-11-13 |
-| TASK-014 | Créer oggdude-weapon-*.mjs (skill, quality, range, hands)            | ✅         | 2025-11-13 |
-| TASK-015 | Créer oggdude-career-skill-map.mjs avec mapCareerOggDudeSkillCodes() | ✅         | 2025-11-13 |
+| -------- | -------------------------------------------------------------------- | --------- | ---------- |
+| TASK-011 | Créer oggdude-skill-map.mjs avec mapOggDudeSkillCode()               | ✅        | 2025-11-13 |
+| TASK-012 | Créer oggdude-armor-category-map.mjs avec resolveArmorCategory()     | ✅        | 2025-11-13 |
+| TASK-013 | Créer oggdude-armor-property-map.mjs avec resolveArmorProperties()   | ✅        | 2025-11-13 |
+| TASK-014 | Créer oggdude-weapon-\*.mjs (skill, quality, range, hands)           | ✅        | 2025-11-13 |
+| TASK-015 | Créer oggdude-career-skill-map.mjs avec mapCareerOggDudeSkillCodes() | ✅        | 2025-11-13 |
 
 ### Implementation Phase 4 - Registry et Orchestration (✅ COMPLETED)
 
 - GOAL-004: Implémenter le système de registre et l'orchestration des imports
 
 | Task     | Description                                               | Completed | Date       |
-|----------|-----------------------------------------------------------|-----------|------------|
-| TASK-016 | Implémenter buildContextMap registry dans OggDudeImporter | ✅         | 2025-11-13 |
-| TASK-017 | Intégrer tous les mappers dans le processus d'import      | ✅         | 2025-11-13 |
-| TASK-018 | Implémenter la sélection de domaines dans l'interface     | ✅         | 2025-11-13 |
-| TASK-019 | Implémenter la validation et gestion d'erreurs            | ✅         | 2025-11-13 |
+| -------- | --------------------------------------------------------- | --------- | ---------- |
+| TASK-016 | Implémenter buildContextMap registry dans OggDudeImporter | ✅        | 2025-11-13 |
+| TASK-017 | Intégrer tous les mappers dans le processus d'import      | ✅        | 2025-11-13 |
+| TASK-018 | Implémenter la sélection de domaines dans l'interface     | ✅        | 2025-11-13 |
+| TASK-019 | Implémenter la validation et gestion d'erreurs            | ✅        | 2025-11-13 |
 
 ### Implementation Phase 5 - Localisation et Interface (✅ COMPLETED)
 
 - GOAL-005: Finaliser l'interface utilisateur et la localisation
 
 | Task     | Description                                                                       | Completed | Date       |
-|----------|-----------------------------------------------------------------------------------|-----------|------------|
-| TASK-020 | Ajouter les libellés de localisation en anglais (lang/en.json)                    | ✅         | 2025-11-13 |
-| TASK-021 | Implémenter la gestion des états UI (boutons, sélections)                         | ✅         | 2025-11-13 |
-| TASK-022 | Implémenter les actions utilisateur (loadAction, toggleDomainAction, resetAction) | ✅         | 2025-11-13 |
+| -------- | --------------------------------------------------------------------------------- | --------- | ---------- |
+| TASK-020 | Ajouter les libellés de localisation en anglais (lang/en.json)                    | ✅        | 2025-11-13 |
+| TASK-021 | Implémenter la gestion des états UI (boutons, sélections)                         | ✅        | 2025-11-13 |
+| TASK-022 | Implémenter les actions utilisateur (loadAction, toggleDomainAction, resetAction) | ✅        | 2025-11-13 |
 
 ### Implementation Phase 6 - Observabilité et Utilitaires (🔄 IN PROGRESS)
 
 - GOAL-006: Implémenter l'observabilité complète et les utilitaires de diagnostic
 
 | Task     | Description                                             | Completed | Date       |
-|----------|---------------------------------------------------------|-----------|------------|
-| TASK-023 | Créer armor-import-utils.mjs avec getArmorImportStats() | ✅         | 2025-11-13 |
+| -------- | ------------------------------------------------------- | --------- | ---------- |
+| TASK-023 | Créer armor-import-utils.mjs avec getArmorImportStats() | ✅        | 2025-11-13 |
 | TASK-024 | Implémenter les statistiques d'import pour weapons      |           |            |
 | TASK-025 | Implémenter les statistiques d'import pour gear         |           |            |
 | TASK-026 | Implémenter les statistiques d'import pour species      |           |            |
@@ -102,9 +102,9 @@ d'implémentation de chaque composant.
 - GOAL-007: Assurer la couverture de tests complète de l'architecture d'import
 
 | Task     | Description                                                   | Completed | Date       |
-|----------|---------------------------------------------------------------|-----------|------------|
-| TASK-029 | Créer tests d'intégration species-import.integration.spec.mjs | ✅         | 2025-11-13 |
-| TASK-030 | Créer tests d'intégration career-import.integration.spec.mjs  | ✅         | 2025-11-13 |
+| -------- | ------------------------------------------------------------- | --------- | ---------- |
+| TASK-029 | Créer tests d'intégration species-import.integration.spec.mjs | ✅        | 2025-11-13 |
+| TASK-030 | Créer tests d'intégration career-import.integration.spec.mjs  | ✅        | 2025-11-13 |
 | TASK-031 | Créer tests unitaires pour OggDudeDataImporter                |           |            |
 | TASK-032 | Créer tests unitaires pour OggDudeImporter                    |           |            |
 | TASK-033 | Créer tests unitaires pour OggDudeDataElement                 |           |            |
@@ -117,11 +117,11 @@ d'implémentation de chaque composant.
 - GOAL-008: Finaliser la documentation et les guides d'extension
 
 | Task     | Description                                              | Completed | Date       |
-|----------|----------------------------------------------------------|-----------|------------|
-| TASK-037 | Créer documentation architecture complète                | ✅         | 2025-11-13 |
-| TASK-038 | Créer guide d'implémentation pour nouveaux types         | ✅         | 2025-11-13 |
-| TASK-039 | Créer documentation des patterns utilisés                | ✅         | 2025-11-13 |
-| TASK-040 | Créer DOCUMENTATION_PROCESS.md                           | ✅         | 2025-11-13 |
+| -------- | -------------------------------------------------------- | --------- | ---------- |
+| TASK-037 | Créer documentation architecture complète                | ✅        | 2025-11-13 |
+| TASK-038 | Créer guide d'implémentation pour nouveaux types         | ✅        | 2025-11-13 |
+| TASK-039 | Créer documentation des patterns utilisés                | ✅        | 2025-11-13 |
+| TASK-040 | Créer DOCUMENTATION_PROCESS.md                           | ✅        | 2025-11-13 |
 | TASK-041 | Créer exemples pratiques d'extension                     |           |            |
 | TASK-042 | Valider les guides avec implémentation d'un type exemple |           |            |
 
@@ -130,7 +130,7 @@ d'implémentation de chaque composant.
 - GOAL-009: Implémenter les améliorations d'expérience utilisateur et performance
 
 | Task     | Description                                          | Completed | Date |
-|----------|------------------------------------------------------|-----------|------|
+| -------- | ---------------------------------------------------- | --------- | ---- |
 | TASK-043 | Implémenter prévisualisation avant import (REQ-006)  |           |      |
 | TASK-044 | Implémenter indicateurs de progression               |           |      |
 | TASK-045 | Optimiser performance pour gros fichiers (streaming) |           |      |
@@ -203,21 +203,21 @@ catégorie et niveau d'implémentation.
 
 #### Equipment & Gear (✅ IMPLEMENTED)
 
-| Type            | File                  | Description                            | Status        | Priority |
-|-----------------|-----------------------|----------------------------------------|---------------|----------|
+| Type            | File                  | Description                            | Status         | Priority |
+| --------------- | --------------------- | -------------------------------------- | -------------- | -------- |
 | Armor           | `Armor.xml`           | Armures et équipements de protection   | ✅ IMPLEMENTED | HIGH     |
 | Weapons         | `Weapons.xml`         | Armes de toutes catégories             | ✅ IMPLEMENTED | HIGH     |
 | Gear            | `Gear.xml`            | Équipements généraux et outils         | ✅ IMPLEMENTED | HIGH     |
-| ItemAttachments | `ItemAttachments.xml` | Attachements et modifications d'objets | 📋 PLANNED    | MEDIUM   |
-| ItemDescriptors | `ItemDescriptors.xml` | Descripteurs et propriétés d'objets    | 📋 PLANNED    | LOW      |
+| ItemAttachments | `ItemAttachments.xml` | Attachements et modifications d'objets | 📋 PLANNED     | MEDIUM   |
+| ItemDescriptors | `ItemDescriptors.xml` | Descripteurs et propriétés d'objets    | 📋 PLANNED     | LOW      |
 
 #### Characters & Species (✅ IMPLEMENTED)
 
-| Type            | File/Directory          | Description                                     | Status        | Priority |
-|-----------------|-------------------------|-------------------------------------------------|---------------|----------|
+| Type            | File/Directory          | Description                                     | Status         | Priority |
+| --------------- | ----------------------- | ----------------------------------------------- | -------------- | -------- |
 | Species         | `Species/*.xml`         | 100+ espèces jouables (Human, Twi'lek, etc.)    | ✅ IMPLEMENTED | HIGH     |
 | Careers         | `Careers/*.xml`         | 20 carrières de base (Ace, Bounty Hunter, etc.) | ✅ IMPLEMENTED | HIGH     |
-| Specializations | `Specializations/*.xml` | 100+ spécialisations (Pilot, Assassin, etc.)    | 📋 PLANNED    | HIGH     |
+| Specializations | `Specializations/*.xml` | 100+ spécialisations (Pilot, Assassin, etc.)    | 📋 PLANNED     | HIGH     |
 
 ### Force & Abilities (🔄 IN PROGRESS)
 
@@ -227,7 +227,7 @@ catégorie et niveau d'implémentation.
 
 Chaque fonction `get<Domain>ImportStats()` retourne:
 
-```json
+````json
 {
   total: number,
   rejected: number,
@@ -264,7 +264,7 @@ totalProcessed: number,
 totalRejected: number,
 totalImported: number
 }
-```
+````
 
 ### Instrumentation Runtime
 
@@ -279,7 +279,7 @@ Exposées à l'UI via `_prepareContext()` => rendu tableau + métriques globales
 #### Force Powers & Abilities
 
 | Type            | File/Directory        | Description                          | Status     | Priority |
-|-----------------|-----------------------|--------------------------------------|------------|----------|
+| --------------- | --------------------- | ------------------------------------ | ---------- | -------- |
 | Force Powers    | `Force Powers/*.xml`  | Pouvoirs de Force (Move, Heal, etc.) | 📋 PLANNED | HIGH     |
 | Force Abilities | `Force Abilities.xml` | Capacités liées à la Force           | 📋 PLANNED | MEDIUM   |
 | Talents         | `Talents.xml`         | Talents généraux (7000+ entrées)     | 📋 PLANNED | HIGH     |
@@ -290,7 +290,7 @@ Exposées à l'UI via `_prepareContext()` => rendu tableau + métriques globales
 #### Background Elements
 
 | Type                | File                      | Description                | Status     | Priority |
-|---------------------|---------------------------|----------------------------|------------|----------|
+| ------------------- | ------------------------- | -------------------------- | ---------- | -------- |
 | Obligations         | `Obligations.xml`         | Obligations de personnage  | 📋 PLANNED | MEDIUM   |
 | Duty                | `Duty.xml`                | Devoirs et responsabilités | 📋 PLANNED | MEDIUM   |
 | Moralities          | `Moralities.xml`          | Codes moraux et éthiques   | 📋 PLANNED | MEDIUM   |
@@ -300,7 +300,7 @@ Exposées à l'UI via `_prepareContext()` => rendu tableau + métriques globales
 #### Social & Reputation
 
 | Type        | File              | Description                | Status     | Priority |
-|-------------|-------------------|----------------------------|------------|----------|
+| ----------- | ----------------- | -------------------------- | ---------- | -------- |
 | Attitudes   | `Attitudes.xml`   | Attitudes comportementales | 📋 PLANNED | LOW      |
 | Reputations | `Reputations.xml` | Systèmes de réputation     | 📋 PLANNED | LOW      |
 | Hooks       | `Hooks.xml`       | Accroches narratives       | 📋 PLANNED | LOW      |
@@ -311,7 +311,7 @@ Exposées à l'UI via `_prepareContext()` => rendu tableau + métriques globales
 #### Core Systems
 
 | Type            | File                  | Description                | Status     | Priority |
-|-----------------|-----------------------|----------------------------|------------|----------|
+| --------------- | --------------------- | -------------------------- | ---------- | -------- |
 | Skills          | `Skills.xml`          | Compétences du système     | 📋 PLANNED | HIGH     |
 | Characteristics | `Characteristics.xml` | Caractéristiques primaires | 📋 PLANNED | HIGH     |
 | Classes         | `Classes.xml`         | Classes de personnages     | 📋 PLANNED | MEDIUM   |
@@ -319,7 +319,7 @@ Exposées à l'UI via `_prepareContext()` => rendu tableau + métriques globales
 #### Crafting & Customization
 
 | Type              | File                    | Description                  | Status     | Priority |
-|-------------------|-------------------------|------------------------------|------------|----------|
+| ----------------- | ----------------------- | ---------------------------- | ---------- | -------- |
 | CraftTemplates    | `CraftTemplates.xml`    | Modèles d'artisanat          | 📋 PLANNED | LOW      |
 | CraftImprovements | `CraftImprovements.xml` | Améliorations d'artisanat    | 📋 PLANNED | LOW      |
 | CraftDroidTraits  | `CraftDroidTraits.xml`  | Traits de droïdes artisanaux | 📋 PLANNED | LOW      |
@@ -329,7 +329,7 @@ Exposées à l'UI via `_prepareContext()` => rendu tableau + métriques globales
 #### Vehicle Systems
 
 | Type         | File/Directory     | Description            | Status     | Priority |
-|--------------|--------------------|------------------------|------------|----------|
+| ------------ | ------------------ | ---------------------- | ---------- | -------- |
 | Vehicles     | `Vehicles/*.xml`   | Véhicules et vaisseaux | 📋 PLANNED | MEDIUM   |
 | VehActions   | `VehActions.xml`   | Actions véhiculaires   | 📋 PLANNED | MEDIUM   |
 | VehPositions | `VehPositions.xml` | Positions d'équipage   | 📋 PLANNED | LOW      |
@@ -339,7 +339,7 @@ Exposées à l'UI via `_prepareContext()` => rendu tableau + métriques globales
 #### Inquisitor Content
 
 | Type                | File                      | Description              | Status     | Priority |
-|---------------------|---------------------------|--------------------------|------------|----------|
+| ------------------- | ------------------------- | ------------------------ | ---------- | -------- |
 | InquisitorAbilities | `InquisitorAbilities.xml` | Capacités d'Inquisiteur  | 📋 PLANNED | LOW      |
 | InquisitorEquipment | `InquisitorEquipment.xml` | Équipement d'Inquisiteur | 📋 PLANNED | LOW      |
 | InquisitorPackages  | `InquisitorPackages.xml`  | Paquets d'Inquisiteur    | 📋 PLANNED | LOW      |
@@ -348,7 +348,7 @@ Exposées à l'UI via `_prepareContext()` => rendu tableau + métriques globales
 #### Advanced Systems
 
 | Type             | File                   | Description           | Status     | Priority |
-|------------------|------------------------|-----------------------|------------|----------|
+| ---------------- | ---------------------- | --------------------- | ---------- | -------- |
 | BaseFoci         | `BaseFoci.xml`         | Foci de base          | 📋 PLANNED | LOW      |
 | BaseOfOperations | `BaseOfOperations.xml` | Bases d'opérations    | 📋 PLANNED | LOW      |
 | BaseUpgrades     | `BaseUpgrades.xml`     | Améliorations de base | 📋 PLANNED | LOW      |
@@ -359,7 +359,7 @@ Exposées à l'UI via `_prepareContext()` => rendu tableau + métriques globales
 #### Image Assets
 
 | Type               | Directory             | Description              | Status     | Priority |
-|--------------------|-----------------------|--------------------------|------------|----------|
+| ------------------ | --------------------- | ------------------------ | ---------- | -------- |
 | BaseImages         | `BaseImages/`         | Images de base système   | 📋 PLANNED | LOW      |
 | EquipmentImages    | `EquipmentImages/`    | Images d'équipements     | 📋 PLANNED | MEDIUM   |
 | SpeciesImages      | `SpeciesImages/`      | Portraits d'espèces      | 📋 PLANNED | MEDIUM   |
@@ -403,7 +403,7 @@ Exposées à l'UI via `_prepareContext()` => rendu tableau + métriques globales
 ### Data Volume Analysis
 
 | Category                | Estimated Items | Complexity | Development Effort |
-|-------------------------|-----------------|------------|--------------------|
+| ----------------------- | --------------- | ---------- | ------------------ |
 | Equipment               | ~500 items      | Medium     | 2-3 sprints        |
 | Species                 | ~100 species    | Medium     | 1-2 sprints        |
 | Careers/Specializations | ~120 items      | High       | 3-4 sprints        |
@@ -529,18 +529,18 @@ sequenceDiagram
     UI->>DI: Sélection fichier ZIP
     UI->>DI: Sélection domaines
     UI->>DI: Clic "Load"
-    
+
     DI->>OI: processOggDudeData(zipFile, domains)
-    
+
     Note over OI: Phase Générique
     OI->>OI: load(importedFile)
     OI->>DE: from(zip)
     OI->>DE: groupByDirectory(elements)
     OI->>DE: groupByType(elements)
-    
+
     Note over OI: Phase Spécifique
     OI->>OI: buildContextMap.set(type, contextBuilder)
-    
+
     loop Pour chaque domaine sélectionné
         OI->>M: contextBuilder(zip, groupByDirectory, groupByType)
         M->>DE: buildJsonDataFromFile(...)
@@ -554,7 +554,7 @@ sequenceDiagram
         M-->>DE: mappedItems
         DE->>F: _storeItems()
     end
-    
+
     OI-->>DI: Import terminé
     DI-->>UI: Notification succès
 ```
@@ -564,79 +564,79 @@ sequenceDiagram
 ### Exigences Must Have
 
 - **REQ-001**: Le système DOIT permettre de sélectionner un fichier ZIP contenant les données OggDude
-    - **Type**: Must
-    - **Rationale**: Condition préalable à tout import de données
-    - **Source**: `OggDudeDataImporter.mjs`, méthode `_onOggdudeZipFileChange`
-    - **Priority**: Must have
-    - **Category**: Usability
+  - **Type**: Must
+  - **Rationale**: Condition préalable à tout import de données
+  - **Source**: `OggDudeDataImporter.mjs`, méthode `_onOggdudeZipFileChange`
+  - **Priority**: Must have
+  - **Category**: Usability
 
 - **REQ-002**: Le système DOIT permettre de sélectionner les domaines d'import (weapon, armor, gear, species, career)
-    - **Type**: Must
-    - **Rationale**: Permet un import sélectif pour éviter la surcharge
-    - **Source**: `OggDudeDataImporter.mjs`, propriété `_domainNames`
-    - **Priority**: Must have
-    - **Category**: Usability
+  - **Type**: Must
+  - **Rationale**: Permet un import sélectif pour éviter la surcharge
+  - **Source**: `OggDudeDataImporter.mjs`, propriété `_domainNames`
+  - **Priority**: Must have
+  - **Category**: Usability
 
 - **REQ-003**: Le système DOIT valider la structure du fichier ZIP avant traitement
-    - **Type**: Must
-    - **Rationale**: Prévention d'erreurs lors du traitement
-    - **Source**: `OggDudeDataElement.mjs`, méthode `from`
-    - **Priority**: Must have
-    - **Category**: Security
+  - **Type**: Must
+  - **Rationale**: Prévention d'erreurs lors du traitement
+  - **Source**: `OggDudeDataElement.mjs`, méthode `from`
+  - **Priority**: Must have
+  - **Category**: Security
 
 ### Exigences Should Have
 
 - **REQ-004**: Le système DEVRAIT fournir des statistiques d'import détaillées
-    - **Type**: Should
-    - **Rationale**: Observabilité et diagnostic des imports
-    - **Source**: `armor-import-utils.mjs`, fonction `getArmorImportStats`
-    - **Priority**: Should have
-    - **Category**: Maintainability
+  - **Type**: Should
+  - **Rationale**: Observabilité et diagnostic des imports
+  - **Source**: `armor-import-utils.mjs`, fonction `getArmorImportStats`
+  - **Priority**: Should have
+  - **Category**: Maintainability
 
 - **REQ-005**: Le système DEVRAIT mapper automatiquement les compétences/propriétés OggDude vers le système
-    - **Type**: Should
-    - **Rationale**: Réduction des erreurs de mapping manuel
-    - **Source**: `oggdude-skill-map.mjs`, `oggdude-armor-category-map.mjs`
-    - **Priority**: Should have
-    - **Category**: Performance
+  - **Type**: Should
+  - **Rationale**: Réduction des erreurs de mapping manuel
+  - **Source**: `oggdude-skill-map.mjs`, `oggdude-armor-category-map.mjs`
+  - **Priority**: Should have
+  - **Category**: Performance
 
 ### Exigences Could Have
 
 - **REQ-006**: Le système POURRAIT permettre la prévisualisation avant import
-    - **Type**: Could
-    - **Rationale**: Validation avant engagement
-    - **Source**: Non implémenté actuellement
-    - **Priority**: Could have
-    - **Category**: Usability
+  - **Type**: Could
+  - **Rationale**: Validation avant engagement
+  - **Source**: Non implémenté actuellement
+  - **Priority**: Could have
+  - **Category**: Usability
 
 ## Exigences Non-Fonctionnelles
 
 ### Performance
 
 - **NFR-001**: L'import d'un fichier ZIP de 50MB DOIT se terminer en moins de 2 minutes
-    - **Type**: Must
-    - **Rationale**: Expérience utilisateur acceptable
-    - **Source**: Contrainte système globale
-    - **Priority**: Must have
-    - **Category**: Performance
+  - **Type**: Must
+  - **Rationale**: Expérience utilisateur acceptable
+  - **Source**: Contrainte système globale
+  - **Priority**: Must have
+  - **Category**: Performance
 
 ### Sécurité
 
 - **NFR-002**: Le système DOIT valider tous les chemins de fichier pour prévenir les attaques de traversée
-    - **Type**: Must
-    - **Rationale**: Sécurité système
-    - **Source**: `OggDudeDataElement.mjs`, méthode `_getRelativePath`
-    - **Priority**: Must have
-    - **Category**: Security
+  - **Type**: Must
+  - **Rationale**: Sécurité système
+  - **Source**: `OggDudeDataElement.mjs`, méthode `_getRelativePath`
+  - **Priority**: Must have
+  - **Category**: Security
 
 ### Maintainabilité
 
 - **NFR-003**: Chaque nouveau type d'item DOIT suivre le pattern de mapping établi
-    - **Type**: Must
-    - **Rationale**: Cohérence architecturale
-    - **Source**: Pattern défini dans tous les mappers existants
-    - **Priority**: Must have
-    - **Category**: Maintainability
+  - **Type**: Must
+  - **Rationale**: Cohérence architecturale
+  - **Source**: Pattern défini dans tous les mappers existants
+  - **Priority**: Must have
+  - **Category**: Maintainability
 
 ## Patterns Architecturaux
 
@@ -647,14 +647,14 @@ Chaque type d'item utilise une stratégie de mapping spécifique :
 ```javascript
 // Interface commune
 export function itemMapper(items) {
-    return items.map(mapOggDudeItem).filter(item => item !== null)
+  return items.map(mapOggDudeItem).filter((item) => item !== null)
 }
 
 // Implémentation spécifique
 function mapOggDudeItem(xmlItem) {
-    // Validation
-    // Transformation
-    // Retour objet Foundry
+  // Validation
+  // Transformation
+  // Retour objet Foundry
 }
 ```
 
@@ -685,8 +685,8 @@ Le processus d'import suit un template method :
 
 ```javascript
 const buildContextMap = new Map()
-buildContextMap.set('armor', {type: 'armor', contextBuilder: buildArmorContext})
-buildContextMap.set('weapon', {type: 'weapon', contextBuilder: buildWeaponContext})
+buildContextMap.set('armor', { type: 'armor', contextBuilder: buildArmorContext })
+buildContextMap.set('weapon', { type: 'weapon', contextBuilder: buildWeaponContext })
 ```
 
 ## Modèles de Données
@@ -695,28 +695,32 @@ buildContextMap.set('weapon', {type: 'weapon', contextBuilder: buildWeaponContex
 
 ```typescript
 interface OggDudeElementContext {
-    jsonData: any[]           // Données XML parsées
-    zip: {                    // Métadonnées ZIP
-        elementFileName: string
-        content: JSZip
-        directories: Record<string, OggDudeDataElement[]>
-    }
-    image: {                  // Configuration images
-        criteria: string        // Chemin source dans ZIP
-        worldPath: string       // Chemin destination monde
-        systemPath: string      // Chemin par défaut système
-        images: OggDudeDataElement[]
-        prefix: string          // Préfixe fichiers
-    }
-    folder: {                 // Dossier Foundry
-        name: string
-        type: string
-    }
-    element: {                // Configuration mapping
-        jsonCriteria: string    // XPath données JSON
-        mapper: Function        // Fonction transformation
-        type: string           // Type item Foundry
-    }
+  jsonData: any[] // Données XML parsées
+  zip: {
+    // Métadonnées ZIP
+    elementFileName: string
+    content: JSZip
+    directories: Record<string, OggDudeDataElement[]>
+  }
+  image: {
+    // Configuration images
+    criteria: string // Chemin source dans ZIP
+    worldPath: string // Chemin destination monde
+    systemPath: string // Chemin par défaut système
+    images: OggDudeDataElement[]
+    prefix: string // Préfixe fichiers
+  }
+  folder: {
+    // Dossier Foundry
+    name: string
+    type: string
+  }
+  element: {
+    // Configuration mapping
+    jsonCriteria: string // XPath données JSON
+    mapper: Function // Fonction transformation
+    type: string // Type item Foundry
+  }
 }
 ```
 
@@ -724,24 +728,24 @@ interface OggDudeElementContext {
 
 ```typescript
 class OggDudeDataElement {
-    private _name: string         // Nom fichier
-    private _relativePath: string // Chemin relatif
-    private _type: string         // Type: directory|image|xml
-    private _fullPath: string     // Chemin complet
+  private _name: string // Nom fichier
+  private _relativePath: string // Chemin relatif
+  private _type: string // Type: directory|image|xml
+  private _fullPath: string // Chemin complet
 
-    // Méthodes de classification
-    isDir(): boolean
+  // Méthodes de classification
+  isDir(): boolean
 
-    isImage(): boolean
+  isImage(): boolean
 
-    isXml(): boolean
+  isXml(): boolean
 
-    // Méthodes statiques de traitement
-    static from(zip): OggDudeDataElement[]
+  // Méthodes statiques de traitement
+  static from(zip): OggDudeDataElement[]
 
-    static groupByType(elements): Record<string, OggDudeDataElement[]>
+  static groupByType(elements): Record<string, OggDudeDataElement[]>
 
-    static groupByDirectory(elements): Record<string, OggDudeDataElement[]>
+  static groupByDirectory(elements): Record<string, OggDudeDataElement[]>
 }
 ```
 
@@ -803,8 +807,8 @@ flowchart TD
 ```javascript
 import OggDudeImporter from '../oggDude.mjs'
 import OggDudeDataElement from '../../settings/models/OggDudeDataElement.mjs'
-import {buildArmorImgWorldPath, buildItemImgSystemPath} from '../../settings/directories.mjs'
-import {logger} from '../../utils/logger.mjs'
+import { buildArmorImgWorldPath, buildItemImgSystemPath } from '../../settings/directories.mjs'
+import { logger } from '../../utils/logger.mjs'
 
 /**
  * MonType Array Mapper : Map the MonType XML data to SwerpgMonType objects.
@@ -812,62 +816,64 @@ import {logger} from '../../utils/logger.mjs'
  * @returns {Array} The SwerpgMonType object array.
  */
 export function monTypeMapper(items) {
-    return items.map((xmlItem) => {
-        const name = OggDudeImporter.mapMandatoryString('montype.Name', xmlItem.Name)
-        const key = OggDudeImporter.mapMandatoryString('montype.Key', xmlItem.Key)
+  return items
+    .map((xmlItem) => {
+      const name = OggDudeImporter.mapMandatoryString('montype.Name', xmlItem.Name)
+      const key = OggDudeImporter.mapMandatoryString('montype.Key', xmlItem.Key)
 
-        logger.debug('[MonTypeImporter] Mapping item', {key, name})
+      logger.debug('[MonTypeImporter] Mapping item', { key, name })
 
-        return {
-            name,
-            type: 'montype',
-            system: {
-                // Mapper les champs selon le modèle SwerpgMonType
-                description: OggDudeImporter.mapOptionalString(xmlItem.Description),
-                // ... autres champs
-            },
-            flags: {
-                swerpg: {
-                    oggdudeKey: key
-                }
-            }
-        }
-    }).filter(item => item !== null)
+      return {
+        name,
+        type: 'montype',
+        system: {
+          // Mapper les champs selon le modèle SwerpgMonType
+          description: OggDudeImporter.mapOptionalString(xmlItem.Description),
+          // ... autres champs
+        },
+        flags: {
+          swerpg: {
+            oggdudeKey: key,
+          },
+        },
+      }
+    })
+    .filter((item) => item !== null)
 }
 
 /**
  * Build the MonType context for the importer process.
  */
 export async function buildMonTypeContext(zip, groupByDirectory, groupByType) {
-    return {
-        jsonData: await OggDudeDataElement.buildJsonDataFromFile(
-            zip,
-            groupByDirectory,
-            'MonType.xml',      // Nom du fichier XML dans OggDude
-            'MonTypes.MonType'   // XPath vers les données
-        ),
-        zip: {
-            elementFileName: 'MonType.xml',
-            content: zip,
-            directories: groupByDirectory,
-        },
-        image: {
-            criteria: 'Data/MonTypeImages',  // Chemin images dans ZIP
-            worldPath: buildArmorImgWorldPath('montypes'),
-            systemPath: buildItemImgSystemPath('montype.svg'),
-            images: groupByType.image,
-            prefix: 'MonType',
-        },
-        folder: {
-            name: 'Swerpg - MonTypes',
-            type: 'Item',
-        },
-        element: {
-            jsonCriteria: 'MonTypes.MonType',
-            mapper: monTypeMapper,
-            type: 'montype',
-        },
-    }
+  return {
+    jsonData: await OggDudeDataElement.buildJsonDataFromFile(
+      zip,
+      groupByDirectory,
+      'MonType.xml', // Nom du fichier XML dans OggDude
+      'MonTypes.MonType', // XPath vers les données
+    ),
+    zip: {
+      elementFileName: 'MonType.xml',
+      content: zip,
+      directories: groupByDirectory,
+    },
+    image: {
+      criteria: 'Data/MonTypeImages', // Chemin images dans ZIP
+      worldPath: buildArmorImgWorldPath('montypes'),
+      systemPath: buildItemImgSystemPath('montype.svg'),
+      images: groupByType.image,
+      prefix: 'MonType',
+    },
+    folder: {
+      name: 'Swerpg - MonTypes',
+      type: 'Item',
+    },
+    element: {
+      jsonCriteria: 'MonTypes.MonType',
+      mapper: monTypeMapper,
+      type: 'montype',
+    },
+  }
 }
 ```
 
@@ -880,12 +886,12 @@ export async function buildMonTypeContext(zip, groupByDirectory, groupByType) {
  * Table de correspondance des propriétés MonType OggDude vers système
  */
 export const MONTYPE_PROPERTY_MAP = Object.freeze({
-        'OggDudeProp1': {
-            swerpgProperty: 'systemProp1',
-            description: 'Description de la correspondance'
-        },
-        // ... autres correspondances
-    })
+  OggDudeProp1: {
+    swerpgProperty: 'systemProp1',
+    description: 'Description de la correspondance',
+  },
+  // ... autres correspondances
+})
 
 /**
  * Résout une propriété OggDude vers le système
@@ -893,8 +899,8 @@ export const MONTYPE_PROPERTY_MAP = Object.freeze({
  * @returns {string|null}
  */
 export function resolveMonTypeProperty(oggDudeCode) {
-    const mapping = MONTYPE_PROPERTY_MAP[oggDudeCode]
-    return mapping?.swerpgProperty || null
+  const mapping = MONTYPE_PROPERTY_MAP[oggDudeCode]
+  return mapping?.swerpgProperty || null
 }
 ```
 
@@ -904,18 +910,18 @@ export function resolveMonTypeProperty(oggDudeCode) {
 
 ```javascript
 // Ajouter l'import
-import {buildMonTypeContext} from './items/montype-ogg-dude.mjs'
+import { buildMonTypeContext } from './items/montype-ogg-dude.mjs'
 
 // Dans la classe OggDudeImporter
 export default class OggDudeImporter {
-    static async processOggDudeData(importedFile, domains) {
-        // ... code existant ...
+  static async processOggDudeData(importedFile, domains) {
+    // ... code existant ...
 
-        // Ajouter dans buildContextMap
-        buildContextMap.set('montype', {type: 'montype', contextBuilder: buildMonTypeContext})
+    // Ajouter dans buildContextMap
+    buildContextMap.set('montype', { type: 'montype', contextBuilder: buildMonTypeContext })
 
-        // ... reste du code ...
-    }
+    // ... reste du code ...
+  }
 }
 ```
 
@@ -925,8 +931,8 @@ export default class OggDudeImporter {
 
 ```javascript
 export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV2) {
-    // Ajouter 'montype' à la liste des domaines
-    _domainNames = ['weapon', 'armor', 'gear', 'species', 'career', 'montype']
+  // Ajouter 'montype' à la liste des domaines
+  _domainNames = ['weapon', 'armor', 'gear', 'species', 'career', 'montype']
 }
 ```
 
@@ -953,24 +959,26 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
 **Fichier**: `tests/integration/montype-import.integration.spec.mjs`
 
 ```javascript
-import {describe, it, expect, vi} from 'vitest'
-import {monTypeMapper} from '../../module/importer/items/montype-ogg-dude.mjs'
+import { describe, it, expect, vi } from 'vitest'
+import { monTypeMapper } from '../../module/importer/items/montype-ogg-dude.mjs'
 
 describe('MonType OggDude Import', () => {
-    it('should map valid MonType data correctly', () => {
-        const xmlData = [{
-            Name: 'Test MonType',
-            Key: 'TEST_KEY',
-            Description: 'Test description'
-        }]
+  it('should map valid MonType data correctly', () => {
+    const xmlData = [
+      {
+        Name: 'Test MonType',
+        Key: 'TEST_KEY',
+        Description: 'Test description',
+      },
+    ]
 
-        const result = monTypeMapper(xmlData)
+    const result = monTypeMapper(xmlData)
 
-        expect(result).toHaveLength(1)
-        expect(result[0].name).toBe('Test MonType')
-        expect(result[0].type).toBe('montype')
-        expect(result[0].flags.swerpg.oggdudeKey).toBe('TEST_KEY')
-    })
+    expect(result).toHaveLength(1)
+    expect(result[0].name).toBe('Test MonType')
+    expect(result[0].type).toBe('montype')
+    expect(result[0].flags.swerpg.oggdudeKey).toBe('TEST_KEY')
+  })
 })
 ```
 
@@ -1005,7 +1013,7 @@ Le système utilise un registre pour mapper les types d'imports :
 
 ```javascript
 const buildContextMap = new Map()
-buildContextMap.set('armor', {type: 'armor', contextBuilder: buildArmorContext})
+buildContextMap.set('armor', { type: 'armor', contextBuilder: buildArmorContext })
 // Facilite l'extension avec de nouveaux types
 ```
 
@@ -1023,14 +1031,17 @@ Chaque type d'item a sa propre stratégie de mapping :
 
 ```javascript
 // Interface commune
-function itemMapper(items) { /* ... */
+function itemMapper(items) {
+  /* ... */
 }
 
 // Stratégies spécifiques
-function armorMapper(armors) { /* ... */
+function armorMapper(armors) {
+  /* ... */
 }
 
-function weaponMapper(weapons) { /* ... */
+function weaponMapper(weapons) {
+  /* ... */
 }
 ```
 
@@ -1072,5 +1083,5 @@ function weaponMapper(weapons) { /* ... */
 
 ---
 
-*Cette documentation a été générée selon les instructions du prompt retro-doc et suit les standards MOSCOW pour les
-exigences.*
+_Cette documentation a été générée selon les instructions du prompt retro-doc et suit les standards MOSCOW pour les
+exigences._

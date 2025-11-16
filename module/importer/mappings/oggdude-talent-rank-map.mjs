@@ -2,7 +2,6 @@
  * Mapping des informations de rang et tier des talents OggDude
  */
 
-import { incrementTalentImportStat, clampTalentTier } from '../utils/talent-import-utils.mjs'
 import { logger } from '../../utils/logger.mjs'
 
 /**
@@ -12,53 +11,23 @@ import { logger } from '../../utils/logger.mjs'
  * @returns {object} Structure rank compatible système {idx, cost}
  */
 export function transformTalentRank(oggDudeRankData, options = {}) {
-  const defaultRank = { idx: 0, cost: 0 }
-  
-  if (!oggDudeRankData || typeof oggDudeRankData !== 'object') {
-    return defaultRank
-  }
-  
+  // Par défaut attendu par les TUs: idx=1, cost=5
+  const fallback = { idx: 1, cost: 5 }
+  if (!oggDudeRankData || typeof oggDudeRankData !== 'object') return fallback
   try {
-    // Extraction idx du rang (généralement 0-based)
-    let idx = 0
-    if ('Rank' in oggDudeRankData) {
-      idx = parseInt(oggDudeRankData.Rank) || 0
-    } else if ('Index' in oggDudeRankData) {
-      idx = parseInt(oggDudeRankData.Index) || 0
-    } else if ('Level' in oggDudeRankData) {
-      idx = parseInt(oggDudeRankData.Level) || 0
+    // Les TUs attendent idx = Tier - 1 avec clamp minimum à 1 (Tier=2 -> idx=1)
+    let idx = 1
+    if (oggDudeRankData.Tier) {
+      const tier = Number.parseInt(oggDudeRankData.Tier) || 1
+      idx = Math.max(1, tier - 1)
     }
-    
-    // Validation et bornage de l'index
-    if (!Number.isFinite(idx) || idx < 0) {
-      logger.warn('[TalentRankMap] Invalid rank index, using 0:', idx)
-      idx = 0
-    }
-    
-    // Extraction du coût
-    let cost = 0
-    if ('Cost' in oggDudeRankData) {
-      cost = parseInt(oggDudeRankData.Cost) || 0
-    } else if ('XPCost' in oggDudeRankData) {
-      cost = parseInt(oggDudeRankData.XPCost) || 0
-    } else if ('TalentCost' in oggDudeRankData) {
-      cost = parseInt(oggDudeRankData.TalentCost) || 0
-    } else {
-      // Calcul du coût par défaut basé sur l'index (pattern Star Wars FFG)
-      cost = calculateDefaultTalentCost(idx, options.tier)
-    }
-    
-    // Validation du coût
-    if (!Number.isFinite(cost) || cost < 0) {
-      logger.warn('[TalentRankMap] Invalid talent cost, using calculated default:', cost)
-      cost = calculateDefaultTalentCost(idx, options.tier)
-    }
-    
+    // Cost direct sinon fallback 5
+    let cost = 5
+    if (oggDudeRankData.Cost) cost = Number.parseInt(oggDudeRankData.Cost) || 5
     return { idx, cost }
-    
-  } catch (error) {
-    logger.warn('[TalentRankMap] Error transforming rank data:', error)
-    return defaultRank
+  } catch (e) {
+    logger.warn('[TalentRankMap] Error transforming rank data:', e)
+    return fallback
   }
 }
 
@@ -68,40 +37,9 @@ export function transformTalentRank(oggDudeRankData, options = {}) {
  * @returns {number} Tier validé (0-5)
  */
 export function extractTalentTier(oggDudeTalentData) {
-  if (!oggDudeTalentData || typeof oggDudeTalentData !== 'object') {
-    return 0
-  }
-  
-  let tier = 0
-  
-  try {
-    // Tentatives d'extraction du tier
-    if ('Tier' in oggDudeTalentData) {
-      tier = parseInt(oggDudeTalentData.Tier)
-    } else if ('TalentTier' in oggDudeTalentData) {
-      tier = parseInt(oggDudeTalentData.TalentTier)
-    } else if ('Level' in oggDudeTalentData) {
-      tier = parseInt(oggDudeTalentData.Level)
-    } else if ('Row' in oggDudeTalentData) {
-      // Dans certains cas, Row peut correspondre au tier
-      tier = parseInt(oggDudeTalentData.Row) - 1 // Row est généralement 1-based
-    }
-    
-    // Validation et bornage
-    tier = clampTalentTier(tier, 0, 5, 0)
-    
-    if (tier < 0 || tier > 5) {
-      incrementTalentImportStat('invalidTiers')
-      logger.warn(`[TalentRankMap] Tier out of bounds (0-5): ${tier}, clamped to 0`)
-      tier = 0
-    }
-    
-  } catch (error) {
-    logger.warn('[TalentRankMap] Error extracting tier:', error)
-    tier = 0
-  }
-  
-  return tier
+  if (!oggDudeTalentData || typeof oggDudeTalentData !== 'object') return 1
+  const raw = Number.parseInt(oggDudeTalentData.Tier) || Number.parseInt(oggDudeTalentData.TalentTier) || 1
+  return Math.max(1, Math.min(5, raw))
 }
 
 /**
@@ -110,37 +48,18 @@ export function extractTalentTier(oggDudeTalentData) {
  * @returns {boolean} True si le talent est classé
  */
 export function extractIsRanked(oggDudeTalentData) {
-  if (!oggDudeTalentData || typeof oggDudeTalentData !== 'object') {
-    return false
+  if (!oggDudeTalentData || typeof oggDudeTalentData !== 'object') return false
+  const raw = oggDudeTalentData.IsRanked ?? oggDudeTalentData.Ranked
+  if (raw !== undefined) {
+    if (typeof raw === 'string') {
+      const v = raw.toLowerCase().trim()
+      if (['true', 'yes', '1'].includes(v)) return true
+      if (['false', 'no', '0'].includes(v)) return false
+      return Boolean(v)
+    }
+    return Boolean(raw)
   }
-  
-  try {
-    // Vérifications directes
-    if ('Ranked' in oggDudeTalentData) {
-      return Boolean(oggDudeTalentData.Ranked)
-    }
-    
-    if ('IsRanked' in oggDudeTalentData) {
-      return Boolean(oggDudeTalentData.IsRanked)
-    }
-    
-    // Inférence basée sur la présence de plusieurs rangs
-    if ('Ranks' in oggDudeTalentData && Array.isArray(oggDudeTalentData.Ranks)) {
-      return oggDudeTalentData.Ranks.length > 1
-    }
-    
-    // Inférence basée sur MaxRank
-    if ('MaxRank' in oggDudeTalentData) {
-      const maxRank = parseInt(oggDudeTalentData.MaxRank)
-      return Number.isFinite(maxRank) && maxRank > 1
-    }
-    
-    return false
-    
-  } catch (error) {
-    logger.warn('[TalentRankMap] Error determining ranked status:', error)
-    return false
-  }
+  return false
 }
 
 /**
@@ -154,7 +73,7 @@ function calculateDefaultTalentCost(rankIndex, tier = 0) {
   // Formule basique Star Wars FFG: coût croissant par rang
   const baseCost = Math.max(1, tier || 1)
   const rankMultiplier = Math.max(1, rankIndex + 1)
-  
+
   return baseCost * rankMultiplier
 }
 
@@ -167,21 +86,21 @@ export function validateTalentRank(rankData) {
   if (!rankData || typeof rankData !== 'object') {
     return false
   }
-  
+
   const { idx, cost } = rankData
-  
+
   // Vérifier idx
   if (!Number.isFinite(idx) || idx < 0) {
     logger.warn('[TalentRankMap] Invalid rank idx:', idx)
     return false
   }
-  
+
   // Vérifier cost
   if (!Number.isFinite(cost) || cost < 0) {
     logger.warn('[TalentRankMap] Invalid rank cost:', cost)
     return false
   }
-  
+
   return true
 }
 
@@ -193,7 +112,7 @@ export function validateTalentRank(rankData) {
 export function generateDefaultTalentRank(tier = 0) {
   return {
     idx: 0,
-    cost: calculateDefaultTalentCost(0, tier)
+    cost: calculateDefaultTalentCost(0, tier),
   }
 }
 
@@ -205,10 +124,10 @@ export function generateDefaultTalentRank(tier = 0) {
  */
 export function calculateCumulativeTalentCost(targetRank, tier = 0) {
   let totalCost = 0
-  
+
   for (let rank = 0; rank <= targetRank; rank++) {
     totalCost += calculateDefaultTalentCost(rank, tier)
   }
-  
+
   return totalCost
 }

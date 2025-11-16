@@ -1,4 +1,124 @@
-# Development Process - Fix TypeError in base-actor-sheet.mjs
+# Development Process
+
+---
+
+## Feature: Jauge de progression globale import OggDude
+
+## Feature: Icônes de statut domaine (Import Statistics)
+
+### Résumé rapide
+
+Ajout d'une colonne de statut (pending/success/mixed/error) dans le tableau Statistiques d'import de `OggDudeDataImporter` via une fonction pure `computeDomainStatus` (classification déterministe des domaines). Contexte enrichi (`importDomainStatus`) + i18n (EN/FR) + classes CSS (`.domain-status--*`). Tests unitaires couvrent règles, clamp invariant, structure mapping et placeholder template.
+
+## Contexte
+
+Ajout d'une barre de progression globale (domaines) dans l'interface `OggDudeDataImporter` pour visualiser l'avancement de l'import des domaines sélectionnés (weapon, armor, gear, species, career, talent). Positionnée dans la section Statistiques, entre le titre et le tableau détaillé.
+
+## Fichiers Analysés / Modifiés
+
+- `module/settings/OggDudeDataImporter.mjs` (extension du contexte `_prepareContext`, casting numérique dans callback)
+- `templates/settings/oggDudeDataImporter.hbs` (insertion markup Handlebars jauge accessible)
+- `styles/applications.less` (styles `.import-progress-global` + utilitaire `.sr-only`)
+- `tests/settings/OggDudeDataImporter.progress.spec.mjs` (nouveaux tests calcul pourcentage & cas limites)
+- `plan/feature-importer-global-progress-jauge-1.md` (plan d'implémentation)
+
+## Étapes Suivies
+
+1. Lecture du plan `feature-importer-global-progress-jauge-1.md` et validation exigences (a11y, performance, sécurité).
+2. Ajout champ `progressPercentDomains` dans `_prepareContext()` sans modifier usage existant de `progressPercent` (compatibilité).
+3. Sécurisation callback de progression (cast `Number()` pour éviter valeurs non numériques / injection inattendue).
+4. Insertion markup conditionnel Handlebars (affichage seulement si `progress.total > 0`).
+5. Ajout styles Less (container + barre + transition + utilitaire a11y `.sr-only`).
+6. Création tests unitaires : 0%, 50%, 100%, absence quand total=0.
+7. Exécution suite d'intégration espèces (détection régression — échec initial hors périmètre fonctionnel de la jauge ; aucune modification requise sur ce point car pas lié; la jauge n'introduit pas de nouvelle dépendance).
+8. Documentation mise à jour (présent document).
+
+## Design & Décisions
+
+- Choix de conserver `progressPercent` (ancien nom) mais ajouter `progressPercentDomains` pour clarté future et éviter conflit sémantique si une autre jauge items est ajoutée.
+- Aucune suppression de l'ancienne barre `progress-global` dans la section métriques (décision: la nouvelle jauge est focalisée sur domaines, l'ancienne sur métriques globales détaillées). Risque faible de confusion car position différente; pourra être revue ultérieurement.
+- Style: dégradé vert (#0b5e0b -> #19a319) garantissant contraste sur fond sombre (ratio > 4.5 estimé). Bordure et background semi-transparent pour lisibilité.
+- Accessibilité: `role="progressbar"`, valeurs ARIA min/now/max, `aria-label` localisé, contenu texte masqué avec `.sr-only`.
+
+## Tests & Couverture
+
+| Test                                    | Objectif                               |
+| --------------------------------------- | -------------------------------------- |
+| `OggDudeDataImporter.progress.spec.mjs` | Calcul pourcentages & cas limites      |
+| Contexte existant                       | Non modifié, toujours valide           |
+| Intégration espèces                     | Pas d'impact direct sur import logique |
+
+## Risques
+
+- Double indication de progression (ancienne barre + nouvelle). Mitigation: design futur pour fusion éventuelle.
+- Non compilation des styles si oubli de build manuel. Mitigation: script `pnpm run build` en CI.
+- Performance: appels fréquents `render()` déjà existants; ajout non significatif (calcul O(1)).
+
+## Points de Sécurité
+
+- Casting numérique défensif pour éviter interprétation chaîne mal formée.
+- Aucune interpolation HTML dangereuse; Handlebars échappe par défaut.
+
+## Suivi / Améliorations Futures
+
+- Fusion potentielle des deux jauges en un seul composant configurable.
+- Ajout d'indicateurs de temps restant estimé si métriques disponibles.
+- Tests de rendu Handlebars complets (snapshot) éventuels.
+
+---
+
+## Feature: Interface immersive import OggDude (sections repliables + résumé)
+
+### Contexte (Immersive UI)
+
+Refactor UI de `OggDudeDataImporter` pour améliorer lisibilité post-import et réduire surcharge cognitive : ajout d'un résumé compact (durée, items traités, taux d'erreur, débit) et transformation des blocs Statistiques / Métriques / Prévisualisation en sections repliables (`<details>/<summary>`) avec états persistés en mémoire d'instance (`showStats`, `showMetrics`, `showPreview`). Objectifs : immersion, hiérarchisation visuelle, accessibilité (focus clair), performance (aucun recalcul lourd).
+
+### Fichiers Modifiés
+
+- `templates/settings/oggDudeDataImporter.hbs` (remplacement markup tableaux par `<details>` + résumé compact)
+- `module/settings/OggDudeDataImporter.mjs` (flags d'état + actions `toggle*Action` + `importSummary` dans contexte)
+- `lang/en.json` / `lang/fr.json` (clé `SETTINGS.OggDudeDataImporter.loadWindow.summary.title` + ajout section `SETTINGS` manquante côté FR)
+- `styles/components/importer.less` (nouveaux styles immersifs panels/collapsibles)
+- `styles/swerpg.less` (import du fichier LESS)
+- `tests/settings/OggDudeDataImporter.context.spec.mjs` (assertions flags + toggle)
+- `tests/settings/oggDudeDataImporter.template.spec.mjs` (assertions présence toggles & résumé)
+- `plan/feature-oggdude-importer-immersive-ui-1.md` (plan de travail préalable – inchangé depuis implémentation)
+
+### Décisions & Justification
+
+- Utilisation native `<details>/<summary>` : comportement accessible par défaut, évite JS supplémentaire; override léger pour icône + style thème.
+- Conservation logique existante d'agrégation métriques; le résumé réutilise valeurs formatées pour éviter duplication.
+- Ajout section `SETTINGS` dans `fr.json` au lieu de modifier usages pour homogénéiser chemins i18n (réduction risque d'incohérence futur).
+- Styles isolés dans `styles/components/importer.less` pour limiter diffusion sélecteurs et favoriser maintenance modulaire.
+- Tests ciblés (flags + actions + markup) plutôt que snapshot complet afin de rester robustes à évolutions mineures de formatage HTML.
+
+### Accessibilité
+
+- Focus visible renforcé (outline accent) sur `summary`, `select`, `input`.
+- Structure sémantique: tableau conserve `role="table"` + `scope="row"/"col"`.
+- Raccourci visuel (icônes) toujours accompagné de texte (pas de reliance couleur seule).
+
+### Performance
+
+- O(1) en toggling (mutation booléenne + `render()` déjà existant).
+- Aucune itération supplémentaire sur domaines; résumé réutilise métriques existantes.
+- Sélecteurs CSS simples (classes directes). Pas de nested deep selectors.
+
+### Risques / Mitigations
+
+| Risque | Impact | Mitigation |
+| ------ | ------ | ---------- |
+| Duplication partielle FR i18n (ancienne racine OggDudeDataImporter + nouvelle SETTINGS) | Confusion maintenance | Étape future: migration complète et suppression racine legacy après audit usages |
+| Navigateurs anciens (support `<details>`) | Dégradation UX (sections toujours ouvertes) | Accepté (cible Foundry v13 – Chrome/Electron récent) |
+| Style conflit futur avec panels génériques | Surcharge CSS | Préfixe spécifique `.sw-collapsible` + fichier dédié |
+
+### Améliorations Futures
+
+- Persistance ouverture sections (localStorage) entre sessions utilisateur.
+- Ajout badge indicateur erreurs dans résumé si `errorRate > 0`.
+- Filtrage preview côté contexte pour réduire DOM quand dataset volumineux.
+
+---
 
 ## Overview
 

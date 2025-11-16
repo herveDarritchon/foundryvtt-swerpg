@@ -16,64 +16,64 @@
  */
 export const ARMOR_CATEGORY_MAP = {
   // Catégories de base OggDude
-  'Light': {
+  Light: {
     swerpgCategory: 'light',
-    description: 'Armure légère - faible protection, grande mobilité'
+    description: 'Armure légère - faible protection, grande mobilité',
   },
-  'Medium': {
+  Medium: {
     swerpgCategory: 'medium',
-    description: 'Armure moyenne - protection équilibrée'
+    description: 'Armure moyenne - protection équilibrée',
   },
-  'Heavy': {
+  Heavy: {
     swerpgCategory: 'heavy',
-    description: 'Armure lourde - protection maximale, mobilité réduite'
+    description: 'Armure lourde - protection maximale, mobilité réduite',
   },
-  
+
   // Variantes possibles dans les données OggDude
-  'light': {
+  light: {
     swerpgCategory: 'light',
-    description: 'Armure légère (minuscule)'
+    description: 'Armure légère (minuscule)',
   },
-  'medium': {
+  medium: {
     swerpgCategory: 'medium',
-    description: 'Armure moyenne (minuscule)'
+    description: 'Armure moyenne (minuscule)',
   },
-  'heavy': {
+  heavy: {
     swerpgCategory: 'heavy',
-    description: 'Armure lourde (minuscule)'
+    description: 'Armure lourde (minuscule)',
   },
-  
+
   // Catégories spéciales
-  'Natural': {
+  Natural: {
     swerpgCategory: 'natural',
-    description: 'Protection naturelle (écailles, carapace, etc.)'
+    description: 'Protection naturelle (écailles, carapace, etc.)',
   },
-  'Unarmored': {
+  Unarmored: {
     swerpgCategory: 'unarmored',
-    description: 'Sans armure'
+    description: 'Sans armure',
   },
-  
+
   // Codes numériques possibles (si utilisés par OggDude)
-  '0': {
+  0: {
     swerpgCategory: 'unarmored',
-    description: 'Code 0 = Sans armure'
+    description: 'Code 0 = Sans armure',
   },
-  '1': {
+  1: {
     swerpgCategory: 'light',
-    description: 'Code 1 = Armure légère'
+    description: 'Code 1 = Armure légère',
   },
-  '2': {
+  2: {
     swerpgCategory: 'medium',
-    description: 'Code 2 = Armure moyenne'
+    description: 'Code 2 = Armure moyenne',
   },
-  '3': {
+  3: {
     swerpgCategory: 'heavy',
-    description: 'Code 3 = Armure lourde'
+    description: 'Code 3 = Armure lourde',
   },
-  '4': {
+  4: {
     swerpgCategory: 'natural',
-    description: 'Code 4 = Protection naturelle'
-  }
+    description: 'Code 4 = Protection naturelle',
+  },
 }
 
 /**
@@ -85,7 +85,7 @@ export function resolveArmorCategory(oggDudeCategory) {
   if (!oggDudeCategory || typeof oggDudeCategory !== 'string') {
     return null
   }
-  
+
   const mapping = ARMOR_CATEGORY_MAP[oggDudeCategory.trim()]
   return mapping ? mapping.swerpgCategory : null
 }

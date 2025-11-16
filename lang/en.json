@@ -753,13 +753,23 @@
           "weapon": "Load Weapons data",
           "talent": "Load Talent data"
         },
+        "progress-bar": {
+          "title": "Import Progress"
+        },
         "stats": {
           "title": "Import Statistics",
           "domain": "Domain",
           "total": "Total",
           "imported": "Imported",
           "rejected": "Rejected",
-          "duration": "Duration (ms)"
+          "duration": "Duration (ms)",
+          "status": {
+            "title": "Status",
+            "pending": "Pending",
+            "success": "Success",
+            "mixed": "Mixed",
+            "error": "Error"
+          }
         },
         "metrics": {
           "title": "Global Metrics",
@@ -783,6 +793,9 @@
           "new": "New",
           "pagination": "Preview Pagination",
           "noData": "No data to preview"
+        },
+        "summary": {
+          "title": "Import Summary"
         },
         "progress": {
           "global": "Overall Progress"

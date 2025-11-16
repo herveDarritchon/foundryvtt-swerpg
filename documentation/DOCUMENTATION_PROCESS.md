@@ -184,7 +184,7 @@ documentation/
 ### Extension de l'Architecture
 
 1. **Nouveaux types OggDude** - Utilisation du guide d'implémentation documenté
-2. **Optimisations performance** - Traitement parallèle, streaming pour gros fichiers  
+2. **Optimisations performance** - Traitement parallèle, streaming pour gros fichiers
 3. **Amélioration UX** - Prévisualisation avant import, progress indicators
 4. **Tests d'intégration** - Couverture des workflows complets d'import
 

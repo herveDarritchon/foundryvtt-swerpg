@@ -56,34 +56,34 @@ Plan d'implémentation pour résoudre l'erreur `c.lookupProperty is not a functi
 
 - GOAL-001: Identifier la source exacte de l'erreur `lookupProperty` dans les templates
 
-| Task     | Description           | Completed | Date       |
-| -------- | --------------------- | --------- | ---------- |
-| TASK-001 | Analyser le template `oggDudeDataImporter.hbs` pour identifier les expressions Handlebars problématiques | ✅ | 2025-11-14 |
-| TASK-002 | Vérifier les helpers Handlebars utilisés et leur compatibilité avec Foundry v13 | ✅ | 2025-11-14 |
-| TASK-003 | Examiner le contexte de données passé depuis `_prepareContext()` dans `OggDudeDataImporter.mjs` | ✅ | 2025-11-14 |
-| TASK-004 | Identifier les références `this.` potentiellement problématiques dans le template | ✅ | 2025-11-14 |
+| Task     | Description                                                                                              | Completed | Date       |
+| -------- | -------------------------------------------------------------------------------------------------------- | --------- | ---------- |
+| TASK-001 | Analyser le template `oggDudeDataImporter.hbs` pour identifier les expressions Handlebars problématiques | ✅        | 2025-11-14 |
+| TASK-002 | Vérifier les helpers Handlebars utilisés et leur compatibilité avec Foundry v13                          | ✅        | 2025-11-14 |
+| TASK-003 | Examiner le contexte de données passé depuis `_prepareContext()` dans `OggDudeDataImporter.mjs`          | ✅        | 2025-11-14 |
+| TASK-004 | Identifier les références `this.` potentiellement problématiques dans le template                        | ✅        | 2025-11-14 |
 
 ### Implementation Phase 2 - Correction des Templates
 
 - GOAL-002: Corriger les expressions Handlebars incompatibles dans le template
 
-| Task     | Description           | Completed | Date |
-| -------- | --------------------- | --------- | ---- |
-| TASK-005 | Remplacer les références `this.domains` par `domains` dans le template | ✅ | 2025-11-14 |
-| TASK-006 | Corriger les références `this.zipFile` par `zipFile` | ✅ | 2025-11-14 |
-| TASK-007 | Simplifier les expressions conditionnelles complexes | ✅ | 2025-11-14 |
-| TASK-008 | Valider que tous les helpers utilisés sont standard Foundry | ✅ | 2025-11-14 |
+| Task     | Description                                                            | Completed | Date       |
+| -------- | ---------------------------------------------------------------------- | --------- | ---------- |
+| TASK-005 | Remplacer les références `this.domains` par `domains` dans le template | ✅        | 2025-11-14 |
+| TASK-006 | Corriger les références `this.zipFile` par `zipFile`                   | ✅        | 2025-11-14 |
+| TASK-007 | Simplifier les expressions conditionnelles complexes                   | ✅        | 2025-11-14 |
+| TASK-008 | Valider que tous les helpers utilisés sont standard Foundry            | ✅        | 2025-11-14 |
 
 ### Implementation Phase 3 - Validation et Tests
 
 - GOAL-003: Vérifier que l'application fonctionne correctement après correction
 
-| Task     | Description           | Completed | Date |
-| -------- | --------------------- | --------- | ---- |
-| TASK-009 | Tester l'ouverture de l'application OggDude Data Importer | ☐ (manuel à effectuer dans Foundry) | |
-| TASK-010 | Vérifier l'affichage correct de tous les éléments du formulaire | ☐ (manuel à effectuer) | |
-| TASK-011 | Tester les interactions (sélection de fichier, domaines, actions) | ☐ (manuel à effectuer) | |
-| TASK-012 | Valider que l'import OggDude fonctionne de bout en bout | ☐ (manuel à effectuer) | |
+| Task     | Description                                                       | Completed                           | Date |
+| -------- | ----------------------------------------------------------------- | ----------------------------------- | ---- |
+| TASK-009 | Tester l'ouverture de l'application OggDude Data Importer         | ☐ (manuel à effectuer dans Foundry) |      |
+| TASK-010 | Vérifier l'affichage correct de tous les éléments du formulaire   | ☐ (manuel à effectuer)              |      |
+| TASK-011 | Tester les interactions (sélection de fichier, domaines, actions) | ☐ (manuel à effectuer)              |      |
+| TASK-012 | Valider que l'import OggDude fonctionne de bout en bout           | ☐ (manuel à effectuer)              |      |
 
 ## 9. Modifications Appliquées
 

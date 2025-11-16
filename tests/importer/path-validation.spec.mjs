@@ -3,7 +3,7 @@ import OggDudeDataElement from '../../module/settings/models/OggDudeDataElement.
 
 describe('Sécurité chemins internes ZIP - getElementsFrom', () => {
   const directories = {
-    Data: [ { name: 'Armor.xml' }, { name: 'Weapons.xml' } ]
+    Data: [{ name: 'Armor.xml' }, { name: 'Weapons.xml' }],
   }
   it('retourne élément valide sur nom OK', () => {
     const el = OggDudeDataElement.getElementsFrom(directories, 'Data', 'Armor.xml')

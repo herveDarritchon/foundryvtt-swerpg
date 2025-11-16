@@ -63,12 +63,100 @@ if (!globalThis.foundry) {
             return null
           }
         },
+        // DocumentSheetV2 minimal early stub (full stub added later in setupFoundryMock)
+        DocumentSheetV2: class DocumentSheetV2Early {
+          constructor({ document, ...options } = {}) {
+            this.document = document || { system: {} }
+            this.options = options
+          }
+          render() {
+            return this
+          }
+        },
         HandlebarsApplicationMixin: (base) => base,
+      },
+      // Instances registry consumed by ActionUseDialog.debounceChangeTarget
+      instances: new Map(),
+    },
+    abstract: {
+      DataModel: class DataModelEarly {
+        static defineSchema() {
+          return {}
+        }
+        static get schema() {
+          return { fields: {} }
+        }
+        constructor(data = {}) {
+          this._source = data
+          Object.assign(this, data)
+        }
+        toObject() {
+          return this._source
+        }
+      },
+      TypeDataModel: class TypeDataModelEarly {
+        static defineSchema() {
+          return {}
+        }
+        static get schema() {
+          return { fields: {} }
+        }
+        constructor(data = {}) {
+          this._source = data
+          Object.assign(this, data)
+        }
+        toObject() {
+          return this._source
+        }
+      },
+    },
+    data: {
+      fields: {
+        StringField: class {
+          constructor(cfg = {}) {
+            this.config = cfg
+          }
+        },
+        NumberField: class {
+          constructor(cfg = {}) {
+            this.config = cfg
+          }
+        },
+        BooleanField: class {
+          constructor(cfg = {}) {
+            this.config = cfg
+          }
+        },
+        ObjectField: class {
+          constructor(cfg = {}) {
+            this.config = cfg
+          }
+        },
+        ArrayField: class {
+          constructor(field, cfg = {}) {
+            this.field = field
+            this.config = cfg
+          }
+        },
+        SetField: class {
+          constructor(field, cfg = {}) {
+            this.field = field
+            this.config = cfg
+          }
+        },
+        SchemaField: class {
+          constructor(schema = {}) {
+            this.schema = schema
+          }
+        },
       },
     },
     utils: {
       deepClone: (o) => structuredClone(o),
       mergeObject: (original, other) => Object.assign(original, other),
+      // Provide early noop debounce so modules imported before vitest setup do not explode
+      debounce: (fn) => fn,
+      isEmpty: (obj) => !obj || Object.keys(obj).length === 0,
     },
   }
 }
@@ -347,6 +435,10 @@ export function setupFoundryMock(options = {}) {
     },
     user: {
       isGM: true,
+    },
+    // Release info accessed by StandardCheckDialog for backward compatibility logic
+    release: {
+      generation: 13,
     },
     messages: {
       get: vi.fn(),
