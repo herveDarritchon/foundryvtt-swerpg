@@ -112,7 +112,7 @@ lang/
 ## References
 
 - **REF-001**: [FoundryVTT Localization Guide](https://foundryvtt.com/article/localization/)
-- **REF-002**: [French Localization File](../../lang/fr.json)
-- **REF-003**: [English Localization File](../../lang/en.json)
+- **REF-002**: [French Localization File](../../../lang/fr.json)
+- **REF-003**: [English Localization File](../../../lang/en.json)
 - **REF-004**: [Star Wars Official Terminology](https://www.starwars.com/)
 - **REF-005**: [Localization Testing Suite](../../tests/localization/)

@@ -743,4 +743,4 @@ export class SwerpgDiceAnalytics {
 
 ---
 
-> 📖 **Voir aussi** : [Talent Tree Architecture](./TALENTS_ARCHITECTURE.md) | [Obligation System Architecture](./OBLIGATIONS_ARCHITECTURE.md)
+> 📖 **Voir aussi** : [Talent Tree Architecture](TALENTS_ARCHITECTURE.md) | [Obligation System Architecture](OBLIGATIONS_ARCHITECTURE.md)

@@ -60,16 +60,16 @@ Ajouter tests snapshot (optionnels) pour vérifier consistance schéma Items com
 ## 8. Exemple base intégration
 
 ```javascript
-import { describe, it, expect } from 'vitest'
-import { buildWeaponContext } from '../../module/importer/items/weapon-ogg-dude.mjs'
+import {describe, it, expect} from 'vitest'
+import {buildWeaponContext} from './weapon-ogg-dude.mjs'
 
 it('importe un weapon minimal', async () => {
-  const zip = buildFakeZip({ 'Data/Weapons.xml': '<Weapons><Weapon><Name>X</Name></Weapon></Weapons>' })
-  const allElements = OggDudeDataElement.from(zip)
-  const byDir = OggDudeDataElement.groupByDirectory(allElements)
-  const byType = OggDudeDataElement.groupByType(allElements)
-  const ctx = await buildWeaponContext(zip, byDir, byType)
-  expect(ctx.jsonData.Name).toBe('X')
+    const zip = buildFakeZip({'Data/Weapons.xml': '<Weapons><Weapon><Name>X</Name></Weapon></Weapons>'})
+    const allElements = OggDudeDataElement.from(zip)
+    const byDir = OggDudeDataElement.groupByDirectory(allElements)
+    const byType = OggDudeDataElement.groupByType(allElements)
+    const ctx = await buildWeaponContext(zip, byDir, byType)
+    expect(ctx.jsonData.Name).toBe('X')
 })
 ```
 

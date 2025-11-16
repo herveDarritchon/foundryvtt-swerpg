@@ -244,5 +244,5 @@ console.log(result[0].system.soak.base) // 0 (clamped)
 
 - [Fix Mapper Species OggDude](../plan/features/fix-mapper-species-oggdude.md)
 - [Fix Mapper Careers OggDude](../plan/features/fix-mapper-careers-oggdude.md)
-- [Refactor Weapon OggDude Mapper](../plan/refactor-weapon-oggdude-mapper-1.md)
+- [Refactor Weapon OggDude Mapper](plan/refactor-weapon-oggdude-mapper-1.md)
 - [Foundry DataModel API](https://foundryvtt.com/api/classes/foundry.abstract.TypeDataModel.html)

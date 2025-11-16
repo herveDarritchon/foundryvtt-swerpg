@@ -18,16 +18,16 @@
 
 ### Architecture Système
 
-- **[swerpg/](./swerpg/)** - Documentation technique Star Wars Edge RPG
-  - [OVERVIEW.md](./swerpg/architecture/OVERVIEW.md) - Architecture globale
-  - [PATTERNS.md](./swerpg/architecture/PATTERNS.md) - Patterns architecturaux
-  - [MODELS.md](./swerpg/architecture/MODELS.md) - Modèles de données
+- **[swerpg/](../docs/swerpg/)** - Documentation technique Star Wars Edge RPG
+  - [OVERVIEW.md](../docs/swerpg/architecture/OVERVIEW.md) - Architecture globale
+  - [PATTERNS.md](../docs/swerpg/architecture/PATTERNS.md) - Patterns architecturaux
+  - [MODELS.md](../docs/swerpg/architecture/MODELS.md) - Modèles de données
 
 ### Modules Fonctionnels
 
-- **[DICE_SYSTEM.md](./swerpg/modules/DICE_SYSTEM.md)** - Système de dés narratifs
-- **[TALENT_SYSTEM.md](./swerpg/modules/TALENT_SYSTEM.md)** - Système de talents
-- **[OBLIGATION_SYSTEM.md](./swerpg/modules/OBLIGATION_SYSTEM.md)** - Système d'obligations
+- **[DICE_SYSTEM.md](../docs/swerpg/modules/DICE_SYSTEM.md)** - Système de dés narratifs
+- **[TALENT_SYSTEM.md](../docs/swerpg/modules/TALENT_SYSTEM.md)** - Système de talents
+- **[OBLIGATION_SYSTEM.md](../docs/swerpg/modules/OBLIGATION_SYSTEM.md)** - Système d'obligations
 
 ## 🚀 Guide de Démarrage Rapide
 
@@ -35,12 +35,12 @@
 
 1. **Comprendre l'état actuel** → Lire [PLAN_DEVELOPPEMENT_EXECUTIF.md](./PLAN_DEVELOPPEMENT_EXECUTIF.md)
 2. **Détails techniques** → Consulter [ASSESSMENT_ET_PLAN_DEVELOPPEMENT.md](./ASSESSMENT_ET_PLAN_DEVELOPPEMENT.md)
-3. **Architecture système** → Explorer [swerpg/architecture/OVERVIEW.md](./swerpg/architecture/OVERVIEW.md)
+3. **Architecture système** → Explorer [swerpg/architecture/OVERVIEW.md](../docs/swerpg/architecture/OVERVIEW.md)
 
 ### Pour Contributeurs
 
 1. **Actions immédiates** → Section "Actions Immédiates" du plan exécutif
-2. **Standards qualité** → [NON_FUNCTIONAL_REQUIREMENTS.md](./swerpg/requirements/NON_FUNCTIONAL_REQUIREMENTS.md)
+2. **Standards qualité** → [NON_FUNCTIONAL_REQUIREMENTS.md](../docs/swerpg/requirements/NON_FUNCTIONAL_REQUIREMENTS.md)
 3. **Process de tests** → Tests section dans le plan détaillé
 
 ## 📊 Métriques Actuelles (Nov 2025)

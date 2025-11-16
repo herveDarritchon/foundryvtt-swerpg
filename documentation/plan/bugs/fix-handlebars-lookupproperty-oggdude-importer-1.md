@@ -155,5 +155,5 @@ Les tests Vitest locaux confirment l'absence des références `this.domains` et 
 
 - [Documentation ApplicationV2 FoundryVTT](https://foundryvtt.com/api/interfaces/foundry.applications.api.ApplicationV2Configuration.html)
 - [Handlebars Documentation](https://handlebarsjs.com/guide/)
-- [Architecture UI Applications SweRPG](/documentation/swerpg/architecture/ui/APPLICATIONS.md)
-- [Patterns Handlebars FoundryVTT](/documentation/swerpg/architecture/integration/FOUNDRY_INTEGRATION.md)
+- [Architecture UI Applications SweRPG](/docs/swerpg/architecture/ui/APPLICATIONS.md)
+- [Patterns Handlebars FoundryVTT](/docs/swerpg/architecture/integration/FOUNDRY_INTEGRATION.md)

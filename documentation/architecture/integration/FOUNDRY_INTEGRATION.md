@@ -692,4 +692,4 @@ export class SwerpgActor extends Actor {
 
 ---
 
-> 📖 **Voir aussi** : [Performance Optimization](./PERFORMANCE.md) | [Security Guidelines](./SECURITY.md)
+> 📖 **Voir aussi** : [Performance Optimization](PERFORMANCE.md) | [Security Guidelines](SECURITY.md)
