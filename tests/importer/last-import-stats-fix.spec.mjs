@@ -4,7 +4,6 @@ import {
   markGlobalEnd,
   aggregateImportMetrics,
   resetRuntimeMetrics,
-  getAllImportStats,
 } from '../../module/importer/utils/global-import-metrics.mjs'
 
 // Mock les fonctions d'import pour simuler des stats
