@@ -10,12 +10,12 @@ vi.mock('../../module/utils/logger.mjs', () => ({
     info: vi.fn(),
     debug: vi.fn(),
     warn: vi.fn(),
-    error: vi.fn()
-  }
+    error: vi.fn(),
+  },
 }))
 
 vi.mock('../../module/importer/utils/talent-import-utils.mjs', () => ({
-  incrementTalentImportStat: vi.fn()
+  incrementTalentImportStat: vi.fn(),
 }))
 
 describe('OggDudeTalentMapper', () => {
@@ -30,11 +30,11 @@ describe('OggDudeTalentMapper', () => {
         Talents: {
           Talent: [
             { Name: 'Talent1', Key: 'talent1' },
-            { Name: 'Talent2', Key: 'talent2' }
-          ]
-        }
+            { Name: 'Talent2', Key: 'talent2' },
+          ],
+        },
       }
-      
+
       const result1 = OggDudeTalentMapper.extractTalentsData(data1)
       expect(result1).toHaveLength(2)
       expect(result1[0].Name).toBe('Talent1')
@@ -43,11 +43,11 @@ describe('OggDudeTalentMapper', () => {
       const data2 = {
         DataSet: {
           Talents: {
-            Talent: { Name: 'SingleTalent', Key: 'single' }
-          }
-        }
+            Talent: { Name: 'SingleTalent', Key: 'single' },
+          },
+        },
       }
-      
+
       const result2 = OggDudeTalentMapper.extractTalentsData(data2)
       expect(result2).toHaveLength(1)
       expect(result2[0].Name).toBe('SingleTalent')
@@ -102,9 +102,9 @@ describe('OggDudeTalentMapper', () => {
         key: 'talent_key',
         name: 'Talent Name',
         prerequisites: {},
-        actions: []
+        actions: [],
       }
-      
+
       expect(OggDudeTalentMapper.validateTalentContext(validContext)).toBe(true)
     })
 
@@ -130,11 +130,11 @@ describe('OggDudeTalentMapper', () => {
         tier: 1,
         prerequisites: {},
         actions: [],
-        custom: false
+        custom: false,
       }
 
       const result = OggDudeTalentMapper.transform(context)
-      
+
       expect(result.name).toBe('Force Sensitive')
       expect(result.type).toBe('talent')
       expect(result.system.activation).toBe('passive')
@@ -156,7 +156,7 @@ describe('OggDudeTalentMapper', () => {
         tier: 1,
         prerequisites: {},
         actions: null,
-        custom: false
+        custom: false,
       }
 
       const result = OggDudeTalentMapper.transform(context)
@@ -174,29 +174,29 @@ describe('OggDudeTalentMapper', () => {
       const oggDudeData = {
         Talents: {
           Talent: [
-            { 
+            {
               Name: 'Force Sensitive',
               Key: 'force_sensitive',
               Description: 'You are sensitive to the Force',
               Activation: 'Passive',
-              Tier: '1'
+              Tier: '1',
             },
-            { 
+            {
               Name: 'Lightsaber Training',
               Key: 'lightsaber_training',
               Description: 'Training with lightsabers',
               Activation: 'Action',
-              Tier: '2'
-            }
-          ]
-        }
+              Tier: '2',
+            },
+          ],
+        },
       }
 
       const result = OggDudeTalentMapper.buildContextMap(oggDudeData)
       expect(result.size).toBe(2)
       expect(result.has('force_sensitive')).toBe(true)
       expect(result.has('lightsaber_training')).toBe(true)
-      
+
       const context = result.get('force_sensitive')
       expect(context.name).toBe('Force Sensitive')
       expect(context.activation).toBe('passive')

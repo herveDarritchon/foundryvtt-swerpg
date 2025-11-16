@@ -10,7 +10,9 @@ if (globalThis.xml2js === undefined) {
 function buildLargeWeaponsXml(count) {
   let parts = ['<Weapons>']
   for (let i = 0; i < count; i++) {
-    parts.push(`<Weapon><Key>W${i}</Key><Name>Weapon ${i}</Name><SkillKey>RANGLT</SkillKey><Damage>5</Damage><Crit>3</Crit><RangeValue>wrShort</RangeValue></Weapon>`) // ~150 bytes
+    parts.push(
+      `<Weapon><Key>W${i}</Key><Name>Weapon ${i}</Name><SkillKey>RANGLT</SkillKey><Damage>5</Damage><Crit>3</Crit><RangeValue>wrShort</RangeValue></Weapon>`,
+    ) // ~150 bytes
   }
   parts.push('</Weapons>')
   return parts.join('')
@@ -24,12 +26,14 @@ describe('Performance import gros fichier XML', () => {
     const fakeZip = {
       files: {
         'Data/Weapons.xml': {
-          async async(type) { if (type === 'text') return xml }
-        }
-      }
+          async async(type) {
+            if (type === 'text') return xml
+          },
+        },
+      },
     }
     const directories = {
-      Data: [ { name: 'Weapons.xml', fullPath: 'Data/Weapons.xml' } ]
+      Data: [{ name: 'Weapons.xml', fullPath: 'Data/Weapons.xml' }],
     }
     const start = performance.now()
     const jsonData = await OggDudeDataElement.buildJsonDataFromFile(fakeZip, directories, 'Weapons.xml', 'Weapons.Weapon')

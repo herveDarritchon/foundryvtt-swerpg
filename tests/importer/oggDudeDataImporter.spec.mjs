@@ -5,8 +5,8 @@ if (!globalThis.foundry) {
     applications: { api: {} },
     utils: {
       expandObject: (o) => o,
-      getProperty: (obj, path) => path.split('.').reduce((acc, key) => acc?.[key], obj)
-    }
+      getProperty: (obj, path) => path.split('.').reduce((acc, key) => acc?.[key], obj),
+    },
   }
 }
 import { OggDudeDataImporter } from '../../module/settings/OggDudeDataImporter.mjs'
@@ -18,7 +18,8 @@ describe('OggDudeDataImporter - logique interne basique', () => {
   })
 
   it('initialise les domaines', () => {
-    expect(importer.domains).toHaveLength(5)
+    // Mise à jour: nouveau domaine 'talent' ajouté à la liste => longueur attendue 6
+    expect(importer.domains).toHaveLength(6)
     expect(importer.domains[0]).toHaveProperty('id')
     expect(importer.domains[0]).toHaveProperty('checked')
   })

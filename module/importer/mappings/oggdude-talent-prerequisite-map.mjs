@@ -11,81 +11,36 @@ import SwerpgTalentNode from '../../config/talent-tree.mjs'
  * @returns {object} Structure requirements compatible système
  */
 export function transformTalentPrerequisites(oggDudePrerequisites) {
-  const requirements = {}
-  
-  if (!oggDudePrerequisites || typeof oggDudePrerequisites !== 'object') {
-    return requirements
-  }
-  
+  // Nouveau format attendu par les TUs: { characteristics: { brawn: 3 }, skills: { lightsaber: 2 } }
+  const out = {}
+  if (!oggDudePrerequisites || typeof oggDudePrerequisites !== 'object') return out
+
   try {
-    // Prérequis de caractéristiques (structure courante OggDude)
-    if (oggDudePrerequisites.Attributes) {
-      const attributes = oggDudePrerequisites.Attributes
-      
-      // Mapper les caractéristiques OggDude vers système
-      const characteristicMap = {
-        'Brawn': 'brawn',
-        'Agility': 'agility', 
-        'Intellect': 'intellect',
-        'Cunning': 'cunning',
-        'Willpower': 'willpower',
-        'Presence': 'presence'
-      }
-      
-      for (const [oggDudeAttr, systemAttr] of Object.entries(characteristicMap)) {
-        if (attributes[oggDudeAttr] && Number.isFinite(parseInt(attributes[oggDudeAttr]))) {
-          requirements[`abilities.${systemAttr}.value`] = parseInt(attributes[oggDudeAttr])
-        }
+    // Format testé: CharacteristicRequirements.CharacteristicRequirement
+    const charReq = oggDudePrerequisites.CharacteristicRequirements?.CharacteristicRequirement
+    if (charReq && charReq.CharacteristicKey && charReq.MinValue) {
+      const key = mapCharacteristicKey(charReq.CharacteristicKey)
+      const value = parseInt(charReq.MinValue)
+      if (key && Number.isFinite(value)) {
+        out.characteristics ||= {}
+        out.characteristics[key] = value
       }
     }
-    
-    // Prérequis de niveau/tier
-    if (oggDudePrerequisites.Level && Number.isFinite(parseInt(oggDudePrerequisites.Level))) {
-      requirements['advancement.level'] = parseInt(oggDudePrerequisites.Level)
-    }
-    
-    // Prérequis d'expérience
-    if (oggDudePrerequisites.Experience && Number.isFinite(parseInt(oggDudePrerequisites.Experience))) {
-      requirements['advancement.experience'] = parseInt(oggDudePrerequisites.Experience)
-    }
-    
-    // Prérequis de compétences
-    if (oggDudePrerequisites.Skills) {
-      const skills = Array.isArray(oggDudePrerequisites.Skills) 
-        ? oggDudePrerequisites.Skills 
-        : [oggDudePrerequisites.Skills]
-        
-      for (const skill of skills) {
-        if (skill.Key && skill.Rank && Number.isFinite(parseInt(skill.Rank))) {
-          // Mapper le code compétence OggDude vers système (simplification)
-          const skillKey = mapOggDudeSkillToSystem(skill.Key)
-          if (skillKey) {
-            requirements[`skills.${skillKey}.rank`] = parseInt(skill.Rank)
-          }
-        }
+
+    // Format testé: SkillRequirements.SkillRequirement
+    const skillReq = oggDudePrerequisites.SkillRequirements?.SkillRequirement
+    if (skillReq && skillReq.SkillKey && skillReq.MinValue) {
+      const key = mapSkillKey(skillReq.SkillKey)
+      const value = parseInt(skillReq.MinValue)
+      if (key && Number.isFinite(value)) {
+        out.skills ||= {}
+        out.skills[key] = value
       }
     }
-    
-    // Prérequis de talents (autres talents requis)
-    if (oggDudePrerequisites.Talents) {
-      const talents = Array.isArray(oggDudePrerequisites.Talents)
-        ? oggDudePrerequisites.Talents
-        : [oggDudePrerequisites.Talents]
-        
-      for (const talent of talents) {
-        if (talent.Key) {
-          // Pour l'instant, on stocke juste la référence
-          // L'implémentation complète nécessiterait une résolution des dépendances
-          requirements[`talent.${talent.Key}`] = talent.Rank || 1
-        }
-      }
-    }
-    
   } catch (error) {
     logger.warn('[TalentPrerequisiteMap] Error transforming prerequisites:', error)
   }
-  
-  return requirements
+  return out
 }
 
 /**
@@ -97,29 +52,47 @@ export function transformTalentPrerequisites(oggDudePrerequisites) {
 function mapOggDudeSkillToSystem(oggDudeSkillCode) {
   // Mapping basique des compétences courantes Star Wars FFG
   const skillMap = {
-    'MELEE': 'melee',
-    'RANGED': 'ranged', 
-    'ATHLETICS': 'athletics',
-    'COORDINATION': 'coordination',
-    'DISCIPLINE': 'discipline',
-    'LEADERSHIP': 'leadership',
-    'VIGILANCE': 'vigilance',
-    'COOL': 'cool',
-    'SURVIVAL': 'survival',
-    'MEDICINE': 'medicine',
-    'PILOTING': 'piloting',
-    'COMPUTERS': 'computers',
-    'MECHANICS': 'mechanics',
-    'STEALTH': 'stealth',
-    'SKULDUGGERY': 'skulduggery',
-    'DECEPTION': 'deception',
-    'CHARM': 'charm',
-    'NEGOTIATION': 'negotiation',
-    'COERCION': 'coercion'
+    MELEE: 'melee',
+    RANGED: 'ranged',
+    ATHLETICS: 'athletics',
+    COORDINATION: 'coordination',
+    DISCIPLINE: 'discipline',
+    LEADERSHIP: 'leadership',
+    VIGILANCE: 'vigilance',
+    COOL: 'cool',
+    SURVIVAL: 'survival',
+    MEDICINE: 'medicine',
+    PILOTING: 'piloting',
+    COMPUTERS: 'computers',
+    MECHANICS: 'mechanics',
+    STEALTH: 'stealth',
+    SKULDUGGERY: 'skulduggery',
+    DECEPTION: 'deception',
+    CHARM: 'charm',
+    NEGOTIATION: 'negotiation',
+    COERCION: 'coercion',
   }
-  
+
   const upperCode = String(oggDudeSkillCode || '').toUpperCase()
   return skillMap[upperCode] || null
+}
+
+// Mapping minimal selon TUs
+function mapCharacteristicKey(k) {
+  const map = {
+    Brawn: 'brawn',
+    Agility: 'agility',
+    Intellect: 'intellect',
+    Cunning: 'cunning',
+    Willpower: 'willpower',
+    Presence: 'presence',
+  }
+  return map[k] || null
+}
+
+function mapSkillKey(k) {
+  // Lightsaber non présent dans mapOggDudeSkillToSystem (spécifique SW), on renvoie lowercase simplifié
+  return String(k || '').toLowerCase()
 }
 
 /**
@@ -128,25 +101,29 @@ function mapOggDudeSkillToSystem(oggDudeSkillCode) {
  * @returns {boolean} True si valide
  */
 export function validateTalentPrerequisites(requirements) {
-  if (!requirements || typeof requirements !== 'object') {
-    return false
-  }
-  
-  // Vérifier que toutes les valeurs sont numériques et positives
-  for (const [key, value] of Object.entries(requirements)) {
-    if (!Number.isFinite(value) || value < 0) {
-      logger.warn(`[TalentPrerequisiteMap] Invalid prerequisite value for "${key}": ${value}`)
-      return false
-    }
-    
-    // Vérifier la structure des clés
-    if (!key.includes('.') && !key.startsWith('talent.')) {
-      logger.warn(`[TalentPrerequisiteMap] Invalid prerequisite key format: "${key}"`)
-      return false
+  if (!requirements || typeof requirements !== 'object') return false
+
+  // Forme imbriquée (nouvelle)
+  if (requirements.characteristics) {
+    for (const v of Object.values(requirements.characteristics)) {
+      if (!Number.isFinite(v) || v < 0) return false
     }
   }
-  
-  return true
+  if (requirements.skills) {
+    for (const v of Object.values(requirements.skills)) {
+      if (!Number.isFinite(v) || v < 0) return false
+    }
+  }
+
+  // Si aucune clé valide détectée, invalide
+  const hasContent =
+    (requirements.characteristics && Object.keys(requirements.characteristics).length) || (requirements.skills && Object.keys(requirements.skills).length)
+  // Les TUs considèrent un objet vide {} comme valide (aucun prérequis requis)
+  if (!hasContent) {
+    // Objet vide accepté
+    if (Object.keys(requirements).length === 0) return true
+  }
+  return Boolean(hasContent)
 }
 
 /**
@@ -165,16 +142,16 @@ export function prepareTalentPrerequisitesForDisplay(requirements) {
  */
 export function mergeTalentPrerequisites(...requirementSets) {
   const merged = {}
-  
+
   for (const requirements of requirementSets) {
     if (!requirements || typeof requirements !== 'object') continue
-    
+
     for (const [key, value] of Object.entries(requirements)) {
       if (Number.isFinite(value)) {
         merged[key] = Math.max(merged[key] || 0, value)
       }
     }
   }
-  
+
   return merged
 }

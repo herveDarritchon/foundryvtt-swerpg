@@ -16,54 +16,54 @@
  */
 export const ARMOR_PROPERTY_MAP = {
   // Propriétés de base supportées par SwerpgArmor
-  'Bulky': {
+  Bulky: {
     swerpgProperty: 'bulky',
-    description: 'Armure encombrante qui réduit la mobilité'
+    description: 'Armure encombrante qui réduit la mobilité',
   },
-  'bulky': {
+  bulky: {
     swerpgProperty: 'bulky',
-    description: 'Armure encombrante (minuscule)'
+    description: 'Armure encombrante (minuscule)',
   },
-  'Organic': {
+  Organic: {
     swerpgProperty: 'organic',
-    description: 'Matériau organique (cuir, écailles, etc.)'
+    description: 'Matériau organique (cuir, écailles, etc.)',
   },
-  'organic': {
+  organic: {
     swerpgProperty: 'organic',
-    description: 'Matériau organique (minuscule)'
+    description: 'Matériau organique (minuscule)',
   },
-  
+
   // Variantes possibles dans OggDude (à mapper vers propriétés existantes)
-  'Heavy': {
+  Heavy: {
     swerpgProperty: 'bulky',
-    description: 'Propriété lourde mappée vers bulky'
+    description: 'Propriété lourde mappée vers bulky',
   },
-  'Unwieldy': {
+  Unwieldy: {
     swerpgProperty: 'bulky',
-    description: 'Propriété difficile à manier mappée vers bulky'
+    description: 'Propriété difficile à manier mappée vers bulky',
   },
-  'Natural': {
+  Natural: {
     swerpgProperty: 'organic',
-    description: 'Protection naturelle mappée vers organic'
+    description: 'Protection naturelle mappée vers organic',
   },
-  'Leather': {
+  Leather: {
     swerpgProperty: 'organic',
-    description: 'Armure en cuir mappée vers organic'
+    description: 'Armure en cuir mappée vers organic',
   },
-  'Hide': {
+  Hide: {
     swerpgProperty: 'organic',
-    description: 'Armure en peau mappée vers organic'
+    description: 'Armure en peau mappée vers organic',
   },
-  
+
   // Codes numériques possibles (si utilisés par OggDude)
-  '1': {
+  1: {
     swerpgProperty: 'bulky',
-    description: 'Code 1 = Propriété bulky'
+    description: 'Code 1 = Propriété bulky',
   },
-  '2': {
+  2: {
     swerpgProperty: 'organic',
-    description: 'Code 2 = Propriété organic'
-  }
+    description: 'Code 2 = Propriété organic',
+  },
 }
 
 /**
@@ -75,7 +75,7 @@ export function resolveArmorProperty(oggDudeProperty) {
   if (!oggDudeProperty || typeof oggDudeProperty !== 'string') {
     return null
   }
-  
+
   const mapping = ARMOR_PROPERTY_MAP[oggDudeProperty.trim()]
   return mapping ? mapping.swerpgProperty : null
 }
@@ -83,17 +83,17 @@ export function resolveArmorProperty(oggDudeProperty) {
 /**
  * Résout un tableau de propriétés OggDude vers un Set de propriétés SwerpgArmor
  * @param {string[]} oggDudeProperties - Les propriétés depuis les données OggDude
- * @returns {{resolvedProperties: Set<string>, unknownProperties: string[]}} 
+ * @returns {{resolvedProperties: Set<string>, unknownProperties: string[]}}
  *   Propriétés résolues et propriétés inconnues
  */
 export function resolveArmorProperties(oggDudeProperties) {
   const resolvedProperties = new Set()
   const unknownProperties = []
-  
+
   if (!Array.isArray(oggDudeProperties)) {
     return { resolvedProperties, unknownProperties }
   }
-  
+
   for (const property of oggDudeProperties) {
     const resolved = resolveArmorProperty(property)
     if (resolved) {
@@ -102,7 +102,7 @@ export function resolveArmorProperties(oggDudeProperties) {
       unknownProperties.push(property)
     }
   }
-  
+
   return { resolvedProperties, unknownProperties }
 }
 

@@ -600,16 +600,6 @@ input[type='range'] {
 .swerpg.application .window-content {
   padding: 0;
 }
-.swerpg.application .app#swerpgSettings-form .window-content .standard-form {
-  max-height: calc(100vh - 140px);
-  overflow: auto;
-  -webkit-overflow-scrolling: touch;
-  padding-right: 0.5rem;
-}
-.swerpg.application .app#swerpgSettings-form .window-content .standard-form table {
-  width: 100%;
-  border-collapse: collapse;
-}
 .swerpg.application button,
 .swerpg.application .button,
 .swerpg.application .control {
@@ -650,6 +640,43 @@ input[type='range'] {
 .swerpg.application .header-control button {
   --button-text-color: var(--color-secondary);
   opacity: 1;
+}
+#swerpgSettings-form .window-content .standard-form {
+  max-height: calc(100vh - 140px);
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-right: 0.5rem;
+}
+#swerpgSettings-form .window-content .standard-form table {
+  width: 100%;
+  border-collapse: collapse;
+}
+#swerpgSettings-form .window-content .standard-form .import-progress-global {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 12px;
+  background: var(--color-cool-5-50, rgba(255, 255, 255, 0.1));
+  border: 2px solid var(--color-cool-2, #444);
+  border-radius: 4px;
+  margin: 0.5rem 0 0.75rem;
+  overflow: hidden;
+}
+#swerpgSettings-form .window-content .standard-form .import-progress-global .bar {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, #0b5e0b, #19a319);
+  transition: width 0.25s ease;
+}
+#swerpgSettings-form .window-content .standard-form .sr-only:not(:focus):not(:active) {
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
 }
 /* ----------------------------------------- */
 /*  DocumentSheet V2 Styles                  */
@@ -3593,6 +3620,108 @@ a.button.increase {
 .defenses-wrapper .defense-bar-container .title.soak,
 .defenses-wrapper .defense-bar-container .values.soak {
   color: #ff9900;
+}
+.import-summary.sw-panel,
+.import-stats.sw-collapsible,
+.import-metrics.sw-collapsible,
+.preview-section.sw-collapsible {
+  margin: 0 0 0.75rem 0;
+  padding: 0.5rem 0.75rem;
+  background: rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 4px;
+}
+.import-summary.sw-panel h4,
+.sw-collapsible > summary {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 600;
+  cursor: pointer;
+  list-style: none;
+}
+.sw-collapsible > summary::-webkit-details-marker {
+  display: none;
+}
+.sw-collapsible[open] {
+  background: rgba(208, 230, 246, 0.12);
+  border-color: rgba(208, 230, 246, 0.4);
+}
+.stats-table,
+.preview-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+}
+.stats-table th,
+.stats-table td,
+.preview-table th,
+.preview-table td {
+  padding: 0.25rem 0.4rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+.stats-table th[scope=row] {
+  text-align: left;
+}
+.metrics,
+.summary {
+  margin: 0.4rem 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.85rem;
+}
+.metrics li,
+.summary li {
+  line-height: 1.3;
+}
+.preview-controls {
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+.preview-controls label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1 1 0;
+}
+.pagination {
+  margin-top: 0.4rem;
+  font-size: 0.75rem;
+  opacity: 0.8;
+}
+.sw-collapsible > summary:focus,
+.preview-controls select:focus,
+.preview-controls input:focus {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+.exists {
+  color: #00ff99;
+  font-weight: 600;
+}
+.new {
+  color: var(--color-accent);
+  font-weight: 600;
+}
+.stats-table td.domain-status {
+  width: 1.2rem;
+  text-align: center;
+}
+.domain-status .fa-circle {
+  font-size: 0.7rem;
+}
+.domain-status--pending .fa-circle {
+  color: #7c8a9e;
+}
+.domain-status--success .fa-circle {
+  color: #00ff99;
+}
+.domain-status--mixed .fa-circle {
+  color: #ffaa00;
+}
+.domain-status--error .fa-circle {
+  color: #ff3333;
 }
 /**
  * TODO: A collection of temporary rules that should be removed in V13

@@ -39,13 +39,13 @@ graph TD
 
 Le système mappe les catégories OggDude vers les catégories SwerpgArmor :
 
-| OggDude | SwerpgArmor | Description |
-|---------|-------------|-------------|
-| `Light`, `light`, `1` | `light` | Armure légère |
-| `Medium`, `medium`, `2` | `medium` | Armure moyenne |
-| `Heavy`, `heavy`, `3` | `heavy` | Armure lourde |
-| `Natural`, `4` | `natural` | Protection naturelle |
-| `Unarmored`, `0` | `unarmored` | Sans armure |
+| OggDude                 | SwerpgArmor | Description          |
+| ----------------------- | ----------- | -------------------- |
+| `Light`, `light`, `1`   | `light`     | Armure légère        |
+| `Medium`, `medium`, `2` | `medium`    | Armure moyenne       |
+| `Heavy`, `heavy`, `3`   | `heavy`     | Armure lourde        |
+| `Natural`, `4`          | `natural`   | Protection naturelle |
+| `Unarmored`, `0`        | `unarmored` | Sans armure          |
 
 **Comportement par défaut :** Si aucune catégorie n'est reconnue, la catégorie `medium` est utilisée par défaut (mode normal) ou l'armure est rejetée (mode strict).
 
@@ -53,10 +53,10 @@ Le système mappe les catégories OggDude vers les catégories SwerpgArmor :
 
 Les propriétés OggDude sont mappées vers les propriétés SwerpgArmor supportées :
 
-| OggDude | SwerpgArmor | Description |
-|---------|-------------|-------------|
-| `Bulky`, `bulky`, `Heavy`, `Unwieldy`, `1` | `bulky` | Armure encombrante |
-| `Organic`, `organic`, `Natural`, `Leather`, `Hide`, `2` | `organic` | Matériau organique |
+| OggDude                                                 | SwerpgArmor | Description        |
+| ------------------------------------------------------- | ----------- | ------------------ |
+| `Bulky`, `bulky`, `Heavy`, `Unwieldy`, `1`              | `bulky`     | Armure encombrante |
+| `Organic`, `organic`, `Natural`, `Leather`, `Hide`, `2` | `organic`   | Matériau organique |
 
 **Comportement :** Les propriétés inconnues sont ignorées avec un avertissement. Les propriétés sont dédupliquées et triées alphabétiquement.
 
@@ -87,6 +87,7 @@ Les propriétés OggDude sont mappées vers les propriétés SwerpgArmor support
 ### Champs Ignorés
 
 Les champs OggDude suivants sont **supprimés** car non supportés par SwerpgArmor :
+
 - `sources` - Références aux livres source
 - `mods` - Modifications de base
 - `weaponModifiers` - Modificateurs d'armes
@@ -119,7 +120,7 @@ export const FLAG_STRICT_ARMOR_VALIDATION = false // Par défaut
 // En mode strict (true) :
 // - Armures avec catégories inconnues → rejetées
 // - Armures avec données invalides → rejetées
-// 
+//
 // En mode normal (false) :
 // - Catégories inconnues → fallback vers 'medium'
 // - Données invalides → correction avec warning
@@ -135,11 +136,11 @@ import { getArmorImportStats, resetArmorImportStats } from './armor-ogg-dude.mjs
 // Obtenir les stats après import
 const stats = getArmorImportStats()
 console.log({
-  total: stats.total,                    // Nombre total traité
-  rejected: stats.rejected,              // Nombre rejeté
-  unknownCategories: stats.unknownCategories,   // Catégories inconnues
-  unknownProperties: stats.unknownProperties,   // Propriétés inconnues
-  rejectionReasons: stats.rejectionReasons      // Codes de rejet
+  total: stats.total, // Nombre total traité
+  rejected: stats.rejected, // Nombre rejeté
+  unknownCategories: stats.unknownCategories, // Catégories inconnues
+  unknownProperties: stats.unknownProperties, // Propriétés inconnues
+  rejectionReasons: stats.rejectionReasons, // Codes de rejet
 })
 
 // Réinitialiser pour le prochain import
@@ -163,19 +164,21 @@ resetArmorImportStats()
 import { armorMapper } from './module/importer/items/armor-ogg-dude.mjs'
 
 // Données XML parsées
-const xmlArmors = [{
-  Name: "Padded Armor",
-  Description: "Light protective gear",
-  Defense: "2",
-  Soak: "1", 
-  Categories: {
-    Category: ["Light", "Bulky"]
+const xmlArmors = [
+  {
+    Name: 'Padded Armor',
+    Description: 'Light protective gear',
+    Defense: '2',
+    Soak: '1',
+    Categories: {
+      Category: ['Light', 'Bulky'],
+    },
+    Encumbrance: '1',
+    Price: '50',
+    Rarity: '0',
+    Restricted: false,
   },
-  Encumbrance: "1",
-  Price: "50",
-  Rarity: "0",
-  Restricted: false
-}]
+]
 
 // Import
 const foundryArmors = armorMapper(xmlArmors)
@@ -198,16 +201,18 @@ console.log(foundryArmors[0])
 
 ```javascript
 // Armure avec catégorie inconnue (mode normal)
-const problematicArmor = [{
-  Name: "Mystery Armor",
-  Categories: { Category: ["UnknownType"] },
-  Defense: "200", // Valeur aberrante
-  Soak: "-5"      // Valeur négative
-}]
+const problematicArmor = [
+  {
+    Name: 'Mystery Armor',
+    Categories: { Category: ['UnknownType'] },
+    Defense: '200', // Valeur aberrante
+    Soak: '-5', // Valeur négative
+  },
+]
 
 const result = armorMapper(problematicArmor)
 // Warnings logged:
-// - "Catégorie d'armure inconnue: UnknownType"  
+// - "Catégorie d'armure inconnue: UnknownType"
 // - "Valeur Defense aberrante: 200, clamped à 100"
 // - "Valeur Soak aberrante: -5, clamped à 0"
 

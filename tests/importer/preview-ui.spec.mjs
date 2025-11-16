@@ -76,7 +76,7 @@ describe('Preview UI - préchargement', () => {
 
   it('filtre par texte sur le nom', async () => {
     const buffer = Buffer.from('fake')
-    const domains = [ { id: 'armor', checked: true } ]
+    const domains = [{ id: 'armor', checked: true }]
     const preview = await OggDudeImporter.preloadOggDudeData(buffer, domains)
     const app = new OggDudeDataImporter()
     app.previewData = preview

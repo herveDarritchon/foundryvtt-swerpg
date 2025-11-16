@@ -150,7 +150,7 @@ globalThis.JSZip = {
 // Helper pour construire un faux zip avec structure OggDude
 function buildFakeZip(domains = ['armor']) {
   const files = {}
-  
+
   // Exemple pour domaine armor
   if (domains.includes('armor')) {
     const armorXml = fs.readFileSync(path.join('resources', 'integration', 'Armor.xml'), 'utf-8')
@@ -163,7 +163,7 @@ function buildFakeZip(domains = ['armor']) {
       },
     }
   }
-  
+
   return { files }
 }
 ```
@@ -203,8 +203,8 @@ if (!globalThis.SYSTEM) {
   globalThis.SYSTEM = {
     ARMOR: {
       CATEGORIES: { light: {}, medium: {}, heavy: {} },
-      DEFAULT_CATEGORY: 'medium'
-    }
+      DEFAULT_CATEGORY: 'medium',
+    },
   }
 }
 
@@ -217,7 +217,7 @@ describe('Intégration Import OggDude', () => {
     const xml = await fs.readFile('resources/integration/Armor.xml', 'utf8')
     const raw = await parseXmlToJson(xml)
     const mapped = armorMapper(raw.Armors.Armor)
-    
+
     expect(mapped.length).toBeGreaterThan(0)
     expect(mapped[0]).toHaveProperty('name')
     expect(mapped[0]).toHaveProperty('type', 'armor')
@@ -228,12 +228,12 @@ describe('Intégration Import OggDude', () => {
 #### Gestion des Erreurs de Mock
 
 ```javascript
-test('gère l\'absence de xml2js vendor', async () => {
+test("gère l'absence de xml2js vendor", async () => {
   const original = globalThis.xml2js
   globalThis.xml2js = { js: { parseStringPromise: undefined } }
-  
+
   await expect(parseXmlToJson('<test/>')).rejects.toThrow('xml2js vendor non chargé')
-  
+
   globalThis.xml2js = original
 })
 ```
@@ -259,9 +259,9 @@ const fakeZip = {
       async async(type) {
         if (type === 'text') return buildLargeWeaponsXml(75000) // ~11MB
         return ''
-      }
-    }
-  }
+      },
+    },
+  },
 }
 ```
 
@@ -518,17 +518,17 @@ globalThis.JSZip = {
   loadAsync: vi.fn().mockResolvedValue({
     files: {
       'Data/test.xml': {
-        async: vi.fn().mockResolvedValue('<test>data</test>')
-      }
-    }
-  })
+        async: vi.fn().mockResolvedValue('<test>data</test>'),
+      },
+    },
+  }),
 }
 
 // Mock xml2js pour tests unitaires
 globalThis.xml2js = {
   js: {
-    parseStringPromise: vi.fn().mockResolvedValue({ test: 'data' })
-  }
+    parseStringPromise: vi.fn().mockResolvedValue({ test: 'data' }),
+  },
 }
 ```
 
@@ -549,7 +549,7 @@ function buildFakeZip(filesMap) {
     files[name] = {
       name,
       dir: false,
-      async: async (type) => type === 'text' ? content : content,
+      async: async (type) => (type === 'text' ? content : content),
     }
   })
   return { files }
@@ -586,10 +586,10 @@ export function setupVendorShims() {
   if (globalThis.xml2js === undefined) {
     globalThis.xml2js = { js: xml2jsModule }
   }
-  
+
   if (globalThis.JSZip === undefined) {
     globalThis.JSZip = {
-      loadAsync: async () => ({ files: {} })
+      loadAsync: async () => ({ files: {} }),
     }
   }
 }
@@ -606,7 +606,7 @@ export function teardownVendorShims() {
 test('debug xml2js interface', () => {
   console.log('xml2js available:', !!globalThis.xml2js)
   console.log('parseStringPromise available:', !!globalThis.xml2js?.js?.parseStringPromise)
-  
+
   expect(globalThis.xml2js.js.parseStringPromise).toBeTypeOf('function')
 })
 ```

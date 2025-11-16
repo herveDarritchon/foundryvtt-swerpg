@@ -2,14 +2,14 @@
 
 ## 1. Symptômes fréquents
 
-| Symptôme | Cause probable | Action rapide |
-|----------|----------------|---------------|
-| Aucune donnée importée | Aucune domain sélectionné | Cocher au moins un domaine avant Load |
-| Erreur `xml2js vendor non chargé` | Vendor absent en environnement test | Vérifier `vendors/xml2js.min.js` présent |
-| Images manquantes | Nom clé non trouvé ou image spécifique absente | Fallback automatique déjà appliqué, vérifier chemin world |
-| Performances lentes (>4000ms) | Fichier XML volumineux / surcharge mémoire | Vérifier taille ZIP, relancer avec moins de domaines |
-| Mémoire élevée | Parsing gros XML accumulé | Vérifier version optimisée (libération rawData) |
-| Statistiques non mises à jour | Utilitaires stats non appelés dans mapper | Inspecter mapper et appels `increment...Stat` |
+| Symptôme                          | Cause probable                                 | Action rapide                                             |
+| --------------------------------- | ---------------------------------------------- | --------------------------------------------------------- |
+| Aucune donnée importée            | Aucune domain sélectionné                      | Cocher au moins un domaine avant Load                     |
+| Erreur `xml2js vendor non chargé` | Vendor absent en environnement test            | Vérifier `vendors/xml2js.min.js` présent                  |
+| Images manquantes                 | Nom clé non trouvé ou image spécifique absente | Fallback automatique déjà appliqué, vérifier chemin world |
+| Performances lentes (>4000ms)     | Fichier XML volumineux / surcharge mémoire     | Vérifier taille ZIP, relancer avec moins de domaines      |
+| Mémoire élevée                    | Parsing gros XML accumulé                      | Vérifier version optimisée (libération rawData)           |
+| Statistiques non mises à jour     | Utilitaires stats non appelés dans mapper      | Inspecter mapper et appels `increment...Stat`             |
 
 ## 2. Procédure d'analyse rapide
 
@@ -21,11 +21,11 @@
 
 ## 3. Erreurs XML fréquentes
 
-| Erreur | Explication | Correction |
-|--------|-------------|------------|
-| Balises non fermées | XML incomplet | Ouvrir fichier source et corriger balise |
-| Encodage inattendu | BOM/charset non UTF-8 | Re-sauver en UTF-8 |
-| Racine inattendue | Critère `Weapons.Weapon` introuvable | Vérifier version générateur OggDude |
+| Erreur              | Explication                          | Correction                               |
+| ------------------- | ------------------------------------ | ---------------------------------------- |
+| Balises non fermées | XML incomplet                        | Ouvrir fichier source et corriger balise |
+| Encodage inattendu  | BOM/charset non UTF-8                | Re-sauver en UTF-8                       |
+| Racine inattendue   | Critère `Weapons.Weapon` introuvable | Vérifier version générateur OggDude      |
 
 ## 4. Stratégie de Retry
 
@@ -34,10 +34,12 @@ Le retry automatique (TASK-023) ré-exécute jusqu'à 3 tentatives sur erreurs t
 ## 5. Vérification des statistiques
 
 Utiliser:
+
 ```javascript
 import { getGlobalImportMetrics } from 'module/importer/utils/global-import-metrics.mjs'
 console.log(getGlobalImportMetrics())
 ```
+
 Si `total === 0` pour un domaine attendu, suspecter critère JSON (`elementCriteria`).
 
 ## 6. Nettoyage environnement
