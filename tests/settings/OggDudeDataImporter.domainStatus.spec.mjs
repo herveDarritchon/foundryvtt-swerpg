@@ -47,7 +47,7 @@ describe('OggDudeDataImporter._buildImportDomainStatus()', () => {
     expect(result.species.code).toBe('pending')
     expect(result.career.code).toBe('pending')
     expect(result.talent.class).toBe('domain-status domain-status--pending')
-    for (const [key, val] of Object.entries(result)) {
+    for (const [_, val] of Object.entries(result)) {
       expect(val.labelI18n).toMatch(/status\.(pending|success|mixed|error)$/)
       expect(val.class).toMatch(/domain-status--(pending|success|mixed|error)/)
     }
