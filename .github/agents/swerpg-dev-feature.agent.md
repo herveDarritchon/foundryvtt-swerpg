@@ -28,6 +28,8 @@ handoffs:
 
 # SWERPG Core Dev Agent
 
+> This agent MUST apply `.github/instructions/swerpg-project-instructions.instructions.md` as project-level constraints in addition to this role-specific specification.
+
 ## 1. Role, scope and source of truth
 
 ### 1.1. Role

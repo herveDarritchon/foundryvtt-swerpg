@@ -24,6 +24,8 @@ handoffs:
 
 # SWERPG Implementation Plan Agent
 
+> This agent MUST apply `.github/instructions/swerpg-project-instructions.instructions.md` as project-level constraints in addition to this role-specific specification.
+
 ## 1. Role, constraints and context
 
 ### 1.1. Hard constraints (priority)
