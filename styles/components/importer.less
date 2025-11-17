@@ -22,7 +22,9 @@
   list-style: none; // évite le triangle par défaut sur browsers non stylés
 }
 
-.sw-collapsible > summary::-webkit-details-marker { display: none; }
+.sw-collapsible > summary::-webkit-details-marker {
+  display: none;
+}
 
 .sw-collapsible[open] {
   background: fade(@color-primary, 12%);
@@ -43,7 +45,9 @@
   padding: 0.25rem 0.4rem;
   border: 1px solid fade(@color-light, 20%);
 }
-.stats-table th[scope=row] { text-align: left; }
+.stats-table th[scope='row'] {
+  text-align: left;
+}
 
 .metrics,
 .summary {
@@ -53,7 +57,9 @@
   font-size: 0.85rem;
 }
 .metrics li,
-.summary li { line-height: 1.3; }
+.summary li {
+  line-height: 1.3;
+}
 
 .preview-controls {
   gap: 0.5rem;
@@ -66,7 +72,11 @@
   flex: 1 1 0;
 }
 
-.pagination { margin-top: 0.4rem; font-size: 0.75rem; opacity: 0.8; }
+.pagination {
+  margin-top: 0.4rem;
+  font-size: 0.75rem;
+  opacity: 0.8;
+}
 
 // Accessibilité focus
 .sw-collapsible > summary:focus,
@@ -76,16 +86,34 @@
   outline-offset: 2px;
 }
 
-.exists { color: @color-success; font-weight: 600; }
-.new { color: @color-accent; font-weight: 600; }
+.exists {
+  color: @color-success;
+  font-weight: 600;
+}
+.new {
+  color: @color-accent;
+  font-weight: 600;
+}
 
 // --- Statuts domaine (icône circulaire) ---
 // Couleurs sélectionnées pour contraste >=3:1 sur fonds sombres.
 // Couleurs statut: pending gris, success vert, mixed accent, error rouge #c62828.
-.stats-table td.domain-status { width: 1.2rem; text-align: center; }
-.domain-status .fa-circle { font-size: 0.7rem; }
-.domain-status--pending .fa-circle { color: @color-secondary }
-.domain-status--success .fa-circle { color: @color-success }
-.domain-status--mixed .fa-circle { color: @color-warning }
-.domain-status--error .fa-circle { color: @color-danger }
-
+.stats-table td.domain-status {
+  width: 1.2rem;
+  text-align: center;
+}
+.domain-status .fa-circle {
+  font-size: 0.7rem;
+}
+.domain-status--pending .fa-circle {
+  color: @color-secondary;
+}
+.domain-status--success .fa-circle {
+  color: @color-success;
+}
+.domain-status--mixed .fa-circle {
+  color: @color-warning;
+}
+.domain-status--error .fa-circle {
+  color: @color-danger;
+}

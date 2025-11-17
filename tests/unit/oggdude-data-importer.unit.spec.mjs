@@ -11,9 +11,8 @@ describe('OggDudeDataImporter domain initialization', () => {
 
 describe('OggDudeDataImporter.toBoolean', () => {
   it('converts string values to boolean', () => {
-
-      const oggDudeDataImporter = new OggDudeDataImporter();
-      expect(oggDudeDataImporter.toBoolean('true')).toBe(true)
+    const oggDudeDataImporter = new OggDudeDataImporter()
+    expect(oggDudeDataImporter.toBoolean('true')).toBe(true)
     expect(oggDudeDataImporter.toBoolean('false')).toBe(false)
   })
 })

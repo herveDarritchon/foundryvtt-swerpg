@@ -54,6 +54,15 @@ export const PROPERTIES = {
   organic: {
     label: 'ARMOR.PROPERTIES.ORGANIC',
   },
+  sealed: {
+    label: 'ARMOR.PROPERTIES.SEALED',
+  },
+  'full-body': {
+    label: 'ARMOR.PROPERTIES.FULL_BODY',
+  },
+  restricted: {
+    label: 'ARMOR.PROPERTIES.RESTRICTED',
+  },
 }
 
 /**

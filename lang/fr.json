@@ -556,8 +556,11 @@
       "TYPE": "Armor Type"
     },
     "PROPERTIES": {
-      "BULKY": "Bulky",
-      "ORGANIC": "Organic"
+      "BULKY": "Encombrante",
+      "ORGANIC": "Organique",
+      "SEALED": "Étanche",
+      "FULL_BODY": "Corps entier",
+      "RESTRICTED": "Restreint"
     }
   },
   "ATTACK.RESULT_TYPES.MISS": "Miss",

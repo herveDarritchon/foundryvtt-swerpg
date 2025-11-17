@@ -5,7 +5,7 @@ date_created: 2025-11-15
 last_updated: 2025-11-15
 owner: importer-ui
 status: 'Planned'
-tags: ['feature','importer','ui','accessibility','performance','a11y']
+tags: ['feature', 'importer', 'ui', 'accessibility', 'performance', 'a11y']
 ---
 
 # Introduction
@@ -42,56 +42,56 @@ Ajouter en début de ligne de chaque domaine dans la table « Import Statistics 
 
 - GOAL-001: Calcul & exposition des statuts domaine dans contexte.
 
-| Task     | Description | Completed | Date |
-| -------- | ----------- | --------- | ---- |
-| TASK-001 | Créer fonction pure `computeDomainStatus({total, imported, rejected})` retournant code parmi pending/success/mixed/error | ✅ | 2025-11-15 |
-| TASK-002 | Ajouter méthode statique ou fonction interne dans `OggDudeDataImporter.mjs` pour itérer domaines et construire objet `importDomainStatus` | ✅ | 2025-11-15 |
-| TASK-003 | Injecter `importDomainStatus` dans retour `_prepareContext` avec structure `{ armor: {...}, weapon: {...}, ... }` | ✅ | 2025-11-15 |
+| Task     | Description                                                                                                                               | Completed | Date       |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------------------- | --------- | ---------- |
+| TASK-001 | Créer fonction pure `computeDomainStatus({total, imported, rejected})` retournant code parmi pending/success/mixed/error                  | ✅        | 2025-11-15 |
+| TASK-002 | Ajouter méthode statique ou fonction interne dans `OggDudeDataImporter.mjs` pour itérer domaines et construire objet `importDomainStatus` | ✅        | 2025-11-15 |
+| TASK-003 | Injecter `importDomainStatus` dans retour `_prepareContext` avec structure `{ armor: {...}, weapon: {...}, ... }`                         | ✅        | 2025-11-15 |
 
 ### Implementation Phase 2
 
 - GOAL-002: Adapter template pour afficher colonne statut.
 
-| Task     | Description | Completed | Date |
-| -------- | ----------- | --------- | ---- |
-| TASK-004 | Ajouter entête colonne avant « Domain »: label i18n `SETTINGS.OggDudeDataImporter.loadWindow.stats.status.title` | ✅ | 2025-11-15 |
-| TASK-005 | Ajouter cellule `<td class="domain-status {{importDomainStatus.armor.class}}" aria-label="{{localize importDomainStatus.armor.labelI18n}}">` avec icône conditionnelle pour chaque ligne | ✅ | 2025-11-15 |
-| TASK-006 | Utiliser icône FontAwesome: `fa-circle` + style couleur via classe; éviter inline style | ✅ | 2025-11-15 |
-| TASK-007 | S'assurer que l'ordre des cellules reste cohérent (status, domain, total, imported, rejected, duration) | ✅ | 2025-11-15 |
+| Task     | Description                                                                                                                                                                              | Completed | Date       |
+| -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | ---------- |
+| TASK-004 | Ajouter entête colonne avant « Domain »: label i18n `SETTINGS.OggDudeDataImporter.loadWindow.stats.status.title`                                                                         | ✅        | 2025-11-15 |
+| TASK-005 | Ajouter cellule `<td class="domain-status {{importDomainStatus.armor.class}}" aria-label="{{localize importDomainStatus.armor.labelI18n}}">` avec icône conditionnelle pour chaque ligne | ✅        | 2025-11-15 |
+| TASK-006 | Utiliser icône FontAwesome: `fa-circle` + style couleur via classe; éviter inline style                                                                                                  | ✅        | 2025-11-15 |
+| TASK-007 | S'assurer que l'ordre des cellules reste cohérent (status, domain, total, imported, rejected, duration)                                                                                  | ✅        | 2025-11-15 |
 
 ### Implementation Phase 3
 
 - GOAL-003: Styling & accessibilité.
 
-| Task     | Description | Completed | Date |
-| -------- | ----------- | --------- | ---- |
-| TASK-008 | Ajouter classes CSS: `.domain-status--pending`, `--success`, `--mixed`, `--error` dans `styles/components/importer.less` | ✅ | 2025-11-15 |
-| TASK-009 | Couleurs: pending=fade(@color-light,30%), success=@color-success, mixed=@color-accent, error=#c62828 (ou variable rouge si dispo) | ✅ | 2025-11-15 |
-| TASK-010 | Ajouter règle `td.domain-status { width: 1.2rem; text-align: center; }` | ✅ | 2025-11-15 |
-| TASK-011 | Vérifier contraste >= 3:1 (manuel: utiliser couleurs existantes haute visibilité) | ✅ | 2025-11-15 |
-| TASK-012 | Ajouter style focus si statut cliquable (non cliquable ici, donc aucun tabindex) | ✅ | 2025-11-15 |
+| Task     | Description                                                                                                                       | Completed | Date       |
+| -------- | --------------------------------------------------------------------------------------------------------------------------------- | --------- | ---------- |
+| TASK-008 | Ajouter classes CSS: `.domain-status--pending`, `--success`, `--mixed`, `--error` dans `styles/components/importer.less`          | ✅        | 2025-11-15 |
+| TASK-009 | Couleurs: pending=fade(@color-light,30%), success=@color-success, mixed=@color-accent, error=#c62828 (ou variable rouge si dispo) | ✅        | 2025-11-15 |
+| TASK-010 | Ajouter règle `td.domain-status { width: 1.2rem; text-align: center; }`                                                           | ✅        | 2025-11-15 |
+| TASK-011 | Vérifier contraste >= 3:1 (manuel: utiliser couleurs existantes haute visibilité)                                                 | ✅        | 2025-11-15 |
+| TASK-012 | Ajouter style focus si statut cliquable (non cliquable ici, donc aucun tabindex)                                                  | ✅        | 2025-11-15 |
 
 ### Implementation Phase 4
 
 - GOAL-004: Tests de validation.
 
-| Task     | Description | Completed | Date |
-| -------- | ----------- | --------- | ---- |
-| TASK-013 | Étendre `OggDudeDataImporter.context.spec.mjs` pour tester `computeDomainStatus` sur jeux de données (4 cas) | ✅ | 2025-11-15 |
-| TASK-014 | Ajouter tests template: vérifier présence colonne header et classes par ligne | ✅ | 2025-11-15 |
-| TASK-015 | Ajouter test accessibilité: chaque cellule a `aria-label` correct (utiliser i18n stub) | ✅ | 2025-11-15 |
-| TASK-016 | Vérifier absence de colonne si stats absentes (hasStats false) | ✅ | 2025-11-15 |
+| Task     | Description                                                                                                  | Completed | Date       |
+| -------- | ------------------------------------------------------------------------------------------------------------ | --------- | ---------- |
+| TASK-013 | Étendre `OggDudeDataImporter.context.spec.mjs` pour tester `computeDomainStatus` sur jeux de données (4 cas) | ✅        | 2025-11-15 |
+| TASK-014 | Ajouter tests template: vérifier présence colonne header et classes par ligne                                | ✅        | 2025-11-15 |
+| TASK-015 | Ajouter test accessibilité: chaque cellule a `aria-label` correct (utiliser i18n stub)                       | ✅        | 2025-11-15 |
+| TASK-016 | Vérifier absence de colonne si stats absentes (hasStats false)                                               | ✅        | 2025-11-15 |
 
 ### Implementation Phase 5
 
 - GOAL-005: Documentation & i18n.
 
-| Task     | Description | Completed | Date |
-| -------- | ----------- | --------- | ---- |
-| TASK-017 | Ajouter clés EN: `status.title`, `status.pending`, `status.success`, `status.mixed`, `status.error` | ✅ | 2025-11-15 |
-| TASK-018 | Ajouter clés FR équivalentes | ✅ | 2025-11-15 |
-| TASK-019 | Mettre à jour `DEVELOPMENT_PROCESS.md` section Importer (sous-section Statuts domaine) | ✅ | 2025-11-15 |
-| TASK-020 | Ajouter commentaires JSDoc sur `computeDomainStatus` (règles / invariants) | ✅ | 2025-11-15 |
+| Task     | Description                                                                                         | Completed | Date       |
+| -------- | --------------------------------------------------------------------------------------------------- | --------- | ---------- |
+| TASK-017 | Ajouter clés EN: `status.title`, `status.pending`, `status.success`, `status.mixed`, `status.error` | ✅        | 2025-11-15 |
+| TASK-018 | Ajouter clés FR équivalentes                                                                        | ✅        | 2025-11-15 |
+| TASK-019 | Mettre à jour `DEVELOPMENT_PROCESS.md` section Importer (sous-section Statuts domaine)              | ✅        | 2025-11-15 |
+| TASK-020 | Ajouter commentaires JSDoc sur `computeDomainStatus` (règles / invariants)                          | ✅        | 2025-11-15 |
 
 ## 3. Alternatives
 
