@@ -262,3 +262,33 @@ Règles tirées d'un incident (JSON cassé) lors de l'ajout des clés de statut�
 - Prévention collisions: éviter qu'une clé existante (string) devienne objet. Avant d'ajouter un sous-objet, rechercher usages template `{{localize ...}}` sur la clé parent — si utilisé comme texte brut, créer une nouvelle clé (`previewButton`).
 - Atomicité des patchs: ajouter virgule finale et sous-objet dans une seule opération pour ne pas laisser le JSON partiellement invalide entre commits.
 - Tests à renforcer: envisager d'étendre le test de localisation pour vérifier la structure `stats.status.title/pending/success/mixed/error` dans les deux langues pour prévenir régressions.
+
+## Double encapsulation bug pattern (nouvelle mémoire)
+
+Pattern récurrent identifié lors du debug armor mapping - éviter `system.system` nesting :
+
+- **Cause racine**: Pipeline `_storeItems()` encapsule automatiquement les données dans `.system` mais les mappers retournent déjà une structure `{ system: {...} }`.
+- **Symptôme**: Items créés avec `armor.system.system.defense` au lieu de `armor.system.defense`, valeurs par défaut (0) au lieu des données mappées.
+- **Solution Adaptateur**: Utiliser `const systemData = item.system ?? item` dans le pipeline pour accepter les deux formats (backward compatibility).
+- **Validation**: Vérifier dans les tests que la structure finale respecte le schéma FoundryVTT attendu (`system.defense.base`, `system.soak.base`).
+- **Debugging**: Utiliser `console.log` dans `_storeItems` pour tracer la structure avant/après encapsulation. Chercher `system.system` dans l'Inspector Foundry.
+
+## Description structure pattern (nouvelle mémoire)
+
+Standard FoundryVTT pour les descriptions d'items découvert lors du fix armor :
+
+- **Structure attendue**: `{ public: "Description visible", secret: "Notes GM" }` au lieu d'un string simple.
+- **Sanitisation**: Toujours utiliser `foundry.utils.htmlToText()` pour nettoyer le HTML avant stockage (prévention XSS).
+- **Construction**: Fonction utilitaire `buildArmorDescription(xmlArmor)` centralise la logique de construction + sanitisation.
+- **Backward compatibility**: Si ancien code attend un string, adapter les tests plutôt que changer la structure (standard FoundryVTT).
+- **Template access**: Dans Handlebars, accéder via `{{system.description.public}}` et non `{{system.description}}`.
+
+## Test import strategy pattern (nouvelle mémoire)
+
+Stratégie pour éviter les erreurs de modules dans les tests d'import :
+
+- **Import dynamique**: Utiliser `const { mapperFunction } = await import('../../module/...')` dans les tests au lieu d'imports statiques en haut de fichier.
+- **Mock Foundry complet**: Vérifier que `globalThis.foundry.applications.api` existe avant d'importer les modules qui en dépendent.
+- **Fonction correcte**: Utiliser le nom exact exporté (`armorMapper` pas `mapOggDudeArmor`) - vérifier les exports avec `grep_search`.
+- **Test isolation**: Mock foundry dans `beforeEach()` pour éviter les fuites entre tests.
+- **Debugging imports**: Si "is not a function", vérifier l'export exact avec `grep_search "export.*function"` sur le fichier cible.
