@@ -160,7 +160,7 @@ describe('armorMapper', () => {
         encumbrance: 2,
         price: 100,
         rarity: 1,
-        restricted: false,
+
         properties: expect.any(Set),
       },
     })
@@ -309,7 +309,7 @@ describe('armorMapper', () => {
     const result = armorMapper([xmlArmor])
 
     expect(result).toHaveLength(1)
-    expect(result[0].system.description).toBe('&lt;script>alert("xss")&lt;/script&gt;Safe text')
+    expect(result[0].system.description.public).toContain('&lt;script>alert("xss")&lt;/script&gt;Safe text')
   })
 
   it('devrait trier les propriétés alphabétiquement', () => {

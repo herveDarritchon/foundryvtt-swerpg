@@ -442,7 +442,10 @@
     },
     "PROPERTIES": {
       "BULKY": "Bulky",
-      "ORGANIC": "Organic"
+      "ORGANIC": "Organic",
+      "SEALED": "Sealed",
+      "FULL_BODY": "Full Body",
+      "RESTRICTED": "Restricted"
     }
   },
   "ATTACK.RESULT_TYPES.MISS": "Miss",

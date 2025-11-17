@@ -8,8 +8,8 @@ Cette documentation technique couvre l'architecture, les modules, les exigences 
 
 ### Architecture
 
-| Document                                    | Description                        | Pages        |
-| ------------------------------------------- | ---------------------------------- | ------------ |
+| Document                                  | Description                        | Pages        |
+| ----------------------------------------- | ---------------------------------- | ------------ |
 | [OVERVIEW.md](architecture/OVERVIEW.md)   | Architecture globale du système    | ~500 lignes  |
 | [PATTERNS.md](architecture/PATTERNS.md)   | Patterns architecturaux identifiés | ~650 lignes  |
 | [MODELS.md](architecture/MODELS.md)       | Models de données (TypeDataModel)  | ~1100 lignes |
@@ -17,15 +17,15 @@ Cette documentation technique couvre l'architecture, les modules, les exigences 
 
 ### Modules
 
-| Document                                       | Description                | Pages       |
-| ---------------------------------------------- | -------------------------- | ----------- |
+| Document                                     | Description                | Pages       |
+| -------------------------------------------- | -------------------------- | ----------- |
 | [ACTION_SYSTEM.md](modules/ACTION_SYSTEM.md) | Système d'actions complet  | ~650 lignes |
 | [TALENT_SYSTEM.md](modules/TALENT_SYSTEM.md) | Système de talents complet | ~750 lignes |
 
 ### Exigences
 
-| Document                                                                        | Description                       | Pages       |
-| ------------------------------------------------------------------------------- | --------------------------------- | ----------- |
+| Document                                                                      | Description                       | Pages       |
+| ----------------------------------------------------------------------------- | --------------------------------- | ----------- |
 | [FUNCTIONAL_REQUIREMENTS.md](requirements/FUNCTIONAL_REQUIREMENTS.md)         | Exigences fonctionnelles (MOSCOW) | ~650 lignes |
 | [NON_FUNCTIONAL_REQUIREMENTS.md](requirements/NON_FUNCTIONAL_REQUIREMENTS.md) | Exigences non-fonctionnelles      | ~550 lignes |
 | [DEPLOYMENT_SCENARIOS.md](requirements/DEPLOYMENT_SCENARIOS.md)               | Scénarios de déploiement          | ~550 lignes |
@@ -33,58 +33,58 @@ Cette documentation technique couvre l'architecture, les modules, les exigences 
 
 ### Processus
 
-| Document                                               | Description                   | Pages       |
-| ------------------------------------------------------ | ----------------------------- | ----------- |
+| Document                                             | Description                   | Pages       |
+| ---------------------------------------------------- | ----------------------------- | ----------- |
 | [DOCUMENTATION_PROCESS.md](DOCUMENTATION_PROCESS.md) | Méthodologie de documentation | ~550 lignes |
 
 ## 🔍 Recherche Rapide
 
 ### Par Concept
 
-| Concept            | Document(s)                                                                                                                                               |
-| ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Concept            | Document(s)                                                                                                                                         |
+| ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Actions            | [ACTION_SYSTEM.md](modules/ACTION_SYSTEM.md), [WORKFLOWS.md](architecture/WORKFLOWS.md), [PATTERNS.md](architecture/PATTERNS.md)                    |
-| Talents            | [TALENT_SYSTEM.md](modules/TALENT_SYSTEM.md), [WORKFLOWS.md](architecture/WORKFLOWS.md)                                                               |
+| Talents            | [TALENT_SYSTEM.md](modules/TALENT_SYSTEM.md), [WORKFLOWS.md](architecture/WORKFLOWS.md)                                                             |
 | Spellcraft         | [ACTION_SYSTEM.md](modules/ACTION_SYSTEM.md), [WORKFLOWS.md](architecture/WORKFLOWS.md), [MODELS.md](architecture/MODELS.md)                        |
-| Combat             | [ACTION_SYSTEM.md](modules/ACTION_SYSTEM.md), [WORKFLOWS.md](architecture/WORKFLOWS.md)                                                               |
-| Progression        | [TALENT_SYSTEM.md](modules/TALENT_SYSTEM.md), [WORKFLOWS.md](architecture/WORKFLOWS.md)                                                               |
-| Data Models        | [MODELS.md](architecture/MODELS.md), [OVERVIEW.md](architecture/OVERVIEW.md)                                                                          |
-| Design Patterns    | [PATTERNS.md](architecture/PATTERNS.md)                                                                                                                 |
-| Workflows          | [WORKFLOWS.md](architecture/WORKFLOWS.md)                                                                                                               |
-| Documents          | [OVERVIEW.md](architecture/OVERVIEW.md)                                                                                                                 |
+| Combat             | [ACTION_SYSTEM.md](modules/ACTION_SYSTEM.md), [WORKFLOWS.md](architecture/WORKFLOWS.md)                                                             |
+| Progression        | [TALENT_SYSTEM.md](modules/TALENT_SYSTEM.md), [WORKFLOWS.md](architecture/WORKFLOWS.md)                                                             |
+| Data Models        | [MODELS.md](architecture/MODELS.md), [OVERVIEW.md](architecture/OVERVIEW.md)                                                                        |
+| Design Patterns    | [PATTERNS.md](architecture/PATTERNS.md)                                                                                                             |
+| Workflows          | [WORKFLOWS.md](architecture/WORKFLOWS.md)                                                                                                           |
+| Documents          | [OVERVIEW.md](architecture/OVERVIEW.md)                                                                                                             |
 | Applications       | [OVERVIEW.md](architecture/OVERVIEW.md), [PATTERNS.md](architecture/PATTERNS.md), [USABILITY_FEATURES.md](requirements/USABILITY_FEATURES.md)       |
-| Build Process      | [DEPLOYMENT_SCENARIOS.md](requirements/DEPLOYMENT_SCENARIOS.md), [WORKFLOWS.md](architecture/WORKFLOWS.md)                                            |
+| Build Process      | [DEPLOYMENT_SCENARIOS.md](requirements/DEPLOYMENT_SCENARIOS.md), [WORKFLOWS.md](architecture/WORKFLOWS.md)                                          |
 | Content Management | [OVERVIEW.md](architecture/OVERVIEW.md), [WORKFLOWS.md](architecture/WORKFLOWS.md), [DEPLOYMENT_SCENARIOS.md](requirements/DEPLOYMENT_SCENARIOS.md) |
 
 ### Par Fichier Source
 
-| Fichier Source                     | Document(s)                                                                                                                                                                   |
-| ---------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `crucible.mjs`                     | [OVERVIEW.md](architecture/OVERVIEW.md), [PATTERNS.md](architecture/PATTERNS.md)                                                                                          |
-| `module/config/system.mjs`         | [OVERVIEW.md](architecture/OVERVIEW.md), [PATTERNS.md](architecture/PATTERNS.md)                                                                                          |
-| `module/config/action.mjs`         | [ACTION_SYSTEM.md](modules/ACTION_SYSTEM.md), [PATTERNS.md](architecture/PATTERNS.md)                                                                                     |
-| `module/config/talent-node.mjs`    | [TALENT_SYSTEM.md](modules/TALENT_SYSTEM.md)                                                                                                                                |
+| Fichier Source                     | Document(s)                                                                                                                                                           |
+| ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `crucible.mjs`                     | [OVERVIEW.md](architecture/OVERVIEW.md), [PATTERNS.md](architecture/PATTERNS.md)                                                                                      |
+| `module/config/system.mjs`         | [OVERVIEW.md](architecture/OVERVIEW.md), [PATTERNS.md](architecture/PATTERNS.md)                                                                                      |
+| `module/config/action.mjs`         | [ACTION_SYSTEM.md](modules/ACTION_SYSTEM.md), [PATTERNS.md](architecture/PATTERNS.md)                                                                                 |
+| `module/config/talent-node.mjs`    | [TALENT_SYSTEM.md](modules/TALENT_SYSTEM.md)                                                                                                                          |
 | `module/models/action.mjs`         | [ACTION_SYSTEM.md](modules/ACTION_SYSTEM.md), [MODELS.md](architecture/MODELS.md), [WORKFLOWS.md](architecture/WORKFLOWS.md), [PATTERNS.md](architecture/PATTERNS.md) |
-| `module/models/actor-*.mjs`        | [MODELS.md](architecture/MODELS.md), [PATTERNS.md](architecture/PATTERNS.md)                                                                                              |
-| `module/models/item-*.mjs`         | [MODELS.md](architecture/MODELS.md), [PATTERNS.md](architecture/PATTERNS.md)                                                                                              |
-| `module/models/combat-*.mjs`       | [MODELS.md](architecture/MODELS.md), [WORKFLOWS.md](architecture/WORKFLOWS.md)                                                                                            |
-| `module/models/spell-action.mjs`   | [MODELS.md](architecture/MODELS.md), [WORKFLOWS.md](architecture/WORKFLOWS.md)                                                                                            |
-| `module/models/spellcraft-*.mjs`   | [MODELS.md](architecture/MODELS.md), [WORKFLOWS.md](architecture/WORKFLOWS.md)                                                                                            |
-| `module/applications/sheets/*.mjs` | [PATTERNS.md](architecture/PATTERNS.md), [WORKFLOWS.md](architecture/WORKFLOWS.md)                                                                                        |
-| `module/documents/actor.mjs`       | [OVERVIEW.md](architecture/OVERVIEW.md), [WORKFLOWS.md](architecture/WORKFLOWS.md)                                                                                        |
-| `module/documents/item.mjs`        | [OVERVIEW.md](architecture/OVERVIEW.md)                                                                                                                                     |
-| `module/documents/combat.mjs`      | [WORKFLOWS.md](architecture/WORKFLOWS.md)                                                                                                                                   |
-| `build.mjs`                        | [DEPLOYMENT_SCENARIOS.md](requirements/DEPLOYMENT_SCENARIOS.md), [WORKFLOWS.md](architecture/WORKFLOWS.md)                                                                |
+| `module/models/actor-*.mjs`        | [MODELS.md](architecture/MODELS.md), [PATTERNS.md](architecture/PATTERNS.md)                                                                                          |
+| `module/models/item-*.mjs`         | [MODELS.md](architecture/MODELS.md), [PATTERNS.md](architecture/PATTERNS.md)                                                                                          |
+| `module/models/combat-*.mjs`       | [MODELS.md](architecture/MODELS.md), [WORKFLOWS.md](architecture/WORKFLOWS.md)                                                                                        |
+| `module/models/spell-action.mjs`   | [MODELS.md](architecture/MODELS.md), [WORKFLOWS.md](architecture/WORKFLOWS.md)                                                                                        |
+| `module/models/spellcraft-*.mjs`   | [MODELS.md](architecture/MODELS.md), [WORKFLOWS.md](architecture/WORKFLOWS.md)                                                                                        |
+| `module/applications/sheets/*.mjs` | [PATTERNS.md](architecture/PATTERNS.md), [WORKFLOWS.md](architecture/WORKFLOWS.md)                                                                                    |
+| `module/documents/actor.mjs`       | [OVERVIEW.md](architecture/OVERVIEW.md), [WORKFLOWS.md](architecture/WORKFLOWS.md)                                                                                    |
+| `module/documents/item.mjs`        | [OVERVIEW.md](architecture/OVERVIEW.md)                                                                                                                               |
+| `module/documents/combat.mjs`      | [WORKFLOWS.md](architecture/WORKFLOWS.md)                                                                                                                             |
+| `build.mjs`                        | [DEPLOYMENT_SCENARIOS.md](requirements/DEPLOYMENT_SCENARIOS.md), [WORKFLOWS.md](architecture/WORKFLOWS.md)                                                            |
 
 ### Par Type de Tâche
 
-| Tâche                     | Document(s) Recommandés                                                                                                         |
-| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| Tâche                     | Document(s) Recommandés                                                                                                     |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
 | Créer une nouvelle action | [ACTION_SYSTEM.md](modules/ACTION_SYSTEM.md), [MODELS.md](architecture/MODELS.md)                                           |
 | Ajouter un talent         | [TALENT_SYSTEM.md](modules/TALENT_SYSTEM.md), [WORKFLOWS.md](architecture/WORKFLOWS.md)                                     |
-| Comprendre un pattern     | [PATTERNS.md](architecture/PATTERNS.md)                                                                                       |
-| Comprendre un workflow    | [WORKFLOWS.md](architecture/WORKFLOWS.md)                                                                                     |
-| Comprendre un data model  | [MODELS.md](architecture/MODELS.md)                                                                                           |
+| Comprendre un pattern     | [PATTERNS.md](architecture/PATTERNS.md)                                                                                     |
+| Comprendre un workflow    | [WORKFLOWS.md](architecture/WORKFLOWS.md)                                                                                   |
+| Comprendre un data model  | [MODELS.md](architecture/MODELS.md)                                                                                         |
 | Modifier l'interface      | [USABILITY_FEATURES.md](requirements/USABILITY_FEATURES.md), [PATTERNS.md](architecture/PATTERNS.md)                        |
 | Déployer le système       | [DEPLOYMENT_SCENARIOS.md](requirements/DEPLOYMENT_SCENARIOS.md), [WORKFLOWS.md](architecture/WORKFLOWS.md)                  |
 | Comprendre l'architecture | [OVERVIEW.md](architecture/OVERVIEW.md), [PATTERNS.md](architecture/PATTERNS.md)                                            |

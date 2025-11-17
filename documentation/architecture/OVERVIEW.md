@@ -86,11 +86,11 @@ YAML Sources → Build Pipeline → Compendium Packs → Runtime Models
 
 ## 🎯 Points d'Extension
 
-| Domaine            | Extension Points           | Documentation                              |
-| ------------------ | -------------------------- | ------------------------------------------ |
+| Domaine            | Extension Points           | Documentation                            |
+| ------------------ | -------------------------- | ---------------------------------------- |
 | **Data Models**    | `TypeDataModel` subclasses | [DATA/MODELS.md](data/MODELS.md)         |
 | **UI Components**  | `ApplicationV2` sheets     | [UI/APPLICATIONS.md](ui/APPLICATIONS.md) |
-| **Game Mechanics** | Action system hooks        | [SYSTEMS/\*.md](./systems/)                |
+| **Game Mechanics** | Action system hooks        | [SYSTEMS/\*.md](./systems/)              |
 | **Canvas**         | Canvas layers/tools        | [UI/CANVAS.md](ui/CANVAS.md)             |
 
 ## 🔗 Intégrations Clés

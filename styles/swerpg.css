@@ -3661,7 +3661,7 @@ a.button.increase {
   padding: 0.25rem 0.4rem;
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
-.stats-table th[scope=row] {
+.stats-table th[scope='row'] {
   text-align: left;
 }
 .metrics,
@@ -3737,3 +3737,4 @@ a.button.increase {
   text-align: left;
   align-self: unset;
 }
+/*# sourceMappingURL=swerpg.css.map */

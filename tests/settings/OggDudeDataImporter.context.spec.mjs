@@ -82,25 +82,25 @@ describe('OggDudeDataImporter toggleDomainAction', () => {
 describe('OggDudeDataImporter toggle collapsible actions', () => {
   it('toggleStatsAction bascule showStats', async () => {
     const app = buildInstance()
-    await OggDudeDataImporter.toggleStatsAction.call(app, {}, { })
+    await OggDudeDataImporter.toggleStatsAction.call(app, {}, {})
     expect(app.showStats).toBe(true)
-    await OggDudeDataImporter.toggleStatsAction.call(app, {}, { })
+    await OggDudeDataImporter.toggleStatsAction.call(app, {}, {})
     expect(app.showStats).toBe(false)
   })
 
   it('toggleMetricsAction bascule showMetrics', async () => {
     const app = buildInstance()
-    await OggDudeDataImporter.toggleMetricsAction.call(app, {}, { })
+    await OggDudeDataImporter.toggleMetricsAction.call(app, {}, {})
     expect(app.showMetrics).toBe(true)
-    await OggDudeDataImporter.toggleMetricsAction.call(app, {}, { })
+    await OggDudeDataImporter.toggleMetricsAction.call(app, {}, {})
     expect(app.showMetrics).toBe(false)
   })
 
   it('togglePreviewAction bascule showPreview', async () => {
     const app = buildInstance()
-    await OggDudeDataImporter.togglePreviewAction.call(app, {}, { })
+    await OggDudeDataImporter.togglePreviewAction.call(app, {}, {})
     expect(app.showPreview).toBe(true)
-    await OggDudeDataImporter.togglePreviewAction.call(app, {}, { })
+    await OggDudeDataImporter.togglePreviewAction.call(app, {}, {})
     expect(app.showPreview).toBe(false)
   })
 })
