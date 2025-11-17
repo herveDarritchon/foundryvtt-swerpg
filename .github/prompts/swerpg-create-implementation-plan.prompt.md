@@ -1,72 +1,179 @@
 ---
-name: "SWERPG – Créer un plan d’implémentation"
-description: "Générer un plan d’implémentation déterministe pour le système SWERPG (Foundry VTT v13+), prêt à être exécuté par un agent de dev."
+name: "SWERPG – Create an implementation plan"
+description: "Generate a deterministic implementation plan for the SWERPG system (Foundry VTT v13+), ready to be executed by a dev agent, based on an input requirements file."
 ---
 
-Tu agis en tant qu’agent `swerpg-plan` pour le système **SWERPG / Star Wars Edge** sur Foundry VTT v13+.
+You act as the `swerpg-plan` agent for the **SWERPG / Star Wars Edge** system on Foundry VTT v13+.
 
-Ton objectif : **créer un plan d’implémentation complet et déterministe**, sous la forme d’un fichier unique dans `/documentation/plan/<domain>/[purpose]-[feature]-[version].md`, en respectant STRICTEMENT les règles suivantes :
+Your goal: **create a complete and deterministic implementation plan**, as a single file in `/documentation/plan/<domain>/[purpose]-[feature]-[version].md`, based on an **input requirements file**, and strictly following the rules below:
 
-- Tu respectes les **SWERPG Project Instructions** : `.github/instructions/swerpg-project-instructions.instructions.md`.
-- Tu respectes les conventions décrites dans ta propre spec d’agent `swerpg-plan.agent.md`.
-- Tu produis **UNIQUEMENT** le contenu du fichier de plan (front matter YAML + sections Markdown) sans texte autour.
+* You follow the **SWERPG Project Instructions**: `.github/instructions/swerpg-project-instructions.instructions.md`.
+* You follow the conventions defined in your own agent spec `swerpg-plan.agent.md`.
+* You use as your **main functional source of truth** the requirements file provided as input (see below).
+* You produce **ONLY** the content of the plan file (YAML front matter + Markdown sections) and nothing else around it.
 
-### Contexte du plan
+### Plan context
 
-- **Type de plan (`purpose`)** :
-    - `feature` | `refactor` | `bug` | `upgrade` | `data` | `architecture`  
-      → Valeur pour ce plan : `<remplacer-ici>`
-- **Domaine (`domain`)** :
-    - ex. `oggdude-importer`, `character-sheet`, `talent-tree`, `dice-roller`, `combat`, `journal`, etc.  
-      → Valeur pour ce plan : `<remplacer-ici>`
-- **Nom de la feature (`feature`)** :
-    - Nom court en kebab-case décrivant l’objectif du plan.
-    - ex. `progress-bar-importer`, `stress-gauge-character-sheet`, `talent-tree-refactor-v2`  
-      → Valeur pour ce plan : `<remplacer-ici>`
-- **Version** :
-    - ex. `1`, `1.0`  
-      → Valeur pour ce plan : `<remplacer-ici>`
+* **Plan type (`purpose`)**:
 
-### Description métier (en français)
+    * `feature` | `refactor` | `bug` | `upgrade` | `data` | `architecture`
+      → Value for this plan: `<replace-here>`
 
-Décris en quelques lignes :
+* **Domain (`domain`)**:
 
-- Ce que le MJ / les joueurs doivent voir ou pouvoir faire.
-- Le comportement actuel (s’il existe).
-- Les problèmes ou limitations à corriger (si refactor / bug).
+    * e.g. `oggdude-importer`, `character-sheet`, `talent-tree`, `dice-roller`, `combat`, `journal`, etc.
+      → Value for this plan: `<replace-here>`
 
-> Contexte métier :
-> - `<décrire ici le besoin métier, du point de vue MJ/Joueurs>`
-> - `<expliquer le problème ou l’opportunité>`
+* **Feature name (`feature`)**:
 
-### Contexte technique existant
+    * Short kebab-case name describing the goal of the plan.
+    * e.g. `progress-bar-importer`, `stress-gauge-character-sheet`, `talent-tree-refactor-v2`
+      → Value for this plan: `<replace-here>`
 
-Indique tout ce que tu sais déjà :
+* **Version**:
 
-- Fichiers clés si tu en as en tête (sinon l’agent les trouvera) :
-    - ex. `module/apps/oggdude/oggdude-importer.mjs`, `templates/apps/oggdude-importer.hbs`, `styles/components/importer.less`, etc.
-- APIs Foundry impliquées :
-    - ex. `ApplicationV2`, hooks spécifiques, documents, etc.
-- Contraintes particulières :
-    - compatibilité v13, perf, backward compatibility des données, etc.
+    * e.g. `1`, `1.0`
+      → Value for this plan: `<replace-here>`
 
-> Contexte technique :
-> - `<lister les fichiers/domaines connus si tu en as>`
-> - `<préciser les contraintes connues (perf, compat, UX, etc.)>`
+* **Input requirements file (`input-spec-file`)**:
 
-### Ce que tu dois produire
+    * Single file describing the need the plan must address (business + optionally technical).
+    * e.g. `/documentation/spec/<domain>/<purpose>-<feature>-needs-1.0.md`
+      → Path provided to the agent: `<replace-here-with-the-full-path-of-the-requirements-file>`
 
-1. Analyse du code existant (via `search/codebase`, `usages`, etc.) pour cartographier les fichiers impactés.
-2. Un plan structuré EXACTEMENT selon le template prévu par ta spec d’agent :
-    - `REQ-XXX`, `CON-XXX`, `PAT-XXX`, `FILE-XXX`, `TASK-XXX`, `TEST-XXX`, etc.
-    - Phases d’implémentation avec tableau de tâches (`TASK-XXX`) et dépendances (`DependsOn`).
-3. Une section `## 6. Testing` avec une stratégie de tests exploitable (Vitest / Playwright / manuel).
-4. Une section `## 8. Related Specifications / Further Reading` remplie avec :
-    - d’autres specs du repo si pertinent,
-    - la doc Foundry ou externe si utile.
+> This requirements file is your **raw material**:
+>
+> * You must read it in full (using the available code / file tools).
+> * You extract goals, constraints, acceptance criteria, edge cases.
+> * You do not copy it verbatim: you synthesize and structure it in the plan.
 
-**Important :**
+### Business description (in French)
 
-- Le plan doit être **exécutable sans interprétation** par `swerpg-dev-core`.
-- Le plan doit être **auto-portant** (pas de “comme vu dans le chat”, “voir discussion précédente”, etc.).
-- Tu écris le texte explicatif du plan en **français**, mais tu gardes les noms de fichiers, d’APIs, de hooks et d’identifiants (`REQ-XXX`, `TASK-XXX`, etc.) en **anglais**.
+Based on the **input requirements file**, summarize in a few lines:
+
+* What the GM / players must see or be able to do.
+* The current behavior (if it exists) and the gaps with the target behavior described in the file.
+* The problems or limitations to fix (if refactor / bug) or the opportunity to seize (if feature / upgrade / data / architecture).
+
+> Business context (summary of the requirements file):
+>
+> * `<summarize here the business need, from the GM/Players point of view>`
+> * `<summarize here the problem, opportunity, or expected feature>`
+> * `<bring over the important business acceptance criteria if they are present in the file>`
+
+If the requirements file already contains a structured formulation (user stories, use cases, acceptance criteria…), use it to produce a **clear and compact synthesis**, without losing critical elements.
+
+### Existing technical context
+
+Indicate everything you already know, combining:
+
+* The technical information possibly present in the **requirements file**.
+* The analysis of the existing code and specs in the repo.
+
+Specify in particular:
+
+* Key files if you already have them in mind (otherwise the dev agent will find them):
+
+    * e.g. `module/apps/oggdude/oggdude-importer.mjs`, `templates/apps/oggdude-importer.hbs`, `styles/components/importer.less`, etc.
+* Involved Foundry APIs:
+
+    * e.g. `ApplicationV2`, documents (`Actor`, `Item`, etc.), hooks (`renderApplication`, `updateActor`, etc.), data systems (`TypeDataModel`), etc.
+* Specific constraints:
+
+    * Foundry v13 compatibility,
+    * performance (data volume, number of players, call frequency, etc.),
+    * backward compatibility of data / compendiums,
+    * UX/UI or accessibility constraints related to the SWERPG theme,
+    * dependencies with other features / modules.
+
+> Technical context:
+>
+> * `<list known files/domains if you have any>`
+> * `<summarize constraints from the requirements file + those discovered in the code>`
+> * `<specify known constraints (perf, compat, UX, refactor, technical debt, etc.)>`
+
+### What you must produce
+
+Based **first** on the requirements file, then on the code and existing documentation in the repo, you produce a structured implementation plan that follows the points below:
+
+1. **Analysis of the input requirements file**
+
+    * Identify:
+
+        * the main and secondary business goals,
+        * the functional scope (in / out of scope),
+        * explicit constraints (technical, UX, perf, security, data),
+        * acceptance criteria (expected functional tests, edge cases).
+    * Transform these elements into:
+
+        * `REQ-XXX` (requirements),
+        * `CON-XXX` (constraints),
+        * optionally `PAT-XXX` (patterns / design decisions) when the requirements file suggests them.
+
+2. **Analysis of the existing code**
+
+    * Use `search/codebase`, `usages`, etc. to map the impacted files.
+    * Identify integration points:
+
+        * `FILE-XXX` (files to create/modify),
+        * related Foundry hooks / APIs,
+        * effects on data (`system` of `Actor`, `Item`, compendiums, settings…).
+
+3. **Plan structured EXACTLY according to your agent spec template**
+
+    * You must produce the sections expected by `swerpg-plan.agent.md`, including at minimum:
+
+        * `REQ-XXX`: functional and non-functional requirements derived from the requirements file.
+        * `CON-XXX`: constraints (technical, UX, data, perf, compat) coming from the file + the existing code.
+        * `PAT-XXX`: patterns / architecture or design decisions, if needed.
+        * `FILE-XXX`: list of files to create / modify (JS, HBS, LESS/CSS, config, data).
+        * `TASK-XXX`: atomic, clearly actionable tasks, with:
+
+            * description,
+            * concerned files (`FILE-XXX`),
+            * dependencies (`DependsOn`).
+        * `TEST-XXX`: test scenarios to implement (unit, integration, e2e, manual).
+    * Implementation phases must be explicit:
+
+        * Numbered phases,
+        * Each phase contains a table of `TASK-XXX` with dependencies,
+        * The whole must be directly executable by `swerpg-dev-core` without interpretation.
+
+4. **Section `## 6. Testing`**
+
+    * Define an actionable testing strategy, based on:
+
+        * the acceptance criteria in the requirements file,
+        * the risks identified during code analysis.
+    * Include:
+
+        * Unit tests (Vitest): which functions / modules, which normal cases, errors, edge cases.
+        * E2E / UI tests (Playwright) if relevant: which GM / player flows, which Foundry windows, which critical scenarios.
+        * Manual tests: checklist for GM / QA (if needed).
+    * Each `TEST-XXX` must be traceable to at least one `REQ-XXX`.
+
+5. **Section `## 8. Related Specifications / Further Reading`**
+
+    * If the requirements file references other documents:
+
+        * list them here with their path in the repo.
+    * Add:
+
+        * other relevant internal specs (architecture, data model, UX, etc.),
+        * links to Foundry or external documentation (as plain textual references in the plan, without depending on the chat).
+
+**Important:**
+
+* The plan must be **executable without interpretation** by `swerpg-dev-core`.
+
+    * Each `TASK-XXX` must be precise enough so that the dev agent does not have to “guess” the intent.
+    * The relationship between `REQ-XXX`, `CON-XXX`, `TASK-XXX` and `TEST-XXX` must be clear.
+* The plan must be **self-contained**:
+
+    * No references to the conversation (“as seen in the chat”, “see previous discussion”, etc.).
+    * Any information taken from the requirements file must be reformulated in the plan (at least as a summary).
+* You write the explanatory text of the plan in **French**, but you keep file names, APIs, hooks and identifiers (`REQ-XXX`, `TASK-XXX`, etc.) in **English**.
+* If the requirements file is incomplete or ambiguous:
+
+    * You explicitly mention it in the `CON-XXX` or in a dedicated subsection (e.g. “Assumptions / Open Questions”),
+    * You state reasonable assumptions **inside the plan itself**, in a structured way, so that `swerpg-dev-core` knows what the plan is based on.
