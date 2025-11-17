@@ -106,11 +106,11 @@ Refactor UI de `OggDudeDataImporter` pour améliorer lisibilité post-import et 
 
 ### Risques / Mitigations
 
-| Risque | Impact | Mitigation |
-| ------ | ------ | ---------- |
-| Duplication partielle FR i18n (ancienne racine OggDudeDataImporter + nouvelle SETTINGS) | Confusion maintenance | Étape future: migration complète et suppression racine legacy après audit usages |
-| Navigateurs anciens (support `<details>`) | Dégradation UX (sections toujours ouvertes) | Accepté (cible Foundry v13 – Chrome/Electron récent) |
-| Style conflit futur avec panels génériques | Surcharge CSS | Préfixe spécifique `.sw-collapsible` + fichier dédié |
+| Risque                                                                                  | Impact                                      | Mitigation                                                                       |
+| --------------------------------------------------------------------------------------- | ------------------------------------------- | -------------------------------------------------------------------------------- |
+| Duplication partielle FR i18n (ancienne racine OggDudeDataImporter + nouvelle SETTINGS) | Confusion maintenance                       | Étape future: migration complète et suppression racine legacy après audit usages |
+| Navigateurs anciens (support `<details>`)                                               | Dégradation UX (sections toujours ouvertes) | Accepté (cible Foundry v13 – Chrome/Electron récent)                             |
+| Style conflit futur avec panels génériques                                              | Surcharge CSS                               | Préfixe spécifique `.sw-collapsible` + fichier dédié                             |
 
 ### Améliorations Futures
 

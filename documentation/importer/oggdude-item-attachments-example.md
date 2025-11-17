@@ -23,11 +23,11 @@ Hooks.on('createItem', async (item, data, options, userId) => {
 ### Étendre les statistiques globales
 
 ```javascript
-import {getGlobalImportMetrics} from './global-import-metrics.mjs'
+import { getGlobalImportMetrics } from './global-import-metrics.mjs'
 
 function logMetrics() {
-    const metrics = getGlobalImportMetrics()
-    console.log('[OggDudeImport][Metrics]', metrics)
+  const metrics = getGlobalImportMetrics()
+  console.log('[OggDudeImport][Metrics]', metrics)
 }
 
 Hooks.on('oggdudeImport.completed', logMetrics)

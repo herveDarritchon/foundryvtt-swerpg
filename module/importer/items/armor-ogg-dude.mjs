@@ -12,6 +12,9 @@ import {
   getArmorImportStats,
   incrementArmorImportStat,
   addRejectionReason,
+  normalizeArmorCategoryTag,
+  buildArmorDescription,
+  extractBaseMods,
 } from '../utils/armor-import-utils.mjs'
 
 /**
@@ -88,12 +91,25 @@ function resolveArmorCategoryWithFallback(xmlCategories, armorName) {
 /**
  * Traite les propriétés d'une armure avec limitation et tri
  */
-function processArmorProperties(xmlCategories, armorName) {
+function processArmorProperties(xmlCategories, armorName, isRestricted = false) {
   const { resolvedProperties, unknownProperties } = resolveArmorProperties(xmlCategories)
 
   if (unknownProperties.length > 0) {
     incrementArmorImportStat('unknownProperties', unknownProperties.length)
     logger.warn(`Propriétés d'armure inconnues pour "${armorName}": ${unknownProperties.join(', ')}`)
+  }
+
+  // Ajouter les catégories normalisées comme propriétés personnalisées
+  for (const category of xmlCategories) {
+    const normalizedTag = normalizeArmorCategoryTag(category)
+    if (normalizedTag && ['sealed', 'full-body'].includes(normalizedTag)) {
+      resolvedProperties.add(normalizedTag)
+    }
+  }
+
+  // Ajouter restricted si applicable
+  if (isRestricted) {
+    resolvedProperties.add('restricted')
   }
 
   // Limitation et tri des propriétés
@@ -158,8 +174,11 @@ function mapOggDudeArmor(xmlArmor) {
 
     armorData.system.category = category
 
+    // Vérification restricted
+    const isRestricted = Boolean(xmlArmor.Restricted)
+
     // Mapping des propriétés
-    armorData.system.properties = processArmorProperties(xmlCategories, armorData.name)
+    armorData.system.properties = processArmorProperties(xmlCategories, armorData.name, isRestricted)
 
     // Mapping des valeurs numériques
     const { defenseValue, soakValue } = mapArmorNumericValues(xmlArmor, armorData.name)
@@ -170,15 +189,37 @@ function mapOggDudeArmor(xmlArmor) {
     armorData.system.encumbrance = clampNumber(xmlArmor.Encumbrance, 0, Number.MAX_SAFE_INTEGER, 0)
     armorData.system.price = clampNumber(xmlArmor.Price, 0, Number.MAX_SAFE_INTEGER, 0)
     armorData.system.rarity = clampNumber(xmlArmor.Rarity, 0, 20, 0)
-    armorData.system.restricted = Boolean(xmlArmor.Restricted)
+    armorData.system.quantity = 1
+    armorData.system.quality = 'standard'
+    armorData.system.broken = false
+    armorData.system.equipped = false
 
-    // Mapping HP si supporté
-    if (xmlArmor.HP !== undefined) {
-      armorData.system.hp = clampNumber(xmlArmor.HP, 0, Number.MAX_SAFE_INTEGER, 0)
+    // Mapping HP vers hardPoints (correction du champ erroné)
+    armorData.system.hardPoints = clampNumber(xmlArmor.HP, 0, Number.MAX_SAFE_INTEGER, 0)
+
+    // Construction de la description structurée
+    const descriptionText = buildArmorDescription(xmlArmor)
+    armorData.system.description = {
+      public: sanitizeText(descriptionText),
+      secret: '',
     }
 
-    // Sanitisation de la description
-    armorData.system.description = sanitizeText(OggDudeImporter.mapMandatoryString('armor.Description', xmlArmor.Description))
+    // Ajout des actions vides
+    armorData.system.actions = []
+
+    // Ajout des flags OggDude
+    const baseMods = extractBaseMods(xmlArmor)
+    armorData.flags = {
+      swerpg: {
+        oggdudeKey: xmlArmor.Key || '',
+        oggdudeSource: typeof xmlArmor.Source === 'string' ? xmlArmor.Source : xmlArmor.Source?._ || '',
+        oggdudeSourcePage: xmlArmor.Source?.$ ? parseInt(xmlArmor.Source.$.Page) || 0 : 0,
+      },
+    }
+
+    if (baseMods.length > 0) {
+      armorData.flags.swerpg.oggdude = { baseMods }
+    }
 
     // Validation finale
     const validation = validateArmorSystem(armorData.system)

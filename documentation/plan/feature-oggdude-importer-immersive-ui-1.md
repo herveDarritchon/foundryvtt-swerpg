@@ -5,7 +5,7 @@ date_created: 2025-11-15
 last_updated: 2025-11-15
 owner: importer-ui
 status: 'Planned'
-tags: ['feature','importer','ui','accessibility','performance']
+tags: ['feature', 'importer', 'ui', 'accessibility', 'performance']
 ---
 
 # Introduction
@@ -38,56 +38,56 @@ Rendre la fenêtre « Import OggDude Data » plus immersive (thème Star Wars) e
 
 - GOAL-001: Préparer logique applicative (états de visibilité, actions toggle)
 
-| Task     | Description | Completed | Date |
-| -------- | ----------- | --------- | ---- |
-| TASK-001 | Ajouter propriétés `showStats`, `showMetrics`, `showPreview` initialisées à false dans `OggDudeDataImporter` |  |  |
-| TASK-002 | Ajouter méthodes actions `toggleStatsAction`, `toggleMetricsAction`, `togglePreviewAction` dans DEFAULT_OPTIONS.actions | ✅ | 2025-11-15 |
-| TASK-003 | Adapter `_prepareContext` pour fournir flags et résumé compact `importSummary` (overallDuration, totalProcessed, errorRate) | ✅ | 2025-11-15 |
+| Task     | Description                                                                                                                 | Completed | Date       |
+| -------- | --------------------------------------------------------------------------------------------------------------------------- | --------- | ---------- |
+| TASK-001 | Ajouter propriétés `showStats`, `showMetrics`, `showPreview` initialisées à false dans `OggDudeDataImporter`                |           |            |
+| TASK-002 | Ajouter méthodes actions `toggleStatsAction`, `toggleMetricsAction`, `togglePreviewAction` dans DEFAULT_OPTIONS.actions     | ✅        | 2025-11-15 |
+| TASK-003 | Adapter `_prepareContext` pour fournir flags et résumé compact `importSummary` (overallDuration, totalProcessed, errorRate) | ✅        | 2025-11-15 |
 
 ### Implementation Phase 2
 
 - GOAL-002: Adapter template Handlebars pour sections repliables et rendu conditionnel
 
-| Task     | Description | Completed | Date |
-| -------- | ----------- | --------- | ---- |
-| TASK-004 | Remplacer blocs par sections repliables (pattern details/summary) avec `{{#if showStats}}` etc. + résumé accessible | ✅ | 2025-11-15 |
-| TASK-005 | N'afficher section stats que si `importStats` a des données (`hasStats`) | ✅ | 2025-11-15 |
-| TASK-006 | N'afficher section métriques que si `importMetricsFormatted.totalProcessed > 0` | ✅ | 2025-11-15 |
-| TASK-007 | N'afficher section preview que si `preview.hasData` | ✅ | 2025-11-15 |
-| TASK-008 | Ajouter barre résumé compact sous progression (utilise `importSummary`) | ✅ | 2025-11-15 |
+| Task     | Description                                                                                                         | Completed | Date       |
+| -------- | ------------------------------------------------------------------------------------------------------------------- | --------- | ---------- |
+| TASK-004 | Remplacer blocs par sections repliables (pattern details/summary) avec `{{#if showStats}}` etc. + résumé accessible | ✅        | 2025-11-15 |
+| TASK-005 | N'afficher section stats que si `importStats` a des données (`hasStats`)                                            | ✅        | 2025-11-15 |
+| TASK-006 | N'afficher section métriques que si `importMetricsFormatted.totalProcessed > 0`                                     | ✅        | 2025-11-15 |
+| TASK-007 | N'afficher section preview que si `preview.hasData`                                                                 | ✅        | 2025-11-15 |
+| TASK-008 | Ajouter barre résumé compact sous progression (utilise `importSummary`)                                             | ✅        | 2025-11-15 |
 
 ### Implementation Phase 3
 
 - GOAL-003: Styling immersif & accessibilité
 
-| Task     | Description | Completed | Date |
-| -------- | ----------- | --------- | ---- |
-| TASK-009 | Ajouter classes `sw-panel`, `sw-collapsible` et effets visuels (bordure lueur, police Star Wars si disponible) dans LESS | ✅ | 2025-11-15 |
-| TASK-010 | Ajouter styles focus visibles personnalisés pour boutons toggle | ✅ | 2025-11-15 |
-| TASK-011 | Vérifier contraste texte / fond (>4.5:1) pour résumé compact | ✅ | 2025-11-15 |
-| TASK-012 | Ajouter icônes thématiques (sabres, data holocron) dans résumé & summaries (via FontAwesome existant) | ✅ | 2025-11-15 |
+| Task     | Description                                                                                                              | Completed | Date       |
+| -------- | ------------------------------------------------------------------------------------------------------------------------ | --------- | ---------- |
+| TASK-009 | Ajouter classes `sw-panel`, `sw-collapsible` et effets visuels (bordure lueur, police Star Wars si disponible) dans LESS | ✅        | 2025-11-15 |
+| TASK-010 | Ajouter styles focus visibles personnalisés pour boutons toggle                                                          | ✅        | 2025-11-15 |
+| TASK-011 | Vérifier contraste texte / fond (>4.5:1) pour résumé compact                                                             | ✅        | 2025-11-15 |
+| TASK-012 | Ajouter icônes thématiques (sabres, data holocron) dans résumé & summaries (via FontAwesome existant)                    | ✅        | 2025-11-15 |
 
 ### Implementation Phase 4
 
 - GOAL-004: Tests & ajustements
 
-| Task     | Description | Completed | Date |
-| -------- | ----------- | --------- | ---- |
-| TASK-013 | Mettre à jour tests context (`OggDudeDataImporter.context.spec.mjs`) pour vérifier présence flags & résumé | ✅ | 2025-11-15 |
-| TASK-014 | Ajouter test d'affichage conditionnel (stats masquées sans import) | ✅ | 2025-11-15 |
-| TASK-015 | Ajouter test action toggle (simule click data-action) | ✅ | 2025-11-15 |
-| TASK-016 | Ajouter test prévisualisation conditionnelle (après preloadAction uniquement) | ✅ | 2025-11-15 |
-| TASK-017 | Vérifier non-régression UI refresh tests existants (barre progression) | ✅ | 2025-11-15 |
+| Task     | Description                                                                                                | Completed | Date       |
+| -------- | ---------------------------------------------------------------------------------------------------------- | --------- | ---------- |
+| TASK-013 | Mettre à jour tests context (`OggDudeDataImporter.context.spec.mjs`) pour vérifier présence flags & résumé | ✅        | 2025-11-15 |
+| TASK-014 | Ajouter test d'affichage conditionnel (stats masquées sans import)                                         | ✅        | 2025-11-15 |
+| TASK-015 | Ajouter test action toggle (simule click data-action)                                                      | ✅        | 2025-11-15 |
+| TASK-016 | Ajouter test prévisualisation conditionnelle (après preloadAction uniquement)                              | ✅        | 2025-11-15 |
+| TASK-017 | Vérifier non-régression UI refresh tests existants (barre progression)                                     | ✅        | 2025-11-15 |
 
 ### Implementation Phase 5
 
 - GOAL-005: Documentation & process
 
-| Task     | Description | Completed | Date |
-| -------- | ----------- | --------- | ---- |
-| TASK-018 | Mettre à jour `documentation/importer/README.md` pour décrire nouveaux toggles |  |  |
-| TASK-019 | Mettre à jour `DEVELOPMENT_PROCESS.md` avec étapes d'implémentation | ✅ | 2025-11-15 |
-| TASK-020 | Ajouter commentaires JSDoc sur nouvelles actions (WHY + usage) | ✅ | 2025-11-15 |
+| Task     | Description                                                                    | Completed | Date       |
+| -------- | ------------------------------------------------------------------------------ | --------- | ---------- |
+| TASK-018 | Mettre à jour `documentation/importer/README.md` pour décrire nouveaux toggles |           |            |
+| TASK-019 | Mettre à jour `DEVELOPMENT_PROCESS.md` avec étapes d'implémentation            | ✅        | 2025-11-15 |
+| TASK-020 | Ajouter commentaires JSDoc sur nouvelles actions (WHY + usage)                 | ✅        | 2025-11-15 |
 
 ## 3. Alternatives
 

@@ -1,10 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import {
-  markGlobalStart,
-  markGlobalEnd,
-  aggregateImportMetrics,
-  resetRuntimeMetrics,
-} from '../../module/importer/utils/global-import-metrics.mjs'
+import { markGlobalStart, markGlobalEnd, aggregateImportMetrics, resetRuntimeMetrics } from '../../module/importer/utils/global-import-metrics.mjs'
 
 // Mock les fonctions d'import pour simuler des stats
 vi.mock('../../module/importer/utils/armor-import-utils.mjs', () => ({

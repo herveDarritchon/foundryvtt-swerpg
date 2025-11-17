@@ -262,4 +262,3 @@ Règles tirées d'un incident (JSON cassé) lors de l'ajout des clés de statut�
 - Prévention collisions: éviter qu'une clé existante (string) devienne objet. Avant d'ajouter un sous-objet, rechercher usages template `{{localize ...}}` sur la clé parent — si utilisé comme texte brut, créer une nouvelle clé (`previewButton`).
 - Atomicité des patchs: ajouter virgule finale et sous-objet dans une seule opération pour ne pas laisser le JSON partiellement invalide entre commits.
 - Tests à renforcer: envisager d'étendre le test de localisation pour vérifier la structure `stats.status.title/pending/success/mixed/error` dans les deux langues pour prévenir régressions.
-
