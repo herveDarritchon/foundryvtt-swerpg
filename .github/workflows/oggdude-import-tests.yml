@@ -20,7 +20,7 @@ jobs:
     steps:
       - name: Install pnpm
         run: npm install -g pnpm
-        
+
       - name: Checkout repository
         uses: actions/checkout@v4
 

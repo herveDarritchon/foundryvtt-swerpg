@@ -354,11 +354,17 @@ class OggDudeDataElement {
         logger.debug('[OggDudeDataElement] Item image to be returned by method _getItemImage', { key })
         const img = await OggDudeDataElement._getItemImage(key, imageWorldPath, prefix, imgSystemPath)
         logger.debug('[OggDudeDataElement] Item image resolved by _getItemImage', { key, img })
+
+        // Adaptateur pour éviter la double encapsulation
+        // Si item.system existe, on l'utilise, sinon on utilise item directement (rétrocompatibilité)
+        const systemData = item.system ?? item
+
         return {
           name: item.name,
-          img: img,
+          img: item.img || img,
           type: elementType, // This should match the type defined in your system
-          system: item, // This should match the structure of your SwerpgItems schema
+          system: systemData, // Utilise les données système correctes
+          flags: item.flags || {}, // Préserve les flags si présents
           folder: folder.id, // Set the folder id
         }
       }),

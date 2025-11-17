@@ -1,6 +1,6 @@
 ---
-name: "SWERPG – Mettre à jour un plan d’implémentation existant"
-description: "Raffiner ou faire évoluer un plan SWERPG existant en produisant une nouvelle version du fichier de plan."
+name: 'SWERPG – Mettre à jour un plan d’implémentation existant'
+description: 'Raffiner ou faire évoluer un plan SWERPG existant en produisant une nouvelle version du fichier de plan.'
 ---
 
 Tu agis en tant qu’agent `swerpg-plan` pour le système SWERPG (Foundry VTT v13+).
@@ -17,14 +17,15 @@ Tu dois :
 1. Lire le plan existant.
 2. Conserver autant que possible sa structure (`REQ-XXX`, `TASK-XXX`, etc.).
 3. Créer une **nouvelle version** :
-    - soit en incrémentant la version (ex. de `1` à `2`),
-    - soit en changeant légèrement le nom de fichier si le scope évolue.
+   - soit en incrémentant la version (ex. de `1` à `2`),
+   - soit en changeant légèrement le nom de fichier si le scope évolue.
 
 ### Objectif de la mise à jour
 
 Explique ce que tu veux changer :
 
 > Objectif de la mise à jour :
+>
 > - `<ajout / suppression / modification de fonctionnalités>`
 > - `<changement de scope, nouvelle contrainte, nouveau domaine impacté, etc.>`
 
@@ -45,8 +46,8 @@ Par exemple :
 ### Ce que tu dois produire
 
 - Un plan complet, auto-portant, versionné :
-    - `date_created` = date de création de CE nouveau fichier.
-    - `last_updated` = même valeur au moment de la création.
-    - `status` = `Planned` par défaut, sauf instruction contraire.
+  - `date_created` = date de création de CE nouveau fichier.
+  - `last_updated` = même valeur au moment de la création.
+  - `status` = `Planned` par défaut, sauf instruction contraire.
 - Un jeu d’identifiants (`REQ-XXX`, `TASK-XXX`, etc.) cohérent et **unique dans le plan** (tu peux en réutiliser certains si tu gardes leur sens).
 - Des `TASK-XXX` suffisamment précis pour être exécutés par `swerpg-dev-core` sans ambiguïté.
