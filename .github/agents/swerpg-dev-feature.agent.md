@@ -1,5 +1,5 @@
 ---
-name: 'swerpg-dev-core'
+name: 'swerpg-dev-feature'
 description: 'SWERPG Core Dev Agent – Implement all code changes (JS, HBS, LESS/CSS, config) defined in a SWERPG implementation plan for Foundry VTT v13.'
 argument-hint: 'SweRPG developer executing an existing implementation plan (file /documentation/plan/...) across all code except automated tests.'
 model: 'GPT-5-Codex (Preview)'

@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-Swerpg is a Foundry Virtual Tabletop game system for Star Wars Edge RPG built on modern ES modules. The system leverages Foundry's V2 application architecture and provides:
+Swerpg is a Foundry Virtual Tabletop game system for Star Wars Edge RPG built on modern ES modules. The system leverages Foundry's architecture and provides:
 
 ## Architecture Essentials
 

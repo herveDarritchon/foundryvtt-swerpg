@@ -3,6 +3,15 @@ import OggDudeImporter from '../oggDude.mjs'
 import OggDudeDataElement from '../../settings/models/OggDudeDataElement.mjs'
 import { logger } from '../../utils/logger.mjs'
 import {
+  sanitizeOggDudeGearDescription,
+  extractGearSourceInfo,
+  formatGearSourceLine,
+  slugifyGearCategory,
+  extractBaseMods,
+  extractWeaponProfile,
+  composeGearDescription,
+} from '../mappings/oggdude-gear-utils.mjs'
+import {
   FLAG_STRICT_GEAR_VALIDATION,
   resetGearImportStats,
   incrementGearImportStat,
@@ -70,44 +79,25 @@ function validateGearBooleanField(value, defaultValue) {
 }
 
 /**
- * Validate and normalize description field for HTML content.
- * @param {*} value Raw description value
- * @returns {string} Clean description string
- */
-function normalizeGearDescription(value) {
-  const description = OggDudeImporter.mapOptionalString(value)
-  if (!description) {
-    return ''
-  }
-  // Basic HTML cleaning - just ensure it's a string, more complex sanitization could be added
-  return description.toString().trim()
-}
-
-/**
- * Validate gear category against available options.
- * @param {*} value Raw category/type value
- * @returns {string} Valid category string
- */
-function validateGearCategory(value) {
-  const category = OggDudeImporter.mapOptionalString(value)
-  if (!category) {
-    logger.debug('[GearImporter] Missing category, using default')
-    return 'general'
-  }
-  // For now accept any non-empty string, could be enhanced with whitelist validation
-  return category
-}
-
-/**
  * Build the system object for SwerpgGear from XML gear data.
  * @param {Object} xmlGear Raw XML gear object
  * @returns {Object} System object conforming to SwerpgGear schema
  */
-function buildGearSystem(xmlGear) {
+function buildGearSystem(xmlGear, options = {}) {
   try {
     // Extract and validate all fields with proper fallbacks
-    const category = validateGearCategory(xmlGear.Type)
-    const description = normalizeGearDescription(xmlGear.Description)
+    const category = options.category ?? slugifyGearCategory(xmlGear.Type)
+    const sanitizedDescription = options.description ?? sanitizeOggDudeGearDescription(xmlGear.Description)
+    const sourceInfo = options.sourceInfo ?? extractGearSourceInfo(xmlGear.Source)
+    const sourceLine = options.sourceLine ?? formatGearSourceLine(sourceInfo)
+    const baseModsLines = options.baseModsLines ?? []
+    const weaponUseLines = options.weaponUseLines ?? []
+    const description = composeGearDescription({
+      baseDescription: sanitizedDescription,
+      sourceLine,
+      baseModsLines,
+      weaponUseLines,
+    })
     const price = normalizeGearNumericField(xmlGear.Price, 0)
     const encumbrance = normalizeGearNumericField(xmlGear.Encumbrance, 1)
     const rarity = normalizeGearNumericField(xmlGear.Rarity, 1)
@@ -187,7 +177,32 @@ export function gearMapper(gears) {
         hasRarity: !!xmlGear.Rarity,
       })
       const originalType = OggDudeImporter.mapOptionalString(xmlGear.Type)
-      const system = buildGearSystem(xmlGear)
+      const sanitizedDescription = sanitizeOggDudeGearDescription(xmlGear.Description)
+      const sourceInfo = extractGearSourceInfo(xmlGear.Source)
+      const sourceLine = formatGearSourceLine(sourceInfo)
+      const baseModsData = extractBaseMods(xmlGear.BaseMods)
+      const weaponProfileData = extractWeaponProfile(xmlGear.WeaponModifiers)
+      logger.debug('[GearImporter] Parsed BaseMods', {
+        key,
+        totalMods: baseModsData.metrics.totalMods,
+        totalDieModifiers: baseModsData.metrics.totalDieModifiers,
+      })
+      logger.debug('[GearImporter] Parsed WeaponModifiers', {
+        key,
+        totalWeaponModifiers: weaponProfileData.metrics.totalWeaponModifiers,
+        totalQualities: weaponProfileData.metrics.totalQualities,
+        extraModifiers: weaponProfileData.metrics.extraModifiers,
+      })
+
+      const category = slugifyGearCategory(originalType)
+      const system = buildGearSystem(xmlGear, {
+        category,
+        description: sanitizedDescription,
+        sourceInfo,
+        sourceLine,
+        baseModsLines: baseModsData.descriptionLines,
+        weaponUseLines: weaponProfileData.descriptionLines,
+      })
       if (system.category === 'general' && originalType) {
         addGearUnknownCategory(originalType)
         if (FLAG_STRICT_GEAR_VALIDATION) {
@@ -195,15 +210,39 @@ export function gearMapper(gears) {
           continue
         }
       }
+
+      const swerpgFlags = {
+        oggdudeKey: key,
+        ...(originalType && { originalType }),
+      }
+
+      if (sourceInfo.name) {
+        swerpgFlags.oggdudeSource = sourceInfo.name
+      }
+      if (sourceInfo.page !== null) {
+        swerpgFlags.oggdudeSourcePage = sourceInfo.page
+      }
+
+      const oggdudeNested = {}
+      if (originalType) {
+        oggdudeNested.type = originalType
+      }
+      if (baseModsData.baseMods.length > 0) {
+        oggdudeNested.baseMods = baseModsData.baseMods
+      }
+      if (weaponProfileData.weaponProfile) {
+        oggdudeNested.weaponProfile = weaponProfileData.weaponProfile
+      }
+      if (Object.keys(oggdudeNested).length > 0) {
+        swerpgFlags.oggdude = oggdudeNested
+      }
+
       mapped.push({
         name,
         type: 'gear',
         system,
         flags: {
-          swerpg: {
-            oggdudeKey: key,
-            ...(originalType && { originalType }),
-          },
+          swerpg: swerpgFlags,
         },
       })
     } catch (e) {
