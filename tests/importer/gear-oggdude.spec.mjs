@@ -19,7 +19,7 @@ describe('gearMapper', () => {
     const result = gearMapper(xmlGears)
 
     expect(result).toHaveLength(1)
-    expect(result[0]).toEqual({
+    expect(result[0]).toMatchObject({
       name: 'Test Gear',
       type: 'gear',
       system: {
@@ -38,14 +38,15 @@ describe('gearMapper', () => {
       },
       flags: {
         swerpg: {
+          oggdudeKey: 'testGear',
+          originalType: 'utility',
           oggdude: {
             type: 'utility',
           },
-          oggdudeKey: 'testGear',
-          originalType: 'utility',
         },
       },
     })
+    expect(result[0].flags.swerpg).not.toHaveProperty('oggdudeSource')
   })
 
   it('should normalize negative numeric values to defaults', () => {
@@ -112,10 +113,19 @@ describe('gearMapper', () => {
       {
         Name: 'Test Gear',
         Key: 'testGear',
-        Sources: [{ _: 'Test Source', Page: 42 }],
+        Description: 'Includes <script>bad()</script> content.',
+        Source: { _: 'Test Source', $: { Page: '42' } },
         Categories: ['category1', 'category2'],
-        BaseMods: [{ Name: 'TestMod' }],
-        WeaponModifiers: [{ Name: 'TestWeaponMod' }],
+        BaseMods: [{ MiscDesc: 'Provides utility.' }],
+        WeaponModifiers: {
+          WeaponModifier: {
+            SkillKey: 'MELEE',
+            Damage: '1',
+            Crit: '3',
+            RangeValue: 'wrEngaged',
+            Qualities: { Quality: { Key: 'CUMBERSOME', Count: '1' } },
+          },
+        },
         EraPricing: [{ Name: 'TestEra', Price: 200 }],
       },
     ]
@@ -134,6 +144,19 @@ describe('gearMapper', () => {
     const expectedKeys = ['category', 'quantity', 'price', 'quality', 'encumbrance', 'rarity', 'broken', 'description', 'actions']
     expect(systemKeys).toEqual(expect.arrayContaining(expectedKeys))
     expect(systemKeys).toHaveLength(expectedKeys.length)
+
+    // Sanitization & structured flags should be applied
+    expect(result[0].system.description.public).not.toContain('<script>')
+    expect(result[0].system.description.public).toContain('&lt;script')
+    expect(result[0].system.description.public).toContain('Source: Test Source, p.42')
+    expect(result[0].system.description.public).toContain('Base Mods:')
+    expect(result[0].system.description.public).toContain('Weapon Use:')
+    expect(result[0].flags.swerpg.oggdude.baseMods).toHaveLength(1)
+    expect(result[0].flags.swerpg.oggdude.weaponProfile).toMatchObject({
+      skillKey: 'MELEE',
+      crit: 3,
+      rangeValue: 'engaged',
+    })
   })
 
   it('should handle empty or undefined description', () => {
@@ -172,6 +195,7 @@ describe('gearMapper', () => {
         Name: 'Test Gear',
         Key: 'uniqueKey',
         Type: 'special',
+        Source: { _: 'Data Vault' },
       },
     ]
 
@@ -179,6 +203,8 @@ describe('gearMapper', () => {
 
     expect(result[0].flags.swerpg.oggdudeKey).toBe('uniqueKey')
     expect(result[0].flags.swerpg.originalType).toBe('special')
+    expect(result[0].flags.swerpg.oggdudeSource).toBe('Data Vault')
+    expect(result[0].flags.swerpg.oggdude).toEqual({ type: 'special' })
   })
 
   it('should handle malformed gear object gracefully', () => {
