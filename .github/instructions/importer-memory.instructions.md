@@ -375,3 +375,69 @@ Stratégie pour éviter les erreurs de modules dans les tests d'import :
 - **Fonction correcte**: Utiliser le nom exact exporté (`armorMapper` pas `mapOggDudeArmor`) - vérifier les exports avec `grep_search`.
 - **Test isolation**: Mock foundry dans `beforeEach()` pour éviter les fuites entre tests.
 - **Debugging imports**: Si "is not a function", vérifier l'export exact avec `grep_search "export.*function"` sur le fichier cible.
+
+## Gear Import Mapping Enrichment (nouvelle mémoire)
+
+Branche de correction Gear.xml (BaseMods & WeaponModifiers) – patterns génériques à réutiliser pour d'autres domaines d'équipement hybrides.
+
+### Pipeline description textuelle
+- Construire la description via accumulation dans un tableau puis `join("\n\n")` pour éviter concaténations O(n^2) et garantir séparation lisible entre blocs (description nettoyée, source, sections additionnelles).
+- Ajouter la source en dernier: `Source: NOM[, p.PAGE]` seulement si le bloc ne contient pas déjà une ligne débutant par `Source:` (prévention doublon).
+- Garder la description strictement texte (pas de Markdown riche) pour stabilité UI & lecture screen reader.
+
+### Sanitation unifiée
+- Réutiliser sanitation arme: neutraliser `<script>` avant tout autre transformation (remplacement `/<script/gi` & `/<\/script>/gi`).
+- Nettoyer balises propriétaires (`[H3]`, `[h3]`, `[BR]`, `[b]`, `[i]`, `[color]`) en spaces ou sauts de ligne déterministes; convertir `[BR]` → `\n`.
+- Opérer sanitation avant ajout sections synthétiques pour garantir absence de balises résiduelles dans les zones injectées.
+
+### BaseMods extraction
+- Accepter `BaseMods.Mod` sous forme tableau ou objet unique; normaliser vers tableau avec `Array.isArray() ? value : [value]`.
+- Conserver texte brut `MiscDesc` déjà sanitizé; stocker structure dans `flags.swerpg.oggdude.baseMods[]` avec: `{ description, dieModifiers?: [{ skillKey, advantageCount }] }`.
+- DieModifiers: normaliser `DieModifiers.DieModifier` en tableau; caster `AdvantageCount` → nombre (fallback 1 minimum) et `skillKey` en uppercase inchangé (ne pas deviner mapping compétence ici).
+- Maintenir ordre source pour ne pas casser lisibilité (pas de tri).
+
+### WeaponModifiers profil
+- Accepter `WeaponModifiers.WeaponModifier` objet unique (pattern observé). Préparer `weaponProfile` seulement si champs clés présents (`SkillKey` ou `Damage`/`Crit`).
+- Stocker dans `flags.swerpg.oggdude.weaponProfile` les champs bruts numériquement castés: `{ skillKey, damage, damageAdd, crit, rangeValue, qualities: [{ key, rank }] }`.
+- Range: prioriser `RangeValue`; mapper codes `wrEngaged` → `engaged`; sinon transformer préfixe `wr` en lowerCase simple (ex: `wrShort` → `short`). Fallback `engaged` si code inconnu (stabilité tests).
+- Damage text pour section: si `damage === 0` et `damageAdd > 0`, formatter `Brawn + X`; sinon valeur numérique directe.
+
+### Qualities fusion
+- Qualités sous `Qualities.Quality` peuvent être objet ou tableau; normaliser en tableau.
+- Fusionner doublons: utiliser `Map` sur clé normalisée lowerCase → somme counts castés (`parseInt(count)||1`).
+- Export section description: chaque qualité sur nouvelle ligne indentée (`"  - Label: rank"`). Les labels humanisés: capitalize première lettre; remplacer underscores éventuels par espace.
+
+### Catégorie & flags
+- Slug catégorie `Type`: remplacer tout caractère non alphanumérique par `_`, lowerCase; résultat dans `system.category`.
+- Conserver original via `flags.swerpg.originalType` et exposer `flags.swerpg.oggdude.type` pour uniformité d'accès.
+- Flag clé OggDude toujours `flags.swerpg.oggdudeKey`.
+
+### Valeurs numériques robustes
+- Price, Encumbrance, Rarity: caster avec `Number()` puis clamp min 0 / min 1 pour encumbrance & rarity; si NaN, appliquer defaults `0/1/1`.
+- Crit & DamageAdd clamp min 0. AdvantageCount clamp min 1.
+
+### Sections conditionnelles
+- Ajouter bloc "Base Mods:" uniquement si au moins un mod après sanitation.
+- Ajouter bloc "Weapon Use:" uniquement si profil construit.
+- Ne jamais ajouter entêtes vides (préférer absence totale plutôt que section vide).
+
+### Tests recommandés (extension mémoire)
+- Vérifier fusion qualité (CUMBERSOME 2 + 1 → rank 3) & présence dans flags.
+- Vérifier absence duplication source.
+- Vérifier neutralisation `<script>` dans description & mods.
+- Vérifier omission Weapon Use quand `WeaponModifiers` absent.
+- Performance: 200 items < 150ms (garde l'objectif précédent mais mesure locale ajustable).
+
+### Performance & sécurité
+- Une seule passe sur chaque objet; éviter regex globales multiples sur gros textes (chaîner remplacements groupés).
+- Aucun accès DOM ni dépendance Foundry durant mapping (pure function). Facilite tests Vitest rapides.
+- Tous contenus injectés traités comme texte brut; pas d'`innerHTML` ultérieur.
+
+### Erreurs & résilience
+- Jamais throw sur champ manquant; laisser defaults et poursuivre mapping pour item (philosophie importer résilient).
+- Logs `logger.debug('[GearImporter] ...')` pour: nombre mods détectés, nombre qualités fusionnées.
+- Pas de warning pour qualité inconnue (diff des armes) – future instrumentation possible si référentiel qualités créé.
+
+### Réutilisation inter-domaines
+- Pattern fusion qualities applicable à d'autres items hybrides (ex: attachments) – extraire fonction générique si réapparition.
+- Sectionnalisation description en pipeline réutilisable pour talents/emplacements – composer sur tableau puis join.
