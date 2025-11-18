@@ -198,6 +198,89 @@ Chaque aspect complexe a son module dédié avec pattern uniforme :
 - Intégration stats via `increment{Domain}ImportStat()`
 - Logging structuré avec contexte
 
+## Weapon Import Mapping – Flags, Fallbacks et Qualités Comptées
+
+Le correctif "weapon" (bug mapping OggDude) introduit des patterns réutilisables pour tout futur domaine avec métadonnées enrichies.
+
+### Fallback déterministe skill/range
+Toujours prioriser la clé spécialisée (`RangeValue`, `SkillKey`) puis fallback vers clé générique (`Range`). Si code inconnu en mode non strict : log catégorisé + stats + remplacement par **valeur par défaut stable** (`rangedLight`, `medium`). Évite rejets silencieux et rend les tests prévisibles.
+
+```js
+let mappedSkill = WEAPON_SKILL_MAP[skillCode]
+if (!mappedSkill) {
+  addWeaponUnknownSkill(skillCode || 'UNDEFINED_SKILL')
+  mappedSkill = 'rangedLight'
+}
+```
+
+### Agrégation de qualités avec valeur
+Convertir la collection source (tableau ou entrée unique) en **Map (qualité → total)** puis créer un tableau trié `{ id, count }`. Le `Set` dans le schéma reste liste des IDs pour compatibilité existante. Ce double stockage maintient retro-compat et ouvre usages futurs.
+
+```js
+const qualityCounts = new Map()
+for (const q of qualities) {
+  const id = normalizeQualityId(q.Key)
+  const count = coerceQualityCount(q.Count)
+  if (SYSTEM.WEAPON.QUALITIES[id]) {
+    qualityCounts.set(id, (qualityCounts.get(id) || 0) + count)
+  } else addWeaponUnknownQuality(q.Key)
+}
+flags.swerpg.oggdudeQualities = [...qualityCounts].map(([id,count]) => ({ id, count }))
+```
+
+### Tags enrichis séparés du schéma
+Ne pas modifier le modèle Foundry tant que l’usage gameplay n’est pas défini. Stocker dans `flags.swerpg.oggdudeTags` un tableau d’objets uniformes `{ type, value, label }`. Le sheet (via `getTags()`) fusionne dynamiquement sans casser l’API publique.
+
+### Sanitation description multi-balises
+Éliminer les balises propriétaires `[H3]`, `[BR]`, `[color]`, etc., convertir `[BR]` en `\n`, conserver structure paragraphe puis **append** la source. Pattern réutilisable pour d’autres domaines (ex: talents).
+
+```js
+description = sanitizeOggDudeWeaponDescription(xml.Description)
+if (source.name) description += `\n\nSource: ${source.name}${source.page ? `, p.${source.page}` : ''}`
+```
+
+### Boolean parsing robuste
+Utiliser une fonction générique (`parseOggDudeBoolean`) pour gérer variations (`true`, `True`, `1`, `yes`). Centraliser pour cohérence entre mappers (restricted, broken, etc.).
+
+### Tests ciblés sans option Vitest `--filter`
+Vitest v3 ne supporte pas `--filter` comme précédemment; exécuter un fichier cible avec `vitest path/to/spec.mjs` ou `vitest --run path/to/spec.mjs` dans le script `pnpm test`. Mémoriser ce pattern pour éviter faux négatifs CI.
+
+### Performance volumétrique
+Valider qu’un lot de ~200 entrées passe <1s local (ajustable) sans exceptions; pas de structures O(n^2) lors de l’agrégation (Map + insertion unique). Réutiliser pour autres domaines à counts multiples (ex: effets stackables).
+
+### Tag injection côté modèle
+Élargir `getTags()` localement plutôt que d’introduire un nouveau champ dans le schéma. Pattern: construire clés normalisées (`type-explosive`) + label dérivé `Type: Explosive`. Garantit séparation données brutes / présentation.
+
+### Règle d’or rétro-compat
+Toute donnée additive (valeurs de qualités, tags enrichis, sizeHigh, source) se met dans `flags.swerpg.*` pour ne pas rompre sérialisation/casting existants Foundry ni la logique dérivée déjà testée.
+
+## Weapon Import – Sécurité et Neutralisation Script
+
+Pattern réutilisable: neutraliser `<script>` via simple remplacement global avant tout autre processing texte (prévention XSS pessimiste). Ne pas transformer en HTML; stocker en texte brut dans `description.public`.
+
+```js
+sanitizeText(text)
+  .replace(/<script/gi,'&lt;script')
+  .replace(/<\/script>/gi,'&lt;/script&gt;')
+```
+
+## Weapon Import – Construction de description source
+
+La source doit toujours être ré-append une fois la sanitation effectuée pour éviter de supprimer accidentellement l’information. Ajouter un séparateur vide ou ligne blanche avant pour lisibilité.
+
+## Weapon Import – Fallback SizeHigh
+
+Parser `SizeHigh` en nombre si possible sinon garder chaîne nettoyée. Stocker dans `flags.swerpg.oggdude.sizeHigh`. Ne jamais injecter dans le modèle tant que non utilisé mécaniquement.
+
+## Weapon Import – Qualités inconnues
+
+Journaliser avec `logger.warn` + incrément stats sans rejeter l’item. Permet instrumentation future sans bloquer contenu custom utilisateur.
+
+## Weapon Import – Normalisation multi-séparateurs
+
+Pour `Type` multi-valeurs ou catégories composites, splitter sur `/`, `;`, `,` et normaliser espace interne. Pattern réutilisable pour tout champ multi-sources.
+
+
 ## UI & i18n gotchas — OggDude importer (nouvelle règle)
 
 Lors d'interventions sur l'interface d'importation (ex: fenêtre d'import OggDude), documenter et appliquer systématiquement ces règles :
