@@ -7,11 +7,12 @@ describe('Gear Import Integration', () => {
       {
         Name: 'Integration Test Gear',
         Key: 'integrationTestGear',
-        Description: 'A gear for integration testing',
-        Type: 'tool',
-        Price: 250,
-        Encumbrance: 3,
-        Rarity: 4,
+        Description: '[H3]Integration Test Gear[/H3]\nA gear for integration testing',
+        Source: { _: 'Core Rulebook', $: { Page: '42' } },
+        Type: 'Tools/Electronics',
+        Price: '250',
+        Encumbrance: '3',
+        Rarity: '4',
         Restricted: false,
       },
     ]
@@ -53,17 +54,26 @@ describe('Gear Import Integration', () => {
     expect(system.description).toHaveProperty('secret')
     expect(typeof system.description.public).toBe('string')
     expect(typeof system.description.secret).toBe('string')
+    expect(system.description.public).toContain('Integration Test Gear')
+    expect(system.description.public).toContain('Source: Core Rulebook, p.42')
+    expect(system.description.public.includes('Base Mods:')).toBe(false)
+    expect(system.description.public.includes('Weapon Use:')).toBe(false)
 
     // Validate numeric constraints
     expect(system.quantity).toBeGreaterThanOrEqual(0)
     expect(system.price).toBeGreaterThanOrEqual(0)
     expect(system.encumbrance).toBeGreaterThanOrEqual(0)
     expect(system.rarity).toBeGreaterThanOrEqual(0)
+
+    // Validate normalized category and source flags
+    expect(system.category).toBe('tools_electronics')
+    expect(gear.flags.swerpg.oggdudeSource).toBe('Core Rulebook')
+    expect(gear.flags.swerpg.oggdudeSourcePage).toBe(42)
   })
 
   it('should handle batch import of multiple gears without performance issues', () => {
-    // Create 150 gear objects for performance testing
-    const xmlGears = Array.from({ length: 150 }, (_, i) => ({
+    // Create 200 gear objects for performance testing
+    const xmlGears = Array.from({ length: 200 }, (_, i) => ({
       Name: `Gear ${i + 1}`,
       Key: `gear${i + 1}`,
       Description: `Description for gear ${i + 1}`,
@@ -78,14 +88,14 @@ describe('Gear Import Integration', () => {
     const endTime = performance.now()
     const duration = endTime - startTime
 
-    // Should complete within reasonable time (< 100ms for 150 items)
-    expect(duration).toBeLessThan(100)
-    expect(result).toHaveLength(150)
+    // Should complete within reasonable time (< 150ms for 200 items)
+    expect(duration).toBeLessThan(150)
+    expect(result).toHaveLength(200)
 
     // Spot check a few items
     expect(result[0].name).toBe('Gear 1')
-    expect(result[49].name).toBe('Gear 50')
-    expect(result[149].name).toBe('Gear 150')
+    expect(result[99].name).toBe('Gear 100')
+    expect(result[199].name).toBe('Gear 200')
 
     // Ensure all items have valid structure
     result.forEach((gear, index) => {
