@@ -34,11 +34,12 @@ function normalizeDelimitedValues(input) {
     if (!input) {
         return []
     }
-
+    // Split sur délimiteurs multiples puis nettoyage; évite erreur .replace sur Array
     return String(input)
         .split(/[;,/]/)
         .map((entry) => sanitizeText(entry))
-        .replace(/[\n\r\s]+/g, ' ')
+        .map((entry) => entry.replaceAll(/\s+/g, ' '))
+        .map((entry) => entry.trim())
         .filter(Boolean)
 }
 
