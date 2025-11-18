@@ -30,6 +30,7 @@
 ### Fixes
 
 - **importer:** refactor career OggDude mapper to align with `SwerpgCareer` schema (description, freeSkillRank clamp, careerSkills normalization, logging)
+- **importer:** correct OggDude gear mapping to restore numeric fields, enriched description, BaseMods serialization and weapon profile flags
 
 ## [0.3.1](https://github.com/herveDarritchon/foundryvtt-swerpg/compare/v0.3.0...v0.3.1) (2025-06-16)
 

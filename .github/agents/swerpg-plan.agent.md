@@ -20,9 +20,9 @@ tools:
   - new
 handoffs:
   - label: Implement the plan
-  - agent: 'swerpg-dev-core'
-  - prompt: 'Implement the provided action plan, step by step (core tasks only – JavaScript and HBS), strictly following the tasks, constraints, and validations defined in the plan.'
-  - send: false
+    agent: 'swerpg-dev-feature'
+    prompt: 'Implement the provided action plan, step by step (core tasks only – JavaScript and HBS), strictly following the tasks, constraints, and validations defined in the plan.'
+    send: false
 ---
 
 # SWERPG Implementation Plan Agent

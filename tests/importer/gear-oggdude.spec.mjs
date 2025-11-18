@@ -38,6 +38,9 @@ describe('gearMapper', () => {
       },
       flags: {
         swerpg: {
+          oggdude: {
+            type: 'utility',
+          },
           oggdudeKey: 'testGear',
           originalType: 'utility',
         },
