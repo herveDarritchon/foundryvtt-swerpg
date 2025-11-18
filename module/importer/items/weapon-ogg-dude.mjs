@@ -4,7 +4,16 @@ import { buildMod, buildWeaponModifiers } from './combat-item-mapper.mjs'
 import OggDudeDataElement from '../../settings/models/OggDudeDataElement.mjs'
 import { logger } from '../../utils/logger.mjs'
 import { SYSTEM } from '../../config/system.mjs'
-import { WEAPON_SKILL_MAP, WEAPON_RANGE_MAP, WEAPON_QUALITY_MAP, WEAPON_HANDS_MAP, clampNumber, sanitizeText } from '../mappings/index-weapon.mjs'
+import {
+  WEAPON_SKILL_MAP,
+  WEAPON_RANGE_MAP,
+  WEAPON_QUALITY_MAP,
+  WEAPON_HANDS_MAP,
+  clampNumber,
+  sanitizeText,
+  parseOggDudeBoolean,
+  sanitizeOggDudeWeaponDescription,
+} from '../mappings/index-weapon.mjs'
 import {
   FLAG_STRICT_WEAPON_VALIDATION,
   resetWeaponImportStats,
@@ -13,6 +22,83 @@ import {
   addWeaponUnknownSkill,
   addWeaponUnknownQuality,
 } from '../utils/weapon-import-utils.mjs'
+
+const DEFAULT_SKILL = 'rangedLight'
+const DEFAULT_RANGE = 'medium'
+
+function coerceQualityCount(value) {
+  const parsed = Number.parseInt(value, 10)
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : 1
+}
+
+function normalizeDelimitedValues(input) {
+  if (!input) {
+    return []
+  }
+
+  return String(input)
+    .split(/[;,/]/)
+    .map((entry) => sanitizeText(entry))
+    .map((entry) => entry.replace(/[\n\r]+/g, ' '))
+    .map((entry) => entry.replace(/\s+/g, ' '))
+    .map((entry) => entry.trim())
+    .filter(Boolean)
+}
+
+function normalizeCategoryValues(rawCategories) {
+  if (!rawCategories) {
+    return []
+  }
+
+  const categories = Array.isArray(rawCategories) ? rawCategories : [rawCategories]
+  return categories
+    .map((category) => {
+      if (typeof category === 'string') {
+        return sanitizeText(category)
+      }
+      if (category && typeof category === 'object') {
+        return sanitizeText(category._ || category.Name || '')
+      }
+      return ''
+    })
+    .map((category) => category.replace(/[\n\r]+/g, ' '))
+    .map((category) => category.replace(/\s+/g, ' '))
+    .map((category) => category.trim())
+    .filter(Boolean)
+}
+
+function normalizeSizeHigh(value) {
+  if (value === undefined || value === null || value === '') {
+    return null
+  }
+
+  const numeric = Number.parseFloat(value)
+  if (Number.isFinite(numeric)) {
+    return numeric
+  }
+
+  const sanitized = sanitizeText(String(value))
+  return sanitized || null
+}
+
+function extractSourceInfo(source) {
+  if (!source) {
+    return { name: '', page: null }
+  }
+
+  if (typeof source === 'string') {
+    return { name: sanitizeText(source), page: null }
+  }
+
+  const name = sanitizeText(source._ || source.name || '')
+  const pageRaw = source?.$?.Page ?? source?.page ?? source?.Page
+  const pageNumber = Number.parseInt(pageRaw, 10)
+
+  return {
+    name,
+    page: Number.isFinite(pageNumber) && pageNumber > 0 ? pageNumber : null,
+  }
+}
 
 /**
  * Maps a single OggDude weapon XML object to SWERPG system format.
@@ -23,97 +109,162 @@ function mapOggDudeWeapon(xmlWeapon) {
   incrementWeaponImportStat('total')
 
   try {
-    // Mapper skill via table de correspondance
+    const name = sanitizeText(xmlWeapon.Name)
+    const oggdudeKey = sanitizeText(xmlWeapon.Key || '')
+
     const skillCode = xmlWeapon.SkillKey
-    const mappedSkill = WEAPON_SKILL_MAP[skillCode]
-
+    let mappedSkill = WEAPON_SKILL_MAP[skillCode]
     if (!mappedSkill) {
-      logger.warn(`Unknown skill code: ${skillCode}`, { category: 'WEAPON_IMPORT_INVALID' })
-      addWeaponUnknownSkill(skillCode)
+      const fallbackSkillCode = skillCode ?? 'UNDEFINED_SKILL'
+      logger.warn(`Unknown skill code: ${fallbackSkillCode}`, { category: 'WEAPON_IMPORT_INVALID' })
+      addWeaponUnknownSkill(fallbackSkillCode)
       if (FLAG_STRICT_WEAPON_VALIDATION) {
         incrementWeaponImportStat('rejected')
         return null
       }
+      mappedSkill = DEFAULT_SKILL
     }
 
-    // Mapper range (priorité RangeValue > Range)
     const rangeCode = xmlWeapon.RangeValue || xmlWeapon.Range
-    const mappedRange = WEAPON_RANGE_MAP[rangeCode]
-
+    let mappedRange = WEAPON_RANGE_MAP[rangeCode]
     if (!mappedRange) {
-      logger.warn(`Unknown range code: ${rangeCode}`, { category: 'WEAPON_IMPORT_INVALID' })
+      const fallbackRangeCode = rangeCode ?? 'UNDEFINED_RANGE'
+      logger.warn(`Unknown range code: ${fallbackRangeCode}`, { category: 'WEAPON_IMPORT_INVALID' })
       if (FLAG_STRICT_WEAPON_VALIDATION) {
         incrementWeaponImportStat('rejected')
         return null
       }
+      mappedRange = DEFAULT_RANGE
     }
 
-    // Calculer damage combiné avec clamp
     const baseDamage = clampNumber(xmlWeapon.Damage, 0, 20, 0)
     const damageAdd = clampNumber(xmlWeapon.DamageAdd, 0, 20, 0)
     const totalDamage = clampNumber(baseDamage + damageAdd, 0, 20, 0)
-
-    // Calculer crit avec clamp
     const crit = clampNumber(xmlWeapon.Crit, 0, 20, 0)
 
-    // Mapper qualities avec déduplication
-    const qualitySet = new Set()
+    const qualityCounts = new Map()
     if (xmlWeapon.Qualities?.Quality) {
       const qualityArray = Array.isArray(xmlWeapon.Qualities.Quality) ? xmlWeapon.Qualities.Quality : [xmlWeapon.Qualities.Quality]
 
       for (const quality of qualityArray) {
-        const qualityCode = quality.Key
-        const mappedQuality = WEAPON_QUALITY_MAP[qualityCode] || qualityCode
-
-        // Vérifier si qualité existe dans système
-        if (!SYSTEM.WEAPON.QUALITIES[mappedQuality]) {
-          logger.warn(`Unknown quality: ${qualityCode}`, { category: 'WEAPON_IMPORT_INVALID' })
-          addWeaponUnknownQuality(qualityCode)
+        const qualityCode = quality?.Key ?? quality
+        if (!qualityCode) {
           continue
         }
 
-        qualitySet.add(mappedQuality)
+        const sanitizedQualityCode = sanitizeText(qualityCode)
+        const mappedQuality =
+          WEAPON_QUALITY_MAP[qualityCode] ||
+          WEAPON_QUALITY_MAP[sanitizedQualityCode] ||
+          sanitizedQualityCode.toLowerCase()
 
-        // Log multi-count (ignoré pour Set)
-        if (quality.Count > 1) {
-          logger.debug(`MULTI_COUNT_IGNORED for quality ${qualityCode}: count=${quality.Count}`)
+        if (!SYSTEM.WEAPON.QUALITIES[mappedQuality]) {
+          logger.warn(`Unknown quality: ${qualityCode}`, { category: 'WEAPON_IMPORT_INVALID' })
+          addWeaponUnknownQuality(String(qualityCode))
+          continue
         }
+
+        const count = coerceQualityCount(quality?.Count ?? quality?.count)
+        const existingCount = qualityCounts.get(mappedQuality) ?? 0
+        qualityCounts.set(mappedQuality, existingCount + count)
       }
     }
 
-    // Mapper slot via hands
+    const qualities = Array.from(qualityCounts.keys()).sort()
+    const oggdudeQualities = Array.from(qualityCounts.entries())
+      .map(([id, count]) => ({ id, count }))
+      .sort((a, b) => a.id.localeCompare(b.id))
+
     const handsCode = xmlWeapon.Hands
     const mappedSlot = WEAPON_HANDS_MAP[handsCode] || 'mainhand'
 
-    // Valeurs numériques avec clamps
     const rarity = clampNumber(xmlWeapon.Rarity, 0, 20, 0)
     const price = clampNumber(xmlWeapon.Price, 0, Number.MAX_SAFE_INTEGER, 0)
     const encumbrance = clampNumber(xmlWeapon.Encumbrance, 0, Number.MAX_SAFE_INTEGER, 0)
     const hp = clampNumber(xmlWeapon.HP, 0, Number.MAX_SAFE_INTEGER, 0)
 
-    // Construire objet final conforme au schéma
+    const restricted = parseOggDudeBoolean(xmlWeapon.Restricted)
+    const typeTags = normalizeDelimitedValues(xmlWeapon.Type)
+    const categoryTags = normalizeCategoryValues(xmlWeapon?.Categories?.Category)
+    const sizeHigh = normalizeSizeHigh(xmlWeapon.SizeHigh)
+    const { name: sourceName, page: sourcePage } = extractSourceInfo(xmlWeapon.Source)
+
+    let description = sanitizeOggDudeWeaponDescription(xmlWeapon.Description)
+    if (sourceName) {
+      const sourceLine = sourcePage ? `Source: ${sourceName}, p.${sourcePage}` : `Source: ${sourceName}`
+      description = description ? `${description}\n\n${sourceLine}` : sourceLine
+    }
+
+    const oggdudeTags = []
+    const tagKeySet = new Set()
+    const registerTag = (type, value, label) => {
+      if (!value) return
+      const key = `${type}|${value.toLowerCase()}`
+      if (tagKeySet.has(key)) return
+      tagKeySet.add(key)
+      oggdudeTags.push({ type, value, label })
+    }
+
+    typeTags.forEach((value) => registerTag('type', value, value))
+    categoryTags.forEach((value) => registerTag('category', value, value))
+    if (restricted) {
+      registerTag('status', 'restricted', 'Restricted')
+    }
+
+    const flags = {
+      swerpg: {
+        oggdudeKey,
+      },
+    }
+
+    if (oggdudeQualities.length > 0) {
+      flags.swerpg.oggdudeQualities = oggdudeQualities
+    }
+    if (oggdudeTags.length > 0) {
+      flags.swerpg.oggdudeTags = oggdudeTags
+    }
+
+    const oggdudeExtras = {}
+    if (sizeHigh !== null) {
+      oggdudeExtras.sizeHigh = sizeHigh
+    }
+    if (sourceName) {
+      oggdudeExtras.source = {
+        name: sourceName,
+        page: sourcePage,
+      }
+    }
+    if (Object.keys(oggdudeExtras).length > 0) {
+      flags.swerpg.oggdude = oggdudeExtras
+    }
+
     const weaponObject = {
-      name: sanitizeText(xmlWeapon.Name),
+      name: name || xmlWeapon.Name || 'Unnamed Weapon',
       type: 'weapon',
-      img: null, // Sera résolu par buildWeaponContext
+      img: null,
       system: {
         skill: mappedSkill,
         range: mappedRange,
         damage: totalDamage,
-        crit: crit,
-        qualities: Array.from(qualitySet).sort(), // Tri alphabétique pour déterminisme
+        crit,
+        qualities,
         slot: mappedSlot,
-        encumbrance: encumbrance,
-        price: price,
-        rarity: rarity,
-        hp: hp,
-        restricted: !!xmlWeapon.Restricted,
+        encumbrance,
+        price,
+        rarity,
+        hp,
+        restricted,
+        description: {
+          public: description,
+          secret: '',
+        },
+        actions: [],
       },
+      flags,
     }
 
-    // Log debug pour NoMelee
     if (xmlWeapon.NoMelee === true) {
-      logger.debug(`NoMelee weapon detected: ${xmlWeapon.Name} with range: ${mappedRange}`)
+      logger.debug(`NoMelee weapon detected: ${weaponObject.name} with range: ${mappedRange}`)
     }
 
     return weaponObject
