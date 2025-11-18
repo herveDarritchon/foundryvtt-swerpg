@@ -279,7 +279,7 @@ export default class SwerpgWeapon extends SwerpgCombatItem {
 
     // Damage
     tags.damage = `${this.damage.weapon} Damage`
-    tags.damage = 'Reload'
+    tags.reload = 'Reload'
 
     const oggdudeTags = this.flags?.swerpg?.oggdudeTags
     if (Array.isArray(oggdudeTags) && oggdudeTags.length > 0) {

@@ -87,5 +87,5 @@ export function sanitizeOggDudeWeaponDescription(description) {
 
   normalized = normalized.replaceAll(/\n{3,}/g, '\n\n')
 
-  return sanitizeText(normalized)
+  return normalized
 }
