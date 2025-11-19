@@ -16,24 +16,24 @@ following the rules below:
 
 ### Plan context
 
-- **Plan type (`purpose`)**:
+- **Plan type (`${purpose}`)**:
   - `feature` | `refactor` | `bug` | `upgrade` | `data` | `architecture`
     → Value for this plan: `<replace-here>`
 
-- **Domain (`domain`)**:
+- **Domain (`${domain}`)**:
   - e.g. `oggdude-importer`, `character-sheet`, `talent-tree`, `dice-roller`, `combat`, `journal`, etc.
     → Value for this plan: `<replace-here>`
 
-- **Feature name (`feature`)**:
+- **Feature name (`${feature}`)**:
   - Short kebab-case name describing the goal of the plan.
   - e.g. `progress-bar-importer`, `stress-gauge-character-sheet`, `talent-tree-refactor-v2`
     → Value for this plan: `<replace-here>`
 
-- **Version**:
+- **Version (`${version}`)**:
   - e.g. `1`, `1.0`
     → Value for this plan: `<replace-here>`
 
-- **Input requirements file (`input-spec-file`)**:
+- **Input requirements file (`${input-spec-file}`)**:
   - Single file describing the need the plan must address (business + optionally technical).
   - e.g. `/documentation/spec/<domain>/<purpose>-<feature>-needs-1.0.md`
     → Path provided to the agent: `<replace-here-with-the-full-path-of-the-requirements-file>`
