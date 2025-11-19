@@ -51,7 +51,8 @@
           "gear": "Charger l'équipement",
           "species": "Charger les espèces",
           "weapon": "Charger les armes",
-          "talent": "Charger les talents"
+          "talent": "Charger les talents",
+          "obligation": "Charger les obligations"
         },
         "stats": {
           "title": "Statistiques d'import",
