@@ -434,3 +434,40 @@ Couverture minimale exigée:
 
 ### Extension future
 Si besoin de rendre interactif (tooltip de chaque modificateur): préparer mapping `flags.swerpg.oggdude.dieModifiers[i].label` localisé sans casser structure ; la description reste texte brut pour compatibilité export.
+
+## Checklist complète ajout nouveau domaine OggDude
+
+Pattern établi pour ajouter un domaine d'import sans oublier de composant. Suivre cette checklist systématiquement pour éviter bugs UI silencieux.
+
+### Backend (logique métier)
+
+- [ ] Créer `module/importer/items/{domain}-ogg-dude.mjs` avec `build{Domain}Context()` et `{domain}Mapper()`
+- [ ] Créer `module/importer/utils/{domain}-import-utils.mjs` avec reset/increment/get/register functions
+- [ ] Ajouter `{domain}` dans `module/importer/oggDude.mjs` : deux entrées `buildContextMap.set()` (processOggDudeData + preloadOggDudeData)
+- [ ] Intégrer stats dans `module/importer/utils/global-import-metrics.mjs` : import + ajout dans `getAllImportStats()`
+- [ ] Ajouter `{domain}` dans `module/settings/OggDudeDataImporter.mjs` : array `_domainNames`
+
+### Frontend (UI & localisation)
+
+- [ ] **Ajouter ligne de tableau dans `templates/settings/oggDudeDataImporter.hbs`** pour afficher les statistiques (Status, Domain, Total, Imported, Rejected, Duration) — **oubli fréquent qui cause stats invisibles**
+- [ ] Ajouter clé de localisation `domains.{domain}` dans `lang/fr.json` et `lang/en.json`
+- [ ] Vérifier que le template utilise bien `{{#each domains}}` pour le dropdown de prévisualisation (automatique si `_domainNames` est à jour)
+
+### Tests & validation
+
+- [ ] Créer `tests/importer/{domain}-utils.spec.mjs` pour utilitaires stats
+- [ ] Créer `tests/importer/{domain}-oggdude.spec.mjs` pour mapper unit tests
+- [ ] Créer `tests/importer/{domain}-import.integration.spec.mjs` avec fixture XML réel
+- [ ] Ajouter test de validation template vérifiant présence des placeholders `{{importStats.{domain}.*}}` et `{{importDomainStatus.{domain}.*}}`
+- [ ] Vérifier que `_buildImportDomainStatus()` génère bien statut pour le nouveau domaine
+
+### Documentation
+
+- [ ] Créer `documentation/importer/import-{domain}.md` avec guide utilisateur complet
+- [ ] Mettre à jour `documentation/importer/README.md` avec nouvelle ligne dans Domain Support Status table
+
+### Pièges fréquents
+
+**Template oublié** : La logique backend peut être 100% fonctionnelle (tests passent, stats collectées) mais l'UI reste à zéro si la ligne de tableau manque dans `oggDudeDataImporter.hbs`. Symptôme : checkbox visible, import réussit, mais aucune stat affichée.
+
+**Test de non-régression essentiel** : Toujours ajouter un test template vérifiant présence de `{{importStats.{domain}.total}}`, `{{importStats.{domain}.imported}}`, etc. pour détecter immédiatement les oublis lors de futurs ajouts de domaines.
