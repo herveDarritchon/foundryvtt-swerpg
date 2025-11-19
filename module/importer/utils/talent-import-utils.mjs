@@ -26,6 +26,7 @@ let _talentStats = {
   unresolvedNodes: 0,
   invalidPrerequisites: 0,
   transformed: 0,
+  dieModifiers: 0, // Nombre de talents avec DieModifiers
   nodeDetails: new Set(), // Ensemble des nodes inconnus
   activationDetails: new Set(), // Ensemble des activations inconnues
   rejectionReasons: [], // Raisons de rejet détaillées
@@ -49,6 +50,7 @@ export function resetTalentImportStats() {
     unresolvedNodes: 0,
     invalidPrerequisites: 0,
     transformed: 0,
+    dieModifiers: 0,
     nodeDetails: new Set(),
     activationDetails: new Set(),
     rejectionReasons: [],
@@ -110,6 +112,7 @@ export function getTalentImportStats() {
     unresolvedNodes: _talentStats.unresolvedNodes,
     invalidPrerequisites: _talentStats.invalidPrerequisites,
     transformed: _talentStats.transformed,
+    dieModifiers: _talentStats.dieModifiers,
     // Propriétés calculées pour compatibilité
     total: _talentStats.processed,
     rejected: _talentStats.failed,
