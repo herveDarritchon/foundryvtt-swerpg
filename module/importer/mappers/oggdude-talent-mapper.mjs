@@ -12,6 +12,7 @@ import { resolveTalentNode } from '../mappings/oggdude-talent-node-map.mjs'
 import { transformTalentPrerequisites, validateTalentPrerequisites } from '../mappings/oggdude-talent-prerequisite-map.mjs'
 import { extractIsRanked, extractTalentTier, transformTalentRank } from '../mappings/oggdude-talent-rank-map.mjs'
 import { createDefaultTalentAction, transformTalentActions, validateTalentActions } from '../mappings/oggdude-talent-actions-map.mjs'
+import { assembleTalentDescription, extractTalentDieModifiers, extractTalentSource } from '../mappings/oggdude-talent-diemodifiers-map.mjs'
 
 /**
  * Context Map Builder pour les talents OggDude
@@ -121,6 +122,10 @@ export class OggDudeTalentMapper {
 
         // Textes
         description: this.extractDescription(talentData),
+        sourceText: extractTalentSource(talentData),
+
+        // DieModifiers
+        dieModifiers: extractTalentDieModifiers(talentData),
 
         // Relations
         prerequisites: transformTalentPrerequisites(talentData.Prerequisites || talentData.Prereqs),
@@ -245,6 +250,19 @@ export class OggDudeTalentMapper {
     try {
       logger.debug(`[OggDudeTalentMapper] Transforming talent: ${context.key}`)
 
+      // Assembler la description complète avec source et DieModifiers
+      const enrichedDescription = assembleTalentDescription({
+        baseDescription: context.description,
+        source: context.sourceText,
+        dieModifiers: context.dieModifiers,
+        maxLength: 2000,
+      })
+
+      // Incrémenter stats si DieModifiers présents
+      if (context.dieModifiers && context.dieModifiers.length > 0) {
+        incrementTalentImportStat('dieModifiers')
+      }
+
       // Structure de données SwerpgTalent
       const talentData = {
         name: context.name,
@@ -263,8 +281,8 @@ export class OggDudeTalentMapper {
           rank: context.rank || { idx: 1, cost: 5 },
           tier: context.tier || 1,
 
-          // Textes
-          description: context.description || '',
+          // Textes - description enrichie
+          description: enrichedDescription,
           source: context.source || 'OggDude Import',
 
           // Relations
@@ -282,6 +300,16 @@ export class OggDudeTalentMapper {
             originalKey: context.key,
             importedAt: new Date().toISOString(),
             custom: context.custom || false,
+          },
+        },
+
+        // Flags pour traçabilité et données structurées
+        flags: {
+          swerpg: {
+            oggdudeKey: context.key,
+            oggdude: {
+              dieModifiers: context.dieModifiers || [],
+            },
           },
         },
       }

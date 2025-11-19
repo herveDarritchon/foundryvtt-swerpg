@@ -126,6 +126,40 @@ describe('Talent Mappings', () => {
       expect(extractIsRanked({ Ranked: 'yes' })).toBe(true)
       expect(extractIsRanked({})).toBe(false)
     })
+
+    it('devrait gérer les variantes de Ranked', () => {
+      // Test avec <Ranked>true</Ranked>
+      expect(extractIsRanked({ Ranked: true })).toBe(true)
+      expect(extractIsRanked({ Ranked: 'true' })).toBe(true)
+      expect(extractIsRanked({ Ranked: 'TRUE' })).toBe(true)
+      
+      // Test avec <Ranked>false</Ranked>
+      expect(extractIsRanked({ Ranked: false })).toBe(false)
+      expect(extractIsRanked({ Ranked: 'false' })).toBe(false)
+      expect(extractIsRanked({ Ranked: 'FALSE' })).toBe(false)
+      
+      // Test avec <IsRanked>
+      expect(extractIsRanked({ IsRanked: true })).toBe(true)
+      expect(extractIsRanked({ IsRanked: 'true' })).toBe(true)
+    })
+  })
+
+  describe('Talent avec Ranked=true et Activation=Passive', () => {
+    it('devrait créer un talent avec isRanked=true et activation=passive', () => {
+      const talentData = {
+        Ranked: 'true',
+        Activation: 'Passive',
+        Tier: '2',
+      }
+
+      const isRanked = extractIsRanked(talentData)
+      const activation = resolveTalentActivation(talentData.Activation)
+      const rank = transformTalentRank(talentData)
+
+      expect(isRanked).toBe(true)
+      expect(activation).toBe('passive')
+      expect(rank.idx).toBe(1) // Tier 2 -> idx 1
+    })
   })
 
   describe('transformTalentActions', () => {

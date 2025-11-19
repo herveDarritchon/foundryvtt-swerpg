@@ -375,3 +375,62 @@ Stratégie pour éviter les erreurs de modules dans les tests d'import :
 - **Fonction correcte**: Utiliser le nom exact exporté (`armorMapper` pas `mapOggDudeArmor`) - vérifier les exports avec `grep_search`.
 - **Test isolation**: Mock foundry dans `beforeEach()` pour éviter les fuites entre tests.
 - **Debugging imports**: Si "is not a function", vérifier l'export exact avec `grep_search "export.*function"` sur le fichier cible.
+
+## Talent Import Mapping – Description, DieModifiers & Flags (nouvelle mémoire)
+
+Pattern consolidé introduit lors du correctif de mapping des Talents OggDude (rank, activation, description enrichie & modificateurs de dés). À appliquer pour tout domaine avec enrichissement textuel + données additives non contractuelles.
+
+### Séparation de responsabilités
+Créer un module dédié `oggdude-talent-diemodifiers-map.mjs` gérant uniquement:
+1. Extraction brute des nœuds `<DieModifiers>`.
+2. Normalisation élément → objet `{ type, skill?, characteristic?, value?, applyOnce? }`.
+3. Formatage pour description (lignes textuelles prêtes à concaténation).
+4. Sanitation texte (voir plus bas) + assemblage final.
+Le mapper principal importe et orchestre sans dupliquer la logique d'assemblage.
+
+### Assemblage déterministe de la description
+Ordre strict (ne jamais réordonner dynamiquement):
+1. Description source OggDude nettoyée.
+2. Ligne blanche.
+3. Source formatée: `Source: <Nom>[, p.<Page>]` si disponible.
+4. Ligne blanche.
+5. Section Die Modifiers seulement si ≥1 modificateur: titre `Die Modifiers:` puis une ligne par modificateur.
+
+Ne jamais insérer d'en-tête vide quand il n'y a aucun modificateur; c'est un invariant testable.
+
+### Sanitation & Limites
+Règles appliquées avant enrichissement:
+- Neutraliser `<script>` / `<style>` par remplacement (`<` → `&lt;` sur balises ouvrantes). Pas d'exécution potentielle.
+- Supprimer balises propriétaires OggDude si présentes (`[BR]`, `[H3]`, `[color]`) ou les convertir en sauts de ligne (`[BR]`).
+- Trim + collapse multi-espaces → espace simple.
+- Troncature dure à 2000 caractères (post assemblage). Tests doivent couvrir la conservation d'un suffixe complet (éviter coupure milieu d'un mot critique; aucune logique de mot, juste cut brut documenté).
+
+### Flags additive vs schéma
+Ne jamais modifier le modèle Foundry (ex: `SwerpgTalent`) pour stocker DieModifiers tant que gameplay non défini. Stocker structure normalisée dans `flags.swerpg.oggdude.dieModifiers` (tableau d'objets) + conserver clé d'origine `flags.swerpg.oggdudeKey` pour traçabilité.
+
+Avantages:
+- Rétro-compatibilité sauvegardes existantes.
+- Facilité d'évolution (ajout futur d'autres modificateurs) sans migrations.
+
+### Incrément métriques
+Incrémenter le compteur `dieModifiers` uniquement si le tableau final possède ≥1 entrée. Permet ratio clair talents enrichis / total. Exposé via `getTalentImportStats().dieModifiers`.
+
+### Performance
+Complexité O(n) par talent (n = nombre d'éléments DieModifier). Pas de regex lourde dans la boucle; sanitation textuelle faite une fois. Vérifier absence de double parsing XML.
+
+### Tests essentiels
+Couverture minimale exigée:
+- Extraction: compter correctement chaque type supporté (Setback / Boost / RemoveSetback / UpgradeDifficulty / DecreaseDifficulty / ApplyOnce).
+- Ignorer modificateurs sans skill ET sans characteristic (logger.warn). Ne pas lever exception.
+- Description: présence ou absence section Die Modifiers selon cas; source correctement append; troncature à 2000 chars.
+- Sanitation: suppression `<script>` & collapse espaces.
+- Flags: structure exacte tableau d'objets; absence du champ si liste vide.
+
+### Pièges évités (rétrospective)
+- Duplication description builder dans le mapper principal → centralisé dans module DieModifiers.
+- Insertion header Die Modifiers vide quand aucun modificateur → invariant ajouté.
+- Pollution schéma principal (ajout champ dieModifiers) → usage des flags protégé.
+- Troncature uniquement sur description initiale (perte section modificateurs) → appliquer troncature après assemblage complet.
+
+### Extension future
+Si besoin de rendre interactif (tooltip de chaque modificateur): préparer mapping `flags.swerpg.oggdude.dieModifiers[i].label` localisé sans casser structure ; la description reste texte brut pour compatibilité export.
