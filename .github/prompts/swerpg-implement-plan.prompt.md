@@ -3,8 +3,6 @@ name: 'swerpg-implémenter-plan-implémentation'
 description: 'Exécuter un plan d’implémentation SWERPG existant avec l’agent `swerpg-dev-core` (JS, HBS, LESS/CSS, config).'
 ---
 
-Tu agis en tant qu’agent `swerpg-dev-core` pour le système SWERPG (Foundry VTT v13+).
-
 Ton objectif : **implémenter un plan d’implémentation existant** en appliquant les changements de code décrits dans les `TASK-XXX` du plan.
 
 ### Plan ciblé
@@ -43,6 +41,23 @@ Tu dois :
    - pas de refactors hors scope (sauf micro-refactor local nécessaire pour intégrer proprement la feature).
 5. Utiliser le tool `edit` pour modifier le code ; ne pas imprimer des patches à appliquer à la main.
 6. Respecter les patterns et conventions existants (logger, nomenclature, structure des classes et hooks).
+
+### Suivi des tâches (`TASK-XXX`) via `todos`
+
+Tu dois considérer le suivi de l’avancement comme une partie **obligatoire** de l’exécution :
+
+1. Dès que tu as identifié les `TASK-XXX` à exécuter (en mode complet ou partiel) :
+   - crée un todo pour chacune via le tool `todos` (status initial "pending").
+
+2. Pour chaque `TASK-XXX` que tu implémentes :
+   - avant la première modification de fichier liée à cette tâche, mets le todo correspondant en **"in-progress"** ;
+   - une fois la tâche terminée (code + tests associés exécutés), mets le todo en **"done"** avec un commentaire court.
+
+3. Si tu ne peux pas terminer une tâche (contradiction du plan, prérequis manquant, erreur bloquante…) :
+   - laisse le todo en "pending" ou "blocked" avec une explication,
+   - signale-le dans la section finale **« Observations / items à revoir »**.
+
+Ne termine jamais ta réponse sans avoir synchronisé l’état des todos avec la réalité de ce que tu as implémenté.
 
 ### Tests
 

@@ -122,6 +122,8 @@ describe('OggDudeTalentMapper', () => {
         key: 'force_sensitive',
         name: 'Force Sensitive',
         description: 'Force sensitive talent',
+        sourceText: 'Source: Core Rulebook p.100',
+        dieModifiers: [],
         source: 'Test Source',
         activation: 'passive',
         node: null,
@@ -143,11 +145,83 @@ describe('OggDudeTalentMapper', () => {
       expect(result.system.importMeta.originalKey).toBe('force_sensitive')
     })
 
+    it('devrait inclure les flags avec oggdudeKey et dieModifiers', () => {
+      const context = {
+        key: 'secret_lore',
+        name: 'Secret Lore',
+        description: 'Please see page 33 of the Unlimited Power Sourcebook for details.',
+        sourceText: 'Source: Unlimited Power p.33',
+        dieModifiers: [
+          {
+            skillKey: 'LORE',
+            setbackCount: 1,
+          },
+        ],
+        source: 'OggDude Import',
+        activation: 'passive',
+        node: null,
+        isRanked: true,
+        rank: { idx: 1, cost: 5 },
+        tier: 1,
+        prerequisites: {},
+        actions: [],
+        custom: false,
+      }
+
+      const result = OggDudeTalentMapper.transform(context)
+
+      // Vérifier les flags
+      expect(result.flags).toBeDefined()
+      expect(result.flags.swerpg).toBeDefined()
+      expect(result.flags.swerpg.oggdudeKey).toBe('secret_lore')
+      expect(result.flags.swerpg.oggdude).toBeDefined()
+      expect(result.flags.swerpg.oggdude.dieModifiers).toHaveLength(1)
+      expect(result.flags.swerpg.oggdude.dieModifiers[0].skillKey).toBe('LORE')
+      expect(result.flags.swerpg.oggdude.dieModifiers[0].setbackCount).toBe(1)
+
+      // Vérifier que isRanked est correct
+      expect(result.system.isRanked).toBe(true)
+
+      // Vérifier que la description est enrichie
+      expect(result.system.description).toContain('Please see page 33')
+      expect(result.system.description).toContain('Source: Unlimited Power p.33')
+      expect(result.system.description).toContain('Die Modifiers:')
+      expect(result.system.description).toContain('Skill LORE')
+    })
+
+    it('devrait gérer les talents sans DieModifiers', () => {
+      const context = {
+        key: 'simple_talent',
+        name: 'Simple Talent',
+        description: 'A simple talent',
+        sourceText: 'Source: Core Rulebook p.50',
+        dieModifiers: [],
+        source: 'OggDude Import',
+        activation: 'active',
+        node: null,
+        isRanked: false,
+        rank: { idx: 1, cost: 5 },
+        tier: 1,
+        prerequisites: {},
+        actions: [],
+        custom: false,
+      }
+
+      const result = OggDudeTalentMapper.transform(context)
+
+      expect(result.flags.swerpg.oggdude.dieModifiers).toEqual([])
+      expect(result.system.description).toContain('A simple talent')
+      expect(result.system.description).toContain('Source: Core Rulebook p.50')
+      expect(result.system.description).not.toContain('Die Modifiers:')
+    })
+
     it('devrait créer une action par défaut si aucune action fournie', () => {
       const context = {
         key: 'test_talent',
         name: 'Test Talent',
         description: 'Test description',
+        sourceText: '',
+        dieModifiers: [],
         source: 'Test',
         activation: 'passive',
         node: null,
