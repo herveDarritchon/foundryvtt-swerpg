@@ -1,4 +1,7 @@
-# Plan : Import d'un Nouveau Type d'Item OggDude
+---
+name: 'swerpg-plan-import-new-item-type'
+description: 'Plan d’implémentation pour l’ajout d’un nouveau type d’item dans le système à partir d\'OggDude'
+---
 
 L'ajout d'un nouveau type d'item (ex: Force Powers, Vehicles, Adversaries) suit une architecture modulaire bien établie
 avec 6 domaines actuellement implémentés (Weapon, Armor, Gear, Species, Career, Talent) servant de références.
@@ -236,33 +239,16 @@ avec 6 domaines actuellement implémentés (Weapon, Armor, Gear, Species, Career
 **Pattern recommandé:**
 
 ```javascript
-// Permissif par défaut, strict optionnel
-export const FLAG_STRICT_
-{
-    TYPE
-}
-_VALIDATION = false
+// Permissif par défaut, strict optionnel - TYPE est le nom du type
+export const FLAG_STRICT_TYPE_VALIDATION = false
 
 // Fallback avec warning
 let mappedValue = MAP[xmlValue]
 if (!mappedValue) {
     logger.warn(`Unknown value: ${xmlValue}`)
-    add
-    {
-        Type
-    }
-    Unknown * (xmlValue)
-    if (FLAG_STRICT_{
-        TYPE
-    }
-    _VALIDATION
-)
-    {
-        increment
-        {
-            Type
-        }
-        ImportStat('rejected')
+    addTypeUnknown * (xmlValue)
+    if (FLAG_STRICT_TYPE_VALIDATION) {
+        incrementTypeImportStat('rejected')
         return null
     }
     mappedValue = 'defaultValue'
@@ -283,21 +269,15 @@ if (!mappedValue) {
 **Exemple:**
 
 ```javascript
-image: {
+
+const image = {
     criteria: 'Data/ForcePowerImages',
-        worldPath
-:
-    'modules/swerpg/assets/forcepowers',
-        systemPath
-:
-    buildItemImgSystemPath('forcepower.svg'),
-        images
-:
-    groupByType.image,
-        prefix
-:
-    'ForcePower'
+    worldPath: 'modules/swerpg/assets/forcepowers',
+    systemPath: buildItemImgSystemPath('forcepower.svg'),
+    images: groupByType.image,
+    prefix: 'ForcePower'
 }
+
 ```
 
 ---
@@ -341,7 +321,7 @@ image: {
 
 ```xml
 
-<Item type="restricted" rarity="8">
+<Item type="restricted" rarity="8">...</Item>
 ```
 
 → Parser doit supporter attributs XML
@@ -376,9 +356,12 @@ image: {
 - Identifier versions OggDude supportées (ex: 2.0+, 2.3+)
 - Documenter variations structure entre versions
 - Implémenter détection version si possible:
-  ```xml
-  <Data version="2.3.1.0">
-  ```
+
+```xml
+
+<Data version="2.3.1.0">...</Data>
+```
+
 - Fallbacks gracieux pour champs manquants
 - Tests avec échantillons multi-versions
 
