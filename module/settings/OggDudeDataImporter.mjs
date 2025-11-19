@@ -26,7 +26,7 @@ const HandlebarsApplicationMixin = foundry?.applications?.api?.HandlebarsApplica
  * @extends {FormApplication}
  */
 export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV2) {
-  _domainNames = ['weapon', 'armor', 'gear', 'species', 'career', 'talent']
+  _domainNames = ['weapon', 'armor', 'gear', 'species', 'career', 'talent', 'obligation']
 
   domains = this._initializeDomains(this._domainNames)
   zipFile = null

@@ -6,6 +6,7 @@
  */
 
 import { logger } from '../../utils/logger.mjs'
+import {sanitizeDescription} from "../utils/text.mjs";
 
 /**
  * Champs supportés dans DieModifier OggDude
@@ -183,43 +184,6 @@ export function formatTalentDieModifiersForDescription(modifiers) {
 }
 
 /**
- * Nettoie et sanitize une description de talent
- * Empêche l'injection de code HTML/JS et normalise les espaces
- * @param {string} description - Description brute
- * @param {number} maxLength - Longueur maximale (défaut: 2000)
- * @returns {string} Description nettoyée
- */
-export function sanitizeTalentDescription(description, maxLength = 2000) {
-  if (!description) {
-    return ''
-  }
-
-  try {
-    let cleaned = String(description)
-    
-    // Supprimer les balises script et style
-    cleaned = cleaned.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
-    cleaned = cleaned.replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, '')
-    
-    // Normaliser les espaces multiples
-    cleaned = cleaned.replace(/\s+/g, ' ')
-    
-    // Trim
-    cleaned = cleaned.trim()
-    
-    // Limiter la longueur
-    if (cleaned.length > maxLength) {
-      cleaned = cleaned.substring(0, maxLength - 3) + '...'
-    }
-    
-    return cleaned
-  } catch (error) {
-    logger.error('[TalentDieModifiersMap] Error sanitizing description:', error)
-    return ''
-  }
-}
-
-/**
  * Extrait les sources (livre + page) d'un talent OggDude
  * @param {object} talentData - Données du talent OggDude
  * @returns {string} Ligne de source formatée (ex: "Source: Unlimited Power, p.33")
@@ -299,7 +263,7 @@ export function assembleTalentDescription({ baseDescription = '', source = '', d
     
     // Ajouter la description de base nettoyée
     if (baseDescription) {
-      parts.push(sanitizeTalentDescription(baseDescription, maxLength))
+      parts.push(sanitizeDescription(baseDescription, maxLength))
     }
     
     // Ajouter la source
@@ -328,7 +292,7 @@ export function assembleTalentDescription({ baseDescription = '', source = '', d
       const availableForBase = maxLength - reservedLength
       if (availableForBase > 50) {
         // On peut garder une partie de la description de base
-        const truncatedBase = sanitizeTalentDescription(baseDescription, availableForBase)
+        const truncatedBase = sanitizeDescription(baseDescription, availableForBase)
         assembled = [truncatedBase, sourceText, dieModifiersText].filter(Boolean).join('\n')
       } else {
         // Prioriser DieModifiers et Source
@@ -344,6 +308,6 @@ export function assembleTalentDescription({ baseDescription = '', source = '', d
     return assembled
   } catch (error) {
     logger.error('[TalentDieModifiersMap] Error assembling description:', error)
-    return sanitizeTalentDescription(baseDescription, maxLength)
+    return sanitizeDescription(baseDescription, maxLength)
   }
 }
