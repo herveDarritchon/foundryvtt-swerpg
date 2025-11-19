@@ -754,7 +754,8 @@
           "gear": "Load Gear data",
           "species": "Load Species data",
           "weapon": "Load Weapons data",
-          "talent": "Load Talent data"
+          "talent": "Load Talent data",
+          "obligation": "Load Obligation data"
         },
         "progress-bar": {
           "title": "Import Progress"

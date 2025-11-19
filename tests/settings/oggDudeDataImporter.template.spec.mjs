@@ -63,4 +63,12 @@ describe('oggDudeDataImporter.hbs template compatibility', () => {
     // Les classes finales (domain-status--*) sont injectées dynamiquement via contexte; on vérifie présence du placeholder Handlebars
     expect(source.includes('{{importDomainStatus.armor.class}}')).toBe(true)
   })
+
+  it('inclut les statistiques pour le domaine obligation', () => {
+    expect(source.includes('{{importDomainStatus.obligation.class}}')).toBe(true)
+    expect(source.includes('{{importStats.obligation.total}}')).toBe(true)
+    expect(source.includes('{{importStats.obligation.imported}}')).toBe(true)
+    expect(source.includes('{{importStats.obligation.rejected}}')).toBe(true)
+    expect(source.includes('{{importMetricsFormatted.domains.obligation.duration}}')).toBe(true)
+  })
 })
