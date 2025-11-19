@@ -371,16 +371,3 @@ Du point de vue du MJ :
 4. **Non-régression**
    - L’import de `Armor.xml` ne casse pas l’import des autres types d’objets OggDude (tests de regression à prévoir dans le plan).
    - Aucun Item `armor` n’est créé avec toutes les valeurs à 0 si le XML contient des données valides.
-
----
-
-# 8. Points à clarifier dans le plan / auprès du PO
-
-Ces points doivent être explicitement traités dans le plan `swerpg-plan` (section contraintes / assumptions) :
-
-- Format exact des tags de `system.properties` (brut vs normalisé).
-- Localisation éventuelle des descriptions à long terme (mais hors scope de ce bugfix).
-- Utilisation ou non des `BaseMods` pour générer des Active Effects automatisés :
-  - C'est une “future evolution” donc non traité pour ce bugfix.
-- Gestion des armures déjà importées et incorrectes :
-  - le scope se limite aux futurs imports

@@ -483,21 +483,3 @@ Les décisions d’architecture sur la taxonomie complète (gear / weapons / arm
 
     * L’import d’autres Gear sans `WeaponModifiers` ne casse pas et reste cohérent (simple gear sans section “Weapon Use” si inexistant).
     * Les imports Armor / Weapons restent fonctionnels (et, si leurs bugfixes sont en place, compatibles avec ce changement).
-
----
-
-# 8. Points à clarifier pour le plan / issues futures
-
-Ces points doivent être explicitement notés dans le plan d’implémentation (`CON-XXX` / “Assumptions”) mais sont **hors périmètre de ce bugfix** :
-
-* Définition d’un modèle canonique pour les qualités (`system.qualities`) et leur réutilisation dans les profils d’armes dérivés (`WeaponModifiers`).
-* Stratégie globale pour les gear utilisables comme armes :
-
-    * création d’`actions` structurées dans `system.actions`,
-    * ou création automatique d’Items `weapon` liés au gear.
-* Taxonomie complète des types / catégories de gear (Tools/Electronics, Clothing, etc.) :
-
-    * `system.category` vs champs dédiés / tags.
-* Migration éventuelle des gear déjà importés avec de mauvaises données (script / bouton de réparation).
-
----
