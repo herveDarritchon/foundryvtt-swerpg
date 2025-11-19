@@ -6,7 +6,8 @@ import {
 
 describe('obligationMapper', () => {
   beforeEach(() => {
-    // Stats are reset at the start of each obligationMapper call
+      // Stats are automatically reset at the start of each obligationMapper call
+      // No manual reset needed in beforeEach for these mapper tests
   })
 
   describe('Valid obligation mapping', () => {
