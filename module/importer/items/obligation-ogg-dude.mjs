@@ -7,6 +7,7 @@ import {
     incrementObligationImportStat,
     resetObligationImportStats,
 } from '../utils/obligation-import-utils.mjs'
+import {sanitizeDescription} from "../utils/text.mjs";
 
 /**
  * Map OggDude Obligation XML data to Foundry Item creation objects.
@@ -59,7 +60,7 @@ export function obligationMapper(obligations) {
             })
 
             // Extract optional description
-            const description = sanitizeObligationDescription(OggDudeImporter.mapOptionalString(xmlObligation.Description))
+            const description = sanitizeDescription(OggDudeImporter.mapOptionalString(xmlObligation.Description))
 
             // Build system object with schema defaults
             const system = {

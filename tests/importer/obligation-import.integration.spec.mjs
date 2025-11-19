@@ -1,8 +1,9 @@
-import {describe, expect, it} from 'vitest'
+import { describe, expect, it } from 'vitest'
 import fs from 'node:fs/promises'
 import xml2jsModule from '../../vendors/xml2js.min.js'
-import {parseXmlToJson} from '../../module/utils/xml/parser.mjs'
-import {getObligationImportStats, obligationMapper,} from '../../module/importer/items/obligation-ogg-dude.mjs'
+import { parseXmlToJson } from '../../module/utils/xml/parser.mjs'
+import { getObligationImportStats, obligationMapper } from '../../module/importer/items/obligation-ogg-dude.mjs'
+import { resetObligationImportStats } from '../../module/importer/utils/obligation-import-utils.mjs'
 
 // Shim xml2js global (same pattern as armor/weapon)
 if (globalThis.xml2js === undefined) {
@@ -12,6 +13,7 @@ if (globalThis.xml2js === undefined) {
 describe('Obligation Import Integration Tests', () => {
     describe('Obligations.xml - mapping real OggDude data', () => {
         it('should successfully map obligations from Obligations.xml fixture', async () => {
+            resetObligationImportStats()
             // Load the fixture file
             const xml = await fs.readFile('resources/integration/Obligations.xml', 'utf8')
             const raw = await parseXmlToJson(xml)
@@ -56,6 +58,7 @@ describe('Obligation Import Integration Tests', () => {
         })
 
         it('should map all standard obligation fields from XML', async () => {
+            resetObligationImportStats()
             const xml = await fs.readFile('resources/integration/Obligations.xml', 'utf8')
             const raw = await parseXmlToJson(xml)
 
@@ -79,6 +82,7 @@ describe('Obligation Import Integration Tests', () => {
         })
 
         it('should handle obligations with Source field', async () => {
+            resetObligationImportStats()
             const xml = await fs.readFile('resources/integration/Obligations.xml', 'utf8')
             const raw = await parseXmlToJson(xml)
 
@@ -97,6 +101,7 @@ describe('Obligation Import Integration Tests', () => {
         })
 
         it('should handle obligations with Sources field (multiple)', async () => {
+            resetObligationImportStats()
             const xml = await fs.readFile('resources/integration/Obligations.xml', 'utf8')
             const raw = await parseXmlToJson(xml)
 
@@ -116,6 +121,7 @@ describe('Obligation Import Integration Tests', () => {
         })
 
         it('should track import statistics for large batch', async () => {
+            resetObligationImportStats()
             const xml = await fs.readFile('resources/integration/Obligations.xml', 'utf8')
             const raw = await parseXmlToJson(xml)
 
@@ -128,17 +134,10 @@ describe('Obligation Import Integration Tests', () => {
             expect(stats.total).toBe(allObligations.length)
             expect(stats.imported + stats.rejected).toBe(stats.total)
             expect(mapped.length).toBe(stats.imported)
-
-            // Log for observability
-            logger.info('[ObligationImporter Integration Test] Import stats', {
-                total: stats.total,
-                imported: stats.imported,
-                rejected: stats.rejected,
-                successRate: `${((stats.imported / stats.total) * 100).toFixed(2)}%`,
-            })
         })
 
         it('should preserve OggDude key traceability', async () => {
+            resetObligationImportStats()
             const xml = await fs.readFile('resources/integration/Obligations.xml', 'utf8')
             const raw = await parseXmlToJson(xml)
 
@@ -154,6 +153,7 @@ describe('Obligation Import Integration Tests', () => {
         })
 
         it('should handle description field correctly', async () => {
+            resetObligationImportStats()
             const xml = await fs.readFile('resources/integration/Obligations.xml', 'utf8')
             const raw = await parseXmlToJson(xml)
 
@@ -169,6 +169,7 @@ describe('Obligation Import Integration Tests', () => {
 
     describe('Performance validation', () => {
         it('should map 50 obligations in reasonable time', async () => {
+            resetObligationImportStats()
             const xml = await fs.readFile('resources/integration/Obligations.xml', 'utf8')
             const raw = await parseXmlToJson(xml)
 
@@ -182,11 +183,6 @@ describe('Obligation Import Integration Tests', () => {
 
             expect(mapped.length).toBeGreaterThan(0)
             expect(duration).toBeLessThan(1000) // Should complete in less than 1 second
-
-            logger.info('[ObligationImporter Performance Test] Mapping performance', {
-                count: mapped.length,
-                durationMs: duration.toFixed(2)
-            })
         })
     })
 })
