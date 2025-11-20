@@ -53,6 +53,65 @@ graph TD
 - Tronque à 8.
 - Retourne `[{id}]`.
 
+## Mappings de Compétences OggDude → SWERPG
+
+Le mapping des codes de compétences OggDude vers les identifiants SWERPG est géré par la table `OGG_DUDE_SKILL_MAP` dans `/module/importer/mappings/oggdude-skill-map.mjs`.
+
+### Codes Supportés
+
+**General Skills** (compétences générales) :
+- `COOL` → `cool`
+- `DISC`, `DISCIPLINE` → `discipline`
+- `LEAD`, `LEADERSHIP` → `leadership`
+- `NEG`, `NEGOTIATION` → `negotiation`
+- `COERC`, `COERCION` → `coercion`
+- `VIGIL`, `VIGILANCE` → `vigilance`
+- `RESIL`, `RESILIENCE` → `resilience`
+- `SW`, `STREETWISE` → `streetwise`
+- `SURV`, `SURVIVAL` → `survival`
+- `ASTRO`, `ASTROGATION` → `astrogation`
+- `PILOTPL`, `PILOTINGPLANETARY` → `pilotingplanetary`
+- `PILOTSP`, `PILOTINGSPACE` → `pilotingspace`
+- `MECH`, `MECHANICS` → `mechanics`
+- `MED`, `MEDICINE` → `medicine`
+- `COMP`, `COMPUTERS` → `computers`
+- `COORD`, `COORDINATION` → `coordination`
+- `ATHL`, `ATHLETICS` → `athletics`
+- `CHARM`, `CHARMING` → `charm`
+- `DECEP`, `DECEPTION` → `deception`
+- `PERC`, `PERCEPTION` → `perception`
+- `SKUL`, `SKULDUGGERY` → `skulduggery`
+- `STEA`, `STEAL`, `STEALTH` → `stealth`
+
+**Combat Skills** (compétences de combat) :
+- `BRAWL` → `brawl`
+- `MELEE` → `melee`
+- `RANGLT`, `RANGEDLIGHT` → `rangedlight`
+- `RANGHVY`, `RANGEDHEAVY` → `rangedheavy`
+- `GUNN`, `GUNNERY` → `gunnery`
+
+**Knowledge Skills** (compétences de connaissance) :
+- `CORE`, `COREWORLDS` → `coreworlds`
+- `LORE` → `lore`
+- `OUT`, `OUTERRIM` → `outerrim`
+- `XEN`, `XENOLOGY` → `xenology`
+- `EDU`, `EDUCATION` → `education`
+
+### Codes Non Mappables
+
+Les codes suivants ne peuvent pas être mappés car les compétences correspondantes n'existent pas dans le système SWERPG :
+
+- **`LTSABER`** (Lightsaber) : Compétence spécifique à Force and Destiny, non présente dans `SYSTEM.SKILLS`
+- **`WARF`** (Warfare) : Compétence Knowledge non présente dans `SYSTEM.SKILLS`
+
+Ces codes génèrent un warning lors de l'import mais ne bloquent pas le traitement de la carrière.
+
+### Notes Importantes
+
+- **CORE vs COORD** : `CORE` mappe vers `coreworlds` (Knowledge: Core Worlds), tandis que `COORD` mappe vers `coordination` (General: Coordination). Ne pas confondre les deux.
+- **Insensibilité à la casse** : Le mapping est case-insensitive, donc `COOL`, `cool`, et `Cool` produisent tous le même résultat.
+- **Synonymes** : Plusieurs variantes (forme courte et forme longue) sont supportées pour chaque compétence afin d'assurer la compatibilité avec différentes versions des fichiers OggDude.
+
 ## Validation
 
 - Longueur finale `careerSkills` ∈ [0,8].

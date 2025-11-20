@@ -6,6 +6,7 @@ let _careerStats = {
   total: 0,
   rejected: 0,
   unknownSkills: 0,
+  skillCount: 0,
   skillDetails: new Set(),
 }
 
@@ -14,13 +15,14 @@ export function resetCareerImportStats() {
     total: 0,
     rejected: 0,
     unknownSkills: 0,
+    skillCount: 0,
     skillDetails: new Set(),
   }
 }
 
-export function incrementCareerImportStat(key) {
+export function incrementCareerImportStat(key, amount = 1) {
   if (Object.prototype.hasOwnProperty.call(_careerStats, key)) {
-    _careerStats[key] += 1
+    _careerStats[key] += amount
   }
 }
 
@@ -29,12 +31,19 @@ export function addCareerUnknownSkill(code) {
   _careerStats.skillDetails.add(code)
 }
 
+export function addCareerSkillCount(count) {
+  if (typeof count === 'number' && count > 0) {
+    _careerStats.skillCount += count
+  }
+}
+
 export function getCareerImportStats() {
   return {
     total: _careerStats.total,
     rejected: _careerStats.rejected,
     imported: _careerStats.total - _careerStats.rejected,
     unknownSkills: _careerStats.unknownSkills,
+    skillCount: _careerStats.skillCount,
     skillDetails: Array.from(_careerStats.skillDetails),
   }
 }

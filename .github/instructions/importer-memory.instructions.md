@@ -106,14 +106,93 @@ export function speciesMapper(species) {
 }
 ```
 
+## Skill Mapping — Organisation et Robustesse (nouvelle mémoire)
+
+Pattern établi lors de l'extension OGG_DUDE_SKILL_MAP (careers/species) pour couvrir 100% des compétences SWERPG.
+
+### Structure organisée par sections
+Tables de mapping centralisées (`module/importer/mappings/oggdude-skill-map.mjs`) doivent être organisées avec des commentaires de sections clairs :
+
+```js
+export const OGG_DUDE_SKILL_MAP = Object.freeze({
+  // === General Skills ===
+  COOL: 'cool',
+  DISC: 'discipline',
+  LEAD: 'leadership',
+  // ... autres
+  
+  // === Combat Skills ===
+  BRAWL: 'brawl',
+  MELEE: 'melee',
+  // ...
+  
+  // === Knowledge Skills ===
+  LORE: 'lore',
+  OUT: 'outerrim',
+  XEN: 'xenology',
+  // ...
+})
+```
+
+Avantages : maintenabilité (ajout/vérification rapide), documentation inline (pas besoin de doc séparée pour liste exhaustive), debugging simplifié.
+
+### Gestion des ambiguïtés et synonymes
+Codes OggDude parfois ambigus (ex: `CORE` peut signifier "Core Worlds" ou "Coordination"). Stratégie :
+
+1. **Documentation explicite** : commentaire inline dans le mapping expliquant la décision (`CORE: 'coreworlds', // NOT coordination - context based`)
+2. **Support synonymes** : autoriser multiples codes → même skill pour robustesse (`COORD: 'coordination', CORE: 'coreworlds'`)
+3. **Validation exhaustive** : test vérifiant tous les codes existants mappent à une compétence valide du système
+
+### Codes non-mappables
+Documenter explicitement avec commentaires :
+
+```js
+// Non-mappable codes (lightsaber talents, warfare not in base SWERPG)
+// LTSABER, WARF
+```
+
+Jamais mapper vers une compétence incorrecte ; préférer `undefined` + log warning dans le mapper.
+
+### Tests exhaustifs de mappings
+Créer test dédié `*-skill-map.spec.mjs` couvrant :
+
+- Tous les codes standards (33 codes) mappent à une compétence existante dans `SYSTEM.SKILLS`
+- Codes synonymes fonctionnent correctement (ex: CORE, COORD distincts)
+- Case-insensitivity (OggDude utilise parfois casse mixte)
+- Codes invalides retournent `undefined` (ne pas crasher)
+- Liste exhaustive des non-mappables est documentée
+
+### Performance
+`Object.freeze()` + lookup O(1). Pas de regex, pas de switch/case. Si >1000 compétences futures : envisager Map mais objet reste optimal pour <100 entrées.
+
 ## Tests: assertions et mocks pratiques
 
-Quelques patterns récurrents rencontrés pendant le debugging des TU :
+Quelques patterns récurrents rencontrés pendant le debugging des TU :
 
-- Ne pas rendre les TU fragiles sur l'ordre des éléments produits par les mappers. Si l'ordre n'est pas contractuel, comparer des tableaux triés ou utiliser des assertions fondées sur `Set`/contient. Exemple : `expect(result.map(r=>r.id).sort()).toEqual(['a','b'].sort())`.
+- Ne pas rendre les TU fragiles sur l'ordre des éléments produits par les mappers. Si l'ordre n'est pas contractuel, comparer des tableaux triés ou utiliser des assertions fondées sur `Set`/contient. Exemple : `expect(result.map(r=>r.id).sort()).toEqual(['a','b'].sort())`.
 - Mocker `globalThis.SYSTEM` (avec `SKILLS` minimal) en tout début de fichier de test lorsque le code importe des mappers qui lisent `SYSTEM` à l'import time. Le mock doit être défini avant d'importer les modules à tester.
+  - **Pattern exhaustif**: Pour tests de mapping complets (careers, species), mocker TOUTES les 35 compétences SWERPG pour éviter faux négatifs. Exemple :
+    ```js
+    globalThis.SYSTEM = {
+      SKILLS: {
+        // General (22)
+        astrogation: {}, athletics: {}, charm: {}, coercion: {}, computers: {},
+        cool: {}, coordination: {}, deception: {}, discipline: {}, leadership: {},
+        mechanics: {}, medicine: {}, negotiation: {}, perception: {}, pilotingPlanetary: {},
+        pilotingSpace: {}, resilience: {}, skullduggery: {}, stealth: {}, streetwise: {},
+        survival: {}, vigilance: {},
+        // Combat (5)
+        brawl: {}, melee: {}, rangedLight: {}, rangedHeavy: {}, gunnery: {},
+        // Knowledge (8)
+        coreworlds: {}, education: {}, lore: {}, outerrim: {}, underworld: {},
+        warfare: {}, xenology: {}, forbiddenknowledge: {}
+      }
+    }
+    ```
+  - Raison : si mock incomplet, tests passent faussement (mapper utilise skill non définie mais test n'échoue pas).
+  - Vérifier présence clé avec `expect(SYSTEM.SKILLS).toHaveProperty('education')` dans les tests si doute.
 - Pour parser XML en Node/Vitest, shimmer `globalThis.xml2js = { js: xml2jsModule }` une seule fois au début du test d'intégration (le parser interne vérifie `xml2js.js.parseStringPromise`).
-- Mock JSZip minimal pour tests hors navigateur : fournir `fakeZip.files[path].async('text')`.
+- Mock JSZip minimal pour tests hors navigateur : fournir `fakeZip.files[path].async('text')`.
 - Toujours appeler `reset*ImportStats()` dans `beforeEach()` pour les tests unitaires/integ multi-items.
 
 ## Tests: éviter de modifier le code de production pour faire passer les TU
@@ -125,8 +204,11 @@ Règle d'or: corriger les TU (mocks, fixtures, assertions) plutôt que d'adapter
 - Les mappers exposent `get*ImportStats` et `reset*ImportStats`.
 - Les mappers appellent `reset*ImportStats()` et incrémentent `total`/`rejected` correctement.
 - Les templates Foundry n'utilisent pas de helpers non supportés (multi-arg `lookup`) ni `this.`.
-- Les tests mockent `globalThis.SYSTEM` et `xml2js` si nécessaire et appellent `reset*ImportStats()` en `beforeEach`.
+- Les tests mockent `globalThis.SYSTEM` (avec TOUTES les 35 skills SWERPG si tests de mapping) et `xml2js` si nécessaire et appellent `reset*ImportStats()` en `beforeEach`.
 - Les assertions des TU ne dépendent pas de l'ordre des collections quand l'ordre n'est pas contractuel.
+- Les tables de mapping sont organisées par sections avec commentaires clairs (General/Combat/Knowledge).
+- Les codes ambigus ou synonymes sont documentés inline dans le mapping.
+- Tout nouveau mapping a un test unitaire dédié validant tous les codes supportés.
 
 ## Extension future (caching/streaming)
 

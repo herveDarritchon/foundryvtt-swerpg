@@ -128,6 +128,16 @@ export const SKILLS = {
     category: 'exp',
     characteristics: ['intellect', 'wisdom'],
   },
+  coordination: {
+    id: 'coordination',
+    category: 'exp',
+    characteristics: ['dexterity', 'intellect'],
+  },
+  perception: {
+    id: 'perception',
+    category: 'exp',
+    characteristics: ['intellect', 'wisdom'],
+  },
   stealth: {
     id: 'stealth',
     category: 'exp',
@@ -144,6 +154,11 @@ export const SKILLS = {
     id: 'arcana',
     category: 'kno',
     characteristics: ['intellect', 'presence'],
+  },
+  computers: {
+    id: 'computers',
+    category: 'kno',
+    characteristics: ['intellect', 'wisdom'],
   },
   medicine: {
     id: 'medicine',
@@ -181,6 +196,11 @@ export const SKILLS = {
     id: 'performance',
     category: 'soc',
     characteristics: ['dexterity', 'presence'],
+  },
+  skulduggery: {
+    id: 'skulduggery',
+    category: 'soc',
+    characteristics: ['dexterity', 'intellect'],
   },
 }
 

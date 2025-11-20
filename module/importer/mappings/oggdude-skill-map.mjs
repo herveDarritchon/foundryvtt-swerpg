@@ -4,26 +4,90 @@ import { logger } from '../../utils/logger.mjs'
  * Table de correspondance déterministe entre les codes de compétences OggDude
  * et les identifiants de compétences du système SWERPG.
  * Toutes les clés sont normalisées en upper-case pour lookup.
+ * 
+ * Organisation:
+ * - General Skills: Compétences générales et sociales
+ * - Combat Skills: Compétences de combat
+ * - Knowledge Skills: Compétences de connaissance
+ * 
+ * Notes:
+ * - LTSABER (Lightsaber): Compétence spécifique Force and Destiny non présente dans SKILLS
+ * - WARF (Warfare): Compétence Knowledge non présente dans SKILLS
  */
 export const OGG_DUDE_SKILL_MAP = Object.freeze({
+  // === GENERAL SKILLS ===
+  ASTRO: 'astrogation',
+  ASTROGATION: 'astrogation',
   ATHL: 'athletics',
   ATHLETICS: 'athletics',
-  // Perception dans OggDude correspond à la compétence système 'perception'
-  // (ancien mapping vers 'awareness' corrigé car 'awareness' n'existe pas dans SYSTEM.SKILLS)
-  PERC: 'perception',
-  PERCEPTION: 'perception',
-  DECEP: 'deception',
-  DECEPTION: 'deception',
   CHARM: 'charm',
   CHARMING: 'charm',
+  COERC: 'coercion',
+  COERCION: 'coercion',
+  COMP: 'computers',
+  COMPUTERS: 'computers',
+  COOL: 'cool',
+  COORD: 'coordination',
+  COORDINATION: 'coordination',
+  DECEP: 'deception',
+  DECEPTION: 'deception',
+  DISC: 'discipline',
+  DISCIPLINE: 'discipline',
+  LEAD: 'leadership',
+  LEADERSHIP: 'leadership',
+  MECH: 'mechanics',
+  MECHANICS: 'mechanics',
+  MED: 'medicine',
+  MEDICINE: 'medicine',
+  NEG: 'negotiation',
+  NEGOTIATION: 'negotiation',
+  PERC: 'perception',
+  PERCEPTION: 'perception',
+  PILOTPL: 'pilotingplanetary',
+  PILOTINGPLANETARY: 'pilotingplanetary',
+  PILOTSP: 'pilotingspace',
+  PILOTINGSPACE: 'pilotingspace',
+  RESIL: 'resilience',
+  RESILIENCE: 'resilience',
+  SKUL: 'skulduggery',
+  SKULDUGGERY: 'skulduggery',
   STEA: 'stealth',
+  STEAL: 'stealth',
   STEALTH: 'stealth',
+  SW: 'streetwise',
+  STREETWISE: 'streetwise',
+  SURV: 'survival',
+  SURVIVAL: 'survival',
+  VIGIL: 'vigilance',
+  VIGILANCE: 'vigilance',
+
+  // === COMBAT SKILLS ===
+  BRAWL: 'brawl',
+  GUNN: 'gunnery',
+  GUNNERY: 'gunnery',
+  MELEE: 'melee',
+  RANGHVY: 'rangedheavy',
+  RANGEDHEAVY: 'rangedheavy',
+  RANGLT: 'rangedlight',
+  RANGEDLIGHT: 'rangedlight',
+
+  // === KNOWLEDGE SKILLS ===
+  CORE: 'coreworlds',
+  COREWORLDS: 'coreworlds',
+  EDU: 'education',
+  EDUCATION: 'education',
+  LORE: 'lore',
+  OUT: 'outerrim',
+  OUTERRIM: 'outerrim',
+  XEN: 'xenology',
+  XENOLOGY: 'xenology',
+
+  // === DEPRECATED/LEGACY MAPPINGS (kept for backward compatibility) ===
   WILD: 'wilderness',
   WILDERNESS: 'wilderness',
   ARCA: 'arcana',
   ARCANA: 'arcana',
   MEDI: 'medicine',
-  MEDICINE: 'medicine',
   SCI: 'science',
   SCIENCE: 'science',
   SOCI: 'society',
@@ -34,7 +98,6 @@ export const OGG_DUDE_SKILL_MAP = Object.freeze({
   INTIMIDATION: 'intimidation',
   PERFO: 'performance',
   PERFORMANCE: 'performance',
-  EDU: 'science', // Education assimilé à science générale
 })
 
 /**
