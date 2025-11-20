@@ -6,6 +6,7 @@ import { buildSpeciesContext } from './items/species-ogg-dude.mjs'
 import { buildCareerContext } from './items/career-ogg-dude.mjs'
 import { buildTalentContext } from './items/talent-ogg-dude.mjs'
 import { buildObligationContext } from './items/obligation-ogg-dude.mjs'
+import { buildSpecializationContext } from './items/specialization-ogg-dude.mjs'
 import { logger } from '../utils/logger.mjs'
 import { withRetry } from './utils/retry.mjs'
 import { markGlobalStart, markGlobalEnd, markArchiveSize, recordDomainStart, recordDomainEnd } from './utils/global-import-metrics.mjs'
@@ -240,6 +241,7 @@ export default class OggDudeImporter {
     buildContextMap.set('career', { type: 'career', contextBuilder: buildCareerContext })
     buildContextMap.set('talent', { type: 'talent', contextBuilder: buildTalentContext })
     buildContextMap.set('obligation', { type: 'obligation', contextBuilder: buildObligationContext })
+    buildContextMap.set('specialization', { type: 'specialization', contextBuilder: buildSpecializationContext })
 
     const domainsToImport = new Set(domains.filter((d) => d.checked).map((d) => d.id))
     const contextEntries = Array.from(buildContextMap.values()).filter((e) => domainsToImport.has(e.type))

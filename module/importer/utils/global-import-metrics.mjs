@@ -8,6 +8,7 @@ import { getSpeciesImportStats } from './species-import-utils.mjs'
 import { getCareerImportStats } from './career-import-utils.mjs'
 import { getTalentImportStats } from './talent-import-utils.mjs'
 import { getObligationImportStats } from './obligation-import-utils.mjs'
+import { getSpecializationImportStats } from './specialization-import-utils.mjs'
 
 // Runtime metrics (durations, sizes) – kept internal and exposed via aggregate function
 const _runtime = {
@@ -71,9 +72,10 @@ export function getAllImportStats() {
   const career = safeCall(getCareerImportStats)
   const talent = safeCall(getTalentImportStats)
   const obligation = safeCall(getObligationImportStats)
+  const specialization = safeCall(getSpecializationImportStats)
 
-  const totalProcessed = armor.total + weapon.total + gear.total + species.total + career.total + talent.total + obligation.total
-  const totalRejected = armor.rejected + weapon.rejected + gear.rejected + species.rejected + career.rejected + talent.rejected + obligation.rejected
+  const totalProcessed = armor.total + weapon.total + gear.total + species.total + career.total + talent.total + obligation.total + specialization.total
+  const totalRejected = armor.rejected + weapon.rejected + gear.rejected + species.rejected + career.rejected + talent.rejected + obligation.rejected + specialization.rejected
   const totalImported = totalProcessed - totalRejected
 
   return {
@@ -84,6 +86,7 @@ export function getAllImportStats() {
     career,
     talent,
     obligation,
+    specialization,
     totalProcessed,
     totalRejected,
     totalImported,

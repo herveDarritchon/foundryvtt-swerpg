@@ -199,6 +199,163 @@ Quelques patterns récurrents rencontrés pendant le debugging des TU :
 
 Règle d'or: corriger les TU (mocks, fixtures, assertions) plutôt que d'adapter la logique métier uniquement pour faire passer un test. Les exceptions doivent être discutées et documentées.
 
+## Pattern Nouveau Domaine d'Import — Extraction & Réutilisation
+
+Lors de l'ajout d'un nouveau type d'item OggDude (ex: Specialization après Career), suivre une approche systématique d'extraction pour maximiser la réutilisabilité et éviter la duplication.
+
+### Identification des utilitaires génériques
+
+Analyser le mapper existant le plus proche (ex: `career-ogg-dude.mjs` pour `specialization-ogg-dude.mjs`) et identifier les fonctions réutilisables :
+
+- **Conversion markup** : `convertMarkupToHtml()` transforme les tokens OggDude `[H4]`, `[B]`, `[I]` en HTML
+- **Construction description** : `buildDescription()` orchestre la conversion avec sanitization
+- **Normalisation valeurs** : `normalizeFreeSkillRank()` borne les valeurs numériques (0-8)
+- **Résolution champs variants** : `resolveSource()` gère les variations XML (`Source` vs `Sources`)
+- **Échappement sécurisé** : `escapeHtmlSafe()` prévient les injections XSS
+
+Créer un fichier utilitaire partagé (`description-markup-utils.mjs`) pour héberger ces fonctions génériques.
+
+### Structure du module utilitaire
+
+```js
+// module/importer/utils/description-markup-utils.mjs
+import { sanitizeDescription } from './text.mjs'
+
+export function normalizeFreeSkillRank(value) {
+  const num = parseInt(value, 10)
+  if (Number.isNaN(num)) return 0
+  return Math.max(0, Math.min(8, num))
+}
+
+export function resolveSource(xmlObject) {
+  return xmlObject.Source ?? xmlObject.Sources ?? 'Unknown'
+}
+
+export function buildDescription(xmlObject) {
+  const raw = xmlObject.Description || ''
+  const html = convertMarkupToHtml(raw)
+  return sanitizeDescription(html)
+}
+
+// ... autres fonctions
+```
+
+### Adaptation du module stats
+
+Créer un fichier de stats dédié (`*-import-utils.mjs`) suivant le pattern établi :
+
+```js
+// module/importer/utils/specialization-import-utils.mjs
+const stats = {
+  total: 0,
+  rejected: 0,
+  unknownSkills: new Set(), // Set pour déduplication automatique
+  // ... autres compteurs
+}
+
+export function resetSpecializationImportStats() {
+  stats.total = 0
+  stats.rejected = 0
+  stats.unknownSkills.clear()
+}
+
+export function getSpecializationImportStats() {
+  return {
+    total: stats.total,
+    rejected: stats.rejected,
+    imported: stats.total - stats.rejected,
+    unknownSkills: Array.from(stats.unknownSkills),
+  }
+}
+```
+
+**Pattern clé** : utiliser `Set` pour les collections d'items inconnus (skills, qualities) évite les logs dupliqués et simplifie la déduplication.
+
+### Gestion des variantes XML
+
+OggDude peut produire des structures XML légèrement différentes selon les versions. Implémenter des extracteurs tolérants :
+
+```js
+export function extractRawSpecializationSkillCodes(xmlSpecialization) {
+  const careerSkills = xmlSpecialization.CareerSkills
+  if (!careerSkills) return []
+  
+  // Supporter 2 formats XML :
+  // Format 1: <CareerSkills><Key>CODE</Key>...</CareerSkills>
+  if (Array.isArray(careerSkills.Key)) {
+    return careerSkills.Key
+  }
+  
+  // Format 2: <CareerSkills><CareerSkill><Key>CODE</Key></CareerSkill>...</CareerSkills>
+  if (Array.isArray(careerSkills.CareerSkill)) {
+    return careerSkills.CareerSkill.map(cs => cs.Key).filter(Boolean)
+  }
+  
+  return []
+}
+```
+
+### Contraintes de données et validation
+
+Appliquer les contraintes métier strictement dans le mapper :
+
+- **Troncature** : limiter arrays à la taille max (ex: 8 skills max)
+- **Déduplication** : préserver l'ordre, supprimer doublons via `Set` intermédiaire
+- **Mode strict** : ajouter option `{strict: true}` pour valider contre `SYSTEM.SKILLS`
+- **Logging throttling** : tracker les codes inconnus dans un `Set` pour éviter spam logs
+
+```js
+export function mapSpecializationSkills(rawCodes, {strict = false} = {}) {
+  const mapped = mapOggDudeSkillCodes(rawCodes)
+  
+  if (strict) {
+    // Validation contre SYSTEM.SKILLS
+    const validated = mapped.filter(code => {
+      if (!SYSTEM.SKILLS[code]) {
+        addSpecializationUnknownSkill(code) // Set-based, pas de dups
+        return false
+      }
+      return true
+    })
+  }
+  
+  // Déduplication avec préservation d'ordre
+  const unique = [...new Set(mapped)]
+  
+  // Troncature à 8
+  return unique.slice(0, 8)
+}
+```
+
+### Enregistrement du domaine
+
+Pour intégrer le nouveau domaine dans le flux d'import, effectuer 4 modifications :
+
+1. **Importer le context builder** dans `module/importer/oggDude.mjs`
+2. **Enregistrer dans les 2 Maps** : `processOggDudeData()` et `preloadOggDudeData()`
+3. **Ajouter au tableau des domaines** : `module/settings/OggDudeDataImporter.mjs` → `_domainNames`
+4. **Intégrer aux métriques globales** : `module/importer/utils/global-import-metrics.mjs` → `getAllImportStats()`
+5. **Localisation** : ajouter clés dans `lang/en.json` et `lang/fr.json`
+
+### Tests — Structure minimale
+
+Pour un nouveau domaine, créer au minimum :
+
+- `*-import-utils.spec.mjs` : valider reset/increment/get des stats
+- `*-ogg-dude.spec.mjs` : tester extraction XML, mapping skills, validation stricte
+- Tests d'intégration : vérifier le flux complet avec fixture XML réaliste
+
+Pattern de mock complet pour les tests :
+
+```js
+beforeAll(() => {
+  globalThis.SYSTEM = {
+    SKILLS: { /* 35 compétences complètes */ }
+  }
+  globalThis.xml2js = { js: xml2jsModule }
+})
+```
+
 ## Exemple de checklist rapide avant soumettre une PR sur l'importer
 
 - Les mappers exposent `get*ImportStats` et `reset*ImportStats`.
