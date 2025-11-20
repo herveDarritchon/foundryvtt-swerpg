@@ -10,7 +10,9 @@ import {
   addCareerUnknownSkill,
   getCareerImportStats,
   FLAG_STRICT_CAREER_VALIDATION,
+  addCareerSkillCount,
 } from '../utils/career-import-utils.mjs'
+import { sanitizeDescription } from '../utils/text.mjs'
 
 /**
  * Career Array Mapper : Map the Career XML data to the SwerpgCareer creation objects.
@@ -25,7 +27,9 @@ export function careerMapper(careers, { strictSkills = false } = {}) {
     incrementCareerImportStat('total')
     const name = OggDudeImporter.mapMandatoryString('career.Name', xmlCareer?.Name)
     const key = OggDudeImporter.mapMandatoryString('career.Key', xmlCareer?.Key)
-    const description = OggDudeImporter.mapOptionalString(xmlCareer?.Description)
+    const rawDescription = OggDudeImporter.mapOptionalString(xmlCareer?.Description)
+    const sourceInfo = resolveCareerSource(xmlCareer)
+    const description = buildCareerDescription(rawDescription, sourceInfo)
     const freeSkillRank = normalizeFreeSkillRank(xmlCareer?.FreeRanks)
 
     // Raw skill codes extraction (structure may be array or object); we accept either xmlCareer.CareerSkills?.CareerSkill?.Key or direct array
@@ -41,7 +45,21 @@ export function careerMapper(careers, { strictSkills = false } = {}) {
       strictSkills,
       rawSkillCount: rawCareerSkills.length,
       ignoredSkillCodes: rawCareerSkills.filter((c) => !mapOggDudeSkillCode(c, { warnOnUnknown: false })),
+      sourceName: sourceInfo.name,
+      sourcePage: sourceInfo.page,
     })
+
+    addCareerSkillCount(careerSkills.length)
+
+    const swerpgFlags = {
+      oggdudeKey: key,
+    }
+    if (sourceInfo.name) {
+      swerpgFlags.oggdudeSource = sourceInfo.name
+    }
+    if (typeof sourceInfo.page === 'number') {
+      swerpgFlags.oggdudeSourcePage = sourceInfo.page
+    }
 
     const careerObject = {
       name,
@@ -53,7 +71,7 @@ export function careerMapper(careers, { strictSkills = false } = {}) {
       },
       // conserver la clé d'origine comme flag interne éventuel
       flags: {
-        swerpg: { oggdudeKey: key },
+        swerpg: swerpgFlags,
       },
     }
 
@@ -61,6 +79,13 @@ export function careerMapper(careers, { strictSkills = false } = {}) {
     const unknown = rawCareerSkills.filter((c) => !mapOggDudeSkillCode(c, { warnOnUnknown: false }))
     for (const code of unknown) {
       addCareerUnknownSkill(code)
+    }
+    if (unknown.length > 0) {
+      logger.warn('[CareerImporter] Unknown career skill codes detected', {
+        key,
+        name,
+        unknown,
+      })
     }
 
     // Mode strict: pourrait rejeter la carrière si unknown skills détectés (placeholder)
@@ -90,6 +115,7 @@ function normalizeFreeSkillRank(raw) {
 /**
  * Extrait la liste des codes bruts de compétences carrière depuis la structure XML.
  * Supporte plusieurs formes selon variations possibles.
+ * Filtre les types non-string et gère les objets orphelins (REQ-001).
  * @param {object} xmlCareer
  * @returns {string[]} raw codes
  */
@@ -98,13 +124,30 @@ function extractRawCareerSkillCodes(xmlCareer) {
   // Possible nested structure CareerSkills.CareerSkill
   const cs = xmlCareer.CareerSkills
   if (!cs) return []
-  // If already array of strings
-  if (Array.isArray(cs)) return cs.filter((c) => typeof c === 'string')
-  // If object with CareerSkill list
-  const list = cs.CareerSkill || cs.Skill || cs.Skills || cs
+  
+  // If already array
+  if (Array.isArray(cs)) {
+    return cs
+      .map((c) => {
+        if (typeof c === 'string') return c
+        if (typeof c === 'object' && c?.Key && typeof c.Key === 'string') return c.Key
+        return null
+      })
+      .filter((c) => typeof c === 'string' && c.length > 0)
+  }
+  
+  // If object with CareerSkill/Skill/Skills list
+  const list = cs.CareerSkill || cs.Skill || cs.Skills || cs.Key
   if (!list) return []
+  
   const arr = Array.isArray(list) ? list : [list]
-  return arr.map((e) => (typeof e === 'string' ? e : e?.Key)).filter(Boolean)
+  return arr
+    .map((e) => {
+      if (typeof e === 'string') return e
+      if (typeof e === 'object' && e?.Key && typeof e.Key === 'string') return e.Key
+      return null
+    })
+    .filter((c) => typeof c === 'string' && c.length > 0)
 }
 
 /**
@@ -112,7 +155,8 @@ function extractRawCareerSkillCodes(xmlCareer) {
  * - mapping via table globale
  * - exclusion des inconnus (log.warn dans mapOggDudeSkillCode déjà)
  * - déduplication & validation par rapport à SYSTEM.SKILLS
- * - tronquage à 8 entrées
+ * - tronquage à 8 entrées (REQ-002, REQ-003)
+ * - logging des codes inconnus (REQ-008)
  * @param {string[]} rawCodes
  * @returns {{id:string}[]}
  */
@@ -130,7 +174,7 @@ export function mapCareerSkills(rawCodes = [], { strict = false } = {}) {
   // optional strict mode: retain only ids that exist in skillsRegistry
   const validated = strict ? mappedIds.filter((id) => !!skillsRegistry[id]) : mappedIds
 
-  // deduplicate preserving order
+  // deduplicate preserving order (REQ-002)
   const seen = new Set()
   const unique = []
   for (const id of validated) {
@@ -139,7 +183,7 @@ export function mapCareerSkills(rawCodes = [], { strict = false } = {}) {
     unique.push(id)
   }
 
-  // truncate to 8
+  // truncate to 8 (REQ-003)
   const truncated = unique.slice(0, 8)
 
   // final filtering: no falsy id objects to respect DataModel schema
@@ -152,7 +196,176 @@ export function mapCareerSkills(rawCodes = [], { strict = false } = {}) {
     })
   }
 
+  // Log unknown codes for observability (REQ-008)
+  const unknownCodes = rawCodes.filter((code) => !mapOggDudeSkillCode(code, { warnOnUnknown: false }))
+  if (unknownCodes.length > 0) {
+    logger.warn('[CareerImporter] Unknown skill codes ignored during mapping', {
+      unknownCodes,
+      rawCount: rawCodes.length,
+      mappedCount: result.length,
+    })
+  }
+
   return result
+}
+
+function resolveCareerSource(xmlCareer) {
+  if (!xmlCareer) return { name: '', page: null }
+
+  const directSource = xmlCareer.Source ?? xmlCareer.source
+  if (directSource) {
+    return extractCareerSourceEntry(directSource)
+  }
+
+  const multipleSources = xmlCareer.Sources?.Source ?? xmlCareer.sources?.Source ?? xmlCareer.Sources?.source
+  if (Array.isArray(multipleSources)) {
+    for (const entry of multipleSources) {
+      const resolved = extractCareerSourceEntry(entry)
+      if (resolved.name) return resolved
+    }
+  } else if (multipleSources) {
+    const resolved = extractCareerSourceEntry(multipleSources)
+    if (resolved.name) return resolved
+  }
+
+  return { name: '', page: null }
+}
+
+function extractCareerSourceEntry(entry) {
+  if (!entry) return { name: '', page: null }
+
+  if (typeof entry === 'string') {
+    const name = sanitizeDescription(entry, 256, { preserveLineBreaks: false })
+    return { name, page: null }
+  }
+
+  if (typeof entry === 'object') {
+    const rawName = entry._ ?? entry.name ?? entry.Name ?? entry.label ?? ''
+    const sanitizedName = sanitizeDescription(rawName, 256, { preserveLineBreaks: false })
+    const pageCandidate = entry?.$?.Page ?? entry?.$?.page ?? entry?.page ?? entry?.Page ?? null
+    const parsedPage = Number.parseInt(pageCandidate, 10)
+    const page = Number.isFinite(parsedPage) && parsedPage > 0 ? parsedPage : null
+    return { name: sanitizedName, page }
+  }
+
+  return { name: '', page: null }
+}
+
+function buildCareerDescription(rawDescription, sourceInfo) {
+  const markupHtml = convertCareerMarkupToHtml(rawDescription)
+  const sections = markupHtml
+    .split(/\n{2,}/)
+    .map((section) => section.trim())
+    .filter(Boolean)
+
+  const htmlSections = sections.map((section) => {
+    const lower = section.toLowerCase()
+    if (lower.startsWith('<h1') || lower.startsWith('<h2') || lower.startsWith('<h3') || lower.startsWith('<h4') || lower.startsWith('<h5') || lower.startsWith('<h6')) {
+      return section
+    }
+    if (lower.startsWith('<ul') || lower.startsWith('<ol') || lower.startsWith('<li') || lower.startsWith('<p') || lower.startsWith('<hr')) {
+      return section
+    }
+    const withLineBreaks = section.replace(/\n/g, '<br />')
+    return `<p>${withLineBreaks}</p>`
+  })
+
+  const withSource = appendSourceSection(htmlSections, sourceInfo)
+  const html = withSource.join('\n').trim()
+  if (!html) return ''
+  return sanitizeDescription(html, 2000, { preserveLineBreaks: true })
+}
+
+function appendSourceSection(sections, sourceInfo) {
+  if (!sourceInfo?.name) {
+    return sections
+  }
+
+  const escapedName = escapeHtmlSafe(sourceInfo.name)
+  const escapedPage = typeof sourceInfo.page === 'number' ? escapeHtmlSafe(String(sourceInfo.page)) : null
+  const pageSuffix = escapedPage ? `, p.${escapedPage}` : ''
+  return [...sections, `<p><strong>Source:</strong> ${escapedName}${pageSuffix}</p>`]
+}
+
+function convertCareerMarkupToHtml(description) {
+  if (!description) {
+    return ''
+  }
+
+  let result = String(description).replace(/\r\n/g, '\n')
+
+  for (let level = 1; level <= 6; level += 1) {
+    const open = new RegExp(`\\[H${level}\\]`, 'g')
+    const closeLower = new RegExp(`\\[h${level}\\]`, 'g')
+    const closeUpper = new RegExp(`\\[/H${level}\\]`, 'g')
+    const closeExplicit = new RegExp(`\\[/h${level}\\]`, 'g')
+    result = result.replace(open, `<h${level}>`)
+    result = result.replace(closeLower, `</h${level}>`)
+    result = result.replace(closeUpper, `</h${level}>`)
+    result = result.replace(closeExplicit, `</h${level}>`)
+  }
+
+  const replacements = [
+    { regex: /\[B\]/g, replacement: '<strong>' },
+    { regex: /\[b\]/g, replacement: '<strong>' },
+    { regex: /\[\/B\]/g, replacement: '</strong>' },
+    { regex: /\[\/b\]/g, replacement: '</strong>' },
+    { regex: /\[I\]/g, replacement: '<em>' },
+    { regex: /\[i\]/g, replacement: '<em>' },
+    { regex: /\[\/I\]/g, replacement: '</em>' },
+    { regex: /\[\/i\]/g, replacement: '</em>' },
+    { regex: /\[U\]/g, replacement: '<u>' },
+    { regex: /\[u\]/g, replacement: '<u>' },
+    { regex: /\[\/U\]/g, replacement: '</u>' },
+    { regex: /\[\/u\]/g, replacement: '</u>' },
+    { regex: /\[(?:BR|br)\]/g, replacement: '<br />' },
+    { regex: /\[(?:HR|hr)\]/g, replacement: '<hr />' },
+    { regex: /\[P\]/g, replacement: '<p>' },
+    { regex: /\[p\]/g, replacement: '<p>' },
+    { regex: /\[\/P\]/g, replacement: '</p>' },
+    { regex: /\[\/p\]/g, replacement: '</p>' },
+    { regex: /\[UL\]/gi, replacement: '<ul>' },
+    { regex: /\[\/UL\]/gi, replacement: '</ul>' },
+    { regex: /\[OL\]/gi, replacement: '<ol>' },
+    { regex: /\[\/OL\]/gi, replacement: '</ol>' },
+    { regex: /\[LI\]/gi, replacement: '<li>' },
+    { regex: /\[\/LI\]/gi, replacement: '</li>' },
+  ]
+
+  for (const { regex, replacement } of replacements) {
+    result = result.replace(regex, replacement)
+  }
+
+  result = result.replace(/\[(?:CENTER|LEFT|RIGHT)\]/gi, '')
+  result = result.replace(/\[\/(?:CENTER|LEFT|RIGHT)\]/gi, '')
+  result = result.replace(/\[COLOR=.*?\]/gi, '')
+  result = result.replace(/\[\/COLOR\]/gi, '')
+
+  result = result.replace(/<\/h([1-6])>/g, '</h$1>\n\n')
+  result = result.replace(/<h([1-6])>([^<]*?)\s+<\/h([1-6])>/g, (match, level, content, closingLevel) => {
+    if (level !== closingLevel) return match
+    return `<h${level}>${content.trimEnd()}</h${level}>`
+  })
+
+  // Nettoyer les balises restantes non reconnues
+  result = result.replace(/\[[^\[\]]+\]/g, '')
+
+  return result
+}
+
+function escapeHtmlSafe(value) {
+  const text = String(value ?? '')
+  if (typeof foundry !== 'undefined' && foundry?.utils?.escapeHTML) {
+    return foundry.utils.escapeHTML(text)
+  }
+  const map = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;',
+  }
+  return text.replace(/[&<>"']/g, (char) => map[char] || char)
 }
 
 /**

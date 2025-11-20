@@ -500,7 +500,8 @@
     "SHEET": {
       "CHOOSE": "Choose Career",
       "CareerSkills": {
-        "maxNumber": "Number of Career Skills maximum to pick"
+        "maxNumber": "Number of Career Skills maximum to pick",
+        "maxReached": "Maximum of 8 career skills reached. Please remove a skill before adding a new one."
       }
     }
   },
