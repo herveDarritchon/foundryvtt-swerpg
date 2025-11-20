@@ -604,6 +604,23 @@
       "TALENT_TIER": "Backgrounds may only offer Tier 0 starting Talents."
     }
   },
+  "CAREER": {
+    "FIELDS": {
+      "FreeSkill": "Compétence gratuite",
+      "FreeSkillRank": {
+        "label": "Rang(s) gratuit(s)",
+        "hint": "Sélectionnez le nombre de rangs gratuits de la carrière."
+      },
+      "Skills": "Compétences de carrière"
+    },
+    "SHEET": {
+      "CHOOSE": "Choisir une carrière",
+      "CareerSkills": {
+        "maxNumber": "Nombre maximum de compétences de carrière à choisir",
+        "maxReached": "Maximum de 8 compétences de carrière atteint. Veuillez retirer une compétence avant d'en ajouter une nouvelle."
+      }
+    }
+  },
   "COMBAT.WarningCannotChangeRound": "Only a Gamemaster user may change the Combat round.",
   "DAMAGE.Damage": "Damage",
   "DAMAGE.Restoration": "Restoration",
@@ -805,6 +822,40 @@
     "RollTitle": "[{name}] {skill} Skill Check",
     "TooltipCheck": "[({a1} + {a2}) / 4] + Bonus + Enchantment",
     "TooltipPassive": "12 + Score"
+  },
+  "SKILLS": {
+    "Athletics": "Athlétisme",
+    "AthleticsAbbr": "Ath",
+    "Awareness": "Vigilance",
+    "AwarenessAbbr": "Vig",
+    "Coordination": "Coordination",
+    "CoordinationAbbr": "Coo",
+    "Perception": "Perception",
+    "PerceptionAbbr": "Per",
+    "Stealth": "Discrétion",
+    "StealthAbbr": "Dis",
+    "Wilderness": "Survie",
+    "WildernessAbbr": "Sur",
+    "Arcana": "Arcane",
+    "ArcanaAbbr": "Arc",
+    "Computers": "Informatique",
+    "ComputersAbbr": "Inf",
+    "Medicine": "Médecine",
+    "MedicineAbbr": "Med",
+    "Science": "Science",
+    "ScienceAbbr": "Sci",
+    "Society": "Société",
+    "SocietyAbbr": "Soc",
+    "Deception": "Tromperie",
+    "DeceptionAbbr": "Tro",
+    "Diplomacy": "Diplomatie",
+    "DiplomacyAbbr": "Dip",
+    "Intimidation": "Intimidation",
+    "IntimidationAbbr": "Int",
+    "Performance": "Représentation",
+    "PerformanceAbbr": "Rep",
+    "Skulduggery": "Escroquerie",
+    "SkulduggeryAbbr": "Esc"
   },
   "SPELL": {
     "FIELDS": {

@@ -3,14 +3,19 @@ import fs from 'node:fs'
 import path from 'node:path'
 
 // Inject SYSTEM mock early
-// Mock complet pour intégration (arcana incluse)
+// Mock complet pour intégration (arcana incluse + nouvelles compétences)
 globalThis.SYSTEM = {
   SKILLS: {
     athletics: { id: 'athletics' },
+    awareness: { id: 'awareness' },
+    coordination: { id: 'coordination' },
     perception: { id: 'perception' },
     deception: { id: 'deception' },
     science: { id: 'science' },
+    stealth: { id: 'stealth' },
     arcana: { id: 'arcana' },
+    computers: { id: 'computers' },
+    skulduggery: { id: 'skulduggery' },
   },
 }
 
