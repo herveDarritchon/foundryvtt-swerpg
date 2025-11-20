@@ -52,7 +52,8 @@
           "species": "Charger les espèces",
           "weapon": "Charger les armes",
           "talent": "Charger les talents",
-          "obligation": "Charger les obligations"
+          "obligation": "Charger les obligations",
+          "specialization": "Charger les spécialisations"
         },
         "stats": {
           "title": "Statistiques d'import",
