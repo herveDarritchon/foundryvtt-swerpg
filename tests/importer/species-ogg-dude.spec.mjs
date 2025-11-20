@@ -23,7 +23,7 @@ describe('OggDude skill mapping', () => {
     expect(mapOggDudeSkillCode('ATHL')).toBe('athletics')
     expect(mapOggDudeSkillCode('perc')).toBe('perception')
     expect(mapOggDudeSkillCode('DECEP')).toBe('deception')
-    expect(mapOggDudeSkillCode('EDU')).toBe('science')
+    expect(mapOggDudeSkillCode('EDU')).toBe('education')
   })
   it('ignore code inconnu et renvoie null', () => {
     expect(mapOggDudeSkillCode('UNKNOWN', { warnOnUnknown: false })).toBeNull()

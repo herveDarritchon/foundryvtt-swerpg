@@ -4,9 +4,12 @@ import { describe, it, expect } from 'vitest'
 globalThis.SYSTEM = {
   SKILLS: {
     athletics: { id: 'athletics' },
+    computers: { id: 'computers' },
+    coordination: { id: 'coordination' },
     perception: { id: 'perception' },
     deception: { id: 'deception' },
     science: { id: 'science' },
+    skulduggery: { id: 'skulduggery' },
   },
 }
 
@@ -17,9 +20,9 @@ import { mapCareerSkills, careerMapper } from '../../module/importer/items/caree
  */
 describe('mapCareerSkills strict mode', () => {
   it('filtre uniquement les skills présents dans SYSTEM.SKILLS en mode strict', () => {
-    const raw = ['ATHL', 'PERC', 'DECEP', 'SCI', 'ARCANA', 'UNKNOWN', '']
+    const raw = ['ATHL', 'PERC', 'DECEP', 'SCI', 'COMP', 'SKUL', 'ARCANA', 'UNKNOWN', '']
     const result = mapCareerSkills(raw, { strict: true })
-    expect(result).toEqual([{ id: 'athletics' }, { id: 'perception' }, { id: 'deception' }, { id: 'science' }])
+    expect(result).toEqual([{ id: 'athletics' }, { id: 'perception' }, { id: 'deception' }, { id: 'science' }, { id: 'computers' }, { id: 'skulduggery' }])
   })
   it('mode non strict conserve les ids mappés connus hors SYSTEM.SKILLS', () => {
     const raw = ['ATHL', 'ARCANA', 'PERC']

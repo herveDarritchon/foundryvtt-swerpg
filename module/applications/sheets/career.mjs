@@ -44,14 +44,19 @@ export default class CareerSheet extends SwerpgBaseItemSheet {
    * @returns {*[]} The prepared career skills
    */
   #prepareCareerSkills(context) {
-    const careerSkillIds = context.source.system.careerSkills.map((skill) => skill.id)
+    const careerSkillIds = new Set(context.source.system.careerSkills.map((skill) => skill.id))
     const skills = Object.keys(SYSTEM.SKILLS)
     return skills
       .map((skillId) => {
         const skill = SYSTEM.SKILLS[skillId]
-        let isActive = careerSkillIds.includes(skillId)
+        let isActive = careerSkillIds.has(skillId)
         skill.isActive = isActive
         skill.extraCss = isActive ? 'active' : 'inactive'
+        // Add a11y attributes (REQ-013)
+        skill.ariaSelected = isActive ? 'true' : 'false'
+        skill.tabindex = '0'
+        // Add data-code for voice access and debugging (REQ-013)
+        skill.dataCode = skillId
         return skill
       })
       .sort((a, b) => a.label.localeCompare(b.label))
@@ -68,23 +73,31 @@ export default class CareerSheet extends SwerpgBaseItemSheet {
     let careerElement = event.target.closest('.career')
     const skillId = careerElement.dataset.actionId
     const skillState = careerElement.dataset.actionIsActive === 'true'
-    if (!skillState) {
-      await CareerSheet.addCareerSkill(this.document, skillId)
-    } else {
+    if (skillState) {
       await CareerSheet.removeCareerSkill(this.document, skillId)
+    } else {
+      await CareerSheet.addCareerSkill(this.document, skillId)
     }
   }
 
   /* -------------------------------------------- */
   /**
    * Add a skill to the career skill list.
+   * Blocks addition if 8 skills already selected (REQ-006, REQ-023).
    * @param document {SwerpgItem} The document to toggle the skill on
    * @param skillId {string} The skill id to toggle
    * @returns {Promise<void>} A promise that resolves when the skill has been added
    */
   static async addCareerSkill(document, skillId) {
+    // Check limit before adding (REQ-006)
+    if (document.system.careerSkills.length >= 8) {
+      ui.notifications.warn(game.i18n.localize('CAREER.SHEET.CareerSkills.maxReached'))
+      return
+    }
     const skillSet = new Set()
-    document.system.careerSkills.forEach((skill) => skillSet.add({ id: skill.id }))
+    for (const skill of document.system.careerSkills) {
+      skillSet.add({ id: skill.id })
+    }
     skillSet.add({ id: skillId })
     await document.update({ 'system.careerSkills': skillSet })
   }
@@ -99,11 +112,11 @@ export default class CareerSheet extends SwerpgBaseItemSheet {
    */
   static async removeCareerSkill(document, skillId) {
     const skillSet = new Set()
-    document.system.careerSkills.forEach((skill) => {
+    for (const skill of document.system.careerSkills) {
       if (skill.id !== skillId) {
         skillSet.add({ id: skill.id })
       }
-    })
+    }
     await document.update({ 'system.careerSkills': skillSet })
   }
 

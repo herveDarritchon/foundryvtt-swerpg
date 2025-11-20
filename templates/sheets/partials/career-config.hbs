@@ -9,9 +9,13 @@
     <legend>{{localize "CAREER.FIELDS.Skills"}} ({{selectedSkills}})</legend>
     <div class="careers">
       {{#each careerSkills as |skill|}}
-        <p class="career {{skill.extraCss}}" data-action="toggleCareer" data-action-id="{{skill.id}}" data-action-is-active="{{skill.isActive}}">{{localize
-            skill.label
-          }}</p>
+        <p class="career {{skill.extraCss}}" 
+           role="button" 
+           tabindex="{{skill.tabindex}}" 
+           aria-selected="{{skill.ariaSelected}}" 
+           data-action="toggleCareer" 
+           data-action-id="{{skill.id}}" 
+           data-action-is-active="{{skill.isActive}}">{{localize skill.label}}</p>
       {{/each}}
     </div>
     <p class="message hint">{{localize "CAREER.SHEET.CareerSkills.maxNumber"}}</p>
