@@ -47,6 +47,7 @@
         "importToCompendium": "Importer dans un Compendium",
         "importToCompendiumHint": "Si coché, les objets seront importés dans un Compendium au lieu des objets du monde.",
         "selectDomains": "Sélectionnez les domaines à importer",
+        "selectAllDomains": "Tout sélectionner",
         "domains": {
           "armor": "Charger les armures",
           "career": "Charger les carrières",

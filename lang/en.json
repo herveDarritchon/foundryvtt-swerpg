@@ -751,6 +751,7 @@
         "importToCompendium": "Import to Compendium",
         "importToCompendiumHint": "If checked, items will be imported into a Compendium instead of the World Items.",
         "selectDomains": "Select the domains you want to import",
+        "selectAllDomains": "Select All",
         "domains": {
           "armor": "Load Armor data",
           "career": "Load Career data",
