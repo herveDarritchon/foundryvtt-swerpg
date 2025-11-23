@@ -44,6 +44,8 @@
         "selectFile": "Fichier Zip OggDude",
         "load": "Charger",
         "reset": "Réinitialiser",
+        "importToCompendium": "Importer dans un Compendium",
+        "importToCompendiumHint": "Si coché, les objets seront importés dans un Compendium au lieu des objets du monde.",
         "selectDomains": "Sélectionnez les domaines à importer",
         "domains": {
           "armor": "Charger les armures",

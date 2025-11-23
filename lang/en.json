@@ -748,6 +748,8 @@
         "selectFile": "OggDude Zip Data File",
         "load": "Load",
         "reset": "Reset",
+        "importToCompendium": "Import to Compendium",
+        "importToCompendiumHint": "If checked, items will be imported into a Compendium instead of the World Items.",
         "selectDomains": "Select the domains you want to import",
         "domains": {
           "armor": "Load Armor data",
