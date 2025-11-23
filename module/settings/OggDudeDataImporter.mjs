@@ -95,6 +95,7 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
       toggleMetricsAction: OggDudeDataImporter.toggleMetricsAction,
       togglePreviewAction: OggDudeDataImporter.togglePreviewAction,
       toggleImportToCompendiumAction: OggDudeDataImporter.toggleImportToCompendiumAction,
+      toggleAllDomainsAction: OggDudeDataImporter.toggleAllDomainsAction,
     },
     footer: {
       template: 'templates/generic/form-footer.hbs',
@@ -160,6 +161,7 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
 
     return {
       domains: this.domains,
+      allDomainsChecked: this.domains.every((d) => d.checked) && this.domains.length > 0,
       domainSelectionDisabled: this.noZipFileSelected(),
       loadButtonDisabled: this.noZipFileSelected() || this._noDomainSelected(),
       zipFile: this.zipFile,
@@ -380,6 +382,21 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
    */
   static async toggleImportToCompendiumAction(_event, target) {
     this.importToCompendium = target.checked
+    await this.render()
+  }
+
+  /**
+   * Bascule l'état de tous les domaines.
+   * @this {OggDudeDataImporter}
+   * @param _event {Event}
+   * @param target {HTMLElement}
+   */
+  static async toggleAllDomainsAction(_event, target) {
+    if (this.noZipFileSelected()) return
+    const checked = target.checked
+    this.domains.forEach((domain) => {
+      domain.checked = checked
+    })
     await this.render()
   }
 
