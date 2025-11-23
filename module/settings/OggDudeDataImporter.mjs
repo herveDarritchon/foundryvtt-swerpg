@@ -94,6 +94,7 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
       toggleStatsAction: OggDudeDataImporter.toggleStatsAction,
       toggleMetricsAction: OggDudeDataImporter.toggleMetricsAction,
       togglePreviewAction: OggDudeDataImporter.togglePreviewAction,
+      toggleImportToCompendiumAction: OggDudeDataImporter.toggleImportToCompendiumAction,
     },
     footer: {
       template: 'templates/generic/form-footer.hbs',
@@ -368,6 +369,17 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
    */
   static async togglePreviewAction(_event, _target) {
     this.showPreview = !this.showPreview
+    await this.render()
+  }
+
+  /**
+   * Bascule l'état de l'import vers Compendium.
+   * @this {OggDudeDataImporter}
+   * @param _event {Event}
+   * @param target {HTMLElement}
+   */
+  static async toggleImportToCompendiumAction(_event, target) {
+    this.importToCompendium = target.checked
     await this.render()
   }
 
