@@ -416,6 +416,13 @@ class OggDudeDataElement {
    * @name processElements
    */
   static processElements = async (context) => {
+    logger.info('[OggDudeDataElement] processElements START', {
+      hasJsonData: !!context?.jsonData,
+      jsonDataLength: context?.jsonData?.length || 0,
+      hasMapper: typeof context?.element?.mapper === 'function',
+      elementType: context?.element?.type
+    })
+
     logger.debug('[OggDudeDataElement] ProcessElements - Step Initial', { context })
 
     // Step 4: Create the folder
@@ -430,13 +437,25 @@ class OggDudeDataElement {
     await OggDudeDataElement._uploadImagesOnTheServer(context.image, context.zip.content)
     logger.debug('[OggDudeDataElement] ProcessElements - Step 5-2 Images uploaded')
 
-    // Step 6-4 : Create the Items
+    // Step 6-4 : Create the Items - APPEL AU MAPPER
     const items = OggDudeDataElement._buildItemElements(context.jsonData, context.element.mapper)
+
+    logger.info('[OggDudeDataElement] APRÈS MAPPING', {
+      itemsCount: items?.length || 0,
+      elementType: context?.element?.type,
+      jsonDataInputLength: context?.jsonData?.length || 0
+    })
+
     logger.debug('[OggDudeDataElement] ProcessElements - Step 6-4 Items', { items })
 
     // Step 6-5: Store the Items in the server database
     await OggDudeDataElement._storeItems(items, folder, context.element.type, context.image.worldPath, context.image.systemPath, context.image.prefix)
     logger.debug('[OggDudeDataElement] ProcessElements - Step 6-5 Items stored')
+
+    logger.info('[OggDudeDataElement] processElements END', {
+      itemsCreated: items?.length || 0,
+      elementType: context?.element?.type
+    })
   }
 
   /**
@@ -484,7 +503,22 @@ class OggDudeDataElement {
       oggDudeElementsSelected.map(async (element) => {
         const fileData = await zip.files[element.fullPath].async('text')
         const rawData = await parseXmlToJson(fileData)
-        return foundry.utils.getProperty(rawData, elementCriteria)
+        let extracted = foundry.utils.getProperty(rawData, elementCriteria)
+        // Fallbacks pour spécialisations ou autres fichiers qui n'ont pas l'enveloppe attendue
+        if (extracted == null) {
+          // Cas racine <Specialization>
+            if (rawData?.Specialization) {
+              extracted = rawData.Specialization
+              logger.debug('[OggDudeDataElement] Fallback extraction <Specialization> utilisé', { fullPath: element.fullPath })
+            } else if (rawData?.Specializations?.Specialization) {
+              extracted = rawData.Specializations.Specialization
+              logger.debug('[OggDudeDataElement] Fallback extraction <Specializations><Specialization> utilisé', { fullPath: element.fullPath })
+            }
+        }
+        if (extracted == null) {
+          logger.warn('[OggDudeDataElement] Aucune donnée extraite pour fichier', { fullPath: element.fullPath, criteria: elementCriteria, keys: Object.keys(rawData) })
+        }
+        return extracted
       }),
     )
 

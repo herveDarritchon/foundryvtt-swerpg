@@ -26,7 +26,7 @@ const HandlebarsApplicationMixin = foundry?.applications?.api?.HandlebarsApplica
  * @extends {FormApplication}
  */
 export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV2) {
-  _domainNames = ['weapon', 'armor', 'gear', 'species', 'career', 'talent', 'obligation']
+  _domainNames = ['weapon', 'armor', 'gear', 'species', 'career', 'talent', 'obligation', 'specialization']
 
   domains = this._initializeDomains(this._domainNames)
   zipFile = null
@@ -144,6 +144,18 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
       : null
     // Calcul des statuts domaine (fonction pur sans effet côté template) – logique testable séparément.
     const importDomainStatus = this._buildImportDomainStatus(stats)
+
+    // Logs de diagnostic pour vérifier la présence de specialization
+    logger.debug('[OggDudeDataImporter] Context prepared', {
+      domainsCount: this._domainNames.length,
+      domainsList: this._domainNames,
+      statsKeys: Object.keys(stats),
+      importDomainStatusKeys: Object.keys(importDomainStatus),
+      hasSpecializationInStats: !!stats.specialization,
+      specializationStats: stats.specialization,
+      hasSpecializationInStatus: !!importDomainStatus.specialization
+    })
+
     return {
       domains: this.domains,
       domainSelectionDisabled: this.noZipFileSelected(),

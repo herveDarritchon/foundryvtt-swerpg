@@ -153,6 +153,14 @@
                         <td>{{importStats.obligation.rejected}}</td>
                         <td>{{importMetricsFormatted.domains.obligation.duration}}</td>
                     </tr>
+                    <tr>
+                        <td class="{{importDomainStatus.specialization.class}}" aria-label="{{localize importDomainStatus.specialization.labelI18n}}"><i class="fa-solid fa-circle" aria-hidden="true"></i></td>
+                        <th scope="row">{{localize "SETTINGS.OggDudeDataImporter.loadWindow.domains.specialization"}}</th>
+                        <td>{{importStats.specialization.total}}</td>
+                        <td>{{importStats.specialization.imported}}</td>
+                        <td>{{importStats.specialization.rejected}}</td>
+                        <td>{{importMetricsFormatted.domains.specialization.duration}}</td>
+                    </tr>
                 {{/if}}
                 </tbody>
             </table>
