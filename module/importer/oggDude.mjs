@@ -163,7 +163,7 @@ export default class OggDudeImporter {
      * @function
      * @name _processOggDudeData
      */
-    static async processOggDudeData(importedFile, domains, {progressCallback} = {}) {
+    static async processOggDudeData(importedFile, domains, {progressCallback, importToCompendium = false} = {}) {
         /* --------------------------------------------- GÉNÉRIQUE ------------------------------------------------------------------- */
 
         // Step 1: Load the zip file
@@ -271,7 +271,7 @@ export default class OggDudeImporter {
                     elementKeys: Object.keys(context?.element || {})
                 })
 
-                await withRetry(() => OggDudeDataElement.processElements(context), {
+                await withRetry(() => OggDudeDataElement.processElements(context, { importToCompendium }), {
                     shouldRetry: (err) => /database|upload|parse/i.test(err?.message || ''),
                 })
 
