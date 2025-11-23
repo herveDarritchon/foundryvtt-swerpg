@@ -756,7 +756,8 @@
           "species": "Load Species data",
           "weapon": "Load Weapons data",
           "talent": "Load Talent data",
-          "obligation": "Load Obligation data"
+          "obligation": "Load Obligation data",
+          "specialization": "Load Specialization data"
         },
         "progress-bar": {
           "title": "Import Progress"
@@ -804,6 +805,9 @@
         },
         "progress": {
           "global": "Overall Progress"
+        },
+        "user-message": {
+          "domain-unsupported": "[ProcessOggDudeData] Domaines demandés non supportés: ({unsupportedDomains}).})"
         }
       }
     }

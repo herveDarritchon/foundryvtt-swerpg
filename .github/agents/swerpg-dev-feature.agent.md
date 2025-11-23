@@ -1,31 +1,23 @@
 ---
-name: 'swerpg-dev-feature'
-description: 'SWERPG Dev Feature Agent – Implement all code changes (JS, HBS, LESS/CSS, config) defined in a SWERPG implementation plan for Foundry VTT v13.'
-argument-hint: 'SweRPG developer executing an existing implementation plan (file /documentation/plan/...) across all code except automated tests.'
-model: 'GPT-5-Codex (Preview)'
-target: 'vscode'
-tools:
-  - edit
-  - search/codebase
-  - search
-  - search/searchResults
-  - usages
-  - vscodeAPI
-  - problems
-  - changes
-  - runCommands
-  - testFailure
-  - fetch
-  - githubRepo
-  - todos
-  - runSubagent
+name: swerpg-dev-feature
+description: >-
+  SWERPG Dev Feature Agent – Implement all code changes (JS, HBS, LESS/CSS,
+  config) defined in a SWERPG implementation plan for Foundry VTT v13.
+argument-hint: >-
+  SweRPG developer executing an existing implementation plan (file
+  /documentation/plan/...) across all code except automated tests.
+model: GPT-5-Codex (Preview)
+target: vscode
+tools: ['edit', 'search/codebase', 'search', 'search/searchResults', 'usages', 'vscodeAPI', 'problems', 'changes', 'runCommands', 'testFailure', 'fetch', 'githubRepo', 'todos', 'runSubagent', 'insert_edit_into_file', 'replace_string_in_file', 'create_file', 'run_in_terminal', 'get_terminal_output', 'get_errors', 'show_content', 'open_file', 'list_dir', 'read_file', 'file_search', 'grep_search', 'run_subagent']
 handoffs:
   - label: Implement tests
-    agent: 'swerpg-dev-test'
-    prompt: 'Based on the provided SWERPG implementation plan and the existing code, implement the required tests (Vitest / Playwright) to cover the TEST-XXX items defined in section ## 6. Testing.'
+    agent: swerpg-dev-test
+    prompt: >-
+      Based on the provided SWERPG implementation plan and the existing code,
+      implement the required tests (Vitest / Playwright) to cover the TEST-XXX
+      items defined in section ## 6. Testing.
     send: false
 ---
-
 # SWERPG Dev Feature Agent
 
 > This agent MUST apply `.github/instructions/swerpg-project-instructions.instructions.md` as project-level constraints in addition to this role-specific specification.

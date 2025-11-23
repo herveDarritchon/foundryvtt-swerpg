@@ -15,6 +15,17 @@
 - **importer:** gear import validation functions with numeric and boolean normalization
 - **tests:** comprehensive unit and integration tests for gear mapping (13 tests total)
 - **docs:** complete gear import technical documentation
+- **importer:** specialization domain fully integrated in OggDude import UI and backend pipeline
+- **tests:** unit tests for specialization domain support (OggDudeDataImporter.specializationSupport.spec.mjs)
+- **tests:** comprehensive unit tests for specialization mapper (9 tests covering valid/invalid cases and edge cases)
+- **importer:** extensive diagnostic logging in specialization mapper (start/end/per-item tracking)
+- **importer:** diagnostic logs in OggDudeDataElement.processElements for mapper execution tracking
+- **importer:** diagnostic logs in oggDude.mjs processOggDudeData for context validation
+- **docs:** plan de correction import spécialisation dataset vide (bug-oggdude-specialization-empty-dataset-1.0.md)
+- **docs:** requirements EARS fix import spécialisation (OGGDUDE_SPECIALIZATION_IMPORT_FIX_REQUIREMENTS.md)
+- **docs:** design correction import spécialisation (design-specialization-import-fix.md)
+- **docs:** tasks list correction import spécialisation (oggdude-specialization-import-fix.tasks.md)
+- **docs:** ADR-0006 isolation erreurs par item spécialisation (adr-0006-specialization-import-error-isolation.md)
 
 ### Changed
 
@@ -27,10 +38,15 @@
 
 - **importer:** removed unsupported armor fields (sources, mods, weaponModifiers, eraPricing) from output
 
-### Fixes
+### Fixed
 
 - **importer:** refactor career OggDude mapper to align with `SwerpgCareer` schema (description, freeSkillRank clamp, careerSkills normalization, logging)
 - **importer:** correct OggDude gear mapping to restore numeric fields, enriched description, BaseMods serialization and weapon profile flags
+- **importer:** add missing "Load Specialization data" row in import statistics table (oggDudeDataImporter.hbs)
+- **importer:** add diagnostic logs in processOggDudeData and _prepareContext for easier troubleshooting of domain registration issues
+- **importer:** add comprehensive error handling with try/catch in specialization mapper to prevent silent failures
+- **importer:** add validation logging in extractRawSpecializationSkillCodes for CareerSkills structure debugging
+- **importer:** add per-item error handling in specializationMapper to isolate mapping failures
 
 ## [0.3.1](https://github.com/herveDarritchon/foundryvtt-swerpg/compare/v0.3.0...v0.3.1) (2025-06-16)
 

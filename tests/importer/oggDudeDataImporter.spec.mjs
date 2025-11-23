@@ -18,7 +18,7 @@ describe('OggDudeDataImporter - logique interne basique', () => {
   })
 
   it('initialise les domaines', () => {
-    expect(importer.domains).toHaveLength(7)
+    expect(importer.domains).toHaveLength(8) // weapon, armor, gear, species, career, talent, obligation, specialization
     expect(importer.domains[0]).toHaveProperty('id')
     expect(importer.domains[0]).toHaveProperty('checked')
   })
@@ -36,7 +36,7 @@ describe('OggDudeDataImporter - logique interne basique', () => {
     expect(importer._noDomainSelected()).toBe(false)
   })
 
-  it('_buildImportDomainStatus génère les statuts pour tous les domaines incluant obligation', () => {
+  it('_buildImportDomainStatus génère les statuts pour tous les domaines incluant obligation et specialization', () => {
     const mockStats = {
       weapon: { total: 10, imported: 10, rejected: 0 },
       armor: { total: 5, imported: 5, rejected: 0 },
@@ -45,6 +45,7 @@ describe('OggDudeDataImporter - logique interne basique', () => {
       career: { total: 3, imported: 3, rejected: 0 },
       talent: { total: 20, imported: 18, rejected: 2 },
       obligation: { total: 41, imported: 41, rejected: 0 },
+      specialization: { total: 15, imported: 14, rejected: 1 },
     }
 
     const result = importer._buildImportDomainStatus(mockStats)
@@ -57,6 +58,7 @@ describe('OggDudeDataImporter - logique interne basique', () => {
     expect(result).toHaveProperty('career')
     expect(result).toHaveProperty('talent')
     expect(result).toHaveProperty('obligation')
+    expect(result).toHaveProperty('specialization')
 
     // Vérifier la structure pour obligation
     expect(result.obligation).toHaveProperty('code')
@@ -65,5 +67,13 @@ describe('OggDudeDataImporter - logique interne basique', () => {
     expect(result.obligation.code).toBe('success')
     expect(result.obligation.labelI18n).toBe('SETTINGS.OggDudeDataImporter.loadWindow.stats.status.success')
     expect(result.obligation.class).toBe('domain-status domain-status--success')
+
+    // Vérifier la structure pour specialization
+    expect(result.specialization).toHaveProperty('code')
+    expect(result.specialization).toHaveProperty('labelI18n')
+    expect(result.specialization).toHaveProperty('class')
+    expect(result.specialization.code).toBe('mixed') // 14 imported + 1 rejected = 15 total
+    expect(result.specialization.labelI18n).toBe('SETTINGS.OggDudeDataImporter.loadWindow.stats.status.mixed')
+    expect(result.specialization.class).toBe('domain-status domain-status--mixed')
   })
 })
