@@ -805,6 +805,9 @@
         },
         "progress": {
           "global": "Overall Progress"
+        },
+        "user-message": {
+          "domain-unsupported": "[ProcessOggDudeData] Domaines demandés non supportés: ({unsupportedDomains}).})"
         }
       }
     }
