@@ -347,7 +347,7 @@ class OggDudeDataElement {
    * @function
    * @name _storeItems
    */
-  static _storeItems = async (items, folder, elementType, imageWorldPath, imgSystemPath, prefix) => {
+  static _storeItems = async (items, folder, elementType, imageWorldPath, imgSystemPath, prefix, importToCompendium = false) => {
     let itemPromises = await Promise.all(
       items.map(async (item) => {
         const key = item.key != null && item.key !== '' ? item.key : item.name.toUpperCase()
@@ -376,7 +376,30 @@ class OggDudeDataElement {
       .then(async (items) => {
         logger.info('[OggDudeDataElement] Creating items batch', { items })
         try {
-          const created = await Item.createDocuments(items)
+          let created
+          if (importToCompendium) {
+            // Capitalize first letter for label
+            const typeLabel = elementType.charAt(0).toUpperCase() + elementType.slice(1)
+            const packName = `oggdude-${elementType.toLowerCase()}`
+            const packLabel = `OggDude ${typeLabel}`
+            const packFullName = `world.${packName}`
+            
+            let pack = game.packs.get(packFullName)
+            if (!pack) {
+              logger.info('[OggDudeDataElement] Creating Compendium', { packName, packLabel })
+              pack = await CompendiumCollection.createCompendium({
+                type: 'Item',
+                label: packLabel,
+                name: packName,
+                package: 'world',
+              })
+            }
+            // Ensure items have the correct type for the pack (though we created the pack as 'Item')
+            // And use Item.createDocuments with the pack option
+            created = await Item.createDocuments(items, { pack: packFullName })
+          } else {
+            created = await Item.createDocuments(items)
+          }
           logger.debug('[OggDudeDataElement] Items created', { created })
         } catch (error) {
           logger.error('[OggDudeDataElement] Error while creating items batch', { error })
@@ -415,7 +438,7 @@ class OggDudeDataElement {
    * @function
    * @name processElements
    */
-  static processElements = async (context) => {
+  static processElements = async (context, { importToCompendium = false } = {}) => {
     logger.info('[OggDudeDataElement] processElements START', {
       hasJsonData: !!context?.jsonData,
       jsonDataLength: context?.jsonData?.length || 0,
@@ -449,7 +472,15 @@ class OggDudeDataElement {
     logger.debug('[OggDudeDataElement] ProcessElements - Step 6-4 Items', { items })
 
     // Step 6-5: Store the Items in the server database
-    await OggDudeDataElement._storeItems(items, folder, context.element.type, context.image.worldPath, context.image.systemPath, context.image.prefix)
+    await OggDudeDataElement._storeItems(
+      items,
+      folder,
+      context.element.type,
+      context.image.worldPath,
+      context.image.systemPath,
+      context.image.prefix,
+      importToCompendium,
+    )
     logger.debug('[OggDudeDataElement] ProcessElements - Step 6-5 Items stored')
 
     logger.info('[OggDudeDataElement] processElements END', {
