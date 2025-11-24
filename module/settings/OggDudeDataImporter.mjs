@@ -37,6 +37,7 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
   showStats = false
   showMetrics = false
   showPreview = false
+  importToCompendium = false
 
   /* -------------------------------------------- */
 
@@ -93,6 +94,8 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
       toggleStatsAction: OggDudeDataImporter.toggleStatsAction,
       toggleMetricsAction: OggDudeDataImporter.toggleMetricsAction,
       togglePreviewAction: OggDudeDataImporter.togglePreviewAction,
+      toggleImportToCompendiumAction: OggDudeDataImporter.toggleImportToCompendiumAction,
+      toggleAllDomainsAction: OggDudeDataImporter.toggleAllDomainsAction,
     },
     footer: {
       template: 'templates/generic/form-footer.hbs',
@@ -158,6 +161,7 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
 
     return {
       domains: this.domains,
+      allDomainsChecked: this.domains.every((d) => d.checked) && this.domains.length > 0,
       domainSelectionDisabled: this.noZipFileSelected(),
       loadButtonDisabled: this.noZipFileSelected() || this._noDomainSelected(),
       zipFile: this.zipFile,
@@ -179,6 +183,7 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
       hasPreview,
       importSummary,
       importDomainStatus,
+      importToCompendium: this.importToCompendium,
     }
   }
 
@@ -241,6 +246,13 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
     logger.info('[OggDudeDataImporter] Load OggDude Data', { instance: this })
     // Initialiser immédiatement total avec le nombre de domaines sélectionnés
     const totalDomains = this.domains.filter((d) => d.checked).length
+    
+    // Read checkbox value directly from the form
+    const importToCompendiumCheckbox = this.element.querySelector('input[name="import-to-compendium"]')
+    if (importToCompendiumCheckbox) {
+      this.importToCompendium = importToCompendiumCheckbox.checked
+    }
+
     this._progress = { processed: 0, total: totalDomains }
     if (typeof this.render === 'function') {
       try {
@@ -259,6 +271,7 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
           this.render().catch((e) => logger.warn('[OggDudeDataImporter] render progress error', { e }))
         }
       },
+      importToCompendium: this.importToCompendium,
     })
 
     // Rafraîchir l'UI après l'import pour afficher les métriques globales finales
@@ -361,6 +374,32 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
     await this.render()
   }
 
+  /**
+   * Bascule l'état de l'import vers Compendium.
+   * @this {OggDudeDataImporter}
+   * @param _event {Event}
+   * @param target {HTMLElement}
+   */
+  static async toggleImportToCompendiumAction(_event, target) {
+    this.importToCompendium = target.checked
+    await this.render()
+  }
+
+  /**
+   * Bascule l'état de tous les domaines.
+   * @this {OggDudeDataImporter}
+   * @param _event {Event}
+   * @param target {HTMLElement}
+   */
+  static async toggleAllDomainsAction(_event, target) {
+    if (this.noZipFileSelected()) return
+    const checked = target.checked
+    this.domains.forEach((domain) => {
+      domain.checked = checked
+    })
+    await this.render()
+  }
+
   /* -------------------------------------------- */
 
   /**
@@ -374,6 +413,9 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
    */
   static async _onSubmit(event, form, formData) {
     const settings = foundry.utils.expandObject(formData.object)
+    if (settings['import-to-compendium'] !== undefined) {
+      this.importToCompendium = settings['import-to-compendium']
+    }
     logger.info('[OggDudeDataImporter] Saving settings', { settings, instance: this })
   }
 
@@ -450,6 +492,7 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
     event.stopPropagation()
     const form = $('form.oggDude-data-importer')[0]
     const importedFile = form['zip-file'].files[0]
+    const importToCompendium = form['import-to-compendium'].checked
 
     this._progress = { processed: 0, total: 0 }
     await OggDudeImporter.processOggDudeData(importedFile, this.domains, {
@@ -460,6 +503,7 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
           this.render().catch(() => {})
         }
       },
+      importToCompendium,
     })
 
     // Rafraîchir l'UI après l'import pour afficher les métriques globales finales

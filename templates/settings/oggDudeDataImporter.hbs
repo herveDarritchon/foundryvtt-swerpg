@@ -16,8 +16,24 @@
         </div>
     </section>
 
+    <section class="import-options flexcol">
+        <div class="form-group">
+            <label class="checkbox">
+                <input type="checkbox" name="import-to-compendium" {{checked importToCompendium}} data-action="toggleImportToCompendiumAction"/>
+                {{localize "SETTINGS.OggDudeDataImporter.loadWindow.importToCompendium"}}
+            </label>
+            <p class="notes">{{localize "SETTINGS.OggDudeDataImporter.loadWindow.importToCompendiumHint"}}</p>
+        </div>
+    </section>
+
     <section class="domain-selection flexcol">
         <h4>{{localize "SETTINGS.OggDudeDataImporter.loadWindow.selectDomains"}}</h4>
+        <div class="form-group select-all">
+            <label class="checkbox">
+                <input type="checkbox" id="select-all-domains" {{checked allDomainsChecked}} {{#if domainSelectionDisabled}}disabled{{/if}} data-action="toggleAllDomainsAction"/>
+                {{localize "SETTINGS.OggDudeDataImporter.loadWindow.selectAllDomains"}}
+            </label>
+        </div>
         <div class="domains flexcol">
             {{!-- Suppression de this. pour chaque domaine --}}
             {{#each domains as |domain|}}
