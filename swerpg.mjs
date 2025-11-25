@@ -177,6 +177,7 @@ Hooks.once('init', async function () {
     background: models.SwerpgBackground,
     species: models.SwerpgSpecies,
     career: models.SwerpgCareer,
+    motivation: models.SwerpgMotivation,
     obligation: models.SwerpgObligation,
     specialization: models.SwerpgSpecialization,
     spell: models.SwerpgSpell,
@@ -232,6 +233,11 @@ Hooks.once('init', async function () {
   foundry.documents.collections.Items.registerSheet(SYSTEM.id, applications.ObligationSheet, {
     types: ['obligation'],
     label: 'SWERPG.SHEETS.Obligation',
+    makeDefault: true,
+  })
+  foundry.documents.collections.Items.registerSheet(SYSTEM.id, applications.MotivationSheet, {
+    types: ['motivation'],
+    label: 'SWERPG.SHEETS.Motivation',
     makeDefault: true,
   })
   foundry.documents.collections.Items.registerSheet(SYSTEM.id, applications.SpecializationSheet, {

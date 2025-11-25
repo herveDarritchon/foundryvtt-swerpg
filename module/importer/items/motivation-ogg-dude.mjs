@@ -1,8 +1,9 @@
 import {buildItemImgSystemPath} from '../../settings/directories.mjs'
-import OggDudeImporter from '../oggDude.mjs'
 import OggDudeDataElement from '../../settings/models/OggDudeDataElement.mjs'
 import {logger} from '../../utils/logger.mjs'
 import {sanitizeDescription} from "../utils/text.mjs";
+import {mapMandatoryString, mapOptionalString} from "../utils/mapper.mjs";
+
 
 /**
  * Map OggDude Motivation XML data to Foundry Item creation objects.
@@ -28,8 +29,8 @@ export function motivationMapper(motivations) {
 
         try {
             // Extract mandatory fields with validation
-            const name = OggDudeImporter.mapMandatoryString('motivation.Name', xmlMotivation.Name)
-            const key = OggDudeImporter.mapMandatoryString('motivation.Key', xmlMotivation.Key)
+            const name = mapMandatoryString('motivation.Name', xmlMotivation.Name)
+            const key = mapMandatoryString('motivation.Key', xmlMotivation.Key)
 
             // Skip if mandatory fields are missing
             if (!name || !key) {
@@ -50,8 +51,8 @@ export function motivationMapper(motivations) {
             })
 
             // Extract optional description
-            const description = sanitizeDescription(OggDudeImporter.mapOptionalString(xmlMotivation.Description))
-            const category = OggDudeImporter.mapOptionalString(xmlMotivation.categoryKey)
+            const description = sanitizeDescription(mapOptionalString(xmlMotivation.Description))
+            const category = mapOptionalString(xmlMotivation.categoryKey)
 
             // Build system object
             const system = {
@@ -66,13 +67,13 @@ export function motivationMapper(motivations) {
 
             // Store source information if available
             if (xmlMotivation.Source) {
-                swerpgFlags.oggdudeSource = OggDudeImporter.mapOptionalString(xmlMotivation.Source)
+                swerpgFlags.oggdudeSource = mapOptionalString(xmlMotivation.Source)
             } else if (xmlMotivation.Sources?.Source) {
                 // Handle multiple sources - store as array
                 const sources = Array.isArray(xmlMotivation.Sources.Source)
                     ? xmlMotivation.Sources.Source
                     : [xmlMotivation.Sources.Source]
-                swerpgFlags.oggdudeSources = sources.map((s) => OggDudeImporter.mapOptionalString(s))
+                swerpgFlags.oggdudeSources = sources.map((s) => mapOptionalString(s))
             }
 
             const item = {

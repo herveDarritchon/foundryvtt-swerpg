@@ -58,6 +58,12 @@
       "type": "Item"
     },
     {
+      "name": "motivations",
+      "label": "Motivations",
+      "path": "packs/motivations",
+      "type": "Item"
+    },
+    {
       "name": "obligations",
       "label": "Obligations",
       "path": "packs/obligations",
@@ -102,7 +108,7 @@
         {
           "name": "Actors Options",
           "color": "#032f96",
-          "packs": ["species", "careers", "specializations", "obligations", "talents"]
+          "packs": ["species", "careers", "specializations", "obligations", "motivations", "talents"]
         },
         {
           "name": "Equipments",
@@ -154,6 +160,9 @@
       },
       "gear": {
         "htmlFields": ["description.public", "description.secret"]
+      },
+      "motivation": {
+        "htmlFields": ["description"]
       },
       "obligation": {
         "htmlFields": ["description"]

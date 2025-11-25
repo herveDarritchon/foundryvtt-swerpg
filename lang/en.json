@@ -13,6 +13,7 @@
       "career": "Career",
       "gear": "Gear",
       "obligation": "Obligation",
+      "motivation": "Motivation",
       "origin": "Origin",
       "specialization": "Specialization",
       "species": "Species",
@@ -663,6 +664,14 @@
   "ITEM.QualityMasterwork": "Masterwork",
   "KEYBINDINGS.ConfirmAction": "Confirm Action",
   "KEYBINDINGS.ConfirmActionHint": "Confirm actions recorded within the last 60 seconds in the order in which they were taken.",
+  "MOTIVATION": {
+    "FIELDS": {
+      "category": {
+        "label": "Motivation Category",
+        "hint": "The general category of this motivation."
+      }
+    }
+  },
   "OBLIGATION": {
     "FIELDS": {
       "value": {
@@ -760,6 +769,7 @@
           "weapon": "Load Weapons data",
           "talent": "Load Talent data",
           "obligation": "Load Obligation data",
+          "motivation": "Load Motivation data",
           "specialization": "Load Specialization data"
         },
         "progress-bar": {

@@ -196,6 +196,7 @@ export default class OggDudeImporter {
         buildContextMap.set('career', {type: 'career', contextBuilder: buildCareerContext})
         buildContextMap.set('talent', {type: 'talent', contextBuilder: buildTalentContext})
         buildContextMap.set('obligation', {type: 'obligation', contextBuilder: buildObligationContext})
+        buildContextMap.set('motivation', {type: 'motivation', contextBuilder: buildMotivationContext})
         buildContextMap.set('specialization', {type: 'specialization', contextBuilder: buildSpecializationContext})
         buildContextMap.set('motivation', {type: 'motivation', contextBuilder: buildMotivationContext})
 
@@ -325,6 +326,7 @@ export default class OggDudeImporter {
         buildContextMap.set('career', {type: 'career', contextBuilder: buildCareerContext})
         buildContextMap.set('talent', {type: 'talent', contextBuilder: buildTalentContext})
         buildContextMap.set('obligation', {type: 'obligation', contextBuilder: buildObligationContext})
+        buildContextMap.set('motivation', {type: 'motivation', contextBuilder: buildMotivationContext})
         buildContextMap.set('specialization', {type: 'specialization', contextBuilder: buildSpecializationContext})
         buildContextMap.set('motivation', {type: 'motivation', contextBuilder: buildMotivationContext})
 
