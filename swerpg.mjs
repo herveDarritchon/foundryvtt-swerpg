@@ -17,6 +17,7 @@ import * as documents from './module/documents/_module.mjs'
 import * as models from './module/models/_module.mjs'
 import * as hooks from './module/hooks/_module.mjs'
 import MotivationCategorySheet from './module/applications/sheets/motivation-category.mjs'
+import MotivationSheet from './module/applications/sheets/motivation.mjs'
 
 // Canvas
 import SwerpgRuler from './module/canvas/ruler.mjs'
@@ -265,6 +266,11 @@ Hooks.once('init', async function () {
   foundry.documents.collections.Items.registerSheet(SYSTEM.id, MotivationCategorySheet, {
     types: ['motivation-category'],
     label: 'SWERPG.SHEETS.MotivationCategory',
+    makeDefault: true,
+  })
+  foundry.documents.collections.Items.registerSheet(SYSTEM.id, MotivationSheet, {
+    types: ['motivation'],
+    label: 'SWERPG.SHEETS.Motivation',
     makeDefault: true,
   })
 
