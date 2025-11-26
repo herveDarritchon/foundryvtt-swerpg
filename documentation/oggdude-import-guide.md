@@ -28,7 +28,7 @@ If the item type does not exist in the system:
 
 Create a new file in `module/models/` (e.g., `my-new-type.mjs`).
 
-- Extend `foundry.abstract.TypeDataModel`.
+- Extend `foundry.abstract.TypeDataModel`. **Do not extend `SwerpgItem`**. `SwerpgItem` is the Document class, while this is the Data Model.
 - Define the schema using `foundry.data.fields`.
 - Export it in `module/models/_module.mjs`.
 
