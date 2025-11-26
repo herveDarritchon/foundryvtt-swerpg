@@ -9,6 +9,7 @@ import { getCareerImportStats } from './career-import-utils.mjs'
 import { getTalentImportStats } from './talent-import-utils.mjs'
 import { getObligationImportStats } from './obligation-import-utils.mjs'
 import { getSpecializationImportStats } from './specialization-import-utils.mjs'
+import { getMotivationImportStats, getMotivationCategoryImportStats } from './motivation-import-utils.mjs'
 
 // Runtime metrics (durations, sizes) – kept internal and exposed via aggregate function
 const _runtime = {
@@ -73,10 +74,31 @@ export function getAllImportStats() {
   const talent = safeCall(getTalentImportStats)
   const obligation = safeCall(getObligationImportStats)
   const specialization = safeCall(getSpecializationImportStats)
+  const motivation = safeCall(getMotivationImportStats)
+  const motivationCategory = safeCall(getMotivationCategoryImportStats)
 
-  const totalProcessed = armor.total + weapon.total + gear.total + species.total + career.total + talent.total + obligation.total + specialization.total
+  const totalProcessed =
+    armor.total +
+    weapon.total +
+    gear.total +
+    species.total +
+    career.total +
+    talent.total +
+    obligation.total +
+    specialization.total +
+    motivation.total +
+    motivationCategory.total
   const totalRejected =
-    armor.rejected + weapon.rejected + gear.rejected + species.rejected + career.rejected + talent.rejected + obligation.rejected + specialization.rejected
+    armor.rejected +
+    weapon.rejected +
+    gear.rejected +
+    species.rejected +
+    career.rejected +
+    talent.rejected +
+    obligation.rejected +
+    specialization.rejected +
+    motivation.rejected +
+    motivationCategory.rejected
   const totalImported = totalProcessed - totalRejected
 
   return {
@@ -88,6 +110,8 @@ export function getAllImportStats() {
     talent,
     obligation,
     specialization,
+    motivation: safeCall(getMotivationImportStats),
+    'motivation-category': safeCall(getMotivationCategoryImportStats),
     totalProcessed,
     totalRejected,
     totalImported,

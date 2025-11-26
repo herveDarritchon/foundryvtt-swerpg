@@ -178,6 +178,12 @@
       },
       "weapon": {
         "htmlFields": ["description.public", "description.secret"]
+      },
+      "motivation-category": {
+        "htmlFields": ["description"]
+      },
+      "motivation": {
+        "htmlFields": ["description"]
       }
     },
     "JournalEntryPage": {

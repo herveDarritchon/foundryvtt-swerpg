@@ -7,10 +7,13 @@ import { buildCareerContext } from './items/career-ogg-dude.mjs'
 import { buildTalentContext } from './items/talent-ogg-dude.mjs'
 import { buildObligationContext } from './items/obligation-ogg-dude.mjs'
 import { buildSpecializationContext } from './items/specialization-ogg-dude.mjs'
+import { buildMotivationCategoryContext } from './items/motivation-category-ogg-dude.mjs'
+import { buildMotivationContext } from './items/motivation-ogg-dude.mjs'
 import { logger } from '../utils/logger.mjs'
 import { withRetry } from './utils/retry.mjs'
 import { markArchiveSize, markGlobalEnd, markGlobalStart, recordDomainEnd, recordDomainStart } from './utils/global-import-metrics.mjs'
 import { getSpecializationImportStats } from './utils/specialization-import-utils.mjs'
+import { getMotivationImportStats, getMotivationCategoryImportStats } from './utils/motivation-import-utils.mjs'
 
 export default class OggDudeImporter {
   /**
@@ -190,6 +193,8 @@ export default class OggDudeImporter {
     buildContextMap.set('talent', { type: 'talent', contextBuilder: buildTalentContext })
     buildContextMap.set('obligation', { type: 'obligation', contextBuilder: buildObligationContext })
     buildContextMap.set('specialization', { type: 'specialization', contextBuilder: buildSpecializationContext })
+    buildContextMap.set('motivation-category', { type: 'motivation-category', contextBuilder: buildMotivationCategoryContext })
+    buildContextMap.set('motivation', { type: 'motivation', contextBuilder: buildMotivationContext })
 
     const domainsToImport = domains.filter((domain) => domain.checked).map((domain) => domain.id)
     const unsupportedDomains = domainsToImport.filter((id) => !buildContextMap.has(id))
@@ -279,6 +284,10 @@ export default class OggDudeImporter {
           const specStats = getSpecializationImportStats()
           domainStatsPayload = specStats
           logger.info('[SpecializationImporter] Statistiques après import', { stats: specStats })
+        } else if (entry.type === 'motivation') {
+          domainStatsPayload = getMotivationImportStats()
+        } else if (entry.type === 'motivation-category') {
+          domainStatsPayload = getMotivationCategoryImportStats()
         }
         emitProgress({ processed, domain: entry.type, phase: 'completed', domainStats: domainStatsPayload })
       } catch (error) {
@@ -318,6 +327,7 @@ export default class OggDudeImporter {
     buildContextMap.set('talent', { type: 'talent', contextBuilder: buildTalentContext })
     buildContextMap.set('obligation', { type: 'obligation', contextBuilder: buildObligationContext })
     buildContextMap.set('specialization', { type: 'specialization', contextBuilder: buildSpecializationContext })
+    buildContextMap.set('motivation', { type: 'motivation', contextBuilder: buildMotivationContext })
 
     const domainsToImport = new Set(domains.filter((d) => d.checked).map((d) => d.id))
     const contextEntries = Array.from(buildContextMap.values()).filter((e) => domainsToImport.has(e.type))
