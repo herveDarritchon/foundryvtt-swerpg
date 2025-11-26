@@ -184,6 +184,9 @@
       },
       "motivation": {
         "htmlFields": ["description"]
+      },
+      "duty": {
+        "htmlFields": ["description"]
       }
     },
     "JournalEntryPage": {

@@ -18,6 +18,7 @@ import * as models from './module/models/_module.mjs'
 import * as hooks from './module/hooks/_module.mjs'
 import MotivationCategorySheet from './module/applications/sheets/motivation-category.mjs'
 import MotivationSheet from './module/applications/sheets/motivation.mjs'
+import DutySheet from './module/applications/sheets/duty.mjs'
 
 // Canvas
 import SwerpgRuler from './module/canvas/ruler.mjs'
@@ -187,6 +188,7 @@ Hooks.once('init', async function () {
     weapon: models.SwerpgWeapon,
     'motivation-category': models.SwerpgMotivationCategory,
     motivation: models.SwerpgMotivation,
+    duty: models.SwerpgDuty,
   }
 
   foundry.documents.collections.Items.unregisterSheet('core', foundry.appv1.sheets.ItemSheet)
@@ -266,6 +268,11 @@ Hooks.once('init', async function () {
   foundry.documents.collections.Items.registerSheet(SYSTEM.id, MotivationCategorySheet, {
     types: ['motivation-category'],
     label: 'SWERPG.SHEETS.MotivationCategory',
+    makeDefault: true,
+  })
+  foundry.documents.collections.Items.registerSheet(SYSTEM.id, DutySheet, {
+    types: ['duty'],
+    label: 'SWERPG.SHEETS.Duty',
     makeDefault: true,
   })
   foundry.documents.collections.Items.registerSheet(SYSTEM.id, MotivationSheet, {

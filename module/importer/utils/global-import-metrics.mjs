@@ -10,6 +10,7 @@ import { getTalentImportStats } from './talent-import-utils.mjs'
 import { getObligationImportStats } from './obligation-import-utils.mjs'
 import { getSpecializationImportStats } from './specialization-import-utils.mjs'
 import { getMotivationImportStats, getMotivationCategoryImportStats } from './motivation-import-utils.mjs'
+import { getDutyImportStats } from './duty-import-utils.mjs'
 
 // Runtime metrics (durations, sizes) – kept internal and exposed via aggregate function
 const _runtime = {
@@ -87,7 +88,8 @@ export function getAllImportStats() {
     obligation.total +
     specialization.total +
     motivation.total +
-    motivationCategory.total
+    motivationCategory.total +
+    safeCall(getDutyImportStats).total
   const totalRejected =
     armor.rejected +
     weapon.rejected +
@@ -98,7 +100,8 @@ export function getAllImportStats() {
     obligation.rejected +
     specialization.rejected +
     motivation.rejected +
-    motivationCategory.rejected
+    motivationCategory.rejected +
+    safeCall(getDutyImportStats).rejected
   const totalImported = totalProcessed - totalRejected
 
   return {
@@ -112,6 +115,7 @@ export function getAllImportStats() {
     specialization,
     motivation: safeCall(getMotivationImportStats),
     'motivation-category': safeCall(getMotivationCategoryImportStats),
+    duty: safeCall(getDutyImportStats),
     totalProcessed,
     totalRejected,
     totalImported,
