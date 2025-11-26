@@ -285,14 +285,16 @@ export default class SwerpgWeapon extends SwerpgCombatItem {
     if (Array.isArray(oggdudeTags) && oggdudeTags.length > 0) {
       const seenKeys = new Set()
       const buildKey = (type, value) => {
-        const sanitizedType = String(type || 'tag')
-          .toLowerCase()
-          .replace(/[^a-z0-9]+/g, '-')
-          .replace(/^-+|-+$/g, '') || 'tag'
-        const sanitizedValue = String(value)
-          .toLowerCase()
-          .replace(/[^a-z0-9]+/g, '-')
-          .replace(/^-+|-+$/g, '') || 'value'
+        const sanitizedType =
+          String(type || 'tag')
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/^-+|-+$/g, '') || 'tag'
+        const sanitizedValue =
+          String(value)
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/^-+|-+$/g, '') || 'value'
         return `${sanitizedType}-${sanitizedValue}`
       }
 

@@ -15,7 +15,7 @@ Le template Handlebars `templates/settings/oggDudeDataImporter.hbs` contenait de
 Le template affichait uniquement :
 
 - armor
-- weapon  
+- weapon
 - gear
 - species
 - career
@@ -35,12 +35,15 @@ Ajout de :
 
 ```handlebars
 <tr>
-    <td class="{{importDomainStatus.obligation.class}}" aria-label="{{localize importDomainStatus.obligation.labelI18n}}"><i class="fa-solid fa-circle" aria-hidden="true"></i></td>
-    <th scope="row">{{localize "SETTINGS.OggDudeDataImporter.loadWindow.domains.obligation"}}</th>
-    <td>{{importStats.obligation.total}}</td>
-    <td>{{importStats.obligation.imported}}</td>
-    <td>{{importStats.obligation.rejected}}</td>
-    <td>{{importMetricsFormatted.domains.obligation.duration}}</td>
+  <td class='{{importDomainStatus.obligation.class}}' aria-label='{{localize importDomainStatus.obligation.labelI18n}}'><i
+      class='fa-solid fa-circle'
+      aria-hidden='true'
+    ></i></td>
+  <th scope='row'>{{localize 'SETTINGS.OggDudeDataImporter.loadWindow.domains.obligation'}}</th>
+  <td>{{importStats.obligation.total}}</td>
+  <td>{{importStats.obligation.imported}}</td>
+  <td>{{importStats.obligation.rejected}}</td>
+  <td>{{importMetricsFormatted.domains.obligation.duration}}</td>
 </tr>
 ```
 
@@ -141,7 +144,7 @@ La section preview (dropdown de filtrage) utilise déjà `{{#each domains}}`, do
 Aucune action supplémentaire requise. La feature d'import des obligations est maintenant complète :
 
 1. ✅ Mapper et context builder implémentés
-2. ✅ Tests unitaires et d'intégration passent  
+2. ✅ Tests unitaires et d'intégration passent
 3. ✅ UI activée (checkbox + label)
 4. ✅ Localisation FR/EN présente
 5. ✅ **Statistiques visibles dans l'interface** ← correction actuelle

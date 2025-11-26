@@ -65,13 +65,7 @@ describe('mapCareerSkills util', () => {
   })
   it('mappe les nouveaux codes Star Wars Edge (COMP, CORE, SKUL, STEAL)', () => {
     const result = mapCareerSkills(['COMP', 'CORE', 'PERC', 'SKUL', 'STEAL'])
-    expect(result).toEqual([
-      { id: 'computers' },
-      { id: 'coreworlds' },
-      { id: 'perception' },
-      { id: 'skulduggery' },
-      { id: 'stealth' },
-    ])
+    expect(result).toEqual([{ id: 'computers' }, { id: 'coreworlds' }, { id: 'perception' }, { id: 'skulduggery' }, { id: 'stealth' }])
   })
   it('mappe les synonymes (STEAL vs STEALTH)', () => {
     const resultSteal = mapCareerSkills(['STEAL'])
@@ -137,7 +131,9 @@ describe('careerMapper', () => {
       },
     ]
     const [mapped] = careerMapper(input)
-    expect(mapped.system.description).toBe('<h4>Ace</h4>\n<p><strong>Pilote hors pair</strong></p>\n<p><strong>Source:</strong> Age of Rebellion Core Rulebook, p.64</p>')
+    expect(mapped.system.description).toBe(
+      '<h4>Ace</h4>\n<p><strong>Pilote hors pair</strong></p>\n<p><strong>Source:</strong> Age of Rebellion Core Rulebook, p.64</p>',
+    )
     expect(mapped.flags.swerpg).toEqual({ oggdudeKey: 'THEACE', oggdudeSource: 'Age of Rebellion Core Rulebook', oggdudeSourcePage: 64 })
   })
   it('mappe la carrière Sentinel avec les nouveaux codes (COMP, CORE, SKUL, STEAL)', () => {

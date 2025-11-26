@@ -31,43 +31,43 @@ Créer deux fonctions principales :
  * @returns {Array} - Objets formatés pour création Item
  */
 export function newTypeMapper(items) {
-    resetNewTypeImportStats() // Réinitialise les métriques
+  resetNewTypeImportStats() // Réinitialise les métriques
 
-    return items
-        .map(xmlItem => {
-            try {
-                incrementNewTypeImportStat('total')
+  return items
+    .map((xmlItem) => {
+      try {
+        incrementNewTypeImportStat('total')
 
-                // 1. Extraction des champs obligatoires
-                const name = OggDudeImporter.mapMandatoryString('newtype.Name', xmlItem.Name)
-                const key = OggDudeImporter.mapMandatoryString('newtype.Key', xmlItem.Key)
+        // 1. Extraction des champs obligatoires
+        const name = OggDudeImporter.mapMandatoryString('newtype.Name', xmlItem.Name)
+        const key = OggDudeImporter.mapMandatoryString('newtype.Key', xmlItem.Key)
 
-                // 2. Mapping des champs vers le schéma système
-                const system = {
-                    description: OggDudeImporter.mapOptionalString(xmlItem.Description),
-                    // Ajouter les autres propriétés spécifiques au type
-                }
+        // 2. Mapping des champs vers le schéma système
+        const system = {
+          description: OggDudeImporter.mapOptionalString(xmlItem.Description),
+          // Ajouter les autres propriétés spécifiques au type
+        }
 
-                // 3. Construction de l'objet Item avec flags
-                incrementNewTypeImportStat('imported')
-                return {
-                    name,
-                    type: 'newtype',
-                    system,
-                    flags: {
-                        swerpg: {
-                            oggdudeKey: key,
-                            // Autres métadonnées de traçabilité
-                        }
-                    }
-                }
-            } catch (error) {
-                logger.error('[NewTypeMapper] Error mapping item', error)
-                incrementNewTypeImportStat('rejected')
-                return null
-            }
-        })
-        .filter(item => item !== null)
+        // 3. Construction de l'objet Item avec flags
+        incrementNewTypeImportStat('imported')
+        return {
+          name,
+          type: 'newtype',
+          system,
+          flags: {
+            swerpg: {
+              oggdudeKey: key,
+              // Autres métadonnées de traçabilité
+            },
+          },
+        }
+      } catch (error) {
+        logger.error('[NewTypeMapper] Error mapping item', error)
+        incrementNewTypeImportStat('rejected')
+        return null
+      }
+    })
+    .filter((item) => item !== null)
 }
 ```
 
@@ -82,44 +82,44 @@ export function newTypeMapper(items) {
  * @returns {Promise<Object>} - Contexte structuré
  */
 export async function buildNewTypeContext(zip, groupByDirectory, groupByType) {
-    return {
-        // 1. Données JSON parsées depuis XML
-        jsonData: await OggDudeDataElement.buildJsonDataFromFile(
-            zip,
-            groupByDirectory,
-            'NewTypes.xml',           // Nom du fichier dans le ZIP
-            'NewTypes.NewType'        // XPath JSON vers les données
-        ),
+  return {
+    // 1. Données JSON parsées depuis XML
+    jsonData: await OggDudeDataElement.buildJsonDataFromFile(
+      zip,
+      groupByDirectory,
+      'NewTypes.xml', // Nom du fichier dans le ZIP
+      'NewTypes.NewType', // XPath JSON vers les données
+    ),
 
-        // 2. Métadonnées du ZIP
-        zip: {
-            elementFileName: 'NewTypes.xml',
-            content: zip,
-            directories: groupByDirectory
-        },
+    // 2. Métadonnées du ZIP
+    zip: {
+      elementFileName: 'NewTypes.xml',
+      content: zip,
+      directories: groupByDirectory,
+    },
 
-        // 3. Configuration des images
-        image: {
-            criteria: 'Data/NewTypeImages',                     // Chemin dans ZIP
-            worldPath: 'modules/swerpg/assets/images/newtypes/', // Destination
-            systemPath: buildItemImgSystemPath('newtype.svg'),  // Fallback
-            images: groupByType.image || [],
-            prefix: 'NewType'                                   // Préfixe fichiers
-        },
+    // 3. Configuration des images
+    image: {
+      criteria: 'Data/NewTypeImages', // Chemin dans ZIP
+      worldPath: 'modules/swerpg/assets/images/newtypes/', // Destination
+      systemPath: buildItemImgSystemPath('newtype.svg'), // Fallback
+      images: groupByType.image || [],
+      prefix: 'NewType', // Préfixe fichiers
+    },
 
-        // 4. Dossier Foundry de destination
-        folder: {
-            name: 'Swerpg - NewTypes',
-            type: 'Item'
-        },
+    // 4. Dossier Foundry de destination
+    folder: {
+      name: 'Swerpg - NewTypes',
+      type: 'Item',
+    },
 
-        // 5. Configuration du mapping
-        element: {
-            jsonCriteria: 'NewTypes.NewType',
-            mapper: newTypeMapper,
-            type: 'newtype'
-        }
-    }
+    // 5. Configuration du mapping
+    element: {
+      jsonCriteria: 'NewTypes.NewType',
+      mapper: newTypeMapper,
+      type: 'newtype',
+    },
+  }
 }
 ```
 
@@ -128,13 +128,9 @@ export async function buildNewTypeContext(zip, groupByDirectory, groupByType) {
 ```javascript
 import OggDudeImporter from '../oggDude.mjs'
 import OggDudeDataElement from '../../settings/models/OggDudeDataElement.mjs'
-import {buildItemImgSystemPath} from '../../settings/directories.mjs'
-import {logger} from '../../utils/logger.mjs'
-import {
-    resetNewTypeImportStats,
-    incrementNewTypeImportStat,
-    getNewTypeImportStats
-} from '../utils/newtype-import-utils.mjs'
+import { buildItemImgSystemPath } from '../../settings/directories.mjs'
+import { logger } from '../../utils/logger.mjs'
+import { resetNewTypeImportStats, incrementNewTypeImportStat, getNewTypeImportStats } from '../utils/newtype-import-utils.mjs'
 ```
 
 ---
@@ -150,28 +146,28 @@ Si le nouveau type nécessite des conversions de codes OggDude vers valeurs syst
  * Table de correspondance OggDude → Système
  */
 export const NEWTYPE_PROPERTY_MAP = Object.freeze({
-        'OGGDUDE_CODE_1': {
-            systemValue: 'swerpg-value-1',
-            description: 'Description de la correspondance'
-        },
-        'OGGDUDE_CODE_2': {
-            systemValue: 'swerpg-value-2',
-            description: 'Description de la correspondance'
-        },
-        // ...
-    })
+  OGGDUDE_CODE_1: {
+    systemValue: 'swerpg-value-1',
+    description: 'Description de la correspondance',
+  },
+  OGGDUDE_CODE_2: {
+    systemValue: 'swerpg-value-2',
+    description: 'Description de la correspondance',
+  },
+  // ...
+})
 
 /**
  * Fonction de résolution avec fallback
  */
 export function resolveNewTypeProperty(oggDudeCode) {
-    const mapping = NEWTYPE_PROPERTY_MAP[oggDudeCode]
-    if (!mapping) {
-        logger.warn(`Unknown OggDude code: ${oggDudeCode}`)
-        addUnknownPropertyStat(oggDudeCode) // Métriques
-        return 'default-value'
-    }
-    return mapping.systemValue
+  const mapping = NEWTYPE_PROPERTY_MAP[oggDudeCode]
+  if (!mapping) {
+    logger.warn(`Unknown OggDude code: ${oggDudeCode}`)
+    addUnknownPropertyStat(oggDudeCode) // Métriques
+    return 'default-value'
+  }
+  return mapping.systemValue
 }
 ```
 
@@ -182,28 +178,28 @@ export function resolveNewTypeProperty(oggDudeCode) {
 **Fichier**: `module/importer/utils/newtype-import-utils.mjs`
 
 ```javascript
-import {logger} from '../../utils/logger.mjs'
+import { logger } from '../../utils/logger.mjs'
 
 // État local des statistiques
 let stats = {
-    total: 0,              // Total d'items traités
-    imported: 0,           // Items importés avec succès
-    rejected: 0,           // Items rejetés (validation échouée)
-    unknownProperties: 0,  // Propriétés non reconnues
-    propertyDetails: []    // Liste des propriétés inconnues
+  total: 0, // Total d'items traités
+  imported: 0, // Items importés avec succès
+  rejected: 0, // Items rejetés (validation échouée)
+  unknownProperties: 0, // Propriétés non reconnues
+  propertyDetails: [], // Liste des propriétés inconnues
 }
 
 /**
  * Réinitialise les statistiques d'import
  */
 export function resetNewTypeImportStats() {
-    stats = {
-        total: 0,
-        imported: 0,
-        rejected: 0,
-        unknownProperties: 0,
-        propertyDetails: []
-    }
+  stats = {
+    total: 0,
+    imported: 0,
+    rejected: 0,
+    unknownProperties: 0,
+    propertyDetails: [],
+  }
 }
 
 /**
@@ -212,9 +208,9 @@ export function resetNewTypeImportStats() {
  * @param {number} value - Valeur à ajouter (défaut: 1)
  */
 export function incrementNewTypeImportStat(key, value = 1) {
-    if (stats[key] !== undefined) {
-        stats[key] += value
-    }
+  if (stats[key] !== undefined) {
+    stats[key] += value
+  }
 }
 
 /**
@@ -222,10 +218,10 @@ export function incrementNewTypeImportStat(key, value = 1) {
  * @param {string} property - Nom de la propriété inconnue
  */
 export function addUnknownPropertyStat(property) {
-    stats.unknownProperties++
-    if (!stats.propertyDetails.includes(property)) {
-        stats.propertyDetails.push(property)
-    }
+  stats.unknownProperties++
+  if (!stats.propertyDetails.includes(property)) {
+    stats.propertyDetails.push(property)
+  }
 }
 
 /**
@@ -233,7 +229,7 @@ export function addUnknownPropertyStat(property) {
  * @returns {Object} - Copie des statistiques actuelles
  */
 export function getNewTypeImportStats() {
-    return {...stats}
+  return { ...stats }
 }
 
 /**
@@ -241,10 +237,10 @@ export function getNewTypeImportStats() {
  * @returns {Object} - Configuration des métriques
  */
 export function registerNewTypeMetrics() {
-    return {
-        domain: 'newtype',
-        getStats: getNewTypeImportStats
-    }
+  return {
+    domain: 'newtype',
+    getStats: getNewTypeImportStats,
+  }
 }
 ```
 
@@ -257,7 +253,7 @@ export function registerNewTypeMetrics() {
 #### a. Ajouter l'import en haut du fichier
 
 ```javascript
-import {buildNewTypeContext} from './items/newtype-ogg-dude.mjs'
+import { buildNewTypeContext } from './items/newtype-ogg-dude.mjs'
 ```
 
 #### b. Dans `processOggDudeData()` (ligne ~185)
@@ -266,8 +262,8 @@ Ajouter dans la Map :
 
 ```javascript
 buildContextMap.set('newtype', {
-    type: 'newtype',
-    contextBuilder: buildNewTypeContext
+  type: 'newtype',
+  contextBuilder: buildNewTypeContext,
 })
 ```
 
@@ -277,8 +273,8 @@ Ajouter exactement la même ligne :
 
 ```javascript
 buildContextMap.set('newtype', {
-    type: 'newtype',
-    contextBuilder: buildNewTypeContext
+  type: 'newtype',
+  contextBuilder: buildNewTypeContext,
 })
 ```
 
@@ -317,68 +313,64 @@ _domainNames = ['weapon', 'armor', 'gear', 'species', 'career', 'talent', 'newty
 **Fichier**: `tests/importer/newtype-oggdude.spec.mjs`
 
 ```javascript
-import {describe, it, expect, beforeEach} from 'vitest'
-import {
-    newTypeMapper,
-    resetNewTypeImportStats,
-    getNewTypeImportStats
-} from '../../module/importer/items/newtype-ogg-dude.mjs'
+import { describe, it, expect, beforeEach } from 'vitest'
+import { newTypeMapper, resetNewTypeImportStats, getNewTypeImportStats } from '../../module/importer/items/newtype-ogg-dude.mjs'
 
 describe('newTypeMapper', () => {
-    beforeEach(() => {
-        resetNewTypeImportStats()
+  beforeEach(() => {
+    resetNewTypeImportStats()
+  })
+
+  it('should map basic newtype with all standard fields', () => {
+    const xmlItems = [
+      {
+        Name: 'Test NewType',
+        Key: 'testNewType',
+        Description: 'A test newtype item',
+        // Ajouter autres champs spécifiques
+      },
+    ]
+
+    const result = newTypeMapper(xmlItems)
+
+    expect(result).toHaveLength(1)
+    expect(result[0]).toMatchObject({
+      name: 'Test NewType',
+      type: 'newtype',
+      system: {
+        description: 'A test newtype item',
+      },
+      flags: {
+        swerpg: {
+          oggdudeKey: 'testNewType',
+        },
+      },
     })
+  })
 
-    it('should map basic newtype with all standard fields', () => {
-        const xmlItems = [{
-            Name: 'Test NewType',
-            Key: 'testNewType',
-            Description: 'A test newtype item',
-            // Ajouter autres champs spécifiques
-        }]
+  it('should track statistics correctly', () => {
+    const xmlItems = [
+      { Name: 'Item1', Key: 'key1' },
+      { Name: 'Item2', Key: 'key2' },
+    ]
 
-        const result = newTypeMapper(xmlItems)
+    newTypeMapper(xmlItems)
+    const stats = getNewTypeImportStats()
 
-        expect(result).toHaveLength(1)
-        expect(result[0]).toMatchObject({
-            name: 'Test NewType',
-            type: 'newtype',
-            system: {
-                description: 'A test newtype item'
-            },
-            flags: {
-                swerpg: {
-                    oggdudeKey: 'testNewType'
-                }
-            }
-        })
-    })
+    expect(stats.total).toBe(2)
+    expect(stats.imported).toBe(2)
+    expect(stats.rejected).toBe(0)
+  })
 
-    it('should track statistics correctly', () => {
-        const xmlItems = [
-            {Name: 'Item1', Key: 'key1'},
-            {Name: 'Item2', Key: 'key2'}
-        ]
+  it('should handle missing mandatory fields gracefully', () => {
+    const xmlItems = [{ Description: 'Missing name and key' }]
 
-        newTypeMapper(xmlItems)
-        const stats = getNewTypeImportStats()
+    const result = newTypeMapper(xmlItems)
+    const stats = getNewTypeImportStats()
 
-        expect(stats.total).toBe(2)
-        expect(stats.imported).toBe(2)
-        expect(stats.rejected).toBe(0)
-    })
-
-    it('should handle missing mandatory fields gracefully', () => {
-        const xmlItems = [
-            {Description: 'Missing name and key'}
-        ]
-
-        const result = newTypeMapper(xmlItems)
-        const stats = getNewTypeImportStats()
-
-        expect(result).toHaveLength(0)
-        expect(stats.rejected).toBe(1)
-    })
+    expect(result).toHaveLength(0)
+    expect(stats.rejected).toBe(1)
+  })
 })
 ```
 
@@ -387,35 +379,31 @@ describe('newTypeMapper', () => {
 **Fichier**: `tests/importer/newtype-import.integration.spec.mjs`
 
 ```javascript
-import {describe, it, expect} from 'vitest'
+import { describe, it, expect } from 'vitest'
 import fs from 'node:fs/promises'
-import {parseXmlToJson} from '../../module/utils/xml/parser.mjs'
-import {
-    newTypeMapper,
-    resetNewTypeImportStats,
-    getNewTypeImportStats
-} from '../../module/importer/items/newtype-ogg-dude.mjs'
+import { parseXmlToJson } from '../../module/utils/xml/parser.mjs'
+import { newTypeMapper, resetNewTypeImportStats, getNewTypeImportStats } from '../../module/importer/items/newtype-ogg-dude.mjs'
 
 describe('Intégration OggDude -> newTypeMapper', () => {
-    it('NewTypes.xml - mapping de plusieurs items réels', async () => {
-        // 1. Charger le fichier XML de test
-        const xml = await fs.readFile('resources/integration/NewTypes.xml', 'utf8')
-        const raw = await parseXmlToJson(xml)
+  it('NewTypes.xml - mapping de plusieurs items réels', async () => {
+    // 1. Charger le fichier XML de test
+    const xml = await fs.readFile('resources/integration/NewTypes.xml', 'utf8')
+    const raw = await parseXmlToJson(xml)
 
-        // 2. Extraire les données et mapper
-        const newTypeNodes = raw.NewTypes.NewType
-        const mapped = newTypeMapper(newTypeNodes.slice(0, 5))
+    // 2. Extraire les données et mapper
+    const newTypeNodes = raw.NewTypes.NewType
+    const mapped = newTypeMapper(newTypeNodes.slice(0, 5))
 
-        // 3. Assertions sur la structure
-        expect(mapped[0].type).toBe('newtype')
-        expect(mapped[0].system).toHaveProperty('description')
-        // Ajouter assertions spécifiques au type
+    // 3. Assertions sur la structure
+    expect(mapped[0].type).toBe('newtype')
+    expect(mapped[0].system).toHaveProperty('description')
+    // Ajouter assertions spécifiques au type
 
-        // 4. Vérification des statistiques
-        const stats = getNewTypeImportStats()
-        expect(stats.total).toBe(5)
-        expect(stats.imported).toBe(mapped.length)
-    })
+    // 4. Vérification des statistiques
+    const stats = getNewTypeImportStats()
+    expect(stats.total).toBe(5)
+    expect(stats.imported).toBe(mapped.length)
+  })
 })
 ```
 
@@ -424,55 +412,55 @@ describe('Intégration OggDude -> newTypeMapper', () => {
 **Fichier**: `tests/importer/newtype-utils.spec.mjs`
 
 ```javascript
-import {describe, it, expect, beforeEach} from 'vitest'
+import { describe, it, expect, beforeEach } from 'vitest'
 import {
-    resetNewTypeImportStats,
-    incrementNewTypeImportStat,
-    addUnknownPropertyStat,
-    getNewTypeImportStats,
-    registerNewTypeMetrics
+  resetNewTypeImportStats,
+  incrementNewTypeImportStat,
+  addUnknownPropertyStat,
+  getNewTypeImportStats,
+  registerNewTypeMetrics,
 } from '../../module/importer/utils/newtype-import-utils.mjs'
 
 describe('newtype-import-utils', () => {
-    beforeEach(() => {
-        resetNewTypeImportStats()
+  beforeEach(() => {
+    resetNewTypeImportStats()
+  })
+
+  it('should initialize stats correctly', () => {
+    const stats = getNewTypeImportStats()
+    expect(stats).toEqual({
+      total: 0,
+      imported: 0,
+      rejected: 0,
+      unknownProperties: 0,
+      propertyDetails: [],
     })
+  })
 
-    it('should initialize stats correctly', () => {
-        const stats = getNewTypeImportStats()
-        expect(stats).toEqual({
-            total: 0,
-            imported: 0,
-            rejected: 0,
-            unknownProperties: 0,
-            propertyDetails: []
-        })
-    })
+  it('should increment stats correctly', () => {
+    incrementNewTypeImportStat('total')
+    incrementNewTypeImportStat('imported', 5)
 
-    it('should increment stats correctly', () => {
-        incrementNewTypeImportStat('total')
-        incrementNewTypeImportStat('imported', 5)
+    const stats = getNewTypeImportStats()
+    expect(stats.total).toBe(1)
+    expect(stats.imported).toBe(5)
+  })
 
-        const stats = getNewTypeImportStats()
-        expect(stats.total).toBe(1)
-        expect(stats.imported).toBe(5)
-    })
+  it('should track unknown properties', () => {
+    addUnknownPropertyStat('unknownProp1')
+    addUnknownPropertyStat('unknownProp2')
+    addUnknownPropertyStat('unknownProp1') // Duplicate
 
-    it('should track unknown properties', () => {
-        addUnknownPropertyStat('unknownProp1')
-        addUnknownPropertyStat('unknownProp2')
-        addUnknownPropertyStat('unknownProp1') // Duplicate
+    const stats = getNewTypeImportStats()
+    expect(stats.unknownProperties).toBe(3)
+    expect(stats.propertyDetails).toEqual(['unknownProp1', 'unknownProp2'])
+  })
 
-        const stats = getNewTypeImportStats()
-        expect(stats.unknownProperties).toBe(3)
-        expect(stats.propertyDetails).toEqual(['unknownProp1', 'unknownProp2'])
-    })
-
-    it('should register metrics correctly', () => {
-        const metrics = registerNewTypeMetrics()
-        expect(metrics.domain).toBe('newtype')
-        expect(typeof metrics.getStats).toBe('function')
-    })
+  it('should register metrics correctly', () => {
+    const metrics = registerNewTypeMetrics()
+    expect(metrics.domain).toBe('newtype')
+    expect(typeof metrics.getStats).toBe('function')
+  })
 })
 ```
 
@@ -489,45 +477,45 @@ Créer un fichier XML de test avec des données réelles issues d'OggDude.
 ### Questions à clarifier avant l'implémentation
 
 1. **Structure du fichier XML OggDude**
-    - Quel est le nom exact du fichier dans le ZIP ? (ex: `NewTypes.xml`)
-    - Quel est le chemin JSON vers les données ? (ex: `NewTypes.NewType`)
-    - Quelle est la structure XML des éléments ?
+   - Quel est le nom exact du fichier dans le ZIP ? (ex: `NewTypes.xml`)
+   - Quel est le chemin JSON vers les données ? (ex: `NewTypes.NewType`)
+   - Quelle est la structure XML des éléments ?
 
 2. **Schéma de données Foundry**
-    - Le type d'Item existe-t-il déjà dans le système ?
-    - Faut-il créer un nouveau `TypeDataModel` dans `module/models/` ?
-    - Quelles sont les propriétés système obligatoires et optionnelles ?
+   - Le type d'Item existe-t-il déjà dans le système ?
+   - Faut-il créer un nouveau `TypeDataModel` dans `module/models/` ?
+   - Quelles sont les propriétés système obligatoires et optionnelles ?
 
 3. **Propriétés complexes**
-    - Y a-t-il des champs nécessitant des mappings spécifiques (skills, qualities, modifiers) ?
-    - Des tables de mapping dédiées sont-elles nécessaires ?
-    - Y a-t-il des relations avec d'autres types d'items ?
+   - Y a-t-il des champs nécessitant des mappings spécifiques (skills, qualities, modifiers) ?
+   - Des tables de mapping dédiées sont-elles nécessaires ?
+   - Y a-t-il des relations avec d'autres types d'items ?
 
 ### Bonnes pratiques
 
 1. **Validation stricte**
-    - Utiliser `mapMandatoryString/Number/Boolean` pour les champs obligatoires
-    - Toujours prévoir des valeurs par défaut avec `mapOptional*`
+   - Utiliser `mapMandatoryString/Number/Boolean` pour les champs obligatoires
+   - Toujours prévoir des valeurs par défaut avec `mapOptional*`
 
 2. **Gestion d'erreurs**
-    - Logger avec le bon niveau : `info` pour succès, `warn` pour données manquantes, `error` pour échecs bloquants
-    - Incrémenter les statistiques appropriées (total, imported, rejected)
-    - Filtrer les `null` en fin de mapper
+   - Logger avec le bon niveau : `info` pour succès, `warn` pour données manquantes, `error` pour échecs bloquants
+   - Incrémenter les statistiques appropriées (total, imported, rejected)
+   - Filtrer les `null` en fin de mapper
 
 3. **Performance**
-    - Pour les gros volumes (>1000 items), envisager le streaming
-    - Cacher les résolutions de mapping fréquentes
-    - Lazy loading des images
+   - Pour les gros volumes (>1000 items), envisager le streaming
+   - Cacher les résolutions de mapping fréquentes
+   - Lazy loading des images
 
 4. **Sécurité**
-    - Valider les chemins de fichiers pour éviter les attaques de traversée
-    - Sanitiser les entrées HTML si nécessaire
-    - Toujours vérifier les types avant manipulation
+   - Valider les chemins de fichiers pour éviter les attaques de traversée
+   - Sanitiser les entrées HTML si nécessaire
+   - Toujours vérifier les types avant manipulation
 
 5. **Documentation**
-    - Créer `documentation/importer/import-newtype.md`
-    - Mettre à jour `documentation/importer/README.md`
-    - Ajouter le type dans la matrice de statut d'implémentation
+   - Créer `documentation/importer/import-newtype.md`
+   - Mettre à jour `documentation/importer/README.md`
+   - Ajouter le type dans la matrice de statut d'implémentation
 
 ---
 

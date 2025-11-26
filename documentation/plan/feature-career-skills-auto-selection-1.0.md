@@ -63,57 +63,57 @@ La feuille d'Item "career" doit afficher automatiquement les compétences de car
 
 - GOAL-001: Analyse & cartographie du code existant + consolidation exigences.
 
-| Task     | Description                                                                                               | DependsOn | Completed | Date |
-| -------- | --------------------------------------------------------------------------------------------------------- | --------- | --------- | ---- |
+| Task     | Description                                                                                              | DependsOn | Completed | Date |
+| -------- | -------------------------------------------------------------------------------------------------------- | --------- | --------- | ---- |
 | TASK-001 | Lire `module/importer/items/career-ogg-dude.mjs` pour confirmer logique actuelle d'extraction & mapping. |           |           |      |
 | TASK-002 | Analyser `module/applications/sheets/career.mjs` (#prepareCareerSkills, toggling) et template HBS.       |           |           |      |
-| TASK-003 | Vérifier modèle `module/models/career.mjs` (SetField validation 0..8).                                    |           |           |      |
-| TASK-004 | Lister variantes XML attendues (ex: Ace.xml, structure manquante, liste simple).                          | TASK-001  |           |      |
-| TASK-005 | Identifier points de logging & métriques disponibles (career import stats).                               | TASK-001  |           |      |
-| TASK-006 | Recenser tests existants liés à career (chercher `career-ogg-dude.spec.mjs`).                              |           |           |      |
-| TASK-007 | Formaliser REQ/CON/PAT définitifs (ajuster si découverte divergente).                                      | TASK-002  |           |      |
+| TASK-003 | Vérifier modèle `module/models/career.mjs` (SetField validation 0..8).                                   |           |           |      |
+| TASK-004 | Lister variantes XML attendues (ex: Ace.xml, structure manquante, liste simple).                         | TASK-001  |           |      |
+| TASK-005 | Identifier points de logging & métriques disponibles (career import stats).                              | TASK-001  |           |      |
+| TASK-006 | Recenser tests existants liés à career (chercher `career-ogg-dude.spec.mjs`).                            |           |           |      |
+| TASK-007 | Formaliser REQ/CON/PAT définitifs (ajuster si découverte divergente).                                    | TASK-002  |           |      |
 
 ### Implementation Phase 2
 
 - GOAL-002: Conception précise (fonctions, mises à jour UI, tests).
 
-| Task     | Description                                                                                                                   | DependsOn | Completed | Date |
-| -------- | ----------------------------------------------------------------------------------------------------------------------------- | --------- | --------- | ---- |
-| TASK-008 | Spécifier renforcement `extractRawCareerSkillCodes`: gérer objets orphelins, filtrage types non-string.                       | TASK-001  |           |      |
-| TASK-009 | Définir pipeline mapping final: extraction → map → déduplication → tronquage → assignation `system.careerSkills`.            | TASK-008  |           |      |
-| TASK-010 | Concevoir mécanisme d'overwrite sur réimport (rechercher item par flag oggdudeKey, update skills).                            | TASK-009  |           |      |
-| TASK-011 | Décrire adaptation `#prepareCareerSkills` (ajout attribut focus/tabindex si a11y requis).                                      | TASK-002  |           |      |
-| TASK-012 | Définir logique côté toggling pour empêcher ajout si déjà 8 (grâce à contrôle préalable avant update).                        | TASK-011  |           |      |
-| TASK-013 | Spécifier message UI localisé sur dépassement (nouvelle clé i18n).                                                            | TASK-012  |           |      |
-| TASK-014 | Plan détaillé tests Vitest (unit extraction/mapping, integration sheet toggling, réimport).                                   | TASK-009  |           |      |
-| TASK-015 | Plan Playwright: ouvrir sheet carrière, vérifier auto-sélection, empêcher 9ème ajout.                                         | TASK-011  |           |      |
-| TASK-016 | Définir instrumentation performance (mesure temps mapping dans test).                                                         | TASK-014  |           |      |
-| TASK-017 | Documentation: section ajoutée dans `documentation/` (guide carrière & import).                                                | TASK-013  |           |      |
+| Task     | Description                                                                                                       | DependsOn | Completed | Date |
+| -------- | ----------------------------------------------------------------------------------------------------------------- | --------- | --------- | ---- |
+| TASK-008 | Spécifier renforcement `extractRawCareerSkillCodes`: gérer objets orphelins, filtrage types non-string.           | TASK-001  |           |      |
+| TASK-009 | Définir pipeline mapping final: extraction → map → déduplication → tronquage → assignation `system.careerSkills`. | TASK-008  |           |      |
+| TASK-010 | Concevoir mécanisme d'overwrite sur réimport (rechercher item par flag oggdudeKey, update skills).                | TASK-009  |           |      |
+| TASK-011 | Décrire adaptation `#prepareCareerSkills` (ajout attribut focus/tabindex si a11y requis).                         | TASK-002  |           |      |
+| TASK-012 | Définir logique côté toggling pour empêcher ajout si déjà 8 (grâce à contrôle préalable avant update).            | TASK-011  |           |      |
+| TASK-013 | Spécifier message UI localisé sur dépassement (nouvelle clé i18n).                                                | TASK-012  |           |      |
+| TASK-014 | Plan détaillé tests Vitest (unit extraction/mapping, integration sheet toggling, réimport).                       | TASK-009  |           |      |
+| TASK-015 | Plan Playwright: ouvrir sheet carrière, vérifier auto-sélection, empêcher 9ème ajout.                             | TASK-011  |           |      |
+| TASK-016 | Définir instrumentation performance (mesure temps mapping dans test).                                             | TASK-014  |           |      |
+| TASK-017 | Documentation: section ajoutée dans `documentation/` (guide carrière & import).                                   | TASK-013  |           |      |
 
 ### Implementation Phase 3
 
 - GOAL-003: Implémentation & validation.
 
-| Task     | Description                                                                                                                                    | DependsOn | Completed | Date |
-| -------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | --------- | --------- | ---- |
-| TASK-018 | Renforcer `extractRawCareerSkillCodes` dans `career-ogg-dude.mjs` (filtrage types, robustesse).                                                | TASK-008  |           |      |
-| TASK-019 | Ajuster `mapCareerSkills` (ordre, déduplication stable, tronquage) + logging codes inconnus.                                                   | TASK-009  |           |      |
-| TASK-020 | Implémenter réimport overwrite (recherche par flag oggdudeKey avant création).                                                                 | TASK-010  |           |      |
-| TASK-021 | Étendre stats import career: totalSkills, unknownSkills (déjà partiel) si besoin (utilitaire career-import-utils).                              | TASK-019  |           |      |
-| TASK-022 | Modifier `CareerSheet.#prepareCareerSkills` pour ajouter data attributes a11y (`aria-selected`, `tabindex`).                                   | TASK-011  |           |      |
-| TASK-023 | Implémenter blocage toggling >8: vérification taille `document.system.careerSkills` avant ajout + notification localisée.                      | TASK-012  |           |      |
-| TASK-024 | Ajouter nouvelle clé i18n message dépassement dans `lang/en.json` & `lang/fr.json`.                                                            | TASK-013  |           |      |
-| TASK-025 | Mettre à jour template `career-config.hbs` si ajout attributs a11y (ex: role="button").                                                      | TASK-022  |           |      |
-| TASK-026 | Créer tests Vitest unitaires `tests/importer/career-skills-mapping.spec.mjs`.                                                                  | TASK-014  |           |      |
-| TASK-027 | Créer tests Vitest intégration `tests/applications/career-sheet.spec.mjs` (toggle, limite, compteur).                                         | TASK-014  |           |      |
-| TASK-028 | Créer test Vitest réimport `tests/importer/career-reimport.spec.mjs`.                                                                          | TASK-014  |           |      |
-| TASK-029 | Créer test performance (mesure temps mapping 50 skills fictives) `tests/importer/career-performance.spec.mjs`.                                | TASK-016  |           |      |
-| TASK-030 | Créer test Playwright `tests/ui/career-sheet-auto-selection.spec.ts`.                                                                          | TASK-015  |           |      |
-| TASK-031 | Documentation mise à jour `documentation/importer/README.md` + `documentation/modules/career-sheet.md`.                                        | TASK-017  |           |      |
-| TASK-032 | Vérifier absence régression description/source flags (test snapshot item).                                                                    | TASK-019  |           |      |
-| TASK-033 | Ajouter entrée CHANGELOG bugfix/feature.                                                                                                       | TASK-031  |           |      |
-| TASK-034 | Audit a11y manuel (focus, lecture screen reader) & ajustements mineurs nécessaires.                                                            | TASK-025  |           |      |
-| TASK-035 | Validation finale & rollback plan (si échecs mapping généralisés) documenté dans MIGRATION_LOGGING_PROGRESSIVE.md.                            | TASK-030  |           |      |
+| Task     | Description                                                                                                               | DependsOn | Completed | Date |
+| -------- | ------------------------------------------------------------------------------------------------------------------------- | --------- | --------- | ---- |
+| TASK-018 | Renforcer `extractRawCareerSkillCodes` dans `career-ogg-dude.mjs` (filtrage types, robustesse).                           | TASK-008  |           |      |
+| TASK-019 | Ajuster `mapCareerSkills` (ordre, déduplication stable, tronquage) + logging codes inconnus.                              | TASK-009  |           |      |
+| TASK-020 | Implémenter réimport overwrite (recherche par flag oggdudeKey avant création).                                            | TASK-010  |           |      |
+| TASK-021 | Étendre stats import career: totalSkills, unknownSkills (déjà partiel) si besoin (utilitaire career-import-utils).        | TASK-019  |           |      |
+| TASK-022 | Modifier `CareerSheet.#prepareCareerSkills` pour ajouter data attributes a11y (`aria-selected`, `tabindex`).              | TASK-011  |           |      |
+| TASK-023 | Implémenter blocage toggling >8: vérification taille `document.system.careerSkills` avant ajout + notification localisée. | TASK-012  |           |      |
+| TASK-024 | Ajouter nouvelle clé i18n message dépassement dans `lang/en.json` & `lang/fr.json`.                                       | TASK-013  |           |      |
+| TASK-025 | Mettre à jour template `career-config.hbs` si ajout attributs a11y (ex: role="button").                                   | TASK-022  |           |      |
+| TASK-026 | Créer tests Vitest unitaires `tests/importer/career-skills-mapping.spec.mjs`.                                             | TASK-014  |           |      |
+| TASK-027 | Créer tests Vitest intégration `tests/applications/career-sheet.spec.mjs` (toggle, limite, compteur).                     | TASK-014  |           |      |
+| TASK-028 | Créer test Vitest réimport `tests/importer/career-reimport.spec.mjs`.                                                     | TASK-014  |           |      |
+| TASK-029 | Créer test performance (mesure temps mapping 50 skills fictives) `tests/importer/career-performance.spec.mjs`.            | TASK-016  |           |      |
+| TASK-030 | Créer test Playwright `tests/ui/career-sheet-auto-selection.spec.ts`.                                                     | TASK-015  |           |      |
+| TASK-031 | Documentation mise à jour `documentation/importer/README.md` + `documentation/modules/career-sheet.md`.                   | TASK-017  |           |      |
+| TASK-032 | Vérifier absence régression description/source flags (test snapshot item).                                                | TASK-019  |           |      |
+| TASK-033 | Ajouter entrée CHANGELOG bugfix/feature.                                                                                  | TASK-031  |           |      |
+| TASK-034 | Audit a11y manuel (focus, lecture screen reader) & ajustements mineurs nécessaires.                                       | TASK-025  |           |      |
+| TASK-035 | Validation finale & rollback plan (si échecs mapping généralisés) documenté dans MIGRATION_LOGGING_PROGRESSIVE.md.        | TASK-030  |           |      |
 
 ## 3. Alternatives
 

@@ -43,7 +43,7 @@
 - **importer:** refactor career OggDude mapper to align with `SwerpgCareer` schema (description, freeSkillRank clamp, careerSkills normalization, logging)
 - **importer:** correct OggDude gear mapping to restore numeric fields, enriched description, BaseMods serialization and weapon profile flags
 - **importer:** add missing "Load Specialization data" row in import statistics table (oggDudeDataImporter.hbs)
-- **importer:** add diagnostic logs in processOggDudeData and _prepareContext for easier troubleshooting of domain registration issues
+- **importer:** add diagnostic logs in processOggDudeData and \_prepareContext for easier troubleshooting of domain registration issues
 - **importer:** add comprehensive error handling with try/catch in specialization mapper to prevent silent failures
 - **importer:** add validation logging in extractRawSpecializationSkillCodes for CareerSkills structure debugging
 - **importer:** add per-item error handling in specializationMapper to isolate mapping failures

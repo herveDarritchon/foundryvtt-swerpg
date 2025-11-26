@@ -1,13 +1,10 @@
 import { describe, it, expect, beforeEach } from 'vitest'
-import {
-  obligationMapper,
-  getObligationImportStats,
-} from '../../module/importer/items/obligation-ogg-dude.mjs'
+import { obligationMapper, getObligationImportStats } from '../../module/importer/items/obligation-ogg-dude.mjs'
 
 describe('obligationMapper', () => {
   beforeEach(() => {
-      // Stats are automatically reset at the start of each obligationMapper call
-      // No manual reset needed in beforeEach for these mapper tests
+    // Stats are automatically reset at the start of each obligationMapper call
+    // No manual reset needed in beforeEach for these mapper tests
   })
 
   describe('Valid obligation mapping', () => {
@@ -48,7 +45,7 @@ describe('obligationMapper', () => {
         {
           Key: 'BOU',
           Name: 'Bounty',
-          Description: 'A bounty on the character\'s head.',
+          Description: "A bounty on the character's head.",
           Sources: {
             Source: ['Source 1', 'Source 2', 'Source 3'],
           },

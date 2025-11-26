@@ -72,7 +72,9 @@ function isBrawnSkill(skillKey) {
   if (!skillKey) {
     return false
   }
-  const normalized = sanitizeText(String(skillKey)).toLowerCase().replace(/[^a-z]/g, '')
+  const normalized = sanitizeText(String(skillKey))
+    .toLowerCase()
+    .replace(/[^a-z]/g, '')
   return BRAWN_BASED_SKILLS.has(normalized)
 }
 

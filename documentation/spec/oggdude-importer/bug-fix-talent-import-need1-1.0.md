@@ -1,17 +1,17 @@
 ---
-title: "Bug OggDude Talent Import – Mauvais mapping des données"
-domain: "oggdude-importer"
-purpose: "bug"
-feature: "oggdude-talent-data-mapping"
-version: "1.0"
-status: "draft"
-owner: "SWERPG Core Dev"
-createdAt: "2025-11-18"
+title: 'Bug OggDude Talent Import – Mauvais mapping des données'
+domain: 'oggdude-importer'
+purpose: 'bug'
+feature: 'oggdude-talent-data-mapping'
+version: '1.0'
+status: 'draft'
+owner: 'SWERPG Core Dev'
+createdAt: '2025-11-18'
 input-sources:
-  - "OggDude Talent.xml export (Unlimited Power & autres suppléments)"
-  - "UI d’import OggDude dans SWERPG (Foundry VTT v13+)"
+  - 'OggDude Talent.xml export (Unlimited Power & autres suppléments)'
+  - 'UI d’import OggDude dans SWERPG (Foundry VTT v13+)'
 notes:
-  - "Spécification de besoin pour générer un plan d’implémentation avec l’agent swerpg-plan."
+  - 'Spécification de besoin pour générer un plan d’implémentation avec l’agent swerpg-plan.'
 ---
 
 # 1. Contexte & objectif
@@ -47,7 +47,7 @@ Exemple de Talent dans OggDude :
     </DieModifier>
   </DieModifiers>
 </Talent>
-````
+```
 
 Résultat actuel dans Foundry (simplifié) :
 
@@ -78,9 +78,9 @@ Résultat actuel dans Foundry (simplifié) :
 
 Assurer un **mapping fiable** des données `Talent.xml` vers la structure `Item` SWERPG de type `talent`, de manière à ce que les Talents importés :
 
-* aient leurs **propriétés de base correctes** (`isRanked`, `activation`),
-* conservent une **description utile** et la **source** (livre + page),
-* ne perdent pas les **modificateurs de dés** (au minimum en description lisible, idéalement aussi en structure dans les flags).
+- aient leurs **propriétés de base correctes** (`isRanked`, `activation`),
+- conservent une **description utile** et la **source** (livre + page),
+- ne perdent pas les **modificateurs de dés** (au minimum en description lisible, idéalement aussi en structure dans les flags).
 
 ---
 
@@ -88,24 +88,24 @@ Assurer un **mapping fiable** des données `Talent.xml` vers la structure `Item`
 
 ## 2.1 In scope
 
-* Import des entrées `<Talent>` issues de `Talent.xml`, notamment :
+- Import des entrées `<Talent>` issues de `Talent.xml`, notamment :
+  - `<Key>`, `<Name>`, `<Description>`,
+  - `<Sources>` / `<Source>` (ouvrage + page),
+  - `<Ranked>`,
+  - `<ActivationValue>`,
+  - `<DieModifiers>` (et leurs sous-champs).
 
-    * `<Key>`, `<Name>`, `<Description>`,
-    * `<Sources>` / `<Source>` (ouvrage + page),
-    * `<Ranked>`,
-    * `<ActivationValue>`,
-    * `<DieModifiers>` (et leurs sous-champs).
-* Création / mise à jour d’Items de type `talent` dans Foundry (système `swerpg`).
-* Mapping XML → champs `system.*` et `flags.swerpg.*` des Items `talent`.
+- Création / mise à jour d’Items de type `talent` dans Foundry (système `swerpg`).
+- Mapping XML → champs `system.*` et `flags.swerpg.*` des Items `talent`.
 
 ## 2.2 Out of scope
 
-* Conception / refactor complet du modèle de données des Talents SWERPG (arbres, nodes, etc.).
-* Mise en place d’une automatisation complète des Talents (génération automatique de `actorHooks` ou d’`actions` à partir des `DieModifiers`).
-* Gestion avancée des arbres de talents (`trees`, `node`, `row`, etc.) :
+- Conception / refactor complet du modèle de données des Talents SWERPG (arbres, nodes, etc.).
+- Mise en place d’une automatisation complète des Talents (génération automatique de `actorHooks` ou d’`actions` à partir des `DieModifiers`).
+- Gestion avancée des arbres de talents (`trees`, `node`, `row`, etc.) :
+  - l’import de `Talent.xml` est considéré ici comme import de **Talents “isolés”**, pas comme définition complète de Talent Trees.
 
-    * l’import de `Talent.xml` est considéré ici comme import de **Talents “isolés”**, pas comme définition complète de Talent Trees.
-* Migration automatique de Talents déjà importés dans des mondes existants (peut faire l’objet d’une issue séparée).
+- Migration automatique de Talents déjà importés dans des mondes existants (peut faire l’objet d’une issue séparée).
 
 ---
 
@@ -115,29 +115,27 @@ Assurer un **mapping fiable** des données `Talent.xml` vers la structure `Item`
 
 À partir du XML :
 
-* `Ranked` est à `true`,
-* `ActivationValue` vaut `taPassive`,
-* le Talent a :
-
-    * une description,
-    * une source (`Unlimited Power`, page 33),
-    * des `DieModifiers` sur la compétence `LORE`.
+- `Ranked` est à `true`,
+- `ActivationValue` vaut `taPassive`,
+- le Talent a :
+  - une description,
+  - une source (`Unlimited Power`, page 33),
+  - des `DieModifiers` sur la compétence `LORE`.
 
 Résultat dans Foundry :
 
-* `system.isRanked` est à `false` → **incorrect** pour un Talent marqué `Ranked=true`.
-* `system.activation` est fixé à `"passive"` dans cet exemple, mais :
+- `system.isRanked` est à `false` → **incorrect** pour un Talent marqué `Ranked=true`.
+- `system.activation` est fixé à `"passive"` dans cet exemple, mais :
+  - on ne sait pas si le mapping est systématique pour les autres valeurs (`taActive`, `taIncidental`, etc.),
+  - il n’y a aucun contrôle / validation.
 
-    * on ne sait pas si le mapping est systématique pour les autres valeurs (`taActive`, `taIncidental`, etc.),
-    * il n’y a aucun contrôle / validation.
-* Aucune description n’est présente (`system.description` absent ou vide).
-* La source (`Unlimited Power`, page 33) est **perdue**.
-* Les `DieModifiers` sont **complètement ignorés** :
-
-    * rien dans `actions`,
-    * rien dans `actorHooks`,
-    * rien dans `flags`,
-    * rien dans la description.
+- Aucune description n’est présente (`system.description` absent ou vide).
+- La source (`Unlimited Power`, page 33) est **perdue**.
+- Les `DieModifiers` sont **complètement ignorés** :
+  - rien dans `actions`,
+  - rien dans `actorHooks`,
+  - rien dans `flags`,
+  - rien dans la description.
 
 En pratique, le Talent importé n’apporte quasiment **aucune information utile** au MJ, à part son nom et son activation.
 
@@ -149,21 +147,19 @@ En pratique, le Talent importé n’apporte quasiment **aucune information utile
 
 Pour le MJ / les joueurs, après import :
 
-* Un Talent doit :
-
-    * refléter correctement s’il est **à rangs multiples** (`isRanked = true/false`),
-    * avoir une **activation correcte** (passive, active, etc.),
-    * présenter une **description lisible**,
-    * préciser clairement sa **source** (livre + page),
-    * ne pas perdre les informations de type **modificateur de dés** (au minimum, sous forme de texte lisible).
+- Un Talent doit :
+  - refléter correctement s’il est **à rangs multiples** (`isRanked = true/false`),
+  - avoir une **activation correcte** (passive, active, etc.),
+  - présenter une **description lisible**,
+  - préciser clairement sa **source** (livre + page),
+  - ne pas perdre les informations de type **modificateur de dés** (au minimum, sous forme de texte lisible).
 
 Résultat attendu :
 
-* Le MJ peut, à partir de la fiche du Talent importé :
-
-    * savoir d’où il vient (ouvrage / page),
-    * voir si le Talent est ranké ou non,
-    * comprendre les effets mécaniques de base (même si ceux-ci ne sont pas encore automatisés).
+- Le MJ peut, à partir de la fiche du Talent importé :
+  - savoir d’où il vient (ouvrage / page),
+  - voir si le Talent est ranké ou non,
+  - comprendre les effets mécaniques de base (même si ceux-ci ne sont pas encore automatisés).
 
 ---
 
@@ -185,14 +181,13 @@ Résultat attendu :
 
 À partir de `<Description>` et `<Sources>` :
 
-* Copier le texte de `<Description>` dans `system.description.public`.
-* Ajouter en bas de description :
+- Copier le texte de `<Description>` dans `system.description.public`.
+- Ajouter en bas de description :
+  - `Source: Unlimited Power, p.33` (ou équivalent, selon `<Source>`/`Page`).
 
-    * `Source: Unlimited Power, p.33` (ou équivalent, selon `<Source>`/`Page`).
-* Conserver les retours à la ligne significatifs.
-* Ne pas tenter de “deviner” ou reformuler les règles du Talent à ce stade :
-
-    * si le texte ne contient qu’un renvoi au livre, on **le garde tel quel**.
+- Conserver les retours à la ligne significatifs.
+- Ne pas tenter de “deviner” ou reformuler les règles du Talent à ce stade :
+  - si le texte ne contient qu’un renvoi au livre, on **le garde tel quel**.
 
 Exemple de description minimale pour `SECRETLORE` :
 
@@ -201,7 +196,7 @@ Please see page 33 of the Unlimited Power Sourcebook for details.
 Source: Unlimited Power, p.33
 ```
 
-*(Les mécaniques issues de `DieModifiers` seront ajoutées en section dédiée, cf. ci-dessous.)*
+_(Les mécaniques issues de `DieModifiers` seront ajoutées en section dédiée, cf. ci-dessous.)_
 
 ---
 
@@ -209,8 +204,8 @@ Source: Unlimited Power, p.33
 
 Règle simple :
 
-* Si `<Ranked>true</Ranked>` → `system.isRanked = true`.
-* Si `<Ranked>false</Ranked>` (ou absent) → `system.isRanked = false`.
+- Si `<Ranked>true</Ranked>` → `system.isRanked = true`.
+- Si `<Ranked>false</Ranked>` (ou absent) → `system.isRanked = false`.
 
 Le champ `system.rank.idx` reste à sa valeur par défaut (0) tant que le Talent n’est pas incorporé dans une arborescence (la logique d’arbres est hors scope de ce bugfix).
 
@@ -222,15 +217,15 @@ Mapping à définir de façon **systématique** :
 
 Exemples typiques (à adapter au vocabulaire déjà en place dans SWERPG) :
 
-* `taPassive` → `system.activation = "passive"`
-* `taActive` → `system.activation = "active"`
-* `taIncidental` / `taIncidentalOutOfTurn` → valeurs internes cohérentes (`"incidental"`, `"incidental-out-of-turn"` ou équivalent).
-* etc.
+- `taPassive` → `system.activation = "passive"`
+- `taActive` → `system.activation = "active"`
+- `taIncidental` / `taIncidentalOutOfTurn` → valeurs internes cohérentes (`"incidental"`, `"incidental-out-of-turn"` ou équivalent).
+- etc.
 
 Pour ce bugfix :
 
-* S’assurer que la valeur `taPassive` du Talent `SECRETLORE` est **correctement mappée** à l’activation passive.
-* Garantir que l’import ne laisse pas `activation` vide ou incohérent quand `<ActivationValue>` est présent.
+- S’assurer que la valeur `taPassive` du Talent `SECRETLORE` est **correctement mappée** à l’activation passive.
+- Garantir que l’import ne laisse pas `activation` vide ou incohérent quand `<ActivationValue>` est présent.
 
 > Les détails exhaustifs de la table de mapping peuvent être précisés dans le plan d’implémentation, mais le besoin métier est clair : l’activation doit être correctement renseignée.
 
@@ -258,8 +253,8 @@ Exemple :
 
 **Objectif minimal :**
 
-* Ne pas perdre ces informations.
-* Les rendre visibles dans la description du Talent, via une section dédiée (par exemple “Die Modifiers” ou “Effets”).
+- Ne pas perdre ces informations.
+- Les rendre visibles dans la description du Talent, via une section dédiée (par exemple “Die Modifiers” ou “Effets”).
 
 Proposition de rendu texte :
 
@@ -269,11 +264,11 @@ Die Modifiers:
 - Skill LORE: Decrease difficulty by 1 (Apply once).
 ```
 
-*(Le format exact peut être ajusté côté plan d’implémentation, tant que l’information est complète et lisible.)*
+_(Le format exact peut être ajusté côté plan d’implémentation, tant que l’information est complète et lisible.)_
 
 **Optionnel / préparatoire (mais fortement recommandé en flags, sans automatisation) :**
 
-* Stocker la structure brute ou simplifiée dans :
+- Stocker la structure brute ou simplifiée dans :
 
 ```json
 "flags": {
@@ -299,8 +294,8 @@ Cela prépare des features futures (génération de hooks / effets), sans les im
 
 **Hors scope dans ce bugfix :**
 
-* Générer automatiquement des `actorHooks` ou `actions` à partir des `DieModifiers`.
-* Appliquer automatiquement ces modificateurs aux jets dans le système.
+- Générer automatiquement des `actorHooks` ou `actions` à partir des `DieModifiers`.
+- Appliquer automatiquement ces modificateurs aux jets dans le système.
 
 ---
 
@@ -308,28 +303,26 @@ Cela prépare des features futures (génération de hooks / effets), sans les im
 
 ## 5.1 Contraintes techniques
 
-* Compatibilité Foundry VTT v13+.
-* Performance : l’import de plusieurs centaines de Talents ne doit pas provoquer de ralentissements majeurs.
-* Non-régression sur :
-
-    * l’import des autres types OggDude (Weapons, Armor, Gear),
-    * les Talents créés manuellement dans SWERPG.
+- Compatibilité Foundry VTT v13+.
+- Performance : l’import de plusieurs centaines de Talents ne doit pas provoquer de ralentissements majeurs.
+- Non-régression sur :
+  - l’import des autres types OggDude (Weapons, Armor, Gear),
+  - les Talents créés manuellement dans SWERPG.
 
 ## 5.2 Hypothèses
 
-* Le schéma `system` des Items `talent` est déjà défini dans SWERPG et inclut :
+- Le schéma `system` des Items `talent` est déjà défini dans SWERPG et inclut :
+  - `system.isRanked`,
+  - `system.activation`,
+  - `system.description.public`,
+  - `system.actions`, `system.actorHooks` (même si non utilisés ici).
 
-    * `system.isRanked`,
-    * `system.activation`,
-    * `system.description.public`,
-    * `system.actions`, `system.actorHooks` (même si non utilisés ici).
-* L’UI de fiche de Talent peut déjà afficher :
+- L’UI de fiche de Talent peut déjà afficher :
+  - l’activation,
+  - la description publique.
 
-    * l’activation,
-    * la description publique.
-* Il n’y a pas encore de UI dédiée pour visualiser les `dieModifiers` structurés :
-
-    * le bugfix s’appuie sur la **description texte** comme canal principal.
+- Il n’y a pas encore de UI dédiée pour visualiser les `dieModifiers` structurés :
+  - le bugfix s’appuie sur la **description texte** comme canal principal.
 
 ---
 
@@ -391,32 +384,25 @@ Cela prépare des features futures (génération de hooks / effets), sans les im
 # 7. Critères d’acceptation
 
 1. **Ranked correctement importé**
-
-    * Étant donné un Talent avec `<Ranked>true</Ranked>`,
-    * Quand il est importé depuis `Talent.xml`,
-    * Alors `system.isRanked` doit être à `true`.
+   - Étant donné un Talent avec `<Ranked>true</Ranked>`,
+   - Quand il est importé depuis `Talent.xml`,
+   - Alors `system.isRanked` doit être à `true`.
 
 2. **Activation correctement mappée**
-
-    * Étant donné un Talent avec `<ActivationValue>taPassive</ActivationValue>`,
-    * Quand il est importé,
-    * Alors `system.activation` doit être correctement renseigné (ex. `"passive"`) et non vide.
+   - Étant donné un Talent avec `<ActivationValue>taPassive</ActivationValue>`,
+   - Quand il est importé,
+   - Alors `system.activation` doit être correctement renseigné (ex. `"passive"`) et non vide.
 
 3. **Description & source préservées**
-
-    * La description publique du Talent contient au minimum :
-
-        * le texte de `<Description>`,
-        * la ligne `Source: <Book>, p.<Page>` générée à partir de `<Source>`.
+   - La description publique du Talent contient au minimum :
+     - le texte de `<Description>`,
+     - la ligne `Source: <Book>, p.<Page>` générée à partir de `<Source>`.
 
 4. **DieModifiers non perdus**
-
-    * Les `DieModifiers` ne sont plus silencieusement ignorés :
-
-        * ils apparaissent sous forme lisible dans la description (section “Die Modifiers” ou équivalent),
-        * et/ou sont stockés dans `flags.swerpg.oggdude.dieModifiers`.
+   - Les `DieModifiers` ne sont plus silencieusement ignorés :
+     - ils apparaissent sous forme lisible dans la description (section “Die Modifiers” ou équivalent),
+     - et/ou sont stockés dans `flags.swerpg.oggdude.dieModifiers`.
 
 5. **Non-régression**
-
-    * L’import de Talents sans `DieModifiers` continue de fonctionner (description + source au minimum).
-    * L’import d’autres types OggDude (Weapons, Armor, Gear) n’est pas cassé par ce changement.
+   - L’import de Talents sans `DieModifiers` continue de fonctionner (description + source au minimum).
+   - L’import d’autres types OggDude (Weapons, Armor, Gear) n’est pas cassé par ce changement.

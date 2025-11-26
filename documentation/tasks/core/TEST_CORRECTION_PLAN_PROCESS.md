@@ -93,14 +93,16 @@ grep_search: beforeEach|afterEach|vi.mock|resetAllMocks
 #### Patterns Identifiés
 
 1. **Setup Pattern**
+
    ```javascript
    beforeEach(() => {
-     reset*ImportStats()
+     reset * ImportStats()
      vi.clearAllMocks()
    })
    ```
 
 2. **Shim Pattern**
+
    ```javascript
    import xml2jsModule from '../../vendors/xml2js.min.js'
    if (globalThis.xml2js === undefined) {
@@ -119,26 +121,31 @@ grep_search: beforeEach|afterEach|vi.mock|resetAllMocks
 À partir de l'analyse des correctifs passés et tests existants, identification de 5 types d'erreurs récurrents :
 
 #### Type A : Erreur d'Assertion
+
 - **Fréquence** : Élevée (30% des échecs)
 - **Cause principale** : Valeurs attendues incorrectes, structure mal comprise
 - **Exemple** : `expect(stats.total).toBe(5)` reçoit 0
 
 #### Type B : Erreur de Mock/Shim
+
 - **Fréquence** : Moyenne (25% des échecs)
 - **Cause principale** : Shim xml2js oublié, mock Foundry incomplet
 - **Exemple** : `ReferenceError: foundry is not defined`
 
 #### Type C : Erreur de Séquençage/État
+
 - **Fréquence** : Moyenne (20% des échecs)
 - **Cause principale** : Stats non réinitialisées, mocks non nettoyés
 - **Exemple** : Test passe isolé, échoue en suite
 
 #### Type D : Erreur de Fixture/Données
+
 - **Fréquence** : Faible (15% des échecs)
 - **Cause principale** : Fixture manquante, XML invalide
 - **Exemple** : `ENOENT: no such file`
 
 #### Type E : Erreur de Logique Métier
+
 - **Fréquence** : Faible (10% des échecs)
 - **Cause principale** : Bug réel dans mapper, double encapsulation
 - **Exemple** : `armor.system.system.defense` au lieu de `armor.system.defense`
@@ -183,16 +190,19 @@ Chaque stratégie suit le pattern :
 Extraction d'exemples concrets depuis les résumés de correctifs :
 
 #### Exemple 1 : Stats Non Réinitialisées
+
 - **Source** : `FIX_OBLIGATION_STATS_UI_RESUME.md`
 - **Problème** : `stats.total = 15` au lieu de 5
 - **Solution** : Ajout `resetObligationImportStats()` dans `beforeEach`
 
 #### Exemple 2 : Shim xml2js Manquant
+
 - **Source** : Tests d'intégration species
 - **Problème** : `TypeError: xml2js.js.parseStringPromise is not a function`
 - **Solution** : Shim avant imports métier
 
 #### Exemple 3 : Double Encapsulation
+
 - **Source** : `BUG_ARMOR_MAPPING_FIX_SUMMARY.md`
 - **Problème** : `armor.system.system.defense`
 - **Solution** : Pattern Adaptateur dans pipeline
@@ -207,6 +217,7 @@ Extraction d'exemples concrets depuis les résumés de correctifs :
 4. **Tests Dépendants** : État partagé entre tests
 
 Chaque anti-pattern documenté avec :
+
 - Exemple code à éviter
 - Explication pourquoi problématique
 - Bonne pratique alternative
@@ -375,7 +386,7 @@ Dans chaque cas, les stratégies proposées correspondent aux solutions appliqu�
 
 ```markdown
 | Trimestre | Corrections | Temps Moyen | Régressions | Docs Complètes |
-|-----------|-------------|-------------|-------------|----------------|
+| --------- | ----------- | ----------- | ----------- | -------------- |
 | Q1 2025   | -           | Baseline    | Baseline    | Baseline       |
 | Q2 2025   | TBD         | TBD         | TBD         | TBD            |
 ```

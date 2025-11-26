@@ -50,46 +50,46 @@ Functional, technical, security, performance and UX framing of the implementatio
 
 - GOAL-001: Analyze existing importer patterns and obligation data model; confirm XML structure & field mapping needs.
 
-| Task     | Description                                                                                                                     | DependsOn | Completed | Date |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------- | --------- | --------- | ---- |
-| TASK-001 | Inspect existing item importer files (`module/importer/items/*.mjs`) to list required context structure parts.                  |           |           |      |
+| Task     | Description                                                                                                                       | DependsOn | Completed | Date |
+| -------- | --------------------------------------------------------------------------------------------------------------------------------- | --------- | --------- | ---- |
+| TASK-001 | Inspect existing item importer files (`module/importer/items/*.mjs`) to list required context structure parts.                    |           |           |      |
 | TASK-002 | Examine obligation data model (`module/models/obligation.mjs`) to derive system fields (description, value, isExtra, extraXp...). |           |           |      |
-| TASK-003 | Confirm XML path and sample structure from `Obligations.xml` (assumed `Obligations.Obligation`)—adjust if different.            | TASK-001  |           |      |
-| TASK-004 | Determine mandatory vs optional OggDude fields (Name, Key, Value, Extra flags) and if mapping table required.                  | TASK-002  |           |      |
-| TASK-005 | Identify image handling strategy (likely fallback only; verify if archive contains images directory).                          | TASK-001  |           |      |
-| TASK-006 | Define list of statistics keys aligning with other domains + any additional needed (none anticipated).                         | TASK-004  |           |      |
-| TASK-007 | Review global metrics integration pattern for domain registration; capture interface shape.                                    |           |           |      |
-| TASK-008 | Finalize requirements additions if XML differs (update REQ-002 / REQ-010 accordingly).                                         | TASK-003  |           |      |
+| TASK-003 | Confirm XML path and sample structure from `Obligations.xml` (assumed `Obligations.Obligation`)—adjust if different.              | TASK-001  |           |      |
+| TASK-004 | Determine mandatory vs optional OggDude fields (Name, Key, Value, Extra flags) and if mapping table required.                     | TASK-002  |           |      |
+| TASK-005 | Identify image handling strategy (likely fallback only; verify if archive contains images directory).                             | TASK-001  |           |      |
+| TASK-006 | Define list of statistics keys aligning with other domains + any additional needed (none anticipated).                            | TASK-004  |           |      |
+| TASK-007 | Review global metrics integration pattern for domain registration; capture interface shape.                                       |           |           |      |
+| TASK-008 | Finalize requirements additions if XML differs (update REQ-002 / REQ-010 accordingly).                                            | TASK-003  |           |      |
 
 ### Implementation Phase 2
 
 - GOAL-002: Design mapper, context builder, utilities, optional mapping table & test specifications.
 
-| Task     | Description                                                                                                                                | DependsOn | Completed | Date |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------------------ | --------- | --------- | ---- |
-| TASK-009 | Draft `obligation-ogg-dude.mjs` with `obligationMapper` (field extraction, system object creation, flags) & `buildObligationContext`.       | TASK-004  |           |      |
-| TASK-010 | Draft stats utils `obligation-import-utils.mjs` (reset, increment, addUnknownPropertyStat, getStats, registerObligationMetrics).            | TASK-006  |           |      |
-| TASK-011 | If needed, design mapping table `obligation-mapping.mjs` for code translations; include resolver warning + metric increment.               | TASK-004  |           |      |
-| TASK-012 | Specify integration of domain into `oggDude.mjs` (two buildContextMap insert points) with import statement at file top.                    | TASK-009  |           |      |
-| TASK-013 | Specify addition to `_domainNames` array in `OggDudeDataImporter.mjs` preserving ordering & UI consistency.                                | TASK-009  |           |      |
-| TASK-014 | Define localization keys FR/EN & fallback text style; update REQ list if new keys required.                                                | TASK-013  |           |      |
-| TASK-015 | Write test cases matrix (unit mapper, error handling, stats; utils; integration with fixture; preview generation).                        | TASK-009  |           |      |
-| TASK-016 | Plan documentation file `import-obligation.md` (purpose, usage steps, limitations, rollback).                                              | TASK-015  |           |      |
-| TASK-017 | Define accessibility considerations (domain label, aria attributes reuse) ensure UI unaffected by new checkbox.                           | TASK-013  |           |      |
+| Task     | Description                                                                                                                           | DependsOn | Completed | Date |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------- | --------- | --------- | ---- |
+| TASK-009 | Draft `obligation-ogg-dude.mjs` with `obligationMapper` (field extraction, system object creation, flags) & `buildObligationContext`. | TASK-004  |           |      |
+| TASK-010 | Draft stats utils `obligation-import-utils.mjs` (reset, increment, addUnknownPropertyStat, getStats, registerObligationMetrics).      | TASK-006  |           |      |
+| TASK-011 | If needed, design mapping table `obligation-mapping.mjs` for code translations; include resolver warning + metric increment.          | TASK-004  |           |      |
+| TASK-012 | Specify integration of domain into `oggDude.mjs` (two buildContextMap insert points) with import statement at file top.               | TASK-009  |           |      |
+| TASK-013 | Specify addition to `_domainNames` array in `OggDudeDataImporter.mjs` preserving ordering & UI consistency.                           | TASK-009  |           |      |
+| TASK-014 | Define localization keys FR/EN & fallback text style; update REQ list if new keys required.                                           | TASK-013  |           |      |
+| TASK-015 | Write test cases matrix (unit mapper, error handling, stats; utils; integration with fixture; preview generation).                    | TASK-009  |           |      |
+| TASK-016 | Plan documentation file `import-obligation.md` (purpose, usage steps, limitations, rollback).                                         | TASK-015  |           |      |
+| TASK-017 | Define accessibility considerations (domain label, aria attributes reuse) ensure UI unaffected by new checkbox.                       | TASK-013  |           |      |
 
 ### Implementation Phase 3
 
 - GOAL-003: Prepare implementation, migration, rollback & validation strategy.
 
-| Task     | Description                                                                                                                           | DependsOn | Completed | Date |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------------- | --------- | --------- | ---- |
-| TASK-018 | Migration impact assessment (none: only importer extension)—document in `import-obligation.md`.                                       | TASK-016  |           |      |
-| TASK-019 | Define deployment steps (add files, run tests `pnpm test`, manual Foundry import simulation) & success criteria.                       | TASK-015  |           |      |
-| TASK-020 | Define rollback: remove domain lines + localization keys + files (non-destructive to items already created).                           | TASK-019  |           |      |
-| TASK-021 | Performance validation plan: measure import time vs existing domain (sample 50 obligations).                                           | TASK-019  |           |      |
-| TASK-022 | Security review checklist (mandatory field validation, no eval, sanitized description) added to documentation.                         | TASK-018  |           |      |
-| TASK-023 | Confirm global metrics aggregation includes obligation (call `aggregateImportMetrics()` after test run).                               | TASK-010  |           |      |
-| TASK-024 | Final verification matrix linking tests to REQ coverage (map REQ-001..013).                                                            | TASK-015  |           |      |
+| Task     | Description                                                                                                      | DependsOn | Completed | Date |
+| -------- | ---------------------------------------------------------------------------------------------------------------- | --------- | --------- | ---- |
+| TASK-018 | Migration impact assessment (none: only importer extension)—document in `import-obligation.md`.                  | TASK-016  |           |      |
+| TASK-019 | Define deployment steps (add files, run tests `pnpm test`, manual Foundry import simulation) & success criteria. | TASK-015  |           |      |
+| TASK-020 | Define rollback: remove domain lines + localization keys + files (non-destructive to items already created).     | TASK-019  |           |      |
+| TASK-021 | Performance validation plan: measure import time vs existing domain (sample 50 obligations).                     | TASK-019  |           |      |
+| TASK-022 | Security review checklist (mandatory field validation, no eval, sanitized description) added to documentation.   | TASK-018  |           |      |
+| TASK-023 | Confirm global metrics aggregation includes obligation (call `aggregateImportMetrics()` after test run).         | TASK-010  |           |      |
+| TASK-024 | Final verification matrix linking tests to REQ coverage (map REQ-001..013).                                      | TASK-015  |           |      |
 
 ## 3. Alternatives
 

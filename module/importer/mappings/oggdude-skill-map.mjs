@@ -4,12 +4,12 @@ import { logger } from '../../utils/logger.mjs'
  * Table de correspondance déterministe entre les codes de compétences OggDude
  * et les identifiants de compétences du système SWERPG.
  * Toutes les clés sont normalisées en upper-case pour lookup.
- * 
+ *
  * Organisation:
  * - General Skills: Compétences générales et sociales
  * - Combat Skills: Compétences de combat
  * - Knowledge Skills: Compétences de connaissance
- * 
+ *
  * Notes:
  * - LTSABER (Lightsaber): Compétence spécifique Force and Destiny non présente dans SKILLS
  * - WARF (Warfare): Compétence Knowledge non présente dans SKILLS

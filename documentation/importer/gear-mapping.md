@@ -1,21 +1,22 @@
 ---
-post_title: "OggDude Gear Mapping Reference"
-author1: "SWERPG Core Dev"
-post_slug: "oggdude-gear-mapping"
-microsoft_alias: "swerpg-dev"
-featured_image: ""
+post_title: 'OggDude Gear Mapping Reference'
+author1: 'SWERPG Core Dev'
+post_slug: 'oggdude-gear-mapping'
+microsoft_alias: 'swerpg-dev'
+featured_image: ''
 categories:
   - importer
 tags:
   - oggdude
   - gear
   - mapping
-ai_note: "Generated with AI assistance"
-summary: "Documentation synthétique sur le correctif Gear.xml : valeurs numériques fiabilisées, description enrichie, BaseMods et WeaponModifiers sérialisés."
+ai_note: 'Generated with AI assistance'
+summary: 'Documentation synthétique sur le correctif Gear.xml : valeurs numériques fiabilisées, description enrichie, BaseMods et WeaponModifiers sérialisés.'
 post_date: 2025-11-18
 ---
 
 <!-- markdownlint-disable-next-line MD041 -->
+
 ## Vue d'ensemble
 
 Le correctif 1.0 du mapper `Gear.xml` préserve désormais tous les champs critiques : prix, encombrement et rareté, type d'équipement, description nettoyée, mods de base et profil d'arme. Les données importées restent compatibles avec le schéma `SwerpgGear` existant et Foundry v13 sans nécessiter de migration rétroactive.
@@ -40,14 +41,14 @@ Le correctif 1.0 du mapper `Gear.xml` préserve désormais tous les champs criti
 
 ## Flags et structures enregistrées
 
-| Flag | Contenu | Usage |
-| --- | --- | --- |
-| `flags.swerpg.oggdudeKey` | Identifiant OggDude d'origine | Traçabilité |
-| `flags.swerpg.originalType` | Type brut (`Tools/Electronics`) | Debug & audit |
-| `flags.swerpg.oggdudeSource` / `oggdudeSourcePage` | Source textuelle | Affichage description |
-| `flags.swerpg.oggdude.type` | Type original (copie) | Préparation future taxonomie |
-| `flags.swerpg.oggdude.baseMods[]` | Tableau `{ description, dieModifiers[] }` | Automatisation ultérieure des bonus |
-| `flags.swerpg.oggdude.weaponProfile` | `{ skillKey, damage, damageAdd, crit, rangeValue, qualities[] }` | Génération d'actions futures |
+| Flag                                               | Contenu                                                          | Usage                               |
+| -------------------------------------------------- | ---------------------------------------------------------------- | ----------------------------------- |
+| `flags.swerpg.oggdudeKey`                          | Identifiant OggDude d'origine                                    | Traçabilité                         |
+| `flags.swerpg.originalType`                        | Type brut (`Tools/Electronics`)                                  | Debug & audit                       |
+| `flags.swerpg.oggdudeSource` / `oggdudeSourcePage` | Source textuelle                                                 | Affichage description               |
+| `flags.swerpg.oggdude.type`                        | Type original (copie)                                            | Préparation future taxonomie        |
+| `flags.swerpg.oggdude.baseMods[]`                  | Tableau `{ description, dieModifiers[] }`                        | Automatisation ultérieure des bonus |
+| `flags.swerpg.oggdude.weaponProfile`               | `{ skillKey, damage, damageAdd, crit, rangeValue, qualities[] }` | Génération d'actions futures        |
 
 ## Tests & validation
 

@@ -10,38 +10,37 @@ import { logger } from '../../utils/logger.mjs'
  * @returns {string} Description nettoyée
  */
 export function sanitizeDescription(description, maxLength = 2000, { preserveLineBreaks = true } = {}) {
-    if (!description) {
-        return ''
+  if (!description) {
+    return ''
+  }
+
+  try {
+    let cleaned = String(description)
+
+    // Normaliser les retours chariot avant nettoyage
+    cleaned = cleaned.replace(/\r\n/g, '\n')
+
+    // Supprimer les balises script et style
+    cleaned = cleaned.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+    cleaned = cleaned.replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, '')
+
+    if (preserveLineBreaks) {
+      // Réduire les espaces horizontaux consécutifs mais conserver les retours à la ligne
+      cleaned = cleaned.replace(/[ \t]+/g, ' ')
+      cleaned = cleaned.replace(/\n{3,}/g, '\n\n')
+    } else {
+      cleaned = cleaned.replace(/\s+/g, ' ')
     }
 
-    try {
-        let cleaned = String(description)
+    cleaned = cleaned.trim()
 
-        // Normaliser les retours chariot avant nettoyage
-        cleaned = cleaned.replace(/\r\n/g, '\n')
-
-
-        // Supprimer les balises script et style
-        cleaned = cleaned.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
-        cleaned = cleaned.replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, '')
-
-        if (preserveLineBreaks) {
-            // Réduire les espaces horizontaux consécutifs mais conserver les retours à la ligne
-            cleaned = cleaned.replace(/[ \t]+/g, ' ')
-            cleaned = cleaned.replace(/\n{3,}/g, '\n\n')
-        } else {
-            cleaned = cleaned.replace(/\s+/g, ' ')
-        }
-
-        cleaned = cleaned.trim()
-
-        if (cleaned.length > maxLength) {
-            cleaned = `${cleaned.substring(0, maxLength - 3).trimEnd()}...`
-        }
-
-        return cleaned
-    } catch (error) {
-        logger.error('[TextUtils] Error sanitizing description', { error })
-        return ''
+    if (cleaned.length > maxLength) {
+      cleaned = `${cleaned.substring(0, maxLength - 3).trimEnd()}...`
     }
+
+    return cleaned
+  } catch (error) {
+    logger.error('[TextUtils] Error sanitizing description', { error })
+    return ''
+  }
 }

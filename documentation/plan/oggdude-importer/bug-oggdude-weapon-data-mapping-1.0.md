@@ -55,47 +55,47 @@ Bugfix visant à fiabiliser l’import des armes OggDude (`Weapons.xml`) dans le
 
 - GOAL-001: Analyse & cartographie des points d’entrée et écarts fonctionnels.
 
-| Task     | Description                                                                                                              | DependsOn | Completed | Date |
-| -------- | ------------------------------------------------------------------------------------------------------------------------ | --------- | --------- | ---- |
-| TASK-001 | Lister fonctions et tables: `mapOggDudeWeapon`, `WEAPON_*_MAP`, stats utils (`weapon-import-utils.mjs`).                 |           |           |      |
-| TASK-002 | Vérifier schéma `module/models/weapon.mjs` pour champs existants / absence de stockage valeur des qualités.             |           |           |      |
-| TASK-003 | Identifier emplacement description cible (`system.description.public`) (confirmé dans autres importers ex. armors).     |           |           |      |
-| TASK-004 | Recenser codes RangeValue manquants (`wrShort`, etc.) à ajouter dans map.                                                |           |           |      |
-| TASK-005 | Documenter écarts actuels vs REQ (description manquante, qualities count perdu, type/catégories absents).               | TASK-001  |           |      |
-| TASK-006 | Finaliser liste REQ/CON/PAT après vérification code (amender si nécessaire).                                             | TASK-005  |           |      |
+| Task     | Description                                                                                                         | DependsOn | Completed | Date |
+| -------- | ------------------------------------------------------------------------------------------------------------------- | --------- | --------- | ---- |
+| TASK-001 | Lister fonctions et tables: `mapOggDudeWeapon`, `WEAPON_*_MAP`, stats utils (`weapon-import-utils.mjs`).            |           |           |      |
+| TASK-002 | Vérifier schéma `module/models/weapon.mjs` pour champs existants / absence de stockage valeur des qualités.         |           |           |      |
+| TASK-003 | Identifier emplacement description cible (`system.description.public`) (confirmé dans autres importers ex. armors). |           |           |      |
+| TASK-004 | Recenser codes RangeValue manquants (`wrShort`, etc.) à ajouter dans map.                                           |           |           |      |
+| TASK-005 | Documenter écarts actuels vs REQ (description manquante, qualities count perdu, type/catégories absents).           | TASK-001  |           |      |
+| TASK-006 | Finaliser liste REQ/CON/PAT après vérification code (amender si nécessaire).                                        | TASK-005  |           |      |
 
 ### Implementation Phase 2
 
 - GOAL-002: Design précis des modifications code, flags et tests.
 
-| Task     | Description                                                                                                                             | DependsOn | Completed | Date |
-| -------- | --------------------------------------------------------------------------------------------------------------------------------------- | --------- | --------- | ---- |
-| TASK-007 | Définir structure des nouveaux flags: `flags.swerpg.oggdudeQualities` & `flags.swerpg.oggdudeTags` (documentation interne).            | TASK-006  |           |      |
-| TASK-008 | Concevoir algorithme parsing Qualities: collecte clé + count, normalisation id via `WEAPON_QUALITY_MAP`, stockage Set + flags.         | TASK-006  |           |      |
-| TASK-009 | Spécifier fonction util sanitizeDescription (regex suppression `[h\d+]` + trim multi espaces / lignes).                               | TASK-006  |           |      |
-| TASK-010 | Définir mapping Type/Categories → tags (ex: Type string → `type:<value>`, Category → `category:<value>`).                              | TASK-006  |           |      |
-| TASK-011 | Définir fallback pour skill/range inconnus: `null` ou valeur initiale schéma + warning + stats.                                        | TASK-006  |           |      |
-| TASK-012 | Spécifier extension `WEAPON_RANGE_MAP` (ajout codes wrShort, wrMedium, wrLong, wrExtreme, wrEngaged).                                   | TASK-006  |           |      |
-| TASK-013 | Définir format append source dans description (ligne séparatrice + `Source:`).                                                         | TASK-006  |           |      |
-| TASK-014 | Définir tests unitaires couvrant chaque REQ (table correspondance test-cas).                                                           | TASK-006  |           |      |
+| Task     | Description                                                                                                                    | DependsOn | Completed | Date |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------ | --------- | --------- | ---- |
+| TASK-007 | Définir structure des nouveaux flags: `flags.swerpg.oggdudeQualities` & `flags.swerpg.oggdudeTags` (documentation interne).    | TASK-006  |           |      |
+| TASK-008 | Concevoir algorithme parsing Qualities: collecte clé + count, normalisation id via `WEAPON_QUALITY_MAP`, stockage Set + flags. | TASK-006  |           |      |
+| TASK-009 | Spécifier fonction util sanitizeDescription (regex suppression `[h\d+]` + trim multi espaces / lignes).                        | TASK-006  |           |      |
+| TASK-010 | Définir mapping Type/Categories → tags (ex: Type string → `type:<value>`, Category → `category:<value>`).                      | TASK-006  |           |      |
+| TASK-011 | Définir fallback pour skill/range inconnus: `null` ou valeur initiale schéma + warning + stats.                                | TASK-006  |           |      |
+| TASK-012 | Spécifier extension `WEAPON_RANGE_MAP` (ajout codes wrShort, wrMedium, wrLong, wrExtreme, wrEngaged).                          | TASK-006  |           |      |
+| TASK-013 | Définir format append source dans description (ligne séparatrice + `Source:`).                                                 | TASK-006  |           |      |
+| TASK-014 | Définir tests unitaires couvrant chaque REQ (table correspondance test-cas).                                                   | TASK-006  |           |      |
 
 ### Implementation Phase 3
 
 - GOAL-003: Préparation exécution, modifications code et stratégie rollback.
 
-| Task     | Description                                                                                                                                                 | DependsOn | Completed | Date |
-| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | --------- | ---- |
-| TASK-015 | Modifier `module/importer/items/weapon-ogg-dude.mjs` pour intégrer description, flags qualités, type/catégories, SizeHigh, source et range étendue.         | TASK-008  |           |      |
-| TASK-016 | Étendre `module/importer/mappings/oggdude-weapon-range-map.mjs` avec codes RangeValue supplémentaires (PAT-005).                                             | TASK-012  |           |      |
-| TASK-017 | Ajouter util `sanitizeOggDudeWeaponDescription` (nouveau fichier `module/importer/mappings/oggdude-weapon-utils.mjs` si extension nécessaire).              | TASK-009  |           |      |
+| Task     | Description                                                                                                                                                        | DependsOn | Completed | Date |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------- | --------- | ---- |
+| TASK-015 | Modifier `module/importer/items/weapon-ogg-dude.mjs` pour intégrer description, flags qualités, type/catégories, SizeHigh, source et range étendue.                | TASK-008  |           |      |
+| TASK-016 | Étendre `module/importer/mappings/oggdude-weapon-range-map.mjs` avec codes RangeValue supplémentaires (PAT-005).                                                   | TASK-012  |           |      |
+| TASK-017 | Ajouter util `sanitizeOggDudeWeaponDescription` (nouveau fichier `module/importer/mappings/oggdude-weapon-utils.mjs` si extension nécessaire).                     | TASK-009  |           |      |
 | TASK-018 | Adapter construction objet final: ajouter `flags.swerpg.oggdudeQualities`, `flags.swerpg.oggdudeTags`, `flags.swerpg.oggdude.sizeHigh`, `flags.swerpg.oggdudeKey`. | TASK-015  |           |      |
-| TASK-019 | Mettre à jour `getTags()` dans `module/models/weapon.mjs` pour inclure tags Type/Categories + `restricted` si présent.                                       | TASK-015  |           |      |
-| TASK-020 | Créer tests Vitest `tests/importer/weapon-import.spec.mjs` couvrant mapping complet (REQ-001…REQ-009, REQ-013, REQ-015).                                    | TASK-014  |           |      |
-| TASK-021 | Créer tests stats Vitest `tests/importer/weapon-import-stats.spec.mjs` (unknown skills/qualités + strict mode).                                             | TASK-014  |           |      |
-| TASK-022 | Ajouter test qualité count multiple (ex: Blast count=2) pour flags détaillés.                                                                               | TASK-020  |           |      |
-| TASK-023 | Vérifier non-régression import autres domaines (exécuter import armures via test existant ou script) – ajuster si side-effects.                             | TASK-015  |           |      |
-| TASK-024 | Documenter dans README interne importer section « Weapon Mapping » (ajout bref).                                                                            | TASK-018  |           |      |
-| TASK-025 | Définir critères rollback (désactiver nouveau mapping via feature flag si régression critique).                                                             | TASK-015  |           |      |
+| TASK-019 | Mettre à jour `getTags()` dans `module/models/weapon.mjs` pour inclure tags Type/Categories + `restricted` si présent.                                             | TASK-015  |           |      |
+| TASK-020 | Créer tests Vitest `tests/importer/weapon-import.spec.mjs` couvrant mapping complet (REQ-001…REQ-009, REQ-013, REQ-015).                                           | TASK-014  |           |      |
+| TASK-021 | Créer tests stats Vitest `tests/importer/weapon-import-stats.spec.mjs` (unknown skills/qualités + strict mode).                                                    | TASK-014  |           |      |
+| TASK-022 | Ajouter test qualité count multiple (ex: Blast count=2) pour flags détaillés.                                                                                      | TASK-020  |           |      |
+| TASK-023 | Vérifier non-régression import autres domaines (exécuter import armures via test existant ou script) – ajuster si side-effects.                                    | TASK-015  |           |      |
+| TASK-024 | Documenter dans README interne importer section « Weapon Mapping » (ajout bref).                                                                                   | TASK-018  |           |      |
+| TASK-025 | Définir critères rollback (désactiver nouveau mapping via feature flag si régression critique).                                                                    | TASK-015  |           |      |
 
 ## 3. Alternatives
 
@@ -150,7 +150,7 @@ Bugfix visant à fiabiliser l’import des armes OggDude (`Weapons.xml`) dans le
 - `/documentation/spec/oggdude-importer/bug-fix-weapon-import-need1-1.0.md` – Spécification de besoin initiale.
 - `/documentation/plan/importer/` (autres plans si existants pour cohérence mapping armures).
 - Foundry VTT API v13 – Items & DataModel.
- - OWASP Secure Coding (référence interne `security-best-practices.collection.yml`).
+- OWASP Secure Coding (référence interne `security-best-practices.collection.yml`).
 
 - **REQ-001**: Mapper correctement la portée en priorisant `RangeValue` (ex. `wrShort` → `short`).
 - **REQ-002**: Ne plus perdre les qualités OggDude ; conserver nom + valeur (ex. Blast 2) de façon structurée.
@@ -183,7 +183,7 @@ Bugfix visant à fiabiliser l’import des armes OggDude (`Weapons.xml`) dans le
 - **SEC-002**: Ignorer attributs XML inattendus (deny-by-default) – ne mapper que liste explicitée.
 - **ASSUMPTION-001**: Le Set `system.qualities` restera la liste simple sans valeur numérique associée.
 - **ASSUMPTION-002**: La fiche arme peut afficher tags additionnels via `getTags()` sans refactor majeur.
-- **ASSUMPTION-003**: Aucun besoin de migration des armes déjà importées (PO valide). 
+- **ASSUMPTION-003**: Aucun besoin de migration des armes déjà importées (PO valide).
 
 ## 2. Implementation Steps
 
@@ -191,47 +191,47 @@ Bugfix visant à fiabiliser l’import des armes OggDude (`Weapons.xml`) dans le
 
 - GOAL-001: Analyse & cartographie des points d’entrée et écarts fonctionnels.
 
-| Task     | Description                                                                                                              | DependsOn | Completed | Date |
-| -------- | ------------------------------------------------------------------------------------------------------------------------ | --------- | --------- | ---- |
-| TASK-001 | Lister fonctions et tables: `mapOggDudeWeapon`, `WEAPON_*_MAP`, stats utils (`weapon-import-utils.mjs`).                 |           |           |      |
-| TASK-002 | Vérifier schéma `module/models/weapon.mjs` pour champs existants / absence de stockage valeur des qualités.             |           |           |      |
-| TASK-003 | Identifier emplacement description cible (`system.description.public`) (confirmé dans autres importers ex. armors).     |           |           |      |
-| TASK-004 | Recenser codes RangeValue manquants (`wrShort`, etc.) à ajouter dans map.                                                |           |           |      |
-| TASK-005 | Documenter écarts actuels vs REQ (description manquante, qualities count perdu, type/catégories absents).               | TASK-001  |           |      |
-| TASK-006 | Finaliser liste REQ/CON/PAT après vérification code (amender si nécessaire).                                             | TASK-005  |           |      |
+| Task     | Description                                                                                                         | DependsOn | Completed | Date |
+| -------- | ------------------------------------------------------------------------------------------------------------------- | --------- | --------- | ---- |
+| TASK-001 | Lister fonctions et tables: `mapOggDudeWeapon`, `WEAPON_*_MAP`, stats utils (`weapon-import-utils.mjs`).            |           |           |      |
+| TASK-002 | Vérifier schéma `module/models/weapon.mjs` pour champs existants / absence de stockage valeur des qualités.         |           |           |      |
+| TASK-003 | Identifier emplacement description cible (`system.description.public`) (confirmé dans autres importers ex. armors). |           |           |      |
+| TASK-004 | Recenser codes RangeValue manquants (`wrShort`, etc.) à ajouter dans map.                                           |           |           |      |
+| TASK-005 | Documenter écarts actuels vs REQ (description manquante, qualities count perdu, type/catégories absents).           | TASK-001  |           |      |
+| TASK-006 | Finaliser liste REQ/CON/PAT après vérification code (amender si nécessaire).                                        | TASK-005  |           |      |
 
 ### Implementation Phase 2
 
 - GOAL-002: Design précis des modifications code, flags et tests.
 
-| Task     | Description                                                                                                                             | DependsOn | Completed | Date |
-| -------- | --------------------------------------------------------------------------------------------------------------------------------------- | --------- | --------- | ---- |
-| TASK-007 | Définir structure des nouveaux flags: `flags.swerpg.oggdudeQualities` & `flags.swerpg.oggdudeTags` (documentation interne).            | TASK-006  |           |      |
-| TASK-008 | Concevoir algorithme parsing Qualities: collecte clé + count, normalisation id via `WEAPON_QUALITY_MAP`, stockage Set + flags.         | TASK-006  |           |      |
-| TASK-009 | Spécifier fonction util sanitizeDescription (regex suppression `[h\d+]` + trim multi espaces / lignes).                               | TASK-006  |           |      |
-| TASK-010 | Définir mapping Type/Categories → tags (ex: Type string → `type:<value>`, Category → `category:<value>`).                              | TASK-006  |           |      |
-| TASK-011 | Définir fallback pour skill/range inconnus: `null` ou valeur initiale schéma + warning + stats.                                        | TASK-006  |           |      |
-| TASK-012 | Spécifier extension `WEAPON_RANGE_MAP` (ajout codes wrShort, wrMedium, wrLong, wrExtreme, wrEngaged).                                   | TASK-006  |           |      |
-| TASK-013 | Définir format append source dans description (ligne séparatrice + `Source:`).                                                         | TASK-006  |           |      |
-| TASK-014 | Définir tests unitaires couvrant chaque REQ (table correspondance test-cas).                                                           | TASK-006  |           |      |
+| Task     | Description                                                                                                                    | DependsOn | Completed | Date |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------ | --------- | --------- | ---- |
+| TASK-007 | Définir structure des nouveaux flags: `flags.swerpg.oggdudeQualities` & `flags.swerpg.oggdudeTags` (documentation interne).    | TASK-006  |           |      |
+| TASK-008 | Concevoir algorithme parsing Qualities: collecte clé + count, normalisation id via `WEAPON_QUALITY_MAP`, stockage Set + flags. | TASK-006  |           |      |
+| TASK-009 | Spécifier fonction util sanitizeDescription (regex suppression `[h\d+]` + trim multi espaces / lignes).                        | TASK-006  |           |      |
+| TASK-010 | Définir mapping Type/Categories → tags (ex: Type string → `type:<value>`, Category → `category:<value>`).                      | TASK-006  |           |      |
+| TASK-011 | Définir fallback pour skill/range inconnus: `null` ou valeur initiale schéma + warning + stats.                                | TASK-006  |           |      |
+| TASK-012 | Spécifier extension `WEAPON_RANGE_MAP` (ajout codes wrShort, wrMedium, wrLong, wrExtreme, wrEngaged).                          | TASK-006  |           |      |
+| TASK-013 | Définir format append source dans description (ligne séparatrice + `Source:`).                                                 | TASK-006  |           |      |
+| TASK-014 | Définir tests unitaires couvrant chaque REQ (table correspondance test-cas).                                                   | TASK-006  |           |      |
 
 ### Implementation Phase 3
 
 - GOAL-003: Préparation exécution, modifications code et stratégie rollback.
 
-| Task     | Description                                                                                                                                                 | DependsOn | Completed | Date |
-| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | --------- | ---- |
-| TASK-015 | Modifier `module/importer/items/weapon-ogg-dude.mjs` pour intégrer description, flags qualités, type/catégories, SizeHigh, source et range étendue.         | TASK-008  |           |      |
-| TASK-016 | Étendre `module/importer/mappings/oggdude-weapon-range-map.mjs` avec codes RangeValue supplémentaires (PAT-005).                                             | TASK-012  |           |      |
-| TASK-017 | Ajouter util `sanitizeOggDudeWeaponDescription` (nouveau fichier `module/importer/mappings/oggdude-weapon-utils.mjs` si extension nécessaire).              | TASK-009  |           |      |
+| Task     | Description                                                                                                                                                        | DependsOn | Completed | Date |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------- | --------- | ---- |
+| TASK-015 | Modifier `module/importer/items/weapon-ogg-dude.mjs` pour intégrer description, flags qualités, type/catégories, SizeHigh, source et range étendue.                | TASK-008  |           |      |
+| TASK-016 | Étendre `module/importer/mappings/oggdude-weapon-range-map.mjs` avec codes RangeValue supplémentaires (PAT-005).                                                   | TASK-012  |           |      |
+| TASK-017 | Ajouter util `sanitizeOggDudeWeaponDescription` (nouveau fichier `module/importer/mappings/oggdude-weapon-utils.mjs` si extension nécessaire).                     | TASK-009  |           |      |
 | TASK-018 | Adapter construction objet final: ajouter `flags.swerpg.oggdudeQualities`, `flags.swerpg.oggdudeTags`, `flags.swerpg.oggdude.sizeHigh`, `flags.swerpg.oggdudeKey`. | TASK-015  |           |      |
-| TASK-019 | Mettre à jour `getTags()` dans `module/models/weapon.mjs` pour inclure tags Type/Categories + `restricted` si présent.                                       | TASK-015  |           |      |
-| TASK-020 | Créer tests Vitest `tests/importer/weapon-import.spec.mjs` couvrant mapping complet (REQ-001…REQ-009, REQ-013, REQ-015).                                    | TASK-014  |           |      |
-| TASK-021 | Créer tests stats Vitest `tests/importer/weapon-import-stats.spec.mjs` (unknown skills/qualities + strict mode).                                             | TASK-014  |           |      |
-| TASK-022 | Ajouter test qualité count multiple (ex: Blast count=2) pour flags détaillés.                                                                               | TASK-020  |           |      |
-| TASK-023 | Vérifier non-régression import autres domaines (exécuter import armures via test existant ou script) – ajuster si side-effects.                             | TASK-015  |           |      |
-| TASK-024 | Documenter dans README interne importer section « Weapon Mapping » (ajout bref).                                                                            | TASK-018  |           |      |
-| TASK-025 | Définir critères rollback (désactiver nouveau mapping via feature flag si régression critique).                                                             | TASK-015  |           |      |
+| TASK-019 | Mettre à jour `getTags()` dans `module/models/weapon.mjs` pour inclure tags Type/Categories + `restricted` si présent.                                             | TASK-015  |           |      |
+| TASK-020 | Créer tests Vitest `tests/importer/weapon-import.spec.mjs` couvrant mapping complet (REQ-001…REQ-009, REQ-013, REQ-015).                                           | TASK-014  |           |      |
+| TASK-021 | Créer tests stats Vitest `tests/importer/weapon-import-stats.spec.mjs` (unknown skills/qualities + strict mode).                                                   | TASK-014  |           |      |
+| TASK-022 | Ajouter test qualité count multiple (ex: Blast count=2) pour flags détaillés.                                                                                      | TASK-020  |           |      |
+| TASK-023 | Vérifier non-régression import autres domaines (exécuter import armures via test existant ou script) – ajuster si side-effects.                                    | TASK-015  |           |      |
+| TASK-024 | Documenter dans README interne importer section « Weapon Mapping » (ajout bref).                                                                                   | TASK-018  |           |      |
+| TASK-025 | Définir critères rollback (désactiver nouveau mapping via feature flag si régression critique).                                                                    | TASK-015  |           |      |
 
 ## 3. Alternatives
 
@@ -253,7 +253,7 @@ Bugfix visant à fiabiliser l’import des armes OggDude (`Weapons.xml`) dans le
 - **FILE-004**: `module/models/weapon.mjs` – Méthode `getTags()` enrichie pour type/catégories/restricted.
 - **FILE-005**: `tests/importer/weapon-import.spec.mjs` – Tests mapping principal.
 - **FILE-006**: `tests/importer/weapon-import-stats.spec.mjs` – Tests statistiques unknown / strict mode.
-- **FILE-007**: `documentation/importer/README.md` – Section Weapon Mapping (documentation interne). 
+- **FILE-007**: `documentation/importer/README.md` – Section Weapon Mapping (documentation interne).
 
 ## 6. Testing
 

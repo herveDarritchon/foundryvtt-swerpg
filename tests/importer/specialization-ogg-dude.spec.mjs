@@ -8,15 +8,17 @@ describe('specializationMapper', () => {
   })
 
   it('should map valid specialization', () => {
-    const input = [{
-      Key: 'PILOT',
-      Name: 'Pilote',
-      Description: 'Test description',
-      CareerSkills: {
-        Key: ['PILOTPL', 'PILOTSP', 'GUNN']
+    const input = [
+      {
+        Key: 'PILOT',
+        Name: 'Pilote',
+        Description: 'Test description',
+        CareerSkills: {
+          Key: ['PILOTPL', 'PILOTSP', 'GUNN'],
+        },
+        FreeRanks: '0',
       },
-      FreeRanks: '0'
-    }]
+    ]
 
     const result = specializationMapper(input)
     const stats = getSpecializationImportStats()
@@ -30,11 +32,13 @@ describe('specializationMapper', () => {
   })
 
   it('should reject specialization with missing Name', () => {
-    const input = [{
-      Key: 'TEST',
-      // Name manquant
-      CareerSkills: { Key: ['PILOTPL'] }
-    }]
+    const input = [
+      {
+        Key: 'TEST',
+        // Name manquant
+        CareerSkills: { Key: ['PILOTPL'] },
+      },
+    ]
 
     const result = specializationMapper(input)
     const stats = getSpecializationImportStats()
@@ -46,11 +50,13 @@ describe('specializationMapper', () => {
   })
 
   it('should reject specialization with missing Key', () => {
-    const input = [{
-      Name: 'Test Specialization',
-      // Key manquant
-      CareerSkills: { Key: ['PILOTPL'] }
-    }]
+    const input = [
+      {
+        Name: 'Test Specialization',
+        // Key manquant
+        CareerSkills: { Key: ['PILOTPL'] },
+      },
+    ]
 
     const result = specializationMapper(input)
     const stats = getSpecializationImportStats()
@@ -67,7 +73,7 @@ describe('specializationMapper', () => {
       Name: `Specialization ${i}`,
       Description: 'Test',
       CareerSkills: { Key: ['PILOTPL'] },
-      FreeRanks: '0'
+      FreeRanks: '0',
     }))
 
     const result = specializationMapper(input)
@@ -96,7 +102,7 @@ describe('specializationMapper', () => {
       { Key: 'VALID1', Name: 'Valid 1', CareerSkills: { Key: ['PILOTPL'] } },
       { Key: 'INVALID', CareerSkills: { Key: ['PILOTPL'] } }, // missing Name
       { Name: 'Invalid 2', CareerSkills: { Key: ['PILOTPL'] } }, // missing Key
-      { Key: 'VALID2', Name: 'Valid 2', CareerSkills: { Key: ['GUNN'] } }
+      { Key: 'VALID2', Name: 'Valid 2', CareerSkills: { Key: ['GUNN'] } },
     ]
 
     const result = specializationMapper(input)
@@ -131,7 +137,6 @@ describe('mapSpecializationSkills', () => {
     const result = mapSpecializationSkills(input, { strict: true })
 
     // En mode strict, les codes inconnus doivent être filtrés
-    expect(result.every(item => item.id)).toBe(true)
+    expect(result.every((item) => item.id)).toBe(true)
   })
 })
-

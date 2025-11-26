@@ -17,21 +17,23 @@
 ## ✅ Modifications Effectuées
 
 ### 1. Correction du Template UI (CRITIQUE)
+
 **Fichier**: `templates/settings/oggDudeDataImporter.hbs`  
 **Lignes**: 167-174 (nouvelles lignes ajoutées)
 
 **Changement**:
+
 ```handlebars
 <!-- AJOUTÉ après la ligne obligation -->
 <tr>
-    <td class="{{importDomainStatus.specialization.class}}" aria-label="{{localize importDomainStatus.specialization.labelI18n}}">
-        <i class="fa-solid fa-circle" aria-hidden="true"></i>
-    </td>
-    <th scope="row">{{localize "SETTINGS.OggDudeDataImporter.loadWindow.domains.specialization"}}</th>
-    <td>{{importStats.specialization.total}}</td>
-    <td>{{importStats.specialization.imported}}</td>
-    <td>{{importStats.specialization.rejected}}</td>
-    <td>{{importMetricsFormatted.domains.specialization.duration}}</td>
+  <td class='{{importDomainStatus.specialization.class}}' aria-label='{{localize importDomainStatus.specialization.labelI18n}}'>
+    <i class='fa-solid fa-circle' aria-hidden='true'></i>
+  </td>
+  <th scope='row'>{{localize 'SETTINGS.OggDudeDataImporter.loadWindow.domains.specialization'}}</th>
+  <td>{{importStats.specialization.total}}</td>
+  <td>{{importStats.specialization.imported}}</td>
+  <td>{{importStats.specialization.rejected}}</td>
+  <td>{{importMetricsFormatted.domains.specialization.duration}}</td>
 </tr>
 ```
 
@@ -40,10 +42,12 @@
 ---
 
 ### 2. Ajout Logs de Diagnostic UI
+
 **Fichier**: `module/settings/OggDudeDataImporter.mjs`  
 **Méthode**: `_prepareContext()`
 
 **Changement**:
+
 ```javascript
 // Logs de diagnostic pour vérifier la présence de specialization
 logger.debug('[OggDudeDataImporter] Context prepared', {
@@ -53,7 +57,7 @@ logger.debug('[OggDudeDataImporter] Context prepared', {
   importDomainStatusKeys: Object.keys(importDomainStatus),
   hasSpecializationInStats: !!stats.specialization,
   specializationStats: stats.specialization,
-  hasSpecializationInStatus: !!importDomainStatus.specialization
+  hasSpecializationInStatus: !!importDomainStatus.specialization,
 })
 ```
 
@@ -62,19 +66,21 @@ logger.debug('[OggDudeDataImporter] Context prepared', {
 ---
 
 ### 3. Ajout Logs de Diagnostic Backend
+
 **Fichier**: `module/importer/oggDude.mjs`  
 **Méthode**: `processOggDudeData()`
 
 **Changement**:
+
 ```javascript
 // Logs de diagnostic pour vérifier la configuration du pipeline
 logger.info('[ProcessOggDudeData] DIAGNOSTIC - Pipeline initialization', {
   contextEntriesCount: contextEntries.length,
-  contextEntriesTypes: contextEntries.map(e => e.type),
+  contextEntriesTypes: contextEntries.map((e) => e.type),
   domainsToImport,
   buildContextMapKeys: Array.from(buildContextMap.keys()),
   hasSpecialization: buildContextMap.has('specialization'),
-  specializationInEntries: contextEntries.some(e => e.type === 'specialization')
+  specializationInEntries: contextEntries.some((e) => e.type === 'specialization'),
 })
 ```
 
@@ -83,9 +89,11 @@ logger.info('[ProcessOggDudeData] DIAGNOSTIC - Pipeline initialization', {
 ---
 
 ### 4. Création Tests Unitaires
+
 **Fichier**: `tests/settings/OggDudeDataImporter.specializationSupport.spec.mjs` (NOUVEAU)
 
 **Tests créés**:
+
 - ✅ `should include specialization in _domainNames`
 - ✅ `should initialize domains with specialization`
 - ✅ `should build importDomainStatus including specialization` (statut "mixed")
@@ -98,15 +106,19 @@ logger.info('[ProcessOggDudeData] DIAGNOSTIC - Pipeline initialization', {
 ---
 
 ### 5. Mise à jour CHANGELOG
+
 **Fichier**: `CHANGELOG.md`
 
 **Ajouts**:
+
 ```markdown
 ### Added
+
 - **importer:** specialization domain fully integrated in OggDude import UI and backend pipeline
 - **tests:** unit tests for specialization domain support
 
 ### Fixed
+
 - **importer:** add missing "Load Specialization data" row in import statistics table
 - **importer:** add diagnostic logs for easier troubleshooting of domain registration issues
 ```
@@ -118,12 +130,14 @@ logger.info('[ProcessOggDudeData] DIAGNOSTIC - Pipeline initialization', {
 ## 🧪 Validation
 
 ### Avant les Corrections
+
 - ❌ Ligne "Load Specialization data" absente du tableau UI
 - ❌ Aucune statistique affichée pour specialization
 - ❌ Aucun Item créé lors de l'import
 - ❌ Dossier "Swerpg - Specializations" non créé
 
 ### Après les Corrections (Attendu)
+
 - ✅ Ligne "Load Specialization data" visible dans le tableau
 - ✅ Colonnes Total/Imported/Rejected affichent les valeurs correctes
 - ✅ Items de spécialisation créés dans Foundry
@@ -135,6 +149,7 @@ logger.info('[ProcessOggDudeData] DIAGNOSTIC - Pipeline initialization', {
 ## 📋 Checklist de Déploiement
 
 ### Pour l'Utilisateur
+
 - [ ] Redémarrer Foundry VTT
 - [ ] Vider le cache navigateur (Cmd+Shift+R ou Ctrl+Shift+R)
 - [ ] Ouvrir la console DevTools
@@ -144,6 +159,7 @@ logger.info('[ProcessOggDudeData] DIAGNOSTIC - Pipeline initialization', {
 - [ ] Vérifier que les Items sont créés
 
 ### Logs à Vérifier (Console DevTools)
+
 1. `[OggDudeDataImporter] Context prepared` → doit montrer `hasSpecializationInStats: true`
 2. `[ProcessOggDudeData] DIAGNOSTIC - Pipeline initialization` → doit montrer `hasSpecialization: true`
 3. `[SpecializationImporter] Building Specialization context`
@@ -155,16 +171,19 @@ logger.info('[ProcessOggDudeData] DIAGNOSTIC - Pipeline initialization', {
 ## 🔍 Diagnostics Possibles
 
 ### Si la ligne n'apparaît toujours pas
+
 1. **Cache navigateur**: Vider le cache avec Cmd+Shift+R
 2. **Foundry cache**: Redémarrer complètement Foundry VTT
 3. **Template non rechargé**: Vérifier que `oggDudeDataImporter.hbs` contient bien la nouvelle ligne
 
 ### Si aucun Item n'est créé
+
 1. **Archive ZIP**: Vérifier que l'archive contient `Data/Specializations/*.xml`
 2. **Logs backend**: Chercher `[ProcessOggDudeData] Domaine sans données` dans la console
 3. **Erreurs de parsing**: Chercher les erreurs XML dans les logs
 
 ### Si les stats affichent 0/0/0
+
 1. **Import non lancé**: Vérifier que le bouton "Load" a bien été cliqué
 2. **Échec silencieux**: Chercher des erreurs dans la console
 3. **Stats non rafraîchies**: Recharger la page après import
@@ -185,17 +204,21 @@ logger.info('[ProcessOggDudeData] DIAGNOSTIC - Pipeline initialization', {
 ## 🎓 Leçons Apprises
 
 ### Points Positifs
+
 1. ✅ La méthode `_buildImportDomainStatus` utilisait déjà `this._domainNames` (liste centrale)
 2. ✅ Le backend (`oggDude.mjs`) contenait déjà le domaine specialization
 3. ✅ Les stats utils existaient déjà (`specialization-import-utils.mjs`)
 4. ✅ Les labels i18n existaient déjà dans `fr.json`
 
 ### Cause de l'Oubli
+
 - ❌ Le template Handlebars contenait une **liste hardcodée** de lignes `<tr>` au lieu d'itérer sur `importDomainStatus`
 - ⚠️ **Anti-pattern identifié**: Duplication de la logique entre code JS et template HBS
 
 ### Amélioration Future (Recommandation)
+
 **Refactoriser le template pour itérer dynamiquement**:
+
 ```handlebars
 {{#each importDomainStatus as |status domainKey|}}
     <tr>
@@ -235,4 +258,3 @@ logger.info('[ProcessOggDudeData] DIAGNOSTIC - Pipeline initialization', {
 **Prêt pour validation**: ✅ OUI
 
 **Prochaine étape**: Tester en environnement Foundry réel et valider que la ligne "Load Specialization data" apparaît avec des statistiques >0 après import.
-

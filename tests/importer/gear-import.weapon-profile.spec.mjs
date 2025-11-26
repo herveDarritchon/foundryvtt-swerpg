@@ -7,8 +7,7 @@ describe('Gear importer weapon profile enrichment', () => {
       {
         Name: '"Breaker" Heavy Hydrospanner',
         Key: 'BREAKHVYHYDROSP',
-        Description:
-          '[H3]Regalis Engineering "Breaker" Heavy Hydrospanner[h3]\nPlease see page 47 of the Fully Operational Sourcebook for details.',
+        Description: '[H3]Regalis Engineering "Breaker" Heavy Hydrospanner[h3]\nPlease see page 47 of the Fully Operational Sourcebook for details.',
         Source: { _: 'Fully Operational', $: { Page: '47' } },
         Type: 'Tools/Electronics',
         Price: '250',

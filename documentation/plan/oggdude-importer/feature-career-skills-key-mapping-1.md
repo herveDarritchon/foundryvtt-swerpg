@@ -49,47 +49,47 @@ Objectif: permettre à l'import OggDude des carrières de sélectionner correcte
 
 - GOAL-001: Analyse & validation du périmètre (codes manquants, incohérences mapping/tests) + décisions architecture.
 
-| Task     | Description                                                                                                      | DependsOn | Completed | Date |
-| -------- | ---------------------------------------------------------------------------------------------------------------- | --------- | --------- | ---- |
-| TASK-001 | Inventorier codes OggDude à ajouter (COMP, CORE, PERC, SKUL, STEAL) et vérifier absence dans `SYSTEM.SKILLS`.     |           |           |      |
-| TASK-002 | Confirmer incohérence PERC (tests vs config) et décider ajout compétence `perception` (PAT-001).                 | TASK-001  |           |      |
+| Task     | Description                                                                                                     | DependsOn | Completed | Date |
+| -------- | --------------------------------------------------------------------------------------------------------------- | --------- | --------- | ---- |
+| TASK-001 | Inventorier codes OggDude à ajouter (COMP, CORE, PERC, SKUL, STEAL) et vérifier absence dans `SYSTEM.SKILLS`.   |           |           |      |
+| TASK-002 | Confirmer incohérence PERC (tests vs config) et décider ajout compétence `perception` (PAT-001).                | TASK-001  |           |      |
 | TASK-003 | Définir catégories des nouvelles compétences: computers→kno, coordination→exp, perception→exp, skulduggery→soc. | TASK-002  |           |      |
-| TASK-004 | Recenser fichiers impactés (`FILE-001`..`FILE-010`).                                                             |           |           |      |
-| TASK-005 | Finaliser liste REQ / CON / PAT (ajouts validés).                                                                | TASK-004  |           |      |
+| TASK-004 | Recenser fichiers impactés (`FILE-001`..`FILE-010`).                                                            |           |           |      |
+| TASK-005 | Finaliser liste REQ / CON / PAT (ajouts validés).                                                               | TASK-004  |           |      |
 
 ### Implementation Phase 2
 
 - GOAL-002: Conception détaillée des modifications code, mapping, localisation et a11y feuille carrière.
 
-| Task     | Description                                                                                                                   | DependsOn | Completed | Date |
-| -------- | ----------------------------------------------------------------------------------------------------------------------------- | --------- | --------- | ---- |
-| TASK-006 | Spécifier objets compétences à ajouter dans `skills.mjs` (id, category, characteristics placeholder).                         | TASK-003  |           |      |
-| TASK-007 | Définir entrées mapping `OGG_DUDE_SKILL_MAP` pour nouveaux codes et synonymes longs/courts.                                  | TASK-006  |           |      |
-| TASK-008 | Décrire modifications `career-ogg-dude.mjs`: aucune refactor majeure, vérifier extraction couvre `<CareerSkills><Key>`.       | TASK-006  |           |      |
-| TASK-009 | Décrire ajout `data-code` & maintien attributs ARIA dans `career.mjs` (#prepareCareerSkills).                                | TASK-006  |           |      |
-| TASK-010 | Spécifier clés de localisation EN/FR (labels + abbréviations).                                                               | TASK-006  |           |      |
-| TASK-011 | Définir scénarios tests unitaires & intégration (REQ-010, REQ-011) & strict mode.                                            | TASK-006  |           |      |
-| TASK-012 | Concevoir stratégie de non-migration (documenter dans risques & assumptions).                                                | TASK-006  |           |      |
+| Task     | Description                                                                                                             | DependsOn | Completed | Date |
+| -------- | ----------------------------------------------------------------------------------------------------------------------- | --------- | --------- | ---- |
+| TASK-006 | Spécifier objets compétences à ajouter dans `skills.mjs` (id, category, characteristics placeholder).                   | TASK-003  |           |      |
+| TASK-007 | Définir entrées mapping `OGG_DUDE_SKILL_MAP` pour nouveaux codes et synonymes longs/courts.                             | TASK-006  |           |      |
+| TASK-008 | Décrire modifications `career-ogg-dude.mjs`: aucune refactor majeure, vérifier extraction couvre `<CareerSkills><Key>`. | TASK-006  |           |      |
+| TASK-009 | Décrire ajout `data-code` & maintien attributs ARIA dans `career.mjs` (#prepareCareerSkills).                           | TASK-006  |           |      |
+| TASK-010 | Spécifier clés de localisation EN/FR (labels + abbréviations).                                                          | TASK-006  |           |      |
+| TASK-011 | Définir scénarios tests unitaires & intégration (REQ-010, REQ-011) & strict mode.                                       | TASK-006  |           |      |
+| TASK-012 | Concevoir stratégie de non-migration (documenter dans risques & assumptions).                                           | TASK-006  |           |      |
 
 ### Implementation Phase 3
 
 - GOAL-003: Préparation exécution, ajout code, tests, validation & rollback.
 
-| Task     | Description                                                                                                                | DependsOn | Completed | Date |
-| -------- | -------------------------------------------------------------------------------------------------------------------------- | --------- | --------- | ---- |
-| TASK-013 | Modifier `skills.mjs` pour ajouter 4 nouvelles compétences (FILE-004).                                                     | TASK-006  |           |      |
-| TASK-014 | Mettre à jour `oggdude-skill-map.mjs` avec nouveaux codes + commentaires (FILE-001).                                       | TASK-007  |           |      |
-| TASK-015 | Ajouter synonymes STEAL→stealth, SKULDUGGERY variantes si nécessaires (FILE-001).                                         | TASK-014  |           |      |
-| TASK-016 | Vérifier extraction déjà conforme (aucun changement requis sinon ajuster commentaires) (FILE-002).                        | TASK-008  |           |      |
-| TASK-017 | Ajouter `data-code` sur éléments UI compétence + conserver ARIA (FILE-003).                                                | TASK-009  |           |      |
-| TASK-018 | Ajouter localisation EN (labels + abbr) pour nouvelles compétences (FILE-005).                                             | TASK-010  |           |      |
-| TASK-019 | Ajouter localisation FR (labels + abbr) (FILE-006).                                                                        | TASK-010  |           |      |
-| TASK-020 | Mettre à jour tests unitaires `career-ogg-dude.spec.mjs` pour nouveaux codes + strict (FILE-007).                          | TASK-011  |           |      |
-| TASK-021 | Mettre à jour tests intégration `career-import.integration.spec.mjs` (inclure Sentinel.xml exemple) (FILE-008).            | TASK-011  |           |      |
-| TASK-022 | Mettre à jour test strict `career-oggdude-strict.spec.mjs` pour filtrage (FILE-010).                                      | TASK-011  |           |      |
-| TASK-023 | Executer suite Vitest & corriger éventuelles régressions (tous tests).                                                     | TASK-020  |           |      |
-| TASK-024 | Vérifier absence de régression sur import carrière existant (manual QA).                                                  | TASK-023  |           |      |
-| TASK-025 | Documenter risques & rollback dans ce plan (section Risks) – si échec revert modifications SKILLS + mapping.              | TASK-024  |           |      |
+| Task     | Description                                                                                                     | DependsOn | Completed | Date |
+| -------- | --------------------------------------------------------------------------------------------------------------- | --------- | --------- | ---- |
+| TASK-013 | Modifier `skills.mjs` pour ajouter 4 nouvelles compétences (FILE-004).                                          | TASK-006  |           |      |
+| TASK-014 | Mettre à jour `oggdude-skill-map.mjs` avec nouveaux codes + commentaires (FILE-001).                            | TASK-007  |           |      |
+| TASK-015 | Ajouter synonymes STEAL→stealth, SKULDUGGERY variantes si nécessaires (FILE-001).                               | TASK-014  |           |      |
+| TASK-016 | Vérifier extraction déjà conforme (aucun changement requis sinon ajuster commentaires) (FILE-002).              | TASK-008  |           |      |
+| TASK-017 | Ajouter `data-code` sur éléments UI compétence + conserver ARIA (FILE-003).                                     | TASK-009  |           |      |
+| TASK-018 | Ajouter localisation EN (labels + abbr) pour nouvelles compétences (FILE-005).                                  | TASK-010  |           |      |
+| TASK-019 | Ajouter localisation FR (labels + abbr) (FILE-006).                                                             | TASK-010  |           |      |
+| TASK-020 | Mettre à jour tests unitaires `career-ogg-dude.spec.mjs` pour nouveaux codes + strict (FILE-007).               | TASK-011  |           |      |
+| TASK-021 | Mettre à jour tests intégration `career-import.integration.spec.mjs` (inclure Sentinel.xml exemple) (FILE-008). | TASK-011  |           |      |
+| TASK-022 | Mettre à jour test strict `career-oggdude-strict.spec.mjs` pour filtrage (FILE-010).                            | TASK-011  |           |      |
+| TASK-023 | Executer suite Vitest & corriger éventuelles régressions (tous tests).                                          | TASK-020  |           |      |
+| TASK-024 | Vérifier absence de régression sur import carrière existant (manual QA).                                        | TASK-023  |           |      |
+| TASK-025 | Documenter risques & rollback dans ce plan (section Risks) – si échec revert modifications SKILLS + mapping.    | TASK-024  |           |      |
 
 ## 3. Alternatives
 

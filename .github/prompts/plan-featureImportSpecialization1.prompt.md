@@ -5,21 +5,26 @@ Date: 2025-11-22
 Auteur: Plan généré pour correction du blocage d'import
 
 ## 1. Objectif
+
 Corriger le blocage constaté lors de l'import des spécialisations depuis l'archive OggDude : aucun Item créé, barre de progression immobile, processus semblant s'arrêter après l'étape de construction du contexte.
 
 ## 2. Constat / Symptômes
+
 - Sélection du seul domaine "Specialization" dans l'UI d'import.
 - Logs montrent exécution Steps 1–3 (zip, extraction, groupements) puis listing des domaines à importer ne contient pas "specialization" (absence dans buildContextMap principal).
 - Fin prématurée avec hook `oggdudeImport.completed` sans création d'Items, durée globale enregistrée.
 - Barre de progression (progressCallback) jamais incrémentée (aucune itération sur le domaine).
 
 ## 3. Cause Racine Probable
+
 Oubli d'enregistrement du domaine `specialization` dans la map de contextes utilisée par `processOggDudeData()`. Le domaine est présent dans `preloadOggDudeData()` mais manquant dans `processOggDudeData()`, empêchant toute exécution du pipeline spécifique (build context + processElements) et donc la création des Items ainsi que les callbacks de progression.
 
 ## 4. Portée
+
 Uniquement l'import des spécialisations OggDude. Vérifications de non-régression sur les autres domaines (armor, weapon, gear, species, career, talent, obligation). Pas de changement sur structure générale des autres importateurs. Ajout instrumentation & robustesse asynchrone.
 
 ## 5. Exigences (REQ)
+
 - REQ-001: Le domaine specialization doit être importable via le pipeline standard (`processOggDudeData`).
 - REQ-002: La barre de progression doit refléter l'avancement (processed/total) incluant specialization.
 - REQ-003: Création des Items specialization dans un dossier dédié `Swerpg - Specializations`.
@@ -38,11 +43,13 @@ Uniquement l'import des spécialisations OggDude. Vérifications de non-régress
 - REQ-016: Fiabilité: hook `oggdudeImport.completed` reflète nombre réel de domaines traités.
 
 ## 6. Hypothèses
+
 - Fichiers XML de spécialisations situés sous `Data/Specializations` avec pattern `*.xml` et racine `Specializations.Specialization`.
 - L'UI sélectionne correctement le domaine `specialization` (id attendu "specialization").
 - Le mapping skills existant est suffisant; mode strict désactivé par défaut.
 
 ## 7. Stratégie de Correction (Haute Niveau)
+
 1. Ajouter entrée specialization au `buildContextMap` dans `processOggDudeData`.
 2. Ajouter validation: si domaine coché absent de la map → log warning.
 3. Enrichir progression: progressCallback avant et après `processElements` (états start/end). Option: structure {processed, total, domain, phase}.
@@ -53,6 +60,7 @@ Uniquement l'import des spécialisations OggDude. Vérifications de non-régress
 8. Vérifier non-régression sur autres importations (exécuter import avec 2 domaines simultanés).
 
 ## 8. Tâches Détaillées
+
 - TASK-001: Auditer code actuel `oggDude.mjs` (identifié absence specialization).
 - TASK-002: Insérer `buildSpecializationContext` dans `buildContextMap` de `processOggDudeData`.
 - TASK-003: Ajouter guard log si domaines sélectionnés non présents.
@@ -71,6 +79,7 @@ Uniquement l'import des spécialisations OggDude. Vérifications de non-régress
 - TASK-016: Mise à jour CHANGELOG.
 
 ## 9. Tests (Résumé)
+
 - TEST-001: Reproduction bug initial (avant fix) — absence progression et Items.
 - TEST-002: Pipeline après fix (progressCallback appelé deux fois min.).
 - TEST-003: Création Items >0, dossier créé.
@@ -85,6 +94,7 @@ Uniquement l'import des spécialisations OggDude. Vérifications de non-régress
 - TEST-012: Retrys ne se déclenchent pas sur erreurs de validation.
 
 ## 10. Risques & Mitigations
+
 - RISK-001: Régression autres domaines — Test multi-domaine (TEST-007).
 - RISK-002: Explosion mémoire si gros XML — Traitement par Promise.all déjà; surveiller taille, éventuel batching futur.
 - RISK-003: Skills inconnues nombreuses spamment logs — Throttling déjà via stats utilitaires (vérifier).
@@ -92,21 +102,25 @@ Uniquement l'import des spécialisations OggDude. Vérifications de non-régress
 - RISK-005: Conflits d'images — Cache image existant limite appels.
 
 ## 11. Performance & Sécurité
+
 - Batch unique `Item.createDocuments` (déjà présent) pour réduire overhead.
 - Validation de noms fichiers (déjà dans `getElementsFrom` pour injections path). Aucune exécution de contenu importé.
 
 ## 12. Observabilité
+
 - Ajout logs start/end domaine specialization.
 - Statistiques finales specialization (counts) en debug.
 - ProgressCallback phases permet instrumentation UI.
 
 ## 13. Critères d'Acceptation
+
 - Import specialization seul: Items créés, progression passe à 1/1, stats cohérentes.
 - Import specialization + career: progression 2/2, chaque dossier créé.
 - XML corrompu: Import continue, log warning, Items valides présents.
 - Compétences inconnues: listées dans logs sans échec global.
 
 ## 14. Plan de Validation Final
+
 1. Exécuter suite tests unitaires & intégration.
 2. Lancer import réel avec archive de référence (petit dataset) en environnement Foundry.
 3. Vérifier UI (barre progression, dossier Items, logs).
@@ -114,10 +128,11 @@ Uniquement l'import des spécialisations OggDude. Vérifications de non-régress
 5. Confirmer absence erreurs console.
 
 ## 15. Suivi / Prochaines étapes
+
 - Exposer `strictSkills` dans UI (amélioration future).
 - Batching adaptatif pour >1000 spécializations.
 - Export metrics vers panneau admin (future feature).
 
 ---
-Fin du plan featureImportSpecialization1
 
+Fin du plan featureImportSpecialization1

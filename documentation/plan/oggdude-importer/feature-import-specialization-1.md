@@ -62,54 +62,54 @@ Add a new domain "specialization" to the OggDude data importer. Source data resi
 
 - GOAL-001: Analyze existing career importer & identify reusable conversion logic; define scope & shared utilities extraction.
 
-| Task     | Description                                                                                           | DependsOn | Completed | Date |
-| -------- | ----------------------------------------------------------------------------------------------------- | --------- | --------- | ---- |
+| Task     | Description                                                                                                                                               | DependsOn | Completed | Date |
+| -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | --------- | ---- |
 | TASK-001 | Inspect `module/importer/items/career-ogg-dude.mjs` to catalog functions to extract (description, source, normalizeFreeSkillRank, skill code extraction). |           |           |      |
-| TASK-002 | Confirm specialization item schema in `module/models/specialization.mjs` (fields: description, specializationSkills, freeSkillRank). |           |           |      |
-| TASK-003 | Determine XML field mapping (CareerSkills → specializationSkills; Source Page attribute; markup tags) from sample `Advisor.xml`. |           |           |      |
-| TASK-004 | Decide utility refactor file name `module/importer/utils/description-markup-utils.mjs` & shared skill extraction normalization. | TASK-001  |           |      |
-| TASK-005 | List all impacted files and produce FILE entries (see section 5).                                      | TASK-001  |           |      |
-| TASK-006 | Validate requirements completeness; refine REQ list if gaps discovered.                                | TASK-002  |           |      |
+| TASK-002 | Confirm specialization item schema in `module/models/specialization.mjs` (fields: description, specializationSkills, freeSkillRank).                      |           |           |      |
+| TASK-003 | Determine XML field mapping (CareerSkills → specializationSkills; Source Page attribute; markup tags) from sample `Advisor.xml`.                          |           |           |      |
+| TASK-004 | Decide utility refactor file name `module/importer/utils/description-markup-utils.mjs` & shared skill extraction normalization.                           | TASK-001  |           |      |
+| TASK-005 | List all impacted files and produce FILE entries (see section 5).                                                                                         | TASK-001  |           |      |
+| TASK-006 | Validate requirements completeness; refine REQ list if gaps discovered.                                                                                   | TASK-002  |           |      |
 
 ### Implementation Phase 2
 
 - GOAL-002: Design and specify code and template changes for specialization importer domain.
 
-| Task     | Description                                                                                                                     | DependsOn | Completed | Date |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------- | --------- | --------- | ---- |
-| TASK-007 | Create shared markup & source utils file: extract `convertCareerMarkupToHtml`, `appendSourceSection`, `escapeHtmlSafe`, `normalizeFreeSkillRank`. | TASK-004  |           |      |
-| TASK-008 | Implement `specializationMapper(specializations, { strictSkills=false })` similar to career but mapping to `specialization` type. | TASK-007  |           |      |
-| TASK-009 | Implement skill extraction helper `extractRawSpecializationSkillCodes(xmlSpec)` (reuse career logic; adjust naming).             | TASK-007  |           |      |
-| TASK-010 | Implement stats util `specialization-import-utils.mjs` with functions: reset, increment, addSpecializationUnknownSkill, get stats. |           |           |      |
-| TASK-011 | Implement context builder `buildSpecializationContext()` using directory aggregation (`Specializations`, criterion `Specialization`). | TASK-008  |           |      |
-| TASK-012 | Register domain in `processOggDudeData()` & `preloadOggDudeData()` (two Map insertions).                                         | TASK-011  |           |      |
-| TASK-013 | Update `_domainNames` in `OggDudeDataImporter.mjs` to include `specialization`.                                                  | TASK-012  |           |      |
-| TASK-014 | Update global metrics `getAllImportStats()` & aggregate to include specialization stats.                                        | TASK-010  |           |      |
-| TASK-015 | Add localization keys in `lang/en.json` & `lang/fr.json` for importer domain label.                                              | TASK-012  |           |      |
-| TASK-016 | Create new doc `documentation/importer/import-specialization.md` with usage & schema mapping notes.                             | TASK-011  |           |      |
-| TASK-017 | Update `documentation/importer/README.md` domain matrix status (add specialization importer row).                                | TASK-016  |           |      |
-| TASK-018 | Ensure description sanitization integrated (reusing escape + sanitize) — add tests.                                             | TASK-008  |           |      |
-| TASK-019 | Add JSDoc comments to all new public functions (mapper, context builder, utils).                                                | TASK-008  |           |      |
-| TASK-020 | Prepare test fixture plan (integration uses existing `resources/integration/Specializations/*.xml`).                            | TASK-011  |           |      |
-| TASK-026 | Implement `extractRawSpecializationSkillCodes` supporting both direct `<CareerSkills><Key>` and nested `<CareerSkills><CareerSkill><Key>` formats. | TASK-009  |           |      |
-| TASK-027 | Implement `mapSpecializationSkills(rawCodes,{strict=false})` reusing `mapOggDudeSkillCodes` and enforcing truncation & de-dup (<=8). | TASK-026  |           |      |
+| Task     | Description                                                                                                                                                                               | DependsOn | Completed | Date |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | --------- | ---- |
+| TASK-007 | Create shared markup & source utils file: extract `convertCareerMarkupToHtml`, `appendSourceSection`, `escapeHtmlSafe`, `normalizeFreeSkillRank`.                                         | TASK-004  |           |      |
+| TASK-008 | Implement `specializationMapper(specializations, { strictSkills=false })` similar to career but mapping to `specialization` type.                                                         | TASK-007  |           |      |
+| TASK-009 | Implement skill extraction helper `extractRawSpecializationSkillCodes(xmlSpec)` (reuse career logic; adjust naming).                                                                      | TASK-007  |           |      |
+| TASK-010 | Implement stats util `specialization-import-utils.mjs` with functions: reset, increment, addSpecializationUnknownSkill, get stats.                                                        |           |           |      |
+| TASK-011 | Implement context builder `buildSpecializationContext()` using directory aggregation (`Specializations`, criterion `Specialization`).                                                     | TASK-008  |           |      |
+| TASK-012 | Register domain in `processOggDudeData()` & `preloadOggDudeData()` (two Map insertions).                                                                                                  | TASK-011  |           |      |
+| TASK-013 | Update `_domainNames` in `OggDudeDataImporter.mjs` to include `specialization`.                                                                                                           | TASK-012  |           |      |
+| TASK-014 | Update global metrics `getAllImportStats()` & aggregate to include specialization stats.                                                                                                  | TASK-010  |           |      |
+| TASK-015 | Add localization keys in `lang/en.json` & `lang/fr.json` for importer domain label.                                                                                                       | TASK-012  |           |      |
+| TASK-016 | Create new doc `documentation/importer/import-specialization.md` with usage & schema mapping notes.                                                                                       | TASK-011  |           |      |
+| TASK-017 | Update `documentation/importer/README.md` domain matrix status (add specialization importer row).                                                                                         | TASK-016  |           |      |
+| TASK-018 | Ensure description sanitization integrated (reusing escape + sanitize) — add tests.                                                                                                       | TASK-008  |           |      |
+| TASK-019 | Add JSDoc comments to all new public functions (mapper, context builder, utils).                                                                                                          | TASK-008  |           |      |
+| TASK-020 | Prepare test fixture plan (integration uses existing `resources/integration/Specializations/*.xml`).                                                                                      | TASK-011  |           |      |
+| TASK-026 | Implement `extractRawSpecializationSkillCodes` supporting both direct `<CareerSkills><Key>` and nested `<CareerSkills><CareerSkill><Key>` formats.                                        | TASK-009  |           |      |
+| TASK-027 | Implement `mapSpecializationSkills(rawCodes,{strict=false})` reusing `mapOggDudeSkillCodes` and enforcing truncation & de-dup (<=8).                                                      | TASK-026  |           |      |
 | TASK-028 | Add coverage script/test to iterate all XML files in `resources/integration/Specializations/` collecting unique skill codes and asserting mapping coverage (produces report of unknowns). | TASK-020  |           |      |
-| TASK-029 | Update importer documentation with coverage results table (mapped vs unknown codes).                                           | TASK-028  |           |      |
-| TASK-030 | Refactor career-only naming where reused (optionally move normalization function to `description-markup-utils.mjs`).            | TASK-007  |           |      |
-| TASK-031 | Add defensive logging throttling: log unknown specialization skill code only once (Set based).                                 | TASK-027  |           |      |
-| TASK-032 | Add integration test asserting that mapping of sample Advisor specialization yields skill ids `[charm,deception,negotiation,streetwise]`. | TASK-011  |           |      |
+| TASK-029 | Update importer documentation with coverage results table (mapped vs unknown codes).                                                                                                      | TASK-028  |           |      |
+| TASK-030 | Refactor career-only naming where reused (optionally move normalization function to `description-markup-utils.mjs`).                                                                      | TASK-007  |           |      |
+| TASK-031 | Add defensive logging throttling: log unknown specialization skill code only once (Set based).                                                                                            | TASK-027  |           |      |
+| TASK-032 | Add integration test asserting that mapping of sample Advisor specialization yields skill ids `[charm,deception,negotiation,streetwise]`.                                                 | TASK-011  |           |      |
 
 ### Implementation Phase 3
 
 - GOAL-003: Prepare implementation, migration and rollback strategy.
 
-| Task     | Description                                                                                                                            | DependsOn | Completed | Date |
-| -------- | -------------------------------------------------------------------------------------------------------------------------------------- | --------- | --------- | ---- |
+| Task     | Description                                                                                                                                                        | DependsOn | Completed | Date |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------- | --------- | ---- |
 | TASK-021 | Define duplicate handling: if an imported specialization (type+name) exists, preview marks `exists=true`; import still creates new item (future de-dupe optional). | TASK-012  |           |      |
-| TASK-022 | Confirm no data migration needed (item type already exists; importer adds new items only).                                            | TASK-021  |           |      |
-| TASK-023 | Rollback plan: manual deletion of imported specialization items & revert added code lines (Map inserts, domain list, metrics aggregator). | TASK-012  |           |      |
-| TASK-024 | Define regression checklist: career import unaffected (run career tests), global metrics totals updated, UI domain selection functional. | TASK-014  |           |      |
-| TASK-025 | Document rollback & verification steps inside new doc file.                                                                           | TASK-023  |           |      |
+| TASK-022 | Confirm no data migration needed (item type already exists; importer adds new items only).                                                                         | TASK-021  |           |      |
+| TASK-023 | Rollback plan: manual deletion of imported specialization items & revert added code lines (Map inserts, domain list, metrics aggregator).                          | TASK-012  |           |      |
+| TASK-024 | Define regression checklist: career import unaffected (run career tests), global metrics totals updated, UI domain selection functional.                           | TASK-014  |           |      |
+| TASK-025 | Document rollback & verification steps inside new doc file.                                                                                                        | TASK-023  |           |      |
 
 ## 3. Alternatives
 

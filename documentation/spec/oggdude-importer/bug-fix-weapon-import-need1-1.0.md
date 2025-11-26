@@ -1,17 +1,17 @@
 ---
-title: "Bug OggDude Weapon Import – Mauvais mapping des données"
-domain: "oggdude-importer"
-purpose: "bug"
-feature: "oggdude-weapon-data-mapping"
-version: "1.0"
-status: "draft"
-owner: "SWERPG Core Dev"
-createdAt: "2025-11-18"
+title: 'Bug OggDude Weapon Import – Mauvais mapping des données'
+domain: 'oggdude-importer'
+purpose: 'bug'
+feature: 'oggdude-weapon-data-mapping'
+version: '1.0'
+status: 'draft'
+owner: 'SWERPG Core Dev'
+createdAt: '2025-11-18'
 input-sources:
-  - "OggDude Weapon.xml export (No Disintegrations & autres suppléments)"
-  - "UI d’import OggDude dans SWERPG (Foundry VTT v13+)"
+  - 'OggDude Weapon.xml export (No Disintegrations & autres suppléments)'
+  - 'UI d’import OggDude dans SWERPG (Foundry VTT v13+)'
 notes:
-  - "Spécification de besoin pour générer un plan d’implémentation avec l’agent swerpg-plan."
+  - 'Spécification de besoin pour générer un plan d’implémentation avec l’agent swerpg-plan.'
 ---
 
 # 1. Contexte & objectif
@@ -97,7 +97,7 @@ Assurer un mapping fiable des données de `Weapon.xml` vers la structure `Item` 
   </Qualities>
   <Range>Short</Range>
 </Weapon>
-````
+```
 
 ## 3.2 Résultat actuellement généré dans Foundry
 
@@ -135,15 +135,15 @@ Assurer un mapping fiable des données de `Weapon.xml` vers la structure `Item` 
 
 ## 3.3 Constats
 
-* Les valeurs issues du XML ne sont pas correctement mappées :
+- Les valeurs issues du XML ne sont pas correctement mappées :
+  - `system.damage` et `system.crit` restent à `0` alors que `<Damage>` et `<Crit>` sont présents.
+  - `system.price`, `system.encumbrance`, `system.hardPoints`, `system.rarity` restent aux valeurs par défaut.
+  - `system.category` reste vide alors que `<Type>` et `<Categories>` fournissent de l’information.
+  - `system.range` est à `medium` alors que l’arme est clairement `Short`.
 
-    * `system.damage` et `system.crit` restent à `0` alors que `<Damage>` et `<Crit>` sont présents.
-    * `system.price`, `system.encumbrance`, `system.hardPoints`, `system.rarity` restent aux valeurs par défaut.
-    * `system.category` reste vide alors que `<Type>` et `<Categories>` fournissent de l’information.
-    * `system.range` est à `medium` alors que l’arme est clairement `Short`.
-* La description est vide alors que le XML contient du texte.
-* Les qualités (BLAST 2, BURN 2, PIERCE 2, VICIOUS 3) sont complètement perdues (`system.qualities` vide).
-* Le champ `Restricted` n’est pas reflété (ni booléen, ni propriété/tag).
+- La description est vide alors que le XML contient du texte.
+- Les qualités (BLAST 2, BURN 2, PIERCE 2, VICIOUS 3) sont complètement perdues (`system.qualities` vide).
+- Le champ `Restricted` n’est pas reflété (ni booléen, ni propriété/tag).
 
 Résultat : l’objet importé n’est pas jouable en l’état, et ne reflète pas les propriétés attendues de l’arme décrite dans OggDude.
 
@@ -155,12 +155,11 @@ Résultat : l’objet importé n’est pas jouable en l’état, et ne reflète 
 
 Pour le MJ / les joueurs :
 
-* Lorsqu’une arme est importée depuis `Weapon.xml`, elle doit :
-
-    * Avoir ses caractéristiques de base correctes (dégâts, critique, portée, prix, encumbrance, rareté, hard points).
-    * Afficher une description exploitable comprenant au minimum le texte OggDude nettoyé + la source.
-    * Exposer les qualités (Blast, Burn, Pierce, Vicious, etc.) de manière lisible, et idéalement structurée.
-    * Conserver l’information sur le type (Explosives/Other, Ranged, Melee, etc.) et le statut `Restricted`.
+- Lorsqu’une arme est importée depuis `Weapon.xml`, elle doit :
+  - Avoir ses caractéristiques de base correctes (dégâts, critique, portée, prix, encumbrance, rareté, hard points).
+  - Afficher une description exploitable comprenant au minimum le texte OggDude nettoyé + la source.
+  - Exposer les qualités (Blast, Burn, Pierce, Vicious, etc.) de manière lisible, et idéalement structurée.
+  - Conserver l’information sur le type (Explosives/Other, Ranged, Melee, etc.) et le statut `Restricted`.
 
 L’objectif est que le MJ puisse immédiatement équiper un PNJ ou un PJ avec l’arme importée sans passer par une phase de correction manuelle systématique.
 
@@ -192,10 +191,9 @@ Pour toutes les entrées `<Weapon>` :
 
 ### Points importants
 
-* Le mapping doit s’aligner sur le schéma actuel des Items `weapon` dans SWERPG :
-
-    * Utiliser la même structure que celle générée par l’UI de création d’arme pour `system.qualities`, `system.range`, `system.skill`, etc.
-    * Éviter de réinventer un format parallèle.
+- Le mapping doit s’aligner sur le schéma actuel des Items `weapon` dans SWERPG :
+  - Utiliser la même structure que celle générée par l’UI de création d’arme pour `system.qualities`, `system.range`, `system.skill`, etc.
+  - Éviter de réinventer un format parallèle.
 
 ---
 
@@ -203,13 +201,13 @@ Pour toutes les entrées `<Weapon>` :
 
 À partir de `<Description>` :
 
-* Supprimer les balises OggDude du type `[H3]` / `[h3]` :
+- Supprimer les balises OggDude du type `[H3]` / `[h3]` :
+  - Soit en les remplaçant par un titre markdown `###`,
+  - Soit en les supprimant, mais de façon **cohérente** avec la logique déjà choisie pour les armures.
 
-    * Soit en les remplaçant par un titre markdown `###`,
-    * Soit en les supprimant, mais de façon **cohérente** avec la logique déjà choisie pour les armures.
-* Conserver les retours à la ligne significatifs.
-* Conserver les éventuels codes de dés (`[BO]`, `[SE]`, etc.) tels quels.
-* Ajouter la source en bas de description :
+- Conserver les retours à la ligne significatifs.
+- Conserver les éventuels codes de dés (`[BO]`, `[SE]`, etc.) tels quels.
+- Ajouter la source en bas de description :
 
 Exemple attendu (version simple) :
 
@@ -226,22 +224,21 @@ Source: No Disintegrations, p.44
 
 ### Type / catégories
 
-* `<Type>` (ici `Explosives/Other`) doit alimenter un champ lisible par le système :
+- `<Type>` (ici `Explosives/Other`) doit alimenter un champ lisible par le système :
+  - Soit `system.category`,
+  - Soit un champ structuré (ex. `system.group`, `system.weaponType`) selon ce qui existe déjà dans le schéma.
 
-    * Soit `system.category`,
-    * Soit un champ structuré (ex. `system.group`, `system.weaponType`) selon ce qui existe déjà dans le schéma.
-* `<Categories>` (ex. `Ranged`) doit permettre au MJ de voir immédiatement s’il s’agit d’une arme de tir, de mêlée, etc.
-
-    * Si le système SWERPG dispose déjà d’une taxonomie, s’aligner dessus.
-    * Sinon, au minimum, stocker les catégories comme tags (liste de chaînes) sans les perdre.
+- `<Categories>` (ex. `Ranged`) doit permettre au MJ de voir immédiatement s’il s’agit d’une arme de tir, de mêlée, etc.
+  - Si le système SWERPG dispose déjà d’une taxonomie, s’aligner dessus.
+  - Sinon, au minimum, stocker les catégories comme tags (liste de chaînes) sans les perdre.
 
 ### Restricted
 
-* Si `<Restricted>true</Restricted>` :
+- Si `<Restricted>true</Restricted>` :
+  - Ajouter un booléen `system.restricted = true` **ou**
+  - Ajouter un tag `restricted` dans la liste de propriétés / qualités contextuelles de l’arme.
 
-    * Ajouter un booléen `system.restricted = true` **ou**
-    * Ajouter un tag `restricted` dans la liste de propriétés / qualités contextuelles de l’arme.
-* L’info doit être visible dans la fiche d’arme (de manière cohérente avec l’UI).
+- L’info doit être visible dans la fiche d’arme (de manière cohérente avec l’UI).
 
 ---
 
@@ -249,19 +246,18 @@ Source: No Disintegrations, p.44
 
 ### Compétence (SkillKey → system.skill)
 
-* Exemple : `RANGLT` (Ranged - Light) → `system.skill = "rangedLight"`.
-* Le mapping doit utiliser la même table que celle déjà potentiellement utilisée ailleurs dans le système (pour lier items et compétences d’acteur).
-* En cas de `SkillKey` inconnu, prévoir une stratégie de fallback (ex. `system.skill = null` + avertissement loggué).
+- Exemple : `RANGLT` (Ranged - Light) → `system.skill = "rangedLight"`.
+- Le mapping doit utiliser la même table que celle déjà potentiellement utilisée ailleurs dans le système (pour lier items et compétences d’acteur).
+- En cas de `SkillKey` inconnu, prévoir une stratégie de fallback (ex. `system.skill = null` + avertissement loggué).
 
 ### Portée (RangeValue / Range → system.range)
 
-* `RangeValue` contient une valeur codée (`wrShort`, `wrMedium`, etc.).
-* `Range` contient la version lisible (`Short`, `Medium`, …).
-* Le mapping doit :
-
-    * Utiliser `RangeValue` comme source de vérité pour `system.range` (ex. `wrShort` → `"short"`),
-    * Utiliser `Range` en fallback si `RangeValue` est manquante ou incohérente,
-    * S’aligner sur les valeurs d’énumération déjà utilisées dans SWERPG (`engaged`, `short`, `medium`, `long`, `extreme`, etc.).
+- `RangeValue` contient une valeur codée (`wrShort`, `wrMedium`, etc.).
+- `Range` contient la version lisible (`Short`, `Medium`, …).
+- Le mapping doit :
+  - Utiliser `RangeValue` comme source de vérité pour `system.range` (ex. `wrShort` → `"short"`),
+  - Utiliser `Range` en fallback si `RangeValue` est manquante ou incohérente,
+  - S’aligner sur les valeurs d’énumération déjà utilisées dans SWERPG (`engaged`, `short`, `medium`, `long`, `extreme`, etc.).
 
 Exemple attendu pour l’arme d’exemple : `system.range = "short"`.
 
@@ -273,16 +269,14 @@ Les qualités (Blast, Burn, Pierce, Vicious, etc.) sont centrales dans le gamepl
 
 ### Objectif minimal
 
-* **Ne plus perdre l’information** :
-
-    * `BLAST 2`, `BURN 2`, `PIERCE 2`, `VICIOUS 3` doivent être visibles **au moins** :
-
-        * dans `system.qualities` sous une forme structurée,
-        * et/ou dans la description (par exemple sous forme de liste à puces).
+- **Ne plus perdre l’information** :
+  - `BLAST 2`, `BURN 2`, `PIERCE 2`, `VICIOUS 3` doivent être visibles **au moins** :
+    - dans `system.qualities` sous une forme structurée,
+    - et/ou dans la description (par exemple sous forme de liste à puces).
 
 ### Format structuré (à adapter au schéma existant)
 
-* Si le schéma `weapon` dispose déjà d’une structure (ex. un tableau d’objets) :
+- Si le schéma `weapon` dispose déjà d’une structure (ex. un tableau d’objets) :
 
   Exemple conceptuel (à ajuster à la réalité du système) :
 
@@ -295,30 +289,28 @@ Les qualités (Blast, Burn, Pierce, Vicious, etc.) sont centrales dans le gamepl
   ]
   ```
 
-* Les clés doivent être normalisées (ex. `BLAST` → `"blast"`, `VICIOUS` → `"vicious"`).
+- Les clés doivent être normalisées (ex. `BLAST` → `"blast"`, `VICIOUS` → `"vicious"`).
 
 ### Fallback descriptif
 
-* En complément (ou en attendant un support complet) :
+- En complément (ou en attendant un support complet) :
+  - Ajouter une section “Qualities” en bas de la description :
 
-    * Ajouter une section “Qualities” en bas de la description :
-
-      ```text
-      Qualities:
-      - Blast 2
-      - Burn 2
-      - Pierce 2
-      - Vicious 3
-      ```
+    ```text
+    Qualities:
+    - Blast 2
+    - Burn 2
+    - Pierce 2
+    - Vicious 3
+    ```
 
 ---
 
 ## 4.7 Champs hors scope / optionnels
 
-* `<SizeHigh>` : interprétation non critique pour la jouabilité immédiate.
-
-    * Scope minimal : conserver la valeur dans `flags.swerpg.oggdude.sizeHigh` pour usage futur.
-    * Pas d’impact immédiat sur les jets ou feuilles de personnage.
+- `<SizeHigh>` : interprétation non critique pour la jouabilité immédiate.
+  - Scope minimal : conserver la valeur dans `flags.swerpg.oggdude.sizeHigh` pour usage futur.
+  - Pas d’impact immédiat sur les jets ou feuilles de personnage.
 
 ---
 
@@ -326,26 +318,24 @@ Les qualités (Blast, Burn, Pierce, Vicious, etc.) sont centrales dans le gamepl
 
 ## 5.1 Contraintes techniques
 
-* Compatibilité Foundry VTT v13+ :
+- Compatibilité Foundry VTT v13+ :
+  - Utiliser les APIs v13 pour la création / mise à jour d’Items (`Item.create`, `fromCompendium`, etc.).
 
-    * Utiliser les APIs v13 pour la création / mise à jour d’Items (`Item.create`, `fromCompendium`, etc.).
-* Le module d’import peut traiter des centaines d’armes :
+- Le module d’import peut traiter des centaines d’armes :
+  - Le parsing XML et la création d’Items doivent rester raisonnablement performants.
 
-    * Le parsing XML et la création d’Items doivent rester raisonnablement performants.
-* Ne pas casser l’import d’autres types de données OggDude :
-
-    * Le bugfix doit être localisé à l’import des armes ou utiliser des fonctions utilitaires partagées sans régression.
+- Ne pas casser l’import d’autres types de données OggDude :
+  - Le bugfix doit être localisé à l’import des armes ou utiliser des fonctions utilitaires partagées sans régression.
 
 ## 5.2 Hypothèses
 
-* Le schéma `system` des Items `weapon` est stable et conforme à l’exemple fourni :
+- Le schéma `system` des Items `weapon` est stable et conforme à l’exemple fourni :
+  - Présence de `system.damage`, `system.crit`, `system.range`, `system.skill`,
+    `system.price`, `system.encumbrance`, `system.rarity`, `system.hardPoints`, `system.qualities`.
 
-    * Présence de `system.damage`, `system.crit`, `system.range`, `system.skill`,
-      `system.price`, `system.encumbrance`, `system.rarity`, `system.hardPoints`, `system.qualities`.
-* Il existe (ou il est acceptable de créer) une table de mapping entre les `SkillKey` OggDude (RANGLT, RANGHV, MELEE, BRWL, etc.) et les identifiers de compétence SWERPG (`rangedLight`, `rangedHeavy`, etc.).
-* L’UI de fiche d’arme SWERPG sait déjà afficher `system.qualities` dans un format exploitable :
-
-    * L’implémentation du bugfix s’alignera sur cette logique, sans refonte de l’UI.
+- Il existe (ou il est acceptable de créer) une table de mapping entre les `SkillKey` OggDude (RANGLT, RANGHV, MELEE, BRWL, etc.) et les identifiers de compétence SWERPG (`rangedLight`, `rangedHeavy`, etc.).
+- L’UI de fiche d’arme SWERPG sait déjà afficher `system.qualities` dans un format exploitable :
+  - L’implémentation du bugfix s’alignera sur cette logique, sans refonte de l’UI.
 
 ---
 
@@ -451,47 +441,38 @@ Les qualités (Blast, Burn, Pierce, Vicious, etc.) sont centrales dans le gamepl
 # 7. Critères d’acceptation
 
 1. **Import d’une arme simple**
-
-    * Étant donné un fichier `Weapon.xml` contenant l’entrée `"Firecaller" Light Flame Projector`,
-    * Quand je lance l’import OggDude Weapons,
-    * Alors l’Item `weapon` créé dans Foundry :
-
-        * a `system.damage = 5`,
-        * a `system.crit = 2`,
-        * a `system.range = "short"`,
-        * a `system.skill = "rangedLight"`,
-        * a `system.encumbrance = 4`,
-        * a `system.hardPoints = 1`,
-        * a `system.price = 1200`,
-        * a `system.rarity = 7`.
+   - Étant donné un fichier `Weapon.xml` contenant l’entrée `"Firecaller" Light Flame Projector`,
+   - Quand je lance l’import OggDude Weapons,
+   - Alors l’Item `weapon` créé dans Foundry :
+     - a `system.damage = 5`,
+     - a `system.crit = 2`,
+     - a `system.range = "short"`,
+     - a `system.skill = "rangedLight"`,
+     - a `system.encumbrance = 4`,
+     - a `system.hardPoints = 1`,
+     - a `system.price = 1200`,
+     - a `system.rarity = 7`.
 
 2. **Conservation du type et des catégories**
-
-    * Le type `Explosives/Other` et la catégorie `Ranged` sont visibles sous forme de `system.category` et/ou de tags clairement identifiables.
+   - Le type `Explosives/Other` et la catégorie `Ranged` sont visibles sous forme de `system.category` et/ou de tags clairement identifiables.
 
 3. **Description non vide et source visible**
-
-    * La description publique contient au minimum :
-
-        * le nom de l’arme,
-        * le texte de description OggDude nettoyé,
-        * une ligne de référence à la source (“Source: No Disintegrations, p.44”).
+   - La description publique contient au minimum :
+     - le nom de l’arme,
+     - le texte de description OggDude nettoyé,
+     - une ligne de référence à la source (“Source: No Disintegrations, p.44”).
 
 4. **Qualités visibles**
-
-    * Les qualités BLAST 2, BURN 2, PIERCE 2, VICIOUS 3 :
-
-        * sont présentes dans `system.qualities` sous une forme structurée cohérente avec le schéma,
-        * et/ou sont listées de façon lisible dans la description.
+   - Les qualités BLAST 2, BURN 2, PIERCE 2, VICIOUS 3 :
+     - sont présentes dans `system.qualities` sous une forme structurée cohérente avec le schéma,
+     - et/ou sont listées de façon lisible dans la description.
 
 5. **Restriction visible**
-
-    * Le statut `Restricted=true` est reflété, soit par un booléen dédié (`system.restricted`), soit par un tag visible sur la fiche d’arme.
+   - Le statut `Restricted=true` est reflété, soit par un booléen dédié (`system.restricted`), soit par un tag visible sur la fiche d’arme.
 
 6. **Non-régression**
-
-    * L’import d’autres armes OggDude ne produit plus d’Items avec dégâts/critique/portée à 0 ou `medium` par défaut quand le XML fournit une valeur.
-    * L’import des autres types d’objets (armures, gear, etc.) continue de fonctionner comme avant (ou mieux si un code partagé est factorisé).
+   - L’import d’autres armes OggDude ne produit plus d’Items avec dégâts/critique/portée à 0 ou `medium` par défaut quand le XML fournit une valeur.
+   - L’import des autres types d’objets (armures, gear, etc.) continue de fonctionner comme avant (ou mieux si un code partagé est factorisé).
 
 ---
 
@@ -499,72 +480,73 @@ Les qualités (Blast, Burn, Pierce, Vicious, etc.) sont centrales dans le gamepl
 
 Ces éléments devront être explicitement traités dans le plan d’implémentation généré par `swerpg-plan` (section CON-XXX / Assumptions) :
 
-* **Format exact de `system.qualities`** :
-    * Quel est le schéma actuel utilisé dans SWERPG pour les qualités d’armes ?
-    * Faut-il aligner OggDude sur un format déjà existant (probable) ou définir une nouvelle structure standard ?
+- **Format exact de `system.qualities`** :
+  - Quel est le schéma actuel utilisé dans SWERPG pour les qualités d’armes ?
+  - Faut-il aligner OggDude sur un format déjà existant (probable) ou définir une nouvelle structure standard ?
 
-* **Destinataire de `<Type>` et `<Categories>`** :
-    * `system.category` vs champ dédié (ex. `system.group`) ?
-    * Faut-il aligner avec une liste prédéfinie (enum) ou accepter des valeurs libres ?
+- **Destinataire de `<Type>` et `<Categories>`** :
+  - `system.category` vs champ dédié (ex. `system.group`) ?
+  - Faut-il aligner avec une liste prédéfinie (enum) ou accepter des valeurs libres ?
 
-* **Visibilité de `Restricted` dans l’UI** :
-    * Doit-elle apparaître sous forme d’icône, de tag texte, d’un champ booléen, … ?
+- **Visibilité de `Restricted` dans l’UI** :
+  - Doit-elle apparaître sous forme d’icône, de tag texte, d’un champ booléen, … ?
 
-* **Traitement des armes déjà importées** :
-    - le scope se limite aux futurs imports
+- **Traitement des armes déjà importées** :
+  - le scope se limite aux futurs imports
 
-* **Gestion de `SizeHigh`** :
-    * Simple stockage dans `flags.swerpg.oggdude.sizeHigh` comme proposé,
-    - C'est une “future evolution” donc non traité pour ce bugfix.
-    - 
+- **Gestion de `SizeHigh`** :
+  - Simple stockage dans `flags.swerpg.oggdude.sizeHigh` comme proposé,
+  * C'est une “future evolution” donc non traité pour ce bugfix.
+  *
+
 ### Clarifications produit / périmètre de ce bugfix
 
 Pour cette US, l’objectif est **uniquement** de corriger le mapping des données OggDude à l’import.  
 Les sujets suivants sont **traités au strict minimum** et explicitement reportés à de futures features plus larges.
 
 - **`system.qualities`**
-    - Objectif de ce bugfix : ne plus perdre l’information sur les qualités OggDude (BLAST, BURN, etc.).
-    - Exigence minimale :
-        - Les qualités doivent être **au moins lisibles** par le MJ (ex. liste textuelle ajoutée dans la description).
-        - Si le système SWERPG dispose **déjà** d’un format structuré pour `system.qualities`, l’import doit **simplement l’alimenter** en respectant ce format existant, sans le redéfinir.
-    - Hors scope pour cette US :
-        - Redéfinition du format canonique de `system.qualities`.
-        - Décision sur une enum globale de qualités, ou sur la structure définitive (objets vs chaînes, flags, etc.).
-        - Toute logique d’automatisation basée sur les qualités (modificateurs de dés, effets automatiques, etc.).
+  - Objectif de ce bugfix : ne plus perdre l’information sur les qualités OggDude (BLAST, BURN, etc.).
+  - Exigence minimale :
+    - Les qualités doivent être **au moins lisibles** par le MJ (ex. liste textuelle ajoutée dans la description).
+    - Si le système SWERPG dispose **déjà** d’un format structuré pour `system.qualities`, l’import doit **simplement l’alimenter** en respectant ce format existant, sans le redéfinir.
+  - Hors scope pour cette US :
+    - Redéfinition du format canonique de `system.qualities`.
+    - Décision sur une enum globale de qualités, ou sur la structure définitive (objets vs chaînes, flags, etc.).
+    - Toute logique d’automatisation basée sur les qualités (modificateurs de dés, effets automatiques, etc.).
 
 - **Mapping de `<Type>` et `<Categories>`**
-    - Objectif de ce bugfix : ne plus perdre ces informations à l’import.
-    - Exigence minimale :
-        - Les valeurs de `<Type>` et `<Categories>` doivent être **conservées quelque part** dans l’Item (champ système existant ou `flags.swerpg.*`), même si leur usage reste purement informatif.
-    - Hors scope pour cette US :
-        - Définir une taxonomie “officielle” (enum) des types d’armes dans SWERPG.
-        - Décider définitivement si `system.category` représente la famille mécanique, le type narratif, ou autre.
-        - Mettre en place des filtres, tris ou comportements UI basés sur ces champs.
+  - Objectif de ce bugfix : ne plus perdre ces informations à l’import.
+  - Exigence minimale :
+    - Les valeurs de `<Type>` et `<Categories>` doivent être **conservées quelque part** dans l’Item (champ système existant ou `flags.swerpg.*`), même si leur usage reste purement informatif.
+  - Hors scope pour cette US :
+    - Définir une taxonomie “officielle” (enum) des types d’armes dans SWERPG.
+    - Décider définitivement si `system.category` représente la famille mécanique, le type narratif, ou autre.
+    - Mettre en place des filtres, tris ou comportements UI basés sur ces champs.
 
 - **Visibilité de `Restricted`**
-    - Objectif de ce bugfix : ne plus perdre l’info `Restricted` à l’import.
-    - Exigence minimale :
-        - La valeur `<Restricted>true/false</Restricted>` doit être **stockée** (ex. `system.restricted` ou `flags.swerpg.restricted`), de façon fiable.
-        - Aucun comportement mécanique supplémentaire n’est attendu dans cette US.
-    - Hors scope pour cette US :
-        - Design UI détaillé (icône, badge, couleur spécifique, filtres sur les listes, etc.).
-        - Mise en place d’un système de “légalité” ou de règles spéciaux pour les objets restreints.
+  - Objectif de ce bugfix : ne plus perdre l’info `Restricted` à l’import.
+  - Exigence minimale :
+    - La valeur `<Restricted>true/false</Restricted>` doit être **stockée** (ex. `system.restricted` ou `flags.swerpg.restricted`), de façon fiable.
+    - Aucun comportement mécanique supplémentaire n’est attendu dans cette US.
+  - Hors scope pour cette US :
+    - Design UI détaillé (icône, badge, couleur spécifique, filtres sur les listes, etc.).
+    - Mise en place d’un système de “légalité” ou de règles spéciaux pour les objets restreints.
 
 - **Traitement des armes déjà importées**
-    - Objectif de ce bugfix : fiabiliser les **futurs imports**.
-    - Décision pour cette US :
-        - Le périmètre de correction porte **uniquement** sur les nouveaux imports de `Weapon.xml`.
-        - Aucun mécanisme automatique de migration / réparation des armes déjà présentes dans les mondes existants n’est prévu dans cette US.
-    - Hors scope pour cette US :
-        - Script de migration, bouton “Réparer les armes OggDude”, ou réimport automatique des anciens objets.
-        - Stratégie fine pour détecter / préserver les modifications manuelles des MJ sur des armes déjà importées.
+  - Objectif de ce bugfix : fiabiliser les **futurs imports**.
+  - Décision pour cette US :
+    - Le périmètre de correction porte **uniquement** sur les nouveaux imports de `Weapon.xml`.
+    - Aucun mécanisme automatique de migration / réparation des armes déjà présentes dans les mondes existants n’est prévu dans cette US.
+  - Hors scope pour cette US :
+    - Script de migration, bouton “Réparer les armes OggDude”, ou réimport automatique des anciens objets.
+    - Stratégie fine pour détecter / préserver les modifications manuelles des MJ sur des armes déjà importées.
 
 - **Gestion de `SizeHigh`**
-    - Objectif de ce bugfix : ne pas perdre l’information.
-    - Exigence minimale :
-        - La valeur `<SizeHigh>` doit être **conservée** (par exemple dans `flags.swerpg.oggdude.sizeHigh`), sans effet mécanique ni UI particulier pour l’instant.
-    - Hors scope pour cette US :
-        - Toute mécanique de “taille / silhouette / nombre de cibles” basée sur `SizeHigh`.
-        - Exposition UI dédiée, champs visibles ou règles spéciales associées à ce paramètre.
+  - Objectif de ce bugfix : ne pas perdre l’information.
+  - Exigence minimale :
+    - La valeur `<SizeHigh>` doit être **conservée** (par exemple dans `flags.swerpg.oggdude.sizeHigh`), sans effet mécanique ni UI particulier pour l’instant.
+  - Hors scope pour cette US :
+    - Toute mécanique de “taille / silhouette / nombre de cibles” basée sur `SizeHigh`.
+    - Exposition UI dédiée, champs visibles ou règles spéciales associées à ce paramètre.
 
 En résumé : ce bugfix vise à **corriger le mapping et préserver toutes les données utiles** à partir de `Weapon.xml`, tout en **évacuant les décisions d’architecture et d’UX plus profondes** vers de futures features (où elles seront formalisées en tant que `feature`/`architecture` plans dédiés).

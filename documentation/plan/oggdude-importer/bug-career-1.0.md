@@ -58,52 +58,52 @@ Correction ciblée du flux d'import OggDude pour les Items de type `career` (Fou
 
 - GOAL-001: Audit détaillé du code import Career et confirmation du modèle / lacunes (description non sanitizée, source absente).
 
-| Task     | Description                                                                                                      | DependsOn | Completed | Date |
-| -------- | ---------------------------------------------------------------------------------------------------------------- | --------- | --------- | ---- |
+| Task     | Description                                                                                                        | DependsOn | Completed | Date |
+| -------- | ------------------------------------------------------------------------------------------------------------------ | --------- | --------- | ---- |
 | TASK-001 | Inspecter `module/importer/items/career-ogg-dude.mjs` (careerMapper, mapCareerSkills, extractRawCareerSkillCodes). |           |           |      |
-| TASK-002 | Vérifier modèle `module/models/career.mjs` (HTMLField description, SetField careerSkills).                        |           |           |      |
-| TASK-003 | Confirmer absence mapping source dans career importer; rechercher usages de `oggdudeSource` ailleurs.             | TASK-001  |           |      |
-| TASK-004 | Lister tags OggDude à nettoyer (collecter échantillons) pour description.                                         | TASK-001  |           |      |
-| TASK-005 | Recenser tests existants pour importer career (aucun dédié) pour définir couverture manquante.                    |           |           |      |
-| TASK-006 | Identifier mécanisme réimport (clé oggdudeKey, dossier, mapping builder dans `oggDude.mjs`).                      | TASK-001  |           |      |
-| TASK-007 | Finaliser exigences / hypothèses (format source flags) et verrouiller REQ/CON/PAT.                                | TASK-003  |           |      |
+| TASK-002 | Vérifier modèle `module/models/career.mjs` (HTMLField description, SetField careerSkills).                         |           |           |      |
+| TASK-003 | Confirmer absence mapping source dans career importer; rechercher usages de `oggdudeSource` ailleurs.              | TASK-001  |           |      |
+| TASK-004 | Lister tags OggDude à nettoyer (collecter échantillons) pour description.                                          | TASK-001  |           |      |
+| TASK-005 | Recenser tests existants pour importer career (aucun dédié) pour définir couverture manquante.                     |           |           |      |
+| TASK-006 | Identifier mécanisme réimport (clé oggdudeKey, dossier, mapping builder dans `oggDude.mjs`).                       | TASK-001  |           |      |
+| TASK-007 | Finaliser exigences / hypothèses (format source flags) et verrouiller REQ/CON/PAT.                                 | TASK-003  |           |      |
 
 ### Implementation Phase 2
 
 - GOAL-002: Concevoir modifications ciblées (sanitization, source flags, tests) et stratégie réimport/migration.
 
-| Task     | Description                                                                                                                         | DependsOn | Completed | Date |
-| -------- | ----------------------------------------------------------------------------------------------------------------------------------- | --------- | --------- | ---- |
-| TASK-008 | Spécifier transformation description: intégrer `sanitizeDescription()` (limite longueur, conversion H4/B/I).                         | TASK-004  |           |      |
-| TASK-009 | Définir format flags source: `flags.swerpg.oggdudeSource` (string livre), `flags.swerpg.oggdudeSourcePage` (number).                 | TASK-003  |           |      |
-| TASK-010 | Décrire adaptation careerMapper: ajouter extraction source + sanitation description avant construction de l'objet.                 | TASK-008  |           |      |
-| TASK-011 | Spécifier logique réimport overwrite: rechercher Item par `flags.swerpg.oggdudeKey` puis `update` plutôt que création doublon.      | TASK-006  |           |      |
-| TASK-012 | Définir utilitaire migration réparation (script ou fonction) pour patcher careers vides existantes (optionnel selon M-1/M-2).       | TASK-007  |           |      |
-| TASK-013 | Concevoir jeux de données tests (XML minimal, avec unknown skills, variations structure CareerSkills).                              | TASK-002  |           |      |
-| TASK-014 | Plan de tests unitaires (mapCareerSkills, extractRawCareerSkillCodes, sanitation).                                                  | TASK-013  |           |      |
-| TASK-015 | Plan test d'intégration import (buildCareerContext + exécution mapper) vérifiant overwrite vs création.                             | TASK-011  |           |      |
-| TASK-016 | Plan test UI (Playwright) ouvrant sheet career pour vérifier affichage compétences & description.                                   | TASK-011  |           |      |
-| TASK-017 | Définir critères rollback (si skill mapping vide après patch → revert commit / désactiver migration).                               | TASK-011  |           |      |
+| Task     | Description                                                                                                                    | DependsOn | Completed | Date |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------ | --------- | --------- | ---- |
+| TASK-008 | Spécifier transformation description: intégrer `sanitizeDescription()` (limite longueur, conversion H4/B/I).                   | TASK-004  |           |      |
+| TASK-009 | Définir format flags source: `flags.swerpg.oggdudeSource` (string livre), `flags.swerpg.oggdudeSourcePage` (number).           | TASK-003  |           |      |
+| TASK-010 | Décrire adaptation careerMapper: ajouter extraction source + sanitation description avant construction de l'objet.             | TASK-008  |           |      |
+| TASK-011 | Spécifier logique réimport overwrite: rechercher Item par `flags.swerpg.oggdudeKey` puis `update` plutôt que création doublon. | TASK-006  |           |      |
+| TASK-012 | Définir utilitaire migration réparation (script ou fonction) pour patcher careers vides existantes (optionnel selon M-1/M-2).  | TASK-007  |           |      |
+| TASK-013 | Concevoir jeux de données tests (XML minimal, avec unknown skills, variations structure CareerSkills).                         | TASK-002  |           |      |
+| TASK-014 | Plan de tests unitaires (mapCareerSkills, extractRawCareerSkillCodes, sanitation).                                             | TASK-013  |           |      |
+| TASK-015 | Plan test d'intégration import (buildCareerContext + exécution mapper) vérifiant overwrite vs création.                        | TASK-011  |           |      |
+| TASK-016 | Plan test UI (Playwright) ouvrant sheet career pour vérifier affichage compétences & description.                              | TASK-011  |           |      |
+| TASK-017 | Définir critères rollback (si skill mapping vide après patch → revert commit / désactiver migration).                          | TASK-011  |           |      |
 
 ### Implementation Phase 3
 
 - GOAL-003: Implémenter modifications, tests, migration utilitaire et préparer rollback/documentation.
 
-| Task     | Description                                                                                                                                    | DependsOn | Completed | Date |
-| -------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | --------- | --------- | ---- |
-| TASK-018 | Modifier `careerMapper`: appliquer `sanitizeDescription(description)` avant assignation, extraire source (XML `<Source Page="">`).            | TASK-010  | done | 2025-11-19 |
-| TASK-019 | Ajouter flags source dans objet retourné; préserver flags existants (`oggdudeKey`).                                                             | TASK-009  | done | 2025-11-19 |
-| TASK-020 | Implémenter recherche & overwrite: adapter pipeline (probablement dans création d'Item en amont du save).                                      | TASK-011  | in-progress |      |
-| TASK-021 | Créer utilitaire migration `module/importer/migrations/repair-careers.mjs` (parcours Items type career flags vides → patch).                   | TASK-012  | in-progress |      |
-| TASK-022 | Écrire tests Vitest `tests/importer/career-import.spec.mjs` (unit + integration).                                                               | TASK-014  |           |      |
-| TASK-023 | Écrire tests Playwright `tests/ui/career-import.spec.ts` (import puis vérification UI).                                                         | TASK-016  |           |      |
-| TASK-024 | Ajouter métrique `unknownCareerSkills` dans stats si non existante ou vérifier incrementation (career-import-utils.mjs).                        | TASK-018  |           |      |
-| TASK-025 | Mettre à jour documentation utilisateur `documentation/importer/README.md` (section careers) avec source & réimport.                            | TASK-020  |           |      |
-| TASK-026 | Ajouter section risques & rollback dans `MIGRATION_LOGGING_PROGRESSIVE.md` si nécessaire.                                                       | TASK-017  |           |      |
-| TASK-027 | Vérifier non-régression sur sheet `module/applications/sheets/career.mjs` (affichage skill badges).                                             | TASK-018  |           |      |
-| TASK-028 | Audit performance: mesurer durée import careers avant/après (log timestamps) et valider CON-012 (<10% overhead).                                | TASK-018  |           |      |
-| TASK-029 | Vérifier absence XSS: contenu description ne contient pas balises script/style non autorisées (inspection tests).                               | TASK-022  |           |      |
-| TASK-030 | Finaliser changelog `CHANGELOG.md` section bugfix careers.                                                                                      | TASK-025  |           |      |
+| Task     | Description                                                                                                                        | DependsOn | Completed   | Date       |
+| -------- | ---------------------------------------------------------------------------------------------------------------------------------- | --------- | ----------- | ---------- |
+| TASK-018 | Modifier `careerMapper`: appliquer `sanitizeDescription(description)` avant assignation, extraire source (XML `<Source Page="">`). | TASK-010  | done        | 2025-11-19 |
+| TASK-019 | Ajouter flags source dans objet retourné; préserver flags existants (`oggdudeKey`).                                                | TASK-009  | done        | 2025-11-19 |
+| TASK-020 | Implémenter recherche & overwrite: adapter pipeline (probablement dans création d'Item en amont du save).                          | TASK-011  | in-progress |            |
+| TASK-021 | Créer utilitaire migration `module/importer/migrations/repair-careers.mjs` (parcours Items type career flags vides → patch).       | TASK-012  | in-progress |            |
+| TASK-022 | Écrire tests Vitest `tests/importer/career-import.spec.mjs` (unit + integration).                                                  | TASK-014  |             |            |
+| TASK-023 | Écrire tests Playwright `tests/ui/career-import.spec.ts` (import puis vérification UI).                                            | TASK-016  |             |            |
+| TASK-024 | Ajouter métrique `unknownCareerSkills` dans stats si non existante ou vérifier incrementation (career-import-utils.mjs).           | TASK-018  |             |            |
+| TASK-025 | Mettre à jour documentation utilisateur `documentation/importer/README.md` (section careers) avec source & réimport.               | TASK-020  |             |            |
+| TASK-026 | Ajouter section risques & rollback dans `MIGRATION_LOGGING_PROGRESSIVE.md` si nécessaire.                                          | TASK-017  |             |            |
+| TASK-027 | Vérifier non-régression sur sheet `module/applications/sheets/career.mjs` (affichage skill badges).                                | TASK-018  |             |            |
+| TASK-028 | Audit performance: mesurer durée import careers avant/après (log timestamps) et valider CON-012 (<10% overhead).                   | TASK-018  |             |            |
+| TASK-029 | Vérifier absence XSS: contenu description ne contient pas balises script/style non autorisées (inspection tests).                  | TASK-022  |             |            |
+| TASK-030 | Finaliser changelog `CHANGELOG.md` section bugfix careers.                                                                         | TASK-025  |             |            |
 
 ## 3. Alternatives
 
