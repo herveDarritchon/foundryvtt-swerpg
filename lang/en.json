@@ -760,7 +760,8 @@
           "weapon": "Load Weapons data",
           "talent": "Load Talent data",
           "obligation": "Load Obligation data",
-          "specialization": "Load Specialization data"
+          "specialization": "Load Specialization data",
+          "motivation-category": "Load Motivation Category data"
         },
         "progress-bar": {
           "title": "Import Progress"
@@ -1393,5 +1394,11 @@
     "NoItemsCollection": "Character data error: Items collection is missing.",
     "ItemNotFound": "Item not found: The selected item may have been deleted.",
     "UnexpectedError": "An unexpected error occurred. Please check the console for details."
+  },
+  "MOTIVATION_CATEGORY": {
+    "SpecificMotivations": "Specific Motivations",
+    "SpecificMotivationsList": "List of Specific Motivations",
+    "Sources": "Sources",
+    "SourcesList": "List of Sources"
   }
 }
