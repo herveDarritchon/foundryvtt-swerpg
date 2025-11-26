@@ -1,6 +1,7 @@
 import OggDudeImporter from '../oggDude.mjs'
 import OggDudeDataElement from '../../settings/models/OggDudeDataElement.mjs'
 import { logger } from '../../utils/logger.mjs'
+import {buildItemImgSystemPath} from "../../settings/directories.mjs";
 
 /**
  * Motivation Mapper
@@ -24,7 +25,7 @@ export function motivationMapper(motivations) {
     return {
       name: OggDudeImporter.mapMandatoryString('SpecificMotivation.Name', xmlMotivation?.Name),
       description: OggDudeImporter.mapOptionalString(xmlMotivation?.Description),
-      img: 'systems/swerpg/assets/icons/items/motivation.svg', // Default icon
+      img: 'systems/swerpg/assets/images/icons/motivation.svg', // Default icon
       system: {
         description: OggDudeImporter.mapOptionalString(xmlMotivation?.Description),
         sources,
@@ -60,7 +61,7 @@ export async function buildMotivationContext(zip, groupByDirectory, groupByType)
     image: {
       criteria: 'Data/MotivationImages', // Assuming images might be here or similar, though SpecificMotivations usually don't have images in OggDude
       worldPath: 'items/motivation',
-      systemPath: 'systems/swerpg/assets/icons/items/motivation.svg',
+      systemPath: buildItemImgSystemPath('motivation.svg'),
       images: groupByType.image,
       prefix: '',
     },
