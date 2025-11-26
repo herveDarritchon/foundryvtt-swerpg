@@ -24,6 +24,12 @@ If the item type does not exist in the system:
 
 2. **`swerpg.mjs`**: Register the Data Model (see step 3) in `CONFIG.Item.dataModels`.
 
+    ```javascript
+    CONFIG.Item.dataModels = {
+      "my-new-type": models.MyNewType
+    }
+    ```
+
 ## 3. Create the Data Model
 
 Create a new file in `module/models/` (e.g., `my-new-type.mjs`).
