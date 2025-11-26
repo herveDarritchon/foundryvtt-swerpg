@@ -761,6 +761,7 @@
           "talent": "Load Talent data",
           "obligation": "Load Obligation data",
           "specialization": "Load Specialization data",
+          "motivation": "Load Motivation data",
           "motivation-category": "Load Motivation Category data"
         },
         "progress-bar": {
