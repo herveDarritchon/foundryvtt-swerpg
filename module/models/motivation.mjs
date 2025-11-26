@@ -1,4 +1,4 @@
-export default class SwerpgMotivation extends SwerpgItem {
+export default class SwerpgMotivation extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     const fields = foundry.data.fields
     return {
