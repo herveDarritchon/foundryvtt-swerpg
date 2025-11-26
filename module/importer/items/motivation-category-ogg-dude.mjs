@@ -25,7 +25,7 @@ export function motivationCategoryMapper(motivations) {
     return {
       name: OggDudeImporter.mapMandatoryString('Motivation.Name', xmlMotivation?.Name),
       description: OggDudeImporter.mapOptionalString(xmlMotivation?.Description),
-      img: 'systems/swerpg/assets/icons/items/motivation.svg', // Default icon
+      img: 'systems/swerpg/assets/icons/items/motivation-category.svg', // Default icon
       system: {
         description: OggDudeImporter.mapOptionalString(xmlMotivation?.Description),
         sources,
@@ -60,7 +60,7 @@ export async function buildMotivationCategoryContext(zip, groupByDirectory, grou
     image: {
       criteria: 'Data/MotivationImages',
       worldPath: 'items/motivation-category',
-      systemPath: buildItemImgSystemPath('motivation.svg'),
+      systemPath: buildItemImgSystemPath('motivation-category.svg'),
       images: groupByType.image,
       prefix: '',
     },
