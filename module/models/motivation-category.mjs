@@ -10,7 +10,6 @@ export default class SwerpgMotivationCategory extends foundry.abstract.TypeDataM
           page: new fields.StringField({ required: true, blank: false }),
         }),
       ),
-      specificMotivations: new fields.ArrayField(new fields.StringField({ required: true, blank: false })),
     }
   }
 

@@ -1,20 +1,6 @@
 <section class="tab sheet-body flexcol {{tabs.config.cssClass}}" data-tab="{{tabs.config.id}}" data-group="{{tabs.config.group}}">
 
   <fieldset>
-    <legend>{{localize "MOTIVATION_CATEGORY.SpecificMotivations"}}</legend>
-    <div class="form-group">
-      <label>{{localize "MOTIVATION_CATEGORY.SpecificMotivationsList"}}</label>
-      <div class="form-fields">
-        <ul>
-          {{#each source.system.specificMotivations as |motivation|}}
-            <li>{{motivation}}</li>
-          {{/each}}
-        </ul>
-      </div>
-    </div>
-  </fieldset>
-
-  <fieldset>
     <legend>{{localize "MOTIVATION_CATEGORY.Sources"}}</legend>
     <div class="form-group">
       <label>{{localize "MOTIVATION_CATEGORY.SourcesList"}}</label>

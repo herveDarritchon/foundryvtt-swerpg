@@ -22,8 +22,6 @@ export function motivationCategoryMapper(motivations) {
       })
     }
 
-    const specificMotivations = OggDudeImporter.mapOptionalArray(xmlMotivation?.SpecificMotivations?.Key, (key) => key)
-
     return {
       name: OggDudeImporter.mapMandatoryString('Motivation.Name', xmlMotivation?.Name),
       description: OggDudeImporter.mapOptionalString(xmlMotivation?.Description),
@@ -31,7 +29,6 @@ export function motivationCategoryMapper(motivations) {
       system: {
         description: OggDudeImporter.mapOptionalString(xmlMotivation?.Description),
         sources,
-        specificMotivations,
       },
       flags: {
         swerpg: {
