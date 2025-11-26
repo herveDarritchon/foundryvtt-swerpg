@@ -185,6 +185,7 @@ Hooks.once('init', async function () {
     taxonomy: models.SwerpgTaxonomy,
     weapon: models.SwerpgWeapon,
     'motivation-category': models.SwerpgMotivationCategory,
+    motivation: models.SwerpgMotivation,
   }
 
   foundry.documents.collections.Items.unregisterSheet('core', foundry.appv1.sheets.ItemSheet)
