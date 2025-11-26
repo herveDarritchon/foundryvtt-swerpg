@@ -14,6 +14,8 @@ import { withRetry } from './utils/retry.mjs'
 import { markArchiveSize, markGlobalEnd, markGlobalStart, recordDomainEnd, recordDomainStart } from './utils/global-import-metrics.mjs'
 import { getSpecializationImportStats } from './utils/specialization-import-utils.mjs'
 import { getMotivationImportStats, getMotivationCategoryImportStats } from './utils/motivation-import-utils.mjs'
+import { buildDutyContext } from './items/duty-ogg-dude.mjs'
+import { getDutyImportStats } from './utils/duty-import-utils.mjs'
 
 export default class OggDudeImporter {
   /**
@@ -195,6 +197,7 @@ export default class OggDudeImporter {
     buildContextMap.set('specialization', { type: 'specialization', contextBuilder: buildSpecializationContext })
     buildContextMap.set('motivation-category', { type: 'motivation-category', contextBuilder: buildMotivationCategoryContext })
     buildContextMap.set('motivation', { type: 'motivation', contextBuilder: buildMotivationContext })
+    buildContextMap.set('duty', { type: 'duty', contextBuilder: buildDutyContext })
 
     const domainsToImport = domains.filter((domain) => domain.checked).map((domain) => domain.id)
     const unsupportedDomains = domainsToImport.filter((id) => !buildContextMap.has(id))
@@ -288,6 +291,8 @@ export default class OggDudeImporter {
           domainStatsPayload = getMotivationImportStats()
         } else if (entry.type === 'motivation-category') {
           domainStatsPayload = getMotivationCategoryImportStats()
+        } else if (entry.type === 'duty') {
+          domainStatsPayload = getDutyImportStats()
         }
         emitProgress({ processed, domain: entry.type, phase: 'completed', domainStats: domainStatsPayload })
       } catch (error) {
@@ -328,6 +333,7 @@ export default class OggDudeImporter {
     buildContextMap.set('obligation', { type: 'obligation', contextBuilder: buildObligationContext })
     buildContextMap.set('specialization', { type: 'specialization', contextBuilder: buildSpecializationContext })
     buildContextMap.set('motivation', { type: 'motivation', contextBuilder: buildMotivationContext })
+    buildContextMap.set('duty', { type: 'duty', contextBuilder: buildDutyContext })
 
     const domainsToImport = new Set(domains.filter((d) => d.checked).map((d) => d.id))
     const contextEntries = Array.from(buildContextMap.values()).filter((e) => domainsToImport.has(e.type))

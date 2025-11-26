@@ -193,6 +193,14 @@
                         <td>{{importStats.motivation-category.rejected}}</td>
                         <td>{{importMetricsFormatted.domains.motivation-category.duration}}</td>
                     </tr>
+                    <tr>
+                        <td class="{{importDomainStatus.duty.class}}" aria-label="{{localize importDomainStatus.duty.labelI18n}}"><i class="fa-solid fa-circle" aria-hidden="true"></i></td>
+                        <th scope="row">{{localize "SETTINGS.OggDudeDataImporter.loadWindow.domains.duty"}}</th>
+                        <td>{{importStats.duty.total}}</td>
+                        <td>{{importStats.duty.imported}}</td>
+                        <td>{{importStats.duty.rejected}}</td>
+                        <td>{{importMetricsFormatted.domains.duty.duration}}</td>
+                    </tr>
                 {{/if}}
                 </tbody>
             </table>

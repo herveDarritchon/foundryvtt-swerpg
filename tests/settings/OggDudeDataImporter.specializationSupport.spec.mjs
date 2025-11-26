@@ -10,7 +10,7 @@ describe('OggDudeDataImporter - Specialization Domain Support', () => {
 
   it('should include specialization in _domainNames', () => {
     expect(importer._domainNames).toContain('specialization')
-    expect(importer._domainNames).toHaveLength(10)
+    expect(importer._domainNames).toHaveLength(11)
   })
 
   it('should initialize domains with specialization', () => {
