@@ -1,5 +1,5 @@
 ---
-goal: "Correction mapping Talent OggDude (isRanked, activation, description, source, DieModifiers)"
+goal: 'Correction mapping Talent OggDude (isRanked, activation, description, source, DieModifiers)'
 version: 1.0
 date_created: 2025-11-19
 last_updated: 2025-11-19
@@ -54,45 +54,45 @@ Ce plan corrige le mapping des Talents importés depuis le fichier OggDude `Tale
 
 - GOAL-001: Analyse détaillée & design du mapping DieModifiers + stratégie description enrichie.
 
-| Task     | Description                                                                                                   | DependsOn | Completed | Date |
-| -------- | ------------------------------------------------------------------------------------------------------------- | --------- | --------- | ---- |
-| TASK-001 | Recenser champs DieModifiers possibles dans exports OggDude (SetbackCount, DecreaseDifficultyCount, etc.).    |           |           |      |
-| TASK-002 | Définir structure JSON normalisée pour `flags.swerpg.oggdude.dieModifiers`.                                   | TASK-001  |           |      |
-| TASK-003 | Spécifier format texte description (section, puces, syntaxe).                                                  | TASK-001  |           |      |
-| TASK-004 | Confirmer absence impact sur modèle `SwerpgTalent` (description champ simple) → documenter **CON-014**.       |           |           |      |
-| TASK-005 | Identifier points d’injection code: `buildSingleTalentContext` & `transform`.                                  |           |           |      |
-| TASK-006 | Définir stratégie fallback multi-sources (première + concat / toutes).                                         | TASK-001  |           |      |
-| TASK-007 | Définir nouvelles métriques (optionnel) `dieModifiers` dans `talent-import-utils.mjs`.                         |           |           |      |
+| Task     | Description                                                                                                | DependsOn | Completed | Date |
+| -------- | ---------------------------------------------------------------------------------------------------------- | --------- | --------- | ---- |
+| TASK-001 | Recenser champs DieModifiers possibles dans exports OggDude (SetbackCount, DecreaseDifficultyCount, etc.). |           |           |      |
+| TASK-002 | Définir structure JSON normalisée pour `flags.swerpg.oggdude.dieModifiers`.                                | TASK-001  |           |      |
+| TASK-003 | Spécifier format texte description (section, puces, syntaxe).                                              | TASK-001  |           |      |
+| TASK-004 | Confirmer absence impact sur modèle `SwerpgTalent` (description champ simple) → documenter **CON-014**.    |           |           |      |
+| TASK-005 | Identifier points d’injection code: `buildSingleTalentContext` & `transform`.                              |           |           |      |
+| TASK-006 | Définir stratégie fallback multi-sources (première + concat / toutes).                                     | TASK-001  |           |      |
+| TASK-007 | Définir nouvelles métriques (optionnel) `dieModifiers` dans `talent-import-utils.mjs`.                     |           |           |      |
 
 ### Implementation Phase 2
 
 - GOAL-002: Implémentation code + tests unitaires mapping enrichi.
 
-| Task     | Description                                                                                                                            | DependsOn | Completed | Date |
-| -------- | -------------------------------------------------------------------------------------------------------------------------------------- | --------- | --------- | ---- |
-| TASK-008 | Créer fichier `module/importer/mappings/oggdude-talent-diemodifiers-map.mjs` (PAT-001).                                                | TASK-001  |           |      |
-| TASK-009 | Ajouter extraction DieModifiers dans `OggDudeTalentMapper.buildSingleTalentContext` (contexte.dieModifiers).                           | TASK-008  |           |      |
-| TASK-010 | Modifier `transform(context)` pour assemblage description: description + Source + Die Modifiers (REQ-003 à REQ-006).                   | TASK-009  |           |      |
-| TASK-011 | Ajouter flags `flags.swerpg.oggdudeKey` + `flags.swerpg.oggdude.dieModifiers` dans résultat `transform`.                               | TASK-009  |           |      |
-| TASK-012 | Implémenter sanitation (strip balises, normaliser espaces) pour description + DieModifiers (SEC-001).                                  | TASK-010  |           |      |
-| TASK-013 | Mettre à jour util `talent-import-utils.mjs` pour compteur `dieModifiers` si liste non vide.                                           | TASK-009  |           |      |
-| TASK-014 | Ajouter tests TUs nouveaux comportements `tests/importer/talent-die-modifiers.spec.mjs`.                                               | TASK-008  |           |      |
-| TASK-015 | Étendre tests existants (`talent-mapper.spec.mjs`) pour vérifier présence flags + description enrichie.                                | TASK-010  |           |      |
-| TASK-016 | Ajouter test activation + ranked end-to-end (context avec Ranked=true, Activation="Passive").                                         | TASK-010  |           |      |
-| TASK-017 | Vérifier non-régression en exécutant suite Vitest existante (automatisé).                                                              | TASK-015  |           |      |
-| TASK-018 | Audit performance (mesurer temps import 200 talents avant/après, simple chronométrage) – consigner si variation >5%.                  | TASK-017  |           |      |
+| Task     | Description                                                                                                          | DependsOn | Completed | Date |
+| -------- | -------------------------------------------------------------------------------------------------------------------- | --------- | --------- | ---- |
+| TASK-008 | Créer fichier `module/importer/mappings/oggdude-talent-diemodifiers-map.mjs` (PAT-001).                              | TASK-001  |           |      |
+| TASK-009 | Ajouter extraction DieModifiers dans `OggDudeTalentMapper.buildSingleTalentContext` (contexte.dieModifiers).         | TASK-008  |           |      |
+| TASK-010 | Modifier `transform(context)` pour assemblage description: description + Source + Die Modifiers (REQ-003 à REQ-006). | TASK-009  |           |      |
+| TASK-011 | Ajouter flags `flags.swerpg.oggdudeKey` + `flags.swerpg.oggdude.dieModifiers` dans résultat `transform`.             | TASK-009  |           |      |
+| TASK-012 | Implémenter sanitation (strip balises, normaliser espaces) pour description + DieModifiers (SEC-001).                | TASK-010  |           |      |
+| TASK-013 | Mettre à jour util `talent-import-utils.mjs` pour compteur `dieModifiers` si liste non vide.                         | TASK-009  |           |      |
+| TASK-014 | Ajouter tests TUs nouveaux comportements `tests/importer/talent-die-modifiers.spec.mjs`.                             | TASK-008  |           |      |
+| TASK-015 | Étendre tests existants (`talent-mapper.spec.mjs`) pour vérifier présence flags + description enrichie.              | TASK-010  |           |      |
+| TASK-016 | Ajouter test activation + ranked end-to-end (context avec Ranked=true, Activation="Passive").                        | TASK-010  |           |      |
+| TASK-017 | Vérifier non-régression en exécutant suite Vitest existante (automatisé).                                            | TASK-015  |           |      |
+| TASK-018 | Audit performance (mesurer temps import 200 talents avant/après, simple chronométrage) – consigner si variation >5%. | TASK-017  |           |      |
 
 ### Implementation Phase 3
 
 - GOAL-003: Préparation diffusion, rollback et validation finale.
 
-| Task     | Description                                                                                                                | DependsOn | Completed | Date |
-| -------- | -------------------------------------------------------------------------------------------------------------------------- | --------- | --------- | ---- |
-| TASK-019 | Documentation rapide: ajouter section dans `documentation/importer/` sur mapping talents enrichi.                          | TASK-015  |           |      |
-| TASK-020 | Définir procédure rollback: retirer nouveau fichier mapping + revert modifications (git tag pré-changement).              | TASK-019  |           |      |
-| TASK-021 | Checklist manuelle Foundry: importer Talents avec DieModifiers + sans DieModifiers + multi-source.                         | TASK-015  |           |      |
-| TASK-022 | Vérifier logs: aucune erreur runtime; stats dieModifiers cohérentes (>0 si sample).                                        | TASK-021  |           |      |
-| TASK-023 | Finaliser plan: marquer tâches complétées; mettre à jour status si tout validé.                                             | TASK-022  |           |      |
+| Task     | Description                                                                                                  | DependsOn | Completed | Date |
+| -------- | ------------------------------------------------------------------------------------------------------------ | --------- | --------- | ---- |
+| TASK-019 | Documentation rapide: ajouter section dans `documentation/importer/` sur mapping talents enrichi.            | TASK-015  |           |      |
+| TASK-020 | Définir procédure rollback: retirer nouveau fichier mapping + revert modifications (git tag pré-changement). | TASK-019  |           |      |
+| TASK-021 | Checklist manuelle Foundry: importer Talents avec DieModifiers + sans DieModifiers + multi-source.           | TASK-015  |           |      |
+| TASK-022 | Vérifier logs: aucune erreur runtime; stats dieModifiers cohérentes (>0 si sample).                          | TASK-021  |           |      |
+| TASK-023 | Finaliser plan: marquer tâches complétées; mettre à jour status si tout validé.                              | TASK-022  |           |      |
 
 ## 3. Alternatives
 
@@ -136,7 +136,6 @@ Stratégie:
 - Vitest pour unités & transform (`tests/importer/...`).
 - Pas de Playwright requis (pas de nouvelle UI); test manuel Foundry (TASK-021) pour rendu visuel.
 - Chaque TEST-XXX doit référencer un REQ-XXX – traçabilité intégrée dans commentaires test.
-
 
 ## 7. Risks & Assumptions
 

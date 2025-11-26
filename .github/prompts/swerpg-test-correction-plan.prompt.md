@@ -400,9 +400,7 @@ const raw = await parseXmlToJson(xml)
 expect(raw).toHaveProperty('Obligations.Obligation')
 
 // Normaliser en tableau si nécessaire
-const obligationNodes = Array.isArray(raw.Obligations.Obligation)
-  ? raw.Obligations.Obligation
-  : [raw.Obligations.Obligation]
+const obligationNodes = Array.isArray(raw.Obligations.Obligation) ? raw.Obligations.Obligation : [raw.Obligations.Obligation]
 ```
 
 **Cas 3 : Données test non représentatives**

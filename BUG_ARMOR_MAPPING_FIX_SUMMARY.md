@@ -5,15 +5,17 @@
 ### Corrections Implémentées
 
 #### 1. Configuration et i18n (✅ Terminé)
+
 - **Fichier** : `module/config/armor.mjs`
   - Ajout des nouvelles propriétés d'armure : `sealed`, `full-body`, `restricted`
   - Intégration avec les clés de localisation
 
-- **Fichiers** : `lang/en.json` et `lang/fr.json`  
+- **Fichiers** : `lang/en.json` et `lang/fr.json`
   - Ajout des traductions pour les nouvelles propriétés d'armure
   - Clés : `ARMOR.PROPERTIES.SEALED`, `ARMOR.PROPERTIES.FULL_BODY`, `ARMOR.PROPERTIES.RESTRICTED`
 
 #### 2. Corrections du Mapper Principal (✅ Terminé)
+
 - **Fichier** : `module/importer/items/armor-ogg-dude.mjs`
   - **Correction REQ-001** : Mapping correct `system.defense.base` (était `system.Defense`)
   - **Correction REQ-002** : Mapping correct `system.soak.base` (était `system.Soak`)
@@ -24,17 +26,20 @@
   - **Correction REQ-009** : Catégories normalisées vers propriétés
 
 #### 3. Correction du Pipeline de Données (✅ Terminé)
+
 - **Fichier** : `module/settings/models/OggDudeDataElement.mjs`
   - **Correction REQ-003** : Pattern Adaptateur pour éviter `system.system` nesting
   - Backward compatibility avec `const systemData = item.system ?? item`
 
 #### 4. Utilitaires d'Import (✅ Terminé)
+
 - **Fichier** : `module/importer/utils/armor-import-utils.mjs`
   - Fonction `buildArmorDescription()` pour construction HTML sécurisée
   - Fonction `normalizeCategoryToProperty()` pour mapping catégories → propriétés
   - Sanitisation XSS avec `foundry.utils.htmlToText()`
 
 #### 5. Tests de Validation (✅ Terminé)
+
 - **Fichier** : `tests/importer/armor-import-mapping.spec.mjs`
   - Tests complets pour tous les requirements REQ-001 à REQ-020
   - Couverture : validation, sanitisation, cas limites, gestion d'erreurs
@@ -59,14 +64,14 @@
 
 ### Fichiers Modifiés
 
-| Fichier | Type | Description |
-|---------|------|-------------|
-| `module/config/armor.mjs` | Config | Ajout propriétés armure |
-| `lang/en.json`, `lang/fr.json` | i18n | Nouvelles traductions |
-| `module/importer/items/armor-ogg-dude.mjs` | Core | Corrections mapper principal |
-| `module/settings/models/OggDudeDataElement.mjs` | Core | Fix pipeline données |
-| `module/importer/utils/armor-import-utils.mjs` | Utils | Nouvelles fonctions utilitaires |
-| `tests/importer/armor-import-mapping.spec.mjs` | Tests | Suite de tests complète |
+| Fichier                                         | Type   | Description                     |
+| ----------------------------------------------- | ------ | ------------------------------- |
+| `module/config/armor.mjs`                       | Config | Ajout propriétés armure         |
+| `lang/en.json`, `lang/fr.json`                  | i18n   | Nouvelles traductions           |
+| `module/importer/items/armor-ogg-dude.mjs`      | Core   | Corrections mapper principal    |
+| `module/settings/models/OggDudeDataElement.mjs` | Core   | Fix pipeline données            |
+| `module/importer/utils/armor-import-utils.mjs`  | Utils  | Nouvelles fonctions utilitaires |
+| `tests/importer/armor-import-mapping.spec.mjs`  | Tests  | Suite de tests complète         |
 
 ### Validation
 

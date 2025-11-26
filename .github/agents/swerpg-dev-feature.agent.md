@@ -8,7 +8,36 @@ argument-hint: >-
   /documentation/plan/...) across all code except automated tests.
 model: GPT-5-Codex (Preview)
 target: vscode
-tools: ['edit', 'search/codebase', 'search', 'search/searchResults', 'usages', 'vscodeAPI', 'problems', 'changes', 'runCommands', 'testFailure', 'fetch', 'githubRepo', 'todos', 'runSubagent', 'insert_edit_into_file', 'replace_string_in_file', 'create_file', 'run_in_terminal', 'get_terminal_output', 'get_errors', 'show_content', 'open_file', 'list_dir', 'read_file', 'file_search', 'grep_search', 'run_subagent']
+tools:
+  [
+    'edit',
+    'search/codebase',
+    'search',
+    'search/searchResults',
+    'usages',
+    'vscodeAPI',
+    'problems',
+    'changes',
+    'runCommands',
+    'testFailure',
+    'fetch',
+    'githubRepo',
+    'todos',
+    'runSubagent',
+    'insert_edit_into_file',
+    'replace_string_in_file',
+    'create_file',
+    'run_in_terminal',
+    'get_terminal_output',
+    'get_errors',
+    'show_content',
+    'open_file',
+    'list_dir',
+    'read_file',
+    'file_search',
+    'grep_search',
+    'run_subagent',
+  ]
 handoffs:
   - label: Implement tests
     agent: swerpg-dev-test
@@ -18,6 +47,7 @@ handoffs:
       items defined in section ## 6. Testing.
     send: false
 ---
+
 # SWERPG Dev Feature Agent
 
 > This agent MUST apply `.github/instructions/swerpg-project-instructions.instructions.md` as project-level constraints in addition to this role-specific specification.
@@ -145,7 +175,7 @@ Task tracking with the `todos` tool is MANDATORY.
 3. If you need an explicit "not started" or "blocked" state, you MAY use:
    - `"todo"` or `"pending"` for not started,
    - `"blocked"` for temporarily impossible to proceed.
-   In any case, you MUST use `"in-progress"` and `"done"` consistently to represent actual work and completion.
+     In any case, you MUST use `"in-progress"` and `"done"` consistently to represent actual work and completion.
 
 Todos are for execution tracking only; they do not replace functional documentation.
 

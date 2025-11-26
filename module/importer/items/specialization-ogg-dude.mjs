@@ -29,7 +29,7 @@ function extractRawSpecializationSkillCodes(xmlSpecialization) {
   const cs = xmlSpecialization.CareerSkills
   if (!cs) {
     logger.warn('[SpecializationImporter] extractRawCodes: CareerSkills manquant', {
-      keys: Object.keys(xmlSpecialization)
+      keys: Object.keys(xmlSpecialization),
     })
     return []
   }
@@ -37,7 +37,7 @@ function extractRawSpecializationSkillCodes(xmlSpecialization) {
   logger.debug('[SpecializationImporter] extractRawCodes: structure CareerSkills', {
     isArray: Array.isArray(cs),
     type: typeof cs,
-    keys: typeof cs === 'object' ? Object.keys(cs) : null
+    keys: typeof cs === 'object' ? Object.keys(cs) : null,
   })
 
   // If already array of strings
@@ -132,13 +132,13 @@ export function specializationMapper(specializations, { strictSkills = false } =
     logger.info('[SpecializationImporter] DÉBUT MAPPING', {
       inputCount: specializations?.length || 0,
       isArray: Array.isArray(specializations),
-      strictSkills
+      strictSkills,
     })
 
     if (!Array.isArray(specializations) || specializations.length === 0) {
       logger.warn('[SpecializationImporter] Input vide ou invalide', {
         specializations,
-        type: typeof specializations
+        type: typeof specializations,
       })
       return []
     }
@@ -150,76 +150,76 @@ export function specializationMapper(specializations, { strictSkills = false } =
         logger.debug('[SpecializationImporter] Processing specialization', {
           index,
           hasName: !!xmlSpecialization?.Name,
-          hasKey: !!xmlSpecialization?.Key
+          hasKey: !!xmlSpecialization?.Key,
         })
 
-    const name = OggDudeImporter.mapMandatoryString('specialization.Name', xmlSpecialization?.Name)
-    const key = OggDudeImporter.mapMandatoryString('specialization.Key', xmlSpecialization?.Key)
+        const name = OggDudeImporter.mapMandatoryString('specialization.Name', xmlSpecialization?.Name)
+        const key = OggDudeImporter.mapMandatoryString('specialization.Key', xmlSpecialization?.Key)
 
-    if (!name || !key) {
-      incrementSpecializationImportStat('rejected')
-      logger.warn('[SpecializationImporter] Ignored specialization missing mandatory fields', { name, key })
-      return null
-    }
+        if (!name || !key) {
+          incrementSpecializationImportStat('rejected')
+          logger.warn('[SpecializationImporter] Ignored specialization missing mandatory fields', { name, key })
+          return null
+        }
 
-    const rawDescription = OggDudeImporter.mapOptionalString(xmlSpecialization?.Description)
-    const sourceInfo = resolveSource(xmlSpecialization)
-    const description = buildDescription(rawDescription, sourceInfo)
-    const freeSkillRank = normalizeFreeSkillRank(xmlSpecialization?.FreeRanks)
+        const rawDescription = OggDudeImporter.mapOptionalString(xmlSpecialization?.Description)
+        const sourceInfo = resolveSource(xmlSpecialization)
+        const description = buildDescription(rawDescription, sourceInfo)
+        const freeSkillRank = normalizeFreeSkillRank(xmlSpecialization?.FreeRanks)
 
-    const rawSpecializationSkills = extractRawSpecializationSkillCodes(xmlSpecialization)
-    const specializationSkills = mapSpecializationSkills(rawSpecializationSkills, { strict: strictSkills })
+        const rawSpecializationSkills = extractRawSpecializationSkillCodes(xmlSpecialization)
+        const specializationSkills = mapSpecializationSkills(rawSpecializationSkills, { strict: strictSkills })
 
-    logger.debug('[SpecializationImporter] Mapped specialization', {
-      key,
-      name,
-      descriptionLength: description?.length || 0,
-      freeSkillRank,
-      skillCount: specializationSkills.length,
-      strictSkills,
-      rawSkillCount: rawSpecializationSkills.length,
-      ignoredSkillCodes: rawSpecializationSkills.filter((c) => !mapOggDudeSkillCode(c, { warnOnUnknown: false })),
-      sourceName: sourceInfo.name,
-      sourcePage: sourceInfo.page,
-    })
+        logger.debug('[SpecializationImporter] Mapped specialization', {
+          key,
+          name,
+          descriptionLength: description?.length || 0,
+          freeSkillRank,
+          skillCount: specializationSkills.length,
+          strictSkills,
+          rawSkillCount: rawSpecializationSkills.length,
+          ignoredSkillCodes: rawSpecializationSkills.filter((c) => !mapOggDudeSkillCode(c, { warnOnUnknown: false })),
+          sourceName: sourceInfo.name,
+          sourcePage: sourceInfo.page,
+        })
 
-    addSpecializationSkillCount(specializationSkills.length)
+        addSpecializationSkillCount(specializationSkills.length)
 
-    const swerpgFlags = {
-      oggdudeKey: key,
-    }
-    if (sourceInfo.name) {
-      swerpgFlags.oggdudeSource = sourceInfo.name
-    }
-    if (typeof sourceInfo.page === 'number') {
-      swerpgFlags.oggdudeSourcePage = sourceInfo.page
-    }
+        const swerpgFlags = {
+          oggdudeKey: key,
+        }
+        if (sourceInfo.name) {
+          swerpgFlags.oggdudeSource = sourceInfo.name
+        }
+        if (typeof sourceInfo.page === 'number') {
+          swerpgFlags.oggdudeSourcePage = sourceInfo.page
+        }
 
-    const specializationObject = {
-      name,
-      type: 'specialization',
-      system: {
-        description,
-        freeSkillRank,
-        specializationSkills,
-      },
-      flags: {
-        swerpg: swerpgFlags,
-      },
-    }
+        const specializationObject = {
+          name,
+          type: 'specialization',
+          system: {
+            description,
+            freeSkillRank,
+            specializationSkills,
+          },
+          flags: {
+            swerpg: swerpgFlags,
+          },
+        }
 
-    // Enregistrer les compétences inconnues (observabilité)
-    const unknown = rawSpecializationSkills.filter((c) => !mapOggDudeSkillCode(c, { warnOnUnknown: false }))
-    for (const code of unknown) {
-      addSpecializationUnknownSkill(code)
-    }
-    if (unknown.length > 0) {
-      logger.warn('[SpecializationImporter] Unknown specialization skill codes detected', {
-        key,
-        name,
-        unknown,
-      })
-    }
+        // Enregistrer les compétences inconnues (observabilité)
+        const unknown = rawSpecializationSkills.filter((c) => !mapOggDudeSkillCode(c, { warnOnUnknown: false }))
+        for (const code of unknown) {
+          addSpecializationUnknownSkill(code)
+        }
+        if (unknown.length > 0) {
+          logger.warn('[SpecializationImporter] Unknown specialization skill codes detected', {
+            key,
+            name,
+            unknown,
+          })
+        }
 
         return specializationObject
       } catch (error) {
@@ -227,7 +227,7 @@ export function specializationMapper(specializations, { strictSkills = false } =
           index,
           error: error.message,
           stack: error.stack,
-          xmlSpecialization
+          xmlSpecialization,
         })
         incrementSpecializationImportStat('rejected')
         return null
@@ -241,15 +241,14 @@ export function specializationMapper(specializations, { strictSkills = false } =
       inputCount: specializations.length,
       mappedCount: mapped.length,
       filteredCount: filtered.length,
-      stats: finalStats
+      stats: finalStats,
     })
 
     return filtered
-
   } catch (error) {
     logger.error('[SpecializationImporter] ERREUR FATALE MAPPING', {
       error: error.message,
-      stack: error.stack
+      stack: error.stack,
     })
     return []
   }
@@ -269,13 +268,14 @@ export async function buildSpecializationContext(zip, groupByDirectory, groupByT
   const rawNested = await OggDudeDataElement.buildJsonDataFromDirectory(zip, groupByType.xml, 'Specializations', 'Specializations.Specialization')
   // Aplatir: ignorer sous-tableaux vides ou null, si un élément est objet unique on l'inclut directement
   const flattened = Array.isArray(rawNested)
-    ? rawNested.flatMap((entry) => {
-        if (!entry) return []
-        if (Array.isArray(entry)) return entry.filter(Boolean)
-        if (typeof entry === 'object') return [entry]
-        return []
-      })
-      .filter((e) => e && typeof e === 'object')
+    ? rawNested
+        .flatMap((entry) => {
+          if (!entry) return []
+          if (Array.isArray(entry)) return entry.filter(Boolean)
+          if (typeof entry === 'object') return [entry]
+          return []
+        })
+        .filter((e) => e && typeof e === 'object')
     : []
   logger.debug('[SpecializationImporter] Dataset size (flattened)', { count: flattened.length, rawNestedCount: rawNested?.length })
   return {

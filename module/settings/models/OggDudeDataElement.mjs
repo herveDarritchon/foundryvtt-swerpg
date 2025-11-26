@@ -383,7 +383,7 @@ class OggDudeDataElement {
             const packName = `oggdude-${elementType.toLowerCase()}`
             const packLabel = `OggDude ${typeLabel}`
             const packFullName = `world.${packName}`
-            
+
             let pack = game.packs.get(packFullName)
             if (!pack) {
               logger.info('[OggDudeDataElement] Creating Compendium', { packName, packLabel })
@@ -443,7 +443,7 @@ class OggDudeDataElement {
       hasJsonData: !!context?.jsonData,
       jsonDataLength: context?.jsonData?.length || 0,
       hasMapper: typeof context?.element?.mapper === 'function',
-      elementType: context?.element?.type
+      elementType: context?.element?.type,
     })
 
     logger.debug('[OggDudeDataElement] ProcessElements - Step Initial', { context })
@@ -466,7 +466,7 @@ class OggDudeDataElement {
     logger.info('[OggDudeDataElement] APRÈS MAPPING', {
       itemsCount: items?.length || 0,
       elementType: context?.element?.type,
-      jsonDataInputLength: context?.jsonData?.length || 0
+      jsonDataInputLength: context?.jsonData?.length || 0,
     })
 
     logger.debug('[OggDudeDataElement] ProcessElements - Step 6-4 Items', { items })
@@ -485,7 +485,7 @@ class OggDudeDataElement {
 
     logger.info('[OggDudeDataElement] processElements END', {
       itemsCreated: items?.length || 0,
-      elementType: context?.element?.type
+      elementType: context?.element?.type,
     })
   }
 
@@ -538,16 +538,20 @@ class OggDudeDataElement {
         // Fallbacks pour spécialisations ou autres fichiers qui n'ont pas l'enveloppe attendue
         if (extracted == null) {
           // Cas racine <Specialization>
-            if (rawData?.Specialization) {
-              extracted = rawData.Specialization
-              logger.debug('[OggDudeDataElement] Fallback extraction <Specialization> utilisé', { fullPath: element.fullPath })
-            } else if (rawData?.Specializations?.Specialization) {
-              extracted = rawData.Specializations.Specialization
-              logger.debug('[OggDudeDataElement] Fallback extraction <Specializations><Specialization> utilisé', { fullPath: element.fullPath })
-            }
+          if (rawData?.Specialization) {
+            extracted = rawData.Specialization
+            logger.debug('[OggDudeDataElement] Fallback extraction <Specialization> utilisé', { fullPath: element.fullPath })
+          } else if (rawData?.Specializations?.Specialization) {
+            extracted = rawData.Specializations.Specialization
+            logger.debug('[OggDudeDataElement] Fallback extraction <Specializations><Specialization> utilisé', { fullPath: element.fullPath })
+          }
         }
         if (extracted == null) {
-          logger.warn('[OggDudeDataElement] Aucune donnée extraite pour fichier', { fullPath: element.fullPath, criteria: elementCriteria, keys: Object.keys(rawData) })
+          logger.warn('[OggDudeDataElement] Aucune donnée extraite pour fichier', {
+            fullPath: element.fullPath,
+            criteria: elementCriteria,
+            keys: Object.keys(rawData),
+          })
         }
         return extracted
       }),

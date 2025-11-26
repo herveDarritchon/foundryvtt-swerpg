@@ -1,36 +1,37 @@
 ---
-post_title: "OggDude Weapon Mapping Reference"
-author1: "SWERPG Core Dev"
-post_slug: "oggdude-weapon-mapping"
-microsoft_alias: "swerpg-dev"
-featured_image: ""
+post_title: 'OggDude Weapon Mapping Reference'
+author1: 'SWERPG Core Dev'
+post_slug: 'oggdude-weapon-mapping'
+microsoft_alias: 'swerpg-dev'
+featured_image: ''
 categories:
   - importer
 tags:
   - oggdude
   - weapon
   - mapping
-ai_note: "Generated with AI assistance"
-summary: "Documentation synthétique sur le mapping Weapon.xml vers les Items weapon SWERPG après la correction 1.0."
+ai_note: 'Generated with AI assistance'
+summary: 'Documentation synthétique sur le mapping Weapon.xml vers les Items weapon SWERPG après la correction 1.0.'
 post_date: 2025-11-18
 ---
 
 <!-- markdownlint-disable-next-line MD041 -->
+
 ## Vue d'ensemble
 
 Le correctif 1.0 du mapper `Weapons.xml` fiabilise l'import des armes OggDude: portée (`RangeValue` puis `Range`), qualités avec valeurs numériques, description nettoyée, type/catégories et contraintes (Restricted, SizeHigh). Les données sont injectées dans le schéma `SwerpgWeapon` sans modifier la structure existante et restent compatibles Foundry v13.
 
 ## Domain Support Status
 
-| Domain | Status | Documentation | Notes |
-| --- | --- | --- | --- |
-| Weapon | ✅ Active | See below | Full support with range, qualities, tags |
-| Armor | ✅ Active | [import-armor.md](./import-armor.md) | Complete mapping with soak, defense |
-| Gear | ✅ Active | [import-gear.md](./import-gear.md) | Categories, base mods, weapon profiles |
-| Species | ✅ Active | - | Characteristics, skills, talents |
-| Career | ✅ Active | [import-career.md](./import-career.md) | Skills, specializations |
-| Talent | ✅ Active | [talent-import-architecture.md](./talent-import-architecture.md) | Full talent tree support |
-| Obligation | ✅ Active | [import-obligation.md](./import-obligation.md) | Narrative obligations with defaults |
+| Domain     | Status    | Documentation                                                    | Notes                                    |
+| ---------- | --------- | ---------------------------------------------------------------- | ---------------------------------------- |
+| Weapon     | ✅ Active | See below                                                        | Full support with range, qualities, tags |
+| Armor      | ✅ Active | [import-armor.md](./import-armor.md)                             | Complete mapping with soak, defense      |
+| Gear       | ✅ Active | [import-gear.md](./import-gear.md)                               | Categories, base mods, weapon profiles   |
+| Species    | ✅ Active | -                                                                | Characteristics, skills, talents         |
+| Career     | ✅ Active | [import-career.md](./import-career.md)                           | Skills, specializations                  |
+| Talent     | ✅ Active | [talent-import-architecture.md](./talent-import-architecture.md) | Full talent tree support                 |
+| Obligation | ✅ Active | [import-obligation.md](./import-obligation.md)                   | Narrative obligations with defaults      |
 
 ## Pipeline de mapping
 
@@ -42,13 +43,13 @@ Le correctif 1.0 du mapper `Weapons.xml` fiabilise l'import des armes OggDude: p
 
 ## Flags et métadonnées
 
-| Clé | Contenu | Usage |
-| --- | --- | --- |
-| `flags.swerpg.oggdudeKey` | Identifiant source OggDude | Traçabilité et diff ultérieur |
-| `flags.swerpg.oggdudeQualities` | Tableau `{ id, count }` trié | Référence future pour mécaniques lisant les valeurs |
-| `flags.swerpg.oggdudeTags` | Tags `type`, `category`, `status` | Exposé via `SwerpgWeapon.getTags()` |
-| `flags.swerpg.oggdude.sizeHigh` | Valeur numérique ou texte | Information annexe non jouée |
-| `flags.swerpg.oggdude.source` | `{ name, page }` | Source affichée dans la description |
+| Clé                             | Contenu                           | Usage                                               |
+| ------------------------------- | --------------------------------- | --------------------------------------------------- |
+| `flags.swerpg.oggdudeKey`       | Identifiant source OggDude        | Traçabilité et diff ultérieur                       |
+| `flags.swerpg.oggdudeQualities` | Tableau `{ id, count }` trié      | Référence future pour mécaniques lisant les valeurs |
+| `flags.swerpg.oggdudeTags`      | Tags `type`, `category`, `status` | Exposé via `SwerpgWeapon.getTags()`                 |
+| `flags.swerpg.oggdude.sizeHigh` | Valeur numérique ou texte         | Information annexe non jouée                        |
+| `flags.swerpg.oggdude.source`   | `{ name, page }`                  | Source affichée dans la description                 |
 
 ## Tests et validation
 

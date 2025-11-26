@@ -1,17 +1,17 @@
 ---
-title: "Bug OggDude Gear Import – Mauvais mapping des données"
-domain: "oggdude-importer"
-purpose: "bug"
-feature: "oggdude-gear-data-mapping"
-version: "1.0"
-status: "draft"
-owner: "SWERPG Core Dev"
-createdAt: "2025-11-18"
+title: 'Bug OggDude Gear Import – Mauvais mapping des données'
+domain: 'oggdude-importer'
+purpose: 'bug'
+feature: 'oggdude-gear-data-mapping'
+version: '1.0'
+status: 'draft'
+owner: 'SWERPG Core Dev'
+createdAt: '2025-11-18'
 input-sources:
-  - "OggDude Gear.xml export (Fully Operational & autres suppléments)"
-  - "UI d’import OggDude dans SWERPG (Foundry VTT v13+)"
+  - 'OggDude Gear.xml export (Fully Operational & autres suppléments)'
+  - 'UI d’import OggDude dans SWERPG (Foundry VTT v13+)'
 notes:
-  - "Spécification de besoin pour générer un plan d’implémentation avec l’agent swerpg-plan."
+  - 'Spécification de besoin pour générer un plan d’implémentation avec l’agent swerpg-plan.'
 ---
 
 # 1. Contexte & objectif
@@ -110,7 +110,7 @@ Assurer un mapping fiable des données `Gear.xml` vers la structure `Item` SWERP
     </WeaponModifier>
   </WeaponModifiers>
 </Gear>
-````
+```
 
 ## 3.2 Résultat actuellement généré dans Foundry
 
@@ -141,18 +141,18 @@ Assurer un mapping fiable des données `Gear.xml` vers la structure `Item` SWERP
 
 ## 3.3 Constats
 
-* Les valeurs issues du XML ne sont pas reprises :
+- Les valeurs issues du XML ne sont pas reprises :
+  - `Price`, `Encumbrance` et `Rarity` sont remplacées par les valeurs par défaut (`0`, `1`, `1`).
+  - `Type` est ignoré (`system.category` vide).
 
-    * `Price`, `Encumbrance` et `Rarity` sont remplacées par les valeurs par défaut (`0`, `1`, `1`).
-    * `Type` est ignoré (`system.category` vide).
-* La description est vide alors que `<Description>` contient du texte et une référence à la source.
-* Les `BaseMods` sont totalement perdus :
+- La description est vide alors que `<Description>` contient du texte et une référence à la source.
+- Les `BaseMods` sont totalement perdus :
+  - Bonus à Mechanics ([AD]) et note “May be used as a weapon” non visibles.
 
-    * Bonus à Mechanics ([AD]) et note “May be used as a weapon” non visibles.
-* Les `WeaponModifiers` sont également perdus :
+- Les `WeaponModifiers` sont également perdus :
+  - Aucun lien ou information sur le profil d’arme possible (Melee, damage+2, crit 4, qualités Cumbersome/Disorient/Inaccurate, etc.).
 
-    * Aucun lien ou information sur le profil d’arme possible (Melee, damage+2, crit 4, qualités Cumbersome/Disorient/Inaccurate, etc.).
-* `actions` est vide alors que ce gear peut manifestement servir comme arme.
+- `actions` est vide alors que ce gear peut manifestement servir comme arme.
 
 Résultat : l’objet importé ne reflète pas les propriétés attendues du “Breaker Heavy Hydrospanner”, ni en tant qu’outil, ni en tant qu’arme improvisée.
 
@@ -164,20 +164,17 @@ Résultat : l’objet importé ne reflète pas les propriétés attendues du “
 
 Pour le MJ / les joueurs :
 
-* Lorsqu’un équipement est importé depuis `Gear.xml`, il doit :
+- Lorsqu’un équipement est importé depuis `Gear.xml`, il doit :
+  - Avoir ses caractéristiques de base correctes (prix, encumbrance, rareté).
+  - Afficher une description compréhensible, incluant au minimum :
+    - la description OggDude nettoyée,
+    - la référence à la source (ouvrage + page).
 
-    * Avoir ses caractéristiques de base correctes (prix, encumbrance, rareté).
-    * Afficher une description compréhensible, incluant au minimum :
-
-        * la description OggDude nettoyée,
-        * la référence à la source (ouvrage + page).
-    * Conserver les `BaseMods` de manière lisible.
-    * Conserver les informations critiques de `WeaponModifiers` :
-
-        * même si aucune automatisation complète n’est implémentée, le MJ doit pouvoir voir clairement :
-
-            * que le gear peut être utilisé comme arme,
-            * avec quel profil (compétence, dégâts, crit, qualités, portée).
+  - Conserver les `BaseMods` de manière lisible.
+  - Conserver les informations critiques de `WeaponModifiers` :
+    - même si aucune automatisation complète n’est implémentée, le MJ doit pouvoir voir clairement :
+      - que le gear peut être utilisé comme arme,
+      - avec quel profil (compétence, dégâts, crit, qualités, portée).
 
 L’objectif est que le MJ n’ait pas à rouvrir OggDude ou le livre pour comprendre ce que fait réellement le gear importé.
 
@@ -209,15 +206,15 @@ Pour toutes les entrées `<Gear>` :
 
 À partir de `<Description>` :
 
-* Supprimer / normaliser les balises OggDude `[H3]` / `[h3]` :
+- Supprimer / normaliser les balises OggDude `[H3]` / `[h3]` :
+  - soit les remplacer par `###` en markdown,
+  - soit les supprimer, mais de façon cohérente avec les autres imports (Weapons / Armor).
 
-    * soit les remplacer par `###` en markdown,
-    * soit les supprimer, mais de façon cohérente avec les autres imports (Weapons / Armor).
-* Conserver les retours à la ligne significatifs.
-* Ajouter en bas de description la source :
+- Conserver les retours à la ligne significatifs.
+- Ajouter en bas de description la source :
+  - `Source: Fully Operational, p.47`
 
-    * `Source: Fully Operational, p.47`
-* Les codes de dés `[AD]` (et autres, si présents) peuvent être conservés tels quels.
+- Les codes de dés `[AD]` (et autres, si présents) peuvent être conservés tels quels.
 
 Exemple attendu (version simple) :
 
@@ -255,8 +252,8 @@ Exemple :
 
 **Objectif minimal :**
 
-* Ne pas perdre l’information.
-* Ajouter une section “Base Mods” en bas de la description publique :
+- Ne pas perdre l’information.
+- Ajouter une section “Base Mods” en bas de la description publique :
 
 ```text
 Base Mods:
@@ -266,14 +263,13 @@ Base Mods:
 
 **Optionnel / préparatoire (flags, hors scope fort du bugfix) :**
 
-* Stocker également une version structurée dans :
+- Stocker également une version structurée dans :
+  - `flags.swerpg.oggdude.baseMods`, reprenant éventuellement :
+    - `SkillKey` (`MECH`),
+    - `AdvantageCount` (`1`),
+    - etc.
 
-    * `flags.swerpg.oggdude.baseMods`, reprenant éventuellement :
-
-        * `SkillKey` (`MECH`),
-        * `AdvantageCount` (`1`),
-        * etc.
-* Ceci prépare de futures features d’automatisation, sans y engager ce bugfix.
+- Ceci prépare de futures features d’automatisation, sans y engager ce bugfix.
 
 ---
 
@@ -282,17 +278,17 @@ Base Mods:
 Les `WeaponModifiers` définissent un **profil d’arme associé au gear**.
 Pour le “Breaker Heavy Hydrospanner” :
 
-* Compétence : `MELEE`
-* Dégâts : `Damage=0`, `DamageAdd=2` → typiquement “Brawn + 2”
-* Critique : `4`
-* Portée : `wrEngaged` (donc `engaged`)
-* Qualités : `CUMBERSOME 3`, `DISORIENT 1`, `INACCURATE 1`
-* Nom d’arme : `Breaker Heavy Hydrospanner` (hors guillemets, version destinée au profil de combat).
+- Compétence : `MELEE`
+- Dégâts : `Damage=0`, `DamageAdd=2` → typiquement “Brawn + 2”
+- Critique : `4`
+- Portée : `wrEngaged` (donc `engaged`)
+- Qualités : `CUMBERSOME 3`, `DISORIENT 1`, `INACCURATE 1`
+- Nom d’arme : `Breaker Heavy Hydrospanner` (hors guillemets, version destinée au profil de combat).
 
 **Objectif minimal :**
 
-* Ne pas perdre l’info, même sans créer un Item `weapon` séparé.
-* Ajouter une section dédiée dans la description, par exemple :
+- Ne pas perdre l’info, même sans créer un Item `weapon` séparé.
+- Ajouter une section dédiée dans la description, par exemple :
 
 ```text
 Weapon Use:
@@ -309,7 +305,7 @@ Weapon Use:
 
 **Optionnel (à jalonner clairement dans le plan comme “future evolution”) :**
 
-* Stocker une structure exploitable dans `flags.swerpg.oggdude.weaponProfile`, par exemple :
+- Stocker une structure exploitable dans `flags.swerpg.oggdude.weaponProfile`, par exemple :
 
 ```json
 {
@@ -326,10 +322,9 @@ Weapon Use:
 }
 ```
 
-* Préparer le terrain pour :
-
-    * la création automatique d’une `action` d’attaque dans `system.actions`,
-    * ou la génération d’un Item `weapon` lié, dans une feature dédiée future.
+- Préparer le terrain pour :
+  - la création automatique d’une `action` d’attaque dans `system.actions`,
+  - ou la génération d’un Item `weapon` lié, dans une feature dédiée future.
 
 Pour ce bugfix, il est acceptable de rester au niveau **description + flags**, tant que rien n’est perdu.
 
@@ -341,10 +336,9 @@ Le `<Type>` de Gear (ex. `Tools/Electronics`) ne doit pas être perdu.
 
 **Exigence minimale :**
 
-* Conserver la valeur, soit :
-
-    * dans `system.category` si c’est cohérent avec la taxonomie actuelle de SWERPG,
-    * soit dans `flags.swerpg.oggdude.type` si la taxonomie globale n’est pas encore fixée.
+- Conserver la valeur, soit :
+  - dans `system.category` si c’est cohérent avec la taxonomie actuelle de SWERPG,
+  - soit dans `flags.swerpg.oggdude.type` si la taxonomie globale n’est pas encore fixée.
 
 Les décisions d’architecture sur la taxonomie complète (gear / weapons / armor) sont à traiter dans des issues / specs d’architecture dédiées.
 
@@ -354,21 +348,21 @@ Les décisions d’architecture sur la taxonomie complète (gear / weapons / arm
 
 ## 5.1 Contraintes techniques
 
-* Compatibilité Foundry VTT v13+.
-* Le module d’import OggDude doit rester utilisable pour des volumes importants de données (nombreux entry `<Gear>`).
-* Le bugfix ne doit pas casser l’import des autres types OggDude (Weapons, Armor, etc.), surtout si du code utilitaire partagé est factorisé.
+- Compatibilité Foundry VTT v13+.
+- Le module d’import OggDude doit rester utilisable pour des volumes importants de données (nombreux entry `<Gear>`).
+- Le bugfix ne doit pas casser l’import des autres types OggDude (Weapons, Armor, etc.), surtout si du code utilitaire partagé est factorisé.
 
 ## 5.2 Hypothèses
 
-* Le schéma `system` d’un Item `gear` est stable et inclut au minimum :
+- Le schéma `system` d’un Item `gear` est stable et inclut au minimum :
+  - `system.price`, `system.encumbrance`, `system.rarity`,
+  - `system.category`,
+  - `system.description.public`.
 
-    * `system.price`, `system.encumbrance`, `system.rarity`,
-    * `system.category`,
-    * `system.description.public`.
-* `system.actions` existe, mais ce bugfix ne requiert pas d’y définir une action d’attaque complète :
+- `system.actions` existe, mais ce bugfix ne requiert pas d’y définir une action d’attaque complète :
+  - la création d’actions structurées (attaques) à partir de `WeaponModifiers` est considérée comme une **feature future**.
 
-    * la création d’actions structurées (attaques) à partir de `WeaponModifiers` est considérée comme une **feature future**.
-* Les icônes / dossier (`img`, `folder`) suivent la logique déjà existante et ne sont pas concernés par le bug.
+- Les icônes / dossier (`img`, `folder`) suivent la logique déjà existante et ne sont pas concernés par le bug.
 
 ---
 
@@ -404,12 +398,12 @@ Les décisions d’architecture sur la taxonomie complète (gear / weapons / arm
   "img": "systems/swerpg/assets/images/icons/gear.svg",
   "type": "gear",
   "system": {
-    "category": "tools-electronics",           // ou valeur existante, mais non vide
+    "category": "tools-electronics", // ou valeur existante, mais non vide
     "quantity": 1,
-    "price": 250,                              // ← Price
+    "price": 250, // ← Price
     "quality": "standard",
-    "encumbrance": 3,                          // ← Encumbrance
-    "rarity": 2,                               // ← Rarity
+    "encumbrance": 3, // ← Encumbrance
+    "rarity": 2, // ← Rarity
     "broken": false,
     "description": {
       "public": "Regalis Engineering \"Breaker\" Heavy Hydrospanner\n\nPlease see page 47 of the Fully Operational Sourcebook for details.\nSource: Fully Operational, p.47\n\nBase Mods:\n- Adds [AD] to Mechanics checks.\n- May be used as a weapon.\n\nWeapon Use:\n- Can be used as a melee weapon.\n- Skill: Melee\n- Damage: Brawn + 2\n- Crit: 4\n- Range: Engaged\n- Qualities:\n  - Cumbersome 3\n  - Disorient 1\n  - Inaccurate 1",
@@ -450,36 +444,30 @@ Les décisions d’architecture sur la taxonomie complète (gear / weapons / arm
 # 7. Critères d’acceptation
 
 1. **Import de base correct**
-
-    * Étant donné un `Gear.xml` contenant `"Breaker" Heavy Hydrospanner`,
-    * Quand je lance l’import OggDude Gear,
-    * Alors l’Item `gear` créé dans Foundry :
-
-        * a `system.price = 250`,
-        * a `system.encumbrance = 3`,
-        * a `system.rarity = 2`,
-        * n’a plus `system.category` vide (type / catégorie conservée).
+   - Étant donné un `Gear.xml` contenant `"Breaker" Heavy Hydrospanner`,
+   - Quand je lance l’import OggDude Gear,
+   - Alors l’Item `gear` créé dans Foundry :
+     - a `system.price = 250`,
+     - a `system.encumbrance = 3`,
+     - a `system.rarity = 2`,
+     - n’a plus `system.category` vide (type / catégorie conservée).
 
 2. **Description non vide et informative**
-
-    * La description publique contient :
-
-        * le texte de description OggDude (sans balises `[H3]`),
-        * la source au format “Source: Fully Operational, p.47”,
-        * une section “Base Mods” listant les `MiscDesc` des `BaseMods`,
-        * une section “Weapon Use” résumant clairement le profil d’arme issu de `WeaponModifiers`.
+   - La description publique contient :
+     - le texte de description OggDude (sans balises `[H3]`),
+     - la source au format “Source: Fully Operational, p.47”,
+     - une section “Base Mods” listant les `MiscDesc` des `BaseMods`,
+     - une section “Weapon Use” résumant clairement le profil d’arme issu de `WeaponModifiers`.
 
 3. **Conservation des mods et profil d’arme**
+   - Aucun des éléments suivants n’est perdu :
+     - “Adds [AD] to Mechanics checks.”,
+     - “May be used as a weapon.”,
+     - compétence Melee, damage+2, crit 4, portée Engaged,
+     - qualités Cumbersome 3, Disorient 1, Inaccurate 1.
 
-    * Aucun des éléments suivants n’est perdu :
-
-        * “Adds [AD] to Mechanics checks.”,
-        * “May be used as a weapon.”,
-        * compétence Melee, damage+2, crit 4, portée Engaged,
-        * qualités Cumbersome 3, Disorient 1, Inaccurate 1.
-    * Ces informations sont au minimum lisibles dans la description.
+   - Ces informations sont au minimum lisibles dans la description.
 
 4. **Non-régression**
-
-    * L’import d’autres Gear sans `WeaponModifiers` ne casse pas et reste cohérent (simple gear sans section “Weapon Use” si inexistant).
-    * Les imports Armor / Weapons restent fonctionnels (et, si leurs bugfixes sont en place, compatibles avec ce changement).
+   - L’import d’autres Gear sans `WeaponModifiers` ne casse pas et reste cohérent (simple gear sans section “Weapon Use” si inexistant).
+   - Les imports Armor / Weapons restent fonctionnels (et, si leurs bugfixes sont en place, compatibles avec ce changement).

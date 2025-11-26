@@ -111,6 +111,7 @@ export function speciesMapper(species) {
 Pattern établi lors de l'extension OGG_DUDE_SKILL_MAP (careers/species) pour couvrir 100% des compétences SWERPG.
 
 ### Structure organisée par sections
+
 Tables de mapping centralisées (`module/importer/mappings/oggdude-skill-map.mjs`) doivent être organisées avec des commentaires de sections clairs :
 
 ```js
@@ -120,12 +121,12 @@ export const OGG_DUDE_SKILL_MAP = Object.freeze({
   DISC: 'discipline',
   LEAD: 'leadership',
   // ... autres
-  
+
   // === Combat Skills ===
   BRAWL: 'brawl',
   MELEE: 'melee',
   // ...
-  
+
   // === Knowledge Skills ===
   LORE: 'lore',
   OUT: 'outerrim',
@@ -137,6 +138,7 @@ export const OGG_DUDE_SKILL_MAP = Object.freeze({
 Avantages : maintenabilité (ajout/vérification rapide), documentation inline (pas besoin de doc séparée pour liste exhaustive), debugging simplifié.
 
 ### Gestion des ambiguïtés et synonymes
+
 Codes OggDude parfois ambigus (ex: `CORE` peut signifier "Core Worlds" ou "Coordination"). Stratégie :
 
 1. **Documentation explicite** : commentaire inline dans le mapping expliquant la décision (`CORE: 'coreworlds', // NOT coordination - context based`)
@@ -144,6 +146,7 @@ Codes OggDude parfois ambigus (ex: `CORE` peut signifier "Core Worlds" ou "Coord
 3. **Validation exhaustive** : test vérifiant tous les codes existants mappent à une compétence valide du système
 
 ### Codes non-mappables
+
 Documenter explicitement avec commentaires :
 
 ```js
@@ -154,6 +157,7 @@ Documenter explicitement avec commentaires :
 Jamais mapper vers une compétence incorrecte ; préférer `undefined` + log warning dans le mapper.
 
 ### Tests exhaustifs de mappings
+
 Créer test dédié `*-skill-map.spec.mjs` couvrant :
 
 - Tous les codes standards (33 codes) mappent à une compétence existante dans `SYSTEM.SKILLS`
@@ -163,6 +167,7 @@ Créer test dédié `*-skill-map.spec.mjs` couvrant :
 - Liste exhaustive des non-mappables est documentée
 
 ### Performance
+
 `Object.freeze()` + lookup O(1). Pas de regex, pas de switch/case. Si >1000 compétences futures : envisager Map mais objet reste optimal pour <100 entrées.
 
 ## Tests: assertions et mocks pratiques
@@ -176,17 +181,44 @@ Quelques patterns récurrents rencontrés pendant le debugging des TU :
     globalThis.SYSTEM = {
       SKILLS: {
         // General (22)
-        astrogation: {}, athletics: {}, charm: {}, coercion: {}, computers: {},
-        cool: {}, coordination: {}, deception: {}, discipline: {}, leadership: {},
-        mechanics: {}, medicine: {}, negotiation: {}, perception: {}, pilotingPlanetary: {},
-        pilotingSpace: {}, resilience: {}, skullduggery: {}, stealth: {}, streetwise: {},
-        survival: {}, vigilance: {},
+        astrogation: {},
+        athletics: {},
+        charm: {},
+        coercion: {},
+        computers: {},
+        cool: {},
+        coordination: {},
+        deception: {},
+        discipline: {},
+        leadership: {},
+        mechanics: {},
+        medicine: {},
+        negotiation: {},
+        perception: {},
+        pilotingPlanetary: {},
+        pilotingSpace: {},
+        resilience: {},
+        skullduggery: {},
+        stealth: {},
+        streetwise: {},
+        survival: {},
+        vigilance: {},
         // Combat (5)
-        brawl: {}, melee: {}, rangedLight: {}, rangedHeavy: {}, gunnery: {},
+        brawl: {},
+        melee: {},
+        rangedLight: {},
+        rangedHeavy: {},
+        gunnery: {},
         // Knowledge (8)
-        coreworlds: {}, education: {}, lore: {}, outerrim: {}, underworld: {},
-        warfare: {}, xenology: {}, forbiddenknowledge: {}
-      }
+        coreworlds: {},
+        education: {},
+        lore: {},
+        outerrim: {},
+        underworld: {},
+        warfare: {},
+        xenology: {},
+        forbiddenknowledge: {},
+      },
     }
     ```
   - Raison : si mock incomplet, tests passent faussement (mapper utilise skill non définie mais test n'échoue pas).
@@ -279,18 +311,18 @@ OggDude peut produire des structures XML légèrement différentes selon les ver
 export function extractRawSpecializationSkillCodes(xmlSpecialization) {
   const careerSkills = xmlSpecialization.CareerSkills
   if (!careerSkills) return []
-  
+
   // Supporter 2 formats XML :
   // Format 1: <CareerSkills><Key>CODE</Key>...</CareerSkills>
   if (Array.isArray(careerSkills.Key)) {
     return careerSkills.Key
   }
-  
+
   // Format 2: <CareerSkills><CareerSkill><Key>CODE</Key></CareerSkill>...</CareerSkills>
   if (Array.isArray(careerSkills.CareerSkill)) {
-    return careerSkills.CareerSkill.map(cs => cs.Key).filter(Boolean)
+    return careerSkills.CareerSkill.map((cs) => cs.Key).filter(Boolean)
   }
-  
+
   return []
 }
 ```
@@ -305,12 +337,12 @@ Appliquer les contraintes métier strictement dans le mapper :
 - **Logging throttling** : tracker les codes inconnus dans un `Set` pour éviter spam logs
 
 ```js
-export function mapSpecializationSkills(rawCodes, {strict = false} = {}) {
+export function mapSpecializationSkills(rawCodes, { strict = false } = {}) {
   const mapped = mapOggDudeSkillCodes(rawCodes)
-  
+
   if (strict) {
     // Validation contre SYSTEM.SKILLS
-    const validated = mapped.filter(code => {
+    const validated = mapped.filter((code) => {
       if (!SYSTEM.SKILLS[code]) {
         addSpecializationUnknownSkill(code) // Set-based, pas de dups
         return false
@@ -318,10 +350,10 @@ export function mapSpecializationSkills(rawCodes, {strict = false} = {}) {
       return true
     })
   }
-  
+
   // Déduplication avec préservation d'ordre
   const unique = [...new Set(mapped)]
-  
+
   // Troncature à 8
   return unique.slice(0, 8)
 }
@@ -350,7 +382,9 @@ Pattern de mock complet pour les tests :
 ```js
 beforeAll(() => {
   globalThis.SYSTEM = {
-    SKILLS: { /* 35 compétences complètes */ }
+    SKILLS: {
+      /* 35 compétences complètes */
+    },
   }
   globalThis.xml2js = { js: xml2jsModule }
 })
@@ -442,6 +476,7 @@ Chaque aspect complexe a son module dédié avec pattern uniforme :
 Le correctif "weapon" (bug mapping OggDude) introduit des patterns réutilisables pour tout futur domaine avec métadonnées enrichies.
 
 ### Fallback déterministe skill/range
+
 Toujours prioriser la clé spécialisée (`RangeValue`, `SkillKey`) puis fallback vers clé générique (`Range`). Si code inconnu en mode non strict : log catégorisé + stats + remplacement par **valeur par défaut stable** (`rangedLight`, `medium`). Évite rejets silencieux et rend les tests prévisibles.
 
 ```js
@@ -453,6 +488,7 @@ if (!mappedSkill) {
 ```
 
 ### Agrégation de qualités avec valeur
+
 Convertir la collection source (tableau ou entrée unique) en **Map (qualité → total)** puis créer un tableau trié `{ id, count }`. Le `Set` dans le schéma reste liste des IDs pour compatibilité existante. Ce double stockage maintient retro-compat et ouvre usages futurs.
 
 ```js
@@ -464,13 +500,15 @@ for (const q of qualities) {
     qualityCounts.set(id, (qualityCounts.get(id) || 0) + count)
   } else addWeaponUnknownQuality(q.Key)
 }
-flags.swerpg.oggdudeQualities = [...qualityCounts].map(([id,count]) => ({ id, count }))
+flags.swerpg.oggdudeQualities = [...qualityCounts].map(([id, count]) => ({ id, count }))
 ```
 
 ### Tags enrichis séparés du schéma
+
 Ne pas modifier le modèle Foundry tant que l’usage gameplay n’est pas défini. Stocker dans `flags.swerpg.oggdudeTags` un tableau d’objets uniformes `{ type, value, label }`. Le sheet (via `getTags()`) fusionne dynamiquement sans casser l’API publique.
 
 ### Sanitation description multi-balises
+
 Éliminer les balises propriétaires `[H3]`, `[BR]`, `[color]`, etc., convertir `[BR]` en `\n`, conserver structure paragraphe puis **append** la source. Pattern réutilisable pour d’autres domaines (ex: talents).
 
 ```js
@@ -479,18 +517,23 @@ if (source.name) description += `\n\nSource: ${source.name}${source.page ? `, p.
 ```
 
 ### Boolean parsing robuste
+
 Utiliser une fonction générique (`parseOggDudeBoolean`) pour gérer variations (`true`, `True`, `1`, `yes`). Centraliser pour cohérence entre mappers (restricted, broken, etc.).
 
 ### Tests ciblés sans option Vitest `--filter`
+
 Vitest v3 ne supporte pas `--filter` comme précédemment; exécuter un fichier cible avec `vitest path/to/spec.mjs` ou `vitest --run path/to/spec.mjs` dans le script `pnpm test`. Mémoriser ce pattern pour éviter faux négatifs CI.
 
 ### Performance volumétrique
+
 Valider qu’un lot de ~200 entrées passe <1s local (ajustable) sans exceptions; pas de structures O(n^2) lors de l’agrégation (Map + insertion unique). Réutiliser pour autres domaines à counts multiples (ex: effets stackables).
 
 ### Tag injection côté modèle
+
 Élargir `getTags()` localement plutôt que d’introduire un nouveau champ dans le schéma. Pattern: construire clés normalisées (`type-explosive`) + label dérivé `Type: Explosive`. Garantit séparation données brutes / présentation.
 
 ### Règle d’or rétro-compat
+
 Toute donnée additive (valeurs de qualités, tags enrichis, sizeHigh, source) se met dans `flags.swerpg.*` pour ne pas rompre sérialisation/casting existants Foundry ni la logique dérivée déjà testée.
 
 ## Weapon Import – Sécurité et Neutralisation Script
@@ -499,8 +542,8 @@ Pattern réutilisable: neutraliser `<script>` via simple remplacement global ava
 
 ```js
 sanitizeText(text)
-  .replace(/<script/gi,'&lt;script')
-  .replace(/<\/script>/gi,'&lt;/script&gt;')
+  .replace(/<script/gi, '&lt;script')
+  .replace(/<\/script>/gi, '&lt;/script&gt;')
 ```
 
 ## Weapon Import – Construction de description source
@@ -518,7 +561,6 @@ Journaliser avec `logger.warn` + incrément stats sans rejeter l’item. Permet 
 ## Weapon Import – Normalisation multi-séparateurs
 
 Pour `Type` multi-valeurs ou catégories composites, splitter sur `/`, `;`, `,` et normaliser espace interne. Pattern réutilisable pour tout champ multi-sources.
-
 
 ## UI & i18n gotchas — OggDude importer (nouvelle règle)
 
@@ -620,15 +662,19 @@ Stratégie pour éviter les erreurs de modules dans les tests d'import :
 Pattern consolidé introduit lors du correctif de mapping des Talents OggDude (rank, activation, description enrichie & modificateurs de dés). À appliquer pour tout domaine avec enrichissement textuel + données additives non contractuelles.
 
 ### Séparation de responsabilités
+
 Créer un module dédié `oggdude-talent-diemodifiers-map.mjs` gérant uniquement:
+
 1. Extraction brute des nœuds `<DieModifiers>`.
 2. Normalisation élément → objet `{ type, skill?, characteristic?, value?, applyOnce? }`.
 3. Formatage pour description (lignes textuelles prêtes à concaténation).
 4. Sanitation texte (voir plus bas) + assemblage final.
-Le mapper principal importe et orchestre sans dupliquer la logique d'assemblage.
+   Le mapper principal importe et orchestre sans dupliquer la logique d'assemblage.
 
 ### Assemblage déterministe de la description
+
 Ordre strict (ne jamais réordonner dynamiquement):
+
 1. Description source OggDude nettoyée.
 2. Ligne blanche.
 3. Source formatée: `Source: <Nom>[, p.<Page>]` si disponible.
@@ -638,27 +684,35 @@ Ordre strict (ne jamais réordonner dynamiquement):
 Ne jamais insérer d'en-tête vide quand il n'y a aucun modificateur; c'est un invariant testable.
 
 ### Sanitation & Limites
+
 Règles appliquées avant enrichissement:
+
 - Neutraliser `<script>` / `<style>` par remplacement (`<` → `&lt;` sur balises ouvrantes). Pas d'exécution potentielle.
 - Supprimer balises propriétaires OggDude si présentes (`[BR]`, `[H3]`, `[color]`) ou les convertir en sauts de ligne (`[BR]`).
 - Trim + collapse multi-espaces → espace simple.
 - Troncature dure à 2000 caractères (post assemblage). Tests doivent couvrir la conservation d'un suffixe complet (éviter coupure milieu d'un mot critique; aucune logique de mot, juste cut brut documenté).
 
 ### Flags additive vs schéma
+
 Ne jamais modifier le modèle Foundry (ex: `SwerpgTalent`) pour stocker DieModifiers tant que gameplay non défini. Stocker structure normalisée dans `flags.swerpg.oggdude.dieModifiers` (tableau d'objets) + conserver clé d'origine `flags.swerpg.oggdudeKey` pour traçabilité.
 
 Avantages:
+
 - Rétro-compatibilité sauvegardes existantes.
 - Facilité d'évolution (ajout futur d'autres modificateurs) sans migrations.
 
 ### Incrément métriques
+
 Incrémenter le compteur `dieModifiers` uniquement si le tableau final possède ≥1 entrée. Permet ratio clair talents enrichis / total. Exposé via `getTalentImportStats().dieModifiers`.
 
 ### Performance
+
 Complexité O(n) par talent (n = nombre d'éléments DieModifier). Pas de regex lourde dans la boucle; sanitation textuelle faite une fois. Vérifier absence de double parsing XML.
 
 ### Tests essentiels
+
 Couverture minimale exigée:
+
 - Extraction: compter correctement chaque type supporté (Setback / Boost / RemoveSetback / UpgradeDifficulty / DecreaseDifficulty / ApplyOnce).
 - Ignorer modificateurs sans skill ET sans characteristic (logger.warn). Ne pas lever exception.
 - Description: présence ou absence section Die Modifiers selon cas; source correctement append; troncature à 2000 chars.
@@ -666,12 +720,14 @@ Couverture minimale exigée:
 - Flags: structure exacte tableau d'objets; absence du champ si liste vide.
 
 ### Pièges évités (rétrospective)
+
 - Duplication description builder dans le mapper principal → centralisé dans module DieModifiers.
 - Insertion header Die Modifiers vide quand aucun modificateur → invariant ajouté.
 - Pollution schéma principal (ajout champ dieModifiers) → usage des flags protégé.
 - Troncature uniquement sur description initiale (perte section modificateurs) → appliquer troncature après assemblage complet.
 
 ### Extension future
+
 Si besoin de rendre interactif (tooltip de chaque modificateur): préparer mapping `flags.swerpg.oggdude.dieModifiers[i].label` localisé sans casser structure ; la description reste texte brut pour compatibilité export.
 
 ## Checklist complète ajout nouveau domaine OggDude

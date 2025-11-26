@@ -45,9 +45,9 @@ Introduire une gestion fine d'erreurs dans le mapper avec comptage `rejected`, l
 ## 4. Requirements (EARS)
 
 4. Pas de comptage `rejected` propagé → incohérence `imported + rejected > total` après clamp.
-3. `emitProgress` n'est pas appelé pour les spécialisations en l'absence de dataset mappé.
-2. `extractRawSpecializationSkillCodes` retourne `undefined` et casse la construction d'objet.
-1. `specializationMapper` retourne systématiquement `null` pour chaque entrée → filtrage élimine tout.
+5. `emitProgress` n'est pas appelé pour les spécialisations en l'absence de dataset mappé.
+6. `extractRawSpecializationSkillCodes` retourne `undefined` et casse la construction d'objet.
+7. `specializationMapper` retourne systématiquement `null` pour chaque entrée → filtrage élimine tout.
 
 ## 3. Root Cause (Hypothèse)
 
@@ -64,7 +64,7 @@ Introduire une gestion fine d'erreurs dans le mapper avec comptage `rejected`, l
 - `Domaine specialization sans données, import ignoré`
 - `datasetSize: 0`
 - `jsonData: Array(123)`
-Logs clés :
+  Logs clés :
 
 Lors de l'import du domaine `specialization`, l'étape `BuildJsonDataFromDirectory` extrait **123 éléments JSON** mais le mapper produit un dataset **vide (0)**. Le processus est ignoré sans création d'items et les métriques enfreignent l'invariant `imported + rejected ≤ total`.
 
@@ -75,6 +75,7 @@ Lors de l'import du domaine `specialization`, l'étape `BuildJsonDataFromDirecto
 # Bug: Import Spécialisation OggDude Dataset Vide
 
 ---
+
 tags: ['bug', 'importer', 'specialization', 'oggdude', 'diagnostic']
 status: 'Planned'
 owner: herve.darritchon
@@ -82,4 +83,3 @@ last_updated: 2025-11-23
 date_created: 2025-11-23
 version: 1.0
 goal: Corriger l'import OggDude des spécialisations produisant un dataset vide
-

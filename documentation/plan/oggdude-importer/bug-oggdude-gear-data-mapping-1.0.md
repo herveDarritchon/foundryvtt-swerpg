@@ -63,50 +63,50 @@ Bugfix visant à corriger la perte d'information lors de l'import OggDude du fic
 
 - GOAL-001: Analyse & cadrage précis des points de modification dans l'importer Gear.
 
-| Task     | Description                                                                                                                           | DependsOn | Completed | Date |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------------- | --------- | --------- | ---- |
-| TASK-001 | Identifier fonctions: `gearMapper`, `buildGearSystem`, utilitaires `normalizeGearDescription` pour extension. (FILE-001)             |          |           |      |
-| TASK-002 | Cartographier structure XML attendue pour BaseMods / WeaponModifiers; définir représentation interne (flags). (FILE-001)              |          |           |      |
-| TASK-003 | Vérifier utilitaires réutilisables dans `oggdude-weapon-utils.mjs` pour sanitation & source parsing. (FILE-002)                        |          |           |      |
-| TASK-004 | Lister impacts tests existants `tests/importer/gear-import.integration.spec.mjs` et nouvelles specs à créer. (FILE-005)               |          |           |      |
-| TASK-005 | Confirmer absence d'effets de bord sur armor/weapon importers (lecture rapide de leurs modules). (FILE-003, FILE-004)                 |          |           |      |
-| TASK-006 | Définir stratégie performance (une passe unique, pas d'accès DOM).                                                                    | TASK-001 |           |      |
-| TASK-007 | Finaliser ensemble `REQ/CON/PAT` (compléter si trous identifiés).                                                                      | TASK-002 |           |      |
+| Task     | Description                                                                                                              | DependsOn | Completed | Date |
+| -------- | ------------------------------------------------------------------------------------------------------------------------ | --------- | --------- | ---- |
+| TASK-001 | Identifier fonctions: `gearMapper`, `buildGearSystem`, utilitaires `normalizeGearDescription` pour extension. (FILE-001) |           |           |      |
+| TASK-002 | Cartographier structure XML attendue pour BaseMods / WeaponModifiers; définir représentation interne (flags). (FILE-001) |           |           |      |
+| TASK-003 | Vérifier utilitaires réutilisables dans `oggdude-weapon-utils.mjs` pour sanitation & source parsing. (FILE-002)          |           |           |      |
+| TASK-004 | Lister impacts tests existants `tests/importer/gear-import.integration.spec.mjs` et nouvelles specs à créer. (FILE-005)  |           |           |      |
+| TASK-005 | Confirmer absence d'effets de bord sur armor/weapon importers (lecture rapide de leurs modules). (FILE-003, FILE-004)    |           |           |      |
+| TASK-006 | Définir stratégie performance (une passe unique, pas d'accès DOM).                                                       | TASK-001  |           |      |
+| TASK-007 | Finaliser ensemble `REQ/CON/PAT` (compléter si trous identifiés).                                                        | TASK-002  |           |      |
 
 ### Implementation Phase 2
 
 - GOAL-002: Conception détaillée du mapping enrichi & mise à jour code + tests.
 
-| Task     | Description                                                                                                                                                | DependsOn | Completed | Date |
-| -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | --------- | ---- |
-| TASK-008 | Créer fonction `sanitizeOggDudeGearDescription(description)` (si divergence minimale sinon réutiliser weapon). (FILE-006)                                 | TASK-001 |           |      |
-| TASK-009 | Implémenter `extractGearSourceInfo(xmlGear.Source)` inspirée de weapon. (FILE-001)                                                                         | TASK-001 |           |      |
-| TASK-010 | Implémenter parse BaseMods: `extractBaseMods(xmlGear.BaseMods)` → array structuré & section description. (FILE-001)                                        | TASK-002 |           |      |
-| TASK-011 | Implémenter parse WeaponModifiers: `extractWeaponProfile(xmlGear.WeaponModifiers)` + normalisation qualités. (FILE-001)                                    | TASK-002 |           |      |
-| TASK-012 | Ajouter slug catégorie: `slugifyCategory(originalType)` (remplacer espaces & `/` par `-`, toLowerCase). (FILE-001)                                         | TASK-001 |           |      |
-| TASK-013 | Refactor `buildGearSystem` pour intégrer description pipeline & valeurs existantes + sections. (FILE-001)                                                  | TASK-010 |           |      |
-| TASK-014 | Enrichir `gearMapper` pour setter flags: baseMods, weaponProfile, source, originalType. (FILE-001)                                                         | TASK-010 |           |      |
-| TASK-015 | Ajouter logs debug pour chaque section parse (compte mods, qualité, anomalies). (FILE-001)                                                                 | TASK-010 |           |      |
-| TASK-016 | Mettre à jour test existant pour tolérer sections supplémentaires (ajustements assertions description). (FILE-005)                                         | TASK-013 |           |      |
-| TASK-017 | Créer nouveau test `gear-import.weapon-profile.spec.mjs` pour cas avec WeaponModifiers & BaseMods. (FILE-007)                                              | TASK-011 |           |      |
-| TASK-018 | Créer test performance >150 items (déjà partiel) adapt pour nouveaux parse (durée <150ms). (FILE-007)                                                      | TASK-013 |           |      |
-| TASK-019 | Créer test absence WeaponModifiers → pas de section Weapon Use. (FILE-007)                                                                                 | TASK-011 |           |      |
-| TASK-020 | Créer test robustesse champs manquants (pas de Price / Rarity / BaseMods) → defaults + pas d'erreur. (FILE-007)                                            | TASK-013 |           |      |
-| TASK-021 | Créer test qualities merge counts. (FILE-007)                                                                                                              | TASK-011 |           |      |
-| TASK-022 | Vérifier successful mapping multi mods & weapon profile flags JSON structure. (FILE-007)                                                                   | TASK-011 |           |      |
-| TASK-023 | Ajouter documentation courte dans `documentation/importer/` sur comportement gear mapping (résumé). (FILE-008)                                            | TASK-014 |           |      |
+| Task     | Description                                                                                                               | DependsOn | Completed | Date |
+| -------- | ------------------------------------------------------------------------------------------------------------------------- | --------- | --------- | ---- |
+| TASK-008 | Créer fonction `sanitizeOggDudeGearDescription(description)` (si divergence minimale sinon réutiliser weapon). (FILE-006) | TASK-001  |           |      |
+| TASK-009 | Implémenter `extractGearSourceInfo(xmlGear.Source)` inspirée de weapon. (FILE-001)                                        | TASK-001  |           |      |
+| TASK-010 | Implémenter parse BaseMods: `extractBaseMods(xmlGear.BaseMods)` → array structuré & section description. (FILE-001)       | TASK-002  |           |      |
+| TASK-011 | Implémenter parse WeaponModifiers: `extractWeaponProfile(xmlGear.WeaponModifiers)` + normalisation qualités. (FILE-001)   | TASK-002  |           |      |
+| TASK-012 | Ajouter slug catégorie: `slugifyCategory(originalType)` (remplacer espaces & `/` par `-`, toLowerCase). (FILE-001)        | TASK-001  |           |      |
+| TASK-013 | Refactor `buildGearSystem` pour intégrer description pipeline & valeurs existantes + sections. (FILE-001)                 | TASK-010  |           |      |
+| TASK-014 | Enrichir `gearMapper` pour setter flags: baseMods, weaponProfile, source, originalType. (FILE-001)                        | TASK-010  |           |      |
+| TASK-015 | Ajouter logs debug pour chaque section parse (compte mods, qualité, anomalies). (FILE-001)                                | TASK-010  |           |      |
+| TASK-016 | Mettre à jour test existant pour tolérer sections supplémentaires (ajustements assertions description). (FILE-005)        | TASK-013  |           |      |
+| TASK-017 | Créer nouveau test `gear-import.weapon-profile.spec.mjs` pour cas avec WeaponModifiers & BaseMods. (FILE-007)             | TASK-011  |           |      |
+| TASK-018 | Créer test performance >150 items (déjà partiel) adapt pour nouveaux parse (durée <150ms). (FILE-007)                     | TASK-013  |           |      |
+| TASK-019 | Créer test absence WeaponModifiers → pas de section Weapon Use. (FILE-007)                                                | TASK-011  |           |      |
+| TASK-020 | Créer test robustesse champs manquants (pas de Price / Rarity / BaseMods) → defaults + pas d'erreur. (FILE-007)           | TASK-013  |           |      |
+| TASK-021 | Créer test qualities merge counts. (FILE-007)                                                                             | TASK-011  |           |      |
+| TASK-022 | Vérifier successful mapping multi mods & weapon profile flags JSON structure. (FILE-007)                                  | TASK-011  |           |      |
+| TASK-023 | Ajouter documentation courte dans `documentation/importer/` sur comportement gear mapping (résumé). (FILE-008)            | TASK-014  |           |      |
 
 ### Implementation Phase 3
 
 - GOAL-003: Préparer stratégie de validation, migration ciblée et rollback.
 
-| Task     | Description                                                                                                              | DependsOn | Completed | Date |
-| -------- | ------------------------------------------------------------------------------------------------------------------------ | --------- | --------- | ---- |
-| TASK-024 | Définir script manuel éventuel de réparation pour gear existants (documenté seulement). (FILE-008)                      | TASK-023 |           |      |
-| TASK-025 | Rédiger critères de rollback (perte performance, description > taille limite) dans doc. (FILE-008)                      | TASK-023 |           |      |
-| TASK-026 | Checklist manuelle QA (import gear avec WeaponModifiers, gear simple, volume 500 items). (FILE-008)                     | TASK-023 |           |      |
-| TASK-027 | Vérification non régression armor/weapon importer via exécution tests existants. (FILE-005)                             | TASK-016 |           |      |
-| TASK-028 | Finalisation du plan de release (branch, changelog, incrément version system.json si requis). (FILE-009)                | TASK-023 |           |      |
+| Task     | Description                                                                                              | DependsOn | Completed | Date |
+| -------- | -------------------------------------------------------------------------------------------------------- | --------- | --------- | ---- |
+| TASK-024 | Définir script manuel éventuel de réparation pour gear existants (documenté seulement). (FILE-008)       | TASK-023  |           |      |
+| TASK-025 | Rédiger critères de rollback (perte performance, description > taille limite) dans doc. (FILE-008)       | TASK-023  |           |      |
+| TASK-026 | Checklist manuelle QA (import gear avec WeaponModifiers, gear simple, volume 500 items). (FILE-008)      | TASK-023  |           |      |
+| TASK-027 | Vérification non régression armor/weapon importer via exécution tests existants. (FILE-005)              | TASK-016  |           |      |
+| TASK-028 | Finalisation du plan de release (branch, changelog, incrément version system.json si requis). (FILE-009) | TASK-023  |           |      |
 
 ## 3. Alternatives
 
@@ -174,4 +174,4 @@ Stratégie:
 - `module/importer/items/weapon-ogg-dude.mjs` – Référence pattern weapon importer.
 - `module/importer/mappings/oggdude-weapon-utils.mjs` – Utilitaires sanitation.
 - Foundry VTT API v13 Documentation – Référence objets Item & flags.
-`tests/importer/gear-import.integration.spec.mjs` – Tests actuels gear importer.
+  `tests/importer/gear-import.integration.spec.mjs` – Tests actuels gear importer.

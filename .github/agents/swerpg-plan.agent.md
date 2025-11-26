@@ -8,7 +8,35 @@ argument-hint: >-
   ES2020+ / LESS / Foundry VTT v13) ready to be executed by a dev agent.
 model: GPT-5
 target: vscode
-tools: ['search/codebase', 'search', 'search/searchResults', 'usages', 'vscodeAPI', 'problems', 'testFailure', 'fetch', 'githubRepo', 'todos', 'edit/editFiles', 'changes', 'new', 'insert_edit_into_file', 'replace_string_in_file', 'create_file', 'run_in_terminal', 'get_terminal_output', 'get_errors', 'show_content', 'open_file', 'list_dir', 'read_file', 'file_search', 'grep_search', 'run_subagent']
+tools:
+  [
+    'search/codebase',
+    'search',
+    'search/searchResults',
+    'usages',
+    'vscodeAPI',
+    'problems',
+    'testFailure',
+    'fetch',
+    'githubRepo',
+    'todos',
+    'edit/editFiles',
+    'changes',
+    'new',
+    'insert_edit_into_file',
+    'replace_string_in_file',
+    'create_file',
+    'run_in_terminal',
+    'get_terminal_output',
+    'get_errors',
+    'show_content',
+    'open_file',
+    'list_dir',
+    'read_file',
+    'file_search',
+    'grep_search',
+    'run_subagent',
+  ]
 handoffs:
   - label: Implement the plan
     agent: swerpg-dev-feature
@@ -18,6 +46,7 @@ handoffs:
       validations defined in the plan.
     send: false
 ---
+
 # SWERPG Implementation Plan Agent
 
 > This agent MUST apply `.github/instructions/swerpg-project-instructions.instructions.md` as project-level constraints in addition to this role-specific specification.

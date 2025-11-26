@@ -132,12 +132,12 @@ describe('Talent Mappings', () => {
       expect(extractIsRanked({ Ranked: true })).toBe(true)
       expect(extractIsRanked({ Ranked: 'true' })).toBe(true)
       expect(extractIsRanked({ Ranked: 'TRUE' })).toBe(true)
-      
+
       // Test avec <Ranked>false</Ranked>
       expect(extractIsRanked({ Ranked: false })).toBe(false)
       expect(extractIsRanked({ Ranked: 'false' })).toBe(false)
       expect(extractIsRanked({ Ranked: 'FALSE' })).toBe(false)
-      
+
       // Test avec <IsRanked>
       expect(extractIsRanked({ IsRanked: true })).toBe(true)
       expect(extractIsRanked({ IsRanked: 'true' })).toBe(true)

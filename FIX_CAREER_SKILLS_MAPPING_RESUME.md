@@ -23,7 +23,7 @@ Ajouter le support des codes compétences carrières OggDude manquants (COMP, CO
 **Ajout de 4 nouvelles compétences** :
 
 - `computers` (kno) - caractéristiques: intellect, wisdom
-- `coordination` (exp) - caractéristiques: dexterity, intellect  
+- `coordination` (exp) - caractéristiques: dexterity, intellect
 - `perception` (exp) - caractéristiques: intellect, wisdom
 - `skulduggery` (soc) - caractéristiques: dexterity, intellect
 
@@ -33,24 +33,24 @@ export const SKILLS = Object.freeze({
   computers: {
     id: 'computers',
     category: 'kno',
-    characteristics: ['intellect', 'wisdom']
+    characteristics: ['intellect', 'wisdom'],
   },
   coordination: {
-    id: 'coordination', 
+    id: 'coordination',
     category: 'exp',
-    characteristics: ['dexterity', 'intellect']
+    characteristics: ['dexterity', 'intellect'],
   },
   perception: {
     id: 'perception',
-    category: 'exp', 
-    characteristics: ['intellect', 'wisdom']
+    category: 'exp',
+    characteristics: ['intellect', 'wisdom'],
   },
   skulduggery: {
     id: 'skulduggery',
     category: 'soc',
-    characteristics: ['dexterity', 'intellect']
-  }
-});
+    characteristics: ['dexterity', 'intellect'],
+  },
+})
 ```
 
 ### 2. Mappings OggDude → SWERPG
@@ -82,8 +82,8 @@ export const OGG_DUDE_SKILL_MAP = Object.freeze({
   SKUL: 'skulduggery',
   SKULDUGGERY: 'skulduggery',
   STEAL: 'stealth',
-  STEA: 'stealth'
-});
+  STEA: 'stealth',
+})
 ```
 
 ### 3. Interface utilisateur (accessibilité)
@@ -202,21 +202,21 @@ Test Files  3 passed (3)
 
 ## 📊 Couverture des exigences
 
-| REQ | Description | Status |
-|-----|-------------|--------|
-| REQ-001 | Support codes COMP, CORE, PERC, SKUL, STEAL | ✅ |
-| REQ-002 | Mapping bidirectionnel code→skill→code | ✅ |
-| REQ-003 | Support extraction XML `<Key>CODE</Key>` | ✅ (déjà existant) |
-| REQ-004 | Validation registre SYSTEM.SKILLS | ✅ |
-| REQ-005 | Déduplication et troncature 8 max | ✅ |
-| REQ-006 | Logging codes inconnus | ✅ (préservé) |
-| REQ-007 | Support mode strict | ✅ |
-| REQ-008 | Traçabilité erreur (flags, logs) | ✅ (préservé) |
-| REQ-009 | Synonymes (STEAL, STEA, etc.) | ✅ |
-| REQ-010 | Localisation EN/FR | ✅ |
-| REQ-011 | Conservation workflow existant | ✅ |
-| REQ-012 | Tests automatisés | ✅ |
-| REQ-013 | Accessibilité UI (data-code) | ✅ |
+| REQ     | Description                                 | Status             |
+| ------- | ------------------------------------------- | ------------------ |
+| REQ-001 | Support codes COMP, CORE, PERC, SKUL, STEAL | ✅                 |
+| REQ-002 | Mapping bidirectionnel code→skill→code      | ✅                 |
+| REQ-003 | Support extraction XML `<Key>CODE</Key>`    | ✅ (déjà existant) |
+| REQ-004 | Validation registre SYSTEM.SKILLS           | ✅                 |
+| REQ-005 | Déduplication et troncature 8 max           | ✅                 |
+| REQ-006 | Logging codes inconnus                      | ✅ (préservé)      |
+| REQ-007 | Support mode strict                         | ✅                 |
+| REQ-008 | Traçabilité erreur (flags, logs)            | ✅ (préservé)      |
+| REQ-009 | Synonymes (STEAL, STEA, etc.)               | ✅                 |
+| REQ-010 | Localisation EN/FR                          | ✅                 |
+| REQ-011 | Conservation workflow existant              | ✅                 |
+| REQ-012 | Tests automatisés                           | ✅                 |
+| REQ-013 | Accessibilité UI (data-code)                | ✅                 |
 
 ---
 
@@ -267,15 +267,15 @@ Test Files  3 passed (3)
 
 ## 📁 Fichiers modifiés
 
-| Fichier | Type | Lignes modifiées |
-|---------|------|------------------|
-| `/module/config/skills.mjs` | Config | +20 (4 skills) |
-| `/module/importer/mappings/oggdude-skill-map.mjs` | Mapping | +10 (7 codes) |
-| `/module/applications/sheets/career.mjs` | UI | +1 (dataCode) |
-| `/lang/fr.json` | i18n | +32 (section SKILLS) |
-| `/tests/importer/career-ogg-dude.spec.mjs` | Tests | +57 (3 tests) |
-| `/tests/importer/career-import.integration.spec.mjs` | Tests | +4 (mock) |
-| `/tests/importer/career-oggdude-strict.spec.mjs` | Tests | +4 (mock) |
+| Fichier                                              | Type    | Lignes modifiées     |
+| ---------------------------------------------------- | ------- | -------------------- |
+| `/module/config/skills.mjs`                          | Config  | +20 (4 skills)       |
+| `/module/importer/mappings/oggdude-skill-map.mjs`    | Mapping | +10 (7 codes)        |
+| `/module/applications/sheets/career.mjs`             | UI      | +1 (dataCode)        |
+| `/lang/fr.json`                                      | i18n    | +32 (section SKILLS) |
+| `/tests/importer/career-ogg-dude.spec.mjs`           | Tests   | +57 (3 tests)        |
+| `/tests/importer/career-import.integration.spec.mjs` | Tests   | +4 (mock)            |
+| `/tests/importer/career-oggdude-strict.spec.mjs`     | Tests   | +4 (mock)            |
 
 **Total** : 7 fichiers, ~128 lignes ajoutées/modifiées
 

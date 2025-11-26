@@ -156,7 +156,7 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
       importDomainStatusKeys: Object.keys(importDomainStatus),
       hasSpecializationInStats: !!stats.specialization,
       specializationStats: stats.specialization,
-      hasSpecializationInStatus: !!importDomainStatus.specialization
+      hasSpecializationInStatus: !!importDomainStatus.specialization,
     })
 
     return {
@@ -246,7 +246,7 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
     logger.info('[OggDudeDataImporter] Load OggDude Data', { instance: this })
     // Initialiser immédiatement total avec le nombre de domaines sélectionnés
     const totalDomains = this.domains.filter((d) => d.checked).length
-    
+
     // Read checkbox value directly from the form
     const importToCompendiumCheckbox = this.element.querySelector('input[name="import-to-compendium"]')
     if (importToCompendiumCheckbox) {

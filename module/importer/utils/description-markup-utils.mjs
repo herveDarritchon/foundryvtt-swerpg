@@ -85,7 +85,14 @@ export function buildDescription(rawDescription, sourceInfo) {
 
   const htmlSections = sections.map((section) => {
     const lower = section.toLowerCase()
-    if (lower.startsWith('<h1') || lower.startsWith('<h2') || lower.startsWith('<h3') || lower.startsWith('<h4') || lower.startsWith('<h5') || lower.startsWith('<h6')) {
+    if (
+      lower.startsWith('<h1') ||
+      lower.startsWith('<h2') ||
+      lower.startsWith('<h3') ||
+      lower.startsWith('<h4') ||
+      lower.startsWith('<h5') ||
+      lower.startsWith('<h6')
+    ) {
       return section
     }
     if (lower.startsWith('<ul') || lower.startsWith('<ol') || lower.startsWith('<li') || lower.startsWith('<p') || lower.startsWith('<hr')) {

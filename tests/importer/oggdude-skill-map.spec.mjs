@@ -171,7 +171,7 @@ describe('OggDude Skill Mapping', () => {
   describe('TEST-001: Validation mappings complets', () => {
     it('tous les codes mappés devraient pointer vers des compétences valides dans SYSTEM.SKILLS', () => {
       const invalidMappings = []
-      
+
       for (const [code, skillId] of Object.entries(OGG_DUDE_SKILL_MAP)) {
         // Ignorer les compétences legacy qui n'existent pas dans SWERPG SKILLS
         const legacySkills = ['wilderness', 'arcana', 'science', 'society', 'diplomacy', 'intimidation', 'performance']
@@ -193,11 +193,39 @@ describe('OggDude Skill Mapping', () => {
     it('tous les codes Star Wars Edge couramment utilisés devraient être mappés', () => {
       // Liste des codes identifiés dans les 20 fichiers XML de carrières
       const commonCodes = [
-        'ASTRO', 'ATHL', 'BRAWL', 'CHARM', 'COERC', 'COMP', 'COOL', 'COORD',
-        'CORE', 'DECEP', 'DISC', 'EDU', 'GUNN', 'LEAD', 'LORE', 'MECH',
-        'MED', 'MELEE', 'NEG', 'OUT', 'PERC', 'PILOTPL', 'PILOTSP',
-        'RANGHVY', 'RANGLT', 'RESIL', 'SKUL', 'STEA', 'STEAL', 'SURV',
-        'SW', 'VIGIL', 'XEN',
+        'ASTRO',
+        'ATHL',
+        'BRAWL',
+        'CHARM',
+        'COERC',
+        'COMP',
+        'COOL',
+        'COORD',
+        'CORE',
+        'DECEP',
+        'DISC',
+        'EDU',
+        'GUNN',
+        'LEAD',
+        'LORE',
+        'MECH',
+        'MED',
+        'MELEE',
+        'NEG',
+        'OUT',
+        'PERC',
+        'PILOTPL',
+        'PILOTSP',
+        'RANGHVY',
+        'RANGLT',
+        'RESIL',
+        'SKUL',
+        'STEA',
+        'STEAL',
+        'SURV',
+        'SW',
+        'VIGIL',
+        'XEN',
       ]
 
       const unmappedCodes = []
@@ -225,7 +253,7 @@ describe('OggDude Skill Mapping', () => {
     it('devrait mapper un tableau de codes en filtrant les inconnus', () => {
       const codes = ['COOL', 'COORD', 'UNKNOWN_XYZ', 'PERC', 'LTSABER']
       const result = mapOggDudeSkillCodes(codes)
-      
+
       expect(result).toContain('cool')
       expect(result).toContain('coordination')
       expect(result).toContain('perception')
@@ -236,7 +264,7 @@ describe('OggDude Skill Mapping', () => {
     it('devrait dédupliquer les codes qui mappent vers la même compétence', () => {
       const codes = ['STEA', 'STEAL', 'STEALTH']
       const result = mapOggDudeSkillCodes(codes)
-      
+
       expect(result).toEqual(['stealth'])
     })
 
@@ -245,10 +273,10 @@ describe('OggDude Skill Mapping', () => {
       expect(mapOggDudeSkillCodes()).toEqual([])
     })
 
-    it('devrait préserver l\'ordre d\'apparition', () => {
+    it("devrait préserver l'ordre d'apparition", () => {
       const codes = ['PERC', 'COOL', 'COORD', 'DECEP']
       const result = mapOggDudeSkillCodes(codes)
-      
+
       expect(result).toEqual(['perception', 'cool', 'coordination', 'deception'])
     })
   })

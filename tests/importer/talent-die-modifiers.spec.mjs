@@ -293,11 +293,7 @@ describe('extractTalentSource', () => {
   it('devrait prendre la première source avec page si plusieurs sources', () => {
     const talentData = {
       Sources: {
-        Source: [
-          { _text: 'Book 1' },
-          { _text: 'Book 2', Page: '42' },
-          { _text: 'Book 3', Page: '99' },
-        ],
+        Source: [{ _text: 'Book 1' }, { _text: 'Book 2', Page: '42' }, { _text: 'Book 3', Page: '99' }],
       },
     }
 
