@@ -181,6 +181,9 @@
       },
       "motivation-category": {
         "htmlFields": ["description"]
+      },
+      "motivation": {
+        "htmlFields": ["description"]
       }
     },
     "JournalEntryPage": {

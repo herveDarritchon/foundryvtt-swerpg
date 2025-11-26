@@ -8,6 +8,7 @@ import { buildTalentContext } from './items/talent-ogg-dude.mjs'
 import { buildObligationContext } from './items/obligation-ogg-dude.mjs'
 import { buildSpecializationContext } from './items/specialization-ogg-dude.mjs'
 import { buildMotivationCategoryContext } from './items/motivation-category-ogg-dude.mjs'
+import { buildMotivationContext } from './items/motivation-ogg-dude.mjs'
 import { logger } from '../utils/logger.mjs'
 import { withRetry } from './utils/retry.mjs'
 import { markArchiveSize, markGlobalEnd, markGlobalStart, recordDomainEnd, recordDomainStart } from './utils/global-import-metrics.mjs'
@@ -192,6 +193,7 @@ export default class OggDudeImporter {
     buildContextMap.set('obligation', { type: 'obligation', contextBuilder: buildObligationContext })
     buildContextMap.set('specialization', { type: 'specialization', contextBuilder: buildSpecializationContext })
     buildContextMap.set('motivation-category', { type: 'motivation-category', contextBuilder: buildMotivationCategoryContext })
+    buildContextMap.set('motivation', { type: 'motivation', contextBuilder: buildMotivationContext })
 
     const domainsToImport = domains.filter((domain) => domain.checked).map((domain) => domain.id)
     const unsupportedDomains = domainsToImport.filter((id) => !buildContextMap.has(id))
@@ -320,6 +322,7 @@ export default class OggDudeImporter {
     buildContextMap.set('talent', { type: 'talent', contextBuilder: buildTalentContext })
     buildContextMap.set('obligation', { type: 'obligation', contextBuilder: buildObligationContext })
     buildContextMap.set('specialization', { type: 'specialization', contextBuilder: buildSpecializationContext })
+    buildContextMap.set('motivation', { type: 'motivation', contextBuilder: buildMotivationContext })
 
     const domainsToImport = new Set(domains.filter((d) => d.checked).map((d) => d.id))
     const contextEntries = Array.from(buildContextMap.values()).filter((e) => domainsToImport.has(e.type))
