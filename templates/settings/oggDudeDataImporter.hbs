@@ -177,6 +177,22 @@
                         <td>{{importStats.specialization.rejected}}</td>
                         <td>{{importMetricsFormatted.domains.specialization.duration}}</td>
                     </tr>
+                    <tr>
+                        <td class="{{importDomainStatus.motivation.class}}" aria-label="{{localize importDomainStatus.motivation.labelI18n}}"><i class="fa-solid fa-circle" aria-hidden="true"></i></td>
+                        <th scope="row">{{localize "SETTINGS.OggDudeDataImporter.loadWindow.domains.motivation"}}</th>
+                        <td>{{importStats.motivation.total}}</td>
+                        <td>{{importStats.motivation.imported}}</td>
+                        <td>{{importStats.motivation.rejected}}</td>
+                        <td>{{importMetricsFormatted.domains.motivation.duration}}</td>
+                    </tr>
+                    <tr>
+                        <td class="{{importDomainStatus.motivation-category.class}}" aria-label="{{localize importDomainStatus.motivation-category.labelI18n}}"><i class="fa-solid fa-circle" aria-hidden="true"></i></td>
+                        <th scope="row">{{localize "SETTINGS.OggDudeDataImporter.loadWindow.domains.motivation-category"}}</th>
+                        <td>{{importStats.motivation-category.total}}</td>
+                        <td>{{importStats.motivation-category.imported}}</td>
+                        <td>{{importStats.motivation-category.rejected}}</td>
+                        <td>{{importMetricsFormatted.domains.motivation-category.duration}}</td>
+                    </tr>
                 {{/if}}
                 </tbody>
             </table>

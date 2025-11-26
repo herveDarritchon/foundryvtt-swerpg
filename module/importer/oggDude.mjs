@@ -13,6 +13,7 @@ import { logger } from '../utils/logger.mjs'
 import { withRetry } from './utils/retry.mjs'
 import { markArchiveSize, markGlobalEnd, markGlobalStart, recordDomainEnd, recordDomainStart } from './utils/global-import-metrics.mjs'
 import { getSpecializationImportStats } from './utils/specialization-import-utils.mjs'
+import { getMotivationImportStats, getMotivationCategoryImportStats } from './utils/motivation-import-utils.mjs'
 
 export default class OggDudeImporter {
   /**
@@ -283,6 +284,10 @@ export default class OggDudeImporter {
           const specStats = getSpecializationImportStats()
           domainStatsPayload = specStats
           logger.info('[SpecializationImporter] Statistiques après import', { stats: specStats })
+        } else if (entry.type === 'motivation') {
+          domainStatsPayload = getMotivationImportStats()
+        } else if (entry.type === 'motivation-category') {
+          domainStatsPayload = getMotivationCategoryImportStats()
         }
         emitProgress({ processed, domain: entry.type, phase: 'completed', domainStats: domainStatsPayload })
       } catch (error) {

@@ -2,6 +2,10 @@ import { buildItemImgSystemPath } from '../../settings/directories.mjs'
 import OggDudeImporter from '../oggDude.mjs'
 import OggDudeDataElement from '../../settings/models/OggDudeDataElement.mjs'
 import { logger } from '../../utils/logger.mjs'
+import {
+  resetMotivationCategoryImportStats,
+  incrementMotivationCategoryImportStat,
+} from '../utils/motivation-import-utils.mjs'
 
 /**
  * Motivation Category Mapper
@@ -9,7 +13,9 @@ import { logger } from '../../utils/logger.mjs'
  * @returns {Array} The SwerpgMotivationCategory object array.
  */
 export function motivationCategoryMapper(motivations) {
+  resetMotivationCategoryImportStats()
   return motivations.map((xmlMotivation) => {
+    incrementMotivationCategoryImportStat('total')
     const sources = OggDudeImporter.mapOptionalArray(xmlMotivation?.Sources?.Source, (source) => ({
       book: OggDudeImporter.mapOptionalString(source?._),
       page: OggDudeImporter.mapOptionalString(source?.Page),
@@ -22,8 +28,16 @@ export function motivationCategoryMapper(motivations) {
       })
     }
 
+    const name = OggDudeImporter.mapMandatoryString('Motivation.Name', xmlMotivation?.Name)
+    const key = OggDudeImporter.mapMandatoryString('Motivation.Key', xmlMotivation?.Key)
+
+    if (!name || !key) {
+      incrementMotivationCategoryImportStat('rejected')
+      return null
+    }
+
     return {
-      name: OggDudeImporter.mapMandatoryString('Motivation.Name', xmlMotivation?.Name),
+      name,
       description: OggDudeImporter.mapOptionalString(xmlMotivation?.Description),
       img: 'systems/swerpg/assets/images/icons/motivation-category.svg', // Default icon
       system: {
@@ -32,11 +46,11 @@ export function motivationCategoryMapper(motivations) {
       },
       flags: {
         swerpg: {
-          oggdudeKey: OggDudeImporter.mapMandatoryString('Motivation.Key', xmlMotivation?.Key),
+          oggdudeKey: key,
         },
       },
     }
-  })
+  }).filter(Boolean)
 }
 
 /**
