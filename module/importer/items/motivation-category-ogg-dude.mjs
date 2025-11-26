@@ -25,7 +25,7 @@ export function motivationCategoryMapper(motivations) {
     return {
       name: OggDudeImporter.mapMandatoryString('Motivation.Name', xmlMotivation?.Name),
       description: OggDudeImporter.mapOptionalString(xmlMotivation?.Description),
-      img: 'systems/swerpg/assets/icons/items/motivation-category.svg', // Default icon
+      img: 'systems/swerpg/assets/images/icons/motivation-category.svg', // Default icon
       system: {
         description: OggDudeImporter.mapOptionalString(xmlMotivation?.Description),
         sources,
