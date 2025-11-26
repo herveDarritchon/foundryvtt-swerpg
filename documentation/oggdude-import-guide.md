@@ -90,6 +90,8 @@ Update `lang/en.json`:
 
 - Add the domain label for the importer checkbox:
 
+- Add the domain label for the importer checkbox:
+
   ```json
   "SETTINGS": {
     "OggDudeDataImporter": {
