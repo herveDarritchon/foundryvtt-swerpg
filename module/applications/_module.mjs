@@ -24,6 +24,7 @@ export { default as SpellSheet } from './sheets/spell.mjs'
 export { default as TalentSheet } from './sheets/talent.mjs'
 export { default as TaxonomySheet } from './sheets/taxonomy.mjs'
 export { default as WeaponSheet } from './sheets/weapon.mjs'
+export { default as MotivationSheet } from './sheets/motivation.mjs'
 
 // Sidebar Apps
 export { default as SwerpgCombatTracker } from './sidebar/combat-tracker.mjs'
