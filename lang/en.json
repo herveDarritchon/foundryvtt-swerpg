@@ -1396,8 +1396,6 @@
     "UnexpectedError": "An unexpected error occurred. Please check the console for details."
   },
   "MOTIVATION_CATEGORY": {
-    "SpecificMotivations": "Specific Motivations",
-    "SpecificMotivationsList": "List of Specific Motivations",
     "Sources": "Sources",
     "SourcesList": "List of Sources"
   }
