@@ -16,6 +16,7 @@ import * as dice from './module/dice/_module.mjs'
 import * as documents from './module/documents/_module.mjs'
 import * as models from './module/models/_module.mjs'
 import * as hooks from './module/hooks/_module.mjs'
+import MotivationCategorySheet from './module/applications/sheets/motivation-category.mjs'
 
 // Canvas
 import SwerpgRuler from './module/canvas/ruler.mjs'
@@ -183,6 +184,8 @@ Hooks.once('init', async function () {
     talent: models.SwerpgTalent,
     taxonomy: models.SwerpgTaxonomy,
     weapon: models.SwerpgWeapon,
+    'motivation-category': models.SwerpgMotivationCategory,
+    motivation: models.SwerpgMotivation,
   }
 
   foundry.documents.collections.Items.unregisterSheet('core', foundry.appv1.sheets.ItemSheet)
@@ -257,6 +260,11 @@ Hooks.once('init', async function () {
   foundry.documents.collections.Items.registerSheet(SYSTEM.id, applications.WeaponSheet, {
     types: ['weapon'],
     label: 'SWERPG.SHEETS.Weapon',
+    makeDefault: true,
+  })
+  foundry.documents.collections.Items.registerSheet(SYSTEM.id, MotivationCategorySheet, {
+    types: ['motivation-category'],
+    label: 'SWERPG.SHEETS.MotivationCategory',
     makeDefault: true,
   })
 

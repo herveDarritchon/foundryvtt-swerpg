@@ -1,0 +1,17 @@
+<section class="tab sheet-body flexcol {{tabs.config.cssClass}}" data-tab="{{tabs.config.id}}" data-group="{{tabs.config.group}}">
+
+  <fieldset>
+    <legend>{{localize "MOTIVATION_CATEGORY.Sources"}}</legend>
+    <div class="form-group">
+      <label>{{localize "MOTIVATION_CATEGORY.SourcesList"}}</label>
+      <div class="form-fields">
+        <ul>
+          {{#each source.system.sources as |source|}}
+            <li>{{source.book}} (p. {{source.page}})</li>
+          {{/each}}
+        </ul>
+      </div>
+    </div>
+  </fieldset>
+
+</section>

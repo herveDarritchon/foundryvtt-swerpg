@@ -56,7 +56,8 @@
           "weapon": "Charger les armes",
           "talent": "Charger les talents",
           "obligation": "Charger les obligations",
-          "specialization": "Charger les spécialisations"
+          "specialization": "Charger les spécialisations",
+          "motivation-category": "Charger les talents"
         },
         "stats": {
           "title": "Statistiques d'import",
