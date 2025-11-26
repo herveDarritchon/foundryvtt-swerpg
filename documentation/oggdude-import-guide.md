@@ -143,10 +143,10 @@ Update all the localization files (e.g., `lang/en.json` and `lang/fr.json`):
 
 ## 9. Create the Sheet
 
-1. **Class**: Create `module/applications/sheets/my-new-type.mjs` extending `SwerpgBaseItemSheet`.
-2. **Template**: Create `templates/sheets/partials/my-new-type-config.hbs`.
-3. **Registration**: Register the sheet in `swerpg.mjs`.
-4. **Export**: Export the sheet class in `module/applications/_module.mjs`.
+Please refer to the [Item Sheet Creation Guide](item-sheet-creation-guide.md) for detailed instructions on creating the sheet class, template, and registering it in the system.
+
+1. **Follow the Guide**: Create the class and template as described in the guide.
+2. **Registration**: Ensure the sheet is registered in `swerpg.mjs` as shown in the guide.
 
 ## 10. Verification
 
