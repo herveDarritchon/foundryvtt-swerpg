@@ -67,6 +67,14 @@ Create a function (e.g., `buildMyTypeContext`) that prepares the import context.
       ```
 
 - **Image Paths**: Define where images should be stored.
+  - Use `buildItemImgSystemPath` from `module/settings/directories.mjs` for system paths to ensure consistency.
+
+    ```javascript
+    import { buildItemImgSystemPath } from '../../settings/directories.mjs'
+    // ...
+    systemPath: buildItemImgSystemPath('my-icon.svg'),
+    ```
+
 - **Folder**: Define the folder name in Foundry.
 
 ## 5. Register the Importer
