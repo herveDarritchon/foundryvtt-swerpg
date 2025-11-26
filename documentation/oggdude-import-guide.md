@@ -86,9 +86,7 @@ Create a function (e.g., `buildMyTypeContext`) that prepares the import context.
 
 ## 6. Localization
 
-Update `lang/en.json`:
-
-- Add the domain label for the importer checkbox:
+Update all the localization files (e.g., `lang/en.json` and `lang/fr.json`):
 
 - Add the domain label for the importer checkbox:
 
