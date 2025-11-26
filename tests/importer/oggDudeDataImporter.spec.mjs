@@ -18,7 +18,7 @@ describe('OggDudeDataImporter - logique interne basique', () => {
   })
 
   it('initialise les domaines', () => {
-    expect(importer.domains).toHaveLength(8) // weapon, armor, gear, species, career, talent, obligation, specialization
+    expect(importer.domains).toHaveLength(10)
     expect(importer.domains[0]).toHaveProperty('id')
     expect(importer.domains[0]).toHaveProperty('checked')
   })
