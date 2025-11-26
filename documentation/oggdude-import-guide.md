@@ -146,6 +146,7 @@ Update all the localization files (e.g., `lang/en.json` and `lang/fr.json`):
 1. **Class**: Create `module/applications/sheets/my-new-type.mjs` extending `SwerpgBaseItemSheet`.
 2. **Template**: Create `templates/sheets/partials/my-new-type-config.hbs`.
 3. **Registration**: Register the sheet in `swerpg.mjs`.
+4. **Export**: Export the sheet class in `module/applications/_module.mjs`.
 
 ## 10. Verification
 
