@@ -1,3 +1,8 @@
+import { ImportStats, clampNumber, sanitizeText } from './import-stats.mjs'
+
+// Re-export helpers for backward compatibility
+export { clampNumber, sanitizeText }
+
 /**
  * Utilitaires de statistiques pour l'import des talents OggDude
  * Fournit observabilité pour métriques globales et tests unitaires.
@@ -13,7 +18,7 @@ export const FLAG_STRICT_TALENT_VALIDATION = false
  * Structure interne des statistiques d'import talent
  * @private
  */
-let _talentStats = {
+const talentStats = new ImportStats({
   processed: 0,
   created: 0,
   failed: 0,
@@ -26,18 +31,15 @@ let _talentStats = {
   unresolvedNodes: 0,
   invalidPrerequisites: 0,
   transformed: 0,
-  dieModifiers: 0, // Nombre de talents avec DieModifiers
-  nodeDetails: new Set(), // Ensemble des nodes inconnus
-  activationDetails: new Set(), // Ensemble des activations inconnues
-  rejectionReasons: [], // Raisons de rejet détaillées
-}
+  dieModifiers: 0,
+})
 
 /**
  * Reset des statistiques avant chaque session d'import.
  * DOIT être appelé avant chaque import pour éviter fuite state.
  */
 export function resetTalentImportStats() {
-  _talentStats = {
+  talentStats.reset({
     processed: 0,
     created: 0,
     failed: 0,
@@ -51,10 +53,7 @@ export function resetTalentImportStats() {
     invalidPrerequisites: 0,
     transformed: 0,
     dieModifiers: 0,
-    nodeDetails: new Set(),
-    activationDetails: new Set(),
-    rejectionReasons: [],
-  }
+  })
 }
 
 /**
@@ -63,9 +62,7 @@ export function resetTalentImportStats() {
  * @param {number} amount - Montant à ajouter (défaut: 1)
  */
 export function incrementTalentImportStat(key, amount = 1) {
-  if (Object.hasOwn(_talentStats, key) && typeof _talentStats[key] === 'number') {
-    _talentStats[key] += amount
-  }
+  talentStats.increment(key, amount)
 }
 
 /**
@@ -73,8 +70,7 @@ export function incrementTalentImportStat(key, amount = 1) {
  * @param {string} nodeId - Identifiant du nœud inconnu
  */
 export function addTalentUnknownNode(nodeId) {
-  _talentStats.unresolvedNodes += 1
-  _talentStats.nodeDetails.add(nodeId)
+  talentStats.addDetail('unresolvedNodes', nodeId, 'nodeDetails')
 }
 
 /**
@@ -82,8 +78,7 @@ export function addTalentUnknownNode(nodeId) {
  * @param {string} activationCode - Code d'activation inconnu
  */
 export function addTalentUnknownActivation(activationCode) {
-  _talentStats.unknownActivations += 1
-  _talentStats.activationDetails.add(activationCode)
+  talentStats.addDetail('unknownActivations', activationCode, 'activationDetails')
 }
 
 /**
@@ -91,7 +86,7 @@ export function addTalentUnknownActivation(activationCode) {
  * @param {string} reason - La raison du rejet
  */
 export function addTalentRejectionReason(reason) {
-  _talentStats.rejectionReasons.push(reason)
+  talentStats.addRejectionReason(reason)
 }
 
 /**
@@ -99,73 +94,14 @@ export function addTalentRejectionReason(reason) {
  * @returns {object} Statistiques complètes d'import
  */
 export function getTalentImportStats() {
+  const stats = talentStats.getStats()
   return {
-    processed: _talentStats.processed,
-    created: _talentStats.created,
-    failed: _talentStats.failed,
-    validation_failed: _talentStats.validation_failed,
-    transform_failed: _talentStats.transform_failed,
-    contextMaps: _talentStats.contextMaps,
-    contextMapErrors: _talentStats.contextMapErrors,
-    duplicates: _talentStats.duplicates,
-    unknownActivations: _talentStats.unknownActivations,
-    unresolvedNodes: _talentStats.unresolvedNodes,
-    invalidPrerequisites: _talentStats.invalidPrerequisites,
-    transformed: _talentStats.transformed,
-    dieModifiers: _talentStats.dieModifiers,
+    ...stats,
     // Propriétés calculées pour compatibilité
-    total: _talentStats.processed,
-    rejected: _talentStats.failed,
-    imported: _talentStats.processed - _talentStats.failed,
-    // Détails
-    nodeDetails: Array.from(_talentStats.nodeDetails),
-    activationDetails: Array.from(_talentStats.activationDetails),
-    rejectionReasons: [..._talentStats.rejectionReasons],
+    total: stats.processed,
+    rejected: stats.failed,
+    imported: stats.processed - stats.failed,
   }
-}
-
-/**
- * Borne une valeur numérique entre un minimum et un maximum
- * @param {*} value - La valeur à borner
- * @param {number} min - Valeur minimum
- * @param {number} max - Valeur maximum
- * @param {number} defaultValue - Valeur par défaut si value n'est pas numérique
- * @returns {number} La valeur bornée
- */
-export function clampNumber(value, min, max, defaultValue) {
-  const num = Number.parseInt(value)
-  if (Number.isNaN(num)) {
-    return defaultValue
-  }
-  return Math.max(min, Math.min(max, num))
-}
-
-/**
- * Sanitise une chaîne de texte pour éviter les injections et normaliser
- * @param {*} str - La chaîne à sanitiser
- * @returns {string} La chaîne sanitisée
- */
-export function sanitizeText(str) {
-  if (str === null || str === undefined) {
-    return ''
-  }
-
-  const text = String(str).trim().replaceAll(/\s+/g, ' ') // Normaliser les espaces multiples
-
-  // Limiter la longueur à 2000 caractères comme dans les tests
-  return text.length > 2000 ? text.substring(0, 2000) : text
-}
-
-/**
- * Statistiques d'import des talents
- * @type {Object}
- */
-let talentImportStats = {
-  total: 0,
-  rejected: 0,
-  get imported() {
-    return this.total - this.rejected
-  },
 }
 
 /**
@@ -207,5 +143,5 @@ export function generateTalentKey(name) {
  * @returns {object} Référence interne aux stats (lecture seule)
  */
 export function _unsafeInternalTalentStatsRef() {
-  return _talentStats
+  return talentStats.getStats()
 }

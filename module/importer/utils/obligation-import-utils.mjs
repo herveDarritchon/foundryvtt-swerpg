@@ -1,25 +1,20 @@
+import { ImportStats } from './import-stats.mjs'
 import { logger } from '../../utils/logger.mjs'
 
-let stats = {
-  total: 0,
+const obligationStats = new ImportStats({
   imported: 0,
-  rejected: 0,
   unknownProperties: 0,
-  propertyDetails: [],
-}
+})
 
 /**
  * Reset obligation import statistics to initial state.
  * Called at the beginning of each import batch.
  */
 export function resetObligationImportStats() {
-  stats = {
-    total: 0,
+  obligationStats.reset({
     imported: 0,
-    rejected: 0,
     unknownProperties: 0,
-    propertyDetails: [],
-  }
+  })
 }
 
 /**
@@ -28,9 +23,7 @@ export function resetObligationImportStats() {
  * @param {number} value - The value to add (default: 1)
  */
 export function incrementObligationImportStat(key, value = 1) {
-  if (stats[key] !== undefined) {
-    stats[key] += value
-  }
+  obligationStats.increment(key, value)
 }
 
 /**
@@ -39,11 +32,8 @@ export function incrementObligationImportStat(key, value = 1) {
  * @param {string} property - The name of the unknown property
  */
 export function addUnknownObligationProperty(property) {
-  stats.unknownProperties++
-  if (!stats.propertyDetails.includes(property)) {
-    stats.propertyDetails.push(property)
-    logger.debug('[ObligationImporter] Unknown property detected', { property })
-  }
+  obligationStats.addDetail('unknownProperties', property, 'propertyDetails')
+  logger.debug('[ObligationImporter] Unknown property detected', { property })
 }
 
 /**
@@ -51,7 +41,7 @@ export function addUnknownObligationProperty(property) {
  * @returns {Object} Copy of the current stats object
  */
 export function getObligationImportStats() {
-  return { ...stats }
+  return obligationStats.getStats()
 }
 
 /**

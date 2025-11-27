@@ -1,45 +1,32 @@
+import { ImportStats } from './import-stats.mjs'
+
 // Utilities de statistiques pour l'import des équipements (gear) OggDude
 // Permet une observabilité homogène avec armor & weapon.
 
 export const FLAG_STRICT_GEAR_VALIDATION = false
 
-let _gearStats = {
-  total: 0,
-  rejected: 0,
+const gearStats = new ImportStats({
   unknownCategories: 0,
-  categoryDetails: new Set(),
-}
+})
 
 export function resetGearImportStats() {
-  _gearStats = {
-    total: 0,
-    rejected: 0,
+  gearStats.reset({
     unknownCategories: 0,
-    categoryDetails: new Set(),
-  }
+  })
 }
 
 export function incrementGearImportStat(key) {
-  if (Object.prototype.hasOwnProperty.call(_gearStats, key)) {
-    _gearStats[key] += 1
-  }
+  gearStats.increment(key)
 }
 
 export function addGearUnknownCategory(code) {
-  _gearStats.unknownCategories += 1
-  _gearStats.categoryDetails.add(code)
+  gearStats.addDetail('unknownCategories', code, 'categoryDetails')
 }
 
 export function getGearImportStats() {
-  return {
-    total: _gearStats.total,
-    rejected: _gearStats.rejected,
-    imported: _gearStats.total - _gearStats.rejected,
-    unknownCategories: _gearStats.unknownCategories,
-    categoryDetails: Array.from(_gearStats.categoryDetails),
-  }
+  return gearStats.getStats()
 }
 
 export function _unsafeInternalGearStatsRef() {
-  return _gearStats
+  return gearStats.getStats()
 }
