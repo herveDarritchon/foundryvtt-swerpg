@@ -1,3 +1,5 @@
+import { ImportStats } from './import-stats.mjs'
+
 // Utilities de statistiques pour l'import des armes OggDude
 // Centralise la logique pour support d'un agrégateur global et tests unitaires.
 
@@ -5,27 +7,19 @@
 export const FLAG_STRICT_WEAPON_VALIDATION = false
 
 // Structure interne des statistiques (Sets pour détails uniques)
-let _weaponStats = {
-  total: 0,
-  rejected: 0,
+const weaponStats = new ImportStats({
   unknownSkills: 0,
   unknownQualities: 0,
-  skillDetails: new Set(),
-  qualityDetails: new Set(),
-}
+})
 
 /**
  * Reset des statistiques avant chaque session d'import.
  */
 export function resetWeaponImportStats() {
-  _weaponStats = {
-    total: 0,
-    rejected: 0,
+  weaponStats.reset({
     unknownSkills: 0,
     unknownQualities: 0,
-    skillDetails: new Set(),
-    qualityDetails: new Set(),
-  }
+  })
 }
 
 /**
@@ -33,9 +27,7 @@ export function resetWeaponImportStats() {
  * @param {('total'|'rejected'|'unknownSkills'|'unknownQualities')} key
  */
 export function incrementWeaponImportStat(key) {
-  if (Object.prototype.hasOwnProperty.call(_weaponStats, key)) {
-    _weaponStats[key] += 1
-  }
+  weaponStats.increment(key)
 }
 
 /**
@@ -43,8 +35,7 @@ export function incrementWeaponImportStat(key) {
  * @param {string} code
  */
 export function addWeaponUnknownSkill(code) {
-  _weaponStats.unknownSkills += 1
-  _weaponStats.skillDetails.add(code)
+  weaponStats.addDetail('unknownSkills', code, 'skillDetails')
 }
 
 /**
@@ -52,8 +43,7 @@ export function addWeaponUnknownSkill(code) {
  * @param {string} code
  */
 export function addWeaponUnknownQuality(code) {
-  _weaponStats.unknownQualities += 1
-  _weaponStats.qualityDetails.add(code)
+  weaponStats.addDetail('unknownQualities', code, 'qualityDetails')
 }
 
 /**
@@ -61,15 +51,7 @@ export function addWeaponUnknownQuality(code) {
  * @returns {{total:number,rejected:number,imported:number,unknownSkills:number,unknownQualities:number,skillDetails:string[],qualityDetails:string[]}}
  */
 export function getWeaponImportStats() {
-  return {
-    total: _weaponStats.total,
-    rejected: _weaponStats.rejected,
-    imported: _weaponStats.total - _weaponStats.rejected,
-    unknownSkills: _weaponStats.unknownSkills,
-    unknownQualities: _weaponStats.unknownQualities,
-    skillDetails: Array.from(_weaponStats.skillDetails),
-    qualityDetails: Array.from(_weaponStats.qualityDetails),
-  }
+  return weaponStats.getStats()
 }
 
 /**
@@ -77,5 +59,5 @@ export function getWeaponImportStats() {
  * À utiliser prudemment (ne pas modifier en dehors de ce module).
  */
 export function _unsafeInternalWeaponStatsRef() {
-  return _weaponStats
+  return weaponStats.getStats()
 }

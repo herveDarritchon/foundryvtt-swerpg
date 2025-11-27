@@ -1,27 +1,17 @@
+import { ImportStats } from './import-stats.mjs'
+
 // Statistiques d'import pour Duty OggDude
 
-let _dutyStats = {
-  total: 0,
-  rejected: 0,
-}
+const dutyStats = new ImportStats()
 
 export function resetDutyImportStats() {
-  _dutyStats = {
-    total: 0,
-    rejected: 0,
-  }
+  dutyStats.reset()
 }
 
 export function incrementDutyImportStat(key, amount = 1) {
-  if (Object.prototype.hasOwnProperty.call(_dutyStats, key)) {
-    _dutyStats[key] += amount
-  }
+  dutyStats.increment(key, amount)
 }
 
 export function getDutyImportStats() {
-  return {
-    total: _dutyStats.total,
-    rejected: _dutyStats.rejected,
-    imported: _dutyStats.total - _dutyStats.rejected,
-  }
+  return dutyStats.getStats()
 }
