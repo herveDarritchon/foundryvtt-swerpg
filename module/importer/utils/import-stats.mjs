@@ -48,12 +48,13 @@ export class ImportStats {
    * @param {string} setKey - The key for the set in the output object (e.g., 'skillDetails')
    */
   addDetail(key, detail, setKey) {
-    this.increment(key)
-    
     if (!this._customSets.has(setKey)) {
       this._customSets.set(setKey, new Set())
     }
     this._customSets.get(setKey).add(detail)
+
+    // Update counter to reflect the actual size of the set (unique entries)
+    this._stats[key] = this._customSets.get(setKey).size
   }
 
   /**

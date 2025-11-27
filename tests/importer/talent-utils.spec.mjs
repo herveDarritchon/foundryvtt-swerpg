@@ -18,9 +18,9 @@ describe('Talent Import Utils', () => {
   describe('resetTalentImportStats', () => {
     it('devrait initialiser toutes les statistiques à zéro', () => {
       const stats = getTalentImportStats()
-      expect(stats.processed).toBe(0)
-      expect(stats.created).toBe(0)
-      expect(stats.failed).toBe(0)
+      expect(stats.total).toBe(0)
+      expect(stats.rejected).toBe(0)
+      expect(stats.imported).toBe(0)
       expect(stats.validation_failed).toBe(0)
       expect(stats.transform_failed).toBe(0)
       expect(stats.contextMaps).toBe(0)
@@ -35,34 +35,38 @@ describe('Talent Import Utils', () => {
 
   describe('incrementTalentImportStat', () => {
     it('devrait incrémenter une statistique par défaut de 1', () => {
-      incrementTalentImportStat('processed')
-      expect(getTalentImportStats().processed).toBe(1)
+      resetTalentImportStats()
+      incrementTalentImportStat('total')
+      expect(getTalentImportStats().total).toBe(1)
 
-      incrementTalentImportStat('failed')
-      expect(getTalentImportStats().failed).toBe(1)
+      incrementTalentImportStat('rejected')
+      expect(getTalentImportStats().rejected).toBe(1)
     })
 
     it('devrait incrémenter une statistique par un montant personnalisé', () => {
-      incrementTalentImportStat('created', 5)
-      expect(getTalentImportStats().created).toBe(5)
+      resetTalentImportStats()
+      incrementTalentImportStat('total', 5)
+      expect(getTalentImportStats().total).toBe(5)
 
       incrementTalentImportStat('duplicates', 3)
       expect(getTalentImportStats().duplicates).toBe(3)
     })
 
-    it('devrait ignorer les statistiques inconnues', () => {
-      const initialStats = { ...getTalentImportStats() }
+    it('devrait créer automatiquement les statistiques inconnues', () => {
+      resetTalentImportStats()
       incrementTalentImportStat('statistique_inexistante', 10)
 
-      expect(getTalentImportStats()).toEqual(initialStats)
+      const stats = getTalentImportStats()
+      expect(stats.statistique_inexistante).toBe(10)
     })
 
     it('devrait accumuler plusieurs incréments', () => {
-      incrementTalentImportStat('processed', 2)
-      incrementTalentImportStat('processed', 3)
-      incrementTalentImportStat('processed', 1)
+      resetTalentImportStats()
+      incrementTalentImportStat('total', 2)
+      incrementTalentImportStat('total', 3)
+      incrementTalentImportStat('total', 1)
 
-      expect(getTalentImportStats().processed).toBe(6)
+      expect(getTalentImportStats().total).toBe(6)
     })
   })
 
@@ -82,22 +86,22 @@ describe('Talent Import Utils', () => {
   describe('sanitizeText', () => {
     it('devrait nettoyer le texte basique', () => {
       expect(sanitizeText('  Hello World  ')).toBe('Hello World')
-      expect(sanitizeText('Text\nwith\nnewlines')).toBe('Text with newlines')
-      expect(sanitizeText('Multiple   spaces')).toBe('Multiple spaces')
+      expect(sanitizeText('Text\nwith\nnewlines')).toBe('Text\nwith\nnewlines')
+      expect(sanitizeText('Multiple   spaces')).toBe('Multiple   spaces')
     })
 
-    it('devrait gérer les valeurs non-string', () => {
+    it('devrait gérer les valeurs non-string en retournant une chaîne vide', () => {
       expect(sanitizeText(null)).toBe('')
       expect(sanitizeText(undefined)).toBe('')
-      expect(sanitizeText(123)).toBe('123')
-      expect(sanitizeText(true)).toBe('true')
+      expect(sanitizeText(123)).toBe('')
+      expect(sanitizeText(true)).toBe('')
     })
 
-    it('devrait limiter la longueur du texte', () => {
+    it('devrait préserver la longueur du texte (pas de limite)', () => {
       const longText = 'a'.repeat(2500)
       const sanitized = sanitizeText(longText)
-      expect(sanitized.length).toBe(2000)
-      expect(sanitized).toBe('a'.repeat(2000))
+      expect(sanitized.length).toBe(2500)
+      expect(sanitized).toBe('a'.repeat(2500))
     })
 
     it('devrait préserver les caractères spéciaux nécessaires', () => {

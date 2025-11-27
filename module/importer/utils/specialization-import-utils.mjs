@@ -9,17 +9,9 @@ import { ImportStats } from './import-stats.mjs'
  * @private
  */
 const specializationStats = new ImportStats({
-  created: 0,
-  updated: 0,
-  failed: 0,
-})
-
-// Additional stats not covered by ImportStats
-let _additionalSpecializationStats = {
   unknownSkills: 0,
   skillCount: 0,
-  skillDetails: new Set(),
-}
+})
 
 /**
  * Obtient les statistiques d'import des spécialisations
@@ -29,10 +21,7 @@ export function getSpecializationImportStats() {
   const stats = specializationStats.getStats()
   return {
     ...stats,
-    imported: stats.created + stats.updated,
-    unknownSkills: _additionalSpecializationStats.unknownSkills,
-    skillCount: _additionalSpecializationStats.skillCount,
-    skillDetails: Array.from(_additionalSpecializationStats.skillDetails),
+    failed: stats.rejected, // Alias pour compatibilité
   }
 }
 
@@ -41,15 +30,9 @@ export function getSpecializationImportStats() {
  */
 export function resetSpecializationImportStats() {
   specializationStats.reset({
-    created: 0,
-    updated: 0,
-    failed: 0,
-  })
-  _additionalSpecializationStats = {
     unknownSkills: 0,
     skillCount: 0,
-    skillDetails: new Set(),
-  }
+  })
 }
 
 /**
@@ -58,6 +41,7 @@ export function resetSpecializationImportStats() {
  * @param {number} amount - Le montant à ajouter (défaut: 1)
  */
 export function incrementSpecializationImportStat(stat, amount = 1) {
+  if (stat === 'failed') stat = 'rejected'
   specializationStats.increment(stat, amount)
 }
 
@@ -70,12 +54,5 @@ export function addSpecializationRejectionReason(reason) {
 }
 
 export function addSpecializationUnknownSkill(code) {
-  _additionalSpecializationStats.unknownSkills += 1
-  _additionalSpecializationStats.skillDetails.add(code)
-}
-
-export function addSpecializationSkillCount(count) {
-  if (typeof count === 'number' && count > 0) {
-    _additionalSpecializationStats.skillCount += count
-  }
+  specializationStats.addDetail('unknownSkills', code, 'skillDetails')
 }

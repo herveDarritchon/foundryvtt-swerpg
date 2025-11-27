@@ -2,7 +2,6 @@ import { ImportStats } from './import-stats.mjs'
 import { logger } from '../../utils/logger.mjs'
 
 const obligationStats = new ImportStats({
-  imported: 0,
   unknownProperties: 0,
 })
 
@@ -12,14 +11,13 @@ const obligationStats = new ImportStats({
  */
 export function resetObligationImportStats() {
   obligationStats.reset({
-    imported: 0,
     unknownProperties: 0,
   })
 }
 
 /**
  * Increment a specific obligation import statistic.
- * @param {string} key - The statistic key to increment ('total', 'imported', 'rejected', etc.)
+ * @param {string} key - The statistic key to increment ('total', 'rejected', etc.)
  * @param {number} value - The value to add (default: 1)
  */
 export function incrementObligationImportStat(key, value = 1) {
