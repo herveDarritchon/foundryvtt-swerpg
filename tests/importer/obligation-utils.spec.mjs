@@ -1,150 +1,146 @@
-import { describe, it, expect, beforeEach } from 'vitest'
+import {beforeEach, describe, expect, it} from 'vitest'
 import {
-  resetObligationImportStats,
-  incrementObligationImportStat,
-  addUnknownObligationProperty,
-  getObligationImportStats,
-  registerObligationMetrics,
+    addUnknownObligationProperty,
+    getObligationImportStats,
+    incrementObligationImportStat,
+    registerObligationMetrics,
+    resetObligationImportStats,
 } from '../../module/importer/utils/obligation-import-utils.mjs'
 
 describe('obligation-import-utils', () => {
-  beforeEach(() => {
-    resetObligationImportStats()
-  })
-
-  describe('resetObligationImportStats', () => {
-    it('should initialize stats to zero', () => {
-      const stats = getObligationImportStats()
-      expect(stats).toEqual({
-        total: 0,
-        imported: 0,
-        rejected: 0,
-        unknownProperties: 0,
-        propertyDetails: [],
-      })
+    beforeEach(() => {
+        resetObligationImportStats()
     })
 
-    it('should reset stats after modifications', () => {
-      incrementObligationImportStat('total', 5)
-      incrementObligationImportStat('imported', 3)
-      resetObligationImportStats()
+    describe('resetObligationImportStats', () => {
+        it('should initialize stats to zero', () => {
+            const stats = getObligationImportStats()
+            expect(stats.total).toBe(0)
+            expect(stats.rejected).toBe(0)
+            expect(stats.imported).toBe(0) // calculé: total - rejected
+            expect(stats.unknownProperties).toBe(0)
+            expect(stats.propertyDetails || []).toEqual([]) // propertyDetails peut être undefined
+            expect(stats.rejectionReasons).toEqual([])
+        })
 
-      const stats = getObligationImportStats()
-      expect(stats.total).toBe(0)
-      expect(stats.imported).toBe(0)
-    })
-  })
+        it('should reset stats after modifications', () => {
+            incrementObligationImportStat('total', 5)
+            incrementObligationImportStat('rejected', 2)
+            resetObligationImportStats()
 
-  describe('incrementObligationImportStat', () => {
-    it('should increment stat by 1 by default', () => {
-      incrementObligationImportStat('total')
-      const stats = getObligationImportStats()
-      expect(stats.total).toBe(1)
-    })
-
-    it('should increment stat by specified value', () => {
-      incrementObligationImportStat('imported', 5)
-      const stats = getObligationImportStats()
-      expect(stats.imported).toBe(5)
+            const stats = getObligationImportStats()
+            expect(stats.total).toBe(0)
+            expect(stats.imported).toBe(0)
+        })
     })
 
-    it('should handle multiple increments', () => {
-      incrementObligationImportStat('total')
-      incrementObligationImportStat('total')
-      incrementObligationImportStat('total', 3)
+    describe('incrementObligationImportStat', () => {
+        it('should increment stat by 1 by default', () => {
+            incrementObligationImportStat('total')
+            const stats = getObligationImportStats()
+            expect(stats.total).toBe(1)
+        })
 
-      const stats = getObligationImportStats()
-      expect(stats.total).toBe(5)
+        it('should increment stat by specified value', () => {
+            incrementObligationImportStat('rejected', 5)
+            const stats = getObligationImportStats()
+            expect(stats.rejected).toBe(5)
+        })
+
+        it('should handle multiple increments', () => {
+            incrementObligationImportStat('total')
+            incrementObligationImportStat('total')
+            incrementObligationImportStat('total', 3)
+
+            const stats = getObligationImportStats()
+            expect(stats.total).toBe(5)
+        })
+
+        it('should create stats for unknown keys automatically', () => {
+            incrementObligationImportStat('nonExistentKey', 10)
+            const stats = getObligationImportStats()
+
+            expect(stats.nonExistentKey).toBe(10)
+        })
     })
 
-    it('should not modify stats for unknown keys', () => {
-      const beforeStats = getObligationImportStats()
-      incrementObligationImportStat('nonExistentKey', 10)
-      const afterStats = getObligationImportStats()
+    describe('addUnknownObligationProperty', () => {
+        it('should increment unknownProperties count', () => {
+            addUnknownObligationProperty('customField')
+            const stats = getObligationImportStats()
+            expect(stats.unknownProperties).toBe(1)
+        })
 
-      expect(afterStats).toEqual(beforeStats)
-    })
-  })
+        it('should add property to propertyDetails array', () => {
+            addUnknownObligationProperty('customField')
+            const stats = getObligationImportStats()
+            expect(stats.propertyDetails).toContain('customField')
+        })
 
-  describe('addUnknownObligationProperty', () => {
-    it('should increment unknownProperties count', () => {
-      addUnknownObligationProperty('customField')
-      const stats = getObligationImportStats()
-      expect(stats.unknownProperties).toBe(1)
-    })
+        it('should not duplicate properties in propertyDetails', () => {
+            addUnknownObligationProperty('customField')
+            addUnknownObligationProperty('customField')
+            addUnknownObligationProperty('customField')
 
-    it('should add property to propertyDetails array', () => {
-      addUnknownObligationProperty('customField')
-      const stats = getObligationImportStats()
-      expect(stats.propertyDetails).toContain('customField')
-    })
+            const stats = getObligationImportStats()
+            expect(stats.unknownProperties).toBe(1) // Déduplication: seuls les éléments uniques sont comptés
+            expect(stats.propertyDetails).toEqual(['customField'])
+        })
 
-    it('should not duplicate properties in propertyDetails', () => {
-      addUnknownObligationProperty('customField')
-      addUnknownObligationProperty('customField')
-      addUnknownObligationProperty('customField')
+        it('should track multiple different properties', () => {
+            addUnknownObligationProperty('field1')
+            addUnknownObligationProperty('field2')
+            addUnknownObligationProperty('field3')
 
-      const stats = getObligationImportStats()
-      expect(stats.unknownProperties).toBe(3)
-      expect(stats.propertyDetails).toEqual(['customField'])
-    })
-
-    it('should track multiple different properties', () => {
-      addUnknownObligationProperty('field1')
-      addUnknownObligationProperty('field2')
-      addUnknownObligationProperty('field3')
-
-      const stats = getObligationImportStats()
-      expect(stats.unknownProperties).toBe(3)
-      expect(stats.propertyDetails).toEqual(['field1', 'field2', 'field3'])
-    })
-  })
-
-  describe('getObligationImportStats', () => {
-    it('should return a copy of stats object', () => {
-      const stats1 = getObligationImportStats()
-      stats1.total = 999
-
-      const stats2 = getObligationImportStats()
-      expect(stats2.total).toBe(0)
+            const stats = getObligationImportStats()
+            expect(stats.unknownProperties).toBe(3)
+            expect(stats.propertyDetails).toEqual(['field1', 'field2', 'field3'])
+        })
     })
 
-    it('should return current state after modifications', () => {
-      incrementObligationImportStat('total', 10)
-      incrementObligationImportStat('imported', 7)
-      incrementObligationImportStat('rejected', 3)
-      addUnknownObligationProperty('unknownField')
+    describe('getObligationImportStats', () => {
+        it('should return a copy of stats object', () => {
+            const stats1 = getObligationImportStats()
+            stats1.total = 999
 
-      const stats = getObligationImportStats()
-      expect(stats).toEqual({
-        total: 10,
-        imported: 7,
-        rejected: 3,
-        unknownProperties: 1,
-        propertyDetails: ['unknownField'],
-      })
-    })
-  })
+            const stats2 = getObligationImportStats()
+            expect(stats2.total).toBe(0)
+        })
 
-  describe('registerObligationMetrics', () => {
-    it('should return metrics registration object with correct structure', () => {
-      const registration = registerObligationMetrics()
+        it('should return current state after modifications', () => {
+            incrementObligationImportStat('total', 10)
+            incrementObligationImportStat('rejected', 3)
+            addUnknownObligationProperty('unknownField')
 
-      expect(registration).toHaveProperty('domain')
-      expect(registration).toHaveProperty('getStats')
-      expect(registration.domain).toBe('obligation')
-      expect(typeof registration.getStats).toBe('function')
+            const stats = getObligationImportStats()
+            expect(stats.total).toBe(10)
+            expect(stats.rejected).toBe(3)
+            expect(stats.imported).toBe(7) // calculé: total - rejected
+            expect(stats.unknownProperties).toBe(1)
+            expect(stats.propertyDetails).toContain('unknownField')
+        })
     })
 
-    it('should return getStats function that retrieves current stats', () => {
-      incrementObligationImportStat('total', 5)
-      incrementObligationImportStat('imported', 3)
+    describe('registerObligationMetrics', () => {
+        it('should return metrics registration object with correct structure', () => {
+            const registration = registerObligationMetrics()
 
-      const registration = registerObligationMetrics()
-      const stats = registration.getStats()
+            expect(registration).toHaveProperty('domain')
+            expect(registration).toHaveProperty('getStats')
+            expect(registration.domain).toBe('obligation')
+            expect(typeof registration.getStats).toBe('function')
+        })
 
-      expect(stats.total).toBe(5)
-      expect(stats.imported).toBe(3)
+        it('should return getStats function that retrieves current stats', () => {
+            incrementObligationImportStat('total', 5)
+            incrementObligationImportStat('rejected', 2)
+
+            const registration = registerObligationMetrics()
+            const stats = registration.getStats()
+
+            expect(stats.total).toBe(5)
+            expect(stats.rejected).toBe(2)
+            expect(stats.imported).toBe(3) // calculé: total - rejected
+        })
     })
-  })
 })

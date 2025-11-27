@@ -44,11 +44,11 @@ export class OggDudeTalentMapper {
           const context = this.buildSingleTalentContext(talentData, options)
           if (context && context.key) {
             contextMap.set(context.key, context)
-            incrementTalentImportStat('processed')
+            incrementTalentImportStat('total')
           }
         } catch (error) {
           logger.error('[OggDudeTalentMapper] Error building talent context:', error)
-          incrementTalentImportStat('failed')
+          incrementTalentImportStat('rejected')
         }
       }
 

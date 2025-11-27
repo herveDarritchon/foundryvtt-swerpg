@@ -30,17 +30,16 @@ describe('Talent Import Real Test', () => {
     resetTalentImportStats()
 
     // Simule traitement de 3 talents
-    incrementTalentImportStat('processed', 3)
+    incrementTalentImportStat('total', 3)
     incrementTalentImportStat('transformed', 2)
-    incrementTalentImportStat('failed', 1)
+    incrementTalentImportStat('rejected', 1)
 
     const stats = getTalentImportStats()
 
-    expect(stats.processed).toBe(3)
+    expect(stats.total).toBe(3)
     expect(stats.transformed).toBe(2)
-    expect(stats.failed).toBe(1)
-    expect(stats.total).toBe(3) // Alias pour compatibilité
-    expect(stats.imported).toBe(2) // processed - failed = 3 - 1 = 2
+    expect(stats.rejected).toBe(1)
+    expect(stats.imported).toBe(2) // total - rejected = 3 - 1 = 2
   })
 
   it('should test action ID generation', async () => {

@@ -25,9 +25,10 @@ export function resetWeaponImportStats() {
 /**
  * Incrémente un compteur numérique connu.
  * @param {('total'|'rejected'|'unknownSkills'|'unknownQualities')} key
+ * @param {number} amount - Montant à ajouter (défaut: 1)
  */
-export function incrementWeaponImportStat(key) {
-  weaponStats.increment(key)
+export function incrementWeaponImportStat(key, amount = 1) {
+  weaponStats.increment(key, amount)
 }
 
 /**
@@ -54,10 +55,3 @@ export function getWeaponImportStats() {
   return weaponStats.getStats()
 }
 
-/**
- * Fournit un accès direct (lecture seule) à la structure interne pour un éventuel agrégateur global.
- * À utiliser prudemment (ne pas modifier en dehors de ce module).
- */
-export function _unsafeInternalWeaponStatsRef() {
-  return weaponStats.getStats()
-}

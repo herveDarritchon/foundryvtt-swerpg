@@ -19,9 +19,6 @@ export const FLAG_STRICT_TALENT_VALIDATION = false
  * @private
  */
 const talentStats = new ImportStats({
-  processed: 0,
-  created: 0,
-  failed: 0,
   validation_failed: 0,
   transform_failed: 0,
   contextMaps: 0,
@@ -40,9 +37,6 @@ const talentStats = new ImportStats({
  */
 export function resetTalentImportStats() {
   talentStats.reset({
-    processed: 0,
-    created: 0,
-    failed: 0,
     validation_failed: 0,
     transform_failed: 0,
     contextMaps: 0,
@@ -94,14 +88,7 @@ export function addTalentRejectionReason(reason) {
  * @returns {object} Statistiques complètes d'import
  */
 export function getTalentImportStats() {
-  const stats = talentStats.getStats()
-  return {
-    ...stats,
-    // Propriétés calculées pour compatibilité
-    total: stats.processed,
-    rejected: stats.failed,
-    imported: stats.processed - stats.failed,
-  }
+  return talentStats.getStats()
 }
 
 /**
@@ -137,11 +124,3 @@ export function generateTalentKey(name) {
     .replace(/^_|_$/g, '')
 }
 
-/**
- * Fournit un accès direct (lecture seule) à la structure interne pour agrégateur global.
- * À utiliser prudemment (ne pas modifier en dehors de ce module).
- * @returns {object} Référence interne aux stats (lecture seule)
- */
-export function _unsafeInternalTalentStatsRef() {
-  return talentStats.getStats()
-}

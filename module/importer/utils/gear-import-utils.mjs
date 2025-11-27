@@ -1,7 +1,9 @@
 import { ImportStats } from './import-stats.mjs'
 
-// Utilities de statistiques pour l'import des équipements (gear) OggDude
-// Permet une observabilité homogène avec armor & weapon.
+/**
+ * Utilities de statistiques pour l'import des équipements (gear) OggDude
+ * Permet une observabilité homogène avec armor & weapon.
+ */
 
 export const FLAG_STRICT_GEAR_VALIDATION = false
 
@@ -15,8 +17,8 @@ export function resetGearImportStats() {
   })
 }
 
-export function incrementGearImportStat(key) {
-  gearStats.increment(key)
+export function incrementGearImportStat(key, amount = 1) {
+  gearStats.increment(key, amount)
 }
 
 export function addGearUnknownCategory(code) {
@@ -27,6 +29,3 @@ export function getGearImportStats() {
   return gearStats.getStats()
 }
 
-export function _unsafeInternalGearStatsRef() {
-  return gearStats.getStats()
-}

@@ -9,7 +9,6 @@ import {
   incrementSpecializationImportStat,
   addSpecializationUnknownSkill,
   getSpecializationImportStats,
-  addSpecializationSkillCount,
 } from '../utils/specialization-import-utils.mjs'
 import { normalizeFreeSkillRank, resolveSource, buildDescription } from '../utils/description-markup-utils.mjs'
 
@@ -183,7 +182,7 @@ export function specializationMapper(specializations, { strictSkills = false } =
           sourcePage: sourceInfo.page,
         })
 
-        addSpecializationSkillCount(specializationSkills.length)
+        incrementSpecializationImportStat('skillCount', specializationSkills.length)
 
         const swerpgFlags = {
           oggdudeKey: key,

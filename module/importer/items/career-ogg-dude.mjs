@@ -10,7 +10,6 @@ import {
   addCareerUnknownSkill,
   getCareerImportStats,
   FLAG_STRICT_CAREER_VALIDATION,
-  addCareerSkillCount,
 } from '../utils/career-import-utils.mjs'
 import { sanitizeDescription } from '../utils/text.mjs'
 
@@ -49,7 +48,7 @@ export function careerMapper(careers, { strictSkills = false } = {}) {
       sourcePage: sourceInfo.page,
     })
 
-    addCareerSkillCount(careerSkills.length)
+    incrementCareerImportStat('skillCount', careerSkills.length)
 
     const swerpgFlags = {
       oggdudeKey: key,

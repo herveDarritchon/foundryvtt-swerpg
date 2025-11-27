@@ -39,15 +39,15 @@ function talentMapper(talents) {
 
           // Transformer via le mapper principal
           const transformedData = OggDudeTalentMapper.transform(context)
-          // Incrémenter les stats « processed » seulement si le contexte est valide et transformé
-          incrementTalentImportStat('processed')
+          // Incrémenter les stats « total » seulement si le contexte est valide et transformé
+          incrementTalentImportStat('total')
 
           logger.debug(`[TalentOggDude] Mapped talent: ${context.key}`)
           return transformedData
         } catch (error) {
           logger.error('[TalentOggDude] Error mapping individual talent:', error)
           // Comptabiliser l'échec de transformation
-          incrementTalentImportStat('failed')
+          incrementTalentImportStat('rejected')
           return null
         }
       })

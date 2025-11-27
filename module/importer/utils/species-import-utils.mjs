@@ -1,6 +1,8 @@
 import { ImportStats } from './import-stats.mjs'
 
-// Statistiques d'import pour Species (espèces) OggDude
+/**
+ * Statistiques d'import pour Species (espèces) OggDude
+ */
 
 export const FLAG_STRICT_SPECIES_VALIDATION = false
 
@@ -14,8 +16,8 @@ export function resetSpeciesImportStats() {
   })
 }
 
-export function incrementSpeciesImportStat(key) {
-  speciesStats.increment(key)
+export function incrementSpeciesImportStat(key, amount = 1) {
+  speciesStats.increment(key, amount)
 }
 
 export function addSpeciesUnknownTalent(code) {
@@ -26,6 +28,3 @@ export function getSpeciesImportStats() {
   return speciesStats.getStats()
 }
 
-export function _unsafeInternalSpeciesStatsRef() {
-  return speciesStats.getStats()
-}
