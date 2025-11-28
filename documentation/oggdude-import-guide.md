@@ -16,19 +16,19 @@ If the item type does not exist in the system:
 
 1. **`system.json`**: Add the new type to `documentTypes.Item`.
 
-    ```json
-    "my-new-type": {
-      "htmlFields": ["description"]
-    }
-    ```
+   ```json
+   "my-new-type": {
+     "htmlFields": ["description"]
+   }
+   ```
 
 2. **`swerpg.mjs`**: Register the Data Model (see step 3) in `CONFIG.Item.dataModels`.
 
-    ```javascript
-    CONFIG.Item.dataModels = {
-      "my-new-type": models.MyNewType
-    }
-    ```
+   ```javascript
+   CONFIG.Item.dataModels = {
+     'my-new-type': models.MyNewType,
+   }
+   ```
 
 ## 3. Create the Data Model
 
@@ -55,15 +55,17 @@ Create a function (e.g., `myTypeMapper`) that transforms the XML object into a F
 ```javascript
 export function myTypeMapper(items) {
   // Initialize stats (see Stats Guide)
-  return items.map((xmlItem) => {
-    // Increment total stats (see Stats Guide)
-    // ... mapping logic ...
-    if (invalid) {
-      // Increment rejected stats (see Stats Guide)
-      return null
-    }
-    return itemObject
-  }).filter(Boolean)
+  return items
+    .map((xmlItem) => {
+      // Increment total stats (see Stats Guide)
+      // ... mapping logic ...
+      if (invalid) {
+        // Increment rejected stats (see Stats Guide)
+        return null
+      }
+      return itemObject
+    })
+    .filter(Boolean)
 }
 ```
 
@@ -77,15 +79,15 @@ Create a function (e.g., `buildMyTypeContext`) that prepares the import context.
 - **Data Extraction**:
   - If the data is in a single file (e.g., `Motivations.xml`):
 
-      ```javascript
-      jsonData: await OggDudeDataElement.buildJsonDataFromFile(zip, groupByDirectory, 'MyFile.xml', 'Root.Item')
-      ```
+    ```javascript
+    jsonData: await OggDudeDataElement.buildJsonDataFromFile(zip, groupByDirectory, 'MyFile.xml', 'Root.Item')
+    ```
 
   - If the data is in a directory of files:
 
-      ```javascript
-      jsonData: await OggDudeDataElement.buildJsonDataFromDirectory(zip, groupByType.xml, 'DirectoryName', 'Root.Item')
-      ```
+    ```javascript
+    jsonData: await OggDudeDataElement.buildJsonDataFromDirectory(zip, groupByType.xml, 'DirectoryName', 'Root.Item')
+    ```
 
 - **Image Paths**: Define where images should be stored.
   - Use `buildItemImgSystemPath` from `module/settings/directories.mjs` for system paths to ensure consistency.

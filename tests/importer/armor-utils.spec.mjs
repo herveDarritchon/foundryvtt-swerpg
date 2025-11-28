@@ -141,10 +141,12 @@ describe("Statistics d'import", () => {
       expect(getArmorImportStats().unknownCategories).toBe(2)
     })
 
-    it('devrait ignorer les stats inexistantes', () => {
+    it('devrait créer automatiquement les stats inexistantes', () => {
+      resetArmorImportStats()
       incrementArmorImportStat('nonExistentStat')
       const stats = getArmorImportStats()
-      expect(stats).not.toHaveProperty('nonExistentStat')
+      expect(stats).toHaveProperty('nonExistentStat')
+      expect(stats.nonExistentStat).toBe(1)
     })
 
     it('devrait ignorer les stats non-numériques', () => {

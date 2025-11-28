@@ -1,57 +1,34 @@
+import { ImportStats } from './import-stats.mjs'
+
 // Statistiques d'import pour Motivation et Motivation Category OggDude
 
-let _motivationStats = {
-  total: 0,
-  rejected: 0,
-}
-
-let _motivationCategoryStats = {
-  total: 0,
-  rejected: 0,
-}
+const motivationStats = new ImportStats()
+const motivationCategoryStats = new ImportStats()
 
 // --- Motivation ---
 
 export function resetMotivationImportStats() {
-  _motivationStats = {
-    total: 0,
-    rejected: 0,
-  }
+  motivationStats.reset()
 }
 
 export function incrementMotivationImportStat(key, amount = 1) {
-  if (Object.prototype.hasOwnProperty.call(_motivationStats, key)) {
-    _motivationStats[key] += amount
-  }
+  motivationStats.increment(key, amount)
 }
 
 export function getMotivationImportStats() {
-  return {
-    total: _motivationStats.total,
-    rejected: _motivationStats.rejected,
-    imported: _motivationStats.total - _motivationStats.rejected,
-  }
+  return motivationStats.getStats()
 }
 
 // --- Motivation Category ---
 
 export function resetMotivationCategoryImportStats() {
-  _motivationCategoryStats = {
-    total: 0,
-    rejected: 0,
-  }
+  motivationCategoryStats.reset()
 }
 
 export function incrementMotivationCategoryImportStat(key, amount = 1) {
-  if (Object.prototype.hasOwnProperty.call(_motivationCategoryStats, key)) {
-    _motivationCategoryStats[key] += amount
-  }
+  motivationCategoryStats.increment(key, amount)
 }
 
 export function getMotivationCategoryImportStats() {
-  return {
-    total: _motivationCategoryStats.total,
-    rejected: _motivationCategoryStats.rejected,
-    imported: _motivationCategoryStats.total - _motivationCategoryStats.rejected,
-  }
+  return motivationCategoryStats.getStats()
 }

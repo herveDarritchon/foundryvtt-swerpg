@@ -114,8 +114,8 @@ describe('Talent Import Fix Validation', () => {
     resetTalentImportStats()
     const stats = getTalentImportStats()
 
-    expect(stats.processed).toBe(0)
-    expect(stats.failed).toBe(0)
+    expect(stats.total).toBe(0)
+    expect(stats.rejected).toBe(0)
     expect(stats.transformed).toBe(0)
   })
 

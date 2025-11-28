@@ -1,53 +1,31 @@
-// Statistiques d'import pour Career (carrières) OggDude
+import { ImportStats } from './import-stats.mjs'
+
+/**
+ * Statistiques d'import pour Career (carrières) OggDude
+ */
 
 export const FLAG_STRICT_CAREER_VALIDATION = false
 
-let _careerStats = {
-  total: 0,
-  rejected: 0,
+const careerStats = new ImportStats({
   unknownSkills: 0,
   skillCount: 0,
-  skillDetails: new Set(),
-}
+})
 
 export function resetCareerImportStats() {
-  _careerStats = {
-    total: 0,
-    rejected: 0,
+  careerStats.reset({
     unknownSkills: 0,
     skillCount: 0,
-    skillDetails: new Set(),
-  }
+  })
 }
 
 export function incrementCareerImportStat(key, amount = 1) {
-  if (Object.prototype.hasOwnProperty.call(_careerStats, key)) {
-    _careerStats[key] += amount
-  }
+  careerStats.increment(key, amount)
 }
 
 export function addCareerUnknownSkill(code) {
-  _careerStats.unknownSkills += 1
-  _careerStats.skillDetails.add(code)
-}
-
-export function addCareerSkillCount(count) {
-  if (typeof count === 'number' && count > 0) {
-    _careerStats.skillCount += count
-  }
+  careerStats.addDetail('unknownSkills', code, 'skillDetails')
 }
 
 export function getCareerImportStats() {
-  return {
-    total: _careerStats.total,
-    rejected: _careerStats.rejected,
-    imported: _careerStats.total - _careerStats.rejected,
-    unknownSkills: _careerStats.unknownSkills,
-    skillCount: _careerStats.skillCount,
-    skillDetails: Array.from(_careerStats.skillDetails),
-  }
-}
-
-export function _unsafeInternalCareerStatsRef() {
-  return _careerStats
+  return careerStats.getStats()
 }
