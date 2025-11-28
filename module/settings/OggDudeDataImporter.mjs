@@ -61,7 +61,7 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
 
   static PARTS = {
     swerpgSettings: {
-      template: 'systems/swerpg/templates/settings/oggDudeDataImporter.hbs',
+      template: 'systems/swerpg/templates/settings/oggDude-data-importer.hbs',
     },
   }
 

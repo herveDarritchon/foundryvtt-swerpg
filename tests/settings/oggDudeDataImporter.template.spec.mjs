@@ -2,8 +2,8 @@ import { describe, it, expect } from 'vitest'
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 
-describe('oggDudeDataImporter.hbs template compatibility', () => {
-  const templatePath = join(process.cwd(), 'templates', 'settings', 'oggDudeDataImporter.hbs')
+describe('oggDude-data-importer.hbs template compatibility', () => {
+  const templatePath = join(process.cwd(), 'templates', 'settings', 'oggDude-data-importer.hbs')
   const source = readFileSync(templatePath, 'utf8')
 
   it('ne contient plus de références this.domains', () => {
