@@ -65,10 +65,10 @@ C'est ce template qui sera chargé automatiquement par `SwerpgBaseItemSheet` dan
 Exemple de contenu (`motivation-config.hbs`) :
 
 ```handlebars
-<section class="tab {{tab.cssClass}}" data-group="sheet" data-tab="config">
-    <!-- Ajoutez ici les champs de configuration spécifiques à l'item -->
-    <!-- Exemple : -->
-    <!--
+<section class='tab {{tab.cssClass}}' data-group='sheet' data-tab='config'>
+  <!-- Ajoutez ici les champs de configuration spécifiques à l'item -->
+  <!-- Exemple : -->
+  <!--
     <div class="form-group">
         <label>{{localize "SWERPG.Labels.MyField"}}</label>
         <div class="form-fields">
@@ -87,21 +87,21 @@ Ouvrez `swerpg.mjs` et effectuez les modifications suivantes :
 
 1. **Importer la classe de la sheet :**
 
-    ```javascript
-    import MyItemSheet from './module/applications/sheets/my-item.mjs'
-    ```
+   ```javascript
+   import MyItemSheet from './module/applications/sheets/my-item.mjs'
+   ```
 
 2. **Enregistrer la sheet dans `Hooks.once('init', ...)` :**
 
-    Trouvez la section où les sheets sont enregistrées (recherchez `foundry.documents.collections.Items.registerSheet`) et ajoutez votre enregistrement :
+   Trouvez la section où les sheets sont enregistrées (recherchez `foundry.documents.collections.Items.registerSheet`) et ajoutez votre enregistrement :
 
-    ```javascript
-    foundry.documents.collections.Items.registerSheet(SYSTEM.id, MyItemSheet, {
-      types: ['[ITEM_TYPE]'],
-      label: 'SWERPG.SHEETS.[LabelKey]', // Assurez-vous d'avoir une clé de localisation
-      makeDefault: true,
-    })
-    ```
+   ```javascript
+   foundry.documents.collections.Items.registerSheet(SYSTEM.id, MyItemSheet, {
+     types: ['[ITEM_TYPE]'],
+     label: 'SWERPG.SHEETS.[LabelKey]', // Assurez-vous d'avoir une clé de localisation
+     makeDefault: true,
+   })
+   ```
 
 ## Résumé
 

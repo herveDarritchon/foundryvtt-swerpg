@@ -1,4 +1,5 @@
-import { ImportStats, clampNumber, sanitizeText } from './import-stats.mjs'
+import { ImportStats } from './import-stats.mjs'
+import { clampNumber, sanitizeText } from './text.mjs'
 
 // Re-export helpers for backward compatibility
 export { clampNumber, sanitizeText }
@@ -123,4 +124,3 @@ export function generateTalentKey(name) {
     .replace(/_+/g, '_')
     .replace(/^_|_$/g, '')
 }
-

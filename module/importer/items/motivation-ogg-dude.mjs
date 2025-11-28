@@ -1,11 +1,8 @@
 import OggDudeImporter from '../oggDude.mjs'
 import OggDudeDataElement from '../../settings/models/OggDudeDataElement.mjs'
 import { logger } from '../../utils/logger.mjs'
-import {buildItemImgSystemPath} from "../../settings/directories.mjs";
-import {
-  resetMotivationImportStats,
-  incrementMotivationImportStat,
-} from '../utils/motivation-import-utils.mjs'
+import { buildItemImgSystemPath } from '../../settings/directories.mjs'
+import { resetMotivationImportStats, incrementMotivationImportStat } from '../utils/motivation-import-utils.mjs'
 
 /**
  * Motivation Mapper
@@ -14,46 +11,48 @@ import {
  */
 export function motivationMapper(motivations) {
   resetMotivationImportStats()
-  return motivations.map((xmlMotivation) => {
-    incrementMotivationImportStat('total')
-    const sources = OggDudeImporter.mapOptionalArray(xmlMotivation?.Sources?.Source, (source) => ({
-      book: OggDudeImporter.mapOptionalString(source?._),
-      page: OggDudeImporter.mapOptionalString(source?.Page),
-    }))
-    // Handle single source case if not in Sources list (some files might have direct Source tag)
-    if (xmlMotivation?.Source) {
-      sources.push({
-        book: OggDudeImporter.mapOptionalString(xmlMotivation.Source?._),
-        page: OggDudeImporter.mapOptionalString(xmlMotivation.Source?.Page),
-      })
-    }
+  return motivations
+    .map((xmlMotivation) => {
+      incrementMotivationImportStat('total')
+      const sources = OggDudeImporter.mapOptionalArray(xmlMotivation?.Sources?.Source, (source) => ({
+        book: OggDudeImporter.mapOptionalString(source?._),
+        page: OggDudeImporter.mapOptionalString(source?.Page),
+      }))
+      // Handle single source case if not in Sources list (some files might have direct Source tag)
+      if (xmlMotivation?.Source) {
+        sources.push({
+          book: OggDudeImporter.mapOptionalString(xmlMotivation.Source?._),
+          page: OggDudeImporter.mapOptionalString(xmlMotivation.Source?.Page),
+        })
+      }
 
-    const name = OggDudeImporter.mapMandatoryString('SpecificMotivation.Name', xmlMotivation?.Name)
-    const key = OggDudeImporter.mapMandatoryString('SpecificMotivation.Key', xmlMotivation?.Key)
+      const name = OggDudeImporter.mapMandatoryString('SpecificMotivation.Name', xmlMotivation?.Name)
+      const key = OggDudeImporter.mapMandatoryString('SpecificMotivation.Key', xmlMotivation?.Key)
 
-    if (!name || !key) {
-      incrementMotivationImportStat('rejected')
-      return null
-    }
+      if (!name || !key) {
+        incrementMotivationImportStat('rejected')
+        return null
+      }
 
-    incrementMotivationImportStat('success')
+      incrementMotivationImportStat('success')
 
-    return {
-      name,
-      description: OggDudeImporter.mapOptionalString(xmlMotivation?.Description),
-      img: 'systems/swerpg/assets/images/icons/motivation.svg', // Default icon
-      system: {
+      return {
+        name,
         description: OggDudeImporter.mapOptionalString(xmlMotivation?.Description),
-        sources,
-        category: OggDudeImporter.mapOptionalString(xmlMotivation?.Motivation),
-      },
-      flags: {
-        swerpg: {
-          oggdudeKey: key,
+        img: 'systems/swerpg/assets/images/icons/motivation.svg', // Default icon
+        system: {
+          description: OggDudeImporter.mapOptionalString(xmlMotivation?.Description),
+          sources,
+          category: OggDudeImporter.mapOptionalString(xmlMotivation?.Motivation),
         },
-      },
-    }
-  }).filter(Boolean)
+        flags: {
+          swerpg: {
+            oggdudeKey: key,
+          },
+        },
+      }
+    })
+    .filter(Boolean)
 }
 
 /**

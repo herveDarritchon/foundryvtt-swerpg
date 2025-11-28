@@ -37,7 +37,7 @@ Il est tout à fait possible et recommandé de simplifier et standardiser le cod
 
 1. **Aligner les noms de métriques** : Renommer `processed` en `total` et `failed` en `rejected` dans `talent-import-utils.mjs`.
 2. **Garder les métriques spécifiques** : Conserver les compteurs de détails (`validation_failed`, etc.) comme métriques additionnelles.
-3. **Simplifier l'instanciation** : Ne passer que les métriques *supplémentaires* au constructeur.
+3. **Simplifier l'instanciation** : Ne passer que les métriques _supplémentaires_ au constructeur.
 
 ### Exemple Avant/Après pour Talent
 
@@ -46,7 +46,7 @@ Il est tout à fait possible et recommandé de simplifier et standardiser le cod
 ```javascript
 const talentStats = new ImportStats({
   processed: 0, // Doublon sémantique de total
-  failed: 0,    // Doublon sémantique de rejected
+  failed: 0, // Doublon sémantique de rejected
   validation_failed: 0,
   // ...
 })

@@ -1,3 +1,6 @@
+// Re-export helpers from text.mjs for backward compatibility
+export { clampNumber, sanitizeText } from './text.mjs'
+
 /**
  * Generic Import Statistics Class
  * Handles common metrics for OggDude data import.
@@ -82,36 +85,4 @@ export class ImportStats {
 
     return stats
   }
-}
-
-/**
- * Clamp a number between min and max
- * @param {*} value - The value to clamp
- * @param {number} min - Minimum value
- * @param {number} max - Maximum value
- * @param {number} defaultValue - Default value if input is invalid
- * @returns {number} The clamped value
- */
-export function clampNumber(value, min, max, defaultValue = 0) {
-  const num = parseInt(value)
-  if (isNaN(num)) {
-    return defaultValue
-  }
-  return Math.max(min, Math.min(max, num))
-}
-
-/**
- * Sanitize text to prevent HTML injection
- * @param {string} str - The string to sanitize
- * @returns {string} The sanitized string
- */
-export function sanitizeText(str) {
-  if (!str || typeof str !== 'string') {
-    return ''
-  }
-
-  return str
-    .trim()
-    .replace(/<script/gi, '&lt;script')
-    .replace(/<\/script>/gi, '&lt;/script&gt;')
 }

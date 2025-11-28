@@ -18,11 +18,7 @@ const specializationStats = new ImportStats({
  * @returns {object} Les statistiques d'import
  */
 export function getSpecializationImportStats() {
-  const stats = specializationStats.getStats()
-  return {
-    ...stats,
-    failed: stats.rejected, // Alias pour compatibilité
-  }
+  return specializationStats.getStats()
 }
 
 /**
@@ -41,7 +37,6 @@ export function resetSpecializationImportStats() {
  * @param {number} amount - Le montant à ajouter (défaut: 1)
  */
 export function incrementSpecializationImportStat(stat, amount = 1) {
-  if (stat === 'failed') stat = 'rejected'
   specializationStats.increment(stat, amount)
 }
 

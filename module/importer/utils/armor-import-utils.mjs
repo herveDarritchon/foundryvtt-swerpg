@@ -1,7 +1,7 @@
-import { ImportStats, clampNumber, sanitizeText } from './import-stats.mjs'
+import { ImportStats } from './import-stats.mjs'
+import { clampNumber, sanitizeText } from './text.mjs'
 
-// Re-export helpers for backward compatibility if needed, or consumers should import from import-stats.mjs
-// For now, we keep them exported here to avoid breaking changes in other files that might import them.
+// Re-export helpers for backward compatibility
 export { clampNumber, sanitizeText }
 
 /**
