@@ -2,6 +2,33 @@
 
 This guide describes the process of adding support for importing a new Item type from OggDude's data (XML) into the SWERPG system.
 
+## Organization of Imported Items
+
+Since version 1.0 (November 2025), items imported from OggDude are automatically organized in a hierarchical folder structure:
+
+```
+OggDude/
+├── Weapons/
+├── Armor/
+├── Gear/
+├── Careers/
+├── Talents/
+├── Species/
+├── Specializations/
+├── Obligations/
+├── Duties/
+├── Motivations/
+└── Motivation Categories/
+```
+
+This organization:
+- **Happens automatically** when you import OggDude data
+- **Applies to all domains** (weapons, armor, gear, careers, talents, etc.)
+- **Uses a cache** to avoid duplicate folder creation during a single import session
+- **Falls back to `OggDude/Misc`** for unrecognized item types
+
+If you are adding a new item type to the import system, you should register it in the folder mapping (see step 6.3 below).
+
 ## 1. Analyze the Source Data
 
 - Locate the XML file in the OggDude export (e.g., `Motivations.xml`, `Careers.xml`).
@@ -113,7 +140,26 @@ Update `module/importer/oggDude.mjs`:
 - Add the context builder to `buildContextMap`.
 - Refer to the [OggDude Import Statistics Guide](oggdude-import-stats-guide.md) for importing the stats getter and updating `processOggDudeData` to pass stats in the progress callback.
 
-### 3. Register Domain
+### 3. Register Folder Mapping (Optional)
+
+If your new item type should have a specific folder name in the `OggDude/` hierarchy:
+
+Update `module/importer/utils/oggdude-import-folders.mjs`:
+
+- Add your domain to the `OGGDUDE_FOLDER_MAP` constant:
+
+  ```javascript
+  const OGGDUDE_FOLDER_MAP = {
+    weapon: 'Weapons',
+    armor: 'Armor',
+    'my-new-type': 'My New Types', // Add your domain here
+    // ...
+  }
+  ```
+
+If you don't register your domain, items will be placed in `OggDude/Misc` by default (with a warning logged).
+
+### 4. Register Domain
 
 Update `module/settings/OggDudeDataImporter.mjs`:
 

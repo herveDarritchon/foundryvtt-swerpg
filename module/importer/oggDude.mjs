@@ -16,6 +16,7 @@ import { getSpecializationImportStats } from './utils/specialization-import-util
 import { getMotivationImportStats, getMotivationCategoryImportStats } from './utils/motivation-import-utils.mjs'
 import { buildDutyContext } from './items/duty-ogg-dude.mjs'
 import { getDutyImportStats } from './utils/duty-import-utils.mjs'
+import { resetFolderCache } from './utils/oggdude-import-folders.mjs'
 
 export default class OggDudeImporter {
   /**
@@ -164,6 +165,10 @@ export default class OggDudeImporter {
    */
   static async processOggDudeData(importedFile, domains, { progressCallback, importToCompendium = false } = {}) {
     /* --------------------------------------------- GÉNÉRIQUE ------------------------------------------------------------------- */
+
+    // Step 0: Reset folder cache for new import session
+    resetFolderCache()
+    logger.debug('[ProcessOggDudeData] - Step 0: Folder cache reset')
 
     // Step 1: Load the zip file
     markGlobalStart()
