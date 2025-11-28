@@ -113,3 +113,10 @@ export function speciesMapper(species) {
 - Quand une stat stocke des détails (ex: `unknownSkills`), utilise `addDetail(key, value, 'detailArray')`. Le compteur est la taille du `Set`; assure-toi que les tests vérifient la déduplication plutôt qu'un simple +1 par appel.
 - Ré-exporte `reset*ImportStats` / `get*ImportStats` depuis les mappers et appelle `reset*ImportStats()` au début de chaque mapper et de chaque test pour éviter les fuites d'état entre runs.
 - Les tests unitaires et d'intégration doivent valider la forme `{ total, rejected, imported, ... }` et s'attendre à ce que les stats inconnues soient créées automatiquement (`incrementStat('foo')` initialise `foo`). Mets à jour les assertions en conséquence lors des refactors.
+
+## Text utils centralisés
+
+- `module/importer/utils/text.mjs` est l’unique source pour `clampNumber`, `sanitizeText` (court) et `sanitizeDescription` (riche). Tout nouveau code importe ces helpers là-bas et non depuis `import-stats.mjs`, qui ne fait qu’un re-export pour compatibilité.
+- Choisir l’API adaptée : `sanitizeText` pour labels/courte saisie (trim + neutralisation `<script>/<style>`), `sanitizeDescription` pour blocs riches (préserve sauts de ligne contrôlés, tronque via `maxLength`). Ne pas réimplémenter d’autres regex dans les mappers.
+- Quand un utilitaire expose encore les helpers, re-exporter uniquement pour les appels existants mais faire migrer les consommateurs directs à `text.mjs` lors des refactors. Documenter le switch dans la PR.
+- Couvrir ces helpers via Vitest (`tests/importer/utils/text.test.mjs`) : cas XSS `<script>/<style>`, normalisation CRLF, options `preserveLineBreaks`, gestion d’erreurs (`toString` qui jette). Ajoute un test à chaque bug fixé pour éviter les régressions.
