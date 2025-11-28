@@ -60,15 +60,22 @@ describe('oggDude-data-importer.hbs template compatibility', () => {
 
   it('inclut entête colonne statut et classes domain-status', () => {
     expect(source.includes('stats.status.title')).toBe(true)
-    // Les classes finales (domain-status--*) sont injectées dynamiquement via contexte; on vérifie présence du placeholder Handlebars
-    expect(source.includes('{{importDomainStatus.armor.class}}')).toBe(true)
+    // Le template utilise maintenant statsTableRows avec row.status.class
+    expect(source.includes('{{row.status.class}}')).toBe(true)
+    expect(source.includes('{{row.stats.total}}')).toBe(true)
+    expect(source.includes('{{row.stats.imported}}')).toBe(true)
+    expect(source.includes('{{row.stats.rejected}}')).toBe(true)
   })
 
   it('inclut les statistiques pour le domaine obligation', () => {
-    expect(source.includes('{{importDomainStatus.obligation.class}}')).toBe(true)
-    expect(source.includes('{{importStats.obligation.total}}')).toBe(true)
-    expect(source.includes('{{importStats.obligation.imported}}')).toBe(true)
-    expect(source.includes('{{importStats.obligation.rejected}}')).toBe(true)
-    expect(source.includes('{{importMetricsFormatted.domains.obligation.duration}}')).toBe(true)
+    // Le template utilise maintenant une structure générique avec statsTableRows
+    // qui contient tous les domaines (armor, weapon, gear, obligation, etc.)
+    // au lieu de références directes comme importDomainStatus.obligation.class
+    expect(source.includes('{{#each statsTableRows as |row|}}')).toBe(true)
+    expect(source.includes('{{row.status.class}}')).toBe(true)
+    expect(source.includes('{{row.stats.total}}')).toBe(true)
+    expect(source.includes('{{row.stats.imported}}')).toBe(true)
+    expect(source.includes('{{row.stats.rejected}}')).toBe(true)
+    expect(source.includes('{{row.duration}}')).toBe(true)
   })
 })
