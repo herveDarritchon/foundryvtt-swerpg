@@ -25,17 +25,8 @@ import {
   getSpecializationImportStats,
   addSpecializationUnknownSkill,
 } from '../../../module/importer/utils/specialization-import-utils.mjs'
-import {
-  resetArmorImportStats,
-  incrementArmorImportStat,
-  getArmorImportStats,
-} from '../../../module/importer/utils/armor-import-utils.mjs'
-import {
-  resetGearImportStats,
-  incrementGearImportStat,
-  getGearImportStats,
-  addGearUnknownCategory,
-} from '../../../module/importer/utils/gear-import-utils.mjs'
+import { resetArmorImportStats, incrementArmorImportStat, getArmorImportStats } from '../../../module/importer/utils/armor-import-utils.mjs'
+import { resetGearImportStats, incrementGearImportStat, getGearImportStats, addGearUnknownCategory } from '../../../module/importer/utils/gear-import-utils.mjs'
 import {
   resetSpeciesImportStats,
   incrementSpeciesImportStat,
@@ -48,16 +39,8 @@ import {
   getObligationImportStats,
   addUnknownObligationProperty,
 } from '../../../module/importer/utils/obligation-import-utils.mjs'
-import {
-  resetDutyImportStats,
-  incrementDutyImportStat,
-  getDutyImportStats,
-} from '../../../module/importer/utils/duty-import-utils.mjs'
-import {
-  resetMotivationImportStats,
-  incrementMotivationImportStat,
-  getMotivationImportStats,
-} from '../../../module/importer/utils/motivation-import-utils.mjs'
+import { resetDutyImportStats, incrementDutyImportStat, getDutyImportStats } from '../../../module/importer/utils/duty-import-utils.mjs'
+import { resetMotivationImportStats, incrementMotivationImportStat, getMotivationImportStats } from '../../../module/importer/utils/motivation-import-utils.mjs'
 
 /**
  * Tests de standardisation de ImportStats
@@ -229,7 +212,6 @@ describe('Import Stats Standardization', () => {
       expect(stats.unknownSkills).toBe(1)
       expect(stats.skillCount).toBe(8)
       expect(stats.skillDetails).toContain('SPEC_SKILL')
-      expect(stats.failed).toBe(1) // Alias pour rejected
     })
 
     it('should track armor-specific metrics', () => {
@@ -299,17 +281,6 @@ describe('Import Stats Standardization', () => {
     })
   })
 
-  describe('Backward Compatibility', () => {
-    it('should support "failed" alias for specialization', () => {
-      resetSpecializationImportStats()
-      incrementSpecializationImportStat('failed', 2)
-
-      const stats = getSpecializationImportStats()
-      expect(stats.rejected).toBe(2)
-      expect(stats.failed).toBe(2) // Alias
-    })
-  })
-
   describe('Detail Deduplication', () => {
     it('should deduplicate detail entries', () => {
       resetWeaponImportStats()
@@ -337,4 +308,3 @@ describe('Import Stats Standardization', () => {
     })
   })
 })
-

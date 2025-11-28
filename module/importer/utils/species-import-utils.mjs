@@ -27,4 +27,3 @@ export function addSpeciesUnknownTalent(code) {
 export function getSpeciesImportStats() {
   return speciesStats.getStats()
 }
-

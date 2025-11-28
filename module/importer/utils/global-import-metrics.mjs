@@ -1,6 +1,7 @@
 // Agrégateur global des statistiques d'import OggDude
 // Fournit une vue consolidée pour observabilité / logging / UI.
 
+import { logger } from '../../utils/logger.mjs'
 import { getArmorImportStats } from './armor-import-utils.mjs'
 import { getWeaponImportStats } from './weapon-import-utils.mjs'
 import { getGearImportStats } from './gear-import-utils.mjs'
@@ -35,13 +36,13 @@ export function resetRuntimeMetrics(preserveLastImportStats = false) {
 
 export function markGlobalStart() {
   _runtime.globalStart = typeof performance !== 'undefined' && typeof performance.now === 'function' ? performance.now() : Date.now()
-  console.debug('[GlobalMetrics] markGlobalStart called, timestamp:', _runtime.globalStart)
+  logger.debug('[GlobalMetrics] markGlobalStart called', { timestamp: _runtime.globalStart })
 }
 
 export function markGlobalEnd() {
   _runtime.globalEnd = typeof performance !== 'undefined' && typeof performance.now === 'function' ? performance.now() : Date.now()
   const duration = _runtime.globalEnd - _runtime.globalStart
-  console.debug('[GlobalMetrics] markGlobalEnd called, timestamp:', _runtime.globalEnd, 'duration:', duration)
+  logger.debug('[GlobalMetrics] markGlobalEnd called', { timestamp: _runtime.globalEnd, duration })
 }
 
 export function markArchiveSize(size) {
@@ -77,6 +78,7 @@ export function getAllImportStats() {
   const specialization = safeCall(getSpecializationImportStats)
   const motivation = safeCall(getMotivationImportStats)
   const motivationCategory = safeCall(getMotivationCategoryImportStats)
+  const duty = safeCall(getDutyImportStats)
 
   const totalProcessed =
     armor.total +
@@ -89,7 +91,7 @@ export function getAllImportStats() {
     specialization.total +
     motivation.total +
     motivationCategory.total +
-    safeCall(getDutyImportStats).total
+    duty.total
   const totalRejected =
     armor.rejected +
     weapon.rejected +
@@ -101,7 +103,7 @@ export function getAllImportStats() {
     specialization.rejected +
     motivation.rejected +
     motivationCategory.rejected +
-    safeCall(getDutyImportStats).rejected
+    duty.rejected
   const totalImported = totalProcessed - totalRejected
 
   return {
@@ -113,9 +115,9 @@ export function getAllImportStats() {
     talent,
     obligation,
     specialization,
-    motivation: safeCall(getMotivationImportStats),
-    'motivation-category': safeCall(getMotivationCategoryImportStats),
-    duty: safeCall(getDutyImportStats),
+    motivation,
+    'motivation-category': motivationCategory,
+    duty,
     totalProcessed,
     totalRejected,
     totalImported,
@@ -148,18 +150,13 @@ export function aggregateImportMetrics(statsOverride) {
 
   const hasValidGlobal = Number.isFinite(_runtime.globalEnd) && Number.isFinite(_runtime.globalStart) && _runtime.globalEnd >= _runtime.globalStart
   const overallDurationMs = hasValidGlobal ? _runtime.globalEnd - _runtime.globalStart : 0
-  console.debug(
-    '[GlobalMetrics] aggregateImportMetrics - globalStart:',
-    _runtime.globalStart,
-    'globalEnd:',
-    _runtime.globalEnd,
-    'hasValidGlobal:',
+  logger.debug('[GlobalMetrics] aggregateImportMetrics', {
+    globalStart: _runtime.globalStart,
+    globalEnd: _runtime.globalEnd,
     hasValidGlobal,
-    'overallDurationMs:',
     overallDurationMs,
-    'usingLastImportStats:',
-    shouldUseLastImportStats,
-  )
+    usingLastImportStats: shouldUseLastImportStats,
+  })
   const domains = {}
   for (const [domain, timing] of _runtime.domains.entries()) {
     const hasValidDomain = Number.isFinite(timing?.end) && Number.isFinite(timing?.start) && timing.end >= timing.start

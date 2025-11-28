@@ -54,4 +54,3 @@ export function addWeaponUnknownQuality(code) {
 export function getWeaponImportStats() {
   return weaponStats.getStats()
 }
-

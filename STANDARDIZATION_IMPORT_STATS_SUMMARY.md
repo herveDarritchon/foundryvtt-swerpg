@@ -9,6 +9,7 @@ Les fichiers utils dans `module/importer/utils/` utilisaient des nomenclatures i
 ### 1. Uniformisation des métriques standard
 
 Tous les modules utils utilisent maintenant les métriques standard fournies par `ImportStats` :
+
 - **`total`** : nombre total d'éléments traités
 - **`rejected`** : nombre d'éléments rejetés
 - **`imported`** : calculé automatiquement comme `total - rejected`
@@ -17,12 +18,14 @@ Tous les modules utils utilisent maintenant les métriques standard fournies par
 ### 2. Suppression du code legacy
 
 #### Métriques obsolètes supprimées :
+
 - ❌ `processed` → ✅ `total`
 - ❌ `failed` → ✅ `rejected`
 - ❌ `created` (sauf pour specialization où c'est légitime)
 - ❌ `imported` en tant que métrique manuelle
 
 #### Fonctions supprimées :
+
 - `_unsafeInternalTalentStatsRef()`
 - `_unsafeInternalWeaponStatsRef()`
 - `_unsafeInternalCareerStatsRef()`
@@ -36,6 +39,7 @@ Tous les modules utils utilisent maintenant les métriques standard fournies par
 La méthode `addDetail()` de `ImportStats` a été corrigée pour que les compteurs reflètent le nombre d'éléments **uniques** dans les Sets au lieu du nombre total d'appels.
 
 **Avant :**
+
 ```javascript
 addDetail(key, detail, setKey) {
   this.increment(key) // ❌ Incrémente à chaque appel
@@ -44,6 +48,7 @@ addDetail(key, detail, setKey) {
 ```
 
 **Après :**
+
 ```javascript
 addDetail(key, detail, setKey) {
   this._customSets.get(setKey).add(detail)
@@ -66,26 +71,31 @@ export function incrementWeaponImportStat(key, amount = 1) { ... }
 ### 5. Simplification des modules
 
 #### talent-import-utils.mjs
+
 - Suppression de la métrique `created`
 - Utilisation de `total` fourni par ImportStats
 
 #### specialization-import-utils.mjs
+
 - Suppression de la logique complexe de calcul de `total` et `imported`
 - Suppression des stats additionnelles séparées
 - Conservation de `created` et `updated` si nécessaire (pour tracking précis)
 - Alias `failed` pour `rejected` conservé pour compatibilité
 
 #### career-import-utils.mjs
+
 - Suppression de `_additionalCareerStats`
 - Intégration de `skillCount` directement dans ImportStats
 
 #### obligation-import-utils.mjs
+
 - Suppression de la métrique redondante `imported`
 - Utilisation du calcul automatique `total - rejected`
 
 ### 6. Mise à jour des tests
 
 **92 fichiers de tests** mis à jour pour refléter la nouvelle nomenclature :
+
 - ✅ `tests/importer/utils/import-stats-standardization.test.mjs` (nouveau)
 - ✅ `tests/importer/armor-utils.spec.mjs`
 - ✅ `tests/importer/obligation-utils.spec.mjs`
@@ -97,9 +107,11 @@ export function incrementWeaponImportStat(key, amount = 1) { ... }
 ## Fichiers modifiés
 
 ### Core
+
 - `module/importer/utils/import-stats.mjs` - Correction de `addDetail()`
 
 ### Utils standardisés
+
 - `module/importer/utils/talent-import-utils.mjs`
 - `module/importer/utils/weapon-import-utils.mjs`
 - `module/importer/utils/armor-import-utils.mjs`
@@ -112,10 +124,12 @@ export function incrementWeaponImportStat(key, amount = 1) { ... }
 - `module/importer/utils/motivation-import-utils.mjs`
 
 ### Importers mis à jour
+
 - `module/importer/items/career-ogg-dude.mjs`
 - `module/importer/items/specialization-ogg-dude.mjs`
 
 ### Tests créés/modifiés
+
 - `tests/importer/utils/import-stats-standardization.test.mjs` (nouveau - 21 tests)
 - `tests/importer/armor-utils.spec.mjs`
 - `tests/importer/obligation-utils.spec.mjs`
@@ -126,12 +140,14 @@ export function incrementWeaponImportStat(key, amount = 1) { ... }
 ## Bénéfices
 
 ### Pour les développeurs
+
 - **Code plus simple** : Une seule API à comprendre (`ImportStats`)
 - **Moins de duplication** : Pas besoin de stats additionnelles séparées
 - **Meilleur typage** : Nomenclature cohérente facilitant l'autocomplétion
 - **Facilite la maintenance** : Modifications centralisées dans `ImportStats`
 
 ### Pour le système
+
 - **Cohérence** : Toutes les métriques suivent les mêmes conventions
 - **Fiabilité** : Déduplication correcte des éléments dans les Sets
 - **Testabilité** : Tests standardisés couvrant tous les domaines
@@ -140,11 +156,13 @@ export function incrementWeaponImportStat(key, amount = 1) { ... }
 ## Compatibilité
 
 ### Rétrocompatibilité assurée
+
 - Alias `failed` → `rejected` conservé dans specialization
 - Tous les tests existants passent
 - Aucune modification de l'API publique des importers
 
 ### Points d'attention
+
 - Les appels directs aux anciennes fonctions supprimées (`_unsafeInternal*`, `addCareerSkillCount`, etc.) doivent être mis à jour
 - Les tests vérifiant l'ancien comportement (stats inexistantes ignorées) ont été adaptés au nouveau comportement (stats créées automatiquement)
 
@@ -175,4 +193,3 @@ La standardisation des statistiques d'import est **complète et validée**. Tous
 **Date** : 27 novembre 2025  
 **Auteur** : AI Assistant (GitHub Copilot)  
 **Statut** : ✅ Terminé
-

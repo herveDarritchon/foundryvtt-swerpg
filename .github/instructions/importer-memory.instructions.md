@@ -109,7 +109,7 @@ export function speciesMapper(species) {
 ## ImportStats standardisation (nouvelle mémoire)
 
 - Tous les domaines doivent utiliser `ImportStats` comme seule source de vérité pour les compteurs. Incrémente `total` et `rejected`, laisse `imported` être calculé par le getter (`total - rejected`). Ne crée jamais de compteur parallèle `created/processed/failed` dans les utils.
-- Les fonctions `increment*ImportStat(key, amount)` exposées par chaque util *doivent* accepter un paramètre `amount` optionnel pour permettre des incréments batch (ex: compter les skills). Évite les versions sans `amount` qui cassent les tests communs.
+- Les fonctions `increment*ImportStat(key, amount)` exposées par chaque util _doivent_ accepter un paramètre `amount` optionnel pour permettre des incréments batch (ex: compter les skills). Évite les versions sans `amount` qui cassent les tests communs.
 - Quand une stat stocke des détails (ex: `unknownSkills`), utilise `addDetail(key, value, 'detailArray')`. Le compteur est la taille du `Set`; assure-toi que les tests vérifient la déduplication plutôt qu'un simple +1 par appel.
 - Ré-exporte `reset*ImportStats` / `get*ImportStats` depuis les mappers et appelle `reset*ImportStats()` au début de chaque mapper et de chaque test pour éviter les fuites d'état entre runs.
 - Les tests unitaires et d'intégration doivent valider la forme `{ total, rejected, imported, ... }` et s'attendre à ce que les stats inconnues soient créées automatiquement (`incrementStat('foo')` initialise `foo`). Mets à jour les assertions en conséquence lors des refactors.

@@ -28,4 +28,3 @@ export function addGearUnknownCategory(code) {
 export function getGearImportStats() {
   return gearStats.getStats()
 }
-
