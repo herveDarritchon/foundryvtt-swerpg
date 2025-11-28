@@ -125,20 +125,12 @@ Update `module/importer/oggDude.mjs`:
 
 ## 5. Update the UI Template
 
-Update `templates/settings/oggDudeDataImporter.hbs`:
+Depuis la refonte de novembre 2025, la table de statistiques ne contient plus de lignes codées en dur. Vous n'avez donc plus à modifier `templates/settings/oggDude-data-importer.hbs` pour chaque nouveau domaine. À la place :
 
-Add a new table row for your item type in the stats table. Ensure you use the correct keys matching `getAllImportStats` and `_domainNames`.
+1. **Ajoutez l'identifiant du domaine** à `_domainNames` dans `module/settings/OggDudeDataImporter.mjs`. L'ordre de ce tableau définit l'ordre des lignes dans l'UI.
+2. **Exposez vos statistiques** via `getAllImportStats()` (voir étapes précédentes). La méthode `_buildDomainStatsRows()` assemble automatiquement chaque ligne (statut, libellé, totaux, durée) à partir de vos données.
+3. **Assurez-vous que les clés de localisation** `SETTINGS.OggDudeDataImporter.loadWindow.domains.<domain>` existent pour l'étiquette de ligne et la case à cocher.
 
-```handlebars
-<tr>
-  <td class='{{importDomainStatus.my-new-type.class}}' aria-label='{{localize importDomainStatus.my-new-type.labelI18n}}'><i
-      class='fa-solid fa-circle'
-      aria-hidden='true'
-    ></i></td>
-  <th scope='row'>{{localize 'SETTINGS.OggDudeDataImporter.loadWindow.domains.my-new-type'}}</th>
-  <td>{{importStats.my-new-type.total}}</td>
-  <td>{{importStats.my-new-type.imported}}</td>
-  <td>{{importStats.my-new-type.rejected}}</td>
-  <td>{{importMetricsFormatted.domains.my-new-type.duration}}</td>
-</tr>
-```
+> ℹ️ Si vous devez réellement personnaliser l'affichage (colonne supplémentaire, panneau dédié, etc.), suivez les patterns Handlebars existants, mais gardez la boucle générique pour les lignes standards.
+
+## 6. Update Localization

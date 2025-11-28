@@ -123,6 +123,12 @@ Update `module/settings/OggDudeDataImporter.mjs`:
 
 Update `templates/settings/oggDudeDataImporter.hbs` to add a new row to the stats table. Please refer to the [OggDude Import Statistics Guide](oggdude-import-stats-guide.md) for the specific HTML structure and data binding.
 
+- **Stats Table (nouveau flux)** : depuis la refonte de novembre 2025, la table d'état n'est plus composée de lignes codées en dur. Pour afficher votre domaine, il suffit maintenant de :
+  1. Ajouter l'identifiant de domaine dans `_domainNames` dans `module/settings/OggDudeDataImporter.mjs` (ordre d'affichage = ordre de ce tableau).
+  2. Garantir que vos statistiques sont retournées par `getAllImportStats()` (voir Stats Guide). La méthode `_buildDomainStatsRows()` construira automatiquement la ligne en combinant vos stats, métriques formatées et statut.
+  3. Vérifier que la clé de localisation `SETTINGS.OggDudeDataImporter.loadWindow.domains.<domain>` existe (section 8 ci-dessous).
+- **Autres sections** : si vous avez des panneaux ou métriques spécifiques, ajoutez vos informations en suivant les patterns existants (collapsibles `<details>` et listes `<ul>`).
+
 ## 8. Localization
 
 Update all the localization files (e.g., `lang/en.json` and `lang/fr.json`):
@@ -155,4 +161,4 @@ Please refer to the [Item Sheet Creation Guide](item-sheet-creation-guide.md) fo
 - Verify the checkbox appears in the Importer settings.
 - Run an import and check the console for errors.
 - Verify the created items have the correct data and flags.
-- **Verify Statistics**: Check that the Import Statistics table correctly shows the total, imported, and rejected counts for your new item type (as described in the Stats Guide).
+- **Verify Statistics**: Check that the Import Statistics table correctly shows the total, imported, and rejected counts for your new item type (as described in the Stats Guide). Grâce à la boucle générique, aucune modification du template n'est requise : assurez-vous simplement que `_domainNames`, `importDomainStatus` et `getAllImportStats()` exposent votre domaine.
