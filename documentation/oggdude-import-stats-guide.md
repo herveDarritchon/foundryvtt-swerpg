@@ -44,34 +44,33 @@ Update `module/importer/utils/global-import-metrics.mjs`:
 
 1. **Import** your new stats functions:
 
-    ```javascript
-    import { getMyNewTypeImportStats } from './my-new-type-import-utils.mjs'
-    ```
+   ```javascript
+   import { getMyNewTypeImportStats } from './my-new-type-import-utils.mjs'
+   ```
 
 2. **Update `getAllImportStats`**:
+   - Add the stats retrieval call:
 
-    - Add the stats retrieval call:
+     ```javascript
+     const myNewType = safeCall(getMyNewTypeImportStats)
+     ```
 
-        ```javascript
-        const myNewType = safeCall(getMyNewTypeImportStats)
-        ```
+   - Update `totalProcessed` and `totalRejected` calculations:
 
-    - Update `totalProcessed` and `totalRejected` calculations:
+     ```javascript
+     const totalProcessed = armor.total + ... + myNewType.total
+     const totalRejected = armor.rejected + ... + myNewType.rejected
+     ```
 
-        ```javascript
-        const totalProcessed = armor.total + ... + myNewType.total
-        const totalRejected = armor.rejected + ... + myNewType.rejected
-        ```
+   - Add the new stats to the return object:
 
-    - Add the new stats to the return object:
-
-        ```javascript
-        return {
-          // ...
-          'my-new-type': myNewType,
-          // ...
-        }
-        ```
+     ```javascript
+     return {
+       // ...
+       'my-new-type': myNewType,
+       // ...
+     }
+     ```
 
 ## 3. Update the Importer Logic
 
@@ -79,30 +78,31 @@ Update your importer file (e.g., `module/importer/items/my-new-type-ogg-dude.mjs
 
 1. **Import** the stats functions:
 
-    ```javascript
-    import { resetMyNewTypeImportStats, incrementMyNewTypeImportStat } from '../../utils/my-new-type-import-utils.mjs'
-    ```
+   ```javascript
+   import { resetMyNewTypeImportStats, incrementMyNewTypeImportStat } from '../../utils/my-new-type-import-utils.mjs'
+   ```
 
 2. **Update the Mapper**:
+   - Call `resetMyNewTypeImportStats()` at the beginning of the mapper function.
+   - Call `incrementMyNewTypeImportStat('total')` for each item processed.
+   - Call `incrementMyNewTypeImportStat('rejected')` if an item is skipped/invalid.
 
-    - Call `resetMyNewTypeImportStats()` at the beginning of the mapper function.
-    - Call `incrementMyNewTypeImportStat('total')` for each item processed.
-    - Call `incrementMyNewTypeImportStat('rejected')` if an item is skipped/invalid.
-
-    ```javascript
-    export function myNewTypeMapper(items) {
-      resetMyNewTypeImportStats()
-      return items.map((xmlItem) => {
-        incrementMyNewTypeImportStat('total')
-        // ... validation ...
-        if (invalid) {
-          incrementMyNewTypeImportStat('rejected')
-          return null
-        }
-        // ... mapping ...
-      }).filter(Boolean)
-    }
-    ```
+   ```javascript
+   export function myNewTypeMapper(items) {
+     resetMyNewTypeImportStats()
+     return items
+       .map((xmlItem) => {
+         incrementMyNewTypeImportStat('total')
+         // ... validation ...
+         if (invalid) {
+           incrementMyNewTypeImportStat('rejected')
+           return null
+         }
+         // ... mapping ...
+       })
+       .filter(Boolean)
+   }
+   ```
 
 ## 4. Update the Main Importer Class
 
@@ -110,19 +110,18 @@ Update `module/importer/oggDude.mjs`:
 
 1. **Import** the stats getter:
 
-    ```javascript
-    import { getMyNewTypeImportStats } from './utils/my-new-type-import-utils.mjs'
-    ```
+   ```javascript
+   import { getMyNewTypeImportStats } from './utils/my-new-type-import-utils.mjs'
+   ```
 
 2. **Update `processOggDudeData`**:
+   - In the progress callback loop, add a case for your new item type to pass the stats:
 
-    - In the progress callback loop, add a case for your new item type to pass the stats:
-
-    ```javascript
-    if (entry.type === 'my-new-type') {
-      domainStatsPayload = getMyNewTypeImportStats()
-    }
-    ```
+   ```javascript
+   if (entry.type === 'my-new-type') {
+     domainStatsPayload = getMyNewTypeImportStats()
+   }
+   ```
 
 ## 5. Update the UI Template
 
@@ -132,11 +131,14 @@ Add a new table row for your item type in the stats table. Ensure you use the co
 
 ```handlebars
 <tr>
-    <td class="{{importDomainStatus.my-new-type.class}}" aria-label="{{localize importDomainStatus.my-new-type.labelI18n}}"><i class="fa-solid fa-circle" aria-hidden="true"></i></td>
-    <th scope="row">{{localize "SETTINGS.OggDudeDataImporter.loadWindow.domains.my-new-type"}}</th>
-    <td>{{importStats.my-new-type.total}}</td>
-    <td>{{importStats.my-new-type.imported}}</td>
-    <td>{{importStats.my-new-type.rejected}}</td>
-    <td>{{importMetricsFormatted.domains.my-new-type.duration}}</td>
+  <td class='{{importDomainStatus.my-new-type.class}}' aria-label='{{localize importDomainStatus.my-new-type.labelI18n}}'><i
+      class='fa-solid fa-circle'
+      aria-hidden='true'
+    ></i></td>
+  <th scope='row'>{{localize 'SETTINGS.OggDudeDataImporter.loadWindow.domains.my-new-type'}}</th>
+  <td>{{importStats.my-new-type.total}}</td>
+  <td>{{importStats.my-new-type.imported}}</td>
+  <td>{{importStats.my-new-type.rejected}}</td>
+  <td>{{importMetricsFormatted.domains.my-new-type.duration}}</td>
 </tr>
 ```

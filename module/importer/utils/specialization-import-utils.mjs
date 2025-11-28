@@ -1,47 +1,53 @@
-// Statistiques d'import pour Specialization OggDude
+import { ImportStats } from './import-stats.mjs'
 
-let _specializationStats = {
-  total: 0,
-  rejected: 0,
+/**
+ * Utilitaires pour l'import des spécialisations OggDude
+ */
+
+/**
+ * Statistics d'import des spécialisations
+ * @private
+ */
+const specializationStats = new ImportStats({
   unknownSkills: 0,
   skillCount: 0,
-  skillDetails: new Set(),
+})
+
+/**
+ * Obtient les statistiques d'import des spécialisations
+ * @returns {object} Les statistiques d'import
+ */
+export function getSpecializationImportStats() {
+  return specializationStats.getStats()
 }
 
+/**
+ * Remet à zéro les statistiques d'import des spécialisations
+ */
 export function resetSpecializationImportStats() {
-  _specializationStats = {
-    total: 0,
-    rejected: 0,
+  specializationStats.reset({
     unknownSkills: 0,
     skillCount: 0,
-    skillDetails: new Set(),
-  }
+  })
 }
 
-export function incrementSpecializationImportStat(key, amount = 1) {
-  if (Object.prototype.hasOwnProperty.call(_specializationStats, key)) {
-    _specializationStats[key] += amount
-  }
+/**
+ * Incrémente les statistiques d'import
+ * @param {string} stat - Le nom de la statistique à incrémenter
+ * @param {number} amount - Le montant à ajouter (défaut: 1)
+ */
+export function incrementSpecializationImportStat(stat, amount = 1) {
+  specializationStats.increment(stat, amount)
+}
+
+/**
+ * Ajoute une raison de rejet aux statistiques
+ * @param {string} reason - La raison du rejet
+ */
+export function addSpecializationRejectionReason(reason) {
+  specializationStats.addRejectionReason(reason)
 }
 
 export function addSpecializationUnknownSkill(code) {
-  _specializationStats.unknownSkills += 1
-  _specializationStats.skillDetails.add(code)
-}
-
-export function addSpecializationSkillCount(count) {
-  if (typeof count === 'number' && count > 0) {
-    _specializationStats.skillCount += count
-  }
-}
-
-export function getSpecializationImportStats() {
-  return {
-    total: _specializationStats.total,
-    rejected: _specializationStats.rejected,
-    imported: _specializationStats.total - _specializationStats.rejected,
-    unknownSkills: _specializationStats.unknownSkills,
-    skillCount: _specializationStats.skillCount,
-    skillDetails: Array.from(_specializationStats.skillDetails),
-  }
+  specializationStats.addDetail('unknownSkills', code, 'skillDetails')
 }

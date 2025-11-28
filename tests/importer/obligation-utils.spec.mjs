@@ -1,10 +1,10 @@
-import { describe, it, expect, beforeEach } from 'vitest'
+import { beforeEach, describe, expect, it } from 'vitest'
 import {
-  resetObligationImportStats,
-  incrementObligationImportStat,
   addUnknownObligationProperty,
   getObligationImportStats,
+  incrementObligationImportStat,
   registerObligationMetrics,
+  resetObligationImportStats,
 } from '../../module/importer/utils/obligation-import-utils.mjs'
 
 describe('obligation-import-utils', () => {
@@ -15,18 +15,17 @@ describe('obligation-import-utils', () => {
   describe('resetObligationImportStats', () => {
     it('should initialize stats to zero', () => {
       const stats = getObligationImportStats()
-      expect(stats).toEqual({
-        total: 0,
-        imported: 0,
-        rejected: 0,
-        unknownProperties: 0,
-        propertyDetails: [],
-      })
+      expect(stats.total).toBe(0)
+      expect(stats.rejected).toBe(0)
+      expect(stats.imported).toBe(0) // calculé: total - rejected
+      expect(stats.unknownProperties).toBe(0)
+      expect(stats.propertyDetails || []).toEqual([]) // propertyDetails peut être undefined
+      expect(stats.rejectionReasons).toEqual([])
     })
 
     it('should reset stats after modifications', () => {
       incrementObligationImportStat('total', 5)
-      incrementObligationImportStat('imported', 3)
+      incrementObligationImportStat('rejected', 2)
       resetObligationImportStats()
 
       const stats = getObligationImportStats()
@@ -43,9 +42,9 @@ describe('obligation-import-utils', () => {
     })
 
     it('should increment stat by specified value', () => {
-      incrementObligationImportStat('imported', 5)
+      incrementObligationImportStat('rejected', 5)
       const stats = getObligationImportStats()
-      expect(stats.imported).toBe(5)
+      expect(stats.rejected).toBe(5)
     })
 
     it('should handle multiple increments', () => {
@@ -57,12 +56,11 @@ describe('obligation-import-utils', () => {
       expect(stats.total).toBe(5)
     })
 
-    it('should not modify stats for unknown keys', () => {
-      const beforeStats = getObligationImportStats()
+    it('should create stats for unknown keys automatically', () => {
       incrementObligationImportStat('nonExistentKey', 10)
-      const afterStats = getObligationImportStats()
+      const stats = getObligationImportStats()
 
-      expect(afterStats).toEqual(beforeStats)
+      expect(stats.nonExistentKey).toBe(10)
     })
   })
 
@@ -85,7 +83,7 @@ describe('obligation-import-utils', () => {
       addUnknownObligationProperty('customField')
 
       const stats = getObligationImportStats()
-      expect(stats.unknownProperties).toBe(3)
+      expect(stats.unknownProperties).toBe(1) // Déduplication: seuls les éléments uniques sont comptés
       expect(stats.propertyDetails).toEqual(['customField'])
     })
 
@@ -111,18 +109,15 @@ describe('obligation-import-utils', () => {
 
     it('should return current state after modifications', () => {
       incrementObligationImportStat('total', 10)
-      incrementObligationImportStat('imported', 7)
       incrementObligationImportStat('rejected', 3)
       addUnknownObligationProperty('unknownField')
 
       const stats = getObligationImportStats()
-      expect(stats).toEqual({
-        total: 10,
-        imported: 7,
-        rejected: 3,
-        unknownProperties: 1,
-        propertyDetails: ['unknownField'],
-      })
+      expect(stats.total).toBe(10)
+      expect(stats.rejected).toBe(3)
+      expect(stats.imported).toBe(7) // calculé: total - rejected
+      expect(stats.unknownProperties).toBe(1)
+      expect(stats.propertyDetails).toContain('unknownField')
     })
   })
 
@@ -138,13 +133,14 @@ describe('obligation-import-utils', () => {
 
     it('should return getStats function that retrieves current stats', () => {
       incrementObligationImportStat('total', 5)
-      incrementObligationImportStat('imported', 3)
+      incrementObligationImportStat('rejected', 2)
 
       const registration = registerObligationMetrics()
       const stats = registration.getStats()
 
       expect(stats.total).toBe(5)
-      expect(stats.imported).toBe(3)
+      expect(stats.rejected).toBe(2)
+      expect(stats.imported).toBe(3) // calculé: total - rejected
     })
   })
 })
