@@ -5,6 +5,7 @@
 ### Modifications effectuées
 
 #### 📁 Fichiers modifiés
+
 1. **module/importer/utils/import-stats.mjs**
    - Suppression des helpers dupliqués (`clampNumber`, `sanitizeText`)
    - Re-export depuis `text.mjs` pour rétrocompatibilité
@@ -31,6 +32,7 @@
    - Optimisation: calcul unique de `getDutyImportStats()` dans `getAllImportStats()`
 
 #### 📝 Tests créés
+
 1. **tests/importer/utils/import-stats.test.mjs** (11 tests)
 2. **tests/importer/utils/text.test.mjs** (14 tests)
 3. **tests/importer/utils/description-markup-utils.test.mjs** (22 tests)
@@ -38,11 +40,13 @@
 5. **tests/importer/utils/import-stats-standardization.test.mjs** (20 tests) - Existant, mis à jour
 
 #### 📄 Tests modifiés
+
 - **tests/importer/utils/import-stats-standardization.test.mjs**
   - Suppression du test de l'alias `failed` (ligne 308-310)
   - Suppression de l'assertion `expect(stats.failed).toBe(1)` (ligne 232)
 
 #### 📚 Documentation créée
+
 1. **documentation/plan/refactoring/oggdude-importer/plan.md**
 2. **documentation/plan/refactoring/oggdude-importer/RAPPORT_REFACTORISATION_UTILS.md**
 
@@ -64,6 +68,7 @@ Duration   688ms
 ### Impact
 
 #### Améliorations
+
 - **Dette technique**: -3 doublons (helpers texte)
 - **Observabilité**: Logs structurés + métriques testées
 - **Sécurité**: Protection contre `<style>` en plus de `<script>`
@@ -71,6 +76,7 @@ Duration   688ms
 - **Performance**: -2 appels redondants à `getDutyImportStats()`
 
 #### Breaking changes
+
 - ❌ Aucun (alias `failed` non utilisé dans le code)
 
 ### Prochaines étapes recommandées
@@ -92,4 +98,3 @@ Duration   688ms
 **Date**: 28 novembre 2025  
 **Agent**: swerpg-dev-feature  
 **Révision**: ✅ Validée
-
