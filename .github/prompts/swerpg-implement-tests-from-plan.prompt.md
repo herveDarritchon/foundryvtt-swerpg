@@ -62,7 +62,7 @@ You must:
 When relevant:
 
 - Run the appropriate commands with `runCommands`:
-  - e.g. `pnpm test`, `pnpm test:unit`, `pnpm test:e2e`, `pnpm lint`.
+  - e.g. `pnpm test`, `pnpm test:unit`, `pnpm test:e2e`, `pnpm eslint`.
 
 - Analyze errors with `testFailure` / `problems`.
 - Fix the tests that YOU have just written if your expectations were wrong.

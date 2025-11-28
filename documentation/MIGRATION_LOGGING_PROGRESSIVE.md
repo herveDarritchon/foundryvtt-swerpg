@@ -60,7 +60,7 @@ grep -r "import .*logger" module/ | grep MonDossier || echo "ATTENTION: import m
 pnpm test actor  # exemple
 
 # 4. Lint
-pnpm lint
+pnpm eslint
 ```
 
 ---

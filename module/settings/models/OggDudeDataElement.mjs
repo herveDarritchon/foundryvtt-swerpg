@@ -2,6 +2,7 @@ import { checkFileExists, createPathIfNecessary, uploadFileOnTheServer } from '.
 import { createFoundryFolder } from '../../helpers/foundry/folder.mjs'
 import { parseXmlToJson } from '../../utils/xml/parser.mjs'
 import { logger } from '../../utils/logger.mjs'
+import { getOrCreateWorldFolder } from '../../importer/utils/oggdude-import-folders.mjs'
 
 /**
  * @typedef {object} ZipEntry
@@ -448,9 +449,25 @@ class OggDudeDataElement {
 
     logger.debug('[OggDudeDataElement] ProcessElements - Step Initial', { context })
 
-    // Step 4: Create the folder
-    let folder = await createFoundryFolder(context.folder.name, context.folder.type)
-    logger.debug('[OggDudeDataElement] ProcessElements - Step 4 Folder', { folder })
+    // Step 4: Create the folder using the new hierarchical folder service
+    const importDomain = context.element.type
+    let folder
+    try {
+      folder = await getOrCreateWorldFolder(importDomain, context.folder.type)
+      logger.debug('[OggDudeDataElement] ProcessElements - Step 4 Folder (hierarchical)', {
+        folder,
+        importDomain,
+        folderPath: `OggDude/${folder.name}`
+      })
+    } catch (error) {
+      logger.error('[OggDudeDataElement] Failed to create hierarchical folder, falling back to legacy behavior', {
+        error,
+        importDomain
+      })
+      // Fallback to legacy behavior if folder service fails
+      folder = await createFoundryFolder(context.folder.name, context.folder.type)
+      logger.debug('[OggDudeDataElement] ProcessElements - Step 4 Folder (legacy fallback)', { folder })
+    }
 
     // Step 5-1: Create the folder in the FVTT tab
     const imgPath = await createPathIfNecessary(context.image.worldPath)
