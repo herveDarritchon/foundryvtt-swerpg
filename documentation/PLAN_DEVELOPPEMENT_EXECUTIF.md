@@ -99,7 +99,7 @@ npx eslint module/ --max-warnings 10 --format compact
 ```bash
 # Métriques à suivre chaque vendredi
 pnpm test:coverage  # Couverture
-pnpm lint          # Erreurs ESLint
+pnpm eslint          # Erreurs ESLint
 npm run build      # Temps de build
 ```
 

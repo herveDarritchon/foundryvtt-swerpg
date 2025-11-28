@@ -61,7 +61,7 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
 
   static PARTS = {
     swerpgSettings: {
-      template: 'systems/swerpg/templates/settings/oggDudeDataImporter.hbs',
+      template: 'systems/swerpg/templates/settings/oggDude-data-importer.hbs',
     },
   }
 
@@ -148,6 +148,9 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
     // Calcul des statuts domaine (fonction pur sans effet côté template) – logique testable séparément.
     const importDomainStatus = this._buildImportDomainStatus(stats)
 
+    // Construction du tableau de lignes pour la table de stats (ordre canonique via _domainNames)
+    const statsTableRows = this._buildDomainStatsRows(stats, metricsFormatted, importDomainStatus)
+
     // Logs de diagnostic pour vérifier la présence de specialization
     logger.debug('[OggDudeDataImporter] Context prepared', {
       domainsCount: this._domainNames.length,
@@ -183,6 +186,7 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
       hasPreview,
       importSummary,
       importDomainStatus,
+      statsTableRows,
       importToCompendium: this.importToCompendium,
     }
   }
@@ -573,5 +577,32 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
       }
     }
     return result
+  }
+
+  /**
+   * Construit un tableau ordonné de lignes pour la table de stats.
+   * Chaque entrée contient le domaine, ses stats, son statut et sa durée formatée.
+   * @param {Object} stats Stats brutes par domaine {armor: {total, imported, rejected}, ...}
+   * @param {Object} metricsFormatted Métriques formatées incluant domains.{name}.duration
+   * @param {Object} domainStatus Statuts par domaine {armor: {code, labelI18n, class}, ...}
+   * @returns {Array<{id:string, labelI18n:string, status:Object, stats:Object, duration:string}>}
+   */
+  _buildDomainStatsRows(stats = {}, metricsFormatted = {}, domainStatus = {}) {
+    return this._domainNames.map((domainId) => {
+      const domainStats = stats[domainId] || { total: 0, imported: 0, rejected: 0 }
+      const domainMetrics = metricsFormatted?.domains?.[domainId] || {}
+      const status = domainStatus[domainId] || {
+        code: 'pending',
+        labelI18n: 'SETTINGS.OggDudeDataImporter.loadWindow.stats.status.pending',
+        class: 'domain-status domain-status--pending',
+      }
+      return {
+        id: domainId,
+        labelI18n: `SETTINGS.OggDudeDataImporter.loadWindow.domains.${domainId}`,
+        status,
+        stats: domainStats,
+        duration: domainMetrics.duration || '',
+      }
+    })
   }
 }

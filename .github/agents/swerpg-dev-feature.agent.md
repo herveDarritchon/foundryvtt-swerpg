@@ -284,7 +284,7 @@ For each SweRPG code change (JS, HBS, LESS/CSS), apply these extra rules:
    - critical behaviors to verify manually.
 
 2. By default, as a core dev agent, you:
-   - **run** existing tests with `runCommands` (e.g. `pnpm test`, `pnpm test:unit`, `pnpm lint`),
+   - **run** existing tests with `runCommands` (e.g. `pnpm test`, `pnpm test:unit`, `pnpm eslint`),
    - analyse results via `testFailure` and `problems`,
    - do **not** create new test files (Vitest / Playwright).
 

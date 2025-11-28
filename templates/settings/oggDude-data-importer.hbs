@@ -1,4 +1,3 @@
-{{log "Domains:" domains}}
 <div class="standard-form oggDude-data-importer scrollable">
     <h2>{{localize "SETTINGS.OggDudeDataImporter.loadWindow.title"}}</h2>
     <section class="form-group file-picker flexcol">
@@ -112,96 +111,16 @@
                 </tr>
                 </thead>
                 <tbody>
-                {{#if importStats}}
+                {{#each statsTableRows as |row|}}
                     <tr>
-                        <td class="{{importDomainStatus.armor.class}}" aria-label="{{localize importDomainStatus.armor.labelI18n}}"><i class="fa-solid fa-circle" aria-hidden="true"></i></td>
-                        <th scope="row">{{localize "SETTINGS.OggDudeDataImporter.loadWindow.domains.armor"}}</th>
-                        <td>{{importStats.armor.total}}</td>
-                        <td>{{importStats.armor.imported}}</td>
-                        <td>{{importStats.armor.rejected}}</td>
-                        <td>{{importMetricsFormatted.domains.armor.duration}}</td>
+                        <td class="{{row.status.class}}" aria-label="{{localize row.status.labelI18n}}"><i class="fa-solid fa-circle" aria-hidden="true"></i></td>
+                        <th scope="row">{{localize row.labelI18n}}</th>
+                        <td>{{row.stats.total}}</td>
+                        <td>{{row.stats.imported}}</td>
+                        <td>{{row.stats.rejected}}</td>
+                        <td>{{row.duration}}</td>
                     </tr>
-                    <tr>
-                        <td class="{{importDomainStatus.weapon.class}}" aria-label="{{localize importDomainStatus.weapon.labelI18n}}"><i class="fa-solid fa-circle" aria-hidden="true"></i></td>
-                        <th scope="row">{{localize "SETTINGS.OggDudeDataImporter.loadWindow.domains.weapon"}}</th>
-                        <td>{{importStats.weapon.total}}</td>
-                        <td>{{importStats.weapon.imported}}</td>
-                        <td>{{importStats.weapon.rejected}}</td>
-                        <td>{{importMetricsFormatted.domains.weapon.duration}}</td>
-                    </tr>
-                    <tr>
-                        <td class="{{importDomainStatus.gear.class}}" aria-label="{{localize importDomainStatus.gear.labelI18n}}"><i class="fa-solid fa-circle" aria-hidden="true"></i></td>
-                        <th scope="row">{{localize "SETTINGS.OggDudeDataImporter.loadWindow.domains.gear"}}</th>
-                        <td>{{importStats.gear.total}}</td>
-                        <td>{{importStats.gear.imported}}</td>
-                        <td>{{importStats.gear.rejected}}</td>
-                        <td>{{importMetricsFormatted.domains.gear.duration}}</td>
-                    </tr>
-                    <tr>
-                        <td class="{{importDomainStatus.species.class}}" aria-label="{{localize importDomainStatus.species.labelI18n}}"><i class="fa-solid fa-circle" aria-hidden="true"></i></td>
-                        <th scope="row">{{localize "SETTINGS.OggDudeDataImporter.loadWindow.domains.species"}}</th>
-                        <td>{{importStats.species.total}}</td>
-                        <td>{{importStats.species.imported}}</td>
-                        <td>{{importStats.species.rejected}}</td>
-                        <td>{{importMetricsFormatted.domains.species.duration}}</td>
-                    </tr>
-                    <tr>
-                        <td class="{{importDomainStatus.career.class}}" aria-label="{{localize importDomainStatus.career.labelI18n}}"><i class="fa-solid fa-circle" aria-hidden="true"></i></td>
-                        <th scope="row">{{localize "SETTINGS.OggDudeDataImporter.loadWindow.domains.career"}}</th>
-                        <td>{{importStats.career.total}}</td>
-                        <td>{{importStats.career.imported}}</td>
-                        <td>{{importStats.career.rejected}}</td>
-                        <td>{{importMetricsFormatted.domains.career.duration}}</td>
-                    </tr>
-                    <tr>
-                        <td class="{{importDomainStatus.talent.class}}" aria-label="{{localize importDomainStatus.talent.labelI18n}}"><i class="fa-solid fa-circle" aria-hidden="true"></i></td>
-                        <th scope="row">{{localize "SETTINGS.OggDudeDataImporter.loadWindow.domains.talent"}}</th>
-                        <td>{{importStats.talent.total}}</td>
-                        <td>{{importStats.talent.imported}}</td>
-                        <td>{{importStats.talent.rejected}}</td>
-                        <td>{{importMetricsFormatted.domains.talent.duration}}</td>
-                    </tr>
-                    <tr>
-                        <td class="{{importDomainStatus.obligation.class}}" aria-label="{{localize importDomainStatus.obligation.labelI18n}}"><i class="fa-solid fa-circle" aria-hidden="true"></i></td>
-                        <th scope="row">{{localize "SETTINGS.OggDudeDataImporter.loadWindow.domains.obligation"}}</th>
-                        <td>{{importStats.obligation.total}}</td>
-                        <td>{{importStats.obligation.imported}}</td>
-                        <td>{{importStats.obligation.rejected}}</td>
-                        <td>{{importMetricsFormatted.domains.obligation.duration}}</td>
-                    </tr>
-                    <tr>
-                        <td class="{{importDomainStatus.specialization.class}}" aria-label="{{localize importDomainStatus.specialization.labelI18n}}"><i class="fa-solid fa-circle" aria-hidden="true"></i></td>
-                        <th scope="row">{{localize "SETTINGS.OggDudeDataImporter.loadWindow.domains.specialization"}}</th>
-                        <td>{{importStats.specialization.total}}</td>
-                        <td>{{importStats.specialization.imported}}</td>
-                        <td>{{importStats.specialization.rejected}}</td>
-                        <td>{{importMetricsFormatted.domains.specialization.duration}}</td>
-                    </tr>
-                    <tr>
-                        <td class="{{importDomainStatus.motivation.class}}" aria-label="{{localize importDomainStatus.motivation.labelI18n}}"><i class="fa-solid fa-circle" aria-hidden="true"></i></td>
-                        <th scope="row">{{localize "SETTINGS.OggDudeDataImporter.loadWindow.domains.motivation"}}</th>
-                        <td>{{importStats.motivation.total}}</td>
-                        <td>{{importStats.motivation.imported}}</td>
-                        <td>{{importStats.motivation.rejected}}</td>
-                        <td>{{importMetricsFormatted.domains.motivation.duration}}</td>
-                    </tr>
-                    <tr>
-                        <td class="{{importDomainStatus.motivation-category.class}}" aria-label="{{localize importDomainStatus.motivation-category.labelI18n}}"><i class="fa-solid fa-circle" aria-hidden="true"></i></td>
-                        <th scope="row">{{localize "SETTINGS.OggDudeDataImporter.loadWindow.domains.motivation-category"}}</th>
-                        <td>{{importStats.motivation-category.total}}</td>
-                        <td>{{importStats.motivation-category.imported}}</td>
-                        <td>{{importStats.motivation-category.rejected}}</td>
-                        <td>{{importMetricsFormatted.domains.motivation-category.duration}}</td>
-                    </tr>
-                    <tr>
-                        <td class="{{importDomainStatus.duty.class}}" aria-label="{{localize importDomainStatus.duty.labelI18n}}"><i class="fa-solid fa-circle" aria-hidden="true"></i></td>
-                        <th scope="row">{{localize "SETTINGS.OggDudeDataImporter.loadWindow.domains.duty"}}</th>
-                        <td>{{importStats.duty.total}}</td>
-                        <td>{{importStats.duty.imported}}</td>
-                        <td>{{importStats.duty.rejected}}</td>
-                        <td>{{importMetricsFormatted.domains.duty.duration}}</td>
-                    </tr>
-                {{/if}}
+                {{/each}}
                 </tbody>
             </table>
         </details>

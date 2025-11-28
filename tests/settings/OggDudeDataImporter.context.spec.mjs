@@ -55,6 +55,46 @@ describe('OggDudeDataImporter _prepareContext()', () => {
     expect(ctx.hasPreview).toBe(false)
     expect(ctx.importSummary).toBeNull()
   })
+
+  it('expose statsTableRows comme tableau ordonné selon _domainNames', () => {
+    const app = buildInstance()
+    const ctx = app._prepareContext({})
+    expect(Array.isArray(ctx.statsTableRows)).toBe(true)
+    expect(ctx.statsTableRows.length).toBe(app._domainNames.length)
+    // Vérifier l'ordre canonique
+    ctx.statsTableRows.forEach((row, index) => {
+      expect(row.id).toBe(app._domainNames[index])
+    })
+  })
+
+  it('chaque ligne de statsTableRows contient les propriétés requises', () => {
+    const app = buildInstance()
+    const ctx = app._prepareContext({})
+    for (const row of ctx.statsTableRows) {
+      expect(row).toHaveProperty('id')
+      expect(row).toHaveProperty('labelI18n')
+      expect(row).toHaveProperty('status')
+      expect(row.status).toHaveProperty('code')
+      expect(row.status).toHaveProperty('labelI18n')
+      expect(row.status).toHaveProperty('class')
+      expect(row).toHaveProperty('stats')
+      expect(row.stats).toHaveProperty('total')
+      expect(row.stats).toHaveProperty('imported')
+      expect(row.stats).toHaveProperty('rejected')
+      expect(row).toHaveProperty('duration')
+    }
+  })
+
+  it('statsTableRows avec stats vides retourne pending et zéros', () => {
+    const app = buildInstance()
+    const ctx = app._prepareContext({})
+    for (const row of ctx.statsTableRows) {
+      expect(row.status.code).toBe('pending')
+      expect(row.stats.total).toBe(0)
+      expect(row.stats.imported).toBe(0)
+      expect(row.stats.rejected).toBe(0)
+    }
+  })
 })
 
 describe('OggDudeDataImporter toggleDomainAction', () => {
@@ -104,3 +144,19 @@ describe('OggDudeDataImporter toggle collapsible actions', () => {
     expect(app.showPreview).toBe(false)
   })
 })
+
+describe('OggDudeDataImporter statsTableRows régression', () => {
+  it('nouveau domaine dans _domainNames apparaît automatiquement dans statsTableRows', () => {
+    const app = buildInstance()
+    const initialLength = app._domainNames.length
+    // Simuler ajout d'un nouveau domaine
+    app._domainNames = [...app._domainNames, 'new-test-domain']
+    app.domains = app._initializeDomains(app._domainNames)
+    const ctx = app._prepareContext({})
+    expect(ctx.statsTableRows.length).toBe(initialLength + 1)
+    const lastRow = ctx.statsTableRows[ctx.statsTableRows.length - 1]
+    expect(lastRow.id).toBe('new-test-domain')
+    expect(lastRow.labelI18n).toBe('SETTINGS.OggDudeDataImporter.loadWindow.domains.new-test-domain')
+  })
+})
+
