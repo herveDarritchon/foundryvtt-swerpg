@@ -4,13 +4,13 @@ version: 1.0
 date_created: 2025-11-28
 last_updated: 2025-11-28
 owner: importer-ui
-status: 'Planned'
+status: 'Completed'
 tags: ['feature', 'importer', 'ui', 'spec-driven']
 ---
 
 # Introduction
 
-![Status: Planned](https://img.shields.io/badge/status-Planned-blue)
+![Status: Completed](https://img.shields.io/badge/status-Completed-green)
 
 Refactor the OggDude importer statistics table to remove hard-coded per-domain blocks and rely on a generic Handlebars iteration over a normalized domain array. Aligns the template with spec-driven patterns, reduces duplication, and simplifies future additions of new domains defined in `OggDudeDataImporter`.
 
@@ -36,31 +36,31 @@ Refactor the OggDude importer statistics table to remove hard-coded per-domain b
 
 - GOAL-001: Normalize importer stats data for template iteration.
 
-| Task     | Description                                                                                                                                       | DependsOn | Completed | Date |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | --------- | ---- |
-| TASK-001 | Inspect `module/settings/OggDudeDataImporter.mjs` to map existing stats sources (`importStats`, `importMetricsFormatted`, `importDomainStatus`).     |           |           |      |
-| TASK-002 | Implement `_buildDomainStatsRows(stats, metricsFormatted, domainStatus)` returning ordered array aligned with `_domainNames`.                       | TASK-001  |           |      |
-| TASK-003 | Add result to `_prepareContext()` as `statsTableRows`, ensuring empty array fallback when stats missing.                                           | TASK-002  |           |      |
+| Task     | Description                                                                                                                                       | DependsOn | Completed | Date       |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | --------- | ---------- |
+| TASK-001 | Inspect `module/settings/OggDudeDataImporter.mjs` to map existing stats sources (`importStats`, `importMetricsFormatted`, `importDomainStatus`).     |           | ✅        | 2025-11-28 |
+| TASK-002 | Implement `_buildDomainStatsRows(stats, metricsFormatted, domainStatus)` returning ordered array aligned with `_domainNames`.                       | TASK-001  | ✅        | 2025-11-28 |
+| TASK-003 | Add result to `_prepareContext()` as `statsTableRows`, ensuring empty array fallback when stats missing.                                           | TASK-002  | ✅        | 2025-11-28 |
 
 ### Implementation Phase 2
 
 - GOAL-002: Update Handlebars template to iterate generically.
 
-| Task     | Description                                                                                                                                              | DependsOn | Completed | Date |
-| -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | --------- | ---- |
-| TASK-004 | Replace hard-coded `<tr>` blocks in `templates/settings/oggDude-data-importer.hbs` with `{{#each statsTableRows}}` loop using row properties.              | TASK-002  |           |      |
-| TASK-005 | Preserve cell structure: status `<td>`, domain `<th scope="row">`, totals `<td>`, and duration field referencing `row.metrics.duration`.                 | TASK-004  |           |      |
-| TASK-006 | Ensure empty state (no rows) keeps `<tbody>` but renders no `<tr>`, matching `hasStats` gating logic.                                                     | TASK-004  |           |      |
+| Task     | Description                                                                                                                                              | DependsOn | Completed | Date       |
+| -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | --------- | ---------- |
+| TASK-004 | Replace hard-coded `<tr>` blocks in `templates/settings/oggDude-data-importer.hbs` with `{{#each statsTableRows}}` loop using row properties.              | TASK-002  | ✅        | 2025-11-28 |
+| TASK-005 | Preserve cell structure: status `<td>`, domain `<th scope="row">`, totals `<td>`, and duration field referencing `row.metrics.duration`.                 | TASK-004  | ✅        | 2025-11-28 |
+| TASK-006 | Ensure empty state (no rows) keeps `<tbody>` but renders no `<tr>`, matching `hasStats` gating logic.                                                     | TASK-004  | ✅        | 2025-11-28 |
 
 ### Implementation Phase 3
 
 - GOAL-003: Update tests and ensure regression coverage.
 
-| Task     | Description                                                                                                         | DependsOn | Completed | Date |
-| -------- | ------------------------------------------------------------------------------------------------------------------- | --------- | --------- | ---- |
-| TASK-007 | Adapt existing Vitest specs (context builder/template) to assert array length, ordering, and rendered rows.           | TASK-003  |           |      |
-| TASK-008 | Add regression test ensuring new domains added to `_domainNames` automatically appear without template modifications. | TASK-007  |           |      |
-| TASK-009 | Run relevant test suites (`pnpm test --filter importer`) and capture results.                                        | TASK-007  |           |      |
+| Task     | Description                                                                                                         | DependsOn | Completed | Date       |
+| -------- | ------------------------------------------------------------------------------------------------------------------- | --------- | --------- | ---------- |
+| TASK-007 | Adapt existing Vitest specs (context builder/template) to assert array length, ordering, and rendered rows.           | TASK-003  | ✅        | 2025-11-28 |
+| TASK-008 | Add regression test ensuring new domains added to `_domainNames` automatically appear without template modifications. | TASK-007  | ✅        | 2025-11-28 |
+| TASK-009 | Run relevant test suites (`pnpm test --filter importer`) and capture results.                                        | TASK-007  | ✅        | 2025-11-28 |
 
 ## 3. Alternatives
 

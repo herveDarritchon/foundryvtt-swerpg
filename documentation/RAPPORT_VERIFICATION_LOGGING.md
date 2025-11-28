@@ -105,7 +105,7 @@ Les seuls appels `console` restants se trouvent dans `module/utils/logger.mjs`, 
 **Commande suggérée pour tests de non-régression**:
 ```bash
 pnpm test
-pnpm lint
+pnpm eslint
 ```
 
 ## Conclusion
