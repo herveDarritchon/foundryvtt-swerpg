@@ -25,20 +25,20 @@ const OGGDUDE_FALLBACK_FOLDER = 'Misc'
  * Couleurs alignées sur la charte graphique SWERPG (bleu hyperespace, orange rebelle, etc.)
  */
 const OGGDUDE_FOLDER_COLORS = {
-  weapon: '#00a8ff', // Bleu hyperespace (armes)
-  armor: '#4cd137', // Vert sabre laser (protection)
-  gear: '#ffc312', // Orange rebelle (équipement)
-  career: '#c23616', // Rouge Sith (carrières)
-  talent: '#9c88ff', // Violet (talents)
-  species: '#44bd32', // Vert nature (espèces)
-  specialization: '#e84118', // Rouge-orange (spécialisations)
-  obligation: '#f79f1f', // Orange foncé (obligations)
-  duty: '#0097e6', // Bleu clair (devoirs)
-  motivation: '#fbc531', // Jaune or (motivations)
-  'motivation-category': '#fbc531', // Même couleur pour catégories de motivations
+  weapon: '#00b8d4', // Cyan éclatant (armes)
+  armor: '#00838f', // Teal profond (protection)
+  gear: '#4dd0e1', // Cyan clair (équipement)
+  career: '#6a1b9a', // Violet intense (carrières)
+  talent: '#ce93d8', // Violet clair (talents)
+  species: '#2e7d32', // Vert forêt (espèces)
+  specialization: '#8e24aa', // Violet médian (spécialisations)
+  obligation: '#ffb300', // Ambre soutenu (obligations)
+  duty: '#ff8f00', // Ambre foncé (devoirs)
+  motivation: '#ffd54f', // Jaune chaud (motivations)
+  'motivation-category': '#ffca28', // Jaune doré (catégories de motivations)
 }
 
-const OGGDUDE_FALLBACK_COLOR = '#1b5f8c' // Bleu-gris par défaut
+const OGGDUDE_FALLBACK_COLOR = '#546e7a' // Gris acier par défaut
 
 /**
  * Cache des dossiers résolus pendant une session d'import
@@ -242,4 +242,3 @@ export function getFolderConfiguration() {
     colorMap: { ...OGGDUDE_FOLDER_COLORS },
   }
 }
-

@@ -1,21 +1,4 @@
-import {beforeEach, describe, expect, it, vi} from 'vitest'
-// MAINTENANT importer le module
-import {
-    getFolderConfiguration,
-    getOrCreateWorldFolder,
-    resetFolderCache,
-} from '../../module/importer/utils/oggdude-import-folders.mjs'
-
-// Mock du logger AVANT tout import
-vi.mock('../../module/utils/logger.mjs', () => ({
-    logger: {
-        info: vi.fn(),
-        warn: vi.fn(),
-        debug: vi.fn(),
-        error: vi.fn(),
-    },
-}))
-
+import {beforeAll, beforeEach, describe, expect, it, vi} from 'vitest'
 // Configuration du mock Folder avant l'import du module
 const mockFolders = []
 
@@ -51,6 +34,19 @@ class MockFolder {
 globalThis.Folder = MockFolder
 attachGameFolders()
 
+// MAINTENANT importer le module
+let getFolderConfiguration
+let getOrCreateWorldFolder
+let resetFolderCache
+
+beforeAll(async () => {
+    ({
+        getFolderConfiguration,
+        getOrCreateWorldFolder,
+        resetFolderCache,
+    } = await import('../../module/importer/utils/oggdude-import-folders.mjs'))
+})
+
 describe('oggdude-import-folders - Folder Colors', () => {
     beforeEach(() => {
         // Réinitialiser les mocks avant chaque test
@@ -69,7 +65,7 @@ describe('oggdude-import-folders - Folder Colors', () => {
             expect(config.colorMap).toHaveProperty('weapon')
             expect(config.colorMap).toHaveProperty('armor')
             expect(config.colorMap).toHaveProperty('gear')
-            expect(config.fallbackColor).toBe('#1b5f8c')
+            expect(config.fallbackColor).toBe('#546e7a')
         })
 
         it('should have colors for all mapped domains', () => {
@@ -90,7 +86,7 @@ describe('oggdude-import-folders - Folder Colors', () => {
 
             expect(folder).toBeDefined()
             expect(folder.name).toBe('Weapons')
-            expect(folder.color).toBe('#00a8ff') // Bleu hyperespace
+            expect(folder.color).toBe('#00b8d4') // Cyan éclatant
             expect(mockFolders).toHaveLength(2) // Root + Weapons
         })
 
@@ -99,7 +95,7 @@ describe('oggdude-import-folders - Folder Colors', () => {
 
             expect(folder).toBeDefined()
             expect(folder.name).toBe('Armor')
-            expect(folder.color).toBe('#4cd137') // Vert sabre laser
+            expect(folder.color).toBe('#00838f') // Teal profond
         })
 
         it('should create folders with correct color for gear domain', async () => {
@@ -107,7 +103,7 @@ describe('oggdude-import-folders - Folder Colors', () => {
 
             expect(folder).toBeDefined()
             expect(folder.name).toBe('Gear')
-            expect(folder.color).toBe('#ffc312') // Orange rebelle
+            expect(folder.color).toBe('#4dd0e1') // Cyan clair
         })
 
         it('should create folders with correct color for career domain', async () => {
@@ -115,7 +111,7 @@ describe('oggdude-import-folders - Folder Colors', () => {
 
             expect(folder).toBeDefined()
             expect(folder.name).toBe('Careers')
-            expect(folder.color).toBe('#c23616') // Rouge Sith
+            expect(folder.color).toBe('#6a1b9a') // Violet intense
         })
 
         it('should use fallback color for unknown domain', async () => {
@@ -123,7 +119,7 @@ describe('oggdude-import-folders - Folder Colors', () => {
 
             expect(folder).toBeDefined()
             expect(folder.name).toBe('Misc')
-            expect(folder.color).toBe('#1b5f8c') // Fallback color
+            expect(folder.color).toBe('#546e7a') // Fallback color
         })
 
         it('should not create duplicate folders on second call', async () => {
@@ -156,8 +152,8 @@ describe('oggdude-import-folders - Folder Colors', () => {
             // Appeler getOrCreateWorldFolder qui devrait corriger la couleur
             const folder = await getOrCreateWorldFolder('weapon', 'Item')
 
-            expect(updateSpy).toHaveBeenCalledWith({color: '#00a8ff'})
-            expect(folder.color).toBe('#00a8ff')
+            expect(updateSpy).toHaveBeenCalledWith({color: '#00b8d4'})
+            expect(folder.color).toBe('#00b8d4')
         })
 
         it('should not update folder if color is already correct', async () => {
@@ -188,9 +184,9 @@ describe('oggdude-import-folders - Folder Colors', () => {
             const armorFolder = await getOrCreateWorldFolder('armor', 'Item')
             const gearFolder = await getOrCreateWorldFolder('gear', 'Item')
 
-            expect(weaponFolder.color).toBe('#00a8ff')
-            expect(armorFolder.color).toBe('#4cd137')
-            expect(gearFolder.color).toBe('#ffc312')
+            expect(weaponFolder.color).toBe('#00b8d4')
+            expect(armorFolder.color).toBe('#00838f')
+            expect(gearFolder.color).toBe('#4dd0e1')
 
             // Tous partagent le même dossier racine
             expect(weaponFolder.folder).toBe(armorFolder.folder)
@@ -213,8 +209,7 @@ describe('oggdude-import-folders - Folder Colors', () => {
             const folder2 = await getOrCreateWorldFolder('weapon', 'Item')
 
             // La couleur devrait être recorrigée
-            expect(folder2.color).toBe('#00a8ff')
+            expect(folder2.color).toBe('#00b8d4')
         })
     })
 })
-
