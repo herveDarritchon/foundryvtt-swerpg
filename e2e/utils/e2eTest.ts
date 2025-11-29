@@ -39,22 +39,22 @@ export async function setUp(
 export async function tearDown(
     page: Page,
     options: FoundrySessionOptions) {
-    const url = page.url()
+    let url = page.url()
 
     if (url.includes('/auth')) {
         return
     }
 
     if (url.includes('/game')) {
-        await logout(page, options)
+        url = await logout(page, options)
     }
 
     if (url.includes('/join')) {
-        await quitWorld(page, options)
+        url = await quitWorld(page, options)
     }
 
     if (url.includes('/setup')) {
-        await logoutFromInstance(page, options)
+        url = await logoutFromInstance(page, options)
     }
 
 }
