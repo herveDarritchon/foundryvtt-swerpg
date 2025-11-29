@@ -50,8 +50,8 @@ use: {
 
 ```env
 E2E_FOUNDRY_BASE_URL=http://localhost:30000
-E2E_FOUNDRY_ADMIN_PASSWORD=Aotearoa3          # ⬅️ NOUVEAU
-E2E_FOUNDRY_USERNAME=gamemaster
+E2E_FOUNDRY_ADMIN_PASSWORD=Aotearoa3"          # ⬅️ NOUVEAU
+E2E_FOUNDRY_USERNAME=Gamemaster
 E2E_FOUNDRY_PASSWORD=changeme
 E2E_FOUNDRY_WORLD=Swerpg-E2E-World
 ```
