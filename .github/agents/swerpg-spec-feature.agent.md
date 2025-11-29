@@ -8,7 +8,7 @@ argument-hint: >-
   Paste a free-form description of a need for the SWERPG / SW Edge system
   (from a GM/players or product perspective); the agent will infer domain,
   purpose, feature, version and write a structured spec file.
-model: GPT-5
+model: GPT-5.1
 target: vscode
 tools:
   [
