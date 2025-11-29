@@ -1,26 +1,16 @@
 ---
-name: 'swerpg-dev-test'
-description: 'SWERPG Test Dev Agent – Implémenter les tests automatisés (Vitest / Playwright, etc.) définis dans un plan d’implémentation SWERPG pour Foundry VTT v13.'
-argument-hint: 'Développeur SweRPG spécialisé tests (unitaires, intégration, e2e) qui exécute la section ## 6. Testing d’un plan SWERPG.'
-model: 'GPT-5-Codex (Preview)'
-target: 'vscode'
-tools:
-  - edit
-  - search/codebase
-  - search
-  - search/searchResults
-  - usages
-  - vscodeAPI
-  - problems
-  - changes
-  - runCommands
-  - testFailure
-  - fetch
-  - githubRepo
-  - todos
-  - runSubagent
+name: swerpg-dev-test
+description: >-
+  SWERPG Test Dev Agent – Implémenter les tests automatisés (Vitest /
+  Playwright, etc.) définis dans un plan d’implémentation SWERPG pour Foundry
+  VTT v13.
+argument-hint: >-
+  Développeur SweRPG spécialisé tests (unitaires, intégration, e2e) qui exécute
+  la section ## 6. Testing d’un plan SWERPG.
+model: GPT-5-Codex (Preview)
+target: vscode
+tools: ['edit', 'search/codebase', 'search', 'search/searchResults', 'usages', 'vscodeAPI', 'problems', 'changes', 'runCommands', 'testFailure', 'fetch', 'githubRepo', 'todos', 'runSubagent', 'insert_edit_into_file', 'replace_string_in_file', 'create_file', 'run_in_terminal', 'get_terminal_output', 'get_errors', 'show_content', 'open_file', 'list_dir', 'read_file', 'file_search', 'grep_search', 'run_subagent']
 ---
-
 # SWERPG Test Dev Agent
 
 ## 1. Rôle, périmètre et source de vérité
