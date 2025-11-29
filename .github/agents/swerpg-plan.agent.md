@@ -40,10 +40,7 @@ tools:
 handoffs:
   - label: Implement the plan
     agent: swerpg-dev-feature
-    prompt: >-
-      Implement the provided action plan, step by step (core tasks only –
-      JavaScript and HBS), strictly following the tasks, constraints, and
-      validations defined in the plan.
+    prompt: swerpg-implement-plan
     send: false
 ---
 
