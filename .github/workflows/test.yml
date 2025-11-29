@@ -44,6 +44,7 @@ jobs:
     needs: test
     env:
       E2E_FOUNDRY_BASE_URL: ${{ secrets.E2E_FOUNDRY_BASE_URL }}
+      E2E_FOUNDRY_ADMIN_PASSWORD: ${{ secrets.E2E_FOUNDRY_ADMIN_PASSWORD }}
       E2E_FOUNDRY_USERNAME: ${{ secrets.E2E_FOUNDRY_USERNAME }}
       E2E_FOUNDRY_PASSWORD: ${{ secrets.E2E_FOUNDRY_PASSWORD }}
       E2E_FOUNDRY_WORLD: ${{ secrets.E2E_FOUNDRY_WORLD }}
