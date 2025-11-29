@@ -6,6 +6,7 @@ export const test = base.extend<{ worldReady: void }>({
     async ({ page }, use) => {
       const options: FoundrySessionOptions = {
         baseURL: process.env.E2E_FOUNDRY_BASE_URL ?? 'http://localhost:30000',
+        adminPassword: process.env.E2E_FOUNDRY_ADMIN_PASSWORD ?? '',
         username: process.env.E2E_FOUNDRY_USERNAME ?? 'gamemaster',
         password: process.env.E2E_FOUNDRY_PASSWORD ?? 'changeme',
         world: process.env.E2E_FOUNDRY_WORLD ?? 'Swerpg-E2E-World',
