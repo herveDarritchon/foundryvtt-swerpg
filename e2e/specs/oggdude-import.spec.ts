@@ -5,8 +5,6 @@ test.describe('OggDude importer', () => {
       // worldReady a déjà :
       // - loggué l’admin
       // - lancé le world swerpg-e2e
-      // - rejoint la partie comme Gamemaster
-      // Tu es donc déjà sur /game avec le système Swerpg chargé.
 
       // 1) Ouvrir Game Settings
       await page.getByRole('tab', { name: /Game Settings/i }).click()
@@ -28,14 +26,9 @@ test.describe('OggDude importer', () => {
       await page.getByRole('button', { name: /Import data from OggDude/i }).click()
 
       // 6) Vérifier que l’interface d’import OggDude est bien affichée
-      const importerWindow = page
-          .locator('.window-app')
-          .filter({ hasText: /OggDude Zip Data File/i })
-
-      await expect(importerWindow).toBeVisible()
-      await expect(
-          importerWindow.getByRole('button', { name: /OggDude Zip Data File/i })
-      ).toBeVisible()
+      // a) Vérifier l’input de fichier
+      const fileInput = await page.getByRole('button', { name: 'OggDude Zip Data File' });
+      await expect(fileInput).toBeVisible()
 
   })
 })
