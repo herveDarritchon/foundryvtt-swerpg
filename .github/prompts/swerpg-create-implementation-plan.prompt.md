@@ -5,6 +5,44 @@ description: 'Generate a deterministic implementation plan for the SWERPG system
 
 You act as the `swerpg-plan` agent for the **SWERPG / Star Wars Edge** system on Foundry VTT v13+.
 
+## Additional Workflow Requirements (GitHub Issue & PR)
+
+Before or while generating the implementation plan file, you MUST also:
+
+1. **Create a GitHub Issue**
+   - Use the repository’s Git tooling (via terminal) to create an issue, or prepare the full issue payload if CLI-based creation is unavailable.
+   - The issue title MUST follow the format: `Plan: <domain> - <feature> v<version>`.
+   - The issue body MUST contain **exactly** the same content as the generated plan file (YAML front matter + Markdown sections), or a faithful copy if format constraints apply.
+   - You MUST assign labels automatically according to the context:
+     - Always include: `plan`, `sweRPG`, `foundry-v13`.
+     - Add `feature`, `bug`, `refactor`, `data`, `upgrade`, ou `architecture` en fonction de la valeur de `${purpose}`.
+     - Add `domain:<domain>` (e.g. `domain:oggdude-importer`, `domain:character-sheet`, etc.).
+   - If issue creation via CLI/API is not possible in this environment, you MUST:
+     - Generate a ready-to-use Markdown issue body,
+     - Print a short copy-paste block with `Title`, `Labels`, and `Body` so it can be created manually.
+
+2. **Create and Switch to a Git Branch for the Plan**
+   - Use `git` in the terminal to:
+     - Create a new branch named: `plan/${domain}/${purpose}-${feature}-v${version}` (kebab-case for `feature`).
+     - Switch to this branch before writing the final version of the plan file.
+   - If `git` is not available, clearly state this limitation in the chat response and still structure the branch name and suggested commands so they can be run manually:
+     - `git checkout -b plan/${domain}/${purpose}-${feature}-v${version}`
+
+3. **Prepare a Pull Request (PR)**
+   - After creating the plan file and (if possible) committing the changes, you MUST:
+     - Prepare the PR metadata (title + body) even if you cannot actually open the PR from this environment.
+     - PR title format: `Plan: ${domain} – ${purpose}-${feature}-v${version}`.
+     - PR body MUST include:
+       - A short executive summary of the change (2–4 lignes en français).
+       - A reference to the created issue (e.g. `Closes #<issue-number>` if known, otherwise `Relates to: <issue title>`).
+       - The main `REQ-XXX`, `TASK-XXX` et `TEST-XXX` IDs en liste à puces.
+       - Le chemin du fichier de plan : `/documentation/plan/<domain>/<purpose>-<feature>-<version>.md`.
+   - Si une CLI GitHub (ex. `gh`) est disponible, tu peux suggérer la commande pour ouvrir la PR (`gh pr create ...`), mais tu dois rester robuste si elle ne l’est pas.
+
+> Ces étapes (Issue + branche + PR) ne remplacent PAS la création du fichier de plan. Elles s’y ajoutent. Le plan reste la source de vérité principale, et son contenu est réutilisé comme corps d’issue et résumé de PR.
+
+## Core Goal
+
 Your goal: **create a complete and deterministic implementation plan**, as a single file in
 `/documentation/plan/<domain>/[purpose]-[feature]-[version].md`, based on an **input requirements file**, and strictly
 following the rules below:
