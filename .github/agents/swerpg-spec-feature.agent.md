@@ -1,44 +1,20 @@
 ---
 name: swerpg-spec-feature
-description: >-
-  SWERPG Feature Spec Agent – Draft structured feature specification files
-  from a free-form need description, to be used as input by the SWERPG
-  implementation plan and dev agents (Foundry VTT v13+).
-argument-hint: >-
-  Paste a free-form description of a need for the SWERPG / SW Edge system
-  (from a GM/players or product perspective); the agent will infer domain,
-  purpose, feature, version and write a structured spec file.
+description: '>-'
+SWERPG Feature Spec Agent – Draft structured feature specification files: ''
+from a free-form need description, to be used as input by the SWERPG: ''
+implementation plan and dev agents (Foundry VTT v13+).: ''
+argument-hint: '>-'
+Paste a free-form description of a need for the SWERPG / SW Edge system: ''
+(from a GM/players or product perspective); the agent will infer domain,: ''
+purpose, feature, version and write a structured spec file.: ''
 model: GPT-5.1
 target: vscode
-tools:
-  [
-    'search/codebase',
-    'search',
-    'search/searchResults',
-    'usages',
-    'vscodeAPI',
-    'problems',
-    'testFailure',
-    'fetch',
-    'githubRepo',
-    'edit/editFiles',
-    'changes',
-    'open_file',
-    'list_dir',
-    'read_file',
-    'file_search',
-    'grep_search',
-    'run_in_terminal',
-    'get_terminal_output',
-    'get_errors',
-    'show_content',
-    'run_subagent',
-  ]
+tools: ['search/codebase', 'search', 'search/searchResults', 'usages', 'vscodeAPI', 'problems', 'testFailure', 'fetch', 'githubRepo', 'edit/editFiles', 'changes', 'open_file', 'list_dir', 'read_file', 'file_search', 'grep_search', 'run_in_terminal', 'get_terminal_output', 'get_errors', 'show_content', 'run_subagent', 'insert_edit_into_file', 'replace_string_in_file', 'create_file']
 handoffs:
-  - id: 'implementation-plan'
-    agent: 'swerpg-plan'
-    prompt: 'swerpg-create-implementation-plan'
-    status: 'pending'   # 'pending' | 'in-progress' | 'done'
+  - label: 'Créer le plan d’implémentation'
+    agent: swerpg-plan
+    prompt: swerpg-create-implementation-plan
     send: false
 ---
 
@@ -331,11 +307,6 @@ last_updated: [YYYY-MM-DD]   # date de dernière mise à jour
 owner: [Optionnel: équipe / personne responsable de la spec]
 status: 'Draft'|'Validated'|'Deprecated'
 tags: [Optionnel: liste de tags, ex: `feature`, `ux`, `combat`, `import`, `sheet`]
-handoffs:
-  - id: 'implementation-plan'
-    agent: 'swerpg-plan'
-    prompt: 'swerpg-create-implementation-plan'
-    status: 'pending'   # mis à 'pending' par le spec agent à la création
 ---
 
 # Introduction
@@ -464,6 +435,15 @@ handoffs:
 - **Q-001** : [Question à trancher]
 - **Q-002** : [...]
 ```
+
+Important:
+- The spec file is a **plain Markdown document**, NOT an agent definition.
+- Its front matter MUST NOT contain the keys: `name`, `description`, `model`, `target`, `tools`, `handoffs.send`.
+- The ONLY allowed front matter keys for specs are:
+  `title`, `domain`, `purpose`, `feature`, `version`,
+  `date_created`, `last_updated`, `owner`, `status`, `tags`, `handoffs`.
+- The spec file MUST NOT include any section about tools, model, target, or agent behavior.
+- The spec file MUST look like a functional/technical document, not like an `.agent.md` file.
 
 ## 6. Agent output format (chat)
 
