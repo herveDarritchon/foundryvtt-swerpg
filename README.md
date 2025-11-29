@@ -97,6 +97,15 @@ pnpm test
 pnpm vitest run tests/integration/species-import.integration.spec.mjs # ex. tester un fichier d'intégration
 ```
 
+## Tests E2E (Playwright)
+
+Le projet inclut une suite de tests end-to-end basée sur Playwright, séparée des tests unitaires (Vitest).
+
+- Tests unitaires : `pnpm test`
+- Tests E2E : `pnpm test:e2e` (ou `pnpm test:e2e:headed`)
+
+Voir `documentation/tests/playwright-e2e-guide.md` pour la configuration détaillée et les bonnes pratiques.
+
 ## Règles de contribution (rapide)
 
 Pour contribuer, regardez d'abord la documentation dans `documentation/` et les fichiers sous `.github/` :

@@ -13,8 +13,8 @@
     "test": "vitest",
     "test:watch": "vitest --watch",
     "test:coverage": "pnpm vitest run --coverage",
-    "test:e2e": "playwright test",
-    "test:e2e:headed": "playwright test --headed",
+    "e2e": "playwright test",
+    "e2e:headed": "playwright test --headed",
     "fmt": "prettier --write .",
     "fmt:check": "prettier --check ."
   },
