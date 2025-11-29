@@ -1,5 +1,6 @@
 import {expect, test as base} from '@playwright/test'
-import {FoundrySessionOptions, loginAndEnterWorld, logoutAndQuitWorld} from '../utils/foundrySession'
+import {FoundrySessionOptions} from '../utils/foundrySession'
+import {setUp, tearDown} from "../utils/e2eTest";
 
 export const test = base.extend<{ worldReady: void }>({
     worldReady: [
@@ -13,12 +14,12 @@ export const test = base.extend<{ worldReady: void }>({
             }
 
             // INIT : on met Foundry en /game sur le bon world
-            await loginAndEnterWorld(page, options)
+            await setUp(page, options)
 
             await use()
 
             // CLOSE : on remet l’instance sur /setup pour le prochain navigateur/projet
-            await logoutAndQuitWorld(page, options)
+            await tearDown(page, options)
         },
         {auto: true},
     ],
