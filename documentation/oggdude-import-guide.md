@@ -4,30 +4,47 @@ This guide describes the process of adding support for importing a new Item type
 
 ## Organization of Imported Items
 
-Since version 1.0 (November 2025), items imported from OggDude are automatically organized in a hierarchical folder structure:
+Since version 1.0 (November 2025), items imported from OggDude are automatically organized in a hierarchical folder structure with color coding:
 
 ```
 OggDude/
-├── Weapons/
-├── Armor/
-├── Gear/
-├── Careers/
-├── Talents/
-├── Species/
-├── Specializations/
-├── Obligations/
-├── Duties/
-├── Motivations/
-└── Motivation Categories/
+├── Weapons/          (Blue - #00a8ff)
+├── Armor/            (Green - #4cd137)
+├── Gear/             (Orange - #ffc312)
+├── Careers/          (Red - #c23616)
+├── Talents/          (Purple - #9c88ff)
+├── Species/          (Light Green - #44bd32)
+├── Specializations/  (Red-Orange - #e84118)
+├── Obligations/      (Dark Orange - #f79f1f)
+├── Duties/           (Light Blue - #0097e6)
+├── Motivations/      (Gold - #fbc531)
+└── Motivation Categories/  (Gold - #fbc531)
 ```
+
+### Folder Features
 
 This organization:
 - **Happens automatically** when you import OggDude data
 - **Applies to all domains** (weapons, armor, gear, careers, talents, etc.)
 - **Uses a cache** to avoid duplicate folder creation during a single import session
-- **Falls back to `OggDude/Misc`** for unrecognized item types
+- **Falls back to `OggDude/Misc`** (Blue-Grey - #1b5f8c) for unrecognized item types
+- **Assigns colors automatically** based on the item type, using the SWERPG theme palette
+- **Preserves manual color changes** made by GMs after import (colors are only applied on folder creation or if missing)
 
-If you are adding a new item type to the import system, you should register it in the folder mapping (see step 6.3 below).
+### For Game Masters
+
+The color-coded folders help you quickly identify different types of OggDude content in your world:
+- **Blue tones** for combat-related items (Weapons)
+- **Green tones** for protection and biological items (Armor, Species)
+- **Orange/Gold tones** for equipment and role-playing elements (Gear, Obligations, Motivations)
+- **Red tones** for character development (Careers, Specializations)
+- **Purple** for special abilities (Talents)
+
+You can manually change folder colors after import if desired - the system will not override your custom colors on subsequent imports.
+
+### For Developers
+
+If you are adding a new item type to the import system, you should register it in the folder mapping (see step 6.3 below) to ensure it gets an appropriate color.
 
 ## 1. Analyze the Source Data
 
