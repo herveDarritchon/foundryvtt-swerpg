@@ -106,3 +106,4 @@ Ou consultez les traces des tests échoués :
 pnpm exec playwright show-trace test-results/path-to-trace/trace.zip
 ```
 
+
