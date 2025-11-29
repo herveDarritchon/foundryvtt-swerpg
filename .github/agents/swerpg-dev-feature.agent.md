@@ -6,7 +6,7 @@ description: >-
 argument-hint: >-
   SweRPG developer executing an existing implementation plan (file
   /documentation/plan/...) across all code except automated tests.
-model: GPT-5-Codex (Preview)
+model: Claude Sonnet 4.5
 target: vscode
 tools:
   [
