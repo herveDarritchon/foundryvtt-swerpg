@@ -10,20 +10,20 @@ You act as the `swerpg-plan` agent for the **SWERPG / Star Wars Edge** system on
 Before or while generating the implementation plan file, you MUST also:
 
 1. **Create a GitHub Issue**
-   - Use the repository’s Git tooling (via terminal) to create an issue, or prepare the full issue payload if CLI-based creation is unavailable.
-   - The issue title MUST follow the format: `Plan: <domain> - <feature> v<version>`.
-   - The issue body MUST contain **exactly** the same content as the generated plan file (YAML front matter + Markdown sections), or a faithful copy if format constraints apply.
+2. - If Github tooling is not available, clearly state this limitation in the chat response.
+   - Use Github tooling (via terminal) to create an issue in OWNER/REPOSITORY.
+   - The issue title MUST follow the format: `<type>: <domain> - <feature>`.
+   - The type MUST be one of: `feat`, `fix`, `refactor`, `docs`, `test`, `chore`.
+   - The issue body MUST contain the same content as the generated plan file (YAML front matter + Markdown sections), or a faithful copy if format constraints apply.
+   - Use task lists to track progress on the issue, task should be the same as the plan tasks.
    - You MUST assign labels automatically according to the context:
-     - Always include: `plan`, `sweRPG`, `foundry-v13`.
+     - Always include: `<foundry-version>`.
      - Add `feature`, `bug`, `refactor`, `data`, `upgrade`, ou `architecture` en fonction de la valeur de `${purpose}`.
      - Add `domain:<domain>` (e.g. `domain:oggdude-importer`, `domain:character-sheet`, etc.).
-   - If issue creation via CLI/API is not possible in this environment, you MUST:
-     - Generate a ready-to-use Markdown issue body,
-     - Print a short copy-paste block with `Title`, `Labels`, and `Body` so it can be created manually.
 
 2. **Create and Switch to a Git Branch for the Plan**
    - Use `git` in the terminal to:
-     - Create a new branch named: `plan/${domain}/${purpose}-${feature}-v${version}` (kebab-case for `feature`).
+     - Create a new branch named: `${type}/${domain}/${purpose}-${feature}-v${version}` (kebab-case for `feature`).
      - Switch to this branch before writing the final version of the plan file.
    - If `git` is not available, clearly state this limitation in the chat response and still structure the branch name and suggested commands so they can be run manually:
      - `git checkout -b plan/${domain}/${purpose}-${feature}-v${version}`
@@ -31,7 +31,7 @@ Before or while generating the implementation plan file, you MUST also:
 3. **Prepare a Pull Request (PR)**
    - After creating the plan file and (if possible) committing the changes, you MUST:
      - Prepare the PR metadata (title + body) even if you cannot actually open the PR from this environment.
-     - PR title format: `Plan: ${domain} – ${purpose}-${feature}-v${version}`.
+     - PR title format: `${type}: ${domain} – ${purpose}-${feature}`.
      - PR body MUST include:
        - A short executive summary of the change (2–4 lignes en français).
        - A reference to the created issue (e.g. `Closes #<issue-number>` if known, otherwise `Relates to: <issue title>`).
