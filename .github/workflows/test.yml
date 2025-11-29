@@ -16,15 +16,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20' # adapte à ta version
-
       - name: 📦 Setup pnpm
         uses: pnpm/action-setup@v4
         with:
           version: 10 # ou "latest" si tu préfères
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20' # adapte à ta version
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -48,17 +48,26 @@ jobs:
       E2E_FOUNDRY_USERNAME: ${{ secrets.E2E_FOUNDRY_USERNAME }}
       E2E_FOUNDRY_PASSWORD: ${{ secrets.E2E_FOUNDRY_PASSWORD }}
       E2E_FOUNDRY_WORLD: ${{ secrets.E2E_FOUNDRY_WORLD }}
+
     steps:
       - uses: actions/checkout@v4
+
+      - name: 📦 Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'pnpm'
-      - name: Install pnpm
-        run: npm install -g pnpm
+
       - name: Install dependencies
         run: pnpm install
+
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
+
       - name: Run Playwright E2E tests
-        run: pnpm test:e2e
+        run: pnpm e2e
+
