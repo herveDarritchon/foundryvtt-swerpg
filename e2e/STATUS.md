@@ -21,7 +21,7 @@ Mise à jour de `e2e/utils/foundrySession.ts` pour :
 Création de `.env.e2e.local` avec la configuration par défaut :
 ```env
 E2E_FOUNDRY_BASE_URL=http://localhost:30000
-E2E_FOUNDRY_USERNAME=gamemaster
+E2E_FOUNDRY_USERNAME=Gamemaster
 E2E_FOUNDRY_PASSWORD=changeme
 E2E_FOUNDRY_WORLD=Swerpg-E2E-World
 ```
