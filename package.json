@@ -13,6 +13,8 @@
     "test": "vitest",
     "test:watch": "vitest --watch",
     "test:coverage": "pnpm vitest run --coverage",
+    "test:e2e": "playwright test",
+    "test:e2e:headed": "playwright test --headed",
     "fmt": "prettier --write .",
     "fmt:check": "prettier --check ."
   },
@@ -42,13 +44,14 @@
     "gulp-less": "^5.0.0",
     "gulp-plumber": "^1.2.1",
     "gulp-touch-cmd": "^0.0.1",
+    "jszip": "^3.10.1",
     "less": "^4.3.0",
     "prettier": "^3.6.2",
     "prettier-plugin-handlebars": "^0.0.1",
     "rollup": "^4.41.1",
     "semantic-release": "^24.2.5",
     "vitest": "^3.1.1",
-    "jszip": "^3.10.1"
+    "@playwright/test": "^1.48.0"
   },
   "author": "Behaska",
   "license": "MIT"
