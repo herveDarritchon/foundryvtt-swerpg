@@ -70,6 +70,11 @@ export async function enterGameAsGamemaster(
     // ici on sélectionne par **label** visible (ex: "Gamemaster")
     await page.getByRole('combobox').selectOption({label: options.username})
 
+    // Variante 2 : par sélecteur CSS
+    const userSelect = page.locator('select[name="userid"]');
+    await userSelect.waitFor({ state: 'visible' });
+    await userSelect.selectOption({ label: options.username });
+
     await page
         .getByRole('button', {name: /join game session/i})
         .click()
