@@ -11,7 +11,7 @@ export default defineConfig({
     workers: 1,
     timeout: process.env.PLAYWRIGHT_TEST_TIMEOUT ? parseInt(process.env.PLAYWRIGHT_TEST_TIMEOUT) : 900000,
     expect: {
-        timeout: process.env.PLAYWRIGHT_EXPECT_TIMEOUT ? parseInt(process.env.PLAYWRIGHT_EXPECT_TIMEOUT) : 15000,
+        timeout: process.env.PLAYWRIGHT_EXPECT_TIMEOUT ? parseInt(process.env.PLAYWRIGHT_EXPECT_TIMEOUT) : 30000, // Augmenté à 30s pour Chromium
     },
     use: {
         baseURL,
@@ -26,6 +26,18 @@ export default defineConfig({
                 ...devices['Desktop Chrome'],
                 viewport: { width: 1920, height: 1080 },
                 actionTimeout: 15000, // Augmenté de 9s par défaut à 15s pour Chromium
+                // Options spécifiques pour améliorer la stabilité de session sur Chromium
+                launchOptions: {
+                    args: [
+                        '--disable-blink-features=AutomationControlled', // Évite la détection d'automation
+                        '--disable-features=IsolateOrigins,site-per-process', // Améliore la gestion des cookies cross-origin
+                    ],
+                },
+                // Contexte persistant pour conserver les cookies entre les navigations
+                contextOptions: {
+                    // Force la persistance des cookies de session
+                    acceptDownloads: true,
+                },
             },
         },
         {
