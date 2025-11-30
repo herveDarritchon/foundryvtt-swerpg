@@ -190,16 +190,12 @@ Pour être concret, je te propose cette boucle pour chaque nouveau scénario :
 
     * générer du boilerplate (imports, signatures, boucles, petits helpers),
     * cloner des patterns déjà propres (tes propres locators, tes propres fixtures).
-* 💣 Ne jamais accepter :
+    * 💣 Ne jamais accepter :
 
-    * des sélecteurs illisibles,
-    * des `waitForTimeout` magiques,
-    * des tests qui n’ont pas d’assert ou un seul assert en fin de fichier.
+        * des sélecteurs illisibles,
+        * des `waitForTimeout` magiques,
+        * des tests qui n’ont pas d’assert ou un seul assert en fin de fichier.
 * 💡 Centraliser :
 
     * login + choix de world + dismiss overlays dans 1–2 helpers bien nommés,
     * et toujours y faire référence par des noms explicites (`loginAsAdminAndEnterWorld('swerpg-e2e-world')`).
-
----
-
-Si tu veux, prochain step : tu m’envoies **un** scénario métier Foundry (ex : “créer un perso, lui lancer un jet, vérifier le chat”) et je te fais *la spec + les commentaires exacts* pour guider Copilot dans ta base actuelle.

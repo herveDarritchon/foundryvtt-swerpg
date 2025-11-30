@@ -1,109 +1,360 @@
 # Guide Playwright E2E pour Swerpg
 
-Ce guide explique comment configurer et exécuter les tests end-to-end Playwright pour le système Swerpg.
+Ce guide décrit comment exécuter et étendre la suite de tests end-to-end Playwright pour le système **Swerpg** sous Foundry VTT v13.
 
-## Prérequis
+Il s’adresse à des développeurs déjà à l’aise avec Foundry VTT, TypeScript et Playwright.
 
-- Node.js et pnpm installés
-- Dépendances du projet installées :
+---
+
+## 1. Prérequis
+
+- Node.js LTS et **pnpm** installés
+- Dépendances du projet Swerpg installées
+- Une instance **Foundry VTT v13+** accessible, avec un **monde de test Swerpg** configuré
+
+Installation des dépendances projet et des navigateurs Playwright :
 
 ```bash
 pnpm install
-npx playwright install --with-deps
+pnpm exec playwright install --with-deps
 ```
 
-- Une instance Foundry VTT v13+ accessible, avec un monde de test Swerpg.
+> Les tests E2E Playwright sont séparés des tests Vitest : `pnpm test` n’exécute **que** Vitest.
 
-## Configuration environnement
+---
 
-1. Copier `.env.e2e.example` en `.env.e2e.local`.
-2. Adapter les variables :
-   - `E2E_FOUNDRY_BASE_URL` - URL de l'instance Foundry
-   - `E2E_FOUNDRY_ADMIN_PASSWORD` - Mot de passe administrateur Foundry (pour accéder au setup)
-   - `E2E_FOUNDRY_USERNAME` - Nom d'utilisateur pour se connecter au monde
-   - `E2E_FOUNDRY_PASSWORD` - Mot de passe de l'utilisateur
-   - `E2E_FOUNDRY_WORLD` - Nom du monde de test
+## 2. Configuration environnement E2E
 
-Les fichiers `.env.e2e*` sont ignorés par Git.
+Les tests E2E se basent sur un fichier d’environnement dédié chargé par `playwright.config.ts` :
 
-**Note importante** : Le mot de passe administrateur (`E2E_FOUNDRY_ADMIN_PASSWORD`) est requis pour accéder à la page de setup de Foundry. C'est différent du mot de passe de l'utilisateur qui se connecte au monde.
+```ts
+// extrait de playwright.config.ts
+dotenv.config({ path: process.env.E2E_ENV_FILE || '.env.e2e.local' })
+const baseURL = process.env.E2E_FOUNDRY_BASE_URL || 'http://localhost:30000'
+```
 
-## Commandes principales
+### 2.1. Création du fichier `.env.e2e.local`
 
-> Important : les tests E2E Playwright ont leur propre cycle de vie et ne sont **pas** lancés par `pnpm test`.
-> `pnpm test` exécute uniquement les tests Vitest.
+1. Copier le fichier d’exemple :
 
-- Exécuter tous les tests E2E :
+```bash
+cp .env.e2e.example .env.e2e.local
+```
+
+2. Adapter au besoin les variables suivantes :
+
+- `E2E_FOUNDRY_BASE_URL` – URL de l’instance Foundry (ex. `http://localhost:30000`)
+- `E2E_FOUNDRY_ADMIN_PASSWORD` – mot de passe **administrateur** Foundry (page `/auth` / `/setup`)
+- `E2E_FOUNDRY_USERNAME` – nom du compte utilisé pour rejoindre la partie (ex. « Gamemaster »)
+- `E2E_FOUNDRY_PASSWORD` – mot de passe de cet utilisateur (si nécessaire)
+- `E2E_FOUNDRY_WORLD` – nom du **monde de test** Swerpg (ex. `swerpg-e2e`)
+
+Les fichiers `.env.e2e*` sont ignorés par Git et ne doivent **jamais** être committés.
+
+### 2.2. Fichier d’environnement alternatif
+
+Il est possible de pointer vers un autre fichier d’environnement sans renommer `.env.e2e.local` :
+
+```bash
+E2E_ENV_FILE=.env.e2e.staging pnpm e2e
+```
+
+Cela permet d’utiliser des environnements Foundry distincts (local, CI, staging…) sans modifier le fichier par défaut.
+
+---
+
+## 3. Commandes pnpm disponibles
+
+Les scripts E2E sont déclarés dans `package.json` :
+
+```jsonc
+"scripts": {
+  ...
+  "e2e": "playwright test",
+  "e2e:headed": "playwright test --headed",
+  "foundry:e2e:start": "bash ./scripts/e2e-foundry-start.sh start",
+  "foundry:e2e:stop": "bash ./scripts/e2e-foundry-start.sh stop",
+  "foundry:e2e:restart": "bash ./scripts/e2e-foundry-start.sh restart"
+}
+```
+
+### 3.1. Lancer la suite complète
 
 ```bash
 pnpm e2e
 ```
 
-- Exécuter en mode headed :
+- Exécute tous les tests dans le dossier `e2e/` (chromium + firefox, cf. `playwright.config.ts`).
+- Mode headless par défaut.
+
+### 3.2. Mode headed (debug visuel)
 
 ```bash
 pnpm e2e:headed
 ```
 
-- Cibler un project spécifique (ex: Firefox) :
+- Ouvre les navigateurs avec UI.
+- Utile pour comprendre un scénario qui échoue ou pour mettre au point de nouveaux tests.
+
+### 3.3. Filtrer projets / fichiers / tests
+
+Playwright accepte les mêmes options que la CLI standard :
+
+- Cibler un **projet** (navigateur) spécifique :
+
+  ```bash
+  pnpm e2e -- --project=firefox
+  pnpm e2e -- --project=chromium
+  ```
+
+- Cibler un **fichier de spec** précis :
+
+  ```bash
+  pnpm e2e -- e2e/specs/bootstrap.spec.ts
+  pnpm e2e -- e2e/specs/oggdude-import.spec.ts
+  ```
+
+- Filtrer par **nom de test** (grep) :
+
+  ```bash
+  pnpm e2e -- --grep "OggDude importer"
+  ```
+
+### 3.4. Démarrer/arrêter Foundry pour les tests
+
+Les scripts suivants pilotent une instance Foundry dédiée aux E2E (si vous avez configuré `scripts/e2e-foundry-start.sh`) :
 
 ```bash
-pnpm e2e -- --project=firefox
+pnpm foundry:e2e:start
+pnpm foundry:e2e:stop
+pnpm foundry:e2e:restart
 ```
 
-- Cibler un test ou un fichier :
+Selon votre environnement, vous pouvez aussi lancer Foundry manuellement via son launcher habituel, tant qu’il est accessible à l’URL configurée dans `E2E_FOUNDRY_BASE_URL`.
 
-```bash
-pnpm e2e -- e2e/specs/bootstrap.spec.ts
-pnpm e2e -- --grep "OggDude importer"
+---
+
+## 4. Configuration Playwright
+
+Le fichier `playwright.config.ts` définit la configuration commune des tests :
+
+- `testDir: './e2e'` – racine de la suite E2E
+- `workers: 1` – exécution séquentielle (évite les collisions sur la même instance Foundry)
+- `timeout` – durée max d’un test (par défaut 15 min, surchargée par `PLAYWRIGHT_TEST_TIMEOUT`)
+- `expect.timeout` – délai des assertions Playwright (par défaut 15 s, surchargé via `PLAYWRIGHT_EXPECT_TIMEOUT`)
+- `use.baseURL` – dérivé de `E2E_FOUNDRY_BASE_URL`
+- Traces / screenshots / vidéos :
+  - `trace`: `retain-on-failure` en local, `on-first-retry` en CI
+  - `screenshot`: `only-on-failure`
+  - `video`: `retain-on-failure`
+- Projets configurés :
+  - `chromium` (`Desktop Chrome`, 1920×1080)
+  - `firefox` (`Desktop Firefox`, 1920×1080)
+
+Reporter :
+
+- En local : `list`
+- En CI : `list` + `html` dans `playwright-report/`
+
+---
+
+## 5. Structure des tests E2E
+
+Le dossier `e2e/` est organisé ainsi :
+
+- `e2e/specs/` – fichiers de tests (scénarios métiers)
+  - `bootstrap.spec.ts` – test minimal qui vérifie que le monde Swerpg se charge correctement
+  - `oggdude-import.spec.ts` – test UI de l’importeur OggDude
+- `e2e/utils/` – utilitaires de session Foundry et helpers de setup/teardown
+  - `foundrySession.ts` – primitives pour naviguer dans les écrans `/license`, `/auth`, `/setup`, `/join`, `/game`
+  - `e2eTest.ts` – `setUp` / `tearDown` haut niveau, basés sur `FoundrySessionOptions`
+- `e2e/helper/`
+  - `overlay.ts` – helpers pour fermer les overlays Foundry (tour, partage de données, etc.)
+- `e2e/fixtures.ts` (si présent) – fixtures Playwright projet, notamment `worldReady`
+- `e2e/README.md` – résumé rapide et renvoi vers ce guide détaillé
+
+### 5.1. Fixtures et session Foundry
+
+Les specs E2E importent les fixtures via :
+
+```ts
+import { test, expect } from '../fixtures'
 ```
 
-## Bonnes pratiques
+La fixture principale (par convention nommée `worldReady`) se charge de :
 
-- Utiliser des locators accessibles (`getByRole`, `getByLabel`, `getByText`).
-- Factoriser la logique de connexion et de navigation dans `e2e/utils/foundrySession.ts` et les fixtures.
-- Garder les scénarios focalisés sur des parcours MJ/joueurs concrets.
+- ouvrir la page `/auth` ou l’URL initiale adéquate,
+- accepter la licence si nécessaire (`/license` → `accepteLicense`),
+- se connecter en administrateur (`loginIntoInstance`),
+- filtrer et lancer le monde Swerpg ciblé (`enterWorld`),
+- rejoindre la partie en tant que MJ (`enterGameAsGamemaster`).
 
-## Troubleshooting
+Ces opérations sont implémentées dans `e2e/utils/foundrySession.ts` et orchestrées par `e2e/utils/e2eTest.ts`.
 
-### Erreur "Foundry instance unreachable"
+En début de test, la page est donc déjà sur `/game` avec l’UI Swerpg chargée.
 
-Si vous obtenez cette erreur lors de l'exécution des tests :
+### 5.2. Exemple de test minimal
 
-1. **Vérifiez que Foundry VTT est bien lancé** sur le port configuré
-2. **Vérifiez l'URL** dans `.env.e2e.local` :
+`e2e/specs/bootstrap.spec.ts` illustre un test de « bootstrap » très simple :
+
+```ts
+import { expect, test } from '../fixtures'
+
+test.describe('Swerpg bootstrap', () => {
+  test('should load Foundry world and display Swerpg UI element', async ({ page }) => {
+    await expect(page).toHaveURL(/.*game/)
+
+    const body = page.locator('body.system-swerpg')
+    await expect(body).toHaveCount(1)
+  })
+})
+```
+
+### 5.3. Exemple de scénario fonctionnel
+
+`e2e/specs/oggdude-import.spec.ts` montre un scénario plus complet basé sur des locators accessibles :
+
+```ts
+import { test, expect } from '../fixtures'
+
+test.describe('OggDude importer', () => {
+  test('should open the OggDude import interface', async ({ page }) => {
+    // 1) Ouvrir Game Settings
+    await page.getByRole('tab', { name: /Game Settings/i }).click({ force: true })
+
+    // 2) Ouvrir Configure Settings
+    await page.getByRole('button', { name: /Configure Settings/i }).click()
+
+    // 3) Aller dans les réglages du système "Star Wars Edge RPG"
+    await page.getByRole('button', { name: /Star Wars Edge RPG/i }).click()
+
+    // 4) Cliquer sur la section OggDude Data Importer
+    const oggDudeSection = page
+      .locator('section')
+      .filter({ hasText: /OggDude Data Importer/i })
+      .first()
+    await oggDudeSection.click()
+
+    // 5) Ouvrir la fenêtre d'import OggDude
+    await page.getByRole('button', { name: /Import data from OggDude/i }).click()
+
+    // 6) Vérifier que l’interface d’import OggDude est bien affichée
+    const fileInput = page.getByRole('button', { name: 'OggDude Zip Data File' })
+    await expect(fileInput).toBeVisible()
+  })
+})
+```
+
+Pour ajouter un nouveau scénario, créez un nouveau fichier `.spec.ts` dans `e2e/specs/` en réutilisant ce pattern (`test.describe` + `test(...)`).
+
+---
+
+## 6. Bonnes pratiques spécifiques Swerpg / Foundry
+
+### 6.1. Locators accessibles
+
+Toujours privilégier les locators Playwright basés sur l’accessibilité :
+
+- `page.getByRole('button', { name: /Configure Settings/i })`
+- `page.getByRole('tab', { name: /Game Settings/i })`
+- `page.getByRole('combobox')`, `page.getByLabel('…')`
+
+Avantages :
+
+- tests plus robustes face aux refactors CSS/HTML,
+- meilleure cohérence avec les bonnes pratiques a11y (labels explicites, rôles ARIA corrects).
+
+### 6.2. Conventions Foundry
+
+- Utiliser les **URLs symboliques** plutôt que des chemins absolus complets :
+  - `/license`, `/auth`, `/setup`, `/join`, `/game`
+- Tirer parti de `baseURL` configuré dans `playwright.config.ts` et utiliser `page.goto(`${options.baseURL}/auth`)` dans les helpers plutôt que de dupliquer l’URL.
+- Attendre explicitement les bonnes étapes de navigation :
+  - `page.waitForURL('**/setup', { waitUntil: 'networkidle' })`
+  - `page.waitForURL('**/game', { waitUntil: 'networkidle' })`
+
+### 6.3. Nettoyage et stabilité
+
+- Le helper `tearDown` (`e2e/utils/e2eTest.ts`) est prévu pour revenir à un état stable entre les tests.
+- En cas d’erreur lors du cleanup, les helpers se contentent d’essayer de revenir sur `/setup` ou `/auth` sans faire échouer le test : objectif → éviter les effets de bord sur les scénarios suivants.
+- Évitez de modifier à la main l’état du monde de test (suppression massive de données, changements de configuration critique) dans un test sans cleanup dédié.
+
+### 6.4. Écriture de nouveaux tests
+
+Pour tout nouveau test E2E :
+
+1. **Identifier le parcours fonctionnel** MJ / joueur visé.
+2. Créer un fichier `e2e/specs/mon-parcours.spec.ts`.
+3. Utiliser `import { test, expect } from '../fixtures'`.
+4. Se baser sur les helpers existants (la page est déjà prête en `/game`).
+5. Utiliser des locators accessibles et éviter les sélecteurs CSS fragiles.
+6. Garder les scénarios concentrés sur un objectif métier précis.
+
+---
+
+## 7. Débogage et troubleshooting
+
+### 7.1. Foundry inaccessible
+
+Symptôme : les tests échouent très tôt avec des erreurs de navigation ou de timeout.
+
+1. Vérifier que Foundry est bien lancé à l’URL attendue :
+
    ```bash
+   echo $E2E_FOUNDRY_BASE_URL
    cat .env.e2e.local
-   ```
-3. **Testez l'accès manuellement** :
-   ```bash
-   curl http://localhost:30000
+   curl "$E2E_FOUNDRY_BASE_URL" || curl http://localhost:30000
    ```
 
-### Erreur "Executable doesn't exist"
+2. Vérifier que le monde configuré dans `E2E_FOUNDRY_WORLD` existe et est jouable.
+3. S’assurer que le mot de passe admin est correct (`E2E_FOUNDRY_ADMIN_PASSWORD`).
 
-Si Playwright ne trouve pas les navigateurs :
+### 7.2. Problèmes de navigateurs Playwright
+
+Si Playwright se plaint que les exécutables navigateur sont manquants :
 
 ```bash
 pnpm exec playwright install --with-deps
 ```
 
-### Les tests passent en headless mais échouent en headed
+### 7.3. Timeouts, surtout en mode headed
 
-Cela peut être lié aux timeouts. Les tests headed sont parfois plus lents. Vérifiez les timeouts dans `playwright.config.ts`.
+- Les tests headed sont parfois plus lents (latence UI humaine, animations, etc.).
+- Adaptez les timeouts via les variables d’environnement si nécessaire :
 
-### Pour voir ce qui se passe réellement
+  ```bash
+  PLAYWRIGHT_TEST_TIMEOUT=1200000 PLAYWRIGHT_EXPECT_TIMEOUT=30000 pnpm e2e:headed
+  ```
 
-Utilisez l'UI Playwright pour déboguer interactivement :
+### 7.4. Inspection et traces de tests
+
+Pour ouvrir l’UI Playwright et déboguer interactivement :
 
 ```bash
 pnpm exec playwright test --ui
 ```
 
-Ou consultez les traces des tests échoués :
+Pour analyser une trace générée (par défaut conservée en cas d’échec) :
 
 ```bash
 pnpm exec playwright show-trace test-results/path-to-trace/trace.zip
 ```
 
+Les rapports HTML sont générés (en CI) dans `playwright-report/`.
 
+### 7.5. Tests instables (flaky)
+
+- Éviter les `page.waitForTimeout()` au profit d’assertions web-first (`expect(locator).toBeVisible()`, `toHaveURL`, etc.).
+- Vérifier que les selectors ne dépendent pas de textes mouvants ou de structures trop fragiles.
+- En cas de flakiness persistante, augmenter légèrement `retries` ou investiguer les temps de réponse de Foundry.
+
+---
+
+## 8. Résumé
+
+- Les tests Playwright E2E vivent dans `e2e/` et s’exécutent via `pnpm e2e` / `pnpm e2e:headed`.
+- La configuration est centralisée dans `playwright.config.ts` et dans un fichier `.env.e2e.local` (ou autre via `E2E_ENV_FILE`).
+- Les helpers `foundrySession.ts`, `e2eTest.ts` et les fixtures partagées encapsulent toute la logique de connexion et de lancement du monde Swerpg.
+- Les scénarios doivent rester courts, robustes, et utiliser des locators accessibles.
+
+Cette documentation a été mise à jour pour refléter l’état actuel de la configuration Playwright et de la suite E2E. Pensez à la compléter à chaque ajout de nouveaux scénarios majeurs ou de nouvelles conventions de test.
