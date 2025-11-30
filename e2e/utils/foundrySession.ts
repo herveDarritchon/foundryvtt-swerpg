@@ -80,27 +80,14 @@ export async function logout(page: Page, options: FoundrySessionOptions): Promis
 
         // Si on est en jeu, tenter Game Settings → Return to Setup
         if (url.includes('/game')) {
-
-            const expanded = await page.getByRole('button', { name: 'Expand' });
-            const collapsed = await page.getByRole('button', { name: 'Collapse' });
-
-            if (await collapsed.isVisible()) {
-                await page.getByRole('tab', { name: 'Game Settings' }).click();
-            }
-
+            // Basculer sur Game Settings si visible puis tenter Log Out
             const gameSettingsTab = page.getByRole('tab', {name: /Game Settings/i})
             if (await gameSettingsTab.count()) {
-                await gameSettingsTab.click().catch(() => {
-                })
-
+                await gameSettingsTab.click().catch(() => {})
                 const returnBtn = page.getByRole('button', {name: /Log Out/i})
                 if (await returnBtn.count()) {
-                    await returnBtn.click().catch(() => {
-                    })
-                    await page
-                        .waitForURL('**/join', {waitUntil: 'domcontentloaded'})
-                        .catch(() => {
-                        })
+                    await returnBtn.click().catch(() => {})
+                    await page.waitForURL('**/join', {waitUntil: 'domcontentloaded'}).catch(() => {})
                     return page.url()
                 }
             }
