@@ -100,6 +100,16 @@ pnpm e2e:headed
 - Ouvre les navigateurs avec UI.
 - Utile pour comprendre un scénario qui échoue ou pour mettre au point de nouveaux tests.
 
+### 3.3. Mode UI interactif (debug avancé)
+
+```bash
+pnpm e2e:ui
+```
+
+- Ouvre l'interface Playwright UI pour déboguer interactivement les tests.
+- Permet d'inspecter les étapes, de relancer des tests, et de voir les traces en temps réel.
+- Recommandé pour investiguer des tests instables ou complexes.
+
 ### 3.3. Filtrer projets / fichiers / tests
 
 Playwright accepte les mêmes options que la CLI standard :
@@ -172,6 +182,7 @@ Le dossier `e2e/` est organisé ainsi :
 - `e2e/utils/` – utilitaires de session Foundry et helpers de setup/teardown
   - `foundrySession.ts` – primitives pour naviguer dans les écrans `/license`, `/auth`, `/setup`, `/join`, `/game`
   - `e2eTest.ts` – `setUp` / `tearDown` haut niveau, basés sur `FoundrySessionOptions`
+  - `foundryUI.ts` – helpers pour interactions UI récurrentes (Game Settings, navigation système)
 - `e2e/helper/`
   - `overlay.ts` – helpers pour fermer les overlays Foundry (tour, partage de données, etc.)
 - `e2e/fixtures.ts` (si présent) – fixtures Playwright projet, notamment `worldReady`

@@ -40,25 +40,31 @@ export async function enterWorld(
     await dismissShareUsageDataIfPresent(page)
     await dismissTourIfPresent(page)
 
-    // 3) Filtrer la liste des worlds
+    // 3) Filtrer la liste des worlds - attendre que le filtre soit prêt
     const worldFilter = page.locator('#world-filter')
+    await worldFilter.waitFor({state: 'visible', timeout: 5000})
     await worldFilter.click()
     await worldFilter.fill(options.world)
 
-    // 4) Cliquer sur "Launch World" pour ce world
+    // 4) Attendre que le world item filtré soit visible
     const worldItem = page
         .locator('li.package.world')
         .filter({hasText: options.world})
         .first()
 
+    // Attendre que l'item soit visible après filtrage
+    await worldItem.waitFor({state: 'visible', timeout: 5000})
+
     // on survole la tuile pour faire apparaître le bouton
     await worldItem.hover()
 
     // puis on clique sur le bouton "Launch World" à l'intérieur
-    await worldItem.locator('a.control.play[aria-label="Launch World"]').click()
+    const launchButton = worldItem.locator('a.control.play[aria-label="Launch World"]')
+    await launchButton.waitFor({state: 'visible', timeout: 3000})
+    await launchButton.click()
 
     // 5) Écran de join : choisir un user et rejoindre
-    await page.waitForURL('**/join', {waitUntil: 'domcontentloaded'})
+    await page.waitForURL('**/join', {waitUntil: 'domcontentloaded', timeout: 30000})
 
     return page.url()
 }
@@ -67,10 +73,7 @@ export async function enterGameAsGamemaster(
     page: Page,
     options: FoundrySessionOptions
 ): Promise<string> {
-    // ici on sélectionne par **label** visible (ex: "Gamemaster")
-    await page.getByRole('combobox').selectOption({label: options.username})
-
-    // Variante 2 : par sélecteur CSS
+    // Sélection de l'utilisateur par label (ex: "Gamemaster")
     const userSelect = page.locator('select[name="userid"]');
     await userSelect.waitFor({ state: 'visible' });
     await userSelect.selectOption({ label: options.username });
@@ -79,7 +82,7 @@ export async function enterGameAsGamemaster(
         .getByRole('button', {name: /join game session/i})
         .click()
 
-    // 6) On s’arrête là : le test pourra vérifier le UI Swerpg
+    // Attendre l'arrivée sur /game
     await page.waitForURL('**/game', {waitUntil: 'networkidle'})
     return page.url()
 }
