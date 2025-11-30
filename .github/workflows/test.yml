@@ -72,11 +72,14 @@ jobs:
 
       - name: Start Foundry VTT (Docker)
         run: |
+          # On repart propre
+          rm -rf .foundry-data
           mkdir -p .foundry-data
-          # Si tu as un snapshot versionné :
-          cp -R "$PWD/resources/*" .foundry-data/
-          chown -R 1000:1000 .foundry-data
-          chmod 770 .foundry-data
+  
+          # Si tu veux injecter un snapshot :
+          cp -R "$PWD/resources/data/." .foundry-data/
+          sudo chown -R 1000:1000 .foundry-data
+          sudo chmod -R 770 .foundry-data
           
           docker run -d --name foundry-e2e \
             -p 30000:30000 \
