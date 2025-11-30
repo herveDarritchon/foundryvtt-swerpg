@@ -150,25 +150,37 @@ Selon votre environnement, vous pouvez aussi lancer Foundry manuellement via son
 
 ## 4. Configuration Playwright
 
-Le fichier `playwright.config.ts` définit la configuration commune des tests :
+Le fichier `playwright.config.ts` définit la configuration commune des tests :
 
 - `testDir: './e2e'` – racine de la suite E2E
 - `workers: 1` – exécution séquentielle (évite les collisions sur la même instance Foundry)
-- `timeout` – durée max d’un test (par défaut 15 min, surchargée par `PLAYWRIGHT_TEST_TIMEOUT`)
-- `expect.timeout` – délai des assertions Playwright (par défaut 15 s, surchargé via `PLAYWRIGHT_EXPECT_TIMEOUT`)
+- `timeout` – durée max d'un test (par défaut 15 min, surchargée par `PLAYWRIGHT_TEST_TIMEOUT`)
+- `expect.timeout` – délai des assertions Playwright (30s par défaut, optimisé pour Chromium)
 - `use.baseURL` – dérivé de `E2E_FOUNDRY_BASE_URL`
-- Traces / screenshots / vidéos :
+- Traces / screenshots / vidéos :
   - `trace`: `retain-on-failure` en local, `on-first-retry` en CI
   - `screenshot`: `only-on-failure`
   - `video`: `retain-on-failure`
-- Projets configurés :
+- Projets configurés :
   - `chromium` (`Desktop Chrome`, 1920×1080)
   - `firefox` (`Desktop Firefox`, 1920×1080)
 
-Reporter :
+Reporter :
 
-- En local : `list`
-- En CI : `list` + `html` dans `playwright-report/`
+- En local : `list`
+- En CI : `list` + `html` dans `playwright-report/`
+
+### 4.1. Spécificités Chromium
+
+La configuration Chromium a été optimisée pour stabiliser la gestion de session Foundry :
+
+- **actionTimeout: 15000ms** – Timeout augmenté pour les actions UI complexes
+- **launchOptions** :
+  - `--disable-blink-features=AutomationControlled` – Évite la détection d'automation par Foundry
+  - `--disable-features=IsolateOrigins,site-per-process` – Améliore la gestion des cookies cross-origin
+- **expect.timeout: 30000ms** (global) – Augmenté pour accommoder les assertions sur dialogues/modals Foundry
+
+Ces ajustements résolvent les problèmes de redirection vers `/join` observés lors de la navigation dans les settings système.
 
 ---
 

@@ -4,15 +4,23 @@ version: 1.0
 date_created: 2025-11-30
 last_updated: 2025-11-30
 owner: SWERPG Core Team
-status: 'Planned'
+status: 'Completed'
 tags: [feature, tests, playwright, chromium, e2e]
 ---
 
 # Introduction
 
-![Status: Planned](https://img.shields.io/badge/status-Planned-blue)
+![Status: Completed](https://img.shields.io/badge/status-Completed-success)
 
 Ce plan vise à corriger et stabiliser le comportement des tests E2E Playwright sur **Chromium**, en particulier autour du scénario `oggdude-import.spec.ts`, où la session Foundry se perd et redirige vers `/join`. L'objectif est d'aligner la fiabilité des tests Chromium sur celle de Firefox, tout en conservant les bonnes pratiques déjà mises en place (pas de `waitForTimeout`, locators accessibles, helpers factorisés).
+
+**Statut** : ✅ **Implémentation complétée avec succès le 30 novembre 2025**  
+**Résultat** : 4/4 tests E2E passent sur Chromium ET Firefox (100% de couverture)
+
+Pour le rapport détaillé d'implémentation, voir :
+- `documentation/tests/e2e/playwright-chromium-stability-implementation-report.md`
+- `documentation/tests/e2e/IMPLEMENTATION-SUCCESS-SUMMARY.md`
+
 
 ## 1. Requirements & Constraints
 
