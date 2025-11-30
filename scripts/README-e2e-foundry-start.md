@@ -10,7 +10,17 @@ Ce script permet de démarrer une instance **Foundry VTT** locale, spécialement
 
 - **Docker** installé
 - **Licence Foundry VTT** valide
-- Variables d'environnement chargées (idéalement via `.env.e2e.local` ou `direnv`).
+- Fichier `.env.e2e.local` avec vos variables (recommandé) ou variables d'environnement exportées
+
+## Chargement automatique des variables
+
+Le script charge **automatiquement** le fichier `.env.e2e.local` s'il existe à la racine du projet. Vous n'avez donc plus besoin de faire `source .env.e2e.local` manuellement avant de lancer le script.
+
+Pour désactiver ce comportement et utiliser uniquement les variables d'environnement exportées:
+
+```bash
+SKIP_ENV_FILE=1 pnpm foundry:e2e:start
+```
 
 ## Variables d'environnement
 
@@ -24,10 +34,11 @@ Ce script permet de démarrer une instance **Foundry VTT** locale, spécialement
 - `FOUNDRY_ADMIN_KEY` (défaut: `admin`)
 - `SYSTEM_ID` (défaut: `swerpg`)
 - `KEEP_DATA` (`0` par défaut: nettoie `./.e2e-foundry-data` à l'arrêt; mettre `1` pour conserver)
+- `SKIP_ENV_FILE` (`0` par défaut: charge `.env.e2e.local`; mettre `1` pour ignorer)
 
 ## Usage
 
-Lancer via PNPM:
+Lancer via PNPM (charge automatiquement `.env.e2e.local`):
 
 ```bash
 pnpm foundry:e2e:start
@@ -46,6 +57,7 @@ pnpm foundry:e2e:restart
 ```
 
 Le script:
+- Charge automatiquement `.env.e2e.local` s'il existe
 - Monte `./.e2e-foundry-data` comme `/data` (créé et supprimé automatiquement à l'arrêt)
 - Monte le système courant dans `/data/Data/systems/swerpg`
 - Expose l'instance sur `http://localhost:FOUNDRY_PORT`

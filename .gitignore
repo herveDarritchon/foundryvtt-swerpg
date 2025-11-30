@@ -270,3 +270,7 @@ swerpg.lock
 signature.json
 packs/
 swerpg-compiled.mjs
+
+## Foundry inside Docker
+.e2e-foundry-data/
+
