@@ -74,7 +74,9 @@ jobs:
         run: |
           mkdir -p .foundry-data
           # Si tu as un snapshot versionné :
-          # cp -R "$PWD/resources/*" .foundry-data/
+          cp -R "$PWD/resources/*" .foundry-data/
+          chown -R 1000:1000 .foundry-data
+          chmod 770 .foundry-data
           
           docker run -d --name foundry-e2e \
             -p 30000:30000 \
@@ -90,7 +92,7 @@ jobs:
       - name: Wait for Foundry to be ready
         run: |
           echo "Waiting for Foundry to start on http://127.0.0.1:30000..."
-          for i in {1..30}; do
+          for i in {1..20}; do
             if curl -sSf http://127.0.0.1:30000/ >/dev/null 2>&1; then
               echo "Foundry is up"
               exit 0
