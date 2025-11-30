@@ -1,5 +1,11 @@
 # Cadre de développement des tests E2E Playwright avec Copilot
 
+Ce document complète le `Guide Playwright E2E pour Swerpg` en se concentrant sur **la manière d’utiliser Copilot** pour accélérer l’écriture des tests Playwright, en respectant les conventions du projet.
+
+> Pour un squelette de spec E2E prêt à l’emploi et un guide détaillé de création de nouveaux scénarios, voir :
+>
+> - `documentation/tests/e2e/playwright-spec-squelette-mon-parcours.md`
+
 ## 1. Architecture de base à mettre en place (avant même Copilot)
 
 Tu te poses ça une bonne fois, **à la main**, ensuite Copilot ne fait que du remplissage.
@@ -55,10 +61,13 @@ L’idée : **tu écris le scénario en pseudo-code / commentaires**, Copilot te
 
 ### a) Workflow pour une *nouvelle* spec
 
-1. Tu crées le fichier :
+Pour la structure globale d’une nouvelle spec et des exemples d’assertions métier, appuie-toi sur le squelette décrit dans :
+
+- `documentation/tests/e2e/playwright-spec-squelette-mon-parcours.md`
+
+Ensuite, dans le fichier réel (par exemple `e2e/specs/bootstrap.spec.ts`) :
 
 ```ts
-// e2e/specs/bootstrap.spec.ts
 import { test, expect } from '../fixtures/foundry-fixtures'
 
 test.describe('Bootstrap SWERPG E2E world', () => {
@@ -70,10 +79,11 @@ test.describe('Bootstrap SWERPG E2E world', () => {
 })
 ```
 
-2. Tu mets ton curseur après le premier commentaire `// Arrange...` et tu laisses Copilot proposer.
-3. Tu acceptes / ajustes **ligne par ligne** (pas tout le bloc comme un bourrin).
+1. Tu crées le fichier.
+2. Tu écris les commentaires `Arrange / Act / Assert`.
+3. Tu laisses Copilot proposer les étapes sous chaque commentaire, puis tu ajustes.
 
-Exemple typique :
+Exemple typique :
 
 ```ts
     // Arrange: login as admin and display world list
@@ -121,7 +131,7 @@ export class FoundrySetupPage {
 }
 ```
 
-Ensuite tu te mets dans `loginAsAdmin` et tu laisses Copilot faire une première proposition à partir d’un commentaire plus explicite :
+Ensuite tu te mets dans `loginAsAdmin` et tu laisses Copilot faire une première proposition à partir d’un commentaire plus explicite :
 
 ```ts
   async loginAsAdmin(password: string) {
@@ -137,15 +147,11 @@ Tu **corriges les sélecteurs** pour qu’ils soient stables (role, text, `data-
 ### b) Tu t’interdis certains trucs (et tu les refuses à Copilot)
 
 * ❌ `locator('div:nth-child(3) …')`
-
 * ❌ `waitForTimeout(5000)`
-
 * ❌ `page.click('text=Play')` sans assert derrière
 
 * ✅ `getByRole`, `getByText`, `getByTestId`
-
 * ✅ `expect(...).toBeVisible()` après chaque action importante
-
 * ✅ helpers dans les page objects pour les flows pénibles (login, dismiss overlays, etc.)
 
 Dès que Copilot te propose un truc fragile → tu le réécris **à la main**, et il apprendra très vite ton style.
@@ -154,7 +160,7 @@ Dès que Copilot te propose un truc fragile → tu le réécris **à la main**, 
 
 ## 4. Boucle de dev avec Playwright + Copilot
 
-Pour être concret, je te propose cette boucle pour chaque nouveau scénario :
+Pour être concret, je te propose cette boucle pour chaque nouveau scénario :
 
 1. **Enregistrer la vraie interaction à la main**
 
@@ -164,7 +170,7 @@ Pour être concret, je te propose cette boucle pour chaque nouveau scénario :
 
 2. **Écrire la spec à la main + commentaires**
 
-    * Comme montré plus haut : `Arrange / Act / Assert` en commentaires.
+    * Comme montré plus haut : `Arrange / Act / Assert` en commentaires.
 
 3. **Utiliser Copilot pour le “bourrage”**
 
@@ -186,16 +192,13 @@ Pour être concret, je te propose cette boucle pour chaque nouveau scénario :
 ## 5. Petite check-list “bonne pratique Copilot + Playwright”
 
 * 💡 *Toujours* écrire **d’abord** le scénario en français ou en pseudo-code dans les commentaires.
-* 💡 Utiliser Copilot pour :
-
-    * générer du boilerplate (imports, signatures, boucles, petits helpers),
-    * cloner des patterns déjà propres (tes propres locators, tes propres fixtures).
-    * 💣 Ne jamais accepter :
-
-        * des sélecteurs illisibles,
-        * des `waitForTimeout` magiques,
-        * des tests qui n’ont pas d’assert ou un seul assert en fin de fichier.
-* 💡 Centraliser :
-
-    * login + choix de world + dismiss overlays dans 1–2 helpers bien nommés,
-    * et toujours y faire référence par des noms explicites (`loginAsAdminAndEnterWorld('swerpg-e2e-world')`).
+* 💡 Utiliser Copilot pour :
+  * générer du boilerplate (imports, signatures, boucles, petits helpers),
+  * cloner des patterns déjà propres (tes propres locators, tes propres fixtures).
+  * 💣 Ne jamais accepter :
+    * des sélecteurs illisibles,
+    * des `waitForTimeout` magiques,
+    * des tests qui n’ont pas d’assert ou un seul assert en fin de fichier.
+* 💡 Centraliser :
+  * login + choix de world + dismiss overlays dans 1–2 helpers bien nommés,
+  * et toujours y faire référence par des noms explicites (`loginAsAdminAndEnterWorld('swerpg-e2e-world')`).
