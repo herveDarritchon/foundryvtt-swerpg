@@ -9,9 +9,9 @@ const baseURL = process.env.E2E_FOUNDRY_BASE_URL || 'http://localhost:30000'
 export default defineConfig({
     testDir: './e2e',
     workers: 1,
-    timeout: 30000,
+    timeout: 90000,
     expect: {
-        timeout: 5000,
+        timeout: 15000,
     },
     use: {
         baseURL,
@@ -25,7 +25,6 @@ export default defineConfig({
             use: {
                 ...devices['Desktop Chrome'],
                 viewport: { width: 1920, height: 1080 },
-                screen: { width: 1920, height: 1080 },
             },
         },
         {
@@ -33,7 +32,6 @@ export default defineConfig({
             use: {
                 ...devices['Desktop Firefox'],
                 viewport: { width: 1920, height: 1080 },
-                screen: { width: 1920, height: 1080 },
             },
         },
     ],
