@@ -2,7 +2,7 @@
   "awsConfig": null,
   "compressSocket": false,
   "compressStatic": false,
-  "cssTheme": "foundry",
+  "cssTheme": "dark",
   "dataPath": "/data",
   "fullscreen": false,
   "hostname": null,
@@ -17,9 +17,11 @@
   "routePrefix": null,
   "sslCert": null,
   "sslKey": null,
-  "telemetry": null,
-  "updateChannel": "release",
+  "telemetry": false,
+  "updateChannel": "stable",
   "upnp": false,
   "upnpLeaseDuration": null,
-  "world": null
+  "world": null,
+  "deleteNEDB": false,
+  "serviceConfig": null
 }

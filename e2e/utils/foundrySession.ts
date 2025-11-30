@@ -1,5 +1,5 @@
 import {Page} from '@playwright/test'
-import {dismissBackupsTourIfPresent} from '../helper/overlay'
+import {dismissBackupsTourIfPresent, dismissShareUsageDataIfPresent} from '../helper/overlay'
 
 export interface FoundrySessionOptions {
     baseURL: string
@@ -9,13 +9,22 @@ export interface FoundrySessionOptions {
     world: string
 }
 
+export async function accepteLicense(
+    page: Page,
+    options: FoundrySessionOptions
+): Promise<string> {
+    // 0) Accept Licence
+    await page.getByText('Acknowledge Agreement I agree').click();
+    await page.getByRole('checkbox', {name: 'I agree to these terms'}).check();
+    await page.getByRole('button', {name: ' Agree'}).click();
+    return page.url()
+}
+
 export async function loginIntoInstance(
     page: Page,
     options: FoundrySessionOptions
 ): Promise<string> {
     // 1) Login admin
-    await page.goto(`${options.baseURL}/auth`, {waitUntil: 'domcontentloaded'})
-
     await page.getByPlaceholder('Administrator Password').fill(options.adminPassword)
     await page.getByRole('button', {name: /log in/i}).click()
 
@@ -28,6 +37,7 @@ export async function enterWorld(
     options: FoundrySessionOptions
 ): Promise<string> {
     // 2) Fermer le tour si présent
+    await dismissShareUsageDataIfPresent(page)
     await dismissBackupsTourIfPresent(page)
 
     // 3) Filtrer la liste des worlds
@@ -83,11 +93,14 @@ export async function logout(page: Page, options: FoundrySessionOptions): Promis
             // Basculer sur Game Settings si visible puis tenter Log Out
             const gameSettingsTab = page.getByRole('tab', {name: /Game Settings/i})
             if (await gameSettingsTab.count()) {
-                await gameSettingsTab.click().catch(() => {})
+                await gameSettingsTab.click().catch(() => {
+                })
                 const returnBtn = page.getByRole('button', {name: /Log Out/i})
                 if (await returnBtn.count()) {
-                    await returnBtn.click().catch(() => {})
-                    await page.waitForURL('**/join', {waitUntil: 'domcontentloaded'}).catch(() => {})
+                    await returnBtn.click().catch(() => {
+                    })
+                    await page.waitForURL('**/join', {waitUntil: 'domcontentloaded'}).catch(() => {
+                    })
                     return page.url()
                 }
             }
