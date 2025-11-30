@@ -81,7 +81,8 @@ jobs:
           sudo chown -R 1000:1000 .foundry-data
           sudo chmod -R 770 .foundry-data
           
-          docker run -d --name foundry-e2e \
+          docker run -d --rm \
+            --name foundry-e2e \
             -p 30000:30000 \
             -e FOUNDRY_LICENSE_KEY=${{ secrets.FOUNDRY_LICENSE_KEY }} \
             -e FOUNDRY_USERNAME=${{ secrets.FOUNDRY_USERNAME }} \

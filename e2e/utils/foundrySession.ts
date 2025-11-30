@@ -1,5 +1,5 @@
 import {Page} from '@playwright/test'
-import {dismissBackupsTourIfPresent, dismissShareUsageDataIfPresent} from '../helper/overlay'
+import {dismissShareUsageDataIfPresent, dismissTourIfPresent} from '../helper/overlay'
 
 export interface FoundrySessionOptions {
     baseURL: string
@@ -38,7 +38,7 @@ export async function enterWorld(
 ): Promise<string> {
     // 2) Fermer le tour si présent
     await dismissShareUsageDataIfPresent(page)
-    await dismissBackupsTourIfPresent(page)
+    await dismissTourIfPresent(page)
 
     // 3) Filtrer la liste des worlds
     const worldFilter = page.locator('#world-filter')

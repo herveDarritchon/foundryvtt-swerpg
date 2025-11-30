@@ -7,7 +7,7 @@ test.describe('OggDude importer', () => {
       // - lancé le world swerpg-e2e
 
       // 1) Ouvrir Game Settings
-      await page.getByRole('tab', { name: /Game Settings/i }).click()
+      await page.getByRole('tab', { name: /Game Settings/i }).click({ force: true })
 
       // 2) Ouvrir Configure Settings
       await page.getByRole('button', { name: /Configure Settings/i }).click()
