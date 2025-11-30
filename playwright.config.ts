@@ -9,9 +9,9 @@ const baseURL = process.env.E2E_FOUNDRY_BASE_URL || 'http://localhost:30000'
 export default defineConfig({
     testDir: './e2e',
     workers: 1,
-    timeout: 90000,
+    timeout: process.env.PLAYWRIGHT_TEST_TIMEOUT ? parseInt(process.env.PLAYWRIGHT_TEST_TIMEOUT) : 900000,
     expect: {
-        timeout: 15000,
+        timeout: process.env.PLAYWRIGHT_EXPECT_TIMEOUT ? parseInt(process.env.PLAYWRIGHT_EXPECT_TIMEOUT) : 15000,
     },
     use: {
         baseURL,
