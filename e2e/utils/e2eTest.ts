@@ -20,7 +20,6 @@ export async function setUp(
         url = page.url()
     }
 
-
     if (url.includes('/game')) {
         return
     }
@@ -47,7 +46,9 @@ export async function tearDown(
     options: FoundrySessionOptions) {
     let url = page.url()
 
-    if (url.includes('/auth')) {
+    await page.goto(`${options.baseURL}/join`, {waitUntil: 'domcontentloaded'})
+
+    /*if (url.includes('/auth')) {
         return
     }
 
@@ -61,6 +62,6 @@ export async function tearDown(
 
     if (url.includes('/setup')) {
         url = await logoutFromInstance(page, options)
-    }
+    }*/
 
 }
