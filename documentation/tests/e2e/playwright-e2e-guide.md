@@ -4,6 +4,10 @@ Ce guide décrit comment exécuter et étendre la suite de tests end-to-end Play
 
 Il s’adresse à des développeurs déjà à l’aise avec Foundry VTT, TypeScript et Playwright.
 
+> Pour un modèle de spec prêt à l’emploi et un guide détaillé sur la création de nouveaux scénarios E2E, voir également :
+>
+> - `documentation/tests/e2e/playwright-spec-squelette-mon-parcours.md`
+
 ---
 
 ## 1. Prérequis
@@ -245,7 +249,9 @@ test.describe('OggDude importer', () => {
 })
 ```
 
-Pour ajouter un nouveau scénario, créez un nouveau fichier `.spec.ts` dans `e2e/specs/` en réutilisant ce pattern (`test.describe` + `test(...)`).
+Pour un squelette générique et un guide plus détaillé sur la création d’une nouvelle spec E2E, se référer au document dédié :
+
+- `documentation/tests/e2e/playwright-spec-squelette-mon-parcours.md`
 
 ---
 
@@ -289,6 +295,10 @@ Pour tout nouveau test E2E :
 4. Se baser sur les helpers existants (la page est déjà prête en `/game`).
 5. Utiliser des locators accessibles et éviter les sélecteurs CSS fragiles.
 6. Garder les scénarios concentrés sur un objectif métier précis.
+
+Pour un guide complet avec un exemple de squelette de spec et comment l’adapter à une nouvelle feature, voir :
+
+- `documentation/tests/e2e/playwright-spec-squelette-mon-parcours.md`
 
 ---
 
