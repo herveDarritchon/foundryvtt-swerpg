@@ -106,6 +106,53 @@ Le projet inclut une suite de tests end-to-end basée sur Playwright, séparée 
 
 Voir `documentation/tests/playwright-e2e-guide.md` pour la configuration détaillée et les bonnes pratiques.
 
+## Tests E2E Playwright – Environnement Foundry local
+
+Pour exécuter les tests end‑to‑end Playwright contre une instance Foundry locale, un script Docker est fourni.
+
+- Script: `scripts/e2e-foundry-start.sh`
+- Guide détaillé: `scripts/README-e2e-foundry-start.md`
+
+### Pré‑requis
+- Docker installé
+- Licence Foundry VTT valide (ne pas commiter la clé)
+- Fichier `.env.e2e.local` pour les variables E2E (ignoré par Git)
+
+Exemple minimal de `.env.e2e.local`:
+
+```dotenv
+E2E_FOUNDRY_BASE_URL=http://localhost:30000
+E2E_FOUNDRY_ADMIN_PASSWORD=admin
+E2E_FOUNDRY_USERNAME=Gamemaster
+E2E_FOUNDRY_PASSWORD=changeme
+E2E_FOUNDRY_WORLD=Swerpg-E2E-World
+```
+
+### Démarrer/arrêter Foundry E2E
+
+```bash
+pnpm foundry:e2e:start
+pnpm foundry:e2e:stop
+# ou
+pnpm foundry:e2e:restart
+```
+
+Le script crée un répertoire éphémère `.e2e-foundry-data` pour les données et le nettoie à l’arrêt (sauf si `KEEP_DATA=1`).
+
+### Lancer un test E2E de base
+
+```bash
+pnpm e2e:headed e2e/specs/bootstrap.spec.ts
+```
+
+En cas d’échec, utilisez la trace Playwright pour diagnostiquer:
+
+```bash
+pnpm exec playwright show-trace test-results/**/trace.zip
+```
+
+> Sécurité: fournissez `FOUNDRY_LICENSE_KEY`, `FOUNDRY_USERNAME`, `FOUNDRY_PASSWORD`, `FOUNDRY_ADMIN_KEY` via l’environnement. Ne commitez jamais vos secrets.
+
 ## Règles de contribution (rapide)
 
 Pour contribuer, regardez d'abord la documentation dans `documentation/` et les fichiers sous `.github/` :
