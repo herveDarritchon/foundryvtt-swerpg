@@ -51,6 +51,7 @@ err() { printf "[e2e-foundry][ERROR] %s\n" "$*" >&2; }
 # Charger les variables depuis .env.e2e.local si présent
 load_env_file
 
+FOUNDRY_WORKING_DIR_NAME='.e2e-foundry-data/'
 FOUNDRY_IMAGE=${FOUNDRY_IMAGE:-felddy/foundryvtt:13.351.0}
 FOUNDRY_PORT=${FOUNDRY_PORT:-30000}
 FOUNDRY_INTERNAL_PORT=${FOUNDRY_INTERNAL_PORT:-30000}
@@ -62,9 +63,9 @@ FOUNDRY_ADMIN_KEY=${FOUNDRY_ADMIN_KEY:-admin}
 SYSTEM_ID=${SYSTEM_ID:-swerpg}
 KEEP_DATA=${KEEP_DATA:-0}
 
-DATA_DIR="${ROOT_DIR}/.e2e-foundry-data"
+DATA_DIR="${ROOT_DIR}/${FOUNDRY_WORKING_DIR_NAME}"
 SYSTEM_DIR="${ROOT_DIR}" # montage du système directement dans Data/systems
-
+INITIAL_INSTANCE_DATA_DIR="${ROOT_DIR}/resources/data/"
 
 docker_exists() { command -v docker >/dev/null 2>&1; }
 
@@ -81,10 +82,20 @@ create_data_dir() {
   fi
 }
 
+fill_data_dir() {
+  if [[ -d "$DATA_DIR" ]]; then
+    log "Répertoire data a déjà été crée: $DATA_DIR"
+  else
+    create_data_dir
+  fi
+  cp -Rp "${INITIAL_INSTANCE_DATA_DIR}" "${DATA_DIR}" || { err "Échec copie données initiales dans $DATA_DIR"; exit 1; }
+}
+
 start_container() {
   ensure_docker
   ensure_license
   create_data_dir
+  fill_data_dir
 
   log "Démarrage container $FOUNDRY_CONTAINER_NAME sur le port $FOUNDRY_PORT ..."
   log "Utilisation de l'image: $FOUNDRY_IMAGE"

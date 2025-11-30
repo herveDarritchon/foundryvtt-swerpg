@@ -1,10 +1,12 @@
 import {Page} from "@playwright/test";
 import {
+    accepteLicense,
     enterGameAsGamemaster,
     enterWorld,
     FoundrySessionOptions,
     loginIntoInstance,
-    logout, logoutFromInstance,
+    logout,
+    logoutFromInstance,
     quitWorld
 } from "./foundrySession";
 
@@ -18,10 +20,14 @@ export async function setUp(
         url = page.url()
     }
 
+
     if (url.includes('/game')) {
         return
     }
 
+    if (url.includes('/license')) {
+        url = await accepteLicense(page, options)
+    }
 
     if (url.includes('/auth')) {
         url = await loginIntoInstance(page, options)

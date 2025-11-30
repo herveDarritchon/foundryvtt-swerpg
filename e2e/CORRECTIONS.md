@@ -50,7 +50,7 @@ use: {
 
 ```env
 E2E_FOUNDRY_BASE_URL=http://localhost:30000
-E2E_FOUNDRY_ADMIN_PASSWORD=Aotearoa3"          # ⬅️ NOUVEAU
+E2E_FOUNDRY_ADMIN_PASSWORD=admin          # ⬅️ NOUVEAU
 E2E_FOUNDRY_USERNAME=Gamemaster
 E2E_FOUNDRY_PASSWORD=changeme
 E2E_FOUNDRY_WORLD=Swerpg-E2E-World
@@ -71,7 +71,7 @@ E2E_FOUNDRY_WORLD=Swerpg-E2E-World
 Pour la CI, ajoutez le secret suivant dans les paramètres GitHub du repository :
 
 **Nom** : `E2E_FOUNDRY_ADMIN_PASSWORD`  
-**Valeur** : `Aotearoa3`
+**Valeur** : `admin`
 
 ## Commandes de test
 
@@ -102,7 +102,7 @@ pnpm exec playwright test --ui
 Pour vérifier que tout fonctionne :
 
 1. Assurez-vous que Foundry VTT tourne sur `http://localhost:30000`
-2. Le mot de passe admin doit être `Aotearoa3`
+2. Le mot de passe admin doit être `admin`
 3. Un monde nommé `Swerpg-E2E-World` doit exister
 4. Un utilisateur `gamemaster` / `changeme` doit être configuré dans ce monde
 5. Lancez `pnpm e2e:headed`
