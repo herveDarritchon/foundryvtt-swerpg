@@ -76,19 +76,27 @@ export async function enterGameAsGamemaster(
 
     const url = page.url()
 
-    if (!url.includes('/join')){
+    if (!url.includes('/join')) {
         throw new Error(`enterGameAsGamemaster failed: expected to be on /join but got ${url}`)
     }
 
-    // Sélection de l'utilisateur par label (ex: "Gamemaster")
-    const userSelect = page.locator('select[name="userid"]');
+    // 2) Sélection de l'utilisateur
+    // Utiliser l'accessible name est souvent plus robuste que name="userid"
+    const userSelect = page.locator('select[name="userid"]'); // label "User Name" sur l'écran join
 
-    if (await userSelect.count() === 0) {
-        throw new Error(`enterGameAsGamemaster failed: no user select listbox found on /join`)
+    // On laisse vraiment sa chance au DOM de s'initialiser
+    await userSelect.waitFor({state: 'visible'});
+
+    // Log des options visibles pour debug CI
+    const optionLabels = await userSelect.locator('option').allTextContents();
+    console.log('[enterGameAsGamemaster] user options:', optionLabels);
+
+    if (optionLabels.length === 0) {
+        throw new Error(
+            '[enterGameAsGamemaster] select User présent mais sans aucune option – vérifie ta config Foundry (users/world).'
+        );
     }
-
-    await userSelect.waitFor({ state: 'visible' });
-    await userSelect.selectOption({ label: options.username });
+    await userSelect.selectOption({label: options.username});
 
     await page
         .getByRole('button', {name: /join game session/i})
