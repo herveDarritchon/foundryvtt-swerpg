@@ -73,8 +73,20 @@ export async function enterGameAsGamemaster(
     page: Page,
     options: FoundrySessionOptions
 ): Promise<string> {
+
+    const url = page.url()
+
+    if (url.includes('/join')){
+        throw new Error(`enterGameAsGamemaster failed: expected to be on /join but got ${url}`)
+    }
+
     // Sélection de l'utilisateur par label (ex: "Gamemaster")
     const userSelect = page.locator('select[name="userid"]');
+
+    if (await userSelect.count() === 0) {
+        throw new Error(`enterGameAsGamemaster failed: no user select listbox found on /join`)
+    }
+
     await userSelect.waitFor({ state: 'visible' });
     await userSelect.selectOption({ label: options.username });
 
