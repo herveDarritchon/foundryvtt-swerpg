@@ -86,6 +86,20 @@ export async function enterGameAsGamemaster(
 
     // On laisse vraiment sa chance au DOM de s'initialiser
     try {
+        const domDebug = await page.evaluate(() => {
+            const selects = Array.from(document.querySelectorAll('select')).map((sel) => ({
+                name: sel.getAttribute('name'),
+                outerHTML: sel.outerHTML.slice(0, 500),
+            }));
+
+            return {
+                location: window.location.href,
+                selects,
+                htmlSnippet: document.body.innerHTML.slice(0, 2000),
+            };
+        });
+
+        console.log('[enterGameAsGamemaster][DOM DEBUG ON SUCCESS]', JSON.stringify(domDebug, null, 2));
         await userSelect.waitFor({state: 'visible', timeout: 10_000});
     } catch (error) {
         const domDebug = await page.evaluate(() => {
@@ -101,7 +115,7 @@ export async function enterGameAsGamemaster(
             };
         });
 
-        console.log('[enterGameAsGamemaster][DOM DEBUG ON FAILURE]', JSON.stringify(domDebug, null, 2));
+        console.error('[enterGameAsGamemaster][DOM DEBUG ON FAILURE]', JSON.stringify(domDebug, null, 2));
         throw error;
     }
 

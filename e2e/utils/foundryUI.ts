@@ -1,9 +1,31 @@
 import {Page} from '@playwright/test'
+import {dismissOverlayIfPresent} from "../helper/overlay";
 
 /**
  * Helpers pour interactions UI Foundry récurrentes dans les tests E2E.
  * Factorise les patterns communs pour éviter duplication dans les specs.
  */
+
+/**
+ * Attend que l'UI principale de Foundry soit complètement chargée et prête.
+ *
+ * @param page - Page Playwright
+ * @param selector -
+ */
+export async function waitForGameUIReady(page: Page, selector: string): Promise<void> {
+    await page.waitForFunction(
+        (sel: string) => {
+            const w = window as any;
+            return !!(
+                w.game &&
+                w.game.ready &&                    // Foundry a déclenché le hook ready
+                document.querySelector(sel) // UI principale montée
+            );
+        },
+        selector,
+        { timeout: 30_000 } // CI-safe, 30s max
+    );
+}
 
 /**
  * Vérifie que la session Foundry est toujours active.
@@ -36,6 +58,7 @@ export async function ensureSessionActive(page: Page): Promise<void> {
  */
 export async function openGameSettings(page: Page): Promise<void> {
     await ensureSessionActive(page)
+    await dismissOverlayIfPresent(page)
 
     const gameSettingsTab = page.getByRole('tab', { name: /Game Settings/i })
     await gameSettingsTab.waitFor({state: 'visible', timeout: 10000})
@@ -54,6 +77,8 @@ export async function openGameSettings(page: Page): Promise<void> {
  */
 export async function openSystemSettings(page: Page, systemName: string): Promise<void> {
     await ensureSessionActive(page)
+    await dismissOverlayIfPresent(page)
+
 
     // Ouvrir Configure Settings
     const configureButton = page.getByRole('button', { name: /Configure Settings/i })
