@@ -1,10 +1,16 @@
 import {expect, test} from '../fixtures'
 
 test.describe('Swerpg bootstrap', () => {
-    test('should load Foundry world and display Swerpg UI element', async ({page, browserName}) => {
+    test('should load Foundry world and display Swerpg UI element', async ({page, browserName}, testInfo) => {
         console.log(`[bootstrap] 🧪 Démarrage du test sur ${browserName}`)
+
         // Vérifier l'URL
         await expect(page).toHaveURL(/.*game/)
+
+        await page.screenshot({
+            path: testInfo.outputPath('bootstrap.png'),
+            fullPage: true,
+        });
 
         // Vérifier la classe système sur body
         const body = page.locator('body.system-swerpg')
