@@ -24,18 +24,14 @@ const projects = [
             },
         },
     },
-]
-
-// ⚠️ Ajout conditionnel propre : uniquement en CI
-if (!process.env.CI) {
-    projects.push({
+    {
         name: 'firefox',
         use: {
             ...devices['Desktop Firefox'],
             viewport: { width: 1920, height: 1080 },
         },
-    })
-}
+    }
+]
 
 export default defineConfig({
     testDir: './e2e',

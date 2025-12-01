@@ -7,27 +7,6 @@ import {dismissOverlayIfPresent} from "../helper/overlay";
  */
 
 /**
- * Attend que l'UI principale de Foundry soit complètement chargée et prête.
- *
- * @param page - Page Playwright
- * @param selector -
- */
-export async function waitForGameUIReady(page: Page, selector: string): Promise<void> {
-    await page.waitForFunction(
-        (sel: string) => {
-            const w = window as any;
-            return !!(
-                w.game &&
-                w.game.ready &&                    // Foundry a déclenché le hook ready
-                document.querySelector(sel) // UI principale montée
-            );
-        },
-        selector,
-        { timeout: 30_000 } // CI-safe, 30s max
-    );
-}
-
-/**
  * Vérifie que la session Foundry est toujours active.
  * Lance une erreur explicite si la page a été redirigée vers /join ou /auth.
  *

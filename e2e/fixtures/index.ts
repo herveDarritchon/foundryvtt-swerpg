@@ -1,6 +1,6 @@
 import {expect, test as base} from '@playwright/test'
 import {FoundrySessionOptions} from '../utils/foundrySession'
-import {setUp, tearDown} from "../utils/e2eTest";
+import {setUp, tearDown} from "../utils/playwrightTest";
 
 export const beforeAllFixture = base.extend({});
 

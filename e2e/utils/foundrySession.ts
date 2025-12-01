@@ -77,51 +77,17 @@ export async function enterGameAsGamemaster(
     const url = page.url()
 
     if (!url.includes('/join')) {
-        throw new Error(`enterGameAsGamemaster failed: expected to be on /join but got ${url}`)
+        throw new Error(`[enterGameAsGamemaster] failed: expected to be on /join but got ${url}`)
     }
 
     // 2) Sélection de l'utilisateur
     // Utiliser l'accessible name est souvent plus robuste que name="userid"
     const userSelect = page.locator('select[name="userid"]'); // label "User Name" sur l'écran join
 
-    // On laisse vraiment sa chance au DOM de s'initialiser
-    try {
-        const domDebug = await page.evaluate(() => {
-            const selects = Array.from(document.querySelectorAll('select')).map((sel) => ({
-                name: sel.getAttribute('name'),
-                outerHTML: sel.outerHTML.slice(0, 500),
-            }));
-
-            return {
-                location: window.location.href,
-                selects,
-                htmlSnippet: document.body.innerHTML.slice(0, 2000),
-            };
-        });
-
-        console.log('[enterGameAsGamemaster][DOM DEBUG ON SUCCESS]', JSON.stringify(domDebug, null, 2));
-        await userSelect.waitFor({state: 'visible', timeout: 10_000});
-    } catch (error) {
-        const domDebug = await page.evaluate(() => {
-            const selects = Array.from(document.querySelectorAll('select')).map((sel) => ({
-                name: sel.getAttribute('name'),
-                outerHTML: sel.outerHTML.slice(0, 500),
-            }));
-
-            return {
-                location: window.location.href,
-                selects,
-                htmlSnippet: document.body.innerHTML.slice(0, 2000),
-            };
-        });
-
-        console.error('[enterGameAsGamemaster][DOM DEBUG ON FAILURE]', JSON.stringify(domDebug, null, 2));
-        throw error;
-    }
+    await userSelect.waitFor({state: 'visible', timeout: 10_000});
 
     // Log des options visibles pour debug CI
     const optionLabels = await userSelect.locator('option').allTextContents();
-    console.log('[enterGameAsGamemaster] user options:', optionLabels);
 
     if (optionLabels.length === 0) {
         throw new Error(

@@ -9,7 +9,6 @@ import {
     logoutFromInstance,
     quitWorld
 } from "./foundrySession";
-import {waitForGameUIReady} from "./foundryUI";
 
 /**
  * Configuration de l'environnement de test : navigation complète jusqu'au monde Swerpg chargé.
@@ -24,10 +23,8 @@ export async function setUp(
     console.log(`[setUp] URL initiale: ${url}`)
 
     if (url.includes('about:blank')) {
-        console.log('[setUp] Navigation vers /auth')
         await page.goto(`${options.baseURL}/auth`, {waitUntil: 'domcontentloaded'})
         url = page.url()
-        console.log(`[setUp] Après navigation: ${url}`)
     }
 
     if (url.includes('/game')) {
@@ -36,41 +33,29 @@ export async function setUp(
     }
 
     if (url.includes('/license')) {
-        console.log('[setUp] Acceptation de la licence')
         url = await accepteLicense(page, options)
-        console.log(`[setUp] Après licence: ${url}`)
     }
 
     if (url.includes('/auth')) {
-        console.log('[setUp] Login administrateur')
         url = await loginIntoInstance(page, options)
-        console.log(`[setUp] Après login: ${url}`)
     }
 
     if (url.includes('/setup')) {
-        console.log('[setUp] Lancement du monde')
         url = await enterWorld(page, options)
-        console.log(`[setUp] Après enterWorld: ${url}`)
     }
 
     if (url.includes('/join')) {
-        console.log('[setUp] Join en tant que MJ')
         url = await enterGameAsGamemaster(page, options)
-        console.log(`[setUp] Après join: ${url}`)
     }
 
     // Validation post-setUp : s'assurer que nous sommes bien en /game
     const finalUrl = page.url()
-    console.log(`[setUp] URL finale: ${finalUrl}`)
+
     if (!finalUrl.includes('/game')) {
         throw new Error(`setUp failed: expected to be on /game but got ${finalUrl}`)
     }
 
-    console.log('[setUp] Attente de la readiness de Foundry (game.ready + #sidebar)...')
-    await waitForGameUIReady(page,'#sidebar')
-    console.log('[setUp] Foundry ready, UI chargée')
-
-    console.log('[setUp] ✅ Setup réussi')
+    console.log('[setUp] 🛠️ Setup réussi ✔')
 }
 
 /**
@@ -102,5 +87,5 @@ export async function tearDown(
         console.warn(`[tearDown] Erreur lors du cleanup, ignoré (page en cours ${url}):`, error)
     }
     console.log (`On finit sur la page ${page.url()}`)
-    console.log('[tearDown] ✅ tearDown réussi.')
+    console.log('[tearDown] 🧹 tearDown réussi ✔')
 }
