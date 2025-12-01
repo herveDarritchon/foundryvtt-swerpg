@@ -76,7 +76,7 @@ export async function enterGameAsGamemaster(
 
     const url = page.url()
 
-    if (url.includes('/join')){
+    if (!url.includes('/join')){
         throw new Error(`enterGameAsGamemaster failed: expected to be on /join but got ${url}`)
     }
 
