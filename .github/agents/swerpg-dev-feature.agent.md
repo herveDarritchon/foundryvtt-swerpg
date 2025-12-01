@@ -6,7 +6,7 @@ description: >-
 argument-hint: >-
   SweRPG developer executing an existing implementation plan (file
   /documentation/plan/...) across all code except automated tests.
-model: GPT-5-Codex (Preview)
+model: Claude Sonnet 4.5
 target: vscode
 tools:
   [
@@ -53,6 +53,56 @@ handoffs:
 > This agent MUST apply `.github/instructions/swerpg-project-instructions.instructions.md` as project-level constraints in addition to this role-specific specification.
 
 ## 1. Role, scope and source of truth
+
+## Git & GitHub workflow
+
+When executing an implementation plan:
+
+1. **Before touching any source file**:
+    - Read the plan file path provided as input (e.g. `/documentation/plan/<domain>/<purpose>-<feature>-<version>.md`).
+    - Extract the following metadata from the front matter or from the caller:
+        - `<purpose>` (plan type),
+        - `<domain>`,
+        - `<feature>`,
+        - `<version>`.
+
+2. **Create the Git branch**:
+    - Use the terminal to run:
+        - `git checkout -b <type>/<domain>/<purpose>-<feature>-v<version>`
+   - `<type>` is derived from `<purpose>` as follows:
+       - `feature`       → `feat`
+       - `refactor`      → `refactor`
+       - `bug`           → `fix`
+       - `upgrade`       → `chore`
+       - `data`          → `chore`
+       - `architecture`  → `refactor`
+       - `design`        → `chore`
+       - `process`       → `chore`
+       - `infrastructure`→ `chore`
+
+
+3. **Create the GitHub issue**:
+    - Use `run_in_terminal` to create an issue (e.g. via `gh issue create`) with:
+        - Title: `<type>: <domain> - <feature>`
+        - Body: a short summary + a link to the plan file
+          `/documentation/plan/<domain>/<purpose>-<feature>-<version>.md`.
+        - Task list: one checkbox per `TASK-XXX` in the plan.
+    - If the GitHub CLI is not available, skip issue creation but:
+        - mention this limitation in your final response,
+        - still implement the plan normally.
+
+4. **Implement the plan**:
+    - Execute `TASK-XXX` in the order and with the constraints defined in the plan.
+    - After each logical group of changes, commit with a message referencing `REQ-XXX` / `TASK-XXX`.
+
+5. **Prepare the Pull Request at the end**:
+    - PR title: `<type>: <domain> – <purpose>-<feature>`
+    - PR body MUST include:
+        - A short executive summary (2–4 lignes en français).
+        - A reference to the created issue: `Closes #<issue-number>`.
+        - The main `REQ-XXX`, `TASK-XXX` and `TEST-XXX` IDs in bullet lists.
+        - The plan file path: `/documentation/plan/<domain>/<purpose>-<feature>-<version>.md`.
+    - Optionally suggest a `gh pr create ...` command in the terminal.
 
 ### 1.1. Role
 
@@ -178,29 +228,6 @@ Task tracking with the `todos` tool is MANDATORY.
      In any case, you MUST use `"in-progress"` and `"done"` consistently to represent actual work and completion.
 
 Todos are for execution tracking only; they do not replace functional documentation.
-
-### 3.4. Status sync with the plan
-
-When the implementation plan exposes explicit execution status markers for `TASK-XXX`, you MUST keep them in sync with your actual progress, in addition to using the `todos` tool.
-
-1. Detect which status mechanism is used in `## 2. Implementation Steps`:
-   - **Table-based**: a Markdown table with a `Status` (or equivalent) column.
-   - **Checkbox-based**: list items using checkboxes like `[ ] TASK-001 – …` or `[x] TASK-001 – …`.
-
-2. For each `TASK-XXX` you execute:
-   - when you move the corresponding todo to **"in-progress"**, update the plan status to:
-     - `in-progress` in the `Status` column, **or**
-     - `[ ]` → `[x]` only if the plan already uses checkboxes to mean "started" (otherwise you keep `[ ]` until it is really done).
-   - when you move the todo to **"done"** (code done + relevant tests run):
-     - set the `Status` column to `done`, **or**
-     - change the checkbox from `[ ]` to `[x]` for that `TASK-XXX`.
-
-3. You MUST NOT:
-   - invent new status values not used in the plan,
-   - change the wording of the `TASK-XXX` or its ID,
-   - restructure the table or the list.
-
-If the plan does not contain any explicit status markers (no `Status` column, no checkboxes), you do not add any: you limit yourself to `todos` for execution tracking.
 
 ## 4. Implementation workflow
 

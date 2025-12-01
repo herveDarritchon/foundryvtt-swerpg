@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",              // ou ES2019 / ESNext, mais > ES2015
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "lib": ["ES2020", "DOM"],        // apporte Promise, etc.
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "noEmit": true                   // on ne build pas les tests
+  },
+  "include": ["**/*.ts"]
+}

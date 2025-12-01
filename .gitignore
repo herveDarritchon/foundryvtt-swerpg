@@ -210,6 +210,13 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
+# E2E Playwright env files
+.env.e2e*
+
+# Playwright outputs
+playwright-report/
+test-results/
+
 ### GitHubPages template
 # This .gitignore is appropriate for repositories deployed to GitHub Pages and using
 # a Gemfile as specified at https://github.com/github/pages-gem#conventional
@@ -263,3 +270,7 @@ swerpg.lock
 signature.json
 packs/
 swerpg-compiled.mjs
+
+## Foundry inside Docker
+.e2e-foundry-data/
+
