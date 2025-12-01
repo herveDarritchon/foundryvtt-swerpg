@@ -32,6 +32,17 @@ jobs:
       - name: Run tests with coverage
         run: pnpm run test -- --coverage
 
+      # 👉 Artefact unit tests / coverage (téléchargeable sur chaque run)
+      - name: Upload unit test coverage artifact
+        if: always() # on garde même si les tests cassent
+        uses: actions/upload-artifact@v4
+        with:
+          name: unit-test-coverage-${{ github.run_number }}
+          path: ./coverage
+          if-no-files-found: warn
+          retention-days: 7
+
+      # Tu peux garder la publication GitHub Pages si tu veux une page publique
       - name: Upload coverage to GitHub Pages
         if: github.ref == 'refs/heads/main'
         uses: peaceiris/actions-gh-pages@v3
@@ -51,7 +62,6 @@ jobs:
       E2E_FOUNDRY_WORLD: Swerpg-E2E-World
       FOUNDRY_USERNAME: ${{ secrets.FOUNDRY_USERNAME }}
       FOUNDRY_PASSWORD: ${{ secrets.FOUNDRY_PASSWORD }}
-
 
     steps:
       - name: Checkout code
@@ -75,7 +85,7 @@ jobs:
           # On repart propre
           rm -rf .foundry-data
           mkdir -p .foundry-data
-  
+          
           # Si tu veux injecter un snapshot :
           cp -R "$PWD/resources/data/." .foundry-data/
           sudo chown -R 1000:1000 .foundry-data
@@ -117,8 +127,25 @@ jobs:
         if: failure()
         run: docker logs foundry-e2e || true
 
+      # 👉 Artefacts Playwright (rapport / traces) à adapter à tes dossiers réels
+      - name: Upload Playwright HTML report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-${{ github.run_number }}
+          path: ./playwright-report
+          if-no-files-found: warn
+          retention-days: 7
+
+      - name: Upload Playwright test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-test-results-${{ github.run_number }}
+          path: ./test-results
+          if-no-files-found: warn
+          retention-days: 7
+
       - name: Stop Foundry container
         if: always()
         run: docker rm -f foundry-e2e || true
-
-
