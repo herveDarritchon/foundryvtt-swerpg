@@ -121,7 +121,7 @@ jobs:
         run: pnpm exec playwright install --with-deps
 
       - name: Run Playwright E2E tests
-        run: pnpm e2e
+        run: pnpm e2e:ci
 
       - name: Dump Foundry logs on failure
         if: failure()
