@@ -28,7 +28,7 @@ export async function loginIntoInstance(
     await page.getByPlaceholder('Administrator Password').fill(options.adminPassword)
     await page.getByRole('button', {name: /log in/i}).click()
 
-    await page.waitForURL('**/setup', {waitUntil: 'networkidle'})
+    await page.waitForURL('**/setup', {waitUntil: 'domcontentloaded'})
     return page.url()
 }
 
@@ -42,7 +42,7 @@ export async function enterWorld(
 
     // 3) Filtrer la liste des worlds - attendre que le filtre soit prêt
     const worldFilter = page.locator('#world-filter')
-    await worldFilter.waitFor({state: 'visible', timeout: 5000})
+    await worldFilter.waitFor({state: 'visible'})
     await worldFilter.click()
     await worldFilter.fill(options.world)
 
@@ -53,18 +53,18 @@ export async function enterWorld(
         .first()
 
     // Attendre que l'item soit visible après filtrage
-    await worldItem.waitFor({state: 'visible', timeout: 5000})
+    await worldItem.waitFor({state: 'visible'})
 
     // on survole la tuile pour faire apparaître le bouton
     await worldItem.hover()
 
     // puis on clique sur le bouton "Launch World" à l'intérieur
     const launchButton = worldItem.locator('a.control.play[aria-label="Launch World"]')
-    await launchButton.waitFor({state: 'visible', timeout: 3000})
+    await launchButton.waitFor({state: 'visible'})
     await launchButton.click()
 
     // 5) Écran de join : choisir un user et rejoindre
-    await page.waitForURL('**/join', {waitUntil: 'domcontentloaded', timeout: 30000})
+    await page.waitForURL('**/join', {waitUntil: 'domcontentloaded'})
 
     return page.url()
 }
@@ -85,7 +85,25 @@ export async function enterGameAsGamemaster(
     const userSelect = page.locator('select[name="userid"]'); // label "User Name" sur l'écran join
 
     // On laisse vraiment sa chance au DOM de s'initialiser
-    await userSelect.waitFor({state: 'visible'});
+    try {
+        await userSelect.waitFor({state: 'visible', timeout: 10_000});
+    } catch (error) {
+        const domDebug = await page.evaluate(() => {
+            const selects = Array.from(document.querySelectorAll('select')).map((sel) => ({
+                name: sel.getAttribute('name'),
+                outerHTML: sel.outerHTML.slice(0, 500),
+            }));
+
+            return {
+                location: window.location.href,
+                selects,
+                htmlSnippet: document.body.innerHTML.slice(0, 2000),
+            };
+        });
+
+        console.log('[enterGameAsGamemaster][DOM DEBUG ON FAILURE]', JSON.stringify(domDebug, null, 2));
+        throw error;
+    }
 
     // Log des options visibles pour debug CI
     const optionLabels = await userSelect.locator('option').allTextContents();
@@ -103,7 +121,7 @@ export async function enterGameAsGamemaster(
         .click()
 
     // Attendre l'arrivée sur /game
-    await page.waitForURL('**/game', {waitUntil: 'networkidle'})
+    await page.waitForURL('**/game', {waitUntil: 'domcontentloaded'})
     return page.url()
 }
 

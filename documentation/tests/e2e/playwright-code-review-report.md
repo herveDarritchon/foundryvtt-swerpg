@@ -162,7 +162,7 @@ e2e/
 
 **Points conformes:**
 - ✅ Séquence complète et logique : accepte licence → login admin → enter world → join MJ
-- ✅ Utilisation systématique de `waitForURL` avec `networkidle` ou `domcontentloaded`
+- ✅ Utilisation systématique de `waitForURL` avec `domcontentloaded`
 - ✅ Gestion des overlays Foundry (tours, partage de données) via helpers dédiés
 
 **Points d'attention:**

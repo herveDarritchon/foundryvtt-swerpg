@@ -299,8 +299,7 @@ Avantages :
   - `/license`, `/auth`, `/setup`, `/join`, `/game`
 - Tirer parti de `baseURL` configuré dans `playwright.config.ts` et utiliser `page.goto(`${options.baseURL}/auth`)` dans les helpers plutôt que de dupliquer l’URL.
 - Attendre explicitement les bonnes étapes de navigation :
-  - `page.waitForURL('**/setup', { waitUntil: 'networkidle' })`
-  - `page.waitForURL('**/game', { waitUntil: 'networkidle' })`
+  - `page.waitForURL('**/setup', { waitUntil: 'domcontentloaded' })`
 
 ### 6.3. Nettoyage et stabilité
 
@@ -380,6 +379,44 @@ Les rapports HTML sont générés (en CI) dans `playwright-report/`.
 - Éviter les `page.waitForTimeout()` au profit d’assertions web-first (`expect(locator).toBeVisible()`, `toHaveURL`, etc.).
 - Vérifier que les selectors ne dépendent pas de textes mouvants ou de structures trop fragiles.
 - En cas de flakiness persistante, augmenter légèrement `retries` ou investiguer les temps de réponse de Foundry.
+
+### 7.6. Raccourcis utiles pour debug et génération de tests
+
+Voici quelques commandes rapides et utiles pour déboguer, visualiser les rapports, et générer des scénarios Playwright : elles sont pratiques lors du développement local des tests.
+
+- Debug avec l'inspecteur Playwright :
+
+  ```bash
+  npx playwright test --debug
+  ```
+
+  Lance l’inspecteur interactif qui met en pause l’exécution et permet d’inspecter les pages, pas à pas; utile pour comprendre l’état DOM et le timing d’un test.
+
+- Mode UI (interface graphique de Playwright) :
+
+  ```bash
+  npx playwright test --ui
+  ```
+
+  Ouvre l’interface Playwright (liste de tests, pas-à-pas, relances) pour naviguer visuellement dans les exécutions et ré-exécuter des étapes.
+
+- Visualiser les rapports HTML générés :
+
+  ```bash
+  npx playwright show-report
+  ```
+
+  Ouvre le rapport HTML (généralement `playwright-report/`) pour examiner résultats, traces, captures et vidéos d’un run.
+
+- Générer un test interactif à partir d’une session navigateur (Playwright Codegen) :
+
+  ```bash
+  npx playwright codegen demo.playwright.dev/todomvc
+  ```
+
+  Ouvre une fenêtre instrumentée et enregistre vos actions pour produire un scénario de test (très utile pour prototyper un spec ou exporter des locators).
+
+Remarque : si vous utilisez `pnpm` dans ce projet, vous pouvez remplacer `npx` par `pnpm exec` (par ex. `pnpm exec playwright test --debug`).
 
 ---
 
