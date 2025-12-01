@@ -9,6 +9,7 @@ import {
     logoutFromInstance,
     quitWorld
 } from "./foundrySession";
+import {waitForGameUIReady} from "./foundryUI";
 
 /**
  * Configuration de l'environnement de test : navigation complète jusqu'au monde Swerpg chargé.
@@ -64,6 +65,11 @@ export async function setUp(
     if (!finalUrl.includes('/game')) {
         throw new Error(`setUp failed: expected to be on /game but got ${finalUrl}`)
     }
+
+    console.log('[setUp] Attente de la readiness de Foundry (game.ready + #sidebar)...')
+    await waitForGameUIReady(page,'#sidebar')
+    console.log('[setUp] Foundry ready, UI chargée')
+
     console.log('[setUp] ✅ Setup réussi')
 }
 
@@ -83,16 +89,18 @@ export async function setUp(
 export async function tearDown(
     page: Page,
     options: FoundrySessionOptions) {
+    const url = page.url()
     try {
         // Retour simple à /join : point d'entrée stable pour le prochain test
         await page.goto(`${options.baseURL}/join`, {
             waitUntil: 'domcontentloaded',
-            timeout: 5000
+            timeout: 10000
         }).catch((error) => {
-            console.warn('[tearDown] Navigation vers /join échouée, ignoré pour ne pas faire échouer le test:', error.message)
+            console.warn(`[tearDown] Navigation vers /join échouée à partir de ${url}, ignoré pour ne pas faire échouer le test:`, error.message)
         })
     } catch (error) {
-        console.warn('[tearDown] Erreur lors du cleanup, ignoré:', error)
+        console.warn(`[tearDown] Erreur lors du cleanup, ignoré (page en cours ${url}):`, error)
     }
-
+    console.log (`On finit sur la page ${page.url()}`)
+    console.log('[tearDown] ✅ tearDown réussi.')
 }

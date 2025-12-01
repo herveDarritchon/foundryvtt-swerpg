@@ -1,7 +1,8 @@
 import {expect, test} from '../fixtures'
 
 test.describe('Swerpg bootstrap', () => {
-    test('should load Foundry world and display Swerpg UI element', async ({page}) => {
+    test('should load Foundry world and display Swerpg UI element', async ({page, browserName}) => {
+        console.log(`[bootstrap] 🧪 Démarrage du test sur ${browserName}`)
         // Vérifier l'URL
         await expect(page).toHaveURL(/.*game/)
 
@@ -12,6 +13,7 @@ test.describe('Swerpg bootstrap', () => {
         // Vérifier qu'un élément UI critique est présent (sidebar)
         const sidebar = page.locator('#sidebar')
         await expect(sidebar).toBeVisible()
+        console.log(`[bootstrap] ✅ Fin du test sur ${browserName}`)
     })
 })
 

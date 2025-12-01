@@ -3,7 +3,7 @@ import { navigateToSystemSettings } from '../utils/foundryUI'
 
 test.describe('OggDude importer', () => {
   test('should open the OggDude import interface', async ({ page, browserName }) => {
-      console.log(`[oggdude-import] Démarrage du test sur ${browserName}`)
+      console.log(`[oggdude-import] 🧪 Démarrage du test sur ${browserName}`)
       console.log(`[oggdude-import] URL initiale: ${page.url()}`)
 
       // worldReady a déjà loggué l'admin et lancé le world swerpg-e2e
@@ -35,6 +35,7 @@ test.describe('OggDude importer', () => {
       console.log('[oggdude-import] Vérification de l\'interface d\'import...')
       const fileInput = page.getByRole('button', { name: 'OggDude Zip Data File' });
       await expect(fileInput).toBeVisible()
-      console.log('[oggdude-import] ✅ Interface d\'import OggDude affichée correctement')
+      console.log('[oggdude-import] Interface d\'import OggDude affichée correctement')
+      console.log(`[oggdude-import] ✅ Fin du test sur ${browserName}`)
   })
 })
