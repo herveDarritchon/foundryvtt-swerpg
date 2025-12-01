@@ -2,6 +2,14 @@ import {expect, test as base} from '@playwright/test'
 import {FoundrySessionOptions} from '../utils/foundrySession'
 import {setUp, tearDown} from "../utils/e2eTest";
 
+export const beforeAllFixture = base.extend({});
+
+beforeAllFixture.beforeAll(async ({browserName, browser}, testInfo) => {
+    console.log(
+        `[E2E] Starting tests on project=${testInfo.project.name} browser=${browserName} version=${browser.version()}`
+    );
+});
+
 export const test = base.extend<{ worldReady: void }>({
     worldReady: [
         async ({page}, use) => {
