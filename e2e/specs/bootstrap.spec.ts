@@ -7,11 +7,6 @@ test.describe('[ci] Swerpg bootstrap', () => {
         // Vérifier l'URL
         await expect(page).toHaveURL(/.*game/)
 
-        await page.screenshot({
-            path: testInfo.outputPath('bootstrap.png'),
-            fullPage: true,
-        });
-
         // Vérifier la classe système sur body
         const body = page.locator('body.system-swerpg')
         await expect(body).toHaveCount(1)
@@ -19,6 +14,7 @@ test.describe('[ci] Swerpg bootstrap', () => {
         // Vérifier qu'un élément UI critique est présent (sidebar)
         const sidebar = page.locator('#sidebar')
         await expect(sidebar).toBeVisible()
+
         console.log(`[bootstrap] ✅ Fin du test sur ${browserName}`)
     })
 })

@@ -76,6 +76,8 @@ Les scripts E2E sont déclarés dans `package.json` :
   ...
   "e2e": "playwright test",
   "e2e:headed": "playwright test --headed",
+  "e2e:ci": "playwright test --project=chromium --grep \"\\[ci\\]\"",
+  "e2e:ui": "playwright test --ui",
   "foundry:e2e:start": "bash ./scripts/e2e-foundry-start.sh start",
   "foundry:e2e:stop": "bash ./scripts/e2e-foundry-start.sh stop",
   "foundry:e2e:restart": "bash ./scripts/e2e-foundry-start.sh restart"
@@ -428,3 +430,16 @@ Remarque : si vous utilisez `pnpm` dans ce projet, vous pouvez remplacer `npx` 
 - Les scénarios doivent rester courts, robustes, et utiliser des locators accessibles.
 
 Cette documentation a été mise à jour pour refléter l’état actuel de la configuration Playwright et de la suite E2E. Pensez à la compléter à chaque ajout de nouveaux scénarios majeurs ou de nouvelles conventions de test.
+
+---
+
+> Remarque pour l'intégration continue (GitHub Actions) : en raison des contraintes de performance des runners GitHub, la pipeline CI n'exécute **que** les tests explicitement marqués avec le tag `[ci]` dans leur titre. Le script `e2e:ci` (défini ci‑dessus) filtre les tests via `--grep "[ci]"` pour ne lancer que ces scénarios critiques.
+>
+> Pour inclure un test dans la CI, ajoutez simplement `[ci]` dans le titre du test ou du describe ; exemple :
+>
+> ```ts
+> // Inclut ce test dans le run CI
+> test('Import OggDude [ci] - critical path', async ({ page }) => { ... })
+> ```
+>
+> Cette approche permet de garder la suite E2E locale complète pour le développement tout en limitant la charge et la durée des runs CI aux scénarios essentiels.
