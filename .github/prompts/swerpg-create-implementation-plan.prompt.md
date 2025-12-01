@@ -5,41 +5,15 @@ description: 'Generate a deterministic implementation plan for the SWERPG system
 
 You act as the `swerpg-plan` agent for the **SWERPG / Star Wars Edge** system on Foundry VTT v13+.
 
-## Additional Workflow Requirements (GitHub Issue & PR)
+## Workflow GitHub / Git
 
-Before or while generating the implementation plan file, you MUST also:
+Important: At the planning step, you MUST NOT:
+- create GitHub issues,
+- create/switch git branches,
+- prepare or open pull requests.
 
-1. **Create a GitHub Issue**
-   - Use the repository’s Git tooling (via terminal) to create an issue, or prepare the full issue payload if CLI-based creation is unavailable.
-   - The issue title MUST follow the format: `Plan: <domain> - <feature> v<version>`.
-   - The issue body MUST contain **exactly** the same content as the generated plan file (YAML front matter + Markdown sections), or a faithful copy if format constraints apply.
-   - You MUST assign labels automatically according to the context:
-     - Always include: `plan`, `sweRPG`, `foundry-v13`.
-     - Add `feature`, `bug`, `refactor`, `data`, `upgrade`, ou `architecture` en fonction de la valeur de `${purpose}`.
-     - Add `domain:<domain>` (e.g. `domain:oggdude-importer`, `domain:character-sheet`, etc.).
-   - If issue creation via CLI/API is not possible in this environment, you MUST:
-     - Generate a ready-to-use Markdown issue body,
-     - Print a short copy-paste block with `Title`, `Labels`, and `Body` so it can be created manually.
-
-2. **Create and Switch to a Git Branch for the Plan**
-   - Use `git` in the terminal to:
-     - Create a new branch named: `plan/${domain}/${purpose}-${feature}-v${version}` (kebab-case for `feature`).
-     - Switch to this branch before writing the final version of the plan file.
-   - If `git` is not available, clearly state this limitation in the chat response and still structure the branch name and suggested commands so they can be run manually:
-     - `git checkout -b plan/${domain}/${purpose}-${feature}-v${version}`
-
-3. **Prepare a Pull Request (PR)**
-   - After creating the plan file and (if possible) committing the changes, you MUST:
-     - Prepare the PR metadata (title + body) even if you cannot actually open the PR from this environment.
-     - PR title format: `Plan: ${domain} – ${purpose}-${feature}-v${version}`.
-     - PR body MUST include:
-       - A short executive summary of the change (2–4 lignes en français).
-       - A reference to the created issue (e.g. `Closes #<issue-number>` if known, otherwise `Relates to: <issue title>`).
-       - The main `REQ-XXX`, `TASK-XXX` et `TEST-XXX` IDs en liste à puces.
-       - Le chemin du fichier de plan : `/documentation/plan/<domain>/<purpose>-<feature>-<version>.md`.
-   - Si une CLI GitHub (ex. `gh`) est disponible, tu peux suggérer la commande pour ouvrir la PR (`gh pr create ...`), mais tu dois rester robuste si elle ne l’est pas.
-
-> Ces étapes (Issue + branche + PR) ne remplacent PAS la création du fichier de plan. Elles s’y ajoutent. Le plan reste la source de vérité principale, et son contenu est réutilisé comme corps d’issue et résumé de PR.
+Issues, branches and PRs are created later by the dev agent when executing the plan.
+Your only goal here is to produce the implementation plan file.
 
 ## Core Goal
 
@@ -50,7 +24,10 @@ following the rules below:
 - You follow the **SWERPG Project Instructions**: `.github/instructions/swerpg-project-instructions.instructions.md`.
 - You follow the conventions defined in your own agent spec `swerpg-plan.agent.md`.
 - You use as your **main functional source of truth** the requirements file provided as input (see below).
-- You produce **ONLY** the content of the plan file (YAML front matter + Markdown sections) and nothing else around it.
+- The plan file content MUST consist ONLY of:
+    - YAML front matter, then
+    - Markdown sections as defined in the template,
+      with no extra wrappers or explanations before or after.
 
 ### Plan context
 
@@ -170,7 +147,7 @@ structured implementation plan that follows the points below:
    - Implementation phases must be explicit:
      - Numbered phases,
      - Each phase contains a table of `TASK-XXX` with dependencies,
-     - The whole must be directly executable by `swerpg-dev-core` without interpretation.
+     - The whole must be directly executable by `swerpg-dev-feature` without interpretation.
 
 4. **Section `## 6. Testing`**
    - Define an actionable testing strategy, based on:
@@ -184,7 +161,7 @@ structured implementation plan that follows the points below:
    - Each `TEST-XXX` must be traceable to at least one `REQ-XXX`.
 
 5. **Section `## 8. Related Specifications / Further Reading`**
-   - If the requirements file references other documents:
+   - If the requirement file references other documents:
      - list them here with their path in the repo.
    - Add:
      - other relevant internal specs (architecture, data model, UX, etc.),
@@ -200,7 +177,7 @@ structured implementation plan that follows the points below:
 - In the chat response, only:
   - confirm the created file path, and
   - give a short summary (5–10 lines) + the main REQ-XXX / TASK-XXX / TEST-XXX IDs.
-- The plan must be **executable without interpretation** by `swerpg-dev-core`.
+- The plan must be **executable without interpretation** by `swerpg-dev-feature`.
   - Each `TASK-XXX` must be precise enough so that the dev agent does not have to “guess” the intent.
   - The relationship between `REQ-XXX`, `CON-XXX`, `TASK-XXX` and `TEST-XXX` must be clear.
 - The plan must be **self-contained**:
@@ -210,5 +187,5 @@ structured implementation plan that follows the points below:
   `REQ-XXX`, `TASK-XXX`, etc.) in **English**.
 - If the requirements file is incomplete or ambiguous:
   - You explicitly mention it in the `CON-XXX` or in a dedicated subsection (e.g. “Assumptions / Open Questions”),
-  - You state reasonable assumptions **inside the plan itself**, in a structured way, so that `swerpg-dev-core` knows
+  - You state reasonable assumptions **inside the plan itself**, in a structured way, so that `swerpg-dev-feature` knows
     what the plan is based on.

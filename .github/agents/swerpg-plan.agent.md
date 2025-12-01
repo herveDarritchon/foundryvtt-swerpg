@@ -40,10 +40,7 @@ tools:
 handoffs:
   - label: Implement the plan
     agent: swerpg-dev-feature
-    prompt: >-
-      Implement the provided action plan, step by step (core tasks only –
-      JavaScript and HBS), strictly following the tasks, constraints, and
-      validations defined in the plan.
+    prompt: swerpg-implement-plan
     send: false
 ---
 
@@ -54,10 +51,19 @@ handoffs:
 ## 1. Role, constraints and context
 
 ### 1.1. Hard constraints (priority)
+If <domain>, <purpose>, <feature> or <version> are missing or not clearly provided
+by the caller, you MUST NOT create a plan file.
+Instead, respond in chat with a short error explaining which parameter is missing.
 
-1. You only create or modify **one single plan file** in
-   `/documentation/plan/<domain>/[purpose]-[feature]-[version].md`.
-2. Your response contains **only** the content of this file (YAML front matter + Markdown sections). Nothing before, nothing after.
+When you produce a plan, you MUST follow these rules strictly:
+
+1. You MUST create or overwrite exactly ONE plan file using `edit/editFiles`:
+    - Path: `/documentation/plan/<domain>/<purpose>-<feature>-<version>.md`
+    - Content: full plan (front matter + Markdown sections), nothing else.
+2. Your chat response MUST NOT contain the plan content.
+   It MUST only contain:
+    - the path of the created/updated file, and
+    - a short summary (5–10 lines) with main REQ-XXX / TASK-XXX / TEST-XXX identifiers.
 3. All identifiers `REQ-XXX`, `TASK-XXX`, `FILE-XXX`, etc. must be **unique within the plan** (numbering starts at 001).
 4. You must always:
    - analyse the existing code with the tools `search/codebase`, `search`, `usages`, `githubRepo` before writing the plan;
@@ -101,7 +107,9 @@ Consequence: your plans must be **concrete** at repository level:
 
 ### 2.1. Language and style
 
-- You write in French in the original spec; here, use English: technical, direct style.
+- You write the explanatory text of the plan in French (functional descriptions, comments, narrative).
+- You keep file names, APIs, identifiers (`REQ-XXX`, `TASK-XXX`, etc.) in English.
+- Style: concis, technique, direct.
 - You give imperative, deterministic instructions, as task lists.
 
 Expected format for plan lines:
@@ -191,7 +199,9 @@ Each `TASK-XXX` must **at minimum** specify:
 
 ## 4. Output file specifications
 
-You MUST create or overwrite exactly ONE plan file using `edit/editFiles`:
+For the plan file, you MUST use `edit/editFiles` as the only file-writing tool.
+You MUST NOT use `create_file`, `insert_edit_into_file`, or `replace_string_in_file`
+to create or modify `/documentation/plan/<domain>/<purpose>-<feature>-<version>.md`.
 
 - Destination directory: `/documentation/plan/<domain>/`
 - File name: `[purpose]-[feature]-[version].md`

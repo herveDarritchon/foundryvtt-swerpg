@@ -13,8 +13,15 @@
     "test": "vitest",
     "test:watch": "vitest --watch",
     "test:coverage": "pnpm vitest run --coverage",
+    "e2e": "playwright test",
+    "e2e:headed": "playwright test --headed",
+    "e2e:ci": "playwright test --project=chromium --grep \"\\[ci\\]\"",
+    "e2e:ui": "playwright test --ui",
     "fmt": "prettier --write .",
-    "fmt:check": "prettier --check ."
+    "fmt:check": "prettier --check .",
+    "foundry:e2e:start": "bash ./scripts/e2e-foundry-start.sh start",
+    "foundry:e2e:stop": "bash ./scripts/e2e-foundry-start.sh stop",
+    "foundry:e2e:restart": "bash ./scripts/e2e-foundry-start.sh restart"
   },
   "devDependencies": {
     "@eslint/js": "^9.8.0",
@@ -42,13 +49,14 @@
     "gulp-less": "^5.0.0",
     "gulp-plumber": "^1.2.1",
     "gulp-touch-cmd": "^0.0.1",
+    "jszip": "^3.10.1",
     "less": "^4.3.0",
     "prettier": "^3.6.2",
     "prettier-plugin-handlebars": "^0.0.1",
     "rollup": "^4.41.1",
     "semantic-release": "^24.2.5",
     "vitest": "^3.1.1",
-    "jszip": "^3.10.1"
+    "@playwright/test": "^1.57.0"
   },
   "author": "Behaska",
   "license": "MIT"

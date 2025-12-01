@@ -1,0 +1,1 @@
+This folder is a recommended location for users to upload assets that are preserved across updates. For additional guidance on how to use this folder, please visit https://foundryvtt.com/article/asset-management
