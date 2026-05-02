@@ -1,6 +1,7 @@
 # Changements apportés - Stabilisation Chromium E2E
 
 ## Résumé
+
 Implémentation complète du plan `feature-playwright-chromium-stability-1.md`.  
 Tous les tests E2E passent maintenant sur Chromium ET Firefox (4/4 - 100%).
 
@@ -9,6 +10,7 @@ Tous les tests E2E passent maintenant sur Chromium ET Firefox (4/4 - 100%).
 ### Configuration
 
 #### `playwright.config.ts`
+
 - `expect.timeout` global augmenté à 30000ms (au lieu de 15000ms)
 - Configuration Chromium enrichie avec :
   - `actionTimeout: 15000ms`
@@ -16,6 +18,7 @@ Tous les tests E2E passent maintenant sur Chromium ET Firefox (4/4 - 100%).
   - `contextOptions` pour persistance cookies
 
 #### `.env.e2e.local`
+
 - `PLAYWRIGHT_TEST_TIMEOUT` passé à 900000ms
 - `PLAYWRIGHT_EXPECT_TIMEOUT` passé à 30000ms
 - Commentaire ajouté pour expliquer les valeurs
@@ -23,6 +26,7 @@ Tous les tests E2E passent maintenant sur Chromium ET Firefox (4/4 - 100%).
 ### Tests
 
 #### `e2e/specs/oggdude-import.spec.ts`
+
 - **Suppression** du `test.skip(browserName === 'chromium', ...)`
 - **Ajout** de 10 lignes de logging détaillé
 - **Ajout** d'une attente explicite sur le bouton d'import
@@ -30,24 +34,27 @@ Tous les tests E2E passent maintenant sur Chromium ET Firefox (4/4 - 100%).
 ### Documentation
 
 #### `documentation/tests/e2e/playwright-e2e-guide.md`
+
 - **Nouvelle section 4.1** : "Spécificités Chromium"
 - Documentation des `launchOptions` et de leur justification
 - Documentation du `expect.timeout` augmenté
 
 #### Nouveaux documents créés
+
 - `documentation/tests/e2e/playwright-chromium-stability-implementation-report.md`
   → Rapport détaillé d'implémentation (métriques, validation, leçons)
-  
 - `documentation/tests/e2e/IMPLEMENTATION-SUCCESS-SUMMARY.md`
   → Résumé exécutif pour communication rapide
 
 #### Plan mis à jour
+
 - `documentation/plan/tests/feature-playwright-chromium-stability-1.md`
   → Statut passé de "Planned" à "Completed"
 
 ## Résultats des tests
 
 ### Avant
+
 ```
 pnpm e2e
 # 1 skipped, 3 passed (21.0s)
@@ -55,6 +62,7 @@ pnpm e2e
 ```
 
 ### Après
+
 ```
 pnpm e2e
 # 4 passed (26.2s)
@@ -66,12 +74,12 @@ pnpm e2e
 
 ## Métriques d'amélioration
 
-| Métrique | Avant | Après | Amélioration |
-|----------|-------|-------|--------------|
-| Tests Chromium | 50% | 100% | +50% |
-| Couverture totale | 75% | 100% | +25% |
-| Tests skippés | 1 | 0 | -100% |
-| Durée totale | ~21s | ~26s | +5s (acceptable) |
+| Métrique          | Avant | Après | Amélioration     |
+| ----------------- | ----- | ----- | ---------------- |
+| Tests Chromium    | 50%   | 100%  | +50%             |
+| Couverture totale | 75%   | 100%  | +25%             |
+| Tests skippés     | 1     | 0     | -100%            |
+| Durée totale      | ~21s  | ~26s  | +5s (acceptable) |
 
 ## Validation
 
@@ -122,4 +130,3 @@ new file:   documentation/tests/e2e/playwright-chromium-stability-implementation
 new file:   documentation/tests/e2e/IMPLEMENTATION-SUCCESS-SUMMARY.md
 new file:   documentation/tests/e2e/CHANGELOG-CHROMIUM-STABILITY.md
 ```
-

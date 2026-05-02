@@ -59,7 +59,7 @@ Ce fichier-là, tu le poses **toi**, proprement. Ensuite tu laisses Copilot t’
 
 L’idée : **tu écris le scénario en pseudo-code / commentaires**, Copilot te génère les étapes Playwright.
 
-### a) Workflow pour une *nouvelle* spec
+### a) Workflow pour une _nouvelle_ spec
 
 Pour la structure globale d’une nouvelle spec et des exemples d’assertions métier, appuie-toi sur le squelette décrit dans :
 
@@ -86,10 +86,10 @@ test.describe('Bootstrap SWERPG E2E world', () => {
 Exemple typique :
 
 ```ts
-    // Arrange: login as admin and display world list
-    await setupPage.goto()
-    await setupPage.loginAsAdmin(process.env.FOUNDRY_ADMIN_PASSWORD!)
-    await setupPage.expectWorldListVisible()
+// Arrange: login as admin and display world list
+await setupPage.goto()
+await setupPage.loginAsAdmin(process.env.FOUNDRY_ADMIN_PASSWORD!)
+await setupPage.expectWorldListVisible()
 ```
 
 Tu écris le nom de fonction, Copilot te propose le corps dans `FoundrySetupPage` quand tu vas l’ouvrir.
@@ -146,13 +146,13 @@ Tu **corriges les sélecteurs** pour qu’ils soient stables (role, text, `data-
 
 ### b) Tu t’interdis certains trucs (et tu les refuses à Copilot)
 
-* ❌ `locator('div:nth-child(3) …')`
-* ❌ `waitForTimeout(5000)`
-* ❌ `page.click('text=Play')` sans assert derrière
+- ❌ `locator('div:nth-child(3) …')`
+- ❌ `waitForTimeout(5000)`
+- ❌ `page.click('text=Play')` sans assert derrière
 
-* ✅ `getByRole`, `getByText`, `getByTestId`
-* ✅ `expect(...).toBeVisible()` après chaque action importante
-* ✅ helpers dans les page objects pour les flows pénibles (login, dismiss overlays, etc.)
+- ✅ `getByRole`, `getByText`, `getByTestId`
+- ✅ `expect(...).toBeVisible()` après chaque action importante
+- ✅ helpers dans les page objects pour les flows pénibles (login, dismiss overlays, etc.)
 
 Dès que Copilot te propose un truc fragile → tu le réécris **à la main**, et il apprendra très vite ton style.
 
@@ -163,42 +163,37 @@ Dès que Copilot te propose un truc fragile → tu le réécris **à la main**, 
 Pour être concret, je te propose cette boucle pour chaque nouveau scénario :
 
 1. **Enregistrer la vraie interaction à la main**
-
-    * `pnpm exec playwright codegen http://localhost:30000`
-    * Tu joues le scénario dans Foundry (login, choisir le world, fermer les popups).
-    * Tu récupères des bouts de code / sélecteurs **juste comme base**, pas pour les coller brut.
+   - `pnpm exec playwright codegen http://localhost:30000`
+   - Tu joues le scénario dans Foundry (login, choisir le world, fermer les popups).
+   - Tu récupères des bouts de code / sélecteurs **juste comme base**, pas pour les coller brut.
 
 2. **Écrire la spec à la main + commentaires**
-
-    * Comme montré plus haut : `Arrange / Act / Assert` en commentaires.
+   - Comme montré plus haut : `Arrange / Act / Assert` en commentaires.
 
 3. **Utiliser Copilot pour le “bourrage”**
-
-    * Laisser Copilot proposer le remplissage des fonctions dans les page objects et les asserts.
-    * Ajuster immédiatement les sélecteurs, les messages, les timeouts.
+   - Laisser Copilot proposer le remplissage des fonctions dans les page objects et les asserts.
+   - Ajuster immédiatement les sélecteurs, les messages, les timeouts.
 
 4. **Stabiliser avec traces**
-
-    * `pnpm e2e:headed e2e/specs/bootstrap.spec.ts`
-    * Si ça foire → `pnpm exec playwright show-trace path/to/trace.zip`
-    * Tu repères où ça coince, tu ajustes, tu rerun.
+   - `pnpm e2e:headed e2e/specs/bootstrap.spec.ts`
+   - Si ça foire → `pnpm exec playwright show-trace path/to/trace.zip`
+   - Tu repères où ça coince, tu ajustes, tu rerun.
 
 5. **Refacto régulier**
-
-    * Dès que 2 tests copient le même bloc → tu sors un helper / méthode de page object **et tu l’annonces dans un commentaire** pour que Copilot recolle dessus ensuite.
+   - Dès que 2 tests copient le même bloc → tu sors un helper / méthode de page object **et tu l’annonces dans un commentaire** pour que Copilot recolle dessus ensuite.
 
 ---
 
 ## 5. Petite check-list “bonne pratique Copilot + Playwright”
 
-* 💡 *Toujours* écrire **d’abord** le scénario en français ou en pseudo-code dans les commentaires.
-* 💡 Utiliser Copilot pour :
-  * générer du boilerplate (imports, signatures, boucles, petits helpers),
-  * cloner des patterns déjà propres (tes propres locators, tes propres fixtures).
-  * 💣 Ne jamais accepter :
-    * des sélecteurs illisibles,
-    * des `waitForTimeout` magiques,
-    * des tests qui n’ont pas d’assert ou un seul assert en fin de fichier.
-* 💡 Centraliser :
-  * login + choix de world + dismiss overlays dans 1–2 helpers bien nommés,
-  * et toujours y faire référence par des noms explicites (`loginAsAdminAndEnterWorld('swerpg-e2e-world')`).
+- 💡 _Toujours_ écrire **d’abord** le scénario en français ou en pseudo-code dans les commentaires.
+- 💡 Utiliser Copilot pour :
+  - générer du boilerplate (imports, signatures, boucles, petits helpers),
+  - cloner des patterns déjà propres (tes propres locators, tes propres fixtures).
+  - 💣 Ne jamais accepter :
+    - des sélecteurs illisibles,
+    - des `waitForTimeout` magiques,
+    - des tests qui n’ont pas d’assert ou un seul assert en fin de fichier.
+- 💡 Centraliser :
+  - login + choix de world + dismiss overlays dans 1–2 helpers bien nommés,
+  - et toujours y faire référence par des noms explicites (`loginAsAdminAndEnterWorld('swerpg-e2e-world')`).
