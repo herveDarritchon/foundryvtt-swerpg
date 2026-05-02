@@ -17,6 +17,7 @@ Définir un plan d'implémentation pour que chaque dossier créé lors d'un impo
 ## Observations d'implémentation
 
 **Phase 1 & 2 complétées** (2025-11-29):
+
 - Mapping de couleurs `OGGDUDE_FOLDER_COLORS` ajouté avec palette SWERPG
 - Fonction `resolveFolderColor(importDomain)` implémentée
 - Fonction `applyFolderColor(folder, color)` implémentée avec gestion conditionnelle des updates
@@ -24,6 +25,7 @@ Définir un plan d'implémentation pour que chaque dossier créé lors d'un impo
 - `getFolderConfiguration()` étendue pour exposer `colorMap` et `fallbackColor`
 
 **Tests automatisés (TASK-008)** :
+
 - Problème de configuration de mocks Vitest rencontré
 - Le mock de `game.folders` n'est pas correctement initialisé avant l'import du module testé
 - Tests unitaires de logique (getFolderConfiguration) passent ✅
@@ -31,11 +33,13 @@ Définir un plan d'implémentation pour que chaque dossier créé lors d'un impo
 - **Recommandation** : Déléguer TASK-008 à `swerpg-dev-test` ou effectuer validation manuelle en priorité (TEST-004, TEST-005)
 
 **Documentation (TASK-009)** ✅ :
+
 - Guide `oggdude-import-guide.md` mis à jour avec la liste complète des couleurs
 - Section dédiée aux GMs expliquant l'utilité du code couleur
 - Notes pour les développeurs sur l'extension du système
 
 **Vérification des logs (TASK-012)** ✅ :
+
 - Tous les logs d'application de couleur utilisent `logger.debug` (non verbeux en production)
 - `logger.info` uniquement pour création de nouveaux dossiers (événement important)
 - `logger.warn` pour domaines inconnus et erreurs non bloquantes
@@ -43,12 +47,14 @@ Définir un plan d'implémentation pour que chaque dossier créé lors d'un impo
 - **Résultat** : Verbosité appropriée pour la production ✅
 
 **Guide de test manuel (TASK-011)** ✅ :
+
 - Fichier créé : `documentation/plan/oggdude-importer/MANUAL_TEST_folder-colors.md`
 - Couvre 5 scénarios de test : import initial, ré-import, couleurs personnalisées, fallback, logs
 - Inclut tableau de validation et rapport de test
 - **Recommandation** : Exécuter ce test manuel avant validation finale
 
 **Restant à faire** :
+
 - TASK-010 (optionnel) : Référence croisée dans feature-folder-organization-1.md
 
 ## 1. Requirements & Constraints
@@ -72,40 +78,40 @@ Définir un plan d'implémentation pour que chaque dossier créé lors d'un impo
 
 - GOAL-001: Étendre le service `oggdude-import-folders` pour préparer la gestion des couleurs.
 
-| Task     | Description                                                                                                                             | DependsOn | Completed | Date       |
-| -------- | --------------------------------------------------------------------------------------------------------------------------------------- | --------- | --------- | ---------- |
+| Task     | Description                                                                                                                                | DependsOn | Completed | Date       |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------ | --------- | --------- | ---------- |
 | TASK-001 | Auditer `module/importer/utils/oggdude-import-folders.mjs` et lister les points où la couleur doit être injectée (création + mise à jour). |           | ✅        | 2025-11-29 |
-| TASK-002 | Définir un objet `OGGDUDE_FOLDER_COLORS` aligné sur `OGGDUDE_FOLDER_MAP` et une couleur fallback (ex: `#1b5f8c`).                        | TASK-001  | ✅        | 2025-11-29 |
-| TASK-003 | Décider d'une API interne (ex: `resolveFolderColor(importDomain)`) pour retourner la couleur voulue en préservant la cohérence du cache. | TASK-002  | ✅        | 2025-11-29 |
+| TASK-002 | Définir un objet `OGGDUDE_FOLDER_COLORS` aligné sur `OGGDUDE_FOLDER_MAP` et une couleur fallback (ex: `#1b5f8c`).                          | TASK-001  | ✅        | 2025-11-29 |
+| TASK-003 | Décider d'une API interne (ex: `resolveFolderColor(importDomain)`) pour retourner la couleur voulue en préservant la cohérence du cache.   | TASK-002  | ✅        | 2025-11-29 |
 
 ### Implementation Phase 2
 
 - GOAL-002: Implémenter l'application des couleurs lors de la création ou mise à jour des dossiers Foundry.
 
-| Task     | Description                                                                                                                                                                | DependsOn | Completed | Date       |
-| -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | --------- | ---------- |
-| TASK-004 | Modifier `getOrCreateFolderInternal` pour accepter un paramètre optionnel `color` et, si fourni, paramétrer `data.color` lors de `Folder.create`.                          | TASK-003  | ✅        | 2025-11-29 |
+| Task     | Description                                                                                                                                                               | DependsOn | Completed | Date       |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | --------- | ---------- |
+| TASK-004 | Modifier `getOrCreateFolderInternal` pour accepter un paramètre optionnel `color` et, si fourni, paramétrer `data.color` lors de `Folder.create`.                         | TASK-003  | ✅        | 2025-11-29 |
 | TASK-005 | Ajouter une étape après récupération du dossier existant: si `folder.color` diffère de la couleur attendue, effectuer `folder.update({ color })` avec log debug contrôlé. | TASK-004  | ✅        | 2025-11-29 |
-| TASK-006 | Adapter `getOrCreateWorldFolder` pour passer la couleur issue de `resolveFolderColor(importDomain)` lors des appels à `getOrCreateFolderInternal`.                         | TASK-004  | ✅        | 2025-11-29 |
-| TASK-007 | Introduire une fonction `applyFolderColor(folder, color)` testable séparément (gère update conditionnel, logs, erreurs).                                                   | TASK-004  | ✅        | 2025-11-29 |
+| TASK-006 | Adapter `getOrCreateWorldFolder` pour passer la couleur issue de `resolveFolderColor(importDomain)` lors des appels à `getOrCreateFolderInternal`.                        | TASK-004  | ✅        | 2025-11-29 |
+| TASK-007 | Introduire une fonction `applyFolderColor(folder, color)` testable séparément (gère update conditionnel, logs, erreurs).                                                  | TASK-004  | ✅        | 2025-11-29 |
 
 ### Implementation Phase 3
 
 - GOAL-003: Couvrir la fonctionnalité par des tests Vitest et mettre à jour la documentation.
 
-| Task     | Description                                                                                                                                                                           | DependsOn | Completed | Date       |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | --------- | ---------- |
+| Task     | Description                                                                                                                                                                             | DependsOn | Completed | Date       |
+| -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | --------- | ---------- |
 | TASK-008 | Créer ou étendre `tests/importer/oggdude-import-folders.spec.mjs` pour couvrir: mapping couleur, création avec couleur, update conditionnel, fallback.                                  | TASK-007  | ⚠️        | 2025-11-29 |
-| TASK-009 | Documenter dans `documentation/oggdude-import-guide.md` (section organisation) la palette assignée à chaque dossier et les implications pour les MJ.                                   | TASK-006  | ✅        | 2025-11-29 |
-| TASK-010 | Ajouter une note dans `documentation/plan/oggdude-importer/feature-folder-organization-1.md` (ou plan équivalent) en référence croisée si nécessaire (optionnel selon instructions PO). | TASK-009  |           |      |
+| TASK-009 | Documenter dans `documentation/oggdude-import-guide.md` (section organisation) la palette assignée à chaque dossier et les implications pour les MJ.                                    | TASK-006  | ✅        | 2025-11-29 |
+| TASK-010 | Ajouter une note dans `documentation/plan/oggdude-importer/feature-folder-organization-1.md` (ou plan équivalent) en référence croisée si nécessaire (optionnel selon instructions PO). | TASK-009  |           |            |
 
 ### Implementation Phase 4
 
 - GOAL-004: Préparer la validation et la communication.
 
-| Task     | Description                                                                                                                   | DependsOn | Completed | Date       |
-| -------- | ----------------------------------------------------------------------------------------------------------------------------- | --------- | --------- | ---------- |
-| TASK-011 | Mettre à jour/ajouter un guide de test manuel: importer un ZIP de référence et vérifier dans Foundry que chaque dossier est coloré. | TASK-009  |           |      |
+| Task     | Description                                                                                                                         | DependsOn | Completed | Date       |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------------- | --------- | --------- | ---------- |
+| TASK-011 | Mettre à jour/ajouter un guide de test manuel: importer un ZIP de référence et vérifier dans Foundry que chaque dossier est coloré. | TASK-009  |           |            |
 | TASK-012 | Vérifier que les logs (`logger.debug/info`) restent non verbeux en production (mettre un niveau debug pour les updates de couleur). | TASK-005  | ✅        | 2025-11-29 |
 
 ## 3. Alternatives
@@ -117,8 +123,8 @@ Définir un plan d'implémentation pour que chaque dossier créé lors d'un impo
 ## 4. Dependencies
 
 - **DEP-001**: Foundry VTT v13.x (API `Folder.create`, `Folder.update`, structure `color`).
-- **DEP-002**: `module/importer/utils/oggdude-import-folders.mjs` (service hiérarchie). 
-- **DEP-003**: `documentation/oggdude-import-guide.md` (guide utilisateur pour importer). 
+- **DEP-002**: `module/importer/utils/oggdude-import-folders.mjs` (service hiérarchie).
+- **DEP-003**: `documentation/oggdude-import-guide.md` (guide utilisateur pour importer).
 - **DEP-004**: Jeu d'essai OggDude ZIP pour tests manuels (déjà utilisé par les guides existants).
 
 ## 5. Files
@@ -151,4 +157,3 @@ Définir un plan d'implémentation pour que chaque dossier créé lors d'un impo
 - `/documentation/oggdude-import-guide.md` – Guide général pour l'import OggDude.
 - `.github/instructions/a11y.instructions.md` – Rappels about contrast and accessibility.
 - `.github/instructions/performance-optimization.instructions.md` – Considérations performance lors des imports.
-

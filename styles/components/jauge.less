@@ -1,15 +1,23 @@
 @import '../variables.less';
 
 .swerpg.sheet.actor {
-  .first-row-split {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+  .combat-telemetry {
+    display: flex;
     gap: 1rem;
     height: 100%;
+    align-items: stretch;
 
-    div.sheet-section {
+    .sheet-section {
       margin: 0;
       padding: 0;
+    }
+
+    .resources {
+      flex: 1.45;
+    }
+
+    .defenses {
+      flex: 1;
     }
   }
 }
@@ -118,7 +126,10 @@
         border: 1px solid rgb(120 169 194 / 0.25);
         color: #78a9c2;
         opacity: 0.5;
-        transition: background 0.15s ease, opacity 0.15s ease, border-color 0.15s ease;
+        transition:
+          background 0.15s ease,
+          opacity 0.15s ease,
+          border-color 0.15s ease;
 
         &:hover {
           background: rgb(16 23 34 / 40%);

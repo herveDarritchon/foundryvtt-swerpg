@@ -11,7 +11,8 @@
 
 ### 1. Appels console.xxx dans le code source (module/)
 
-**Commande exécutée**: 
+**Commande exécutée**:
+
 ```bash
 grep -r "console\." module/ --include="*.mjs" --exclude="logger.mjs"
 ```
@@ -25,6 +26,7 @@ Les seuls appels `console` restants se trouvent dans `module/utils/logger.mjs`, 
 **Nombre de fichiers utilisant le logger**: 20 fichiers
 
 **Fichiers identifiés**:
+
 - `module/applications/sheets/base-item.mjs`
 - `module/applications/sheets/duty.mjs`
 - `module/applications/sheets/motivation-category.mjs`
@@ -51,6 +53,7 @@ Les seuls appels `console` restants se trouvent dans `module/utils/logger.mjs`, 
 **Nombre d'appels logger.xxx détectés**: 20+ occurrences
 
 **Types d'appels utilisés**:
+
 - `logger.debug()` - Pour les messages de débogage
 - `logger.warn()` - Pour les avertissements
 - `logger.error()` - Pour les erreurs
@@ -103,6 +106,7 @@ Les seuls appels `console` restants se trouvent dans `module/utils/logger.mjs`, 
 ## Validation des Tests
 
 **Commande suggérée pour tests de non-régression**:
+
 ```bash
 pnpm test
 pnpm eslint
@@ -115,6 +119,7 @@ pnpm eslint
 **Résultat final**: Tous les logs de l'application passent maintenant par le logger centralisé (`module/utils/logger.mjs`) comme spécifié dans le guide de migration progressive.
 
 **Prochaines étapes**:
+
 - ✅ Aucune action de migration supplémentaire requise
 - ✅ Le système de logging est prêt pour la production
 - ℹ️ Continuer à utiliser `logger.xxx` pour tout nouveau code
@@ -123,4 +128,3 @@ pnpm eslint
 
 **Vérifié par**: GitHub Copilot (Agent swerpg-dev-feature)
 **Date de vérification**: 28 novembre 2025
-
