@@ -1,4 +1,4 @@
-<div class="skill" data-skill-id="{{id}}" data-skill-rank="{{rank.value}}" data-skill-next-rank="{{nextRank}}" data-skill-next-cost="{{nextCost}}" data-skill-can-purchase="{{canPurchase}}" data-skill-is-free="{{isFreePurchase}}" data-is-career="{{freeRank.isCareer}}" data-is-specialization="{{freeRank.isSpecialization}}">
+<div class="skill" data-skill-id="{{id}}" data-skill-rank="{{rank.value}}" data-skill-next-rank="{{nextRank}}" data-skill-next-cost="{{nextCost}}" data-skill-can-purchase="{{canPurchase}}" data-skill-is-free="{{isFreePurchase}}" data-is-career="{{freeRank.isCareer}}" data-is-specialization="{{freeRank.isSpecialization}}" data-action="skillHover" data-action="skillLeave">
   <div class="name flexrow">
     <span class="label">{{label}}</span>
     <span class="abbreviation">({{characteristics.abbreviation}})</span>
@@ -25,6 +25,10 @@
         <span class="skill-cost">MAX</span>
       {{/if}}
     {{/if}}
+  </div>
+  <div class="skill-dice-preview" data-tooltip="Dice pool after next rank">
+    {{#each dicePreview.ability}}<span class="die die--ability"></span>{{/each}}
+    {{#each dicePreview.proficiency}}<span class="die die--proficiency"></span>{{/each}}
   </div>
   <div class="pips flexrow" data-action="toggleTrainedSkill">
     {{#each pips as |pip|}}
