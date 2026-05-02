@@ -14,7 +14,7 @@ Le but est de refactorer proprement le LESS existant :
 - les remplacer directement lorsque c’est possible ;
 - supprimer les animations et shadows inutiles ;
 - éviter les doublons ;
-- conserver les classes, data-action, data-tooltip et data-* existants ;
+- conserver les classes, data-action, data-tooltip et data-\* existants ;
 - ne modifier le HTML que si une correction CSS propre est impossible.
 
 Les valeurs cibles indiquées ci-dessous sont des directions de design, pas des obligations absolues.
@@ -37,7 +37,7 @@ Si une valeur nuit à la lisibilité, privilégier la lisibilité et expliquer l
 ## Fichiers concernés
 
 | Fichier                           | Rôle                                                     |
-|-----------------------------------|----------------------------------------------------------|
+| --------------------------------- | -------------------------------------------------------- |
 | `styles/variables.less`           | Palette, familles de polices, tokens holographiques      |
 | `styles/theme.less`               | Typographie structurelle, headings, liens                |
 | `styles/actor.less`               | Caractéristiques (anneaux, icônes, valeurs, boutons +/-) |
@@ -51,7 +51,7 @@ Si une valeur nuit à la lisibilité, privilégier la lisibilité et expliquer l
 ### 1.1 Palette à désaturer
 
 | Variable                 | Valeur actuelle          | Valeur cible              |
-|--------------------------|--------------------------|---------------------------|
+| ------------------------ | ------------------------ | ------------------------- |
 | `--color-glow`           | `#00b0ff`                | `#78a9c2`                 |
 | `--color-glow-hover`     | `lighten(#00b0ff, 15%)`  | `#9ec3d6`                 |
 | `--color-accent`         | `#00b0ff`                | `#6fa7c4`                 |
@@ -70,7 +70,7 @@ Si une valeur nuit à la lisibilité, privilégier la lisibilité et expliquer l
 ### 1.2 Ressources — désaturer les gradients et couleurs
 
 | Variable                       | Valeur cible                                   |
-|--------------------------------|------------------------------------------------|
+| ------------------------------ | ---------------------------------------------- |
 | `--color-wounds`               | `#b55050`                                      |
 | `--color-wounds-glow`          | `#cc6666`                                      |
 | `--color-strain`               | `#5ab4c9`                                      |
@@ -84,7 +84,7 @@ Si une valeur nuit à la lisibilité, privilégier la lisibilité et expliquer l
 ### 1.3 Polices — retirer Star Jedi du corps structurel
 
 | Variable       | Valeur cible             | Usage recommandé                         |
-|----------------|--------------------------|------------------------------------------|
+| -------------- | ------------------------ | ---------------------------------------- |
 | `--font-h1`    | `'Orbitron', sans-serif` | Titres principaux, nom du personnage     |
 | `--font-h2`    | `'Orbitron', sans-serif` | Titres secondaires                       |
 | `--font-h3`    | `'Rajdhani', sans-serif` | Labels de panneaux, sous-sections        |
@@ -156,7 +156,7 @@ Elle peut rester disponible pour un logo ou un élément décoratif exceptionnel
 ### 4.2 `.characteristic.holo-circle`
 
 | Propriété          | Actuel                            | Cible                                                                                  |
-|--------------------|-----------------------------------|----------------------------------------------------------------------------------------|
+| ------------------ | --------------------------------- | -------------------------------------------------------------------------------------- |
 | `width` / `height` | `80px`                            | `72px` (réduction subtile)                                                             |
 | `border-radius`    | `50%`                             | `50%`                                                                                  |
 | `background`       | radial-gradient sombre            | `radial-gradient(circle at center, rgb(16 23 34 / 90%) 40%, rgb(8 12 18 / 100%) 100%)` |
@@ -165,7 +165,7 @@ Elle peut rester disponible pour un logo ou un élément décoratif exceptionnel
 ### 4.3 `.circle-content`
 
 | Propriété    | Actuel                        | Cible                                          |
-|--------------|-------------------------------|------------------------------------------------|
+| ------------ | ----------------------------- | ---------------------------------------------- |
 | `border`     | `4px solid var(--color-glow)` | `1px solid rgb(120 169 194 / 0.45)`            |
 | `box-shadow` | 4 couches de glow             | `inset 0 0 6px rgb(120 169 194 / 0.08)`        |
 | `animation`  | `pulse-glow 2s infinite`      | **supprimée**                                  |
@@ -174,7 +174,7 @@ Elle peut rester disponible pour un logo ou un élément décoratif exceptionnel
 ### 4.4 `.characteristic-icon`
 
 | Propriété   | Actuel                             | Cible                                                         |
-|-------------|------------------------------------|---------------------------------------------------------------|
+| ----------- | ---------------------------------- | ------------------------------------------------------------- |
 | `filter`    | `drop-shadow(0 0 6px @color-glow)` | **supprimé** ou `drop-shadow(0 0 2px rgb(120 169 194 / 0.2))` |
 | `opacity`   | `0.2`                              | `0.15`                                                        |
 | `animation` | `holo-fade-in 0.6s ease-out`       | **supprimée**                                                 |
@@ -182,7 +182,7 @@ Elle peut rester disponible pour un logo ou un élément décoratif exceptionnel
 ### 4.5 `.value`
 
 | Propriété     | Actuel                       | Cible                             |
-|---------------|------------------------------|-----------------------------------|
+| ------------- | ---------------------------- | --------------------------------- |
 | `font-size`   | `3rem`                       | `2.2rem`                          |
 | `color`       | `var(--color-accent-yellow)` | `#c9b36a` (ton or froid)          |
 | `text-shadow` | 4 couches de glow            | `0 0 2px rgb(201 179 106 / 0.25)` |
@@ -195,7 +195,7 @@ Elle peut rester disponible pour un logo ou un élément décoratif exceptionnel
 ### 4.7 Boutons + / -
 
 | Propriété          | Actuel                             | Cible                                |
-|--------------------|------------------------------------|--------------------------------------|
+| ------------------ | ---------------------------------- | ------------------------------------ |
 | `color`            | `#00b0ff`                          | `#78a9c2`                            |
 | `border`           | `1px solid rgba(0, 176, 255, 0.5)` | `1px solid rgb(120 169 194 / 0.3)`   |
 | `background`       | `rgba(12, 15, 23, 0.5)`            | `transparent`                        |
@@ -217,7 +217,7 @@ Elle peut rester disponible pour un logo ou un élément décoratif exceptionnel
 ### 5.2 `.resource-bar-container`
 
 | Propriété          | Actuel                       | Cible                                   |
-|--------------------|------------------------------|-----------------------------------------|
+| ------------------ | ---------------------------- | --------------------------------------- |
 | `border`           | `2px solid #2a2a2a`          | `1px solid rgb(42 54 66 / 0.6)`         |
 | `border-radius`    | `8px`                        | `6px`                                   |
 | `background-color` | `#1b1b1b`                    | `rgb(16 23 34 / 70%)`                   |
@@ -227,7 +227,7 @@ Elle peut rester disponible pour un logo ou un élément décoratif exceptionnel
 ### 5.3 `.jauge .block`
 
 | Propriété          | Actuel           | Cible                            |
-|--------------------|------------------|----------------------------------|
+| ------------------ | ---------------- | -------------------------------- |
 | `border`           | `1px solid #555` | `1px solid rgb(42 54 66 / 0.35)` |
 | `background-color` | `#111`           | `rgb(8 12 18 / 80%)`             |
 | `opacity`          | `0.3`            | `0.35`                           |
@@ -235,7 +235,7 @@ Elle peut rester disponible pour un logo ou un élément décoratif exceptionnel
 ### 5.4 `.block.active` par type
 
 | Type        | Couleur actuelle | Couleur cible |
-|-------------|------------------|---------------|
+| ----------- | ---------------- | ------------- |
 | wounds      | `#ff0000` + glow | `#b55050`     |
 | strain      | `#00bfff` + glow | `#5ab4c9`     |
 | encumbrance | `#ff9900` + glow | `#c4944a`     |
@@ -252,10 +252,10 @@ Elle peut rester disponible pour un logo ou un élément décoratif exceptionnel
 ### 5.6 Boutons +/- (jauge)
 
 - Mêmes corrections que pour les caractéristiques :
-    - taille réduite
-    - opacité `0.5` par défaut
-    - bordure fine désaturée
-    - pas de background plein
+  - taille réduite
+  - opacité `0.5` par défaut
+  - bordure fine désaturée
+  - pas de background plein
 
 ### 5.7 `.icon img`
 
@@ -273,7 +273,7 @@ Elle peut rester disponible pour un logo ou un élément décoratif exceptionnel
 ### 6.2 `.defense-bar-container`
 
 | Propriété          | Actuel                       | Cible                                   |
-|--------------------|------------------------------|-----------------------------------------|
+| ------------------ | ---------------------------- | --------------------------------------- |
 | `width`            | `60px`                       | `56px`                                  |
 | `border`           | `2px solid #2a2a2a`          | `1px solid rgb(42 54 66 / 0.6)`         |
 | `border-radius`    | `8px`                        | `6px`                                   |
@@ -310,11 +310,7 @@ Elle peut rester disponible pour un logo ou un élément décoratif exceptionnel
     position: absolute;
     inset: 0;
     pointer-events: none;
-    background-image: repeating-linear-gradient(0deg,
-    transparent,
-    transparent 2px,
-    rgb(0 0 0 / 0.04) 2px,
-    rgb(0 0 0 / 0.04) 4px);
+    background-image: repeating-linear-gradient(0deg, transparent, transparent 2px, rgb(0 0 0 / 0.04) 2px, rgb(0 0 0 / 0.04) 4px);
     border-radius: inherit;
     z-index: 1;
   }
@@ -330,7 +326,7 @@ Elle peut rester disponible pour un logo ou un élément décoratif exceptionnel
 ## 8. Ordre d'exécution
 
 | Étape | Fichier                    | Action                                       |
-|-------|----------------------------|----------------------------------------------|
+| ----- | -------------------------- | -------------------------------------------- |
 | 1     | `variables.less`           | Palette, polices, gradients, thèmes          |
 | 2     | `theme.less`               | Headings, dividers, th                       |
 | 3     | `actor.less`               | Animations, caractéristiques, boutons +/-    |

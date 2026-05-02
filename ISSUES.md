@@ -5,12 +5,14 @@
 **Fichiers concernés :** `styles/variables.less`, `styles/theme.less`, `styles/actor.less` (keyframes uniquement)
 
 **Objectif :**
+
 - Remplacer la palette néon par des valeurs désaturées (cyan bleuté, or froid)
 - Retirer `Star Jedi` des headings structurels au profit d'Orbitron/Rajdhani/Exo 2
 - Neutraliser les animations `pulse-glow` et `pulse-ring` (déjà trop arcade)
 - Atténuer `fade-in-holo` et `holo-fade-in` sans les supprimer
 
 **Critères de validation :**
+
 - [x] `--color-glow` n'est plus un bleu néon saturé
 - [x] `--font-h1`, `--font-h2`, `--font-h3` ne pointent plus vers `Star Jedi`
 - [x] `pulse-glow` n'est plus utilisé comme animation permanente
@@ -24,6 +26,7 @@
 **Fichiers concernés :** `styles/actor.less` (section `.characteristics`)
 
 **Objectif :**
+
 - Réduire l'anneau de 4px à 1px, supprimer le glow permanent
 - Remplacer `animation: pulse-glow` par une transition hover discrète
 - Réduire la taille et le glow du chiffre central
@@ -31,6 +34,7 @@
 - Supprimer le drop-shadow sur les icônes
 
 **Critères de validation :**
+
 - [x] L'anneau est fin, sans halo permanent
 - [x] Le chiffre est lisible sans text-shadow excessif
 - [x] Les boutons +/- sont discrets (opacité 0.5 par défaut)
@@ -44,6 +48,7 @@
 **Fichiers concernés :** `styles/components/jauge.less`
 
 **Objectif :**
+
 - Ré-encapsuler tout le fichier sous `.swerpg.sheet.actor`
 - Neutraliser `.left-half` / `.right-half` (fonds violets/bleu plein)
 - Remplacer les aplats noirs par des fonds translucides
@@ -52,6 +57,7 @@
 - Rendre les boutons +/- discrets
 
 **Critères de validation :**
+
 - [x] Les panneaux de ressources sont translucides, pas opaques
 - [x] Aucun box-shadow coloré permanent
 - [x] Les couleurs sémantiques restent identifiables mais désaturées
@@ -65,6 +71,7 @@
 **Fichiers concernés :** `styles/components/defenses.less`
 
 **Objectif :**
+
 - Ré-encapsuler tout le fichier sous `.swerpg.sheet.actor`
 - Harmoniser le style avec les ressources (fonds translucides, bordures fines)
 - Réduire la taille des chiffres (3rem → 2rem)
@@ -72,6 +79,7 @@
 - Désaturer les couleurs (soak, melee, ranged)
 
 **Critères de validation :**
+
 - [x] Les panneaux de défenses sont cohérents avec les ressources
 - [x] Les chiffres sont plus compacts
 - [x] Aucun glow permanent sur les titres
@@ -84,11 +92,13 @@
 **Fichiers concernés :** `styles/actor.less`, `styles/components/jauge.less`
 
 **Objectif :**
+
 - Ajouter un effet de scanlines très subtil sur les `.sheet-section`
 - Uniquement via pseudo-élément `::after` avec `pointer-events: none`
 - Opacité minimale (3%) pour ne pas interférer avec la lisibilité
 
 **Critères de validation :**
+
 - [x] Les scanlines sont visibles de près mais pas distrayantes
 - [x] Ne bloquent pas les interactions (clic, hover, drag)
 - [x] Ne cassent pas le rendu des autres éléments

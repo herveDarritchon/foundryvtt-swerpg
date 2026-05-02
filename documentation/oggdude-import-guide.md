@@ -24,6 +24,7 @@ OggDude/
 ### Folder Features
 
 This organization:
+
 - **Happens automatically** when you import OggDude data
 - **Applies to all domains** (weapons, armor, gear, careers, talents, etc.)
 - **Uses a cache** to avoid duplicate folder creation during a single import session
@@ -34,6 +35,7 @@ This organization:
 ### For Game Masters
 
 The color-coded folders help you quickly identify different types of OggDude content in your world:
+
 - **Blue tones** for combat-related items (Weapons)
 - **Green tones** for protection and biological items (Armor, Species)
 - **Orange/Gold tones** for equipment and role-playing elements (Gear, Obligations, Motivations)

@@ -57,6 +57,7 @@ pnpm foundry:e2e:restart
 ```
 
 Le script:
+
 - Charge automatiquement `.env.e2e.local` s'il existe
 - Monte `./.e2e-foundry-data` comme `/data` (créé et supprimé automatiquement à l'arrêt)
 - Monte le système courant dans `/data/Data/systems/swerpg`
