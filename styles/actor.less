@@ -1540,32 +1540,112 @@
 
       .skill {
         display: grid;
-        grid-template-columns: minmax(165px, 1fr) 44px 58px 64px 132px;
+        grid-template-columns: minmax(180px, 1.5fr) 50px 80px 80px 140px;
         align-items: center;
         min-height: 1.75rem;
         height: auto;
-        padding: 0.05rem 0.3rem;
+        padding: 0.15rem 0.3rem;
+        gap: 0 0.5rem;
 
         .name {
           display: flex;
           align-items: baseline;
           min-width: 0;
+          overflow: hidden;
 
           .label {
-            flex: none;
+            flex-shrink: 1;
             margin-right: 0.2em;
             font-size: var(--font-size-12);
             font-weight: bold;
+            color: #d0e6f6;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
           }
 
           .abbreviation {
-            flex: none;
+            flex-shrink: 0;
             font-size: var(--font-size-10);
-            color: var(--color-label, #aaa);
+            color: #9bb0c2;
             font-style: italic;
+          }
+        }
+
+        .skill-tags {
+          display: flex;
+          justify-content: center;
+          gap: 0.2rem;
+
+          .skill-tag {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 1.1rem;
+            height: 1.1rem;
+            border: 1px solid currentColor;
+            border-radius: 2px;
+            font-size: 0.62rem;
+            line-height: 1;
+            font-weight: bold;
+          }
+
+          .skill-tag--career {
+            color: #46c7ff;
+          }
+
+          .skill-tag--specialization {
+            color: #00d49a;
+          }
+        }
+
+        .skill-rank {
+          text-align: center;
+          color: #9bb0c2;
+          font-size: 0.7rem;
+
+          .skill-rank-label {
+            display: block;
+            font-size: 0.6rem;
+            text-transform: uppercase;
+          }
+
+          .skill-rank-value {
+            font-weight: bold;
+          }
+        }
+
+        .skill-cost {
+          text-align: right;
+          font-size: 0.72rem;
+          color: #c9b36a;
+
+          .skill-cost--free {
+            color: #00ff99;
+            font-weight: bold;
+          }
+        }
+
+        .skill-dice-preview {
+          display: flex;
+          justify-content: center;
+          gap: 0.2rem;
+
+          .die {
+            width: 16px;
+            height: 16px;
+            display: inline-block;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+          }
+
+          .die--ability {
+            background-image: url('../ui/dice/d6-ability.png');
+          }
+
+          .die--proficiency {
+            background-image: url('../ui/dice/d12-proficiency.png');
           }
         }
 
@@ -1614,29 +1694,9 @@
 
             &.trained:nth-child(5) {
               --pip-bg: url('../ui/skills/fifth-trained-pips.png');
-            }
-
-            &:nth-child(1) {
-              left: 0;
-            }
-
-            &:nth-child(2) {
-              left: -5px;
-            }
-
-            &:nth-child(3) {
-              left: -10px;
-            }
-
-            &:nth-child(4) {
-              left: -15px;
-            }
-
-            &:nth-child(5) {
-              left: -20px;
-            }
           }
         }
+      }
       }
 
       .skill-tags {

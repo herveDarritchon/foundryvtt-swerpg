@@ -5,7 +5,7 @@ import ErrorSkill from '../../lib/skills/error-skill.mjs'
 import TalentFactory from '../../lib/talents/talent-factory.mjs'
 import ErrorTalent from '../../lib/talents/error-talent.mjs'
 import { logger } from '../../utils/logger.mjs'
-import { getSkillNextRankCost, getSkillPurchaseState } from '../../utils/skill-costs.mjs'
+import { getSkillNextRankCost, getSkillPurchaseState, getPositiveDicePoolPreview } from '../../utils/skill-costs.mjs'
 
 /**
  * @typedef {Object} DefenseDisplayData
@@ -467,6 +467,10 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
           freeCareerSkillsLeft,
           freeSpecializationSkillsLeft,
         })
+        const dicePreview = getPositiveDicePoolPreview({
+          characteristicValue: actor.system.characteristics[skill.characteristics.id]?.value ?? 0,
+          skillRank: purchaseState.nextRank ?? total,
+        })
         return {
           pips: this._prepareSkillRanks(skillEnriched),
           freeRank: this._prepareFreeSkill(actor, skill.id),
@@ -475,6 +479,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
           canPurchase: purchaseState.canPurchase,
           isFreePurchase: purchaseState.isFreePurchase,
           purchaseReason: purchaseState.reason,
+          dicePreview,
           ...skillEnriched,
         }
       })
