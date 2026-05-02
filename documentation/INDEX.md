@@ -19,6 +19,7 @@ Cette documentation technique couvre l'architecture, les modules, les exigences,
 | [`architecture/oggdude/`](./architecture/oggdude/) | Architecture import OggDude                      |
 | [`architecture/systems/`](./architecture/systems/) | Sous‑systèmes ludiques (combat, initiative, etc.) |
 | [`architecture/ui/`](./architecture/ui/)          | Architecture UI, sheets, composants              |
+| [SHEETS-TABS.md](./architecture/ui/SHEETS-TABS.md) | Mode opératoire des onglets de sheets (ApplicationV2) |
 
 ### Modules
 
