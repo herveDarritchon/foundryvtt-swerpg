@@ -3,8 +3,8 @@
 .swerpg.sheet.actor {
   .first-row-split {
     display: grid;
-    grid-template-columns: 1fr 1fr; /* Deux colonnes égales */
-    gap: 1rem; /* optionnel : espace entre les colonnes */
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
     height: 100%;
 
     div.sheet-section {
@@ -14,29 +14,20 @@
   }
 }
 
+// Neutralisé : les fonds pleins violet/rose étaient trop arcade
 .left-half,
 .right-half {
   width: 100%;
   height: 100%;
+  background-color: transparent;
 }
 
-.left-half {
-  background-color: rgba(124, 125, 255, 1);
-}
-
-.right-half {
-  background-color: rgba(255, 0, 255, 1);
-}
-
-.resources-wrapper {
+.swerpg.sheet.actor .resources-wrapper {
   justify-content: space-evenly;
   align-content: flex-end;
   align-items: end;
   flex: 1;
   width: 100%;
-  /* Espace en haut pour empêcher les jauges de remonter sous le titre (h3).
-     padding-top crée un tampon à l'intérieur du conteneur pour que les jauges
-     commencent bien en dessous du titre. */
   padding-top: 1.5rem;
 
   .jauge-wrapper {
@@ -48,15 +39,13 @@
     flex-direction: column;
     align-items: center;
     padding: 6px;
-    /* Augmentation de la largeur pour rendre le label plus visible */
-    width: 80px;
-    border: 2px solid #2a2a2a;
-    border-radius: 8px;
+    width: 72px;
+    border: 1px solid rgb(42 54 66 / 0.6);
+    border-radius: 6px;
     gap: 0.5rem;
-    background-color: #1b1b1b;
-    box-shadow: 0 0 6px rgba(0, 0, 0, 0.4);
+    background-color: rgb(16 23 34 / 70%);
+    box-shadow: inset 0 1px 0 rgb(120 169 194 / 0.06);
 
-    /* Hauteur commune des jauges : changez la valeur si besoin. */
     --jauge-height: 85px;
 
     .icon {
@@ -68,33 +57,28 @@
       gap: 0.3rem;
 
       img {
-        /* Icônes légèrement plus grandes pour meilleure lisibilité */
-        width: 40px;
-        height: 40px;
-        filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.2));
+        width: 36px;
+        height: 36px;
+        filter: drop-shadow(0 0 1px rgb(255 255 255 / 0.06));
       }
     }
 
     .jauge {
       display: flex;
       flex-direction: column-reverse;
-      /* Plus d'espace entre les blocks pour une lecture plus claire */
       gap: 6px;
       width: 100%;
-      /* Fixe la hauteur totale de la zone des blocks pour que toutes les jauges aient la même taille. */
       height: var(--jauge-height);
-      /* Permettre aux blocks de s'étirer pour remplir l'espace disponible. */
       align-items: stretch;
     }
 
     .block {
-      /* Les blocks prennent une part égale de la hauteur définie par .jauge. */
       flex: 1 1 0;
       width: 100%;
-      border: 1px solid #555;
+      border: 1px solid rgb(42 54 66 / 0.35);
       border-radius: 2px;
-      background-color: #111;
-      opacity: 0.3;
+      background-color: rgb(8 12 18 / 80%);
+      opacity: 0.35;
       transition:
         background-color 0.3s,
         opacity 0.3s;
@@ -102,118 +86,111 @@
 
     .label {
       position: relative;
-      /* Use flex layout to place decrease button, value and increase button on one line
-         Buttons will be at the edges and the value centered. */
-      /* Small default nudge to correct FontAwesome vertical baseline issues; tweak if needed */
       --icon-nudge: -1px;
       display: flex;
-      align-items: center; /* vertical centering */
-      justify-content: space-between; /* buttons at each side */
+      align-items: center;
+      justify-content: space-between;
       width: 100%;
       padding: 0 6px;
       margin-top: 4px;
 
       .values {
-        /* Allow the value to take remaining space and be centered */
         flex: 1 1 auto;
         text-align: center;
-        /* Valeurs plus lisibles */
         font-size: 0.85rem;
         font-weight: 700;
-        color: #e6e6e6;
+        color: var(--color-text);
       }
 
-      /* Style the small icon buttons so they remain compact and centered */
       a.button.icon {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: 24px;
-        height: 24px;
+        width: 20px;
+        height: 20px;
         padding: 0;
-        border-radius: 4px;
-        font-size: 12px;
-        /* Prevent baseline offsets from FontAwesome pseudo-elements */
+        border-radius: 3px;
+        font-size: 10px;
         line-height: 0;
         margin: 0;
         vertical-align: middle;
+        background: transparent;
+        border: 1px solid rgb(120 169 194 / 0.25);
+        color: #78a9c2;
+        opacity: 0.5;
+        transition: background 0.15s ease, opacity 0.15s ease, border-color 0.15s ease;
+
+        &:hover {
+          background: rgb(16 23 34 / 40%);
+          border-color: rgb(120 169 194 / 0.45);
+          opacity: 0.8;
+        }
       }
 
-      /* Place the decrease/increase buttons absolutely so they do not shift the .values span
-         and can be perfectly vertically centered with top:50% + translateY(-50%). */
       a.button.icon.decrease {
         position: absolute;
-        left: 6px; /* matches .label padding */
+        left: 6px;
         top: 50%;
-        /* Allow a small manual nudge if icons need micro-adjustment */
         transform: translateY(calc(-50% + var(--icon-nudge, 0px)));
         z-index: 2;
       }
 
       a.button.icon.increase {
         position: absolute;
-        right: 6px; /* matches .label padding */
+        right: 6px;
         top: 50%;
-        /* Allow a small manual nudge if icons need micro-adjustment */
         transform: translateY(calc(-50% + var(--icon-nudge, 0px)));
         z-index: 2;
       }
 
-      /* Ensure the icon glyph (usually rendered with ::before) is block-level and centered */
       a.button.icon::before {
         display: flex;
         align-items: center;
         justify-content: center;
-        height: 100%; /* fill the anchor so centering is exact */
+        height: 100%;
         line-height: 1;
-        font-size: 14px; /* tweak if icon appears too small/large */
+        font-size: 12px;
       }
     }
 
     .title {
       text-transform: uppercase;
-      /* Titre agrandi pour meilleure visibilité */
-      font-size: 0.8rem;
-      font-family: 'Orbitron', sans-serif;
-      color: white;
-      text-shadow: 0 0 2px black;
+      font-size: 0.75rem;
+      font-family: var(--font-sans);
+      color: var(--color-text);
+      text-shadow: 0 1px 2px rgb(0 0 0 / 0.5);
       font-weight: 700;
       width: 85px;
       display: block;
       overflow: hidden;
       text-overflow: ellipsis;
-      background: @background-dark;
+      background: var(--color-frame-bg-75);
       text-align: center;
 
       &.wounds {
         border-color: #700;
-        color: #ff0000;
-        box-shadow: 0 0 4px #ff3c3c;
+        color: #b55050;
         opacity: 1;
       }
 
       &.strain {
         border-color: #046;
-        color: #00bfff;
-        box-shadow: 0 0 4px #00eaff;
+        color: #5ab4c9;
         opacity: 1;
       }
 
       &.encumbrance {
         border-color: #a50;
-        color: #ff9900;
-        box-shadow: 0 0 4px #ffc266;
+        color: #c4944a;
         opacity: 1;
       }
     }
 
-    // Thèmes spécifiques
     &.wounds {
       border-color: #700;
 
       .block.active {
-        background-color: #ff0000;
-        box-shadow: 0 0 4px #ff3c3c;
+        background-color: #b55050;
         opacity: 1;
       }
     }
@@ -222,8 +199,7 @@
       border-color: #046;
 
       .block.active {
-        background-color: #00bfff;
-        box-shadow: 0 0 4px #00eaff;
+        background-color: #5ab4c9;
         opacity: 1;
       }
     }
@@ -232,8 +208,7 @@
       border-color: #a50;
 
       .block.active {
-        background-color: #ff9900;
-        box-shadow: 0 0 4px #ffc266;
+        background-color: #c4944a;
         opacity: 1;
       }
     }
