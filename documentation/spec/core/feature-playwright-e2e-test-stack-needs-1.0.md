@@ -8,7 +8,7 @@ date_created: 2025-11-29
 last_updated: 2025-11-29
 owner: Core dev team
 status: 'Draft'
-tags: [ 'feature', 'testing', 'e2e', 'playwright', 'quality' ]
+tags: ['feature', 'testing', 'e2e', 'playwright', 'quality']
 ---
 
 # Introduction
@@ -43,9 +43,9 @@ régression visible uniquement dans l'UI de Foundry peut passer sous les radars 
 - Cette stack doit être **totalement décorrelée des tests unitaires** : configuration, répertoires, scripts `pnpm`,
   outillage et éventuelles dépendances.
 - Les développeurs doivent pouvoir lancer facilement :
-    - tous les tests e2e,
-    - un seul fichier de test,
-    - un test précis en mode headed pour le débogage.
+  - tous les tests e2e,
+  - un seul fichier de test,
+  - un test précis en mode headed pour le débogage.
 - Les tests doivent suivre les bonnes pratiques Playwright (locators par rôle/label/texte, assertions web-first, pas de
   `wait` fixes).
 
@@ -72,20 +72,20 @@ régression visible uniquement dans l'UI de Foundry peut passer sous les radars 
 ### 2.3 Périmètre (In scope / Out of scope)
 
 - **In scope** :
-    - Structure de répertoires pour les tests E2E (par exemple `e2e/` ou `tests-e2e/`).
-    - Fichier(s) de configuration Playwright (`playwright.config.ts` ou équivalent) adapté au projet.
-    - Scripts `pnpm` dédiés (par ex. `pnpm test:e2e`, `pnpm test:e2e:headed`).
-    - Mise en place d'au moins un monde / scénario de test Foundry de base (ou configuration permettant de se connecter
-      à un monde de test existant).
-    - Création de quelques specs E2E exemples qui :
-        - se connectent à l'instance Foundry,
-        - chargent un monde de test,
-        - vérifient l'affichage de l'écran principal et d'un élément clé du système Swerpg.
+  - Structure de répertoires pour les tests E2E (par exemple `e2e/` ou `tests-e2e/`).
+  - Fichier(s) de configuration Playwright (`playwright.config.ts` ou équivalent) adapté au projet.
+  - Scripts `pnpm` dédiés (par ex. `pnpm test:e2e`, `pnpm test:e2e:headed`).
+  - Mise en place d'au moins un monde / scénario de test Foundry de base (ou configuration permettant de se connecter
+    à un monde de test existant).
+  - Création de quelques specs E2E exemples qui :
+    - se connectent à l'instance Foundry,
+    - chargent un monde de test,
+    - vérifient l'affichage de l'écran principal et d'un élément clé du système Swerpg.
 - **Out of scope** :
-    - Couverture exhaustive de toutes les fonctionnalités de Swerpg par des tests E2E.
-    - Refonte ou migration complète des tests unitaires existants.
-    - Mise en place d'une infrastructure d'exécution distribuée des tests E2E (ex. grid de navigateurs, farm de
-      runners).
+  - Couverture exhaustive de toutes les fonctionnalités de Swerpg par des tests E2E.
+  - Refonte ou migration complète des tests unitaires existants.
+  - Mise en place d'une infrastructure d'exécution distribuée des tests E2E (ex. grid de navigateurs, farm de
+    runners).
 
 ## 3. Acteurs et cas d’usage
 
@@ -136,10 +136,10 @@ interactions typiques :
 - **F-006** : La configuration Playwright doit être compatible avec une exécution locale (dev) et une exécution CI (URL
   de Foundry configurable, timeouts raisonnables, headless par défaut).
 - **F-007** : La stack doit inclure au minimum un test E2E démontrant :
-    - connexion à l'instance Foundry,
-    - chargement d'un monde de test,
-    - vérification d'un élément clé de l'UI spécifique à Swerpg (par exemple, présence du logo système ou d'un élément
-      de navigation propre au système).
+  - connexion à l'instance Foundry,
+  - chargement d'un monde de test,
+  - vérification d'un élément clé de l'UI spécifique à Swerpg (par exemple, présence du logo système ou d'un élément
+    de navigation propre au système).
 
 ### 4.1 Gestion des erreurs / validations
 
@@ -182,9 +182,9 @@ interactions typiques :
 
 - Domaine principal : `core` (outillage de test et qualité globale du système).
 - Modules et répertoires impactés :
-    - `package.json` (scripts `pnpm` et dépendances Playwright),
-    - éventuellement `tests/` si une convention de structure est réutilisée, ou un nouveau répertoire `e2e/` /
-      `tests-e2e/`.
+  - `package.json` (scripts `pnpm` et dépendances Playwright),
+  - éventuellement `tests/` si une convention de structure est réutilisée, ou un nouveau répertoire `e2e/` /
+    `tests-e2e/`.
 - Intégration avec la configuration Foundry utilisée localement ou en CI (URL, monde de test, utilisateur de test).
 
 ### 6.2 APIs et concepts Foundry probables
@@ -235,32 +235,31 @@ interactions typiques :
 
 - **ASS-001** : Les développeurs disposent d'une instance Foundry VTT v13+ accessible localement ou dans un
   environnement de test explicitement configuré pour les E2E.
-    - oui, ce sera le cas.
+  - oui, ce sera le cas.
 - **ASS-002** : Il est acceptable d'ajouter Playwright comme dépendance de développement dans `package.json`.
-    - oui, c'est le cas.
+  - oui, c'est le cas.
 - **ASS-003** : Un monde de test minimal peut être créé (ou réutilisé) sans impacter les mondes de production des MJ.
-    - oui, c'est le cas.
+  - oui, c'est le cas.
 - **ASS-004** : La CI peut être configurée pour démarrer (ou accéder à) une instance Foundry avant l'exécution des tests
   E2E.
-    - oui, il faudra le faire mais ce n'est pas dans le scope de cette demande.
+  - oui, il faudra le faire mais ce n'est pas dans le scope de cette demande.
 
 ### 9.2 Questions ouvertes
 
 - **Q-001** : Quel nom et quelle convention de dossier retenir pour les tests E2E (`e2e/`, `tests-e2e/`, sous-dossier de
   `tests/`...) ?
-    - e2e, me semble le plus logique.
+  - e2e, me semble le plus logique.
 - **Q-002** : Faut-il prévoir un script d'aide pour démarrer automatiquement une instance Foundry dédiée aux tests avant
   d'exécuter Playwright, ou s'appuyer sur une instance déjà en cours d'exécution ?
-    - s'appuyer sur une instance disponible par contre il faudra créer une librairie de méthode pour pouvoir se
-      connecter au monde de test avant de lancer les tests e2e fonctionnels. Une instance de foundryvtt sera disponible
-      mais il faudra revenir à revenir à l'écran de setup puis se connecter au monde.
+  - s'appuyer sur une instance disponible par contre il faudra créer une librairie de méthode pour pouvoir se
+    connecter au monde de test avant de lancer les tests e2e fonctionnels. Une instance de foundryvtt sera disponible
+    mais il faudra revenir à revenir à l'écran de setup puis se connecter au monde.
 - **Q-003** : Quels sont les premiers parcours fonctionnels à couvrir en priorité (ouverture de feuille de héros, import
   OggDude, actions de combat, etc.) ?
-    - en premier il faudra couvrir les imports OggDude
+  - en premier il faudra couvrir les imports OggDude
 - **Q-004** : La suite E2E doit-elle être exécutée sur plusieurs navigateurs (Chromium, Firefox, WebKit) ou seulement
   sur Chromium dans un premier temps ?
   - oui, minimum Chromium et Firefox dans un premier temps.
 - **Q-005** : Faut-il intégrer des données de test spécifiques (PJ préconfigurés, équipements, talents) dans un monde
   dédié aux E2E, et si oui, comment les maintenir ?
   - Pour l'instant non, on va partir d'un monde de test vierge.
-

@@ -58,7 +58,7 @@ jobs:
       E2E_FOUNDRY_BASE_URL: http://127.0.0.1:30000
       E2E_FOUNDRY_ADMIN_PASSWORD: ${{ secrets.FOUNDRY_ADMIN_KEY }}
       E2E_FOUNDRY_USERNAME: Gamemaster
-      E2E_FOUNDRY_PASSWORD: ""
+      E2E_FOUNDRY_PASSWORD: ''
       E2E_FOUNDRY_WORLD: Swerpg-E2E-World
       FOUNDRY_USERNAME: ${{ secrets.FOUNDRY_USERNAME }}
       FOUNDRY_PASSWORD: ${{ secrets.FOUNDRY_PASSWORD }}
@@ -85,12 +85,12 @@ jobs:
           # On repart propre
           rm -rf .foundry-data
           mkdir -p .foundry-data
-          
+
           # Si tu veux injecter un snapshot :
           cp -R "$PWD/resources/data/." .foundry-data/
           sudo chown -R 1000:1000 .foundry-data
           sudo chmod -R 770 .foundry-data
-          
+
           docker run -d --rm \
             --name foundry-e2e \
             -p 30000:30000 \

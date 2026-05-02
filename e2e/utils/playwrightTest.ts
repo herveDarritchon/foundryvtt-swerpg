@@ -1,14 +1,14 @@
-import {Page} from "@playwright/test";
+import { Page } from '@playwright/test'
 import {
-    accepteLicense,
-    enterGameAsGamemaster,
-    enterWorld,
-    FoundrySessionOptions,
-    loginIntoInstance,
-    logout,
-    logoutFromInstance,
-    quitWorld
-} from "./foundrySession";
+  accepteLicense,
+  enterGameAsGamemaster,
+  enterWorld,
+  FoundrySessionOptions,
+  loginIntoInstance,
+  logout,
+  logoutFromInstance,
+  quitWorld,
+} from './foundrySession'
 
 /**
  * Configuration de l'environnement de test : navigation complète jusqu'au monde Swerpg chargé.
@@ -16,46 +16,44 @@ import {
  *
  * @throws {Error} Si le monde ne peut pas être chargé (fail-fast)
  */
-export async function setUp(
-    page: Page,
-    options: FoundrySessionOptions) {
-    let url = page.url()
-    console.log(`[setUp] URL initiale: ${url}`)
+export async function setUp(page: Page, options: FoundrySessionOptions) {
+  let url = page.url()
+  console.log(`[setUp] URL initiale: ${url}`)
 
-    if (url.includes('about:blank')) {
-        await page.goto(`${options.baseURL}/auth`, {waitUntil: 'domcontentloaded'})
-        url = page.url()
-    }
+  if (url.includes('about:blank')) {
+    await page.goto(`${options.baseURL}/auth`, { waitUntil: 'domcontentloaded' })
+    url = page.url()
+  }
 
-    if (url.includes('/game')) {
-        console.log('[setUp] Déjà en /game, rien à faire')
-        return
-    }
+  if (url.includes('/game')) {
+    console.log('[setUp] Déjà en /game, rien à faire')
+    return
+  }
 
-    if (url.includes('/license')) {
-        url = await accepteLicense(page, options)
-    }
+  if (url.includes('/license')) {
+    url = await accepteLicense(page, options)
+  }
 
-    if (url.includes('/auth')) {
-        url = await loginIntoInstance(page, options)
-    }
+  if (url.includes('/auth')) {
+    url = await loginIntoInstance(page, options)
+  }
 
-    if (url.includes('/setup')) {
-        url = await enterWorld(page, options)
-    }
+  if (url.includes('/setup')) {
+    url = await enterWorld(page, options)
+  }
 
-    if (url.includes('/join')) {
-        url = await enterGameAsGamemaster(page, options)
-    }
+  if (url.includes('/join')) {
+    url = await enterGameAsGamemaster(page, options)
+  }
 
-    // Validation post-setUp : s'assurer que nous sommes bien en /game
-    const finalUrl = page.url()
+  // Validation post-setUp : s'assurer que nous sommes bien en /game
+  const finalUrl = page.url()
 
-    if (!finalUrl.includes('/game')) {
-        throw new Error(`setUp failed: expected to be on /game but got ${finalUrl}`)
-    }
+  if (!finalUrl.includes('/game')) {
+    throw new Error(`setUp failed: expected to be on /game but got ${finalUrl}`)
+  }
 
-    console.log('[setUp] 🛠️ Setup réussi ✔')
+  console.log('[setUp] 🛠️ Setup réussi ✔')
 }
 
 /**
@@ -71,21 +69,21 @@ export async function setUp(
  * Si un cleanup complet est nécessaire (ex: CI avec état instable), décommenter
  * la logique ci-dessous et ajuster les timeouts en conséquence.
  */
-export async function tearDown(
-    page: Page,
-    options: FoundrySessionOptions) {
-    const url = page.url()
-    try {
-        // Retour simple à /join : point d'entrée stable pour le prochain test
-        await page.goto(`${options.baseURL}/join`, {
-            waitUntil: 'domcontentloaded',
-            timeout: 10000
-        }).catch((error) => {
-            console.warn(`[tearDown] Navigation vers /join échouée à partir de ${url}, ignoré pour ne pas faire échouer le test:`, error.message)
-        })
-    } catch (error) {
-        console.warn(`[tearDown] Erreur lors du cleanup, ignoré (page en cours ${url}):`, error)
-    }
-    console.log (`On finit sur la page ${page.url()}`)
-    console.log('[tearDown] 🧹 tearDown réussi ✔')
+export async function tearDown(page: Page, options: FoundrySessionOptions) {
+  const url = page.url()
+  try {
+    // Retour simple à /join : point d'entrée stable pour le prochain test
+    await page
+      .goto(`${options.baseURL}/join`, {
+        waitUntil: 'domcontentloaded',
+        timeout: 10000,
+      })
+      .catch((error) => {
+        console.warn(`[tearDown] Navigation vers /join échouée à partir de ${url}, ignoré pour ne pas faire échouer le test:`, error.message)
+      })
+  } catch (error) {
+    console.warn(`[tearDown] Erreur lors du cleanup, ignoré (page en cours ${url}):`, error)
+  }
+  console.log(`On finit sur la page ${page.url()}`)
+  console.log('[tearDown] 🧹 tearDown réussi ✔')
 }

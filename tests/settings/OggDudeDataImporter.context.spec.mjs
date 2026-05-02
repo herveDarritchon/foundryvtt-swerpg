@@ -159,4 +159,3 @@ describe('OggDudeDataImporter statsTableRows régression', () => {
     expect(lastRow.labelI18n).toBe('SETTINGS.OggDudeDataImporter.loadWindow.domains.new-test-domain')
   })
 })
-

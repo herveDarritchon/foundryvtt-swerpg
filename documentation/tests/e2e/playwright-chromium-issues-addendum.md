@@ -12,10 +12,10 @@ Après l'implémentation des corrections du code review, les tests E2E présente
 
 ### Résultats des tests
 
-| Test | Firefox | Chromium | Notes |
-|------|---------|----------|-------|
-| bootstrap.spec.ts | ✅ Passe | ✅ Passe | **Corrigé** avec les améliorations overlay.ts et enterWorld |
-| oggdude-import.spec.ts | ✅ Passe (4s) | ❌ Échoue (11s) | Redirection vers `/join` pendant le test |
+| Test                   | Firefox       | Chromium        | Notes                                                       |
+| ---------------------- | ------------- | --------------- | ----------------------------------------------------------- |
+| bootstrap.spec.ts      | ✅ Passe      | ✅ Passe        | **Corrigé** avec les améliorations overlay.ts et enterWorld |
+| oggdude-import.spec.ts | ✅ Passe (4s) | ❌ Échoue (11s) | Redirection vers `/join` pendant le test                    |
 
 ---
 
@@ -83,15 +83,15 @@ Ajouter un timeout spécifique au projet Chromium dans `playwright.config.ts` :
 
 ```typescript
 projects: [
-    {
-        name: 'chromium',
-        use: {
-            ...devices['Desktop Chrome'],
-            viewport: { width: 1920, height: 1080 },
-            actionTimeout: 15000, // Augmenter de 9s à 15s
-        },
+  {
+    name: 'chromium',
+    use: {
+      ...devices['Desktop Chrome'],
+      viewport: { width: 1920, height: 1080 },
+      actionTimeout: 15000, // Augmenter de 9s à 15s
     },
-    // ...
+  },
+  // ...
 ]
 ```
 
@@ -104,21 +104,21 @@ Configurer explicitement la gestion des cookies dans le projet Chromium :
 
 ```typescript
 projects: [
-    {
-        name: 'chromium',
-        use: {
-            ...devices['Desktop Chrome'],
-            viewport: { width: 1920, height: 1080 },
-            storageState: undefined, // Réinitialiser pour chaque test
-            launchOptions: {
-                args: [
-                    '--disable-blink-features=AutomationControlled',
-                    '--disable-web-security', // Attention: uniquement pour tests
-                ],
-            },
-        },
+  {
+    name: 'chromium',
+    use: {
+      ...devices['Desktop Chrome'],
+      viewport: { width: 1920, height: 1080 },
+      storageState: undefined, // Réinitialiser pour chaque test
+      launchOptions: {
+        args: [
+          '--disable-blink-features=AutomationControlled',
+          '--disable-web-security', // Attention: uniquement pour tests
+        ],
+      },
     },
-    // ...
+  },
+  // ...
 ]
 ```
 
@@ -131,17 +131,17 @@ Créer un helper `ensureSessionActive` dans `foundryUI.ts` :
 
 ```typescript
 export async function ensureSessionActive(page: Page): Promise<void> {
-    const currentUrl = page.url()
-    
-    if (currentUrl.includes('/join') || currentUrl.includes('/auth')) {
-        throw new Error(`Session lost: redirected to ${currentUrl}`)
-    }
-    
-    // Vérifier qu'un élément critique de /game est présent
-    const sidebar = page.locator('#sidebar')
-    await sidebar.waitFor({state: 'visible', timeout: 3000}).catch(() => {
-        throw new Error('Session check failed: sidebar not visible')
-    })
+  const currentUrl = page.url()
+
+  if (currentUrl.includes('/join') || currentUrl.includes('/auth')) {
+    throw new Error(`Session lost: redirected to ${currentUrl}`)
+  }
+
+  // Vérifier qu'un élément critique de /game est présent
+  const sidebar = page.locator('#sidebar')
+  await sidebar.waitFor({ state: 'visible', timeout: 3000 }).catch(() => {
+    throw new Error('Session check failed: sidebar not visible')
+  })
 }
 ```
 
@@ -149,17 +149,17 @@ Puis l'appeler avant chaque interaction critique dans les helpers :
 
 ```typescript
 export async function openSystemSettings(page: Page, systemName: string): Promise<void> {
-    await ensureSessionActive(page) // Vérification session
-    
-    const configureButton = page.getByRole('button', { name: /Configure Settings/i })
-    await configureButton.waitFor({state: 'visible', timeout: 10000})
-    await configureButton.click()
-    
-    await ensureSessionActive(page) // Re-vérification après action
-    
-    const systemButton = page.getByRole('button', { name: new RegExp(systemName, 'i') })
-    await systemButton.waitFor({state: 'visible', timeout: 10000})
-    await systemButton.click()
+  await ensureSessionActive(page) // Vérification session
+
+  const configureButton = page.getByRole('button', { name: /Configure Settings/i })
+  await configureButton.waitFor({ state: 'visible', timeout: 10000 })
+  await configureButton.click()
+
+  await ensureSessionActive(page) // Re-vérification après action
+
+  const systemButton = page.getByRole('button', { name: new RegExp(systemName, 'i') })
+  await systemButton.waitFor({ state: 'visible', timeout: 10000 })
+  await systemButton.click()
 }
 ```
 
@@ -172,9 +172,9 @@ Ajouter une condition de skip dans le test :
 
 ```typescript
 test('should open the OggDude import interface', async ({ page, browserName }) => {
-    test.skip(browserName === 'chromium', 'Issue with session persistence on Chromium - investigating')
-    
-    // ... reste du test
+  test.skip(browserName === 'chromium', 'Issue with session persistence on Chromium - investigating')
+
+  // ... reste du test
 })
 ```
 
@@ -201,10 +201,10 @@ test('should open the OggDude import interface', async ({ page, browserName }) =
 
 ### Mise à jour de la matrice
 
-| Action | Avant | Après addendum |
-|--------|-------|----------------|
+| Action                     | Avant       | Après addendum                              |
+| -------------------------- | ----------- | ------------------------------------------- |
 | Remplacer `waitForTimeout` | ✅ **Fait** | ✅ **Maintenu** (0 waitForTimeout restants) |
-| Stabilité tests Chromium | N/A | ⚠️ **Partiel** (1/2 tests passent) |
+| Stabilité tests Chromium   | N/A         | ⚠️ **Partiel** (1/2 tests passent)          |
 
 ### Métriques révisées
 
@@ -226,10 +226,10 @@ test('should open the OggDude import interface', async ({ page, browserName }) =
 ## Conclusion temporaire
 
 Les améliorations du code review ont **partiellement résolu** les problèmes Chromium :
+
 - ✅ `bootstrap.spec.ts` passe maintenant (amélioration significative)
 - ⚠️ `oggdude-import.spec.ts` révèle un problème de session spécifique à Chromium
 
 Le problème identifié est un **bug de compatibilité Chromium/Foundry** plutôt qu'un problème de code des tests eux-mêmes. Les corrections apportées (suppression waitForTimeout, attentes explicites) sont **valides et à conserver**.
 
 **Note**: Firefox étant le navigateur de référence pour Foundry VTT, avoir 100% de couverture sur Firefox est acceptable en attendant de résoudre le problème Chromium.
-
