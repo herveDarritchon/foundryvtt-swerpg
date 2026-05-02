@@ -30,9 +30,9 @@
     }
   ],
   "compatibility": {
-    "minimum": 13.347,
-    "verified": 13.35,
-    "maximum": 13
+    "minimum": 14,
+    "verified": 14.309,
+    "maximum": 14
   },
   "license": "LICENSE",
   "esmodules": ["swerpg.mjs"],
