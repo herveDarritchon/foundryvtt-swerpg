@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CopilotDiffPersistence">
+    <option name="pendingDiffs">
+      <map>
+        <entry key="$PROJECT_DIR$/.env.e2e.local">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="$PROJECT_DIR$/.env.e2e.local" />
+              <option name="originalContent" value="# Configuration E2E locale pour les tests Playwright&#10;# Ce fichier est ignoré par Git - adaptez-le à votre environnement&#10;&#10;# Clé de licence Foundry VTT pour l'instance de test&#10;FOUNDRY_LICENSE_KEY='JQHT-YCQW-GGYY-ESH3-KZNM-RO7Q'&#10;FOUNDRY_USERNAME=herveDarritchon&#10;FOUNDRY_PASSWORD='2BZUKy3JgbnX2ai'&#10;&#10;# URL de votre instance Foundry VTT de test&#10;FOUNDRY_PORT=31000&#10;E2E_FOUNDRY_BASE_URL=http://localhost:31000&#10;&#10;# Mot de passe administrateur Foundry (pour accéder au setup)&#10;E2E_FOUNDRY_ADMIN_PASSWORD='admin'&#10;&#10;# Identifiants pour se connecter au monde de test&#10;E2E_FOUNDRY_USERNAME=Gamemaster&#10;E2E_FOUNDRY_PASSWORD=changeme&#10;&#10;# Nom du monde de test à utiliser&#10;E2E_FOUNDRY_WORLD=Swerpg-E2E-World&#10;&#10;# Playwright settings&#10;PLAYWRIGHT_TEST_TIMEOUT=15000&#10;PLAYWRIGHT_EXPECT_TIMEOUT=5000" />
+              <option name="updatedContent" value="# Configuration E2E locale pour les tests Playwright&#10;# Ce fichier est ignoré par Git - adaptez-le à votre environnement&#10;&#10;# Clé de licence Foundry VTT pour l'instance de test&#10;FOUNDRY_LICENSE_KEY='JQHT-YCQW-GGYY-ESH3-KZNM-RO7Q'&#10;FOUNDRY_USERNAME=herveDarritchon&#10;FOUNDRY_PASSWORD='2BZUKy3JgbnX2ai'&#10;&#10;# URL de votre instance Foundry VTT de test&#10;FOUNDRY_PORT=31000&#10;E2E_FOUNDRY_BASE_URL=http://localhost:31000&#10;&#10;# Mot de passe administrateur Foundry (pour accéder au setup)&#10;E2E_FOUNDRY_ADMIN_PASSWORD='admin'&#10;&#10;# Identifiants pour se connecter au monde de test&#10;E2E_FOUNDRY_USERNAME=Gamemaster&#10;E2E_FOUNDRY_PASSWORD=changeme&#10;&#10;# Nom du monde de test à utiliser&#10;E2E_FOUNDRY_WORLD=Swerpg-E2E-World&#10;&#10;# Playwright settings&#10;PLAYWRIGHT_TEST_TIMEOUT=15000&#10;PLAYWRIGHT_EXPECT_TIMEOUT=5000" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
