@@ -5,6 +5,7 @@ import ErrorSkill from '../../lib/skills/error-skill.mjs'
 import TalentFactory from '../../lib/talents/talent-factory.mjs'
 import ErrorTalent from '../../lib/talents/error-talent.mjs'
 import { logger } from '../../utils/logger.mjs'
+import { getSkillNextRankCost, getSkillPurchaseState } from '../../utils/skill-costs.mjs'
 
 /**
  * @typedef {Object} DefenseDisplayData
@@ -443,6 +444,10 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
    * @returns {undefined}
    */
   static #prepareSkills(actor) {
+    const freeCareerSkillsLeft = (actor.system.progression?.freeSkillRanks?.career?.gained ?? 0) - (actor.system.progression?.freeSkillRanks?.career?.spent ?? 0)
+    const freeSpecializationSkillsLeft = (actor.system.progression?.freeSkillRanks?.specialization?.gained ?? 0) - (actor.system.progression?.freeSkillRanks?.specialization?.spent ?? 0)
+    const availableXp = actor.system.experience?.available ?? 0
+
     const skills = Object.entries(actor.system.skills)
       .map(([k, v]) => ({
         id: k,
@@ -452,9 +457,24 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
       .map((skill) => {
         const total = skill.rank.base + skill.rank.careerFree + skill.rank.specializationFree + skill.rank.trained
         const skillEnriched = foundry.utils.mergeObject(skill, { rank: { value: total } })
+        const isCareer = skillEnriched.freeRank?.isCareer ?? false
+        const isSpecialization = skillEnriched.freeRank?.isSpecialization ?? false
+        const purchaseState = getSkillPurchaseState({
+          rank: total,
+          isCareer,
+          isSpecialization,
+          availableXp,
+          freeCareerSkillsLeft,
+          freeSpecializationSkillsLeft,
+        })
         return {
           pips: this._prepareSkillRanks(skillEnriched),
           freeRank: this._prepareFreeSkill(actor, skill.id),
+          nextRank: purchaseState.nextRank,
+          nextCost: purchaseState.nextCost,
+          canPurchase: purchaseState.canPurchase,
+          isFreePurchase: purchaseState.isFreePurchase,
+          purchaseReason: purchaseState.reason,
           ...skillEnriched,
         }
       })

@@ -112,13 +112,11 @@
       z-index: 1;
       pointer-events: none;
       border-radius: inherit;
-      background-image: repeating-linear-gradient(
-              0deg,
-              transparent,
-              transparent 2px,
-              rgb(0 0 0 / 0.03) 2px,
-              rgb(0 0 0 / 0.03) 4px
-      );
+      background-image: repeating-linear-gradient(0deg,
+      transparent,
+      transparent 2px,
+      rgb(0 0 0 / 0.03) 2px,
+      rgb(0 0 0 / 0.03) 4px);
     }
 
     > *,
@@ -317,11 +315,9 @@
         padding: 0.3rem 0.4rem;
         border: 1px solid var(--color-frame);
         border-radius: 4px;
-        background: linear-gradient(
-                135deg,
-                var(--color-frame-bg-75) 0%,
-                var(--color-frame-bg-50) 60%
-        );
+        background: linear-gradient(135deg,
+        var(--color-frame-bg-75) 0%,
+        var(--color-frame-bg-50) 60%);
         animation: fade-in-holo 180ms ease-out;
 
         &.broken {
@@ -529,16 +525,14 @@
 
           display: flex;
           margin: 0;
-          clip-path: polygon(
-                  0% var(--notchSize),
-                  var(--notchSize) 0%,
-                  calc(100% - var(--notchSize)) 0%,
-                  100% var(--notchSize),
-                  100% calc(100% - var(--notchSize)),
-                  calc(100% - var(--notchSize)) 100%,
-                  var(--notchSize) 100%,
-                  0% calc(100% - var(--notchSize))
-          );
+          clip-path: polygon(0% var(--notchSize),
+          var(--notchSize) 0%,
+          calc(100% - var(--notchSize)) 0%,
+          100% var(--notchSize),
+          100% calc(100% - var(--notchSize)),
+          calc(100% - var(--notchSize)) 100%,
+          var(--notchSize) 100%,
+          0% calc(100% - var(--notchSize)));
 
           .label {
             align-items: center;
@@ -835,9 +829,8 @@
       width: 100%;
 
       &:hover .circle-content {
-        box-shadow:
-                inset 0 0 8px rgb(120 169 194 / 0.12),
-                0 0 6px rgb(120 169 194 / 0.1);
+        box-shadow: inset 0 0 8px rgb(120 169 194 / 0.12),
+        0 0 6px rgb(120 169 194 / 0.1);
       }
 
       .characteristic-wrapper {
@@ -867,11 +860,9 @@
           margin: 0 0.2rem;
           overflow: hidden;
           border-radius: 50%;
-          background: radial-gradient(
-                  circle at center,
-                  rgb(16 23 34 / 90%) 40%,
-                  rgb(8 12 18 / 100%) 100%
-          );
+          background: radial-gradient(circle at center,
+          rgb(16 23 34 / 90%) 40%,
+          rgb(8 12 18 / 100%) 100%);
           box-shadow: 0 0 4px rgb(120 169 194 / 0.15);
 
           .circle-content {
@@ -884,16 +875,13 @@
             height: 72px;
             border: 3px solid rgb(120 169 194 / 0.45);
             border-radius: 50%;
-            background: radial-gradient(
-                    ellipse at center,
-                    rgb(16 23 34 / 95%) 0%,
-                    rgb(8 12 18 / 80%) 60%,
-                    transparent 100%
-            );
+            background: radial-gradient(ellipse at center,
+            rgb(16 23 34 / 95%) 0%,
+            rgb(8 12 18 / 80%) 60%,
+            transparent 100%);
             box-shadow: inset 0 0 6px rgb(120 169 194 / 0.08);
-            transition:
-                    border-color 0.2s ease,
-                    box-shadow 0.2s ease;
+            transition: border-color 0.2s ease,
+            box-shadow 0.2s ease;
             fill: var(--color-accent);
 
             .characteristic-icon {
@@ -974,10 +962,9 @@
         cursor: pointer;
         font-size: 9px;
         line-height: 1;
-        transition:
-                background 0.15s ease,
-                border-color 0.15s ease,
-                opacity 0.15s ease;
+        transition: background 0.15s ease,
+        border-color 0.15s ease,
+        opacity 0.15s ease;
 
         &:hover:not(:disabled) {
           border-color: rgb(120 169 194 / 0.5);
@@ -1552,143 +1539,256 @@
       }
 
       .skill {
+        display: grid;
+        grid-template-columns: minmax(165px, 1fr) 44px 58px 64px 132px;
         align-items: center;
-        align-content: center;
-        justify-content: center;
-        height: 1.5em;
+        min-height: 1.75rem;
+        height: auto;
+        padding: 0.05rem 0.3rem;
 
         .name {
-          flex: 2;
+          display: flex;
           align-items: baseline;
-          align-content: baseline;
-          justify-content: flex-start;
+          min-width: 0;
 
           .label {
             flex: none;
             margin-right: 0.2em;
             font-size: var(--font-size-12);
             font-weight: bold;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
           }
 
           .abbreviation {
             flex: none;
             font-size: var(--font-size-10);
+            color: var(--color-label, #aaa);
+            font-style: italic;
           }
         }
 
-        .career {
-          flex: 0.25;
+        .skill-tags {
+          display: flex;
+          justify-content: center;
+          gap: 0.2rem;
 
-          .career-and-speciality {
-            content: ' ';
+          .skill-tag {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 1.1rem;
+            height: 1.1rem;
+            border: 1px solid currentColor;
+            border-radius: 2px;
+            font-size: 0.62rem;
+            line-height: 1;
+            font-weight: bold;
+          }
+
+          .skill-tag--career {
+            color: #46c7ff;
+          }
+
+          .skill-tag--specialization {
+            color: #00d49a;
+          }
+        }
+
+        .skill-rank {
+          text-align: center;
+          color: var(--color-label, #aaa);
+          font-size: 0.7rem;
+
+          .skill-rank-label {
             display: block;
-            width: 15px;
-            height: 15px;
+            font-size: 0.6rem;
+            text-transform: uppercase;
+          }
 
-            &.active {
-              background-image: url('../ui/actor/career-and-speciality-icon-small.webp');
-              background-repeat: no-repeat;
-              background-position: bottom center;
-              background-size: 100%;
+          .skill-rank-value {
+            font-weight: bold;
+          }
+        }
+
+        .skill-cost {
+          text-align: right;
+          font-size: 0.72rem;
+          color: #c9b36a;
+
+          .skill-cost--free {
+            color: #00ff99;
+            font-weight: bold;
+          }
+        }
+
+        .pips {
+          flex: 0 0 123px;
+          align-items: center;
+          align-content: center;
+          justify-content: center;
+          gap: 4px 0;
+
+          .pip {
+            --pip-bg: url('../ui/skills/central-pips.png');
+
+            position: relative;
+            display: flex;
+            align-items: center;
+            align-content: center;
+            justify-content: center;
+            width: 30px;
+            height: 15px;
+            margin: 0;
+            padding: 0;
+            cursor: pointer;
+            background: var(--pip-bg) no-repeat center;
+            background-size: 25px;
+
+            &.untrained {
+              --pip-bg: url('../ui/skills/central-pips.png');
+            }
+
+            &.trained {
+              --pip-bg: url('../ui/skills/central-trained-pips.png');
+            }
+
+            &.untrained:nth-child(1) {
+              --pip-bg: url('../ui/skills/first-pip.png');
+            }
+
+            &.untrained:nth-child(5) {
+              --pip-bg: url('../ui/skills/fifth-pip.png');
+            }
+
+            &.trained:nth-child(1) {
+              --pip-bg: url('../ui/skills/first-trained-pip.png');
+            }
+
+            &.trained:nth-child(5) {
+              --pip-bg: url('../ui/skills/fifth-trained-pips.png');
+            }
+
+            &:nth-child(1) {
+              left: 0;
+            }
+
+            &:nth-child(2) {
+              left: -5px;
+            }
+
+            &:nth-child(3) {
+              left: -10px;
+            }
+
+            &:nth-child(4) {
+              left: -15px;
+            }
+
+            &:nth-child(5) {
+              left: -20px;
             }
           }
         }
       }
 
-      .pips {
-        flex: 0 0 123px;
+      .skill-tags {
+        flex: 0 0 40px;
+        display: flex;
+        justify-content: center;
+        gap: 0.2rem;
+
+        .skill-tag {
+          display: inline-flex;
+          justify-content: center;
+          align-items: center;
+          width: 1.1rem;
+          height: 1.1rem;
+          border: 1px solid currentColor;
+          border-radius: 2px;
+          font-size: 0.62rem;
+          line-height: 1;
+          font-weight: bold;
+        }
+
+        .skill-tag--career {
+          color: #46c7ff;
+        }
+
+        .skill-tag--specialization {
+          color: #00d49a;
+        }
+      }
+
+      .skill-rank {
+        flex: 0 0 58px;
+        color: var(--color-label, #aaa);
+        font-size: 0.7rem;
+        text-align: center;
+
+        .skill-rank-label {
+          display: block;
+          font-size: 0.6rem;
+          text-transform: uppercase;
+        }
+
+        .skill-rank-value {
+          font-weight: bold;
+        }
+      }
+
+      .skill-cost {
+        flex: 0 0 64px;
+        text-align: right;
+        font-size: 0.72rem;
+        color: #c9b36a;
+
+        .skill-cost--free {
+          color: #00ff99;
+          font-weight: bold;
+        }
+      }
+
+      .point-pools {
+        position: relative;
+        top: 0.75rem;
+        right: 1rem;
         align-items: center;
         align-content: center;
         justify-content: center;
-        gap: 4px 0;
+        width: 550px;
+      }
 
-        .pip {
-          --pip-bg: url('../ui/skills/central-pips.png');
+      .bonus {
+        flex: 0 0 70px;
+        justify-content: center;
 
-          position: relative;
+        span.value {
           display: flex;
+          flex: 0 0 40px;
           align-items: center;
-          align-content: center;
           justify-content: center;
-          width: 30px;
-          height: 15px;
-          margin: 0;
-          padding: 0;
-          cursor: pointer;
-          background: var(--pip-bg) no-repeat center;
-          background-size: 25px;
+          height: 32px;
+        }
 
-          &.untrained {
-            --pip-bg: url('../ui/skills/central-pips.png');
-          }
-
-          &.trained {
-            --pip-bg: url('../ui/skills/central-trained-pips.png');
-          }
-
-          &.untrained:nth-child(1) {
-            --pip-bg: url('../ui/skills/first-pip.png');
-          }
-
-          &.untrained:nth-child(5) {
-            --pip-bg: url('../ui/skills/fifth-pip.png');
-          }
-
-          &.trained:nth-child(1) {
-            --pip-bg: url('../ui/skills/first-trained-pip.png');
-          }
-
-          &.trained:nth-child(5) {
-            --pip-bg: url('../ui/skills/fifth-trained-pips.png');
-          }
-
-          &:nth-child(1) {
-            left: 0;
-          }
-
-          &:nth-child(2) {
-            left: -5px;
-          }
-
-          &:nth-child(3) {
-            left: -10px;
-          }
-
-          &:nth-child(4) {
-            left: -15px;
-          }
-
-          &:nth-child(5) {
-            left: -20px;
-          }
+        span.passive {
+          flex: 0 0 20px;
+          color: var(--color-secondary);
+          font-family: var(--font-sans);
+          font-size: var(--font-size-10);
+          text-align: center;
         }
       }
-    }
 
-    .point-pools {
-      position: relative;
-      top: 0.75rem;
-      right: 1rem;
-      align-items: center;
-      align-content: center;
-      justify-content: center;
-      width: 550px;
-    }
-
-    .bonus {
-      flex: 0 0 70px;
-      justify-content: center;
-
-      span.value {
-        display: flex;
-        flex: 0 0 40px;
-        align-items: center;
+      .ranks {
+        flex: 0 0 170px;
         justify-content: center;
-        height: 32px;
+        gap: 4px;
       }
 
-      span.passive {
-        flex: 0 0 20px;
+      .cost {
+        flex: none;
         color: var(--color-secondary);
         font-family: var(--font-sans);
         font-size: var(--font-size-10);
@@ -1696,134 +1796,116 @@
       }
     }
 
-    .ranks {
-      flex: 0 0 170px;
-      justify-content: center;
-      gap: 4px;
-    }
+    /* ----------------------------------------- */
+    /*  Legacy Skill Container                    */
+    /* ----------------------------------------- */
 
-    .cost {
-      flex: none;
-      color: var(--color-secondary);
-      font-family: var(--font-sans);
-      font-size: var(--font-size-10);
-      text-align: center;
-    }
-  }
-
-  /* ----------------------------------------- */
-  /*  Legacy Skill Container                    */
-  /* ----------------------------------------- */
-
-  .skill-container {
-    display: inline-block;
-    min-width: 50px;
-    margin: 10px;
-    text-align: center;
-
-    .skill-title {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 4px;
-      border-top: 1px solid #8a644f;
-      border-right: 1px solid #8a644f;
-      border-bottom: 1px solid #e4c9a8;
-      border-top-left-radius: 4px;
-      border-top-right-radius: 5px;
-      background: linear-gradient(90deg, #3d2a1e, #5a3e2b);
-      color: #e4c9a8;
-      font-family: 'Cinzel', serif;
-      font-size: 12px;
-      font-weight: bold;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      transition:
-              box-shadow 0.3s ease-in-out,
-              transform 0.3s ease-in-out;
-
-      span {
-        font-size: 16px;
-      }
-    }
-
-    .skill-box {
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .skill-container {
+      display: inline-block;
       min-width: 50px;
-      height: 40px;
-      padding: 8px;
-      overflow: visible;
-      border-right: 1px solid #44362d;
-      border-bottom: 1px solid #2b221b;
-      border-bottom-right-radius: 15px 40px;
-      border-bottom-left-radius: 15px 40px;
-      background: #2b221b;
-      color: #e4c9a8;
-      font-family: 'Patrick Hand', cursive;
-      font-weight: bold;
-      transition:
-              box-shadow 0.3s ease-in-out,
-              transform 0.3s ease-in-out;
+      margin: 10px;
+      text-align: center;
 
-      span {
+      .skill-title {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 4px;
+        border-top: 1px solid #8a644f;
+        border-right: 1px solid #8a644f;
+        border-bottom: 1px solid #e4c9a8;
+        border-top-left-radius: 4px;
+        border-top-right-radius: 5px;
+        background: linear-gradient(90deg, #3d2a1e, #5a3e2b);
+        color: #e4c9a8;
+        font-family: 'Cinzel', serif;
+        font-size: 12px;
+        font-weight: bold;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        transition: box-shadow 0.3s ease-in-out,
+        transform 0.3s ease-in-out;
+
+        span {
+          font-size: 16px;
+        }
+      }
+
+      .skill-box {
         position: relative;
-        font-size: 20px;
-        text-shadow: 2px 2px 5px rgb(0 0 0 / 70%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 50px;
+        height: 40px;
+        padding: 8px;
+        overflow: visible;
+        border-right: 1px solid #44362d;
+        border-bottom: 1px solid #2b221b;
+        border-bottom-right-radius: 15px 40px;
+        border-bottom-left-radius: 15px 40px;
+        background: #2b221b;
+        color: #e4c9a8;
+        font-family: 'Patrick Hand', cursive;
+        font-weight: bold;
+        transition: box-shadow 0.3s ease-in-out,
+        transform 0.3s ease-in-out;
+
+        span {
+          position: relative;
+          font-size: 20px;
+          text-shadow: 2px 2px 5px rgb(0 0 0 / 70%);
+        }
+
+        span::after {
+          content: '%';
+          position: absolute;
+          top: 6px;
+          right: -12px;
+          font-size: 14px;
+        }
+      }
+    }
+
+    /* ----------------------------------------- */
+    /*  Allegiance Toggle                         */
+    /* ----------------------------------------- */
+
+    .sw-toggle {
+      width: 24px;
+      height: 24px;
+      border: 2px solid #666;
+      border-radius: 4px;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: cover;
+      cursor: pointer;
+      transition: background-color 0.2s ease-in-out,
+      border-color 0.2s ease-in-out,
+      opacity 0.2s ease-in-out,
+      transform 0.2s ease-in-out;
+
+      &.active {
+        background-color: rgb(255 255 255 / 75%);
+        background-image: url(@rebel-logo);
       }
 
-      span::after {
-        content: '%';
-        position: absolute;
-        top: 6px;
-        right: -12px;
-        font-size: 14px;
+      &:not(.active) {
+        background-color: rgb(255 255 255 / 15%);
+        background-image: url(@empire-logo);
       }
     }
   }
-
+}
   /* ----------------------------------------- */
-  /*  Allegiance Toggle                         */
+  /*  Character Creation Tooltip                */
+  /*  Le tooltip Foundry peut être hors sheet.   */
+  /*  On le garde donc volontairement global.    */
   /* ----------------------------------------- */
 
-  .sw-toggle {
-    width: 24px;
-    height: 24px;
-    border: 2px solid #666;
-    border-radius: 4px;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: cover;
-    cursor: pointer;
-    transition:
-            background-color 0.2s ease-in-out,
-            border-color 0.2s ease-in-out,
-            opacity 0.2s ease-in-out,
-            transform 0.2s ease-in-out;
-
-    &.active {
-      background-color: rgb(255 255 255 / 75%);
-      background-image: url(@rebel-logo);
-    }
-
-    &:not(.active) {
-      background-color: rgb(255 255 255 / 15%);
-      background-image: url(@empire-logo);
-    }
+  #tooltip.creation-steps {
+    padding: 1rem 1.5rem;
+    font-family: var(--font-serif), serif;
+    font-size: var(--font-size-13);
+    text-align: left;
   }
-}
-
-/* ----------------------------------------- */
-/*  Character Creation Tooltip                */
-/*  Le tooltip Foundry peut être hors sheet.   */
-/*  On le garde donc volontairement global.    */
-/* ----------------------------------------- */
-
-#tooltip.creation-steps {
-  padding: 1rem 1.5rem;
-  font-family: var(--font-serif), serif;
-  font-size: var(--font-size-13);
-  text-align: left;
-}
