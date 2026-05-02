@@ -1811,11 +1811,98 @@
           font-size: 14px;
         }
       }
-    }
-  }
+        }
 
-  /* ----------------------------------------- */
-  /*  Allegiance Toggle                         */
+        .xp-console {
+          margin: 0 auto 0.85rem;
+          padding: 0.55rem 0.75rem;
+          width: min(760px, 100%);
+          border: 1px solid fade(#78a9c2, 28%);
+          border-radius: 4px;
+          background: linear-gradient(90deg, fade(#1a1a2e, 82%), fade(#0f0f1a, 62%)),
+                      radial-gradient(circle at 50% 0%, fade(#78a9c2, 14%), transparent 58%);
+          box-shadow: inset 0 0 18px fade(#78a9c2, 8%),
+                      0 0 12px fade(#78a9c2, 8%);
+
+          .xp-console__header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.4rem;
+          }
+
+          .xp-console__title {
+            color: #8ab0c8;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.85rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+          }
+
+          .xp-console__status {
+            color: #c9b36a;
+            font-size: 0.75rem;
+            font-style: italic;
+          }
+
+          .xp-console__stats {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(90px, 1fr));
+            gap: 0.45rem;
+          }
+
+          .xp-console__stat {
+            padding: 0.35rem 0.45rem;
+            border: 1px solid fade(#78a9c2, 18%);
+            background: fade(#0c0f17, 34%);
+          }
+
+          .xp-console__label {
+            display: block;
+            color: #9bb0c2;
+            font-size: 0.65rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+          }
+
+          .xp-console__value {
+            display: block;
+            color: #d0e6f6;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            text-shadow: 0 0 6px fade(#78a9c2, 38%);
+          }
+
+          .xp-console__stat--selected {
+            grid-column: 5;
+          }
+
+          .xp-console__selection {
+            margin-top: 0.5rem;
+            padding: 0.4rem 0.6rem;
+            border: 1px solid fade(#78a9c2, 12%);
+            background: fade(#0c0f17, 20%);
+            font-size: 0.75rem;
+            color: #d0e6f6;
+          }
+
+          &.is-free .xp-console__status {
+            color: #00ff99;
+          }
+
+          &.is-affordable .xp-console__status {
+            color: #c9b36a;
+          }
+
+          &.is-locked .xp-console__status,
+          &.is-error .xp-console__status {
+            color: #c9593f;
+          }
+        }
+    }
+
+    /* ----------------------------------------- */
+    /*  Allegiance Toggle                         */
   /* ----------------------------------------- */
 
   .sw-toggle {
