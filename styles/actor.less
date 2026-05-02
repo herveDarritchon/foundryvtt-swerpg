@@ -120,6 +120,27 @@
     position: relative;
     padding: 1.5rem 1rem 1rem;
 
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-image: repeating-linear-gradient(0deg,
+      transparent,
+      transparent 2px,
+      rgb(0 0 0 / 0.03) 2px,
+      rgb(0 0 0 / 0.03) 4px);
+      border-radius: inherit;
+      z-index: 1;
+    }
+
+    > *,
+    > .flexcol,
+    > .flexrow {
+      position: relative;
+      z-index: 2;
+    }
+
     &.flexcol {
       width: 100%;
       align-items: center;
@@ -141,6 +162,7 @@
       color: var(--color-primary);
       background: var(--color-frame-bg);
       border-radius: 3px;
+      z-index: 3;
     }
   }
 
@@ -298,6 +320,7 @@
     }
 
     /* Featured Equipment Display */
+
     .item-list.equipped {
       .equipped.line-item {
         position: relative;
@@ -350,6 +373,7 @@
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+
             a {
               text-decoration: none;
               color: var(--color-text-light-primary);
@@ -362,6 +386,7 @@
             gap: 2px 4px;
             max-height: calc(2 * 1.1em + 6px); /* two lines of tags incl. gaps */
             overflow: hidden;
+
             .tag {
               flex: none;
               font-size: var(--font-size-9);
@@ -378,13 +403,17 @@
               white-space: nowrap;
             }
           }
+
           /* Compact mode overrides */
+
           &.equipped.line-item--compact {
             padding: 0.25rem 0.35rem;
             min-height: 34px;
+
             h4 {
               font-size: calc(var(--font-size-12) - 1px);
             }
+
             .tags .tag {
               font-size: calc(var(--font-size-9) - 1px);
             }
@@ -512,16 +541,14 @@
           padding: 0;
           margin: 0;
           --notchSize: 5px;
-          clip-path: polygon(
-            0% var(--notchSize),
-            var(--notchSize) 0%,
-            calc(100% - var(--notchSize)) 0%,
-            100% var(--notchSize),
-            100% calc(100% - var(--notchSize)),
-            calc(100% - var(--notchSize)) 100%,
-            var(--notchSize) 100%,
-            0% calc(100% - var(--notchSize))
-          );
+          clip-path: polygon(0% var(--notchSize),
+          var(--notchSize) 0%,
+          calc(100% - var(--notchSize)) 0%,
+          100% var(--notchSize),
+          100% calc(100% - var(--notchSize)),
+          calc(100% - var(--notchSize)) 100%,
+          var(--notchSize) 100%,
+          0% calc(100% - var(--notchSize)));
           height: 25px;
           display: flex;
         }
@@ -531,16 +558,14 @@
           padding: 2px 3px;
           margin: 0;
           --notchSize: 5px;
-          clip-path: polygon(
-            0% var(--notchSize),
-            var(--notchSize) 0%,
-            calc(100% - var(--notchSize)) 0%,
-            100% var(--notchSize),
-            100% calc(100% - var(--notchSize)),
-            calc(100% - var(--notchSize)) 100%,
-            var(--notchSize) 100%,
-            0% calc(100% - var(--notchSize))
-          );
+          clip-path: polygon(0% var(--notchSize),
+          var(--notchSize) 0%,
+          calc(100% - var(--notchSize)) 0%,
+          100% var(--notchSize),
+          100% calc(100% - var(--notchSize)),
+          calc(100% - var(--notchSize)) 100%,
+          var(--notchSize) 100%,
+          0% calc(100% - var(--notchSize)));
           height: 25px;
           display: flex;
 
@@ -549,16 +574,14 @@
             padding: 0;
             margin: 0;
             --notchSize: 4px;
-            clip-path: polygon(
-              0% var(--notchSize),
-              var(--notchSize) 0%,
-              calc(100% - var(--notchSize)) 0%,
-              100% var(--notchSize),
-              100% calc(100% - var(--notchSize)),
-              calc(100% - var(--notchSize)) 100%,
-              var(--notchSize) 100%,
-              0% calc(100% - var(--notchSize))
-            );
+            clip-path: polygon(0% var(--notchSize),
+            var(--notchSize) 0%,
+            calc(100% - var(--notchSize)) 0%,
+            100% var(--notchSize),
+            100% calc(100% - var(--notchSize)),
+            calc(100% - var(--notchSize)) 100%,
+            var(--notchSize) 100%,
+            0% calc(100% - var(--notchSize)));
             height: 21px;
             width: 100%;
             display: flex;
@@ -570,16 +593,14 @@
           padding: 2px 3px;
           margin: 0;
           --notchSize: 17px;
-          clip-path: polygon(
-            0% var(--notchSize),
-            var(--notchSize) 0%,
-            calc(100% - var(--notchSize)) 0%,
-            100% var(--notchSize),
-            100% calc(100% - var(--notchSize)),
-            calc(100% - var(--notchSize)) 100%,
-            var(--notchSize) 100%,
-            0% calc(100% - var(--notchSize))
-          );
+          clip-path: polygon(0% var(--notchSize),
+          var(--notchSize) 0%,
+          calc(100% - var(--notchSize)) 0%,
+          100% var(--notchSize),
+          100% calc(100% - var(--notchSize)),
+          calc(100% - var(--notchSize)) 100%,
+          var(--notchSize) 100%,
+          0% calc(100% - var(--notchSize)));
           height: 75px;
           display: flex;
 
@@ -588,16 +609,14 @@
             padding: 0;
             margin: 0;
             --notchSize: 16px;
-            clip-path: polygon(
-              0% var(--notchSize),
-              var(--notchSize) 0%,
-              calc(100% - var(--notchSize)) 0%,
-              100% var(--notchSize),
-              100% calc(100% - var(--notchSize)),
-              calc(100% - var(--notchSize)) 100%,
-              var(--notchSize) 100%,
-              0% calc(100% - var(--notchSize))
-            );
+            clip-path: polygon(0% var(--notchSize),
+            var(--notchSize) 0%,
+            calc(100% - var(--notchSize)) 0%,
+            100% var(--notchSize),
+            100% calc(100% - var(--notchSize)),
+            calc(100% - var(--notchSize)) 100%,
+            var(--notchSize) 100%,
+            0% calc(100% - var(--notchSize)));
             height: 70px;
             width: 100%;
             display: flex;
@@ -607,16 +626,14 @@
               padding: 0;
               margin: 3px 3px 0 7px;
               --notchSize: 8px;
-              clip-path: polygon(
-                0% var(--notchSize),
-                var(--notchSize) 0%,
-                calc(100% - var(--notchSize)) 0%,
-                100% var(--notchSize),
-                100% calc(100% - var(--notchSize)),
-                calc(100% - var(--notchSize)) 100%,
-                var(--notchSize) 100%,
-                0% calc(100% - var(--notchSize))
-              );
+              clip-path: polygon(0% var(--notchSize),
+              var(--notchSize) 0%,
+              calc(100% - var(--notchSize)) 0%,
+              100% var(--notchSize),
+              100% calc(100% - var(--notchSize)),
+              calc(100% - var(--notchSize)) 100%,
+              var(--notchSize) 100%,
+              0% calc(100% - var(--notchSize)));
               height: 16px;
               width: 79px;
               display: flex;
@@ -650,16 +667,14 @@
           padding: 0;
           margin: 0;
           --notchSize: 10px;
-          clip-path: polygon(
-            0% var(--notchSize),
-            var(--notchSize) 0%,
-            calc(100% - var(--notchSize)) 0%,
-            100% var(--notchSize),
-            100% calc(100% - var(--notchSize)),
-            calc(100% - var(--notchSize)) 100%,
-            var(--notchSize) 100%,
-            0% calc(100% - var(--notchSize))
-          );
+          clip-path: polygon(0% var(--notchSize),
+          var(--notchSize) 0%,
+          calc(100% - var(--notchSize)) 0%,
+          100% var(--notchSize),
+          100% calc(100% - var(--notchSize)),
+          calc(100% - var(--notchSize)) 100%,
+          var(--notchSize) 100%,
+          0% calc(100% - var(--notchSize)));
           height: 20px;
           display: flex;
         }
@@ -899,6 +914,11 @@
         .action-wrapper {
           position: relative;
           margin: 0 0.5rem;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-content: center;
+          align-items: center;
         }
 
         .characteristic.holo-circle {
@@ -918,7 +938,7 @@
             width: 72px;
             height: 72px;
             border-radius: 50%;
-            border: 1px solid rgb(120 169 194 / 0.45);
+            border: 3px solid rgb(120 169 194 / 0.45);
             background: radial-gradient(ellipse at center, rgb(16 23 34 / 95%) 0%, rgb(8 12 18 / 80%) 60%, transparent 100%);
             box-shadow: inset 0 0 6px rgb(120 169 194 / 0.08);
             display: flex;
@@ -926,9 +946,8 @@
             align-items: center;
             justify-content: center;
             position: relative;
-            transition:
-              border-color 0.2s ease,
-              box-shadow 0.2s ease;
+            transition: border-color 0.2s ease,
+            box-shadow 0.2s ease;
 
             .characteristic-icon {
               z-index: 1;
@@ -976,9 +995,8 @@
       }
 
       &:hover .circle-content {
-        box-shadow:
-          inset 0 0 8px rgb(120 169 194 / 0.12),
-          0 0 6px rgb(120 169 194 / 0.1);
+        box-shadow: inset 0 0 8px rgb(120 169 194 / 0.12),
+        0 0 6px rgb(120 169 194 / 0.1);
       }
 
       .label {
@@ -990,40 +1008,63 @@
         text-align: center;
       }
 
-      .button.icon {
-        position: absolute;
-        color: #78a9c2;
+      .characteristic-controls {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.25rem;
+        background: rgba(16, 23, 34, 0.6);
+        border: 1px solid rgba(120, 169, 194, 0.25);
         border-radius: 3px;
-        transition: background 0.15s ease, border-color 0.15s ease;
-        height: 14px;
-        width: 14px;
-        padding: 0;
-        margin: 0;
-        z-index: 5;
-        background: transparent;
-        opacity: 0.5;
-        border: 1px solid rgb(120 169 194 / 0.3);
-        font-size: 10px;
+        width: 5rem;
+      }
+
+      .stepper-btn {
         display: flex;
         align-items: center;
         justify-content: center;
+        width: 18px;
+        height: 18px;
+        padding: 0;
+        margin: 0;
+        border: 1px solid rgb(120 169 194 / 0.3);
+        border-radius: 2px;
+        background: rgb(16 23 34 / 0.4);
+        color: #78a9c2;
+        font-size: 9px;
         line-height: 1;
+        cursor: pointer;
+        transition: background 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
 
-        &.increase {
-          top: 18px;
-          right: -4px;
-        }
-
-        &.decrease {
-          top: 18px;
-          left: -4px;
-        }
-
-        &:hover {
-          background: rgb(16 23 34 / 40%);
+        &:hover:not(:disabled) {
+          background: rgb(16 23 34 / 0.6);
           border-color: rgb(120 169 194 / 0.5);
-          opacity: 0.8;
         }
+
+        &:disabled {
+          opacity: 0.25;
+          cursor: default;
+          border-color: rgb(120 169 194 / 0.15);
+        }
+      }
+
+      .stepper-value {
+        font-size: 0.75rem;
+        color: #c9b36a;
+        font-weight: 600;
+        min-width: 14px;
+        text-align: center;
+        text-shadow: 0 0 2px rgb(201 179 106 / 0.2);
+      }
+    }
+
+    .button.icon {
+      display: none;
+    }
+
+    &[data-character-state="play"] {
+      .characteristic-controls {
+        display: none;
       }
     }
   }
@@ -1777,9 +1818,8 @@ a.button {
     border-right: 1px solid #8a644f;
     /*      box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5),
             -4px -4px 10px rgba(255, 255, 255, 0.1);*/ /* Ombre principale */
-    transition:
-      box-shadow 0.3s ease-in-out,
-      transform 0.3s ease-in-out;
+    transition: box-shadow 0.3s ease-in-out,
+    transform 0.3s ease-in-out;
 
     span {
       font-size: 16px; /* Première lettre plus grande */
@@ -1807,9 +1847,8 @@ a.button {
     border-bottom: 1px solid #2b221b;
     /*box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5),
       -4px -4px 10px rgba(255, 255, 255, 0.1);*/ /* Ombre principale */
-    transition:
-      box-shadow 0.3s ease-in-out,
-      transform 0.3s ease-in-out;
+    transition: box-shadow 0.3s ease-in-out,
+    transform 0.3s ease-in-out;
 
     span {
       position: relative;
