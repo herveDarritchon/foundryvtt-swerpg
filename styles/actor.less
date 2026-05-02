@@ -4,37 +4,33 @@
 @keyframes fade-in-holo {
   from {
     opacity: 0;
-    transform: scale(0.9);
-    filter: drop-shadow(0 0 5px fade(@color-glow, 30%));
+    transform: scale(0.95);
+    filter: drop-shadow(0 0 2px fade(@color-glow, 12%));
   }
   to {
     opacity: 1;
     transform: scale(1);
-    filter: drop-shadow(0 0 10px fade(@color-glow, 60%));
+    filter: drop-shadow(0 0 4px fade(@color-glow, 18%));
   }
 }
 
+// Neutralisé : animation arcade trop agressive
+// Remplacé par une transition hover discrète sur les composants
 @keyframes pulse-glow {
   0%,
   100% {
-    box-shadow:
-      0 0 6px fade(@color-glow, 50%),
-      0 0 12px fade(@color-glow, 25%),
-      inset 0 0 6px fade(@color-glow, 10%);
+    box-shadow: none;
   }
   50% {
-    box-shadow:
-      0 0 10px fade(@color-glow, 80%),
-      0 0 18px fade(@color-glow, 40%),
-      inset 0 0 10px fade(@color-glow, 25%);
+    box-shadow: none;
   }
 }
 
 @keyframes holo-fade-in {
   0% {
     opacity: 0;
-    transform: scale(0.8);
-    filter: blur(4px) brightness(150%);
+    transform: scale(0.92);
+    filter: blur(1px) brightness(108%);
   }
   100% {
     opacity: 1;
@@ -43,15 +39,12 @@
   }
 }
 
+// Neutralisé : ne sert à rien en holographique sobre
 @keyframes pulse-ring {
-  0% {
-    box-shadow: 0 0 6px fade(@color-glow, 50%);
-  }
-  50% {
-    box-shadow: 0 0 12px fade(@color-glow, 70%);
-  }
+  0%,
+  50%,
   100% {
-    box-shadow: 0 0 6px fade(@color-glow, 50%);
+    box-shadow: none;
   }
 }
 
@@ -1878,3 +1871,4 @@ a.button {
     background-color: rgba(255, 255, 255, 0.15); // fond discret
   }
 }
+
