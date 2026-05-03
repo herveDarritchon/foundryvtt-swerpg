@@ -1648,54 +1648,39 @@
           }
         }
 
-        .pips {
-          flex: 0 0 95px;
-          align-items: center;
-          align-content: center;
-          justify-content: center;
-          gap: 1px 0;
-
-          .pip {
-            --pip-bg: url('../ui/skills/central-pips.png');
-
-            position: relative;
-            display: flex;
+          .pips {
+            flex: 0 0 95px;
             align-items: center;
             align-content: center;
             justify-content: center;
-            width: 30px;
-            height: 15px;
-            margin: 0;
-            padding: 0;
-            cursor: pointer;
-            background: var(--pip-bg) no-repeat center;
-            background-size: 25px;
+            gap: 1px 0;
 
-            &.untrained {
-              --pip-bg: url('../ui/skills/central-pips.png');
+            .pip {
+              --pip-color: #0e5915;
+
+              position: relative;
+              display: flex;
+              align-items: center;
+              align-content: center;
+              justify-content: center;
+              width: 30px;
+              height: 15px;
+              margin: 0;
+              padding: 0;
+              cursor: pointer;
+              background: var(--pip-color);
+              clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+
+              &.untrained {
+                --pip-color: #0e5915;
+              }
+
+              &.trained {
+                --pip-color: #ffd700;
+                clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+              }
             }
-
-            &.trained {
-              --pip-bg: url('../ui/skills/central-trained-pips.png');
-            }
-
-            &.untrained:nth-child(1) {
-              --pip-bg: url('../ui/skills/first-pip.png');
-            }
-
-            &.untrained:nth-child(5) {
-              --pip-bg: url('../ui/skills/fifth-pip.png');
-            }
-
-            &.trained:nth-child(1) {
-              --pip-bg: url('../ui/skills/first-trained-pip.png');
-            }
-
-            &.trained:nth-child(5) {
-              --pip-bg: url('../ui/skills/fifth-trained-pips.png');
           }
-        }
-      }
       }
 
       .skill-tags {
