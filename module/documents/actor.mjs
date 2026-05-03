@@ -761,10 +761,9 @@ export default class SwerpgActor extends Actor {
    * @returns {number}            The ability bonus
    */
   getAbilityBonus(scaling) {
-    const abilities = this.system.abilities
-    if (scaling == null || scaling.length === 0) return 0
-    /*        Return Math.round(scaling.reduce((x, t) => x + abilities[t].value, 0) / (scaling.length * 2));*/
-    return 1
+    const abilities = this.system.abilities;
+    if (scaling == null || scaling.length === 0) return 0;
+    return Math.round(scaling.reduce((x, t) => x + abilities[t].value, 0) / (scaling.length * 2));
   }
 
   /* -------------------------------------------- */
