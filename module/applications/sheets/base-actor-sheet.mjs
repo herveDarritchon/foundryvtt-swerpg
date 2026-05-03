@@ -604,13 +604,23 @@ export default class SwerpgBaseActorSheet extends HBMixin(BaseActorSheetV2) {
     const encCurrent = resources.encumbrance.value
     const encMax = resources.encumbrance.threshold
 
-    const makeResource = (id, current, max, bg, fill) => ({
-      id,
-      current,
-      max,
-      pct: max > 0 ? current / max : 0,
-      color: { bg, fill },
-    })
+    const makeResource = (id, current, max, bg, fill) => {
+      // Generate pips array for resource display
+      const pips = []
+      for (let i = 0; i < max; i++) {
+        pips.push({
+          cssClass: i < current ? 'trained' : 'untrained',
+        })
+      }
+      return {
+        id,
+        current,
+        max,
+        pct: max > 0 ? current / max : 0,
+        color: { bg, fill },
+        pips,
+      }
+    }
 
     return {
       wounds: makeResource('wounds', woundCurrent, woundMax, '#440000', '#ff0000'),

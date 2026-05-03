@@ -134,10 +134,10 @@ Valider que les dossiers créés lors de l'import OggDude ont les bonnes couleur
 
 ## Rapport de Test
 
-**Date** : ******\_\_\_******  
-**Testeur** : ******\_\_\_******  
-**Version SWERPG** : ******\_\_\_******  
-**Version Foundry** : ******\_\_\_******
+**Date** : **\*\***\_\_\_**\*\***  
+**Testeur** : **\*\***\_\_\_**\*\***  
+**Version SWERPG** : **\*\***\_\_\_**\*\***  
+**Version Foundry** : **\*\***\_\_\_**\*\***
 
 | Test                          | Statut          | Observations |
 | ----------------------------- | --------------- | ------------ |
