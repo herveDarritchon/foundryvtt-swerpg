@@ -16,7 +16,7 @@ function compileLESS() {
   return gulp
     .src(LESS_SRC)
     .pipe(
-      less().on('error', function (err) {
+      less({ sourceMap: false }).on('error', function (err) {
         console.error('LESS Error:', err.message)
         this.emit('end')
       }),
