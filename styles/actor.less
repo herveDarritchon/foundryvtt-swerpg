@@ -1516,20 +1516,20 @@
   /*  Skills Tab                                */
   /* ----------------------------------------- */
 
-  .tab.skills {
+  .tab.skills.skills.skills {
     .skills-wrapper {
-      display: grid;
+      display: grid !important;
 
       .general-skills {
-        grid-column: 1;
+        grid-column: 1 !important;
       }
 
       .non-general-skills {
-        grid-column: 2;
+        grid-column: 2 !important;
       }
 
       .combat-skills {
-        margin-bottom: 2em;
+        margin-bottom: 2em !important;
       }
 
       .skill {
@@ -1640,28 +1640,28 @@
             background-image: url('/icons/svg/d12-grey.svg');
           }
         }
-          .pips {
-            flex: 0 0 150px;
+        .pips {
+          flex: 0 0 150px;
+          align-items: center;
+          align-content: center;
+          justify-content: start;
+          gap: 0;
+
+          .pip {
+            --pip-color: #0e5915;
+
+            position: relative;
+            display: flex;
             align-items: center;
             align-content: center;
-            justify-content: start;
-            gap: 0;
-
-            .pip {
-              --pip-color: #0e5915;
-
-              position: relative;
-              display: flex;
-              align-items: center;
-              align-content: center;
-              justify-content: center;
-              flex: 0 0 20%;
-              height: 15px;
-              margin: 0;
-              padding: 0;
-              cursor: pointer;
-              background: var(--pip-color);
-              clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+            justify-content: center;
+            flex: 0 0 20%;
+            height: 15px;
+            margin: 0;
+            padding: 0;
+            cursor: pointer;
+            background: var(--pip-color);
+            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
 
             &.untrained {
               --pip-color: #0e5915;
