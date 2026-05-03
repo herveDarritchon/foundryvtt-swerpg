@@ -16,9 +16,6 @@ import * as dice from './module/dice/_module.mjs'
 import * as documents from './module/documents/_module.mjs'
 import * as models from './module/models/_module.mjs'
 import * as hooks from './module/hooks/_module.mjs'
-import MotivationCategorySheet from './module/applications/sheets/motivation-category.mjs'
-import MotivationSheet from './module/applications/sheets/motivation.mjs'
-import DutySheet from './module/applications/sheets/duty.mjs'
 
 // Canvas
 import SwerpgRuler from './module/canvas/ruler.mjs'
@@ -172,23 +169,14 @@ Hooks.once('init', async function () {
   // Item document configuration
   CONFIG.Item.documentClass = documents.SwerpgItem
   CONFIG.Item.dataModels = {
-    ancestry: models.SwerpgAncestry,
-    archetype: models.SwerpgArchetype,
     armor: models.SwerpgArmor,
     gear: models.SwerpgGear,
-    origin: models.SwerpgOrigin,
-    background: models.SwerpgBackground,
     species: models.SwerpgSpecies,
     career: models.SwerpgCareer,
     obligation: models.SwerpgObligation,
     specialization: models.SwerpgSpecialization,
-    spell: models.SwerpgSpell,
     talent: models.SwerpgTalent,
-    taxonomy: models.SwerpgTaxonomy,
     weapon: models.SwerpgWeapon,
-    'motivation-category': models.SwerpgMotivationCategory,
-    motivation: models.SwerpgMotivation,
-    duty: models.SwerpgDuty,
   }
 
   foundry.documents.collections.Items.unregisterSheet('core', foundry.appv1.sheets.ItemSheet)
@@ -200,29 +188,9 @@ Hooks.once('init', async function () {
   })
 
   // V1 Registrations
-  foundry.documents.collections.Items.registerSheet(SYSTEM.id, applications.AncestrySheet, {
-    types: ['ancestry'],
-    label: 'SWERPG.SHEETS.Ancestry',
-    makeDefault: true,
-  })
-  foundry.documents.collections.Items.registerSheet(SYSTEM.id, applications.ArchetypeSheet, {
-    types: ['archetype'],
-    label: 'SWERPG.SHEETS.Archetype',
-    makeDefault: true,
-  })
-  foundry.documents.collections.Items.registerSheet(SYSTEM.id, applications.BackgroundSheet, {
-    types: ['background'],
-    label: 'SWERPG.SHEETS.Background',
-    makeDefault: true,
-  })
   foundry.documents.collections.Items.registerSheet(SYSTEM.id, applications.GearSheet, {
     types: ['gear'],
     label: 'SWERPG.SHEETS.Gear',
-    makeDefault: true,
-  })
-  foundry.documents.collections.Items.registerSheet(SYSTEM.id, applications.OriginSheet, {
-    types: ['origin'],
-    label: 'SWERPG.SHEETS.Origin',
     makeDefault: true,
   })
   foundry.documents.collections.Items.registerSheet(SYSTEM.id, applications.SpeciesSheet, {
@@ -245,39 +213,14 @@ Hooks.once('init', async function () {
     label: 'SWERPG.SHEETS.Specialization',
     makeDefault: true,
   })
-  foundry.documents.collections.Items.registerSheet(SYSTEM.id, applications.SpellSheet, {
-    types: ['spell'],
-    label: 'SWERPG.SHEETS.Spell',
-    makeDefault: true,
-  })
   foundry.documents.collections.Items.registerSheet(SYSTEM.id, applications.TalentSheet, {
     types: ['talent'],
     label: 'SWERPG.SHEETS.Talent',
     makeDefault: true,
   })
-  foundry.documents.collections.Items.registerSheet(SYSTEM.id, applications.TaxonomySheet, {
-    types: ['taxonomy'],
-    label: 'SWERPG.SHEETS.Taxonomy',
-    makeDefault: true,
-  })
   foundry.documents.collections.Items.registerSheet(SYSTEM.id, applications.WeaponSheet, {
     types: ['weapon'],
     label: 'SWERPG.SHEETS.Weapon',
-    makeDefault: true,
-  })
-  foundry.documents.collections.Items.registerSheet(SYSTEM.id, MotivationCategorySheet, {
-    types: ['motivation-category'],
-    label: 'SWERPG.SHEETS.MotivationCategory',
-    makeDefault: true,
-  })
-  foundry.documents.collections.Items.registerSheet(SYSTEM.id, DutySheet, {
-    types: ['duty'],
-    label: 'SWERPG.SHEETS.Duty',
-    makeDefault: true,
-  })
-  foundry.documents.collections.Items.registerSheet(SYSTEM.id, MotivationSheet, {
-    types: ['motivation'],
-    label: 'SWERPG.SHEETS.Motivation',
     makeDefault: true,
   })
 

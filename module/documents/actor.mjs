@@ -1,7 +1,6 @@
 import StandardCheck from '../dice/standard-check.mjs'
 import AttackRoll from '../dice/attack-roll.mjs'
 import SwerpgAction from '../models/action.mjs'
-import SwerpgSpellAction from '../models/spell-action.mjs'
 import { SYSTEM } from '../config/system.mjs'
 import CharacteristicFactory from '../lib/characteristics/characteristic-factory.mjs'
 import ErrorCharacteristic from '../lib/characteristics/error-characteristic.mjs'
@@ -23,7 +22,6 @@ const { DialogV2 } = foundry.applications.api
  * @property {SwerpgItem} mainhand
  * @property {SwerpgItem} offhand
  * @property {boolean} freehand
- * @property {number} spellHands
  * @property {boolean} unarmed
  * @property {boolean} shield
  * @property {boolean} twoHanded
@@ -75,18 +73,6 @@ export default class SwerpgActor extends Actor {
    * @type {ActorEquipment}
    */
   equipment = this.equipment
-
-  /**
-   * The spellcraft components known by this Actor
-   * @type {{
-   *   gestures: Set<SwerpgGesture>,
-   *   iconicSlots: number,
-   *   iconicSpells: SwerpgItem[],
-   *   inflections: Set<SwerpgInflection>,
-   *   runes: Set<SwerpgRune>
-   * }}
-   */
-  grimoire = this.grimoire
 
   /**
    * @typedef {Object} SwerpgActorTraining
@@ -342,7 +328,6 @@ export default class SwerpgActor extends Actor {
     super.prepareEmbeddedDocuments()
     const items = this.itemTypes
     SwerpgActor.#prepareTalents.call(this, items.talent)
-    SwerpgActor.#prepareSpells.call(this, items.spell)
     this._prepareEffects()
     this.training = SwerpgActor.#prepareTraining.call(this)
     this.equipment = SwerpgActor.#prepareEquipment.call(this, items)
@@ -564,9 +549,6 @@ export default class SwerpgActor extends Actor {
         case 'armor':
           if (item.system.equipped) SwerpgActor.#registerItemActions.call(this, item)
           break
-        case 'spell':
-          SwerpgActor.#registerItemActions.call(this, item)
-          break
       }
     }
     this.callActorHooks('prepareActions', this.actions)
@@ -581,7 +563,7 @@ export default class SwerpgActor extends Actor {
   static #prepareDefaultActions() {
     const w = this.equipment.weapons
     for (let ad of SYSTEM.ACTION.DEFAULT_ACTIONS) {
-      if (ad.id === 'cast' && !(this.grimoire.gestures.size && this.grimoire.runes.size)) continue
+      if (ad.id === 'cast') continue
       if (ad.id === 'reload' && !w.reload) continue
       if (ad.id === 'refocus' && !w.talisman) continue
       ad = foundry.utils.deepClone(ad)
@@ -637,13 +619,6 @@ export default class SwerpgActor extends Actor {
   static #prepareTalents(talents) {
     this.talentIds = new Set()
     this.actorHooks = {}
-    this.grimoire = {
-      runes: new Set(),
-      gestures: new Set(),
-      inflections: new Set(),
-      iconicSlots: 0,
-      iconicSpells: [],
-    }
     const details = this.system.details
     const signatureNames = []
 
@@ -666,15 +641,6 @@ export default class SwerpgActor extends Actor {
 
       // Register signatures
       if (t.system.node?.type === 'signature') signatureNames.push(t.name)
-
-      // Register spellcraft knowledge
-      if (t.system.rune) {
-        this.grimoire.runes.add(SYSTEM.SPELL.RUNES[t.system.rune])
-        this.grimoire.gestures.add(SYSTEM.SPELL.GESTURES.touch)
-      }
-      if (t.system.gesture) this.grimoire.gestures.add(SYSTEM.SPELL.GESTURES[t.system.gesture])
-      if (t.system.inflection) this.grimoire.inflections.add(SYSTEM.SPELL.INFLECTIONS[t.system.inflection])
-      if (t.system.iconicSpells) this.grimoire.iconicSlots += t.system.iconicSpells
     }
 
     // Compose Signature Name
@@ -689,21 +655,6 @@ export default class SwerpgActor extends Actor {
                  ui.notifications?.warn(`Actor ${this.name} has more Talents unlocked than they have talent points available.`);
              }
          }*/
-  }
-
-  /* -------------------------------------------- */
-
-  /**
-   * Prepare iconic spells.
-   * @this {SwerpgActor}
-   * @param {SwerpgItem[]} spells
-   */
-  static #prepareSpells(spells) {
-    for (const spell of spells) {
-      spell.system.isKnown = spell.system.canKnowSpell(this)
-      this.grimoire.iconicSpells.push(spell)
-      for (const hook of spell.system.actorHooks) SwerpgActor.#registerActorHook(this, spell, hook)
-    }
   }
 
   /* -------------------------------------------- */
@@ -761,9 +712,9 @@ export default class SwerpgActor extends Actor {
    * @returns {number}            The ability bonus
    */
   getAbilityBonus(scaling) {
-    const abilities = this.system.abilities;
-    if (scaling == null || scaling.length === 0) return 0;
-    return Math.round(scaling.reduce((x, t) => x + abilities[t].value, 0) / (scaling.length * 2));
+    const abilities = this.system.abilities
+    if (scaling == null || scaling.length === 0) return 0
+    return Math.round(scaling.reduce((x, t) => x + abilities[t].value, 0) / (scaling.length * 2))
   }
 
   /* -------------------------------------------- */
@@ -802,7 +753,7 @@ export default class SwerpgActor extends Actor {
    * Get the number of additional boons or banes you have when attacking a target.
    * @param {SwerpgActor} target    The target being attacked
    * @param {SwerpgAction} action   The action being performed
-   * @param {string} actionType       The type of action being performed: "weapon", "spell", or "skill
+   * @param {string} actionType       The type of action being performed: "weapon" or "skill"
    * @param {boolean} [ranged]        Does this action count as a ranged attack?
    * @returns {{boons: Object<DiceBoon>, banes: Object<DiceBoon>}}  Configuration of boons and banes
    */
@@ -985,65 +936,8 @@ export default class SwerpgActor extends Actor {
   static async macroAction(actor, actionId) {
     if (!actor) return ui.notifications.warn('You must have a Token controlled to use this Macro')
     let action = actor.actions[actionId]
-    if (!action && actionId.startsWith('spell.')) action = SwerpgSpellAction.fromId(actionId, { actor })
     if (!action) return ui.notifications.warn(`Actor "${actor.name}" does not have the action "${actionId}"`)
     await action.use()
-  }
-
-  /* -------------------------------------------- */
-
-  /**
-   * Cast a certain spell against a target.
-   * @param {SwerpgSpellAction} spell
-   * @param {SwerpgActor} target
-   * @returns {Promise<AttackRoll|null>}
-   */
-  async castSpell(spell, target) {
-    if (!(target instanceof SwerpgActor)) throw new Error('You must define a target Actor for the spell.')
-    if (!spell.usage.hasDice) return null
-
-    // Prepare Roll Data
-    const defenseType = spell.defense
-    const { boons, banes } = this.applyTargetBoons(target, spell, 'spell')
-    const rollData = {
-      actorId: this.id,
-      spellId: spell.id,
-      target: target.uuid,
-      ability: this.getAbilityBonus(Array.from(spell.scaling)),
-      skill: 0,
-      enchantment: 0,
-      banes,
-      boons,
-      defenseType,
-      dc: target.defenses[defenseType].total,
-    }
-
-    // Call talent hooks
-    this.callActorHooks('prepareStandardCheck', rollData)
-    this.callActorHooks('prepareSpellAttack', spell, target, rollData)
-    target.callActorHooks('defendSpellAttack', spell, this, rollData)
-
-    // Create the Attack Roll instance
-    const roll = new AttackRoll(rollData)
-
-    // Evaluate the result and record the result
-    await roll.evaluate({ async: true })
-    const r = (roll.data.result = target.testDefense(defenseType, roll))
-
-    // Structure damage
-    if (r < AttackRoll.RESULT_TYPES.GLANCE) return roll
-    roll.data.damage = {
-      overflow: roll.overflow,
-      multiplier: spell.damage.multiplier ?? 1,
-      base: spell.damage.base,
-      bonus: (spell.damage.bonus ?? 0) + (this.rollBonuses.damage?.[spell.damage.type] ?? 0),
-      resistance: target.getResistance(spell.rune.resource, spell.damage.type, spell.damage.restoration),
-      resource: spell.rune.resource,
-      type: spell.damage.type,
-      restoration: spell.damage.restoration,
-    }
-    roll.data.damage.total = SwerpgAction.computeDamage(roll.data.damage)
-    return roll
   }
 
   /* -------------------------------------------- */
@@ -1570,26 +1464,6 @@ export default class SwerpgActor extends Actor {
 
   /* -------------------------------------------- */
   /*  Character Creation Methods                  */
-
-  /* -------------------------------------------- */
-
-  /**
-   * Test whether an Actor is able to learn a new Iconic Spell.
-   * @param {SwerpgItem} spell    The spell desired to know
-   * @throws {Error}                An error if the Actor cannot learn the spell
-   */
-  canLearnIconicSpell(spell) {
-    const { iconicSpells, iconicSlots } = this.grimoire
-    if (iconicSpells.length >= iconicSlots) {
-      throw new Error(`Actor ${this.name} does not have any available Iconic Spell slots.`)
-    }
-    if (this.items.get(spell._id)) {
-      throw new Error(`Actor ${this.name} already knows the ${spell.name} Iconic Spell.`)
-    }
-    if (!spell.system.canKnowSpell(this)) {
-      throw new Error(`Actor ${this.name} does not satisfy the knowledge requirements to learn the ${spell.name} Iconic Spell.`)
-    }
-  }
 
   /* -------------------------------------------- */
 

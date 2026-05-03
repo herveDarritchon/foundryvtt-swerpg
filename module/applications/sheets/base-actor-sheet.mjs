@@ -97,10 +97,6 @@ export default class SwerpgBaseActorSheet extends HBMixin(BaseActorSheetV2) {
       id: 'talents',
       template: 'systems/swerpg/templates/sheets/actor/talents.hbs',
     },
-    spells: {
-      id: 'spells',
-      template: 'systems/swerpg/templates/sheets/actor/spells.hbs',
-    },
     effects: {
       id: 'effects',
       template: 'systems/swerpg/templates/sheets/actor/effects.hbs',
@@ -126,7 +122,6 @@ export default class SwerpgBaseActorSheet extends HBMixin(BaseActorSheetV2) {
       { id: 'inventory', group: 'sheet', label: 'ACTOR.TABS.INVENTORY' },
       { id: 'skills', group: 'sheet', label: 'ACTOR.TABS.SKILLS' },
       { id: 'talents', group: 'sheet', label: 'ACTOR.TABS.TALENTS' },
-      { id: 'spells', group: 'sheet', label: 'ACTOR.TABS.SPELLS' },
       { id: 'effects', group: 'sheet', label: 'ACTOR.TABS.EFFECTS' },
       { id: 'biography', group: 'sheet', label: 'ACTOR.TABS.BIOGRAPHY' },
       { id: 'commitments', group: 'sheet', label: 'ACTOR.TABS.COMMITMENTS' },
@@ -169,7 +164,7 @@ export default class SwerpgBaseActorSheet extends HBMixin(BaseActorSheetV2) {
   /** @override */
   async _prepareContext(options) {
     const tabGroups = this.#getTabs()
-    const { inventory, talents, iconicSpells } = this.#prepareItems()
+    const { inventory, talents } = this.#prepareItems()
     const { sections: actions, favorites: favoriteActions } = this.#prepareActions()
     const featuredEquipment = this.#prepareFeaturedEquipment()
     const context = {
@@ -200,7 +195,6 @@ export default class SwerpgBaseActorSheet extends HBMixin(BaseActorSheetV2) {
       // Resources: this.#prepareResources(),
       skillCategories: this.#prepareSkills(),
       source: this.document.toObject(),
-      spells: this.#prepareSpells(iconicSpells),
       tabGroups,
       tabs: tabGroups.sheet,
       talents,
@@ -208,17 +202,6 @@ export default class SwerpgBaseActorSheet extends HBMixin(BaseActorSheetV2) {
     // Phase 4: déléguer calcul du mode compact à méthode dédiée pour respecter PAT-001
     this.#applyFeaturedEquipmentCompactMode(context)
     return context
-  }
-
-  /**
-   * Détermine si le mode compact doit être activé selon le nombre d'éléments d'équipement affichés.
-   * WHY: Réduire la densité visuelle quand la sidebar aurait sinon un empilement trop haut pour lisibilité.
-   * @param {object} context Contexte déjà construit contenant featuredEquipment
-   * @private
-   */
-  #applyFeaturedEquipmentCompactMode(context) {
-    const count = context.featuredEquipment?.length ?? 0
-    context.compactMode = count > 3
   }
 
   /* -------------------------------------------- */

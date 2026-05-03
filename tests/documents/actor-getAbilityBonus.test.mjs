@@ -76,14 +76,14 @@ describe('getAbilityBonus() - Bug #44 Fix', () => {
     const result3 = getAbilityBonus.call(mockActor, ['intellect', 'cunning']) // Math.round((2+3)/4) = 1 (correctly 1)
 
     // result1 and result2 should NOT be 1 (this was the bug)
-    expect(result1).not.toBe(1)  // strength=3, should be 2
-    expect(result2).not.toBe(1)  // willpower+presence, should be 2
+    expect(result1).not.toBe(1) // strength=3, should be 2
+    expect(result2).not.toBe(1) // willpower+presence, should be 2
     // result3 CAN be 1 (that's correct math)
 
     // All should be calculated correctly
     expect(result1).toBe(2)
     expect(result2).toBe(2)
-    expect(result3).toBe(1)  // This is correct: Math.round(1.25) = 1
+    expect(result3).toBe(1) // This is correct: Math.round(1.25) = 1
   })
 
   test('should handle abilities with value 0', () => {
