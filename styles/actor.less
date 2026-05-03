@@ -1640,29 +1640,28 @@
             background-image: url('/icons/svg/d12-grey.svg');
           }
         }
-
           .pips {
-            flex: 0 0 auto;
+            flex: 0 0 150px;
             align-items: center;
             align-content: center;
             justify-content: center;
-            gap: 1px 0;
+            gap: 0;
 
-          .pip {
-            --pip-color: #0e5915;
+            .pip {
+              --pip-color: #0e5915;
 
-            position: relative;
-            display: flex;
-            align-items: center;
-            align-content: center;
-            justify-content: center;
-            width: 30px;
-            height: 15px;
-            margin: 0;
-            padding: 0;
-            cursor: pointer;
-            background: var(--pip-color);
-            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+              position: relative;
+              display: flex;
+              align-items: center;
+              align-content: center;
+              justify-content: center;
+              flex: 0 0 20%;
+              height: 15px;
+              margin: 0;
+              padding: 0;
+              cursor: pointer;
+              background: var(--pip-color);
+              clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
 
             &.untrained {
               --pip-color: #0e5915;
