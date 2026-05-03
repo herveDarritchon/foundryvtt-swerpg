@@ -1,10 +1,34 @@
-<div class="skill flexrow" data-skill-id="{{id}}" data-is-career="{{freeRank.isCareer}}" data-is-specialization="{{freeRank.isSpecialization}}">
+<div class="skill" data-skill-id="{{id}}" data-skill-rank="{{rank.value}}" data-skill-next-rank="{{nextRank}}" data-skill-next-cost="{{nextCost}}" data-skill-can-purchase="{{canPurchase}}" data-skill-is-free="{{isFreePurchase}}" data-is-career="{{freeRank.isCareer}}" data-is-specialization="{{freeRank.isSpecialization}}" data-action="skillHover" data-action="skillLeave">
   <div class="name flexrow">
     <span class="label">{{label}}</span>
     <span class="abbreviation">({{characteristics.abbreviation}})</span>
   </div>
-  <div class="career">
-    <span class="career-and-speciality {{freeRank.extraClass}}" data-tooltip="{{freeRank.name}}"></span>
+  <div class="skill-tags">
+    {{#if freeRank.isCareer}}
+      <span class="skill-tag skill-tag--career" data-tooltip="Career skill">C</span>
+    {{/if}}
+    {{#if freeRank.isSpecialization}}
+      <span class="skill-tag skill-tag--specialization" data-tooltip="Specialization skill">S</span>
+    {{/if}}
+  </div>
+  <div class="skill-rank">
+    <span class="skill-rank-label">Rank</span>
+    <span class="skill-rank-value">{{rank.value}}/5</span>
+  </div>
+  <div class="skill-cost">
+    {{#if isFreePurchase}}
+      <span class="skill-cost--free">FREE</span>
+    {{else}}
+      {{#if nextCost}}
+        <span class="skill-cost">{{nextCost}} XP</span>
+      {{else}}
+        <span class="skill-cost">MAX</span>
+      {{/if}}
+    {{/if}}
+  </div>
+  <div class="skill-dice-preview" data-tooltip="Dice pool after next rank">
+    {{#each dicePreview.proficiency}}<span class="die die--proficiency"></span>{{/each}}
+    {{#each dicePreview.ability}}<span class="die die--ability"></span>{{/each}}
   </div>
   <div class="pips flexrow" data-action="toggleTrainedSkill">
     {{#each pips as |pip|}}
