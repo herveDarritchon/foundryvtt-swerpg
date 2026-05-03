@@ -14,19 +14,6 @@
     </header>
 
     <div class="subtitle flexrow">
-        <h2 class="origin flexrow {{#if incomplete.origin}}incomplete{{/if}}" data-action="editOrigin"
-            {{#if incomplete.origin}}data-tooltip="WALKTHROUGH.AddOrigin"{{/if}}>
-            <a>{{#if incomplete.origin}}<i class="fa-solid fa-circle-plus"></i> {{/if}}{{originName}}</a>
-        </h2>
-
-        <h2 class="ancestry flexrow {{#if incomplete.ancestry}}incomplete{{/if}}" data-action="editAncestry"
-            {{#if incomplete.ancestry}}data-tooltip="WALKTHROUGH.AddAncestry"{{/if}}>
-            <a>{{#if incomplete.ancestry}}<i class="fa-solid fa-circle-plus"></i> {{/if}}{{ancestryName}}</a>
-        </h2>
-        <h2 class="background flexrow {{#if incomplete.background}}incomplete{{/if}}" data-action="editBackground"
-            {{#if incomplete.background}}data-tooltip="WALKTHROUGH.AddBackground"{{/if}}>
-            <a>{{#if incomplete.background}}<i class="fa-solid fa-circle-plus"></i> {{/if}}{{backgroundName}}</a>
-        </h2>
         {{#if actor.system.details.signatureName}}
             <h2 class="signature">{{actor.system.details.signatureName}}</h2>
         {{/if}}
@@ -42,7 +29,7 @@
         {{/if}}
         <div class="metadata flexrow">
             <div class="size flexrow">
-                <span class="label" data-tooltip="ANCESTRY.FIELDS.size.hint">{{localize "ACTOR.LABELS.SIZE"}}</span>
+                <span class="label">{{localize "ACTOR.LABELS.SIZE"}}</span>
                 <span class="value">{{actor.size}}</span>
             </div>
         </div>

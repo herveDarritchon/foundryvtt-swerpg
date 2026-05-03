@@ -1,7 +1,4 @@
 import SwerpgActorType from './actor-type.mjs'
-import SwerpgAncestry from './ancestry.mjs'
-import SwerpgBackground from './background.mjs'
-import SwerpgOrigin from './origin.mjs'
 
 /**
  * Data schema, attributes, and methods specific to Hero type Actors.
@@ -35,24 +32,13 @@ export default class SwerpgHero extends SwerpgActorType {
       progress: new fields.NumberField({ ...requiredInteger, initial: 0, min: 0, label: 'ADVANCEMENT.Progress' }),
     })
 
+    const detailField = {
+      name: new fields.StringField({ blank: false }),
+      img: new fields.StringField(),
+    }
+
     // Details
     schema.details = new fields.SchemaField({
-      ancestry: new fields.SchemaField(
-        {
-          name: new fields.StringField({ blank: false }),
-          img: new fields.StringField(),
-          ...SwerpgAncestry.defineSchema(),
-        },
-        { required: true, nullable: true, initial: null },
-      ),
-      background: new fields.SchemaField(
-        {
-          name: new fields.StringField({ blank: false }),
-          img: new fields.StringField(),
-          ...SwerpgBackground.defineSchema(),
-        },
-        { required: true, nullable: true, initial: null },
-      ),
       biography: new fields.SchemaField({
         appearance: new fields.HTMLField(),
         age: new fields.StringField(),
@@ -61,11 +47,31 @@ export default class SwerpgHero extends SwerpgActorType {
         public: new fields.HTMLField(),
         private: new fields.HTMLField(),
       }),
+      ancestry: new fields.SchemaField(
+        {
+          ...detailField,
+          size: new fields.NumberField({ required: true, integer: true, nullable: false, min: 1, initial: 3 }),
+          stride: new fields.NumberField({ required: true, integer: true, nullable: false, min: 1, initial: 10 }),
+          primary: new fields.StringField({ required: false, initial: undefined, choices: SYSTEM.CHARACTERISTICS }),
+          secondary: new fields.StringField({ required: false, initial: undefined, choices: SYSTEM.CHARACTERISTICS }),
+          resistance: new fields.StringField({ blank: true, choices: SYSTEM.DAMAGE_TYPES }),
+          vulnerability: new fields.StringField({ blank: true, choices: SYSTEM.DAMAGE_TYPES }),
+        },
+        { required: true, nullable: true, initial: null },
+      ),
+      background: new fields.SchemaField(
+        {
+          ...detailField,
+          description: new fields.HTMLField({ required: false, initial: undefined }),
+          skills: new fields.SetField(new fields.StringField({ required: false, choices: SYSTEM.SKILLS })),
+          talents: new fields.ArrayField(new fields.StringField({ required: false })),
+        },
+        { required: true, nullable: true, initial: null },
+      ),
       origin: new fields.SchemaField(
         {
-          name: new fields.StringField({ blank: false }),
-          img: new fields.StringField(),
-          ...SwerpgOrigin.defineSchema(),
+          ...detailField,
+          description: new fields.HTMLField({ required: false, initial: undefined }),
         },
         { required: true, nullable: true, initial: null },
       ),
@@ -260,38 +266,5 @@ export default class SwerpgHero extends SwerpgActorType {
     // Madness
     r.madness.max = Math.ceil(1.5 * r.morale.max)
     r.madness.value = Math.clamp(r.madness.value, 0, r.madness.max)
-  }
-
-  /* -------------------------------------------- */
-  /*  Helper Methods                              */
-
-  /* -------------------------------------------- */
-
-  /**
-   * Apply an Ancestry item to this Hero Actor.
-   * @param {SwerpgItem} ancestry     The ancestry Item to apply to the Actor.
-   * @returns {Promise<void>}
-   */
-  async applyAncestry(ancestry) {
-    const actor = this.parent
-    await actor._applyDetailItem(ancestry, {
-      canApply: actor.isL0 && !actor.points.ability.spent,
-      canClear: actor.isL0,
-    })
-  }
-
-  /* -------------------------------------------- */
-
-  /**
-   * Apply a Background item to this Hero Actor.
-   * @param {SwerpgItem} background     The background Item to apply to the Actor.
-   * @returns {Promise<void>}
-   */
-  async applyBackground(background) {
-    const actor = this.parent
-    await actor._applyDetailItem(background, {
-      canApply: actor.isL0 && !actor.points.skill.spent,
-      canClear: actor.isL0,
-    })
   }
 }

@@ -137,17 +137,8 @@
       "adversary": {}
     },
     "Item": {
-      "ancestry": {
-        "htmlFields": ["description"]
-      },
-      "archetype": {
-        "htmlFields": ["description"]
-      },
       "armor": {
         "htmlFields": ["description.public", "description.secret"]
-      },
-      "background": {
-        "htmlFields": ["description"]
       },
       "career": {
         "htmlFields": ["description"]
@@ -158,22 +149,13 @@
       "obligation": {
         "htmlFields": ["description"]
       },
-      "origin": {
-        "htmlFields": ["description"]
-      },
       "specialization": {
         "htmlFields": ["description"]
       },
       "species": {
         "htmlFields": ["description"]
       },
-      "spell": {
-        "htmlFields": ["description"]
-      },
       "talent": {
-        "htmlFields": ["description"]
-      },
-      "taxonomy": {
         "htmlFields": ["description"]
       },
       "weapon": {

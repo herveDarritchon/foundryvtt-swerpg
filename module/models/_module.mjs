@@ -1,8 +1,6 @@
 export { default as SwerpgAction } from './action.mjs'
 export { default as SwerpgAdversary } from './adversary.mjs'
-export { default as SwerpgOrigin } from './origin.mjs'
 export { default as SwerpgArmor } from './armor.mjs'
-export { default as SwerpgBackground } from './background.mjs'
 export { default as SwerpgCareer } from './career.mjs'
 export { default as SwerpgObligation } from './obligation.mjs'
 export { default as SwerpgGear } from './gear.mjs'

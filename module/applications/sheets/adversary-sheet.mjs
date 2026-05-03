@@ -10,8 +10,6 @@ export default class AdversarySheet extends SwerpgBaseActorSheet {
       type: 'adversary',
     },
     actions: {
-      editArchetype: AdversarySheet.#onEditArchetype,
-      editTaxonomy: AdversarySheet.#onEditTaxonomy,
       levelDecrease: AdversarySheet.#onLevelDecrease,
       levelIncrease: AdversarySheet.#onLevelIncrease,
     },
@@ -26,13 +24,11 @@ export default class AdversarySheet extends SwerpgBaseActorSheet {
   /** @override */
   async _prepareContext(options) {
     const context = await super._prepareContext(options)
-    const { actor: a, source: s, incomplete: i } = context
+    const { actor: a } = context
     const { threat, level } = a.system.advancement
 
     // Expand Context
     Object.assign(context, {
-      archetypeName: a.system.details.archetype?.name || game.i18n.localize('ARCHETYPE.SHEET.CHOOSE'),
-      taxonomyName: a.system.details.taxonomy?.name || game.i18n.localize('TAXONOMY.SHEET.CHOOSE'),
       canPurchaseTalents: false,
       canPurchaseSkills: false,
       threats: SYSTEM.THREAT_LEVELS,
@@ -40,12 +36,6 @@ export default class AdversarySheet extends SwerpgBaseActorSheet {
       levelDisplay: this.#getLevelDisplay(level),
       canLevelUp: level < 24,
       canLevelDown: level > -5,
-    })
-
-    // Incomplete Tasks
-    Object.assign(i, {
-      taxonomy: !s.system.details.taxonomy?.name,
-      archetype: !s.system.details.archetype?.name,
     })
     return context
   }
@@ -61,33 +51,6 @@ export default class AdversarySheet extends SwerpgBaseActorSheet {
     if (level > 0) return String(level)
     if (level === 0) return '0'
     return `1/${1 - level}`
-  }
-
-  /* -------------------------------------------- */
-  /*  Event Listeners and Handlers                */
-
-  /* -------------------------------------------- */
-
-  /**
-   * Handle click action to choose or edit the Archetype of this Adversary.
-   * @this {AdversarySheet}
-   * @param {PointerEvent} event
-   * @returns {Promise<void>}
-   */
-  static async #onEditArchetype(event) {
-    await this.actor._viewDetailItem('archetype', { editable: false })
-  }
-
-  /* -------------------------------------------- */
-
-  /**
-   * Handle click action to choose or edit the Taxonomy of this Adversary.
-   * @this {AdversarySheet}
-   * @param {PointerEvent} event
-   * @returns {Promise<void>}
-   */
-  static async #onEditTaxonomy(event) {
-    await this.actor._viewDetailItem('taxonomy', { editable: false })
   }
 
   /* -------------------------------------------- */
@@ -132,12 +95,6 @@ export default class AdversarySheet extends SwerpgBaseActorSheet {
   /** @inheritDoc */
   async _onDropItem(event, item) {
     if (!this.actor.isOwner) return
-    switch (item.type) {
-      case 'archetype':
-        return this.actor.system.applyArchetype(item)
-      case 'taxonomy':
-        return this.actor.system.applyTaxonomy(item)
-    }
     return super._onDropItem(event, item)
   }
 }

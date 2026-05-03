@@ -11,8 +11,6 @@ export default class HeroSheet extends SwerpgBaseActorSheet {
       type: 'character',
     },
     actions: {
-      editAncestry: HeroSheet.#onEditAncestry,
-      editBackground: HeroSheet.#onEditBackground,
       levelUp: HeroSheet.#onLevelUp,
     },
   }
@@ -30,8 +28,6 @@ export default class HeroSheet extends SwerpgBaseActorSheet {
 
     // Expand Context
     Object.assign(context, {
-      ancestryName: s.system.details.ancestry?.name || game.i18n.localize('ANCESTRY.SHEET.CHOOSE'),
-      backgroundName: s.system.details.background?.name || game.i18n.localize('BACKGROUND.SHEET.CHOOSE'),
       talentTreeButtonText: game.system.tree.actor === a ? 'Close Talent Tree' : 'Open Talent Tree',
     })
 
@@ -39,19 +35,15 @@ export default class HeroSheet extends SwerpgBaseActorSheet {
     const { isL0 } = a
     context.points = a.system.points
     Object.assign(i, {
-      ancestry: !s.system.details.ancestry?.name,
-      background: !s.system.details.background?.name,
       abilities: context.points.ability.requireInput,
       skills: context.points.skill.available,
       talents: context.points.talent.available,
       isL0: isL0,
     })
-    i.creation = i.ancestry || i.background || i.abilities || i.skills || i.talents
+    i.creation = i.abilities || i.skills || i.talents
     i.level = isL0 ? !i.creation : a.system.advancement.pct === 100
     if (i.creation) {
       i.creationTooltip = '<p>Character Creation Incomplete!</p><ol>'
-      if (i.ancestry) i.creationTooltip += '<li>Select Ancestry</li>'
-      if (i.background) i.creationTooltip += '<li>Select Background</li>'
       if (i.abilities) i.creationTooltip += '<li>Spend Ability Points</li>'
       if (i.skills) i.creationTooltip += '<li>Spend Skill Points</li>'
       if (i.talents) i.creationTooltip += '<li>Spend Talent Points</li>'
@@ -117,29 +109,6 @@ export default class HeroSheet extends SwerpgBaseActorSheet {
 
   /* -------------------------------------------- */
 
-  /**
-   * Handle click action to choose or edit your Ancestry.
-   * @this {HeroSheet}
-   * @param {PointerEvent} event
-   * @returns {Promise<void>}
-   */
-  static async #onEditAncestry(event) {
-    await this.actor._viewDetailItem('ancestry', { editable: false })
-  }
-
-  /* -------------------------------------------- */
-
-  /**
-   * Handle click action to choose or edit your Background.
-   * @this {HeroSheet}
-   * @param {PointerEvent} event
-   * @returns {Promise<void>}
-   */
-  static async #onEditBackground(event) {
-    await this.actor._viewDetailItem('background', { editable: false })
-  }
-
-  /* -------------------------------------------- */
   /*  Drag and Drop                               */
 
   /* -------------------------------------------- */
@@ -148,20 +117,6 @@ export default class HeroSheet extends SwerpgBaseActorSheet {
   async _onDropItem(event, item) {
     if (!this.actor.isOwner) return
     switch (item.type) {
-      case 'ancestry':
-        await this.actor.system.applyAncestry(item)
-        return
-      case 'background':
-        await this.actor.system.applyBackground(item)
-        return
-      case 'spell':
-        try {
-          this.actor.canLearnIconicSpell(item)
-        } catch (err) {
-          ui.notifications.warn(err.message)
-          return
-        }
-        break
       case 'talent':
         ui.notifications.error('Talents can only be added to a protagonist Actor via the Talent Tree.')
         return

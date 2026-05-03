@@ -204,6 +204,15 @@ export default class SwerpgBaseActorSheet extends HBMixin(BaseActorSheetV2) {
     return context
   }
 
+  /**
+   * Active le mode compact de la sidebar équipement quand la liste devient trop dense.
+   * @param {object} context
+   */
+  #applyFeaturedEquipmentCompactMode(context) {
+    const count = context.featuredEquipment?.length ?? 0
+    context.compactMode = count > 3
+  }
+
   /* -------------------------------------------- */
 
   /** @inheritDoc */
@@ -363,13 +372,11 @@ export default class SwerpgBaseActorSheet extends HBMixin(BaseActorSheetV2) {
         signature: { label: 'Signature Talents', items: [] },
         active: { label: 'Active Abilities', items: [] },
         passive: { label: 'Passive Talents', items: [] },
-        spell: { label: 'Spellcraft Talents', items: [] },
       },
       inventory: {
         equipment: { label: 'Equipment', items: [], empty: game.i18n.localize('ACTOR.LABELS.EQUIPMENT_HINT') },
         backpack: { label: 'Backpack', items: [], empty: game.i18n.localize('ACTOR.LABELS.BACKPACK_HINT') },
       },
-      iconicSpells: { label: game.i18n.localize('SPELL.IconicPl'), items: [] },
     }
 
     // Iterate over items and organize them
@@ -390,18 +397,12 @@ export default class SwerpgBaseActorSheet extends HBMixin(BaseActorSheetV2) {
         case 'talent':
           d.tier = i.system.node?.tier || 0
           const action = i.actions.at(0)
-          const spellComp = i.system.rune || i.system.gesture || i.system.inflection
           if (i.system.isSignature) section = sections.talents.signature
           if (action) {
             const tags = action.getTags()
             d.tags = { ...tags.action, ...tags.activation }
             section ||= sections.talents.active
-          } else if (spellComp) section ||= sections.talents.spell
-          else section ||= sections.talents.passive
-          break
-        case 'spell':
-          d.isItem = true
-          section = sections.iconicSpells
+          } else section ||= sections.talents.passive
           break
       }
       if (section) section.items.push(d)
@@ -429,7 +430,6 @@ export default class SwerpgBaseActorSheet extends HBMixin(BaseActorSheetV2) {
   #prepareActions() {
     const sections = {
       attack: { label: 'Attack Actions', actions: [] },
-      spell: { label: 'Spellcraft Actions', actions: [] },
       reaction: { label: 'Reactions', actions: [] },
       movement: { label: 'Movement Actions', actions: [] },
       general: { label: 'General Actions', actions: [] },
@@ -452,8 +452,6 @@ export default class SwerpgBaseActorSheet extends HBMixin(BaseActorSheetV2) {
       let section = 'general'
       const tagMapping = {
         reaction: 'reaction',
-        spell: 'spell',
-        iconicSpell: 'spell',
         movement: 'movement',
         melee: 'attack',
         ranged: 'attack',
@@ -543,21 +541,6 @@ export default class SwerpgBaseActorSheet extends HBMixin(BaseActorSheetV2) {
       else section.effects.sort((a, b) => a.t - b.t || a.name.localeCompare(b.name))
     }
     return sections
-  }
-
-  /* -------------------------------------------- */
-
-  /**
-   * Format categories of the spells tab.
-   * @param {{label: string, items: SwerpgItem[]}} iconicSpells
-   * @returns {{
-   *  runes: {label: string, known: Set<SwerpgRune>},
-   *  inflections: {label: string, known: Set<SwerpgInflection>},
-   *  gestures: {label: string, known: Set<SwerpgGesture>}
-   * }}
-   */
-  #prepareSpells(iconicSpells) {
-    return {}
   }
 
   /* -------------------------------------------- */

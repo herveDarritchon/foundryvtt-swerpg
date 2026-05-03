@@ -159,14 +159,6 @@ export default class SwerpgActor extends Actor {
   }
 
   /**
-   * The background of the Actor.
-   * @returns {*}
-   */
-  get background() {
-    return this.system.details.background
-  }
-
-  /**
    * The prepared object of actor defenses
    * @type {object}
    */
@@ -622,15 +614,7 @@ export default class SwerpgActor extends Actor {
     const details = this.system.details
     const signatureNames = []
 
-    // Identify permanent talents from a background, taxonomy, archetype, etc...
     this.permanentTalentIds = new Set()
-    if (details.background?.talents) {
-      details.background.talents = details.background.talents.map((uuid) => {
-        const talentId = foundry.utils.parseUuid(uuid)?.documentId
-        if (talentId) this.permanentTalentIds.add(talentId)
-        return talentId
-      })
-    }
 
     // Iterate over talents
     for (const t of talents) {
@@ -1587,13 +1571,7 @@ export default class SwerpgActor extends Actor {
 
     // Confirm that character creation is complete
     if (this.isL0) {
-      const steps = [
-        this.system.details.ancestry?.name,
-        this.system.details.background?.name,
-        !this.points.ability.requireInput,
-        !this.points.skill.available,
-        !this.points.talent.available,
-      ]
+      const steps = [!this.points.ability.requireInput, !this.points.skill.available, !this.points.talent.available]
       if (!steps.every((k) => k)) return ui.notifications.warn('WALKTHROUGH.LevelZeroIncomplete', { localize: true })
     }
 
@@ -1757,12 +1735,6 @@ export default class SwerpgActor extends Actor {
     if (!skill || delta === 0) return false
     if (this.type !== SYSTEM.ACTOR_TYPE.character.type) return false // TODO only heroes can purchase skills currently
 
-    // Must Choose Background first
-    if (!this.background.name && delta > 0) {
-      if (strict) throw new Error(game.i18n.localize('WARNING.SkillRequireAncestryBackground'))
-      return false
-    }
-
     // Decreasing Skill
     if (delta < 0) {
       if (skill.rank === 0) {
@@ -1874,7 +1846,7 @@ export default class SwerpgActor extends Actor {
   /**
    * View actor detail data as an editable item.
    * This is an internal helper method not intended for external use.
-   * @param {string} type         The data type, either "archetype" or "taxonomy"
+   * @param {string} type         The data type stored in `system.details`
    * @param {object} [options]    Options that configure how the data is viewed
    * @param {boolean} [options.editable]    Is the detail item editable?
    * @returns {Promise<void>}
