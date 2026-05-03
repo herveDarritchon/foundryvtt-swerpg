@@ -27,8 +27,8 @@
     {{/if}}
   </div>
   <div class="skill-dice-preview" data-tooltip="Dice pool after next rank">
-    {{#each dicePreview.ability}}<span class="die die--ability"></span>{{/each}}
     {{#each dicePreview.proficiency}}<span class="die die--proficiency"></span>{{/each}}
+    {{#each dicePreview.ability}}<span class="die die--ability"></span>{{/each}}
   </div>
   <div class="pips flexrow" data-action="toggleTrainedSkill">
     {{#each pips as |pip|}}

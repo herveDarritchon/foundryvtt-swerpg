@@ -2217,7 +2217,7 @@ input[type='range'] {
   flex: 0 0 150px;
   align-items: center;
   align-content: center;
-  justify-content: center;
+  justify-content: start;
   gap: 0;
 }
 .swerpg.sheet.actor .tab.skills .skills-wrapper .skill .pips .pip {
@@ -3871,4 +3871,3 @@ input[type='range'] {
   text-align: left;
   align-self: unset;
 }
-/*# sourceMappingURL=swerpg.css.map */

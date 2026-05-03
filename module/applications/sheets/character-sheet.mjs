@@ -517,14 +517,14 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
 
     const pips = []
 
-    // Add ability dice (normal dice) as untrained pips
-    for (let i = 0; i < abilityDice; i++) {
-      pips.push({ cssClass: 'untrained' })
-    }
-
-    // Add proficiency dice (trained dice) as trained pips
+    // Add proficiency dice (trained dice) first - hexagone D12
     for (let i = 0; i < proficiencyDice; i++) {
       pips.push({ cssClass: 'trained' })
+    }
+
+    // Add ability dice (normal dice) after - losange vert
+    for (let i = 0; i < abilityDice; i++) {
+      pips.push({ cssClass: 'untrained' })
     }
 
     return pips
