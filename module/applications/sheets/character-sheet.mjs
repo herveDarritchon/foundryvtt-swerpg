@@ -444,8 +444,10 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
    * @returns {undefined}
    */
   static #prepareSkills(actor) {
-    const freeCareerSkillsLeft = (actor.system.progression?.freeSkillRanks?.career?.gained ?? 0) - (actor.system.progression?.freeSkillRanks?.career?.spent ?? 0)
-    const freeSpecializationSkillsLeft = (actor.system.progression?.freeSkillRanks?.specialization?.gained ?? 0) - (actor.system.progression?.freeSkillRanks?.specialization?.spent ?? 0)
+    const freeCareerSkillsLeft =
+      (actor.system.progression?.freeSkillRanks?.career?.gained ?? 0) - (actor.system.progression?.freeSkillRanks?.career?.spent ?? 0)
+    const freeSpecializationSkillsLeft =
+      (actor.system.progression?.freeSkillRanks?.specialization?.gained ?? 0) - (actor.system.progression?.freeSkillRanks?.specialization?.spent ?? 0)
     const availableXp = actor.system.experience?.available ?? 0
 
     const skills = Object.entries(actor.system.skills)
@@ -467,10 +469,18 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
           freeCareerSkillsLeft,
           freeSpecializationSkillsLeft,
         })
-        const dicePreview = getPositiveDicePoolPreview({
-          characteristicValue: actor.system.characteristics[skill.characteristics.id]?.value ?? 0,
-          skillRank: purchaseState.nextRank ?? total,
-        })
+        // Get characteristic ID (could be direct ID or object with id property)
+        const characteristicId = skill.characteristics?.id || skill.characteristics
+        const characteristicValue = characteristicId ? (actor.system.characteristics[characteristicId]?.rank.value ?? 0) : 0
+
+        const characteristicValueSkillRank = {
+          characteristicValue,
+          skillRank: total,
+        };
+        console.log(`Calculating dice preview for skill '${skill.label}' with characteristic value ${characteristicValue} and skill rank ${total}:`, characteristicValueSkillRank)
+        const dicePreview = getPositiveDicePoolPreview(characteristicValueSkillRank)
+        // Attach dicePreview to skillEnriched BEFORE preparing ranks
+        skillEnriched.dicePreview = dicePreview
         return {
           pips: this._prepareSkillRanks(skillEnriched),
           freeRank: this._prepareFreeSkill(actor, skill.id),
@@ -497,14 +507,28 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
 
   /**
    * Prepare the skill Ranks for the context
-   * If skill rank is equal or greater of the current pip value then it is filled otherwise it is empty
+   * Uses dicePreview to display ability dice (untrained/losange) and proficiency dice (trained/hexagone)
    * @param skill
-   * @returns {undefined}
+   * @returns {Array} Array of pip objects with appropriate cssClass
    */
   static _prepareSkillRanks(skill) {
-    return Array.from({ length: 5 }, (_, i) => ({
-      cssClass: i < skill.rank.value ? 'trained' : 'untrained',
-    }))
+    const abilityDice = skill.dicePreview?.ability ?? 0
+    const proficiencyDice = skill.dicePreview?.proficiency ?? 0
+    const totalDice = abilityDice + proficiencyDice
+
+    const pips = []
+
+    // Add ability dice (normal dice) as untrained pips
+    for (let i = 0; i < abilityDice; i++) {
+      pips.push({ cssClass: 'untrained' })
+    }
+
+    // Add proficiency dice (trained dice) as trained pips
+    for (let i = 0; i < proficiencyDice; i++) {
+      pips.push({ cssClass: 'trained' })
+    }
+
+    return pips
   }
 
   /**

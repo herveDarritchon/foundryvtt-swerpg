@@ -93,7 +93,7 @@
                         <a class="button icon fa-solid fa-caret-down {{#unless skill.canDecrease}}invisible{{/unless}}"
                            data-tooltip="Decrease Skill Rank" data-action="skillDecrease"></a>
                         <div class="pips flexrow">
-                            {{#each skill.pips}}<span class="pip {{this}}"></span>{{/each}}
+                            {{#each skill.pips}}<span class="pip {{this.cssClass}}"></span>{{/each}}
                         </div>
                         <a class="button icon fa-solid fa-caret-up {{#unless skill.canIncrease}}invisible{{/unless}}"
                            data-tooltip="Increase Skill Rank" data-action="skillIncrease"></a>

@@ -70,14 +70,12 @@ rg "data-tab=\"skills\""
 rg "skills-wrapper"
 rg "toggleTrainedSkill"
 rg "career-and-speciality"
-````
+```
 
 Objectif : trouver le template qui génère cette structure :
 
 ```html
-<section class="tab secondary skills flexcol scrollable" data-tab="skills">
-  ...
-</section>
+<section class="tab secondary skills flexcol scrollable" data-tab="skills">...</section>
 ```
 
 ## 1.2 Identifier la logique actuelle de clic sur les pips
@@ -93,23 +91,23 @@ rg "untrained"
 
 Comprendre :
 
-* comment le rang est actuellement calculé ;
-* comment le clic sur un pip modifie la compétence ;
-* si le coût XP est déjà calculé quelque part ;
-* si les achats gratuits carrière/spécialisation sont déjà gérés ;
-* si les validations d’achat sont côté client uniquement ou aussi côté modèle acteur.
+- comment le rang est actuellement calculé ;
+- comment le clic sur un pip modifie la compétence ;
+- si le coût XP est déjà calculé quelque part ;
+- si les achats gratuits carrière/spécialisation sont déjà gérés ;
+- si les validations d’achat sont côté client uniquement ou aussi côté modèle acteur.
 
 ## 1.3 Identifier la source des données de compétence
 
 Trouver où sont définis :
 
-* nom de compétence ;
-* caractéristique associée ;
-* rang actuel ;
-* statut carrière ;
-* statut spécialisation ;
-* coût éventuel ;
-* rang maximum.
+- nom de compétence ;
+- caractéristique associée ;
+- rang actuel ;
+- statut carrière ;
+- statut spécialisation ;
+- coût éventuel ;
+- rang maximum.
 
 Chercher :
 
@@ -129,30 +127,27 @@ rg "coreworlds"
 Dans le HTML actuel, la compétence ayant l’id `xenology` affiche incorrectement :
 
 ```html
-<span class="label">Piloting Planetary</span>
-<span class="abbreviation">(Int)</span>
+<span class="label">Piloting Planetary</span> <span class="abbreviation">(Int)</span>
 ```
 
 Elle doit afficher :
 
 ```html
-<span class="label">Xenology</span>
-<span class="abbreviation">(Int)</span>
+<span class="label">Xenology</span> <span class="abbreviation">(Int)</span>
 ```
 
 ou, si l’interface est localisée en français :
 
 ```html
-<span class="label">Xénologie</span>
-<span class="abbreviation">(Int)</span>
+<span class="label">Xénologie</span> <span class="abbreviation">(Int)</span>
 ```
 
 Action attendue :
 
-* trouver la donnée source de `xenology` ;
-* corriger son label ;
-* vérifier que `Piloting Planetary` n’est pas dupliqué dans les Lore Skills ;
-* ajouter ou mettre à jour un test si une structure de test existe.
+- trouver la donnée source de `xenology` ;
+- corriger son label ;
+- vérifier que `Piloting Planetary` n’est pas dupliqué dans les Lore Skills ;
+- ajouter ou mettre à jour un test si une structure de test existe.
 
 ---
 
@@ -238,9 +233,7 @@ par une structure plus explicite :
   </div>
 
   <div class="xp-console__selection" data-selected-skill-summary>
-    <span class="xp-console__selection-placeholder">
-      Select a skill to preview purchase cost.
-    </span>
+    <span class="xp-console__selection-placeholder"> Select a skill to preview purchase cost. </span>
   </div>
 </section>
 ```
@@ -253,19 +246,23 @@ Prévoir les états suivants :
 
 ```html
 <section class="xp-console is-idle">
-<section class="xp-console is-affordable">
-<section class="xp-console is-free">
-<section class="xp-console is-locked">
-<section class="xp-console is-error">
+  <section class="xp-console is-affordable">
+    <section class="xp-console is-free">
+      <section class="xp-console is-locked">
+        <section class="xp-console is-error"></section>
+      </section>
+    </section>
+  </section>
+</section>
 ```
 
 Signification :
 
-* `is-idle` : aucune compétence sélectionnée ;
-* `is-affordable` : achat possible avec XP ;
-* `is-free` : achat gratuit possible ;
-* `is-locked` : achat impossible ;
-* `is-error` : incohérence ou erreur de données.
+- `is-idle` : aucune compétence sélectionnée ;
+- `is-affordable` : achat possible avec XP ;
+- `is-free` : achat gratuit possible ;
+- `is-locked` : achat impossible ;
+- `is-error` : incohérence ou erreur de données.
 
 ---
 
@@ -275,13 +272,13 @@ Signification :
 
 Chaque ligne doit afficher les informations nécessaires à la décision :
 
-* nom ;
-* caractéristique ;
-* statut carrière/spécialisation ;
-* rang actuel ;
-* coût du prochain rang ;
-* état d’achat ;
-* pips interactifs.
+- nom ;
+- caractéristique ;
+- statut carrière/spécialisation ;
+- rang actuel ;
+- coût du prochain rang ;
+- état d’achat ;
+- pips interactifs.
 
 Exemple cible :
 
@@ -312,11 +309,9 @@ Structure cible recommandée :
 
   <div class="skill__tags">
     {{#if skill.isCareer}}
-      <span class="skill-tag skill-tag--career" data-tooltip="Career skill">C</span>
-    {{/if}}
-
-    {{#if skill.isSpecialization}}
-      <span class="skill-tag skill-tag--specialization" data-tooltip="Specialization skill">S</span>
+    <span class="skill-tag skill-tag--career" data-tooltip="Career skill">C</span>
+    {{/if}} {{#if skill.isSpecialization}}
+    <span class="skill-tag skill-tag--specialization" data-tooltip="Specialization skill">S</span>
     {{/if}}
   </div>
 
@@ -327,21 +322,15 @@ Structure cible recommandée :
 
   <div class="skill__cost">
     {{#if skill.isFreePurchase}}
-      <span class="skill-cost skill-cost--free">FREE</span>
+    <span class="skill-cost skill-cost--free">FREE</span>
     {{else}}
-      <span class="skill-cost">{{skill.nextCost}} XP</span>
+    <span class="skill-cost">{{skill.nextCost}} XP</span>
     {{/if}}
   </div>
 
   <div class="skill__pips" data-action="toggleTrainedSkill">
     {{#each skill.pips}}
-      <button
-        type="button"
-        class="pip {{this.state}}"
-        data-rank="{{this.rank}}"
-        data-tooltip="{{this.tooltip}}"
-        aria-label="{{this.ariaLabel}}"
-      ></button>
+    <button type="button" class="pip {{this.state}}" data-rank="{{this.rank}}" data-tooltip="{{this.tooltip}}" aria-label="{{this.ariaLabel}}"></button>
     {{/each}}
   </div>
 </div>
@@ -349,9 +338,9 @@ Structure cible recommandée :
 
 Si le template actuel doit rester stable, faire une première passe minimale :
 
-* conserver `.name`, `.career`, `.pips` ;
-* ajouter uniquement `.skill__rank` et `.skill__cost` ;
-* remplacer progressivement les classes anciennes ensuite.
+- conserver `.name`, `.career`, `.pips` ;
+- ajouter uniquement `.skill__rank` et `.skill__cost` ;
+- remplacer progressivement les classes anciennes ensuite.
 
 ## 4.3 Remplacer l’icône seule par des badges explicites
 
@@ -382,10 +371,10 @@ Implémenter une fonction unique de calcul du coût du prochain rang.
 
 Règle FFG Edge of the Empire à vérifier dans les données du système :
 
-* compétence de carrière : coût du prochain rang = prochain rang × 5 XP ;
-* compétence hors carrière : coût du prochain rang = prochain rang × 5 XP + 5 XP ;
-* rang maximum standard : 5 ;
-* pendant la création de personnage, certaines compétences de carrière ou spécialisation peuvent recevoir un rang gratuit.
+- compétence de carrière : coût du prochain rang = prochain rang × 5 XP ;
+- compétence hors carrière : coût du prochain rang = prochain rang × 5 XP + 5 XP ;
+- rang maximum standard : 5 ;
+- pendant la création de personnage, certaines compétences de carrière ou spécialisation peuvent recevoir un rang gratuit.
 
 Exemples :
 
@@ -405,14 +394,14 @@ Créer une fonction du type :
 
 ```js
 export function getSkillNextRankCost({ rank, isCareer, maxRank = 5 }) {
-  const nextRank = rank + 1;
+  const nextRank = rank + 1
 
   if (nextRank > maxRank) {
-    return null;
+    return null
   }
 
-  const baseCost = nextRank * 5;
-  return isCareer ? baseCost : baseCost + 5;
+  const baseCost = nextRank * 5
+  return isCareer ? baseCost : baseCost + 5
 }
 ```
 
@@ -421,58 +410,50 @@ export function getSkillNextRankCost({ rank, isCareer, maxRank = 5 }) {
 Créer une fonction du type :
 
 ```js
-export function getSkillPurchaseState({
-  rank,
-  isCareer,
-  isSpecialization,
-  availableXp,
-  freeCareerSkillsLeft,
-  freeSpecializationSkillsLeft,
-  maxRank = 5
-}) {
-  const nextRank = rank + 1;
-  const nextCost = getSkillNextRankCost({ rank, isCareer, maxRank });
+export function getSkillPurchaseState({ rank, isCareer, isSpecialization, availableXp, freeCareerSkillsLeft, freeSpecializationSkillsLeft, maxRank = 5 }) {
+  const nextRank = rank + 1
+  const nextCost = getSkillNextRankCost({ rank, isCareer, maxRank })
 
   if (nextCost === null) {
     return {
       canPurchase: false,
       isFreePurchase: false,
-      reason: "MAX_RANK",
+      reason: 'MAX_RANK',
       nextRank,
-      nextCost: null
-    };
+      nextCost: null,
+    }
   }
 
-  const canUseCareerFreeRank = isCareer && freeCareerSkillsLeft > 0 && rank === 0;
-  const canUseSpecializationFreeRank = isSpecialization && freeSpecializationSkillsLeft > 0 && rank === 0;
+  const canUseCareerFreeRank = isCareer && freeCareerSkillsLeft > 0 && rank === 0
+  const canUseSpecializationFreeRank = isSpecialization && freeSpecializationSkillsLeft > 0 && rank === 0
 
   if (canUseCareerFreeRank || canUseSpecializationFreeRank) {
     return {
       canPurchase: true,
       isFreePurchase: true,
-      reason: "FREE_RANK_AVAILABLE",
+      reason: 'FREE_RANK_AVAILABLE',
       nextRank,
-      nextCost: 0
-    };
+      nextCost: 0,
+    }
   }
 
   if (availableXp >= nextCost) {
     return {
       canPurchase: true,
       isFreePurchase: false,
-      reason: "AFFORDABLE",
+      reason: 'AFFORDABLE',
       nextRank,
-      nextCost
-    };
+      nextCost,
+    }
   }
 
   return {
     canPurchase: false,
     isFreePurchase: false,
-    reason: "INSUFFICIENT_XP",
+    reason: 'INSUFFICIENT_XP',
     nextRank,
-    nextCost
-  };
+    nextCost,
+  }
 }
 ```
 
@@ -488,14 +469,14 @@ Le rang de compétence ne correspond pas directement à une couleur de dé.
 
 Le pool dépend de :
 
-* la valeur de caractéristique ;
-* le rang de compétence.
+- la valeur de caractéristique ;
+- le rang de compétence.
 
 Principe :
 
-* le plus haut des deux donne le nombre total de dés positifs ;
-* le plus bas donne le nombre de dés améliorés en dés jaunes ;
-* les dés restants sont des dés verts.
+- le plus haut des deux donne le nombre total de dés positifs ;
+- le plus bas donne le nombre de dés améliorés en dés jaunes ;
+- les dés restants sont des dés verts.
 
 Exemples :
 
@@ -511,14 +492,14 @@ Agilité 3 + Distance légère 4 = 3 jaunes + 1 vert
 
 ```js
 export function getPositiveDicePoolPreview({ characteristicValue, skillRank }) {
-  const totalDice = Math.max(characteristicValue, skillRank);
-  const proficiencyDice = Math.min(characteristicValue, skillRank);
-  const abilityDice = totalDice - proficiencyDice;
+  const totalDice = Math.max(characteristicValue, skillRank)
+  const proficiencyDice = Math.min(characteristicValue, skillRank)
+  const abilityDice = totalDice - proficiencyDice
 
   return {
     ability: abilityDice,
-    proficiency: proficiencyDice
-  };
+    proficiency: proficiencyDice,
+  }
 }
 ```
 
@@ -570,11 +551,11 @@ Au `mouseleave`, deux options :
 
 Option A, simple :
 
-* la console revient à l’état idle.
+- la console revient à l’état idle.
 
 Option B, meilleure UX :
 
-* la dernière compétence sélectionnée reste affichée jusqu’à ce qu’une autre soit survolée.
+- la dernière compétence sélectionnée reste affichée jusqu’à ce qu’une autre soit survolée.
 
 Recommandation : Option B.
 
@@ -582,13 +563,13 @@ Recommandation : Option B.
 
 Avant de modifier la compétence :
 
-* vérifier si le rang ciblé est valide ;
-* vérifier si l’achat est possible ;
-* vérifier s’il s’agit d’un achat gratuit ;
-* afficher une notification si impossible ;
-* appliquer la dépense ou le rang gratuit ;
-* mettre à jour l’acteur ;
-* rafraîchir la feuille.
+- vérifier si le rang ciblé est valide ;
+- vérifier si l’achat est possible ;
+- vérifier s’il s’agit d’un achat gratuit ;
+- afficher une notification si impossible ;
+- appliquer la dépense ou le rang gratuit ;
+- mettre à jour l’acteur ;
+- rafraîchir la feuille.
 
 Pseudo-code :
 
@@ -694,8 +675,7 @@ Créer un bloc LESS dédié :
     border: 1px solid fade(@color-glow, 28%);
     border-radius: 4px;
     background:
-      linear-gradient(90deg, fade(@color-bg-dark, 82%), fade(@color-bg, 62%)),
-      radial-gradient(circle at 50% 0%, fade(@color-glow, 14%), transparent 58%);
+      linear-gradient(90deg, fade(@color-bg-dark, 82%), fade(@color-bg, 62%)), radial-gradient(circle at 50% 0%, fade(@color-glow, 14%), transparent 58%);
     box-shadow:
       inset 0 0 18px fade(@color-glow, 8%),
       0 0 12px fade(@color-glow, 8%);
@@ -967,19 +947,19 @@ Résultat attendu: label Xenology ou Xénologie
 
 L’implémentation est considérée comme correcte si :
 
-* l’onglet Skills reste visuellement cohérent avec le thème Star Wars/datapad ;
-* le bandeau XP est lisible et central ;
-* chaque compétence affiche son coût de prochain rang ;
-* les compétences carrière et spécialisation sont identifiables sans ambiguïté ;
-* les achats gratuits sont visibles ;
-* les achats impossibles sont visuellement différenciés ;
-* le clic sur un pip ne permet pas d’achat invalide ;
-* les XP sont correctement décrémentées lors d’un achat payant ;
-* les compteurs gratuits sont correctement décrémentés lors d’un achat gratuit ;
-* `xenology` n’affiche plus `Piloting Planetary` ;
-* aucun autre onglet de la feuille acteur n’est impacté ;
-* les tests unitaires passent si le projet en possède ;
-* le rendu reste correct sur la largeur actuelle de la feuille.
+- l’onglet Skills reste visuellement cohérent avec le thème Star Wars/datapad ;
+- le bandeau XP est lisible et central ;
+- chaque compétence affiche son coût de prochain rang ;
+- les compétences carrière et spécialisation sont identifiables sans ambiguïté ;
+- les achats gratuits sont visibles ;
+- les achats impossibles sont visuellement différenciés ;
+- le clic sur un pip ne permet pas d’achat invalide ;
+- les XP sont correctement décrémentées lors d’un achat payant ;
+- les compteurs gratuits sont correctement décrémentés lors d’un achat gratuit ;
+- `xenology` n’affiche plus `Piloting Planetary` ;
+- aucun autre onglet de la feuille acteur n’est impacté ;
+- les tests unitaires passent si le projet en possède ;
+- le rendu reste correct sur la largeur actuelle de la feuille.
 
 ---
 
@@ -989,57 +969,56 @@ Ne pas tout faire en une seule passe.
 
 ## Étape 1 — Sécurisation
 
-* Identifier les fichiers.
-* Corriger `xenology`.
-* Ajouter les fonctions pures de coût et de preview.
-* Ajouter les tests unitaires si possible.
+- Identifier les fichiers.
+- Corriger `xenology`.
+- Ajouter les fonctions pures de coût et de preview.
+- Ajouter les tests unitaires si possible.
 
 ## Étape 2 — UX minimale
 
-* Ajouter le coût du prochain rang dans chaque ligne.
-* Ajouter les badges `C` et `S`.
-* Ajouter les classes d’état :
-
-    * `is-free`
-    * `is-affordable`
-    * `is-locked`
-    * `is-max-rank`
+- Ajouter le coût du prochain rang dans chaque ligne.
+- Ajouter les badges `C` et `S`.
+- Ajouter les classes d’état :
+  - `is-free`
+  - `is-affordable`
+  - `is-locked`
+  - `is-max-rank`
 
 ## Étape 3 — Console XP
 
-* Remplacer le bandeau actuel par `xp-console`.
-* Brancher les valeurs existantes.
-* Mettre à jour la console au survol ou focus d’une compétence.
+- Remplacer le bandeau actuel par `xp-console`.
+- Brancher les valeurs existantes.
+- Mettre à jour la console au survol ou focus d’une compétence.
 
 ## Étape 4 — Achat contrôlé
 
-* Intercepter les clics sur les pips.
-* Vérifier les conditions d’achat.
-* Appliquer coût XP ou rang gratuit.
-* Afficher les notifications d’erreur.
+- Intercepter les clics sur les pips.
+- Vérifier les conditions d’achat.
+- Appliquer coût XP ou rang gratuit.
+- Afficher les notifications d’erreur.
 
 ## Étape 5 — Dice preview
 
-* Ajouter la fonction de pool.
-* Ajouter le rendu compact du pool positif.
-* Ne pas bloquer l’intégration principale si cette étape dépend d’une donnée manquante.
+- Ajouter la fonction de pool.
+- Ajouter le rendu compact du pool positif.
+- Ne pas bloquer l’intégration principale si cette étape dépend d’une donnée manquante.
 
 ---
 
 # Notes importantes pour OpenCode
 
-* Ne pas inventer une nouvelle structure de données si le système possède déjà une logique d’XP ou de compétences.
-* Réutiliser les propriétés existantes du modèle acteur autant que possible.
-* Si une propriété manque, ajouter une couche de préparation des données dans `getData()` ou équivalent plutôt que de mettre de la logique complexe dans le template.
-* La logique métier doit rester côté JS/modèle, pas dans le Handlebars.
-* Le template ne doit recevoir que des données prêtes à afficher :
+- Ne pas inventer une nouvelle structure de données si le système possède déjà une logique d’XP ou de compétences.
+- Réutiliser les propriétés existantes du modèle acteur autant que possible.
+- Si une propriété manque, ajouter une couche de préparation des données dans `getData()` ou équivalent plutôt que de mettre de la logique complexe dans le template.
+- La logique métier doit rester côté JS/modèle, pas dans le Handlebars.
+- Le template ne doit recevoir que des données prêtes à afficher :
+  - `nextCost`
+  - `nextRank`
+  - `canPurchase`
+  - `isFreePurchase`
+  - `purchaseReason`
+  - `dicePreview`
 
-    * `nextCost`
-    * `nextRank`
-    * `canPurchase`
-    * `isFreePurchase`
-    * `purchaseReason`
-    * `dicePreview`
-* Les styles doivent rester confinés à `.swerpg .tab.skills` pour éviter les effets de bord.
+- Les styles doivent rester confinés à `.swerpg .tab.skills` pour éviter les effets de bord.
 
 Point critique : ne laisse pas OpenCode commencer par la partie “dice preview”. C’est séduisant, mais ce n’est pas le cœur. Le vrai gain UX vient d’abord du coût, des états d’achat et de la console XP.

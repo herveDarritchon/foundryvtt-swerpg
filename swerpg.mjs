@@ -463,7 +463,7 @@ Hooks.once('ready', async function () {
   const welcome = game.settings.get('swerpg', 'welcome')
   if (!welcome) {
     const entry = await fromUuid('Compendium.swerpg.rules.JournalEntry.5SgXrAKS2EnqVggJ')
-    entry.sheet.render(true)
+    //entry.sheet.render(true)
     game.settings.set('swerpg', 'welcome', true)
   }
   // FIXME bring this back with a migration version
