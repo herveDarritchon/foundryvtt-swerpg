@@ -31,15 +31,7 @@ export function getSkillNextRankCost({ rank, isCareer, maxRank = 5 }) {
  * @param {number} [params.maxRank=5] - Maximum rank allowed
  * @returns {Object} Purchase state
  */
-export function getSkillPurchaseState({
-  rank,
-  isCareer,
-  isSpecialization,
-  availableXp,
-  freeCareerSkillsLeft,
-  freeSpecializationSkillsLeft,
-  maxRank = 5,
-}) {
+export function getSkillPurchaseState({ rank, isCareer, isSpecialization, availableXp, freeCareerSkillsLeft, freeSpecializationSkillsLeft, maxRank = 5 }) {
   const nextRank = rank + 1
   const nextCost = getSkillNextRankCost({ rank, isCareer, maxRank })
 
@@ -54,8 +46,7 @@ export function getSkillPurchaseState({
   }
 
   const canUseCareerFreeRank = isCareer && freeCareerSkillsLeft > 0 && rank === 0
-  const canUseSpecializationFreeRank =
-    isSpecialization && freeSpecializationSkillsLeft > 0 && rank === 0
+  const canUseSpecializationFreeRank = isSpecialization && freeSpecializationSkillsLeft > 0 && rank === 0
 
   if (canUseCareerFreeRank || canUseSpecializationFreeRank) {
     return {
