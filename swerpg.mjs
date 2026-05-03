@@ -84,77 +84,13 @@ Hooks.once('init', async function () {
     hooks,
   }
 
-  //     /**
-  //  * Configurable properties of the system which affect its behavior.
-  //  */
-  // crucible.CONFIG = {
-  //     /**
-  //      * Configured setting-specific currency denominations.
-  //      * @type {Record{string, CrucibleCurrencyDenomination}
-  //      * @see @link{SYSTEM.ACTOR.CURRENCY_DENOMINATIONS}
-  //      */
-  //     currency: foundry.utils.deepClone(SYSTEM.ACTOR.CURRENCY_DENOMINATIONS),
-  //
-  //     /**
-  //      * Configuration of compendium packs which are used as sources for system workflows.
-  //      * @type {Record<string, Set<string>>}
-  //      */
-  //     packs: {
-  //         ancestry: new Set([SYSTEM.COMPENDIUM_PACKS.ancestry]),
-  //         background: new Set([SYSTEM.COMPENDIUM_PACKS.background]),
-  //         spell: new Set([SYSTEM.COMPENDIUM_PACKS.spell]),
-  //         talent: new Set([SYSTEM.COMPENDIUM_PACKS.talent]),
-  //     },
-  //     /**
-  //      * The character creation sheet class which should be registered
-  //      * @type {typeof applications.CrucibleHeroCreationSheet}
-  //      */
-  //     heroCreationSheet: applications.CrucibleHeroCreationSheet,
-  //
-  //     /**
-  //      * The knowledge topics configured for the system.
-  //      * @type {Record<string, CrucibleKnowledgeConfig>}
-  //      */
-  //     knowledge: foundry.utils.deepClone(SYSTEM.SKILL.DEFAULT_KNOWLEDGE),
-  //
-  //     /**
-  //      * The categories a language can belong to.
-  //      * @type {Record<string, {label: string}}
-  //      */
-  //     languageCategories: foundry.utils.deepClone(SYSTEM.ACTOR.LANGUAGE_CATEGORIES),
-  //
-  //     /**
-  //      * The languages a creature can know.
-  //      * @type {Record<string, {label: string, category?: string}>}
-  //      */
-  //     languages: foundry.utils.deepClone(SYSTEM.ACTOR.LANGUAGES)
-  // };
-  // /** @deprecated */
-  // crucible.CONFIG.ancestryPacks = crucible.CONFIG.packs.ancestry;
-  //
-  // /**
-  //  * The primary party of player characters.
-  //  * @type {CrucibleActor|null}
-  //  */
-  // Object.defineProperty(crucible, "party", {
-  //     get() {
-  //         return party;
-  //     }
-  // });
-
   // Actor document configuration
   CONFIG.Actor.documentClass = documents.SwerpgActor
   CONFIG.Actor.dataModels = {
     adversary: models.SwerpgAdversary,
-    hero: models.SwerpgHero,
     character: models.SwerpgCharacter,
   }
   foundry.documents.collections.Actors.unregisterSheet('core', foundry.appv1.sheets.ActorSheet)
-  foundry.documents.collections.Actors.registerSheet(SYSTEM.id, applications.HeroSheet, {
-    types: ['character'],
-    label: 'SWERPG.SHEETS.Character',
-    makeDefault: true,
-  })
   foundry.documents.collections.Actors.registerSheet(SYSTEM.id, applications.CharacterSheet, {
     types: ['character'],
     label: 'SWERPG.SHEETS.Character',
