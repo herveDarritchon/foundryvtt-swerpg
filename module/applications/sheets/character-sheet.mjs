@@ -477,7 +477,6 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
           characteristicValue,
           skillRank: total,
         };
-        console.log(`Calculating dice preview for skill '${skill.label}' with characteristic value ${characteristicValue} and skill rank ${total}:`, characteristicValueSkillRank)
         const dicePreview = getPositiveDicePoolPreview(characteristicValueSkillRank)
         // Attach dicePreview to skillEnriched BEFORE preparing ranks
         skillEnriched.dicePreview = dicePreview
