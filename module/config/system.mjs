@@ -32,15 +32,9 @@ export const ANCESTRIES = {
  * @enum {string}
  */
 export const COMPENDIUM_PACKS = {
-  ancestry: 'swerpg.ancestry',
-  archetype: 'swerpg.archetype',
   background: 'swerpg.background',
   origin: 'swerpg.origin',
-  spell: 'swerpg.spells',
-  spellExtensions: null,
   talent: 'swerpg.talent',
-  talentExtensions: null,
-  taxonomy: 'swerpg.taxonomy',
 }
 
 /* -------------------------------------------- */
@@ -104,10 +98,6 @@ export const ACTOR_HOOKS = Object.freeze({
     group: 'TALENT.HOOKS.GROUP_ACTION',
     argNames: ['action', 'origin', 'rollData'],
   },
-  defendSpellAttack: {
-    group: 'TALENT.HOOKS.GROUP_ACTION',
-    argNames: ['spell', 'origin', 'rollData'],
-  },
   defendWeaponAttack: {
     group: 'TALENT.HOOKS.GROUP_ACTION',
     argNames: ['action', 'origin', 'rollData'],
@@ -149,10 +139,6 @@ export const ACTOR_HOOKS = Object.freeze({
   prepareSkillAttack: {
     group: 'TALENT.HOOKS.GROUP_PREPARATION',
     argNames: ['action', 'target', 'rollData'],
-  },
-  prepareSpellAttack: {
-    group: 'TALENT.HOOKS.GROUP_PREPARATION',
-    argNames: ['spell', 'target', 'rollData'],
   },
   prepareTraining: {
     group: 'TALENT.HOOKS.GROUP_PREPARATION',

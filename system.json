@@ -137,12 +137,6 @@
       "adversary": {}
     },
     "Item": {
-      "ancestry": {
-        "htmlFields": ["description"]
-      },
-      "archetype": {
-        "htmlFields": ["description"]
-      },
       "armor": {
         "htmlFields": ["description.public", "description.secret"]
       },
@@ -167,13 +161,7 @@
       "species": {
         "htmlFields": ["description"]
       },
-      "spell": {
-        "htmlFields": ["description"]
-      },
       "talent": {
-        "htmlFields": ["description"]
-      },
-      "taxonomy": {
         "htmlFields": ["description"]
       },
       "weapon": {
@@ -183,9 +171,6 @@
         "htmlFields": ["description"]
       },
       "motivation": {
-        "htmlFields": ["description"]
-      },
-      "duty": {
         "htmlFields": ["description"]
       }
     },

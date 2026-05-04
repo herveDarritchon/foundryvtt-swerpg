@@ -404,7 +404,6 @@
       "RESISTANCES": "The chosen Resistance and Vulnerability for an Ancestry may not be the same."
     }
   },
-  "ANCESTRY.ApplyError": "You may only apply an ancestry to a level 0 character with no spent skill or ability points.",
   "ACTION.Action": "Action",
   "ACTION.Condition": "Condition",
   "ACTION.Targets": "Targets",

@@ -32,7 +32,7 @@ describe('System Configuration', () => {
 
   describe('COMPENDIUM_PACKS configuration', () => {
     test('should have all required compendium packs defined', () => {
-      const expectedPacks = ['ancestry', 'archetype', 'background', 'origin', 'spell', 'spellExtensions', 'talent', 'talentExtensions', 'taxonomy']
+      const expectedPacks = ['background', 'origin', 'talent']
 
       for (const packKey of expectedPacks) {
         expect(SystemConfig.COMPENDIUM_PACKS).toHaveProperty(packKey)
@@ -40,18 +40,9 @@ describe('System Configuration', () => {
     })
 
     test('should have correct pack identifiers for main packs', () => {
-      expect(SystemConfig.COMPENDIUM_PACKS.ancestry).toBe('swerpg.ancestry')
-      expect(SystemConfig.COMPENDIUM_PACKS.archetype).toBe('swerpg.archetype')
       expect(SystemConfig.COMPENDIUM_PACKS.background).toBe('swerpg.background')
       expect(SystemConfig.COMPENDIUM_PACKS.origin).toBe('swerpg.origin')
-      expect(SystemConfig.COMPENDIUM_PACKS.spell).toBe('swerpg.spells')
       expect(SystemConfig.COMPENDIUM_PACKS.talent).toBe('swerpg.talent')
-      expect(SystemConfig.COMPENDIUM_PACKS.taxonomy).toBe('swerpg.taxonomy')
-    })
-
-    test('should have null values for extension packs', () => {
-      expect(SystemConfig.COMPENDIUM_PACKS.spellExtensions).toBeNull()
-      expect(SystemConfig.COMPENDIUM_PACKS.talentExtensions).toBeNull()
     })
   })
 
@@ -139,7 +130,6 @@ describe('System Configuration', () => {
         'prepareWeaponAttack',
         'applyCriticalEffects',
         'defendSkillAttack',
-        'defendSpellAttack',
         'defendWeaponAttack',
         'applyActionOutcome',
       ]
@@ -162,6 +152,7 @@ describe('System Configuration', () => {
         'prepareResistances',
         'prepareSkillCheck',
         'prepareSkillAttack',
+        'prepareTraining',
       ]
 
       for (const hookName of preparationHooks) {

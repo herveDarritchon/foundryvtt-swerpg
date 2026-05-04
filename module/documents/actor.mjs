@@ -1021,8 +1021,6 @@ export default class SwerpgActor extends Actor {
 
     // Call talent hooks
     this.callActorHooks('prepareStandardCheck', rollData)
-    this.callActorHooks('prepareSpellAttack', spell, target, rollData)
-    target.callActorHooks('defendSpellAttack', spell, this, rollData)
 
     // Create the Attack Roll instance
     const roll = new AttackRoll(rollData)
