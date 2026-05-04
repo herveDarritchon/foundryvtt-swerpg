@@ -6,19 +6,13 @@
       "npc": "Non-Player Character"
     },
     "Item": {
-      "ancestry": "Ancestry",
-      "archetype": "Archetype",
       "armor": "Armor",
-      "background": "Background",
       "career": "Career",
       "duty": "Duty",
       "gear": "Gear",
       "obligation": "Obligation",
-      "origin": "Origin",
       "specialization": "Specialization",
       "species": "Species",
-      "spell": "Iconic Spell",
-      "taxonomy": "Taxonomy",
       "talent": "Talent",
       "weapon": "Weapon"
     },
@@ -224,7 +218,6 @@
       "SKILLS": "Skills",
       "TALENTS": "Talents",
       "INVENTORY": "Inventory",
-      "SPELLS": "Spells",
       "BIOGRAPHY": "Biography",
       "COMMITMENTS": "Commitments"
     },
@@ -241,51 +234,7 @@
     "NO_EQUIPMENT": "No equipped items",
     "TOGGLE": "Toggle Equipment"
   },
-  "ANCESTRY": {
-    "FIELDS": {
-      "description": {
-        "label": "Ancestry Description"
-      },
-      "size": {
-        "label": "Size",
-        "hint": "The size of this ancestry in grid spaces."
-      },
-      "stride": {
-        "label": "Stride",
-        "hint": "The starting movement speed of this Ancestry in grid spaces."
-      },
-      "primary": {
-        "label": "Primary Ability",
-        "hint": "Select a primary ability score which begins at 3."
-      },
-      "secondary": {
-        "label": "Secondary Ability",
-        "hint": "Select a secondary ability score which begins at 2."
-      },
-      "resistance": {
-        "label": "Damage Resistance",
-        "hint": "A biological Resistance (+5) to a certain damage type."
-      },
-      "vulnerability": {
-        "label": "Damage Vulnerability",
-        "hint": "A biological Vulnerability (-5) to a certain damage type."
-      }
-    },
-    "SHEET": {
-      "BROWSE": "Browse Ancestries",
-      "CHOOSE": "Choose Ancestry",
-      "CLEAR": "Clear Ancestry",
-      "ABILITIES": "Ability Scores",
-      "RESISTANCES": "Resistances and Vulnerabilities",
-      "RESISTANCE_HINT": "You must choose both a Resistance and a Vulnerability if you select either.",
-      "STATURE": "Ancestry Stature"
-    },
-    "WARNINGS": {
-      "ABILITIES": "The primary and secondary Abilities for an Ancestry may not be the same.",
-      "RESISTANCES": "The chosen Resistance and Vulnerability for an Ancestry may not be the same."
-    }
-  },
-  "ANCESTRY.ApplyError": "You may only apply an ancestry to a level 0 character with no spent skill or ability points.",
+
   "ACTION.Action": "Action",
   "ACTION.Condition": "Condition",
   "ACTION.Targets": "Targets",
@@ -366,8 +315,6 @@
   "ACTION.TagReloadTooltip": "This action reloads a ranged weapon which requires reloading.",
   "ACTION.TagShield": "Shield",
   "ACTION.TagShieldTooltip": "This action requires wielding a shield to perform.",
-  "ACTION.TagSpell": "Spell",
-  "ACTION.TagSpellTooltip": "This action involves spellcraft.",
   "ACTION.TagSkill": "Skill",
   "ACTION.TagSkillTooltip": "This action involves a targeted or opposed Skill check.",
   "ACTION.TagSummon": "Summon",
@@ -380,8 +327,6 @@
   "ACTION.TagUnarmedTooltip": "This action requires you to be fully unarmed in order to perform.",
   "ACTION.TagUnarmored": "Unarmored",
   "ACTION.TagUnarmoredTooltip": "This action requires you to be unarmored in order to perform.",
-  "ACTION.TagIconicSpell": "Iconic Spell",
-  "ACTION.TagIconicSpellTooltip": "This action is an Iconic Spell learned through mastery of its components.",
   "ACTION.TagTargetTooltip": "The target type, distance, and number which applies to this action.",
   "ACTION.TagCostTooltip": "The Action Point or Focus Point cost of using this action.",
   "ACTION.ACTIONS": {
@@ -390,25 +335,6 @@
   },
   "ADVANCEMENT.Level": "Level",
   "ADVANCEMENT.Progress": "Milestone Progress",
-  "ARCHETYPE": {
-    "FIELDS": {
-      "abilities": {
-        "label": "Ability Scaling",
-        "hint": "Define how the ability scores for creatures of this Archetype scale as they advance in level. Allocate 18 points across all Ability scores. Each ability score must be between zero and 8. Adversaries will increase their abilities by 1 point each level. Scores with a higher value advance more frequently."
-      },
-      "talents": {
-        "label": "Granted Talents",
-        "hint": "Configure one or more talents which this Archetype receives automatically."
-      }
-    },
-    "SHEET": {
-      "CHOOSE": "Choose Archetype",
-      "CLEAR": "Clear Archetype",
-      "TALENT_ADD": "Add Talent",
-      "TALENT_REMOVE": "Remove Talent",
-      "TALENT_DROP": "Add a talent to this Archetype by dragging and dropping from the Talents compendium pack."
-    }
-  },
   "ARMOR": {
     "FIELDS": {
       "defense": {
@@ -462,35 +388,6 @@
   "ATTRIBUTES.Pools": "Resource Pools",
   "ATTRIBUTES.Resistances": "Damage Resistances",
   "BIOGRAPHY.eyes": "Eyes",
-  "BACKGROUND": {
-    "FIELDS": {
-      "description": {
-        "label": "Background Description"
-      },
-      "skills": {
-        "label": "Acquired Skills",
-        "hint": "Choose four skills which were acquired as part of your Background, each of which will begin at Novice rank."
-      },
-      "talents": {
-        "label": "Acquired Talents",
-        "hint": "Configure one or more talents which this Background receives automatically."
-      }
-    },
-    "SHEET": {
-      "BROWSE": "Browse Backgrounds",
-      "CLEAR": "Clear Background",
-      "CHOOSE": "Choose Background",
-      "TALENT_ADD": "Add Talent",
-      "TALENT_REMOVE": "Remove Talent",
-      "TALENT_DROP": "Add a talent to this Background by dragging and dropping from the Talents compendium pack."
-    },
-    "ERRORS": {
-      "APPLY": "You may only apply a background to a level 0 character with no spent skill points.",
-      "SKILLS_NUMBER": "A Background must not provide more than four acquired Skills.",
-      "TALENT_NUMBER": "A Background may contain a maximum of one starting Talent.",
-      "TALENT_TIER": "Backgrounds may only offer Tier 0 starting Talents."
-    }
-  },
   "CAREER": {
     "FIELDS": {
       "FreeSkill": "Free Skill",
@@ -682,36 +579,6 @@
       "extraXp": {
         "label": "Extra Experience",
         "hint": "The amount of extra experience which the character receives for taking on this obligation."
-      }
-    }
-  },
-  "ORIGIN": {
-    "SHEET": {
-      "CHOOSE": "Choose Origin",
-      "SKILLS": {
-        "title": "Skill modifications",
-        "add": {
-          "tooltip": {
-            "label": "Add a skill modification",
-            "direction": "LEFT"
-          }
-        },
-        "decrease": {
-          "tooltip": {
-            "label": "Decrease skill modification value",
-            "direction": "DOWN"
-          }
-        },
-        "empty": "No skill modifications",
-        "hint": "Select a skill to modify and provide a value which will be added to the base skill value then click the + button.",
-        "increase": {
-          "tooltip": {
-            "label": "Increase skill modification value",
-            "direction": "UP"
-          }
-        },
-        "base": "Base",
-        "max": "Max"
       }
     }
   },
@@ -956,7 +823,7 @@
       },
       "stride": {
         "label": "Stride",
-        "hint": "The starting movement speed of this Ancestry in grid spaces."
+        "hint": "The starting movement speed of this Species in grid spaces."
       },
       "primary": {
         "label": "Primary Ability",
@@ -998,12 +865,12 @@
       "RESISTANCE_HINT": "You must choose both a Resistance and a Vulnerability if you select either.",
       "SpecialAbility": "Special Ability",
       "StartingExperience": "Starting Experience",
-      "STATURE": "Ancestry Stature",
+      "STATURE": "Species Stature",
       "Threshold": "Threshold Scores"
     },
     "WARNINGS": {
-      "ABILITIES": "The primary and secondary Abilities for an Ancestry may not be the same.",
-      "RESISTANCES": "The chosen Resistance and Vulnerability for an Ancestry may not be the same."
+      "ABILITIES": "The primary and secondary Abilities for a Species may not be the same.",
+      "RESISTANCES": "The chosen Resistance and Vulnerability for a Species may not be the same."
     }
   },
   "TALENT": {
@@ -1036,20 +903,13 @@
         "hint": "This Talent may be purchased multiple times, each time increasing its effectiveness."
       },
       "rune": {
-        "label": "Rune",
-        "hint": "Obtaining this talent grants knowledge of a specific spellcraft Rune."
+        "label": "Rune"
       },
       "gesture": {
-        "label": "Gesture",
-        "hint": "Obtaining this talent grants knowledge of a specific spellcraft Gesture."
+        "label": "Gesture"
       },
       "inflection": {
-        "label": "Inflection",
-        "hint": "Obtaining this talent grants knowledge of a specific spellcraft Inflection."
-      },
-      "iconicSpells": {
-        "label": "Iconic Spells",
-        "hint": "A number of Iconic Spell slots that are granted by this Talent."
+        "label": "Inflection"
       },
       "actorHooks": {
         "label": "Hooked Functions",
@@ -1090,41 +950,6 @@
     "AdversaryAbbr": "Adv",
     "ConvincingDemeanor": "Convincing Demeanor",
     "ConvincingDemeanorAbbr": "Cdr"
-  },
-  "TAXONOMY": {
-    "FIELDS": {
-      "abilities": {
-        "label": "Base Abilities",
-        "hint": "Define the initial ability scores for creatures with this Taxonomy. Allocate 18 points across all Ability scores. Each ability score must be between zero and 8."
-      },
-      "category": {
-        "label": "Category",
-        "hint": "The category of creature that this Taxonomy belongs to."
-      },
-      "resistances": {
-        "label": "Resistance Scaling",
-        "hint": "Define how the resistances and vulnerabilities for creatures of this Taxonomy scale as they advance in level. Assign values to each resistance between -3 (most vulnerable) and +3 (most resistant). Damage types set to zero are neither resistant nor vulnerable. The total across all resistances must sum to zero."
-      },
-      "size": {
-        "label": "Size"
-      },
-      "stride": {
-        "label": "Stride"
-      }
-    },
-    "CATEGORIES": {
-      "BEAST": "Beast",
-      "ELEMENTAL": "Elemental",
-      "GIANT": "Giant",
-      "HUMANOID": "Humanoid",
-      "OUTSIDER": "Outsider",
-      "UNDEAD": "Undead"
-    },
-    "SHEET": {
-      "CHOOSE": "Choose Taxonomy",
-      "CLEAR": "Clear Taxonomy",
-      "STATURE": "Taxonomy Stature"
-    }
   },
   "WEAPON": {
     "QUALITIES": {
@@ -1270,17 +1095,12 @@
   },
   "WARNING.AbilityCannotIncrease": "You cannot increase this Ability further.",
   "WARNING.AbilityCannotDecrease": "You cannot decrease this Ability further.",
-  "WARNING.AbilityRequireAncestry": "You must assign an Ancestry before you can purchase Ability trained.",
   "WARNING.CannotEquipSlotInUse": "Actor {actor} cannot equip {item} because the {type} item slot is already in use.",
   "WARNING.CannotEquipActionCost": "You cannot equip weaponry because you have no Action points available.",
   "WARNING.CannotEquipInvalidCategory": "Actor {actor} cannot use {item} in the {type} equipment slot.",
-  "WARNING.SkillRequireAncestryBackground": "You must assign both Ancestry and Background before you can purchase Skill ranks.",
   "WALKTHROUGH.AddSpecies": "Choose a Species from the Compendium or Items sidebar and add it via drag-and-drop.",
   "WALKTHROUGH.AddCareer": "Choose a Career from the Compendium or Items sidebar and add it via drag-and-drop.",
   "WALKTHROUGH.AddSpecialization": "Choose a Specialization from the Compendium or Items sidebar and add it via drag-and-drop.",
-  "WALKTHROUGH.AddBackground": "Choose a Background from the Compendium or Items sidebar and add it via drag-and-drop.",
-  "WALKTHROUGH.ConfigureArchetype": "Configure an Archetype for this adversary.",
-  "WALKTHROUGH.ConfigureTaxonomy": "Configure a Taxonomy for this adversary.",
   "WALKTHROUGH.AbilityPoints": "Spend available Ability Points by increasing your Ability scores.",
   "WALKTHROUGH.SkillPoints": "Spend available Skill Points by increasing your Skill ranks.",
   "WALKTHROUGH.TalentPoints": "Spend available Talent Points by opening the Talent Tree.",
