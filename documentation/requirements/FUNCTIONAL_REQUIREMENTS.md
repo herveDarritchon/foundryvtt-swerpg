@@ -348,4 +348,4 @@ Ce document classe les exigences fonctionnelles selon la méthode MoSCoW :
 - **Documentation API** : [Foundry VTT v13 API](https://foundryvtt.com/api/v13/)
 - **Livres de règles** : Edge of the Empire, Age of Rebellion, Force and Destiny
 - **Architecture** : [MODELS.md](../architecture/MODELS.md), [OVERVIEW.md](../architecture/OVERVIEW.md)
-- **Modules** : [DICE_SYSTEM.md](../modules/DICE_SYSTEM.md), [FORCE_SYSTEM.md](../modules/FORCE_SYSTEM.md), [TALENT_SYSTEM.md](../modules/TALENT_SYSTEM.md)
+- **Modules** : [DICE_SYSTEM.md](../modules/DICE_SYSTEM.md), [TALENT_SYSTEM.md](../modules/TALENT_SYSTEM.md)

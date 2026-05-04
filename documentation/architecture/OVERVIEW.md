@@ -13,7 +13,6 @@ graph TB
         DICE[Dés Narratifs]
         TALENTS[Arbres de Talents]
         OBLIGATIONS[Obligations/Devoirs]
-        FORCE[Pouvoirs de la Force]
     end
 
     subgraph "🎨 Presentation Layer"
@@ -128,12 +127,11 @@ Ce répertoire couvre tout ce que voient et manipulent les utilisateurs : feuill
 
 ### 🎮 Systèmes de Jeu
 
-Ici sont détaillées les mécaniques de jeu propres à Star Wars Edge : dés narratifs, arbres de talents, obligations, Force, etc. Cette documentation explique comment les systèmes sont modélisés et comment les étendre ou les rééquilibrer.
+Ici sont détaillées les mécaniques de jeu propres à Star Wars Edge : dés narratifs, arbres de talents, obligations, etc. Cette documentation explique comment les systèmes sont modélisés et comment les étendre ou les rééquilibrer.
 
 - [Dice System Architecture](systems/DICE_ARCHITECTURE.md)
 - [Talent Tree Architecture](systems/TALENTS_ARCHITECTURE.md)
 - [Obligation System Architecture](systems/OBLIGATIONS_ARCHITECTURE.md)
-- [Force Powers Architecture](systems/FORCE_ARCHITECTURE.md)
 
 ### 🔧 Intégration et Performance
 
