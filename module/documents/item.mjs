@@ -152,33 +152,10 @@ export default class SwerpgItem extends Item {
     await super._preCreate(data, options, user)
     if (this.isOwned) {
       switch (data.type) {
-        case 'ancestry':
-          if (this.parent.type === 'character') await this.parent.system.applyAncestry(this)
-          return false // Prevent creation
-        case 'archetype':
-          if (this.parent.type === 'adversary') await this.parent.system.applyArchetype(this)
-          return false // Prevent creation
-        case 'background':
-          if (this.parent.type === 'character') await this.parent.system.applyBackground(this)
-          return false // Prevent creation
-        case 'origin':
-          if (this.parent.type === 'character') await this.parent.system.applyOrigin(this)
-          return false // Prevent creation
-        case 'spell':
-          try {
-            this.parent.canLearnIconicSpell(this)
-          } catch (err) {
-            return false
-          }
-          options.keepId = true
-          break
         case 'talent':
           options.keepId = true
           options.keepEmbeddedIds = true
           break // Allow creation
-        case 'taxonomy':
-          if (this.parent.type === 'adversary') await this.parent.system.applyTaxonomy(this)
-          return false // Prevent creation
       }
     }
   }

@@ -1,7 +1,9 @@
 # Rapport d'Architecture : Système de Compétences (Skills)
-*Analyse technique par l'architecte logiciel senior*
+
+_Analyse technique par l'architecte logiciel senior_
 
 ## Table des matières
+
 1. [Vue d'ensemble architecturale](#1-vue-densemble-architecturale)
 2. [Structure des données](#2-structure-des-données)
 3. [Calcul des valeurs de compétences](#3-calcul-des-valeurs-de-compétences)
@@ -17,12 +19,14 @@
 ## 1. Vue d'ensemble architecturale
 
 Le système de compétences suit une architecture modulaire avec séparation claire entre :
+
 - **Configuration** : Définition des compétences, rangs, catégories
 - **Modèles de données** : Schémas FoundryVTT (Data Models)
 - **Logique métier** : Calculs, coûts, validation (Lib + Utils)
 - **Interface utilisateur** : Sheets, templates Handlebars
 
 ### Schéma global
+
 ```
 Configuration (config/skills.mjs)
          ↓
@@ -42,9 +46,11 @@ Système de dés (dice/standard-check.mjs)
 ## 2. Structure des données
 
 ### 2.1 Configuration centrale
+
 **Fichier :** `module/config/skills.mjs`
 
 #### Rangs de compétence (RANKS)
+
 ```javascript
 RANKS = {
   0: { id: 'untrained', rank: 0, label: '...', cost: 0, spent: 0, bonus: -4, path: false },
@@ -52,32 +58,37 @@ RANKS = {
   2: { id: 'apprentice', rank: 2, label: '...', cost: 1, spent: 2, bonus: 2, path: false },
   3: { id: 'specialist', rank: 3, label: '...', cost: 2, spent: 4, bonus: 4, path: true },
   4: { id: 'adept', rank: 4, label: '...', cost: 4, spent: 8, bonus: 8, path: false },
-  5: { id: 'master', rank: 5, label: '...', cost: 4, spent: 12, bonus: 12, path: true }
+  5: { id: 'master', rank: 5, label: '...', cost: 4, spent: 12, bonus: 12, path: true },
 }
 ```
 
 **Propriétés clés :**
+
 - `cost` : Coût en points de compétence pour acquérir le rang
 - `spent` : Points totaux dépensés pour atteindre ce rang
 - `bonus` : Bonus numérique ajouté au score de compétence
 - `path` : Indique si une spécialisation est requise (rangs 3 et 5)
 
 #### Catégories de compétences (CATEGORIES)
+
 ```javascript
 CATEGORIES = {
   exp: { label: 'Exploration', color: Color.from('#81cc44'), defaultIcon: 'icons/skills/no-exp.jpg' },
   kno: { label: 'Knowledge', color: Color.from('#6c6cff'), defaultIcon: 'icons/skills/no-kno.jpg' },
-  soc: { label: 'Social', color: Color.from('#ab3fe8'), defaultIcon: 'icons/skills/no-soc.jpg' }
+  soc: { label: 'Social', color: Color.from('#ab3fe8'), defaultIcon: 'icons/skills/no-soc.jpg' },
 }
 ```
 
 #### Définition des compétences (SKILLS)
+
 12 compétences réparties en 3 catégories, chacune avec :
+
 - `id` : Identifiant unique
 - `category` : Catégorie (exp, kno, soc)
 - `characteristics` : Tableau de 2 caractéristiques associées [primaire, secondaire]
 
 **Exemple :**
+
 ```javascript
 athletics: {
   id: 'athletics',
@@ -87,11 +98,13 @@ athletics: {
 ```
 
 ### 2.2 Modèle de compétence pour JournalEntry (SwerpgSkill)
+
 **Fichier :** `module/models/skill.mjs`
 
 **Classe :** `SwerpgSkill extends foundry.abstract.TypeDataModel`
 
 **Schema :**
+
 ```javascript
 {
   skillId: StringField (lié à SYSTEM.SKILLS),
@@ -102,14 +115,17 @@ athletics: {
 ```
 
 **Méthode clé :** `static async initialize()`
+
 - Charge les données depuis le JournalEntry configuré
 - Fusionne les données du journal avec la configuration SYSTEM.SKILLS
 - Initialise les icônes, descriptions, chemins de spécialisation
 
 ### 2.3 Modèle de compétence pour Acteur (ActorType)
+
 **Fichier :** `module/models/actor-type.mjs`
 
 **Schema pour chaque compétence d'acteur :**
+
 ```javascript
 skills: {
   [skillId]: {
@@ -130,7 +146,8 @@ skills: {
 
 ## 3. Calcul des valeurs de compétences
 
-### 3.1 Préparation des compétences (_prepareSkill)
+### 3.1 Préparation des compétences (\_prepareSkill)
+
 **Fichier :** `module/models/actor-type.mjs` (lignes 214-222)
 
 ```javascript
@@ -155,6 +172,7 @@ _prepareSkill(skillId, skill) {
 ```
 
 ### 3.2 Calcul du bonus de caractéristique (getAbilityBonus)
+
 **Fichier :** `module/documents/actor-origin.mjs` (lignes 734-738)
 
 ```javascript
@@ -167,9 +185,11 @@ getAbilityBonus(scaling) {
 ```
 
 ### 3.3 Coût des rangs (Skill Costs)
+
 **Fichier :** `module/utils/skill-costs.mjs`
 
 Règle FFG Edge of the Empire :
+
 - Compétence de carrière : `rangSuivant * 5` XP
 - Compétence hors carrière : `rangSuivant * 5 + 5` XP
 
@@ -187,12 +207,12 @@ getSkillNextRankCost({ rank, isCareer, maxRank = 5 }) {
 ```javascript
 class SkillCostCalculator {
   #calculateTrainCost(value) {
-    const baseCost = value * 5;
-    return this.isSpecialized ? baseCost : baseCost + 5;
+    const baseCost = value * 5
+    return this.isSpecialized ? baseCost : baseCost + 5
   }
 
   #skillIsSpecialized() {
-    return this.skill.isCareer || this.skill.isSpecialization;
+    return this.skill.isCareer || this.skill.isSpecialization
   }
 }
 ```
@@ -202,6 +222,7 @@ class SkillCostCalculator {
 ## 4. Services et Pattern Factory
 
 ### 4.1 SkillFactory (Fabrique de compétences)
+
 **Fichier :** `module/lib/skills/skill-factory.mjs`
 
 **Classe :** `SkillFactory`
@@ -209,6 +230,7 @@ class SkillCostCalculator {
 **Méthode statique :** `static build(actor, skillId, params, options)`
 
 **Logique de création :**
+
 1. **Hors création** : toujours `TrainedSkill`
 2. **En création :**
    - Si pas de compétence gratuite disponible : `TrainedSkill`
@@ -220,17 +242,18 @@ class SkillCostCalculator {
 ### 4.2 Hiérarchie des classes de compétence
 
 **Classe de base :** `Skill` (`module/lib/skills/skill.mjs`)
+
 - Propriétés : actor, data, isCreation, isCareer, isSpecialization, action, options, evaluated
 - Méthodes abstraites : `process()`, `updateState()`, `#computeFreeSkillRankAvailable()`
 
 **Sous-classes :**
 
-| Classe | Fichier | Rôle |
-|--------|---------|------|
-| `TrainedSkill` | `module/lib/skills/trained-skill.mjs` | Achat normal avec XP |
-| `CareerFreeSkill` | `module/lib/skills/career-free-skill.mjs` | Rangs gratuits de carrière |
+| Classe                    | Fichier                                           | Rôle                             |
+| ------------------------- | ------------------------------------------------- | -------------------------------- |
+| `TrainedSkill`            | `module/lib/skills/trained-skill.mjs`             | Achat normal avec XP             |
+| `CareerFreeSkill`         | `module/lib/skills/career-free-skill.mjs`         | Rangs gratuits de carrière       |
 | `SpecializationFreeSkill` | `module/lib/skills/specialization-free-skill.mjs` | Rangs gratuits de spécialisation |
-| `ErrorSkill` | `module/lib/skills/error-skill.mjs` | Gestion d'erreurs |
+| `ErrorSkill`              | `module/lib/skills/error-skill.mjs`               | Gestion d'erreurs                |
 
 **Détails des sous-classes :**
 
@@ -253,6 +276,7 @@ class SkillCostCalculator {
 ## 5. Utilisation dans les jets de dés (Rolls)
 
 ### 5.1 Roll de compétence (rollSkill)
+
 **Fichier :** `module/documents/actor.mjs` (lignes 874-911)
 
 ```javascript
@@ -284,22 +308,26 @@ async rollSkill(skillId, { banes = 0, boons = 0, dc, rollMode, dialog = false } 
 ```
 
 ### 5.2 StandardCheck (Système de dés)
+
 **Fichier :** `module/dice/standard-check.mjs`
 
 **Formule :** `3d8 + @ability + @skill + @enchantment`
 
 **Mécanique :**
+
 - **Boons** : augmentent la taille des dés (d8 → d10 → d12)
 - **Banes** : diminuent la taille des dés (d8 → d6 → d4)
 - **Max Boons/Banes** : définis dans `SYSTEM.dice.MAX_BOONS`
 
 **Résultats :**
+
 - `isSuccess` : total > DC
 - `isCriticalSuccess` : total > DC + (criticalSuccessThreshold ?? 6)
 - `isFailure` : total <= DC
 - `isCriticalFailure` : total < DC - (criticalFailureThreshold ?? 6)
 
 ### 5.3 Prévisualisation du pool de dés
+
 **Fichier :** `module/utils/skill-costs.mjs`
 
 ```javascript
@@ -319,19 +347,23 @@ getPositiveDicePoolPreview({ characteristicValue, skillRank }) {
 ### 6.1 Feuilles de personnage
 
 **CharacterSheet :** `module/applications/sheets/character-sheet.mjs`
+
 - Classe : `CharacterSheet extends SwerpgBaseActorSheet`
 - Actions : `toggleTrainedSkill`, `skillDecrease`, `skillIncrease`, `skillRoll`, `skillConfig`
 
 **HeroSheet :** `module/applications/sheets/hero-sheet.mjs`
+
 - Classe : `HeroSheet extends SwerpgBaseActorSheet`
 - Actions similaires pour les héros
 
 ### 6.2 Configuration de compétence (SkillConfig)
+
 **Fichier :** `module/applications/config/skill.mjs`
 
 **Classe :** `SkillConfig extends api.HandlebarsApplicationMixin(api.DocumentSheetV2)`
 
 **Fonctionnalités :**
+
 - Choix de spécialisation (choosePath)
 - Augmentation/diminution de rang (increase/decrease)
 - Affichage des rangs acquis et non-acquis
@@ -339,11 +371,11 @@ getPositiveDicePoolPreview({ characteristicValue, skillRank }) {
 
 ### 6.3 Templates Handlebars
 
-| Template | Chemin | Rôle |
-|----------|--------|------|
-| `skills.hbs` | `templates/sheets/actor/skills.hbs` | Onglet principal des compétences |
-| `character-skill.hbs` | `templates/sheets/partials/character-skill.hbs` | Ligne individuelle de compétence |
-| `skill.hbs` | `templates/sheets/actor/skill.hbs` | Vue détaillée d'une compétence |
+| Template                 | Chemin                                             | Rôle                               |
+| ------------------------ | -------------------------------------------------- | ---------------------------------- |
+| `skills.hbs`             | `templates/sheets/actor/skills.hbs`                | Onglet principal des compétences   |
+| `character-skill.hbs`    | `templates/sheets/partials/character-skill.hbs`    | Ligne individuelle de compétence   |
+| `skill.hbs`              | `templates/sheets/actor/skill.hbs`                 | Vue détaillée d'une compétence     |
 | `skill-modifier-tag.hbs` | `templates/sheets/partials/skill-modifier-tag.hbs` | Affichage des tags de modification |
 
 ---
@@ -351,6 +383,7 @@ getPositiveDicePoolPreview({ characteristicValue, skillRank }) {
 ## 7. Flux de données et interactions
 
 ### 7.1 Achat d'une compétence (purchaseSkill)
+
 **Fichier :** `module/documents/actor.mjs` (lignes 1852-1869)
 
 ```javascript
@@ -373,7 +406,9 @@ async purchaseSkill(skillId, delta = 1) {
 ```
 
 ### 7.2 Validation d'achat (canPurchaseSkill)
+
 Vérifie :
+
 - Présence d'un background (pour l'achat)
 - Rang maximum (5)
 - Choix de spécialisation requis pour rang 3+
@@ -382,6 +417,7 @@ Vérifie :
 ### 7.3 Préparation des compétences pour l'Actor
 
 **Hero** (`module/models/hero.mjs`) :
+
 ```javascript
 _prepareSkills() {
   let pointsSpent = 0;
@@ -396,10 +432,12 @@ _prepareSkills() {
 ```
 
 **Character** (`module/models/character.mjs`) :
+
 - `_applyFreeSkillSpecies()` : applique les compétences gratuites de l'espèce (base = 1)
 - Préparation via `_prepareSkills()` et `_prepareSkill()`
 
 ### 7.4 Diagramme de flux : Achat d'une compétence
+
 ```
 UI (Clic "+") → character-sheet.hbs
     ↓
@@ -421,6 +459,7 @@ UI refresh (automatique via Foundry)
 ```
 
 ### 7.5 Diagramme de flux : Jet de compétence
+
 ```
 UI (Clic nom compétence) → skillRoll action
     ↓
@@ -442,17 +481,20 @@ sc.toMessage() → Envoi dans le chat
 ## 8. Inventaire complet des fichiers impactés
 
 ### Configuration et Constantes
+
 - `module/config/skills.mjs` - Définition RANKS, CATEGORIES, SKILLS
 
 ### Modèles de Données (Models)
+
 - `module/models/skill.mjs` - SwerpgSkill (JournalEntryPage)
-- `module/models/actor-type.mjs` - SwerpgActorType (schema skills, _prepareSkill)
+- `module/models/actor-type.mjs` - SwerpgActorType (schema skills, \_prepareSkill)
 - `module/models/actor-type-origin.mjs` - SwerpgActorTypeOrigin (schema alternatif)
-- `module/models/hero.mjs` - SwerpgHero (_prepareSkills, _prepareSkill)
-- `module/models/character.mjs` - SwerpgCharacter (_applyFreeSkillSpecies, _prepareSkills)
-- `module/models/character-origin.mjs` - SwerpgCharacterOrigin (_prepareSkills, _prepareSkill)
+- `module/models/hero.mjs` - SwerpgHero (\_prepareSkills, \_prepareSkill)
+- `module/models/character.mjs` - SwerpgCharacter (\_applyFreeSkillSpecies, \_prepareSkills)
+- `module/models/character-origin.mjs` - SwerpgCharacterOrigin (\_prepareSkills, \_prepareSkill)
 
 ### Logique Métier (Lib)
+
 - `module/lib/skills/skill.mjs` - Classe abstraite Skill
 - `module/lib/skills/skill-factory.mjs` - SkillFactory.build()
 - `module/lib/skills/trained-skill.mjs` - TrainedSkill
@@ -462,22 +504,27 @@ sc.toMessage() → Envoi dans le chat
 - `module/lib/skills/skill-cost-calculator.mjs` - SkillCostCalculator
 
 ### Utilitaires (Utils)
+
 - `module/utils/skill-costs.mjs` - getSkillNextRankCost, getSkillPurchaseState, getPositiveDicePoolPreview
 
 ### Documents (Actor)
+
 - `module/documents/actor.mjs` - purchaseSkill, canPurchaseSkill, rollSkill, getAbilityBonus
 - `module/documents/actor-origin.mjs` - purchaseSkill (origin), rollSkill, getAbilityBonus
 
 ### Interface Utilisateur (Applications/Sheets)
+
 - `module/applications/sheets/base-actor-sheet.mjs` - SwerpgBaseActorSheet (base)
 - `module/applications/sheets/character-sheet.mjs` - CharacterSheet
 - `module/applications/sheets/hero-sheet.mjs` - HeroSheet
 - `module/applications/config/skill.mjs` - SkillConfig
 
 ### Système de Dés (Dice)
+
 - `module/dice/standard-check.mjs` - StandardCheck (3d8 + ability + skill)
 
 ### Templates (Handlebars)
+
 - `templates/sheets/actor/skills.hbs` - Onglet skills
 - `templates/sheets/partials/character-skill.hbs` - Ligne skill
 - `templates/sheets/actor/skill.hbs` - Vue détaillée
@@ -486,6 +533,7 @@ sc.toMessage() → Envoi dans le chat
 - `templates/sheets/partials/skill-modifier-tag.hbs` - Tag
 
 ### Tests
+
 - `tests/lib/skills/skill-factory.test.mjs`
 - `tests/lib/skills/trained-skill.test.mjs`
 - `tests/lib/skills/career-free-skill.test.mjs`
@@ -496,6 +544,7 @@ sc.toMessage() → Envoi dans le chat
 - `tests/utils/skills/skill.mjs`
 
 ### Styles
+
 - `styles/skill.less`
 
 ---
@@ -530,6 +579,7 @@ sc.toMessage() → Envoi dans le chat
 Le système est bien testé avec Vitest. Les tests se trouvent dans `tests/lib/skills/` et `tests/utils/`.
 
 Pour lancer les tests :
+
 ```bash
 npm run test
 ```
@@ -549,4 +599,4 @@ npm run test
 
 Ce système est robuste, bien testé, et suit les règles de Edge of the Empire (FFG) adaptées pour Foundry VTT. L'architecture modulaire permet une maintenance facile et une extension possible des fonctionnalités.
 
-*Rapport généré le 3 mai 2026 par l'architecte logiciel senior*
+_Rapport généré le 3 mai 2026 par l'architecte logiciel senior_

@@ -32,7 +32,7 @@ describe('System Configuration', () => {
 
   describe('COMPENDIUM_PACKS configuration', () => {
     test('should have all required compendium packs defined', () => {
-      const expectedPacks = ['background', 'origin', 'talent']
+      const expectedPacks = ['talent', 'talentExtensions']
 
       for (const packKey of expectedPacks) {
         expect(SystemConfig.COMPENDIUM_PACKS).toHaveProperty(packKey)
@@ -40,9 +40,11 @@ describe('System Configuration', () => {
     })
 
     test('should have correct pack identifiers for main packs', () => {
-      expect(SystemConfig.COMPENDIUM_PACKS.background).toBe('swerpg.background')
-      expect(SystemConfig.COMPENDIUM_PACKS.origin).toBe('swerpg.origin')
       expect(SystemConfig.COMPENDIUM_PACKS.talent).toBe('swerpg.talent')
+    })
+
+    test('should have null values for extension packs', () => {
+      expect(SystemConfig.COMPENDIUM_PACKS.talentExtensions).toBeNull()
     })
   })
 
@@ -151,8 +153,6 @@ describe('System Configuration', () => {
         'prepareMovement',
         'prepareResistances',
         'prepareSkillCheck',
-        'prepareSkillAttack',
-        'prepareTraining',
       ]
 
       for (const hookName of preparationHooks) {

@@ -1,7 +1,9 @@
 # Rapport d'Analyse Architecturale : `module/documents/actor.mjs`
-*Analyse par l'architecte logiciel senior*
+
+_Analyse par l'architecte logiciel senior_
 
 ## Table des matières
+
 1. [Vue d'ensemble et métriques](#1-vue-densemble-et-métriques)
 2. [Analyse des responsabilités](#2-analyse-des-responsabilités)
 3. [Problèmes d'architecture identifiés](#3-problèmes-darchitecture-identifiés)
@@ -16,12 +18,14 @@
 ## 1. Vue d'ensemble et métriques
 
 ### Statistiques du fichier
+
 - **Taille** : 2490 lignes
 - **Complexité** : Très élevée (une seule classe avec ~40 méthodes publiques)
 - **Responsabilités** : ~15 domaines différents mélangés
 - **Code commenté/TODO** : ~10 blocs (environ 50 lignes mortes)
 
 ### Structure actuelle
+
 ```
 SwerpgActor (2490 lignes)
 ├── Getters (12) : species, experiencePoints, freeSkillRanks, abilities, background, etc.
@@ -46,24 +50,26 @@ SwerpgActor (2490 lignes)
 
 La classe `SwerpgActor` viole flagramment le principe SRP. Elle gère :
 
-| Domaine | Méthodes | Problème |
-|--------|----------|---------|
-| **Préparation des données** | `prepareBaseData`, `prepareEmbeddedDocuments`, `#prepareTraining`, `#prepareEquipment`, `#prepareActions`, etc. | ✅ Correct ici, mais trop de méthodes privées |
-| **Système de dés/rolls** | `rollSkill`, `testDefense`, `applyTargetBoons`, `prepareAction` | ⚠️ Devrait être dans `dice/` |
-| **Gestion de combat** | `onStartTurn`, `onEndTurn`, `onLeaveCombat`, `applyDamageOverTime`, `expireEffects` | ⚠️ Devrait être extrait dans `combat/` |
-| **Équipement** | `_prepareArmor`, `_prepareWeapons`, `equipArmor`, `equipWeapon`, `#equipWeapon`, `#unequipWeapon` | ⚠️ Devrait être dans `equipment/` |
-| **Création personnage** | `purchaseSkill`, `canPurchaseSkill`, `purchaseCharacteristic`, `canPurchaseCharacteristic`, `levelUp` | ❌ **Doublon avec `lib/skills/` et `lib/characteristics/`** |
-| **Gestion des talents** | `#prepareTalents`, `addTalent`, `resetTalents`, `syncTalents`, `addTalentWithXpCheck` | ⚠️ Devrait être dans `talents/` |
-| **Gestion des ressources** | `alterResources`, `modifyResource`, `_getRestData`, `rest`, `#trackHeroismDamage` | ⚠️ Devrait être dans `resources/` |
-| **Spells** | `#prepareSpells`, `castSpell` | ⚠️ Devrait être dans `spells/` |
-| **Effets actifs** | `_prepareEffects`, `toggleStatusEffect`, `#applyOutcomeEffects` | ⚠️ Mélangé avec la logique métier |
+| Domaine                     | Méthodes                                                                                                        | Problème                                                    |
+| --------------------------- | --------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
+| **Préparation des données** | `prepareBaseData`, `prepareEmbeddedDocuments`, `#prepareTraining`, `#prepareEquipment`, `#prepareActions`, etc. | ✅ Correct ici, mais trop de méthodes privées               |
+| **Système de dés/rolls**    | `rollSkill`, `testDefense`, `applyTargetBoons`, `prepareAction`                                                 | ⚠️ Devrait être dans `dice/`                                |
+| **Gestion de combat**       | `onStartTurn`, `onEndTurn`, `onLeaveCombat`, `applyDamageOverTime`, `expireEffects`                             | ⚠️ Devrait être extrait dans `combat/`                      |
+| **Équipement**              | `_prepareArmor`, `_prepareWeapons`, `equipArmor`, `equipWeapon`, `#equipWeapon`, `#unequipWeapon`               | ⚠️ Devrait être dans `equipment/`                           |
+| **Création personnage**     | `purchaseSkill`, `canPurchaseSkill`, `purchaseCharacteristic`, `canPurchaseCharacteristic`, `levelUp`           | ❌ **Doublon avec `lib/skills/` et `lib/characteristics/`** |
+| **Gestion des talents**     | `#prepareTalents`, `addTalent`, `resetTalents`, `syncTalents`, `addTalentWithXpCheck`                           | ⚠️ Devrait être dans `talents/`                             |
+| **Gestion des ressources**  | `alterResources`, `modifyResource`, `_getRestData`, `rest`, `#trackHeroismDamage`                               | ⚠️ Devrait être dans `resources/`                           |
+| **Spells**                  | `#prepareSpells`, `castSpell`                                                                                   | ⚠️ Devrait être dans `spells/`                              |
+| **Effets actifs**           | `_prepareEffects`, `toggleStatusEffect`, `#applyOutcomeEffects`                                                 | ⚠️ Mélangé avec la logique métier                           |
 
 ---
 
 ## 3. Problèmes d'architecture identifiés
 
 ### 3.1 Taille excessive du fichier
+
 **Problème** : 2490 lignes dans un seul fichier.
+
 - Difficulté de lecture et maintenance
 - Conflits Git fréquents
 - Tests unitaires difficiles à écrire
@@ -76,29 +82,30 @@ La classe `SwerpgActor` viole flagramment le principe SRP. Elle gère :
 
 **Comparaison** :
 
-| Aspect | `actor.mjs` (lignes 1852-1923) | `lib/skills/` |
-|--------|---------------------------|-----------------|
-| Création de l'objet skill | ❌ Absente (met à jour directement) | ✅ `SkillFactory.build()` |
-| Validation des règles | ⚠️ Partielle dans `canPurchaseSkill` | ✅ Complète dans `*Skill.process()` |
-| Calcul des coûts | ❌ Absent | ✅ `SkillCostCalculator` |
-| Gestion des erreurs | ⚠️ `ui.notifications.warn()` | ✅ `ErrorSkill` avec messages |
-| Mise à jour BDD | ✅ Présent | ✅ `updateState()` |
+| Aspect                    | `actor.mjs` (lignes 1852-1923)       | `lib/skills/`                       |
+| ------------------------- | ------------------------------------ | ----------------------------------- |
+| Création de l'objet skill | ❌ Absente (met à jour directement)  | ✅ `SkillFactory.build()`           |
+| Validation des règles     | ⚠️ Partielle dans `canPurchaseSkill` | ✅ Complète dans `*Skill.process()` |
+| Calcul des coûts          | ❌ Absent                            | ✅ `SkillCostCalculator`            |
+| Gestion des erreurs       | ⚠️ `ui.notifications.warn()`         | ✅ `ErrorSkill` avec messages       |
+| Mise à jour BDD           | ✅ Présent                           | ✅ `updateState()`                  |
 
 **Code dupliqué dans `actor.mjs`** :
+
 ```javascript
 // Lignes 1852-1869 : purchaseSkill()
 async purchaseSkill(skillId, delta = 1) {
   delta = Math.sign(delta);
   const skill = this.system.skills[skillId];
   if (!skill) return;
-  
+
   // Validation partielle
   try {
     this.canPurchaseSkill(skillId, delta, true);
   } catch (err) {
     return ui.notifications.warn(err);
   }
-  
+
   // Mise à jour directe (contrairement à lib/skills qui utilise process())
   const rank = skill.rank + delta;
   const update = { [`system.skills.${skillId}.rank`]: rank };
@@ -114,6 +121,7 @@ async purchaseSkill(skillId, delta = 1) {
 **Problème** : Il existe deux systèmes d'actors (`actor.mjs` et `actor-origin.mjs`) avec des méthodes dupliquées.
 
 Méthodes présentes dans les deux fichiers :
+
 - `rollSkill()`
 - `getAbilityBonus()` (⚠️ **Bug dans actor.mjs ligne 763-768** : retourne toujours `1` !)
 - `castSpell()`
@@ -124,6 +132,7 @@ Méthodes présentes dans les deux fichiers :
 - `rest()`
 
 **Bug identifié ligne 763-768** :
+
 ```javascript
 getAbilityBonus(scaling) {
   const abilities = this.system.abilities;
@@ -141,19 +150,20 @@ Le calcul est commenté et la fonction retourne toujours `1`. C'est un bug majeu
 
 ### 4.1 Code commenté (mort)
 
-| Lignes | Description | Action recommandée |
-|--------|-------------|---------------------|
-| 369 | `// Natural: Math.clamp(...)` TODO temporaire | Supprimer si périmé |
-| 390 | `accessories: {}, // TODO: Equipped Accessories` | Implémenter ou supprimer |
-| 514-515 | `// Mh.system.prepareEquippedData();` | Supprimer |
-| 521-535 | Sections commentées (Range, Free Hand, etc.) | Créer des tickets ou supprimer |
-| 684-691 | Grand bloc `if (this.type === "character"...` | Supprimer le code mort |
-| 1221 | `// Updates["system.resources.heroism.value"] = 0;` | Supprimer |
-| 2271-2273 | `// TODO update size of active tokens` et `// this.#replenishResources...` | Implémenter ou supprimer |
+| Lignes    | Description                                                                | Action recommandée             |
+| --------- | -------------------------------------------------------------------------- | ------------------------------ |
+| 369       | `// Natural: Math.clamp(...)` TODO temporaire                              | Supprimer si périmé            |
+| 390       | `accessories: {}, // TODO: Equipped Accessories`                           | Implémenter ou supprimer       |
+| 514-515   | `// Mh.system.prepareEquippedData();`                                      | Supprimer                      |
+| 521-535   | Sections commentées (Range, Free Hand, etc.)                               | Créer des tickets ou supprimer |
+| 684-691   | Grand bloc `if (this.type === "character"...`                              | Supprimer le code mort         |
+| 1221      | `// Updates["system.resources.heroism.value"] = 0;`                        | Supprimer                      |
+| 2271-2273 | `// TODO update size of active tokens` et `// this.#replenishResources...` | Implémenter ou supprimer       |
 
 ### 4.2 Duplication de méthodes
 
 **`getAbilityBonus()`** existe dans :
+
 - `module/documents/actor.mjs` (ligne 763) - **Buggy : retourne toujours 1**
 - `module/documents/actor-origin.mjs` - (à vérifier)
 - `module/lib/skills/trained-skill.mjs` utilise `SkillCostCalculator`
@@ -167,10 +177,12 @@ Le calcul est commenté et la fonction retourne toujours `1`. C'est un bug majeu
 ### Architecture à double système
 
 Le projet a deux implémentations d'Actor :
+
 1. `actor.mjs` (2490 lignes) - "Nouvelle" version ?
 2. `actor-origin.mjs` (2322 lignes) - Ancienne version ?
 
 **Problème** : Cette dualité crée :
+
 - Maintenance double
 - Incohérences entre les deux (comme le bug `getAbilityBonus`)
 - Confusion pour les nouveaux développeurs
@@ -182,15 +194,18 @@ Le projet a deux implémentations d'Actor :
 ## 6. Analyse de la couverture de tests
 
 ### État actuel
+
 En cherchant dans `tests/documents/`, je ne vois pas de fichier de test dédié à `actor.mjs`.
 
 **Problèmes** :
+
 1. **Aucun test unitaire** pour une classe de 2490 lignes
 2. **Aucun test** pour les méthodes critiques (`purchaseSkill`, `canPurchaseSkill`, `alterResources`)
 3. **Aucun test** pour les hooks de combat (`onStartTurn`, `onEndTurn`)
 4. **Bug `getAbilityBonus`** non détecté faute de tests
 
 ### Tests manquants
+
 - `tests/documents/actor.mjs` - Tests des méthodes publiques
 - `tests/documents/actor-creation.test.mjs` - Tests de création de personnage
 - `tests/documents/actor-combat.test.mjs` - Tests des mécaniques de combat
@@ -203,6 +218,7 @@ En cherchant dans `tests/documents/`, je ne vois pas de fichier de test dédié 
 ### 7.1 Extraire les modules métier
 
 **Structure proposée** :
+
 ```
 module/
 ├── documents/
@@ -245,25 +261,25 @@ async purchaseSkill(skillId, delta = 1) {
   delta = Math.sign(delta);
   const skill = this.system.skills[skillId];
   if (!skill) return;
-  
+
   // Utiliser SkillFactory comme dans le reste du système
   const isCareer = /* déterminer si career skill */;
   const isSpecialization = /* déterminer si specialization skill */;
   const isCreation = this.isL0;
-  
+
   const skillObj = SkillFactory.build(this, skillId, {
     action: delta > 0 ? 'train' : 'forget',
     isCreation,
     isCareer,
     isSpecialization,
   }, {});
-  
+
   const evaluated = skillObj.process();
   if (evaluated instanceof ErrorSkill) {
     ui.notifications.warn(evaluated.options.message);
     return;
   }
-  
+
   return evaluated.updateState();
 }
 ```
@@ -271,6 +287,7 @@ async purchaseSkill(skillId, delta = 1) {
 ### 7.3 Corriger le bug `getAbilityBonus()`
 
 **Ligne 763-768** :
+
 ```javascript
 // BUG : Retourne toujours 1
 getAbilityBonus(scaling) {
@@ -291,6 +308,7 @@ getAbilityBonus(scaling) {
 ### 7.4 Unifier `actor.mjs` et `actor-origin.mjs`
 
 **Approche recommandée** :
+
 1. Créer `SwerpgActorBase` avec les méthodes communes
 2. `SwerpgActor` et `SwerpgActorOrigin` héritent de la base
 3. Supprimer les doublons
@@ -301,23 +319,27 @@ getAbilityBonus(scaling) {
 ## 8. Plan d'action proposé
 
 ### Phase 1 : Corrections critiques (immédiat)
+
 1. ✅ **Corriger `getAbilityBonus()`** (ligne 763-768) - Bug bloquant
 2. ✅ **Corriger `purchaseSkill()`** pour utiliser `SkillFactory`
 3. ✅ **Supprimer le code mort** commenté (environ 50 lignes)
 
 ### Phase 2 : Refactoring modulaire (court terme)
+
 1. Extraire `actor-talents.mjs` (méthodes talents)
 2. Extraire `actor-equipment.mjs` (méthodes équipement)
 3. Extraire `actor-combat.mjs` (méthodes combat)
 4. Créer les tests unitaires correspondants
 
 ### Phase 3 : Unification des Actors (moyen terme)
+
 1. Créer `SwerpgActorBase`
 2. Migrer `actor-origin.mjs` vers la nouvelle structure
 3. Supprimer les doublons
 4. Ajouter des tests d'intégration
 
 ### Phase 4 : Amélioration continue (long terme)
+
 1. Extraire `actor-resources.mjs`
 2. Extraire `actor-spells.mjs`
 3. Documenter l'API publique

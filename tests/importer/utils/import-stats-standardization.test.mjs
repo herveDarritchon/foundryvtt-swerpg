@@ -39,8 +39,6 @@ import {
   getObligationImportStats,
   addUnknownObligationProperty,
 } from '../../../module/importer/utils/obligation-import-utils.mjs'
-import { resetDutyImportStats, incrementDutyImportStat, getDutyImportStats } from '../../../module/importer/utils/duty-import-utils.mjs'
-import { resetMotivationImportStats, incrementMotivationImportStat, getMotivationImportStats } from '../../../module/importer/utils/motivation-import-utils.mjs'
 
 /**
  * Tests de standardisation de ImportStats
@@ -126,28 +124,6 @@ describe('Import Stats Standardization', () => {
       const stats = getObligationImportStats()
       expect(stats.total).toBe(6)
       expect(stats.rejected).toBe(1)
-      expect(stats.imported).toBe(5)
-    })
-
-    it('should provide standard metrics for duty imports', () => {
-      resetDutyImportStats()
-      incrementDutyImportStat('total', 4)
-      incrementDutyImportStat('rejected', 0)
-
-      const stats = getDutyImportStats()
-      expect(stats.total).toBe(4)
-      expect(stats.rejected).toBe(0)
-      expect(stats.imported).toBe(4)
-    })
-
-    it('should provide standard metrics for motivation imports', () => {
-      resetMotivationImportStats()
-      incrementMotivationImportStat('total', 7)
-      incrementMotivationImportStat('rejected', 2)
-
-      const stats = getMotivationImportStats()
-      expect(stats.total).toBe(7)
-      expect(stats.rejected).toBe(2)
       expect(stats.imported).toBe(5)
     })
   })
