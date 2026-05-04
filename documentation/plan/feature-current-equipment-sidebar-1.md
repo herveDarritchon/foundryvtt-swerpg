@@ -110,7 +110,7 @@ Completion Criteria Phase 4: Bouton toggle fonctionne pour armes et armure, noti
 - GOAL-005: Validation finale et durcissement sécurité / accessibilité.
 
 | Task     | Description                                                                                           | Completed | Date |
-| -------- |-------------------------------------------------------------------------------------------------------| --------- | ---- |
+| -------- | ----------------------------------------------------------------------------------------------------- | --------- | ---- |
 | TASK-026 | Audit sécurité visuel: aucune insertion HTML non contrôlée (utiliser texte brut pour tags).           |           |      |
 | TASK-027 | Vérifier attribut `alt` sur toutes images d'équipement (déjà présent); si manquant, ajouter nom item. |           |      |
 | TASK-028 | Ajouter `aria-label` sur bouton equipToggle si nécessaire (`aria-label="Toggle Equipment"`).          |           |      |

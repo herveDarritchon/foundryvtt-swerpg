@@ -1,9 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import {
-  getOrCreateWorldFolder,
-  resetFolderCache,
-  getFolderConfiguration,
-} from '../../../module/importer/utils/oggdude-import-folders.mjs'
+import { getOrCreateWorldFolder, resetFolderCache, getFolderConfiguration } from '../../../module/importer/utils/oggdude-import-folders.mjs'
 
 describe('OggDude Import Folders Service', () => {
   beforeEach(() => {
@@ -129,9 +125,7 @@ describe('OggDude Import Folders Service', () => {
 
       // Mock existing root folder
       globalThis.game.folders.find = vi.fn((predicate) => {
-        const mockFolders = [
-          { id: 'root-1', name: 'OggDude', type: 'Item', folder: null },
-        ]
+        const mockFolders = [{ id: 'root-1', name: 'OggDude', type: 'Item', folder: null }]
         return mockFolders.find(predicate)
       })
 
@@ -166,4 +160,3 @@ describe('OggDude Import Folders Service', () => {
     })
   })
 })
-

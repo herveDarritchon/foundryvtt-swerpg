@@ -98,7 +98,6 @@ Remplacer progressivement les parties génériques par ton cas réel :
   ```
 
 - **Navigation (section 2 du squelette)**
-
   - Adapter les tabs / boutons ciblés :
 
     ```ts

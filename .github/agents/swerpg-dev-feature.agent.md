@@ -59,50 +59,49 @@ handoffs:
 When executing an implementation plan:
 
 1. **Before touching any source file**:
-    - Read the plan file path provided as input (e.g. `/documentation/plan/<domain>/<purpose>-<feature>-<version>.md`).
-    - Extract the following metadata from the front matter or from the caller:
-        - `<purpose>` (plan type),
-        - `<domain>`,
-        - `<feature>`,
-        - `<version>`.
+   - Read the plan file path provided as input (e.g. `/documentation/plan/<domain>/<purpose>-<feature>-<version>.md`).
+   - Extract the following metadata from the front matter or from the caller:
+     - `<purpose>` (plan type),
+     - `<domain>`,
+     - `<feature>`,
+     - `<version>`.
 
 2. **Create the Git branch**:
-    - Use the terminal to run:
-        - `git checkout -b <type>/<domain>/<purpose>-<feature>-v<version>`
+   - Use the terminal to run:
+     - `git checkout -b <type>/<domain>/<purpose>-<feature>-v<version>`
    - `<type>` is derived from `<purpose>` as follows:
-       - `feature`       → `feat`
-       - `refactor`      → `refactor`
-       - `bug`           → `fix`
-       - `upgrade`       → `chore`
-       - `data`          → `chore`
-       - `architecture`  → `refactor`
-       - `design`        → `chore`
-       - `process`       → `chore`
-       - `infrastructure`→ `chore`
-
+     - `feature` → `feat`
+     - `refactor` → `refactor`
+     - `bug` → `fix`
+     - `upgrade` → `chore`
+     - `data` → `chore`
+     - `architecture` → `refactor`
+     - `design` → `chore`
+     - `process` → `chore`
+     - `infrastructure`→ `chore`
 
 3. **Create the GitHub issue**:
-    - Use `run_in_terminal` to create an issue (e.g. via `gh issue create`) with:
-        - Title: `<type>: <domain> - <feature>`
-        - Body: a short summary + a link to the plan file
-          `/documentation/plan/<domain>/<purpose>-<feature>-<version>.md`.
-        - Task list: one checkbox per `TASK-XXX` in the plan.
-    - If the GitHub CLI is not available, skip issue creation but:
-        - mention this limitation in your final response,
-        - still implement the plan normally.
+   - Use `run_in_terminal` to create an issue (e.g. via `gh issue create`) with:
+     - Title: `<type>: <domain> - <feature>`
+     - Body: a short summary + a link to the plan file
+       `/documentation/plan/<domain>/<purpose>-<feature>-<version>.md`.
+     - Task list: one checkbox per `TASK-XXX` in the plan.
+   - If the GitHub CLI is not available, skip issue creation but:
+     - mention this limitation in your final response,
+     - still implement the plan normally.
 
 4. **Implement the plan**:
-    - Execute `TASK-XXX` in the order and with the constraints defined in the plan.
-    - After each logical group of changes, commit with a message referencing `REQ-XXX` / `TASK-XXX`.
+   - Execute `TASK-XXX` in the order and with the constraints defined in the plan.
+   - After each logical group of changes, commit with a message referencing `REQ-XXX` / `TASK-XXX`.
 
 5. **Prepare the Pull Request at the end**:
-    - PR title: `<type>: <domain> – <purpose>-<feature>`
-    - PR body MUST include:
-        - A short executive summary (2–4 lignes en français).
-        - A reference to the created issue: `Closes #<issue-number>`.
-        - The main `REQ-XXX`, `TASK-XXX` and `TEST-XXX` IDs in bullet lists.
-        - The plan file path: `/documentation/plan/<domain>/<purpose>-<feature>-<version>.md`.
-    - Optionally suggest a `gh pr create ...` command in the terminal.
+   - PR title: `<type>: <domain> – <purpose>-<feature>`
+   - PR body MUST include:
+     - A short executive summary (2–4 lignes en français).
+     - A reference to the created issue: `Closes #<issue-number>`.
+     - The main `REQ-XXX`, `TASK-XXX` and `TEST-XXX` IDs in bullet lists.
+     - The plan file path: `/documentation/plan/<domain>/<purpose>-<feature>-<version>.md`.
+   - Optionally suggest a `gh pr create ...` command in the terminal.
 
 ### 1.1. Role
 

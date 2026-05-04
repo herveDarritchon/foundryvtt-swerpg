@@ -8,6 +8,7 @@ You act as the `swerpg-plan` agent for the **SWERPG / Star Wars Edge** system on
 ## Workflow GitHub / Git
 
 Important: At the planning step, you MUST NOT:
+
 - create GitHub issues,
 - create/switch git branches,
 - prepare or open pull requests.
@@ -25,9 +26,9 @@ following the rules below:
 - You follow the conventions defined in your own agent spec `swerpg-plan.agent.md`.
 - You use as your **main functional source of truth** the requirements file provided as input (see below).
 - The plan file content MUST consist ONLY of:
-    - YAML front matter, then
-    - Markdown sections as defined in the template,
-      with no extra wrappers or explanations before or after.
+  - YAML front matter, then
+  - Markdown sections as defined in the template,
+    with no extra wrappers or explanations before or after.
 
 ### Plan context
 

@@ -12,10 +12,10 @@ se référer au guide complet:
 - `documentation/tests/e2e/playwright-e2e-guide.md`.
 
 - Utiliser les hooks Playwright:
-    - `beforeAll`: pour initialiser le contexte du fichier de test.
-    - `beforeEach`: pour initialiser le contexte de .
-    - `afterEach`:
-    - `afterAll`: pour fermer le contexte de fichier de test.
+  - `beforeAll`: pour initialiser le contexte du fichier de test.
+  - `beforeEach`: pour initialiser le contexte de .
+  - `afterEach`:
+  - `afterAll`: pour fermer le contexte de fichier de test.
 
 ## Conseils:
 

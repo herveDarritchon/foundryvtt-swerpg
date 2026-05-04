@@ -1,18 +1,17 @@
 {
   "tasks": [
-    {"id": "TASK-001", "title": "Playwright infra - package.json & scripts", "status": "pending"},
-    {"id": "TASK-002", "title": "Playwright env files & .gitignore", "status": "pending"},
-    {"id": "TASK-003", "title": "e2e folder & README", "status": "pending"},
-    {"id": "TASK-004", "title": "playwright.config.ts", "status": "pending"},
-    {"id": "TASK-005", "title": "foundrySession helper", "status": "pending"},
-    {"id": "TASK-006", "title": "global-setup.ts", "status": "pending"},
-    {"id": "TASK-007", "title": "fixtures index & swerpgTest", "status": "pending"},
-    {"id": "TASK-008", "title": "bootstrap.spec.ts", "status": "pending"},
-    {"id": "TASK-009", "title": "oggdude-import.spec.ts", "status": "pending"},
-    {"id": "TASK-010", "title": "e2e README targeting & headed", "status": "pending"},
-    {"id": "TASK-011", "title": "playwright-e2e guide", "status": "pending"},
-    {"id": "TASK-012", "title": "CI workflow Playwright job", "status": "pending"},
-    {"id": "TASK-013", "title": "README section E2E", "status": "pending"}
+    { "id": "TASK-001", "title": "Playwright infra - package.json & scripts", "status": "pending" },
+    { "id": "TASK-002", "title": "Playwright env files & .gitignore", "status": "pending" },
+    { "id": "TASK-003", "title": "e2e folder & README", "status": "pending" },
+    { "id": "TASK-004", "title": "playwright.config.ts", "status": "pending" },
+    { "id": "TASK-005", "title": "foundrySession helper", "status": "pending" },
+    { "id": "TASK-006", "title": "global-setup.ts", "status": "pending" },
+    { "id": "TASK-007", "title": "fixtures index & swerpgTest", "status": "pending" },
+    { "id": "TASK-008", "title": "bootstrap.spec.ts", "status": "pending" },
+    { "id": "TASK-009", "title": "oggdude-import.spec.ts", "status": "pending" },
+    { "id": "TASK-010", "title": "e2e README targeting & headed", "status": "pending" },
+    { "id": "TASK-011", "title": "playwright-e2e guide", "status": "pending" },
+    { "id": "TASK-012", "title": "CI workflow Playwright job", "status": "pending" },
+    { "id": "TASK-013", "title": "README section E2E", "status": "pending" }
   ]
 }
-

@@ -1,7 +1,7 @@
 <section class="tab {{tabs.attributes.id}} {{tabs.attributes.cssClass}}" data-tab="{{tabs.attributes.id}}" data-group="{{tabs.attributes.group}}">
 
-  <div class="first-row-split">
-    <div class="sheet-section resources left-half flexcol">
+  <div class="combat-telemetry flexrow">
+    <div class="sheet-section resources flexcol" style="flex: 1.45;">
       <h3>Resources</h3>
       <div class="resources-wrapper flexrow">
         {{#each jauges as |jauge|}}
@@ -40,76 +40,82 @@
         {{/each}}
       </div>
     </div>
-    <div class="sheet-section defenses right-half flexcol">
-      <h3>defenses</h3>
-      <div class="defenses-wrapper flexrow">
-
-        <div class="defense-wrapper" data-defense-type="{{soak.type}}">
-          <div class="defense-bar-container {{soak.extraCss}}">
-            <div class="icon">
+    <div class="sheet-section defenses flexcol" style="flex: 1;">
+      <h3>Defenses</h3>
+      <div class="defenses-dashboard flexrow">
+        <div class="defense-primary" data-defense-type="{{soak.type}}">
+          <div class="defense-soak-card {{soak.extraCss}}">
+            <div class="defense-icon">
               <img src="systems/swerpg/assets/icons/combat/{{soak.type}}-icon.svg" alt="{{soak.type}}" />
             </div>
-            <div>
-              <div class="label">
-                <span class="values {{soak.extraCss}}"> {{soak.value}}</span>
-              </div>
+            <div class="defense-value">
+              <span class="value {{soak.extraCss}}">{{soak.value}}</span>
+            </div>
+            <div class="defense-label">
               <span class="title {{soak.extraCss}}">{{soak.label}}</span>
             </div>
+            <div class="defense-sublabel">Encaissement total</div>
           </div>
         </div>
-        {{#each defenses as |defense|}}
-          <div class="defense-wrapper" data-defense-type="{{defense.type}}">
-            <div class="defense-bar-container {{defense.extraCss}}">
-              <div class="icon">
-                <img src="systems/swerpg/assets/icons/combat/defense-{{defense.type}}-icon.svg" alt="{{defense.type}}" />
-              </div>
-              <div>
-                <div class="label">
-                  <span class="values {{defense.extraCss}}"> {{defense.value}}</span>
+        <div class="defense-secondary-stack flexcol">
+          {{#each defenses as |defense|}}
+            <div class="defense-secondary" data-defense-type="{{defense.type}}">
+              <div class="defense-card {{defense.extraCss}}">
+                <div class="defense-icon">
+                  <img src="systems/swerpg/assets/icons/combat/defense-{{defense.type}}-icon.svg" alt="{{defense.type}}" />
                 </div>
-                <span class="title {{defense.extraCss}}">{{defense.label}}</span>
+                <div class="defense-value">
+                  <span class="values {{defense.extraCss}}">{{defense.value}}</span>
+                </div>
+                <div class="defense-label">
+                  <span class="title {{defense.extraCss}}">{{defense.label}}</span>
+                </div>
               </div>
             </div>
-          </div>
-        {{/each}}
+          {{/each}}
+        </div>
       </div>
     </div>
   </div>
 
-  <div class="sheet-section characteristics">
+  <div class="sheet-section characteristics" data-character-state="{{#if incomplete.creation}}creation{{else}}play{{/if}}">
     <h3>Characteristics</h3>
     <div class="characteristics-wrapper">
       {{#each characteristicScores as |characteristic|}}
         <div class="characteristic-wrapper flexcol" data-characteristic="{{characteristic.id}}">
           <div class="action-wrapper">
-            {{#if characteristic.canDecrease}}
-              <a
-                class="button icon fa-solid fa-circle-caret-down decrease"
-                data-action="characteristicDecrease"
-                data-tooltip="Decrease {{characteristic.label}}"
-                data-tooltip-direction="LEFT"
-              >
-              </a>
-            {{/if}}
-
             <div class="characteristic {{characteristic.id}} {{characteristic.type.id}} holo-circle">
               <div class="circle-content flexcol">
                 <img class="characteristic-icon" src="systems/swerpg/assets/icons/characteristics/{{characteristic.id}}.svg" alt="{{characteristic.label}}" />
                 <span class="value">{{characteristic.rank.value}}</span>
-
               </div>
             </div>
-
-            {{#if characteristic.canIncrease}}
-              <a
-                class="button icon fa-solid fa-circle-caret-up increase"
+            <h4 class="label">{{characteristic.label}}</h4>
+            <div class="characteristic-controls">
+              <button
+                type="button"
+                class="stepper-btn decrease"
+                data-action="characteristicDecrease"
+                data-tooltip="Decrease {{characteristic.label}}"
+                data-tooltip-direction="LEFT"
+                aria-label="Decrease {{characteristic.label}}"
+                {{#unless characteristic.canDecrease}}disabled{{/unless}}
+              >
+                <i class="fa-solid fa-minus"></i>
+              </button>
+              <span class="stepper-value">{{characteristic.rank.value}}</span>
+              <button
+                type="button"
+                class="stepper-btn increase"
                 data-action="characteristicIncrease"
                 data-tooltip="Increase {{characteristic.label}}"
                 data-tooltip-direction="RIGHT"
+                aria-label="Increase {{characteristic.label}}"
+                {{#unless characteristic.canIncrease}}disabled{{/unless}}
               >
-              </a>
-            {{/if}}
-            <h4 class="label">{{characteristic.label}}</h4>
+                <i class="fa-solid fa-plus"></i>
+              </button>
+            </div>
           </div>
         </div>
       {{/each}}

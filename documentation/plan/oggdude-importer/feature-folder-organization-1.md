@@ -49,39 +49,39 @@ Ce plan décrit l’implémentation d’une organisation en dossiers hiérarchiq
 
 - GOAL-001: Cartographier les points d’entrée et usages actuels des dossiers pour l’import OggDude, et définir le modèle de hiérarchie cible.
 
-| Task     | Description                                                                                                                      | DependsOn | Completed | Date |
-| -------- | -------------------------------------------------------------------------------------------------------------------------------- | --------- | --------- | ---- |
-| TASK-001 | Identifier les fichiers responsables de la création d’Items et/ou de l’affectation de `folder` lors de l’import OggDude.        |           |           |      |
+| Task     | Description                                                                                                                    | DependsOn | Completed | Date |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------ | --------- | --------- | ---- |
+| TASK-001 | Identifier les fichiers responsables de la création d’Items et/ou de l’affectation de `folder` lors de l’import OggDude.       |           |           |      |
 | TASK-002 | Lister les types d’Item OggDude pris en charge (weapons, armor, gear, careers, talents, species, etc.) et leur type SWERPG.    | TASK-001  |           |      |
 | TASK-003 | Analyser l’usage actuel des dossiers (ex. dossiers par défaut `folder` dans les exemples d’Items importés) et leurs IDs fixes. | TASK-001  |           |      |
-| TASK-004 | Définir la hiérarchie cible des dossiers : noms exacts, profondeur (root `OggDude` + un niveau par type).                       | TASK-002  |           |      |
-| TASK-005 | Valider qu’aucun autre module / fonctionnalité ne dépend de l’ancien schéma « flat » de dossiers (ou documenter l’impact).      | TASK-001  |           |      |
+| TASK-004 | Définir la hiérarchie cible des dossiers : noms exacts, profondeur (root `OggDude` + un niveau par type).                      | TASK-002  |           |      |
+| TASK-005 | Valider qu’aucun autre module / fonctionnalité ne dépend de l’ancien schéma « flat » de dossiers (ou documenter l’impact).     | TASK-001  |           |      |
 
 ### Implementation Phase 2
 
 - GOAL-002: Concevoir et implémenter un service centralisé pour la gestion des dossiers d’import OggDude, puis l’intégrer dans les mappers.
 
-| Task     | Description                                                                                                                                      | DependsOn | Completed | Date |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------ | --------- | --------- | ---- |
-| TASK-006 | Créer un nouveau module utilitaire `module/importer/utils/oggdude-import-folders.mjs` pour centraliser la logique de gestion des dossiers.      | TASK-004  |           |      |
-| TASK-007 | Dans ce module, implémenter une fonction `getOrCreateWorldFolder(importDomain, itemType)` avec cache interne pour les dossiers `OggDude/*`.      | TASK-006  |           |      |
-| TASK-008 | (Si pertinent) Concevoir l’API pour gérer aussi les dossiers de compendiums (`getOrCreateCompendiumFolder`), en respectant les contraintes v13. | TASK-006  |           |      |
+| Task     | Description                                                                                                                                         | DependsOn | Completed | Date |
+| -------- | --------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | --------- | ---- |
+| TASK-006 | Créer un nouveau module utilitaire `module/importer/utils/oggdude-import-folders.mjs` pour centraliser la logique de gestion des dossiers.          | TASK-004  |           |      |
+| TASK-007 | Dans ce module, implémenter une fonction `getOrCreateWorldFolder(importDomain, itemType)` avec cache interne pour les dossiers `OggDude/*`.         | TASK-006  |           |      |
+| TASK-008 | (Si pertinent) Concevoir l’API pour gérer aussi les dossiers de compendiums (`getOrCreateCompendiumFolder`), en respectant les contraintes v13.     | TASK-006  |           |      |
 | TASK-009 | Mettre à jour le fichier principal de l’importeur (ex. `module/importer/oggDude.mjs`) pour utiliser le nouveau service lors de la création d’Items. | TASK-007  |           |      |
 | TASK-010 | Adapter au moins un mapper existant (par ex. `module/importer/items/weapon-ogg-dude.mjs`) pour déléguer l’affectation du champ `folder` au service. | TASK-009  |           |      |
-| TASK-011 | Étendre l’intégration à tous les mappers OggDude (armor, gear, careers, talents, etc.) afin d’appliquer uniformément la hiérarchie.              | TASK-010  |           |      |
-| TASK-012 | Ajouter une configuration simple (objet mapping) listant `importDomain` → `OggDude/<Subfolder>` dans un module dédié ou dans le service.          | TASK-006  |           |      |
+| TASK-011 | Étendre l’intégration à tous les mappers OggDude (armor, gear, careers, talents, etc.) afin d’appliquer uniformément la hiérarchie.                 | TASK-010  |           |      |
+| TASK-012 | Ajouter une configuration simple (objet mapping) listant `importDomain` → `OggDude/<Subfolder>` dans un module dédié ou dans le service.            | TASK-006  |           |      |
 
 ### Implementation Phase 3
 
 - GOAL-003: Gérer la compatibilité ascendante, la robustesse et la validation de la nouvelle organisation de dossiers.
 
-| Task     | Description                                                                                                                                              | DependsOn | Completed | Date |
-| -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | --------- | ---- |
-| TASK-013 | Ajouter une gestion de fallback pour les types inconnus (`OggDude/Misc`) avec un log d’avertissement clair.                                            | TASK-007  |           |      |
-| TASK-014 | S’assurer que la logique de `getOrCreateWorldFolder` ne recrée pas de doublons (`OggDude/OggDude/...`) et gère correctement les dossiers déjà existants. | TASK-007  |           |      |
+| Task     | Description                                                                                                                                                | DependsOn | Completed | Date |
+| -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | --------- | ---- |
+| TASK-013 | Ajouter une gestion de fallback pour les types inconnus (`OggDude/Misc`) avec un log d’avertissement clair.                                                | TASK-007  |           |      |
+| TASK-014 | S’assurer que la logique de `getOrCreateWorldFolder` ne recrée pas de doublons (`OggDude/OggDude/...`) et gère correctement les dossiers déjà existants.   | TASK-007  |           |      |
 | TASK-015 | Vérifier que les IDs de dossiers « historiques » utilisés dans les anciens exemples ne sont plus codés en dur dans le code (ou les encapsuler proprement). | TASK-003  |           |      |
-| TASK-016 | Mettre à jour la documentation utilisateur sur l’import OggDude (`documentation/oggdude-import-guide.md`) pour décrire la nouvelle hiérarchie.          | TASK-011  |           |      |
-| TASK-017 | Vérifier que les métriques et statistiques d’import (si existantes) ne dépendent pas de l’ancienne organisation en dossiers.                            | TASK-011  |           |      |
+| TASK-016 | Mettre à jour la documentation utilisateur sur l’import OggDude (`documentation/oggdude-import-guide.md`) pour décrire la nouvelle hiérarchie.             | TASK-011  |           |      |
+| TASK-017 | Vérifier que les métriques et statistiques d’import (si existantes) ne dépendent pas de l’ancienne organisation en dossiers.                               | TASK-011  |           |      |
 
 ## 3. Alternatives
 
@@ -136,4 +136,3 @@ Ce plan décrit l’implémentation d’une organisation en dossiers hiérarchiq
 - `/documentation/spec/oggdude-importer/bug-fix-gear-import-need1-1.0.md` – Spécification détaillée sur le mapping du gear OggDude.
 - `/documentation/spec/oggdude-importer/bug-career-import-data-needs-1.0.md` – Spécification détaillée sur l’import des careers OggDude.
 - `/documentation/spec/oggdude-importer/bug-fix-talent-import-need1-1.0.md` – Spécification détaillée sur l’import des talents OggDude.
-

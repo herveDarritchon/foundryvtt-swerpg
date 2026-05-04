@@ -5,7 +5,7 @@ date_created: 2025-11-29
 last_updated: 2025-11-29
 owner: Core dev team
 status: 'Planned'
-tags: [ 'feature', 'testing', 'e2e', 'playwright', 'quality', 'spec-driven' ]
+tags: ['feature', 'testing', 'e2e', 'playwright', 'quality', 'spec-driven']
 ---
 
 # Introduction
@@ -43,8 +43,8 @@ Ce plan détaille l’implémentation d’une stack de tests end-to-end Playwrig
 
 - GOAL-002: Designer la structure technique Playwright (config, répertoires) et la documentation Spec-Driven.
 
-| Task     | Description                                                                      | DependsOn | Completed | Date |
-| -------- | -------------------------------------------------------------------------------- | --------- | --------- | ---- |
+| Task     | Description                                                                        | DependsOn | Completed | Date |
+| -------- | ---------------------------------------------------------------------------------- | --------- | --------- | ---- |
 | TASK-004 | Définir la structure `e2e/` (specs, fixtures, utils) et le `playwright.config.ts`. | TASK-002  |           |      |
 | TASK-005 | Spécifier les scripts PNPM (`test:e2e`, `test:e2e:headed`, ciblage fichier).       | TASK-002  |           |      |
 | TASK-006 | Rédiger `documentation/requirements/core/playwright-e2e-requirements.md`.          | TASK-003  |           |      |

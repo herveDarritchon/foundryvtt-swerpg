@@ -4,5 +4,6 @@ export default {
     file: 'dist/swerpg.bundle.js',
     format: 'es',
     compact: true,
+    inlineDynamicImports: true,
   },
 }

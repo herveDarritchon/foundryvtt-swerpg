@@ -34,14 +34,14 @@
 /* ----------------------------------------- */
 
 .swerpg {
-  --color-glow: #00b0ff; // bleu néon
+  --color-glow: #78a9c2; // cyan bleuté désaturé
   --color-text: #d0e6f6;
   --color-label: #9bb0c2;
-  --color-shadow: rgba(0, 176, 255, 0.3);
-  --color-glow-hover: lighten(#00b0ff, 15%);
+  --color-shadow: rgb(111 167 196 / 0.18);
+  --color-glow-hover: #9ec3d6;
   --color-background: #0c0f17;
-  --color-frame: #3a3f48;
-  --color-accent: #00b0ff;
+  --color-frame: #334150;
+  --color-accent: #6fa7c4;
 
   --background: #0a1f44; /* Bleu nuit */
   --background-dark: #0c0f17; /* Bleu nuit profond */
@@ -51,21 +51,21 @@
   --color-primary: var(--color-text);
   --color-secondary: #7c8a9e; /* Gris bleuté pour les textes secondaires */
   --color-tertiary: #5a5f67; /* Gris acier pour les détails */
-  --color-header: #26c6da; /* Cyan lumineux pour les titres */
-  --color-h1: #72a4ea; /* Bleu électrique pour les titres H1 */
+  --color-header: #78a9c2; /* Cyan atténué pour les titres */
+  --color-h1: #8ab0c8; /* Bleu-cyan holographique */
   //--color-frame: #3A3F48; /* Gris sombre pour les encadrés */
-  --color-frame-bg: #121923; /* Noir bleu profond pour les fonds */
-  --color-frame-bg-25: rgb(18 25 35 / 25%);
-  --color-frame-bg-50: rgb(18 25 35 / 50%);
-  --color-frame-bg-75: rgb(18 25 35 / 75%);
+  --color-frame-bg: #101722; /* Noir bleu profond pour les fonds */
+  --color-frame-bg-25: rgb(16 23 34 / 25%);
+  --color-frame-bg-50: rgb(16 23 34 / 50%);
+  --color-frame-bg-75: rgb(16 23 34 / 75%);
   //--color-accent: #0096FF; /* Bleu néon pour les éléments interactifs */
-  --color-tern: #063a5e; /* Bleu néon pour les éléments interactifs */
-  --color-link-text: #26c6da; /* Cyan éclatant pour les liens */
+  --color-tern: #142a3c; /* Bleu sombre désaturé */
+  --color-link-text: #8db9cc; /* Cyan atténué pour les liens */
   --color-border-highlight: var(--color-accent); /* Bordures lumineuses */
   --color-border: var(--color-tern); /* Bordures lumineuses */
 
-  --color-accent-blue: #00b0ff; /* Bleu néon */
-  --color-accent-yellow: #ffe81f; /* jaune sabre */
+  --color-accent-blue: #6fa7c4; /* Cyan désaturé */
+  --color-accent-yellow: #c9b36a; /* or froid */
 
   --color-box-warm-1: #ee9b3a; /* Orange lumineux */
   --color-box-warm-2: #c9593f; /* Rouge lumineux */
@@ -95,37 +95,37 @@
 
   // === General UI ===
   --color-background-dark: #121212;
-  --color-border-default: #333;
+  --color-border-default: #2a3642;
   --color-font-default: #e0e0e0;
 
   // === Soak (Armor / Passive)
-  --color-soak: #ffcc33;
-  --color-soak-shadow: #ffaa00;
+  --color-soak: #c4a04a;
+  --color-soak-shadow: #a8883a;
   --color-soak-bg: #332200;
 
   // === Defense
-  --color-defense: #00ccff;
-  --color-defense-melee: #00aaff; /* ou #ff4444 pour une version rouge */
-  --color-defense-ranged: #00ddff;
-  --color-defense-general: #3399ff;
-  --color-defense-shadow: rgba(0, 255, 255, 0.4);
+  --color-defense: #5ab4c9;
+  --color-defense-melee: #4a9ab8;
+  --color-defense-ranged: #5ab4c9;
+  --color-defense-general: #4a9ab8;
+  --color-defense-shadow: rgb(90 180 201 / 0.25);
 
   // === Wounds (Health)
-  --color-wounds: #ff3c3c;
-  --color-wounds-glow: #ff6666;
-  --color-wounds-gradient: linear-gradient(to bottom, #ff4a3e, #a40000);
+  --color-wounds: #b55050;
+  --color-wounds-glow: #cc6666;
+  --color-wounds-gradient: linear-gradient(to bottom, #b55050, #7a2222);
   --color-wounds-border: #5a0000;
 
   // === Strain (Mental)
-  --color-strain: #00d4ff;
-  --color-strain-glow: #66f0ff;
-  --color-strain-gradient: linear-gradient(to bottom, #48e8ff, #007f99);
+  --color-strain: #5ab4c9;
+  --color-strain-glow: #80c8d9;
+  --color-strain-gradient: linear-gradient(to bottom, #5ab4c9, #2a7088);
   --color-strain-border: #003344;
 
   // === Encumbrance (Load)
-  --color-encumbrance: #ff9900;
-  --color-encumbrance-glow: #ffc266;
-  --color-encumbrance-gradient: linear-gradient(to bottom, #ffc64d, #a65b00);
+  --color-encumbrance: #c4944a;
+  --color-encumbrance-glow: #d4a96e;
+  --color-encumbrance-gradient: linear-gradient(to bottom, #c4944a, #8a5a1a);
   --color-encumbrance-border: #5a2f00;
 
   // === Other / Semantic
@@ -133,10 +133,10 @@
   --color-warning: #ffaa00;
   --color-danger: #ff3333;
 
-  --font-h1: 'Star Jedi', sans-serif;
-  --font-h2: 'Star Jedi', sans-serif;
-  --font-h3: 'Star Jedi', sans-serif;
-  --font-body: 'Orbitron', sans-serif;
+  --font-h1: 'Orbitron', sans-serif;
+  --font-h2: 'Orbitron', sans-serif;
+  --font-h3: 'Rajdhani', sans-serif;
+  --font-body: 'Exo 2', sans-serif;
   --font-quote: 'Exo 2', sans-serif;
   --font-sans: 'Rajdhani', sans-serif;
 
@@ -168,7 +168,7 @@
 
 @color-light: #ffffff;
 @color-dark: #000000;
-@color-glow: #00b0ff;
+@color-glow: #78a9c2;
 @color-primary: #d0e6f6;
 @color-secondary: #7c8a9e;
 @color-warning: #ffaa00;
@@ -181,32 +181,32 @@
 @color-glow-hover: var(--color-glow-hover);
 @font-body: var(--font-body);
 @background-dark: #0c0f17;
-@color-glow-yellow: #efe58b;
+@color-glow-yellow: #c9b36a;
 
 // === Thèmes dynamiques Jedi / Sith ===
 
 .theme-light() {
-  --color-glow: #ffe81f; // jaune Jedi
+  --color-glow: #c9b36a; // or froid
   --color-text: #1c1c1c;
   --color-label: #3a3a3a;
-  --color-shadow: rgba(255, 232, 31, 0.3);
-  --color-glow-hover: #fff56e;
+  --color-shadow: rgb(201 179 106 / 0.2);
+  --color-glow-hover: #d4c07a;
   --color-background: #f0f5fa;
   --color-frame: #ccd5e0;
-  --color-accent: #ffe81f;
-  --font-body: 'Orbitron', sans-serif;
+  --color-accent: #c9b36a;
+  --font-body: 'Exo 2', sans-serif;
 }
 
 .theme-dark() {
-  --color-glow: #00b0ff; // bleu néon
+  --color-glow: #78a9c2; // cyan désaturé
   --color-text: #d0e6f6;
   --color-label: #9bb0c2;
-  --color-shadow: rgba(0, 176, 255, 0.3);
-  --color-glow-hover: lighten(#00b0ff, 15%);
+  --color-shadow: rgb(111 167 196 / 0.18);
+  --color-glow-hover: #9ec3d6;
   --color-background: #0c0f17;
-  --color-frame: #3a3f48;
-  --color-accent: #00b0ff;
-  --font-body: 'Orbitron', sans-serif;
+  --color-frame: #334150;
+  --color-accent: #6fa7c4;
+  --font-body: 'Exo 2', sans-serif;
 }
 
 .swerpg.light-side {

@@ -457,12 +457,12 @@ class OggDudeDataElement {
       logger.debug('[OggDudeDataElement] ProcessElements - Step 4 Folder (hierarchical)', {
         folder,
         importDomain,
-        folderPath: `OggDude/${folder.name}`
+        folderPath: `OggDude/${folder.name}`,
       })
     } catch (error) {
       logger.error('[OggDudeDataElement] Failed to create hierarchical folder, falling back to legacy behavior', {
         error,
-        importDomain
+        importDomain,
       })
       // Fallback to legacy behavior if folder service fails
       folder = await createFoundryFolder(context.folder.name, context.folder.type)

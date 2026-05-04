@@ -114,6 +114,7 @@ Pour exécuter les tests end‑to‑end Playwright contre une instance Foundry l
 - Guide détaillé: `scripts/README-e2e-foundry-start.md`
 
 ### Pré‑requis
+
 - Docker installé
 - Licence Foundry VTT valide (ne pas commiter la clé)
 - Fichier `.env.e2e.local` pour les variables E2E (ignoré par Git)

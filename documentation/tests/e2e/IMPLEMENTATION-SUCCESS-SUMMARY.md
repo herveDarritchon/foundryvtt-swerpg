@@ -66,6 +66,7 @@ expect: {
 **Fichier** : `documentation/tests/e2e/playwright-e2e-guide.md`
 
 Nouvelle section 4.1 "Spécificités Chromium" documentant :
+
 - Les `launchOptions` et leur justification
 - Le `expect.timeout` augmenté et pourquoi
 - Les différences de comportement Chromium vs Firefox
@@ -83,27 +84,30 @@ PLAYWRIGHT_EXPECT_TIMEOUT=30000  # Augmenté pour stabilité Chromium
 
 ## 📊 Métriques d'amélioration
 
-| Métrique | Avant | Après | Gain |
-|----------|-------|-------|------|
-| Tests Chromium | 1/2 (50%) | 2/2 (100%) | **+50%** |
-| Couverture totale | 3/4 (75%) | 4/4 (100%) | **+25%** |
-| Tests skippés | 1 | 0 | **-100%** |
-| Fiabilité | ~75% | 100% | **+25%** |
+| Métrique          | Avant     | Après      | Gain      |
+| ----------------- | --------- | ---------- | --------- |
+| Tests Chromium    | 1/2 (50%) | 2/2 (100%) | **+50%**  |
+| Couverture totale | 3/4 (75%) | 4/4 (100%) | **+25%**  |
+| Tests skippés     | 1         | 0          | **-100%** |
+| Fiabilité         | ~75%      | 100%       | **+25%**  |
 
 ---
 
 ## ✅ Validation complète
 
 ### Phase 1 : Analyse ✅
+
 - Problème identifié : timeout de 9s insuffisant pour assertions sur dialogs Foundry
 - Logging révèle que la "redirection /join" n'était qu'un symptôme du timeout
 
 ### Phase 2 : Conception ✅
+
 - Configuration Chromium définie avec timeouts optimisés
 - `ensureSessionActive` déjà implémenté (travaux précédents)
 - Stratégie de réactivation claire
 
 ### Phase 3 : Implémentation ✅
+
 - **TASK-007** : `playwright.config.ts` mis à jour
 - **TASK-008** : `ensureSessionActive` vérifié et fonctionnel
 - **TASK-009** : `oggdude-import.spec.ts` réactivé avec logging
@@ -127,16 +131,19 @@ PLAYWRIGHT_EXPECT_TIMEOUT=30000  # Augmenté pour stabilité Chromium
 ## 🚀 Prochaines étapes recommandées
 
 ### Court terme
+
 1. Marquer l'addendum Chromium comme "Résolu"
 2. Committer les changements avec un message clair
 3. Informer l'équipe du succès de la stabilisation
 
 ### Moyen terme
+
 1. Ajouter tests de couverture fonctionnelle (fiches acteur, jets de dés)
 2. Créer des page objects pour factoriser (`GameSettingsPage`, `CharacterSheetPage`)
 3. Ajouter un test de régression pour détecter les futures pertes de session
 
 ### Long terme
+
 1. Intégration CI/CD avec workflow GitHub Actions
 2. Badge de statut E2E dans le README
 3. Tests de performance pour tracker les temps d'exécution
@@ -146,12 +153,14 @@ PLAYWRIGHT_EXPECT_TIMEOUT=30000  # Augmenté pour stabilité Chromium
 ## 🎓 Leçons apprées
 
 ### Ce qui a fonctionné ✅
+
 - **Approche incrémentale** : Tester après chaque changement
 - **Logging détaillé** : Crucial pour identifier le vrai problème
 - **Configuration isolée** : Chromium optimisé sans impacter Firefox
 - **Tests de non-régression** : Vérifier systématiquement les deux navigateurs
 
 ### Enseignements techniques 📚
+
 - Chromium est 2-3s plus lent que Firefox sur interactions UI Foundry complexes
 - Distinguer `actionTimeout` (actions) vs `expect.timeout` (assertions)
 - Sessions Foundry sensibles aux flags de sécurité navigateur
@@ -185,6 +194,7 @@ pnpm e2e -- e2e/specs/oggdude-import.spec.ts
 ## 🎯 Conclusion
 
 Le plan a été **implémenté avec un succès total** :
+
 - ✅ Tous les requirements satisfaits (13/13)
 - ✅ Toutes les tâches complétées (12/12)
 - ✅ Tous les tests de validation passés (5/5)
@@ -196,4 +206,3 @@ Le plan a été **implémenté avec un succès total** :
 
 **Pour plus de détails**, voir le rapport complet :
 `documentation/tests/e2e/playwright-chromium-stability-implementation-report.md`
-

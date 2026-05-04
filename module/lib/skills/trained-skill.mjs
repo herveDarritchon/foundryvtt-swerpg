@@ -5,7 +5,7 @@ import SkillCostCalculator from './skill-cost-calculator.mjs'
 export default class TrainedSkill extends Skill {
   constructor(actor, data, params, options) {
     super(actor, data, params, options)
-    this.#computeFreeSkillRankAvailable()
+    this.freeSkillRankAvailable = this.#computeFreeSkillRankAvailable()
     this.dataCostCalculator = new SkillCostCalculator(this)
   }
 

@@ -51,6 +51,7 @@ handoffs:
 ## 1. Role, constraints and context
 
 ### 1.1. Hard constraints (priority)
+
 If <domain>, <purpose>, <feature> or <version> are missing or not clearly provided
 by the caller, you MUST NOT create a plan file.
 Instead, respond in chat with a short error explaining which parameter is missing.
@@ -58,12 +59,12 @@ Instead, respond in chat with a short error explaining which parameter is missin
 When you produce a plan, you MUST follow these rules strictly:
 
 1. You MUST create or overwrite exactly ONE plan file using `edit/editFiles`:
-    - Path: `/documentation/plan/<domain>/<purpose>-<feature>-<version>.md`
-    - Content: full plan (front matter + Markdown sections), nothing else.
+   - Path: `/documentation/plan/<domain>/<purpose>-<feature>-<version>.md`
+   - Content: full plan (front matter + Markdown sections), nothing else.
 2. Your chat response MUST NOT contain the plan content.
    It MUST only contain:
-    - the path of the created/updated file, and
-    - a short summary (5–10 lines) with main REQ-XXX / TASK-XXX / TEST-XXX identifiers.
+   - the path of the created/updated file, and
+   - a short summary (5–10 lines) with main REQ-XXX / TASK-XXX / TEST-XXX identifiers.
 3. All identifiers `REQ-XXX`, `TASK-XXX`, `FILE-XXX`, etc. must be **unique within the plan** (numbering starts at 001).
 4. You must always:
    - analyse the existing code with the tools `search/codebase`, `search`, `usages`, `githubRepo` before writing the plan;

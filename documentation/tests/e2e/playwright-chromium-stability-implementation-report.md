@@ -22,6 +22,7 @@ pnpm e2e
 ```
 
 **Amélioration mesurable** :
+
 - **Avant** : 3/4 tests passent (75%) - oggdude-import skippé sur Chromium
 - **Après** : 4/4 tests passent (100%) - couverture complète ✅
 
@@ -41,14 +42,13 @@ pnpm e2e
   - `actionTimeout: 15000ms`
   - `expect.timeout: 30000ms` (global)
   - `launchOptions` avec args anti-détection automation
-  
 - **TASK-005** ✅ : `ensureSessionActive` déjà implémenté (travaux précédents), intégré dans `foundryUI.ts`
-  
 - **TASK-006** ✅ : Stratégie de réactivation définie : retirer `test.skip` + ajouter logging détaillé
 
 ### Phase 3 : Implémentation ✅
 
 - **TASK-007** ✅ : `playwright.config.ts` mis à jour avec :
+
   ```typescript
   {
     name: 'chromium',
@@ -85,11 +85,13 @@ pnpm e2e
 ### 1. Configuration Playwright (`playwright.config.ts`)
 
 **Changements** :
+
 - `expect.timeout` global passé de 15000ms à **30000ms**
 - Configuration Chromium enrichie avec `launchOptions` pour désactiver la détection d'automation
 - Ajout de `contextOptions` pour améliorer la persistance des cookies
 
 **Impact** :
+
 - Résout les timeouts prématurés sur les assertions de dialogs/modals Foundry
 - Améliore la gestion de session sur Chromium
 - Aucun impact sur Firefox (config isolée)
@@ -97,11 +99,13 @@ pnpm e2e
 ### 2. Test oggdude-import (`e2e/specs/oggdude-import.spec.ts`)
 
 **Changements** :
+
 - Suppression du `test.skip(browserName === 'chromium', ...)`
 - Ajout de 10 lignes de logging pour traçabilité
 - Ajout d'une attente explicite sur le bouton d'import avant clic
 
 **Impact** :
+
 - Test désormais exécuté sur Chromium
 - Meilleure traçabilité en cas d'échec futur
 - Aucune modification de la logique métier du test
@@ -109,20 +113,24 @@ pnpm e2e
 ### 3. Documentation (`documentation/tests/e2e/playwright-e2e-guide.md`)
 
 **Changements** :
+
 - Nouvelle section 4.1 "Spécificités Chromium"
 - Documentation des `launchOptions` et de leur justification
 - Documentation du `expect.timeout` augmenté
 
 **Impact** :
+
 - Meilleure compréhension de la config Chromium pour les futurs contributeurs
 - Justification claire des choix techniques
 
 ### 4. Variables d'environnement (`.env.e2e.local`)
 
 **Changements** :
+
 - Ajout de `PLAYWRIGHT_EXPECT_TIMEOUT=30000` avec commentaire explicatif
 
 **Impact** :
+
 - Les développeurs peuvent override ce timeout si nécessaire
 - Documentation inline de la raison du timeout élevé
 
@@ -130,21 +138,21 @@ pnpm e2e
 
 ## Validation des requirements
 
-| Requirement | Status | Validation |
-|-------------|--------|------------|
-| **REQ-001** : Aligner stabilité Chromium/Firefox | ✅ | 4/4 tests passent sur les deux navigateurs |
-| **REQ-002** : Empêcher redirections `/join` | ✅ | Aucune redirection observée avec la nouvelle config |
-| **REQ-003** : Réactiver test oggdude Chromium | ✅ | `test.skip` supprimé, test passe |
-| **REQ-004** : Conserver exécution rapide | ✅ | Durée totale : 26.9s (4 tests), acceptable |
-| **REQ-005** : Conserver bonnes pratiques a11y | ✅ | Locators ARIA maintenus, pas de régression |
-| **SEC-001** : Limiter modifs au test | ✅ | `launchOptions` uniquement dans `playwright.config.ts` |
-| **CON-001** : Compat Foundry v13 | ✅ | Aucun changement d'API Foundry |
-| **CON-002** : Mono-worker | ✅ | `workers: 1` maintenu |
-| **CON-003** : Pas de `waitForTimeout` | ✅ | 0 `waitForTimeout` ajouté |
-| **GUD-001** : Centraliser logique session | ✅ | Helpers `foundryUI.ts` utilisés |
-| **GUD-002** : Logging explicite | ✅ | 10 lignes de logging ajoutées |
-| **PAT-001** : `ensureSessionActive` | ✅ | Déjà intégré dans les helpers |
-| **PAT-002** : Config Chromium isolée | ✅ | Pas d'impact sur Firefox vérifié |
+| Requirement                                      | Status | Validation                                             |
+| ------------------------------------------------ | ------ | ------------------------------------------------------ |
+| **REQ-001** : Aligner stabilité Chromium/Firefox | ✅     | 4/4 tests passent sur les deux navigateurs             |
+| **REQ-002** : Empêcher redirections `/join`      | ✅     | Aucune redirection observée avec la nouvelle config    |
+| **REQ-003** : Réactiver test oggdude Chromium    | ✅     | `test.skip` supprimé, test passe                       |
+| **REQ-004** : Conserver exécution rapide         | ✅     | Durée totale : 26.9s (4 tests), acceptable             |
+| **REQ-005** : Conserver bonnes pratiques a11y    | ✅     | Locators ARIA maintenus, pas de régression             |
+| **SEC-001** : Limiter modifs au test             | ✅     | `launchOptions` uniquement dans `playwright.config.ts` |
+| **CON-001** : Compat Foundry v13                 | ✅     | Aucun changement d'API Foundry                         |
+| **CON-002** : Mono-worker                        | ✅     | `workers: 1` maintenu                                  |
+| **CON-003** : Pas de `waitForTimeout`            | ✅     | 0 `waitForTimeout` ajouté                              |
+| **GUD-001** : Centraliser logique session        | ✅     | Helpers `foundryUI.ts` utilisés                        |
+| **GUD-002** : Logging explicite                  | ✅     | 10 lignes de logging ajoutées                          |
+| **PAT-001** : `ensureSessionActive`              | ✅     | Déjà intégré dans les helpers                          |
+| **PAT-002** : Config Chromium isolée             | ✅     | Pas d'impact sur Firefox vérifié                       |
 
 **Score de conformité** : 13/13 requirements satisfaits (100%) ✅
 
@@ -162,6 +170,7 @@ pnpm e2e --project=chromium
 ```
 
 **Observations** :
+
 - Aucun timeout
 - Aucune redirection `/join`
 - Logging clair et exploitable
@@ -176,6 +185,7 @@ pnpm e2e --project=firefox
 ```
 
 **Observations** :
+
 - Aucune régression
 - Temps d'exécution stable (Firefox toujours plus rapide que Chromium)
 
@@ -192,6 +202,7 @@ pnpm e2e:headed -- e2e/specs/oggdude-import.spec.ts
 ```
 
 **Observations** :
+
 - Navigation fluide Game Settings → System Settings
 - Aucun freeze ou redirection inattendue
 - Interface d'import OggDude s'affiche correctement
@@ -199,6 +210,7 @@ pnpm e2e:headed -- e2e/specs/oggdude-import.spec.ts
 ### TEST-005 : Test `ensureSessionActive` ⏳
 
 **Note** : Test unitaire non implémenté dans ce plan, car :
+
 1. Le helper est déjà utilisé et validé par les tests E2E
 2. La logique est simple (vérification URL + sidebar)
 3. Peut être ajouté dans une future itération si nécessaire
@@ -217,7 +229,8 @@ pnpm e2e:headed -- e2e/specs/oggdude-import.spec.ts
 ### RISK-002 : Allongement durée tests 📊
 
 **Évaluation** : Acceptable  
-**Impact mesuré** : 
+**Impact mesuré** :
+
 - Avant (3 tests) : ~21s
 - Après (4 tests) : ~27s
 - Augmentation : +6s pour +1 test = acceptable
@@ -284,14 +297,14 @@ pnpm e2e:headed -- e2e/specs/oggdude-import.spec.ts
 
 ## Métriques d'amélioration
 
-| Métrique | Avant | Après | Amélioration |
-|----------|-------|-------|--------------|
-| Tests passants Chromium | 1/2 (50%) | 2/2 (100%) | **+50%** ✅ |
-| Tests passants Firefox | 2/2 (100%) | 2/2 (100%) | Stable ✅ |
-| Couverture globale | 3/4 (75%) | 4/4 (100%) | **+25%** ✅ |
-| Tests skippés | 1 | 0 | **-100%** ✅ |
-| Durée totale suite | ~21s | ~27s | +6s (acceptable) |
-| Fiabilité (succès/tentative) | ~75% | 100% | **+25%** ✅ |
+| Métrique                     | Avant      | Après      | Amélioration     |
+| ---------------------------- | ---------- | ---------- | ---------------- |
+| Tests passants Chromium      | 1/2 (50%)  | 2/2 (100%) | **+50%** ✅      |
+| Tests passants Firefox       | 2/2 (100%) | 2/2 (100%) | Stable ✅        |
+| Couverture globale           | 3/4 (75%)  | 4/4 (100%) | **+25%** ✅      |
+| Tests skippés                | 1          | 0          | **-100%** ✅     |
+| Durée totale suite           | ~21s       | ~27s       | +6s (acceptable) |
+| Fiabilité (succès/tentative) | ~75%       | 100%       | **+25%** ✅      |
 
 ---
 
@@ -324,7 +337,7 @@ pnpm e2e
 # Tests Chromium uniquement
 pnpm e2e --project=chromium
 
-# Tests Firefox uniquement  
+# Tests Firefox uniquement
 pnpm e2e --project=firefox
 
 # Mode debug interactif
@@ -343,4 +356,3 @@ pnpm e2e -- e2e/specs/oggdude-import.spec.ts
 **Dernière mise à jour** : 30 novembre 2025  
 **Validé par** : Implémentation automatique selon plan  
 **Statut** : ✅ Archivé - Succès complet
-

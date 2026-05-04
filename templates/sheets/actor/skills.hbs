@@ -2,20 +2,45 @@
          data-tab="{{tabs.skills.id}}" data-group="{{tabs.skills.group}}">
 
     {{#if incomplete.skills}}
-        <div>
-            <div class="point-pools flexrow">
-                <span class="label">Career Free Skill(s) left</span>
-                <span class="value">{{progression.freeSkillRanks.career.available}}</span>
-                <span class="label">Specialization Free Skill(s) left</span>
-                <span class="value">{{progression.freeSkillRanks.specialization.available}}</span>
+    <section class="xp-console" data-skill-purchase-console>
+        <header class="xp-console__header">
+            <span class="xp-console__title">XP Transaction Console</span>
+            <span class="xp-console__status" data-xp-console-status>Awaiting selection</span>
+        </header>
+
+        <div class="xp-console__stats">
+            <div class="xp-console__stat">
+                <span class="xp-console__label">Available</span>
+                <span class="xp-console__value" data-xp-available>{{progression.experience.available}}</span>
             </div>
-            <div class="point-pools flexrow">
-                <span class="label">Experience Spent</span>
-                <span class="value">{{progression.experience.available}}</span>
-                <span class="label">Available</span>
-                <span class="value">{{progression.experience.total}}</span>
+
+            <div class="xp-console__stat">
+                <span class="xp-console__label">Spent</span>
+                <span class="xp-console__value" data-xp-spent>{{progression.experience.total}}</span>
+            </div>
+
+            <div class="xp-console__stat">
+                <span class="xp-console__label">Career Free</span>
+                <span class="xp-console__value" data-free-career-skills>{{progression.freeSkillRanks.career.available}}</span>
+            </div>
+
+            <div class="xp-console__stat">
+                <span class="xp-console__label">Specialty Free</span>
+                <span class="xp-console__value" data-free-specialization-skills>{{progression.freeSkillRanks.specialization.available}}</span>
+            </div>
+
+            <div class="xp-console__stat xp-console__stat--selected">
+                <span class="xp-console__label">Selected Cost</span>
+                <span class="xp-console__value" data-selected-skill-cost>—</span>
             </div>
         </div>
+
+        <div class="xp-console__selection" data-selected-skill-summary>
+            <span class="xp-console__selection-placeholder">
+                Select a skill to preview purchase cost.
+            </span>
+        </div>
+    </section>
     {{/if}}
 
     <div class="skills-wrapper">
@@ -68,7 +93,7 @@
                         <a class="button icon fa-solid fa-caret-down {{#unless skill.canDecrease}}invisible{{/unless}}"
                            data-tooltip="Decrease Skill Rank" data-action="skillDecrease"></a>
                         <div class="pips flexrow">
-                            {{#each skill.pips}}<span class="pip {{this}}"></span>{{/each}}
+                            {{#each skill.pips}}<span class="pip {{this.cssClass}}"></span>{{/each}}
                         </div>
                         <a class="button icon fa-solid fa-caret-up {{#unless skill.canIncrease}}invisible{{/unless}}"
                            data-tooltip="Increase Skill Rank" data-action="skillIncrease"></a>

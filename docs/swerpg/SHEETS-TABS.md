@@ -83,9 +83,9 @@ Le pattern swerpg associe très souvent **1 onglet = 1 part**.
 - Le template `templates/sheets/actor/body.hbs` itère sur `tabs` et insère :
 
 ```hbs
-<template data-application-part="header"></template>
+<template data-application-part='header'></template>
 {{#each tabs as |tab|}}
-  <template data-application-part="{{tab.id}}"></template>
+  <template data-application-part='{{tab.id}}'></template>
 {{/each}}
 ```
 
@@ -122,14 +122,10 @@ Dans swerpg acteur : `templates/sheets/actor/tabs.hbs`
 Extrait :
 
 ```hbs
-<nav class="sheet-tabs tabs" aria-label="{{localize 'SHEETS.FormNavLabel'}}">
+<nav class='sheet-tabs tabs' aria-label='{{localize "SHEETS.FormNavLabel"}}'>
   {{#each tabs as |tab|}}
-    <a class="{{tab.id}} {{tab.cssClass}}"
-       data-action="tab"
-       data-group="{{tab.group}}"
-       data-tab="{{tab.id}}"
-       data-tooltip="{{tab.label}}">
-      <img class="tab-icon" src="{{tab.icon}}" alt="" />
+    <a class='{{tab.id}} {{tab.cssClass}}' data-action='tab' data-group='{{tab.group}}' data-tab='{{tab.id}}' data-tooltip='{{tab.label}}'>
+      <img class='tab-icon' src='{{tab.icon}}' alt='' />
     </a>
   {{/each}}
 </nav>
@@ -154,9 +150,7 @@ Un panneau est généralement une section avec :
 Exemple sur item description : `templates/sheets/partials/item-description.hbs`
 
 ```hbs
-<section class="tab sheet-body flexcol {{tabs.description.cssClass}}"
-         data-tab="{{tabs.description.id}}"
-         data-group="{{tabs.description.group}}">
+<section class='tab sheet-body flexcol {{tabs.description.cssClass}}' data-tab='{{tabs.description.id}}' data-group='{{tabs.description.group}}'>
   ...
 </section>
 ```
@@ -275,15 +269,17 @@ Si tu réimplémentes ailleurs : calcule ces champs dans ton `_prepareContext()`
 Le markup minimal (reprend le pattern swerpg, avec les ajouts a11y) :
 
 ```hbs
-<nav class="sheet-tabs tabs" aria-label="{{localize 'SHEETS.FormNavLabel'}}">
+<nav class='sheet-tabs tabs' aria-label='{{localize "SHEETS.FormNavLabel"}}'>
   {{#each tabs as |tab|}}
-    <a class="{{tab.id}} {{tab.cssClass}}"
-       data-action="tab"
-       data-group="{{tab.group}}"
-       data-tab="{{tab.id}}"
-       data-tooltip="{{tab.label}}"
-       aria-label="{{localize tab.label}}">
-      <img class="tab-icon" src="{{tab.icon}}" alt="" aria-hidden="true" />
+    <a
+      class='{{tab.id}} {{tab.cssClass}}'
+      data-action='tab'
+      data-group='{{tab.group}}'
+      data-tab='{{tab.id}}'
+      data-tooltip='{{tab.label}}'
+      aria-label='{{localize tab.label}}'
+    >
+      <img class='tab-icon' src='{{tab.icon}}' alt='' aria-hidden='true' />
     </a>
   {{/each}}
 </nav>
@@ -424,4 +420,3 @@ Squelette LESS (adaptable) :
   - `styles/actor.less`
   - `styles/applications.less`
   - `styles/item.less`
-

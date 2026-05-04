@@ -1,246 +1,210 @@
 @import '../variables.less';
 
 .swerpg.sheet.actor {
-  .first-row-split {
-    display: grid;
-    grid-template-columns: 1fr 1fr; /* Deux colonnes égales */
-    gap: 1rem; /* optionnel : espace entre les colonnes */
+  .combat-telemetry {
+    display: flex;
+    gap: 1rem;
     height: 100%;
+    align-items: stretch;
 
-    div.sheet-section {
+    .sheet-section {
       margin: 0;
       padding: 0;
     }
+
+    .resources {
+      flex: 1.45;
+      min-width: 0;
+    }
+
+    .defenses {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .sheet-section > h3 {
+      position: relative;
+      z-index: 3;
+    }
   }
-}
 
-.left-half,
-.right-half {
-  width: 100%;
-  height: 100%;
-}
+  .left-half,
+  .right-half {
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+  }
 
-.left-half {
-  background-color: rgba(124, 125, 255, 1);
-}
+  .resources-wrapper {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: flex-end;
+    flex: 1;
+    width: 100%;
+    padding-top: 1.5rem;
 
-.right-half {
-  background-color: rgba(255, 0, 255, 1);
-}
-
-.resources-wrapper {
-  justify-content: space-evenly;
-  align-content: flex-end;
-  align-items: end;
-  flex: 1;
-  width: 100%;
-  /* Espace en haut pour empêcher les jauges de remonter sous le titre (h3).
-     padding-top crée un tampon à l'intérieur du conteneur pour que les jauges
-     commencent bien en dessous du titre. */
-  padding-top: 1.5rem;
-
-  .jauge-wrapper {
-    flex: none;
+    .jauge-wrapper {
+      flex: none;
+    }
   }
 
   .resource-bar-container {
+    --jauge-height: 85px;
+    --resource-color: #78a9c2;
+    --resource-border-color: rgb(42 54 66 / 0.6);
+    --resource-panel-bg: rgb(16 23 34 / 70%);
+    --resource-block-bg: rgb(8 12 18 / 80%);
+
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 90px;
     padding: 6px;
-    /* Augmentation de la largeur pour rendre le label plus visible */
-    width: 80px;
-    border: 2px solid #2a2a2a;
-    border-radius: 8px;
     gap: 0.5rem;
-    background-color: #1b1b1b;
-    box-shadow: 0 0 6px rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--resource-border-color);
+    border-radius: 6px;
+    background-color: var(--resource-panel-bg);
+    box-shadow: inset 0 1px 0 rgb(120 169 194 / 0.06);
 
-    /* Hauteur commune des jauges : changez la valeur si besoin. */
-    --jauge-height: 85px;
+    &.wounds {
+      --resource-color: #b55050;
+      --resource-border-color: #700;
+    }
+
+    &.strain {
+      --resource-color: #5ab4c9;
+      --resource-border-color: #046;
+    }
+
+    &.encumbrance {
+      --resource-color: #c4944a;
+      --resource-border-color: #a50;
+    }
 
     .icon {
-      flex-direction: column;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      align-content: center;
       justify-content: center;
       gap: 0.3rem;
 
       img {
-        /* Icônes légèrement plus grandes pour meilleure lisibilité */
-        width: 40px;
-        height: 40px;
-        filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.2));
+        display: block;
+        width: 36px;
+        height: 36px;
+        object-fit: contain;
+        filter: drop-shadow(0 0 1px rgb(255 255 255 / 0.06));
       }
     }
 
     .jauge {
       display: flex;
       flex-direction: column-reverse;
-      /* Plus d'espace entre les blocks pour une lecture plus claire */
-      gap: 6px;
-      width: 100%;
-      /* Fixe la hauteur totale de la zone des blocks pour que toutes les jauges aient la même taille. */
-      height: var(--jauge-height);
-      /* Permettre aux blocks de s'étirer pour remplir l'espace disponible. */
       align-items: stretch;
+      width: 100%;
+      height: var(--jauge-height);
+      gap: 6px;
     }
 
     .block {
-      /* Les blocks prennent une part égale de la hauteur définie par .jauge. */
       flex: 1 1 0;
       width: 100%;
-      border: 1px solid #555;
+      border: 1px solid rgb(42 54 66 / 0.35);
       border-radius: 2px;
-      background-color: #111;
-      opacity: 0.3;
+      background-color: var(--resource-block-bg);
+      opacity: 0.35;
       transition:
-        background-color 0.3s,
-        opacity 0.3s;
+        background-color 0.3s ease,
+        opacity 0.3s ease;
+
+      &.active {
+        background-color: var(--resource-color);
+        opacity: 1;
+      }
     }
 
     .label {
       position: relative;
-      /* Use flex layout to place decrease button, value and increase button on one line
-         Buttons will be at the edges and the value centered. */
-      /* Small default nudge to correct FontAwesome vertical baseline issues; tweak if needed */
-      --icon-nudge: -1px;
       display: flex;
-      align-items: center; /* vertical centering */
-      justify-content: space-between; /* buttons at each side */
+      align-items: center;
+      justify-content: center;
       width: 100%;
-      padding: 0 6px;
+      min-height: 20px;
+      padding: 0 28px;
       margin-top: 4px;
 
       .values {
-        /* Allow the value to take remaining space and be centered */
         flex: 1 1 auto;
+        min-width: 0;
         text-align: center;
-        /* Valeurs plus lisibles */
         font-size: 0.85rem;
         font-weight: 700;
-        color: #e6e6e6;
+        color: var(--color-text);
       }
 
-      /* Style the small icon buttons so they remain compact and centered */
       a.button.icon {
+        position: absolute;
+        top: 50%;
+        z-index: 2;
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: 24px;
-        height: 24px;
+        width: 20px;
+        height: 20px;
         padding: 0;
-        border-radius: 4px;
-        font-size: 12px;
-        /* Prevent baseline offsets from FontAwesome pseudo-elements */
-        line-height: 0;
         margin: 0;
-        vertical-align: middle;
-      }
-
-      /* Place the decrease/increase buttons absolutely so they do not shift the .values span
-         and can be perfectly vertically centered with top:50% + translateY(-50%). */
-      a.button.icon.decrease {
-        position: absolute;
-        left: 6px; /* matches .label padding */
-        top: 50%;
-        /* Allow a small manual nudge if icons need micro-adjustment */
-        transform: translateY(calc(-50% + var(--icon-nudge, 0px)));
-        z-index: 2;
-      }
-
-      a.button.icon.increase {
-        position: absolute;
-        right: 6px; /* matches .label padding */
-        top: 50%;
-        /* Allow a small manual nudge if icons need micro-adjustment */
-        transform: translateY(calc(-50% + var(--icon-nudge, 0px)));
-        z-index: 2;
-      }
-
-      /* Ensure the icon glyph (usually rendered with ::before) is block-level and centered */
-      a.button.icon::before {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 100%; /* fill the anchor so centering is exact */
+        border: 1px solid rgb(120 169 194 / 0.25);
+        border-radius: 3px;
+        background: transparent;
+        color: #78a9c2;
+        opacity: 0.5;
+        font-size: 10px;
         line-height: 1;
-        font-size: 14px; /* tweak if icon appears too small/large */
+        transform: translateY(-50%);
+        transition:
+          background 0.15s ease,
+          opacity 0.15s ease,
+          border-color 0.15s ease;
+
+        &:hover {
+          background: rgb(16 23 34 / 40%);
+          border-color: rgb(120 169 194 / 0.45);
+          opacity: 0.8;
+        }
+
+        &::before {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          height: 100%;
+          font-size: 12px;
+          line-height: 1;
+        }
+
+        &.decrease {
+          left: 6px;
+        }
+
+        &.increase {
+          right: 6px;
+        }
       }
     }
 
     .title {
-      text-transform: uppercase;
-      /* Titre agrandi pour meilleure visibilité */
-      font-size: 0.8rem;
-      font-family: 'Orbitron', sans-serif;
-      color: white;
-      text-shadow: 0 0 2px black;
-      font-weight: 700;
-      width: 85px;
       display: block;
+      width: 85px;
       overflow: hidden;
       text-overflow: ellipsis;
-      background: @background-dark;
       text-align: center;
-
-      &.wounds {
-        border-color: #700;
-        color: #ff0000;
-        box-shadow: 0 0 4px #ff3c3c;
-        opacity: 1;
-      }
-
-      &.strain {
-        border-color: #046;
-        color: #00bfff;
-        box-shadow: 0 0 4px #00eaff;
-        opacity: 1;
-      }
-
-      &.encumbrance {
-        border-color: #a50;
-        color: #ff9900;
-        box-shadow: 0 0 4px #ffc266;
-        opacity: 1;
-      }
-    }
-
-    // Thèmes spécifiques
-    &.wounds {
-      border-color: #700;
-
-      .block.active {
-        background-color: #ff0000;
-        box-shadow: 0 0 4px #ff3c3c;
-        opacity: 1;
-      }
-    }
-
-    &.strain {
-      border-color: #046;
-
-      .block.active {
-        background-color: #00bfff;
-        box-shadow: 0 0 4px #00eaff;
-        opacity: 1;
-      }
-    }
-
-    &.encumbrance {
-      border-color: #a50;
-
-      .block.active {
-        background-color: #ff9900;
-        box-shadow: 0 0 4px #ffc266;
-        opacity: 1;
-      }
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      font-family: var(--font-sans), serif;
+      font-weight: 700;
+      color: var(--resource-color);
+      text-shadow: 0 1px 2px rgb(0 0 0 / 0.5);
+      background: var(--color-frame-bg-75);
+      opacity: 1;
     }
   }
-}
-
-/* S'assurer que le titre est au-dessus des jauges */
-.swerpg.sheet.actor .sheet-section > h3 {
-  z-index: 2;
 }

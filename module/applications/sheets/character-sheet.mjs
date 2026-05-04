@@ -5,6 +5,7 @@ import ErrorSkill from '../../lib/skills/error-skill.mjs'
 import TalentFactory from '../../lib/talents/talent-factory.mjs'
 import ErrorTalent from '../../lib/talents/error-talent.mjs'
 import { logger } from '../../utils/logger.mjs'
+import { getSkillNextRankCost, getSkillPurchaseState, getPositiveDicePoolPreview } from '../../utils/skill-costs.mjs'
 
 /**
  * @typedef {Object} DefenseDisplayData
@@ -82,7 +83,6 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
       editSpecies: CharacterSheet.#onEditSpecies,
       editCareer: CharacterSheet.#onEditCareer,
       editSpecializations: CharacterSheet.#onEditSpecializations,
-      editBackground: CharacterSheet.#onEditBackground,
       toggleTrainedSkill: CharacterSheet.#onToggleTrainedSkill,
       toggleObligationExtraState: CharacterSheet.#onToggleObligationExtraState,
     },
@@ -107,7 +107,6 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
       speciesName: a.system.details.species?.name || game.i18n.localize('SPECIES.SHEET.CHOOSE'),
       careerName: a.system.details.career?.name || game.i18n.localize('CAREER.SHEET.CHOOSE'),
       specializationName: Array.from(a.system.details.specializations)[0]?.name || game.i18n.localize('SPECIALIZATION.SHEET.CHOOSE'),
-      backgroundName: a.system.details.background?.name || game.i18n.localize('BACKGROUND.SHEET.CHOOSE'),
       talentTreeButtonText: game.system.tree.actor === a ? 'Close Talent Tree' : 'Open Talent Tree',
       experience: a.system.experience,
     })
@@ -124,19 +123,17 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
       career: !s.system.details.career?.name,
       specialization: s.system.details.specializations?.length === 0,
       freeSkill: a.hasFreeSkillsAvailable(),
-      background: !s.system.details.background?.name,
       characteristics: true,
       skills: true,
       talents: true,
     })
-    i.creation = i.species || i.career || i.freeSkill || i.specialization || i.background || i.characteristics || i.skills || i.talents
+    i.creation = i.species || i.career || i.freeSkill || i.specialization || i.characteristics || i.skills || i.talents
     if (i.creation) {
       i.creationTooltip = '<p>Character Creation Incomplete!</p><ol>'
       if (i.species) i.creationTooltip += '<li>Select Species</li>'
       if (i.career) i.creationTooltip += '<li>Select Career</li>'
       if (i.specialization) i.creationTooltip += '<li>Select Specialization</li>'
       if (i.freeSkill) i.creationTooltip += '<li>Use Free Skill</li>'
-      if (i.background) i.creationTooltip += '<li>Select Background</li>'
       if (i.characteristics) i.creationTooltip += '<li>Spend Ability Points</li>'
       if (i.skills) i.creationTooltip += '<li>Spend Skill Points</li>'
       if (i.talents) i.creationTooltip += '<li>Spend Talent Points</li>'
@@ -343,17 +340,6 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
 
   /* -------------------------------------------- */
 
-  /**
-   * Handle click action to choose or edit your Background.
-   * @this {CharacterSheet}
-   * @param {PointerEvent} event
-   * @returns {Promise<void>}
-   */
-  static async #onEditBackground(event) {
-    await this.actor._viewDetailItem('background', { editable: false })
-  }
-
-  /* -------------------------------------------- */
   /*  Drag and Drop                               */
 
   /* -------------------------------------------- */
@@ -371,17 +357,6 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
       case 'specialization':
         await this.actor.system.applySpecialization(item)
         return
-      case 'background':
-        await this.actor.system.applyBackground(item)
-        return
-      case 'spell':
-        try {
-          this.actor.canLearnIconicSpell(item)
-        } catch (err) {
-          ui.notifications.warn(err.message)
-          return
-        }
-        break
       case 'talent':
         // Build the skill class depending on the context
         const talentClass = TalentFactory.build(
@@ -443,6 +418,12 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
    * @returns {undefined}
    */
   static #prepareSkills(actor) {
+    const freeCareerSkillsLeft =
+      (actor.system.progression?.freeSkillRanks?.career?.gained ?? 0) - (actor.system.progression?.freeSkillRanks?.career?.spent ?? 0)
+    const freeSpecializationSkillsLeft =
+      (actor.system.progression?.freeSkillRanks?.specialization?.gained ?? 0) - (actor.system.progression?.freeSkillRanks?.specialization?.spent ?? 0)
+    const availableXp = actor.system.experience?.available ?? 0
+
     const skills = Object.entries(actor.system.skills)
       .map(([k, v]) => ({
         id: k,
@@ -452,9 +433,36 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
       .map((skill) => {
         const total = skill.rank.base + skill.rank.careerFree + skill.rank.specializationFree + skill.rank.trained
         const skillEnriched = foundry.utils.mergeObject(skill, { rank: { value: total } })
+        const isCareer = skillEnriched.freeRank?.isCareer ?? false
+        const isSpecialization = skillEnriched.freeRank?.isSpecialization ?? false
+        const purchaseState = getSkillPurchaseState({
+          rank: total,
+          isCareer,
+          isSpecialization,
+          availableXp,
+          freeCareerSkillsLeft,
+          freeSpecializationSkillsLeft,
+        })
+        // Get characteristic ID (could be direct ID or object with id property)
+        const characteristicId = skill.characteristics?.id || skill.characteristics
+        const characteristicValue = characteristicId ? (actor.system.characteristics[characteristicId]?.rank.value ?? 0) : 0
+
+        const characteristicValueSkillRank = {
+          characteristicValue,
+          skillRank: total,
+        }
+        const dicePreview = getPositiveDicePoolPreview(characteristicValueSkillRank)
+        // Attach dicePreview to skillEnriched BEFORE preparing ranks
+        skillEnriched.dicePreview = dicePreview
         return {
           pips: this._prepareSkillRanks(skillEnriched),
           freeRank: this._prepareFreeSkill(actor, skill.id),
+          nextRank: purchaseState.nextRank,
+          nextCost: purchaseState.nextCost,
+          canPurchase: purchaseState.canPurchase,
+          isFreePurchase: purchaseState.isFreePurchase,
+          purchaseReason: purchaseState.reason,
+          dicePreview,
           ...skillEnriched,
         }
       })
@@ -472,14 +480,28 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
 
   /**
    * Prepare the skill Ranks for the context
-   * If skill rank is equal or greater of the current pip value then it is filled otherwise it is empty
+   * Uses dicePreview to display ability dice (untrained/losange) and proficiency dice (trained/hexagone)
    * @param skill
-   * @returns {undefined}
+   * @returns {Array} Array of pip objects with appropriate cssClass
    */
   static _prepareSkillRanks(skill) {
-    return Array.from({ length: 5 }, (_, i) => ({
-      cssClass: i < skill.rank.value ? 'trained' : 'untrained',
-    }))
+    const abilityDice = skill.dicePreview?.ability ?? 0
+    const proficiencyDice = skill.dicePreview?.proficiency ?? 0
+    const totalDice = abilityDice + proficiencyDice
+
+    const pips = []
+
+    // Add proficiency dice (trained dice) first - hexagone D12
+    for (let i = 0; i < proficiencyDice; i++) {
+      pips.push({ cssClass: 'trained' })
+    }
+
+    // Add ability dice (normal dice) after - losange vert
+    for (let i = 0; i < abilityDice; i++) {
+      pips.push({ cssClass: 'untrained' })
+    }
+
+    return pips
   }
 
   /**
@@ -634,18 +656,5 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
    */
   #computeObligationPoints(obligations) {
     return obligations.reduce((total, obligation) => total + obligation.value, 0)
-  }
-
-  /**
-   * Builds a list of motivations for the character sheet.
-   * @returns {MotivationDisplayData[]}
-   */
-  #buildMotivationList() {
-    return this.buildItemListByType('motivation', (motivation) => ({
-      id: motivation.id,
-      name: motivation.name,
-      img: motivation.img,
-      cssClass: motivation.system.isExtra ? 'extra' : '',
-    }))
   }
 }

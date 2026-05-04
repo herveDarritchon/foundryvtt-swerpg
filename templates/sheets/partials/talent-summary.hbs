@@ -1,16 +1,6 @@
 <section class="description">
-  {{{source.system.description}}}
+  {{source.system.description}}
 </section>
-
-{{#if source.system.iconicSpells}}
-  <p class="iconic-spells">
-    <strong>{{localize "SPELL.IconicPl"}}:</strong>
-    {{source.name}}
-    grants
-    {{source.system.iconicSpells}}
-    Iconic Spell slots.
-  </p>
-{{/if}}
 
 {{#if actions.length}}
   <section class="actions">

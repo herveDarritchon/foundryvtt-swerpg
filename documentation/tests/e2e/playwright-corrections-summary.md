@@ -67,16 +67,16 @@ pnpm e2e
 
 ### Avant corrections
 
-| Test | Firefox | Chromium | Statut |
-|------|---------|----------|--------|
-| bootstrap.spec.ts | ✅ | ❌ Timeout 9s | Instable |
-| oggdude-import.spec.ts | ✅ | ❌ Timeout + redirect /join | Instable |
+| Test                   | Firefox | Chromium                    | Statut   |
+| ---------------------- | ------- | --------------------------- | -------- |
+| bootstrap.spec.ts      | ✅      | ❌ Timeout 9s               | Instable |
+| oggdude-import.spec.ts | ✅      | ❌ Timeout + redirect /join | Instable |
 
 ### Après corrections
 
-| Test | Firefox | Chromium | Statut |
-|------|---------|----------|--------|
-| bootstrap.spec.ts | ✅ (4.6s) | ✅ (5.6s) | **Stable** |
+| Test                   | Firefox   | Chromium   | Statut     |
+| ---------------------- | --------- | ---------- | ---------- |
+| bootstrap.spec.ts      | ✅ (4.6s) | ✅ (5.6s)  | **Stable** |
 | oggdude-import.spec.ts | ✅ (4.1s) | ⏭️ Skipped | Temporaire |
 
 **Couverture globale**: 3/4 tests passent (75%) - 100% sur Firefox ✅
@@ -114,6 +114,7 @@ pnpm e2e
 ### Court terme (1-2 jours)
 
 1. **Analyser les traces Playwright** du test oggdude-import sur Chromium :
+
    ```bash
    pnpm exec playwright show-trace test-results/.../trace.zip
    ```
@@ -184,4 +185,3 @@ Les corrections ont été appliquées avec succès. La suite E2E est maintenant 
 Le problème Chromium identifié est un **edge case** spécifique à la navigation settings système et ne remet pas en cause la qualité des corrections apportées. Toutes les améliorations du code review (suppression `waitForTimeout`, attentes explicites, helpers réutilisables) sont **valides et maintenues**.
 
 **Recommandation**: Considérer les tests comme prêts pour la CI avec Firefox comme navigateur principal, Chromium en secondaire avec le skip temporaire documenté.
-
