@@ -2636,61 +2636,6 @@ input[type='range'] {
   padding: 1rem;
 }
 /** ----------------------------------------- *
- *  Archetype Sheet                           *
- * ------------------------------------------ */
-.swerpg.archetype .characteristics .form-fields,
-.swerpg.taxonomy .characteristics .form-fields,
-.swerpg.archetype .resistances .form-fields,
-.swerpg.taxonomy .resistances .form-fields {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-gap: 0.5rem;
-}
-.swerpg.archetype .characteristics .form-fields label,
-.swerpg.taxonomy .characteristics .form-fields label,
-.swerpg.archetype .resistances .form-fields label,
-.swerpg.taxonomy .resistances .form-fields label {
-  padding: 0.25rem;
-  border: 1px solid var(--color-frame);
-  border-radius: 6px;
-}
-.swerpg.archetype .characteristics .form-fields input,
-.swerpg.taxonomy .characteristics .form-fields input,
-.swerpg.archetype .resistances .form-fields input,
-.swerpg.taxonomy .resistances .form-fields input {
-  --input-border-color: transparent;
-  font-size: var(--font-size-18);
-}
-.swerpg.archetype .characteristics .sum,
-.swerpg.taxonomy .characteristics .sum,
-.swerpg.archetype .resistances .sum,
-.swerpg.taxonomy .resistances .sum {
-  margin-left: 0.25rem;
-  padding: 0.25rem 0.5rem;
-  border: 1px solid green;
-  border-radius: 4px;
-}
-.swerpg.archetype .characteristics .sum.invalid,
-.swerpg.taxonomy .characteristics .sum.invalid,
-.swerpg.archetype .resistances .sum.invalid,
-.swerpg.taxonomy .resistances .sum.invalid {
-  border-color: red;
-}
-.swerpg.archetype .resistances .form-fields,
-.swerpg.taxonomy .resistances .form-fields {
-  grid-template-columns: repeat(4, 1fr);
-}
-.swerpg.archetype .talents,
-.swerpg.taxonomy .talents {
-  gap: 1rem;
-}
-.swerpg.archetype .droppable,
-.swerpg.taxonomy .droppable {
-  padding: 0 1rem;
-  border: 1px dashed var(--color-frame);
-  border-radius: 6px;
-}
-/** ----------------------------------------- *
  *  Background Sheet                          *
  * ------------------------------------------ */
 .swerpg.background .talents .talent .tags {
@@ -3043,7 +2988,6 @@ input[type='range'] {
   /** Dice Pool Visualization */
   /** Dice Roll Bonuses */
   /** Boon and Bane Details */
-  /** Spell Components */
 }
 .swerpg.dice-roll .standard-check {
   padding: 1rem;
@@ -3351,13 +3295,6 @@ input[type='range'] {
   background: none;
   line-height: 20px;
   height: auto;
-}
-.swerpg.dice-roll .spell-component {
-  font-size: var(--font-size-12);
-  line-height: 1.25em;
-}
-.swerpg.dice-roll .spell-component > label {
-  flex: 2;
 }
 /* ----------------------------------------- */
 /*  Action Roll                              */
