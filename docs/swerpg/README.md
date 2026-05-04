@@ -60,14 +60,8 @@ Bienvenue dans la documentation technique du système Star Wars Edge RPG pour Fo
 - **[OBLIGATION_SYSTEM.md](./modules/OBLIGATION_SYSTEM.md)** - Système d'obligations
   - Obligations Edge of the Empire
   - Devoirs Age of Rebellion
-  - Conflits Force and Destiny
+  - Conflits narratifs
   - Gestion automatique des déclenchements
-
-- **[FORCE_SYSTEM.md](./modules/FORCE_SYSTEM.md)** - Système de la Force
-  - Pouvoirs de la Force
-  - Points de Force et Destinée
-  - Côté obscur et lumineux
-  - Moralité et conflit
 
 ### 📋 Exigences
 
@@ -147,7 +141,6 @@ Cette documentation est destinée à :
 
 1. Commencez par **[DICE_SYSTEM.md](./modules/DICE_SYSTEM.md)** pour comprendre les mécaniques de base
 2. Consultez **[OBLIGATION_SYSTEM.md](./modules/OBLIGATION_SYSTEM.md)** pour les complications narratives
-3. Explorez **[FORCE_SYSTEM.md](./modules/FORCE_SYSTEM.md)** pour les utilisateurs de la Force
 
 ## 🌟 Spécificités Star Wars Edge RPG
 
@@ -167,9 +160,8 @@ Le système Star Wars Edge RPG se distingue par :
 
 ### Intégration Star Wars
 
-- **Trois Systèmes** : Edge of the Empire, Age of Rebellion, Force and Destiny
+- **Systèmes** : Edge of the Empire, Age of Rebellion
 - **Obligations/Devoirs** : Complications personnelles intégrées au gameplay
-- **La Force** : Système mystique avec conséquences morales
 
 ## 📈 Métriques du Système
 

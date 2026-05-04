@@ -28,7 +28,6 @@ Cette documentation technique couvre l'architecture, les modules, les exigences,
 | [DICE_SYSTEM.md](./modules/DICE_SYSTEM.md)             | Système de dés narratifs SW           |
 | [TALENT_SYSTEM.md](./modules/TALENT_SYSTEM.md)         | Système de talents et spécialisations |
 | [OBLIGATION_SYSTEM.md](./modules/OBLIGATION_SYSTEM.md) | Système d'obligations et devoirs      |
-| [FORCE_SYSTEM.md](./modules/FORCE_SYSTEM.md)           | Système de la Force                   |
 
 ### Exigences
 
@@ -96,7 +95,6 @@ Cette documentation technique couvre l'architecture, les modules, les exigences,
 | Dés Narratifs    | [DICE_SYSTEM.md](./modules/DICE_SYSTEM.md), [NARRATIVE_DICE.md](./rules/NARRATIVE_DICE.md), [OVERVIEW.md](./architecture/OVERVIEW.md)                          |
 | Talents          | [TALENT_SYSTEM.md](./modules/TALENT_SYSTEM.md), [OVERVIEW.md](./architecture/OVERVIEW.md), [MODELS.md](./architecture/MODELS.md)                               |
 | Obligations      | [OBLIGATION_SYSTEM.md](./modules/OBLIGATION_SYSTEM.md), [OVERVIEW.md](./architecture/OVERVIEW.md)                                                              |
-| La Force         | [FORCE_SYSTEM.md](./modules/FORCE_SYSTEM.md), [OVERVIEW.md](./architecture/OVERVIEW.md), [MODELS.md](./architecture/MODELS.md)                                 |
 | Combat           | [DICE_SYSTEM.md](./modules/DICE_SYSTEM.md), [OVERVIEW.md](./architecture/OVERVIEW.md)                                                                          |
 | Progression      | [TALENT_SYSTEM.md](./modules/TALENT_SYSTEM.md), [MODELS.md](./architecture/MODELS.md)                                                                          |
 | Caractéristiques | [MODELS.md](./architecture/MODELS.md)                                                                                                                          |
@@ -111,7 +109,6 @@ Cette documentation technique couvre l'architecture, les modules, les exigences,
 | ---------------------- | ------------------------------------------------------------------------------------------------------ |
 | **Edge of the Empire** | [OBLIGATION_SYSTEM.md](./modules/OBLIGATION_SYSTEM.md), [TALENT_SYSTEM.md](./modules/TALENT_SYSTEM.md) |
 | **Age of Rebellion**   | [TALENT_SYSTEM.md](./modules/TALENT_SYSTEM.md), [OVERVIEW.md](./architecture/OVERVIEW.md)              |
-| **Force and Destiny**  | [FORCE_SYSTEM.md](./modules/FORCE_SYSTEM.md), [TALENT_SYSTEM.md](./modules/TALENT_SYSTEM.md)           |
 
 ### Par Type d'Acteur
 
@@ -128,16 +125,15 @@ Cette documentation couvre spécifiquement les mécaniques uniques du système S
 - **Dés Narratifs** : Système unique utilisant succès, avantages, menaces et désespoir
 - **Obligations** : Système de complications personnelles pour les personnages
 - **Talents** : Arbres de talents spécialisés par carrière et spécialisation
-- **La Force** : Pouvoir mystique avec côté obscur et lumineux
 - **Stress & Trauma** : Gestion des blessures physiques et mentales
-- **Destinée** : Points de Force partagés entre MJ et joueurs
+- **Destinée** : Points de Destin partagés entre MJ et joueurs
 
 ## 📊 Statistiques de Documentation
 
 > Ces chiffres sont indicatifs et seront ajustés au fil de l'enrichissement de la documentation.
 
 - **Architecture** : forte couverture (overview + dossiers spécialisés)
-- **Modules** : documentation détaillée pour les systèmes centraux (dés, talents, obligations, Force)
+- **Modules** : documentation détaillée pour les systèmes centraux (dés, talents, obligations)
 - **Exigences** : exigences fonctionnelles, non-fonctionnelles et cas spécifiques OggDude
 - **Tests & Qualité** : plusieurs guides dédiés (tests UI, couverture, stratégie globale)
 
