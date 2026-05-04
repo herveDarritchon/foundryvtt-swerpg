@@ -142,58 +142,6 @@
 }
 
 /** ----------------------------------------- *
- *  Archetype Sheet                           *
- * ------------------------------------------ */
-
-.swerpg.archetype,
-.swerpg.taxonomy {
-  .characteristics,
-  .resistances {
-    .form-fields {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      grid-gap: 0.5rem;
-
-      label {
-        padding: 0.25rem;
-        border: 1px solid var(--color-frame);
-        border-radius: 6px;
-      }
-
-      input {
-        --input-border-color: transparent;
-        font-size: var(--font-size-18);
-      }
-    }
-
-    .sum {
-      margin-left: 0.25rem;
-      padding: 0.25rem 0.5rem;
-      border: 1px solid green;
-      border-radius: 4px;
-
-      &.invalid {
-        border-color: red;
-      }
-    }
-  }
-
-  .resistances .form-fields {
-    grid-template-columns: repeat(4, 1fr);
-  }
-
-  .talents {
-    gap: 1rem;
-  }
-
-  .droppable {
-    padding: 0 1rem;
-    border: 1px dashed var(--color-frame);
-    border-radius: 6px;
-  }
-}
-
-/** ----------------------------------------- *
  *  Background Sheet                          *
  * ------------------------------------------ */
 
