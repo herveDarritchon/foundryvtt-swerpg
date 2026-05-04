@@ -280,7 +280,7 @@ export default class SwerpgCharacter extends SwerpgActorType {
   points
 
   /**
-   * Character actor size is determined by their ancestry and size modifier.
+   * Character actor size.
    * @type {number}
    */
   size
@@ -292,9 +292,7 @@ export default class SwerpgCharacter extends SwerpgActorType {
 
   /** @override */
   prepareBaseData() {
-    // This.#prepareAdvancement();
-    // this.#prepareExperience();
-    this.size = (this.details?.ancestry?.size || 3) + (this.details?.size || 0)
+    this.size = 3 + (this.details?.size || 0)
     this.#prepareSpecies()
     this.#prepareCareer()
     this.#prepareSpecializations()
@@ -305,11 +303,12 @@ export default class SwerpgCharacter extends SwerpgActorType {
   /* -------------------------------------------- */
 
   /**
-   * Prepare base movement attributes that are defined by the Character's Ancestry and bonuses.
+   * Prepare base movement attributes.
    */
   #prepareBaseMovement() {
     const m = this.movement
-    const { size = 3, stride = 10 } = this.details.ancestry || {}
+    const size = 3
+    const stride = 10
     m.size = size + m.sizeBonus
     m.stride = stride + m.strideBonus
   }
@@ -360,9 +359,6 @@ export default class SwerpgCharacter extends SwerpgActorType {
       const careerDefaults = swerpg.api.models.SwerpgCareer.schema.getInitialValue()
       this.details.career = this.schema.getField('details.career').initialize(careerDefaults)
     }
-
-    // This.details.background ||= this.schema.getField("details.background").initialize({});
-
     // Threat level
     /*        this.advancement.threatLevel = this.advancement.level;
                 this.advancement.threatFactor = 1;*/
@@ -616,21 +612,6 @@ export default class SwerpgCharacter extends SwerpgActorType {
       canClear: true,
       isCollection: true,
       collectionKey: 'specializations',
-    })
-  }
-
-  /* -------------------------------------------- */
-
-  /**
-   * Apply a Background item to this Character Actor.
-   * @param {SwerpgItem} background     The background Item to apply to the Actor.
-   * @returns {Promise<void>}
-   */
-  async applyBackground(background) {
-    const actor = this.parent
-    await actor._applyDetailItem(background, {
-      canApply: actor.isL0 && !actor.points.skill.spent,
-      canClear: actor.isL0,
     })
   }
 }

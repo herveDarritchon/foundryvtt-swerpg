@@ -28,10 +28,6 @@
             <a>{{#if incomplete.specialization}}<i class="fa-solid fa-circle-plus"></i> {{/if}}{{specializationName}}
             </a>
         </h2>
-        <h2 class="background flexrow {{#if incomplete.background}}incomplete{{/if}}" data-action="editBackground"
-            {{#if incomplete.background}}data-tooltip="WALKTHROUGH.AddBackground"{{/if}}>
-            <a>{{#if incomplete.background}}<i class="fa-solid fa-circle-plus"></i> {{/if}}{{backgroundName}}</a>
-        </h2>
         {{#if actor.system.details.signatureName}}
             <h2 class="signature">{{actor.system.details.signatureName}}</h2>
         {{/if}}

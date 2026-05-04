@@ -101,12 +101,17 @@ describe('SkillFactory - Additional Coverage', () => {
       actor.system.skills.brawl.rank.trained = 1
       const skillId = 'brawl'
 
-      const skill = SkillFactory.build(actor, skillId, {
-        action: 'forget',
-        isCreation: false,
-        isCareer: false,
-        isSpecialization: false,
-      }, {})
+      const skill = SkillFactory.build(
+        actor,
+        skillId,
+        {
+          action: 'forget',
+          isCreation: false,
+          isCareer: false,
+          isSpecialization: false,
+        },
+        {},
+      )
 
       expect(skill).toBeInstanceOf(TrainedSkill)
     })

@@ -83,7 +83,6 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
       editSpecies: CharacterSheet.#onEditSpecies,
       editCareer: CharacterSheet.#onEditCareer,
       editSpecializations: CharacterSheet.#onEditSpecializations,
-      editBackground: CharacterSheet.#onEditBackground,
       toggleTrainedSkill: CharacterSheet.#onToggleTrainedSkill,
       toggleObligationExtraState: CharacterSheet.#onToggleObligationExtraState,
     },
@@ -108,7 +107,6 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
       speciesName: a.system.details.species?.name || game.i18n.localize('SPECIES.SHEET.CHOOSE'),
       careerName: a.system.details.career?.name || game.i18n.localize('CAREER.SHEET.CHOOSE'),
       specializationName: Array.from(a.system.details.specializations)[0]?.name || game.i18n.localize('SPECIALIZATION.SHEET.CHOOSE'),
-      backgroundName: a.system.details.background?.name || game.i18n.localize('BACKGROUND.SHEET.CHOOSE'),
       talentTreeButtonText: game.system.tree.actor === a ? 'Close Talent Tree' : 'Open Talent Tree',
       experience: a.system.experience,
     })
@@ -125,19 +123,17 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
       career: !s.system.details.career?.name,
       specialization: s.system.details.specializations?.length === 0,
       freeSkill: a.hasFreeSkillsAvailable(),
-      background: !s.system.details.background?.name,
       characteristics: true,
       skills: true,
       talents: true,
     })
-    i.creation = i.species || i.career || i.freeSkill || i.specialization || i.background || i.characteristics || i.skills || i.talents
+    i.creation = i.species || i.career || i.freeSkill || i.specialization || i.characteristics || i.skills || i.talents
     if (i.creation) {
       i.creationTooltip = '<p>Character Creation Incomplete!</p><ol>'
       if (i.species) i.creationTooltip += '<li>Select Species</li>'
       if (i.career) i.creationTooltip += '<li>Select Career</li>'
       if (i.specialization) i.creationTooltip += '<li>Select Specialization</li>'
       if (i.freeSkill) i.creationTooltip += '<li>Use Free Skill</li>'
-      if (i.background) i.creationTooltip += '<li>Select Background</li>'
       if (i.characteristics) i.creationTooltip += '<li>Spend Ability Points</li>'
       if (i.skills) i.creationTooltip += '<li>Spend Skill Points</li>'
       if (i.talents) i.creationTooltip += '<li>Spend Talent Points</li>'
@@ -344,17 +340,6 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
 
   /* -------------------------------------------- */
 
-  /**
-   * Handle click action to choose or edit your Background.
-   * @this {CharacterSheet}
-   * @param {PointerEvent} event
-   * @returns {Promise<void>}
-   */
-  static async #onEditBackground(event) {
-    await this.actor._viewDetailItem('background', { editable: false })
-  }
-
-  /* -------------------------------------------- */
   /*  Drag and Drop                               */
 
   /* -------------------------------------------- */
@@ -372,17 +357,6 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
       case 'specialization':
         await this.actor.system.applySpecialization(item)
         return
-      case 'background':
-        await this.actor.system.applyBackground(item)
-        return
-      case 'spell':
-        try {
-          this.actor.canLearnIconicSpell(item)
-        } catch (err) {
-          ui.notifications.warn(err.message)
-          return
-        }
-        break
       case 'talent':
         // Build the skill class depending on the context
         const talentClass = TalentFactory.build(
@@ -682,18 +656,5 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
    */
   #computeObligationPoints(obligations) {
     return obligations.reduce((total, obligation) => total + obligation.value, 0)
-  }
-
-  /**
-   * Builds a list of motivations for the character sheet.
-   * @returns {MotivationDisplayData[]}
-   */
-  #buildMotivationList() {
-    return this.buildItemListByType('motivation', (motivation) => ({
-      id: motivation.id,
-      name: motivation.name,
-      img: motivation.img,
-      cssClass: motivation.system.isExtra ? 'extra' : '',
-    }))
   }
 }

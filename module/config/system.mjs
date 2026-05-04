@@ -6,7 +6,6 @@ import * as dice from './dice.mjs'
 import { logger } from '../utils/logger.mjs'
 import * as EFFECTS from './effects.mjs'
 import * as SKILL from './skills.mjs'
-import * as SPELL from './spellcraft.mjs'
 import * as WEAPON from './weapon.mjs'
 import { ENCHANTMENT_TIERS, QUALITY_TIERS } from './items.mjs'
 import { ASCII, ASCII_DEV_MODE, DEV_MODE } from '../applications/system/constants.mjs'
@@ -32,9 +31,8 @@ export const ANCESTRIES = {
  * @enum {string}
  */
 export const COMPENDIUM_PACKS = {
-  background: 'swerpg.background',
-  origin: 'swerpg.origin',
   talent: 'swerpg.talent',
+  talentExtensions: null,
 }
 
 /* -------------------------------------------- */
@@ -211,7 +209,6 @@ export const SYSTEM = {
   SKILL,
   SKILLS: ATTRIBUTES.SKILLS,
   SECONDARY_ATTRIBUTES: ATTRIBUTES.SECONDARY_ATTRIBUTES,
-  SPELL,
   TALENTS: ATTRIBUTES.TALENTS,
   TALENT_ACTIVATION: ATTRIBUTES.TALENT_ACTIVATION,
   THREAT_LEVELS,

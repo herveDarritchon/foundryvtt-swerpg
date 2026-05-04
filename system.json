@@ -140,9 +140,6 @@
       "armor": {
         "htmlFields": ["description.public", "description.secret"]
       },
-      "background": {
-        "htmlFields": ["description"]
-      },
       "career": {
         "htmlFields": ["description"]
       },
@@ -150,9 +147,6 @@
         "htmlFields": ["description.public", "description.secret"]
       },
       "obligation": {
-        "htmlFields": ["description"]
-      },
-      "origin": {
         "htmlFields": ["description"]
       },
       "specialization": {
