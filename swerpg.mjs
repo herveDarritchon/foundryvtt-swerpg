@@ -16,9 +16,6 @@ import * as dice from './module/dice/_module.mjs'
 import * as documents from './module/documents/_module.mjs'
 import * as models from './module/models/_module.mjs'
 import * as hooks from './module/hooks/_module.mjs'
-import MotivationCategorySheet from './module/applications/sheets/motivation-category.mjs'
-import MotivationSheet from './module/applications/sheets/motivation.mjs'
-import DutySheet from './module/applications/sheets/duty.mjs'
 
 // Canvas
 import SwerpgRuler from './module/canvas/ruler.mjs'
@@ -87,77 +84,13 @@ Hooks.once('init', async function () {
     hooks,
   }
 
-  //     /**
-  //  * Configurable properties of the system which affect its behavior.
-  //  */
-  // crucible.CONFIG = {
-  //     /**
-  //      * Configured setting-specific currency denominations.
-  //      * @type {Record{string, CrucibleCurrencyDenomination}
-  //      * @see @link{SYSTEM.ACTOR.CURRENCY_DENOMINATIONS}
-  //      */
-  //     currency: foundry.utils.deepClone(SYSTEM.ACTOR.CURRENCY_DENOMINATIONS),
-  //
-  //     /**
-  //      * Configuration of compendium packs which are used as sources for system workflows.
-  //      * @type {Record<string, Set<string>>}
-  //      */
-  //     packs: {
-  //         ancestry: new Set([SYSTEM.COMPENDIUM_PACKS.ancestry]),
-  //         background: new Set([SYSTEM.COMPENDIUM_PACKS.background]),
-  //         spell: new Set([SYSTEM.COMPENDIUM_PACKS.spell]),
-  //         talent: new Set([SYSTEM.COMPENDIUM_PACKS.talent]),
-  //     },
-  //     /**
-  //      * The character creation sheet class which should be registered
-  //      * @type {typeof applications.CrucibleHeroCreationSheet}
-  //      */
-  //     heroCreationSheet: applications.CrucibleHeroCreationSheet,
-  //
-  //     /**
-  //      * The knowledge topics configured for the system.
-  //      * @type {Record<string, CrucibleKnowledgeConfig>}
-  //      */
-  //     knowledge: foundry.utils.deepClone(SYSTEM.SKILL.DEFAULT_KNOWLEDGE),
-  //
-  //     /**
-  //      * The categories a language can belong to.
-  //      * @type {Record<string, {label: string}}
-  //      */
-  //     languageCategories: foundry.utils.deepClone(SYSTEM.ACTOR.LANGUAGE_CATEGORIES),
-  //
-  //     /**
-  //      * The languages a creature can know.
-  //      * @type {Record<string, {label: string, category?: string}>}
-  //      */
-  //     languages: foundry.utils.deepClone(SYSTEM.ACTOR.LANGUAGES)
-  // };
-  // /** @deprecated */
-  // crucible.CONFIG.ancestryPacks = crucible.CONFIG.packs.ancestry;
-  //
-  // /**
-  //  * The primary party of player characters.
-  //  * @type {CrucibleActor|null}
-  //  */
-  // Object.defineProperty(crucible, "party", {
-  //     get() {
-  //         return party;
-  //     }
-  // });
-
   // Actor document configuration
   CONFIG.Actor.documentClass = documents.SwerpgActor
   CONFIG.Actor.dataModels = {
     adversary: models.SwerpgAdversary,
-    hero: models.SwerpgHero,
     character: models.SwerpgCharacter,
   }
   foundry.documents.collections.Actors.unregisterSheet('core', foundry.appv1.sheets.ActorSheet)
-  foundry.documents.collections.Actors.registerSheet(SYSTEM.id, applications.HeroSheet, {
-    types: ['character'],
-    label: 'SWERPG.SHEETS.Character',
-    makeDefault: true,
-  })
   foundry.documents.collections.Actors.registerSheet(SYSTEM.id, applications.CharacterSheet, {
     types: ['character'],
     label: 'SWERPG.SHEETS.Character',
@@ -172,23 +105,14 @@ Hooks.once('init', async function () {
   // Item document configuration
   CONFIG.Item.documentClass = documents.SwerpgItem
   CONFIG.Item.dataModels = {
-    ancestry: models.SwerpgAncestry,
-    archetype: models.SwerpgArchetype,
     armor: models.SwerpgArmor,
     gear: models.SwerpgGear,
-    origin: models.SwerpgOrigin,
-    background: models.SwerpgBackground,
     species: models.SwerpgSpecies,
     career: models.SwerpgCareer,
     obligation: models.SwerpgObligation,
     specialization: models.SwerpgSpecialization,
-    spell: models.SwerpgSpell,
     talent: models.SwerpgTalent,
-    taxonomy: models.SwerpgTaxonomy,
     weapon: models.SwerpgWeapon,
-    'motivation-category': models.SwerpgMotivationCategory,
-    motivation: models.SwerpgMotivation,
-    duty: models.SwerpgDuty,
   }
 
   foundry.documents.collections.Items.unregisterSheet('core', foundry.appv1.sheets.ItemSheet)
@@ -200,29 +124,9 @@ Hooks.once('init', async function () {
   })
 
   // V1 Registrations
-  foundry.documents.collections.Items.registerSheet(SYSTEM.id, applications.AncestrySheet, {
-    types: ['ancestry'],
-    label: 'SWERPG.SHEETS.Ancestry',
-    makeDefault: true,
-  })
-  foundry.documents.collections.Items.registerSheet(SYSTEM.id, applications.ArchetypeSheet, {
-    types: ['archetype'],
-    label: 'SWERPG.SHEETS.Archetype',
-    makeDefault: true,
-  })
-  foundry.documents.collections.Items.registerSheet(SYSTEM.id, applications.BackgroundSheet, {
-    types: ['background'],
-    label: 'SWERPG.SHEETS.Background',
-    makeDefault: true,
-  })
   foundry.documents.collections.Items.registerSheet(SYSTEM.id, applications.GearSheet, {
     types: ['gear'],
     label: 'SWERPG.SHEETS.Gear',
-    makeDefault: true,
-  })
-  foundry.documents.collections.Items.registerSheet(SYSTEM.id, applications.OriginSheet, {
-    types: ['origin'],
-    label: 'SWERPG.SHEETS.Origin',
     makeDefault: true,
   })
   foundry.documents.collections.Items.registerSheet(SYSTEM.id, applications.SpeciesSheet, {
@@ -245,39 +149,14 @@ Hooks.once('init', async function () {
     label: 'SWERPG.SHEETS.Specialization',
     makeDefault: true,
   })
-  foundry.documents.collections.Items.registerSheet(SYSTEM.id, applications.SpellSheet, {
-    types: ['spell'],
-    label: 'SWERPG.SHEETS.Spell',
-    makeDefault: true,
-  })
   foundry.documents.collections.Items.registerSheet(SYSTEM.id, applications.TalentSheet, {
     types: ['talent'],
     label: 'SWERPG.SHEETS.Talent',
     makeDefault: true,
   })
-  foundry.documents.collections.Items.registerSheet(SYSTEM.id, applications.TaxonomySheet, {
-    types: ['taxonomy'],
-    label: 'SWERPG.SHEETS.Taxonomy',
-    makeDefault: true,
-  })
   foundry.documents.collections.Items.registerSheet(SYSTEM.id, applications.WeaponSheet, {
     types: ['weapon'],
     label: 'SWERPG.SHEETS.Weapon',
-    makeDefault: true,
-  })
-  foundry.documents.collections.Items.registerSheet(SYSTEM.id, MotivationCategorySheet, {
-    types: ['motivation-category'],
-    label: 'SWERPG.SHEETS.MotivationCategory',
-    makeDefault: true,
-  })
-  foundry.documents.collections.Items.registerSheet(SYSTEM.id, DutySheet, {
-    types: ['duty'],
-    label: 'SWERPG.SHEETS.Duty',
-    makeDefault: true,
-  })
-  foundry.documents.collections.Items.registerSheet(SYSTEM.id, MotivationSheet, {
-    types: ['motivation'],
-    label: 'SWERPG.SHEETS.Motivation',
     makeDefault: true,
   })
 
@@ -463,7 +342,7 @@ Hooks.once('ready', async function () {
   const welcome = game.settings.get('swerpg', 'welcome')
   if (!welcome) {
     const entry = await fromUuid('Compendium.swerpg.rules.JournalEntry.5SgXrAKS2EnqVggJ')
-    entry.sheet.render(true)
+    //entry.sheet.render(true)
     game.settings.set('swerpg', 'welcome', true)
   }
   // FIXME bring this back with a migration version
@@ -681,12 +560,7 @@ async function resetAllActorTalents() {
     const deleteIds = []
     for (const item of actor.items) {
       if (item.type !== 'talent') continue
-      if (actor.system.details.ancestry?.talents?.has(item.id)) continue
-      if (actor.system.details.origin?.talents?.has(item.id)) continue
-      if (actor.system.details.background?.talents?.has(item.id)) continue
-      if (actor.system.details.archetype?.talents?.has(item.id)) continue
       if (actor.system.details.species?.talents?.has(item.id)) continue
-      if (actor.system.details.taxonomy?.talents?.has(item.id)) continue
       deleteIds.add(item.id)
     }
     await actor.deleteEmbeddedDocuments('Item', deleteIds)

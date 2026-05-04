@@ -135,9 +135,7 @@ async function getOrCreateFolderInternal(folderName, folderType, parentId = null
   }
 
   // Recherche du dossier existant
-  const existingFolder = game.folders.find(
-    (f) => f.type === folderType && f.name === folderName && (f.folder?.id ?? null) === parentId,
-  )
+  const existingFolder = game.folders.find((f) => f.type === folderType && f.name === folderName && (f.folder?.id ?? null) === parentId)
 
   if (existingFolder) {
     logger.debug('[OggDudeImportFolders] Dossier existant trouvé', { folderName, folderId: existingFolder.id })
@@ -177,7 +175,7 @@ async function getOrCreateFolderInternal(folderName, folderType, parentId = null
  */
 export async function getOrCreateWorldFolder(importDomain, itemType = 'Item') {
   if (!importDomain || typeof importDomain !== 'string') {
-    logger.error('[OggDudeImportFolders] Domaine d\'import invalide', { importDomain })
+    logger.error("[OggDudeImportFolders] Domaine d'import invalide", { importDomain })
     throw new Error(`Invalid import domain: ${importDomain}`)
   }
 

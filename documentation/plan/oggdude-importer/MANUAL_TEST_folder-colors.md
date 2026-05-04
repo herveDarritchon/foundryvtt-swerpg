@@ -1,9 +1,11 @@
 # Guide de Test Manuel - Couleurs des Dossiers OggDude
 
 ## Objectif
+
 Valider que les dossiers créés lors de l'import OggDude ont les bonnes couleurs selon le type d'objet.
 
 ## Prérequis
+
 - Foundry VTT v13 avec le système SWERPG installé
 - Un fichier ZIP d'export OggDude de test contenant plusieurs types d'objets (armes, armures, équipement, carrières, talents, etc.)
 - Recommandation : utiliser `resources/oggdude-data.zip` si disponible
@@ -32,18 +34,18 @@ Valider que les dossiers créés lors de l'import OggDude ont les bonnes couleur
 
    Vérifier visuellement que les couleurs correspondent au mapping attendu :
 
-   | Dossier | Couleur attendue | Code hex | Description |
-   |---------|------------------|----------|-------------|
-   | `OggDude/Weapons` | Bleu hyperespace | #00a8ff | Bleu vif |
-   | `OggDude/Armor` | Vert sabre laser | #4cd137 | Vert vif |
-   | `OggDude/Gear` | Orange rebelle | #ffc312 | Orange vif |
-   | `OggDude/Careers` | Rouge Sith | #c23616 | Rouge foncé |
-   | `OggDude/Talents` | Violet | #9c88ff | Violet/Mauve |
-   | `OggDude/Species` | Vert nature | #44bd32 | Vert clair |
-   | `OggDude/Specializations` | Rouge-orange | #e84118 | Rouge orangé |
-   | `OggDude/Obligations` | Orange foncé | #f79f1f | Orange doré |
-   | `OggDude/Duties` | Bleu clair | #0097e6 | Bleu cyan |
-   | `OggDude/Motivations` | Jaune or | #fbc531 | Jaune doré |
+   | Dossier                   | Couleur attendue | Code hex | Description  |
+   | ------------------------- | ---------------- | -------- | ------------ |
+   | `OggDude/Weapons`         | Bleu hyperespace | #00a8ff  | Bleu vif     |
+   | `OggDude/Armor`           | Vert sabre laser | #4cd137  | Vert vif     |
+   | `OggDude/Gear`            | Orange rebelle   | #ffc312  | Orange vif   |
+   | `OggDude/Careers`         | Rouge Sith       | #c23616  | Rouge foncé  |
+   | `OggDude/Talents`         | Violet           | #9c88ff  | Violet/Mauve |
+   | `OggDude/Species`         | Vert nature      | #44bd32  | Vert clair   |
+   | `OggDude/Specializations` | Rouge-orange     | #e84118  | Rouge orangé |
+   | `OggDude/Obligations`     | Orange foncé     | #f79f1f  | Orange doré  |
+   | `OggDude/Duties`          | Bleu clair       | #0097e6  | Bleu cyan    |
+   | `OggDude/Motivations`     | Jaune or         | #fbc531  | Jaune doré   |
 
    **Critères de succès** :
    - ✅ Chaque dossier a une couleur distincte
@@ -111,41 +113,46 @@ Valider que les dossiers créés lors de l'import OggDude ont les bonnes couleur
 ✅ **Test 2 réussi** : Pas de doublons, couleurs préservées  
 ✅ **Test 3 réussi** : Couleurs personnalisées non écrasées  
 ✅ **Test 4 réussi** : Fallback fonctionne correctement  
-✅ **Test 5 réussi** : Logs non verbeux en production  
+✅ **Test 5 réussi** : Logs non verbeux en production
 
 ## Problèmes Potentiels et Solutions
 
 ### Problème : Les couleurs n'apparaissent pas
+
 **Cause possible** : Thème Foundry personnalisé qui écrase les couleurs de dossiers  
 **Solution** : Vérifier avec le thème par défaut de Foundry
 
 ### Problème : Couleurs différentes de celles attendues
+
 **Cause possible** : Cache navigateur ou Foundry  
 **Solution** : Faire Ctrl+F5 pour recharger sans cache
 
 ### Problème : Dossiers en doublon
+
 **Cause possible** : Bug dans la logique de détection des dossiers existants  
 **Solution** : Vérifier les logs et reporter le bug avec les détails
 
 ## Rapport de Test
 
-**Date** : _______________  
-**Testeur** : _______________  
-**Version SWERPG** : _______________  
-**Version Foundry** : _______________  
+**Date** : **\*\***\_\_\_**\*\***  
+**Testeur** : **\*\***\_\_\_**\*\***  
+**Version SWERPG** : **\*\***\_\_\_**\*\***  
+**Version Foundry** : **\*\***\_\_\_**\*\***
 
-| Test | Statut | Observations |
-|------|--------|--------------|
-| Test 1: Import initial | ⬜ Pass ⬜ Fail | |
-| Test 2: Ré-import | ⬜ Pass ⬜ Fail | |
-| Test 3: Couleur personnalisée | ⬜ Pass ⬜ Fail | |
-| Test 4: Fallback | ⬜ Pass ⬜ Fail | |
-| Test 5: Logs | ⬜ Pass ⬜ Fail | |
+| Test                          | Statut          | Observations |
+| ----------------------------- | --------------- | ------------ |
+| Test 1: Import initial        | ⬜ Pass ⬜ Fail |              |
+| Test 2: Ré-import             | ⬜ Pass ⬜ Fail |              |
+| Test 3: Couleur personnalisée | ⬜ Pass ⬜ Fail |              |
+| Test 4: Fallback              | ⬜ Pass ⬜ Fail |              |
+| Test 5: Logs                  | ⬜ Pass ⬜ Fail |              |
 
 **Résultat Global** : ⬜ Validé ⬜ Non validé
 
 **Notes supplémentaires** :
-_______________________________________________________________________________
-_______________________________________________________________________________
-_______________________________________________________________________________
 
+---
+
+---
+
+---

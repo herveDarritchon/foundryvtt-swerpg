@@ -18,9 +18,9 @@ Ce plan vise à corriger et stabiliser le comportement des tests E2E Playwright 
 **Résultat** : 4/4 tests E2E passent sur Chromium ET Firefox (100% de couverture)
 
 Pour le rapport détaillé d'implémentation, voir :
+
 - `documentation/tests/e2e/playwright-chromium-stability-implementation-report.md`
 - `documentation/tests/e2e/IMPLEMENTATION-SUCCESS-SUMMARY.md`
-
 
 ## 1. Requirements & Constraints
 
@@ -49,34 +49,34 @@ Pour le rapport détaillé d'implémentation, voir :
 
 - GOAL-001: Consolider l'analyse technique des problèmes Chromium et cartographier précisément les points d'échec.
 
-| Task     | Description                                                                                                       | DependsOn | Completed | Date |
-| -------- | ----------------------------------------------------------------------------------------------------------------- | --------- | --------- | ---- |
+| Task     | Description                                                                                                        | DependsOn | Completed | Date |
+| -------- | ------------------------------------------------------------------------------------------------------------------ | --------- | --------- | ---- |
 | TASK-001 | Relire et synthétiser `documentation/tests/e2e/playwright-chromium-issues-addendum.md` en requirements techniques. |           |           |      |
-| TASK-002 | Cartographier les points d'entrée utilisés par le test OggDude (`FILE-001` à `FILE-004`).                        | TASK-001  |           |      |
-| TASK-003 | Analyser les traces Playwright existantes sur Chromium (trace.zip) pour confirmer la séquence de redirection.   | TASK-002  |           |      |
+| TASK-002 | Cartographier les points d'entrée utilisés par le test OggDude (`FILE-001` à `FILE-004`).                          | TASK-001  |           |      |
+| TASK-003 | Analyser les traces Playwright existantes sur Chromium (trace.zip) pour confirmer la séquence de redirection.      | TASK-002  |           |      |
 
 ### Implementation Phase 2
 
 - GOAL-002: Concevoir les ajustements de configuration et helpers de session pour Chromium.
 
-| Task     | Description                                                                                                               | DependsOn | Completed | Date |
-| -------- | ------------------------------------------------------------------------------------------------------------------------- | --------- | --------- | ---- |
-| TASK-004 | Définir la configuration Chromium cible dans `playwright.config.ts` (`actionTimeout`, `storageState`, `launchOptions`).   | TASK-003  |           |      |
-| TASK-005 | Spécifier le contrat détaillé de `ensureSessionActive` (états valides, erreurs, intégration dans `foundryUI.ts`).        | TASK-003  |           |      |
-| TASK-006 | Définir la stratégie de réactivation du test oggdude sur Chromium (conditions de suppression du `test.skip`).            | TASK-003  |           |      |
+| Task     | Description                                                                                                             | DependsOn | Completed | Date |
+| -------- | ----------------------------------------------------------------------------------------------------------------------- | --------- | --------- | ---- |
+| TASK-004 | Définir la configuration Chromium cible dans `playwright.config.ts` (`actionTimeout`, `storageState`, `launchOptions`). | TASK-003  |           |      |
+| TASK-005 | Spécifier le contrat détaillé de `ensureSessionActive` (états valides, erreurs, intégration dans `foundryUI.ts`).       | TASK-003  |           |      |
+| TASK-006 | Définir la stratégie de réactivation du test oggdude sur Chromium (conditions de suppression du `test.skip`).           | TASK-003  |           |      |
 
 ### Implementation Phase 3
 
 - GOAL-003: Implémenter les modifications dans le code, réactiver le test Chromium et sécuriser la non-régression.
 
-| Task     | Description                                                                                                                             | DependsOn | Completed | Date |
-| -------- | --------------------------------------------------------------------------------------------------------------------------------------- | --------- | --------- | ---- |
-| TASK-007 | Mettre à jour `playwright.config.ts` pour isoler clairement la config Chromium (timeouts, éventuellement `storageState`).               | TASK-004  |           |      |
-| TASK-008 | Implémenter/compléter `ensureSessionActive` dans `e2e/utils/foundryUI.ts` et l'intégrer dans les helpers utilisés par oggdude.          | TASK-005  |           |      |
-| TASK-009 | Adapter `e2e/specs/oggdude-import.spec.ts` pour retirer le `test.skip` et ajouter du logging ciblé en cas de perte de session.          | TASK-006  |           |      |
-| TASK-010 | Lancer `pnpm e2e --project=chromium` en local, analyser les traces en cas d'échec et itérer sur la config si nécessaire.                | TASK-007  |           |      |
-| TASK-011 | Vérifier que les tests Firefox ne sont pas impactés (exécution `pnpm e2e --project=firefox`).                                          | TASK-007  |           |      |
-| TASK-012 | Documenter la stratégie finale et les spécificités Chromium dans `documentation/tests/e2e/playwright-e2e-guide.md`.                      | TASK-007  |           |      |
+| Task     | Description                                                                                                                    | DependsOn | Completed | Date |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------ | --------- | --------- | ---- |
+| TASK-007 | Mettre à jour `playwright.config.ts` pour isoler clairement la config Chromium (timeouts, éventuellement `storageState`).      | TASK-004  |           |      |
+| TASK-008 | Implémenter/compléter `ensureSessionActive` dans `e2e/utils/foundryUI.ts` et l'intégrer dans les helpers utilisés par oggdude. | TASK-005  |           |      |
+| TASK-009 | Adapter `e2e/specs/oggdude-import.spec.ts` pour retirer le `test.skip` et ajouter du logging ciblé en cas de perte de session. | TASK-006  |           |      |
+| TASK-010 | Lancer `pnpm e2e --project=chromium` en local, analyser les traces en cas d'échec et itérer sur la config si nécessaire.       | TASK-007  |           |      |
+| TASK-011 | Vérifier que les tests Firefox ne sont pas impactés (exécution `pnpm e2e --project=firefox`).                                  | TASK-007  |           |      |
+| TASK-012 | Documenter la stratégie finale et les spécificités Chromium dans `documentation/tests/e2e/playwright-e2e-guide.md`.            | TASK-007  |           |      |
 
 ## 3. Alternatives
 
@@ -122,4 +122,3 @@ Pour le rapport détaillé d'implémentation, voir :
 - `documentation/tests/e2e/playwright-chromium-issues-addendum.md` – Analyse détaillée des problèmes Chromium.
 - `documentation/tests/e2e/playwright-e2e-guide.md` – Guide principal d'utilisation Playwright pour Swerpg.
 - Foundry VTT Knowledge Base / API v13 – Référence sur la gestion de session et l'authentification.
-

@@ -8,6 +8,7 @@
 .idea/**/usage.statistics.xml
 .idea/**/dictionaries
 .idea/**/shelf
+.idea/
 
 # AWS User-specific
 .idea/**/aws.xml
@@ -274,3 +275,4 @@ swerpg-compiled.mjs
 ## Foundry inside Docker
 .e2e-foundry-data/
 
+tmp/

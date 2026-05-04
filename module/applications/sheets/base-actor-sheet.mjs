@@ -97,10 +97,6 @@ export default class SwerpgBaseActorSheet extends HBMixin(BaseActorSheetV2) {
       id: 'talents',
       template: 'systems/swerpg/templates/sheets/actor/talents.hbs',
     },
-    spells: {
-      id: 'spells',
-      template: 'systems/swerpg/templates/sheets/actor/spells.hbs',
-    },
     effects: {
       id: 'effects',
       template: 'systems/swerpg/templates/sheets/actor/effects.hbs',
@@ -126,7 +122,6 @@ export default class SwerpgBaseActorSheet extends HBMixin(BaseActorSheetV2) {
       { id: 'inventory', group: 'sheet', label: 'ACTOR.TABS.INVENTORY' },
       { id: 'skills', group: 'sheet', label: 'ACTOR.TABS.SKILLS' },
       { id: 'talents', group: 'sheet', label: 'ACTOR.TABS.TALENTS' },
-      { id: 'spells', group: 'sheet', label: 'ACTOR.TABS.SPELLS' },
       { id: 'effects', group: 'sheet', label: 'ACTOR.TABS.EFFECTS' },
       { id: 'biography', group: 'sheet', label: 'ACTOR.TABS.BIOGRAPHY' },
       { id: 'commitments', group: 'sheet', label: 'ACTOR.TABS.COMMITMENTS' },
@@ -169,7 +164,7 @@ export default class SwerpgBaseActorSheet extends HBMixin(BaseActorSheetV2) {
   /** @override */
   async _prepareContext(options) {
     const tabGroups = this.#getTabs()
-    const { inventory, talents, iconicSpells } = this.#prepareItems()
+    const { inventory, talents } = this.#prepareItems()
     const { sections: actions, favorites: favoriteActions } = this.#prepareActions()
     const featuredEquipment = this.#prepareFeaturedEquipment()
     const context = {
@@ -200,7 +195,6 @@ export default class SwerpgBaseActorSheet extends HBMixin(BaseActorSheetV2) {
       // Resources: this.#prepareResources(),
       skillCategories: this.#prepareSkills(),
       source: this.document.toObject(),
-      spells: this.#prepareSpells(iconicSpells),
       tabGroups,
       tabs: tabGroups.sheet,
       talents,
@@ -211,10 +205,8 @@ export default class SwerpgBaseActorSheet extends HBMixin(BaseActorSheetV2) {
   }
 
   /**
-   * Détermine si le mode compact doit être activé selon le nombre d'éléments d'équipement affichés.
-   * WHY: Réduire la densité visuelle quand la sidebar aurait sinon un empilement trop haut pour lisibilité.
-   * @param {object} context Contexte déjà construit contenant featuredEquipment
-   * @private
+   * Active le mode compact de la sidebar équipement quand la liste devient trop dense.
+   * @param {object} context
    */
   #applyFeaturedEquipmentCompactMode(context) {
     const count = context.featuredEquipment?.length ?? 0
@@ -380,13 +372,11 @@ export default class SwerpgBaseActorSheet extends HBMixin(BaseActorSheetV2) {
         signature: { label: 'Signature Talents', items: [] },
         active: { label: 'Active Abilities', items: [] },
         passive: { label: 'Passive Talents', items: [] },
-        spell: { label: 'Spellcraft Talents', items: [] },
       },
       inventory: {
         equipment: { label: 'Equipment', items: [], empty: game.i18n.localize('ACTOR.LABELS.EQUIPMENT_HINT') },
         backpack: { label: 'Backpack', items: [], empty: game.i18n.localize('ACTOR.LABELS.BACKPACK_HINT') },
       },
-      iconicSpells: { label: game.i18n.localize('SPELL.IconicPl'), items: [] },
     }
 
     // Iterate over items and organize them
@@ -407,18 +397,12 @@ export default class SwerpgBaseActorSheet extends HBMixin(BaseActorSheetV2) {
         case 'talent':
           d.tier = i.system.node?.tier || 0
           const action = i.actions.at(0)
-          const spellComp = i.system.rune || i.system.gesture || i.system.inflection
           if (i.system.isSignature) section = sections.talents.signature
           if (action) {
             const tags = action.getTags()
             d.tags = { ...tags.action, ...tags.activation }
             section ||= sections.talents.active
-          } else if (spellComp) section ||= sections.talents.spell
-          else section ||= sections.talents.passive
-          break
-        case 'spell':
-          d.isItem = true
-          section = sections.iconicSpells
+          } else section ||= sections.talents.passive
           break
       }
       if (section) section.items.push(d)
@@ -446,7 +430,6 @@ export default class SwerpgBaseActorSheet extends HBMixin(BaseActorSheetV2) {
   #prepareActions() {
     const sections = {
       attack: { label: 'Attack Actions', actions: [] },
-      spell: { label: 'Spellcraft Actions', actions: [] },
       reaction: { label: 'Reactions', actions: [] },
       movement: { label: 'Movement Actions', actions: [] },
       general: { label: 'General Actions', actions: [] },
@@ -469,8 +452,6 @@ export default class SwerpgBaseActorSheet extends HBMixin(BaseActorSheetV2) {
       let section = 'general'
       const tagMapping = {
         reaction: 'reaction',
-        spell: 'spell',
-        iconicSpell: 'spell',
         movement: 'movement',
         melee: 'attack',
         ranged: 'attack',
@@ -565,21 +546,6 @@ export default class SwerpgBaseActorSheet extends HBMixin(BaseActorSheetV2) {
   /* -------------------------------------------- */
 
   /**
-   * Format categories of the spells tab.
-   * @param {{label: string, items: SwerpgItem[]}} iconicSpells
-   * @returns {{
-   *  runes: {label: string, known: Set<SwerpgRune>},
-   *  inflections: {label: string, known: Set<SwerpgInflection>},
-   *  gestures: {label: string, known: Set<SwerpgGesture>}
-   * }}
-   */
-  #prepareSpells(iconicSpells) {
-    return {}
-  }
-
-  /* -------------------------------------------- */
-
-  /**
    * Prepare and format resistance data for rendering.
    * @returns {{physical: object[], elemental: object[], spiritual: object[]}}
    */
@@ -604,13 +570,23 @@ export default class SwerpgBaseActorSheet extends HBMixin(BaseActorSheetV2) {
     const encCurrent = resources.encumbrance.value
     const encMax = resources.encumbrance.threshold
 
-    const makeResource = (id, current, max, bg, fill) => ({
-      id,
-      current,
-      max,
-      pct: max > 0 ? current / max : 0,
-      color: { bg, fill },
-    })
+    const makeResource = (id, current, max, bg, fill) => {
+      // Generate pips array for resource display
+      const pips = []
+      for (let i = 0; i < max; i++) {
+        pips.push({
+          cssClass: i < current ? 'trained' : 'untrained',
+        })
+      }
+      return {
+        id,
+        current,
+        max,
+        pct: max > 0 ? current / max : 0,
+        color: { bg, fill },
+        pips,
+      }
+    }
 
     return {
       wounds: makeResource('wounds', woundCurrent, woundMax, '#440000', '#ff0000'),

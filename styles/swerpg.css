@@ -27,14 +27,14 @@
 /*  CSS Variables                            */
 /* ----------------------------------------- */
 .swerpg {
-  --color-glow: #00b0ff;
+  --color-glow: #78a9c2;
   --color-text: #d0e6f6;
   --color-label: #9bb0c2;
-  --color-shadow: rgba(0, 176, 255, 0.3);
-  --color-glow-hover: #4dc8ff;
+  --color-shadow: rgba(111, 167, 196, 0.18);
+  --color-glow-hover: #9ec3d6;
   --color-background: #0c0f17;
-  --color-frame: #3a3f48;
-  --color-accent: #00b0ff;
+  --color-frame: #334150;
+  --color-accent: #6fa7c4;
   --background: #0a1f44;
   /* Bleu nuit */
   --background-dark: #0c0f17;
@@ -46,27 +46,27 @@
   /* Gris bleuté pour les textes secondaires */
   --color-tertiary: #5a5f67;
   /* Gris acier pour les détails */
-  --color-header: #26c6da;
-  /* Cyan lumineux pour les titres */
-  --color-h1: #72a4ea;
-  /* Bleu électrique pour les titres H1 */
-  --color-frame-bg: #121923;
+  --color-header: #78a9c2;
+  /* Cyan atténué pour les titres */
+  --color-h1: #8ab0c8;
+  /* Bleu-cyan holographique */
+  --color-frame-bg: #101722;
   /* Noir bleu profond pour les fonds */
-  --color-frame-bg-25: rgba(18, 25, 35, 0.25);
-  --color-frame-bg-50: rgba(18, 25, 35, 0.5);
-  --color-frame-bg-75: rgba(18, 25, 35, 0.75);
-  --color-tern: #063a5e;
-  /* Bleu néon pour les éléments interactifs */
-  --color-link-text: #26c6da;
-  /* Cyan éclatant pour les liens */
+  --color-frame-bg-25: rgba(16, 23, 34, 0.25);
+  --color-frame-bg-50: rgba(16, 23, 34, 0.5);
+  --color-frame-bg-75: rgba(16, 23, 34, 0.75);
+  --color-tern: #142a3c;
+  /* Bleu sombre désaturé */
+  --color-link-text: #8db9cc;
+  /* Cyan atténué pour les liens */
   --color-border-highlight: var(--color-accent);
   /* Bordures lumineuses */
   --color-border: var(--color-tern);
   /* Bordures lumineuses */
-  --color-accent-blue: #00b0ff;
-  /* Bleu néon */
-  --color-accent-yellow: #ffe81f;
-  /* jaune sabre */
+  --color-accent-blue: #6fa7c4;
+  /* Cyan désaturé */
+  --color-accent-yellow: #c9b36a;
+  /* or froid */
   --color-box-warm-1: #ee9b3a;
   /* Orange lumineux */
   --color-box-warm-2: #c9593f;
@@ -99,36 +99,35 @@
   /* Rouge sombre pour les borders des éléments inactifs */
   --color-blue-tern: #2a84c5;
   --color-background-dark: #121212;
-  --color-border-default: #333;
+  --color-border-default: #2a3642;
   --color-font-default: #e0e0e0;
-  --color-soak: #ffcc33;
-  --color-soak-shadow: #ffaa00;
+  --color-soak: #c4a04a;
+  --color-soak-shadow: #a8883a;
   --color-soak-bg: #332200;
-  --color-defense: #00ccff;
-  --color-defense-melee: #00aaff;
-  /* ou #ff4444 pour une version rouge */
-  --color-defense-ranged: #00ddff;
-  --color-defense-general: #3399ff;
-  --color-defense-shadow: rgba(0, 255, 255, 0.4);
-  --color-wounds: #ff3c3c;
-  --color-wounds-glow: #ff6666;
-  --color-wounds-gradient: linear-gradient(to bottom, #ff4a3e, #a40000);
+  --color-defense: #5ab4c9;
+  --color-defense-melee: #4a9ab8;
+  --color-defense-ranged: #5ab4c9;
+  --color-defense-general: #4a9ab8;
+  --color-defense-shadow: rgba(90, 180, 201, 0.25);
+  --color-wounds: #b55050;
+  --color-wounds-glow: #cc6666;
+  --color-wounds-gradient: linear-gradient(to bottom, #b55050, #7a2222);
   --color-wounds-border: #5a0000;
-  --color-strain: #00d4ff;
-  --color-strain-glow: #66f0ff;
-  --color-strain-gradient: linear-gradient(to bottom, #48e8ff, #007f99);
+  --color-strain: #5ab4c9;
+  --color-strain-glow: #80c8d9;
+  --color-strain-gradient: linear-gradient(to bottom, #5ab4c9, #2a7088);
   --color-strain-border: #003344;
-  --color-encumbrance: #ff9900;
-  --color-encumbrance-glow: #ffc266;
-  --color-encumbrance-gradient: linear-gradient(to bottom, #ffc64d, #a65b00);
+  --color-encumbrance: #c4944a;
+  --color-encumbrance-glow: #d4a96e;
+  --color-encumbrance-gradient: linear-gradient(to bottom, #c4944a, #8a5a1a);
   --color-encumbrance-border: #5a2f00;
   --color-success: #00ff99;
   --color-warning: #ffaa00;
   --color-danger: #ff3333;
-  --font-h1: 'Star Jedi', sans-serif;
-  --font-h2: 'Star Jedi', sans-serif;
-  --font-h3: 'Star Jedi', sans-serif;
-  --font-body: 'Orbitron', sans-serif;
+  --font-h1: 'Orbitron', sans-serif;
+  --font-h2: 'Orbitron', sans-serif;
+  --font-h3: 'Rajdhani', sans-serif;
+  --font-body: 'Exo 2', sans-serif;
   --font-quote: 'Exo 2', sans-serif;
   --font-sans: 'Rajdhani', sans-serif;
   --color-fieldset-border: var(--color-frame);
@@ -154,26 +153,26 @@
 /*  Light Theme (NOT USED YET)               */
 /* ----------------------------------------- */
 .swerpg.light-side {
-  --color-glow: #ffe81f;
+  --color-glow: #c9b36a;
   --color-text: #1c1c1c;
   --color-label: #3a3a3a;
-  --color-shadow: rgba(255, 232, 31, 0.3);
-  --color-glow-hover: #fff56e;
+  --color-shadow: rgba(201, 179, 106, 0.2);
+  --color-glow-hover: #d4c07a;
   --color-background: #f0f5fa;
   --color-frame: #ccd5e0;
-  --color-accent: #ffe81f;
-  --font-body: 'Orbitron', sans-serif;
+  --color-accent: #c9b36a;
+  --font-body: 'Exo 2', sans-serif;
 }
 .swerpg.dark-side {
-  --color-glow: #00b0ff;
+  --color-glow: #78a9c2;
   --color-text: #d0e6f6;
   --color-label: #9bb0c2;
-  --color-shadow: rgba(0, 176, 255, 0.3);
-  --color-glow-hover: #4dc8ff;
+  --color-shadow: rgba(111, 167, 196, 0.18);
+  --color-glow-hover: #9ec3d6;
   --color-background: #0c0f17;
-  --color-frame: #3a3f48;
-  --color-accent: #00b0ff;
-  --font-body: 'Orbitron', sans-serif;
+  --color-frame: #334150;
+  --color-accent: #6fa7c4;
+  --font-body: 'Exo 2', sans-serif;
 }
 /** ----------------------------------------- *
  *  Swerpg V2 Styles                        *
@@ -192,6 +191,8 @@
   font-weight: normal;
   color: var(--color-h1);
   border: none;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 .swerpg h1.divider,
 .swerpg h2.divider,
@@ -256,7 +257,7 @@
 .swerpg table th {
   line-height: 1.5rem;
   color: var(--color-text);
-  font-family: var(--font-h1);
+  font-family: var(--font-h2);
   font-weight: normal;
   text-align: left;
   text-shadow: none;
@@ -752,6 +753,9 @@ input[type='range'] {
 .swerpg.sheet prose-mirror {
   font-size: 13px;
 }
+.swerpg.sheet prose-mirror menu {
+  padding: 0;
+}
 /* ----------------------------------------- */
 /*  Line Items: Actions, Talents, etc...     */
 /* ----------------------------------------- */
@@ -845,38 +849,26 @@ input[type='range'] {
   font-family: monospace;
   font-size: 12px;
 }
+/* ----------------------------------------- */
+/*  Animations                                */
+/* ----------------------------------------- */
 @keyframes fade-in-holo {
   from {
     opacity: 0;
-    transform: scale(0.9);
-    filter: drop-shadow(0 0 5px rgba(0, 176, 255, 0.3));
+    transform: scale(0.95);
+    filter: drop-shadow(0 0 2px rgba(120, 169, 194, 0.12));
   }
   to {
     opacity: 1;
     transform: scale(1);
-    filter: drop-shadow(0 0 10px rgba(0, 176, 255, 0.6));
-  }
-}
-@keyframes pulse-glow {
-  0%,
-  100% {
-    box-shadow:
-      0 0 6px rgba(0, 176, 255, 0.5),
-      0 0 12px rgba(0, 176, 255, 0.25),
-      inset 0 0 6px rgba(0, 176, 255, 0.1);
-  }
-  50% {
-    box-shadow:
-      0 0 10px rgba(0, 176, 255, 0.8),
-      0 0 18px rgba(0, 176, 255, 0.4),
-      inset 0 0 10px rgba(0, 176, 255, 0.25);
+    filter: drop-shadow(0 0 4px rgba(120, 169, 194, 0.18));
   }
 }
 @keyframes holo-fade-in {
   0% {
     opacity: 0;
-    transform: scale(0.8);
-    filter: blur(4px) brightness(150%);
+    transform: scale(0.92);
+    filter: blur(1px) brightness(108%);
   }
   100% {
     opacity: 1;
@@ -884,19 +876,11 @@ input[type='range'] {
     filter: blur(0) brightness(100%);
   }
 }
-@keyframes pulse-ring {
-  0% {
-    box-shadow: 0 0 6px rgba(0, 176, 255, 0.5);
-  }
-  50% {
-    box-shadow: 0 0 12px rgba(0, 176, 255, 0.7);
-  }
-  100% {
-    box-shadow: 0 0 6px rgba(0, 176, 255, 0.5);
-  }
-}
 /* ----------------------------------------- */
-/*  Actor Sheet                              */
+/*  Asset Variables                           */
+/* ----------------------------------------- */
+/* ----------------------------------------- */
+/*  Actor Sheet                               */
 /* ----------------------------------------- */
 .swerpg.sheet.actor {
   --sidebar-width: 200px;
@@ -919,16 +903,48 @@ input[type='range'] {
   /* ----------------------------------------- */
   /*  Attributes Tab                           */
   /* ----------------------------------------- */
-  /** Abilities */
+  /* ----------------------------------------- */
+  /*  Characteristics                          */
+  /* ----------------------------------------- */
+  /* ----------------------------------------- */
+  /*  Local Control Buttons                     */
+  /* ----------------------------------------- */
+  /* ----------------------------------------- */
+  /*  Ability Point Pool                        */
+  /* ----------------------------------------- */
+  /* ----------------------------------------- */
+  /*  Defenses                                  */
+  /* ----------------------------------------- */
+  /* ----------------------------------------- */
+  /*  Resistances                               */
+  /* ----------------------------------------- */
+  /* ----------------------------------------- */
+  /*  Biography / Commitments shared editor     */
+  /* ----------------------------------------- */
+  /* ----------------------------------------- */
+  /*  Biography Tab                             */
+  /* ----------------------------------------- */
+  /* ----------------------------------------- */
+  /*  Commitments Tab                           */
+  /* ----------------------------------------- */
+  /* ----------------------------------------- */
+  /*  Inventory, Talents, Skills shared         */
+  /* ----------------------------------------- */
+  /* ----------------------------------------- */
+  /*  Skills Tab                                */
+  /* ----------------------------------------- */
+  /* ----------------------------------------- */
+  /*  Allegiance Toggle                         */
+  /* ----------------------------------------- */
 }
 .swerpg.sheet.actor .window-content {
-  overflow: visible;
-  height: calc(100% - var(--header-height));
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
   gap: var(--margin-size);
+  height: calc(100% - var(--header-height));
   padding: 0 var(--margin-size) var(--margin-size);
+  overflow: visible;
 }
 .swerpg.sheet.actor.minimized,
 .swerpg.sheet.actor.minimizing,
@@ -942,15 +958,15 @@ input[type='range'] {
 }
 .swerpg.sheet.actor .sheet-body {
   display: flex;
+  flex: 1;
   flex-direction: column;
   justify-content: flex-start;
-  flex: 1;
-  gap: 0 1rem;
+  gap: 1rem;
   height: 100%;
 }
 .swerpg.sheet.actor .tab {
-  flex: 1;
   position: relative;
+  flex: 1;
   padding: 1.5rem 0 1rem;
   gap: 1.5rem;
 }
@@ -959,10 +975,25 @@ input[type='range'] {
   font-size: var(--font-size-12);
 }
 .swerpg.sheet.actor .sheet-section {
-  background: var(--color-frame-bg-50);
-  border-radius: 6px;
   position: relative;
   padding: 1.5rem 1rem 1rem;
+  border-radius: 6px;
+  background: var(--color-frame-bg-50);
+}
+.swerpg.sheet.actor .sheet-section::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  border-radius: inherit;
+  background-image: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 0, 0, 0.03) 2px, rgba(0, 0, 0, 0.03) 4px);
+}
+.swerpg.sheet.actor .sheet-section > *,
+.swerpg.sheet.actor .sheet-section > .flexcol,
+.swerpg.sheet.actor .sheet-section > .flexrow {
+  position: relative;
+  z-index: 2;
 }
 .swerpg.sheet.actor .sheet-section.flexcol {
   width: 100%;
@@ -974,22 +1005,23 @@ input[type='range'] {
 .swerpg.sheet.actor .sheet-section > h3 {
   box-sizing: content-box;
   position: absolute;
+  top: -0.75rem;
+  z-index: 3;
+  height: 1.5rem;
   margin: 0;
   padding: 0 1rem;
-  height: 1.5rem;
-  line-height: 1.5rem;
-  top: -0.75rem;
-  font-size: var(--font-size-14);
-  color: var(--color-primary);
-  background: var(--color-frame-bg);
   border-radius: 3px;
+  background: var(--color-frame-bg);
+  color: var(--color-primary);
+  font-size: var(--font-size-14);
+  line-height: 1.5rem;
 }
 .swerpg.sheet.actor h4.label {
   flex: none;
-  font-size: var(--font-size-11);
-  background: var(--color-frame-bg);
-  padding: 2px 6px;
   margin: 0;
+  padding: 2px 6px;
+  background: var(--color-frame-bg);
+  font-size: var(--font-size-11);
 }
 .swerpg.sheet.actor .sheet-header {
   --sheet-header-height: 40px;
@@ -999,17 +1031,17 @@ input[type='range'] {
   gap: var(--margin-half);
 }
 .swerpg.sheet.actor .sheet-header header.title input {
-  height: var(--sheet-header-height);
   width: initial;
-  background: var(--color-frame-bg-50);
+  height: var(--sheet-header-height);
   border: none;
+  background: var(--color-frame-bg-50);
   font-family: var(--font-h1);
   font-size: var(--font-size-24);
 }
 .swerpg.sheet.actor .sheet-header header.title .charname {
+  flex: 1 !important;
   margin-right: 2rem;
   padding: 0 0.5rem;
-  flex: 1 !important;
   text-align: left;
 }
 .swerpg.sheet.actor .sheet-header header.title .level,
@@ -1018,9 +1050,9 @@ input[type='range'] {
   flex: none;
 }
 .swerpg.sheet.actor .sheet-header header.title a.level-up {
-  opacity: 1;
   height: 28px;
   border: 1px solid var(--color-warm-1);
+  opacity: 1;
 }
 .swerpg.sheet.actor .sheet-header header.title input:last-child {
   flex: 0 0 var(--sheet-header-height);
@@ -1033,12 +1065,12 @@ input[type='range'] {
 .swerpg.sheet.actor .sheet-header div.subtitle h2 {
   flex: none;
   margin: 0;
-  font-size: var(--font-size-14);
-  line-height: 24px;
   padding: 0 0.5rem;
-  background: var(--color-frame-bg-75);
   border: 1px solid var(--color-frame);
   border-radius: 4px;
+  background: var(--color-frame-bg-75);
+  font-size: var(--font-size-14);
+  line-height: 24px;
 }
 .swerpg.sheet.actor .sheet-header div.subtitle h2.incomplete {
   border-color: var(--color-box-warm-3);
@@ -1063,25 +1095,23 @@ input[type='range'] {
 .swerpg.sheet.actor .sheet-header div.metadata div.size span.value {
   flex: none;
   width: 24px;
+  padding: 0.25rem 0.5rem;
   background: url('../ui/elements/hex-plain.svg') no-repeat center;
   background-size: 24px;
   font-family: var(--font-h1);
   font-size: var(--font-size-16);
-  padding: 0.25rem 0.5rem;
 }
 .swerpg.sheet.actor .sheet-sidebar {
-  /* Responsive equipment icon sizing variable */
   --equipment-icon-size: 32px;
   flex: 0 0 var(--sidebar-width);
   height: 100%;
   gap: var(--margin-half);
   overflow: hidden;
-  /* Featured Equipment Display */
 }
 .swerpg.sheet.actor .sheet-sidebar img.profile {
   border: none;
-  background: var(--color-frame-bg-50);
   border-radius: 4px;
+  background: var(--color-frame-bg-50);
   object-fit: contain;
 }
 .swerpg.sheet.actor .sheet-sidebar h2.divider {
@@ -1089,11 +1119,10 @@ input[type='range'] {
   font-size: var(--font-size-14);
 }
 .swerpg.sheet.actor .sheet-sidebar .item-list {
-  overflow: hidden auto;
   display: flex;
   flex-direction: column;
   gap: 4px;
-  /* compacted vertical gap */
+  overflow: hidden auto;
 }
 .swerpg.sheet.actor .sheet-sidebar .item-list.equipment {
   flex: none;
@@ -1113,14 +1142,12 @@ input[type='range'] {
   display: flex;
   align-items: stretch;
   gap: 0.5rem;
-  /* Reduced padding for horizontal space optimization */
+  min-height: 38px;
   padding: 0.3rem 0.4rem;
-  background: linear-gradient(135deg, var(--color-frame-bg-75) 0%, var(--color-frame-bg-50) 60%);
   border: 1px solid var(--color-frame);
   border-radius: 4px;
+  background: linear-gradient(135deg, var(--color-frame-bg-75) 0%, var(--color-frame-bg-50) 60%);
   animation: fade-in-holo 180ms ease-out;
-  /* Reduced vertical footprint for higher density */
-  min-height: 38px;
 }
 .swerpg.sheet.actor .sheet-sidebar .item-list.equipped .equipped.line-item.broken {
   filter: grayscale(70%) brightness(80%);
@@ -1130,112 +1157,108 @@ input[type='range'] {
   border-color: var(--color-accent);
   box-shadow: 0 0 6px var(--color-accent);
 }
+.swerpg.sheet.actor .sheet-sidebar .item-list.equipped .equipped.line-item.line-item--compact {
+  min-height: 34px;
+  padding: 0.25rem 0.35rem;
+}
+.swerpg.sheet.actor .sheet-sidebar .item-list.equipped .equipped.line-item.line-item--compact .title h4 {
+  font-size: calc(var(--font-size-12) - 1px);
+}
+.swerpg.sheet.actor .sheet-sidebar .item-list.equipped .equipped.line-item.line-item--compact .tags .tag {
+  font-size: calc(var(--font-size-9) - 1px);
+}
 .swerpg.sheet.actor .sheet-sidebar .item-list.equipped .equipped.line-item img.icon {
   flex: 0 0 var(--equipment-icon-size);
   width: var(--equipment-icon-size);
   height: var(--equipment-icon-size);
-  object-fit: cover;
-  border-radius: 3px;
   border: 1px solid var(--color-frame);
+  border-radius: 3px;
   background: var(--color-frame-bg-75);
+  object-fit: cover;
 }
 .swerpg.sheet.actor .sheet-sidebar .item-list.equipped .equipped.line-item .title {
-  flex: 1;
   display: flex;
+  flex: 1;
   flex-direction: column;
   justify-content: center;
   gap: 2px;
-  /* compact gap */
-  /* Compact mode overrides */
 }
 .swerpg.sheet.actor .sheet-sidebar .item-list.equipped .equipped.line-item .title h4 {
+  max-width: 120px;
   margin: 0;
+  overflow: hidden;
+  font-family: var(--font-sans);
   font-size: var(--font-size-12);
   line-height: 1.1rem;
-  font-family: var(--font-sans);
-  /* Truncation to keep within narrow sidebar */
-  max-width: 120px;
-  overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 .swerpg.sheet.actor .sheet-sidebar .item-list.equipped .equipped.line-item .title h4 a {
-  text-decoration: none;
   color: var(--color-text-light-primary);
+  text-decoration: none;
 }
 .swerpg.sheet.actor .sheet-sidebar .item-list.equipped .equipped.line-item .title .tags {
   display: flex;
   flex-wrap: wrap;
   gap: 2px 4px;
   max-height: calc(2 * 1.1em + 6px);
-  /* two lines of tags incl. gaps */
   overflow: hidden;
 }
 .swerpg.sheet.actor .sheet-sidebar .item-list.equipped .equipped.line-item .title .tags .tag {
   flex: none;
-  font-size: var(--font-size-9);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  background: var(--color-frame-bg-50);
-  padding: 2px 4px;
-  border-radius: 3px;
-  border: 1px solid var(--color-frame);
-  color: var(--color-secondary);
   max-width: 45px;
+  padding: 2px 4px;
   overflow: hidden;
+  border: 1px solid var(--color-frame);
+  border-radius: 3px;
+  background: var(--color-frame-bg-50);
+  color: var(--color-secondary);
+  font-size: var(--font-size-9);
+  letter-spacing: 0.5px;
   text-overflow: ellipsis;
+  text-transform: uppercase;
   white-space: nowrap;
 }
-.swerpg.sheet.actor .sheet-sidebar .item-list.equipped .equipped.line-item .title.equipped.line-item--compact {
-  padding: 0.25rem 0.35rem;
-  min-height: 34px;
-}
-.swerpg.sheet.actor .sheet-sidebar .item-list.equipped .equipped.line-item .title.equipped.line-item--compact h4 {
-  font-size: calc(var(--font-size-12) - 1px);
-}
-.swerpg.sheet.actor .sheet-sidebar .item-list.equipped .equipped.line-item .title.equipped.line-item--compact .tags .tag {
-  font-size: calc(var(--font-size-9) - 1px);
-}
 .swerpg.sheet.actor .sheet-sidebar .item-list.equipped .equipped.line-item .controls {
-  flex: 0 0 24px;
   display: flex;
+  flex: 0 0 24px;
   align-items: center;
   justify-content: center;
 }
 .swerpg.sheet.actor .sheet-sidebar .item-list.equipped .equipped.line-item .controls button.icon-button {
-  width: 24px;
-  height: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 24px;
+  height: 24px;
   padding: 0;
   border: 1px solid var(--color-frame);
-  background: var(--color-frame-bg-50);
   border-radius: 4px;
-  cursor: pointer;
+  background: var(--color-frame-bg-50);
   color: var(--color-link-text);
+  cursor: pointer;
 }
 .swerpg.sheet.actor .sheet-sidebar .item-list.equipped .equipped.line-item .controls button.icon-button:hover {
   border-color: var(--color-accent);
   color: var(--color-accent);
 }
 .swerpg.sheet.actor .sheet-sidebar .item-list.equipped .empty.equipped-empty {
-  font-size: var(--font-size-11);
-  text-align: center;
   padding: 0.5rem;
-  background: var(--color-frame-bg-50);
   border: 1px dashed var(--color-frame);
   border-radius: 4px;
+  background: var(--color-frame-bg-50);
   color: var(--color-text-light-secondary);
+  font-size: var(--font-size-11);
+  text-align: center;
 }
 .swerpg.sheet.actor .sheet-tabs {
   --tab-size: 32px;
   --icon-size: 28px;
-  flex-direction: column;
   position: absolute;
-  width: calc(var(--tab-size) + 4px);
-  right: calc(-1 * (var(--tab-size) + 4px));
   top: 90px;
+  right: calc(-1 * (var(--tab-size) + 4px));
+  flex-direction: column;
+  width: calc(var(--tab-size) + 4px);
   padding: 4px 4px 4px 0;
   gap: var(--margin-half);
   border: none;
@@ -1243,15 +1266,15 @@ input[type='range'] {
 }
 .swerpg.sheet.actor .sheet-tabs > a {
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   width: var(--tab-size);
   height: calc(var(--tab-size) + 4px);
   padding: 0;
-  background: var(--color-frame-bg-75);
   border: 1px solid #000;
   border-left: none;
   border-radius: 0 4px 4px 0;
+  background: var(--color-frame-bg-75);
 }
 .swerpg.sheet.actor .sheet-tabs > a .tab-icon {
   box-sizing: content-box;
@@ -1261,206 +1284,125 @@ input[type='range'] {
   opacity: 0.5;
 }
 .swerpg.sheet.actor .sheet-tabs > a.active {
-  background: var(--color-frame-bg);
   border-color: var(--color-accent);
+  background: var(--color-frame-bg);
   box-shadow: 0 0 4px var(--color-link-text);
 }
 .swerpg.sheet.actor .sheet-tabs > a.active .tab-icon {
   opacity: 1;
 }
 .swerpg.sheet.actor .tab.attributes {
-  grid-template-rows: 200px 200px 1fr;
   grid-template-columns: 1fr;
+  grid-template-rows: auto auto 1fr;
   padding-bottom: var(--margin-size);
-  /** Resources */
 }
 .swerpg.sheet.actor .tab.attributes.active {
   display: grid;
+  gap: 45px;
 }
 .swerpg.sheet.actor .tab.attributes .resources {
   grid-column: 1;
   grid-row: 1;
   justify-content: center;
-  padding: 0 0.5rem;
   min-height: 200px;
-  /** Pool Resources */
-  /** Economy Resources */
+  padding: 0 0.5rem;
 }
 .swerpg.sheet.actor .tab.attributes .resources .resource-wrapper {
-  margin: 0.5em 1em;
-  width: 100px;
   flex: none;
+  width: 100px;
+  margin: 0.5em 1em;
+}
+.swerpg.sheet.actor .tab.attributes .resources .resource-wrapper .beveled-rectangle,
+.swerpg.sheet.actor .tab.attributes .resources .resource-wrapper .beveled-frame,
+.swerpg.sheet.actor .tab.attributes .resources .resource-wrapper .king-sized-beveled-frame,
+.swerpg.sheet.actor .tab.attributes .resources .resource-wrapper .empty-rectangle,
+.swerpg.sheet.actor .tab.attributes .resources .resource-wrapper .octagon {
+  --notchSize: 5px;
+  display: flex;
+  margin: 0;
+  clip-path: polygon(0% var(--notchSize), var(--notchSize) 0%, calc(100% - var(--notchSize)) 0%, 100% var(--notchSize), 100% calc(100% - var(--notchSize)), calc(100% - var(--notchSize)) 100%, var(--notchSize) 100%, 0% calc(100% - var(--notchSize)));
+}
+.swerpg.sheet.actor .tab.attributes .resources .resource-wrapper .beveled-rectangle .label,
+.swerpg.sheet.actor .tab.attributes .resources .resource-wrapper .beveled-frame .label,
+.swerpg.sheet.actor .tab.attributes .resources .resource-wrapper .king-sized-beveled-frame .label,
+.swerpg.sheet.actor .tab.attributes .resources .resource-wrapper .empty-rectangle .label,
+.swerpg.sheet.actor .tab.attributes .resources .resource-wrapper .octagon .label {
+  align-items: center;
+  margin: auto;
+  padding: 0;
+  color: var(--color-primary);
+  font-size: var(--font-size-10);
+  font-weight: bold;
+  text-transform: uppercase;
 }
 .swerpg.sheet.actor .tab.attributes .resources .resource-wrapper .beveled-rectangle {
-  background-color: var(--color-accent);
-  padding: 0;
-  margin: 0;
-  --notchSize: 5px;
-  clip-path: polygon(
-    0% var(--notchSize),
-    var(--notchSize) 0%,
-    calc(100% - var(--notchSize)) 0%,
-    100% var(--notchSize),
-    100% calc(100% - var(--notchSize)),
-    calc(100% - var(--notchSize)) 100%,
-    var(--notchSize) 100%,
-    0% calc(100% - var(--notchSize))
-  );
   height: 25px;
-  display: flex;
+  padding: 0;
+  background-color: var(--color-accent);
 }
 .swerpg.sheet.actor .tab.attributes .resources .resource-wrapper .beveled-frame {
-  background-color: white;
-  padding: 2px 3px;
-  margin: 0;
-  --notchSize: 5px;
-  clip-path: polygon(
-    0% var(--notchSize),
-    var(--notchSize) 0%,
-    calc(100% - var(--notchSize)) 0%,
-    100% var(--notchSize),
-    100% calc(100% - var(--notchSize)),
-    calc(100% - var(--notchSize)) 100%,
-    var(--notchSize) 100%,
-    0% calc(100% - var(--notchSize))
-  );
   height: 25px;
-  display: flex;
+  padding: 2px 3px;
+  background-color: white;
 }
 .swerpg.sheet.actor .tab.attributes .resources .resource-wrapper .beveled-frame .empty-rectangle {
-  background-color: var(--color-frame-bg-75);
-  padding: 0;
-  margin: 0;
   --notchSize: 4px;
-  clip-path: polygon(
-    0% var(--notchSize),
-    var(--notchSize) 0%,
-    calc(100% - var(--notchSize)) 0%,
-    100% var(--notchSize),
-    100% calc(100% - var(--notchSize)),
-    calc(100% - var(--notchSize)) 100%,
-    var(--notchSize) 100%,
-    0% calc(100% - var(--notchSize))
-  );
-  height: 21px;
   width: 100%;
-  display: flex;
+  height: 21px;
+  padding: 0;
+  background-color: var(--color-frame-bg-75);
 }
 .swerpg.sheet.actor .tab.attributes .resources .resource-wrapper .king-sized-beveled-frame {
-  background-color: white;
-  padding: 2px 3px;
-  margin: 0;
   --notchSize: 17px;
-  clip-path: polygon(
-    0% var(--notchSize),
-    var(--notchSize) 0%,
-    calc(100% - var(--notchSize)) 0%,
-    100% var(--notchSize),
-    100% calc(100% - var(--notchSize)),
-    calc(100% - var(--notchSize)) 100%,
-    var(--notchSize) 100%,
-    0% calc(100% - var(--notchSize))
-  );
   height: 75px;
-  display: flex;
+  padding: 2px 3px;
+  background-color: white;
 }
 .swerpg.sheet.actor .tab.attributes .resources .resource-wrapper .king-sized-beveled-frame .empty-rectangle {
-  background-color: var(--color-frame-bg-75);
-  padding: 0;
-  margin: 0;
   --notchSize: 16px;
-  clip-path: polygon(
-    0% var(--notchSize),
-    var(--notchSize) 0%,
-    calc(100% - var(--notchSize)) 0%,
-    100% var(--notchSize),
-    100% calc(100% - var(--notchSize)),
-    calc(100% - var(--notchSize)) 100%,
-    var(--notchSize) 100%,
-    0% calc(100% - var(--notchSize))
-  );
-  height: 70px;
   width: 100%;
-  display: flex;
+  height: 70px;
+  padding: 0;
+  background-color: var(--color-frame-bg-75);
 }
 .swerpg.sheet.actor .tab.attributes .resources .resource-wrapper .king-sized-beveled-frame .empty-rectangle .octagon {
-  background-color: var(--color-accent);
-  padding: 0;
-  margin: 3px 3px 0 7px;
   --notchSize: 8px;
-  clip-path: polygon(
-    0% var(--notchSize),
-    var(--notchSize) 0%,
-    calc(100% - var(--notchSize)) 0%,
-    100% var(--notchSize),
-    100% calc(100% - var(--notchSize)),
-    calc(100% - var(--notchSize)) 100%,
-    var(--notchSize) 100%,
-    0% calc(100% - var(--notchSize))
-  );
-  height: 16px;
   width: 79px;
-  display: flex;
+  height: 16px;
+  margin: 3px 3px 0 7px;
+  padding: 0;
+  background-color: var(--color-accent);
 }
 .swerpg.sheet.actor .tab.attributes .resources .resource-wrapper .king-sized-beveled-frame .empty-rectangle .column-wrapper {
   height: 100%;
 }
 .swerpg.sheet.actor .tab.attributes .resources .resource-wrapper .king-sized-beveled-frame .empty-rectangle .column-wrapper .column_1,
 .swerpg.sheet.actor .tab.attributes .resources .resource-wrapper .king-sized-beveled-frame .empty-rectangle .column-wrapper .column_2 {
-  height: 100%;
   display: flex;
-  justify-content: center;
   align-items: center;
   align-content: center;
+  justify-content: center;
+  height: 100%;
 }
 .swerpg.sheet.actor .tab.attributes .resources .resource-wrapper .king-sized-beveled-frame .empty-rectangle .column-wrapper .column_1 {
-  border-right: 1px solid white;
   margin-right: 0.25em;
+  border-right: 1px solid white;
 }
 .swerpg.sheet.actor .tab.attributes .resources .resource-wrapper .octagon {
-  background-color: var(--color-accent);
-  padding: 0;
-  margin: 0;
   --notchSize: 10px;
-  clip-path: polygon(
-    0% var(--notchSize),
-    var(--notchSize) 0%,
-    calc(100% - var(--notchSize)) 0%,
-    100% var(--notchSize),
-    100% calc(100% - var(--notchSize)),
-    calc(100% - var(--notchSize)) 100%,
-    var(--notchSize) 100%,
-    0% calc(100% - var(--notchSize))
-  );
   height: 20px;
-  display: flex;
-}
-.swerpg.sheet.actor .tab.attributes .resources .resource-wrapper .octagon .label,
-.swerpg.sheet.actor .tab.attributes .resources .resource-wrapper .beveled-rectangle .label,
-.swerpg.sheet.actor .tab.attributes .resources .resource-wrapper .beveled-frame .label,
-.swerpg.sheet.actor .tab.attributes .resources .resource-wrapper .king-sized-beveled-frame .label {
-  text-transform: uppercase;
-  font-size: var(--font-size-10);
-  font-weight: bold;
-  align-items: center;
   padding: 0;
-  margin: auto;
-}
-.swerpg.sheet.actor .tab.attributes .resources .resource-wrapper .octagon .label,
-.swerpg.sheet.actor .tab.attributes .resources .resource-wrapper .beveled-rectangle .label,
-.swerpg.sheet.actor .tab.attributes .resources .resource-wrapper .beveled-frame .label,
-.swerpg.sheet.actor .tab.attributes .resources .resource-wrapper .king-sized-beveled-frame .label {
-  color: var(--color-primary);
+  background-color: var(--color-accent);
 }
 .swerpg.sheet.actor .tab.attributes .resources .resource {
   --resource-pct: 0%;
   position: relative;
   flex: 0 0 100px;
+  justify-content: center;
+  align-items: center;
   height: 114px;
   background: var(--resource-bg) no-repeat center;
   background-size: 100px;
-  justify-content: center;
-  align-items: center;
 }
 .swerpg.sheet.actor .tab.attributes .resources .resource .label {
   position: absolute;
@@ -1480,17 +1422,17 @@ input[type='range'] {
 .swerpg.sheet.actor .tab.attributes .resources .resource .pool input {
   flex: 0 0 40%;
   height: 1.25em;
-  background: none;
   padding: 0 0.25rem;
   border: none;
-  text-align: center;
+  background: none;
   font-family: var(--font-h1);
   font-size: inherit;
+  text-align: center;
 }
 .swerpg.sheet.actor .tab.attributes .resources .resource .pool .total,
 .swerpg.sheet.actor .tab.attributes .resources .resource .pool .sep {
-  font-family: var(--font-h1);
   color: var(--color-secondary);
+  font-family: var(--font-h1);
 }
 .swerpg.sheet.actor .tab.attributes .resources .resource .pool .sep {
   flex: none;
@@ -1506,35 +1448,35 @@ input[type='range'] {
   font-size: var(--font-size-14);
 }
 .swerpg.sheet.actor .tab.attributes .resources .resource::before {
+  content: '';
   display: block;
   position: absolute;
-  pointer-events: none;
-  content: '';
+  z-index: 0;
   width: 100%;
   height: 100%;
+  pointer-events: none;
   background: var(--resource-fill) no-repeat center;
   background-size: 100px;
-  z-index: 0;
-  clip-path: inset(var(--resource-pct) 0px 0px 0px);
+  clip-path: inset(var(--resource-pct) 0 0 0);
   transition: clip-path 1s;
 }
 .swerpg.sheet.actor .tab.attributes .resources .resource .threshold {
   position: absolute;
   bottom: -8px;
-  flex: none;
-  width: 32px;
-  height: 40px;
   display: flex;
+  flex: none;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  width: 32px;
+  height: 40px;
   background: url('../ui/elements/hex-plain.svg') no-repeat center;
   background-size: auto 32px;
 }
 .swerpg.sheet.actor .tab.attributes .resources .resource .threshold .value {
-  font-size: var(--font-size-12);
-  font-family: var(--font-h1);
   color: var(--color-secondary);
+  font-family: var(--font-h1);
+  font-size: var(--font-size-12);
 }
 .swerpg.sheet.actor .tab.attributes .resources .resource .threshold.wounds {
   right: -12px;
@@ -1551,46 +1493,47 @@ input[type='range'] {
   --resource-fill: url('../ui/resources/morale-fill.png');
 }
 .swerpg.sheet.actor .tab.attributes .resources .economy {
-  height: 100%;
   align-items: center;
+  height: 100%;
   gap: 0.5rem;
   padding: 1.25rem 0 0;
 }
 .swerpg.sheet.actor .tab.attributes .resources .economy .currency {
-  width: 100%;
   align-items: center;
+  width: 100%;
 }
 .swerpg.sheet.actor .tab.attributes .resources .economy .currency .points {
-  width: 100%;
   display: flex;
   justify-content: center;
+  width: 100%;
   gap: 0.25rem;
 }
 .swerpg.sheet.actor .tab.attributes .resources .economy .currency .points input {
   flex: 0 0 16px;
+  width: 16px;
   height: 16px;
   padding: 0;
-  background: none;
   border: none;
-  text-align: center;
-  font-size: var(--font-size-12);
+  background: none;
   font-family: var(--font-sans);
+  font-size: var(--font-size-12);
+  text-align: center;
 }
 .swerpg.sheet.actor .tab.attributes .resources .economy .currency .points span.max {
   flex: 0 0 16px;
-  font-family: var(--font-sans);
   color: var(--color-secondary);
+  font-family: var(--font-sans);
   font-size: var(--font-size-12);
   text-align: center;
 }
 .swerpg.sheet.actor .tab.attributes .resources .economy .currency .full::before {
-  display: block;
   content: '';
+  display: block;
   width: 8px;
   height: 8px;
   margin: 2px;
-  background: var(--resource-color);
   border-radius: 4px;
+  background: var(--resource-color);
 }
 .swerpg.sheet.actor .tab.attributes .resources .action {
   --resource-color: #ff9900;
@@ -1602,512 +1545,507 @@ input[type='range'] {
   --resource-color: #ff0059;
 }
 .swerpg.sheet.actor .characteristics {
+  display: flex;
   grid-column: 1;
   grid-row: 2;
-  display: flex;
   justify-content: center;
   padding: 1.5rem 0 0;
 }
+.swerpg.sheet.actor .characteristics[data-character-state='play'] .characteristic-controls {
+  display: none;
+}
+.swerpg.sheet.actor .characteristics .button.icon {
+  display: none;
+}
 .swerpg.sheet.actor .characteristics .characteristics-wrapper {
   display: flex;
-  width: 100%;
-  justify-content: center;
-  align-content: center;
   align-items: center;
+  align-content: center;
+  justify-content: center;
+  width: 100%;
+}
+.swerpg.sheet.actor .characteristics .characteristics-wrapper:hover .circle-content {
+  box-shadow: inset 0 0 8px rgba(120, 169, 194, 0.12), 0 0 6px rgba(120, 169, 194, 0.1);
 }
 .swerpg.sheet.actor .characteristics .characteristics-wrapper .characteristic-wrapper {
   display: flex;
-  min-width: 115px;
-  justify-content: center;
-  align-content: center;
   align-items: center;
+  align-content: center;
+  justify-content: center;
+  min-width: 115px;
 }
 .swerpg.sheet.actor .characteristics .characteristics-wrapper .characteristic-wrapper .action-wrapper {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
   margin: 0 0.5rem;
 }
 .swerpg.sheet.actor .characteristics .characteristics-wrapper .characteristic-wrapper .characteristic.holo-circle {
   position: relative;
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  background: radial-gradient(circle at center, #151a28 40%, #000000 100%);
-  box-shadow: 0 0 10px rgba(0, 176, 255, 0.4);
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
+  width: 72px;
+  height: 72px;
   margin: 0 0.2rem;
+  overflow: hidden;
+  border-radius: 50%;
+  background: radial-gradient(circle at center, rgba(16, 23, 34, 0.9) 40%, #080c12 100%);
+  box-shadow: 0 0 4px rgba(120, 169, 194, 0.15);
 }
 .swerpg.sheet.actor .characteristics .characteristics-wrapper .characteristic-wrapper .characteristic.holo-circle .circle-content {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  border: 4px solid var(--color-glow);
-  background: radial-gradient(ellipse at center, #151a28 0%, #000000 60%, transparent 100%);
-  box-shadow:
-    0 0 4px var(--color-glow),
-    0 0 10px rgba(0, 176, 255, 0.6),
-    0 0 20px rgba(0, 176, 255, 0.3),
-    inset 0 0 8px rgba(0, 176, 255, 0.15);
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  position: relative;
-  transition:
-    box-shadow 0.3s ease,
-    transform 0.3s ease;
-  animation: pulse-glow 2s infinite ease-in-out;
+  width: 72px;
+  height: 72px;
+  border: 3px solid rgba(120, 169, 194, 0.45);
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(16, 23, 34, 0.95) 0%, rgba(8, 12, 18, 0.8) 60%, transparent 100%);
+  box-shadow: inset 0 0 6px rgba(120, 169, 194, 0.08);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
   fill: var(--color-accent);
 }
 .swerpg.sheet.actor .characteristics .characteristics-wrapper .characteristic-wrapper .characteristic.holo-circle .circle-content .characteristic-icon {
-  z-index: 1;
   position: absolute;
-  height: 70px;
-  width: 70px;
+  z-index: 1;
+  width: 60px;
+  height: 60px;
   margin: 0.1rem;
   padding: 0.1rem;
-  filter: drop-shadow(0 0 6px #00b0ff);
-  opacity: 0.2;
-  /* transition: transform 0.25s ease, filter 0.25s ease; */
-  animation: holo-fade-in 0.6s ease-out;
+  opacity: 0.05;
+  filter: drop-shadow(0 0 2px rgba(120, 169, 194, 0.15));
   fill: var(--color-accent);
 }
 .characteristic:hover .swerpg.sheet.actor .characteristics .characteristics-wrapper .characteristic-wrapper .characteristic.holo-circle {
-  transform: scale(1.1);
+  transform: scale(1.04);
   opacity: 1;
 }
 .swerpg.sheet.actor .characteristics .characteristics-wrapper .characteristic-wrapper .characteristic.holo-circle .value {
   position: absolute;
   z-index: 10;
-  font-size: 3rem;
+  color: #c9b36a;
+  font-size: 2.2rem;
   font-weight: bold;
-  color: var(--color-accent-yellow);
-  text-shadow:
-    0 0 2px #efe58b,
-    0 0 4px rgba(239, 229, 139, 0.5),
-    0 0 8px rgba(239, 229, 139, 0.2),
-    5px 5px 5px black;
+  text-shadow: 0 0 2px rgba(201, 179, 106, 0.25);
 }
 .swerpg.sheet.actor .characteristics .characteristics-wrapper .characteristic-wrapper .characteristic.holo-circle .icon-svg {
-  width: 28px;
-  height: 28px;
-  fill: var(--color-glow);
+  width: 24px;
+  height: 24px;
   margin-bottom: 4px;
-  filter: drop-shadow(0 0 3px rgba(0, 176, 255, 0.4));
+  filter: drop-shadow(0 0 1px rgba(120, 169, 194, 0.15));
+  fill: var(--color-glow);
   transition: transform 0.2s ease;
 }
 .swerpg.sheet.actor .characteristics .characteristics-wrapper .characteristic-wrapper .characteristic.holo-circle .icon-svg:hover {
-  transform: scale(1.2);
-  filter: drop-shadow(0 0 6px rgba(0, 176, 255, 0.7));
-}
-.swerpg.sheet.actor .characteristics .characteristics-wrapper:hover .circle-content {
-  box-shadow:
-    0 0 12px var(--color-glow-hover),
-    0 0 24px rgba(0, 176, 255, 0.2);
+  transform: scale(1.1);
+  filter: drop-shadow(0 0 2px rgba(120, 169, 194, 0.25));
 }
 .swerpg.sheet.actor .characteristics .characteristics-wrapper .label {
-  font-size: 0.8rem;
   margin-top: 0.4rem;
-  letter-spacing: 0.05em;
   color: var(--color-label);
-  text-shadow: 0 0 4px #222;
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
   text-align: center;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);
 }
-.swerpg.sheet.actor .characteristics .characteristics-wrapper .button.icon {
-  position: absolute;
-  color: #00b0ff;
-  border-radius: 5px;
-  transition: transform 0.2s ease;
-  height: 10px;
-  width: 25px;
-  padding: 0;
+.swerpg.sheet.actor .characteristics .characteristics-wrapper .characteristic-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 5rem;
+  gap: 0.25rem;
+  border: 1px solid rgba(120, 169, 194, 0.25);
+  border-radius: 3px;
+  background: rgba(16, 23, 34, 0.6);
+}
+.swerpg.sheet.actor .characteristics .characteristics-wrapper .stepper-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
   margin: 0;
-  z-index: 5;
-  background: rgba(12, 15, 23, 0.5);
-  opacity: 1;
-  border: 1px solid rgba(0, 176, 255, 0.5);
+  padding: 0;
+  border: 1px solid rgba(120, 169, 194, 0.3);
+  border-radius: 2px;
+  background: rgba(16, 23, 34, 0.4);
+  color: #78a9c2;
+  cursor: pointer;
+  font-size: 9px;
+  line-height: 1;
+  transition: background 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
 }
-.swerpg.sheet.actor .characteristics .characteristics-wrapper .button.icon.increase {
-  top: 20px;
-  right: -5px;
+.swerpg.sheet.actor .characteristics .characteristics-wrapper .stepper-btn:hover:not(:disabled) {
+  border-color: rgba(120, 169, 194, 0.5);
+  background: rgba(16, 23, 34, 0.6);
 }
-.swerpg.sheet.actor .characteristics .characteristics-wrapper .button.icon.decrease {
-  top: 20px;
-  left: -5px;
+.swerpg.sheet.actor .characteristics .characteristics-wrapper .stepper-btn:disabled {
+  border-color: rgba(120, 169, 194, 0.15);
+  cursor: default;
+  opacity: 0.25;
 }
-.swerpg.sheet.actor .characteristics .characteristics-wrapper .button.icon:hover {
-  background: #0c0f17;
-  border: 1px solid #00b0ff;
+.swerpg.sheet.actor .characteristics .characteristics-wrapper .stepper-value {
+  min-width: 14px;
+  color: #c9b36a;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-align: center;
+  text-shadow: 0 0 2px rgba(201, 179, 106, 0.2);
 }
-.strength {
+.swerpg.sheet.actor .characteristic.strength,
+.swerpg.sheet.actor .strength {
   --ability-icon: url('../ui/abilities/strength.svg');
 }
-.toughness {
+.swerpg.sheet.actor .characteristic.toughness,
+.swerpg.sheet.actor .toughness {
   --ability-icon: url('../ui/abilities/toughness.svg');
 }
-.dexterity {
+.swerpg.sheet.actor .characteristic.dexterity,
+.swerpg.sheet.actor .dexterity {
   --ability-icon: url('../ui/abilities/dexterity.svg');
 }
-.wisdom {
+.swerpg.sheet.actor .characteristic.wisdom,
+.swerpg.sheet.actor .wisdom {
   --ability-icon: url('../ui/abilities/wisdom.svg');
 }
-.presence {
+.swerpg.sheet.actor .characteristic.presence,
+.swerpg.sheet.actor .presence {
   --ability-icon: url('../ui/abilities/presence.svg');
 }
-.intellect {
+.swerpg.sheet.actor .characteristic.intellect,
+.swerpg.sheet.actor .intellect {
   --ability-icon: url('../ui/abilities/intellect.svg');
 }
-a.button {
+.swerpg.sheet.actor .characteristics a.button,
+.swerpg.sheet.actor .characteristic-wrapper a.button,
+.swerpg.sheet.actor .action-wrapper a.button {
   position: absolute;
-  height: 20px;
-  width: 20px;
   top: -10px;
+  width: 20px;
+  height: 20px;
   opacity: 1;
 }
-a.button.decrease {
+.swerpg.sheet.actor .characteristics a.button.decrease,
+.swerpg.sheet.actor .characteristic-wrapper a.button.decrease,
+.swerpg.sheet.actor .action-wrapper a.button.decrease {
   left: -10px;
 }
-a.button.increase {
+.swerpg.sheet.actor .characteristics a.button.increase,
+.swerpg.sheet.actor .characteristic-wrapper a.button.increase,
+.swerpg.sheet.actor .action-wrapper a.button.increase {
   right: -10px;
 }
-.point-pools {
+.swerpg.sheet.actor .point-pools {
   position: absolute;
-  padding: 0 0 0 0.5rem;
   bottom: -0.5rem;
   z-index: 1;
-  font-size: var(--font-size-12);
   justify-content: center;
-  background: var(--color-frame-bg);
   gap: 0.5rem;
+  padding: 0 0 0 0.5rem;
+  background: var(--color-frame-bg);
+  font-size: var(--font-size-12);
 }
-.point-pools .label {
+.swerpg.sheet.actor .point-pools .label {
   flex: none;
   color: var(--color-secondary);
 }
-.point-pools .value {
+.swerpg.sheet.actor .point-pools .value {
   flex: none;
   width: 24px;
   height: 24px;
   margin: -2px -12px -2px 0;
 }
-/** Defenses */
-.defenses {
+.swerpg.sheet.actor .defenses {
   display: flex;
   grid-column: 2;
   grid-row: 1;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   min-height: 200px;
 }
-.defenses .defense {
+.swerpg.sheet.actor .defenses .defense {
+  position: relative;
   display: flex;
   flex-direction: column;
-  position: relative;
   align-items: center;
   justify-content: center;
 }
-.defenses .defense .label {
+.swerpg.sheet.actor .defenses .defense .label {
   position: absolute;
   top: 0;
 }
-.defenses .defense .value {
-  font-size: var(--font-size-24);
+.swerpg.sheet.actor .defenses .defense .value {
   font-family: var(--font-h1);
+  font-size: var(--font-size-24);
 }
-.defenses .defense .pct {
+.swerpg.sheet.actor .defenses .defense .pct {
   position: absolute;
   bottom: 0;
 }
-.defenses .physical {
+.swerpg.sheet.actor .defenses .physical,
+.swerpg.sheet.actor .defenses .magical {
   width: 100%;
   justify-content: space-between;
 }
-.defenses .physical > * {
+.swerpg.sheet.actor .defenses .physical > *,
+.swerpg.sheet.actor .defenses .magical > * {
   flex: none;
 }
-.defenses .physical .total {
+.swerpg.sheet.actor .defenses .physical .total {
   width: 60px;
   height: 100px;
   background: url('../ui/elements/hex-willpower.svg') no-repeat center;
   background-size: 60px;
 }
-.defenses .physical .sep {
+.swerpg.sheet.actor .defenses .physical .sep {
   color: var(--color-h1);
   font-size: var(--font-size-20);
 }
-.defenses .physical .component {
+.swerpg.sheet.actor .defenses .physical .component {
   width: 40px;
   height: 80px;
   background: url('../ui/elements/hex-plain.svg') no-repeat center;
   background-size: 40px;
 }
-.defenses .physical .component .value {
+.swerpg.sheet.actor .defenses .physical .component .value {
   font-size: var(--font-size-18);
 }
-.defenses .physical .component .pct {
-  font-size: var(--font-size-10);
+.swerpg.sheet.actor .defenses .physical .component .pct {
   font-family: var(--font-sans);
+  font-size: var(--font-size-10);
 }
-.defenses .physical .component.inactive {
-  opacity: 0.75;
+.swerpg.sheet.actor .defenses .physical .component.inactive {
   background: rgba(12, 15, 23, 0.5);
+  opacity: 0.75;
 }
-.defenses .magical {
-  width: 100%;
-  justify-content: space-between;
-}
-.defenses .magical > * {
-  flex: none;
-}
-.defenses .magical .defense {
+.swerpg.sheet.actor .defenses .magical .defense {
   width: 60px;
   height: 80px;
   padding: 16px 0 0;
   background: var(--defense-icon) no-repeat bottom center;
   background-size: auto 64px;
 }
-.defenses .magical .defense.fortitude {
+.swerpg.sheet.actor .defenses .magical .defense.fortitude {
   --defense-icon: url('../ui/elements/hex-fortitude.svg');
 }
-.defenses .magical .defense.willpower {
+.swerpg.sheet.actor .defenses .magical .defense.willpower {
   --defense-icon: url('../ui/elements/hex-willpower.svg');
 }
-.defenses .magical .defense.reflex {
+.swerpg.sheet.actor .defenses .magical .defense.reflex {
   --defense-icon: url('../ui/elements/hex-reflex.svg');
 }
-.defenses .magical .extra {
+.swerpg.sheet.actor .defenses .magical .extra {
   --defense-icon: url('../ui/elements/hex-plain.svg');
+  align-self: flex-end;
   width: 32px;
   height: 64px;
-  align-self: flex-end;
   padding: 16px 0;
-  background-size: auto 32px;
   background-position: center;
+  background-size: auto 32px;
 }
-.defenses .magical .extra .value {
+.swerpg.sheet.actor .defenses .magical .extra .value {
   font-size: var(--font-size-12);
 }
-.defenses .magical .extra .label {
-  bottom: 0;
+.swerpg.sheet.actor .defenses .magical .extra .label {
   top: unset;
+  bottom: 0;
 }
-/** Resistances */
-.resistances {
-  grid-column: 1 / span 2;
+.swerpg.sheet.actor .resistances {
+  grid-column: 1;
   justify-content: center;
   gap: 1rem;
 }
-.resistances .resistance-group {
+.swerpg.sheet.actor .resistances .resistance-group {
   align-items: center;
   gap: 0.25rem;
 }
-.resistances .resistance {
+.swerpg.sheet.actor .resistances .resistance {
   width: 100%;
   align-items: center;
 }
-.resistances .resistance .resistance-bar {
+.swerpg.sheet.actor .resistances .resistance .resistance-bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
   height: 12px;
   margin: 6px 0;
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-left: 1px solid var(--color-frame);
   border-right: 1px solid var(--color-frame);
+  border-left: 1px solid var(--color-frame);
 }
-.resistances .resistance .resistance-bar::before {
+.swerpg.sheet.actor .resistances .resistance .resistance-bar::before {
   content: '';
   display: block;
-  width: 100%;
   position: absolute;
   top: 6px;
+  width: 100%;
   border-top: 1px solid var(--color-frame);
 }
-.resistances .resistance .resistance-bar .value {
+.swerpg.sheet.actor .resistances .resistance .resistance-bar .value {
+  z-index: 1;
   flex: 0 0 24px;
   height: 24px;
   background: url('../ui/elements/hex-plain-filled.svg') no-repeat center;
   background-size: auto 24px;
+  font-size: var(--font-size-12);
   line-height: 24px;
   text-align: center;
-  font-size: var(--font-size-12);
-  z-index: 1;
 }
-.resistances .resistance .resistance-bar .bar {
+.swerpg.sheet.actor .resistances .resistance .resistance-bar .bar {
   position: absolute;
-  height: 8px;
+  z-index: 0;
   max-width: 50%;
+  height: 8px;
   border: 1px solid;
   border-radius: 2px;
-  z-index: 0;
 }
-.resistances .resistance.none {
+.swerpg.sheet.actor .resistances .resistance.none {
   opacity: 0.5;
 }
-.resistances .resistance.none .bar {
+.swerpg.sheet.actor .resistances .resistance.none .bar {
   display: none;
 }
-.resistances .resistance.res .value {
+.swerpg.sheet.actor .resistances .resistance.res .value {
   background: url('../ui/elements/hex-resistance.svg') no-repeat center;
   background-size: auto 24px;
 }
-.resistances .resistance.res .bar {
+.swerpg.sheet.actor .resistances .resistance.res .bar {
   left: 50%;
-  background: var(--color-damage-resistance);
   border: 1px solid var(--color-damage-resistance-border);
   border-left: none;
+  background: var(--color-damage-resistance);
 }
-.resistances .resistance.vuln .value {
+.swerpg.sheet.actor .resistances .resistance.vuln .value {
   background: url('../ui/elements/hex-vulnerability.svg') no-repeat center;
   background-size: auto 24px;
 }
-.resistances .resistance.vuln .bar {
+.swerpg.sheet.actor .resistances .resistance.vuln .bar {
   right: 50%;
-  background: var(--color-damage-vulnerability);
   border: 1px solid var(--color-damage-vulnerability-border);
   border-right: none;
+  background: var(--color-damage-vulnerability);
 }
-/* ----------------------------------------- */
-/*  Biography Tab                            */
-/* ----------------------------------------- */
-.tab.biography {
-  flex: 1;
-  padding: 1rem 0 0;
-}
-.tab.biography .sheet-section {
+.swerpg.sheet.actor .tab.biography .sheet-section,
+.swerpg.sheet.actor .tab.commitments .sheet-section {
   flex: 1;
   padding: 0.5rem;
 }
-.tab.biography .sheet-section prose-mirror {
+.swerpg.sheet.actor .tab.biography .sheet-section prose-mirror,
+.swerpg.sheet.actor .tab.commitments .sheet-section prose-mirror {
   flex: 1;
   width: 100%;
 }
-.tab.biography .sheet-section prose-mirror.active {
+.swerpg.sheet.actor .tab.biography .sheet-section prose-mirror.active,
+.swerpg.sheet.actor .tab.commitments .sheet-section prose-mirror.active {
   margin-top: 0.5rem;
 }
-.tab.biography .sheet-section prose-mirror menu {
+.swerpg.sheet.actor .tab.biography .sheet-section prose-mirror menu,
+.swerpg.sheet.actor .tab.commitments .sheet-section prose-mirror menu {
   padding: 0;
 }
-.tab.biography .sheet-section prose-mirror button.toggle {
+.swerpg.sheet.actor .tab.biography .sheet-section prose-mirror button.toggle,
+.swerpg.sheet.actor .tab.commitments .sheet-section prose-mirror button.toggle {
   right: 1rem;
-  background: var(--color-frame-bg);
   border-color: var(--color-frame);
+  background: var(--color-frame-bg);
   color: var(--color-secondary);
 }
-.tab.biography .appearance {
+.swerpg.sheet.actor .tab.biography {
+  flex: 1;
+  padding: 1rem 0 0;
+}
+.swerpg.sheet.actor .tab.biography .appearance {
   align-items: flex-start;
 }
-.tab.biography .appearance fieldset {
+.swerpg.sheet.actor .tab.biography .appearance fieldset {
   flex: 0 0 150px;
   padding: 0.5rem 1rem;
   font-size: var(--font-size-12);
 }
-.tab.biography .appearance > div {
+.swerpg.sheet.actor .tab.biography .appearance > div {
   padding: 0 1rem;
 }
-/* ----------------------------------------- */
-/*  Commitments Tab                            */
-/* ----------------------------------------- */
-.tab.commitments .sheet-section {
-  flex: 1;
-  padding: 0.5rem;
-}
-.tab.commitments .sheet-section prose-mirror {
-  flex: 1;
-  width: 100%;
-}
-.tab.commitments .sheet-section prose-mirror.active {
-  margin-top: 0.5rem;
-}
-.tab.commitments .sheet-section prose-mirror menu {
-  padding: 0;
-}
-.tab.commitments .sheet-section prose-mirror button.toggle {
-  right: 1rem;
-  background: var(--color-frame-bg);
-  border-color: var(--color-frame);
-  color: var(--color-secondary);
-}
-.tab.commitments .header {
+.swerpg.sheet.actor .tab.commitments .header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   padding: 0.15rem 0.25rem;
-  background: var(--color-frame-bg);
   border-bottom: 1px solid var(--color-frame);
+  background: var(--color-frame-bg);
 }
-.tab.commitments .header .shifted {
+.swerpg.sheet.actor .tab.commitments .header .shifted {
   margin-left: 5rem;
 }
-.tab.commitments .header .title {
+.swerpg.sheet.actor .tab.commitments .header .title {
+  border: none;
+  color: var(--color-h1);
   font-family: var(--font-h1);
   font-weight: normal;
-  color: var(--color-h1);
-  border: none;
 }
-.tab.commitments .centered {
-  flex: 1.5;
-  text-align: center;
-  justify-content: center;
-  align-items: center;
+.swerpg.sheet.actor .tab.commitments .centered {
   display: flex;
+  flex: 1.5;
+  align-items: center;
   align-content: center;
+  justify-content: center;
+  text-align: center;
 }
-.tab.commitments .column {
+.swerpg.sheet.actor .tab.commitments .column {
   flex: 1.5;
   text-align: center;
 }
-.tab.commitments .slim.column {
+.swerpg.sheet.actor .tab.commitments .slim.column {
   flex: 1;
 }
-.tab.commitments .principal.column {
+.swerpg.sheet.actor .tab.commitments .principal.column {
   flex: 3;
   text-align: left;
 }
-.tab.commitments img.header-icon {
-  margin-right: auto;
-  margin-left: auto;
+.swerpg.sheet.actor .tab.commitments img.header-icon {
   width: 28px;
   height: 28px;
+  margin-right: auto;
+  margin-left: auto;
 }
-.tab.commitments .controls {
+.swerpg.sheet.actor .tab.commitments .controls {
   flex: none;
-  justify-content: center;
-  align-content: center;
   align-items: center;
+  align-content: center;
+  justify-content: center;
   text-align: center;
 }
-/* ----------------------------------------- */
-/*  Inventory, Talents, Skills               */
-/* ----------------------------------------- */
-.tab.secondary .header-section {
+.swerpg.sheet.actor .tab.secondary .header-section {
   justify-content: space-between;
 }
-.tab.secondary .header-section a.button {
+.swerpg.sheet.actor .tab.secondary .header-section a.button {
   flex: none;
 }
-.tab.secondary .header-section a.framed {
+.swerpg.sheet.actor .tab.secondary .header-section a.framed {
   font-size: var(--font-size-12);
 }
-.tab.secondary .point-pools {
-  justify-content: flex-end;
-  font-size: var(--font-size-12);
-  gap: 0.5rem;
-  z-index: 1;
-  padding: 1px 0.5rem;
+.swerpg.sheet.actor .tab.secondary .point-pools {
   box-sizing: content-box;
-  background: var(--color-frame-bg);
+  z-index: 1;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  padding: 1px 0.5rem;
   border-radius: 3px;
+  background: var(--color-frame-bg);
+  font-size: var(--font-size-12);
 }
-.tab.secondary .point-pools .label {
+.swerpg.sheet.actor .tab.secondary .point-pools .label {
   flex: none;
   color: var(--color-secondary);
 }
-.tab.secondary .point-pools .value {
+.swerpg.sheet.actor .tab.secondary .point-pools .value {
   flex: 0 0 24px;
   height: 24px;
   background: url('../ui/elements/hex-plain.svg') no-repeat center;
@@ -2115,313 +2053,445 @@ a.button.increase {
   line-height: 24px;
   text-align: center;
 }
-.tab.secondary .item-section {
+.swerpg.sheet.actor .tab.secondary .item-section {
   padding: 1rem;
 }
-.tab.secondary .item-section .notes {
+.swerpg.sheet.actor .tab.secondary .item-section .notes {
   color: var(--color-tertiary);
 }
-.tab.secondary ol.items-list {
-  width: 100%;
-  list-style: none;
-  padding: 0;
-  margin: 0;
+.swerpg.sheet.actor .tab.secondary ol.items-list {
   display: flex;
   flex-direction: column;
+  width: 100%;
   gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
-.tab.secondary ol.items-list li {
+.swerpg.sheet.actor .tab.secondary ol.items-list li {
   margin: 0;
 }
-.tab.inventory .inventory-create {
+.swerpg.sheet.actor .tab.inventory .inventory-create {
   position: absolute;
-  width: 32px;
-  bottom: 0;
   right: 0;
+  bottom: 0;
+  width: 32px;
 }
-.tab.talents {
+.swerpg.sheet.actor .tab.talents {
   gap: 0.25rem !important;
 }
-.tab.talents .header-section {
+.swerpg.sheet.actor .tab.talents .header-section {
   margin-bottom: -1rem;
 }
-.tab.talents .point-pools {
+.swerpg.sheet.actor .tab.talents .point-pools {
   flex: none;
-  width: 200px;
   justify-content: space-around;
+  width: 200px;
   min-height: 50px;
 }
-.tab.talents .line-item {
+.swerpg.sheet.actor .tab.talents .line-item {
   justify-content: space-between;
 }
-.tab.talents .line-item .title {
+.swerpg.sheet.actor .tab.talents .line-item .title {
   flex: 2;
 }
-.tab.talents .line-item .tags {
+.swerpg.sheet.actor .tab.talents .line-item .tags {
   width: unset;
 }
-.tab.talents .line-item .value {
+.swerpg.sheet.actor .tab.talents .line-item .value {
   flex: 0.5;
 }
-.tab.talents .line-item .controls {
+.swerpg.sheet.actor .tab.talents .line-item .controls {
   flex: 0.5;
   justify-content: flex-end;
 }
-/* ----------------------------------------- */
-/*  Skills Tab                               */
-/* ----------------------------------------- */
-.tab.skills .skills-wrapper {
+.swerpg.sheet.actor .tab.skills.skills.skills {
+  /* ----------------------------------------- */
+  /*  Legacy Skill Container                    */
+  /* ----------------------------------------- */
+}
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper {
+  display: grid !important;
+}
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .general-skills {
+  grid-column: 1 !important;
+}
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .non-general-skills {
+  grid-column: 2 !important;
+}
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .combat-skills {
+  margin-bottom: 2em !important;
+}
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill {
   display: grid;
+  grid-template-columns: minmax(120px, 1fr) 26px 36px 36px 26px 80px;
+  align-items: center;
+  min-height: 1.75rem;
+  height: auto;
+  padding: 0.1rem 0.15rem;
 }
-.tab.skills .skills-wrapper .combat-skills {
-  margin-bottom: 2em;
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill .name {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  overflow: hidden;
+  gap: 0.2rem;
 }
-.tab.skills .skills-wrapper .skill {
-  height: 1.5em;
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill .name .label {
+  flex: 0 0 auto;
+  font-size: var(--font-size-12);
+  font-weight: bold;
+  color: #d0e6f6;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill .name .abbreviation {
+  flex-shrink: 0;
+  font-size: var(--font-size-10);
+  color: #9bb0c2;
+  font-style: italic;
+}
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill .skill-tags {
+  display: flex;
+  justify-content: center;
+  gap: 0.15rem;
+}
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill .skill-tags .skill-tag {
+  display: inline-flex;
   justify-content: center;
   align-items: center;
-  align-content: center;
-}
-.tab.skills .skills-wrapper .skill .name {
-  justify-content: flex-start;
-  align-content: baseline;
-  align-items: baseline;
-  flex: 2;
-}
-.tab.skills .skills-wrapper .skill .name .label {
-  font-size: var(--font-size-12);
-  flex: none;
-  margin-right: 0.2em;
+  width: 1rem;
+  height: 1rem;
+  border: 1px solid currentColor;
+  border-radius: 2px;
+  font-size: 0.6rem;
+  line-height: 1;
   font-weight: bold;
 }
-.tab.skills .skills-wrapper .skill .name .abbreviation {
-  font-size: var(--font-size-10);
-  flex: none;
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill .skill-tags .skill-tag--career {
+  color: #46c7ff;
 }
-.tab.skills .skills-wrapper .skill .career {
-  flex: 0.25;
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill .skill-tags .skill-tag--specialization {
+  color: #00d49a;
 }
-.tab.skills .skills-wrapper .skill .career .career-and-speciality {
-  height: 15px;
-  width: 15px;
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill .skill-rank {
+  text-align: center;
+  color: #9bb0c2;
+  font-size: 0.65rem;
+}
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill .skill-rank .skill-rank-label {
   display: block;
-  content: ' ';
+  font-size: 0.55rem;
+  text-transform: uppercase;
 }
-.tab.skills .skills-wrapper .skill .career .career-and-speciality.active {
-  background-image: url(../ui/actor/career-and-speciality-icon-small.webp);
-  background-size: 100%;
-  background-repeat: no-repeat;
-  background-position: bottom center;
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill .skill-rank .skill-rank-value {
+  font-weight: bold;
 }
-.tab.skills .skills-wrapper .general-skills {
-  grid-column: 1;
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill .skill-cost {
+  text-align: right;
+  font-size: 0.65rem;
+  color: #c9b36a;
 }
-.tab.skills .skills-wrapper .non-general-skills {
-  grid-column: 2;
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill .skill-cost .skill-cost--free {
+  color: #00ff99;
+  font-weight: bold;
 }
-.tab.skills .skills-wrapper .pips {
-  flex: 0 0 123px;
-  justify-content: center;
-  gap: 4px 0;
-  align-items: center;
-  align-content: center;
-}
-.tab.skills .skills-wrapper .pips .pip {
-  height: 15px;
-  width: 30px;
-  padding: 0;
-  margin: 0;
-  justify-content: center;
-  align-items: center;
-  align-content: center;
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill .skill-dice-preview {
   display: flex;
-  cursor: pointer;
-}
-.tab.skills .skills-wrapper .pips .pip.untrained {
-  background: url('../ui/skills/central-pips.png') no-repeat center;
-  background-size: 25px;
-  position: relative;
-}
-.tab.skills .skills-wrapper .pips .pip.untrained:nth-child(1) {
-  background: url('../ui/skills/first-pip.png') no-repeat center;
-  background-size: 25px;
-  position: relative;
-}
-.tab.skills .skills-wrapper .pips .pip.untrained:nth-child(5) {
-  background: url('../ui/skills/fifth-pip.png') no-repeat center;
-  background-size: 25px;
-  position: relative;
-}
-.tab.skills .skills-wrapper .pips .pip.trained {
-  background: url('../ui/skills/central-trained-pips.png') no-repeat center;
-  background-size: 25px;
-  position: relative;
-}
-.tab.skills .skills-wrapper .pips .pip.trained:nth-child(1) {
-  background: url('../ui/skills/first-trained-pip.png') no-repeat center;
-  background-size: 25px;
-  position: relative;
-}
-.tab.skills .skills-wrapper .pips .pip.trained:nth-child(5) {
-  background: url('../ui/skills/fifth-trained-pip.png') no-repeat center;
-  background-size: 25px;
-  position: relative;
-}
-.tab.skills .skills-wrapper .pips .pip:nth-child(1) {
-  left: 0px;
-}
-.tab.skills .skills-wrapper .pips .pip:nth-child(2) {
-  left: -5px;
-}
-.tab.skills .skills-wrapper .pips .pip:nth-child(3) {
-  left: -10px;
-}
-.tab.skills .skills-wrapper .pips .pip:nth-child(4) {
-  left: -15px;
-}
-.tab.skills .skills-wrapper .pips .pip:nth-child(5) {
-  left: -20px;
-}
-.tab.skills .point-pools {
-  width: 550px;
-  position: relative;
-  right: 1rem;
-  top: 0.75rem;
   justify-content: center;
-  align-content: center;
-  align-items: center;
+  gap: 0.2rem;
 }
-.tab.skills .bonus {
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill .skill-dice-preview .die {
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill .skill-dice-preview .die--ability {
+  background-image: url('/icons/svg/d6-grey.svg');
+}
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill .skill-dice-preview .die--proficiency {
+  background-image: url('/icons/svg/d12-grey.svg');
+}
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill .pips {
+  flex: 0 0 150px;
+  align-items: center;
+  align-content: center;
+  justify-content: start;
+  gap: 0;
+}
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill .pips .pip {
+  --pip-color: #0e5915;
+  position: relative;
+  display: flex;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  flex: 0 0 20%;
+  height: 15px;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+  background: var(--pip-color);
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+}
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill .pips .pip.untrained {
+  --pip-color: #0e5915;
+}
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill .pips .pip.trained {
+  --pip-color: #ffd700;
+  clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+}
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill-tags {
+  flex: 0 0 40px;
+  display: flex;
+  justify-content: center;
+  gap: 0.2rem;
+}
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill-tags .skill-tag {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 1.1rem;
+  height: 1.1rem;
+  border: 1px solid currentColor;
+  border-radius: 2px;
+  font-size: 0.62rem;
+  line-height: 1;
+  font-weight: bold;
+}
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill-tags .skill-tag--career {
+  color: #46c7ff;
+}
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill-tags .skill-tag--specialization {
+  color: #00d49a;
+}
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill-rank {
+  flex: 0 0 58px;
+  color: var(--color-label, #aaa);
+  font-size: 0.7rem;
+  text-align: center;
+}
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill-rank .skill-rank-label {
+  display: block;
+  font-size: 0.6rem;
+  text-transform: uppercase;
+}
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill-rank .skill-rank-value {
+  font-weight: bold;
+}
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill-cost {
+  flex: 0 0 64px;
+  text-align: right;
+  font-size: 0.72rem;
+  color: #c9b36a;
+}
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill-cost .skill-cost--free {
+  color: #00ff99;
+  font-weight: bold;
+}
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .point-pools {
+  position: relative;
+  top: 0.75rem;
+  right: 1rem;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  width: 550px;
+}
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .bonus {
   flex: 0 0 70px;
   justify-content: center;
 }
-.tab.skills .bonus span.value {
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .bonus span.value {
   display: flex;
+  flex: 0 0 40px;
   align-items: center;
   justify-content: center;
   height: 32px;
-  flex: 0 0 40px;
 }
-.tab.skills .bonus span.passive {
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .bonus span.passive {
   flex: 0 0 20px;
-  text-align: center;
-  font-size: var(--font-size-10);
-  font-family: var(--font-sans);
   color: var(--color-secondary);
+  font-family: var(--font-sans);
+  font-size: var(--font-size-10);
+  text-align: center;
 }
-.tab.skills .ranks {
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .ranks {
   flex: 0 0 170px;
   justify-content: center;
   gap: 4px;
 }
-.tab.skills .cost {
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .cost {
   flex: none;
-  text-align: center;
-  font-size: var(--font-size-10);
-  font-family: var(--font-sans);
   color: var(--color-secondary);
-}
-/* ----------------------------------------- */
-/*  Inventory, Talents, Skills               */
-/* ----------------------------------------- */
-.skill-container {
-  display: inline-block;
+  font-family: var(--font-sans);
+  font-size: var(--font-size-10);
   text-align: center;
-  margin: 10px;
-  min-width: 50px;
-  /* Empêche l'écrasement */
 }
-.skill-container .skill-title {
+.swerpg.sheet.actor .tab.skills.skills.skills .skill-container {
+  display: inline-block;
+  min-width: 50px;
+  margin: 10px;
+  text-align: center;
+}
+.swerpg.sheet.actor .tab.skills.skills.skills .skill-container .skill-title {
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border-top: 1px solid #8a644f;
+  border-right: 1px solid #8a644f;
+  border-bottom: 1px solid #e4c9a8;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 5px;
   background: linear-gradient(90deg, #3d2a1e, #5a3e2b);
   color: #e4c9a8;
   font-family: 'Cinzel', serif;
   font-size: 12px;
   font-weight: bold;
-  text-transform: uppercase;
   letter-spacing: 2px;
-  padding: 4px;
-  border-top-left-radius: 4px;
-  border-top-right-radius: 5px;
-  border-bottom: 1px solid #e4c9a8;
-  border-top: 1px solid #8a644f;
-  border-right: 1px solid #8a644f;
-  /*      box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5),
-            -4px -4px 10px rgba(255, 255, 255, 0.1);*/
-  /* Ombre principale */
-  transition:
-    box-shadow 0.3s ease-in-out,
-    transform 0.3s ease-in-out;
+  text-transform: uppercase;
+  transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
 }
-.skill-container .skill-title span {
+.swerpg.sheet.actor .tab.skills.skills.skills .skill-container .skill-title span {
   font-size: 16px;
-  /* Première lettre plus grande */
 }
-.skill-container .skill-box {
+.swerpg.sheet.actor .tab.skills.skills.skills .skill-container .skill-box {
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 50px;
+  height: 40px;
+  padding: 8px;
+  overflow: visible;
+  border-right: 1px solid #44362d;
+  border-bottom: 1px solid #2b221b;
+  border-bottom-right-radius: 15px 40px;
+  border-bottom-left-radius: 15px 40px;
   background: #2b221b;
   color: #e4c9a8;
   font-family: 'Patrick Hand', cursive;
   font-weight: bold;
-  padding: 8px;
-  height: 40px;
-  min-width: 50px;
-  border-right: 1px solid #44362d;
-  border-bottom-left-radius: 15px 40px;
-  border-bottom-right-radius: 15px 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: visible;
-  border-bottom: 1px solid #2b221b;
-  /*box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5),
-      -4px -4px 10px rgba(255, 255, 255, 0.1);*/
-  /* Ombre principale */
-  transition:
-    box-shadow 0.3s ease-in-out,
-    transform 0.3s ease-in-out;
+  transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
 }
-.skill-container .skill-box span {
+.swerpg.sheet.actor .tab.skills.skills.skills .skill-container .skill-box span {
   position: relative;
   font-size: 20px;
   text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
 }
-.skill-container .skill-box span::after {
+.swerpg.sheet.actor .tab.skills.skills.skills .skill-container .skill-box span::after {
   content: '%';
-  font-size: 14px;
   position: absolute;
-  right: -12px;
   top: 6px;
+  right: -12px;
+  font-size: 14px;
+}
+.swerpg.sheet.actor .tab.skills.skills.skills .xp-console {
+  margin: 0 auto 0.85rem;
+  padding: 0.55rem 0.75rem;
+  width: min(760px, 100%);
+  border: 1px solid rgba(120, 169, 194, 0.28);
+  border-radius: 4px;
+  background: linear-gradient(90deg, rgba(26, 26, 46, 0.82), rgba(15, 15, 26, 0.62)), radial-gradient(circle at 50% 0%, rgba(120, 169, 194, 0.14), transparent 58%);
+  box-shadow: inset 0 0 18px rgba(120, 169, 194, 0.08), 0 0 12px rgba(120, 169, 194, 0.08);
+}
+.swerpg.sheet.actor .tab.skills.skills.skills .xp-console .xp-console__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.4rem;
+}
+.swerpg.sheet.actor .tab.skills.skills.skills .xp-console .xp-console__title {
+  color: #8ab0c8;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.swerpg.sheet.actor .tab.skills.skills.skills .xp-console .xp-console__status {
+  color: #c9b36a;
+  font-size: 0.75rem;
+  font-style: italic;
+}
+.swerpg.sheet.actor .tab.skills.skills.skills .xp-console .xp-console__stats {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(90px, 1fr));
+  gap: 0.45rem;
+}
+.swerpg.sheet.actor .tab.skills.skills.skills .xp-console .xp-console__stat {
+  padding: 0.35rem 0.45rem;
+  border: 1px solid rgba(120, 169, 194, 0.18);
+  background: rgba(12, 15, 23, 0.34);
+}
+.swerpg.sheet.actor .tab.skills.skills.skills .xp-console .xp-console__label {
+  display: block;
+  color: #9bb0c2;
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.swerpg.sheet.actor .tab.skills.skills.skills .xp-console .xp-console__value {
+  display: block;
+  color: #d0e6f6;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1rem;
+  text-shadow: 0 0 6px rgba(120, 169, 194, 0.38);
+}
+.swerpg.sheet.actor .tab.skills.skills.skills .xp-console .xp-console__stat--selected {
+  grid-column: 5;
+}
+.swerpg.sheet.actor .tab.skills.skills.skills .xp-console .xp-console__selection {
+  margin-top: 0.5rem;
+  padding: 0.4rem 0.6rem;
+  border: 1px solid rgba(120, 169, 194, 0.12);
+  background: rgba(12, 15, 23, 0.2);
+  font-size: 0.75rem;
+  color: #d0e6f6;
+}
+.swerpg.sheet.actor .tab.skills.skills.skills .xp-console.is-free .xp-console__status {
+  color: #00ff99;
+}
+.swerpg.sheet.actor .tab.skills.skills.skills .xp-console.is-affordable .xp-console__status {
+  color: #c9b36a;
+}
+.swerpg.sheet.actor .tab.skills.skills.skills .xp-console.is-locked .xp-console__status,
+.swerpg.sheet.actor .tab.skills.skills.skills .xp-console.is-error .xp-console__status {
+  color: #c9593f;
+}
+.swerpg.sheet.actor .sw-toggle {
+  width: 24px;
+  height: 24px;
+  border: 2px solid #666;
+  border-radius: 4px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+}
+.swerpg.sheet.actor .sw-toggle.active {
+  background-color: rgba(255, 255, 255, 0.75);
+  background-image: url('../assets/icons/emblems/rebel.svg');
+}
+.swerpg.sheet.actor .sw-toggle:not(.active) {
+  background-color: rgba(255, 255, 255, 0.15);
+  background-image: url('../assets/icons/emblems/empire.svg');
 }
 /* ----------------------------------------- */
-/*  Character Creation Tooltip               */
+/*  Character Creation Tooltip                */
+/*  Le tooltip Foundry peut être hors sheet.   */
+/*  On le garde donc volontairement global.    */
 /* ----------------------------------------- */
 #tooltip.creation-steps {
   padding: 1rem 1.5rem;
-  text-align: left;
+  font-family: var(--font-serif), serif;
   font-size: var(--font-size-13);
-  font-family: var(--font-serif);
-}
-.sw-toggle {
-  width: 24px;
-  height: 24px;
-  border-radius: 4px;
-  border: 2px solid #666;
-  background-position: center;
-  background-size: cover;
-  background-repeat: no-repeat;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-}
-.sw-toggle.active {
-  background-image: url('../assets/icons/emblems/rebel.svg');
-  background-color: rgba(255, 255, 255, 0.75);
-}
-.sw-toggle:not(.active) {
-  background-image: url('../assets/icons/emblems/empire.svg');
-  background-color: rgba(255, 255, 255, 0.15);
+  text-align: left;
 }
 /* ----------------------------------------- */
 /*  All Items                                */
@@ -3406,307 +3476,287 @@ a.button.increase {
   flex: 0 0 240px;
   gap: 0.5rem;
 }
-.swerpg.sheet.actor .first-row-split {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  /* Deux colonnes égales */
+.swerpg.sheet.actor .combat-telemetry {
+  display: flex;
   gap: 1rem;
-  /* optionnel : espace entre les colonnes */
   height: 100%;
+  align-items: stretch;
 }
-.swerpg.sheet.actor .first-row-split div.sheet-section {
+.swerpg.sheet.actor .combat-telemetry .sheet-section {
   margin: 0;
   padding: 0;
 }
-.left-half,
-.right-half {
+.swerpg.sheet.actor .combat-telemetry .resources {
+  flex: 1.45;
+  min-width: 0;
+}
+.swerpg.sheet.actor .combat-telemetry .defenses {
+  flex: 1;
+  min-width: 0;
+}
+.swerpg.sheet.actor .combat-telemetry .sheet-section > h3 {
+  position: relative;
+  z-index: 3;
+}
+.swerpg.sheet.actor .left-half,
+.swerpg.sheet.actor .right-half {
   width: 100%;
   height: 100%;
+  background-color: transparent;
 }
-.left-half {
-  background-color: #7c7dff;
-}
-.right-half {
-  background-color: #ff00ff;
-}
-.resources-wrapper {
+.swerpg.sheet.actor .resources-wrapper {
+  display: flex;
   justify-content: space-evenly;
-  align-content: flex-end;
-  align-items: end;
+  align-items: flex-end;
   flex: 1;
   width: 100%;
-  /* Espace en haut pour empêcher les jauges de remonter sous le titre (h3).
-     padding-top crée un tampon à l'intérieur du conteneur pour que les jauges
-     commencent bien en dessous du titre. */
   padding-top: 1.5rem;
 }
-.resources-wrapper .jauge-wrapper {
+.swerpg.sheet.actor .resources-wrapper .jauge-wrapper {
   flex: none;
 }
-.resources-wrapper .resource-bar-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 6px;
-  /* Augmentation de la largeur pour rendre le label plus visible */
-  width: 80px;
-  border: 2px solid #2a2a2a;
-  border-radius: 8px;
-  gap: 0.5rem;
-  background-color: #1b1b1b;
-  box-shadow: 0 0 6px rgba(0, 0, 0, 0.4);
-  /* Hauteur commune des jauges : changez la valeur si besoin. */
+.swerpg.sheet.actor .resource-bar-container {
   --jauge-height: 85px;
-}
-.resources-wrapper .resource-bar-container .icon {
-  flex-direction: column;
+  --resource-color: #78a9c2;
+  --resource-border-color: rgba(42, 54, 66, 0.6);
+  --resource-panel-bg: rgba(16, 23, 34, 0.7);
+  --resource-block-bg: rgba(8, 12, 18, 0.8);
   display: flex;
+  flex-direction: column;
   align-items: center;
-  align-content: center;
+  width: 90px;
+  padding: 6px;
+  gap: 0.5rem;
+  border: 1px solid var(--resource-border-color);
+  border-radius: 6px;
+  background-color: var(--resource-panel-bg);
+  box-shadow: inset 0 1px 0 rgba(120, 169, 194, 0.06);
+}
+.swerpg.sheet.actor .resource-bar-container.wounds {
+  --resource-color: #b55050;
+  --resource-border-color: #700;
+}
+.swerpg.sheet.actor .resource-bar-container.strain {
+  --resource-color: #5ab4c9;
+  --resource-border-color: #046;
+}
+.swerpg.sheet.actor .resource-bar-container.encumbrance {
+  --resource-color: #c4944a;
+  --resource-border-color: #a50;
+}
+.swerpg.sheet.actor .resource-bar-container .icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
   gap: 0.3rem;
 }
-.resources-wrapper .resource-bar-container .icon img {
-  /* Icônes légèrement plus grandes pour meilleure lisibilité */
-  width: 40px;
-  height: 40px;
-  filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.2));
+.swerpg.sheet.actor .resource-bar-container .icon img {
+  display: block;
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 1px rgba(255, 255, 255, 0.06));
 }
-.resources-wrapper .resource-bar-container .jauge {
+.swerpg.sheet.actor .resource-bar-container .jauge {
   display: flex;
   flex-direction: column-reverse;
-  /* Plus d'espace entre les blocks pour une lecture plus claire */
-  gap: 6px;
-  width: 100%;
-  /* Fixe la hauteur totale de la zone des blocks pour que toutes les jauges aient la même taille. */
-  height: var(--jauge-height);
-  /* Permettre aux blocks de s'étirer pour remplir l'espace disponible. */
   align-items: stretch;
+  width: 100%;
+  height: var(--jauge-height);
+  gap: 6px;
 }
-.resources-wrapper .resource-bar-container .block {
-  /* Les blocks prennent une part égale de la hauteur définie par .jauge. */
+.swerpg.sheet.actor .resource-bar-container .block {
   flex: 1 1 0;
   width: 100%;
-  border: 1px solid #555;
+  border: 1px solid rgba(42, 54, 66, 0.35);
   border-radius: 2px;
-  background-color: #111;
-  opacity: 0.3;
-  transition:
-    background-color 0.3s,
-    opacity 0.3s;
+  background-color: var(--resource-block-bg);
+  opacity: 0.35;
+  transition: background-color 0.3s ease, opacity 0.3s ease;
 }
-.resources-wrapper .resource-bar-container .label {
+.swerpg.sheet.actor .resource-bar-container .block.active {
+  background-color: var(--resource-color);
+  opacity: 1;
+}
+.swerpg.sheet.actor .resource-bar-container .label {
   position: relative;
-  /* Use flex layout to place decrease button, value and increase button on one line
-         Buttons will be at the edges and the value centered. */
-  /* Small default nudge to correct FontAwesome vertical baseline issues; tweak if needed */
-  --icon-nudge: -1px;
   display: flex;
   align-items: center;
-  /* vertical centering */
-  justify-content: space-between;
-  /* buttons at each side */
+  justify-content: center;
   width: 100%;
-  padding: 0 6px;
+  min-height: 20px;
+  padding: 0 28px;
   margin-top: 4px;
-  /* Style the small icon buttons so they remain compact and centered */
-  /* Place the decrease/increase buttons absolutely so they do not shift the .values span
-         and can be perfectly vertically centered with top:50% + translateY(-50%). */
-  /* Ensure the icon glyph (usually rendered with ::before) is block-level and centered */
 }
-.resources-wrapper .resource-bar-container .label .values {
-  /* Allow the value to take remaining space and be centered */
+.swerpg.sheet.actor .resource-bar-container .label .values {
   flex: 1 1 auto;
+  min-width: 0;
   text-align: center;
-  /* Valeurs plus lisibles */
   font-size: 0.85rem;
   font-weight: 700;
-  color: #e6e6e6;
+  color: var(--color-text);
 }
-.resources-wrapper .resource-bar-container .label a.button.icon {
+.swerpg.sheet.actor .resource-bar-container .label a.button.icon {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
   padding: 0;
-  border-radius: 4px;
-  font-size: 12px;
-  /* Prevent baseline offsets from FontAwesome pseudo-elements */
-  line-height: 0;
   margin: 0;
-  vertical-align: middle;
+  border: 1px solid rgba(120, 169, 194, 0.25);
+  border-radius: 3px;
+  background: transparent;
+  color: #78a9c2;
+  opacity: 0.5;
+  font-size: 10px;
+  line-height: 1;
+  transform: translateY(-50%);
+  transition: background 0.15s ease, opacity 0.15s ease, border-color 0.15s ease;
 }
-.resources-wrapper .resource-bar-container .label a.button.icon.decrease {
-  position: absolute;
-  left: 6px;
-  /* matches .label padding */
-  top: 50%;
-  /* Allow a small manual nudge if icons need micro-adjustment */
-  transform: translateY(calc(-50% + var(--icon-nudge, 0px)));
-  z-index: 2;
+.swerpg.sheet.actor .resource-bar-container .label a.button.icon:hover {
+  background: rgba(16, 23, 34, 0.4);
+  border-color: rgba(120, 169, 194, 0.45);
+  opacity: 0.8;
 }
-.resources-wrapper .resource-bar-container .label a.button.icon.increase {
-  position: absolute;
-  right: 6px;
-  /* matches .label padding */
-  top: 50%;
-  /* Allow a small manual nudge if icons need micro-adjustment */
-  transform: translateY(calc(-50% + var(--icon-nudge, 0px)));
-  z-index: 2;
-}
-.resources-wrapper .resource-bar-container .label a.button.icon::before {
+.swerpg.sheet.actor .resource-bar-container .label a.button.icon::before {
   display: flex;
   align-items: center;
   justify-content: center;
   height: 100%;
-  /* fill the anchor so centering is exact */
+  font-size: 12px;
   line-height: 1;
-  font-size: 14px;
-  /* tweak if icon appears too small/large */
 }
-.resources-wrapper .resource-bar-container .title {
-  text-transform: uppercase;
-  /* Titre agrandi pour meilleure visibilité */
-  font-size: 0.8rem;
-  font-family: 'Orbitron', sans-serif;
-  color: white;
-  text-shadow: 0 0 2px black;
-  font-weight: 700;
-  width: 85px;
+.swerpg.sheet.actor .resource-bar-container .label a.button.icon.decrease {
+  left: 6px;
+}
+.swerpg.sheet.actor .resource-bar-container .label a.button.icon.increase {
+  right: 6px;
+}
+.swerpg.sheet.actor .resource-bar-container .title {
   display: block;
+  width: 85px;
   overflow: hidden;
   text-overflow: ellipsis;
-  background: #0c0f17;
   text-align: center;
-}
-.resources-wrapper .resource-bar-container .title.wounds {
-  border-color: #700;
-  color: #ff0000;
-  box-shadow: 0 0 4px #ff3c3c;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  font-family: var(--font-sans), serif;
+  font-weight: 700;
+  color: var(--resource-color);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  background: var(--color-frame-bg-75);
   opacity: 1;
 }
-.resources-wrapper .resource-bar-container .title.strain {
-  border-color: #046;
-  color: #00bfff;
-  box-shadow: 0 0 4px #00eaff;
-  opacity: 1;
-}
-.resources-wrapper .resource-bar-container .title.encumbrance {
-  border-color: #a50;
-  color: #ff9900;
-  box-shadow: 0 0 4px #ffc266;
-  opacity: 1;
-}
-.resources-wrapper .resource-bar-container.wounds {
-  border-color: #700;
-}
-.resources-wrapper .resource-bar-container.wounds .block.active {
-  background-color: #ff0000;
-  box-shadow: 0 0 4px #ff3c3c;
-  opacity: 1;
-}
-.resources-wrapper .resource-bar-container.strain {
-  border-color: #046;
-}
-.resources-wrapper .resource-bar-container.strain .block.active {
-  background-color: #00bfff;
-  box-shadow: 0 0 4px #00eaff;
-  opacity: 1;
-}
-.resources-wrapper .resource-bar-container.encumbrance {
-  border-color: #a50;
-}
-.resources-wrapper .resource-bar-container.encumbrance .block.active {
-  background-color: #ff9900;
-  box-shadow: 0 0 4px #ffc266;
-  opacity: 1;
-}
-/* S'assurer que le titre est au-dessus des jauges */
-.swerpg.sheet.actor .sheet-section > h3 {
-  z-index: 2;
-}
-.defenses-wrapper {
-  justify-content: space-evenly;
-  align-content: flex-end;
-  align-items: end;
-  flex: 1;
+.swerpg.sheet.actor .defenses-dashboard {
+  display: grid;
+  grid-template-columns: minmax(120px, 1.25fr) minmax(96px, 0.85fr);
+  gap: 0.75rem;
+  align-items: stretch;
   width: 100%;
+  padding-top: 0.5rem;
 }
-.defenses-wrapper .defense-wrapper {
-  flex: none;
+.swerpg.sheet.actor .defense-primary,
+.swerpg.sheet.actor .defense-secondary-stack {
+  min-width: 0;
 }
-.defenses-wrapper .defense-bar-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 6px;
-  width: 60px;
-  border: 2px solid #2a2a2a;
-  border-radius: 8px;
+.swerpg.sheet.actor .defense-secondary-stack {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
   gap: 0.5rem;
-  background-color: #1b1b1b;
-  box-shadow: 0 0 6px rgba(0, 0, 0, 0.4);
 }
-.defenses-wrapper .defense-bar-container .icon {
+.swerpg.sheet.actor .defense-soak-card,
+.swerpg.sheet.actor .defense-card {
+  display: flex;
   flex-direction: column;
-  display: flex;
   align-items: center;
-  align-content: center;
   justify-content: center;
-  gap: 0.3rem;
+  border: 1px solid rgba(42, 54, 66, 0.6);
+  border-radius: 6px;
+  background-color: rgba(16, 23, 34, 0.7);
+  box-shadow: inset 0 1px 0 rgba(120, 169, 194, 0.06);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  min-width: 0;
 }
-.defenses-wrapper .defense-bar-container .icon img {
-  width: 32px;
-  height: 32px;
-  filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.2));
+.swerpg.sheet.actor .defense-soak-card {
+  height: 100%;
+  padding: 14px 18px;
+  gap: 0.45rem;
+  border-color: rgba(196, 148, 74, 0.4);
 }
-.defenses-wrapper .defense-bar-container .label {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  align-content: center;
+.swerpg.sheet.actor .defense-soak-card .defense-icon img {
+  width: 56px;
+  height: 56px;
+  filter: drop-shadow(0 0 2px rgba(196, 148, 74, 0.3));
 }
-.defenses-wrapper .defense-bar-container .label .values {
-  flex: none;
-}
-.defenses-wrapper .defense-bar-container .values {
-  text-transform: uppercase;
+.swerpg.sheet.actor .defense-soak-card .defense-value {
   font-size: 3rem;
-  font-family: 'Orbitron', sans-serif;
-  color: white;
-  text-shadow: 0 0 2px black;
-  font-weight: 700;
+  color: #c4944a;
 }
-.defenses-wrapper .defense-bar-container .title {
+.swerpg.sheet.actor .defense-soak-card .defense-title {
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+}
+.swerpg.sheet.actor .defense-soak-card .defense-sublabel {
+  display: block;
+  max-width: 8rem;
+  font-size: 0.65rem;
+  color: rgba(120, 169, 194, 0.6);
+  text-align: center;
   text-transform: uppercase;
-  font-size: 1rem;
-  font-family: 'Orbitron', sans-serif;
-  color: white;
-  text-shadow: 0 0 2px black;
+  letter-spacing: 0.05em;
+  line-height: 1.2;
+}
+.swerpg.sheet.actor .defense-card {
+  width: 100%;
+  height: 100%;
+  padding: 10px 12px;
+  gap: 0.3rem;
+  border-color: rgba(90, 180, 201, 0.3);
+}
+.swerpg.sheet.actor .defense-card .defense-icon img {
+  width: 30px;
+  height: 30px;
+  filter: drop-shadow(0 0 1px rgba(255, 255, 255, 0.06));
+}
+.swerpg.sheet.actor .defense-card .defense-value {
+  font-size: 1.8rem;
+  color: #5ab4c9;
+}
+.swerpg.sheet.actor .defense-card .defense-title {
+  font-size: 0.65rem;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+.swerpg.sheet.actor .defense-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.swerpg.sheet.actor .defense-icon img {
+  display: block;
+  object-fit: contain;
+}
+.swerpg.sheet.actor .defense-value {
+  font-family: var(--font-h2), serif;
   font-weight: 700;
+  line-height: 1;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
 }
-.defenses-wrapper .defense-bar-container .title.ranged,
-.defenses-wrapper .defense-bar-container .title.melee {
-  border-color: #046;
-  box-shadow: 0 0 4px #00eaff;
-  opacity: 1;
+.swerpg.sheet.actor .defense-title {
+  font-family: var(--font-sans), serif;
+  font-weight: 700;
+  color: var(--color-text);
+  text-transform: uppercase;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
-.defenses-wrapper .defense-bar-container .title.soak {
-  border-color: #a50;
-  box-shadow: 0 0 4px #ffc266;
-  opacity: 1;
-}
-.defenses-wrapper .defense-bar-container .title.ranged,
-.defenses-wrapper .defense-bar-container .values.ranged,
-.defenses-wrapper .defense-bar-container .title.melee,
-.defenses-wrapper .defense-bar-container .values.melee {
-  color: #00bfff;
-}
-.defenses-wrapper .defense-bar-container .title.soak,
-.defenses-wrapper .defense-bar-container .values.soak {
-  color: #ff9900;
+.swerpg.sheet.actor .defense-soak-card:hover,
+.swerpg.sheet.actor .defense-card:hover {
+  box-shadow: inset 0 1px 0 rgba(120, 169, 194, 0.08), 0 0 8px rgba(90, 180, 201, 0.08);
 }
 .import-summary.sw-panel,
 .import-stats.sw-collapsible,
@@ -3809,18 +3859,4 @@ a.button.increase {
 }
 .domain-status--error .fa-circle {
   color: #ff3333;
-}
-/**
- * TODO: A collection of temporary rules that should be removed in V13
- */
-.swerpg prose-mirror menu {
-  padding: 0;
-}
-.swerpg prose-mirror menu .pm-dropdown {
-  background: var(--color-control-bg);
-  color: var(--color-cool-5);
-}
-.swerpg prose-mirror menu .pm-dropdown > span {
-  text-align: left;
-  align-self: unset;
 }

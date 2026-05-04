@@ -253,68 +253,6 @@ describe('SwerpgItem Document', () => {
       mockItem.__proto__.__proto__ = { _preCreate: superPreCreate }
     })
 
-    test('should handle ancestry type for character', async () => {
-      mockData.type = 'ancestry'
-      mockActor.type = 'character'
-
-      const result = await SwerpgItem.prototype._preCreate.call(mockItem, mockData, mockOptions, mockUser)
-
-      expect(mockActor.system.applyAncestry).toHaveBeenCalledWith(mockItem)
-      expect(result).toBe(false) // Should prevent creation
-    })
-
-    test('should handle archetype type for adversary', async () => {
-      mockData.type = 'archetype'
-      mockActor.type = 'adversary'
-
-      const result = await SwerpgItem.prototype._preCreate.call(mockItem, mockData, mockOptions, mockUser)
-
-      expect(mockActor.system.applyArchetype).toHaveBeenCalledWith(mockItem)
-      expect(result).toBe(false) // Should prevent creation
-    })
-
-    test('should handle background type for character', async () => {
-      mockData.type = 'background'
-      mockActor.type = 'character'
-
-      const result = await SwerpgItem.prototype._preCreate.call(mockItem, mockData, mockOptions, mockUser)
-
-      expect(mockActor.system.applyBackground).toHaveBeenCalledWith(mockItem)
-      expect(result).toBe(false) // Should prevent creation
-    })
-
-    test('should handle origin type for character', async () => {
-      mockData.type = 'origin'
-      mockActor.type = 'character'
-
-      const result = await SwerpgItem.prototype._preCreate.call(mockItem, mockData, mockOptions, mockUser)
-
-      expect(mockActor.system.applyOrigin).toHaveBeenCalledWith(mockItem)
-      expect(result).toBe(false) // Should prevent creation
-    })
-
-    test('should handle spell type with successful validation', async () => {
-      mockData.type = 'spell'
-      mockActor.canLearnIconicSpell.mockImplementation(() => {}) // No error
-
-      await SwerpgItem.prototype._preCreate.call(mockItem, mockData, mockOptions, mockUser)
-
-      expect(mockActor.canLearnIconicSpell).toHaveBeenCalledWith(mockItem)
-      expect(mockOptions.keepId).toBe(true)
-    })
-
-    test('should handle spell type with validation error', async () => {
-      mockData.type = 'spell'
-      mockActor.canLearnIconicSpell.mockImplementation(() => {
-        throw new Error('Cannot learn spell')
-      })
-
-      const result = await SwerpgItem.prototype._preCreate.call(mockItem, mockData, mockOptions, mockUser)
-
-      expect(mockActor.canLearnIconicSpell).toHaveBeenCalledWith(mockItem)
-      expect(result).toBe(false) // Should prevent creation
-    })
-
     test('should handle talent type', async () => {
       mockData.type = 'talent'
 
@@ -322,16 +260,6 @@ describe('SwerpgItem Document', () => {
 
       expect(mockOptions.keepId).toBe(true)
       expect(mockOptions.keepEmbeddedIds).toBe(true)
-    })
-
-    test('should handle taxonomy type for adversary', async () => {
-      mockData.type = 'taxonomy'
-      mockActor.type = 'adversary'
-
-      const result = await SwerpgItem.prototype._preCreate.call(mockItem, mockData, mockOptions, mockUser)
-
-      expect(mockActor.system.applyTaxonomy).toHaveBeenCalledWith(mockItem)
-      expect(result).toBe(false) // Should prevent creation
     })
   })
 

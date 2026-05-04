@@ -7,4 +7,3 @@ if (!process.env.E2E_FOUNDRY_BASE_URL) {
   console.error('E2E_FOUNDRY_BASE_URL is not defined. Please configure .env.e2e.local or E2E_ENV_FILE.')
   process.exit(1)
 }
-
