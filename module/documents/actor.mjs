@@ -62,6 +62,147 @@ export default class SwerpgActor extends ResourcesMixin(CombatMixin(Actor)) {
    */
   actorHooks = {}
 
+  /* -------------------------------------------- */
+  /*  Getters                                     */
+  /* -------------------------------------------- */
+
+  /**
+   * Convenient access to the Actor's species.
+   * @type {object}  The species data
+   */
+  get species() {
+    return this.system.details.species
+  }
+
+  /**
+   * Convenient access to the Actor's experience points.
+   * @type {ExperiencePoints}  The experience points data
+   */
+  get experiencePoints() {
+    if (this.type !== SYSTEM.ACTOR_TYPE.character.type) return { gained: 0, spent: 0, startingExperience: 0 }
+    return this.system.progression.experience
+  }
+
+  /**
+   * Convenient access to the Actor's abilities.
+   * @type {object}  The abilities data
+   */
+  get abilities() {
+    return this.system.abilities
+  }
+
+  /**
+   * Convenient access to the Actor's defenses.
+   * @type {object}  The defenses data
+   */
+  get defenses() {
+    return this.system.defenses
+  }
+
+  /**
+   * Convenient access to the Actor's level.
+   * @type {number}  The actor level
+   */
+  get level() {
+    return this.system.details.level
+  }
+
+  /**
+   * Convenient access to the Actor's points (ability, skill, talent).
+   * @type {object}  The points data
+   */
+  get points() {
+    return this.system.points
+  }
+
+  /**
+   * Convenient access to the Actor's resistances.
+   * @type {object}  The resistances data
+   */
+  get resistances() {
+    return this.system.resistances
+  }
+
+  /**
+   * Convenient access to the Actor's skills.
+   * @type {object}  The skills data
+   */
+  get skills() {
+    return this.system.skills
+  }
+
+  /**
+   * Convenient access to the Actor's size.
+   * @type {number}  The actor size
+   */
+  get size() {
+    return this.system.details.size || 1
+  }
+
+  /**
+   * Convenient access to the Actor's status.
+   * @type {object}  The status data
+   */
+  get status() {
+    return this.system.status
+  }
+
+  /**
+   * Check if the actor is level 0.
+   * @type {boolean}
+   */
+  get isL0() {
+    return this.level === 0
+  }
+
+  /**
+   * Check if the actor is knocked out.
+   * @type {boolean}
+   */
+  get isKnockedOut() {
+    return this.system.status.conditions.knockedOut
+  }
+
+  /**
+   * Check if the actor is broken.
+   * @type {boolean}
+   */
+  get isBroken() {
+    return this.system.status.conditions.broken
+  }
+
+  /**
+   * Check if the actor is dead.
+   * @type {boolean}
+   */
+  get isDead() {
+    return this.system.status.conditions.dead
+  }
+
+  /**
+   * Check if the actor is insane.
+   * @type {boolean}
+   */
+  get isInsane() {
+    return this.system.status.conditions.insane
+  }
+
+  /**
+   * Check if the actor is incapacitated.
+   * @type {boolean}
+   */
+  get isIncapacitated() {
+    return this.isKnockedOut || this.isBroken || this.isDead || this.isInsane
+  }
+
+  /**
+   * Convenient access to the combatant.
+   * @type {object|null}  The combatant or null
+   */
+  get combatant() {
+    return this._combatant
+  }
+
   /*  Character Creation Methods                  */
 
   /* -------------------------------------------- */
@@ -813,11 +954,22 @@ export default class SwerpgActor extends ResourcesMixin(CombatMixin(Actor)) {
   /* -------------------------------------------- */
 
   /**
+   * Get the free skill ranks for the actor.
+   * @returns {FreeSkillRanks} The free skill ranks for the actor.
+   */
+  get freeSkillRanks() {
+    return this.system.progression.freeSkillRanks
+  }
+
+  /* -------------------------------------------- */
+
+  /**
    * Check if actor has any career free skill ranks available.
    * @returns {boolean}   True if actor has free skill ranks
    */
   hasCareerFreeSkillsAvailable() {
-    return this.freeSkillRanks.career.available !== 0
+    const career = this.freeSkillRanks.career
+    return (career.gained - career.spent) !== 0
   }
 
   /* -------------------------------------------- */
@@ -827,7 +979,8 @@ export default class SwerpgActor extends ResourcesMixin(CombatMixin(Actor)) {
    * @returns {boolean}   True if actor has free skill ranks
    */
   hasSpecializationFreeSkillsAvailable() {
-    return this.freeSkillRanks.specialization.available !== 0
+    const specialization = this.freeSkillRanks.specialization
+    return (specialization.gained - specialization.spent) !== 0
   }
 
   /* -------------------------------------------- */
