@@ -3,7 +3,6 @@
  * Extracted from actor.mjs lines ~1181-1417
  */
 
-import SYSTEM from '../../config/system.mjs'
 
 export const EffectsMixin = (Base) =>
   class extends Base {
@@ -116,7 +115,7 @@ export const EffectsMixin = (Base) =>
      */
     async applyDamageOverTime() {
       for (const effect of this.effects) {
-        const dot = effect.flags.swerpg?.dot
+        const dot = effect.flags?.swerpg?.dot
         if (!dot) continue
 
         // Categorize damage
@@ -151,6 +150,8 @@ export const EffectsMixin = (Base) =>
      * @returns {boolean}
      */
     _isEffectExpired(effect, start = true) {
+      if (effect.duration == null) return false
+
       const { startRound, rounds, turns } = effect.duration
       const elapsed = game.combat.round - startRound + 1
 

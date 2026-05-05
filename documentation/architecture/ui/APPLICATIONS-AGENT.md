@@ -45,8 +45,8 @@ Connais et respecte ces mappings (ne les renomme pas sans instruction humaine) :
 
 **Items (`SwerpgBaseItemSheet`)**
 
-  `GearSheet`, `ObligationSheet`, `OriginSheet`, `SpecializationSheet`, `SpeciesSheet`,
-  → tous sous `module/applications/sheets/*-sheet.mjs`.
+`GearSheet`, `ObligationSheet`, `OriginSheet`, `SpecializationSheet`, `SpeciesSheet`,
+→ tous sous `module/applications/sheets/*-sheet.mjs`.
 
 ### 1.3. Nommage & fichiers
 
