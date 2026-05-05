@@ -6,8 +6,8 @@
 import { describe, test, expect, beforeEach, vi } from 'vitest'
 import { EffectsMixin } from '../../module/documents/actor-mixins/combat/effects.mixin.mjs'
 
-// Mock base class for testing mixins
-class MockBase {
+// Minimal mock class
+class TestActor {
   constructor(data = {}) {
     this.effects = new Map()
     this.isWeakened = data.isWeakened || false
@@ -24,15 +24,14 @@ class MockBase {
   }
 }
 
-class TestActor extends EffectsMixin(MockBase) {}
+class ActorWithEffects extends EffectsMixin(TestActor) {}
 
-describe('EffectsMixin', () => {
+describe('EffectsMixin - applyDamageOverTime()', () => {
   let actor
 
   beforeEach(() => {
-    actor = new TestActor()
+    actor = new ActorWithEffects()
 
-    // Mock game
     global.game = {
       combat: { round: 1, active: true },
       settings: {
@@ -42,116 +41,120 @@ describe('EffectsMixin', () => {
     }
   })
 
-  describe('applyDamageOverTime()', () => {
-    test('should apply DOT from effects', async () => {
-      actor.effects.set('dot-1', {
-        flags: { swerpg: { dot: { health: 5, damageType: 'poison' } } }
-      })
-      actor.resistances = { poison: { total: 2 } }
-
-      await actor.applyDamageOverTime()
-
-      expect(actor.alterResources).toHaveBeenCalled()
+  test('should apply DOT from effects', async () => {
+    actor.effects.set('dot-1', {
+      flags: { swerpg: { dot: { health: 5, damageType: 'poison' } } }
     })
+    actor.resistances = { poison: { total: 2 } }
 
-    test('should skip effects without dot flag', async () => {
-      actor.effects.set('no-dot', {
-        flags: {}
-      })
-
-      await actor.applyDamageOverTime()
-
-      expect(actor.alterResources).not.toHaveBeenCalled()
-    })
+    const alterSpy = vi.spyOn(actor, 'alterResources')
+    await actor.applyDamageOverTime()
+    expect(alterSpy).toHaveBeenCalled()
   })
 
-  describe('_isEffectExpired()', () => {
-    test('should return false for start turn if turn-based effect', () => {
-      const effect = {
-        duration: { turns: 2, startRound: 1 }
-      }
-
-      // At start of turn, turn-based effects don't expire
-      const result = actor._isEffectExpired(effect, true)
-      expect(result).toBe(false)
+  test('should skip effects without dot flag', async () => {
+    actor.effects.set('no-dot', {
+      flags: {}
     })
 
-    test('should return true for end turn if turns elapsed', () => {
-      const effect = {
-        duration: { turns: 1, startRound: 1 }
-      }
+    const alterSpy = vi.spyOn(actor, 'alterResources')
+    await actor.applyDamageOverTime()
+    expect(alterSpy).not.toHaveBeenCalled()
+  })
+})
 
-      // At end of turn, effect with turns=1 should expire
-      const result = actor._isEffectExpired(effect, false)
-      expect(result).toBe(true)
-    })
+describe('EffectsMixin - _isEffectExpired()', () => {
+  let actor
 
-    test('should return true for start turn if rounds elapsed', () => {
-      const effect = {
-        duration: { rounds: 1, startRound: 1 }
-      }
+  beforeEach(() => {
+    actor = new ActorWithEffects()
 
-      // At start of next turn, effect with rounds=1 should expire
-      const result = actor._isEffectExpired(effect, true)
-      expect(result).toBe(true)
-    })
+    global.game = {
+      combat: { round: 2 }
+    }
   })
 
-  describe('expireEffects()', () => {
-    test('should delete expired effects', async () => {
-      const expiredEffect = {
-        id: 'effect-1',
-        duration: { turns: 1, startRound: 0 },
-        _isEffectExpired: true
-      }
-
-      actor.effects.set('effect-1', expiredEffect)
-      actor.effects.set('effect-2', {
-        id: 'effect-2',
-        duration: { turns: 5, startRound: 1 }
-      })
-
-      await actor.expireEffects(true)
-
-      // Since effect-1 has turns:1 and startRound:0, and game.combat.round=1,
-      // elapsed = 1 - 0 + 1 = 2, turns=1, so at start (start=true) it should NOT expire
-      // Actually, let's just verify the method was called
-      expect(actor.deleteEmbeddedDocuments).toHaveBeenCalled()
-    })
+  test('should return false for start turn if turn-based effect', () => {
+    const effect = {
+      duration: { turns: 2, startRound: 1 }
+    }
+    // At start of turn, turn-based effects don't expire
+    const result = actor._isEffectExpired(effect, true)
+    expect(result).toBe(false)
   })
 
-  describe('_trackHeroismDamage()', () => {
-    test('should not track if combat not active', async () => {
-      global.game.combat.active = false
+  test('should return true for end turn if turns elapsed', () => {
+    const effect = {
+      duration: { turns: 1, startRound: 1 }
+    }
+    // At end of turn, effect with turns=1 should expire
+    const result = actor._isEffectExpired(effect, false)
+    expect(result).toBe(true)
+  })
 
-      await actor._trackHeroismDamage({ health: -5 })
+  test('should return true for start turn if rounds elapsed', () => {
+    const effect = {
+      duration: { rounds: 1, startRound: 1 }
+    }
+    // At start of next turn, effect with rounds=1 should expire
+    const result = actor._isEffectExpired(effect, true)
+    expect(result).toBe(true)
+  })
+})
 
-      expect(global.game.settings.set).not.toHaveBeenCalled()
-    })
+describe('EffectsMixin - expireEffects()', () => {
+  let actor
 
-    test('should track positive damage', async () => {
-      global.game.settings.get.mockReturnValue(0)
-      // Note: In current implementation, negative resources (damage) result in delta = -8
-      // and Math.max(-8, 0) = 0, so no heroism is tracked
-      // Test with positive resources instead
-      await actor._trackHeroismDamage({ health: 5, morale: 3 })
+  beforeEach(() => {
+    actor = new ActorWithEffects()
+    actor.effects.set('effect-1', { id: 'effect-1', duration: { turns: 1, startRound: 0 } })
+    actor.effects.set('effect-2', { id: 'effect-2', duration: { turns: 5, startRound: 1 } })
+  })
 
-      expect(global.game.settings.set).toHaveBeenCalledWith(
-        'swerpg',
-        'heroism',
-        8  // 5 + 3 = 8
-      )
-    })
+  test('should delete expired effects', async () => {
+    const deleteSpy = vi.spyOn(actor, 'deleteEmbeddedDocuments')
+    await actor.expireEffects(true)
+    expect(deleteSpy).toHaveBeenCalled()
+  })
+})
 
-    test('should reverse damage if requested', async () => {
-      global.game.settings.get.mockReturnValue(0)
-      await actor._trackHeroismDamage({ health: -5 }, true)
+describe('EffectsMixin - _trackHeroismDamage()', () => {
+  let actor
 
-      expect(global.game.settings.set).toHaveBeenCalledWith(
-        'swerpg',
-        'heroism',
-        5  // -(-5) = 5
-      )
-    })
+  beforeEach(() => {
+    actor = new ActorWithEffects()
+
+    global.game = {
+      combat: { round: 1, active: true },
+      settings: {
+        get: vi.fn().mockReturnValue(0),
+        set: vi.fn().mockResolvedValue()
+      }
+    }
+  })
+
+  test('should not track if combat not active', async () => {
+    global.game.combat.active = false
+    await actor._trackHeroismDamage({ health: -5 })
+    expect(global.game.settings.set).not.toHaveBeenCalled()
+  })
+
+  test('should track positive damage', async () => {
+    global.game.settings.get.mockReturnValue(0)
+    await actor._trackHeroismDamage({ health: 5, morale: 3 })
+    expect(global.game.settings.set).toHaveBeenCalledWith(
+      'swerpg',
+      'heroism',
+      8  // 0 + 5 + 3
+    )
+  })
+
+  test('should reverse damage if requested', async () => {
+    await actor._trackHeroismDamage({ health: -5 }, true)
+    expect(global.game.settings.set).toHaveBeenCalledWith(
+      'swerpg',
+      'heroism',
+      5  // 0 - (-5)
+    )
   })
 })

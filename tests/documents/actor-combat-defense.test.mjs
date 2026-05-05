@@ -3,14 +3,14 @@
  * Chantier 03 - Combat refactoring (Issue #48)
  */
 
-import { describe, test, expect, beforeEach, vi } from 'vitest'
+import { describe, test, expect, beforeEach } from 'vitest'
 import { DefenseMixin } from '../../module/documents/actor-mixins/combat/defense.mixin.mjs'
 
-// Mock base class for testing mixins
-class MockBase {
+// Minimal mock class
+class TestActor {
   constructor(data = {}) {
-    this.system = {
-      defenses: data.defenses || {
+    this.system = data.system || {
+      defenses: {
         physical: { total: 10 },
         dodge: { total: 5 },
         parry: { total: 3 },
@@ -25,63 +25,69 @@ class MockBase {
   }
 }
 
-class TestActor extends DefenseMixin(MockBase) {}
+class ActorWithDefense extends DefenseMixin(TestActor) {}
 
-describe('DefenseMixin', () => {
+describe('DefenseMixin - getResistance()', () => {
   let actor
 
   beforeEach(() => {
-    actor = new TestActor()
+    actor = new ActorWithDefense()
   })
 
-  describe('getResistance()', () => {
-    test('should return 0 for restoration', () => {
-      const r = actor.getResistance('health', 'slashing', true)
-      expect(r).toBe(0)
-    })
-
-    test('should return base resistance', () => {
-      actor.resistances = { slashing: { total: 5 } }
-      const r = actor.getResistance('health', 'slashing', false)
-      expect(r).toBe(5)
-    })
-
-    test('should apply broken penalty for health', () => {
-      actor.isBroken = true
-      actor.resistances = { slashing: { total: 5 } }
-      const r = actor.getResistance('health', 'slashing', false)
-      expect(r).toBe(3) // 5 - 2
-    })
-
-    test('should apply weakened penalty for morale', () => {
-      actor.isWeakened = true
-      actor.resistances = { fire: { total: 4 } }
-      const r = actor.getResistance('morale', 'fire', false)
-      expect(r).toBe(2) // 4 - 2
-    })
-
-    test('should return Infinity for invulnerable', () => {
-      actor.statuses = new Set(['invulnerable'])
-      actor.resistances = { slashing: { total: 5 } }
-      const r = actor.getResistance('health', 'slashing', false)
-      expect(r).toBe(Infinity)
-    })
-
-    test('should return Infinity for resolute', () => {
-      actor.statuses = new Set(['resolute'])
-      actor.resistances = { fire: { total: 3 } }
-      const r = actor.getResistance('morale', 'fire', false)
-      expect(r).toBe(Infinity)
-    })
+  test('should return 0 for restoration', () => {
+    const r = actor.getResistance('health', 'slashing', true)
+    expect(r).toBe(0)
   })
 
-  describe('testDefense()', () => {
-    test('should throw error for invalid defense type', () => {
-      const roll = { total: 15 }
-      expect(() => actor.testDefense('invalid', roll)).toThrow('Invalid defense type')
-    })
-
-    // Note: Full testDefense tests require proper AttackRoll mock
-    // and potentially mocking twist.random()
+  test('should return base resistance', () => {
+    actor.resistances = { slashing: { total: 5 } }
+    const r = actor.getResistance('health', 'slashing', false)
+    expect(r).toBe(5)
   })
+
+  test('should apply broken penalty for health', () => {
+    actor.isBroken = true
+    actor.resistances = { slashing: { total: 5 } }
+    const r = actor.getResistance('health', 'slashing', false)
+    expect(r).toBe(3) // 5 - 2
+  })
+
+  test('should apply weakened penalty for morale', () => {
+    actor.isWeakened = true
+    actor.resistances = { fire: { total: 4 } }
+    const r = actor.getResistance('morale', 'fire', false)
+    expect(r).toBe(2) // 4 - 2
+  })
+
+  test('should return Infinity for invulnerable', () => {
+    actor.statuses = new Set(['invulnerable'])
+    actor.resistances = { slashing: { total: 5 } }
+    const r = actor.getResistance('health', 'slashing', false)
+    expect(r).toBe(Infinity)
+  })
+
+  test('should return Infinity for resolute', () => {
+    actor.statuses = new Set(['resolute'])
+    actor.resistances = { fire: { total: 3 } }
+    const r = actor.getResistance('morale', 'fire', false)
+    expect(r).toBe(Infinity)
+  })
+})
+
+describe('DefenseMixin - testDefense()', () => {
+  let actor
+
+  beforeEach(() => {
+    actor = new ActorWithDefense()
+    // Mock twist.random
+    global.twist = { random: () => 0.5 }
+  })
+
+  test('should throw error for invalid defense type', () => {
+    const roll = { total: 15 }
+    expect(() => actor.testDefense('invalid', roll)).toThrow('Invalid defense type')
+  })
+
+  // Note: Full testDefense tests require proper AttackRoll mock
+  // These are integration tests best done with real Foundry environment
 })
