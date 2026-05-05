@@ -3,10 +3,10 @@
  * Extracted from actor.mjs lines ~716-995
  */
 
-import AttackRoll from '../../dice/attack-roll.mjs'
-import SwerpgAction from '../../models/action.mjs'
-import SYSTEM from '../../config/system.mjs'
-import { logger } from '../../utils/logger.mjs'
+import AttackRoll from '../../../dice/attack-roll.mjs'
+import SwerpgAction from '../../../models/action.mjs'
+import SYSTEM from '../../../config/system.mjs'
+import { logger } from '../../../utils/logger.mjs'
 
 export const AttackMixin = (Base) =>
   class extends Base {

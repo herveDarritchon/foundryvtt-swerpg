@@ -3,6 +3,9 @@
  * Chantier 03 - Combat refactoring (Issue #48)
  */
 
+import { describe, test, expect, beforeEach, vi } from 'vitest'
+import { DefenseMixin } from '../../module/documents/actor-mixins/combat/defense.mixin.mjs'
+
 // Mock base class for testing mixins
 class MockBase {
   constructor(data = {}) {
@@ -21,9 +24,6 @@ class MockBase {
     this.statuses = data.statuses || new Set()
   }
 }
-
-// Import the mixin
-import { DefenseMixin } from '../../module/documents/actor-mixins/combat/defense.mixin.mjs'
 
 class TestActor extends DefenseMixin(MockBase) {}
 
