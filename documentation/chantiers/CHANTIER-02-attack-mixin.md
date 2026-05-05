@@ -1,7 +1,51 @@
+# Chantier 02 : Extraction de l'Attack Mixin
+
+## Objectif
+Extraire les méthodes liées à l'exécution d'attaques vers `attack.mixin.mjs`
+
+## Méthodes à extraire (~120 lignes)
+
+| Méthode | Lignes (actor.mjs) | Description |
+|---------|-------------------|-------------|
+| `useAction()` | 878-882 | Utilise une action |
+| `weaponAttack()` | 955-995 | Attaque avec une arme |
+| `skillAttack()` | 907-944 | Attaque avec une compétence |
+| `castSpell()` | **À créer** | Lance un sort (n'existe pas actuellement) |
+| `applyTargetBoons()` | 716-740 | Applique les boons/banes selon la cible |
+
+## Dépendances des méthodes
+
+### `useAction()`
+- `this.actions` - Actions disponibles
+- `this.id` - ID de l'acteur
+
+### `weaponAttack()`
+- `this.applyTargetBoons()` - Sera dans ce mixin
+- `this.callActorHooks()` - Méthode dans actor.mjs (temporairement, à extraire plus tard)
+- `this.id` - ID de l'acteur
+- **Externe** : `AttackRoll`, `SwerpgAction`, méthodes de `target`
+
+### `skillAttack()`
+- `this.applyTargetBoons()` - Sera dans ce mixin
+- `this.callActorHooks()` - Méthode dans actor.mjs
+- `this.id` - ID de l'acteur
+- **Externe** : `game.system.api.dice.AttackRoll`, `SwerpgAction`, méthodes de `target`
+
+### `applyTargetBoons()`
+- **Externe** : `foundry.utils.deepClone`, `SYSTEM.EFFECTS`, `logger`
+
+## Implémentation de `attack.mixin.mjs`
+
+```javascript
 /**
  * Attack Mixin - Handles all attack-related actions
  * Extracted from actor.mjs lines ~716-995
  */
+
+import AttackRoll from '../../dice/attack-roll.mjs'
+import SwerpgAction from '../action.mjs'
+import SYSTEM from '../../config/system.mjs'
+import logger from '../../utils/logger.mjs'
 
 export const AttackMixin = (Base) =>
   class extends Base {
@@ -36,12 +80,8 @@ export const AttackMixin = (Base) =>
         actorId: this.id,
         itemId: weapon.id,
         target: target.uuid,
-        ability,
-        skill,
-        enchantment,
-        banes,
-        boons,
-        defenseType,
+        ability, skill, enchantment,
+        banes, boons, defenseType,
         dc: target.defenses[defenseType].total,
         criticalSuccessThreshold: weapon.system.properties.has('keen') ? 4 : 6,
         criticalFailureThreshold: weapon.system.properties.has('reliable') ? 4 : 6,
@@ -82,10 +122,7 @@ export const AttackMixin = (Base) =>
         actorId: this.id, 
         type: skillId, 
         target: target.uuid, 
-        boons, 
-        banes, 
-        defenseType, 
-        dc 
+        boons, banes, defenseType, dc 
       }
 
       this.callActorHooks('prepareStandardCheck', rollData)
@@ -119,12 +156,11 @@ export const AttackMixin = (Base) =>
      */
     async castSpell(action, target) {
       // TODO: Implement spell casting logic
-      // This method is referenced in action.mjs line 481
       throw new Error('castSpell() is not yet implemented')
     }
 
     /**
-     * Apply target-specific boons and banes based on target status
+     * Apply target-specific boons and banes
      * @param {SwerpgActor} target - The target actor
      * @param {SwerpgAction} action - The action being used
      * @param {string} actionType - Type of action ('weapon', 'skill', etc.)
@@ -136,12 +172,10 @@ export const AttackMixin = (Base) =>
       ranged ??= action.range?.maximum > 3
       const isAttack = actionType !== 'skill' && !action.damage?.restoration
 
-      // Guarded
       if (target.statuses.has('guarded') && isAttack) {
         banes.guarded = { label: 'Guarded', number: 1 }
       }
 
-      // Prone
       if (target.statuses.has('prone') && isAttack) {
         if (ranged) {
           if ('prone' in banes) banes.prone.number += 1
@@ -151,7 +185,6 @@ export const AttackMixin = (Base) =>
         }
       }
 
-      // Flanked
       if (target.statuses.has('flanked') && isAttack && !ranged) {
         const ae = target.effects.get(SYSTEM.EFFECTS.getEffectId('flanked'))
         if (ae) {
@@ -164,3 +197,42 @@ export const AttackMixin = (Base) =>
       return { boons, banes }
     }
   }
+```
+
+## Étapes d'implémentation
+
+1. Créer le fichier `module/documents/actor-mixins/combat/attack.mixin.mjs`
+2. Copier les méthodes listées depuis `actor.mjs`
+3. Ajuster les imports (AttackRoll, SwerpgAction, SYSTEM, logger)
+4. Vérifier que `this.callActorHooks()` est accessible (méthode sur Base)
+5. Vérifier que `target.testDefense()` et `target.getResistance()` seront accessibles (Via DefenseMixin)
+
+## Points d'attention
+
+⚠️ **`castSpell()` n'existe pas** dans actor.mjs actuellement
+- Le fichier `action.mjs` (ligne 481) référence `this.actor.castSpell(this, target)`
+- Il faut soit l'implémenter, soit corriger action.mjs
+
+⚠️ **Dépendances sur d'autres mixins**
+- `target.testDefense()` → Sera dans DefenseMixin (chantier 03)
+- `target.getResistance()` → Sera dans DefenseMixin (chantier 03)
+- `this.callActorHooks()` → Méthode dans actor.mjs (pas encore extraite)
+
+## Tests à créer
+
+```javascript
+// tests/documents/actor-combat-attack.test.mjs
+describe('AttackMixin', () => {
+  test('useAction() should use the specified action', () => { ... })
+  test('weaponAttack() should perform a weapon attack', () => { ... })
+  test('skillAttack() should perform a skill attack', () => { ... })
+  test('applyTargetBoons() should apply correct boons based on target status', () => { ... })
+})
+```
+
+## Vérification
+
+```bash
+# Vérifier la syntaxe
+node --check module/documents/actor-mixins/combat/attack.mixin.mjs
+```

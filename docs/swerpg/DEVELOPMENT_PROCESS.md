@@ -105,7 +105,7 @@ Deux approches coexistaient :
 2. **ObligationSheet** (`module/applications/sheets/obligation.mjs`)
 3. **SpecializationSheet** (`module/applications/sheets/specialization.mjs`)
 4. **SpeciesSheet** (`module/applications/sheets/species.mjs`)
-6. **CharacterSheet** (`module/applications/sheets/character-sheet.mjs`)
+5. **CharacterSheet** (`module/applications/sheets/character-sheet.mjs`)
 
 **Exemple de conversion:**
 
