@@ -2,8 +2,8 @@
  * Defense Mixin - Handles defense calculations and resistances
  * Extracted from actor.mjs lines ~750-868
  */
+import { AttackRoll } from '../../../dice/_module.mjs'
 
-import AttackRoll from '../../dice/attack-roll.mjs'
 
 export const DefenseMixin = (Base) =>
   class extends Base {
