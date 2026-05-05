@@ -1611,7 +1611,7 @@ export default class SwerpgActor extends Actor {
   async modifyResource(jaugeType, action) {
     const resource = this.system.resources[jaugeType]
 
-    const value = this.#computeResourceValue(resource, action)
+    const value = this.computeResourceValue(resource, action)
     logger.debug(`modifyResource(${jaugeType}, ${action}) with new value (${value}) from values`, resource, this.system.resources)
 
     resource.value = value
@@ -1623,7 +1623,7 @@ export default class SwerpgActor extends Actor {
     logger.debug(`[After] modifyResource with value:`, updatedActor?.system?.resources[jaugeType])
   }
 
-  #computeResourceValue(resource, action) {
+  computeResourceValue(resource, action) {
     if (action === 'increase') {
       return Math.min(resource.value + 1, resource.threshold)
     } else if (action === 'decrease') {
