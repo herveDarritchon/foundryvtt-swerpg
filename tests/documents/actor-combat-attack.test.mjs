@@ -3,14 +3,19 @@
  * Chantier 02 - Combat refactoring (Issue #48)
  */
 
+import { describe, test, expect, beforeEach, vi } from 'vitest'
+
+// Import the mixin - use relative path from test file
+import { AttackMixin } from '../../module/documents/actor-mixins/combat/attack.mixin.mjs'
+
 // Mock base class for testing mixins
 class MockBase {
   constructor(data = {}) {
     this.id = data.id || 'test-actor'
     this.actions = data.actions || {}
     this.system = data.system || {}
-    this._sheet = { render: jest.fn() }
-    this.callActorHooks = jest.fn()
+    this._sheet = { render: vi.fn() }
+    this.callActorHooks = vi.fn()
   }
 
   async update(data) {
@@ -34,7 +39,7 @@ describe('AttackMixin', () => {
       id: 'actor-1',
       actions: {
         'attack-1': {
-          use: jest.fn().mockResolvedValue({ success: true }),
+          use: vi.fn().mockResolvedValue({ success: true }),
           usage: {
             boons: {},
             banes: {},

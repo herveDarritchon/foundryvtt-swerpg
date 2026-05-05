@@ -3,6 +3,9 @@
  * Chantier 04 - Combat refactoring (Issue #48)
  */
 
+import { describe, test, expect, beforeEach, vi } from 'vitest'
+import { TurnMixin } from '../../module/documents/actor-mixins/combat/turn.mixin.mjs'
+
 // Mock base class for testing mixins
 class MockBase {
   constructor(data = {}) {
@@ -12,20 +15,17 @@ class MockBase {
     this.isIncapacitated = data.isIncapacitated || false
     this.isWeakened = data.isWeakened || false
     this.isBroken = data.isBroken || false
-    this.system = data.system || { resources: { action: { value: 1 } } }
-    this._sheet = { render: jest.fn() }
+    this.system = data.system || { resources: { action: { value: 1 } }
+    this._sheet = { render: vi.fn() }
     this.effects = new Map()
 
-    this.reset = jest.fn()
-    this.update = jest.fn().mockResolvedValue(this)
-    this.expireEffects = jest.fn().mockResolvedValue()
-    this.applyDamageOverTime = jest.fn().mockResolvedValue()
-    this.alterResources = jest.fn().mockResolvedValue()
+    this.reset = vi.fn()
+    this.update = vi.fn().mockResolvedValue(this)
+    this.expireEffects = vi.fn().mockResolvedValue()
+    this.applyDamageOverTime = vi.fn().mockResolvedValue()
+    this.alterResources = vi.fn().mockResolvedValue()
   }
 }
-
-// Import the mixin
-import { TurnMixin } from '../../module/documents/actor-mixins/combat/turn.mixin.mjs'
 
 class TestActor extends TurnMixin(MockBase) {}
 
@@ -109,7 +109,7 @@ describe('TurnMixin', () => {
 
   describe('delay()', () => {
     beforeEach(() => {
-      global.game.combat.getCombatantByActor = jest.fn().mockReturnValue({
+      global.game.combat.getCombatantByActor = vi.fn().mockReturnValue({
         initiative: 10,
         getDelayMaximum: () => 20
       })
@@ -125,7 +125,7 @@ describe('TurnMixin', () => {
     })
 
     test('should update actor flags and combat', async () => {
-      global.game.combat.update = jest.fn().mockResolvedValue()
+      global.game.combat.update = vi.fn().mockResolvedValue()
       await actor.delay(15)
 
       expect(actor.update).toHaveBeenCalledWith(
