@@ -45,8 +45,6 @@ Si tu es un agent AI/copilot, utilise-le comme référence pour proposer du code
 
 | Type d’élément | Classe de feuille     | Fichier                                               |
 | -------------- | --------------------- | ----------------------------------------------------- |
-| Ascendance     | `AncestrySheet`       | `module/applications/sheets/ancestry-sheet.mjs`       |
-| Archétype      | `ArchetypeSheet`      | `module/applications/sheets/archetype-sheet.mjs`      |
 | Armure         | `ArmorSheet`          | `module/applications/sheets/armor-sheet.mjs`          |
 | Historique     | `BackgroundSheet`     | `module/applications/sheets/background-sheet.mjs`     |
 | Carrière       | `CareerSheet`         | `module/applications/sheets/career-sheet.mjs`         |
@@ -55,9 +53,7 @@ Si tu es un agent AI/copilot, utilise-le comme référence pour proposer du code
 | Origine        | `OriginSheet`         | `module/applications/sheets/origin-sheet.mjs`         |
 | Spécialisation | `SpecializationSheet` | `module/applications/sheets/specialization-sheet.mjs` |
 | Espèce         | `SpeciesSheet`        | `module/applications/sheets/species-sheet.mjs`        |
-| Sort/Pouvoir   | `SpellSheet`          | `module/applications/sheets/spell-sheet.mjs`          |
 | Talent         | `TalentSheet`         | `module/applications/sheets/talent-sheet.mjs`         |
-| Taxonomie      | `TaxonomySheet`       | `module/applications/sheets/taxonomy-sheet.mjs`       |
 | Arme           | `WeaponSheet`         | `module/applications/sheets/weapon-sheet.mjs`         |
 
 #### 1.3 Enregistrer une sheet pour un type de document
