@@ -29,6 +29,7 @@ import * as chat from './module/chat.mjs'
 import Enum from './module/config/enum.mjs'
 import { registerSystemSettings } from './module/applications/settings/settings.js'
 import { logger } from './module/utils/logger.mjs'
+import { SwerpgTokenHUD } from './module/applications/_module.mjs'
 
 globalThis.SYSTEM = SYSTEM
 

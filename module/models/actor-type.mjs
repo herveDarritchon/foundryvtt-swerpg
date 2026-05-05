@@ -235,19 +235,6 @@ export default class SwerpgActorType extends foundry.abstract.TypeDataModel {
     this._prepareDerivedAttributes()
     this._prepareFreeSkillRanks()
     this.parent.callActorHooks('prepareResources', this.resources)
-
-    // Defenses
-    // this.#prepareDefenses();
-    // this.parent.callActorHooks("prepareDefenses", this.defenses);
-    // this.#prepareTotalDefenses();
-
-    // Resistances
-    // this.parent.callActorHooks("prepareResistances", this.resistances);
-    // this.#prepareTotalResistances();
-
-    // Movement
-    // this._prepareMovement();
-    // this.parent.callActorHooks("prepareMovement", this.movement);
   }
 
   /**

@@ -31,7 +31,14 @@ export default class SwerpgActor extends EquipmentMixin(ResourcesMixin(CombatMix
   constructor(data, context) {
     super(data, context)
     this._cachedResources = {}
+    this.actorHooks = {}
   }
+
+  /**
+   * Talent hook functions which apply to this Actor based on their set of owned Talents.
+   * @type {Object<string, {talent: SwerpgItem, fn: Function}[]>}
+   */
+  actorHooks = {}
 
   /*  Character Creation Methods                  */
 
@@ -479,6 +486,41 @@ export default class SwerpgActor extends EquipmentMixin(ResourcesMixin(CombatMix
   }
 
   /* -------------------------------------------- */
+  /*  Actor Preparation                            */
+
+  /* -------------------------------------------- */
+
+  /** @inheritDoc */
+  prepareEmbeddedDocuments() {
+    super.prepareEmbeddedDocuments()
+    const items = this.itemTypes
+    SwerpgActor.#prepareTalents.call(this, items.talent)
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Prepare Talent data for the Actor.
+   * @this {SwerpgActor}
+   * @param {SwerpgItem[]} talents
+   */
+  static #prepareTalents(talents) {
+    this.talentIds = new Set()
+    this.actorHooks = {}
+    this.permanentTalentIds = new Set()
+
+    // Iterate over talents
+    for (const t of talents) {
+      this.talentIds.add(t.id)
+
+      // Register hooks
+      for (const hook of t.system.actorHooks) SwerpgActor.#registerActorHook(this, t, hook)
+    }
+  }
+
+  /* -------------------------------------------- */
+
+  /* -------------------------------------------- */
   /*  Database Workflows                          */
 
   /* -------------------------------------------- */
@@ -700,4 +742,46 @@ export default class SwerpgActor extends EquipmentMixin(ResourcesMixin(CombatMix
       await canvas.scene.updateEmbeddedDocuments('Token', updates)
     }
   }
+
+  /* -------------------------------------------- */
+  /*  Talent Hooks                                */
+  /* -------------------------------------------- */
+
+  /**
+   * Register a hooked function declared by a Talent item.
+   * @param actor
+   * @param {SwerpgItem} talent   The Talent registering the hook
+   * @param {object} data           Registered hook data
+   * @param {string} data.hook        The hook name
+   * @param {string} data.fn          The hook function
+   * @private
+   */
+  static #registerActorHook(actor, talent, { hook, fn } = {}) {
+    const hookConfig = SYSTEM.ACTOR_HOOKS[hook]
+    if (!hookConfig) throw new Error(`Invalid Actor hook name "${hook}" defined by Talent "${talent.id}"`)
+    actor.actorHooks[hook] ||= []
+    actor.actorHooks[hook].push({ talent, fn: new Function('actor', ...hookConfig.argNames, fn) })
+  }
+
+  /**
+   * Call all actor hooks registered for a certain event name.
+   * Each registered function is called in sequence.
+   * @param {string} hook     The hook name to call.
+   * @param {...*} args       Arguments passed to the hooked function
+   */
+  callActorHooks(hook, ...args) {
+    const hookConfig = SYSTEM.ACTOR_HOOKS[hook]
+    if (!hookConfig) throw new Error(`Invalid Actor hook function "${hook}"`)
+    const hooks = (this.actorHooks[hook] ||= [])
+    for (const { talent, fn } of hooks) {
+      logger.debug(`Calling ${hook} hook for Talent ${talent.name}`)
+      try {
+        fn(this, ...args)
+      } catch (err) {
+        const msg = `The "${hook}" hook defined for Talent "${talent.name}" failed evaluation in Actor [${this.id}]`
+        logger.error(msg, err)
+      }
+    }
+  }
+
 }
