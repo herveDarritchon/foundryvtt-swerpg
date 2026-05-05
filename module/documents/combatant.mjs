@@ -25,7 +25,7 @@ export default class SwerpgCombatant extends Combatant {
 
     // Prepare roll data
     const rollData = {
-      ability: this.actor.getAbilityBonus(['dexterity', 'intellect']),
+      ability: 0,
       skill: 0,
       enchantment: 0,
       boons: boons,
