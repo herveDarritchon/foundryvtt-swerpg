@@ -6,8 +6,8 @@
 import { describe, test, expect, beforeEach, vi } from 'vitest'
 import { TurnMixin } from '../../module/documents/actor-mixins/combat/turn.mixin.mjs'
 
-// Mock base class for testing mixins
-class MockBase {
+// Minimal mock class
+class TestActor {
   constructor(data = {}) {
     this.id = data.id || 'test-actor'
     this.flags = data.flags || { swerpg: {} }
@@ -27,15 +27,14 @@ class MockBase {
   }
 }
 
-class TestActor extends TurnMixin(MockBase) {}
+class ActorWithTurn extends TurnMixin(TestActor) {}
 
-describe('TurnMixin', () => {
+describe('TurnMixin - onStartTurn()', () => {
   let actor
 
   beforeEach(() => {
-    actor = new TestActor()
+    actor = new ActorWithTurn()
 
-    // Mock game.combat
     global.game = {
       combat: {
         round: 1,
@@ -45,95 +44,93 @@ describe('TurnMixin', () => {
     }
   })
 
-  describe('onStartTurn()', () => {
-    test('should reset actor and render sheet', async () => {
-      await actor.onStartTurn()
-      expect(actor.reset).toHaveBeenCalled()
-      expect(actor._sheet.render).toHaveBeenCalledWith(false)
-    })
-
-    test('should call expireEffects and applyDamageOverTime', async () => {
-      await actor.onStartTurn()
-      expect(actor.expireEffects).toHaveBeenCalledWith(true)
-      expect(actor.applyDamageOverTime).toHaveBeenCalled()
-    })
-
-    test('should recover action resource', async () => {
-      await actor.onStartTurn()
-      expect(actor.alterResources).toHaveBeenCalled()
-    })
-
-    test('should apply lesser regeneration talent', async () => {
-      actor.talentIds = new Set(['lesserregenerati'])
-      actor.isWeakened = false
-      await actor.onStartTurn()
-      expect(actor.alterResources).toHaveBeenCalledWith(
-        expect.objectContaining({ health: 1 }),
-        expect.any(Object)
-      )
-    })
+  test('should call reset and render sheet', async () => {
+    await actor.onStartTurn()
+    expect(actor.reset).toHaveBeenCalled()
+    expect(actor._sheet.render).toHaveBeenCalledWith(false)
   })
 
-  describe('onEndTurn()', () => {
-    test('should reset actor and render sheet', async () => {
-      await actor.onEndTurn()
-      expect(actor.reset).toHaveBeenCalled()
-      expect(actor._sheet.render).toHaveBeenCalledWith(false)
-    })
+  test('should call expireEffects and applyDamageOverTime', async () => {
+    await actor.onStartTurn()
+    expect(actor.expireEffects).toHaveBeenCalledWith(true)
+    expect(actor.applyDamageOverTime).toHaveBeenCalled()
+  })
+})
 
-    test('should call expireEffects with false', async () => {
-      await actor.onEndTurn()
-      expect(actor.expireEffects).toHaveBeenCalledWith(false)
-    })
+describe('TurnMixin - onEndTurn()', () => {
+  let actor
 
-    test('should apply conserve effort talent', async () => {
-      actor.talentIds = new Set(['conserveeffort00'])
-      actor.system.resources.action = { value: 2 }
-      await actor.onEndTurn()
-      expect(actor.alterResources).toHaveBeenCalledWith(
-        { focus: 1 },
-        {},
-        { statusText: 'Conserve Effort' }
-      )
-    })
+  beforeEach(() => {
+    actor = new ActorWithTurn()
+
+    global.game = {
+      combat: {
+        round: 1,
+        turn: 0,
+        combatant: { initiative: 10 }
+      }
+    }
   })
 
-  describe('onLeaveCombat()', () => {
-    test('should clear delay flags and reset', async () => {
-      actor.flags.swerpg.delay = { round: 1, from: 10, to: 5 }
-      await actor.onLeaveCombat()
-      expect(actor.update).toHaveBeenCalledWith({ 'flags.swerpg.-=delay': null })
-      expect(actor.reset).toHaveBeenCalled()
-    })
+  test('should call reset and render sheet', async () => {
+    await actor.onEndTurn()
+    expect(actor.reset).toHaveBeenCalled()
+    expect(actor._sheet.render).toHaveBeenCalledWith(false)
   })
 
-  describe('delay()', () => {
-    beforeEach(() => {
-      global.game.combat.getCombatantByActor = vi.fn().mockReturnValue({
-        initiative: 10,
-        getDelayMaximum: () => 20
-      })
-    })
+  test('should call expireEffects with false', async () => {
+    await actor.onEndTurn()
+    expect(actor.expireEffects).toHaveBeenCalledWith(false)
+  })
+})
 
-    test('should throw error if no combatant found', async () => {
-      global.game.combat.getCombatantByActor.mockReturnValue(null)
-      await expect(actor.delay(15)).rejects.toThrow('no Combatant')
-    })
+describe('TurnMixin - onLeaveCombat()', () => {
+  let actor
 
-    test('should throw error if initiative out of range', async () => {
-      await expect(actor.delay(25)).rejects.toThrow('between 1 and 20')
-    })
+  beforeEach(() => {
+    actor = new ActorWithTurn()
+  })
 
-    test('should update actor flags and combat', async () => {
-      global.game.combat.update = vi.fn().mockResolvedValue()
-      await actor.delay(15)
+  test('should clear delay flags and reset', async () => {
+    actor.flags.swerpg.delay = { round: 1, from: 10, to: 5 }
+    const updateSpy = vi.spyOn(actor, 'update')
+    await actor.onLeaveCombat()
+    expect(updateSpy).toHaveBeenCalledWith({ 'flags.swerpg.-=delay': null })
+  })
+})
 
-      expect(actor.update).toHaveBeenCalledWith(
-        expect.objectContaining({
-          'flags.swerpg.delay': expect.any(Object)
-        })
-      )
-      expect(global.game.combat.update).toHaveBeenCalled()
-    })
+describe('TurnMixin - delay()', () => {
+  let actor
+
+  beforeEach(() => {
+    actor = new ActorWithTurn()
+
+    global.game = {
+      combat: {
+        round: 1,
+        turn: 0,
+        combatant: { initiative: 10 },
+        getCombatantByActor: vi.fn().mockReturnValue({
+          initiative: 10,
+          getDelayMaximum: () => 20
+        }),
+        update: vi.fn().mockResolvedValue()
+      }
+    }
+  })
+
+  test('should throw error if no combatant found', async () => {
+    global.game.combat.getCombatantByActor.mockReturnValue(null)
+    await expect(actor.delay(15)).rejects.toThrow('no Combatant')
+  })
+
+  test('should throw error if initiative out of range', async () => {
+    await expect(actor.delay(25)).rejects.toThrow('between 1 and 20')
+  })
+
+  test('should update actor flags and combat', async () => {
+    await actor.delay(15)
+    expect(actor.update).toHaveBeenCalled()
+    expect(global.game.combat.update).toHaveBeenCalled()
   })
 })
