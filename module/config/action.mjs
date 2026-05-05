@@ -777,7 +777,7 @@ for (const { id, label } of Object.values(CHARACTERISTICS)) {
     label,
     category: 'scaling',
     prepare() {
-      this.usage.bonuses.ability = this.actor.getAbilityBonus([id])
+      this.usage.bonuses.ability = 0
     },
   }
 }
@@ -811,7 +811,7 @@ for (const { id, name } of Object.values(SKILLS)) {
       const skill = this.actor.skills[id]
       this.usage.hasDice = true
       Object.assign(this.usage.bonuses, {
-        ability: skill.abilityBonus,
+        ability: 0,
         skill: skill.skillBonus,
         enchantment: skill.enchantmentBonus,
       })

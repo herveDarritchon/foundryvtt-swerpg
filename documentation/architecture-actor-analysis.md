@@ -39,7 +39,7 @@ SwerpgActor (2490 lignes)
 ├── Effets actifs (3) : _prepareEffects, expireEffects, toggleStatusEffect
 ├── Spells (2) : #prepareSpells, castSpell
 ├── Database hooks (3) : _preCreate, _preUpdate, _onUpdate
-└── Utilitaires divers (4) : getAbilityBonus, hasItem, canLearnIconicSpell, etc.
+└── Utilitaires divers (3) : hasItem, canLearnIconicSpell, etc.
 ```
 
 ---
