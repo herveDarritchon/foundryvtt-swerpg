@@ -154,8 +154,8 @@ skills: {
 _prepareSkill(skillId, skill) {
   const config = SYSTEM.SKILLS[skillId];
 
-  // Bonus de caractéristique (plus haute des 2 caractéristiques)
-  const ab = skill.abilityBonus = this.parent.getAbilityBonus(config.characteristics);
+  // Bonus de caractéristique (désactivé dans SWERPG)
+  skill.abilityBonus = 0;
 
   // Bonus de rang (depuis RANKS)
   const sb = skill.skillBonus = SYSTEM.SKILL.RANKS[r].bonus;
@@ -164,25 +164,16 @@ _prepareSkill(skillId, skill) {
   const eb = skill.enchantmentBonus = 0;
 
   // Score total
-  const s = skill.score = ab + sb + eb;
+  const s = skill.score = sb + eb;
 
   // Valeur passive (pour tests opposés)
   skill.passive = SYSTEM.PASSIVE_BASE + s;
 }
 ```
 
-### 3.2 Calcul du bonus de caractéristique (getAbilityBonus)
+### 3.2 Bonus de caractéristique
 
-**Fichier :** `module/documents/actor-origin.mjs` (lignes 734-738)
-
-```javascript
-getAbilityBonus(scaling) {
-  const abilities = this.system.abilities;
-  if (scaling == null || scaling.length === 0) return 0;
-  // Moyenne arrondie des caractéristiques divisée par 2
-  return Math.round(scaling.reduce((x, t) => x + abilities[t].value, 0) / (scaling.length * 2));
-}
-```
+Le calcul du bonus de caractéristique a été supprimé de SWERPG (issue #44). La valeur est maintenant fixée à 0.
 
 ### 3.3 Coût des rangs (Skill Costs)
 
@@ -509,8 +500,8 @@ sc.toMessage() → Envoi dans le chat
 
 ### Documents (Actor)
 
-- `module/documents/actor.mjs` - purchaseSkill, canPurchaseSkill, rollSkill, getAbilityBonus
-- `module/documents/actor-origin.mjs` - purchaseSkill (origin), rollSkill, getAbilityBonus
+- `module/documents/actor.mjs` - purchaseSkill, canPurchaseSkill, rollSkill
+- `module/documents/actor-origin.mjs` - purchaseSkill (origin), rollSkill
 
 ### Interface Utilisateur (Applications/Sheets)
 
@@ -521,7 +512,7 @@ sc.toMessage() → Envoi dans le chat
 
 ### Système de Dés (Dice)
 
-- `module/dice/standard-check.mjs` - StandardCheck (3d8 + ability + skill)
+- `module/dice/standard-check.mjs` - StandardCheck (3d8 + skill)
 
 ### Templates (Handlebars)
 

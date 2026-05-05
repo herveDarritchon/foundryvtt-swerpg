@@ -3,7 +3,6 @@ import { logger } from '../utils/logger.mjs'
  * @typedef {Object} SwerpgActorSkill
  * @param {number} rank
  * @param {string} path
- * @param {number} [abilityBonus]
  * @param {number} [skillBonus]
  * @param {number} [enchantmentBonus]
  * @param {number} [score]
@@ -214,10 +213,10 @@ export default class SwerpgActorType extends foundry.abstract.TypeDataModel {
   _prepareSkill(skillId, skill) {
     const config = SYSTEM.SKILLS[skillId]
     const r = (skill.rank ||= 0)
-    const ab = (skill.abilityBonus = this.parent.getAbilityBonus(config.abilities))
+    skill.abilityBonus = 0
     const sb = (skill.skillBonus = SYSTEM.SKILL.RANKS[r].bonus)
     const eb = (skill.enchantmentBonus = 0)
-    const s = (skill.score = ab + sb + eb)
+    const s = (skill.score = sb + eb)
     skill.passive = SYSTEM.PASSIVE_BASE + s
   }
 

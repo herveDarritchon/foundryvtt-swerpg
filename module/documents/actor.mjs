@@ -676,19 +676,6 @@ export default class SwerpgActor extends Actor {
   /* -------------------------------------------- */
 
   /**
-   * Compute the ability score bonus for a given scaling mode.
-   * @param {string[]} scaling    How is the ability bonus computed?
-   * @returns {number}            The ability bonus
-   */
-  getAbilityBonus(scaling) {
-    const abilities = this.system.abilities
-    if (scaling == null || scaling.length === 0) return 0
-    return Math.round(scaling.reduce((x, t) => x + abilities[t].value, 0) / (scaling.length * 2))
-  }
-
-  /* -------------------------------------------- */
-
-  /**
    * Prepare an Action to be used by this Actor.
    * @param {SwerpgAction} action     The action being prepared
    */
@@ -800,7 +787,7 @@ export default class SwerpgActor extends Actor {
       banes: {},
       boons: {},
       dc: dc,
-      ability: skill.abilityBonus,
+      ability: 0,
       skill: skill.skillBonus,
       enchantment: skill.enchantmentBonus,
       type: skillId,
