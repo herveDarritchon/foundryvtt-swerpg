@@ -45,9 +45,7 @@ Connais et respecte ces mappings (ne les renomme pas sans instruction humaine) :
 
 **Items (`SwerpgBaseItemSheet`)**
 
-- `AncestrySheet`, `ArchetypeSheet`, `ArmorSheet`, `BackgroundSheet`, `CareerSheet`,
   `GearSheet`, `ObligationSheet`, `OriginSheet`, `SpecializationSheet`, `SpeciesSheet`,
-  `SpellSheet`, `TalentSheet`, `TaxonomySheet`, `WeaponSheet`
   → tous sous `module/applications/sheets/*-sheet.mjs`.
 
 ### 1.3. Nommage & fichiers
