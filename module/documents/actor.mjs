@@ -3,6 +3,7 @@ import CharacteristicFactory from '../lib/characteristics/characteristic-factory
 import ErrorCharacteristic from '../lib/characteristics/error-characteristic.mjs'
 import { logger } from '../utils/logger.mjs'
 import { CombatMixin } from './actor-mixins/combat/index.mjs'
+import { EquipmentMixin } from './actor-mixins/equipment.mjs'
 import { ResourcesMixin } from './actor-mixins/resources.mjs'
 
 const { DialogV2 } = foundry.applications.api
@@ -17,29 +18,6 @@ const { DialogV2 } = foundry.applications.api
  */
 
 /**
- * @typedef {Object} ActorEquippedWeapons
- * @property {SwerpgItem} mainhand
- * @property {SwerpgItem} offhand
- * @property {boolean} freehand
- * @property {boolean} unarmed
- * @property {boolean} shield
- * @property {boolean} twoHanded
- * @property {boolean} melee
- * @property {boolean} ranged
- * @property {boolean} dualWield
- * @property {boolean} dualMelee
- * @property {boolean} dualRanged
- * @property {boolean} slow
- */
-
-/**
- * @typedef {Object} ActorEquipment
- * @property {SwerpgItem} armor
- * @property {ActorEquippedWeapons} weapons
- * @property {SwerpgItem[]} accessories
- */
-
-/**
  * @typedef {Object}   ActorRoundStatus
  * @property {boolean} hasMoved
  * @property {boolean} hasAttacked
@@ -49,7 +27,7 @@ const { DialogV2 } = foundry.applications.api
 /**
  * The Actor document subclass in the Swerpg system which extends the behavior of the base Actor class.
  */
-export default class SwerpgActor extends ResourcesMixin(CombatMixin(Actor)) {
+export default class SwerpgActor extends EquipmentMixin(ResourcesMixin(CombatMixin(Actor))) {
   constructor(data, context) {
     super(data, context)
     this._cachedResources = {}
@@ -459,141 +437,7 @@ export default class SwerpgActor extends ResourcesMixin(CombatMixin(Actor)) {
 
   /* -------------------------------------------- */
   /*  Equipment Management Methods                */
-
-  /* -------------------------------------------- */
-
-  /**
-   * Equip an owned armor Item.
-   * @param {string} itemId       The owned Item id of the Armor to equip
-   * @param {object} [options]    Options which configure how armor is equipped
-   * @param {boolean} [options.equipped]  Is the armor being equipped (true), or unequipped (false)
-   * @returns {Promise}            A Promise which resolves once the armor has been equipped or un-equipped
-   */
-  async equipArmor(itemId, { equipped = true } = {}) {
-    const current = this.equipment.armor
-    const item = this.items.get(itemId)
-
-    // Modify the currently equipped armor
-    if (current === item) {
-      if (equipped) return current
-      else return current.update({ 'system.equipped': false })
-    }
-
-    // Cannot equip armor
-    if (current.id) {
-      return ui.notifications.warn(
-        game.i18n.format('WARNING.CannotEquipSlotInUse', {
-          actor: this.name,
-          item: item.name,
-          type: game.i18n.localize('TYPES.Item.armor'),
-        }),
-      )
-    }
-
-    // Equip new armor
-    return item.update({ 'system.equipped': true })
-  }
-
-  /* -------------------------------------------- */
-
-  /**
-   * Equip an owned weapon Item.
-   * @param {string} itemId       The owned Item id of the Weapon to equip. The slot is automatically determined.
-   * @param {object} [options]    Options which configure how the weapon is equipped.
-   * @param {number} [options.slot]       A specific equipment slot in SYSTEM.WEAPON.SLOTS
-   * @param {boolean} [options.equipped]  Whether the weapon should be equipped (true) or unequipped (false)
-   * @returns {Promise}            A Promise which resolves once the weapon has been equipped or un-equipped
-   */
-  async equipWeapon(itemId, { slot, equipped = true } = {}) {
-    // Identify changes
-    const weapon = this.items.get(itemId, { strict: true })
-    const { actionCost, actorUpdates, itemUpdates } = equipped ? this.#equipWeapon(weapon, slot) : this.#unequipWeapon(weapon)
-
-    // Enforce action cost of equipping for Actors that are in combat
-    if (this.combatant) {
-      if (this.system.resources.action.value < actionCost) {
-        throw new Error(game.i18n.localize('WARNING.CannotEquipActionCost'))
-      }
-      await this.alterResources({ action: -actionCost }, actorUpdates)
-    }
-
-    // Update item equipped state
-    await this.updateEmbeddedDocuments('Item', itemUpdates)
-  }
-
-  /* -------------------------------------------- */
-
-  /**
-   * Identify updates which should be made when un-equipping a weapon.
-   * @param {SwerpgItem} [weapon]     A weapon being unequipped
-   * @returns {{itemUpdates: object[], actionCost: number, actorUpdates: {}}}
-   */
-  #unequipWeapon(weapon) {
-    const itemUpdates = []
-    const actorUpdates = {}
-    const actionCost = 0
-    if (weapon.system.equipped) itemUpdates.push({ _id: weapon.id, 'system.equipped': false })
-    if (itemUpdates.length) foundry.utils.setProperty(actorUpdates, 'system.status.unequippedWeapon', true)
-    return { itemUpdates, actionCost, actorUpdates }
-  }
-
-  /* -------------------------------------------- */
-
-  /**
-   * Identify updates which should be made when equipping a weapon.
-   * @param {SwerpgItem} weapon     A weapon being equipped
-   * @param {number} slot             A requested equipment slot in SYSTEM.WEAPON.SLOTS
-   * @returns {{itemUpdates: object[], actionCost: number, actorUpdates: {}}}
-   */
-  #equipWeapon(weapon, slot) {
-    const category = weapon.config.category
-    const slots = SYSTEM.WEAPON.SLOTS
-    const { mainhand, offhand } = this.equipment.weapons
-
-    // Identify the target equipment slot
-    if (slot === undefined) {
-      if (category.hands === 2) slot = slots.TWOHAND
-      else if (category.main) slot = mainhand.id && category.off ? slots.OFFHAND : slots.MAINHAND
-      else if (category.off) slot = slots.OFFHAND
-    }
-
-    // Confirm the target slot is available
-    let occupied
-    switch (slot) {
-      case slots.TWOHAND:
-        if (mainhand.id) occupied = mainhand
-        else if (offhand.id) occupied = offhand
-        break
-      case slots.MAINHAND:
-        if (mainhand.id) occupied = mainhand
-        break
-      case slots.OFFHAND:
-        if (offhand?.id) occupied = offhand
-        else if (mainhand.config.category.hands === 2) occupied = mainhand
-        break
-    }
-    if (occupied)
-      throw new Error(
-        game.i18n.format('WARNING.CannotEquipSlotInUse', {
-          actor: this.name,
-          item: weapon.name,
-          type: game.i18n.localize(slots.label(slot)),
-        }),
-      )
-
-    // Mark the item update
-    const itemUpdates = [{ _id: weapon.id, 'system.equipped': true, 'system.slot': slot }]
-    const actorUpdates = {}
-
-    // Determine action cost
-    let actionCost = weapon.system.properties.has('ambush') ? 0 : 1
-    if (actionCost && this.talentIds.has('preparedness0000') && !this.system.status.hasMoved) {
-      actionCost = 0
-      foundry.utils.setProperty(actorUpdates, 'system.status.hasMoved', true)
-    }
-    return { itemUpdates, actorUpdates, actionCost }
-  }
-
+  /*  Now handled by EquipmentMixin               */
   /* -------------------------------------------- */
 
   /**
@@ -856,5 +700,4 @@ export default class SwerpgActor extends ResourcesMixin(CombatMixin(Actor)) {
       await canvas.scene.updateEmbeddedDocuments('Token', updates)
     }
   }
-
 }

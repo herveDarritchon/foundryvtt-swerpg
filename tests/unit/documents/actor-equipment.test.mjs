@@ -4,6 +4,7 @@
  */
 
 import { describe, it, expect, beforeEach } from 'vitest'
+import { EquipmentMixin } from '../../../module/documents/actor-mixins/equipment.mjs'
 
 // Mock Foundry globals
 globalThis.getDocumentClass = (type) => {
@@ -50,9 +51,6 @@ globalThis.SYSTEM = {
     }
   }
 }
-
-// Import the canFreeMove function
-import { EquipmentMixin } from '../../module/documents/actor-mixins/equipment.mjs'
 
 // Mock Actor base class
 class MockActor {
@@ -148,14 +146,22 @@ describe('EquipmentMixin', () => {
   })
 })
 
-describe('canFreeMove function', () => {
-  it('should return true when actor is not weakened, not prone, and armor is not heavy', () => {
+describe('Equipment Methods Integration', () => {
+  it('should have all required methods', () => {
+    const TestActor = EquipmentMixin(MockActor)
     const actor = new TestActor({}, {})
-    actor.isWeakened = false
-    actor.statuses = new Set()
-    const armor = { system: { category: 'light' } }
-    // canFreeMove is defined outside the mixin
-    const result = actor.equipment?.canFreeMove !== undefined
-    expect(true).toBe(true) // Placeholder - function is tested via prepareEmbeddedDocuments
+    
+    expect(typeof actor._prepareArmor).toBe('function')
+    expect(typeof actor._prepareWeapons).toBe('function')
+    expect(typeof actor._getUnarmoredArmor).toBe('function')
+    expect(typeof actor._getUnarmedWeapon).toBe('function')
+    expect(typeof actor.equipArmor).toBe('function')
+    expect(typeof actor.equipWeapon).toBe('function')
+  })
+
+  it('should have _prepareEquipment method', () => {
+    const TestActor = EquipmentMixin(MockActor)
+    const actor = new TestActor({}, {})
+    expect(typeof actor._prepareEquipment).toBe('function')
   })
 })
