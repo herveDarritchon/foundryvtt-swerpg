@@ -3,6 +3,7 @@ import CharacteristicFactory from '../lib/characteristics/characteristic-factory
 import ErrorCharacteristic from '../lib/characteristics/error-characteristic.mjs'
 import { logger } from '../utils/logger.mjs'
 import { CombatMixin } from './actor-mixins/combat/index.mjs'
+import { ResourcesMixin } from './actor-mixins/resources.mjs'
 
 const { DialogV2 } = foundry.applications.api
 
@@ -48,10 +49,10 @@ const { DialogV2 } = foundry.applications.api
 /**
  * The Actor document subclass in the Swerpg system which extends the behavior of the base Actor class.
  */
-export default class SwerpgActor extends CombatMixin(Actor) {
+export default class SwerpgActor extends ResourcesMixin(CombatMixin(Actor)) {
   constructor(data, context) {
     super(data, context)
-    this.#updateCachedResources()
+    this._cachedResources = {}
   }
 
   /*  Character Creation Methods                  */
@@ -235,38 +236,6 @@ export default class SwerpgActor extends CombatMixin(Actor) {
       characteristicUpdated.actor,
       characteristicUpdated.data.rank,
     )
-  }
-
-  /* -------------------------------------------- */
-
-  /**
-   * Modify a jauge value increase or decrease for the Actor
-   * @param {string} jaugeType      The jauge type to increase or decrease
-   * @param {string} action        A string in ['increase', 'decrease'] for the action to perform on the jauge value.
-   * @returns {Promise}
-   */
-  async modifyResource(jaugeType, action) {
-    const resource = this.system.resources[jaugeType]
-
-    const value = this.computeResourceValue(resource, action)
-    logger.debug(`modifyResource(${jaugeType}, ${action}) with new value (${value}) from values`, resource, this.system.resources)
-
-    resource.value = value
-
-    const updateData = { [`system.resources.${jaugeType}`]: resource }
-
-    logger.debug(`[Before] modifyResource with value:`, updateData)
-    const updatedActor = await this.update(updateData)
-    logger.debug(`[After] modifyResource with value:`, updatedActor?.system?.resources[jaugeType])
-  }
-
-  computeResourceValue(resource, action) {
-    if (action === 'increase') {
-      return Math.min(resource.value + 1, resource.threshold)
-    } else if (action === 'decrease') {
-      return Math.max(resource.value - 1, 0)
-    }
-    throw new Error(`Invalid action "${action}" for jauge type "${resource.type}"`)
   }
 
   /* -------------------------------------------- */
@@ -731,7 +700,7 @@ export default class SwerpgActor extends CombatMixin(Actor) {
     }
 
     // Update cached resource values
-    this.#updateCachedResources()
+    this.updateCachedResources()
 
     // Refresh display of the active talent tree
     const tree = game.system.tree
@@ -796,26 +765,6 @@ export default class SwerpgActor extends CombatMixin(Actor) {
           jitter: 0.5,
         })
       }
-    }
-  }
-
-  /* -------------------------------------------- */
-
-  /**
-   * Apply status effect changes when attribute pools change
-   * @param {object} data     The data which changed
-   * @returns {Promise<void>}
-   * @private
-   */
-  async #applyResourceStatuses(data) {
-    const r = data?.system?.resources || {}
-    if ('health' in r || 'wounds' in r) {
-      await this.toggleStatusEffect('weakened', { active: this.isWeakened && !this.isDead })
-      await this.toggleStatusEffect('dead', { active: this.isDead })
-    }
-    if ('morale' in r || 'madness' in r) {
-      await this.toggleStatusEffect('broken', { active: this.isBroken && !this.isInsane })
-      await this.toggleStatusEffect('insane', { active: this.isInsane })
     }
   }
 
@@ -908,32 +857,4 @@ export default class SwerpgActor extends CombatMixin(Actor) {
     }
   }
 
-  /* -------------------------------------------- */
-
-  /**
-   * Update the cached resources for this actor.
-   * @private
-   */
-  #updateCachedResources() {
-    this._cachedResources = Object.entries(this.system.resources).reduce(
-      (obj, [id, { value }]) => {
-        obj[id] = value
-        return obj
-      },
-      {
-        wasIncapacitated: this.isIncapacitated,
-        wasBroken: this.isBroken,
-      },
-    )
-  }
-
-  /* -------------------------------------------- */
-
-  #replenishResources(data) {
-    const levelChange = foundry.utils.hasProperty(data, 'system.advancement.level')
-    const attributeChange = Object.keys(SYSTEM.CHARACTERISTICS).some((k) => {
-      return foundry.utils.hasProperty(data, `system.abilities.${k}`)
-    })
-    if (this.isOwner && (levelChange || attributeChange)) this.rest()
-  }
 }
