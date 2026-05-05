@@ -52,7 +52,6 @@ describe('SwerpgActor Resources', () => {
 
   describe('modifyResource()', () => {
     beforeEach(() => {
-      // Mock the update method
       actor.update = vi.fn().mockResolvedValue(actor)
     })
 
@@ -92,6 +91,207 @@ describe('SwerpgActor Resources', () => {
       const result = await actor.modifyResource('action', 'increase')
 
       expect(result).toBe(mockResult)
+    })
+  })
+
+  describe('alterResources()', () => {
+    beforeEach(() => {
+      actor.update = vi.fn().mockResolvedValue(actor)
+      actor.system.resources = {
+        health: { value: 10, max: 20 },
+        morale: { value: 15, max: 20 },
+        action: { value: 3, max: 6 },
+      }
+    })
+
+    test('should update multiple resources at once', async () => {
+      await actor.alterResources({ health: 5, morale: -3 }, {}, {})
+
+      expect(actor.update).toHaveBeenCalledWith({
+        'system.resources.health.value': 15,
+        'system.resources.morale.value': 12,
+      })
+    })
+
+    test('should skip resources with zero delta', async () => {
+      await actor.alterResources({ health: 0, action: 2 }, {}, {})
+
+      expect(actor.update).toHaveBeenCalledWith({
+        'system.resources.action.value': 5,
+      })
+    })
+
+    test('should clamp values to min 0 and max', async () => {
+      await actor.alterResources({ health: -15, morale: 10 }, {}, {})
+
+      expect(actor.update).toHaveBeenCalledWith({
+        'system.resources.health.value': 0,
+        'system.resources.morale.value': 20,
+      })
+    })
+
+    test('should handle reverse option', async () => {
+      await actor.alterResources({ health: 5 }, {}, { reverse: true })
+
+      expect(actor.update).toHaveBeenCalledWith({
+        'system.resources.health.value': 5,
+      })
+    })
+
+    test('should merge actorUpdates', async () => {
+      const actorUpdates = { 'system.status.rested': true }
+      await actor.alterResources({ action: -1 }, actorUpdates, {})
+
+      expect(actor.update).toHaveBeenCalledWith({
+        'system.resources.action.value': 2,
+        'system.status.rested': true,
+      })
+    })
+  })
+
+  describe('getters', () => {
+    beforeEach(() => {
+      actor.system.resources = {
+        health: { value: 10, threshold: 5, max: 20 },
+        wounds: { value: 2, max: 10 },
+        morale: { value: 12, threshold: 6, max: 20 },
+        madness: { value: 3, max: 10 },
+      }
+    })
+
+    test('isWeakened should be true when health is at or below threshold', () => {
+      actor.system.resources.health.value = 5
+      expect(actor.isWeakened).toBe(true)
+
+      actor.system.resources.health.value = 3
+      expect(actor.isWeakened).toBe(true)
+
+      actor.system.resources.health.value = 6
+      expect(actor.isWeakened).toBe(false)
+    })
+
+    test('isBroken should be true when morale is at or below threshold', () => {
+      actor.system.resources.morale.value = 6
+      expect(actor.isBroken).toBe(true)
+
+      actor.system.resources.morale.value = 4
+      expect(actor.isBroken).toBe(true)
+
+      actor.system.resources.morale.value = 7
+      expect(actor.isBroken).toBe(false)
+    })
+
+    test('isDead should be true when health is 0 or below', () => {
+      actor.system.resources.health.value = 0
+      expect(actor.isDead).toBe(true)
+
+      actor.system.resources.health.value = -1
+      expect(actor.isDead).toBe(true)
+
+      actor.system.resources.health.value = 10
+      expect(actor.isDead).toBe(false)
+    })
+
+    test('isInsane should be true when madness is at max', () => {
+      actor.system.resources.madness.value = 10
+      expect(actor.isInsane).toBe(true)
+
+      actor.system.resources.madness.value = 5
+      expect(actor.isInsane).toBe(false)
+    })
+
+    test('isIncapacitated should be true when dead or insane', () => {
+      actor.system.resources.health.value = 0
+      expect(actor.isIncapacitated).toBe(true)
+
+      actor.system.resources.health.value = 10
+      actor.system.resources.madness.value = 10
+      expect(actor.isIncapacitated).toBe(true)
+
+      actor.system.resources.madness.value = 5
+      expect(actor.isIncapacitated).toBe(false)
+    })
+  })
+
+  describe('toggleStatusEffect()', () => {
+    beforeEach(() => {
+      actor.createEmbeddedDocuments = vi.fn().mockResolvedValue([])
+      actor.deleteEmbeddedDocuments = vi.fn().mockResolvedValue([])
+      actor.effects = new Map()
+    })
+
+    test('should create effect when active is true and effect does not exist', async () => {
+      CONFIG.statusEffects = [{ id: 'weakened', name: 'Weakened' }]
+
+      await actor.toggleStatusEffect('weakened', { active: true })
+
+      expect(actor.createEmbeddedDocuments).toHaveBeenCalledWith('ActiveEffect', [
+        CONFIG.statusEffects[0],
+      ])
+    })
+
+    test('should delete effect when active is false and effect exists', async () => {
+      const mockEffect = { id: 'effect1' }
+      actor.effects.set('weakened', mockEffect)
+
+      await actor.toggleStatusEffect('weakened', { active: false })
+
+      expect(actor.deleteEmbeddedDocuments).toHaveBeenCalledWith('ActiveEffect', ['effect1'])
+    })
+
+    test('should not create effect if already exists', async () => {
+      const mockEffect = { id: 'effect1' }
+      actor.effects.set('weakened', mockEffect)
+
+      await actor.toggleStatusEffect('weakened', { active: true })
+
+      expect(actor.createEmbeddedDocuments).not.toHaveBeenCalled()
+    })
+
+    test('should not delete effect if does not exist', async () => {
+      await actor.toggleStatusEffect('weakened', { active: false })
+
+      expect(actor.deleteEmbeddedDocuments).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('rest() and _getRestData()', () => {
+    beforeEach(() => {
+      actor.update = vi.fn().mockResolvedValue(actor)
+      actor.system.resources = {
+        health: { value: 5, max: 20, type: 'active' },
+        morale: { value: 8, max: 20, type: 'passive' },
+        action: { value: 2, max: 6, type: 'active' },
+      }
+    })
+
+    test('_getRestData should return data to restore resources', () => {
+      const restData = actor._getRestData()
+
+      expect(restData).toEqual({
+        'system.resources.health.value': 20,
+        'system.resources.morale.value': 20,
+        'system.resources.action.value': 6,
+      })
+    })
+
+    test('rest() should update actor with rest data', async () => {
+      await actor.rest()
+
+      expect(actor.update).toHaveBeenCalledWith({
+        'system.resources.health.value': 20,
+        'system.resources.morale.value': 20,
+        'system.resources.action.value': 6,
+      })
+    })
+
+    test('_getRestData should return null if no resources to restore', () => {
+      actor.system.resources = {
+        health: { value: 20, max: 20, type: 'active' },
+      }
+
+      const restData = actor._getRestData()
+      expect(restData).toBeNull()
     })
   })
 })

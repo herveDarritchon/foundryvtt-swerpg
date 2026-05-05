@@ -1,15 +1,22 @@
 import { vi } from 'vitest'
+import { ResourcesMixin } from '../../../module/documents/actor-mixins/resources.mjs'
 
 /**
  * Create a mock SwerpgActor for unit testing.
- * Minimal implementation focused on testability with limited mocking.
+ * Uses ResourcesMixin to provide real method implementations.
  *
  * @param {object} [overrides={}] - Override default mock values
  * @returns {object} A mock actor object
  */
 export function createMockActor(overrides = {}) {
-  const mockActor = {
-    // System data (minimal structure)
+  // Create a base class that includes ResourcesMixin
+  const MockActorBase = ResourcesMixin(class Base {
+    constructor(data) {
+      Object.assign(this, data)
+    }
+  })
+
+  const baseData = {
     system: {
       abilities: {
         strength: { value: 3 },
@@ -34,108 +41,74 @@ export function createMockActor(overrides = {}) {
         brawl: { rank: 5, cost: 25, path: 'brawler' },
       },
       resources: {
-        action: { value: 2, threshold: 6 },
-        focus: { value: 1, threshold: 3 },
-        health: { value: 20, threshold: 30 },
-        wounds: { value: 0, threshold: 10 },
-        morale: { value: 15, threshold: 20 },
-        madness: { value: 0, threshold: 10 },
+        action: { value: 2, threshold: 6, max: 6 },
+        focus: { value: 1, threshold: 3, max: 3 },
+        health: { value: 20, threshold: 30, max: 30 },
+        wounds: { value: 0, threshold: 10, max: 10 },
+        morale: { value: 15, threshold: 20, max: 20 },
+        madness: { value: 0, threshold: 10, max: 10 },
       },
       details: { species: null, career: null, specialization: null },
       advancement: { level: 1 },
       status: null,
+      resistances: {},
     },
-
-    // Points
     points: {
       skill: { available: 10, spent: 0, total: 10, requireInput: false },
       ability: { pool: 6, spent: 0, available: 6, requireInput: false },
       talent: { available: 5, spent: 0, total: 5 },
     },
-
-    // Experience
-    experiencePoints: {
-      gained: 0,
-      spent: 0,
-      startingExperience: 100,
-      total: 100,
-      available: 100,
-    },
-
-    // Properties
-    type: 'character',
-    id: 'mock-actor-id',
-    name: 'Mock Actor',
-    isL0: false,
-    isIncapacitated: false,
-    isWeakened: false,
-    isBroken: false,
-    level: 1,
-
-    // Mock Foundry methods
-    update: vi.fn().mockResolvedValue({}),
-    updateEmbeddedDocuments: vi.fn().mockResolvedValue([]),
-    deleteEmbeddedDocuments: vi.fn().mockResolvedValue([]),
-    reset: vi.fn(),
-    expireEffects: vi.fn().mockResolvedValue(),
-    applyDamageOverTime: vi.fn().mockResolvedValue(),
-    alterResources: vi.fn().mockResolvedValue(),
-    callActorHooks: vi.fn(),
-    _sheet: { render: vi.fn() },
-
-    // Mock methods that are on the class prototype (for testing)
-    canPurchaseSkill: vi.fn().mockReturnValue(true),
-    purchaseSkill: vi.fn().mockResolvedValue({}),
-    canPurchaseCharacteristic: vi.fn().mockReturnValue(true),
-    purchaseCharacteristic: vi.fn().mockResolvedValue(),
-    levelUp: vi.fn().mockResolvedValue({}),
-    addTalent: vi.fn().mockResolvedValue({}),
-    resetTalents: vi.fn().mockResolvedValue(),
-    onStartTurn: vi.fn().mockResolvedValue(),
-    onEndTurn: vi.fn().mockResolvedValue(),
-    useAction: vi.fn().mockResolvedValue([]),
-    applyTargetBoons: vi.fn().mockReturnValue({ boons: {}, banes: {} }),
-    equipArmor: vi.fn().mockResolvedValue({}),
-    equipWeapon: vi.fn().mockResolvedValue({}),
-
-    // Maps and Sets
-    items: new Map(),
-    itemTypes: { talent: [] },
-    talents: [],
-    talentIds: new Set(),
-    permanentTalentIds: new Set(),
-    combatant: null,
-
-    // Other
-    actor: null, // self-reference for some methods
-    flags: {},
-
-    // Add computeResourceValue method (refactored from private #computeResourceValue)
-    computeResourceValue(resource, action) {
-      if (action === 'increase') {
-        return Math.min(resource.value + 1, resource.threshold)
-      } else if (action === 'decrease') {
-        return Math.max(resource.value - 1, 0)
-      }
-      throw new Error(`Invalid action "${action}" for jauge type "${resource.type}"`)
-    },
-
-    // Add modifyResource method
-    async modifyResource(jaugeType, action) {
-      const resource = this.system.resources[jaugeType]
-      const value = this.computeResourceValue(resource, action)
-      resource.value = value
-      const updateData = { [`system.resources.${jaugeType}`]: resource }
-      return this.update(updateData)
-    },
-
-    ...overrides,
   }
 
-  // Self-reference for methods that use `this.actor`
-  if (!mockActor.actor) {
-    mockActor.actor = mockActor
-  }
+  const mockActor = new MockActorBase(baseData)
+
+  // Add mock methods
+  mockActor.update = vi.fn().mockResolvedValue(mockActor)
+  mockActor.updateEmbeddedDocuments = vi.fn().mockResolvedValue([])
+  mockActor.deleteEmbeddedDocuments = vi.fn().mockResolvedValue([])
+  mockActor.createEmbeddedDocuments = vi.fn().mockResolvedValue([])
+  mockActor.reset = vi.fn()
+  mockActor.expireEffects = vi.fn().mockResolvedValue()
+  mockActor.applyDamageOverTime = vi.fn().mockResolvedValue()
+  mockActor.callActorHooks = vi.fn()
+  mockActor._sheet = { render: vi.fn() }
+
+  // Mock methods that are on the class prototype (for testing)
+  mockActor.canPurchaseSkill = vi.fn().mockReturnValue(true)
+  mockActor.purchaseSkill = vi.fn().mockResolvedValue({})
+  mockActor.canPurchaseCharacteristic = vi.fn().mockReturnValue(true)
+  mockActor.purchaseCharacteristic = vi.fn().mockResolvedValue()
+  mockActor.levelUp = vi.fn().mockResolvedValue({})
+  mockActor.addTalent = vi.fn().mockResolvedValue({})
+  mockActor.resetTalents = vi.fn().mockResolvedValue({})
+  mockActor.onStartTurn = vi.fn().mockResolvedValue()
+  mockActor.onEndTurn = vi.fn().mockResolvedValue()
+  mockActor.useAction = vi.fn().mockResolvedValue([])
+  mockActor.applyTargetBoons = vi.fn().mockReturnValue({ boons: {}, banes: {} })
+  mockActor.equipArmor = vi.fn().mockResolvedValue({})
+  mockActor.equipWeapon = vi.fn().mockResolvedValue({})
+
+  // Maps and Sets
+  mockActor.items = new Map()
+  mockActor.itemTypes = { talent: [] }
+  mockActor.talents = []
+  mockActor.talentIds = new Set()
+  mockActor.permanentTalentIds = new Set()
+  mockActor.effects = new Map()
+  mockActor.combatant = null
+
+  // Properties
+  mockActor.type = 'character'
+  mockActor.id = 'mock-actor-id'
+  mockActor.name = 'Mock Actor'
+  mockActor.isL0 = false
+  mockActor.level = 1
+  mockActor.actor = mockActor // self-reference
+  mockActor.flags = {}
+  mockActor._cachedResources = {}
+
+  // Apply overrides
+  Object.assign(mockActor, overrides)
 
   return mockActor
 }
