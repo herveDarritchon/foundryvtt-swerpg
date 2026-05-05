@@ -47,7 +47,7 @@ describe('SkillFactory build()', () => {
         test('click on a skill either career-free or specialization-free only and has a career-free skill point.', () => {
           const actor = createActor()
           actor.system.skills.brawl.rank.careerFree = 1
-          actor.freeSkillRanks = {
+          actor.system.progression.freeSkillRanks = {
             career: {
               spent: 1,
               gained: 4,
@@ -73,7 +73,7 @@ describe('SkillFactory build()', () => {
           actor.experiencePoints.spent = 10
           actor.experiencePoints.gained = 100
           actor.experiencePoints.available = 90
-          actor.freeSkillRanks = {
+          actor.system.progression.freeSkillRanks = {
             career: {
               spent: 4,
               gained: 4,
@@ -134,7 +134,7 @@ describe('SkillFactory build()', () => {
         })
         test('an actor that has spent career-free skill points and click on a skill that is both career-free and specialization-free.', () => {
           const actor = createActor()
-          actor.freeSkillRanks.career = {
+          actor.system.progression.freeSkillRanks.career = {
             spent: 4,
             gained: 4,
           }
@@ -155,7 +155,7 @@ describe('SkillFactory build()', () => {
         test('click on a skill either career-free or specialization-free only and has a specialization-free skill point.', () => {
           const actor = createActor()
           actor.system.skills.brawl.rank.specializationFree = 1
-          actor.freeSkillRanks = {
+          actor.system.progression.freeSkillRanks = {
             career: {
               spent: 0,
               gained: 4,
@@ -181,7 +181,7 @@ describe('SkillFactory build()', () => {
           actor.system.skills.brawl.rank.specializationFree = 1
           actor.system.skills.brawl.rank.careerFree = 1
           actor.experiencePoints.spent = 10
-          actor.freeSkillRanks = {
+          actor.system.progression.freeSkillRanks = {
             career: {
               spent: 1,
               gained: 4,
@@ -210,7 +210,7 @@ describe('SkillFactory build()', () => {
         const action = 'train'
         test('click on a skill neither career-free nor specialization-free and actor has no career-free points.', () => {
           const actor = createActor()
-          actor.freeSkillRanks = {
+          actor.system.progression.freeSkillRanks = {
             career: {
               spent: 4,
               gained: 4,
@@ -235,7 +235,7 @@ describe('SkillFactory build()', () => {
         })
         test('an actor that has spent career-free and specialization-free skill points and click on a skill that is both career-free and specialization-free.', () => {
           const actor = createActor()
-          actor.freeSkillRanks = {
+          actor.system.progression.freeSkillRanks = {
             career: {
               spent: 4,
               gained: 4,
@@ -264,7 +264,7 @@ describe('SkillFactory build()', () => {
           actor.experiencePoints.spent = 10
           actor.experiencePoints.gained = 100
           actor.experiencePoints.available = 90
-          actor.freeSkillRanks = {
+          actor.system.progression.freeSkillRanks = {
             career: {
               spent: 0,
               gained: 4,
@@ -292,7 +292,7 @@ describe('SkillFactory build()', () => {
           actor.experiencePoints.spent = 10
           actor.experiencePoints.gained = 100
           actor.experiencePoints.available = 90
-          actor.freeSkillRanks = {
+          actor.system.progression.freeSkillRanks = {
             career: {
               spent: 4,
               gained: 4,
@@ -327,7 +327,7 @@ describe('SkillFactory build()', () => {
           actor.system.skills.brawl.rank.specializationFree = 0
           actor.system.skills.brawl.rank.trained = 1
           actor.experiencePoints.spent = 10
-          actor.freeSkillRanks = {
+          actor.system.progression.freeSkillRanks = {
             career: {
               spent: 0,
               gained: 4,
@@ -356,7 +356,7 @@ describe('SkillFactory build()', () => {
           actor.system.skills.brawl.rank.specializationFree = 0
           actor.system.skills.brawl.rank.trained = 1
           actor.experiencePoints.spent = 10
-          actor.freeSkillRanks = {
+          actor.system.progression.freeSkillRanks = {
             career: {
               spent: 4,
               gained: 4,
@@ -385,7 +385,7 @@ describe('SkillFactory build()', () => {
           actor.system.skills.brawl.rank.specializationFree = 1
           actor.system.skills.brawl.rank.trained = 1
           actor.experiencePoints.spent = 10
-          actor.freeSkillRanks = {
+          actor.system.progression.freeSkillRanks = {
             career: {
               spent: 3,
               gained: 4,
@@ -414,7 +414,7 @@ describe('SkillFactory build()', () => {
           actor.system.skills.brawl.rank.specializationFree = 1
           actor.system.skills.brawl.rank.trained = 1
           actor.experiencePoints.spent = 10
-          actor.freeSkillRanks = {
+          actor.system.progression.freeSkillRanks = {
             career: {
               spent: 4,
               gained: 4,
@@ -443,7 +443,7 @@ describe('SkillFactory build()', () => {
           actor.system.skills.brawl.rank.specializationFree = 0
           actor.system.skills.brawl.rank.trained = 1
           actor.experiencePoints.spent = 10
-          actor.freeSkillRanks = {
+          actor.system.progression.freeSkillRanks = {
             career: {
               spent: 4,
               gained: 4,
@@ -508,7 +508,7 @@ describe('SkillFactory build()', () => {
           actor.system.skills.brawl.rank.careerFree = 0
           actor.system.skills.brawl.rank.specializationFree = 0
           actor.system.skills.brawl.rank.trained = 1
-          actor.freeSkillRanks = {
+          actor.system.progression.freeSkillRanks = {
             career: {
               spent: 4,
               gained: 4,
