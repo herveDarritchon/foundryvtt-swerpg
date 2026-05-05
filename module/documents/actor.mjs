@@ -343,7 +343,6 @@ export default class SwerpgActor extends Actor {
       mechanical: 0,
       shield: 0,
       talisman: 0,
-      //            Natural: Math.clamp(Math.floor((this.system.advancement.level + 1) / 4), 0, 3) // TODO temporary
     }
     this.callActorHooks('prepareTraining', training)
     return training
@@ -488,12 +487,6 @@ export default class SwerpgActor extends Actor {
     const mh = weapons.mainhand
     const oh = weapons.offhand
     const ohCategory = {}
-    // Mh.system.prepareEquippedData();
-    // oh?.system.prepareEquippedData();
-
-    // Range
-
-    // Free Hand or Unarmed
 
     // Hands available for spellcasting
 
@@ -631,14 +624,6 @@ export default class SwerpgActor extends Actor {
     details.signatureName = signatureNames.sort((a, b) => a.localeCompare(b)).join(' ')
 
     // Warn if the Actor does not have a legal build
-    /* if (this.type === "character" || this.type === "character") {
-             const points = this.system.points.talent;
-             points.spent = this.talentIds.size - this.permanentTalentIds.size;
-             points.available = points.total - points.spent;
-             if (points.available < 0) {
-                 ui.notifications?.warn(`Actor ${this.name} has more Talents unlocked than they have talent points available.`);
-             }
-         }*/
   }
 
   /* -------------------------------------------- */
@@ -1019,8 +1004,6 @@ export default class SwerpgActor extends Actor {
     if (r < AttackRoll.RESULT_TYPES.GLANCE) return roll
     roll.data.damage = weapon.system.getDamage(this, action, target, roll)
     roll.data.damage.total = SwerpgAction.computeDamage(roll.data.damage)
-
-    // TODO "rollWeaponAttack" hook for final damage adjustments?
     return roll
   }
 
@@ -2112,9 +2095,6 @@ export default class SwerpgActor extends Actor {
     // Apply follow-up database changes only as the initiating user
     if (game.userId === userId) {
       this.#updateSize()
-      // TODO update size of active tokens
-      // this.#replenishResources(data);
-      // this.#applyResourceStatuses(data);
     }
 
     // Update flanking
