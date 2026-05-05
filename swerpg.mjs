@@ -44,11 +44,7 @@ Hooks.once('init', async function () {
 
   const swerpg = (globalThis.swerpg = game.system)
   swerpg.CONST = SYSTEM
-  // TODO Fix these comments to restore the features.
-  // SwerpgTalentNode.defineTree();
-  // swerpg.developmentMode = game.data.options.debug;
   swerpg.developmentMode = detectDevelopmentMode()
-  // Swerpg.vfxEnabled = !!game.modules.get("foundryvtt-vfx")?.active;
 
   // Configure logger with development mode
   logger.setDebug(swerpg.developmentMode)
@@ -192,10 +188,7 @@ Hooks.once('init', async function () {
 
   // Canvas Configuration
   CONFIG.Canvas.rulerClass = SwerpgRuler
-  CONFIG.Token.hudClass = applications.SwerpgTokenHUD
-
-  /*    // Canvas Configuration
-        canvas.configure();*/
+  CONFIG.Token.hudClass = SwerpgTokenHUD
 
   /**
    * Is animation enabled for the system?
@@ -342,11 +335,8 @@ Hooks.once('ready', async function () {
   const welcome = game.settings.get('swerpg', 'welcome')
   if (!welcome) {
     const entry = await fromUuid('Compendium.swerpg.rules.JournalEntry.5SgXrAKS2EnqVggJ')
-    //entry.sheet.render(true)
     game.settings.set('swerpg', 'welcome', true)
   }
-  // FIXME bring this back with a migration version
-  // if ( game.user === game.users.activeGM ) await syncTalents();
 })
 
 /* -------------------------------------------- */
@@ -365,7 +355,7 @@ Hooks.on('preDeleteChatMessage', models.SwerpgAction.onDeleteChatMessage)
  */
 Hooks.on('canvasReady', () => {
   if (game.system.tree.actor) game.system.tree.open(game.system.tree.actor, { resetView: false })
-  for (const token of canvas.tokens.placeables) token.renderFlags.set({ refreshFlanking: true }) // No commit
+  for (const token of canvas.tokens.placeables) token.renderFlags.set({ refreshFlanking: true })
 })
 
 Hooks.on('hotbarDrop', async (bar, data, slot) => {
@@ -557,13 +547,13 @@ async function syncTalents(force = false) {
  */
 async function resetAllActorTalents() {
   for (const actor of game.actors) {
-    const deleteIds = []
+    const deleteIds = new Set()
     for (const item of actor.items) {
       if (item.type !== 'talent') continue
       if (actor.system.details.species?.talents?.has(item.id)) continue
       deleteIds.add(item.id)
     }
-    await actor.deleteEmbeddedDocuments('Item', deleteIds)
+    await actor.deleteEmbeddedDocuments('Item', Array.from(deleteIds))
   }
 }
 
