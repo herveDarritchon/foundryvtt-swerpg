@@ -9,7 +9,7 @@ class TestActor {
     this.isIncapacitated = false
     this.isWeakened = false
     this.isBroken = false
-    this.system = { resources: { action: { value: 1 } }
+    this.system = { resources: { action: { value: 1 } }}
     this._sheet = { render: vi.fn() }
     this.effects = new Map()
 
