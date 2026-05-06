@@ -154,7 +154,7 @@ export default class SwerpgActor extends EquipmentMixin(ResourcesMixin(CombatMix
    * @type {boolean}
    */
   get isKnockedOut() {
-    return this.system.status.conditions.knockedOut
+    return this.system?.status?.conditions?.knockedOut || false
   }
 
   /**
@@ -162,7 +162,7 @@ export default class SwerpgActor extends EquipmentMixin(ResourcesMixin(CombatMix
    * @type {boolean}
    */
   get isBroken() {
-    return this.system.status.conditions.broken
+    return this.system?.status?.conditions?.broken || false
   }
 
   /**
@@ -170,7 +170,7 @@ export default class SwerpgActor extends EquipmentMixin(ResourcesMixin(CombatMix
    * @type {boolean}
    */
   get isDead() {
-    return this.system.status.conditions.dead
+    return this.system?.status?.conditions?.dead
   }
 
   /**
@@ -178,7 +178,7 @@ export default class SwerpgActor extends EquipmentMixin(ResourcesMixin(CombatMix
    * @type {boolean}
    */
   get isInsane() {
-    return this.system.status.conditions.insane
+    return this.system?.status?.conditions?.insane
   }
 
   /**
