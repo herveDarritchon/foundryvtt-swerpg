@@ -3,25 +3,12 @@
 import { describe, expect, test, vi, beforeEach } from 'vitest'
 import { createMockActor } from '../utils/actors/actor-factory.js'
 import SkillFactory from '../../module/lib/skills/skill-factory.mjs'
-import ErrorSkill from '../../module/lib/skills/error-skill.mjs'
 
 vi.mock('../../module/lib/skills/skill-factory.mjs', () => {
   return {
     default: {
       build: vi.fn(),
     },
-  }
-})
-
-vi.mock('../../module/lib/skills/error-skill.mjs', () => {
-  return {
-    default: vi.fn().mockImplementation((actor, data, params, options) => {
-      return {
-        options: options || {},
-        process: vi.fn().mockReturnThis(),
-        updateState: vi.fn().mockResolvedValue('updated'),
-      }
-    }),
   }
 })
 
@@ -66,7 +53,7 @@ describe('SwerpgActor Character Creation', () => {
     actor.update = vi.fn().mockResolvedValue(actor)
     actor.isL0 = false
 
-    // Add purchaseSkill mock that uses SkillFactory
+    // Mock purchaseSkill to use SkillFactory mocks
     actor.purchaseSkill = vi.fn().mockImplementation(async (skillId, delta = 1) => {
       delta = Math.sign(delta)
       const skill = actor.system.skills[skillId]
@@ -86,8 +73,7 @@ describe('SwerpgActor Character Creation', () => {
       }, {})
 
       const evaluated = skillObj.process()
-      // Check if it's an error (either via instanceof or via options.message)
-      if (evaluated && evaluated.options && evaluated.options.message) {
+      if (evaluated?.options?.message) {
         global.ui.notifications.warn(evaluated.options.message)
         return
       }
@@ -104,43 +90,26 @@ describe('SwerpgActor Character Creation', () => {
       expect(SkillFactory.build).not.toHaveBeenCalled()
     })
 
-    test('should show warning and return if SkillFactory returns ErrorSkill', async () => {
-      // Mock SkillFactory to return an object that looks like an ErrorSkill
-      const mockErrorResult = {
-        options: { message: 'Cannot purchase' },
-        updateState: vi.fn(),
-      }
-      SkillFactory.build.mockReturnValue({
-        process: vi.fn().mockReturnValue(mockErrorResult),
-        updateState: vi.fn(),
-      })
-
-      await actor.purchaseSkill('cool', 1)
-
-      expect(global.ui.notifications.warn).toHaveBeenCalledWith('Cannot purchase')
-    })
-
-    test('should call process and updateState on successful purchase', async () => {
+    test('should call SkillFactory.build with correct params for train action', async () => {
       const mockSkillObj = {
         process: vi.fn().mockReturnThis(),
         updateState: vi.fn().mockResolvedValue('updated'),
       }
       SkillFactory.build.mockReturnValue(mockSkillObj)
 
-      const result = await actor.purchaseSkill('cool', 1)
+      await actor.purchaseSkill('cool', 1)
 
       expect(SkillFactory.build).toHaveBeenCalledWith(
         actor,
         'cool',
-        expect.objectContaining({ action: 'train', isCreation: false }),
+        expect.objectContaining({ action: 'train', isCreation: false, isCareer: false, isSpecialization: false }),
         {},
       )
       expect(mockSkillObj.process).toHaveBeenCalled()
       expect(mockSkillObj.updateState).toHaveBeenCalled()
-      expect(result).toBe('updated')
     })
 
-    test('should use action forget when delta is negative', async () => {
+    test('should call SkillFactory.build with correct params for forget action', async () => {
       const mockSkillObj = {
         process: vi.fn().mockReturnThis(),
         updateState: vi.fn().mockResolvedValue('updated'),
@@ -149,10 +118,32 @@ describe('SwerpgActor Character Creation', () => {
 
       await actor.purchaseSkill('cool', -1)
 
-      expect(SkillFactory.build).toHaveBeenCalled()
+      expect(SkillFactory.build).toHaveBeenCalledWith(
+        actor,
+        'cool',
+        expect.objectContaining({ action: 'forget' }),
+        {},
+      )
     })
 
-    test('should set isCreation to true when actor is L0', async () => {
+    test('should handle delta > 1 with Math.sign', async () => {
+      const mockSkillObj = {
+        process: vi.fn().mockReturnThis(),
+        updateState: vi.fn().mockResolvedValue('updated'),
+      }
+      SkillFactory.build.mockReturnValue(mockSkillObj)
+
+      await actor.purchaseSkill('cool', 5)
+
+      expect(SkillFactory.build).toHaveBeenCalledWith(
+        actor,
+        'cool',
+        expect.objectContaining({ action: 'train' }),
+        {},
+      )
+    })
+
+    test('should set isCreation=true when actor.isL0=true', async () => {
       actor.isL0 = true
       const mockSkillObj = {
         process: vi.fn().mockReturnThis(),
@@ -162,10 +153,15 @@ describe('SwerpgActor Character Creation', () => {
 
       await actor.purchaseSkill('cool', 1)
 
-      expect(SkillFactory.build).toHaveBeenCalled()
+      expect(SkillFactory.build).toHaveBeenCalledWith(
+        actor,
+        'cool',
+        expect.objectContaining({ isCreation: true }),
+        {},
+      )
     })
 
-    test('should set isCareer based on SYSTEM.SKILLS', async () => {
+    test('should set isCareer from SYSTEM.SKILLS for brawl', async () => {
       const mockSkillObj = {
         process: vi.fn().mockReturnThis(),
         updateState: vi.fn().mockResolvedValue('updated'),
@@ -174,18 +170,40 @@ describe('SwerpgActor Character Creation', () => {
 
       await actor.purchaseSkill('brawl', 1)
 
-      expect(SkillFactory.build).toHaveBeenCalled()
+      expect(SkillFactory.build).toHaveBeenCalledWith(
+        actor,
+        'brawl',
+        expect.objectContaining({ isCareer: true, isSpecialization: false }),
+        {},
+      )
     })
 
-    test('should handle Math.sign for delta values', async () => {
+    test('should show warning when SkillFactory returns error object', async () => {
+      // Simulate an error return (like ErrorSkill) with options.message
+      const errorResult = {
+        options: { message: 'Cannot purchase skill' },
+        process: vi.fn().mockReturnValue({
+          options: { message: 'Cannot purchase skill' }
+        }),
+        updateState: vi.fn(),
+      }
+      SkillFactory.build.mockReturnValue(errorResult)
+
+      await actor.purchaseSkill('cool', 1)
+
+      expect(global.ui.notifications.warn).toHaveBeenCalledWith('Cannot purchase skill')
+    })
+
+    test('should return the result of updateState on success', async () => {
       const mockSkillObj = {
         process: vi.fn().mockReturnThis(),
-        updateState: vi.fn().mockResolvedValue('updated'),
+        updateState: vi.fn().mockResolvedValue('update-result'),
       }
       SkillFactory.build.mockReturnValue(mockSkillObj)
 
-      await actor.purchaseSkill('cool', 5)
-      expect(SkillFactory.build).toHaveBeenCalled()
+      const result = await actor.purchaseSkill('cool', 1)
+
+      expect(result).toBe('update-result')
     })
   })
 
