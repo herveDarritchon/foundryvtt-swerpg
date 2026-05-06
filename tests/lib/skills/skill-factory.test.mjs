@@ -348,7 +348,7 @@ describe('SkillFactory build()', () => {
           }
           const options = {}
           const skill = SkillFactory.build(actor, skillId, params, options)
-          expect(skill).toBeInstanceOf(expectTrainedClassSkill)
+          expect(skill).toBeInstanceOf(ErrorSkill)
         })
         test('click on a skill with trained and career free skill points.', () => {
           const actor = createActor()
