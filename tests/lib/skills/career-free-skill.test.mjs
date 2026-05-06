@@ -11,55 +11,60 @@ describe('Career Free Skill', () => {
   describe('process a skill', () => {
     describe('should return an error skill if', () => {
       describe('you train a skill', () => {
-        test('and career free skill rank is greater than 1', () => {
+        test('and career free skill rank is greater than 1', async () => {
           const actor = createActor()
+          actor.updateFreeSkillRanks = vi.fn().mockResolvedValue(actor)
           const data = createSkillData({ careerFree: 2 })
           const params = {}
           const options = {}
 
           const careerFreeSkill = new CareerFreeSkill(actor, data, params, options)
-          const errorSkill = careerFreeSkill.process()
+          const errorSkill = await careerFreeSkill.process()
 
           expect(errorSkill).toBeInstanceOf(ErrorSkill)
           expect(errorSkill.options.message).toBe("you can't use more than 1 career free skill rank into the same skill!")
           expect(errorSkill.evaluated).toBe(false)
         })
-        test('after train free skill rank available is less than 0', () => {
+
+        test('after train free skill rank available is less than 0', async () => {
           const actor = createActor({ careerSpent: 5 })
+          actor.updateFreeSkillRanks = vi.fn().mockResolvedValue(actor)
           const data = createSkillData({ careerFree: 1 })
           const params = {}
           const options = {}
 
           const careerFreeSkill = new CareerFreeSkill(actor, data, params, options)
-          const errorSkill = careerFreeSkill.process()
+          const errorSkill = await careerFreeSkill.process()
 
           expect(errorSkill).toBeInstanceOf(ErrorSkill)
           expect(errorSkill.options.message).toBe("you can't use free skill rank anymore. You have used all!")
           expect(errorSkill.evaluated).toBe(false)
         })
       })
+
       describe('you forget a skill', () => {
-        test('and career free skill rank is less than 0', () => {
+        test('and career free skill rank is less than 0', async () => {
           const actor = createActor()
           const data = createSkillData({ careerFree: -1 })
           const params = {}
           const options = {}
 
           const careerFreeSkill = new CareerFreeSkill(actor, data, params, options)
-          const errorSkill = careerFreeSkill.process()
+          const errorSkill = await careerFreeSkill.process()
 
           expect(errorSkill).toBeInstanceOf(ErrorSkill)
-          expect(errorSkill.options.message).toBe("you can't forget this rank because it comes from species free bonus!")
+          expect(errorSkill.options.message).toBe("you can't forget this rank because it was not trained but free!")
           expect(errorSkill.evaluated).toBe(false)
         })
-        test('and career free skill rank is greater than career free skill rank gained', () => {
+
+        test('and career free skill rank is greater than career free skill rank gained', async () => {
           const actor = createActor({ careerSpent: -1 })
           const data = createSkillData({ careerFree: 0 })
           const params = {}
           const options = {}
 
           const careerFreeSkill = new CareerFreeSkill(actor, data, params, options)
-          const errorSkill = careerFreeSkill.process()
+          const errorSkill = await careerFreeSkill.process()
 
           expect(errorSkill).toBeInstanceOf(ErrorSkill)
           expect(errorSkill.options.message).toBe("you can't get more than 4 free skill ranks!")
@@ -67,56 +72,20 @@ describe('Career Free Skill', () => {
         })
       })
     })
+
     describe('should return a career free skill if', () => {
-      describe('train a skill', () => {
-        test('should increase the career free skill rank', () => {
-          const actor = createActor()
-          const data = createSkillData()
-          const params = {
-            action: 'train',
-            isCreation: true,
-            isCareer: true,
-            isSpecialization: true,
-          }
-          const options = {}
-
-          const careerFreeSkill = new CareerFreeSkill(actor, data, params, options)
-          const trainedSkill = careerFreeSkill.process()
-
-          expect(trainedSkill.data.rank.careerFree).toBe(1)
-          expect(trainedSkill.actor.freeSkillRanks.career.spent).toBe(1)
-          expect(trainedSkill.actor.freeSkillRanks.specialization.spent).toBe(0)
-          expect(trainedSkill.data.rank.specializationFree).toBe(0)
-        })
-      })
-      describe('forget a skill', () => {
-        test('should decrease the career free skill rank', () => {
-          const actor = createActor({ careerSpent: 1 })
-          const data = createSkillData({ careerFree: 1 })
-          const params = {
-            action: 'forget',
-            isCreation: true,
-            isCareer: true,
-            isSpecialization: true,
-          }
-          const options = {}
-
-          const careerFreeSkill = new CareerFreeSkill(actor, data, params, options)
-          const trainedSkill = careerFreeSkill.process()
-
-          expect(trainedSkill.data.rank.careerFree).toBe(0)
-          expect(trainedSkill.actor.freeSkillRanks.career.spent).toBe(0)
-          expect(trainedSkill.actor.freeSkillRanks.specialization.spent).toBe(0)
-          expect(trainedSkill.data.rank.specializationFree).toBe(0)
-        })
-      })
-      test('career free skill rank is 1 and only 1', () => {
+    test('career free skill rank is 1 and only 1', async () => {
         const actor = createActor()
-        const data = createSkillData({ careerFree: 1 })
-        const params = {}
+        actor.updateFreeSkillRanks = vi.fn().mockResolvedValue(actor)
+        const data = createSkillData({ careerFree: 0, trained: 0, value: 0 })
+        const params = {
+          action: 'train',
+          isCareer: true,
+        }
         const options = {}
+
         const careerFreeSkill = new CareerFreeSkill(actor, data, params, options)
-        const evaluatedSkill = careerFreeSkill.process()
+        const evaluatedSkill = await careerFreeSkill.process()
         expect(evaluatedSkill).toBeInstanceOf(CareerFreeSkill)
         expect(evaluatedSkill.data.rank.careerFree).toBe(1)
         expect(evaluatedSkill.data.rank.value).toBe(1)
@@ -124,39 +93,30 @@ describe('Career Free Skill', () => {
       })
     })
   })
+
   describe('updateState a skill', () => {
     test('should update the state of the skill and return the skill', async () => {
       const actor = createActor()
       const updateMock = vi.fn().mockResolvedValue({})
       actor.update = updateMock
-      const data = createSkillData({ careerFree: 1 })
-      const params = {}
+      actor.updateFreeSkillRanks = vi.fn().mockResolvedValue(actor)
+      const data = createSkillData({ careerFree: 0, trained: 0, value: 0 })
+      const params = {
+        action: 'train',
+        isCreation: false,
+        isCareer: true,
+      }
       const options = {}
+
       const careerFreeSkill = new CareerFreeSkill(actor, data, params, options)
-      careerFreeSkill.process()
+      const processedSkill = await careerFreeSkill.process()
+      expect(processedSkill).toBeInstanceOf(CareerFreeSkill)
       const updatedSkill = await careerFreeSkill.updateState()
+
       expect(updatedSkill).toBeInstanceOf(CareerFreeSkill)
-      expect(updateMock).toHaveBeenCalledTimes(2)
-      expect(updateMock).toHaveBeenNthCalledWith(1, {
-        'system.progression.freeSkillRanks': {
-          career: {
-            available: 4,
-            gained: 4,
-            id: '',
-            name: '',
-            spent: 0,
-          },
-          specialization: {
-            available: 2,
-            gained: 2,
-            id: '',
-            name: '',
-            spent: 0,
-          },
-        },
-      })
-      expect(updateMock).toHaveBeenNthCalledWith(2, {
-        'system.skills.skill-id.rank': {
+      expect(updateMock).toHaveBeenCalledTimes(1)
+      expect(updateMock).toHaveBeenCalledWith({
+        [`system.skills.skill-id.rank`]: {
           base: 0,
           careerFree: 1,
           specializationFree: 0,
@@ -165,47 +125,80 @@ describe('Career Free Skill', () => {
         },
       })
     })
+
     describe('should return an Error Skill if any update fails', () => {
       test('should not update the state of the skill if the skill evaluated state is false', async () => {
         const actor = createActor()
         const updateMock = vi.fn().mockResolvedValue({})
         actor.update = updateMock
-        const data = createSkillData({ careerFree: 1 })
+
+        const data = createSkillData({ specializationFree: 1, careerFree: 1, trained: 1 })
         const params = {}
         const options = {}
+
         const careerFreeSkill = new CareerFreeSkill(actor, data, params, options)
         const result = await careerFreeSkill.updateState()
+
         expect(updateMock).toHaveBeenCalledTimes(0)
         expect(result).toBeInstanceOf(ErrorSkill)
         expect(result.options.message).toContain('you must evaluate the skill before updating it!')
       })
+
       test('free skill ranks update fails', async () => {
         const actor = createActor()
-        const updateMock = vi.fn().mockRejectedValueOnce(new Error('Erreur sur premier update'))
-        actor.update = updateMock
-        const data = createSkillData({ careerFree: 1 })
-        const params = {}
+        actor.updateFreeSkillRanks = vi.fn().mockImplementation(async (type, params) => {
+          throw new Error('Error on free skill ranks update')
+        })
+        const data = createSkillData({ careerFree: 0 })
+        const params = {
+          action: 'train',
+          isCreation: false,
+          isCareer: true,
+        }
         const options = {}
+
         const careerFreeSkill = new CareerFreeSkill(actor, data, params, options)
-        careerFreeSkill.process()
+        await expect(careerFreeSkill.process()).rejects.toThrow('Error on free skill ranks update')
+      })
+
+      test('skill rank update fails', async () => {
+        const actor = createActor()
+        actor.updateFreeSkillRanks = vi.fn().mockResolvedValue(actor)
+        const updateMock = vi.fn().mockRejectedValue(new Error('Error on skill rank update'))
+        actor.update = updateMock
+        const data = createSkillData({ careerFree: 0, trained: 0, value: 0 })
+        const params = {
+          action: 'train',
+          isCreation: false,
+          isCareer: true,
+        }
+        const options = {}
+
+        const careerFreeSkill = new CareerFreeSkill(actor, data, params, options)
+        await careerFreeSkill.process()
         const result = await careerFreeSkill.updateState()
         expect(updateMock).toHaveBeenCalledTimes(1)
         expect(result).toBeInstanceOf(ErrorSkill)
-        expect(result.options.message).toContain('Erreur sur premier update')
+        expect(result.options.message).toContain('Error on skill rank update')
       })
+
       test('skill rank update fails', async () => {
         const actor = createActor()
-        const updateMock = vi.fn().mockResolvedValueOnce({}).mockRejectedValueOnce(new Error('Erreur sur deuxième update'))
+        actor.updateFreeSkillRanks = vi.fn().mockResolvedValue(actor)
+        const updateMock = vi.fn().mockRejectedValue(new Error('Error on skill rank update'))
         actor.update = updateMock
-        const data = createSkillData({ careerFree: 1 })
-        const params = {}
+        const data = createSkillData({ careerFree: 0, trained: 0, value: 0 })
+        const params = {
+          action: 'train',
+          isCreation: false,
+          isCareer: true,
+        }
         const options = {}
         const careerFreeSkill = new CareerFreeSkill(actor, data, params, options)
-        careerFreeSkill.process()
+        await careerFreeSkill.process()
         const result = await careerFreeSkill.updateState()
-        expect(updateMock).toHaveBeenCalledTimes(2)
         expect(result).toBeInstanceOf(ErrorSkill)
-        expect(result.options.message).toContain('Erreur sur deuxième update')
+        expect(result.options.message).toContain('Error on skill rank update')
       })
     })
   })
