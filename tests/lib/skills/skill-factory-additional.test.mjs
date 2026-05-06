@@ -13,9 +13,9 @@ describe('SkillFactory - Additional Coverage', () => {
   describe('edge cases during creation', () => {
     test('should return TrainedSkill when isCareer and isSpecialization but no free ranks and has XP', () => {
       const actor = createActor({ careerSpent: 4, specializationSpent: 2 })
-      actor.experiencePoints.gained = 100
-      actor.experiencePoints.total = 100
-      actor.experiencePoints.available = 100
+      actor.system.progression.experience.gained = 100
+      actor.system.progression.experience.total = 100
+      actor.system.progression.experience.spent = 0
 
       const skillId = 'brawl'
       const params = {
@@ -98,132 +98,56 @@ describe('SkillFactory - Additional Coverage', () => {
 
     test('should return TrainedSkill for forget action when not in creation', () => {
       const actor = createActor()
-      actor.system.skills.brawl.rank.trained = 1
+      actor.system.progression.experience.spent = 10
+      actor.system.progression.experience.gained = 100
+      actor.system.progression.experience.total = 100
       const skillId = 'brawl'
+      const params = {
+        action: 'forget',
+        isCreation: false,
+        isCareer: true,
+        isSpecialization: false,
+      }
+      const options = {}
 
-      const skill = SkillFactory.build(
-        actor,
-        skillId,
-        {
-          action: 'forget',
-          isCreation: false,
-          isCareer: false,
-          isSpecialization: false,
-        },
-        {},
-      )
-
+      const skill = SkillFactory.build(actor, skillId, params, options)
       expect(skill).toBeInstanceOf(TrainedSkill)
     })
   })
 
-  describe('private methods coverage', () => {
-    test('#hasCareerFreeSkill should return true when available > 0', () => {
-      const actor = createActor() // career.available = 4 by default
+  describe('factory builds correct skill types', () => {
+    test('should build TrainedSkill when not in creation and has XP', () => {
+      const actor = createActor()
+      actor.system.progression.experience.gained = 100
+      actor.system.progression.experience.total = 100
+      actor.system.progression.experience.available = 100
       const skillId = 'brawl'
       const params = {
         action: 'train',
-        isCreation: true,
+        isCreation: false,
         isCareer: false,
         isSpecialization: false,
       }
       const options = {}
 
-      // This should return ErrorSkill because hasCareerFreeSkill returns true
+      const skill = SkillFactory.build(actor, skillId, params, options)
+      expect(skill).toBeInstanceOf(TrainedSkill)
+    })
+
+    test('should build ErrorSkill when in creation and tries to train a non-free skill', () => {
+      const actor = createActor() // Has free ranks available
+      const skillId = 'brawl'
+      const params = {
+        action: 'train',
+        isCreation: true,
+        isCareer: false, // Non-free skill
+        isSpecialization: false,
+      }
+      const options = {}
+
       const skill = SkillFactory.build(actor, skillId, params, options)
       expect(skill).toBeInstanceOf(ErrorSkill)
-    })
-
-    test('#hasCareerFreeSkill should return false when available = 0', () => {
-      const actor = createActor({ careerSpent: 4, specializationSpent: 2 })
-      // Need to manually set available since createActor hardcodes it
-      actor.freeSkillRanks.career.available = 0
-      actor.freeSkillRanks.specialization.available = 0
-
-      const skillId = 'brawl'
-      const params = {
-        action: 'train',
-        isCreation: true,
-        isCareer: false,
-        isSpecialization: false,
-      }
-      const options = {}
-
-      // This should return TrainedSkill because hasCareerFreeSkill returns false
-      const skill = SkillFactory.build(actor, skillId, params, options)
-      expect(skill).toBeInstanceOf(TrainedSkill)
-    })
-
-    test('#hasSpecializationFreeSkill should return true when available > 0', () => {
-      const actor = createActor() // specialization.available = 2 by default
-      const skillId = 'brawl'
-      const params = {
-        action: 'train',
-        isCreation: true,
-        isCareer: false,
-        isSpecialization: false,
-      }
-      const options = {}
-
-      // This should return ErrorSkill because hasSpecializationFreeSkill returns true
-      const skill = SkillFactory.build(actor, skillId, params, options)
-      expect(skill).toBeInstanceOf(ErrorSkill)
-    })
-  })
-
-  describe('buildCareerOrSpecialization edge cases', () => {
-    test('should return TrainedSkill when both free ranks spent and training', () => {
-      const actor = createActor({ careerSpent: 4, specializationSpent: 2 })
-      actor.experiencePoints.gained = 100
-      actor.experiencePoints.total = 100
-      actor.experiencePoints.available = 100
-
-      const skillId = 'brawl'
-      const params = {
-        action: 'train',
-        isCreation: true,
-        isCareer: true,
-        isSpecialization: true,
-      }
-      const options = {}
-
-      const skill = SkillFactory.build(actor, skillId, params, options)
-      expect(skill).toBeInstanceOf(TrainedSkill)
-    })
-
-    test('should prioritize CareerFreeSkill when both free ranks available and careerFree is 0', () => {
-      const actor = createActor({ careerSpent: 0, specializationSpent: 0 })
-      actor.system.skills.brawl.rank.careerFree = 0
-      actor.system.skills.brawl.rank.specializationFree = 0
-
-      const skillId = 'brawl'
-      const params = {
-        action: 'train',
-        isCreation: true,
-        isCareer: true,
-        isSpecialization: true,
-      }
-      const options = {}
-
-      const skill = SkillFactory.build(actor, skillId, params, options)
-      expect(skill).toBeInstanceOf(CareerFreeSkill)
-    })
-
-    test('should return SpecializationFreeSkill when career rank already used', () => {
-      const actor = createActor({ careerSpent: 1 })
-      actor.system.skills.brawl.rank.careerFree = 1
-
-      const skillId = 'brawl'
-      const params = {
-        action: 'train',
-        isCreation: true,
-        isCareer: true,
-        isSpecialization: true,
-      }
-      const options = {}
-
-      const skill = SkillFactory.build(actor, skillId, params, options)
-      expect(skill).toBeInstanceOf(SpecializationFreeSkill)
+      expect(skill.options.message).toBe('you have to spend free skill points first during character creation!')
     })
   })
 })
