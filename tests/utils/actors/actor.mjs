@@ -24,7 +24,7 @@ export function createActor({ careerSpent = 0, specializationSpent = 0, items = 
             gained: 2,
           },
         },
-        experiencePoints: {
+        experience: {
           spent: 0,
           gained: 0,
           startingExperience: 100,
