@@ -8,8 +8,8 @@ export default class TrainedCharacteristic extends Characteristic {
     this.dataCostCalculator = new CharacteristicCostCalculator(this)
   }
 
-  process() {
-    let experiencePointsSpent = this.actor.experiencePoints.spent
+  async process() {
+    let experiencePointsSpent = this.actor.system.progression.experience.spent
     let trained = this.data.rank.trained
 
     let value
@@ -38,13 +38,13 @@ export default class TrainedCharacteristic extends Characteristic {
       return new ErrorCharacteristic(this.actor, this.data, {}, { message: "you can't have more than 6 rank!" })
     }
 
-    if (experiencePointsSpent > this.actor.experiencePoints.total) {
+    if (experiencePointsSpent > this.actor.system.progression.experience.total) {
       return new ErrorCharacteristic(this.actor, this.data, {}, { message: "you can't spend more experience than your total!" })
     }
 
     this.data.rank.value = value
     this.data.rank.trained = trained
-    this.actor.experiencePoints.spent = experiencePointsSpent
+    await this.actor.updateExperiencePoints({ spent: experiencePointsSpent })
     this.evaluated = true
     return this
   }
@@ -60,7 +60,6 @@ export default class TrainedCharacteristic extends Characteristic {
       })
     }
     try {
-      await this.actor.update({ 'system.progression.experience.spent': this.actor.experiencePoints.spent })
       await this.actor.update({ [`system.characteristics.${this.data.id}.rank`]: this.data.rank })
       return new Promise((resolve, _) => {
         resolve(this)
