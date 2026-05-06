@@ -62,8 +62,24 @@ export default class SwerpgActor extends EquipmentMixin(ResourcesMixin(CombatMix
   }
 
   /**
+   * Update actor's experience points
+   * @param {Object} params
+   * @param {number} [params.spent] - Experience points spent
+   * @param {number} [params.gained] - Experience points gained
+   * @param {number} [params.total] - Total experience points
+   * @returns {Promise} Foundry update promise
+   */
+  async updateExperiencePoints({ spent, gained, total } = {}) {
+    const updates = {}
+    if (spent !== undefined) updates['system.progression.experience.spent'] = spent
+    if (gained !== undefined) updates['system.progression.experience.gained'] = gained
+    if (total !== undefined) updates['system.progression.experience.total'] = total
+    return this.update(updates)
+  }
+
+  /**
    * Convenient access to the Actor's abilities.
-   * @type {object}  The abilities data
+   * @type {object}  The ability data
    */
   get abilities() {
     return this.system.abilities
@@ -803,6 +819,21 @@ export default class SwerpgActor extends EquipmentMixin(ResourcesMixin(CombatMix
    */
   get freeSkillRanks() {
     return this.system.progression.freeSkillRanks
+  }
+
+  /**
+   * Update free skill ranks
+   * @param {'career'|'specialization'} type - Type of free skill rank
+   * @param {Object} params
+   * @param {number} [params.spent] - Ranks spent
+   * @param {number} [params.gained] - Ranks gained
+   * @returns {Promise} Foundry update promise
+   */
+  async updateFreeSkillRanks(type, { spent, gained } = {}) {
+    const updates = {}
+    if (spent !== undefined) updates[`system.progression.freeSkillRanks.${type}.spent`] = spent
+    if (gained !== undefined) updates[`system.progression.freeSkillRanks.${type}.gained`] = gained
+    return this.update(updates)
   }
 
   /* -------------------------------------------- */

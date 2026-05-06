@@ -64,6 +64,19 @@ export function createMockActor(overrides = {}) {
 
   // Add mock methods
   mockActor.update = vi.fn().mockResolvedValue(mockActor)
+  mockActor.updateExperiencePoints = vi.fn().mockImplementation(async (params = {}) => {
+    const updates = {}
+    if (params.spent !== undefined) updates['system.progression.experience.spent'] = params.spent
+    if (params.gained !== undefined) updates['system.progression.experience.gained'] = params.gained
+    if (params.total !== undefined) updates['system.progression.experience.total'] = params.total
+    return mockActor.update(updates)
+  })
+  mockActor.updateFreeSkillRanks = vi.fn().mockImplementation(async (type, params = {}) => {
+    const updates = {}
+    if (params.spent !== undefined) updates[`system.progression.freeSkillRanks.${type}.spent`] = params.spent
+    if (params.gained !== undefined) updates[`system.progression.freeSkillRanks.${type}.gained`] = params.gained
+    return mockActor.update(updates)
+  })
   mockActor.updateEmbeddedDocuments = vi.fn().mockResolvedValue([])
   mockActor.deleteEmbeddedDocuments = vi.fn().mockResolvedValue([])
   mockActor.createEmbeddedDocuments = vi.fn().mockResolvedValue([])
