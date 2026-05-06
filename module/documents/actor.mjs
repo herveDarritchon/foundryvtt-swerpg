@@ -439,7 +439,7 @@ export default class SwerpgActor extends EquipmentMixin(ResourcesMixin(CombatMix
     }, {})
 
     const evaluated = skillObj.process()
-    if (evaluated instanceof ErrorSkill) {
+    if (evaluated?.options?.message) {
       ui.notifications.warn(evaluated.options.message)
       return
     }
