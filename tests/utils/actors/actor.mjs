@@ -8,30 +8,32 @@
 export function createActor({ careerSpent = 0, specializationSpent = 0, items = [] } = {}) {
   const baseData = {
     items: items,
-    freeSkillRanks: {
-      career: {
-        id: '',
-        name: '',
-        spent: careerSpent,
-        gained: 4,
-        available: 4,
-      },
-      specialization: {
-        id: '',
-        name: '',
-        spent: specializationSpent,
-        gained: 2,
-        available: 2,
-      },
-    },
-    experiencePoints: {
-      spent: 0,
-      gained: 0,
-      startingExperience: 100,
-      total: 100,
-      available: 100,
-    },
     system: {
+      progression: {
+        freeSkillRanks: {
+          career: {
+            id: '',
+            name: '',
+            spent: careerSpent,
+            gained: 4,
+            available: 4,
+          },
+          specialization: {
+            id: '',
+            name: '',
+            spent: specializationSpent,
+            gained: 2,
+            available: 2,
+          },
+        },
+        experience: {
+          spent: 0,
+          gained: 0,
+          startingExperience: 100,
+          total: 100,
+          available: 100,
+        },
+      },
       skills: {
         cool: {
           rank: {

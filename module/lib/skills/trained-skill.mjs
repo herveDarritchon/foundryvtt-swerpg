@@ -9,12 +9,12 @@ export default class TrainedSkill extends Skill {
     this.dataCostCalculator = new SkillCostCalculator(this)
   }
 
-  process() {
+  async process() {
     this.freeSkillRankAvailable = this.#computeFreeSkillRankAvailable()
 
     let trained = this.data.rank.trained
 
-    let experiencePointsSpent = this.actor.experiencePoints.spent
+    let experiencePointsSpent = this.actor.system.progression.experience.spent
     let value
 
     if (this.action === 'train') {
@@ -41,13 +41,13 @@ export default class TrainedSkill extends Skill {
       return new ErrorSkill(this.actor, this.data, {}, { message: "you can't have more than 5 rank!" })
     }
 
-    if (experiencePointsSpent > this.actor.experiencePoints.total) {
+    if (experiencePointsSpent > this.actor.system.progression.experience.total) {
       return new ErrorSkill(this.actor, this.data, {}, { message: "you can't spend more experience than your total!" })
     }
 
     this.data.rank.value = value
     this.data.rank.trained = trained
-    this.actor.experiencePoints.spent = experiencePointsSpent
+    await this.actor.updateExperiencePoints({ spent: experiencePointsSpent })
     this.evaluated = true
     return this
   }
@@ -71,7 +71,6 @@ export default class TrainedSkill extends Skill {
       })
     }
     try {
-      await this.actor.update({ 'system.progression.experience.spent': this.actor.experiencePoints.spent })
       await this.actor.update({ [`system.skills.${this.data.id}.rank`]: this.data.rank })
       return new Promise((resolve, _) => {
         resolve(this)
