@@ -8,8 +8,8 @@ export default class TrainedTalent extends Talent {
     this.talentCostCalculator = new TalentCostCalculator(this)
   }
 
-  process() {
-    let experiencePointsSpent = this.actor.experiencePoints.spent
+  async process() {
+    let experiencePointsSpent = this.actor.system.progression.experience.spent
     const talent = this.data
     const row = talent.system.row
 
@@ -40,11 +40,11 @@ export default class TrainedTalent extends Talent {
       cost = 0
     }
 
-    if (experiencePointsSpent > this.actor.experiencePoints.total) {
+    if (experiencePointsSpent > this.actor.system.progression.experience.total) {
       return new ErrorTalent(this.actor, talent, {}, { message: "you can't spend more experience than your total!" })
     }
 
-    this.actor.experiencePoints.spent = experiencePointsSpent
+    await this.actor.updateExperiencePoints({ spent: experiencePointsSpent })
 
     talent.system.rank = {
       idx: 0,
@@ -65,7 +65,6 @@ export default class TrainedTalent extends Talent {
       })
     }
     try {
-      await this.actor.update({ 'system.progression.experience.spent': this.actor.experiencePoints.spent })
       if (this.action === 'train') {
         await this.actor.createEmbeddedDocuments('Item', [this.data.toObject()])
       } else {

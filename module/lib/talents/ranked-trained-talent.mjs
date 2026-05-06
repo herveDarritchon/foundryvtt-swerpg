@@ -9,8 +9,8 @@ export default class RankedTrainedTalent extends TrainedTalent {
     this.talentCostCalculator = new TalentCostCalculator(this)
   }
 
-  process() {
-    let experiencePointsSpent = this.actor.experiencePoints.spent
+  async process() {
+    let experiencePointsSpent = this.actor.system.progression.experience.spent
     const talent = this.data
     const row = talent.system.row
 
@@ -37,13 +37,13 @@ export default class RankedTrainedTalent extends TrainedTalent {
       idx = ranks.length - 1
     }
 
-    if (experiencePointsSpent > this.actor.experiencePoints.total) {
+    if (experiencePointsSpent > this.actor.system.progression.experience.total) {
       return new ErrorTalent(this.actor, talent, {}, { message: "you can't spend more experience than your total!" })
     }
 
     // As we are dealing with a ranked talent, we need to set the rank value to the number of ranks
     // Set to ranks.length because we are adding a new rank and we count from 0
-    this.actor.experiencePoints.spent = experiencePointsSpent
+    await this.actor.updateExperiencePoints({ spent: experiencePointsSpent })
 
     this.data.updateSource({
       system: {
