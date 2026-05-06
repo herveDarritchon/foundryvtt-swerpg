@@ -9,12 +9,13 @@ import ErrorSkill from '../../../module/lib/skills/error-skill.mjs'
 
 describe('Trained Skill - Additional Coverage', () => {
   describe('process() edge cases', () => {
-    test('should return ErrorSkill when experiencePoints.spent equals total after training', () => {
+    test('should return ErrorSkill when experiencePoints.spent equals total after training', async () => {
       const actor = createActor()
-      actor.experiencePoints.spent = 95
-      actor.experiencePoints.gained = 100
-      actor.experiencePoints.total = 100
-      actor.experiencePoints.available = 5
+      actor.system.progression.experience.spent = 95
+      actor.system.progression.experience.gained = 100
+      actor.system.progression.experience.total = 100
+      actor.system.progression.experience.available = 5
+      actor.updateExperiencePoints = vi.fn().mockResolvedValue(actor)
 
       const data = createSkillData({ trained: 0 })
       const params = {
@@ -26,7 +27,7 @@ describe('Trained Skill - Additional Coverage', () => {
       const options = {}
 
       const trainedSkill = new TrainedSkill(actor, data, params, options)
-      const result = trainedSkill.process()
+      const result = await trainedSkill.process()
 
       // Rank 0 -> 1, cost = 1 * 5 + 5 = 10 (non-specialized)
       // 95 + 10 = 105 > 100 total, should fail
@@ -34,12 +35,13 @@ describe('Trained Skill - Additional Coverage', () => {
       expect(result.options.message).toBe("you can't spend more experience than your total!")
     })
 
-    test('should succeed when experiencePoints.spent + cost equals total exactly', () => {
+    test('should succeed when experiencePoints.spent + cost equals total exactly', async () => {
       const actor = createActor()
-      actor.experiencePoints.spent = 90
-      actor.experiencePoints.gained = 100
-      actor.experiencePoints.total = 100
-      actor.experiencePoints.available = 10
+      actor.system.progression.experience.spent = 90
+      actor.system.progression.experience.gained = 100
+      actor.system.progression.experience.total = 100
+      actor.system.progression.experience.available = 10
+      actor.updateExperiencePoints = vi.fn().mockResolvedValue(actor)
 
       const data = createSkillData({ trained: 0 })
       const params = {
@@ -51,15 +53,16 @@ describe('Trained Skill - Additional Coverage', () => {
       const options = {}
 
       const trainedSkill = new TrainedSkill(actor, data, params, options)
-      const result = trainedSkill.process()
+      const result = await trainedSkill.process()
 
       // 90 + 5 = 95 <= 100, should succeed
       expect(result).toBeInstanceOf(TrainedSkill)
       expect(result.data.rank.trained).toBe(1)
     })
 
-    test('should return ErrorSkill when forgetting with trained = 0 (bug: code checks wrong variable)', () => {
+    test('should return ErrorSkill when forgetting with trained = 0 (bug: code checks wrong variable)', async () => {
       const actor = createActor()
+      actor.updateExperiencePoints = vi.fn().mockResolvedValue(actor)
       const data = createSkillData({ trained: 0 })
       const params = {
         action: 'forget',
@@ -70,7 +73,7 @@ describe('Trained Skill - Additional Coverage', () => {
       const options = {}
 
       const trainedSkill = new TrainedSkill(actor, data, params, options)
-      const result = trainedSkill.process()
+      const result = await trainedSkill.process()
 
       // NOTE: There's a bug in the code - it checks this.data.rank.trained < 0 instead of the local 'trained' variable
       // When trained=0 and action=forget, local 'trained' becomes -1, but this.data.rank.trained is still 0
@@ -78,8 +81,9 @@ describe('Trained Skill - Additional Coverage', () => {
       expect(result).toBeInstanceOf(TrainedSkill) // Actual behavior due to bug
     })
 
-    test('should return ErrorSkill when forgetting with trained already negative', () => {
+    test('should return ErrorSkill when forgetting with trained already negative', async () => {
       const actor = createActor()
+      actor.updateExperiencePoints = vi.fn().mockResolvedValue(actor)
       const data = createSkillData({ trained: -1 }) // Already negative
       const params = {
         action: 'forget',
@@ -90,17 +94,18 @@ describe('Trained Skill - Additional Coverage', () => {
       const options = {}
 
       const trainedSkill = new TrainedSkill(actor, data, params, options)
-      const result = trainedSkill.process()
+      const result = await trainedSkill.process()
 
       expect(result).toBeInstanceOf(ErrorSkill)
       expect(result.options.message).toBe("you can't forget this rank because it was not trained but free!")
     })
 
-    test('should handle training at rank 5 during creation (isCreation=true)', () => {
+    test('should handle training at rank 5 during creation (isCreation=true)', async () => {
       const actor = createActor()
-      actor.experiencePoints.gained = 1000
-      actor.experiencePoints.total = 1000
-      actor.experiencePoints.available = 1000
+      actor.system.progression.experience.gained = 1000
+      actor.system.progression.experience.total = 1000
+      actor.system.progression.experience.available = 1000
+      actor.updateExperiencePoints = vi.fn().mockResolvedValue(actor)
 
       const data = createSkillData({ trained: 1, value: 1 })
       const params = {
@@ -112,15 +117,17 @@ describe('Trained Skill - Additional Coverage', () => {
       const options = {}
 
       const trainedSkill = new TrainedSkill(actor, data, params, options)
-      const result = trainedSkill.process()
+      const result = await trainedSkill.process()
 
       // Value becomes 2, which is allowed during creation
       expect(result).toBeInstanceOf(TrainedSkill)
       expect(result.data.rank.value).toBe(2)
     })
 
-    test('should return ErrorSkill when training beyond rank 2 during creation', () => {
+    test('should return ErrorSkill when training beyond rank 2 during creation', async () => {
       const actor = createActor()
+      actor.updateExperiencePoints = vi.fn().mockResolvedValue(actor)
+
       const data = createSkillData({ trained: 2, value: 2 })
       const params = {
         action: 'train',
@@ -131,17 +138,18 @@ describe('Trained Skill - Additional Coverage', () => {
       const options = {}
 
       const trainedSkill = new TrainedSkill(actor, data, params, options)
-      const result = trainedSkill.process()
+      const result = await trainedSkill.process()
 
       expect(result).toBeInstanceOf(ErrorSkill)
       expect(result.options.message).toBe("you can't have more than 2 rank at creation!")
     })
 
-    test('should correctly update experiencePoints.spent when forgetting', () => {
+    test('should correctly update experiencePoints.spent when forgetting', async () => {
       const actor = createActor()
-      actor.experiencePoints.spent = 15
-      actor.experiencePoints.gained = 100
-      actor.experiencePoints.available = 85
+      actor.system.progression.experience.spent = 15
+      actor.system.progression.experience.gained = 100
+      actor.system.progression.experience.available = 85
+      actor.updateExperiencePoints = vi.fn().mockResolvedValue(actor)
 
       const data = createSkillData({ careerFree: 1, trained: 1, value: 2 })
       const params = {
@@ -153,13 +161,13 @@ describe('Trained Skill - Additional Coverage', () => {
       const options = {}
 
       const trainedSkill = new TrainedSkill(actor, data, params, options)
-      const result = trainedSkill.process()
+      const result = await trainedSkill.process()
 
       expect(result).toBeInstanceOf(TrainedSkill)
       expect(result.data.rank.trained).toBe(0)
       // Forgetting rank 2 (value was 2, becomes 1): cost = calculateForgetCost(1) = calculateTrainCost(2) = 2 * 5 = 10 (specialized)
       // spent: 15 - 10 = 5
-      expect(result.actor.experiencePoints.spent).toBe(5)
+      expect(actor.updateExperiencePoints).toHaveBeenCalledWith({ spent: 5 })
     })
   })
 
@@ -168,6 +176,7 @@ describe('Trained Skill - Additional Coverage', () => {
       const actor = createActor()
       const updateMock = vi.fn().mockRejectedValue(new Error('Update failed'))
       actor.update = updateMock
+      actor.updateExperiencePoints = vi.fn().mockResolvedValue(actor)
 
       const data = createSkillData({ trained: 0 })
       const params = {
@@ -179,7 +188,7 @@ describe('Trained Skill - Additional Coverage', () => {
       const options = {}
 
       const trainedSkill = new TrainedSkill(actor, data, params, options)
-      trainedSkill.process()
+      await trainedSkill.process()
       const result = await trainedSkill.updateState()
 
       expect(result).toBeInstanceOf(ErrorSkill)
