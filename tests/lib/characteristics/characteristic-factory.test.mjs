@@ -30,7 +30,7 @@ describe('CharacteristicFactory build()', () => {
         test('click on forget a characteristic with trained points', () => {
           const actor = createActor()
           actor.system.characteristics.brawn.rank.trained = 1
-          actor.experiencePoints.spent = 10
+          actor.system.progression.experience.spent = 10
           const params = {
             action: action,
             isCreation: true,
