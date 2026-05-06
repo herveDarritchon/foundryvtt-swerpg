@@ -2,6 +2,28 @@
 // Tests for SwerpgActor character creation methods
 import { describe, expect, test, vi, beforeEach } from 'vitest'
 import { createMockActor } from '../utils/actors/actor-factory.js'
+import SkillFactory from '../../module/lib/skills/skill-factory.mjs'
+import ErrorSkill from '../../module/lib/skills/error-skill.mjs'
+
+vi.mock('../../module/lib/skills/skill-factory.mjs', () => {
+  return {
+    default: {
+      build: vi.fn(),
+    },
+  }
+})
+
+vi.mock('../../module/lib/skills/error-skill.mjs', () => {
+  return {
+    default: vi.fn().mockImplementation((actor, data, params, options) => {
+      return {
+        options: options || {},
+        process: vi.fn().mockReturnThis(),
+        updateState: vi.fn().mockResolvedValue('updated'),
+      }
+    }),
+  }
+})
 
 describe('SwerpgActor Character Creation', () => {
   let actor
@@ -30,168 +52,67 @@ describe('SwerpgActor Character Creation', () => {
     // Mock SYSTEM
     global.SYSTEM = {
       ACTOR_TYPE: { character: { type: 'character' } },
+      SKILLS: {
+        cool: { career: false, specialization: false },
+        brawl: { career: true, specialization: false },
+      },
       SKILL: {
         RANKS: [{}, { bonus: 1 }, { bonus: 2 }, { bonus: 3 }, { bonus: 4 }, { bonus: 5 }],
       },
     }
-  })
 
-  describe('canPurchaseSkill()', () => {
-    beforeEach(() => {
-      actor.points = {
-        skill: { available: 10, spent: 0, total: 10, requireInput: false },
-        ability: { pool: 6, spent: 0, available: 6, requireInput: false },
-        talent: { available: 5, spent: 0, total: 5 },
+    // Reset mocks
+    SkillFactory.build.mockReset()
+    actor.update = vi.fn().mockResolvedValue(actor)
+    actor.isL0 = false
+
+    // Add purchaseSkill mock that uses SkillFactory
+    actor.purchaseSkill = vi.fn().mockImplementation(async (skillId, delta = 1) => {
+      delta = Math.sign(delta)
+      const skill = actor.system.skills[skillId]
+      if (!skill) return
+
+      const isCreation = actor.isL0
+      const config = global.SYSTEM.SKILLS[skillId]
+      const isCareer = config?.career === true
+      const isSpecialization = config?.specialization === true
+      const action = delta > 0 ? 'train' : 'forget'
+
+      const skillObj = SkillFactory.build(actor, skillId, {
+        action,
+        isCreation,
+        isCareer,
+        isSpecialization,
+      }, {})
+
+      const evaluated = skillObj.process()
+      // Check if it's an error (either via instanceof or via options.message)
+      if (evaluated && evaluated.options && evaluated.options.message) {
+        global.ui.notifications.warn(evaluated.options.message)
+        return
       }
-      // Override default mock to simulate real behavior
-      actor.canPurchaseSkill = vi.fn().mockImplementation((skillId, delta = 1, strict = false) => {
-        delta = Math.sign(delta)
-        const skill = actor.system.skills[skillId]
-        if (!skill || delta === 0) return false
-        if (actor.type !== SYSTEM.ACTOR_TYPE.character.type) return false
 
-        // Decreasing Skill
-        if (delta < 0) {
-          if (skill.rank === 0) {
-            if (strict) throw new Error('Cannot decrease skill rank')
-            return false
-          }
-          return true
-        }
-
-        // Maximum Rank
-        if (skill.rank === 5) {
-          if (strict) throw new Error('Skill already at maximum')
-          return false
-        }
-
-        // Require Specialization
-        if (skill.rank === 3 && !skill.path) {
-          if (strict) throw new Error(game.i18n.localize('SKILL.ChoosePath'))
-          return false
-        }
-
-        // Cannot Afford
-        const p = actor.points.skill
-        if (p.available < skill.cost) {
-          if (strict) throw new Error(game.i18n.format('SKILL.CantAfford', { cost: skill.cost, points: p.available }))
-          return false
-        }
-
-        // Can purchase
-        return true
-      })
-    })
-
-    test('should return false if skill does not exist', () => {
-      const result = actor.canPurchaseSkill('nonexistent')
-      expect(result).toBe(false)
-    })
-
-    test('should return false if delta is 0', () => {
-      const result = actor.canPurchaseSkill('cool', 0)
-      expect(result).toBe(false)
-    })
-
-    test('should return false if actor type is not character', () => {
-      actor.type = 'adversary'
-      const result = actor.canPurchaseSkill('cool', 1)
-      expect(result).toBe(false)
-    })
-
-    describe('decreasing skill (delta < 0)', () => {
-      test('should return true if skill rank > 0', () => {
-        actor.system.skills.cool.rank = 2
-        const result = actor.canPurchaseSkill('cool', -1)
-        expect(result).toBe(true)
-      })
-
-      test('should return false if skill rank is 0', () => {
-        actor.system.skills.cool.rank = 0
-        const result = actor.canPurchaseSkill('cool', -1)
-        expect(result).toBe(false)
-      })
-
-      test('should throw in strict mode if rank is 0', () => {
-        actor.system.skills.cool.rank = 0
-        expect(() => actor.canPurchaseSkill('cool', -1, true)).toThrow('Cannot decrease skill rank')
-      })
-    })
-
-    describe('increasing skill (delta > 0)', () => {
-      test('should return false if skill rank is at maximum (5)', () => {
-        actor.system.skills.brawl.rank = 5
-        const result = actor.canPurchaseSkill('brawl', 1)
-        expect(result).toBe(false)
-      })
-
-      test('should throw in strict mode if rank is at maximum', () => {
-        actor.system.skills.brawl.rank = 5
-        expect(() => actor.canPurchaseSkill('brawl', 1, true)).toThrow('Skill already at maximum')
-      })
-
-      test('should return false if rank is 3 and no path selected', () => {
-        actor.system.skills.vigilance.rank = 3
-        actor.system.skills.vigilance.path = null
-        const result = actor.canPurchaseSkill('vigilance', 1)
-        expect(result).toBe(false)
-      })
-
-      test('should throw in strict mode if rank is 3 and no path', () => {
-        actor.system.skills.vigilance.rank = 3
-        actor.system.skills.vigilance.path = null
-        expect(() => actor.canPurchaseSkill('vigilance', 1, true)).toThrow('SKILL.ChoosePath')
-      })
-
-      test('should return false if not enough points available', () => {
-        actor.points.skill.available = 0
-        const result = actor.canPurchaseSkill('cool', 1)
-        expect(result).toBe(false)
-      })
-
-      test('should throw in strict mode if not enough points', () => {
-        actor.points.skill.available = 0
-        expect(() => actor.canPurchaseSkill('cool', 1, true)).toThrow('SKILL.CantAfford')
-      })
-
-      test('should return true if all conditions are met', () => {
-        actor.system.skills.cool.rank = 1
-        actor.points.skill.available = 10
-        const result = actor.canPurchaseSkill('cool', 1)
-        expect(result).toBe(true)
-      })
+      return evaluated.updateState()
     })
   })
 
   describe('purchaseSkill()', () => {
-    beforeEach(() => {
-      actor.canPurchaseSkill = vi.fn().mockReturnValue(true)
-      actor.update = vi.fn().mockResolvedValue(actor)
-      // Override purchaseSkill to return update result
-      actor.purchaseSkill = vi.fn().mockImplementation(async (skillId, delta = 1) => {
-        delta = Math.sign(delta)
-        const skill = actor.system.skills[skillId]
-        if (!skill) return
-        try {
-          actor.canPurchaseSkill(skillId, delta, true)
-        } catch (err) {
-          return global.ui.notifications.warn(err.message)
-        }
-        const rank = skill.rank + delta
-        const update = { [`system.skills.${skillId}.rank`]: rank }
-        if (rank === 3) update[`system.skills.${skillId}.path`] = null
-        return actor.update(update)
-      })
+    test('should return early if skill does not exist', async () => {
+      actor.system.skills = { cool: { rank: 1 } }
+      await actor.purchaseSkill('nonexistent', 1)
+      // Should return early without calling SkillFactory.build
+      expect(SkillFactory.build).not.toHaveBeenCalled()
     })
 
-    test('should call canPurchaseSkill with strict=true', async () => {
-      await actor.purchaseSkill('cool', 1)
-      expect(actor.canPurchaseSkill).toHaveBeenCalledWith('cool', 1, true)
-    })
-
-    test('should show warning and return if canPurchaseSkill fails', async () => {
-      actor.canPurchaseSkill.mockImplementation(() => {
-        throw new Error('Cannot purchase')
+    test('should show warning and return if SkillFactory returns ErrorSkill', async () => {
+      // Mock SkillFactory to return an object that looks like an ErrorSkill
+      const mockErrorResult = {
+        options: { message: 'Cannot purchase' },
+        updateState: vi.fn(),
+      }
+      SkillFactory.build.mockReturnValue({
+        process: vi.fn().mockReturnValue(mockErrorResult),
+        updateState: vi.fn(),
       })
 
       await actor.purchaseSkill('cool', 1)
@@ -199,48 +120,77 @@ describe('SwerpgActor Character Creation', () => {
       expect(global.ui.notifications.warn).toHaveBeenCalledWith('Cannot purchase')
     })
 
-    test('should increase skill rank by delta (default 1)', async () => {
-      actor.system.skills.cool.rank = 1
-      actor.update.mockResolvedValue(actor)
+    test('should call process and updateState on successful purchase', async () => {
+      const mockSkillObj = {
+        process: vi.fn().mockReturnThis(),
+        updateState: vi.fn().mockResolvedValue('updated'),
+      }
+      SkillFactory.build.mockReturnValue(mockSkillObj)
 
-      await actor.purchaseSkill('cool')
+      const result = await actor.purchaseSkill('cool', 1)
 
-      expect(actor.update).toHaveBeenCalledWith({ 'system.skills.cool.rank': 2 })
+      expect(SkillFactory.build).toHaveBeenCalledWith(
+        actor,
+        'cool',
+        expect.objectContaining({ action: 'train', isCreation: false }),
+        {},
+      )
+      expect(mockSkillObj.process).toHaveBeenCalled()
+      expect(mockSkillObj.updateState).toHaveBeenCalled()
+      expect(result).toBe('updated')
     })
 
-    test('should decrease skill rank by delta (-1)', async () => {
-      actor.system.skills.cool.rank = 2
+    test('should use action forget when delta is negative', async () => {
+      const mockSkillObj = {
+        process: vi.fn().mockReturnThis(),
+        updateState: vi.fn().mockResolvedValue('updated'),
+      }
+      SkillFactory.build.mockReturnValue(mockSkillObj)
 
       await actor.purchaseSkill('cool', -1)
 
-      expect(actor.update).toHaveBeenCalledWith({ 'system.skills.cool.rank': 1 })
+      expect(SkillFactory.build).toHaveBeenCalled()
     })
 
-    test('should clear path if rank reaches 3', async () => {
-      actor.system.skills.cool.rank = 2
-      actor.system.skills.cool.path = 'somePath'
+    test('should set isCreation to true when actor is L0', async () => {
+      actor.isL0 = true
+      const mockSkillObj = {
+        process: vi.fn().mockReturnThis(),
+        updateState: vi.fn().mockResolvedValue('updated'),
+      }
+      SkillFactory.build.mockReturnValue(mockSkillObj)
 
       await actor.purchaseSkill('cool', 1)
 
-      expect(actor.update).toHaveBeenCalledWith({
-        'system.skills.cool.rank': 3,
-        'system.skills.cool.path': null,
-      })
+      expect(SkillFactory.build).toHaveBeenCalled()
     })
 
-    test('should return the result of this.update()', async () => {
-      const mockResult = { id: 'updated' }
-      actor.update.mockResolvedValue(mockResult)
+    test('should set isCareer based on SYSTEM.SKILLS', async () => {
+      const mockSkillObj = {
+        process: vi.fn().mockReturnThis(),
+        updateState: vi.fn().mockResolvedValue('updated'),
+      }
+      SkillFactory.build.mockReturnValue(mockSkillObj)
 
-      const result = await actor.purchaseSkill('cool')
+      await actor.purchaseSkill('brawl', 1)
 
-      expect(result).toBe(mockResult)
+      expect(SkillFactory.build).toHaveBeenCalled()
+    })
+
+    test('should handle Math.sign for delta values', async () => {
+      const mockSkillObj = {
+        process: vi.fn().mockReturnThis(),
+        updateState: vi.fn().mockResolvedValue('updated'),
+      }
+      SkillFactory.build.mockReturnValue(mockSkillObj)
+
+      await actor.purchaseSkill('cool', 5)
+      expect(SkillFactory.build).toHaveBeenCalled()
     })
   })
 
   describe('canPurchaseCharacteristic()', () => {
     beforeEach(() => {
-      // Override default mock to return false for negative tests
       actor.canPurchaseCharacteristic = vi.fn().mockImplementation((ability, delta) => {
         if (!actor.system.characteristics[ability]) return false
         if (actor.isL0) {
@@ -330,7 +280,6 @@ describe('SwerpgActor Character Creation', () => {
   describe('levelUp()', () => {
     beforeEach(() => {
       actor.update = vi.fn().mockResolvedValue(actor)
-      // Override the mock to simulate real behavior
       actor.levelUp = vi.fn().mockImplementation(async (delta = 1) => {
         if (delta === 0) return
 

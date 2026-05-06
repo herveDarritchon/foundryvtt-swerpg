@@ -1,6 +1,8 @@
 import { SYSTEM } from '../config/system.mjs'
 import CharacteristicFactory from '../lib/characteristics/characteristic-factory.mjs'
 import ErrorCharacteristic from '../lib/characteristics/error-characteristic.mjs'
+import SkillFactory from '../lib/skills/skill-factory.mjs'
+import ErrorSkill from '../lib/skills/error-skill.mjs'
 import { logger } from '../utils/logger.mjs'
 import { CombatMixin } from './actor-mixins/combat/index.mjs'
 import { EquipmentMixin } from './actor-mixins/equipment.mjs'
@@ -423,66 +425,26 @@ export default class SwerpgActor extends EquipmentMixin(ResourcesMixin(CombatMix
     const skill = this.system.skills[skillId]
     if (!skill) return
 
-    // Assert that the skill can be purchased
-    try {
-      this.canPurchaseSkill(skillId, delta, true)
-    } catch (err) {
-      return ui.notifications.warn(err)
+    const isCreation = this.isL0
+    const config = SYSTEM.SKILLS[skillId]
+    const isCareer = config?.career === true
+    const isSpecialization = config?.specialization === true
+    const action = delta > 0 ? 'train' : 'forget'
+
+    const skillObj = SkillFactory.build(this, skillId, {
+      action,
+      isCreation,
+      isCareer,
+      isSpecialization,
+    }, {})
+
+    const evaluated = skillObj.process()
+    if (evaluated instanceof ErrorSkill) {
+      ui.notifications.warn(evaluated.options.message)
+      return
     }
 
-    // Adjust rank
-    const rank = skill.rank + delta
-    const update = { [`system.skills.${skillId}.rank`]: rank }
-    if (rank === 3) update[`system.skills.${skillId}.path`] = null
-    return this.update(update)
-  }
-
-  /* -------------------------------------------- */
-
-  /**
-   * Test whether this Actor can modify a Skill rank in a certain direction.
-   * @param {string} skillId      A skill in SKILLS
-   * @param {number} delta        A number in [-1, 1] for the direction of the purchase
-   * @param {boolean} strict      In strict mode an error message is thrown if the skill cannot be changed
-   * @returns {boolean}           In non-strict mode, a boolean for whether the rank can be purchased
-   * @throws                      In strict mode, an error if the skill cannot be purchased
-   */
-  canPurchaseSkill(skillId, delta = 1, strict = false) {
-    delta = Math.sign(delta)
-    const skill = this.system.skills[skillId]
-    if (!skill || delta === 0) return false
-    if (this.type !== SYSTEM.ACTOR_TYPE.character.type) return false // TODO only heroes can purchase skills currently
-
-    // Decreasing Skill
-    if (delta < 0) {
-      if (skill.rank === 0) {
-        if (strict) throw new Error('Cannot decrease skill rank')
-        return false
-      }
-      return true
-    }
-
-    // Maximum Rank
-    if (skill.rank === 5) {
-      if (strict) throw new Error('Skill already at maximum')
-      return false
-    }
-
-    // Require Specialization
-    if (skill.rank === 3 && !skill.path) {
-      if (strict) throw new Error(game.i18n.localize(`SKILL.ChoosePath`))
-      return false
-    }
-
-    // Cannot Afford
-    const p = this.points.skill
-    if (p.available < skill.cost) {
-      if (strict) throw new Error(game.i18n.format(`SKILL.CantAfford`, { cost: skill.cost, points: p.available }))
-      return false
-    }
-
-    // Can purchase
-    return true
+    return evaluated.updateState()
   }
 
   /* -------------------------------------------- */

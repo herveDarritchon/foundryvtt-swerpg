@@ -88,7 +88,6 @@ export function createMockActor(overrides = {}) {
 
   // Mock methods that are on the class prototype (for testing)
   mockActor.canPurchaseSkill = vi.fn().mockReturnValue(true)
-  mockActor.purchaseSkill = vi.fn().mockResolvedValue({})
   mockActor.canPurchaseCharacteristic = vi.fn().mockReturnValue(true)
   mockActor.purchaseCharacteristic = vi.fn().mockResolvedValue()
   mockActor.levelUp = vi.fn().mockResolvedValue({})
