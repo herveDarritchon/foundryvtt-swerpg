@@ -65,10 +65,10 @@ export default class SkillFactory {
     }
 
     if (skill.rank.trained > 0) {
-      if (action === 'forget' && actor.experiencePoints.spent > 0) {
+      if (action === 'forget' && actor.system.progression.experience.spent > 0) {
         return new TrainedSkill(actor, skill, { action, isCreation, isCareer, isSpecialization }, options)
       }
-      if (action === 'train' && actor.experiencePoints.available > 0) {
+      if (action === 'train' && actor.system.progression.experience.available > 0) {
         return new TrainedSkill(actor, skill, { action, isCreation, isCareer, isSpecialization }, options)
       }
     }
@@ -78,13 +78,13 @@ export default class SkillFactory {
     }
 
     if (isCareer) {
-      if ((action === 'train' && SkillFactory.#hasCareerFreeSkill(actor)) || (action === 'forget' && actor.freeSkillRanks.career.spent > 0)) {
+      if ((action === 'train' && SkillFactory.#hasCareerFreeSkill(actor)) || (action === 'forget' && actor.system.progression.freeSkillRanks.career.spent > 0)) {
         return new CareerFreeSkill(actor, skill, { action, isCreation, isCareer, isSpecialization }, options)
       }
     }
 
     if (isSpecialization) {
-      if ((action === 'train' && SkillFactory.#hasSpecializationFreeSkill(actor)) || (action === 'forget' && actor.freeSkillRanks.specialization.spent > 0)) {
+      if ((action === 'train' && SkillFactory.#hasSpecializationFreeSkill(actor)) || (action === 'forget' && actor.system.progression.freeSkillRanks.specialization.spent > 0)) {
         return new SpecializationFreeSkill(
           actor,
           skill,
@@ -99,17 +99,17 @@ export default class SkillFactory {
       }
     }
 
-    if (actor.experiencePoints.available > 0) {
+    if (actor.system.progression.experience.available > 0) {
       return new TrainedSkill(actor, skill, { action, isCreation, isCareer, isSpecialization }, options)
     }
   }
 
   static #hasCareerFreeSkill(actor) {
-    return actor.freeSkillRanks.career.available > 0
+    return actor.system.progression.freeSkillRanks.career.available > 0
   }
 
   static #hasSpecializationFreeSkill(actor) {
-    return actor.freeSkillRanks.specialization.available > 0
+    return actor.system.progression.freeSkillRanks.specialization.available > 0
   }
 
   /**
@@ -124,7 +124,7 @@ export default class SkillFactory {
    */
   static #buildCareerOrSpecialization(actor, skill, action, options) {
     if (action === 'train') {
-      const freeSkillRanks = foundry.utils.deepClone(actor.freeSkillRanks)
+      const freeSkillRanks = foundry.utils.deepClone(actor.system.progression.freeSkillRanks)
       if (freeSkillRanks.career.gained - freeSkillRanks.career.spent > 0 && skill.rank.careerFree === 0) {
         return new CareerFreeSkill(
           actor,
@@ -165,7 +165,7 @@ export default class SkillFactory {
     }
 
     if (action === 'forget') {
-      const freeSkillRanks = foundry.utils.deepClone(actor.freeSkillRanks)
+      const freeSkillRanks = foundry.utils.deepClone(actor.system.progression.freeSkillRanks)
       if (skill.rank.specializationFree > 0 && freeSkillRanks.specialization.spent > 0) {
         return new SpecializationFreeSkill(
           actor,

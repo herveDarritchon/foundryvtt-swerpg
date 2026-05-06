@@ -11,11 +11,11 @@ export default class CareerFreeSkill extends Skill {
    * @inheritDoc
    * @override
    */
-  process() {
+  async process() {
     this.freeSkillRankAvailable = this.#computeFreeSkillRankAvailable()
 
     let careerFree = this.data.rank.careerFree
-    let careerFreeRankSpent = this.actor.freeSkillRanks.career.spent
+    let careerFreeRankSpent = this.actor.system.progression.freeSkillRanks.career.spent
 
     if (this.action === 'train') {
       careerFree++
@@ -28,7 +28,7 @@ export default class CareerFreeSkill extends Skill {
     }
 
     if (careerFree < 0) {
-      return new ErrorSkill(this.actor, this.data, {}, { message: "you can't forget this rank because it comes from species free bonus!" })
+      return new ErrorSkill(this.actor, this.data, {}, { message: "you can't forget this rank because it was not trained but free!" })
     }
 
     if (careerFree > 1) {
@@ -39,14 +39,14 @@ export default class CareerFreeSkill extends Skill {
       return new ErrorSkill(this.actor, this.data, {}, { message: "you can't use free skill rank anymore. You have used all!" })
     }
 
-    const maxCareerFreeSkillRank = this.actor.freeSkillRanks.career.gained
+    const maxCareerFreeSkillRank = this.actor.system.progression.freeSkillRanks.career.gained
     if (this.freeSkillRankAvailable > maxCareerFreeSkillRank) {
       return new ErrorSkill(this.actor, this.data, {}, { message: `you can't get more than ${maxCareerFreeSkillRank} free skill ranks!` })
     }
 
     this.data.rank.value = this.data.rank.base + careerFree + this.data.rank.specializationFree + this.data.rank.trained
     this.data.rank.careerFree = careerFree
-    this.actor.freeSkillRanks.career.spent = careerFreeRankSpent
+    await this.actor.updateFreeSkillRanks('career', { spent: careerFreeRankSpent })
     this.evaluated = true
     return this
   }
@@ -56,7 +56,8 @@ export default class CareerFreeSkill extends Skill {
    * @override
    */
   #computeFreeSkillRankAvailable() {
-    return this.actor.freeSkillRanks.career.gained - this.actor.freeSkillRanks.career.spent
+    const career = this.actor.system.progression.freeSkillRanks.career
+    return career.gained - career.spent
   }
 
   /**
@@ -70,7 +71,6 @@ export default class CareerFreeSkill extends Skill {
       })
     }
     try {
-      await this.actor.update({ 'system.progression.freeSkillRanks': this.actor.freeSkillRanks })
       await this.actor.update({ [`system.skills.${this.data.id}.rank`]: this.data.rank })
       return new Promise((resolve, _) => {
         resolve(this)
