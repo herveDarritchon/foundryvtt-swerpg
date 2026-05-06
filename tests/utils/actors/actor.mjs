@@ -8,30 +8,29 @@
 export function createActor({ careerSpent = 0, specializationSpent = 0, items = [] } = {}) {
   const baseData = {
     items: items,
-    freeSkillRanks: {
-      career: {
-        id: '',
-        name: '',
-        spent: careerSpent,
-        gained: 4,
-        available: 4,
-      },
-      specialization: {
-        id: '',
-        name: '',
-        spent: specializationSpent,
-        gained: 2,
-        available: 2,
-      },
-    },
-    experiencePoints: {
-      spent: 0,
-      gained: 0,
-      startingExperience: 100,
-      total: 100,
-      available: 100,
-    },
     system: {
+      progression: {
+        freeSkillRanks: {
+          career: {
+            id: '',
+            name: '',
+            spent: careerSpent,
+            gained: 4,
+          },
+          specialization: {
+            id: '',
+            name: '',
+            spent: specializationSpent,
+            gained: 2,
+          },
+        },
+        experiencePoints: {
+          spent: 0,
+          gained: 0,
+          startingExperience: 100,
+          total: 100,
+        },
+      },
       skills: {
         cool: {
           rank: {
@@ -388,9 +387,9 @@ export function createActor({ careerSpent = 0, specializationSpent = 0, items = 
 }
 
 /**
- *
- * @param actor
- * @param updates
+ * Update Actor
+ * @param actor : SwerpgActor
+ * @param updates : Object with the same structure as the actor, but only with the properties to update
  */
 export function updateActor(actor, updates) {
   for (const [key, value] of Object.entries(updates)) {

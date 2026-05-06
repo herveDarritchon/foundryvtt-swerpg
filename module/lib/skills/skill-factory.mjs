@@ -78,13 +78,15 @@ export default class SkillFactory {
     }
 
     if (isCareer) {
-      if ((action === 'train' && SkillFactory.#hasCareerFreeSkill(actor)) || (action === 'forget' && actor.freeSkillRanks.career.spent > 0)) {
+      const careerSpent = actor.freeSkillRanks.career.spent
+      if ((action === 'train' && SkillFactory.#hasCareerFreeSkill(actor)) || (action === 'forget' && careerSpent > 0)) {
         return new CareerFreeSkill(actor, skill, { action, isCreation, isCareer, isSpecialization }, options)
       }
     }
 
     if (isSpecialization) {
-      if ((action === 'train' && SkillFactory.#hasSpecializationFreeSkill(actor)) || (action === 'forget' && actor.freeSkillRanks.specialization.spent > 0)) {
+      const specializationSpent = actor.freeSkillRanks.specialization.spent
+      if ((action === 'train' && SkillFactory.#hasSpecializationFreeSkill(actor)) || (action === 'forget' && specializationSpent > 0)) {
         return new SpecializationFreeSkill(
           actor,
           skill,
@@ -105,11 +107,13 @@ export default class SkillFactory {
   }
 
   static #hasCareerFreeSkill(actor) {
-    return actor.freeSkillRanks.career.available > 0
+    const career = actor.freeSkillRanks.career
+    return (career.gained - career.spent) > 0
   }
 
   static #hasSpecializationFreeSkill(actor) {
-    return actor.freeSkillRanks.specialization.available > 0
+    const specialization = actor.freeSkillRanks.specialization
+    return (specialization.gained - specialization.spent) > 0
   }
 
   /**

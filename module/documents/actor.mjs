@@ -31,6 +31,170 @@ export default class SwerpgActor extends EquipmentMixin(ResourcesMixin(CombatMix
   constructor(data, context) {
     super(data, context)
     this._cachedResources = {}
+    this.actorHooks = {}
+  }
+
+  /**
+   * Talent hook functions which apply to this Actor based on their set of owned Talents.
+   * @type {Object<string, {talent: SwerpgItem, fn: Function}[]>}
+   */
+  actorHooks = {}
+
+  /* -------------------------------------------- */
+  /*  Getters                                     */
+  /* -------------------------------------------- */
+
+  /**
+   * Convenient access to the Actor's species.
+   * @type {object}  The species data
+   */
+  get species() {
+    return this.system.details.species
+  }
+
+  /**
+   * Convenient access to the Actor's experience points.
+   * @type {ExperiencePoints}  The experience points data
+   */
+  get experiencePoints() {
+    if (this.type !== SYSTEM.ACTOR_TYPE.character.type) return { gained: 0, spent: 0, startingExperience: 0 }
+    return this.system.progression.experience
+  }
+
+  /**
+   * Update actor's experience points
+   * @param {Object} params
+   * @param {number} [params.spent] - Experience points spent
+   * @param {number} [params.gained] - Experience points gained
+   * @param {number} [params.total] - Total experience points
+   * @returns {Promise} Foundry update promise
+   */
+  async updateExperiencePoints({ spent, gained, total } = {}) {
+    const updates = {}
+    if (spent !== undefined) updates['system.progression.experience.spent'] = spent
+    if (gained !== undefined) updates['system.progression.experience.gained'] = gained
+    if (total !== undefined) updates['system.progression.experience.total'] = total
+    return this.update(updates)
+  }
+
+  /**
+   * Convenient access to the Actor's abilities.
+   * @type {object}  The ability data
+   */
+  get abilities() {
+    return this.system.abilities
+  }
+
+  /**
+   * Convenient access to the Actor's defenses.
+   * @type {object}  The defenses data
+   */
+  get defenses() {
+    return this.system.defenses
+  }
+
+  /**
+   * Convenient access to the Actor's level.
+   * @type {number}  The actor level
+   */
+  get level() {
+    return this.system.details.level
+  }
+
+  /**
+   * Convenient access to the Actor's points (ability, skill, talent).
+   * @type {object}  The points data
+   */
+  get points() {
+    return this.system.points
+  }
+
+  /**
+   * Convenient access to the Actor's resistances.
+   * @type {object}  The resistances data
+   */
+  get resistances() {
+    return this.system.resistances
+  }
+
+  /**
+   * Convenient access to the Actor's skills.
+   * @type {object}  The skills data
+   */
+  get skills() {
+    return this.system.skills
+  }
+
+  /**
+   * Convenient access to the Actor's size.
+   * @type {number}  The actor size
+   */
+  get size() {
+    return this.system.details.size || 1
+  }
+
+  /**
+   * Convenient access to the Actor's status.
+   * @type {object}  The status data
+   */
+  get status() {
+    return this.system.status
+  }
+
+  /**
+   * Check if the actor is level 0.
+   * @type {boolean}
+   */
+  get isL0() {
+    return this.level === 0
+  }
+
+  /**
+   * Check if the actor is knocked out.
+   * @type {boolean}
+   */
+  get isKnockedOut() {
+    return this.system.status.conditions.knockedOut
+  }
+
+  /**
+   * Check if the actor is broken.
+   * @type {boolean}
+   */
+  get isBroken() {
+    return this.system.status.conditions.broken
+  }
+
+  /**
+   * Check if the actor is dead.
+   * @type {boolean}
+   */
+  get isDead() {
+    return this.system.status.conditions.dead
+  }
+
+  /**
+   * Check if the actor is insane.
+   * @type {boolean}
+   */
+  get isInsane() {
+    return this.system.status.conditions.insane
+  }
+
+  /**
+   * Check if the actor is incapacitated.
+   * @type {boolean}
+   */
+  get isIncapacitated() {
+    return this.isKnockedOut || this.isBroken || this.isDead || this.isInsane
+  }
+
+  /**
+   * Convenient access to the combatant.
+   * @type {object|null}  The combatant or null
+   */
+  get combatant() {
+    return this._combatant
   }
 
   /*  Character Creation Methods                  */
@@ -479,6 +643,41 @@ export default class SwerpgActor extends EquipmentMixin(ResourcesMixin(CombatMix
   }
 
   /* -------------------------------------------- */
+  /*  Actor Preparation                            */
+
+  /* -------------------------------------------- */
+
+  /** @inheritDoc */
+  prepareEmbeddedDocuments() {
+    super.prepareEmbeddedDocuments()
+    const items = this.itemTypes
+    SwerpgActor.#prepareTalents.call(this, items.talent)
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Prepare Talent data for the Actor.
+   * @this {SwerpgActor}
+   * @param {SwerpgItem[]} talents
+   */
+  static #prepareTalents(talents) {
+    this.talentIds = new Set()
+    this.actorHooks = {}
+    this.permanentTalentIds = new Set()
+
+    // Iterate over talents
+    for (const t of talents) {
+      this.talentIds.add(t.id)
+
+      // Register hooks
+      for (const hook of t.system.actorHooks) SwerpgActor.#registerActorHook(this, t, hook)
+    }
+  }
+
+  /* -------------------------------------------- */
+
+  /* -------------------------------------------- */
   /*  Database Workflows                          */
 
   /* -------------------------------------------- */
@@ -615,11 +814,37 @@ export default class SwerpgActor extends EquipmentMixin(ResourcesMixin(CombatMix
   /* -------------------------------------------- */
 
   /**
+   * Get the free skill ranks for the actor.
+   * @returns {FreeSkillRanks} The free skill ranks for the actor.
+   */
+  get freeSkillRanks() {
+    return this.system.progression.freeSkillRanks
+  }
+
+  /**
+   * Update free skill ranks
+   * @param {'career'|'specialization'} type - Type of free skill rank
+   * @param {Object} params
+   * @param {number} [params.spent] - Ranks spent
+   * @param {number} [params.gained] - Ranks gained
+   * @returns {Promise} Foundry update promise
+   */
+  async updateFreeSkillRanks(type, { spent, gained } = {}) {
+    const updates = {}
+    if (spent !== undefined) updates[`system.progression.freeSkillRanks.${type}.spent`] = spent
+    if (gained !== undefined) updates[`system.progression.freeSkillRanks.${type}.gained`] = gained
+    return this.update(updates)
+  }
+
+  /* -------------------------------------------- */
+
+  /**
    * Check if actor has any career free skill ranks available.
    * @returns {boolean}   True if actor has free skill ranks
    */
   hasCareerFreeSkillsAvailable() {
-    return this.freeSkillRanks.career.available !== 0
+    const career = this.freeSkillRanks.career
+    return (career.gained - career.spent) !== 0
   }
 
   /* -------------------------------------------- */
@@ -629,7 +854,8 @@ export default class SwerpgActor extends EquipmentMixin(ResourcesMixin(CombatMix
    * @returns {boolean}   True if actor has free skill ranks
    */
   hasSpecializationFreeSkillsAvailable() {
-    return this.freeSkillRanks.specialization.available !== 0
+    const specialization = this.freeSkillRanks.specialization
+    return (specialization.gained - specialization.spent) !== 0
   }
 
   /* -------------------------------------------- */
@@ -700,4 +926,46 @@ export default class SwerpgActor extends EquipmentMixin(ResourcesMixin(CombatMix
       await canvas.scene.updateEmbeddedDocuments('Token', updates)
     }
   }
+
+  /* -------------------------------------------- */
+  /*  Talent Hooks                                */
+  /* -------------------------------------------- */
+
+  /**
+   * Register a hooked function declared by a Talent item.
+   * @param actor
+   * @param {SwerpgItem} talent   The Talent registering the hook
+   * @param {object} data           Registered hook data
+   * @param {string} data.hook        The hook name
+   * @param {string} data.fn          The hook function
+   * @private
+   */
+  static #registerActorHook(actor, talent, { hook, fn } = {}) {
+    const hookConfig = SYSTEM.ACTOR_HOOKS[hook]
+    if (!hookConfig) throw new Error(`Invalid Actor hook name "${hook}" defined by Talent "${talent.id}"`)
+    actor.actorHooks[hook] ||= []
+    actor.actorHooks[hook].push({ talent, fn: new Function('actor', ...hookConfig.argNames, fn) })
+  }
+
+  /**
+   * Call all actor hooks registered for a certain event name.
+   * Each registered function is called in sequence.
+   * @param {string} hook     The hook name to call.
+   * @param {...*} args       Arguments passed to the hooked function
+   */
+  callActorHooks(hook, ...args) {
+    const hookConfig = SYSTEM.ACTOR_HOOKS[hook]
+    if (!hookConfig) throw new Error(`Invalid Actor hook function "${hook}"`)
+    const hooks = (this.actorHooks[hook] ||= [])
+    for (const { talent, fn } of hooks) {
+      logger.debug(`Calling ${hook} hook for Talent ${talent.name}`)
+      try {
+        fn(this, ...args)
+      } catch (err) {
+        const msg = `The "${hook}" hook defined for Talent "${talent.name}" failed evaluation in Actor [${this.id}]`
+        logger.error(msg, err)
+      }
+    }
+  }
+
 }
