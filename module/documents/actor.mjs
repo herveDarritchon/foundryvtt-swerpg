@@ -7,6 +7,7 @@ import { logger } from '../utils/logger.mjs'
 import { CombatMixin } from './actor-mixins/combat/index.mjs'
 import { EquipmentMixin } from './actor-mixins/equipment.mjs'
 import { ResourcesMixin } from './actor-mixins/resources.mjs'
+import { TalentsMixin } from './actor-mixins/talents.mjs'
 
 const { DialogV2 } = foundry.applications.api
 
@@ -29,18 +30,11 @@ const { DialogV2 } = foundry.applications.api
 /**
  * The Actor document subclass in the Swerpg system which extends the behavior of the base Actor class.
  */
-export default class SwerpgActor extends EquipmentMixin(ResourcesMixin(CombatMixin(Actor))) {
+export default class SwerpgActor extends TalentsMixin(EquipmentMixin(ResourcesMixin(CombatMixin(Actor)))) {
   constructor(data, context) {
     super(data, context)
     this._cachedResources = {}
-    this.actorHooks = {}
   }
-
-  /**
-   * Talent hook functions which apply to this Actor based on their set of owned Talents.
-   * @type {Object<string, {talent: SwerpgItem, fn: Function}[]>}
-   */
-  actorHooks = {}
 
   /* -------------------------------------------- */
   /*  Getters                                     */
@@ -200,115 +194,6 @@ export default class SwerpgActor extends EquipmentMixin(ResourcesMixin(CombatMix
   }
 
   /*  Character Creation Methods                  */
-
-  /* -------------------------------------------- */
-
-  /**
-   * Toggle display of the Talent Tree.
-   * @param active
-   */
-  async toggleTalentTree(active) {
-    if (this.type !== SYSTEM.ACTOR_TYPE.character.type) return
-    const tree = game.system.tree
-    if (tree.actor === this && active !== true) return game.system.tree.close()
-    else if (active !== false) return game.system.tree.open(this)
-  }
-
-  /* -------------------------------------------- */
-
-  /**
-   * Reset all Talents for the Actor.
-   * @param {object} [options]        Options which modify how talents are reset
-   * @param {boolean} [options.dialog]    Present the user with a confirmation dialog?
-   * @returns {Promise<void>}         A Promise which resolves once talents are reset or the dialog is declined
-   */
-  async resetTalents({ dialog = true } = {}) {
-    // Prompt for confirmation
-    if (dialog) {
-      const confirm = await DialogV2.confirm({
-        window: {
-          title: `Reset Talents: ${this.name}`,
-          icon: 'fa-solid fa-undo',
-        },
-        content: `<p>Are you sure you wish to reset all Talents?</p>`,
-        yes: {
-          default: true,
-        },
-      })
-      if (!confirm) return
-    }
-
-    // Remove all non-permanent talents
-    const deleteIds = this.items.reduce((arr, i) => {
-      if (i.type === 'talent' && !this.permanentTalentIds.has(i.id)) arr.push(i.id)
-      return arr
-    }, [])
-    await this.deleteEmbeddedDocuments('Item', deleteIds)
-  }
-
-  /* -------------------------------------------- */
-
-  /**
-   * Re-sync all Talent data on this actor with updated source data.
-   * @returns {Promise<void>}
-   */
-  async syncTalents() {
-    const updates = []
-    const packIds = [SYSTEM.COMPENDIUM_PACKS.talent, SYSTEM.COMPENDIUM_PACKS.talentExtensions]
-    for (const packId of packIds) {
-      const pack = game.packs.get(packId)
-      if (!pack) continue
-      for (const item of this.itemTypes.talent) {
-        if (pack.index.has(item.id)) {
-          const talent = await pack.getDocument(item.id)
-          if (talent) updates.push(talent.toObject())
-        }
-      }
-    }
-    await this.updateEmbeddedDocuments('Item', updates, { diff: false, recursive: false, noHook: true })
-    await this.update({ '_stats.systemVersion': game.system.version })
-  }
-
-  /* -------------------------------------------- */
-
-  /**
-   * Handle requests to add a new Talent to the Actor.
-   * Confirm that the Actor meets the requirements to add the Talent, and if so create it on the Actor
-   * @param {SwerpgItem} talent     The Talent item to add to the Actor
-   * @param {object} [options]        Options which configure how the Talent is added
-   * @param {boolean} [options.dialog]    Prompt the user with a confirmation dialog?
-   * @returns {Promise<SwerpgItem|null>} The created talent Item or null if no talent was added
-   */
-  async addTalent(talent, { dialog = false } = {}) {
-    // Confirm that the Actor meets the requirements to add the Talent
-    try {
-      talent.system.assertPrerequisites(this)
-    } catch (err) {
-      ui.notifications.warn(err.message)
-      return null
-    }
-
-    // Confirmation dialog
-    if (dialog) {
-      const confirm = await Dialog.confirm({
-        title: `Purchase Talent: ${talent.name}`,
-        content: `<p>Spend 1 Talent Point to purchase <strong>${talent.name}</strong>?</p>`,
-        defaultYes: false,
-      })
-      if (!confirm) return null
-
-      // Re-confirm after the dialog has been submitted to prevent queuing
-      try {
-        talent.system.assertPrerequisites(this)
-      } catch (err) {
-        ui.notifications.warn(err.message)
-        return null
-      }
-    }
-
-    // Create the talent
-    return talent.constructor.create(talent.toObject(), { parent: this, keepId: true })
-  }
 
   /* -------------------------------------------- */
 
@@ -613,28 +498,8 @@ export default class SwerpgActor extends EquipmentMixin(ResourcesMixin(CombatMix
   prepareEmbeddedDocuments() {
     super.prepareEmbeddedDocuments()
     const items = this.itemTypes
-    SwerpgActor.#prepareTalents.call(this, items.talent)
-  }
-
-  /* -------------------------------------------- */
-
-  /**
-   * Prepare Talent data for the Actor.
-   * @this {SwerpgActor}
-   * @param {SwerpgItem[]} talents
-   */
-  static #prepareTalents(talents) {
-    this.talentIds = new Set()
-    this.actorHooks = {}
-    this.permanentTalentIds = new Set()
-
-    // Iterate over talents
-    for (const t of talents) {
-      this.talentIds.add(t.id)
-
-      // Register hooks
-      for (const hook of t.system.actorHooks) SwerpgActor.#registerActorHook(this, t, hook)
-    }
+    // prepareTalents is now in TalentsMixin, called as instance method
+    this.prepareTalents(items.talent)
   }
 
   /* -------------------------------------------- */
@@ -840,35 +705,6 @@ export default class SwerpgActor extends EquipmentMixin(ResourcesMixin(CombatMix
   }
 
   /**
-   * Add a Talent item to the actor with XP check and duplicate prevention.
-   * @param {Item} item The Talent item to add.
-   * @returns {Promise<boolean>} - Whether the talent was added successfully.
-   */
-  async addTalentWithXpCheck(item) {
-    const alreadyOwned = this.items.find((i) => i.name === item.name)
-    if (alreadyOwned) {
-      ui.notifications.warn(`${this.name} already has "${item.name}"`)
-      return false
-    }
-
-    const experiencePoints = this.experiencePoints
-    const currentXP = experiencePoints.available
-    const cost = 5
-
-    if (currentXP - cost < 0) {
-      ui.notifications.warn(`${this.name} doesn't have enough XP (${cost} required)`)
-      return false
-    }
-
-    await this.createEmbeddedDocuments('Item', [item.toObject()])
-    await this.spendExperiencePoints(cost)
-
-    return true
-  }
-
-  /* -------------------------------------------- */
-
-  /**
    * Update the size of Tokens for this Actor.
    * @returns {Promise<void>}
    */
@@ -886,47 +722,6 @@ export default class SwerpgActor extends EquipmentMixin(ResourcesMixin(CombatMix
         if (token.width !== this.size) updates.push({ _id: token.id, width: this.size, height: this.size })
       }
       await canvas.scene.updateEmbeddedDocuments('Token', updates)
-    }
-  }
-
-  /* -------------------------------------------- */
-  /*  Talent Hooks                                */
-  /* -------------------------------------------- */
-
-  /**
-   * Register a hooked function declared by a Talent item.
-   * @param actor
-   * @param {SwerpgItem} talent   The Talent registering the hook
-   * @param {object} data           Registered hook data
-   * @param {string} data.hook        The hook name
-   * @param {string} data.fn          The hook function
-   * @private
-   */
-  static #registerActorHook(actor, talent, { hook, fn } = {}) {
-    const hookConfig = SYSTEM.ACTOR_HOOKS[hook]
-    if (!hookConfig) throw new Error(`Invalid Actor hook name "${hook}" defined by Talent "${talent.id}"`)
-    actor.actorHooks[hook] ||= []
-    actor.actorHooks[hook].push({ talent, fn: new Function('actor', ...hookConfig.argNames, fn) })
-  }
-
-  /**
-   * Call all actor hooks registered for a certain event name.
-   * Each registered function is called in sequence.
-   * @param {string} hook     The hook name to call.
-   * @param {...*} args       Arguments passed to the hooked function
-   */
-  callActorHooks(hook, ...args) {
-    const hookConfig = SYSTEM.ACTOR_HOOKS[hook]
-    if (!hookConfig) throw new Error(`Invalid Actor hook function "${hook}"`)
-    const hooks = (this.actorHooks[hook] ||= [])
-    for (const { talent, fn } of hooks) {
-      logger.debug(`Calling ${hook} hook for Talent ${talent.name}`)
-      try {
-        fn(this, ...args)
-      } catch (err) {
-        const msg = `The "${hook}" hook defined for Talent "${talent.name}" failed evaluation in Actor [${this.id}]`
-        logger.error(msg, err)
-      }
     }
   }
 

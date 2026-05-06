@@ -1,5 +1,7 @@
 import { vi } from 'vitest'
 import { ResourcesMixin } from '../../../module/documents/actor-mixins/resources.mjs'
+import { EquipmentMixin } from '../../../module/documents/actor-mixins/equipment.mjs'
+import { CombatMixin } from '../../../module/documents/actor-mixins/combat/index.mjs'
 
 /**
  * Create a mock SwerpgActor for unit testing.
@@ -10,11 +12,12 @@ import { ResourcesMixin } from '../../../module/documents/actor-mixins/resources
  */
 export function createMockActor(overrides = {}) {
   // Create a base class that includes ResourcesMixin
-  const MockActorBase = ResourcesMixin(class Base {
+  // Create base class with all available mixins (without TalentsMixin - to be added after creation)
+  const MockActorBase = CombatMixin(EquipmentMixin(ResourcesMixin(class Base {
     constructor(data) {
       Object.assign(this, data)
     }
-  })
+  })))
 
   const baseData = {
     system: {
@@ -90,8 +93,7 @@ export function createMockActor(overrides = {}) {
   mockActor.canPurchaseCharacteristic = vi.fn().mockReturnValue(true)
   mockActor.purchaseCharacteristic = vi.fn().mockResolvedValue()
   mockActor.levelUp = vi.fn().mockResolvedValue({})
-  mockActor.addTalent = vi.fn().mockResolvedValue({})
-  mockActor.resetTalents = vi.fn().mockResolvedValue({})
+  // Note: addTalent and resetTalents will be tested for real after TalentsMixin is integrated
   mockActor.onStartTurn = vi.fn().mockResolvedValue()
   mockActor.onEndTurn = vi.fn().mockResolvedValue()
   mockActor.useAction = vi.fn().mockResolvedValue([])
