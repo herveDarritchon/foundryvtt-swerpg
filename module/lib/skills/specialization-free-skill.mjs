@@ -11,11 +11,11 @@ export default class SpecializationFreeSkill extends Skill {
    * @inheritDoc
    * @override
    */
-  process() {
+  async process() {
     this.freeSkillRankAvailable = this.#computeFreeSkillRankAvailable()
 
     let specializationFree = this.data.rank.specializationFree
-    let specializationFreeRankSpent = this.actor.freeSkillRanks.specialization.spent
+    let specializationFreeRankSpent = this.actor.system.progression.freeSkillRanks.specialization.spent
 
     if (this.action === 'train') {
       specializationFree++
@@ -39,14 +39,14 @@ export default class SpecializationFreeSkill extends Skill {
       return new ErrorSkill(this.actor, this.data, {}, { message: "you can't use free skill rank anymore. You have used all!" })
     }
 
-    const maxSpecializationFreeSkillRank = this.actor.freeSkillRanks.specialization.gained
+    const maxSpecializationFreeSkillRank = this.actor.system.progression.freeSkillRanks.specialization.gained
     if (this.freeSkillRankAvailable > maxSpecializationFreeSkillRank) {
       return new ErrorSkill(this.actor, this.data, {}, { message: `you can't get more than ${maxSpecializationFreeSkillRank} free skill ranks!` })
     }
 
     this.data.rank.value = this.data.rank.base + this.data.rank.careerFree + specializationFree + this.data.rank.trained
     this.data.rank.specializationFree = specializationFree
-    this.actor.freeSkillRanks.specialization.spent = specializationFreeRankSpent
+    await this.actor.updateFreeSkillRanks('specialization', { spent: specializationFreeRankSpent })
     this.evaluated = true
     return this
   }
@@ -56,7 +56,8 @@ export default class SpecializationFreeSkill extends Skill {
    * @override
    */
   #computeFreeSkillRankAvailable() {
-    return this.actor.freeSkillRanks.specialization.gained - this.actor.freeSkillRanks.specialization.spent
+    const specialization = this.actor.system.progression.freeSkillRanks.specialization
+    return specialization.gained - specialization.spent
   }
 
   /**
@@ -70,7 +71,6 @@ export default class SpecializationFreeSkill extends Skill {
       })
     }
     try {
-      await this.actor.update({ 'system.progression.freeSkillRanks': this.actor.freeSkillRanks })
       await this.actor.update({ [`system.skills.${this.data.id}.rank`]: this.data.rank })
       return new Promise((resolve, _) => {
         resolve(this)
