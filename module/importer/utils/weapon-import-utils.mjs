@@ -10,6 +10,9 @@ export const FLAG_STRICT_WEAPON_VALIDATION = false
 const weaponStats = new ImportStats({
   unknownSkills: 0,
   unknownQualities: 0,
+  unknownTypes: 0,
+  unknownCategories: 0,
+  categoryFallbacks: 0,
 })
 
 /**
@@ -19,6 +22,9 @@ export function resetWeaponImportStats() {
   weaponStats.reset({
     unknownSkills: 0,
     unknownQualities: 0,
+    unknownTypes: 0,
+    unknownCategories: 0,
+    categoryFallbacks: 0,
   })
 }
 
@@ -48,8 +54,31 @@ export function addWeaponUnknownQuality(code) {
 }
 
 /**
+ * Enregistre un type d'arme inconnu.
+ * @param {string} typeValue
+ */
+export function addWeaponUnknownType(typeValue) {
+  weaponStats.addDetail('unknownTypes', typeValue, 'typeDetails')
+}
+
+/**
+ * Enregistre une catégorie d'arme inconnue.
+ * @param {string} categoryValue
+ */
+export function addWeaponUnknownCategory(categoryValue) {
+  weaponStats.addDetail('unknownCategories', categoryValue, 'categoryDetails')
+}
+
+/**
+ * Incrémente le compteur de fallback de catégorie.
+ */
+export function incrementWeaponCategoryFallback() {
+  weaponStats.increment('categoryFallbacks', 1)
+}
+
+/**
  * Récupère les statistiques actuelles dans un format sérialisable.
- * @returns {{total:number,rejected:number,imported:number,unknownSkills:number,unknownQualities:number,skillDetails:string[],qualityDetails:string[]}}
+ * @returns {{total:number,rejected:number,imported:number,unknownSkills:number,unknownQualities:number,unknownTypes:number,unknownCategories:number,categoryFallbacks:number,skillDetails:string[],qualityDetails:string[],typeDetails:string[],categoryDetails:string[]}}
  */
 export function getWeaponImportStats() {
   return weaponStats.getStats()

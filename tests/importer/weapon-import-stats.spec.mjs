@@ -112,4 +112,100 @@ describe('weaponMapper - stats and fallbacks', () => {
     const blastQuality = result[0].system.qualities.find(q => q.key === 'blast')
     expect(blastQuality).toMatchObject({ key: 'blast', rank: 6, hasRank: true })
   })
+
+  it('records unknown weapon types and falls back to slugified weaponType', () => {
+    const xmlWeapons = [
+      {
+        Name: 'Mysterious Blaster',
+        Key: 'mysterious',
+        SkillKey: 'RangedLight',
+        Range: 'Short',
+        Damage: 3,
+        Crit: 2,
+        Type: 'Quantum/Plasma',
+        Qualities: {
+          Quality: { Key: 'Accurate', Count: 1 },
+        },
+      },
+    ]
+
+    const result = weaponMapper(xmlWeapons)
+    expect(result).toHaveLength(1)
+
+    // Unknown type → slugified
+    expect(result[0].system.weaponType).toBe('quantum-plasma')
+    // Raw type preserved in flags
+    expect(result[0].flags.swerpg.oggdude.type).toBe('Quantum/Plasma')
+
+    const stats = getWeaponImportStats()
+    expect(stats.unknownTypes).toBe(1)
+    expect(stats.typeDetails).toContain('Quantum/Plasma')
+  })
+
+  it('falls back category from SkillKey when no Categories match', () => {
+    const xmlWeapons = [
+      {
+        Name: 'Mystery Melee',
+        Key: 'mystery-melee',
+        SkillKey: 'Melee',
+        Range: 'Engaged',
+        Damage: 3,
+        Crit: 2,
+        Qualities: {
+          Quality: { Key: 'Breach', Count: 1 },
+        },
+      },
+    ]
+
+    const result = weaponMapper(xmlWeapons)
+    expect(result[0].system.category).toBe('melee')
+
+    const stats = getWeaponImportStats()
+    expect(stats.categoryFallbacks).toBeGreaterThan(0)
+  })
+
+  it('uses default category when both Categories and SkillKey are absent', () => {
+    const xmlWeapons = [
+      {
+        Name: 'No Hints',
+        Key: 'no-hints',
+        SkillKey: 'UNDEFINED_SKILL',
+        Range: 'UNDEFINED_RANGE',
+        Damage: 1,
+        Crit: 1,
+        Qualities: {
+          Quality: { Key: 'Accurate', Count: 1 },
+        },
+      },
+    ]
+
+    const result = weaponMapper(xmlWeapons)
+    expect(result[0].system.category).toBe('ranged')
+  })
+
+  it('records unknown category values', () => {
+    const xmlWeapons = [
+      {
+        Name: 'Weird Category',
+        Key: 'weird-cat',
+        SkillKey: 'RangedLight',
+        Range: 'Short',
+        Damage: 2,
+        Crit: 2,
+        Categories: {
+          Category: ['TotallyUnknownCategory'],
+        },
+        Qualities: {
+          Quality: { Key: 'Accurate', Count: 1 },
+        },
+      },
+    ]
+
+    const result = weaponMapper(xmlWeapons)
+    expect(result).toHaveLength(1)
+
+    const stats = getWeaponImportStats()
+    expect(stats.unknownCategories).toBe(1)
+    expect(stats.categoryDetails).toContain('TotallyUnknownCategory')
+  })
 })
