@@ -8,6 +8,12 @@ import SwerpgCombatItem from './combat.mjs'
  */
 export default class SwerpgWeapon extends SwerpgCombatItem {
   /** @override */
+  static ITEM_CATEGORIES = SYSTEM.WEAPON.CATEGORIES
+
+  /** @override */
+  static DEFAULT_CATEGORY = 'ranged'
+
+  /** @override */
   static ITEM_QUALITIES = SYSTEM.WEAPON.QUALITIES
 
   /** @override */
@@ -51,6 +57,10 @@ export default class SwerpgWeapon extends SwerpgCombatItem {
         required: false,
         choices: SYSTEM.WEAPON.ANIMATION_TYPES,
         initial: undefined,
+      }),
+      weaponType: new fields.StringField({
+        required: false,
+        initial: '',
       }),
     })
   }
@@ -101,9 +111,10 @@ export default class SwerpgWeapon extends SwerpgCombatItem {
    * Prepare derived data specific to the weapon type.
    */
   prepareBaseData() {
-    // Weapon Category
-    const skills = SYSTEM.WEAPON.SKILLS
-    const category = skills[this.category] || skills[this.constructor.QUALITY]
+    // Weapon Category — resolved from canonical taxonomy, with fallback to default
+    const categories = SYSTEM.WEAPON.CATEGORIES
+    const categoryId = this.category in categories ? this.category : this.constructor.DEFAULT_CATEGORY
+    const category = categories[categoryId]
 
     // Weapon Quality
     const qualities = SYSTEM.QUALITY_TIERS
@@ -281,6 +292,13 @@ export default class SwerpgWeapon extends SwerpgCombatItem {
 
     // Damage
     tags.damage = `${this.damage.weapon} Damage`
+
+    // Canonical category (mechanical family)
+    if (this.config?.category?.label) tags.category = this.config.category.label
+
+    // Narrative subtype
+    if (this.weaponType) tags['weapon-type'] = this.weaponType
+
     tags.reload = 'Reload'
 
     const oggdudeTags = this.flags?.swerpg?.oggdudeTags

@@ -13,6 +13,20 @@
  */
 
 /**
+ * @typedef {Object} WeaponCategory    A canonincal weapon mechanical family (system.category)
+ * @property {string} id               The category id
+ * @property {string} label            The localized label
+ * @property {boolean} ranged          Whether this is a ranged weapon family
+ * @property {boolean} reload          Whether weapons in this family require reloading
+ * @property {number} hands            Typical hand count (1 or 2)
+ * @property {boolean} main            Can be equipped in main-hand slot
+ * @property {boolean} off             Can be equipped in off-hand slot
+ * @property {string} training         Training key used for bonus lookups
+ * @property {string[]} scaling        Ability scaling keys (e.g. ['dexterity'])
+ * @property {RangeCategory} rangeCategory  The range category for attack roll mechanics
+ */
+
+/**
  * @typedef {Object} RangeType     A weapon range type
  * @property {string} id               The range category id
  * @property {string} abrev            The range category abbreviation
@@ -70,6 +84,98 @@ export const RANGE_CATEGORY = {
     id: 'distant',
     abrev: 'DIS',
     label: 'WEAPON.RANGE_CATEGORY.DISTANT',
+  },
+}
+
+/**
+ * Named weapon categories (canonical mechanical family taxonomy).
+ * Each entry defines metadata consumed by the runtime (equipment, actions, preparation).
+ * @enum {WeaponCategory}
+ */
+export const CATEGORIES = {
+  melee: {
+    id: 'melee',
+    label: 'WEAPON.CATEGORIES.MELEE',
+    ranged: false,
+    reload: false,
+    hands: 1,
+    main: true,
+    off: true,
+    training: 'melee',
+    scaling: ['strength'],
+    rangeCategory: RANGE_CATEGORY.melee,
+  },
+  ranged: {
+    id: 'ranged',
+    label: 'WEAPON.CATEGORIES.RANGED',
+    ranged: true,
+    reload: true,
+    hands: 1,
+    main: true,
+    off: false,
+    training: 'projectile',
+    scaling: ['dexterity'],
+    rangeCategory: RANGE_CATEGORY.distant,
+  },
+  gunnery: {
+    id: 'gunnery',
+    label: 'WEAPON.CATEGORIES.GUNNERY',
+    ranged: true,
+    reload: true,
+    hands: 2,
+    main: true,
+    off: false,
+    training: 'projectile',
+    scaling: ['dexterity'],
+    rangeCategory: RANGE_CATEGORY.distant,
+  },
+  explosive: {
+    id: 'explosive',
+    label: 'WEAPON.CATEGORIES.EXPLOSIVE',
+    ranged: true,
+    reload: false,
+    hands: 1,
+    main: true,
+    off: false,
+    training: 'projectile',
+    scaling: ['dexterity'],
+    rangeCategory: RANGE_CATEGORY.distant,
+  },
+  thrown: {
+    id: 'thrown',
+    label: 'WEAPON.CATEGORIES.THROWN',
+    ranged: true,
+    reload: false,
+    hands: 1,
+    main: true,
+    off: true,
+    training: 'projectile',
+    scaling: ['dexterity'],
+    rangeCategory: RANGE_CATEGORY.distant,
+  },
+  vehicle: {
+    id: 'vehicle',
+    label: 'WEAPON.CATEGORIES.VEHICLE',
+    ranged: true,
+    reload: true,
+    hands: 2,
+    main: true,
+    off: false,
+    training: 'mechanical',
+    scaling: ['dexterity'],
+    rangeCategory: RANGE_CATEGORY.distant,
+  },
+  natural: {
+    id: 'natural',
+    label: 'WEAPON.CATEGORIES.NATURAL',
+    ranged: false,
+    reload: false,
+    hands: 1,
+    main: true,
+    off: false,
+    training: 'melee',
+    scaling: ['strength'],
+    rangeCategory: RANGE_CATEGORY.melee,
   },
 }
 

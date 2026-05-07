@@ -11,6 +11,7 @@ vi.mock('../../module/utils/logger.mjs', () => ({
 
 import { weaponMapper, getWeaponImportStats, resetWeaponImportStats } from '../../module/importer/items/weapon-ogg-dude.mjs'
 import SwerpgWeapon from '../../module/models/weapon.mjs'
+import { SYSTEM } from '../../module/config/system.mjs'
 
 describe('weaponMapper - mapping', () => {
   beforeEach(() => {
@@ -191,5 +192,61 @@ describe('weaponMapper - mapping', () => {
     expect(tags['category-ranged']).toBe('Category: Ranged')
     expect(tags.restricted).toBe('Restricted')
     expect(tags['blast']).toBe(game.i18n.localize('WEAPON.QUALITIES.Blast') + ' 2')
+  })
+})
+
+describe('SwerpgWeapon - schema taxonomy', () => {
+  it('declares ITEM_CATEGORIES as the canonical weapon taxonomy', () => {
+    expect(SwerpgWeapon.ITEM_CATEGORIES).toBe(SYSTEM.WEAPON.CATEGORIES)
+    expect(SwerpgWeapon.ITEM_CATEGORIES).toHaveProperty('melee')
+    expect(SwerpgWeapon.ITEM_CATEGORIES).toHaveProperty('ranged')
+    expect(SwerpgWeapon.ITEM_CATEGORIES).toHaveProperty('gunnery')
+    expect(SwerpgWeapon.ITEM_CATEGORIES).toHaveProperty('explosive')
+    expect(SwerpgWeapon.ITEM_CATEGORIES).toHaveProperty('thrown')
+    expect(SwerpgWeapon.ITEM_CATEGORIES).toHaveProperty('vehicle')
+    expect(SwerpgWeapon.ITEM_CATEGORIES).toHaveProperty('natural')
+  })
+
+  it('uses ranged as DEFAULT_CATEGORY', () => {
+    expect(SwerpgWeapon.DEFAULT_CATEGORY).toBe('ranged')
+  })
+
+  it('defines system.weaponType in the schema', () => {
+    if (globalThis.foundry?.data?.fields) {
+      if (!globalThis.foundry.data.fields.EmbeddedDataField) {
+        globalThis.foundry.data.fields.EmbeddedDataField = class EmbeddedDataField {
+          constructor(type) { this.type = type }
+        }
+      }
+      if (!globalThis.foundry.data.fields.HTMLField) {
+        globalThis.foundry.data.fields.HTMLField = class extends globalThis.foundry.data.fields.StringField {}
+      }
+    }
+    const weaponSchema = SwerpgWeapon.defineSchema()
+    expect(weaponSchema.weaponType).toBeDefined()
+    expect(weaponSchema.weaponType.config.required).toBe(false)
+    expect(weaponSchema.weaponType.config.initial).toBe('')
+  })
+
+  it('category fallback uses DEFAULT_CATEGORY when value is invalid', () => {
+    const categories = SYSTEM.WEAPON.CATEGORIES
+    // Simulate the same lookup prepareBaseData does
+    const invalidCategory = 'nonexistent'
+    const resolved = invalidCategory in categories ? categories[invalidCategory] : categories[SwerpgWeapon.DEFAULT_CATEGORY]
+    expect(resolved).toBeDefined()
+    expect(resolved.id).toBe(SwerpgWeapon.DEFAULT_CATEGORY)
+  })
+
+  it('every category entry has required runtime metadata', () => {
+    const categories = SYSTEM.WEAPON.CATEGORIES
+    for (const [key, cat] of Object.entries(categories)) {
+      expect(cat.id).toBe(key)
+      expect(cat.label).toBeTruthy()
+      expect(typeof cat.ranged).toBe('boolean')
+      expect(typeof cat.reload).toBe('boolean')
+      expect(typeof cat.hands).toBe('number')
+      expect(Array.isArray(cat.scaling)).toBe(true)
+      expect(cat.rangeCategory).toBeDefined()
+    }
   })
 })
