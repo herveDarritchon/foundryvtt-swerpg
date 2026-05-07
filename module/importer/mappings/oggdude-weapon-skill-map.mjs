@@ -36,4 +36,15 @@ export const WEAPON_SKILL_MAP = {
   LightSaber: 'lightSaber',
   LS: 'lightSaber',
   LIGHTSABRE: 'lightSaber',
+
+  // Missing codes from logs
+  RANGL: 'rangedLight',
+  RANGT: 'rangedLight',
+  RANGHT: 'rangedHeavy',
+  RANGHVY: 'rangedHeavy',
+  RANGH: 'rangedHeavy',
+  RANGVY: 'rangedHeavy',
+  MECH: 'brawl',
+  SKUL: 'rangedLight',
+  RANGLT: 'rangedLight',
 }

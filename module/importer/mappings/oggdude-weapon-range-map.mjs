@@ -52,6 +52,9 @@ export const WEAPON_RANGE_MAP = {
   close: 'engaged',
   Close: 'engaged',
   CLOSE: 'engaged',
+  wrClose: 'engaged',
+  WRClose: 'engaged',
+  wrclose: 'engaged',
 
   far: 'long',
   Far: 'long',
@@ -60,4 +63,8 @@ export const WEAPON_RANGE_MAP = {
   personal: 'engaged',
   Personal: 'engaged',
   PERSONAL: 'engaged',
+
+  wrNoRange: 'engaged',
+  WRNoRange: 'engaged',
+  wrnorange: 'engaged',
 }

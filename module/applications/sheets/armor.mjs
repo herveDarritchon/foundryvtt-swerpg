@@ -26,7 +26,7 @@ export default class ArmorSheet extends SwerpgBaseItemSheet {
     Object.assign(context, {
       defenseWidget: this.#defenseWidget.bind(this),
       soakWidget: this.#soakWidget.bind(this),
-      propertiesWidget: this.#propertiesWidget.bind(this),
+      qualitiesWidget: this.#qualitiesWidget.bind(this),
       scaledPrice: new foundry.data.fields.StringField({ label: game.i18n.localize('ARMOR.SHEET.SCALED_PRICE') }),
     })
     return context
@@ -69,17 +69,92 @@ export default class ArmorSheet extends SwerpgBaseItemSheet {
   /* -------------------------------------------- */
 
   /**
-   * Render the properties field as a multi-checkboxes element.
+   * Render the qualities field as a multi-checkboxes element with rank support.
    * @param field
    * @param groupConfig
    * @param inputConfig
-   * @returns {HTMLMultiCheckboxElement}
+   * @returns {HTMLElement}
    */
-  #propertiesWidget(field, groupConfig, inputConfig) {
-    inputConfig.name = field.fieldPath
-    inputConfig.options = Object.entries(SYSTEM.ARMOR.PROPERTIES).map(([k, v]) => ({ value: k, label: v.label }))
-    inputConfig.type = 'checkboxes'
-    return foundry.applications.fields.createMultiSelectInput(inputConfig)
+  #qualitiesWidget(field, groupConfig, inputConfig) {
+    const qualities = this.document.system.qualities || []
+    const qualityOptions = Object.entries(SYSTEM.ARMOR.PROPERTIES).map(([k, v]) => ({
+      value: k,
+      label: v.label,
+      hasRank: v.hasRank || false,
+    }))
+
+    const container = document.createElement('div')
+    container.className = 'qualities-widget'
+
+    qualityOptions.forEach((opt) => {
+      const qualityData = qualities.find((q) => q.key === opt.value)
+      const isChecked = qualityData !== undefined
+      const currentRank = qualityData?.rank ?? 1
+
+      const row = document.createElement('div')
+      row.className = 'quality-row'
+
+      const checkbox = document.createElement('input')
+      checkbox.type = 'checkbox'
+      checkbox.name = `${field.fieldPath}.${opt.value}.active`
+      checkbox.checked = isChecked
+      checkbox.dataset.key = opt.value
+      checkbox.addEventListener('change', (ev) => this._onQualityChange(ev))
+
+      const label = document.createElement('label')
+      label.textContent = opt.label
+
+      row.appendChild(checkbox)
+      row.appendChild(label)
+
+      if (opt.hasRank) {
+        const rankInput = document.createElement('input')
+        rankInput.type = 'number'
+        rankInput.name = `${field.fieldPath}.${opt.value}.rank`
+        rankInput.value = currentRank
+        rankInput.min = 0
+        rankInput.className = 'quality-rank'
+        rankInput.disabled = !isChecked
+        rankInput.addEventListener('change', (ev) => this._onQualityChange(ev))
+        row.appendChild(rankInput)
+      }
+
+      container.appendChild(row)
+    })
+
+    return container
+  }
+
+  async _onQualityChange(event) {
+    const target = event.target
+    const key = target.dataset.key
+    const isCheckbox = target.type === 'checkbox'
+    const isChecked = isCheckbox ? target.checked : true
+
+    const qualities = foundry.utils.deepClone(this.document.system.qualities || [])
+
+    if (isCheckbox) {
+      if (isChecked) {
+        const qualityConfig = SYSTEM.ARMOR.PROPERTIES[key]
+        qualities.push({
+          key: key,
+          rank: qualityConfig?.hasRank ? 1 : null,
+          hasRank: qualityConfig?.hasRank || false,
+          active: true,
+          source: 'base',
+        })
+      } else {
+        const idx = qualities.findIndex((q) => q.key === key)
+        if (idx !== -1) qualities.splice(idx, 1)
+      }
+    } else {
+      const quality = qualities.find((q) => q.key === key)
+      if (quality) {
+        quality.rank = parseInt(target.value) || 0
+      }
+    }
+
+    await this.document.update({ 'system.qualities': qualities })
   }
 
   /* -------------------------------------------- */
