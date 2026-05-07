@@ -82,7 +82,12 @@ export const OGG_DUDE_SKILL_MAP = Object.freeze({
   XEN: 'xenology',
   XENOLOGY: 'xenology',
 
-  // === DEPRECATED/LEGACY MAPPINGS (kept for backward compatibility) ===
+   // === ADDITIONAL SKILLS (Age of Rebellion / Force and Destiny) ===
+   WARF: 'warfare',
+   UND: 'underworld',
+   LTSABER: 'lightsaber',
+
+   // === DEPRECATED/LEGACY MAPPINGS (kept for backward compatibility) ===
   WILD: 'wilderness',
   WILDERNESS: 'wilderness',
   ARCA: 'arcana',

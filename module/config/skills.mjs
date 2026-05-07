@@ -197,11 +197,11 @@ export const SKILLS = {
     category: 'soc',
     characteristics: ['dexterity', 'presence'],
   },
-  skulduggery: {
-    id: 'skulduggery',
-    category: 'soc',
-    characteristics: ['dexterity', 'intellect'],
-  },
+   skulduggery: {
+     id: 'skulduggery',
+     category: 'soc',
+     characteristics: ['dexterity', 'intellect'],
+   },
 }
 
 /**
