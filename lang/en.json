@@ -806,6 +806,10 @@
     "OuterRimAbbr": "out",
     "Underworld": "Underworld",
     "UnderworldAbbr": "Und",
+    "Warfare": "Warfare",
+    "WarfareAbbr": "War",
+    "Lightsaber": "Lightsaber",
+    "LightsaberAbbr": "Lts",
     "Xenology": "Xenology",
     "XenologyAbbr": "Xen"
   },
