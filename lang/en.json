@@ -956,6 +956,15 @@
     "ConvincingDemeanorAbbr": "Cdr"
   },
   "WEAPON": {
+    "CATEGORIES": {
+      "MELEE": "Melee",
+      "RANGED": "Ranged",
+      "GUNNERY": "Gunnery",
+      "EXPLOSIVE": "Explosive",
+      "THROWN": "Thrown",
+      "VEHICLE": "Vehicle",
+      "NATURAL": "Natural"
+    },
     "QUALITIES": {
       "Accurate": "Accurate",
       "AccurateTooltip": "This weapon is particularly accurate, granting +1 bonus to the attack roll.",
@@ -1059,6 +1068,10 @@
       "animation": {
         "label": "Weapon Animation Prefix",
         "hint": "If using Swerpg with JB2A animation integration, specify which animation prefix is used for this weapon."
+      },
+      "weaponType": {
+        "label": "Weapon Type",
+        "hint": "The narrative subtype or lineage of this weapon (e.g. blaster, lightsaber)."
       }
     },
     "TAGS": {

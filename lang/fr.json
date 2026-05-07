@@ -866,23 +866,13 @@
   },
   "WEAPON": {
     "CATEGORIES": {
-      "LIGHT1": "Light (1h)",
-      "SIMPLE1": "Simple (1h)",
-      "BALANCED1": "Balanced (1h)",
-      "HEAVY1": "Heavy (1h)",
-      "SIMPLE2": "Simple (2h)",
-      "BALANCED2": "Balanced (2h)",
-      "HEAVY2": "Heavy (2h)",
-      "PROJECTILE1": "Projectile (1h)",
-      "PROJECTILE2": "Projectile (2h)",
-      "MECHANICAL1": "Mechanical (1h)",
-      "MECHANICAL2": "Mechanical (2h)",
-      "NATURAL": "Natural",
-      "UNARMED": "Unarmed",
-      "SHIELD_LIGHT": "Light Shield",
-      "SHIELD_HEAVY": "Heavy Shield",
-      "TALISMAN1": "Talisman (1h)",
-      "TALISMAN2": "Talisman (2h)"
+      "MELEE": "Melee",
+      "RANGED": "Ranged",
+      "GUNNERY": "Gunnery",
+      "EXPLOSIVE": "Explosive",
+      "THROWN": "Thrown",
+      "VEHICLE": "Vehicle",
+      "NATURAL": "Natural"
     },
     "FIELDS": {
       "damageType": {
@@ -900,6 +890,10 @@
       "animation": {
         "label": "Weapon Animation Prefix",
         "hint": "If using Swerpg with JB2A animation integration, specify which animation prefix is used for this weapon."
+      },
+      "weaponType": {
+        "label": "Weapon Type",
+        "hint": "The narrative subtype or lineage of this weapon (e.g. blaster, lightsaber)."
       }
     },
     "TAGS": {
