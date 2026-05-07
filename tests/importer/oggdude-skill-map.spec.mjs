@@ -62,23 +62,27 @@ describe('OggDude Skill Mapping', () => {
       consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
     })
 
-    it('devrait retourner null pour LTSABER avec warning', () => {
+    it('devrait mapper LTSABER vers lightsaber sans warning', () => {
       const result = mapOggDudeSkillCode('LTSABER')
-      expect(result).toBeNull()
-      expect(consoleWarnSpy).toHaveBeenCalled()
+      expect(result).toBe('lightsaber')
+      expect(consoleWarnSpy).not.toHaveBeenCalled()
     })
 
-    it('devrait retourner null pour WARF avec warning', () => {
+    it('devrait mapper WARF vers warfare sans warning', () => {
       const result = mapOggDudeSkillCode('WARF')
-      expect(result).toBeNull()
-      expect(consoleWarnSpy).toHaveBeenCalled()
+      expect(result).toBe('warfare')
+      expect(consoleWarnSpy).not.toHaveBeenCalled()
+    })
+
+    it('devrait mapper UND vers underworld sans warning', () => {
+      const result = mapOggDudeSkillCode('UND')
+      expect(result).toBe('underworld')
+      expect(consoleWarnSpy).not.toHaveBeenCalled()
     })
 
     it('devrait retourner null pour codes inconnus sans warning si warnOnUnknown=false', () => {
-      const result1 = mapOggDudeSkillCode('LTSABER', { warnOnUnknown: false })
-      const result2 = mapOggDudeSkillCode('WARF', { warnOnUnknown: false })
+      const result1 = mapOggDudeSkillCode('UNKNOWN_CODE_XYZ', { warnOnUnknown: false })
       expect(result1).toBeNull()
-      expect(result2).toBeNull()
       expect(consoleWarnSpy).not.toHaveBeenCalled()
     })
 
@@ -226,6 +230,9 @@ describe('OggDude Skill Mapping', () => {
         'SW',
         'VIGIL',
         'XEN',
+        'WARF',
+        'UND',
+        'LTSABER',
       ]
 
       const unmappedCodes = []
@@ -242,10 +249,10 @@ describe('OggDude Skill Mapping', () => {
       expect(unmappedCodes).toHaveLength(0)
     })
 
-    it('les codes non mappables connus devraient être documentés', () => {
-      // LTSABER et WARF ne doivent pas être dans la table (compétences absentes de SKILLS)
-      expect(OGG_DUDE_SKILL_MAP.LTSABER).toBeUndefined()
-      expect(OGG_DUDE_SKILL_MAP.WARF).toBeUndefined()
+    it('les codes WARF, UND, LTSABER devraient être mappés vers les bonnes compétences', () => {
+      expect(OGG_DUDE_SKILL_MAP.WARF).toBe('warfare')
+      expect(OGG_DUDE_SKILL_MAP.UND).toBe('underworld')
+      expect(OGG_DUDE_SKILL_MAP.LTSABER).toBe('lightsaber')
     })
   })
 
