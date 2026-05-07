@@ -673,7 +673,11 @@
           "exists": "Exists",
           "new": "New",
           "pagination": "Preview Pagination",
-          "noData": "No data to preview"
+          "noData": "No data to preview",
+          "category": "Category",
+          "categoryAll": "All",
+          "weaponType": "Weapon Type",
+          "weaponTypeAll": "All"
         },
         "summary": {
           "title": "Import Summary"

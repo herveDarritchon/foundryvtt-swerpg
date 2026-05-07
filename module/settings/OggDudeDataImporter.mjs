@@ -7,6 +7,7 @@
 import OggDudeImporter from '../importer/oggDude.mjs'
 import { logger } from '../utils/logger.mjs'
 import { aggregateImportMetrics, formatGlobalMetrics, getAllImportStats } from '../importer/utils/global-import-metrics.mjs'
+import { SYSTEM } from '../config/system.mjs'
 // Similar syntax to importing, mais c'est du destructuring et peut être indisponible en environnement de test.
 
 // Fournit des fallbacks légers si l'API Foundry n'est pas initialisée (exécution tests).
@@ -31,7 +32,7 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
   domains = this._initializeDomains(this._domainNames)
   zipFile = null
   previewData = {}
-  previewFilters = { domain: 'all', text: '' }
+  previewFilters = { domain: 'all', text: '', category: 'all', weaponType: 'all' }
   pagination = { page: 1, size: 50 }
   // États de visibilité des sections repliables (collapsibles). Masqués par défaut.
   showStats = false
@@ -231,6 +232,24 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
       textInput.addEventListener('input', async (e) => {
         this.previewFilters.text = e.target.value
         // reset page to 1 on filter change
+        this.pagination.page = 1
+        await this.render()
+      })
+    }
+    const categorySelect = this.element.querySelector('select[name="preview-category"]')
+    if (categorySelect) {
+      categorySelect.value = this.previewFilters.category
+      categorySelect.addEventListener('change', async (e) => {
+        this.previewFilters.category = e.target.value
+        this.pagination.page = 1
+        await this.render()
+      })
+    }
+    const weaponTypeSelect = this.element.querySelector('select[name="preview-weaponType"]')
+    if (weaponTypeSelect) {
+      weaponTypeSelect.value = this.previewFilters.weaponType
+      weaponTypeSelect.addEventListener('change', async (e) => {
+        this.previewFilters.weaponType = e.target.value
         this.pagination.page = 1
         await this.render()
       })
@@ -459,15 +478,40 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
     const domains = Object.keys(this.previewData || {})
     const selectedDomain = this.previewFilters.domain === 'all' ? null : this.previewFilters.domain
     const text = (this.previewFilters.text || '').toLowerCase()
+    const selectedCategory = this.previewFilters.category === 'all' ? null : this.previewFilters.category
+    const selectedWeaponType = this.previewFilters.weaponType === 'all' ? null : this.previewFilters.weaponType
+
+    const categorySet = new Set()
+    const weaponTypeSet = new Set()
+
     let items = []
     for (const d of domains) {
       if (selectedDomain && d !== selectedDomain) continue
       const arr = this.previewData[d] || []
+      for (const it of arr) {
+        if (it.system?.category) categorySet.add(it.system.category)
+        if (it.system?.weaponType) weaponTypeSet.add(it.system.weaponType)
+      }
       items.push(...arr)
+    }
+
+    // Apply category filter
+    if (selectedCategory) {
+      items = items.filter((it) => it.system?.category === selectedCategory)
+    }
+    // Apply weaponType filter
+    if (selectedWeaponType) {
+      items = items.filter((it) => it.system?.weaponType === selectedWeaponType)
     }
     if (text) {
       items = items.filter((it) => `${it.name}`.toLowerCase().includes(text))
     }
+
+    const catLabel = (key) => {
+      const cat = SYSTEM.WEAPON.CATEGORIES[key]
+      return cat ? (game?.i18n?.localize?.(cat.label) ?? key) : key
+    }
+
     const total = items.length
     const size = this.pagination.size
     const page = Math.max(1, Math.min(this.pagination.page, Math.ceil(total / size) || 1))
@@ -481,6 +525,8 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
       totalPages: Math.max(1, Math.ceil(total / size)),
       items: pageItems,
       filters: this.previewFilters,
+      categoryOptions: Array.from(categorySet).sort().map((k) => ({ value: k, label: catLabel(k) })),
+      weaponTypeOptions: Array.from(weaponTypeSet).sort(),
     }
   }
 

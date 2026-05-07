@@ -96,7 +96,11 @@
           "exists": "Existe",
           "new": "Nouveau",
           "pagination": "Pagination d'aperçu",
-          "noData": "Aucune donnée à prévisualiser"
+          "noData": "Aucune donnée à prévisualiser",
+          "category": "Catégorie",
+          "categoryAll": "Toutes",
+          "weaponType": "Type d'arme",
+          "weaponTypeAll": "Tous"
         },
         "progress": {
           "global": "Progression globale"
@@ -160,7 +164,11 @@
         "exists": "Existe",
         "new": "Nouveau",
         "pagination": "Pagination d'aperçu",
-        "noData": "Aucune donnée à prévisualiser"
+        "noData": "Aucune donnée à prévisualiser",
+        "category": "Catégorie",
+        "categoryAll": "Toutes",
+        "weaponType": "Type d'arme",
+        "weaponTypeAll": "Tous"
       },
       "progress": {
         "global": "Progression globale"
