@@ -178,9 +178,58 @@ describe('weaponMapper - mapping', () => {
 
     const tags = SwerpgWeapon.prototype.getTags.call(weapon, 'full')
     expect(tags.category).toBe('Ranged')
-    expect(tags['weapon-type']).toBe('heavy-blaster')
+    expect(tags['weapon-type']).toBe('Heavy Blaster')
     expect(tags.restricted).toBe('Restricted')
     expect(tags['blast']).toBe(game.i18n.localize('WEAPON.QUALITIES.Blast') + ' 2')
+  })
+
+  it('short scope excludes qualities and range', () => {
+    const weapon = {
+      damage: { weapon: 6 },
+      range: 'medium',
+      weaponType: 'lightsaber',
+      restricted: false,
+      qualities: [],
+      flags: {},
+      system: {},
+      defense: { block: 0, parry: 0 },
+      config: {
+        category: { label: 'Melee', reload: false },
+      },
+      broken: false,
+    }
+    const tags = SwerpgWeapon.prototype.getTags.call(weapon, 'short')
+    expect(tags.damage).toBe('6 Damage')
+    expect(tags.category).toBe('Melee')
+    expect(tags['weapon-type']).toBe('Lightsaber')
+    expect(tags.reload).toBeUndefined()
+    expect(tags.range).toBeUndefined()
+  })
+
+  it('reload tag present only when category.reload is true', () => {
+    const noReload = SwerpgWeapon.prototype.getTags.call({
+      damage: { weapon: 4 },
+      weaponType: 'melee',
+      qualities: [],
+      flags: {},
+      system: {},
+      defense: { block: 0, parry: 0 },
+      config: { category: { label: 'Melee', reload: false } },
+      broken: false,
+    }, 'short')
+    expect(noReload.reload).toBeUndefined()
+
+    const withReload = SwerpgWeapon.prototype.getTags.call({
+      damage: { weapon: 6 },
+      weaponType: 'heavy-blaster',
+      qualities: [],
+      flags: {},
+      system: {},
+      defense: { block: 0, parry: 0 },
+      config: { category: { label: 'Ranged', reload: true } },
+      broken: false,
+    }, 'short')
+    expect(withReload.reload).toBe('Reload')
   })
 })
 
