@@ -1,6 +1,8 @@
 <section class="tab sheet-body flexcol scrollable {{tabs.config.cssClass}}" data-tab="{{tabs.config.id}}" data-group="{{tabs.config.group}}">
   <fieldset {{fieldDisabled}}>
     <legend>{{localize "WEAPON.SHEET.TYPE"}}</legend>
+    {{formField fields.category value=source.system.category}}
+    {{formField fields.weaponType value=source.system.weaponType}}
     {{formField fields.skill value=source.system.skill}}
     {{formField fields.quality value=source.system.quality}}
     {{formField fields.range value=source.system.range localize=true}}
