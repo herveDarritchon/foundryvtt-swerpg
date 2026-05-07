@@ -10,7 +10,7 @@ superseded_by: ''
 
 ## Status
 
-**Accepted** — Validée le 2026-05-07. L'ADR formalise les décisions d'architecture issues de #15 et sert de référence pour #97, #98, #100 et #101.
+**Accepted** — Validée le 2026-05-07. L'ADR formalise les décisions d'architecture issues de #15. Les valeurs canoniques finales de la taxonomie sont définies dans la [spécification canonique](../../spec/weapon-taxonomy-canonical.md) (issue #97). Cette ADR sert de référence pour #98, #100 et #101.
 
 ## Context
 
@@ -56,47 +56,36 @@ On distingue deux champs distincts dans le schéma `weapon` :
     - Issu de `<Type>` OggDude.
     - Usage informatif, affichage, filtres secondaires et préparation pour futurs comportements.
 
-### D2 — Enum canonique proposée pour `system.category`
+### D2 — Enum canonique pour `system.category`
 
-Les valeurs proposées à titre initial (seront finalisées dans #97) :
+Les valeurs canoniques finales sont définies dans la [spécification canonique #97](../../spec/weapon-taxonomy-canonical.md).
 
-| Clé         | Label         | Skill principal          | RangeCategory | Notes                                   |
-|-------------|---------------|--------------------------|---------------|-----------------------------------------|
-| `melee`     | Mêlée         | melee, lightsaber, brawl | melee         | Armes de corps-à-corps                  |
-| `ranged`    | Distance      | rangedLight, rangedHeavy | distant       | Armes à distance (hors heavy)           |
-| `gunnery`   | Armes lourdes | gunnery                  | distant       | Mitrailleuses, lance-missiles portatifs |
-| `explosive` | Explosifs     | variable                 | variable      | Grenades, mines, démolitions            |
-| `thrown`    | Jet           | rangedLight              | distant       | Couteaux de lancer, shurikens           |
-| `vehicle`   | Véhicule      | gunnery                  | distant       | Armement monté sur véhicule             |
-| `natural`   | Naturelles    | brawl                    | melee         | Attaques sans arme                      |
+L'enum se compose des valeurs suivantes, validées dans #97 :
 
-**Règles :**
-
-- Toute arme non catégorisée reçoit `melee` ou `ranged` selon son `SkillKey` (fallback sûr).
-- Les valeurs sont définies dans `module/config/weapon.mjs` sous une export `CATEGORIES` suivant le pattern d'
-  `armor.mjs`.
-
-### D3 — `system.weaponType` : valeurs et mapping OggDude
-
-Le champ `system.weaponType` reçoit une valeur normalisée à partir de `<Type>` OggDude via une table de mapping :
-
-| `<Type>` OggDude   | `system.weaponType` normalisé |
-|--------------------|-------------------------------|
-| `Blasters`         | `blaster`                     |
-| `Blasters/Heavy`   | `blaster-heavy`               |
-| `Slugthrowers`     | `slugthrower`                 |
-| `Flame-Projectors` | `flame-projector`             |
-| `Explosives/Other` | `explosive-other`             |
-| `Ion`              | `ion`                         |
-| `Missiles`         | `missile`                     |
-| `Melee`            | `melee`                       |
-| `Lightsabers`      | `lightsaber`                  |
-| `Brawl`            | `brawl`                       |
+| Clé         | Rôle mécanique                      | Skill principal          | RangeCategory |
+|-------------|-------------------------------------|--------------------------|---------------|
+| `melee`     | Corps-à-corps                       | melee, lightsaber, brawl | melee         |
+| `ranged`    | Tir standard                        | rangedLight, rangedHeavy | distant       |
+| `gunnery`   | Armes lourdes portatives            | gunnery                  | distant       |
+| `explosive` | Explosifs, démolitions              | rangedLight, gunnery     | distant       |
+| `thrown`    | Armes de jet                        | rangedLight              | distant       |
+| `vehicle`   | Armement monté                       | gunnery                  | distant       |
+| `natural`   | Attaques naturelles                 | brawl                    | melee         |
 
 **Règles :**
 
-- Les valeurs sont normalisées en kebab-case.
-- Les valeurs inconnues sont conservées telles quelles (slugifiées) avec un warning.
+- Toute arme non catégorisée reçoit `melee` ou `ranged` selon son `SkillKey` (fallback sûr, voir chaîne de priorité dans la spec #97).
+- Les valeurs sont définies dans `module/config/weapon.mjs` sous une export `CATEGORIES` suivant le pattern d'`armor.mjs`.
+
+### D3 — `system.weaponType` : liste normalisée ouverte
+
+Le champ `system.weaponType` reçoit une valeur normalisée à partir de `<Type>` OggDude. La liste des valeurs connues et les règles de slugification sont définies dans la [spécification canonique #97](../../spec/weapon-taxonomy-canonical.md).
+
+**Règles (synthèse) :**
+
+- `system.weaponType` n'est pas une enum fermée : c'est une liste de référence ouverte avec fallback par slugification.
+- Les valeurs connues sont normalisées en kebab-case.
+- Les valeurs inconnues sont slugifiées (kebab-case, sans caractères spéciaux).
 - La valeur brute d'origine est toujours conservée dans `flags.swerpg.oggdude.type`.
 
 ### D4 — Mapping de `<Categories>` OggDude
@@ -266,9 +255,9 @@ Aucun impact direct sur `system.qualities` dont le format reste celui défini da
 
 Cette ADR doit être réévaluée après :
 
-- L'implémentation de #97 (finalisation des valeurs d'enum).
 - L'implémentation de #98 (alignement du schéma).
-- Un retour d'expérience sur l'import OggDude (#101) et l'UI (#100).
+- L'implémentation de #101 (import OggDude).
+- L'implémentation de #100 (UX/tests).
 
 Ces implémentations pourront amender l'ADR si des écarts sont constatés par rapport aux décisions initiales.
 
@@ -277,7 +266,8 @@ Prochaine réévaluation : 2026-08-01.
 ## Links
 
 - Issue source : #15
-- Implémentation découlant de cette ADR : #97, #98, #100, #101
+- Spécification canonique #97 : `documentation/spec/weapon-taxonomy-canonical.md`
+- Implémentation découlant de cette ADR : #98, #100, #101
 - Issues connexes : #16 (Restricted), #17 (Migration armes importées), #18 (SizeHigh)
 - Spec qualités : `docs/specifications/qualities-format-spec.md`
 - Plan d'implémentation : `documentation/plan/features/feature-weapon-taxonomy-adr-1.md`
