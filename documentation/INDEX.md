@@ -13,6 +13,7 @@ Cette documentation technique couvre l'architecture, les modules, les exigences,
 | [OVERVIEW.md](./architecture/OVERVIEW.md)                  | Architecture globale du système swerpg                |
 | [MODELS.md](./architecture/MODELS.md)                      | Modèles de données (TypeDataModel, acteurs, etc.)     |
 | Dossiers détaillés                                         |                                                       |
+| [`architecture/adr/`](./architecture/adr/)                 | Architecture Decision Records (ADR-0001 → 0008)       |
 | [`architecture/core/`](./architecture/core/)               | Cœur système, entrypoints, configuration              |
 | [`architecture/data/`](./architecture/data/)               | Modèles de données, schémas et persistance            |
 | [`architecture/integration/`](./architecture/integration/) | Intégrations Foundry, hooks, API externes             |
