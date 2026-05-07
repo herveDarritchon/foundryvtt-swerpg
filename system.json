@@ -143,6 +143,9 @@
       "career": {
         "htmlFields": ["description"]
       },
+      "duty": {
+        "htmlFields": ["description"]
+      },
       "gear": {
         "htmlFields": ["description.public", "description.secret"]
       },

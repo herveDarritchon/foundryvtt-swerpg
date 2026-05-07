@@ -106,6 +106,7 @@ Hooks.once('init', async function () {
     gear: models.SwerpgGear,
     species: models.SwerpgSpecies,
     career: models.SwerpgCareer,
+    duty: models.SwerpgDuty,
     obligation: models.SwerpgObligation,
     specialization: models.SwerpgSpecialization,
     talent: models.SwerpgTalent,
@@ -134,6 +135,11 @@ Hooks.once('init', async function () {
   foundry.documents.collections.Items.registerSheet(SYSTEM.id, applications.CareerSheet, {
     types: ['career'],
     label: 'SWERPG.SHEETS.Career',
+    makeDefault: true,
+  })
+  foundry.documents.collections.Items.registerSheet(SYSTEM.id, applications.DutySheet, {
+    types: ['duty'],
+    label: 'SWERPG.SHEETS.Duty',
     makeDefault: true,
   })
   foundry.documents.collections.Items.registerSheet(SYSTEM.id, applications.ObligationSheet, {
