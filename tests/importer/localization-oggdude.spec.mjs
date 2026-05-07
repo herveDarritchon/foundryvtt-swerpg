@@ -13,4 +13,14 @@ describe('Localisation OggDudeDataImporter', () => {
     expect(frRoot.loadWindow.menuLabel).toBeDefined()
     expect(frRoot.loadWindow.domains).toBeDefined()
   })
+
+  it('contient la clé duty dans les domaines EN et FR', () => {
+    const enDomains = en.SETTINGS?.OggDudeDataImporter?.loadWindow?.domains
+    expect(enDomains?.duty).toBe('Load Duty data')
+
+    const frDomains = fr.OggDudeDataImporter?.loadWindow?.domains
+    const frSwrpgDomains = fr.SETTINGS?.OggDudeDataImporter?.loadWindow?.domains
+    const frDuty = frDomains?.duty || frSwrpgDomains?.duty
+    expect(frDuty).toBe('Charger les devoirs')
+  })
 })

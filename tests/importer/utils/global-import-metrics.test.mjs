@@ -82,6 +82,7 @@ describe('Global Import Metrics', () => {
       expect(stats).toHaveProperty('species')
       expect(stats).toHaveProperty('career')
       expect(stats).toHaveProperty('talent')
+      expect(stats).toHaveProperty('duty')
       expect(stats).toHaveProperty('totalProcessed')
       expect(stats).toHaveProperty('totalRejected')
       expect(stats).toHaveProperty('totalImported')

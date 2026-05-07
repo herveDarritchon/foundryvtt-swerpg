@@ -49,6 +49,7 @@ describe('Preview UI - preload', () => {
       { id: 'gear', checked: false },
       { id: 'species', checked: false },
       { id: 'career', checked: false },
+      { id: 'duty', checked: false },
     ]
 
     const preview = await OggDudeImporter.preloadOggDudeData(buffer, domains)
