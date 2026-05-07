@@ -287,4 +287,29 @@ describe('SwerpgWeapon - schema taxonomy', () => {
       expect(cat.rangeCategory).toBeDefined()
     }
   })
+
+  it('inherits restrictionLevel from SwerpgPhysicalItem schema', () => {
+    if (globalThis.foundry?.data?.fields) {
+      if (!globalThis.foundry.data.fields.EmbeddedDataField) {
+        globalThis.foundry.data.fields.EmbeddedDataField = class EmbeddedDataField {
+          constructor(type) { this.type = type }
+        }
+      }
+      if (!globalThis.foundry.data.fields.HTMLField) {
+        globalThis.foundry.data.fields.HTMLField = class extends globalThis.foundry.data.fields.StringField {}
+      }
+    }
+    const weaponSchema = SwerpgWeapon.defineSchema()
+    expect(weaponSchema.restrictionLevel).toBeDefined()
+    expect(weaponSchema.restrictionLevel.config.required).toBe(true)
+    expect(weaponSchema.restrictionLevel.config.initial).toBe('none')
+    expect(weaponSchema.restrictionLevel.config.choices).toBe(SYSTEM.RESTRICTION_LEVELS)
+
+    const { none, restricted, military, illegal } = SYSTEM.RESTRICTION_LEVELS
+
+    expect(none.id).toBe('none')
+    expect(restricted.id).toBe('restricted')
+    expect(military.id).toBe('military')
+    expect(illegal.id).toBe('illegal')
+  })
 })
