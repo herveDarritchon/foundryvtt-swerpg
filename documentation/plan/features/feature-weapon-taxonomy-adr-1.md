@@ -79,9 +79,9 @@ L'ADR sera le document de référence pour :
 
 | Task | Description | Completed | Date |
 | ---- | ----------- | --------- | ---- |
-| TASK-016 | Soumettre l'ADR pour relecture (PR ou validation directe). | | |
-| TASK-017 | Intégrer les retours de review. | | |
-| TASK-018 | Mettre à jour le statut de l'ADR (Proposed → Accepted). | | |
+| TASK-016 | Soumettre l'ADR pour relecture (PR ou validation directe). | ✅ | 2026-05-07 |
+| TASK-017 | Intégrer les retours de review. | ✅ | 2026-05-07 |
+| TASK-018 | Mettre à jour le statut de l'ADR (Proposed → Accepted). | ✅ | 2026-05-07 |
 
 ## 3. Alternatives
 

@@ -71,6 +71,7 @@ Cette documentation technique couvre l'architecture, les modules, les exigences,
 | Document / Dossier                                                                       | Description                                         |
 | ---------------------------------------------------------------------------------------- | --------------------------------------------------- |
 | [`spec/`](./spec/)                                                                       | Spécifications détaillées (design, séquences, etc.) |
+| [`spec/weapon-taxonomy-canonical.md`](./spec/weapon-taxonomy-canonical.md)               | Spécification canonique de la taxonomie des armes   |
 | [`spec/design-current-equipment-sidebar.md`](./spec/design-current-equipment-sidebar.md) | Design de la sidebar d'équipement courant           |
 | [`spec/oggdude-importer/`](./spec/oggdude-importer/)                                     | Spécifications dédiées à l'importeur OggDude        |
 | [`plan/`](./plan/)                                                                       | Plans d'implémentation (REQ/TASK/FILE/TEST)         |
