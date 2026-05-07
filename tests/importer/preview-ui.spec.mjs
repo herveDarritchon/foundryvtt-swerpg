@@ -59,7 +59,7 @@ describe('Preview UI - preload', () => {
     // Injecte données dans l'application et vérifie le contexte
     const app = new OggDudeDataImporter()
     app.previewData = preview
-    app.previewFilters = { domain: 'all', text: '' }
+    app.previewFilters = { domain: 'all', text: '', category: 'all', weaponType: 'all' }
     app.pagination = { page: 1, size: 50 }
 
     const ctx = app._buildPreviewContext()
@@ -75,7 +75,7 @@ describe('Preview UI - preload', () => {
     const preview = await OggDudeImporter.preloadOggDudeData(buffer, domains)
     const app = new OggDudeDataImporter()
     app.previewData = preview
-    app.previewFilters = { domain: 'weapon', text: 'blaster' }
+    app.previewFilters = { domain: 'weapon', text: 'blaster', category: 'all', weaponType: 'all' }
     app.pagination = { page: 1, size: 50 }
 
     const ctx = app._buildPreviewContext()
@@ -83,5 +83,80 @@ describe('Preview UI - preload', () => {
     expect(ctx.hasData).toBeTypeOf('boolean')
     expect(ctx.page).toBe(1)
     expect(ctx.total).toBeGreaterThanOrEqual(0)
+  })
+
+  it('filters weapon items by category', () => {
+    const app = new OggDudeDataImporter()
+    app.previewData = {
+      weapon: [
+        { name: 'Blaster Rifle', type: 'weapon', system: { category: 'ranged', weaponType: 'blasters' } },
+        { name: 'Lightsaber', type: 'weapon', system: { category: 'melee', weaponType: 'lightsaber' } },
+        { name: 'Grenade', type: 'weapon', system: { category: 'explosive', weaponType: 'grenade' } },
+      ],
+    }
+    app.previewFilters = { domain: 'weapon', text: '', category: 'melee', weaponType: 'all' }
+    app.pagination = { page: 1, size: 50 }
+
+    const ctx = app._buildPreviewContext()
+    expect(ctx.hasData).toBe(true)
+    expect(ctx.total).toBe(1)
+    expect(ctx.items[0].name).toBe('Lightsaber')
+    expect(ctx.categoryOptions).toBeDefined()
+    const labels = ctx.categoryOptions.map((o) => o.value)
+    expect(labels).toContain('ranged')
+    expect(labels).toContain('melee')
+    expect(labels).toContain('explosive')
+  })
+
+  it('filters weapon items by weaponType', () => {
+    const app = new OggDudeDataImporter()
+    app.previewData = {
+      weapon: [
+        { name: 'Blaster Rifle', type: 'weapon', system: { category: 'ranged', weaponType: 'blasters' } },
+        { name: 'Lightsaber', type: 'weapon', system: { category: 'melee', weaponType: 'lightsaber' } },
+        { name: 'Blaster Pistol', type: 'weapon', system: { category: 'ranged', weaponType: 'blasters' } },
+      ],
+    }
+    app.previewFilters = { domain: 'weapon', text: '', category: 'all', weaponType: 'lightsaber' }
+    app.pagination = { page: 1, size: 50 }
+
+    const ctx = app._buildPreviewContext()
+    expect(ctx.hasData).toBe(true)
+    expect(ctx.total).toBe(1)
+    expect(ctx.items[0].name).toBe('Lightsaber')
+    expect(ctx.weaponTypeOptions).toEqual(expect.arrayContaining(['blasters', 'lightsaber']))
+  })
+
+  it('combines category and text filters', () => {
+    const app = new OggDudeDataImporter()
+    app.previewData = {
+      weapon: [
+        { name: 'Blaster Rifle', type: 'weapon', system: { category: 'ranged', weaponType: 'blasters' } },
+        { name: 'Blaster Pistol', type: 'weapon', system: { category: 'ranged', weaponType: 'blasters' } },
+        { name: 'Lightsaber', type: 'weapon', system: { category: 'melee', weaponType: 'lightsaber' } },
+      ],
+    }
+    app.previewFilters = { domain: 'weapon', text: 'pistol', category: 'ranged', weaponType: 'all' }
+    app.pagination = { page: 1, size: 50 }
+
+    const ctx = app._buildPreviewContext()
+    expect(ctx.total).toBe(1)
+    expect(ctx.items[0].name).toBe('Blaster Pistol')
+  })
+
+  it('exposes category and weaponType filter options from preview data', () => {
+    const app = new OggDudeDataImporter()
+    app.previewData = {
+      weapon: [
+        { name: 'Sword', type: 'weapon', system: { category: 'melee', weaponType: 'melee' } },
+      ],
+    }
+    app.previewFilters = { domain: 'all', text: '', category: 'all', weaponType: 'all' }
+    app.pagination = { page: 1, size: 50 }
+
+    const ctx = app._buildPreviewContext()
+    expect(ctx.categoryOptions.length).toBe(1)
+    expect(ctx.categoryOptions[0].value).toBe('melee')
+    expect(ctx.weaponTypeOptions).toContain('melee')
   })
 })

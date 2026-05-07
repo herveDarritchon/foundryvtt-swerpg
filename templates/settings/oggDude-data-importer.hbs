@@ -165,6 +165,26 @@
                     <input type="text" name="preview-text"
                                  placeholder="{{localize 'SETTINGS.OggDudeDataImporter.loadWindow.preview.textPlaceholder'}}"/>
                 </label>
+                <label>
+                    <span>{{localize "SETTINGS.OggDudeDataImporter.loadWindow.preview.category"}}</span>
+                    <select name="preview-category"
+                                    aria-label="{{localize 'SETTINGS.OggDudeDataImporter.loadWindow.preview.category'}}">
+                        <option value="all">{{localize "SETTINGS.OggDudeDataImporter.loadWindow.preview.categoryAll"}}</option>
+                        {{#each categoryOptions as |opt|}}
+                            <option value="{{opt.value}}">{{opt.label}}</option>
+                        {{/each}}
+                    </select>
+                </label>
+                <label>
+                    <span>{{localize "SETTINGS.OggDudeDataImporter.loadWindow.preview.weaponType"}}</span>
+                    <select name="preview-weaponType"
+                                    aria-label="{{localize 'SETTINGS.OggDudeDataImporter.loadWindow.preview.weaponType'}}">
+                        <option value="all">{{localize "SETTINGS.OggDudeDataImporter.loadWindow.preview.weaponTypeAll"}}</option>
+                        {{#each weaponTypeOptions as |opt|}}
+                            <option value="{{opt}}">{{opt}}</option>
+                        {{/each}}
+                    </select>
+                </label>
             </div>
             {{#if preview.hasData}}
                 <table class="preview-table" role="table" aria-describedby="preview-section">

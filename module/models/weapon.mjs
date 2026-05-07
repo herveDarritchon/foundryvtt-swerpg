@@ -296,10 +296,11 @@ export default class SwerpgWeapon extends SwerpgCombatItem {
     // Canonical category (mechanical family)
     if (this.config?.category?.label) tags.category = this.config.category.label
 
-    // Narrative subtype
-    if (this.weaponType) tags['weapon-type'] = this.weaponType
+    // Narrative subtype — humanize slug for display
+    if (this.weaponType) tags['weapon-type'] = humanizeWeaponType(this.weaponType)
 
-    tags.reload = 'Reload'
+    // Reload — only if the weapon's category requires it
+    if (this.config?.category?.reload) tags.reload = 'Reload'
 
     if ((this.system?.restricted ?? this.restricted) && !tags.restricted) {
       tags.restricted = 'Restricted'
@@ -380,4 +381,17 @@ export default class SwerpgWeapon extends SwerpgCombatItem {
     // Return animation config
     return { src: animation, wait: -500 }
   }
+}
+
+/**
+ * Convert a kebab-case slug to a human-readable label for display.
+ * @param {string} slug  e.g. "heavy-blaster"
+ * @returns {string}     e.g. "Heavy Blaster"
+ */
+export function humanizeWeaponType(slug) {
+  if (!slug) return ''
+  return slug
+    .split('-')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ')
 }
