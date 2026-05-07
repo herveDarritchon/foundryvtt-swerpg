@@ -8,6 +8,7 @@ import {
   clampNumber,
   sanitizeText,
   FLAG_STRICT_ARMOR_VALIDATION,
+  ARMOR_IGNORED_TAGS,
   getArmorImportStats,
   incrementArmorImportStat,
   addRejectionReason,
@@ -64,37 +65,39 @@ function validateArmorSystem(system) {
 }
 
 /**
- * Résout la catégorie d'une armure en ignorant les propriétés connues
- * @returns {string|null} La catégorie ou null si rejeté
+ * Résout la catégorie d'une armure selon l'ADR-0008 :
+ * 1. Ignore les tags ADR-ignorés
+ * 2. Cherche une catégorie valide
+ * 3. Saute les propriétés connues
+ * @returns {{ category: string|null, unknownCategories: string[] }}
  */
 function resolveArmorCategoryWithFallback(xmlCategories, armorName) {
-  // Catégories valides OggDude
-  const VALID_CATEGORIES = new Set(['light', 'medium', 'heavy', 'natural', 'unarmored', '0', '1', '2', '3', '4'])
-  // Propriétés connues qui ne sont PAS des catégories
-  const KNOWN_PROPERTIES = new Set(['full body', 'hard full body', 'hard', 'resistant', 'sealable', 'sealed', 'powered', 'light', 'half body'])
-  
-  // Recherche de la première catégorie reconnue (Light/Medium/Heavy/Natural/Unarmored)
   for (const xmlCategory of xmlCategories) {
     const sanitized = xmlCategory?.trim()
     if (!sanitized) continue
-    
-    // Ignorer si c'est une propriété connue
-    if (KNOWN_PROPERTIES.has(sanitized.toLowerCase())) continue
-    
-    // Vérifier si c'est une catégorie valide
-    if (VALID_CATEGORIES.has(sanitized.toLowerCase())) {
-      const resolvedCategory = resolveArmorCategory(sanitized)
-      if (resolvedCategory) {
-        return resolvedCategory
-      }
-    }
+
+    const lower = sanitized.toLowerCase()
+
+    if (ARMOR_IGNORED_TAGS.has(lower)) continue
+
+    const resolved = resolveArmorCategory(sanitized)
+    if (resolved) return { category: resolved, unknownCategories: [] }
+
+    if (ARMOR_PROPERTY_MAP[sanitized]?.swerpgProperty != null) continue
   }
 
-  // Gestion des catégories inconnues - logger seulement si on a vraiment des catégories inconnues (pas juste des propriétés)
-  const unknownCategories = xmlCategories.filter(cat => {
-    const sanitized = cat?.trim()?.toLowerCase()
-    return sanitized && !KNOWN_PROPERTIES.has(sanitized) && !VALID_CATEGORIES.has(sanitized)
-  })
+  const unknownCategories = []
+  for (const xmlCategory of xmlCategories) {
+    const sanitized = xmlCategory?.trim()
+    if (!sanitized) continue
+
+    const lower = sanitized.toLowerCase()
+    if (ARMOR_IGNORED_TAGS.has(lower)) continue
+    if (resolveArmorCategory(sanitized)) continue
+    if (ARMOR_PROPERTY_MAP[sanitized]?.swerpgProperty != null) continue
+
+    unknownCategories.push(sanitized)
+  }
 
   if (unknownCategories.length > 0) {
     incrementArmorImportStat('unknownCategories')
@@ -105,60 +108,41 @@ function resolveArmorCategoryWithFallback(xmlCategories, armorName) {
     addRejectionReason('ARMOR_CATEGORY_UNKNOWN')
     incrementArmorImportStat('rejected')
     logger.warn(`Armure rejetée en mode strict: "${armorName}" - catégorie inconnue`)
-    return null
+    return { category: null, unknownCategories }
   }
 
-  return SYSTEM.ARMOR.DEFAULT_CATEGORY || 'medium'
-}
-
-/**
- * Mapping des propriétés OggDude vers les qualités système
- */
-const OGGDUDE_ARMOR_PROPERTY_TO_QUALITY = {
-  'full body': 'full-body',
-  'hard full body': 'bulky',
-  'hard': 'bulky',
-  'resistant': 'organic',
-  'sealable': 'sealed',
-  'sealed': 'sealed',
-  'powered': 'bulky',
-  'light': null, // Pas une propriété d'armure système
-  'half body': null, // Pas une propriété d'armure système
+  return { category: SYSTEM.ARMOR.DEFAULT_CATEGORY || 'medium', unknownCategories }
 }
 
 /**
  * Traite les propriétés d'une armure et les convertit en format Option C
- * @returns {Array} Qualities array in Option C format
+ * Mapping strict selon ADR-0008 (ARMOR_PROPERTY_MAP uniquement, pas de mapping permissif)
+ * @returns {{ qualities: Array, unknownProperties: string[], ignoredProperties: string[] }}
  */
 function processArmorProperties(xmlCategories, armorName, isRestricted = false) {
   const resolvedProperties = new Set()
   const unknownProperties = []
+  const ignoredProperties = []
 
-  // Traiter chaque élément : si c'est une catégorie valide, l'ignorer ; sinon, c'est une propriété
   for (const xmlCategory of xmlCategories) {
     const sanitized = xmlCategory?.trim()
     if (!sanitized) continue
-    
-    // Vérifier si c'est une catégorie valide
-    const isCategory = resolveArmorCategory(sanitized)
-    if (isCategory) continue // C'est une catégorie, pas une propriété
-    
-    // C'est une propriété - chercher dans ARMOR_PROPERTY_MAP d'abord
-    let mappedProperty = ARMOR_PROPERTY_MAP[sanitized]?.swerpgProperty
-    
-    // Sinon, chercher dans le mapping OggDude
-    if (mappedProperty === undefined) {
-      mappedProperty = OGGDUDE_ARMOR_PROPERTY_TO_QUALITY[sanitized.toLowerCase()]
-    }
-    
+
+    if (resolveArmorCategory(sanitized)) continue
+
+    const mappedProperty = ARMOR_PROPERTY_MAP[sanitized]?.swerpgProperty
     if (mappedProperty) {
       resolvedProperties.add(mappedProperty)
-    } else if (mappedProperty === null) {
-      // Propriété connue mais pas pertinente pour le système - ignorer silencieusement
       continue
-    } else {
-      unknownProperties.push(sanitized)
     }
+
+    const lower = sanitized.toLowerCase()
+    if (ARMOR_IGNORED_TAGS.has(lower)) {
+      ignoredProperties.push(sanitized)
+      continue
+    }
+
+    unknownProperties.push(sanitized)
   }
 
   if (unknownProperties.length > 0) {
@@ -166,19 +150,10 @@ function processArmorProperties(xmlCategories, armorName, isRestricted = false) 
     logger.warn(`Propriétés d'armure inconnues pour "${armorName}": ${unknownProperties.join(', ')}`)
   }
 
-  // Ajouter sealed et full-body depuis le mapping OGGDUDE_ARMOR_PROPERTY_TO_QUALITY si applicable
-  for (const [oggDudeKey, systemKey] of Object.entries(OGGDUDE_ARMOR_PROPERTY_TO_QUALITY)) {
-    if (systemKey && resolvedProperties.has(systemKey)) {
-      // Déjà ajouté via la première boucle, rien à faire
-    }
-  }
-
-  // Ajouter restricted si applicable
   if (isRestricted) {
     resolvedProperties.add('restricted')
   }
 
-  // Convertir en format Option C
   const qualities = []
   for (const prop of resolvedProperties) {
     const qualityConfig = getQualityConfig(prop)
@@ -191,14 +166,14 @@ function processArmorProperties(xmlCategories, armorName, isRestricted = false) 
     })
   }
 
-  // Limitation et tri
   const maxProperties = 12
+  qualities.sort((a, b) => a.key.localeCompare(b.key))
   if (qualities.length > maxProperties) {
     logger.warn(`Trop de propriétés pour "${armorName}": ${qualities.length} > ${maxProperties}, troncature appliquée`)
-    return qualities.sort((a, b) => a.key.localeCompare(b.key)).slice(0, maxProperties)
+    qualities.length = maxProperties
   }
 
-  return qualities.sort((a, b) => a.key.localeCompare(b.key))
+  return { qualities, unknownProperties, ignoredProperties }
 }
 
 /**
@@ -242,18 +217,15 @@ function mapOggDudeArmor(xmlArmor) {
       ? xmlArmor.Categories.Category
       : xmlArmor?.Categories?.Category ? [xmlArmor.Categories.Category] : []
 
-    const category = resolveArmorCategoryWithFallback(xmlCategories, name)
-    if (category === null) {
-      return null // Rejeté en mode strict
+    const categoryResult = resolveArmorCategoryWithFallback(xmlCategories, name)
+    if (categoryResult.category === null) {
+      return null
     }
 
-    // Vérification restricted
     const isRestricted = parseOggDudeBoolean(xmlArmor.Restricted)
 
-    // Mapping des qualités en format Option C
-    const qualities = processArmorProperties(xmlCategories, name, isRestricted)
+    const propertyResult = processArmorProperties(xmlCategories, name, isRestricted)
 
-    // Mapping des valeurs numériques
     const soak = clampNumber(xmlArmor.Soak, 0, 20, DEFAULT_SOAK)
     const defense = clampNumber(xmlArmor.Defense, 0, 20, DEFAULT_DEFENSE)
     const hp = clampNumber(xmlArmor.HP, 0, Number.MAX_SAFE_INTEGER, 0)
@@ -261,11 +233,29 @@ function mapOggDudeArmor(xmlArmor) {
     const rarity = clampNumber(xmlArmor.Rarity, 0, 20, 0)
     const price = clampNumber(xmlArmor.Price, 0, Number.MAX_SAFE_INTEGER, 0)
 
-    // Construction de la description
     const description = buildArmorDescription(xmlArmor)
-
-    // Ajout des flags OggDude
     const baseMods = extractBaseMods(xmlArmor)
+
+    const rawCategories = [...new Set(
+      xmlCategories
+        .filter(c => c?.trim())
+        .map(c => c.trim())
+    )]
+
+    const oggdudeExtras = {}
+    if (rawCategories.length > 0) {
+      oggdudeExtras.categories = rawCategories
+    }
+    if (propertyResult.ignoredProperties.length > 0) {
+      oggdudeExtras.ignoredCategories = [...new Set(propertyResult.ignoredProperties)]
+    }
+    if (propertyResult.unknownProperties.length > 0) {
+      oggdudeExtras.unknownProperties = [...new Set(propertyResult.unknownProperties)]
+    }
+    if (baseMods.length > 0) {
+      oggdudeExtras.baseMods = baseMods
+    }
+
     const flags = {
       swerpg: {
         oggdudeKey,
@@ -273,24 +263,23 @@ function mapOggDudeArmor(xmlArmor) {
         oggdudeSourcePage: xmlArmor.Source?.$ ? parseInt(xmlArmor.Source.$.Page) || 0 : 0,
       },
     }
-
-    if (baseMods.length > 0) {
-      flags.swerpg.oggdude = { baseMods }
+    if (Object.keys(oggdudeExtras).length > 0) {
+      flags.swerpg.oggdude = oggdudeExtras
     }
 
     const armorObject = {
       name,
       type: 'armor',
-      img: 'icons/svg/aura.svg', // Image par défaut Foundry
+      img: 'icons/svg/aura.svg',
       system: {
-        category,
+        category: categoryResult.category,
         soak,
         defense,
         hp,
         encumbrance,
         rarity,
         price,
-        qualities,
+        qualities: propertyResult.qualities,
         restricted: isRestricted,
         description,
       },
