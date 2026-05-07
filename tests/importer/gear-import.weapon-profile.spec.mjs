@@ -87,9 +87,9 @@ describe('Gear importer weapon profile enrichment', () => {
     })
     expect(swerpg.oggdude.weaponProfile.qualities).toEqual(
       expect.arrayContaining([
-        { key: 'cumbersome', rank: 3 },
-        { key: 'disorient', rank: 1 },
-        { key: 'inaccurate', rank: 1 },
+        expect.objectContaining({ key: 'cumbersome', rank: 3, hasRank: false }),
+        expect.objectContaining({ key: 'disorient', rank: 1, hasRank: true }),
+        expect.objectContaining({ key: 'inaccurate', rank: 1, hasRank: false }),
       ]),
     )
   })

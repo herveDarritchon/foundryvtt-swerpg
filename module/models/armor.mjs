@@ -1,4 +1,5 @@
 import { SYSTEM } from '../config/system.mjs'
+import { buildQualitySchema } from './qualities-schema.mjs'
 import SwerpgCombatItem from './combat.mjs'
 
 /**
@@ -12,7 +13,7 @@ export default class SwerpgArmor extends SwerpgCombatItem {
   static DEFAULT_CATEGORY = 'medium'
 
   /** @override */
-  static ITEM_PROPERTIES = SYSTEM.ARMOR.PROPERTIES
+  static ITEM_QUALITIES = SYSTEM.ARMOR.PROPERTIES
 
   /** @override */
   static LOCALIZATION_PREFIXES = ['ITEM', 'ARMOR']
@@ -29,7 +30,7 @@ export default class SwerpgArmor extends SwerpgCombatItem {
       defense: new fields.SchemaField({
         base: new fields.NumberField({ integer: true, nullable: false, initial: 0, min: 0 }),
       }),
-      properties: new fields.SetField(new fields.StringField({ required: true, choices: this.ITEM_PROPERTIES })),
+      qualities: new fields.ArrayField(buildQualitySchema()),
       soak: new fields.SchemaField({
         base: new fields.NumberField({ integer: true, nullable: false, initial: 0, min: 0 }),
       }),
@@ -79,9 +80,9 @@ export default class SwerpgArmor extends SwerpgCombatItem {
     this.soak.start = category.soak.start
 
     // Armor Properties
-    for (let p of this.properties) {
-      const prop = SYSTEM.ARMOR.PROPERTIES[p]
-      if (prop.rarity) this.rarity += prop.rarity
+    for (let q of this.qualities) {
+      const prop = SYSTEM.ARMOR.PROPERTIES[q.key]
+      if (prop && prop.rarity) this.rarity += prop.rarity
     }
   }
 
@@ -110,8 +111,9 @@ export default class SwerpgArmor extends SwerpgCombatItem {
   getTags(scope = 'full') {
     const tags = {}
     tags.category = this.config.category.label
-    for (let p of this.properties) {
-      tags[p] = SYSTEM.ARMOR.PROPERTIES[p].label
+    for (let q of this.qualities) {
+      const prop = SYSTEM.ARMOR.PROPERTIES[q.key]
+      if (prop) tags[q.key] = prop.label
     }
     tags.defense = `${this.defense.base + this.defense.bonus} Armor`
     const actor = this.parent.parent

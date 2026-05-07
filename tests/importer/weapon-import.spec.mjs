@@ -60,10 +60,9 @@ describe('weaponMapper - mapping', () => {
     const weapon = result[0]
     expect(weapon.system.range).toBe('short')
     expect(weapon.system.skill).toBe('rangedLight')
-    expect(weapon.system.qualities).toEqual(['blast', 'burn'])
-    expect(weapon.flags.swerpg.oggdudeQualities).toEqual([
-      { id: 'blast', count: 2 },
-      { id: 'burn', count: 3 },
+    expect(weapon.system.qualities).toEqual([
+      { key: 'blast', rank: 2, hasRank: true, active: true, source: 'oggdude' },
+      { key: 'burn', rank: 3, hasRank: true, active: true, source: 'oggdude' },
     ])
 
     const tags = weapon.flags.swerpg.oggdudeTags
@@ -130,10 +129,9 @@ describe('weaponMapper - mapping', () => {
     const result = weaponMapper(xmlWeapons)
     const weapon = result[0]
 
-    expect(weapon.system.qualities).toEqual(['accurate', 'blast'])
-    expect(weapon.flags.swerpg.oggdudeQualities).toEqual([
-      { id: 'accurate', count: 1 },
-      { id: 'blast', count: 3 },
+    expect(weapon.system.qualities).toEqual([
+      { key: 'accurate', rank: null, hasRank: false, active: true, source: 'oggdude' },
+      { key: 'blast', rank: 3, hasRank: true, active: true, source: 'oggdude' },
     ])
   })
 
@@ -153,13 +151,23 @@ describe('weaponMapper - mapping', () => {
     const result = weaponMapper(xmlWeapons)
     expect(result).toHaveLength(200)
     expect(getWeaponImportStats().total).toBe(200)
+    // Vérifier que le format est correct pour le premier élément
+    expect(result[0].system.qualities[0]).toMatchObject({
+      key: 'accurate',
+      rank: null,
+      hasRank: false,
+      active: true,
+      source: 'oggdude',
+    })
   })
 
   it('exposes oggdude tags through weapon getTags()', () => {
     const weapon = {
       damage: { weapon: 6 },
       range: 'medium',
-      qualities: new Set(['blast']),
+      qualities: [
+        { key: 'blast', rank: 2, hasRank: true, active: true, source: 'base' },
+      ],
       flags: {
         swerpg: {
           oggdudeTags: [
@@ -172,6 +180,9 @@ describe('weaponMapper - mapping', () => {
       system: { restricted: true },
       defense: { block: 0, parry: 0 },
       schema: { fields: { broken: { label: 'Broken' } } },
+      config: {
+        category: { label: 'Ranged' },
+      },
       broken: false,
     }
 
@@ -179,5 +190,6 @@ describe('weaponMapper - mapping', () => {
     expect(tags['type-explosive']).toBe('Type: Explosive')
     expect(tags['category-ranged']).toBe('Category: Ranged')
     expect(tags.restricted).toBe('Restricted')
+    expect(tags['blast']).toBe(game.i18n.localize('WEAPON.QUALITIES.Blast') + ' 2')
   })
 })

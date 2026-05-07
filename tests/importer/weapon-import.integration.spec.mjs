@@ -13,7 +13,13 @@ if (globalThis.xml2js === undefined) {
 if (!globalThis.SYSTEM) {
   globalThis.SYSTEM = {
     WEAPON: {
-      QUALITIES: { stunsetting: {}, accurate: {}, vicious: {} },
+      QUALITIES: {
+        stunsetting: { hasRank: false },
+        accurate: { hasRank: false },
+        vicious: { hasRank: true },
+        blast: { hasRank: true },
+        burn: { hasRank: true },
+      },
     },
   }
 }
