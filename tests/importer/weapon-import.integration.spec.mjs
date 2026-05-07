@@ -52,6 +52,17 @@ describe('Intégration OggDude -> weaponMapper', () => {
     expect(typeof first.system.hp).toBe('number')
     expect(typeof first.system.restricted).toBe('boolean')
 
+    // ADR-0007: every mapped weapon must have a resolved category and weaponType
+    for (const weapon of mapped) {
+      expect(weapon.system.category).toBeDefined()
+      expect(typeof weapon.system.category).toBe('string')
+      expect(weapon.system.category.length).toBeGreaterThan(0)
+      expect(weapon.system).toHaveProperty('weaponType')
+      expect(typeof weapon.system.weaponType).toBe('string')
+      // No flat oggdudeTags
+      expect(weapon.flags?.swerpg?.oggdudeTags).toBeUndefined()
+    }
+
     const stats = getWeaponImportStats()
     expect(stats.total).toBe(sample.length)
     expect(stats.imported).toBe(mapped.length)
