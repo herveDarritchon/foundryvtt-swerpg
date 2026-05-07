@@ -50,18 +50,23 @@ export const CATEGORIES = {
 export const PROPERTIES = {
   bulky: {
     label: 'ARMOR.PROPERTIES.BULKY',
+    hasRank: false,
   },
   organic: {
     label: 'ARMOR.PROPERTIES.ORGANIC',
+    hasRank: false,
   },
   sealed: {
     label: 'ARMOR.PROPERTIES.SEALED',
+    hasRank: false,
   },
   'full-body': {
     label: 'ARMOR.PROPERTIES.FULL_BODY',
+    hasRank: false,
   },
   restricted: {
     label: 'ARMOR.PROPERTIES.RESTRICTED',
+    hasRank: false,
   },
 }
 

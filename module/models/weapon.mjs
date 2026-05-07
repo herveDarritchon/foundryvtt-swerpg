@@ -1,4 +1,6 @@
 import { SYSTEM } from '../config/system.mjs'
+import { getQualityConfig } from '../config/qualities.mjs'
+import { buildQualitySchema } from './qualities-schema.mjs'
 import SwerpgCombatItem from './combat.mjs'
 
 /**
@@ -44,7 +46,7 @@ export default class SwerpgWeapon extends SwerpgCombatItem {
         max: 20,
         step: 1,
       }),
-      qualities: new fields.SetField(new fields.StringField({ required: true, choices: this.ITEM_QUALITIES })),
+      qualities: new fields.ArrayField(buildQualitySchema()),
       animation: new fields.StringField({
         required: false,
         choices: SYSTEM.WEAPON.ANIMATION_TYPES,
@@ -139,14 +141,14 @@ export default class SwerpgWeapon extends SwerpgCombatItem {
     this.actionCost = 0
 
     // Weapon Properties
-    for (let p of this.qualities) {
-      const prop = SYSTEM.WEAPON.QUALITIES[p]
+    for (let q of this.qualities) {
+      const prop = SYSTEM.WEAPON.QUALITIES[q.key]
       if (prop.actionCost) this.actionCost += prop.actionCost
       if (prop.rarity) this.rarity += prop.rarity
     }
 
     // Versatile Two-Handed
-    if (this.qualities.has('versatile') && this.slot === SYSTEM.WEAPON.SLOTS.TWOHAND) {
+    if (this.qualities.some(q => q.key === 'versatile') && this.slot === SYSTEM.WEAPON.SLOTS.TWOHAND) {
       this.damage.base += 2
       this.actionCost += 1
     }
@@ -329,9 +331,12 @@ export default class SwerpgWeapon extends SwerpgCombatItem {
     // Weapon Category
     const qualities = this.qualities
 
-    qualities.forEach((quality) => {
-      const q = SYSTEM.WEAPON.QUALITIES[quality]
-      if (q) tags[q.id] = q.label
+    qualities.forEach((q) => {
+      const qualityConfig = SYSTEM.WEAPON.QUALITIES[q.key]
+      if (qualityConfig) {
+        const label = q.hasRank ? `${qualityConfig.label} ${q.rank}` : qualityConfig.label
+        tags[q.key] = label
+      }
     })
 
     // Equipment Slot

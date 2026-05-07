@@ -12,6 +12,7 @@ import {
   WEAPON_RANGE_MAP,
   WEAPON_SKILL_MAP,
 } from '../mappings/index-weapon.mjs'
+import { getQualityConfig } from '../../config/qualities.mjs'
 import {
   addWeaponUnknownQuality,
   addWeaponUnknownSkill,
@@ -140,7 +141,7 @@ function mapOggDudeWeapon(xmlWeapon) {
     const totalDamage = clampNumber(baseDamage + damageAdd, 0, 20, 0)
     const crit = clampNumber(xmlWeapon.Crit, 0, 20, 0)
 
-    const qualityCounts = new Map()
+    const qualityMap = new Map()
     if (xmlWeapon.Qualities?.Quality) {
       const qualityArray = Array.isArray(xmlWeapon.Qualities.Quality) ? xmlWeapon.Qualities.Quality : [xmlWeapon.Qualities.Quality]
 
@@ -160,15 +161,24 @@ function mapOggDudeWeapon(xmlWeapon) {
         }
 
         const count = coerceQualityCount(quality?.Count ?? quality?.count)
-        const existingCount = qualityCounts.get(mappedQuality) ?? 0
-        qualityCounts.set(mappedQuality, existingCount + count)
+        const existing = qualityMap.get(mappedQuality) ?? 0
+        qualityMap.set(mappedQuality, existing + count)
       }
     }
 
-    const qualities = Array.from(qualityCounts.keys()).sort()
-    const oggdudeQualities = Array.from(qualityCounts.entries())
-      .map(([id, count]) => ({ id, count }))
-      .sort((a, b) => a.id.localeCompare(b.id))
+    const qualities = []
+    for (const [key, totalCount] of qualityMap.entries()) {
+      const qualityConfig = getQualityConfig(key)
+      qualities.push({
+        key,
+        rank: qualityConfig?.hasRank ? totalCount : null,
+        hasRank: qualityConfig?.hasRank || false,
+        active: true,
+        source: 'oggdude',
+      })
+    }
+
+    qualities.sort((a, b) => a.key.localeCompare(b.key))
 
     const handsCode = xmlWeapon.Hands
     const mappedSlot = WEAPON_HANDS_MAP[handsCode] || 'mainhand'
@@ -218,9 +228,6 @@ function mapOggDudeWeapon(xmlWeapon) {
       },
     }
 
-    if (oggdudeQualities.length > 0) {
-      flags.swerpg.oggdudeQualities = oggdudeQualities
-    }
     if (oggdudeTags.length > 0) {
       flags.swerpg.oggdudeTags = oggdudeTags
     }
