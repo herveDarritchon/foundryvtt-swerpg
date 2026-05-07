@@ -14,6 +14,7 @@ import { sanitizeDescription } from '../utils/text.mjs'
  */
 const SUPPORTED_DIE_MODIFIER_FIELDS = Object.freeze([
   'SkillKey',
+  'SkillType',
   'SetbackCount',
   'BoostCount',
   'AddSetbackCount',
@@ -98,7 +99,13 @@ function normalizeDieModifier(modifierData) {
       }
 
       // Normaliser les clés en camelCase
-      const normalizedKey = field.charAt(0).toLowerCase() + field.slice(1)
+      let normalizedKey = field.charAt(0).toLowerCase() + field.slice(1)
+
+      // Dans certains cas on a skillType au lieu de skillKey, on veut normaliser ça
+      if (normalizedKey === 'skillType'){
+        normalizedKey = 'skillKey';
+      }
+
       normalized[normalizedKey] = value
     }
   }
