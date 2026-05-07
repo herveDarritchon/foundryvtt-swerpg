@@ -7,6 +7,7 @@
     },
     "Item": {
       "armor": "Armor",
+      "duty": "Devoir",
       "species": "Espèce",
       "talent": "Talent",
       "weapon": "Weapon"
@@ -23,6 +24,7 @@
     "Scaled": "Scaled",
     "SHEETS": {
       "Armor": "Swerpg Armor Sheet",
+      "Duty": "Swerpg Duty Sheet",
       "Journal": "Swerpg Journal Sheet"
     }
   },
@@ -50,6 +52,7 @@
           "species": "Charger les espèces",
           "weapon": "Charger les armes",
           "talent": "Charger les talents",
+          "duty": "Charger les devoirs",
           "obligation": "Charger les obligations",
           "specialization": "Charger les spécialisations",
           "motivation-category": "Charger les talents"

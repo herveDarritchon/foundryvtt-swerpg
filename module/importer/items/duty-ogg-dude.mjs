@@ -2,23 +2,49 @@ import OggDudeImporter from '../oggDude.mjs'
 import OggDudeDataElement from '../../settings/models/OggDudeDataElement.mjs'
 import { logger } from '../../utils/logger.mjs'
 import { buildItemImgSystemPath } from '../../settings/directories.mjs'
-import { resetDutyImportStats, incrementDutyImportStat } from '../utils/duty-import-utils.mjs'
+import { resetDutyImportStats, incrementDutyImportStat, getDutyImportStats } from '../utils/duty-import-utils.mjs'
+import { sanitizeDescription } from '../utils/text.mjs'
 
-/**
- * Duty Mapper
- * @param duties {Array} The Duty data from the XML file.
- * @returns {Array} The SwerpgDuty object array.
- */
 export function dutyMapper(duties) {
   resetDutyImportStats()
-  return duties
-    .map((xmlDuty) => {
+  if (!Array.isArray(duties)) {
+    logger.warn('[DutyImporter] Invalid input: expected array', { duties })
+    return []
+  }
+  const mapped = []
+  for (const xmlDuty of duties) {
+    if (!xmlDuty || typeof xmlDuty !== 'object') {
       incrementDutyImportStat('total')
+      incrementDutyImportStat('rejected')
+      continue
+    }
+    incrementDutyImportStat('total')
+
+    try {
+      const name = OggDudeImporter.mapMandatoryString('duty.Name', xmlDuty.Name)
+      const key = OggDudeImporter.mapMandatoryString('duty.Key', xmlDuty.Key)
+
+      if (!name || !key) {
+        logger.warn('[DutyImporter] Skipping duty with missing mandatory fields', {
+          name,
+          key,
+        })
+        incrementDutyImportStat('rejected')
+        continue
+      }
+
+      logger.debug('[DutyImporter] Mapping duty', {
+        key,
+        name,
+        hasDescription: !!xmlDuty.Description,
+      })
+
+      const description = sanitizeDescription(OggDudeImporter.mapOptionalString(xmlDuty.Description))
+
       const sources = OggDudeImporter.mapOptionalArray(xmlDuty?.Sources?.Source, (source) => ({
         book: OggDudeImporter.mapOptionalString(source?._),
         page: OggDudeImporter.mapOptionalString(source?.Page),
       }))
-      // Handle single source case if not in Sources list
       if (xmlDuty?.Source) {
         sources.push({
           book: OggDudeImporter.mapOptionalString(xmlDuty.Source?._),
@@ -26,42 +52,54 @@ export function dutyMapper(duties) {
         })
       }
 
-      const name = OggDudeImporter.mapMandatoryString('Duty.Name', xmlDuty?.Name)
-      const key = OggDudeImporter.mapMandatoryString('Duty.Key', xmlDuty?.Key)
-
-      if (!name || !key) {
-        incrementDutyImportStat('rejected')
-        return null
+      const system = {
+        description,
+        value: 10,
+        sources,
       }
 
-      incrementDutyImportStat('success')
+      const swerpgFlags = {
+        oggdudeKey: key,
+      }
 
-      return {
+      const item = {
         name,
         type: 'duty',
-        img: 'systems/swerpg/assets/images/icons/duty.svg', // Default icon
-        system: {
-          description: OggDudeImporter.mapOptionalString(xmlDuty?.Description),
-          sources,
-          category: '', // Duty doesn't seem to have a category in the XML provided
-        },
+        system,
         flags: {
-          swerpg: {
-            oggdudeKey: key,
-          },
+          swerpg: swerpgFlags,
         },
       }
-    })
-    .filter(Boolean)
+
+      mapped.push(item)
+      incrementDutyImportStat('imported')
+
+      logger.debug('[DutyImporter] Successfully mapped duty', {
+        key,
+        name,
+      })
+    } catch (error) {
+      logger.error('[DutyImporter] Error mapping duty', {
+        name: xmlDuty?.Name || 'unknown',
+        key: xmlDuty?.Key || 'unknown',
+        error: error.message,
+      })
+      incrementDutyImportStat('rejected')
+    }
+  }
+
+  const stats = getDutyImportStats()
+  logger.info('[DutyImporter] Import completed', {
+    total: stats.total,
+    imported: stats.imported,
+    rejected: stats.rejected,
+  })
+
+  return mapped
 }
 
-/**
- * Create the Duty Context for the OggDude Data Import
- * @param zip
- * @param groupByDirectory
- * @param groupByType
- * @returns {Promise<Object>}
- */
+export { getDutyImportStats } from '../utils/duty-import-utils.mjs'
+
 export async function buildDutyContext(zip, groupByDirectory, groupByType) {
   logger.debug('[DutyImporter] Building Duty context')
 

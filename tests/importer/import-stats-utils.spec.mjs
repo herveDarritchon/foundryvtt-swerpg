@@ -4,6 +4,7 @@ import { getWeaponImportStats } from '../../module/importer/utils/weapon-import-
 import { getGearImportStats } from '../../module/importer/utils/gear-import-utils.mjs'
 import { getSpeciesImportStats } from '../../module/importer/utils/species-import-utils.mjs'
 import { getCareerImportStats } from '../../module/importer/utils/career-import-utils.mjs'
+import { getDutyImportStats } from '../../module/importer/utils/duty-import-utils.mjs'
 import { getAllImportStats, aggregateImportMetrics } from '../../module/importer/utils/global-import-metrics.mjs'
 
 function expectBaseDomainStats(stats) {
@@ -30,6 +31,9 @@ describe('Import Stats Utilities', () => {
   })
   it('should expose career stats structure', () => {
     expectBaseDomainStats(getCareerImportStats())
+  })
+  it('should expose duty stats structure', () => {
+    expectBaseDomainStats(getDutyImportStats())
   })
   it('should aggregate all import stats', () => {
     const all = getAllImportStats()
