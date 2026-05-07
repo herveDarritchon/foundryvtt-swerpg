@@ -169,6 +169,7 @@ export const QUALITIES = {
     label: 'WEAPON.QUALITIES.Accurate',
     tooltip: 'WEAPON.QUALITIES.AccurateTooltip',
     activationType: ACTIVATION_TYPE.passive,
+    hasRank: false,
   },
   autoFire: {
     id: 'autoFire',
@@ -176,6 +177,7 @@ export const QUALITIES = {
     label: 'WEAPON.QUALITIES.AutoFire',
     tooltip: 'WEAPON.QUALITIES.AutoFireTooltip',
     activationType: ACTIVATION_TYPE.active,
+    hasRank: true,
   },
   breach: {
     id: 'breach',
@@ -183,6 +185,7 @@ export const QUALITIES = {
     label: 'WEAPON.QUALITIES.Breach',
     tooltip: 'WEAPON.QUALITIES.BreachTooltip',
     activationType: ACTIVATION_TYPE.passive,
+    hasRank: false,
   },
   burn: {
     id: 'burn',
@@ -190,6 +193,7 @@ export const QUALITIES = {
     label: 'WEAPON.QUALITIES.Burn',
     tooltip: 'WEAPON.QUALITIES.BurnTooltip',
     activationType: ACTIVATION_TYPE.active,
+    hasRank: true,
   },
   blast: {
     id: 'blast',
@@ -197,6 +201,7 @@ export const QUALITIES = {
     label: 'WEAPON.QUALITIES.Blast',
     tooltip: 'WEAPON.QUALITIES.BlastTooltip',
     activationType: ACTIVATION_TYPE.active,
+    hasRank: true,
   },
   concussive: {
     id: 'concussive',
@@ -204,6 +209,7 @@ export const QUALITIES = {
     label: 'WEAPON.QUALITIES.Concussive',
     tooltip: 'WEAPON.QUALITIES.ConcussiveTooltip',
     activationType: ACTIVATION_TYPE.active,
+    hasRank: true,
   },
   cortosis: {
     id: 'cortosis',
@@ -211,6 +217,7 @@ export const QUALITIES = {
     label: 'WEAPON.QUALITIES.Cortosis',
     tooltip: 'WEAPON.QUALITIES.CortosisTooltip',
     activationType: ACTIVATION_TYPE.passive,
+    hasRank: false,
   },
   cumbersome: {
     id: 'cumbersome',
@@ -218,6 +225,7 @@ export const QUALITIES = {
     label: 'WEAPON.QUALITIES.Cumbersome',
     tooltip: 'WEAPON.QUALITIES.CumbersomeTooltip',
     activationType: ACTIVATION_TYPE.passive,
+    hasRank: false,
   },
   defensive: {
     id: 'defensive',
@@ -225,6 +233,7 @@ export const QUALITIES = {
     label: 'WEAPON.QUALITIES.Defensive',
     tooltip: 'WEAPON.QUALITIES.DefensiveTooltip',
     activationType: ACTIVATION_TYPE.passive,
+    hasRank: false,
   },
   deflection: {
     id: 'deflection',
@@ -232,6 +241,7 @@ export const QUALITIES = {
     label: 'WEAPON.QUALITIES.Deflection',
     tooltip: 'WEAPON.QUALITIES.DeflectionTooltip',
     activationType: ACTIVATION_TYPE.passive,
+    hasRank: false,
   },
   disorient: {
     id: 'disorient',
@@ -239,6 +249,7 @@ export const QUALITIES = {
     label: 'WEAPON.QUALITIES.Disorient',
     tooltip: 'WEAPON.QUALITIES.DisorientTooltip',
     activationType: ACTIVATION_TYPE.active,
+    hasRank: true,
   },
   ensnare: {
     id: 'ensnare',
@@ -246,6 +257,7 @@ export const QUALITIES = {
     label: 'WEAPON.QUALITIES.Ensnare',
     tooltip: 'WEAPON.QUALITIES.EnsnareTooltip',
     activationType: ACTIVATION_TYPE.active,
+    hasRank: true,
   },
   guided: {
     id: 'guided',
@@ -253,6 +265,7 @@ export const QUALITIES = {
     label: 'WEAPON.QUALITIES.Guided',
     tooltip: 'WEAPON.QUALITIES.GuidedTooltip',
     activationType: ACTIVATION_TYPE.active,
+    hasRank: false,
   },
   knockdown: {
     id: 'knockdown',
@@ -260,6 +273,7 @@ export const QUALITIES = {
     label: 'WEAPON.QUALITIES.Knockdown',
     tooltip: 'WEAPON.QUALITIES.KnockdownTooltip',
     activationType: ACTIVATION_TYPE.active,
+    hasRank: true,
   },
   inaccurate: {
     id: 'inaccurate',
@@ -267,6 +281,7 @@ export const QUALITIES = {
     label: 'WEAPON.QUALITIES.Inaccurate',
     tooltip: 'WEAPON.QUALITIES.InaccurateTooltip',
     activationType: ACTIVATION_TYPE.passive,
+    hasRank: false,
   },
   inferior: {
     id: 'inferior',
@@ -274,6 +289,7 @@ export const QUALITIES = {
     label: 'WEAPON.QUALITIES.Inferior',
     tooltip: 'WEAPON.QUALITIES.InferiorTooltip',
     activationType: ACTIVATION_TYPE.passive,
+    hasRank: false,
   },
   ion: {
     id: 'ion',
@@ -281,6 +297,7 @@ export const QUALITIES = {
     label: 'WEAPON.QUALITIES.Ion',
     tooltip: 'WEAPON.QUALITIES.IonTooltip',
     activationType: ACTIVATION_TYPE.passive,
+    hasRank: false,
   },
   limitedAmmo: {
     id: 'limitedAmmo',
@@ -288,6 +305,7 @@ export const QUALITIES = {
     label: 'WEAPON.QUALITIES.LimitedAmmo',
     tooltip: 'WEAPON.QUALITIES.LimitedAmmoTooltip',
     activationType: ACTIVATION_TYPE.passive,
+    hasRank: true,
   },
   linked: {
     id: 'linked',
@@ -295,6 +313,7 @@ export const QUALITIES = {
     label: 'WEAPON.QUALITIES.Linked',
     tooltip: 'WEAPON.QUALITIES.LinkedTooltip',
     activationType: ACTIVATION_TYPE.passive,
+    hasRank: false,
   },
   pierce: {
     id: 'pierce',
@@ -302,6 +321,7 @@ export const QUALITIES = {
     label: 'WEAPON.QUALITIES.Pierce',
     tooltip: 'WEAPON.QUALITIES.PierceTooltip',
     activationType: ACTIVATION_TYPE.passive,
+    hasRank: true,
   },
   prepare: {
     id: 'prepare',
@@ -309,6 +329,7 @@ export const QUALITIES = {
     label: 'WEAPON.QUALITIES.Prepare',
     tooltip: 'WEAPON.QUALITIES.PrepareTooltip',
     activationType: ACTIVATION_TYPE.passive,
+    hasRank: false,
   },
   slowFiring: {
     id: 'slowFiring',
@@ -316,6 +337,7 @@ export const QUALITIES = {
     label: 'WEAPON.QUALITIES.SlowFiring',
     tooltip: 'WEAPON.QUALITIES.SlowFiringTooltip',
     activationType: ACTIVATION_TYPE.passive,
+    hasRank: false,
   },
   stun: {
     id: 'stun',
@@ -323,6 +345,7 @@ export const QUALITIES = {
     label: 'WEAPON.QUALITIES.Stun',
     tooltip: 'WEAPON.QUALITIES.StunTooltip',
     activationType: ACTIVATION_TYPE.active,
+    hasRank: false,
   },
   stunSetting: {
     id: 'stunSetting',
@@ -330,6 +353,7 @@ export const QUALITIES = {
     label: 'WEAPON.QUALITIES.StunSetting',
     tooltip: 'WEAPON.QUALITIES.StunSettingTooltip',
     activationType: ACTIVATION_TYPE.active,
+    hasRank: false,
   },
   stunDamage: {
     id: 'stunDamage',
@@ -337,6 +361,7 @@ export const QUALITIES = {
     label: 'WEAPON.QUALITIES.StunDamage',
     tooltip: 'WEAPON.QUALITIES.StunDamageTooltip',
     activationType: ACTIVATION_TYPE.passive,
+    hasRank: false,
   },
   sunder: {
     id: 'sunder',
@@ -344,6 +369,7 @@ export const QUALITIES = {
     label: 'WEAPON.QUALITIES.Sunder',
     tooltip: 'WEAPON.QUALITIES.SunderTooltip',
     activationType: ACTIVATION_TYPE.active,
+    hasRank: true,
   },
   superior: {
     id: 'superior',
@@ -351,6 +377,7 @@ export const QUALITIES = {
     label: 'WEAPON.QUALITIES.Superior',
     tooltip: 'WEAPON.QUALITIES.SuperiorTooltip',
     activationType: ACTIVATION_TYPE.passive,
+    hasRank: false,
   },
   tractor: {
     id: 'tractor',
@@ -358,6 +385,23 @@ export const QUALITIES = {
     label: 'WEAPON.QUALITIES.Tractor',
     tooltip: 'WEAPON.QUALITIES.TractorTooltip',
     activationType: ACTIVATION_TYPE.passive,
+    hasRank: false,
+  },
+  unwieldy: {
+    id: 'unwieldy',
+    abrev: 'UNW',
+    label: 'WEAPON.QUALITIES.Unwieldy',
+    tooltip: 'WEAPON.QUALITIES.UnwieldyTooltip',
+    activationType: ACTIVATION_TYPE.passive,
+    hasRank: false,
+  },
+  twoHanded: {
+    id: 'twoHanded',
+    abrev: '2H',
+    label: 'WEAPON.QUALITIES.TwoHanded',
+    tooltip: 'WEAPON.QUALITIES.TwoHandedTooltip',
+    activationType: ACTIVATION_TYPE.passive,
+    hasRank: false,
   },
   vicious: {
     id: 'vicious',
@@ -365,6 +409,7 @@ export const QUALITIES = {
     label: 'WEAPON.QUALITIES.Vicious',
     tooltip: 'WEAPON.QUALITIES.ViciousTooltip',
     activationType: ACTIVATION_TYPE.passive,
+    hasRank: true,
   },
 }
 

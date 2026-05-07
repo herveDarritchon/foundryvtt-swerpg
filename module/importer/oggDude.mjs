@@ -1,7 +1,7 @@
 import OggDudeDataElement from '../settings/models/OggDudeDataElement.mjs'
 import { buildGearContext } from './items/gear-ogg-dude.mjs'
-import { buildArmorContext } from './items/armor-ogg-dude.mjs'
 import { buildWeaponContext } from './items/weapon-ogg-dude.mjs'
+import { buildArmorContext } from './items/armor-ogg-dude.mjs'
 import { buildSpeciesContext } from './items/species-ogg-dude.mjs'
 import { buildCareerContext } from './items/career-ogg-dude.mjs'
 import { buildTalentContext } from './items/talent-ogg-dude.mjs'
@@ -192,8 +192,8 @@ export default class OggDudeImporter {
 
     /* --------------------------------------------- SPÉCIFIQUE ------------------------------------------------------------------- */
     const buildContextMap = new Map()
-    buildContextMap.set('armor', { type: 'armor', contextBuilder: buildArmorContext })
     buildContextMap.set('weapon', { type: 'weapon', contextBuilder: buildWeaponContext })
+    buildContextMap.set('armor', { type: 'armor', contextBuilder: buildArmorContext })
     buildContextMap.set('gear', { type: 'gear', contextBuilder: buildGearContext })
     buildContextMap.set('species', { type: 'species', contextBuilder: buildSpeciesContext })
     buildContextMap.set('career', { type: 'career', contextBuilder: buildCareerContext })
@@ -208,8 +208,8 @@ export default class OggDudeImporter {
     const unsupportedDomains = domainsToImport.filter((id) => !buildContextMap.has(id))
     if (unsupportedDomains.length > 0) {
       logger.warn('[ProcessOggDudeData] Domaines demandés non supportés', { unsupportedDomains })
-      const unsupportedDomains = unsupportedDomains.map((domain) => domain.id).join(',')
-      ui.notifications.warn(game.i18n.format('SETTINGS.OggDudeDataImporter.loadWindow.user-message.domain-unsupported:', unsupportedDomains))
+      const unsupportedDomainsStr = unsupportedDomains.map((domain) => domain).join(',')
+      ui.notifications.warn(game.i18n.format('SETTINGS.OggDudeDataImporter.loadWindow.user-message.domain-unsupported:', unsupportedDomainsStr))
     }
     logger.debug('[ProcessOggDudeData] -Step 3.3: Domains to Import >', domainsToImport)
 
@@ -329,7 +329,6 @@ export default class OggDudeImporter {
 
     // Build context map
     const buildContextMap = new Map()
-    buildContextMap.set('armor', { type: 'armor', contextBuilder: buildArmorContext })
     buildContextMap.set('weapon', { type: 'weapon', contextBuilder: buildWeaponContext })
     buildContextMap.set('gear', { type: 'gear', contextBuilder: buildGearContext })
     buildContextMap.set('species', { type: 'species', contextBuilder: buildSpeciesContext })

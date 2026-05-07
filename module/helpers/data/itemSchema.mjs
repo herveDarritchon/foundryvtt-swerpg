@@ -7,6 +7,7 @@ import {
   buildOptionalStringField,
 } from './utilities.mjs'
 import SwerpgCombatItemData from '../../data/combat-item.mjs'
+import { buildQualitySchema } from '../../models/qualities-schema.mjs'
 
 export function buildAttributesSchema(fields) {
   return new fields.SchemaField(
@@ -170,20 +171,7 @@ export function buildTalentModifiersSchema(fields, extraFields = {}) {
 }
 
 export function buildQualitiesSchema(fields) {
-  return buildOptionalSetField({
-    field: buildOptionalSchemaField({
-      key: buildOptionalStringField({
-        itemType: SwerpgCombatItemData.ITEM_TYPE,
-        key: 'weapon-modifiers.qualities.key',
-      }),
-      count: buildOptionalIntegerField({
-        itemType: SwerpgCombatItemData.ITEM_TYPE,
-        key: 'weapon-modifiers.qualities.count',
-        min: 0,
-        max: 100,
-      }),
-    }),
-  })
+  return new fields.ArrayField(buildQualitySchema())
 }
 
 export function buildWeaponModifiersSchema(fields, extraFields = {}) {
@@ -236,7 +224,7 @@ export function buildWeaponModifiersSchema(fields, extraFields = {}) {
         initial: 0,
         max: 10,
       }),
-      qualities: buildQualitiesSchema(fields),
+      qualities: buildQualitiesSchema(),
     }),
   })
 }

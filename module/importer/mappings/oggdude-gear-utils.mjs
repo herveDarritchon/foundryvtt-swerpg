@@ -1,5 +1,6 @@
 import { sanitizeOggDudeWeaponDescription, sanitizeText } from './oggdude-weapon-utils.mjs'
 import { WEAPON_RANGE_MAP } from './oggdude-weapon-range-map.mjs'
+import { getQualityConfig } from '../../config/qualities.mjs'
 
 const BRAWN_BASED_SKILLS = new Set(['melee', 'meleeheavy', 'meleelight', 'brawl', 'lightsaber'])
 
@@ -276,7 +277,16 @@ export function extractWeaponProfile(weaponModifiersNode) {
   }
 
   const qualities = Array.from(qualityMap.entries())
-    .map(([key, rank]) => ({ key, rank }))
+    .map(([key, rank]) => {
+      const qualityConfig = getQualityConfig(key)
+      return {
+        key,
+        rank: rank > 0 ? rank : null,
+        hasRank: qualityConfig?.hasRank ?? true,
+        active: true,
+        source: 'oggdude',
+      }
+    })
     .sort((a, b) => a.key.localeCompare(b.key))
 
   const descriptionLines = []

@@ -1,10 +1,9 @@
 import { buildArmorImgWorldPath, buildItemImgSystemPath } from '../../settings/directories.mjs'
-import OggDudeImporter from '../oggDude.mjs'
-import { buildMod, buildWeaponModifiers } from './combat-item-mapper.mjs'
 import OggDudeDataElement from '../../settings/models/OggDudeDataElement.mjs'
 import { logger } from '../../utils/logger.mjs'
 import { SYSTEM } from '../../config/system.mjs'
-import { resolveArmorCategory, resolveArmorProperties } from '../mappings/index-armor.mjs'
+import { resolveArmorCategory, resolveArmorProperties, ARMOR_CATEGORY_MAP, ARMOR_PROPERTY_MAP } from '../mappings/index-armor.mjs'
+import { getQualityConfig } from '../../config/qualities.mjs'
 import {
   clampNumber,
   sanitizeText,
@@ -15,12 +14,16 @@ import {
   normalizeArmorCategoryTag,
   buildArmorDescription,
   extractBaseMods,
+  resetArmorImportStats,
 } from '../utils/armor-import-utils.mjs'
+import { parseOggDudeBoolean } from '../mappings/oggdude-weapon-utils.mjs'
+
+const DEFAULT_CATEGORY = 'medium'
+const DEFAULT_SOAK = 2
+const DEFAULT_DEFENSE = 0
 
 /**
- * Validation des données système d'une armure
- * @param {object} system - Les données système de l'armure
- * @returns {{valid: boolean, errors: string[]}} Résultat de la validation
+ * Résout la catégorie d'une armure avec gestion des erreurs et fallback
  */
 function validateArmorSystem(system) {
   const errors = []
@@ -61,24 +64,44 @@ function validateArmorSystem(system) {
 }
 
 /**
- * Résout la catégorie d'une armure avec gestion des erreurs et fallback
+ * Résout la catégorie d'une armure en ignorant les propriétés connues
+ * @returns {string|null} La catégorie ou null si rejeté
  */
 function resolveArmorCategoryWithFallback(xmlCategories, armorName) {
-  // Recherche de la première catégorie reconnue
+  // Catégories valides OggDude
+  const VALID_CATEGORIES = new Set(['light', 'medium', 'heavy', 'natural', 'unarmored', '0', '1', '2', '3', '4'])
+  // Propriétés connues qui ne sont PAS des catégories
+  const KNOWN_PROPERTIES = new Set(['full body', 'hard full body', 'hard', 'resistant', 'sealable', 'sealed', 'powered', 'light', 'half body'])
+  
+  // Recherche de la première catégorie reconnue (Light/Medium/Heavy/Natural/Unarmored)
   for (const xmlCategory of xmlCategories) {
-    const resolvedCategory = resolveArmorCategory(xmlCategory)
-    if (resolvedCategory) {
-      return resolvedCategory
+    const sanitized = xmlCategory?.trim()
+    if (!sanitized) continue
+    
+    // Ignorer si c'est une propriété connue
+    if (KNOWN_PROPERTIES.has(sanitized.toLowerCase())) continue
+    
+    // Vérifier si c'est une catégorie valide
+    if (VALID_CATEGORIES.has(sanitized.toLowerCase())) {
+      const resolvedCategory = resolveArmorCategory(sanitized)
+      if (resolvedCategory) {
+        return resolvedCategory
+      }
     }
   }
 
-  // Gestion des catégories inconnues
-  incrementArmorImportStat('unknownCategories')
-  if (xmlCategories.length > 0) {
-    logger.warn(`Catégorie d'armure inconnue pour "${armorName}": ${xmlCategories.join(', ')}`)
+  // Gestion des catégories inconnues - logger seulement si on a vraiment des catégories inconnues (pas juste des propriétés)
+  const unknownCategories = xmlCategories.filter(cat => {
+    const sanitized = cat?.trim()?.toLowerCase()
+    return sanitized && !KNOWN_PROPERTIES.has(sanitized) && !VALID_CATEGORIES.has(sanitized)
+  })
+
+  if (unknownCategories.length > 0) {
+    incrementArmorImportStat('unknownCategories')
+    logger.warn(`Catégorie d'armure inconnue pour "${armorName}": ${unknownCategories.join(', ')}`)
   }
 
-  if (FLAG_STRICT_ARMOR_VALIDATION) {
+  if (FLAG_STRICT_ARMOR_VALIDATION && unknownCategories.length > 0) {
     addRejectionReason('ARMOR_CATEGORY_UNKNOWN')
     incrementArmorImportStat('rejected')
     logger.warn(`Armure rejetée en mode strict: "${armorName}" - catégorie inconnue`)
@@ -89,21 +112,64 @@ function resolveArmorCategoryWithFallback(xmlCategories, armorName) {
 }
 
 /**
- * Traite les propriétés d'une armure avec limitation et tri
+ * Mapping des propriétés OggDude vers les qualités système
+ */
+const OGGDUDE_ARMOR_PROPERTY_TO_QUALITY = {
+  'full body': 'full-body',
+  'hard full body': 'bulky',
+  'hard': 'bulky',
+  'resistant': 'organic',
+  'sealable': 'sealed',
+  'sealed': 'sealed',
+  'powered': 'bulky',
+  'light': null, // Pas une propriété d'armure système
+  'half body': null, // Pas une propriété d'armure système
+}
+
+/**
+ * Traite les propriétés d'une armure et les convertit en format Option C
+ * @returns {Array} Qualities array in Option C format
  */
 function processArmorProperties(xmlCategories, armorName, isRestricted = false) {
-  const { resolvedProperties, unknownProperties } = resolveArmorProperties(xmlCategories)
+  const resolvedProperties = new Set()
+  const unknownProperties = []
+
+  // Traiter chaque élément : si c'est une catégorie valide, l'ignorer ; sinon, c'est une propriété
+  for (const xmlCategory of xmlCategories) {
+    const sanitized = xmlCategory?.trim()
+    if (!sanitized) continue
+    
+    // Vérifier si c'est une catégorie valide
+    const isCategory = resolveArmorCategory(sanitized)
+    if (isCategory) continue // C'est une catégorie, pas une propriété
+    
+    // C'est une propriété - chercher dans ARMOR_PROPERTY_MAP d'abord
+    let mappedProperty = ARMOR_PROPERTY_MAP[sanitized]?.swerpgProperty
+    
+    // Sinon, chercher dans le mapping OggDude
+    if (mappedProperty === undefined) {
+      mappedProperty = OGGDUDE_ARMOR_PROPERTY_TO_QUALITY[sanitized.toLowerCase()]
+    }
+    
+    if (mappedProperty) {
+      resolvedProperties.add(mappedProperty)
+    } else if (mappedProperty === null) {
+      // Propriété connue mais pas pertinente pour le système - ignorer silencieusement
+      continue
+    } else {
+      unknownProperties.push(sanitized)
+    }
+  }
 
   if (unknownProperties.length > 0) {
     incrementArmorImportStat('unknownProperties', unknownProperties.length)
     logger.warn(`Propriétés d'armure inconnues pour "${armorName}": ${unknownProperties.join(', ')}`)
   }
 
-  // Ajouter les catégories normalisées comme propriétés personnalisées
-  for (const category of xmlCategories) {
-    const normalizedTag = normalizeArmorCategoryTag(category)
-    if (normalizedTag && ['sealed', 'full-body'].includes(normalizedTag)) {
-      resolvedProperties.add(normalizedTag)
+  // Ajouter sealed et full-body depuis le mapping OGGDUDE_ARMOR_PROPERTY_TO_QUALITY si applicable
+  for (const [oggDudeKey, systemKey] of Object.entries(OGGDUDE_ARMOR_PROPERTY_TO_QUALITY)) {
+    if (systemKey && resolvedProperties.has(systemKey)) {
+      // Déjà ajouté via la première boucle, rien à faire
     }
   }
 
@@ -112,22 +178,34 @@ function processArmorProperties(xmlCategories, armorName, isRestricted = false) 
     resolvedProperties.add('restricted')
   }
 
-  // Limitation et tri des propriétés
-  const maxProperties = 12
-  if (resolvedProperties.size > maxProperties) {
-    logger.warn(`Trop de propriétés pour "${armorName}": ${resolvedProperties.size} > ${maxProperties}, troncature appliquée`)
-    const sortedProperties = Array.from(resolvedProperties)
-      .sort((a, b) => a.localeCompare(b))
-      .slice(0, maxProperties)
-    return new Set(sortedProperties)
+  // Convertir en format Option C
+  const qualities = []
+  for (const prop of resolvedProperties) {
+    const qualityConfig = getQualityConfig(prop)
+    qualities.push({
+      key: prop,
+      rank: qualityConfig?.hasRank ? 1 : null,
+      hasRank: qualityConfig?.hasRank || false,
+      active: true,
+      source: 'oggdude',
+    })
   }
 
-  const sortedProperties = Array.from(resolvedProperties).sort((a, b) => a.localeCompare(b))
-  return new Set(sortedProperties)
+  // Limitation et tri
+  const maxProperties = 12
+  if (qualities.length > maxProperties) {
+    logger.warn(`Trop de propriétés pour "${armorName}": ${qualities.length} > ${maxProperties}, troncature appliquée`)
+    return qualities.sort((a, b) => a.key.localeCompare(b.key)).slice(0, maxProperties)
+  }
+
+  return qualities.sort((a, b) => a.key.localeCompare(b.key))
 }
 
 /**
- * Mappe les valeurs numériques avec validation
+ * Mappe une armure XML OggDude vers un objet SwerpgArmor (Option C)
+ * @param {object} xmlArmor - Les données XML de l'armure
+ * @param armorName
+ * @returns {object|null} L'objet armure mappé ou null si rejeté
  */
 function mapArmorNumericValues(xmlArmor, armorName) {
   const result = {}
@@ -148,7 +226,7 @@ function mapArmorNumericValues(xmlArmor, armorName) {
 }
 
 /**
- * Mappe une armure XML OggDude vers un objet SwerpgArmor
+ * Mappe une armure XML OggDude vers un objet SwerpgArmor (Option C)
  * @param {object} xmlArmor - Les données XML de l'armure
  * @returns {object|null} L'objet armure mappé ou null si rejeté
  */
@@ -156,85 +234,71 @@ function mapOggDudeArmor(xmlArmor) {
   incrementArmorImportStat('total')
 
   try {
-    // Construction de la structure de base Foundry
-    const armorData = {
-      name: sanitizeText(OggDudeImporter.mapMandatoryString('armor.Name', xmlArmor.Name)),
-      type: 'armor',
-      img: buildItemImgSystemPath('armor.svg'), // Image par défaut, sera remplacée plus tard
-      system: {},
-    }
+    const name = sanitizeText(xmlArmor.Name)
+    const oggdudeKey = sanitizeText(xmlArmor.Key || '')
 
     // Mapping de la catégorie
-    const xmlCategories = OggDudeImporter.mapOptionalArray(xmlArmor?.Categories?.Category, (cat) => cat) || []
-    const category = resolveArmorCategoryWithFallback(xmlCategories, armorData.name)
+    const xmlCategories = Array.isArray(xmlArmor?.Categories?.Category)
+      ? xmlArmor.Categories.Category
+      : xmlArmor?.Categories?.Category ? [xmlArmor.Categories.Category] : []
 
+    const category = resolveArmorCategoryWithFallback(xmlCategories, name)
     if (category === null) {
       return null // Rejeté en mode strict
     }
 
-    armorData.system.category = category
-
     // Vérification restricted
-    const isRestricted = Boolean(xmlArmor.Restricted)
+    const isRestricted = parseOggDudeBoolean(xmlArmor.Restricted)
 
-    // Mapping des propriétés
-    armorData.system.properties = processArmorProperties(xmlCategories, armorData.name, isRestricted)
+    // Mapping des qualités en format Option C
+    const qualities = processArmorProperties(xmlCategories, name, isRestricted)
 
     // Mapping des valeurs numériques
-    const { defenseValue, soakValue } = mapArmorNumericValues(xmlArmor, armorData.name)
-    armorData.system.defense = { base: defenseValue }
-    armorData.system.soak = { base: soakValue }
+    const soak = clampNumber(xmlArmor.Soak, 0, 20, DEFAULT_SOAK)
+    const defense = clampNumber(xmlArmor.Defense, 0, 20, DEFAULT_DEFENSE)
+    const hp = clampNumber(xmlArmor.HP, 0, Number.MAX_SAFE_INTEGER, 0)
+    const encumbrance = clampNumber(xmlArmor.Encumbrance, 0, Number.MAX_SAFE_INTEGER, 0)
+    const rarity = clampNumber(xmlArmor.Rarity, 0, 20, 0)
+    const price = clampNumber(xmlArmor.Price, 0, Number.MAX_SAFE_INTEGER, 0)
 
-    // Mapping des autres propriétés héritées
-    armorData.system.encumbrance = clampNumber(xmlArmor.Encumbrance, 0, Number.MAX_SAFE_INTEGER, 0)
-    armorData.system.price = clampNumber(xmlArmor.Price, 0, Number.MAX_SAFE_INTEGER, 0)
-    armorData.system.rarity = clampNumber(xmlArmor.Rarity, 0, 20, 0)
-    armorData.system.quantity = 1
-    armorData.system.quality = 'standard'
-    armorData.system.broken = false
-    armorData.system.equipped = false
-
-    // Mapping HP vers hardPoints (correction du champ erroné)
-    armorData.system.hardPoints = clampNumber(xmlArmor.HP, 0, Number.MAX_SAFE_INTEGER, 0)
-
-    // Construction de la description structurée
-    const descriptionText = buildArmorDescription(xmlArmor)
-    armorData.system.description = {
-      public: sanitizeText(descriptionText),
-      secret: '',
-    }
-
-    // Ajout des actions vides
-    armorData.system.actions = []
+    // Construction de la description
+    const description = buildArmorDescription(xmlArmor)
 
     // Ajout des flags OggDude
     const baseMods = extractBaseMods(xmlArmor)
-    armorData.flags = {
+    const flags = {
       swerpg: {
-        oggdudeKey: xmlArmor.Key || '',
+        oggdudeKey,
         oggdudeSource: typeof xmlArmor.Source === 'string' ? xmlArmor.Source : xmlArmor.Source?._ || '',
         oggdudeSourcePage: xmlArmor.Source?.$ ? parseInt(xmlArmor.Source.$.Page) || 0 : 0,
       },
     }
 
     if (baseMods.length > 0) {
-      armorData.flags.swerpg.oggdude = { baseMods }
+      flags.swerpg.oggdude = { baseMods }
     }
 
-    // Validation finale
-    const validation = validateArmorSystem(armorData.system)
-    if (!validation.valid) {
-      if (FLAG_STRICT_ARMOR_VALIDATION) {
-        addRejectionReason('ARMOR_SYSTEM_INVALID')
-        incrementArmorImportStat('rejected')
-        logger.warn(`Armure rejetée en mode strict: "${armorData.name}" - validation échouée: ${validation.errors.join(', ')}`)
-        return null
-      } else {
-        logger.warn(`Armure avec erreurs de validation: "${armorData.name}" - ${validation.errors.join(', ')}`)
-      }
+    const armorObject = {
+      name,
+      type: 'armor',
+      img: 'icons/svg/aura.svg', // Image par défaut Foundry
+      system: {
+        category,
+        soak,
+        defense,
+        hp,
+        encumbrance,
+        rarity,
+        price,
+        qualities,
+        restricted: isRestricted,
+        description,
+      },
+      flags,
     }
 
-    return armorData
+    incrementArmorImportStat('imported')
+    return armorObject
   } catch (error) {
     logger.error(`Erreur lors du mapping de l'armure "${xmlArmor.Name || 'Unknown'}"`, error)
     addRejectionReason('ARMOR_MAPPING_ERROR')
@@ -252,9 +316,10 @@ function mapOggDudeArmor(xmlArmor) {
  * @name armorMapper
  */
 export function armorMapper(armors) {
+  resetArmorImportStats()
   logger.debug(`[ArmorMapper] Mapping ${armors.length} armures`)
 
-  const mappedArmors = armors.map(mapOggDudeArmor).filter((armor) => armor !== null) // Exclure les armures rejetées
+  const mappedArmors = armors.map(mapOggDudeArmor).filter((armor) => armor !== null)
 
   logger.debug(`[ArmorMapper] Mapping terminé: ${mappedArmors.length}/${armors.length} armures conservées`)
 
@@ -266,22 +331,38 @@ export function armorMapper(armors) {
 }
 
 // Export des utilitaires pour les tests et le monitoring
-export { getArmorImportStats, resetArmorImportStats } from '../utils/armor-import-utils.mjs'
+export { getArmorImportStats, resetArmorImportStats }
 
 /**
  * Create the Armor Context for the OggDude Data Import
- * @param zip
- * @param groupByDirectory
- * @param groupByType
- * @returns {{zip: {elementFileName: string, directories, content}, image: {images: (string|((buffer: Buffer, options?: ansiEscapes.ImageOptions) => string)|number|[OggDudeDataElement]|[OggDudeDataElement,OggDudeDataElement]|[OggDudeDataElement,OggDudeDataElement]|OggDudeContextImage|*), criteria: string, systemPath: string, worldPath: string}, folder: {name: string, type: string}, element: {jsonCriteria: string, mapper: *, type: string}}}
- * @public
- * @function
+ * Supports both old signature (zip, groupByDirectory, groupByType) for backward compatibility
+ * and new signature ({importedFile, options})
+ * @param {Object|any} zipOrParams - Zip file or params object
+ * @param {Object} [groupByDirectory] - Directory grouping (old signature)
+ * @param {Object} [groupByType] - Type grouping (old signature)
+ * @returns {Promise<Object>} The import context with items and stats
  */
-export async function buildArmorContext(zip, groupByDirectory, groupByType) {
-  logger.debug('[ArmorImporter] Building Armor context', { groupByDirectoryCount: groupByDirectory.length, groupByType, hasZip: !!zip })
+export async function buildArmorContext(zipOrParams, groupByDirectory, groupByType) {
+  resetArmorImportStats()
 
+  // Support new signature: buildArmorContext({importedFile, options})
+  let importedFile
+  if (zipOrParams && typeof zipOrParams === 'object' && !Array.isArray(zipOrParams) && 'importedFile' in zipOrParams) {
+    importedFile = zipOrParams.importedFile
+    const dataset = OggDudeDataElement.getElementsFrom({ file: importedFile, elementName: 'Armor' })
+    return buildContextFromDataset(dataset)
+  }
+
+  // Old signature: buildArmorContext(zip, groupByDirectory, groupByType)
+  const zip = zipOrParams
+  logger.debug('[ArmorImporter] Building Armor context (old signature)', { 
+    groupByDirectoryCount: groupByDirectory?.length, 
+    hasZip: !!zip 
+  })
+
+  const jsonData = await OggDudeDataElement.buildJsonDataFromFile(zip, groupByDirectory, 'Armor.xml', 'Armors.Armor')
   return {
-    jsonData: await OggDudeDataElement.buildJsonDataFromFile(zip, groupByDirectory, 'Armor.xml', 'Armors.Armor'),
+    jsonData,
     zip: {
       elementFileName: 'Armor.xml',
       content: zip,
@@ -291,7 +372,7 @@ export async function buildArmorContext(zip, groupByDirectory, groupByType) {
       criteria: 'Data/EquipmentImages/Armor',
       worldPath: buildArmorImgWorldPath('armors'),
       systemPath: buildItemImgSystemPath('armor.svg'),
-      images: groupByType.image,
+      images: groupByType?.image,
       prefix: 'Armor',
     },
     folder: {
@@ -303,5 +384,33 @@ export async function buildArmorContext(zip, groupByDirectory, groupByType) {
       mapper: armorMapper,
       type: 'armor',
     },
+  }
+}
+
+/**
+ * Build context from dataset
+ * @param {Array} dataset - The XML dataset
+ * @returns {Object} Context with items and stats
+ */
+function buildContextFromDataset(dataset) {
+  const items = []
+  const errors = []
+
+  for (const xmlArmor of dataset) {
+    try {
+      const mapped = mapOggDudeArmor(xmlArmor)
+      if (mapped) {
+        items.push(mapped)
+      }
+    } catch (error) {
+      errors.push({ key: xmlArmor?.Key, error: error.message })
+    }
+  }
+
+  return {
+    type: 'armor',
+    items,
+    stats: getArmorImportStats(),
+    errors: errors.length > 0 ? errors : undefined,
   }
 }
