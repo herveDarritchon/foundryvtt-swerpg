@@ -1,6 +1,8 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { mapOggDudeSkillCode, mapOggDudeSkillCodes, OGG_DUDE_SKILL_MAP } from '../../module/importer/mappings/oggdude-skill-map.mjs'
+import { mapSpecializationSkills } from '../../module/importer/items/specialization-ogg-dude.mjs'
 import { SYSTEM } from '../../module/config/system.mjs'
+import { CHARACTERISTICS } from '../../module/config/attributes.mjs'
 
 describe('OggDude Skill Mapping', () => {
   describe('TEST-002: Validation mappings spécifiques', () => {
@@ -62,23 +64,27 @@ describe('OggDude Skill Mapping', () => {
       consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
     })
 
-    it('devrait retourner null pour LTSABER avec warning', () => {
+    it('devrait mapper LTSABER vers lightsaber sans warning', () => {
       const result = mapOggDudeSkillCode('LTSABER')
-      expect(result).toBeNull()
-      expect(consoleWarnSpy).toHaveBeenCalled()
+      expect(result).toBe('lightsaber')
+      expect(consoleWarnSpy).not.toHaveBeenCalled()
     })
 
-    it('devrait retourner null pour WARF avec warning', () => {
+    it('devrait mapper WARF vers warfare sans warning', () => {
       const result = mapOggDudeSkillCode('WARF')
-      expect(result).toBeNull()
-      expect(consoleWarnSpy).toHaveBeenCalled()
+      expect(result).toBe('warfare')
+      expect(consoleWarnSpy).not.toHaveBeenCalled()
+    })
+
+    it('devrait mapper UND vers underworld sans warning', () => {
+      const result = mapOggDudeSkillCode('UND')
+      expect(result).toBe('underworld')
+      expect(consoleWarnSpy).not.toHaveBeenCalled()
     })
 
     it('devrait retourner null pour codes inconnus sans warning si warnOnUnknown=false', () => {
-      const result1 = mapOggDudeSkillCode('LTSABER', { warnOnUnknown: false })
-      const result2 = mapOggDudeSkillCode('WARF', { warnOnUnknown: false })
+      const result1 = mapOggDudeSkillCode('UNKNOWN_CODE_XYZ', { warnOnUnknown: false })
       expect(result1).toBeNull()
-      expect(result2).toBeNull()
       expect(consoleWarnSpy).not.toHaveBeenCalled()
     })
 
@@ -226,6 +232,9 @@ describe('OggDude Skill Mapping', () => {
         'SW',
         'VIGIL',
         'XEN',
+        'WARF',
+        'UND',
+        'LTSABER',
       ]
 
       const unmappedCodes = []
@@ -242,10 +251,10 @@ describe('OggDude Skill Mapping', () => {
       expect(unmappedCodes).toHaveLength(0)
     })
 
-    it('les codes non mappables connus devraient être documentés', () => {
-      // LTSABER et WARF ne doivent pas être dans la table (compétences absentes de SKILLS)
-      expect(OGG_DUDE_SKILL_MAP.LTSABER).toBeUndefined()
-      expect(OGG_DUDE_SKILL_MAP.WARF).toBeUndefined()
+    it('les codes WARF, UND, LTSABER devraient être mappés vers les bonnes compétences', () => {
+      expect(OGG_DUDE_SKILL_MAP.WARF).toBe('warfare')
+      expect(OGG_DUDE_SKILL_MAP.UND).toBe('underworld')
+      expect(OGG_DUDE_SKILL_MAP.LTSABER).toBe('lightsaber')
     })
   })
 
@@ -294,6 +303,102 @@ describe('OggDude Skill Mapping', () => {
       expect(mapOggDudeSkillCode('COOL!', { warnOnUnknown: false })).toBeNull()
       expect(mapOggDudeSkillCode('CO-OL', { warnOnUnknown: false })).toBeNull()
       expect(mapOggDudeSkillCode('CO_OL', { warnOnUnknown: false })).toBeNull()
+    })
+  })
+
+  describe('Additional Skills Validation', () => {
+    it('devrait avoir warfare dans SYSTEM.SKILLS avec les bonnes propriétés', () => {
+      expect(SYSTEM.SKILLS.warfare).toBeDefined()
+      expect(SYSTEM.SKILLS.warfare.id).toBe('warfare')
+      expect(SYSTEM.SKILLS.warfare.type.id).toBe('knowledge')
+      expect(SYSTEM.SKILLS.warfare.characteristics).toBeDefined()
+      expect(SYSTEM.SKILLS.warfare.characteristics).toBe(CHARACTERISTICS.intellect)
+    })
+
+    it('devrait avoir lightsaber dans SYSTEM.SKILLS avec les bonnes propriétés', () => {
+      expect(SYSTEM.SKILLS.lightsaber).toBeDefined()
+      expect(SYSTEM.SKILLS.lightsaber.id).toBe('lightsaber')
+      expect(SYSTEM.SKILLS.lightsaber.type.id).toBe('combat')
+      expect(SYSTEM.SKILLS.lightsaber.characteristics).toBeDefined()
+      expect(SYSTEM.SKILLS.lightsaber.characteristics).toBe(CHARACTERISTICS.brawn)
+    })
+
+    it('underworld devrait être présent dans SYSTEM.SKILLS', () => {
+      expect(SYSTEM.SKILLS.underworld).toBeDefined()
+      expect(SYSTEM.SKILLS.underworld.type.id).toBe('knowledge')
+      expect(SYSTEM.SKILLS.underworld.characteristics).toBeDefined()
+      expect(SYSTEM.SKILLS.underworld.characteristics).toBe(CHARACTERISTICS.intellect)
+    })
+  })
+
+  describe('Specialization Import with New Skills', () => {
+    it('devrait mapper une spécialisation avec le code WARF', () => {
+      const xmlData = [
+        {
+          Key: 'STRATEGIST',
+          Name: 'Strategist',
+          CareerSkills: { Key: ['WARF', 'DISC', 'LEAD', 'NEG'] },
+        },
+      ]
+      const result = mapSpecializationSkills(['WARF', 'DISC', 'LEAD', 'NEG'])
+      expect(result).toContainEqual({ id: 'warfare' })
+      expect(result).toContainEqual({ id: 'discipline' })
+      expect(result).toContainEqual({ id: 'leadership' })
+      expect(result).toContainEqual({ id: 'negotiation' })
+    })
+
+    it('devrait mapper une spécialisation avec les codes UND', () => {
+      const result = mapSpecializationSkills(['UND', 'SKUL', 'STEA', 'DECEP'])
+      expect(result).toContainEqual({ id: 'underworld' })
+      expect(result).toContainEqual({ id: 'skulduggery' })
+      expect(result).toContainEqual({ id: 'stealth' })
+      expect(result).toContainEqual({ id: 'deception' })
+    })
+
+    it('devrait mapper une spécialisation avec le code LTSABER', () => {
+      const result = mapSpecializationSkills(['LTSABER', 'MELEE', 'BRAWL'])
+      expect(result).toContainEqual({ id: 'lightsaber' })
+      expect(result).toContainEqual({ id: 'melee' })
+      expect(result).toContainEqual({ id: 'brawl' })
+    })
+
+    it('devrait dédupliquer les codes mappant vers la même compétence', () => {
+      const result = mapSpecializationSkills(['UND', 'UND', 'WARF'])
+      expect(result.filter((item) => item.id === 'underworld')).toHaveLength(1)
+      expect(result.filter((item) => item.id === 'warfare')).toHaveLength(1)
+    })
+  })
+
+  describe('Regression: Affected Specializations', () => {
+    const affectedSpecs = [
+      { key: 'REPNAVYOFF', name: 'Republic Navy Officer', oggDudeCode: 'WARF', expectedSkill: 'warfare' },
+      { key: 'SAPPER', name: 'Sapper', oggDudeCode: 'WARF', expectedSkill: 'warfare' },
+      { key: 'SEPARATISTCOMMANDER', name: 'Separatist Commander', oggDudeCode: 'WARF', expectedSkill: 'warfare' },
+      { key: 'STRATEGIST', name: 'Strategist', oggDudeCode: 'WARF', expectedSkill: 'warfare' },
+      { key: 'RIGGER', name: 'Rigger', oggDudeCode: 'UND', expectedSkill: 'underworld' },
+      { key: 'SCHOLAR', name: 'Scholar', oggDudeCode: 'UND', expectedSkill: 'underworld' },
+      { key: 'SHADOW', name: 'Shadow', oggDudeCode: 'UND', expectedSkill: 'underworld' },
+      { key: 'SKIPTRACER', name: 'Skip Tracer', oggDudeCode: 'UND', expectedSkill: 'underworld' },
+      { key: 'SLICER', name: 'Slicer', oggDudeCode: 'UND', expectedSkill: 'underworld' },
+      { key: 'TRADER', name: 'Trader', oggDudeCode: 'UND', expectedSkill: 'underworld' },
+      { key: 'WARDEN', name: 'Warden', oggDudeCode: 'UND', expectedSkill: 'underworld' },
+      { key: 'SENTRY', name: 'Sentry', oggDudeCode: 'LTSABER', expectedSkill: 'lightsaber' },
+      { key: 'SHIEN', name: 'Shien Expert', oggDudeCode: 'LTSABER', expectedSkill: 'lightsaber' },
+      { key: 'SHIICHO', name: 'Shii-Cho Knight', oggDudeCode: 'LTSABER', expectedSkill: 'lightsaber' },
+      { key: 'SORESU', name: 'Soresu Defender', oggDudeCode: 'LTSABER', expectedSkill: 'lightsaber' },
+    ]
+
+    affectedSpecs.forEach(({ key, name, oggDudeCode, expectedSkill }) => {
+      it(`devrait mapper correctement ${name} (${key}) avec ${expectedSkill}`, () => {
+        const result = mapSpecializationSkills([oggDudeCode])
+        expect(result).toContainEqual({ id: expectedSkill })
+      })
+    })
+
+    it('devrait limiter à 8 compétences maximum', () => {
+      const manySkills = ['WARF', 'UND', 'LTSABER', 'COOL', 'COORD', 'DISC', 'LEAD', 'NEG', 'PERC', 'VIGIL']
+      const result = mapSpecializationSkills(manySkills)
+      expect(result).toHaveLength(8)
     })
   })
 })
