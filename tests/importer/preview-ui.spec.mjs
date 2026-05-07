@@ -5,53 +5,47 @@ import OggDudeImporter from '../../module/importer/oggDude.mjs'
 import { OggDudeDataImporter } from '../../module/settings/OggDudeDataImporter.mjs'
 
 /**
- * Construit un ZIP minimal OggDude à partir des fichiers de ressources d'intégration
+ * Build a minimal fake ZIP for OggDude with only weapons
  */
-function buildFakeZip(domains = ['armor']) {
+function buildFakeZip() {
   const files = {}
   const baseDir = path.resolve(process.cwd(), 'resources', 'integration')
-  for (const d of domains) {
-    if (d === 'armor') {
-      const armorXml = fs.readFileSync(path.join(baseDir, 'Armor.xml'), 'utf-8')
-      files['Data/Armor.xml'] = {
-        name: 'Data/Armor.xml',
-        dir: false,
-        async: async (type) => armorXml,
-      }
-    }
+  const weaponXml = fs.readFileSync(path.join(baseDir, 'Weapons.xml'), 'utf-8')
+  files['Data/Weapons.xml'] = {
+    name: 'Data/Weapons.xml',
+    dir: false,
+    async: async (type) => weaponXml,
   }
   return { files }
 }
 
-// Stub global JSZip for importer load
+// stub global JSZip for importer load
 globalThis.JSZip = {
-  loadAsync: async (_buffer) => buildFakeZip(['armor']),
+  loadAsync: async (_buffer) => buildFakeZip(),
 }
 
 // Shim xml2js minimal pour parser Name
 globalThis.xml2js = {
   js: {
     parseStringPromise: async (xml) => {
-      if (xml.includes('<Armors>')) {
-        // Très simpliste: renvoie tableau d'armures avec Name
+      if (xml.includes('<Weapons>')) {
         const names = [...xml.matchAll(/<Name>([^<]+)<\/Name>/g)].map((m) => ({ Name: m[1] }))
-        return { Armors: { Armor: names.length ? names : [{ Name: 'Unknown' }] } }
+        return { Weapons: { Weapon: names.length ? names : [{ Name: 'Unknown' }] } }
       }
       return {}
     },
   },
 }
 
-// Stub monde pour buildArmorImgWorldPath
+// Stub monde pour buildWeaponImgWorldPath
 if (!globalThis.game) globalThis.game = {}
 globalThis.game.world = { id: 'test-world' }
 
-describe('Preview UI - préchargement', () => {
-  it('précharge les armures sans création et fournit un aperçu paginé', async () => {
+describe('Preview UI - preload', () => {
+  it('preloads weapons without creation and provides paginated preview', async () => {
     const buffer = Buffer.from('fake')
     const domains = [
-      { id: 'armor', checked: true },
-      { id: 'weapon', checked: false },
+      { id: 'weapon', checked: true },
       { id: 'gear', checked: false },
       { id: 'species', checked: false },
       { id: 'career', checked: false },
@@ -59,7 +53,7 @@ describe('Preview UI - préchargement', () => {
 
     const preview = await OggDudeImporter.preloadOggDudeData(buffer, domains)
     expect(preview).toBeTypeOf('object')
-    expect(preview.armor?.length).toBeGreaterThan(0)
+    expect(preview.weapon?.length).toBeGreaterThan(0)
 
     // Injecte données dans l'application et vérifie le contexte
     const app = new OggDudeDataImporter()
@@ -70,17 +64,17 @@ describe('Preview UI - préchargement', () => {
     const ctx = app._buildPreviewContext()
     expect(ctx.hasData).toBe(true)
     expect(ctx.items.length).toBeGreaterThan(0)
-    expect(ctx.total).toBe(preview.armor.length)
+    expect(ctx.total).toBe(preview.weapon.length)
     expect(ctx.page).toBe(1)
   })
 
-  it('filtre par texte sur le nom', async () => {
+  it('filters by text on name', async () => {
     const buffer = Buffer.from('fake')
-    const domains = [{ id: 'armor', checked: true }]
+    const domains = [{ id: 'weapon', checked: true }]
     const preview = await OggDudeImporter.preloadOggDudeData(buffer, domains)
     const app = new OggDudeDataImporter()
     app.previewData = preview
-    app.previewFilters = { domain: 'armor', text: 'cloth' }
+    app.previewFilters = { domain: 'weapon', text: 'blaster' }
     app.pagination = { page: 1, size: 50 }
 
     const ctx = app._buildPreviewContext()
