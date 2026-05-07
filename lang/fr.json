@@ -656,6 +656,12 @@
       "SECRET": "Secret Description"
     }
   },
+  "ITEM.RESTRICTION_LEVEL": {
+    "NONE": "Aucune restriction",
+    "RESTRICTED": "Restreint",
+    "MILITARY": "Militaire",
+    "ILLEGAL": "Illégal"
+  },
   "ITEM.EnchantmentMundane": "Mundane",
   "ITEM.EnchantmentMinor": "Minor",
   "ITEM.EnchantmentMajor": "Major",

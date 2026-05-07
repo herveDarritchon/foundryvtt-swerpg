@@ -181,6 +181,31 @@ export const ACTION_HOOKS = Object.freeze({
 /* -------------------------------------------- */
 
 /**
+ * Named restriction levels which are allowed by the system.
+ * @enum {{id: string, label: string}}
+ */
+export const RESTRICTION_LEVELS = {
+  none: {
+    id: 'none',
+    label: 'ITEM.RESTRICTION_LEVEL.NONE',
+  },
+  restricted: {
+    id: 'restricted',
+    label: 'ITEM.RESTRICTION_LEVEL.RESTRICTED',
+  },
+  military: {
+    id: 'military',
+    label: 'ITEM.RESTRICTION_LEVEL.MILITARY',
+  },
+  illegal: {
+    id: 'illegal',
+    label: 'ITEM.RESTRICTION_LEVEL.ILLEGAL',
+  },
+}
+
+/* -------------------------------------------- */
+
+/**
  * Include all constant definitions within the SYSTEM global export
  * @type {Object}
  */
@@ -205,6 +230,7 @@ export const SYSTEM = {
   ENCHANTMENT_TIERS,
   PASSIVE_BASE: ATTRIBUTES.PASSIVE_BASE,
   QUALITY_TIERS,
+  RESTRICTION_LEVELS,
   RESOURCES: ATTRIBUTES.RESOURCES,
   SKILL,
   SKILLS: ATTRIBUTES.SKILLS,
