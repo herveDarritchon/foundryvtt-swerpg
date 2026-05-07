@@ -301,42 +301,6 @@ export default class SwerpgWeapon extends SwerpgCombatItem {
 
     tags.reload = 'Reload'
 
-    const oggdudeTags = this.flags?.swerpg?.oggdudeTags
-    if (Array.isArray(oggdudeTags) && oggdudeTags.length > 0) {
-      const seenKeys = new Set()
-      const buildKey = (type, value) => {
-        const sanitizedType =
-          String(type || 'tag')
-            .toLowerCase()
-            .replace(/[^a-z0-9]+/g, '-')
-            .replace(/^-+|-+$/g, '') || 'tag'
-        const sanitizedValue =
-          String(value)
-            .toLowerCase()
-            .replace(/[^a-z0-9]+/g, '-')
-            .replace(/^-+|-+$/g, '') || 'value'
-        return `${sanitizedType}-${sanitizedValue}`
-      }
-
-      for (const entry of oggdudeTags) {
-        if (!entry || !entry.value) continue
-        const key = buildKey(entry.type, entry.value)
-        if (seenKeys.has(key)) continue
-        seenKeys.add(key)
-
-        let label = entry.label || String(entry.value)
-        if (!entry.label && entry.type === 'type') {
-          label = `Type: ${entry.value}`
-        } else if (!entry.label && entry.type === 'category') {
-          label = `Category: ${entry.value}`
-        } else if (!entry.label && entry.type === 'status' && entry.value === 'restricted') {
-          label = 'Restricted'
-        }
-
-        tags[key] = label
-      }
-    }
-
     if ((this.system?.restricted ?? this.restricted) && !tags.restricted) {
       tags.restricted = 'Restricted'
     }

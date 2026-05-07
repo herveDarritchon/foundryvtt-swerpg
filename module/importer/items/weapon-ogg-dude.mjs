@@ -11,13 +11,20 @@ import {
   WEAPON_QUALITY_MAP,
   WEAPON_RANGE_MAP,
   WEAPON_SKILL_MAP,
+  WEAPON_TYPE_MAP,
+  WEAPON_CATEGORY_MAP,
+  resolveWeaponType,
+  resolveWeaponCategory,
 } from '../mappings/index-weapon.mjs'
 import { getQualityConfig } from '../../config/qualities.mjs'
 import {
+  addWeaponUnknownCategory,
   addWeaponUnknownQuality,
   addWeaponUnknownSkill,
+  addWeaponUnknownType,
   FLAG_STRICT_WEAPON_VALIDATION,
   getWeaponImportStats,
+  incrementWeaponCategoryFallback,
   incrementWeaponImportStat,
   resetWeaponImportStats,
 } from '../utils/weapon-import-utils.mjs'
@@ -189,10 +196,32 @@ function mapOggDudeWeapon(xmlWeapon) {
     const hp = clampNumber(xmlWeapon.HP, 0, Number.MAX_SAFE_INTEGER, 0)
 
     const restricted = parseOggDudeBoolean(xmlWeapon.Restricted)
-    const typeTags = normalizeDelimitedValues(xmlWeapon.Type)
+    const rawType = xmlWeapon.Type || ''
     const categoryTags = normalizeCategoryValues(xmlWeapon?.Categories?.Category)
     const sizeHigh = normalizeSizeHigh(xmlWeapon.SizeHigh)
     const { name: sourceName, page: sourcePage } = extractSourceInfo(xmlWeapon.Source)
+
+    // Resolve system.category (ADR-0007 priority: Categories → SkillKey → Range → default)
+    const { category: resolvedCategory, source: categorySource } = resolveWeaponCategory(categoryTags, mappedSkill, mappedRange, 'ranged')
+    if (categorySource !== 'category') {
+      incrementWeaponCategoryFallback()
+    }
+
+    // Resolve system.weaponType
+    const { weaponType, isMapped } = resolveWeaponType(rawType)
+    if (!isMapped && rawType) {
+      logger.warn(`Unknown weapon type: "${rawType}" for "${name}", slugified to "${weaponType}"`, { category: 'WEAPON_IMPORT_INVALID' })
+      addWeaponUnknownType(rawType)
+    }
+
+    // Track unknown category values (not in map)
+    if (Array.isArray(categoryTags) && categoryTags.length > 0) {
+      for (const cat of categoryTags) {
+        if (cat && !WEAPON_CATEGORY_MAP[cat]) {
+          addWeaponUnknownCategory(cat)
+        }
+      }
+    }
 
     let description = sanitizeOggDudeWeaponDescription(xmlWeapon.Description)
     if (sourceName) {
@@ -200,39 +229,14 @@ function mapOggDudeWeapon(xmlWeapon) {
       description = description ? `${description}\n\n${sourceLine}` : sourceLine
     }
 
-    const oggdudeTags = []
-    const tagKeySet = new Set()
-    const buildTagKey = (type, value) => {
-      // Use consistent sanitization for both type and value
-      const sanitizedType = sanitizeText(type).toLowerCase()
-      const sanitizedValue = sanitizeText(value).toLowerCase()
-      return `${sanitizedType}-${sanitizedValue}`
-    }
-    const registerTag = (type, value, label) => {
-      if (!value) return
-      const key = buildTagKey(type, value)
-      if (tagKeySet.has(key)) return
-      tagKeySet.add(key)
-      oggdudeTags.push({ type, value, label })
-    }
-
-    typeTags.forEach((value) => registerTag('type', value, value))
-    categoryTags.forEach((value) => registerTag('category', value, value))
-    if (restricted) {
-      registerTag('status', 'restricted', 'Restricted')
-    }
-
-    const flags = {
-      swerpg: {
-        oggdudeKey,
-      },
-    }
-
-    if (oggdudeTags.length > 0) {
-      flags.swerpg.oggdudeTags = oggdudeTags
-    }
-
+    // Build structured flags (no more flat oggdudeTags)
     const oggdudeExtras = {}
+    if (rawType) {
+      oggdudeExtras.type = rawType
+    }
+    if (categoryTags.length > 0) {
+      oggdudeExtras.categories = [...categoryTags]
+    }
     if (sizeHigh !== null) {
       oggdudeExtras.sizeHigh = sizeHigh
     }
@@ -241,6 +245,12 @@ function mapOggDudeWeapon(xmlWeapon) {
         name: sourceName,
         page: sourcePage,
       }
+    }
+
+    const flags = {
+      swerpg: {
+        oggdudeKey,
+      },
     }
     if (Object.keys(oggdudeExtras).length > 0) {
       flags.swerpg.oggdude = oggdudeExtras
@@ -251,6 +261,8 @@ function mapOggDudeWeapon(xmlWeapon) {
       type: 'weapon',
       img: null,
       system: {
+        category: resolvedCategory,
+        weaponType,
         skill: mappedSkill,
         range: mappedRange,
         damage: totalDamage,

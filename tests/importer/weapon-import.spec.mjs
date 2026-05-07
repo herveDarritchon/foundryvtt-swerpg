@@ -61,22 +61,17 @@ describe('weaponMapper - mapping', () => {
     const weapon = result[0]
     expect(weapon.system.range).toBe('short')
     expect(weapon.system.skill).toBe('rangedLight')
+    expect(weapon.system.category).toBe('ranged')
+    expect(weapon.system.weaponType).toBe('heavy-blaster')
     expect(weapon.system.qualities).toEqual([
       { key: 'blast', rank: 2, hasRank: true, active: true, source: 'oggdude' },
       { key: 'burn', rank: 3, hasRank: true, active: true, source: 'oggdude' },
     ])
 
-    const tags = weapon.flags.swerpg.oggdudeTags
-    expect(tags).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({ type: 'type', value: 'Blasters' }),
-        expect.objectContaining({ type: 'type', value: 'Heavy' }),
-        expect.objectContaining({ type: 'category', value: 'Ranged' }),
-        expect.objectContaining({ type: 'category', value: 'Starship' }),
-        expect.objectContaining({ type: 'status', value: 'restricted' }),
-      ]),
-    )
-
+    // Structured flags (no more flat oggdudeTags)
+    expect(weapon.flags.swerpg.oggdudeTags).toBeUndefined()
+    expect(weapon.flags.swerpg.oggdude.type).toBe('Blasters/Heavy')
+    expect(weapon.flags.swerpg.oggdude.categories).toEqual(['Ranged', 'Starship'])
     expect(weapon.flags.swerpg.oggdude.sizeHigh).toBe(2.5)
     expect(weapon.flags.swerpg.oggdude.source).toEqual({ name: 'Core Rulebook', page: 123 })
     expect(weapon.system.description.public).toBe('DL-44\nFamous blaster.\n\nSource: Core Rulebook, p.123')
@@ -162,22 +157,16 @@ describe('weaponMapper - mapping', () => {
     })
   })
 
-  it('exposes oggdude tags through weapon getTags()', () => {
+  it('exposes category and weapon-type tags through getTags()', () => {
     const weapon = {
       damage: { weapon: 6 },
       range: 'medium',
+      weaponType: 'heavy-blaster',
+      restricted: true,
       qualities: [
         { key: 'blast', rank: 2, hasRank: true, active: true, source: 'base' },
       ],
-      flags: {
-        swerpg: {
-          oggdudeTags: [
-            { type: 'type', value: 'Explosive', label: 'Type: Explosive' },
-            { type: 'category', value: 'Ranged', label: 'Category: Ranged' },
-            { type: 'status', value: 'restricted', label: 'Restricted' },
-          ],
-        },
-      },
+      flags: {},
       system: { restricted: true },
       defense: { block: 0, parry: 0 },
       schema: { fields: { broken: { label: 'Broken' } } },
@@ -188,8 +177,8 @@ describe('weaponMapper - mapping', () => {
     }
 
     const tags = SwerpgWeapon.prototype.getTags.call(weapon, 'full')
-    expect(tags['type-explosive']).toBe('Type: Explosive')
-    expect(tags['category-ranged']).toBe('Category: Ranged')
+    expect(tags.category).toBe('Ranged')
+    expect(tags['weapon-type']).toBe('heavy-blaster')
     expect(tags.restricted).toBe('Restricted')
     expect(tags['blast']).toBe(game.i18n.localize('WEAPON.QUALITIES.Blast') + ' 2')
   })
