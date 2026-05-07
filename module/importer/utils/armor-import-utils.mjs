@@ -10,6 +10,16 @@ export { clampNumber, sanitizeText }
  */
 export const FLAG_STRICT_ARMOR_VALIDATION = false
 
+export const ARMOR_IGNORED_TAGS = new Set([
+  'full body',
+  'hard full body',
+  'hard',
+  'resistant',
+  'sealable',
+  'powered',
+  'half body',
+])
+
 /**
  * Statistics d'import des armures
  * @private
