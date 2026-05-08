@@ -162,6 +162,22 @@ export default class SwerpgBaseItemSheet extends api.HandlebarsApplicationMixin(
       tabs: tabGroups.sheet,
       tabsPartial: this.constructor.PARTS.tabs.template,
       tags: this.document.getTags(),
+      restrictionBadge: this.#prepareRestrictionBadge(source.system.restrictionLevel),
+    }
+  }
+
+  /**
+   * Prepare the restriction badge data for the item header.
+   * @param {string} restrictionLevel    The restriction level key
+   * @returns {{level: string, label: string}|null}
+   */
+  #prepareRestrictionBadge(restrictionLevel) {
+    if (!restrictionLevel || restrictionLevel === 'none') return null
+    const rlConfig = SYSTEM.RESTRICTION_LEVELS[restrictionLevel]
+    if (!rlConfig) return null
+    return {
+      level: restrictionLevel,
+      label: game.i18n.localize(rlConfig.label),
     }
   }
 
