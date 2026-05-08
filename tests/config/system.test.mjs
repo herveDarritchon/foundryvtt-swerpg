@@ -32,7 +32,7 @@ describe('System Configuration', () => {
 
   describe('COMPENDIUM_PACKS configuration', () => {
     test('should have all required compendium packs defined', () => {
-      const expectedPacks = ['talent', 'talentExtensions']
+      const expectedPacks = ['talent', 'armor']
 
       for (const packKey of expectedPacks) {
         expect(SystemConfig.COMPENDIUM_PACKS).toHaveProperty(packKey)
@@ -40,11 +40,11 @@ describe('System Configuration', () => {
     })
 
     test('should have correct pack identifiers for main packs', () => {
-      expect(SystemConfig.COMPENDIUM_PACKS.talent).toBe('swerpg.talent')
+      expect(SystemConfig.COMPENDIUM_PACKS.talent).toBe('swerpg.talents')
     })
 
     test('should have null values for extension packs', () => {
-      expect(SystemConfig.COMPENDIUM_PACKS.talentExtensions).toBeNull()
+      expect(SystemConfig.COMPENDIUM_PACKS.armor).toBe('swerpg.armors')
     })
   })
 

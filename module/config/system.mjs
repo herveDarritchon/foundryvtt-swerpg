@@ -31,8 +31,15 @@ export const ANCESTRIES = {
  * @enum {string}
  */
 export const COMPENDIUM_PACKS = {
-  talent: 'swerpg.talent',
-  talentExtensions: null,
+  armor: 'swerpg.armors',
+  weapon: 'swerpg.weapons',
+  skill: 'swerpg.skills',
+  gear: 'swerpg.gears',
+  obligation: 'swerpg.obligations',
+  specialization: 'swerpg.specializations',
+  species: 'swerpg.species',
+  talent: 'swerpg.talents',
+
 }
 
 /* -------------------------------------------- */
