@@ -8,6 +8,11 @@
       {{#each tags as |label tag|}}
         <span class="tag" data-tag="{{tag}}">{{label}}</span>
       {{/each}}
+      {{#if restrictionBadge}}
+        <span class="tag tag-restriction" data-restriction-level="{{restrictionBadge.level}}" data-tooltip="{{restrictionBadge.label}}">
+          {{restrictionBadge.label}}
+        </span>
+      {{/if}}
     </div>
   </div>
 </header>

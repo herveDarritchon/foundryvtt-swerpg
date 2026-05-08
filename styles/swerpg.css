@@ -320,6 +320,24 @@
 .swerpg .tags:empty {
   display: none;
 }
+.swerpg .tag-restriction {
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.swerpg .tag-restriction[data-restriction-level="restricted"] {
+  border-color: orange;
+  color: orange;
+}
+.swerpg .tag-restriction[data-restriction-level="military"] {
+  border-color: darkred;
+  color: #ff4444;
+}
+.swerpg .tag-restriction[data-restriction-level="illegal"] {
+  border-color: #000;
+  color: #ff4444;
+  background: rgba(0, 0, 0, 0.3);
+}
 .swerpg .tag-icon {
   flex: none;
   font-size: 10px;
