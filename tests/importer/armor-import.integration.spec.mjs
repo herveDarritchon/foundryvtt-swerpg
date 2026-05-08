@@ -10,6 +10,8 @@ vi.mock('../../module/utils/logger.mjs', () => ({
 }))
 
 import { armorMapper, getArmorImportStats, resetArmorImportStats } from '../../module/importer/items/armor-ogg-dude.mjs'
+import SwerpgArmor from '../../module/models/armor.mjs'
+import { SYSTEM } from '../../module/config/system.mjs'
 
 describe('armorMapper - ADR-0008 alignment', () => {
   beforeEach(() => {
@@ -191,5 +193,104 @@ describe('armorMapper - ADR-0008 alignment', () => {
 
     const armor = result[0]
     expect(armor.flags.swerpg.oggdude.categories).toEqual(['Light', 'Bulky'])
+  })
+
+  it('maps Restricted true to restrictionLevel restricted and preserves raw value in flags', () => {
+    const xmlArmors = [
+      {
+        Name: 'Restricted Armor',
+        Key: 'restricted_armor',
+        Soak: 5,
+        Defense: 2,
+        Categories: { Category: ['Light'] },
+        Restricted: 'true',
+      },
+    ]
+
+    const result = armorMapper(xmlArmors)
+    expect(result).toHaveLength(1)
+
+    const armor = result[0]
+    expect(armor.system.restrictionLevel).toBe('restricted')
+    expect(armor.flags.swerpg.oggdude.restricted).toBe('true')
+  })
+
+  it('maps Restricted false to restrictionLevel none', () => {
+    const xmlArmors = [
+      {
+        Name: 'Unrestricted Armor',
+        Key: 'unrestricted_armor',
+        Soak: 5,
+        Defense: 2,
+        Categories: { Category: ['Light'] },
+        Restricted: false,
+      },
+    ]
+
+    const result = armorMapper(xmlArmors)
+    expect(result).toHaveLength(1)
+
+    const armor = result[0]
+    expect(armor.system.restrictionLevel).toBe('none')
+    expect(armor.flags.swerpg.oggdude.restricted).toBe(false)
+  })
+
+  it('defaults restrictionLevel to none when Restricted is absent', () => {
+    const xmlArmors = [
+      {
+        Name: 'No Restricted Armor',
+        Key: 'no_restricted_armor',
+        Soak: 5,
+        Defense: 2,
+        Categories: { Category: ['Light'] },
+      },
+    ]
+
+    const result = armorMapper(xmlArmors)
+    expect(result).toHaveLength(1)
+
+    const armor = result[0]
+    expect(armor.system.restrictionLevel).toBe('none')
+    expect(armor.flags.swerpg.oggdude?.restricted).toBeUndefined()
+  })
+})
+
+describe('SwerpgArmor - getTags restrictionLevel', () => {
+  function makeArmor(restrictionLevel) {
+    return {
+      restrictionLevel,
+      qualities: [],
+      config: { category: { label: 'Medium' } },
+      defense: { base: 4, bonus: 0 },
+      soak: { base: 5, start: 2 },
+      parent: { parent: null },
+    }
+  }
+
+  it('includes restricted tag for restricted level', () => {
+    const tags = SwerpgArmor.prototype.getTags.call(makeArmor('restricted'), 'full')
+    expect(tags.restricted).toBe(game.i18n.localize('ITEM.RESTRICTION_LEVEL.RESTRICTED'))
+  })
+
+  it('includes restricted tag for military level', () => {
+    const tags = SwerpgArmor.prototype.getTags.call(makeArmor('military'), 'full')
+    expect(tags.restricted).toBe(game.i18n.localize('ITEM.RESTRICTION_LEVEL.MILITARY'))
+  })
+
+  it('includes restricted tag for illegal level', () => {
+    const tags = SwerpgArmor.prototype.getTags.call(makeArmor('illegal'), 'full')
+    expect(tags.restricted).toBe(game.i18n.localize('ITEM.RESTRICTION_LEVEL.ILLEGAL'))
+  })
+
+  it('omits restricted tag when level is none', () => {
+    const tags = SwerpgArmor.prototype.getTags.call(makeArmor('none'), 'full')
+    expect(tags.restricted).toBeUndefined()
+  })
+
+  it('preserves category and defense tags alongside restriction', () => {
+    const tags = SwerpgArmor.prototype.getTags.call(makeArmor('restricted'), 'full')
+    expect(tags.category).toBe('Medium')
+    expect(tags.defense).toBe('4 Armor')
+    expect(tags.restricted).toBe(game.i18n.localize('ITEM.RESTRICTION_LEVEL.RESTRICTED'))
   })
 })
