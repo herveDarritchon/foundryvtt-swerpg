@@ -2,6 +2,7 @@ import { buildArmorImgWorldPath, buildItemImgSystemPath } from '../../settings/d
 import OggDudeImporter from '../oggDude.mjs'
 import OggDudeDataElement from '../../settings/models/OggDudeDataElement.mjs'
 import { logger } from '../../utils/logger.mjs'
+import { parseOggDudeBoolean } from '../mappings/oggdude-weapon-utils.mjs'
 import {
   sanitizeOggDudeGearDescription,
   extractGearSourceInfo,
@@ -114,9 +115,10 @@ function buildGearSystem(xmlGear, options = {}) {
 
     return {
       category,
-      quantity: 1, // Default for imported items
+      quantity: 1,
       price,
-      quality: 'standard', // Default quality tier
+      quality: 'standard',
+      restrictionLevel: options.restrictionLevel ?? 'none',
       encumbrance,
       rarity,
       broken,
@@ -124,7 +126,7 @@ function buildGearSystem(xmlGear, options = {}) {
         public: description,
         secret: '',
       },
-      actions: [], // No actions defined in XML data
+      actions: [],
     }
   } catch (error) {
     logger.warn('[GearImporter] Error building gear system object, using fallback values', {
@@ -138,6 +140,7 @@ function buildGearSystem(xmlGear, options = {}) {
       quantity: 1,
       price: 0,
       quality: 'standard',
+      restrictionLevel: 'none',
       encumbrance: 1,
       rarity: 1,
       broken: false,
@@ -195,6 +198,7 @@ export function gearMapper(gears) {
       })
 
       const category = slugifyGearCategory(originalType)
+      const isRestricted = parseOggDudeBoolean(xmlGear.Restricted)
       const system = buildGearSystem(xmlGear, {
         category,
         description: sanitizedDescription,
@@ -202,6 +206,7 @@ export function gearMapper(gears) {
         sourceLine,
         baseModsLines: baseModsData.descriptionLines,
         weaponUseLines: weaponProfileData.descriptionLines,
+        restrictionLevel: isRestricted ? 'restricted' : 'none',
       })
       if (system.category === 'general' && originalType) {
         addGearUnknownCategory(originalType)
@@ -232,6 +237,10 @@ export function gearMapper(gears) {
       }
       if (weaponProfileData.weaponProfile) {
         oggdudeNested.weaponProfile = weaponProfileData.weaponProfile
+      }
+      const rawRestricted = xmlGear.Restricted
+      if (rawRestricted !== undefined && rawRestricted !== null) {
+        oggdudeNested.restricted = rawRestricted
       }
       if (Object.keys(oggdudeNested).length > 0) {
         swerpgFlags.oggdude = oggdudeNested
