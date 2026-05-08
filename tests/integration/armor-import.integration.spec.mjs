@@ -51,14 +51,14 @@ describe('Intégration armorMapper', () => {
         swerpg: {
           oggdudeKey: 'restricted_armor_001',
           oggdude: {
-            restricted: true,
+            restricted: 'true',
             categories: ['Heavy'],
           },
         },
       },
     }
 
-    expect(mockArmor.flags.swerpg.oggdude.restricted).toBe(true)
+    expect(mockArmor.flags.swerpg.oggdude.restricted).toBe('true')
     expect(mockArmor.system.restrictionLevel).toBe('restricted')
   })
 
