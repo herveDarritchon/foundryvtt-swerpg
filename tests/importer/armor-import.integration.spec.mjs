@@ -293,4 +293,19 @@ describe('SwerpgArmor - getTags restrictionLevel', () => {
     expect(tags.defense).toBe('4 Armor')
     expect(tags.restricted).toBe(game.i18n.localize('ITEM.RESTRICTION_LEVEL.RESTRICTED'))
   })
+
+  it('localizes raw armor category labels when building tags', () => {
+    const localizeSpy = vi.spyOn(game.i18n, 'localize').mockImplementation((key) => {
+      if (key === 'ARMOR.CATEGORIES.MEDIUM') return 'Medium Armor'
+      return key
+    })
+
+    const armor = makeArmor('restricted')
+    armor.config.category.label = 'ARMOR.CATEGORIES.MEDIUM'
+
+    const tags = SwerpgArmor.prototype.getTags.call(armor, 'full')
+
+    expect(tags.category).toBe('Medium Armor')
+    expect(localizeSpy).toHaveBeenCalledWith('ARMOR.CATEGORIES.MEDIUM')
+  })
 })

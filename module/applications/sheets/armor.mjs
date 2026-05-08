@@ -79,7 +79,7 @@ export default class ArmorSheet extends SwerpgBaseItemSheet {
     const qualities = this.document.system.qualities || []
     const qualityOptions = Object.entries(SYSTEM.ARMOR.PROPERTIES).map(([k, v]) => ({
       value: k,
-      label: v.label,
+      label: game.i18n.localize(v.label),
       hasRank: v.hasRank || false,
     }))
 
