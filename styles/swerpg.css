@@ -338,6 +338,16 @@
   color: #ff4444;
   background: rgba(0, 0, 0, 0.3);
 }
+
+/* Restriction badge in list contexts (inventory, sidebar) */
+.swerpg .line-item .tags .tag-restriction .fa-lock {
+  margin-right: 2px;
+  font-size: 9px;
+}
+.swerpg .line-item--compact .tags .tag-restriction {
+  padding: 0 3px;
+  font-size: 9px;
+}
 .swerpg .tag-icon {
   flex: none;
   font-size: 10px;
