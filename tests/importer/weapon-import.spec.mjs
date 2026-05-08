@@ -74,6 +74,8 @@ describe('weaponMapper - mapping', () => {
     expect(weapon.flags.swerpg.oggdude.categories).toEqual(['Ranged', 'Starship'])
     expect(weapon.flags.swerpg.oggdude.sizeHigh).toBe(2.5)
     expect(weapon.flags.swerpg.oggdude.source).toEqual({ name: 'Core Rulebook', page: 123 })
+    expect(weapon.system.restrictionLevel).toBe('restricted')
+    expect(weapon.flags.swerpg.oggdude.restricted).toBe('true')
     expect(weapon.system.description.public).toBe('DL-44\nFamous blaster.\n\nSource: Core Rulebook, p.123')
     expect(weapon.system.description.secret).toBe('')
     expect(weapon.system.actions).toEqual([])
@@ -162,10 +164,10 @@ describe('weaponMapper - mapping', () => {
       damage: { weapon: 6 },
       range: 'medium',
       weaponType: 'heavy-blaster',
-      restricted: true,
+      restrictionLevel: 'restricted',
       qualities: [{ key: 'blast', rank: 2, hasRank: true, active: true, source: 'base' }],
       flags: {},
-      system: { restricted: true },
+      system: { restrictionLevel: 'restricted' },
       defense: { block: 0, parry: 0 },
       schema: { fields: { broken: { label: 'Broken' } } },
       config: {
@@ -186,7 +188,7 @@ describe('weaponMapper - mapping', () => {
       damage: { weapon: 6 },
       range: 'medium',
       weaponType: 'lightsaber',
-      restricted: false,
+      restrictionLevel: 'none',
       qualities: [],
       flags: {},
       system: {},
