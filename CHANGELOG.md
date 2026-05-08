@@ -1,3 +1,11 @@
+# [0.5.0](https://github.com/herveDarritchon/foundryvtt-swerpg/compare/v0.4.0...v0.5.0) (2026-05-08)
+
+### Bug Fixes
+
+- **import:** Correction du mapping des armes OggDude (Weapon.xml) — portée, qualités avec valeur, description, source, type/catégories, restriction. Les nouveaux imports produisent désormais des armes complètes et exploitables. ([#17](https://github.com/herveDarritchon/foundryvtt-swerpg/issues/17))
+
+  **Note :** Cette correction s'applique uniquement aux *futurs imports*. Les armes déjà importées via OggDude ne sont pas modifiées rétroactivement. Pour bénéficier des données corrigées, réimportez vos fichiers Weapons.xml.
+
 # [0.4.0](https://github.com/herveDarritchon/foundryvtt-swerpg/compare/v0.3.1...v0.4.0) (2026-05-04)
 
 ### Bug Fixes
