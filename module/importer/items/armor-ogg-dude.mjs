@@ -119,7 +119,7 @@ function resolveArmorCategoryWithFallback(xmlCategories, armorName) {
  * Mapping strict selon ADR-0008 (ARMOR_PROPERTY_MAP uniquement, pas de mapping permissif)
  * @returns {{ qualities: Array, unknownProperties: string[], ignoredProperties: string[] }}
  */
-function processArmorProperties(xmlCategories, armorName, isRestricted = false) {
+function processArmorProperties(xmlCategories, armorName) {
   const resolvedProperties = new Set()
   const unknownProperties = []
   const ignoredProperties = []
@@ -148,10 +148,6 @@ function processArmorProperties(xmlCategories, armorName, isRestricted = false) 
   if (unknownProperties.length > 0) {
     incrementArmorImportStat('unknownProperties', unknownProperties.length)
     logger.warn(`Propriétés d'armure inconnues pour "${armorName}": ${unknownProperties.join(', ')}`)
-  }
-
-  if (isRestricted) {
-    resolvedProperties.add('restricted')
   }
 
   const qualities = []
@@ -224,7 +220,7 @@ function mapOggDudeArmor(xmlArmor) {
 
     const isRestricted = parseOggDudeBoolean(xmlArmor.Restricted)
 
-    const propertyResult = processArmorProperties(xmlCategories, name, isRestricted)
+    const propertyResult = processArmorProperties(xmlCategories, name)
 
     const soak = clampNumber(xmlArmor.Soak, 0, 20, DEFAULT_SOAK)
     const defense = clampNumber(xmlArmor.Defense, 0, 20, DEFAULT_DEFENSE)
@@ -255,6 +251,9 @@ function mapOggDudeArmor(xmlArmor) {
     if (baseMods.length > 0) {
       oggdudeExtras.baseMods = baseMods
     }
+    if (isRestricted !== undefined) {
+      oggdudeExtras.restricted = isRestricted
+    }
 
     const flags = {
       swerpg: {
@@ -280,7 +279,7 @@ function mapOggDudeArmor(xmlArmor) {
         rarity,
         price,
         qualities: propertyResult.qualities,
-        restricted: isRestricted,
+        restrictionLevel: isRestricted ? 'restricted' : 'none',
         description,
       },
       flags,
