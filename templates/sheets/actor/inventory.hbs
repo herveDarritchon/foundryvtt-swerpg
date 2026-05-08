@@ -16,8 +16,16 @@
                 {{~item.name~}}
               </h4>
               <div class="tags">
-                {{#each item.tags}}
-                  {{#if this}}<span class="tag">{{this}}</span>{{/if}}
+                {{#each item.tags as |label tag|}}
+                  {{#if label}}
+                    {{#if (eq tag "restricted")}}
+                      <span class="tag tag-restriction" data-restriction-level="{{item.restrictionBadge.level}}" data-tooltip="{{label}}">
+                        <i class="fa-solid fa-lock"></i> {{label}}
+                      </span>
+                    {{else}}
+                      <span class="tag">{{label}}</span>
+                    {{/if}}
+                  {{/if}}
                 {{/each}}
               </div>
             </div>
