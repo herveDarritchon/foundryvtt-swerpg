@@ -111,6 +111,11 @@ export default class SwerpgArmor extends SwerpgCombatItem {
   getTags(scope = 'full') {
     const tags = {}
     tags.category = this.config.category.label
+
+    if (this.restrictionLevel && this.restrictionLevel !== 'none') {
+      tags.restricted = game.i18n.localize(SYSTEM.RESTRICTION_LEVELS[this.restrictionLevel].label)
+    }
+
     for (let q of this.qualities) {
       const prop = SYSTEM.ARMOR.PROPERTIES[q.key]
       if (prop) tags[q.key] = prop.label

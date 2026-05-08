@@ -183,6 +183,102 @@ describe('weaponMapper - mapping', () => {
     expect(tags['blast']).toBe(game.i18n.localize('WEAPON.QUALITIES.Blast') + ' 2')
   })
 
+  it('getTags includes restrictionLevel tag for restricted level', () => {
+    const weapon = {
+      damage: { weapon: 6 },
+      range: 'medium',
+      weaponType: 'heavy-blaster',
+      restrictionLevel: 'restricted',
+      qualities: [],
+      flags: {},
+      system: { restrictionLevel: 'restricted' },
+      defense: { block: 0, parry: 0 },
+      schema: { fields: { broken: { label: 'Broken' } } },
+      config: { category: { label: 'Ranged' } },
+      broken: false,
+    }
+
+    const tags = SwerpgWeapon.prototype.getTags.call(weapon, 'full')
+    expect(tags.restricted).toBe(game.i18n.localize('ITEM.RESTRICTION_LEVEL.RESTRICTED'))
+  })
+
+  it('getTags includes restrictionLevel tag for military level', () => {
+    const weapon = {
+      damage: { weapon: 6 },
+      range: 'medium',
+      weaponType: 'heavy-blaster',
+      restrictionLevel: 'military',
+      qualities: [],
+      flags: {},
+      system: { restrictionLevel: 'military' },
+      defense: { block: 0, parry: 0 },
+      schema: { fields: { broken: { label: 'Broken' } } },
+      config: { category: { label: 'Ranged' } },
+      broken: false,
+    }
+
+    const tags = SwerpgWeapon.prototype.getTags.call(weapon, 'full')
+    expect(tags.restricted).toBe(game.i18n.localize('ITEM.RESTRICTION_LEVEL.MILITARY'))
+  })
+
+  it('getTags includes restrictionLevel tag for illegal level', () => {
+    const weapon = {
+      damage: { weapon: 6 },
+      range: 'medium',
+      weaponType: 'heavy-blaster',
+      restrictionLevel: 'illegal',
+      qualities: [],
+      flags: {},
+      system: { restrictionLevel: 'illegal' },
+      defense: { block: 0, parry: 0 },
+      schema: { fields: { broken: { label: 'Broken' } } },
+      config: { category: { label: 'Ranged' } },
+      broken: false,
+    }
+
+    const tags = SwerpgWeapon.prototype.getTags.call(weapon, 'full')
+    expect(tags.restricted).toBe(game.i18n.localize('ITEM.RESTRICTION_LEVEL.ILLEGAL'))
+  })
+
+  it('getTags omits restrictionLevel tag when level is none', () => {
+    const weapon = {
+      damage: { weapon: 6 },
+      range: 'medium',
+      weaponType: 'heavy-blaster',
+      restrictionLevel: 'none',
+      qualities: [],
+      flags: {},
+      system: { restrictionLevel: 'none' },
+      defense: { block: 0, parry: 0 },
+      schema: { fields: { broken: { label: 'Broken' } } },
+      config: { category: { label: 'Ranged' } },
+      broken: false,
+    }
+
+    const tags = SwerpgWeapon.prototype.getTags.call(weapon, 'full')
+    expect(tags.restricted).toBeUndefined()
+  })
+
+  it('getTags restrictionLevel tag appears in short scope', () => {
+    const weapon = {
+      damage: { weapon: 6 },
+      range: 'medium',
+      weaponType: 'heavy-blaster',
+      restrictionLevel: 'military',
+      qualities: [],
+      flags: {},
+      system: { restrictionLevel: 'military' },
+      defense: { block: 0, parry: 0 },
+      schema: { fields: { broken: { label: 'Broken' } } },
+      config: { category: { label: 'Ranged' } },
+      broken: false,
+    }
+
+    const tags = SwerpgWeapon.prototype.getTags.call(weapon, 'short')
+    expect(tags.restricted).toBe(game.i18n.localize('ITEM.RESTRICTION_LEVEL.MILITARY'))
+    expect(tags.range).toBeUndefined()
+  })
+
   it('short scope excludes qualities and range', () => {
     const weapon = {
       damage: { weapon: 6 },
@@ -321,5 +417,35 @@ describe('SwerpgWeapon - schema taxonomy', () => {
     expect(restricted.id).toBe('restricted')
     expect(military.id).toBe('military')
     expect(illegal.id).toBe('illegal')
+  })
+
+  it('RESTRICTION_LEVELS is a closed enum with exactly 4 levels', () => {
+    const keys = Object.keys(SYSTEM.RESTRICTION_LEVELS)
+    expect(keys).toEqual(['none', 'restricted', 'military', 'illegal'])
+  })
+
+  it('each restriction level entry has required id and label fields', () => {
+    for (const [key, level] of Object.entries(SYSTEM.RESTRICTION_LEVELS)) {
+      expect(level.id).toBe(key)
+      expect(typeof level.label).toBe('string')
+      expect(level.label.length).toBeGreaterThan(0)
+    }
+  })
+
+  it('schema choices reference is the live SYSTEM.RESTRICTION_LEVELS object', () => {
+    if (globalThis.foundry?.data?.fields) {
+      if (!globalThis.foundry.data.fields.EmbeddedDataField) {
+        globalThis.foundry.data.fields.EmbeddedDataField = class EmbeddedDataField {
+          constructor(type) {
+            this.type = type
+          }
+        }
+      }
+      if (!globalThis.foundry.data.fields.HTMLField) {
+        globalThis.foundry.data.fields.HTMLField = class extends globalThis.foundry.data.fields.StringField {}
+      }
+    }
+    const weaponSchema = SwerpgWeapon.defineSchema()
+    expect(weaponSchema.restrictionLevel.config.choices).toBe(SYSTEM.RESTRICTION_LEVELS)
   })
 })
