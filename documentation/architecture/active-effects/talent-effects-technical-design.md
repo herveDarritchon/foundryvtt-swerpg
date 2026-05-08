@@ -54,18 +54,18 @@ Structure cible :
 ```js
 {
   type: "talent",
-  system: {
+    system: {
     description: {},
     activation: "passive",
-    ranked: false,
-    effects: [],
-    actions: []
+      ranked: false,
+      effects: [],
+      actions: []
   },
   flags: {
     swerpg: {}
   }
 }
-````
+```
 
 ### Principe 2 — Ne pas faire de `actorHooks` le modèle standard
 
@@ -120,6 +120,48 @@ Les imports doivent conserver :
 * les avertissements.
 
 OggDude est une source d’entrée, pas le modèle interne.
+
+### Principe 5 — Positionner `system.effects` face aux ActiveEffects Foundry
+
+`system.effects` est le modèle métier canonique des effets mécaniques SWERPG.
+
+Il ne remplace pas les ActiveEffects Foundry. Il les précède.
+
+La séparation retenue est la suivante :
+
+```txt
+system.effects
+= ce que l’effet veut dire dans les règles Star Wars Edge
+
+ActiveEffect Foundry
+= comment Foundry applique, persiste, expire ou affiche certains effets
+```
+
+Le flux cible est donc :
+
+```txt
+Talent / Item
+  system.effects[]      ← source de vérité métier SWERPG
+
+Effect Engine SWERPG
+  résout le contexte, le timing, les coûts, les scopes
+
+Foundry Bridge
+  produit éventuellement un ActiveEffect Foundry V14
+```
+
+Règle structurante :
+
+```txt
+system.effects est la source de vérité.
+ActiveEffect est une projection technique optionnelle.
+```
+
+Les ActiveEffects Foundry doivent être utilisés lorsque leur rôle natif est utile : application persistante, expiration, affichage dans l’interface Foundry, visibilité sur l’Actor ou le Token, compatibilité avec les mécanismes standards de la plateforme.
+
+Ils ne doivent pas devenir le langage métier principal du système, car de nombreux Talents Star Wars Edge sont contextuels, liés à un jet précis, déclenchés après réussite, dépendants d’un coût variable, d’une dépense d’avantages ou d’une confirmation joueur / MJ.
+
+Conséquence : tout ActiveEffect généré depuis un effet SWERPG doit être traçable par `flags.swerpg.generatedFrom`.
 
 ## Structure globale d’un Talent
 
@@ -316,6 +358,71 @@ export const MAPPING_CONFIDENCE = Object.freeze({
 });
 ```
 
+### `EFFECT_APPLICATION_STRATEGIES`
+
+```js
+/**
+ * Stratégies d’application d’un effet SWERPG.
+ *
+ * `system.effects` reste la source de vérité métier.
+ * Cette stratégie indique seulement comment l’effet est appliqué ou projeté techniquement.
+ *
+ * @readonly
+ * @enum {string}
+ */
+export const EFFECT_APPLICATION_STRATEGIES = Object.freeze({
+  COMPUTED: "computed",
+  ACTIVE_EFFECT: "activeEffect",
+  CHAT_ONLY: "chatOnly",
+  MANUAL: "manual"
+});
+```
+
+| Valeur         | Usage                                                                 |
+| -------------- | --------------------------------------------------------------------- |
+| `computed`     | Effet calculé directement par le moteur SWERPG, sans ActiveEffect     |
+| `activeEffect` | Effet projetable vers un ActiveEffect Foundry V14                     |
+| `chatOnly`     | Effet présenté ou résolu via carte de chat, sans application directe  |
+| `manual`       | Effet documenté, mais appliqué manuellement par le joueur ou le MJ    |
+
+### `EFFECT_TARGET_DOCUMENTS`
+
+```js
+/**
+ * Documents Foundry ou contextes techniques ciblés par l’application d’un effet.
+ *
+ * @readonly
+ * @enum {string}
+ */
+export const EFFECT_TARGET_DOCUMENTS = Object.freeze({
+  ACTOR: "actor",
+  ITEM: "item",
+  TOKEN: "token",
+  ROLL: "roll",
+  CHAT: "chat",
+  NONE: "none"
+});
+```
+
+### `EFFECT_DIRECTIONS`
+
+```js
+/**
+ * Direction mécanique d’un effet par rapport à sa source.
+ *
+ * @readonly
+ * @enum {string}
+ */
+export const EFFECT_DIRECTIONS = Object.freeze({
+  SELF: "self",
+  OUTGOING: "outgoing",
+  INCOMING: "incoming",
+  TARGET: "target",
+  ALLY: "ally",
+  AREA: "area"
+});
+```
+
 ## Contrats de données JSDoc
 
 ### `TalentDescription`
@@ -444,6 +551,62 @@ Règles :
  */
 ```
 
+### `EffectApplication`
+
+```js
+/**
+ * Stratégie d’application technique d’un effet SWERPG.
+ *
+ * Cette structure ne remplace pas le modèle métier.
+ * Elle indique si l’effet reste calculé par le moteur SWERPG, s’il est seulement affiché,
+ * ou s’il peut être projeté vers un ActiveEffect Foundry.
+ *
+ * @typedef {Object} EffectApplication
+ * @property {"computed"|"activeEffect"|"chatOnly"|"manual"} strategy
+ * @property {"actor"|"item"|"token"|"roll"|"chat"|"none"=} targetDocument
+ * @property {boolean=} persist
+ * @property {boolean=} generated
+ */
+```
+
+Règles :
+
+* `computed` est le choix par défaut pour les effets de seuil, de pool de dés, de dégâts ou de critiques résolus par le moteur SWERPG.
+* `activeEffect` est réservé aux effets qui bénéficient réellement de la persistance, de l’expiration ou de l’affichage Foundry.
+* `chatOnly` convient aux Talents qui doivent produire une carte, demander un choix ou guider une résolution sans appliquer automatiquement un changement.
+* `manual` convient aux effets narratifs ou non encore automatisés.
+
+### `GeneratedActiveEffectRef`
+
+```js
+/**
+ * Traçabilité d’un ActiveEffect Foundry généré depuis un effet SWERPG.
+ *
+ * Ce bloc doit être stocké dans `flags.swerpg.generatedFrom` sur l’ActiveEffect généré.
+ *
+ * @typedef {Object} GeneratedActiveEffectRef
+ * @property {string} itemUuid - UUID de l’Item source.
+ * @property {string} effectId - Identifiant de l’effet dans `system.effects`.
+ * @property {number} schemaVersion - Version du schéma SWERPG utilisée.
+ */
+```
+
+Exemple de flag attendu sur un ActiveEffect généré :
+
+```js
+{
+  flags: {
+    swerpg: {
+      generatedFrom: {
+        itemUuid: "Actor.abc.Item.def",
+        effectId: "example-effect-id",
+        schemaVersion: 1
+      }
+    }
+  }
+}
+```
+
 ### `EffectConstraints`
 
 ```js
@@ -488,6 +651,8 @@ Règles :
  * @property {"passive"|"activated"|"reaction"|"manual"} mode
  * @property {string} timing
  * @property {EffectScope} scope
+ * @property {"self"|"outgoing"|"incoming"|"target"|"ally"|"area"=} direction
+ * @property {EffectApplication=} application
  * @property {RankScaling=} rankScaling
  * @property {EffectCost=} cost
  * @property {Object} changes
@@ -705,6 +870,12 @@ Règles :
         scope: {
           actor: "self"
         },
+        direction: "self",
+        application: {
+          strategy: "computed",
+          targetDocument: "actor",
+          persist: false
+        },
         rankScaling: {
           enabled: true,
           rankSource: "talent",
@@ -750,6 +921,12 @@ Règles :
         timing: "prepareData",
         scope: {
           actor: "self"
+        },
+        direction: "self",
+        application: {
+          strategy: "computed",
+          targetDocument: "actor",
+          persist: false
         },
         rankScaling: {
           enabled: true,
@@ -799,6 +976,12 @@ Règles :
           rollTypes: ["skill"],
           skills: ["coordination", "stealth"]
         },
+        direction: "self",
+        application: {
+          strategy: "computed",
+          targetDocument: "roll",
+          persist: false
+        },
         rankScaling: {
           enabled: true,
           rankSource: "talent",
@@ -843,8 +1026,15 @@ Règles :
         mode: "passive",
         timing: "beforeCriticalRoll",
         scope: {
-          actor: "target",
-          rollTypes: ["critical"]
+          actor: "self",
+          rollTypes: ["critical"],
+          tags: ["inflictedBySelf"]
+        },
+        direction: "outgoing",
+        application: {
+          strategy: "computed",
+          targetDocument: "roll",
+          persist: false
         },
         rankScaling: {
           enabled: true,
@@ -892,6 +1082,12 @@ Règles :
         scope: {
           actor: "self",
           rollTypes: ["combat"]
+        },
+        direction: "incoming",
+        application: {
+          strategy: "computed",
+          targetDocument: "roll",
+          persist: false
         },
         cost: {
           strain: {
@@ -973,6 +1169,12 @@ Règles :
           actor: "self",
           rollTypes: ["skill"]
         },
+        direction: "self",
+        application: {
+          strategy: "computed",
+          targetDocument: "roll",
+          persist: false
+        },
         cost: {
           strain: 1,
           maneuver: 1
@@ -1045,6 +1247,12 @@ Règles :
         scope: {
           actor: "ally"
         },
+        direction: "ally",
+        application: {
+          strategy: "chatOnly",
+          targetDocument: "chat",
+          persist: false
+        },
         cost: {
           action: 1
         },
@@ -1089,6 +1297,128 @@ Règles :
   }
 }
 ```
+
+## ActiveEffects Foundry V14 et bridge SWERPG
+
+### Positionnement
+
+`system.effects` n’est pas un remplacement complet des ActiveEffects Foundry.
+
+`system.effects` est le modèle métier interne : il décrit l’intention mécanique selon les règles Star Wars Edge.
+
+Un ActiveEffect Foundry est une projection technique optionnelle : il sert uniquement lorsque Foundry apporte une valeur concrète pour appliquer, persister, expirer ou afficher l’effet.
+
+### Typologie d’application
+
+#### Effets calculés directement par le système
+
+Ces effets restent dans `system.effects` et sont résolus par le moteur SWERPG. Aucun ActiveEffect n’est créé par défaut.
+
+Exemples :
+
+* `Robustesse` : augmentation du seuil de stress ;
+* `Endurci` : augmentation du seuil de blessure ;
+* `Filature` : modification d’un pool de dés sur certains tests ;
+* `Coup mortel` : bonus aux blessures critiques infligées.
+
+Stratégie recommandée :
+
+```js
+application: {
+  strategy: "computed",
+  targetDocument: "actor",
+  persist: false
+}
+```
+
+ou, pour les jets :
+
+```js
+application: {
+  strategy: "computed",
+  targetDocument: "roll",
+  persist: false
+}
+```
+
+#### Effets temporaires ou persistants projetables vers ActiveEffect
+
+Ces effets peuvent produire un ActiveEffect Foundry si la persistance, l’expiration, la visibilité ou l’intégration native Foundry est utile.
+
+Exemples :
+
+* condition temporaire ;
+* bonus ou malus jusqu’à la fin du tour ;
+* bonus ou malus jusqu’à la fin de la rencontre ;
+* effet visible sur l’Actor ou le Token ;
+* effet dont l’expiration doit être gérée par Foundry.
+
+Stratégie recommandée :
+
+```js
+application: {
+  strategy: "activeEffect",
+  targetDocument: "actor",
+  persist: true,
+  generated: true
+}
+```
+
+Tout ActiveEffect généré doit porter le flag suivant :
+
+```js
+flags: {
+  swerpg: {
+    generatedFrom: {
+      itemUuid: "...",
+      effectId: "...",
+      schemaVersion: 1
+    }
+  }
+}
+```
+
+#### Effets de chat ou d’assistance
+
+Ces effets ne doivent pas produire automatiquement d’ActiveEffect.
+
+Ils servent à afficher une carte de chat, demander un choix, enregistrer une intention ou guider le MJ.
+
+Exemples :
+
+* `Dose de stimulant` ;
+* `Sens de la rhétorique` ;
+* `Répartie caustique` ;
+* effets dépendants d’une dépense d’avantages, de triomphes ou d’un choix narratif.
+
+Stratégie recommandée :
+
+```js
+application: {
+  strategy: "chatOnly",
+  targetDocument: "chat",
+  persist: false
+}
+```
+
+### Règles de synchronisation
+
+* `system.effects` reste la source de vérité métier.
+* Un ActiveEffect généré depuis `system.effects` ne doit pas être interprété comme source métier autonome.
+* Un ActiveEffect généré doit être traçable via `flags.swerpg.generatedFrom`.
+* Si l’Item source est supprimé, désactivé ou migré, les ActiveEffects générés depuis cet Item doivent pouvoir être retrouvés et nettoyés.
+* Une édition directe d’un ActiveEffect généré ne doit pas modifier silencieusement `system.effects`.
+* Si une synchronisation inverse est un jour souhaitée, elle devra faire l’objet d’une ADR séparée.
+
+### Règle anti-pattern
+
+Le système ne doit pas appliquer la règle suivante :
+
+```txt
+Tout Talent → ActiveEffect Foundry
+```
+
+Cette approche est rejetée, car elle créerait des ActiveEffects incapables de représenter correctement les coûts variables, les effets limités à un jet, les déclencheurs après réussite, les dépenses d’avantages, les confirmations joueur / MJ et les effets narratifs.
 
 ## Import OggDude
 
@@ -1196,6 +1526,8 @@ export function isEnumValue(value, enumObject) {
 ```js
 import {
   AUTOMATION_LEVELS,
+  EFFECT_APPLICATION_STRATEGIES,
+  EFFECT_DIRECTIONS,
   EFFECT_MODES,
   EFFECT_TIMINGS,
   EFFECT_TYPES
@@ -1257,6 +1589,21 @@ export function validateEffectDefinition(effect) {
     errors.push("Effect must define a changes object.");
   }
 
+  if (
+    effect.direction !== undefined &&
+    !isEnumValue(effect.direction, EFFECT_DIRECTIONS)
+  ) {
+    errors.push(`Unknown effect direction: ${String(effect.direction)}`);
+  }
+
+  if (effect.application !== undefined) {
+    if (!isPlainObject(effect.application)) {
+      errors.push("Effect application must be an object when defined.");
+    } else if (!isEnumValue(effect.application.strategy, EFFECT_APPLICATION_STRATEGIES)) {
+      errors.push(`Unknown effect application strategy: ${String(effect.application.strategy)}`);
+    }
+  }
+
   if (!isPlainObject(effect.ui)) {
     warnings.push("Effect should define ui metadata.");
   } else {
@@ -1277,6 +1624,13 @@ export function validateEffectDefinition(effect) {
     effect.ui?.automationLevel === AUTOMATION_LEVELS.AUTO
   ) {
     warnings.push("Custom effects should not use automationLevel auto.");
+  }
+
+  if (
+    effect.application?.strategy === EFFECT_APPLICATION_STRATEGIES.ACTIVE_EFFECT &&
+    effect.type === EFFECT_TYPES.CUSTOM
+  ) {
+    warnings.push("Custom effects should not be projected to ActiveEffect without a dedicated adapter.");
   }
 
   return {
@@ -1451,9 +1805,11 @@ La fiche d’Actor doit pouvoir exploiter les Talents sans noyer le joueur.
 5. Filtrer par scope.
 6. Filtrer par conditions.
 7. Séparer effets automatiques, assistés et manuels.
-8. Appliquer les effets automatiques sûrs.
-9. Proposer les effets assistés.
-10. Journaliser les effets appliqués.
+8. Séparer effets calculés, effets de chat et effets projetables en ActiveEffects.
+9. Appliquer les effets automatiques sûrs via le moteur SWERPG.
+10. Proposer les effets assistés.
+11. Produire ou synchroniser un ActiveEffect Foundry uniquement si `application.strategy === "activeEffect"`.
+12. Journaliser les effets appliqués.
 ```
 
 ### Contexte de résolution
@@ -1485,6 +1841,8 @@ La fiche d’Actor doit pouvoir exploiter les Talents sans noyer le joueur.
  * @property {EffectDefinition} effect
  * @property {string=} sourceItemId
  * @property {string} automationLevel
+ * @property {string=} applicationStrategy
+ * @property {boolean} shouldCreateActiveEffect
  * @property {boolean} applicable
  * @property {string=} reason
  */
@@ -1505,6 +1863,34 @@ export function collectApplicableEffects(actor, context) {
   return [];
 }
 ```
+
+### Projection optionnelle vers ActiveEffect
+
+```js
+/**
+ * Construit les données nécessaires à la création d’un ActiveEffect Foundry
+ * depuis un effet SWERPG résolu.
+ *
+ * Cette fonction ne doit être appelée que si l’effet est explicitement projetable
+ * vers Foundry via `application.strategy === "activeEffect"`.
+ *
+ * @param {ResolvedEffect} resolvedEffect
+ * @param {EffectResolutionContext} context
+ * @returns {Object|null}
+ */
+export function buildActiveEffectData(resolvedEffect, context) {
+  // Implementation target
+  return null;
+}
+```
+
+Règles :
+
+* ne jamais créer un ActiveEffect par défaut pour tous les Talents ;
+* ne créer un ActiveEffect que lorsque `application.strategy === "activeEffect"` ;
+* toujours ajouter `flags.swerpg.generatedFrom` ;
+* ne pas dupliquer un ActiveEffect déjà généré pour le même `itemUuid` et le même `effectId` ;
+* ne pas convertir les effets `computed`, `chatOnly` ou `manual` en ActiveEffects.
 
 ## Gestion des actions
 
@@ -1568,7 +1954,8 @@ Un effet doit avoir :
 * un `timing` connu ;
 * un `scope`, même minimal ;
 * un `changes`, même vide pour `custom` ;
-* idéalement un `ui.label`.
+* idéalement un `ui.label` ;
+* idéalement une `application.strategy`, sinon `computed` est supposé par défaut.
 
 Une action doit avoir :
 
@@ -1587,7 +1974,9 @@ Le système doit produire un warning si :
 * une action référence un effet inexistant ;
 * un effet automatique utilise un type `custom` ;
 * un coût variable n’a pas de borne ;
-* un effet importé n’a pas été revu.
+* un effet importé n’a pas été revu ;
+* un effet `custom` demande une projection ActiveEffect sans adaptateur dédié ;
+* un ActiveEffect généré ne contient pas `flags.swerpg.generatedFrom`.
 
 ## Migrations
 
@@ -1644,7 +2033,11 @@ Prévoir des tests pour :
 * calcul du scaling par rang ;
 * filtrage par compétence ;
 * filtrage par timing ;
-* filtrage par scope.
+* filtrage par scope ;
+* validation d’une stratégie `computed` ;
+* validation d’une stratégie `activeEffect` ;
+* construction d’un ActiveEffect avec `flags.swerpg.generatedFrom` ;
+* refus de conversion automatique d’un effet `chatOnly` en ActiveEffect.
 
 ### Exemple de test
 
@@ -1719,6 +2112,8 @@ Prévoir des tests pour :
 * Ajouter les validateurs runtime.
 * Ajouter les helpers de mapping.
 * Ajouter les helpers de collecte d’effets.
+* Ajouter les constantes et validateurs liés à `application.strategy`.
+* Ajouter un bridge minimal vers ActiveEffect, sans génération automatique globale.
 * Ajouter une UI minimale de lecture des effets.
 * Ajouter les tests Vitest du modèle.
 
@@ -1731,6 +2126,8 @@ Prévoir des tests pour :
 * Ne pas créer une DSL complète.
 * Ne pas supprimer les descriptions textuelles.
 * Ne pas appliquer automatiquement les mappings incertains.
+* Ne pas convertir tous les Talents en ActiveEffects Foundry.
+* Ne pas considérer un ActiveEffect généré comme source de vérité métier.
 * Ne pas créer un modèle réservé uniquement aux Talents si le modèle peut être commun aux autres Items.
 
 ## Roadmap technique
@@ -1782,18 +2179,25 @@ Prévoir des tests pour :
 * Proposer les effets assistés.
 * Journaliser les effets appliqués.
 
+### Étape 8 — Bridge ActiveEffect Foundry
+
+* Ajouter `buildActiveEffectData`.
+* Générer un ActiveEffect uniquement pour les effets `application.strategy === "activeEffect"`.
+* Ajouter systématiquement `flags.swerpg.generatedFrom`.
+* Prévoir le nettoyage des ActiveEffects générés quand l’Item source est supprimé, désactivé ou migré.
+
 ## Décisions ouvertes
 
 Les points suivants restent à trancher dans des ADR ou specs séparées :
 
 1. format exact des compétences internes ;
 2. format exact des dés SWERPG dans le moteur de jets ;
-3. interaction entre `system.effects` et les Active Effects Foundry ;
-4. gestion des effets temporaires ;
+3. mapping exact des `changes` SWERPG vers les `changes` ActiveEffect Foundry pour chaque type d’effet projetable ;
+4. règles fines d’expiration des ActiveEffects temporaires ;
 5. UX précise des réactions en combat ;
 6. degré d’automatisation accepté par défaut ;
 7. format commun définitif pour armes, armures, gear et pouvoirs de Force ;
-8. emplacement exact des fichiers de constantes, validateurs et helpers dans l’arborescence du projet.
+8. emplacement exact des fichiers de constantes, validateurs, bridge ActiveEffect et helpers dans l’arborescence du projet.
 
 ## Résumé
 
@@ -1804,8 +2208,11 @@ Talent
 ├── description = texte lisible
 ├── effects     = effets mécaniques structurés
 ├── actions     = activations cliquables
-├── flags       = import brut et métadonnées
+├── flags       = import brut, métadonnées et traçabilité
 └── actorHooks  = extension experte uniquement
+
+Foundry Bridge
+└── ActiveEffect = projection technique optionnelle, jamais source de vérité métier
 ```
 
 La V1 doit rester volontairement sobre.
@@ -1813,5 +2220,7 @@ La V1 doit rester volontairement sobre.
 L’objectif n’est pas d’automatiser tous les Talents immédiatement.
 
 L’objectif est de poser un modèle stable qui permette d’importer, afficher, relire, tester et automatiser progressivement les effets mécaniques.
+
+`system.effects` reste la source de vérité métier. Les ActiveEffects Foundry V14 peuvent être produits ou pilotés par le système, mais uniquement comme couche technique optionnelle d’application, de persistance, d’expiration ou d’affichage.
 
 Ce modèle doit être implémenté en JavaScript vanilla, documenté en JSDoc et sécurisé par des validateurs runtime.
