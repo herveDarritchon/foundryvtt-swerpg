@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { gearMapper } from '../../module/importer/items/gear-ogg-dude.mjs'
 
 describe('gearMapper', () => {
-  it('should map basic gear with all standard fields', () => {
+  it('should map basic gear with all standard fields and default restrictionLevel', () => {
     const xmlGears = [
       {
         Name: 'Test Gear',
@@ -27,6 +27,7 @@ describe('gearMapper', () => {
         quantity: 1,
         price: 100,
         quality: 'standard',
+        restrictionLevel: 'none',
         encumbrance: 2,
         rarity: 3,
         broken: false,
@@ -47,6 +48,72 @@ describe('gearMapper', () => {
       },
     })
     expect(result[0].flags.swerpg).not.toHaveProperty('oggdudeSource')
+  })
+
+  it('should use restrictionLevel restricted when Restricted is true and preserve raw value in flags', () => {
+    const xmlGears = [
+      {
+        Name: 'Restricted Gear',
+        Key: 'restrictedGear',
+        Description: 'A restricted gear item',
+        Type: 'weapon_part',
+        Price: 500,
+        Encumbrance: 1,
+        Rarity: 8,
+        Restricted: true,
+      },
+    ]
+
+    const result = gearMapper(xmlGears)
+
+    expect(result[0].system.restrictionLevel).toBe('restricted')
+    expect(result[0].flags.swerpg.oggdude.restricted).toBe(true)
+  })
+
+  it('should handle string Restricted values correctly', () => {
+    const xmlGears = [
+      {
+        Name: 'String Restricted Gear',
+        Key: 'stringRestrictedGear',
+        Restricted: 'true',
+      },
+    ]
+
+    const result = gearMapper(xmlGears)
+
+    expect(result[0].system.restrictionLevel).toBe('restricted')
+    expect(result[0].flags.swerpg.oggdude.restricted).toBe('true')
+  })
+
+  it('should default to none when Restricted is absent', () => {
+    const xmlGears = [
+      {
+        Name: 'No Restricted Gear',
+        Key: 'noRestrictedGear',
+      },
+    ]
+
+    const result = gearMapper(xmlGears)
+
+    expect(result[0].system.restrictionLevel).toBe('none')
+    expect(result[0].flags.swerpg.oggdude).toBeUndefined()
+  })
+
+  it('should not store restricted in flags when Restricted is absent', () => {
+    const xmlGears = [
+      {
+        Name: 'Gear Without Restricted',
+        Key: 'gearNoRestricted',
+        Type: 'tool',
+      },
+    ]
+
+    const result = gearMapper(xmlGears)
+
+    expect(result[0].system.restrictionLevel).toBe('none')
+    if (result[0].flags.swerpg.oggdude) {
+      expect(result[0].flags.swerpg.oggdude).not.toHaveProperty('restricted')
+    }
   })
 
   it('should normalize negative numeric values to defaults', () => {
@@ -85,29 +152,6 @@ describe('gearMapper', () => {
     expect(result[0].system.rarity).toBe(1)
   })
 
-  it('should validate boolean restricted field properly', () => {
-    const testCases = [
-      { input: true, expected: false }, // broken field not used currently
-      { input: false, expected: false },
-      { input: 'true', expected: false },
-      { input: undefined, expected: false },
-      { input: null, expected: false },
-    ]
-
-    testCases.forEach(({ input, expected }) => {
-      const xmlGears = [
-        {
-          Name: 'Test Gear',
-          Key: 'testGear',
-          Restricted: input,
-        },
-      ]
-
-      const result = gearMapper(xmlGears)
-      expect(result[0].system.broken).toBe(expected)
-    })
-  })
-
   it('should exclude unsupported fields from result', () => {
     const xmlGears = [
       {
@@ -141,7 +185,7 @@ describe('gearMapper', () => {
 
     // Only valid schema fields should be present in system
     const systemKeys = Object.keys(result[0].system)
-    const expectedKeys = ['category', 'quantity', 'price', 'quality', 'encumbrance', 'rarity', 'broken', 'description', 'actions']
+    const expectedKeys = ['category', 'quantity', 'price', 'quality', 'restrictionLevel', 'encumbrance', 'rarity', 'broken', 'description', 'actions']
     expect(systemKeys).toEqual(expect.arrayContaining(expectedKeys))
     expect(systemKeys).toHaveLength(expectedKeys.length)
 

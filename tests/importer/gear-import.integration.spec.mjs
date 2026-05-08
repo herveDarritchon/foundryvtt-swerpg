@@ -32,6 +32,7 @@ describe('Gear Import Integration', () => {
     expect(system).toHaveProperty('quantity')
     expect(system).toHaveProperty('price')
     expect(system).toHaveProperty('quality')
+    expect(system).toHaveProperty('restrictionLevel')
     expect(system).toHaveProperty('encumbrance')
     expect(system).toHaveProperty('rarity')
     expect(system).toHaveProperty('broken')
