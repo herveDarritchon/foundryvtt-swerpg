@@ -179,7 +179,7 @@ describe('weaponMapper - mapping', () => {
     const tags = SwerpgWeapon.prototype.getTags.call(weapon, 'full')
     expect(tags.category).toBe('Ranged')
     expect(tags['weapon-type']).toBe('Heavy Blaster')
-    expect(tags.restricted).toBe('Restricted')
+    expect(tags.restricted).toBe(game.i18n.localize('ITEM.RESTRICTION_LEVEL.RESTRICTED'))
     expect(tags['blast']).toBe(game.i18n.localize('WEAPON.QUALITIES.Blast') + ' 2')
   })
 
