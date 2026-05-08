@@ -1,3 +1,4 @@
+import { SYSTEM } from '../config/system.mjs'
 import SwerpgPhysicalItem from './physical.mjs'
 
 /**
@@ -64,6 +65,11 @@ export default class SwerpgGear extends SwerpgPhysicalItem {
    */
   getTags(scope = 'full') {
     const tags = {}
+
+    if (this.restrictionLevel && this.restrictionLevel !== 'none') {
+      tags.restricted = game.i18n.localize(SYSTEM.RESTRICTION_LEVELS[this.restrictionLevel].label)
+    }
+
     return tags
   }
 }
