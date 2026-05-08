@@ -1,7 +1,7 @@
 <section class="tab sheet-body flexcol scrollable {{tabs.config.cssClass}}" data-tab="{{tabs.config.id}}" data-group="{{tabs.config.group}}">
   <fieldset {{fieldDisabled}}>
     <legend>{{localize "ARMOR.SHEET.TYPE"}}</legend>
-    {{formField fields.category value=source.system.category}}
+    {{formField fields.category value=source.system.category localize=true}}
     {{formField fields.quality value=source.system.quality}}
     {{formField fields.encumbrance value=source.system.encumbrance}}
   </fieldset>

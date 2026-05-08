@@ -102,6 +102,9 @@
           "weaponType": "Type d'arme",
           "weaponTypeAll": "Tous"
         },
+        "progress-bar": {
+          "title": "Progression de l'Import"
+        },
         "progress": {
           "global": "Progression globale"
         }
@@ -289,6 +292,9 @@
       "TARGET": "Target",
       "EFFECTS": "Effects",
       "HOOKS": "Hooks"
+    },
+    "TAGS": {
+      "delete": "Supprimer l'Action"
     }
   },
   "ACTOR": {
@@ -516,6 +522,11 @@
   "ATTRIBUTES.Abilities": "Ability Scores",
   "ATTRIBUTES.Pools": "Resource Pools",
   "ATTRIBUTES.Resistances": "Damage Resistances",
+  "BACKGROUND": {
+    "SHEET": {
+      "TALENT_REMOVE": "Retirer le Talent"
+    }
+  },
   "CAREER": {
     "FIELDS": {
       "FreeSkill": "Compétence gratuite",
@@ -672,6 +683,14 @@
   "ITEM.QualityMasterwork": "Masterwork",
   "KEYBINDINGS.ConfirmAction": "Confirm Action",
   "KEYBINDINGS.ConfirmActionHint": "Confirm actions recorded within the last 60 seconds in the order in which they were taken.",
+  "MOTIVATION": {
+    "Sources": "Sources",
+    "SourcesList": "Liste des Sources"
+  },
+  "MOTIVATION_CATEGORY": {
+    "Sources": "Sources",
+    "SourcesList": "Liste des Sources"
+  },
   "RESOURCES": {
     "HEALTH": "Health",
     "WOUNDS": "Wounds",
@@ -682,6 +701,9 @@
     "HEROISM": "Heroism"
   },
   "RULER.CannotAffordMove": "You cannot afford to move {distance} spaces which costs {action} Action points.",
+  "SHEETS": {
+    "FormNavLabel": "Navigation de la Feuille"
+  },
   "SETTINGS.AutoConfirmName": "Action Auto-Confirmation",
   "SETTINGS.AutoConfirmHint": "Enable auto-confirmation of actions in combat which do not deal damage or cause active effects. This can speed things up but is not recommended during play-testing.",
   "SETTINGS.AutoConfirmNone": "No Auto-Confirmation",
@@ -821,6 +843,80 @@
     "Xenology": "Xénologie",
     "XenologyAbbr": "Xen"
   },
+  "SPECIALIZATION": {
+    "FIELDS": {
+      "FreeSkill": "Compétence Gratuite",
+      "Skills": "Compétences de Spécialisation",
+      "FreeSkillRank": {
+        "label": "Rang(s) gratuit(s)",
+        "hint": "Sélectionnez le nombre de rangs gratuits de la spécialisation."
+      }
+    },
+    "SHEET": {
+      "CHOOSE": "Choisir une Spécialisation",
+      "CLEAR": "Effacer la Spécialisation",
+      "SpecializationSkills": {
+        "maxNumber": "Nombre maximum de compétences de spécialisation à choisir"
+      }
+    }
+  },
+  "SPECIES": {
+    "FIELDS": {
+      "description": {
+        "label": "Description de l'Espèce"
+      },
+      "stride": {
+        "label": "Allure",
+        "hint": "La vitesse de déplacement de départ de cette espèce en cases de grille."
+      },
+      "primary": {
+        "label": "Capacité Primaire",
+        "hint": "Sélectionnez une capacité primaire qui commence à 3."
+      },
+      "secondary": {
+        "label": "Capacité Secondaire",
+        "hint": "Sélectionnez une capacité secondaire qui commence à 2."
+      },
+      "resistance": {
+        "label": "Résistance aux Dégâts",
+        "hint": "Une Résistance biologique (+5) à un certain type de dégâts."
+      },
+      "StartingExperience": {
+        "label": "Valeur",
+        "hint": "Sélectionnez l'expérience de départ pour cette espèce."
+      },
+      "StrainThreshold": {
+        "modifier": "Modificateur de Seuil de Contrainte",
+        "abilityKey": "Clé"
+      },
+      "WoundThreshold": {
+        "modifier": "Modificateur de Seuil de Blessure",
+        "abilityKey": "Clé"
+      },
+      "vulnerability": {
+        "label": "Vulnérabilité aux Dégâts",
+        "hint": "Une Vulnérabilité biologique (-5) à un certain type de dégâts."
+      }
+    },
+    "SHEET": {
+      "BROWSE": "Parcourir les Ancêtres",
+      "Characteristics": "Valeurs de Caractéristiques",
+      "CHOOSE": "Choisir une Espèce",
+      "CLEAR": "Effacer l'Espèce",
+      "FreeSkill": "Compétence Gratuite",
+      "FreeTalent": "Talent Gratuit",
+      "RESISTANCES": "Résistances et Vulnérabilités",
+      "RESISTANCE_HINT": "Vous devez choisir à la fois une Résistance et une Vulnérabilité si vous en sélectionnez une.",
+      "SpecialAbility": "Capacité Spéciale",
+      "StartingExperience": "Expérience de Départ",
+      "STATURE": "Taille de l'Espèce",
+      "Threshold": "Valeurs de Seuil"
+    },
+    "WARNINGS": {
+      "ABILITIES": "Les capacités primaire et secondaire d'une Espèce ne peuvent pas être identiques.",
+      "RESISTANCES": "La Résistance et la Vulnérabilité choisies pour une Espèce ne peuvent pas être identiques."
+    }
+  },
   "TALENT": {
     "FIELDS": {
       "node": {
@@ -957,6 +1053,9 @@
   "WALKTHROUGH.LevelZero": "Complete all character creation steps before advancing your character to Level 1.",
   "WALKTHROUGH.LevelOne": "Set your character to Level 1 and begin your adventure!",
   "WALKTHROUGH.LevelUp": "You have made enough progress to advance to a new level. Increase your level by one when you are ready!",
+  "WALKTHROUGH.AddSpecies": "Choisissez une Espèce depuis le Compendium ou la barre latérale des Objets et ajoutez-la par glisser-déposer.",
+  "WALKTHROUGH.AddCareer": "Choisissez une Carrière depuis le Compendium ou la barre latérale des Objets et ajoutez-la par glisser-déposer.",
+  "WALKTHROUGH.AddSpecialization": "Choisissez une Spécialisation depuis le Compendium ou la barre latérale des Objets et ajoutez-la par glisser-déposer.",
   "WALKTHROUGH.LevelZeroIncomplete": "You may not advance to Level 1 until you have finished all character creation steps!",
   "ERRORS": {
     "InvalidEvent": "Événement invalide : Impossible de traiter l'interaction d'interface.",

@@ -383,6 +383,11 @@
   "ATTACK.RESULT_TYPES.RESIST": "Resist",
   "ATTACK.RESULT_TYPES.GLANCE": "Glance",
   "ATTACK.RESULT_TYPES.HIT": "Hit",
+  "BACKGROUND": {
+    "SHEET": {
+      "TALENT_REMOVE": "Remove Talent"
+    }
+  },
   "ATTRIBUTES.Abilities": "Ability Scores",
   "ATTRIBUTES.Pools": "Resource Pools",
   "ATTRIBUTES.Resistances": "Damage Resistances",
@@ -393,7 +398,8 @@
       "FreeSkillRank": {
         "label": "Free Rank(s)",
         "hint": "Select number of free ranks from career."
-      }
+      },
+      "Skills": "Career Skills"
     },
     "SHEET": {
       "CHOOSE": "Choose Career",
@@ -567,6 +573,10 @@
   "ITEM.QualityMasterwork": "Masterwork",
   "KEYBINDINGS.ConfirmAction": "Confirm Action",
   "KEYBINDINGS.ConfirmActionHint": "Confirm actions recorded within the last 60 seconds in the order in which they were taken.",
+  "MOTIVATION": {
+    "Sources": "Sources",
+    "SourcesList": "List of Sources"
+  },
   "OBLIGATION": {
     "FIELDS": {
       "value": {
@@ -602,6 +612,9 @@
     "Vitality": "Vitality",
     "Resolve": "Resolve",
     "Fortune": "Fortune"
+  },
+  "SHEETS": {
+    "FormNavLabel": "Sheet Navigation"
   },
   "SETTINGS": {
     "Auto": {
@@ -823,10 +836,20 @@
     "XenologyAbbr": "Xen"
   },
   "SPECIALIZATION": {
-    "FIELDS": {},
+    "FIELDS": {
+      "FreeSkill": "Free Skill",
+      "Skills": "Specialization Skills",
+      "FreeSkillRank": {
+        "label": "Free Rank(s)",
+        "hint": "Select number of free ranks from specialization."
+      }
+    },
     "SHEET": {
       "CHOOSE": "Choose Specialization",
-      "CLEAR": "Clear Specialization"
+      "CLEAR": "Clear Specialization",
+      "SpecializationSkills": {
+        "maxNumber": "Number of Specialization Skills maximum to pick"
+      }
     }
   },
   "SPECIES": {
