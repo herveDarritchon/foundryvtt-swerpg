@@ -357,6 +357,19 @@ export default class SwerpgBaseActorSheet extends HBMixin(BaseActorSheetV2) {
     // On limite aux armes équipées (filtrage métier dans computeFeaturedEquipment)
     const weapons = this.actor.items.filter((i) => i.type === 'weapon' && i.system?.equipped)
     const featured = computeFeaturedEquipment({ armor, weapons })
+    // Enrich featured equipment with restriction badge data
+    for (const item of featured) {
+      const src = this.actor.items.get(item.id)
+      const rl = src?.system?.restrictionLevel
+      if (rl && rl !== 'none') {
+        const label = game.i18n.localize(SYSTEM.RESTRICTION_LEVELS[rl].label)
+        item.restrictionLevel = rl
+        item.restrictionBadge = { level: rl, label }
+        // Remove duplicate restriction tag from generic tags array
+        const idx = item.tags.indexOf(label)
+        if (idx !== -1) item.tags.splice(idx, 1)
+      }
+    }
     logger.debug('[base-actor-sheet] featuredEquipment', featured)
     return featured
   }
@@ -382,6 +395,15 @@ export default class SwerpgBaseActorSheet extends HBMixin(BaseActorSheetV2) {
     // Iterate over items and organize them
     for (let i of this.document.items) {
       const d = { id: i.id, name: i.name, img: i.img, tags: i.getTags() }
+      // restriction badge for inventory lists
+      const rl = i.system?.restrictionLevel
+      if (rl && rl !== 'none') {
+        d.restrictionLevel = rl
+        d.restrictionBadge = {
+          level: rl,
+          label: game.i18n.localize(SYSTEM.RESTRICTION_LEVELS[rl].label),
+        }
+      }
       let section
       switch (i.type) {
         case 'armor':
