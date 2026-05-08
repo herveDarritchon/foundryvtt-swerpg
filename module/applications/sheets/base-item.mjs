@@ -162,7 +162,7 @@ export default class SwerpgBaseItemSheet extends api.HandlebarsApplicationMixin(
       tabs: tabGroups.sheet,
       tabsPartial: this.constructor.PARTS.tabs.template,
       tags: this.document.getTags(),
-      restrictionBadge: this.#prepareRestrictionBadge(source.system.restrictionLevel),
+      restrictionBadge: this.#prepareRestrictionBadge(this.document.system.restrictionLevel),
     }
   }
 
