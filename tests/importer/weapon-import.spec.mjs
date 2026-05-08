@@ -163,9 +163,7 @@ describe('weaponMapper - mapping', () => {
       range: 'medium',
       weaponType: 'heavy-blaster',
       restricted: true,
-      qualities: [
-        { key: 'blast', rank: 2, hasRank: true, active: true, source: 'base' },
-      ],
+      qualities: [{ key: 'blast', rank: 2, hasRank: true, active: true, source: 'base' }],
       flags: {},
       system: { restricted: true },
       defense: { block: 0, parry: 0 },
@@ -207,28 +205,34 @@ describe('weaponMapper - mapping', () => {
   })
 
   it('reload tag present only when category.reload is true', () => {
-    const noReload = SwerpgWeapon.prototype.getTags.call({
-      damage: { weapon: 4 },
-      weaponType: 'melee',
-      qualities: [],
-      flags: {},
-      system: {},
-      defense: { block: 0, parry: 0 },
-      config: { category: { label: 'Melee', reload: false } },
-      broken: false,
-    }, 'short')
+    const noReload = SwerpgWeapon.prototype.getTags.call(
+      {
+        damage: { weapon: 4 },
+        weaponType: 'melee',
+        qualities: [],
+        flags: {},
+        system: {},
+        defense: { block: 0, parry: 0 },
+        config: { category: { label: 'Melee', reload: false } },
+        broken: false,
+      },
+      'short',
+    )
     expect(noReload.reload).toBeUndefined()
 
-    const withReload = SwerpgWeapon.prototype.getTags.call({
-      damage: { weapon: 6 },
-      weaponType: 'heavy-blaster',
-      qualities: [],
-      flags: {},
-      system: {},
-      defense: { block: 0, parry: 0 },
-      config: { category: { label: 'Ranged', reload: true } },
-      broken: false,
-    }, 'short')
+    const withReload = SwerpgWeapon.prototype.getTags.call(
+      {
+        damage: { weapon: 6 },
+        weaponType: 'heavy-blaster',
+        qualities: [],
+        flags: {},
+        system: {},
+        defense: { block: 0, parry: 0 },
+        config: { category: { label: 'Ranged', reload: true } },
+        broken: false,
+      },
+      'short',
+    )
     expect(withReload.reload).toBe('Reload')
   })
 })
@@ -253,7 +257,9 @@ describe('SwerpgWeapon - schema taxonomy', () => {
     if (globalThis.foundry?.data?.fields) {
       if (!globalThis.foundry.data.fields.EmbeddedDataField) {
         globalThis.foundry.data.fields.EmbeddedDataField = class EmbeddedDataField {
-          constructor(type) { this.type = type }
+          constructor(type) {
+            this.type = type
+          }
         }
       }
       if (!globalThis.foundry.data.fields.HTMLField) {
@@ -292,7 +298,9 @@ describe('SwerpgWeapon - schema taxonomy', () => {
     if (globalThis.foundry?.data?.fields) {
       if (!globalThis.foundry.data.fields.EmbeddedDataField) {
         globalThis.foundry.data.fields.EmbeddedDataField = class EmbeddedDataField {
-          constructor(type) { this.type = type }
+          constructor(type) {
+            this.type = type
+          }
         }
       }
       if (!globalThis.foundry.data.fields.HTMLField) {
