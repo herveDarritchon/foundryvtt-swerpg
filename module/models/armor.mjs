@@ -110,7 +110,7 @@ export default class SwerpgArmor extends SwerpgCombatItem {
    */
   getTags(scope = 'full') {
     const tags = {}
-    tags.category = this.config.category.label
+    tags.category = game.i18n.localize(this.config.category.label)
 
     if (this.restrictionLevel && this.restrictionLevel !== 'none') {
       tags.restricted = game.i18n.localize(SYSTEM.RESTRICTION_LEVELS[this.restrictionLevel].label)

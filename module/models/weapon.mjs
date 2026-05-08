@@ -294,7 +294,7 @@ export default class SwerpgWeapon extends SwerpgCombatItem {
     tags.damage = `${this.damage.weapon} Damage`
 
     // Canonical category (mechanical family)
-    if (this.config?.category?.label) tags.category = this.config.category.label
+    if (this.config?.category?.label) tags.category = game.i18n.localize(this.config.category.label)
 
     // Narrative subtype — humanize slug for display
     if (this.weaponType) tags['weapon-type'] = humanizeWeaponType(this.weaponType)
