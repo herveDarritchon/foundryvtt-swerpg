@@ -195,7 +195,8 @@ function mapOggDudeWeapon(xmlWeapon) {
     const encumbrance = clampNumber(xmlWeapon.Encumbrance, 0, Number.MAX_SAFE_INTEGER, 0)
     const hp = clampNumber(xmlWeapon.HP, 0, Number.MAX_SAFE_INTEGER, 0)
 
-    const restricted = parseOggDudeBoolean(xmlWeapon.Restricted)
+    const isRestricted = parseOggDudeBoolean(xmlWeapon.Restricted)
+    const restrictionLevel = isRestricted ? 'restricted' : 'none'
     const rawType = xmlWeapon.Type || ''
     const categoryTags = normalizeCategoryValues(xmlWeapon?.Categories?.Category)
     const sizeHigh = normalizeSizeHigh(xmlWeapon.SizeHigh)
@@ -247,13 +248,19 @@ function mapOggDudeWeapon(xmlWeapon) {
       }
     }
 
+    const rawRestricted = xmlWeapon.Restricted
+    const oggdudeData = { ...oggdudeExtras }
+    if (rawRestricted !== undefined && rawRestricted !== null) {
+      oggdudeData.restricted = rawRestricted
+    }
+
     const flags = {
       swerpg: {
         oggdudeKey,
       },
     }
-    if (Object.keys(oggdudeExtras).length > 0) {
-      flags.swerpg.oggdude = oggdudeExtras
+    if (Object.keys(oggdudeData).length > 0) {
+      flags.swerpg.oggdude = oggdudeData
     }
 
     const weaponObject = {
@@ -273,7 +280,7 @@ function mapOggDudeWeapon(xmlWeapon) {
         price,
         rarity,
         hp,
-        restricted,
+        restrictionLevel,
         description: {
           public: description,
           secret: '',

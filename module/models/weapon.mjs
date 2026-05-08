@@ -302,7 +302,7 @@ export default class SwerpgWeapon extends SwerpgCombatItem {
     // Reload — only if the weapon's category requires it
     if (this.config?.category?.reload) tags.reload = 'Reload'
 
-    if ((this.system?.restricted ?? this.restricted) && !tags.restricted) {
+    if (this.restrictionLevel && this.restrictionLevel !== 'none') {
       tags.restricted = 'Restricted'
     }
 

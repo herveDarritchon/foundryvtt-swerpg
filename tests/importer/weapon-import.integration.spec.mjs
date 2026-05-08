@@ -50,7 +50,7 @@ describe('Intégration OggDude -> weaponMapper', () => {
     expect(typeof first.system.price).toBe('number')
     expect(typeof first.system.rarity).toBe('number')
     expect(typeof first.system.hp).toBe('number')
-    expect(typeof first.system.restricted).toBe('boolean')
+    expect(typeof first.system.restrictionLevel).toBe('string')
 
     // ADR-0007: every mapped weapon must have a resolved category and weaponType
     for (const weapon of mapped) {
