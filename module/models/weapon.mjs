@@ -303,7 +303,7 @@ export default class SwerpgWeapon extends SwerpgCombatItem {
     if (this.config?.category?.reload) tags.reload = 'Reload'
 
     if (this.restrictionLevel && this.restrictionLevel !== 'none') {
-      tags.restricted = 'Restricted'
+      tags.restricted = game.i18n.localize(SYSTEM.RESTRICTION_LEVELS[this.restrictionLevel].label)
     }
 
     if (scope === 'short') return tags
