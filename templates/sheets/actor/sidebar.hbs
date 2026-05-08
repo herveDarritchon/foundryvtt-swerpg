@@ -10,6 +10,11 @@
         <div class="title">
           <h4 data-action="itemEdit" title="{{e.name}}"><a>{{e.name}}</a></h4>
           <div class="tags">
+            {{#if e.restrictionBadge}}
+              <span class="tag tag-restriction" data-restriction-level="{{e.restrictionLevel}}" data-tooltip="{{e.restrictionBadge.label}}">
+                <i class="fa-solid fa-lock"></i>
+              </span>
+            {{/if}}
             {{#each e.tags}}
               <span class="tag" title="{{this}}">{{this}}</span>
             {{/each}}
