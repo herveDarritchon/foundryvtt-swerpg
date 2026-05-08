@@ -251,8 +251,9 @@ function mapOggDudeArmor(xmlArmor) {
     if (baseMods.length > 0) {
       oggdudeExtras.baseMods = baseMods
     }
-    if (isRestricted !== undefined) {
-      oggdudeExtras.restricted = isRestricted
+    const rawRestricted = xmlArmor.Restricted
+    if (rawRestricted !== undefined && rawRestricted !== null) {
+      oggdudeExtras.restricted = rawRestricted
     }
 
     const flags = {
