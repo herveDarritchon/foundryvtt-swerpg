@@ -372,8 +372,7 @@
       "BULKY": "Bulky",
       "ORGANIC": "Organic",
       "SEALED": "Sealed",
-      "FULL_BODY": "Full Body",
-      "RESTRICTED": "Restricted"
+      "FULL_BODY": "Full Body"
     }
   },
   "ATTACK.RESULT_TYPES.MISS": "Miss",

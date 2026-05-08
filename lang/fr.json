@@ -502,8 +502,7 @@
       "BULKY": "Encombrante",
       "ORGANIC": "Organique",
       "SEALED": "Étanche",
-      "FULL_BODY": "Corps entier",
-      "RESTRICTED": "Restreint"
+      "FULL_BODY": "Corps entier"
     }
   },
   "ATTACK.RESULT_TYPES.MISS": "Miss",

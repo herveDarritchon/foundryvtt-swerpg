@@ -64,10 +64,6 @@ export const PROPERTIES = {
     label: 'ARMOR.PROPERTIES.FULL_BODY',
     hasRank: false,
   },
-  restricted: {
-    label: 'ARMOR.PROPERTIES.RESTRICTED',
-    hasRank: false,
-  },
 }
 
 /**
