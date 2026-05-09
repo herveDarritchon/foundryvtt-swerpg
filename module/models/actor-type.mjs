@@ -1,15 +1,24 @@
 import { logger } from '../utils/logger.mjs'
+import { getPositiveDicePoolPreview } from '../utils/skill-costs.mjs'
 /**
  * @typedef {Object} SwerpgActorSkill
- * @param {number} rank
- * @param {string} path
- * @param {number} [skillBonus]
- * @param {number} [enchantmentBonus]
- * @param {number} [score]
- * @param {number} [passive]
- * @param {number} [spent]
- * @param {number} [cost]
- * @property
+ * @property {Object} rank
+ * @property {number} rank.base
+ * @property {number} rank.careerFree
+ * @property {number} rank.specializationFree
+ * @property {number} rank.trained
+ * @property {number} rank.value
+ * @property {string} [path]
+ * @property {string} label
+ * @property {Object} characteristics
+ * @property {string} characteristics.abbreviation
+ * @property {string} characteristicId
+ * @property {number} characteristicValue
+ * @property {Object} type
+ * @property {string} type.id
+ * @property {Object} dicePreview
+ * @property {number} dicePreview.ability
+ * @property {number} dicePreview.proficiency
  */
 
 /**
@@ -212,12 +221,21 @@ export default class SwerpgActorType extends foundry.abstract.TypeDataModel {
    */
   _prepareSkill(skillId, skill) {
     const config = SYSTEM.SKILLS[skillId]
-    const r = (skill.rank ||= 0)
-    skill.abilityBonus = 0
-    const sb = (skill.skillBonus = SYSTEM.SKILL.RANKS[r].bonus)
-    const eb = (skill.enchantmentBonus = 0)
-    const s = (skill.score = sb + eb)
-    skill.passive = SYSTEM.PASSIVE_BASE + s
+    if (!config) return
+
+    const rank = skill.rank
+    rank.value = rank.base + rank.careerFree + rank.specializationFree + rank.trained
+
+    skill.label = game.i18n.localize(config.label)
+    skill.characteristicId = config.characteristics.id
+    skill.characteristics = {
+      abbreviation: game.i18n.localize(config.characteristics.abbreviation),
+    }
+    skill.type = config.type
+
+    const characteristicValue = this.characteristics[config.characteristics.id]?.rank?.value ?? 0
+    skill.characteristicValue = characteristicValue
+    skill.dicePreview = getPositiveDicePoolPreview({ characteristicValue, skillRank: rank.value })
   }
 
   /* -------------------------------------------- */
@@ -227,13 +245,11 @@ export default class SwerpgActorType extends foundry.abstract.TypeDataModel {
    * @override
    */
   prepareDerivedData() {
-    // TODO Reactive if necessary
-
-    // Resource pools
     this._prepareResources()
     this._prepareExperience()
-    this._prepareDerivedAttributes()
     this._prepareFreeSkillRanks()
+    this._prepareSkills()
+    this._prepareDerivedAttributes()
     this.parent.callActorHooks('prepareResources', this.resources)
   }
 
