@@ -765,7 +765,11 @@
     "XP_CONSOLE": {
       "TITLE": "Console de transaction XP",
       "STATUS": {
-        "IDLE": "En attente de sélection"
+        "IDLE": "En attente de sélection",
+        "FREE_RANK": "Rang gratuit disponible",
+        "AFFORDABLE": "Achat possible",
+        "INSUFFICIENT_XP": "XP insuffisants",
+        "MAX_RANK": "Rang maximum"
       },
       "LABEL": {
         "AVAILABLE": "Disponibles",
@@ -774,7 +778,16 @@
         "SPECIALIZATION_FREE": "Gratuits spécialisation",
         "SELECTED_COST": "Coût sélectionné"
       },
-      "PLACEHOLDER": "Sélectionnez une compétence pour prévisualiser le coût."
+      "PLACEHOLDER": "Sélectionnez une compétence pour prévisualiser le coût.",
+      "SOURCE": {
+        "UNKNOWN": "Source inconnue"
+      },
+      "SUMMARY": {
+        "FREE": "{label} — rang {current} → {next} — 0 XP — {source}",
+        "AFFORDABLE": "{label} — {cost} XP — {remaining} XP restants — Pool {pool} → {poolAfter}",
+        "INSUFFICIENT": "{label} — {cost} XP requis — {available} XP disponibles — manque {shortfall} XP",
+        "MAX": "{label} — Rang maximum ({max}/{max})"
+      }
     },
     "MARKER": {
       "CAREER": "Compétence de carrière",
