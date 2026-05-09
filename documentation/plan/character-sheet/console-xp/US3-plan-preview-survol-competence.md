@@ -1,613 +1,348 @@
-# Plan d'implémentation — US3 : Prévisualisation d'achat au survol d'une compétence
+# Plan d'implémentation — US3 : Prévisualisation d'achat au survol d'une compétence (Version simplifiée)
 
-**Issue** : [#138 — US3: Prévisualisation d'achat au survol d'une compétence](https://github.com/herveDarritchon/foundryvtt-swerpg/issues/138)  
-**Epic** : [#144 — EPIC: Console de transaction XP des compétences](https://github.com/herveDarritchon/foundryvtt-swerpg/issues/144)  
-**Spécification** : `documentation/spec/character-sheet/spec-console-transaction-xp.md` (§6, §9, §10.1)  
-**Dépend de** : US1 (console d'affichage des ressources), US2 (états visuels des lignes)  
+**Issue** : [#138 — US3: Prévisualisation d'achat au survol d'une compétence](https://github.com/herveDarritchon/foundryvtt-swerpg/issues/138)
+**Epic** : [#144 — EPIC: Console de transaction XP des compétences](https://github.com/herveDarritchon/foundryvtt-swerpg/issues/144)
+**Spécification** : `documentation/spec/character-sheet/spec-console-transaction-xp.md` (§9 — Version simplifiée)
+**Dépend de** : US1 (console d'affichage des ressources), US2 (états visuels des lignes)
 **Prérequis pour** : US4 (achat d'un rang), US5 (retrait d'un rang)
 
 ---
 
 ## 1. Objectif
 
-Rendre la console XP interactive au survol d'une ligne de compétence : le joueur voit immédiatement le coût, le gain de rang, l'impact XP et le pool de dés, sans clic ni modification des données.
+Simplifier la preview console XP au survol d'une compétence : **seulement statut + coût**.
 
-Aucune transaction n'est déclenchée dans US3. C'est une couche de prévisualisation purement UI.
-
-il faut donc réutiliser le code existant, sans duplication, mais en respectant les règles de conception et de ségrégation des responsabilités d'un code professionnel.
+Aucun calcul complexe. Aucun summary texte détaillé. Juste un mapping direct des données déjà enrichies.
 
 ---
 
-## 2. Périmètre
+## 2. Constat sur l'existant (état actuel)
 
-### Inclus dans US3
+### 2.1. Ce qui existe DÉJÀ et fonctionne
 
-- Mise à jour dynamique de la console XP au `mouseenter` / `focusin` d'une ligne `.skill`
-- Retour à l'état neutre (idle) au `mouseleave` / `focusout`
-- Affichage des 5 états fonctionnels de la spec (§6) :
-  - Achat gratuit disponible
-  - Achat payant possible
-  - XP insuffisants
-  - Rang maximum atteint
-  - Retrait impossible (état neutre pour le hover de US3, pas de decrease)
-- Pool de dés : afficher le pool actuel **et** le pool après achat dans la preview
-- Mise à jour de la classe CSS de la console (`.is-free`, `.is-affordable`, `.is-locked`, `.is-error`)
-- Tous les textes visibles internationalisés (FR/EN)
-- Accessibilité clavier : `focusin` / `focusout` sur les lignes
+**Listeners et handlers sont connectés** :
+- `_onRender` attache `mouseover`/`mouseout`/`focusin`/`focusout` (lignes 782-785)
+- `#onHoverAction` et `#onHoverOutAction` délèguent vers `skillPreview`
+- `#handleSkillPreviewEnter` et `#handleSkillPreviewLeave` existent
 
-### Exclu de US3
+**Méthodes de preview existent** :
+- `_buildSkillPreview()` — construit l'objet preview (actuellement trop complexe)
+- `_buildIdlePreview()` — construit l'état neutre
+- `#findSkillInContext()` — retrouve une skill par son `id`
+- `#updateConsolePreview()` — met à jour la console
+- `#resetConsolePreview()` — reset à l'état neutre
+- `#applyConsolePreview()` — applique la preview au DOM
 
-- Achat effectif d'un rang → US4
-- Retrait effectif d'un rang → US5
-- Traçabilité des rangs → US6
-- Notifications toast → US7
-- Pool de dés dans les stats de la console (hors preview) → US8
-- Modification des données du personnage (XP, rangs, compteurs)
+**Données sont DÉJÀ enrichies** dans `#prepareSkills()` :
+Chaque skill reçoit de `getSkillPurchaseState()` (source de vérité dans `utils/skill-costs.mjs`) :
+- `purchaseReason`: `'FREE_RANK_AVAILABLE' | 'AFFORDABLE' | 'INSUFFICIENT_XP' | 'MAX_RANK'`
+- `nextCost`: coût du prochain rang (0 si gratuit, nombre, ou null si max)
+
+### 2.2. Ce qui est dupliqué/buggé et à supprimer
+
+**Code dupliqué/buggé dans `character-sheet.mjs`** :
+1. `#getSkillRankCost()` (ligne 247) — **BUG** :
+   - Calcule coût = `nextRank * 5` pour TOUTES les compétences
+   - MAIS compétences **non-carrière** coûtent `(nextRank * 5) + 5`
+   - La source de vérité est `utils/skill-costs.mjs#getSkillPurchaseState()` qui calcule `nextCost` correctement
+
+2. `#getSkillPurchaseReason()` (ligne 256) — **DUPLICATION** :
+   - Reproduit la logique de `getSkillPurchaseState` de `utils/skill-costs.mjs`
+   - Utilise le `#getSkillRankCost()` buggé
+   - Résultat : incohérence entre `#prepareSkills()` (correct) et `_buildSkillPreview()` (buggé)
+
+3. `#getAvailableFreeRankForSkill()` (ligne 293) — **DUPLICATION** :
+   - Logique similaire à `_prepareFreeSkill()`
+   - Plus nécessaire car `purchaseReason` et `isFreePurchase` sont déjà enrichis
+
+### 2.3. Ce qui est trop complexe et à simplifier
+
+**`_buildSkillPreview()` (lignes 873-944)** — actuellement construit :
+- `summaryText` complexe avec :
+  - Nom de la skill
+  - Rang actuel → prochain rang
+  - Source du rang gratuit
+  - Coût
+  - XP restants / manque
+  - Pool de dés avant/après
+
+**Ce qui doit être simplifié** :
+- Retirer TOUTE la logique de `summaryText`
+- Ne garder que le **mapping simple**
 
 ---
 
-## 3. Constat sur l'existant
+## 3. Mapping simple (Preview = Statut + Coût)
 
-### 3.1. Console XP prête mais statique
+| `purchaseReason` | `statusKey` | `consoleCssClass` | `selectedCost` |
+|------------------|-------------|-------------------|----------------|
+| `FREE_RANK_AVAILABLE` | `SKILL.XP_CONSOLE.STATUS.FREE_RANK` | `is-free` | `0 XP` |
+| `AFFORDABLE` | `SKILL.XP_CONSOLE.STATUS.AFFORDABLE` | `is-affordable` | `${nextCost} XP` |
+| `INSUFFICIENT_XP` | `SKILL.XP_CONSOLE.STATUS.INSUFFICIENT_XP` | `is-locked` | `${nextCost} XP` |
+| `MAX_RANK` | `SKILL.XP_CONSOLE.STATUS.MAX_RANK` | `is-error` | `—` |
+| (idle) | `SKILL.XP_CONSOLE.STATUS.IDLE` | `''` | `—` |
 
-Le template `templates/sheets/actor/skills.hbs` contient une structure complète avec `data-xp-console-status`, `data-selected-skill-cost`, `data-selected-skill-summary`. Tous les labels sont déjà localisés (US1). Mais la console ne réagit à aucun événement.
+---
 
-### 3.2. Données métier déjà calculées
+## 4. Plan de travail détaillé
 
-Dans `CharacterSheet.#prepareSkills()` (`character-sheet.mjs:420-503`), chaque skill reçoit déjà :
+### Étape 1 : Supprimer le code dupliqué/buggé
 
+**Fichier** : `module/applications/sheets/character-sheet.mjs`
+
+**À supprimer** :
+
+1. `#getSkillRankCost()` (ligne 247)
+   - **Pourquoi** : Bug sur le coût des compétences non-carrière
+   - **Remplacement** : Utiliser `skill.nextCost` déjà enrichi par `#prepareSkills()`
+
+2. `#getSkillPurchaseReason()` (ligne 256)
+   - **Pourquoi** : Duplication de `getSkillPurchaseState`
+   - **Remplacement** : Utiliser `skill.purchaseReason` déjà enrichi
+
+3. `#getAvailableFreeRankForSkill()` (ligne 293)
+   - **Pourquoi** : Duplication, plus nécessaire
+   - **Remplacement** : Utiliser `skill.isFreePurchase` et `skill.purchaseReason`
+
+**Vérification** : S'assurer que rien d'autre n'appelle ces méthodes.
+
+### Étape 2 : Simplifier `_buildSkillPreview()`
+
+**Fichier** : `module/applications/sheets/character-sheet.mjs`
+
+**Approche** : Mapping direct, pas de calcul complexe.
+
+**Code simplifié** :
 ```js
-{
-  nextRank,       // rang cible
-  nextCost,       // coût (0, nombre, ou null)
-  canPurchase,    // booléen
-  isFreePurchase, // booléen
-  purchaseReason, // 'FREE_RANK_AVAILABLE' | 'AFFORDABLE' | 'INSUFFICIENT_XP' | 'MAX_RANK'
-  dicePreview,    // { ability, proficiency } — pool actuel
-  ui: {
-    markerState,
-    increaseState,
-    increaseIcon,
-    decreaseState: 'pending',
-    lineCssClass,
+/**
+ * Mapping purchaseReason → statut console
+ */
+static #PURCHASE_REASON_TO_STATUS = {
+  'FREE_RANK_AVAILABLE': {
+    statusKey: 'SKILL.XP_CONSOLE.STATUS.FREE_RANK',
+    consoleCssClass: 'is-free',
+    getCost: (nextCost) => '0 XP',
   },
-  freeRank: {
-    isCareer,
-    isSpecialization,
-    name,           // nom de la carrière / spé
+  'AFFORDABLE': {
+    statusKey: 'SKILL.XP_CONSOLE.STATUS.AFFORDABLE',
+    consoleCssClass: 'is-affordable',
+    getCost: (nextCost) => `${nextCost} XP`,
+  },
+  'INSUFFICIENT_XP': {
+    statusKey: 'SKILL.XP_CONSOLE.STATUS.INSUFFICIENT_XP',
+    consoleCssClass: 'is-locked',
+    getCost: (nextCost) => `${nextCost} XP`,
+  },
+  'MAX_RANK': {
+    statusKey: 'SKILL.XP_CONSOLE.STATUS.MAX_RANK',
+    consoleCssClass: 'is-error',
+    getCost: () => '—',
   },
 }
-```
 
-**Ce qui manque pour la preview** :
-
-- Pas de `dicePreviewAfterPurchase` (pool dés après achat du prochain rang)
-- Pas de `remainingXpAfterPurchase` dans le contexte
-- Pas de méthode centralisée pour produire l'objet de preview de la console
-- Pas de méthode pour le cas "idle"
-- Pas de mapping `purchaseReason` → message localisé pour le résumé console
-
-### 3.3. Gestionnaires d'événements
-
-- `character-sheet.mjs` a `_onClickAction()` et des actions `static #on*` (ApplicationV2 `actions` dans `DEFAULT_OPTIONS`).
-- La base `SwerpgBaseActorSheet._onRender()` ne fait que du DragDrop.
-- `SwerpgBaseActorSheet._attachFrameListeners()` attache un `focusin` global sur la frame.
-- Aucun listener `mouseenter` / `mouseleave` sur `.skill` n'existe.
-- L'attribut `data-action="skillHover"` dans `character-skill.hbs:11` n'est pas supporté par `_onClickAction` et ne peut pas gérer le hover.
-
-### 3.4. CSS de la console
-
-Dans `styles/actor.less:1868-1953`, les classes d'état existent :
-
-```less
-.xp-console.is-free       .xp-console__status { color: #00ff99; }
-.xp-console.is-affordable .xp-console__status { color: #c9b36a; }
-.xp-console.is-locked     .xp-console__status,
-.xp-console.is-error      .xp-console__status { color: #c9593f; }
-```
-
-Elles ne sont **jamais appliquées dynamiquement**.
-
----
-
-## 4. Décisions techniques
-
-### 4.1. Mode d'interaction : hover via listeners DOM (pas `data-action`)
-
-**Important** : Les `actions` ApplicationV2 (`data-action` + `DEFAULT_OPTIONS.actions`) ne fonctionnent **que pour les clics**. Pour les interactions de type **hover** (`mouseenter`/`mouseleave`) et **focus clavier** (`focusin`/`focusout`), il faut utiliser des listeners DOM classiques attachés dans `_onRender`.
-
-**Décision finale** : Utiliser des listeners DOM délégués dans `_onRender` avec `data-hover-action` pour router les événements hover et focus.
-
-Pattern à respecter :
-
-1. **Template** : Ajouter `data-hover-action="skillPreview"` et `tabindex="0"` sur les éléments interactifs :
-   ```hbs
-   <div class="skill" data-skill-id="{{id}}" tabindex="0" data-hover-action="skillPreview">
-   ```
-
-2. **JS - `_onRender`** : Attacher 4 listeners (2 pour souris, 2 pour clavier) :
-   ```js
-   async _onRender(context, options) {
-     await super._onRender(context, options)
-     this.element.addEventListener('mouseover', this.#onHoverAction)   // délégation souris in
-     this.element.addEventListener('mouseout', this.#onHoverOutAction) // délégation souris out
-     this.element.addEventListener('focusin', this.#onHoverAction)    // délégation focus in
-     this.element.addEventListener('focusout', this.#onHoverOutAction) // délégation focus out
-   }
-   ```
-
-3. **JS - Handlers délégués** : Utiliser `closest('[data-hover-action]')` pour router :
-   ```js
-   #onHoverAction = async (event) => {
-     const target = event.target.closest('[data-hover-action]')
-     if (!target) return
-     const action = target.dataset.hoverAction
-     switch (action) {
-       case 'skillPreview': return this.#handleSkillPreviewEnter(target)
-       // ... autres actions hover
-     }
-   }
-   ```
-
-4. **Anti-clignotement** : Quand on quitte un élément, vérifier `event.relatedTarget` pour ne pas reset si on entre dans un autre élément du même type :
-   ```js
-   #handleSkillPreviewLeave(target, event) {
-     const related = event.relatedTarget
-     if (related) {
-       const enteringSkill = related.closest('[data-hover-action="skillPreview"]')
-       if (enteringSkill) return  // on ne reset pas
-     }
-     this.#resetConsolePreview()
-   }
-   ```
-
-Justification :
-
-- `mouseover`/`mouseout` et `focusin`/`focusout** bubblent, donc la délégation sur `this.element` fonctionne.
-- `mouseenter`/`mouseleave` et `focus`/`blur** NE bubblent PAS, donc ils ne fonctionnent pas avec la délégation.
-- Accessibilité clavier : `tabindex="0"` + `focusin`/`focusout` permettent de prévisualiser en naviguant avec Tab.
-- Ce pattern est déjà utilisé ailleurs dans la codebase (`character-sheet.mjs` lignes ~670).
-
-### 4.2. Architecture du preview
-
-Créer une méthode publique de classe `CharacterSheet.#buildSkillPreview(context, skillId)` qui :
-
-1. Reçoit le contexte complet
-2. Trouve la skill par `skillId` dans `context.skills.[exp|kno|soc]`
-3. Calcule le pool après achat via `getPositiveDicePoolPreview({ characteristicValue, skillRank: nextRank })`
-4. Calcule les XP restants après achat
-5. Assemble un objet de preview avec :
-
-```js
-{
-  statusKey,          // clé i18n pour le statut
-  consoleCssClass,    // 'is-free' | 'is-affordable' | 'is-locked' | 'is-error' | ''
-  selectedCost,       // string localisée : '0 XP', '15 XP', '—', 'MAX'
-  summaryParts,       // tableau de chaînes à joindre pour le résumé
-  dicePreviewAfter,   // { ability, proficiency }
-}
-```
-
-### 4.3. Résumé console compact
-
-Le résumé (`data-selected-skill-summary`) doit tenir en 1-2 lignes. Format recommandé par état :
-
-| État | Résumé |
-|------|--------|
-| Gratuit | `{label} : rang {current} → {next} · {source} · 0 XP` |
-| Payant | `{label} : {cost} XP · {remaining} XP restants · Pool {currDice} → {nextDice}` |
-| Insuffisant | `{label} : {cost} XP requis · {available} XP disponibles · manque {shortfall} XP` |
-| Max | `{label} : rang maximum atteint ({max}/5)` |
-
-Ce format est produit en JS sous forme de texte localisé, pas de HTML brut dans le template.
-
-### 4.4. Pool de dés dans la preview
-
-Le template affiche déjà les dés du pool actuel via `.skill__dice-preview`. Pour la preview console, il faut montrer **les deux pools** (actuel → après achat). Format proposé :
-
-```
-Pool actuel : 🎲🎲🎲  →  Pool après achat : 🎲🎲🎲🎲
-```
-
-(utilisation des icônes SVG existantes ou texte stylé)
-
-### 4.5. État neutre
-
-La remise à zéro de la console doit être une méthode dédiée : `#resetSkillPreview(context)`. Elle réapplique les valeurs idle.
-
----
-
-## 5. Plan de travail détaillé
-
-### Étape 1 : Ajouter `dicePreviewAfter` au contexte de chaque skill
-
-Fichier : `module/applications/sheets/character-sheet.mjs` — dans `#prepareSkills()`
-
-Après le calcul de `dicePreview` (pool actuel), ajouter le pool prévu après le prochain achat :
-
-```js
-const dicePreviewAfter = getPositiveDicePoolPreview({
-  characteristicValue,
-  skillRank: purchaseState.nextRank,
-})
-skillEnriched.dicePreviewAfter = dicePreviewAfter
-```
-
-Puis inclure dans l'objet retourné :
-
-```js
-dicePreview,
-dicePreviewAfter,
-```
-
-### Étape 2 : Créer le builder de preview console
-
-Fichier : `module/applications/sheets/character-sheet.mjs`
-
-Ajouter une méthode privée statique :
-
-```js
 /**
  * Build a console preview object for the given skill.
  * @param {object} skill - Enriched skill data from #prepareSkills
- * @param {object} progression - context.progression
+ * @param {object} _progression - Ignored in simplified version
  * @returns {object} Preview data for the console
  */
-static #buildSkillPreview(skill, progression) {
-  const { nextCost, nextRank, canPurchase, isFreePurchase, purchaseReason, dicePreview, dicePreviewAfter } = skill
-  const rank = skill.rank.value
-  const available = progression.experience.available
+static _buildSkillPreview(skill, _progression) {
+  const { nextCost, purchaseReason } = skill
+  const mapping = this.#PURCHASE_REASON_TO_STATUS[purchaseReason]
 
-  // ... construire statusKey, consoleCssClass, selectedCost, summaryParts, dicePreviewAfter
-}
-```
+  if (!mapping) {
+    // Fallback vers état neutre
+    return this._buildIdlePreview()
+  }
 
-Détail par état :
-
-**FREE_RANK_AVAILABLE :**
-```js
-statusKey = 'SKILL.XP_CONSOLE.STATUS.FREE_RANK'
-selectedCost = '0 XP'
-consoleCssClass = 'is-free'
-summaryParts = [
-  label,
-  `rank ${rank} → ${nextRank}`,
-  freeRank.name,       // source
-  '0 XP',
-]
-```
-
-**AFFORDABLE :**
-```js
-statusKey = 'SKILL.XP_CONSOLE.STATUS.AFFORDABLE'
-selectedCost = `${nextCost} XP`
-consoleCssClass = 'is-affordable'
-summaryParts = [
-  label,
-  `${nextCost} XP`,
-  `${available - nextCost} XP remaining`,
-  `Pool ${formatDice(dicePreview)} → ${formatDice(dicePreviewAfter)}`,
-]
-```
-
-**INSUFFICIENT_XP :**
-```js
-statusKey = 'SKILL.XP_CONSOLE.STATUS.INSUFFICIENT_XP'
-selectedCost = `${nextCost} XP`
-consoleCssClass = 'is-locked'
-summaryParts = [
-  label,
-  `${nextCost} XP required`,
-  `${available} XP available`,
-  `shortfall ${nextCost - available} XP`,
-]
-```
-
-**MAX_RANK :**
-```js
-statusKey = 'SKILL.XP_CONSOLE.STATUS.MAX_RANK'
-selectedCost = '—'
-consoleCssClass = 'is-error'
-summaryParts = [ label, 'Maximum rank reached (5/5)' ]
-```
-
-Ajouter un helper `#formatDicePreview(dice)` pour produire une chaîne lisible :
-
-```js
-static #formatDicePreview(dice) {
-  const a = dice?.ability ?? 0
-  const p = dice?.proficiency ?? 0
-  const parts = []
-  if (p > 0) parts.push(`${p}P`)
-  if (a > 0) parts.push(`${a}A`)
-  return parts.join('+') || '0'
-}
-```
-
-### Étape 3 : Créer la méthode de reset idle
-
-Fichier : `module/applications/sheets/character-sheet.mjs`
-
-```js
-static #buildIdlePreview() {
   return {
-    statusKey: 'SKILL.XP_CONSOLE.STATUS.IDLE',
-    consoleCssClass: '',
-    selectedCost: '—',
-    summaryKey: 'SKILL.XP_CONSOLE.PLACEHOLDER',
-    summaryParts: null,
-    dicePreviewAfter: null,
+    statusKey: mapping.statusKey,
+    consoleCssClass: mapping.consoleCssClass,
+    selectedCost: mapping.getCost(nextCost),
+    summaryText: null,
   }
 }
 ```
 
-### Étape 4 : Brancher les listeners hover/focus dans `_onRender`
+**À retirer de l'ancienne implémentation** :
+- Toute la logique de `summaryText`
+- Les références à `dicePreview`, `dicePreviewAfter`, `freeRank`
+- Les références à `#getSkillRankCost()` (sera supprimé)
+- Les références à `#getSkillPurchaseReason()` (sera supprimé)
+- Les références à `#getAvailableFreeRankForSkill()` (sera supprimé)
+- Les références à `_formatDicePreview()` (si plus utilisé)
 
-**Important :** Les `actions` ApplicationV2 (`data-action`) ne fonctionnent **que pour les clics**. Pour le hover et le focus clavier, il faut utiliser des listeners DOM dans `_onRender`.
+### Étape 3 : Simplifier/supprimer `_formatDicePreview()`
 
-Fichier : `module/applications/sheets/character-sheet.mjs`
+**Fichier** : `module/applications/sheets/character-sheet.mjs`
 
-**1. Ajouter les listeners dans `_onRender` :**
+**Action** :
+1. Vérifier si `_formatDicePreview()` est utilisé ailleurs que dans l'ancienne implémentation de `_buildSkillPreview()`
+2. Si **plus utilisé** : le supprimer
+3. Si **utilisé ailleurs** : le garder tel quel
 
+### Étape 4 : Vérifier `_buildIdlePreview()`
+
+**Fichier** : `module/applications/sheets/character-sheet.mjs`
+
+**Action** : Vérifier que `_buildIdlePreview()` retourne bien :
 ```js
-async _onRender(context, options) {
-  await super._onRender(context, options)
-
-  // Souris : mouseover/mouseout BUBBLENT → délégation possible
-  this.element.addEventListener('mouseover', this.#onHoverAction)
-  this.element.addEventListener('mouseout', this.#onHoverOutAction)
-
-  // Clavier : focusin/focusout BUBBLENT → délégation possible
-  this.element.addEventListener('focusin', this.#onHoverAction)
-  this.element.addEventListener('focusout', this.#onHoverOutAction)
+{
+  statusKey: 'SKILL.XP_CONSOLE.STATUS.IDLE',
+  consoleCssClass: '',
+  selectedCost: '—',
+  summaryText: null,
 }
 ```
 
-**Note :** Ne pas utiliser `mouseenter`/`mouseleave` ni `focus`/`blur` — ils **ne bubblent pas** et ne fonctionnent pas avec la délégation.
+### Étape 5 : Mettre à jour les tests
 
-**2. Créer les handlers délégués :**
+**Fichier** : `tests/applications/sheets/character-sheet-skills.test.mjs`
 
+**Tests existants pour `_buildSkillPreview()`** (lignes 648-744) :
+- Vérifient `statusKey`, `consoleCssClass`, `selectedCost` ✅
+- Vérifient aussi `summaryText` ❌ (à retirer)
+
+**Modifications nécessaires** :
+1. Retirer les assertions sur `summaryText`
+2. Garder les assertions sur `statusKey`, `consoleCssClass`, `selectedCost`
+
+**Exemple de test simplifié** :
 ```js
-#onHoverAction = async (event) => {
-  const target = event.target.closest('[data-hover-action]')
-  if (!target || !this.element.contains(target)) return
-
-  const action = target.dataset.hoverAction
-
-  switch (action) {
-    case 'skillPreview':
-      return this.#handleSkillPreviewEnter(target)
-    // ... autres actions hover
-  }
-}
-
-#onHoverOutAction = async (event) => {
-  const target = event.target.closest('[data-hover-action]')
-  if (!target || !this.element.contains(target)) return
-
-  const action = target.dataset.hoverAction
-
-  switch (action) {
-    case 'skillPreview':
-      return this.#handleSkillPreviewLeave(target, event)
-    // ... autres actions hover
-  }
-}
-```
-
-**3. Créer les handlers spécifiques à la preview skill :**
-
-```js
-#handleSkillPreviewEnter(target) {
-  const skillId = target.dataset.skillId
-  if (!skillId) return
-  this.#updateConsolePreview(skillId)
-}
-
-#handleSkillPreviewLeave(target, event) {
-  // Anti-clignotement : ne pas reset si on entre dans une autre skill
-  const related = event.relatedTarget
-  if (related) {
-    const enteringSkill = related.closest('[data-hover-action="skillPreview"]')
-    if (enteringSkill) return
-  }
-  this.#resetConsolePreview()
-}
-```
-
-**Méthodes de mise à jour UI (déjà existantes) :**
-
-```js
-#updateConsolePreview(skillId) {
-  const skill = this.#findSkillInContext(skillId)
-  if (!skill) return
-
-  const preview = CharacterSheet._buildSkillPreview(skill, this._context.progression)
-  this.#applyConsolePreview(preview)
-}
-
-#resetConsolePreview() {
-  this.#_selectedSkillId = null
-  const preview = CharacterSheet._buildIdlePreview()
-  this.#applyConsolePreview(preview)
-}
-
-#applyConsolePreview(preview) {
-  const consoleEl = this.element.querySelector('[data-skill-purchase-console]')
-  if (!consoleEl) return
-
-  const statusEl = consoleEl.querySelector('[data-xp-console-status]')
-  if (statusEl) statusEl.textContent = game.i18n.localize(preview.statusKey)
-
-  const costEl = consoleEl.querySelector('[data-selected-skill-cost]')
-  if (costEl) costEl.textContent = preview.selectedCost
-
-  const summaryEl = consoleEl.querySelector('[data-selected-skill-summary]')
-  if (summaryEl) {
-    summaryEl.textContent = preview.summaryText ?? game.i18n.localize('SKILL.XP_CONSOLE.PLACEHOLDER')
+it('returns FREE_RANK_AVAILABLE state', () => {
+  const skill = {
+    purchaseReason: 'FREE_RANK_AVAILABLE',
+    nextCost: 0,
   }
 
-  consoleEl.className = consoleEl.className
-    .split(' ')
-    .filter((c) => !c.startsWith('is-'))
-    .concat(preview.consoleCssClass)
-    .filter(Boolean)
-    .join(' ')
-}
+  const preview = CharacterSheet._buildSkillPreview(skill, baseProgression)
+
+  expect(preview.statusKey).toBe('SKILL.XP_CONSOLE.STATUS.FREE_RANK')
+  expect(preview.consoleCssClass).toBe('is-free')
+  expect(preview.selectedCost).toBe('0 XP')
+  // Plus de vérification sur summaryText
+})
 ```
 
-Comportement :
-- `mouseover` sur une ligne → affiche la preview
-- `mouseout` d'une ligne → reset à idle (sauf si on entre dans une autre skill)
-- `focusin` (Tab) → affiche la preview
-- `focusout` (Shift+Tab ou Tab vers autre) → reset
+**Tests de `_formatDicePreview()`** (lignes 615-636) :
+- Si `_formatDicePreview()` est supprimé : supprimer ces tests
+- Si `_formatDicePreview()` est gardé : garder ces tests
 
-### Étape 5 : Mettre à jour le template `character-skill.hbs`
+---
 
-Fichier : `templates/sheets/partials/character-skill.hbs`
+## 5. Architecture après simplification
 
-Ajouter `tabindex="0"` et `data-hover-action="skillPreview"` (au lieu de `data-action` qui ne marche pas pour hover) :
+### Flux de données
+```
+1. #prepareSkills()
+   ↓ appelle getSkillPurchaseState() (source de vérité)
+   ↓ enrichit chaque skill avec : purchaseReason, nextCost, isFreePurchase, canPurchase
 
-```html
-<div class="skill {{ui.lineCssClass}}"
-     data-skill-id="{{id}}"
-     ...
-     tabindex="0"
-     data-hover-action="skillPreview">
+2. Hover/focus sur une ligne .skill
+   ↓ déclenche #onHoverAction
+   ↓ appelle #handleSkillPreviewEnter(skillId)
+   ↓ appelle #updateConsolePreview(skillId)
+
+3. #updateConsolePreview(skillId)
+   ↓ appelle #findSkillInContext(skillId) → retrouve la skill enrichie
+   ↓ appelle CharacterSheet._buildSkillPreview(skill, progression)
+   ↓ appelle #applyConsolePreview(preview)
+
+4. _buildSkillPreview(skill)
+   ↓ MAPPING DIRECT : skill.purchaseReason → { statusKey, consoleCssClass, selectedCost }
+   ↓ PAS DE CALCUL COMPLEXE
+   ↓ PAS DE SUMMARY TEXTE
+
+5. #applyConsolePreview(preview)
+   ↓ met à jour le DOM : status, cost, CSS class
 ```
 
-- `tabindex="0"` permet de focus l'élément avec Tab
-- `data-hover-action` est utilisé par les listeners délégués dans `_onRender`
-- **Ne pas utiliser** `data-action` pour du hover — les actions ApplicationV2 ne fonctionnent que pour les clics.
-
-Fichier : `templates/sheets/actor/skills.hbs`
-
-Aucune modification nécessaire. La structure actuelle avec les `data-xp-console-*` est prête.
-
-### Étape 6 : Ajouter les clés i18n
-
-Fichiers : `lang/en.json` et `lang/fr.json`
-
-Ajouter dans `SKILL.XP_CONSOLE.STATUS.*` :
-
-| Clé i18n | EN | FR |
-|---|---|---|
-| `SKILL.XP_CONSOLE.STATUS.FREE_RANK` | Free rank available | Rang gratuit disponible |
-| `SKILL.XP_CONSOLE.STATUS.AFFORDABLE` | Purchase possible | Achat possible |
-| `SKILL.XP_CONSOLE.STATUS.INSUFFICIENT_XP` | Insufficient XP | XP insuffisants |
-| `SKILL.XP_CONSOLE.STATUS.MAX_RANK` | Maximum rank | Rang maximum |
-| `SKILL.XP_CONSOLE.SUMMARY.FREE` | {label} rank {current} → {next} · 0 XP | {label} rang {current} → {next} · 0 XP |
-| `SKILL.XP_CONSOLE.SUMMARY.AFFORDABLE` | {label} · {cost} XP · {remaining} XP left · Pool {pool} → {poolAfter} | {label} · {cost} XP · {remaining} XP restants · Pool {pool} → {poolAfter} |
-| `SKILL.XP_CONSOLE.SUMMARY.INSUFFICIENT` | {label} · {cost} XP needed · {available} XP available · shortfall {shortfall} XP | {label} · {cost} XP requis · {available} XP disponibles · manque {shortfall} XP |
-| `SKILL.XP_CONSOLE.SUMMARY.MAX` | {label} · Maximum rank ({max}/{max}) | {label} · Rang maximum ({max}/{max}) |
-| `SKILL.XP_CONSOLE.SUMMARY.DICE_POOL` | {proficiency}P+{ability}A | {proficiency}P+{ability}A |
-| `SKILL.XP_CONSOLE.XP_REMAINING` | {xp} XP remaining | {xp} XP restants |
-
-### Étape 7 : Tests unitaires
-
-Fichier : `tests/applications/sheets/character-sheet-skills.test.mjs`
-
-Ajouter des tests pour :
-
-```js
-it('buildSkillPreview returns FREE_RANK_AVAILABLE state with correct fields')
-it('buildSkillPreview returns AFFORDABLE state with correct fields')
-it('buildSkillPreview returns INSUFFICIENT_XP state with correct fields')
-it('buildSkillPreview returns MAX_RANK state with correct fields')
-it('buildIdlePreview returns neutral state')
-it('formatDicePreview formats proficiency+ability correctly')
-it('formatDicePreview returns "0" for empty pool')
-it('formatDicePreview returns only proficiency when ability is 0')
-it('dicePreviewAfter is computed for each skill')
-it('dicePreviewAfter differs from dicePreview when nextRank > current rank')
-```
-
-Ces tests n'ont pas besoin de Foundry DOM. Ils testent les méthodes statiques avec des objets skill mockés.
-
-### Étape 8 : Vérification manuelle
-
-1. Personnage neuf (100 XP, rangs gratuits dispo) :
-   - Survoler une compétence carrière rang 0 → console affiche "Gratuit", coût "0 XP", source carrière
-   - Survoler une compétence hors carrière rang 0 → console affiche coût
-   - Survoler une compétence au max → console affiche "Rang maximum"
-
-2. Personnage sans XP :
-   - Survoler une compétence avec coût > 0 → console affiche "XP insuffisants", coût, manque
-
-3. Personnage avec XP suffisants :
-   - Survoler une compétence achetable → console affiche coût, XP restants, pool avant/après
-
-4. Sortie de survol :
-   - Quitter la ligne → retour à l'état neutre
-
-5. Accessibilité clavier :
-   - Tab sur une ligne → console se met à jour
-   - Tab hors de la ligne → retour neutre
-
-6. Changement de langue FR → EN :
-   - Tous les textes de preview changent
+### Points clés
+- **Source de vérité unique** : `utils/skill-costs.mjs#getSkillPurchaseState()`
+- **Pas de duplication** : toutes les données sont enrichies une seule fois dans `#prepareSkills()`
+- **Preview = mapping simple** : pas de logique métier dans la preview
+- **Listeners existent déjà** : rien à ajouter sur ce plan
 
 ---
 
 ## 6. Fichiers modifiés
 
 | Fichier | Modification |
-|---|---|---|
-| `module/applications/sheets/character-sheet.mjs` | Ajout `dicePreviewAfter` dans `#prepareSkills()`, méthodes `_buildSkillPreview`, `_buildIdlePreview`, `_formatDicePreview`, `#findSkillInContext`, `#applyConsolePreview`, `#updateConsolePreview`, `#resetConsolePreview`, listeners hover/focus dans `_onRender` et handlers `#handleSkillPreviewEnter`/`#handleSkillPreviewLeave` (utilise `data-hover-action`, pas `data-action`) |
-| `templates/sheets/partials/character-skill.hbs` | Ajout `tabindex="0"` et `data-hover-action="skillPreview"` (au lieu de `data-action` qui ne fonctionne pas pour hover) |
-| `lang/en.json` | Nouvelles clés `SKILL.XP_CONSOLE.STATUS.*`, `SKILL.XP_CONSOLE.SUMMARY.*`, `SKILL.XP_CONSOLE.XP_REMAINING` |
-| `lang/fr.json` | Traductions françaises correspondantes |
-| `tests/applications/sheets/character-sheet-skills.test.mjs` | Tests sur `_buildSkillPreview`, `_buildIdlePreview`, `_formatDicePreview`, `dicePreviewAfter` |
-
-Fichiers **non modifiés** (aucun changement nécessaire) :
-- `templates/sheets/actor/skills.hbs`
-- `styles/actor.less`
+|---------|--------------|
+| `documentation/spec/character-sheet/spec-console-transaction-xp.md` | Mise à jour §9 — Prévisualisation au survol (version simplifiée) |
+| `documentation/plan/character-sheet/console-xp/US3-plan-preview-survol-competence.md` | Réécriture complète — Approche simplifiée |
+| `module/applications/sheets/character-sheet.mjs` | Suppression code dupliqué/buggé + simplification `_buildSkillPreview()` |
+| `tests/applications/sheets/character-sheet-skills.test.mjs` | Mise à jour tests — retrait assertions sur `summaryText` |
 
 ---
 
-## 7. Tests et validation
+## 7. Ordre de commit suggéré
+
+1. **Mise à jour documentation** :
+   - Spécification §9 simplifiée
+   - Plan US3 réécrit
+
+2. **Suppression code dupliqué/buggé** :
+   - Supprimer `#getSkillRankCost()`
+   - Supprimer `#getSkillPurchaseReason()`
+   - Supprimer `#getAvailableFreeRankForSkill()`
+   - Vérifier que rien ne casse
+
+3. **Simplification `_buildSkillPreview()`** :
+   - Ajouter mapping constant `#PURCHASE_REASON_TO_STATUS`
+   - Simplifier la méthode
+   - Retirer la logique de `summaryText`
+
+4. **Nettoyage `_formatDicePreview()`** (si nécessaire) :
+   - Si plus utilisé : le supprimer
+   - Sinon : le garder
+
+5. **Mise à jour tests** :
+   - Retirer assertions sur `summaryText`
+   - Garder assertions sur `statusKey`, `consoleCssClass`, `selectedCost`
+   - Supprimer tests de `_formatDicePreview()` si nécessaire
+
+6. **Vérification finale** :
+   - Lancer les tests
+   - Vérifier que les listeners existent toujours
+   - Vérifier que le flux fonctionne
+
+---
+
+## 8. Validation
 
 ```bash
-# Tests unitaires
+# Lancer les tests
 npx vitest run tests/applications/sheets/character-sheet-skills.test.mjs
 
-# Build LESS (selon setup)
-npm run build:less  # ou équivalent
+# Vérifier qu'il n'y a pas d'erreurs TypeScript (si applicable)
+# npm run typecheck
+
+# Vérifier qu'il n'y a pas d'erreurs LESS
+# npm run build:less
 ```
 
 ---
 
-## 8. Risques
+## 9. Risques et mitigations
 
 | Risque | Impact | Mitigation |
-|---|---|---|
-| `this._context` non disponible dans `_onRender` | La preview ne peut pas lire les skills | Les méthodes de preview ne dépendent pas du contexte ; on peut stocker le contexte ou le retrouver par re-calcul |
-| Les listeners ajoutés dans `_onRender` s'accumulent si le DOM n'est pas détruit | Multiples events par render | ApplicationV2 détruit l'élément. Vérifier que `_onRender` reçoit bien un élément frais |
-| `data-skill-id` vs `data-skill` en double sur la ligne | Incohérence de lecture | Vérifier que les deux attributs existent avec la même valeur ; sinon unifier vers `data-skill-id` |
-| Performance si beaucoup de skills | Lag au survol rapide | Le calcul de preview est léger (pas de DOM, pas de Foundry). La mise à jour DOM est 3-4 assignations |
-| `focusout` se déclenche entre deux skills | Console clignote | Utiliser `event.relatedTarget` pour détecter le passage d'une skill à l'autre |
-| i18n des chaînes de summary composées | Mauvaise traduction | Utiliser `game.i18n.format()` avec des paramètres pour chaque clé |
+|--------|--------|------------|
+| Du code utilise encore les méthodes supprimées | Erreur JS | Vérifier les références avant suppression |
+| `#findSkillInContext()` est encore utile | Ne pas le supprimer | Ce n'est pas dans la liste des suppressions — il sert à retrouver la skill par son id dans le contexte |
+| Tests échouent après simplification | CI casse | Mettre à jour les tests en même temps que le code |
+| `_formatDicePreview()` est utilisé ailleurs | Erreur après suppression | Vérifier les références avant suppression |
 
 ---
 
-## 9. Ordre de commit suggéré
+## 10. Résultat attendu
 
-1. Ajout de `dicePreviewAfter` dans `#prepareSkills()` + test associé
-2. Méthodes `_buildSkillPreview`, `_buildIdlePreview`, `_formatDicePreview`, `#findSkillInContext` + tests unitaires
-3. Méthode `#applyConsolePreview` + `#updateConsolePreview` / `#resetConsolePreview`
-4. Clés i18n dans `en.json` et `fr.json`
-5. Listeners hover/focus dans `_onRender` + handlers `#handleSkillPreviewEnter`/`#handleSkillPreviewLeave` + `data-hover-action="skillPreview"` + `tabindex="0"` dans le template
-   - **Important :** Ne pas utiliser `data-action` pour le hover — les actions ApplicationV2 ne fonctionnent que pour les clics.
-6. Test manuel complet (tous les états, FR/EN, souris, clavier avec Tab)
+Après implémentation :
+- ✅ Plus de code dupliqué
+- ✅ Plus de bug sur le coût des compétences non-carrière
+- ✅ Preview = mapping simple de `purchaseReason` et `nextCost`
+- ✅ Source de vérité unique : `utils/skill-costs.mjs#getSkillPurchaseState()`
+- ✅ Tous les tests passent
+- ✅ Listeners existent toujours et fonctionnent
 
----
-
-## 10. Points de vigilance
-
-- US3 ne doit **jamais muter** les données de l'acteur. Si un handler de sélection déclenche une écriture, c'est un bug.
-- La preview du pool de dés après achat est un calcul instantané (`getPositiveDicePoolPreview`), pas une simulation de transaction.
-- **Règle critique sur les interactions UI :**
-  - Pour les **clics** : utiliser `data-action` + `DEFAULT_OPTIONS.actions` (pattern ApplicationV2)
-  - Pour les **hover/survol** (`mouseenter`/`mouseleave`) : utiliser **listeners DOM** dans `_onRender` avec `data-hover-action` — les actions ApplicationV2 ne fonctionnent **pas** pour les événements hover.
-  - Pour l'**accessibilité clavier** : ajouter `tabindex="0"` et utiliser `focusin`/`focusout` (qui bubblent, contrairement à `focus`/`blur`)
-- L'interaction est en hover, pas en clic toggle. `mouseover`/`focusin` → affiche la preview ; `mouseout`/`focusout` → retour à idle.
+La preview est **simplifiée**, **maintenable**, et **cohérente** avec le reste du code.
