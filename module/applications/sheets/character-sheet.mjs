@@ -453,6 +453,11 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
         const dicePreview = getPositiveDicePoolPreview(characteristicValueSkillRank)
         // Attach dicePreview to skillEnriched BEFORE preparing ranks
         skillEnriched.dicePreview = dicePreview
+        const markerState = freeRank.isCareer && freeRank.isSpecialization ? 'both'
+          : freeRank.isCareer ? 'career'
+          : freeRank.isSpecialization ? 'specialization'
+          : 'none'
+
         return {
           pips: this._prepareSkillRanks(skillEnriched),
           freeRank,
@@ -463,6 +468,24 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
           purchaseReason: purchaseState.reason,
           dicePreview,
           ...skillEnriched,
+          ui: {
+            markerState,
+            increaseState: purchaseState.reason,
+            increaseIcon: purchaseState.reason === 'FREE_RANK_AVAILABLE' ? 'free'
+              : purchaseState.reason === 'AFFORDABLE' ? 'buy'
+              : purchaseState.reason === 'INSUFFICIENT_XP' ? 'buy-blocked'
+              : null,
+            decreaseState: 'pending',
+            decreaseIcon: 'sell',
+            lineCssClass: [
+              freeRank.isCareer ? 'is-career' : '',
+              freeRank.isSpecialization ? 'is-specialization' : '',
+              purchaseState.reason === 'FREE_RANK_AVAILABLE' ? 'is-free' : '',
+              purchaseState.reason === 'AFFORDABLE' ? 'is-affordable' : '',
+              purchaseState.reason === 'INSUFFICIENT_XP' ? 'is-blocked' : '',
+              purchaseState.reason === 'MAX_RANK' ? 'is-max' : '',
+            ].filter(Boolean).join(' '),
+          },
         }
       })
 
