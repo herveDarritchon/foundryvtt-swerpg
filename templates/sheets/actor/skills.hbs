@@ -1,72 +1,69 @@
 <section class="tab secondary scrollable {{tabs.skills.id}} flexcol {{tabs.skills.cssClass}} scrollable"
          data-tab="{{tabs.skills.id}}" data-group="{{tabs.skills.group}}">
 
-    {{#if incomplete.skills}}
     <section class="xp-console" data-skill-purchase-console>
         <header class="xp-console__header">
-            <span class="xp-console__title">XP Transaction Console</span>
-            <span class="xp-console__status" data-xp-console-status>Awaiting selection</span>
+            <span class="xp-console__title">{{localize "SKILL.XP_CONSOLE.TITLE"}}</span>
+            <span class="xp-console__status" data-xp-console-status>{{localize "SKILL.XP_CONSOLE.STATUS.IDLE"}}</span>
         </header>
 
         <div class="xp-console__stats">
             <div class="xp-console__stat">
-                <span class="xp-console__label">Available</span>
+                <span class="xp-console__label">{{localize "SKILL.XP_CONSOLE.LABEL.AVAILABLE"}}</span>
                 <span class="xp-console__value" data-xp-available>{{progression.experience.available}}</span>
             </div>
 
             <div class="xp-console__stat">
-                <span class="xp-console__label">Spent</span>
+                <span class="xp-console__label">{{localize "SKILL.XP_CONSOLE.LABEL.SPENT"}}</span>
                 <span class="xp-console__value" data-xp-spent>{{progression.experience.total}}</span>
             </div>
 
             <div class="xp-console__stat">
-                <span class="xp-console__label">Career Free</span>
+                <span class="xp-console__label">{{localize "SKILL.XP_CONSOLE.LABEL.CAREER_FREE"}}</span>
                 <span class="xp-console__value" data-free-career-skills>{{progression.freeSkillRanks.career.available}}</span>
             </div>
 
             <div class="xp-console__stat">
-                <span class="xp-console__label">Specialty Free</span>
+                <span class="xp-console__label">{{localize "SKILL.XP_CONSOLE.LABEL.SPECIALIZATION_FREE"}}</span>
                 <span class="xp-console__value" data-free-specialization-skills>{{progression.freeSkillRanks.specialization.available}}</span>
             </div>
 
             <div class="xp-console__stat xp-console__stat--selected">
-                <span class="xp-console__label">Selected Cost</span>
+                <span class="xp-console__label">{{localize "SKILL.XP_CONSOLE.LABEL.SELECTED_COST"}}</span>
                 <span class="xp-console__value" data-selected-skill-cost>—</span>
             </div>
         </div>
 
         <div class="xp-console__selection" data-selected-skill-summary>
             <span class="xp-console__selection-placeholder">
-                Select a skill to preview purchase cost.
+                {{localize "SKILL.XP_CONSOLE.PLACEHOLDER"}}
             </span>
         </div>
     </section>
-    {{/if}}
 
     <div class="skills-wrapper">
 
         <section class="general-skills">
-            <h4>General Skills</h4>
+            <h4>{{localize "SKILL.CATEGORY.EXPLORATION.label"}}</h4>
             {{#each skills.general as |skill|}}
                 {{> "systems/swerpg/templates/sheets/partials/character-skill.hbs" skill}}
             {{/each}}
         </section>
 
         <section class="non-general-skills">
-            <div class="combat-skills">
-                <h4>Combat Skills</h4>
+            <div class="knowledge-skills">
+                <h4>{{localize "SKILL.CATEGORY.KNOWLEDGE.label"}}</h4>
                 {{#each skills.combat as |skill|}}
                     {{> "systems/swerpg/templates/sheets/partials/character-skill.hbs" skill}}
                 {{/each}}
             </div>
-            <div class="knowledge-skills">
-                <h4>Lore Skills</h4>
+            <div class="combat-skills">
+                <h4>{{localize "SKILL.CATEGORY.SOCIAL.label"}}</h4>
                 {{#each skills.knowledge as |skill|}}
                     {{> "systems/swerpg/templates/sheets/partials/character-skill.hbs" skill}}
                 {{/each}}
             </div>
         </section>
-
 
     </div>
 </section>

@@ -761,7 +761,21 @@
     "RollFlavor": "{name} rolls a {skill} check",
     "RollTitle": "[{name}] {skill} Skill Check",
     "TooltipCheck": "[({a1} + {a2}) / 4] + Bonus + Enchantment",
-    "TooltipPassive": "12 + Score"
+    "TooltipPassive": "12 + Score",
+    "XP_CONSOLE": {
+      "TITLE": "XP Transaction Console",
+      "STATUS": {
+        "IDLE": "Awaiting selection"
+      },
+      "LABEL": {
+        "AVAILABLE": "Available",
+        "SPENT": "Spent",
+        "CAREER_FREE": "Career Free",
+        "SPECIALIZATION_FREE": "Specialty Free",
+        "SELECTED_COST": "Selected Cost"
+      },
+      "PLACEHOLDER": "Select a skill to preview purchase cost."
+    }
   },
   "SKILLS": {
     "Athletics": "Athletics",
