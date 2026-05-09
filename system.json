@@ -38,85 +38,8 @@
   "esmodules": ["swerpg.mjs"],
   "styles": ["styles/swerpg.css"],
   "scripts": ["./vendors/jszip.min.js", "./vendors/xml2js.min.js"],
-  "packs": [
-    {
-      "name": "careers",
-      "label": "Careers",
-      "path": "packs/careers",
-      "type": "Item"
-    },
-    {
-      "name": "species",
-      "label": "Species",
-      "path": "packs/species",
-      "type": "Item"
-    },
-    {
-      "name": "specializations",
-      "label": "Specializations",
-      "path": "packs/specializations",
-      "type": "Item"
-    },
-    {
-      "name": "obligations",
-      "label": "Obligations",
-      "path": "packs/obligations",
-      "type": "Item"
-    },
-    {
-      "name": "talents",
-      "label": "Talents",
-      "path": "packs/talents",
-      "type": "Item"
-    },
-    {
-      "name": "armors",
-      "label": "Armors",
-      "path": "packs/armors",
-      "type": "Item"
-    },
-    {
-      "name": "gears",
-      "label": "Gears",
-      "path": "packs/gears",
-      "type": "Item"
-    },
-    {
-      "name": "weapons",
-      "label": "Weapons",
-      "path": "packs/weapons",
-      "type": "Item"
-    },
-    {
-      "name": "pregens",
-      "label": "Pregenerated Heroes",
-      "path": "packs/pregens",
-      "type": "Actor"
-    }
-  ],
-  "packFolders": [
-    {
-      "name": "SWERPG System",
-      "color": "#031d59",
-      "folders": [
-        {
-          "name": "Actors Options",
-          "color": "#032f96",
-          "packs": ["species", "careers", "specializations", "obligations", "talents"]
-        },
-        {
-          "name": "Equipments",
-          "color": "#360c55",
-          "packs": ["armors", "gear", "weapons"]
-        },
-        {
-          "name": "Actors",
-          "color": "#380d05",
-          "packs": ["pregens"]
-        }
-      ]
-    }
-  ],
+  "packs": [],
+  "packFolders": [],
   "languages": [
     {
       "lang": "en",
