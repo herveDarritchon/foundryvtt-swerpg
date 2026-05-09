@@ -320,34 +320,6 @@
 .swerpg .tags:empty {
   display: none;
 }
-.swerpg .tag-restriction {
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-.swerpg .tag-restriction[data-restriction-level="restricted"] {
-  border-color: orange;
-  color: orange;
-}
-.swerpg .tag-restriction[data-restriction-level="military"] {
-  border-color: darkred;
-  color: #ff4444;
-}
-.swerpg .tag-restriction[data-restriction-level="illegal"] {
-  border-color: #000;
-  color: #ff4444;
-  background: rgba(0, 0, 0, 0.3);
-}
-
-/* Restriction badge in list contexts (inventory, sidebar) */
-.swerpg .line-item .tags .tag-restriction .fa-lock {
-  margin-right: 2px;
-  font-size: 9px;
-}
-.swerpg .line-item--compact .tags .tag-restriction {
-  padding: 0 3px;
-  font-size: 9px;
-}
 .swerpg .tag-icon {
   flex: none;
   font-size: 10px;
@@ -2152,20 +2124,40 @@ input[type='range'] {
 }
 .swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill {
   display: grid;
-  grid-template-columns: minmax(120px, 1fr) 26px 36px 36px 26px 80px;
+  grid-template-columns: minmax(120px, 1fr) 28px 28px 28px 36px 36px 80px 1fr;
   align-items: center;
   min-height: 1.75rem;
   height: auto;
   padding: 0.1rem 0.15rem;
 }
-.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill .name {
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill.is-free .skill__action--increase {
+  color: #00ff99;
+}
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill.is-affordable .skill__action--increase {
+  color: #c9b36a;
+}
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill.is-blocked .skill__action--increase {
+  opacity: 0.5;
+}
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill.is-max .skill__action--increase {
+  color: #9bb0c2;
+}
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill.is-career .skill-marker--career {
+  color: #46c7ff;
+  border-color: #46c7ff;
+}
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill.is-specialization .skill-marker--specialization {
+  color: #00d49a;
+  border-color: #00d49a;
+}
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill .skill__info {
   display: flex;
   align-items: center;
   min-width: 0;
   overflow: hidden;
   gap: 0.2rem;
 }
-.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill .name .label {
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill .skill__info .skill__label {
   flex: 0 0 auto;
   font-size: var(--font-size-12);
   font-weight: bold;
@@ -2174,18 +2166,18 @@ input[type='range'] {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill .name .abbreviation {
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill .skill__info .skill__characteristic {
   flex-shrink: 0;
   font-size: var(--font-size-10);
   color: #9bb0c2;
   font-style: italic;
 }
-.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill .skill-tags {
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill .skill__marker {
   display: flex;
   justify-content: center;
   gap: 0.15rem;
 }
-.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill .skill-tags .skill-tag {
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill .skill__marker .skill-marker {
   display: inline-flex;
   justify-content: center;
   align-items: center;
@@ -2196,41 +2188,48 @@ input[type='range'] {
   font-size: 0.6rem;
   line-height: 1;
   font-weight: bold;
-}
-.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill .skill-tags .skill-tag--career {
-  color: #46c7ff;
-}
-.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill .skill-tags .skill-tag--specialization {
-  color: #00d49a;
-}
-.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill .skill-rank {
-  text-align: center;
   color: #9bb0c2;
+}
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill .skill__action {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 0;
+}
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill .skill__action img {
+  width: 14px;
+  height: 14px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill .skill__action .increase-badge--max {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 1.1rem;
+  height: 1.1rem;
+  border: 1px solid #9bb0c2;
+  border-radius: 2px;
+  font-size: 0.6rem;
+  font-weight: bold;
+  color: #9bb0c2;
+}
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill .skill__action--decrease img.is-disabled {
+  opacity: 0.25;
+  filter: grayscale(1);
+}
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill .skill__rank {
+  text-align: center;
   font-size: 0.65rem;
-}
-.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill .skill-rank .skill-rank-label {
-  display: block;
-  font-size: 0.55rem;
-  text-transform: uppercase;
-}
-.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill .skill-rank .skill-rank-value {
+  color: #9bb0c2;
   font-weight: bold;
 }
-.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill .skill-cost {
-  text-align: right;
-  font-size: 0.65rem;
-  color: #c9b36a;
-}
-.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill .skill-cost .skill-cost--free {
-  color: #00ff99;
-  font-weight: bold;
-}
-.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill .skill-dice-preview {
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill .skill__dice-preview {
   display: flex;
   justify-content: center;
   gap: 0.2rem;
 }
-.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill .skill-dice-preview .die {
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill .skill__dice-preview .die {
   width: 16px;
   height: 16px;
   display: inline-block;
@@ -2238,10 +2237,10 @@ input[type='range'] {
   background-repeat: no-repeat;
   background-position: center;
 }
-.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill .skill-dice-preview .die--ability {
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill .skill__dice-preview .die--ability {
   background-image: url('/icons/svg/d6-grey.svg');
 }
-.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill .skill-dice-preview .die--proficiency {
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill .skill__dice-preview .die--proficiency {
   background-image: url('/icons/svg/d12-grey.svg');
 }
 .swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill .pips {
