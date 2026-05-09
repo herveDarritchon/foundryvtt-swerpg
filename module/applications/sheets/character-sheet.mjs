@@ -253,26 +253,6 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
   }
 
   /**
-   * Find a skill in the current render context by its ID.
-   * Uses the already-enriched skills from #prepareSkills() (source de vérité).
-   * @param {string} skillId
-   * @returns {object|null}
-   */
-  #findSkillInContext(skillId) {
-    if (!skillId) return null
-
-    const skillsByType = this._context?.skills
-    if (!skillsByType) return null
-
-    for (const skills of Object.values(skillsByType)) {
-      const skill = skills.find((s) => s.id === skillId)
-      if (skill) return skill
-    }
-
-    return null
-  }
-
-  /**
    * Apply a preview object to the XP console DOM.
    * @param {{ statusKey: string, consoleCssClass: string, selectedCost: string, summaryText: string|null }} preview
    */
@@ -302,16 +282,14 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
 
   /**
    * Update the console to show the preview for a given skill.
+   * Reads the enriched skill directly from the data model.
    * @param {string} skillId
    */
   #updateConsolePreview(skillId) {
-    const skill = this.#findSkillInContext(skillId)
+    const skill = this.actor?.system?.skills?.[skillId]
     if (!skill) return
 
-    const progression = this.actor?.system?.progression
-    if (!progression) return
-
-    const preview = CharacterSheet._buildSkillPreview(skill, progression)
+    const preview = CharacterSheet._buildSkillPreview(skill)
     this.#applyConsolePreview(preview)
   }
 
@@ -384,11 +362,11 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
    * @returns {Promise<void>}
    */
   static async #onToggleTrainedSkill(event) {
-    // Initialize the context depending on the event
     const element = event.target.closest('.skill')
     const skillId = element.dataset.skillId
-    const isCareer = element.dataset.isCareer === 'true'
-    const isSpecialization = element.dataset.isSpecialization === 'true'
+    const skill = this.actor.system.skills?.[skillId]
+    if (!skill) return
+    const { isCareer, isSpecialization } = skill.freeRank
     const action = event.ctrlKey ? 'forget' : 'train'
 
     // Build the skill class depending on the context
@@ -729,13 +707,11 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
 
   /**
    * Build the console preview data for a skill being hovered.
-   * Version simplifiée : mapping direct de purchaseReason → statut + coût.
-   * Pas de summary texte complexe.
-   * @param {object} skill - Enriched skill data from #prepareSkills
-   * @param {object} _progression - Ignoré dans la version simplifiée
+   * Reads purchase state directly from the enriched skill.
+   * @param {object} skill - Enriched skill data from model
    * @returns {object} Preview data { statusKey, consoleCssClass, selectedCost, summaryText }
    */
-  static _buildSkillPreview(skill, _progression) {
+  static _buildSkillPreview(skill) {
     const { nextCost, purchaseReason } = skill
     const mapping = this.#PURCHASE_REASON_MAPPING[purchaseReason]
 
