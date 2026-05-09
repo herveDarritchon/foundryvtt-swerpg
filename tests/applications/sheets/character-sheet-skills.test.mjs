@@ -561,5 +561,163 @@ describe('CharacterSheet skill methods', () => {
       expect(athletics.ui.decreaseState).toBe('pending')
       expect(athletics.ui.decreaseIcon).toBe('sell')
     })
+
+    // --- US3: dicePreviewAfter ---
+
+    it('provides dicePreviewAfter for each skill', async () => {
+      const actor = buildMockActor({
+        characteristics: { agility: { rank: { value: 3 } } },
+        skills: {
+          athletics: { rank: { base: 2, careerFree: 0, specializationFree: 0, trained: 0 } },
+        },
+      })
+      const context = await getContext(actor)
+      const athletics = context.skills.general.find((s) => s.id === 'athletics')
+
+      expect(athletics.dicePreviewAfter).toBeDefined()
+      expect(athletics.dicePreviewAfter.ability).toBeTypeOf('number')
+      expect(athletics.dicePreviewAfter.proficiency).toBeTypeOf('number')
+    })
+
+    it('dicePreviewAfter differs from dicePreview when nextRank > current rank', async () => {
+      const actor = buildMockActor({
+        characteristics: { agility: { rank: { value: 3 } } },
+        skills: {
+          athletics: { rank: { base: 0, careerFree: 0, specializationFree: 0, trained: 0 } },
+        },
+      })
+      const context = await getContext(actor)
+
+      // Athletics is career, rank 0, free ranks available, nextRank = 1
+      // dicePreview uses rank 0, dicePreviewAfter uses nextRank 1
+      const athletics = context.skills.general.find((s) => s.id === 'athletics')
+      expect(athletics.nextRank).toBe(1)
+      expect(athletics.dicePreview).toEqual({ ability: 3, proficiency: 0 })
+      expect(athletics.dicePreviewAfter).toEqual({ ability: 2, proficiency: 1 })
+    })
+  })
+})
+
+describe('CharacterSheet US3 preview methods', () => {
+  let CharacterSheet
+
+  beforeEach(async () => {
+    vi.stubGlobal('game', {
+      ...globalThis.game,
+      i18n: {
+        ...globalThis.game.i18n,
+        format: vi.fn((key, data) => `[${key}] ${JSON.stringify(data)}`),
+      },
+    })
+    CharacterSheet = (await import('../../../module/applications/sheets/character-sheet.mjs')).default
+  })
+
+  describe('_buildIdlePreview', () => {
+    it('returns idle status key and placeholder', () => {
+      const preview = CharacterSheet._buildIdlePreview()
+      expect(preview.statusKey).toBe('SKILL.XP_CONSOLE.STATUS.IDLE')
+      expect(preview.consoleCssClass).toBe('')
+      expect(preview.selectedCost).toBe('—')
+      expect(preview.summaryText).toBeNull()
+    })
+  })
+
+  describe('_buildSkillPreview', () => {
+    const baseProgression = {
+      experience: { available: 100, total: 100, gained: 100, spent: 0 },
+    }
+
+    it('returns FREE_RANK_AVAILABLE state', () => {
+      const skill = {
+        id: 'athletics',
+        label: 'SKILLS.Athletics',
+        rank: { value: 0 },
+        nextRank: 1,
+        nextCost: 0,
+        canPurchase: true,
+        isFreePurchase: true,
+        purchaseReason: 'FREE_RANK_AVAILABLE',
+        dicePreview: { ability: 3, proficiency: 0 },
+        dicePreviewAfter: { ability: 2, proficiency: 1 },
+        freeRank: { isCareer: true, isSpecialization: false, name: 'Scout' },
+      }
+
+       const preview = CharacterSheet._buildSkillPreview(skill, baseProgression)
+
+       expect(preview.statusKey).toBe('SKILL.XP_CONSOLE.STATUS.FREE_RANK')
+       expect(preview.consoleCssClass).toBe('is-free')
+       expect(preview.selectedCost).toBe('0 XP')
+       expect(preview.summaryText).toBeNull()
+     })
+
+    it('returns AFFORDABLE state', () => {
+      const skill = {
+        id: 'athletics',
+        label: 'SKILLS.Athletics',
+        rank: { value: 1 },
+        nextRank: 2,
+        nextCost: 10,
+        canPurchase: true,
+        isFreePurchase: false,
+        purchaseReason: 'AFFORDABLE',
+        dicePreview: { ability: 2, proficiency: 1 },
+        dicePreviewAfter: { ability: 1, proficiency: 2 },
+        freeRank: { isCareer: true, isSpecialization: false, name: 'Scout' },
+      }
+
+       const preview = CharacterSheet._buildSkillPreview(skill, baseProgression)
+
+       expect(preview.statusKey).toBe('SKILL.XP_CONSOLE.STATUS.AFFORDABLE')
+       expect(preview.consoleCssClass).toBe('is-affordable')
+       expect(preview.selectedCost).toBe('10 XP')
+       expect(preview.summaryText).toBeNull()
+     })
+
+     it('returns INSUFFICIENT_XP state', () => {
+      const skill = {
+        id: 'athletics',
+        label: 'SKILLS.Athletics',
+        rank: { value: 2 },
+        nextRank: 3,
+        nextCost: 15,
+        canPurchase: false,
+        isFreePurchase: false,
+        purchaseReason: 'INSUFFICIENT_XP',
+        dicePreview: { ability: 1, proficiency: 2 },
+        dicePreviewAfter: { ability: 0, proficiency: 3 },
+        freeRank: { isCareer: true, isSpecialization: false, name: 'Scout' },
+      }
+
+      const progressionLow = { experience: { available: 5, total: 100, gained: 100, spent: 95 } }
+       const preview = CharacterSheet._buildSkillPreview(skill, progressionLow)
+
+       expect(preview.statusKey).toBe('SKILL.XP_CONSOLE.STATUS.INSUFFICIENT_XP')
+       expect(preview.consoleCssClass).toBe('is-locked')
+       expect(preview.selectedCost).toBe('15 XP')
+       expect(preview.summaryText).toBeNull()
+     })
+
+     it('returns MAX_RANK state', () => {
+      const skill = {
+        id: 'diplomacy',
+        label: 'SKILLS.Diplomacy',
+        rank: { value: 5 },
+        nextRank: 6,
+        nextCost: null,
+        canPurchase: false,
+        isFreePurchase: false,
+        purchaseReason: 'MAX_RANK',
+        dicePreview: { ability: 0, proficiency: 5 },
+        dicePreviewAfter: { ability: 0, proficiency: 5 },
+        freeRank: { isCareer: false, isSpecialization: false, name: '' },
+      }
+
+       const preview = CharacterSheet._buildSkillPreview(skill, baseProgression)
+
+        expect(preview.statusKey).toBe('SKILL.XP_CONSOLE.STATUS.MAX_RANK')
+        expect(preview.consoleCssClass).toBe('is-error')
+        expect(preview.selectedCost).toBe('—')
+        expect(preview.summaryText).toBeNull()
+      })
   })
 })
