@@ -291,42 +291,29 @@ C’est une règle importante pour éviter les incohérences d’XP.
 
 # 9. Prévisualisation au survol
 
-Lorsqu’un joueur survole une compétence, la console doit afficher une prévisualisation de l’action principale disponible.
+Lorsqu’un joueur survole une compétence, la console affiche une prévisualisation simplifiée de l’action principale disponible.
 
-## Si le prochain rang est achetable
+La preview se limite à **deux informations clés** :
 
-La console affiche :
+1. **Statut** : état de l’action possible (via `purchaseReason`)
+2. **Coût** : coût du prochain rang (via `nextCost`)
 
-* nom de la compétence ;
-* rang actuel ;
-* prochain rang ;
-* coût ;
-* XP restants après achat ;
-* pool de dés actuel ;
-* pool de dés après achat.
+## Mapping des états
 
-## Si le rang est gratuit
+| `purchaseReason` | Statut affiché | Classe CSS | Coût |
+|------------------|----------------|------------|------|
+| `FREE_RANK_AVAILABLE` | Rang gratuit disponible | `is-free` | 0 XP |
+| `AFFORDABLE` | Achat possible | `is-affordable` | `nextCost` XP |
+| `INSUFFICIENT_XP` | XP insuffisants | `is-locked` | `nextCost` XP |
+| `MAX_RANK` | Rang maximum | `is-error` | — |
+| (aucune sélection) | Sélectionnez une compétence | — | — |
 
-La console affiche :
+## Principe de simplification
 
-* nom de la compétence ;
-* rang actuel ;
-* prochain rang ;
-* coût : 0 XP ;
-* source du rang gratuit ;
-* pool de dés après achat.
-
-## Si l’achat est impossible
-
-La console affiche :
-
-* nom de la compétence ;
-* raison de blocage ;
-* éventuellement le coût requis et les XP disponibles.
-
-## Si le rang maximum est atteint
-
-La console affiche que la compétence ne peut plus progresser.
+- Aucun calcul complexe dans la preview
+- Toutes les données sont **déjà enrichies** dans chaque skill par `#prepareSkills()`
+- La preview est un **mapping direct** de `purchaseReason` et `nextCost`
+- Pas de summary texte complexe : pas de nom de skill, pas de rang actuel/prochain, pas de pool de dés
 
 ---
 

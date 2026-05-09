@@ -765,7 +765,11 @@
     "XP_CONSOLE": {
       "TITLE": "XP Transaction Console",
       "STATUS": {
-        "IDLE": "Awaiting selection"
+        "IDLE": "Awaiting selection",
+        "FREE_RANK": "Free rank available",
+        "AFFORDABLE": "Purchase possible",
+        "INSUFFICIENT_XP": "Insufficient XP",
+        "MAX_RANK": "Maximum rank"
       },
       "LABEL": {
         "AVAILABLE": "Available",
@@ -774,7 +778,16 @@
         "SPECIALIZATION_FREE": "Specialty Free",
         "SELECTED_COST": "Selected Cost"
       },
-      "PLACEHOLDER": "Select a skill to preview purchase cost."
+      "PLACEHOLDER": "Select a skill to preview purchase cost.",
+      "SOURCE": {
+        "UNKNOWN": "Unknown source"
+      },
+      "SUMMARY": {
+        "FREE": "{label} — rank {current} → {next} — 0 XP — {source}",
+        "AFFORDABLE": "{label} — {cost} XP — {remaining} XP left — Pool {pool} → {poolAfter}",
+        "INSUFFICIENT": "{label} — {cost} XP needed — {available} XP available — shortfall {shortfall} XP",
+        "MAX": "{label} — Maximum rank ({max}/{max})"
+      }
     },
     "MARKER": {
       "CAREER": "Career skill",
