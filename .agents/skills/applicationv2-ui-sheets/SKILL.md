@@ -446,7 +446,7 @@ Do not spam multiple sequential updates for one user action.
 
 ## Actions and listeners
 
-Prefer ApplicationV2 `actions` in `DEFAULT_OPTIONS` when the current base class supports them:
+Prefer ApplicationV2 `actions` in `DEFAULT_OPTIONS` when the current base class supports them and you need to handle a `click` event:
 
 ```js
 static DEFAULT_OPTIONS = {
@@ -466,7 +466,7 @@ Use `data-action` in HBS:
 </button>
 ```
 
-If the current sheet still uses `activateListeners(html)`, keep it disciplined:
+In the case of a `hover` eventr or a more complex interaction, or if the current base class does not support `actions`, use `activateListeners(html)` but keep it organized and disciplined.
 
 ```js
 activateListeners(html) {
