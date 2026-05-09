@@ -2,12 +2,12 @@ import { SYSTEM } from '../config/system.mjs'
 import CharacteristicFactory from '../lib/characteristics/characteristic-factory.mjs'
 import ErrorCharacteristic from '../lib/characteristics/error-characteristic.mjs'
 import SkillFactory from '../lib/skills/skill-factory.mjs'
-import ErrorSkill from '../lib/skills/error-skill.mjs'
 import { logger } from '../utils/logger.mjs'
 import { CombatMixin } from './actor-mixins/combat/index.mjs'
 import { EquipmentMixin } from './actor-mixins/equipment.mjs'
 import { ResourcesMixin } from './actor-mixins/resources.mjs'
 import { TalentsMixin } from './actor-mixins/talents.mjs'
+import { getCharacterCreationCompendiumPack } from '../utils/foundry/compendium-utils.mjs'
 
 const { DialogV2 } = foundry.applications.api
 
@@ -316,12 +316,17 @@ export default class SwerpgActor extends TalentsMixin(EquipmentMixin(ResourcesMi
     const isSpecialization = config?.specialization === true
     const action = delta > 0 ? 'train' : 'forget'
 
-    const skillObj = SkillFactory.build(this, skillId, {
-      action,
-      isCreation,
-      isCareer,
-      isSpecialization,
-    }, {})
+    const skillObj = SkillFactory.build(
+      this,
+      skillId,
+      {
+        action,
+        isCreation,
+        isCareer,
+        isSpecialization,
+      },
+      {},
+    )
 
     const evaluated = skillObj.process()
     if (evaluated?.options?.message) {
@@ -413,13 +418,14 @@ export default class SwerpgActor extends TalentsMixin(EquipmentMixin(ResourcesMi
    * This is an internal helper method not intended for external use.
    * @param {string} type         The data type stored in `system.details`
    * @param {object} [options]    Options that configure how the data is viewed
+   * @param {string} detailsId    The id in the details structure to view, if the type is a collection
    * @param {boolean} [options.editable]    Is the detail item editable?
    * @returns {Promise<void>}
    * @internal
    */
-  async _viewDetailItem(type, { editable = false } = {}) {
-    if (!(type in this.system.details)) {
-      throw new Error(`Incorrect detail item type ${type} for Actor type ${this.type}`)
+  async _viewDetailItem(type, detailsId, { editable = false } = {}) {
+    if (!(detailsId in this.system.details)) {
+      throw new Error(`Incorrect detail item type ${detailsId} for Actor type ${this.type}`)
     }
     const data = this.toObject().system.details[type]
 
@@ -439,9 +445,25 @@ export default class SwerpgActor extends TalentsMixin(EquipmentMixin(ResourcesMi
       return
     }
 
-    // Browse compendium pack
+    // Browse imported world compendium pack
     if (this.isL0 || !data?.name) {
-      const pack = game.packs.get(SYSTEM.COMPENDIUM_PACKS[type])
+      const { pack, packConfig, reason, actualDocumentName } = getCharacterCreationCompendiumPack(type)
+
+      if (!pack) {
+        if (reason === 'missing') {
+          ui.notifications.warn(`Aucun compendium importé trouvé pour "${type}". Lancez l’import OggDude ou vérifiez le pack ${packConfig.fullName}.`)
+          return
+        }
+
+        if (reason === 'invalid-document-type') {
+          ui.notifications.error(`Compendium invalide pour "${type}" : ${packConfig.fullName}. Type attendu : Item, type trouvé : ${actualDocumentName}.`)
+          return
+        }
+
+        ui.notifications.error(`Impossible d’ouvrir le compendium pour "${type}".`)
+        return
+      }
+
       pack.render(true)
     }
   }
@@ -671,7 +693,7 @@ export default class SwerpgActor extends TalentsMixin(EquipmentMixin(ResourcesMi
    */
   hasCareerFreeSkillsAvailable() {
     const career = this.freeSkillRanks.career
-    return (career.gained - career.spent) !== 0
+    return career.gained - career.spent !== 0
   }
 
   /* -------------------------------------------- */
@@ -682,7 +704,7 @@ export default class SwerpgActor extends TalentsMixin(EquipmentMixin(ResourcesMi
    */
   hasSpecializationFreeSkillsAvailable() {
     const specialization = this.freeSkillRanks.specialization
-    return (specialization.gained - specialization.spent) !== 0
+    return specialization.gained - specialization.spent !== 0
   }
 
   /* -------------------------------------------- */
@@ -724,5 +746,4 @@ export default class SwerpgActor extends TalentsMixin(EquipmentMixin(ResourcesMi
       await canvas.scene.updateEmbeddedDocuments('Token', updates)
     }
   }
-
 }

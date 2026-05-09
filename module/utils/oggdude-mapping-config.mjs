@@ -25,7 +25,7 @@ const OGGDUDE_PACKS_BY_TYPE = {
     folderGroup: 'actor-options',
   },
   "motivation-category": {
-    name: 'swerpg-motivation-category',
+    name: 'swerpg-motivation-categories',
     label: 'Motivation Categories',
     folderGroup: 'actor-options',
   },
@@ -35,8 +35,8 @@ const OGGDUDE_PACKS_BY_TYPE = {
     folderGroup: 'actor-options',
   },
   duty: {
-    name: 'swerpg-talents',
-    label: 'Talents',
+    name: 'swerpg-duties',
+    label: 'Duties',
     folderGroup: 'actor-options',
   },
   armor: {

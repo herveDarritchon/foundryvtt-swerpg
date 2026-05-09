@@ -27,24 +27,6 @@ export const ANCESTRIES = {
 /* -------------------------------------------- */
 
 /**
- * The compendium pack IDs which should be used as the source for character creation materials.
- * @enum {string}
- */
-export const COMPENDIUM_PACKS = {
-  armor: 'swerpg.armors',
-  weapon: 'swerpg.weapons',
-  skill: 'swerpg.skills',
-  gear: 'swerpg.gears',
-  obligation: 'swerpg.obligations',
-  specialization: 'swerpg.specializations',
-  species: 'swerpg.species',
-  talent: 'swerpg.talents',
-
-}
-
-/* -------------------------------------------- */
-
-/**
  * The threat levels that an adversary may have.
  * @enum {number}
  */
@@ -228,7 +210,6 @@ export const SYSTEM = {
   ARMOR,
   ASCII,
   ASCII_DEV_MODE,
-  COMPENDIUM_PACKS,
   DAMAGE_CATEGORIES: ATTRIBUTES.DAMAGE_CATEGORIES,
   DAMAGE_TYPES: ATTRIBUTES.DAMAGE_TYPES,
   DEFENSES: ATTRIBUTES.DEFENSES,

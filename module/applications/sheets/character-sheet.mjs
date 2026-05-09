@@ -5,7 +5,7 @@ import ErrorSkill from '../../lib/skills/error-skill.mjs'
 import TalentFactory from '../../lib/talents/talent-factory.mjs'
 import ErrorTalent from '../../lib/talents/error-talent.mjs'
 import { logger } from '../../utils/logger.mjs'
-import { getSkillNextRankCost, getSkillPurchaseState, getPositiveDicePoolPreview } from '../../utils/skill-costs.mjs'
+import { getPositiveDicePoolPreview, getSkillPurchaseState } from '../../utils/skill-costs.mjs'
 
 /**
  * @typedef {Object} DefenseDisplayData
@@ -311,7 +311,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
    * @returns {Promise<void>}
    */
   static async #onEditSpecies(event) {
-    await this.actor._viewDetailItem('species', { editable: false })
+    await this.actor._viewDetailItem('species', 'species', { editable: false })
   }
 
   /* -------------------------------------------- */
@@ -323,7 +323,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
    * @returns {Promise<void>}
    */
   static async #onEditSpecializations(event) {
-    await this.actor._viewDetailItem('specialization', { editable: false })
+    await this.actor._viewDetailItem('specialization', 'specializations', { editable: false })
   }
 
   /* -------------------------------------------- */
@@ -335,7 +335,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
    * @returns {Promise<void>}
    */
   static async #onEditCareer(event) {
-    await this.actor._viewDetailItem('career', { editable: false })
+    await this.actor._viewDetailItem('career', 'career', { editable: false })
   }
 
   /* -------------------------------------------- */
