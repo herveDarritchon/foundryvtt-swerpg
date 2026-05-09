@@ -466,15 +466,17 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
         }
       })
 
-    const skillsByType = Object.groupBy(skills, (skill) => skill.type.id)
+    const skillsByType = skills.reduce((acc, skill) => {
+      const type = skill.type.id
+      ;(acc[type] ||= []).push(skill)
+      return acc
+    }, {})
 
     // Sort and return the skills
-    return Object.fromEntries(
-      Object.entries(skillsByType).map(([type, skillGroup]) => {
-        skillGroup.sort((a, b) => a.label.localeCompare(b.label))
-        return [type, skillGroup]
-      }),
-    )
+    for (const skillGroup of Object.values(skillsByType)) {
+      skillGroup.sort((a, b) => a.label.localeCompare(b.label))
+    }
+    return skillsByType
   }
 
   /**
