@@ -135,7 +135,8 @@ export default class SwerpgTalentNode {
    */
   static async initialize() {
     for (const node of this.nodes.values()) node.talents.clear()
-    const packs = [SYSTEM.COMPENDIUM_PACKS.talent, SYSTEM.COMPENDIUM_PACKS.talentExtensions]
+    //const packs = [SYSTEM.COMPENDIUM_PACKS.talent, SYSTEM.COMPENDIUM_PACKS.talentExtensions]
+    const packs = []
     for (const packId of packs) {
       if (!packId) continue
       const pack = game.packs.get(packId)
