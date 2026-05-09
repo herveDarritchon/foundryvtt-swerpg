@@ -84,6 +84,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
       editCareer: CharacterSheet.#onEditCareer,
       editSpecializations: CharacterSheet.#onEditSpecializations,
       toggleTrainedSkill: CharacterSheet.#onToggleTrainedSkill,
+      skillSelect: CharacterSheet.#onSkillSelect,
       toggleObligationExtraState: CharacterSheet.#onToggleObligationExtraState,
     },
     form: {
@@ -214,6 +215,131 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
         return this.actor.toggleTalentTree()
       // Case "talentReset":
       //   return this.actor.resetTalents();
+    }
+  }
+
+  /* -------------------------------------------- */
+  /*  Skill Preview Handlers (US3)                */
+  /* -------------------------------------------- */
+
+  /** @type {string|null} */
+  #_selectedSkillId = null
+
+  /**
+   * Mapping purchaseReason → statut console (simplifié)
+   * Utilisé par _buildSkillPreview() pour construire la preview
+   */
+  static #PURCHASE_REASON_MAPPING = {
+    'FREE_RANK_AVAILABLE': {
+      statusKey: 'SKILL.XP_CONSOLE.STATUS.FREE_RANK',
+      consoleCssClass: 'is-free',
+      getCost: () => '0 XP',
+    },
+    'AFFORDABLE': {
+      statusKey: 'SKILL.XP_CONSOLE.STATUS.AFFORDABLE',
+      consoleCssClass: 'is-affordable',
+      getCost: (nextCost) => `${nextCost} XP`,
+    },
+    'INSUFFICIENT_XP': {
+      statusKey: 'SKILL.XP_CONSOLE.STATUS.INSUFFICIENT_XP',
+      consoleCssClass: 'is-locked',
+      getCost: (nextCost) => `${nextCost} XP`,
+    },
+    'MAX_RANK': {
+      statusKey: 'SKILL.XP_CONSOLE.STATUS.MAX_RANK',
+      consoleCssClass: 'is-error',
+      getCost: () => '—',
+    },
+  }
+
+  /**
+   * Find a skill in the current render context by its ID.
+   * Uses the already-enriched skills from #prepareSkills() (source de vérité).
+   * @param {string} skillId
+   * @returns {object|null}
+   */
+  #findSkillInContext(skillId) {
+    if (!skillId) return null
+
+    const skillsByType = this._context?.skills
+    if (!skillsByType) return null
+
+    for (const skills of Object.values(skillsByType)) {
+      const skill = skills.find((s) => s.id === skillId)
+      if (skill) return skill
+    }
+
+    return null
+  }
+
+  /**
+   * Apply a preview object to the XP console DOM.
+   * @param {{ statusKey: string, consoleCssClass: string, selectedCost: string, summaryText: string|null }} preview
+   */
+  #applyConsolePreview(preview) {
+    const consoleEl = this.element.querySelector('[data-skill-purchase-console]')
+    if (!consoleEl) return
+
+    const statusEl = consoleEl.querySelector('[data-xp-console-status]')
+    if (statusEl) statusEl.textContent = game.i18n.localize(preview.statusKey)
+
+    const costEl = consoleEl.querySelector('[data-selected-skill-cost]')
+    if (costEl) costEl.textContent = preview.selectedCost
+
+    const summaryEl = consoleEl.querySelector('[data-selected-skill-summary]')
+    if (summaryEl) {
+      summaryEl.textContent = preview.summaryText ?? game.i18n.localize('SKILL.XP_CONSOLE.PLACEHOLDER')
+    }
+
+    const classes = consoleEl.className
+      .split(' ')
+      .filter((c) => !c.startsWith('is-'))
+      .concat(preview.consoleCssClass)
+      .filter(Boolean)
+      .join(' ')
+    consoleEl.className = classes
+  }
+
+  /**
+   * Update the console to show the preview for a given skill.
+   * @param {string} skillId
+   */
+  #updateConsolePreview(skillId) {
+    const skill = this.#findSkillInContext(skillId)
+    if (!skill) return
+
+    const progression = this.actor?.system?.progression
+    if (!progression) return
+
+    const preview = CharacterSheet._buildSkillPreview(skill, progression)
+    this.#applyConsolePreview(preview)
+  }
+
+  /**
+   * Reset the console to its neutral idle state.
+   */
+  #resetConsolePreview() {
+    this.#_selectedSkillId = null
+    const preview = CharacterSheet._buildIdlePreview()
+    this.#applyConsolePreview(preview)
+  }
+
+  /**
+   * Handle click to select/deselect a skill row for console preview.
+   * ApplicationV2 action triggered via data-action="skillSelect".
+   * @this {CharacterSheet}
+   * @param {PointerEvent} event
+   */
+  static async #onSkillSelect(event) {
+    const skillEl = event.target.closest('[data-skill-id]')
+    if (!skillEl) return
+    const skillId = skillEl.dataset.skillId
+
+    if (skillId === this.#_selectedSkillId) {
+      this.#resetConsolePreview()
+    } else {
+      this.#_selectedSkillId = skillId
+      this.#updateConsolePreview(skillId)
     }
   }
 
@@ -453,10 +579,13 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
         const dicePreview = getPositiveDicePoolPreview(characteristicValueSkillRank)
         // Attach dicePreview to skillEnriched BEFORE preparing ranks
         skillEnriched.dicePreview = dicePreview
-        const markerState = freeRank.isCareer && freeRank.isSpecialization ? 'both'
-          : freeRank.isCareer ? 'career'
-          : freeRank.isSpecialization ? 'specialization'
-          : 'none'
+        const dicePreviewAfter = getPositiveDicePoolPreview({
+          characteristicValue,
+          skillRank: purchaseState.nextRank,
+        })
+        skillEnriched.dicePreviewAfter = dicePreviewAfter
+        const markerState =
+          freeRank.isCareer && freeRank.isSpecialization ? 'both' : freeRank.isCareer ? 'career' : freeRank.isSpecialization ? 'specialization' : 'none'
 
         return {
           pips: this._prepareSkillRanks(skillEnriched),
@@ -467,14 +596,19 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
           isFreePurchase: purchaseState.isFreePurchase,
           purchaseReason: purchaseState.reason,
           dicePreview,
+          dicePreviewAfter,
           ...skillEnriched,
           ui: {
             markerState,
             increaseState: purchaseState.reason,
-            increaseIcon: purchaseState.reason === 'FREE_RANK_AVAILABLE' ? 'free'
-              : purchaseState.reason === 'AFFORDABLE' ? 'buy'
-              : purchaseState.reason === 'INSUFFICIENT_XP' ? 'buy-blocked'
-              : null,
+            increaseIcon:
+              purchaseState.reason === 'FREE_RANK_AVAILABLE'
+                ? 'free'
+                : purchaseState.reason === 'AFFORDABLE'
+                  ? 'buy'
+                  : purchaseState.reason === 'INSUFFICIENT_XP'
+                    ? 'buy-blocked'
+                    : null,
             decreaseState: 'pending',
             decreaseIcon: 'sell',
             lineCssClass: [
@@ -484,7 +618,9 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
               purchaseState.reason === 'AFFORDABLE' ? 'is-affordable' : '',
               purchaseState.reason === 'INSUFFICIENT_XP' ? 'is-blocked' : '',
               purchaseState.reason === 'MAX_RANK' ? 'is-max' : '',
-            ].filter(Boolean).join(' '),
+            ]
+              .filter(Boolean)
+              .join(' '),
           },
         }
       })
@@ -563,6 +699,136 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
       name: mayBeAFreeSkill.length ? mayBeAFreeSkill.map((skill) => skill.parent).join(', ') : '',
       isCareer: mayBeAFreeSkill.length !== 0 && mayBeAFreeSkill.filter((skill) => skill.type === 'career').length > 0,
       isSpecialization: mayBeAFreeSkill.length !== 0 && mayBeAFreeSkill.filter((skill) => skill.type === 'specialization').length > 0,
+    }
+  }
+
+  async _onRender(context, options) {
+    await super._onRender(context, options)
+
+    this.element.addEventListener('mouseover', this.#onHoverAction)
+    this.element.addEventListener('mouseout', this.#onHoverOutAction)
+    this.element.addEventListener('focusin', this.#onHoverAction)
+    this.element.addEventListener('focusout', this.#onHoverOutAction)
+  }
+
+  #onHoverAction = async (event) => {
+    const target = event.target.closest('[data-hover-action]')
+    if (!target || !this.element.contains(target)) return
+
+    const action = target.dataset.hoverAction
+
+    switch (action) {
+      case 'skillPreview':
+        return this.#handleSkillPreviewEnter(target)
+
+      case 'showTooltip':
+        return this.#showTooltip(event, target)
+
+      case 'previewItem':
+        return this.#previewItem(event, target)
+
+      default:
+        return
+    }
+  }
+
+  #onHoverOutAction = async (event) => {
+    const target = event.target.closest('[data-hover-action]')
+    if (!target || !this.element.contains(target)) return
+
+    const action = target.dataset.hoverAction
+
+    switch (action) {
+      case 'skillPreview':
+        return this.#handleSkillPreviewLeave(target, event)
+
+      case 'showTooltip':
+        return this.#hideTooltip(event, target)
+
+      default:
+        return
+    }
+  }
+
+  /**
+   * Handle entering a skill row (mouseenter or focusin) to show preview.
+   * @param {HTMLElement} target - The skill row element.
+   */
+  #handleSkillPreviewEnter(target) {
+    const skillId = target.dataset.skillId
+    if (!skillId) return
+    this.#updateConsolePreview(skillId)
+  }
+
+  /**
+   * Handle leaving a skill row (mouseleave or focusout) to reset preview.
+   * Uses relatedTarget to avoid flickering when moving between adjacent skill rows.
+   * @param {HTMLElement} target - The skill row element being left.
+   * @param {Event} event - The original mouseout/focusout event.
+   */
+  #handleSkillPreviewLeave(target, event) {
+    const related = event.relatedTarget
+    if (related) {
+      const enteringSkill = related.closest('[data-hover-action="skillPreview"]')
+      if (enteringSkill) return
+    }
+    this.#resetConsolePreview()
+  }
+
+  async #previewItem(event, target) {
+    console.log('Preview ...', target.dataset)
+  }
+
+  async #showTooltip(event, target) {
+    console.log('Hover in', target.dataset)
+  }
+
+  async #hideTooltip(event, target) {
+    console.log('Hover out', target.dataset)
+  }
+
+  static async #onRollSomething(event, target) {
+    console.log('Click action classique')
+  }
+
+  /* -------------------------------------------- */
+  /*  Skill Preview Builder (US3)                 */
+  /* -------------------------------------------- */
+
+  /**
+   * Build the console preview data for a skill being hovered.
+   * Version simplifiée : mapping direct de purchaseReason → statut + coût.
+   * Pas de summary texte complexe.
+   * @param {object} skill - Enriched skill data from #prepareSkills
+   * @param {object} _progression - Ignoré dans la version simplifiée
+   * @returns {object} Preview data { statusKey, consoleCssClass, selectedCost, summaryText }
+   */
+  static _buildSkillPreview(skill, _progression) {
+    const { nextCost, purchaseReason } = skill
+    const mapping = this.#PURCHASE_REASON_MAPPING[purchaseReason]
+
+    if (!mapping) {
+      return this._buildIdlePreview()
+    }
+
+    return {
+      statusKey: mapping.statusKey,
+      consoleCssClass: mapping.consoleCssClass,
+      selectedCost: mapping.getCost(nextCost),
+      summaryText: null,
+    }
+  }
+
+  /**
+   * Build the neutral / idle preview state for the console.
+   * @returns {object} Preview data with placeholder text and no state class.
+   */
+  static _buildIdlePreview() {
+    return {
+      statusKey: 'SKILL.XP_CONSOLE.STATUS.IDLE',
+      consoleCssClass: '',
+      selectedCost: '—',
+      summaryText: null,
     }
   }
 
