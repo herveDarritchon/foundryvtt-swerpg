@@ -445,5 +445,121 @@ describe('CharacterSheet skill methods', () => {
       expect(athletics.type).toBeDefined()
       expect(athletics.type.id).toBe('general')
     })
+
+    // --- US2: skill.ui visual state tests ---
+
+    it('computes ui.markerState = "career" for career skill', async () => {
+      const actor = buildMockActor({
+        career: { name: 'Scout', careerSkills: [{ id: 'athletics' }] },
+        skills: {
+          athletics: { rank: { base: 0, careerFree: 0, specializationFree: 0, trained: 0 } },
+        },
+      })
+      const context = await getContext(actor)
+      const athletics = context.skills.general.find((s) => s.id === 'athletics')
+
+      expect(athletics.ui.markerState).toBe('career')
+      expect(athletics.ui.lineCssClass).toContain('is-career')
+    })
+
+    it('computes ui.markerState = "specialization" for specialization skill', async () => {
+      const actor = buildMockActor({
+        specializations: [{ name: 'Shadow', skills: ['deception'] }],
+        skills: {
+          deception: { rank: { base: 0, careerFree: 0, specializationFree: 0, trained: 0 } },
+        },
+      })
+      const context = await getContext(actor)
+      const deception = context.skills.combat.find((s) => s.id === 'deception')
+
+      expect(deception.ui.markerState).toBe('specialization')
+      expect(deception.ui.lineCssClass).toContain('is-specialization')
+    })
+
+    it('computes ui.markerState = "none" for non-career non-specialization skill', async () => {
+      const actor = buildMockActor({
+        skills: {
+          arcana: { rank: { base: 0, careerFree: 0, specializationFree: 0, trained: 0 } },
+        },
+      })
+      const context = await getContext(actor)
+      const arcana = context.skills.knowledge.find((s) => s.id === 'arcana')
+
+      expect(arcana.ui.markerState).toBe('none')
+      expect(arcana.ui.lineCssClass).not.toContain('is-career')
+      expect(arcana.ui.lineCssClass).not.toContain('is-specialization')
+    })
+
+    it('computes ui.increaseState = "FREE_RANK_AVAILABLE" with icon "free"', async () => {
+      const actor = buildMockActor({
+        career: { name: 'Scout', careerSkills: [{ id: 'athletics' }] },
+        skills: {
+          athletics: { rank: { base: 0, careerFree: 0, specializationFree: 0, trained: 0 } },
+        },
+      })
+      const context = await getContext(actor)
+      const athletics = context.skills.general.find((s) => s.id === 'athletics')
+
+      expect(athletics.ui.increaseState).toBe('FREE_RANK_AVAILABLE')
+      expect(athletics.ui.increaseIcon).toBe('free')
+      expect(athletics.ui.lineCssClass).toContain('is-free')
+    })
+
+    it('computes ui.increaseState = "AFFORDABLE" with icon "buy"', async () => {
+      const actor = buildMockActor({
+        experienceAvailable: 100,
+        skills: {
+          athletics: { rank: { base: 1, careerFree: 0, specializationFree: 0, trained: 0 } },
+        },
+      })
+      const context = await getContext(actor)
+      const athletics = context.skills.general.find((s) => s.id === 'athletics')
+
+      expect(athletics.ui.increaseState).toBe('AFFORDABLE')
+      expect(athletics.ui.increaseIcon).toBe('buy')
+      expect(athletics.ui.lineCssClass).toContain('is-affordable')
+    })
+
+    it('computes ui.increaseState = "INSUFFICIENT_XP" with icon "buy-blocked"', async () => {
+      const actor = buildMockActor({
+        experienceAvailable: 5,
+        skills: {
+          athletics: { rank: { base: 2, careerFree: 0, specializationFree: 0, trained: 0 } },
+        },
+      })
+      const context = await getContext(actor)
+      const athletics = context.skills.general.find((s) => s.id === 'athletics')
+
+      expect(athletics.ui.increaseState).toBe('INSUFFICIENT_XP')
+      expect(athletics.ui.increaseIcon).toBe('buy-blocked')
+      expect(athletics.ui.lineCssClass).toContain('is-blocked')
+    })
+
+    it('computes ui.increaseState = "MAX_RANK" with icon null', async () => {
+      const actor = buildMockActor({
+        skills: {
+          athletics: { rank: { base: 5, careerFree: 0, specializationFree: 0, trained: 0 } },
+        },
+      })
+      const context = await getContext(actor)
+      const athletics = context.skills.general.find((s) => s.id === 'athletics')
+
+      expect(athletics.ui.increaseState).toBe('MAX_RANK')
+      expect(athletics.ui.increaseIcon).toBeNull()
+      expect(athletics.ui.lineCssClass).toContain('is-max')
+    })
+
+    it('computes ui.decreaseState = "pending" before US6', async () => {
+      const actor = buildMockActor({
+        skills: {
+          athletics: { rank: { base: 1, careerFree: 0, specializationFree: 0, trained: 0 } },
+        },
+      })
+      const context = await getContext(actor)
+      const athletics = context.skills.general.find((s) => s.id === 'athletics')
+
+      expect(athletics.ui.decreaseState).toBe('pending')
+      expect(athletics.ui.decreaseIcon).toBe('sell')
+    })
   })
 })

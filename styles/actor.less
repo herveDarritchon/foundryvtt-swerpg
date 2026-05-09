@@ -1534,20 +1534,28 @@
 
       .skill {
         display: grid;
-        grid-template-columns: minmax(120px, 1fr) 26px 36px 36px 26px 80px;
+        grid-template-columns: minmax(120px, 1fr) 28px 28px 28px 36px 36px 80px 1fr;
         align-items: center;
         min-height: 1.75rem;
         height: auto;
         padding: 0.1rem 0.15rem;
 
-        .name {
+        // === State visual classes ===
+        &.is-free .skill__action--increase { color: #00ff99; }
+        &.is-affordable .skill__action--increase { color: #c9b36a; }
+        &.is-blocked .skill__action--increase { opacity: 0.5; }
+        &.is-max .skill__action--increase { color: #9bb0c2; }
+        &.is-career .skill-marker--career { color: #46c7ff; border-color: #46c7ff; }
+        &.is-specialization .skill-marker--specialization { color: #00d49a; border-color: #00d49a; }
+
+        .skill__info {
           display: flex;
           align-items: center;
           min-width: 0;
           overflow: hidden;
           gap: 0.2rem;
 
-          .label {
+          .skill__label {
             flex: 0 0 auto;
             font-size: var(--font-size-12);
             font-weight: bold;
@@ -1557,7 +1565,7 @@
             white-space: nowrap;
           }
 
-          .abbreviation {
+          .skill__characteristic {
             flex-shrink: 0;
             font-size: var(--font-size-10);
             color: #9bb0c2;
@@ -1565,12 +1573,12 @@
           }
         }
 
-        .skill-tags {
+        .skill__marker {
           display: flex;
           justify-content: center;
           gap: 0.15rem;
 
-          .skill-tag {
+          .skill-marker {
             display: inline-flex;
             justify-content: center;
             align-items: center;
@@ -1581,45 +1589,50 @@
             font-size: 0.6rem;
             line-height: 1;
             font-weight: bold;
-          }
-
-          .skill-tag--career {
-            color: #46c7ff;
-          }
-
-          .skill-tag--specialization {
-            color: #00d49a;
+            color: #9bb0c2;
           }
         }
 
-        .skill-rank {
+        .skill__action {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          min-width: 0;
+
+          img {
+            width: 14px;
+            height: 14px;
+            object-fit: contain;
+            flex-shrink: 0;
+          }
+
+          .increase-badge--max {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 1.1rem;
+            height: 1.1rem;
+            border: 1px solid #9bb0c2;
+            border-radius: 2px;
+            font-size: 0.6rem;
+            font-weight: bold;
+            color: #9bb0c2;
+          }
+        }
+
+        .skill__action--decrease img.is-disabled {
+          opacity: 0.25;
+          filter: grayscale(1);
+        }
+
+        .skill__rank {
           text-align: center;
+          font-size: 0.65rem;
           color: #9bb0c2;
-          font-size: 0.65rem;
-
-          .skill-rank-label {
-            display: block;
-            font-size: 0.55rem;
-            text-transform: uppercase;
-          }
-
-          .skill-rank-value {
-            font-weight: bold;
-          }
+          font-weight: bold;
         }
 
-        .skill-cost {
-          text-align: right;
-          font-size: 0.65rem;
-          color: #c9b36a;
-
-          .skill-cost--free {
-            color: #00ff99;
-            font-weight: bold;
-          }
-        }
-
-        .skill-dice-preview {
+        .skill__dice-preview {
           display: flex;
           justify-content: center;
           gap: 0.2rem;
@@ -1640,6 +1653,7 @@
             background-image: url('/icons/svg/d12-grey.svg');
           }
         }
+
         .pips {
           flex: 0 0 150px;
           align-items: center;
