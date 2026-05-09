@@ -1,8 +1,7 @@
 import { checkFileExists, createPathIfNecessary, uploadFileOnTheServer } from '../../helpers/server/directory/file.mjs'
-import { createFoundryFolder } from '../../helpers/foundry/folder.mjs'
 import { parseXmlToJson } from '../../utils/xml/parser.mjs'
 import { logger } from '../../utils/logger.mjs'
-import { getOrCreateWorldFolder } from '../../importer/utils/oggdude-import-folders.mjs'
+import { createOggDudeStorageTarget } from '../../utils/storage/storage-strategy.mjs'
 
 /**
  * @typedef {object} ZipEntry
@@ -338,82 +337,96 @@ class OggDudeDataElement {
   /**
    * Store the Items in the database. The data is mapped to the Swerpg Item object array
    * @param items {Array} The items to be stored in the database.
-   * @param folder {Folder} The folder where the items will be stored.
+   * @param folderType {string} The folder where the items will be stored.
    * @param elementType {string} The element type to be stored, must be a system item type.
    * @param imageWorldPath {string} The path to store the image for the item in the world .
    * @param imgSystemPath {string} The path to store the image for the item in the system.
    * @param prefix
+   * @param importToCompendium
    * @returns {Promise<void>} A Promise that resolves when the items have been stored.
    * @private
    * @function
    * @name _storeItems
    */
-  static _storeItems = async (items, folder, elementType, imageWorldPath, imgSystemPath, prefix, importToCompendium = false) => {
-    let itemPromises = await Promise.all(
-      items.map(async (item) => {
-        const key = item.key != null && item.key !== '' ? item.key : item.name.toUpperCase()
-        logger.debug('[OggDudeDataElement] Item image to be returned by method _getItemImage', { key })
-        const img = await OggDudeDataElement._getItemImage(key, imageWorldPath, prefix, imgSystemPath)
-        logger.debug('[OggDudeDataElement] Item image resolved by _getItemImage', { key, img })
-
-        // Adaptateur pour éviter la double encapsulation
-        // Si item.system existe, on l'utilise, sinon on utilise item directement (rétrocompatibilité)
-        const systemData = item.system ?? item
-
-        return {
-          name: item.name,
-          img: item.img || img,
-          type: elementType, // This should match the type defined in your system
-          system: systemData, // Utilise les données système correctes
-          flags: item.flags || {}, // Préserve les flags si présents
-          folder: folder.id, // Set the folder id
-        }
-      }),
-    )
-
-    logger.debug('[OggDudeDataElement] Items mapped before creation', { itemPromises })
-
-    let promiseResolved = Promise.resolve(itemPromises)
-      .then(async (items) => {
-        logger.info('[OggDudeDataElement] Creating items batch', { items })
-        try {
-          let created
-          if (importToCompendium) {
-            // Capitalize first letter for label
-            const typeLabel = elementType.charAt(0).toUpperCase() + elementType.slice(1)
-            const packName = `oggdude-${elementType.toLowerCase()}`
-            const packLabel = `OggDude ${typeLabel}`
-            const packFullName = `world.${packName}`
-
-            let pack = game.packs.get(packFullName)
-            if (!pack) {
-              logger.info('[OggDudeDataElement] Creating Compendium', { packName, packLabel })
-              pack = await CompendiumCollection.createCompendium({
-                type: 'Item',
-                label: packLabel,
-                name: packName,
-                package: 'world',
-              })
-            }
-            // Ensure items have the correct type for the pack (though we created the pack as 'Item')
-            // And use Item.createDocuments with the pack option
-            created = await Item.createDocuments(items, { pack: packFullName })
-          } else {
-            created = await Item.createDocuments(items)
-          }
-          logger.debug('[OggDudeDataElement] Items created', { created })
-        } catch (error) {
-          logger.error('[OggDudeDataElement] Error while creating items batch', { error })
-        }
-      })
-      .catch((error) => {
-        logger.error('[OggDudeDataElement] Error while resolving item creation promises', { error })
+  static _storeItems = async (
+    items,
+    folderType,
+    elementType,
+    imageWorldPath,
+    imgSystemPath,
+    prefix,
+    importToCompendium = false,
+  ) => {
+    try {
+      const storageTarget = await createOggDudeStorageTarget({
+        mode: importToCompendium ? 'compendium' : 'world',
+        elementType,
+        folderType,
       })
 
-    logger.debug('[OggDudeDataElement] Items creation promises resolved', { promiseResolved })
-    return promiseResolved
+      const mappedItems = await Promise.all(
+        items.map(async item => {
+          const key =
+            item.key != null && item.key !== ''
+              ? item.key
+              : item.name.toUpperCase()
+
+          logger.debug('[OggDudeDataElement] Item image to be returned by method _getItemImage', {
+            key,
+          })
+
+          const img = await OggDudeDataElement._getItemImage(
+            key,
+            imageWorldPath,
+            prefix,
+            imgSystemPath,
+          )
+
+          logger.debug('[OggDudeDataElement] Item image resolved by _getItemImage', {
+            key,
+            img,
+          })
+
+          const systemData = item.system ?? item
+
+          return storageTarget.prepareItemData({
+            name: item.name,
+            img: item.img || img,
+            type: elementType,
+            system: systemData,
+            flags: item.flags || {},
+          })
+        }),
+      )
+
+      logger.debug('[OggDudeDataElement] Items mapped before creation', {
+        count: mappedItems.length,
+        elementType,
+        storageMode: storageTarget.mode,
+        storageLabel: storageTarget.label,
+      })
+
+      const created = await storageTarget.createDocuments(mappedItems)
+
+      logger.debug('[OggDudeDataElement] Items created', {
+        count: created.length,
+        elementType,
+        storageMode: storageTarget.mode,
+        storageLabel: storageTarget.label,
+      })
+
+      return created
+    } catch (error) {
+      logger.error('[OggDudeDataElement] Error while storing items batch', {
+        error,
+        elementType,
+        folderType,
+        importToCompendium,
+      })
+
+      throw error
+    }
   }
-
   /**
    * Store the Items in the database. The data is mapped to the Swerpg Item object array.
    * @param jsonData {[OggDudeDataElement]} The Items in the format of Json.
@@ -433,6 +446,7 @@ class OggDudeDataElement {
   /**
    * Store Items base on the context provided
    * @param context {OggDudeElementContext} The context of the element to be stored
+   * @param importToCompendium
    * @returns {Promise<void>} A Promise that resolves when the element has been stored.
    * @async
    * @public
@@ -449,27 +463,7 @@ class OggDudeDataElement {
 
     logger.debug('[OggDudeDataElement] ProcessElements - Step Initial', { context })
 
-    // Step 4: Create the folder using the new hierarchical folder service
-    const importDomain = context.element.type
-    let folder
-    try {
-      folder = await getOrCreateWorldFolder(importDomain, context.folder.type)
-      logger.debug('[OggDudeDataElement] ProcessElements - Step 4 Folder (hierarchical)', {
-        folder,
-        importDomain,
-        folderPath: `OggDude/${folder.name}`,
-      })
-    } catch (error) {
-      logger.error('[OggDudeDataElement] Failed to create hierarchical folder, falling back to legacy behavior', {
-        error,
-        importDomain,
-      })
-      // Fallback to legacy behavior if folder service fails
-      folder = await createFoundryFolder(context.folder.name, context.folder.type)
-      logger.debug('[OggDudeDataElement] ProcessElements - Step 4 Folder (legacy fallback)', { folder })
-    }
-
-    // Step 5-1: Create the folder in the FVTT tab
+    // Step 5-1: Create the folder in the FVTT server
     const imgPath = await createPathIfNecessary(context.image.worldPath)
     logger.debug('[OggDudeDataElement] ProcessElements - Step 5-1 Image Path', { imgPath })
 
@@ -491,7 +485,7 @@ class OggDudeDataElement {
     // Step 6-5: Store the Items in the server database
     await OggDudeDataElement._storeItems(
       items,
-      folder,
+      context.folder.type,
       context.element.type,
       context.image.worldPath,
       context.image.systemPath,

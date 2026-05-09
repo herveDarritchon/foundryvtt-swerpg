@@ -168,6 +168,33 @@ async function getOrCreateFolderInternal(folderName, folderType, parentId = null
 }
 
 /**
+ * Create a folder in the Foundry VTT sidebar
+ * @param context {OggDudeElementContext} The context of the element to be stored
+ * @returns {Promise<Folder>} The created folder.
+ * @async
+ * @public
+ * @function
+ * @name createFoundryFolder
+ */
+export async function createFoundryFolder(elementType, folderType) {
+  const importDomain = elementType
+  let folder
+  try {
+    folder = await getOrCreateWorldFolder(importDomain, folderType)
+    logger.debug('[OggDudeDataElement] ProcessElements - Step 4 Folder (hierarchical)', {
+      folder,
+      importDomain,
+      folderPath: `OggDude/${folder.name}`,
+    })
+  } catch (error) {
+    logger.error('[OggDudeDataElement] Failed to create hierarchical folder.', {
+      error,
+      importDomain,
+    })
+  }
+  return folder
+}
+/**
  * Récupère ou crée la hiérarchie de dossiers OggDude pour un domaine d'import
  * @param {string} importDomain Domaine d'import (weapon, armor, gear, etc.)
  * @param {string} itemType Type d'Item Foundry (ex: 'Item')
