@@ -4,6 +4,7 @@ import SwerpgSpeciality from './speciality.mjs'
 import { SwerpgSpecies } from './_module.mjs'
 import SwerpgCareer from './career.mjs'
 import SwerpgSpecialization from './specialization.mjs'
+import { getSkillPurchaseState } from '../utils/skill-costs.mjs'
 
 /**
  * @typedef {Object} Thresholds
@@ -428,51 +429,53 @@ export default class SwerpgCharacter extends SwerpgActorType {
   }
 
   /* -------------------------------------------- */
+
   /**
-   * Prepare skills data for Character Actor subtypes.
-   * @protected
-   * @param {Set<Object>} skills The skills object to prepare
+   * Prepare a single skill for the Character subtype specifically.
+   * Enriches with purchase state, free rank status, and next rank cost.
+   * @inheritDoc
    */
-  _prepareSkills(skills) {
-    /*        For (const skill of Object.entries(skills)) {
-                    this._prepareSkill(...skill);
-                }*/
+  _prepareSkill(skillId, skill) {
+    super._prepareSkill(skillId, skill)
+
+    const freeStatus = this.#getFreeSkillStatus(skillId)
+    skill.freeRank = {
+      isCareer: freeStatus.isCareer,
+      isSpecialization: freeStatus.isSpecialization,
+    }
+
+    const progression = this.progression
+    const purchaseState = getSkillPurchaseState({
+      rank: skill.rank.value,
+      isCareer: freeStatus.isCareer,
+      isSpecialization: freeStatus.isSpecialization,
+      availableXp: progression.experience.available,
+      freeCareerSkillsLeft: progression.freeSkillRanks.career.available,
+      freeSpecializationSkillsLeft: progression.freeSkillRanks.specialization.available,
+    })
+
+    skill.nextRank = purchaseState.nextRank
+    skill.nextCost = purchaseState.nextCost
+    skill.purchaseReason = purchaseState.reason
+    skill.isFreePurchase = purchaseState.isFreePurchase
+    skill.canPurchase = purchaseState.canPurchase
   }
 
   /* -------------------------------------------- */
 
   /**
-   * Prepare a single skill for the Character subtype specifically.
-   * @inheritDoc
+   * Determine whether a skill is a free career or specialization skill.
+   * @param {string} skillId
+   * @returns {{ isCareer: boolean, isSpecialization: boolean }}
    */
-  _prepareSkill(skillId, skill) {
-    // Adjust base skill rank
-    let base = skill?.base || 0
-    let careerFree = skill?.careerFree || 0
-    let specializationFree = skill?.specializationFree || 0
-    let trained = skill?.trained || 0
+  #getFreeSkillStatus(skillId) {
+    const career = this.details.career
+    const isCareer = career ? Array.from(career.careerSkills || []).some((s) => s.id === skillId) : false
 
-    if (this.details.species?.freeSkills?.has(skillId)) {
-      base++
-    }
+    const specializations = Array.from(this.details.specializations || [])
+    const isSpecialization = specializations.some((spec) => Array.from(spec.specializationSkills || []).some((s) => s.id === skillId))
 
-    skill.rank = {
-      base: base,
-      careerFree: careerFree,
-      specializationFree: specializationFree,
-      trained: trained,
-    }
-
-    return skill
-    // Standard skill preparation
-    // super._prepareSkill(skillId, skill);
-
-    // Record point cost
-    /*        const ranks = SYSTEM.SKILL.RANKS;
-                const rank = ranks[skill.rank];
-                skill.spent = rank.spent - base;
-                const next = ranks[skill.rank + 1] || {cost: null};
-                skill.cost = next.cost;*/
+    return { isCareer, isSpecialization }
   }
 
   /* -------------------------------------------- */

@@ -5,7 +5,7 @@ import ErrorSkill from '../../lib/skills/error-skill.mjs'
 import TalentFactory from '../../lib/talents/talent-factory.mjs'
 import ErrorTalent from '../../lib/talents/error-talent.mjs'
 import { logger } from '../../utils/logger.mjs'
-import { getPositiveDicePoolPreview, getSkillPurchaseState } from '../../utils/skill-costs.mjs'
+import { getPositiveDicePoolPreview } from '../../utils/skill-costs.mjs'
 
 /**
  * @typedef {Object} DefenseDisplayData
@@ -539,85 +539,55 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
   /* -------------------------------------------- */
 
   /**
-   * Prepare the skills for the context
+   * Prepare the skills for the context.
+   * Skills are already enriched by the data model — this method adds UI-layer fields only.
    * @param actor
    * @returns {undefined}
    */
   static #prepareSkills(actor) {
-    const freeCareerSkillsLeft =
-      (actor.system.progression?.freeSkillRanks?.career?.gained ?? 0) - (actor.system.progression?.freeSkillRanks?.career?.spent ?? 0)
-    const freeSpecializationSkillsLeft =
-      (actor.system.progression?.freeSkillRanks?.specialization?.gained ?? 0) - (actor.system.progression?.freeSkillRanks?.specialization?.spent ?? 0)
-    const availableXp = actor.system.progression?.experience?.available ?? 0
-
     const skills = Object.entries(actor.system.skills)
       .map(([k, v]) => ({
         id: k,
         ...v,
-        ...SYSTEM.SKILLS[k],
       }))
       .map((skill) => {
-        const total = skill.rank.base + skill.rank.careerFree + skill.rank.specializationFree + skill.rank.trained
-        const skillEnriched = foundry.utils.mergeObject(skill, { rank: { value: total } })
-        const freeRank = this._prepareFreeSkill(actor, skill.id)
-        const purchaseState = getSkillPurchaseState({
-          rank: total,
-          isCareer: freeRank.isCareer,
-          isSpecialization: freeRank.isSpecialization,
-          availableXp,
-          freeCareerSkillsLeft,
-          freeSpecializationSkillsLeft,
-        })
-        // Get characteristic ID (could be direct ID or object with id property)
-        const characteristicId = skill.characteristics?.id || skill.characteristics
-        const characteristicValue = characteristicId ? (actor.system.characteristics[characteristicId]?.rank.value ?? 0) : 0
-
-        const characteristicValueSkillRank = {
-          characteristicValue,
-          skillRank: total,
-        }
-        const dicePreview = getPositiveDicePoolPreview(characteristicValueSkillRank)
-        // Attach dicePreview to skillEnriched BEFORE preparing ranks
-        skillEnriched.dicePreview = dicePreview
         const dicePreviewAfter = getPositiveDicePoolPreview({
-          characteristicValue,
-          skillRank: purchaseState.nextRank,
+          characteristicValue: skill.characteristicValue,
+          skillRank: skill.nextRank,
         })
-        skillEnriched.dicePreviewAfter = dicePreviewAfter
         const markerState =
-          freeRank.isCareer && freeRank.isSpecialization ? 'both' : freeRank.isCareer ? 'career' : freeRank.isSpecialization ? 'specialization' : 'none'
+          skill.freeRank.isCareer && skill.freeRank.isSpecialization
+            ? 'both'
+            : skill.freeRank.isCareer
+              ? 'career'
+              : skill.freeRank.isSpecialization
+                ? 'specialization'
+                : 'none'
 
         return {
-          pips: this._prepareSkillRanks(skillEnriched),
-          freeRank,
-          nextRank: purchaseState.nextRank,
-          nextCost: purchaseState.nextCost,
-          canPurchase: purchaseState.canPurchase,
-          isFreePurchase: purchaseState.isFreePurchase,
-          purchaseReason: purchaseState.reason,
-          dicePreview,
+          pips: this._prepareSkillRanks(skill),
           dicePreviewAfter,
-          ...skillEnriched,
+          ...skill,
           ui: {
             markerState,
-            increaseState: purchaseState.reason,
+            increaseState: skill.purchaseReason,
             increaseIcon:
-              purchaseState.reason === 'FREE_RANK_AVAILABLE'
+              skill.purchaseReason === 'FREE_RANK_AVAILABLE'
                 ? 'free'
-                : purchaseState.reason === 'AFFORDABLE'
+                : skill.purchaseReason === 'AFFORDABLE'
                   ? 'buy'
-                  : purchaseState.reason === 'INSUFFICIENT_XP'
+                  : skill.purchaseReason === 'INSUFFICIENT_XP'
                     ? 'buy-blocked'
                     : null,
             decreaseState: 'pending',
             decreaseIcon: 'sell',
             lineCssClass: [
-              freeRank.isCareer ? 'is-career' : '',
-              freeRank.isSpecialization ? 'is-specialization' : '',
-              purchaseState.reason === 'FREE_RANK_AVAILABLE' ? 'is-free' : '',
-              purchaseState.reason === 'AFFORDABLE' ? 'is-affordable' : '',
-              purchaseState.reason === 'INSUFFICIENT_XP' ? 'is-blocked' : '',
-              purchaseState.reason === 'MAX_RANK' ? 'is-max' : '',
+              skill.freeRank.isCareer ? 'is-career' : '',
+              skill.freeRank.isSpecialization ? 'is-specialization' : '',
+              skill.purchaseReason === 'FREE_RANK_AVAILABLE' ? 'is-free' : '',
+              skill.purchaseReason === 'AFFORDABLE' ? 'is-affordable' : '',
+              skill.purchaseReason === 'INSUFFICIENT_XP' ? 'is-blocked' : '',
+              skill.purchaseReason === 'MAX_RANK' ? 'is-max' : '',
             ]
               .filter(Boolean)
               .join(' '),
@@ -662,44 +632,6 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
     }
 
     return pips
-  }
-
-  /**
-   * Prepare the skill Ranks for the context
-   * @param actor
-   * @param skillKey
-   * @returns {undefined}
-   */
-  static _prepareFreeSkill(actor, skillKey) {
-    const specializationFreeSkills = Array.from(actor.system.details.specializations).flatMap((specialization) =>
-      Array.from(
-        specialization.specializationSkills.map((skill) => {
-          return {
-            id: skill.id,
-            parent: specialization.name,
-            type: 'specialization',
-          }
-        }),
-      ),
-    )
-    const careerFreeSkills = Array.from(actor.system.details.career?.careerSkills ?? []).map((skill) => {
-      return {
-        id: skill.id,
-        parent: actor.system.details.career.name,
-        type: 'career',
-      }
-    })
-
-    const freeSkills = specializationFreeSkills.concat(careerFreeSkills)
-
-    const mayBeAFreeSkill = freeSkills.filter((skill) => skill.id === skillKey)
-
-    return {
-      extraClass: mayBeAFreeSkill.length ? 'active' : '',
-      name: mayBeAFreeSkill.length ? mayBeAFreeSkill.map((skill) => skill.parent).join(', ') : '',
-      isCareer: mayBeAFreeSkill.length !== 0 && mayBeAFreeSkill.filter((skill) => skill.type === 'career').length > 0,
-      isSpecialization: mayBeAFreeSkill.length !== 0 && mayBeAFreeSkill.filter((skill) => skill.type === 'specialization').length > 0,
-    }
   }
 
   async _onRender(context, options) {

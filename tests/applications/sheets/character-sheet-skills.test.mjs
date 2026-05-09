@@ -13,6 +13,8 @@ vi.mock('../../../module/lib/featured-equipment.mjs', () => ({
   computeFeaturedEquipment: vi.fn(() => []),
 }))
 
+import { getPositiveDicePoolPreview, getSkillPurchaseState } from '../../../module/utils/skill-costs.mjs'
+
 const SKILL_TYPE = {
   general: { id: 'general', label: 'SKILL_TYPE.General' },
   knowledge: { id: 'knowledge', label: 'SKILL_TYPE.Knowledge' },
@@ -20,12 +22,12 @@ const SKILL_TYPE = {
 }
 
 const MOCK_CHARACTERISTICS = {
-  agility: { id: 'agility', label: 'CHARACTERISTICS.Agility' },
-  brawn: { id: 'brawn', label: 'CHARACTERISTICS.Brawn' },
-  intellect: { id: 'intellect', label: 'CHARACTERISTICS.Intellect' },
-  cunning: { id: 'cunning', label: 'CHARACTERISTICS.Cunning' },
-  presence: { id: 'presence', label: 'CHARACTERISTICS.Presence' },
-  willpower: { id: 'willpower', label: 'CHARACTERISTICS.Willpower' },
+  agility: { id: 'agility', label: 'CHARACTERISTICS.Agility', abbreviation: 'CHARACTERISTICS.AgilityAbbr' },
+  brawn: { id: 'brawn', label: 'CHARACTERISTICS.Brawn', abbreviation: 'CHARACTERISTICS.BrawnAbbr' },
+  intellect: { id: 'intellect', label: 'CHARACTERISTICS.Intellect', abbreviation: 'CHARACTERISTICS.IntellectAbbr' },
+  cunning: { id: 'cunning', label: 'CHARACTERISTICS.Cunning', abbreviation: 'CHARACTERISTICS.CunningAbbr' },
+  presence: { id: 'presence', label: 'CHARACTERISTICS.Presence', abbreviation: 'CHARACTERISTICS.PresenceAbbr' },
+  willpower: { id: 'willpower', label: 'CHARACTERISTICS.Willpower', abbreviation: 'CHARACTERISTICS.WillpowerAbbr' },
 }
 
 const MOCK_SKILL_CONFIG = {
@@ -172,83 +174,6 @@ describe('CharacterSheet skill methods', () => {
     })
   })
 
-  describe('_prepareFreeSkill', () => {
-    it('marks a skill as career when it belongs to the career skills list', () => {
-      const actor = buildMockActor({
-        career: { name: 'Scout', careerSkills: [{ id: 'athletics' }, { id: 'survival' }] },
-        specializations: [],
-      })
-      const result = CharacterSheet._prepareFreeSkill(actor, 'athletics')
-      expect(result.isCareer).toBe(true)
-      expect(result.isSpecialization).toBe(false)
-      expect(result.extraClass).toBe('active')
-      expect(result.name).toBe('Scout')
-    })
-
-    it('marks a skill as specialization when it belongs to specialization skills', () => {
-      const actor = buildMockActor({
-        specializations: [{ name: 'Shadow', skills: ['stealth', 'deception'] }],
-      })
-      const result = CharacterSheet._prepareFreeSkill(actor, 'stealth')
-      expect(result.isSpecialization).toBe(true)
-      expect(result.isCareer).toBe(false)
-      expect(result.extraClass).toBe('active')
-      expect(result.name).toBe('Shadow')
-    })
-
-    it('marks a skill as both career and specialization when it belongs to both', () => {
-      const actor = buildMockActor({
-        career: { name: 'Scout', careerSkills: [{ id: 'perception' }] },
-        specializations: [{ name: 'Shadow', skills: ['perception'] }],
-      })
-      const result = CharacterSheet._prepareFreeSkill(actor, 'perception')
-      expect(result.isCareer).toBe(true)
-      expect(result.isSpecialization).toBe(true)
-      expect(result.extraClass).toBe('active')
-      expect(result.name).toContain('Scout')
-      expect(result.name).toContain('Shadow')
-    })
-
-    it('returns inactive for a skill not in career or specialization lists', () => {
-      const actor = buildMockActor({
-        career: { name: 'Scout', careerSkills: [{ id: 'athletics' }] },
-        specializations: [{ name: 'Shadow', skills: ['stealth'] }],
-      })
-      const result = CharacterSheet._prepareFreeSkill(actor, 'arcana')
-      expect(result.isCareer).toBe(false)
-      expect(result.isSpecialization).toBe(false)
-      expect(result.extraClass).toBe('')
-      expect(result.name).toBe('')
-    })
-
-    it('handles multiple specializations with overlapping skills', () => {
-      const actor = buildMockActor({
-        career: { name: 'Smuggler', careerSkills: [{ id: 'deception' }] },
-        specializations: [
-          { name: 'Scoundrel', skills: ['deception', 'streetwise'] },
-          { name: 'Thief', skills: ['deception', 'stealth'] },
-        ],
-      })
-      const result = CharacterSheet._prepareFreeSkill(actor, 'deception')
-      expect(result.isCareer).toBe(true)
-      expect(result.isSpecialization).toBe(true)
-      expect(result.name).toContain('Scoundrel')
-      expect(result.name).toContain('Thief')
-      expect(result.name).toContain('Smuggler')
-    })
-
-    it('handles actor without a career', () => {
-      const actor = buildMockActor({
-        career: null,
-        specializations: [{ name: 'Test Spec', skills: ['athletics'] }],
-      })
-      const result = CharacterSheet._prepareFreeSkill(actor, 'athletics')
-      expect(result.isCareer).toBe(false)
-      expect(result.isSpecialization).toBe(true)
-      expect(result.extraClass).toBe('active')
-    })
-  })
-
   describe('Skills context preparation', () => {
     let SwerpgBaseActorSheet
 
@@ -278,7 +203,55 @@ describe('CharacterSheet skill methods', () => {
       }
     }
 
+    /**
+     * Enrich mock skills with the same fields the data model would provide.
+     * This mimics SwerpgActorType._prepareSkill() + SwerpgCharacter._prepareSkill().
+     */
+    function enrichMockSkills(actor) {
+      const skills = actor.system.skills
+      const characteristics = actor.system.characteristics
+      const career = actor.system.details.career
+      const specializations = Array.from(actor.system.details.specializations || [])
+      const freeSkillRanks = actor.system.progression.freeSkillRanks
+      const experience = actor.system.progression.experience
+
+      Object.entries(skills).forEach(([skillId, skill]) => {
+        const config = MOCK_SKILL_CONFIG[skillId]
+        if (!config) return
+
+        skill.rank.value = skill.rank.base + skill.rank.careerFree + skill.rank.specializationFree + skill.rank.trained
+
+        skill.label = config.label
+        skill.characteristicId = config.characteristics.id
+        skill.characteristics = { abbreviation: config.characteristics.abbreviation }
+        skill.type = config.type
+
+        const characteristicValue = characteristics[config.characteristics.id]?.rank?.value ?? 0
+        skill.characteristicValue = characteristicValue
+        skill.dicePreview = getPositiveDicePoolPreview({ characteristicValue, skillRank: skill.rank.value })
+
+        const isCareer = career ? Array.from(career.careerSkills || []).some((s) => s.id === skillId) : false
+        const isSpecialization = specializations.some((spec) => Array.from(spec.specializationSkills || []).some((s) => s.id === skillId))
+        skill.freeRank = { isCareer, isSpecialization }
+
+        const purchaseState = getSkillPurchaseState({
+          rank: skill.rank.value,
+          isCareer,
+          isSpecialization,
+          availableXp: experience.available,
+          freeCareerSkillsLeft: freeSkillRanks.career.gained - freeSkillRanks.career.spent,
+          freeSpecializationSkillsLeft: freeSkillRanks.specialization.gained - freeSkillRanks.specialization.spent,
+        })
+        skill.nextRank = purchaseState.nextRank
+        skill.nextCost = purchaseState.nextCost
+        skill.purchaseReason = purchaseState.reason
+        skill.isFreePurchase = purchaseState.isFreePurchase
+        skill.canPurchase = purchaseState.canPurchase
+      })
+    }
+
     async function getContext(actor) {
+      enrichMockSkills(actor)
       vi.spyOn(SwerpgBaseActorSheet.prototype, '_prepareContext').mockResolvedValue(buildBaseContext(actor))
       const sheet = new CharacterSheet({ document: actor })
       sheet.actor = actor
