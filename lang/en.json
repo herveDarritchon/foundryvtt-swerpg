@@ -775,7 +775,26 @@
         "SELECTED_COST": "Selected Cost"
       },
       "PLACEHOLDER": "Select a skill to preview purchase cost."
-    }
+    },
+    "MARKER": {
+      "CAREER": "Career skill",
+      "SPECIALIZATION": "Specialization skill"
+    },
+    "INCREASE": {
+      "FREE": "FREE",
+      "FREE_TOOLTIP": "Free rank available",
+      "BLOCKED": "Blocked",
+      "BLOCKED_TOOLTIP": "Insufficient XP",
+      "MAX": "MAX",
+      "MAX_TOOLTIP": "Maximum rank reached",
+      "COST_TOOLTIP": "Cost: {cost} XP"
+    },
+    "DECREASE": {
+      "PENDING": "Refund not available",
+      "FORGETTABLE": "Refundable rank",
+      "NON_REFUNDABLE": "Non-refundable rank"
+    },
+    "DICE_PREVIEW_TOOLTIP": "Current dice pool"
   },
   "SKILLS": {
     "Athletics": "Athletics",

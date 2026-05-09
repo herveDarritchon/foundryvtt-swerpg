@@ -775,7 +775,26 @@
         "SELECTED_COST": "Coût sélectionné"
       },
       "PLACEHOLDER": "Sélectionnez une compétence pour prévisualiser le coût."
-    }
+    },
+    "MARKER": {
+      "CAREER": "Compétence de carrière",
+      "SPECIALIZATION": "Compétence de spécialisation"
+    },
+    "INCREASE": {
+      "FREE": "GRATUIT",
+      "FREE_TOOLTIP": "Rang gratuit disponible",
+      "BLOCKED": "Bloqué",
+      "BLOCKED_TOOLTIP": "XP insuffisants",
+      "MAX": "MAX",
+      "MAX_TOOLTIP": "Rang maximum atteint",
+      "COST_TOOLTIP": "Coût : {cost} XP"
+    },
+    "DECREASE": {
+      "PENDING": "Remboursement non disponible",
+      "FORGETTABLE": "Rang remboursable",
+      "NON_REFUNDABLE": "Rang non remboursable"
+    },
+    "DICE_PREVIEW_TOOLTIP": "Pool de dés actuel"
   },
   "SKILLS": {
     "Athletics": "Athlétisme",
