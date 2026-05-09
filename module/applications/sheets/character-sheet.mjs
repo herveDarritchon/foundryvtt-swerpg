@@ -287,7 +287,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
     logger.debug(`[${this.constructor.name}] onToggleTrainedSkill - Before: skill '${skillId}', isCareer: ${isCareer}`, skillClass)
 
     // Evaluate the skill following the action processed
-    const skillEvaluated = skillClass.process()
+    const skillEvaluated = await skillClass.process()
 
     // Display a warning if the skill action is not valid
     if (skillEvaluated instanceof ErrorSkill) {
