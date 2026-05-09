@@ -269,6 +269,70 @@ html.on('contextmenu', '[data-has-context=talent]', this._onTalentContextMenu.bi
 
 Les mises à jour qui en découlent doivent **toujours** passer par `this.document.update(...)`.
 
+### 5.3. Hover, focus et interactions non-click : `data-hover-action` vs `data-action`
+
+**RÈGE CRITIQUE** : Les `actions` ApplicationV2 (`data-action` + `DEFAULT_OPTIONS.actions`) ne fonctionnent **que pour les clics**. Pour les interactions de type **hover** (`mouseenter`/`mouseleave`) et **focus clavier** (`focusin`/`focusout`), il faut utiliser des **listeners DOM classiques**, pas le système d'actions.
+
+| Type d'interaction | Pattern à utiliser | Pourquoi |
+|---|---|---|
+| Clic (souris ou clavier Enter/Space) | `data-action` + `DEFAULT_OPTIONS.actions` | C'est le pattern canonique ApplicationV2 pour les clics. |
+| Hover/survol souris | Listeners dans `_onRender` + `data-hover-action` | Les actions ApplicationV2 ne déclenchent pas sur `mouseover`. |
+| Focus clavier (Tab) | Listeners dans `_onRender` + `tabindex="0"` + `focusin`/`focusout` | Les actions ApplicationV2 ne déclenchent pas sur `focusin`. |
+
+**Pattern hover à respecter :
+
+1. **Template** :
+```hbs
+<div class="skill" 
+     data-skill-id="{{id}}" 
+     tabindex="0"
+     data-hover-action="skillPreview">
+```
+
+2. **JS - `_onRender`** (pour attacher les listeners :
+```js
+async _onRender(context, options) {
+  await super._onRender(context, options)
+  // Utiliser mouseover/mouseout et focusin/focusout
+  // car CEUX BUBBLENT (contrairement à mouseenter/mouseleave et focus/blur)
+  this.element.addEventListener('mouseover', this.#onHoverAction)
+  this.element.addEventListener('mouseout', this.#onHoverOutAction)
+  this.element.addEventListener('focusin', this.#onHoverAction)
+  this.element.addEventListener('focusout', this.#onHoverOutAction)
+}
+```
+
+3. **JS - Handler délégué :
+```js
+#onHoverAction = (event) => {
+  const target = event.target.closest('[data-hover-action]')
+  if (!target) return
+  switch (target.dataset.hoverAction) {
+    case 'skillPreview':
+      return this.#handleSkillPreviewEnter(target)
+    // ...autres actions
+  }
+}
+```
+
+**Pourquoi pas `mouseenter`/`mouseleave` :**
+- `mouseenter` et `mouseleave` **ne bubblent pas** → impossible d'un élément enfant au parent
+- La délégation d'événements sur `this.element` ne fonctionne pas avec eux
+- Préférer **`mouseover`/`mouseover` et **`focusin`/`focusout` qui bubblent
+
+**Anti-clignotement (`event.relatedTarget` :**
+```js
+#handleSkillPreviewLeave(target, event) {
+  // Vérifie si on entre dans un autre élément du même type
+  const related = event.relatedTarget
+  if (related) {
+    const entering = related.closest('[data-hover-action="skillPreview"]')
+    if (entering) return  // on ne reset pas
+  }
+  this.#resetConsolePreview()
+}
+```
+
 ---
 
 ## 6. Mise à jour & validation des données
