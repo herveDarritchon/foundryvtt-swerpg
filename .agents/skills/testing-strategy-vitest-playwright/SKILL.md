@@ -319,7 +319,16 @@ Reject or rewrite:
 - `waitForTimeout` equivalents;
 - assertions against private implementation details when public behavior is available;
 - uncleaned globals (`globalThis.xml2js`, `globalThis.JSZip`, mocked `game`, etc.);
-- tests with no meaningful assertion.
+- tests with no meaningful assertion;
+- `Object.groupBy` in production code — not available in Node.js < 21 (CI pipeline uses Node 20). Use `Array.reduce` instead:
+  ```js
+  // ❌ Avoid
+  const grouped = Object.groupBy(items, item => item.type.id)
+  // ✅ Prefer
+  const grouped = items.reduce((acc, item) => {
+    const key = item.type.id; (acc[key] ||= []).push(item); return acc
+  }, {})
+  ```
 
 ## Playwright E2E rules
 

@@ -108,7 +108,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
       careerName: a.system.details.career?.name || game.i18n.localize('CAREER.SHEET.CHOOSE'),
       specializationName: Array.from(a.system.details.specializations)[0]?.name || game.i18n.localize('SPECIALIZATION.SHEET.CHOOSE'),
       talentTreeButtonText: game.system.tree.actor === a ? 'Close Talent Tree' : 'Open Talent Tree',
-      experience: a.system.experience,
+      experience: a.system.progression?.experience,
     })
 
     context.skills = CharacterSheet.#prepareSkills(a)
@@ -258,7 +258,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
    * @returns {Promise<void>}
    */
   static async #onToggleTrainedSkill(event) {
-    // Iniitialize the context depending on the event
+    // Initialize the context depending on the event
     const element = event.target.closest('.skill')
     const skillId = element.dataset.skillId
     const isCareer = element.dataset.isCareer === 'true'
@@ -422,7 +422,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
       (actor.system.progression?.freeSkillRanks?.career?.gained ?? 0) - (actor.system.progression?.freeSkillRanks?.career?.spent ?? 0)
     const freeSpecializationSkillsLeft =
       (actor.system.progression?.freeSkillRanks?.specialization?.gained ?? 0) - (actor.system.progression?.freeSkillRanks?.specialization?.spent ?? 0)
-    const availableXp = actor.system.experience?.available ?? 0
+    const availableXp = actor.system.progression?.experience?.available ?? 0
 
     const skills = Object.entries(actor.system.skills)
       .map(([k, v]) => ({
@@ -433,12 +433,11 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
       .map((skill) => {
         const total = skill.rank.base + skill.rank.careerFree + skill.rank.specializationFree + skill.rank.trained
         const skillEnriched = foundry.utils.mergeObject(skill, { rank: { value: total } })
-        const isCareer = skillEnriched.freeRank?.isCareer ?? false
-        const isSpecialization = skillEnriched.freeRank?.isSpecialization ?? false
+        const freeRank = this._prepareFreeSkill(actor, skill.id)
         const purchaseState = getSkillPurchaseState({
           rank: total,
-          isCareer,
-          isSpecialization,
+          isCareer: freeRank.isCareer,
+          isSpecialization: freeRank.isSpecialization,
           availableXp,
           freeCareerSkillsLeft,
           freeSpecializationSkillsLeft,
@@ -456,7 +455,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
         skillEnriched.dicePreview = dicePreview
         return {
           pips: this._prepareSkillRanks(skillEnriched),
-          freeRank: this._prepareFreeSkill(actor, skill.id),
+          freeRank,
           nextRank: purchaseState.nextRank,
           nextCost: purchaseState.nextCost,
           canPurchase: purchaseState.canPurchase,
@@ -467,15 +466,17 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
         }
       })
 
-    const skillsByType = Object.groupBy(skills, (skill) => skill.type.id)
+    const skillsByType = skills.reduce((acc, skill) => {
+      const type = skill.type.id
+      ;(acc[type] ||= []).push(skill)
+      return acc
+    }, {})
 
     // Sort and return the skills
-    return Object.fromEntries(
-      Object.entries(skillsByType).map(([type, skillGroup]) => {
-        skillGroup.sort((a, b) => a.label.localeCompare(b.label))
-        return [type, skillGroup]
-      }),
-    )
+    for (const skillGroup of Object.values(skillsByType)) {
+      skillGroup.sort((a, b) => a.label.localeCompare(b.label))
+    }
+    return skillsByType
   }
 
   /**
@@ -522,7 +523,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
         }),
       ),
     )
-    const careerFreeSkills = Array.from(actor.system.details.career?.careerSkills).map((skill) => {
+    const careerFreeSkills = Array.from(actor.system.details.career?.careerSkills ?? []).map((skill) => {
       return {
         id: skill.id,
         parent: actor.system.details.career.name,
