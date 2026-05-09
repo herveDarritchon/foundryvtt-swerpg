@@ -30,24 +30,6 @@ describe('System Configuration', () => {
     })
   })
 
-  describe('COMPENDIUM_PACKS configuration', () => {
-    test('should have all required compendium packs defined', () => {
-      const expectedPacks = ['talent', 'armor']
-
-      for (const packKey of expectedPacks) {
-        expect(SystemConfig.COMPENDIUM_PACKS).toHaveProperty(packKey)
-      }
-    })
-
-    test('should have correct pack identifiers for main packs', () => {
-      expect(SystemConfig.COMPENDIUM_PACKS.talent).toBe('swerpg.talents')
-    })
-
-    test('should have null values for extension packs', () => {
-      expect(SystemConfig.COMPENDIUM_PACKS.armor).toBe('swerpg.armors')
-    })
-  })
-
   describe('THREAT_LEVELS configuration', () => {
     test('should have all threat levels defined', () => {
       const expectedLevels = ['minion', 'normal', 'elite', 'boss']
@@ -188,7 +170,7 @@ describe('System Configuration', () => {
 
   describe('Configuration completeness', () => {
     test('should export all expected top-level constants', () => {
-      const expectedExports = ['SYSTEM_ID', 'ANCESTRIES', 'COMPENDIUM_PACKS', 'THREAT_LEVELS', 'ACTOR_HOOKS']
+      const expectedExports = ['SYSTEM_ID', 'ANCESTRIES', 'THREAT_LEVELS', 'ACTOR_HOOKS']
 
       for (const exportName of expectedExports) {
         expect(SystemConfig).toHaveProperty(exportName)
@@ -232,18 +214,6 @@ describe('System Configuration', () => {
 
       for (const levelData of Object.values(SystemConfig.THREAT_LEVELS)) {
         expect(levelData.icon).toMatch(iconPattern)
-      }
-    })
-  })
-
-  describe('Compendium pack naming conventions', () => {
-    test('should follow swerpg.* naming pattern for non-null packs', () => {
-      const packPattern = /^swerpg\./
-
-      for (const [packKey, packId] of Object.entries(SystemConfig.COMPENDIUM_PACKS)) {
-        if (packId !== null) {
-          expect(packId).toMatch(packPattern)
-        }
       }
     })
   })
