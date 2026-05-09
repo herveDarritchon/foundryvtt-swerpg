@@ -8,7 +8,7 @@
      data-skill-next-cost="{{nextCost}}"
      data-skill-can-purchase="{{canPurchase}}"
      data-skill-is-free="{{isFreePurchase}}"
-     data-action="skillHover">
+     data-hover-action="skillPreview">
   <div class="skill__info">
     <span class="skill__label">{{label}}</span>
     <span class="skill__characteristic">({{characteristics.abbreviation}})</span>
@@ -30,12 +30,12 @@
     {{else if (eq ui.increaseState 'MAX_RANK')}}
       <span class="increase-badge increase-badge--max">M</span>
     {{else if nextCost}}
-      <img src="systems/swerpg/assets/images/icons/buy.svg" alt="" aria-hidden="true"
+      <img src="systems/swerpg/assets/images/icons/increase.svg" alt="" aria-hidden="true"
            data-tooltip="{{localize 'SKILL.INCREASE.COST_TOOLTIP' cost=nextCost}}">
     {{/if}}
   </div>
   <div class="skill__action skill__action--decrease {{ui.decreaseState}}">
-    <img src="systems/swerpg/assets/images/icons/sell.svg" alt="" aria-hidden="true"
+    <img src="systems/swerpg/assets/images/icons/decrease.svg" alt="" aria-hidden="true"
          class="is-disabled"
          data-tooltip="{{localize 'SKILL.DECREASE.PENDING'}}">
   </div>
