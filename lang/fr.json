@@ -761,7 +761,21 @@
     "RollFlavor": "{name} rolls a {skill} check",
     "RollTitle": "[{name}] {skill} Skill Check",
     "TooltipCheck": "[({a1} + {a2}) / 4] + Bonus + Enchantment",
-    "TooltipPassive": "12 + Score"
+    "TooltipPassive": "12 + Score",
+    "XP_CONSOLE": {
+      "TITLE": "Console de transaction XP",
+      "STATUS": {
+        "IDLE": "En attente de sélection"
+      },
+      "LABEL": {
+        "AVAILABLE": "Disponibles",
+        "SPENT": "Dépensés",
+        "CAREER_FREE": "Gratuits carrière",
+        "SPECIALIZATION_FREE": "Gratuits spécialisation",
+        "SELECTED_COST": "Coût sélectionné"
+      },
+      "PLACEHOLDER": "Sélectionnez une compétence pour prévisualiser le coût."
+    }
   },
   "SKILLS": {
     "Athletics": "Athlétisme",
