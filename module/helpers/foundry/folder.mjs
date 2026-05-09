@@ -1,3 +1,6 @@
+import { getOrCreateWorldFolder } from '../../importer/utils/oggdude-import-folders.mjs'
+import { logger } from '../../utils/logger.mjs'
+
 /**
  * Create a folder in the Foundry VTT sidebar
  * @param name {string} The name of the folder to create.
@@ -8,11 +11,12 @@
  * @function
  * @name createFoundryFolder
  */
-export async function createFoundryFolder(name, type) {
+/*export async function createFoundryFolder(name, type) {
   // Create the folder
   let folder = game.folders.find((f) => f.name === name && f.type === type)
   if (!folder) {
     folder = await Folder.create({ name, type, parent: null })
   }
   return folder
-}
+}*/
+
