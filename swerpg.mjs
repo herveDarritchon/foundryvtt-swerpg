@@ -29,6 +29,7 @@ import * as chat from './module/chat.mjs'
 import Enum from './module/config/enum.mjs'
 import { registerSystemSettings } from './module/applications/settings/settings.js'
 import { logger } from './module/utils/logger.mjs'
+import { registerAuditLogHooks } from './module/utils/audit-log.mjs'
 import { SwerpgTokenHUD } from './module/applications/_module.mjs'
 
 globalThis.SYSTEM = SYSTEM
@@ -331,6 +332,9 @@ Hooks.once('setup', function () {
 
   // Activate window listeners
   $('#chat-log').on('mouseenter mouseleave', '.swerpg.action .target-link', chat.onChatTargetLinkHover)
+
+  // Register audit log hooks
+  registerAuditLogHooks()
 })
 
 /* -------------------------------------------- */
