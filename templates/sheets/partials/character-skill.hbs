@@ -19,20 +19,20 @@
      {{#if (or (eq ui.increaseState 'INSUFFICIENT_XP') (eq ui.increaseState 'MAX_RANK'))}}is-disabled{{/if}}"
      data-action="skillBuy">
     {{#if (eq ui.increaseState 'FREE_RANK_AVAILABLE')}}
-      <img src="systems/swerpg/assets/images/icons/free.svg" alt="" aria-hidden="true"
-           data-tooltip="{{localize 'SKILL.INCREASE.FREE_TOOLTIP'}}">
+      <span class="skill__icon skill__icon--free" aria-hidden="true"
+            data-tooltip="{{localize 'SKILL.INCREASE.FREE_TOOLTIP'}}"></span>
     {{else if (eq ui.increaseState 'MAX_RANK')}}
       <span class="increase-badge increase-badge--max">M</span>
     {{else if nextCost}}
-      <img src="systems/swerpg/assets/images/icons/increase.svg" alt="" aria-hidden="true"
-           data-tooltip="{{localize 'SKILL.INCREASE.COST_TOOLTIP' cost=nextCost}}">
+      <span class="skill__icon skill__icon--increase" aria-hidden="true"
+            data-tooltip="{{localize 'SKILL.INCREASE.COST_TOOLTIP' cost=nextCost}}"></span>
     {{/if}}
   </div>
   <div class="skill__action skill__action--decrease
      {{#if (eq ui.decreaseState 'forgettable')}}is-refundable{{else}}is-disabled{{/if}}"
      {{#if (eq ui.decreaseState 'forgettable')}}data-action="skillRefund"{{/if}}
      data-tooltip="{{#if (eq ui.decreaseState 'forgettable')}}{{localize 'SKILL.DECREASE.FORGETTABLE'}}{{else}}{{localize 'SKILL.DECREASE.PENDING'}}{{/if}}">
-    <img src="systems/swerpg/assets/images/icons/decrease.svg" alt="" aria-hidden="true">
+    <span class="skill__icon skill__icon--decrease" aria-hidden="true"></span>
   </div>
   <div class="skill__rank">
     <span class="skill-rank-value">{{rank.value}}/5</span>
