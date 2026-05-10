@@ -1599,11 +1599,34 @@
           align-items: center;
           min-width: 0;
 
-          img {
+          .skill__icon {
+            display: inline-block;
             width: 14px;
             height: 14px;
-            object-fit: contain;
             flex-shrink: 0;
+            background-color: #fff;
+            mask-size: contain;
+            mask-repeat: no-repeat;
+            mask-position: center;
+            -webkit-mask-size: contain;
+            -webkit-mask-repeat: no-repeat;
+            -webkit-mask-position: center;
+            transition: transform 0.15s ease, background-color 0.15s ease, filter 0.15s ease;
+
+            &--increase {
+              mask-image: url('../assets/images/icons/increase.svg');
+              -webkit-mask-image: url('../assets/images/icons/increase.svg');
+            }
+
+            &--decrease {
+              mask-image: url('../assets/images/icons/decrease.svg');
+              -webkit-mask-image: url('../assets/images/icons/decrease.svg');
+            }
+
+            &--free {
+              mask-image: url('../assets/images/icons/free.svg');
+              -webkit-mask-image: url('../assets/images/icons/free.svg');
+            }
           }
 
           .increase-badge--max {
@@ -1620,9 +1643,30 @@
           }
         }
 
-        .skill__action--decrease img.is-disabled {
-          opacity: 0.25;
-          filter: grayscale(1);
+        .skill__action--decrease.is-disabled,
+        .skill__action--increase.is-disabled {
+          cursor: default;
+
+          .skill__icon {
+            opacity: 0.25;
+          }
+        }
+
+        .skill__action--increase:not(.is-disabled),
+        .skill__action--decrease:not(.is-disabled) {
+          cursor: pointer;
+        }
+
+        .skill__action--increase:not(.is-disabled):hover .skill__icon {
+          transform: scale(1.15);
+          background-color: #00ff99;
+          filter: drop-shadow(0 0 3px rgba(0, 255, 153, 0.85));
+        }
+
+        .skill__action--decrease.is-refundable:hover .skill__icon {
+          transform: scale(1.15);
+          background-color: #ee9b3a;
+          filter: drop-shadow(0 0 3px rgba(238, 155, 58, 0.85));
         }
 
         .skill__rank {
