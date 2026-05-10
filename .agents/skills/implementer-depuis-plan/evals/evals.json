@@ -1,0 +1,47 @@
+{
+  "skill_name": "implementer-depuis-plan",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Implémente ce plan : `documentation/plan/character-sheet/evolution-logs/TECH-159-plan-diff-analyzer.md`. Je veux le code, les tests associés, et une validation finale. Respecte Foundry VTT v14+, évite les API dépréciées, et ne repars pas dans une phase de spec.",
+      "expected_output": "L'agent lit le plan fourni, inspecte les fichiers impactés, implémente les changements demandés, ajoute ou met à jour les tests, exécute les validations utiles, puis résume le résultat sans refaire un plan.",
+      "files": [
+        "documentation/plan/character-sheet/evolution-logs/TECH-159-plan-diff-analyzer.md"
+      ],
+      "expectations": [
+        "Le run produit un résumé d'implémentation non vide dans outputs/summary.md.",
+        "Le run produit un diff Git non vide dans outputs/git.diff.",
+        "Le run produit une trace de validation dans outputs/validation.txt.",
+        "Le run produit un fichier outputs/final_status.json listant les fichiers modifiés."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Applique ce plan d'implémentation déjà prêt dans `documentation/plan/importer/feature-importer-global-progress-jauge-1.md`. Je veux une implémentation propre, DRY, KISS, avec séparation nette entre logique métier et adaptation Foundry. Ajoute les tests pertinents et évite toute API Foundry obsolète.",
+      "expected_output": "L'agent traite le plan comme une entrée exécutable, suit l'architecture du projet, garde le changement focalisé, place la logique au bon niveau, ajoute les tests adaptés et valide le résultat.",
+      "files": [
+        "documentation/plan/importer/feature-importer-global-progress-jauge-1.md"
+      ],
+      "expectations": [
+        "Le run produit un résumé d'implémentation non vide dans outputs/summary.md.",
+        "Le run produit un diff Git non vide dans outputs/git.diff.",
+        "Le run produit une trace de validation dans outputs/validation.txt.",
+        "Le run produit un fichier outputs/final_status.json listant les fichiers modifiés."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "J'ai déjà un plan technique dans `documentation/plan/character-sheet/evolution-logs/US1-plan-audit-log-hooks.md`. Exécute-le directement en code, sans refaire une analyse complète. Si tu vois un écart important entre le plan et le code actuel, signale-le seulement si c'est bloquant. Sinon, implémente, teste et valide.",
+      "expected_output": "L'agent exécute le plan sans relancer inutilement la planification, utilise le repository comme source de vérité, ne signale que les ambiguïtés bloquantes, puis livre code, tests et validation.",
+      "files": [
+        "documentation/plan/character-sheet/evolution-logs/US1-plan-audit-log-hooks.md"
+      ],
+      "expectations": [
+        "Le run produit un résumé d'implémentation non vide dans outputs/summary.md.",
+        "Le run produit un diff Git non vide dans outputs/git.diff.",
+        "Le run produit une trace de validation dans outputs/validation.txt.",
+        "Le run produit un fichier outputs/final_status.json listant les fichiers modifiés."
+      ]
+    }
+  ]
+}
