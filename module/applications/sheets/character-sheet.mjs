@@ -5,7 +5,7 @@ import ErrorSkill from '../../lib/skills/error-skill.mjs'
 import TalentFactory from '../../lib/talents/talent-factory.mjs'
 import ErrorTalent from '../../lib/talents/error-talent.mjs'
 import { logger } from '../../utils/logger.mjs'
-import { getPositiveDicePoolPreview } from '../../utils/skill-costs.mjs'
+import { getPositiveDicePoolPreview, getSkillDecreaseRefund } from '../../utils/skill-costs.mjs'
 
 /**
  * @typedef {Object} DefenseDisplayData
@@ -366,6 +366,11 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
     if (!skill) return
     const { isCareer, isSpecialization } = skill.freeRank
 
+    const oldRank = skill.rank.value
+    const cost = action === 'train'
+      ? (skill.nextCost ?? 0)
+      : (skill.rank.careerFree > 0 || skill.rank.specializationFree > 0 ? 0 : getSkillDecreaseRefund({ rank: oldRank, isCareer }))
+
     const skillClass = SkillFactory.build(
       app.actor,
       skillId,
@@ -385,7 +390,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
     }
 
     await evaluated.updateState()
-    CharacterSheet.#refreshConsoleAfterPurchase(app, skillId, action)
+    await CharacterSheet.#refreshConsoleAfterPurchase(app, skillId, action, oldRank, cost)
   }
 
   /**
@@ -413,12 +418,14 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
   }
 
   /**
-   * Refresh the XP console stats and show a notification after a transaction.
+   * Refresh the XP console stats and send a feedback chat message after a transaction.
    * @param {CharacterSheet} app - The sheet instance
    * @param {string} skillId - The skill ID
    * @param {'train'|'forget'} action - The action performed
+   * @param {number} oldRank - The rank before the transaction
+   * @param {number} cost - The XP cost (train) or refund (forget) amount
    */
-  static #refreshConsoleAfterPurchase(app, skillId, action) {
+  static async #refreshConsoleAfterPurchase(app, skillId, action, oldRank, cost) {
     const consoleEl = app.element.querySelector('[data-skill-purchase-console]')
     if (consoleEl) {
       const exp = app.actor.system.progression.experience
@@ -440,10 +447,58 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
     app.#resetConsolePreview()
 
     const skill = app.actor.system.skills?.[skillId]
-    if (skill) {
-      const key = action === 'train' ? 'SKILL.XP_CONSOLE.PURCHASE_SUCCESS' : 'SKILL.XP_CONSOLE.REFUND_SUCCESS'
-      ui.notifications.info(game.i18n.format(key, { label: skill.label, rank: skill.rank.value }))
+    if (!skill) return
+
+    const key = action === 'train' ? 'SKILL.XP_CONSOLE.PURCHASE_SUCCESS' : 'SKILL.XP_CONSOLE.REFUND_SUCCESS'
+    ui.notifications.info(game.i18n.format(key, { label: skill.label, rank: skill.rank.value }))
+    await CharacterSheet.#sendSkillTransactionChat(app, skillId, action, oldRank, cost)
+  }
+
+  /**
+   * Send an immersive chat message after a successful skill transaction (US7).
+   * Renders the skill-transaction.hbs template with actor portrait, rank change, and cost.
+   * @param {CharacterSheet} app - The sheet instance
+   * @param {string} skillId - The skill ID
+   * @param {'train'|'forget'} action - The action performed
+   * @param {number} oldRank - The rank before the transaction
+   * @param {number} cost - The XP cost (train) or refund (forget) amount
+   */
+  static async #sendSkillTransactionChat(app, skillId, action, oldRank, cost) {
+    const actor = app.actor
+    const skill = actor.system.skills?.[skillId]
+    if (!skill) return
+
+    const newRank = skill.rank.value
+    const remainingXp = actor.system.progression.experience.available
+    const isFree = action === 'train' && cost === 0
+    const isRefund = action === 'forget'
+
+    let costLabel
+    if (isFree) {
+      costLabel = game.i18n.localize('SKILL.CHAT.FREE_COST')
+    } else if (isRefund) {
+      costLabel = game.i18n.format('SKILL.CHAT.REFUND', { cost })
+    } else {
+      costLabel = game.i18n.format('SKILL.CHAT.COST', { cost })
     }
+
+    const content = await renderTemplate('systems/swerpg/templates/chat/skill-transaction.hbs', {
+      actorImg: actor.img,
+      actorName: actor.name,
+      skillLabel: skill.label,
+      oldRank,
+      newRank,
+      costLabel,
+      remainingLabel: game.i18n.format('SKILL.CHAT.REMAINING', { xp: remainingXp }),
+      cssClass: isFree ? 'is-free' : isRefund ? 'is-forget' : 'is-train',
+      costCssClass: isFree ? 'is-free' : isRefund ? 'is-refund' : '',
+    })
+
+    await ChatMessage.create({
+      content,
+      speaker: ChatMessage.getSpeaker({ actor }),
+      flags: { swerpg: { skillTransaction: true, action, skillId } },
+    })
   }
 
   /* -------------------------------------------- */

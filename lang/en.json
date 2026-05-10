@@ -809,7 +809,14 @@
       "FORGETTABLE": "Refundable rank",
       "NON_REFUNDABLE": "Non-refundable rank"
     },
-    "DICE_PREVIEW_TOOLTIP": "Current dice pool"
+    "DICE_PREVIEW_TOOLTIP": "Current dice pool",
+    "CHAT": {
+      "COST": "Cost: {cost} XP",
+      "FREE_COST": "Free training",
+      "REMAINING": "{xp} XP remaining",
+      "REFUND": "Refund: +{cost} XP",
+      "RESTORE": "Free rank restored"
+    }
   },
   "SKILLS": {
     "Athletics": "Athletics",

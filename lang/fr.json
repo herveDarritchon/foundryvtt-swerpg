@@ -809,7 +809,14 @@
       "FORGETTABLE": "Rang remboursable",
       "NON_REFUNDABLE": "Rang non remboursable"
     },
-    "DICE_PREVIEW_TOOLTIP": "Pool de dés actuel"
+    "DICE_PREVIEW_TOOLTIP": "Pool de dés actuel",
+    "CHAT": {
+      "COST": "Coût : {cost} XP",
+      "FREE_COST": "Entraînement gratuit",
+      "REMAINING": "{xp} XP restants",
+      "REFUND": "Remboursement : +{cost} XP",
+      "RESTORE": "Rang gratuit restauré"
+    }
   },
   "SKILLS": {
     "Athletics": "Athlétisme",
