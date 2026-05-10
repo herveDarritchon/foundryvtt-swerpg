@@ -291,6 +291,12 @@ describe('Chat Module', () => {
         append: vi.fn(),
         prepend: vi.fn(),
         remove: vi.fn(),
+        classList: { add: vi.fn() },
+        querySelector: vi.fn().mockReturnValue({
+          classList: { add: vi.fn() },
+          insertAdjacentHTML: vi.fn(),
+          remove: vi.fn(),
+        }),
       }
       mockMessage.rolls = []
     })
@@ -300,7 +306,7 @@ describe('Chat Module', () => {
 
       ChatModule.renderChatMessage(mockMessage, mockHtml, {}, {})
 
-      expect(mockHtml.addClass).toHaveBeenCalledWith('swerpg')
+      expect(mockHtml.classList.add).toHaveBeenCalledWith('swerpg')
     })
 
     test('should add swerpg class for StandardCheck rolls', () => {
@@ -309,7 +315,7 @@ describe('Chat Module', () => {
 
       ChatModule.renderChatMessage(mockMessage, mockHtml, {}, {})
 
-      expect(mockHtml.addClass).toHaveBeenCalledWith('swerpg')
+      expect(mockHtml.classList.add).toHaveBeenCalledWith('swerpg')
     })
 
     test('should render confirmed action correctly', () => {
@@ -317,8 +323,8 @@ describe('Chat Module', () => {
 
       ChatModule.renderChatMessage(mockMessage, mockHtml, {}, {})
 
-      expect(mockHtml.find).toHaveBeenCalledWith('.damage-result .target')
-      expect(mockHtml.find).toHaveBeenCalledWith('.message-metadata')
+      expect(mockHtml.querySelector).toHaveBeenCalledWith('.damage-result .target')
+      expect(mockHtml.querySelector).toHaveBeenCalledWith('.message-metadata')
     })
 
     test('should render unconfirmed action correctly', () => {
@@ -326,7 +332,7 @@ describe('Chat Module', () => {
 
       ChatModule.renderChatMessage(mockMessage, mockHtml, {}, {})
 
-      expect(mockHtml.find).toHaveBeenCalledWith('.message-metadata')
+      expect(mockHtml.querySelector).toHaveBeenCalledWith('.message-metadata')
     })
 
     test('should not add confirm button for non-GM users', () => {
@@ -335,7 +341,7 @@ describe('Chat Module', () => {
 
       ChatModule.renderChatMessage(mockMessage, mockHtml, {}, {})
 
-      expect(mockHtml.append).not.toHaveBeenCalled()
+      expect(mockHtml.querySelector).not.toHaveBeenCalledWith('.damage-result .target')
       game.user.isGM = true
     })
 
@@ -344,7 +350,7 @@ describe('Chat Module', () => {
 
       ChatModule.renderChatMessage(mockMessage, mockHtml, {}, {})
 
-      expect(mockHtml.find).toHaveBeenCalledWith('.dice-rolls')
+      expect(mockHtml.querySelector).toHaveBeenCalledWith('.dice-rolls')
     })
   })
 
