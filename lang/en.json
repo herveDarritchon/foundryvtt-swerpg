@@ -787,7 +787,9 @@
         "AFFORDABLE": "{label} — {cost} XP — {remaining} XP left — Pool {pool} → {poolAfter}",
         "INSUFFICIENT": "{label} — {cost} XP needed — {available} XP available — shortfall {shortfall} XP",
         "MAX": "{label} — Maximum rank ({max}/{max})"
-      }
+      },
+      "PURCHASE_SUCCESS": "{label} upgraded to rank {rank}",
+      "REFUND_SUCCESS": "{label} reverted to rank {rank}"
     },
     "MARKER": {
       "CAREER": "Career skill",
