@@ -5,7 +5,8 @@ import ErrorSkill from '../../lib/skills/error-skill.mjs'
 import TalentFactory from '../../lib/talents/talent-factory.mjs'
 import ErrorTalent from '../../lib/talents/error-talent.mjs'
 import { logger } from '../../utils/logger.mjs'
-import { getPositiveDicePoolPreview, getSkillDecreaseRefund } from '../../utils/skill-costs.mjs'
+import { getPositiveDicePoolPreview } from '../../utils/skill-costs.mjs'
+import SkillCostCalculator from '../../lib/skills/skill-cost-calculator.mjs'
 
 /**
  * @typedef {Object} DefenseDisplayData
@@ -227,22 +228,22 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
    * Utilisé par _buildSkillPreview() pour construire la preview
    */
   static #PURCHASE_REASON_MAPPING = {
-    'FREE_RANK_AVAILABLE': {
+    FREE_RANK_AVAILABLE: {
       statusKey: 'SKILL.XP_CONSOLE.STATUS.FREE_RANK',
       consoleCssClass: 'is-free',
       getCost: () => '0 XP',
     },
-    'AFFORDABLE': {
+    AFFORDABLE: {
       statusKey: 'SKILL.XP_CONSOLE.STATUS.AFFORDABLE',
       consoleCssClass: 'is-affordable',
       getCost: (nextCost) => `${nextCost} XP`,
     },
-    'INSUFFICIENT_XP': {
+    INSUFFICIENT_XP: {
       statusKey: 'SKILL.XP_CONSOLE.STATUS.INSUFFICIENT_XP',
       consoleCssClass: 'is-locked',
       getCost: (nextCost) => `${nextCost} XP`,
     },
-    'MAX_RANK': {
+    MAX_RANK: {
       statusKey: 'SKILL.XP_CONSOLE.STATUS.MAX_RANK',
       consoleCssClass: 'is-error',
       getCost: () => '—',
@@ -362,35 +363,62 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
    * @returns {Promise<void>}
    */
   static async #executeSkillTransaction(app, skillId, action) {
-    const skill = app.actor.system.skills?.[skillId]
+    const actor = app.actor
+    const skill = actor.system.skills?.[skillId]
+
     if (!skill) return
-    const { isCareer, isSpecialization } = skill.freeRank
 
     const oldRank = skill.rank.value
-    const cost = action === 'train'
-      ? (skill.nextCost ?? 0)
-      : (skill.rank.careerFree > 0 || skill.rank.specializationFree > 0 ? 0 : getSkillDecreaseRefund({ rank: oldRank, isCareer }))
+    const { isCareer = false, isSpecialization = false } = skill.freeRank ?? {}
 
-    const skillClass = SkillFactory.build(
-      app.actor,
-      skillId,
-      { action, isCreation: app.actor.isL0, isCareer, isSpecialization },
-      {},
-    )
+    const skillTransaction = SkillFactory.build(actor, skillId, {
+      action,
+      isCreation: actor.isL0,
+      isCareer,
+      isSpecialization,
+    })
 
-    if (skillClass instanceof ErrorSkill) {
-      ui.notifications.warn(skillClass.options.message)
+    if (!skillTransaction) {
+      ui.notifications.warn('Unable to build skill transaction.')
       return
     }
 
-    const evaluated = await skillClass.process()
+    if (skillTransaction instanceof ErrorSkill) {
+      ui.notifications.warn(skillTransaction.options.message)
+      return
+    }
+
+    const evaluated = await skillTransaction.process()
+
     if (evaluated instanceof ErrorSkill) {
       ui.notifications.warn(evaluated.options.message)
       return
     }
 
-    await evaluated.updateState()
+    const cost = evaluated.getCost(oldRank)
+
+    const updated = await evaluated.updateState()
+
+    if (updated instanceof ErrorSkill) {
+      ui.notifications.warn(updated.options.message)
+      return
+    }
+
     await CharacterSheet.#refreshConsoleAfterPurchase(app, skillId, action, oldRank, cost)
+  }
+
+  static #calculateSkillTransactionCost(skillTransaction, action, oldRank) {
+    const calculator = new SkillCostCalculator(skillTransaction)
+
+    if (action === 'train') {
+      return calculator.calculateCost(action, oldRank + 1)
+    }
+
+    if (action === 'forget') {
+      return calculator.calculateCost(action, oldRank - 1)
+    }
+
+    return 0
   }
 
   /**

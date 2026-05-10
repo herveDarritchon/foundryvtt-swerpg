@@ -2499,6 +2499,7 @@ input[type='range'] {
   font-size: 0.65rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  text-align: center;
 }
 .swerpg.sheet.actor .tab.skills.skills.skills .xp-console .xp-console__value {
   display: block;
@@ -2506,6 +2507,7 @@ input[type='range'] {
   font-family: 'Orbitron', sans-serif;
   font-size: 1rem;
   text-shadow: 0 0 6px rgba(120, 169, 194, 0.38);
+  text-align: center;
 }
 .swerpg.sheet.actor .tab.skills.skills.skills .xp-console .xp-console__stat--selected {
   grid-column: 5;

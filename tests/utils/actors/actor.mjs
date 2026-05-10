@@ -387,18 +387,46 @@ export function createActor({ careerSpent = 0, specializationSpent = 0, items = 
 }
 
 /**
- * Update Actor
- * @param actor : SwerpgActor
- * @param updates : Object with the same structure as the actor, but only with the properties to update
+ * Applies Foundry-like flat update paths to a plain actor object.
+ *
+ * Supports:
+ * {
+ *   'system.progression.experience.spent': 15,
+ *   'system.skills.cool.rank': {...}
+ * }
+ *
+ * @param {SwerpgActor} actor
+ * @param {Record<string, unknown>} updates
+ * @returns {SwerpgActor}
  */
 export function updateActor(actor, updates) {
-  for (const [key, value] of Object.entries(updates)) {
-    if (key in actor) {
-      if (typeof value === 'object' && value !== null) {
-        updateActor(actor[key], value)
-      } else {
-        actor[key] = value
-      }
-    }
+  for (const [path, value] of Object.entries(updates)) {
+    setProperty(actor, path, value)
   }
+
+  return actor
+}
+
+/**
+ * Sets a nested property from a dot-separated path.
+ *
+ * @param {object} target
+ * @param {string} path
+ * @param {unknown} value
+ */
+function setProperty(target, path, value) {
+  const parts = path.split('.')
+  const last = parts.pop()
+
+  let current = target
+
+  for (const part of parts) {
+    if (!(part in current) || current[part] === null || typeof current[part] !== 'object') {
+      current[part] = {}
+    }
+
+    current = current[part]
+  }
+
+  current[last] = value
 }

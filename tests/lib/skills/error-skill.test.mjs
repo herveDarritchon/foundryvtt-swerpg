@@ -1,4 +1,4 @@
-// Error-skill.test.mjs
+// error-skill.test.mjs
 import '../../setupTests.js'
 import { describe, expect, test } from 'vitest'
 
@@ -6,67 +6,81 @@ import { createActor } from '../../utils/actors/actor.mjs'
 import { createSkillData } from '../../utils/skills/skill.mjs'
 import ErrorSkill from '../../../module/lib/skills/error-skill.mjs'
 
-describe('Error Skill', () => {
-  describe('process a skill', () => {
-    test('should create an error skill with correct message', () => {
-      const actor = createActor({ careerSpent: 1 })
-      const data = createSkillData({ careerFree: 1 })
-      const params = {}
-      const options = {}
+describe('ErrorSkill', () => {
+  test('should keep the original error message', () => {
+    const actor = createActor()
+    const data = createSkillData()
+    const params = {}
+    const options = {
+      message: 'Original business error',
+    }
 
-      const errorSkill = new ErrorSkill(actor, data, params, options)
-      const forgetErrorSkill = errorSkill.process()
+    const errorSkill = new ErrorSkill(actor, data, params, options)
 
-      expect(forgetErrorSkill.options.message).toBe('Process not implemented. Should not be used!')
-    })
-    describe('train a skill', () => {
-      test('should create an error skill with correct message', () => {
-        const actor = createActor()
-        const data = createSkillData()
-        const params = {
-          action: 'train',
-          isCreation: true,
-          isCareer: true,
-          isSpecialization: true,
-        }
-        const options = {}
-
-        const errorSkill = new ErrorSkill(actor, data, params, options)
-        const trainErrorSkill = errorSkill.process()
-
-        expect(trainErrorSkill.options.message).toBe('Process not implemented. Should not be used!')
-      })
-    })
-    describe('forget a skill', () => {
-      test('should create an error skill with correct message', () => {
-        const actor = createActor({ careerSpent: 1 })
-        const data = createSkillData({ careerFree: 1 })
-        const params = {
-          action: 'forget',
-          isCreation: true,
-          isCareer: true,
-          isSpecialization: true,
-        }
-        const options = {}
-
-        const errorSkill = new ErrorSkill(actor, data, params, options)
-        const forgetErrorSkill = errorSkill.process()
-
-        expect(forgetErrorSkill.options.message).toBe('Process not implemented. Should not be used!')
-      })
-    })
+    expect(errorSkill).toBeInstanceOf(ErrorSkill)
+    expect(errorSkill.options.message).toBe('Original business error')
   })
-  describe('updateState a skill', () => {
-    test('should create an error skill with correct message', async () => {
-      const actor = createActor({ careerSpent: 1 })
-      const data = createSkillData({ careerFree: 1 })
-      const params = {}
-      const options = {}
 
-      const errorSkill = new ErrorSkill(actor, data, params, options)
-      const forgetErrorSkill = await errorSkill.updateState()
+  test('process should return the same ErrorSkill without changing the message', () => {
+    const actor = createActor()
+    const data = createSkillData()
+    const params = {}
+    const options = {
+      message: 'Original business error',
+    }
 
-      expect(forgetErrorSkill.options.message).toBe('UpdateState not implemented. Should not be used!')
-    })
+    const errorSkill = new ErrorSkill(actor, data, params, options)
+
+    const result = errorSkill.process()
+
+    expect(result).toBe(errorSkill)
+    expect(result).toBeInstanceOf(ErrorSkill)
+    expect(result.options.message).toBe('Original business error')
+  })
+
+  test('updateState should return the same ErrorSkill without changing the message', async () => {
+    const actor = createActor()
+    const data = createSkillData()
+    const params = {}
+    const options = {
+      message: 'Original business error',
+    }
+
+    const errorSkill = new ErrorSkill(actor, data, params, options)
+
+    const result = await errorSkill.updateState()
+
+    expect(result).toBe(errorSkill)
+    expect(result).toBeInstanceOf(ErrorSkill)
+    expect(result.options.message).toBe('Original business error')
+  })
+
+  test('getCost should return 0', () => {
+    const actor = createActor()
+    const data = createSkillData()
+    const params = {}
+    const options = {
+      message: 'Original business error',
+    }
+
+    const errorSkill = new ErrorSkill(actor, data, params, options)
+
+    expect(errorSkill.getCost()).toBe(0)
+  })
+
+  test('createError should update the message and return itself', () => {
+    const actor = createActor()
+    const data = createSkillData()
+    const params = {}
+    const options = {
+      message: 'Original business error',
+    }
+
+    const errorSkill = new ErrorSkill(actor, data, params, options)
+
+    const result = errorSkill.createError('New error message')
+
+    expect(result).toBe(errorSkill)
+    expect(result.options.message).toBe('New error message')
   })
 })
