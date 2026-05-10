@@ -328,7 +328,7 @@ export default class SwerpgActor extends TalentsMixin(EquipmentMixin(ResourcesMi
       {},
     )
 
-    const evaluated = skillObj.process()
+    const evaluated = await skillObj.process()
     if (evaluated?.options?.message) {
       ui.notifications.warn(evaluated.options.message)
       return

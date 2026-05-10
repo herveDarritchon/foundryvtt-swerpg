@@ -52,6 +52,20 @@ export default class SkillFactory {
     skill.id = skillId
 
     if (!isCreation) {
+      if (action === 'forget') {
+        if (skill.rank.careerFree > 0) {
+          return new CareerFreeSkill(actor, skill, { action, isCreation, isCareer, isSpecialization }, options)
+        }
+        if (skill.rank.specializationFree > 0) {
+          return new SpecializationFreeSkill(actor, skill, { action, isCreation, isCareer, isSpecialization }, options)
+        }
+        if (skill.rank.trained > 0) {
+          return new TrainedSkill(actor, skill, { action, isCreation, isCareer, isSpecialization }, options)
+        }
+        if (skill.rank.base > 0) {
+          return new ErrorSkill(actor, skill, { action, isCreation, isCareer, isSpecialization }, { message: "you can't forget this rank because it comes from species!" })
+        }
+      }
       return new TrainedSkill(actor, skill, { action, isCreation, isCareer, isSpecialization }, options)
     }
 

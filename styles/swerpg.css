@@ -2218,6 +2218,24 @@ input[type='range'] {
   opacity: 0.25;
   filter: grayscale(1);
 }
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill .skill__action--decrease.is-disabled,
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill .skill__action--increase.is-disabled {
+  cursor: default;
+}
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill .skill__action--increase:not(.is-disabled),
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill .skill__action--decrease:not(.is-disabled) {
+  cursor: pointer;
+}
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill .skill__action--increase:not(.is-disabled):hover img {
+  transform: scale(1.15);
+  filter: brightness(1.4) drop-shadow(0 0 4px rgba(0, 255, 153, 0.9));
+  transition: transform 0.15s ease, filter 0.15s ease;
+}
+.swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill .skill__action--decrease.is-refundable:hover img {
+  transform: scale(1.15);
+  filter: brightness(1.4) drop-shadow(0 0 4px rgba(238, 155, 58, 0.9));
+  transition: transform 0.15s ease, filter 0.15s ease;
+}
 .swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill .skill__rank {
   text-align: center;
   font-size: 0.65rem;

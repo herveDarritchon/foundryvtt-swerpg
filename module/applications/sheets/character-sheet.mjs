@@ -83,7 +83,8 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
       editSpecies: CharacterSheet.#onEditSpecies,
       editCareer: CharacterSheet.#onEditCareer,
       editSpecializations: CharacterSheet.#onEditSpecializations,
-      toggleTrainedSkill: CharacterSheet.#onToggleTrainedSkill,
+      skillBuy: CharacterSheet.#onSkillBuy,
+      skillRefund: CharacterSheet.#onSkillRefund,
       skillSelect: CharacterSheet.#onSkillSelect,
       toggleObligationExtraState: CharacterSheet.#onToggleObligationExtraState,
     },
@@ -205,10 +206,6 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
         })
         await skillConfig.render({ force: true })
         break
-      case 'skillDecrease':
-        return this.actor.purchaseSkill(target.closest('.skill').dataset.skill, -1)
-      case 'skillIncrease':
-        return this.actor.purchaseSkill(target.closest('.skill').dataset.skill, 1)
       case 'skillRoll':
         return this.actor.rollSkill(target.closest('.skill').dataset.skill, { dialog: true })
       case 'talentTree':
@@ -355,30 +352,24 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
 
   /* -------------------------------------------- */
 
+  /* -------------------------------------------- */
+
   /**
-   * Handle click action to choose or edit your Career.
-   * @this {CharacterSheet}
-   * @param {PointerEvent} event
+   * Execute a skill transaction (buy or refund a rank).
+   * @param {CharacterSheet} app - The sheet instance
+   * @param {string} skillId - The skill ID
+   * @param {'train'|'forget'} action - Transaction direction
    * @returns {Promise<void>}
    */
-  static async #onToggleTrainedSkill(event) {
-    const element = event.target.closest('.skill')
-    const skillId = element.dataset.skillId
-    const skill = this.actor.system.skills?.[skillId]
+  static async #executeSkillTransaction(app, skillId, action) {
+    const skill = app.actor.system.skills?.[skillId]
     if (!skill) return
     const { isCareer, isSpecialization } = skill.freeRank
-    const action = event.ctrlKey ? 'forget' : 'train'
 
-    // Build the skill class depending on the context
     const skillClass = SkillFactory.build(
-      this.actor,
+      app.actor,
       skillId,
-      {
-        action,
-        isCreation: true,
-        isCareer,
-        isSpecialization,
-      },
+      { action, isCreation: app.actor.isL0, isCareer, isSpecialization },
       {},
     )
 
@@ -387,23 +378,72 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
       return
     }
 
-    // Debug de toggle skill avant
-    logger.debug(`[${this.constructor.name}] onToggleTrainedSkill - Before: skill '${skillId}', isCareer: ${isCareer}`, skillClass)
-
-    // Evaluate the skill following the action processed
-    const skillEvaluated = await skillClass.process()
-
-    // Display a warning if the skill action is not valid
-    if (skillEvaluated instanceof ErrorSkill) {
-      ui.notifications.warn(skillEvaluated.options.message)
+    const evaluated = await skillClass.process()
+    if (evaluated instanceof ErrorSkill) {
+      ui.notifications.warn(evaluated.options.message)
       return
     }
 
-    // Update the skill state in the Database
-    const skillUpdated = await skillEvaluated.updateState()
+    await evaluated.updateState()
+    CharacterSheet.#refreshConsoleAfterPurchase(app, skillId, action)
+  }
 
-    // Debug de toggle skill après
-    logger.debug(`[${this.constructor.name}] onToggleTrainedSkill - After: skill '${skillId}' updated`, skillUpdated)
+  /**
+   * Handle Buy button click — purchase the next skill rank.
+   * @this {CharacterSheet}
+   * @param {PointerEvent} event
+   * @returns {Promise<void>}
+   */
+  static async #onSkillBuy(event) {
+    const skillId = event.target.closest('[data-skill-id]')?.dataset.skillId
+    if (!skillId) return
+    await CharacterSheet.#executeSkillTransaction(this, skillId, 'train')
+  }
+
+  /**
+   * Handle Sell button click — refund the last skill rank.
+   * @this {CharacterSheet}
+   * @param {PointerEvent} event
+   * @returns {Promise<void>}
+   */
+  static async #onSkillRefund(event) {
+    const skillId = event.target.closest('[data-skill-id]')?.dataset.skillId
+    if (!skillId) return
+    await CharacterSheet.#executeSkillTransaction(this, skillId, 'forget')
+  }
+
+  /**
+   * Refresh the XP console stats and show a notification after a transaction.
+   * @param {CharacterSheet} app - The sheet instance
+   * @param {string} skillId - The skill ID
+   * @param {'train'|'forget'} action - The action performed
+   */
+  static #refreshConsoleAfterPurchase(app, skillId, action) {
+    const consoleEl = app.element.querySelector('[data-skill-purchase-console]')
+    if (consoleEl) {
+      const exp = app.actor.system.progression.experience
+      const availableEl = consoleEl.querySelector('[data-xp-available]')
+      if (availableEl) availableEl.textContent = exp.available
+      const spentEl = consoleEl.querySelector('[data-xp-spent]')
+      if (spentEl) spentEl.textContent = exp.spent
+      const careerEl = consoleEl.querySelector('[data-free-career-skills]')
+      if (careerEl) {
+        const career = app.actor.system.progression.freeSkillRanks.career
+        careerEl.textContent = career.gained - career.spent
+      }
+      const specEl = consoleEl.querySelector('[data-free-specialization-skills]')
+      if (specEl) {
+        const spec = app.actor.system.progression.freeSkillRanks.specialization
+        specEl.textContent = spec.gained - spec.spent
+      }
+    }
+    app.#resetConsolePreview()
+
+    const skill = app.actor.system.skills?.[skillId]
+    if (skill) {
+      const key = action === 'train' ? 'SKILL.XP_CONSOLE.PURCHASE_SUCCESS' : 'SKILL.XP_CONSOLE.REFUND_SUCCESS'
+      ui.notifications.info(game.i18n.format(key, { label: skill.label, rank: skill.rank.value }))
+    }
   }
 
   /* -------------------------------------------- */
@@ -542,6 +582,9 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
                 ? 'specialization'
                 : 'none'
 
+        const forgettable = skill.rank.trained > 0 || skill.rank.careerFree > 0 || skill.rank.specializationFree > 0
+        const nonRefundable = skill.rank.base > 0
+
         return {
           pips: this._prepareSkillRanks(skill),
           dicePreviewAfter,
@@ -557,7 +600,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
                   : skill.purchaseReason === 'INSUFFICIENT_XP'
                     ? 'buy-blocked'
                     : null,
-            decreaseState: 'pending',
+            decreaseState: forgettable ? 'forgettable' : nonRefundable ? 'non-refundable' : 'pending',
             decreaseIcon: 'sell',
             lineCssClass: [
               skill.freeRank.isCareer ? 'is-career' : '',
