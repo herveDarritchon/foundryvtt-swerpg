@@ -90,38 +90,29 @@ export async function onCreateChatMessage(message, data, options, userId) {
 /* -------------------------------------------- */
 
 /**
- * Custom alterations to apply when rendering chat message HTML
- * @param message
- * @param html
- * @param data
- * @param options
+ * Custom alterations to apply when rendering chat message HTML.
+ * Called via the renderChatMessageHTML hook (v13+).
+ * @param {ChatMessage} message
+ * @param {HTMLElement} html
+ * @param {object} data
  */
-export function renderChatMessage(message, html, data, options) {
+export function renderChatMessage(message, html, data) {
   const flags = message.flags.swerpg || {}
-  if (flags.action || message.rolls[0] instanceof swerpg.api.dice.StandardCheck) html.addClass('swerpg')
+  if (flags.action || message.rolls[0] instanceof swerpg.api.dice.StandardCheck) html.classList.add('swerpg')
 
   // Action Cards
   if (flags.action) {
     if (flags.confirmed) {
-      html.find('.damage-result .target').addClass('applied')
-      html.find('.message-metadata').prepend(`<i class="confirmed fa-solid fa-hexagon-check" data-tooltip="ACTION.Confirmed"></i>`)
+      html.querySelector('.damage-result .target')?.classList.add('applied')
+      html.querySelector('.message-metadata')?.insertAdjacentHTML('afterbegin', '<i class="confirmed fa-solid fa-hexagon-check" data-tooltip="ACTION.Confirmed"></i>')
     } else {
-      html.find('.message-metadata').prepend(`<i class="unconfirmed fa-solid fa-hexagon-xmark" data-tooltip="ACTION.Unconfirmed"></i>`)
-      if (!game.user.isGM) return
-      const confirm = $(`<button class="confirm frame-brown" type="button"><i class="fas fa-hexagon-check"></i>Confirm</button>`)
-      html.append(confirm)
-      confirm.click((event) => {
-        const button = event.currentTarget
-        button.disabled = true
-        button.firstElementChild.className = 'fa-solid fa-spinner fa-spin'
-        SwerpgAction.confirm(message)
-      })
+      html.querySelector('.message-metadata')?.insertAdjacentHTML('afterbegin', '<i class="unconfirmed fa-solid fa-hexagon-xmark" data-tooltip="ACTION.Unconfirmed"></i>')
     }
   }
 
   // Initiative Report
   if (flags.isInitiativeReport) {
-    html.find('.dice-rolls').remove()
+    html.querySelector('.dice-rolls')?.remove()
   }
 }
 
