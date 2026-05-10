@@ -1,0 +1,23 @@
+{
+  "skill_name": "plan-depuis-issue",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "J'ai besoin d'un plan d'implémentation pour l'issue #156 (US6: Consulter l'historique d'évolution du personnage depuis sa fiche). C'est une user story qui demande une interface de visualisation des logs d'audit. Je veux un plan technique complet.",
+      "expected_output": "Un fichier dans documentation/plan/character-sheet/evolution-logs/ qui couvre : architecture ApplicationV2, récupération des logs depuis flags.swerpg.logs, filtres par type d'événement, rendu des entrées, internationalisation, accès depuis la feuille de personnage",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Crée moi un plan pour l'issue #162 (TECH: Taille maximale configurable des logs avec éviction FIFO). C'est une issue technique qui doit ajouter un System Setting Foundry pour configurer la taille max du tableau de logs d'audit, avec éviction FIFO.",
+      "expected_output": "Un fichier plan couvrant : registration du System Setting, lecture dans writeLogEntry, algorithme FIFO, clés i18n, test du comportement",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "On a une nouvelle fonctionnalité à planifier : permettre au MJ d'ajouter manuellement des entrées de log d'audit pour un personnage (ex: 'a reçu un objet spécial', 'a gagné 50 XP pour sa performance'). Il faudrait une petite interface dans la feuille MJ. J'ai pas encore d'issue, mais j'aimerais un plan pour savoir par où commencer.",
+      "expected_output": "Un plan exploratoire qui : analyse l'existant (flags.swerpg.logs), propose des choix d'architecture (bouton dans la feuille vs application dédiée), pose les questions nécessaires, et propose un découpage en étapes",
+      "files": []
+    }
+  ]
+}
