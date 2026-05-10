@@ -98,7 +98,7 @@ export default class StandardCheckDialog extends DialogV2 {
 
   /** @override */
   async _renderHTML(context, _options) {
-    return renderTemplate(this.constructor.TEMPLATE, context)
+    return foundry.applications.handlebars.renderTemplate(this.constructor.TEMPLATE, context)
   }
 
   /* -------------------------------------------- */
