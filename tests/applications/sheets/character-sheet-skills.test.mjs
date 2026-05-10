@@ -522,7 +522,7 @@ describe('CharacterSheet skill methods', () => {
       expect(athletics.ui.lineCssClass).toContain('is-max')
     })
 
-    it('computes ui.decreaseState = "pending" before US6', async () => {
+    it('computes ui.decreaseState = "non-refundable" for base-only skill', async () => {
       const actor = buildMockActor({
         skills: {
           athletics: { rank: { base: 1, careerFree: 0, specializationFree: 0, trained: 0 } },
@@ -531,7 +531,7 @@ describe('CharacterSheet skill methods', () => {
       const context = await getContext(actor)
       const athletics = context.skills.general.find((s) => s.id === 'athletics')
 
-      expect(athletics.ui.decreaseState).toBe('pending')
+      expect(athletics.ui.decreaseState).toBe('non-refundable')
       expect(athletics.ui.decreaseIcon).toBe('sell')
     })
 

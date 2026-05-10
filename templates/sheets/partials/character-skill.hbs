@@ -15,7 +15,9 @@
             data-tooltip="{{localize 'SKILL.MARKER.SPECIALIZATION'}}">S</span>
     {{/if}}
   </div>
-  <div class="skill__action skill__action--increase {{#if (eq ui.increaseState 'INSUFFICIENT_XP')}}is-blocked{{/if}}">
+  <div class="skill__action skill__action--increase
+     {{#if (or (eq ui.increaseState 'INSUFFICIENT_XP') (eq ui.increaseState 'MAX_RANK'))}}is-disabled{{/if}}"
+     data-action="skillBuy">
     {{#if (eq ui.increaseState 'FREE_RANK_AVAILABLE')}}
       <img src="systems/swerpg/assets/images/icons/free.svg" alt="" aria-hidden="true"
            data-tooltip="{{localize 'SKILL.INCREASE.FREE_TOOLTIP'}}">
@@ -26,10 +28,11 @@
            data-tooltip="{{localize 'SKILL.INCREASE.COST_TOOLTIP' cost=nextCost}}">
     {{/if}}
   </div>
-  <div class="skill__action skill__action--decrease {{ui.decreaseState}}">
-    <img src="systems/swerpg/assets/images/icons/decrease.svg" alt="" aria-hidden="true"
-         class="is-disabled"
-         data-tooltip="{{localize 'SKILL.DECREASE.PENDING'}}">
+  <div class="skill__action skill__action--decrease
+     {{#if (eq ui.decreaseState 'forgettable')}}is-refundable{{else}}is-disabled{{/if}}"
+     {{#if (eq ui.decreaseState 'forgettable')}}data-action="skillRefund"{{/if}}
+     data-tooltip="{{#if (eq ui.decreaseState 'forgettable')}}{{localize 'SKILL.DECREASE.FORGETTABLE'}}{{else}}{{localize 'SKILL.DECREASE.PENDING'}}{{/if}}">
+    <img src="systems/swerpg/assets/images/icons/decrease.svg" alt="" aria-hidden="true">
   </div>
   <div class="skill__rank">
     <span class="skill-rank-value">{{rank.value}}/5</span>
@@ -38,7 +41,7 @@
     {{#each dicePreview.proficiency}}<span class="die die--proficiency"></span>{{/each}}
     {{#each dicePreview.ability}}<span class="die die--ability"></span>{{/each}}
   </div>
-  <div class="pips flexrow" data-action="toggleTrainedSkill">
+  <div class="pips flexrow">
     {{#each pips as |pip|}}
       <div class="pip {{pip.cssClass}}"></div>
     {{/each}}
