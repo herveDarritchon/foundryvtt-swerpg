@@ -29,6 +29,7 @@
     }
   },
   "SWERPG.ERRORS.InvalidEvent": "Événement invalide: impossible de traiter l'interaction.",
+  "SWERPG.AUDIT.WRITE_FAILED": "Échec d'écriture du journal d'audit pour l'acteur \"{actor}\". Voir la console pour les détails.",
   "SETTINGS": {
     "OggDudeDataImporter": {
       "name": "Importateur de Données OggDude",
