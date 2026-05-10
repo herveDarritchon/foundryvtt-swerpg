@@ -75,6 +75,9 @@ export function addChatMessageContextOptions(html, options) {
  */
 export async function onCreateChatMessage(message, data, options, userId) {
   if (game.user !== game.users.activeGM) return
+
+  if (!isSwerpgActionMessage(message)) return
+
   const flags = message.flags.swerpg || {}
   if (!flags.action || flags.confirmed) return
 
@@ -85,6 +88,14 @@ export async function onCreateChatMessage(message, data, options, userId) {
   const action = SwerpgAction.fromChatMessage(message)
   const canConfirm = action.canAutoConfirm()
   if (canConfirm) await SwerpgAction.confirm(message, { action })
+}
+
+/* -------------------------------------------- */
+
+function isSwerpgActionMessage(message) {
+  const flags = message.flags.swerpg
+
+  return Boolean(flags?.action && Array.isArray(flags?.outcomes))
 }
 
 /* -------------------------------------------- */
