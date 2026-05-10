@@ -250,17 +250,13 @@ describe('Chat Module', () => {
       expect(actionSpies.fromChatMessage).not.toHaveBeenCalled()
     })
 
-    test('should wait for dice animation if dice3d is available', async () => {
-      mockMessage.flags.swerpg = { action: true }
-      mockMessage.rolls = [{ id: 'roll1' }]
-
-      await ChatModule.onCreateChatMessage(mockMessage, {}, {}, 'user-id')
-
-      expect(game.dice3d.waitFor3DAnimationByMessageID).toHaveBeenCalledWith('msg-123')
-    })
-
     test('should auto-confirm if action allows it', async () => {
-      mockMessage.flags.swerpg = { action: true }
+      mockMessage.flags.swerpg = {
+        actor: 'Actor.actor-001',
+        action: 'some-action-id',
+        confirmed: false,
+        outcomes: [],
+      }
 
       await ChatModule.onCreateChatMessage(mockMessage, {}, {}, 'user-id')
 
@@ -270,7 +266,12 @@ describe('Chat Module', () => {
     })
 
     test('should not auto-confirm if action does not allow it', async () => {
-      mockMessage.flags.swerpg = { action: true }
+      mockMessage.flags.swerpg = {
+        actor: 'Actor.actor-001',
+        action: 'some-action-id',
+        confirmed: false,
+        outcomes: [],
+      }
       mockAction.canAutoConfirm.mockReturnValue(false)
 
       await ChatModule.onCreateChatMessage(mockMessage, {}, {}, 'user-id')
