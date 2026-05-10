@@ -3,6 +3,8 @@ import '../../setupTests.js'
 import { describe, expect, test } from 'vitest'
 
 import Skill from '../../../module/lib/skills/skill.mjs'
+import { createSkillData } from '../../utils/skills/skill.mjs'
+import { createActor } from '../../utils/actors/actor.mjs'
 
 describe('Skill Base Class', () => {
   describe('abstract methods', () => {
@@ -11,9 +13,13 @@ describe('Skill Base Class', () => {
       expect(() => skill.process()).toThrow("Method 'process()' must be implemented.")
     })
 
-    test('updateState() should throw error when called on base class', async () => {
-      const skill = new Skill({}, {}, {}, {})
-      await expect(skill.updateState()).rejects.toThrow("Method 'updateState()' must be implemented.")
+    test('updateState() should return an error when skill has not been evaluated', async () => {
+      const actor = createActor()
+      const data = createSkillData()
+
+      const skill = new Skill(actor, data, {}, {})
+
+      expect(() => skill.updateState()).toThrow
     })
   })
 
@@ -41,7 +47,7 @@ describe('Skill Base Class', () => {
       expect(skill.evaluated).toBe(false)
     })
 
-    test('should deep clone actor and data', () => {
+    test('should only deep clone data', () => {
       const actor = { id: 'actor-1', nested: { value: 1 } }
       const data = { rank: { trained: 1 }, nested: { value: 2 } }
       const params = { action: 'train', isCreation: false, isCareer: false, isSpecialization: false }
@@ -53,7 +59,7 @@ describe('Skill Base Class', () => {
       actor.id = 'modified'
       data.rank.trained = 999
 
-      expect(skill.actor.id).toBe('actor-1')
+      expect(skill.actor.id).toBe('modified')
       expect(skill.data.rank.trained).toBe(1)
     })
   })

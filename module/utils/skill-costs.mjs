@@ -78,21 +78,6 @@ export function getSkillPurchaseState({ rank, isCareer, isSpecialization, availa
 }
 
 /**
- * Calculate the XP refund amount when forgetting the last trained rank.
- * Mirrors SkillCostCalculator.#calculateForgetCost logic.
- * For free ranks, the refund is always 0 (handled by the caller).
- * @param {Object} params
- * @param {number} params.rank - Current total skill rank value (before decrease)
- * @param {boolean} params.isCareer - Whether the skill is a career skill
- * @returns {number} The XP refund amount, or 0 if rank <= 0
- */
-export function getSkillDecreaseRefund({ rank, isCareer }) {
-  if (rank <= 0) return 0
-  const rankAfter = rank - 1
-  return getSkillNextRankCost({ rank: rankAfter, isCareer }) ?? 0
-}
-
-/**
  * Calculate the positive dice pool preview based on characteristic value and skill rank
  * @param {Object} params
  * @param {number} params.characteristicValue - The characteristic value

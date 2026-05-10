@@ -2,83 +2,60 @@ import ErrorSkill from './error-skill.mjs'
 import Skill from './skill.mjs'
 
 export default class CareerFreeSkill extends Skill {
-  constructor(actor, data, params, options) {
-    super(actor, data, params, options)
-    this.freeSkillRankAvailable = this.#computeFreeSkillRankAvailable()
+  getCost() {
+    return 0
   }
 
-  /**
-   * @inheritDoc
-   * @override
-   */
-  async process() {
-    this.freeSkillRankAvailable = this.#computeFreeSkillRankAvailable()
+  createError(message) {
+    return new ErrorSkill(this.actor, this.data, {}, { message })
+  }
 
+  async process() {
+    const career = this.actor.system.progression.freeSkillRanks.career
+
+    const careerFreeRankGained = career.gained
+    let careerFreeRankSpent = career.spent
     let careerFree = this.data.rank.careerFree
-    let careerFreeRankSpent = this.actor.system.progression.freeSkillRanks.career.spent
 
     if (this.action === 'train') {
-      careerFree++
-      careerFreeRankSpent++
+      careerFree += 1
+      careerFreeRankSpent += 1
+    } else if (this.action === 'forget') {
+      careerFree -= 1
+      careerFreeRankSpent -= 1
+    } else {
+      return this.createError(`Unknown skill action: ${this.action}`)
     }
 
-    if (this.action === 'forget') {
-      careerFree--
-      careerFreeRankSpent--
-    }
+    const careerFreeRankAvailable = careerFreeRankGained - careerFreeRankSpent
 
     if (careerFree < 0) {
-      return new ErrorSkill(this.actor, this.data, {}, { message: "you can't forget this rank because it was not trained but free!" })
+      return this.createError("you can't forget this career free rank because this skill has no career free rank!")
     }
 
     if (careerFree > 1) {
-      return new ErrorSkill(this.actor, this.data, {}, { message: "you can't use more than 1 career free skill rank into the same skill!" })
+      return this.createError("you can't use more than 1 career free skill rank into the same skill!")
     }
 
-    if (this.freeSkillRankAvailable < 0) {
-      return new ErrorSkill(this.actor, this.data, {}, { message: "you can't use free skill rank anymore. You have used all!" })
+    if (careerFreeRankSpent < 0) {
+      return this.createError("career free skill ranks spent can't be negative!")
     }
 
-    const maxCareerFreeSkillRank = this.actor.system.progression.freeSkillRanks.career.gained
-    if (this.freeSkillRankAvailable > maxCareerFreeSkillRank) {
-      return new ErrorSkill(this.actor, this.data, {}, { message: `you can't get more than ${maxCareerFreeSkillRank} free skill ranks!` })
+    if (careerFreeRankAvailable < 0) {
+      return this.createError('you cannot use more career free skill ranks. You have used them all!')
     }
 
-    this.data.rank.value = this.data.rank.base + careerFree + this.data.rank.specializationFree + this.data.rank.trained
+    if (careerFreeRankAvailable > careerFreeRankGained) {
+      return this.createError(`you can't get more than ${careerFreeRankGained} career free skill ranks!`)
+    }
+
     this.data.rank.careerFree = careerFree
-    await this.actor.updateFreeSkillRanks('career', { spent: careerFreeRankSpent })
+    this.data.rank.value = this.computeRankValue()
+
+    this.updateData['system.progression.freeSkillRanks.career.spent'] = careerFreeRankSpent
+    this.prepareRankUpdate()
+
     this.evaluated = true
     return this
-  }
-
-  /**
-   * @inheritDoc
-   * @override
-   */
-  #computeFreeSkillRankAvailable() {
-    const career = this.actor.system.progression.freeSkillRanks.career
-    return career.gained - career.spent
-  }
-
-  /**
-   * @inheritDoc
-   * @override
-   */
-  async updateState() {
-    if (!this.evaluated) {
-      return new Promise((resolve, _) => {
-        resolve(new ErrorSkill(this.actor, this.data, {}, { message: 'you must evaluate the skill before updating it!' }))
-      })
-    }
-    try {
-      await this.actor.update({ [`system.skills.${this.data.id}.rank`]: this.data.rank })
-      return new Promise((resolve, _) => {
-        resolve(this)
-      })
-    } catch (e) {
-      return new Promise((resolve, _) => {
-        resolve(new ErrorSkill(this.actor, this.data, {}, { message: e.toString() }))
-      })
-    }
   }
 }

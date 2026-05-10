@@ -1,3 +1,5 @@
+export const TEST_SKILL_ID = 'cool'
+
 /**
  * Create a skill object to be used in tests
  * @param id.id
@@ -14,15 +16,15 @@
  * @param id.value
  * @returns {{id: string, rank: {base: number, careerFree: number, specializationFree: number, trained: number, value: number}}}
  */
-export function createSkillData({ id = 'skill-id', base = 0, careerFree = 0, specializationFree = 0, trained = 0, value = 0 } = {}) {
+export function createSkillData({ id = TEST_SKILL_ID, base = 0, careerFree = 0, specializationFree = 0, trained = 0, value = 0 } = {}) {
   return {
-    id: id,
+    id,
     rank: {
-      base: base,
-      careerFree: careerFree,
-      specializationFree: specializationFree,
-      trained: trained,
-      value: value,
+      base,
+      careerFree,
+      specializationFree,
+      trained,
+      value,
     },
   }
 }

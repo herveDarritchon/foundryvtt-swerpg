@@ -3,82 +3,68 @@ import ErrorSkill from './error-skill.mjs'
 import SkillCostCalculator from './skill-cost-calculator.mjs'
 
 export default class TrainedSkill extends Skill {
-  constructor(actor, data, params, options) {
-    super(actor, data, params, options)
-    this.freeSkillRankAvailable = this.#computeFreeSkillRankAvailable()
-    this.dataCostCalculator = new SkillCostCalculator(this)
-  }
-
-  async process() {
-    this.freeSkillRankAvailable = this.#computeFreeSkillRankAvailable()
-
-    let trained = this.data.rank.trained
-
-    let experiencePointsSpent = this.actor.system.progression.experience.spent
-    let value
+  getCost(oldRank) {
+    const calculator = new SkillCostCalculator(this)
 
     if (this.action === 'train') {
-      trained++
-      value = this.data.rank.base + this.data.rank.careerFree + this.data.rank.specializationFree + trained
-      experiencePointsSpent = experiencePointsSpent + this.dataCostCalculator.calculateCost('train', value)
+      return calculator.calculateCost('train', oldRank + 1)
     }
 
     if (this.action === 'forget') {
-      trained--
-      value = this.data.rank.base + this.data.rank.careerFree + this.data.rank.specializationFree + trained
-      experiencePointsSpent = experiencePointsSpent - this.dataCostCalculator.calculateCost('forget', value)
+      return calculator.calculateCost('forget', oldRank - 1)
     }
 
-    if (this.data.rank.trained < 0) {
-      return new ErrorSkill(this.actor, this.data, {}, { message: "you can't forget this rank because it was not trained but free!" })
+    return 0
+  }
+
+  createError(message) {
+    return new ErrorSkill(this.actor, this.data, {}, { message })
+  }
+
+  async process() {
+    const oldRank = this.data.rank.value
+    const cost = this.getCost(oldRank)
+
+    let trained = this.data.rank.trained
+    let experiencePointsSpent = this.actor.system.progression.experience.spent
+
+    if (this.action === 'train') {
+      trained += 1
+      experiencePointsSpent += cost
+    } else if (this.action === 'forget') {
+      trained -= 1
+      experiencePointsSpent -= cost
+    } else {
+      return this.createError(`Unknown skill action: ${this.action}`)
     }
 
-    if (this.isCreation && value > 2) {
-      return new ErrorSkill(this.actor, this.data, {}, { message: "you can't have more than 2 rank at creation!" })
+    if (trained < 0) {
+      return this.createError("you can't forget this rank because it was not trained!")
     }
 
-    if (!this.isCreation && value > 5) {
-      return new ErrorSkill(this.actor, this.data, {}, { message: "you can't have more than 5 rank!" })
+    if (experiencePointsSpent < 0) {
+      return this.createError("spent experience can't be negative!")
     }
 
     if (experiencePointsSpent > this.actor.system.progression.experience.total) {
-      return new ErrorSkill(this.actor, this.data, {}, { message: "you can't spend more experience than your total!" })
+      return this.createError("you can't spend more experience than your total!")
     }
 
-    this.data.rank.value = value
     this.data.rank.trained = trained
-    await this.actor.updateExperiencePoints({ spent: experiencePointsSpent })
+    this.data.rank.value = this.computeRankValue()
+
+    if (this.isCreation && this.data.rank.value > 2) {
+      return this.createError("you can't have more than 2 ranks at creation!")
+    }
+
+    if (!this.isCreation && this.data.rank.value > 5) {
+      return this.createError("you can't have more than 5 ranks!")
+    }
+
+    this.updateData['system.progression.experience.spent'] = experiencePointsSpent
+    this.prepareRankUpdate()
+
     this.evaluated = true
     return this
-  }
-
-  /**
-   * @inheritDoc
-   * @override
-   */
-  #computeFreeSkillRankAvailable() {
-    return false
-  }
-
-  /**
-   * @inheritDoc
-   * @override
-   */
-  async updateState() {
-    if (!this.evaluated) {
-      return new Promise((resolve, _) => {
-        resolve(new ErrorSkill(this.actor, this.data, {}, { message: 'you must evaluate the skill before updating it!' }))
-      })
-    }
-    try {
-      await this.actor.update({ [`system.skills.${this.data.id}.rank`]: this.data.rank })
-      return new Promise((resolve, _) => {
-        resolve(this)
-      })
-    } catch (e) {
-      return new Promise((resolve, _) => {
-        resolve(new ErrorSkill(this.actor, this.data, {}, { message: e.toString() }))
-      })
-    }
   }
 }
