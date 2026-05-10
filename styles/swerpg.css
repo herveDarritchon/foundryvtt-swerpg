@@ -2201,13 +2201,14 @@ input[type='range'] {
   width: 14px;
   height: 14px;
   flex-shrink: 0;
-  background-color: currentColor;
+  background-color: #fff;
   mask-size: contain;
   mask-repeat: no-repeat;
   mask-position: center;
   -webkit-mask-size: contain;
   -webkit-mask-repeat: no-repeat;
   -webkit-mask-position: center;
+  transition: transform 0.15s ease, background-color 0.15s ease, filter 0.15s ease;
 }
 .swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill .skill__action .skill__icon--increase {
   mask-image: url('../assets/images/icons/increase.svg');
@@ -2249,13 +2250,11 @@ input[type='range'] {
   transform: scale(1.15);
   background-color: #00ff99;
   filter: drop-shadow(0 0 3px rgba(0, 255, 153, 0.85));
-  transition: transform 0.15s ease, background-color 0.15s ease, filter 0.15s ease;
 }
 .swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill .skill__action--decrease.is-refundable:hover .skill__icon {
   transform: scale(1.15);
   background-color: #ee9b3a;
   filter: drop-shadow(0 0 3px rgba(238, 155, 58, 0.85));
-  transition: transform 0.15s ease, background-color 0.15s ease, filter 0.15s ease;
 }
 .swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill .skill__rank {
   text-align: center;
