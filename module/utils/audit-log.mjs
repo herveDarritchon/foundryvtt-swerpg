@@ -1,4 +1,5 @@
 import { logger } from './logger.mjs'
+import { composeEntries } from './audit-diff.mjs'
 
 /* -------------------------------------------- */
 /*  Constantes                                  */
@@ -126,14 +127,6 @@ function snapshotOldState(source, changes) {
   }
 
   return oldState
-}
-
-/* -------------------------------------------- */
-/*  Placeholder analyseur de diff (#159)        */
-/* -------------------------------------------- */
-
-function composeEntries(_oldState, _changes, _actor, _userId) {
-  return []
 }
 
 /* -------------------------------------------- */
