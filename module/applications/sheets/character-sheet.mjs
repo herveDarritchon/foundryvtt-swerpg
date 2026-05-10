@@ -510,7 +510,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
       costLabel = game.i18n.format('SKILL.CHAT.COST', { cost })
     }
 
-    const content = await renderTemplate('systems/swerpg/templates/chat/skill-transaction.hbs', {
+    const content = await foundry.applications.handlebars.renderTemplate('systems/swerpg/templates/chat/skill-transaction.hbs', {
       actorImg: actor.img,
       actorName: actor.name,
       skillLabel: skill.label,
