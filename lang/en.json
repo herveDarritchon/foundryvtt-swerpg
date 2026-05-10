@@ -38,6 +38,7 @@
   "SWERPG.ERRORS.NoItemsCollection": "Character data error: Items collection is missing.",
   "SWERPG.ERRORS.ItemNotFound": "Item not found: The selected item may have been deleted.",
   "SWERPG.ERRORS.UnexpectedError": "Unexpected system error: Please retry.",
+  "SWERPG.AUDIT.WRITE_FAILED": "Audit log write failed for actor \"{actor}\". Check the console for details.",
   "ADVERSARY.ThreatMinion": "Minion",
   "ADVERSARY.ThreatNormal": "Normal",
   "ADVERSARY.ThreatElite": "Elite",

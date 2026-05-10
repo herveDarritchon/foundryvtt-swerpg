@@ -558,6 +558,17 @@ export function setupFoundryMock(options = {}) {
     }
   }
 
+  // Mock Hooks global (Foundry VTT global for hook registration)
+  if (!globalThis.Hooks) {
+    globalThis.Hooks = {
+      on: vi.fn(),
+      once: vi.fn(),
+      off: vi.fn(),
+      call: vi.fn(),
+      callAll: vi.fn(),
+    }
+  }
+
   // Mock jQuery-like selector functions for DOM manipulation
   // Minimal jQuery-like wrapper supporting chained find(selector).remove()/append()/prepend()
   globalThis.$ = vi.fn((selector) => {
