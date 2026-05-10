@@ -3,44 +3,58 @@
   "evals": [
     {
       "id": 1,
-      "prompt": "Implémente ce plan : `documentation/plan/character-sheet/evolution-logs/TECH-159-plan-diff-analyzer.md`. Je veux le code, les tests associés, et une validation finale. Respecte Foundry VTT v14+, évite les API dépréciées, et ne repars pas dans une phase de spec.",
-      "expected_output": "L'agent lit le plan fourni, inspecte les fichiers impactés, implémente les changements demandés, ajoute ou met à jour les tests, exécute les validations utiles, puis résume le résultat sans refaire un plan.",
-      "files": [
-        "documentation/plan/character-sheet/evolution-logs/TECH-159-plan-diff-analyzer.md"
-      ],
+      "prompt": "Implémente ce plan : `documentation/plan/character-sheet/evolution-logs/TECH-159-plan-diff-analyzer.md`. Je veux le code, les tests associés, et une validation finale. Respecte Foundry VTT v14+, évite les API dépréciées, et ne repars pas dans une phase de spec. N'ajoute pas de comportement métier non demandé par le plan : si tu vois une amélioration utile mais hors périmètre, signale-la seulement dans le résumé final.",
+      "expected_output": "L'agent lit le plan fourni, inspecte les fichiers impactés, implémente les changements demandés, ajoute ou met à jour les tests, exécute les validations utiles, puis résume le résultat sans refaire un plan. Il reste dans le périmètre du plan, ne change pas de règle métier non demandée, et distingue clairement les adaptations dues au code réel des écarts éventuels.",
+      "files": ["documentation/plan/character-sheet/evolution-logs/TECH-159-plan-diff-analyzer.md"],
       "expectations": [
         "Le run produit un résumé d'implémentation non vide dans outputs/summary.md.",
         "Le run produit un diff Git non vide dans outputs/git.diff.",
         "Le run produit une trace de validation dans outputs/validation.txt.",
-        "Le run produit un fichier outputs/final_status.json listant les fichiers modifiés."
+        "Le run produit un fichier outputs/final_status.json listant les fichiers modifiés.",
+        "Le résumé distingue ce qui était demandé par le plan, ce qui a été adapté à cause du code réel, et les écarts éventuels.",
+        "Le diff reste focalisé sur les fichiers nécessaires au plan et aux tests associés.",
+        "Le run n'introduit pas de règle métier non demandée par le plan.",
+        "Les tests ajoutés ou modifiés couvrent au moins un comportement fonctionnel du diff analyzer qui aurait pu échouer avant l'implémentation.",
+        "Les changements de calcul, parsing, mapping ou transformation sont couverts par des tests unitaires Vitest.",
+        "Le run ne relance pas une longue phase de spécification et livre une implémentation concrète."
       ]
     },
     {
       "id": 2,
-      "prompt": "Applique ce plan d'implémentation déjà prêt dans `documentation/plan/importer/feature-importer-global-progress-jauge-1.md`. Je veux une implémentation propre, DRY, KISS, avec séparation nette entre logique métier et adaptation Foundry. Ajoute les tests pertinents et évite toute API Foundry obsolète.",
-      "expected_output": "L'agent traite le plan comme une entrée exécutable, suit l'architecture du projet, garde le changement focalisé, place la logique au bon niveau, ajoute les tests adaptés et valide le résultat.",
-      "files": [
-        "documentation/plan/importer/feature-importer-global-progress-jauge-1.md"
-      ],
+      "prompt": "Applique ce plan d'implémentation déjà prêt dans `documentation/plan/importer/feature-importer-global-progress-jauge-1.md`. Je veux une implémentation propre, DRY, KISS, avec séparation nette entre logique métier et adaptation Foundry. Ajoute les tests pertinents et évite toute API Foundry obsolète. Reste strictement dans le périmètre de la jauge de progression : ne refactorise pas l'importer au-delà de ce qui est nécessaire.",
+      "expected_output": "L'agent traite le plan comme une entrée exécutable, suit l'architecture du projet, garde le changement focalisé, place la logique au bon niveau, ajoute les tests adaptés et valide le résultat. La logique de calcul ou de normalisation est isolée de l'adaptation Foundry quand c'est pertinent, le template reste orienté rendu, et l'implémentation ne modifie pas d'autres comportements de l'importer.",
+      "files": ["documentation/plan/importer/feature-importer-global-progress-jauge-1.md"],
       "expectations": [
         "Le run produit un résumé d'implémentation non vide dans outputs/summary.md.",
         "Le run produit un diff Git non vide dans outputs/git.diff.",
         "Le run produit une trace de validation dans outputs/validation.txt.",
-        "Le run produit un fichier outputs/final_status.json listant les fichiers modifiés."
+        "Le run produit un fichier outputs/final_status.json listant les fichiers modifiés.",
+        "Le résumé distingue ce qui était demandé par le plan, ce qui a été adapté à cause du code réel, et les écarts éventuels.",
+        "La logique métier de normalisation ou de calcul de progression est séparée de l'adaptation Foundry quand le code réel le permet.",
+        "Le template Handlebars reste orienté rendu et ne contient pas de logique métier excessive.",
+        "Les attributs UI visibles ou accessibles sont localisés ou utilisent les clés i18n existantes lorsqu'une chaîne utilisateur est ajoutée.",
+        "Les tests couvrent la logique pure de progression et au moins un cas de rendu ou de contexte ApplicationV2.",
+        "Le diff ne refactorise pas l'importer au-delà du périmètre de la jauge de progression."
       ]
     },
     {
       "id": 3,
-      "prompt": "J'ai déjà un plan technique dans `documentation/plan/character-sheet/evolution-logs/US1-plan-audit-log-hooks.md`. Exécute-le directement en code, sans refaire une analyse complète. Si tu vois un écart important entre le plan et le code actuel, signale-le seulement si c'est bloquant. Sinon, implémente, teste et valide.",
-      "expected_output": "L'agent exécute le plan sans relancer inutilement la planification, utilise le repository comme source de vérité, ne signale que les ambiguïtés bloquantes, puis livre code, tests et validation.",
-      "files": [
-        "documentation/plan/character-sheet/evolution-logs/US1-plan-audit-log-hooks.md"
-      ],
+      "prompt": "J'ai déjà un plan technique dans `documentation/plan/character-sheet/evolution-logs/US1-plan-audit-log-hooks.md`. Exécute-le directement en code, sans refaire une analyse complète. Si tu vois un écart important entre le plan et le code actuel, signale-le seulement si c'est bloquant. Sinon, implémente, teste et valide. Attention : n'étends pas l'analyseur d'audit ou les règles XP au-delà de ce que demande ce plan US1.",
+      "expected_output": "L'agent exécute le plan sans relancer inutilement la planification, utilise le repository comme source de vérité, ne signale que les ambiguïtés bloquantes, puis livre code, tests et validation. Il implémente les hooks et comportements demandés par US1 sans ajouter de nouvelles règles métier dans l'analyseur de diff si elles ne sont pas explicitement demandées.",
+      "files": ["documentation/plan/character-sheet/evolution-logs/US1-plan-audit-log-hooks.md"],
       "expectations": [
         "Le run produit un résumé d'implémentation non vide dans outputs/summary.md.",
         "Le run produit un diff Git non vide dans outputs/git.diff.",
         "Le run produit une trace de validation dans outputs/validation.txt.",
-        "Le run produit un fichier outputs/final_status.json listant les fichiers modifiés."
+        "Le run produit un fichier outputs/final_status.json listant les fichiers modifiés.",
+        "Le résumé distingue ce qui était demandé par le plan, ce qui a été adapté à cause du code réel, et les écarts éventuels.",
+        "Le run reste dans le périmètre US1 et n'étend pas l'analyseur de diff à de nouveaux types d'entrées non demandés.",
+        "Le run ne change pas les règles de double comptage XP sauf si le plan US1 le demande explicitement.",
+        "Les hooks demandés sont enregistrés et testés au bon niveau.",
+        "Les écritures de logs évitent la récursion via les options ou garde-fous prévus.",
+        "Toute nouvelle chaîne visible liée aux erreurs ou notifications passe par l'i18n.",
+        "Les tests couvrent au moins un flux d'intégration hook -> composition éventuelle -> écriture de log ou garde anti-récursion.",
+        "Le diff ne modifie pas des fichiers sans lien direct avec US1, sauf justification dans le résumé."
       ]
     }
   ]
