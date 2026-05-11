@@ -1381,6 +1381,107 @@ describe('detail changes', () => {
       },
     })
   })
+
+  test('creates species.set entry when clearing species', async () => {
+    const changes = {
+      system: {
+        details: {
+          species: null,
+        },
+      },
+    }
+
+    const source = defaultSource()
+    source.system.details.species = { name: 'Human' }
+
+    const entries = await composeFromChanges(changes, source)
+
+    expect(entries).toHaveLength(1)
+    expect(entries[0]).toMatchObject({
+      type: 'species.set',
+      xpDelta: 0,
+      data: {
+        oldSpecies: 'Human',
+        newSpecies: null,
+      },
+    })
+  })
+
+  test('creates career.set entry when clearing career', async () => {
+    const changes = {
+      system: {
+        details: {
+          career: null,
+        },
+      },
+    }
+
+    const source = defaultSource()
+    source.system.details.career = { name: 'Mercenary' }
+
+    const entries = await composeFromChanges(changes, source)
+
+    expect(entries).toHaveLength(1)
+    expect(entries[0]).toMatchObject({
+      type: 'career.set',
+      xpDelta: 0,
+      data: {
+        oldCareer: 'Mercenary',
+        newCareer: null,
+      },
+    })
+  })
+
+  test('detects specialization.add with unnormalized key', async () => {
+    const changes = {
+      system: {
+        details: {
+          specializations: {
+            'my spec!': {
+              name: 'Bodyguard',
+            },
+          },
+        },
+      },
+    }
+
+    const source = defaultSource()
+
+    const entries = await composeFromChanges(changes, source)
+    const addEntries = entries.filter((e) => e.type === 'specialization.add')
+
+    expect(addEntries).toHaveLength(1)
+    expect(addEntries[0]).toMatchObject({
+      type: 'specialization.add',
+      xpDelta: 0,
+      data: {
+        specializationId: 'my spec!',
+      },
+    })
+  })
+
+  test('returns empty when details values are unchanged', async () => {
+    const changes = {
+      system: {
+        details: {
+          species: {
+            name: 'Human',
+          },
+          career: {
+            name: 'Mercenary',
+          },
+        },
+      },
+    }
+
+    const source = defaultSource()
+    source.system.details.species = { name: 'Human' }
+    source.system.details.career = { name: 'Mercenary' }
+
+    const entries = await composeFromChanges(changes, source)
+
+    expect(entries).toEqual([])
+  })
 })
 
 /* ============================================ */
