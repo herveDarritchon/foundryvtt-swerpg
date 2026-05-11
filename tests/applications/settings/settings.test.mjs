@@ -39,7 +39,7 @@ describe('System Settings Registration', () => {
       registerSystemSettings()
 
       // Verify all settings were registered
-      expect(mockGameSettings.register).toHaveBeenCalledTimes(7) // 7 settings total
+      expect(mockGameSettings.register).toHaveBeenCalledTimes(8) // 8 settings total
       expect(mockKeybindings.register).toHaveBeenCalledTimes(1) // 1 keybinding
     })
 
@@ -157,7 +157,7 @@ describe('System Settings Registration', () => {
 
         // World-scoped settings
         const worldSettings = calls.filter((call) => call[2].scope === 'world')
-        expect(worldSettings).toHaveLength(6)
+        expect(worldSettings).toHaveLength(7)
 
         // Client-scoped settings
         const clientSettings = calls.filter((call) => call[2].scope === 'client')
@@ -176,12 +176,13 @@ describe('System Settings Registration', () => {
 
         // Visible settings (config: true)
         const visibleSettings = calls.filter((call) => call[2].config === true)
-        expect(visibleSettings).toHaveLength(2)
+        expect(visibleSettings).toHaveLength(3)
 
-        // Check that actionAnimations and autoConfirm are visible
+        // Check that actionAnimations, autoConfirm and auditLogMaxEntries are visible
         const visibleSettingNames = visibleSettings.map((call) => call[1])
         expect(visibleSettingNames).toContain('actionAnimations')
         expect(visibleSettingNames).toContain('autoConfirm')
+        expect(visibleSettingNames).toContain('auditLogMaxEntries')
       })
 
       test('should have correct data types', () => {
@@ -201,8 +202,8 @@ describe('System Settings Registration', () => {
 
         // Number settings
         const numberSettings = calls.filter((call) => call[2].type === Number)
-        expect(numberSettings).toHaveLength(2)
-        expect(numberSettings.map((call) => call[1])).toEqual(expect.arrayContaining(['autoConfirm', 'heroism']))
+        expect(numberSettings).toHaveLength(3)
+        expect(numberSettings.map((call) => call[1])).toEqual(expect.arrayContaining(['autoConfirm', 'heroism', 'auditLogMaxEntries']))
       })
 
       test('should have correct default values', () => {
@@ -223,6 +224,26 @@ describe('System Settings Registration', () => {
         expect(settingsWithDefaults.welcome).toBe(false)
         expect(settingsWithDefaults.heroism).toBe(0)
         expect(settingsWithDefaults.autoConfirm).toBeUndefined() // This setting doesn't have a default
+        expect(settingsWithDefaults.auditLogMaxEntries).toBe(500)
+      })
+    })
+
+    test('should register auditLogMaxEntries setting', () => {
+      registerSystemSettings()
+
+      expect(mockGameSettings.register).toHaveBeenCalledWith('swerpg', 'auditLogMaxEntries', {
+        name: 'SWERPG.SETTINGS.AUDIT_LOG_MAX_ENTRIES_NAME',
+        hint: 'SWERPG.SETTINGS.AUDIT_LOG_MAX_ENTRIES_HINT',
+        scope: 'world',
+        config: true,
+        type: Number,
+        default: 500,
+        range: {
+          min: 100,
+          max: 5000,
+          step: 100,
+        },
+        onChange: expect.any(Function),
       })
     })
 
@@ -267,7 +288,7 @@ describe('System Settings Registration', () => {
         registerSystemSettings()
 
         // Should have been called twice for each setting
-        expect(mockGameSettings.register).toHaveBeenCalledTimes(14) // 7 settings x 2 calls
+        expect(mockGameSettings.register).toHaveBeenCalledTimes(16) // 8 settings x 2 calls
         expect(mockKeybindings.register).toHaveBeenCalledTimes(2) // 1 keybinding x 2 calls
       })
     })
@@ -277,7 +298,7 @@ describe('System Settings Registration', () => {
         registerSystemSettings()
 
         const registeredKeys = mockGameSettings.register.mock.calls.map((call) => call[1])
-        const expectedKeys = ['systemMigrationVersion', 'worldKey', 'devMode', 'actionAnimations', 'autoConfirm', 'welcome', 'heroism']
+        const expectedKeys = ['systemMigrationVersion', 'worldKey', 'devMode', 'actionAnimations', 'autoConfirm', 'welcome', 'heroism', 'auditLogMaxEntries']
 
         for (const key of expectedKeys) {
           expect(registeredKeys).toContain(key)

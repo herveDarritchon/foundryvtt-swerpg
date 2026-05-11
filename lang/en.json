@@ -42,6 +42,8 @@
   "SWERPG.AUDIT.ACTOR": "Actor",
   "SWERPG.AUDIT.ERROR": "Error",
   "SWERPG.AUDIT.CHECK_CONSOLE": "See the console (F12) for more details.",
+  "SWERPG.SETTINGS.AUDIT_LOG_MAX_ENTRIES_NAME": "Audit Log max entries",
+  "SWERPG.SETTINGS.AUDIT_LOG_MAX_ENTRIES_HINT": "Maximum number of entries stored in the character audit log (100-5000). Oldest entries are removed first when the limit is exceeded.",
   "ADVERSARY.ThreatMinion": "Minion",
   "ADVERSARY.ThreatNormal": "Normal",
   "ADVERSARY.ThreatElite": "Elite",
