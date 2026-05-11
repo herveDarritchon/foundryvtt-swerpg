@@ -256,7 +256,7 @@ export function onUpdateActor(actor, changes, options, userId) {
 /*  createItem handler (talent detection)        */
 /* -------------------------------------------- */
 
-export function onCreateItem(item, data, options, userId) {
+function onCreateItem(item, data, options, userId) {
   if (item.parent?.type !== 'character') return
   if (item.type !== 'talent') return
 
