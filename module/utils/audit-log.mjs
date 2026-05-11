@@ -8,7 +8,10 @@ import { composeEntries } from './audit-diff.mjs'
 const AUDIT_LOG_KEY = 'flags.swerpg.logs'
 const PENDING_TTL_MS = 30000
 const MAX_PENDING = 50
+const MAX_RETRIES = 1
+const RETRY_DELAY_MS = 1000
 const pendingOldStates = new Map()
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
 /* -------------------------------------------- */
 /*  Gardes                                      */
@@ -50,6 +53,11 @@ function pruneExpiredPending() {
     } else if (remaining.length !== queue.length) {
       pendingOldStates.set(key, remaining)
     }
+  }
+
+  const total = countPendingEntries()
+  if (total > 100) {
+    logger.warn(`[AuditLog] pendingOldStates has ${total} entries. Possible leak.`)
   }
 }
 
@@ -130,25 +138,60 @@ function snapshotOldState(source, changes) {
 }
 
 /* -------------------------------------------- */
+/*  Gestion d'erreur                            */
+/* -------------------------------------------- */
+
+export async function handleWriteError(actor, err) {
+  logger.error(`[AuditLog] Write failed for actor "${actor.name}" (${actor.id})`, err)
+  ui.notifications?.warn?.(
+    game.i18n.format('SWERPG.AUDIT.WRITE_FAILED', { actor: actor.name })
+  )
+
+  if (game.user?.isGM) {
+    try {
+      const content = await foundry.applications.handlebars.renderTemplate(
+        'systems/swerpg/templates/chat/audit-log-warning.hbs',
+        {
+          actorName: actor.name,
+          errorMessage: err.message,
+        }
+      )
+      await ChatMessage.create({
+        content,
+        speaker: ChatMessage.getSpeaker({ actor }),
+        whisper: ChatMessage.getWhisperRecipients('GM'),
+        type: CONST.CHAT_MESSAGE_TYPES.WHISPER,
+      })
+    } catch (chatErr) {
+      logger.warn('[AuditLog] Failed to send GM whisper for write error:', chatErr)
+    }
+  }
+}
+
+/* -------------------------------------------- */
 /*  Écriture batch fire-and-forget              */
 /* -------------------------------------------- */
 
 async function writeLogEntries(actor, entries) {
   if (!entries.length) return
 
-  try {
-    const currentLogs = cloneValue(_getProperty(actor, AUDIT_LOG_KEY) ?? [])
-    const nextLogs = [...currentLogs, ...entries]
+  for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+    try {
+      const currentLogs = cloneValue(_getProperty(actor, AUDIT_LOG_KEY) ?? [])
+      const nextLogs = [...currentLogs, ...entries]
 
-    await actor.update(
-      { [AUDIT_LOG_KEY]: nextLogs },
-      { swerpgAuditLog: false }
-    )
-  } catch (err) {
-    logger.error(`[AuditLog] Write failed for actor "${actor.name}" (${actor.id})`, err)
-    ui.notifications?.warn?.(
-      game.i18n.format('SWERPG.AUDIT.WRITE_FAILED', { actor: actor.name })
-    )
+      await actor.update(
+        { [AUDIT_LOG_KEY]: nextLogs },
+        { swerpgAuditLog: false }
+      )
+      return
+    } catch (err) {
+      if (attempt < MAX_RETRIES) {
+        await sleep(RETRY_DELAY_MS)
+        continue
+      }
+      await handleWriteError(actor, err)
+    }
   }
 }
 
@@ -156,7 +199,7 @@ async function writeLogEntries(actor, entries) {
 /*  Helpers exportés pour tests                 */
 /* -------------------------------------------- */
 
-export { isOnlyAuditChange, snapshotOldState, cloneValue, evictOldestIfNeeded, flushPending, countPendingEntries, getPendingKey, shiftPendingEntry, pushPendingEntry, isDeletionPath, writeLogEntries }
+export { isOnlyAuditChange, snapshotOldState, cloneValue, evictOldestIfNeeded, flushPending, countPendingEntries, getPendingKey, shiftPendingEntry, pushPendingEntry, isDeletionPath, writeLogEntries, handleWriteError, pruneExpiredPending }
 
 /* -------------------------------------------- */
 /*  Handlers (exportés)                         */
