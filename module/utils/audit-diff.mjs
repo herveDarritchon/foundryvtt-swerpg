@@ -4,20 +4,15 @@ import { logger } from './logger.mjs'
 /*  Capture instantané de l'état XP après update */
 /* -------------------------------------------- */
 
-function captureXpSnapshotAfter(actor) {
+function captureSnapshot(actor) {
   const xp = actor.system?.progression?.experience
-  if (!xp) {
-    return {
-      available: 0,
-      spent: 0,
-      gained: 0,
-    }
-  }
-
+  const freeRanks = actor.system?.progression?.freeSkillRanks
   return {
-    available: xp.available ?? 0,
-    spent: xp.spent ?? 0,
-    gained: xp.gained ?? 0,
+    xpAvailable: xp?.available ?? 0,
+    totalXpSpent: xp?.spent ?? 0,
+    totalXpGained: xp?.gained ?? 0,
+    careerFreeAvailable: freeRanks?.career?.available ?? 0,
+    specializationFreeAvailable: freeRanks?.specialization?.available ?? 0,
   }
 }
 
@@ -66,7 +61,7 @@ function reconstructPreviousValue(oldPartialValue, currentValue) {
 /*  Helper de construction d'entrée             */
 /* -------------------------------------------- */
 
-function makeEntry({ type, data, xpDelta, ts, userId, user, xpAfter }) {
+function makeEntry({ type, data, xpDelta, ts, userId, user, snapshot }) {
   return {
     id: foundry.utils.randomID(),
     schemaVersion: 1,
@@ -76,9 +71,7 @@ function makeEntry({ type, data, xpDelta, ts, userId, user, xpAfter }) {
     type,
     data,
     xpDelta: Object.is(xpDelta, -0) ? 0 : xpDelta,
-    snapshot: {
-      xpAfter: { ...xpAfter },
-    },
+    snapshot: { ...snapshot },
   }
 }
 
@@ -86,7 +79,7 @@ function makeEntry({ type, data, xpDelta, ts, userId, user, xpAfter }) {
 /*  Détecteurs                                  */
 /* -------------------------------------------- */
 
-function detectSkillChanges(oldState, changes, actor, ts, userId, user, xpAfter) {
+function detectSkillChanges(oldState, changes, actor, ts, userId, user, snapshot) {
   const entries = []
   const skillChanges = changes.system?.skills
   if (!skillChanges) return entries
@@ -130,7 +123,7 @@ function detectSkillChanges(oldState, changes, actor, ts, userId, user, xpAfter)
         ts,
         userId,
         user,
-        xpAfter,
+        snapshot,
       }),
     )
   }
@@ -165,7 +158,7 @@ function getCareerSkillIds(actor) {
   return ids
 }
 
-function detectCharacteristicChanges(oldState, changes, actor, ts, userId, user, xpAfter) {
+function detectCharacteristicChanges(oldState, changes, actor, ts, userId, user, snapshot) {
   const entries = []
   const characteristicChanges = changes.system?.characteristics
   if (!characteristicChanges) return entries
@@ -198,7 +191,7 @@ function detectCharacteristicChanges(oldState, changes, actor, ts, userId, user,
         ts,
         userId,
         user,
-        xpAfter,
+        snapshot,
       }),
     )
   }
@@ -210,7 +203,7 @@ function getCharacteristicTotalRank(rank) {
   return (rank.base ?? 0) + (rank.trained ?? 0) + (rank.bonus ?? 0)
 }
 
-function detectXpChanges(oldState, changes, actor, ts, userId, user, xpAfter) {
+function detectXpChanges(oldState, changes, actor, ts, userId, user, snapshot) {
   const entries = []
   const expChanges = changes.system?.progression?.experience
   if (!expChanges) return entries
@@ -234,7 +227,7 @@ function detectXpChanges(oldState, changes, actor, ts, userId, user, xpAfter) {
           ts,
           userId,
           user,
-          xpAfter,
+          snapshot,
         }),
       )
     }
@@ -259,7 +252,7 @@ function detectXpChanges(oldState, changes, actor, ts, userId, user, xpAfter) {
           ts,
           userId,
           user,
-          xpAfter,
+          snapshot,
         }),
       )
     }
@@ -268,7 +261,7 @@ function detectXpChanges(oldState, changes, actor, ts, userId, user, xpAfter) {
   return entries
 }
 
-function detectDetailChanges(oldState, changes, actor, ts, userId, user, xpAfter) {
+function detectDetailChanges(oldState, changes, actor, ts, userId, user, snapshot) {
   const entries = []
   const detailChanges = changes.system?.details
   if (!detailChanges) return entries
@@ -286,7 +279,7 @@ function detectDetailChanges(oldState, changes, actor, ts, userId, user, xpAfter
           ts,
           userId,
           user,
-          xpAfter,
+          snapshot,
         }),
       )
     }
@@ -305,20 +298,20 @@ function detectDetailChanges(oldState, changes, actor, ts, userId, user, xpAfter
           ts,
           userId,
           user,
-          xpAfter,
+          snapshot,
         }),
       )
     }
   }
 
   if (detailChanges.specializations !== undefined) {
-    entries.push(...detectSpecializationChanges(oldState, detailChanges.specializations, actor, ts, userId, user, xpAfter))
+    entries.push(...detectSpecializationChanges(oldState, detailChanges.specializations, actor, ts, userId, user, snapshot))
   }
 
   return entries
 }
 
-function detectSpecializationChanges(oldState, specializationChanges, actor, ts, userId, user, xpAfter) {
+function detectSpecializationChanges(oldState, specializationChanges, actor, ts, userId, user, snapshot) {
   const entries = []
 
   for (const [key, value] of Object.entries(specializationChanges)) {
@@ -334,7 +327,7 @@ function detectSpecializationChanges(oldState, specializationChanges, actor, ts,
           ts,
           userId,
           user,
-          xpAfter,
+          snapshot,
         }),
       )
 
@@ -353,7 +346,7 @@ function detectSpecializationChanges(oldState, specializationChanges, actor, ts,
           ts,
           userId,
           user,
-          xpAfter,
+          snapshot,
         }),
       )
     }
@@ -362,7 +355,7 @@ function detectSpecializationChanges(oldState, specializationChanges, actor, ts,
   return entries
 }
 
-function detectAdvancementChanges(oldState, changes, actor, ts, userId, user, xpAfter) {
+function detectAdvancementChanges(oldState, changes, actor, ts, userId, user, snapshot) {
   if (changes.system?.advancement?.level === undefined) return []
 
   const newLevel = actor.system?.advancement?.level ?? 0
@@ -378,7 +371,7 @@ function detectAdvancementChanges(oldState, changes, actor, ts, userId, user, xp
       ts,
       userId,
       user,
-      xpAfter,
+      snapshot,
     }),
   ]
 }
@@ -392,7 +385,7 @@ export function composeEntries(oldState, changes, actor, userId) {
     const entries = []
     const expandedChanges = foundry.utils.expandObject(changes)
     const ts = Date.now()
-    const xpAfter = captureXpSnapshotAfter(actor)
+    const snapshot = captureSnapshot(actor)
     const user = game.users?.get(userId) ?? null
 
     const hasBusinessChange = Boolean(
@@ -403,25 +396,25 @@ export function composeEntries(oldState, changes, actor, userId) {
     )
 
     if (expandedChanges.system?.skills) {
-      entries.push(...detectSkillChanges(oldState, expandedChanges, actor, ts, userId, user, xpAfter))
+      entries.push(...detectSkillChanges(oldState, expandedChanges, actor, ts, userId, user, snapshot))
     }
 
     if (expandedChanges.system?.characteristics) {
-      entries.push(...detectCharacteristicChanges(oldState, expandedChanges, actor, ts, userId, user, xpAfter))
+      entries.push(...detectCharacteristicChanges(oldState, expandedChanges, actor, ts, userId, user, snapshot))
     }
 
     // Les entrées métier portent déjà le coût XP.
     // On ne logge les changements XP que s'ils sont purs.
     if (expandedChanges.system?.progression?.experience && !hasBusinessChange) {
-      entries.push(...detectXpChanges(oldState, expandedChanges, actor, ts, userId, user, xpAfter))
+      entries.push(...detectXpChanges(oldState, expandedChanges, actor, ts, userId, user, snapshot))
     }
 
     if (expandedChanges.system?.details) {
-      entries.push(...detectDetailChanges(oldState, expandedChanges, actor, ts, userId, user, xpAfter))
+      entries.push(...detectDetailChanges(oldState, expandedChanges, actor, ts, userId, user, snapshot))
     }
 
     if (expandedChanges.system?.advancement) {
-      entries.push(...detectAdvancementChanges(oldState, expandedChanges, actor, ts, userId, user, xpAfter))
+      entries.push(...detectAdvancementChanges(oldState, expandedChanges, actor, ts, userId, user, snapshot))
     }
 
     return entries
@@ -436,7 +429,7 @@ export function composeEntries(oldState, changes, actor, userId) {
 
 export {
   makeEntry,
-  captureXpSnapshotAfter,
+  captureSnapshot,
   computeSkillTrainCost,
   computeSkillForgetRefund,
   computeCharacteristicCost,
