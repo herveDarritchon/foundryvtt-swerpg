@@ -10,6 +10,7 @@ Chaque sous-dossier détaille les actions à effectuer et les résultats attendu
 
 | Famille | Description | Pages |
 |---------|-------------|-------|
+| [Audit Log](audit-log/README.md) | Hooks, entrées (skill/carac/XP/talents), snapshot, résilience, éviction FIFO | ~25 scénarios |
 | [Personnage](personnage/README.md) | Création, espèces, carrières, spécialisations, caractéristiques, compétences, ressources, XP, audit log | ~30 scénarios |
 | [Combat](combat/README.md) | Tours, attaque/défense, dégâts, résistances, effets de statut (23), DOT (13), héroïsme | ~35 scénarios |
 | [Dés narratifs](des-narratifs/README.md) | StandardCheck, AttackRoll, pools boon/bane, dialogs, chat, socket | ~25 scénarios |
@@ -25,8 +26,8 @@ Chaque sous-dossier détaille les actions à effectuer et les résultats attendu
 
 | Métrique | Valeur |
 |----------|--------|
-| Familles de test | 8 |
-| Total scénarios documentés | ~200 |
+| Familles de test | 9 |
+| Total scénarios documentés | ~225 |
 | Statuts couverts | 23 |
 | Types de dégâts | 12 |
 | Qualités d'arme | 30 |
