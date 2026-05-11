@@ -364,36 +364,10 @@ describe('makeEntry', () => {
 })
 
 /* ============================================ */
-/*  Helpers de coûts                            */
+/*  computeCharacteristicCost                   */
 /* ============================================ */
 
-describe('cost helpers', () => {
-  test('computeSkillTrainCost career', async () => {
-    const { computeSkillTrainCost } = await import('../../module/utils/audit-diff.mjs')
-
-    expect(computeSkillTrainCost(0, true)).toBe(5)
-    expect(computeSkillTrainCost(2, true)).toBe(15)
-  })
-
-  test('computeSkillTrainCost non-career', async () => {
-    const { computeSkillTrainCost } = await import('../../module/utils/audit-diff.mjs')
-
-    expect(computeSkillTrainCost(0, false)).toBe(10)
-    expect(computeSkillTrainCost(2, false)).toBe(20)
-  })
-
-  test('computeSkillForgetRefund career', async () => {
-    const { computeSkillForgetRefund } = await import('../../module/utils/audit-diff.mjs')
-
-    expect(computeSkillForgetRefund(3, true)).toBe(15)
-  })
-
-  test('computeSkillForgetRefund non-career', async () => {
-    const { computeSkillForgetRefund } = await import('../../module/utils/audit-diff.mjs')
-
-    expect(computeSkillForgetRefund(3, false)).toBe(20)
-  })
-
+describe('computeCharacteristicCost', () => {
   test('computeCharacteristicCost', async () => {
     const { computeCharacteristicCost } = await import('../../module/utils/audit-diff.mjs')
 
@@ -633,6 +607,227 @@ describe('skill changes', () => {
         isFree: true,
       },
     })
+  })
+
+  test('sets freeRankType=career on career free rank increase', async () => {
+    const changes = {
+      system: {
+        skills: {
+          cool: {
+            rank: { careerFree: 1 },
+          },
+        },
+      },
+    }
+
+    const source = defaultSource()
+    source.system.skills.cool = {
+      rank: {
+        base: 0,
+        careerFree: 0,
+        specializationFree: 0,
+        trained: 0,
+      },
+    }
+    source.system.details.career = {
+      name: 'Explorer',
+      careerSkills: ['cool'],
+    }
+
+    const entries = await composeFromChanges(changes, source)
+
+    expect(entries).toHaveLength(1)
+    expect(entries[0].data.freeRankType).toBe('career')
+    expect(entries[0].data.isFree).toBe(true)
+    expect(entries[0].data.cost).toBe(0)
+  })
+
+  test('career free rank forget costs 0 XP', async () => {
+    const changes = {
+      system: {
+        skills: {
+          cool: {
+            rank: { careerFree: 0 },
+          },
+        },
+      },
+    }
+
+    const source = defaultSource()
+    source.system.skills.cool = {
+      rank: {
+        base: 0,
+        careerFree: 1,
+        specializationFree: 0,
+        trained: 0,
+      },
+    }
+    source.system.details.career = {
+      name: 'Explorer',
+      careerSkills: ['cool'],
+    }
+
+    const entries = await composeFromChanges(changes, source)
+
+    expect(entries).toHaveLength(1)
+    expect(entries[0]).toMatchObject({
+      type: 'skill.forget',
+      xpDelta: 0,
+      data: {
+        skillId: 'cool',
+        oldRank: 1,
+        newRank: 0,
+        cost: 0,
+        isFree: false,
+        freeRankType: 'career',
+      },
+    })
+  })
+
+  test('specialization free rank forget costs 0 XP', async () => {
+    const changes = {
+      system: {
+        skills: {
+          cool: {
+            rank: { specializationFree: 0 },
+          },
+        },
+      },
+    }
+
+    const source = defaultSource()
+    source.system.skills.cool = {
+      rank: {
+        base: 0,
+        careerFree: 0,
+        specializationFree: 1,
+        trained: 0,
+      },
+    }
+    source.system.details.career = {
+      name: 'Explorer',
+      careerSkills: [],
+    }
+    source.system.details.specializations = {
+      spec1: {
+        careerSkills: ['cool'],
+      },
+    }
+
+    const entries = await composeFromChanges(changes, source)
+
+    expect(entries).toHaveLength(1)
+    expect(entries[0]).toMatchObject({
+      type: 'skill.forget',
+      xpDelta: 0,
+      data: {
+        skillId: 'cool',
+        oldRank: 1,
+        newRank: 0,
+        cost: 0,
+        isFree: false,
+        freeRankType: 'specialization',
+      },
+    })
+  })
+
+  test('includes skillName and skillCategory in entry data', async () => {
+    const changes = {
+      system: {
+        skills: {
+          cool: {
+            rank: { trained: 1 },
+          },
+        },
+      },
+    }
+
+    const source = defaultSource()
+    source.system.skills.cool = {
+      label: 'Cool',
+      type: 'general',
+      rank: {
+        base: 0,
+        careerFree: 0,
+        specializationFree: 0,
+        trained: 0,
+      },
+    }
+    source.system.details.career = {
+      name: 'Explorer',
+      careerSkills: ['cool'],
+    }
+
+    const entries = await composeFromChanges(changes, source)
+
+    expect(entries).toHaveLength(1)
+    expect(entries[0].data.skillName).toBe('Cool')
+    expect(entries[0].data.skillCategory).toBe('general')
+  })
+
+  test('skillName falls back to skillId when label is missing', async () => {
+    const changes = {
+      system: {
+        skills: {
+          athletics: {
+            rank: { trained: 1 },
+          },
+        },
+      },
+    }
+
+    const source = defaultSource()
+    source.system.skills.athletics = {
+      rank: {
+        base: 0,
+        careerFree: 0,
+        specializationFree: 0,
+        trained: 0,
+      },
+    }
+    source.system.details.career = {
+      name: 'Explorer',
+      careerSkills: ['athletics'],
+    }
+
+    const entries = await composeFromChanges(changes, source)
+
+    expect(entries).toHaveLength(1)
+    expect(entries[0].data.skillName).toBe('athletics')
+    expect(entries[0].data.skillCategory).toBeNull()
+  })
+
+  test('trained rank forget has freeRankType=null', async () => {
+    const changes = {
+      system: {
+        skills: {
+          cool: {
+            rank: { trained: 2 },
+          },
+        },
+      },
+    }
+
+    const source = defaultSource()
+    source.system.skills.cool = {
+      rank: {
+        base: 0,
+        careerFree: 0,
+        specializationFree: 0,
+        trained: 3,
+      },
+    }
+    source.system.details.career = {
+      name: 'Explorer',
+      careerSkills: ['cool'],
+    }
+
+    const entries = await composeFromChanges(changes, source)
+
+    expect(entries).toHaveLength(1)
+    expect(entries[0].data.freeRankType).toBeNull()
+    expect(entries[0].data.cost).toBe(15)
+    expect(entries[0].data.isFree).toBe(false)
   })
 })
 
