@@ -249,7 +249,7 @@ export default class SwerpgActor extends TalentsMixin(EquipmentMixin(ResourcesMi
     logger.debug(`[Before] purchaseCharacteristic characteristic with id '${characteristicId}' and values:`, characteristicClass, this.actor)
 
     // Evaluate the characteristic following the action processed
-    const characteristicEvaluated = characteristicClass.process()
+    const characteristicEvaluated = await characteristicClass.process()
 
     // Display a warning if the characteristic action is not valid
     if (characteristicEvaluated instanceof ErrorCharacteristic) {
