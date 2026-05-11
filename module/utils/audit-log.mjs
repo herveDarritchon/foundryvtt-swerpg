@@ -141,7 +141,7 @@ function snapshotOldState(source, changes) {
 /*  Gestion d'erreur                            */
 /* -------------------------------------------- */
 
-export async function handleWriteError(actor, err) {
+async function handleWriteError(actor, err) {
   logger.error(`[AuditLog] Write failed for actor "${actor.name}" (${actor.id})`, err)
   ui.notifications?.warn?.(
     game.i18n.format('SWERPG.AUDIT.WRITE_FAILED', { actor: actor.name })
