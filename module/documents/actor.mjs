@@ -94,7 +94,7 @@ export default class SwerpgActor extends TalentsMixin(EquipmentMixin(ResourcesMi
    * @type {number}  The actor level
    */
   get level() {
-    return this.system.details.level
+    return this.system.advancement?.level ?? 0
   }
 
   /**

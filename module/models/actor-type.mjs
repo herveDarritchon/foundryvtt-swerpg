@@ -260,13 +260,11 @@ export default class SwerpgActorType extends foundry.abstract.TypeDataModel {
   _prepareFreeSkillRanks() {
     const freeSkillRanks = this.progression.freeSkillRanks
 
-    let c = freeSkillRanks.career
-    c.available = c.gained - c.spent
-    freeSkillRanks.career = c
+    const career = freeSkillRanks.career
+    career.available = Math.max(0, (career.gained ?? 0) - (career.spent ?? 0))
 
-    let s = freeSkillRanks.specialization
-    s.available = s.gained - s.spent
-    freeSkillRanks.specialization = s
+    const specialization = freeSkillRanks.specialization
+    specialization.available = Math.max(0, (specialization.gained ?? 0) - (specialization.spent ?? 0))
   }
 
   _prepareExperience() {
