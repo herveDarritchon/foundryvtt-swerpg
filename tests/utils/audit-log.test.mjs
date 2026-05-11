@@ -552,16 +552,167 @@ describe('writeLogEntries', () => {
 })
 
 /* ============================================ */
+/*  onCreateItem                                */
+/* ============================================ */
+
+describe('onCreateItem', () => {
+  function makeCharacterActor(overrides = {}) {
+    return {
+      type: 'character',
+      id: 'actor-001',
+      uuid: 'Actor.actor-001',
+      name: 'Test Character',
+      _source: {
+        system: {
+          skills: {},
+          characteristics: {},
+          progression: { totalXP: 0, spentXP: 0 },
+          details: {},
+          advancement: {},
+        },
+        flags: {},
+      },
+      system: {
+        progression: {
+          experience: { spent: 0, gained: 0, available: 0, total: 0 },
+          freeSkillRanks: {
+            career: { spent: 0, gained: 0, available: 0 },
+            specialization: { spent: 0, gained: 0, available: 0 },
+          },
+        },
+      },
+      update: vi.fn(),
+      ...overrides,
+    }
+  }
+
+  function makeTalentItem(actor, overrides = {}) {
+    return {
+      type: 'talent',
+      id: 'talent-001',
+      name: 'Test Talent',
+      parent: actor,
+      system: {
+        cost: 10,
+        ranks: 1,
+      },
+      ...overrides,
+    }
+  }
+
+  test('creates talent.purchase entry for talent on character', async () => {
+    const { onCreateItem } = await import('../../module/utils/audit-log.mjs')
+    globalThis.foundry.utils.deepClone = vi.fn((o) => structuredClone(o))
+
+    const actor = makeCharacterActor()
+    const item = makeTalentItem(actor)
+
+    await onCreateItem(item, {}, {}, 'user-1')
+
+    expect(actor.update).toHaveBeenCalledTimes(1)
+    const updateArg = actor.update.mock.calls[0][0]
+    const logs = updateArg['flags.swerpg.logs']
+    expect(logs).toHaveLength(1)
+    expect(logs[0]).toMatchObject({
+      type: 'talent.purchase',
+      data: {
+        talentId: 'talent-001',
+        talentName: 'Test Talent',
+        cost: 10,
+        ranks: 1,
+      },
+      xpDelta: -10,
+      userId: 'user-1',
+    })
+  })
+
+  test('uses default cost and ranks when system values are missing', async () => {
+    const { onCreateItem } = await import('../../module/utils/audit-log.mjs')
+    globalThis.foundry.utils.deepClone = vi.fn((o) => structuredClone(o))
+
+    const actor = makeCharacterActor()
+    const item = makeTalentItem(actor, { system: {} })
+
+    await onCreateItem(item, {}, {}, 'user-1')
+
+    expect(actor.update).toHaveBeenCalledTimes(1)
+    const updateArg = actor.update.mock.calls[0][0]
+    const logs = updateArg['flags.swerpg.logs']
+    expect(logs[0].data.cost).toBe(5)
+    expect(logs[0].data.ranks).toBe(1)
+    expect(logs[0].xpDelta).toBe(-5)
+  })
+
+  test('ignores non-talent items', async () => {
+    const { onCreateItem } = await import('../../module/utils/audit-log.mjs')
+    const actor = makeCharacterActor()
+    const item = makeTalentItem(actor, { type: 'weapon' })
+
+    await onCreateItem(item, {}, {}, 'user-1')
+
+    expect(actor.update).not.toHaveBeenCalled()
+  })
+
+  test('ignores items on non-character actors', async () => {
+    const { onCreateItem } = await import('../../module/utils/audit-log.mjs')
+    const npc = { type: 'npc', id: 'npc-001', name: 'NPC', update: vi.fn(), system: {} }
+    const item = makeTalentItem(npc)
+
+    await onCreateItem(item, {}, {}, 'user-1')
+
+    expect(npc.update).not.toHaveBeenCalled()
+  })
+
+  test('handles null parent gracefully', async () => {
+    const { onCreateItem } = await import('../../module/utils/audit-log.mjs')
+    const item = makeTalentItem(null)
+
+    expect(() => onCreateItem(item, {}, {}, 'user-1')).not.toThrow()
+  })
+
+  test('includes valid snapshot fields', async () => {
+    const { onCreateItem } = await import('../../module/utils/audit-log.mjs')
+    globalThis.foundry.utils.deepClone = vi.fn((o) => structuredClone(o))
+
+    const actor = makeCharacterActor({
+      system: {
+        progression: {
+          experience: { spent: 50, gained: 200, available: 150, total: 200 },
+          freeSkillRanks: {
+            career: { spent: 2, gained: 5, available: 3 },
+            specialization: { spent: 0, gained: 3, available: 3 },
+          },
+        },
+      },
+    })
+    const item = makeTalentItem(actor)
+
+    await onCreateItem(item, {}, {}, 'user-1')
+
+    const updateArg = actor.update.mock.calls[0][0]
+    const snapshot = updateArg['flags.swerpg.logs'][0].snapshot
+    expect(snapshot).toMatchObject({
+      xpAvailable: 150,
+      totalXpSpent: 50,
+      totalXpGained: 200,
+      careerFreeAvailable: 3,
+      specializationFreeAvailable: 3,
+    })
+  })
+})
+
+/* ============================================ */
 /*  registerAuditLogHooks                       */
 /* ============================================ */
 
 describe('registerAuditLogHooks', () => {
-  test('registers two hooks via Hooks.on (no onCreateItemAction)', async () => {
+  test('registers three hooks via Hooks.on', async () => {
     const { registerAuditLogHooks } = await import('../../module/utils/audit-log.mjs')
     registerAuditLogHooks()
-    expect(globalThis.Hooks.on).toHaveBeenCalledTimes(2)
+    expect(globalThis.Hooks.on).toHaveBeenCalledTimes(3)
     expect(globalThis.Hooks.on).toHaveBeenCalledWith('preUpdateActor', expect.any(Function))
     expect(globalThis.Hooks.on).toHaveBeenCalledWith('updateActor', expect.any(Function))
+    expect(globalThis.Hooks.on).toHaveBeenCalledWith('createItem', expect.any(Function))
   })
 })
 
