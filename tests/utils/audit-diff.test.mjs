@@ -126,12 +126,14 @@ function defaultSource() {
             name: '',
             spent: 0,
             gained: 0,
+            available: 0,
           },
           specialization: {
             id: null,
             name: '',
             spent: 0,
             gained: 0,
+            available: 0,
           },
         },
       },
@@ -180,12 +182,12 @@ afterEach(() => {
 })
 
 /* ============================================ */
-/*  captureXpSnapshotAfter                      */
+/*  captureSnapshot                             */
 /* ============================================ */
 
-describe('captureXpSnapshotAfter', () => {
-  test('returns XP data from actor after update', async () => {
-    const { captureXpSnapshotAfter } = await import('../../module/utils/audit-diff.mjs')
+describe('captureSnapshot', () => {
+  test('returns expanded XP snapshot from actor after update', async () => {
+    const { captureSnapshot } = await import('../../module/utils/audit-diff.mjs')
 
     const actor = makeActor({
       progression: {
@@ -195,31 +197,51 @@ describe('captureXpSnapshotAfter', () => {
           available: 150,
           total: 200,
         },
+        freeSkillRanks: {
+          career: {
+            id: 'career-1',
+            name: 'Warrior',
+            spent: 2,
+            gained: 5,
+            available: 3,
+          },
+          specialization: {
+            id: 'spec-1',
+            name: 'Colossus',
+            spent: 0,
+            gained: 3,
+            available: 3,
+          },
+        },
       },
     })
 
-    const snap = captureXpSnapshotAfter(actor)
+    const snap = captureSnapshot(actor)
 
     expect(snap).toEqual({
-      available: 150,
-      spent: 50,
-      gained: 200,
+      xpAvailable: 150,
+      totalXpSpent: 50,
+      totalXpGained: 200,
+      careerFreeAvailable: 3,
+      specializationFreeAvailable: 3,
     })
   })
 
   test('returns zeros when XP data is missing', async () => {
-    const { captureXpSnapshotAfter } = await import('../../module/utils/audit-diff.mjs')
+    const { captureSnapshot } = await import('../../module/utils/audit-diff.mjs')
 
     const actor = makeActor({
       progression: {},
     })
 
-    const snap = captureXpSnapshotAfter(actor)
+    const snap = captureSnapshot(actor)
 
     expect(snap).toEqual({
-      available: 0,
-      spent: 0,
-      gained: 0,
+      xpAvailable: 0,
+      totalXpSpent: 0,
+      totalXpGained: 0,
+      careerFreeAvailable: 0,
+      specializationFreeAvailable: 0,
     })
   })
 })
@@ -246,10 +268,12 @@ describe('makeEntry', () => {
       ts: 1000,
       userId: 'user-1',
       user: { name: 'Player One' },
-      xpAfter: {
-        available: 95,
-        spent: 5,
-        gained: 100,
+      snapshot: {
+        xpAvailable: 95,
+        totalXpSpent: 5,
+        totalXpGained: 100,
+        careerFreeAvailable: 2,
+        specializationFreeAvailable: 1,
       },
     })
 
@@ -270,11 +294,11 @@ describe('makeEntry', () => {
         isCareer: true,
       },
       snapshot: {
-        xpAfter: {
-          available: 95,
-          spent: 5,
-          gained: 100,
-        },
+        xpAvailable: 95,
+        totalXpSpent: 5,
+        totalXpGained: 100,
+        careerFreeAvailable: 2,
+        specializationFreeAvailable: 1,
       },
     })
   })
@@ -289,7 +313,7 @@ describe('makeEntry', () => {
       ts: 2000,
       userId: 'unknown',
       user: null,
-      xpAfter: {},
+      snapshot: {},
     })
 
     expect(entry.userName).toBe('Unknown')
@@ -305,20 +329,22 @@ describe('makeEntry', () => {
       ts: 0,
       userId: 'u1',
       user: null,
-      xpAfter: {},
+      snapshot: {},
     })
 
     expect(Object.is(entry.xpDelta, -0)).toBe(false)
     expect(entry.xpDelta).toBe(0)
   })
 
-  test('xpAfter snapshot is shallow-cloned', async () => {
+  test('snapshot is shallow-cloned', async () => {
     const { makeEntry } = await import('../../module/utils/audit-diff.mjs')
 
-    const xpAfter = {
-      available: 100,
-      spent: 0,
-      gained: 100,
+    const snapshot = {
+      xpAvailable: 100,
+      totalXpSpent: 0,
+      totalXpGained: 100,
+      careerFreeAvailable: 1,
+      specializationFreeAvailable: 0,
     }
 
     const entry = makeEntry({
@@ -328,12 +354,12 @@ describe('makeEntry', () => {
       ts: 0,
       userId: 'u1',
       user: null,
-      xpAfter,
+      snapshot,
     })
 
-    xpAfter.available = 999
+    snapshot.xpAvailable = 999
 
-    expect(entry.snapshot.xpAfter.available).toBe(100)
+    expect(entry.snapshot.xpAvailable).toBe(100)
   })
 })
 
