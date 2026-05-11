@@ -1,5 +1,6 @@
 import * as chat from '../../chat.mjs'
 import { OggDudeDataImporter } from '../../settings/OggDudeDataImporter.mjs'
+import { logger } from '../../utils/logger.mjs'
 
 export const registerSystemSettings = function () {
   /**
@@ -88,5 +89,23 @@ export const registerSystemSettings = function () {
     config: false,
     type: Number,
     default: 0,
+  })
+
+  // Audit Log max entries setting
+  game.settings.register(SYSTEM.id, 'auditLogMaxEntries', {
+    name: 'SWERPG.SETTINGS.AUDIT_LOG_MAX_ENTRIES_NAME',
+    hint: 'SWERPG.SETTINGS.AUDIT_LOG_MAX_ENTRIES_HINT',
+    scope: 'world',
+    config: true,
+    type: Number,
+    default: 500,
+    range: {
+      min: 100,
+      max: 5000,
+      step: 100,
+    },
+    onChange: (value) => {
+      logger.debug(`[AuditLog] Max entries setting changed to ${value}`)
+    },
   })
 }

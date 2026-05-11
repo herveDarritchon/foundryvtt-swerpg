@@ -33,6 +33,8 @@
   "SWERPG.AUDIT.ACTOR": "Acteur",
   "SWERPG.AUDIT.ERROR": "Erreur",
   "SWERPG.AUDIT.CHECK_CONSOLE": "Voir la console (F12) pour plus de détails.",
+  "SWERPG.SETTINGS.AUDIT_LOG_MAX_ENTRIES_NAME": "Nombre max d'entrées du journal",
+  "SWERPG.SETTINGS.AUDIT_LOG_MAX_ENTRIES_HINT": "Nombre maximum d'entrées dans le journal d'évolution du personnage (100-5000). Les plus anciennes sont supprimées en premier lorsque la limite est dépassée.",
   "SETTINGS": {
     "OggDudeDataImporter": {
       "name": "Importateur de Données OggDude",

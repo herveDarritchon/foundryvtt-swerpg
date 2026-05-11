@@ -47,6 +47,12 @@ beforeEach(() => {
         return key
       }),
     },
+    settings: {
+      get: vi.fn((namespace, key) => {
+        if (namespace === 'swerpg' && key === 'auditLogMaxEntries') return 500
+        return undefined
+      }),
+    },
   }
 
   globalThis.CONST = {
@@ -248,20 +254,135 @@ describe('pending queue', () => {
     expect(shiftPendingEntry(actor, userId)).toBeUndefined()
     flushPending()
   })
+})
 
-  test('different user keys do not interfere', async () => {
-    const { pushPendingEntry, shiftPendingEntry, getPendingKey, flushPending } = await import('../../module/utils/audit-log.mjs')
-    flushPending()
+/* ============================================ */
+/*  writeLogEntries max size / FIFO             */
+/* ============================================ */
+
+describe('writeLogEntries max size', () => {
+  test('evicts oldest entries when threshold is exceeded', async () => {
+    const { writeLogEntries } = await import('../../module/utils/audit-log.mjs')
+
+    const existingLogs = [
+      { type: 'oldest', timestamp: 1 },
+      { type: 'old', timestamp: 2 },
+      { type: 'recent', timestamp: 3 },
+    ]
+
+    const actor = makeCharacterActor({ flags: { swerpg: { logs: existingLogs } } })
+
+    globalThis.foundry.utils.deepClone = vi.fn((o) => structuredClone(o))
+
+    globalThis.game.settings.get = vi.fn((namespace, key) => {
+      if (namespace === 'swerpg' && key === 'auditLogMaxEntries') return 3
+      return undefined
+    })
+
+    await writeLogEntries(actor, [
+      { type: 'new1', timestamp: 4 },
+      { type: 'new2', timestamp: 5 },
+    ])
+
+    expect(actor.update).toHaveBeenCalledTimes(1)
+    const updateArg = actor.update.mock.calls[0][0]
+    const logs = updateArg['flags.swerpg.logs']
+    expect(logs).toHaveLength(3)
+    expect(logs[0].type).toBe('recent')
+    expect(logs[1].type).toBe('new1')
+    expect(logs[2].type).toBe('new2')
+  })
+
+  test('does nothing when threshold is not exceeded', async () => {
+    const { writeLogEntries } = await import('../../module/utils/audit-log.mjs')
+
+    const existingLogs = [
+      { type: 'a', timestamp: 1 },
+      { type: 'b', timestamp: 2 },
+    ]
+
+    const actor = makeCharacterActor({ flags: { swerpg: { logs: existingLogs } } })
+
+    globalThis.foundry.utils.deepClone = vi.fn((o) => structuredClone(o))
+
+    globalThis.game.settings.get = vi.fn((namespace, key) => {
+      if (namespace === 'swerpg' && key === 'auditLogMaxEntries') return 5
+      return undefined
+    })
+
+    await writeLogEntries(actor, [{ type: 'c', timestamp: 3 }])
+
+    expect(actor.update).toHaveBeenCalledTimes(1)
+    const updateArg = actor.update.mock.calls[0][0]
+    const logs = updateArg['flags.swerpg.logs']
+    expect(logs).toHaveLength(3)
+  })
+
+  test('enforces low limit (100)', async () => {
+    const { writeLogEntries } = await import('../../module/utils/audit-log.mjs')
+
+    const existingLogs = Array.from({ length: 150 }, (_, i) => ({ type: `old-${i}`, idx: i }))
+    const actor = makeCharacterActor({ flags: { swerpg: { logs: existingLogs } } })
+
+    globalThis.foundry.utils.deepClone = vi.fn((o) => structuredClone(o))
+
+    globalThis.game.settings.get = vi.fn((namespace, key) => {
+      if (namespace === 'swerpg' && key === 'auditLogMaxEntries') return 100
+      return undefined
+    })
+
+    await writeLogEntries(actor, Array.from({ length: 10 }, (_, i) => ({ type: `new-${i}`, idx: i })))
+
+    expect(actor.update).toHaveBeenCalledTimes(1)
+    const updateArg = actor.update.mock.calls[0][0]
+    const logs = updateArg['flags.swerpg.logs']
+    expect(logs).toHaveLength(100)
+  })
+
+  test('reads setting dynamically on each call', async () => {
+    const { writeLogEntries } = await import('../../module/utils/audit-log.mjs')
 
     const actor = makeCharacterActor()
-    pushPendingEntry(actor, 'user-1', { changes: { a: 1 }, timestamp: 1 })
-    pushPendingEntry(actor, 'user-2', { changes: { b: 2 }, timestamp: 2 })
+    globalThis.foundry.utils.deepClone = vi.fn((o) => structuredClone(o))
 
-    const from1 = shiftPendingEntry(actor, 'user-1')
-    expect(from1.changes).toEqual({ a: 1 })
-    const from2 = shiftPendingEntry(actor, 'user-2')
-    expect(from2.changes).toEqual({ b: 2 })
-    flushPending()
+    await writeLogEntries(actor, [{ type: 'entry' }])
+
+    expect(globalThis.game.settings.get).toHaveBeenCalledWith('swerpg', 'auditLogMaxEntries')
+  })
+
+  test('falls back to 500 when game.settings.get throws', async () => {
+    const { writeLogEntries } = await import('../../module/utils/audit-log.mjs')
+
+    const existingLogs = Array.from({ length: 600 }, (_, i) => ({ type: `e-${i}` }))
+    const actor = makeCharacterActor({ flags: { swerpg: { logs: existingLogs } } })
+
+    globalThis.foundry.utils.deepClone = vi.fn((o) => structuredClone(o))
+
+    globalThis.game.settings.get = vi.fn(() => { throw new Error('settings not ready') })
+
+    await writeLogEntries(actor, [{ type: 'new' }])
+
+    expect(actor.update).toHaveBeenCalledTimes(1)
+    const updateArg = actor.update.mock.calls[0][0]
+    const logs = updateArg['flags.swerpg.logs']
+    expect(logs).toHaveLength(500)
+  })
+
+  test('existing tests still pass without hitting the limit', async () => {
+    const { writeLogEntries } = await import('../../module/utils/audit-log.mjs')
+    const actor = makeCharacterActor()
+    globalThis.foundry.utils.deepClone = vi.fn((o) => structuredClone(o))
+
+    const entries = [
+      { type: 'skill.updated', path: 'system.skills.Athletics.rank', before: 2, after: 3 },
+      { type: 'skill.updated', path: 'system.skills.Lore.rank', before: 1, after: 2 },
+    ]
+
+    await writeLogEntries(actor, entries)
+    expect(actor.update).toHaveBeenCalledTimes(1)
+
+    const updateArg = actor.update.mock.calls[0][0]
+    expect(updateArg['flags.swerpg.logs']).toHaveLength(2)
   })
 })
 

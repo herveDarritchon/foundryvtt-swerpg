@@ -175,10 +175,16 @@ export async function handleWriteError(actor, err) {
 async function writeLogEntries(actor, entries) {
   if (!entries.length) return
 
+  const maxEntries = readMaxLogEntries()
+
   for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
     try {
       const currentLogs = cloneValue(_getProperty(actor, AUDIT_LOG_KEY) ?? [])
       const nextLogs = [...currentLogs, ...entries]
+
+      if (nextLogs.length > maxEntries) {
+        nextLogs.splice(0, nextLogs.length - maxEntries)
+      }
 
       await actor.update(
         { [AUDIT_LOG_KEY]: nextLogs },
@@ -195,11 +201,19 @@ async function writeLogEntries(actor, entries) {
   }
 }
 
+function readMaxLogEntries() {
+  try {
+    return game.settings.get('swerpg', 'auditLogMaxEntries') ?? 500
+  } catch {
+    return 500
+  }
+}
+
 /* -------------------------------------------- */
 /*  Helpers exportés pour tests                 */
 /* -------------------------------------------- */
 
-export { isOnlyAuditChange, snapshotOldState, cloneValue, evictOldestIfNeeded, flushPending, countPendingEntries, getPendingKey, shiftPendingEntry, pushPendingEntry, isDeletionPath, writeLogEntries, handleWriteError, pruneExpiredPending }
+export { isOnlyAuditChange, snapshotOldState, cloneValue, evictOldestIfNeeded, flushPending, countPendingEntries, getPendingKey, shiftPendingEntry, pushPendingEntry, isDeletionPath, writeLogEntries, handleWriteError, pruneExpiredPending, readMaxLogEntries }
 
 /* -------------------------------------------- */
 /*  Handlers (exportés)                         */
