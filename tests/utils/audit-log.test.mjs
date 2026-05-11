@@ -1,6 +1,17 @@
 import { describe, test, expect, vi, beforeEach, afterEach } from 'vitest'
 import { setupFoundryMock, teardownFoundryMock } from '../helpers/mock-foundry.mjs'
 
+vi.mock('../../module/utils/logger.mjs', () => {
+  const logger = {
+    debug: vi.fn(),
+    info: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn(),
+    isDebugEnabled: vi.fn(() => false),
+  }
+  return { logger }
+})
+
 const translations = {
   'SWERPG.AUDIT.WRITE_FAILED': 'Audit log write failed for actor "{actor}". Check the console for details.',
 }
@@ -22,6 +33,36 @@ beforeEach(() => {
       warn: vi.fn(),
       info: vi.fn(),
     },
+  }
+
+  globalThis.game = {
+    ...globalThis.game,
+    user: { id: 'gm-1', name: 'Game Master', isGM: true },
+    i18n: {
+      localize: (key) => key,
+      format: vi.fn((key, data) => {
+        if (key === 'SWERPG.AUDIT.WRITE_FAILED') {
+          return `Audit log write failed for actor "${data.actor}". Check the console for details.`
+        }
+        return key
+      }),
+    },
+  }
+
+  globalThis.CONST = {
+    CHAT_MESSAGE_TYPES: {
+      WHISPER: 4,
+    },
+  }
+
+  globalThis.ChatMessage = {
+    create: vi.fn().mockResolvedValue(undefined),
+    getWhisperRecipients: vi.fn(() => ['gm-1']),
+    getSpeaker: vi.fn(() => ({ actor: 'actor-001' })),
+  }
+
+  globalThis.foundry.applications.handlebars = {
+    renderTemplate: vi.fn().mockResolvedValue('<div class="swerpg chat-message audit-log-warning">mock</div>'),
   }
 })
 
@@ -400,5 +441,157 @@ describe('registerAuditLogHooks', () => {
     expect(globalThis.Hooks.on).toHaveBeenCalledTimes(2)
     expect(globalThis.Hooks.on).toHaveBeenCalledWith('preUpdateActor', expect.any(Function))
     expect(globalThis.Hooks.on).toHaveBeenCalledWith('updateActor', expect.any(Function))
+  })
+})
+
+/* ============================================ */
+/*  handleWriteError                            */
+/* ============================================ */
+
+describe('handleWriteError', () => {
+  test('calls logger.error with actor info', async () => {
+    const { handleWriteError } = await import('../../module/utils/audit-log.mjs')
+    const { logger } = await import('../../module/utils/logger.mjs')
+    const actor = makeCharacterActor()
+    const err = new Error('DB timeout')
+
+    await handleWriteError(actor, err)
+
+    expect(logger.error).toHaveBeenCalledWith(
+      expect.stringContaining('[AuditLog] Write failed for actor "Test Character"'),
+      err,
+    )
+  })
+
+  test('calls ui.notifications.warn with i18n key', async () => {
+    const { handleWriteError } = await import('../../module/utils/audit-log.mjs')
+    const actor = makeCharacterActor()
+    const err = new Error('DB timeout')
+
+    await handleWriteError(actor, err)
+
+    expect(globalThis.ui.notifications.warn).toHaveBeenCalledWith(
+      expect.stringContaining('Audit log write failed for actor'),
+    )
+  })
+
+  test('sends ChatMessage whisper to GM when user is GM', async () => {
+    const { handleWriteError } = await import('../../module/utils/audit-log.mjs')
+    const actor = makeCharacterActor()
+    const err = new Error('DB timeout')
+
+    await handleWriteError(actor, err)
+
+    expect(globalThis.ChatMessage.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        whisper: ['gm-1'],
+      }),
+    )
+  })
+
+  test('does NOT send ChatMessage when user is not GM', async () => {
+    globalThis.game.user = { id: 'player-1', name: 'Player One', isGM: false }
+    const { handleWriteError } = await import('../../module/utils/audit-log.mjs')
+    const actor = makeCharacterActor()
+    const err = new Error('DB timeout')
+
+    await handleWriteError(actor, err)
+
+    expect(globalThis.ChatMessage.create).not.toHaveBeenCalled()
+  })
+
+  test('catches ChatMessage.create failure without propagating', async () => {
+    globalThis.ChatMessage.create = vi.fn().mockRejectedValue(new Error('Chat failed'))
+    const { handleWriteError } = await import('../../module/utils/audit-log.mjs')
+    const { logger } = await import('../../module/utils/logger.mjs')
+    const actor = makeCharacterActor()
+    const err = new Error('DB timeout')
+
+    await expect(handleWriteError(actor, err)).resolves.toBeUndefined()
+    expect(logger.warn).toHaveBeenCalledWith(
+      expect.stringContaining('[AuditLog] Failed to send GM whisper'),
+      expect.any(Error),
+    )
+  })
+})
+
+/* ============================================ */
+/*  Retry                                       */
+/* ============================================ */
+
+describe('writeLogEntries retry', () => {
+  test('retries on first failure and succeeds on second attempt', async () => {
+    const { writeLogEntries } = await import('../../module/utils/audit-log.mjs')
+    const actor = makeCharacterActor()
+
+    actor.update
+      .mockRejectedValueOnce(new Error('First fail'))
+      .mockResolvedValueOnce(undefined)
+
+    await writeLogEntries(actor, [{ type: 'test' }])
+
+    expect(actor.update).toHaveBeenCalledTimes(2)
+  })
+
+  test('calls handleWriteError after all retries exhausted', async () => {
+    const { writeLogEntries } = await import('../../module/utils/audit-log.mjs')
+    const actor = makeCharacterActor()
+
+    actor.update.mockRejectedValue(new Error('Persistent fail'))
+
+    await writeLogEntries(actor, [{ type: 'test' }])
+
+    expect(actor.update).toHaveBeenCalledTimes(2)
+  })
+
+  test('succeeds on first attempt without retry', async () => {
+    const { writeLogEntries } = await import('../../module/utils/audit-log.mjs')
+    const actor = makeCharacterActor()
+
+    await writeLogEntries(actor, [{ type: 'test' }])
+
+    expect(actor.update).toHaveBeenCalledTimes(1)
+  })
+})
+
+/* ============================================ */
+/*  pruneExpiredPending capacity warning        */
+/* ============================================ */
+
+describe('pruneExpiredPending capacity warning', () => {
+  test('does not log warning when under 100 entries', async () => {
+    const { logger } = await import('../../module/utils/logger.mjs')
+    const { pruneExpiredPending, pushPendingEntry, flushPending, countPendingEntries } = await import('../../module/utils/audit-log.mjs')
+    flushPending()
+
+    const actor = makeCharacterActor()
+    for (let i = 0; i < 50; i++) {
+      pushPendingEntry(actor, 'user-1', { changes: { idx: i }, timestamp: Date.now() })
+    }
+    expect(countPendingEntries()).toBe(50)
+
+    pruneExpiredPending()
+
+    expect(logger.warn).not.toHaveBeenCalled()
+    flushPending()
+  })
+
+  test('logs warning when over 100 entries', async () => {
+    const { logger } = await import('../../module/utils/logger.mjs')
+    const { pruneExpiredPending, pushPendingEntry, flushPending, countPendingEntries } = await import('../../module/utils/audit-log.mjs')
+    flushPending()
+
+    const actor = makeCharacterActor()
+    for (let i = 0; i < 101; i++) {
+      pushPendingEntry(actor, 'user-1', { changes: { idx: i }, timestamp: Date.now() })
+    }
+    expect(countPendingEntries()).toBe(101)
+
+    pruneExpiredPending()
+
+    expect(logger.warn).toHaveBeenCalledWith(
+      expect.stringContaining('pendingOldStates has 101 entries'),
+    )
+    flushPending()
   })
 })

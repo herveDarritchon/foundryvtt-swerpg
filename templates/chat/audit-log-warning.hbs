@@ -1,0 +1,19 @@
+<div class="swerpg chat-message audit-log-warning">
+  <div class="audit-log-warning__header">
+    <div class="audit-log-warning__icon">
+      <i class="fa-solid fa-triangle-exclamation"></i>
+    </div>
+    <div class="audit-log-warning__title">{{localize 'SWERPG.AUDIT.WRITE_FAILED' actor=actorName}}</div>
+  </div>
+  <div class="audit-log-warning__detail">
+    <span class="audit-log-warning__label">{{localize 'SWERPG.AUDIT.ACTOR'}}:</span>
+    <span class="audit-log-warning__value">{{actorName}}</span>
+  </div>
+  <div class="audit-log-warning__detail">
+    <span class="audit-log-warning__label">{{localize 'SWERPG.AUDIT.ERROR'}}:</span>
+    <span class="audit-log-warning__value audit-log-warning__error">{{errorMessage}}</span>
+  </div>
+  <div class="audit-log-warning__footer">
+    {{localize 'SWERPG.AUDIT.CHECK_CONSOLE'}}
+  </div>
+</div>
