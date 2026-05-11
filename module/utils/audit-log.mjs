@@ -1,5 +1,5 @@
 import { logger } from './logger.mjs'
-import { composeEntries } from './audit-diff.mjs'
+import { composeEntries, makeEntry, captureSnapshot } from './audit-diff.mjs'
 
 /* -------------------------------------------- */
 /*  Constantes                                  */
@@ -213,7 +213,7 @@ function readMaxLogEntries() {
 /*  Helpers exportés pour tests                 */
 /* -------------------------------------------- */
 
-export { isOnlyAuditChange, snapshotOldState, cloneValue, evictOldestIfNeeded, flushPending, countPendingEntries, getPendingKey, shiftPendingEntry, pushPendingEntry, isDeletionPath, writeLogEntries, handleWriteError, pruneExpiredPending, readMaxLogEntries }
+export { isOnlyAuditChange, snapshotOldState, cloneValue, evictOldestIfNeeded, flushPending, countPendingEntries, getPendingKey, shiftPendingEntry, pushPendingEntry, isDeletionPath, writeLogEntries, handleWriteError, pruneExpiredPending, readMaxLogEntries, onCreateItem }
 
 /* -------------------------------------------- */
 /*  Handlers (exportés)                         */
@@ -253,12 +253,45 @@ export function onUpdateActor(actor, changes, options, userId) {
 }
 
 /* -------------------------------------------- */
+/*  createItem handler (talent detection)        */
+/* -------------------------------------------- */
+
+export function onCreateItem(item, data, options, userId) {
+  if (item.parent?.type !== 'character') return
+  if (item.type !== 'talent') return
+
+  const ts = Date.now()
+  const snapshot = captureSnapshot(item.parent)
+  const user = game.users?.get(userId) ?? null
+  const cost = item.system?.cost ?? 5
+  const ranks = item.system?.ranks ?? 1
+
+  const entry = makeEntry({
+    type: 'talent.purchase',
+    data: {
+      talentId: item.id,
+      talentName: item.name,
+      cost,
+      ranks,
+    },
+    xpDelta: -cost,
+    ts,
+    userId,
+    user,
+    snapshot,
+  })
+
+  void writeLogEntries(item.parent, [entry])
+}
+
+/* -------------------------------------------- */
 /*  Point d'entrée unique                       */
 /* -------------------------------------------- */
 
 export function registerAuditLogHooks() {
   Hooks.on('preUpdateActor', onPreUpdateActor)
   Hooks.on('updateActor', onUpdateActor)
+  Hooks.on('createItem', onCreateItem)
 }
 
 /* -------------------------------------------- */
