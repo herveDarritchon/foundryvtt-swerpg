@@ -1,4 +1,5 @@
 import { logger } from './logger.mjs'
+import SkillCostCalculator from '../lib/skills/skill-cost-calculator.mjs'
 
 /* -------------------------------------------- */
 /*  Capture instantané de l'état XP après update */
@@ -14,19 +15,6 @@ function captureSnapshot(actor) {
     careerFreeAvailable: freeRanks?.career?.available ?? 0,
     specializationFreeAvailable: freeRanks?.specialization?.available ?? 0,
   }
-}
-
-/* -------------------------------------------- */
-/*  Helpers de coûts XP                         */
-/* -------------------------------------------- */
-
-function computeSkillTrainCost(oldTotal, isCareer) {
-  const nextRank = oldTotal + 1
-  return nextRank * 5 + (isCareer ? 0 : 5)
-}
-
-function computeSkillForgetRefund(oldTotal, isCareer) {
-  return oldTotal * 5 + (isCareer ? 0 : 5)
 }
 
 function computeCharacteristicCost(newValue) {
@@ -99,25 +87,49 @@ function detectSkillChanges(oldState, changes, actor, ts, userId, user, snapshot
 
     const isIncrease = newTotal > oldTotal
     const trainedUnchanged = (newRank.trained ?? 0) === (oldRank.trained ?? 0)
-    const isFree = isIncrease && trainedUnchanged
     const isCareer = inferIsCareer(skillId, oldState, actor)
 
-    let cost = 0
+    /* ---- Déterminer si c'est un changement de rang purement gratuit ---- */
+    const changedRankKeys = Object.keys(skillData.rank)
+    const hasCareerFreeChange = changedRankKeys.includes('careerFree')
+    const hasSpecFreeChange = changedRankKeys.includes('specializationFree')
+    const isPureFreeRankChange = trainedUnchanged && (hasCareerFreeChange || hasSpecFreeChange)
 
-    if (!isFree) {
-      cost = isIncrease ? computeSkillTrainCost(oldTotal, isCareer) : computeSkillForgetRefund(oldTotal, isCareer)
+    const isFree = isIncrease && isPureFreeRankChange
+
+    let freeRankType = null
+    if (isPureFreeRankChange) {
+      freeRankType = hasCareerFreeChange ? 'career' : 'specialization'
     }
+
+    /* ---- Coût XP ---- */
+    let cost = 0
+    if (!isPureFreeRankChange) {
+      if (isIncrease) {
+        cost = SkillCostCalculator.computeCost({ action: 'train', rankValue: oldTotal + 1, isSpecialized: isCareer })
+      } else {
+        cost = SkillCostCalculator.computeCost({ action: 'forget', rankValue: oldTotal - 1, isSpecialized: isCareer })
+      }
+    }
+
+    /* ---- Champs enrichis ---- */
+    const skillMeta = actor.system?.skills?.[skillId]
+    const skillName = skillMeta?.label ?? skillId
+    const skillCategory = skillMeta?.type ?? null
 
     entries.push(
       makeEntry({
         type: isIncrease ? 'skill.train' : 'skill.forget',
         data: {
           skillId,
+          skillName,
+          skillCategory,
           oldRank: oldTotal,
           newRank: newTotal,
           cost,
           isFree,
           isCareer,
+          freeRankType,
         },
         xpDelta: isIncrease ? -cost : cost,
         ts,
@@ -430,8 +442,6 @@ export function composeEntries(oldState, changes, actor, userId) {
 export {
   makeEntry,
   captureSnapshot,
-  computeSkillTrainCost,
-  computeSkillForgetRefund,
   computeCharacteristicCost,
   inferIsCareer,
   getCareerSkillIds,

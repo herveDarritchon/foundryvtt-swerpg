@@ -270,3 +270,43 @@ describe('Skills Calculator', () => {
     })
   })
 })
+
+describe('SkillCostCalculator.computeCost static', () => {
+  describe('train', () => {
+    test('specialized rank 1 costs 5', () => {
+      expect(SkillCostCalculator.computeCost({ action: 'train', rankValue: 1, isSpecialized: true })).toBe(5)
+    })
+
+    test('specialized rank 2 costs 10', () => {
+      expect(SkillCostCalculator.computeCost({ action: 'train', rankValue: 2, isSpecialized: true })).toBe(10)
+    })
+
+    test('non-specialized rank 1 costs 10', () => {
+      expect(SkillCostCalculator.computeCost({ action: 'train', rankValue: 1, isSpecialized: false })).toBe(10)
+    })
+
+    test('non-specialized rank 2 costs 15', () => {
+      expect(SkillCostCalculator.computeCost({ action: 'train', rankValue: 2, isSpecialized: false })).toBe(15)
+    })
+  })
+
+  describe('forget', () => {
+    test('specialized rankAfterDecrease=2 (was 3) costs 15', () => {
+      expect(SkillCostCalculator.computeCost({ action: 'forget', rankValue: 2, isSpecialized: true })).toBe(15)
+    })
+
+    test('non-specialized rankAfterDecrease=2 (was 3) costs 20', () => {
+      expect(SkillCostCalculator.computeCost({ action: 'forget', rankValue: 2, isSpecialized: false })).toBe(20)
+    })
+
+    test('specialized rankAfterDecrease=0 (was 1) costs 5', () => {
+      expect(SkillCostCalculator.computeCost({ action: 'forget', rankValue: 0, isSpecialized: true })).toBe(5)
+    })
+  })
+
+  describe('unknown action', () => {
+    test('returns 0', () => {
+      expect(SkillCostCalculator.computeCost({ action: 'unknown', rankValue: 1, isSpecialized: true })).toBe(0)
+    })
+  })
+})
