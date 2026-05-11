@@ -895,6 +895,136 @@ describe('characteristic changes', () => {
 
     expect(entries).toEqual([])
   })
+
+  test.each(['brawn', 'agility', 'intellect', 'cunning', 'willpower', 'presence'])(
+    'characteristic.increase for %s from 2 to 3 costs 30 XP',
+    async (charId) => {
+      const changes = {
+        system: {
+          characteristics: {
+            [charId]: {
+              rank: { trained: 1 },
+            },
+          },
+        },
+      }
+
+      const source = defaultSource()
+      source.system.characteristics[charId] = {
+        rank: { base: 2, trained: 0, bonus: 0 },
+      }
+
+      const entries = await composeFromChanges(changes, source)
+
+      expect(entries).toHaveLength(1)
+      expect(entries[0]).toMatchObject({
+        type: 'characteristic.increase',
+        xpDelta: -30,
+        data: {
+          characteristicId: charId,
+          oldValue: 2,
+          newValue: 3,
+          cost: 30,
+        },
+      })
+    },
+  )
+
+  test('characteristic.increase at max (5→6) costs 60 XP', async () => {
+    const changes = {
+      system: {
+        characteristics: {
+          brawn: {
+            rank: { trained: 1 },
+          },
+        },
+      },
+    }
+
+    const source = defaultSource()
+    source.system.characteristics.brawn = {
+      rank: { base: 5, trained: 0, bonus: 0 },
+    }
+
+    const entries = await composeFromChanges(changes, source)
+
+    expect(entries).toHaveLength(1)
+    expect(entries[0]).toMatchObject({
+      type: 'characteristic.increase',
+      xpDelta: -60,
+      data: {
+        characteristicId: 'brawn',
+        oldValue: 5,
+        newValue: 6,
+        cost: 60,
+      },
+    })
+  })
+
+  test('bonus-only rank increase creates characteristic.increase entry', async () => {
+    const changes = {
+      system: {
+        characteristics: {
+          brawn: {
+            rank: { bonus: 1 },
+          },
+        },
+      },
+    }
+
+    const source = defaultSource()
+    source.system.characteristics.brawn = {
+      rank: { base: 2, trained: 0, bonus: 0 },
+    }
+
+    const entries = await composeFromChanges(changes, source)
+
+    expect(entries).toHaveLength(1)
+    expect(entries[0]).toMatchObject({
+      type: 'characteristic.increase',
+      xpDelta: -30,
+      data: {
+        characteristicId: 'brawn',
+        oldValue: 2,
+        newValue: 3,
+        cost: 30,
+      },
+    })
+  })
+
+  test('does not create xp.spend when characteristic increase also changes spent', async () => {
+    const changes = {
+      system: {
+        characteristics: {
+          brawn: {
+            rank: { trained: 1 },
+          },
+        },
+        progression: {
+          experience: {
+            spent: 30,
+          },
+        },
+      },
+    }
+
+    const source = defaultSource()
+    source.system.characteristics.brawn = {
+      rank: { base: 2, trained: 0, bonus: 0 },
+    }
+    source.system.progression.experience = {
+      spent: 0,
+      gained: 200,
+      available: 200,
+      total: 200,
+    }
+
+    const entries = await composeFromChanges(changes, source)
+
+    expect(entries).toHaveLength(1)
+    expect(entries[0].type).toBe('characteristic.increase')
+    expect(entries.find((e) => e.type.startsWith('xp.'))).toBeUndefined()
+  })
 })
 
 /* ============================================ */
