@@ -115,9 +115,6 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
     })
 
     context.skills = CharacterSheet.#prepareSkills(a)
-    context.progression.freeSkillRanks.career.available = a.system.progression.freeSkillRanks.career.gained - a.system.progression.freeSkillRanks.career.spent
-    context.progression.freeSkillRanks.specialization.available =
-      a.system.progression.freeSkillRanks.specialization.gained - a.system.progression.freeSkillRanks.specialization.spent
     // Incomplete Tasks
     context.points = a.system.points
 
@@ -371,6 +368,14 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
     const oldRank = skill.rank.value
     const { isCareer = false, isSpecialization = false } = skill.freeRank ?? {}
 
+    logger.info('[SkillTransaction] creation state', {
+      actorName: actor.name,
+      actorLevel: actor.level,
+      isL0: actor.isL0,
+      detailsLevel: actor.system.details?.level,
+      advancementLevel: actor.system.advancement?.level,
+    })
+
     const skillTransaction = SkillFactory.build(actor, skillId, {
       action,
       isCreation: actor.isL0,
@@ -454,32 +459,43 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
    * @param {number} cost - The XP cost (train) or refund (forget) amount
    */
   static async #refreshConsoleAfterPurchase(app, skillId, action, oldRank, cost) {
-    const consoleEl = app.element.querySelector('[data-skill-purchase-console]')
-    if (consoleEl) {
-      const exp = app.actor.system.progression.experience
-      const availableEl = consoleEl.querySelector('[data-xp-available]')
-      if (availableEl) availableEl.textContent = exp.available
-      const spentEl = consoleEl.querySelector('[data-xp-spent]')
-      if (spentEl) spentEl.textContent = exp.spent
-      const careerEl = consoleEl.querySelector('[data-free-career-skills]')
-      if (careerEl) {
-        const career = app.actor.system.progression.freeSkillRanks.career
-        careerEl.textContent = career.gained - career.spent
-      }
-      const specEl = consoleEl.querySelector('[data-free-specialization-skills]')
-      if (specEl) {
-        const spec = app.actor.system.progression.freeSkillRanks.specialization
-        specEl.textContent = spec.gained - spec.spent
-      }
-    }
+    CharacterSheet.#refreshConsoleStats(app)
     app.#resetConsolePreview()
 
     const skill = app.actor.system.skills?.[skillId]
     if (!skill) return
 
     const key = action === 'train' ? 'SKILL.XP_CONSOLE.PURCHASE_SUCCESS' : 'SKILL.XP_CONSOLE.REFUND_SUCCESS'
-    ui.notifications.info(game.i18n.format(key, { label: skill.label, rank: skill.rank.value }))
+
+    ui.notifications.info(
+      game.i18n.format(key, {
+        label: skill.label,
+        rank: skill.rank.value,
+      }),
+    )
+
     await CharacterSheet.#sendSkillTransactionChat(app, skillId, action, oldRank, cost)
+  }
+
+  static #refreshConsoleStats(app) {
+    const consoleEl = app.element.querySelector('[data-skill-purchase-console]')
+    if (!consoleEl) return
+
+    const progression = app.actor.system.progression
+    const exp = progression.experience
+    const free = progression.freeSkillRanks
+
+    const availableEl = consoleEl.querySelector('[data-xp-available]')
+    if (availableEl) availableEl.textContent = exp.available ?? 0
+
+    const spentEl = consoleEl.querySelector('[data-xp-spent]')
+    if (spentEl) spentEl.textContent = exp.spent ?? 0
+
+    const careerEl = consoleEl.querySelector('[data-free-career-skills]')
+    if (careerEl) careerEl.textContent = free.career.available ?? 0
+
+    const specEl = consoleEl.querySelector('[data-free-specialization-skills]')
+    if (specEl) specEl.textContent = free.specialization.available ?? 0
   }
 
   /**

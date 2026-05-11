@@ -44,8 +44,10 @@ function buildMockActor(overrides = {}) {
     skills = {},
     careerSpent = 0,
     careerGained = 4,
+    careerAvailable = careerGained - careerSpent,
     specializationSpent = 0,
     specializationGained = 2,
+    specializationAvailable = specializationGained - specializationSpent,
     experienceAvailable = 100,
     experienceSpent = 0,
     experienceGained = 100,
@@ -87,8 +89,16 @@ function buildMockActor(overrides = {}) {
       }, {}),
       progression: {
         freeSkillRanks: {
-          career: { spent: careerSpent, gained: careerGained },
-          specialization: { spent: specializationSpent, gained: specializationGained },
+          career: {
+            spent: careerSpent,
+            gained: careerGained,
+            available: careerAvailable,
+          },
+          specialization: {
+            spent: specializationSpent,
+            gained: specializationGained,
+            available: specializationAvailable,
+          },
         },
         experience: {
           available: experienceAvailable,
