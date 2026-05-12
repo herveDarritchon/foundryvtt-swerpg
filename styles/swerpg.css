@@ -1151,13 +1151,14 @@ input[type='range'] {
 }
 .swerpg.sheet.actor .sheet-header header.title .level,
 .swerpg.sheet.actor .sheet-header header.title .controls,
-.swerpg.sheet.actor .sheet-header header.title a.level-up {
+.swerpg.sheet.actor .sheet-header header.title a.character-creation {
   flex: none;
 }
-.swerpg.sheet.actor .sheet-header header.title a.level-up {
-  height: 28px;
-  border: 1px solid var(--color-warm-1);
+.swerpg.sheet.actor .sheet-header header.title a.character-creation {
+  border: 2px solid var(--color-warm-1);
   opacity: 1;
+  color: var(--color-box-warm-2);
+  font-size: var(--font-size-16);
 }
 .swerpg.sheet.actor .sheet-header header.title .audit-log-trigger {
   display: inline-flex;
