@@ -1274,6 +1274,18 @@ input[type='range'] {
   background: var(--color-frame-bg-50);
   object-fit: contain;
 }
+.swerpg.sheet.actor .sheet-sidebar .sidebar-header .sidebar-profile-wrapper .sidebar-profile-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 20%;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  border-radius: 0 0 4px 4px;
+  pointer-events: none;
+}
 .swerpg.sheet.actor .sheet-sidebar h2.divider {
   margin: 0;
   font-size: var(--font-size-14);
