@@ -33,7 +33,7 @@ L’historique relève du système d’audit/log.
 La source de vérité métier reste :
 
 ```txt
-actor.system.talentPurchases
+actor.system.progression.talentPurchases
 ````
 
 ou structure équivalente.

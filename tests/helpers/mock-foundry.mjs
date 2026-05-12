@@ -287,6 +287,26 @@ export function setupFoundryMock(options = {}) {
           return this._source || {}
         }
       },
+      TypeDataModel: class MockTypeDataModel {
+        static defineSchema() {
+          return {}
+        }
+        static get schema() {
+          return { fields: {} }
+        }
+        constructor(data = {}) {
+          this._source = data
+        }
+        clone() {
+          return this
+        }
+        updateSource(_data) {
+          /* noop */
+        }
+        toObject() {
+          return this._source || {}
+        }
+      },
     },
     data: {
       fields: {
@@ -296,11 +316,6 @@ export function setupFoundryMock(options = {}) {
           }
         },
         FilePathField: class {
-          constructor(cfg = {}) {
-            this.config = cfg
-          }
-        },
-        HTMLField: class {
           constructor(cfg = {}) {
             this.config = cfg
           }
@@ -330,11 +345,26 @@ export function setupFoundryMock(options = {}) {
           constructor(field, cfg = {}) {
             this.field = field
             this.config = cfg
+            this.options = {}
           }
         },
         SchemaField: class {
           constructor(schema = {}) {
             this.schema = schema
+            this.options = {}
+          }
+          get fields() {
+            return Object.values(this.schema)
+          }
+        },
+        HTMLField: class {
+          constructor(cfg = {}) {
+            this.config = cfg
+          }
+        },
+        DocumentUUIDField: class {
+          constructor(cfg = {}) {
+            this.config = cfg
           }
         },
       },
@@ -562,6 +592,41 @@ export function setupFoundryMock(options = {}) {
       ACTION_HOOKS: {},
     }
   }
+
+  // Extend SYSTEM global with properties needed by actor-type.mjs defineSchema
+  if (!globalThis.SYSTEM) globalThis.SYSTEM = {}
+  globalThis.SYSTEM.CHARACTERISTICS = {
+    brawn: { id: 'brawn', label: 'CHARACTERISTICS.Brawn', name: 'Brawn' },
+    agility: { id: 'agility', label: 'CHARACTERISTICS.Agility', name: 'Agility' },
+    intellect: { id: 'intellect', label: 'CHARACTERISTICS.Intellect', name: 'Intellect' },
+    cunning: { id: 'cunning', label: 'CHARACTERISTICS.Cunning', name: 'Cunning' },
+    willpower: { id: 'willpower', label: 'CHARACTERISTICS.Willpower', name: 'Willpower' },
+    presence: { id: 'presence', label: 'CHARACTERISTICS.Presence', name: 'Presence' },
+  }
+  globalThis.SYSTEM.DEFENSES = {
+    physical: { id: 'physical', label: 'DEFENSES.Physical' },
+    armor: { id: 'armor', label: 'DEFENSES.Armor' },
+    block: { id: 'block', label: 'DEFENSES.Block' },
+    dodge: { id: 'dodge', label: 'DEFENSES.Dodge' },
+    parry: { id: 'parry', label: 'DEFENSES.Parry' },
+    fortitude: { id: 'fortitude', label: 'DEFENSES.Fortitude' },
+    willpower: { id: 'willpower', label: 'DEFENSES.Willpower' },
+    reflex: { id: 'reflex', label: 'DEFENSES.Reflex' },
+    wounds: { id: 'wounds', label: 'DEFENSES.Wounds' },
+    madness: { id: 'madness', label: 'DEFENSES.Madness' },
+  }
+  globalThis.SYSTEM.DAMAGE_TYPES = {
+    physical: { id: 'physical', label: 'DAMAGE_TYPES.Physical' },
+  }
+  globalThis.SYSTEM.RESOURCES = {
+    wounds: { id: 'wounds', label: 'RESOURCES.WOUNDS', max: 2000 },
+    strain: { id: 'strain', label: 'RESOURCES.STRAIN', max: 2000 },
+  }
+  globalThis.SYSTEM.SKILLS = {
+    athletics: { id: 'athletics', name: 'Athletics' },
+    perception: { id: 'perception', name: 'Perception' },
+  }
+  globalThis.SYSTEM.PASSIVE_BASE = 12
 
   // Mock Hooks global (Foundry VTT global for hook registration)
   if (!globalThis.Hooks) {

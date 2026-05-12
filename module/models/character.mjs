@@ -173,6 +173,15 @@ export default class SwerpgCharacter extends SwerpgActorType {
           { label: 'EXPERIENCE.Gained' },
         ),
       }),
+      talentPurchases: new fields.ArrayField(
+        new fields.SchemaField({
+          treeId: new fields.StringField({ required: true, blank: false }),
+          nodeId: new fields.StringField({ required: true, blank: false }),
+          talentId: new fields.StringField({ required: true, blank: false }),
+          specializationId: new fields.StringField({ required: true, blank: false }),
+        }),
+        { required: false, initial: [] },
+      ),
     })
 
     schema.details = new fields.SchemaField({

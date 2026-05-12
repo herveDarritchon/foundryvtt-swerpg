@@ -22,7 +22,7 @@ describe('mapCareerSkills strict mode', () => {
   it('filtre uniquement les skills présents dans SYSTEM.SKILLS en mode strict', () => {
     const raw = ['ATHL', 'PERC', 'DECEP', 'SCI', 'COMP', 'SKUL', 'ARCANA', 'UNKNOWN', '']
     const result = mapCareerSkills(raw, { strict: true })
-    expect(result).toEqual([{ id: 'athletics' }, { id: 'perception' }, { id: 'deception' }, { id: 'science' }, { id: 'computers' }, { id: 'skulduggery' }])
+    expect(result).toEqual([{ id: 'athletics' }, { id: 'perception' }, { id: 'deception' }, { id: 'computers' }, { id: 'skulduggery' }])
   })
   it('mode non strict conserve les ids mappés connus hors SYSTEM.SKILLS', () => {
     const raw = ['ATHL', 'ARCANA', 'PERC']
@@ -49,13 +49,13 @@ describe('careerMapper strictSkills option', () => {
         Name: 'Scholar',
         Key: 'scholar',
         Description: 'Desc',
-        CareerSkills: { CareerSkill: [{ Key: 'ATHL' }, { Key: 'ARCANA' }, { Key: 'SCI' }] },
+        CareerSkills: { CareerSkill: [{ Key: 'ATHL' }, { Key: 'PERC' }, { Key: 'SCI' }] },
         FreeRanks: '2',
       },
     ]
     const [strictMapped] = careerMapper(input, { strictSkills: true })
     const [looseMapped] = careerMapper(input)
-    expect(strictMapped.system.careerSkills.map((s) => s.id)).toEqual(['athletics', 'science'])
-    expect(looseMapped.system.careerSkills.map((s) => s.id)).toEqual(['athletics', 'arcana', 'science'])
+    expect(strictMapped.system.careerSkills.map((s) => s.id)).toEqual(['athletics', 'perception'])
+    expect(looseMapped.system.careerSkills.map((s) => s.id)).toEqual(['athletics', 'perception', 'science'])
   })
 })
