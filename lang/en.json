@@ -13,6 +13,7 @@
       "obligation": "Obligation",
       "specialization": "Specialization",
       "species": "Species",
+      "specialization-tree": "Specialization Tree",
       "talent": "Talent",
       "weapon": "Weapon"
     },
@@ -29,7 +30,48 @@
     "SHEETS": {
       "Armor": "Swerpg Armor Sheet",
       "Duty": "Swerpg Duty Sheet",
-      "Journal": "Swerpg Journal Sheet"
+      "Journal": "Swerpg Journal Sheet",
+      "SpecializationTree": "Specialization Tree Sheet"
+    }
+  },
+  "SPECIALIZATION_TREE": {
+    "FIELDS": {
+      "identification": {
+        "label": "Identification",
+        "hint": "Specialization and career references"
+      },
+      "specializationId": {
+        "label": "Specialization ID",
+        "hint": "The identifier of the linked specialization"
+      },
+      "careerId": {
+        "label": "Career ID",
+        "hint": "The identifier of the linked career (optional)"
+      },
+      "source": {
+        "label": "Source",
+        "hint": "Source book reference",
+        "system": {
+          "label": "System",
+          "hint": "Game system (e.g. eote)"
+        },
+        "book": {
+          "label": "Book",
+          "hint": "Source book name"
+        },
+        "page": {
+          "label": "Page",
+          "hint": "Page number"
+        }
+      },
+      "nodes": {
+        "label": "Nodes",
+        "hint": "Talent tree nodes — details managed in future updates"
+      },
+      "connections": {
+        "label": "Connections",
+        "hint": "Connections between nodes — details managed in future updates"
+      }
     }
   },
   "SWERPG.ERRORS.InvalidEvent": "Invalid event: Unable to process the UI interaction.",

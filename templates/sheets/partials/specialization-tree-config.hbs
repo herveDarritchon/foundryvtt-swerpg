@@ -1,0 +1,26 @@
+<section class="tab sheet-body flexcol {{tabs.config.cssClass}} scrollable" data-tab="{{tabs.config.id}}" data-group="{{tabs.config.group}}">
+
+  <fieldset {{fieldDisabled}}>
+    <legend>{{localize 'SPECIALIZATION_TREE.FIELDS.identification.label'}}</legend>
+    {{formGroup fields.specializationId name='system.specializationId' value=source.system.specializationId localize=true}}
+    {{formGroup fields.careerId name='system.careerId' value=source.system.careerId localize=true}}
+  </fieldset>
+
+  <fieldset {{fieldDisabled}}>
+    <legend>{{localize 'SPECIALIZATION_TREE.FIELDS.source.label'}}</legend>
+    {{formGroup fields.source.fields.system name='system.source.system' value=source.system.source.system localize=true}}
+    {{formGroup fields.source.fields.book name='system.source.book' value=source.system.source.book localize=true}}
+    {{formGroup fields.source.fields.page name='system.source.page' value=source.system.source.page localize=true}}
+  </fieldset>
+
+  <fieldset {{fieldDisabled}}>
+    <legend>{{localize 'SPECIALIZATION_TREE.FIELDS.nodes.label'}} ({{system.nodes.length}})</legend>
+    <p class='hint'>{{localize 'SPECIALIZATION_TREE.FIELDS.nodes.hint'}}</p>
+  </fieldset>
+
+  <fieldset {{fieldDisabled}}>
+    <legend>{{localize 'SPECIALIZATION_TREE.FIELDS.connections.label'}} ({{system.connections.length}})</legend>
+    <p class='hint'>{{localize 'SPECIALIZATION_TREE.FIELDS.connections.hint'}}</p>
+  </fieldset>
+
+</section>
