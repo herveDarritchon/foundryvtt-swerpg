@@ -176,13 +176,6 @@
         font-size: var(--font-size-24);
       }
 
-      .charname {
-        flex: 1 !important;
-        margin-right: 2rem;
-        padding: 0 0.5rem;
-        text-align: left;
-      }
-
       .level,
       .controls,
       a.level-up {
@@ -294,6 +287,44 @@
       border-radius: 4px;
       background: var(--color-frame-bg-50);
       object-fit: contain;
+    }
+
+    .sidebar-header {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+
+      .sidebar-name {
+        width: 100%;
+        height: 32px;
+        border: none;
+        border-bottom: 1px solid var(--color-frame);
+        background: transparent;
+        font-family: var(--font-h1);
+        font-size: var(--font-size-16);
+        text-align: center;
+        color: var(--color-text-light-highlight);
+
+        &:focus {
+          border-bottom-color: var(--color-accent);
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+          outline: none;
+        }
+      }
+
+      .sidebar-profile-wrapper {
+        position: relative;
+        width: 100%;
+
+        img.profile {
+          display: block;
+          width: 100%;
+          border: none;
+          border-radius: 4px;
+          background: var(--color-frame-bg-50);
+          object-fit: contain;
+        }
+      }
     }
 
     h2.divider {
