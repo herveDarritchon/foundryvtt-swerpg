@@ -204,6 +204,8 @@ export default class SwerpgCharacter extends SwerpgActorType {
       specializations: new fields.SetField(
         new fields.SchemaField(
           {
+            specializationId: new fields.StringField({ required: false, blank: false, initial: undefined }),
+            treeUuid: new fields.DocumentUUIDField({ type: 'Item', required: false, nullable: true, initial: undefined }),
             name: new fields.StringField({ blank: false }),
             img: new fields.StringField(),
             ...SwerpgSpecialization.defineSchema(),
@@ -494,8 +496,12 @@ export default class SwerpgCharacter extends SwerpgActorType {
    * @override
    */
   #prepareSpecializations() {
-    const specialization = Array.from(this.details.specializations)[0]
-    this.progression.freeSkillRanks.specialization.gained = specialization?.freeSkillRank || 0
+    let totalFreeRanks = 0
+    for (const specialization of Array.from(this.details.specializations || [])) {
+      totalFreeRanks += specialization?.freeSkillRank || 0
+    }
+
+    this.progression.freeSkillRanks.specialization.gained = totalFreeRanks
   }
 
   /* -------------------------------------------- */

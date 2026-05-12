@@ -62,7 +62,13 @@ describe('CharacterSheet sidebarHeader context', () => {
     actor.toObject = () => ({
       name: actor.name,
       img: actor.img,
-      system: JSON.parse(JSON.stringify(actor.system)),
+      system: {
+        ...JSON.parse(JSON.stringify(actor.system)),
+        details: {
+          ...JSON.parse(JSON.stringify(actor.system.details)),
+          specializations: Array.from(actor.system.details.specializations || []),
+        },
+      },
     })
     return actor
   }
@@ -99,6 +105,23 @@ describe('CharacterSheet sidebarHeader context', () => {
     expect(context.sidebarHeader.img).toBe('systems/swerpg/assets/portraits/darth-maul.webp')
     expect(context.sidebarHeader.wounds).toEqual({ value: 3, threshold: 12 })
     expect(context.sidebarHeader.strain).toEqual({ value: 2, threshold: 11 })
+  })
+
+  it('exposes multi-specialization display data in the sheet context', async () => {
+    const actor = buildCharacterActor()
+    actor.system.details.specializations = new Set([{ name: 'Bodyguard' }, { name: 'Mercenary Soldier' }])
+    vi.spyOn(SwerpgBaseActorSheet.prototype, '_prepareContext').mockResolvedValue(buildBaseContext(actor))
+
+    const sheet = new CharacterSheet({ document: actor })
+    sheet.actor = actor
+    sheet.document = actor
+
+    const context = await sheet._prepareContext({})
+
+    expect(context.specializationName).toBe('Bodyguard')
+    expect(context.specializationNames).toEqual(['Bodyguard', 'Mercenary Soldier'])
+    expect(context.specializationCount).toBe(2)
+    expect(context.specializationDisplayName).toBe('Bodyguard, Mercenary Soldier')
   })
 
   it('does not expose sidebarHeader from the base actor sheet context', async () => {

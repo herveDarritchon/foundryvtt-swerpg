@@ -106,12 +106,18 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
   async _prepareContext(options) {
     const context = await super._prepareContext(options)
     const { actor: a, source: s, incomplete: i } = context
+    const specializations = Array.from(a.system.details.specializations || [])
+    const specializationNames = specializations.map((specialization) => specialization?.name).filter(Boolean)
+    const specializationFallback = game.i18n.localize('SPECIALIZATION.SHEET.CHOOSE')
 
     // Expand Context
     Object.assign(context, {
       speciesName: a.system.details.species?.name || game.i18n.localize('SPECIES.SHEET.CHOOSE'),
       careerName: a.system.details.career?.name || game.i18n.localize('CAREER.SHEET.CHOOSE'),
-      specializationName: Array.from(a.system.details.specializations)[0]?.name || game.i18n.localize('SPECIALIZATION.SHEET.CHOOSE'),
+      specializationName: specializationNames[0] || specializationFallback,
+      specializationNames,
+      specializationCount: specializations.length,
+      specializationDisplayName: specializationNames.join(', ') || specializationFallback,
       talentTreeButtonText: game.system.tree.actor === a ? 'Close Talent Tree' : 'Open Talent Tree',
       experience: a.system.progression?.experience,
       canViewAuditLog: canViewAuditLog(a),
@@ -124,7 +130,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
     Object.assign(i, {
       species: !s.system.details.species?.name,
       career: !s.system.details.career?.name,
-      specialization: s.system.details.specializations?.length === 0,
+      specialization: specializations.length === 0,
       freeSkill: a.hasFreeSkillsAvailable(),
       characteristics: true,
       skills: true,
