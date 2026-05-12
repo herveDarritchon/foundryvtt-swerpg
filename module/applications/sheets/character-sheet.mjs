@@ -1,4 +1,5 @@
 import SwerpgBaseActorSheet from './base-actor-sheet.mjs'
+import CharacterAuditLogApp, { canViewAuditLog } from '../character-audit-log.mjs'
 import SkillConfig from '../config/skill.mjs'
 import SkillFactory from '../../lib/skills/skill-factory.mjs'
 import ErrorSkill from '../../lib/skills/error-skill.mjs'
@@ -84,6 +85,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
       editSpecies: CharacterSheet.#onEditSpecies,
       editCareer: CharacterSheet.#onEditCareer,
       editSpecializations: CharacterSheet.#onEditSpecializations,
+      openAuditLog: CharacterSheet.#onOpenAuditLog,
       skillBuy: CharacterSheet.#onSkillBuy,
       skillRefund: CharacterSheet.#onSkillRefund,
       skillSelect: CharacterSheet.#onSkillSelect,
@@ -112,6 +114,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
       specializationName: Array.from(a.system.details.specializations)[0]?.name || game.i18n.localize('SPECIALIZATION.SHEET.CHOOSE'),
       talentTreeButtonText: game.system.tree.actor === a ? 'Close Talent Tree' : 'Open Talent Tree',
       experience: a.system.progression?.experience,
+      canViewAuditLog: canViewAuditLog(a),
     })
 
     context.skills = CharacterSheet.#prepareSkills(a)
@@ -579,6 +582,26 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
    */
   static async #onEditCareer(event) {
     await this.actor._viewDetailItem('career', 'career', { editable: false })
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Open the read-only audit log window for the current character.
+   * @this {CharacterSheet}
+   * @param {PointerEvent} event
+   * @returns {Promise<void>}
+   */
+  static async #onOpenAuditLog(event) {
+    event.preventDefault()
+
+    if (!canViewAuditLog(this.actor)) {
+      ui.notifications.warn(game.i18n.localize('SWERPG.AUDIT_LOG.NO_PERMISSION'))
+      return
+    }
+
+    const app = new CharacterAuditLogApp({ document: this.actor })
+    await app.render({ force: true })
   }
 
   /* -------------------------------------------- */

@@ -190,12 +190,18 @@ describe('snapshotOldState', () => {
     expect(snapshotOldState(source, changes)).toEqual({})
   })
 
-  test('skips deletion paths (-=)', async () => {
+  test('captures the parent collection for deletion paths (-=)', async () => {
     const { snapshotOldState } = await import('../../module/utils/audit-log.mjs')
     const source = { system: { skills: { Athletics: { rank: 2 } } } }
     const changes = { 'system.skills.-=Athletics': null }
     const state = snapshotOldState(source, changes)
-    expect(Object.keys(state)).toHaveLength(0)
+    expect(state).toEqual({
+      system: {
+        skills: {
+          Athletics: { rank: 2 },
+        },
+      },
+    })
   })
 
   test('extracts multiple modified paths', async () => {

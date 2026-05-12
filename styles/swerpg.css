@@ -850,6 +850,117 @@ input[type='range'] {
   font-size: 12px;
 }
 /* ----------------------------------------- */
+/*  Character Audit Log Application          */
+/* ----------------------------------------- */
+.swerpg.application.character-audit-log {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+.swerpg.application.character-audit-log .audit-log__header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem;
+  border-bottom: 1px solid var(--color-cool-4);
+  background: linear-gradient(180deg, rgba(17, 25, 36, 0.92), rgba(10, 15, 24, 0.85));
+}
+.swerpg.application.character-audit-log .audit-log__title {
+  margin: 0;
+  font-family: var(--font-h1);
+  color: var(--color-primary);
+}
+.swerpg.application.character-audit-log .audit-log__subtitle {
+  margin: 0.25rem 0 0;
+  color: var(--color-secondary);
+  font-size: var(--font-size-12);
+}
+.swerpg.application.character-audit-log .audit-log__filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.swerpg.application.character-audit-log .audit-log__filter {
+  opacity: 1;
+}
+.swerpg.application.character-audit-log .audit-log__filter.is-active {
+  --button-text-color: var(--color-primary);
+  --button-background-color: var(--color-frame-bg-75);
+  --button-border-color: var(--color-primary);
+  box-shadow: 0 0 10px rgba(79, 168, 255, 0.22);
+}
+.swerpg.application.character-audit-log .audit-log__entries {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem;
+  overflow-y: auto;
+}
+.swerpg.application.character-audit-log .audit-log-entry {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--color-cool-4);
+  border-radius: 8px;
+  background: rgba(12, 18, 27, 0.8);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+}
+.swerpg.application.character-audit-log .audit-log-entry__meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem;
+  color: var(--color-secondary);
+  font-size: var(--font-size-11);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.swerpg.application.character-audit-log .audit-log-entry__body {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.swerpg.application.character-audit-log .audit-log-entry__description {
+  margin: 0;
+  color: var(--color-text);
+}
+.swerpg.application.character-audit-log .audit-log-entry__xp {
+  flex: none;
+  min-width: 5rem;
+  text-align: right;
+  font-family: var(--font-h1);
+}
+.swerpg.application.character-audit-log .audit-log-entry__xp.is-gain {
+  color: #77d38a;
+}
+.swerpg.application.character-audit-log .audit-log-entry__xp.is-spend {
+  color: #f07a7a;
+}
+.swerpg.application.character-audit-log .audit-log-entry__xp.is-neutral {
+  color: var(--color-secondary);
+}
+.swerpg.application.character-audit-log .audit-log__empty {
+  display: grid;
+  flex: 1;
+  place-items: center;
+  padding: 2rem;
+  color: var(--color-secondary);
+  text-align: center;
+}
+@media (max-width: 640px) {
+  .swerpg.application.character-audit-log .audit-log-entry__body {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .swerpg.application.character-audit-log .audit-log-entry__xp {
+    min-width: auto;
+    text-align: left;
+  }
+}
+/* ----------------------------------------- */
 /*  Animations                                */
 /* ----------------------------------------- */
 @keyframes fade-in-holo {
@@ -1052,6 +1163,28 @@ input[type='range'] {
 .swerpg.sheet.actor .sheet-header header.title a.level-up {
   height: 28px;
   border: 1px solid var(--color-warm-1);
+  opacity: 1;
+}
+.swerpg.sheet.actor .sheet-header header.title .audit-log-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--color-cool-4);
+  border-radius: 50%;
+  background: linear-gradient(180deg, var(--color-frame-bg-75), var(--color-frame-bg));
+  color: var(--color-secondary);
+  box-shadow: 0 0 8px rgba(79, 168, 255, 0.15);
+  opacity: 0.85;
+  transition: transform 120ms ease, box-shadow 120ms ease, color 120ms ease, border-color 120ms ease;
+}
+.swerpg.sheet.actor .sheet-header header.title .audit-log-trigger:hover,
+.swerpg.sheet.actor .sheet-header header.title .audit-log-trigger:focus-visible {
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 12px rgba(79, 168, 255, 0.3);
+  transform: translateY(-1px);
   opacity: 1;
 }
 .swerpg.sheet.actor .sheet-header header.title input:last-child {

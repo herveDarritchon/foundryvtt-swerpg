@@ -331,10 +331,15 @@ function detectSpecializationChanges(oldState, specializationChanges, actor, ts,
       const specializationId = key.slice(2)
       if (!specializationId) continue
 
+      const oldSpec = oldState.system?.details?.specializations?.[specializationId]
+
       entries.push(
         makeEntry({
           type: 'specialization.remove',
-          data: { specializationId },
+          data: {
+            specializationId,
+            specializationName: oldSpec?.name ?? specializationId,
+          },
           xpDelta: 0,
           ts,
           userId,
@@ -353,7 +358,10 @@ function detectSpecializationChanges(oldState, specializationChanges, actor, ts,
       entries.push(
         makeEntry({
           type: 'specialization.add',
-          data: { specializationId: key },
+          data: {
+            specializationId: key,
+            specializationName: newSpec?.name ?? value?.name ?? key,
+          },
           xpDelta: 0,
           ts,
           userId,

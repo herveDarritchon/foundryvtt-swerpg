@@ -82,7 +82,15 @@ function makeOldState(changes, source) {
 
   for (const path of Object.keys(flat)) {
     if (!path.startsWith('system.')) continue
-    if (path.includes('.-=')) continue
+
+    if (path.includes('.-=')) {
+      const parentPath = path.split('.').slice(0, -1).join('.')
+      const parentValue = getProperty(source, parentPath)
+      if (parentValue !== undefined) {
+        setProperty(oldState, parentPath, structuredClone(parentValue))
+      }
+      continue
+    }
 
     const value = getProperty(source, path)
     if (value !== undefined) {
@@ -1321,6 +1329,7 @@ describe('detail changes', () => {
       xpDelta: 0,
       data: {
         specializationId: 'spec1',
+        specializationName: 'Bodyguard',
       },
     })
   })
@@ -1378,6 +1387,7 @@ describe('detail changes', () => {
       xpDelta: 0,
       data: {
         specializationId: 'spec1',
+        specializationName: 'Bodyguard',
       },
     })
   })
@@ -1456,6 +1466,7 @@ describe('detail changes', () => {
       xpDelta: 0,
       data: {
         specializationId: 'my spec!',
+        specializationName: 'Bodyguard',
       },
     })
   })
