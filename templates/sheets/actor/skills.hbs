@@ -1,46 +1,6 @@
 <section class="tab secondary scrollable {{tabs.skills.id}} flexcol {{tabs.skills.cssClass}} scrollable"
          data-tab="{{tabs.skills.id}}" data-group="{{tabs.skills.group}}">
 
-    <section class="xp-console" data-skill-purchase-console>
-        <header class="xp-console__header">
-            <span class="xp-console__title">{{localize "SKILL.XP_CONSOLE.TITLE"}}</span>
-            <span class="xp-console__status" data-xp-console-status>{{localize "SKILL.XP_CONSOLE.STATUS.IDLE"}}</span>
-        </header>
-
-        <div class="xp-console__stats">
-            <div class="xp-console__stat">
-                <span class="xp-console__label">{{localize "SKILL.XP_CONSOLE.LABEL.AVAILABLE"}}</span>
-                <span class="xp-console__value" data-xp-available>{{progression.experience.available}}</span>
-            </div>
-
-            <div class="xp-console__stat">
-                <span class="xp-console__label">{{localize "SKILL.XP_CONSOLE.LABEL.SPENT"}}</span>
-                <span class="xp-console__value" data-xp-spent>{{progression.experience.total}}</span>
-            </div>
-
-            <div class="xp-console__stat">
-                <span class="xp-console__label">{{localize "SKILL.XP_CONSOLE.LABEL.CAREER_FREE"}}</span>
-                <span class="xp-console__value" data-free-career-skills>{{progression.freeSkillRanks.career.available}}</span>
-            </div>
-
-            <div class="xp-console__stat">
-                <span class="xp-console__label">{{localize "SKILL.XP_CONSOLE.LABEL.SPECIALIZATION_FREE"}}</span>
-                <span class="xp-console__value" data-free-specialization-skills>{{progression.freeSkillRanks.specialization.available}}</span>
-            </div>
-
-            <div class="xp-console__stat xp-console__stat--selected">
-                <span class="xp-console__label">{{localize "SKILL.XP_CONSOLE.LABEL.SELECTED_COST"}}</span>
-                <span class="xp-console__value" data-selected-skill-cost>—</span>
-            </div>
-        </div>
-
-        <div class="xp-console__selection" data-selected-skill-summary>
-            <span class="xp-console__selection-placeholder">
-                {{localize "SKILL.XP_CONSOLE.PLACEHOLDER"}}
-            </span>
-        </div>
-    </section>
-
     <div class="skills-wrapper">
 
         <section class="general-skills">

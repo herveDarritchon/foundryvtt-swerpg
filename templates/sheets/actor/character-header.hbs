@@ -1,56 +1,103 @@
 <section class="sheet-header flexcol">
-    <header class="title flexrow">
-        {{#if incomplete.creation}}
-            <a class="button icon level-up fa-solid fa-triangle-exclamation incomplete" data-action="levelUp"
-               data-tooltip="{{incomplete.creationTooltip}}" data-tooltip-class="creation-steps"></a>
-        {{/if}}
-        {{#if canViewAuditLog}}
-            <button
-                type="button"
-                class="button icon audit-log-trigger"
-                data-action="openAuditLog"
-                data-tooltip="SWERPG.AUDIT_LOG.OPEN"
-                aria-label="{{localize 'SWERPG.AUDIT_LOG.OPEN'}}"
-                title="{{localize 'SWERPG.AUDIT_LOG.OPEN'}}"
-            >
-                <i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i>
-            </button>
-        {{/if}}
-        <div class="experience flexrow">
-            <div  class="experience">Experience
-            <span>{{progression.experience.available}}</span>
-            /<span>{{progression.experience.total}}</span>
-            </div>
-        </div>
-    </header>
+  <header class="title flexrow">
+    {{#if incomplete.creation}}
+      <a class="button icon level-up fa-solid fa-triangle-exclamation incomplete" data-action="levelUp"
+         data-tooltip="{{incomplete.creationTooltip}}" data-tooltip-class="creation-steps"></a>
+    {{/if}}
 
-    <div class="subtitle flexrow">
-        <h2 class="species flexrow {{#if incomplete.species}}incomplete{{/if}}" data-action="editSpecies"
-            {{#if incomplete.species}}data-tooltip="WALKTHROUGH.AddSpecies"{{/if}}>
-            <a>{{#if incomplete.species}}<i class="fa-solid fa-circle-plus"></i> {{/if}}{{speciesName}}</a>
-        </h2>
-        <h2 class="career flexrow {{#if incomplete.career}}incomplete{{/if}}" data-action="editCareer"
-            {{#if incomplete.career}}data-tooltip="WALKTHROUGH.AddCareer"{{/if}}>
-            <a>{{#if incomplete.career}}<i class="fa-solid fa-circle-plus"></i> {{/if}}{{careerName}}</a>
-        </h2>
-        <h2 class="specialization flexrow {{#if incomplete.specialization}}incomplete{{/if}}"
-            data-action="editSpecializations"
-            {{#if incomplete.specialization}}data-tooltip="WALKTHROUGH.AddSpecialization"{{/if}}>
-            <a>{{#if incomplete.specialization}}<i class="fa-solid fa-circle-plus"></i> {{/if}}{{specializationName}}
-            </a>
-        </h2>
-        {{#if actor.system.details.signatureName}}
-            <h2 class="signature">{{actor.system.details.signatureName}}</h2>
-        {{/if}}
-        {{#if showMilestones}}
-            <div class="advancement flexrow" data-tooltip="WALKTHROUGH.NextLevel">
-                <div class="bar">
-                    <div class="fill" style="width:{{actor.system.advancement.pct}}%"></div>
-                </div>
-                <input type="number" name="system.advancement.progress" value="{{actor.system.advancement.progress}}">
-                <span class="slash"></span>
-                <span class="input">{{actor.system.advancement.next}}</span>
-            </div>
-        {{/if}}
+    <div class="identity-summary flexrow">
+      <h2 class="species flexrow {{#if incomplete.species}}incomplete{{/if}}" data-action="editSpecies"
+          {{#if incomplete.species}}data-tooltip="WALKTHROUGH.AddSpecies"{{/if}}>
+        <a>{{#if incomplete.species}}<i class="fa-solid fa-circle-plus"></i> {{/if}}{{speciesName}}</a>
+      </h2>
+      <h2 class="career flexrow {{#if incomplete.career}}incomplete{{/if}}" data-action="editCareer"
+          {{#if incomplete.career}}data-tooltip="WALKTHROUGH.AddCareer"{{/if}}>
+        <a>{{#if incomplete.career}}<i class="fa-solid fa-circle-plus"></i> {{/if}}{{careerName}}</a>
+      </h2>
+      <h2 class="specialization flexrow {{#if incomplete.specialization}}incomplete{{/if}}"
+          data-action="editSpecializations"
+          {{#if incomplete.specialization}}data-tooltip="WALKTHROUGH.AddSpecialization"{{/if}}>
+        <a>{{#if incomplete.specialization}}<i class="fa-solid fa-circle-plus"></i> {{/if}}{{specializationName}}
+        </a>
+      </h2>
+      {{#if actor.system.details.signatureName}}
+        <h2 class="signature">{{actor.system.details.signatureName}}</h2>
+      {{/if}}
+      {{#if showMilestones}}
+        <div class="advancement flexrow" data-tooltip="WALKTHROUGH.NextLevel">
+          <div class="bar">
+            <div class="fill" style="width:{{actor.system.advancement.pct}}%"></div>
+          </div>
+          <input type="number" name="system.advancement.progress" value="{{actor.system.advancement.progress}}">
+          <span class="slash"></span>
+          <span class="input">{{actor.system.advancement.next}}</span>
+        </div>
+      {{/if}}
     </div>
+
+    {{#unless incomplete.creation}}
+      <div class="experience flexrow">
+        {{#if canViewAuditLog}}
+          <button
+            type="button"
+            class="button icon audit-log-trigger"
+            data-action="openAuditLog"
+            data-tooltip="SWERPG.AUDIT_LOG.OPEN"
+            aria-label="{{localize 'SWERPG.AUDIT_LOG.OPEN'}}"
+            title="{{localize 'SWERPG.AUDIT_LOG.OPEN'}}"
+          >
+            <i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i>
+          </button>
+        {{/if}}
+        <div class="experience">Experience
+          <span>{{progression.experience.available}}</span>
+          /<span>{{progression.experience.total}}</span>
+        </div>
+      </div>
+    {{/unless}}
+
+  </header>
+
+  {{#if incomplete.creation}}
+    <section class="xp-console" data-skill-purchase-console>
+      <header class="xp-console__header">
+        <span class="xp-console__title">{{localize "SKILL.XP_CONSOLE.TITLE"}}</span>
+        <span class="xp-console__status" data-xp-console-status>{{localize "SKILL.XP_CONSOLE.STATUS.IDLE"}}</span>
+      </header>
+
+      <div class="xp-console__stats">
+        <div class="xp-console__stat">
+          <span class="xp-console__label">{{localize "SKILL.XP_CONSOLE.LABEL.AVAILABLE"}}</span>
+          <span class="xp-console__value" data-xp-available>{{progression.experience.available}}</span>
+        </div>
+
+        <div class="xp-console__stat">
+          <span class="xp-console__label">{{localize "SKILL.XP_CONSOLE.LABEL.SPENT"}}</span>
+          <span class="xp-console__value" data-xp-spent>{{progression.experience.total}}</span>
+        </div>
+
+        <div class="xp-console__stat">
+          <span class="xp-console__label">{{localize "SKILL.XP_CONSOLE.LABEL.CAREER_FREE"}}</span>
+          <span class="xp-console__value" data-free-career-skills>{{progression.freeSkillRanks.career.available}}</span>
+        </div>
+
+        <div class="xp-console__stat">
+          <span class="xp-console__label">{{localize "SKILL.XP_CONSOLE.LABEL.SPECIALIZATION_FREE"}}</span>
+          <span class="xp-console__value"
+                data-free-specialization-skills>{{progression.freeSkillRanks.specialization.available}}</span>
+        </div>
+
+        <div class="xp-console__stat xp-console__stat--selected">
+          <span class="xp-console__label">{{localize "SKILL.XP_CONSOLE.LABEL.SELECTED_COST"}}</span>
+          <span class="xp-console__value" data-selected-skill-cost>—</span>
+        </div>
+      </div>
+
+      <div class="xp-console__selection" data-selected-skill-summary>
+            <span class="xp-console__selection-placeholder">
+              {{localize "SKILL.XP_CONSOLE.PLACEHOLDER"}}
+            </span>
+      </div>
+    </section>
+  {{/if}}
 </section>
