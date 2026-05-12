@@ -4,7 +4,16 @@
     <input class="sidebar-name" name="name" type="text" value="{{sidebarHeader.name}}" placeholder="Actor Name">
     <div class="sidebar-profile-wrapper">
       <img class="profile" src="{{sidebarHeader.img}}" alt="{{sidebarHeader.name}}" width="200" height="200" data-action="editImage" data-edit="img">
-      <div class="sidebar-profile-overlay"></div>
+      <div class="sidebar-profile-overlay">
+        <div class="sidebar-resource wounds">
+          <span class="label">{{localize "RESOURCES.WOUNDS"}}</span>
+          <span class="value">{{sidebarHeader.wounds.value}}/{{sidebarHeader.wounds.threshold}}</span>
+        </div>
+        <div class="sidebar-resource strain">
+          <span class="label">{{localize "RESOURCES.STRAIN"}}</span>
+          <span class="value">{{sidebarHeader.strain.value}}/{{sidebarHeader.strain.threshold}}</span>
+        </div>
+      </div>
     </div>
   </div>
 {{else}}

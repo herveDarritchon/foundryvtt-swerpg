@@ -97,6 +97,8 @@ describe('CharacterSheet sidebarHeader context', () => {
     expect(context.sidebarHeader).toBeDefined()
     expect(context.sidebarHeader.name).toBe('Darth Maul')
     expect(context.sidebarHeader.img).toBe('systems/swerpg/assets/portraits/darth-maul.webp')
+    expect(context.sidebarHeader.wounds).toEqual({ value: 3, threshold: 12 })
+    expect(context.sidebarHeader.strain).toEqual({ value: 2, threshold: 11 })
   })
 
   it('does not expose sidebarHeader from the base actor sheet context', async () => {
