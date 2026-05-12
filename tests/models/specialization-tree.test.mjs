@@ -26,9 +26,9 @@ describe('SwerpgSpecializationTree', () => {
       expect(schema.connections).toBeInstanceOf(foundry.data.fields.ArrayField)
     })
 
-    test('specializationId is required and does not allow blank', () => {
+    test('specializationId does not allow blank (but optional at creation)', () => {
       const field = SwerpgSpecializationTree.defineSchema().specializationId
-      expect(field.config.required).toBe(true)
+      expect(field.config.required).toBe(false)
       expect(field.config.blank).toBe(false)
     })
 
@@ -91,6 +91,12 @@ describe('SwerpgSpecializationTree', () => {
     test('creates instance with minimal required data', () => {
       const instance = new SwerpgSpecializationTree({ specializationId: 'spec-bounty-hunter' })
       expect(instance.specializationId).toBe('spec-bounty-hunter')
+    })
+
+    test('creates instance without specializationId (create-dialog workflow)', () => {
+      const instance = new SwerpgSpecializationTree({})
+      expect(instance).toBeDefined()
+      expect(instance.specializationId).toBeUndefined()
     })
 
     test('creates instance with full data', () => {

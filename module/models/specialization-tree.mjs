@@ -4,7 +4,7 @@ export default class SwerpgSpecializationTree extends foundry.abstract.TypeDataM
 
     return {
       description: new fields.HTMLField({ required: false, initial: undefined }),
-      specializationId: new fields.StringField({ required: true, blank: false }),
+      specializationId: new fields.StringField({ required: false, blank: false }),
       careerId: new fields.StringField({ required: false, blank: false, initial: undefined }),
       source: new fields.SchemaField({
         system: new fields.StringField({ required: false, blank: true, initial: undefined }),
