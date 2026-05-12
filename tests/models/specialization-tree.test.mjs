@@ -1,5 +1,15 @@
 import { describe, test, expect, beforeEach, vi } from 'vitest'
 import SwerpgSpecializationTree from '../../module/models/specialization-tree.mjs'
+import { logger } from '../../module/utils/logger.mjs'
+
+vi.mock('../../module/utils/logger.mjs', () => ({
+  logger: {
+    warn: vi.fn(),
+    debug: vi.fn(),
+    info: vi.fn(),
+    error: vi.fn(),
+  },
+}))
 
 vi.mock('../../module/applications/sheets/base-item.mjs', () => {
   class MockBaseItemSheet {
@@ -50,13 +60,45 @@ describe('SwerpgSpecializationTree', () => {
       expect(source.schema.page).toBeInstanceOf(foundry.data.fields.StringField)
     })
 
-    test('nodes ArrayField wraps a SchemaField with nodeId and talentId', () => {
+    test('nodes ArrayField wraps a SchemaField with nodeId, talentId, row, column, cost', () => {
       const nodeField = SwerpgSpecializationTree.defineSchema().nodes.field
       expect(nodeField).toBeInstanceOf(foundry.data.fields.SchemaField)
       expect(nodeField.schema.nodeId).toBeInstanceOf(foundry.data.fields.StringField)
       expect(nodeField.schema.nodeId.config.required).toBe(true)
       expect(nodeField.schema.talentId).toBeInstanceOf(foundry.data.fields.StringField)
       expect(nodeField.schema.talentId.config.required).toBe(true)
+      expect(nodeField.schema.row).toBeInstanceOf(foundry.data.fields.NumberField)
+      expect(nodeField.schema.column).toBeInstanceOf(foundry.data.fields.NumberField)
+      expect(nodeField.schema.cost).toBeInstanceOf(foundry.data.fields.NumberField)
+    })
+
+    test('node row field is optional, integer, min 1, max 10, initial 1', () => {
+      const field = SwerpgSpecializationTree.defineSchema().nodes.field.schema.row
+      expect(field.config.required).toBe(false)
+      expect(field.config.nullable).toBe(false)
+      expect(field.config.integer).toBe(true)
+      expect(field.config.min).toBe(1)
+      expect(field.config.max).toBe(10)
+      expect(field.config.initial).toBe(1)
+    })
+
+    test('node column field is optional, integer, min 1, max 10, initial 1', () => {
+      const field = SwerpgSpecializationTree.defineSchema().nodes.field.schema.column
+      expect(field.config.required).toBe(false)
+      expect(field.config.nullable).toBe(false)
+      expect(field.config.integer).toBe(true)
+      expect(field.config.min).toBe(1)
+      expect(field.config.max).toBe(10)
+      expect(field.config.initial).toBe(1)
+    })
+
+    test('node cost field is optional, integer, min 0, initial 5', () => {
+      const field = SwerpgSpecializationTree.defineSchema().nodes.field.schema.cost
+      expect(field.config.required).toBe(false)
+      expect(field.config.nullable).toBe(false)
+      expect(field.config.integer).toBe(true)
+      expect(field.config.min).toBe(0)
+      expect(field.config.initial).toBe(5)
     })
 
     test('connections ArrayField wraps a SchemaField with from and to', () => {
@@ -82,8 +124,36 @@ describe('SwerpgSpecializationTree', () => {
   })
 
   describe('validateJoint', () => {
-    test('is a no-op that returns undefined', () => {
+    test('returns undefined for empty data', () => {
       expect(SwerpgSpecializationTree.validateJoint({})).toBeUndefined()
+    })
+
+    test('returns undefined when nodes is empty array', () => {
+      expect(SwerpgSpecializationTree.validateJoint({ nodes: [] })).toBeUndefined()
+    })
+
+    test('passes silently when nodeId matches row/column convention', () => {
+      logger.warn.mockClear()
+      SwerpgSpecializationTree.validateJoint({
+        nodes: [
+          { nodeId: 'r1c1', row: 1, column: 1, cost: 5 },
+          { nodeId: 'r2c3', row: 2, column: 3, cost: 10 },
+        ],
+      })
+      expect(logger.warn).not.toHaveBeenCalled()
+    })
+
+    test('warns when nodeId does not match row/column convention', () => {
+      logger.warn.mockClear()
+      SwerpgSpecializationTree.validateJoint({
+        nodes: [
+          { nodeId: 'wrong', row: 1, column: 2, cost: 5 },
+        ],
+      })
+      expect(logger.warn).toHaveBeenCalledWith(
+        '[SwerpgSpecializationTree] Node nodeId mismatch with row/column',
+        expect.objectContaining({ nodeId: 'wrong', expectedId: 'r1c2', row: 1, column: 2 }),
+      )
     })
   })
 
@@ -99,22 +169,37 @@ describe('SwerpgSpecializationTree', () => {
       expect(instance.specializationId).toBeUndefined()
     })
 
-    test('creates instance with full data', () => {
+    test('creates instance with full data including node position and cost', () => {
       const data = {
         specializationId: 'spec-slicer',
         careerId: 'career-technician',
         description: '<p>A slicing specialist</p>',
         source: { system: 'eote', book: 'Core Rulebook', page: '42' },
-        nodes: [{ nodeId: 'n1', talentId: 'talent-slice-1' }],
-        connections: [{ from: 'n1', to: 'n2' }],
+        nodes: [
+          { nodeId: 'r1c1', talentId: 'talent-slice-1', row: 1, column: 1, cost: 5 },
+          { nodeId: 'r1c2', talentId: 'talent-slice-2', row: 1, column: 2, cost: 10 },
+        ],
+        connections: [{ from: 'r1c1', to: 'r1c2' }],
       }
       const instance = new SwerpgSpecializationTree(data)
       expect(instance.specializationId).toBe('spec-slicer')
       expect(instance.careerId).toBe('career-technician')
       expect(instance.description).toBe('<p>A slicing specialist</p>')
       expect(instance.source).toEqual({ system: 'eote', book: 'Core Rulebook', page: '42' })
-      expect(instance.nodes).toEqual([{ nodeId: 'n1', talentId: 'talent-slice-1' }])
-      expect(instance.connections).toEqual([{ from: 'n1', to: 'n2' }])
+      expect(instance.nodes).toEqual([
+        { nodeId: 'r1c1', talentId: 'talent-slice-1', row: 1, column: 1, cost: 5 },
+        { nodeId: 'r1c2', talentId: 'talent-slice-2', row: 1, column: 2, cost: 10 },
+      ])
+      expect(instance.connections).toEqual([{ from: 'r1c1', to: 'r1c2' }])
+    })
+
+    test('creates instance with nodes without row/column/cost (backward compat)', () => {
+      const data = {
+        specializationId: 'spec-bounty-hunter',
+        nodes: [{ nodeId: 'legacy-node', talentId: 'talent-old' }],
+      }
+      const instance = new SwerpgSpecializationTree(data)
+      expect(instance.nodes).toEqual([{ nodeId: 'legacy-node', talentId: 'talent-old' }])
     })
 
     test('toObject returns source data', () => {

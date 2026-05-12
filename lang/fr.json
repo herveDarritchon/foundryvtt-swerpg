@@ -62,7 +62,7 @@
       },
       "nodes": {
         "label": "Nœuds",
-        "hint": "Nœuds de l'arbre de talents — détails gérés dans les mises à jour futures"
+        "hint": "Chaque nœud a un nodeId stable, une référence de talent (talentId), une position (row, column) et un coût XP (cost)"
       },
       "connections": {
         "label": "Connexions",
