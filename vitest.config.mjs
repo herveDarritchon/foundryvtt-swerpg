@@ -5,5 +5,13 @@ export default defineConfig({
     setupFiles: ['./tests/setup.mjs'],
     include: ['tests/**/*.test.mjs'],
     globals: true,
+    reporters: ['verbose'],
+  },
+  diff: {
+    contextLines: 10,
+    expand: true,
+    truncateThreshold: 0,
+    printBasicPrototype: false,
+    maxDepth: 30,
   },
 })
