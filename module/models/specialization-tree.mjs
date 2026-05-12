@@ -1,3 +1,5 @@
+import { logger } from '../utils/logger.mjs'
+
 export default class SwerpgSpecializationTree extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     const fields = foundry.data.fields
@@ -15,6 +17,9 @@ export default class SwerpgSpecializationTree extends foundry.abstract.TypeDataM
         new fields.SchemaField({
           nodeId: new fields.StringField({ required: true, blank: false }),
           talentId: new fields.StringField({ required: true, blank: false }),
+          row: new fields.NumberField({ required: false, nullable: false, integer: true, min: 1, max: 10, initial: 1 }),
+          column: new fields.NumberField({ required: false, nullable: false, integer: true, min: 1, max: 10, initial: 1 }),
+          cost: new fields.NumberField({ required: false, nullable: false, integer: true, min: 0, initial: 5 }),
         }),
         { required: false, initial: [] },
       ),
@@ -30,5 +35,21 @@ export default class SwerpgSpecializationTree extends foundry.abstract.TypeDataM
 
   static LOCALIZATION_PREFIXES = ['SPECIALIZATION_TREE']
 
-  static validateJoint(data) {}
+  static validateJoint(data) {
+    if (!data.nodes?.length) return
+
+    for (const node of data.nodes) {
+      if (!node.nodeId || node.row == null || node.column == null) continue
+
+      const expectedId = `r${node.row}c${node.column}`
+      if (node.nodeId !== expectedId) {
+        logger.warn('[SwerpgSpecializationTree] Node nodeId mismatch with row/column', {
+          nodeId: node.nodeId,
+          expectedId,
+          row: node.row,
+          column: node.column,
+        })
+      }
+    }
+  }
 }
