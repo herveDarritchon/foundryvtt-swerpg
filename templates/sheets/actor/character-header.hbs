@@ -5,6 +5,18 @@
             <a class="button icon level-up fa-solid fa-triangle-exclamation incomplete" data-action="levelUp"
                data-tooltip="{{incomplete.creationTooltip}}" data-tooltip-class="creation-steps"></a>
         {{/if}}
+        {{#if canViewAuditLog}}
+            <button
+                type="button"
+                class="button icon audit-log-trigger"
+                data-action="openAuditLog"
+                data-tooltip="SWERPG.AUDIT_LOG.OPEN"
+                aria-label="{{localize 'SWERPG.AUDIT_LOG.OPEN'}}"
+                title="{{localize 'SWERPG.AUDIT_LOG.OPEN'}}"
+            >
+                <i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i>
+            </button>
+        {{/if}}
         <div class="experience flexrow">
             <div  class="experience">Experience
             <span>{{progression.experience.available}}</span>

@@ -428,7 +428,12 @@ export function setupFoundryMock(options = {}) {
 
   const baseGame = {
     i18n: {
+      lang: 'en',
       localize: vi.fn((key) => mergedTranslations[key] || key),
+      format: vi.fn((key, data = {}) => {
+        const template = mergedTranslations[key] || key
+        return template.replace(/\{(\w+)\}/g, (_match, token) => String(data[token] ?? `{${token}}`))
+      }),
     },
     system: {
       config: {},
