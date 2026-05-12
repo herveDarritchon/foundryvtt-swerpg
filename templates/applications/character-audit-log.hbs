@@ -17,6 +17,21 @@
         </button>
       {{/each}}
     </div>
+
+    {{#if canExport}}
+      <div class='audit-log__export'>
+        <button
+          type='button'
+          class='audit-log__export-button button framed'
+          data-action='exportCsv'
+          data-tooltip='{{localize "SWERPG.AUDIT_LOG.EXPORT_TOOLTIP"}}'
+          aria-label='{{localize "SWERPG.AUDIT_LOG.EXPORT"}}'
+        >
+          <i class='fa-solid fa-download' aria-hidden='true'></i>
+          {{localize 'SWERPG.AUDIT_LOG.EXPORT'}}
+        </button>
+      </div>
+    {{/if}}
   </header>
 
   {{#if hasEntries}}
