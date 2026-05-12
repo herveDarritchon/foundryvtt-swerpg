@@ -63,20 +63,33 @@ describe('Intégration import carrières XML', () => {
     // Order is not significant; compare as sorted arrays to avoid brittle ordering assumptions
     expect(soldier.system.careerSkills.map((s) => s.id).sort()).toEqual(['athletics', 'deception', 'perception'].sort())
     expect(spy.system.careerSkills.map((s) => s.id).sort()).toEqual(['athletics', 'perception'].sort())
-    expect(scholar.system.careerSkills.map((s) => s.id).sort()).toEqual(['science', 'arcana', 'athletics'].sort())
+    expect(scholar.system.careerSkills.map((s) => s.id).sort()).toEqual(['perception', 'charm', 'athletics'].sort())
   })
 
-  it('filtre correctement en mode strict', () => {
+  it('filtre correctement les careerSkills en mode strict', () => {
     const mappedStrict = careerMapper(careersRaw, { strictSkills: true })
+
     const scholarStrict = mappedStrict.find((c) => c.flags?.swerpg?.oggdudeKey === 'scholar')
     const spyStrict = mappedStrict.find((c) => c.flags?.swerpg?.oggdudeKey === 'spy')
-    expect(scholarStrict).toBeDefined()
-    expect(spyStrict).toBeDefined()
-    // arcana est dans le registre strict donc conservée
-    expect(scholarStrict.system.careerSkills.map((s) => s.id).sort()).toEqual(['science', 'arcana', 'athletics'].sort())
-    expect(spyStrict.system.careerSkills.map((s) => s.id).sort()).toEqual(['athletics', 'perception'].sort())
-  })
 
+    expect(scholarStrict, 'la carrière "scholar" doit exister après import strict').toBeDefined()
+    expect(spyStrict, 'la carrière "spy" doit exister après import strict').toBeDefined()
+
+    const scholarSkillIds = scholarStrict.system.careerSkills.map((s) => s.id)
+    const spySkillIds = spyStrict.system.careerSkills.map((s) => s.id)
+
+    expect(scholarSkillIds, '"scholar" doit conserver "perception" en mode strict car "perception" est présente dans SYSTEM.SKILLS').toContain('perception')
+
+    expect(scholarSkillIds, '"scholar" ne doit pas conserver "science" en mode strict car "science" n\'est pas présente dans SYSTEM.SKILLS').not.toContain('science')
+
+    expect([...scholarSkillIds].sort(), '"scholar" doit contenir exactement les careerSkills attendues en mode strict').toEqual([
+      'athletics',
+      'charm',
+      'perception',
+    ])
+
+    expect([...spySkillIds].sort(), '"spy" doit contenir exactement les careerSkills attendues en mode strict').toEqual(['athletics', 'perception'])
+  })
   it('ne génère aucun id falsy', () => {
     const mapped = careerMapper(careersRaw)
     const falsy = mapped.flatMap((c) => c.system.careerSkills.filter((s) => !s.id))
