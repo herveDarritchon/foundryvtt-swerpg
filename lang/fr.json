@@ -9,6 +9,7 @@
       "armor": "Armor",
       "duty": "Devoir",
       "species": "Espèce",
+      "specialization-tree": "Arbre de spécialisation",
       "talent": "Talent",
       "weapon": "Weapon"
     },
@@ -25,7 +26,48 @@
     "SHEETS": {
       "Armor": "Swerpg Armor Sheet",
       "Duty": "Swerpg Duty Sheet",
-      "Journal": "Swerpg Journal Sheet"
+      "Journal": "Swerpg Journal Sheet",
+      "SpecializationTree": "Feuille d'arbre de spécialisation"
+    }
+  },
+  "SPECIALIZATION_TREE": {
+    "FIELDS": {
+      "identification": {
+        "label": "Identification",
+        "hint": "Références de spécialisation et carrière"
+      },
+      "specializationId": {
+        "label": "ID Spécialisation",
+        "hint": "L'identifiant de la spécialisation liée"
+      },
+      "careerId": {
+        "label": "ID Carrière",
+        "hint": "L'identifiant de la carrière liée (optionnel)"
+      },
+      "source": {
+        "label": "Source",
+        "hint": "Référence du livre source",
+        "system": {
+          "label": "Système",
+          "hint": "Système de jeu (ex. eote)"
+        },
+        "book": {
+          "label": "Ouvrage",
+          "hint": "Nom du livre source"
+        },
+        "page": {
+          "label": "Page",
+          "hint": "Numéro de page"
+        }
+      },
+      "nodes": {
+        "label": "Nœuds",
+        "hint": "Nœuds de l'arbre de talents — détails gérés dans les mises à jour futures"
+      },
+      "connections": {
+        "label": "Connexions",
+        "hint": "Connexions entre les nœuds — détails gérés dans les mises à jour futures"
+      }
     }
   },
   "SWERPG.ERRORS.InvalidEvent": "Événement invalide: impossible de traiter l'interaction.",

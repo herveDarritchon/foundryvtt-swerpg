@@ -92,6 +92,9 @@
       },
       "motivation": {
         "htmlFields": ["description"]
+      },
+      "specialization-tree": {
+        "htmlFields": ["description"]
       }
     },
     "JournalEntryPage": {

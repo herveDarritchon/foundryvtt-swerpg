@@ -1146,7 +1146,7 @@ input[type='range'] {
   height: var(--sheet-header-height);
   border: none;
   background: var(--color-frame-bg-50);
-  font-family: var(--font-h1);
+  font-family: var(--font-h1), serif;
   font-size: var(--font-size-24);
 }
 .swerpg.sheet.actor .sheet-header header.title .level,
