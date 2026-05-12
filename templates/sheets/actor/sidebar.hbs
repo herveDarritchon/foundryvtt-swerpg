@@ -1,5 +1,14 @@
 <section class="sheet-sidebar flexcol">
+{{#if sidebarHeader}}
+  <div class="sidebar-header">
+    <input class="sidebar-name" name="name" type="text" value="{{sidebarHeader.name}}" placeholder="Actor Name">
+    <div class="sidebar-profile-wrapper">
+      <img class="profile" src="{{sidebarHeader.img}}" alt="{{sidebarHeader.name}}" width="200" height="200" data-action="editImage" data-edit="img">
+    </div>
+  </div>
+{{else}}
   <img class="profile" src="{{source.img}}" alt="{{source.name}}" width="200" height="200" data-action="editImage" data-edit="img" />
+{{/if}}
 
   {{! Current Equipment }}
   <h2 class="section-header divider">{{localize "ACTOR.LABELS.CURRENT_EQUIPMENT"}}</h2>
