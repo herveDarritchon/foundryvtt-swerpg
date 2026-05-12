@@ -79,6 +79,9 @@
   "SWERPG.AUDIT_LOG.DESCRIPTION.TALENT_PURCHASE": "Achat du talent {talent} (rang {ranks})",
   "SWERPG.AUDIT_LOG.DESCRIPTION.ADVANCEMENT_LEVEL": "Niveau {oldLevel} -> {newLevel}",
   "SWERPG.AUDIT_LOG.DESCRIPTION.UNKNOWN": "Événement non interprété ({type})",
+  "SWERPG.AUDIT_LOG.EXPORT": "Exporter",
+  "SWERPG.AUDIT_LOG.EXPORT_TOOLTIP": "Exporter l'historique complet au format CSV",
+  "SWERPG.AUDIT_LOG.EXPORT_FAILED": "Échec de l'export du journal d'évolution du personnage.",
   "SWERPG.SETTINGS.AUDIT_LOG_MAX_ENTRIES_NAME": "Nombre max d'entrées du journal",
   "SWERPG.SETTINGS.AUDIT_LOG_MAX_ENTRIES_HINT": "Nombre maximum d'entrées dans le journal d'évolution du personnage (100-5000). Les plus anciennes sont supprimées en premier lorsque la limite est dépassée.",
   "SETTINGS": {

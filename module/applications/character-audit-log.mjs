@@ -1,6 +1,20 @@
+import { logger } from '../utils/logger.mjs'
+
 const { api } = foundry.applications
 
 const AUDIT_LOG_PATH = 'flags.swerpg.logs'
+
+const CSV_COLUMNS = Object.freeze([
+  'timestamp',
+  'date',
+  'userName',
+  'type',
+  'typeLabel',
+  'description',
+  'xpDelta',
+  'actorName',
+  'playerName',
+])
 
 const AUDIT_LOG_FAMILIES = Object.freeze({
   all: 'all',
@@ -249,6 +263,7 @@ export default class CharacterAuditLogApp extends api.HandlebarsApplicationMixin
     position: { width: 780, height: 720 },
     actions: {
       setFilter: CharacterAuditLogApp.#onSetFilter,
+      exportCsv: CharacterAuditLogApp.#onExportCsv,
     },
     window: {
       minimizable: true,
@@ -292,6 +307,7 @@ export default class CharacterAuditLogApp extends api.HandlebarsApplicationMixin
       config: game.system.config,
       isOwner: this.document.isOwner,
       canViewAuditLog: canViewAuditLog(this.actor),
+      canExport: canViewAuditLog(this.actor),
       activeFilter: this.filter,
       filters: AUDIT_LOG_FILTER_ORDER.map((filterId) => ({
         id: filterId,
@@ -314,4 +330,97 @@ export default class CharacterAuditLogApp extends api.HandlebarsApplicationMixin
     this.filter = filter
     await this.render({ force: true })
   }
+
+  static async #onExportCsv(event, target) {
+    event.preventDefault()
+
+    if (!canViewAuditLog(this.actor)) {
+      ui.notifications.warn(game.i18n.localize('SWERPG.AUDIT_LOG.NO_PERMISSION'))
+      return
+    }
+
+    try {
+      const csvContent = buildCsvContent(this.actor)
+      const filename = buildExportFilename(this.actor)
+
+      saveDataToFile(csvContent, 'text/csv;charset=utf-8', filename)
+    } catch (err) {
+      logger.error('[AuditLog] CSV export failed', err)
+      ui.notifications.error(game.i18n.localize('SWERPG.AUDIT_LOG.EXPORT_FAILED'))
+    }
+  }
+}
+
+/* -------------------------------------------- */
+/*  CSV export helpers                          */
+/* -------------------------------------------- */
+
+export function escapeCsvCell(value) {
+  if (value === null || value === undefined) return ''
+  const str = String(value)
+  if (str.includes(',') || str.includes('"') || str.includes('\n') || str.includes('\r')) {
+    return `"${str.replace(/"/g, '""')}"`
+  }
+  return str
+}
+
+export function getPrimaryOwnerName(actor) {
+  if (!actor?.ownership) return 'unknown-player'
+
+  const ownerIds = Object.entries(actor.ownership)
+    .filter(([, level]) => level === 3)
+    .map(([userId]) => userId)
+
+  if (ownerIds.length === 0) return 'unknown-player'
+
+  const primaryOwnerId = ownerIds[0]
+  const user = game.users?.get(primaryOwnerId)
+  return user?.name ?? 'unknown-player'
+}
+
+function slugify(str) {
+  return str
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-zA-Z0-9-_]/g, '_')
+    .replace(/_+/g, '_')
+    .replace(/^_|_$/g, '')
+    .toLowerCase() || 'unnamed'
+}
+
+export function buildExportFilename(actor) {
+  const charName = slugify(actor?.name ?? 'character')
+  const ownerName = slugify(getPrimaryOwnerName(actor))
+  const date = new Date().toISOString().slice(0, 10)
+  return `${charName}_${ownerName}_${date}.csv`
+}
+
+export function buildCsvContent(actor) {
+  const rawLogs = foundry.utils.getProperty(actor, AUDIT_LOG_PATH) ?? []
+  const ownerName = getPrimaryOwnerName(actor)
+  const actorName = actor?.name ?? ''
+
+  const header = CSV_COLUMNS.map(escapeCsvCell).join(',')
+  const rows = rawLogs.map((entry) => {
+    const typeLabel = getAuditLogTypeLabel(entry.type)
+    const description = buildAuditLogDescription(entry)
+    const formattedDate = formatAuditLogTimestamp(entry.timestamp)
+    const xpDelta = Number(entry.xpDelta) || 0
+
+    const row = [
+      entry.timestamp ?? '',
+      formattedDate,
+      entry.userName ?? '',
+      entry.type ?? '',
+      typeLabel,
+      description,
+      xpDelta,
+      actorName,
+      ownerName,
+    ]
+
+    return row.map(escapeCsvCell).join(',')
+  })
+
+  return [header, ...rows].join('\n')
 }

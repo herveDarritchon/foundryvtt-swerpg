@@ -222,7 +222,43 @@ structurées dans `actor.flags.swerpg.logs`.
 
 ---
 
-## 12. Gap connu
+## 12. Export CSV
+
+### 12.1. Bouton d'export dans la fenêtre de consultation
+
+| Action | Résultat attendu |
+|--------|------------------|
+| Ouvrir la fenêtre du journal d'évolution depuis la fiche personnage | La fenêtre s'affiche avec les filtres habituels |
+| Vérifier la présence d'un bouton `Exporter` (icône download) | Le bouton est visible dans l'en-tête de la fenêtre |
+| Cliquer sur le bouton `Exporter` | Un fichier CSV est téléchargé par le navigateur |
+
+### 12.2. Nom du fichier exporté
+
+| Action | Résultat attendu |
+|--------|------------------|
+| Exporter le journal d'un personnage nommé "Vara Kesh" dont le propriétaire est "Alice" | Le fichier téléchargé se nomme `vara_kesh_alice_YYYY-MM-DD.csv` |
+| Exporter le journal d'un personnage sans propriétaire explicite | Le fichier téléchargé contient `unknown-player` dans son nom |
+
+### 12.3. Contenu du CSV
+
+| Action | Résultat attendu |
+|--------|------------------|
+| Ouvrir le fichier CSV dans un tableur (Excel, LibreOffice) | Les colonnes sont : timestamp, date, userName, type, typeLabel, description, xpDelta, actorName, playerName |
+| Vérifier la première ligne de données | Les informations correspondent à la première entrée du journal (chronologie complète) |
+| Vérifier que toutes les entrées sont présentes | Le nombre de lignes de données correspond au nombre total d'entrées dans `flags.swerpg.logs` |
+| Appliquer un filtre (ex: "Compétences") dans la UI puis exporter | Le CSV exporté contient TOUTES les entrées, pas seulement celles du filtre actif |
+
+### 12.4. Cas aux limites
+
+| Action | Résultat attendu |
+|--------|------------------|
+| Exporter le journal d'un personnage sans aucune entrée | Le CSV contient uniquement l'en-tête (aucune ligne de données) |
+| Ouvrir le CSV dans un éditeur de texte | Les cellules contenant des virgules, guillemets ou sauts de ligne sont correctement échappées |
+| Vérifier les colonnes xpDelta | Les valeurs numériques sont présentes (positives, négatives, ou zéro) |
+
+---
+
+## 13. Gap connu
 
 Les entrées `specialization.remove` ne peuvent pas être testées facilement via l'UI car la suppression d'une
 spécialisation n'est pas encore exposée dans l'interface.  
