@@ -151,6 +151,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
     context.jauges = this.buildJaugeDisplayData(a.system.resources)
     context.soak = this.#buildSoakDisplayData(a.system.characteristics.brawn)
     context.defenses = this.buildDefenseDisplayData()
+    context.sidebarHeader = { name: s.name, img: s.img }
 
     // Debug de préparation du contexte
     logger.debug(`[${this.constructor.name}] Context prepared:`, context)
