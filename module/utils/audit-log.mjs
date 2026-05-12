@@ -121,13 +121,31 @@ function isDeletionPath(path) {
   return path.includes('.-=')
 }
 
+function getDeletionParentPath(path) {
+  const segments = path.split('.')
+  const deletionIndex = segments.findIndex((segment) => segment.startsWith('-='))
+  if (deletionIndex <= 0) return null
+  return segments.slice(0, deletionIndex).join('.')
+}
+
 function snapshotOldState(source, changes) {
   const oldState = {}
   const flatChanges = _flattenObject(changes)
 
   for (const path of Object.keys(flatChanges)) {
     if (!path.startsWith('system.')) continue
-    if (isDeletionPath(path)) continue
+
+    if (isDeletionPath(path)) {
+      const parentPath = getDeletionParentPath(path)
+      if (!parentPath) continue
+
+      const parentValue = _getProperty(source, parentPath)
+      if (parentValue !== undefined) {
+        _setProperty(oldState, parentPath, cloneValue(parentValue))
+      }
+      continue
+    }
+
     const value = _getProperty(source, path)
     if (value !== undefined) {
       _setProperty(oldState, path, cloneValue(value))

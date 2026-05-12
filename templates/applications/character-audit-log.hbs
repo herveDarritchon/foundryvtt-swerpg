@@ -1,0 +1,43 @@
+<section class='swerpg application character-audit-log'>
+  <header class='audit-log__header'>
+    <div class='audit-log__title-block'>
+      <h2 class='audit-log__title'>{{document.name}}</h2>
+      <p class='audit-log__subtitle'>{{localize 'SWERPG.AUDIT_LOG.SUBTITLE'}}</p>
+    </div>
+
+    <div class='audit-log__filters' aria-label='{{localize "SWERPG.AUDIT_LOG.FILTER_ARIA"}}'>
+      {{#each filters as |filter|}}
+        <button
+          type='button'
+          class='audit-log__filter button framed {{filter.cssClass}}'
+          data-action='setFilter'
+          data-filter='{{filter.id}}'
+        >
+          {{filter.label}}
+        </button>
+      {{/each}}
+    </div>
+  </header>
+
+  {{#if hasEntries}}
+    <section class='audit-log__entries'>
+      {{#each entries as |entry|}}
+        <article class='audit-log-entry'>
+          <div class='audit-log-entry__meta'>
+            <span class='audit-log-entry__date'>{{entry.formattedTimestamp}}</span>
+            <span class='audit-log-entry__type'>{{entry.typeLabel}}</span>
+          </div>
+
+          <div class='audit-log-entry__body'>
+            <p class='audit-log-entry__description'>{{entry.description}}</p>
+            <span class='audit-log-entry__xp {{entry.xpDeltaClass}}'>{{entry.formattedXpDelta}}</span>
+          </div>
+        </article>
+      {{/each}}
+    </section>
+  {{else}}
+    <section class='audit-log__empty'>
+      <p>{{emptyLabel}}</p>
+    </section>
+  {{/if}}
+</section>
