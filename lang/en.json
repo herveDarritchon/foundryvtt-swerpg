@@ -655,6 +655,7 @@
   "RESOURCES": {
     "HEALTH": "Health",
     "WOUNDS": "Wounds",
+    "STRAIN": "Strain",
     "MORALE": "Morale",
     "MADNESS": "Madness",
     "ACTION": "Action",
