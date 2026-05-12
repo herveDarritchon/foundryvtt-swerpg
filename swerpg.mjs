@@ -110,6 +110,7 @@ Hooks.once('init', async function () {
     duty: models.SwerpgDuty,
     obligation: models.SwerpgObligation,
     specialization: models.SwerpgSpecialization,
+    'specialization-tree': models.SwerpgSpecializationTree,
     talent: models.SwerpgTalent,
     weapon: models.SwerpgWeapon,
   }
@@ -151,6 +152,11 @@ Hooks.once('init', async function () {
   foundry.documents.collections.Items.registerSheet(SYSTEM.id, applications.SpecializationSheet, {
     types: ['specialization'],
     label: 'SWERPG.SHEETS.Specialization',
+    makeDefault: true,
+  })
+  foundry.documents.collections.Items.registerSheet(SYSTEM.id, applications.SpecializationTreeSheet, {
+    types: ['specialization-tree'],
+    label: 'SWERPG.SHEETS.SpecializationTree',
     makeDefault: true,
   })
   foundry.documents.collections.Items.registerSheet(SYSTEM.id, applications.TalentSheet, {

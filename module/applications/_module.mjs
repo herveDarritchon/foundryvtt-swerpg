@@ -17,6 +17,7 @@ export { default as GearSheet } from './sheets/gear.mjs'
 export { default as CharacterSheet } from './sheets/character-sheet.mjs'
 export { default as SwerpgJournalSheet } from './sheets/journal.mjs'
 export { default as SkillPageSheet } from './sheets/skill.mjs'
+export { default as SpecializationTreeSheet } from './sheets/specialization-tree.mjs'
 export { default as TalentSheet } from './sheets/talent.mjs'
 export { default as WeaponSheet } from './sheets/weapon.mjs'
 
