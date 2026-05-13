@@ -11,7 +11,7 @@ vi.mock('../../module/utils/logger.mjs', () => ({
 
 import OggDudeDataElement from '../../module/settings/models/OggDudeDataElement.mjs'
 import { buildSpecializationTreeContext } from '../../module/importer/items/specialization-tree-ogg-dude.mjs'
-import { specializationTreeMapper } from '../../module/importer/mappers/oggdude-specialization-tree-mapper.mjs'
+import { extractDirectionalConnections, specializationTreeMapper } from '../../module/importer/mappers/oggdude-specialization-tree-mapper.mjs'
 import {
   getSpecializationTreeImportStats,
   resetSpecializationTreeImportStats,
@@ -118,6 +118,54 @@ describe('specializationTreeMapper', () => {
     expect(stats.missingCosts).toBe(1)
     expect(stats.incompleteTrees).toBe(1)
   })
+
+  it('maps specialization-tree connections from OggDude Directions', () => {
+    const input = [
+      {
+        Key: 'ADVISOR',
+        Name: 'Advisor',
+        TalentRows: {
+          TalentRow: [
+            {
+              Cost: '5',
+              Talents: { Key: ['PLAUSDEN', 'KNOWSOM', 'GRIT', 'KILL'] },
+              Directions: {
+                Direction: [
+                  { Right: 'true' },
+                  { Right: 'true', Down: 'true' },
+                  {},
+                  {},
+                ],
+              },
+            },
+            {
+              Cost: '10',
+              Talents: { Key: ['STIM', 'DEDICATION'] },
+              Directions: {
+                Direction: [{}, {}],
+              },
+            },
+            {
+              Cost: '15',
+              Talents: { Key: ['CONFUSE'] },
+              Directions: {
+                Direction: [{}],
+              },
+            },
+          ],
+        },
+      },
+    ]
+
+    const result = specializationTreeMapper(input)
+
+    expect(result).toHaveLength(1)
+    expect(result[0].system.nodes).toHaveLength(7)
+    expect(result[0].system.connections).toHaveLength(3)
+    expect(result[0].system.connections).toContainEqual({ from: 'r1c1', to: 'r1c2', type: 'horizontal' })
+    expect(result[0].system.connections).toContainEqual({ from: 'r1c2', to: 'r1c3', type: 'horizontal' })
+    expect(result[0].system.connections).toContainEqual({ from: 'r1c2', to: 'r2c2', type: 'vertical' })
+  })
 })
 
   it('maps nodes from real OggDude TalentRows/Talents/Key format', () => {
@@ -189,6 +237,84 @@ describe('specializationTreeMapper', () => {
     expect(result[0].system.nodes).toHaveLength(1)
     expect(result[0].system.nodes[0]).toMatchObject({ nodeId: 'r1c1', talentId: 'parry', cost: 5 })
   })
+
+describe('extractDirectionalConnections', () => {
+  it('produces a horizontal connection for Right direction', () => {
+    const nodes = [
+      { nodeId: 'r1c1', row: 1, column: 1, rawNode: { direction: { Right: 'true' } } },
+      { nodeId: 'r1c2', row: 1, column: 2, rawNode: { direction: null } },
+    ]
+    const result = extractDirectionalConnections(nodes)
+    expect(result.connections).toEqual([{ from: 'r1c1', to: 'r1c2', type: 'horizontal' }])
+    expect(result.warnings).toEqual([])
+  })
+
+  it('produces a vertical connection for Down direction', () => {
+    const nodes = [
+      { nodeId: 'r1c1', row: 1, column: 1, rawNode: { direction: { Down: 'true' } } },
+      { nodeId: 'r2c1', row: 2, column: 1, rawNode: { direction: null } },
+    ]
+    const result = extractDirectionalConnections(nodes)
+    expect(result.connections).toEqual([{ from: 'r1c1', to: 'r2c1', type: 'vertical' }])
+    expect(result.warnings).toEqual([])
+  })
+
+  it('handles both Right and Down on the same node', () => {
+    const nodes = [
+      { nodeId: 'r1c1', row: 1, column: 1, rawNode: { direction: { Right: 'true', Down: 'true' } } },
+      { nodeId: 'r1c2', row: 1, column: 2, rawNode: { direction: null } },
+      { nodeId: 'r2c1', row: 2, column: 1, rawNode: { direction: null } },
+    ]
+    const result = extractDirectionalConnections(nodes)
+    expect(result.connections).toHaveLength(2)
+    expect(result.connections).toContainEqual({ from: 'r1c1', to: 'r1c2', type: 'horizontal' })
+    expect(result.connections).toContainEqual({ from: 'r1c1', to: 'r2c1', type: 'vertical' })
+    expect(result.warnings).toEqual([])
+  })
+
+  it('ignores Left and Up directions', () => {
+    const nodes = [
+      { nodeId: 'r2c2', row: 2, column: 2, rawNode: { direction: { Left: 'true', Up: 'true' } } },
+    ]
+    const result = extractDirectionalConnections(nodes)
+    expect(result.connections).toEqual([])
+    expect(result.warnings).toEqual([])
+  })
+
+  it('returns empty connections when nodes have no directions', () => {
+    const nodes = [
+      { nodeId: 'r1c1', row: 1, column: 1, rawNode: { direction: null } },
+      { nodeId: 'r1c2', row: 1, column: 2, rawNode: { direction: null } },
+    ]
+    const result = extractDirectionalConnections(nodes)
+    expect(result.connections).toEqual([])
+    expect(result.warnings).toEqual([])
+  })
+
+  it('returns warning when Right target node is missing', () => {
+    const nodes = [
+      { nodeId: 'r1c1', row: 1, column: 1, rawNode: { direction: { Right: 'true' } } },
+    ]
+    const result = extractDirectionalConnections(nodes)
+    expect(result.connections).toEqual([])
+    expect(result.warnings).toContain('directional-target-missing:r1c1->r1c2 (Right)')
+  })
+
+  it('returns warning when Down target node is missing', () => {
+    const nodes = [
+      { nodeId: 'r1c1', row: 1, column: 1, rawNode: { direction: { Down: 'true' } } },
+    ]
+    const result = extractDirectionalConnections(nodes)
+    expect(result.connections).toEqual([])
+    expect(result.warnings).toContain('directional-target-missing:r1c1->r2c1 (Down)')
+  })
+
+  it('handles empty nodes array', () => {
+    const result = extractDirectionalConnections([])
+    expect(result.connections).toEqual([])
+    expect(result.warnings).toEqual([])
+  })
+})
 
 describe('buildSpecializationTreeContext', () => {
   beforeEach(() => {
