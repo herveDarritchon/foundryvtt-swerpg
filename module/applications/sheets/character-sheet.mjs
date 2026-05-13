@@ -243,6 +243,25 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
     },
   }
 
+  static #TALENT_SOURCE_STATE_MAPPING = {
+    'tree-unresolved': {
+      labelKey: 'SWERPG.TALENT.SOURCE_SPECIALIZATION_WITHOUT_TREE',
+      cssClass: 'talent-source--degraded',
+    },
+    'tree-incomplete': {
+      labelKey: 'SWERPG.TALENT.SOURCE_SPECIALIZATION_WITHOUT_TREE',
+      cssClass: 'talent-source--degraded',
+    },
+    'specialization-not-found': {
+      labelKey: 'SWERPG.TALENT.UNKNOWN_SOURCE',
+      cssClass: 'talent-source--degraded',
+    },
+    'node-missing': {
+      labelKey: 'SWERPG.TALENT.SOURCE_INCOMPLETE',
+      cssClass: 'talent-source--degraded',
+    },
+  }
+
   /**
    * Apply a preview object to the XP console DOM.
    * @param {{ statusKey: string, consoleCssClass: string, selectedCost: string, summaryText: string|null }} preview
@@ -926,7 +945,6 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
     const definitions = this.#buildTalentDefinitions()
     const summary = buildOwnedTalentSummary(this.actor, definitions)
     const unknownTalentLabel = game.i18n.localize('SWERPG.TALENT.UNKNOWN')
-    const unknownSourceLabel = game.i18n.localize('SWERPG.TALENT.UNKNOWN_SOURCE')
     const unspecifiedActivationLabel = game.i18n.localize('SWERPG.TALENT.UNSPECIFIED')
 
     return summary.map((entry) => {
@@ -945,12 +963,8 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
         tags.push({ label: game.i18n.localize('SWERPG.TALENT.NON_RANKED'), cssClass: 'tag-neutral' })
       }
 
-      const sourceLabels = Array.from(new Set(entry.sources.map((s) => {
-        if (s.resolutionState === 'ok') {
-          return s.specializationName || s.treeName || unknownSourceLabel
-        }
-        return unknownSourceLabel
-      })))
+      const sources = CharacterSheet.#buildTalentSourceEntries(entry.sources)
+      const sourceLabels = sources.map(({ label }) => label)
 
       const rankValue = entry.isRanked && entry.rank !== null ? entry.rank : null
       const displayName = entry.name || unknownTalentLabel
@@ -961,7 +975,9 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
         tags,
         isRanked: entry.isRanked,
         rank: rankValue,
+        sources,
         sourceLabels,
+        hasDegradedSources: sources.some((source) => source.isDegraded),
       }
     }).sort((left, right) => {
       const leftName = left.name || unknownTalentLabel
@@ -972,6 +988,52 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
 
       return left.talentId.localeCompare(right.talentId)
     })
+  }
+
+  /**
+   * Convert domain source resolution states into localized, template-ready entries.
+   * @param {Array<{ specializationName?: string|null, treeName?: string|null, resolutionState?: string }>} rawSources
+   * @returns {Array<{ label: string, cssClass: string, isDegraded: boolean }>}
+   */
+  static #buildTalentSourceEntries(rawSources = []) {
+    const entries = []
+    const seen = new Set()
+    const unknownSourceLabel = game.i18n.localize('SWERPG.TALENT.UNKNOWN_SOURCE')
+
+    for (const source of rawSources) {
+      const entry = CharacterSheet.#buildTalentSourceEntry(source, unknownSourceLabel)
+      const dedupeKey = `${entry.cssClass}:${entry.label}`
+      if (seen.has(dedupeKey)) continue
+
+      seen.add(dedupeKey)
+      entries.push(entry)
+    }
+
+    return entries
+  }
+
+  /**
+   * Build one display entry for a consolidated talent source.
+   * @param {{ specializationName?: string|null, treeName?: string|null, resolutionState?: string }} source
+   * @param {string} unknownSourceLabel
+   * @returns {{ label: string, cssClass: string, isDegraded: boolean }}
+   */
+  static #buildTalentSourceEntry(source, unknownSourceLabel) {
+    if (source?.resolutionState === 'ok') {
+      return {
+        label: source.specializationName || source.treeName || unknownSourceLabel,
+        cssClass: 'talent-source--resolved',
+        isDegraded: false,
+      }
+    }
+
+    const mapping = CharacterSheet.#TALENT_SOURCE_STATE_MAPPING[source?.resolutionState]
+
+    return {
+      label: mapping ? game.i18n.localize(mapping.labelKey) : unknownSourceLabel,
+      cssClass: mapping?.cssClass ?? 'talent-source--degraded',
+      isDegraded: true,
+    }
   }
 
   /**
