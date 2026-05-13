@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-vi.mock('../../module/utils/logger.mjs', () => ({
+vi.mock('../../../module/utils/logger.mjs', () => ({
   logger: {
     debug: vi.fn(),
     info: vi.fn(),
@@ -9,12 +9,12 @@ vi.mock('../../module/utils/logger.mjs', () => ({
   },
 }))
 
-import { logger } from '../../module/utils/logger.mjs'
+import { logger } from '../../../module/utils/logger.mjs'
 import {
   getSpecializationTreeResolutionState,
   resolveActorSpecializationTrees,
   resolveSpecializationTree,
-} from '../../module/utils/talent-tree-resolver.mjs'
+} from '../../../module/lib/talent-node/talent-tree-resolver.mjs'
 
 describe('talent-tree-resolver', () => {
   beforeEach(() => {

@@ -1,4 +1,4 @@
-import { logger } from './logger.mjs'
+import { logger } from '../../utils/logger.mjs'
 
 export const NODE_STATE = Object.freeze({
   PURCHASED: 'purchased',

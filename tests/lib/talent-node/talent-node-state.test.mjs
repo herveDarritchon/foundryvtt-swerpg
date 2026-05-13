@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-vi.mock('../../module/utils/logger.mjs', () => ({
+vi.mock('../../../module/utils/logger.mjs', () => ({
   logger: {
     debug: vi.fn(),
     info: vi.fn(),
@@ -9,13 +9,13 @@ vi.mock('../../module/utils/logger.mjs', () => ({
   },
 }))
 
-import { logger } from '../../module/utils/logger.mjs'
+import { logger } from '../../../module/utils/logger.mjs'
 import {
   getNodeState,
   getTreeNodesStates,
   NODE_STATE,
   REASON_CODE,
-} from '../../module/utils/talent-node-state.mjs'
+} from '../../../module/lib/talent-node/talent-node-state.mjs'
 
 function buildActor({ specializations, talentPurchases, experience } = {}) {
   return {

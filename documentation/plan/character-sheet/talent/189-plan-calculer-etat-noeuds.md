@@ -4,7 +4,7 @@
 **Epic** : [#184 — EPIC: Refonte V1 des talents Edge](https://github.com/herveDarritchon/foundryvtt-swerpg/issues/184)  
 **ADR** : `documentation/architecture/adr/adr-0004-vitest-testing-strategy.md`,
 `documentation/architecture/adr/adr-0012-unit-tests-readable-diagnostics.md`  
-**Module(s) impacté(s)** : `module/libs/talent-node-state.mjs` (création), `tests/utils/talent-node-state.test.mjs` (
+**Module(s) impacté(s)** : `module/libs/talent-node-state.mjs` (création), `tests/lib/talent-node/talent-node-state.test.mjs` (
 création)
 
 ---
@@ -102,13 +102,13 @@ commence à numéroter les row d'un tree à partir de 1.
 Options envisagées :
 
 - `module/lib/talents/` — réservé aux logiques legacy
-- extension de `module/libs/talent-tree-resolver.mjs` — mélangerait résolution et état
+- extension de `module/lib/talent-node/talent-tree-resolver.mjs` — mélangerait résolution et état
 
 **Décision retenue** : module dédié dans `module/libs/`.
 
 Justification :
 
-- Cohérent avec `module/libs/talent-tree-resolver.mjs`, déjà structuré comme logique réutilisable
+- Cohérent avec `module/lib/talent-node/talent-tree-resolver.mjs`, déjà structuré comme logique réutilisable
 - Évite de gonfler le resolver avec une responsabilité métier distincte
 - Garde une API pure, testable sans Foundry
 - Permet à US6 et aux vues graphiques de consommer la même API
@@ -322,7 +322,7 @@ Exemples de `details` :
 
 ### Étape 6 — Écrire la suite de tests Vitest
 
-**Quoi** : Créer `tests/utils/talent-node-state.test.mjs` avec des assertions ciblées conformes à ADR-0012.
+**Quoi** : Créer `tests/lib/talent-node/talent-node-state.test.mjs` avec des assertions ciblées conformes à ADR-0012.
 
 Cas minimaux à couvrir :
 
@@ -338,7 +338,7 @@ Cas minimaux à couvrir :
 - `invalid` pour spécialisation non possédée
 - robustesse sur acteur sans `talentPurchases` (tableau vide ou absent)
 
-**Fichiers** : `tests/utils/talent-node-state.test.mjs` (création)
+**Fichiers** : `tests/lib/talent-node/talent-node-state.test.mjs` (création)
 
 **Risques** :
 
@@ -371,7 +371,7 @@ Cette vérification répond au critère "aucune régression sur les anciennes lo
 | Fichier                                  | Action   | Description du changement                                                                              |
 |------------------------------------------|----------|--------------------------------------------------------------------------------------------------------|
 | `module/libs/talent-node-state.mjs`      | Création | Module domaine pur pour calculer l'état d'un nœud et retourner un résultat structuré                   |
-| `tests/utils/talent-node-state.test.mjs` | Création | Tests Vitest couvrant les quatre états, les raisons de blocage, les cas dégradés et l'isolation legacy |
+| `tests/lib/talent-node/talent-node-state.test.mjs` | Création | Tests Vitest couvrant les quatre états, les raisons de blocage, les cas dégradés et l'isolation legacy |
 
 ---
 
@@ -394,7 +394,7 @@ Cette vérification répond au critère "aucune régression sur les anciennes lo
 | Ordre | Message                                                               | Fichiers                                 |
 |-------|-----------------------------------------------------------------------|------------------------------------------|
 | 1     | `feat(domain): add pure talent node state evaluator`                  | `module/libs/talent-node-state.mjs`      |
-| 2     | `test(domain): cover talent node states, reasons, and degraded cases` | `tests/utils/talent-node-state.test.mjs` |
+| 2     | `test(domain): cover talent node states, reasons, and degraded cases` | `tests/lib/talent-node/talent-node-state.test.mjs` |
 
 Si un découpage plus fin est souhaité :
 
@@ -402,8 +402,8 @@ Si un découpage plus fin est souhaité :
 |-------|---------------------------------------------------------------------------------|------------------------------------------|
 | 1     | `feat(domain): add node validity guards and purchased state`                    | `module/libs/talent-node-state.mjs`      |
 | 2     | `feat(domain): add available/locked computation with XP check`                  | `module/libs/talent-node-state.mjs`      |
-| 3     | `test(domain): cover all node states and blocking reasons`                      | `tests/utils/talent-node-state.test.mjs` |
-| 4     | `test(domain): add degraded cases (incomplete trees, broken refs, empty actor)` | `tests/utils/talent-node-state.test.mjs` |
+| 3     | `test(domain): cover all node states and blocking reasons`                      | `tests/lib/talent-node/talent-node-state.test.mjs` |
+| 4     | `test(domain): add degraded cases (incomplete trees, broken refs, empty actor)` | `tests/lib/talent-node/talent-node-state.test.mjs` |
 
 ---
 
