@@ -3,6 +3,13 @@
   data-tab="{{tabs.talents.id}}"
   data-group="{{tabs.talents.group}}"
 >
+  <div class="talent-navigation">
+    <button type="button" class="talent-navigation__button" data-action="talentTree">
+      <i class="fa-solid fa-diagram-project" aria-hidden="true"></i>
+      <span>{{specializationTreeButtonLabel}}</span>
+    </button>
+  </div>
+
   {{#each talents as |talent|}}
     <article class="line-item talent-consolidated" data-talent-id="{{talent.talentId}}">
       <div class="talent-consolidated__header">

@@ -1108,6 +1108,7 @@
     "SOURCE_SPECIALIZATION_WITHOUT_TREE": "Spécialisation sans arbre disponible",
     "SOURCE_INCOMPLETE": "Source incomplète",
     "SOURCES": "Sources",
+    "VIEW_SPECIALIZATION_TREES": "Voir les arbres de spécialisation",
     "ACTIONS": {
       "ADD": "Add Action",
       "DELETE": "Delete Action",

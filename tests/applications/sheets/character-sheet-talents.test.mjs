@@ -78,6 +78,8 @@ describe('CharacterSheet talent consolidation (US12)', () => {
         points: {},
       },
       hasFreeSkillsAvailable: vi.fn(() => false),
+      openSpecializationTreeApp: vi.fn(),
+      closeSpecializationTreeApp: vi.fn(),
       ...overrides,
     }
     actor.toObject = () => JSON.parse(JSON.stringify(actor))
@@ -98,6 +100,15 @@ describe('CharacterSheet talent consolidation (US12)', () => {
     const context = await getContext(actor)
 
     expect(context.talents).toEqual([])
+  })
+
+  it('exposes a localized specialization tree CTA label in context', async () => {
+    buildOwnedTalentSummary.mockReturnValue([])
+    const actor = buildMockActor()
+
+    const context = await getContext(actor)
+
+    expect(context.specializationTreeButtonLabel).toBe('SWERPG.TALENT.VIEW_SPECIALIZATION_TREES')
   })
 
   it('builds consolidated talent entry with tags, rank, and source labels', async () => {
@@ -345,5 +356,24 @@ describe('CharacterSheet talent consolidation (US12)', () => {
     expect(context.talents.map((entry) => entry.talentId)).toEqual(['talent-degraded', 'talent-resolved'])
     expect(context.talents[0].sourceLabels).toEqual(['SWERPG.TALENT.SOURCE_SPECIALIZATION_WITHOUT_TREE'])
     expect(context.talents[1].sourceLabels).toEqual(['Bodyguard'])
+  })
+
+  it('opens the specialization tree app from the talents action handler', async () => {
+    const actor = buildMockActor()
+    const sheet = new CharacterSheet({ document: actor })
+    sheet.actor = actor
+    sheet.document = actor
+
+    const event = {
+      preventDefault: vi.fn(),
+      stopPropagation: vi.fn(),
+    }
+    const target = {
+      dataset: { action: 'talentTree' },
+    }
+
+    await sheet._onClickAction(event, target)
+
+    expect(actor.openSpecializationTreeApp, 'talentTree action should delegate to the actor bridge').toHaveBeenCalledTimes(1)
   })
 })
