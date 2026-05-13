@@ -1107,6 +1107,7 @@
     },
     "ACTIVE": "Active",
     "PASSIVE": "Passive",
+    "UNSPECIFIED": "Unspecified",
     "RANKED": "Ranked",
     "UNKNOWN": "Unknown Talent",
     "UNKNOWN_SOURCE": "Unknown Source",
@@ -1328,5 +1329,9 @@
   "MOTIVATION_CATEGORY": {
     "Sources": "Sources",
     "SourcesList": "List of Sources"
+  },
+  "TALENT_ACTIVATION": {
+    "Unspecified": "Unspecified",
+    "UnspecifiedAbbr": "Unsp."
   }
 }
