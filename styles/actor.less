@@ -1779,14 +1779,36 @@
         flex-wrap: wrap;
         gap: 0.25rem;
         min-width: 0;
+
+        &.has-degraded-sources .source-values {
+          row-gap: 0.35rem;
+        }
       }
 
       .source-values {
+        display: inline-flex;
+        align-items: baseline;
+        flex-wrap: wrap;
+        gap: 0.15rem;
         min-width: 0;
       }
 
       .source-name {
         color: #d0e6f6;
+        white-space: normal;
+
+        &.talent-source--resolved {
+          color: #d0e6f6;
+        }
+
+        &.talent-source--degraded {
+          color: #f0d4a0;
+          font-style: italic;
+        }
+      }
+
+      .source-separator {
+        color: #9bb0c2;
       }
     }
   }

@@ -22,11 +22,11 @@
           </div>
         {{/if}}
 
-        <div class="talent-sources">
+        <div class="talent-sources{{#if talent.hasDegradedSources}} has-degraded-sources{{/if}}">
           <span class="source-label">{{localize 'SWERPG.TALENT.SOURCES'}}:</span>
           <span class="source-values">
-            {{#each talent.sourceLabels as |source|}}
-              <span class="source-name">{{source}}{{#unless @last}}, {{/unless}}</span>
+            {{#each talent.sources as |source|}}
+              <span class="source-name {{source.cssClass}}">{{source.label}}</span>{{#unless @last}}<span class="source-separator">, </span>{{/unless}}
             {{/each}}
           </span>
         </div>

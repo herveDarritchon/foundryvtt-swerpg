@@ -124,6 +124,11 @@ describe('CharacterSheet talent consolidation (US12)', () => {
     expect(entry.isRanked).toBe(true)
     expect(entry.rank).toBe(2)
     expect(entry.sourceLabels).toEqual(['Bodyguard', 'Mercenary Soldier'])
+    expect(entry.sources).toEqual([
+      { label: 'Bodyguard', cssClass: 'talent-source--resolved', isDegraded: false },
+      { label: 'Mercenary Soldier', cssClass: 'talent-source--resolved', isDegraded: false },
+    ])
+    expect(entry.hasDegradedSources).toBe(false)
     expect(entry.tags).toEqual([
       { label: 'SWERPG.TALENT.ACTIVE', cssClass: 'tag-active' },
       { label: 'SWERPG.TALENT.RANKED', cssClass: 'tag-ranked' },
@@ -179,7 +184,7 @@ describe('CharacterSheet talent consolidation (US12)', () => {
     expect(entry.rank).toBeNull()
   })
 
-  it('uses unknown source label when resolution state is not ok', async () => {
+  it('maps unresolved tree state to specialization without available tree label', async () => {
     buildOwnedTalentSummary.mockReturnValue([
       {
         talentId: 'talent-parry',
@@ -196,7 +201,15 @@ describe('CharacterSheet talent consolidation (US12)', () => {
     const context = await getContext(actor)
 
     const entry = context.talents[0]
-    expect(entry.sourceLabels).toEqual(['SWERPG.TALENT.UNKNOWN_SOURCE'])
+    expect(entry.sourceLabels).toEqual(['SWERPG.TALENT.SOURCE_SPECIALIZATION_WITHOUT_TREE'])
+    expect(entry.sources).toEqual([
+      {
+        label: 'SWERPG.TALENT.SOURCE_SPECIALIZATION_WITHOUT_TREE',
+        cssClass: 'talent-source--degraded',
+        isDegraded: true,
+      },
+    ])
+    expect(entry.hasDegradedSources).toBe(true)
   })
 
   it('deduplicates same talentId into single entry with consolidated sources', async () => {
@@ -221,6 +234,51 @@ describe('CharacterSheet talent consolidation (US12)', () => {
     const entry = context.talents[0]
     expect(entry.sourceLabels).toHaveLength(2)
     expect(entry.sourceLabels).toEqual(['Bodyguard', 'Mercenary Soldier'])
+  })
+
+  it('keeps distinct degraded labels alongside resolved sources', async () => {
+    buildOwnedTalentSummary.mockReturnValue([
+      {
+        talentId: 'talent-parry',
+        name: 'Parry',
+        activation: 'active',
+        isRanked: true,
+        rank: 2,
+        sources: [
+          { specializationName: 'Bodyguard', resolutionState: 'ok' },
+          { specializationName: null, treeName: null, resolutionState: 'tree-incomplete' },
+          { specializationName: null, treeName: null, resolutionState: 'tree-unresolved' },
+        ],
+      },
+    ])
+
+    const actor = buildMockActor()
+    const context = await getContext(actor)
+
+    expect(context.talents[0].sourceLabels).toEqual([
+      'Bodyguard',
+      'SWERPG.TALENT.SOURCE_SPECIALIZATION_WITHOUT_TREE',
+    ])
+  })
+
+  it('maps missing node state to incomplete source label', async () => {
+    buildOwnedTalentSummary.mockReturnValue([
+      {
+        talentId: 'talent-parry',
+        name: 'Parry',
+        activation: 'active',
+        isRanked: true,
+        rank: 1,
+        sources: [
+          { specializationName: 'Bodyguard', treeName: 'Bodyguard Tree', resolutionState: 'node-missing' },
+        ],
+      },
+    ])
+
+    const actor = buildMockActor()
+    const context = await getContext(actor)
+
+    expect(context.talents[0].sourceLabels).toEqual(['SWERPG.TALENT.SOURCE_INCOMPLETE'])
   })
 
   it('sorts consolidated entries by display name then talent id', async () => {
@@ -259,5 +317,33 @@ describe('CharacterSheet talent consolidation (US12)', () => {
       'talent-alpha-b',
       'talent-zeta',
     ])
+  })
+
+  it('keeps rendering other talents when one entry has degraded sources', async () => {
+    buildOwnedTalentSummary.mockReturnValue([
+      {
+        talentId: 'talent-degraded',
+        name: 'Broken Source',
+        activation: 'passive',
+        isRanked: false,
+        rank: null,
+        sources: [{ specializationName: null, treeName: null, resolutionState: 'tree-unresolved' }],
+      },
+      {
+        talentId: 'talent-resolved',
+        name: 'Parry',
+        activation: 'active',
+        isRanked: true,
+        rank: 2,
+        sources: [{ specializationName: 'Bodyguard', resolutionState: 'ok' }],
+      },
+    ])
+
+    const actor = buildMockActor()
+    const context = await getContext(actor)
+
+    expect(context.talents.map((entry) => entry.talentId)).toEqual(['talent-degraded', 'talent-resolved'])
+    expect(context.talents[0].sourceLabels).toEqual(['SWERPG.TALENT.SOURCE_SPECIALIZATION_WITHOUT_TREE'])
+    expect(context.talents[1].sourceLabels).toEqual(['Bodyguard'])
   })
 })
