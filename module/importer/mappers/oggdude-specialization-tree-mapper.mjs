@@ -237,6 +237,42 @@ function dedupeConnections(connections) {
   return deduped
 }
 
+function extractDirectionalConnections(nodes) {
+  const connections = []
+  const warnings = []
+
+  if (!Array.isArray(nodes) || nodes.length === 0) {
+    return { connections, warnings }
+  }
+
+  for (const node of nodes) {
+    const direction = node.rawNode?.direction
+    if (!direction) continue
+
+    if (direction.Right === 'true' || direction.Right === true) {
+      const targetNodeId = `r${node.row}c${node.column + 1}`
+      const targetExists = nodes.some(n => n.nodeId === targetNodeId)
+      if (targetExists) {
+        connections.push({ from: node.nodeId, to: targetNodeId, type: 'horizontal' })
+      } else {
+        warnings.push(`directional-target-missing:${node.nodeId}->${targetNodeId} (Right)`)
+      }
+    }
+
+    if (direction.Down === 'true' || direction.Down === true) {
+      const targetNodeId = `r${node.row + 1}c${node.column}`
+      const targetExists = nodes.some(n => n.nodeId === targetNodeId)
+      if (targetExists) {
+        connections.push({ from: node.nodeId, to: targetNodeId, type: 'vertical' })
+      } else {
+        warnings.push(`directional-target-missing:${node.nodeId}->${targetNodeId} (Down)`)
+      }
+    }
+  }
+
+  return { connections, warnings }
+}
+
 export function specializationTreeMapper(specializations) {
   resetSpecializationTreeImportStats()
 
@@ -273,9 +309,12 @@ export function specializationTreeMapper(specializations) {
         const { normalizedNodes, warnings, rawCount } = normalizeNodes(xmlSpecialization, specializationId)
         const nodeMaps = buildNodeReferenceMaps(normalizedNodes)
 
+        const { connections: directionalConnections, warnings: directionalWarnings } = extractDirectionalConnections(normalizedNodes)
+        warnings.push(...directionalWarnings)
+
         const nodeConnections = normalizedNodes.flatMap((node) => extractNodeConnectionEntries(node.rawNode, node.nodeId, nodeMaps))
         const globalConnections = extractGlobalConnectionEntries(xmlSpecialization, nodeMaps)
-        const connections = dedupeConnections([...nodeConnections, ...globalConnections]).map((connection) => ({
+        const connections = dedupeConnections([...nodeConnections, ...globalConnections, ...directionalConnections]).map((connection) => ({
           ...(connection.type ? connection : { from: connection.from, to: connection.to }),
         }))
 
@@ -336,4 +375,4 @@ export function specializationTreeMapper(specializations) {
     .filter(Boolean)
 }
 
-export { getSpecializationTreeImportStats, resetSpecializationTreeImportStats }
+export { extractDirectionalConnections, getSpecializationTreeImportStats, resetSpecializationTreeImportStats }
