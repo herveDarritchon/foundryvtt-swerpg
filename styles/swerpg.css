@@ -2387,6 +2387,77 @@ input[type='range'] {
   flex: 0.5;
   justify-content: flex-end;
 }
+.swerpg.sheet.actor .tab.talents .talent-consolidated {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.35rem;
+  padding: 0.4rem 0.55rem;
+}
+.swerpg.sheet.actor .tab.talents .talent-consolidated .talent-consolidated__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.swerpg.sheet.actor .tab.talents .talent-consolidated .talent-consolidated__title-group {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  min-width: 0;
+}
+.swerpg.sheet.actor .tab.talents .talent-consolidated .talent-consolidated__name {
+  margin: 0;
+}
+.swerpg.sheet.actor .tab.talents .talent-consolidated .talent-consolidated__tag {
+  white-space: nowrap;
+}
+.swerpg.sheet.actor .tab.talents .talent-consolidated .talent-consolidated__details {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.75rem;
+  color: #d0e6f6;
+}
+.swerpg.sheet.actor .tab.talents .talent-consolidated .tag-neutral {
+  background: rgba(122, 138, 156, 0.25);
+  border: 1px solid rgba(155, 176, 194, 0.4);
+  color: #c2d5e5;
+}
+.swerpg.sheet.actor .tab.talents .talent-consolidated .tag-ranked {
+  background: rgba(201, 179, 106, 0.18);
+  border: 1px solid rgba(201, 179, 106, 0.35);
+  color: #e4d29d;
+}
+.swerpg.sheet.actor .tab.talents .talent-consolidated .talent-rank {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: var(--font-size-12);
+}
+.swerpg.sheet.actor .tab.talents .talent-consolidated .talent-rank__label,
+.swerpg.sheet.actor .tab.talents .talent-consolidated .source-label {
+  color: #9bb0c2;
+  font-weight: 600;
+}
+.swerpg.sheet.actor .tab.talents .talent-consolidated .talent-rank__value {
+  color: #f0e0a0;
+  font-weight: 700;
+}
+.swerpg.sheet.actor .tab.talents .talent-consolidated .talent-sources {
+  display: inline-flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  min-width: 0;
+}
+.swerpg.sheet.actor .tab.talents .talent-consolidated .source-values {
+  min-width: 0;
+}
+.swerpg.sheet.actor .tab.talents .talent-consolidated .source-name {
+  color: #d0e6f6;
+}
 .swerpg.sheet.actor .tab.skills.skills.skills {
   /* ----------------------------------------- */
   /*  Legacy Skill Container                    */

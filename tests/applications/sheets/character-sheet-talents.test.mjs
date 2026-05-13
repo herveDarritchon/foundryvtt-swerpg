@@ -19,7 +19,7 @@ vi.mock('../../../module/lib/talent-node/owned-talent-summary.mjs', () => ({
 
 import { buildOwnedTalentSummary } from '../../../module/lib/talent-node/owned-talent-summary.mjs'
 
-describe('CharacterSheet talent consolidation (US8)', () => {
+describe('CharacterSheet talent consolidation (US12)', () => {
   let CharacterSheet
   let SwerpgBaseActorSheet
 
@@ -126,7 +126,7 @@ describe('CharacterSheet talent consolidation (US8)', () => {
     expect(entry.sourceLabels).toEqual(['Bodyguard', 'Mercenary Soldier'])
     expect(entry.tags).toEqual([
       { label: 'SWERPG.TALENT.ACTIVE', cssClass: 'tag-active' },
-      { label: 'SWERPG.TALENT.RANKED' },
+      { label: 'SWERPG.TALENT.RANKED', cssClass: 'tag-ranked' },
     ])
   })
 
@@ -148,9 +148,10 @@ describe('CharacterSheet talent consolidation (US8)', () => {
 
     const entry = context.talents[0]
     expect(entry.isRanked).toBe(false)
-    expect(entry.rank).toBe('-')
+    expect(entry.rank).toBeNull()
     expect(entry.tags).toEqual([
       { label: 'SWERPG.TALENT.PASSIVE', cssClass: 'tag-passive' },
+      { label: 'SWERPG.TALENT.NON_RANKED', cssClass: 'tag-neutral' },
     ])
   })
 
@@ -172,8 +173,10 @@ describe('CharacterSheet talent consolidation (US8)', () => {
 
     const entry = context.talents[0]
     expect(entry.name).toBe('SWERPG.TALENT.UNKNOWN')
-    expect(entry.tags).toEqual([])
-    expect(entry.rank).toBe('-')
+    expect(entry.tags).toEqual([
+      { label: 'SWERPG.TALENT.UNSPECIFIED', cssClass: 'tag-neutral' },
+    ])
+    expect(entry.rank).toBeNull()
   })
 
   it('uses unknown source label when resolution state is not ok', async () => {
@@ -207,6 +210,7 @@ describe('CharacterSheet talent consolidation (US8)', () => {
         sources: [
           { specializationName: 'Bodyguard', resolutionState: 'ok' },
           { specializationName: 'Mercenary Soldier', resolutionState: 'ok' },
+          { specializationName: 'Bodyguard', resolutionState: 'ok' },
         ],
       },
     ])
@@ -217,5 +221,43 @@ describe('CharacterSheet talent consolidation (US8)', () => {
     const entry = context.talents[0]
     expect(entry.sourceLabels).toHaveLength(2)
     expect(entry.sourceLabels).toEqual(['Bodyguard', 'Mercenary Soldier'])
+  })
+
+  it('sorts consolidated entries by display name then talent id', async () => {
+    buildOwnedTalentSummary.mockReturnValue([
+      {
+        talentId: 'talent-zeta',
+        name: 'Zeta',
+        activation: 'passive',
+        isRanked: false,
+        rank: null,
+        sources: [{ specializationName: 'Bodyguard', resolutionState: 'ok' }],
+      },
+      {
+        talentId: 'talent-alpha-b',
+        name: 'Alpha',
+        activation: 'active',
+        isRanked: true,
+        rank: 1,
+        sources: [{ specializationName: 'Pilot', resolutionState: 'ok' }],
+      },
+      {
+        talentId: 'talent-alpha-a',
+        name: 'Alpha',
+        activation: 'passive',
+        isRanked: false,
+        rank: null,
+        sources: [{ specializationName: 'Explorer', resolutionState: 'ok' }],
+      },
+    ])
+
+    const actor = buildMockActor()
+    const context = await getContext(actor)
+
+    expect(context.talents.map((entry) => entry.talentId)).toEqual([
+      'talent-alpha-a',
+      'talent-alpha-b',
+      'talent-zeta',
+    ])
   })
 })
