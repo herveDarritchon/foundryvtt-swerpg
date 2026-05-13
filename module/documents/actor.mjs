@@ -595,10 +595,15 @@ export default class SwerpgActor extends TalentsMixin(EquipmentMixin(ResourcesMi
     this.updateCachedResources()
 
     // Refresh display of the active talent tree
-    const tree = game.system.tree
-    if (tree.actor === this) {
-      const talentChange = foundry.utils.hasProperty(data, 'system.advancement.level') || 'items' in data
-      if (talentChange) tree.refresh()
+    const talentChange = foundry.utils.hasProperty(data, 'system.advancement.level') || 'items' in data
+    if (talentChange) {
+      const dedicatedTreeApp = game.system.specializationTreeApp
+      if (dedicatedTreeApp?.actor === this && typeof dedicatedTreeApp.refresh === 'function') {
+        dedicatedTreeApp.refresh()
+      } else {
+        const legacyTree = game.system.tree
+        if (legacyTree?.actor === this) legacyTree.refresh()
+      }
     }
   }
 
@@ -607,8 +612,14 @@ export default class SwerpgActor extends TalentsMixin(EquipmentMixin(ResourcesMi
   /** @inheritdoc */
   _onCreateDescendantDocuments(...args) {
     super._onCreateDescendantDocuments(...args)
-    const tree = game.system.tree
-    if (tree.actor === this) tree.refresh()
+    const dedicatedTreeApp = game.system.specializationTreeApp
+    if (dedicatedTreeApp?.actor === this && typeof dedicatedTreeApp.refresh === 'function') {
+      dedicatedTreeApp.refresh()
+      return
+    }
+
+    const legacyTree = game.system.tree
+    if (legacyTree?.actor === this) legacyTree.refresh()
   }
 
   /* -------------------------------------------- */
@@ -616,8 +627,14 @@ export default class SwerpgActor extends TalentsMixin(EquipmentMixin(ResourcesMi
   /** @inheritdoc */
   _onDeleteDescendantDocuments(...args) {
     super._onDeleteDescendantDocuments(...args)
-    const tree = game.system.tree
-    if (tree.actor === this) tree.refresh()
+    const dedicatedTreeApp = game.system.specializationTreeApp
+    if (dedicatedTreeApp?.actor === this && typeof dedicatedTreeApp.refresh === 'function') {
+      dedicatedTreeApp.refresh()
+      return
+    }
+
+    const legacyTree = game.system.tree
+    if (legacyTree?.actor === this) legacyTree.refresh()
   }
 
   /* -------------------------------------------- */

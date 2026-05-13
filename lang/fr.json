@@ -1070,7 +1070,7 @@
       "RESISTANCES": "La Résistance et la Vulnérabilité choisies pour une Espèce ne peuvent pas être identiques."
     }
   },
-  "TALENT": {
+    "TALENT": {
     "FIELDS": {
       "node": {
         "label": "Talent Node",
@@ -1108,8 +1108,28 @@
     "SOURCE_SPECIALIZATION_WITHOUT_TREE": "Spécialisation sans arbre disponible",
     "SOURCE_INCOMPLETE": "Source incomplète",
     "SOURCES": "Sources",
-    "VIEW_SPECIALIZATION_TREES": "Voir les arbres de spécialisation",
-    "ACTIONS": {
+      "VIEW_SPECIALIZATION_TREES": "Voir les arbres de spécialisation",
+      "SPECIALIZATION_TREE_APP": {
+        "TITLE": "Arbres de spécialisation : {actor}",
+        "SUBTITLE": "Viewport graphique dédié aux arbres de spécialisation possédés.",
+        "UNKNOWN_ACTOR": "Acteur inconnu",
+        "UNKNOWN_SPECIALIZATION": "Spécialisation inconnue",
+        "VIEWPORT_ARIA_LABEL": "Viewport graphique des arbres de spécialisation",
+        "STATUS": {
+          "AVAILABLE": "Arbre disponible",
+          "UNRESOLVED": "Arbre non résolu",
+          "INCOMPLETE": "Arbre incomplet"
+        },
+        "EMPTY": {
+          "NO_ACTOR_TITLE": "Aucun acteur sélectionné",
+          "NO_ACTOR_DESCRIPTION": "Ouvrez cette application depuis une fiche personnage pour consulter les arbres de spécialisation possédés.",
+          "NO_SPECIALIZATIONS_TITLE": "Aucune spécialisation possédée",
+          "NO_SPECIALIZATIONS_DESCRIPTION": "Ce personnage ne possède actuellement aucune spécialisation à afficher.",
+          "NO_AVAILABLE_TREE_TITLE": "Aucun arbre de spécialisation disponible",
+          "NO_AVAILABLE_TREE_DESCRIPTION": "Les spécialisations possédées ont bien été trouvées, mais aucune ne se résout actuellement vers un arbre référentiel complet."
+        }
+      },
+      "ACTIONS": {
       "ADD": "Add Action",
       "DELETE": "Delete Action",
       "EDIT": "Edit Action",

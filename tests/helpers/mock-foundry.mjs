@@ -73,6 +73,21 @@ if (!globalThis.foundry) {
             return this
           }
         },
+        ApplicationV2: class ApplicationV2Early {
+          constructor(options = {}) {
+            this.options = options
+            this.rendered = false
+            this.element = null
+          }
+          async render() {
+            this.rendered = true
+            return this
+          }
+          async close() {
+            this.rendered = false
+            return this
+          }
+        },
         HandlebarsApplicationMixin: (base) => base,
       },
       // Instances registry consumed by ActionUseDialog.debounceChangeTarget
@@ -228,6 +243,21 @@ export function setupFoundryMock(options = {}) {
           }
           _processFormData(_event, _form, _formData) {
             return {}
+          }
+        },
+        ApplicationV2: class ApplicationV2Mock {
+          constructor(options = {}) {
+            this.options = options
+            this.element = null
+            this.rendered = false
+          }
+          async render() {
+            this.rendered = true
+            return this
+          }
+          async close() {
+            this.rendered = false
+            return this
           }
         },
         DialogV2: class DialogV2Mock {
