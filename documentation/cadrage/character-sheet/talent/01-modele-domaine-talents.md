@@ -60,6 +60,19 @@ Les éléments suivants sont recalculés à partir de cette source :
 
 L’onglet Talents et la vue graphique d’arbre ne sont pas des sources de vérité.
 
+### 2.3 Organisation modulaire
+
+Les traitements liés aux nœuds de talent sont regroupés dans `module/lib/talent-node/` :
+
+- `talent-tree-resolver.mjs` — résolution spécialisation possédée → arbre référentiel (US4)
+- `talent-node-state.mjs` — calcul d'état d'un nœud : `purchased`, `available`, `locked`, `invalid` (US5)
+
+Ces modules sont des modules domaine purs : ils ne dépendent pas de `game.i18n`, de l'UI Foundry ni du cycle de vie des documents. Ils importent uniquement le logger centralisé.
+
+Les tests correspondants sont dans `tests/lib/talent-node/` :
+- `tests/lib/talent-node/talent-tree-resolver.test.mjs`
+- `tests/lib/talent-node/talent-node-state.test.mjs`
+
 ---
 
 ## 3. Définition générique de talent
