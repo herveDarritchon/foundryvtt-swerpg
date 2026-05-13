@@ -117,7 +117,7 @@ describe('OggDudeTalentMapper', () => {
   })
 
   describe('transform', () => {
-    it('devrait transformer un contexte en données SwerpgTalent', () => {
+    it('devrait produire une définition générique sans coût XP ni nœud', () => {
       const context = {
         key: 'force_sensitive',
         name: 'Force Sensitive',
@@ -131,7 +131,6 @@ describe('OggDudeTalentMapper', () => {
         rank: { idx: 1, cost: 5 },
         tier: 1,
         prerequisites: {},
-        actions: [],
         custom: false,
       }
 
@@ -141,11 +140,20 @@ describe('OggDudeTalentMapper', () => {
       expect(result.type).toBe('talent')
       expect(result.system.activation).toBe('passive')
       expect(result.system.isRanked).toBe(false)
-      expect(result.system.rank.cost).toBe(5)
-      expect(result.system.importMeta.originalKey).toBe('force_sensitive')
+      expect(result.system.description).toContain('Force sensitive talent')
+      expect(result.flags.swerpg.oggdudeKey).toBe('force_sensitive')
+      expect(result.flags.swerpg.import).toBeDefined()
+      expect(result.flags.swerpg.import.source).toBe('Test Source')
+      expect(result.flags.swerpg.import.sourceText).toBe('Source: Core Rulebook p.100')
+
+      // Vérifier l'absence de champs legacy
+      expect(result.system.rank).toBeUndefined()
+      expect(result.system.importMeta).toBeUndefined()
+      expect(result.system.node).toBeUndefined()
+      expect(result.system.actions).toBeUndefined()
     })
 
-    it('devrait inclure les flags avec oggdudeKey et dieModifiers', () => {
+    it('devrait stocker dieModifiers dans flags.swerpg.import et enrichir la description', () => {
       const context = {
         key: 'secret_lore',
         name: 'Secret Lore',
@@ -164,25 +172,18 @@ describe('OggDudeTalentMapper', () => {
         rank: { idx: 1, cost: 5 },
         tier: 1,
         prerequisites: {},
-        actions: [],
         custom: false,
       }
 
       const result = OggDudeTalentMapper.transform(context)
 
-      // Vérifier les flags
-      expect(result.flags).toBeDefined()
-      expect(result.flags.swerpg).toBeDefined()
       expect(result.flags.swerpg.oggdudeKey).toBe('secret_lore')
-      expect(result.flags.swerpg.oggdude).toBeDefined()
-      expect(result.flags.swerpg.oggdude.dieModifiers).toHaveLength(1)
-      expect(result.flags.swerpg.oggdude.dieModifiers[0].skillKey).toBe('LORE')
-      expect(result.flags.swerpg.oggdude.dieModifiers[0].setbackCount).toBe(1)
+      expect(result.flags.swerpg.import.dieModifiers).toHaveLength(1)
+      expect(result.flags.swerpg.import.dieModifiers[0].skillKey).toBe('LORE')
+      expect(result.flags.swerpg.import.dieModifiers[0].setbackCount).toBe(1)
 
-      // Vérifier que isRanked est correct
       expect(result.system.isRanked).toBe(true)
 
-      // Vérifier que la description est enrichie
       expect(result.system.description).toContain('Please see page 33')
       expect(result.system.description).toContain('Source: Unlimited Power p.33')
       expect(result.system.description).toContain('Die Modifiers:')
@@ -203,38 +204,32 @@ describe('OggDudeTalentMapper', () => {
         rank: { idx: 1, cost: 5 },
         tier: 1,
         prerequisites: {},
-        actions: [],
         custom: false,
       }
 
       const result = OggDudeTalentMapper.transform(context)
 
-      expect(result.flags.swerpg.oggdude.dieModifiers).toEqual([])
+      expect(result.flags.swerpg.import.dieModifiers).toEqual([])
       expect(result.system.description).toContain('A simple talent')
       expect(result.system.description).toContain('Source: Core Rulebook p.50')
       expect(result.system.description).not.toContain('Die Modifiers:')
     })
 
-    it('devrait créer une action par défaut si aucune action fournie', () => {
+    it('devrait utiliser unspecified comme activation par défaut', () => {
       const context = {
         key: 'test_talent',
         name: 'Test Talent',
         description: 'Test description',
-        sourceText: '',
         dieModifiers: [],
         source: 'Test',
-        activation: 'passive',
-        node: null,
+        activation: undefined,
         isRanked: false,
-        rank: { idx: 1, cost: 5 },
         tier: 1,
         prerequisites: {},
-        actions: null,
-        custom: false,
       }
 
       const result = OggDudeTalentMapper.transform(context)
-      expect(result.system.actions).toHaveLength(1)
+      expect(result.system.activation).toBe('unspecified')
     })
   })
 

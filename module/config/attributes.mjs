@@ -835,6 +835,12 @@ export const DEFENSES = {
 /* -------------------------------------------- */
 
 export const TALENT_ACTIVATION = Object.freeze({
+  unspecified: {
+    id: 'unspecified',
+    label: 'TALENT_ACTIVATION.Unspecified',
+    abbreviation: 'TALENT_ACTIVATION.UnspecifiedAbbr',
+    color: Color.from('#888888'),
+  },
   passive: {
     id: 'passive',
     label: 'TALENT_ACTIVATION.Passive',
