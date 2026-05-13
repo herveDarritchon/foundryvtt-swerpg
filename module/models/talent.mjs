@@ -64,13 +64,13 @@ export default class SwerpgTalent extends foundry.abstract.TypeDataModel {
     const fields = foundry.data.fields
 
     return {
-      node: new fields.StringField({ required: true, blank: true, choices: () => SwerpgTalentNode.getChoices() }),
+      node: new fields.StringField({ required: false, blank: true, choices: () => SwerpgTalentNode.getChoices() }),
       trees: new fields.SetField(new fields.DocumentUUIDField({ type: 'Item' }), {
         validate: SwerpgTalent.#validateTrees,
       }),
       description: new fields.HTMLField({ required: false, initial: undefined }),
       isRanked: new fields.BooleanField({ required: false, initial: false }),
-      row: new fields.NumberField({ required: true, nullable: false, integer: true, initial: 1, min: 1, max: 5 }),
+      row: new fields.NumberField({ required: false, nullable: false, integer: true, initial: 1, min: 1, max: 5 }),
       rank: new fields.SchemaField({
         idx: new fields.NumberField({ required: true, blank: false, initial: 0 }),
         cost: new fields.NumberField({ required: true, blank: false, initial: 0 }),
@@ -243,6 +243,17 @@ export default class SwerpgTalent extends foundry.abstract.TypeDataModel {
           game.i18n.format('TALENT.WARNINGS.CannotAfford', {
             name: this.parent.name,
             cost: 1,
+          }),
+        )
+      else return false
+    }
+
+    // Generic definitions (no node) cannot be purchased
+    if (!this.node) {
+      if (strict)
+        throw new Error(
+          game.i18n.format('TALENT.WARNINGS.Inaccessible', {
+            name: this.parent.name,
           }),
         )
       else return false

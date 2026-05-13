@@ -1099,6 +1099,7 @@
     },
     "ACTIVE": "Actif",
     "PASSIVE": "Passif",
+    "UNSPECIFIED": "Non spécifié",
     "RANKED": "Ranked",
     "UNKNOWN": "Talent inconnu",
     "UNKNOWN_SOURCE": "Source inconnue",
@@ -1223,5 +1224,9 @@
     "NoItemsCollection": "Erreur de données du personnage : La collection d'objets est manquante.",
     "ItemNotFound": "Objet introuvable : L'objet sélectionné a peut-être été supprimé.",
     "UnexpectedError": "Une erreur inattendue s'est produite. Consultez la console pour plus de détails."
+  },
+  "TALENT_ACTIVATION": {
+    "Unspecified": "Non spécifié",
+    "UnspecifiedAbbr": "N.spéc."
   }
 }
