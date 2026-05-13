@@ -10,6 +10,7 @@ import { getCareerImportStats } from './career-import-utils.mjs'
 import { getTalentImportStats } from './talent-import-utils.mjs'
 import { getObligationImportStats } from './obligation-import-utils.mjs'
 import { getSpecializationImportStats } from './specialization-import-utils.mjs'
+import { getCombinedSpecializationImportStats, getSpecializationTreeImportStats } from './specialization-tree-import-utils.mjs'
 import { getDutyImportStats } from './duty-import-utils.mjs'
 
 // Runtime metrics (durations, sizes) – kept internal and exposed via aggregate function
@@ -74,7 +75,7 @@ export function getAllImportStats() {
   const career = safeCall(getCareerImportStats)
   const talent = safeCall(getTalentImportStats)
   const obligation = safeCall(getObligationImportStats)
-  const specialization = safeCall(getSpecializationImportStats)
+  const specialization = getCombinedSpecializationImportStats(safeCall(getSpecializationImportStats), safeCall(getSpecializationTreeImportStats))
   const duty = safeCall(getDutyImportStats)
 
   const totalProcessed = armor.total + weapon.total + gear.total + species.total + career.total + talent.total + obligation.total + specialization.total + duty.total

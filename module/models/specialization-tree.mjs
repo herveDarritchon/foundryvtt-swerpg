@@ -27,6 +27,7 @@ export default class SwerpgSpecializationTree extends foundry.abstract.TypeDataM
         new fields.SchemaField({
           from: new fields.StringField({ required: true, blank: false }),
           to: new fields.StringField({ required: true, blank: false }),
+          type: new fields.StringField({ required: false, blank: false, initial: undefined }),
         }),
         { required: false, initial: [] },
       ),
