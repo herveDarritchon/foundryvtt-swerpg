@@ -124,3 +124,10 @@ export function generateTalentKey(name) {
     .replace(/_+/g, '_')
     .replace(/^_|_$/g, '')
 }
+
+export function buildTalentImportDiagnostics(warnings = [], unresolved = false) {
+  const w = Array.isArray(warnings) ? [...warnings] : []
+  const u = Boolean(unresolved)
+  const status = u || w.length > 0 ? 'incomplete' : 'valid'
+  return { status, warnings: w, unresolved: u }
+}

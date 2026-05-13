@@ -4,7 +4,7 @@
  */
 
 import { logger } from '../../utils/logger.mjs'
-import { incrementTalentImportStat } from '../utils/talent-import-utils.mjs'
+import { buildTalentImportDiagnostics, incrementTalentImportStat } from '../utils/talent-import-utils.mjs'
 
 // Mappings spécialisés
 import { resolveTalentActivation } from '../mappings/oggdude-talent-activation-map.mjs'
@@ -101,6 +101,8 @@ export class OggDudeTalentMapper {
       // Clé unique du talent
       const key = this.generateTalentKey(talentData)
       const name = talentData.Name || talentData.TalentName || key
+      const rawActivation = talentData.Activation || talentData.ActivationType
+      const activation = resolveTalentActivation(rawActivation)
 
       // Construction du contexte avec toutes les transformations
       const context = {
@@ -113,7 +115,8 @@ export class OggDudeTalentMapper {
         custom: talentData.Custom === 'true' || talentData.IsCustom === 'true',
 
         // Données transformées
-        activation: resolveTalentActivation(talentData.Activation || talentData.ActivationType),
+        activation,
+        hasUnknownActivation: activation === 'unspecified' && typeof rawActivation === 'string' && rawActivation.trim() !== '',
         node: resolveTalentNode(talentData.NodeId || talentData.TalentNode, { name }),
         tier: extractTalentTier(talentData),
         isRanked: extractIsRanked(talentData),
@@ -251,6 +254,13 @@ export class OggDudeTalentMapper {
         incrementTalentImportStat('dieModifiers')
       }
 
+      const warnings = []
+      if (context.hasUnknownActivation) {
+        warnings.push('unknown-activation')
+      }
+
+      const diagnostics = buildTalentImportDiagnostics(warnings)
+
       const talentData = {
         name: context.name,
         type: 'talent',
@@ -263,11 +273,17 @@ export class OggDudeTalentMapper {
           swerpg: {
             oggdudeKey: context.key,
             import: {
+              ...diagnostics,
               source: context.source || 'OggDude Import',
               sourceText: context.sourceText || '',
               dieModifiers: context.dieModifiers || [],
               prerequisites: context.prerequisites || {},
               tier: context.tier || 1,
+              raw: {
+                key: context.key,
+                activation: context.originalData?.Activation || context.originalData?.ActivationType || undefined,
+                source: context.originalData?.Source || context.originalData?.SourceBook || undefined,
+              },
               importedAt: new Date().toISOString(),
             },
           },

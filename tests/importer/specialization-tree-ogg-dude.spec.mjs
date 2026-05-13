@@ -73,6 +73,13 @@ describe('specializationTreeMapper', () => {
     expect(result[0].system.connections).toEqual([{ from: 'r1c1', to: 'r2c1', type: 'vertical' }])
     expect(result[0].flags.swerpg.import.importedNodeCount).toBe(3)
     expect(result[0].flags.swerpg.import.importedConnectionCount).toBe(1)
+    expect(result[0].flags.swerpg.import.status).toBe('valid')
+    expect(result[0].flags.swerpg.import.raw).toEqual({
+      key: 'BODYGUARD',
+      careerKey: 'HIRED_GUN',
+      inputFormat: 'talent-rows-columns',
+      nodeCount: 3,
+    })
     expect(result[0].system.description).toContain('Source:')
     expect(stats.total).toBe(1)
     expect(stats.imported).toBe(1)
@@ -94,8 +101,14 @@ describe('specializationTreeMapper', () => {
     const stats = getSpecializationTreeImportStats()
 
     expect(item.system.nodes[0].talentId).toBe('unknown:bodyguard:r1c1')
+    expect(item.flags.swerpg.import.status).toBe('incomplete')
     expect(item.flags.swerpg.import.unresolved).toBe(true)
     expect(item.flags.swerpg.import.warnings).toContain('unresolved-talent:r1c1')
+    expect(item.flags.swerpg.import.raw).toMatchObject({
+      key: 'BODYGUARD',
+      inputFormat: 'talent-rows-columns',
+      nodeCount: 1,
+    })
     expect(stats.unresolvedTalents).toBe(1)
     expect(stats.imported).toBe(1)
   })
@@ -115,6 +128,7 @@ describe('specializationTreeMapper', () => {
     const stats = getSpecializationTreeImportStats()
 
     expect(item.system.nodes).toEqual([])
+    expect(item.flags.swerpg.import.status).toBe('invalid')
     expect(item.flags.swerpg.import.warnings).toEqual(expect.arrayContaining(['missing-cost:r1c1', 'tree-incomplete']))
     expect(stats.missingCosts).toBe(1)
     expect(stats.incompleteTrees).toBe(1)
@@ -166,6 +180,46 @@ describe('specializationTreeMapper', () => {
     expect(result[0].system.connections).toContainEqual({ from: 'r1c1', to: 'r1c2', type: 'horizontal' })
     expect(result[0].system.connections).toContainEqual({ from: 'r1c2', to: 'r1c3', type: 'horizontal' })
     expect(result[0].system.connections).toContainEqual({ from: 'r1c2', to: 'r2c2', type: 'vertical' })
+  })
+
+  it('marks trees with partially invalid connections as incomplete', () => {
+    const result = specializationTreeMapper([
+      {
+        Key: 'BODYGUARD',
+        Name: 'Bodyguard',
+        TalentRows: {
+          TalentRow: [
+            {
+              Index: '1',
+              TalentColumns: {
+                TalentColumn: [
+                  {
+                    Index: '1',
+                    TalentKey: 'PARRY',
+                    Cost: '5',
+                    Connections: {
+                      Connection: [
+                        { To: 'r2c1', Type: 'Vertical' },
+                        { To: 'missing-node', Type: 'Vertical' },
+                      ],
+                    },
+                  },
+                ],
+              },
+            },
+            {
+              Index: '2',
+              TalentColumns: {
+                TalentColumn: [{ Index: '1', TalentKey: 'TOUGHENED', Cost: '10' }],
+              },
+            },
+          ],
+        },
+      },
+    ])
+
+    expect(result[0].flags.swerpg.import.status).toBe('incomplete')
+    expect(result[0].flags.swerpg.import.warnings).toEqual(expect.arrayContaining(['invalid-connection:r1c1->missing-node']))
   })
 
   it('logs debug with detected format for talent-rows-keys', () => {

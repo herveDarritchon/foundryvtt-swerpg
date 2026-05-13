@@ -90,3 +90,16 @@ export function normalizeConnectionType(rawValue) {
 export function isResolvedNodeReference(nodeId) {
   return typeof nodeId === 'string' && /^r\d+c\d+$/i.test(nodeId)
 }
+
+export function buildTreeImportDiagnostics(warnings = [], unresolved = false, options = {}) {
+  const w = Array.isArray(warnings) ? [...warnings] : []
+  const u = Boolean(unresolved)
+  const hasNodes = options.hasNodes !== false
+  const hasConnections = options.hasConnections !== false
+
+  let status = 'valid'
+  if (!hasNodes) status = 'invalid'
+  else if (!hasConnections || w.length > 0 || u) status = 'incomplete'
+
+  return { status, warnings: w, unresolved: u }
+}
