@@ -1,4 +1,4 @@
-import { logger } from './logger.mjs'
+import { logger } from '../../utils/logger.mjs'
 
 /**
  * Determine whether a specialization tree is structurally usable.
