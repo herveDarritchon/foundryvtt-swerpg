@@ -14,6 +14,11 @@ const OGGDUDE_PACKS_BY_TYPE = {
     label: 'Specializations',
     folderGroup: 'actor-options',
   },
+  'specialization-tree': {
+    name: 'swerpg-specialization-trees',
+    label: 'Specialization Trees',
+    folderGroup: 'actor-options',
+  },
   obligation: {
     name: 'swerpg-obligations',
     label: 'Obligations',

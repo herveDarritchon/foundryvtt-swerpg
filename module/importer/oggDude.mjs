@@ -7,16 +7,50 @@ import { buildCareerContext } from './items/career-ogg-dude.mjs'
 import { buildTalentContext } from './items/talent-ogg-dude.mjs'
 import { buildObligationContext } from './items/obligation-ogg-dude.mjs'
 import { buildSpecializationContext } from './items/specialization-ogg-dude.mjs'
+import { buildSpecializationTreeContext, getSpecializationTreeImportStats } from './items/specialization-tree-ogg-dude.mjs'
 import { buildMotivationCategoryContext } from './items/motivation-category-ogg-dude.mjs'
 import { buildMotivationContext } from './items/motivation-ogg-dude.mjs'
 import { logger } from '../utils/logger.mjs'
 import { withRetry } from './utils/retry.mjs'
 import { markArchiveSize, markGlobalEnd, markGlobalStart, recordDomainEnd, recordDomainStart } from './utils/global-import-metrics.mjs'
 import { getSpecializationImportStats } from './utils/specialization-import-utils.mjs'
+import { getCombinedSpecializationImportStats } from './utils/specialization-tree-import-utils.mjs'
 import { getMotivationImportStats, getMotivationCategoryImportStats } from './utils/motivation-import-utils.mjs'
 import { buildDutyContext } from './items/duty-ogg-dude.mjs'
 import { getDutyImportStats } from './utils/duty-import-utils.mjs'
 import { resetFolderCache } from './utils/oggdude-import-folders.mjs'
+
+function buildContextRegistry() {
+  return new Map([
+    ['weapon', [{ type: 'weapon', contextBuilder: buildWeaponContext }]],
+    ['armor', [{ type: 'armor', contextBuilder: buildArmorContext }]],
+    ['gear', [{ type: 'gear', contextBuilder: buildGearContext }]],
+    ['species', [{ type: 'species', contextBuilder: buildSpeciesContext }]],
+    ['career', [{ type: 'career', contextBuilder: buildCareerContext }]],
+    ['talent', [{ type: 'talent', contextBuilder: buildTalentContext }]],
+    ['obligation', [{ type: 'obligation', contextBuilder: buildObligationContext }]],
+    [
+      'specialization',
+      [
+        { type: 'specialization', contextBuilder: buildSpecializationContext },
+        { type: 'specialization-tree', contextBuilder: buildSpecializationTreeContext },
+      ],
+    ],
+    ['motivation-category', [{ type: 'motivation-category', contextBuilder: buildMotivationCategoryContext }]],
+    ['motivation', [{ type: 'motivation', contextBuilder: buildMotivationContext }]],
+    ['duty', [{ type: 'duty', contextBuilder: buildDutyContext }]],
+  ])
+}
+
+function getDomainStatsPayload(domain) {
+  if (domain === 'specialization') {
+    return getCombinedSpecializationImportStats(getSpecializationImportStats(), getSpecializationTreeImportStats())
+  }
+  if (domain === 'motivation') return getMotivationImportStats()
+  if (domain === 'motivation-category') return getMotivationCategoryImportStats()
+  if (domain === 'duty') return getDutyImportStats()
+  return undefined
+}
 
 export default class OggDudeImporter {
   /**
@@ -191,18 +225,7 @@ export default class OggDudeImporter {
     logger.debug('[ProcessOggDudeData] - Step 3.2: Group By Type >', groupByType)
 
     /* --------------------------------------------- SPÉCIFIQUE ------------------------------------------------------------------- */
-    const buildContextMap = new Map()
-    buildContextMap.set('weapon', { type: 'weapon', contextBuilder: buildWeaponContext })
-    buildContextMap.set('armor', { type: 'armor', contextBuilder: buildArmorContext })
-    buildContextMap.set('gear', { type: 'gear', contextBuilder: buildGearContext })
-    buildContextMap.set('species', { type: 'species', contextBuilder: buildSpeciesContext })
-    buildContextMap.set('career', { type: 'career', contextBuilder: buildCareerContext })
-    buildContextMap.set('talent', { type: 'talent', contextBuilder: buildTalentContext })
-    buildContextMap.set('obligation', { type: 'obligation', contextBuilder: buildObligationContext })
-    buildContextMap.set('specialization', { type: 'specialization', contextBuilder: buildSpecializationContext })
-    buildContextMap.set('motivation-category', { type: 'motivation-category', contextBuilder: buildMotivationCategoryContext })
-    buildContextMap.set('motivation', { type: 'motivation', contextBuilder: buildMotivationContext })
-    buildContextMap.set('duty', { type: 'duty', contextBuilder: buildDutyContext })
+    const buildContextMap = buildContextRegistry()
 
     const domainsToImport = domains.filter((domain) => domain.checked).map((domain) => domain.id)
     const unsupportedDomains = domainsToImport.filter((id) => !buildContextMap.has(id))
@@ -213,7 +236,7 @@ export default class OggDudeImporter {
     }
     logger.debug('[ProcessOggDudeData] -Step 3.3: Domains to Import >', domainsToImport)
 
-    const contextEntries = domainsToImport.map((id) => buildContextMap.get(id)).filter(Boolean)
+    const contextEntries = domainsToImport.map((id) => ({ domain: id, pipelines: buildContextMap.get(id) })).filter((entry) => Array.isArray(entry.pipelines))
     const total = contextEntries.length
     let processed = 0
     const completedDomains = []
@@ -221,11 +244,11 @@ export default class OggDudeImporter {
     // Logs de diagnostic pour vérifier la configuration du pipeline
     logger.info('[ProcessOggDudeData] DIAGNOSTIC - Pipeline initialization', {
       contextEntriesCount: contextEntries.length,
-      contextEntriesTypes: contextEntries.map((e) => e.type),
+      contextEntriesTypes: contextEntries.map((e) => e.domain),
       domainsToImport,
       buildContextMapKeys: Array.from(buildContextMap.keys()),
       hasSpecialization: buildContextMap.has('specialization'),
-      specializationInEntries: contextEntries.some((e) => e.type === 'specialization'),
+      specializationInEntries: contextEntries.some((e) => e.domain === 'specialization'),
     })
 
     const emitProgress = (payload) => {
@@ -238,73 +261,72 @@ export default class OggDudeImporter {
     }
     emitProgress({ processed, phase: 'init' })
     for (const entry of contextEntries) {
-      recordDomainStart(entry.type)
-      emitProgress({ processed, domain: entry.type, phase: 'start' })
+      recordDomainStart(entry.domain)
+      emitProgress({ processed, domain: entry.domain, phase: 'start' })
       try {
-        const context = await withRetry(() => entry.contextBuilder(zip, groupByDirectory, groupByType), {
-          shouldRetry: (err) => /parse|XML|network/i.test(err?.message || ''),
-        })
-        const datasetSize = Array.isArray(context?.jsonData) ? context.jsonData.filter((el) => el != null).length : 0
+        let ranAtLeastOnePipeline = false
+        for (const pipeline of entry.pipelines) {
+          const context = await withRetry(() => pipeline.contextBuilder(zip, groupByDirectory, groupByType), {
+            shouldRetry: (err) => /parse|XML|network/i.test(err?.message || ''),
+          })
+          const datasetSize = Array.isArray(context?.jsonData) ? context.jsonData.filter((el) => el != null).length : 0
 
-        logger.info('[ProcessOggDudeData] Context créé', {
-          domain: entry.type,
-          datasetSize,
-          hasMapper: typeof context?.element?.mapper === 'function',
-          jsonDataSample: context?.jsonData?.slice(0, 2),
-        })
+          logger.info('[ProcessOggDudeData] Context créé', {
+            domain: entry.domain,
+            pipelineType: pipeline.type,
+            datasetSize,
+            hasMapper: typeof context?.element?.mapper === 'function',
+            jsonDataSample: context?.jsonData?.slice(0, 2),
+          })
 
-        logger.debug('[ProcessOggDudeData] - Step 3.4: Context >', { domain: entry.type, datasetSize })
-        if (datasetSize === 0 && entry.type === 'specialization') {
-          // Ne pas incrémenter rejected artificiellement: dataset réellement vide
-          logger.warn('[ProcessOggDudeData] Domaine specialization sans données, import ignoré')
+          logger.debug('[ProcessOggDudeData] - Step 3.4: Context >', { domain: entry.domain, pipelineType: pipeline.type, datasetSize })
+          if (datasetSize === 0) {
+            logger.warn('[ProcessOggDudeData] Domaine sans données, import ignoré', { domain: entry.domain, pipelineType: pipeline.type })
+            continue
+          }
+
+          logger.info('[ProcessOggDudeData] AVANT processElements', {
+            domain: entry.domain,
+            pipelineType: pipeline.type,
+            contextKeys: Object.keys(context || {}),
+            elementKeys: Object.keys(context?.element || {}),
+          })
+
+          await withRetry(() => OggDudeDataElement.processElements(context, { importToCompendium }), {
+            shouldRetry: (err) => /database|upload|parse/i.test(err?.message || ''),
+          })
+
+          ranAtLeastOnePipeline = true
+
+          logger.info('[ProcessOggDudeData] APRÈS processElements', {
+            domain: entry.domain,
+            pipelineType: pipeline.type,
+          })
+        }
+
+        if (!ranAtLeastOnePipeline) {
           emitProgress({
             processed,
-            domain: entry.type,
+            domain: entry.domain,
             phase: 'skipped',
             reason: 'empty-data',
-            domainStats: getSpecializationImportStats(),
+            domainStats: getDomainStatsPayload(entry.domain),
           })
           continue
         }
-        if (datasetSize === 0) {
-          logger.warn('[ProcessOggDudeData] Domaine sans données, import ignoré', { domain: entry.type })
-          emitProgress({ processed, domain: entry.type, phase: 'skipped', reason: 'empty-data' })
-          continue
-        }
 
-        logger.info('[ProcessOggDudeData] AVANT processElements', {
-          domain: entry.type,
-          contextKeys: Object.keys(context || {}),
-          elementKeys: Object.keys(context?.element || {}),
-        })
-
-        await withRetry(() => OggDudeDataElement.processElements(context, { importToCompendium }), {
-          shouldRetry: (err) => /database|upload|parse/i.test(err?.message || ''),
-        })
-
-        logger.info('[ProcessOggDudeData] APRÈS processElements', {
-          domain: entry.type,
-        })
         processed += 1
-        completedDomains.push(entry.type)
-        let domainStatsPayload
-        if (entry.type === 'specialization') {
-          const specStats = getSpecializationImportStats()
-          domainStatsPayload = specStats
-          logger.info('[SpecializationImporter] Statistiques après import', { stats: specStats })
-        } else if (entry.type === 'motivation') {
-          domainStatsPayload = getMotivationImportStats()
-        } else if (entry.type === 'motivation-category') {
-          domainStatsPayload = getMotivationCategoryImportStats()
-        } else if (entry.type === 'duty') {
-          domainStatsPayload = getDutyImportStats()
+        completedDomains.push(entry.domain)
+        const domainStatsPayload = getDomainStatsPayload(entry.domain)
+        if (entry.domain === 'specialization') {
+          logger.info('[SpecializationImporter] Statistiques après import', { stats: domainStatsPayload })
         }
-        emitProgress({ processed, domain: entry.type, phase: 'completed', domainStats: domainStatsPayload })
+        emitProgress({ processed, domain: entry.domain, phase: 'completed', domainStats: domainStatsPayload })
       } catch (error) {
-        logger.error('[ProcessOggDudeData] Échec import domaine', { domain: entry.type, error })
-        emitProgress({ processed, domain: entry.type, phase: 'error', error: error?.message })
+        logger.error('[ProcessOggDudeData] Échec import domaine', { domain: entry.domain, error })
+        emitProgress({ processed, domain: entry.domain, phase: 'error', error: error?.message })
       } finally {
-        recordDomainEnd(entry.type)
+        recordDomainEnd(entry.domain)
       }
     }
     Hooks.callAll('oggdudeImport.completed', { processed, total, domains: completedDomains })
@@ -328,26 +350,15 @@ export default class OggDudeImporter {
     const groupByType = OggDudeDataElement.groupByType(allDataElements)
 
     // Build context map
-    const buildContextMap = new Map()
-    buildContextMap.set('weapon', { type: 'weapon', contextBuilder: buildWeaponContext })
-    buildContextMap.set('gear', { type: 'gear', contextBuilder: buildGearContext })
-    buildContextMap.set('species', { type: 'species', contextBuilder: buildSpeciesContext })
-    buildContextMap.set('career', { type: 'career', contextBuilder: buildCareerContext })
-    buildContextMap.set('talent', { type: 'talent', contextBuilder: buildTalentContext })
-    buildContextMap.set('obligation', { type: 'obligation', contextBuilder: buildObligationContext })
-    buildContextMap.set('specialization', { type: 'specialization', contextBuilder: buildSpecializationContext })
-    buildContextMap.set('motivation', { type: 'motivation', contextBuilder: buildMotivationContext })
-    buildContextMap.set('duty', { type: 'duty', contextBuilder: buildDutyContext })
+    const buildContextMap = buildContextRegistry()
 
     const domainsToImport = new Set(domains.filter((d) => d.checked).map((d) => d.id))
-    const contextEntries = Array.from(buildContextMap.values()).filter((e) => domainsToImport.has(e.type))
+    const contextEntries = Array.from(buildContextMap.entries())
+      .filter(([domain]) => domainsToImport.has(domain))
+      .map(([domain, pipelines]) => ({ domain, pipelines }))
 
     const previews = {}
     for (const entry of contextEntries) {
-      const context = await entry.contextBuilder(zip, groupByDirectory, groupByType)
-      // Mapper uniquement, ne pas stocker
-      const items = OggDudeDataElement._buildItemElements(context.jsonData, context.element.mapper)
-      // Annoter existence (si environnement Foundry présent)
       const existingSet = new Set()
       try {
         const existing = globalThis.game?.items?.contents ?? []
@@ -357,11 +368,21 @@ export default class OggDudeImporter {
       } catch (e) {
         logger.debug('[OggDudeImporter] preload existence check skipped (no Foundry runtime)', { error: e })
       }
-      previews[entry.type] = items.map((it) => ({
-        ...it,
-        preview: true,
-        exists: existingSet.has(`${it.type}::${it.name}`),
-      }))
+
+      const previewItems = []
+      for (const pipeline of entry.pipelines) {
+        const context = await pipeline.contextBuilder(zip, groupByDirectory, groupByType)
+        const items = OggDudeDataElement._buildItemElements(context.jsonData, context.element.mapper)
+        previewItems.push(
+          ...items.map((it) => ({
+            ...it,
+            preview: true,
+            exists: existingSet.has(`${it.type}::${it.name}`),
+          })),
+        )
+      }
+
+      previews[entry.domain] = previewItems
     }
 
     return previews

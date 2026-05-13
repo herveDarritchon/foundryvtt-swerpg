@@ -101,13 +101,15 @@ describe('SwerpgSpecializationTree', () => {
       expect(field.config.initial).toBe(5)
     })
 
-    test('connections ArrayField wraps a SchemaField with from and to', () => {
+    test('connections ArrayField wraps a SchemaField with from, to, and optional type', () => {
       const connField = SwerpgSpecializationTree.defineSchema().connections.field
       expect(connField).toBeInstanceOf(foundry.data.fields.SchemaField)
       expect(connField.schema.from).toBeInstanceOf(foundry.data.fields.StringField)
       expect(connField.schema.from.config.required).toBe(true)
       expect(connField.schema.to).toBeInstanceOf(foundry.data.fields.StringField)
       expect(connField.schema.to.config.required).toBe(true)
+      expect(connField.schema.type).toBeInstanceOf(foundry.data.fields.StringField)
+      expect(connField.schema.type.config.required).toBe(false)
     })
 
     test('nodes and connections default to empty array', () => {
@@ -179,7 +181,7 @@ describe('SwerpgSpecializationTree', () => {
           { nodeId: 'r1c1', talentId: 'talent-slice-1', row: 1, column: 1, cost: 5 },
           { nodeId: 'r1c2', talentId: 'talent-slice-2', row: 1, column: 2, cost: 10 },
         ],
-        connections: [{ from: 'r1c1', to: 'r1c2' }],
+        connections: [{ from: 'r1c1', to: 'r1c2', type: 'horizontal' }],
       }
       const instance = new SwerpgSpecializationTree(data)
       expect(instance.specializationId).toBe('spec-slicer')
@@ -190,7 +192,7 @@ describe('SwerpgSpecializationTree', () => {
         { nodeId: 'r1c1', talentId: 'talent-slice-1', row: 1, column: 1, cost: 5 },
         { nodeId: 'r1c2', talentId: 'talent-slice-2', row: 1, column: 2, cost: 10 },
       ])
-      expect(instance.connections).toEqual([{ from: 'r1c1', to: 'r1c2' }])
+      expect(instance.connections).toEqual([{ from: 'r1c1', to: 'r1c2', type: 'horizontal' }])
     })
 
     test('creates instance with nodes without row/column/cost (backward compat)', () => {

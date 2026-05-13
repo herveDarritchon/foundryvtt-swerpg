@@ -11,6 +11,7 @@ const OGGDUDE_FOLDER_MAP = {
   talent: 'Talents',
   species: 'Species',
   specialization: 'Specializations',
+  'specialization-tree': 'Specialization Trees',
   obligation: 'Obligations',
   duty: 'Duties',
   motivation: 'Motivations',
@@ -32,6 +33,7 @@ const OGGDUDE_FOLDER_COLORS = {
   talent: '#ce93d8', // Violet clair (talents)
   species: '#2e7d32', // Vert forêt (espèces)
   specialization: '#8e24aa', // Violet médian (spécialisations)
+  'specialization-tree': '#7b1fa2', // Violet profond (arbres de spécialisation)
   obligation: '#ffb300', // Ambre soutenu (obligations)
   duty: '#ff8f00', // Ambre foncé (devoirs)
   motivation: '#ffd54f', // Jaune chaud (motivations)

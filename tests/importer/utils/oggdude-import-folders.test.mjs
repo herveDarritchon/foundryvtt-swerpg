@@ -88,6 +88,20 @@ describe('OggDude Import Folders Service', () => {
       expect(folder.id).toBe('existing-weapons')
     })
 
+    it('should resolve specialization-tree to Specialization Trees folder', async () => {
+      const config = getFolderConfiguration()
+
+      expect(config.domainMap).toHaveProperty('specialization-tree')
+      expect(config.domainMap['specialization-tree']).toBe('Specialization Trees')
+    })
+
+    it('should have a color defined for specialization-tree', () => {
+      const config = getFolderConfiguration()
+
+      expect(config.colorMap).toHaveProperty('specialization-tree')
+      expect(config.colorMap['specialization-tree']).toBe('#7b1fa2')
+    })
+
     it('should handle all known domains', async () => {
       const config = getFolderConfiguration()
       const domains = Object.keys(config.domainMap)
