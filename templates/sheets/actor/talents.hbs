@@ -4,23 +4,26 @@
   data-group="{{tabs.talents.group}}"
 >
 
-  {{#each talents as |talent s|}}
-    <div class="line-item {{talent.cssClass}}" data-item-id="{{talent.id}}" data-delete-action="deleteTalent" data-item-type="talent">
+  {{#each talents as |talent|}}
+    <div class="line-item talent-consolidated" data-talent-id="{{talent.talentId}}">
       <div class="title">
-        <img class="icon" src="{{talent.img}}" alt="{{talent.name}}" />
         <h4 class="item-header">{{talent.name}}</h4>
         <div class="tags">
-          {{#each talent.tags as |tag i|}}
-            <span class="tag {{tag.cssClass}}" data-tooltip="{{tag.tooltip}}">{{tag.label}}</span>
+          {{#each talent.tags as |tag|}}
+            <span class="tag {{tag.cssClass}}">{{tag.label}}</span>
           {{/each}}
         </div>
       </div>
-      <div class="value">{{talent.rank}}</div>
-      <div class="controls">
-        {{#unless talent.isFree}}
-          <a class="button icon fa-solid fa-trash" data-action="itemDelete" data-tooltip="Delete Talent"></a>
-        {{/unless}}
-        <a class="button icon fa-solid fa-edit" data-action="itemEdit" data-tooltip="Edit Talent"></a>
+      <div class="talent-rank">
+        {{#if talent.isRanked}}
+          {{talent.rank}}
+        {{/if}}
+      </div>
+      <div class="talent-sources">
+        <span class="source-label">{{localize 'SWERPG.TALENT.SOURCES'}}:</span>
+        {{#each talent.sourceLabels as |source i|}}
+          <span class="source-name">{{source}}{{#unless @last}}, {{/unless}}</span>
+        {{/each}}
       </div>
     </div>
   {{/each}}

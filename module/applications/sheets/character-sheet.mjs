@@ -5,6 +5,7 @@ import SkillFactory from '../../lib/skills/skill-factory.mjs'
 import ErrorSkill from '../../lib/skills/error-skill.mjs'
 import TalentFactory from '../../lib/talents/talent-factory.mjs'
 import ErrorTalent from '../../lib/talents/error-talent.mjs'
+import { buildOwnedTalentSummary } from '../../lib/talent-node/owned-talent-summary.mjs'
 import { logger } from '../../utils/logger.mjs'
 import { getPositiveDicePoolPreview } from '../../utils/skill-costs.mjs'
 import SkillCostCalculator from '../../lib/skills/skill-cost-calculator.mjs'
@@ -17,27 +18,6 @@ import SkillCostCalculator from '../../lib/skills/skill-cost-calculator.mjs'
  * @property {string} type - The type of defense, which is typically the same as `extraCss`.
  * @property {string} label - The label for the defense, typically the same as the type.
  * @property {number} value - The current value of the jauge.
- */
-
-/**
- * @typedef {Object} TalentTag
- * Represents a visual tag or label associated with a talent.
- *
- * @property {string} label - The visible label of the tag (e.g., "Active", "Ranked", "Combat").
- * @property {string} [cssClass] - Optional CSS class for styling the tag (e.g., "tag-active", "tag-passive").
- * @property {string} [tooltip] - Optional tooltip text for the tag.
- */
-
-/**
- * @typedef {Object} TalentDisplayData
- * Represents the data structure used to render a talent on the character sheet.
- *
- * @property {string} id - Unique ID of the Talent Item.
- * @property {string} name - Name of the talent.
- * @property {string} img - Image path used for the talent icon.
- * @property {string} [cssClass] - Optional CSS class applied to the container (e.g., "highlighted", "disabled").
- * @property {boolean} isFree - Indicates if the talent is free by any mean.
- * @property {TalentTag[]} tags - List of tags to display under the talent.
  */
 
 /**
@@ -149,7 +129,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
       i.creationTooltip += '</ol>'
     }
 
-    context.talents = this.#buildTalentList()
+    context.talents = this.#buildConsolidatedTalentList()
 
     context.obligations = this.#buildObligationList()
     context.obligationPoints = this.#computeObligationPoints(context.obligations)
@@ -919,87 +899,63 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
   }
 
   /**
-   * Builds the display-ready data for a talent item.
-   * @param {Item} item A Foundry VTT Item of type "talent".
-   * @returns {TalentDisplayData}
+   * Build a Map of talent definitions from world items for owned-talent-summary resolution.
+   * @returns {Map<string, {name: string, activation: string, isRanked: boolean}>}
    */
-  #buildTalentDisplayData(item) {
-    const tags = this.#buildTags(item)
-
-    return {
-      id: item.id,
-      name: item.name,
-      img: item.img,
-      isFree: item.system.isFree,
-      cssClass: item.system.disabled ? 'disabled' : '',
-      tags,
-      rank: '-',
+  #buildTalentDefinitions() {
+    const defs = new Map()
+    if (!game?.items?.find) return defs
+    for (const item of game.items) {
+      if (item.type === 'talent') {
+        defs.set(item.id, {
+          name: item.name,
+          activation: item.system?.activation,
+          isRanked: item.system?.isRanked,
+        })
+      }
     }
+    return defs
   }
 
   /**
-   * Builds the tags for a talent item.
-   * @param item {Item} - A Foundry VTT Item of type "talent".
-   * @returns {*[]} A list of tags to display under the talent.
+   * Build a consolidated talent list for the character sheet using OwnedTalentSummary.
+   * Groups by talentId, deduplicates, and enriches with definition metadata.
+   * @returns {object[]} Template-ready talent display entries.
    */
-  #buildTags(item) {
-    const tags = []
+  #buildConsolidatedTalentList() {
+    const definitions = this.#buildTalentDefinitions()
+    const summary = buildOwnedTalentSummary(this.actor, definitions)
 
-    if (item.system.activation === 'active') {
-      tags.push({ label: 'Active', cssClass: 'tag-active' })
-    } else {
-      tags.push({ label: 'Passive', cssClass: 'tag-passive' })
-    }
+    return summary.map((entry) => {
+      const tags = []
+      if (entry.activation === 'active') {
+        tags.push({ label: game.i18n.localize('SWERPG.TALENT.ACTIVE'), cssClass: 'tag-active' })
+      } else if (entry.activation === 'passive') {
+        tags.push({ label: game.i18n.localize('SWERPG.TALENT.PASSIVE'), cssClass: 'tag-passive' })
+      }
+      if (entry.isRanked) {
+        tags.push({ label: game.i18n.localize('SWERPG.TALENT.RANKED') })
+      }
 
-    if (item.system.isRanked) {
-      tags.push({ label: 'Ranked' })
-    }
+      const sourceLabels = entry.sources.map((s) => {
+        if (s.resolutionState === 'ok') {
+          return s.specializationName || s.treeName || game.i18n.localize('SWERPG.TALENT.UNKNOWN_SOURCE')
+        }
+        return game.i18n.localize('SWERPG.TALENT.UNKNOWN_SOURCE')
+      })
 
-    if (item.system.category) {
-      tags.push({ label: item.system.category })
-    }
-
-    if (item.system.isFree) {
-      tags.push({ label: 'Species', cssClass: 'tag-free', tooltip: 'Talent is free thanks to the Species' })
-    }
-    return tags
-  }
-
-  /**
-   * Builds a list of talents for the character sheet.
-   * @returns {TalentDisplayData[]}
-   */
-  #buildTalentList() {
-    const simpleTalents = this.actor.items.filter((item) => (item.type === 'talent') & !item.system.isRanked)
-    const rankedTalents = this.actor.items.filter((item) => item.type === 'talent' && item.system.isRanked)
-    const rankedTalentsData = this.#buildAggregateTalentDisplayData(rankedTalents)
-    const simpleTalentsData = simpleTalents.map((talent) => this.#buildTalentDisplayData(talent))
-
-    return simpleTalentsData.concat(rankedTalentsData)
-  }
-
-  #buildAggregateTalentDisplayData(talents) {
-    const groupedByName = talents.reduce((acc, talent) => {
-      const key = talent.name
-      if (!acc[key]) acc[key] = []
-      acc[key].push(talent)
-      return acc
-    }, {})
-    return Object.entries(groupedByName).map(([name, group], index) => {
-      // Trouver le talent avec le rank maximal
-      const maxRankTalent = group.reduce((a, b) => (a.idx > b.idx ? a : b))
-
-      // Exemple de génération de tags — à adapter à ton système
-      const tags = this.#buildTags(maxRankTalent) // ← Ajoute ici une logique si nécessaire
+      let rankValue = '-'
+      if (entry.isRanked && entry.rank !== null) {
+        rankValue = entry.rank
+      }
 
       return {
-        id: maxRankTalent.id,
-        name: maxRankTalent.name,
-        img: maxRankTalent.img,
-        isFree: maxRankTalent.system.isFree,
-        cssClass: maxRankTalent.system.disabled ? 'disabled' : '',
+        talentId: entry.talentId,
+        name: entry.name || game.i18n.localize('SWERPG.TALENT.UNKNOWN'),
         tags,
-        rank: maxRankTalent.system.rank.idx,
+        isRanked: entry.isRanked,
+        rank: rankValue,
+        sourceLabels,
       }
     })
   }
