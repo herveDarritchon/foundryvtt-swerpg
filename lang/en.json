@@ -1113,6 +1113,8 @@
     "RANK": "Rank",
     "UNKNOWN": "Unknown Talent",
     "UNKNOWN_SOURCE": "Unknown Source",
+    "SOURCE_SPECIALIZATION_WITHOUT_TREE": "Specialization without available tree",
+    "SOURCE_INCOMPLETE": "Incomplete source",
     "SOURCES": "Sources",
     "ACTIONS": {
       "ADD": "Add Action",

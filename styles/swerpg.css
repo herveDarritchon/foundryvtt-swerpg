@@ -2452,11 +2452,29 @@ input[type='range'] {
   gap: 0.25rem;
   min-width: 0;
 }
+.swerpg.sheet.actor .tab.talents .talent-consolidated .talent-sources.has-degraded-sources .source-values {
+  row-gap: 0.35rem;
+}
 .swerpg.sheet.actor .tab.talents .talent-consolidated .source-values {
+  display: inline-flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.15rem;
   min-width: 0;
 }
 .swerpg.sheet.actor .tab.talents .talent-consolidated .source-name {
   color: #d0e6f6;
+  white-space: normal;
+}
+.swerpg.sheet.actor .tab.talents .talent-consolidated .source-name.talent-source--resolved {
+  color: #d0e6f6;
+}
+.swerpg.sheet.actor .tab.talents .talent-consolidated .source-name.talent-source--degraded {
+  color: #f0d4a0;
+  font-style: italic;
+}
+.swerpg.sheet.actor .tab.talents .talent-consolidated .source-separator {
+  color: #9bb0c2;
 }
 .swerpg.sheet.actor .tab.skills.skills.skills {
   /* ----------------------------------------- */
