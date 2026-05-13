@@ -36,10 +36,10 @@ export const TALENT_ACTIVATION_MAP = Object.freeze({
   Reaction: 'reaction',
   REACTION: 'reaction',
 
-  // Fallback par défaut (vide ou undefined)
-  '': 'passive',
-  undefined: 'passive',
-  null: 'passive',
+  // Fallback par défaut (vide ou undefined) vers la valeur neutre
+  '': 'unspecified',
+  undefined: 'unspecified',
+  null: 'unspecified',
 })
 
 /**
@@ -69,7 +69,7 @@ export function resolveTalentActivation(oggDudeCode) {
     addTalentUnknownActivation(cleanCode)
   }
 
-  return 'passive' // Fallback sécurisé
+  return 'unspecified' // Valeur neutre pour code inconnu
 }
 
 /**

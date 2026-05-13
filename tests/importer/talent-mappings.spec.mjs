@@ -42,12 +42,12 @@ describe('Talent Mappings', () => {
       expect(resolveTalentActivation('PaSSiVe')).toBe('passive')
     })
 
-    it('devrait retourner passive pour les activations inconnues', () => {
-      expect(resolveTalentActivation('Unknown')).toBe('passive')
-      expect(resolveTalentActivation('Custom')).toBe('passive')
-      expect(resolveTalentActivation('')).toBe('passive')
-      expect(resolveTalentActivation(null)).toBe('passive')
-      expect(resolveTalentActivation(undefined)).toBe('passive')
+    it('devrait retourner unspecified pour les activations inconnues ou vides', () => {
+      expect(resolveTalentActivation('Unknown')).toBe('unspecified')
+      expect(resolveTalentActivation('Custom')).toBe('unspecified')
+      expect(resolveTalentActivation('')).toBe('unspecified')
+      expect(resolveTalentActivation(null)).toBe('unspecified')
+      expect(resolveTalentActivation(undefined)).toBe('unspecified')
     })
   })
 

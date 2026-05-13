@@ -11,7 +11,6 @@ import { resolveTalentActivation } from '../mappings/oggdude-talent-activation-m
 import { resolveTalentNode } from '../mappings/oggdude-talent-node-map.mjs'
 import { transformTalentPrerequisites, validateTalentPrerequisites } from '../mappings/oggdude-talent-prerequisite-map.mjs'
 import { extractIsRanked, extractTalentTier, transformTalentRank } from '../mappings/oggdude-talent-rank-map.mjs'
-import { createDefaultTalentAction, transformTalentActions, validateTalentActions } from '../mappings/oggdude-talent-actions-map.mjs'
 import { assembleTalentDescription, extractTalentDieModifiers, extractTalentSource } from '../mappings/oggdude-talent-diemodifiers-map.mjs'
 
 /**
@@ -130,9 +129,6 @@ export class OggDudeTalentMapper {
         // Relations
         prerequisites: transformTalentPrerequisites(talentData.Prerequisites || talentData.Prereqs),
 
-        // Actions (placeholder pour extension future)
-        actions: transformTalentActions(talentData.Actions, { talentName: name }),
-
         // Options d'import
         options,
       }
@@ -231,12 +227,6 @@ export class OggDudeTalentMapper {
       return false
     }
 
-    // Validation des actions
-    if (context.actions && !validateTalentActions(context.actions)) {
-      logger.warn(`[OggDudeTalentMapper] Invalid actions for talent: ${context.key}`)
-      return false
-    }
-
     return true
   }
 
@@ -250,7 +240,6 @@ export class OggDudeTalentMapper {
     try {
       logger.debug(`[OggDudeTalentMapper] Transforming talent: ${context.key}`)
 
-      // Assembler la description complète avec source et DieModifiers
       const enrichedDescription = assembleTalentDescription({
         baseDescription: context.description,
         source: context.sourceText,
@@ -258,57 +247,28 @@ export class OggDudeTalentMapper {
         maxLength: 2000,
       })
 
-      // Incrémenter stats si DieModifiers présents
       if (context.dieModifiers && context.dieModifiers.length > 0) {
         incrementTalentImportStat('dieModifiers')
       }
 
-      // Structure de données SwerpgTalent
       const talentData = {
         name: context.name,
         type: 'talent',
-
-        // Données système spécifiques
         system: {
-          // Node et relations
-          node: context.node,
-
-          // Activation
-          activation: context.activation || 'passive',
-
-          // Rang et coût
+          activation: context.activation || 'unspecified',
           isRanked: context.isRanked || false,
-          rank: context.rank || { idx: 1, cost: 5 },
-          tier: context.tier || 1,
-
-          // Textes - description enrichie
           description: enrichedDescription,
-          source: context.source || 'OggDude Import',
-
-          // Relations
-          requirements: context.prerequisites || {},
-
-          // Actions (tableau d'instances SwerpgAction)
-          actions: this.finalizeActions(context),
-
-          // Hooks d'acteur (vide par défaut)
-          actorHooks: {},
-
-          // Métadonnées d'import
-          importMeta: {
-            source: 'oggdude',
-            originalKey: context.key,
-            importedAt: new Date().toISOString(),
-            custom: context.custom || false,
-          },
         },
-
-        // Flags pour traçabilité et données structurées
         flags: {
           swerpg: {
             oggdudeKey: context.key,
-            oggdude: {
+            import: {
+              source: context.source || 'OggDude Import',
+              sourceText: context.sourceText || '',
               dieModifiers: context.dieModifiers || [],
+              prerequisites: context.prerequisites || {},
+              tier: context.tier || 1,
+              importedAt: new Date().toISOString(),
             },
           },
         },
@@ -325,35 +285,6 @@ export class OggDudeTalentMapper {
     }
   }
 
-  /**
-   * Finalise le tableau d'actions pour un talent
-   * @param {object} context - Contexte du talent
-   * @returns {Array} Tableau d'actions finalisées
-   * @private
-   */
-  static finalizeActions(context) {
-    let actions = context.actions || []
-
-    // Si aucune action spécifiée, créer une action par défaut
-    if (!actions || actions.length === 0) {
-      const defaultAction = createDefaultTalentAction({
-        name: context.name,
-        description: context.description,
-      })
-
-      if (defaultAction) {
-        actions = [defaultAction]
-      }
-    }
-
-    // Validation finale
-    if (!validateTalentActions(actions)) {
-      logger.warn(`[OggDudeTalentMapper] Actions validation failed for talent: ${context.key}`)
-      actions = []
-    }
-
-    return actions
-  }
 }
 
 // Export par défaut pour compatibilité
