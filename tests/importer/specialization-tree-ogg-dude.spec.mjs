@@ -9,6 +9,7 @@ vi.mock('../../module/utils/logger.mjs', () => ({
   },
 }))
 
+import { logger } from '../../module/utils/logger.mjs'
 import OggDudeDataElement from '../../module/settings/models/OggDudeDataElement.mjs'
 import { buildSpecializationTreeContext } from '../../module/importer/items/specialization-tree-ogg-dude.mjs'
 import { extractDirectionalConnections, specializationTreeMapper } from '../../module/importer/mappers/oggdude-specialization-tree-mapper.mjs'
@@ -165,6 +166,97 @@ describe('specializationTreeMapper', () => {
     expect(result[0].system.connections).toContainEqual({ from: 'r1c1', to: 'r1c2', type: 'horizontal' })
     expect(result[0].system.connections).toContainEqual({ from: 'r1c2', to: 'r1c3', type: 'horizontal' })
     expect(result[0].system.connections).toContainEqual({ from: 'r1c2', to: 'r2c2', type: 'vertical' })
+  })
+
+  it('logs debug with detected format for talent-rows-keys', () => {
+    const input = [
+      {
+        Key: 'ADVISOR',
+        Name: 'Advisor',
+        TalentRows: {
+          TalentRow: [
+            {
+              Cost: '5',
+              Talents: { Key: ['PLAUSDEN', 'KNOWSOM'] },
+            },
+          ],
+        },
+      },
+    ]
+
+    specializationTreeMapper(input)
+
+    expect(logger.debug).toHaveBeenCalledWith(
+      expect.stringContaining('Format détecté'),
+      expect.objectContaining({ specializationId: 'advisor', format: 'talent-rows-keys' }),
+    )
+  })
+
+  it('logs debug with mapping summary', () => {
+    const input = [
+      {
+        Key: 'ADVISOR',
+        Name: 'Advisor',
+        TalentRows: {
+          TalentRow: [
+            {
+              Cost: '5',
+              Talents: { Key: ['PLAUSDEN', 'KNOWSOM'] },
+            },
+          ],
+        },
+      },
+    ]
+
+    specializationTreeMapper(input)
+
+    expect(logger.debug).toHaveBeenCalledWith(
+      expect.stringContaining('Résumé du mapping'),
+      expect.objectContaining({
+        specializationId: 'advisor',
+        rawNodeCount: 2,
+        importedNodeCount: 2,
+        connectionCount: 0,
+      }),
+    )
+  })
+
+  it('logs warn for directional target missing', () => {
+    const input = [
+      {
+        Key: 'ADVISOR',
+        Name: 'Advisor',
+        TalentRows: {
+          TalentRow: [
+            {
+              Cost: '5',
+              Talents: { Key: ['PLAUSDEN'] },
+              Directions: {
+                Direction: [{ Right: 'true' }],
+              },
+            },
+          ],
+        },
+      },
+    ]
+
+    specializationTreeMapper(input)
+
+    expect(logger.warn).toHaveBeenCalledWith(
+      expect.stringContaining('directional-target-missing'),
+      expect.objectContaining({ specializationId: 'advisor' }),
+    )
+  })
+
+  it('logs warn for unknown format', () => {
+    const input = [{ Key: 'UNKNOWN', Name: 'Unknown Format' }]
+
+    specializationTreeMapper(input)
+
+    expect(logger.warn).toHaveBeenCalledWith(
+      expect.stringContaining('Format non reconnu'),
+      expect.objectContaining({ specializationId: 'unknown' }),
+    )
   })
 })
 

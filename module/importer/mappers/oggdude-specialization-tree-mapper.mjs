@@ -186,6 +186,39 @@ function extractRawNodeEntries(xmlSpecialization) {
   return extractNodesFromFlatList(xmlSpecialization)
 }
 
+function detectInputFormat(xmlSpecialization) {
+  const rows = asArray(xmlSpecialization?.TalentRows?.TalentRow)
+
+  if (rows.length > 0) {
+    let hasKeys = false
+    let hasColumns = false
+
+    for (const row of rows) {
+      if (row?.Talents?.Key) {
+        hasKeys = true
+        break
+      }
+      if (row?.TalentColumns?.TalentColumn) {
+        hasColumns = true
+      }
+    }
+
+    if (hasKeys) return 'talent-rows-keys'
+    if (hasColumns) return 'talent-rows-columns'
+    return 'talent-rows-unknown'
+  }
+
+  if (
+    xmlSpecialization?.Nodes?.Node ||
+    xmlSpecialization?.TalentNodes?.TalentNode ||
+    xmlSpecialization?.Tree?.Nodes?.Node
+  ) {
+    return 'flat-list'
+  }
+
+  return 'unknown'
+}
+
 function normalizeNodes(xmlSpecialization, specializationId) {
   const warnings = []
   const normalizedNodes = []
@@ -304,6 +337,9 @@ export function specializationTreeMapper(specializations) {
           return null
         }
 
+        const detectedFormat = detectInputFormat(xmlSpecialization)
+        logger.debug('[SpecializationTreeImporter] Format détecté', { specializationId, format: detectedFormat })
+
         const sourceInfo = resolveSource(xmlSpecialization)
         const description = buildDescription(readOptionalString(xmlSpecialization?.Description), sourceInfo)
         const { normalizedNodes, warnings, rawCount } = normalizeNodes(xmlSpecialization, specializationId)
@@ -311,12 +347,37 @@ export function specializationTreeMapper(specializations) {
 
         const { connections: directionalConnections, warnings: directionalWarnings } = extractDirectionalConnections(normalizedNodes)
         warnings.push(...directionalWarnings)
+        for (const warning of directionalWarnings) {
+          logger.warn(`[SpecializationTreeImporter] ${warning}`, { specializationId })
+        }
 
         const nodeConnections = normalizedNodes.flatMap((node) => extractNodeConnectionEntries(node.rawNode, node.nodeId, nodeMaps))
         const globalConnections = extractGlobalConnectionEntries(xmlSpecialization, nodeMaps)
         const connections = dedupeConnections([...nodeConnections, ...globalConnections, ...directionalConnections]).map((connection) => ({
           ...(connection.type ? connection : { from: connection.from, to: connection.to }),
         }))
+
+        logger.debug('[SpecializationTreeImporter] Résumé du mapping', {
+          specializationId,
+          rawNodeCount: rawCount,
+          importedNodeCount: normalizedNodes.length,
+          connectionCount: connections.length,
+        })
+
+        if (detectedFormat === 'unknown') {
+          logger.warn('[SpecializationTreeImporter] Format non reconnu', { specializationId })
+        }
+
+        if (detectedFormat === 'talent-rows-unknown') {
+          logger.warn('[SpecializationTreeImporter] Format rows sans nœuds identifiables', {
+            specializationId,
+            rowCount: asArray(xmlSpecialization?.TalentRows?.TalentRow).length,
+          })
+        }
+
+        if (normalizedNodes.length === 0 && rawCount > 0) {
+          logger.warn('[SpecializationTreeImporter] Toutes les entrées brutes rejetées', { specializationId, rawCount })
+        }
 
         if (normalizedNodes.length === 0 || connections.length === 0) {
           incrementSpecializationTreeImportStat('incompleteTrees')
