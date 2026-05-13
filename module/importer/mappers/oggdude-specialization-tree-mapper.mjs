@@ -5,6 +5,7 @@ import {
   addSpecializationTreeMissingCost,
   addSpecializationTreeRejectionReason,
   addSpecializationTreeUnresolvedTalent,
+  buildTreeImportDiagnostics,
   getSpecializationTreeImportStats,
   incrementSpecializationTreeImportStat,
   isResolvedNodeReference,
@@ -77,6 +78,7 @@ function resolveConnectionEndpoint(rawReference, maps) {
 
 function extractNodeConnectionEntries(rawNode, currentNodeId, maps) {
   const connections = []
+  const warnings = []
   const candidates = asArray(rawNode?.Connections?.Connection)
 
   for (const connection of candidates) {
@@ -84,6 +86,7 @@ function extractNodeConnectionEntries(rawNode, currentNodeId, maps) {
     const resolvedTo = resolveConnectionEndpoint(targetRef, maps)
     if (!resolvedTo) {
       addSpecializationTreeInvalidConnection(`${currentNodeId}->${targetRef || 'unknown'}`)
+      warnings.push(`invalid-connection:${currentNodeId}->${targetRef || 'unknown'}`)
       continue
     }
 
@@ -94,12 +97,13 @@ function extractNodeConnectionEntries(rawNode, currentNodeId, maps) {
     })
   }
 
-  return connections
+  return { connections, warnings }
 }
 
 function extractGlobalConnectionEntries(xmlSpecialization, maps) {
   const candidates = asArray(xmlSpecialization?.Connections?.Connection)
   const connections = []
+  const warnings = []
 
   for (const connection of candidates) {
     const fromRef = readFirstString(connection?.From, connection?.Source, connection?.FromNodeKey)
@@ -109,6 +113,7 @@ function extractGlobalConnectionEntries(xmlSpecialization, maps) {
 
     if (!from || !to) {
       addSpecializationTreeInvalidConnection(`${fromRef || 'unknown'}->${toRef || 'unknown'}`)
+      warnings.push(`invalid-connection:${fromRef || 'unknown'}->${toRef || 'unknown'}`)
       continue
     }
 
@@ -119,7 +124,7 @@ function extractGlobalConnectionEntries(xmlSpecialization, maps) {
     })
   }
 
-  return connections
+  return { connections, warnings }
 }
 
 function extractNodesFromRows(xmlSpecialization) {
@@ -351,9 +356,15 @@ export function specializationTreeMapper(specializations) {
           logger.warn(`[SpecializationTreeImporter] ${warning}`, { specializationId })
         }
 
-        const nodeConnections = normalizedNodes.flatMap((node) => extractNodeConnectionEntries(node.rawNode, node.nodeId, nodeMaps))
-        const globalConnections = extractGlobalConnectionEntries(xmlSpecialization, nodeMaps)
-        const connections = dedupeConnections([...nodeConnections, ...globalConnections, ...directionalConnections]).map((connection) => ({
+        const nodeConnectionResults = normalizedNodes.map((node) => extractNodeConnectionEntries(node.rawNode, node.nodeId, nodeMaps))
+        const globalConnectionResults = extractGlobalConnectionEntries(xmlSpecialization, nodeMaps)
+        const nodeConnections = nodeConnectionResults.flatMap((result) => result.connections)
+        const connectionWarnings = [
+          ...nodeConnectionResults.flatMap((result) => result.warnings),
+          ...globalConnectionResults.warnings,
+        ]
+        warnings.push(...connectionWarnings)
+        const connections = dedupeConnections([...nodeConnections, ...globalConnectionResults.connections, ...directionalConnections]).map((connection) => ({
           ...(connection.type ? connection : { from: connection.from, to: connection.to }),
         }))
 
@@ -384,6 +395,12 @@ export function specializationTreeMapper(specializations) {
           warnings.push('tree-incomplete')
         }
 
+        const unresolved = warnings.some((warning) => warning.startsWith('unresolved-talent'))
+        const diagnostics = buildTreeImportDiagnostics(warnings, unresolved, {
+          hasNodes: normalizedNodes.length > 0,
+          hasConnections: connections.length > 0,
+        })
+
         const rawCareerKey = readFirstString(
           xmlSpecialization?.CareerKey,
           xmlSpecialization?.CareerId,
@@ -411,13 +428,18 @@ export function specializationTreeMapper(specializations) {
             swerpg: {
               oggdudeKey: rawKey,
               import: {
+                ...diagnostics,
                 domain: 'specialization-tree',
                 source: sourceInfo.name || 'OggDude Import',
-                warnings,
+                raw: {
+                  key: rawKey,
+                  careerKey: rawCareerKey || undefined,
+                  inputFormat: detectedFormat,
+                  nodeCount: rawCount,
+                },
                 rawNodeCount: rawCount,
                 importedNodeCount: normalizedNodes.length,
                 importedConnectionCount: connections.length,
-                unresolved: warnings.some((warning) => warning.startsWith('unresolved-talent')),
               },
             },
           },

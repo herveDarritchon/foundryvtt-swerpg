@@ -15,6 +15,11 @@ vi.mock('../../module/utils/logger.mjs', () => ({
 }))
 
 vi.mock('../../module/importer/utils/talent-import-utils.mjs', () => ({
+  buildTalentImportDiagnostics: (warnings = [], unresolved = false) => ({
+    status: unresolved || warnings.length > 0 ? 'incomplete' : 'valid',
+    warnings,
+    unresolved,
+  }),
   incrementTalentImportStat: vi.fn(),
 }))
 
@@ -145,6 +150,13 @@ describe('OggDudeTalentMapper', () => {
       expect(result.flags.swerpg.import).toBeDefined()
       expect(result.flags.swerpg.import.source).toBe('Test Source')
       expect(result.flags.swerpg.import.sourceText).toBe('Source: Core Rulebook p.100')
+      expect(result.flags.swerpg.import.status).toBe('valid')
+      expect(result.flags.swerpg.import.warnings).toEqual([])
+      expect(result.flags.swerpg.import.raw).toEqual({
+        key: 'force_sensitive',
+        activation: undefined,
+        source: undefined,
+      })
 
       // Vérifier l'absence de champs legacy
       expect(result.system.rank).toBeUndefined()
@@ -181,6 +193,7 @@ describe('OggDudeTalentMapper', () => {
       expect(result.flags.swerpg.import.dieModifiers).toHaveLength(1)
       expect(result.flags.swerpg.import.dieModifiers[0].skillKey).toBe('LORE')
       expect(result.flags.swerpg.import.dieModifiers[0].setbackCount).toBe(1)
+      expect(result.flags.swerpg.import.status).toBe('valid')
 
       expect(result.system.isRanked).toBe(true)
 
@@ -230,6 +243,37 @@ describe('OggDudeTalentMapper', () => {
 
       const result = OggDudeTalentMapper.transform(context)
       expect(result.system.activation).toBe('unspecified')
+      expect(result.flags.swerpg.import.status).toBe('valid')
+      expect(result.flags.swerpg.import.warnings).toEqual([])
+    })
+
+    it('devrait exposer un warning quand l activation source est inconnue', () => {
+      const context = {
+        key: 'odd_talent',
+        name: 'Odd Talent',
+        description: 'Test description',
+        dieModifiers: [],
+        source: 'Test',
+        activation: 'unspecified',
+        hasUnknownActivation: true,
+        isRanked: false,
+        tier: 1,
+        prerequisites: {},
+        originalData: {
+          Activation: 'WeirdAction',
+          Source: 'Edge of the Empire',
+        },
+      }
+
+      const result = OggDudeTalentMapper.transform(context)
+
+      expect(result.flags.swerpg.import.status).toBe('incomplete')
+      expect(result.flags.swerpg.import.warnings).toEqual(['unknown-activation'])
+      expect(result.flags.swerpg.import.raw).toEqual({
+        key: 'odd_talent',
+        activation: 'WeirdAction',
+        source: 'Edge of the Empire',
+      })
     })
   })
 

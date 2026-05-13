@@ -256,6 +256,44 @@ describe('TalentNodeState', () => {
       expect(result.reasonCode).toBe(REASON_CODE.NODE_INVALID)
     })
 
+    it('returns invalid when node uses an unresolved unknown placeholder talent id', () => {
+      const actor = buildActor({ specializations: [{ specializationId: 'spec-1' }] })
+      const tree = buildTree({
+        specializationId: 'spec-1',
+        nodes: [{ nodeId: 'r1c1', talentId: 'unknown:spec-1:r1c1', row: 1, cost: 5 }],
+        connections: [{ from: 'r1c1', to: 'r2c1' }],
+      })
+
+      const result = getNodeState(actor, 'spec-1', tree, 'r1c1')
+
+      expect(result.state).toBe(NODE_STATE.INVALID)
+      expect(result.reasonCode).toBe(REASON_CODE.NODE_INVALID)
+    })
+
+    it('returns invalid when tree import flags mark the tree as incomplete', () => {
+      const actor = buildActor({ specializations: [{ specializationId: 'spec-1' }] })
+      const tree = {
+        ...buildTree({
+          specializationId: 'spec-1',
+          nodes: [buildNode()],
+          connections: [{ from: 'r1c1', to: 'r2c1' }],
+        }),
+        flags: {
+          swerpg: {
+            import: {
+              status: 'incomplete',
+              unresolved: true,
+            },
+          },
+        },
+      }
+
+      const result = getNodeState(actor, 'spec-1', tree, 'r1c1')
+
+      expect(result.state).toBe(NODE_STATE.INVALID)
+      expect(result.reasonCode).toBe(REASON_CODE.TREE_INCOMPLETE)
+    })
+
     it('handles actor without talentPurchases gracefully', () => {
       const actor = {
         system: {
