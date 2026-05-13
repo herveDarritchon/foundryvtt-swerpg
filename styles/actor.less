@@ -1704,6 +1704,91 @@
         justify-content: flex-end;
       }
     }
+
+    .talent-consolidated {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0.35rem;
+      padding: 0.4rem 0.55rem;
+
+      .talent-consolidated__header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 0.5rem;
+      }
+
+      .talent-consolidated__title-group {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 0.35rem;
+        min-width: 0;
+      }
+
+      .talent-consolidated__name {
+        margin: 0;
+      }
+
+      .talent-consolidated__tag {
+        white-space: nowrap;
+      }
+
+      .talent-consolidated__details {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 0.35rem 0.75rem;
+        color: #d0e6f6;
+      }
+
+      .tag-neutral {
+        background: rgba(122, 138, 156, 0.25);
+        border: 1px solid rgba(155, 176, 194, 0.4);
+        color: #c2d5e5;
+      }
+
+      .tag-ranked {
+        background: rgba(201, 179, 106, 0.18);
+        border: 1px solid rgba(201, 179, 106, 0.35);
+        color: #e4d29d;
+      }
+
+      .talent-rank {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        font-size: var(--font-size-12);
+      }
+
+      .talent-rank__label,
+      .source-label {
+        color: #9bb0c2;
+        font-weight: 600;
+      }
+
+      .talent-rank__value {
+        color: #f0e0a0;
+        font-weight: 700;
+      }
+
+      .talent-sources {
+        display: inline-flex;
+        align-items: baseline;
+        flex-wrap: wrap;
+        gap: 0.25rem;
+        min-width: 0;
+      }
+
+      .source-values {
+        min-width: 0;
+      }
+
+      .source-name {
+        color: #d0e6f6;
+      }
+    }
   }
 
   /* ----------------------------------------- */

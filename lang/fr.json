@@ -1101,6 +1101,8 @@
     "PASSIVE": "Passif",
     "UNSPECIFIED": "Non spécifié",
     "RANKED": "Ranked",
+    "NON_RANKED": "Non ranked",
+    "RANK": "Rang",
     "UNKNOWN": "Talent inconnu",
     "UNKNOWN_SOURCE": "Source inconnue",
     "SOURCES": "Sources",
