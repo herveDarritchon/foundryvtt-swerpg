@@ -1,0 +1,56 @@
+<section class='swerpg application specialization-tree-app'>
+  <header class='specialization-tree-app__header'>
+    <div class='specialization-tree-app__title-block'>
+      <h2 class='specialization-tree-app__title'>{{title}}</h2>
+      <p class='specialization-tree-app__subtitle'>{{subtitle}}</p>
+    </div>
+  </header>
+
+  {{#if hasActor}}
+    <section class='specialization-tree-app__layout'>
+      <aside class='specialization-tree-app__sidebar'>
+        {{#if hasSpecializations}}
+          <ul class='specialization-tree-app__specializations'>
+            {{#each specializations as |specialization|}}
+              <li class='specialization-tree-app__specialization {{#if specialization.isAvailable}}is-available{{else}}is-unavailable{{/if}}'>
+                <div class='specialization-tree-app__specialization-main'>
+                  <span class='specialization-tree-app__specialization-name'>{{specialization.name}}</span>
+                  <span class='specialization-tree-app__specialization-state'>{{specialization.stateLabel}}</span>
+                </div>
+
+                {{#if specialization.treeName}}
+                  <div class='specialization-tree-app__tree-name'>{{specialization.treeName}}</div>
+                {{/if}}
+              </li>
+            {{/each}}
+          </ul>
+        {{else}}
+          <div class='specialization-tree-app__sidebar-empty'>
+            <h3>{{emptyStateTitle}}</h3>
+            <p>{{emptyStateDescription}}</p>
+          </div>
+        {{/if}}
+      </aside>
+
+      <section class='specialization-tree-app__viewport-panel'>
+        {{#if showViewport}}
+          <div
+            class='specialization-tree-app__viewport'
+            data-specialization-tree-viewport
+            aria-label='{{viewportAriaLabel}}'
+          ></div>
+        {{else}}
+          <div class='specialization-tree-app__empty'>
+            <h3>{{emptyStateTitle}}</h3>
+            <p>{{emptyStateDescription}}</p>
+          </div>
+        {{/if}}
+      </section>
+    </section>
+  {{else}}
+    <section class='specialization-tree-app__empty'>
+      <h3>{{emptyStateTitle}}</h3>
+      <p>{{emptyStateDescription}}</p>
+    </section>
+  {{/if}}
+</section>

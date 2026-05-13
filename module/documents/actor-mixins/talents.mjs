@@ -30,8 +30,8 @@ export const TalentsMixin = (Base) =>
 
     /**
      * Resolve the active specialization-tree UI controller.
-     * Prefer a dedicated application bridge when available, otherwise fall back
-     * to the legacy canvas controller so the sheet remains usable until US15 lands.
+     * Prefer the dedicated application bridge for the V1 flow, while preserving a
+     * legacy canvas fallback until the old tree is fully retired.
      * @returns {{ isOpenForActor: (actor: object) => boolean, open: (actor: object, options?: object) => Promise<unknown>|unknown, close: () => Promise<unknown>|unknown }|null}
      */
     #getSpecializationTreeController() {
