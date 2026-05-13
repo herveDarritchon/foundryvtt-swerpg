@@ -19,6 +19,7 @@ import {
 function asArray(value) {
   if (Array.isArray(value)) return value.filter(Boolean)
   if (value && typeof value === 'object') return [value]
+  if (typeof value === 'string') return [value]
   return []
 }
 
@@ -127,8 +128,26 @@ function extractNodesFromRows(xmlSpecialization) {
 
   for (const [rowIndex, rawRow] of rows.entries()) {
     const row = parsePositiveInteger(rawRow?.Index ?? rawRow?.Row ?? rawRow?.Tier) ?? rowIndex + 1
-    const columns = asArray(rawRow?.TalentColumns?.TalentColumn)
 
+    const talentKeys = asArray(rawRow?.Talents?.Key)
+    if (talentKeys.length > 0) {
+      const directions = asArray(rawRow?.Directions?.Direction)
+      const cost = parseNonNegativeInteger(rawRow?.Cost)
+      for (const [columnIndex, rawTalentKey] of talentKeys.entries()) {
+        const column = columnIndex + 1
+        nodes.push({
+          rawNode: { rawTalentKey, direction: directions[columnIndex] || null },
+          row,
+          column,
+          rawNodeKey: `r${row}c${column}`,
+          talentId: normalizeSpecializationTreeId(readFirstString(rawTalentKey)),
+          cost,
+        })
+      }
+      continue
+    }
+
+    const columns = asArray(rawRow?.TalentColumns?.TalentColumn)
     for (const [columnIndex, rawColumn] of columns.entries()) {
       nodes.push({
         rawNode: rawColumn,
