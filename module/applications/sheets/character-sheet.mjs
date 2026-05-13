@@ -641,7 +641,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
         })
 
         // Evaluate the talent following the action processed
-        const talentEvaluated = talentClass.process()
+        const talentEvaluated = await talentClass.process()
 
         // Display a warning if the talent action is not valid
         if (talentEvaluated instanceof ErrorTalent) {
