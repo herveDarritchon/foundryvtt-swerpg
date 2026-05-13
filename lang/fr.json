@@ -1097,6 +1097,12 @@
         "hint": "This configuration tab involves advanced features for automating talent effects. Mis-configuring data on this tab can have serious consequences. Do not attempt to make changes here unless you are confident in your own knowledge."
       }
     },
+    "ACTIVE": "Actif",
+    "PASSIVE": "Passif",
+    "RANKED": "Ranked",
+    "UNKNOWN": "Talent inconnu",
+    "UNKNOWN_SOURCE": "Source inconnue",
+    "SOURCES": "Sources",
     "ACTIONS": {
       "ADD": "Add Action",
       "DELETE": "Delete Action",
