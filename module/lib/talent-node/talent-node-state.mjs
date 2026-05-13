@@ -51,6 +51,7 @@ function hasPurchase(actor, treeId, nodeId, talentId, specializationId) {
 function hasValidFields(node) {
   if (!node.nodeId || !node.talentId) return false
   if (node.row == null || node.cost == null) return false
+  if (typeof node.talentId === 'string' && node.talentId.startsWith('unknown:')) return false
   return true
 }
 
@@ -66,6 +67,12 @@ function missingFields(node) {
 function isCompleteTree(tree) {
   const nodes = tree?.system?.nodes
   const connections = tree?.system?.connections
+  const importFlags = tree?.flags?.swerpg?.import
+
+  if (importFlags?.unresolved || importFlags?.status === 'incomplete' || importFlags?.status === 'invalid') {
+    return false
+  }
+
   return Array.isArray(nodes) && nodes.length > 0
     && Array.isArray(connections) && connections.length > 0
 }

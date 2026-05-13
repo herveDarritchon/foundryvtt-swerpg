@@ -150,4 +150,23 @@ describe('talent-tree-resolver', () => {
       }),
     ).toBe('incomplete')
   })
+
+  it('returns incomplete for trees flagged as unresolved by import diagnostics', () => {
+    expect(
+      getSpecializationTreeResolutionState({
+        flags: {
+          swerpg: {
+            import: {
+              status: 'incomplete',
+              unresolved: true,
+            },
+          },
+        },
+        system: {
+          nodes: [{ nodeId: 'r1c1' }],
+          connections: [{ from: 'r1c1', to: 'r2c1' }],
+        },
+      }),
+    ).toBe('incomplete')
+  })
 })
