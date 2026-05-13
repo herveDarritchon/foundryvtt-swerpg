@@ -333,6 +333,9 @@ Hooks.once('setup', function () {
   // Initialize Talent tree data
   SwerpgTalentNode.initialize()
 
+  // Create the dedicated specialization tree application
+  game.system.specializationTreeApp = new applications.SpecializationTreeApp()
+
   // Create Talent Tree canvas
   game.system.tree = new SwerpgTalentTree()
 

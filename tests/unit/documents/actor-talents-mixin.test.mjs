@@ -272,6 +272,20 @@ describe('TalentsMixin', () => {
       expect(game.system.tree.open).not.toHaveBeenCalled()
     })
 
+    it('closes the dedicated specialization tree app only when it is open for this actor', async () => {
+      actor.type = 'character'
+      game.system.specializationTreeApp = {
+        actor,
+        open: vi.fn(),
+        close: vi.fn(),
+      }
+
+      await actor.closeSpecializationTreeApp()
+
+      expect(game.system.specializationTreeApp.close).toHaveBeenCalledTimes(1)
+      expect(game.system.tree.close).not.toHaveBeenCalled()
+    })
+
     it('falls back to the legacy tree when no dedicated app is available', async () => {
       actor.type = 'character'
       game.system.specializationTreeApp = null
