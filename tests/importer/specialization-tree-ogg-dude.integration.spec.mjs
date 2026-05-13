@@ -4,6 +4,8 @@ import path from 'node:path'
 import xml2jsModule from '../../vendors/xml2js.min.js'
 import { parseXmlToJson } from '../../module/utils/xml/parser.mjs'
 import { extractDirectionalConnections, specializationTreeMapper } from '../../module/importer/mappers/oggdude-specialization-tree-mapper.mjs'
+import { buildSpecializationTreeContext } from '../../module/importer/items/specialization-tree-ogg-dude.mjs'
+import OggDudeDataElement from '../../module/settings/models/OggDudeDataElement.mjs'
 import { resetSpecializationTreeImportStats } from '../../module/importer/utils/specialization-tree-import-utils.mjs'
 
 vi.mock('../../module/utils/logger.mjs', () => ({
@@ -207,6 +209,30 @@ describe('specializationTreeMapper — OggDude format réel (fixture XML)', () =
         expect.objectContaining({ specializationId: 'unknown' }),
       )
     })
+  })
+})
+
+describe('chaîne complète parseur → context builder → mapper', () => {
+  it('produit des nœuds et connexions non vides via buildSpecializationTreeContext', async () => {
+    const xml = await fs.readFile(fixturePath, 'utf-8')
+    const raw = await parseXmlToJson(xml)
+
+    vi.spyOn(OggDudeDataElement, 'buildJsonDataFromDirectory').mockResolvedValue([raw.Specialization])
+    const context = await buildSpecializationTreeContext({}, [], { xml: ['Advisor.xml'], image: [] })
+
+    expect(context.element.type).toBe('specialization-tree')
+    expect(context.element.mapper).toBe(specializationTreeMapper)
+    expect(context.jsonData).toHaveLength(1)
+    expect(context.jsonData[0].Key).toBe('ADVISOR')
+
+    const mapped = context.element.mapper(context.jsonData)
+
+    expect(mapped).toHaveLength(1)
+    expect(mapped[0].system.nodes.length).toBeGreaterThan(0)
+    expect(mapped[0].system.connections.length).toBeGreaterThan(0)
+    expect(mapped[0].flags.swerpg.import.rawNodeCount).toBe(20)
+    expect(mapped[0].flags.swerpg.import.importedNodeCount).toBe(20)
+    expect(mapped[0].flags.swerpg.import.importedConnectionCount).toBe(mapped[0].system.connections.length)
   })
 })
 
