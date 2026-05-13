@@ -961,6 +961,149 @@ input[type='range'] {
   }
 }
 /* ----------------------------------------- */
+/*  Specialization Tree Application          */
+/* ----------------------------------------- */
+.swerpg.application.specialization-tree-app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  background: linear-gradient(180deg, rgba(12, 18, 27, 0.96), rgba(7, 11, 18, 0.94));
+}
+.swerpg.application.specialization-tree-app .specialization-tree-app__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid rgba(120, 169, 194, 0.22);
+  background: linear-gradient(180deg, rgba(16, 25, 37, 0.92), rgba(10, 16, 26, 0.88));
+}
+.swerpg.application.specialization-tree-app .specialization-tree-app__title {
+  margin: 0;
+  color: #e8f3fb;
+  font-family: var(--font-h1);
+}
+.swerpg.application.specialization-tree-app .specialization-tree-app__subtitle {
+  margin: 0.2rem 0 0;
+  color: #9fc0d6;
+  font-size: var(--font-size-12);
+}
+.swerpg.application.specialization-tree-app .specialization-tree-app__layout {
+  display: grid;
+  grid-template-columns: minmax(240px, 300px) minmax(0, 1fr);
+  flex: 1;
+  min-height: 0;
+}
+.swerpg.application.specialization-tree-app .specialization-tree-app__sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-height: 0;
+  padding: 1rem;
+  border-right: 1px solid rgba(120, 169, 194, 0.18);
+  background: rgba(10, 17, 26, 0.72);
+  overflow-y: auto;
+}
+.swerpg.application.specialization-tree-app .specialization-tree-app__specializations {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.swerpg.application.specialization-tree-app .specialization-tree-app__specialization {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 0.75rem 0.85rem;
+  border: 1px solid rgba(120, 169, 194, 0.18);
+  border-radius: 8px;
+  background: rgba(18, 28, 42, 0.72);
+}
+.swerpg.application.specialization-tree-app .specialization-tree-app__specialization.is-available {
+  border-color: rgba(99, 200, 166, 0.38);
+  box-shadow: inset 0 0 0 1px rgba(99, 200, 166, 0.08);
+}
+.swerpg.application.specialization-tree-app .specialization-tree-app__specialization-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+.swerpg.application.specialization-tree-app .specialization-tree-app__specialization-name {
+  color: #eff8ff;
+  font-weight: 600;
+}
+.swerpg.application.specialization-tree-app .specialization-tree-app__specialization-state {
+  color: #9fc0d6;
+  font-size: var(--font-size-11);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.swerpg.application.specialization-tree-app .specialization-tree-app__tree-name {
+  color: #d3e6f5;
+  font-size: var(--font-size-12);
+}
+.swerpg.application.specialization-tree-app .specialization-tree-app__viewport-panel {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  padding: 1rem;
+}
+.swerpg.application.specialization-tree-app .specialization-tree-app__viewport,
+.swerpg.application.specialization-tree-app .specialization-tree-app__empty,
+.swerpg.application.specialization-tree-app .specialization-tree-app__sidebar-empty {
+  display: grid;
+  width: 100%;
+  min-height: 100%;
+  border: 1px solid rgba(120, 169, 194, 0.18);
+  border-radius: 10px;
+  background: radial-gradient(circle at top, rgba(24, 39, 58, 0.72), rgba(8, 13, 21, 0.94));
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+}
+.swerpg.application.specialization-tree-app .specialization-tree-app__viewport {
+  min-height: 420px;
+  overflow: hidden;
+}
+.swerpg.application.specialization-tree-app .specialization-tree-app__canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.swerpg.application.specialization-tree-app .specialization-tree-app__empty,
+.swerpg.application.specialization-tree-app .specialization-tree-app__sidebar-empty {
+  place-items: center;
+  padding: 1.5rem;
+  text-align: center;
+  color: #d5e4f1;
+}
+.swerpg.application.specialization-tree-app .specialization-tree-app__empty h3,
+.swerpg.application.specialization-tree-app .specialization-tree-app__sidebar-empty h3 {
+  margin: 0 0 0.4rem;
+  color: #eef8ff;
+  font-family: var(--font-h1);
+  font-size: var(--font-size-18);
+}
+.swerpg.application.specialization-tree-app .specialization-tree-app__empty p,
+.swerpg.application.specialization-tree-app .specialization-tree-app__sidebar-empty p {
+  max-width: 40rem;
+  margin: 0;
+  color: #9fc0d6;
+}
+@media (max-width: 768px) {
+  .swerpg.application.specialization-tree-app .specialization-tree-app__layout {
+    grid-template-columns: 1fr;
+  }
+  .swerpg.application.specialization-tree-app .specialization-tree-app__sidebar {
+    border-right: 0;
+    border-bottom: 1px solid rgba(120, 169, 194, 0.18);
+  }
+  .swerpg.application.specialization-tree-app .specialization-tree-app__viewport {
+    min-height: 320px;
+  }
+}
+/* ----------------------------------------- */
 /*  Animations                                */
 /* ----------------------------------------- */
 @keyframes fade-in-holo {
