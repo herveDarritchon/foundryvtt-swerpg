@@ -231,7 +231,7 @@ function readMaxLogEntries() {
 /*  Helpers exportés pour tests                 */
 /* -------------------------------------------- */
 
-export { isOnlyAuditChange, snapshotOldState, cloneValue, evictOldestIfNeeded, flushPending, countPendingEntries, getPendingKey, shiftPendingEntry, pushPendingEntry, isDeletionPath, writeLogEntries, handleWriteError, pruneExpiredPending, readMaxLogEntries, onCreateItem }
+export { isOnlyAuditChange, snapshotOldState, cloneValue, evictOldestIfNeeded, flushPending, countPendingEntries, getPendingKey, shiftPendingEntry, pushPendingEntry, isDeletionPath, writeLogEntries, handleWriteError, pruneExpiredPending, readMaxLogEntries, onCreateItem, recordTalentNodePurchase }
 
 /* -------------------------------------------- */
 /*  Handlers (exportés)                         */
@@ -300,6 +300,51 @@ function onCreateItem(item, data, options, userId) {
   })
 
   void writeLogEntries(item.parent, [entry])
+}
+
+/* -------------------------------------------- */
+/*  Talent node purchase audit bridge           */
+/* -------------------------------------------- */
+
+/**
+ * Record a talent node purchase in the audit log.
+ * Non-blocking: failures are caught internally without throwing.
+ * @param {object} actor - The actor document instance.
+ * @param {object} purchaseData
+ * @param {string} purchaseData.specializationId
+ * @param {string} purchaseData.treeId
+ * @param {string} purchaseData.nodeId
+ * @param {string} purchaseData.talentId
+ * @param {number} purchaseData.cost
+ * @param {number} [purchaseData.previousXp]
+ * @param {number} [purchaseData.nextXp]
+ */
+export async function recordTalentNodePurchase(actor, purchaseData) {
+  const ts = Date.now()
+  const snapshot = captureSnapshot(actor)
+  const user = game.users?.get(game.user?.id) ?? null
+
+  const entry = makeEntry({
+    type: 'talent-node-purchase',
+    data: {
+      actorId: actor.id,
+      specializationId: purchaseData.specializationId,
+      treeId: purchaseData.treeId,
+      nodeId: purchaseData.nodeId,
+      talentId: purchaseData.talentId,
+      cost: purchaseData.cost,
+      source: 'specialization-tree',
+      ...(purchaseData.previousXp !== undefined ? { previousXp: purchaseData.previousXp } : {}),
+      ...(purchaseData.nextXp !== undefined ? { nextXp: purchaseData.nextXp } : {}),
+    },
+    xpDelta: -purchaseData.cost,
+    ts,
+    userId: game.user?.id,
+    user,
+    snapshot,
+  })
+
+  await writeLogEntries(actor, [entry])
 }
 
 /* -------------------------------------------- */
