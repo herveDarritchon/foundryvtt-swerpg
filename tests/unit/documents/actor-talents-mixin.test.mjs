@@ -12,6 +12,7 @@ const mockTalentItems = new Map()
 // Setup minimal mocks
 globalThis.game = {
   system: {
+    specializationTreeApp: null,
     tree: {
       actor: null,
       open: vi.fn(),
@@ -152,6 +153,15 @@ describe('TalentsMixin', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     mockTalentItems.clear()
+
+    if (!game.system) game.system = {}
+    game.system.tree = {
+      actor: null,
+      open: vi.fn(),
+      close: vi.fn(),
+      refresh: vi.fn(),
+    }
+    game.system.specializationTreeApp = null
     actor = new TestActor({}, {})
     actor.itemTypes.talent = []
   })
@@ -162,6 +172,8 @@ describe('TalentsMixin', () => {
     })
 
     it('should have all required methods', () => {
+      expect(typeof actor.openSpecializationTreeApp).toBe('function')
+      expect(typeof actor.closeSpecializationTreeApp).toBe('function')
       expect(typeof actor.toggleTalentTree).toBe('function')
       expect(typeof actor.resetTalents).toBe('function')
       expect(typeof actor.syncTalents).toBe('function')
@@ -246,25 +258,60 @@ describe('TalentsMixin', () => {
   })
 
   describe('toggleTalentTree()', () => {
-    // TODO: Fix game.system.tree mocking issue
-    // The mocking of game.system.tree is not working properly with vi.stubGlobal
-    it.skip('should open tree for character type', () => {
+    it('opens the dedicated specialization tree app when available', async () => {
       actor.type = 'character'
-      game.system.tree.actor = null
-      actor.toggleTalentTree(true)
-      expect(game.system.tree.open).toHaveBeenCalledWith(actor)
+      game.system.specializationTreeApp = {
+        actor: null,
+        open: vi.fn(),
+        close: vi.fn(),
+      }
+
+      await actor.openSpecializationTreeApp({ resetView: false })
+
+      expect(game.system.specializationTreeApp.open).toHaveBeenCalledWith(actor, { resetView: false })
+      expect(game.system.tree.open).not.toHaveBeenCalled()
     })
 
-    it.skip('should close tree if already open for this actor', () => {
+    it('falls back to the legacy tree when no dedicated app is available', async () => {
+      actor.type = 'character'
+      game.system.specializationTreeApp = null
+
+      await actor.openSpecializationTreeApp()
+
+      expect(game.system.tree.open).toHaveBeenCalledWith(actor, {})
+    })
+
+    it('closes the legacy tree only when it is open for this actor', async () => {
       actor.type = 'character'
       game.system.tree.actor = actor
-      actor.toggleTalentTree(false)
-      expect(game.system.tree.close).toHaveBeenCalled()
+
+      await actor.closeSpecializationTreeApp()
+
+      expect(game.system.tree.close).toHaveBeenCalledTimes(1)
     })
 
-    it.skip('should not open tree for non-character type', () => {
+    it('delegates toggle close requests to the specialization tree bridge', async () => {
+      actor.type = 'character'
+      actor.closeSpecializationTreeApp = vi.fn()
+
+      await actor.toggleTalentTree(false)
+
+      expect(actor.closeSpecializationTreeApp).toHaveBeenCalledTimes(1)
+    })
+
+    it('delegates toggle open requests to the specialization tree bridge', async () => {
+      actor.type = 'character'
+      actor.openSpecializationTreeApp = vi.fn()
+
+      await actor.toggleTalentTree(true)
+
+      expect(actor.openSpecializationTreeApp).toHaveBeenCalledTimes(1)
+    })
+
+    it('does not open tree for non-character type', async () => {
       actor.type = 'adversary'
-      actor.toggleTalentTree(true)
+      await actor.openSpecializationTreeApp()
+
       expect(game.system.tree.open).not.toHaveBeenCalled()
     })
   })

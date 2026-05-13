@@ -1673,6 +1673,32 @@
   .tab.talents {
     gap: 0.25rem !important;
 
+    .talent-navigation {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 0.35rem;
+    }
+
+    .talent-navigation__button {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.45rem 0.75rem;
+      border: 1px solid fade(#78a9c2, 28%);
+      border-radius: 4px;
+      background: linear-gradient(90deg, fade(#1a1a2e, 82%), fade(#0f0f1a, 62%));
+      color: #d0e6f6;
+      font-size: var(--font-size-12);
+      line-height: 1.2;
+
+      &:hover,
+      &:focus-visible {
+        border-color: fade(#78a9c2, 55%);
+        color: #f0fbff;
+        box-shadow: 0 0 12px fade(#78a9c2, 16%);
+      }
+    }
+
     .header-section {
       margin-bottom: -1rem;
     }
