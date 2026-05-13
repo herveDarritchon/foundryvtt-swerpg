@@ -29,14 +29,73 @@ export const TalentsMixin = (Base) =>
     }
 
     /**
+     * Resolve the active specialization-tree UI controller.
+     * Prefer a dedicated application bridge when available, otherwise fall back
+     * to the legacy canvas controller so the sheet remains usable until US15 lands.
+     * @returns {{ isOpenForActor: (actor: object) => boolean, open: (actor: object, options?: object) => Promise<unknown>|unknown, close: () => Promise<unknown>|unknown }|null}
+     */
+    #getSpecializationTreeController() {
+      const dedicatedApp = game.system?.specializationTreeApp
+      if (dedicatedApp && typeof dedicatedApp.open === 'function' && typeof dedicatedApp.close === 'function') {
+        return {
+          isOpenForActor: (actor) => dedicatedApp.actor === actor,
+          open: (actor, options) => dedicatedApp.open(actor, options),
+          close: () => dedicatedApp.close(),
+        }
+      }
+
+      const legacyTree = game.system?.tree
+      if (legacyTree && typeof legacyTree.open === 'function' && typeof legacyTree.close === 'function') {
+        return {
+          isOpenForActor: (actor) => legacyTree.actor === actor,
+          open: (actor, options) => legacyTree.open(actor, options),
+          close: () => legacyTree.close(),
+        }
+      }
+
+      return null
+    }
+
+    /**
+     * Open the specialization tree UI for this actor.
+     * @param {object} [options] - UI options forwarded to the underlying controller.
+     * @returns {Promise<unknown>|unknown}
+     */
+    async openSpecializationTreeApp(options = {}) {
+      if (this.type !== SYSTEM.ACTOR_TYPE.character.type) return
+
+      const controller = this.#getSpecializationTreeController()
+      if (!controller) {
+        logger.warn('[TalentsMixin] No specialization tree controller is available', {
+          actorId: this.id,
+          actorType: this.type,
+        })
+        return
+      }
+
+      return controller.open(this, options)
+    }
+
+    /**
+     * Close the specialization tree UI when it is open for this actor.
+     * @returns {Promise<unknown>|unknown}
+     */
+    async closeSpecializationTreeApp() {
+      if (this.type !== SYSTEM.ACTOR_TYPE.character.type) return
+
+      const controller = this.#getSpecializationTreeController()
+      if (!controller?.isOpenForActor(this)) return
+
+      return controller.close()
+    }
+
+    /**
      * Toggle display of the Talent Tree.
      * @param {boolean} active - Whether to open or close the tree
      */
     async toggleTalentTree(active) {
-      if (this.type !== SYSTEM.ACTOR_TYPE.character.type) return
-      const tree = game.system.tree
-      if (tree.actor === this && active !== true) return game.system.tree.close()
-      else if (active !== false) return game.system.tree.open(this)
+      if (active === false) return this.closeSpecializationTreeApp()
+      return this.openSpecializationTreeApp()
     }
 
     /* -------------------------------------------- */

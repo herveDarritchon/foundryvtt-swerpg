@@ -98,7 +98,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
       specializationNames,
       specializationCount: specializations.length,
       specializationDisplayName: specializationNames.join(', ') || specializationFallback,
-      talentTreeButtonText: game.system.tree.actor === a ? 'Close Talent Tree' : 'Open Talent Tree',
+      specializationTreeButtonLabel: game.i18n.localize('SWERPG.TALENT.VIEW_SPECIALIZATION_TREES'),
       experience: a.system.progression?.experience,
       canViewAuditLog: canViewAuditLog(a),
     })
@@ -172,7 +172,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
   /** @override */
   async close(options) {
     await super.close(options)
-    await this.actor.toggleTalentTree(false)
+    await this.actor.closeSpecializationTreeApp()
   }
 
   /* -------------------------------------------- */
@@ -203,7 +203,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
       case 'skillRoll':
         return this.actor.rollSkill(target.closest('.skill').dataset.skill, { dialog: true })
       case 'talentTree':
-        return this.actor.toggleTalentTree()
+        return this.actor.openSpecializationTreeApp()
       // Case "talentReset":
       //   return this.actor.resetTalents();
     }
