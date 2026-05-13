@@ -16,7 +16,15 @@ L'existant se compose notamment :
 - d'un ancien canvas PIXI d'arbre de talents (`module/canvas/talent-tree.mjs`, `talent-tree-node.mjs`, `talent-choice-wheel.mjs`, etc.) conçu pour un arbre global, sans notion de spécialisation Edge ;
 - de logiques d'achat éparpillées entre `module/models/talent.mjs`, `actor-mixins/talents.mjs` et `module/lib/talents/*.mjs` ;
 - d'incohérences métier : coût hardcodé, logique `isCreation`, mélange XP / talent points ;
-- d'un import OggDude partiellement amorcé, mais pas encore aligné sur un modèle exploitable pour l’UI, les arbres et la progression.
+- d'un import OggDude désormais réaligné sur le format réel des arbres de spécialisation (`TalentRows.TalentRow.Talents.Key` + `Directions.Direction`) pour la couche référentielle, mais encore à exploiter complètement par la V1 côté UI, progression acteur et validation Foundry de bout en bout.
+
+Le bug historique d’arbres de spécialisation importés vides a été corrigé dans l’epic technique dédié `#217`.
+
+Cause racine identifiée :
+
+- le mapper cherchait les nœuds dans le chemin legacy `TalentRows.TalentRow.TalentColumns.TalentColumn` ;
+- le XML OggDude réel encode les arbres via `TalentRows.TalentRow.Talents.Key` pour les nœuds et `Directions.Direction` pour les connexions ;
+- conséquence : import de référentiels `specialization-tree` avec `system.nodes = []` et `system.connections = []`.
 
 La V1 Talents Edge doit repartir du besoin Edge, pas adapter la logique fonctionnelle Crucible.
 

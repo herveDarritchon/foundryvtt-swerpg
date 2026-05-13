@@ -169,6 +169,10 @@ Ordre conseillé :
 
 ## 5. Lot 3 — Import OggDude minimal
 
+Note de suivi : le bug historique d’arbres de spécialisation OggDude importés vides a été traité dans l’epic dédié `#217` via les issues `#218` à `#222`.
+
+Cause racine documentée : le mapper lisait le chemin legacy `TalentColumns.TalentColumn`, alors que le format Edge réel utilise `Talents.Key` pour les nœuds et `Directions.Direction` pour les connexions.
+
 ### US 9 — Importer les définitions génériques de talents
 
 **Objectif** : alimenter les talents de référence.
@@ -193,14 +197,15 @@ Ordre conseillé :
 **À couvrir** :
 - spécialisation liée ;
 - carrière liée si disponible ;
-- nœuds ;
+- nœuds issus du format réel `Talents.Key` ;
 - positions ;
 - coûts ;
-- connexions si disponibles.
+- connexions issues de `Directions` quand disponibles.
 
 **AC** :
 - l’arbre est exploitable par la couche domaine ;
 - l’acteur ne reçoit pas une copie complète de l’arbre.
+- un arbre Edge réel n’est pas importé vide.
 
 ---
 
@@ -219,6 +224,7 @@ Ordre conseillé :
 - les données brutes sont conservées ;
 - un nœud incomplet est marqué invalide ou non achetable ;
 - aucun fallback implicite dangereux n’est appliqué.
+- le fallback legacy reste supporté sans redevenir le chemin principal du format Edge réel.
 
 ---
 

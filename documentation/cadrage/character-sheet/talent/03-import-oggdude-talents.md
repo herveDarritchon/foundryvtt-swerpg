@@ -159,6 +159,35 @@ Les connexions doivent être suffisamment explicites pour savoir si un nœud dev
 
 ---
 
+### 3.5 Format réel OggDude des arbres de spécialisation
+
+Le format réel rencontré dans les exports OggDude Edge pour les arbres de spécialisation est le suivant :
+
+```txt
+TalentRows
+  TalentRow[]
+    Cost
+    Talents.Key[]
+    Directions.Direction[]
+```
+
+Contraintes de lecture à respecter :
+
+* les nœuds viennent de `Talents.Key[]` ;
+* les coûts viennent du `Cost` porté par la ligne ;
+* les connexions viennent de `Directions.Direction[]`, notamment `Right` et `Down` ;
+* le fallback legacy `TalentColumns.TalentColumn[]` reste supporté, mais n’est plus l’hypothèse principale.
+
+Exemple de contrat attendu sur un arbre réel de type `Advisor.xml` :
+
+* 5 lignes ;
+* 4 nœuds par ligne ;
+* 20 nœuds au total ;
+* coûts `5 / 10 / 15 / 20 / 25` ;
+* connexions déduites depuis `Directions`.
+
+---
+
 ## 4. Données brutes OggDude
 
 Les données brutes utiles au diagnostic doivent être conservées dans :
@@ -177,6 +206,16 @@ flags.swerpg.import
 * warnings d’import.
 
 Objectif : permettre le debug, la migration et les corrections futures.
+
+### 4.1 Retour d’expérience sur le bug corrigé
+
+Le bug d’arbres vides corrigé en 2026 provenait d’une hypothèse de parsing erronée : le mapper lisait prioritairement `TalentColumns.TalentColumn`, alors que les fichiers OggDude réels des spécialisations Edge utilisent `Talents.Key` et `Directions.Direction`.
+
+Implications pour ce cadrage :
+
+* un import qui produit un arbre vide à partir d’un XML Edge réel doit être considéré comme un bug ;
+* la conservation des diagnostics dans `flags.swerpg.import` reste obligatoire ;
+* les tests d’import doivent couvrir le format réel avant toute évolution future du mapper.
 
 ---
 
@@ -228,6 +267,8 @@ Si les connexions sont absentes ou incohérentes :
 * marquer l’arbre comme incomplet ;
 * empêcher les achats non fiables ;
 * produire un warning.
+
+Pour le format OggDude réel, l’absence de connexions cohérentes s’évalue d’abord à partir de `Directions.Direction` ; une absence totale de `connections` sur un arbre Edge importé ne doit pas être considérée comme nominale.
 
 Aucune reconstruction implicite ne doit être faite sans règle documentée.
 

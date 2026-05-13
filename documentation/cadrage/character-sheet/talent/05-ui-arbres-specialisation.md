@@ -174,6 +174,8 @@ Message indicatif :
 Talent déjà possédé. Acheter ce nœud peut toutefois débloquer la progression dans cet arbre.
 ```
 
+Important : la vue graphique consomme des référentiels `specialization-tree` déjà normalisés. Elle ne doit ni relire le XML OggDude brut, ni reconstruire les nœuds/connexions depuis des hypothèses legacy comme `TalentColumns.TalentColumn`.
+
 ---
 
 ## 11. Données incomplètes
@@ -193,6 +195,8 @@ Coût manquant
 Connexion invalide
 Arbre non résolu
 ```
+
+Suite à la correction du bug d’arbres importés vides, un arbre OggDude Edge dont `system.nodes` ou `system.connections` est vide doit être traité comme une anomalie référentielle ou un import incomplet, pas comme un état normal de la V1.
 
 ---
 
@@ -258,6 +262,7 @@ Après achat :
 * achat d’un talent ranked ;
 * achat d’un nœud non-ranked déjà possédé ailleurs ;
 * arbre introuvable ou incomplet ;
+* arbre importé depuis un XML OggDude réel (`Advisor`) avec nœuds et connexions non vides ;
 * vérification que l’ancien canvas de scène n’est pas utilisé.
 
 ---
