@@ -925,6 +925,9 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
   #buildConsolidatedTalentList() {
     const definitions = this.#buildTalentDefinitions()
     const summary = buildOwnedTalentSummary(this.actor, definitions)
+    const unknownTalentLabel = game.i18n.localize('SWERPG.TALENT.UNKNOWN')
+    const unknownSourceLabel = game.i18n.localize('SWERPG.TALENT.UNKNOWN_SOURCE')
+    const unspecifiedActivationLabel = game.i18n.localize('SWERPG.TALENT.UNSPECIFIED')
 
     return summary.map((entry) => {
       const tags = []
@@ -932,31 +935,42 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
         tags.push({ label: game.i18n.localize('SWERPG.TALENT.ACTIVE'), cssClass: 'tag-active' })
       } else if (entry.activation === 'passive') {
         tags.push({ label: game.i18n.localize('SWERPG.TALENT.PASSIVE'), cssClass: 'tag-passive' })
+      } else {
+        tags.push({ label: unspecifiedActivationLabel, cssClass: 'tag-neutral' })
       }
+
       if (entry.isRanked) {
-        tags.push({ label: game.i18n.localize('SWERPG.TALENT.RANKED') })
+        tags.push({ label: game.i18n.localize('SWERPG.TALENT.RANKED'), cssClass: 'tag-ranked' })
+      } else if (entry.isRanked === false) {
+        tags.push({ label: game.i18n.localize('SWERPG.TALENT.NON_RANKED'), cssClass: 'tag-neutral' })
       }
 
-      const sourceLabels = entry.sources.map((s) => {
+      const sourceLabels = Array.from(new Set(entry.sources.map((s) => {
         if (s.resolutionState === 'ok') {
-          return s.specializationName || s.treeName || game.i18n.localize('SWERPG.TALENT.UNKNOWN_SOURCE')
+          return s.specializationName || s.treeName || unknownSourceLabel
         }
-        return game.i18n.localize('SWERPG.TALENT.UNKNOWN_SOURCE')
-      })
+        return unknownSourceLabel
+      })))
 
-      let rankValue = '-'
-      if (entry.isRanked && entry.rank !== null) {
-        rankValue = entry.rank
-      }
+      const rankValue = entry.isRanked && entry.rank !== null ? entry.rank : null
+      const displayName = entry.name || unknownTalentLabel
 
       return {
         talentId: entry.talentId,
-        name: entry.name || game.i18n.localize('SWERPG.TALENT.UNKNOWN'),
+        name: displayName,
         tags,
         isRanked: entry.isRanked,
         rank: rankValue,
         sourceLabels,
       }
+    }).sort((left, right) => {
+      const leftName = left.name || unknownTalentLabel
+      const rightName = right.name || unknownTalentLabel
+
+      const nameCompare = leftName.localeCompare(rightName)
+      if (nameCompare !== 0) return nameCompare
+
+      return left.talentId.localeCompare(right.talentId)
     })
   }
 

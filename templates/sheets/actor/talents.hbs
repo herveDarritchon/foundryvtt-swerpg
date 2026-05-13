@@ -3,28 +3,34 @@
   data-tab="{{tabs.talents.id}}"
   data-group="{{tabs.talents.group}}"
 >
-
   {{#each talents as |talent|}}
-    <div class="line-item talent-consolidated" data-talent-id="{{talent.talentId}}">
-      <div class="title">
-        <h4 class="item-header">{{talent.name}}</h4>
-        <div class="tags">
+    <article class="line-item talent-consolidated" data-talent-id="{{talent.talentId}}">
+      <div class="talent-consolidated__header">
+        <div class="talent-consolidated__title-group">
+          <h4 class="item-header talent-consolidated__name">{{talent.name}}</h4>
           {{#each talent.tags as |tag|}}
-            <span class="tag {{tag.cssClass}}">{{tag.label}}</span>
+            <span class="tag {{tag.cssClass}} talent-consolidated__tag">{{tag.label}}</span>
           {{/each}}
         </div>
       </div>
-      <div class="talent-rank">
+
+      <div class="talent-consolidated__details">
         {{#if talent.isRanked}}
-          {{talent.rank}}
+          <div class="talent-rank">
+            <span class="talent-rank__label">{{localize 'SWERPG.TALENT.RANK'}}:</span>
+            <span class="talent-rank__value">{{talent.rank}}</span>
+          </div>
         {{/if}}
+
+        <div class="talent-sources">
+          <span class="source-label">{{localize 'SWERPG.TALENT.SOURCES'}}:</span>
+          <span class="source-values">
+            {{#each talent.sourceLabels as |source|}}
+              <span class="source-name">{{source}}{{#unless @last}}, {{/unless}}</span>
+            {{/each}}
+          </span>
+        </div>
       </div>
-      <div class="talent-sources">
-        <span class="source-label">{{localize 'SWERPG.TALENT.SOURCES'}}:</span>
-        {{#each talent.sourceLabels as |source i|}}
-          <span class="source-name">{{source}}{{#unless @last}}, {{/unless}}</span>
-        {{/each}}
-      </div>
-    </div>
+    </article>
   {{/each}}
 </section>
