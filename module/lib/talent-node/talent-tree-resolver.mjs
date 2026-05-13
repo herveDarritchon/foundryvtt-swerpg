@@ -6,6 +6,11 @@ import { logger } from '../../utils/logger.mjs'
  * @returns {'available'|'incomplete'}
  */
 export function getSpecializationTreeResolutionState(tree) {
+  const importFlags = tree?.flags?.swerpg?.import
+  if (importFlags?.unresolved || importFlags?.status === 'incomplete' || importFlags?.status === 'invalid') {
+    return 'incomplete'
+  }
+
   const nodes = Array.isArray(tree?.system?.nodes) ? tree.system.nodes : []
   const connections = Array.isArray(tree?.system?.connections) ? tree.system.connections : []
 
