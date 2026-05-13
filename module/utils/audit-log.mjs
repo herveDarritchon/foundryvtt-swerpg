@@ -319,7 +319,7 @@ function onCreateItem(item, data, options, userId) {
  * @param {number} [purchaseData.previousXp]
  * @param {number} [purchaseData.nextXp]
  */
-export async function recordTalentNodePurchase(actor, purchaseData) {
+async function recordTalentNodePurchase(actor, purchaseData) {
   const ts = Date.now()
   const snapshot = captureSnapshot(actor)
   const user = game.users?.get(game.user?.id) ?? null
