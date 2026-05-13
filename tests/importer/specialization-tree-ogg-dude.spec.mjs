@@ -120,6 +120,76 @@ describe('specializationTreeMapper', () => {
   })
 })
 
+  it('maps nodes from real OggDude TalentRows/Talents/Key format', () => {
+    const input = [
+      {
+        Key: 'ADVISOR',
+        Name: 'Advisor',
+        TalentRows: {
+          TalentRow: [
+            {
+              Cost: '5',
+              Talents: { Key: ['PLAUSDEN', 'KNOWSOM', 'GRIT', 'KILL'] },
+            },
+            {
+              Cost: '10',
+              Talents: { Key: ['STIM', 'DEDICATION'] },
+            },
+            {
+              Cost: '15',
+              Talents: { Key: ['CONFUSE'] },
+            },
+          ],
+        },
+      },
+    ]
+
+    const result = specializationTreeMapper(input)
+    const stats = getSpecializationTreeImportStats()
+
+    expect(result).toHaveLength(1)
+    expect(result[0].system.nodes).toHaveLength(7)
+
+    // All row-1 nodes inherit cost from row
+    expect(result[0].system.nodes.filter((n) => n.row === 1).every((n) => n.cost === 5)).toBe(true)
+    expect(result[0].system.nodes.filter((n) => n.row === 2).every((n) => n.cost === 10)).toBe(true)
+    expect(result[0].system.nodes.filter((n) => n.row === 3).every((n) => n.cost === 15)).toBe(true)
+
+    // Verify node identities
+    expect(result[0].system.nodes[0]).toMatchObject({ nodeId: 'r1c1', row: 1, column: 1, talentId: 'plausden', cost: 5 })
+    expect(result[0].system.nodes[1]).toMatchObject({ nodeId: 'r1c2', row: 1, column: 2, talentId: 'knowsom', cost: 5 })
+    expect(result[0].system.nodes[4]).toMatchObject({ nodeId: 'r2c1', row: 2, column: 1, talentId: 'stim', cost: 10 })
+    expect(result[0].system.nodes[5]).toMatchObject({ nodeId: 'r2c2', row: 2, column: 2, talentId: 'dedication', cost: 10 })
+    expect(result[0].system.nodes[6]).toMatchObject({ nodeId: 'r3c1', row: 3, column: 1, talentId: 'confuse', cost: 15 })
+
+    // Connections empty until #219
+    expect(result[0].system.connections).toEqual([])
+    expect(stats.total).toBe(1)
+    expect(stats.imported).toBe(1)
+  })
+
+  it('handles single string Talents.Key as produced by xml2js explicitArray:false', () => {
+    const input = [
+      {
+        Key: 'BODYGUARD',
+        Name: 'Bodyguard',
+        TalentRows: {
+          TalentRow: [
+            {
+              Cost: '5',
+              Talents: { Key: 'PARRY' },
+            },
+          ],
+        },
+      },
+    ]
+
+    const result = specializationTreeMapper(input)
+
+    expect(result[0].system.nodes).toHaveLength(1)
+    expect(result[0].system.nodes[0]).toMatchObject({ nodeId: 'r1c1', talentId: 'parry', cost: 5 })
+  })
+
 describe('buildSpecializationTreeContext', () => {
   beforeEach(() => {
     vi.clearAllMocks()
