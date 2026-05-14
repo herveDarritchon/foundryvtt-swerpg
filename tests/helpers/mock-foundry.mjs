@@ -752,8 +752,8 @@ export function setCombatMock({ round = 1, combatants = [] } = {}) {
 
 /**
  * Add mock compendium packs to game.packs.
- * Each pack definition: { id, documents: Array<{id,name}> }
- * @param {Array<{id:string, documents?:Array<object>}>} packs
+ * Each pack definition: { id, documents: Array<{id,name,type?,system?,flags?}> }
+ * @param {object} packs - Object map of pack id → pack definition
  */
 export function addPacksMock(packs = {}) {
   if (!globalThis.game) {
@@ -762,15 +762,24 @@ export function addPacksMock(packs = {}) {
   if (!globalThis.game.packs) globalThis.game.packs = new Map()
   if (!packs || typeof packs !== 'object') return
 
-  // Support object map form: { 'id': { name, type, documents? } }
   for (const [id, def] of Object.entries(packs)) {
     if (!id || !def) continue
-    const { name = id, type = 'Item', documents = [] } = def
+    const { name = id, type = 'Item', documentName = 'Item', collection = id, documents = [] } = def
+    const index = new Map()
+    for (const doc of documents) {
+      const _id = doc.id ?? doc._id
+      const entry = { _id, name: doc.name ?? 'Unnamed', type: doc.type ?? type }
+      if (doc.system) entry.system = doc.system
+      if (doc.flags) entry.flags = doc.flags
+      index.set(_id, entry)
+    }
     const packObj = {
-      metadata: { id, name, type },
-      index: documents.map((d) => ({ _id: d.id, name: d.name })),
+      metadata: { id, name, type, documentName },
+      documentName,
+      collection,
+      index,
       contents: documents,
-      getDocument: vi.fn(async (docId) => documents.find((d) => d.id === docId) ?? undefined),
+      getDocument: vi.fn(async (docId) => documents.find((d) => (d.id ?? d._id) === docId) ?? undefined),
     }
     globalThis.game.packs.set(id, packObj)
   }

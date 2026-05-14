@@ -1,10 +1,10 @@
-import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import xml2jsModule from '../../vendors/xml2js.min.js'
 import { parseXmlToJson } from '../../module/utils/xml/parser.mjs'
 import { extractDirectionalConnections, specializationTreeMapper } from '../../module/importer/mappers/oggdude-specialization-tree-mapper.mjs'
-import { buildSpecializationTreeContext } from '../../module/importer/items/specialization-tree-ogg-dude.mjs'
+import { buildSpecializationTreeContext, buildTalentIndex, buildTalentByIdFromWorld, buildTalentByIdFromCompendium } from '../../module/importer/items/specialization-tree-ogg-dude.mjs'
 import OggDudeDataElement from '../../module/settings/models/OggDudeDataElement.mjs'
 import { resetSpecializationTreeImportStats } from '../../module/importer/utils/specialization-tree-import-utils.mjs'
 
@@ -280,5 +280,197 @@ describe('extractDirectionalConnections — contrat booléen OggDude', () => {
     const result = extractDirectionalConnections(nodes)
     expect(result.connections).toHaveLength(0)
     expect(result.warnings).toHaveLength(0)
+  })
+})
+
+describe('world items — end-to-end talent resolution chain', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    resetSpecializationTreeImportStats()
+    globalThis.game = {
+      items: [],
+      packs: new Map(),
+      i18n: { localize: (key) => key },
+    }
+  })
+
+  afterEach(() => {
+    delete globalThis.game
+  })
+
+  it('builds talent index from game.items and enriches node talentUuid via mapper', () => {
+    globalThis.game.items = [
+      {
+        type: 'talent',
+        name: 'Grit',
+        uuid: 'Item.grit001',
+        system: { id: 'grit', uuid: 'Item.grit001', isRanked: true },
+      },
+      {
+        type: 'talent',
+        name: 'Tough',
+        uuid: 'Item.tough001',
+        system: { id: 'tough', uuid: 'Item.tough001', isRanked: false },
+      },
+    ]
+
+    const worldIndex = buildTalentByIdFromWorld()
+
+    expect(worldIndex.has('grit'), 'world index contains grit').toBe(true)
+    expect(worldIndex.get('grit').uuid, 'grit uuid is Item.grit001').toBe('Item.grit001')
+    expect(worldIndex.has('tough'), 'world index contains tough').toBe(true)
+    expect(worldIndex.get('tough').uuid, 'tough uuid is Item.tough001').toBe('Item.tough001')
+
+    const input = [{
+      Key: 'BODYGUARD',
+      Name: 'Bodyguard',
+      TalentRows: {
+        TalentRow: [
+          { Index: '0', Cost: '5', Talents: { Key: ['GRIT'] } },
+          { Index: '1', Cost: '10', Talents: { Key: ['TOUGH'] } },
+        ],
+      },
+    }]
+
+    const result = specializationTreeMapper(input, { talentById: worldIndex })
+
+    expect(result[0].system.nodes[0].talentId, 'node 0 talentId is grit').toBe('grit')
+    expect(result[0].system.nodes[0].talentUuid, 'node 0 talentUuid resolved').toBe('Item.grit001')
+    expect(result[0].system.nodes[1].talentId, 'node 1 talentId is tough').toBe('tough')
+    expect(result[0].system.nodes[1].talentUuid, 'node 1 talentUuid resolved').toBe('Item.tough001')
+  })
+
+  it('buildTalentIndex combines world and compendium, preferring world', () => {
+    globalThis.game.items = [
+      {
+        type: 'talent',
+        name: 'Grit',
+        uuid: 'Item.grit-world',
+        system: { id: 'grit', uuid: 'Item.grit-world', isRanked: true },
+      },
+    ]
+
+    globalThis.game.packs.set('swerpg.talents', {
+      documentName: 'Item',
+      collection: 'swerpg.talents',
+      index: new Map([['talent-grit', {
+        _id: 'talent-grit',
+        name: 'Grit',
+        type: 'talent',
+        system: { id: 'grit', isRanked: true },
+      }]]),
+    })
+
+    const combined = buildTalentIndex()
+
+    expect(combined.has('grit'), 'combined index has grit').toBe(true)
+    expect(combined.get('grit').uuid, 'prefers world uuid').toBe('Item.grit-world')
+  })
+
+  it('buildTalentIndex returns empty map when no game', () => {
+    delete globalThis.game
+    const result = buildTalentIndex()
+    expect(result.size).toBe(0)
+  })
+})
+
+describe('compendium items — end-to-end talent resolution chain', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    resetSpecializationTreeImportStats()
+    globalThis.game = {
+      items: [],
+      packs: new Map(),
+      i18n: { localize: (key) => key },
+    }
+  })
+
+  afterEach(() => {
+    delete globalThis.game
+  })
+
+  it('builds talent index from compendium packs and enriches node talentUuid via mapper', () => {
+    globalThis.game.packs.set('swerpg.talents', {
+      documentName: 'Item',
+      collection: 'swerpg.talents',
+      index: new Map([['talent-grit', {
+        _id: 'talent-grit',
+        name: 'Grit',
+        type: 'talent',
+        system: { id: 'grit', isRanked: true },
+      }]]),
+    })
+
+    const compendiumIndex = buildTalentByIdFromCompendium()
+
+    expect(compendiumIndex.has('grit'), 'compendium index contains grit').toBe(true)
+    expect(compendiumIndex.get('grit').uuid, 'compendium uuid format').toBe('Compendium.swerpg.talents.talent-grit')
+
+    const input = [{
+      Key: 'BODYGUARD',
+      Name: 'Bodyguard',
+      TalentRows: {
+        TalentRow: [
+          { Index: '0', Cost: '5', Talents: { Key: ['GRIT'] } },
+        ],
+      },
+    }]
+
+    const result = specializationTreeMapper(input, { talentById: compendiumIndex })
+
+    expect(result[0].system.nodes[0].talentId, 'node talentId is grit').toBe('grit')
+    expect(result[0].system.nodes[0].talentUuid, 'node talentUuid is compendium uuid').toBe('Compendium.swerpg.talents.talent-grit')
+  })
+
+  it('skips packs with wrong documentName', () => {
+    globalThis.game.packs.set('swerpg.actors', {
+      documentName: 'Actor',
+      collection: 'swerpg.actors',
+      index: new Map([['actor-1', {
+        _id: 'actor-1',
+        name: 'Villain',
+        type: 'character',
+      }]]),
+    })
+
+    const compendiumIndex = buildTalentByIdFromCompendium()
+
+    expect(compendiumIndex.size, 'actor packs are skipped').toBe(0)
+  })
+
+  it('skips packs with empty index', () => {
+    globalThis.game.packs.set('swerpg.talents', {
+      documentName: 'Item',
+      collection: 'swerpg.talents',
+      index: new Map(),
+    })
+
+    const compendiumIndex = buildTalentByIdFromCompendium()
+
+    expect(compendiumIndex.size, 'empty pack index yields no results').toBe(0)
+  })
+
+  it('falls back to oggdudeKey flag when system.id is absent', () => {
+    globalThis.game.packs.set('swerpg.talents', {
+      documentName: 'Item',
+      collection: 'swerpg.talents',
+      index: new Map([['talent-legacy', {
+        _id: 'talent-legacy',
+        name: 'Legacy Talent',
+        type: 'talent',
+        flags: { swerpg: { oggdudeKey: 'LEGACY_TALENT' } },
+      }]]),
+    })
+
+    const compendiumIndex = buildTalentByIdFromCompendium()
+
+    expect(compendiumIndex.has('legacy_talent'), 'legacy fallback key is lowercased').toBe(true)
+    expect(compendiumIndex.get('legacy_talent').uuid, 'legacy uuid format').toBe('Compendium.swerpg.talents.talent-legacy')
+  })
+
+  it('returns empty map when no game.packs', () => {
+    delete globalThis.game.packs
+    const result = buildTalentByIdFromCompendium()
+    expect(result.size).toBe(0)
   })
 })

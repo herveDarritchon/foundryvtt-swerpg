@@ -1063,4 +1063,58 @@ describe('specialization-tree application', () => {
     expect(available.reasonCode).toBe('')
     expect(available.reasonLabel).toBeNull()
   })
+
+  it('renders mapper-enriched nodes with talentUuid without falling back to Unknown talent', () => {
+    const actor = createActor({
+      system: {
+        details: {
+          specializations: [
+            { specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' },
+          ],
+        },
+        progression: {
+          talentPurchases: [],
+          experience: { available: 100 },
+        },
+      },
+    })
+
+    globalThis.fromUuidSync = vi.fn((uuid) => {
+      if (uuid === 'Item.tree-bodyguard') {
+        return {
+          type: 'specialization-tree',
+          name: 'Bodyguard Tree',
+          system: {
+            nodes: [
+              { nodeId: 'r1c1', talentId: 'grit', talentUuid: 'Item.talent-grit', row: 1, column: 1, cost: 10 },
+              { nodeId: 'r2c1', talentId: 'tough', talentUuid: 'Item.talent-tough', row: 2, column: 1, cost: 15 },
+            ],
+            connections: [{ from: 'r1c1', to: 'r2c1' }],
+          },
+        }
+      }
+      if (uuid === 'Item.talent-grit') return { name: 'Grit', system: { isRanked: true } }
+      if (uuid === 'Item.talent-tough') return { name: 'Tough', system: { isRanked: false } }
+      return null
+    })
+
+    const context = buildSpecializationTreeContext(actor)
+
+    expect(context.renderNodes, 'should have 2 render nodes').toHaveLength(2)
+
+    const grit = context.renderNodes.find((n) => n.nodeId === 'r1c1')
+    expect(grit).toBeDefined()
+    expect(grit.talentName, 'grit resolved by talentUuid').toBe('Grit')
+    expect(grit.talentId, 'grit keeps business key').toBe('grit')
+    expect(grit.isRanked, 'grit is ranked').toBe(true)
+
+    const tough = context.renderNodes.find((n) => n.nodeId === 'r2c1')
+    expect(tough).toBeDefined()
+    expect(tough.talentName, 'tough resolved by talentUuid').toBe('Tough')
+    expect(tough.talentId, 'tough keeps business key').toBe('tough')
+    expect(tough.isRanked, 'tough is not ranked').toBe(false)
+
+    const unknownNodes = context.renderNodes.filter((n) => n.talentName === 'Unknown talent')
+    expect(unknownNodes, 'no node falls back to Unknown talent').toHaveLength(0)
+  })
 })
