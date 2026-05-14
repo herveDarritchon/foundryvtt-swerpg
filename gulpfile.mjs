@@ -1,43 +1,50 @@
 import gulp from 'gulp'
 import less from 'gulp-less'
+import plumber from 'gulp-plumber'
 
 /* ----------------------------------------- */
-/*  Compile LESS
+/*  LESS paths
 /* ----------------------------------------- */
+
 const LESS_SRC = './styles/swerpg.less'
 const CSS_DEST = './styles'
 const LESS_WATCH = ['./styles/**/*.less']
 
-/**
- *
- */
+/* ----------------------------------------- */
+/*  Compile LESS
+/* ----------------------------------------- */
+
 function compileLESS() {
-  console.log('Compiling LESS files from:', LESS_SRC, 'to:', CSS_DEST)
   return gulp
-    .src(LESS_SRC)
+    .src(LESS_SRC, { sourcemaps: false })
     .pipe(
-      less({ sourceMap: false }).on('error', function (err) {
-        console.error('LESS Error:', err.message)
-        this.emit('end')
+      plumber({
+        errorHandler(err) {
+          console.error('LESS Error:', err.message)
+          this.emit('end')
+        },
       }),
     )
+    .pipe(less())
     .pipe(gulp.dest(CSS_DEST))
 }
-const css = gulp.series(compileLESS)
 
 /* ----------------------------------------- */
-/*  Watch Updates
+/*  Watch LESS
 /* ----------------------------------------- */
-/**
- *
- */
-function watchUpdates() {
-  gulp.watch(LESS_WATCH, css)
+
+function watchLESS() {
+  gulp.watch(LESS_WATCH, compileLESS)
 }
 
 /* ----------------------------------------- */
-/*  Export Tasks
+/*  Export tasks
 /* ----------------------------------------- */
 
+const css = gulp.series(compileLESS)
+const watchCss = gulp.series(compileLESS, watchLESS)
+
 export { css }
-export default gulp.series(gulp.parallel(css), watchUpdates)
+export { watchCss as 'watch:css' }
+
+export default watchCss
