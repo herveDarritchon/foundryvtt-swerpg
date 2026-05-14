@@ -79,9 +79,11 @@ const PADDING = 20
  * @returns {{ width: number, height: number }} Safe viewport dimensions.
  */
 export function getViewportDimensions(host) {
+  const rect = host?.getBoundingClientRect?.()
+
   return {
-    width: Math.max(Math.round(host?.clientWidth || 0), MIN_VIEWPORT_SIZE),
-    height: Math.max(Math.round(host?.clientHeight || 0), MIN_VIEWPORT_SIZE),
+    width: Math.max(Math.round(rect?.width || host?.clientWidth || 0), MIN_VIEWPORT_SIZE),
+    height: Math.max(Math.round(rect?.height || host?.clientHeight || 0), MIN_VIEWPORT_SIZE),
   }
 }
 
@@ -229,9 +231,7 @@ export function buildSpecializationTreeContext(actor) {
       name: specialization?.name || game.i18n.localize('SWERPG.TALENT.SPECIALIZATION_TREE_APP.UNKNOWN_SPECIALIZATION'),
       treeName: resolution.tree?.name ?? null,
       state,
-      stateLabel: game.i18n.localize(
-        SPECIALIZATION_TREE_STATE_LABELS[state] ?? SPECIALIZATION_TREE_STATE_LABELS.unresolved,
-      ),
+      stateLabel: game.i18n.localize(SPECIALIZATION_TREE_STATE_LABELS[state] ?? SPECIALIZATION_TREE_STATE_LABELS.unresolved),
       isAvailable: state === 'available',
     }
   })
@@ -284,13 +284,9 @@ export function buildSpecializationTreeContext(actor) {
       return {
         ...node,
         nodeState: stateResult.state,
-        nodeStateLabel: game.i18n.localize(
-          NODE_STATE_LABEL_KEYS[stateResult.state] ?? NODE_STATE_LABEL_KEYS[NODE_STATE.INVALID],
-        ),
+        nodeStateLabel: game.i18n.localize(NODE_STATE_LABEL_KEYS[stateResult.state] ?? NODE_STATE_LABEL_KEYS[NODE_STATE.INVALID]),
         reasonCode,
-        reasonLabel: reasonCode
-          ? game.i18n.localize(REASON_LABEL_KEYS[reasonCode] ?? REASON_LABEL_DEFAULT)
-          : null,
+        reasonLabel: reasonCode ? game.i18n.localize(REASON_LABEL_KEYS[reasonCode] ?? REASON_LABEL_DEFAULT) : null,
         variant,
       }
     })
@@ -334,12 +330,14 @@ export function buildSpecializationTreeContext(actor) {
     currentTreeData,
     renderNodes,
     renderConnections,
-    emptyStateTitle: specializationEntries.length === 0
-      ? game.i18n.localize('SWERPG.TALENT.SPECIALIZATION_TREE_APP.EMPTY.NO_SPECIALIZATIONS_TITLE')
-      : game.i18n.localize('SWERPG.TALENT.SPECIALIZATION_TREE_APP.EMPTY.NO_AVAILABLE_TREE_TITLE'),
-    emptyStateDescription: specializationEntries.length === 0
-      ? game.i18n.localize('SWERPG.TALENT.SPECIALIZATION_TREE_APP.EMPTY.NO_SPECIALIZATIONS_DESCRIPTION')
-      : game.i18n.localize('SWERPG.TALENT.SPECIALIZATION_TREE_APP.EMPTY.NO_AVAILABLE_TREE_DESCRIPTION'),
+    emptyStateTitle:
+      specializationEntries.length === 0
+        ? game.i18n.localize('SWERPG.TALENT.SPECIALIZATION_TREE_APP.EMPTY.NO_SPECIALIZATIONS_TITLE')
+        : game.i18n.localize('SWERPG.TALENT.SPECIALIZATION_TREE_APP.EMPTY.NO_AVAILABLE_TREE_TITLE'),
+    emptyStateDescription:
+      specializationEntries.length === 0
+        ? game.i18n.localize('SWERPG.TALENT.SPECIALIZATION_TREE_APP.EMPTY.NO_SPECIALIZATIONS_DESCRIPTION')
+        : game.i18n.localize('SWERPG.TALENT.SPECIALIZATION_TREE_APP.EMPTY.NO_AVAILABLE_TREE_DESCRIPTION'),
     viewportAriaLabel: game.i18n.localize('SWERPG.TALENT.SPECIALIZATION_TREE_APP.VIEWPORT_ARIA_LABEL'),
   }
 }
@@ -378,11 +376,15 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
 
   #viewportHost = null
 
-  #boundResize = () => this.#resizeViewport()
-
   #treeContainer = null
 
-  #isResizeBound = false
+  #resizeObserver = null
+
+  #currentTreeId = null
+
+  #hasInitializedViewport = false
+
+  #observedViewportHost = null
 
   #renderNodesCache = null
 
@@ -462,23 +464,56 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
     this.#viewportHost = viewportHost
     this.#ensurePixiApp(viewportHost)
     this.#bindViewportInteractions()
+    this.#bindResizeObserver(viewportHost)
+
+    const nextTreeId = context?.currentTreeId ?? null
+    const shouldResetView = options.resetView !== false && (!this.#hasInitializedViewport || this.#currentTreeId !== nextTreeId)
+
+    this.#currentTreeId = nextTreeId
+    this.#hasInitializedViewport = true
+
     this.#resizeViewport()
 
-    if (!this.#isResizeBound) {
-      window.addEventListener('resize', this.#boundResize)
-      this.#isResizeBound = true
-    }
-
-    if (options.resetView !== false) {
+    if (shouldResetView) {
       this.#centerTree(context)
     }
 
     this.#drawTree(context)
+
+    requestAnimationFrame(() => {
+      this.#resizeViewport()
+
+      if (shouldResetView) {
+        this.#centerTree(context)
+      }
+
+      this.#applyViewportTransform()
+    })
+  }
+
+  #bindResizeObserver(viewportHost) {
+    if (this.#resizeObserver && this.#observedViewportHost === viewportHost) return
+
+    if (this.#resizeObserver) {
+      this.#resizeObserver.disconnect()
+      this.#resizeObserver = null
+    }
+
+    this.#observedViewportHost = viewportHost
+
+    this.#resizeObserver = new ResizeObserver(() => {
+      requestAnimationFrame(() => {
+        this.#resizeViewport()
+        this.#applyViewportTransform()
+      })
+    })
+
+    this.#resizeObserver.observe(viewportHost)
   }
 
   #getViewportHost() {
     const isHtmlElement = typeof HTMLElement !== 'undefined' && this.element instanceof HTMLElement
-    const root = isHtmlElement ? this.element : this.element?.[0] ?? this.element
+    const root = isHtmlElement ? this.element : (this.element?.[0] ?? this.element)
     return root?.querySelector?.('[data-specialization-tree-viewport]') ?? null
   }
 
@@ -508,8 +543,21 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
 
   #resizeViewport() {
     if (!this.pixiApp || !this.#viewportHost) return
+
     const { width, height } = getViewportDimensions(this.#viewportHost)
-    this.pixiApp.renderer?.resize?.(width, height)
+
+    const renderer = this.pixiApp.renderer
+    if (renderer?.width !== width || renderer?.height !== height) {
+      renderer?.resize?.(width, height)
+    }
+
+    const canvas = this.pixiApp.canvas ?? this.pixiApp.view
+    if (canvas) {
+      canvas.style.width = '100%'
+      canvas.style.height = '100%'
+      canvas.style.display = 'block'
+    }
+
     if (this.pixiApp.stage) {
       this.pixiApp.stage.hitArea = new PIXI.Rectangle(0, 0, width, height)
     }
@@ -690,9 +738,7 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
   }
 
   #showNodeTooltip(node) {
-    const root = typeof HTMLElement !== 'undefined' && this.element instanceof HTMLElement
-      ? this.element
-      : this.element?.[0] ?? this.element
+    const root = typeof HTMLElement !== 'undefined' && this.element instanceof HTMLElement ? this.element : (this.element?.[0] ?? this.element)
     const tooltip = root?.querySelector?.('[data-node-tooltip]')
     if (!tooltip) return
 
@@ -724,9 +770,7 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
   }
 
   #hideNodeTooltip() {
-    const root = typeof HTMLElement !== 'undefined' && this.element instanceof HTMLElement
-      ? this.element
-      : this.element?.[0] ?? this.element
+    const root = typeof HTMLElement !== 'undefined' && this.element instanceof HTMLElement ? this.element : (this.element?.[0] ?? this.element)
     const tooltip = root?.querySelector?.('[data-node-tooltip]')
     if (tooltip) tooltip.hidden = true
     this.#selectedNodeId = null
@@ -736,17 +780,24 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
     this.#unbindViewportInteractions()
     this.#stopPanning()
 
-    if (this.#isResizeBound) {
-      window.removeEventListener('resize', this.#boundResize)
-      this.#isResizeBound = false
+    if (this.#resizeObserver) {
+      this.#resizeObserver.disconnect()
+      this.#resizeObserver = null
     }
 
     this.#treeContainer = null
+    this.#renderNodesCache = null
+    this.#selectedNodeId = null
     this.#viewport = { scale: 1, x: 0, y: 0 }
 
     if (this.pixiApp) {
       this.pixiApp.destroy?.(true)
       this.pixiApp = null
     }
+
+    this.#observedViewportHost = null
+    this.#currentTreeId = null
+    this.#hasInitializedViewport = false
+    this.#viewportHost = null
   }
 }
