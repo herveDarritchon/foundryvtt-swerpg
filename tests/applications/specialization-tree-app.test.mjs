@@ -342,8 +342,8 @@ describe('specialization-tree application', () => {
           name: 'Bodyguard Tree',
           system: {
             nodes: [
-              { nodeId: 'r1c1', talentId: 'Item.talent-tough', row: 1, column: 1, cost: 10 },
-              { nodeId: 'r1c2', talentId: 'Item.talent-protect', row: 1, column: 2, cost: 15 },
+              { nodeId: 'r1c1', talentId: 'Item.talent-tough', talentUuid: 'Item.talent-tough', row: 1, column: 1, cost: 10 },
+              { nodeId: 'r1c2', talentId: 'Item.talent-protect', talentUuid: 'Item.talent-protect', row: 1, column: 2, cost: 15 },
             ],
             connections: [{ from: 'r1c1', to: 'r1c2' }],
           },
@@ -493,6 +493,11 @@ describe('specialization-tree application', () => {
   it('resolveTalentItem returns unknown fallback when item not found', () => {
     globalThis.fromUuidSync = vi.fn(() => null)
     expect(resolveTalentItem('Item.talent-nonexistent')).toBe('Unknown talent')
+  })
+
+  it('resolveTalentItem returns name from talentUuid when passed node object', () => {
+    globalThis.fromUuidSync = vi.fn(() => ({ name: 'Dodge' }))
+    expect(resolveTalentItem({ talentUuid: 'Item.talent-dodge', talentId: 'dodge' })).toBe('Dodge')
   })
 
   describe('computeTreeBoundingBox', () => {
@@ -843,6 +848,50 @@ describe('specialization-tree application', () => {
     })
   })
 
+  describe('resolveTalentDetail with node object', () => {
+    it('prioritizes talentUuid over talentId', () => {
+      globalThis.fromUuidSync = vi.fn((uuid) => {
+        if (uuid === 'Item.talent-dodge') return { name: 'Dodge', system: { isRanked: true } }
+        return null
+      })
+
+      const detail = resolveTalentDetail({ talentUuid: 'Item.talent-dodge', talentId: 'grit' })
+      expect(detail.name).toBe('Dodge')
+      expect(detail.isRanked).toBe(true)
+    })
+
+    it('falls back to legacy business key lookup when talentUuid is absent', () => {
+      globalThis.fromUuidSync = vi.fn(() => null)
+      globalThis.game.items = [
+        { type: 'talent', name: 'Grit', uuid: 'Item.grit001', system: { id: 'grit', isRanked: true } },
+      ]
+
+      const detail = resolveTalentDetail({ talentUuid: null, talentId: 'grit' })
+      expect(detail.name).toBe('Grit')
+      expect(detail.isRanked).toBe(true)
+    })
+
+    it('returns unknown when both talentUuid and talentId fail', () => {
+      globalThis.fromUuidSync = vi.fn(() => null)
+
+      const detail = resolveTalentDetail({ talentUuid: null, talentId: 'nonexistent' })
+      expect(detail.name).toBe('Unknown talent')
+      expect(detail.isRanked).toBe(false)
+    })
+
+    it('never calls fromUuidSync with a business-key talentId', () => {
+      const fromUuidSync = vi.fn(() => null)
+      globalThis.fromUuidSync = fromUuidSync
+      globalThis.game.items = [
+        { type: 'talent', name: 'Grit', uuid: 'Item.grit001', system: { id: 'grit', isRanked: true } },
+      ]
+
+      resolveTalentDetail({ talentUuid: null, talentId: 'grit' })
+
+      expect(fromUuidSync).not.toHaveBeenCalledWith('grit')
+    })
+  })
+
   it('includes talentId and isRanked in every render node', () => {
     const actor = createActor({
       system: {
@@ -865,8 +914,8 @@ describe('specialization-tree application', () => {
           name: 'Bodyguard Tree',
           system: {
             nodes: [
-              { nodeId: 'r1c1', talentId: 'Item.talent-tough', row: 1, column: 1, cost: 10 },
-              { nodeId: 'r2c1', talentId: 'Item.talent-protect', row: 2, column: 1, cost: 15 },
+              { nodeId: 'r1c1', talentId: 'Item.talent-tough', talentUuid: 'Item.talent-tough', row: 1, column: 1, cost: 10 },
+              { nodeId: 'r2c1', talentId: 'Item.talent-protect', talentUuid: 'Item.talent-protect', row: 2, column: 1, cost: 15 },
             ],
             connections: [{ from: 'r1c1', to: 'r2c1' }],
           },
