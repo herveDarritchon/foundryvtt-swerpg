@@ -39,3 +39,16 @@ if (typeof game === 'undefined') {
     }
   }
 }
+
+// Polyfill ResizeObserver for Vitest/node environment
+if (typeof globalThis.ResizeObserver === 'undefined') {
+  globalThis.ResizeObserver = class ResizeObserver {
+    constructor(callback) { this.callback = callback }
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  }
+}
+if (typeof global.ResizeObserver === 'undefined') {
+  global.ResizeObserver = globalThis.ResizeObserver;
+}

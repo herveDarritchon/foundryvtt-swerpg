@@ -3,10 +3,18 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { setupFoundryMock, teardownFoundryMock } from '../helpers/mock-foundry.mjs'
 
 function createMockCanvas() {
+  const listeners = {}
+
   return {
-    classList: {
-      add: vi.fn(),
-    },
+    classList: { add: vi.fn() },
+    style: {},
+    _listeners: listeners,
+    addEventListener: vi.fn((event, handler) => {
+      listeners[event] = handler
+    }),
+    removeEventListener: vi.fn((event) => {
+      delete listeners[event]
+    }),
   }
 }
 
@@ -191,10 +199,26 @@ describe('specialization-tree application', () => {
       },
     }
 
-    globalThis.window = {
-      addEventListener: vi.fn(),
-      removeEventListener: vi.fn(),
+    const resizeObserverInstances = []
+
+    globalThis.ResizeObserver = class MockResizeObserver {
+      constructor(callback) {
+        this.callback = callback
+        this.observe = vi.fn()
+        this.disconnect = vi.fn()
+        this.unobserve = vi.fn()
+        resizeObserverInstances.push(this)
+      }
     }
+
+    globalThis.__resizeObserverInstances = resizeObserverInstances
+
+    globalThis.requestAnimationFrame = vi.fn((callback) => {
+      callback()
+      return 1
+    })
+
+    globalThis.cancelAnimationFrame = vi.fn()
 
     ;({
       default: SpecializationTreeApp,
@@ -213,6 +237,10 @@ describe('specialization-tree application', () => {
     vi.clearAllMocks()
     delete globalThis.PIXI
     delete globalThis.window
+    delete globalThis.ResizeObserver
+    delete globalThis.requestAnimationFrame
+    delete globalThis.cancelAnimationFrame
+    delete globalThis.__resizeObserverInstances
     teardownFoundryMock()
   })
 
@@ -637,7 +665,8 @@ describe('specialization-tree application', () => {
     expect(app.pixiApp).not.toBeNull()
     expect(host.firstElementChild).toBe(app.pixiApp.canvas)
     expect(app.pixiApp.renderer.resize).toHaveBeenCalledWith(640, 480)
-    expect(globalThis.window.addEventListener).toHaveBeenCalledWith('resize', expect.any(Function))
+    expect(globalThis.__resizeObserverInstances).toHaveLength(1)
+    expect(globalThis.__resizeObserverInstances[0].observe).toHaveBeenCalledWith(host)
     expect(globalThis.canvas).toBeUndefined()
   })
 
@@ -1563,5 +1592,322 @@ describe('specialization-tree application', () => {
       'pointerup',
       'pointerupoutside',
     ])
+  })
+
+  it('registers a wheel listener on the PIXI canvas', async () => {
+    const actor = createActor({
+      system: {
+        details: {
+          specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' }],
+        },
+        progression: {
+          talentPurchases: [],
+          experience: { available: 100 },
+        },
+      },
+    })
+    globalThis.fromUuidSync = vi.fn((uuid) => {
+      if (uuid === 'Item.tree-bodyguard') {
+        return {
+          type: 'specialization-tree',
+          name: 'Bodyguard Tree',
+          system: {
+            nodes: [{ nodeId: 'r1c1', talentId: 'Item.talent-tough', row: 1, column: 1, cost: 10 }],
+            connections: [{ from: 'r1c1', to: 'r2c1' }],
+          },
+        }
+      }
+      if (uuid === 'Item.talent-tough') return { name: 'Tough' }
+      return null
+    })
+
+    const app = new SpecializationTreeApp()
+    app.actor = actor
+    app.document = actor
+    const host = createMockHost({ width: 640, height: 480 })
+    app.element = { querySelector: vi.fn(() => host) }
+
+    const context = buildSpecializationTreeContext(actor)
+    await app._onRender(context, { resetView: false })
+
+    const canvas = app.pixiApp.canvas
+    expect(canvas.addEventListener, 'wheel listener must be registered on canvas').toHaveBeenCalledWith(
+      'wheel', expect.any(Function), { passive: false },
+    )
+  })
+
+  it('wheel zoom in increases viewport scale by zoomStep', async () => {
+    const actor = createActor({
+      system: {
+        details: {
+          specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' }],
+        },
+        progression: {
+          talentPurchases: [],
+          experience: { available: 100 },
+        },
+      },
+    })
+    globalThis.fromUuidSync = vi.fn((uuid) => {
+      if (uuid === 'Item.tree-bodyguard') {
+        return {
+          type: 'specialization-tree',
+          name: 'Bodyguard Tree',
+          system: {
+            nodes: [{ nodeId: 'r1c1', talentId: 'Item.talent-tough', row: 1, column: 1, cost: 10 }],
+            connections: [{ from: 'r1c1', to: 'r2c1' }],
+          },
+        }
+      }
+      if (uuid === 'Item.talent-tough') return { name: 'Tough' }
+      return null
+    })
+
+    const app = new SpecializationTreeApp()
+    app.actor = actor
+    app.document = actor
+    const host = createMockHost({ width: 640, height: 480 })
+    app.element = { querySelector: vi.fn(() => host) }
+
+    const context = buildSpecializationTreeContext(actor)
+    await app._onRender(context, { resetView: false })
+
+    const container = app.pixiApp.stage.children.find((c) => c.position && c.scale)
+    expect(container, 'tree container must exist').toBeDefined()
+
+    container.scale.set.mockClear()
+    container.position.set.mockClear()
+
+    app.pixiApp.canvas._listeners.wheel({ deltaY: -100, offsetX: 320, offsetY: 240, preventDefault: vi.fn() })
+
+    expect(container.scale.set, 'wheel up must zoom in by zoomStep factor').toHaveBeenCalledWith(1.15)
+  })
+
+  it('wheel zoom out decreases viewport scale by zoomStep', async () => {
+    const actor = createActor({
+      system: {
+        details: {
+          specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' }],
+        },
+        progression: {
+          talentPurchases: [],
+          experience: { available: 100 },
+        },
+      },
+    })
+    globalThis.fromUuidSync = vi.fn((uuid) => {
+      if (uuid === 'Item.tree-bodyguard') {
+        return {
+          type: 'specialization-tree',
+          name: 'Bodyguard Tree',
+          system: {
+            nodes: [{ nodeId: 'r1c1', talentId: 'Item.talent-tough', row: 1, column: 1, cost: 10 }],
+            connections: [{ from: 'r1c1', to: 'r2c1' }],
+          },
+        }
+      }
+      if (uuid === 'Item.talent-tough') return { name: 'Tough' }
+      return null
+    })
+
+    const app = new SpecializationTreeApp()
+    app.actor = actor
+    app.document = actor
+    const host = createMockHost({ width: 640, height: 480 })
+    app.element = { querySelector: vi.fn(() => host) }
+
+    const context = buildSpecializationTreeContext(actor)
+    await app._onRender(context, { resetView: false })
+
+    const container = app.pixiApp.stage.children.find((c) => c.position && c.scale)
+    expect(container, 'tree container must exist').toBeDefined()
+
+    container.scale.set.mockClear()
+    container.position.set.mockClear()
+
+    app.pixiApp.canvas._listeners.wheel({ deltaY: 100, offsetX: 320, offsetY: 240, preventDefault: vi.fn() })
+
+    expect(container.scale.set, 'wheel down must zoom out by 1/zoomStep factor').toHaveBeenCalledWith(1 / 1.15)
+  })
+
+  it('clamps zoom scale between minZoom and maxZoom', async () => {
+    const actor = createActor({
+      system: {
+        details: {
+          specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' }],
+        },
+        progression: {
+          talentPurchases: [],
+          experience: { available: 100 },
+        },
+      },
+    })
+    globalThis.fromUuidSync = vi.fn((uuid) => {
+      if (uuid === 'Item.tree-bodyguard') {
+        return {
+          type: 'specialization-tree',
+          name: 'Bodyguard Tree',
+          system: {
+            nodes: [{ nodeId: 'r1c1', talentId: 'Item.talent-tough', row: 1, column: 1, cost: 10 }],
+            connections: [{ from: 'r1c1', to: 'r2c1' }],
+          },
+        }
+      }
+      if (uuid === 'Item.talent-tough') return { name: 'Tough' }
+      return null
+    })
+
+    const app = new SpecializationTreeApp()
+    app.actor = actor
+    app.document = actor
+    const host = createMockHost({ width: 640, height: 480 })
+    app.element = { querySelector: vi.fn(() => host) }
+
+    const context = buildSpecializationTreeContext(actor)
+    await app._onRender(context, { resetView: false })
+
+    const container = app.pixiApp.stage.children.find((c) => c.position && c.scale)
+    expect(container, 'tree container must exist').toBeDefined()
+
+    container.scale.set.mockClear()
+    container.position.set.mockClear()
+
+    const canvas = app.pixiApp.canvas
+    const fire = (deltaY) => canvas._listeners.wheel({ deltaY, offsetX: 320, offsetY: 240, preventDefault: vi.fn() })
+
+    fire(-100)
+    expect(container.scale.set, 'zoom in must not exceed maxZoom 2').toHaveBeenCalledWith(1.15)
+
+    fire(-100)
+    fire(-100)
+    fire(-100)
+    fire(-100)
+    fire(-100)
+    expect(container.scale.set, 'zoom in after many steps must not exceed maxZoom 2').toHaveBeenCalledWith(2)
+
+    container.scale.set.mockClear()
+
+    fire(100)
+    fire(100)
+    fire(100)
+    fire(100)
+    fire(100)
+    fire(100)
+    fire(100)
+    fire(100)
+    fire(100)
+    fire(100)
+    expect(container.scale.set, 'zoom out after many steps must not go below minZoom 0.5').toHaveBeenCalledWith(0.5)
+  })
+
+  it('wheel zoom preserves pointer point stability and does not mutate renderNodes', async () => {
+    const actor = createActor({
+      system: {
+        details: {
+          specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' }],
+        },
+        progression: {
+          talentPurchases: [],
+          experience: { available: 100 },
+        },
+      },
+    })
+    globalThis.fromUuidSync = vi.fn((uuid) => {
+      if (uuid === 'Item.tree-bodyguard') {
+        return {
+          type: 'specialization-tree',
+          name: 'Bodyguard Tree',
+          system: {
+            nodes: [{ nodeId: 'r1c1', talentId: 'Item.talent-tough', row: 1, column: 1, cost: 10 }],
+            connections: [{ from: 'r1c1', to: 'r2c1' }],
+          },
+        }
+      }
+      if (uuid === 'Item.talent-tough') return { name: 'Tough' }
+      return null
+    })
+
+    const app = new SpecializationTreeApp()
+    app.actor = actor
+    app.document = actor
+    const host = createMockHost({ width: 640, height: 480 })
+    app.element = { querySelector: vi.fn(() => host) }
+
+    const context = buildSpecializationTreeContext(actor)
+    expect(context.renderNodes, 'stability test requires at least one node').toHaveLength(1)
+    const originalNode = { x: context.renderNodes[0].x, y: context.renderNodes[0].y }
+
+    await app._onRender(context, { resetView: false })
+
+    const container = app.pixiApp.stage.children.find((c) => c.position && c.scale)
+    expect(container, 'tree container must exist').toBeDefined()
+
+    container.scale.set.mockClear()
+    container.position.set.mockClear()
+
+    const pointerX = 320
+    const pointerY = 240
+    app.pixiApp.canvas._listeners.wheel({ deltaY: -100, offsetX: pointerX, offsetY: pointerY, preventDefault: vi.fn() })
+
+    const setCalls = container.position.set.mock.calls
+    const lastCall = setCalls[setCalls.length - 1]
+    expect(lastCall, 'viewport position must be recalculated after zoom').toBeDefined()
+
+    const newViewportX = lastCall[0]
+    const newViewportY = lastCall[1]
+
+    const worldX = (pointerX - 0) / 1
+    const worldY = (pointerY - 0) / 1
+    const expectedX = pointerX - worldX * 1.15
+    const expectedY = pointerY - worldY * 1.15
+    expect(newViewportX, 'viewport x must keep pointer point stable').toBeCloseTo(expectedX, 5)
+    expect(newViewportY, 'viewport y must keep pointer point stable').toBeCloseTo(expectedY, 5)
+
+    expect(context.renderNodes[0].x, 'zoom must not mutate node x').toBe(originalNode.x)
+    expect(context.renderNodes[0].y, 'zoom must not mutate node y').toBe(originalNode.y)
+  })
+
+  it('removes the wheel listener from the canvas on close', async () => {
+    const actor = createActor({
+      system: {
+        details: {
+          specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' }],
+        },
+        progression: {
+          talentPurchases: [],
+          experience: { available: 100 },
+        },
+      },
+    })
+    globalThis.fromUuidSync = vi.fn((uuid) => {
+      if (uuid === 'Item.tree-bodyguard') {
+        return {
+          type: 'specialization-tree',
+          name: 'Bodyguard Tree',
+          system: {
+            nodes: [{ nodeId: 'r1c1', talentId: 'Item.talent-tough', row: 1, column: 1, cost: 10 }],
+            connections: [{ from: 'r1c1', to: 'r2c1' }],
+          },
+        }
+      }
+      if (uuid === 'Item.talent-tough') return { name: 'Tough' }
+      return null
+    })
+
+    const app = new SpecializationTreeApp()
+    app.actor = actor
+    app.document = actor
+    const host = createMockHost({ width: 640, height: 480 })
+    app.element = { querySelector: vi.fn(() => host) }
+
+    const context = buildSpecializationTreeContext(actor)
+    await app._onRender(context, { resetView: false })
+
+    const canvas = app.pixiApp.canvas
+    await app.close()
+
+    expect(canvas.removeEventListener, 'close must remove wheel listener').toHaveBeenCalledWith(
+      'wheel', expect.any(Function),
+    )
   })
 })
