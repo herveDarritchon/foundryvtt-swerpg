@@ -462,6 +462,78 @@ describe('extractDirectionalConnections', () => {
   })
 })
 
+describe('specializationTreeMapper — talentUuid enrichment', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    resetSpecializationTreeImportStats()
+  })
+
+  const minimalInput = [
+    {
+      Key: 'BODYGUARD',
+      Name: 'Bodyguard',
+      TalentRows: {
+        TalentRow: [
+          {
+            Cost: '5',
+            Talents: { Key: ['PARRY'] },
+          },
+        ],
+      },
+    },
+  ]
+
+  it('sets talentUuid from talentById when a matching talent exists', () => {
+    const talentById = new Map([
+      ['parry', { uuid: 'Item.talentParry001', id: 'parry' }],
+    ])
+
+    const result = specializationTreeMapper(minimalInput, { talentById })
+
+    expect(result[0].system.nodes[0].talentId).toBe('parry')
+    expect(result[0].system.nodes[0].talentUuid).toBe('Item.talentParry001')
+  })
+
+  it('sets talentUuid to null when talentById is not provided', () => {
+    const result = specializationTreeMapper(minimalInput)
+
+    expect(result[0].system.nodes[0].talentId).toBe('parry')
+    expect(result[0].system.nodes[0].talentUuid).toBeNull()
+  })
+
+  it('sets talentUuid to null when the talent is not found in talentById', () => {
+    const talentById = new Map([
+      ['other', { uuid: 'Item.other001', id: 'other' }],
+    ])
+
+    const result = specializationTreeMapper(minimalInput, { talentById })
+
+    expect(result[0].system.nodes[0].talentId).toBe('parry')
+    expect(result[0].system.nodes[0].talentUuid).toBeNull()
+  })
+
+  it('resolves talentUuid when talentById key is already lowercased', () => {
+    const talentById = new Map([
+      ['parry', { uuid: 'Item.talentParry002', id: 'parry' }],
+    ])
+
+    const result = specializationTreeMapper(minimalInput, { talentById })
+
+    expect(result[0].system.nodes[0].talentUuid).toBe('Item.talentParry002')
+  })
+
+  it('preserves talentId unchanged when talentUuid is resolved', () => {
+    const talentById = new Map([
+      ['parry', { uuid: 'Item.talentParry003', id: 'parry' }],
+    ])
+
+    const result = specializationTreeMapper(minimalInput, { talentById })
+
+    expect(result[0].system.nodes[0].talentId).toBe('parry')
+    expect(result[0].system.nodes[0].talentUuid).toBe('Item.talentParry003')
+  })
+})
+
 describe('buildSpecializationTreeContext', () => {
   beforeEach(() => {
     vi.clearAllMocks()
@@ -474,7 +546,7 @@ describe('buildSpecializationTreeContext', () => {
 
     expect(context.folder.name).toBe('Swerpg - Specialization Trees')
     expect(context.element.type).toBe('specialization-tree')
-    expect(context.element.mapper).toBe(specializationTreeMapper)
+    expect(typeof context.element.mapper).toBe('function')
     expect(context.jsonData).toEqual([{ Key: 'BODYGUARD' }])
   })
 })

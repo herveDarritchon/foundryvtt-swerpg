@@ -5,6 +5,7 @@ import {
   addSpecializationTreeMissingCost,
   addSpecializationTreeRejectionReason,
   addSpecializationTreeUnresolvedTalent,
+  addSpecializationTreeTalentUuidNotResolved,
   buildTreeImportDiagnostics,
   getSpecializationTreeImportStats,
   incrementSpecializationTreeImportStat,
@@ -311,7 +312,7 @@ function extractDirectionalConnections(nodes) {
   return { connections, warnings }
 }
 
-export function specializationTreeMapper(specializations) {
+export function specializationTreeMapper(specializations, { talentById } = {}) {
   resetSpecializationTreeImportStats()
 
   if (!Array.isArray(specializations) || specializations.length === 0) {
@@ -421,7 +422,19 @@ export function specializationTreeMapper(specializations) {
               book: sourceInfo.name || undefined,
               page: sourceInfo.page != null ? String(sourceInfo.page) : undefined,
             },
-            nodes: normalizedNodes.map(({ nodeId, talentId, row, column, cost }) => ({ nodeId, talentId, row, column, cost })),
+            nodes: normalizedNodes.map(({ nodeId, talentId, row, column, cost }) => {
+              let talentUuid = null
+              if (talentById && talentId) {
+                const key = talentId.toLowerCase().trim()
+                const resolved = talentById.get(key)
+                if (resolved) {
+                  talentUuid = resolved.uuid
+                } else {
+                  addSpecializationTreeTalentUuidNotResolved(`${specializationId}:${nodeId}:${talentId}`)
+                }
+              }
+              return { nodeId, talentId, talentUuid, row, column, cost }
+            }),
             connections,
           },
           flags: {
@@ -458,4 +471,4 @@ export function specializationTreeMapper(specializations) {
     .filter(Boolean)
 }
 
-export { extractDirectionalConnections, getSpecializationTreeImportStats, resetSpecializationTreeImportStats }
+export { extractDirectionalConnections, getSpecializationTreeImportStats, resetSpecializationTreeImportStats, addSpecializationTreeTalentUuidNotResolved }
