@@ -657,6 +657,40 @@
     color: #c8dcee;
   }
 
+  .specialization-tree-app__toolbar {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    z-index: 5;
+    display: flex;
+    gap: 0.5rem;
+    pointer-events: none;
+
+    > * {
+      pointer-events: auto;
+    }
+  }
+
+  .specialization-tree-app__toolbar-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0.65rem;
+    background: rgba(10, 17, 26, 0.85);
+    border: 1px solid rgba(120, 169, 194, 0.3);
+    border-radius: 6px;
+    color: #c8dcee;
+    font-size: var(--font-size-11, 11px);
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+
+    &:hover {
+      background: rgba(24, 39, 58, 0.9);
+      border-color: rgba(120, 169, 194, 0.6);
+      color: #eef8ff;
+    }
+  }
+
   .specialization-tree-app__empty,
   .specialization-tree-app__sidebar-empty {
     place-items: center;

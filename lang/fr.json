@@ -111,6 +111,9 @@
           "NO_SPECIALIZATIONS_DESCRIPTION": "Ce personnage ne possède actuellement aucune spécialisation à afficher.",
           "NO_AVAILABLE_TREE_TITLE": "Aucun arbre de spécialisation disponible",
           "NO_AVAILABLE_TREE_DESCRIPTION": "Les spécialisations possédées ont bien été trouvées, mais aucune ne se résout actuellement vers un arbre référentiel complet."
+        },
+        "ACTION": {
+          "CENTER": "Centrer"
         }
       },
       "ACTIONS": {

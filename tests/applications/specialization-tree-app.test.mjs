@@ -1228,4 +1228,52 @@ describe('specialization-tree application', () => {
     const unknownNodes = context.renderNodes.filter((n) => n.talentName === 'Unknown talent')
     expect(unknownNodes, 'no node falls back to Unknown talent').toHaveLength(0)
   })
+
+  it('resetView action recenters the tree viewport', async () => {
+    const actor = createActor({
+      system: {
+        details: {
+          specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' }],
+        },
+        progression: {
+          talentPurchases: [],
+          experience: { available: 100 },
+        },
+      },
+    })
+    globalThis.fromUuidSync = vi.fn((uuid) => {
+      if (uuid === 'Item.tree-bodyguard') {
+        return { type: 'specialization-tree', name: 'Bodyguard Tree', system: { nodes: [{ nodeId: 'r1c1', talentId: 'Item.talent-tough', row: 1, column: 1, cost: 10 }], connections: [{ from: 'r1c1', to: 'r2c1' }] } }
+      }
+      if (uuid === 'Item.talent-tough') return { name: 'Tough' }
+      return null
+    })
+
+    const app = new SpecializationTreeApp()
+    app.actor = actor
+    app.document = actor
+    const host = createMockHost({ width: 640, height: 480 })
+    app.element = { querySelector: vi.fn(() => host) }
+
+    const context = buildSpecializationTreeContext(actor)
+    await app._onRender(context, { resetView: false })
+
+    expect(app.pixiApp).not.toBeNull()
+    const container = app.pixiApp.stage.children.find((c) => c.position && c.scale)
+    expect(container, 'tree container must exist after render').toBeDefined()
+    expect(container.position.set.mock.calls.at(-1), 'initial viewport must be at origin').toEqual([0, 0])
+
+    container.position.set.mockClear()
+    container.scale.set.mockClear()
+
+    const event = { preventDefault: vi.fn() }
+    await SpecializationTreeApp.DEFAULT_OPTIONS.actions.resetView.call(app, event)
+
+    expect(event.preventDefault).toHaveBeenCalled()
+    expect(container.position.set).toHaveBeenCalled()
+    expect(container.scale.set).toHaveBeenCalledWith(1)
+    const centerCall = container.position.set.mock.calls[0]
+    expect(centerCall[0], 'centered x must differ from origin').not.toBe(0)
+    expect(centerCall[1], 'centered y must differ from origin').not.toBe(0)
+  })
 })
