@@ -32,6 +32,10 @@ export function addSpecializationTreeUnresolvedTalent(detail) {
   specializationTreeStats.addDetail('unresolvedTalents', detail, 'unresolvedTalentDetails')
 }
 
+export function addSpecializationTreeTalentUuidNotResolved(detail) {
+  specializationTreeStats.addDetail('unresolvedTalents', detail, 'talentUuidNotResolvedDetails')
+}
+
 export function addSpecializationTreeInvalidConnection(detail) {
   specializationTreeStats.addDetail('invalidConnections', detail, 'invalidConnectionDetails')
 }
