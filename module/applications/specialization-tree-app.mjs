@@ -396,6 +396,12 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
 
   #zoomStep = 1.15
 
+  #isPanning = false
+
+  #lastPointerPosition = null
+
+  #isViewportInteractionsBound = false
+
   get title() {
     return game.i18n.format('SWERPG.TALENT.SPECIALIZATION_TREE_APP.TITLE', {
       actor: this.actor?.name ?? game.i18n.localize('SWERPG.TALENT.SPECIALIZATION_TREE_APP.UNKNOWN_ACTOR'),
@@ -455,6 +461,7 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
 
     this.#viewportHost = viewportHost
     this.#ensurePixiApp(viewportHost)
+    this.#bindViewportInteractions()
     this.#resizeViewport()
 
     if (!this.#isResizeBound) {
@@ -503,6 +510,9 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
     if (!this.pixiApp || !this.#viewportHost) return
     const { width, height } = getViewportDimensions(this.#viewportHost)
     this.pixiApp.renderer?.resize?.(width, height)
+    if (this.pixiApp.stage) {
+      this.pixiApp.stage.hitArea = new PIXI.Rectangle(0, 0, width, height)
+    }
   }
 
   #applyViewportTransform() {
@@ -540,6 +550,63 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
   #resetView() {
     this.#centerTree({ renderNodes: this.#renderNodesCache })
     this.#applyViewportTransform()
+  }
+
+  #bindViewportInteractions() {
+    if (this.#isViewportInteractionsBound || !this.pixiApp?.stage) return
+
+    this.#isViewportInteractionsBound = true
+    const stage = this.pixiApp.stage
+    stage.eventMode = 'static'
+
+    stage.on('pointerdown', (event) => {
+      this.#hideNodeTooltip()
+      this.#isPanning = true
+      this.#lastPointerPosition = this.#getPointerPosition(event)
+    })
+
+    stage.on('pointermove', (event) => {
+      if (!this.#isPanning || !this.#lastPointerPosition) return
+
+      const nextPosition = this.#getPointerPosition(event)
+      if (!nextPosition) return
+
+      this.#viewport.x += nextPosition.x - this.#lastPointerPosition.x
+      this.#viewport.y += nextPosition.y - this.#lastPointerPosition.y
+      this.#lastPointerPosition = nextPosition
+      this.#applyViewportTransform()
+    })
+
+    stage.on('pointerup', () => this.#stopPanning())
+    stage.on('pointerupoutside', () => this.#stopPanning())
+  }
+
+  #unbindViewportInteractions() {
+    if (!this.#isViewportInteractionsBound || !this.pixiApp?.stage) return
+
+    this.#isViewportInteractionsBound = false
+    this.pixiApp.stage.off?.('pointerdown')
+    this.pixiApp.stage.off?.('pointermove')
+    this.pixiApp.stage.off?.('pointerup')
+    this.pixiApp.stage.off?.('pointerupoutside')
+  }
+
+  #getPointerPosition(event) {
+    const point = event?.global ?? event?.data?.global
+    if (point?.x !== undefined && point?.y !== undefined) {
+      return { x: point.x, y: point.y }
+    }
+
+    if (event?.globalX !== undefined && event?.globalY !== undefined) {
+      return { x: event.globalX, y: event.globalY }
+    }
+
+    return null
+  }
+
+  #stopPanning() {
+    this.#isPanning = false
+    this.#lastPointerPosition = null
   }
 
   #drawTree(context) {
@@ -619,9 +686,6 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
         })
         this.#treeContainer.addChild(hitArea)
       }
-
-      this.pixiApp.stage.eventMode = 'static'
-      this.pixiApp.stage.on('pointerdown', () => this.#hideNodeTooltip())
     }
   }
 
@@ -669,6 +733,9 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
   }
 
   #teardownViewport() {
+    this.#unbindViewportInteractions()
+    this.#stopPanning()
+
     if (this.#isResizeBound) {
       window.removeEventListener('resize', this.#boundResize)
       this.#isResizeBound = false
