@@ -184,6 +184,22 @@ l'absence de comportement d'achat, sans snapshots graphiques PIXI.
 - réduit fortement la fragilité de la suite ;
 - cible le vrai contrat métier de cette sous-issue.
 
+### 4.7. Direction visuelle : lisibilité immersive, pas neutralité abstraite
+
+**Problème** : les variantes d’état doivent être immédiatement compréhensibles, mais le rendu ne doit pas paraître générique ou hors thème.
+
+**Décision retenue** : les variantes visuelles sont définies selon une direction artistique légère, compatible avec Star Wars et avec le ton du système :
+- interface tactique / holo-affichage ;
+- palette sobre et crédible ;
+- contraste suffisant entre états ;
+- rendu non cartoon, non fantasy, non “UI web générique” ;
+- priorité absolue à la lisibilité en jeu.
+
+**Justification** :
+- renforce l’immersion ;
+- donne une identité propre à la vue graphique ;
+- prépare les futures US sans imposer une refonte visuelle globale.
+- 
 ---
 
 ## 5. Plan de travail détaillé
