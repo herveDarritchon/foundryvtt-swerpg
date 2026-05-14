@@ -43,6 +43,7 @@ describe('specialization-tree application', () => {
   let getViewportDimensions
   let computeNodePosition
   let resolveTalentItem
+  let resolveTalentDetail
 
   beforeEach(async () => {
     setupFoundryMock({
@@ -65,6 +66,21 @@ describe('specialization-tree application', () => {
         'SWERPG.TALENT.SPECIALIZATION_TREE_APP.NODE_STATE.AVAILABLE': 'Available',
         'SWERPG.TALENT.SPECIALIZATION_TREE_APP.NODE_STATE.LOCKED': 'Locked',
         'SWERPG.TALENT.SPECIALIZATION_TREE_APP.NODE_STATE.INVALID': 'Invalid',
+        'SWERPG.TALENT.SPECIALIZATION_TREE_APP.REASON.ALREADY_PURCHASED': 'Already purchased',
+        'SWERPG.TALENT.SPECIALIZATION_TREE_APP.REASON.SPECIALIZATION_NOT_OWNED': 'Specialization not owned',
+        'SWERPG.TALENT.SPECIALIZATION_TREE_APP.REASON.TREE_NOT_FOUND': 'Reference tree not found',
+        'SWERPG.TALENT.SPECIALIZATION_TREE_APP.REASON.TREE_INCOMPLETE': 'Reference tree is incomplete',
+        'SWERPG.TALENT.SPECIALIZATION_TREE_APP.REASON.NODE_NOT_FOUND': 'Node not found in tree',
+        'SWERPG.TALENT.SPECIALIZATION_TREE_APP.REASON.NODE_INVALID': 'Node data is invalid',
+        'SWERPG.TALENT.SPECIALIZATION_TREE_APP.REASON.NODE_LOCKED': 'Prerequisites not met',
+        'SWERPG.TALENT.SPECIALIZATION_TREE_APP.REASON.NOT_ENOUGH_XP': 'Not enough XP',
+        'SWERPG.TALENT.SPECIALIZATION_TREE_APP.REASON.UNKNOWN': 'Unknown reason',
+        'SWERPG.TALENT.SPECIALIZATION_TREE_APP.TOOLTIP.XP_COST': 'Cost',
+        'SWERPG.TALENT.SPECIALIZATION_TREE_APP.TOOLTIP.TYPE': 'Type',
+        'SWERPG.TALENT.SPECIALIZATION_TREE_APP.TOOLTIP.RANKED': 'Ranked Talent',
+        'SWERPG.TALENT.SPECIALIZATION_TREE_APP.TOOLTIP.NON_RANKED': 'Non-ranked Talent',
+        'SWERPG.TALENT.SPECIALIZATION_TREE_APP.TOOLTIP.STATE': 'State',
+        'SWERPG.TALENT.SPECIALIZATION_TREE_APP.TOOLTIP.REASON': 'Reason',
         'SWERPG.TALENT.UNKNOWN': 'Unknown talent',
       },
     })
@@ -72,6 +88,7 @@ describe('specialization-tree application', () => {
     function createMockContainer() {
       return {
         children: [],
+        eventMode: 'none',
         addChild: vi.fn(function (child) {
           this.children.push(child)
           return child
@@ -83,6 +100,7 @@ describe('specialization-tree application', () => {
         destroy: vi.fn(function () {
           this.children = []
         }),
+        on: vi.fn(),
       }
     }
 
@@ -104,6 +122,9 @@ describe('specialization-tree application', () => {
       Graphics: class MockGraphics {
         constructor() {
           this.calls = []
+          this.eventMode = 'none'
+          this.cursor = 'default'
+          this._listeners = {}
         }
         lineStyle(...args) {
           this.calls.push(['lineStyle', ...args])
@@ -129,6 +150,14 @@ describe('specialization-tree application', () => {
           this.calls.push(['drawRoundedRect', ...args])
           return this
         }
+        drawRect(...args) {
+          this.calls.push(['drawRect', ...args])
+          return this
+        }
+        on(event, handler) {
+          this._listeners[event] = handler
+          return this
+        }
       },
       Text: class MockText {
         constructor(text, style) {
@@ -151,6 +180,7 @@ describe('specialization-tree application', () => {
       getViewportDimensions,
       computeNodePosition,
       resolveTalentItem,
+      resolveTalentDetail,
     } = await import('../../module/applications/specialization-tree-app.mjs'))
   })
 
@@ -709,5 +739,213 @@ describe('specialization-tree application', () => {
     expect(app.pixiApp).toBeNull()
     expect(app.actor).toBeNull()
     expect(app.document).toBeNull()
+  })
+
+  describe('resolveTalentDetail', () => {
+    it('returns talent name and isRanked when item is found', () => {
+      globalThis.fromUuidSync = vi.fn(() => ({
+        name: 'Dodge',
+        system: { isRanked: true },
+      }))
+      const detail = resolveTalentDetail('Item.talent-dodge')
+      expect(detail.name).toBe('Dodge')
+      expect(detail.isRanked).toBe(true)
+    })
+
+    it('returns talent name and isRanked=false when item is found but not ranked', () => {
+      globalThis.fromUuidSync = vi.fn(() => ({
+        name: 'Tough',
+        system: { isRanked: false },
+      }))
+      const detail = resolveTalentDetail('Item.talent-tough')
+      expect(detail.name).toBe('Tough')
+      expect(detail.isRanked).toBe(false)
+    })
+
+    it('returns unknown fallback when item is not found', () => {
+      globalThis.fromUuidSync = vi.fn(() => null)
+      const detail = resolveTalentDetail('Item.talent-nonexistent')
+      expect(detail.name).toBe('Unknown talent')
+      expect(detail.isRanked).toBe(false)
+    })
+
+    it('returns unknown fallback when fromUuidSync throws', () => {
+      globalThis.fromUuidSync = vi.fn(() => { throw new Error('not found') })
+      const detail = resolveTalentDetail('Item.talent-error')
+      expect(detail.name).toBe('Unknown talent')
+      expect(detail.isRanked).toBe(false)
+    })
+  })
+
+  it('includes talentId and isRanked in every render node', () => {
+    const actor = createActor({
+      system: {
+        details: {
+          specializations: [
+            { specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' },
+          ],
+        },
+        progression: {
+          talentPurchases: [],
+          experience: { available: 100 },
+        },
+      },
+    })
+
+    globalThis.fromUuidSync = vi.fn((uuid) => {
+      if (uuid === 'Item.tree-bodyguard') {
+        return {
+          type: 'specialization-tree',
+          name: 'Bodyguard Tree',
+          system: {
+            nodes: [
+              { nodeId: 'r1c1', talentId: 'Item.talent-tough', row: 1, column: 1, cost: 10 },
+              { nodeId: 'r2c1', talentId: 'Item.talent-protect', row: 2, column: 1, cost: 15 },
+            ],
+            connections: [{ from: 'r1c1', to: 'r2c1' }],
+          },
+        }
+      }
+      if (uuid === 'Item.talent-tough') return { name: 'Tough', system: { isRanked: true } }
+      if (uuid === 'Item.talent-protect') return { name: 'Protect', system: { isRanked: false } }
+      return null
+    })
+
+    const context = buildSpecializationTreeContext(actor)
+
+    expect(context.renderNodes, 'should have 2 render nodes').toHaveLength(2)
+
+    const tough = context.renderNodes.find((n) => n.nodeId === 'r1c1')
+    expect(tough).toBeDefined()
+    expect(tough.talentId).toBe('Item.talent-tough')
+    expect(tough.isRanked).toBe(true)
+
+    const protect = context.renderNodes.find((n) => n.nodeId === 'r2c1')
+    expect(protect).toBeDefined()
+    expect(protect.talentId).toBe('Item.talent-protect')
+    expect(protect.isRanked).toBe(false)
+  })
+
+  it('includes reasonCode and reasonLabel for locked nodes', () => {
+    const actor = createActor({
+      system: {
+        details: {
+          specializations: [
+            { specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' },
+          ],
+        },
+        progression: {
+          talentPurchases: [],
+          experience: { available: 0 },
+        },
+      },
+    })
+
+    globalThis.fromUuidSync = vi.fn((uuid) => {
+      if (uuid === 'Item.tree-bodyguard') {
+        return {
+          type: 'specialization-tree',
+          name: 'Bodyguard Tree',
+          system: {
+            nodes: [
+              { nodeId: 'r1c1', talentId: 'Item.talent-tough', row: 1, column: 1, cost: 10 },
+            ],
+            connections: [{ from: 'r1c1', to: 'r2c1' }],
+          },
+        }
+      }
+      if (uuid === 'Item.talent-tough') return { name: 'Tough', system: { isRanked: false } }
+      return null
+    })
+
+    const context = buildSpecializationTreeContext(actor)
+
+    expect(context.renderNodes).toHaveLength(1)
+    const node = context.renderNodes[0]
+    expect(node.nodeState).toBe('locked')
+    expect(node.reasonCode).toBe('not-enough-xp')
+    expect(node.reasonLabel).toBe('Not enough XP')
+  })
+
+  it('includes reasonCode and reasonLabel for nodes locked by accessibility', () => {
+    const actor = createActor({
+      system: {
+        details: {
+          specializations: [
+            { specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' },
+          ],
+        },
+        progression: {
+          talentPurchases: [],
+          experience: { available: 100 },
+        },
+      },
+    })
+
+    globalThis.fromUuidSync = vi.fn((uuid) => {
+      if (uuid === 'Item.tree-bodyguard') {
+        return {
+          type: 'specialization-tree',
+          name: 'Bodyguard Tree',
+          system: {
+            nodes: [
+              { nodeId: 'r1c1', talentId: 'Item.talent-tough', row: 1, column: 1, cost: 10 },
+              { nodeId: 'r2c1', talentId: 'Item.talent-protect', row: 2, column: 1, cost: 5 },
+            ],
+            connections: [{ from: 'r1c1', to: 'r2c1' }],
+          },
+        }
+      }
+      if (uuid === 'Item.talent-tough') return { name: 'Tough', system: { isRanked: false } }
+      if (uuid === 'Item.talent-protect') return { name: 'Protect', system: { isRanked: false } }
+      return null
+    })
+
+    const context = buildSpecializationTreeContext(actor)
+
+    const lockedNode = context.renderNodes.find((n) => n.nodeState === 'locked')
+    expect(lockedNode).toBeDefined()
+    expect(lockedNode.reasonCode).toBe('node-locked')
+    expect(lockedNode.reasonLabel).toBe('Prerequisites not met')
+  })
+
+  it('sets reasonLabel to null for available nodes', () => {
+    const actor = createActor({
+      system: {
+        details: {
+          specializations: [
+            { specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' },
+          ],
+        },
+        progression: {
+          talentPurchases: [],
+          experience: { available: 100 },
+        },
+      },
+    })
+
+    globalThis.fromUuidSync = vi.fn((uuid) => {
+      if (uuid === 'Item.tree-bodyguard') {
+        return {
+          type: 'specialization-tree',
+          name: 'Bodyguard Tree',
+          system: {
+            nodes: [
+              { nodeId: 'r1c1', talentId: 'Item.talent-tough', row: 1, column: 1, cost: 10 },
+            ],
+            connections: [{ from: 'r1c1', to: 'r2c1' }],
+          },
+        }
+      }
+      if (uuid === 'Item.talent-tough') return { name: 'Tough', system: { isRanked: false } }
+      return null
+    })
+
+    const context = buildSpecializationTreeContext(actor)
+
+    const available = context.renderNodes.find((n) => n.nodeState === 'available')
+    expect(available).toBeDefined()
+    expect(available.reasonCode).toBe('')
+    expect(available.reasonLabel).toBeNull()
   })
 })
