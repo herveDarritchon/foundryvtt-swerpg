@@ -258,6 +258,15 @@ export function buildSpecializationTreeContext(actor) {
     currentTreeData = resolution?.tree ?? null
 
     const nodes = Array.from(currentTreeData?.system?.nodes || [])
+
+    console.table(nodes.map((node) => ({
+      nodeId: node.nodeId,
+      talentId: node.talentId,
+      cost: node.cost,
+      row: node.row,
+      column: node.column,
+    })))
+
     const connections = Array.from(currentTreeData?.system?.connections || [])
 
     renderNodes = nodes.map((node) => {
