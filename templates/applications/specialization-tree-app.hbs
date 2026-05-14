@@ -39,6 +39,10 @@
             data-specialization-tree-viewport
             aria-label='{{viewportAriaLabel}}'
           ></div>
+          <div class='specialization-tree-app__node-tooltip' data-node-tooltip hidden>
+            <div class='specialization-tree-app__node-tooltip-header' data-tooltip-header></div>
+            <div class='specialization-tree-app__node-tooltip-body' data-tooltip-body></div>
+          </div>
         {{else}}
           <div class='specialization-tree-app__empty'>
             <h3>{{emptyStateTitle}}</h3>
