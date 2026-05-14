@@ -276,6 +276,72 @@ describe('Mock Foundry Helpers', () => {
 
       expect(result).toBeUndefined()
     })
+
+    test('should set documentName default to Item', () => {
+      const packDefinitions = {
+        'swerpg.test': { name: 'Test' },
+      }
+
+      addPacksMock(packDefinitions)
+
+      const pack = globalThis.game.packs.get('swerpg.test')
+      expect(pack.documentName).toBe('Item')
+    })
+
+    test('should set collection default to pack id', () => {
+      const packDefinitions = {
+        'swerpg.test': { name: 'Test' },
+      }
+
+      addPacksMock(packDefinitions)
+
+      const pack = globalThis.game.packs.get('swerpg.test')
+      expect(pack.collection).toBe('swerpg.test')
+    })
+
+    test('should keep index as a Map with proper entries', () => {
+      const packDefinitions = {
+        'swerpg.talents': {
+          name: 'Talents',
+          type: 'Item',
+          documentName: 'Item',
+          collection: 'swerpg.talents',
+          documents: [
+            { id: 'talent-grit', name: 'Grit', type: 'talent', system: { id: 'grit', isRanked: true } },
+          ],
+        },
+      }
+
+      addPacksMock(packDefinitions)
+
+      const pack = globalThis.game.packs.get('swerpg.talents')
+      expect(pack.index).toBeInstanceOf(Map)
+      expect(pack.index.size).toBe(1)
+      expect(pack.index.has('talent-grit')).toBe(true)
+
+      const entry = pack.index.get('talent-grit')
+      expect(entry._id).toBe('talent-grit')
+      expect(entry.name).toBe('Grit')
+      expect(entry.type).toBe('talent')
+      expect(entry.system.id).toBe('grit')
+      expect(entry.system.isRanked).toBe(true)
+    })
+
+    test('should carry flags in index entries when provided', () => {
+      const packDefinitions = {
+        'swerpg.talents': {
+          documents: [
+            { id: 'talent-1', name: 'Talent 1', type: 'talent', flags: { swerpg: { oggdudeKey: 'TALENT_1' } } },
+          ],
+        },
+      }
+
+      addPacksMock(packDefinitions)
+
+      const pack = globalThis.game.packs.get('swerpg.talents')
+      const entry = pack.index.get('talent-1')
+      expect(entry.flags.swerpg.oggdudeKey).toBe('TALENT_1')
+    })
   })
 
   describe('foundry.utils methods', () => {
