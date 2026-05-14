@@ -32,6 +32,135 @@
       "Duty": "Swerpg Duty Sheet",
       "Journal": "Swerpg Journal Sheet",
       "SpecializationTree": "Specialization Tree Sheet"
+    },
+    "TALENT": {
+      "FIELDS": {
+        "node": {
+          "label": "Talent Node",
+          "hint": "Assign this Talent to be purchased from a particular node in the Talent Tree."
+        },
+        "trees": {
+          "label": "Talent Trees",
+          "hint": "Select the Talent Trees which this Talent is available from."
+        },
+        "row": {
+          "label": "Talent Row in Tree",
+          "hint": "Select the row of the Talent Tree which this Talent is available from."
+        },
+        "description": {
+          "label": "Talent Description"
+        },
+        "actions": {
+          "label": "Granted Actions",
+          "hint": "Associate Actions which are available to characters which possess this Talent."
+        },
+        "activation": {
+          "label": "Activation",
+          "hint": "The type of Action to activate this Talent."
+        },
+        "isRanked": {
+          "label": "Ranked",
+          "hint": "This Talent may be purchased multiple times, each time increasing its effectiveness."
+        },
+        "rune": {
+          "label": "Rune"
+        },
+        "gesture": {
+          "label": "Gesture"
+        },
+        "inflection": {
+          "label": "Inflection"
+        },
+        "actorHooks": {
+          "label": "Hooked Functions",
+          "hint": "This configuration tab involves advanced features for automating talent effects. Mis-configuring data on this tab can have serious consequences. Do not attempt to make changes here unless you are confident in your own knowledge."
+        }
+      },
+      "ACTIVE": "Active",
+      "PASSIVE": "Passive",
+      "UNSPECIFIED": "Unspecified",
+      "RANKED": "Ranked",
+      "NON_RANKED": "Non-ranked",
+      "RANK": "Rank",
+      "UNKNOWN": "Unknown Talent",
+      "UNKNOWN_SOURCE": "Unknown Source",
+      "SOURCE_SPECIALIZATION_WITHOUT_TREE": "Specialization without available tree",
+      "SOURCE_INCOMPLETE": "Incomplete source",
+      "SOURCES": "Sources",
+      "VIEW_SPECIALIZATION_TREES": "View specialization trees",
+      "SPECIALIZATION_TREE_APP": {
+        "TITLE": "Specialization trees: {actor}",
+        "SUBTITLE": "Dedicated graphical viewport for owned specialization trees.",
+        "UNKNOWN_ACTOR": "Unknown actor",
+        "UNKNOWN_SPECIALIZATION": "Unknown specialization",
+        "VIEWPORT_ARIA_LABEL": "Specialization tree graphical viewport",
+        "STATUS": {
+          "AVAILABLE": "Available tree",
+          "UNRESOLVED": "Tree not resolved",
+          "INCOMPLETE": "Incomplete tree"
+        },
+        "NODE_STATE": {
+          "PURCHASED": "Purchased",
+          "AVAILABLE": "Available",
+          "LOCKED": "Locked",
+          "INVALID": "Invalid"
+        },
+        "REASON": {
+          "ALREADY_PURCHASED": "Already purchased",
+          "SPECIALIZATION_NOT_OWNED": "Specialization not owned",
+          "TREE_NOT_FOUND": "Reference tree not found",
+          "TREE_INCOMPLETE": "Reference tree is incomplete",
+          "NODE_NOT_FOUND": "Node not found in tree",
+          "NODE_INVALID": "Node data is invalid",
+          "NODE_LOCKED": "Prerequisites not met",
+          "NOT_ENOUGH_XP": "Not enough XP",
+          "UNKNOWN": "Unknown reason"
+        },
+        "TOOLTIP": {
+          "XP_COST": "Cost",
+          "TYPE": "Type",
+          "RANKED": "Ranked Talent",
+          "NON_RANKED": "Non-ranked Talent",
+          "STATE": "State",
+          "REASON": "Reason"
+        },
+        "EMPTY": {
+          "NO_ACTOR_TITLE": "No actor selected",
+          "NO_ACTOR_DESCRIPTION": "Open this application from a character sheet to inspect the owned specialization trees.",
+          "NO_SPECIALIZATIONS_TITLE": "No owned specialization",
+          "NO_SPECIALIZATIONS_DESCRIPTION": "This character does not currently own any specialization to display.",
+          "NO_AVAILABLE_TREE_TITLE": "No available specialization tree",
+          "NO_AVAILABLE_TREE_DESCRIPTION": "The owned specializations were found, but none currently resolve to a complete reference tree."
+        }
+      },
+      "ACTIONS": {
+        "ADD": "Add Action",
+        "DELETE": "Delete Action",
+        "EDIT": "Edit Action",
+        "HOOK_ADD": "Add Hook",
+        "HOOK_DELETE": "Delete Hook"
+      },
+      "WARNINGS": {
+        "AlreadyOwned": "You already own {name} and cannot add it a second time.",
+        "Banned": "You cannot purchase additional Signature talents at this node or tier.",
+        "CannotAfford": "You do not have sufficient Talent points to purchase {name} which costs {cost} points.",
+        "Inaccessible": "You are unable to acquire \"{name}\" because you have not unlocked this talent tree node.",
+        "Locked": "You do not satisfy the requirements to acquire \"{name}\" which requires {requires} {requirement}."
+      },
+      "HOOKS": {
+        "REGISTER": "Register Hook Function",
+        "GROUP_PREPARATION": "Actor Data Preparation",
+        "GROUP_ACTION": "Action Usage"
+      },
+      "NodeAttack": "Attack",
+      "NodeDefault": "PLACEHOLDER",
+      "NodeDefense": "Defense",
+      "NodeHeal": "Healing",
+      "NodeMagic": "Magic",
+      "NodeMove": "Movement",
+      "NodeSignature": "Signature",
+      "NodeUtility": "Utility",
+      "PointsAvailable": "Points Available"
     }
   },
   "SPECIALIZATION_TREE": {
@@ -331,7 +460,6 @@
     "NO_EQUIPMENT": "No equipped items",
     "TOGGLE": "Toggle Equipment"
   },
-
   "ACTION.Action": "Action",
   "ACTION.Condition": "Condition",
   "ACTION.Targets": "Targets",
@@ -1061,135 +1189,6 @@
       "ABILITIES": "The primary and secondary Abilities for a Species may not be the same.",
       "RESISTANCES": "The chosen Resistance and Vulnerability for a Species may not be the same."
     }
-  },
-    "TALENT": {
-    "FIELDS": {
-      "node": {
-        "label": "Talent Node",
-        "hint": "Assign this Talent to be purchased from a particular node in the Talent Tree."
-      },
-      "trees": {
-        "label": "Talent Trees",
-        "hint": "Select the Talent Trees which this Talent is available from."
-      },
-      "row": {
-        "label": "Talent Row in Tree",
-        "hint": "Select the row of the Talent Tree which this Talent is available from."
-      },
-      "description": {
-        "label": "Talent Description"
-      },
-      "actions": {
-        "label": "Granted Actions",
-        "hint": "Associate Actions which are available to characters which possess this Talent."
-      },
-      "activation": {
-        "label": "Activation",
-        "hint": "The type of Action to activate this Talent."
-      },
-      "isRanked": {
-        "label": "Ranked",
-        "hint": "This Talent may be purchased multiple times, each time increasing its effectiveness."
-      },
-      "rune": {
-        "label": "Rune"
-      },
-      "gesture": {
-        "label": "Gesture"
-      },
-      "inflection": {
-        "label": "Inflection"
-      },
-      "actorHooks": {
-        "label": "Hooked Functions",
-        "hint": "This configuration tab involves advanced features for automating talent effects. Mis-configuring data on this tab can have serious consequences. Do not attempt to make changes here unless you are confident in your own knowledge."
-      }
-    },
-    "ACTIVE": "Active",
-    "PASSIVE": "Passive",
-    "UNSPECIFIED": "Unspecified",
-    "RANKED": "Ranked",
-    "NON_RANKED": "Non-ranked",
-    "RANK": "Rank",
-    "UNKNOWN": "Unknown Talent",
-    "UNKNOWN_SOURCE": "Unknown Source",
-    "SOURCE_SPECIALIZATION_WITHOUT_TREE": "Specialization without available tree",
-    "SOURCE_INCOMPLETE": "Incomplete source",
-    "SOURCES": "Sources",
-      "VIEW_SPECIALIZATION_TREES": "View specialization trees",
-      "SPECIALIZATION_TREE_APP": {
-        "TITLE": "Specialization trees: {actor}",
-        "SUBTITLE": "Dedicated graphical viewport for owned specialization trees.",
-        "UNKNOWN_ACTOR": "Unknown actor",
-        "UNKNOWN_SPECIALIZATION": "Unknown specialization",
-        "VIEWPORT_ARIA_LABEL": "Specialization tree graphical viewport",
-        "STATUS": {
-          "AVAILABLE": "Available tree",
-          "UNRESOLVED": "Tree not resolved",
-          "INCOMPLETE": "Incomplete tree"
-        },
-        "NODE_STATE": {
-          "PURCHASED": "Purchased",
-          "AVAILABLE": "Available",
-          "LOCKED": "Locked",
-          "INVALID": "Invalid"
-        },
-        "REASON": {
-          "ALREADY_PURCHASED": "Already purchased",
-          "SPECIALIZATION_NOT_OWNED": "Specialization not owned",
-          "TREE_NOT_FOUND": "Reference tree not found",
-          "TREE_INCOMPLETE": "Reference tree is incomplete",
-          "NODE_NOT_FOUND": "Node not found in tree",
-          "NODE_INVALID": "Node data is invalid",
-          "NODE_LOCKED": "Prerequisites not met",
-          "NOT_ENOUGH_XP": "Not enough XP",
-          "UNKNOWN": "Unknown reason"
-        },
-        "TOOLTIP": {
-          "XP_COST": "Cost",
-          "TYPE": "Type",
-          "RANKED": "Ranked Talent",
-          "NON_RANKED": "Non-ranked Talent",
-          "STATE": "State",
-          "REASON": "Reason"
-        },
-        "EMPTY": {
-          "NO_ACTOR_TITLE": "No actor selected",
-          "NO_ACTOR_DESCRIPTION": "Open this application from a character sheet to inspect the owned specialization trees.",
-          "NO_SPECIALIZATIONS_TITLE": "No owned specialization",
-          "NO_SPECIALIZATIONS_DESCRIPTION": "This character does not currently own any specialization to display.",
-          "NO_AVAILABLE_TREE_TITLE": "No available specialization tree",
-          "NO_AVAILABLE_TREE_DESCRIPTION": "The owned specializations were found, but none currently resolve to a complete reference tree."
-        }
-      },
-      "ACTIONS": {
-      "ADD": "Add Action",
-      "DELETE": "Delete Action",
-      "EDIT": "Edit Action",
-      "HOOK_ADD": "Add Hook",
-      "HOOK_DELETE": "Delete Hook"
-    },
-    "WARNINGS": {
-      "AlreadyOwned": "You already own {name} and cannot add it a second time.",
-      "Banned": "You cannot purchase additional Signature talents at this node or tier.",
-      "CannotAfford": "You do not have sufficient Talent points to purchase {name} which costs {cost} points.",
-      "Inaccessible": "You are unable to acquire \"{name}\" because you have not unlocked this talent tree node.",
-      "Locked": "You do not satisfy the requirements to acquire \"{name}\" which requires {requires} {requirement}."
-    },
-    "HOOKS": {
-      "REGISTER": "Register Hook Function",
-      "GROUP_PREPARATION": "Actor Data Preparation",
-      "GROUP_ACTION": "Action Usage"
-    },
-    "NodeAttack": "Attack",
-    "NodeDefault": "PLACEHOLDER",
-    "NodeDefense": "Defense",
-    "NodeHeal": "Healing",
-    "NodeMagic": "Magic",
-    "NodeMove": "Movement",
-    "NodeSignature": "Signature",
-    "NodeUtility": "Utility",
-    "PointsAvailable": "Points Available"
   },
   "TALENTS": {
     "Adversary": "Adversary",
