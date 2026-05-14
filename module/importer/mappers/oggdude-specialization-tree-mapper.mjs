@@ -133,7 +133,8 @@ function extractNodesFromRows(xmlSpecialization) {
   const nodes = []
 
   for (const [rowIndex, rawRow] of rows.entries()) {
-    const row = parsePositiveInteger(rawRow?.Index ?? rawRow?.Row ?? rawRow?.Tier) ?? rowIndex + 1
+    const cost = parseNonNegativeInteger(rawRow?.Cost)
+    const row = computeRowFromCost(cost) ?? parsePositiveInteger(rawRow?.Row ?? rawRow?.Tier) ?? rowIndex + 1
 
     const talentKeys = asArray(rawRow?.Talents?.Key)
     if (talentKeys.length > 0) {
@@ -167,6 +168,14 @@ function extractNodesFromRows(xmlSpecialization) {
   }
 
   return nodes
+}
+
+function computeRowFromCost(cost) {
+  const numericCost = Number(cost)
+  if (!Number.isFinite(numericCost)) return null
+
+  const row = Math.floor((numericCost - 5) / 5) + 1
+  return row >= 1 && row <= 5 ? row : null
 }
 
 function extractNodesFromFlatList(xmlSpecialization) {
