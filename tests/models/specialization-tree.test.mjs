@@ -60,13 +60,16 @@ describe('SwerpgSpecializationTree', () => {
       expect(source.schema.page).toBeInstanceOf(foundry.data.fields.StringField)
     })
 
-    test('nodes ArrayField wraps a SchemaField with nodeId, talentId, row, column, cost', () => {
+    test('nodes ArrayField wraps a SchemaField with nodeId, talentId, talentUuid, row, column, cost', () => {
       const nodeField = SwerpgSpecializationTree.defineSchema().nodes.field
       expect(nodeField).toBeInstanceOf(foundry.data.fields.SchemaField)
       expect(nodeField.schema.nodeId).toBeInstanceOf(foundry.data.fields.StringField)
       expect(nodeField.schema.nodeId.config.required).toBe(true)
       expect(nodeField.schema.talentId).toBeInstanceOf(foundry.data.fields.StringField)
       expect(nodeField.schema.talentId.config.required).toBe(true)
+      expect(nodeField.schema.talentUuid).toBeInstanceOf(foundry.data.fields.StringField)
+      expect(nodeField.schema.talentUuid.config.required).toBe(false)
+      expect(nodeField.schema.talentUuid.config.nullable).toBe(true)
       expect(nodeField.schema.row).toBeInstanceOf(foundry.data.fields.NumberField)
       expect(nodeField.schema.column).toBeInstanceOf(foundry.data.fields.NumberField)
       expect(nodeField.schema.cost).toBeInstanceOf(foundry.data.fields.NumberField)
