@@ -116,28 +116,69 @@ export function computeCenteredOffset(bbox, viewportWidth, viewportHeight) {
   }
 }
 
-export function resolveTalentItem(talentId) {
-  try {
-    const item = fromUuidSync(talentId)
-    return item?.name ?? game.i18n.localize('SWERPG.TALENT.UNKNOWN')
-  } catch {
-    return game.i18n.localize('SWERPG.TALENT.UNKNOWN')
+function _resolveTalentByBusinessKey(normalizedKey) {
+  if (typeof game !== 'undefined' && game.items) {
+    for (const item of game.items) {
+      if (item.type !== 'talent') continue
+      const id = item.system?.id
+      if (id && typeof id === 'string' && id.toLowerCase().trim() === normalizedKey) {
+        return { name: item.name, isRanked: item.system?.isRanked ?? false }
+      }
+    }
   }
+
+  if (typeof game !== 'undefined' && game.packs) {
+    for (const pack of game.packs.values()) {
+      if (pack.documentName !== 'Item') continue
+      if (!pack.index?.size) continue
+      for (const entry of pack.index.values()) {
+        if (entry.type !== 'talent') continue
+        const systemId = entry.system?.id
+        if (systemId && typeof systemId === 'string' && systemId.toLowerCase().trim() === normalizedKey) {
+          return { name: entry.name, isRanked: entry.system?.isRanked ?? false }
+        }
+      }
+    }
+  }
+
+  return null
 }
 
-export function resolveTalentDetail(talentId) {
-  try {
-    const item = fromUuidSync(talentId)
-    if (!item) {
-      return { name: game.i18n.localize('SWERPG.TALENT.UNKNOWN'), isRanked: false }
+export function resolveTalentItem(ref) {
+  return resolveTalentDetail(ref).name
+}
+
+export function resolveTalentDetail(nodeRef) {
+  const unknown = game.i18n.localize('SWERPG.TALENT.UNKNOWN')
+
+  const talentUuid = typeof nodeRef === 'string' ? nodeRef : nodeRef?.talentUuid
+  const talentId = typeof nodeRef === 'string' ? null : nodeRef?.talentId
+
+  if (talentUuid) {
+    try {
+      const item = fromUuidSync(talentUuid)
+      if (item) {
+        return {
+          name: item.name ?? unknown,
+          isRanked: item.system?.isRanked ?? false,
+        }
+      }
+    } catch {
+      // Fall through to legacy fallback
     }
-    return {
-      name: item.name ?? game.i18n.localize('SWERPG.TALENT.UNKNOWN'),
-      isRanked: item.system?.isRanked ?? false,
-    }
-  } catch {
-    return { name: game.i18n.localize('SWERPG.TALENT.UNKNOWN'), isRanked: false }
   }
+
+  if (talentId) {
+    const matched = _resolveTalentByBusinessKey(talentId.toLowerCase().trim())
+    if (matched) {
+      return {
+        name: matched.name ?? unknown,
+        isRanked: matched.isRanked ?? false,
+      }
+    }
+  }
+
+  return { name: unknown, isRanked: false }
 }
 
 /**
@@ -221,7 +262,7 @@ export function buildSpecializationTreeContext(actor) {
 
     renderNodes = nodes.map((node) => {
       const pos = computeNodePosition(node.row, node.column)
-      const detail = resolveTalentDetail(node.talentId)
+      const detail = resolveTalentDetail(node)
       return {
         nodeId: node.nodeId,
         talentId: node.talentId,
