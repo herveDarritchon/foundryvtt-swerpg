@@ -415,6 +415,18 @@ class OggDudeDataElement {
         storageLabel: storageTarget.label,
       })
 
+      if (elementType === 'talent') {
+        const talentsToUpdate = created.filter(doc => doc?.type === 'talent' && doc.system?.uuid !== doc.uuid)
+        for (const talent of talentsToUpdate) {
+          await talent.update({ 'system.uuid': talent.uuid })
+        }
+        if (talentsToUpdate.length > 0) {
+          logger.debug('[OggDudeDataElement] Talent UUIDs persisted for stored items', {
+            count: talentsToUpdate.length,
+          })
+        }
+      }
+
       return created
     } catch (error) {
       logger.error('[OggDudeDataElement] Error while storing items batch', {
