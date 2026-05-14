@@ -385,6 +385,14 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
 
   #selectedNodeId = null
 
+  #viewport = { scale: 1, x: 0, y: 0 }
+
+  #minZoom = 0.5
+
+  #maxZoom = 2
+
+  #zoomStep = 1.15
+
   get title() {
     return game.i18n.format('SWERPG.TALENT.SPECIALIZATION_TREE_APP.TITLE', {
       actor: this.actor?.name ?? game.i18n.localize('SWERPG.TALENT.SPECIALIZATION_TREE_APP.UNKNOWN_ACTOR'),
@@ -432,10 +440,10 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
   /** @override */
   async _onRender(context, options) {
     await super._onRender?.(context, options)
-    this.#syncViewport(context)
+    this.#syncViewport(context, options)
   }
 
-  #syncViewport(context) {
+  #syncViewport(context, options = {}) {
     const viewportHost = this.#getViewportHost()
     if (!viewportHost) {
       this.#teardownViewport()
@@ -449,6 +457,10 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
     if (!this.#isResizeBound) {
       window.addEventListener('resize', this.#boundResize)
       this.#isResizeBound = true
+    }
+
+    if (options.resetView !== false) {
+      this.#centerTree(context)
     }
 
     this.#drawTree(context)
@@ -490,6 +502,28 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
     this.pixiApp.renderer?.resize?.(width, height)
   }
 
+  #applyViewportTransform() {
+    if (!this.#treeContainer) return
+    this.#treeContainer.position.set(this.#viewport.x, this.#viewport.y)
+    this.#treeContainer.scale.set(this.#viewport.scale)
+  }
+
+  #centerTree(context) {
+    const { renderNodes } = context ?? {}
+    if (!renderNodes?.length) {
+      this.#viewport.x = 0
+      this.#viewport.y = 0
+      this.#viewport.scale = 1
+      return
+    }
+    const bbox = computeTreeBoundingBox(renderNodes, NODE_WIDTH, NODE_HEIGHT)
+    const { width: vw, height: vh } = getViewportDimensions(this.#viewportHost)
+    const { offsetX, offsetY } = computeCenteredOffset(bbox, vw, vh)
+    this.#viewport.x = offsetX
+    this.#viewport.y = offsetY
+    this.#viewport.scale = 1
+  }
+
   #drawTree(context) {
     if (!this.pixiApp) return
 
@@ -507,14 +541,9 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
 
     this.#treeContainer = new PIXI.Container()
     this.pixiApp.stage.addChild(this.#treeContainer)
+    this.#applyViewportTransform()
 
     this.#renderNodesCache = renderNodes
-
-    const bbox = computeTreeBoundingBox(renderNodes, NODE_WIDTH, NODE_HEIGHT)
-    const { width: vw, height: vh } = getViewportDimensions(this.#viewportHost)
-    const { offsetX, offsetY } = computeCenteredOffset(bbox, vw, vh)
-    this.#treeContainer.x = offsetX
-    this.#treeContainer.y = offsetY
 
     if (renderConnections.length > 0) {
       const gfx = new PIXI.Graphics()
@@ -628,6 +657,7 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
     }
 
     this.#treeContainer = null
+    this.#viewport = { scale: 1, x: 0, y: 0 }
 
     if (this.pixiApp) {
       this.pixiApp.destroy?.(true)
