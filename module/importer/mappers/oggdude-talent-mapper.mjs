@@ -265,6 +265,7 @@ export class OggDudeTalentMapper {
         name: context.name,
         type: 'talent',
         system: {
+          id: context.key,
           activation: context.activation || 'unspecified',
           isRanked: context.isRanked || false,
           description: enrichedDescription,

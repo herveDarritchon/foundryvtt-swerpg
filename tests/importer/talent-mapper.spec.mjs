@@ -146,6 +146,7 @@ describe('OggDudeTalentMapper', () => {
       expect(result.system.activation).toBe('passive')
       expect(result.system.isRanked).toBe(false)
       expect(result.system.description).toContain('Force sensitive talent')
+      expect(result.system.id).toBe('force_sensitive')
       expect(result.flags.swerpg.oggdudeKey).toBe('force_sensitive')
       expect(result.flags.swerpg.import).toBeDefined()
       expect(result.flags.swerpg.import.source).toBe('Test Source')

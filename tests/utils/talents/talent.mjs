@@ -19,7 +19,7 @@
  */
 export function createTalentData(
   id = 'O0bl3Rdmkgf8wYIi',
-  { name = 'talent-name', type = 'talent', isRanked = false, row = 1, idxRank = 0, cost = 0, trees = ['Item.assassin00000000', 'Item.gadgeteerCopy000'] } = {},
+  { name = 'talent-name', type = 'talent', isRanked = false, row = 1, idxRank = 0, cost = 0, trees = ['Item.assassin00000000', 'Item.gadgeteerCopy000'], talentId, talentUuid } = {},
 ) {
   let baseData = {
     name: name,
@@ -27,6 +27,8 @@ export function createTalentData(
     id: id,
     img: 'worlds/swerpg-test/assets/talent.webp',
     system: {
+      id: talentId ?? name?.toLowerCase().replace(/\s+/g, '_') ?? '',
+      uuid: talentUuid ?? '',
       description: '',
       trees: trees,
       activation: 'active',
