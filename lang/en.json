@@ -131,6 +131,9 @@
           "NO_SPECIALIZATIONS_DESCRIPTION": "This character does not currently own any specialization to display.",
           "NO_AVAILABLE_TREE_TITLE": "No available specialization tree",
           "NO_AVAILABLE_TREE_DESCRIPTION": "The owned specializations were found, but none currently resolve to a complete reference tree."
+        },
+        "ACTION": {
+          "CENTER": "Center"
         }
       },
       "ACTIONS": {

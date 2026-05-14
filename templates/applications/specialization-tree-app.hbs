@@ -34,6 +34,12 @@
 
       <section class='specialization-tree-app__viewport-panel'>
         {{#if showViewport}}
+          <div class='specialization-tree-app__toolbar'>
+            <button type='button' class='specialization-tree-app__toolbar-btn' data-action='resetView'>
+              <i class='fa-solid fa-crosshairs'></i>
+              {{localize 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.ACTION.CENTER'}}
+            </button>
+          </div>
           <div
             class='specialization-tree-app__viewport'
             data-specialization-tree-viewport

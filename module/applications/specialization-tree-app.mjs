@@ -357,6 +357,9 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
       resizable: true,
     },
     sheetConfig: false,
+    actions: {
+      resetView: SpecializationTreeApp.#onResetView,
+    },
   }
 
   static PARTS = {
@@ -522,6 +525,21 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
     this.#viewport.x = offsetX
     this.#viewport.y = offsetY
     this.#viewport.scale = 1
+  }
+
+  /** @returns {Promise<void>} */
+  static async #onResetView(event, _target) {
+    event.preventDefault()
+    this.#resetView()
+  }
+
+  /**
+   * Reset the viewport to the centered initial view.
+   * Relies on the cached render nodes from the last draw.
+   */
+  #resetView() {
+    this.#centerTree({ renderNodes: this.#renderNodesCache })
+    this.#applyViewportTransform()
   }
 
   #drawTree(context) {
