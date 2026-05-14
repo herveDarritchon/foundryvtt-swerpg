@@ -1,4 +1,5 @@
 import { resolveActorSpecializationTrees } from '../lib/talent-node/talent-tree-resolver.mjs'
+import { getTreeNodesStates, NODE_STATE } from '../lib/talent-node/talent-node-state.mjs'
 import { logger } from '../utils/logger.mjs'
 
 const { api } = foundry.applications
@@ -7,6 +8,48 @@ const SPECIALIZATION_TREE_STATE_LABELS = Object.freeze({
   available: 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.STATUS.AVAILABLE',
   unresolved: 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.STATUS.UNRESOLVED',
   incomplete: 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.STATUS.INCOMPLETE',
+})
+
+const NODE_STATE_LABEL_KEYS = Object.freeze({
+  [NODE_STATE.PURCHASED]: 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.NODE_STATE.PURCHASED',
+  [NODE_STATE.AVAILABLE]: 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.NODE_STATE.AVAILABLE',
+  [NODE_STATE.LOCKED]: 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.NODE_STATE.LOCKED',
+  [NODE_STATE.INVALID]: 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.NODE_STATE.INVALID',
+})
+
+const NODE_STATE_VARIANTS = Object.freeze({
+  [NODE_STATE.PURCHASED]: Object.freeze({
+    fillColor: 0x1a3a2a,
+    borderColor: 0x4a9a6a,
+    borderWidth: 2,
+    alpha: 1,
+    textColor: 0xcccccc,
+    costColor: 0x88bb88,
+  }),
+  [NODE_STATE.AVAILABLE]: Object.freeze({
+    fillColor: 0x1a2c44,
+    borderColor: 0x78a9c2,
+    borderWidth: 2,
+    alpha: 1,
+    textColor: 0xffffff,
+    costColor: 0xcccccc,
+  }),
+  [NODE_STATE.LOCKED]: Object.freeze({
+    fillColor: 0x222222,
+    borderColor: 0x555555,
+    borderWidth: 1,
+    alpha: 0.7,
+    textColor: 0x888888,
+    costColor: 0x666666,
+  }),
+  [NODE_STATE.INVALID]: Object.freeze({
+    fillColor: 0x3a1a1a,
+    borderColor: 0x8a3333,
+    borderWidth: 2,
+    alpha: 1,
+    textColor: 0xaaaaaa,
+    costColor: 0xaa6666,
+  }),
 })
 
 const MIN_VIEWPORT_SIZE = 320
@@ -134,6 +177,20 @@ export function buildSpecializationTreeContext(actor) {
         column: node.column,
         x: pos.x,
         y: pos.y,
+      }
+    })
+
+    const nodeStates = getTreeNodesStates(actor, currentTreeId, currentTreeData)
+    renderNodes = renderNodes.map((node) => {
+      const stateResult = nodeStates.get(node.nodeId) ?? { state: NODE_STATE.INVALID }
+      const variant = NODE_STATE_VARIANTS[stateResult.state] ?? NODE_STATE_VARIANTS[NODE_STATE.INVALID]
+      return {
+        ...node,
+        nodeState: stateResult.state,
+        nodeStateLabel: game.i18n.localize(
+          NODE_STATE_LABEL_KEYS[stateResult.state] ?? NODE_STATE_LABEL_KEYS[NODE_STATE.INVALID],
+        ),
+        variant,
       }
     })
 
@@ -356,18 +413,20 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
     if (renderNodes.length > 0) {
       const bg = new PIXI.Graphics()
       for (const node of renderNodes) {
-        bg.beginFill(0x1a2c44, 1)
-        bg.lineStyle(2, 0x78a9c2, 1)
+        const v = node.variant ?? NODE_STATE_VARIANTS[NODE_STATE.AVAILABLE]
+        bg.beginFill(v.fillColor, v.alpha)
+        bg.lineStyle(v.borderWidth, v.borderColor, v.alpha)
         bg.drawRoundedRect(node.x, node.y, NODE_WIDTH, NODE_HEIGHT, 4)
         bg.endFill()
       }
       this.#treeContainer.addChild(bg)
 
       for (const node of renderNodes) {
+        const v = node.variant ?? NODE_STATE_VARIANTS[NODE_STATE.AVAILABLE]
         const nameText = new PIXI.Text(node.talentName, {
           fontFamily: 'Arial',
           fontSize: 11,
-          fill: 0xffffff,
+          fill: v.textColor,
           wordWrap: true,
           wordWrapWidth: NODE_WIDTH - 8,
         })
@@ -378,7 +437,7 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
         const costText = new PIXI.Text(`${node.xpCost} XP`, {
           fontFamily: 'Arial',
           fontSize: 10,
-          fill: 0xcccccc,
+          fill: v.costColor,
         })
         costText.x = node.x + 4
         costText.y = node.y + NODE_HEIGHT - 16
