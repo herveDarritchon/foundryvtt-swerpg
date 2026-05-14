@@ -41,6 +41,8 @@ describe('specialization-tree application', () => {
   let SpecializationTreeApp
   let buildSpecializationTreeContext
   let getViewportDimensions
+  let computeNodePosition
+  let resolveTalentItem
 
   beforeEach(async () => {
     setupFoundryMock({
@@ -59,18 +61,77 @@ describe('specialization-tree application', () => {
         'SWERPG.TALENT.SPECIALIZATION_TREE_APP.EMPTY.NO_SPECIALIZATIONS_DESCRIPTION': 'This character does not currently own any specialization to display.',
         'SWERPG.TALENT.SPECIALIZATION_TREE_APP.EMPTY.NO_AVAILABLE_TREE_TITLE': 'No available specialization tree',
         'SWERPG.TALENT.SPECIALIZATION_TREE_APP.EMPTY.NO_AVAILABLE_TREE_DESCRIPTION': 'The owned specializations were found, but none currently resolve to a complete reference tree.',
+        'SWERPG.TALENT.UNKNOWN': 'Unknown talent',
       },
     })
+
+    function createMockContainer() {
+      return {
+        children: [],
+        addChild: vi.fn(function (child) {
+          this.children.push(child)
+          return child
+        }),
+        removeChild: vi.fn(function (child) {
+          this.children = this.children.filter((c) => c !== child)
+          return child
+        }),
+        destroy: vi.fn(function () {
+          this.children = []
+        }),
+      }
+    }
 
     globalThis.PIXI = {
       Application: class MockPixiApplication {
         constructor(options = {}) {
           this.options = options
-          this.renderer = {
-            resize: vi.fn(),
-          }
+          this.renderer = { resize: vi.fn() }
           this.canvas = createMockCanvas()
+          this.stage = createMockContainer()
           this.destroy = vi.fn()
+        }
+      },
+      Container: class MockContainer {
+        constructor() {
+          Object.assign(this, createMockContainer())
+        }
+      },
+      Graphics: class MockGraphics {
+        constructor() {
+          this.calls = []
+        }
+        lineStyle(...args) {
+          this.calls.push(['lineStyle', ...args])
+          return this
+        }
+        moveTo(...args) {
+          this.calls.push(['moveTo', ...args])
+          return this
+        }
+        lineTo(...args) {
+          this.calls.push(['lineTo', ...args])
+          return this
+        }
+        beginFill(...args) {
+          this.calls.push(['beginFill', ...args])
+          return this
+        }
+        endFill() {
+          this.calls.push(['endFill'])
+          return this
+        }
+        drawRoundedRect(...args) {
+          this.calls.push(['drawRoundedRect', ...args])
+          return this
+        }
+      },
+      Text: class MockText {
+        constructor(text, style) {
+          this.text = text
+          this.style = style
+          this.x = 0
+          this.y = 0
         }
       },
     }
@@ -84,6 +145,8 @@ describe('specialization-tree application', () => {
       default: SpecializationTreeApp,
       buildSpecializationTreeContext,
       getViewportDimensions,
+      computeNodePosition,
+      resolveTalentItem,
     } = await import('../../module/applications/specialization-tree-app.mjs'))
   })
 
@@ -156,6 +219,200 @@ describe('specialization-tree application', () => {
     expect(getViewportDimensions(host)).toEqual({ width: 320, height: 320 })
   })
 
+  it('computes node position from row and column', () => {
+    const pos = computeNodePosition(1, 2)
+    expect(pos.x).toBe(2 * (140 + 30) + 20)
+    expect(pos.y).toBe(1 * (60 + 30) + 20)
+    const pos2 = computeNodePosition(0, 0)
+    expect(pos2.x).toBe(20)
+    expect(pos2.y).toBe(20)
+  })
+
+  it('selects the last available specialization as current tree', () => {
+    const actor = createActor({
+      system: {
+        details: {
+          specializations: [
+            { specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' },
+            { specializationId: 'spec-soldier', name: 'Soldier', treeUuid: 'Item.tree-soldier' },
+          ],
+        },
+      },
+    })
+
+    globalThis.fromUuidSync = vi.fn((uuid) => {
+      if (uuid === 'Item.tree-bodyguard') {
+        return { type: 'specialization-tree', name: 'Bodyguard Tree', system: { nodes: [{ nodeId: 'r1c1', talentId: 'Item.talent-bg', row: 1, column: 1 }, { nodeId: 'r2c1', talentId: 'Item.talent-bg', row: 2, column: 1 }], connections: [{ from: 'r1c1', to: 'r2c1' }] } }
+      }
+      if (uuid === 'Item.tree-soldier') {
+        return { type: 'specialization-tree', name: 'Soldier Tree', system: { nodes: [{ nodeId: 'r1c1', talentId: 'Item.talent-sd', row: 1, column: 1 }, { nodeId: 'r2c1', talentId: 'Item.talent-sd', row: 2, column: 1 }], connections: [{ from: 'r1c1', to: 'r2c1' }] } }
+      }
+      return null
+    })
+
+    const context = buildSpecializationTreeContext(actor)
+
+    expect(context.currentTreeId).toBe('spec-soldier')
+    expect(context.currentTreeName).toBe('Soldier Tree')
+    expect(context.currentTreeData).not.toBeNull()
+  })
+
+  it('sets currentTreeId to null when no specialization is available', () => {
+    const actor = createActor({
+      system: {
+        details: {
+          specializations: [
+            { specializationId: 'spec-unknown', name: 'Unknown', treeUuid: 'Item.tree-unknown' },
+          ],
+        },
+      },
+    })
+
+    globalThis.fromUuidSync = vi.fn(() => null)
+
+    const context = buildSpecializationTreeContext(actor)
+
+    expect(context.currentTreeId).toBeNull()
+    expect(context.currentTreeData).toBeNull()
+    expect(context.renderNodes).toEqual([])
+    expect(context.renderConnections).toEqual([])
+  })
+
+  it('builds renderNodes with computed positions and talent names', () => {
+    const actor = createActor({
+      system: {
+        details: {
+          specializations: [
+            { specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' },
+          ],
+        },
+      },
+    })
+
+    globalThis.fromUuidSync = vi.fn((uuid) => {
+      if (uuid === 'Item.tree-bodyguard') {
+        return {
+          type: 'specialization-tree',
+          name: 'Bodyguard Tree',
+          system: {
+            nodes: [
+              { nodeId: 'r1c1', talentId: 'Item.talent-tough', row: 1, column: 1, cost: 10 },
+              { nodeId: 'r1c2', talentId: 'Item.talent-protect', row: 1, column: 2, cost: 15 },
+            ],
+            connections: [{ from: 'r1c1', to: 'r1c2' }],
+          },
+        }
+      }
+      if (uuid === 'Item.talent-tough' || uuid === 'Item.talent-protect') {
+        return { name: uuid === 'Item.talent-tough' ? 'Tough' : 'Protect' }
+      }
+      return null
+    })
+
+    const context = buildSpecializationTreeContext(actor)
+
+    expect(context.renderNodes).toHaveLength(2)
+    expect(context.renderNodes[0]).toEqual({
+      nodeId: 'r1c1',
+      talentName: 'Tough',
+      xpCost: 10,
+      row: 1,
+      column: 1,
+      x: 1 * (140 + 30) + 20,
+      y: 1 * (60 + 30) + 20,
+    })
+    expect(context.renderNodes[1]).toEqual({
+      nodeId: 'r1c2',
+      talentName: 'Protect',
+      xpCost: 15,
+      row: 1,
+      column: 2,
+      x: 2 * (140 + 30) + 20,
+      y: 1 * (60 + 30) + 20,
+    })
+  })
+
+  it('builds renderConnections with correct from/to center positions', () => {
+    const actor = createActor({
+      system: {
+        details: {
+          specializations: [
+            { specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' },
+          ],
+        },
+      },
+    })
+
+    globalThis.fromUuidSync = vi.fn((uuid) => {
+      if (uuid === 'Item.tree-bodyguard') {
+        return {
+          type: 'specialization-tree',
+          name: 'Bodyguard Tree',
+          system: {
+            nodes: [
+              { nodeId: 'r1c1', talentId: 'Item.talent-tough', row: 1, column: 1, cost: 10 },
+              { nodeId: 'r1c2', talentId: 'Item.talent-protect', row: 1, column: 2, cost: 15 },
+            ],
+            connections: [{ from: 'r1c1', to: 'r1c2', type: 'straight' }],
+          },
+        }
+      }
+      if (uuid === 'Item.talent-tough' || uuid === 'Item.talent-protect') {
+        return { name: 'Talent' }
+      }
+      return null
+    })
+
+    const context = buildSpecializationTreeContext(actor)
+
+    expect(context.renderConnections).toHaveLength(1)
+    const conn = context.renderConnections[0]
+    expect(conn.type).toBe('straight')
+
+    const fromCenterX = context.renderNodes[0].x + 70
+    const fromCenterY = context.renderNodes[0].y + 30
+    const toCenterX = context.renderNodes[1].x + 70
+    const toCenterY = context.renderNodes[1].y + 30
+
+    expect(conn.fromX).toBe(fromCenterX)
+    expect(conn.fromY).toBe(fromCenterY)
+    expect(conn.toX).toBe(toCenterX)
+    expect(conn.toY).toBe(toCenterY)
+  })
+
+  it('resolves unknown talentId to i18n fallback', () => {
+    const actor = createActor({
+      system: {
+        details: {
+          specializations: [
+            { specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' },
+          ],
+        },
+      },
+    })
+
+    globalThis.fromUuidSync = vi.fn((uuid) => {
+      if (uuid === 'Item.tree-bodyguard') {
+        return { type: 'specialization-tree', name: 'Bodyguard Tree', system: { nodes: [{ nodeId: 'r1c1', talentId: 'Item.talent-missing', row: 1, column: 1, cost: 5 }, { nodeId: 'r2c1', talentId: 'Item.talent-other', row: 2, column: 1, cost: 5 }], connections: [{ from: 'r1c1', to: 'r2c1' }] } }
+      }
+      return null
+    })
+
+    const context = buildSpecializationTreeContext(actor)
+
+    expect(context.renderNodes[0].talentName).toBe('Unknown talent')
+  })
+
+  it('resolveTalentItem returns name when item found', () => {
+    globalThis.fromUuidSync = vi.fn(() => ({ name: 'Dodge' }))
+    expect(resolveTalentItem('Item.talent-dodge')).toBe('Dodge')
+  })
+
+  it('resolveTalentItem returns unknown fallback when item not found', () => {
+    globalThis.fromUuidSync = vi.fn(() => null)
+    expect(resolveTalentItem('Item.talent-nonexistent')).toBe('Unknown talent')
+  })
+
   it('opens for the provided actor and triggers a render', async () => {
     const actor = createActor()
     const app = new SpecializationTreeApp()
@@ -213,6 +470,37 @@ describe('specialization-tree application', () => {
     expect(app.pixiApp.renderer.resize).toHaveBeenCalledWith(640, 480)
     expect(globalThis.window.addEventListener).toHaveBeenCalledWith('resize', expect.any(Function))
     expect(globalThis.canvas).toBeUndefined()
+  })
+
+  it('draws tree nodes and connections into the PIXI stage without crashing', async () => {
+    const actor = createActor({
+      system: {
+        details: {
+          specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' }],
+        },
+      },
+    })
+    globalThis.fromUuidSync = vi.fn((uuid) => {
+      if (uuid === 'Item.tree-bodyguard') {
+        return { type: 'specialization-tree', name: 'Bodyguard Tree', system: { nodes: [{ nodeId: 'r1c1', talentId: 'Item.talent-tough', row: 1, column: 1, cost: 10 }], connections: [{ from: 'r1c1', to: 'r2c1' }] } }
+      }
+      if (uuid === 'Item.talent-tough') return { name: 'Tough' }
+      return null
+    })
+
+    const app = new SpecializationTreeApp()
+    app.actor = actor
+    app.document = actor
+    const host = createMockHost({ width: 640, height: 480 })
+    app.element = { querySelector: vi.fn(() => host) }
+
+    const context = buildSpecializationTreeContext(actor)
+
+    await app._onRender(context, {})
+
+    expect(app.pixiApp).not.toBeNull()
+    expect(app.pixiApp.stage.addChild).toHaveBeenCalled()
+    expect(app.pixiApp.stage.children.length).toBeGreaterThan(0)
   })
 
   it('tears down the PIXI viewport and clears actor bindings on close', async () => {

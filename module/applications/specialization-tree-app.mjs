@@ -11,6 +11,12 @@ const SPECIALIZATION_TREE_STATE_LABELS = Object.freeze({
 
 const MIN_VIEWPORT_SIZE = 320
 
+const NODE_WIDTH = 140
+const NODE_HEIGHT = 60
+const H_GAP = 30
+const V_GAP = 30
+const PADDING = 20
+
 /**
  * Compute the viewport size from a host element.
  * @param {HTMLElement|null|undefined} host - The DOM element hosting the PIXI viewport.
@@ -20,6 +26,22 @@ export function getViewportDimensions(host) {
   return {
     width: Math.max(Math.round(host?.clientWidth || 0), MIN_VIEWPORT_SIZE),
     height: Math.max(Math.round(host?.clientHeight || 0), MIN_VIEWPORT_SIZE),
+  }
+}
+
+export function computeNodePosition(row, column) {
+  return {
+    x: column * (NODE_WIDTH + H_GAP) + PADDING,
+    y: row * (NODE_HEIGHT + V_GAP) + PADDING,
+  }
+}
+
+export function resolveTalentItem(talentId) {
+  try {
+    const item = fromUuidSync(talentId)
+    return item?.name ?? game.i18n.localize('SWERPG.TALENT.UNKNOWN')
+  } catch {
+    return game.i18n.localize('SWERPG.TALENT.UNKNOWN')
   }
 }
 
@@ -48,6 +70,11 @@ export function buildSpecializationTreeContext(actor) {
       hasResolvedTrees: false,
       showViewport: false,
       specializations: [],
+      currentTreeId: null,
+      currentTreeName: null,
+      currentTreeData: null,
+      renderNodes: [],
+      renderConnections: [],
       emptyStateTitle: game.i18n.localize('SWERPG.TALENT.SPECIALIZATION_TREE_APP.EMPTY.NO_ACTOR_TITLE'),
       emptyStateDescription: game.i18n.localize('SWERPG.TALENT.SPECIALIZATION_TREE_APP.EMPTY.NO_ACTOR_DESCRIPTION'),
       viewportAriaLabel: game.i18n.localize('SWERPG.TALENT.SPECIALIZATION_TREE_APP.VIEWPORT_ARIA_LABEL'),
@@ -75,6 +102,62 @@ export function buildSpecializationTreeContext(actor) {
 
   const hasResolvedTrees = specializationEntries.some((specialization) => specialization.isAvailable)
 
+  let currentTreeId = null
+  let currentTreeName = null
+  let currentTreeData = null
+  let renderNodes = []
+  let renderConnections = []
+
+  let lastAvailableEntry = null
+  for (const entry of specializationEntries) {
+    if (entry.isAvailable) {
+      lastAvailableEntry = entry
+    }
+  }
+
+  if (lastAvailableEntry) {
+    currentTreeId = lastAvailableEntry.key
+    currentTreeName = lastAvailableEntry.treeName
+    const resolution = resolutions.get(currentTreeId)
+    currentTreeData = resolution?.tree ?? null
+
+    const nodes = Array.from(currentTreeData?.system?.nodes || [])
+    const connections = Array.from(currentTreeData?.system?.connections || [])
+
+    renderNodes = nodes.map((node) => {
+      const pos = computeNodePosition(node.row, node.column)
+      return {
+        nodeId: node.nodeId,
+        talentName: resolveTalentItem(node.talentId),
+        xpCost: node.cost ?? 0,
+        row: node.row,
+        column: node.column,
+        x: pos.x,
+        y: pos.y,
+      }
+    })
+
+    const nodePositionMap = new Map()
+    for (const node of renderNodes) {
+      nodePositionMap.set(node.nodeId, {
+        centerX: node.x + NODE_WIDTH / 2,
+        centerY: node.y + NODE_HEIGHT / 2,
+      })
+    }
+
+    renderConnections = connections.map((conn) => {
+      const fromPos = nodePositionMap.get(conn.from) ?? { centerX: 0, centerY: 0 }
+      const toPos = nodePositionMap.get(conn.to) ?? { centerX: 0, centerY: 0 }
+      return {
+        fromX: fromPos.centerX,
+        fromY: fromPos.centerY,
+        toX: toPos.centerX,
+        toY: toPos.centerY,
+        type: conn.type ?? null,
+      }
+    })
+  }
+
   return {
     actor,
     document: actor,
@@ -88,6 +171,11 @@ export function buildSpecializationTreeContext(actor) {
     hasResolvedTrees,
     showViewport: hasResolvedTrees,
     specializations: specializationEntries,
+    currentTreeId,
+    currentTreeName,
+    currentTreeData,
+    renderNodes,
+    renderConnections,
     emptyStateTitle: specializationEntries.length === 0
       ? game.i18n.localize('SWERPG.TALENT.SPECIALIZATION_TREE_APP.EMPTY.NO_SPECIALIZATIONS_TITLE')
       : game.i18n.localize('SWERPG.TALENT.SPECIALIZATION_TREE_APP.EMPTY.NO_AVAILABLE_TREE_TITLE'),
@@ -130,6 +218,8 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
   #viewportHost = null
 
   #boundResize = () => this.#resizeViewport()
+
+  #treeContainer = null
 
   #isResizeBound = false
 
@@ -180,10 +270,10 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
   /** @override */
   async _onRender(context, options) {
     await super._onRender?.(context, options)
-    this.#syncViewport()
+    this.#syncViewport(context)
   }
 
-  #syncViewport() {
+  #syncViewport(context) {
     const viewportHost = this.#getViewportHost()
     if (!viewportHost) {
       this.#teardownViewport()
@@ -198,6 +288,8 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
       window.addEventListener('resize', this.#boundResize)
       this.#isResizeBound = true
     }
+
+    this.#drawTree(context)
   }
 
   #getViewportHost() {
@@ -236,11 +328,72 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
     this.pixiApp.renderer?.resize?.(width, height)
   }
 
+  #drawTree(context) {
+    if (!this.pixiApp) return
+
+    if (this.#treeContainer) {
+      this.pixiApp.stage?.removeChild?.(this.#treeContainer)
+      this.#treeContainer.destroy?.({ children: true })
+      this.#treeContainer = null
+    }
+
+    const { renderNodes, renderConnections } = context ?? {}
+    if (!renderNodes?.length && !renderConnections?.length) return
+
+    this.#treeContainer = new PIXI.Container()
+    this.pixiApp.stage.addChild(this.#treeContainer)
+
+    if (renderConnections.length > 0) {
+      const gfx = new PIXI.Graphics()
+      gfx.lineStyle(2, 0x78a9c2, 0.6)
+      for (const conn of renderConnections) {
+        gfx.moveTo(conn.fromX, conn.fromY)
+        gfx.lineTo(conn.toX, conn.toY)
+      }
+      this.#treeContainer.addChild(gfx)
+    }
+
+    if (renderNodes.length > 0) {
+      const bg = new PIXI.Graphics()
+      for (const node of renderNodes) {
+        bg.beginFill(0x1a2c44, 1)
+        bg.lineStyle(2, 0x78a9c2, 1)
+        bg.drawRoundedRect(node.x, node.y, NODE_WIDTH, NODE_HEIGHT, 4)
+        bg.endFill()
+      }
+      this.#treeContainer.addChild(bg)
+
+      for (const node of renderNodes) {
+        const nameText = new PIXI.Text(node.talentName, {
+          fontFamily: 'Arial',
+          fontSize: 11,
+          fill: 0xffffff,
+          wordWrap: true,
+          wordWrapWidth: NODE_WIDTH - 8,
+        })
+        nameText.x = node.x + 4
+        nameText.y = node.y + 4
+        this.#treeContainer.addChild(nameText)
+
+        const costText = new PIXI.Text(`${node.xpCost} XP`, {
+          fontFamily: 'Arial',
+          fontSize: 10,
+          fill: 0xcccccc,
+        })
+        costText.x = node.x + 4
+        costText.y = node.y + NODE_HEIGHT - 16
+        this.#treeContainer.addChild(costText)
+      }
+    }
+  }
+
   #teardownViewport() {
     if (this.#isResizeBound) {
       window.removeEventListener('resize', this.#boundResize)
       this.#isResizeBound = false
     }
+
+    this.#treeContainer = null
 
     if (this.pixiApp) {
       this.pixiApp.destroy?.(true)
