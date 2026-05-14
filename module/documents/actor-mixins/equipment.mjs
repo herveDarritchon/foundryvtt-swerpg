@@ -37,7 +37,7 @@ import { logger } from '../../utils/logger.mjs'
 function canFreeMove(actor, armor) {
   if (actor.isWeakened) return false
   if (actor.statuses.has('prone')) return false
-  if (armor.system.category === 'heavy' && !actor.talentIds.has('armoredefficiency')) return false
+  if (armor.system.category === 'heavy' && actor?.talentIds && !actor?.talentIds.has('armoredefficiency')) return false
   return true
 }
 
