@@ -1,5 +1,42 @@
 import { logger } from '../../utils/logger.mjs'
 
+export function findTreeForSpecialization(specData) {
+  const name = specData?.name
+  if (!name || !game?.items?.find) return null
+  const nameSlug = name.toLowerCase().replace(/\s+/g, '-')
+  return game.items.find(
+    (item) =>
+      item?.type === 'specialization-tree' &&
+      (item?.system?.specializationId === nameSlug || item?.name === name),
+  ) ?? null
+}
+
+/**
+ * Enrich an actor's owned specializations that are missing specializationId / treeUuid.
+ * Resolves them by name and persists the enrichment.
+ * @param {Actor|object} actor - The actor whose specializations should be normalized.
+ * @returns {Promise<Array<object>>} The enriched specializations array.
+ */
+export async function normalizeActorSpecializations(actor) {
+  const specializations = Array.from(actor?.system?.details?.specializations || [])
+  let hasChanges = false
+  const enriched = specializations.map((spec) => {
+    if (spec.specializationId || spec.treeUuid) return spec
+    hasChanges = true
+    const tree = findTreeForSpecialization(spec)
+    const nameSlug = spec.name?.toLowerCase().replace(/\s+/g, '-') ?? ''
+    return {
+      ...spec,
+      specializationId: tree?.system?.specializationId || nameSlug,
+      treeUuid: tree?.uuid ?? undefined,
+    }
+  })
+  if (hasChanges && typeof actor.update === 'function') {
+    await actor.update({ 'system.details.specializations': enriched })
+  }
+  return enriched
+}
+
 /**
  * Determine whether a specialization tree is structurally usable.
  * @param {Item|object|null} tree - The specialization-tree item to inspect.
@@ -59,6 +96,15 @@ export function resolveSpecializationTree(specializationData = {}) {
     logger.warn('[TalentTreeResolver] Owned specialization is missing specializationId and treeUuid', {
       specializationData,
     })
+
+    const nameTree = findTreeForSpecialization(specializationData)
+    if (nameTree) {
+      logger.warn('[TalentTreeResolver] Resolved legacy specialization by name fallback', {
+        name: specializationData?.name,
+        specializationId: nameTree.system.specializationId,
+      })
+      return { tree: nameTree, state: getSpecializationTreeResolutionState(nameTree) }
+    }
   }
 
   return { tree: null, state: 'unresolved' }
