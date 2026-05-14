@@ -17,6 +17,7 @@ export default class SwerpgSpecializationTree extends foundry.abstract.TypeDataM
         new fields.SchemaField({
           nodeId: new fields.StringField({ required: true, blank: false }),
           talentId: new fields.StringField({ required: true, blank: false }),
+          talentUuid: new fields.StringField({ required: false, nullable: true, blank: false, initial: null }),
           row: new fields.NumberField({ required: false, nullable: false, integer: true, min: 1, max: 10, initial: 1 }),
           column: new fields.NumberField({ required: false, nullable: false, integer: true, min: 1, max: 10, initial: 1 }),
           cost: new fields.NumberField({ required: false, nullable: false, integer: true, min: 0, initial: 5 }),

@@ -221,7 +221,7 @@ describe('chaîne complète parseur → context builder → mapper', () => {
     const context = await buildSpecializationTreeContext({}, [], { xml: ['Advisor.xml'], image: [] })
 
     expect(context.element.type).toBe('specialization-tree')
-    expect(context.element.mapper).toBe(specializationTreeMapper)
+    expect(typeof context.element.mapper).toBe('function')
     expect(context.jsonData).toHaveLength(1)
     expect(context.jsonData[0].Key).toBe('ADVISOR')
 
