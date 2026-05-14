@@ -42,6 +42,8 @@ describe('specialization-tree application', () => {
   let buildSpecializationTreeContext
   let getViewportDimensions
   let computeNodePosition
+  let computeTreeBoundingBox
+  let computeCenteredOffset
   let resolveTalentItem
   let resolveTalentDetail
 
@@ -179,6 +181,8 @@ describe('specialization-tree application', () => {
       buildSpecializationTreeContext,
       getViewportDimensions,
       computeNodePosition,
+      computeTreeBoundingBox,
+      computeCenteredOffset,
       resolveTalentItem,
       resolveTalentDetail,
     } = await import('../../module/applications/specialization-tree-app.mjs'))
@@ -255,8 +259,8 @@ describe('specialization-tree application', () => {
 
   it('computes node position from row and column', () => {
     const pos = computeNodePosition(1, 2)
-    expect(pos.x).toBe(2 * (140 + 30) + 20)
-    expect(pos.y).toBe(1 * (60 + 30) + 20)
+    expect(pos.x).toBe(2 * (120 + 24) + 20)
+    expect(pos.y).toBe(1 * (48 + 24) + 20)
     const pos2 = computeNodePosition(0, 0)
     expect(pos2.x).toBe(20)
     expect(pos2.y).toBe(20)
@@ -361,8 +365,8 @@ describe('specialization-tree application', () => {
     expect(firstNode.xpCost).toBe(10)
     expect(firstNode.row).toBe(1)
     expect(firstNode.column).toBe(1)
-    expect(firstNode.x).toBe(1 * (140 + 30) + 20)
-    expect(firstNode.y).toBe(1 * (60 + 30) + 20)
+    expect(firstNode.x).toBe(1 * (120 + 24) + 20)
+    expect(firstNode.y).toBe(1 * (48 + 24) + 20)
 
     const secondNode = context.renderNodes[1]
     expect(secondNode.nodeId).toBe('r1c2')
@@ -370,8 +374,8 @@ describe('specialization-tree application', () => {
     expect(secondNode.xpCost).toBe(15)
     expect(secondNode.row).toBe(1)
     expect(secondNode.column).toBe(2)
-    expect(secondNode.x).toBe(2 * (140 + 30) + 20)
-    expect(secondNode.y).toBe(1 * (60 + 30) + 20)
+    expect(secondNode.x).toBe(2 * (120 + 24) + 20)
+    expect(secondNode.y).toBe(1 * (48 + 24) + 20)
   })
 
   it('includes node state for every render node', () => {
@@ -447,10 +451,10 @@ describe('specialization-tree application', () => {
     const conn = context.renderConnections[0]
     expect(conn.type).toBe('straight')
 
-    const fromCenterX = context.renderNodes[0].x + 70
-    const fromCenterY = context.renderNodes[0].y + 30
-    const toCenterX = context.renderNodes[1].x + 70
-    const toCenterY = context.renderNodes[1].y + 30
+    const fromCenterX = context.renderNodes[0].x + 60
+    const fromCenterY = context.renderNodes[0].y + 24
+    const toCenterX = context.renderNodes[1].x + 60
+    const toCenterY = context.renderNodes[1].y + 24
 
     expect(conn.fromX).toBe(fromCenterX)
     expect(conn.fromY).toBe(fromCenterY)
@@ -489,6 +493,68 @@ describe('specialization-tree application', () => {
   it('resolveTalentItem returns unknown fallback when item not found', () => {
     globalThis.fromUuidSync = vi.fn(() => null)
     expect(resolveTalentItem('Item.talent-nonexistent')).toBe('Unknown talent')
+  })
+
+  describe('computeTreeBoundingBox', () => {
+    it('returns zeros for empty nodes', () => {
+      const result = computeTreeBoundingBox([])
+      expect(result).toEqual({ minX: 0, minY: 0, maxX: 0, maxY: 0, width: 0, height: 0 })
+    })
+
+    it('returns zeros for nullish nodes', () => {
+      expect(computeTreeBoundingBox(null)).toEqual({ minX: 0, minY: 0, maxX: 0, maxY: 0, width: 0, height: 0 })
+      expect(computeTreeBoundingBox(undefined)).toEqual({ minX: 0, minY: 0, maxX: 0, maxY: 0, width: 0, height: 0 })
+    })
+
+    it('computes bounds for a single node', () => {
+      const result = computeTreeBoundingBox([{ x: 20, y: 20 }], 120, 48)
+      expect(result).toEqual({ minX: 20, minY: 20, maxX: 140, maxY: 68, width: 120, height: 48 })
+    })
+
+    it('computes bounds for multiple nodes', () => {
+      const nodes = [
+        { x: 20, y: 20 },
+        { x: 164, y: 20 },
+        { x: 20, y: 92 },
+      ]
+      const result = computeTreeBoundingBox(nodes, 120, 48)
+      expect(result.minX).toBe(20)
+      expect(result.minY).toBe(20)
+      expect(result.maxX).toBe(284)
+      expect(result.maxY).toBe(140)
+      expect(result.width).toBe(264)
+      expect(result.height).toBe(120)
+    })
+
+    it('accepts custom node width and height', () => {
+      const result = computeTreeBoundingBox([{ x: 10, y: 10 }], 80, 30)
+      expect(result).toEqual({ minX: 10, minY: 10, maxX: 90, maxY: 40, width: 80, height: 30 })
+    })
+  })
+
+  describe('computeCenteredOffset', () => {
+    it('centers a small tree in a large viewport', () => {
+      const bbox = { minX: 20, minY: 20, maxX: 140, maxY: 68, width: 120, height: 48 }
+      const result = computeCenteredOffset(bbox, 640, 480)
+      const expectedX = (640 - 120) / 2 - 20
+      const expectedY = (480 - 48) / 2 - 20
+      expect(result.offsetX).toBe(expectedX)
+      expect(result.offsetY).toBe(expectedY)
+    })
+
+    it('offsets from zero-origin bounding box correctly', () => {
+      const bbox = { minX: 0, minY: 0, width: 200, height: 100 }
+      const result = computeCenteredOffset(bbox, 400, 300)
+      expect(result.offsetX).toBe(100)
+      expect(result.offsetY).toBe(100)
+    })
+
+    it('handles large tree in small viewport (partial visibility)', () => {
+      const bbox = { minX: 20, minY: 20, width: 600, height: 400 }
+      const result = computeCenteredOffset(bbox, 320, 320)
+      expect(result.offsetX).toBeLessThan(0)
+      expect(result.offsetY).toBeLessThan(0)
+    })
   })
 
   it('opens for the provided actor and triggers a render', async () => {
