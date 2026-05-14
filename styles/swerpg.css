@@ -1050,6 +1050,7 @@ input[type='range'] {
   flex: 1;
   min-height: 0;
   padding: 1rem;
+  position: relative;
 }
 .swerpg.application.specialization-tree-app .specialization-tree-app__viewport,
 .swerpg.application.specialization-tree-app .specialization-tree-app__empty,
@@ -1070,6 +1071,37 @@ input[type='range'] {
   display: block;
   width: 100%;
   height: 100%;
+}
+.swerpg.application.specialization-tree-app .specialization-tree-app__node-tooltip {
+  position: absolute;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  min-width: 200px;
+  max-width: 280px;
+  padding: 0.75rem 1rem;
+  background: rgba(10, 17, 26, 0.95);
+  border: 1px solid rgba(120, 169, 194, 0.4);
+  border-radius: 8px;
+  color: #d5e4f1;
+  font-size: var(--font-size-12, 12px);
+  line-height: 1.6;
+  z-index: 10;
+  pointer-events: auto;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+}
+.swerpg.application.specialization-tree-app .specialization-tree-app__node-tooltip[hidden] {
+  display: none;
+}
+.swerpg.application.specialization-tree-app .specialization-tree-app__node-tooltip-header {
+  color: #eef8ff;
+  font-weight: 600;
+  font-size: var(--font-size-14, 14px);
+  margin-bottom: 0.4rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid rgba(120, 169, 194, 0.18);
+}
+.swerpg.application.specialization-tree-app .specialization-tree-app__node-tooltip-body {
+  color: #c8dcee;
 }
 .swerpg.application.specialization-tree-app .specialization-tree-app__empty,
 .swerpg.application.specialization-tree-app .specialization-tree-app__sidebar-empty {

@@ -1134,6 +1134,25 @@
           "LOCKED": "Locked",
           "INVALID": "Invalid"
         },
+        "REASON": {
+          "ALREADY_PURCHASED": "Already purchased",
+          "SPECIALIZATION_NOT_OWNED": "Specialization not owned",
+          "TREE_NOT_FOUND": "Reference tree not found",
+          "TREE_INCOMPLETE": "Reference tree is incomplete",
+          "NODE_NOT_FOUND": "Node not found in tree",
+          "NODE_INVALID": "Node data is invalid",
+          "NODE_LOCKED": "Prerequisites not met",
+          "NOT_ENOUGH_XP": "Not enough XP",
+          "UNKNOWN": "Unknown reason"
+        },
+        "TOOLTIP": {
+          "XP_COST": "Cost",
+          "TYPE": "Type",
+          "RANKED": "Ranked Talent",
+          "NON_RANKED": "Non-ranked Talent",
+          "STATE": "State",
+          "REASON": "Reason"
+        },
         "EMPTY": {
           "NO_ACTOR_TITLE": "No actor selected",
           "NO_ACTOR_DESCRIPTION": "Open this application from a character sheet to inspect the owned specialization trees.",

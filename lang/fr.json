@@ -1126,6 +1126,25 @@
           "LOCKED": "Verrouillé",
           "INVALID": "Invalide"
         },
+        "REASON": {
+          "ALREADY_PURCHASED": "Déjà acheté",
+          "SPECIALIZATION_NOT_OWNED": "Spécialisation non possédée",
+          "TREE_NOT_FOUND": "Arbre de référence introuvable",
+          "TREE_INCOMPLETE": "Arbre de référence incomplet",
+          "NODE_NOT_FOUND": "Nœud introuvable dans l'arbre",
+          "NODE_INVALID": "Données du nœud invalides",
+          "NODE_LOCKED": "Prérequis non remplis",
+          "NOT_ENOUGH_XP": "XP insuffisants",
+          "UNKNOWN": "Raison inconnue"
+        },
+        "TOOLTIP": {
+          "XP_COST": "Coût",
+          "TYPE": "Type",
+          "RANKED": "Talent à rangs",
+          "NON_RANKED": "Talent sans rang",
+          "STATE": "État",
+          "REASON": "Raison"
+        },
         "EMPTY": {
           "NO_ACTOR_TITLE": "Aucun acteur sélectionné",
           "NO_ACTOR_DESCRIPTION": "Ouvrez cette application depuis une fiche personnage pour consulter les arbres de spécialisation possédés.",

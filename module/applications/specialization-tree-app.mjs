@@ -1,5 +1,5 @@
 import { resolveActorSpecializationTrees } from '../lib/talent-node/talent-tree-resolver.mjs'
-import { getTreeNodesStates, NODE_STATE } from '../lib/talent-node/talent-node-state.mjs'
+import { getTreeNodesStates, NODE_STATE, REASON_CODE } from '../lib/talent-node/talent-node-state.mjs'
 import { logger } from '../utils/logger.mjs'
 
 const { api } = foundry.applications
@@ -16,6 +16,19 @@ const NODE_STATE_LABEL_KEYS = Object.freeze({
   [NODE_STATE.LOCKED]: 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.NODE_STATE.LOCKED',
   [NODE_STATE.INVALID]: 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.NODE_STATE.INVALID',
 })
+
+const REASON_LABEL_KEYS = Object.freeze({
+  [REASON_CODE.ALREADY_PURCHASED]: 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.REASON.ALREADY_PURCHASED',
+  [REASON_CODE.SPECIALIZATION_NOT_OWNED]: 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.REASON.SPECIALIZATION_NOT_OWNED',
+  [REASON_CODE.TREE_NOT_FOUND]: 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.REASON.TREE_NOT_FOUND',
+  [REASON_CODE.TREE_INCOMPLETE]: 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.REASON.TREE_INCOMPLETE',
+  [REASON_CODE.NODE_NOT_FOUND]: 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.REASON.NODE_NOT_FOUND',
+  [REASON_CODE.NODE_INVALID]: 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.REASON.NODE_INVALID',
+  [REASON_CODE.NODE_LOCKED]: 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.REASON.NODE_LOCKED',
+  [REASON_CODE.NOT_ENOUGH_XP]: 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.REASON.NOT_ENOUGH_XP',
+})
+
+const REASON_LABEL_DEFAULT = 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.REASON.UNKNOWN'
 
 const NODE_STATE_VARIANTS = Object.freeze({
   [NODE_STATE.PURCHASED]: Object.freeze({
@@ -85,6 +98,21 @@ export function resolveTalentItem(talentId) {
     return item?.name ?? game.i18n.localize('SWERPG.TALENT.UNKNOWN')
   } catch {
     return game.i18n.localize('SWERPG.TALENT.UNKNOWN')
+  }
+}
+
+export function resolveTalentDetail(talentId) {
+  try {
+    const item = fromUuidSync(talentId)
+    if (!item) {
+      return { name: game.i18n.localize('SWERPG.TALENT.UNKNOWN'), isRanked: false }
+    }
+    return {
+      name: item.name ?? game.i18n.localize('SWERPG.TALENT.UNKNOWN'),
+      isRanked: item.system?.isRanked ?? false,
+    }
+  } catch {
+    return { name: game.i18n.localize('SWERPG.TALENT.UNKNOWN'), isRanked: false }
   }
 }
 
@@ -169,9 +197,12 @@ export function buildSpecializationTreeContext(actor) {
 
     renderNodes = nodes.map((node) => {
       const pos = computeNodePosition(node.row, node.column)
+      const detail = resolveTalentDetail(node.talentId)
       return {
         nodeId: node.nodeId,
-        talentName: resolveTalentItem(node.talentId),
+        talentId: node.talentId,
+        talentName: detail.name,
+        isRanked: detail.isRanked,
         xpCost: node.cost ?? 0,
         row: node.row,
         column: node.column,
@@ -184,12 +215,17 @@ export function buildSpecializationTreeContext(actor) {
     renderNodes = renderNodes.map((node) => {
       const stateResult = nodeStates.get(node.nodeId) ?? { state: NODE_STATE.INVALID }
       const variant = NODE_STATE_VARIANTS[stateResult.state] ?? NODE_STATE_VARIANTS[NODE_STATE.INVALID]
+      const reasonCode = stateResult.reasonCode ?? null
       return {
         ...node,
         nodeState: stateResult.state,
         nodeStateLabel: game.i18n.localize(
           NODE_STATE_LABEL_KEYS[stateResult.state] ?? NODE_STATE_LABEL_KEYS[NODE_STATE.INVALID],
         ),
+        reasonCode,
+        reasonLabel: reasonCode
+          ? game.i18n.localize(REASON_LABEL_KEYS[reasonCode] ?? REASON_LABEL_DEFAULT)
+          : null,
         variant,
       }
     })
@@ -279,6 +315,10 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
   #treeContainer = null
 
   #isResizeBound = false
+
+  #renderNodesCache = null
+
+  #selectedNodeId = null
 
   get title() {
     return game.i18n.format('SWERPG.TALENT.SPECIALIZATION_TREE_APP.TITLE', {
@@ -394,11 +434,16 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
       this.#treeContainer = null
     }
 
+    this.#renderNodesCache = null
+    this.#hideNodeTooltip()
+
     const { renderNodes, renderConnections } = context ?? {}
     if (!renderNodes?.length && !renderConnections?.length) return
 
     this.#treeContainer = new PIXI.Container()
     this.pixiApp.stage.addChild(this.#treeContainer)
+
+    this.#renderNodesCache = renderNodes
 
     if (renderConnections.length > 0) {
       const gfx = new PIXI.Graphics()
@@ -442,8 +487,67 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
         costText.x = node.x + 4
         costText.y = node.y + NODE_HEIGHT - 16
         this.#treeContainer.addChild(costText)
+
+        const hitArea = new PIXI.Graphics()
+        hitArea.beginFill(0xffffff, 0.001)
+        hitArea.drawRect(node.x, node.y, NODE_WIDTH, NODE_HEIGHT)
+        hitArea.endFill()
+        hitArea.eventMode = 'static'
+        hitArea.cursor = 'pointer'
+        const capturedNode = node
+        hitArea.on('pointerdown', (event) => {
+          event.stopPropagation()
+          this.#showNodeTooltip(capturedNode)
+        })
+        this.#treeContainer.addChild(hitArea)
       }
+
+      this.pixiApp.stage.eventMode = 'static'
+      this.pixiApp.stage.on('pointerdown', () => this.#hideNodeTooltip())
     }
+  }
+
+  #showNodeTooltip(node) {
+    const root = typeof HTMLElement !== 'undefined' && this.element instanceof HTMLElement
+      ? this.element
+      : this.element?.[0] ?? this.element
+    const tooltip = root?.querySelector?.('[data-node-tooltip]')
+    if (!tooltip) return
+
+    const i18n = game.i18n.localize.bind(game.i18n)
+
+    const typeLabel = node.isRanked
+      ? i18n('SWERPG.TALENT.SPECIALIZATION_TREE_APP.TOOLTIP.RANKED')
+      : i18n('SWERPG.TALENT.SPECIALIZATION_TREE_APP.TOOLTIP.NON_RANKED')
+
+    const headerEl = tooltip.querySelector('[data-tooltip-header]')
+    const bodyEl = tooltip.querySelector('[data-tooltip-body]')
+    if (headerEl) {
+      headerEl.textContent = node.talentName
+    }
+    if (bodyEl) {
+      const parts = [
+        `${i18n('SWERPG.TALENT.SPECIALIZATION_TREE_APP.TOOLTIP.XP_COST')}: ${node.xpCost} XP`,
+        `${i18n('SWERPG.TALENT.SPECIALIZATION_TREE_APP.TOOLTIP.TYPE')}: ${typeLabel}`,
+        `${i18n('SWERPG.TALENT.SPECIALIZATION_TREE_APP.TOOLTIP.STATE')}: ${node.nodeStateLabel}`,
+      ]
+      if (node.reasonLabel) {
+        parts.push(`${i18n('SWERPG.TALENT.SPECIALIZATION_TREE_APP.TOOLTIP.REASON')}: ${node.reasonLabel}`)
+      }
+      bodyEl.innerHTML = parts.join('<br>')
+    }
+
+    tooltip.hidden = false
+    this.#selectedNodeId = node.nodeId
+  }
+
+  #hideNodeTooltip() {
+    const root = typeof HTMLElement !== 'undefined' && this.element instanceof HTMLElement
+      ? this.element
+      : this.element?.[0] ?? this.element
+    const tooltip = root?.querySelector?.('[data-node-tooltip]')
+    if (tooltip) tooltip.hidden = true
+    this.#selectedNodeId = null
   }
 
   #teardownViewport() {
