@@ -386,6 +386,18 @@ export default class SwerpgActor extends TalentsMixin(EquipmentMixin(ResourcesMi
     else {
       const itemData = item.toObject()
       const data = Object.assign(itemData.system, { name: itemData.name, img: itemData.img })
+      if (isCollection && item?.type === 'specialization' && globalThis.game?.items?.find) {
+        const nameSlug = data.name?.toLowerCase().replace(/\s+/g, '-') ?? ''
+        const tree = globalThis.game.items.find(
+          (i) =>
+            i?.type === 'specialization-tree' &&
+            (i?.system?.specializationId === nameSlug || i?.name === data.name),
+        )
+        if (tree) {
+          data.specializationId = tree.system.specializationId || nameSlug
+          data.treeUuid = tree.uuid
+        }
+      }
       if (isCollection) {
         this.system.details.specializations.add(data)
         updateData[key] = this.system.details.specializations
