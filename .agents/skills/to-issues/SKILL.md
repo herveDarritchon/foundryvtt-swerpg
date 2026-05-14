@@ -49,7 +49,22 @@ Ask the user:
 
 Iterate until the user approves the breakdown.
 
-### 5. Publish the issues to the issue tracker
+## 5. Language requirement
+
+Keep the skill instructions, workflow, and internal reasoning in English.
+
+All issue content published to the issue tracker MUST be written in French, including:
+- issue titles
+- issue descriptions
+- acceptance criteria
+- dependency notes
+- HITL / AFK explanations if included in the issue body
+
+Keep the issue body structure and section headings exactly as defined in the template unless the user explicitly asks to translate the headings.
+
+Do not translate tracker labels, issue types, or system-controlled metadata unless the issue tracker requires localized labels.
+
+### 6. Publish the issues to the issue tracker
 
 For each approved slice, publish a new issue to the issue tracker. Use the issue body template below. These issues are considered ready for AFK agents, so publish them with the correct triage label unless instructed otherwise.
 
@@ -58,26 +73,25 @@ Publish issues in dependency order (blockers first) so you can reference real is
 <issue-template>
 ## Parent
 
-A reference to the parent issue on the issue tracker (if the source was an existing issue, otherwise omit this section).
+Référence au ticket parent dans l’issue tracker, si la source est un ticket existant. Sinon, omettre cette section.
 
 ## What to build
 
-A concise description of this vertical slice. Describe the end-to-end behavior, not layer-by-layer implementation.
+Description concise, en français, de cette tranche verticale. Décrire le comportement de bout en bout, pas l’implémentation couche par couche.
 
-Avoid specific file paths or code snippets — they go stale fast. Exception: if a prototype produced a snippet that encodes a decision more precisely than prose can (state machine, reducer, schema, type shape), inline it here and note briefly that it came from a prototype. Trim to the decision-rich parts — not a working demo, just the important bits.
+Éviter les chemins de fichiers ou les extraits de code, car ils vieillissent vite. Exception : si un prototype a produit un extrait qui encode une décision plus précisément qu’une description en prose, l’inclure ici en précisant brièvement qu’il vient d’un prototype. Ne garder que les parties utiles à la décision.
 
 ## Acceptance criteria
 
-- [ ] Criterion 1
-- [ ] Criterion 2
-- [ ] Criterion 3
+- [ ] Critère 1
+- [ ] Critère 2
+- [ ] Critère 3
 
 ## Blocked by
 
-- A reference to the blocking ticket (if any)
+- Référence au ticket bloquant, s’il y en a un.
 
-Or "None - can start immediately" if no blockers.
-
+Ou : “Aucun — peut démarrer immédiatement.” si aucun ticket ne bloque le démarrage.
 </issue-template>
 
 Do NOT close or modify any parent issue.
