@@ -1128,6 +1128,12 @@
           "UNRESOLVED": "Tree not resolved",
           "INCOMPLETE": "Incomplete tree"
         },
+        "NODE_STATE": {
+          "PURCHASED": "Purchased",
+          "AVAILABLE": "Available",
+          "LOCKED": "Locked",
+          "INVALID": "Invalid"
+        },
         "EMPTY": {
           "NO_ACTOR_TITLE": "No actor selected",
           "NO_ACTOR_DESCRIPTION": "Open this application from a character sheet to inspect the owned specialization trees.",
