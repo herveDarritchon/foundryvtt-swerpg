@@ -67,10 +67,10 @@ const NODE_STATE_VARIANTS = Object.freeze({
 
 const MIN_VIEWPORT_SIZE = 320
 
-const NODE_WIDTH = 140
-const NODE_HEIGHT = 60
-const H_GAP = 30
-const V_GAP = 30
+const NODE_WIDTH = 120
+const NODE_HEIGHT = 48
+const H_GAP = 24
+const V_GAP = 24
 const PADDING = 20
 
 /**
@@ -89,6 +89,30 @@ export function computeNodePosition(row, column) {
   return {
     x: column * (NODE_WIDTH + H_GAP) + PADDING,
     y: row * (NODE_HEIGHT + V_GAP) + PADDING,
+  }
+}
+
+export function computeTreeBoundingBox(nodes, nodeWidth = NODE_WIDTH, nodeHeight = NODE_HEIGHT) {
+  if (!nodes?.length) {
+    return { minX: 0, minY: 0, maxX: 0, maxY: 0, width: 0, height: 0 }
+  }
+  let minX = Infinity
+  let minY = Infinity
+  let maxX = -Infinity
+  let maxY = -Infinity
+  for (const node of nodes) {
+    minX = Math.min(minX, node.x)
+    minY = Math.min(minY, node.y)
+    maxX = Math.max(maxX, node.x + nodeWidth)
+    maxY = Math.max(maxY, node.y + nodeHeight)
+  }
+  return { minX, minY, maxX, maxY, width: maxX - minX, height: maxY - minY }
+}
+
+export function computeCenteredOffset(bbox, viewportWidth, viewportHeight) {
+  return {
+    offsetX: (viewportWidth - bbox.width) / 2 - bbox.minX,
+    offsetY: (viewportHeight - bbox.height) / 2 - bbox.minY,
   }
 }
 
@@ -445,6 +469,12 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
 
     this.#renderNodesCache = renderNodes
 
+    const bbox = computeTreeBoundingBox(renderNodes, NODE_WIDTH, NODE_HEIGHT)
+    const { width: vw, height: vh } = getViewportDimensions(this.#viewportHost)
+    const { offsetX, offsetY } = computeCenteredOffset(bbox, vw, vh)
+    this.#treeContainer.x = offsetX
+    this.#treeContainer.y = offsetY
+
     if (renderConnections.length > 0) {
       const gfx = new PIXI.Graphics()
       gfx.lineStyle(2, 0x78a9c2, 0.6)
@@ -470,7 +500,7 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
         const v = node.variant ?? NODE_STATE_VARIANTS[NODE_STATE.AVAILABLE]
         const nameText = new PIXI.Text(node.talentName, {
           fontFamily: 'Arial',
-          fontSize: 11,
+          fontSize: 10,
           fill: v.textColor,
           wordWrap: true,
           wordWrapWidth: NODE_WIDTH - 8,
@@ -481,11 +511,11 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
 
         const costText = new PIXI.Text(`${node.xpCost} XP`, {
           fontFamily: 'Arial',
-          fontSize: 10,
+          fontSize: 9,
           fill: v.costColor,
         })
         costText.x = node.x + 4
-        costText.y = node.y + NODE_HEIGHT - 16
+        costText.y = node.y + NODE_HEIGHT - 14
         this.#treeContainer.addChild(costText)
 
         const hitArea = new PIXI.Graphics()
