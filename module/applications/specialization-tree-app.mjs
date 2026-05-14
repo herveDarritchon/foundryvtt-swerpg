@@ -413,6 +413,10 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
 
   #isViewportInteractionsBound = false
 
+  #zoomCanvas = null
+
+  #zoomWheelHandler = null
+
   get title() {
     return game.i18n.format('SWERPG.TALENT.SPECIALIZATION_TREE_APP.TITLE', {
       actor: this.actor?.name ?? game.i18n.localize('SWERPG.TALENT.SPECIALIZATION_TREE_APP.UNKNOWN_ACTOR'),
@@ -609,6 +613,20 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
     this.#applyViewportTransform()
   }
 
+  #zoomAt(globalPoint, nextScale) {
+    const clampedScale = Math.min(Math.max(nextScale, this.#minZoom), this.#maxZoom)
+    if (clampedScale === this.#viewport.scale) return
+
+    const worldX = (globalPoint.x - this.#viewport.x) / this.#viewport.scale
+    const worldY = (globalPoint.y - this.#viewport.y) / this.#viewport.scale
+
+    this.#viewport.scale = clampedScale
+    this.#viewport.x = globalPoint.x - worldX * clampedScale
+    this.#viewport.y = globalPoint.y - worldY * clampedScale
+
+    this.#applyViewportTransform()
+  }
+
   #bindViewportInteractions() {
     if (this.#isViewportInteractionsBound || !this.pixiApp?.stage) return
 
@@ -636,6 +654,19 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
 
     stage.on('pointerup', () => this.#stopPanning())
     stage.on('pointerupoutside', () => this.#stopPanning())
+
+    const canvas = this.pixiApp.canvas ?? this.pixiApp.view
+    if (!canvas || this.#zoomCanvas === canvas) return
+
+    const wheelHandler = (event) => {
+      event.preventDefault()
+      const delta = Math.sign(event.deltaY)
+      const factor = delta > 0 ? 1 / this.#zoomStep : this.#zoomStep
+      this.#zoomAt({ x: event.offsetX, y: event.offsetY }, this.#viewport.scale * factor)
+    }
+    canvas.addEventListener('wheel', wheelHandler, { passive: false })
+    this.#zoomCanvas = canvas
+    this.#zoomWheelHandler = wheelHandler
   }
 
   #unbindViewportInteractions() {
@@ -646,6 +677,12 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
     this.pixiApp.stage.off?.('pointermove')
     this.pixiApp.stage.off?.('pointerup')
     this.pixiApp.stage.off?.('pointerupoutside')
+
+    if (this.#zoomCanvas && this.#zoomWheelHandler) {
+      this.#zoomCanvas.removeEventListener('wheel', this.#zoomWheelHandler)
+      this.#zoomCanvas = null
+      this.#zoomWheelHandler = null
+    }
   }
 
   #getPointerPosition(event) {
