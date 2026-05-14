@@ -263,6 +263,64 @@ describe('SwerpgItem Document', () => {
     })
   })
 
+  describe('_onCreate workflow', () => {
+    let mockData, mockOptions, mockUser
+
+    beforeEach(() => {
+      mockData = { type: 'talent' }
+      mockOptions = {}
+      mockUser = { id: 'user-id' }
+
+      const superOnCreate = vi.fn().mockResolvedValue(true)
+      mockItem.__proto__.__proto__ = { _onCreate: superOnCreate }
+    })
+
+    test('should set system.uuid for non-owned talent', async () => {
+      mockItem.type = 'talent'
+      mockItem.isOwned = false
+      mockItem.uuid = 'Item.abc123def456'
+      mockItem.update = vi.fn()
+
+      await SwerpgItem.prototype._onCreate.call(mockItem, mockData, mockOptions, mockUser)
+
+      expect(mockItem.update).toHaveBeenCalledWith({ 'system.uuid': 'Item.abc123def456' })
+    })
+
+    test('should skip system.uuid for owned talent', async () => {
+      mockItem.type = 'talent'
+      mockItem.isOwned = true
+      mockItem.uuid = 'Item.abc123def456'
+      mockItem.update = vi.fn()
+
+      await SwerpgItem.prototype._onCreate.call(mockItem, mockData, mockOptions, mockUser)
+
+      expect(mockItem.update).not.toHaveBeenCalled()
+    })
+
+    test('should skip system.uuid for non-talent items', async () => {
+      mockItem.type = 'weapon'
+      mockItem.isOwned = false
+      mockItem.uuid = 'Item.abc123def456'
+      mockItem.update = vi.fn()
+
+      await SwerpgItem.prototype._onCreate.call(mockItem, mockData, mockOptions, mockUser)
+
+      expect(mockItem.update).not.toHaveBeenCalled()
+    })
+
+    test('should skip update if system.uuid already matches item.uuid', async () => {
+      mockItem.type = 'talent'
+      mockItem.isOwned = false
+      mockItem.uuid = 'Item.abc123def456'
+      mockItem.system.uuid = 'Item.abc123def456'
+      mockItem.update = vi.fn()
+
+      await SwerpgItem.prototype._onCreate.call(mockItem, mockData, mockOptions, mockUser)
+
+      expect(mockItem.update).not.toHaveBeenCalled()
+    })
+  })
+
   describe('_onUpdate', () => {
     beforeEach(() => {
       // Mock super method

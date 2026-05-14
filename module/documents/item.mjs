@@ -162,6 +162,19 @@ export default class SwerpgItem extends Item {
 
   /* -------------------------------------------- */
 
+  /** @inheritDoc */
+  async _onCreate(data, options, userId) {
+    await super._onCreate(data, options, userId)
+    if (this.type === 'talent' && !this.isOwned) {
+      const current = this.system?.uuid
+      if (current !== this.uuid) {
+        await this.update({ 'system.uuid': this.uuid })
+      }
+    }
+  }
+
+  /* -------------------------------------------- */
+
   /**
    * Deletes the talent associated with the current object instance.
    *

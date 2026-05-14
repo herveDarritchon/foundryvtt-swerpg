@@ -64,6 +64,8 @@ export default class SwerpgTalent extends foundry.abstract.TypeDataModel {
     const fields = foundry.data.fields
 
     return {
+      id: new fields.StringField({ required: false, nullable: false, blank: false }),
+      uuid: new fields.StringField({ required: false, nullable: false, blank: true, initial: '' }),
       node: new fields.StringField({ required: false, blank: true, choices: () => SwerpgTalentNode.getChoices() }),
       trees: new fields.SetField(new fields.DocumentUUIDField({ type: 'Item' }), {
         validate: SwerpgTalent.#validateTrees,
