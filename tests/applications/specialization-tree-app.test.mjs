@@ -35,6 +35,7 @@ function createActor(overrides = {}) {
     name: 'Vara Kesh',
     type: 'character',
     isOwner: true,
+    update: vi.fn().mockResolvedValue(undefined),
     system: {
       details: {
         specializations: [],
