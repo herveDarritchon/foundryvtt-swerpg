@@ -6,6 +6,8 @@
 import { SYSTEM } from '../../config/system.mjs'
 import { logger } from '../../utils/logger.mjs'
 
+const DEPR_DIRECT_PURCHASE = () => SYSTEM.DEPRECATION.crucible.directPurchase
+
 export const TalentsMixin = (Base) =>
   class extends Base {
     /**
@@ -159,13 +161,22 @@ export const TalentsMixin = (Base) =>
 
     /**
      * Handle requests to add a new Talent to the Actor.
-     * Confirm that the Actor meets the requirements to add the Talent, and if so create it on the Actor
+     * @deprecated Crucible legacy — uses assertPrerequisites() with talent points.
+     *   V1 Edge uses purchaseTalentNode() from talent-node-purchase.mjs.
+     *   Will be removed in a future version.
      * @param {SwerpgItem} talent     The Talent item to add to the Actor
      * @param {object} [options]        Options which configure how the Talent is added
      * @param {boolean} [options.dialog]    Prompt the user with a confirmation dialog?
      * @returns {Promise<SwerpgItem|null>} The created talent Item or null if no talent was added
      */
     async addTalent(talent, { dialog = false } = {}) {
+      if (DEPR_DIRECT_PURCHASE().warn) {
+        logger.deprecated('talents-mixin', 'addTalent() — direct generic talent purchase', 'V1 Edge uses purchaseTalentNode() from talent-node-purchase.mjs.')
+      }
+      if (!DEPR_DIRECT_PURCHASE().enabled) {
+        ui.notifications.warn('Direct talent purchase is disabled (Crucible legacy). Use specialization-tree instead.')
+        return null
+      }
       // Confirm that the Actor meets the requirements to add the Talent
       try {
         talent.system.assertPrerequisites(this)
@@ -196,35 +207,6 @@ export const TalentsMixin = (Base) =>
 
       // Create the talent
       return talent.constructor.create(talent.toObject(), { parent: this, keepId: true })
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Add a Talent item to the actor with XP check and duplicate prevention.
-     * @param {Item} item The Talent item to add.
-     * @returns {Promise<boolean>} - Whether the talent was added successfully.
-     */
-    async addTalentWithXpCheck(item) {
-      const alreadyOwned = this.items.find((i) => i.name === item.name)
-      if (alreadyOwned) {
-        ui.notifications.warn(`${this.name} already has "${item.name}"`)
-        return false
-      }
-
-      const experiencePoints = this.experiencePoints
-      const currentXP = experiencePoints.available
-      const cost = 5
-
-      if (currentXP - cost < 0) {
-        ui.notifications.warn(`${this.name} doesn't have enough XP (${cost} required)`)
-        return false
-      }
-
-      await this.createEmbeddedDocuments('Item', [item.toObject()])
-      await this.spendExperiencePoints(cost)
-
-      return true
     }
 
     /* -------------------------------------------- */

@@ -1,6 +1,11 @@
 import SwerpgTalentTreeTalent from './talent-tree-talent.mjs'
 
 /**
+ * @deprecated Crucible legacy — choice wheel radial selection UI.
+ *   La V1 ne reconduit pas la choice wheel comme mécanisme métier.
+ *   Use specialization-tree-app.mjs with direct node selection instead.
+ *   Will be removed in a future version.
+ *
  * A canvas UI element which displays a choice wheel for a talent tree node.
  * Only one choice wheel is displayed at a given time. The wheel is a singleton at canvas.tree.wheel.
  */

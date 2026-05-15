@@ -178,7 +178,6 @@ describe('TalentsMixin', () => {
       expect(typeof actor.resetTalents).toBe('function')
       expect(typeof actor.syncTalents).toBe('function')
       expect(typeof actor.addTalent).toBe('function')
-      expect(typeof actor.addTalentWithXpCheck).toBe('function')
       expect(typeof actor.callActorHooks).toBe('function')
       expect(typeof actor.prepareEmbeddedDocuments).toBe('function')
     })
@@ -419,49 +418,4 @@ describe('TalentsMixin', () => {
     })
   })
 
-  describe('addTalentWithXpCheck()', () => {
-    let mockItem
-
-    beforeEach(() => {
-      mockItem = {
-        name: 'XP Talent',
-        toObject: vi.fn().mockReturnValue({ name: 'XP Talent', type: 'talent' }),
-      }
-      actor.experiencePoints = { available: 10 }
-      actor.createEmbeddedDocuments = vi.fn().mockResolvedValue([])
-      actor.spendExperiencePoints = vi.fn().mockResolvedValue()
-
-      // Mock items.find to return undefined by default (no duplicate)
-      actor._itemsMock = {
-        find: vi.fn().mockReturnValue(undefined),
-      }
-    })
-
-    it('should add talent if XP is sufficient', async () => {
-      const result = await actor.addTalentWithXpCheck(mockItem)
-
-      expect(result).toBe(true)
-      expect(actor.createEmbeddedDocuments).toHaveBeenCalled()
-      expect(actor.spendExperiencePoints).toHaveBeenCalledWith(5)
-    })
-
-    it('should warn and return false if XP is insufficient', async () => {
-      actor.experiencePoints.available = 3
-
-      const result = await actor.addTalentWithXpCheck(mockItem)
-
-      expect(result).toBe(false)
-      expect(ui.notifications.warn).toHaveBeenCalledWith("Test Actor doesn't have enough XP (5 required)")
-    })
-
-    it('should warn and return false if talent already owned', async () => {
-      // Override the mock for this specific test
-      actor._itemsMock.find.mockReturnValue({ name: 'XP Talent' })
-
-      const result = await actor.addTalentWithXpCheck(mockItem)
-
-      expect(result).toBe(false)
-      expect(ui.notifications.warn).toHaveBeenCalledWith('Test Actor already has "XP Talent"')
-    })
-  })
 })
