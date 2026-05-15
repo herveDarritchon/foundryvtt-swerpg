@@ -199,6 +199,9 @@ export default class SwerpgTalent extends foundry.abstract.TypeDataModel {
 
   /**
    * Assert that an Actor meets the prerequisites for this Talent.
+   * @deprecated Crucible legacy — uses actor.points.talent (talent points system).
+   *   V1 Edge uses purchaseTalentNode() with XP-based cost from specialization-tree nodes.
+   *   Will be removed in a future version.
    * @param {SwerpgActor} actor         The Actor to test
    * @param {boolean} strict              Throw an error if prerequisites are not met, otherwise return a boolean
    * @returns {boolean}                   Only if testing is not strict

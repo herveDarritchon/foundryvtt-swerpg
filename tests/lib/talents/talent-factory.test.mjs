@@ -1,7 +1,8 @@
 // Talent-factory.test.mjs
 import '../../setupTests.js'
-import { describe, expect, test } from 'vitest'
+import { beforeAll, describe, expect, test } from 'vitest'
 
+import { SYSTEM } from '../../../module/config/system.mjs'
 import TalentFactory from '../../../module/lib/talents/talent-factory.mjs'
 import { createActor } from '../../utils/actors/actor.mjs'
 import TrainedTalent from '../../../module/lib/talents/trained-talent.mjs'
@@ -10,6 +11,9 @@ import RankedTrainedTalent from '../../../module/lib/talents/ranked-trained-tale
 import { createTalentData } from '../../utils/talents/talent.mjs'
 
 describe('TalentFactory build()', () => {
+  beforeAll(() => {
+    SYSTEM.DEPRECATION.crucible.isCreation.warn = false
+  })
   describe('should create a TrainedTalent', () => {
     const expectedTrainedClassTalent = TrainedTalent
     const action = 'train'

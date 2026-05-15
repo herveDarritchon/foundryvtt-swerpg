@@ -1,7 +1,8 @@
 // Talent-cost-calculator.test.mjs
 import '../../setupTests.js'
-import { describe, expect, test } from 'vitest'
+import { beforeAll, describe, expect, test } from 'vitest'
 
+import { SYSTEM } from '../../../module/config/system.mjs'
 import { createTalentData } from '../../utils/talents/talent.mjs'
 import TrainedTalent from '../../../module/lib/talents/trained-talent.mjs'
 import ErrorTalent from '../../../module/lib/talents/error-talent.mjs'
@@ -10,6 +11,10 @@ import { createActor } from '../../utils/actors/actor.mjs'
 import RankedTrainedTalent from '../../../module/lib/talents/ranked-trained-talent.mjs'
 
 describe('Talents Calculator', () => {
+  beforeAll(() => {
+    SYSTEM.DEPRECATION.crucible.rankTimes5.warn = false
+    SYSTEM.DEPRECATION.crucible.isCreation.warn = false
+  })
   describe('train a talent', () => {
     const action = 'train'
     const actor = createActor()
