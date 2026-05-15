@@ -1,7 +1,18 @@
+import { SYSTEM } from './system.mjs'
 import SwerpgTalent from '../models/talent.mjs'
 import { logger } from '../utils/logger.mjs'
 import { CHARACTERISTICS } from './attributes.mjs'
 import Enum from './enum.mjs'
+
+const DEPR_GLOBAL_TREE = () => SYSTEM.DEPRECATION.crucible.globalTree
+
+/**
+ * @deprecated Crucible legacy — defines the global talent tree inherited from Crucible.
+ *   Do NOT add new nodes here. Use specialization-tree items for V1 Edge trees.
+ *   This file defines a single global tree with nodes, connections, and signature groups.
+ *   The V1 Edge system uses per-specialization trees (specialization-tree items).
+ *   Will be removed in a future version.
+ */
 export default class SwerpgTalentNode {
   static ACTIVATION = Object.freeze({
     ACTIVE: 'active',
@@ -57,15 +68,31 @@ export default class SwerpgTalentNode {
     return this.#nodes
   }
 
+  /**
+   * Get all node entries from the global Crucible tree.
+   * @deprecated Crucible legacy — use specialization-tree items instead.
+   * @returns {Map<string, SwerpgTalentNode>}
+   */
+  static getNodes() {
+    if (DEPR_GLOBAL_TREE().warn) {
+      logger.deprecated('talent-tree', 'SwerpgTalentNode.getNodes() — global tree access', 'Use specialization-tree items for per-tree resolution via resolveSpecializationTree().')
+    }
+    return this.#nodes
+  }
+
   static #nodes = new Map()
 
   /* -------------------------------------------- */
 
   /**
    * Get the valid node identifiers which can be referenced by a Talent.
+   * @deprecated Crucible legacy — global tree will be removed.
    * @returns {FormSelectOption[]}
    */
   static getChoices() {
+    if (DEPR_GLOBAL_TREE().warn) {
+      logger.deprecated('talent-tree', 'SwerpgTalentNode.getChoices()', 'Use specialization-tree items.')
+    }
     const choices = {}
     for (const { id, groups } of this.#nodes.values()) {
       if (groups) {
@@ -301,10 +328,14 @@ export default class SwerpgTalentNode {
 
   /**
    * Prepare the data structure of talent prerequisites
+   * @deprecated Crucible legacy — prerequisites are handled by talent-node-state.mjs in V1.
    * @param {AdvancementPrerequisites} requirements
    * @returns {AdvancementPrerequisites}
    */
   static preparePrerequisites(requirements = {}) {
+    if (DEPR_GLOBAL_TREE().warn) {
+      logger.deprecated('talent-tree', 'SwerpgTalentNode.preparePrerequisites()', 'Handled by talent-node-state.mjs in V1.')
+    }
     return Object.entries(foundry.utils.flattenObject(requirements)).reduce((obj, r) => {
       const [k, v] = r
       const o = (obj[k] = { value: v })

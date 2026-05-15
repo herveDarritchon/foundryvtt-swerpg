@@ -1,5 +1,9 @@
 import Talent from './talent.mjs'
 
+/**
+ * @deprecated Crucible legacy — used only by TalentFactory in the legacy flow.
+ *   Will be removed in a future version.
+ */
 export default class ErrorTalent extends Talent {
   constructor(actor, data, params, options) {
     super(actor, data, params, options)

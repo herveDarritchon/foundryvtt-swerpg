@@ -2,6 +2,11 @@ import Talent from './talent.mjs'
 import ErrorTalent from './error-talent.mjs'
 import TalentCostCalculator from './talent-cost-calculator.mjs'
 
+/**
+ * @deprecated Crucible legacy — use purchaseTalentNode() instead.
+ *   This class handles train/forget of non-ranked talents using the legacy Crucible flow.
+ *   Will be removed in a future version.
+ */
 export default class TrainedTalent extends Talent {
   constructor(actor, data, params, options) {
     super(actor, data, params, options)

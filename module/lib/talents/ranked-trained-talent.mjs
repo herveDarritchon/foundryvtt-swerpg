@@ -3,6 +3,11 @@ import { logger } from '../../utils/logger.mjs'
 import TalentCostCalculator from './talent-cost-calculator.mjs'
 import TrainedTalent from './trained-talent.mjs'
 
+/**
+ * @deprecated Crucible legacy — use purchaseTalentNode() instead.
+ *   This class handles train/forget of ranked talents using the legacy Crucible flow.
+ *   Will be removed in a future version.
+ */
 export default class RankedTrainedTalent extends TrainedTalent {
   constructor(actor, data, params, options) {
     super(actor, data, params, options)

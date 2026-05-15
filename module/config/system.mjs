@@ -229,6 +229,26 @@ export const SYSTEM = {
   WEAPON,
   activeCheckFormula: '3d8',
   dice: dice,
+
+  /**
+   * Flags de dépréciation pour les logiques héritées de Crucible.
+   * Chaque flag supporte `{ enabled, warn }` :
+   * - enabled : true = la logique fonctionne encore, false = désactivée
+   * - warn    : true = un logger.deprecated() est émis à chaque usage
+   *
+   * Utilisé par les guards runtime dans les modules legacy.
+   * @type {Object<string, {enabled: boolean, warn: boolean}>}
+   */
+  DEPRECATION: {
+    crucible: {
+      rankTimes5: { enabled: true, warn: true },
+      isCreation: { enabled: true, warn: true },
+      talentPoints: { enabled: true, warn: true },
+      globalTree: { enabled: true, warn: true },
+      choiceWheel: { enabled: true, warn: true },
+      directPurchase: { enabled: true, warn: true },
+    },
+  },
 }
 
 /**
