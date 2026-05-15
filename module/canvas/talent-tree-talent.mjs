@@ -1,5 +1,14 @@
+import { SYSTEM } from '../config/system.mjs'
+import { logger } from '../utils/logger.mjs'
 import SwerpgTalentIcon from './talent-icon.mjs'
 
+const DEPR_CHOICE_WHEEL = () => SYSTEM.DEPRECATION.crucible.choiceWheel
+
+/**
+ * @deprecated Crucible legacy — individual talent icon inside the choice wheel.
+ *   V1 Edge uses specialization-tree-app.mjs with direct node selection.
+ *   Will be removed in a future version.
+ */
 export default class SwerpgTalentTreeTalent extends SwerpgTalentIcon {
   constructor(node, talent, position, config) {
     super(config)
@@ -35,11 +44,29 @@ export default class SwerpgTalentTreeTalent extends SwerpgTalentIcon {
 
   /* -------------------------------------------- */
 
+  /**
+   * @deprecated Crucible legacy — choice wheel left-click purchase.
+   *   V1 Edge uses specialization-tree-app.mjs with purchaseTalentNode().
+   */
   async #onClickLeft(event) {
     event.stopPropagation()
-    if (event.data.originalEvent.button !== 0) return // Only support standard left-click
+    if (event.data.originalEvent.button !== 0) return
     const tree = game.system.tree
     if (!tree.actor || tree.actor.talentIds.has(this.talent.id)) return
+
+    // V1 guard : si l'acteur a des spécialisations, rediriger vers la vue graphique V1
+    const hasV1Specializations = tree.actor.itemTypes?.specialization?.length > 0
+    if (hasV1Specializations) {
+      if (DEPR_CHOICE_WHEEL().warn) {
+        logger.deprecated('talent-tree-talent', 'Choice wheel purchase blocked — actor has V1 specializations', 'Use specialization-tree-app.mjs for talent purchase.')
+      }
+      ui.notifications.warn('This actor uses V1 specialization trees. Use the specialization tree view to purchase talents.')
+      return
+    }
+
+    if (DEPR_CHOICE_WHEEL().warn) {
+      logger.deprecated('talent-tree-talent', 'Choice wheel purchase via addTalent()', 'V1 Edge uses purchaseTalentNode() via specialization-tree-app.mjs.')
+    }
     const response = await tree.actor.addTalent(this.talent, { dialog: true })
     if (response) tree.playClick()
   }
