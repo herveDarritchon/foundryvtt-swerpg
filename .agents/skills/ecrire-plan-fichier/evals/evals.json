@@ -1,0 +1,44 @@
+{
+  "skill_name": "ecrire-plan-fichier",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Crée un fichier markdown dans documentation/plan avec le plan ci-dessous pour l'issue #246. Range-le dans le bon sous-dossier si nécessaire en t'appuyant sur l'arborescence existante du repo sandbox, et garde le contenu tel quel.\n\n# Plan d'implémentation — Stabiliser le recalcul d'état après changement d'arbre (US16)\n\n**Issue** : [#246 — Stabiliser le recalcul d'état après changement d'arbre](https://example.test/issues/246)\n**Epic** : [#184 — EPIC Talents Edge](https://example.test/issues/184)\n\n---\n\n## 1. Objectif\n\nÉviter les états visuels obsolètes dans la vue graphique après un changement d'arbre de spécialisation.\n\n## 2. Périmètre\n\n### Inclus\n\n- recalculer les états des noeuds après changement d'arbre ;\n- garder la vue purement en lecture ;\n- préserver le comportement d'affichage existant hors recalcul.\n\n### Exclu\n\n- achat de noeud ;\n- nouvelle persistance ;\n- refonte du layout.\n\n## 3. Plan de travail\n\n1. Rebrancher le recalcul sur la source de vérité déjà utilisée par l'application.\n2. Rafraichir le view-model à chaque changement d'arbre courant.\n3. Ajouter une vérification ciblée sur le scénario de changement d'arbre.\n",
+      "expected_output": "One Markdown file is created under documentation/plan using the specialization-tree subdirectory inferred from the sandbox structure. The plan content is preserved without being redesigned, and the final response gives the exact created path.",
+      "files": [],
+      "expectations": [
+        "Exactly one Markdown output file is produced for the plan.",
+        "The created repository path stays under documentation/plan/character-sheet/specialization-tree/.",
+        "The Markdown content preserves the title 'Plan d'implémentation — Stabiliser le recalcul d'état après changement d'arbre (US16)'.",
+        "The Markdown content includes the original sections '## 1. Objectif', '## 2. Périmètre', and '## 3. Plan de travail' without adding a new architecture-design section.",
+        "The final summary reports the exact created path."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Mets ce plan dans un fichier md propre sous documentation/plan/character-sheet/talent/. Nom attendu : 234-plan-appliquer-variantes-visuelles-etats-noeud.md. N'ajoute rien au contenu.\n\n# Plan d'implémentation — Appliquer les variantes visuelles des états de noeud (US16)\n\n**Issue** : [#234 — Appliquer les variantes visuelles des états de noeud](https://example.test/issues/234)\n**Parent** : [#200 — Vue graphique des arbres](https://example.test/issues/200)\n\n---\n\n## 1. Objectif\n\nRendre chaque état de noeud visible sans ambiguïté dans la vue graphique.\n\n## 2. Périmètre\n\n### Inclus\n\n- consommer l'état métier déjà disponible ;\n- appliquer une variante visuelle par état ;\n- ajouter les libellés d'état nécessaires.\n\n### Exclu\n\n- explication détaillée des raisons de blocage ;\n- achat de noeud ;\n- sélection interactive d'une autre spécialisation.\n\n## 3. Fichiers impactés\n\n- module/applications/specialization-tree-app.mjs ;\n- lang/fr.json ;\n- lang/en.json ;\n- tests/applications/specialization-tree-app.test.mjs\n",
+      "expected_output": "One Markdown file is created exactly at documentation/plan/character-sheet/talent/234-plan-appliquer-variantes-visuelles-etats-noeud.md. The provided plan structure and wording are preserved apart from minor Markdown cleanup, and the final response confirms the exact path.",
+      "files": [],
+      "expectations": [
+        "Exactly one Markdown output file is produced for the plan.",
+        "The created repository path is exactly documentation/plan/character-sheet/talent/234-plan-appliquer-variantes-visuelles-etats-noeud.md.",
+        "The Markdown content preserves the title 'Plan d'implémentation — Appliquer les variantes visuelles des états de noeud (US16)'.",
+        "The Markdown content includes the original '## 3. Fichiers impactés' section and keeps the listed file paths.",
+        "The final summary reports the exact created path."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Prends le cadrage ci-dessous et matérialise-le en fichier Markdown dans la doc du projet. Si tu dois choisir le nom, utilise un slug propre basé sur le titre. Ne développe pas davantage le contenu.\n\n# Plan d'implémentation — Feature Import Diagnostics Timeline\n\n**Context** : importer diagnostics timeline for long-running OggDude imports\n\n---\n\n## Goal\n\nProvide a documented implementation plan file for a timeline view of importer diagnostics.\n\n## Scope\n\n- show major import phases on a timeline ;\n- keep existing logs as the source of truth ;\n- avoid changing importer business rules.\n\n## Out of scope\n\n- redesign of the importer shell ;\n- data migration ;\n- Playwright coverage beyond the existing diagnostics flow.\n",
+      "expected_output": "One Markdown file is created under documentation/plan with an inferred kebab-case filename based on the provided title. The result stays narrow: it writes the existing plan content, does not invent missing implementation details, and confirms the created path.",
+      "files": [],
+      "expectations": [
+        "Exactly one Markdown output file is produced for the plan.",
+        "The created repository path stays under documentation/plan/ and ends with a kebab-case .md filename inferred from the title.",
+        "The Markdown content preserves the title 'Plan d'implémentation — Feature Import Diagnostics Timeline'.",
+        "The Markdown content keeps the sections '## Goal', '## Scope', and '## Out of scope' without adding extra implementation-detail sections.",
+        "The final summary reports the exact created path."
+      ]
+    }
+  ]
+}
