@@ -21,6 +21,7 @@ import { logger } from '../../../module/utils/logger.mjs'
 import { recordTalentNodePurchase } from '../../../module/utils/audit-log.mjs'
 import { resolveSpecializationTree } from '../../../module/lib/talent-node/talent-tree-resolver.mjs'
 import { purchaseTalentNode } from '../../../module/lib/talent-node/talent-node-purchase.mjs'
+import { buildOwnedTalentSummary } from '../../../module/lib/talent-node/owned-talent-summary.mjs'
 import { REASON_CODE } from '../../../module/lib/talent-node/talent-node-state.mjs'
 
 function buildActor(overrides = {}) {
@@ -293,6 +294,144 @@ describe('TalentNodePurchase', () => {
 
       expect(result.ok).toBe(false)
       expect(result.reasonCode).toBe(REASON_CODE.SPECIALIZATION_NOT_OWNED)
+    })
+
+    it('groups ranked talent purchases into a single consolidated entry with rank 2 via buildOwnedTalentSummary', async () => {
+      const actor = {
+        id: 'actor-001',
+        system: {
+          details: {
+            specializations: [
+              { specializationId: 'spec-1', name: 'Bodyguard' },
+              { specializationId: 'spec-2', name: 'Mercenary Soldier' },
+            ],
+          },
+          progression: {
+            talentPurchases: [],
+            experience: { gained: 100, spent: 0 },
+          },
+        },
+        update: vi.fn().mockResolvedValue(undefined),
+      }
+
+      resolveSpecializationTree.mockImplementation((spec) => {
+        if (spec.specializationId === 'spec-1') {
+          return {
+            tree: {
+              id: 'tree-1',
+              system: {
+                specializationId: 'spec-1',
+                nodes: [{ nodeId: 'r1c1', talentId: 'talent-parry', row: 1, column: 1, cost: 5 }],
+                connections: [{ from: 'r1c1', to: 'r2c1' }],
+              },
+            },
+            state: 'available',
+          }
+        }
+        return {
+          tree: {
+            id: 'tree-2',
+            system: {
+              specializationId: 'spec-2',
+              nodes: [{ nodeId: 'r1c1', talentId: 'talent-parry', row: 1, column: 1, cost: 5 }],
+              connections: [{ from: 'r1c1', to: 'r2c1' }],
+            },
+          },
+          state: 'available',
+        }
+      })
+
+      await purchaseTalentNode(actor, 'spec-1', 'r1c1')
+      actor.system.progression.talentPurchases = [
+        { treeId: 'tree-1', nodeId: 'r1c1', talentId: 'talent-parry', specializationId: 'spec-1' },
+      ]
+      actor.system.progression.experience.spent = 5
+
+      await purchaseTalentNode(actor, 'spec-2', 'r1c1')
+      actor.system.progression.talentPurchases = [
+        { treeId: 'tree-1', nodeId: 'r1c1', talentId: 'talent-parry', specializationId: 'spec-1' },
+        { treeId: 'tree-2', nodeId: 'r1c1', talentId: 'talent-parry', specializationId: 'spec-2' },
+      ]
+      actor.system.progression.experience.spent = 10
+
+      const definitions = new Map()
+      definitions.set('talent-parry', { name: 'Parer', activation: 'active', isRanked: true })
+      const summary = buildOwnedTalentSummary(actor, definitions)
+
+      expect(summary).toHaveLength(1)
+      expect(summary[0].talentId).toBe('talent-parry')
+      expect(summary[0].isRanked).toBe(true)
+      expect(summary[0].rank).toBe(2)
+      expect(summary[0].sources).toHaveLength(2)
+    })
+
+    it('deduplicates non-ranked talent purchases into a single entry with two sources via buildOwnedTalentSummary', async () => {
+      const actor = {
+        id: 'actor-001',
+        system: {
+          details: {
+            specializations: [
+              { specializationId: 'spec-1', name: 'Bodyguard' },
+              { specializationId: 'spec-2', name: 'Mercenary Soldier' },
+            ],
+          },
+          progression: {
+            talentPurchases: [],
+            experience: { gained: 100, spent: 0 },
+          },
+        },
+        update: vi.fn().mockResolvedValue(undefined),
+      }
+
+      resolveSpecializationTree.mockImplementation((spec) => {
+        if (spec.specializationId === 'spec-1') {
+          return {
+            tree: {
+              id: 'tree-1',
+              system: {
+                specializationId: 'spec-1',
+                nodes: [{ nodeId: 'r1c1', talentId: 'talent-toughness', row: 1, column: 1, cost: 5 }],
+                connections: [{ from: 'r1c1', to: 'r2c1' }],
+              },
+            },
+            state: 'available',
+          }
+        }
+        return {
+          tree: {
+            id: 'tree-2',
+            system: {
+              specializationId: 'spec-2',
+              nodes: [{ nodeId: 'r1c1', talentId: 'talent-toughness', row: 1, column: 1, cost: 5 }],
+              connections: [{ from: 'r1c1', to: 'r2c1' }],
+            },
+          },
+          state: 'available',
+        }
+      })
+
+      await purchaseTalentNode(actor, 'spec-1', 'r1c1')
+      actor.system.progression.talentPurchases = [
+        { treeId: 'tree-1', nodeId: 'r1c1', talentId: 'talent-toughness', specializationId: 'spec-1' },
+      ]
+      actor.system.progression.experience.spent = 5
+
+      await purchaseTalentNode(actor, 'spec-2', 'r1c1')
+      actor.system.progression.talentPurchases = [
+        { treeId: 'tree-1', nodeId: 'r1c1', talentId: 'talent-toughness', specializationId: 'spec-1' },
+        { treeId: 'tree-2', nodeId: 'r1c1', talentId: 'talent-toughness', specializationId: 'spec-2' },
+      ]
+      actor.system.progression.experience.spent = 10
+
+      const definitions = new Map()
+      definitions.set('talent-toughness', { name: 'Toughness', activation: 'passive', isRanked: false })
+      const summary = buildOwnedTalentSummary(actor, definitions)
+
+      expect(summary).toHaveLength(1)
+      expect(summary[0].talentId).toBe('talent-toughness')
+      expect(summary[0].isRanked).toBe(false)
+      expect(summary[0].rank).toBeNull()
+      expect(summary[0].sources).toHaveLength(2)
     })
   })
 })
