@@ -242,4 +242,191 @@ describe('Talent purchase sync chain (US19)', () => {
       expect(actor.update).toHaveBeenCalledTimes(1)
     })
   })
+
+  describe('full chain: purchase -> consolidated -> audit (US22)', () => {
+    it('chains ranked purchase in two trees, verifies consolidated rank and audit calls', async () => {
+      const actor = {
+        id: 'actor-001',
+        name: 'Vara Kesh',
+        system: {
+          details: {
+            specializations: [
+              { specializationId: 'spec-bodyguard', name: 'Bodyguard' },
+              { specializationId: 'spec-merc', name: 'Mercenary Soldier' },
+            ],
+          },
+          progression: {
+            talentPurchases: [],
+            experience: { gained: 100, spent: 0 },
+          },
+        },
+        update: vi.fn().mockResolvedValue(undefined),
+      }
+
+      resolveSpecializationTree.mockImplementation((spec) => {
+        if (spec.specializationId === 'spec-bodyguard') {
+          return {
+            tree: {
+              id: 'tree-bodyguard',
+              system: {
+                specializationId: 'spec-bodyguard',
+                nodes: [{ nodeId: 'r1c1', talentId: 'grit', row: 1, column: 1, cost: 5 }],
+                connections: [{ from: 'r1c1', to: 'r2c1' }],
+              },
+            },
+            state: 'available',
+          }
+        }
+        return {
+          tree: {
+            id: 'tree-merc',
+            system: {
+              specializationId: 'spec-merc',
+              nodes: [{ nodeId: 'r1c1', talentId: 'grit', row: 1, column: 1, cost: 5 }],
+              connections: [{ from: 'r1c1', to: 'r2c1' }],
+            },
+          },
+          state: 'available',
+        }
+      })
+
+      const definitions = new Map()
+      definitions.set('grit', { name: 'Grit', activation: 'passive', isRanked: true })
+
+      const result1 = await purchaseTalentNode(actor, 'spec-bodyguard', 'r1c1')
+      expect(result1.ok).toBe(true)
+      actor.system.progression.talentPurchases = [
+        { treeId: 'tree-bodyguard', nodeId: 'r1c1', talentId: 'grit', specializationId: 'spec-bodyguard' },
+      ]
+      actor.system.progression.experience.spent = 5
+
+      let summary = buildOwnedTalentSummary(actor, definitions)
+      expect(summary).toHaveLength(1)
+      expect(summary[0].rank).toBe(1)
+
+      const result2 = await purchaseTalentNode(actor, 'spec-merc', 'r1c1')
+      expect(result2.ok).toBe(true)
+      actor.system.progression.talentPurchases = [
+        { treeId: 'tree-bodyguard', nodeId: 'r1c1', talentId: 'grit', specializationId: 'spec-bodyguard' },
+        { treeId: 'tree-merc', nodeId: 'r1c1', talentId: 'grit', specializationId: 'spec-merc' },
+      ]
+      actor.system.progression.experience.spent = 10
+
+      summary = buildOwnedTalentSummary(actor, definitions)
+      expect(summary).toHaveLength(1)
+      expect(summary[0].rank).toBe(2)
+      expect(summary[0].sources).toHaveLength(2)
+
+      expect(recordTalentNodePurchase).toHaveBeenCalledTimes(2)
+    })
+
+    it('chains non-ranked purchase in two trees, verifies deduplication and audit calls', async () => {
+      const actor = {
+        id: 'actor-001',
+        name: 'Vara Kesh',
+        system: {
+          details: {
+            specializations: [
+              { specializationId: 'spec-bodyguard', name: 'Bodyguard' },
+              { specializationId: 'spec-merc', name: 'Mercenary Soldier' },
+            ],
+          },
+          progression: {
+            talentPurchases: [],
+            experience: { gained: 100, spent: 0 },
+          },
+        },
+        update: vi.fn().mockResolvedValue(undefined),
+      }
+
+      resolveSpecializationTree.mockImplementation((spec) => {
+        if (spec.specializationId === 'spec-bodyguard') {
+          return {
+            tree: {
+              id: 'tree-bodyguard',
+              system: {
+                specializationId: 'spec-bodyguard',
+                nodes: [{ nodeId: 'r1c1', talentId: 'toughness', row: 1, column: 1, cost: 5 }],
+                connections: [{ from: 'r1c1', to: 'r2c1' }],
+              },
+            },
+            state: 'available',
+          }
+        }
+        return {
+          tree: {
+            id: 'tree-merc',
+            system: {
+              specializationId: 'spec-merc',
+              nodes: [{ nodeId: 'r1c1', talentId: 'toughness', row: 1, column: 1, cost: 5 }],
+              connections: [{ from: 'r1c1', to: 'r2c1' }],
+            },
+          },
+          state: 'available',
+        }
+      })
+
+      const definitions = new Map()
+      definitions.set('toughness', { name: 'Toughness', activation: 'passive', isRanked: false })
+
+      await purchaseTalentNode(actor, 'spec-bodyguard', 'r1c1')
+      actor.system.progression.talentPurchases = [
+        { treeId: 'tree-bodyguard', nodeId: 'r1c1', talentId: 'toughness', specializationId: 'spec-bodyguard' },
+      ]
+      actor.system.progression.experience.spent = 5
+
+      await purchaseTalentNode(actor, 'spec-merc', 'r1c1')
+      actor.system.progression.talentPurchases = [
+        { treeId: 'tree-bodyguard', nodeId: 'r1c1', talentId: 'toughness', specializationId: 'spec-bodyguard' },
+        { treeId: 'tree-merc', nodeId: 'r1c1', talentId: 'toughness', specializationId: 'spec-merc' },
+      ]
+      actor.system.progression.experience.spent = 10
+
+      const summary = buildOwnedTalentSummary(actor, definitions)
+
+      expect(summary).toHaveLength(1)
+      expect(summary[0].talentId).toBe('toughness')
+      expect(summary[0].isRanked).toBe(false)
+      expect(summary[0].rank).toBeNull()
+      expect(summary[0].sources).toHaveLength(2)
+      expect(recordTalentNodePurchase).toHaveBeenCalledTimes(2)
+    })
+
+    it('handles purchase when talentPurchases field is absent gracefully', async () => {
+      const actor = {
+        id: 'actor-001',
+        name: 'Vara Kesh',
+        system: {
+          details: {
+            specializations: [
+              { specializationId: 'spec-bodyguard', name: 'Bodyguard' },
+            ],
+          },
+          progression: {
+            experience: { gained: 100, spent: 0 },
+          },
+        },
+        update: vi.fn().mockResolvedValue(undefined),
+      }
+
+      const treeData = {
+        tree: {
+          id: 'tree-bodyguard',
+          system: {
+            specializationId: 'spec-bodyguard',
+            nodes: [{ nodeId: 'r1c1', talentId: 'grit', row: 1, column: 1, cost: 5 }],
+            connections: [{ from: 'r1c1', to: 'r2c1' }],
+          },
+        },
+        state: 'available',
+      }
+      resolveSpecializationTree.mockReturnValue(treeData)
+
+      const result = await purchaseTalentNode(actor, 'spec-bodyguard', 'r1c1')
+
+      expect(result.ok).toBe(true)
+      expect(actor.update).toHaveBeenCalledTimes(1)
+      expect(recordTalentNodePurchase).toHaveBeenCalledTimes(1)
+    })
+  })
 })
