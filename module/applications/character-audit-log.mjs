@@ -60,6 +60,7 @@ const AUDIT_LOG_TYPE_LABELS = Object.freeze({
   'specialization.add': 'SWERPG.AUDIT_LOG.TYPE.SPECIALIZATION_ADD',
   'specialization.remove': 'SWERPG.AUDIT_LOG.TYPE.SPECIALIZATION_REMOVE',
   'talent.purchase': 'SWERPG.AUDIT_LOG.TYPE.TALENT_PURCHASE',
+  'talent-node-purchase': 'SWERPG.AUDIT_LOG.TYPE.TALENT_NODE_PURCHASE',
   'advancement.level': 'SWERPG.AUDIT_LOG.TYPE.ADVANCEMENT_LEVEL',
 })
 
@@ -86,6 +87,7 @@ export function getAuditLogFamily(type) {
     case 'skill.forget':
       return AUDIT_LOG_FAMILIES.skills
     case 'talent.purchase':
+    case 'talent-node-purchase':
       return AUDIT_LOG_FAMILIES.talents
     case 'xp.spend':
     case 'xp.refund':
@@ -208,6 +210,12 @@ export function buildAuditLogDescription(entry) {
       return game.i18n.format('SWERPG.AUDIT_LOG.DESCRIPTION.TALENT_PURCHASE', {
         talent: getAuditLogName(data.talentName, 'SWERPG.AUDIT_LOG.UNKNOWN_TALENT'),
         ranks: data.ranks ?? 1,
+      })
+    case 'talent-node-purchase':
+      return game.i18n.format('SWERPG.AUDIT_LOG.DESCRIPTION.TALENT_NODE_PURCHASE', {
+        talentId: getAuditLogName(data.talentId, 'SWERPG.AUDIT_LOG.UNKNOWN_VALUE'),
+        specializationId: getAuditLogName(data.specializationId, 'SWERPG.AUDIT_LOG.UNKNOWN_VALUE'),
+        cost: data.cost ?? 0,
       })
     case 'advancement.level':
       return game.i18n.format('SWERPG.AUDIT_LOG.DESCRIPTION.ADVANCEMENT_LEVEL', {
