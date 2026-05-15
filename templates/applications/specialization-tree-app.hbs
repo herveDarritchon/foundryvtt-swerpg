@@ -34,10 +34,15 @@
 
       <section class='specialization-tree-app__viewport-panel'>
         {{#if showViewport}}
-          <div class='specialization-tree-app__toolbar'>
-            <button type='button' class='specialization-tree-app__toolbar-btn' data-action='resetView'>
+          <div class='specialization-tree-app__viewport-toolbar'>
+            <button type='button' class='specialization-tree-app__toolbar-btn' data-action='zoomOut' aria-label='{{localize "SWERPG.TALENT.SPECIALIZATION_TREE_APP.ACTION.ZOOM_OUT"}}'>
+              <i class='fa-solid fa-minus'></i>
+            </button>
+            <button type='button' class='specialization-tree-app__toolbar-btn' data-action='resetView' aria-label='{{localize "SWERPG.TALENT.SPECIALIZATION_TREE_APP.ACTION.CENTER"}}'>
               <i class='fa-solid fa-crosshairs'></i>
-              {{localize 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.ACTION.CENTER'}}
+            </button>
+            <button type='button' class='specialization-tree-app__toolbar-btn' data-action='zoomIn' aria-label='{{localize "SWERPG.TALENT.SPECIALIZATION_TREE_APP.ACTION.ZOOM_IN"}}'>
+              <i class='fa-solid fa-plus'></i>
             </button>
           </div>
           <div

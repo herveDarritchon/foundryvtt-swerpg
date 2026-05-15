@@ -1103,7 +1103,7 @@ input[type='range'] {
 .swerpg.application.specialization-tree-app .specialization-tree-app__node-tooltip-body {
   color: #c8dcee;
 }
-.swerpg.application.specialization-tree-app .specialization-tree-app__toolbar {
+.swerpg.application.specialization-tree-app .specialization-tree-app__viewport-toolbar {
   position: absolute;
   top: 1.5rem;
   right: 1.5rem;
@@ -1112,7 +1112,7 @@ input[type='range'] {
   gap: 0.5rem;
   pointer-events: none;
 }
-.swerpg.application.specialization-tree-app .specialization-tree-app__toolbar > * {
+.swerpg.application.specialization-tree-app .specialization-tree-app__viewport-toolbar > * {
   pointer-events: auto;
 }
 .swerpg.application.specialization-tree-app .specialization-tree-app__toolbar-btn {

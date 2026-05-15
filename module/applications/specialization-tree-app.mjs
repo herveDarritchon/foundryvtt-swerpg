@@ -366,6 +366,8 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
     sheetConfig: false,
     actions: {
       resetView: SpecializationTreeApp.#onResetView,
+      zoomIn: SpecializationTreeApp.#onZoomIn,
+      zoomOut: SpecializationTreeApp.#onZoomOut,
     },
   }
 
@@ -604,6 +606,18 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
     this.#resetView()
   }
 
+  /** @returns {Promise<void>} */
+  static async #onZoomIn(event, _target) {
+    event.preventDefault()
+    this.#zoomIn()
+  }
+
+  /** @returns {Promise<void>} */
+  static async #onZoomOut(event, _target) {
+    event.preventDefault()
+    this.#zoomOut()
+  }
+
   /**
    * Reset the viewport to the centered initial view.
    * Relies on the cached render nodes from the last draw.
@@ -611,6 +625,28 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
   #resetView() {
     this.#centerTree({ renderNodes: this.#renderNodesCache })
     this.#applyViewportTransform()
+  }
+
+  /**
+   * Zoom in by one zoomStep around the visible center of the viewport.
+   * Delegates to #zoomAt() for clamp and repositioning.
+   */
+  #zoomIn() {
+    if (!this.#viewportHost) return
+    const { width, height } = getViewportDimensions(this.#viewportHost)
+    const center = { x: width / 2, y: height / 2 }
+    this.#zoomAt(center, this.#viewport.scale * this.#zoomStep)
+  }
+
+  /**
+   * Zoom out by one zoomStep around the visible center of the viewport.
+   * Delegates to #zoomAt() for clamp and repositioning.
+   */
+  #zoomOut() {
+    if (!this.#viewportHost) return
+    const { width, height } = getViewportDimensions(this.#viewportHost)
+    const center = { x: width / 2, y: height / 2 }
+    this.#zoomAt(center, this.#viewport.scale / this.#zoomStep)
   }
 
   #zoomAt(globalPoint, nextScale) {

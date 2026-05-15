@@ -1910,4 +1910,149 @@ describe('specialization-tree application', () => {
       'wheel', expect.any(Function),
     )
   })
+
+  it('zoomIn action increases viewport scale by zoomStep', async () => {
+    const actor = createActor({
+      system: {
+        details: {
+          specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' }],
+        },
+        progression: {
+          talentPurchases: [],
+          experience: { available: 100 },
+        },
+      },
+    })
+    globalThis.fromUuidSync = vi.fn((uuid) => {
+      if (uuid === 'Item.tree-bodyguard') {
+        return {
+          type: 'specialization-tree',
+          name: 'Bodyguard Tree',
+          system: {
+            nodes: [{ nodeId: 'r1c1', talentId: 'Item.talent-tough', row: 1, column: 1, cost: 10 }],
+            connections: [{ from: 'r1c1', to: 'r2c1' }],
+          },
+        }
+      }
+      if (uuid === 'Item.talent-tough') return { name: 'Tough' }
+      return null
+    })
+
+    const app = new SpecializationTreeApp()
+    app.actor = actor
+    app.document = actor
+    const host = createMockHost({ width: 640, height: 480 })
+    app.element = { querySelector: vi.fn(() => host) }
+
+    const context = buildSpecializationTreeContext(actor)
+    await app._onRender(context, { resetView: false })
+
+    const container = app.pixiApp.stage.children.find((c) => c.position && c.scale)
+    expect(container, 'tree container must exist').toBeDefined()
+
+    container.scale.set.mockClear()
+    container.position.set.mockClear()
+
+    const event = { preventDefault: vi.fn() }
+    await SpecializationTreeApp.DEFAULT_OPTIONS.actions.zoomIn.call(app, event)
+
+    expect(event.preventDefault).toHaveBeenCalled()
+    expect(container.scale.set, 'zoomIn must zoom in by zoomStep factor').toHaveBeenCalledWith(1.15)
+  })
+
+  it('zoomOut action decreases viewport scale by zoomStep', async () => {
+    const actor = createActor({
+      system: {
+        details: {
+          specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' }],
+        },
+        progression: {
+          talentPurchases: [],
+          experience: { available: 100 },
+        },
+      },
+    })
+    globalThis.fromUuidSync = vi.fn((uuid) => {
+      if (uuid === 'Item.tree-bodyguard') {
+        return {
+          type: 'specialization-tree',
+          name: 'Bodyguard Tree',
+          system: {
+            nodes: [{ nodeId: 'r1c1', talentId: 'Item.talent-tough', row: 1, column: 1, cost: 10 }],
+            connections: [{ from: 'r1c1', to: 'r2c1' }],
+          },
+        }
+      }
+      if (uuid === 'Item.talent-tough') return { name: 'Tough' }
+      return null
+    })
+
+    const app = new SpecializationTreeApp()
+    app.actor = actor
+    app.document = actor
+    const host = createMockHost({ width: 640, height: 480 })
+    app.element = { querySelector: vi.fn(() => host) }
+
+    const context = buildSpecializationTreeContext(actor)
+    await app._onRender(context, { resetView: false })
+
+    const container = app.pixiApp.stage.children.find((c) => c.position && c.scale)
+    expect(container, 'tree container must exist').toBeDefined()
+
+    container.scale.set.mockClear()
+    container.position.set.mockClear()
+
+    const event = { preventDefault: vi.fn() }
+    await SpecializationTreeApp.DEFAULT_OPTIONS.actions.zoomOut.call(app, event)
+
+    expect(event.preventDefault).toHaveBeenCalled()
+    expect(container.scale.set, 'zoomOut must zoom out by 1/zoomStep factor').toHaveBeenCalledWith(1 / 1.15)
+  })
+
+  it('zoomIn and zoomOut actions do not mutate renderNodes', async () => {
+    const actor = createActor({
+      system: {
+        details: {
+          specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' }],
+        },
+        progression: {
+          talentPurchases: [],
+          experience: { available: 100 },
+        },
+      },
+    })
+    globalThis.fromUuidSync = vi.fn((uuid) => {
+      if (uuid === 'Item.tree-bodyguard') {
+        return {
+          type: 'specialization-tree',
+          name: 'Bodyguard Tree',
+          system: {
+            nodes: [{ nodeId: 'r1c1', talentId: 'Item.talent-tough', row: 1, column: 1, cost: 10 }],
+            connections: [{ from: 'r1c1', to: 'r2c1' }],
+          },
+        }
+      }
+      if (uuid === 'Item.talent-tough') return { name: 'Tough' }
+      return null
+    })
+
+    const app = new SpecializationTreeApp()
+    app.actor = actor
+    app.document = actor
+    const host = createMockHost({ width: 640, height: 480 })
+    app.element = { querySelector: vi.fn(() => host) }
+
+    const context = buildSpecializationTreeContext(actor)
+    expect(context.renderNodes, 'immutability test requires at least one node').toHaveLength(1)
+    const originalNode = { x: context.renderNodes[0].x, y: context.renderNodes[0].y }
+
+    await app._onRender(context, { resetView: false })
+
+    const event = { preventDefault: vi.fn() }
+    await SpecializationTreeApp.DEFAULT_OPTIONS.actions.zoomIn.call(app, event)
+    await SpecializationTreeApp.DEFAULT_OPTIONS.actions.zoomOut.call(app, event)
+
+    expect(context.renderNodes[0].x, 'zoom actions must not mutate node x').toBe(originalNode.x)
+    expect(context.renderNodes[0].y, 'zoom actions must not mutate node y').toBe(originalNode.y)
+  })
 })
