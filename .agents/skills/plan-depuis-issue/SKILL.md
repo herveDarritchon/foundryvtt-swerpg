@@ -1,15 +1,16 @@
 ---
 name: plan-depuis-issue
 description: >
-  Génère un plan d'implémentation technique détaillé à partir d'une issue GitHub
-  pour le système Foundry VTT SWERPG. À utiliser quand l'utilisateur demande de
-  créer un plan, une spec technique, ou un découpage pour une issue ou une user
-  story. Déclenche-toi aussi quand l'utilisateur parle de "planifier", "découper",
-  "splitter", "implémenter", ou "tech lead" une issue. Le skill produit un
-  document structuré dans `documentation/plan/` qui respecte le format, l'architecture
-  et les conventions du projet. N'hésite PAS à proposer ce skill dès que
-  l'utilisateur évoque une issue en demandant comment l'aborder — même s'il ne
-  demande pas explicitement un plan.
+  Génère un plan d'implémentation technique détaillé et validé à partir d'une
+  issue GitHub pour le système Foundry VTT SWERPG. À utiliser quand l'utilisateur
+  demande de créer un plan, une spec technique, ou un découpage pour une issue ou
+  une user story. Déclenche-toi aussi quand l'utilisateur parle de "planifier",
+  "découper", "splitter", "implémenter", ou "tech lead" une issue. Le skill
+  produit un plan validé comme message structuré en suivant le format canonique
+  du projet. L'écriture du plan dans `documentation/plan/` et l'implémentation
+  sont des étapes séparées. N'hésite PAS à proposer ce skill dès que l'utilisateur
+  évoque une issue en demandant comment l'aborder — même s'il ne demande pas
+  explicitement un plan.
 license: project-internal
 compatibility:
   - claude-code
@@ -31,10 +32,12 @@ Utilise ce skill quand l'utilisateur te demande de créer un plan d'implémentat
 ## 1. Règles absolues
 
 1. **Ne jamais écrire une ligne de code d'implémentation.** Un plan décrit ce qu'il faut faire, pas le code final.
-2. **Toujours lire les plans existants** dans `documentation/plan/` avant d'écrire pour t'inspirer du format et du niveau de détail.
+2. **Toujours lire les plans existants** dans `documentation/plan/` avant d'écrire pour t'inspirer du format et du niveau de détail. Ne pas produire de fichier dans le repo : livrer le plan comme message validé.
 3. **Toujours lire les ADRs** dans `documentation/architecture/adr/` qui concernent le périmètre de l'issue.
 4. **Ne pas modifier le code existant** — le plan peut recommander des modifications, mais ne les applique pas.
 5. **Ne pas modifier les issues GitHub** — le plan est un document de travail, pas un outil de gestion de projet.
+6. **Ne pas élargir le périmètre de l'issue.** Le plan doit refléter l'issue et les arbitrages utilisateur, pas une feuille de route opportuniste.
+7. **Ne pas matérialiser automatiquement le plan dans le dépôt.** L'écriture dans `documentation/plan/` est une étape séparée, via `ecrire-plan-fichier`.
 
 ---
 
@@ -88,9 +91,9 @@ Avant de rédiger la version finale, résume les décisions prises et demande un
 
 ### 2.5. Rédiger le plan
 
-Produis un document dans `documentation/plan/<domaine>/<nom-du-plan>.md` en suivant le format standard.
+Produis un plan validé comme message structuré, en respectant le format canonique des plans existants dans `documentation/plan/`. L'écriture du plan dans le dépôt est une étape séparée : le plan est d'abord livré et validé dans la conversation. Une fois validé, l'utilisateur peut utiliser `ecrire-plan-fichier` pour le matérialiser.
 
-Le plan doit suivre la structure canonique des plans existants dans `documentation/plan/` :
+Le plan doit suivre la structure canonique :
 
 ```markdown
 # Plan d'implémentation — <Titre>
@@ -165,6 +168,9 @@ Avant de présenter le plan, vérifie :
 - [ ] Les risques sont identifiés avec des mitiations concrètes
 - [ ] Les fichiers impactés sont listés avec leur action (création/modification)
 - [ ] L'ordre de commit est réaliste
+- [ ] Aucun code d'implémentation n'est présent dans le plan
+- [ ] Le périmètre n'a pas été élargi au-delà de l'issue
+- [ ] Le plan est livré comme message validé, pas comme fichier dans le dépôt
 
 ---
 
