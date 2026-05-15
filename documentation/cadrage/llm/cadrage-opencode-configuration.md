@@ -1184,8 +1184,61 @@ La stratégie recommandée est :
 
 C’est cette discipline qui permettra d’obtenir le meilleur compromis entre coût, qualité, contrôle et vélocité.
 
-La règle structurante à retenir est simple :
+---
 
-> Exécuter ≠ analyser ≠ corriger.
+## 17. Doctrine cible validée — Issue #267
 
-C’est elle qui doit guider en priorité la conception des agents, des commandes, des permissions et des choix de modèles.
+Cette section formalise la doctrine cible validée par l’issue [#267](https://github.com/herveDarritchon/foundryvtt-swerpg/issues/267). Elle extrait les principes normatifs du présent document et les complète par la matrice des usages fréquents, les niveaux de risque, d’autonomie et les types d’agent attendus.
+
+### 17.1. Principes doctrinaux
+
+1. **Orchestration assistée** — OpenCode assiste l’utilisateur, ne le remplace pas. Les décisions d’architecture, les modifications de code, les suppressions et les opérations Git critiques restent sous validation humaine.
+2. **Séparation des rôles** — Un agent de planification ne modifie pas le code. Un agent d’implémentation suit un plan. Un agent de revue ne valide pas son propre travail. Un agent de test diagnostique avant de corriger.
+3. **Permissions alignées sur le risque** — Les tâches à risque élevé (code, architecture, Git) exigent une validation humaine explicite. Les tâches à faible risque (lecture, recherche, documentation) peuvent être déléguées avec une autonomie plus large.
+4. **Commandes pour les routines, skills pour le savoir** — Les commandes standardisent les workflows récurrents. Les skills portent la connaissance durable du projet (conventions, architecture, patterns, pièges).
+5. **Modèle adapté au besoin** — Les modèles de raisonnement avancé sont réservés aux décisions d’architecture, plans complexes et revues critiques. Les modèles économiques ou locaux suffisent pour l’exploration, les tâches mécaniques et les reformulations.
+
+### 17.2. Matrice des usages fréquents
+
+| Activité | Risque | Autonomie | Type d’agent | Skill existant | Validation humaine |
+|---|---|---|---|---|---|
+| Créer des issues depuis un cadrage | Moyen | Assistée | Planification / Découpage | `to-issues` | Oui — contenu des issues |
+| Créer un plan depuis une issue | Moyen | Assistée | Planification | `plan-depuis-issue` | Oui — plan validé |
+| Écrire un plan dans `documentation/plan/` | Faible | Assistée | Documentation | `ecrire-plan-fichier` | Non |
+| Implémenter un plan | Élevé | Assistée | Implémentation | `implementer-depuis-plan` | Oui — code et tests |
+| Diagnostiquer / corriger un bug | Élevé | Assistée | Correction | Partiellement `implementer-depuis-plan` | Oui — fix et tests |
+| Exécuter et analyser des tests | Faible | Lecture seule ou assistée | Test | Aucun | Non — résultat suffit |
+| Relire un diff / revue de code | Élevé | Lecture seule | Revue | Aucun | Oui — approbation |
+| Préparer / créer une PR | Moyen | Assistée | Documentation | `my-pull-requests` (lister seulement) | Oui — PR à valider |
+| Mettre à jour une documentation projet | Faible | Assistée | Documentation | Aucun | Non |
+| Lancer des vérifications mécaniques | Faible | Automatique (script) | Script | Aucun | Non |
+
+### 17.3. Niveaux de risque — Définition
+
+| Niveau | Exemples | Exigence |
+|---|---|---|
+| **Faible** | Documentation, lint, tests automatisés, exploration | Autonomie large, contrôle minimal |
+| **Moyen** | Planification, issues, PR, refactor localisé | Autonomie assistée, validation humaine recommandée |
+| **Élevé** | Implémentation, architecture, Git destructeur, suppression | Validation humaine obligatoire avant action |
+
+### 17.4. Écarts identifiés par l’audit des skills
+
+L’audit des skills existants (cf. documentation/plan/llm/267-audit-skills-opencode.md) révèle les écarts suivants :
+
+1. **`my-pull-requests`** — Le skill liste les PR mais ne permet pas d’en créer. Or l’usage attendu “préparer/créer une PR” n’est pas couvert. **Action** : créer ou étendre un skill de création de PR.
+2. **`ecrire-plan-fichier`** — Ce skill est une opération mécanique d’écriture. Il correspond davantage au rôle d’une **commande** que d’un skill porteur de connaissance. **Action** : évaluer sa transformation en commande dans un ticket ultérieur.
+3. **Activités non couvertes** — Aucun skill dédié n’existe pour : test automatisé, revue de code, diagnostic de bug, vérifications mécaniques, documentation projet. **Action** : décider dans un ticket ultérieur si ces activités nécessitent un skill, une commande, ou un simple prompt réutilisable.
+
+### 17.5. Ordre de mise en oeuvre recommandé pour les tickets suivants
+
+1. Doctrine et cartographie (ce ticket) ✓
+2. Alignement des commandes — Formaliser les routines les plus fréquentes en commandes OpenCode
+3. Alignement des skills — Corriger les écarts (`my-pull-requests`), transformer les skills mécaniques en commandes
+4. Permissions — Définir les permissions par type d’agent et niveau de risque
+5. Plugins / hooks transverses — Ajouter des garde-fous si nécessaire (sécurité, coût, validation)
+6. Mesure et ajustements — Observer l’utilisation réelle et ajuster la configuration
+
+[1]: https://opencode.ai/docs/agents/?utm_source=chatgpt.com "Agents"
+[2]: https://opencode.ai/docs/tools/?utm_source=chatgpt.com "Tools"
+[3]: https://opencode.ai/docs/commands/?utm_source=chatgpt.com "Commands"
+[4]: https://opencode.ai/docs/plugins/?utm_source=chatgpt.com "Plugins"
