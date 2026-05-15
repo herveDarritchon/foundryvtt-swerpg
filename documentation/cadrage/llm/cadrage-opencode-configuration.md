@@ -1327,3 +1327,100 @@ L'exploration ne doit pas franchir ces frontières de rôle sans instruction exp
 | Approfondie | Architecture transverse, dépendances, 5-15 fichiers | 5-10 min |
 
 La profondeur est choisie par l'utilisateur ou inférée depuis l'intention exprimée.
+
+---
+
+## 19. Workflow de planification en lecture seule — Issue #269
+
+Cette section formalise le workflow cible pour les demandes de planification d'implémentation, conformément à l'issue [#269](https://github.com/herveDarritchon/foundryvtt-swerpg/issues/269).
+
+### 19.1. Principe
+
+La planification est un workflow qui transforme une demande utilisateur (issue GitHub, URL, ou demande explicite) en **plan d'intervention structuré**, sans jamais implémenter, écrire dans le code source ni matérialiser automatiquement le plan dans le dépôt.
+
+Elle est conçue pour être exécutée par un agent de type **général / planification**, avec des permissions **lecture seule stricte** sur le code et le dépôt.
+
+### 19.2. Intentions déclenchantes
+
+Le workflow de planification est adapté aux demandes suivantes :
+
+- créer un plan depuis une issue GitHub ou une URL d'issue ;
+- créer un plan depuis une user story, une spécification ou un cadrage ;
+- créer un plan depuis un ticket technique (bug, refactor, feature) ;
+- découper une fonctionnalité complexe en étapes implémentables ;
+- analyser un périmètre et produire un plan avec décisions d'architecture, risques et ordre d'exécution.
+
+### 19.3. Exclusions explicites
+
+Ne pas utiliser ce workflow pour :
+
+- explorer ou comprendre du code existant (→ workflow d'exploration `#268`) ;
+- implémenter ou modifier du code ;
+- corriger un bug directement ;
+- écrire un fichier de plan dans `documentation/plan/` (→ étape séparée via `ecrire-plan-fichier`) ;
+- créer ou modifier des issues GitHub ;
+- relire un diff ou valider une PR.
+
+### 19.4. Agent et permissions
+
+| Propriété | Valeur |
+|---|---|
+| Type d'agent | Général / Planification |
+| Modèle cible | Standard ou économique selon la complexité du plan |
+| Autonomie | Lecture seule stricte (code et dépôt), avec capacité d'analyse forte |
+| Outils autorisés | Recherche fichiers, recherche textuelle, lecture fichiers, consultation web, questions à l'utilisateur |
+| Interdits | Édition, écriture, matérialisation automatique dans le repo, modification d'issue, élargissement du scope |
+
+### 19.5. Contrat de sortie
+
+Toute restitution de planification doit contenir :
+
+1. **Objectif** — Pourquoi ce plan ? Quel problème résout-il ?
+2. **Périmètre inclus / exclu** — Ce qui est couvert et ce qui est explicitement hors scope.
+3. **Constat sur l'existant** — Analyse de l'état actuel : ce qui existe, ce qui manque, les patterns en place.
+4. **Décisions d'architecture** — Chaque décision importante avec options envisagées, décision retenue et justification.
+5. **Plan de travail détaillé** — Découpage en étapes implémentables avec fichiers modifiés et risques spécifiques.
+6. **Fichiers modifiés** — Tableau fichier → action → description.
+7. **Risques** — Tableau risque → impact → mitigation.
+8. **Proposition d'ordre de commit** — Messages type conventional commit.
+9. **Dépendances** — Liens avec les autres US, tickets ou ADRs.
+
+Règles de sobriété :
+
+- pas de code d'implémentation dans le plan ;
+- pas d'élargissement du périmètre au-delà de l'issue ;
+- pas de décisions d'architecture implicites sans signalement ;
+- pas de matérialisation automatique du plan dans le dépôt ;
+- pas de transition automatique vers l'implémentation.
+
+### 19.6. Articulation avec les workflows voisins
+
+Le workflow de planification s'inscrit dans une chaîne explicite :
+
+```
+Exploration (#268) → Planification → Écriture du plan (ecrire-plan-fichier) → Implémentation (implementer-depuis-plan)
+```
+
+Règles de passage :
+
+- l'exploration ne planifie pas : elle prépare le terrain en livrant des constats ;
+- la planification n'écrit pas automatiquement dans le repo : elle livre un plan validé ;
+- l'implémentation exige un plan validé en amont ;
+- chaque transition est explicite et attend une instruction utilisateur.
+
+### 19.7. Garde-fous
+
+Le workflow de planification doit impérativement respecter les règles suivantes :
+
+1. **Pas de code** — Aucune ligne de code d'implémentation, même partielle.
+2. **Pas de doc écrite automatiquement** — Le plan est livré comme message, pas comme fichier dans le repo.
+3. **Pas de mise à jour d'issue** — Le plan ne modifie pas GitHub.
+4. **Pas d'élargissement du scope** — Le plan reflète l'issue et les arbitrages utilisateur, pas une feuille de route opportuniste.
+5. **Pas de choix d'architecture implicite** — Toute décision d'architecture doit être signalée et justifiée.
+6. **Pas de passage direct à l'implémentation** — Même si la solution est évidente, le workflow s'arrête au plan validé.
+
+### 19.8. Escalade depuis l'exploration
+
+Si une demande d'exploration révèle un besoin de planification, le workflow d'exploration s'arrête et oriente vers ce workflow de planification. Les constats de l'exploration sont transmis comme base de travail.
+
+L'escalade n'est jamais automatique. Le workflow signale la recommandation et attend une instruction explicite.
