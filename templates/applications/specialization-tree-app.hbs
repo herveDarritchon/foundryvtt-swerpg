@@ -12,7 +12,7 @@
         {{#if hasSpecializations}}
           <ul class='specialization-tree-app__specializations'>
             {{#each specializations as |specialization|}}
-              <li class='specialization-tree-app__specialization {{#if specialization.isAvailable}}is-available{{else}}is-unavailable{{/if}}'>
+              <li class='specialization-tree-app__specialization {{#if specialization.isAvailable}}is-available{{else}}is-unavailable{{/if}} {{#if specialization.isSelected}}is-active{{/if}}'{{#if specialization.isAvailable}} data-action='selectTree' data-tree-key='{{specialization.key}}'{{/if}}>
                 <div class='specialization-tree-app__specialization-main'>
                   <span class='specialization-tree-app__specialization-name'>{{specialization.name}}</span>
                   <span class='specialization-tree-app__specialization-state'>{{specialization.stateLabel}}</span>

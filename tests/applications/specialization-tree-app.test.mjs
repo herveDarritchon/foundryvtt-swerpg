@@ -45,6 +45,10 @@ function createActor(overrides = {}) {
   }
 }
 
+function getTreeContainer(app) {
+  return app.pixiApp.stage.children.find((child) => child.position && child.scale)
+}
+
 describe('specialization-tree application', () => {
   let SpecializationTreeApp
   let buildSpecializationTreeContext
@@ -2055,4 +2059,456 @@ describe('specialization-tree application', () => {
     expect(context.renderNodes[0].x, 'zoom actions must not mutate node x').toBe(originalNode.x)
     expect(context.renderNodes[0].y, 'zoom actions must not mutate node y').toBe(originalNode.y)
   })
+
+  describe('specialization tree selection', () => {
+    it('buildSpecializationTreeContext with selectedKey picks the matching available specialization', () => {
+      const actor = createActor({
+        system: {
+          details: {
+            specializations: [
+              { specializationId: 'spec-first', name: 'First', treeUuid: 'Item.tree-first' },
+              { specializationId: 'spec-second', name: 'Second', treeUuid: 'Item.tree-second' },
+            ],
+          },
+        },
+      })
+
+      globalThis.fromUuidSync = vi.fn((uuid) => {
+        if (uuid === 'Item.tree-first') {
+          return {
+            type: 'specialization-tree',
+            name: 'First Tree',
+            system: {
+              nodes: [
+                { nodeId: 'r1c1', talentId: 'Item.talent-a', row: 1, column: 1, cost: 5 },
+                { nodeId: 'r2c1', talentId: 'Item.talent-a-2', row: 2, column: 1, cost: 10 },
+              ],
+              connections: [{ from: 'r1c1', to: 'r2c1' }],
+            },
+          }
+        }
+
+        if (uuid === 'Item.tree-second') {
+          return {
+            type: 'specialization-tree',
+            name: 'Second Tree',
+            system: {
+              nodes: [
+                { nodeId: 'r1c1', talentId: 'Item.talent-b', row: 1, column: 1, cost: 10 },
+                { nodeId: 'r2c1', talentId: 'Item.talent-b-2', row: 2, column: 1, cost: 15 },
+              ],
+              connections: [{ from: 'r1c1', to: 'r2c1' }],
+            },
+          }
+        }
+
+        return null
+      })
+
+      const defaultContext = buildSpecializationTreeContext(actor)
+
+      expect(defaultContext.currentTreeId, 'default picks last available').toBe('spec-second')
+
+      const defaultSelected = defaultContext.specializations.find((s) => s.isSelected)
+      expect(defaultSelected, 'default selected entry').toBeDefined()
+      expect(defaultSelected.key, 'default selected key').toBe('spec-second')
+
+      const firstContext = buildSpecializationTreeContext(actor, 'spec-first')
+
+      expect(firstContext.currentTreeId, 'selectedKey picks spec-first').toBe('spec-first')
+
+      const firstSelected = firstContext.specializations.find((s) => s.isSelected)
+      expect(firstSelected, 'first selected entry').toBeDefined()
+      expect(firstSelected.key, 'first selected key').toBe('spec-first')
+    })
+
+    it('falls back to last available when selectedKey does not match any available specialization', () => {
+      const actor = createActor({
+        system: {
+          details: {
+            specializations: [{ specializationId: 'spec-avail', name: 'Available', treeUuid: 'Item.tree-avail' }],
+          },
+        },
+      })
+
+      globalThis.fromUuidSync = vi.fn((uuid) => {
+        if (uuid === 'Item.tree-avail') {
+          return {
+            type: 'specialization-tree',
+            name: 'Available Tree',
+            system: {
+              nodes: [
+                { nodeId: 'r1c1', talentId: 'Item.talent-avail', row: 1, column: 1, cost: 5 },
+                { nodeId: 'r2c1', talentId: 'Item.talent-avail-2', row: 2, column: 1, cost: 10 },
+              ],
+              connections: [{ from: 'r1c1', to: 'r2c1' }],
+            },
+          }
+        }
+
+        return null
+      })
+
+      const context = buildSpecializationTreeContext(actor, 'spec-nonexistent')
+
+      expect(context.currentTreeId, 'falls back to available').toBe('spec-avail')
+    })
+
+    it('marks specialization entries with isSelected correctly', () => {
+      const actor = createActor({
+        system: {
+          details: {
+            specializations: [
+              { specializationId: 'spec-first', name: 'First', treeUuid: 'Item.tree-first' },
+              { specializationId: 'spec-second', name: 'Second', treeUuid: 'Item.tree-second' },
+              { specializationId: 'spec-third', name: 'Third', treeUuid: 'Item.tree-third' },
+            ],
+          },
+        },
+      })
+
+      globalThis.fromUuidSync = vi.fn((uuid) => ({
+        type: 'specialization-tree',
+        name: `${uuid} Tree`,
+        system: {
+          nodes: [
+            { nodeId: 'r1c1', talentId: `${uuid}.talent-a`, row: 1, column: 1, cost: 5 },
+            { nodeId: 'r2c1', talentId: `${uuid}.talent-b`, row: 2, column: 1, cost: 10 },
+          ],
+          connections: [{ from: 'r1c1', to: 'r2c1' }],
+        },
+      }))
+
+      const context = buildSpecializationTreeContext(actor, 'spec-first')
+
+      const first = context.specializations.find((s) => s.key === 'spec-first')
+      const second = context.specializations.find((s) => s.key === 'spec-second')
+      const third = context.specializations.find((s) => s.key === 'spec-third')
+
+      expect(first, 'spec-first entry must exist').toBeDefined()
+      expect(second, 'spec-second entry must exist').toBeDefined()
+      expect(third, 'spec-third entry must exist').toBeDefined()
+
+      expect(first.isSelected, 'spec-first must be selected').toBe(true)
+      expect(second.isSelected, 'spec-second must not be selected').toBe(false)
+      expect(third.isSelected, 'spec-third must not be selected').toBe(false)
+    })
+  })
+
+  describe('viewport stability', () => {
+    it('preserves viewport camera when re-rendering the same specialization tree', async () => {
+      const actor = createActor({
+        system: {
+          details: {
+            specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' }],
+          },
+          progression: {
+            talentPurchases: [],
+            experience: { available: 100 },
+          },
+        },
+      })
+
+      globalThis.fromUuidSync = vi.fn((uuid) => {
+        if (uuid === 'Item.tree-bodyguard') {
+          return {
+            type: 'specialization-tree',
+            name: 'Bodyguard Tree',
+            system: {
+              nodes: [
+                { nodeId: 'r1c1', talentId: 'Item.talent-tough', row: 1, column: 1, cost: 10 },
+                { nodeId: 'r2c1', talentId: 'Item.talent-grit', row: 2, column: 1, cost: 15 },
+              ],
+              connections: [{ from: 'r1c1', to: 'r2c1' }],
+            },
+          }
+        }
+
+        if (uuid === 'Item.talent-tough') {
+          return { name: 'Tough' }
+        }
+
+        if (uuid === 'Item.talent-grit') {
+          return { name: 'Grit' }
+        }
+
+        return null
+      })
+
+      const app = new SpecializationTreeApp()
+      app.actor = actor
+      app.document = actor
+
+      const host = createMockHost({ width: 640, height: 480 })
+      app.element = { querySelector: vi.fn(() => host) }
+
+      const context = buildSpecializationTreeContext(actor)
+
+      expect(context.currentTreeId, 'test requires a selected tree').toBe('spec-bodyguard')
+
+      await app._onRender(context, { resetView: false })
+
+      const stage = app.pixiApp.stage
+      const container = getTreeContainer(app)
+
+      stage._listeners.pointerdown({ global: { x: 100, y: 100 } })
+      stage._listeners.pointermove({ global: { x: 200, y: 150 } })
+
+      expect(container.position.set.mock.calls.at(-1), 'pan must move viewport').toEqual([100, 50])
+
+      container.position.set.mockClear()
+      container.scale.set.mockClear()
+
+      await app._onRender(context, { resetView: false })
+
+      const rerenderContainer = getTreeContainer(app)
+      const rerenderCall = rerenderContainer.position.set.mock.calls.at(-1)
+
+      expect(rerenderCall, 'viewport must preserve position after same-tree rerender').toBeDefined()
+      expect(rerenderCall[0], 'viewport x must be preserved after same-tree rerender').toBe(100)
+      expect(rerenderCall[1], 'viewport y must be preserved after same-tree rerender').toBe(50)
+    })
+
+    it('recenters the viewport when switching to a different specialization tree', async () => {
+      const actor = createActor({
+        system: {
+          details: {
+            specializations: [
+              { specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' },
+              { specializationId: 'spec-soldier', name: 'Soldier', treeUuid: 'Item.tree-soldier' },
+            ],
+          },
+          progression: {
+            talentPurchases: [],
+            experience: { available: 100 },
+          },
+        },
+      })
+
+      globalThis.fromUuidSync = vi.fn((uuid) => {
+        if (uuid === 'Item.tree-bodyguard') {
+          return {
+            type: 'specialization-tree',
+            name: 'Bodyguard Tree',
+            system: {
+              nodes: [
+                { nodeId: 'r1c1', talentId: 'Item.talent-tough', row: 1, column: 1, cost: 10 },
+                { nodeId: 'r2c1', talentId: 'Item.talent-grit', row: 2, column: 1, cost: 15 },
+              ],
+              connections: [{ from: 'r1c1', to: 'r2c1' }],
+            },
+          }
+        }
+
+        if (uuid === 'Item.tree-soldier') {
+          return {
+            type: 'specialization-tree',
+            name: 'Soldier Tree',
+            system: {
+              nodes: [
+                { nodeId: 'r1c1', talentId: 'Item.talent-grit', row: 1, column: 1, cost: 5 },
+                { nodeId: 'r2c1', talentId: 'Item.talent-enduring', row: 2, column: 1, cost: 10 },
+              ],
+              connections: [{ from: 'r1c1', to: 'r2c1' }],
+            },
+          }
+        }
+
+        if (uuid === 'Item.talent-tough') {
+          return { name: 'Tough' }
+        }
+
+        if (uuid === 'Item.talent-grit') {
+          return { name: 'Grit' }
+        }
+
+        if (uuid === 'Item.talent-enduring') {
+          return { name: 'Enduring' }
+        }
+
+        return null
+      })
+
+      const app = new SpecializationTreeApp()
+      app.actor = actor
+      app.document = actor
+
+      const host = createMockHost({ width: 640, height: 480 })
+      app.element = { querySelector: vi.fn(() => host) }
+
+      const contextA = buildSpecializationTreeContext(actor)
+
+      expect(contextA.currentTreeId).toBe('spec-soldier')
+
+      await app._onRender(contextA, { resetView: false })
+
+      const stage = app.pixiApp.stage
+      const container = getTreeContainer(app)
+
+      container.position.set.mockClear()
+
+      stage._listeners.pointerdown({ global: { x: 100, y: 100 } })
+      stage._listeners.pointermove({ global: { x: 200, y: 150 } })
+
+      expect(container.position.set.mock.calls.at(-1), 'pan must move viewport').toEqual([100, 50])
+
+      container.position.set.mockClear()
+      container.scale.set.mockClear()
+
+      const contextB = buildSpecializationTreeContext(actor, 'spec-bodyguard')
+
+      expect(contextB.currentTreeId, 'contextB must be bodyguard').toBe('spec-bodyguard')
+
+      await app._onRender(contextB, {})
+
+      const rerenderContainer = getTreeContainer(app)
+      const recenterCall = rerenderContainer.position.set.mock.calls.at(-1)
+
+      expect(recenterCall, 'viewport must recenter on tree change').toBeDefined()
+      expect(recenterCall[0], 'recentered x must differ from panned x').not.toBe(100)
+      expect(recenterCall[1], 'recentered y must differ from panned y').not.toBe(50)
+    })
+
+    it('does not reset viewport camera on ResizeObserver callback', async () => {
+      const actor = createActor({
+        system: {
+          details: {
+            specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' }],
+          },
+          progression: {
+            talentPurchases: [],
+            experience: { available: 100 },
+          },
+        },
+      })
+
+      globalThis.fromUuidSync = vi.fn((uuid) => {
+        if (uuid === 'Item.tree-bodyguard') {
+          return {
+            type: 'specialization-tree',
+            name: 'Bodyguard Tree',
+            system: {
+              nodes: [
+                { nodeId: 'r1c1', talentId: 'Item.talent-tough', row: 1, column: 1, cost: 10 },
+                { nodeId: 'r2c1', talentId: 'Item.talent-grit', row: 2, column: 1, cost: 15 },
+              ],
+              connections: [{ from: 'r1c1', to: 'r2c1' }],
+            },
+          }
+        }
+
+        if (uuid === 'Item.talent-tough') {
+          return { name: 'Tough' }
+        }
+
+        if (uuid === 'Item.talent-grit') {
+          return { name: 'Grit' }
+        }
+
+        return null
+      })
+
+      const app = new SpecializationTreeApp()
+      app.actor = actor
+      app.document = actor
+
+      const host = createMockHost({ width: 640, height: 480 })
+      app.element = { querySelector: vi.fn(() => host) }
+
+      const context = buildSpecializationTreeContext(actor)
+
+      expect(context.currentTreeId, 'test requires a selected tree').toBe('spec-bodyguard')
+
+      await app._onRender(context, { resetView: false })
+
+      const stage = app.pixiApp.stage
+      const container = getTreeContainer(app)
+
+      stage._listeners.pointerdown({ global: { x: 100, y: 100 } })
+      stage._listeners.pointermove({ global: { x: 200, y: 150 } })
+
+      expect(container.position.set.mock.calls.at(-1), 'pan must move viewport').toEqual([100, 50])
+
+      container.position.set.mockClear()
+      container.scale.set.mockClear()
+      app.pixiApp.renderer.resize.mockClear()
+
+      const observer = globalThis.__resizeObserverInstances[0]
+
+      expect(observer, 'ResizeObserver must exist after render').toBeDefined()
+
+      observer.callback()
+
+      expect(app.pixiApp.renderer.resize, 'renderer must be resized').toHaveBeenCalled()
+
+      const resizeCall = container.position.set.mock.calls.at(-1)
+
+      expect(resizeCall, 'viewport must be set after resize').toBeDefined()
+      expect(resizeCall[0], 'viewport x must be preserved after resize').toBe(100)
+      expect(resizeCall[1], 'viewport y must be preserved after resize').toBe(50)
+    })
+
+    it('disconnects ResizeObserver on close', async () => {
+      const actor = createActor({
+        system: {
+          details: {
+            specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' }],
+          },
+          progression: {
+            talentPurchases: [],
+            experience: { available: 100 },
+          },
+        },
+      })
+
+      globalThis.fromUuidSync = vi.fn((uuid) => {
+        if (uuid === 'Item.tree-bodyguard') {
+          return {
+            type: 'specialization-tree',
+            name: 'Bodyguard Tree',
+            system: {
+              nodes: [
+                { nodeId: 'r1c1', talentId: 'Item.talent-tough', row: 1, column: 1, cost: 10 },
+                { nodeId: 'r2c1', talentId: 'Item.talent-grit', row: 2, column: 1, cost: 15 },
+              ],
+              connections: [{ from: 'r1c1', to: 'r2c1' }],
+            },
+          }
+        }
+
+        if (uuid === 'Item.talent-tough') {
+          return { name: 'Tough' }
+        }
+
+        if (uuid === 'Item.talent-grit') {
+          return { name: 'Grit' }
+        }
+
+        return null
+      })
+
+      const app = new SpecializationTreeApp()
+      app.actor = actor
+      app.document = actor
+
+      const host = createMockHost({ width: 640, height: 480 })
+      app.element = { querySelector: vi.fn(() => host) }
+
+      const context = buildSpecializationTreeContext(actor)
+
+      expect(context.currentTreeId, 'test requires a selected tree').toBe('spec-bodyguard')
+
+      await app._onRender(context, { resetView: false })
+
+      const observer = globalThis.__resizeObserverInstances[0]
+
+      expect(observer, 'ResizeObserver must exist after render').toBeDefined()
+      expect(observer.disconnect, 'disconnect must not have been called yet').not.toHaveBeenCalled()
+
+      await app.close()
+
+      expect(observer.disconnect, 'close must disconnect the ResizeObserver').toHaveBeenCalled()
+    })
+  })
+
 })

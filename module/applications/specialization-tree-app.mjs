@@ -188,7 +188,7 @@ export function resolveTalentDetail(nodeRef) {
  * @param {Actor|object|null} actor - The active actor document.
  * @returns {object} Display-ready render context.
  */
-export function buildSpecializationTreeContext(actor) {
+export function buildSpecializationTreeContext(actor, selectedKey = null) {
   const specializations = Array.from(actor?.system?.details?.specializations || [])
   const title = game.i18n.format('SWERPG.TALENT.SPECIALIZATION_TREE_APP.TITLE', {
     actor: actor?.name ?? game.i18n.localize('SWERPG.TALENT.SPECIALIZATION_TREE_APP.UNKNOWN_ACTOR'),
@@ -244,17 +244,27 @@ export function buildSpecializationTreeContext(actor) {
   let renderNodes = []
   let renderConnections = []
 
-  let lastAvailableEntry = null
-  for (const entry of specializationEntries) {
-    if (entry.isAvailable) {
-      lastAvailableEntry = entry
+  let activeKey = null
+  if (selectedKey && specializationEntries.some(e => e.key === selectedKey && e.isAvailable)) {
+    activeKey = selectedKey
+  }
+  if (!activeKey) {
+    for (const entry of specializationEntries) {
+      if (entry.isAvailable) {
+        activeKey = entry.key
+      }
     }
   }
 
-  if (lastAvailableEntry) {
-    currentTreeId = lastAvailableEntry.key
-    currentTreeName = lastAvailableEntry.treeName
-    const resolution = resolutions.get(currentTreeId)
+  for (const entry of specializationEntries) {
+    entry.isSelected = entry.key === activeKey
+  }
+
+  if (activeKey) {
+    currentTreeId = activeKey
+    const entry = specializationEntries.find(e => e.key === activeKey)
+    currentTreeName = entry?.treeName ?? null
+    const resolution = resolutions.get(activeKey)
     currentTreeData = resolution?.tree ?? null
 
     const nodes = Array.from(currentTreeData?.system?.nodes || [])
@@ -366,6 +376,7 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
     sheetConfig: false,
     actions: {
       resetView: SpecializationTreeApp.#onResetView,
+      selectTree: SpecializationTreeApp.#onSelectTree,
       zoomIn: SpecializationTreeApp.#onZoomIn,
       zoomOut: SpecializationTreeApp.#onZoomOut,
     },
@@ -391,7 +402,9 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
 
   #resizeObserver = null
 
-  #currentTreeId = null
+  #selectedTreeKey = null
+
+  #pendingSelection = null
 
   #hasInitializedViewport = false
 
@@ -460,7 +473,9 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
 
   /** @override */
   async _prepareContext(_options) {
-    return buildSpecializationTreeContext(this.actor)
+    const pendingKey = this.#pendingSelection
+    this.#pendingSelection = null
+    return buildSpecializationTreeContext(this.actor, pendingKey ?? this.#selectedTreeKey)
   }
 
   /** @override */
@@ -481,10 +496,10 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
     this.#bindViewportInteractions()
     this.#bindResizeObserver(viewportHost)
 
-    const nextTreeId = context?.currentTreeId ?? null
-    const shouldResetView = options.resetView !== false && (!this.#hasInitializedViewport || this.#currentTreeId !== nextTreeId)
+    const nextTreeKey = context?.currentTreeId ?? null
+    const shouldResetView = options.resetView !== false && (!this.#hasInitializedViewport || this.#selectedTreeKey !== nextTreeKey)
 
-    this.#currentTreeId = nextTreeId
+    this.#selectedTreeKey = nextTreeKey
     this.#hasInitializedViewport = true
 
     this.#resizeViewport()
@@ -604,6 +619,15 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
   static async #onResetView(event, _target) {
     event.preventDefault()
     this.#resetView()
+  }
+
+  /** @returns {Promise<void>} */
+  static async #onSelectTree(event, target) {
+    event.preventDefault()
+    const key = target.dataset.treeKey
+    if (!key || key === this.#selectedTreeKey) return
+    this.#pendingSelection = key
+    await this.render()
   }
 
   /** @returns {Promise<void>} */
@@ -878,7 +902,8 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
     }
 
     this.#observedViewportHost = null
-    this.#currentTreeId = null
+    this.#selectedTreeKey = null
+    this.#pendingSelection = null
     this.#hasInitializedViewport = false
     this.#viewportHost = null
   }
