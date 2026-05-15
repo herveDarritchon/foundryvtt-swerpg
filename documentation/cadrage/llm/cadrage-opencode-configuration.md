@@ -1242,3 +1242,88 @@ L’audit des skills existants (cf. documentation/plan/llm/267-audit-skills-open
 [2]: https://opencode.ai/docs/tools/?utm_source=chatgpt.com "Tools"
 [3]: https://opencode.ai/docs/commands/?utm_source=chatgpt.com "Commands"
 [4]: https://opencode.ai/docs/plugins/?utm_source=chatgpt.com "Plugins"
+
+---
+
+## 18. Workflow d'exploration en lecture seule — Issue #268
+
+Cette section formalise le workflow cible pour les demandes d'exploration en lecture seule, conformément à l'issue [#268](https://github.com/herveDarritchon/foundryvtt-swerpg/issues/268).
+
+### 18.1. Principe
+
+L'exploration en lecture seule est un workflow standardisé qui prend une intention utilisateur (comprendre, trouver, cartographier, vérifier) et produit une synthèse courte et sourcée, sans jamais modifier le code ni la documentation du projet.
+
+Elle est conçue pour être exécutée par un sous-agent `explore` avec un modèle économique ou local, sans capacité d'écriture.
+
+### 18.2. Intentions déclenchantes
+
+Le workflow d'exploration est adapté aux demandes suivantes :
+
+- comprendre une convention, une règle ou un pattern existant ;
+- trouver où se trouve un fichier, une classe, une fonction, une clé i18n ou un test ;
+- cartographier un module, un flux d'exécution ou une dépendance ;
+- préparer le terrain avant une planification ou une implémentation ;
+- vérifier un fait, une règle ou une décision documentée ;
+- comparer des approches existantes dans le code.
+
+### 18.3. Exclusions explicites
+
+Ne pas utiliser ce workflow pour :
+
+- planifier ou concevoir une solution ;
+- implémenter ou modifier du code ;
+- corriger un bug ;
+- relire un diff ou valider une PR ;
+- modifier de la documentation ;
+- lancer ou analyser des tests automatisés en continu.
+
+### 18.4. Agent et permissions
+
+| Propriété | Valeur |
+|---|---|
+| Type d'agent | `explore` |
+| Modèle cible | Économique ou local |
+| Autonomie | Lecture seule stricte |
+| Outils autorisés | Recherche fichiers, recherche textuelle, lecture fichiers, consultation web si explicitement demandée |
+| Interdits | Édition, écriture, tests non nécessaires, Git modifiant l'état, commandes destructrices |
+
+### 18.5. Contrat de sortie
+
+Toute restitution d'exploration doit contenir :
+
+1. **Résumé** de la demande comprise et du périmètre exploré.
+2. **Constatations principales** avec références de fichiers et lignes.
+3. **Points non résolus** ou zones d'incertitude, s'il y en a.
+4. **Recommandation d'étape suivante** : planification, implémentation, revue, documentation, ou fin.
+
+Règles de sobriété :
+
+- pas de longs logs bruts ;
+- pas de citations massives de code ;
+- pas de pseudo-plan d'implémentation ;
+- pas d'action non demandée ;
+- pas d'escalade vers un autre workflow sans mention explicite.
+
+### 18.6. Escalade
+
+Si la demande utilisateur dépasse le périmètre d'exploration, le workflow s'arrête et oriente vers :
+
+| Si la demande nécessite... | Orienter vers |
+|---|---|
+| Un plan d'implémentation | `plan-depuis-issue` |
+| De l'implémentation | `implementer-depuis-plan` |
+| Une revue de diff | Revue de code |
+| Un diagnostic de bug | Diagnostic / Correction |
+| Une mise à jour de documentation | Documentation |
+
+L'exploration ne doit pas franchir ces frontières de rôle sans instruction explicite.
+
+### 18.7. Variantes de profondeur
+
+| Profondeur | Périmètre typique | Temps estimé |
+|---|---|---|
+| Rapide | Un fichier, une convention, une référence | 1-2 min |
+| Moyenne | Un module, un flux, 3-5 fichiers | 3-5 min |
+| Approfondie | Architecture transverse, dépendances, 5-15 fichiers | 5-10 min |
+
+La profondeur est choisie par l'utilisateur ou inférée depuis l'intention exprimée.
