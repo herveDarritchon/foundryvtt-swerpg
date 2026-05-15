@@ -114,9 +114,13 @@ export class OggDudeTalentMapper {
         source: talentData.Source || talentData.SourceBook || 'OggDude Import',
         custom: talentData.Custom === 'true' || talentData.IsCustom === 'true',
 
-        // Données transformées
+        // Données transformées (contrat canonique : system.* générique uniquement)
         activation,
         hasUnknownActivation: activation === 'unspecified' && typeof rawActivation === 'string' && rawActivation.trim() !== '',
+        // Diagnostics legacy — calculés mais NON persistés dans system.*.
+        //   node : résolution de nœud OggDude / Crucible (legacy, diagnostic only)
+        //   tier : tier OggDude, stocké dans flags.swerpg.import.tier (diagnostic)
+        //   rank : rang et coût OggDude, NON persistés — le coût relève de specialization-tree
         node: resolveTalentNode(talentData.NodeId || talentData.TalentNode, { name }),
         tier: extractTalentTier(talentData),
         isRanked: extractIsRanked(talentData),

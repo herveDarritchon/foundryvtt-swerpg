@@ -164,6 +164,8 @@ describe('OggDudeTalentMapper', () => {
       expect(result.system.importMeta).toBeUndefined()
       expect(result.system.node).toBeUndefined()
       expect(result.system.actions).toBeUndefined()
+      expect(result.system.trees).toBeUndefined()
+      expect(result.system.row).toBeUndefined()
     })
 
     it('devrait stocker dieModifiers dans flags.swerpg.import et enrichir la description', () => {
