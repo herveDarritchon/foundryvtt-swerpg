@@ -616,6 +616,9 @@ export default class SwerpgActor extends TalentsMixin(EquipmentMixin(ResourcesMi
         const legacyTree = game.system.tree
         if (legacyTree?.actor === this) legacyTree.refresh()
       }
+
+      // Refresh the character sheet to sync the talents tab
+      this.sheet?.render(false)
     }
   }
 
