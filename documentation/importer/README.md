@@ -30,7 +30,7 @@ Le correctif 1.0 du mapper `Weapons.xml` fiabilise l'import des armes OggDude: p
 | Gear       | ✅ Active | [import-gear.md](./import-gear.md)                               | Categories, base mods, weapon profiles   |
 | Species    | ✅ Active | -                                                                | Characteristics, skills, talents         |
 | Career     | ✅ Active | [import-career.md](./import-career.md)                           | Skills, specializations                  |
-| Talent     | ✅ Active | [talent-import-architecture.md](./talent-import-architecture.md) | Full talent tree support                 |
+| Talent     | ✅ Active | [talent-import-architecture.md](./talent-import-architecture.md) | Générique uniquement (voir ADR-0014) ; arbre et progression = specialization-tree et talentPurchases |
 | Obligation | ✅ Active | [import-obligation.md](./import-obligation.md)                   | Narrative obligations with defaults      |
 
 ## Pipeline de mapping

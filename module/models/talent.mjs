@@ -19,12 +19,12 @@ const DEPR_TALENT_POINTS = () => SYSTEM.DEPRECATION.crucible.talentPoints
 
 /**
  * @typedef {Object} TalentData
- * @property {string} node
+ * @property {string} [node]         @deprecated V1 Edge legacy — do not use for V1. Canonical tree data is on specialization-tree nodes.
  * @property {string} description
  * @property {boolean} isRanked
  * @property {Rank} rank
  * @property {boolean} active
- * @property {SwerpgSpecialization[]} trees
+ * @property {SwerpgSpecialization[]} [trees]  @deprecated V1 Edge legacy — do not use for V1. Use specialization-tree items to access tree membership.
  * @property {SwerpgAction[]} actions   The actions which have been unlocked by this talent
  * @property {number} iconicSpells
  * @property {ActorHook[]} actorHooks
@@ -68,12 +68,18 @@ export default class SwerpgTalent extends foundry.abstract.TypeDataModel {
     return {
       id: new fields.StringField({ required: false, nullable: false, blank: false }),
       uuid: new fields.StringField({ required: false, nullable: false, blank: true, initial: '' }),
+      // @deprecated V1 Edge legacy — non-canonical for V1.
+      //   Tree membership is defined by specialization-tree entries, not by this field.
       node: new fields.StringField({ required: false, blank: true, choices: () => SwerpgTalentNode.getChoices() }),
+      // @deprecated V1 Edge legacy — non-canonical for V1.
+      //   Tree membership is defined by specialization-tree items, not by an Item.talent-level set.
       trees: new fields.SetField(new fields.DocumentUUIDField({ type: 'Item' }), {
         validate: SwerpgTalent.#validateTrees,
       }),
       description: new fields.HTMLField({ required: false, initial: undefined }),
       isRanked: new fields.BooleanField({ required: false, initial: false }),
+      // @deprecated V1 Edge legacy — non-canonical for V1.
+      //   Node row/position is defined by specialization-tree.system.nodes[].row.
       row: new fields.NumberField({ required: false, nullable: false, integer: true, initial: 1, min: 1, max: 5 }),
       rank: new fields.SchemaField({
         idx: new fields.NumberField({ required: true, blank: false, initial: 0 }),
