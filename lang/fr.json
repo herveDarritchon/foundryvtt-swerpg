@@ -113,7 +113,9 @@
           "NO_AVAILABLE_TREE_DESCRIPTION": "Les spécialisations possédées ont bien été trouvées, mais aucune ne se résout actuellement vers un arbre référentiel complet."
         },
         "ACTION": {
-          "CENTER": "Centrer"
+          "CENTER": "Centrer",
+          "ZOOM_IN": "Zoom avant",
+          "ZOOM_OUT": "Zoom arrière"
         }
       },
       "ACTIONS": {
