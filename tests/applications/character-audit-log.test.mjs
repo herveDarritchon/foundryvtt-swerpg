@@ -45,6 +45,7 @@ describe('character-audit-log application', () => {
         'SWERPG.AUDIT_LOG.FILTER.ADVANCEMENT': 'Advancement',
         'SWERPG.AUDIT_LOG.TYPE.SKILL_TRAIN': 'Skill purchase',
         'SWERPG.AUDIT_LOG.TYPE.SPECIALIZATION_REMOVE': 'Specialization removed',
+        'SWERPG.AUDIT_LOG.TYPE.TALENT_NODE_PURCHASE': 'Talent node purchase',
         'SWERPG.AUDIT_LOG.TYPE.UNKNOWN': 'Unknown event',
         'SWERPG.AUDIT_LOG.NONE': 'None',
         'SWERPG.AUDIT_LOG.UNKNOWN_SPECIALIZATION': 'Unknown specialization',
@@ -52,6 +53,7 @@ describe('character-audit-log application', () => {
         'SWERPG.AUDIT_LOG.UNKNOWN_VALUE': 'Unknown value',
         'SWERPG.AUDIT_LOG.DESCRIPTION.SKILL_TRAIN': 'Skill {skill}: rank {oldRank} -> {newRank}',
         'SWERPG.AUDIT_LOG.DESCRIPTION.SPECIALIZATION_REMOVE': 'Removed specialization {specialization}',
+        'SWERPG.AUDIT_LOG.DESCRIPTION.TALENT_NODE_PURCHASE': 'Talent node {talentId} / specialization {specializationId} ({cost} XP)',
         'SWERPG.AUDIT_LOG.DESCRIPTION.UNKNOWN': 'Unknown event ({type})',
       },
     })
@@ -114,6 +116,63 @@ describe('character-audit-log application', () => {
     const filtered = buildAuditLogEntries(actor, 'skills')
     expect(filtered).toHaveLength(1)
     expect(filtered[0].id).toBe('entry-1')
+  })
+
+  it('builds a dedicated description for talent-node-purchase type', () => {
+    const description = buildAuditLogDescription({
+      type: 'talent-node-purchase',
+      xpDelta: -10,
+      data: {
+        talentId: 'grit',
+        specializationId: 'spec-bodyguard',
+        cost: 10,
+      },
+    })
+
+    expect(description).toBe('Talent node grit / specialization spec-bodyguard (10 XP)')
+  })
+
+  it('builds description with fallback for missing talent-node-purchase data', () => {
+    const description = buildAuditLogDescription({
+      type: 'talent-node-purchase',
+      data: {},
+    })
+
+    expect(description).toBe('Talent node Unknown value / specialization Unknown value (0 XP)')
+  })
+
+  it('maps talent-node-purchase to the talents family', () => {
+    const actor = createActor({
+      flags: {
+        swerpg: {
+          logs: [
+            {
+              id: 'entry-3',
+              timestamp: 300,
+              type: 'talent-node-purchase',
+              xpDelta: -10,
+              data: { talentId: 'grit', specializationId: 'spec-bodyguard', cost: 10 },
+            },
+          ],
+        },
+      },
+    })
+
+    const entries = buildAuditLogEntries(actor, 'talents')
+    expect(entries).toHaveLength(1)
+    expect(entries[0].type).toBe('talent-node-purchase')
+    expect(entries[0].typeLabel).toBe('Talent node purchase')
+    expect(entries[0].family).toBe('talents')
+  })
+
+  it('does not fall back to unknown for talent-node-purchase', () => {
+    const description = buildAuditLogDescription({
+      type: 'talent-node-purchase',
+      data: { talentId: 'grit', specializationId: 'spec-bodyguard', cost: 10 },
+    })
+
+    expect(description).not.toContain('Unknown event')
+    expect(description).not.toContain('Unrecognized event')
   })
 
   it('falls back to an unknown description for unsupported types', () => {
