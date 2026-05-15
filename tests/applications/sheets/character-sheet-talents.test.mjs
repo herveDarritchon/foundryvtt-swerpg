@@ -28,6 +28,7 @@ describe('CharacterSheet talent consolidation (US12)', () => {
 
     if (!globalThis.game.system.tree) globalThis.game.system.tree = {}
     globalThis.game.system.tree.actor = null
+    delete globalThis.game.items
 
     SwerpgBaseActorSheet = (await import('../../../module/applications/sheets/base-actor-sheet.mjs')).default
     CharacterSheet = (await import('../../../module/applications/sheets/character-sheet.mjs')).default
@@ -356,6 +357,59 @@ describe('CharacterSheet talent consolidation (US12)', () => {
     expect(context.talents.map((entry) => entry.talentId)).toEqual(['talent-degraded', 'talent-resolved'])
     expect(context.talents[0].sourceLabels).toEqual(['SWERPG.TALENT.SOURCE_SPECIALIZATION_WITHOUT_TREE'])
     expect(context.talents[1].sourceLabels).toEqual(['Bodyguard'])
+  })
+
+  it('resolves talent definitions by system.id with fallback to item.id', async () => {
+    const talentWithSystemId = {
+      id: 'Item.abc123',
+      name: 'Grit',
+      type: 'talent',
+      system: { id: 'grit', activation: 'passive', isRanked: true },
+    }
+    const talentWithoutSystemId = {
+      id: 'Item.def456',
+      name: 'Old Talent',
+      type: 'talent',
+      system: { activation: 'active', isRanked: false },
+    }
+    const talentWithEmptySystemId = {
+      id: 'Item.ghi789',
+      name: 'Willpower',
+      type: 'talent',
+      system: { id: '', activation: 'passive', isRanked: true },
+    }
+
+    globalThis.game.items = [
+      talentWithSystemId,
+      talentWithoutSystemId,
+      talentWithEmptySystemId,
+    ]
+
+    let capturedDefinitions
+    buildOwnedTalentSummary.mockImplementationOnce((_actor, definitions) => {
+      capturedDefinitions = definitions
+      return []
+    })
+
+    const actor = buildMockActor()
+    await getContext(actor)
+
+    expect(capturedDefinitions.get('grit')).toEqual({
+      name: 'Grit',
+      activation: 'passive',
+      isRanked: true,
+    })
+    expect(capturedDefinitions.get('Item.def456')).toEqual({
+      name: 'Old Talent',
+      activation: 'active',
+      isRanked: false,
+    })
+    expect(capturedDefinitions.get('Item.ghi789')).toEqual({
+      name: 'Willpower',
+      activation: 'passive',
+      isRanked: true,
+    })
+    expect(capturedDefinitions.size).toBe(3)
   })
 
   it('opens the specialization tree app from the talents action handler', async () => {
