@@ -926,7 +926,8 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
     if (!game?.items?.find) return defs
     for (const item of game.items) {
       if (item.type === 'talent') {
-        defs.set(item.id, {
+        const key = item.system?.id || item.id
+        defs.set(key, {
           name: item.name,
           activation: item.system?.activation,
           isRanked: item.system?.isRanked,
