@@ -133,7 +133,9 @@
           "NO_AVAILABLE_TREE_DESCRIPTION": "The owned specializations were found, but none currently resolve to a complete reference tree."
         },
         "ACTION": {
-          "CENTER": "Center"
+          "CENTER": "Center",
+          "ZOOM_IN": "Zoom in",
+          "ZOOM_OUT": "Zoom out"
         }
       },
       "ACTIONS": {
