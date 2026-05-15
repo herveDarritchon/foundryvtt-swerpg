@@ -1,5 +1,6 @@
 import { resolveActorSpecializationTrees } from '../lib/talent-node/talent-tree-resolver.mjs'
 import { getTreeNodesStates, NODE_STATE, REASON_CODE } from '../lib/talent-node/talent-node-state.mjs'
+import { purchaseTalentNode } from '../lib/talent-node/talent-node-purchase.mjs'
 import { logger } from '../utils/logger.mjs'
 
 const { api } = foundry.applications
@@ -268,14 +269,6 @@ export function buildSpecializationTreeContext(actor, selectedKey = null) {
     currentTreeData = resolution?.tree ?? null
 
     const nodes = Array.from(currentTreeData?.system?.nodes || [])
-
-    console.table(nodes.map((node) => ({
-      nodeId: node.nodeId,
-      talentId: node.talentId,
-      cost: node.cost,
-      row: node.row,
-      column: node.column,
-    })))
 
     const connections = Array.from(currentTreeData?.system?.connections || [])
 
@@ -836,7 +829,11 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
         const capturedNode = node
         hitArea.on('pointerdown', (event) => {
           event.stopPropagation()
-          this.#showNodeTooltip(capturedNode)
+          if (capturedNode.nodeState === NODE_STATE.AVAILABLE) {
+            this.#purchaseNode(capturedNode)
+          } else {
+            this.#showNodeTooltip(capturedNode)
+          }
         })
         this.#treeContainer.addChild(hitArea)
       }
@@ -880,6 +877,27 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
     const tooltip = root?.querySelector?.('[data-node-tooltip]')
     if (tooltip) tooltip.hidden = true
     this.#selectedNodeId = null
+  }
+
+  async #purchaseNode(node) {
+    const specializationId = this.#selectedTreeKey
+    if (!specializationId || !node?.nodeId) return
+
+    const result = await purchaseTalentNode(this.actor, specializationId, node.nodeId)
+
+    this.#hideNodeTooltip()
+
+    if (result.ok) {
+      const key = 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.PURCHASE.SUCCESS'
+      ui.notifications.info(game.i18n.format(key, { talent: node.talentName }))
+    } else {
+      const reasonLabelKey = REASON_LABEL_KEYS[result.reasonCode] ?? REASON_LABEL_DEFAULT
+      const reasonLabel = game.i18n.localize(reasonLabelKey)
+      const key = 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.PURCHASE.FAILURE'
+      ui.notifications.warn(game.i18n.format(key, { reason: reasonLabel }))
+    }
+
+    this.refresh()
   }
 
   #teardownViewport() {

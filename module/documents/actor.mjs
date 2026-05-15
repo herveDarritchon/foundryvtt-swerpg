@@ -607,7 +607,7 @@ export default class SwerpgActor extends TalentsMixin(EquipmentMixin(ResourcesMi
     this.updateCachedResources()
 
     // Refresh display of the active talent tree
-    const talentChange = foundry.utils.hasProperty(data, 'system.advancement.level') || 'items' in data
+    const talentChange = foundry.utils.hasProperty(data, 'system.advancement.level') || 'items' in data || foundry.utils.hasProperty(data, 'system.progression.talentPurchases') || foundry.utils.hasProperty(data, 'system.progression.experience.spent')
     if (talentChange) {
       const dedicatedTreeApp = game.system.specializationTreeApp
       if (dedicatedTreeApp?.actor === this && typeof dedicatedTreeApp.refresh === 'function') {
