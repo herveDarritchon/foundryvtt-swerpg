@@ -122,6 +122,7 @@ Issue/cadrage
 | `.agents/skills/plan-depuis-issue/SKILL.md`                    | Planning from issues         |
 | `.agents/skills/creer-branche-feature/SKILL.md`                | Create feature branch        |
 | `.agents/skills/creer-pull-request/SKILL.md`                   | Create pull request          |
+| `.agents/skills/corriger-echec-validation/SKILL.md`            | Fix validation failure       |
 | `.agents/skills/implementer-depuis-plan/SKILL.md`              | Implementation from plans    |
 | `.agents/skills/narrative-dice/SKILL.md`                       | Narrative dice system        |
 | `.agents/skills/oggdude-importer/SKILL.md`                     | OggDude import               |

@@ -1,0 +1,23 @@
+{
+  "skill_name": "corriger-echec-validation",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Un test Vitest échoue sur ma branche depuis le dernier changement. Analyse l'échec, identifie la cause probable et applique un fix minimal sans refactor hors scope, puis relance seulement le test concerné.",
+      "expected_output": "Le skill part d'un échec concret, isole la cause proche, applique une correction locale et relance au moins la validation ciblée concernée.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Le lint casse sur un fichier touché par mon ticket. Répare uniquement ce qui est nécessaire pour faire passer la validation, sans opportunistic cleanup.",
+      "expected_output": "Le skill évite le nettoyage hors scope, corrige le problème ESLint réel et vérifie la cible lint la plus restreinte possible.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Le build échoue après mon implémentation. Je veux une correction ciblée, pas une refonte. Analyse d'abord la sortie, fais le plus petit patch correct, puis relance la validation utile.",
+      "expected_output": "Le skill analyse la sortie de build avant modification, applique une correction minimale puis relance la validation utile en signalant clairement le périmètre traité.",
+      "files": []
+    }
+  ]
+}
