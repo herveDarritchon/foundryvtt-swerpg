@@ -130,3 +130,18 @@ La commande sera matérialisée dans l'emplacement défini par le futur ticket d
 - tout autre emplacement validé par la configuration OpenCode projet
 
 Cette spécification sert de source de vérité fonctionnelle, indépendante de l'emplacement technique final.
+
+## Token budget policy
+
+Do not send large context to an LLM unless reasoning is required.
+
+For deterministic tasks:
+- execute with shell, Git, npm, Vitest, Playwright or CI;
+- collect only the useful output;
+- call an LLM only if interpretation, decision or correction is needed.
+
+For failures:
+- send only the failing command;
+- send only the relevant error block;
+- send only the files directly involved;
+- ask for the smallest correction.

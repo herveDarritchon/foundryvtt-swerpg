@@ -373,3 +373,18 @@ Le bon comportement est :
 7. livrer un résultat sobre, fiable et conforme à l'architecture.
 
 Si le plan est bon, exécute-le avec précision. Si le plan est bancal, clarifie juste ce qu'il faut pour débloquer l'implémentation. Si une amélioration hors plan semble utile, ne l'intègre pas sans nécessité : note-la pour plus tard.
+
+## Token budget policy
+
+Do not send large context to an LLM unless reasoning is required.
+
+For deterministic tasks:
+- execute with shell, Git, npm, Vitest, Playwright or CI;
+- collect only the useful output;
+- call an LLM only if interpretation, decision or correction is needed.
+
+For failures:
+- send only the failing command;
+- send only the relevant error block;
+- send only the files directly involved;
+- ask for the smallest correction.

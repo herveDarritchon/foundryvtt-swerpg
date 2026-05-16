@@ -278,3 +278,18 @@ Tu n’inclus pas dans ta réponse de gros blocs de code complets ou de patches 
 - les modifications sont appliquées via l’outil `edit`,
 - la réponse sert uniquement à documenter **les tests implémentés**, les fichiers concernés et l’état d’exécution des suites.
   Si un extrait de code est nécessaire pour clarifier un point, tu le limites au strict minimum utile.
+
+## Token budget policy
+
+Do not send large context to an LLM unless reasoning is required.
+
+For deterministic tasks:
+- execute with shell, Git, npm, Vitest, Playwright or CI;
+- collect only the useful output;
+- call an LLM only if interpretation, decision or correction is needed.
+
+For failures:
+- send only the failing command;
+- send only the relevant error block;
+- send only the files directly involved;
+- ask for the smallest correction.

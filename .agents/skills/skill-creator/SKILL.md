@@ -483,3 +483,18 @@ Repeating one more time the core loop here for emphasis:
 Please add steps to your TodoList, if you have such a thing, to make sure you don't forget. If you're in Cowork, please specifically put "Create evals JSON and run `eval-viewer/generate_review.py` so human can review test cases" in your TodoList to make sure it happens.
 
 Good luck!
+
+## Token budget policy
+
+Do not send large context to an LLM unless reasoning is required.
+
+For deterministic tasks:
+- execute with shell, Git, npm, Vitest, Playwright or CI;
+- collect only the useful output;
+- call an LLM only if interpretation, decision or correction is needed.
+
+For failures:
+- send only the failing command;
+- send only the relevant error block;
+- send only the files directly involved;
+- ask for the smallest correction.

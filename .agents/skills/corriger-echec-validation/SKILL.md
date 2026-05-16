@@ -6,9 +6,9 @@ description: >
   validation ciblée. Utilise ce skill dès que l'utilisateur demande de corriger
   un test cassé, réparer un échec lint/build/e2e, traiter une régression de
   validation, ou appliquer un targeted fix après un diagnostic, même s'il ne
-  mentionne pas explicitement le mot “skill”. Déclenche-toi aussi sur des
-  formulations comme “corrige cet échec”, “répare la validation”, “fais le fix
-  minimal”, “corrige sans hors scope”, ou “fais passer ce test sans refactor”.
+  mentionne pas explicitement le mot \u201cskill\u201d. Déclenche-toi aussi sur des
+  formulations comme \u201ccorrige cet échec\u201d, \u201crépare la validation\u201d, \u201cfais le fix
+  minimal\u201d, \u201ccorrige sans hors scope\u201d, ou \u201cfais passer ce test sans refactor\u201d.
 license: project-internal
 compatibility:
   - claude-code
@@ -22,7 +22,7 @@ metadata:
 
 Utilise ce skill quand un échec est déjà identifié et que l'utilisateur attend une correction ciblée, sobre, et vérifiable.
 
-Ce skill ne sert pas à refondre une zone instable ni à “améliorer” le code au passage. Il sert à réparer le défaut démontré avec le plus petit changement correct.
+Ce skill ne sert pas à refondre une zone instable ni à \u201caméliorer\u201d le code au passage. Il sert à réparer le défaut démontré avec le plus petit changement correct.
 
 ## 1. Mission
 
@@ -43,7 +43,7 @@ Le skill doit :
 2. Diagnose avant de modifier. Analyser ne signifie pas corriger à l'aveugle.
 3. Garde la correction locale et minimale. Pas de refactor large sans nécessité démontrée.
 4. Ne change pas des règles métier ou d'architecture non impliquées par l'échec.
-5. Ne “fais pas passer” artificiellement une validation en supprimant une assertion légitime, en affaiblissant un contrat, ou en contournant le comportement attendu sans justification.
+5. Ne \u201cfais pas passer\u201d artificiellement une validation en supprimant une assertion légitime, en affaiblissant un contrat, ou en contournant le comportement attendu sans justification.
 6. Relance la validation la plus ciblée possible avant toute validation plus large.
 7. Si l'échec révèle un problème de plan, de spec, ou un défaut structurel plus large, arrête-toi et explique pourquoi une correction minimale n'est pas suffisante.
 8. Ne mélange pas plusieurs fixes indépendants dans la même intervention.
@@ -113,7 +113,7 @@ Préférer :
 
 - les refactors spéculatifs ;
 - les généralisations prématurées ;
-- les “nettoyages” opportunistes.
+- les \u201cnettoyages\u201d opportunistes.
 
 ### Étape 3 : Choisir la correction minimale
 
@@ -193,4 +193,19 @@ Il ne doit pas :
 - traiter des défauts annexes non demandés ;
 - créer un plan complet d'implémentation ;
 - faire un commit, un push, ou une PR ;
-- présenter comme “corrigé” un cas seulement masqué ou contourné.
+- présenter comme \u201ccorrig\u00e9\u201d un cas seulement masqu\u00e9 ou contourn\u00e9.
+
+## Token budget policy
+
+Do not send large context to an LLM unless reasoning is required.
+
+For deterministic tasks:
+- execute with shell, Git, npm, Vitest, Playwright or CI;
+- collect only the useful output;
+- call an LLM only if interpretation, decision or correction is needed.
+
+For failures:
+- send only the failing command;
+- send only the relevant error block;
+- send only the files directly involved;
+- ask for the smallest correction.
