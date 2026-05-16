@@ -1,219 +1,140 @@
 ---
 name: creer-branche-feature
 description: >
-  Crée une branche Git de travail à partir de `develop` en respectant la
-  convention `feat/<issue>-<slug>`. Utilise ce skill dès que l'utilisateur
-  demande de créer une branche feature, partir de `develop`, nommer une branche
-  avec un numéro d'issue, normaliser un slug, ou préparer une branche avant
-  implémentation, même s'il ne mentionne pas explicitement le mot “skill”.
-  Déclenche-toi aussi sur des formulations comme “crée la branche”, “pars de
-  develop”, “ouvre une branche pour l'issue #123”, “prépare ma branche de
-  feature”, ou “branche-moi sur le ticket X”.
+  Crée une branche Git de travail depuis develop avec la convention
+  <prefix>/<issue>-<slug>, sans commit, push, PR ni implémentation.
 license: project-internal
 compatibility:
   - claude-code
   - opencode
 metadata:
-  project: swerpg
-  scope: création de branche Git depuis develop, normalisation du nom, vérification des collisions, sécurité minimale
+  scope: création de branche Git depuis develop
 ---
 
 # Créer une branche feature
 
-Utilise ce skill pour créer une branche Git de travail depuis `develop` avec la convention `feat/<issue>-<slug>`.
+## Mission
 
-Ce skill est volontairement étroit : il prépare proprement la branche et s'arrête là.
+Créer une branche locale de travail depuis `develop`, puis s'arrêter.
 
-## 1. Mission
-
-Le but est de produire une branche locale correctement nommée, basée sur `develop`, sans dériver vers le commit, le push, la PR, ou l'implémentation.
-
-Le skill doit :
-
-1. identifier le numéro d'issue et le slug attendu ;
-2. vérifier l'état Git minimal nécessaire ;
-3. s'assurer que `develop` existe localement ou qu'il peut être récupéré proprement ;
-4. créer la branche avec le format `feat/<issue>-<slug>` ;
-5. répondre avec le nom exact de la branche créée.
-
-## 2. Règles absolues
-
-1. Ne crée pas de branche si le numéro d'issue manque et qu'aucune convention alternative n'a été explicitement demandée.
-2. Ne choisis pas un slug arbitraire si une source fiable existe déjà, par exemple le titre d'une issue GitHub fournie ou accessible.
-3. N'écrase jamais une branche existante.
-4. Ne fais pas de `git reset --hard`, `git checkout --`, `git branch -D`, ni aucune commande destructive.
-5. Ne crée ni commit, ni tag, ni PR dans ce skill.
-6. Ne pousse pas la branche sur le remote sauf demande explicite de l'utilisateur.
-7. Si l'état du worktree empêche un changement de branche propre, arrête-toi et explique brièvement le blocage.
-8. Si `develop` n'existe pas localement mais existe sur le remote, récupère-la proprement sans modifier d'autres branches.
-9. Garde la convention exacte `feat/<issue>-<slug>` sauf demande explicite contraire.
-
-## 3. Quand l'utiliser
-
-Utilise ce skill pour des demandes comme :
-
-- "Crée une branche pour l'issue #270"
-- "Pars de develop et fais une branche feature"
-- "Prépare une branche `feat/...` pour ce ticket"
-- "Crée la branche de travail pour #123 add importer logging"
-- "Je veux une branche à partir de develop avec le bon slug"
-
-Ne l'utilise pas si la demande principale est :
-
-- créer un plan ;
-- implémenter une feature ;
-- corriger un bug dans le code ;
-- ouvrir une PR ;
-- renommer, fusionner, supprimer, ou nettoyer des branches existantes.
-
-## 4. Entrées attendues
-
-Le skill peut recevoir :
-
-- un numéro d'issue, par exemple `#270` ou `270` ;
-- un titre d'issue ou un slug proposé ;
-- un lien GitHub d'issue ;
-- une demande explicite de branchement depuis `develop`.
-
-Sources prioritaires pour construire le nom :
-
-1. numéro d'issue + titre GitHub ;
-2. numéro d'issue + slug explicite donné par l'utilisateur ;
-3. numéro d'issue + titre textuel donné dans la conversation.
-
-Si le numéro d'issue manque, pose une question courte. Le skill ne doit pas inventer un numéro.
-
-## 5. Construction du nom de branche
-
-Le nom final doit suivre cette formule :
+Format par défaut :
 
 ```text
 feat/<issue>-<slug>
 ```
 
-Exemples valides :
-
-- `feat/270-workflow-test-diagnostics`
-- `feat/123-import-oggdude-logging`
-- `feat/89-fix-character-sheet-sidebar`
-
-### 5.1. Règles de slug
-
-Normalise le slug de façon prévisible :
-
-1. passer en minuscules ;
-2. remplacer accents et ponctuation par des séparateurs simples ;
-3. remplacer espaces et séparateurs répétés par `-` ;
-4. supprimer les `-` de début et de fin ;
-5. garder un slug court, lisible, orienté intention.
-
-Évite de recopier un titre d'issue trop long tel quel. Garde l'idée principale sans bruit inutile.
-
 Exemple :
 
-- Titre : `OpenCode - Cadrer un workflow de tests et d'analyse d'échec avant modification`
-- Branche : `feat/270-workflow-test-diagnostics`
+```text
+feat/270-workflow-test-diagnostics
+```
 
-## 6. Workflow
+## Entrées attendues
 
-### Étape 1 : Récupérer le contexte minimal
+Le skill attend :
 
-Identifie :
+- un numéro d'issue : `270`, `#270` ou une URL GitHub ;
+- un titre ou un slug explicite ;
+- éventuellement un préfixe : `feat`, `fix`, `chore` ou `docs`.
 
-- le numéro d'issue ;
-- le slug ou le titre source ;
-- la branche de base attendue, qui doit être `develop` par défaut.
+Valeurs par défaut :
 
-Si l'utilisateur fournit seulement un numéro d'issue et que GitHub est accessible, récupère le titre de l'issue pour proposer un slug propre.
+- base : `develop` ;
+- préfixe : `feat`.
 
-### Étape 2 : Vérifier l'état Git
+Si le numéro d'issue manque, arrêter et demander ce numéro.  
+Ne pas inventer de numéro d'issue.
 
-Avant toute création :
+## Règles strictes
 
-- vérifier que le dépôt est bien un repo Git ;
-- vérifier la branche courante et l'état du worktree ;
-- vérifier si `develop` existe localement ;
-- vérifier si la branche cible existe déjà localement ou sur le remote.
+- Ne jamais modifier `main`, `master` ou `develop` directement.
+- Ne jamais utiliser `main` ou `master` comme base de remplacement implicite.
+- Ne pas créer la branche si le worktree est sale.
+- Ne pas écraser une branche existante.
+- Ne pas utiliser de commande destructive : `reset --hard`, `checkout --`, `branch -D`.
+- Ne pas commit, push, tag, ouvrir de PR, lancer de test ou implémenter du code.
+- Ne pas lire largement le dépôt : Git suffit.
 
-Si la branche cible existe déjà :
+## Slug
 
-1. ne crée rien ;
-2. signale son nom exact ;
-3. demande s'il faut s'y positionner ou choisir un autre slug.
+Construire un slug court et stable :
 
-### Étape 3 : Préparer `develop`
+1. minuscules ;
+2. accents supprimés ;
+3. espaces et ponctuation remplacés par `-` ;
+4. séparateurs répétés compactés ;
+5. `-` de début et de fin supprimés.
 
-Cas à gérer :
+Garder l'intention principale, pas le titre complet.
 
-- si `develop` existe localement, s'en servir comme base ;
-- si `develop` n'existe qu'à distance, la récupérer proprement ;
-- si `develop` n'existe ni localement ni à distance, s'arrêter et demander quoi faire.
+## Procédure
 
-Ne remplace pas implicitement `develop` par `main` ou `master`. Ce serait un changement de convention, pas une simple exécution.
+### 1. Déterminer le nom cible
 
-### Étape 4 : Créer la branche
+Construire :
 
-Créer la branche depuis `develop` avec un flux non destructif et explicite.
+```text
+<prefix>/<issue>-<slug>
+```
 
-Objectif opérationnel :
+### 2. Vérifier l'état Git
 
-1. partir de `develop` ;
-2. créer `feat/<issue>-<slug>` ;
-3. se positionner dessus.
+Exécuter uniquement les contrôles nécessaires :
 
-Si le worktree sale empêche le checkout, arrêter le workflow et expliquer brièvement pourquoi.
+```bash
+git rev-parse --is-inside-work-tree
+git status --short
+git branch --list develop
+git ls-remote --heads origin develop
+git branch --list "<branch>"
+git ls-remote --heads origin "<branch>"
+```
 
-### Étape 5 : Réponse finale
+Arrêter si :
 
-Réponds brièvement avec :
+- le dépôt n'est pas un repo Git ;
+- le worktree est sale ;
+- `develop` est introuvable ;
+- la branche cible existe déjà localement ou à distance.
 
-- le nom exact de la branche ;
-- la base utilisée, en général `develop` ;
-- éventuellement le blocage détecté si la branche n'a pas pu être créée.
+### 3. Créer la branche
+
+Si tout est clair :
+
+```bash
+git fetch origin
+git checkout develop
+git pull --ff-only origin develop
+git checkout -b "<branch>"
+```
+
+Si `develop` n'existe pas localement mais existe sur `origin/develop` :
+
+```bash
+git fetch origin
+git checkout -b develop origin/develop
+git pull --ff-only origin develop
+git checkout -b "<branch>"
+```
+
+## Réponse attendue
+
+Répondre brièvement avec :
+
+- branche créée ou blocage ;
+- base utilisée ;
+- état Git final si disponible.
 
 Exemples :
 
-- `Branche créée : feat/270-workflow-test-diagnostics (base : develop).`
-- `La branche feat/270-workflow-test-diagnostics existe déjà. Je n'ai rien créé.`
-- `Impossible de basculer sur develop car le worktree contient des changements incompatibles avec le checkout.`
+```text
+Branche créée : feat/270-workflow-test-diagnostics (base : develop).
+```
 
-## 7. Questions légitimes à poser
+```text
+Blocage : worktree non propre. Aucune branche créée.
+```
 
-Pose une question courte seulement si elle est bloquante :
-
-- le numéro d'issue manque ;
-- deux slugs plausibles existent et aucun n'est explicitement préféré ;
-- `develop` n'existe pas ;
-- la branche cible existe déjà ;
-- le worktree ne permet pas de changer de branche proprement.
-
-Quand un choix mineur peut être inféré sans risque, fais-le et indique-le brièvement dans la réponse.
-
-## 8. Périmètre strict
-
-Ce skill s'arrête une fois la branche créée ou le blocage expliqué.
-
-Il ne doit pas :
-
-- implémenter le ticket ;
-- créer un plan ;
-- écrire de fichier ;
-- lancer les tests ;
-- faire un commit ;
-- pousser la branche ;
-- ouvrir une pull request.
-
-## Token budget policy
-
-Do not send large context to an LLM unless reasoning is required.
-
-For deterministic tasks:
-- execute with shell, Git, npm, Vitest, Playwright or CI;
-- collect only the useful output;
-- call an LLM only if interpretation, decision or correction is needed.
-
-For failures:
-- send only the failing command;
-- send only the relevant error block;
-- send only the files directly involved;
-- ask for the smallest correction.
+```text
+Blocage : la branche feat/270-workflow-test-diagnostics existe déjà. Aucune action destructive effectuée.
+```

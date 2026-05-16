@@ -1,5 +1,7 @@
 ---
 description: Prepare or create a Pull Request targeting develop
+agent: cmd-create-pr
+subtask: true
 ---
 
 Use the `creer-pull-request` skill.
