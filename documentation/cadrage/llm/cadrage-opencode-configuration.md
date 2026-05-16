@@ -1206,7 +1206,7 @@ Cette section formalise la doctrine cible validée par l’issue [#267](https://
 | Créer un plan depuis une issue | Moyen | Assistée | Planification | `plan-depuis-issue` | Oui — plan validé |
 | Écrire un plan dans `documentation/plan/` | Faible | Assistée | Documentation | `ecrire-plan-fichier` | Non |
 | Implémenter un plan | Élevé | Assistée | Implémentation | `implementer-depuis-plan` | Oui — code et tests |
-| Diagnostiquer / corriger un bug | Élevé | Assistée | Correction | Partiellement `implementer-depuis-plan` | Oui — fix et tests |
+| Diagnostiquer / corriger un bug | Élevé | Assistée | Correction | `corriger-echec-validation` | Oui — fix et tests |
 | Exécuter et analyser des tests | Faible | Lecture seule ou assistée | Test | Aucun | Non — résultat suffit |
 | Relire un diff / revue de code | Élevé | Lecture seule | Revue | Aucun | Oui — approbation |
 | Préparer / créer une PR | Moyen | Assistée | Documentation | `creer-pull-request` | Oui — PR à valider |
