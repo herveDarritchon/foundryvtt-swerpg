@@ -2,7 +2,8 @@
 
 ## Project
 
-Swerpg is a Foundry Virtual Tabletop v13+ game system for Star Wars Edge RPG, built with ES2022 modules (`"type": "module"`, `.mjs`).
+Swerpg is a Foundry Virtual Tabletop v13+ game system for Star Wars Edge RPG, built with ES2022 modules (
+`"type": "module"`, `.mjs`).
 
 - **Entrypoint**: `swerpg.mjs` → `dist/swerpg.bundle.js` (Rollup)
 - **System ID**: `swerpg` (in `module/config/system.mjs`)
@@ -76,7 +77,8 @@ lang/              # en.json, fr.json
 ## Tests
 
 - 1500+ Vitest tests, 80+ files
-- Two vitest configs: `vitest.config.mjs` (default, minimal setup) and `vitest.config.js` (coverage + clearMocks + restoreMocks)
+- Two vitest configs: `vitest.config.mjs` (default, minimal setup) and `vitest.config.js` (coverage + clearMocks +
+  restoreMocks)
 - Setup: `tests/setup.mjs` (default) or `tests/vitest-setup.js` (full mock-foundry)
 - Mock helpers: `tests/helpers/mock-foundry.mjs`
 - Use `setupFoundryMock()` / `teardownFoundryMock()` in beforeEach/afterEach for Foundry-dependent tests
@@ -98,33 +100,37 @@ Keys in `lang/en.json` and `lang/fr.json`, shape: `SWERPG.Domain.Subdomain.Key`.
 
 ## OpenCode workflows
 
-| Workflow | Doc |
-|---|---|
-| Exploration readonly | `documentation/spec/llm/opencode-exploration-readonly-command.md` |
-| Planning readonly | `documentation/spec/llm/opencode-planning-readonly-command.md` |
-| Test & diagnostics | `documentation/spec/llm/opencode-test-diagnostics-command.md` |
-| Doctrine | `documentation/cadrage/llm/cadrage-opencode-configuration.md` |
-
-Chain: **Exploration (#268)** → **Planning (#269)** → **Implémentation** → **Tests/Diagnostic (#270)** → **Correction**
+Issue/cadrage
+→ plan
+→ plan file under documentation/plan/
+→ feature branch from develop
+→ implementation from plan with file under documentation/plan/
+→ tests/lint/e2e
+→ targeted fix if validation fails
+→ scope check
+→ PR to develop
+→ PR review
 
 ## Skills
 
-| Skill file | Purpose |
-|---|---|
-| `.agents/skills/coding-standards-project-conventions/SKILL.md` | Full coding conventions |
-| `.agents/skills/foundry-vtt-system-architecture/SKILL.md` | Core system architecture |
-| `.agents/skills/applicationv2-ui-sheets/SKILL.md` | UI/sheet conventions |
-| `.agents/skills/swerpg-talent-effects/SKILL.md` | Talent mechanical effects |
-| `.agents/skills/plan-depuis-issue/SKILL.md` | Planning from issues |
-| `.agents/skills/implementer-depuis-plan/SKILL.md` | Implementation from plans |
-| `.agents/skills/narrative-dice/SKILL.md` | Narrative dice system |
-| `.agents/skills/oggdude-importer/SKILL.md` | OggDude import |
-| `.agents/skills/logging-diagnostics/SKILL.md` | Logger migration validation |
-| `.agents/skills/swerpg-unit-test-discipline/SKILL.md` | Unit test patterns |
-| `.agents/skills/testing-strategy-vitest-playwright/SKILL.md` | Vitest + Playwright strategy |
+| Skill file                                                     | Purpose                      |
+|----------------------------------------------------------------|------------------------------|
+| `.agents/skills/coding-standards-project-conventions/SKILL.md` | Full coding conventions      |
+| `.agents/skills/foundry-vtt-system-architecture/SKILL.md`      | Core system architecture     |
+| `.agents/skills/applicationv2-ui-sheets/SKILL.md`              | UI/sheet conventions         |
+| `.agents/skills/swerpg-talent-effects/SKILL.md`                | Talent mechanical effects    |
+| `.agents/skills/plan-depuis-issue/SKILL.md`                    | Planning from issues         |
+| `.agents/skills/creer-branche-feature/SKILL.md`                | Create feature branch        |
+| `.agents/skills/implementer-depuis-plan/SKILL.md`              | Implementation from plans    |
+| `.agents/skills/narrative-dice/SKILL.md`                       | Narrative dice system        |
+| `.agents/skills/oggdude-importer/SKILL.md`                     | OggDude import               |
+| `.agents/skills/logging-diagnostics/SKILL.md`                  | Logger migration validation  |
+| `.agents/skills/swerpg-unit-test-discipline/SKILL.md`          | Unit test patterns           |
+| `.agents/skills/testing-strategy-vitest-playwright/SKILL.md`   | Vitest + Playwright strategy |
 
 ## Stale doc (trust executable config over prose)
 
-- `.github/copilot-instructions.md` — references Foundry v13/Crucible/Tenebris (outdated), wrong npm commands (use `pnpm`)
+- `.github/copilot-instructions.md` — references Foundry v13/Crucible/Tenebris (outdated), wrong npm commands (use
+  `pnpm`)
 - `README.md` — E2E script names may be stale (real ones: `pnpm e2e*`)
 - No `lint` npm script in `package.json` — use `pnpm exec eslint <targets>` directly
