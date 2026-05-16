@@ -1,0 +1,23 @@
+{
+  "skill_name": "creer-pull-request",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Ma branche courante contient les commits du ticket #270. Prépare et crée une PR vers develop avec un titre propre, un résumé en 3 puces maximum, et référence l'issue si c'est pertinent.",
+      "expected_output": "Le skill vérifie la branche courante, compare avec develop, pousse la branche si nécessaire, crée une PR vers develop, puis retourne l'URL de la PR avec un titre et un corps cohérents.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Peux-tu regarder ma branche, comparer tout ce qu'elle embarque par rapport à develop, puis ouvrir la PR GitHub ? Je veux un corps de PR court mais utile pour la review, avec les validations réellement faites seulement.",
+      "expected_output": "Le skill analyse l'ensemble des commits et le diff develop...HEAD, ne surestime pas les validations exécutées, puis crée la PR avec un résumé fidèle et concis.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Publie ma branche si besoin et ouvre la pull request vers develop. S'il y a déjà une PR pour cette branche, ne duplique rien et donne-moi simplement le lien existant.",
+      "expected_output": "Le skill détecte l'état remote de la branche, évite une PR dupliquée, et retourne soit l'URL de la PR créée, soit celle de la PR déjà ouverte.",
+      "files": []
+    }
+  ]
+}

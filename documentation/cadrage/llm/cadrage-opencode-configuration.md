@@ -1209,7 +1209,7 @@ Cette section formalise la doctrine cible validée par l’issue [#267](https://
 | Diagnostiquer / corriger un bug | Élevé | Assistée | Correction | Partiellement `implementer-depuis-plan` | Oui — fix et tests |
 | Exécuter et analyser des tests | Faible | Lecture seule ou assistée | Test | Aucun | Non — résultat suffit |
 | Relire un diff / revue de code | Élevé | Lecture seule | Revue | Aucun | Oui — approbation |
-| Préparer / créer une PR | Moyen | Assistée | Documentation | `my-pull-requests` (lister seulement) | Oui — PR à valider |
+| Préparer / créer une PR | Moyen | Assistée | Documentation | `creer-pull-request` | Oui — PR à valider |
 | Mettre à jour une documentation projet | Faible | Assistée | Documentation | Aucun | Non |
 | Lancer des vérifications mécaniques | Faible | Automatique (script) | Script | Aucun | Non |
 
@@ -1225,7 +1225,7 @@ Cette section formalise la doctrine cible validée par l’issue [#267](https://
 
 L’audit des skills existants (cf. documentation/plan/llm/267-audit-skills-opencode.md) révèle les écarts suivants :
 
-1. **`my-pull-requests`** — Le skill liste les PR mais ne permet pas d’en créer. Or l’usage attendu “préparer/créer une PR” n’est pas couvert. **Action** : créer ou étendre un skill de création de PR.
+1. **`my-pull-requests`** — Le skill liste les PR mais ne crée pas de PR. L’écart est désormais couvert par **`creer-pull-request`**, dédié à la préparation et à la création de PR vers `develop`.
 2. **`ecrire-plan-fichier`** — Ce skill est une opération mécanique d’écriture. Il correspond davantage au rôle d’une **commande** que d’un skill porteur de connaissance. **Action** : évaluer sa transformation en commande dans un ticket ultérieur.
 3. **Activités non couvertes** — Aucun skill dédié n’existe pour : test automatisé, revue de code, diagnostic de bug, vérifications mécaniques, documentation projet. **Action** : décider dans un ticket ultérieur si ces activités nécessitent un skill, une commande, ou un simple prompt réutilisable.
 
@@ -1233,7 +1233,7 @@ L’audit des skills existants (cf. documentation/plan/llm/267-audit-skills-open
 
 1. Doctrine et cartographie (ce ticket) ✓
 2. Alignement des commandes — Formaliser les routines les plus fréquentes en commandes OpenCode
-3. Alignement des skills — Corriger les écarts (`my-pull-requests`), transformer les skills mécaniques en commandes
+3. Alignement des skills — Transformer les skills mécaniques en commandes et compléter les usages restants si nécessaire
 4. Permissions — Définir les permissions par type d’agent et niveau de risque
 5. Plugins / hooks transverses — Ajouter des garde-fous si nécessaire (sécurité, coût, validation)
 6. Mesure et ajustements — Observer l’utilisation réelle et ajuster la configuration
