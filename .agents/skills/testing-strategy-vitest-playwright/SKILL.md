@@ -616,3 +616,18 @@ When answering a code/testing task, include:
 6. **Commit message** — Conventional Commit.
 
 For small diagnostic questions, shorten the format but keep the layer choice and commands.
+
+## Token budget policy
+
+Do not send large context to an LLM unless reasoning is required.
+
+For deterministic tasks:
+- execute with shell, Git, npm, Vitest, Playwright or CI;
+- collect only the useful output;
+- call an LLM only if interpretation, decision or correction is needed.
+
+For failures:
+- send only the failing command;
+- send only the relevant error block;
+- send only the files directly involved;
+- ask for the smallest correction.

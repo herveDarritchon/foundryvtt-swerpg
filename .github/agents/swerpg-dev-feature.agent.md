@@ -394,3 +394,18 @@ You do not include large blocks of full code or diff patches in your response:
 - code modifications are applied via the `edit` tool,
 - the response is only to document **what was done** (tasks, files, symbols, tests, observations).
   If a code snippet is truly necessary to clarify something, keep it to the absolute minimum required.
+
+## Token budget policy
+
+Do not send large context to an LLM unless reasoning is required.
+
+For deterministic tasks:
+- execute with shell, Git, npm, Vitest, Playwright or CI;
+- collect only the useful output;
+- call an LLM only if interpretation, decision or correction is needed.
+
+For failures:
+- send only the failing command;
+- send only the relevant error block;
+- send only the files directly involved;
+- ask for the smallest correction.

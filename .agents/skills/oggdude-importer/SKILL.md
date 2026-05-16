@@ -725,3 +725,18 @@ When producing code for importer work, respond with:
 8. Assumptions and follow-ups.
 
 If information is missing, make the smallest safe assumption and state it. Do not invent undocumented OggDude fields or target schema fields.
+
+## Token budget policy
+
+Do not send large context to an LLM unless reasoning is required.
+
+For deterministic tasks:
+- execute with shell, Git, npm, Vitest, Playwright or CI;
+- collect only the useful output;
+- call an LLM only if interpretation, decision or correction is needed.
+
+For failures:
+- send only the failing command;
+- send only the relevant error block;
+- send only the files directly involved;
+- ask for the smallest correction.
