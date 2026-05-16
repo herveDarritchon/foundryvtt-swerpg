@@ -1,5 +1,7 @@
 ---
 description: Implement code and tests from an approved plan
+agent: cmd-implement-plan
+subtask: true
 ---
 
 Use the `implementer-depuis-plan` skill.

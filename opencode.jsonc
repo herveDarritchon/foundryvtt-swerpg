@@ -1,0 +1,42 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  // Modèle par défaut : intermédiaire.
+  // C'est le bon choix pour éviter d'utiliser trop souvent le modèle fort.
+  "model": "opencode/big-pickle",
+  "small_model": "copilot/gpt-4.1",
+  "provider": {
+    "copilot": {
+      "models": {
+        // 1. Modèle léger
+        // Usage : slugs, résumé court, extraction JSON, écriture simple.
+        "gpt-4.1": {
+          "options": {
+            "textVerbosity": "low"
+          }
+        }
+      }
+    },
+    "openai": {
+      "models": {
+        // 2. Modèle intermédiaire
+        // Usage : plans, implémentation courante, correction ciblée.
+        "gpt-5.4-mini": {
+          "options": {
+            "reasoningEffort": "medium",
+            "textVerbosity": "low",
+            "reasoningSummary": "auto"
+          }
+        },
+        // 3. Modèle fort
+        // Usage : architecture, revue PR critique, analyse complexe.
+        "gpt-5.4": {
+          "options": {
+            "reasoningEffort": "high",
+            "textVerbosity": "low",
+            "reasoningSummary": "auto"
+          }
+        }
+      }
+    }
+  }
+}

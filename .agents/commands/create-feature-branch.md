@@ -1,6 +1,10 @@
 ---
 description: Create a feature branch from up-to-date develop
+agent: cmd-create-feature-branch
+subtask: true
 ---
+
+Use the `creer-branche-feature` skill.
 
 Create a dedicated feature branch from `develop`.
 
@@ -23,14 +27,5 @@ Rules:
 - Do not implement code.
 - Do not commit.
 - Do not push unless explicitly asked.
-
-Suggested command sequence, after checks:
-
-```bash
-git fetch origin
-git checkout develop
-git pull --ff-only origin develop
-git checkout -b feat/<issue-number>-<slug>
-```
 
 Report the final branch name and current `git status`.

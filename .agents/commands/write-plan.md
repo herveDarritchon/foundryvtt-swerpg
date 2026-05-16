@@ -1,5 +1,7 @@
 ---
 description: Write an approved implementation plan under documentation/plan/
+agent: cmd-write-plan
+subtask: true
 ---
 
 Use the `ecrire-plan-fichier` skill.

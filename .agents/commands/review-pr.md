@@ -1,5 +1,7 @@
 ---
 description: Review PR architecture, tests, maintainability and scope
+agent: cmd-review-pr
+subtask: true
 ---
 
 Use the `reviewer-pr-architecture` skill.
