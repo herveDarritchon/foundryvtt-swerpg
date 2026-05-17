@@ -1,16 +1,13 @@
 ---
 name: plan-depuis-issue
 description: >
-  Génère un plan d'implémentation technique détaillé et validé à partir d'une
-  issue GitHub pour le système Foundry VTT SWERPG. À utiliser quand l'utilisateur
-  demande de créer un plan, une spec technique, ou un découpage pour une issue ou
-  une user story. Déclenche-toi aussi quand l'utilisateur parle de "planifier",
-  "découper", "splitter", "implémenter", ou "tech lead" une issue. Le skill
-  produit un plan validé comme message structuré en suivant le format canonique
-  du projet. L'écriture du plan dans `documentation/plan/` et l'implémentation
-  sont des étapes séparées. N'hésite PAS à proposer ce skill dès que l'utilisateur
-  évoque une issue en demandant comment l'aborder — même s'il ne demande pas
-  explicitement un plan.
+  Génère un plan d'implémentation technique à partir d'une issue GitHub ou
+  d'un cadrage, puis le matérialise directement dans un fichier Markdown sous
+  `documentation/plan/<business-domain-path>/`. À utiliser quand l'utilisateur
+  demande de créer un plan, une spec technique, ou un découpage pour une issue
+  ou une user story. Le skill produit un artefact versionnable : un fichier de
+  plan Markdown classé dans une arborescence métier. Il ne doit jamais
+  implémenter le code ou lancer les tests.
 license: project-internal
 compatibility:
   - claude-code
@@ -18,249 +15,265 @@ compatibility:
 metadata:
   project: swerpg
   stack: Foundry VTT v14+, JavaScript ES2022, ApplicationV2, TypeDataModel, Handlebars, Vitest
-  scope: planification technique, découpage, analyse d'issue, rédaction de plan d'implémentation
+  scope: planification technique, découpage, analyse d'issue, rédaction et matérialisation de plan sous documentation/plan/<business-domain-path>
 ---
 
 # Plan depuis une issue GitHub
 
-Utilise ce skill quand l'utilisateur te demande de créer un plan d'implémentation à partir d'une issue GitHub, ou quand il évoque le besoin de planifier/découper une fonctionnalité.
+Utilise ce skill quand l'utilisateur demande de créer un plan d'implémentation à partir d'une issue GitHub, d'une URL d'issue, d'un numéro d'issue, ou d'un cadrage.
 
-> ⚠️ **Langue** : Ce skill produit des documents en **français** (sauf si l'utilisateur demande explicitement l'anglais). Les échanges avec l'utilisateur peuvent être dans l'une ou l'autre langue.
+> Langue : produis le plan en français sauf demande explicite contraire.
 
----
+## 1. Mission
 
-## 1. Règles absolues
+Produire un plan d'implémentation court, actionnable, puis l'écrire directement comme fichier Markdown dans une arborescence métier sous `documentation/plan/`.
 
-1. **Ne jamais écrire une ligne de code d'implémentation.** Un plan décrit ce qu'il faut faire, pas le code final.
-2. **Toujours lire les plans existants** dans `documentation/plan/` avant d'écrire pour t'inspirer du format et du niveau de détail. Ne pas produire de fichier dans le repo : livrer le plan comme message validé.
-3. **Toujours lire les ADRs** dans `documentation/architecture/adr/` qui concernent le périmètre de l'issue.
-4. **Ne pas modifier le code existant** — le plan peut recommander des modifications, mais ne les applique pas.
-5. **Ne pas modifier les issues GitHub** — le plan est un document de travail, pas un outil de gestion de projet.
-6. **Ne pas élargir le périmètre de l'issue.** Le plan doit refléter l'issue et les arbitrages utilisateur, pas une feuille de route opportuniste.
-7. **Ne pas matérialiser automatiquement le plan dans le dépôt.** L'écriture dans `documentation/plan/` est une étape séparée, via `ecrire-plan-fichier`.
+Le résultat attendu n'est pas seulement un message : c'est un artefact versionnable dans le dépôt.
 
----
+Le skill doit :
 
-## 2. Processus
+1. comprendre l'issue ou le cadrage ;
+2. lire uniquement le contexte projet nécessaire ;
+3. identifier le domaine métier concerné ;
+4. choisir un `business-domain-path` stable, potentiellement multi-niveaux ;
+5. rédiger un plan exploitable ;
+6. déterminer un chemin cible stable sous `documentation/plan/<business-domain-path>/` ;
+7. vérifier les collisions ;
+8. créer le fichier Markdown ;
+9. répondre avec le chemin exact créé.
 
-### 2.1. Comprendre l'issue
+## 2. Règles absolues
 
-- Récupère le contenu de l'issue via `gh issue view <numéro>` (ou lis l'URL fournie)
-- Identifie : le type (bug, feature, refactor, US), le périmètre, les critères d'acceptation, les dépendances
-- Identifie les fichiers et modules impactés potentiels en explorant le codebase
-- Identifie les ADRs existants qui contraignent ou guident les décisions d'architecture
+1. Ne jamais écrire une ligne de code d'implémentation.
+2. Ne jamais modifier le code source.
+3. Ne jamais modifier les issues GitHub.
+4. Ne jamais lancer de tests.
+5. Ne jamais créer de branche, commit ni PR.
+6. Ne pas élargir le périmètre de l'issue.
+7. Lire `documentation/plan/` pour respecter le format, identifier les chemins métier existants et éviter les collisions.
+8. Lire les ADRs pertinentes dans `documentation/architecture/adr/` seulement si le périmètre de l'issue le justifie.
+9. Ne jamais écrire directement sous `documentation/plan/`.
+10. Écrire uniquement sous `documentation/plan/<business-domain-path>/`.
+11. Ne jamais écraser silencieusement un fichier existant.
+12. Si le fichier cible existe, arrêter et retourner : `BLOCKED: target plan file already exists: <path>`.
+13. Si le chemin métier est ambigu, arrêter et retourner : `BLOCKED: ambiguous business-domain path for plan directory.`
+14. Si l'issue ou le cadrage est insuffisant pour produire un plan fiable, arrêter et retourner les ambiguïtés au lieu d'inventer.
 
-### 2.2. Rechercher dans le codebase
+## 3. Processus
 
-Avant d'écrire le plan, explore les zones pertinentes :
+### 3.1. Comprendre l'entrée
 
-- `module/` — la structure des modules existants
-- `documentation/architecture/` — les ADRs, le modèle de données, l'intégration Foundry
-- `documentation/plan/` — les plans existants (même format à suivre)
-- Les fichiers mentionnés dans l'issue ou les issues liées
-- Les tests existants (`tests/`) pour comprendre comment le code est testé
+À partir de `$ARGUMENTS`, identifie :
 
-Utilise ces lectures pour identifier :
-- Les patterns existants à respecter (conventions de nommage, structure de fichiers, hooks, etc.)
-- Les API Foundry à utiliser (ApplicationV2, TypeDataModel, etc.)
-- Les points d'intégration avec le code existant
+- l'URL ou le numéro d'issue ;
+- le titre de l'issue si disponible ;
+- le type de demande : bug, feature, refactor, US, dette technique ;
+- le périmètre fonctionnel et métier ;
+- les critères d'acceptation ;
+- les dépendances éventuelles.
 
-### 2.3. Poser des questions si nécessaire
+Si l'entrée est une URL GitHub mais que les outils web/bash sont indisponibles, utilise uniquement le texte visible dans l'entrée. Si le contenu de l'issue n'est pas accessible et que le titre ne suffit pas, bloque avec une question courte.
 
-Si l'issue est ambiguë ou que des choix d'architecture sont ouverts, **pose des questions à l'utilisateur**. Ne présume pas. Les choix typiques à valider :
+### 3.2. Lire le contexte minimal
 
-- Stockage des données : `flags` vs `system` (data model) → documenté dans ADR-0011
-- Type de hook Foundry à utiliser pour l'interception
-- Nouveau module autonome vs extension d'un module existant
-- Approche UI : ApplicationV2 vs dialogue natif vs simple template
-- Rétrocompatibilité : migration nécessaire ou non ?
-- Tests : unitaires (Vitest) vs intégration vs manuels
+Lis uniquement :
 
-Présente les options avec leurs avantages/inconvénients et laisse l'utilisateur trancher. Cite les ADRs ou les patterns existants qui appuient chaque option.
+- `documentation/plan/` pour le format, les collisions et les chemins métier existants ;
+- les fichiers explicitement mentionnés par l'issue ou le cadrage ;
+- les ADRs directement liées au périmètre ;
+- les tests existants seulement s'ils sont nécessaires pour définir les validations attendues.
 
-### 2.4. Valider les décisions clés
+Ne scanne pas tout le dépôt.
 
-Avant de rédiger la version finale, résume les décisions prises et demande une confirmation :
+### 3.3. Déterminer le chemin métier
 
-> "Voici les choix retenus pour le plan :
-> 1. Stockage dans `actor.flags.swerpg.X` (conforme ADR-0011)
-> 2. Hook `updateActor` plutôt que surcharge de `_onUpdate` (approche AOP)
-> 3. Nouveau fichier `module/utils/X.mjs`
-> 
-> Ces choix te conviennent-ils ?"
+Le plan doit être écrit sous :
 
-### 2.5. Rédiger le plan
+```text
+documentation/plan/<business-domain-path>/<issue-number>-<kebab-case-slug>.md
+```
 
-Produis un plan validé comme message structuré, en respectant le format canonique des plans existants dans `documentation/plan/`. L'écriture du plan dans le dépôt est une étape séparée : le plan est d'abord livré et validé dans la conversation. Une fois validé, l'utilisateur peut utiliser `ecrire-plan-fichier` pour le matérialiser.
+`<business-domain-path>` est une série d'un ou plusieurs sous-répertoires en kebab-case.
 
-Le plan doit suivre la structure canonique :
+#### Règles de choix du `business-domain-path`
 
-```markdown
+- Le plan ne doit jamais être écrit directement sous `documentation/plan/`.
+- Le chemin doit représenter le domaine fonctionnel ou métier de l'issue, pas seulement un fichier technique touché.
+- Préfère un chemin existant sous `documentation/plan/` quand il correspond clairement au domaine.
+- Si un parent existant correspond, réutilise-le et ajoute uniquement le sous-répertoire manquant.
+- Crée de nouveaux sous-répertoires seulement si le domaine est clair.
+- Ne crée pas plus de 3 niveaux métier sauf si une structure plus profonde existe déjà pour ce domaine.
+- N'utilise jamais de dossiers fourre-tout : `misc`, `other`, `general`, `technical`, `todo`.
+- Si plusieurs chemins sont plausibles sans règle claire pour trancher, bloque.
+
+#### Niveaux recommandés
+
+- Niveau 1 : grande zone fonctionnelle ou applicative.
+- Niveau 2 : module fonctionnel ou famille de fonctionnalité.
+- Niveau 3 : sous-fonctionnalité ou workflow spécifique, seulement si cela aide vraiment à retrouver les plans.
+
+#### Mapping indicatif
+
+Ce mapping guide le choix du chemin. Il ne remplace pas l'observation de la structure existante.
+
+- character sheet, actor sheet → `character-sheet`
+- vue talents de la character sheet, talents consolidés → `character-sheet/talent`
+- arbres de spécialisation affichés depuis la character sheet → `character-sheet/talent/specialization-tree`
+- modèle métier des talents, définitions, achats de talents → `talents`
+- modèle ou resolver des arbres de spécialisation hors UI sheet → `talents/specialization-tree`
+- importers, OggDude → `importers/oggdude`
+- compendiums, PackFolders, référentiels importés → `importers/compendiums`
+- dés narratifs, mécanique de jet → `narrative-dice`
+- construction de dice pool → `narrative-dice/dice-pool`
+- active effects, effect engine, conditions → `active-effects`
+- bridge Foundry Active Effects → `active-effects/foundry-bridge`
+- logs, diagnostics, audit logs → `logging`
+- hooks d'audit log → `logging/audit-log`
+- UI framework, ApplicationV2, infrastructure sheet partagée → `ui/application-v2`
+- tests, CI, validation tooling → `testing`
+- architecture, ADR, frontières techniques → `architecture`
+
+#### Exemples valides
+
+```text
+documentation/plan/character-sheet/talent/282-vue-consolidee-resoudre-identifiant-metier.md
+documentation/plan/character-sheet/talent/specialization-tree/233-afficher-arbre-specialisation.md
+documentation/plan/importers/oggdude/300-import-armors.md
+documentation/plan/narrative-dice/dice-pool/310-refactor-pool-builder.md
+documentation/plan/active-effects/foundry-bridge/320-connecter-effect-engine-active-effects.md
+documentation/plan/logging/audit-log/330-ajouter-hooks-audit.md
+```
+
+### 3.4. Déterminer le nom de fichier
+
+Le nom de fichier doit suivre ce format :
+
+```text
+<issue-number>-<kebab-case-slug>.md
+```
+
+Si le numéro d'issue est absent :
+
+```text
+<kebab-case-slug>.md
+```
+
+Le slug doit :
+
+- être basé sur le titre de l'issue ou du cadrage ;
+- être court, lisible et significatif ;
+- être en kebab-case ;
+- ne pas contenir d'accents ;
+- éviter la ponctuation inutile ;
+- éviter de répéter le domaine déjà exprimé par le chemin.
+
+Évite :
+
+```text
+documentation/plan/character-sheet/talent/282-character-sheet-talent-vue-consolidee-talents.md
+```
+
+Préférer :
+
+```text
+documentation/plan/character-sheet/talent/282-vue-consolidee-resoudre-identifiant-metier.md
+```
+
+### 3.5. Rédiger le plan
+
+Le plan doit être court, actionnable.
+
+Structure cible :
+
+```md
 # Plan d'implémentation — <Titre>
 
 **Issue** : [#N — Titre](url)
-**Epic** : [#N — Titre](url) (si applicable)
 **ADR** : `documentation/architecture/adr/adr-N-*.md` (si applicable)
-**Module(s) impacté(s)** : `module/X.mjs` (création/modification)
+**Module(s) impacté(s)** : `module/X.mjs`, `tests/X.test.mjs`
 
 ---
 
 ## 1. Objectif
 
-Pourquoi ce plan ? Quel problème résout-il ? Quel est le résultat attendu ?
-
 ## 2. Périmètre
 
-### Inclus dans cette US / ce ticket
+### Inclus
 
-Liste précise de ce qui est couvert.
-
-### Exclu de cette US / ce ticket
-
-Liste de ce qui est explicitement hors scope (et renvoi vers l'US ou le ticket qui le couvre).
+### Hors scope
 
 ## 3. Constat sur l'existant
 
-Analyse de l'état actuel du code : ce qui existe, ce qui manque, ce qui est cassé, les patterns en place.
-
 ## 4. Décisions d'architecture
 
-Chaque décision importante est documentée avec :
-- Le problème / la question
-- Les options envisagées
-- La décision retenue
-- La justification
+## 5. Plan de travail
 
-## 5. Plan de travail détaillé
+## 6. Fichiers probablement modifiés
 
-Découpage en étapes implémentables indépendamment. Chaque étape décrit :
-- Quoi faire (pas comment coder)
-- Quels fichiers modifier
-- Quels risques spécifiques
+## 7. Tests attendus
 
-## 6. Fichiers modifiés
+## 8. Risques et mitigations
 
-Tableau : fichier → action (création/modification) → description du changement
-
-## 7. Risques
-
-Tableau : risque → impact → mitigation
-
-## 8. Proposition d'ordre de commit
-
-Les commits dans l'ordre recommandé, chacun avec un message type conventional commit.
-
-## 9. Dépendances avec les autres US
-
-Si applicable : qui dépend de quoi, ordre d'implémentation conseillé.
+## 9. Critères d'arrêt
 ```
 
-> 💡 Inspire-toi du plan existant `documentation/plan/character-sheet/evolution-logs/US1-plan-audit-log-hooks.md` comme référence de qualité et de niveau de détail.
+Ne mets pas de code d'implémentation dans le plan.
 
-### 2.6. Vérifications finales
+### 3.6. Vérifier les collisions
 
-Avant de présenter le plan, vérifie :
+Avant d'écrire :
 
-- [ ] Toutes les sections du format canonique sont présentes
-- [ ] Chaque décision d'architecture a une justification (pas de "parce que c'est comme ça")
-- [ ] Les ADRs pertinents sont cités
-- [ ] Le périmètre est clairement délimité (inclus vs exclu)
-- [ ] Les risques sont identifiés avec des mitiations concrètes
-- [ ] Les fichiers impactés sont listés avec leur action (création/modification)
-- [ ] L'ordre de commit est réaliste
-- [ ] Aucun code d'implémentation n'est présent dans le plan
-- [ ] Le périmètre n'a pas été élargi au-delà de l'issue
-- [ ] Le plan est livré comme message validé, pas comme fichier dans le dépôt
+1. liste les fichiers existants dans le chemin cible ;
+2. vérifie que le fichier cible n'existe pas ;
+3. vérifie aussi les noms très proches pour éviter un doublon évident.
 
----
+Si le fichier existe déjà :
 
-## 3. Conventions du projet à respecter
-
-### Structure du code
-
-```
-module/
-├── applications/    → Applications V2 (sheets, config, dialogs)
-├── config/          → Données de configuration (skills, items, etc.)
-├── documents/       → Extensions de documents Foundry (Actor, Item, etc.)
-│   └── actor-mixins/ → Mixins pour SwerpgActor
-├── models/          → Data models (TypeDataModel)
-├── lib/             → Logique métier pure (skill factory, talent factory, etc.)
-├── utils/           → Utilitaires transverses (logger, skill-costs, etc.)
-└── hooks/           → Hooks spécifiques
-documentation/
-├── architecture/
-│   ├── adr/         → Architecture Decision Records (conventions contraignantes)
-│   ├── data/        → Schémas de données
-│   ├── integration/ → Intégration Foundry
-│   └── ui/          → Patterns UI
-├── plan/            → Plans d'implémentation (ce que ce skill produit)
-└── spec/            → Spécifications fonctionnelles
-templates/
-├── chat/            → Templates de messages de chat
-├── sheets/          → Templates de feuilles (actor, item)
-│   └── partials/    → Partials Handlebars
-└── applications/    → Templates d'applications V2
-lang/
-├── en.json          → Internationalisation anglaise
-└── fr.json          → Internationalisation française
-styles/
-├── *.less           → Sources LESS
-└── swerpg.css       → CSS compilé
-tests/               → Tests Vitest
+```text
+BLOCKED: target plan file already exists: <path>
 ```
 
-### Conventions de codage
+Ne propose pas d'écrasement automatique.
 
-- Modules ES (`.mjs`) avec `import`/`export`
-- Classes avec `PascalCase`, fonctions avec `camelCase`, constantes avec `UPPER_SNAKE_CASE`
-- Méthodes privées : `#methodName` (vraie private syntax)
-- ApplicationV2 pour toute nouvelle UI (pas de jQuery, pas de Handlebars Application v1)
-- TypeDataModel pour les schémas de données (pas de simple ObjectField pour les données métier)
-- Logger centralisé depuis `module/utils/logger.mjs` (pas de `console.log` direct)
-- Tests Vitest dans `tests/` (un fichier par module)
+### 3.7. Créer le fichier
 
-### Patterns Foundry à privilégier
+Écris le plan final dans le chemin cible.
 
-- **Hooks** : `Hooks.on(...)` pour l'interception transverse (approche AOP)
-- **Surcharge** : override des méthodes `_preUpdate`, `_onUpdate`, `_preCreate` sur les classes document pour la logique métier attachée au cycle de vie
-- **Flags** : `actor.flags.swerpg.*` pour les données secondaires (ADR-0011)
-- **Data model** : `actor.system.*` pour les données cœur via `TypeDataModel.defineSchema()`
-- **Sheets V2** : `ApplicationV2` avec `PARTS`, `TABS`, `tabGroups`
-- **i18n** : `game.i18n.localize()` et `game.i18n.format()` — jamais de texte hardcodé
+Le fichier créé est la sortie principale du skill.
 
----
+### 3.8. Réponse finale
 
-## 4. Exemple de section « Décisions d'architecture »
+Réponds uniquement avec :
 
-```
-### 4.1. Hook global vs override de `_onUpdate`
-
-**Décision** : Utiliser `Hooks.on('updateActor', ...)` plutôt que de surcharger `SwerpgActor._onUpdate()`.
-
-Justification :
-- Approche AOP : le code métier n'est pas modifié
-- Séparation des concerns : l'audit log est un aspect transverse
-- Désactivable : on peut retirer les hooks sans impacter le métier
-
-### 4.2. Stockage des données
-
-**Décision** : Stocker dans `actor.flags.swerpg.X` (conforme ADR-0011).
-
-Raison : donnée secondaire, pas de source de vérité, pas de migration data model.
+```text
+Created <path>
 ```
 
-## Token budget policy
+ou, en cas de blocage :
 
-Do not send large context to an LLM unless reasoning is required.
+```text
+BLOCKED: <reason>
+```
 
-For deterministic tasks:
-- execute with shell, Git, npm, Vitest, Playwright or CI;
-- collect only the useful output;
-- call an LLM only if interpretation, decision or correction is needed.
+## 4. Périmètre strict
 
-For failures:
-- send only the failing command;
-- send only the relevant error block;
-- send only the files directly involved;
-- ask for the smallest correction.
+Ce skill s'arrête après la création du fichier de plan.
+
+Il ne doit pas :
+
+- implémenter le plan ;
+- modifier du code ;
+- lancer des validations ;
+- créer une branche ;
+- créer une PR ;
+- enrichir le scope au-delà de l'issue ;
+- écrire un fichier temporaire sauf demande explicite.
+
+## 5. Politique de sobriété contexte / tokens
+
+- Ne lis pas le dépôt entier.
+- Ne lis pas tous les ADRs.
+- Ne lis pas tous les tests et ne les exécutes pas.
+- Ne charge un skill métier complémentaire que si le périmètre l'exige explicitement.
+- Si une information manque, bloque au lieu de compenser par de longues explorations.
+- Si un chemin métier existant convient, réutilise-le au lieu d'inventer une nouvelle structure.

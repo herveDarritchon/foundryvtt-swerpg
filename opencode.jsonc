@@ -3,7 +3,7 @@
   // Modèle par défaut : intermédiaire.
   // C'est le bon choix pour éviter d'utiliser trop souvent le modèle fort.
   "model": "opencode/big-pickle",
-  "small_model": "copilot/gpt-4.1",
+  "small_model": "github-copilot/gpt-4.1",
   "provider": {
     "copilot": {
       "models": {
