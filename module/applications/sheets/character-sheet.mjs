@@ -949,6 +949,15 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
     const unspecifiedActivationLabel = game.i18n.localize('SWERPG.TALENT.UNSPECIFIED')
 
     return summary.map((entry) => {
+      // Diagnostic log when a purchased talentId has no matching definition
+      if (entry.name === null) {
+        logger.warn('[CharacterSheet] Unresolved consolidated talent — no definition found for talentId', {
+          actorId: this.actor?.id,
+          actorName: this.actor?.name,
+          talentId: entry.talentId,
+        })
+      }
+
       const tags = []
       if (entry.activation === 'active') {
         tags.push({ label: game.i18n.localize('SWERPG.TALENT.ACTIVE'), cssClass: 'tag-active' })
