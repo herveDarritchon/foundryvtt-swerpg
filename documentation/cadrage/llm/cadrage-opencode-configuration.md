@@ -1424,3 +1424,171 @@ Le workflow de planification doit impérativement respecter les règles suivante
 Si une demande d'exploration révèle un besoin de planification, le workflow d'exploration s'arrête et oriente vers ce workflow de planification. Les constats de l'exploration sont transmis comme base de travail.
 
 L'escalade n'est jamais automatique. Le workflow signale la recommandation et attend une instruction explicite.
+
+---
+
+## 20. Workflow de tests et diagnostic d'échec — Issue #270
+
+Cette section formalise le workflow cible pour les demandes d'exécution de tests, de lint et de vérifications mécaniques, avec une priorité donnée au diagnostic et à l'explication des échecs avant toute correction, conformément à l'issue [#270](https://github.com/herveDarritchon/foundryvtt-swerpg/issues/270).
+
+### 20.1. Principe
+
+Le workflow de tests et diagnostic d'échec est un workflow en **3 phases strictement séparées** :
+
+1. **Exécution mécanique** — Lancer la commande de vérification (tests, lint, format, script) et capturer le résultat.
+2. **Diagnostic** — Analyser l'échec uniquement si la phase 1 échoue, en travaillant sur un volume réduit et pertinent.
+3. **Correction** — Étape séparée et optionnelle, déclenchée explicitement par l'utilisateur après réception du diagnostic.
+
+Il est conçu pour être exécuté avec une intervention LLM minimale : les phases mécaniques sont pilotées par scripts, seuls l'analyse d'échec et l'arbitrage justifient un modèle plus capable.
+
+### 20.2. Intentions déclenchantes
+
+Le workflow de tests et diagnostic est adapté aux demandes suivantes :
+
+- exécuter des tests unitaires Vitest (toute la suite, un dossier, un fichier, un pattern) ;
+- exécuter des tests de couverture Vitest ;
+- exécuter des tests E2E Playwright (headless, headed, CI, UI) ;
+- vérifier le format Prettier sans appliquer de correction ;
+- lancer le lint ESLint sur tout ou partie du code ;
+- exécuter un script mécanique projet (ex. `validate-logging-migration`) ;
+- analyser la cause d'un échec de vérification mécanique.
+
+### 20.3. Exclusions explicites
+
+Ne pas utiliser ce workflow pour :
+
+- explorer ou comprendre du code existant (→ workflow d'exploration `#268`) ;
+- planifier une implémentation (→ workflow de planification `#269`) ;
+- implémenter ou modifier du code pour corriger un échec ;
+- corriger automatiquement des erreurs de format ou de lint ;
+- rédiger de nouveaux tests (→ implémentation dédiée) ;
+- modifier les configurations de test ou de build.
+
+### 20.4. Agent et permissions par phase
+
+#### Phase 1 — Exécution
+
+| Propriété | Valeur |
+|---|---|
+| Type d'agent | Exécution mécanique (script) |
+| Modèle cible | Aucun (exécution script) ou économique |
+| Autonomie | Exécution seule, pas d'analyse |
+| Outils autorisés | Commande shell pour lancer la vérification |
+| Interdits | Modification de code, analyse, correction |
+
+#### Phase 2 — Diagnostic
+
+| Propriété | Valeur |
+|---|---|
+| Type d'agent | Général / Diagnostic |
+| Modèle cible | Intermédiaire ou raisonnement selon complexité |
+| Autonomie | Lecture seule sur le code, analyse de la sortie d'erreur |
+| Outils autorisés | Recherche fichiers, recherche textuelle, lecture fichiers, extraction de logs |
+| Interdits | Édition, écriture, correction, exécution de nouvelles vérifications |
+
+#### Phase 3 — Correction
+
+| Propriété | Valeur |
+|---|---|
+| Type d'agent | Implémentation |
+| Déclenchement | Explicite par l'utilisateur après réception du diagnostic |
+| Périmètre | Correction minimale ciblée |
+| Note | Non détaillée dans ce workflow — renvoi vers `implementer-depuis-plan` ou workflow de correction dédié |
+
+### 20.5. Contrat de sortie
+
+**Phase 1 — Exécution** (toujours produite) :
+
+```
+Commande exécutée : <commande>
+Statut : <succès/échec>
+Durée : <secondes>
+Fichiers testés : <nombre> (si applicable)
+Tests passés : <nombre> (si applicable)
+Tests échoués : <nombre> (si applicable)
+Sortie complète : <référence vers fichier temporaire si longue>
+```
+
+**Phase 2 — Diagnostic** (produite seulement si échec et si l'utilisateur le demande) :
+
+```
+Périmètre analysé : <fichiers/modules>
+Cause probable : <hypothèse>
+Fichiers incriminés : <liste>
+Extrait pertinent : <code/log extrait>
+Suggestion de correction : <description courte>
+Complexité estimée : <faible/moyenne/élevée>
+Modèle recommandé pour la correction : <type>
+```
+
+**Phase 3 — Correction** : non détaillée dans ce workflow.
+
+Règles de sobriété :
+
+- la sortie de la phase 1 ne doit pas être envoyée intégralement au modèle si elle est longue ;
+- seuls le statut, le message d'erreur principal et les fichiers incriminés sont transmis au diagnostic ;
+- le diagnostic ne doit pas contenir de code correctif exécutable, seulement une description ;
+- pas de transition automatique vers la correction.
+
+### 20.6. Variantes de profondeur
+
+| Profondeur | Usage typique | Phases activées |
+|---|---|---|
+| `check` | Simple exécution, résultat binaire | Phase 1 uniquement |
+| `check --diagnose` | Exécution + diagnostic en cas d'échec | Phase 1 + Phase 2 |
+| `check --fix` (demande explicite) | Exécution + diagnostic + proposition de correction (attente validation) | Phase 1 + Phase 2 + Phase 3 (validation requise) |
+
+### 20.7. Sous-commandes prévues
+
+| Sous-commande | Outil | Commande exécutée |
+|---|---|---|
+| `check tests` | Vitest | `pnpm test` ou `pnpm vitest run <filtre>` |
+| `check coverage` | Vitest + V8 | `pnpm test:coverage` |
+| `check e2e` | Playwright | `pnpm e2e` (ou headed/ci/ui) |
+| `check lint` | ESLint | `pnpm exec eslint <cibles>` |
+| `check format` | Prettier | `pnpm fmt:check` |
+| `check script <nom>` | Script projet | `bash scripts/<nom>.sh` |
+| `check all` | Tous | Exécution séquentielle de toutes les vérifications |
+
+### 20.8. Garde-fous
+
+Le workflow de tests et diagnostic doit impérativement respecter les règles suivantes :
+
+1. **Exécuter ≠ Analyser ≠ Corriger** — Chaque phase est une étape distincte avec des permissions différentes.
+2. **Pas de correction automatique** — Même si la correction est évidente, le workflow attend une instruction explicite.
+3. **Pas d'élargissement du scope** — La vérification se limite à ce qui a été demandé.
+4. **Pas de modification de code pendant le diagnostic** — Le diagnostic est lecture seule.
+5. **Pas de reformulation du besoin** — Une demande de test ne devient pas une demande d'implémentation.
+6. **Volume réduit pour le diagnostic** — Seuls les éléments pertinents (statut, erreur, fichiers) sont transmis au modèle.
+
+### 20.9. Cas nécessitant une question à l'utilisateur
+
+Le workflow doit poser une question à l'utilisateur dans les cas suivants :
+
+- le filtre de tests est ambigu (plusieurs interprétations possibles) ;
+- l'échec est massif (>50% des tests) ;
+- l'échec semble lié à l'infrastructure de test (mock, setup) plutôt qu'au code métier ;
+- la cause de l'échec est incertaine et plusieurs hypothèses coexistent ;
+- la vérification demandée n'existe pas (ex. `check <outil-inconnu>`).
+
+### 20.10. Escalade depuis l'exploration et la planification
+
+Si une demande d'exploration révèle un besoin de vérification, ou si une planification nécessite une validation par les tests, le workflow s'arrête et oriente vers ce workflow de tests et diagnostic.
+
+Réciproquement, si le diagnostic d'un échec révèle un problème d'architecture ou un besoin de planification, une escalade vers le workflow de planification `#269` peut être proposée.
+
+L'escalade n'est jamais automatique. Le workflow signale la recommandation et attend une instruction explicite.
+
+### 20.11. Articulation avec la chaîne complète des workflows
+
+```
+Exploration (#268) → Planification (#269) → Exécution/Développement → Tests/Diagnostic (ce workflow) → Correction (séparée)
+```
+
+- L'exploration prépare le terrain.
+- La planification décide de la stratégie.
+- L'implémentation produit le code.
+- Les tests valident et diagnostiquent les écarts.
+- La correction ne vient qu'après un diagnostic validé.
+
+Chaque transition est explicite et attend une instruction utilisateur.
