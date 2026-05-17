@@ -18,6 +18,7 @@ vi.mock('../../../module/lib/talent-node/owned-talent-summary.mjs', () => ({
 }))
 
 import { buildOwnedTalentSummary } from '../../../module/lib/talent-node/owned-talent-summary.mjs'
+import { logger } from '../../../module/utils/logger.mjs'
 
 describe('CharacterSheet talent consolidation (US12)', () => {
   let CharacterSheet
@@ -410,6 +411,32 @@ describe('CharacterSheet talent consolidation (US12)', () => {
       isRanked: true,
     })
     expect(capturedDefinitions.size).toBe(3)
+  })
+
+  it('logs a warning and preserves Unknown fallback when a consolidated talent has no definition', async () => {
+    buildOwnedTalentSummary.mockReturnValue([
+      {
+        talentId: 'talent-missing',
+        name: null,
+        activation: null,
+        isRanked: null,
+        rank: null,
+        sources: [
+          { specializationName: 'Bodyguard', resolutionState: 'ok' },
+        ],
+      },
+    ])
+    const actor = buildMockActor()
+    const context = await getContext(actor)
+
+    expect(logger.warn).toHaveBeenCalledWith(
+      '[CharacterSheet] Unresolved consolidated talent — no definition found for talentId',
+      expect.objectContaining({ talentId: 'talent-missing' }),
+    )
+    expect(context.talents).toHaveLength(1)
+    const entry = context.talents[0]
+    expect(entry.name).toBe('SWERPG.TALENT.UNKNOWN')
+    expect(entry.sourceLabels).toEqual(['Bodyguard'])
   })
 
   it('opens the specialization tree app from the talents action handler', async () => {

@@ -1,7 +1,7 @@
 ---
 description: Exécute les validations projet via le skill executer-validation-projet, sans correction ni analyse coûteuse inutile.
 mode: subagent
-model: copilot/gpt-4.1
+model: github-copilot/gpt-4.1
 temperature: 0.1
 permission:
   read: allow
