@@ -418,7 +418,7 @@ describe('CharacterSheet talent consolidation (US12)', () => {
     expect(capturedDefinitions.size).toBe(3)
   })
 
-  it('logs a warning and preserves Unknown fallback when a consolidated talent has no definition', async () => {
+  it('logs a structured warning and preserves Unknown fallback when a consolidated talent has no definition', async () => {
     buildOwnedTalentSummary.mockReturnValue([
       {
         talentId: 'talent-missing',
@@ -431,17 +431,47 @@ describe('CharacterSheet talent consolidation (US12)', () => {
         ],
       },
     ])
-    const actor = buildMockActor()
+    const actor = buildMockActor({ id: 'actor-abc', name: 'Test Hero' })
     const context = await getContext(actor)
 
     expect(logger.warn).toHaveBeenCalledWith(
       '[CharacterSheet] Unresolved consolidated talent — no definition found for talentId',
-      expect.objectContaining({ talentId: 'talent-missing' }),
+      expect.objectContaining({
+        actorId: 'actor-abc',
+        actorName: 'Test Hero',
+        talentId: 'talent-missing',
+        sources: [
+          { specializationName: 'Bodyguard', resolutionState: 'ok' },
+        ],
+        keysTried: ['talent-missing'],
+        definitionsAvailable: 0,
+      }),
     )
     expect(context.talents).toHaveLength(1)
     const entry = context.talents[0]
     expect(entry.name).toBe('SWERPG.TALENT.UNKNOWN')
     expect(entry.sourceLabels).toEqual(['Bodyguard'])
+  })
+
+  it('does not emit warning for a resolved consolidated talent', async () => {
+    buildOwnedTalentSummary.mockReturnValue([
+      {
+        talentId: 'talent-parry',
+        name: 'Parry',
+        activation: 'active',
+        isRanked: true,
+        rank: 2,
+        sources: [
+          { specializationName: 'Bodyguard', resolutionState: 'ok' },
+        ],
+      },
+    ])
+    const actor = buildMockActor()
+    const context = await getContext(actor)
+
+    expect(logger.warn).not.toHaveBeenCalled()
+    expect(context.talents).toHaveLength(1)
+    expect(context.talents[0].name).toBe('Parry')
   })
 
   describe('integration: full consolidation pipeline', () => {
