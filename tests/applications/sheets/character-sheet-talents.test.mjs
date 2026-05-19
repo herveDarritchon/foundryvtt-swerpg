@@ -17,7 +17,12 @@ vi.mock('../../../module/lib/talent-node/owned-talent-summary.mjs', () => ({
   buildOwnedTalentSummary: vi.fn(),
 }))
 
+vi.mock('../../../module/lib/talent-node/talent-tree-resolver.mjs', () => ({
+  resolveSpecializationTree: vi.fn(),
+}))
+
 import { buildOwnedTalentSummary } from '../../../module/lib/talent-node/owned-talent-summary.mjs'
+import { resolveSpecializationTree } from '../../../module/lib/talent-node/talent-tree-resolver.mjs'
 import { logger } from '../../../module/utils/logger.mjs'
 
 describe('CharacterSheet talent consolidation (US12)', () => {
@@ -437,6 +442,162 @@ describe('CharacterSheet talent consolidation (US12)', () => {
     const entry = context.talents[0]
     expect(entry.name).toBe('SWERPG.TALENT.UNKNOWN')
     expect(entry.sourceLabels).toEqual(['Bodyguard'])
+  })
+
+  describe('integration: full consolidation pipeline', () => {
+    beforeEach(() => {
+      vi.clearAllMocks()
+    })
+
+    it('round-trips ranked multi-specialization purchases into single entry with rank 2', async () => {
+      const realModule = await vi.importActual('../../../module/lib/talent-node/owned-talent-summary.mjs')
+      buildOwnedTalentSummary.mockImplementation(realModule.buildOwnedTalentSummary)
+
+      resolveSpecializationTree.mockImplementation((spec) => {
+        if (spec.specializationId === 'spec-merc') {
+          return {
+            tree: {
+              id: 'tree-merc', name: 'Mercenary Soldier', type: 'specialization-tree',
+              system: { specializationId: 'spec-merc', nodes: [{ nodeId: 'r1c1', talentId: 'talent-parry', row: 1, column: 1, cost: 10 }], connections: [] },
+            },
+            state: 'available',
+          }
+        }
+        return {
+          tree: {
+            id: 'tree-bodyguard', name: 'Bodyguard', type: 'specialization-tree',
+            system: { specializationId: 'spec-bodyguard', nodes: [{ nodeId: 'r1c1', talentId: 'talent-parry', row: 1, column: 1, cost: 5 }], connections: [{ from: 'r1c1', to: 'r2c1' }] },
+          },
+          state: 'available',
+        }
+      })
+
+      globalThis.game.items = [
+        { id: 'Item.parry', name: 'Parry', type: 'talent', system: { id: 'talent-parry', activation: 'active', isRanked: true } },
+      ]
+
+      const actor = buildMockActor({
+        system: {
+          skills: {},
+          progression: {
+            freeSkillRanks: { career: { spent: 0, gained: 4, available: 4 }, specialization: { spent: 0, gained: 0, available: 0 } },
+            experience: { available: 0, spent: 0, gained: 0, total: 0 },
+            talentPurchases: [
+              { talentId: 'talent-parry', specializationId: 'spec-bodyguard', treeId: 'tree-bodyguard', nodeId: 'r1c1' },
+              { talentId: 'talent-parry', specializationId: 'spec-merc', treeId: 'tree-merc', nodeId: 'r1c1' },
+            ],
+          },
+          characteristics: { brawn: { rank: { value: 2 } } },
+          details: { career: null, specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard' }, { specializationId: 'spec-merc', name: 'Mercenary Soldier' }], species: { name: 'Test Species' } },
+          resources: { wounds: { value: 0, threshold: 10 }, strain: { value: 0, threshold: 10 }, encumbrance: { value: 0, threshold: 10 } },
+          points: {},
+        },
+      })
+
+      const context = await getContext(actor)
+
+      expect(context.talents).toHaveLength(1)
+      const entry = context.talents[0]
+      expect(entry.talentId).toBe('talent-parry')
+      expect(entry.isRanked).toBe(true)
+      expect(entry.rank).toBe(2)
+      expect(entry.sourceLabels).toHaveLength(2)
+      expect(entry.sourceLabels).toEqual(expect.arrayContaining(['Bodyguard', 'Mercenary Soldier']))
+      expect(entry.hasDegradedSources).toBe(false)
+    })
+
+    it('round-trips non-ranked multi-specialization purchases into single entry with deduplicated sources', async () => {
+      const realModule = await vi.importActual('../../../module/lib/talent-node/owned-talent-summary.mjs')
+      buildOwnedTalentSummary.mockImplementation(realModule.buildOwnedTalentSummary)
+
+      resolveSpecializationTree.mockImplementation((spec) => {
+        if (spec.specializationId === 'spec-merc') {
+          return {
+            tree: {
+              id: 'tree-merc', name: 'Mercenary Soldier', type: 'specialization-tree',
+              system: { specializationId: 'spec-merc', nodes: [{ nodeId: 'r1c1', talentId: 'talent-toughness', row: 1, column: 1, cost: 5 }], connections: [] },
+            },
+            state: 'available',
+          }
+        }
+        return {
+          tree: {
+            id: 'tree-bodyguard', name: 'Bodyguard', type: 'specialization-tree',
+            system: { specializationId: 'spec-bodyguard', nodes: [{ nodeId: 'r1c1', talentId: 'talent-toughness', row: 1, column: 1, cost: 5 }], connections: [{ from: 'r1c1', to: 'r2c1' }] },
+          },
+          state: 'available',
+        }
+      })
+
+      globalThis.game.items = [
+        { id: 'Item.toughness', name: 'Toughness', type: 'talent', system: { id: 'talent-toughness', activation: 'passive', isRanked: false } },
+      ]
+
+      const actor = buildMockActor({
+        system: {
+          skills: {},
+          progression: {
+            freeSkillRanks: { career: { spent: 0, gained: 4, available: 4 }, specialization: { spent: 0, gained: 0, available: 0 } },
+            experience: { available: 0, spent: 0, gained: 0, total: 0 },
+            talentPurchases: [
+              { talentId: 'talent-toughness', specializationId: 'spec-bodyguard', treeId: 'tree-bodyguard', nodeId: 'r1c1' },
+              { talentId: 'talent-toughness', specializationId: 'spec-merc', treeId: 'tree-merc', nodeId: 'r1c1' },
+            ],
+          },
+          characteristics: { brawn: { rank: { value: 2 } } },
+          details: { career: null, specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard' }, { specializationId: 'spec-merc', name: 'Mercenary Soldier' }], species: { name: 'Test Species' } },
+          resources: { wounds: { value: 0, threshold: 10 }, strain: { value: 0, threshold: 10 }, encumbrance: { value: 0, threshold: 10 } },
+          points: {},
+        },
+      })
+
+      const context = await getContext(actor)
+
+      expect(context.talents).toHaveLength(1)
+      const entry = context.talents[0]
+      expect(entry.talentId).toBe('talent-toughness')
+      expect(entry.isRanked).toBe(false)
+      expect(entry.rank).toBeNull()
+      expect(entry.sourceLabels).toHaveLength(2)
+      expect(entry.sourceLabels).toEqual(expect.arrayContaining(['Bodyguard', 'Mercenary Soldier']))
+      expect(entry.hasDegradedSources).toBe(false)
+    })
+
+    it('preserves degraded fallback when a source tree is unresolvable in full pipeline', async () => {
+      const realModule = await vi.importActual('../../../module/lib/talent-node/owned-talent-summary.mjs')
+      buildOwnedTalentSummary.mockImplementation(realModule.buildOwnedTalentSummary)
+
+      resolveSpecializationTree.mockReturnValue({ tree: null, state: 'unresolved' })
+
+      globalThis.game.items = [
+        { id: 'Item.parry', name: 'Parry', type: 'talent', system: { id: 'talent-parry', activation: 'active', isRanked: true } },
+      ]
+
+      const actor = buildMockActor({
+        system: {
+          skills: {},
+          progression: {
+            freeSkillRanks: { career: { spent: 0, gained: 4, available: 4 }, specialization: { spent: 0, gained: 0, available: 0 } },
+            experience: { available: 0, spent: 0, gained: 0, total: 0 },
+            talentPurchases: [
+              { talentId: 'talent-parry', specializationId: 'spec-bodyguard', treeId: 'tree-bodyguard', nodeId: 'r1c1' },
+            ],
+          },
+          characteristics: { brawn: { rank: { value: 2 } } },
+          details: { career: null, specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard' }], species: { name: 'Test Species' } },
+          resources: { wounds: { value: 0, threshold: 10 }, strain: { value: 0, threshold: 10 }, encumbrance: { value: 0, threshold: 10 } },
+          points: {},
+        },
+      })
+
+      const context = await getContext(actor)
+
+      expect(context.talents).toHaveLength(1)
+      const entry = context.talents[0]
+      expect(entry.talentId).toBe('talent-parry')
+      expect(entry.hasDegradedSources).toBe(true)
+      expect(entry.sources.some((s) => s.isDegraded)).toBe(true)
+    })
   })
 
   it('opens the specialization tree app from the talents action handler', async () => {

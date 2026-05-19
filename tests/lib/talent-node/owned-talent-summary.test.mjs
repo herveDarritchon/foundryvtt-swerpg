@@ -290,6 +290,79 @@ describe('OwnedTalentSummary', () => {
       expect(talentIds).toEqual(['talent-parry', 'talent-deflect'])
     })
 
+    it('groups ranked talent purchases from the same tree into rank 2', () => {
+      const actor = buildActor({
+        specializations: [buildSpec()],
+        talentPurchases: [
+          buildPurchase({ nodeId: 'r1c1', talentId: 'talent-parry' }),
+          buildPurchase({ nodeId: 'r2c1', talentId: 'talent-parry' }),
+        ],
+      })
+      resolveSpecializationTree.mockReturnValue(buildResolvedTree())
+      const definitions = new Map([['talent-parry', buildTalentDefinition({ isRanked: true })]])
+      const result = buildOwnedTalentSummary(actor, definitions)
+
+      expect(result).toHaveLength(1)
+      expect(result[0].talentId).toBe('talent-parry')
+      expect(result[0].rank).toBe(2)
+      expect(result[0].sources).toHaveLength(2)
+    })
+
+    it('groups ranked talent purchased across three specializations into rank 3', () => {
+      const actor = buildActor({
+        specializations: [
+          buildSpec(),
+          buildSpec({ specializationId: 'spec-merc', name: 'Mercenary Soldier' }),
+          buildSpec({ specializationId: 'spec-pilot', name: 'Pilot' }),
+        ],
+        talentPurchases: [
+          buildPurchase({ talentId: 'talent-parry', specializationId: 'spec-bodyguard' }),
+          buildPurchase({ talentId: 'talent-parry', specializationId: 'spec-merc' }),
+          buildPurchase({ talentId: 'talent-parry', specializationId: 'spec-pilot' }),
+        ],
+      })
+      resolveSpecializationTree.mockImplementation((spec) => {
+        if (spec.specializationId === 'spec-bodyguard') return buildResolvedTree()
+        if (spec.specializationId === 'spec-merc') return buildResolvedTree({ tree: { id: 'tree-merc', name: 'Mercenary Soldier', type: 'specialization-tree', system: { specializationId: 'spec-merc', nodes: [{ nodeId: 'r1c1', talentId: 'talent-parry', row: 1, column: 1, cost: 10 }], connections: [] } } })
+        return buildResolvedTree({ tree: { id: 'tree-pilot', name: 'Pilot', type: 'specialization-tree', system: { specializationId: 'spec-pilot', nodes: [{ nodeId: 'r1c1', talentId: 'talent-parry', row: 1, column: 1, cost: 5 }], connections: [] } } })
+      })
+      const definitions = new Map([['talent-parry', buildTalentDefinition({ isRanked: true })]])
+      const result = buildOwnedTalentSummary(actor, definitions)
+
+      expect(result).toHaveLength(1)
+      expect(result[0].rank).toBe(3)
+      expect(result[0].sources).toHaveLength(3)
+    })
+
+    it('preserves invariant sources.length === rank for all ranked entries', () => {
+      const actor = buildActor({
+        specializations: [
+          buildSpec(),
+          buildSpec({ specializationId: 'spec-merc', name: 'Mercenary Soldier' }),
+        ],
+        talentPurchases: [
+          buildPurchase({ talentId: 'talent-parry', specializationId: 'spec-bodyguard' }),
+          buildPurchase({ talentId: 'talent-parry', specializationId: 'spec-merc' }),
+          buildPurchase({ talentId: 'talent-deflect', specializationId: 'spec-bodyguard' }),
+        ],
+      })
+      resolveSpecializationTree.mockImplementation((spec) => {
+        if (spec.specializationId === 'spec-merc') return buildResolvedTree({ tree: { id: 'tree-merc', name: 'Mercenary Soldier', type: 'specialization-tree', system: { specializationId: 'spec-merc', nodes: [{ nodeId: 'r1c1', talentId: 'talent-parry', row: 1, column: 1, cost: 10 }], connections: [] } } })
+        return buildResolvedTree()
+      })
+      const definitions = new Map([
+        ['talent-parry', buildTalentDefinition({ isRanked: true })],
+        ['talent-deflect', buildTalentDefinition({ name: 'Deflect', isRanked: true })],
+      ])
+      const result = buildOwnedTalentSummary(actor, definitions)
+      const rankedEntries = result.filter(e => e.isRanked === true)
+
+      expect(rankedEntries.length).toBeGreaterThan(0)
+      rankedEntries.forEach((entry) => {
+        expect(entry.rank).toBe(entry.sources.length)
+      })
+    })
+
     it('handles resolveSpecializationTree throwing without crashing', () => {
       const actor = buildActor({
         specializations: [buildSpec()],
