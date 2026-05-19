@@ -4,7 +4,7 @@ agent: cmd-plan-from-issue
 subtask: true
 ---
 
-Use the `plan-depuis-issue` skill.
+Use the `structured-autonomy-plan` skill.
 
 Input: `$ARGUMENTS`
 
