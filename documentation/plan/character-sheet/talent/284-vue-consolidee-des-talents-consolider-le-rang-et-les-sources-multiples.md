@@ -1,85 +1,75 @@
 # Plan d'implémentation — #284 : Vue consolidée des talents — consolider le rang et les sources multiples
 
-**Issue** : [#284 — Vue consolidée des talents : consolider le rang et les sources multiples](https://github.com/herveDarritchon/foundryvtt-swerpg/issues/284)
-**ADR** : `documentation/architecture/adr/adr-0013-technical-key-and-business-key-separation.md`
-**Cadrage** : `documentation/cadrage/character-sheet/talent/cadrage-resolution-talents-unknown-vue-consolidee.md`, `documentation/cadrage/character-sheet/talent/04-ui-onglet-talents.md`
-**Dépendance fonctionnelle** : `documentation/plan/character-sheet/talent/283-vue-consolidee-resoudre-talents-connus-referentiel.md`
-**Module(s) probablement impacté(s)** : `module/lib/talent-node/owned-talent-summary.mjs`, `module/applications/sheets/character-sheet.mjs`, `tests/lib/talent-node/owned-talent-summary.test.mjs`, `tests/applications/sheets/character-sheet-talents.test.mjs`
+**Issue** : [#284 — Vue consolidée des talents : consolider le rang et les sources multiples](https://github.com/herveDarritchon/foundryvtt-swerpg/issues/284)  
+**ADR** : `documentation/architecture/adr/adr-0012-unit-tests-readable-diagnostics.md`, `documentation/architecture/adr/adr-0013-technical-key-and-business-key-separation.md`  
+**Plans de référence** : `documentation/plan/character-sheet/talent/191-plan-consolider-talents-possedes.md`, `documentation/plan/character-sheet/talent/192-plan-gerer-ranked-non-ranked-dupliques.md`, `documentation/plan/character-sheet/talent/197-plan-afficher-rangs-sources-onglet-talents.md`  
+**Module(s) impacté(s)** : `module/lib/talent-node/owned-talent-summary.mjs`, `module/applications/sheets/character-sheet.mjs`, `tests/lib/talent-node/owned-talent-summary.test.mjs`, `tests/applications/sheets/character-sheet-talents.test.mjs`
 
 ---
 
 ## 1. Objectif
 
-Garantir qu'un même talent acheté plusieurs fois reste affiché comme une seule entrée dans la vue consolidée, avec :
-
-- le rang total correct pour les talents ranked ;
-- toutes les sources utiles dédupliquées pour les achats multi-arbres ;
-- aucun retour à des doublons visuels ou à une perte d'information de source.
+Garantir que la vue consolidée des talents affiche une seule entrée par `talentId`, avec le rang total correct pour les talents ranked et l'ensemble des sources uniques quand un même talent provient de plusieurs arbres ou spécialisations.
 
 ## 2. Périmètre
 
 ### Inclus
 
-- vérifier où la consolidation finale peut encore se casser entre le résumé métier et la projection fiche personnage ;
-- regrouper strictement les achats par `talentId` canonique ;
-- additionner le rang des talents ranked sans dupliquer les lignes ;
-- dédupliquer et conserver les sources multiples dans un ordre stable ;
-- ajouter des tests ciblés sur les cas multi-achats et multi-sources.
+- vérifier où le rang consolidé ou les sources multiples se perdent entre la consolidation métier et l'adaptateur de fiche ;
+- corriger la consolidation ou le mapping UI minimalement pour préserver `rank` et `sources` sur une seule ligne ;
+- conserver les fallbacks existants pour les talents ou sources non résolus ;
+- ajouter la couverture de tests ciblée sur ranked multi-sources, non-ranked multi-sources et cas dégradés.
 
 ### Hors scope
 
-- migration de données `talentPurchases` ;
-- ajout de nouveaux identifiants persistés (`talentUuid`, cache, flags) ;
-- refonte visuelle large de l'onglet Talents ;
-- import OggDude, effets mécaniques ou Active Effects.
+- modification de `actor.system.progression.talentPurchases` ;
+- refonte visuelle du template talents ou du style ;
+- import OggDude, migration de données ou ajout de nouveaux identifiants ;
+- effets mécaniques des talents.
 
-## 3. Constat de départ
+## 3. Constat sur l'existant
 
-- la vue consolidée doit déjà résoudre les talents connus via le référentiel (#283) ;
-- le contrat attendu côté cadrage impose une seule entrée par talent, plusieurs sources si nécessaire, et un rang consolidé pour les ranked ;
-- le défaut de l'issue #284 est donc probablement un écart d'agrégation ou de projection finale, pas un besoin de nouveau modèle métier.
+- `owned-talent-summary` est déjà la brique canonique pour regrouper les achats par `talentId`.
+- Les plans US7, US8 et US13 fixent déjà le contrat attendu : un talent ranked conserve un rang consolidé, un non-ranked reste une seule ligne avec plusieurs sources possibles.
+- L'issue #284 indique que ce contrat n'est pas restitué de manière fiable dans la vue consolidée actuelle, soit parce que la consolidation perd une partie des achats, soit parce que l'adaptateur sheet n'expose pas correctement `rank` et `sources`.
 
-## 4. Breakdown d'implémentation
+## 4. Décisions d'architecture
 
-### Feature — Stabiliser la consolidation finale des talents
+- `talentId` reste la clé unique de consolidation ; aucun regroupement par nom ne doit réapparaître.
+- Le calcul du rang reste dans `owned-talent-summary` ; la fiche ne fait qu'afficher la valeur consolidée.
+- Les sources affichées doivent être complètes et dédupliquées, sans masquer un fallback dégradé distinct si une résolution échoue.
+- Le correctif doit rester limité à la chaîne `owned-talent-summary` -> `character-sheet` -> tests ciblés.
 
-#### Story 1 — Verrouiller l'agrégation métier rang / sources
+## 5. Plan de travail
 
-1. Auditer le point de regroupement réel utilisé pour la vue consolidée afin de confirmer qu'il repose toujours sur `talentId` et non sur le nom affiché.
-2. Corriger l'agrégation pour que :
-   - un talent ranked cumule son `rank` sur tous les achats correspondants ;
-   - un talent non-ranked reste une seule entrée ;
-   - les sources multiples soient conservées puis dédupliquées sans écraser un cas valide.
+1. Auditer la chaîne `talentPurchases` -> `owned-talent-summary` -> `#buildConsolidatedTalentList()` pour identifier l'étape exacte où le rang consolidé ou les sources multiples sont perdus.
+2. Corriger le maillon minimal concerné pour garantir qu'un même `talentId` produit une seule entrée, avec `rank` total pour les ranked et toutes les sources uniques conservées.
+3. Vérifier que les fallbacks actuels (`Unknown Talent`, `Unknown Source`, source partielle) restent inchangés pour les cas réellement non résolus.
+4. Étendre les tests unitaires et sheet pour couvrir : ranked acheté plusieurs fois avec rang total visible, non-ranked acheté depuis plusieurs sources avec une seule ligne, et maintien du comportement dégradé quand une source ou une définition manque.
 
-#### Story 2 — Préserver cette consolidation dans la fiche personnage
-
-3. Vérifier que `character-sheet.mjs` ne réintroduit pas de duplication lors de la préparation des données d'affichage.
-4. Garantir que la projection UI consomme la structure consolidée telle quelle, sans recalcul concurrent du rang ni aplatissement des sources.
-
-#### Test — Couvrir les cas critiques prouvés par l'issue
-
-5. Étendre les tests pour couvrir au minimum :
-   - talent ranked acheté plusieurs fois -> une seule entrée, rang total correct ;
-   - talent non-ranked présent dans plusieurs arbres -> une seule entrée, plusieurs sources ;
-   - sources identiques répétées -> pas de doublon visuel ;
-   - talent non résolu -> fallback conservé sans casser la consolidation des autres entrées.
-
-## 5. Fichiers probables
+## 6. Fichiers probablement modifiés
 
 - `module/lib/talent-node/owned-talent-summary.mjs`
 - `module/applications/sheets/character-sheet.mjs`
 - `tests/lib/talent-node/owned-talent-summary.test.mjs`
 - `tests/applications/sheets/character-sheet-talents.test.mjs`
 
-## 6. Risques
+## 7. Tests attendus
 
-- **Régression de regroupement** : une clé d'affichage remplace par erreur la clé métier `talentId`.
-- **Perte de sources** : une déduplication trop agressive masque une provenance valide.
-- **Double calcul** : le domaine consolide correctement mais la fiche reconstruit ensuite une vue divergente.
+- un talent ranked acheté sur plusieurs nœuds / arbres produit une seule entrée avec le rang total attendu ;
+- un talent non-ranked acheté depuis plusieurs spécialisations produit une seule entrée avec plusieurs sources dédupliquées ;
+- la résolution d'un talent connu continue de fonctionner avec la consolidation ;
+- un talent ou une source réellement introuvable conserve le fallback existant sans casser l'affichage.
 
-## 7. Critères d'arrêt
+## 8. Risques et mitigations
 
-- un talent ranked multi-achats apparaît une seule fois avec le bon rang consolidé ;
-- un talent multi-sources apparaît une seule fois avec ses sources utiles dédupliquées ;
-- les cas non résolus gardent leur fallback sans régression sur les autres talents ;
-- la consolidation reste centrée sur `talentId` et ne dérive pas vers une logique par nom affiché.
+- **Régression sur les talents déjà résolus** : garder des tests qui combinent résolution de définition et consolidation multi-achats.
+- **Perte d'information lors de la déduplication** : dédupliquer uniquement les libellés de sources, jamais les achats utiles au calcul du rang.
+- **Élargissement de scope** : ne pas toucher au stockage acteur, au template ni à l'importer sans preuve que c'est nécessaire.
+
+## 9. Critères d'arrêt
+
+- la vue consolidée affiche bien une seule ligne par `talentId` concerné par l'issue ;
+- le rang total des talents ranked correspond au nombre d'achats consolidés ;
+- les sources multiples restent visibles et dédupliquées ;
+- le correctif reste borné à la consolidation talents et à ses tests ciblés.
