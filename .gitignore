@@ -276,4 +276,8 @@ swerpg-compiled.mjs
 .e2e-foundry-data/
 
 tmp/
-.idea/
+
+## OpenCode specific
+.opencode/
+!.opencode/agents
+!.opencode/commands
