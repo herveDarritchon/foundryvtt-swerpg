@@ -1,9 +1,10 @@
 import { resolveActorSpecializationTrees } from '../lib/talent-node/talent-tree-resolver.mjs'
-import { getTreeNodesStates, NODE_STATE, REASON_CODE } from '../lib/talent-node/talent-node-state.mjs'
+import { getTreeNodesStates } from '../lib/talent-node/talent-node-state.mjs'
 import { purchaseTalentNode } from '../lib/talent-node/talent-node-purchase.mjs'
 import { resolveTalentDetail } from '../lib/talent-node/talent-reference-resolver.mjs'
 import { selectDefaultTreeKey } from '../lib/specialization-tree/default-tree-selector.mjs'
 import { buildRenderViewModel } from './specialization-tree/render-view-model.mjs'
+import { enrichNode, getReasonLabelKey, NODE_STATE, NODE_STATE_VARIANTS } from './specialization-tree/node-ui-state.mjs'
 import { logger } from '../utils/logger.mjs'
 
 const { api } = foundry.applications
@@ -12,61 +13,6 @@ const SPECIALIZATION_TREE_STATE_LABELS = Object.freeze({
   available: 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.STATUS.AVAILABLE',
   unresolved: 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.STATUS.UNRESOLVED',
   incomplete: 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.STATUS.INCOMPLETE',
-})
-
-const NODE_STATE_LABEL_KEYS = Object.freeze({
-  [NODE_STATE.PURCHASED]: 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.NODE_STATE.PURCHASED',
-  [NODE_STATE.AVAILABLE]: 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.NODE_STATE.AVAILABLE',
-  [NODE_STATE.LOCKED]: 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.NODE_STATE.LOCKED',
-  [NODE_STATE.INVALID]: 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.NODE_STATE.INVALID',
-})
-
-const REASON_LABEL_KEYS = Object.freeze({
-  [REASON_CODE.ALREADY_PURCHASED]: 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.REASON.ALREADY_PURCHASED',
-  [REASON_CODE.SPECIALIZATION_NOT_OWNED]: 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.REASON.SPECIALIZATION_NOT_OWNED',
-  [REASON_CODE.TREE_NOT_FOUND]: 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.REASON.TREE_NOT_FOUND',
-  [REASON_CODE.TREE_INCOMPLETE]: 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.REASON.TREE_INCOMPLETE',
-  [REASON_CODE.NODE_NOT_FOUND]: 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.REASON.NODE_NOT_FOUND',
-  [REASON_CODE.NODE_INVALID]: 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.REASON.NODE_INVALID',
-  [REASON_CODE.NODE_LOCKED]: 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.REASON.NODE_LOCKED',
-  [REASON_CODE.NOT_ENOUGH_XP]: 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.REASON.NOT_ENOUGH_XP',
-})
-
-const REASON_LABEL_DEFAULT = 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.REASON.UNKNOWN'
-
-const NODE_STATE_VARIANTS = Object.freeze({
-  [NODE_STATE.PURCHASED]: Object.freeze({
-    fillColor: 0x1a3a2a,
-    borderColor: 0x4a9a6a,
-    borderWidth: 2,
-    alpha: 1,
-    textColor: 0xcccccc,
-    costColor: 0x88bb88,
-  }),
-  [NODE_STATE.AVAILABLE]: Object.freeze({
-    fillColor: 0x1a2c44,
-    borderColor: 0x78a9c2,
-    borderWidth: 2,
-    alpha: 1,
-    textColor: 0xffffff,
-    costColor: 0xcccccc,
-  }),
-  [NODE_STATE.LOCKED]: Object.freeze({
-    fillColor: 0x222222,
-    borderColor: 0x555555,
-    borderWidth: 1,
-    alpha: 0.7,
-    textColor: 0x888888,
-    costColor: 0x666666,
-  }),
-  [NODE_STATE.INVALID]: Object.freeze({
-    fillColor: 0x3a1a1a,
-    borderColor: 0x8a3333,
-    borderWidth: 2,
-    alpha: 1,
-    textColor: 0xaaaaaa,
-    costColor: 0xaa6666,
-  }),
 })
 
 const MIN_VIEWPORT_SIZE = 320
@@ -198,9 +144,7 @@ export function buildSpecializationTreeContext(actor, selectedKey = null) {
 
     const viewModel = buildRenderViewModel(currentTreeData, (node) => {
       const detail = resolveTalentDetail(node)
-      return detail
-        ? { name: detail.name, uuid: node.talentUuid ?? node.talentId ?? '', isRanked: detail.isRanked }
-        : null
+      return detail ? { name: detail.name, uuid: node.talentUuid ?? node.talentId ?? '', isRanked: detail.isRanked } : null
     })
 
     renderNodes = viewModel.nodes.map((viewNode) => {
@@ -221,16 +165,7 @@ export function buildSpecializationTreeContext(actor, selectedKey = null) {
     const nodeStates = getTreeNodesStates(actor, currentTreeId, currentTreeData)
     renderNodes = renderNodes.map((node) => {
       const stateResult = nodeStates.get(node.nodeId) ?? { state: NODE_STATE.INVALID }
-      const variant = NODE_STATE_VARIANTS[stateResult.state] ?? NODE_STATE_VARIANTS[NODE_STATE.INVALID]
-      const reasonCode = stateResult.reasonCode ?? null
-      return {
-        ...node,
-        nodeState: stateResult.state,
-        nodeStateLabel: game.i18n.localize(NODE_STATE_LABEL_KEYS[stateResult.state] ?? NODE_STATE_LABEL_KEYS[NODE_STATE.INVALID]),
-        reasonCode,
-        reasonLabel: reasonCode ? game.i18n.localize(REASON_LABEL_KEYS[reasonCode] ?? REASON_LABEL_DEFAULT) : null,
-        variant,
-      }
+      return enrichNode(node, stateResult, game.i18n.localize.bind(game.i18n))
     })
 
     const nodePositionMap = new Map()
@@ -821,7 +756,7 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
       const key = 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.PURCHASE.SUCCESS'
       ui.notifications.info(game.i18n.format(key, { talent: node.talentName }))
     } else {
-      const reasonLabelKey = REASON_LABEL_KEYS[result.reasonCode] ?? REASON_LABEL_DEFAULT
+      const reasonLabelKey = getReasonLabelKey(result.reasonCode)
       const reasonLabel = game.i18n.localize(reasonLabelKey)
       const key = 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.PURCHASE.FAILURE'
       ui.notifications.warn(game.i18n.format(key, { reason: reasonLabel }))
