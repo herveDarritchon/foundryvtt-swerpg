@@ -16,6 +16,8 @@ export const REASON_CODE = Object.freeze({
   NODE_INVALID: 'node-invalid',
   NODE_LOCKED: 'node-locked',
   NOT_ENOUGH_XP: 'not-enough-xp',
+  NODE_NOT_PURCHASED: 'node-not-purchased',
+  NODE_HAS_DEPENDENTS: 'node-has-dependents',
 })
 
 function makeResult(state, reasonCode, details = {}) {
