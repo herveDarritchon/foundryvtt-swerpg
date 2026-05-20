@@ -955,6 +955,9 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
           actorId: this.actor?.id,
           actorName: this.actor?.name,
           talentId: entry.talentId,
+          sources: entry.sources,
+          keysTried: [entry.talentId],
+          definitionsAvailable: definitions.size,
         })
       }
 
