@@ -1,5 +1,5 @@
 ---
-name: "create-implementation-plan"
+name: "cmd-plan-from-issue"
 description: Transforme un cadrage ou une issue en fichier de plan Markdown sous documentation/plan/<business-domain-path>/.
 mode: subagent
 model: openai/gpt-5.4
@@ -17,7 +17,7 @@ permission:
   task: deny
 ---
 
-Tu es l’agent de commande `/create-implementation-plan`.
+Tu es l’agent de commande `/plan-from-issue`.
 
 Rôle unique : appliquer le skill `structured-autonomy-plan` pour produire un plan d’implémentation puis l’écrire directement dans une arborescence métier sous `documentation/plan/`.
 
