@@ -1,7 +1,6 @@
 import { logger } from '../../utils/logger.mjs'
-import { resolveSpecializationTree } from './talent-tree-resolver.mjs'
-import { getNodeState, NODE_STATE, REASON_CODE } from './talent-node-state.mjs'
 import { recordTalentNodePurchase } from '../../utils/audit-log.mjs'
+import { processTalentNodeProgression } from './talent-node-progression.mjs'
 
 /**
  * @typedef {Object} PurchaseResult
@@ -18,8 +17,9 @@ import { recordTalentNodePurchase } from '../../utils/audit-log.mjs'
 
 /**
  * Purchase a talent node for an actor.
- * Validates using the canonical state engine, persists the purchase and XP atomically,
- * then records an audit entry (non-blocking).
+ * Delegates business validation to the central progression service,
+ * persists the purchase and XP atomically, then records an audit entry
+ * (non-blocking).
  *
  * @param {object} actor - The actor document instance.
  * @param {string} specializationId - The specialization identifier.
@@ -27,70 +27,31 @@ import { recordTalentNodePurchase } from '../../utils/audit-log.mjs'
  * @returns {Promise<PurchaseResult>}
  */
 export async function purchaseTalentNode(actor, specializationId, nodeId) {
-  if (!actor) {
-    return { ok: false, reason: 'Missing actor', reasonCode: REASON_CODE.NODE_INVALID }
+  const result = processTalentNodeProgression(actor, specializationId, nodeId, 'purchase')
+
+  if (!result.ok) {
+    return { ok: false, reason: result.reason, reasonCode: result.reasonCode }
   }
 
-  if (!specializationId || !nodeId) {
-    return { ok: false, reason: 'Missing specializationId or nodeId', reasonCode: REASON_CODE.NODE_INVALID }
-  }
-
-  const specializationData = findSpecialization(actor, specializationId)
-  if (!specializationData) {
-    return {
-      ok: false,
-      reason: `Specialization "${specializationId}" is not owned`,
-      reasonCode: REASON_CODE.SPECIALIZATION_NOT_OWNED,
-    }
-  }
-
-  const resolved = resolveSpecializationTree(specializationData)
-  if (!resolved.tree) {
-    const reasonCode = resolved.state === 'unresolved' ? REASON_CODE.TREE_NOT_FOUND : REASON_CODE.TREE_INCOMPLETE
-    return { ok: false, reason: `Tree ${resolved.state} for specialization "${specializationId}"`, reasonCode }
-  }
-
-  const tree = resolved.tree
-  const node = findNodeInTree(tree, nodeId)
-  if (!node) {
-    return { ok: false, reason: `Node "${nodeId}" not found in tree`, reasonCode: REASON_CODE.NODE_NOT_FOUND }
-  }
-
-  const state = getNodeState(actor, specializationId, tree, nodeId)
-  if (state.state !== NODE_STATE.AVAILABLE) {
-    return { ok: false, reason: state.reason, reasonCode: state.reasonCode }
-  }
-
-  const treeId = tree.id ?? tree._id
-  const purchase = {
-    treeId,
-    treeUuid: tree.uuid ?? null,
-    nodeId: node.nodeId,
-    talentId: node.talentId,
-    talentUuid: node.talentUuid ?? null,
-    specializationId,
-  }
-
+  const { payload } = result
   const currentSpent = actor.system?.progression?.experience?.spent ?? 0
-  const currentPurchases = Array.isArray(actor.system?.progression?.talentPurchases) ? actor.system.progression.talentPurchases : []
-  const newSpent = currentSpent + node.cost
 
   await actor.update({
-    'system.progression.talentPurchases': [...currentPurchases, purchase],
-    'system.progression.experience.spent': newSpent,
+    'system.progression.talentPurchases': payload.updatedPurchases,
+    'system.progression.experience.spent': payload.updatedSpent,
   })
 
   try {
     await recordTalentNodePurchase(actor, {
-      specializationId,
-      treeId,
-      treeUuid: purchase.treeUuid,
-      nodeId: node.nodeId,
-      talentId: node.talentId,
-      talentUuid: purchase.talentUuid,
-      cost: node.cost,
+      specializationId: payload.specializationId,
+      treeId: payload.treeId,
+      treeUuid: payload.treeUuid,
+      nodeId: payload.nodeId,
+      talentId: payload.talentId,
+      talentUuid: payload.talentUuid,
+      cost: payload.cost,
       previousXp: currentSpent,
-      nextXp: newSpent,
+      nextXp: payload.updatedSpent,
     })
   } catch (err) {
     logger.warn('[TalentNodePurchase] Audit log write failed (non-blocking)', {
@@ -100,23 +61,10 @@ export async function purchaseTalentNode(actor, specializationId, nodeId) {
     })
   }
 
+  const purchaseEntry = payload.updatedPurchases[payload.updatedPurchases.length - 1]
+
   return {
     ok: true,
-    purchase: { ...purchase, cost: node.cost },
+    purchase: { ...purchaseEntry, cost: payload.cost },
   }
-}
-
-function findSpecialization(actor, specializationId) {
-  const specs = actor?.system?.details?.specializations
-  if (!specs) return null
-  for (const spec of specs) {
-    if (spec?.specializationId === specializationId) return spec
-  }
-  return null
-}
-
-function findNodeInTree(tree, nodeId) {
-  const nodes = tree?.system?.nodes
-  if (!Array.isArray(nodes)) return null
-  return nodes.find((n) => n?.nodeId === nodeId) ?? null
 }
