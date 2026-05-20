@@ -54,7 +54,6 @@ describe('specialization-tree application', () => {
   let SpecializationTreeApp
   let buildSpecializationTreeContext
   let getViewportDimensions
-  let computeNodePosition
   let computeTreeBoundingBox
   let computeCenteredOffset
   let resolveTalentItem
@@ -230,7 +229,6 @@ describe('specialization-tree application', () => {
       default: SpecializationTreeApp,
       buildSpecializationTreeContext,
       getViewportDimensions,
-      computeNodePosition,
       computeTreeBoundingBox,
       computeCenteredOffset,
     } = await import('../../module/applications/specialization-tree-app.mjs'))
@@ -308,15 +306,6 @@ describe('specialization-tree application', () => {
     const host = createMockHost({ width: 120, height: 180 })
 
     expect(getViewportDimensions(host)).toEqual({ width: 320, height: 320 })
-  })
-
-  it('computes node position from row and column', () => {
-    const pos = computeNodePosition(1, 2)
-    expect(pos.x).toBe(2 * (120 + 24) + 20)
-    expect(pos.y).toBe(1 * (48 + 24) + 20)
-    const pos2 = computeNodePosition(0, 0)
-    expect(pos2.x).toBe(20)
-    expect(pos2.y).toBe(20)
   })
 
   it('selects the last available specialization as current tree', () => {
