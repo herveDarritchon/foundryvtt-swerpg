@@ -6,6 +6,7 @@ import ErrorSkill from '../../lib/skills/error-skill.mjs'
 import TalentFactory from '../../lib/talents/talent-factory.mjs'
 import ErrorTalent from '../../lib/talents/error-talent.mjs'
 import { buildOwnedTalentSummary } from '../../lib/talent-node/owned-talent-summary.mjs'
+import { buildTalentDefinitionsMap } from '../../lib/talent-node/talent-reference-resolver.mjs'
 import { logger } from '../../utils/logger.mjs'
 import { getPositiveDicePoolPreview } from '../../utils/skill-costs.mjs'
 import SkillCostCalculator from '../../lib/skills/skill-cost-calculator.mjs'
@@ -918,32 +919,12 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
   }
 
   /**
-   * Build a Map of talent definitions from world items for owned-talent-summary resolution.
-   * @returns {Map<string, {name: string, activation: string, isRanked: boolean}>}
-   */
-  #buildTalentDefinitions() {
-    const defs = new Map()
-    if (!game?.items?.find) return defs
-    for (const item of game.items) {
-      if (item.type === 'talent') {
-        const key = item.system?.id || item.id
-        defs.set(key, {
-          name: item.name,
-          activation: item.system?.activation,
-          isRanked: item.system?.isRanked,
-        })
-      }
-    }
-    return defs
-  }
-
-  /**
    * Build a consolidated talent list for the character sheet using OwnedTalentSummary.
    * Groups by talentId, deduplicates, and enriches with definition metadata.
    * @returns {object[]} Template-ready talent display entries.
    */
   #buildConsolidatedTalentList() {
-    const definitions = this.#buildTalentDefinitions()
+    const definitions = buildTalentDefinitionsMap()
     const summary = buildOwnedTalentSummary(this.actor, definitions)
     const unknownTalentLabel = game.i18n.localize('SWERPG.TALENT.UNKNOWN')
     const unspecifiedActivationLabel = game.i18n.localize('SWERPG.TALENT.UNSPECIFIED')

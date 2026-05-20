@@ -64,8 +64,10 @@ export async function purchaseTalentNode(actor, specializationId, nodeId) {
   const treeId = tree.id ?? tree._id
   const purchase = {
     treeId,
+    treeUuid: tree.uuid ?? null,
     nodeId: node.nodeId,
     talentId: node.talentId,
+    talentUuid: node.talentUuid ?? null,
     specializationId,
   }
 
@@ -84,8 +86,10 @@ export async function purchaseTalentNode(actor, specializationId, nodeId) {
     await recordTalentNodePurchase(actor, {
       specializationId,
       treeId,
+      treeUuid: purchase.treeUuid,
       nodeId: node.nodeId,
       talentId: node.talentId,
+      talentUuid: purchase.talentUuid,
       cost: node.cost,
       previousXp: currentSpent,
       nextXp: newSpent,

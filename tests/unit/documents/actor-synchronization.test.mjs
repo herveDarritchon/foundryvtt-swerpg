@@ -74,15 +74,17 @@ describe('Talent purchase sync chain (US19)', () => {
       expect(result.ok).toBe(true)
       expect(result.purchase).toMatchObject({
         treeId: 'tree-bodyguard',
+        treeUuid: null,
         nodeId: 'r1c1',
         talentId: 'grit',
+        talentUuid: null,
         specializationId: 'spec-bodyguard',
         cost: 5,
       })
       expect(actor.update).toHaveBeenCalledTimes(1)
       expect(actor.update).toHaveBeenCalledWith({
         'system.progression.talentPurchases': [
-          { treeId: 'tree-bodyguard', nodeId: 'r1c1', talentId: 'grit', specializationId: 'spec-bodyguard' },
+          { treeId: 'tree-bodyguard', treeUuid: null, nodeId: 'r1c1', talentId: 'grit', talentUuid: null, specializationId: 'spec-bodyguard' },
         ],
         'system.progression.experience.spent': 5,
       })
@@ -140,7 +142,7 @@ describe('Talent purchase sync chain (US19)', () => {
       expect(actor.update).toHaveBeenLastCalledWith({
         'system.progression.talentPurchases': [
           { treeId: 'tree-bodyguard', nodeId: 'r1c1', talentId: 'grit', specializationId: 'spec-bodyguard' },
-          { treeId: 'tree-bodyguard', nodeId: 'r2c1', talentId: 'toughness', specializationId: 'spec-bodyguard' },
+          { treeId: 'tree-bodyguard', treeUuid: null, nodeId: 'r2c1', talentId: 'toughness', talentUuid: null, specializationId: 'spec-bodyguard' },
         ],
         'system.progression.experience.spent': 15,
       })
@@ -159,8 +161,10 @@ describe('Talent purchase sync chain (US19)', () => {
       expect(recordTalentNodePurchase).toHaveBeenCalledWith(actor, {
         specializationId: 'spec-bodyguard',
         treeId: 'tree-bodyguard',
+        treeUuid: null,
         nodeId: 'r1c1',
         talentId: 'grit',
+        talentUuid: null,
         cost: 5,
         previousXp: 0,
         nextXp: 5,
