@@ -34,9 +34,9 @@ Before using this prompt, ensure you have the complete testing workflow artifact
 
 ### Core Feature Documents
 
-1. **Feature PRD**: `/docs/ways-of-work/plan/{epic-name}/{feature-name}.md`
-2. **Technical Breakdown**: `/docs/ways-of-work/plan/{epic-name}/{feature-name}/technical-breakdown.md`
-3. **Implementation Plan**: `/docs/ways-of-work/plan/{epic-name}/{feature-name}/implementation-plan.md`
+1. **Feature PRD**: `/documentation/ways-of-work/plan/{epic-name}/{feature-name}.md`
+2. **Technical Breakdown**: `/documentation/ways-of-work/plan/{epic-name}/{feature-name}/technical-breakdown.md`
+3. **Implementation Plan**: `/documentation/ways-of-work/plan/{epic-name}/{feature-name}/implementation-plan.md`
 
 ### Related Planning Prompts
 
@@ -48,8 +48,8 @@ Before using this prompt, ensure you have the complete testing workflow artifact
 
 Create two primary deliverables:
 
-1. **Project Plan**: `/docs/ways-of-work/plan/{epic-name}/{feature-name}/project-plan.md`
-2. **Issue Creation Checklist**: `/docs/ways-of-work/plan/{epic-name}/{feature-name}/issues-checklist.md`
+1. **Project Plan**: `/documentation/ways-of-work/plan/{epic-name}/{feature-name}/project-plan.md`
+2. **Issue Creation Checklist**: `/documentation/ways-of-work/plan/{epic-name}/{feature-name}/issues-checklist.md`
 
 ### Project Plan Structure
 
@@ -472,7 +472,7 @@ jobs:
 - [ ] **Feature estimation completed** using t-shirt sizing
 - [ ] **Feature acceptance criteria defined** with measurable outcomes
 
-#### Story/Enabler Level Issues documented in `/docs/ways-of-work/plan/{epic-name}/{feature-name}/issues-checklist.md`
+#### Story/Enabler Level Issues documented in `/documentation/ways-of-work/plan/{epic-name}/{feature-name}/issues-checklist.md`
 
 - [ ] **User stories created** following INVEST criteria
 - [ ] **Technical enablers identified** and prioritized
