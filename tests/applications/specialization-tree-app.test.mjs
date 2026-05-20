@@ -727,6 +727,210 @@ describe('specialization-tree application', () => {
     expect(app.pixiApp.stage.children.length).toBeGreaterThan(0)
   })
 
+  it('draws connections before node graphics in the PIXI container', async () => {
+    const actor = createActor({
+      system: {
+        details: {
+          specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' }],
+        },
+        progression: {
+          talentPurchases: [],
+          experience: { available: 100 },
+        },
+      },
+    })
+    globalThis.fromUuidSync = vi.fn((uuid) => {
+      if (uuid === 'Item.tree-bodyguard') {
+        return {
+          type: 'specialization-tree',
+          name: 'Bodyguard Tree',
+          system: {
+            nodes: [
+              { nodeId: 'r1c1', talentId: 'Item.talent-tough', talentUuid: 'Item.talent-tough', row: 1, column: 1, cost: 10 },
+              { nodeId: 'r2c1', talentId: 'Item.talent-grit', talentUuid: 'Item.talent-grit', row: 2, column: 1, cost: 15 },
+            ],
+            connections: [{ from: 'r1c1', to: 'r2c1' }],
+          },
+        }
+      }
+      if (uuid === 'Item.talent-tough') return { name: 'Tough', system: { isRanked: false } }
+      if (uuid === 'Item.talent-grit') return { name: 'Grit', system: { isRanked: false } }
+      return null
+    })
+
+    const app = new SpecializationTreeApp()
+    app.actor = actor
+    app.document = actor
+    const host = createMockHost({ width: 640, height: 480 })
+    app.element = { querySelector: vi.fn(() => host) }
+
+    const context = buildSpecializationTreeContext(actor)
+    await app._onRender(context, {})
+
+    const treeContainer = app.pixiApp.stage.children.find((c) => c.position && c.scale)
+    expect(treeContainer, 'tree container must exist').toBeDefined()
+
+    const children = treeContainer.children
+    const graphicsChildren = children.filter((c) => c.constructor.name === 'MockGraphics')
+
+    // The first Graphics child is the connections (lineStyle is its first call)
+    const firstGraphicsCall = graphicsChildren[0]?.calls?.[0]?.[0]
+    expect(firstGraphicsCall, 'first Graphics call must be lineStyle for connections').toBe('lineStyle')
+
+    // The second Graphics child is the node backgrounds (beginFill is its first call)
+    const secondGraphicsCall = graphicsChildren[1]?.calls?.[0]?.[0]
+    expect(secondGraphicsCall, 'second Graphics call must be beginFill for node backgrounds').toBe('beginFill')
+  })
+
+  it('renders a (R) indicator on PIXI cards for ranked talents', async () => {
+    const actor = createActor({
+      system: {
+        details: {
+          specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' }],
+        },
+        progression: {
+          talentPurchases: [],
+          experience: { available: 100 },
+        },
+      },
+    })
+    globalThis.fromUuidSync = vi.fn((uuid) => {
+      if (uuid === 'Item.tree-bodyguard') {
+        return {
+          type: 'specialization-tree',
+          name: 'Bodyguard Tree',
+          system: {
+            nodes: [
+              { nodeId: 'r1c1', talentId: 'Item.talent-tough', talentUuid: 'Item.talent-tough', row: 1, column: 1, cost: 10 },
+              { nodeId: 'r2c1', talentId: 'Item.talent-grit', talentUuid: 'Item.talent-grit', row: 2, column: 1, cost: 15 },
+            ],
+            connections: [{ from: 'r1c1', to: 'r2c1' }],
+          },
+        }
+      }
+      if (uuid === 'Item.talent-tough') return { name: 'Tough', system: { isRanked: true } }
+      if (uuid === 'Item.talent-grit') return { name: 'Grit', system: { isRanked: false } }
+      return null
+    })
+
+    const app = new SpecializationTreeApp()
+    app.actor = actor
+    app.document = actor
+    const host = createMockHost({ width: 640, height: 480 })
+    app.element = { querySelector: vi.fn(() => host) }
+
+    const context = buildSpecializationTreeContext(actor)
+    await app._onRender(context, {})
+
+    const treeContainer = app.pixiApp.stage.children.find((c) => c.position && c.scale)
+    expect(treeContainer, 'tree container must exist').toBeDefined()
+
+    const rankedTexts = treeContainer.children.filter(
+      (c) => c.constructor.name === 'MockText' && c.text === '(R)',
+    )
+    expect(rankedTexts, 'ranked indicator (R) must appear exactly once for Tough').toHaveLength(1)
+
+    const nonRankedTexts = treeContainer.children.filter(
+      (c) => c.constructor.name === 'MockText' && /^Grit$/.test(c.text),
+    )
+    expect(nonRankedTexts, 'Grit text must be present').toHaveLength(1)
+  })
+
+  it('clears and rebuilds the PIXI tree container on each render', async () => {
+    const actor = createActor({
+      system: {
+        details: {
+          specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' }],
+        },
+        progression: {
+          talentPurchases: [],
+          experience: { available: 100 },
+        },
+      },
+    })
+    globalThis.fromUuidSync = vi.fn((uuid) => {
+      if (uuid === 'Item.tree-bodyguard') {
+        return {
+          type: 'specialization-tree',
+          name: 'Bodyguard Tree',
+          system: {
+            nodes: [{ nodeId: 'r1c1', talentId: 'Item.talent-tough', row: 1, column: 1, cost: 10 }],
+            connections: [{ from: 'r1c1', to: 'r2c1' }],
+          },
+        }
+      }
+      if (uuid === 'Item.talent-tough') return { name: 'Tough' }
+      return null
+    })
+
+    const app = new SpecializationTreeApp()
+    app.actor = actor
+    app.document = actor
+    const host = createMockHost({ width: 640, height: 480 })
+    app.element = { querySelector: vi.fn(() => host) }
+
+    const context = buildSpecializationTreeContext(actor)
+    await app._onRender(context, {})
+
+    const containerBefore = app.pixiApp.stage.children.find((c) => c.position && c.scale)
+    expect(containerBefore, 'tree container must exist after first render').toBeDefined()
+    const childrenBefore = containerBefore.children.length
+
+    await app._onRender(context, {})
+
+    const containerAfter = app.pixiApp.stage.children.find((c) => c.position && c.scale)
+    expect(containerAfter, 'tree container must exist after second render').toBeDefined()
+
+    expect(containerBefore.destroy, 'old container must have been destroyed').toHaveBeenCalled()
+    expect(containerAfter.children.length, 'new container must be rebuilt with fresh children').toBeGreaterThan(0)
+    expect(containerAfter.children.length, 'new container must have at least as many children').toBeGreaterThanOrEqual(1)
+  })
+
+  it('does not render a (R) indicator when isRanked is false', async () => {
+    const actor = createActor({
+      system: {
+        details: {
+          specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' }],
+        },
+        progression: {
+          talentPurchases: [],
+          experience: { available: 100 },
+        },
+      },
+    })
+    globalThis.fromUuidSync = vi.fn((uuid) => {
+      if (uuid === 'Item.tree-bodyguard') {
+        return {
+          type: 'specialization-tree',
+          name: 'Bodyguard Tree',
+          system: {
+            nodes: [{ nodeId: 'r1c1', talentId: 'Item.talent-tough', row: 1, column: 1, cost: 10 }],
+            connections: [{ from: 'r1c1', to: 'r2c1' }],
+          },
+        }
+      }
+      if (uuid === 'Item.talent-tough') return { name: 'Tough', system: { isRanked: false } }
+      return null
+    })
+
+    const app = new SpecializationTreeApp()
+    app.actor = actor
+    app.document = actor
+    const host = createMockHost({ width: 640, height: 480 })
+    app.element = { querySelector: vi.fn(() => host) }
+
+    const context = buildSpecializationTreeContext(actor)
+    await app._onRender(context, {})
+
+    const treeContainer = app.pixiApp.stage.children.find((c) => c.position && c.scale)
+    expect(treeContainer, 'tree container must exist').toBeDefined()
+
+    const rankedTexts = treeContainer.children.filter(
+      (c) => c.constructor.name === 'MockText' && c.text === '(R)',
+    )
+    expect(rankedTexts, 'no (R) indicator must appear for non-ranked talents').toHaveLength(0)
+  })
+
   it('applies viewport transform via position.set and scale.set after draw', async () => {
     const actor = createActor({
       system: {
