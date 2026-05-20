@@ -13,7 +13,7 @@ Review the provided context and output a thorough, comprehensive implementation 
 
 ## Output Format
 
-The output should be a complete implementation plan in Markdown format, saved to `/docs/ways-of-work/plan/{epic-name}/{feature-name}/implementation-plan.md`.
+The output should be a complete implementation plan in Markdown format, saved to `/documentation/ways-of-work/plan/{epic-name}/{feature-name}/implementation-plan.md`.
 
 ### File System
 
