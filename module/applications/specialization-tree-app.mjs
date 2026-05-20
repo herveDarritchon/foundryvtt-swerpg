@@ -5,6 +5,7 @@ import { resolveTalentDetail } from '../lib/talent-node/talent-reference-resolve
 import { selectDefaultTreeKey } from '../lib/specialization-tree/default-tree-selector.mjs'
 import { buildRenderViewModel } from './specialization-tree/render-view-model.mjs'
 import { enrichNode, getReasonLabelKey, NODE_STATE, NODE_STATE_VARIANTS } from './specialization-tree/node-ui-state.mjs'
+import { NODE_WIDTH, NODE_HEIGHT, computeNodePosition, buildConnectionAnchors } from './specialization-tree/layout.mjs'
 import { logger } from '../utils/logger.mjs'
 
 const { api } = foundry.applications
@@ -17,12 +18,6 @@ const SPECIALIZATION_TREE_STATE_LABELS = Object.freeze({
 
 const MIN_VIEWPORT_SIZE = 320
 
-const NODE_WIDTH = 120
-const NODE_HEIGHT = 48
-const H_GAP = 24
-const V_GAP = 24
-const PADDING = 20
-
 /**
  * Compute the viewport size from a host element.
  * @param {HTMLElement|null|undefined} host - The DOM element hosting the PIXI viewport.
@@ -34,13 +29,6 @@ export function getViewportDimensions(host) {
   return {
     width: Math.max(Math.round(rect?.width || host?.clientWidth || 0), MIN_VIEWPORT_SIZE),
     height: Math.max(Math.round(rect?.height || host?.clientHeight || 0), MIN_VIEWPORT_SIZE),
-  }
-}
-
-export function computeNodePosition(row, column) {
-  return {
-    x: column * (NODE_WIDTH + H_GAP) + PADDING,
-    y: row * (NODE_HEIGHT + V_GAP) + PADDING,
   }
 }
 
@@ -168,25 +156,7 @@ export function buildSpecializationTreeContext(actor, selectedKey = null) {
       return enrichNode(node, stateResult, game.i18n.localize.bind(game.i18n))
     })
 
-    const nodePositionMap = new Map()
-    for (const node of renderNodes) {
-      nodePositionMap.set(node.nodeId, {
-        centerX: node.x + NODE_WIDTH / 2,
-        centerY: node.y + NODE_HEIGHT / 2,
-      })
-    }
-
-    renderConnections = viewModel.connections.map((viewConn) => {
-      const fromPos = nodePositionMap.get(viewConn.fromNodeId) ?? { centerX: 0, centerY: 0 }
-      const toPos = nodePositionMap.get(viewConn.toNodeId) ?? { centerX: 0, centerY: 0 }
-      return {
-        fromX: fromPos.centerX,
-        fromY: fromPos.centerY,
-        toX: toPos.centerX,
-        toY: toPos.centerY,
-        type: viewConn.type ?? null,
-      }
-    })
+    renderConnections = buildConnectionAnchors(renderNodes, viewModel.connections)
   }
 
   return {
