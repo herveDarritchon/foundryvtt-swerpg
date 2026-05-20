@@ -1,4 +1,5 @@
 ---
+name: "breakdown-plan"
 description: un ensemble de documents de cadrage déjà mûrs en plan de gestion GitHub complet.
 mode: subagent
 model: openai/gpt-5.4

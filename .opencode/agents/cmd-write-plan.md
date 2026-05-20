@@ -1,4 +1,5 @@
 ---
+name: "write-plan"
 description: Écrit un plan déjà validé sous documentation/plan/ via le skill ecrire-plan-fichier, sans réinterprétation.
 mode: subagent
 model: github-copilot/gpt-4.1

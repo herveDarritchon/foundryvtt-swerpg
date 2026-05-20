@@ -1,4 +1,5 @@
 ---
+name: "validate"
 description: Exécute les validations projet via le skill executer-validation-projet, sans correction ni analyse coûteuse inutile.
 mode: subagent
 model: github-copilot/gpt-4.1

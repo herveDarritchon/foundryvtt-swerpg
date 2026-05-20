@@ -2,6 +2,7 @@
 description: Create a feature branch from up-to-date develop
 agent: cmd-create-feature-branch
 subtask: true
+context: fork
 ---
 
 Use the `creer-branche-feature` skill.

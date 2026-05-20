@@ -2,6 +2,7 @@
 description: Write an approved implementation plan under documentation/plan/
 agent: cmd-write-plan
 subtask: true
+context: fork
 ---
 
 Use the `ecrire-plan-fichier` skill.

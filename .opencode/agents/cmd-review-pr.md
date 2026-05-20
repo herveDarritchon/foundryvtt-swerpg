@@ -1,4 +1,5 @@
 ---
+name: "review-pr"
 description: Relit une PR via le skill reviewer-pr-architecture, avec focus architecture, tests, maintenabilité et scope.
 mode: subagent
 model: openai/gpt-5.4

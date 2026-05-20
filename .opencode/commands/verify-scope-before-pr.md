@@ -2,6 +2,7 @@
 description: Compare issue, plan, diff, tests and validations before PR
 agent: cmd-verify-scope-before-pr
 subtask: true
+context: fork
 ---
 
 Use the `verifier-scope-avant-pr` skill.

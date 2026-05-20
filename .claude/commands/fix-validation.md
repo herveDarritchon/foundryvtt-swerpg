@@ -1,0 +1,1 @@
+../../.opencode/commands/fix-validation.md

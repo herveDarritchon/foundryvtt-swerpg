@@ -2,6 +2,7 @@
 description: Implement code and tests from an approved plan
 agent: cmd-implement-plan
 subtask: true
+context: fork
 ---
 
 Use the `implementer-depuis-plan` skill.

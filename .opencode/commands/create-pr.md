@@ -2,6 +2,7 @@
 description: Prepare or create a Pull Request targeting develop
 agent: cmd-create-pr
 subtask: true
+context: fork
 ---
 
 Use the `creer-pull-request` skill.

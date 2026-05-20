@@ -1,0 +1,1 @@
+/Users/hervedarritchon/Workspace/Perso/FoundryVTT/foundryvtt-swerpg/.opencode/agents/cmd-review-pr.md

@@ -2,6 +2,7 @@
 description: Analyze a failed validation and apply the smallest scoped fix
 agent: cmd-fix-validation
 subtask: true
+context: fork
 ---
 
 Use the `corriger-echec-validation` skill.
