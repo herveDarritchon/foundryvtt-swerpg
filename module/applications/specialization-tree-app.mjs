@@ -2,6 +2,7 @@ import { resolveActorSpecializationTrees } from '../lib/talent-node/talent-tree-
 import { getTreeNodesStates, NODE_STATE, REASON_CODE } from '../lib/talent-node/talent-node-state.mjs'
 import { purchaseTalentNode } from '../lib/talent-node/talent-node-purchase.mjs'
 import { resolveTalentDetail } from '../lib/talent-node/talent-reference-resolver.mjs'
+import { selectDefaultTreeKey } from '../lib/specialization-tree/default-tree-selector.mjs'
 import { logger } from '../utils/logger.mjs'
 
 const { api } = foundry.applications
@@ -181,17 +182,7 @@ export function buildSpecializationTreeContext(actor, selectedKey = null) {
   let renderNodes = []
   let renderConnections = []
 
-  let activeKey = null
-  if (selectedKey && specializationEntries.some(e => e.key === selectedKey && e.isAvailable)) {
-    activeKey = selectedKey
-  }
-  if (!activeKey) {
-    for (const entry of specializationEntries) {
-      if (entry.isAvailable) {
-        activeKey = entry.key
-      }
-    }
-  }
+  const activeKey = selectDefaultTreeKey(specializationEntries, selectedKey)
 
   for (const entry of specializationEntries) {
     entry.isSelected = entry.key === activeKey
@@ -199,7 +190,7 @@ export function buildSpecializationTreeContext(actor, selectedKey = null) {
 
   if (activeKey) {
     currentTreeId = activeKey
-    const entry = specializationEntries.find(e => e.key === activeKey)
+    const entry = specializationEntries.find((e) => e.key === activeKey)
     currentTreeName = entry?.treeName ?? null
     const resolution = resolutions.get(activeKey)
     currentTreeData = resolution?.tree ?? null
