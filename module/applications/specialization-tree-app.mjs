@@ -3,6 +3,7 @@ import { getTreeNodesStates, NODE_STATE, REASON_CODE } from '../lib/talent-node/
 import { purchaseTalentNode } from '../lib/talent-node/talent-node-purchase.mjs'
 import { resolveTalentDetail } from '../lib/talent-node/talent-reference-resolver.mjs'
 import { selectDefaultTreeKey } from '../lib/specialization-tree/default-tree-selector.mjs'
+import { buildRenderViewModel } from './specialization-tree/render-view-model.mjs'
 import { logger } from '../utils/logger.mjs'
 
 const { api } = foundry.applications
@@ -195,21 +196,23 @@ export function buildSpecializationTreeContext(actor, selectedKey = null) {
     const resolution = resolutions.get(activeKey)
     currentTreeData = resolution?.tree ?? null
 
-    const nodes = Array.from(currentTreeData?.system?.nodes || [])
-
-    const connections = Array.from(currentTreeData?.system?.connections || [])
-
-    renderNodes = nodes.map((node) => {
-      const pos = computeNodePosition(node.row, node.column)
+    const viewModel = buildRenderViewModel(currentTreeData, (node) => {
       const detail = resolveTalentDetail(node)
+      return detail
+        ? { name: detail.name, uuid: node.talentUuid ?? node.talentId ?? '', isRanked: detail.isRanked }
+        : null
+    })
+
+    renderNodes = viewModel.nodes.map((viewNode) => {
+      const pos = computeNodePosition(viewNode.row, viewNode.column)
       return {
-        nodeId: node.nodeId,
-        talentId: node.talentId,
-        talentName: detail.name,
-        isRanked: detail.isRanked,
-        xpCost: node.cost ?? 0,
-        row: node.row,
-        column: node.column,
+        nodeId: viewNode.nodeId,
+        talentId: viewNode.talentId,
+        talentName: viewNode.talent.name,
+        isRanked: viewNode.isRanked,
+        xpCost: viewNode.cost,
+        row: viewNode.row,
+        column: viewNode.column,
         x: pos.x,
         y: pos.y,
       }
@@ -238,15 +241,15 @@ export function buildSpecializationTreeContext(actor, selectedKey = null) {
       })
     }
 
-    renderConnections = connections.map((conn) => {
-      const fromPos = nodePositionMap.get(conn.from) ?? { centerX: 0, centerY: 0 }
-      const toPos = nodePositionMap.get(conn.to) ?? { centerX: 0, centerY: 0 }
+    renderConnections = viewModel.connections.map((viewConn) => {
+      const fromPos = nodePositionMap.get(viewConn.fromNodeId) ?? { centerX: 0, centerY: 0 }
+      const toPos = nodePositionMap.get(viewConn.toNodeId) ?? { centerX: 0, centerY: 0 }
       return {
         fromX: fromPos.centerX,
         fromY: fromPos.centerY,
         toX: toPos.centerX,
         toY: toPos.centerY,
-        type: conn.type ?? null,
+        type: viewConn.type ?? null,
       }
     })
   }
