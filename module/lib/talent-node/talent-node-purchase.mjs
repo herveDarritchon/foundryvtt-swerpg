@@ -1,6 +1,7 @@
 import { logger } from '../../utils/logger.mjs'
 import { recordTalentNodePurchase } from '../../utils/audit-log.mjs'
 import { processTalentNodeProgression } from './talent-node-progression.mjs'
+import { applyTalentNodePatch } from './talent-node-persistence.mjs'
 
 /**
  * @typedef {Object} PurchaseResult
@@ -9,8 +10,10 @@ import { processTalentNodeProgression } from './talent-node-progression.mjs'
  * @property {string} [reasonCode] - Machine-readable failure reason code (only when ok === false).
  * @property {Object} [purchase] - Purchase data (only when ok === true).
  * @property {string} purchase.treeId
+ * @property {string|null} purchase.treeUuid
  * @property {string} purchase.nodeId
  * @property {string} purchase.talentId
+ * @property {string|null} purchase.talentUuid
  * @property {string} purchase.specializationId
  * @property {number} purchase.cost
  */
@@ -18,8 +21,8 @@ import { processTalentNodeProgression } from './talent-node-progression.mjs'
 /**
  * Purchase a talent node for an actor.
  * Delegates business validation to the central progression service,
- * persists the purchase and XP atomically, then records an audit entry
- * (non-blocking).
+ * persists the purchase and XP atomically via the shared persistence helper,
+ * then records an audit entry (non-blocking).
  *
  * @param {object} actor - The actor document instance.
  * @param {string} specializationId - The specialization identifier.
@@ -36,10 +39,10 @@ export async function purchaseTalentNode(actor, specializationId, nodeId) {
   const { payload } = result
   const currentSpent = actor.system?.progression?.experience?.spent ?? 0
 
-  await actor.update({
-    'system.progression.talentPurchases': payload.updatedPurchases,
-    'system.progression.experience.spent': payload.updatedSpent,
-  })
+  const persisted = await applyTalentNodePatch(actor, payload, 'purchase')
+  if (!persisted.ok) {
+    return persisted
+  }
 
   try {
     await recordTalentNodePurchase(actor, {
@@ -61,10 +64,5 @@ export async function purchaseTalentNode(actor, specializationId, nodeId) {
     })
   }
 
-  const purchaseEntry = payload.updatedPurchases[payload.updatedPurchases.length - 1]
-
-  return {
-    ok: true,
-    purchase: { ...purchaseEntry, cost: payload.cost },
-  }
+  return persisted
 }
