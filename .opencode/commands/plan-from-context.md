@@ -11,14 +11,14 @@ Input: `$ARGUMENTS`
 Task:
 Produce a short project plan and issues checklist from the provided cadrage and project documentation, then write it directly as a Markdown files under:
 
-/docs/ways-of-work/plan/{epic-name}/{feature-name}/project-plan.md
-/docs/ways-of-work/plan/{epic-name}/{feature-name}/issues-checklist.md
+/documentation/ways-of-work/plan/{epic-name}/{feature-name}/project-plan.md
+/documentation/ways-of-work/plan/{epic-name}/{feature-name}/issues-checklist.md
 
 Rules:
 - Do not only print the plan in chat.
 - Do not create a temporary plan file unless explicitly requested.
 - Do not write directly under `documentation/ways-of-work/plan/`.
-- Do not write outside `/docs/ways-of-work/plan/{epic-name}/{feature-name}/`.
+- Do not write outside `/documentation/ways-of-work/plan/{epic-name}/{feature-name}/`.
 - Do not overwrite an existing file silently.
 - Do not modify source code.
 - Do not run tests.
