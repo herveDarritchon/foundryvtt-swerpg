@@ -8,31 +8,31 @@ Chaque sous-dossier détaille les actions à effectuer et les résultats attendu
 
 ## Familles de tests
 
-| Famille | Description | Pages |
-|---------|-------------|-------|
-| [Audit Log](audit-log/README.md) | Hooks, entrées (skill/carac/XP/talents), snapshot, résilience, éviction FIFO | ~25 scénarios |
-| [Personnage](personnage/README.md) | Création, espèces, carrières, spécialisations, caractéristiques, compétences, ressources, XP, audit log | ~30 scénarios |
-| [Combat](combat/README.md) | Tours, attaque/défense, dégâts, résistances, effets de statut (23), DOT (13), héroïsme | ~35 scénarios |
-| [Dés narratifs](des-narratifs/README.md) | StandardCheck, AttackRoll, pools boon/bane, dialogs, chat, socket | ~25 scénarios |
-| [Import OggDude](import-oggdude/README.md) | Pipeline ZIP → parsing → mapping (11 domaines), stockage, erreurs | ~30 scénarios |
-| [Talents](talents/README.md) | Arbre de talents (canvas PIXI), achat/suppression, ranked, hooks | ~20 scénarios |
-| [Équipement](equipement/README.md) | Armes (7 catégories, 30 qualités), armures (5 catégories), gear, hard points | ~25 scénarios |
-| [Véhicules](vehicules/README.md) | Adversary comme véhicule, armes vehicle, combat (partiellement implémenté) | ~10 scénarios |
-| [UI Sheets](ui-sheets/README.md) | Sheets V1/V2, tabs, drag & drop, responsive, i18n, performances | ~30 scénarios |
+| Famille                                    | Description                                                                                             | Pages         |
+| ------------------------------------------ | ------------------------------------------------------------------------------------------------------- | ------------- |
+| [Audit Log](audit-log/README.md)           | Hooks, entrées (skill/carac/XP/talents), snapshot, résilience, éviction FIFO                            | ~25 scénarios |
+| [Personnage](personnage/README.md)         | Création, espèces, carrières, spécialisations, caractéristiques, compétences, ressources, XP, audit log | ~30 scénarios |
+| [Combat](combat/README.md)                 | Tours, attaque/défense, dégâts, résistances, effets de statut (23), DOT (13), héroïsme                  | ~35 scénarios |
+| [Dés narratifs](des-narratifs/README.md)   | StandardCheck, AttackRoll, pools boon/bane, dialogs, chat, socket                                       | ~25 scénarios |
+| [Import OggDude](import-oggdude/README.md) | Pipeline ZIP → parsing → mapping (11 domaines), stockage, erreurs                                       | ~30 scénarios |
+| [Talents](talents/README.md)               | Arbre de talents (canvas PIXI), achat/suppression, ranked, hooks                                        | ~20 scénarios |
+| [Équipement](equipement/README.md)         | Armes (7 catégories, 30 qualités), armures (5 catégories), gear, hard points                            | ~25 scénarios |
+| [Véhicules](vehicules/README.md)           | Adversary comme véhicule, armes vehicle, combat (partiellement implémenté)                              | ~10 scénarios |
+| [UI Sheets](ui-sheets/README.md)           | Sheets V1/V2, tabs, drag & drop, responsive, i18n, performances                                         | ~30 scénarios |
 
 ---
 
 ## Résumé des counts
 
-| Métrique | Valeur |
-|----------|--------|
-| Familles de test | 9 |
-| Total scénarios documentés | ~225 |
-| Statuts couverts | 23 |
-| Types de dégâts | 12 |
-| Qualités d'arme | 30 |
-| Domaines d'import OggDude | 11 |
-| Templates HBS | 56 |
+| Métrique                   | Valeur |
+| -------------------------- | ------ |
+| Familles de test           | 9      |
+| Total scénarios documentés | ~225   |
+| Statuts couverts           | 23     |
+| Types de dégâts            | 12     |
+| Qualités d'arme            | 30     |
+| Domaines d'import OggDude  | 11     |
+| Templates HBS              | 56     |
 
 ---
 

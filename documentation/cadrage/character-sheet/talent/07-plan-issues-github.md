@@ -36,6 +36,7 @@ Ordre conseillé :
 **Objectif** : créer le référentiel d’arbre de spécialisation.
 
 **À couvrir** :
+
 - Item type `specialization-tree` ;
 - spécialisation liée ;
 - carrière liée si disponible ;
@@ -44,6 +45,7 @@ Ordre conseillé :
 - métadonnées de source/import.
 
 **AC** :
+
 - un arbre peut être stocké dans le monde ou en compendium ;
 - l’acteur ne stocke pas l’arbre complet.
 
@@ -54,6 +56,7 @@ Ordre conseillé :
 **Objectif** : représenter une occurrence de talent dans un arbre.
 
 **À couvrir** :
+
 - `nodeId` stable ;
 - `talentId` / référence talent ;
 - position ;
@@ -61,6 +64,7 @@ Ordre conseillé :
 - connexions / prérequis.
 
 **AC** :
+
 - le coût est porté par le nœud ;
 - aucun coût n’est lu depuis la définition générique du talent.
 
@@ -71,6 +75,7 @@ Ordre conseillé :
 **Objectif** : persister la progression talents.
 
 **À couvrir** :
+
 - structure `talentPurchases` ou équivalent ;
 - référence arbre ;
 - référence nœud ;
@@ -78,6 +83,7 @@ Ordre conseillé :
 - référence spécialisation.
 
 **AC** :
+
 - l’acteur stocke les achats de nœuds ;
 - l’acteur ne stocke pas l’historique détaillé.
 
@@ -88,11 +94,13 @@ Ordre conseillé :
 **Objectif** : relier les spécialisations possédées aux arbres référentiels.
 
 **À couvrir** :
+
 - `treeUuid`, `treeId`, `importKey` ou équivalent ;
 - cas d’arbre introuvable ;
 - état arbre indisponible / incomplet.
 
 **AC** :
+
 - toutes les spécialisations possédées sont prises en compte ;
 - aucune logique ne se limite à la première spécialisation.
 
@@ -105,12 +113,14 @@ Ordre conseillé :
 **Objectif** : déterminer si un nœud est acheté, achetable, verrouillé ou invalide.
 
 **À couvrir** :
+
 - `purchased` ;
 - `available` ;
 - `locked` ;
 - `invalid`.
 
 **AC** :
+
 - un nœud invalide n’est pas achetable ;
 - les raisons de blocage sont exploitables par l’UI.
 
@@ -121,6 +131,7 @@ Ordre conseillé :
 **Objectif** : acheter un talent depuis un nœud valide.
 
 **À couvrir** :
+
 - spécialisation possédée ;
 - arbre résolu ;
 - nœud résolu ;
@@ -129,6 +140,7 @@ Ordre conseillé :
 - persistance achat acteur.
 
 **AC** :
+
 - l’achat porte sur un nœud ;
 - le coût vient du nœud ;
 - l’achat met à jour l’acteur.
@@ -140,6 +152,7 @@ Ordre conseillé :
 **Objectif** : construire la vue consolidée des talents.
 
 **À couvrir** :
+
 - regroupement par `talentId` ;
 - rang consolidé ;
 - sources ;
@@ -147,6 +160,7 @@ Ordre conseillé :
 - ranked / non-ranked.
 
 **AC** :
+
 - la vue consolidée est dérivée ;
 - elle n’est pas source de vérité.
 
@@ -157,11 +171,13 @@ Ordre conseillé :
 **Objectif** : appliquer les règles de consolidation spécifiques.
 
 **À couvrir** :
+
 - ranked : rang augmenté par nœud acheté ;
 - non-ranked : bénéfice non cumulatif ;
 - non-ranked achetable dans plusieurs arbres pour progression.
 
 **AC** :
+
 - un ranked acheté dans deux arbres donne rang 2 ;
 - un non-ranked acheté dans deux arbres apparaît une seule fois avec plusieurs sources.
 
@@ -174,6 +190,7 @@ Ordre conseillé :
 **Objectif** : alimenter les talents de référence.
 
 **À couvrir** :
+
 - nom ;
 - description ;
 - activation ;
@@ -182,6 +199,7 @@ Ordre conseillé :
 - données brutes dans `flags.swerpg.import`.
 
 **AC** :
+
 - aucun coût XP n’est stocké sur la définition générique.
 
 ---
@@ -191,6 +209,7 @@ Ordre conseillé :
 **Objectif** : créer les référentiels `specialization-tree`.
 
 **À couvrir** :
+
 - spécialisation liée ;
 - carrière liée si disponible ;
 - nœuds ;
@@ -199,6 +218,7 @@ Ordre conseillé :
 - connexions si disponibles.
 
 **AC** :
+
 - l’arbre est exploitable par la couche domaine ;
 - l’acteur ne reçoit pas une copie complète de l’arbre.
 
@@ -209,6 +229,7 @@ Ordre conseillé :
 **Objectif** : éviter les imports silencieusement faux.
 
 **À couvrir** :
+
 - talent inconnu ;
 - coût manquant ;
 - connexion manquante ;
@@ -216,6 +237,7 @@ Ordre conseillé :
 - warnings.
 
 **AC** :
+
 - les données brutes sont conservées ;
 - un nœud incomplet est marqué invalide ou non achetable ;
 - aucun fallback implicite dangereux n’est appliqué.
@@ -229,6 +251,7 @@ Ordre conseillé :
 **Objectif** : afficher les talents possédés en jeu.
 
 **À couvrir** :
+
 - liste consolidée ;
 - nom ;
 - activation ;
@@ -237,6 +260,7 @@ Ordre conseillé :
 - sources.
 
 **AC** :
+
 - l’onglet affiche les talents depuis la vue consolidée ;
 - aucun achat n’est possible depuis l’onglet.
 
@@ -247,12 +271,14 @@ Ordre conseillé :
 **Objectif** : rendre lisible l’origine et le niveau des talents.
 
 **À couvrir** :
+
 - rang consolidé ;
 - spécialisation(s) source(s) ;
 - cas multi-spé ;
 - cas talent non résolu.
 
 **AC** :
+
 - un ranked multi-source affiche le bon rang ;
 - un non-ranked multi-source n’apparaît pas en doublon.
 
@@ -263,11 +289,13 @@ Ordre conseillé :
 **Objectif** : ouvrir la vue des arbres depuis la fiche.
 
 **À couvrir** :
+
 - bouton ou action dédiée ;
 - ouverture application arbre ;
 - acteur courant transmis.
 
 **AC** :
+
 - l’utilisateur peut ouvrir les arbres depuis l’onglet Talents ;
 - l’achat reste dans la vue arbre, pas dans l’onglet.
 
@@ -280,12 +308,14 @@ Ordre conseillé :
 **Objectif** : remplacer l’ancien canvas fonctionnellement.
 
 **À couvrir** :
+
 - application Foundry dédiée ;
 - indépendante du canvas de scène ;
 - base de rendu graphique ;
 - cycle de vie ouverture / fermeture.
 
 **AC** :
+
 - la vue ne dépend pas du canvas de scène ;
 - l’ancien arbre Crucible n’est pas reconduit comme base métier.
 
@@ -296,6 +326,7 @@ Ordre conseillé :
 **Objectif** : rendre l’arbre de spécialisation sélectionné.
 
 **À couvrir** :
+
 - nœuds ;
 - connexions ;
 - coût ;
@@ -303,6 +334,7 @@ Ordre conseillé :
 - états visuels.
 
 **AC** :
+
 - les états `purchased`, `available`, `locked`, `invalid` sont distinguables.
 
 ---
@@ -312,11 +344,13 @@ Ordre conseillé :
 **Objectif** : naviguer entre les arbres possédés.
 
 **À couvrir** :
+
 - liste des spécialisations possédées ;
 - sélection courante ;
 - arbre indisponible / incomplet.
 
 **AC** :
+
 - la sélection est un état UI ;
 - les autres spécialisations restent consultables.
 
@@ -327,12 +361,14 @@ Ordre conseillé :
 **Objectif** : déclencher l’achat depuis un nœud disponible.
 
 **À couvrir** :
+
 - clic / action achat ;
 - appel couche domaine ;
 - retour succès / échec ;
 - messages de blocage.
 
 **AC** :
+
 - la vue ne persiste pas directement l’achat ;
 - un nœud verrouillé ou invalide ne peut pas être acheté.
 
@@ -345,12 +381,14 @@ Ordre conseillé :
 **Objectif** : garder les vues cohérentes après achat.
 
 **À couvrir** :
+
 - recalcul vue consolidée ;
 - refresh onglet Talents ;
 - refresh vue graphique ;
 - recalcul états de nœuds.
 
 **AC** :
+
 - un achat est visible dans les deux vues ;
 - aucun doublon de vue consolidée n’est persisté comme source de vérité.
 
@@ -361,6 +399,7 @@ Ordre conseillé :
 **Objectif** : rendre l’achat traçable.
 
 **À couvrir** :
+
 - acteur ;
 - spécialisation ;
 - arbre ;
@@ -370,6 +409,7 @@ Ordre conseillé :
 - rang avant/après si disponible.
 
 **AC** :
+
 - l’acteur ne stocke pas l’historique ;
 - l’audit/log peut recevoir une opération structurée ;
 - l’achat n’est pas bloqué si l’audit/log est indisponible.
@@ -381,6 +421,7 @@ Ordre conseillé :
 **Objectif** : éviter les conflits avec la V1.
 
 **À couvrir** :
+
 - `rank * 5` ;
 - `isCreation` ;
 - talent points ;
@@ -389,6 +430,7 @@ Ordre conseillé :
 - achat direct de talent générique.
 
 **AC** :
+
 - le flux V1 n’utilise plus ces logiques ;
 - les anciens modules sont supprimés, isolés ou rendus inaccessibles au flux V1.
 
@@ -399,6 +441,7 @@ Ordre conseillé :
 **Objectif** : sécuriser les règles critiques.
 
 **À couvrir** :
+
 - achat simple ;
 - ranked multi-arbres ;
 - non-ranked multi-arbres ;
@@ -409,5 +452,6 @@ Ordre conseillé :
 - audit/log.
 
 **AC** :
+
 - les règles critiques sont couvertes ;
 - les scénarios manuels sont documentés.

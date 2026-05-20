@@ -38,21 +38,21 @@ La commande refuse ou redirige les demandes suivantes :
 
 ### 2.3. Entrées acceptées
 
-| Type d'entrée | Format | Exemple |
-|---|---|---|
-| Sous-commande explicite | `check <sous-commande>` | `check tests` |
-| Sous-commande + filtre | `check <sous-commande> <filtre>` | `check tests tests/documents/` |
-| Profondeur de diagnostic | `check --diagnose` ou `check --fix` | `check tests --diagnose` |
-| Demande textuelle | Phrase libre | « Lance les tests du dossier importer » |
-| Résultat précédent | Sortie d'une commande + demande d'analyse | Sortie de `pnpm test` + « Analyse cet échec » |
+| Type d'entrée            | Format                                    | Exemple                                       |
+| ------------------------ | ----------------------------------------- | --------------------------------------------- |
+| Sous-commande explicite  | `check <sous-commande>`                   | `check tests`                                 |
+| Sous-commande + filtre   | `check <sous-commande> <filtre>`          | `check tests tests/documents/`                |
+| Profondeur de diagnostic | `check --diagnose` ou `check --fix`       | `check tests --diagnose`                      |
+| Demande textuelle        | Phrase libre                              | « Lance les tests du dossier importer »       |
+| Résultat précédent       | Sortie d'une commande + demande d'analyse | Sortie de `pnpm test` + « Analyse cet échec » |
 
 ### 2.4. Profondeur de diagnostic
 
-| Mode | Usage typique | Phases activées |
-|---|---|---|
-| `check` (défaut) | Vérification rapide, résultat binaire | Phase 1 uniquement |
-| `check --diagnose` | Exécution + analyse en cas d'échec | Phase 1 + Phase 2 |
-| `check --fix` | Exécution + analyse + proposition de correction (attente validation) | Phase 1 + Phase 2 + Phase 3 (validation requise) |
+| Mode               | Usage typique                                                        | Phases activées                                  |
+| ------------------ | -------------------------------------------------------------------- | ------------------------------------------------ |
+| `check` (défaut)   | Vérification rapide, résultat binaire                                | Phase 1 uniquement                               |
+| `check --diagnose` | Exécution + analyse en cas d'échec                                   | Phase 1 + Phase 2                                |
+| `check --fix`      | Exécution + analyse + proposition de correction (attente validation) | Phase 1 + Phase 2 + Phase 3 (validation requise) |
 
 ---
 
@@ -63,15 +63,18 @@ La commande refuse ou redirige les demandes suivantes :
 **Agent** : exécution script, pas de modèle ou modèle économique.
 
 **Outils autorisés** :
+
 - Commande shell pour lancer la vérification (bash)
 - Lecture du statut de sortie et de la sortie standard/erreur
 
 **Interdits** :
+
 - Modification de code
 - Analyse ou interprétation du résultat
 - Lancement de vérifications supplémentaires non demandées
 
 **Sortie produite** :
+
 ```
 Commande exécutée : <commande exacte>
 Statut : <succès/échec>
@@ -89,18 +92,21 @@ Sortie complète : <référence vers fichier temporaire si longue>
 **Agent** : général / diagnostic, modèle intermédiaire ou de raisonnement selon complexité.
 
 **Outils autorisés** :
+
 - Recherche de fichiers (glob)
 - Recherche textuelle (grep, regex)
 - Lecture de fichiers (read, avec offset/limit)
 - Extraction de logs à partir de la sortie de la phase 1
 
 **Interdits** :
+
 - Édition ou écriture de fichiers
 - Modification de code
 - Lancement de nouvelles vérifications
 - Correction même partielle
 
 **Sortie produite** :
+
 ```
 Périmètre analysé : <fichiers/modules concernés>
 Cause probable : <hypothèse>
@@ -160,15 +166,18 @@ Durée : <secondes>
 - Fichiers incriminés : <liste>
 - Extrait pertinent :
 ```
+
 <code ou log>
 ```
 - Suggestion de correction : <description>
 - Complexité estimée : <faible/moyenne/élevée>
 
 ### Suite recommandée
+
 - Corriger : demande une implémentation de correction
 - Ignorer : l'échec est acceptable ou connu
 - Reporter : créer une issue pour investigation ultérieure
+
 ```
 
 ### 4.3. Règles de sobriété
@@ -271,7 +280,9 @@ L'escalade n'est jamais automatique. Le workflow signale la recommandation et at
 ## 8. Articulation avec les workflows voisins
 
 ```
+
 Exploration (#268) → Planification (#269) → Implémentation → Tests/Diagnostic (ce workflow) → Correction (séparée)
+
 ```
 
 - L'exploration livre des constats. Si elle détecte un besoin de vérification, elle oriente vers cette commande.
@@ -292,3 +303,4 @@ La commande sera matérialisée dans l'emplacement défini par le futur ticket d
 - tout autre emplacement validé par la configuration OpenCode projet
 
 Cette spécification sert de source de vérité fonctionnelle, indépendante de l'emplacement technique final.
+```

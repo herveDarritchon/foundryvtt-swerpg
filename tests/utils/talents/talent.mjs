@@ -19,7 +19,17 @@
  */
 export function createTalentData(
   id = 'O0bl3Rdmkgf8wYIi',
-  { name = 'talent-name', type = 'talent', isRanked = false, row = 1, idxRank = 0, cost = 0, trees = ['Item.assassin00000000', 'Item.gadgeteerCopy000'], talentId, talentUuid } = {},
+  {
+    name = 'talent-name',
+    type = 'talent',
+    isRanked = false,
+    row = 1,
+    idxRank = 0,
+    cost = 0,
+    trees = ['Item.assassin00000000', 'Item.gadgeteerCopy000'],
+    talentId,
+    talentUuid,
+  } = {},
 ) {
   let baseData = {
     name: name,

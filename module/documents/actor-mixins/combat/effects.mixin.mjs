@@ -3,7 +3,6 @@
  * Extracted from actor.mjs lines ~1181-1417
  */
 
-
 export const EffectsMixin = (Base) =>
   class extends Base {
     /**

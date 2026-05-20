@@ -13,6 +13,7 @@
 Compléter la vue graphique des arbres de spécialisation pour qu'un utilisateur puisse consulter, au clic sur un nœud, les informations minimales utiles sans déclencher d'achat ni introduire d'état applicatif persistant.
 
 Le résultat attendu est une consultation en lecture seule du nœud courant avec :
+
 - nom du talent ;
 - coût XP ;
 - indication ranked / non-ranked si disponible ;
@@ -84,6 +85,7 @@ Le résultat attendu est une consultation en lecture seule du nœud courant avec
 **Problème** : il faut afficher un détail compréhensible sans introduire de panneau complexe ni d'état applicatif persistant.
 
 **Options envisagées** :
+
 - panneau latéral interactif ;
 - libellé DOM adjacent permanent ;
 - tooltip DOM léger synchronisé au nœud.
@@ -91,6 +93,7 @@ Le résultat attendu est une consultation en lecture seule du nœud courant avec
 **Décision retenue** : utiliser un tooltip DOM léger affiché au clic sur un nœud.
 
 **Justification** :
+
 - respecte explicitement le cadrage de `#235` ;
 - reste léger dans une application `ApplicationV2` conforme à ADR-0001 ;
 - évite de transformer la consultation en navigation secondaire.
@@ -100,6 +103,7 @@ Le résultat attendu est une consultation en lecture seule du nœud courant avec
 **Problème** : l'issue mentionne "survol ou clic", mais il faut un contrat de test clair et stable.
 
 **Options envisagées** :
+
 - survol ;
 - survol + clic ;
 - clic uniquement.
@@ -107,6 +111,7 @@ Le résultat attendu est une consultation en lecture seule du nœud courant avec
 **Décision retenue** : considérer le clic comme contrat principal de l'US.
 
 **Justification** :
+
 - plus explicite pour un canvas PIXI ;
 - réduit l'ambiguïté de timing et d'accessibilité du survol ;
 - simplifie les tests applicatifs sans figer un comportement hover fragile.
@@ -118,6 +123,7 @@ Le résultat attendu est une consultation en lecture seule du nœud courant avec
 **Décision retenue** : faire le mapping `reasonCode -> clé i18n` dans `specialization-tree-app.mjs`.
 
 **Justification** :
+
 - conforme à ADR-0005 ;
 - préserve la pureté de la couche domaine ;
 - permet d'améliorer le wording sans toucher au moteur métier.
@@ -129,6 +135,7 @@ Le résultat attendu est une consultation en lecture seule du nœud courant avec
 **Décision retenue** : enrichir le view-model à partir des résultats existants de `getTreeNodesStates()`.
 
 **Justification** :
+
 - une seule source de vérité ;
 - pas de divergence entre achat futur, affichage et tests ;
 - cohérent avec le découpage des responsabilités déjà en place.
@@ -138,6 +145,7 @@ Le résultat attendu est une consultation en lecture seule du nœud courant avec
 **Décision** : le tooltip est purement consultatif et volatil.
 
 **Justification** :
+
 - conforme au périmètre de l'issue ;
 - évite tout débordement vers US17/US18 ;
 - ne nécessite ni `flags` ni extension du modèle système.
@@ -149,6 +157,7 @@ Le résultat attendu est une consultation en lecture seule du nœud courant avec
 ### Étape 1 — Enrichir le view-model de rendu des nœuds
 
 **Quoi faire** :
+
 - compléter `renderNodes` avec les données de détail consultatif :
   - `nodeState`
   - `nodeStateLabel`
@@ -158,74 +167,89 @@ Le résultat attendu est une consultation en lecture seule du nœud courant avec
   - identifiant stable exploitable pour le clic
 
 **Fichiers** :
+
 - `module/applications/specialization-tree-app.mjs`
 
 **Risques spécifiques** :
+
 - dupliquer la logique métier existante ;
 - ne pas prévoir de fallback clair pour un talent introuvable ou un nœud invalide.
 
 ### Étape 2 — Introduire le mapping `reasonCode -> i18n`
 
 **Quoi faire** :
+
 - définir la table de mapping applicative des raisons métier ;
 - prévoir des fallbacks localisés pour les cas non attendus ;
 - reformuler les raisons techniques en texte utilisateur.
 
 **Fichiers** :
+
 - `module/applications/specialization-tree-app.mjs`
 - `lang/fr.json`
 - `lang/en.json`
 
 **Risques spécifiques** :
+
 - désynchronisation FR/EN ;
 - exposition d'un texte trop technique si une raison n'est pas mappée proprement.
 
 ### Étape 3 — Ajouter la structure DOM du tooltip
 
 **Quoi faire** :
+
 - enrichir le template de l'application avec une zone DOM dédiée au tooltip ;
 - prévoir un conteneur compatible avec un affichage conditionnel, sans panneau latéral ;
 - garder la structure simple et découplée du canvas.
 
 **Fichiers** :
+
 - `templates/applications/specialization-tree-app.hbs`
 
 **Risques spécifiques** :
+
 - couplage trop fort entre structure DOM et géométrie PIXI ;
 - glissement vers une UI persistante plus lourde que nécessaire.
 
 ### Étape 4 — Brancher l'interaction clic dans le rendu PIXI
 
 **Quoi faire** :
+
 - rendre les nœuds cliquables ;
 - associer chaque clic à l'ouverture ou mise à jour du tooltip ;
 - afficher les informations principales sans déclencher aucune action métier ;
 - fermer ou remplacer le détail lorsqu'un autre nœud est cliqué ou lors d'un rerender.
 
 **Fichiers** :
+
 - `module/applications/specialization-tree-app.mjs`
 
 **Risques spécifiques** :
+
 - logique d'interaction trop mêlée au dessin ;
 - comportement involontaire assimilable à une préparation d'achat.
 
 ### Étape 5 — Styliser le tooltip et préserver la lisibilité
 
 **Quoi faire** :
+
 - ajouter le style du tooltip léger ;
 - garantir une lisibilité correcte sur desktop et mobile ;
 - veiller à la cohérence visuelle avec les variantes d'état déjà livrées par `#234`.
 
 **Fichiers** :
+
 - `styles/applications.less`
 
 **Risques spécifiques** :
+
 - contraste insuffisant ;
 - tooltip coupé ou mal positionné sur petits écrans.
 
 ### Étape 6 — Étendre les tests du contrat applicatif
 
 **Quoi faire** :
+
 - couvrir la présence des métadonnées de détail dans le contexte ;
 - couvrir le mapping des `reasonCode` vers des labels localisés ;
 - vérifier l'absence de déclenchement métier ;
@@ -237,9 +261,11 @@ Le résultat attendu est une consultation en lecture seule du nœud courant avec
   - fallback localisé.
 
 **Fichiers** :
+
 - `tests/applications/specialization-tree-app.test.mjs`
 
 **Risques spécifiques** :
+
 - tests trop couplés à PIXI au lieu du contrat ;
 - assertions trop larges, contraires à ADR-0012.
 
@@ -247,27 +273,27 @@ Le résultat attendu est une consultation en lecture seule du nœud courant avec
 
 ## 6. Fichiers modifiés
 
-| Fichier | Action | Description du changement |
-|---|---|---|
-| `module/applications/specialization-tree-app.mjs` | modification | Enrichir le view-model, mapper `reasonCode`, gérer le clic sur nœud et synchroniser le tooltip |
-| `templates/applications/specialization-tree-app.hbs` | modification | Ajouter la structure DOM légère du détail consultatif |
-| `styles/applications.less` | modification | Styliser le tooltip et ses variantes de lisibilité |
-| `lang/fr.json` | modification | Ajouter les labels FR des raisons de blocage et du détail de nœud |
-| `lang/en.json` | modification | Ajouter les labels EN correspondants |
-| `tests/applications/specialization-tree-app.test.mjs` | modification | Couvrir le contrat de détail, le mapping i18n et l'absence d'achat |
+| Fichier                                               | Action       | Description du changement                                                                      |
+| ----------------------------------------------------- | ------------ | ---------------------------------------------------------------------------------------------- |
+| `module/applications/specialization-tree-app.mjs`     | modification | Enrichir le view-model, mapper `reasonCode`, gérer le clic sur nœud et synchroniser le tooltip |
+| `templates/applications/specialization-tree-app.hbs`  | modification | Ajouter la structure DOM légère du détail consultatif                                          |
+| `styles/applications.less`                            | modification | Styliser le tooltip et ses variantes de lisibilité                                             |
+| `lang/fr.json`                                        | modification | Ajouter les labels FR des raisons de blocage et du détail de nœud                              |
+| `lang/en.json`                                        | modification | Ajouter les labels EN correspondants                                                           |
+| `tests/applications/specialization-tree-app.test.mjs` | modification | Couvrir le contrat de détail, le mapping i18n et l'absence d'achat                             |
 
 ---
 
 ## 7. Risques
 
-| Risque | Impact | Mitigation |
-|---|---|---|
-| Le tooltip introduit une pseudo-sélection persistante | dérive fonctionnelle hors scope | limiter l'état à une consultation volatile réinitialisée au rerender |
-| Le mapping UI diverge des `reasonCode` domaine | incohérences visibles utilisateur | centraliser le mapping dans un seul objet applicatif et le couvrir par tests |
-| Le clic sur nœud prépare involontairement US18 | confusion fonctionnelle | séparer strictement consultation et achat, sans appel métier |
-| Les raisons invalides restent trop techniques | UX pauvre | reformuler en i18n utilisateur et prévoir un fallback lisible |
-| Le rendu/tests deviennent fragiles à cause de PIXI | maintenance coûteuse | tester le view-model et la logique de mapping plutôt que des détails graphiques |
-| Le tooltip est mal positionné ou peu lisible sur mobile | régression UX | prévoir un style responsive simple et des limites de largeur |
+| Risque                                                  | Impact                            | Mitigation                                                                      |
+| ------------------------------------------------------- | --------------------------------- | ------------------------------------------------------------------------------- |
+| Le tooltip introduit une pseudo-sélection persistante   | dérive fonctionnelle hors scope   | limiter l'état à une consultation volatile réinitialisée au rerender            |
+| Le mapping UI diverge des `reasonCode` domaine          | incohérences visibles utilisateur | centraliser le mapping dans un seul objet applicatif et le couvrir par tests    |
+| Le clic sur nœud prépare involontairement US18          | confusion fonctionnelle           | séparer strictement consultation et achat, sans appel métier                    |
+| Les raisons invalides restent trop techniques           | UX pauvre                         | reformuler en i18n utilisateur et prévoir un fallback lisible                   |
+| Le rendu/tests deviennent fragiles à cause de PIXI      | maintenance coûteuse              | tester le view-model et la logique de mapping plutôt que des détails graphiques |
+| Le tooltip est mal positionné ou peu lisible sur mobile | régression UX                     | prévoir un style responsive simple et des limites de largeur                    |
 
 ---
 

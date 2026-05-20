@@ -7,6 +7,7 @@
 Objectif : livrer une vue graphique en lecture seule d’un arbre de spécialisation résolu, avec nœuds positionnés, connexions visibles, coûts, états visuels et raisons minimales compréhensibles.
 
 Cette US ne couvre pas :
+
 - la sélection interactive de spécialisation courante ;
 - l’achat de nœud ;
 - la synchronisation post-achat avec l’onglet Talents ;
@@ -294,16 +295,16 @@ Tester :
 
 ## Synthèse du découpage
 
-| Sous-issue | Sujet | Nature |
-|---|---|---|
-| 16.1 | Choix de l’arbre affiché par défaut | Logique applicative |
-| 16.2 | View-model de rendu | Modèle UI |
-| 16.3 | Mapping états / raisons | Pont domaine → UI |
-| 16.4 | Layout graphique minimal | Géométrie de rendu |
-| 16.5 | Dessin PIXI | Rendu graphique |
-| 16.6 | Détail minimal de consultation | UX légère |
-| 16.7 | Traductions FR / EN | i18n |
-| 16.8 | Tests de contrat | Qualité / non-régression |
+| Sous-issue | Sujet                               | Nature                   |
+| ---------- | ----------------------------------- | ------------------------ |
+| 16.1       | Choix de l’arbre affiché par défaut | Logique applicative      |
+| 16.2       | View-model de rendu                 | Modèle UI                |
+| 16.3       | Mapping états / raisons             | Pont domaine → UI        |
+| 16.4       | Layout graphique minimal            | Géométrie de rendu       |
+| 16.5       | Dessin PIXI                         | Rendu graphique          |
+| 16.6       | Détail minimal de consultation      | UX légère                |
+| 16.7       | Traductions FR / EN                 | i18n                     |
+| 16.8       | Tests de contrat                    | Qualité / non-régression |
 
 ---
 

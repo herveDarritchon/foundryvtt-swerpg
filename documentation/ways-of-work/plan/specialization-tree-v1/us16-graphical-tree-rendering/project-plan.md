@@ -53,12 +53,12 @@
 
 ## 4. Risques principaux
 
-| Risque | Impact | Mitigation |
-| --- | --- | --- |
-| Talents référencés dans les nœuds introuvables | nœud sans nom ni coût | fallback explicite avec log de diagnostic |
-| Confusion `resolvedTreeStatus: "available"` vs `nodeState: "available"` | bugs de sémantique dans le view-model | adopter la convention de nommage du cadrage |
-| Dépendance au viewport PIXI livré par US15 | blocage si US15 non livrée | US15 supposée livrée avant le début de US16 |
-| Layout non adapté à des arbres de taille réelle | troncature ou chevauchement | paramétrer les constantes de layout, sans auto-layout complexe |
+| Risque                                                                  | Impact                                | Mitigation                                                     |
+| ----------------------------------------------------------------------- | ------------------------------------- | -------------------------------------------------------------- |
+| Talents référencés dans les nœuds introuvables                          | nœud sans nom ni coût                 | fallback explicite avec log de diagnostic                      |
+| Confusion `resolvedTreeStatus: "available"` vs `nodeState: "available"` | bugs de sémantique dans le view-model | adopter la convention de nommage du cadrage                    |
+| Dépendance au viewport PIXI livré par US15                              | blocage si US15 non livrée            | US15 supposée livrée avant le début de US16                    |
+| Layout non adapté à des arbres de taille réelle                         | troncature ou chevauchement           | paramétrer les constantes de layout, sans auto-layout complexe |
 
 ## 5. Hiérarchie des work items
 
@@ -109,16 +109,16 @@ graph TD
 
 ### Stories / Enablers / Tests
 
-| # | Type | Titre | Priorité | Estimate | Dépendances |
-| --- | --- | --- | --- | --- | --- |
-| 16.1 | Story | Déterminer l'arbre affiché par défaut | P0 | 1 | Feature |
-| 16.2 | Story | Construire le view-model de rendu de l'arbre courant | P0 | 2 | Feature |
-| 16.3 | Enabler | Mapper les états et raisons de nœud vers l'UI | P0 | 1 | 16.2 |
-| 16.4 | Enabler | Définir le layout graphique minimal | P0 | 1 | 16.2 |
-| 16.5 | Story | Dessiner les connexions et les nœuds dans PIXI | P0 | 2 | 16.3, 16.4 |
-| 16.6 | Story | Exposer un détail minimal de consultation | P1 | 1 | 16.5 |
-| 16.7 | Enabler | Compléter les traductions FR/EN | P1 | 1 | 16.3 |
-| 16.8 | Test | Étendre les tests de contrat de rendu | P0 | 1 | 16.2, 16.3, 16.4 |
+| #    | Type    | Titre                                                | Priorité | Estimate | Dépendances      |
+| ---- | ------- | ---------------------------------------------------- | -------- | -------- | ---------------- |
+| 16.1 | Story   | Déterminer l'arbre affiché par défaut                | P0       | 1        | Feature          |
+| 16.2 | Story   | Construire le view-model de rendu de l'arbre courant | P0       | 2        | Feature          |
+| 16.3 | Enabler | Mapper les états et raisons de nœud vers l'UI        | P0       | 1        | 16.2             |
+| 16.4 | Enabler | Définir le layout graphique minimal                  | P0       | 1        | 16.2             |
+| 16.5 | Story   | Dessiner les connexions et les nœuds dans PIXI       | P0       | 2        | 16.3, 16.4       |
+| 16.6 | Story   | Exposer un détail minimal de consultation            | P1       | 1        | 16.5             |
+| 16.7 | Enabler | Compléter les traductions FR/EN                      | P1       | 1        | 16.3             |
+| 16.8 | Test    | Étendre les tests de contrat de rendu                | P0       | 1        | 16.2, 16.3, 16.4 |
 
 ## 7. Dépendances et ordre recommandé
 
@@ -135,16 +135,16 @@ Les sous-issues 16.3 et 16.4 sont indépendantes entre elles et peuvent être pa
 
 ## 8. Priorisation
 
-| Issue | Priorité | Valeur | Raison |
-| --- | --- | --- | --- |
-| 16.1 Défaut arbre | P0 | High | fondation de toute la feature |
-| 16.2 View-model | P0 | High | pivot entre domaine et rendu |
-| 16.3 Mapping états | P0 | High | visibilité des états sans recalcul domaine |
-| 16.4 Layout | P0 | High | nécessaire pour positionner les nœuds |
-| 16.5 Dessin PIXI | P0 | High | rendu effectif visible par l'utilisateur |
-| 16.6 Détail minimal | P1 | Medium | amélioration UX non bloquante |
-| 16.7 Traductions | P1 | Medium | qualité linguistique, blocable si temps manque |
-| 16.8 Tests contrat | P0 | High | verrouille la non-régression |
+| Issue               | Priorité | Valeur | Raison                                         |
+| ------------------- | -------- | ------ | ---------------------------------------------- |
+| 16.1 Défaut arbre   | P0       | High   | fondation de toute la feature                  |
+| 16.2 View-model     | P0       | High   | pivot entre domaine et rendu                   |
+| 16.3 Mapping états  | P0       | High   | visibilité des états sans recalcul domaine     |
+| 16.4 Layout         | P0       | High   | nécessaire pour positionner les nœuds          |
+| 16.5 Dessin PIXI    | P0       | High   | rendu effectif visible par l'utilisateur       |
+| 16.6 Détail minimal | P1       | Medium | amélioration UX non bloquante                  |
+| 16.7 Traductions    | P1       | Medium | qualité linguistique, blocable si temps manque |
+| 16.8 Tests contrat  | P0       | High   | verrouille la non-régression                   |
 
 ## 9. Configuration board Kanban
 

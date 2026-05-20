@@ -15,7 +15,13 @@ All GraphQL issue type operations require the `GraphQL-Features: issue_types` HT
 {
   organization(login: "OWNER") {
     issueTypes(first: 20) {
-      nodes { id name color description isEnabled }
+      nodes {
+        id
+        name
+        color
+        description
+        isEnabled
+      }
     }
   }
 }
@@ -30,7 +36,11 @@ Types can also be listed per-repo via `repository.issueTypes` or looked up by na
 {
   repository(owner: "OWNER", name: "REPO") {
     issue(number: 123) {
-      issueType { id name color }
+      issueType {
+        id
+        name
+        color
+      }
     }
   }
 }
@@ -41,11 +51,13 @@ Types can also be listed per-repo via `repository.issueTypes` or looked up by na
 ```graphql
 # Header: GraphQL-Features: issue_types
 mutation {
-  updateIssueIssueType(input: {
-    issueId: "ISSUE_NODE_ID"
-    issueTypeId: "IT_xxx"
-  }) {
-    issue { id issueType { name } }
+  updateIssueIssueType(input: { issueId: "ISSUE_NODE_ID", issueTypeId: "IT_xxx" }) {
+    issue {
+      id
+      issueType {
+        name
+      }
+    }
   }
 }
 ```
@@ -55,12 +67,14 @@ mutation {
 ```graphql
 # Header: GraphQL-Features: issue_types
 mutation {
-  createIssue(input: {
-    repositoryId: "REPO_NODE_ID"
-    title: "Fix login bug"
-    issueTypeId: "IT_xxx"
-  }) {
-    issue { id number issueType { name } }
+  createIssue(input: { repositoryId: "REPO_NODE_ID", title: "Fix login bug", issueTypeId: "IT_xxx" }) {
+    issue {
+      id
+      number
+      issueType {
+        name
+      }
+    }
   }
 }
 ```

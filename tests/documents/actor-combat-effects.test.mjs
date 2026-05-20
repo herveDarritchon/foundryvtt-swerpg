@@ -10,7 +10,7 @@ class TestActor {
     this.resistances = {}
     this.system = {}
   }
-  
+
   async alterResources() {}
   async deleteEmbeddedDocuments() {}
   async updateEmbeddedDocuments() {}
@@ -29,14 +29,14 @@ describe('EffectsMixin', () => {
       combat: { round: 1, active: true },
       settings: {
         get: vi.fn().mockReturnValue(0),
-        set: vi.fn().mockResolvedValue()
-      }
+        set: vi.fn().mockResolvedValue(),
+      },
     }
   })
 
   test('applyDamageOverTime should not throw', async () => {
     actor.effects.set('dot-1', {
-      flags: { swerpg: { dot: { health: 5, damageType: 'poison' } } }
+      flags: { swerpg: { dot: { health: 5, damageType: 'poison' } } },
     })
     actor.resistances = { poison: { total: 2 } }
     await actor.applyDamageOverTime()
@@ -64,10 +64,6 @@ describe('EffectsMixin', () => {
   test('_trackHeroismDamage should track damage', async () => {
     global.game.settings.get.mockReturnValue(0)
     await actor._trackHeroismDamage({ health: 5, morale: 3 })
-    expect(global.game.settings.set).toHaveBeenCalledWith(
-      'swerpg',
-      'heroism',
-      8
-    )
+    expect(global.game.settings.set).toHaveBeenCalledWith('swerpg', 'heroism', 8)
   })
 })

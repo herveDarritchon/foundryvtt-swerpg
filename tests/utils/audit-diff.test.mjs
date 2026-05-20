@@ -904,39 +904,36 @@ describe('characteristic changes', () => {
     expect(entries).toEqual([])
   })
 
-  test.each(['brawn', 'agility', 'intellect', 'cunning', 'willpower', 'presence'])(
-    'characteristic.increase for %s from 2 to 3 costs 30 XP',
-    async (charId) => {
-      const changes = {
-        system: {
-          characteristics: {
-            [charId]: {
-              rank: { trained: 1 },
-            },
+  test.each(['brawn', 'agility', 'intellect', 'cunning', 'willpower', 'presence'])('characteristic.increase for %s from 2 to 3 costs 30 XP', async (charId) => {
+    const changes = {
+      system: {
+        characteristics: {
+          [charId]: {
+            rank: { trained: 1 },
           },
         },
-      }
+      },
+    }
 
-      const source = defaultSource()
-      source.system.characteristics[charId] = {
-        rank: { base: 2, trained: 0, bonus: 0 },
-      }
+    const source = defaultSource()
+    source.system.characteristics[charId] = {
+      rank: { base: 2, trained: 0, bonus: 0 },
+    }
 
-      const entries = await composeFromChanges(changes, source)
+    const entries = await composeFromChanges(changes, source)
 
-      expect(entries).toHaveLength(1)
-      expect(entries[0]).toMatchObject({
-        type: 'characteristic.increase',
-        xpDelta: -30,
-        data: {
-          characteristicId: charId,
-          oldValue: 2,
-          newValue: 3,
-          cost: 30,
-        },
-      })
-    },
-  )
+    expect(entries).toHaveLength(1)
+    expect(entries[0]).toMatchObject({
+      type: 'characteristic.increase',
+      xpDelta: -30,
+      data: {
+        characteristicId: charId,
+        oldValue: 2,
+        newValue: 3,
+        cost: 30,
+      },
+    })
+  })
 
   test('characteristic.increase at max (5→6) costs 60 XP', async () => {
     const changes = {

@@ -1,12 +1,13 @@
 # Plan d'implémentation — #179 : Ajouter un overlay visuel en bas de l'avatar dans la sidebar
 
-**Issue** : [#179 — Ajouter un overlay visuel en bas de l'avatar dans la sidebar](https://github.com/herveDarritchon/foundryvtt-swerpg/issues/179)    
-**Epic** : [#177 — Epic: Enrichir le header de la sidebar Character Sheet](https://github.com/herveDarritchon/foundryvtt-swerpg/issues/177)   
+**Issue** : [#179 — Ajouter un overlay visuel en bas de l'avatar dans la sidebar](https://github.com/herveDarritchon/foundryvtt-swerpg/issues/179)  
+**Epic** : [#177 — Epic: Enrichir le header de la sidebar Character Sheet](https://github.com/herveDarritchon/foundryvtt-swerpg/issues/177)  
 **ADR(s)** :
+
 - `documentation/architecture/adr/adr-0001-foundry-applicationv2-adoption.md` (UI en ApplicationV2)
 - `documentation/architecture/adr/adr-0004-vitest-testing-strategy.md` (stratégie de test)
-- `documentation/architecture/adr/adr-0005-localization-strategy.md` (i18n, pas de nouvelles clés nécessaires)   
-**Module(s) impacté(s)** : `templates/sheets/actor/sidebar.hbs` (modification), `styles/actor.less` (modification)
+- `documentation/architecture/adr/adr-0005-localization-strategy.md` (i18n, pas de nouvelles clés nécessaires)  
+  **Module(s) impacté(s)** : `templates/sheets/actor/sidebar.hbs` (modification), `styles/actor.less` (modification)
 
 ---
 
@@ -93,6 +94,7 @@ Les tests existants (`tests/applications/sheets/character-sheet-sidebar-header.t
 **Question** : faut-il afficher dès `#179` les ressources `Wounds` / `Strain` dans l'overlay ?
 
 **Options envisagées** :
+
 - Overlay strictement vide (conteneur seul)
 - Overlay avec des `div` slots préparés pour `#180`
 - Overlay complet avec valeurs déjà branchées
@@ -100,6 +102,7 @@ Les tests existants (`tests/applications/sheets/character-sheet-sidebar-header.t
 **Décision** : overlay vide, sans conteneur interne supplémentaire.
 
 **Justification** :
+
 - Découpage clair validé : `#179` = structure visuelle, `#180` = contenu métier
 - Pas d'enrichissement de contexte ni d'hypothèse sur la mise en page exacte de `#180`
 - `#180` pourra ajouter sa structure interne dans le conteneur sans refonte
@@ -110,12 +113,14 @@ Les tests existants (`tests/applications/sheets/character-sheet-sidebar-header.t
 **Question** : faut-il modifier la template partagée ou en créer une propre aux `character` ?
 
 **Options envisagées** :
+
 - Modifier `templates/sheets/actor/sidebar.hbs`
 - Créer `templates/sheets/actor/sidebar-character.hbs`
 
 **Décision** : modifier la template partagée.
 
 **Justification** :
+
 - Le garde-fou `{{#if sidebarHeader}}` existe déjà et protège les autres types d'acteurs
 - Créer une seconde sidebar dupliquerait tout le contenu (équipement, actions) pour un seul overlay
 - Le pattern est déjà utilisé par `#178`
@@ -125,6 +130,7 @@ Les tests existants (`tests/applications/sheets/character-sheet-sidebar-header.t
 **Question** : comment garantir que le clic sur l'avatar continue d'ouvrir l'éditeur d'image (`data-action="editImage"`) ?
 
 **Options envisagées** :
+
 - Overlay avec `pointer-events: none`
 - Overlay transparent aux événements via CSS
 - Overlay avec gestion manuelle des événements
@@ -132,6 +138,7 @@ Les tests existants (`tests/applications/sheets/character-sheet-sidebar-header.t
 **Décision** : `pointer-events: none` sur l'overlay.
 
 **Justification** :
+
 - Solution CSS pure, sans JavaScript
 - L'overlay n'a aucun comportement interactif en `#179` (et `#180` affiche seulement des données en lecture seule)
 - Aucune régression possible si l'overlay ne capture pas les événements souris
@@ -142,12 +149,14 @@ Les tests existants (`tests/applications/sheets/character-sheet-sidebar-header.t
 **Question** : faut-il enrichir `sidebarHeader` dès `#179` avec les données `wounds` / `strain` ?
 
 **Options envisagées** :
+
 - Enrichir le contexte dès maintenant
 - Ne rien changer au contexte
 
 **Décision** : ne pas modifier le contexte.
 
 **Justification** :
+
 - `#179` ne consomme et n'affiche aucune donnée métier
 - Enrichir le contexte maintenant créerait une dépendance inutile du template vers des données non utilisées
 - `#180` portera à la fois l'enrichissement du contexte et l'affichage des données
@@ -158,12 +167,14 @@ Les tests existants (`tests/applications/sheets/character-sheet-sidebar-header.t
 **Question** : quelle stratégie de validation pour un changement purement CSS/interaction ?
 
 **Options envisagées** :
+
 - Ajouter un test de rendu DOM automatisé
 - Valider manuellement sur les deux types d'acteurs
 
 **Décision** : validation manuelle uniquement, pas de test automatisé.
 
 **Justification** :
+
 - Le risque principal est CSS (positionnement, superposition, blur) et non logique métier
 - Les tests existants (`sidebar-header.test.mjs`) couvrent déjà le garde-fou `sidebarHeader`
 - Un test de template purement structurel serait fragile et de faible valeur sans moteur de rendu UI stabilisé
@@ -180,24 +191,22 @@ Les tests existants (`tests/applications/sheets/character-sheet-sidebar-header.t
 Dans le bloc `{{#if sidebarHeader}}`, à l'intérieur de `.sidebar-profile-wrapper` et **après** `<img class="profile">`, ajouter :
 
 ```hbs
-<div class="sidebar-profile-overlay"></div>
+<div class='sidebar-profile-overlay'></div>
 ```
 
 Le résultat dans la branche `character` devient :
 
 ```hbs
 {{#if sidebarHeader}}
-  <div class="sidebar-header">
-    <input class="sidebar-name" name="name" type="text" value="{{sidebarHeader.name}}" placeholder="Actor Name">
-    <div class="sidebar-profile-wrapper">
-      <img class="profile" src="{{sidebarHeader.img}}" alt="{{sidebarHeader.name}}"
-           width="200" height="200" data-action="editImage" data-edit="img">
-      <div class="sidebar-profile-overlay"></div>
+  <div class='sidebar-header'>
+    <input class='sidebar-name' name='name' type='text' value='{{sidebarHeader.name}}' placeholder='Actor Name' />
+    <div class='sidebar-profile-wrapper'>
+      <img class='profile' src='{{sidebarHeader.img}}' alt='{{sidebarHeader.name}}' width='200' height='200' data-action='editImage' data-edit='img' />
+      <div class='sidebar-profile-overlay'></div>
     </div>
   </div>
 {{else}}
-  <img class="profile" src="{{source.img}}" alt="{{source.name}}"
-       width="200" height="200" data-action="editImage" data-edit="img" />
+  <img class='profile' src='{{source.img}}' alt='{{source.name}}' width='200' height='200' data-action='editImage' data-edit='img' />
 {{/if}}
 ```
 
@@ -225,6 +234,7 @@ Ajouter sous `.sidebar-profile-wrapper` (après `img.profile` existant) :
 ```
 
 Explications des choix de style :
+
 - `position: absolute` + ancrage `bottom:0 / left:0 / right:0` : l'overlay occupe toute la largeur de l'image et est collé en bas
 - `height: 20%` : hauteur proportionnelle à l'image, ajustable ultérieurement
 - `background: rgba(0, 0, 0, 0.65)` : fond sombre semi-transparent, assure un bon contraste même si `backdrop-filter` n'est pas supporté
@@ -240,34 +250,34 @@ Explications des choix de style :
 
 Valider manuellement les scénarios suivants :
 
-| Scénario | Attendu |
-|---|---|
-| Character Sheet, avatar | Un bandeau translucide apparaît en bas de l'image |
-| Character Sheet, clic sur l'avatar | L'éditeur d'image s'ouvre (l'overlay ne bloque pas) |
-| Character Sheet, redimensionnement | L'overlay suit la largeur de l'image et reste proportionnel |
-| Adversary Sheet | Pas d'overlay, sidebar inchangée |
-| Sidebar en mode compact (si applicable) | L'overlay reste visible et ne décale pas le contenu |
+| Scénario                                | Attendu                                                     |
+| --------------------------------------- | ----------------------------------------------------------- |
+| Character Sheet, avatar                 | Un bandeau translucide apparaît en bas de l'image           |
+| Character Sheet, clic sur l'avatar      | L'éditeur d'image s'ouvre (l'overlay ne bloque pas)         |
+| Character Sheet, redimensionnement      | L'overlay suit la largeur de l'image et reste proportionnel |
+| Adversary Sheet                         | Pas d'overlay, sidebar inchangée                            |
+| Sidebar en mode compact (si applicable) | L'overlay reste visible et ne décale pas le contenu         |
 
 ---
 
 ## 6. Fichiers modifiés
 
-| Fichier | Action | Description du changement |
-|---|---|---|
-| `templates/sheets/actor/sidebar.hbs` | Modification | Ajout du `<div class="sidebar-profile-overlay">` dans la branche `{{#if sidebarHeader}}` |
-| `styles/actor.less` | Modification | Ajout des styles `.sidebar-profile-overlay` : position absolute, fond rgba, blur, pointer-events |
+| Fichier                              | Action       | Description du changement                                                                        |
+| ------------------------------------ | ------------ | ------------------------------------------------------------------------------------------------ |
+| `templates/sheets/actor/sidebar.hbs` | Modification | Ajout du `<div class="sidebar-profile-overlay">` dans la branche `{{#if sidebarHeader}}`         |
+| `styles/actor.less`                  | Modification | Ajout des styles `.sidebar-profile-overlay` : position absolute, fond rgba, blur, pointer-events |
 
 ---
 
 ## 7. Risques
 
-| Risque | Impact | Mitigation |
-|---|---|---|
-| L'overlay bloque le clic sur l'avatar | Élevé | `pointer-events: none` + validation manuelle du scénario `editImage` |
-| Régression sur les sheets `adversary` | Élevé | Overlay strictement dans la branche `{{#if sidebarHeader}}` ; tester qu'AdversarySheet reste inchangée |
-| Overlay trop petit ou trop grand visuellement | Moyen | Valeur initiale `height: 20%`, ajustement possible en `#180` avec `min-height` / `max-height` si nécessaire |
-| `backdrop-filter` non supporté (Safari, certains environnements) | Faible | Le fond `rgba` assure le rendu visuel ; le flou est un enrichissement progressif |
-| L'overlay dépasse visuellement des bords de l'image | Faible | `border-radius` cohérent avec celui de `.sidebar-profile-wrapper img.profile` ; vérifier que l'ancrage `left/right: 0` reste dans le wrapper |
+| Risque                                                           | Impact | Mitigation                                                                                                                                   |
+| ---------------------------------------------------------------- | ------ | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| L'overlay bloque le clic sur l'avatar                            | Élevé  | `pointer-events: none` + validation manuelle du scénario `editImage`                                                                         |
+| Régression sur les sheets `adversary`                            | Élevé  | Overlay strictement dans la branche `{{#if sidebarHeader}}` ; tester qu'AdversarySheet reste inchangée                                       |
+| Overlay trop petit ou trop grand visuellement                    | Moyen  | Valeur initiale `height: 20%`, ajustement possible en `#180` avec `min-height` / `max-height` si nécessaire                                  |
+| `backdrop-filter` non supporté (Safari, certains environnements) | Faible | Le fond `rgba` assure le rendu visuel ; le flou est un enrichissement progressif                                                             |
+| L'overlay dépasse visuellement des bords de l'image              | Faible | `border-radius` cohérent avec celui de `.sidebar-profile-wrapper img.profile` ; vérifier que l'ancrage `left/right: 0` reste dans le wrapper |
 
 ---
 

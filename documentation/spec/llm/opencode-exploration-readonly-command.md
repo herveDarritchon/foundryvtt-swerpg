@@ -35,11 +35,11 @@ La commande refuse ou redirige les demandes suivantes :
 
 ### 2.3. Variantes de profondeur
 
-| Profondeur | Usage typique | Sortie attendue |
-|---|---|---|
-| `explore --quick` | Question ponctuelle (une convention, un fichier) | 1-3 phrases + référence fichier:ligne |
+| Profondeur                | Usage typique                                     | Sortie attendue                       |
+| ------------------------- | ------------------------------------------------- | ------------------------------------- |
+| `explore --quick`         | Question ponctuelle (une convention, un fichier)  | 1-3 phrases + référence fichier:ligne |
 | `explore` (moyen, défaut) | Cartographie d'un module, compréhension d'un flux | 3-8 constats + fichier:ligne + résumé |
-| `explore --deep` | Architecture transverse, dépendances, historique | Synthèse structurée avec sections |
+| `explore --deep`          | Architecture transverse, dépendances, historique  | Synthèse structurée avec sections     |
 
 ---
 
@@ -108,14 +108,14 @@ Modèle économique ou local. Pas de modèle de raisonnement avancé pour la sim
 
 ## 5. Matrice d'escalade
 
-| Condition d'escalade | Destination | Condition de déclenchement |
-|---|---|---|
-| La demande nécessite un plan d'implémentation | `plan-depuis-issue` | L'utilisateur demande explicitement une stratégie d'intervention |
-| La demande nécessite du code | `implementer-depuis-plan` | L'utilisateur demande une modification du code source |
-| La demande nécessite un diagnostic de bug | Diagnostic / Correction | L'utilisateur signale un comportement inattendu ou une erreur |
-| La demande nécessite une revue de diff | Revue de code | L'utilisateur fournit un diff ou une PR à relire |
-| La demande nécessite une mise à jour de documentation | Documentation | L'utilisateur demande d'écrire ou de modifier un fichier `.md` |
-| Aucune des conditions ci-dessus | Fin | L'exploration a répondu à la question |
+| Condition d'escalade                                  | Destination               | Condition de déclenchement                                       |
+| ----------------------------------------------------- | ------------------------- | ---------------------------------------------------------------- |
+| La demande nécessite un plan d'implémentation         | `plan-depuis-issue`       | L'utilisateur demande explicitement une stratégie d'intervention |
+| La demande nécessite du code                          | `implementer-depuis-plan` | L'utilisateur demande une modification du code source            |
+| La demande nécessite un diagnostic de bug             | Diagnostic / Correction   | L'utilisateur signale un comportement inattendu ou une erreur    |
+| La demande nécessite une revue de diff                | Revue de code             | L'utilisateur fournit un diff ou une PR à relire                 |
+| La demande nécessite une mise à jour de documentation | Documentation             | L'utilisateur demande d'écrire ou de modifier un fichier `.md`   |
+| Aucune des conditions ci-dessus                       | Fin                       | L'exploration a répondu à la question                            |
 
 L'escalade n'est jamais automatique. Le workflow signale la recommandation et attend une instruction explicite.
 
@@ -136,11 +136,13 @@ Cette spécification sert de source de vérité fonctionnelle, indépendante de 
 Do not send large context to an LLM unless reasoning is required.
 
 For deterministic tasks:
+
 - execute with shell, Git, npm, Vitest, Playwright or CI;
 - collect only the useful output;
 - call an LLM only if interpretation, decision or correction is needed.
 
 For failures:
+
 - send only the failing command;
 - send only the relevant error block;
 - send only the files directly involved;

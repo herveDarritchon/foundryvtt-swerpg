@@ -72,11 +72,13 @@ describe('specialization-tree application', () => {
         'SWERPG.TALENT.SPECIALIZATION_TREE_APP.STATUS.UNRESOLVED': 'Tree not resolved',
         'SWERPG.TALENT.SPECIALIZATION_TREE_APP.STATUS.INCOMPLETE': 'Incomplete tree',
         'SWERPG.TALENT.SPECIALIZATION_TREE_APP.EMPTY.NO_ACTOR_TITLE': 'No actor selected',
-        'SWERPG.TALENT.SPECIALIZATION_TREE_APP.EMPTY.NO_ACTOR_DESCRIPTION': 'Open this application from a character sheet to inspect the owned specialization trees.',
+        'SWERPG.TALENT.SPECIALIZATION_TREE_APP.EMPTY.NO_ACTOR_DESCRIPTION':
+          'Open this application from a character sheet to inspect the owned specialization trees.',
         'SWERPG.TALENT.SPECIALIZATION_TREE_APP.EMPTY.NO_SPECIALIZATIONS_TITLE': 'No owned specialization',
         'SWERPG.TALENT.SPECIALIZATION_TREE_APP.EMPTY.NO_SPECIALIZATIONS_DESCRIPTION': 'This character does not currently own any specialization to display.',
         'SWERPG.TALENT.SPECIALIZATION_TREE_APP.EMPTY.NO_AVAILABLE_TREE_TITLE': 'No available specialization tree',
-        'SWERPG.TALENT.SPECIALIZATION_TREE_APP.EMPTY.NO_AVAILABLE_TREE_DESCRIPTION': 'The owned specializations were found, but none currently resolve to a complete reference tree.',
+        'SWERPG.TALENT.SPECIALIZATION_TREE_APP.EMPTY.NO_AVAILABLE_TREE_DESCRIPTION':
+          'The owned specializations were found, but none currently resolve to a complete reference tree.',
         'SWERPG.TALENT.SPECIALIZATION_TREE_APP.NODE_STATE.PURCHASED': 'Purchased',
         'SWERPG.TALENT.SPECIALIZATION_TREE_APP.NODE_STATE.AVAILABLE': 'Available',
         'SWERPG.TALENT.SPECIALIZATION_TREE_APP.NODE_STATE.LOCKED': 'Locked',
@@ -224,7 +226,6 @@ describe('specialization-tree application', () => {
     })
 
     globalThis.cancelAnimationFrame = vi.fn()
-
     ;({
       default: SpecializationTreeApp,
       buildSpecializationTreeContext,
@@ -233,11 +234,7 @@ describe('specialization-tree application', () => {
       computeTreeBoundingBox,
       computeCenteredOffset,
     } = await import('../../module/applications/specialization-tree-app.mjs'))
-
-    ;({
-      resolveTalentItem,
-      resolveTalentDetail,
-    } = await import('../../module/lib/talent-node/talent-reference-resolver.mjs'))
+    ;({ resolveTalentItem, resolveTalentDetail } = await import('../../module/lib/talent-node/talent-reference-resolver.mjs'))
   })
 
   afterEach(() => {
@@ -340,10 +337,30 @@ describe('specialization-tree application', () => {
 
     globalThis.fromUuidSync = vi.fn((uuid) => {
       if (uuid === 'Item.tree-bodyguard') {
-        return { type: 'specialization-tree', name: 'Bodyguard Tree', system: { nodes: [{ nodeId: 'r1c1', talentId: 'Item.talent-bg', row: 1, column: 1 }, { nodeId: 'r2c1', talentId: 'Item.talent-bg', row: 2, column: 1 }], connections: [{ from: 'r1c1', to: 'r2c1' }] } }
+        return {
+          type: 'specialization-tree',
+          name: 'Bodyguard Tree',
+          system: {
+            nodes: [
+              { nodeId: 'r1c1', talentId: 'Item.talent-bg', row: 1, column: 1 },
+              { nodeId: 'r2c1', talentId: 'Item.talent-bg', row: 2, column: 1 },
+            ],
+            connections: [{ from: 'r1c1', to: 'r2c1' }],
+          },
+        }
       }
       if (uuid === 'Item.tree-soldier') {
-        return { type: 'specialization-tree', name: 'Soldier Tree', system: { nodes: [{ nodeId: 'r1c1', talentId: 'Item.talent-sd', row: 1, column: 1 }, { nodeId: 'r2c1', talentId: 'Item.talent-sd', row: 2, column: 1 }], connections: [{ from: 'r1c1', to: 'r2c1' }] } }
+        return {
+          type: 'specialization-tree',
+          name: 'Soldier Tree',
+          system: {
+            nodes: [
+              { nodeId: 'r1c1', talentId: 'Item.talent-sd', row: 1, column: 1 },
+              { nodeId: 'r2c1', talentId: 'Item.talent-sd', row: 2, column: 1 },
+            ],
+            connections: [{ from: 'r1c1', to: 'r2c1' }],
+          },
+        }
       }
       return null
     })
@@ -359,9 +376,7 @@ describe('specialization-tree application', () => {
     const actor = createActor({
       system: {
         details: {
-          specializations: [
-            { specializationId: 'spec-unknown', name: 'Unknown', treeUuid: 'Item.tree-unknown' },
-          ],
+          specializations: [{ specializationId: 'spec-unknown', name: 'Unknown', treeUuid: 'Item.tree-unknown' }],
         },
       },
     })
@@ -380,9 +395,7 @@ describe('specialization-tree application', () => {
     const actor = createActor({
       system: {
         details: {
-          specializations: [
-            { specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' },
-          ],
+          specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' }],
         },
         progression: {
           talentPurchases: [],
@@ -438,16 +451,18 @@ describe('specialization-tree application', () => {
     const actor = createActor({
       system: {
         details: {
-          specializations: [
-            { specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' },
-          ],
+          specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' }],
         },
       },
     })
 
     globalThis.fromUuidSync = vi.fn((uuid) => {
       if (uuid === 'Item.tree-bodyguard') {
-        return { type: 'specialization-tree', name: 'Bodyguard Tree', system: { nodes: [{ nodeId: 'r1c1', talentId: 'Item.talent-tough', row: 1, column: 1, cost: 10 }], connections: [{ from: 'r1c1', to: 'r2c1' }] } }
+        return {
+          type: 'specialization-tree',
+          name: 'Bodyguard Tree',
+          system: { nodes: [{ nodeId: 'r1c1', talentId: 'Item.talent-tough', row: 1, column: 1, cost: 10 }], connections: [{ from: 'r1c1', to: 'r2c1' }] },
+        }
       }
       return null
     })
@@ -470,9 +485,7 @@ describe('specialization-tree application', () => {
     const actor = createActor({
       system: {
         details: {
-          specializations: [
-            { specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' },
-          ],
+          specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' }],
         },
         progression: {
           talentPurchases: [],
@@ -522,16 +535,24 @@ describe('specialization-tree application', () => {
     const actor = createActor({
       system: {
         details: {
-          specializations: [
-            { specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' },
-          ],
+          specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' }],
         },
       },
     })
 
     globalThis.fromUuidSync = vi.fn((uuid) => {
       if (uuid === 'Item.tree-bodyguard') {
-        return { type: 'specialization-tree', name: 'Bodyguard Tree', system: { nodes: [{ nodeId: 'r1c1', talentId: 'Item.talent-missing', row: 1, column: 1, cost: 5 }, { nodeId: 'r2c1', talentId: 'Item.talent-other', row: 2, column: 1, cost: 5 }], connections: [{ from: 'r1c1', to: 'r2c1' }] } }
+        return {
+          type: 'specialization-tree',
+          name: 'Bodyguard Tree',
+          system: {
+            nodes: [
+              { nodeId: 'r1c1', talentId: 'Item.talent-missing', row: 1, column: 1, cost: 5 },
+              { nodeId: 'r2c1', talentId: 'Item.talent-other', row: 2, column: 1, cost: 5 },
+            ],
+            connections: [{ from: 'r1c1', to: 'r2c1' }],
+          },
+        }
       }
       return null
     })
@@ -692,7 +713,11 @@ describe('specialization-tree application', () => {
     })
     globalThis.fromUuidSync = vi.fn((uuid) => {
       if (uuid === 'Item.tree-bodyguard') {
-        return { type: 'specialization-tree', name: 'Bodyguard Tree', system: { nodes: [{ nodeId: 'r1c1', talentId: 'Item.talent-tough', row: 1, column: 1, cost: 10 }], connections: [{ from: 'r1c1', to: 'r2c1' }] } }
+        return {
+          type: 'specialization-tree',
+          name: 'Bodyguard Tree',
+          system: { nodes: [{ nodeId: 'r1c1', talentId: 'Item.talent-tough', row: 1, column: 1, cost: 10 }], connections: [{ from: 'r1c1', to: 'r2c1' }] },
+        }
       }
       if (uuid === 'Item.talent-tough') return { name: 'Tough' }
       return null
@@ -727,7 +752,11 @@ describe('specialization-tree application', () => {
     })
     globalThis.fromUuidSync = vi.fn((uuid) => {
       if (uuid === 'Item.tree-bodyguard') {
-        return { type: 'specialization-tree', name: 'Bodyguard Tree', system: { nodes: [{ nodeId: 'r1c1', talentId: 'Item.talent-tough', row: 1, column: 1, cost: 10 }], connections: [{ from: 'r1c1', to: 'r2c1' }] } }
+        return {
+          type: 'specialization-tree',
+          name: 'Bodyguard Tree',
+          system: { nodes: [{ nodeId: 'r1c1', talentId: 'Item.talent-tough', row: 1, column: 1, cost: 10 }], connections: [{ from: 'r1c1', to: 'r2c1' }] },
+        }
       }
       if (uuid === 'Item.talent-tough') return { name: 'Tough' }
       return null
@@ -763,7 +792,11 @@ describe('specialization-tree application', () => {
     })
     globalThis.fromUuidSync = vi.fn((uuid) => {
       if (uuid === 'Item.tree-bodyguard') {
-        return { type: 'specialization-tree', name: 'Bodyguard Tree', system: { nodes: [{ nodeId: 'r1c1', talentId: 'Item.talent-tough', row: 1, column: 1, cost: 10 }], connections: [{ from: 'r1c1', to: 'r2c1' }] } }
+        return {
+          type: 'specialization-tree',
+          name: 'Bodyguard Tree',
+          system: { nodes: [{ nodeId: 'r1c1', talentId: 'Item.talent-tough', row: 1, column: 1, cost: 10 }], connections: [{ from: 'r1c1', to: 'r2c1' }] },
+        }
       }
       if (uuid === 'Item.talent-tough') return { name: 'Tough' }
       return null
@@ -799,7 +832,11 @@ describe('specialization-tree application', () => {
     })
     globalThis.fromUuidSync = vi.fn((uuid) => {
       if (uuid === 'Item.tree-bodyguard') {
-        return { type: 'specialization-tree', name: 'Bodyguard Tree', system: { nodes: [{ nodeId: 'r1c1', talentId: 'Item.talent-tough', row: 1, column: 1, cost: 10 }], connections: [{ from: 'r1c1', to: 'r2c1' }] } }
+        return {
+          type: 'specialization-tree',
+          name: 'Bodyguard Tree',
+          system: { nodes: [{ nodeId: 'r1c1', talentId: 'Item.talent-tough', row: 1, column: 1, cost: 10 }], connections: [{ from: 'r1c1', to: 'r2c1' }] },
+        }
       }
       if (uuid === 'Item.talent-tough') return { name: 'Tough' }
       return null
@@ -826,9 +863,7 @@ describe('specialization-tree application', () => {
     const actor = createActor({
       system: {
         details: {
-          specializations: [
-            { specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' },
-          ],
+          specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' }],
         },
         progression: {
           talentPurchases: [],
@@ -843,9 +878,7 @@ describe('specialization-tree application', () => {
           type: 'specialization-tree',
           name: 'Bodyguard Tree',
           system: {
-            nodes: [
-              { nodeId: 'r1c1', talentId: 'Item.talent-tough', row: 1, column: 1, cost: 10 },
-            ],
+            nodes: [{ nodeId: 'r1c1', talentId: 'Item.talent-tough', row: 1, column: 1, cost: 10 }],
             connections: [{ from: 'r1c1', to: 'r2c1' }],
           },
         }
@@ -864,9 +897,7 @@ describe('specialization-tree application', () => {
     const actor = createActor({
       system: {
         details: {
-          specializations: [
-            { specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' },
-          ],
+          specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' }],
         },
         progression: {
           talentPurchases: [],
@@ -881,9 +912,7 @@ describe('specialization-tree application', () => {
           type: 'specialization-tree',
           name: 'Bodyguard Tree',
           system: {
-            nodes: [
-              { nodeId: 'r1c1', talentId: 'Item.talent-tough', row: 1, column: 1, cost: 10 },
-            ],
+            nodes: [{ nodeId: 'r1c1', talentId: 'Item.talent-tough', row: 1, column: 1, cost: 10 }],
             connections: [{ from: 'r1c1', to: 'r2c1' }],
           },
         }
@@ -902,9 +931,7 @@ describe('specialization-tree application', () => {
     const actor = createActor({
       system: {
         details: {
-          specializations: [
-            { specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' },
-          ],
+          specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' }],
         },
         progression: {
           talentPurchases: [],
@@ -919,9 +946,7 @@ describe('specialization-tree application', () => {
           type: 'specialization-tree',
           name: 'Bodyguard Tree',
           system: {
-            nodes: [
-              { nodeId: 'r1c1', talentId: 'Item.talent-tough', row: 1, column: 1, cost: 10 },
-            ],
+            nodes: [{ nodeId: 'r1c1', talentId: 'Item.talent-tough', row: 1, column: 1, cost: 10 }],
             connections: [{ from: 'r1c1', to: 'r2c1' }],
           },
         }
@@ -946,9 +971,7 @@ describe('specialization-tree application', () => {
     const actor = createActor({
       system: {
         details: {
-          specializations: [
-            { specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' },
-          ],
+          specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' }],
         },
       },
     })
@@ -1007,7 +1030,9 @@ describe('specialization-tree application', () => {
     })
 
     it('returns unknown fallback when fromUuidSync throws', () => {
-      globalThis.fromUuidSync = vi.fn(() => { throw new Error('not found') })
+      globalThis.fromUuidSync = vi.fn(() => {
+        throw new Error('not found')
+      })
       const detail = resolveTalentDetail('Item.talent-error')
       expect(detail.name).toBe('Unknown talent')
       expect(detail.isRanked).toBe(false)
@@ -1028,9 +1053,7 @@ describe('specialization-tree application', () => {
 
     it('falls back to legacy business key lookup when talentUuid is absent', () => {
       globalThis.fromUuidSync = vi.fn(() => null)
-      globalThis.game.items = [
-        { type: 'talent', name: 'Grit', uuid: 'Item.grit001', system: { id: 'grit', isRanked: true } },
-      ]
+      globalThis.game.items = [{ type: 'talent', name: 'Grit', uuid: 'Item.grit001', system: { id: 'grit', isRanked: true } }]
 
       const detail = resolveTalentDetail({ talentUuid: null, talentId: 'grit' })
       expect(detail.name).toBe('Grit')
@@ -1048,9 +1071,7 @@ describe('specialization-tree application', () => {
     it('never calls fromUuidSync with a business-key talentId', () => {
       const fromUuidSync = vi.fn(() => null)
       globalThis.fromUuidSync = fromUuidSync
-      globalThis.game.items = [
-        { type: 'talent', name: 'Grit', uuid: 'Item.grit001', system: { id: 'grit', isRanked: true } },
-      ]
+      globalThis.game.items = [{ type: 'talent', name: 'Grit', uuid: 'Item.grit001', system: { id: 'grit', isRanked: true } }]
 
       resolveTalentDetail({ talentUuid: null, talentId: 'grit' })
 
@@ -1062,9 +1083,7 @@ describe('specialization-tree application', () => {
     const actor = createActor({
       system: {
         details: {
-          specializations: [
-            { specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' },
-          ],
+          specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' }],
         },
         progression: {
           talentPurchases: [],
@@ -1111,9 +1130,7 @@ describe('specialization-tree application', () => {
     const actor = createActor({
       system: {
         details: {
-          specializations: [
-            { specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' },
-          ],
+          specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' }],
         },
         progression: {
           talentPurchases: [],
@@ -1128,9 +1145,7 @@ describe('specialization-tree application', () => {
           type: 'specialization-tree',
           name: 'Bodyguard Tree',
           system: {
-            nodes: [
-              { nodeId: 'r1c1', talentId: 'Item.talent-tough', row: 1, column: 1, cost: 10 },
-            ],
+            nodes: [{ nodeId: 'r1c1', talentId: 'Item.talent-tough', row: 1, column: 1, cost: 10 }],
             connections: [{ from: 'r1c1', to: 'r2c1' }],
           },
         }
@@ -1152,9 +1167,7 @@ describe('specialization-tree application', () => {
     const actor = createActor({
       system: {
         details: {
-          specializations: [
-            { specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' },
-          ],
+          specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' }],
         },
         progression: {
           talentPurchases: [],
@@ -1194,9 +1207,7 @@ describe('specialization-tree application', () => {
     const actor = createActor({
       system: {
         details: {
-          specializations: [
-            { specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' },
-          ],
+          specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' }],
         },
         progression: {
           talentPurchases: [],
@@ -1211,9 +1222,7 @@ describe('specialization-tree application', () => {
           type: 'specialization-tree',
           name: 'Bodyguard Tree',
           system: {
-            nodes: [
-              { nodeId: 'r1c1', talentId: 'Item.talent-tough', row: 1, column: 1, cost: 10 },
-            ],
+            nodes: [{ nodeId: 'r1c1', talentId: 'Item.talent-tough', row: 1, column: 1, cost: 10 }],
             connections: [{ from: 'r1c1', to: 'r2c1' }],
           },
         }
@@ -1234,9 +1243,7 @@ describe('specialization-tree application', () => {
     const actor = createActor({
       system: {
         details: {
-          specializations: [
-            { specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' },
-          ],
+          specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' }],
         },
         progression: {
           talentPurchases: [],
@@ -1298,7 +1305,11 @@ describe('specialization-tree application', () => {
     })
     globalThis.fromUuidSync = vi.fn((uuid) => {
       if (uuid === 'Item.tree-bodyguard') {
-        return { type: 'specialization-tree', name: 'Bodyguard Tree', system: { nodes: [{ nodeId: 'r1c1', talentId: 'Item.talent-tough', row: 1, column: 1, cost: 10 }], connections: [{ from: 'r1c1', to: 'r2c1' }] } }
+        return {
+          type: 'specialization-tree',
+          name: 'Bodyguard Tree',
+          system: { nodes: [{ nodeId: 'r1c1', talentId: 'Item.talent-tough', row: 1, column: 1, cost: 10 }], connections: [{ from: 'r1c1', to: 'r2c1' }] },
+        }
       }
       if (uuid === 'Item.talent-tough') return { name: 'Tough' }
       return null
@@ -1580,12 +1591,10 @@ describe('specialization-tree application', () => {
     await app._onRender(context, { resetView: false })
 
     const stage = app.pixiApp.stage
-    expect(stage.on.mock.calls.map(([eventName]) => eventName), 'stage listeners must be registered once').toEqual([
-      'pointerdown',
-      'pointermove',
-      'pointerup',
-      'pointerupoutside',
-    ])
+    expect(
+      stage.on.mock.calls.map(([eventName]) => eventName),
+      'stage listeners must be registered once',
+    ).toEqual(['pointerdown', 'pointermove', 'pointerup', 'pointerupoutside'])
 
     stage.on.mockClear()
     await app._onRender(context, { resetView: false })
@@ -1594,12 +1603,10 @@ describe('specialization-tree application', () => {
 
     await app.close()
 
-    expect(stage.off.mock.calls.map(([eventName]) => eventName), 'close must clean viewport listeners').toEqual([
-      'pointerdown',
-      'pointermove',
-      'pointerup',
-      'pointerupoutside',
-    ])
+    expect(
+      stage.off.mock.calls.map(([eventName]) => eventName),
+      'close must clean viewport listeners',
+    ).toEqual(['pointerdown', 'pointermove', 'pointerup', 'pointerupoutside'])
   })
 
   it('registers a wheel listener on the PIXI canvas', async () => {
@@ -1639,9 +1646,7 @@ describe('specialization-tree application', () => {
     await app._onRender(context, { resetView: false })
 
     const canvas = app.pixiApp.canvas
-    expect(canvas.addEventListener, 'wheel listener must be registered on canvas').toHaveBeenCalledWith(
-      'wheel', expect.any(Function), { passive: false },
-    )
+    expect(canvas.addEventListener, 'wheel listener must be registered on canvas').toHaveBeenCalledWith('wheel', expect.any(Function), { passive: false })
   })
 
   it('wheel zoom in increases viewport scale by zoomStep', async () => {
@@ -1914,9 +1919,7 @@ describe('specialization-tree application', () => {
     const canvas = app.pixiApp.canvas
     await app.close()
 
-    expect(canvas.removeEventListener, 'close must remove wheel listener').toHaveBeenCalledWith(
-      'wheel', expect.any(Function),
-    )
+    expect(canvas.removeEventListener, 'close must remove wheel listener').toHaveBeenCalledWith('wheel', expect.any(Function))
   })
 
   it('zoomIn action increases viewport scale by zoomStep', async () => {
@@ -2514,5 +2517,4 @@ describe('specialization-tree application', () => {
       expect(observer.disconnect, 'close must disconnect the ResizeObserver').toHaveBeenCalled()
     })
   })
-
 })

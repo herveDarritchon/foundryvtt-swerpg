@@ -30,9 +30,7 @@ describe('Talent purchase sync chain (US19)', () => {
       name: 'Vara Kesh',
       system: {
         details: {
-          specializations: [
-            { specializationId: 'spec-bodyguard', name: 'Bodyguard' },
-          ],
+          specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard' }],
         },
         progression: {
           talentPurchases: [],
@@ -94,14 +92,10 @@ describe('Talent purchase sync chain (US19)', () => {
       const actor = buildActor({
         system: {
           details: {
-            specializations: [
-              { specializationId: 'spec-bodyguard', name: 'Bodyguard' },
-            ],
+            specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard' }],
           },
           progression: {
-            talentPurchases: [
-              { treeId: 'tree-bodyguard', nodeId: 'r1c1', talentId: 'grit', specializationId: 'spec-bodyguard' },
-            ],
+            talentPurchases: [{ treeId: 'tree-bodyguard', nodeId: 'r1c1', talentId: 'grit', specializationId: 'spec-bodyguard' }],
             experience: { gained: 100, spent: 5 },
           },
         },
@@ -129,9 +123,7 @@ describe('Talent purchase sync chain (US19)', () => {
 
       await purchaseTalentNode(actor, 'spec-bodyguard', 'r1c1')
 
-      actor.system.progression.talentPurchases = [
-        { treeId: 'tree-bodyguard', nodeId: 'r1c1', talentId: 'grit', specializationId: 'spec-bodyguard' },
-      ]
+      actor.system.progression.talentPurchases = [{ treeId: 'tree-bodyguard', nodeId: 'r1c1', talentId: 'grit', specializationId: 'spec-bodyguard' }]
       actor.system.progression.experience.spent = 5
 
       resolveSpecializationTree.mockReturnValue(treeData)
@@ -196,9 +188,7 @@ describe('Talent purchase sync chain (US19)', () => {
             specializations: [{ specializationId: 'spec-bodyguard' }],
           },
           progression: {
-            talentPurchases: [
-              { treeId: 'tree-bodyguard', nodeId: 'r1c1', talentId: 'grit', specializationId: 'spec-bodyguard' },
-            ],
+            talentPurchases: [{ treeId: 'tree-bodyguard', nodeId: 'r1c1', talentId: 'grit', specializationId: 'spec-bodyguard' }],
             experience: { gained: 100, spent: 5 },
           },
         },
@@ -299,9 +289,7 @@ describe('Talent purchase sync chain (US19)', () => {
 
       const result1 = await purchaseTalentNode(actor, 'spec-bodyguard', 'r1c1')
       expect(result1.ok).toBe(true)
-      actor.system.progression.talentPurchases = [
-        { treeId: 'tree-bodyguard', nodeId: 'r1c1', talentId: 'grit', specializationId: 'spec-bodyguard' },
-      ]
+      actor.system.progression.talentPurchases = [{ treeId: 'tree-bodyguard', nodeId: 'r1c1', talentId: 'grit', specializationId: 'spec-bodyguard' }]
       actor.system.progression.experience.spent = 5
 
       let summary = buildOwnedTalentSummary(actor, definitions)
@@ -374,9 +362,7 @@ describe('Talent purchase sync chain (US19)', () => {
       definitions.set('toughness', { name: 'Toughness', activation: 'passive', isRanked: false })
 
       await purchaseTalentNode(actor, 'spec-bodyguard', 'r1c1')
-      actor.system.progression.talentPurchases = [
-        { treeId: 'tree-bodyguard', nodeId: 'r1c1', talentId: 'toughness', specializationId: 'spec-bodyguard' },
-      ]
+      actor.system.progression.talentPurchases = [{ treeId: 'tree-bodyguard', nodeId: 'r1c1', talentId: 'toughness', specializationId: 'spec-bodyguard' }]
       actor.system.progression.experience.spent = 5
 
       await purchaseTalentNode(actor, 'spec-merc', 'r1c1')
@@ -402,9 +388,7 @@ describe('Talent purchase sync chain (US19)', () => {
         name: 'Vara Kesh',
         system: {
           details: {
-            specializations: [
-              { specializationId: 'spec-bodyguard', name: 'Bodyguard' },
-            ],
+            specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard' }],
           },
           progression: {
             experience: { gained: 100, spent: 0 },

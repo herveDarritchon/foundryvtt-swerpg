@@ -90,6 +90,7 @@ Ce pattern est réutilisable, mais doit être rendu plus strict et plus aligné 
 **Décision** : résoudre `talentUuid` contre les talents déjà disponibles dans Foundry au moment où les arbres sont importés.
 
 **Justification** :
+
 - conforme à ton choix ;
 - évite de coupler ce ticket à une refonte d'ordonnancement inter-domaines ;
 - couvre à la fois les talents déjà présents et ceux importés plus tôt dans la même session s'ils existent déjà au moment du mapping.
@@ -99,6 +100,7 @@ Ce pattern est réutilisable, mais doit être rendu plus strict et plus aligné 
 **Décision** : ne jamais remplacer `talentId` par un UUID.
 
 **Justification** :
+
 - conforme ADR-0013 ;
 - indispensable pour garder une identité stable entre imports ;
 - évite de mélanger identité métier et référence technique.
@@ -108,6 +110,7 @@ Ce pattern est réutilisable, mais doit être rendu plus strict et plus aligné 
 **Décision** : renseigner `talentUuid` avec l'UUID Foundry exact si le talent est trouvé, sinon `null`.
 
 **Justification** :
+
 - conforme aux critères d'acceptation ;
 - évite de bloquer l'import pour une référence manquante ;
 - compatible avec ADR-0006 sur la résilience et l'isolation des erreurs.
@@ -117,6 +120,7 @@ Ce pattern est réutilisable, mais doit être rendu plus strict et plus aligné 
 **Décision** : construire l'index de résolution à partir de `talent.system.id` -> `talent.system.uuid`.
 
 **Justification** :
+
 - c'est le contrat cible posé par #242 ;
 - plus robuste qu'une recherche par nom ;
 - limite les ambiguïtés entre variantes de libellés.
@@ -126,6 +130,7 @@ Ce pattern est réutilisable, mais doit être rendu plus strict et plus aligné 
 **Décision** : autoriser un fallback limité sur `flags.swerpg.oggdudeKey` seulement si nécessaire pour retrouver des talents importés avant stabilisation complète de #242.
 
 **Justification** :
+
 - réduit le risque de rupture pendant la transition ;
 - garde `system.id` comme voie nominale ;
 - doit rester secondaire et explicitement borné.
@@ -135,6 +140,7 @@ Ce pattern est réutilisable, mais doit être rendu plus strict et plus aligné 
 **Décision** : enrichir les nœuds pendant le flux importer, avant persistance des `specialization-tree`.
 
 **Justification** :
+
 - l'issue parle d'enrichissement à l'import ;
 - permet de persister des données complètes et non de recalculer à l'affichage ;
 - prépare proprement le ticket UI suivant sans le mélanger à celui-ci.
@@ -151,10 +157,12 @@ Ce pattern est réutilisable, mais doit être rendu plus strict et plus aligné 
 - Le champ doit être optionnel et nullable, avec `initial: null` ou l'équivalent compatible avec le projet.
 
 **Fichiers**
+
 - `module/models/specialization-tree.mjs`
 - `tests/models/specialization-tree.test.mjs`
 
 **Risques**
+
 - casser des tests existants si le schéma suppose encore une forme minimale sans `talentUuid`.
 
 ---
@@ -172,10 +180,12 @@ Ce pattern est réutilisable, mais doit être rendu plus strict et plus aligné 
 - N'utiliser les flags historiques qu'en secours transitoire si nécessaire.
 
 **Fichiers potentiels**
+
 - `module/importer/items/specialization-tree-ogg-dude.mjs`
 - ou un nouveau helper dédié dans `module/importer/utils/`
 
 **Risques**
+
 - index de compendium incomplet si certains packs ne sont pas chargés ;
 - collisions si plusieurs talents partagent la même clé métier.
 
@@ -190,10 +200,12 @@ Ce pattern est réutilisable, mais doit être rendu plus strict et plus aligné 
 - Éviter de rendre `OggDudeDataElement` plus générique que nécessaire si le besoin est spécifique au domaine `specialization-tree`.
 
 **Fichiers**
+
 - `module/importer/items/specialization-tree-ogg-dude.mjs`
 - `module/importer/mappers/oggdude-specialization-tree-mapper.mjs`
 
 **Risques**
+
 - trop élargir l'API générique des mappers alors que le besoin est local ;
 - couplage inutile avec d'autres pipelines importer.
 
@@ -211,9 +223,11 @@ Ce pattern est réutilisable, mais doit être rendu plus strict et plus aligné 
   - journaliser un warning exploitable contenant au minimum `specializationId`, `nodeId`, `talentId`.
 
 **Fichiers**
+
 - `module/importer/mappers/oggdude-specialization-tree-mapper.mjs`
 
 **Risques**
+
 - bruit de logs si le warning n'est pas bien structuré ;
 - divergence entre `warnings[]` internes et logs émis si les deux ne sont pas alignés.
 
@@ -230,10 +244,12 @@ Ce pattern est réutilisable, mais doit être rendu plus strict et plus aligné 
   - `talentUuid` trouvé.
 
 **Fichiers**
+
 - `module/importer/mappers/oggdude-specialization-tree-mapper.mjs`
 - éventuellement `module/importer/utils/specialization-tree-import-utils.mjs`
 
 **Risques**
+
 - confondre "nœud invalide" et "référence non résolue" dans les stats métier.
 
 ---
@@ -254,11 +270,13 @@ Ce pattern est réutilisable, mais doit être rendu plus strict et plus aligné 
 - Garder des assertions ciblées et lisibles, conformément ADR-0012.
 
 **Fichiers**
+
 - `tests/importer/specialization-tree-ogg-dude.spec.mjs`
 - `tests/importer/specialization-tree-ogg-dude.integration.spec.mjs`
 - `tests/models/specialization-tree.test.mjs`
 
 **Risques**
+
 - mocks Foundry insuffisants pour la forme exacte des UUID compendium ;
 - tests trop couplés à des structures complètes au lieu du contrat métier.
 
@@ -273,38 +291,40 @@ Ce pattern est réutilisable, mais doit être rendu plus strict et plus aligné 
 - Documenter explicitement dans le plan ou PR que l'exploitation UI reste à traiter séparément.
 
 **Fichiers à relire**
+
 - `module/applications/specialization-tree-app.mjs`
 - `tests/applications/specialization-tree-app.test.mjs`
 
 **Risques**
+
 - confusion de périmètre avec le futur ticket UI.
 
 ---
 
 ## 6. Fichiers modifiés
 
-| Fichier | Action | Description |
-|---|---|---|
-| `module/models/specialization-tree.mjs` | modification | Ajouter `talentUuid` au schéma des nœuds |
-| `module/importer/items/specialization-tree-ogg-dude.mjs` | modification | Préparer le contexte de résolution des talents disponibles |
-| `module/importer/mappers/oggdude-specialization-tree-mapper.mjs` | modification | Enrichir chaque nœud avec `talentUuid` et warnings associés |
-| `module/importer/utils/specialization-tree-import-utils.mjs` | modification potentielle | Étendre les diagnostics si nécessaire |
-| `tests/models/specialization-tree.test.mjs` | modification | Valider le nouveau champ de schéma |
-| `tests/importer/specialization-tree-ogg-dude.spec.mjs` | modification | Couvrir les cas unitaires de résolution |
-| `tests/importer/specialization-tree-ogg-dude.integration.spec.mjs` | modification | Couvrir world items et compendium |
+| Fichier                                                            | Action                   | Description                                                 |
+| ------------------------------------------------------------------ | ------------------------ | ----------------------------------------------------------- |
+| `module/models/specialization-tree.mjs`                            | modification             | Ajouter `talentUuid` au schéma des nœuds                    |
+| `module/importer/items/specialization-tree-ogg-dude.mjs`           | modification             | Préparer le contexte de résolution des talents disponibles  |
+| `module/importer/mappers/oggdude-specialization-tree-mapper.mjs`   | modification             | Enrichir chaque nœud avec `talentUuid` et warnings associés |
+| `module/importer/utils/specialization-tree-import-utils.mjs`       | modification potentielle | Étendre les diagnostics si nécessaire                       |
+| `tests/models/specialization-tree.test.mjs`                        | modification             | Valider le nouveau champ de schéma                          |
+| `tests/importer/specialization-tree-ogg-dude.spec.mjs`             | modification             | Couvrir les cas unitaires de résolution                     |
+| `tests/importer/specialization-tree-ogg-dude.integration.spec.mjs` | modification             | Couvrir world items et compendium                           |
 
 ---
 
 ## 7. Risques
 
-| Risque | Impact | Mitigation |
-|---|---|---|
-| `#242` non totalement appliquée | résolution incomplète ou ambiguë | considérer `#242` comme prérequis dur pour la voie nominale |
-| plusieurs talents pour un même `system.id` | UUID non déterministe | documenter une règle de priorité et logger les collisions |
-| compendium index sans `system.id` exploitable | faux négatifs en compendium | fallback transitoire borné sur `flags.swerpg.oggdudeKey` |
-| surcharge de l'API générique des mappers | complexité technique inutile | injecter le contexte au niveau `buildSpecializationTreeContext()` |
-| warnings peu exploitables | diagnostic difficile | inclure `specializationId`, `nodeId`, `talentId`, source de résolution |
-| dérive de périmètre vers l'UI | ticket trop large | maintenir l'exploitation `fromUuidSync(node.talentUuid)` hors de #243 |
+| Risque                                        | Impact                           | Mitigation                                                             |
+| --------------------------------------------- | -------------------------------- | ---------------------------------------------------------------------- |
+| `#242` non totalement appliquée               | résolution incomplète ou ambiguë | considérer `#242` comme prérequis dur pour la voie nominale            |
+| plusieurs talents pour un même `system.id`    | UUID non déterministe            | documenter une règle de priorité et logger les collisions              |
+| compendium index sans `system.id` exploitable | faux négatifs en compendium      | fallback transitoire borné sur `flags.swerpg.oggdudeKey`               |
+| surcharge de l'API générique des mappers      | complexité technique inutile     | injecter le contexte au niveau `buildSpecializationTreeContext()`      |
+| warnings peu exploitables                     | diagnostic difficile             | inclure `specializationId`, `nodeId`, `talentId`, source de résolution |
+| dérive de périmètre vers l'UI                 | ticket trop large                | maintenir l'exploitation `fromUuidSync(node.talentUuid)` hors de #243  |
 
 ---
 

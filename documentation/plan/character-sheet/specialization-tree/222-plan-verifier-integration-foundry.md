@@ -13,6 +13,7 @@
 Vérifier que les corrections apportées au mapper OggDude des arbres de spécialisation (US1–US4) s'intègrent correctement dans Foundry VTT : l'import complet depuis un ZIP OggDude produit des items `specialization-tree` avec des nœuds et connexions non vides, sans régression sur les autres types d'items importés.
 
 Le résultat attendu est le suivant :
+
 - l'import Foundry d'un arbre réel (ex. `Advisor.xml`) produit un item avec `system.nodes.length > 0` et `system.connections.length > 0` ;
 - les compteurs `rawNodeCount`, `importedNodeCount`, `importedConnectionCount` sont cohérents et accessibles dans les flags ;
 - les `talentId` des nœuds correspondent aux talents réellement présents dans les compendiums ;
@@ -60,16 +61,17 @@ Le résultat attendu est le suivant :
 
 L'epic `#217` est en phase finale. Les US suivantes sont mergées sur `develop` :
 
-| US | Issue | PR | Statut |
-|---|---|---|---|
-| US1 — Mapper les nœuds depuis le format réel | #218 | #223 | ✅ Mergé |
-| US2 — Générer les connexions depuis Directions | #219 | #224 | ✅ Mergé |
-| US3 — Logs de diagnostic | #220 | #225 | ✅ Mergé |
-| US4 — Tests unitaires format réel | #221 | #226 | ✅ Mergé |
+| US                                             | Issue | PR   | Statut   |
+| ---------------------------------------------- | ----- | ---- | -------- |
+| US1 — Mapper les nœuds depuis le format réel   | #218  | #223 | ✅ Mergé |
+| US2 — Générer les connexions depuis Directions | #219  | #224 | ✅ Mergé |
+| US3 — Logs de diagnostic                       | #220  | #225 | ✅ Mergé |
+| US4 — Tests unitaires format réel              | #221  | #226 | ✅ Mergé |
 
 ### État du mapper (`oggdude-specialization-tree-mapper.mjs`)
 
 Le mapper contient aujourd'hui :
+
 - `extractNodesFromRows()` — lit `Talents.Key`, `Cost`, `Directions.Direction` (format réel) et `TalentColumns.TalentColumn` (fallback) — couvert par #218
 - `extractDirectionalConnections(nodes)` — génère connexions `horizontal`/`vertical` depuis `Right`/`Down` — couvert par #219
 - `detectInputFormat(xmlSpecialization)` — détection de format — couvert par #220
@@ -105,6 +107,7 @@ Le fichier `documentation/cadrage/character-sheet/specialization-tree/fix-oggdud
 **Décision** : ajouter un test d'intégration Vitest qui exécute la chaîne complète `parseXmlToJson → buildSpecializationTreeContext → specializationTreeMapper` en mockant uniquement le filesystem OggDudeDataElement (pas Foundry).
 
 **Justification** :
+
 - `buildSpecializationTreeContext` est déjà testé dans la spec existante (mock `buildJsonDataFromDirectory`)
 - Ajouter un test qui part d'un vrai fichier XML, passe par le context builder, et vérifie le résultat du mapper permettra de valider la chaîne sans environnement Foundry
 - Évite la complexité et la fragilité d'un test Foundry réel (nécessite `game`, `ui`, etc.)
@@ -112,6 +115,7 @@ Le fichier `documentation/cadrage/character-sheet/specialization-tree/fix-oggdud
 ### 4.2. Scénario de validation manuelle documenté
 
 **Décision** : rédiger un scénario de test manuel (dans les commentaires du code ou dans un fichier `tests/manual/specialization-tree-import-validation.md`) qui décrit les étapes pour valider dans Foundry :
+
 1. Charger un ZIP OggDude contenant Advisor + ses talents
 2. Lancer l'import
 3. Vérifier les items créés dans le compendium
@@ -137,6 +141,7 @@ Le fichier `documentation/cadrage/character-sheet/specialization-tree/fix-oggdud
 ### Étape 1 — Exécuter la suite de tests complète et vérifier l'absence de régression
 
 **Quoi faire** :
+
 - Lancer `npx vitest run tests/importer/` et vérifier que les 547+ tests passent
 - Lancer `npx vitest run tests/` complet (si faisable) pour détecter toute régression hors importer
 - Signaler tout échec comme bug bloquant avant de continuer
@@ -148,19 +153,23 @@ Le fichier `documentation/cadrage/character-sheet/specialization-tree/fix-oggdud
 ### Étape 2 — Vérifier la chaîne parseur → context builder → mapper dans un test automatisé
 
 **Quoi faire** :
+
 - Ajouter un test d'intégration dans la spec existante (`specialization-tree-ogg-dude.integration.spec.mjs`) ou un nouveau fichier dédié
 - Le test lit la fixture `tests/fixtures/Specializations/Advisor.xml`, appelle `parseXmlToJson`, puis `buildSpecializationTreeContext` avec les données parsées, et vérifie que l'élément produit n'a pas de nœuds/connexions vides
 - Mock `OggDudeDataElement.buildJsonDataFromDirectory` pour retourner les données parsées au lieu de lire le filesystem ZIP
 
 **Fichiers** :
+
 - `tests/importer/specialization-tree-ogg-dude.integration.spec.mjs` (ajout de test)
 
 **Risques spécifiques** :
+
 - `buildSpecializationTreeContext` dépend de `OggDudeDataElement.buildJsonDataFromDirectory` qui lit un ZIP → nécessite un mock minimal
 
 ### Étape 3 — Documenter le scénario de validation manuelle Foundry
 
 **Quoi faire** :
+
 - Créer un fichier `tests/manual/specialization-tree-import-validation.md`
 - Documenter les étapes précises pour :
   1. Préparer un ZIP OggDude de test contenant Advisor.xml + talents + carrières
@@ -172,14 +181,17 @@ Le fichier `documentation/cadrage/character-sheet/specialization-tree/fix-oggdud
   7. Vérifier que les autres items (carrières, species) sont intacts
 
 **Fichiers** :
+
 - `tests/manual/specialization-tree-import-validation.md` (création)
 
 **Risques spécifiques** :
+
 - Scénario manuel obsolète si le workflow d'import change → le maintenir à jour avec les versions
 
 ### Étape 4 — Exécuter le scénario manuel et consigner les résultats
 
 **Quoi faire** :
+
 - Exécuter le scénario de validation manuelle dans une instance Foundry réelle
 - Noter les résultats : succès/échec pour chaque étape
 - En cas d'échec, créer un bug report et retourner en US1–US4 pour correction
@@ -188,11 +200,13 @@ Le fichier `documentation/cadrage/character-sheet/specialization-tree/fix-oggdud
 **Fichiers** : aucun (validation manuelle)
 
 **Risques spécifiques** :
+
 - L'environnement Foundry réel peut révéler des problèmes non visibles en tests Vitest (ex. timing, hooks, permissions)
 
 ### Étape 5 — Nettoyage et clôture de l'epic
 
 **Quoi faire** :
+
 - Mettre à jour le fichier de cadrage (`fix-oggdude-specialization-tree-import-empty-nodes.md`) avec un résumé des problèmes résolus et de l'état actuel
 - Vérifier que tous les critères d'acceptation de l'epic #217 sont remplis :
   - ✅ 20 nœuds produits depuis Advisor.xml
@@ -205,6 +219,7 @@ Le fichier `documentation/cadrage/character-sheet/specialization-tree/fix-oggdud
 - Clore l'epic #217
 
 **Fichiers** :
+
 - `documentation/cadrage/character-sheet/specialization-tree/fix-oggdude-specialization-tree-import-empty-nodes.md` (mise à jour)
 
 **Risques spécifiques** : aucun.
@@ -213,23 +228,23 @@ Le fichier `documentation/cadrage/character-sheet/specialization-tree/fix-oggdud
 
 ## 6. Fichiers modifiés
 
-| Fichier | Action | Description du changement |
-|---|---|---|
-| `tests/importer/specialization-tree-ogg-dude.integration.spec.mjs` | Modification | Ajouter un test qui valide la chaîne parseur → context builder → mapper avec données réelles |
-| `tests/manual/specialization-tree-import-validation.md` | Création | Scénario de validation manuelle documentée pour environnement Foundry réel |
-| `documentation/cadrage/character-sheet/specialization-tree/fix-oggdude-specialization-tree-import-empty-nodes.md` | Mise à jour | Résumé des corrections apportées et état de l'epic |
+| Fichier                                                                                                           | Action       | Description du changement                                                                    |
+| ----------------------------------------------------------------------------------------------------------------- | ------------ | -------------------------------------------------------------------------------------------- |
+| `tests/importer/specialization-tree-ogg-dude.integration.spec.mjs`                                                | Modification | Ajouter un test qui valide la chaîne parseur → context builder → mapper avec données réelles |
+| `tests/manual/specialization-tree-import-validation.md`                                                           | Création     | Scénario de validation manuelle documentée pour environnement Foundry réel                   |
+| `documentation/cadrage/character-sheet/specialization-tree/fix-oggdude-specialization-tree-import-empty-nodes.md` | Mise à jour  | Résumé des corrections apportées et état de l'epic                                           |
 
 ---
 
 ## 7. Risques
 
-| Risque | Impact | Mitigation |
-|---|---|---|
-| Tests Vitest mockés ne couvrent pas les appels Foundry réels | Faux sentiment de sécurité, bugs non détectés | Documenter et exécuter le scénario manuel (Étape 4) |
-| `buildSpecializationTreeContext` difficile à tester sans mock OggDudeDataElement | Test fragile ou trop complexe | Mocker uniquement `buildJsonDataFromDirectory`, tester le reste du pipeline |
-| Scénario manuel non exécuté faute de temps ou d'environnement | Epic non validée | Planifier une session de validation dédiée avant la clôture |
-| Régression silencieuse sur un autre type d'import | Découverte tardive | Exécuter la suite complète de tests avant et après la validation (Étape 1) |
-| Le fichier de cadrage vide ne fournit pas de contraintes | Pas de guidance métier supplémentaire | Utiliser les AC de l'epic #217 comme unique référence |
+| Risque                                                                           | Impact                                        | Mitigation                                                                  |
+| -------------------------------------------------------------------------------- | --------------------------------------------- | --------------------------------------------------------------------------- |
+| Tests Vitest mockés ne couvrent pas les appels Foundry réels                     | Faux sentiment de sécurité, bugs non détectés | Documenter et exécuter le scénario manuel (Étape 4)                         |
+| `buildSpecializationTreeContext` difficile à tester sans mock OggDudeDataElement | Test fragile ou trop complexe                 | Mocker uniquement `buildJsonDataFromDirectory`, tester le reste du pipeline |
+| Scénario manuel non exécuté faute de temps ou d'environnement                    | Epic non validée                              | Planifier une session de validation dédiée avant la clôture                 |
+| Régression silencieuse sur un autre type d'import                                | Découverte tardive                            | Exécuter la suite complète de tests avant et après la validation (Étape 1)  |
+| Le fichier de cadrage vide ne fournit pas de contraintes                         | Pas de guidance métier supplémentaire         | Utiliser les AC de l'epic #217 comme unique référence                       |
 
 ---
 
@@ -256,6 +271,7 @@ Si les étapes 1 et 2 sont atomiques :
 - **Rôle dans l'epic** : US5 est la dernière US de l'epic #217. Sa validation confirme que toutes les corrections antérieures fonctionnent ensemble dans Foundry.
 
 Ordre recommandé final :
+
 1. `#218` — mapping des nœuds (✅)
 2. `#219` — connexions directionnelles (✅)
 3. `#220` — logs de diagnostic (✅)

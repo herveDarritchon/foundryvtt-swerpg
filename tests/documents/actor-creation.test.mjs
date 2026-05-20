@@ -65,12 +65,17 @@ describe('SwerpgActor Character Creation', () => {
       const isSpecialization = config?.specialization === true
       const action = delta > 0 ? 'train' : 'forget'
 
-      const skillObj = SkillFactory.build(actor, skillId, {
-        action,
-        isCreation,
-        isCareer,
-        isSpecialization,
-      }, {})
+      const skillObj = SkillFactory.build(
+        actor,
+        skillId,
+        {
+          action,
+          isCreation,
+          isCareer,
+          isSpecialization,
+        },
+        {},
+      )
 
       const evaluated = skillObj.process()
       if (evaluated?.options?.message) {
@@ -118,12 +123,7 @@ describe('SwerpgActor Character Creation', () => {
 
       await actor.purchaseSkill('cool', -1)
 
-      expect(SkillFactory.build).toHaveBeenCalledWith(
-        actor,
-        'cool',
-        expect.objectContaining({ action: 'forget' }),
-        {},
-      )
+      expect(SkillFactory.build).toHaveBeenCalledWith(actor, 'cool', expect.objectContaining({ action: 'forget' }), {})
     })
 
     test('should handle delta > 1 with Math.sign', async () => {
@@ -135,12 +135,7 @@ describe('SwerpgActor Character Creation', () => {
 
       await actor.purchaseSkill('cool', 5)
 
-      expect(SkillFactory.build).toHaveBeenCalledWith(
-        actor,
-        'cool',
-        expect.objectContaining({ action: 'train' }),
-        {},
-      )
+      expect(SkillFactory.build).toHaveBeenCalledWith(actor, 'cool', expect.objectContaining({ action: 'train' }), {})
     })
 
     test('should set isCreation=true when actor.isL0=true', async () => {
@@ -153,12 +148,7 @@ describe('SwerpgActor Character Creation', () => {
 
       await actor.purchaseSkill('cool', 1)
 
-      expect(SkillFactory.build).toHaveBeenCalledWith(
-        actor,
-        'cool',
-        expect.objectContaining({ isCreation: true }),
-        {},
-      )
+      expect(SkillFactory.build).toHaveBeenCalledWith(actor, 'cool', expect.objectContaining({ isCreation: true }), {})
     })
 
     test('should set isCareer from SYSTEM.SKILLS for brawl', async () => {
@@ -170,12 +160,7 @@ describe('SwerpgActor Character Creation', () => {
 
       await actor.purchaseSkill('brawl', 1)
 
-      expect(SkillFactory.build).toHaveBeenCalledWith(
-        actor,
-        'brawl',
-        expect.objectContaining({ isCareer: true, isSpecialization: false }),
-        {},
-      )
+      expect(SkillFactory.build).toHaveBeenCalledWith(actor, 'brawl', expect.objectContaining({ isCareer: true, isSpecialization: false }), {})
     })
 
     test('should show warning when SkillFactory returns error object', async () => {
@@ -183,7 +168,7 @@ describe('SwerpgActor Character Creation', () => {
       const errorResult = {
         options: { message: 'Cannot purchase skill' },
         process: vi.fn().mockReturnValue({
-          options: { message: 'Cannot purchase skill' }
+          options: { message: 'Cannot purchase skill' },
         }),
         updateState: vi.fn(),
       }

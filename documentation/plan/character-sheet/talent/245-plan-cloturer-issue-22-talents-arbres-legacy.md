@@ -92,6 +92,7 @@ La clôture de `#22` n'exige pas leur suppression immédiate, mais impose qu'ils
 **Décision** : considérer l'issue `#22` comme une issue d'architecture et d'alignement documentaire/technique minimal, pas comme un ticket de suppression exhaustive du legacy talents.
 
 Justification :
+
 - cohérent avec le texte initial de l'issue ;
 - cohérent avec ADR-0014 ;
 - évite de bloquer indéfiniment la clôture sur des travaux plus larges déjà identifiés ailleurs.
@@ -101,6 +102,7 @@ Justification :
 **Décision** : une documentation active qui décrit encore `SwerpgTalentNode` ou `system.node` comme contrat normal du flux `Talent.xml` doit être réécrite, pas seulement préfacée d'un avertissement.
 
 Justification :
+
 - une note en tête ne suffit pas si le contenu détaillé raconte encore l'ancien modèle ;
 - la doc doit aider un futur contributeur à prendre la bonne direction sans ambiguïté.
 
@@ -109,6 +111,7 @@ Justification :
 **Décision** : tant que `node`, `trees` et `row` restent dans `module/models/talent.mjs`, ils doivent être signalés dans le code comme champs legacy non canoniques V1.
 
 Justification :
+
 - limite les réintroductions accidentelles dans de nouveaux développements ;
 - rend le contrat plus honnête pour les mainteneurs ;
 - aligne le code avec ADR-0014 sans forcer une suppression risquée immédiate.
@@ -118,6 +121,7 @@ Justification :
 **Décision** : si `node`, `tier` ou `rank` sont encore utiles dans le contexte d'import, ils doivent être conservés uniquement comme aide de diagnostic ou de compatibilité transitoire, jamais comme représentation métier canonique de l'arbre V1.
 
 Justification :
+
 - respecte ADR-0014 ;
 - évite une suppression trop agressive ;
 - permet un nettoyage progressif et testable.
@@ -131,6 +135,7 @@ Justification :
 **Quoi faire** : remplacer les sections qui décrivent le flux comme centré sur `SwerpgTalentNode`, `system.node`, `rank` et un pseudo-contrat d'arbre par une documentation alignée sur le mapper réel : définition générique, activation, `isRanked`, description enrichie, données d'import dans `flags.swerpg.import`, et séparation stricte avec `specialization-tree`.
 
 **Fichiers** :
+
 - `documentation/importer/talent-import-architecture.md`
 
 **Risques** : réécrire trop vite et perdre quelques détails utiles sur les diagnostics d'import ; corriger la direction mais décrire un contrat qui ne correspond pas exactement au code actuel.
@@ -140,6 +145,7 @@ Justification :
 **Quoi faire** : ajouter une documentation de code explicite sur `node`, `trees` et `row` pour préciser qu'ils ne sont pas canoniques pour la V1 Talents Edge. Ajuster la JSDoc et, si utile, des commentaires ciblés dans `defineSchema()` et/ou les getters concernés.
 
 **Fichiers** :
+
 - `module/models/talent.mjs`
 
 **Risques** : commentaires trop vagues ou trop dispersés ; oubli d'un point de contact important qui continuerait de présenter ces champs comme normaux.
@@ -149,11 +155,13 @@ Justification :
 **Quoi faire** : relire `module/importer/mappers/oggdude-talent-mapper.mjs` et ses mappings satellites pour décider si `resolveTalentNode()`, `tier` et `rank` sont encore nécessaires.
 
 Sous-cas possibles :
+
 - s'ils ne servent plus au contrat ni aux tests utiles, les retirer du contexte principal ;
 - s'ils servent encore au diagnostic, les reléguer explicitement au statut de métadonnées non canoniques ;
 - s'ils servent à un test obsolète, corriger le test au lieu de sanctuariser le legacy.
 
 **Fichiers** :
+
 - `module/importer/mappers/oggdude-talent-mapper.mjs`
 - `module/importer/mappings/oggdude-talent-node-map.mjs`
 - `module/importer/mappings/oggdude-talent-rank-map.mjs`
@@ -172,6 +180,7 @@ Sous-cas possibles :
 - qu'aucun test ne dépend encore d'une hypothèse du type "Talent.xml = full tree support".
 
 **Fichiers** :
+
 - `tests/importer/talent-mapper.spec.mjs`
 - `tests/importer/talent-import-real-test.spec.mjs`
 - éventuellement un nouveau test ciblé si le contrat actuel n'est pas assez lisible
@@ -188,6 +197,7 @@ Sous-cas possibles :
 - ce qui reste volontairement hors scope et suivi par des tickets/US de nettoyage legacy séparés.
 
 **Fichiers / supports** :
+
 - issue GitHub `#22`
 
 **Risques** : fermer l'issue sans mentionner clairement le reliquat legacy restant, ce qui pourrait recréer de l'ambiguïté plus tard.
@@ -196,15 +206,15 @@ Sous-cas possibles :
 
 ## 6. Fichiers modifiés
 
-| Fichier | Action | Description du changement |
-|---|---|---|
-| `documentation/importer/talent-import-architecture.md` | modification | Réécrire le document pour refléter le vrai contrat `Talent.xml` générique et la séparation avec `specialization-tree` |
-| `module/models/talent.mjs` | modification | Annoter `node`, `trees`, `row` comme legacy non canoniques V1 |
-| `module/importer/mappers/oggdude-talent-mapper.mjs` | modification potentielle | Réduire ou requalifier les reliquats legacy du contexte d'import |
-| `module/importer/mappings/oggdude-talent-node-map.mjs` | modification potentielle | Ajuster ou isoler la logique de résolution legacy si elle reste nécessaire |
-| `module/importer/mappings/oggdude-talent-rank-map.mjs` | modification potentielle | Vérifier si la donnée reste utile comme diagnostic uniquement |
-| `tests/importer/talent-mapper.spec.mjs` | modification | Verrouiller le contrat final du mapper talent |
-| `tests/importer/talent-import-real-test.spec.mjs` | modification potentielle | Vérifier le pipeline réel sans support implicite des arbres via `Talent.xml` |
+| Fichier                                                | Action                   | Description du changement                                                                                             |
+| ------------------------------------------------------ | ------------------------ | --------------------------------------------------------------------------------------------------------------------- |
+| `documentation/importer/talent-import-architecture.md` | modification             | Réécrire le document pour refléter le vrai contrat `Talent.xml` générique et la séparation avec `specialization-tree` |
+| `module/models/talent.mjs`                             | modification             | Annoter `node`, `trees`, `row` comme legacy non canoniques V1                                                         |
+| `module/importer/mappers/oggdude-talent-mapper.mjs`    | modification potentielle | Réduire ou requalifier les reliquats legacy du contexte d'import                                                      |
+| `module/importer/mappings/oggdude-talent-node-map.mjs` | modification potentielle | Ajuster ou isoler la logique de résolution legacy si elle reste nécessaire                                            |
+| `module/importer/mappings/oggdude-talent-rank-map.mjs` | modification potentielle | Vérifier si la donnée reste utile comme diagnostic uniquement                                                         |
+| `tests/importer/talent-mapper.spec.mjs`                | modification             | Verrouiller le contrat final du mapper talent                                                                         |
+| `tests/importer/talent-import-real-test.spec.mjs`      | modification potentielle | Vérifier le pipeline réel sans support implicite des arbres via `Talent.xml`                                          |
 
 ---
 

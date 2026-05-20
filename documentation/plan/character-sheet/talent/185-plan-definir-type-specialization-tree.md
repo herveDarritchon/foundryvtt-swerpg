@@ -31,16 +31,16 @@ et extensible ; US2 détaillera la structure des nœuds.
 ### Inclus dans US1
 
 - Création du fichier `module/models/specialization-tree.mjs` avec `TypeDataModel` comportant :
-    - `description` : `HTMLField` — conforme au pattern des autres Items (career, specialization, etc.)
-    - `specializationId` : `StringField` — référence vers la spécialisation liée
-    - `careerId` : `StringField` — référence vers la carrière liée (nullable, facultative)
-    - `nodes` : `ArrayField` de `SchemaField` minimal — tableau de nœuds, chaque nœud porte au minimum `nodeId` (
-      `StringField` requis) et `talentId` (`StringField` requis). Le schéma est conçu pour être étendu par US2 sans
-      breaking change
-    - `connections` : `ArrayField` de `SchemaField` minimal — tableau de connexions entre nœuds, chaque connexion porte
-      `from` et `to` (`StringField` requis)
-    - `source` : `SchemaField` avec `system` (`StringField`), `book` (`StringField`, nullable), `page` (`StringField`,
-      nullable) — conforme au pattern `motivation`/`duty` existant
+  - `description` : `HTMLField` — conforme au pattern des autres Items (career, specialization, etc.)
+  - `specializationId` : `StringField` — référence vers la spécialisation liée
+  - `careerId` : `StringField` — référence vers la carrière liée (nullable, facultative)
+  - `nodes` : `ArrayField` de `SchemaField` minimal — tableau de nœuds, chaque nœud porte au minimum `nodeId` (
+    `StringField` requis) et `talentId` (`StringField` requis). Le schéma est conçu pour être étendu par US2 sans
+    breaking change
+  - `connections` : `ArrayField` de `SchemaField` minimal — tableau de connexions entre nœuds, chaque connexion porte
+    `from` et `to` (`StringField` requis)
+  - `source` : `SchemaField` avec `system` (`StringField`), `book` (`StringField`, nullable), `page` (`StringField`,
+    nullable) — conforme au pattern `motivation`/`duty` existant
 - Export dans `module/models/_module.mjs` sous le nom `SwerpgSpecializationTree`
 - Enregistrement du type d'Item dans `system.json` :
   ```json
@@ -51,26 +51,26 @@ et extensible ; US2 détaillera la structure des nœuds.
   CONFIG.Item.dataModels['specialization-tree'] = models.SwerpgSpecializationTree
   ```
 - Enregistrement d'une sheet minimale dans `swerpg.mjs` :
-    - Classe `SpecializationTreeSheet` dans `module/applications/sheets/specialization-tree.mjs`
-    - Utilise `api.HandlebarsApplicationMixin(sheets.ItemSheetV2)` via `SwerpgBaseItemSheet`
-    - Template partiel `templates/sheets/partials/specialization-tree-config.hbs` pour l'onglet `config`
-    - L'onglet `config` affiche en lecture/édition les champs `specializationId`, `careerId`, `source`
-    - L'onglet `description` utilise le template item-description standard
-    - Export dans `module/applications/_module.mjs`
-    - Enregistrement V2 (utilise `foundry.applications.apps.DocumentSheetConfig.registerSheet`)
+  - Classe `SpecializationTreeSheet` dans `module/applications/sheets/specialization-tree.mjs`
+  - Utilise `api.HandlebarsApplicationMixin(sheets.ItemSheetV2)` via `SwerpgBaseItemSheet`
+  - Template partiel `templates/sheets/partials/specialization-tree-config.hbs` pour l'onglet `config`
+  - L'onglet `config` affiche en lecture/édition les champs `specializationId`, `careerId`, `source`
+  - L'onglet `description` utilise le template item-description standard
+  - Export dans `module/applications/_module.mjs`
+  - Enregistrement V2 (utilise `foundry.applications.apps.DocumentSheetConfig.registerSheet`)
 - Clés d'i18n minimales dans `lang/en.json` et `lang/fr.json` :
-    - `TYPES.Item.specialization-tree` : nom lisible du type
-    - `SWERPG.SHEETS.SpecializationTree` : label de la sheet
-    - `SPECIALIZATION_TREE.FIELDS.specializationId` : label + hint
-    - `SPECIALIZATION_TREE.FIELDS.careerId` : label + hint
-    - `SPECIALIZATION_TREE.FIELDS.source` : label + hint pour les sous-champs
-    - `SPECIALIZATION_TREE.FIELDS.nodes` : label (affichage info)
-    - `SPECIALIZATION_TREE.FIELDS.connections` : label (affichage info)
+  - `TYPES.Item.specialization-tree` : nom lisible du type
+  - `SWERPG.SHEETS.SpecializationTree` : label de la sheet
+  - `SPECIALIZATION_TREE.FIELDS.specializationId` : label + hint
+  - `SPECIALIZATION_TREE.FIELDS.careerId` : label + hint
+  - `SPECIALIZATION_TREE.FIELDS.source` : label + hint pour les sous-champs
+  - `SPECIALIZATION_TREE.FIELDS.nodes` : label (affichage info)
+  - `SPECIALIZATION_TREE.FIELDS.connections` : label (affichage info)
 - Tests Vitest :
-    - Test unitaire du `TypeDataModel.defineSchema()` — vérifie la présence et le type de tous les champs
-    - Test de création d'un item `specialization-tree` avec des données valides
-    - Test de validation : champs requis manquants, valeurs invalides
-    - Test d'ouverture de la sheet — vérifie que la classe sheet existe et s'initialise sans erreur
+  - Test unitaire du `TypeDataModel.defineSchema()` — vérifie la présence et le type de tous les champs
+  - Test de création d'un item `specialization-tree` avec des données valides
+  - Test de validation : champs requis manquants, valeurs invalides
+  - Test d'ouverture de la sheet — vérifie que la classe sheet existe et s'initialise sans erreur
 
 ### Exclu de US1
 
@@ -284,7 +284,7 @@ Justification :
 ## 6. Fichiers modifiés
 
 | Fichier                                                    | Action       | Description du changement                                                                                                                                                |
-|------------------------------------------------------------|--------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ---------------------------------------------------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `module/models/specialization-tree.mjs`                    | Création     | Data model `SwerpgSpecializationTree` avec `description`, `specializationId`, `careerId`, `nodes`, `connections`, `source`                                               |
 | `module/models/_module.mjs`                                | Modification | Ajout de l'export `SwerpgSpecializationTree`                                                                                                                             |
 | `system.json`                                              | Modification | Ajout de `"specialization-tree": {"htmlFields": ["description"]}` sous `documentTypes.Item`                                                                              |
@@ -301,7 +301,7 @@ Justification :
 ## 7. Risques
 
 | Risque                                                                                     | Impact                                                  | Mitigation                                                                                                                |
-|--------------------------------------------------------------------------------------------|---------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------|
+| ------------------------------------------------------------------------------------------ | ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
 | Ordre d'init dans `swerpg.mjs` : data model enregistré avant que le module ne soit importé | Erreur Foundry au démarrage, Items non créables         | Vérifier que `_module.mjs` est importé avant le bloc init ; suivre le pattern des autres data models existants            |
 | Template partiel `specialization-tree-config.hbs` absent ou mal nommé                      | La sheet ne trouve pas le partiel, erreur au rendu      | Suivre la convention de nommage exacte : `templates/sheets/partials/specialization-tree-config.hbs`                       |
 | `system.json` non rechargé par Foundry après modification                                  | La création d'Item du type `specialization-tree` échoue | Foundry recharge `system.json` au démarrage ; pas de mitigation particulière                                              |
@@ -313,25 +313,25 @@ Justification :
 ## 8. Proposition d'ordre de commit
 
 1. **`feat(model): create SwerpgSpecializationTree TypeDataModel`**
-    - `module/models/specialization-tree.mjs` (création)
-    - `module/models/_module.mjs` (modification)
+   - `module/models/specialization-tree.mjs` (création)
+   - `module/models/_module.mjs` (modification)
 
 2. **`feat(system): declare specialization-tree Item type`**
-    - `system.json` (modification)
-    - `swerpg.mjs` (modification — enregistrement data model)
+   - `system.json` (modification)
+   - `swerpg.mjs` (modification — enregistrement data model)
 
 3. **`feat(ui): add minimal SpecializationTreeSheet`**
-    - `module/applications/sheets/specialization-tree.mjs` (création)
-    - `module/applications/_module.mjs` (modification)
-    - `templates/sheets/partials/specialization-tree-config.hbs` (création)
-    - `swerpg.mjs` (modification — enregistrement sheet)
+   - `module/applications/sheets/specialization-tree.mjs` (création)
+   - `module/applications/_module.mjs` (modification)
+   - `templates/sheets/partials/specialization-tree-config.hbs` (création)
+   - `swerpg.mjs` (modification — enregistrement sheet)
 
 4. **`feat(i18n): add specialization-tree localization keys`**
-    - `lang/en.json` (modification)
-    - `lang/fr.json` (modification)
+   - `lang/en.json` (modification)
+   - `lang/fr.json` (modification)
 
 5. **`test(model): add specialization-tree unit tests`**
-    - `tests/models/specialization-tree.test.mjs` (création)
+   - `tests/models/specialization-tree.test.mjs` (création)
 
 ---
 
@@ -339,8 +339,8 @@ Justification :
 
 - **Dépend de** : Rien. US1 est le socle du Lot 1 et n'a pas de prérequis.
 - **Est dépendante de** :
-    - US2 (structure des nœuds) — enrichira `nodes` et `connections` dans le même data model
-    - US3 (achats acteur) — utilisera `specialization-tree` comme référentiel
-    - US4 (résolution spécialisation → arbre) — lira `specialization-tree` depuis le monde/compendium
-    - US10 (import OggDude des arbres) — produira des Items `specialization-tree`
+  - US2 (structure des nœuds) — enrichira `nodes` et `connections` dans le même data model
+  - US3 (achats acteur) — utilisera `specialization-tree` comme référentiel
+  - US4 (résolution spécialisation → arbre) — lira `specialization-tree` depuis le monde/compendium
+  - US10 (import OggDude des arbres) — produira des Items `specialization-tree`
 - **Ordre conseillé** : US1 → US2 → US3 → US4, puis Lot 2 et Lot 3 en parallèle.

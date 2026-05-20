@@ -5,11 +5,13 @@ Dependencies let you mark that an issue is blocked by another issue. This create
 ## Using REST API
 
 **List issues blocking this issue:**
+
 ```
 GET /repos/{owner}/{repo}/issues/{issue_number}/dependencies/blocked_by
 ```
 
 **Add a blocking dependency:**
+
 ```
 POST /repos/{owner}/{repo}/issues/{issue_number}/dependencies/blocked_by
 Body: { "issue_id": 12345 }
@@ -18,6 +20,7 @@ Body: { "issue_id": 12345 }
 The `issue_id` is the numeric issue **ID** (not the issue number).
 
 **Remove a blocking dependency:**
+
 ```
 DELETE /repos/{owner}/{repo}/issues/{issue_number}/dependencies/blocked_by/{issue_id}
 ```
@@ -25,38 +28,58 @@ DELETE /repos/{owner}/{repo}/issues/{issue_number}/dependencies/blocked_by/{issu
 ## Using GraphQL
 
 **Read dependencies:**
+
 ```graphql
 {
   repository(owner: "OWNER", name: "REPO") {
     issue(number: 123) {
-      blockedBy(first: 10) { nodes { number title state } }
-      blocking(first: 10) { nodes { number title state } }
-      issueDependenciesSummary { blockedBy blocking totalBlockedBy totalBlocking }
+      blockedBy(first: 10) {
+        nodes {
+          number
+          title
+          state
+        }
+      }
+      blocking(first: 10) {
+        nodes {
+          number
+          title
+          state
+        }
+      }
+      issueDependenciesSummary {
+        blockedBy
+        blocking
+        totalBlockedBy
+        totalBlocking
+      }
     }
   }
 }
 ```
 
 **Add a dependency:**
+
 ```graphql
 mutation {
-  addBlockedBy(input: {
-    issueId: "BLOCKED_ISSUE_NODE_ID"
-    blockingIssueId: "BLOCKING_ISSUE_NODE_ID"
-  }) {
-    blockingIssue { number title }
+  addBlockedBy(input: { issueId: "BLOCKED_ISSUE_NODE_ID", blockingIssueId: "BLOCKING_ISSUE_NODE_ID" }) {
+    blockingIssue {
+      number
+      title
+    }
   }
 }
 ```
 
 **Remove a dependency:**
+
 ```graphql
 mutation {
-  removeBlockedBy(input: {
-    issueId: "BLOCKED_ISSUE_NODE_ID"
-    blockingIssueId: "BLOCKING_ISSUE_NODE_ID"
-  }) {
-    blockingIssue { number title }
+  removeBlockedBy(input: { issueId: "BLOCKED_ISSUE_NODE_ID", blockingIssueId: "BLOCKING_ISSUE_NODE_ID" }) {
+    blockingIssue {
+      number
+      title
+    }
   }
 }
 ```

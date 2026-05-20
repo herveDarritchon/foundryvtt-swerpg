@@ -42,12 +42,12 @@ Construire, côté `SpecializationTreeApp`, un view-model pur et testable du tre
 
 ## 4. Risques
 
-| Risque | Impact | Mitigation |
-| --- | --- | --- |
-| Confusion entre `resolvedTreeStatus` et `nodeState` | mauvais contrat UI | reprendre explicitement la convention du cadrage US16 |
-| Talent référencé mais non résolu | nœud inutilisable au rendu | fallback explicite + test dédié |
-| View-model trop couplé au layout PIXI | refactor coûteux pour US16.4/16.5 | limiter US16.2 aux données de rendu, pas au dessin |
-| Dépendance implicite à la sélection d'arbre courant | contrat instable | traiter US16.1 comme prérequis fonctionnel |
+| Risque                                              | Impact                            | Mitigation                                            |
+| --------------------------------------------------- | --------------------------------- | ----------------------------------------------------- |
+| Confusion entre `resolvedTreeStatus` et `nodeState` | mauvais contrat UI                | reprendre explicitement la convention du cadrage US16 |
+| Talent référencé mais non résolu                    | nœud inutilisable au rendu        | fallback explicite + test dédié                       |
+| View-model trop couplé au layout PIXI               | refactor coûteux pour US16.4/16.5 | limiter US16.2 aux données de rendu, pas au dessin    |
+| Dépendance implicite à la sélection d'arbre courant | contrat instable                  | traiter US16.1 comme prérequis fonctionnel            |
 
 ## 5. Hiérarchie des work items
 
@@ -70,13 +70,13 @@ graph TD
 
 ## 6. Découpage GitHub recommandé
 
-| Type | Titre | Priorité | Estimate | Dépendances |
-| --- | --- | --- | --- | --- |
-| Story | `US16.2 - Construire le view-model de rendu de l'arbre courant` | P0 | 2 | Feature #200, prérequis US16.1 |
-| Enabler | `US16.2.a - Normaliser les nœuds du tree courant` | P0 | 1 | Story #295 |
-| Enabler | `US16.2.b - Préparer les connexions du view-model` | P0 | 1 | Story #295 |
-| Enabler | `US16.2.c - Gérer le fallback talent introuvable` | P0 | 1 | Story #295 |
-| Test | `US16.2.t - Couvrir le contrat du view-model de rendu` | P0 | 1 | 16.2.a, 16.2.b, 16.2.c |
+| Type    | Titre                                                           | Priorité | Estimate | Dépendances                    |
+| ------- | --------------------------------------------------------------- | -------- | -------- | ------------------------------ |
+| Story   | `US16.2 - Construire le view-model de rendu de l'arbre courant` | P0       | 2        | Feature #200, prérequis US16.1 |
+| Enabler | `US16.2.a - Normaliser les nœuds du tree courant`               | P0       | 1        | Story #295                     |
+| Enabler | `US16.2.b - Préparer les connexions du view-model`              | P0       | 1        | Story #295                     |
+| Enabler | `US16.2.c - Gérer le fallback talent introuvable`               | P0       | 1        | Story #295                     |
+| Test    | `US16.2.t - Couvrir le contrat du view-model de rendu`          | P0       | 1        | 16.2.a, 16.2.b, 16.2.c         |
 
 ## 7. Dépendances et ordre recommandé
 

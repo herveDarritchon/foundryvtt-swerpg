@@ -52,6 +52,7 @@ Sans cette US, `#prepareSpecializations()` et l'affichage de la fiche ne consid�
 ### Le modèle acteur n'a pas de clé stable pour les spécialisations
 
 Dans `module/models/character.mjs`, chaque entrée de `system.details.specializations` ne porte que :
+
 - `name` : nom affiché
 - `img` : image
 - `description`, `specializationSkills`, `freeSkillRank` (hérités de `SwerpgSpecialization`)
@@ -96,10 +97,12 @@ Le type `specialization-tree` est enregistré. Si des arbres ont été importés
 **Décision** : stocker les références stables de résolution directement dans `actor.system.details.specializations[]`, et non dans `actor.flags.swerpg.*`.
 
 Chaque spécialisation possédée par l'acteur doit porter au minimum :
+
 - `specializationId` : identifiant métier stable de la spécialisation
 - `treeUuid` : UUID du `specialization-tree` référentiel, optionnel dans un premier temps pour compatibilité
 
 Justification :
+
 - Ce lien n'est pas une donnée secondaire ni un cache technique ; il structure directement le futur flux métier des talents.
 - Il servira aux US suivantes pour résoudre l'arbre, acheter un nœud, consolider les talents et afficher correctement les sources.
 - Il évite une structure parallèle hors du modèle principal.
@@ -110,11 +113,13 @@ Justification :
 **Décision** : ne plus faire reposer la résolution sur `name`.
 
 Rôle des champs :
+
 - `name` : libellé affiché dans l'UI
 - `specializationId` : identifiant stable de la spécialisation
 - `treeUuid` : lien fort vers l'arbre référentiel
 
 Justification :
+
 - Le nom affiché peut changer (traduction, correction, harmonisation éditoriale).
 - Un identifiant métier stable est mieux adapté comme clé de jointure.
 - Cela réduit le risque de casser les liens lors d'une évolution UX ou contenu.
@@ -124,12 +129,14 @@ Justification :
 **Décision** : la résolution principale s'appuie sur `treeUuid`. En l'absence de `treeUuid`, un fallback temporaire est autorisé via `specializationId` vers les items `specialization-tree` du monde.
 
 **Ordre de résolution** :
+
 1. Lire `treeUuid` sur la spécialisation possédée.
 2. Tenter de résoudre l'UUID via `fromUuidSync`.
 3. Si absent ou introuvable, fallback contrôlé : chercher un item `specialization-tree` dont `system.specializationId` correspond.
 4. Si aucun arbre n'est trouvé, la spécialisation reste visible mais l'arbre est marqué `unresolved`.
 
 Justification :
+
 - `treeUuid` fournit une résolution non ambiguë.
 - Le fallback permet la compatibilité avec les acteurs ou référentiels pas encore enrichis.
 - Cela prépare une migration progressive vers une résolution 100 % stable.
@@ -139,6 +146,7 @@ Justification :
 **Décision** : étendre la structure `system.details.specializations` du data model `character` pour inclure `specializationId` et `treeUuid`.
 
 Justification :
+
 - Les spécialisations possédées sont déjà portées dans le modèle acteur.
 - C'est le bon endroit pour enrichir la donnée persistée utile au jeu.
 - Cela évite d'introduire une convention cachée dans des flags.
@@ -149,10 +157,12 @@ Justification :
 **Décision** : inclure dans US4 la suppression des hypothèses "première spécialisation uniquement".
 
 Points concernés :
+
 - `#prepareSpecializations()` dans `module/models/character.mjs`
 - Préparation de contexte dans `module/applications/sheets/character-sheet.mjs`
 
 Justification :
+
 - L'issue exige explicitement que toutes les spécialisations possédées soient prises en compte.
 - Ces deux endroits sont déjà en défaut aujourd'hui.
 - Les laisser en place rendrait la résolution multi-spé incohérente.
@@ -162,6 +172,7 @@ Justification :
 **Décision** : ne pas persister sur l'acteur une structure dérivée du type "arbres résolus" ou "état UI des arbres".
 
 Justification :
+
 - La source de vérité doit rester la spécialisation possédée enrichie (`specializationId`, `treeUuid`).
 - Les états de résolution, d'indisponibilité ou de complétude sont des données calculées.
 - Cela évite de multiplier les sources de vérité.
@@ -175,13 +186,16 @@ Justification :
 **Quoi** : modifier `module/models/character.mjs` pour enrichir chaque entrée de `system.details.specializations` avec `specializationId` et `treeUuid`.
 
 **Fichiers** :
+
 - `module/models/character.mjs` (modification)
 
 **Contraintes recommandées** :
+
 - `specializationId` : `StringField`, stable, requis à terme mais optionnel dans un premier temps pour rétrocompatibilité
 - `treeUuid` : `DocumentUUIDField` (ou `StringField` documenté UUID-compatible), optionnel pour compatibilité
 
 **Risques spécifiques** :
+
 - Casser des acteurs existants si les nouveaux champs sont rendus obligatoires immédiatement.
 - Choisir un type trop strict pour `treeUuid` alors que tous les acteurs ne seront pas encore enrichis.
 
@@ -197,37 +211,47 @@ Fonctions attendues :
  * @param {object} specializationData - Entrée de system.details.specializations
  * @returns {{ tree: SwerpgItem|null, state: 'available'|'unresolved'|'incomplete' }}
  */
-export function resolveSpecializationTree(specializationData) { /* ... */ }
+export function resolveSpecializationTree(specializationData) {
+  /* ... */
+}
 
 /**
  * Résout toutes les spécialisations possédées par un acteur.
  * @param {SwerpgActor} actor - L'acteur character
  * @returns {Map<string, {tree: SwerpgItem|null, state: string}>}
  */
-export function resolveActorSpecializationTrees(actor) { /* ... */ }
+export function resolveActorSpecializationTrees(actor) {
+  /* ... */
+}
 
 /**
  * Détermine l'état de complétude d'un arbre.
  * @param {SwerpgItem} tree - L'item specialization-tree
  * @returns {'available'|'incomplete'}
  */
-export function getSpecializationTreeResolutionState(tree) { /* ... */ }
+export function getSpecializationTreeResolutionState(tree) {
+  /* ... */
+}
 ```
 
 Logique de résolution :
+
 1. Lire `specializationData.treeUuid`
 2. Si UUID présent : `fromUuidSync(uuid)` → si valide, retourner l'item avec état `available` ou `incomplete`
 3. Si absent ou invalide : fallback → chercher dans `game.items` un `specialization-tree` dont `system.specializationId === specializationData.specializationId`
 4. Si toujours rien trouvé : retourner `{ tree: null, state: 'unresolved' }`
 
 Gestion d'erreur :
+
 - `fromUuidSync` encapsulé dans un try/catch → logger.warn en cas d'UUID invalide
 - Si `game.ready === false`, retourner `unresolved` sans lever d'erreur
 
 **Fichiers** :
+
 - `module/lib/talent-node/talent-tree-resolver.mjs` (création)
 
 **Risques spécifiques** :
+
 - Duplication de logique si la résolution est réimplémentée ailleurs.
 - Confusion entre arbre introuvable et arbre incomplet si le contrat de retour n'est pas clair.
 
@@ -246,9 +270,11 @@ Gestion d'erreur :
 ```
 
 **Fichiers** :
+
 - `module/models/character.mjs` (modification)
 
 **Risques spécifiques** :
+
 - Changement de comportement visible pour les acteurs multi-spé existants — c'est le comportement correct attendu.
 - `this.details.specializations` peut être `undefined` ou `null` → itération sécurisée.
 
@@ -265,10 +291,12 @@ specializationCount: Array.from(a.system.details.specializations || []).length,
 ```
 
 **Fichiers** :
+
 - `module/applications/sheets/character-sheet.mjs` (modification)
 - `templates/sheets/actor/character.hbs` (modification potentielle, selon consommation actuelle)
 
 **Risques spécifiques** :
+
 - Casser l'affichage existant si le template attend encore une chaîne unique.
 - Introduire une UI floue si le cas "arbre non résolu" n'est pas explicitement représenté.
 
@@ -277,16 +305,19 @@ specializationCount: Array.from(a.system.details.specializations || []).length,
 **Quoi** : formaliser le contrat métier des cas dégradés.
 
 Règles attendues :
+
 - `treeUuid` absent ou invalide → fallback par `specializationId` ; si toujours rien → `unresolved`
 - Arbre trouvé mais sans nœuds, ou sans connexions → `incomplete`
 - Spécialisation sans `specializationId` et sans `treeUuid` → `unresolved` avec warning technique
 - Aucun achat autorisé si l'état n'est pas `available`
 
 **Fichiers** :
+
 - `module/lib/talent-node/talent-tree-resolver.mjs` (création — intégré dans la logique)
 - Tests associés
 
 **Risques spécifiques** :
+
 - Laisser un fallback silencieux dangereux.
 - Bloquer l'UI alors que seule la résolution d'arbre est manquante.
 
@@ -296,31 +327,33 @@ Règles attendues :
 
 Tests du resolver (`tests/lib/talent-node/talent-tree-resolver.test.mjs`) :
 
-| Test | Description | Vérification |
-|------|-------------|-------------|
-| `resolveSpecializationTree with valid treeUuid` | UUID valide, item trouvé | Retourne `{ tree, state: 'available' }` |
-| `resolveSpecializationTree with invalid treeUuid` | UUID invalide, fallback par specializationId | Retourne l'item ou `{ null, 'unresolved' }` |
-| `resolveSpecializationTree with no identifiers` | Ni treeUuid, ni specializationId | `{ null, 'unresolved' }` |
-| `resolveSpecializationTree with incomplete tree` | Arbre sans nœuds | `{ tree, state: 'incomplete' }` |
-| `resolveActorSpecializationTrees with 3 specs` | 3 specs, 2 matchent, 1 sans arbre | Map avec états mélangés |
-| `getSpecializationTreeResolutionState with full tree` | Nodes et connections valides | `'available'` |
-| `getSpecializationTreeResolutionState with empty tree` | Pas de nodes | `'incomplete'` |
+| Test                                                   | Description                                  | Vérification                                |
+| ------------------------------------------------------ | -------------------------------------------- | ------------------------------------------- |
+| `resolveSpecializationTree with valid treeUuid`        | UUID valide, item trouvé                     | Retourne `{ tree, state: 'available' }`     |
+| `resolveSpecializationTree with invalid treeUuid`      | UUID invalide, fallback par specializationId | Retourne l'item ou `{ null, 'unresolved' }` |
+| `resolveSpecializationTree with no identifiers`        | Ni treeUuid, ni specializationId             | `{ null, 'unresolved' }`                    |
+| `resolveSpecializationTree with incomplete tree`       | Arbre sans nœuds                             | `{ tree, state: 'incomplete' }`             |
+| `resolveActorSpecializationTrees with 3 specs`         | 3 specs, 2 matchent, 1 sans arbre            | Map avec états mélangés                     |
+| `getSpecializationTreeResolutionState with full tree`  | Nodes et connections valides                 | `'available'`                               |
+| `getSpecializationTreeResolutionState with empty tree` | Pas de nodes                                 | `'incomplete'`                              |
 
 Tests de `#prepareSpecializations()` (`tests/models/character-specializations.test.mjs`) :
 
-| Test | Description | Vérification |
-|------|-------------|-------------|
-| Single specialization | 1 spec avec freeSkillRank=4 | gained = 4 |
-| Multiple specializations | 2 specs avec freeSkillRank=4 et 5 | gained = 9 |
-| No specializations | specs vide | gained = 0 |
+| Test                           | Description                           | Vérification             |
+| ------------------------------ | ------------------------------------- | ------------------------ |
+| Single specialization          | 1 spec avec freeSkillRank=4           | gained = 4               |
+| Multiple specializations       | 2 specs avec freeSkillRank=4 et 5     | gained = 9               |
+| No specializations             | specs vide                            | gained = 0               |
 | Null/undefined specializations | `this.details.specializations` absent | gained = 0, pas d'erreur |
 
 **Fichiers** :
+
 - `tests/lib/talent-node/talent-tree-resolver.test.mjs` (création)
 - `tests/models/character-specializations.test.mjs` (création)
 - `tests/utils/actors/actor.mjs` (modification éventuelle si fixtures à enrichir)
 
 **Risques spécifiques** :
+
 - Mocks incomplets autour des UUID Foundry (`fromUuidSync`).
 - Tests trop couplés au rendu UI au lieu du contrat métier de résolution.
 
@@ -328,32 +361,32 @@ Tests de `#prepareSpecializations()` (`tests/models/character-specializations.te
 
 ## 6. Fichiers modifiés
 
-| Fichier | Action | Description du changement |
-|---------|--------|---------------------------|
-| `module/models/character.mjs` | Modification | Enrichir la structure `system.details.specializations` avec `specializationId` (`StringField`) et `treeUuid` (`DocumentUUIDField` ou `StringField`). Corriger `#prepareSpecializations()` pour itérer toutes les spécialisations et cumuler les `freeSkillRank`. |
-| `module/lib/talent-node/talent-tree-resolver.mjs` | Création | Module de résolution spécialisation → arbre : `resolveSpecializationTree()`, `resolveActorSpecializationTrees()`, `getSpecializationTreeResolutionState()`. Résolution primaire par `treeUuid`, fallback par `specializationId`. Gestion des cas dégradés (`unresolved`, `incomplete`). |
-| `module/applications/sheets/character-sheet.mjs` | Modification | Supprimer l'hypothèse mono-spécialisation. Exposer `specializationNames` (Array), `specializationCount`, et conserver `specializationName` pour compatibilité template. |
-| `templates/sheets/actor/character.hbs` | Modification potentielle | Adapter l'affichage pour supporter plusieurs spécialisations (liste, badge "+N", état arbre indisponible). |
-| `tests/lib/talent-node/talent-tree-resolver.test.mjs` | Création | Tests unitaires du resolver : résolution par UUID, fallback, cas dégradés, arbre incomplet. |
-| `tests/models/character-specializations.test.mjs` | Création | Tests du schéma enrichi et de `#prepareSpecializations()` : mono-spé, multi-spé, cas vide, null. |
-| `tests/utils/actors/actor.mjs` | Modification éventuelle | Enrichir les fixtures acteur avec `specializationId` et `treeUuid` si nécessaire pour la compatibilité des tests. |
+| Fichier                                               | Action                   | Description du changement                                                                                                                                                                                                                                                               |
+| ----------------------------------------------------- | ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `module/models/character.mjs`                         | Modification             | Enrichir la structure `system.details.specializations` avec `specializationId` (`StringField`) et `treeUuid` (`DocumentUUIDField` ou `StringField`). Corriger `#prepareSpecializations()` pour itérer toutes les spécialisations et cumuler les `freeSkillRank`.                        |
+| `module/lib/talent-node/talent-tree-resolver.mjs`     | Création                 | Module de résolution spécialisation → arbre : `resolveSpecializationTree()`, `resolveActorSpecializationTrees()`, `getSpecializationTreeResolutionState()`. Résolution primaire par `treeUuid`, fallback par `specializationId`. Gestion des cas dégradés (`unresolved`, `incomplete`). |
+| `module/applications/sheets/character-sheet.mjs`      | Modification             | Supprimer l'hypothèse mono-spécialisation. Exposer `specializationNames` (Array), `specializationCount`, et conserver `specializationName` pour compatibilité template.                                                                                                                 |
+| `templates/sheets/actor/character.hbs`                | Modification potentielle | Adapter l'affichage pour supporter plusieurs spécialisations (liste, badge "+N", état arbre indisponible).                                                                                                                                                                              |
+| `tests/lib/talent-node/talent-tree-resolver.test.mjs` | Création                 | Tests unitaires du resolver : résolution par UUID, fallback, cas dégradés, arbre incomplet.                                                                                                                                                                                             |
+| `tests/models/character-specializations.test.mjs`     | Création                 | Tests du schéma enrichi et de `#prepareSpecializations()` : mono-spé, multi-spé, cas vide, null.                                                                                                                                                                                        |
+| `tests/utils/actors/actor.mjs`                        | Modification éventuelle  | Enrichir les fixtures acteur avec `specializationId` et `treeUuid` si nécessaire pour la compatibilité des tests.                                                                                                                                                                       |
 
 ---
 
 ## 7. Risques
 
-| Risque | Impact | Mitigation |
-|--------|--------|------------|
-| **Rétrocompatibilité du schéma** : les acteurs existants n'ont ni `specializationId` ni `treeUuid` | Erreurs de validation ou spécialisations partiellement inutilisables | Introduire les nouveaux champs comme optionnels (`required: false`). Utiliser un fallback contrôlé tant que toutes les données ne sont pas enrichies. |
-| **UUID absent ou cassé** | Impossible de résoudre l'arbre malgré une spécialisation possédée | Résolution primaire par `treeUuid`, fallback par `specializationId`, journalisation via `logger.warn`, et état explicite `unresolved` côté resolver. |
-| **Fallback trop permissif** | Résolution vers le mauvais arbre si `specializationId` n'est pas réellement stable ou unique | Limiter le fallback à une phase transitoire clairement documentée. `treeUuid` doit rester la seule source fiable à terme. |
-| **Changement métier sur la multi-spé** | Les acteurs avec plusieurs spécialisations voient leurs rangs gratuits augmenter | Assumer explicitement qu'il s'agit d'une correction de bug. Documenter dans le plan et couvrir par des tests ciblés. |
-| **Couplage fort entre affichage et ancienne structure** | La fiche personnage peut casser si elle attend encore une seule spécialisation textuelle | Conserver temporairement un champ de compatibilité `specializationName` tout en exposant la nouvelle structure multi-spé. |
-| **Confusion entre donnée métier et donnée dérivée** | Risque d'ajouter ensuite des états de résolution persistés dans l'acteur | Garder comme source de vérité uniquement `specializationId` et `treeUuid`. Calculer dynamiquement les états `available`, `unresolved`, `incomplete`. |
-| **Fixtures de test incomplètes** | Faux négatifs dans les tests existants autour des personnages | Centraliser l'enrichissement minimal dans les helpers de fixtures. Éviter de propager prématurément de la logique métier dans les tests non concernés. |
-| **Choix du type technique pour `treeUuid`** | Schéma trop strict ou trop faible selon l'API Foundry utilisée | Trancher entre `DocumentUUIDField` et `StringField` documenté UUID-compatible lors de l'implémentation. Couvrir ce choix par des tests unitaires. |
-| **`fromUuidSync` peut throw** | Blocage de la résolution, possible crash | Wrapper try/catch dans le resolver. `logger.warn` en cas d'échec, état `unresolved` retourné. |
-| **`game.items` non disponible** | Retour `unresolved` pour tout le monde | Vérifier `game.ready` avant d'accéder à `game.items`. Si pas prêt, retourner `unresolved` et logger un debug. |
+| Risque                                                                                             | Impact                                                                                       | Mitigation                                                                                                                                             |
+| -------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Rétrocompatibilité du schéma** : les acteurs existants n'ont ni `specializationId` ni `treeUuid` | Erreurs de validation ou spécialisations partiellement inutilisables                         | Introduire les nouveaux champs comme optionnels (`required: false`). Utiliser un fallback contrôlé tant que toutes les données ne sont pas enrichies.  |
+| **UUID absent ou cassé**                                                                           | Impossible de résoudre l'arbre malgré une spécialisation possédée                            | Résolution primaire par `treeUuid`, fallback par `specializationId`, journalisation via `logger.warn`, et état explicite `unresolved` côté resolver.   |
+| **Fallback trop permissif**                                                                        | Résolution vers le mauvais arbre si `specializationId` n'est pas réellement stable ou unique | Limiter le fallback à une phase transitoire clairement documentée. `treeUuid` doit rester la seule source fiable à terme.                              |
+| **Changement métier sur la multi-spé**                                                             | Les acteurs avec plusieurs spécialisations voient leurs rangs gratuits augmenter             | Assumer explicitement qu'il s'agit d'une correction de bug. Documenter dans le plan et couvrir par des tests ciblés.                                   |
+| **Couplage fort entre affichage et ancienne structure**                                            | La fiche personnage peut casser si elle attend encore une seule spécialisation textuelle     | Conserver temporairement un champ de compatibilité `specializationName` tout en exposant la nouvelle structure multi-spé.                              |
+| **Confusion entre donnée métier et donnée dérivée**                                                | Risque d'ajouter ensuite des états de résolution persistés dans l'acteur                     | Garder comme source de vérité uniquement `specializationId` et `treeUuid`. Calculer dynamiquement les états `available`, `unresolved`, `incomplete`.   |
+| **Fixtures de test incomplètes**                                                                   | Faux négatifs dans les tests existants autour des personnages                                | Centraliser l'enrichissement minimal dans les helpers de fixtures. Éviter de propager prématurément de la logique métier dans les tests non concernés. |
+| **Choix du type technique pour `treeUuid`**                                                        | Schéma trop strict ou trop faible selon l'API Foundry utilisée                               | Trancher entre `DocumentUUIDField` et `StringField` documenté UUID-compatible lors de l'implémentation. Couvrir ce choix par des tests unitaires.      |
+| **`fromUuidSync` peut throw**                                                                      | Blocage de la résolution, possible crash                                                     | Wrapper try/catch dans le resolver. `logger.warn` en cas d'échec, état `unresolved` retourné.                                                          |
+| **`game.items` non disponible**                                                                    | Retour `unresolved` pour tout le monde                                                       | Vérifier `game.ready` avant d'accéder à `game.items`. Si pas prêt, retourner `unresolved` et logger un debug.                                          |
 
 ---
 

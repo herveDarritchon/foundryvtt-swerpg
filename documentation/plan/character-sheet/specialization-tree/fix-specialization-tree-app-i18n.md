@@ -9,7 +9,7 @@ SWERPG.TALENT.SPECIALIZATION_TREE_APP.TITLE
 SWERPG.TALENT.SPECIALIZATION_TREE_APP.SUBTITLE
 SWERPG.TALENT.SPECIALIZATION_TREE_APP.STATUS.AVAILABLE
 SWERPG.TALENT.SPECIALIZATION_TREE_APP.VIEWPORT_ARIA_LABEL
-````
+```
 
 ## Cause probable
 
@@ -58,8 +58,8 @@ si `title`, `subtitle`, `stateLabel` contiennent des clés.
 Après :
 
 ```hbs
-<h2>{{localize "SWERPG.TALENT.SPECIALIZATION_TREE_APP.TITLE"}}</h2>
-<p>{{localize "SWERPG.TALENT.SPECIALIZATION_TREE_APP.SUBTITLE"}}</p>
+<h2>{{localize 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.TITLE'}}</h2>
+<p>{{localize 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.SUBTITLE'}}</p>
 <span>{{localize specialization.stateLabelKey}}</span>
 ```
 
@@ -149,18 +149,18 @@ Aucune clé brute ne doit être visible.
 
 ## Tests à ajouter
 
-* Le titre de fenêtre est localisé.
-* Le titre interne est localisé.
-* Le sous-titre est localisé.
-* Le statut `available` est localisé.
-* `aria-label` est localisé.
-* Aucune chaîne visible ne commence par `SWERPG.`.
+- Le titre de fenêtre est localisé.
+- Le titre interne est localisé.
+- Le sous-titre est localisé.
+- Le statut `available` est localisé.
+- `aria-label` est localisé.
+- Aucune chaîne visible ne commence par `SWERPG.`.
 
 ## Critères d’acceptation
 
-* Plus aucune clé `SWERPG.*` visible dans l’app.
-* Les textes sont présents en `fr.json` et `en.json`.
-* Le view-model ne mélange pas labels localisés et clés brutes sans convention claire.
+- Plus aucune clé `SWERPG.*` visible dans l’app.
+- Les textes sont présents en `fr.json` et `en.json`.
+- Le view-model ne mélange pas labels localisés et clés brutes sans convention claire.
 
 ## Slug
 

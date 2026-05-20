@@ -11,6 +11,7 @@
 Définir un workflow complet pour les demandes d'exploration OpenCode, depuis l'intention utilisateur jusqu'au résultat restitué, avec un agent limité à la lecture, à la recherche et à la synthèse.
 
 Le résultat attendu est un cadre opérable et sobre qui :
+
 - traite de bout en bout une demande de compréhension sans aucune capacité d'écriture ;
 - explicite les limites de l'agent, le type de résultat attendu et le niveau de modèle visé ;
 - réduit le coût des tâches de lecture et de préparation sans dégrader la fiabilité ;
@@ -54,6 +55,7 @@ Le résultat attendu est un cadre opérable et sobre qui :
 ### 3.1. La doctrine cible existe déjà
 
 `documentation/cadrage/llm/cadrage-opencode-configuration.md` formalise déjà les règles structurantes utiles ici :
+
 - exploration = lecture, recherche, synthèse ;
 - une tâche de lecture doit avoir un accès en lecture seule ;
 - les commandes portent les routines ;
@@ -70,6 +72,7 @@ Cela oriente fortement `#268` vers une **commande documentée**, et non vers un 
 ### 3.3. Aucun artefact OpenCode local n'existe encore pour les commandes
 
 Le dépôt ne contient pas aujourd'hui :
+
 - de répertoire `.opencode/` ;
 - de répertoire `docs/agents/` ;
 - de fichier `AGENTS.md` projet ;
@@ -80,6 +83,7 @@ Le ticket doit donc d'abord cadrer le workflow et la spécification, sans présu
 ### 3.4. Le dépôt possède déjà des patterns documentaires réutilisables
 
 Les zones existantes les plus cohérentes pour porter ce travail sont :
+
 - `documentation/cadrage/llm/` pour la doctrine ;
 - `documentation/spec/` pour une spécification opérable ;
 - `.github/prompts/` et `.github/chatmodes/` comme références de structuration d'artefacts assistants, sans les cibler directement dans ce ticket.
@@ -87,6 +91,7 @@ Les zones existantes les plus cohérentes pour porter ce travail sont :
 ### 3.5. Le niveau de modèle recommandé est déjà documenté
 
 Le cadrage OpenCode et le prompt `model-recommendation` convergent :
+
 - outils lecture seule => modèles économiques ou locaux ;
 - pas de modèle avancé pour une simple tâche de repérage ;
 - raisonnement fort réservé aux plans, arbitrages et revues critiques.
@@ -106,11 +111,13 @@ Cette dépendance doit être clarifiée dans le plan comme risque documentaire, 
 **Décision** : cadrer le workflow comme une future **commande OpenCode**, documentée dans le dépôt, et non comme un nouveau skill.
 
 **Options envisagées** :
+
 - créer un skill d'exploration ;
 - décrire une commande/routine d'exploration ;
 - rester purement théorique sans artefact cible.
 
 **Justification** :
+
 - la doctrine validée dit : commandes pour les routines, skills pour le savoir ;
 - l'audit `#267` recommande explicitement de ne pas créer de skill pour l'exploration simple ;
 - une commande est mieux adaptée à un flux standardisé entrée -> recherche -> synthèse.
@@ -120,11 +127,13 @@ Cette dépendance doit être clarifiée dans le plan comme risque documentaire, 
 **Décision** : retenir le sous-agent `explore` comme moteur exclusif du workflow d'exploration.
 
 **Options envisagées** :
+
 - agent général bridé ;
 - mix `general` / `explore` ;
 - `explore` seul.
 
 **Justification** :
+
 - l'objectif du ticket est précisément une activité bornée à la lecture ;
 - cela limite le risque de dérive de scope ;
 - cela rend le choix du modèle plus économique et plus prévisible ;
@@ -133,12 +142,14 @@ Cette dépendance doit être clarifiée dans le plan comme risque documentaire, 
 ### 4.3. Sortie courte, sourcée, non verbeuse
 
 **Décision** : imposer une restitution courte avec preuves minimales :
+
 - réponse synthétique ;
 - références de fichiers et lignes pertinentes ;
 - éventuelles zones d'incertitude ;
 - proposition d'escalade seulement si nécessaire.
 
 **Justification** :
+
 - le cadrage OpenCode impose de ne pas noyer le contexte avec des sorties longues ;
 - ADR-0012 valorise des diagnostics lisibles et ciblés ;
 - l'exploration doit aider à décider, pas produire un dump brut.
@@ -146,12 +157,14 @@ Cette dépendance doit être clarifiée dans le plan comme risque documentaire, 
 ### 4.4. Escalade explicite vers planification ou implémentation
 
 **Décision** : le workflow d'exploration s'arrête dès que la demande nécessite :
+
 - arbitrage d'architecture ;
 - plan d'implémentation ;
 - modification de code ;
 - validation fonctionnelle large.
 
 **Justification** :
+
 - séparation stricte des rôles ;
 - prévention des dérives ;
 - conformité avec l'orchestration assistée validée par `#267`.
@@ -161,6 +174,7 @@ Cette dépendance doit être clarifiée dans le plan comme risque documentaire, 
 **Décision** : dans ce ticket, créer une spécification documentaire de la future commande et de ses scénarios de validation, sans figer encore un répertoire runtime OpenCode inexistant dans le repo.
 
 **Justification** :
+
 - le dépôt n'a pas encore de convention locale pour les commandes OpenCode ;
 - cela permet de livrer une décision exploitable sans inventer une intégration prématurée ;
 - la matérialisation technique pourra suivre dans un ticket d'alignement des commandes.
@@ -172,6 +186,7 @@ Cette dépendance doit être clarifiée dans le plan comme risque documentaire, 
 ### Étape 1 — Consolider la doctrine d'exploration en lecture seule
 
 **Quoi faire** :
+
 - Extraire du cadrage OpenCode les règles normatives applicables à l'exploration.
 - Ajouter une section dédiée au workflow d'exploration :
   - intention utilisateur ;
@@ -182,15 +197,18 @@ Cette dépendance doit être clarifiée dans le plan comme risque documentaire, 
   - conditions d'escalade.
 
 **Fichiers à modifier** :
+
 - `documentation/cadrage/llm/cadrage-opencode-configuration.md`
 
 **Risques spécifiques** :
+
 - répéter la doctrine existante sans valeur ajoutée ;
 - rester trop abstrait pour être exécutable.
 
 ### Étape 2 — Définir le contrat d'entrée du workflow
 
 **Quoi faire** :
+
 - Décrire précisément quels types de demandes doivent déclencher l'exploration.
 - Décrire les exclusions :
   - demandes de plan ;
@@ -203,15 +221,18 @@ Cette dépendance doit être clarifiée dans le plan comme risque documentaire, 
   - approfondie.
 
 **Fichiers à modifier** :
+
 - `documentation/spec/llm/opencode-exploration-readonly-command.md`
 
 **Risques spécifiques** :
+
 - frontière floue entre exploration et planification ;
 - sur-déclenchement du workflow pour des demandes non adaptées.
 
 ### Étape 3 — Définir le contrat d'exécution du sous-agent
 
 **Quoi faire** :
+
 - Formaliser l'usage du sous-agent `explore`.
 - Décrire les outils autorisés en lecture :
   - recherche de fichiers ;
@@ -226,15 +247,18 @@ Cette dépendance doit être clarifiée dans le plan comme risque documentaire, 
   - Git modifiant l'état du dépôt.
 
 **Fichiers à modifier** :
+
 - `documentation/spec/llm/opencode-exploration-readonly-command.md`
 
 **Risques spécifiques** :
+
 - oublier un garde-fou important ;
 - décrire un profil trop large, proche d'un agent général.
 
 ### Étape 4 — Définir le contrat de sortie
 
 **Quoi faire** :
+
 - Définir le format minimal de restitution :
   - résumé de la demande comprise ;
   - constats principaux ;
@@ -248,9 +272,11 @@ Cette dépendance doit être clarifiée dans le plan comme risque documentaire, 
   - pas d'action non demandée.
 
 **Fichiers à modifier** :
+
 - `documentation/spec/llm/opencode-exploration-readonly-command.md`
 
 **Risques spécifiques** :
+
 - sortie trop bavarde ;
 - sortie trop pauvre pour être utile ;
 - confusion entre synthèse et plan d'action.
@@ -258,6 +284,7 @@ Cette dépendance doit être clarifiée dans le plan comme risque documentaire, 
 ### Étape 5 — Définir la matrice d'escalade
 
 **Quoi faire** :
+
 - Décrire quand l'exploration doit s'arrêter et orienter vers :
   - planification ;
   - implémentation ;
@@ -267,16 +294,19 @@ Cette dépendance doit être clarifiée dans le plan comme risque documentaire, 
 - Donner des exemples concrets de routage.
 
 **Fichiers à modifier** :
+
 - `documentation/spec/llm/opencode-exploration-readonly-command.md`
 - `documentation/spec/llm/opencode-exploration-readonly-scenarios.md`
 
 **Risques spécifiques** :
+
 - laisser l'agent franchir trop facilement la frontière de rôle ;
 - escalade trop tardive.
 
 ### Étape 6 — Définir les scénarios de validation manuelle
 
 **Quoi faire** :
+
 - Rédiger 6 à 10 scénarios représentatifs couvrant :
   - compréhension de convention ;
   - cartographie d'un module ;
@@ -291,9 +321,11 @@ Cette dépendance doit être clarifiée dans le plan comme risque documentaire, 
   - critère d'acceptation.
 
 **Fichiers à modifier** :
+
 - `documentation/spec/llm/opencode-exploration-readonly-scenarios.md`
 
 **Risques spécifiques** :
+
 - validation trop théorique ;
 - scénarios non représentatifs des usages réels.
 
@@ -301,27 +333,27 @@ Cette dépendance doit être clarifiée dans le plan comme risque documentaire, 
 
 ## 6. Fichiers modifiés
 
-| Fichier | Action | Description du changement |
-|---|---|---|
-| `documentation/plan/llm/268-plan-workflow-exploration-readonly.md` | création | Plan canonique de l'issue |
-| `documentation/cadrage/llm/cadrage-opencode-configuration.md` | modification | Ajout d'une section normative dédiée au workflow d'exploration en lecture seule |
-| `documentation/spec/llm/opencode-exploration-readonly-command.md` | création | Spécification opérable de la future commande OpenCode d'exploration |
-| `documentation/spec/llm/opencode-exploration-readonly-scenarios.md` | création | Scénarios de validation manuelle et matrice d'escalade |
+| Fichier                                                             | Action       | Description du changement                                                       |
+| ------------------------------------------------------------------- | ------------ | ------------------------------------------------------------------------------- |
+| `documentation/plan/llm/268-plan-workflow-exploration-readonly.md`  | création     | Plan canonique de l'issue                                                       |
+| `documentation/cadrage/llm/cadrage-opencode-configuration.md`       | modification | Ajout d'une section normative dédiée au workflow d'exploration en lecture seule |
+| `documentation/spec/llm/opencode-exploration-readonly-command.md`   | création     | Spécification opérable de la future commande OpenCode d'exploration             |
+| `documentation/spec/llm/opencode-exploration-readonly-scenarios.md` | création     | Scénarios de validation manuelle et matrice d'escalade                          |
 
 ---
 
 ## 7. Risques
 
-| Risque | Impact | Mitigation |
-|---|---|---|
-| Confondre exploration et planification | L'agent commence à proposer ou imposer une solution | Définir des critères d'entrée/sortie et une matrice d'escalade explicite |
-| Créer un skill au lieu d'une commande | Désalignement avec la doctrine `#267` | Rappeler explicitement la règle "commandes pour les routines" |
-| Décrire un agent trop puissant | Dérive de scope et coût excessif | Imposer `explore` seul, lecture seule stricte, modèle économique |
-| Sortie trop verbeuse | Coût élevé et faible lisibilité | Fixer un contrat de restitution court et sourcé |
-| Sortie insuffisamment étayée | Baisse de fiabilité | Exiger références de fichiers et éléments vérifiés |
-| Absence de convention locale pour stocker les commandes OpenCode | Blocage d'implémentation ultérieure | Livrer d'abord une spécification documentaire indépendante du runtime |
-| Dépendance `#256` incohérente | Mauvaise lecture des prérequis | Documenter la dépendance comme ambiguë et demander clarification avant implémentation runtime |
-| Validation trop théorique | Workflow non fiable en pratique | Prévoir une batterie de scénarios manuels représentatifs |
+| Risque                                                           | Impact                                              | Mitigation                                                                                    |
+| ---------------------------------------------------------------- | --------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| Confondre exploration et planification                           | L'agent commence à proposer ou imposer une solution | Définir des critères d'entrée/sortie et une matrice d'escalade explicite                      |
+| Créer un skill au lieu d'une commande                            | Désalignement avec la doctrine `#267`               | Rappeler explicitement la règle "commandes pour les routines"                                 |
+| Décrire un agent trop puissant                                   | Dérive de scope et coût excessif                    | Imposer `explore` seul, lecture seule stricte, modèle économique                              |
+| Sortie trop verbeuse                                             | Coût élevé et faible lisibilité                     | Fixer un contrat de restitution court et sourcé                                               |
+| Sortie insuffisamment étayée                                     | Baisse de fiabilité                                 | Exiger références de fichiers et éléments vérifiés                                            |
+| Absence de convention locale pour stocker les commandes OpenCode | Blocage d'implémentation ultérieure                 | Livrer d'abord une spécification documentaire indépendante du runtime                         |
+| Dépendance `#256` incohérente                                    | Mauvaise lecture des prérequis                      | Documenter la dépendance comme ambiguë et demander clarification avant implémentation runtime |
+| Validation trop théorique                                        | Workflow non fiable en pratique                     | Prévoir une batterie de scénarios manuels représentatifs                                      |
 
 ---
 

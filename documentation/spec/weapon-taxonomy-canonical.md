@@ -15,15 +15,15 @@ Elle sert de document de référence unique pour les issues #98 (schéma), #101 
 
 ### Valeurs autorisées
 
-| Clé | Rôle mécanique | Skill principal | RangeCategory | Exemples OggDude |
-|-----|----------------|-----------------|---------------|------------------|
-| `melee` | Corps-à-corps | melee, lightsaber, brawl | melee | Armes blanches, vibro-lames, gantelets |
-| `ranged` | Tir standard, armes légères et lourdes portatives | rangedLight, rangedHeavy | distant | Blasters, fusils, pistolets |
-| `gunnery` | Armes lourdes portatives, mitrailleuses, lance-missiles | gunnery | distant | Mitrailleuses lourdes, lance-missiles |
-| `explosive` | Explosifs, démolitions, grenades | rangedLight, gunnery | distant | Grenades, mines, charges |
-| `thrown` | Armes de jet | rangedLight | distant | Couteaux de lancer, shurikens, hachettes |
-| `vehicle` | Armement monté sur véhicule ou vaisseau | gunnery | distant | Tourelles, canons montés |
-| `natural` | Attaques naturelles sans arme | brawl | melee | Griffes, crocs, attaques à mains nues |
+| Clé         | Rôle mécanique                                          | Skill principal          | RangeCategory | Exemples OggDude                         |
+| ----------- | ------------------------------------------------------- | ------------------------ | ------------- | ---------------------------------------- |
+| `melee`     | Corps-à-corps                                           | melee, lightsaber, brawl | melee         | Armes blanches, vibro-lames, gantelets   |
+| `ranged`    | Tir standard, armes légères et lourdes portatives       | rangedLight, rangedHeavy | distant       | Blasters, fusils, pistolets              |
+| `gunnery`   | Armes lourdes portatives, mitrailleuses, lance-missiles | gunnery                  | distant       | Mitrailleuses lourdes, lance-missiles    |
+| `explosive` | Explosifs, démolitions, grenades                        | rangedLight, gunnery     | distant       | Grenades, mines, charges                 |
+| `thrown`    | Armes de jet                                            | rangedLight              | distant       | Couteaux de lancer, shurikens, hachettes |
+| `vehicle`   | Armement monté sur véhicule ou vaisseau                 | gunnery                  | distant       | Tourelles, canons montés                 |
+| `natural`   | Attaques naturelles sans arme                           | brawl                    | melee         | Griffes, crocs, attaques à mains nues    |
 
 ### Règles de l'enum
 
@@ -38,17 +38,17 @@ Elle sert de document de référence unique pour les issues #98 (schéma), #101 
 ### Valeurs connues (liste de référence, non exhaustive)
 
 | Valeur normalisée | Source `<Type>` OggDude typique | `system.category` typique |
-|---|---|---|
-| `blaster` | Blasters | ranged |
-| `blaster-heavy` | Blasters/Heavy | ranged, gunnery |
-| `slugthrower` | Slugthrowers | ranged |
-| `flame-projector` | Flame-Projectors | ranged |
-| `explosive-other` | Explosives/Other | explosive |
-| `ion` | Ion | ranged |
-| `missile` | Missiles | gunnery |
-| `melee` | Melee | melee |
-| `lightsaber` | Lightsabers | melee |
-| `brawl` | Brawl | natural |
+| ----------------- | ------------------------------- | ------------------------- |
+| `blaster`         | Blasters                        | ranged                    |
+| `blaster-heavy`   | Blasters/Heavy                  | ranged, gunnery           |
+| `slugthrower`     | Slugthrowers                    | ranged                    |
+| `flame-projector` | Flame-Projectors                | ranged                    |
+| `explosive-other` | Explosives/Other                | explosive                 |
+| `ion`             | Ion                             | ranged                    |
+| `missile`         | Missiles                        | gunnery                   |
+| `melee`           | Melee                           | melee                     |
+| `lightsaber`      | Lightsabers                     | melee                     |
+| `brawl`           | Brawl                           | natural                   |
 
 ### Règles de normalisation
 
@@ -75,32 +75,32 @@ output: chaîne slugifiée
 ### `<Categories>` → `system.category`
 
 | `<Category>` OggDude | `system.category` | Priorité |
-|---|---|---|
-| `Ranged` | `ranged` | 1 |
-| `Melee` | `melee` | 1 |
-| `Thrown` | `thrown` | 1 |
-| `Vehicle` | `vehicle` | 1 |
-| `Starship` | `vehicle` | 1 |
-| `Explosive` | `explosive` | 1 |
-| `Heavy` | `gunnery` | 1 |
+| -------------------- | ----------------- | -------- |
+| `Ranged`             | `ranged`          | 1        |
+| `Melee`              | `melee`           | 1        |
+| `Thrown`             | `thrown`          | 1        |
+| `Vehicle`            | `vehicle`         | 1        |
+| `Starship`           | `vehicle`         | 1        |
+| `Explosive`          | `explosive`       | 1        |
+| `Heavy`              | `gunnery`         | 1        |
 
 **Règle de prise en compte pour les tableaux** : Parcourir le tableau dans l'ordre. La première valeur reconnue détermine `system.category`. Si cette valeur entre en conflit avec SkillKey, le conflit est loggué et SkillKey l'emporte (§Priorités et fallbacks).
 
 ### `<Type>` → `system.weaponType`
 
-| `<Type>` OggDude | `system.weaponType` | Priorité |
-|---|---|---|
-| `Blasters` | `blaster` | 1 |
-| `Blasters/Heavy` | `blaster-heavy` | 1 |
-| `Slugthrowers` | `slugthrower` | 1 |
-| `Flame-Projectors` | `flame-projector` | 1 |
-| `Ion` | `ion` | 1 |
-| `Missiles` | `missile` | 1 |
-| `Melee` | `melee` | 1 |
-| `Lightsabers` | `lightsaber` | 1 |
-| `Brawl` | `brawl` | 1 |
-| `Explosives/Other` | `explosive-other` | 1 |
-| *Toute autre valeur* | `slugify(valeur)` | 2 (fallback) |
+| `<Type>` OggDude     | `system.weaponType` | Priorité     |
+| -------------------- | ------------------- | ------------ |
+| `Blasters`           | `blaster`           | 1            |
+| `Blasters/Heavy`     | `blaster-heavy`     | 1            |
+| `Slugthrowers`       | `slugthrower`       | 1            |
+| `Flame-Projectors`   | `flame-projector`   | 1            |
+| `Ion`                | `ion`               | 1            |
+| `Missiles`           | `missile`           | 1            |
+| `Melee`              | `melee`             | 1            |
+| `Lightsabers`        | `lightsaber`        | 1            |
+| `Brawl`              | `brawl`             | 1            |
+| `Explosives/Other`   | `explosive-other`   | 1            |
+| _Toute autre valeur_ | `slugify(valeur)`   | 2 (fallback) |
 
 ## Priorités et fallbacks
 
@@ -131,6 +131,7 @@ output: chaîne slugifiée
 ```
 
 **Règles :**
+
 - Chaque saut de fallback émet un warning loggué (catégorie `WEAPON_CATEGORY_FALLBACK`).
 - En mode strict (flag import), l'absence de résolution fiable peut rejeter l'item.
 
@@ -152,39 +153,47 @@ output: chaîne slugifiée
 ## Cas ambigus documentés
 
 ### Cas 1 : Blasters/Heavy + `Ranged` + SkillKey RangedLight
+
 - **system.category** : `ranged` (Categories reconnue)
 - **system.weaponType** : `blaster-heavy`
 - **Justification** : Cohérent. Le `Heavy` du type ne change pas la famille mécanique.
 
 ### Cas 2 : Explosives/Other + `Ranged` + SkillKey RangedLight
+
 - **system.category** : `ranged` (Categories reconnue)
 - **system.weaponType** : `explosive-other`
 - **Justification** : Les explosifs lancés sont `Ranged` dans OggDude. Le type `Explosive-other` permet de les distinguer.
 
 ### Cas 3 : Explosives/Other + `Explosive` (Categories)
+
 - **system.category** : `explosive`
 - **system.weaponType** : `explosive-other`
 - **Justification** : `<Categories>` fournit `Explosive` → mappé directement vers `explosive`.
 
 ### Cas 4 : Type inconnu + Categories absentes + SkillKey Melee
+
 - **system.category** : `melee` (via SkillKey)
 - **system.weaponType** : `slugify(Type)` ou `""`
 - **Justification** : SkillKey fiable en fallback quand Categories est absent.
 
 ### Cas 5 : `['Melee', 'Ranged']` + SkillKey RangedLight
+
 - **system.category** : `ranged` (conflit entre Categories et SkillKey → SkillKey l'emporte avec warning)
 - **Justification** : La première valeur reconnue dans Categories serait `melee`, mais SkillKey indique `ranged`. Le conflit est tranché en faveur de SkillKey.
 
 ### Cas 6 : Pas de Type ni Categories (création manuelle ou source non-OggDude)
+
 - **system.category** : `"ranged"` (valeur par défaut du schéma)
 - **system.weaponType** : `""` (vide)
 - **Justification** : Fallback documenté pour les armes créées manuellement.
 
 ### Cas 7 : `['Ranged', 'Starship']` + SkillKey Gunnery
+
 - **system.category** : `vehicle` (Starship → vehicle) si c'est la première valeur reconnue pertinente. Si conflit avec SkillKey gunnery → `gunnery` l'emporte avec warning.
 - **Justification** : Les armes montées sur vaisseau peuvent être taguées `Ranged` et `Starship`. La résolution dépend de l'ordre des valeurs et de SkillKey.
 
 ### Cas 8 : Arme sans SkillKey ni Range (données minimales)
+
 - **system.category** : `"ranged"` (fallback ultime)
 - **system.weaponType** : `""` (vide)
 - **Justification** : Sécurité. Une arme sans skill ni range est invalide mais ne doit pas planter l'import.
@@ -192,12 +201,14 @@ output: chaîne slugifiée
 ## Implications pour les issues suivantes
 
 ### #98 — Schéma weapon
+
 - Définir `SwerpgWeapon.ITEM_CATEGORIES = SYSTEM.WEAPON.CATEGORIES` (pattern `SwerpgArmor`)
 - Définir `SwerpgWeapon.DEFAULT_CATEGORY = 'ranged'`
 - Ajouter `system.weaponType` : `StringField({ required: false, initial: '' })`
 - Ajouter les clés de localisation `WEAPON.CATEGORIES.*` dans `lang/*.json`
 
 ### #101 — Import OggDude weapon
+
 - Mapper `<Categories>` → `system.category` via la table de mapping
 - Mapper `<Type>` → `system.weaponType` via la table de mapping
 - Stocker `flags.swerpg.oggdude.type` (valeur brute)
@@ -206,6 +217,7 @@ output: chaîne slugifiée
 - Clarifier l'avenir de `flags.swerpg.oggdudeTags`
 
 ### #100 — UX/Tests
+
 - Exposer `system.category` dans la fiche d'arme (selecteur)
 - Afficher `system.weaponType` en lecture seule (ou éditable si pertinent)
 - Préparer les filtres UI par `system.category`

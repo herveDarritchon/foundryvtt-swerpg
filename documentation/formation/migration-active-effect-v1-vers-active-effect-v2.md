@@ -2,8 +2,8 @@
 
 Je vais appeler :
 
-* **Active Effects V1** : le modèle historique introduit autour de V7/V8 et encore reconnaissable jusqu’en V13.
-* **Active Effects V2** : la refonte V14, explicitement nommée ainsi dans les notes de version Foundry VTT V14. Foundry
+- **Active Effects V1** : le modèle historique introduit autour de V7/V8 et encore reconnaissable jusqu’en V13.
+- **Active Effects V2** : la refonte V14, explicitement nommée ainsi dans les notes de version Foundry VTT V14. Foundry
   présente V14 comme une version qui “étend significativement” les Active Effects avec expiration améliorée, événements
   d’expiration et modification du token de l’acteur. ([foundryvtt.com][1])
 
@@ -18,7 +18,7 @@ meilleures bases pour les systèmes.
 Pour des développeurs habitués à V7/V8/V9/V10/V11/V12/V13, les changements importants sont les suivants :
 
 | Sujet                   | Avant V14 — “V1”                                      | V14 — “V2”                                                                | Impact développeur                                       |
-|-------------------------|-------------------------------------------------------|---------------------------------------------------------------------------|----------------------------------------------------------|
+| ----------------------- | ----------------------------------------------------- | ------------------------------------------------------------------------- | -------------------------------------------------------- |
 | Emplacement des changes | `ActiveEffect#changes` à la racine                    | `ActiveEffect#system#changes`                                             | Migration obligatoire du modèle de données               |
 | Modèle de données       | Structure relativement fixe                           | `ActiveEffect` possède un `system` typé via `TypeDataModel`               | Les systèmes doivent fournir un modèle AE propre         |
 | Forme des changes       | Change classique : key/mode/value/priority            | Structure plus flexible, avec `type`, `phase`, `priority` requis          | Les systèmes peuvent étendre la logique plus proprement  |
@@ -45,20 +45,22 @@ effect.changes
 ou on créait un effet comme ceci :
 
 ```js
-await actor.createEmbeddedDocuments("ActiveEffect", [{
-  name: "Bless",
-  changes: [
-    {
-      key: "system.attributes.attack.bonus",
-      mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-      value: "1",
-      priority: 20
-    }
-  ],
-  duration: {
-    rounds: 10
-  }
-}]);
+await actor.createEmbeddedDocuments('ActiveEffect', [
+  {
+    name: 'Bless',
+    changes: [
+      {
+        key: 'system.attributes.attack.bonus',
+        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        value: '1',
+        priority: 20,
+      },
+    ],
+    duration: {
+      rounds: 10,
+    },
+  },
+])
 ```
 
 C’était le modèle mental des Active Effects V1 : un document `ActiveEffect` avec une propriété racine `changes`.
@@ -73,26 +75,28 @@ Les modèles AE fournis par les packages doivent implémenter ce champ, le plus 
 Donc le modèle devient plutôt :
 
 ```js
-await actor.createEmbeddedDocuments("ActiveEffect", [{
-  name: "Bless",
-  type: "base",
-  system: {
-    changes: [
-      {
-        key: "system.attributes.attack.bonus",
-        type: "add",
-        value: "1",
-        phase: "apply",
-        priority: 20
-      }
-    ]
+await actor.createEmbeddedDocuments('ActiveEffect', [
+  {
+    name: 'Bless',
+    type: 'base',
+    system: {
+      changes: [
+        {
+          key: 'system.attributes.attack.bonus',
+          type: 'add',
+          value: '1',
+          phase: 'apply',
+          priority: 20,
+        },
+      ],
+    },
+    duration: {
+      units: 'rounds',
+      value: 10,
+      expiry: 'turnStart',
+    },
   },
-  duration: {
-    units: "rounds",
-    value: 10,
-    expiry: "turnStart"
-  }
-}]);
+])
 ```
 
 Les noms exacts de `type`, `phase`, `expiry` doivent être vérifiés dans l’API effective et dans le système cible, mais
@@ -171,15 +175,15 @@ Cela ouvre une vraie possibilité de design :
 ```js
 class MySystemActiveEffectModel extends foundry.data.ActiveEffectTypeDataModel {
   static defineSchema() {
-    const fields = foundry.data.fields;
+    const fields = foundry.data.fields
 
     return {
       ...super.defineSchema(),
       category: new fields.StringField({
-        choices: ["condition", "equipment", "spell", "aura", "environment"]
+        choices: ['condition', 'equipment', 'spell', 'aura', 'environment'],
       }),
-      rules: new fields.ArrayField(new fields.ObjectField())
-    };
+      rules: new fields.ArrayField(new fields.ObjectField()),
+    }
   }
 }
 ```
@@ -189,14 +193,14 @@ class MySystemActiveEffectModel extends foundry.data.ActiveEffectTypeDataModel {
 Les développeurs V7/V8 ont souvent l’habitude de mettre des choses dans :
 
 ```js
-effect.flags["my-system"]
+effect.flags['my-system']
 ```
 
 En V14, il faut se poser la question franchement :
 
-* si la donnée est un vrai concept système : **mettez-la dans `effect.system`** ;
-* si c’est une donnée de module ou une extension non canonique : **gardez `flags`** ;
-* si c’est une donnée de compatibilité temporaire : **prévoir une migration, pas une dépendance éternelle aux flags**.
+- si la donnée est un vrai concept système : **mettez-la dans `effect.system`** ;
+- si c’est une donnée de module ou une extension non canonique : **gardez `flags`** ;
+- si c’est une donnée de compatibilité temporaire : **prévoir une migration, pas une dépendance éternelle aux flags**.
 
 ---
 
@@ -395,7 +399,7 @@ utilisés pour résoudre les expressions `@`. ([foundryvtt.com][3])
 On faisait souvent :
 
 ```js
-value: "2"
+value: '2'
 ```
 
 ou alors on passait par du `custom` pour dire :
@@ -983,49 +987,53 @@ La suppression finale du legacy transferral en V14 impose une vraie migration. (
 ## Avant V14
 
 ```js
-await actor.createEmbeddedDocuments("ActiveEffect", [{
-  name: "Hâte",
-  icon: "icons/svg/upgrade.svg",
-  changes: [
-    {
-      key: "system.attributes.speed.value",
-      mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-      value: "10",
-      priority: 20
-    }
-  ],
-  duration: {
-    rounds: 10
+await actor.createEmbeddedDocuments('ActiveEffect', [
+  {
+    name: 'Hâte',
+    icon: 'icons/svg/upgrade.svg',
+    changes: [
+      {
+        key: 'system.attributes.speed.value',
+        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        value: '10',
+        priority: 20,
+      },
+    ],
+    duration: {
+      rounds: 10,
+    },
+    disabled: false,
   },
-  disabled: false
-}]);
+])
 ```
 
 ## V14 conceptuel
 
 ```js
-await actor.createEmbeddedDocuments("ActiveEffect", [{
-  name: "Hâte",
-  type: "base",
-  img: "icons/svg/upgrade.svg",
-  system: {
-    changes: [
-      {
-        key: "system.attributes.speed.value",
-        type: "add",
-        value: "10",
-        phase: "apply",
-        priority: 20
-      }
-    ]
+await actor.createEmbeddedDocuments('ActiveEffect', [
+  {
+    name: 'Hâte',
+    type: 'base',
+    img: 'icons/svg/upgrade.svg',
+    system: {
+      changes: [
+        {
+          key: 'system.attributes.speed.value',
+          type: 'add',
+          value: '10',
+          phase: 'apply',
+          priority: 20,
+        },
+      ],
+    },
+    duration: {
+      units: 'rounds',
+      value: 10,
+      expiry: null,
+    },
+    disabled: false,
   },
-  duration: {
-    units: "rounds",
-    value: 10,
-    expiry: null
-  },
-  disabled: false
-}]);
+])
 ```
 
 Le code exact dépend du modèle du système, mais c’est le changement d’architecture à retenir.
@@ -1216,22 +1224,13 @@ Un système qui répond clairement à ces questions sera plus stable, plus lisib
 Foundry VTT. Un système qui se contente de porter ses anciens hacks V8/V9 vers V14 gardera les mêmes problèmes, mais
 dans une architecture plus stricte.
 
-[1]: https://foundryvtt.com/releases/14.356 "Release 14.356 | Foundry Virtual Tabletop"
-
-[2]: https://github.com/foundryvtt/foundryvtt/issues/13740 "Migrate `ActiveEffect#changes` to `ActiveEffect#system#changes` · Issue #13740 · foundryvtt/foundryvtt · GitHub"
-
-[3]: https://foundryvtt.com/api/classes/foundry.documents.ActiveEffect.html "ActiveEffect | Foundry Virtual Tabletop - API Documentation - Version 14"
-
-[4]: https://foundryvtt.com/api/v14/variables/CONST.ACTIVE_EFFECT_CHANGE_TYPES.html "ACTIVE_EFFECT_CHANGE_TYPES | Foundry Virtual Tabletop - API Documentation - Version 14"
-
-[5]: https://github.com/foundryvtt/foundryvtt/issues/5841 "Allow Active Effect change values to reference actor data · Issue #5841 · foundryvtt/foundryvtt · GitHub"
-
-[6]: https://foundryvtt.com/releases/14.353 "Release 14.353 | Foundry Virtual Tabletop"
-
-[7]: https://github.com/foundryvtt/foundryvtt/issues/13332 "Allow for indicating ActiveEffect duration using time units other than seconds · Issue #13332 · foundryvtt/foundryvtt · GitHub"
-
-[8]: https://foundryvtt.com/releases/14.356?utm_source=chatgpt.com "Release 14.356"
-
-[9]: https://foundryvtt.com/releases/14.349 "Release 14.349 | Foundry Virtual Tabletop"
-
-[10]: https://foundryvtt.com/article/active-effects/ "Active Effects | Foundry Virtual Tabletop"
+[1]: https://foundryvtt.com/releases/14.356 'Release 14.356 | Foundry Virtual Tabletop'
+[2]: https://github.com/foundryvtt/foundryvtt/issues/13740 'Migrate `ActiveEffect#changes` to `ActiveEffect#system#changes` · Issue #13740 · foundryvtt/foundryvtt · GitHub'
+[3]: https://foundryvtt.com/api/classes/foundry.documents.ActiveEffect.html 'ActiveEffect | Foundry Virtual Tabletop - API Documentation - Version 14'
+[4]: https://foundryvtt.com/api/v14/variables/CONST.ACTIVE_EFFECT_CHANGE_TYPES.html 'ACTIVE_EFFECT_CHANGE_TYPES | Foundry Virtual Tabletop - API Documentation - Version 14'
+[5]: https://github.com/foundryvtt/foundryvtt/issues/5841 'Allow Active Effect change values to reference actor data · Issue #5841 · foundryvtt/foundryvtt · GitHub'
+[6]: https://foundryvtt.com/releases/14.353 'Release 14.353 | Foundry Virtual Tabletop'
+[7]: https://github.com/foundryvtt/foundryvtt/issues/13332 'Allow for indicating ActiveEffect duration using time units other than seconds · Issue #13332 · foundryvtt/foundryvtt · GitHub'
+[8]: https://foundryvtt.com/releases/14.356?utm_source=chatgpt.com 'Release 14.356'
+[9]: https://foundryvtt.com/releases/14.349 'Release 14.349 | Foundry Virtual Tabletop'
+[10]: https://foundryvtt.com/article/active-effects/ 'Active Effects | Foundry Virtual Tabletop'

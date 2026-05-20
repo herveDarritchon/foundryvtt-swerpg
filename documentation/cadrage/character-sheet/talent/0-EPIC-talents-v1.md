@@ -334,11 +334,11 @@ Si l’audit/log est indisponible, l’achat ne doit pas être bloqué pour cett
 ## 11. Critères d’acceptation globaux
 
 - [ ] L’onglet Talents affiche clairement les talents possédés et leur état :
-    - nom ;
-    - activation ;
-    - ranked ou non ;
-    - rang consolidé ;
-    - spécialisation(s) source(s).
+  - nom ;
+  - activation ;
+  - ranked ou non ;
+  - rang consolidé ;
+  - spécialisation(s) source(s).
 
 - [ ] Le personnage peut consulter ses arbres de spécialisation via une vue graphique dédiée, indépendante du canvas de scène Foundry.
 
@@ -347,17 +347,17 @@ Si l’audit/log est indisponible, l’achat ne doit pas être bloqué pour cett
 - [ ] Les autres spécialisations possédées par l’acteur restent consultables en lecture.
 
 - [ ] L’achat d’un talent met à jour correctement :
-    - les données persistantes de l’acteur ;
-    - les achats de nœuds ;
-    - le rang consolidé du talent ;
-    - l’onglet Talents / vue consolidée ;
-    - la vue graphique d’arbre ;
-    - les règles d’accessibilité des nœuds suivants.
+  - les données persistantes de l’acteur ;
+  - les achats de nœuds ;
+  - le rang consolidé du talent ;
+  - l’onglet Talents / vue consolidée ;
+  - la vue graphique d’arbre ;
+  - les règles d’accessibilité des nœuds suivants.
 
 - [ ] Les talents ranked sont gérés proprement :
-    - achats multiples possibles sur des nœuds valides ;
-    - rang consolidé correct ;
-    - coût XP issu des nœuds achetés.
+  - achats multiples possibles sur des nœuds valides ;
+  - rang consolidé correct ;
+  - coût XP issu des nœuds achetés.
 
 - [ ] Les talents non-ranked présents dans plusieurs arbres peuvent être achetés comme nœuds distincts sans cumul de bénéfice dans la vue consolidée.
 
@@ -368,14 +368,14 @@ Si l’audit/log est indisponible, l’achat ne doit pas être bloqué pour cett
 - [ ] Les achats déclenchent une opération audit/log compatible sans stocker l’historique dans l’acteur.
 
 - [ ] Les tests couvrent au minimum :
-    - achat simple ;
-    - achat ranked depuis un seul arbre ;
-    - achat ranked depuis plusieurs arbres ;
-    - achat non-ranked déjà possédé dans un autre arbre ;
-    - verrouillage / déverrouillage par connexions ;
-    - recalcul de la vue consolidée ;
-    - import minimal d’un arbre OggDude ;
-    - cas d’arbre ou de nœud invalide.
+  - achat simple ;
+  - achat ranked depuis un seul arbre ;
+  - achat ranked depuis plusieurs arbres ;
+  - achat non-ranked déjà possédé dans un autre arbre ;
+  - verrouillage / déverrouillage par connexions ;
+  - recalcul de la vue consolidée ;
+  - import minimal d’un arbre OggDude ;
+  - cas d’arbre ou de nœud invalide.
 
 ---
 

@@ -10,14 +10,14 @@ Le système doit pouvoir conserver une trace des principales modifications réal
 
 Ces traces doivent permettre de comprendre l’évolution du personnage dans le temps, notamment :
 
-* choix structurants à la création du personnage ;
-* choix d’espèce ;
-* choix de carrière ;
-* choix de spécialisation ;
-* dépenses d’expérience ;
-* achat de niveaux de compétence ;
-* revente de niveaux de compétence ;
-* autres modifications importantes utiles au suivi ou au debug.
+- choix structurants à la création du personnage ;
+- choix d’espèce ;
+- choix de carrière ;
+- choix de spécialisation ;
+- dépenses d’expérience ;
+- achat de niveaux de compétence ;
+- revente de niveaux de compétence ;
+- autres modifications importantes utiles au suivi ou au debug.
 
 Ce journal a une vocation de suivi, d’audit et de debug.
 
@@ -44,11 +44,11 @@ Il sert à comprendre, auditer ou diagnostiquer l’évolution d’un personnage
 
 Le stockage dans les flags est donc retenu car il permet :
 
-* de conserver les logs directement sur l’acteur ;
-* de ne pas modifier le modèle principal du personnage ;
-* d’éviter une migration du data model ;
-* de faire évoluer progressivement la structure des logs ;
-* de garder cette trace séparée des données cœur du système.
+- de conserver les logs directement sur l’acteur ;
+- de ne pas modifier le modèle principal du personnage ;
+- d’éviter une migration du data model ;
+- de faire évoluer progressivement la structure des logs ;
+- de garder cette trace séparée des données cœur du système.
 
 ## Option écartée — Stockage dans `actor.system.logs`
 
@@ -90,12 +90,12 @@ Chaque entrée de log doit correspondre à une seule modification du personnage.
 
 Chaque entrée doit permettre d’identifier au minimum :
 
-* la date de l’action ;
-* l’utilisateur ayant déclenché l’action ;
-* le personnage concerné ;
-* le type d’action ;
-* une description lisible ;
-* les données utiles à la compréhension de la modification.
+- la date de l’action ;
+- l’utilisateur ayant déclenché l’action ;
+- le personnage concerné ;
+- le type d’action ;
+- une description lisible ;
+- les données utiles à la compréhension de la modification.
 
 Les logs doivent rester exploitables pour générer un compte rendu lisible de l’évolution du personnage.
 
@@ -103,10 +103,10 @@ Les logs doivent rester exploitables pour générer un compte rendu lisible de l
 
 Le journal peut être utilisé pour :
 
-* afficher un historique d’évolution du personnage ;
-* comprendre les dépenses et remboursements d’expérience ;
-* diagnostiquer une anomalie de progression ;
-* produire un compte rendu de création ou d’évolution.
+- afficher un historique d’évolution du personnage ;
+- comprendre les dépenses et remboursements d’expérience ;
+- diagnostiquer une anomalie de progression ;
+- produire un compte rendu de création ou d’évolution.
 
 Le journal ne doit pas être utilisé comme source principale de vérité.
 

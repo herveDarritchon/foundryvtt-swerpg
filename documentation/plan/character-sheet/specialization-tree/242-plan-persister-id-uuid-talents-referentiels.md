@@ -38,8 +38,8 @@ Il ne couvre pas les talents embarqués sur actor, ni la résolution `node -> ta
   par les storage targets de l'importer.
 - Définition explicite du comportement attendu pour la création directe des talents référentiels.
 - Tests ciblés sur :
-    - projection `system.id` dans le mapper ;
-    - persistance `system.uuid` après création world et compendium.
+  - projection `system.id` dans le mapper ;
+  - persistance `system.uuid` après création world et compendium.
 
 ### Exclu de ce ticket
 
@@ -251,7 +251,7 @@ compendium. Confirmé avec toi lors de la revue du plan.
 ## 6. Fichiers modifiés
 
 | Fichier                                                   | Action                   | Description                                           |
-|-----------------------------------------------------------|--------------------------|-------------------------------------------------------|
+| --------------------------------------------------------- | ------------------------ | ----------------------------------------------------- |
 | `module/models/talent.mjs`                                | modification             | Ajouter `system.id` et `system.uuid` au schéma        |
 | `module/importer/mappers/oggdude-talent-mapper.mjs`       | modification             | Alimenter `system.id` depuis `context.key`            |
 | `module/settings/models/OggDudeDataElement.mjs`           | modification             | Post-traitement `system.uuid` après `createDocuments` |
@@ -267,7 +267,7 @@ compendium. Confirmé avec toi lors de la revue du plan.
 ## 7. Risques
 
 | Risque                                                | Impact                       | Mitigation                                          |
-|-------------------------------------------------------|------------------------------|-----------------------------------------------------|
+| ----------------------------------------------------- | ---------------------------- | --------------------------------------------------- |
 | Confusion `item.id` Foundry vs `system.id` métier     | bugs de lecture/association  | Assertions explicites dans tests et code review     |
 | Solution trop large touchant les actor-owned talents  | dérive de périmètre          | Filtrer strictement sur talents référentiels        |
 | Post-update UUID oublié sur un des deux contextes     | incohérence world/compendium | Mutualiser la logique et tester les deux modes      |

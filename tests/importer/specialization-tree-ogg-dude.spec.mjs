@@ -13,10 +13,7 @@ import { logger } from '../../module/utils/logger.mjs'
 import OggDudeDataElement from '../../module/settings/models/OggDudeDataElement.mjs'
 import { buildSpecializationTreeContext } from '../../module/importer/items/specialization-tree-ogg-dude.mjs'
 import { extractDirectionalConnections, specializationTreeMapper } from '../../module/importer/mappers/oggdude-specialization-tree-mapper.mjs'
-import {
-  getSpecializationTreeImportStats,
-  resetSpecializationTreeImportStats,
-} from '../../module/importer/utils/specialization-tree-import-utils.mjs'
+import { getSpecializationTreeImportStats, resetSpecializationTreeImportStats } from '../../module/importer/utils/specialization-tree-import-utils.mjs'
 
 describe('specializationTreeMapper', () => {
   beforeEach(() => {
@@ -69,7 +66,10 @@ describe('specializationTreeMapper', () => {
     expect(result[0].name).toBe('Bodyguard')
     expect(result[0].system.specializationId).toBe('bodyguard')
     expect(result[0].system.careerId).toBe('hired-gun')
-    expect(result[0].system.nodes.map((node) => node.nodeId), 'rows and columns should become stable node ids').toEqual(['r1c1', 'r1c2', 'r2c1'])
+    expect(
+      result[0].system.nodes.map((node) => node.nodeId),
+      'rows and columns should become stable node ids',
+    ).toEqual(['r1c1', 'r1c2', 'r2c1'])
     expect(result[0].system.connections).toEqual([{ from: 'r1c1', to: 'r2c1', type: 'vertical' }])
     expect(result[0].flags.swerpg.import.importedNodeCount).toBe(3)
     expect(result[0].flags.swerpg.import.importedConnectionCount).toBe(1)
@@ -145,12 +145,7 @@ describe('specializationTreeMapper', () => {
               Cost: '5',
               Talents: { Key: ['PLAUSDEN', 'KNOWSOM', 'GRIT', 'KILL'] },
               Directions: {
-                Direction: [
-                  { Right: 'true' },
-                  { Right: 'true', Down: 'true' },
-                  {},
-                  {},
-                ],
+                Direction: [{ Right: 'true' }, { Right: 'true', Down: 'true' }, {}, {}],
               },
             },
             {
@@ -296,10 +291,7 @@ describe('specializationTreeMapper', () => {
 
     specializationTreeMapper(input)
 
-    expect(logger.warn).toHaveBeenCalledWith(
-      expect.stringContaining('directional-target-missing'),
-      expect.objectContaining({ specializationId: 'advisor' }),
-    )
+    expect(logger.warn).toHaveBeenCalledWith(expect.stringContaining('directional-target-missing'), expect.objectContaining({ specializationId: 'advisor' }))
   })
 
   it('logs warn for unknown format', () => {
@@ -307,82 +299,79 @@ describe('specializationTreeMapper', () => {
 
     specializationTreeMapper(input)
 
-    expect(logger.warn).toHaveBeenCalledWith(
-      expect.stringContaining('Format non reconnu'),
-      expect.objectContaining({ specializationId: 'unknown' }),
-    )
+    expect(logger.warn).toHaveBeenCalledWith(expect.stringContaining('Format non reconnu'), expect.objectContaining({ specializationId: 'unknown' }))
   })
 })
 
-  it('maps nodes from real OggDude TalentRows/Talents/Key format', () => {
-    const input = [
-      {
-        Key: 'ADVISOR',
-        Name: 'Advisor',
-        TalentRows: {
-          TalentRow: [
-            {
-              Cost: '5',
-              Talents: { Key: ['PLAUSDEN', 'KNOWSOM', 'GRIT', 'KILL'] },
-            },
-            {
-              Cost: '10',
-              Talents: { Key: ['STIM', 'DEDICATION'] },
-            },
-            {
-              Cost: '15',
-              Talents: { Key: ['CONFUSE'] },
-            },
-          ],
-        },
+it('maps nodes from real OggDude TalentRows/Talents/Key format', () => {
+  const input = [
+    {
+      Key: 'ADVISOR',
+      Name: 'Advisor',
+      TalentRows: {
+        TalentRow: [
+          {
+            Cost: '5',
+            Talents: { Key: ['PLAUSDEN', 'KNOWSOM', 'GRIT', 'KILL'] },
+          },
+          {
+            Cost: '10',
+            Talents: { Key: ['STIM', 'DEDICATION'] },
+          },
+          {
+            Cost: '15',
+            Talents: { Key: ['CONFUSE'] },
+          },
+        ],
       },
-    ]
+    },
+  ]
 
-    const result = specializationTreeMapper(input)
-    const stats = getSpecializationTreeImportStats()
+  const result = specializationTreeMapper(input)
+  const stats = getSpecializationTreeImportStats()
 
-    expect(result).toHaveLength(1)
-    expect(result[0].system.nodes).toHaveLength(7)
+  expect(result).toHaveLength(1)
+  expect(result[0].system.nodes).toHaveLength(7)
 
-    // All row-1 nodes inherit cost from row
-    expect(result[0].system.nodes.filter((n) => n.row === 1).every((n) => n.cost === 5)).toBe(true)
-    expect(result[0].system.nodes.filter((n) => n.row === 2).every((n) => n.cost === 10)).toBe(true)
-    expect(result[0].system.nodes.filter((n) => n.row === 3).every((n) => n.cost === 15)).toBe(true)
+  // All row-1 nodes inherit cost from row
+  expect(result[0].system.nodes.filter((n) => n.row === 1).every((n) => n.cost === 5)).toBe(true)
+  expect(result[0].system.nodes.filter((n) => n.row === 2).every((n) => n.cost === 10)).toBe(true)
+  expect(result[0].system.nodes.filter((n) => n.row === 3).every((n) => n.cost === 15)).toBe(true)
 
-    // Verify node identities
-    expect(result[0].system.nodes[0]).toMatchObject({ nodeId: 'r1c1', row: 1, column: 1, talentId: 'plausden', cost: 5 })
-    expect(result[0].system.nodes[1]).toMatchObject({ nodeId: 'r1c2', row: 1, column: 2, talentId: 'knowsom', cost: 5 })
-    expect(result[0].system.nodes[4]).toMatchObject({ nodeId: 'r2c1', row: 2, column: 1, talentId: 'stim', cost: 10 })
-    expect(result[0].system.nodes[5]).toMatchObject({ nodeId: 'r2c2', row: 2, column: 2, talentId: 'dedication', cost: 10 })
-    expect(result[0].system.nodes[6]).toMatchObject({ nodeId: 'r3c1', row: 3, column: 1, talentId: 'confuse', cost: 15 })
+  // Verify node identities
+  expect(result[0].system.nodes[0]).toMatchObject({ nodeId: 'r1c1', row: 1, column: 1, talentId: 'plausden', cost: 5 })
+  expect(result[0].system.nodes[1]).toMatchObject({ nodeId: 'r1c2', row: 1, column: 2, talentId: 'knowsom', cost: 5 })
+  expect(result[0].system.nodes[4]).toMatchObject({ nodeId: 'r2c1', row: 2, column: 1, talentId: 'stim', cost: 10 })
+  expect(result[0].system.nodes[5]).toMatchObject({ nodeId: 'r2c2', row: 2, column: 2, talentId: 'dedication', cost: 10 })
+  expect(result[0].system.nodes[6]).toMatchObject({ nodeId: 'r3c1', row: 3, column: 1, talentId: 'confuse', cost: 15 })
 
-    // Connections empty until #219
-    expect(result[0].system.connections).toEqual([])
-    expect(stats.total).toBe(1)
-    expect(stats.imported).toBe(1)
-  })
+  // Connections empty until #219
+  expect(result[0].system.connections).toEqual([])
+  expect(stats.total).toBe(1)
+  expect(stats.imported).toBe(1)
+})
 
-  it('handles single string Talents.Key as produced by xml2js explicitArray:false', () => {
-    const input = [
-      {
-        Key: 'BODYGUARD',
-        Name: 'Bodyguard',
-        TalentRows: {
-          TalentRow: [
-            {
-              Cost: '5',
-              Talents: { Key: 'PARRY' },
-            },
-          ],
-        },
+it('handles single string Talents.Key as produced by xml2js explicitArray:false', () => {
+  const input = [
+    {
+      Key: 'BODYGUARD',
+      Name: 'Bodyguard',
+      TalentRows: {
+        TalentRow: [
+          {
+            Cost: '5',
+            Talents: { Key: 'PARRY' },
+          },
+        ],
       },
-    ]
+    },
+  ]
 
-    const result = specializationTreeMapper(input)
+  const result = specializationTreeMapper(input)
 
-    expect(result[0].system.nodes).toHaveLength(1)
-    expect(result[0].system.nodes[0]).toMatchObject({ nodeId: 'r1c1', talentId: 'parry', cost: 5 })
-  })
+  expect(result[0].system.nodes).toHaveLength(1)
+  expect(result[0].system.nodes[0]).toMatchObject({ nodeId: 'r1c1', talentId: 'parry', cost: 5 })
+})
 
 describe('extractDirectionalConnections', () => {
   it('produces a horizontal connection for Right direction', () => {
@@ -419,9 +408,7 @@ describe('extractDirectionalConnections', () => {
   })
 
   it('ignores Left and Up directions', () => {
-    const nodes = [
-      { nodeId: 'r2c2', row: 2, column: 2, rawNode: { direction: { Left: 'true', Up: 'true' } } },
-    ]
+    const nodes = [{ nodeId: 'r2c2', row: 2, column: 2, rawNode: { direction: { Left: 'true', Up: 'true' } } }]
     const result = extractDirectionalConnections(nodes)
     expect(result.connections).toEqual([])
     expect(result.warnings).toEqual([])
@@ -438,18 +425,14 @@ describe('extractDirectionalConnections', () => {
   })
 
   it('returns warning when Right target node is missing', () => {
-    const nodes = [
-      { nodeId: 'r1c1', row: 1, column: 1, rawNode: { direction: { Right: 'true' } } },
-    ]
+    const nodes = [{ nodeId: 'r1c1', row: 1, column: 1, rawNode: { direction: { Right: 'true' } } }]
     const result = extractDirectionalConnections(nodes)
     expect(result.connections).toEqual([])
     expect(result.warnings).toContain('directional-target-missing:r1c1->r1c2 (Right)')
   })
 
   it('returns warning when Down target node is missing', () => {
-    const nodes = [
-      { nodeId: 'r1c1', row: 1, column: 1, rawNode: { direction: { Down: 'true' } } },
-    ]
+    const nodes = [{ nodeId: 'r1c1', row: 1, column: 1, rawNode: { direction: { Down: 'true' } } }]
     const result = extractDirectionalConnections(nodes)
     expect(result.connections).toEqual([])
     expect(result.warnings).toContain('directional-target-missing:r1c1->r2c1 (Down)')
@@ -484,9 +467,7 @@ describe('specializationTreeMapper — talentUuid enrichment', () => {
   ]
 
   it('sets talentUuid from talentById when a matching talent exists', () => {
-    const talentById = new Map([
-      ['parry', { uuid: 'Item.talentParry001', id: 'parry' }],
-    ])
+    const talentById = new Map([['parry', { uuid: 'Item.talentParry001', id: 'parry' }]])
 
     const result = specializationTreeMapper(minimalInput, { talentById })
 
@@ -502,9 +483,7 @@ describe('specializationTreeMapper — talentUuid enrichment', () => {
   })
 
   it('sets talentUuid to null when the talent is not found in talentById', () => {
-    const talentById = new Map([
-      ['other', { uuid: 'Item.other001', id: 'other' }],
-    ])
+    const talentById = new Map([['other', { uuid: 'Item.other001', id: 'other' }]])
 
     const result = specializationTreeMapper(minimalInput, { talentById })
 
@@ -513,9 +492,7 @@ describe('specializationTreeMapper — talentUuid enrichment', () => {
   })
 
   it('resolves talentUuid when talentById key is already lowercased', () => {
-    const talentById = new Map([
-      ['parry', { uuid: 'Item.talentParry002', id: 'parry' }],
-    ])
+    const talentById = new Map([['parry', { uuid: 'Item.talentParry002', id: 'parry' }]])
 
     const result = specializationTreeMapper(minimalInput, { talentById })
 
@@ -523,9 +500,7 @@ describe('specializationTreeMapper — talentUuid enrichment', () => {
   })
 
   it('preserves talentId unchanged when talentUuid is resolved', () => {
-    const talentById = new Map([
-      ['parry', { uuid: 'Item.talentParry003', id: 'parry' }],
-    ])
+    const talentById = new Map([['parry', { uuid: 'Item.talentParry003', id: 'parry' }]])
 
     const result = specializationTreeMapper(minimalInput, { talentById })
 

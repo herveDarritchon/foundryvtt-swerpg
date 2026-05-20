@@ -41,11 +41,11 @@
 
 ## 4. Risques principaux
 
-| Risque | Impact | Mitigation |
-| --- | --- | --- |
-| Les Items Talent référentiels n'existent pas réellement | le bug persiste malgré le resolver | vérifier le référentiel avant correction lourde |
-| Les clés importées ne sont pas homogènes | faux négatifs de résolution | documenter la clé canonique et les fallbacks supportés |
-| Confusion entre `item.uuid`, `system.uuid` et `talentUuid` | modèle difficile à maintenir | interdire l'ambiguïté dans la décision de design |
+| Risque                                                     | Impact                             | Mitigation                                             |
+| ---------------------------------------------------------- | ---------------------------------- | ------------------------------------------------------ |
+| Les Items Talent référentiels n'existent pas réellement    | le bug persiste malgré le resolver | vérifier le référentiel avant correction lourde        |
+| Les clés importées ne sont pas homogènes                   | faux négatifs de résolution        | documenter la clé canonique et les fallbacks supportés |
+| Confusion entre `item.uuid`, `system.uuid` et `talentUuid` | modèle difficile à maintenir       | interdire l'ambiguïté dans la décision de design       |
 
 ## 5. Hiérarchie des work items
 
@@ -85,14 +85,14 @@ graph TD
 
 ### Stories / Enablers / Tests
 
-| Type | Titre | Priorité | Estimate | Dépendances |
-| --- | --- | --- | --- | --- |
-| Story | Diagnostiquer où `Unknown Talent` est produit | P0 | 2 | Feature |
-| Enabler | Formaliser la stratégie de clés `talentId` / `talentUuid` | P1 | 1 | Story diagnostic |
-| Story | Mettre à niveau le resolver de talents consolidés | P0 | 3 | Diagnostic, enabler clés |
-| Enabler | Enrichir les nouveaux achats avec `talentUuid` et `treeUuid` | P2 | 2 | Resolver corrigé |
-| Test | Couvrir les cas unitaires de consolidation | P0 | 2 | Resolver corrigé |
-| Test | Vérifier visuellement la fiche Foundry avec acteur de référence | P1 | 1 | Resolver corrigé, tests unitaires |
+| Type    | Titre                                                           | Priorité | Estimate | Dépendances                       |
+| ------- | --------------------------------------------------------------- | -------- | -------- | --------------------------------- |
+| Story   | Diagnostiquer où `Unknown Talent` est produit                   | P0       | 2        | Feature                           |
+| Enabler | Formaliser la stratégie de clés `talentId` / `talentUuid`       | P1       | 1        | Story diagnostic                  |
+| Story   | Mettre à niveau le resolver de talents consolidés               | P0       | 3        | Diagnostic, enabler clés          |
+| Enabler | Enrichir les nouveaux achats avec `talentUuid` et `treeUuid`    | P2       | 2        | Resolver corrigé                  |
+| Test    | Couvrir les cas unitaires de consolidation                      | P0       | 2        | Resolver corrigé                  |
+| Test    | Vérifier visuellement la fiche Foundry avec acteur de référence | P1       | 1        | Resolver corrigé, tests unitaires |
 
 ## 7. Dépendances et ordre recommandé
 
@@ -105,14 +105,14 @@ graph TD
 
 ## 8. Priorisation
 
-| Issue | Priorité | Valeur | Raison |
-| --- | --- | --- | --- |
-| Diagnostic resolver | P0 | High | l'échec exact doit être prouvé avant correction |
-| Resolver consolidé | P0 | High | bug utilisateur visible dans la feuille personnage |
-| Tests unitaires | P0 | High | verrouille la non-régression métier |
-| Stratégie de clés | P1 | Medium | réduit la dette de design et les ambiguïtés |
-| Vérification visuelle | P1 | Medium | confirme le rendu réel Foundry |
-| Enrichissement persistance | P2 | Medium | amélioration progressive, non bloquante pour le hotfix |
+| Issue                      | Priorité | Valeur | Raison                                                 |
+| -------------------------- | -------- | ------ | ------------------------------------------------------ |
+| Diagnostic resolver        | P0       | High   | l'échec exact doit être prouvé avant correction        |
+| Resolver consolidé         | P0       | High   | bug utilisateur visible dans la feuille personnage     |
+| Tests unitaires            | P0       | High   | verrouille la non-régression métier                    |
+| Stratégie de clés          | P1       | Medium | réduit la dette de design et les ambiguïtés            |
+| Vérification visuelle      | P1       | Medium | confirme le rendu réel Foundry                         |
+| Enrichissement persistance | P2       | Medium | amélioration progressive, non bloquante pour le hotfix |
 
 ## 9. Configuration board Kanban
 

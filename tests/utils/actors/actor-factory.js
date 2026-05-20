@@ -13,11 +13,17 @@ import { CombatMixin } from '../../../module/documents/actor-mixins/combat/index
 export function createMockActor(overrides = {}) {
   // Create a base class that includes ResourcesMixin
   // Create base class with all available mixins (without TalentsMixin - to be added after creation)
-  const MockActorBase = CombatMixin(EquipmentMixin(ResourcesMixin(class Base {
-    constructor(data) {
-      Object.assign(this, data)
-    }
-  })))
+  const MockActorBase = CombatMixin(
+    EquipmentMixin(
+      ResourcesMixin(
+        class Base {
+          constructor(data) {
+            Object.assign(this, data)
+          }
+        },
+      ),
+    ),
+  )
 
   const baseData = {
     system: {

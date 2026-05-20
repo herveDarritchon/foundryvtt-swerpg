@@ -306,32 +306,32 @@ Cela concerne :
 
 ## 6. Fichiers modifiés
 
-| Fichier | Action | Description du changement |
-|---|---|---|
-| `module/applications/specialization-tree-app.mjs` | création | Nouvelle application V2 dédiée aux arbres avec acteur courant, viewport PIXI et API `open/refresh/close` |
-| `module/applications/_module.mjs` | modification | Exporter l'application dédiée |
-| `templates/applications/specialization-tree-app.hbs` | création | Template de la fenêtre graphique dédiée |
-| `swerpg.mjs` | modification | Instancier et exposer `game.system.specializationTreeApp`, retirer la dépendance V1 au `canvasReady` pour cette vue |
-| `module/documents/actor.mjs` | modification | Rediriger le refresh de la vue ouverte vers l'application dédiée |
-| `module/documents/actor-mixins/talents.mjs` | modification potentielle | Ajuster le bridge si le contrat public doit être clarifié |
-| `styles/applications.less` | modification | Styles de la fenêtre et du viewport dédié |
-| `lang/fr.json` | modification | Libellés FR de l'application |
-| `lang/en.json` | modification | Libellés EN de l'application |
-| `tests/applications/specialization-tree-app.test.mjs` | création | Tests de cycle de vie et d'indépendance au canvas |
-| `tests/unit/documents/actor-talents-mixin.test.mjs` | modification potentielle | Tests du bridge acteur vers l'application dédiée |
+| Fichier                                               | Action                   | Description du changement                                                                                           |
+| ----------------------------------------------------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------- |
+| `module/applications/specialization-tree-app.mjs`     | création                 | Nouvelle application V2 dédiée aux arbres avec acteur courant, viewport PIXI et API `open/refresh/close`            |
+| `module/applications/_module.mjs`                     | modification             | Exporter l'application dédiée                                                                                       |
+| `templates/applications/specialization-tree-app.hbs`  | création                 | Template de la fenêtre graphique dédiée                                                                             |
+| `swerpg.mjs`                                          | modification             | Instancier et exposer `game.system.specializationTreeApp`, retirer la dépendance V1 au `canvasReady` pour cette vue |
+| `module/documents/actor.mjs`                          | modification             | Rediriger le refresh de la vue ouverte vers l'application dédiée                                                    |
+| `module/documents/actor-mixins/talents.mjs`           | modification potentielle | Ajuster le bridge si le contrat public doit être clarifié                                                           |
+| `styles/applications.less`                            | modification             | Styles de la fenêtre et du viewport dédié                                                                           |
+| `lang/fr.json`                                        | modification             | Libellés FR de l'application                                                                                        |
+| `lang/en.json`                                        | modification             | Libellés EN de l'application                                                                                        |
+| `tests/applications/specialization-tree-app.test.mjs` | création                 | Tests de cycle de vie et d'indépendance au canvas                                                                   |
+| `tests/unit/documents/actor-talents-mixin.test.mjs`   | modification potentielle | Tests du bridge acteur vers l'application dédiée                                                                    |
 
 ---
 
 ## 7. Risques
 
-| Risque | Impact | Mitigation |
-|---|---|---|
-| Le viewport PIXI fuit en mémoire ou garde des listeners après fermeture | instabilité UI, re-render dégradé | imposer dans le plan des hooks explicites de mount/unmount/destroy et des tests de fermeture |
-| Le nouveau flux conserve une dépendance cachée à `canvas` | non-respect de l'AC principal | interdire dans US15 tout appel à `canvas`, `canvas.hud`, `canvasReady` dans le chemin de la nouvelle application |
-| US15 dérive vers le rendu métier d'US16 | périmètre flou, rework | limiter US15 à la coque, au contexte et au viewport technique |
-| Le refresh reste câblé uniquement au legacy `game.system.tree` | application dédiée obsolète ou incohérente | faire une revue systématique des points de refresh dans `actor.mjs` et le bridge acteur |
-| Coexistence legacy/dedicated mal contrôlée | doubles ouvertures, comportement incohérent | faire de `game.system.specializationTreeApp` le point d'entrée prioritaire et ne pas supprimer le legacy dans cette US |
-| Tests trop fragiles à cause de PIXI/Foundry mocks | faible valeur de non-régression | tester le contrat applicatif et le bridge, pas le rendu graphique détaillé |
+| Risque                                                                  | Impact                                      | Mitigation                                                                                                             |
+| ----------------------------------------------------------------------- | ------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| Le viewport PIXI fuit en mémoire ou garde des listeners après fermeture | instabilité UI, re-render dégradé           | imposer dans le plan des hooks explicites de mount/unmount/destroy et des tests de fermeture                           |
+| Le nouveau flux conserve une dépendance cachée à `canvas`               | non-respect de l'AC principal               | interdire dans US15 tout appel à `canvas`, `canvas.hud`, `canvasReady` dans le chemin de la nouvelle application       |
+| US15 dérive vers le rendu métier d'US16                                 | périmètre flou, rework                      | limiter US15 à la coque, au contexte et au viewport technique                                                          |
+| Le refresh reste câblé uniquement au legacy `game.system.tree`          | application dédiée obsolète ou incohérente  | faire une revue systématique des points de refresh dans `actor.mjs` et le bridge acteur                                |
+| Coexistence legacy/dedicated mal contrôlée                              | doubles ouvertures, comportement incohérent | faire de `game.system.specializationTreeApp` le point d'entrée prioritaire et ne pas supprimer le legacy dans cette US |
+| Tests trop fragiles à cause de PIXI/Foundry mocks                       | faible valeur de non-régression             | tester le contrat applicatif et le bridge, pas le rendu graphique détaillé                                             |
 
 ---
 

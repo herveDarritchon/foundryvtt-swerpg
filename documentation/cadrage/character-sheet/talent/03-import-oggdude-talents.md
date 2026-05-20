@@ -63,7 +63,7 @@ Données minimales :
     page: null
   }
 }
-````
+```
 
 Le coût XP ne doit pas être stocké sur la définition générique du talent.
 
@@ -93,9 +93,9 @@ Données minimales :
 
 Les arbres peuvent être stockés :
 
-* dans le monde ;
-* dans un compendium monde ;
-* dans un pack généré par import.
+- dans le monde ;
+- dans un compendium monde ;
+- dans un pack généré par import.
 
 ---
 
@@ -169,12 +169,12 @@ flags.swerpg.import
 
 À conserver au minimum lorsque disponible :
 
-* identifiant OggDude original ;
-* type de donnée importée ;
-* source brute ;
-* références d’origine ;
-* informations non résolues ;
-* warnings d’import.
+- identifiant OggDude original ;
+- type de donnée importée ;
+- source brute ;
+- références d’origine ;
+- informations non résolues ;
+- warnings d’import.
 
 Objectif : permettre le debug, la migration et les corrections futures.
 
@@ -186,9 +186,9 @@ Objectif : permettre le debug, la migration et les corrections futures.
 
 Si un nœud référence un talent introuvable :
 
-* créer un placeholder contrôlé ;
-* marquer la référence comme non résolue ;
-* produire un warning.
+- créer un placeholder contrôlé ;
+- marquer la référence comme non résolue ;
+- produire un warning.
 
 Exemple :
 
@@ -213,10 +213,10 @@ Exemple :
 
 Si le coût d’un nœud est manquant :
 
-* ne pas deviner le coût ;
-* ne pas appliquer de fallback `rank * 5` ;
-* marquer le nœud comme invalide ou non achetable ;
-* produire un warning.
+- ne pas deviner le coût ;
+- ne pas appliquer de fallback `rank * 5` ;
+- marquer le nœud comme invalide ou non achetable ;
+- produire un warning.
 
 ---
 
@@ -224,10 +224,10 @@ Si le coût d’un nœud est manquant :
 
 Si les connexions sont absentes ou incohérentes :
 
-* importer les nœuds si possible ;
-* marquer l’arbre comme incomplet ;
-* empêcher les achats non fiables ;
-* produire un warning.
+- importer les nœuds si possible ;
+- marquer l’arbre comme incomplet ;
+- empêcher les achats non fiables ;
+- produire un warning.
 
 Aucune reconstruction implicite ne doit être faite sans règle documentée.
 
@@ -237,9 +237,9 @@ Aucune reconstruction implicite ne doit être faite sans règle documentée.
 
 Si l’activation est inconnue :
 
-* importer avec une valeur neutre (`unknown`, `unspecified` ou équivalent) ;
-* produire un warning non bloquant ;
-* permettre l’affichage du talent.
+- importer avec une valeur neutre (`unknown`, `unspecified` ou équivalent) ;
+- produire un warning non bloquant ;
+- permettre l’affichage du talent.
 
 L’activation impacte l’affichage, pas l’achat.
 
@@ -275,10 +275,10 @@ treeUuid
 
 Si la résolution échoue :
 
-* la spécialisation reste affichable ;
-* l’arbre est marqué indisponible ou incomplet ;
-* l’achat est interdit dans cet arbre ;
-* un warning est produit.
+- la spécialisation reste affichable ;
+- l’arbre est marqué indisponible ou incomplet ;
+- l’achat est interdit dans cet arbre ;
+- un warning est produit.
 
 ---
 
@@ -286,14 +286,14 @@ Si la résolution échoue :
 
 L’import doit produire des warnings exploitables pour les cas suivants :
 
-* talent introuvable ;
-* coût manquant ;
-* connexion invalide ;
-* arbre sans spécialisation liée ;
-* spécialisation sans arbre résolu ;
-* doublon d’identifiant ;
-* donnée brute non reconnue ;
-* fallback appliqué explicitement.
+- talent introuvable ;
+- coût manquant ;
+- connexion invalide ;
+- arbre sans spécialisation liée ;
+- spécialisation sans arbre résolu ;
+- doublon d’identifiant ;
+- donnée brute non reconnue ;
+- fallback appliqué explicitement.
 
 Les warnings doivent aider à corriger les données, pas seulement signaler une erreur générique.
 
@@ -303,16 +303,16 @@ Les warnings doivent aider à corriger les données, pas seulement signaler une 
 
 Les tests ou scénarios manuels doivent couvrir au minimum :
 
-* import d’une définition générique de talent ;
-* import d’un arbre de spécialisation complet ;
-* import de nœuds avec positions et coûts ;
-* import de connexions ;
-* conservation des données brutes dans `flags.swerpg.import`;
-* talent inconnu transformé en placeholder ;
-* coût manquant → nœud invalide ou non achetable ;
-* connexions manquantes → arbre incomplet ;
-* résolution spécialisation → arbre ;
-* absence de création d’achats acteur.
+- import d’une définition générique de talent ;
+- import d’un arbre de spécialisation complet ;
+- import de nœuds avec positions et coûts ;
+- import de connexions ;
+- conservation des données brutes dans `flags.swerpg.import`;
+- talent inconnu transformé en placeholder ;
+- coût manquant → nœud invalide ou non achetable ;
+- connexions manquantes → arbre incomplet ;
+- résolution spécialisation → arbre ;
+- absence de création d’achats acteur.
 
 ---
 
@@ -320,10 +320,10 @@ Les tests ou scénarios manuels doivent couvrir au minimum :
 
 L’import V1 ne couvre pas :
 
-* automatisation des effets mécaniques ;
-* création d’achats acteur ;
-* calcul du rang consolidé ;
-* édition manuelle des arbres ;
-* correction graphique avancée des arbres ;
-* talents signatures ;
-* import exhaustif de toutes les subtilités OggDude si elles ne bloquent pas la V1.
+- automatisation des effets mécaniques ;
+- création d’achats acteur ;
+- calcul du rang consolidé ;
+- édition manuelle des arbres ;
+- correction graphique avancée des arbres ;
+- talents signatures ;
+- import exhaustif de toutes les subtilités OggDude si elles ne bloquent pas la V1.

@@ -314,12 +314,12 @@ application: {
 
 Définition fonctionnelle :
 
-| Stratégie | Usage |
-|---|---|
-| `computed` | Effet calculé par SWERPG sans création d’ActiveEffect |
-| `activeEffect` | Effet projeté vers un `ActiveEffect` Foundry |
-| `chatOnly` | Effet affiché ou guidé par carte de chat |
-| `manual` | Effet conservé comme information structurée mais appliqué manuellement |
+| Stratégie      | Usage                                                                  |
+| -------------- | ---------------------------------------------------------------------- |
+| `computed`     | Effet calculé par SWERPG sans création d’ActiveEffect                  |
+| `activeEffect` | Effet projeté vers un `ActiveEffect` Foundry                           |
+| `chatOnly`     | Effet affiché ou guidé par carte de chat                               |
+| `manual`       | Effet conservé comme information structurée mais appliqué manuellement |
 
 Par défaut, un effet V1 doit être `computed`, `chatOnly` ou `manual`.
 
@@ -332,7 +332,7 @@ Le modèle doit distinguer le bénéficiaire ou le sens mécanique d’un effet.
 Le détail est défini dans le technical design, mais l’intention ADR est la suivante :
 
 ```js
-direction: "self" | "outgoing" | "incoming" | "target" | "ally" | "area"
+direction: 'self' | 'outgoing' | 'incoming' | 'target' | 'ally' | 'area'
 ```
 
 Cette notion est nécessaire pour éviter les ambiguïtés entre :
@@ -421,14 +421,14 @@ Le noyau V1 strict comprend les types d’effets suivants :
  * @enum {string}
  */
 export const EFFECT_TYPES = Object.freeze({
-  MODIFY_DICE_POOL: "modifyDicePool",
-  MODIFY_DERIVED_STAT: "modifyDerivedStat",
-  MODIFY_DAMAGE: "modifyDamage",
-  MODIFY_CRITICAL: "modifyCritical",
-  GRANT_CAREER_SKILL: "grantCareerSkill",
-  REROLL_CHECK: "rerollCheck",
-  CUSTOM: "custom"
-});
+  MODIFY_DICE_POOL: 'modifyDicePool',
+  MODIFY_DERIVED_STAT: 'modifyDerivedStat',
+  MODIFY_DAMAGE: 'modifyDamage',
+  MODIFY_CRITICAL: 'modifyCritical',
+  GRANT_CAREER_SKILL: 'grantCareerSkill',
+  REROLL_CHECK: 'rerollCheck',
+  CUSTOM: 'custom',
+})
 ```
 
 Ces types couvrent les familles les plus fréquentes et les plus utiles pour une première automatisation.
@@ -733,6 +733,9 @@ Il doit être une donnée mécanique déclarative SWERPG que le système sait af
 Ce contrat doit être documenté en JSDoc et sécurisé par validation runtime, sans imposer TypeScript au projet.
 
 [^foundry-14-356]: Foundry Virtual Tabletop, “Release 14.356”, 12 mars 2026, https://foundryvtt.com/releases/14.356.
+
 [^foundry-14-353]: Foundry Virtual Tabletop, “Release 14.353”, 16 janvier 2026, https://foundryvtt.com/releases/14.353.
+
 [^foundry-activeeffect-api]: Foundry Virtual Tabletop API Documentation, “ActiveEffect — Version 14”, consulté le 8 mai 2026, https://foundryvtt.com/api/classes/foundry.documents.ActiveEffect.html.
+
 [^foundry-ae-system-changes]: Foundry VTT GitHub, “Migrate `ActiveEffect#changes` to `ActiveEffect#system#changes`”, issue #13740, 15 janvier 2026, https://github.com/foundryvtt/foundryvtt/issues/13740.

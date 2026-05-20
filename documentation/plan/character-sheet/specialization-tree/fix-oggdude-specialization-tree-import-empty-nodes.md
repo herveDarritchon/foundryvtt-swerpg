@@ -6,13 +6,13 @@ Le mapper OggDude des arbres de spécialisation cherchait les nœuds dans `Talen
 
 ## Corrections appliquées
 
-| US | Issue | PR | Description |
-|---|---|---|---|
-| US1 | #218 | #223 | Mapping des nœuds depuis le format réel OggDude (`Talents.Key`, `Cost`) |
-| US2 | #219 | #224 | Génération des connexions depuis `Directions` (`Right` → horizontal, `Down` → vertical) |
-| US3 | #220 | #225 | Logs de diagnostic structurés (détection de format, résumé mapping, warnings) |
-| US4 | #221 | #226 | Tests unitaires et d'intégration sur format réel avec fixture Advisor.xml (20 nœuds) |
-| US5 | #222 | — | Validation d'intégration Foundry bout en bout (tests pipeline + scénario manuel) |
+| US  | Issue | PR   | Description                                                                             |
+| --- | ----- | ---- | --------------------------------------------------------------------------------------- |
+| US1 | #218  | #223 | Mapping des nœuds depuis le format réel OggDude (`Talents.Key`, `Cost`)                 |
+| US2 | #219  | #224 | Génération des connexions depuis `Directions` (`Right` → horizontal, `Down` → vertical) |
+| US3 | #220  | #225 | Logs de diagnostic structurés (détection de format, résumé mapping, warnings)           |
+| US4 | #221  | #226 | Tests unitaires et d'intégration sur format réel avec fixture Advisor.xml (20 nœuds)    |
+| US5 | #222  | —    | Validation d'intégration Foundry bout en bout (tests pipeline + scénario manuel)        |
 
 ## Résultat
 

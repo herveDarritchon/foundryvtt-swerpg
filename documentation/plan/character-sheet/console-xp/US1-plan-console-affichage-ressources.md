@@ -23,11 +23,11 @@ US1 est une fondation pour US3 (survol), US4 (achat) et US5 (retrait). Aucune in
 ### Inclus dans US1
 
 - Affichage des 5 données de progression :
-    - XP disponibles
-    - XP dépensés
-    - Rangs gratuits carrière restants
-    - Rangs gratuits spécialisation restants
-    - Coût de la sélection en cours (état neutre)
+  - XP disponibles
+  - XP dépensés
+  - Rangs gratuits carrière restants
+  - Rangs gratuits spécialisation restants
+  - Coût de la sélection en cours (état neutre)
 - Internationalisation complète de tous les textes visibles de la console
 - Correction du découpage des catégories de compétences sous la console
 - Détermination propre de la visibilité de la console
@@ -49,14 +49,14 @@ US1 est une fondation pour US3 (survol), US4 (achat) et US5 (retrait). Aucune in
 ### Console hardcodée en anglais
 
 ```hbs
-<span class="xp-console__title">XP Transaction Console</span>
-<span class="xp-console__status" data-xp-console-status>Awaiting selection</span>
-<span class="xp-console__label">Available</span>
-<span class="xp-console__label">Spent</span>
-<span class="xp-console__label">Career Free</span>
-<span class="xp-console__label">Specialty Free</span>
-<span class="xp-console__label">Selected Cost</span>
-<span class="xp-console__selection-placeholder">Select a skill to preview purchase cost.</span>
+<span class='xp-console__title'>XP Transaction Console</span>
+<span class='xp-console__status' data-xp-console-status>Awaiting selection</span>
+<span class='xp-console__label'>Available</span>
+<span class='xp-console__label'>Spent</span>
+<span class='xp-console__label'>Career Free</span>
+<span class='xp-console__label'>Specialty Free</span>
+<span class='xp-console__label'>Selected Cost</span>
+<span class='xp-console__selection-placeholder'>Select a skill to preview purchase cost.</span>
 ```
 
 Aucune de ces chaînes n'utilise `{{localize}}`. Aucune clé i18n correspondante n'existe dans `lang/en.json` ou
@@ -99,8 +99,7 @@ system.progression.freeSkillRanks.specialization → { spent, gained }
 Les compteurs "available" sont déjà calculés dans `character-sheet.mjs` :
 
 ```js
-context.progression.freeSkillRanks.career.available =
-  a.system.progression.freeSkillRanks.career.gained - a.system.progression.freeSkillRanks.career.spent
+context.progression.freeSkillRanks.career.available = a.system.progression.freeSkillRanks.career.gained - a.system.progression.freeSkillRanks.career.spent
 context.progression.freeSkillRanks.specialization.available =
   a.system.progression.freeSkillRanks.specialization.gained - a.system.progression.freeSkillRanks.specialization.spent
 ```
@@ -184,11 +183,11 @@ Les titres de sections utilisent les clés i18n existantes :
 ### Étape 2 : Stabiliser la visibilité de la console
 
 - Dans `character-sheet.mjs` `_prepareContext()` :
-    - Supprimer le `skills: true` de l'objet `incomplete`
-    - Remplacer `{{#if incomplete.skills}}` dans `skills.hbs` par une condition ou une absence de condition
-    - Si la console est toujours visible, supprimer simplement le `{{#if}}`
-    - Si une condition métier est préférée, créer une propriété dédiée (ex : `context.showXpConsole`) non mélangée à
-      `incomplete`
+  - Supprimer le `skills: true` de l'objet `incomplete`
+  - Remplacer `{{#if incomplete.skills}}` dans `skills.hbs` par une condition ou une absence de condition
+  - Si la console est toujours visible, supprimer simplement le `{{#if}}`
+  - Si une condition métier est préférée, créer une propriété dédiée (ex : `context.showXpConsole`) non mélangée à
+    `incomplete`
 - S'assurer que `i.creation` n'est pas impacté (le bandeau de création de personnage doit continuer à fonctionner)
 
 ### Étape 3 : Ajouter les clés i18n
@@ -200,7 +199,7 @@ Les titres de sections utilisent les clés i18n existantes :
 Clés à créer :
 
 | Clé i18n                                     | EN                                       | FR                                                      |
-|----------------------------------------------|------------------------------------------|---------------------------------------------------------|
+| -------------------------------------------- | ---------------------------------------- | ------------------------------------------------------- |
 | `SKILL.XP_CONSOLE.TITLE`                     | XP Transaction Console                   | Console de transaction XP                               |
 | `SKILL.XP_CONSOLE.STATUS.IDLE`               | Awaiting selection                       | En attente de sélection                                 |
 | `SKILL.XP_CONSOLE.LABEL.AVAILABLE`           | Available                                | Disponibles                                             |
@@ -236,31 +235,31 @@ Clés à créer :
 Vérifications manuelles à effectuer :
 
 1. **Personnage neuf** (100 XP, 4 rangs carrière, 2 rangs spé)
-    - Console visible, compteurs corrects, état neutre
+   - Console visible, compteurs corrects, état neutre
 
 2. **Personnage avec 0 XP, 0 rang gratuit**
-    - Console visible, compteurs à zéro, état neutre
+   - Console visible, compteurs à zéro, état neutre
 
 3. **Personnage après import OggDude**
-    - Console visible, données de progression cohérentes
+   - Console visible, données de progression cohérentes
 
 4. **Changement de langue FR → EN**
-    - Tous les textes de la console changent de langue
+   - Tous les textes de la console changent de langue
 
 5. **Rendu des catégories**
-    - Les compétences apparaissent sous les bonnes rubriques
-    - Plus aucune référence à `general`, `combat`, `knowledge` dans le template
+   - Les compétences apparaissent sous les bonnes rubriques
+   - Plus aucune référence à `general`, `combat`, `knowledge` dans le template
 
 6. **Bandeau de création de personnage**
-    - Le bandeau `i.creation` continue de s'afficher quand la création est incomplète
-    - Il n'est pas affecté par le changement de visibilité de la console
+   - Le bandeau `i.creation` continue de s'afficher quand la création est incomplète
+   - Il n'est pas affecté par le changement de visibilité de la console
 
 ---
 
 ## 6. Fichiers modifiés
 
 | Fichier                                          | Modification                                                         |
-|--------------------------------------------------|----------------------------------------------------------------------|
+| ------------------------------------------------ | -------------------------------------------------------------------- |
 | `templates/sheets/actor/skills.hbs`              | Localisation + correction catégories + visibilité                    |
 | `lang/en.json`                                   | Ajout du bloc `SKILL.XP_CONSOLE.*`                                   |
 | `lang/fr.json`                                   | Ajout du bloc `SKILL.XP_CONSOLE.*` (traductions françaises)          |
@@ -271,7 +270,7 @@ Vérifications manuelles à effectuer :
 ## 7. Risques
 
 | Risque                                                                          | Impact                            | Mitigation                                                               |
-|---------------------------------------------------------------------------------|-----------------------------------|--------------------------------------------------------------------------|
+| ------------------------------------------------------------------------------- | --------------------------------- | ------------------------------------------------------------------------ |
 | `incomplete.skills = true` est utilisé ailleurs que dans la console             | Régression du bandeau de création | Vérifier toutes les dépendances à `incomplete.skills` avant modification |
 | `skill.type.id` n'existe pas pour tous les skills                               | Catégories vides ou erreur        | Vérifier dans `#prepareSkills()` que chaque skill a `type.id`            |
 | Clés i18n `SKILL.CATEGORY.*.label` déjà utilisées ailleurs                      | Double affichage                  | Vérifier qu'elles ne sont pas déjà rendues dans le même template         |

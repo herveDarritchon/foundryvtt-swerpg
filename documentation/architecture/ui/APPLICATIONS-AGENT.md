@@ -273,23 +273,25 @@ Les mises à jour qui en découlent doivent **toujours** passer par `this.docume
 
 **RÈGE CRITIQUE** : Les `actions` ApplicationV2 (`data-action` + `DEFAULT_OPTIONS.actions`) ne fonctionnent **que pour les clics**. Pour les interactions de type **hover** (`mouseenter`/`mouseleave`) et **focus clavier** (`focusin`/`focusout`), il faut utiliser des **listeners DOM classiques**, pas le système d'actions.
 
-| Type d'interaction | Pattern à utiliser | Pourquoi |
-|---|---|---|
-| Clic (souris ou clavier Enter/Space) | `data-action` + `DEFAULT_OPTIONS.actions` | C'est le pattern canonique ApplicationV2 pour les clics. |
-| Hover/survol souris | Listeners dans `_onRender` + `data-hover-action` | Les actions ApplicationV2 ne déclenchent pas sur `mouseover`. |
-| Focus clavier (Tab) | Listeners dans `_onRender` + `tabindex="0"` + `focusin`/`focusout` | Les actions ApplicationV2 ne déclenchent pas sur `focusin`. |
+| Type d'interaction                   | Pattern à utiliser                                                 | Pourquoi                                                      |
+| ------------------------------------ | ------------------------------------------------------------------ | ------------------------------------------------------------- |
+| Clic (souris ou clavier Enter/Space) | `data-action` + `DEFAULT_OPTIONS.actions`                          | C'est le pattern canonique ApplicationV2 pour les clics.      |
+| Hover/survol souris                  | Listeners dans `_onRender` + `data-hover-action`                   | Les actions ApplicationV2 ne déclenchent pas sur `mouseover`. |
+| Focus clavier (Tab)                  | Listeners dans `_onRender` + `tabindex="0"` + `focusin`/`focusout` | Les actions ApplicationV2 ne déclenchent pas sur `focusin`.   |
 
-**Pattern hover à respecter :
+\*\*Pattern hover à respecter :
 
 1. **Template** :
+
 ```hbs
-<div class="skill" 
-     data-skill-id="{{id}}" 
+<div class="skill"
+     data-skill-id="{{id}}"
      tabindex="0"
      data-hover-action="skillPreview">
 ```
 
 2. **JS - `_onRender`** (pour attacher les listeners :
+
 ```js
 async _onRender(context, options) {
   await super._onRender(context, options)
@@ -302,7 +304,8 @@ async _onRender(context, options) {
 }
 ```
 
-3. **JS - Handler délégué :
+3. \*\*JS - Handler délégué :
+
 ```js
 #onHoverAction = (event) => {
   const target = event.target.closest('[data-hover-action]')
@@ -316,11 +319,13 @@ async _onRender(context, options) {
 ```
 
 **Pourquoi pas `mouseenter`/`mouseleave` :**
+
 - `mouseenter` et `mouseleave` **ne bubblent pas** → impossible d'un élément enfant au parent
 - La délégation d'événements sur `this.element` ne fonctionne pas avec eux
 - Préférer **`mouseover`/`mouseover` et **`focusin`/`focusout` qui bubblent
 
 **Anti-clignotement (`event.relatedTarget` :**
+
 ```js
 #handleSkillPreviewLeave(target, event) {
   // Vérifie si on entre dans un autre élément du même type

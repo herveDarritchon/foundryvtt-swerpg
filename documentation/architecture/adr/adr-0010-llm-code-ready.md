@@ -257,7 +257,7 @@ Interprétation :
 Le modèle doit distinguer la direction de l’effet :
 
 ```js
-direction: "self" | "outgoing" | "incoming" | "target" | "ally" | "area"
+direction: 'self' | 'outgoing' | 'incoming' | 'target' | 'ally' | 'area'
 ```
 
 Exemples :

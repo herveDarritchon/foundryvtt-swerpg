@@ -125,10 +125,7 @@ User Settings       // persisted client/world settings
 Do this:
 
 ```javascript
-const runtimeConfig = foundry.utils.mergeObject(
-  foundry.utils.deepClone(SYSTEM.CONST),
-  game.settings.get('swerpg', 'systemConfiguration') ?? {},
-)
+const runtimeConfig = foundry.utils.mergeObject(foundry.utils.deepClone(SYSTEM.CONST), game.settings.get('swerpg', 'systemConfiguration') ?? {})
 ```
 
 Avoid this:
@@ -415,20 +412,20 @@ Avoid:
 
 Use this table when deciding where code belongs:
 
-| Need | Put it here |
-|---|---|
-| Static constants, dice names, skill definitions | `module/config/**`, `SYSTEM.CONST` |
-| Runtime configurable defaults | `swerpg.CONFIG`, settings integration |
-| Actor/Item schema | `TypeDataModel` subclasses |
-| Derived actor/item stats | data models or document methods |
-| Document lifecycle behavior | `SwerpgActor`, `SwerpgItem`, etc. |
-| Sheet rendering data | ApplicationV2 `_prepareContext` |
-| Template layout | `.hbs` parts/templates |
-| Narrative dice resolution | dice system services/classes |
-| Talent activation/effects | talent/effects system, not UI |
-| Compendium canonical content | source data and build pipeline |
-| Reusable external integration | `swerpg.api` |
-| Multiplayer sync | `game.socket` integration |
+| Need                                            | Put it here                           |
+| ----------------------------------------------- | ------------------------------------- |
+| Static constants, dice names, skill definitions | `module/config/**`, `SYSTEM.CONST`    |
+| Runtime configurable defaults                   | `swerpg.CONFIG`, settings integration |
+| Actor/Item schema                               | `TypeDataModel` subclasses            |
+| Derived actor/item stats                        | data models or document methods       |
+| Document lifecycle behavior                     | `SwerpgActor`, `SwerpgItem`, etc.     |
+| Sheet rendering data                            | ApplicationV2 `_prepareContext`       |
+| Template layout                                 | `.hbs` parts/templates                |
+| Narrative dice resolution                       | dice system services/classes          |
+| Talent activation/effects                       | talent/effects system, not UI         |
+| Compendium canonical content                    | source data and build pipeline        |
+| Reusable external integration                   | `swerpg.api`                          |
+| Multiplayer sync                                | `game.socket` integration             |
 
 ## Anti-patterns to reject
 
@@ -519,11 +516,13 @@ Do not mutate static config, hardcode labels, scan packs repeatedly, or put game
 Do not send large context to an LLM unless reasoning is required.
 
 For deterministic tasks:
+
 - execute with shell, Git, npm, Vitest, Playwright or CI;
 - collect only the useful output;
 - call an LLM only if interpretation, decision or correction is needed.
 
 For failures:
+
 - send only the failing command;
 - send only the relevant error block;
 - send only the files directly involved;

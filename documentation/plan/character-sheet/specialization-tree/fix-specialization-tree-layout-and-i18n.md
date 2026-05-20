@@ -3,19 +3,25 @@
 ## Problèmes restants
 
 ### 1. Layout / position
+
 Les nœuds sont affichés mais mal positionnés dans le canvas :
+
 - arbre trop décalé ;
 - partie visible tronquée ;
 - mauvais centrage dans la zone utile.
 
 ### 2. Taille
+
 Les cartes de nœud semblent trop grandes / peu adaptées :
+
 - largeur/hauteur peu cohérentes ;
 - densité faible ;
 - arbre difficile à lire.
 
 ### 3. i18n / résolution texte
+
 Deux sous-problèmes :
+
 - les clés d’UI ne sont pas localisées (`SWERPG.TALENT.SPECIALIZATION_TREE_APP.*`) ;
 - les talents affichent `SWERPG.TALENT.UNKNOWN`, donc les labels des talents ne sont pas correctement résolus.
 
@@ -24,17 +30,22 @@ Deux sous-problèmes :
 ## Cause probable
 
 ### Layout / taille
+
 Problème dans la logique de rendu :
+
 - calcul des positions ;
 - dimensions fixes des nœuds ;
 - absence de `fit-to-view` / centrage initial ;
 - viewport pas recalculé après rendu.
 
 ### i18n UI
+
 Le template ou le renderer affiche les clés brutes au lieu d’appeler `game.i18n.localize(...)`.
 
 ### i18n talents
+
 Les nœuds de l’arbre ne retrouvent pas correctement le talent associé :
+
 - référence talent absente / incorrecte ;
 - fallback vers `SWERPG.TALENT.UNKNOWN` ;
 - ou nom/label non localisé.
@@ -44,9 +55,11 @@ Les nœuds de l’arbre ne retrouvent pas correctement le talent associé :
 ## Correction attendue
 
 ### 1. Corriger l’i18n UI
+
 Vérifier que tous les libellés de l’app passent bien par localisation.
 
 À corriger pour :
+
 - titre ;
 - sous-titre ;
 - labels de panneau ;
@@ -54,16 +67,21 @@ Vérifier que tous les libellés de l’app passent bien par localisation.
 - états vides.
 
 ### 2. Corriger la résolution des talents des nœuds
+
 Pour chaque nœud :
+
 - retrouver le talent cible ;
 - afficher son vrai nom ;
 - ne plus afficher `SWERPG.TALENT.UNKNOWN` si la référence existe.
 
 Fallback attendu :
+
 - si talent introuvable, afficher un libellé de secours lisible du type `Unknown Talent`, pas une clé brute.
 
 ### 3. Corriger layout / position
+
 Mettre en place :
+
 - dimensions de nœud centralisées dans des constantes ;
 - espacement horizontal/vertical centralisé ;
 - calcul propre du bounding box global ;
@@ -71,7 +89,9 @@ Mettre en place :
 - si nécessaire, `fit to available area` au chargement.
 
 ### 4. Corriger la taille des nœuds
+
 Réduire et homogénéiser :
+
 - largeur ;
 - hauteur ;
 - padding ;
@@ -110,4 +130,5 @@ Objectif : afficher l’arbre complet de manière lisible sans impression de zoo
 - Les nœuds ont une taille cohérente et lisible.
 
 ## Slug
+
 fix-specialization-tree-layout-and-i18n

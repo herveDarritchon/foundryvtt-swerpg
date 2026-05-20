@@ -69,6 +69,7 @@ Pour un `skill.forget` (isIncrease = false) d'un rang gratuit, `isFree` est touj
 **Décision** : Ajouter `skillName`, `skillCategory`, `freeRankType` aux entrées `skill.train` / `skill.forget`.
 
 Justification :
+
 - `skillName` permet une lecture humaine immédiate sans résolution i18n côté UI
 - `skillCategory` permet le filtrage/groupement par type (US6 pourra l'exploiter)
 - `freeRankType` distingue les rangs gratuits carrière vs spécialisation vs aucun
@@ -96,6 +97,7 @@ static computeCost({ action, rankValue, isSpecialized }) {
 `SkillCostCalculator.#calculateTrainCost()` et `#calculateForgetCost()` délèguent à cette méthode statique. `detectSkillChanges()` l'appelle directement.
 
 Justification :
+
 - DRY : une seule formule de coût dans le codebase
 - Testable unitairement
 - Pas de dépendance cyclique (audit-diff n'a pas besoin d'importer TrainedSkill)
@@ -106,6 +108,7 @@ Justification :
 **Décision** : Analyser les sous-clés de `skillData.rank` dans le diff pour déterminer quel composant de rang a changé.
 
 Le diff `changes.system.skills[skillId].rank` ne contient que les sous-champs modifiés. On peut détecter :
+
 - Si `careerFree` est dans les clés → action sur rang gratuit carrière
 - Si `specializationFree` est dans les clés → action sur rang gratuit spé
 - Si `trained` est dans les clés → action sur rang XP
@@ -125,10 +128,12 @@ Les anciennes entrées (sans `skillName`, `skillCategory`, `freeRankType`) reste
 **Quoi** : Ajouter une méthode statique `SkillCostCalculator.computeCost()`. Modifier les méthodes privées d'instance pour déléguer. Remplacer les helpers dupliqués dans `audit-diff.mjs` par l'appel à la méthode statique.
 
 **Fichiers** :
+
 - `module/lib/skills/skill-cost-calculator.mjs` — ajouter `static computeCost()`, modifier `#calculateTrainCost` / `#calculateForgetCost`
 - `module/utils/audit-diff.mjs` — supprimer `computeSkillTrainCost` et `computeSkillForgetRefund`, les remplacer par `SkillCostCalculator.computeCost()`
 
 **Risques** :
+
 - `SkillCostCalculator` vérifie `instanceof TrainedScript` dans `calculateCost()` — on conserve ce guard pour la méthode d'instance ; la statique n'en a pas besoin
 - La fonction partagée doit avoir exactement la même sémantique pour ne pas casser le calcul existant → tests de parité
 
@@ -137,7 +142,9 @@ Les anciennes entrées (sans `skillName`, `skillCategory`, `freeRankType`) reste
 **Quoi** : Dans `detectSkillChanges()`, lire `actor.system.skills[skillId].label` et `.type` (après update) et les inclure dans `data`. Analyser les sous-clés du diff rank pour déterminer `freeRankType`.
 
 **Fichiers** :
+
 - `module/utils/audit-diff.mjs` — modifier `detectSkillChanges()` :
+
   ```js
   // Nouveaux champs enrichis
   const skillData = actor.system?.skills?.[skillId]
@@ -159,6 +166,7 @@ Les anciennes entrées (sans `skillName`, `skillCategory`, `freeRankType`) reste
   ```
 
 **Risques** :
+
 - `actor.system.skills[skillId]` peut ne pas exister au moment du hook (compétence supprimée ?) → fallback
 - `skill.label` est résolu par `_prepareSkill()` → présent sur l'instance actor après update
 
@@ -167,10 +175,11 @@ Les anciennes entrées (sans `skillName`, `skillCategory`, `freeRankType`) reste
 **Quoi** : Quand `skill.forget` est détecté et que le champ modifié est `careerFree` ou `specializationFree` (et pas `trained` uniquement), le `cost` doit être 0.
 
 **Fichiers** :
+
 - `module/utils/audit-diff.mjs` — dans `detectSkillChanges()`, logique modifiée :
+
   ```js
-  const isPureFreeRankChange = trainedUnchanged &&
-    (hasCareerFreeChange || hasSpecFreeChange)
+  const isPureFreeRankChange = trainedUnchanged && (hasCareerFreeChange || hasSpecFreeChange)
 
   let cost = 0
   if (!isPureFreeRankChange) {
@@ -181,11 +190,13 @@ Les anciennes entrées (sans `skillName`, `skillCategory`, `freeRankType`) reste
   ```
 
 **Risques** :
+
 - Un oubli de rang où `trained` ET `careerFree` changent simultanément (ne devrait pas arriver dans le flux normal) → `isPureFreeRankChange` sera false, le calcul normal s'applique. C'est correct car on ne peut pas garantir quel mécanisme est en jeu.
 
 ### Étape 4 : Mettre à jour les tests
 
 **Quoi** : Ajouter des tests pour :
+
 - `skill.train` avec `skillName` et `skillCategory` dans la sortie
 - `skill.forget` d'un rang gratuit (careerFree → cost 0, xpDelta 0)
 - `skill.forget` d'un rang specializationFree
@@ -194,6 +205,7 @@ Les anciennes entrées (sans `skillName`, `skillCategory`, `freeRankType`) reste
 - Parité entre `SkillCostCalculator.computeCost()` statique et l'ancienne formule
 
 **Fichiers** :
+
 - `tests/utils/audit-diff.test.mjs` — nouveaux cas de test
 - `tests/lib/skills/skill-cost-calculator.test.mjs` — tests de la méthode statique
 
@@ -202,6 +214,7 @@ Les anciennes entrées (sans `skillName`, `skillCategory`, `freeRankType`) reste
 **Quoi** : Vérifier qu'aucune nouvelle clé i18n n'est nécessaire. Les noms de compétence sont déjà localisés via `SKILLS.*`.
 
 **Fichiers** :
+
 - `lang/en.json` — vérification
 - `lang/fr.json` — vérification
 
@@ -209,27 +222,27 @@ Les anciennes entrées (sans `skillName`, `skillCategory`, `freeRankType`) reste
 
 ## 6. Fichiers modifiés
 
-| Fichier | Action | Description |
-|---------|--------|-------------|
-| `module/lib/skills/skill-cost-calculator.mjs` | Modification | Ajout de `static computeCost()`, délégation depuis les méthodes d'instance |
-| `module/utils/audit-diff.mjs` | Modification | Ajout de `skillName`, `skillCategory`, `freeRankType` dans `detectSkillChanges()` ; correction du calcul de coût pour `skill.forget` free ranks ; suppression des helpers dupliqués au profit de `SkillCostCalculator.computeCost()` |
-| `module/utils/audit-log.mjs` | Aucune (vérification) | Pas de changement attendu dans le module d'infrastructure |
-| `lang/en.json` | Vérification | Aucun changement attendu |
-| `lang/fr.json` | Vérification | Aucun changement attendu |
-| `tests/utils/audit-diff.test.mjs` | Modification | Nouveaux tests pour skillName, skillCategory, freeRankType, free rank forget |
-| `tests/lib/skills/skill-cost-calculator.test.mjs` | Modification | Tests de `static computeCost()` |
+| Fichier                                           | Action                | Description                                                                                                                                                                                                                          |
+| ------------------------------------------------- | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `module/lib/skills/skill-cost-calculator.mjs`     | Modification          | Ajout de `static computeCost()`, délégation depuis les méthodes d'instance                                                                                                                                                           |
+| `module/utils/audit-diff.mjs`                     | Modification          | Ajout de `skillName`, `skillCategory`, `freeRankType` dans `detectSkillChanges()` ; correction du calcul de coût pour `skill.forget` free ranks ; suppression des helpers dupliqués au profit de `SkillCostCalculator.computeCost()` |
+| `module/utils/audit-log.mjs`                      | Aucune (vérification) | Pas de changement attendu dans le module d'infrastructure                                                                                                                                                                            |
+| `lang/en.json`                                    | Vérification          | Aucun changement attendu                                                                                                                                                                                                             |
+| `lang/fr.json`                                    | Vérification          | Aucun changement attendu                                                                                                                                                                                                             |
+| `tests/utils/audit-diff.test.mjs`                 | Modification          | Nouveaux tests pour skillName, skillCategory, freeRankType, free rank forget                                                                                                                                                         |
+| `tests/lib/skills/skill-cost-calculator.test.mjs` | Modification          | Tests de `static computeCost()`                                                                                                                                                                                                      |
 
 ---
 
 ## 7. Risques
 
-| Risque | Impact | Mitigation |
-|--------|--------|------------|
-| **Régression** du calcul de coût XP si la fonction partagée diffère | Coût erroné dans les logs | Tests de parité comparant l'ancienne et la nouvelle formule |
-| **`skill.label` absent** au moment du hook (cas rare de compétence non trouvée) | Entrée sans `skillName` | Fallback à `skillId` si le label n'est pas disponible |
-| **`SkillCostCalculator` cassé** si on modifie l'interface `instanceof` | Blocage des achats de compétence | On conserve le guard `instanceof` dans la méthode d'instance ; la statique ne change pas l'interface publique |
-| **Migration** des anciens logs (sans les nouveaux champs) | Champs manquants dans les anciennes entrées | L'UI (US6) doit gérer les champs optionnels avec fallback |
-| **Changement simultané** de plusieurs sous-composants de rang (trained + careerFree) | freeRankType ambigu | Scénario impossible dans le flux actuel (les appels sont atomiques par type de rang). Si ça arrive, `isPureFreeRankChange` est false → calcul normal |
+| Risque                                                                               | Impact                                      | Mitigation                                                                                                                                           |
+| ------------------------------------------------------------------------------------ | ------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Régression** du calcul de coût XP si la fonction partagée diffère                  | Coût erroné dans les logs                   | Tests de parité comparant l'ancienne et la nouvelle formule                                                                                          |
+| **`skill.label` absent** au moment du hook (cas rare de compétence non trouvée)      | Entrée sans `skillName`                     | Fallback à `skillId` si le label n'est pas disponible                                                                                                |
+| **`SkillCostCalculator` cassé** si on modifie l'interface `instanceof`               | Blocage des achats de compétence            | On conserve le guard `instanceof` dans la méthode d'instance ; la statique ne change pas l'interface publique                                        |
+| **Migration** des anciens logs (sans les nouveaux champs)                            | Champs manquants dans les anciennes entrées | L'UI (US6) doit gérer les champs optionnels avec fallback                                                                                            |
+| **Changement simultané** de plusieurs sous-composants de rang (trained + careerFree) | freeRankType ambigu                         | Scénario impossible dans le flux actuel (les appels sont atomiques par type de rang). Si ça arrive, `isPureFreeRankChange` est false → calcul normal |
 
 ---
 

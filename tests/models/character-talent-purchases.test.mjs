@@ -58,9 +58,7 @@ describe('SwerpgCharacter — talentPurchases', () => {
     test('creates instance with a single purchase entry', () => {
       const data = {
         progression: {
-          talentPurchases: [
-            { treeId: 'bodyguard-tree', nodeId: 'r1c1', talentId: 'parry', specializationId: 'bodyguard' },
-          ],
+          talentPurchases: [{ treeId: 'bodyguard-tree', nodeId: 'r1c1', talentId: 'parry', specializationId: 'bodyguard' }],
         },
       }
       const instance = new SwerpgCharacter(data)
@@ -88,9 +86,7 @@ describe('SwerpgCharacter — talentPurchases', () => {
     test('toObject preserves talentPurchases data', () => {
       const data = {
         progression: {
-          talentPurchases: [
-            { treeId: 'merc-tree', nodeId: 'r1c2', talentId: 'grit', specializationId: 'mercenary-soldier' },
-          ],
+          talentPurchases: [{ treeId: 'merc-tree', nodeId: 'r1c2', talentId: 'grit', specializationId: 'mercenary-soldier' }],
         },
       }
       const instance = new SwerpgCharacter(data)

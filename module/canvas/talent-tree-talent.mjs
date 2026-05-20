@@ -58,7 +58,11 @@ export default class SwerpgTalentTreeTalent extends SwerpgTalentIcon {
     const hasV1Specializations = tree.actor.itemTypes?.specialization?.length > 0
     if (hasV1Specializations) {
       if (DEPR_CHOICE_WHEEL().warn) {
-        logger.deprecated('talent-tree-talent', 'Choice wheel purchase blocked — actor has V1 specializations', 'Use specialization-tree-app.mjs for talent purchase.')
+        logger.deprecated(
+          'talent-tree-talent',
+          'Choice wheel purchase blocked — actor has V1 specializations',
+          'Use specialization-tree-app.mjs for talent purchase.',
+        )
       }
       ui.notifications.warn('This actor uses V1 specialization trees. Use the specialization tree view to purchase talents.')
       return

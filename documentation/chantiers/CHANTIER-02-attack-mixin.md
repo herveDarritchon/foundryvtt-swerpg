@@ -1,37 +1,42 @@
 # Chantier 02 : Extraction de l'Attack Mixin
 
 ## Objectif
+
 Extraire les méthodes liées à l'exécution d'attaques vers `attack.mixin.mjs`
 
 ## Méthodes à extraire (~120 lignes)
 
-| Méthode | Lignes (actor.mjs) | Description |
-|---------|-------------------|-------------|
-| `useAction()` | 878-882 | Utilise une action |
-| `weaponAttack()` | 955-995 | Attaque avec une arme |
-| `skillAttack()` | 907-944 | Attaque avec une compétence |
-| `castSpell()` | **À créer** | Lance un sort (n'existe pas actuellement) |
-| `applyTargetBoons()` | 716-740 | Applique les boons/banes selon la cible |
+| Méthode              | Lignes (actor.mjs) | Description                               |
+| -------------------- | ------------------ | ----------------------------------------- |
+| `useAction()`        | 878-882            | Utilise une action                        |
+| `weaponAttack()`     | 955-995            | Attaque avec une arme                     |
+| `skillAttack()`      | 907-944            | Attaque avec une compétence               |
+| `castSpell()`        | **À créer**        | Lance un sort (n'existe pas actuellement) |
+| `applyTargetBoons()` | 716-740            | Applique les boons/banes selon la cible   |
 
 ## Dépendances des méthodes
 
 ### `useAction()`
+
 - `this.actions` - Actions disponibles
 - `this.id` - ID de l'acteur
 
 ### `weaponAttack()`
+
 - `this.applyTargetBoons()` - Sera dans ce mixin
 - `this.callActorHooks()` - Méthode dans actor.mjs (temporairement, à extraire plus tard)
 - `this.id` - ID de l'acteur
 - **Externe** : `AttackRoll`, `SwerpgAction`, méthodes de `target`
 
 ### `skillAttack()`
+
 - `this.applyTargetBoons()` - Sera dans ce mixin
 - `this.callActorHooks()` - Méthode dans actor.mjs
 - `this.id` - ID de l'acteur
 - **Externe** : `game.system.api.dice.AttackRoll`, `SwerpgAction`, méthodes de `target`
 
 ### `applyTargetBoons()`
+
 - **Externe** : `foundry.utils.deepClone`, `SYSTEM.EFFECTS`, `logger`
 
 ## Implémentation de `attack.mixin.mjs`
@@ -70,7 +75,7 @@ export const AttackMixin = (Base) =>
       weapon ||= action.usage.weapon
       const { boons, banes } = this.applyTargetBoons(target, action, 'weapon', !!weapon.config.category.ranged)
       const defenseType = action.usage.defenseType || 'physical'
-      
+
       if (weapon?.type !== 'weapon') {
         throw new Error(`Weapon attack Action "${action.name}" did not specify which weapon is used in the attack`)
       }
@@ -80,8 +85,12 @@ export const AttackMixin = (Base) =>
         actorId: this.id,
         itemId: weapon.id,
         target: target.uuid,
-        ability, skill, enchantment,
-        banes, boons, defenseType,
+        ability,
+        skill,
+        enchantment,
+        banes,
+        boons,
+        defenseType,
         dc: target.defenses[defenseType].total,
         criticalSuccessThreshold: weapon.system.properties.has('keen') ? 4 : 6,
         criticalFailureThreshold: weapon.system.properties.has('reliable') ? 4 : 6,
@@ -110,19 +119,22 @@ export const AttackMixin = (Base) =>
       let { bonuses, damageType, defenseType, restoration, resource, skillId } = action.usage
       const { boons, banes } = this.applyTargetBoons(target, action, 'skill')
       let dc
-      
+
       if (defenseType in target.defenses) dc = target.defenses[defenseType].total
       else {
         defenseType = skillId
         dc = target.skills[skillId].passive
       }
-      
-      const rollData = { 
-        ...bonuses, 
-        actorId: this.id, 
-        type: skillId, 
-        target: target.uuid, 
-        boons, banes, defenseType, dc 
+
+      const rollData = {
+        ...bonuses,
+        actorId: this.id,
+        type: skillId,
+        target: target.uuid,
+        boons,
+        banes,
+        defenseType,
+        dc,
       }
 
       this.callActorHooks('prepareStandardCheck', rollData)
@@ -210,10 +222,12 @@ export const AttackMixin = (Base) =>
 ## Points d'attention
 
 ⚠️ **`castSpell()` n'existe pas** dans actor.mjs actuellement
+
 - Le fichier `action.mjs` (ligne 481) référence `this.actor.castSpell(this, target)`
 - Il faut soit l'implémenter, soit corriger action.mjs
 
 ⚠️ **Dépendances sur d'autres mixins**
+
 - `target.testDefense()` → Sera dans DefenseMixin (chantier 03)
 - `target.getResistance()` → Sera dans DefenseMixin (chantier 03)
 - `this.callActorHooks()` → Méthode dans actor.mjs (pas encore extraite)

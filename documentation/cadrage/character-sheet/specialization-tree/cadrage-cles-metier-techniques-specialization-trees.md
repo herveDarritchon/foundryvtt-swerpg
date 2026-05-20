@@ -25,7 +25,7 @@ Aujourd’hui, les nœuds des arbres de spécialisation contiennent un champ de 
   column: 3,
   cost: 5,
 }
-````
+```
 
 `talentId` contient une clé métier issue de la donnée source, par exemple :
 
@@ -192,7 +192,9 @@ Exemple :
 const talentById = new Map()
 
 for (const talent of talents) {
-  const talentId = String(talent.system?.id ?? '').trim().toLowerCase()
+  const talentId = String(talent.system?.id ?? '')
+    .trim()
+    .toLowerCase()
 
   if (!talentId) continue
 
@@ -218,7 +220,9 @@ Exemple :
 
 ```js
 function mapSpecializationTreeNode(rawNode, talentById) {
-  const talentId = String(rawNode.talentId ?? '').trim().toLowerCase()
+  const talentId = String(rawNode.talentId ?? '')
+    .trim()
+    .toLowerCase()
   const talent = talentById.get(talentId)
 
   return {
@@ -332,7 +336,7 @@ Elle doit :
 Pseudo-code :
 
 ```js
-for (const talent of game.items.filter(i => i.type === 'talent')) {
+for (const talent of game.items.filter((i) => i.type === 'talent')) {
   if (talent.system?.uuid !== talent.uuid) {
     await talent.update({ 'system.uuid': talent.uuid })
   }
@@ -340,16 +344,20 @@ for (const talent of game.items.filter(i => i.type === 'talent')) {
 
 const talentById = new Map(
   game.items
-    .filter(i => i.type === 'talent')
-    .map(i => [
-      String(i.system?.id ?? '').trim().toLowerCase(),
+    .filter((i) => i.type === 'talent')
+    .map((i) => [
+      String(i.system?.id ?? '')
+        .trim()
+        .toLowerCase(),
       i.uuid,
-    ])
+    ]),
 )
 
-for (const tree of game.items.filter(i => i.type === 'specialization-tree')) {
+for (const tree of game.items.filter((i) => i.type === 'specialization-tree')) {
   const nodes = tree.system.nodes.map((node) => {
-    const talentId = String(node.talentId ?? '').trim().toLowerCase()
+    const talentId = String(node.talentId ?? '')
+      .trim()
+      .toLowerCase()
 
     return {
       ...node,
@@ -409,35 +417,35 @@ Un doublon de `nodeId`, `row` ou `column` doit être considéré comme une anoma
 
 Responsable de :
 
-* créer ou retrouver les talents ;
-* renseigner les UUID ;
-* construire les index métier ;
-* enrichir les nœuds ;
-* logger les associations non résolues.
+- créer ou retrouver les talents ;
+- renseigner les UUID ;
+- construire les index métier ;
+- enrichir les nœuds ;
+- logger les associations non résolues.
 
 ### Modèle métier
 
 Responsable de :
 
-* conserver les clés métier stables ;
-* exprimer les règles de progression ;
-* ne pas dépendre exclusivement des UUID Foundry.
+- conserver les clés métier stables ;
+- exprimer les règles de progression ;
+- ne pas dépendre exclusivement des UUID Foundry.
 
 ### UI / Application
 
 Responsable de :
 
-* résoudre les documents liés par UUID ;
-* afficher les informations enrichies ;
-* conserver un fallback transitoire sur les anciennes données.
+- résoudre les documents liés par UUID ;
+- afficher les informations enrichies ;
+- conserver un fallback transitoire sur les anciennes données.
 
 ### Renderer graphique
 
 Responsable uniquement de :
 
-* dessiner les nœuds ;
-* dessiner les connexions ;
-* afficher les états transmis.
+- dessiner les nœuds ;
+- dessiner les connexions ;
+- afficher les états transmis.
 
 Le renderer ne doit pas faire de mapping métier.
 
@@ -450,7 +458,7 @@ Le renderer ne doit pas faire de mapping métier.
 Après import dans les items du monde :
 
 ```js
-const talent = game.items.find(i => i.type === 'talent' && i.system.id === 'grit')
+const talent = game.items.find((i) => i.type === 'talent' && i.system.id === 'grit')
 ```
 
 Alors :
@@ -488,10 +496,10 @@ L’arbre doit afficher le nom réel du talent dès que `node.talentUuid` est re
 
 `Unknown Talent` ne doit apparaître que si :
 
-* `talentUuid` est absent ;
-* `talentUuid` est invalide ;
-* le fallback métier échoue ;
-* le talent source est réellement introuvable.
+- `talentUuid` est absent ;
+- `talentUuid` est invalide ;
+- le fallback métier échoue ;
+- le talent source est réellement introuvable.
 
 ---
 

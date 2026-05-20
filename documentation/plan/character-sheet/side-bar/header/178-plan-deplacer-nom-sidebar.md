@@ -221,16 +221,14 @@ Remplacer le `<img class="profile">` existant (ligne 2) par un bloc conditionnel
 
 ```hbs
 {{#if sidebarHeader}}
-<div class="sidebar-header">
-  <input class="sidebar-name" name="name" type="text" value="{{sidebarHeader.name}}" placeholder="Actor Name">
-  <div class="sidebar-profile-wrapper">
-    <img class="profile" src="{{sidebarHeader.img}}" alt="{{sidebarHeader.name}}"
-         width="200" height="200" data-action="editImage" data-edit="img">
+  <div class='sidebar-header'>
+    <input class='sidebar-name' name='name' type='text' value='{{sidebarHeader.name}}' placeholder='Actor Name' />
+    <div class='sidebar-profile-wrapper'>
+      <img class='profile' src='{{sidebarHeader.img}}' alt='{{sidebarHeader.name}}' width='200' height='200' data-action='editImage' data-edit='img' />
+    </div>
   </div>
-</div>
 {{else}}
-<img class="profile" src="{{source.img}}" alt="{{source.name}}"
-     width="200" height="200" data-action="editImage" data-edit="img" />
+  <img class='profile' src='{{source.img}}' alt='{{source.name}}' width='200' height='200' data-action='editImage' data-edit='img' />
 {{/if}}
 ```
 
@@ -244,7 +242,7 @@ character. C'est le cas ci-dessus.
 Supprimer la ligne :
 
 ```hbs
-<input class="charname" name="name" type="text" value="{{source.name}}" placeholder="Actor Name">
+<input class='charname' name='name' type='text' value='{{source.name}}' placeholder='Actor Name' />
 ```
 
 Les autres éléments du header (audit log, XP, bouton creation) ne sont pas modifiés.
@@ -341,7 +339,7 @@ Vérifier que `SwerpgBaseActorSheet._prepareContext()` (base, pas CharacterSheet
 ## 6. Fichiers modifiés
 
 | Fichier                                                             | Action       | Description                                                                                                          |
-|---------------------------------------------------------------------|--------------|----------------------------------------------------------------------------------------------------------------------|
+| ------------------------------------------------------------------- | ------------ | -------------------------------------------------------------------------------------------------------------------- |
 | `module/applications/sheets/character-sheet.mjs`                    | Modification | Ajout de `context.sidebarHeader = { name, img }` dans `_prepareContext()`                                            |
 | `templates/sheets/actor/sidebar.hbs`                                | Modification | Ajout du bloc conditionnel `.sidebar-header` avec input name ; fallback pour les non-character                       |
 | `templates/sheets/actor/character-header.hbs`                       | Modification | Retrait du `<input class="charname">`                                                                                |
@@ -353,7 +351,7 @@ Vérifier que `SwerpgBaseActorSheet._prepareContext()` (base, pas CharacterSheet
 ## 7. Risques
 
 | Risque                                                                                              | Impact | Mitigation                                                                                                                                         |
-|-----------------------------------------------------------------------------------------------------|--------|----------------------------------------------------------------------------------------------------------------------------------------------------|
+| --------------------------------------------------------------------------------------------------- | ------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Régression Adversary** : l'ajout dans `sidebar.hbs` impacte les adversary sheets                  | Moyen  | Bloc `{{#if sidebarHeader}}` ; tester qu'AdversarySheet ne définit pas `sidebarHeader`                                                             |
 | **Perte de persistance du nom** : l'input dans la sidebar ne persiste pas                           | Élevé  | Le binding `name="name"` est identique à celui du header ; `submitOnChange` est défini dans `DEFAULT_OPTIONS` de `base-actor-sheet.mjs` (ligne 39) |
 | **Layout header droit cassé** : le retrait du champ `flex: 1` désaligne les éléments restants       | Faible | Les autres enfants (audit-log, XP) sont en `flex: none` et `flex: 0 0 var(--sheet-header-height)` ; vérification manuelle après changement CSS     |
@@ -365,33 +363,33 @@ Vérifier que `SwerpgBaseActorSheet._prepareContext()` (base, pas CharacterSheet
 ## 8. Proposition d'ordre de commit
 
 1. **`feat(sidebar-header): add sidebarHeader context data to CharacterSheet._prepareContext()`**
-    - `module/applications/sheets/character-sheet.mjs`
-    - Ajoute `context.sidebarHeader = { name, img }`
+   - `module/applications/sheets/character-sheet.mjs`
+   - Ajoute `context.sidebarHeader = { name, img }`
 
 2. **`feat(sidebar-header): add character name input to sidebar template`**
-    - `templates/sheets/actor/sidebar.hbs`
-    - Bloc conditionnel `.sidebar-header` avec l'input nom et l'avatar
+   - `templates/sheets/actor/sidebar.hbs`
+   - Bloc conditionnel `.sidebar-header` avec l'input nom et l'avatar
 
 3. **`feat(sidebar-header): remove character name input from right header`**
-    - `templates/sheets/actor/character-header.hbs`
-    - Retrait du `<input class="charname">`
+   - `templates/sheets/actor/character-header.hbs`
+   - Retrait du `<input class="charname">`
 
 4. **`style(sidebar-header): add sidebar header styles and adjust right header`**
-    - `styles/actor.less`
-    - Nouveaux styles `.sidebar-header`, `.sidebar-name`, `.sidebar-profile-wrapper`
-    - Nettoyage des règles `.charname` devenues inutiles
+   - `styles/actor.less`
+   - Nouveaux styles `.sidebar-header`, `.sidebar-name`, `.sidebar-profile-wrapper`
+   - Nettoyage des règles `.charname` devenues inutiles
 
 5. **`test(sidebar-header): add context tests for sidebarHeader presence and shape`**
-    - `tests/applications/sheets/character-sheet-sidebar-header.test.mjs`
-    - Test character → `sidebarHeader` présent
-    - Test non-character → `sidebarHeader` absent
+   - `tests/applications/sheets/character-sheet-sidebar-header.test.mjs`
+   - Test character → `sidebarHeader` présent
+   - Test non-character → `sidebarHeader` absent
 
 ---
 
 ## 9. Dépendances avec les autres US
 
 | Issue                 | Dépendance       | Raison                                                           |
-|-----------------------|------------------|------------------------------------------------------------------|
+| --------------------- | ---------------- | ---------------------------------------------------------------- |
 | #179 — Overlay avatar | #178 (précédent) | L'overlay s'insère dans `.sidebar-profile-wrapper` créé par #178 |
 | #180 — Wounds/Strain  | #179 (précédent) | Les valeurs s'affichent dans l'overlay créé par #179             |
 

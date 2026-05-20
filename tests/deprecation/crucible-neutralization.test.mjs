@@ -44,9 +44,7 @@ describe('Crucible deprecation flags', () => {
 
       calculator.calculateCost('train', 1)
 
-      expect(logger.warn).toHaveBeenCalledWith(
-        expect.stringContaining('[DEPRECATED] [talent-cost-calculator]'),
-      )
+      expect(logger.warn).toHaveBeenCalledWith(expect.stringContaining('[DEPRECATED] [talent-cost-calculator]'))
     })
 
     test('returns 0 when enabled=false', () => {
@@ -82,9 +80,7 @@ describe('Crucible deprecation flags', () => {
 
       calculator.calculateCost('train', 1)
 
-      expect(logger.warn).not.toHaveBeenCalledWith(
-        expect.stringContaining('[DEPRECATED]'),
-      )
+      expect(logger.warn).not.toHaveBeenCalledWith(expect.stringContaining('[DEPRECATED]'))
     })
   })
 
@@ -99,9 +95,7 @@ describe('Crucible deprecation flags', () => {
 
       TalentFactory.build(actor, item, { action: 'train', isCreation: true }, {})
 
-      expect(logger.warn).toHaveBeenCalledWith(
-        expect.stringContaining('[DEPRECATED] [talent-factory]'),
-      )
+      expect(logger.warn).toHaveBeenCalledWith(expect.stringContaining('[DEPRECATED] [talent-factory]'))
     })
 
     test('returns ErrorTalent when enabled=false', () => {
@@ -121,9 +115,7 @@ describe('Crucible deprecation flags', () => {
 
       TalentFactory.build(actor, item, { action: 'train', isCreation: true }, {})
 
-      expect(logger.warn).not.toHaveBeenCalledWith(
-        expect.stringContaining('[DEPRECATED]'),
-      )
+      expect(logger.warn).not.toHaveBeenCalledWith(expect.stringContaining('[DEPRECATED]'))
     })
   })
 
@@ -160,16 +152,12 @@ describe('Crucible deprecation flags', () => {
   describe('logger.deprecated() format', () => {
     test('includes [DEPRECATED] prefix', () => {
       logger.deprecated('test-module', 'test feature', 'Use new thing instead.')
-      expect(logger.warn).toHaveBeenCalledWith(
-        expect.stringContaining('[DEPRECATED] [test-module] test feature — Use new thing instead.'),
-      )
+      expect(logger.warn).toHaveBeenCalledWith(expect.stringContaining('[DEPRECATED] [test-module] test feature — Use new thing instead.'))
     })
 
     test('works without suggestion', () => {
       logger.deprecated('test-module', 'test feature')
-      expect(logger.warn).toHaveBeenCalledWith(
-        expect.stringContaining('[DEPRECATED] [test-module] test feature'),
-      )
+      expect(logger.warn).toHaveBeenCalledWith(expect.stringContaining('[DEPRECATED] [test-module] test feature'))
     })
   })
 })

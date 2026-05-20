@@ -8,17 +8,13 @@ describe('Intégration armorMapper', () => {
       system: {
         category: 'light',
         restrictionLevel: 'restricted',
-        qualities: [
-          { key: 'bulky', hasRank: false },
-        ],
+        qualities: [{ key: 'bulky', hasRank: false }],
       },
     }
 
     expect(mockArmor.type).toBe('armor')
     expect(mockArmor.system.restrictionLevel).toBe('restricted')
-    expect(mockArmor.system.qualities).not.toContainEqual(
-      expect.objectContaining({ key: 'restricted' })
-    )
+    expect(mockArmor.system.qualities).not.toContainEqual(expect.objectContaining({ key: 'restricted' }))
   })
 
   it('should handle multiple qualities without restricted', () => {
@@ -33,9 +29,7 @@ describe('Intégration armorMapper', () => {
     }
 
     expect(mockArmor.system.qualities).toHaveLength(2)
-    expect(mockArmor.system.qualities).not.toContainEqual(
-      expect.objectContaining({ key: 'restricted' })
-    )
+    expect(mockArmor.system.qualities).not.toContainEqual(expect.objectContaining({ key: 'restricted' }))
   })
 
   it('should preserve raw oggdude restricted value in flags', () => {

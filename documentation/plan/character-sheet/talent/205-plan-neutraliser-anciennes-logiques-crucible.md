@@ -13,14 +13,14 @@ Neutraliser les 6 logiques héritées de Crucible identifiées dans l'issue, en 
 
 Les 6 logiques à neutraliser :
 
-| # | Logique Crucible | Fichier(s) porteur(s) |
-|---|------------------|----------------------|
-| 1 | `rank * 5` | `talent-cost-calculator.mjs:32` |
-| 2 | `isCreation` | `talent-factory.mjs:54`, `talent.mjs:5` |
-| 3 | Talent points (`actor.points.talent`) | `models/talent.mjs:241`, `actor.mjs:211` |
-| 4 | Arbre global Crucible | `config/talent-tree.mjs` |
-| 5 | `choice wheel` métier | `canvas/talent-choice-wheel.mjs` |
-| 6 | Achat direct de talent générique | `actor-mixins/talents.mjs:168` (`addTalent`), `talents.mjs:208` (`addTalentWithXpCheck`) |
+| #   | Logique Crucible                      | Fichier(s) porteur(s)                                                                    |
+| --- | ------------------------------------- | ---------------------------------------------------------------------------------------- |
+| 1   | `rank * 5`                            | `talent-cost-calculator.mjs:32`                                                          |
+| 2   | `isCreation`                          | `talent-factory.mjs:54`, `talent.mjs:5`                                                  |
+| 3   | Talent points (`actor.points.talent`) | `models/talent.mjs:241`, `actor.mjs:211`                                                 |
+| 4   | Arbre global Crucible                 | `config/talent-tree.mjs`                                                                 |
+| 5   | `choice wheel` métier                 | `canvas/talent-choice-wheel.mjs`                                                         |
+| 6   | Achat direct de talent générique      | `actor-mixins/talents.mjs:168` (`addTalent`), `talents.mjs:208` (`addTalentWithXpCheck`) |
 
 ---
 
@@ -52,19 +52,19 @@ Les 6 logiques à neutraliser :
 
 ### 3.1. US6, US7, US18 sont fermés et livrés
 
-| US | Issue | Statut | Rôle |
-|----|-------|--------|------|
-| US6 (#190) | Implémenter l'achat d'un nœud | CLOSED | Achat via `talent-node-purchase.mjs` |
-| US7 (#191) | Consolider les talents possédés | CLOSED | Vue consolidée des achats |
+| US          | Issue                                   | Statut | Rôle                                          |
+| ----------- | --------------------------------------- | ------ | --------------------------------------------- |
+| US6 (#190)  | Implémenter l'achat d'un nœud           | CLOSED | Achat via `talent-node-purchase.mjs`          |
+| US7 (#191)  | Consolider les talents possédés         | CLOSED | Vue consolidée des achats                     |
 | US18 (#202) | Acheter un nœud depuis la vue graphique | CLOSED | UI d'achat dans `specialization-tree-app.mjs` |
 
 **Vérification effectuée** : Le flux V1 est totalement indépendant des 6 logiques Crucible :
 
-| V1 Purchase Flow | Utilise Crucible ? |
-|-----------------|-------------------|
-| `talent-node-purchase.mjs:purchaseTalentNode()` | Non — utilise `system.progression.talentPurchases` + XP |
-| `talent-node-state.mjs:getNodeState()` | Non — utilise `talentPurchases` pour l'état |
-| `specialization-tree-app.mjs` (click → purchase) | Non — appelle `purchaseTalentNode()` directement |
+| V1 Purchase Flow                                 | Utilise Crucible ?                                      |
+| ------------------------------------------------ | ------------------------------------------------------- |
+| `talent-node-purchase.mjs:purchaseTalentNode()`  | Non — utilise `system.progression.talentPurchases` + XP |
+| `talent-node-state.mjs:getNodeState()`           | Non — utilise `talentPurchases` pour l'état             |
+| `specialization-tree-app.mjs` (click → purchase) | Non — appelle `purchaseTalentNode()` directement        |
 
 ### 3.2. État des 6 logiques Crucible
 
@@ -77,6 +77,7 @@ Les 6 logiques à neutraliser :
 **Appelé par** : `trained-talent.mjs:process()`, `ranked-trained-talent.mjs:process()` via `TalentCostCalculator.calculateCost()`.
 
 **Appelé depuis** :
+
 - `character-sheet.mjs:640` — `_onDropItem` avec `TalentFactory.build(actor, item, { action: 'train', isCreation: true })` puis `talentClass.process()` → utilise `rank * 5`
 - `item.mjs:190` — `deleteTalent()` avec `TalentFactory.build(actor, this, { action: 'forget', isCreation: true })` puis `talentClass.process()` → utilise `rank * 5` (pour remboursement)
 
@@ -113,6 +114,7 @@ if (points.available < 1) { throw new Error(...) }
 #### 3.2.4. Arbre global Crucible (config/talent-tree.mjs)
 
 `module/config/talent-tree.mjs` (1152 lignes) définit un arbre global unique avec des nœuds, connexions et talents. Il est référencé par :
+
 - `SwerpgTalent` (models/talent.mjs) — `initializeTree()`, `prepareBaseData()`, `assertPrerequisites()`
 - `module/config/talent-tree.mjs` lui-même — s'auto-enregistre via `SwerpgTalentNode`
 - Canvas legacy — `SwerpgTalentTree` lit les nœuds depuis cet arbre
@@ -151,17 +153,18 @@ addTalentWithXpCheck(item)                 // ligne 208
 ```js
 CONFIG.SWERPG.deprecation = {
   crucible: {
-    rankTimes5: { enabled: true, warn: true },     // true = la logique fonctionne encore
-    isCreation: { enabled: true, warn: true },       // false = la logique est désactivée
+    rankTimes5: { enabled: true, warn: true }, // true = la logique fonctionne encore
+    isCreation: { enabled: true, warn: true }, // false = la logique est désactivée
     talentPoints: { enabled: true, warn: true },
     globalTree: { enabled: true, warn: true },
     choiceWheel: { enabled: true, warn: true },
     directPurchase: { enabled: true, warn: true },
-  }
+  },
 }
 ```
 
 Justification :
+
 - Permet de désactiver chaque logique indépendamment pendant le debug
 - Les warnings sont activables/désactivables
 - Compatibilité ascendante préservée : `enabled: true` par défaut
@@ -180,6 +183,7 @@ logger.deprecated('talent-cost-calculator', 'rank * 5 cost calculation')
 ```
 
 Justification :
+
 - Pattern unique et identifiable dans les logs
 - Message standardisé incluant la suggestion de remplacement
 - Facile à rechercher dans les logs : `[DEPRECATED]`
@@ -191,6 +195,7 @@ Justification :
 **Décision** : Ajouter `@deprecated` JSDoc avec message de remplacement sur chaque classe/méthode/propriété concernée.
 
 Exemple :
+
 ```js
 /**
  * Calculate the cost of the talent.
@@ -207,6 +212,7 @@ Exemple :
 **Décision** : Conserver le code Crucible jusqu'à la fin de l'EPIC talents V1 (#184). La suppression sera traitée dans une US ultérieure dédiée au nettoyage.
 
 Justification :
+
 - Personnages existants peuvent encore référencer l'arbre global Crucible
 - Tests existants utilisent encore ces chemins
 - Risque de régression inacceptable en cours d'EPIC
@@ -216,6 +222,7 @@ Justification :
 **Décision** : Désactiver le bouton d'achat dans le canvas legacy pour les personnages V1. Dans `talent-tree-talent.mjs:#onClickLeft`, ajouter un guard qui redirige vers la vue graphique V1.
 
 Justification :
+
 - Le canvas legacy est le seul point d'entrée qui déclenche encore `addTalent()` en runtime
 - La V1 propose déjà `specialization-tree-app.mjs` pour l'achat
 - Évite qu'un joueur utilise par erreur l'ancien flux
@@ -225,6 +232,7 @@ Justification :
 **Décision** : Supprimer `addTalentWithXpCheck()` de `actor-mixins/talents.mjs`. Cette méthode a été remplacée par `purchaseTalentNode()` et n'est appelée nulle part.
 
 Justification :
+
 - Élimination de code mort sans risque
 - La méthode utilisait un `cost = 5` hardcodé qui est trompeur
 
@@ -237,6 +245,7 @@ Justification :
 **Quoi** : Vérifier exhaustivement que le flux V1 (depuis `specialization-tree-app.mjs` → `purchaseTalentNode()` → `talent-node-state.mjs`) ne passe par aucune des 6 logiques Crucible.
 
 **Fichiers** :
+
 - `module/applications/specialization-tree-app.mjs` — tracer l'appel `purchaseTalentNode`
 - `module/lib/talent-node/talent-node-purchase.mjs` — tracer le chemin complet
 - `module/lib/talent-node/talent-node-state.mjs` — vérifier l'absence de `rank*5`, `points.talent`, `isCreation`
@@ -248,6 +257,7 @@ Justification :
 **Quoi** : Ajouter la structure `CONFIG.SWERPG.deprecation.crucible` avec les 6 flags, chacun supportant `{ enabled, warn }`.
 
 **Fichiers** :
+
 - `module/config/system.mjs` (ou fichier de configuration dédié)
 
 **Risque** : Faible — nouvelle structure, aucun code existant ne la lit encore.
@@ -257,6 +267,7 @@ Justification :
 **Quoi** : Ajouter une méthode `deprecated(module, feature, suggestion)` sur le logger centralisé.
 
 **Fichiers** :
+
 - `module/utils/logger.mjs` — ajout de la méthode
 
 **Risque** : Faible — ajout non-cassant.
@@ -264,12 +275,14 @@ Justification :
 ### Étape 4 : Neutraliser `rank * 5`
 
 **Quoi** :
+
 1. Ajouter `@deprecated` JSDoc sur `TalentCostCalculator` et ses méthodes
 2. Ajouter un `logger.deprecated()` dans `#calculateTrainCost()` et `#calculateForgetCost()`
 3. Ajouter un guard optionnel via `CONFIG.SWERPG.deprecation.crucible.rankTimes5.enabled`
 4. Mettre à jour les tests pour vérifier le warning de dépréciation
 
 **Fichiers** :
+
 - `module/lib/talents/talent-cost-calculator.mjs` — modification
 - `tests/lib/talents/talent-cost-calculator.test.mjs` — modification
 
@@ -278,12 +291,14 @@ Justification :
 ### Étape 5 : Neutraliser `isCreation` (périmètre talents uniquement)
 
 **Quoi** :
+
 1. Ajouter `@deprecated` JSDoc sur le paramètre `isCreation` de `Talent` et `TalentFactory`
 2. Ajouter `logger.deprecated()` dans `TalentFactory.build()` quand un talent est construit avec `isCreation`
 3. Ajouter un commentaire « héritée Crucible — ne pas utiliser pour V1 » en tête de `talent-factory.mjs`
 4. Mettre à jour les tests talents pour vérifier le warning
 
 **Fichiers** :
+
 - `module/lib/talents/talent.mjs` — modification
 - `module/lib/talents/talent-factory.mjs` — modification
 - `module/lib/talents/trained-talent.mjs` — modification
@@ -296,11 +311,13 @@ Justification :
 ### Étape 6 : Neutraliser `talentPoints` (actor.points.talent)
 
 **Quoi** :
+
 1. Ajouter `@deprecated` JSDoc sur `SwerpgTalent.assertPrerequisites()` — signaler que cette méthode utilise les talent points Crucible
 2. Ajouter un `logger.deprecated()` dans `assertPrerequisites()` quand elle est appelée
 3. Vérifier que `levelUp()` dans `actor.mjs:211` ne bloque pas les personnages V1 (la vérification `points.talent.available` est déjà conditionnée par `this.isL0`)
 
 **Fichiers** :
+
 - `module/models/talent.mjs` — modification
 - `module/models/talent-orig.mjs` — modification (même logique)
 
@@ -309,11 +326,13 @@ Justification :
 ### Étape 7 : Neutraliser l'arbre global Crucible
 
 **Quoi** :
+
 1. Ajouter un en-tête de commentaire en haut de `module/config/talent-tree.mjs` : « Ce fichier définit l'arbre global hérité de Crucible. Ne pas ajouter de nouveaux nœuds. Utiliser specialization-tree pour les arbres V1. »
 2. Ajouter `@deprecated` JSDoc sur `SwerpgTalentNode` et ses méthodes principales
 3. Ajouter `logger.deprecated()` dans `SwerpgTalentNode.getNodes()` et `SwerpgTalentNode.preparePrerequisites()`
 
 **Fichiers** :
+
 - `module/config/talent-tree.mjs` — modification
 
 **Risque** : Faible — la structure est encore utilisée par les talents existants. Ne pas désactiver, juste marquer.
@@ -321,11 +340,13 @@ Justification :
 ### Étape 8 : Neutraliser la `choice wheel`
 
 **Quoi** :
+
 1. Ajouter un en-tête de commentaire dans `module/canvas/talent-choice-wheel.mjs` et `module/canvas/talent-tree-talent.mjs`
 2. Dans `talent-tree-talent.mjs:#onClickLeft`, ajouter un guard qui vérifie si une spécialisation V1 est présente sur l'acteur. Si oui, afficher une notification redirigeant vers la vue graphique V1 et ne pas appeler `addTalent()`.
 3. Marquer `@deprecated` sur `SwerpgTalentChoiceWheel`
 
 **Fichiers** :
+
 - `module/canvas/talent-choice-wheel.mjs` — modification
 - `module/canvas/talent-tree-talent.mjs` — modification
 
@@ -334,12 +355,14 @@ Justification :
 ### Étape 9 : Neutraliser l'achat direct de talent générique
 
 **Quoi** :
+
 1. Ajouter `@deprecated` JSDoc sur `addTalent()` et `addTalentWithXpCheck()` dans `actor-mixins/talents.mjs`
 2. Ajouter `logger.deprecated()` dans `addTalent()` quand elle est appelée
 3. Supprimer `addTalentWithXpCheck()` (code mort non appelé)
 4. Marquer tout le bloc « talent purchase » comme hérité Crucible
 
 **Fichiers** :
+
 - `module/documents/actor-mixins/talents.mjs` — modification
 - `tests/documents/actor-creation.test.mjs` — vérifier qu'aucun test ne dépend de `addTalentWithXpCheck()`
 
@@ -348,11 +371,13 @@ Justification :
 ### Étape 10 : Mettre à jour les tests
 
 **Quoi** :
+
 1. Dans les tests talents existants qui utilisent `isCreation`, vérifier que le warning de dépréciation apparaît
 2. Ajouter un test vérifiant que `talent-node-purchase.mjs` n'émet AUCUN warning de dépréciation Crucible
 3. Ajouter un test par logique vérifiant que le guard `CONFIG.SWERPG.deprecation.crucible.X.enabled = false` désactive la logique
 
 **Fichiers** :
+
 - `tests/lib/talents/talent-factory.test.mjs` — modification
 - `tests/lib/talents/talent-cost-calculator.test.mjs` — modification
 - `tests/lib/talent-node/talent-node-purchase.test.mjs` — ajout d'un test de non-régression
@@ -364,40 +389,40 @@ Justification :
 
 ## 6. Fichiers modifiés
 
-| Fichier | Action | Description |
-|---------|--------|-------------|
-| `module/config/system.mjs` | Modification | Ajout de `CONFIG.SWERPG.deprecation.crucible` avec les 6 flags |
-| `module/utils/logger.mjs` | Modification | Ajout de `logger.deprecated(module, feature, suggestion)` |
-| `module/lib/talents/talent-cost-calculator.mjs` | Modification | `@deprecated` JSDoc + `logger.deprecated()` + guard flag |
-| `module/lib/talents/talent.mjs` | Modification | `@deprecated` JSDoc sur `isCreation` param |
-| `module/lib/talents/talent-factory.mjs` | Modification | `@deprecated` en-tête + `logger.deprecated()` + guard flag |
-| `module/lib/talents/trained-talent.mjs` | Modification | `@deprecated` en-tête |
-| `module/lib/talents/ranked-trained-talent.mjs` | Modification | `@deprecated` en-tête |
-| `module/lib/talents/error-talent.mjs` | Modification | `@deprecated` en-tête |
-| `module/models/talent.mjs` | Modification | `@deprecated` sur `assertPrerequisites()` + `logger.deprecated()` |
-| `module/models/talent-orig.mjs` | Modification | `@deprecated` sur `assertPrerequisites()` |
-| `module/config/talent-tree.mjs` | Modification | En-tête legacy + `@deprecated` sur `SwerpgTalentNode` + `logger.deprecated()` |
-| `module/canvas/talent-choice-wheel.mjs` | Modification | En-tête legacy + `@deprecated` |
-| `module/canvas/talent-tree-talent.mjs` | Modification | Guard V1 dans `#onClickLeft` + notification |
-| `module/documents/actor-mixins/talents.mjs` | Modification | `@deprecated` + `logger.deprecated()` sur `addTalent()` ; suppression de `addTalentWithXpCheck()` |
-| `documentation/cadrage/character-sheet/talent/07-plan-issues-github.md` | Modification | Marquage US21 comme livrée |
-| `tests/lib/talents/talent-factory.test.mjs` | Modification | Vérification warning dépréciation |
-| `tests/lib/talents/talent-cost-calculator.test.mjs` | Modification | Vérification warning dépréciation |
-| `tests/lib/talent-node/talent-node-purchase.test.mjs` | Modification | Test non-régression V1 sans warning Crucible |
-| `tests/deprecation/crucible-neutralization.test.mjs` | Création | Tests par logique : flag enabled/disabled, warning émis |
+| Fichier                                                                 | Action       | Description                                                                                       |
+| ----------------------------------------------------------------------- | ------------ | ------------------------------------------------------------------------------------------------- |
+| `module/config/system.mjs`                                              | Modification | Ajout de `CONFIG.SWERPG.deprecation.crucible` avec les 6 flags                                    |
+| `module/utils/logger.mjs`                                               | Modification | Ajout de `logger.deprecated(module, feature, suggestion)`                                         |
+| `module/lib/talents/talent-cost-calculator.mjs`                         | Modification | `@deprecated` JSDoc + `logger.deprecated()` + guard flag                                          |
+| `module/lib/talents/talent.mjs`                                         | Modification | `@deprecated` JSDoc sur `isCreation` param                                                        |
+| `module/lib/talents/talent-factory.mjs`                                 | Modification | `@deprecated` en-tête + `logger.deprecated()` + guard flag                                        |
+| `module/lib/talents/trained-talent.mjs`                                 | Modification | `@deprecated` en-tête                                                                             |
+| `module/lib/talents/ranked-trained-talent.mjs`                          | Modification | `@deprecated` en-tête                                                                             |
+| `module/lib/talents/error-talent.mjs`                                   | Modification | `@deprecated` en-tête                                                                             |
+| `module/models/talent.mjs`                                              | Modification | `@deprecated` sur `assertPrerequisites()` + `logger.deprecated()`                                 |
+| `module/models/talent-orig.mjs`                                         | Modification | `@deprecated` sur `assertPrerequisites()`                                                         |
+| `module/config/talent-tree.mjs`                                         | Modification | En-tête legacy + `@deprecated` sur `SwerpgTalentNode` + `logger.deprecated()`                     |
+| `module/canvas/talent-choice-wheel.mjs`                                 | Modification | En-tête legacy + `@deprecated`                                                                    |
+| `module/canvas/talent-tree-talent.mjs`                                  | Modification | Guard V1 dans `#onClickLeft` + notification                                                       |
+| `module/documents/actor-mixins/talents.mjs`                             | Modification | `@deprecated` + `logger.deprecated()` sur `addTalent()` ; suppression de `addTalentWithXpCheck()` |
+| `documentation/cadrage/character-sheet/talent/07-plan-issues-github.md` | Modification | Marquage US21 comme livrée                                                                        |
+| `tests/lib/talents/talent-factory.test.mjs`                             | Modification | Vérification warning dépréciation                                                                 |
+| `tests/lib/talents/talent-cost-calculator.test.mjs`                     | Modification | Vérification warning dépréciation                                                                 |
+| `tests/lib/talent-node/talent-node-purchase.test.mjs`                   | Modification | Test non-régression V1 sans warning Crucible                                                      |
+| `tests/deprecation/crucible-neutralization.test.mjs`                    | Création     | Tests par logique : flag enabled/disabled, warning émis                                           |
 
 ---
 
 ## 7. Risques
 
-| Risque | Impact | Mitigation |
-|--------|--------|------------|
-| **Un module inconnu dépend encore d'une logique Crucible** | Warning inattendu, comportement modifié | Audit préalable (étape 1). Tous les appels ont été tracés. Si un nouveau chemin est découvert, le warning le signalera immédiatement dans les logs. |
-| **`addTalent()` est encore utilisé par un module non-couvrant** | L'achat de talent plante | Le guard dans `talent-tree-talent.mjs` ne désactive que si l'acteur a des spécialisations V1. Les personnages sans spécialisation V1 continuent de passer par l'ancien flux. |
-| **`levelUp()` bloque les personnages V1** | Impossibilité de monter de niveau | La vérification `points.talent.available` dans `levelUp()` (actor.mjs:211) n'est exécutée que si `this.isL0`. Un personnage V1 qui a déjà commencé sa progression ne sera pas bloqué. |
-| **Tests flaky à cause des warnings de dépréciation** | Tests qui échouent inopinément | Les tests qui vérifient l'absence de warning doivent utiliser `CONFIG.SWERPG.deprecation.crucible.X.enabled = false` pour désactiver le warning. |
-| **Suppression de `addTalentWithXpCheck()` cassant un import** | Erreur à l'import OggDude | Vérification préalable : aucun import n'appelle `addTalentWithXpCheck()`. Seul `purchaseTalentNode()` est utilisé par l'importer. |
-| **Fausse alerte de dépréciation pendant les tests d'intégration** | Bruit dans les logs de test | Les tests d'intégration qui utilisent intentionnellement les chemins legacy doivent activer le flag `warn: false` ou `enabled: false` pour éviter le bruit. |
+| Risque                                                            | Impact                                  | Mitigation                                                                                                                                                                            |
+| ----------------------------------------------------------------- | --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Un module inconnu dépend encore d'une logique Crucible**        | Warning inattendu, comportement modifié | Audit préalable (étape 1). Tous les appels ont été tracés. Si un nouveau chemin est découvert, le warning le signalera immédiatement dans les logs.                                   |
+| **`addTalent()` est encore utilisé par un module non-couvrant**   | L'achat de talent plante                | Le guard dans `talent-tree-talent.mjs` ne désactive que si l'acteur a des spécialisations V1. Les personnages sans spécialisation V1 continuent de passer par l'ancien flux.          |
+| **`levelUp()` bloque les personnages V1**                         | Impossibilité de monter de niveau       | La vérification `points.talent.available` dans `levelUp()` (actor.mjs:211) n'est exécutée que si `this.isL0`. Un personnage V1 qui a déjà commencé sa progression ne sera pas bloqué. |
+| **Tests flaky à cause des warnings de dépréciation**              | Tests qui échouent inopinément          | Les tests qui vérifient l'absence de warning doivent utiliser `CONFIG.SWERPG.deprecation.crucible.X.enabled = false` pour désactiver le warning.                                      |
+| **Suppression de `addTalentWithXpCheck()` cassant un import**     | Erreur à l'import OggDude               | Vérification préalable : aucun import n'appelle `addTalentWithXpCheck()`. Seul `purchaseTalentNode()` est utilisé par l'importer.                                                     |
+| **Fausse alerte de dépréciation pendant les tests d'intégration** | Bruit dans les logs de test             | Les tests d'intégration qui utilisent intentionnellement les chemins legacy doivent activer le flag `warn: false` ou `enabled: false` pour éviter le bruit.                           |
 
 ---
 

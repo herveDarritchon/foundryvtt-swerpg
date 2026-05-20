@@ -21,25 +21,25 @@ fenêtre Foundry VTT distincte.
 
 Sont inclus dans ce cadrage :
 
-* la structure générale de l’écran ;
-* la hiérarchie visuelle ;
-* la lisibilité du canevas ;
-* le rendu des nœuds ;
-* le rendu des liens ;
-* les états visuels des talents ;
-* les interactions de consultation ;
-* les contrôles de zoom, pan et recentrage ;
-* la navigation entre arbres ;
-* l’ambiance graphique Star Wars / Foundry ;
-* les exigences UX minimales pour que l’écran aide réellement à comprendre et décider.
+- la structure générale de l’écran ;
+- la hiérarchie visuelle ;
+- la lisibilité du canevas ;
+- le rendu des nœuds ;
+- le rendu des liens ;
+- les états visuels des talents ;
+- les interactions de consultation ;
+- les contrôles de zoom, pan et recentrage ;
+- la navigation entre arbres ;
+- l’ambiance graphique Star Wars / Foundry ;
+- les exigences UX minimales pour que l’écran aide réellement à comprendre et décider.
 
 Sont exclus à ce stade :
 
-* la refonte complète du modèle de données des talents ;
-* les règles métier d’achat de talents, sauf lorsqu’elles doivent être exposées visuellement ;
-* la refonte globale de la fiche personnage ;
-* l’intégration d’animations avancées non nécessaires à la compréhension ;
-* la création d’un thème graphique complet pour tout le système.
+- la refonte complète du modèle de données des talents ;
+- les règles métier d’achat de talents, sauf lorsqu’elles doivent être exposées visuellement ;
+- la refonte globale de la fiche personnage ;
+- l’intégration d’animations avancées non nécessaires à la compréhension ;
+- la création d’un thème graphique complet pour tout le système.
 
 ## 3. Diagnostic synthétique de l’écran actuel
 
@@ -138,11 +138,11 @@ Le comportement attendu est un « fit to tree » automatique au chargement, puis
 
 Critères d’acceptation proposés :
 
-* à l’ouverture, l’arbre sélectionné est visible intégralement ;
-* l’arbre occupe visuellement environ 60 à 75 % de l’espace utile du canevas ;
-* aucun nœud n’est tronqué ;
-* un bouton permet de revenir à ce cadrage initial ;
-* le comportement reste stable après redimensionnement de la fenêtre.
+- à l’ouverture, l’arbre sélectionné est visible intégralement ;
+- l’arbre occupe visuellement environ 60 à 75 % de l’espace utile du canevas ;
+- aucun nœud n’est tronqué ;
+- un bouton permet de revenir à ce cadrage initial ;
+- le comportement reste stable après redimensionnement de la fenêtre.
 
 ### 7.2. Réduction du poids visuel du header
 
@@ -154,10 +154,10 @@ suffire, par exemple avec le nom de la spécialisation, le statut de l’arbre e
 
 Critères d’acceptation proposés :
 
-* le canevas devient l’élément dominant de l’écran ;
-* le titre reste identifiable sans écraser la vue ;
-* la hauteur disponible pour le graphe augmente ;
-* les informations redondantes sont supprimées ou fusionnées.
+- le canevas devient l’élément dominant de l’écran ;
+- le titre reste identifiable sans écraser la vue ;
+- la hauteur disponible pour le graphe augmente ;
+- les informations redondantes sont supprimées ou fusionnées.
 
 ### 7.3. Amélioration des états de nœuds
 
@@ -166,17 +166,17 @@ invalide ou incomplet.
 
 Orientation visuelle recommandée :
 
-* acheté : vert validé, halo discret, lien actif ;
-* disponible : bleu/cyan lumineux, bordure nette, invitation visuelle ;
-* verrouillé : gris sombre mais lisible, opacité réduite sans disparition ;
-* invalide/incomplet : ambre ou rouge discret, icône d’alerte, tooltip explicatif.
+- acheté : vert validé, halo discret, lien actif ;
+- disponible : bleu/cyan lumineux, bordure nette, invitation visuelle ;
+- verrouillé : gris sombre mais lisible, opacité réduite sans disparition ;
+- invalide/incomplet : ambre ou rouge discret, icône d’alerte, tooltip explicatif.
 
 Critères d’acceptation proposés :
 
-* chaque état est différenciable sans dépendre uniquement de la couleur ;
-* les textes restent lisibles dans tous les états ;
-* les états sont cohérents entre nœuds et connexions ;
-* les états invalides ou incomplets ne ressemblent pas à des états verrouillés ordinaires.
+- chaque état est différenciable sans dépendre uniquement de la couleur ;
+- les textes restent lisibles dans tous les états ;
+- les états sont cohérents entre nœuds et connexions ;
+- les états invalides ou incomplets ne ressemblent pas à des états verrouillés ordinaires.
 
 ### 7.4. Ajout d’une légende compacte
 
@@ -187,10 +187,10 @@ Elle doit rester compacte et ne pas concurrencer l’arbre.
 
 Critères d’acceptation proposés :
 
-* la légende affiche les états principaux ;
-* elle utilise les mêmes styles que les nœuds ;
-* elle ne masque pas l’arbre ;
-* elle reste lisible après redimensionnement.
+- la légende affiche les états principaux ;
+- elle utilise les mêmes styles que les nœuds ;
+- elle ne masque pas l’arbre ;
+- elle reste lisible après redimensionnement.
 
 ### 7.5. Tooltips ou panneau de détail des talents
 
@@ -210,11 +210,11 @@ objectif prioritaire.
 
 Critères d’acceptation proposés :
 
-* un nœud disponible indique qu’il peut être acheté ;
-* un nœud verrouillé indique pourquoi il est verrouillé ;
-* un nœud acheté indique son statut et son rang éventuel ;
-* un nœud invalide indique la nature du problème ;
-* les textes sont localisés.
+- un nœud disponible indique qu’il peut être acheté ;
+- un nœud verrouillé indique pourquoi il est verrouillé ;
+- un nœud acheté indique son statut et son rang éventuel ;
+- un nœud invalide indique la nature du problème ;
+- les textes sont localisés.
 
 ### 7.6. Mise en valeur des chemins de progression
 
@@ -222,17 +222,17 @@ Les connexions ne doivent pas être de simples traits structurels. Elles doivent
 
 Les liens devraient exprimer au minimum :
 
-* chemin déjà parcouru ;
-* chemin menant aux talents disponibles ;
-* chemin verrouillé ;
-* relation mise en évidence au survol d’un nœud.
+- chemin déjà parcouru ;
+- chemin menant aux talents disponibles ;
+- chemin verrouillé ;
+- relation mise en évidence au survol d’un nœud.
 
 Critères d’acceptation proposés :
 
-* les liens des talents achetés sont plus visibles ;
-* les liens vers des talents disponibles sont identifiables ;
-* les liens verrouillés restent présents mais secondaires ;
-* au survol d’un nœud, ses prérequis et débouchés sont mis en évidence.
+- les liens des talents achetés sont plus visibles ;
+- les liens vers des talents disponibles sont identifiables ;
+- les liens verrouillés restent présents mais secondaires ;
+- au survol d’un nœud, ses prérequis et débouchés sont mis en évidence.
 
 ### 7.7. Enrichissement de la carte de spécialisation dans la sidebar
 
@@ -241,20 +241,20 @@ utile.
 
 Informations candidates :
 
-* nom de la spécialisation ;
-* carrière associée ;
-* statut de résolution de l’arbre ;
-* nombre de talents achetés ;
-* nombre de talents disponibles ;
-* XP dépensée dans l’arbre ;
-* alerte si l’arbre est incomplet ou non résolu.
+- nom de la spécialisation ;
+- carrière associée ;
+- statut de résolution de l’arbre ;
+- nombre de talents achetés ;
+- nombre de talents disponibles ;
+- XP dépensée dans l’arbre ;
+- alerte si l’arbre est incomplet ou non résolu.
 
 Critères d’acceptation proposés :
 
-* aucune information n’est répétée inutilement ;
-* la carte sélectionnée est clairement distinguée ;
-* le statut métier de l’arbre est distinct de l’état UI sélectionné ;
-* la sidebar reste lisible avec plusieurs spécialisations.
+- aucune information n’est répétée inutilement ;
+- la carte sélectionnée est clairement distinguée ;
+- le statut métier de l’arbre est distinct de l’état UI sélectionné ;
+- la sidebar reste lisible avec plusieurs spécialisations.
 
 ### 7.8. Clarification des contrôles de zoom
 
@@ -265,11 +265,11 @@ doit être stable et prévisible.
 
 Critères d’acceptation proposés :
 
-* bouton zoom arrière avec tooltip ;
-* bouton recentrer/ajuster avec tooltip ;
-* bouton zoom avant avec tooltip ;
-* raccourcis souris conservés ;
-* reset de vue fiable.
+- bouton zoom arrière avec tooltip ;
+- bouton recentrer/ajuster avec tooltip ;
+- bouton zoom avant avec tooltip ;
+- raccourcis souris conservés ;
+- reset de vue fiable.
 
 ## 8. Recommandations graphiques
 
@@ -282,12 +282,12 @@ d’une interface impériale clinique ni d’un arbre de talents de jeu vidéo g
 
 Les choix visuels doivent privilégier :
 
-* fonds sombres bleutés ;
-* bordures cyan ou vertes maîtrisées ;
-* textures très discrètes ;
-* coins légèrement biseautés ;
-* glow limité aux états importants ;
-* typographie immersive pour les titres, lisible pour les informations fonctionnelles.
+- fonds sombres bleutés ;
+- bordures cyan ou vertes maîtrisées ;
+- textures très discrètes ;
+- coins légèrement biseautés ;
+- glow limité aux états importants ;
+- typographie immersive pour les titres, lisible pour les informations fonctionnelles.
 
 ### 8.2. Typographie
 
@@ -296,11 +296,11 @@ fonctionnelles doivent rester très lisibles.
 
 Recommandations :
 
-* augmenter légèrement le contraste des noms de talents ;
-* éviter les textes trop fins sur fond sombre ;
-* limiter l’italique aux textes d’ambiance ;
-* vérifier les noms longs ;
-* prévoir les traductions françaises qui peuvent être plus longues que les libellés anglais.
+- augmenter légèrement le contraste des noms de talents ;
+- éviter les textes trop fins sur fond sombre ;
+- limiter l’italique aux textes d’ambiance ;
+- vérifier les noms longs ;
+- prévoir les traductions françaises qui peuvent être plus longues que les libellés anglais.
 
 ### 8.3. Couleurs
 
@@ -308,11 +308,11 @@ La couleur doit servir l’état fonctionnel. Elle ne doit pas être seulement d
 
 Palette fonctionnelle recommandée :
 
-* acheté : vert contrôlé ;
-* disponible : cyan/bleu clair ;
-* verrouillé : gris froid ;
-* invalide/incomplet : ambre ou rouge doux ;
-* sélection/survol : halo clair temporaire.
+- acheté : vert contrôlé ;
+- disponible : cyan/bleu clair ;
+- verrouillé : gris froid ;
+- invalide/incomplet : ambre ou rouge doux ;
+- sélection/survol : halo clair temporaire.
 
 Il faudra vérifier le contraste des textes et ne pas rendre les nœuds verrouillés illisibles.
 
@@ -324,13 +324,13 @@ libellés accessibles.
 
 Exigences minimales :
 
-* les états ne reposent pas uniquement sur la couleur ;
-* les textes principaux restent lisibles ;
-* les boutons disposent de labels accessibles ;
-* les tooltips sont localisés ;
-* la vue reste exploitable après redimensionnement ;
-* les noms longs ne cassent pas la mise en page ;
-* les états d’erreur sont compréhensibles.
+- les états ne reposent pas uniquement sur la couleur ;
+- les textes principaux restent lisibles ;
+- les boutons disposent de labels accessibles ;
+- les tooltips sont localisés ;
+- la vue reste exploitable après redimensionnement ;
+- les noms longs ne cassent pas la mise en page ;
+- les états d’erreur sont compréhensibles.
 
 ## 10. Impacts techniques pressentis
 
@@ -341,12 +341,12 @@ principalement du rendu PIXI et de la logique de viewport.
 
 Points techniques à prévoir :
 
-* calcul de bounding box de l’arbre ;
-* fonction fit-to-tree ;
-* recalcul au resize ;
-* mapping stable entre état métier et style visuel ;
-* gestion du hover sur nœud ;
-* mise en évidence temporaire des connexions associées.
+- calcul de bounding box de l’arbre ;
+- fonction fit-to-tree ;
+- recalcul au resize ;
+- mapping stable entre état métier et style visuel ;
+- gestion du hover sur nœud ;
+- mise en évidence temporaire des connexions associées.
 
 ### 10.2. Côté données de vue
 
@@ -367,13 +367,13 @@ La vue ne doit pas afficher de clés i18n brutes.
 
 Les tests doivent couvrir les invariants UX critiques, notamment :
 
-* calcul de cadrage initial ;
-* styles associés aux états ;
-* présence des tooltips ou labels ;
-* non-régression des interactions zoom/pan ;
-* stabilité avec arbres incomplets ou non résolus ;
-* comportement avec plusieurs spécialisations ;
-* comportement avec noms longs.
+- calcul de cadrage initial ;
+- styles associés aux états ;
+- présence des tooltips ou labels ;
+- non-régression des interactions zoom/pan ;
+- stabilité avec arbres incomplets ou non résolus ;
+- comportement avec plusieurs spécialisations ;
+- comportement avec noms longs.
 
 ## 11. Proposition de découpage en incréments
 
@@ -383,11 +383,11 @@ Objectif : rendre l’arbre immédiatement lisible à l’ouverture.
 
 Contenu :
 
-* fit-to-tree initial ;
-* bouton recentrer/ajuster ;
-* réduction du header ;
-* amélioration du contraste de base ;
-* tooltips des contrôles de zoom.
+- fit-to-tree initial ;
+- bouton recentrer/ajuster ;
+- réduction du header ;
+- amélioration du contraste de base ;
+- tooltips des contrôles de zoom.
 
 Valeur : forte. C’est l’incrément qui améliorera le plus immédiatement la perception de l’écran.
 
@@ -397,11 +397,11 @@ Objectif : rendre les statuts compréhensibles.
 
 Contenu :
 
-* styles différenciés des nœuds ;
-* styles différenciés des liens ;
-* légende compacte ;
-* état invalide/incomplet explicite ;
-* vérification des contrastes.
+- styles différenciés des nœuds ;
+- styles différenciés des liens ;
+- légende compacte ;
+- état invalide/incomplet explicite ;
+- vérification des contrastes.
 
 Valeur : forte. C’est l’incrément qui transforme la vue en outil compréhensible.
 
@@ -411,12 +411,12 @@ Objectif : expliquer les décisions au joueur.
 
 Contenu :
 
-* tooltip enrichi ou panneau simple ;
-* raison de verrouillage ;
-* prérequis manquants ;
-* statut d’achat ;
-* rang éventuel ;
-* coût XP.
+- tooltip enrichi ou panneau simple ;
+- raison de verrouillage ;
+- prérequis manquants ;
+- statut d’achat ;
+- rang éventuel ;
+- coût XP.
 
 Valeur : forte. C’est l’incrément qui transforme la visualisation en outil d’aide à la décision.
 
@@ -426,11 +426,11 @@ Objectif : améliorer la navigation entre spécialisations et la synthèse.
 
 Contenu :
 
-* carte de spécialisation enrichie ;
-* progression ;
-* XP dépensée ou nombre de talents achetés ;
-* gestion propre des statuts available/incomplete/unresolved ;
-* comportement avec plusieurs arbres.
+- carte de spécialisation enrichie ;
+- progression ;
+- XP dépensée ou nombre de talents achetés ;
+- gestion propre des statuts available/incomplete/unresolved ;
+- comportement avec plusieurs arbres.
 
 Valeur : moyenne à forte selon la fréquence des personnages multi-spécialisés.
 
@@ -440,11 +440,11 @@ Objectif : renforcer l’identité Star Wars sans nuire à l’usage.
 
 Contenu :
 
-* grille holographique subtile ;
-* micro-effets de survol ;
-* coins biseautés ;
-* glow contrôlé ;
-* éventuelles animations légères.
+- grille holographique subtile ;
+- micro-effets de survol ;
+- coins biseautés ;
+- glow contrôlé ;
+- éventuelles animations légères.
 
 Valeur : moyenne. À faire après les bases UX, pas avant.
 
@@ -452,13 +452,13 @@ Valeur : moyenne. À faire après les bases UX, pas avant.
 
 L’évolution sera réussie si un joueur peut ouvrir la vue et comprendre immédiatement :
 
-* quelle spécialisation il consulte ;
-* quels talents sont déjà achetés ;
-* quels talents sont actuellement disponibles ;
-* quels talents sont verrouillés ;
-* pourquoi un talent est verrouillé ;
-* quels chemins de progression s’offrent à lui ;
-* comment revenir à une vue centrée après navigation.
+- quelle spécialisation il consulte ;
+- quels talents sont déjà achetés ;
+- quels talents sont actuellement disponibles ;
+- quels talents sont verrouillés ;
+- pourquoi un talent est verrouillé ;
+- quels chemins de progression s’offrent à lui ;
+- comment revenir à une vue centrée après navigation.
 
 L’écran sera considéré comme mature lorsqu’il ne sera plus seulement une représentation graphique de l’arbre, mais un
 support clair de décision de progression.

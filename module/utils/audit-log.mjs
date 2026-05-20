@@ -11,7 +11,7 @@ const MAX_PENDING = 50
 const MAX_RETRIES = 1
 const RETRY_DELAY_MS = 1000
 const pendingOldStates = new Map()
-const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms))
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
 /* -------------------------------------------- */
 /*  Gardes                                      */
@@ -47,7 +47,7 @@ function cloneValue(value) {
 function pruneExpiredPending() {
   const now = Date.now()
   for (const [key, queue] of pendingOldStates) {
-    const remaining = queue.filter(p => now - p.timestamp <= PENDING_TTL_MS)
+    const remaining = queue.filter((p) => now - p.timestamp <= PENDING_TTL_MS)
     if (remaining.length === 0) {
       pendingOldStates.delete(key)
     } else if (remaining.length !== queue.length) {
@@ -161,19 +161,14 @@ function snapshotOldState(source, changes) {
 
 async function handleWriteError(actor, err) {
   logger.error(`[AuditLog] Write failed for actor "${actor.name}" (${actor.id})`, err)
-  ui.notifications?.warn?.(
-    game.i18n.format('SWERPG.AUDIT.WRITE_FAILED', { actor: actor.name })
-  )
+  ui.notifications?.warn?.(game.i18n.format('SWERPG.AUDIT.WRITE_FAILED', { actor: actor.name }))
 
   if (game.user?.isGM) {
     try {
-      const content = await foundry.applications.handlebars.renderTemplate(
-        'systems/swerpg/templates/chat/audit-log-warning.hbs',
-        {
-          actorName: actor.name,
-          errorMessage: err.message,
-        }
-      )
+      const content = await foundry.applications.handlebars.renderTemplate('systems/swerpg/templates/chat/audit-log-warning.hbs', {
+        actorName: actor.name,
+        errorMessage: err.message,
+      })
       await ChatMessage.create({
         content,
         speaker: ChatMessage.getSpeaker({ actor }),
@@ -204,10 +199,7 @@ async function writeLogEntries(actor, entries) {
         nextLogs.splice(0, nextLogs.length - maxEntries)
       }
 
-      await actor.update(
-        { [AUDIT_LOG_KEY]: nextLogs },
-        { swerpgAuditLog: false }
-      )
+      await actor.update({ [AUDIT_LOG_KEY]: nextLogs }, { swerpgAuditLog: false })
       return
     } catch (err) {
       if (attempt < MAX_RETRIES) {
@@ -231,7 +223,24 @@ function readMaxLogEntries() {
 /*  Helpers exportés pour tests                 */
 /* -------------------------------------------- */
 
-export { isOnlyAuditChange, snapshotOldState, cloneValue, evictOldestIfNeeded, flushPending, countPendingEntries, getPendingKey, shiftPendingEntry, pushPendingEntry, isDeletionPath, writeLogEntries, handleWriteError, pruneExpiredPending, readMaxLogEntries, onCreateItem, recordTalentNodePurchase }
+export {
+  isOnlyAuditChange,
+  snapshotOldState,
+  cloneValue,
+  evictOldestIfNeeded,
+  flushPending,
+  countPendingEntries,
+  getPendingKey,
+  shiftPendingEntry,
+  pushPendingEntry,
+  isDeletionPath,
+  writeLogEntries,
+  handleWriteError,
+  pruneExpiredPending,
+  readMaxLogEntries,
+  onCreateItem,
+  recordTalentNodePurchase,
+}
 
 /* -------------------------------------------- */
 /*  Handlers (exportés)                         */

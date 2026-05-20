@@ -42,35 +42,33 @@ Condition : ne rien exposer pour `adversary` (pas d'impact).
 Remplacer :
 
 ```hbs
-<img class="profile" src="{{source.img}}" ... />
+<img class='profile' src='{{source.img}}' ... />
 ```
 
 par un bloc structuré **uniquement si** `sidebarHeader` existe :
 
 ```hbs
 {{#if sidebarHeader}}
-<div class="sidebar-header">
-  <input class="sidebar-name" name="name" type="text" value="{{sidebarHeader.name}}" placeholder="…">
+  <div class='sidebar-header'>
+    <input class='sidebar-name' name='name' type='text' value='{{sidebarHeader.name}}' placeholder='…' />
 
-  <div class="sidebar-profile-wrapper">
-    <img class="profile" src="{{sidebarHeader.img}}" alt="{{sidebarHeader.name}}"
-         width="200" height="200" data-action="editImage" data-edit="img">
+    <div class='sidebar-profile-wrapper'>
+      <img class='profile' src='{{sidebarHeader.img}}' alt='{{sidebarHeader.name}}' width='200' height='200' data-action='editImage' data-edit='img' />
 
-    <div class="sidebar-profile-overlay">
-      <div class="sidebar-resource wounds">
-        <span class="label">{{localize "RESOURCES.WOUNDS"}}</span>
-        <span class="value">{{sidebarHeader.wounds.value}}/{{sidebarHeader.wounds.threshold}}</span>
-      </div>
-      <div class="sidebar-resource strain">
-        <span class="label">{{localize "RESOURCES.STRAIN"}}</span>
-        <span class="value">{{sidebarHeader.strain.value}}/{{sidebarHeader.strain.threshold}}</span>
+      <div class='sidebar-profile-overlay'>
+        <div class='sidebar-resource wounds'>
+          <span class='label'>{{localize 'RESOURCES.WOUNDS'}}</span>
+          <span class='value'>{{sidebarHeader.wounds.value}}/{{sidebarHeader.wounds.threshold}}</span>
+        </div>
+        <div class='sidebar-resource strain'>
+          <span class='label'>{{localize 'RESOURCES.STRAIN'}}</span>
+          <span class='value'>{{sidebarHeader.strain.value}}/{{sidebarHeader.strain.threshold}}</span>
+        </div>
       </div>
     </div>
   </div>
-</div>
 {{else}}
-<img class="profile" src="{{source.img}}" alt="{{source.name}}"
-     width="200" height="200" data-action="editImage" data-edit="img" />
+  <img class='profile' src='{{source.img}}' alt='{{source.name}}' width='200' height='200' data-action='editImage' data-edit='img' />
 {{/if}}
 ```
 
@@ -81,7 +79,7 @@ Le `else` préserve le comportement actuel pour `adversary` et tout autre type.
 Retirer :
 
 ```hbs
-<input class="charname" name="name" type="text" value="{{source.name}}" placeholder="Actor Name">
+<input class='charname' name='name' type='text' value='{{source.name}}' placeholder='Actor Name' />
 ```
 
 et ajuster le layout du `.title` pour occuper l'espace libéré.
@@ -158,10 +156,18 @@ Ajouter dans la section `.sheet-sidebar` :
           white-space: nowrap;
         }
 
-        &.wounds .label { color: #ff4444; }
-        &.wounds .value { color: #ff6666; }
-        &.strain .label { color: #44cc44; }
-        &.strain .value { color: #66ee66; }
+        &.wounds .label {
+          color: #ff4444;
+        }
+        &.wounds .value {
+          color: #ff6666;
+        }
+        &.strain .label {
+          color: #44cc44;
+        }
+        &.strain .value {
+          color: #66ee66;
+        }
       }
     }
   }
@@ -183,13 +189,13 @@ présentes dans `lang/en.json` et `lang/fr.json`.
 
 ## Fichiers impactés
 
-| Fichier | Nature |
-|---|---|
-| `module/applications/sheets/character-sheet.mjs` | + préparation contexte |
-| `templates/sheets/actor/sidebar.hbs` | + structure header/overlay |
-| `templates/sheets/actor/character-header.hbs` | - champ nom |
-| `styles/actor.less` | + styles nouveau bloc |
-| `tests/…` (à définir) | + tests contexte |
+| Fichier                                          | Nature                     |
+| ------------------------------------------------ | -------------------------- |
+| `module/applications/sheets/character-sheet.mjs` | + préparation contexte     |
+| `templates/sheets/actor/sidebar.hbs`             | + structure header/overlay |
+| `templates/sheets/actor/character-header.hbs`    | - champ nom                |
+| `styles/actor.less`                              | + styles nouveau bloc      |
+| `tests/…` (à définir)                            | + tests contexte           |
 
 ## Risques et atténuations
 

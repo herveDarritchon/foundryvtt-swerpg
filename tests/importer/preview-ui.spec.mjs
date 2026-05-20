@@ -147,9 +147,7 @@ describe('Preview UI - preload', () => {
   it('exposes category and weaponType filter options from preview data', () => {
     const app = new OggDudeDataImporter()
     app.previewData = {
-      weapon: [
-        { name: 'Sword', type: 'weapon', system: { category: 'melee', weaponType: 'melee' } },
-      ],
+      weapon: [{ name: 'Sword', type: 'weapon', system: { category: 'melee', weaponType: 'melee' } }],
     }
     app.previewFilters = { domain: 'all', text: '', category: 'all', weaponType: 'all' }
     app.pagination = { page: 1, size: 50 }

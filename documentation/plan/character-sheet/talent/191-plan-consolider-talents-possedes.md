@@ -31,19 +31,19 @@ fiche (US12).
 - Calcul du rang consolidé pour les talents ranked
 - Déduplication des talents non-ranked présents dans plusieurs arbres
 - Exposition, pour chaque talent consolidé, des données suivantes :
-    - `talentId`
-    - `name`
-    - `activation`
-    - `isRanked`
-    - `rank`
-    - `sources`
+  - `talentId`
+  - `name`
+  - `activation`
+  - `isRanked`
+  - `rank`
+  - `sources`
 - Réutilisation de la résolution spécialisation -> arbre déjà introduite par US4
 - Résolution temporaire des définitions génériques de talents à partir des `Item` `talent` existants du monde/compendium
 - Gestion des cas dégradés :
-    - arbre introuvable
-    - nœud introuvable
-    - définition de talent introuvable
-    - source incomplète
+  - arbre introuvable
+  - nœud introuvable
+  - définition de talent introuvable
+  - source incomplète
 - Tests Vitest couvrant les cas métier nominaux et dégradés
 
 ### Exclu de cette US / ce ticket
@@ -420,7 +420,7 @@ ADR-0012.
 ## 6. Fichiers modifiés
 
 | Fichier                                               | Action                  | Description du changement                                                                               |
-|-------------------------------------------------------|-------------------------|---------------------------------------------------------------------------------------------------------|
+| ----------------------------------------------------- | ----------------------- | ------------------------------------------------------------------------------------------------------- |
 | `module/lib/talent-node/owned-talent-summary.mjs`     | Création                | Module domaine pur de consolidation des talents possédés à partir de `talentPurchases`                  |
 | `tests/lib/talent-node/owned-talent-summary.test.mjs` | Création                | Couverture Vitest des règles de consolidation ranked / non-ranked et des cas dégradés                   |
 | `tests/utils/talents/talent.mjs`                      | Modification éventuelle | Ajout d'un helper de fixture pour des définitions `Item talent` si cela réduit la duplication des tests |
@@ -430,7 +430,7 @@ ADR-0012.
 ## 7. Risques
 
 | Risque                                                                             | Impact                                                                                | Mitigation                                                                                                 |
-|------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------|
+| ---------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
 | Pas de clé de jointure canonique entre `talentId` et les `Item` `talent` existants | La consolidation ne peut pas exposer `name`, `activation`, `isRanked` de façon fiable | Documenter explicitement la stratégie de lookup, la tester, et prévoir un mode dégradé `talent non résolu` |
 | Coexistence entre V1 `talentPurchases` et legacy `Item` talents embarqués          | L'UI actuelle et la vue consolidée peuvent diverger temporairement                    | Garder US7 strictement domaine et documenter que la fiche actuelle n'est pas encore consommateur canonique |
 | Arbres ou nœuds incomplets                                                         | Sources partielles, rang ou provenance incomplets                                     | Réutiliser le resolver US4, porter des états dégradés explicites par source                                |

@@ -103,12 +103,14 @@ Le besoin est de produire une base de pilotage et d'arbitrage, pas une configura
 **Question** : quel niveau d'autonomie cible faut-il valider ?
 
 **Options envisagées** :
+
 - Automatisation complète des workflows fréquents.
 - Orchestration assistée avec validation humaine sur les zones à risque.
 
 **Décision** : retenir l'**orchestration assistée** comme doctrine cible.
 
 **Justification** :
+
 - Le cadrage existant l'énonce explicitement.
 - Les activités à risque du projet incluent code, architecture, suppression, refactor et Git.
 - Cela évite de transformer trop tôt OpenCode en "agent tout-puissant".
@@ -119,12 +121,14 @@ Le besoin est de produire une base de pilotage et d'arbitrage, pas une configura
 **Question** : faut-il se limiter aux 5 activités citées dans l'issue ?
 
 **Options envisagées** :
+
 - Rester strictement sur les 5 activités listées.
 - Produire une matrice élargie cohérente avec le cadrage OpenCode.
 
 **Décision** : produire une matrice **élargie à 6-10 activités**.
 
 **Justification** :
+
 - Le document de cadrage recommande explicitement ce volume.
 - Les activités "tests", "revue", "diagnostic de bug" et "préparation de PR" sont structurellement récurrentes.
 - Une doctrine partielle serait trop faible pour guider les tickets suivants.
@@ -134,12 +138,14 @@ Le besoin est de produire une base de pilotage et d'arbitrage, pas une configura
 **Question** : faut-il modifier les skills actuels dans ce ticket ?
 
 **Options envisagées** :
+
 - Corriger immédiatement les skills incohérents.
 - Se limiter à un audit documentaire et préparer les tickets suivants.
 
 **Décision** : faire un **audit de cohérence sans modification**.
 
 **Justification** :
+
 - L'issue vise une doctrine, pas une implémentation.
 - Le cadrage insiste sur la séparation des responsabilités.
 - Cette approche évite un mélange entre conception et exécution.
@@ -149,12 +155,14 @@ Le besoin est de produire une base de pilotage et d'arbitrage, pas une configura
 **Question** : quelle place donner aux skills dans la doctrine ?
 
 **Options envisagées** :
+
 - Faire des skills le conteneur principal des workflows.
 - Réserver les skills au savoir projet et laisser les commandes porter les routines.
 
 **Décision** : confirmer que **les skills apportent le savoir projet**, tandis que **les commandes standardisent les routines**.
 
 **Justification** :
+
 - C'est la règle explicitée dans `documentation/cadrage/llm/cadrage-opencode-configuration.md`.
 - Cela évite des skills trop longs et trop directifs.
 - Cela permet de mieux relier risque, permission et type d'agent.
@@ -164,12 +172,14 @@ Le besoin est de produire une base de pilotage et d'arbitrage, pas une configura
 **Question** : comment détecter les incohérences les plus utiles ?
 
 **Options envisagées** :
+
 - Lire uniquement les noms des skills.
 - Comparer l'intention métier de l'issue avec la capacité réelle de chaque skill.
 
 **Décision** : auditer par **écart intention / capacité réelle**.
 
 **Justification** :
+
 - Le cas `my-pull-requests` montre qu'un nom ou une présence de skill ne suffit pas.
 - La doctrine doit porter sur des usages opérationnels réels, pas sur un inventaire superficiel.
 
@@ -180,6 +190,7 @@ Le besoin est de produire une base de pilotage et d'arbitrage, pas une configura
 ### Étape 1 — Consolider la doctrine cible à partir du cadrage existant
 
 **Quoi faire** :
+
 - Extraire du document de cadrage les principes réellement normatifs.
 - Reformuler une doctrine courte et stable :
   - orchestration assistée ;
@@ -189,16 +200,19 @@ Le besoin est de produire une base de pilotage et d'arbitrage, pas une configura
   - skills pour la connaissance durable.
 
 **Fichiers concernés** :
+
 - `documentation/cadrage/llm/cadrage-opencode-configuration.md`
 - futur plan dans `documentation/plan/llm/`
 
 **Risques spécifiques** :
+
 - Produire une doctrine redondante par rapport au cadrage.
 - Rester trop abstrait pour être exploitable.
 
 ### Étape 2 — Définir la liste prioritaire des activités fréquentes
 
 **Quoi faire** :
+
 - Établir une matrice priorisée de 6 à 10 usages.
 - Recommandation de base pour la matrice :
   - créer des issues depuis un cadrage ;
@@ -213,16 +227,19 @@ Le besoin est de produire une base de pilotage et d'arbitrage, pas une configura
   - lancer des vérifications mécaniques.
 
 **Fichiers concernés** :
+
 - futur plan
 - `documentation/cadrage/llm/cadrage-opencode-configuration.md`
 
 **Risques spécifiques** :
+
 - Liste trop large pour être utile.
 - Liste trop courte pour guider les prochains tickets.
 
 ### Étape 3 — Associer risque, autonomie et type d'agent à chaque activité
 
 **Quoi faire** :
+
 - Pour chaque activité, préciser :
   - niveau de risque : faible / moyen / élevé ;
   - autonomie : lecture seule / exécution assistée / exécution avec validation humaine ;
@@ -231,15 +248,18 @@ Le besoin est de produire une base de pilotage et d'arbitrage, pas une configura
   - nécessité ou non d'une validation explicite.
 
 **Fichiers concernés** :
+
 - futur plan
 
 **Risques spécifiques** :
+
 - Confondre activité métier et choix d'outil.
 - Sous-estimer le risque Git / architecture / code.
 
 ### Étape 4 — Auditer la cohérence des skills existants avec la doctrine
 
 **Quoi faire** :
+
 - Vérifier pour chaque skill :
   - intention annoncée ;
   - résultat attendu ;
@@ -252,6 +272,7 @@ Le besoin est de produire une base de pilotage et d'arbitrage, pas une configura
   - usage qui devrait être une commande plutôt qu'un skill.
 
 **Fichiers concernés** :
+
 - `.agents/skills/plan-depuis-issue/SKILL.md`
 - `.agents/skills/ecrire-plan-fichier/SKILL.md`
 - `.agents/skills/implementer-depuis-plan/SKILL.md`
@@ -259,12 +280,14 @@ Le besoin est de produire une base de pilotage et d'arbitrage, pas une configura
 - `.agents/skills/my-pull-requests/SKILL.md`
 
 **Risques spécifiques** :
+
 - Basculer vers une refonte de skills hors scope.
 - Juger un skill sur son nom plutôt que sur son contrat réel.
 
 ### Étape 5 — Formaliser les écarts et les suites recommandées
 
 **Quoi faire** :
+
 - Produire une section claire :
   - usages déjà couverts ;
   - usages partiellement couverts ;
@@ -273,15 +296,18 @@ Le besoin est de produire une base de pilotage et d'arbitrage, pas une configura
   - tickets d'orchestration à ouvrir ensuite.
 
 **Fichiers concernés** :
+
 - futur plan
 
 **Risques spécifiques** :
+
 - Recommandations trop vagues.
 - Absence de priorisation exploitable.
 
 ### Étape 6 — Définir un ordre de mise en oeuvre pour les tickets suivants
 
 **Quoi faire** :
+
 - Recommander un enchaînement logique :
   1. doctrine et cartographie ;
   2. alignement des commandes ;
@@ -291,9 +317,11 @@ Le besoin est de produire une base de pilotage et d'arbitrage, pas une configura
   6. mesure et ajustements.
 
 **Fichiers concernés** :
+
 - futur plan
 
 **Risques spécifiques** :
+
 - Démarrer par la technique avant la doctrine.
 - Créer une sur-orchestration trop tôt.
 
@@ -301,29 +329,29 @@ Le besoin est de produire une base de pilotage et d'arbitrage, pas une configura
 
 ## 6. Fichiers modifiés
 
-| Fichier | Action | Description du changement |
-|---|---|---|
-| `documentation/plan/llm/267-plan-doctrine-opencode-usages-frequents.md` | création | Plan canonique de l'issue |
-| `documentation/cadrage/llm/cadrage-opencode-configuration.md` | modification potentielle ultérieure | Alignement ou extraction éventuelle d'une synthèse doctrinale après validation |
-| `.agents/skills/plan-depuis-issue/SKILL.md` | audit uniquement dans ce ticket | Vérifier cohérence avec rôle de planification sans modification |
-| `.agents/skills/ecrire-plan-fichier/SKILL.md` | audit uniquement dans ce ticket | Vérifier séparation planification / matérialisation |
-| `.agents/skills/implementer-depuis-plan/SKILL.md` | audit uniquement dans ce ticket | Vérifier cohérence avec autonomie assistée |
-| `.agents/skills/to-issues/SKILL.md` | audit uniquement dans ce ticket | Vérifier cohérence avec découpage vertical des tickets |
-| `.agents/skills/my-pull-requests/SKILL.md` | audit uniquement dans ce ticket | Documenter l'écart avec l'usage cible "préparer/créer une PR" |
+| Fichier                                                                 | Action                              | Description du changement                                                      |
+| ----------------------------------------------------------------------- | ----------------------------------- | ------------------------------------------------------------------------------ |
+| `documentation/plan/llm/267-plan-doctrine-opencode-usages-frequents.md` | création                            | Plan canonique de l'issue                                                      |
+| `documentation/cadrage/llm/cadrage-opencode-configuration.md`           | modification potentielle ultérieure | Alignement ou extraction éventuelle d'une synthèse doctrinale après validation |
+| `.agents/skills/plan-depuis-issue/SKILL.md`                             | audit uniquement dans ce ticket     | Vérifier cohérence avec rôle de planification sans modification                |
+| `.agents/skills/ecrire-plan-fichier/SKILL.md`                           | audit uniquement dans ce ticket     | Vérifier séparation planification / matérialisation                            |
+| `.agents/skills/implementer-depuis-plan/SKILL.md`                       | audit uniquement dans ce ticket     | Vérifier cohérence avec autonomie assistée                                     |
+| `.agents/skills/to-issues/SKILL.md`                                     | audit uniquement dans ce ticket     | Vérifier cohérence avec découpage vertical des tickets                         |
+| `.agents/skills/my-pull-requests/SKILL.md`                              | audit uniquement dans ce ticket     | Documenter l'écart avec l'usage cible "préparer/créer une PR"                  |
 
 ---
 
 ## 7. Risques
 
-| Risque | Impact | Mitigation |
-|---|---|---|
-| La doctrine répète le cadrage existant sans valeur ajoutée | Document peu utile pour la suite | Produire une synthèse orientée décision et matrice d'usages |
-| La matrice des usages est trop large | Priorisation floue | Limiter à 6-10 usages réellement fréquents |
-| La matrice des usages est trop étroite | Doctrine insuffisante pour les prochains tickets | Inclure au minimum plan, issues, implémentation, tests, review, PR |
-| Confusion entre skill, commande, agent et plugin | Mauvais design des tickets suivants | Réserver à chaque notion un rôle explicite dans le plan |
-| Tentation de corriger les skills tout de suite | Dérive de scope | Limiter ce ticket à l'audit et aux recommandations |
-| Sous-estimation du risque des tâches Git et code | Automatisation excessive | Imposer validation humaine sur PR, code, architecture et opérations critiques |
-| Mauvais alignement entre besoin métier et outillage actuel | Doctrine théorique, peu actionnable | Documenter explicitement les écarts comme `my-pull-requests` vs création de PR |
+| Risque                                                     | Impact                                           | Mitigation                                                                     |
+| ---------------------------------------------------------- | ------------------------------------------------ | ------------------------------------------------------------------------------ |
+| La doctrine répète le cadrage existant sans valeur ajoutée | Document peu utile pour la suite                 | Produire une synthèse orientée décision et matrice d'usages                    |
+| La matrice des usages est trop large                       | Priorisation floue                               | Limiter à 6-10 usages réellement fréquents                                     |
+| La matrice des usages est trop étroite                     | Doctrine insuffisante pour les prochains tickets | Inclure au minimum plan, issues, implémentation, tests, review, PR             |
+| Confusion entre skill, commande, agent et plugin           | Mauvais design des tickets suivants              | Réserver à chaque notion un rôle explicite dans le plan                        |
+| Tentation de corriger les skills tout de suite             | Dérive de scope                                  | Limiter ce ticket à l'audit et aux recommandations                             |
+| Sous-estimation du risque des tâches Git et code           | Automatisation excessive                         | Imposer validation humaine sur PR, code, architecture et opérations critiques  |
+| Mauvais alignement entre besoin métier et outillage actuel | Doctrine théorique, peu actionnable              | Documenter explicitement les écarts comme `my-pull-requests` vs création de PR |
 
 ---
 

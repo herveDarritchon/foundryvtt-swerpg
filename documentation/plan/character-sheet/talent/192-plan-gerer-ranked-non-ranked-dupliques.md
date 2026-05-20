@@ -131,6 +131,7 @@ Justification :
 ### 4.6. La règle ranked / non-ranked est reflétée explicitement dans le contrat d'affichage
 
 **Décision** :
+
 - ranked : `rank = nombre d'achats consolidés` ;
 - non-ranked : une seule ligne, `rank = null`, plusieurs sources possibles.
 
@@ -159,10 +160,12 @@ Justification :
 **Quoi faire** : relire et compléter `owned-talent-summary` pour s'assurer que le contrat final couvre explicitement les règles US8.
 
 **Fichiers** :
+
 - `module/lib/talent-node/owned-talent-summary.mjs`
 - `tests/lib/talent-node/owned-talent-summary.test.mjs`
 
 **Risques spécifiques** :
+
 - considérer US8 comme déjà terminée alors que seule la couche domaine l'est partiellement ;
 - laisser des cas ambigus non documentés dans le contrat retourné.
 
@@ -171,9 +174,11 @@ Justification :
 **Quoi faire** : remplacer la construction actuelle basée sur `actor.items` par une transformation de la vue `buildOwnedTalentSummary()` vers les données attendues par le template.
 
 **Fichiers** :
+
 - `module/applications/sheets/character-sheet.mjs`
 
 **Risques spécifiques** :
+
 - dépendance trop forte aux embedded items legacy ;
 - résolution incomplète des définitions de talents si le référentiel n'est pas chargé.
 
@@ -182,9 +187,11 @@ Justification :
 **Quoi faire** : adapter `templates/sheets/actor/talents.hbs` pour afficher une entrée consolidée et ses sources, sans contrôles incohérents.
 
 **Fichiers** :
+
 - `templates/sheets/actor/talents.hbs`
 
 **Risques spécifiques** :
+
 - conserver des actions `edit` / `delete` devenues trompeuses ;
 - afficher les sources de façon illisible si plusieurs spécialisations existent.
 
@@ -193,10 +200,12 @@ Justification :
 **Quoi faire** : introduire ou réutiliser les clés i18n nécessaires pour `Active`, `Passive`, `Ranked`, `Sources`, états inconnus ou incomplets si affichés.
 
 **Fichiers** :
+
 - `lang/fr.json`
 - `lang/en.json`
 
 **Risques spécifiques** :
+
 - introduire des libellés hardcodés supplémentaires ;
 - divergence entre FR et EN.
 
@@ -205,10 +214,12 @@ Justification :
 **Quoi faire** : compléter les tests domaine et ajouter des tests ciblés sur l'adaptateur sheet pour vérifier l'absence de doublons visuels.
 
 **Fichiers** :
+
 - `tests/lib/talent-node/owned-talent-summary.test.mjs`
 - `tests/applications/sheets/character-sheet-talents.test.mjs`
 
 **Risques spécifiques** :
+
 - se limiter à des tests domaine alors que l'issue impose un effet visible dans l'UI ;
 - écrire des tests trop couplés à une structure HTML fragile.
 
@@ -216,27 +227,27 @@ Justification :
 
 ## 6. Fichiers modifiés
 
-| Fichier | Action | Description du changement |
-|---|---|---|
-| `module/lib/talent-node/owned-talent-summary.mjs` | modification | Verrouiller ou compléter le contrat métier de consolidation ranked / non-ranked |
-| `module/applications/sheets/character-sheet.mjs` | modification | Construire les données de l'onglet Talents depuis la vue consolidée V1 |
-| `templates/sheets/actor/talents.hbs` | modification | Afficher une ligne consolidée par talent avec sources et rang si applicable |
-| `lang/fr.json` | modification | Ajouter les libellés FR nécessaires à l'affichage consolidé |
-| `lang/en.json` | modification | Ajouter les libellés EN correspondants |
-| `tests/lib/talent-node/owned-talent-summary.test.mjs` | modification | Compléter les cas métiers ciblés par l'issue |
-| `tests/applications/sheets/character-sheet-talents.test.mjs` | création | Vérifier l'absence de duplication visuelle et la bonne projection de la vue consolidée |
+| Fichier                                                      | Action       | Description du changement                                                              |
+| ------------------------------------------------------------ | ------------ | -------------------------------------------------------------------------------------- |
+| `module/lib/talent-node/owned-talent-summary.mjs`            | modification | Verrouiller ou compléter le contrat métier de consolidation ranked / non-ranked        |
+| `module/applications/sheets/character-sheet.mjs`             | modification | Construire les données de l'onglet Talents depuis la vue consolidée V1                 |
+| `templates/sheets/actor/talents.hbs`                         | modification | Afficher une ligne consolidée par talent avec sources et rang si applicable            |
+| `lang/fr.json`                                               | modification | Ajouter les libellés FR nécessaires à l'affichage consolidé                            |
+| `lang/en.json`                                               | modification | Ajouter les libellés EN correspondants                                                 |
+| `tests/lib/talent-node/owned-talent-summary.test.mjs`        | modification | Compléter les cas métiers ciblés par l'issue                                           |
+| `tests/applications/sheets/character-sheet-talents.test.mjs` | création     | Vérifier l'absence de duplication visuelle et la bonne projection de la vue consolidée |
 
 ---
 
 ## 7. Risques
 
-| Risque | Impact | Mitigation |
-|---|---|---|
-| La fiche continue à lire `actor.items` dans un sous-chemin oublié | L'UI garde des doublons malgré la consolidation | Centraliser toute la préparation talents dans un seul adaptateur sheet |
-| Le référentiel de définitions talent n'est pas résolu en lecture | L'onglet affiche des talents partiellement vides | Prévoir un affichage dégradé explicite et des tests associés |
-| Une ligne consolidée garde des actions legacy | Suppression ou édition incohérente d'un talent multi-source | Retirer ou neutraliser les contrôles sur les lignes consolidées |
-| Les tests ne couvrent que le domaine | L'AC "aucune duplication visuelle" n'est pas réellement prouvée | Ajouter un test ciblé sur la préparation de données de la fiche |
-| Le changement empiète trop sur US12/US13 | Rework futur plus coûteux | Limiter cette US à un branchement minimal sans refonte graphique complète |
+| Risque                                                            | Impact                                                          | Mitigation                                                                |
+| ----------------------------------------------------------------- | --------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| La fiche continue à lire `actor.items` dans un sous-chemin oublié | L'UI garde des doublons malgré la consolidation                 | Centraliser toute la préparation talents dans un seul adaptateur sheet    |
+| Le référentiel de définitions talent n'est pas résolu en lecture  | L'onglet affiche des talents partiellement vides                | Prévoir un affichage dégradé explicite et des tests associés              |
+| Une ligne consolidée garde des actions legacy                     | Suppression ou édition incohérente d'un talent multi-source     | Retirer ou neutraliser les contrôles sur les lignes consolidées           |
+| Les tests ne couvrent que le domaine                              | L'AC "aucune duplication visuelle" n'est pas réellement prouvée | Ajouter un test ciblé sur la préparation de données de la fiche           |
+| Le changement empiète trop sur US12/US13                          | Rework futur plus coûteux                                       | Limiter cette US à un branchement minimal sans refonte graphique complète |
 
 ---
 

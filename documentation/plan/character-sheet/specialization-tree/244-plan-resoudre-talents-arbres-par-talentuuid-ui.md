@@ -83,6 +83,7 @@ Il faut verifier si les interactions (affichage d'un popup, achat, etc.) utilise
 **Decision** : faire evoluer `resolveTalentDetail()` pour qu'il accepte les informations du noeud (`talentUuid`, `talentId`), pas seulement une chaine.
 
 **Justification** :
+
 - conforme a ADR-0013 ;
 - evite de perdre l'information technique au point d'appel ;
 - permet d'exprimer clairement l'ordre de resolution nominal et fallback.
@@ -96,6 +97,7 @@ Il faut verifier si les interactions (affichage d'un popup, achat, etc.) utilise
 3. `Unknown talent` : si aucune resolution possible
 
 **Justification** :
+
 - conforme a l'issue et a ADR-0013 ;
 - garde la compatibilite transitoire avec les anciennes donnees ;
 - empeche de confondre cle metier et UUID Foundry.
@@ -105,6 +107,7 @@ Il faut verifier si les interactions (affichage d'un popup, achat, etc.) utilise
 **Decision** : le fallback legacy doit chercher un talent par cle metier stable (`system.id`), pas essayer de resoudre `talentId` comme un UUID.
 
 **Justification** :
+
 - c'est la cause directe du bug actuel ;
 - l'issue l'interdit explicitement ("sans devenir le chemin nominal de resolution").
 
@@ -113,6 +116,7 @@ Il faut verifier si les interactions (affichage d'un popup, achat, etc.) utilise
 **Decision** : construire, au sein du meme fichier applicatif, un petit index des talents resolubles par cle metier, en parcourant les items du monde et les index de compendiums.
 
 **Justification** :
+
 - changement minimal et localise ;
 - evite un refactor transverse premature ;
 - reprend le pattern deja utilise par l'import (#243) pour la resolution.
@@ -122,6 +126,7 @@ Il faut verifier si les interactions (affichage d'un popup, achat, etc.) utilise
 **Decision** : ne pas emettre de `logger.warn` par noeud lors du rendu si le fallback legacy est utilise. Un seul `logger.debug` global en debut de construction du contexte pour indiquer le nombre de noeud tombant en fallback.
 
 **Justification** :
+
 - le rendu peut etre frequent (scroll, resize, onglet) ;
 - un warning par noeud polluerait les logs without benefice actionnable ;
 - le besoin principal du ticket est l'affichage correct, pas le diagnostic importer.
@@ -139,9 +144,11 @@ Il faut verifier si les interactions (affichage d'un popup, achat, etc.) utilise
 - Retourner `{ name, isRanked }` ou `null`.
 
 **Fichiers**
+
 - `module/applications/specialization-tree-app.mjs`
 
 **Risques**
+
 - impacter la signature public exportee (`resolveTalentDetail`, `resolveTalentItem`) si on ne gere pas la retrocompatibilite.
 
 ---
@@ -156,9 +163,11 @@ Il faut verifier si les interactions (affichage d'un popup, achat, etc.) utilise
 - Si le fallback legacy echoue → retourner `Unknown talent`.
 
 **Fichiers**
+
 - `module/applications/specialization-tree-app.mjs`
 
 **Risques**
+
 - casser les tests existants si on change la signature ; mitigation : garder un overload ou adapter les appels.
 
 ---
@@ -171,9 +180,11 @@ Il faut verifier si les interactions (affichage d'un popup, achat, etc.) utilise
 - Continuer a produire les memes proprietes de rendu : `talentName`, `isRanked`, `talentId`.
 
 **Fichiers**
+
 - `module/applications/specialization-tree-app.mjs`
 
 **Risques**
+
 - regression discrete dans `buildSpecializationTreeContext()` si le contrat de sortie change (meme proprietes, valeurs corrigees, donc aucun risque).
 
 ---
@@ -186,9 +197,11 @@ Il faut verifier si les interactions (affichage d'un popup, achat, etc.) utilise
 - soit le reduire a un simple wrapper sur le resolver principal pour les tests.
 
 **Fichiers**
+
 - `module/applications/specialization-tree-app.mjs`
 
 **Risques**
+
 - garder deux logiques divergentes dans le meme fichier.
 
 ---
@@ -206,9 +219,11 @@ Ajouter les tests suivants dans `tests/applications/specialization-tree-app.test
 5. **Mise a jour des tests existants** de `resolveTalentDetail()` et `resolveTalentItem()` pour refleter le nouveau contrat.
 
 **Fichiers**
+
 - `tests/applications/specialization-tree-app.test.mjs`
 
 **Risques**
+
 - tests trop couples a l'implementation au lieu du comportement metier ;
 - mocks Foundry insuffisants pour simuler `game.items` et index compendium.
 
@@ -223,20 +238,22 @@ Ajouter les tests suivants dans `tests/applications/specialization-tree-app.test
 - Verifier que le rendu `Unknown talent` reste stable pour les vrais cas d'echec.
 
 **Fichiers a relire**
+
 - `module/applications/specialization-tree-app.mjs`
 - `tests/applications/specialization-tree-app.test.mjs`
 
 **Risques**
+
 - corriger la resolution mais casser un test annexe de rendu (par ex. tests de `renderConnections`, `variant`, `nodeState`).
 
 ---
 
 ## 6. Fichiers modifies
 
-| Fichier | Action | Description |
-|---|---|---|
-| `module/applications/specialization-tree-app.mjs` | modification | Faire resoudre les talents par `talentUuid` en priorite, avec fallback legacy par `talentId` |
-| `tests/applications/specialization-tree-app.test.mjs` | modification | Couvrir priorite `talentUuid`, fallback legacy et vrai cas `Unknown talent` |
+| Fichier                                               | Action       | Description                                                                                  |
+| ----------------------------------------------------- | ------------ | -------------------------------------------------------------------------------------------- |
+| `module/applications/specialization-tree-app.mjs`     | modification | Faire resoudre les talents par `talentUuid` en priorite, avec fallback legacy par `talentId` |
+| `tests/applications/specialization-tree-app.test.mjs` | modification | Couvrir priorite `talentUuid`, fallback legacy et vrai cas `Unknown talent`                  |
 
 Aucun autre fichier n'est necessaire pour ce ticket si on reste sur une correction minimale, locale a l'application.
 
@@ -244,14 +261,14 @@ Aucun autre fichier n'est necessaire pour ce ticket si on reste sur une correcti
 
 ## 7. Risques
 
-| Risque | Impact | Mitigation |
-|---|---|---|
-| L'UI continue d'utiliser `talentId` comme UUID dans un chemin residu | bug non entierement corrige | centraliser toute la resolution dans un seul helper |
-| Fallback legacy trop large ou ambigu | mauvais talent affiche | chercher par `system.id` normalise et documenter le caractere transitoire |
-| Regression sur les tests existants exportant l'ancienne signature | friction de maintenance | adapter les tests au nouveau contrat public |
-| Logs trop verbeux au rendu | pollution console | eviter les warnings par noeud, logger global en debug |
-| Couverture incomplete du cas compendium | bug latent hors monde | ajouter au moins un test cible si le fallback compendium est retenu |
-| Les evenements de clic sur noeud utilisent une resolution differente du rendu | incoherence UX | verifier le code d'interaction dans le meme fichier |
+| Risque                                                                        | Impact                      | Mitigation                                                                |
+| ----------------------------------------------------------------------------- | --------------------------- | ------------------------------------------------------------------------- |
+| L'UI continue d'utiliser `talentId` comme UUID dans un chemin residu          | bug non entierement corrige | centraliser toute la resolution dans un seul helper                       |
+| Fallback legacy trop large ou ambigu                                          | mauvais talent affiche      | chercher par `system.id` normalise et documenter le caractere transitoire |
+| Regression sur les tests existants exportant l'ancienne signature             | friction de maintenance     | adapter les tests au nouveau contrat public                               |
+| Logs trop verbeux au rendu                                                    | pollution console           | eviter les warnings par noeud, logger global en debug                     |
+| Couverture incomplete du cas compendium                                       | bug latent hors monde       | ajouter au moins un test cible si le fallback compendium est retenu       |
+| Les evenements de clic sur noeud utilisent une resolution differente du rendu | incoherence UX              | verifier le code d'interaction dans le meme fichier                       |
 
 ---
 

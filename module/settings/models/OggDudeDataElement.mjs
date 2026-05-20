@@ -348,15 +348,7 @@ class OggDudeDataElement {
    * @function
    * @name _storeItems
    */
-  static _storeItems = async (
-    items,
-    folderType,
-    elementType,
-    imageWorldPath,
-    imgSystemPath,
-    prefix,
-    importToCompendium = false,
-  ) => {
+  static _storeItems = async (items, folderType, elementType, imageWorldPath, imgSystemPath, prefix, importToCompendium = false) => {
     try {
       const storageTarget = await createOggDudeStorageTarget({
         mode: importToCompendium ? 'compendium' : 'world',
@@ -365,22 +357,14 @@ class OggDudeDataElement {
       })
 
       const mappedItems = await Promise.all(
-        items.map(async item => {
-          const key =
-            item.key != null && item.key !== ''
-              ? item.key
-              : item.name.toUpperCase()
+        items.map(async (item) => {
+          const key = item.key != null && item.key !== '' ? item.key : item.name.toUpperCase()
 
           logger.debug('[OggDudeDataElement] Item image to be returned by method _getItemImage', {
             key,
           })
 
-          const img = await OggDudeDataElement._getItemImage(
-            key,
-            imageWorldPath,
-            prefix,
-            imgSystemPath,
-          )
+          const img = await OggDudeDataElement._getItemImage(key, imageWorldPath, prefix, imgSystemPath)
 
           logger.debug('[OggDudeDataElement] Item image resolved by _getItemImage', {
             key,
@@ -416,7 +400,7 @@ class OggDudeDataElement {
       })
 
       if (elementType === 'talent') {
-        const talentsToUpdate = created.filter(doc => doc?.type === 'talent' && doc.system?.uuid !== doc.uuid)
+        const talentsToUpdate = created.filter((doc) => doc?.type === 'talent' && doc.system?.uuid !== doc.uuid)
         for (const talent of talentsToUpdate) {
           await talent.update({ 'system.uuid': talent.uuid })
         }

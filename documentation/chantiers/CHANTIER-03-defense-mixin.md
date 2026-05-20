@@ -1,23 +1,26 @@
 # Chantier 03 : Extraction du Defense Mixin
 
 ## Objectif
+
 Extraire les méthodes liées aux calculs de défense et résistances vers `defense.mixin.mjs`
 
 ## Méthodes à extraire (~50 lignes)
 
-| Méthode | Lignes (actor.mjs) | Description |
-|---------|-------------------|-------------|
-| `testDefense()` | 827-868 | Teste une défense contre un jet d'attaque |
-| `getResistance()` | 750-764 | Calcule la résistance d'une ressource |
+| Méthode           | Lignes (actor.mjs) | Description                               |
+| ----------------- | ------------------ | ----------------------------------------- |
+| `testDefense()`   | 827-868            | Teste une défense contre un jet d'attaque |
+| `getResistance()` | 750-764            | Calcule la résistance d'une ressource     |
 
 ## Dépendances des méthodes
 
 ### `testDefense(defenseType, roll)`
+
 - `this.system.defenses` - Getter des défenses (physique, dodge, parry, block)
 - `this.system.skills` - Getter des compétences (pour défense basée sur compétence)
 - **Externe** : `AttackRoll`, `AttackRoll.RESULT_TYPES`, `twist.random()`
 
 ### `getResistance(resource, damageType, restoration)`
+
 - `this.resistances` - Getter des résistances
 - `this.isBroken` - Getter du statut
 - `this.isWeakened` - Getter du statut
@@ -45,15 +48,15 @@ export const DefenseMixin = (Base) =>
     testDefense(defenseType, roll) {
       const d = this.system.defenses
       const s = this.system.skills
-      
+
       if (defenseType !== 'physical' && !(defenseType in d) && !(defenseType in s)) {
         throw new Error(`Invalid defense type "${defenseType}" passed to Actor#testDefense`)
       }
-      
+
       if (!(roll instanceof AttackRoll)) {
         throw new Error('You must pass an AttackRoll instance to Actor#testDefense')
       }
-      
+
       const results = AttackRoll.RESULT_TYPES
       let dc
 
@@ -64,15 +67,15 @@ export const DefenseMixin = (Base) =>
 
         const r = twist.random() * d.physical.total
         const dodge = d.dodge.total
-        
+
         if (r <= dodge) return results.DODGE
-        
+
         const parry = dodge + d.parry.total
         if (r <= parry) return results.PARRY
-        
+
         const block = dodge + d.block.total
         if (r <= block) return results.BLOCK
-        
+
         return roll.isCriticalFailure ? results.ARMOR : results.GLANCE
       }
 
@@ -82,7 +85,7 @@ export const DefenseMixin = (Base) =>
       } else {
         dc = d[defenseType].total
       }
-      
+
       if (roll.total > dc) return AttackRoll.RESULT_TYPES.HIT
       else return AttackRoll.RESULT_TYPES.RESIST
     }
@@ -96,9 +99,9 @@ export const DefenseMixin = (Base) =>
      */
     getResistance(resource, damageType, restoration) {
       if (restoration) return 0
-      
+
       let r = this.resistances[damageType]?.total ?? 0
-      
+
       switch (resource) {
         case 'health':
           if (this.isBroken) r -= 2
@@ -109,7 +112,7 @@ export const DefenseMixin = (Base) =>
           if (this.statuses.has('resolute')) r = Infinity
           break
       }
-      
+
       return r
     }
   }
@@ -126,16 +129,19 @@ export const DefenseMixin = (Base) =>
 ## Points d'attention
 
 ⚠️ **`twist.random()`**
+
 - Vérifier si `twist` est une variable globale ou s'il faut l'importer
 - Si import nécessaire, ajouter en haut du fichier
 
 ⚠️ **Getters sur `this`**
+
 - `this.system.defenses` - Doit être accessible via le mixin (hérité de Base/Actor)
 - `this.resistances` - Idem
 - `this.isBroken`, `this.isWeakened` - Idem
 - `this.statuses` - Idem
 
 ⚠️ **`AttackRoll.RESULT_TYPES`**
+
 - Utilisé dans `testDefense()` pour retourner le résultat
 - Vérifier que l'import d'AttackRoll fonctionne correctement
 

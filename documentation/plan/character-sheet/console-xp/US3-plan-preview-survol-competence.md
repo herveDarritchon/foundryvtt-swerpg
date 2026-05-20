@@ -21,11 +21,13 @@ Aucun calcul complexe. Aucun summary texte détaillé. Juste un mapping direct d
 ### 2.1. Ce qui existe DÉJÀ et fonctionne
 
 **Listeners et handlers sont connectés** :
+
 - `_onRender` attache `mouseover`/`mouseout`/`focusin`/`focusout` (lignes 782-785)
 - `#onHoverAction` et `#onHoverOutAction` délèguent vers `skillPreview`
 - `#handleSkillPreviewEnter` et `#handleSkillPreviewLeave` existent
 
 **Méthodes de preview existent** :
+
 - `_buildSkillPreview()` — construit l'objet preview (actuellement trop complexe)
 - `_buildIdlePreview()` — construit l'état neutre
 - `#findSkillInContext()` — retrouve une skill par son `id`
@@ -35,12 +37,14 @@ Aucun calcul complexe. Aucun summary texte détaillé. Juste un mapping direct d
 
 **Données sont DÉJÀ enrichies** dans `#prepareSkills()` :
 Chaque skill reçoit de `getSkillPurchaseState()` (source de vérité dans `utils/skill-costs.mjs`) :
+
 - `purchaseReason`: `'FREE_RANK_AVAILABLE' | 'AFFORDABLE' | 'INSUFFICIENT_XP' | 'MAX_RANK'`
 - `nextCost`: coût du prochain rang (0 si gratuit, nombre, ou null si max)
 
 ### 2.2. Ce qui est dupliqué/buggé et à supprimer
 
 **Code dupliqué/buggé dans `character-sheet.mjs`** :
+
 1. `#getSkillRankCost()` (ligne 247) — **BUG** :
    - Calcule coût = `nextRank * 5` pour TOUTES les compétences
    - MAIS compétences **non-carrière** coûtent `(nextRank * 5) + 5`
@@ -58,6 +62,7 @@ Chaque skill reçoit de `getSkillPurchaseState()` (source de vérité dans `util
 ### 2.3. Ce qui est trop complexe et à simplifier
 
 **`_buildSkillPreview()` (lignes 873-944)** — actuellement construit :
+
 - `summaryText` complexe avec :
   - Nom de la skill
   - Rang actuel → prochain rang
@@ -67,6 +72,7 @@ Chaque skill reçoit de `getSkillPurchaseState()` (source de vérité dans `util
   - Pool de dés avant/après
 
 **Ce qui doit être simplifié** :
+
 - Retirer TOUTE la logique de `summaryText`
 - Ne garder que le **mapping simple**
 
@@ -74,13 +80,13 @@ Chaque skill reçoit de `getSkillPurchaseState()` (source de vérité dans `util
 
 ## 3. Mapping simple (Preview = Statut + Coût)
 
-| `purchaseReason` | `statusKey` | `consoleCssClass` | `selectedCost` |
-|------------------|-------------|-------------------|----------------|
-| `FREE_RANK_AVAILABLE` | `SKILL.XP_CONSOLE.STATUS.FREE_RANK` | `is-free` | `0 XP` |
-| `AFFORDABLE` | `SKILL.XP_CONSOLE.STATUS.AFFORDABLE` | `is-affordable` | `${nextCost} XP` |
-| `INSUFFICIENT_XP` | `SKILL.XP_CONSOLE.STATUS.INSUFFICIENT_XP` | `is-locked` | `${nextCost} XP` |
-| `MAX_RANK` | `SKILL.XP_CONSOLE.STATUS.MAX_RANK` | `is-error` | `—` |
-| (idle) | `SKILL.XP_CONSOLE.STATUS.IDLE` | `''` | `—` |
+| `purchaseReason`      | `statusKey`                               | `consoleCssClass` | `selectedCost`   |
+| --------------------- | ----------------------------------------- | ----------------- | ---------------- |
+| `FREE_RANK_AVAILABLE` | `SKILL.XP_CONSOLE.STATUS.FREE_RANK`       | `is-free`         | `0 XP`           |
+| `AFFORDABLE`          | `SKILL.XP_CONSOLE.STATUS.AFFORDABLE`      | `is-affordable`   | `${nextCost} XP` |
+| `INSUFFICIENT_XP`     | `SKILL.XP_CONSOLE.STATUS.INSUFFICIENT_XP` | `is-locked`       | `${nextCost} XP` |
+| `MAX_RANK`            | `SKILL.XP_CONSOLE.STATUS.MAX_RANK`        | `is-error`        | `—`              |
+| (idle)                | `SKILL.XP_CONSOLE.STATUS.IDLE`            | `''`              | `—`              |
 
 ---
 
@@ -113,6 +119,7 @@ Chaque skill reçoit de `getSkillPurchaseState()` (source de vérité dans `util
 **Approche** : Mapping direct, pas de calcul complexe.
 
 **Code simplifié** :
+
 ```js
 /**
  * Mapping purchaseReason → statut console
@@ -165,6 +172,7 @@ static _buildSkillPreview(skill, _progression) {
 ```
 
 **À retirer de l'ancienne implémentation** :
+
 - Toute la logique de `summaryText`
 - Les références à `dicePreview`, `dicePreviewAfter`, `freeRank`
 - Les références à `#getSkillRankCost()` (sera supprimé)
@@ -177,6 +185,7 @@ static _buildSkillPreview(skill, _progression) {
 **Fichier** : `module/applications/sheets/character-sheet.mjs`
 
 **Action** :
+
 1. Vérifier si `_formatDicePreview()` est utilisé ailleurs que dans l'ancienne implémentation de `_buildSkillPreview()`
 2. Si **plus utilisé** : le supprimer
 3. Si **utilisé ailleurs** : le garder tel quel
@@ -186,6 +195,7 @@ static _buildSkillPreview(skill, _progression) {
 **Fichier** : `module/applications/sheets/character-sheet.mjs`
 
 **Action** : Vérifier que `_buildIdlePreview()` retourne bien :
+
 ```js
 {
   statusKey: 'SKILL.XP_CONSOLE.STATUS.IDLE',
@@ -200,14 +210,17 @@ static _buildSkillPreview(skill, _progression) {
 **Fichier** : `tests/applications/sheets/character-sheet-skills.test.mjs`
 
 **Tests existants pour `_buildSkillPreview()`** (lignes 648-744) :
+
 - Vérifient `statusKey`, `consoleCssClass`, `selectedCost` ✅
 - Vérifient aussi `summaryText` ❌ (à retirer)
 
 **Modifications nécessaires** :
+
 1. Retirer les assertions sur `summaryText`
 2. Garder les assertions sur `statusKey`, `consoleCssClass`, `selectedCost`
 
 **Exemple de test simplifié** :
+
 ```js
 it('returns FREE_RANK_AVAILABLE state', () => {
   const skill = {
@@ -225,6 +238,7 @@ it('returns FREE_RANK_AVAILABLE state', () => {
 ```
 
 **Tests de `_formatDicePreview()`** (lignes 615-636) :
+
 - Si `_formatDicePreview()` est supprimé : supprimer ces tests
 - Si `_formatDicePreview()` est gardé : garder ces tests
 
@@ -233,6 +247,7 @@ it('returns FREE_RANK_AVAILABLE state', () => {
 ## 5. Architecture après simplification
 
 ### Flux de données
+
 ```
 1. #prepareSkills()
    ↓ appelle getSkillPurchaseState() (source de vérité)
@@ -258,6 +273,7 @@ it('returns FREE_RANK_AVAILABLE state', () => {
 ```
 
 ### Points clés
+
 - **Source de vérité unique** : `utils/skill-costs.mjs#getSkillPurchaseState()`
 - **Pas de duplication** : toutes les données sont enrichies une seule fois dans `#prepareSkills()`
 - **Preview = mapping simple** : pas de logique métier dans la preview
@@ -267,12 +283,12 @@ it('returns FREE_RANK_AVAILABLE state', () => {
 
 ## 6. Fichiers modifiés
 
-| Fichier | Modification |
-|---------|--------------|
-| `documentation/spec/character-sheet/spec-console-transaction-xp.md` | Mise à jour §9 — Prévisualisation au survol (version simplifiée) |
-| `documentation/plan/character-sheet/console-xp/US3-plan-preview-survol-competence.md` | Réécriture complète — Approche simplifiée |
-| `module/applications/sheets/character-sheet.mjs` | Suppression code dupliqué/buggé + simplification `_buildSkillPreview()` |
-| `tests/applications/sheets/character-sheet-skills.test.mjs` | Mise à jour tests — retrait assertions sur `summaryText` |
+| Fichier                                                                               | Modification                                                            |
+| ------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| `documentation/spec/character-sheet/spec-console-transaction-xp.md`                   | Mise à jour §9 — Prévisualisation au survol (version simplifiée)        |
+| `documentation/plan/character-sheet/console-xp/US3-plan-preview-survol-competence.md` | Réécriture complète — Approche simplifiée                               |
+| `module/applications/sheets/character-sheet.mjs`                                      | Suppression code dupliqué/buggé + simplification `_buildSkillPreview()` |
+| `tests/applications/sheets/character-sheet-skills.test.mjs`                           | Mise à jour tests — retrait assertions sur `summaryText`                |
 
 ---
 
@@ -326,18 +342,19 @@ npx vitest run tests/applications/sheets/character-sheet-skills.test.mjs
 
 ## 9. Risques et mitigations
 
-| Risque | Impact | Mitigation |
-|--------|--------|------------|
-| Du code utilise encore les méthodes supprimées | Erreur JS | Vérifier les références avant suppression |
-| `#findSkillInContext()` est encore utile | Ne pas le supprimer | Ce n'est pas dans la liste des suppressions — il sert à retrouver la skill par son id dans le contexte |
-| Tests échouent après simplification | CI casse | Mettre à jour les tests en même temps que le code |
-| `_formatDicePreview()` est utilisé ailleurs | Erreur après suppression | Vérifier les références avant suppression |
+| Risque                                         | Impact                   | Mitigation                                                                                             |
+| ---------------------------------------------- | ------------------------ | ------------------------------------------------------------------------------------------------------ |
+| Du code utilise encore les méthodes supprimées | Erreur JS                | Vérifier les références avant suppression                                                              |
+| `#findSkillInContext()` est encore utile       | Ne pas le supprimer      | Ce n'est pas dans la liste des suppressions — il sert à retrouver la skill par son id dans le contexte |
+| Tests échouent après simplification            | CI casse                 | Mettre à jour les tests en même temps que le code                                                      |
+| `_formatDicePreview()` est utilisé ailleurs    | Erreur après suppression | Vérifier les références avant suppression                                                              |
 
 ---
 
 ## 10. Résultat attendu
 
 Après implémentation :
+
 - ✅ Plus de code dupliqué
 - ✅ Plus de bug sur le coût des compétences non-carrière
 - ✅ Preview = mapping simple de `purchaseReason` et `nextCost`

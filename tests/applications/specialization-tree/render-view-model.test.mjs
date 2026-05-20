@@ -11,9 +11,7 @@ function mockTree(overrides = {}) {
         { nodeId: 'n1', talentId: 'talent-parry', cost: 5, row: 1, column: 1 },
         { nodeId: 'n2', talentId: 'talent-grit', cost: 10, row: 1, column: 2 },
       ],
-      connections: [
-        { from: 'n1', to: 'n2', type: 'straight' },
-      ],
+      connections: [{ from: 'n1', to: 'n2', type: 'straight' }],
     },
     ...overrides,
   }
@@ -131,11 +129,7 @@ describe('buildRenderViewModel', () => {
 
   it('skips connections with missing from or to fields', () => {
     const tree = mockTree()
-    tree.system.connections.push(
-      { from: 'n1', type: 'straight' },
-      { to: 'n2', type: 'straight' },
-      {},
-    )
+    tree.system.connections.push({ from: 'n1', type: 'straight' }, { to: 'n2', type: 'straight' }, {})
     const result = buildRenderViewModel(tree, mockTalentLookup)
 
     expect(result.connections).toHaveLength(1)
@@ -151,9 +145,7 @@ describe('buildRenderViewModel', () => {
 
   it('preserves straight and angled connection types', () => {
     const tree = mockTree()
-    tree.system.connections = [
-      { from: 'n1', to: 'n2', type: 'straight' },
-    ]
+    tree.system.connections = [{ from: 'n1', to: 'n2', type: 'straight' }]
     let result = buildRenderViewModel(tree, mockTalentLookup)
     expect(result.connections[0].type).toBe('straight')
 

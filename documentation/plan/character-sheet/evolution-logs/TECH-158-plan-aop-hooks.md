@@ -68,6 +68,7 @@ Il n'y a **aucune** structure de log, d'historique ou de trace dans le codebase.
 ### Aucun hook `updateActor` / `preUpdateActor` enregistré
 
 Le fichier `swerpg.mjs` enregistre des hooks pour le chat, le combat, le canvas, mais **aucun** pour les mises à jour d'acteur. Le seul hook lié aux documents est :
+
 - `preDeleteChatMessage` (ligne 357)
 - `createItem` n'est pas utilisé
 - `updateItem` existe en dev-only (ligne 512)
@@ -75,6 +76,7 @@ Le fichier `swerpg.mjs` enregistre des hooks pour le chat, le combat, le canvas,
 ### `_onUpdate` déjà surchargé dans `SwerpgActor`
 
 `actor.mjs:574` — `_onUpdate(data, options, userId)` est déjà override pour :
+
 - Affichage du scrolling de statut
 - Mise à jour de la taille du token
 - Mise à jour du flanking
@@ -83,6 +85,7 @@ Le fichier `swerpg.mjs` enregistre des hooks pour le chat, le combat, le canvas,
 ### ADR-0011 déjà accepté
 
 L'ADR `adr-0011-stockage-journal-evolution-personnage-flags.md` valide le stockage dans `actor.flags.swerpg.logs`. Règles clés :
+
 - Le log est une donnée **secondaire**, pas une source de vérité
 - Stockage dans les flags pour éviter migration du data model
 - Pas de recalcul automatique de l'état du personnage à partir du log
@@ -183,6 +186,7 @@ function composeEntries(oldState, changes, actor, userId) {
 **Problème** : Comment organiser les exports du module ?
 
 **Décision** :
+
 - Fichier : `module/utils/audit-log.mjs`
 - Fonction principale : `registerAuditLogHooks()` — câble tout en interne
 - Handlers exportés individuellement pour les tests :
@@ -238,6 +242,7 @@ module/utils/audit-log.mjs
 #### Détail des handlers
 
 **onPreUpdateActor :**
+
 ```js
 export function onPreUpdateActor(actor, changes, options, userId) {
   if (!isCharacterActor(actor)) return
@@ -257,6 +262,7 @@ export function onPreUpdateActor(actor, changes, options, userId) {
 ```
 
 **onUpdateActor :**
+
 ```js
 export function onUpdateActor(actor, changes, options, userId) {
   if (!isCharacterActor(actor)) return
@@ -275,6 +281,7 @@ export function onUpdateActor(actor, changes, options, userId) {
 ```
 
 **onCreateItemAction :**
+
 ```js
 export function onCreateItemAction(item, data, options, userId) {
   if (item.parent?.type !== 'character') return
@@ -385,65 +392,65 @@ Fichier : `tests/utils/audit-log.test.mjs`
 
 #### Tests unitaires
 
-| # | Test | Description | Vérification |
-|---|------|-------------|-------------|
-| 1 | `snapshotOldState ne capture que les chemins modifiés` | changes = `{ system: { skills: { stealth: {} } } }` | `oldState` a `skills.stealth` mais pas `progression` |
-| 2 | `snapshotOldState retourne objet vide si changes vides` | changes = `{}` | `oldState = {}` |
-| 3 | `snapshotOldState gère les chemins imbriqués` | changes = `{ system: { skills: { stealth: { rank: { trained: 3 } } } } }` | `oldState.skills.stealth.rank` est l'objet complet |
-| 4 | `isOnlyAuditChange retourne true` | changes = `{ flags: { swerpg: { logs: [...] } } }` | `true` |
-| 5 | `isOnlyAuditChange retourne false si system modifié` | changes = `{ system: { skills: {} } }` | `false` |
-| 6 | `isOnlyAuditChange retourne false si mixte` | changes = `{ flags: { swerpg: { logs: [] } }, system: { skills: {} } }` | `false` |
-| 7 | `isOnlyAuditChange retourne false si changes vide` | changes = `{}` | `false` |
-| 8 | `pruneExpiredPending supprime les entrées expirées` | 2 expired + 3 valides | size = 3 |
-| 9 | `evictOldestIfNeeded ne fait rien si < MAX` | size = 30, MAX = 50 | size inchangé |
-| 10 | `evictOldestIfNeeded évince les plus anciennes` | size = 55, MAX = 50 | size = 50, les 5 plus anciennes supprimées |
+| #   | Test                                                    | Description                                                               | Vérification                                         |
+| --- | ------------------------------------------------------- | ------------------------------------------------------------------------- | ---------------------------------------------------- |
+| 1   | `snapshotOldState ne capture que les chemins modifiés`  | changes = `{ system: { skills: { stealth: {} } } }`                       | `oldState` a `skills.stealth` mais pas `progression` |
+| 2   | `snapshotOldState retourne objet vide si changes vides` | changes = `{}`                                                            | `oldState = {}`                                      |
+| 3   | `snapshotOldState gère les chemins imbriqués`           | changes = `{ system: { skills: { stealth: { rank: { trained: 3 } } } } }` | `oldState.skills.stealth.rank` est l'objet complet   |
+| 4   | `isOnlyAuditChange retourne true`                       | changes = `{ flags: { swerpg: { logs: [...] } } }`                        | `true`                                               |
+| 5   | `isOnlyAuditChange retourne false si system modifié`    | changes = `{ system: { skills: {} } }`                                    | `false`                                              |
+| 6   | `isOnlyAuditChange retourne false si mixte`             | changes = `{ flags: { swerpg: { logs: [] } }, system: { skills: {} } }`   | `false`                                              |
+| 7   | `isOnlyAuditChange retourne false si changes vide`      | changes = `{}`                                                            | `false`                                              |
+| 8   | `pruneExpiredPending supprime les entrées expirées`     | 2 expired + 3 valides                                                     | size = 3                                             |
+| 9   | `evictOldestIfNeeded ne fait rien si < MAX`             | size = 30, MAX = 50                                                       | size inchangé                                        |
+| 10  | `evictOldestIfNeeded évince les plus anciennes`         | size = 55, MAX = 50                                                       | size = 50, les 5 plus anciennes supprimées           |
 
 #### Tests d'intégration
 
-| # | Test | Description |
-|---|------|-------------|
-| 11 | `onPreUpdateActor ignore non-character` | actor.type = "adversary" → `pendingOldStates` non modifié |
-| 12 | `onPreUpdateActor ignore isOnlyAuditChange` | changes = `{ flags: { swerpg: { logs: [] } } }` → pas de capture |
-| 13 | `onPreUpdateActor stocke dans pendingOldStates` | Character update → Map a l'entrée |
-| 14 | `onUpdateActor consomme pendingOldStates` | preUpdate + update → Map.get null après |
-| 15 | `onUpdateActor ignore TTL expiré` | pending.timestamp > 30s → `writeLogEntry` non appelé |
-| 16 | `onUpdateActor ignore si composeEntries vide` | composeEntries retourne [] → `writeLogEntry` non appelé |
-| 17 | `onUpdateActor ignore si pas de pending` | update sans preUpdate → return silencieux |
-| 18 | `onCreateItemAction ignore non-talent` | item.type = "weapon", parent character → pas d'appel |
-| 19 | `onCreateItemAction ignore non-character` | item.type = "talent", parent adversary → pas d'appel |
+| #   | Test                                            | Description                                                      |
+| --- | ----------------------------------------------- | ---------------------------------------------------------------- |
+| 11  | `onPreUpdateActor ignore non-character`         | actor.type = "adversary" → `pendingOldStates` non modifié        |
+| 12  | `onPreUpdateActor ignore isOnlyAuditChange`     | changes = `{ flags: { swerpg: { logs: [] } } }` → pas de capture |
+| 13  | `onPreUpdateActor stocke dans pendingOldStates` | Character update → Map a l'entrée                                |
+| 14  | `onUpdateActor consomme pendingOldStates`       | preUpdate + update → Map.get null après                          |
+| 15  | `onUpdateActor ignore TTL expiré`               | pending.timestamp > 30s → `writeLogEntry` non appelé             |
+| 16  | `onUpdateActor ignore si composeEntries vide`   | composeEntries retourne [] → `writeLogEntry` non appelé          |
+| 17  | `onUpdateActor ignore si pas de pending`        | update sans preUpdate → return silencieux                        |
+| 18  | `onCreateItemAction ignore non-talent`          | item.type = "weapon", parent character → pas d'appel             |
+| 19  | `onCreateItemAction ignore non-character`       | item.type = "talent", parent adversary → pas d'appel             |
 
 #### Tests de résilience
 
-| # | Test | Description |
-|---|------|-------------|
-| 20 | `writeLogEntry ne throw pas si update fail` | actor.update reject → `logger.error` appelé, pas d'exception |
-| 21 | `writeLogEntry appelle ui.notifications.warn sur erreur` | actor.update reject → `ui.notifications.warn` appelé |
-| 22 | `writeLogEntry ajoute une entrée à un tableau vide` | flags.swerpg.logs = [] → entry ajoutée |
-| 23 | `writeLogEntry ajoute une entrée à des logs existants` | 3 entries existantes → 4 après |
+| #   | Test                                                     | Description                                                  |
+| --- | -------------------------------------------------------- | ------------------------------------------------------------ |
+| 20  | `writeLogEntry ne throw pas si update fail`              | actor.update reject → `logger.error` appelé, pas d'exception |
+| 21  | `writeLogEntry appelle ui.notifications.warn sur erreur` | actor.update reject → `ui.notifications.warn` appelé         |
+| 22  | `writeLogEntry ajoute une entrée à un tableau vide`      | flags.swerpg.logs = [] → entry ajoutée                       |
+| 23  | `writeLogEntry ajoute une entrée à des logs existants`   | 3 entries existantes → 4 après                               |
 
 ---
 
 ## 6. Fichiers modifiés
 
-| Fichier | Action | Description |
-|---------|--------|-------------|
-| `module/utils/audit-log.mjs` | **Création** | Module AOP complet : handlers, gardes, anti-fuite, placeholder composeEntries, writeLogEntry fire-and-forget |
-| `swerpg.mjs` | **Modification** | Import de `registerAuditLogHooks` + appel dans `Hooks.once('setup', ...)` |
-| `lang/en.json` | **Modification** | Ajout `SKILL.AUDIT.WRITE_FAILED` |
-| `lang/fr.json` | **Modification** | Ajout `SKILL.AUDIT.WRITE_FAILED` |
-| `tests/utils/audit-log.test.mjs` | **Création** | 23 tests Vitest |
+| Fichier                          | Action           | Description                                                                                                  |
+| -------------------------------- | ---------------- | ------------------------------------------------------------------------------------------------------------ |
+| `module/utils/audit-log.mjs`     | **Création**     | Module AOP complet : handlers, gardes, anti-fuite, placeholder composeEntries, writeLogEntry fire-and-forget |
+| `swerpg.mjs`                     | **Modification** | Import de `registerAuditLogHooks` + appel dans `Hooks.once('setup', ...)`                                    |
+| `lang/en.json`                   | **Modification** | Ajout `SKILL.AUDIT.WRITE_FAILED`                                                                             |
+| `lang/fr.json`                   | **Modification** | Ajout `SKILL.AUDIT.WRITE_FAILED`                                                                             |
+| `tests/utils/audit-log.test.mjs` | **Création**     | 23 tests Vitest                                                                                              |
 
 ---
 
 ## 7. Risques
 
-| Risque | Impact | Mitigation |
-|--------|--------|------------|
-| **Boucle infinie** si `writeLogEntry` déclenche un nouveau `preUpdateActor` | Crash navigateur, freeze | `isOnlyAuditChange` guard en tête des deux hooks (testé #4-7) |
-| **Fuite mémoire** si preUpdate sans update (crash DB, timeout, navigation) | Map qui gonfle | TTL 30s + MAX_PENDING 50 + pruneExpiredPending + evictOldestIfNeeded (testé #8-10) |
-| **Perte d'entrée** si `onUpdateActor` appelé sans `preUpdateActor` préalable | Entrée non enregistrée | Acceptable : le log est secondaire. `onUpdateActor` retourne silencieusement (testé #17) |
-| **Race condition** si deux updates simultanés sur le même actor (ex: GM + joueur) | Écrasement ou perte old state | `pendingOldStates.set` remplace l'ancienne entrée. Cas rare, sans gravité pour un log secondaire |
-| **Le placeholder composeEntries retourne []** | Aucun log écrit tant que #159 n'est pas implémenté | Comportement attendu et documenté. #159 aura un test qui vérifie que composeEntries est appelé |
+| Risque                                                                            | Impact                                             | Mitigation                                                                                       |
+| --------------------------------------------------------------------------------- | -------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| **Boucle infinie** si `writeLogEntry` déclenche un nouveau `preUpdateActor`       | Crash navigateur, freeze                           | `isOnlyAuditChange` guard en tête des deux hooks (testé #4-7)                                    |
+| **Fuite mémoire** si preUpdate sans update (crash DB, timeout, navigation)        | Map qui gonfle                                     | TTL 30s + MAX_PENDING 50 + pruneExpiredPending + evictOldestIfNeeded (testé #8-10)               |
+| **Perte d'entrée** si `onUpdateActor` appelé sans `preUpdateActor` préalable      | Entrée non enregistrée                             | Acceptable : le log est secondaire. `onUpdateActor` retourne silencieusement (testé #17)         |
+| **Race condition** si deux updates simultanés sur le même actor (ex: GM + joueur) | Écrasement ou perte old state                      | `pendingOldStates.set` remplace l'ancienne entrée. Cas rare, sans gravité pour un log secondaire |
+| **Le placeholder composeEntries retourne []**                                     | Aucun log écrit tant que #159 n'est pas implémenté | Comportement attendu et documenté. #159 aura un test qui vérifie que composeEntries est appelé   |
 
 ---
 

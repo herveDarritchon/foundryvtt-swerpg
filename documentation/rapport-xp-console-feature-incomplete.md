@@ -16,15 +16,18 @@ D'après le plan détaillé dans `documentation/plan/feature-refactor-skill-tabs
 ## Ce qui est implémenté (le squelette)
 
 ### Template (`templates/sheets/actor/skills.hbs`)
+
 - Structure HTML complète de la console : header, stats (Available, Spent, Career Free, Specialty Free, Selected Cost), zone de sélection
 - Données statiques affichées : `progression.experience.available`, `progression.experience.total`, `progression.freeSkillRanks.career.available`, `progression.freeSkillRanks.specialization.available`
 - Section entourée d'un `{{#if incomplete.skills}}` qui est **toujours true** (hardcodé dans `character-sheet.mjs:130`)
 
 ### CSS (`styles/actor.less:1854-1936`)
+
 - Styles complets pour `.xp-console` et ses sous-éléments
 - Classes d'état définies : `is-free`, `is-affordable`, `is-locked`, `is-error`
 
 ### Data enrichment (`character-sheet.mjs:#prepareSkills`)
+
 - Chaque compétence reçoit : `nextRank`, `nextCost`, `canPurchase`, `isFreePurchase`, `purchaseReason`, `dicePreview`
 - Groupement par `skill.type.id` (valeurs : `exp`, `kno`, `soc`)
 - Données exposées dans les `data-*` attributes du partial `character-skill.hbs`
@@ -32,6 +35,7 @@ D'après le plan détaillé dans `documentation/plan/feature-refactor-skill-tabs
 ## Ce qui manque (le moteur)
 
 ### 1. Aucun handler JavaScript pour le survol
+
 - `character-skill.hbs:1` : l'attribut `data-action` est **déclaré deux fois** :
   ```html
   data-action="skillHover" data-action="skillLeave"
@@ -41,21 +45,25 @@ D'après le plan détaillé dans `documentation/plan/feature-refactor-skill-tabs
 - Aucun écouteur d'événement `mouseenter`/`mouseleave` n'est branché nulle part.
 
 ### 2. Console toujours en état "idle"
+
 - Le `data-xp-console-status` est figé à « Awaiting selection »
 - Le `data-selected-skill-cost` est toujours « — »
 - Le `data-selected-skill-summary` montre toujours « Select a skill to preview purchase cost. »
 - Les classes CSS `is-idle`, `is-affordable`, `is-free`, `is-locked`, `is-error` ne sont **jamais appliquées dynamiquement**
 
 ### 3. Pas d'internationalisation
+
 - Tous les libellés de la console sont en anglais **hardcodés** (pas de `{{localize}}`)
 - Aucune clé i18n correspondante dans `lang/en.json` ou `lang/fr.json`
 
 ### 4. Bug potentiel : nom des catégories
+
 - Le template `skills.hbs` référence `skills.general`, `skills.combat`, `skills.knowledge`
 - `#prepareSkills()` groupe par `skill.type.id` qui donne `exp`, `kno`, `soc`
 - Les skills risquent de **ne pas s'afficher** car les clés ne correspondent pas
 
 ### 5. `incomplete.skills` toujours true
+
 - Ligne 130 de `character-sheet.mjs` : `skills: true` en dur
 - Le plan lui-même (`chantier-5.md:25`) note que cette condition est à revoir
 

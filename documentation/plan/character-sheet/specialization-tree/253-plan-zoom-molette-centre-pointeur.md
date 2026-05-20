@@ -12,6 +12,7 @@
 Ajouter dans `SpecializationTreeApp` un zoom à la molette centré sur le pointeur, sans jamais modifier les coordonnées métier des nœuds.
 
 Le résultat attendu est :
+
 - un listener `wheel` branché sur le canvas PIXI ;
 - une méthode `#zoomAt(globalPoint, nextScale)` qui conserve visuellement le point sous la souris ;
 - un zoom borné entre `#minZoom` et `#maxZoom` ;
@@ -71,6 +72,7 @@ Le résultat attendu est :
 **Décision** : modifier uniquement `#viewport.scale`, `#viewport.x` et `#viewport.y`.
 
 **Justification** :
+
 - cohérent avec `#250` et `#252` ;
 - préserve la séparation layout métier / navigation UI ;
 - garantit que `renderNodes` reste stable.
@@ -80,6 +82,7 @@ Le résultat attendu est :
 **Décision** : brancher la molette sur `this.pixiApp.canvas ?? this.pixiApp.view`.
 
 **Justification** :
+
 - l'acceptance criterion demande explicitement un listener `wheel` sur le canvas ;
 - l'événement `wheel` est un événement DOM natif ;
 - le cleanup est plus explicite qu'un binding indirect via PIXI.
@@ -89,6 +92,7 @@ Le résultat attendu est :
 **Décision** : centraliser tout le calcul de zoom dans une méthode dédiée.
 
 **Justification** :
+
 - un seul point de vérité pour la conversion écran → monde → nouvel offset ;
 - évite de disperser le calcul dans le handler `wheel` ;
 - facilite les tests unitaires indirects via le contrat observable.
@@ -98,6 +102,7 @@ Le résultat attendu est :
 **Décision** : calculer les coordonnées monde sous le curseur avant changement de scale, puis recalculer `#viewport.x/y` pour que ce même point monde retombe sous le même point écran après zoom.
 
 **Justification** :
+
 - c'est le coeur fonctionnel de l'issue ;
 - évite l'effet de zoom "vers le centre" jugé peu ergonomique ;
 - rend le zoom compatible avec le pan déjà en place.
@@ -107,6 +112,7 @@ Le résultat attendu est :
 **Décision** : stocker la cible canvas et le handler `wheel` pour pouvoir les détacher explicitement au teardown.
 
 **Justification** :
+
 - le listener n'est pas porté par le stage PIXI, donc il ne doit pas être oublié ;
 - évite les fuites de listeners entre fermeture/réouverture ;
 - aligne la logique avec le cleanup déjà en place pour les événements de pan.
@@ -116,6 +122,7 @@ Le résultat attendu est :
 **Décision** : vérifier le scale appliqué, le déplacement cohérent du viewport, le respect des bornes et l'immuabilité de `renderNodes`, sans test pixel-perfect.
 
 **Justification** :
+
 - conforme ADR-0004 et ADR-0012 ;
 - plus robuste que des assertions trop couplées au rendu ;
 - diagnostique clair en cas de régression.
@@ -127,20 +134,24 @@ Le résultat attendu est :
 ### Étape 1 — Introduire l'état de binding `wheel`
 
 **À faire**
+
 - Ajouter des champs privés pour mémoriser :
   - l'élément canvas lié ;
   - le handler `wheel` actif.
 - Prévoir une garde empêchant de binder plusieurs fois le même canvas.
 
 **Fichier**
+
 - `module/applications/specialization-tree-app.mjs`
 
 **Risque**
+
 - duplication du listener si le canvas est rebinding à chaque render.
 
 ### Étape 2 — Étendre `#bindViewportInteractions()`
 
 **À faire**
+
 - Conserver les bindings stage existants pour le pan.
 - Récupérer le canvas PIXI.
 - Brancher un listener `wheel` sur ce canvas.
@@ -151,14 +162,17 @@ Le résultat attendu est :
   - déléguer à `#zoomAt(globalPoint, nextScale)`.
 
 **Fichier**
+
 - `module/applications/specialization-tree-app.mjs`
 
 **Risque**
+
 - brancher le wheel trop tôt, avant disponibilité du canvas DOM.
 
 ### Étape 3 — Implémenter `#zoomAt(globalPoint, nextScale)`
 
 **À faire**
+
 - Borner `nextScale` entre `#minZoom` et `#maxZoom`.
 - Si le scale borné est identique au scale courant, ne rien faire.
 - Convertir `globalPoint` écran en coordonnées monde courantes :
@@ -171,28 +185,34 @@ Le résultat attendu est :
 - Appeler `#applyViewportTransform()`.
 
 **Fichier**
+
 - `module/applications/specialization-tree-app.mjs`
 
 **Risque**
+
 - confusion entre coordonnées écran du canvas et coordonnées globales du pointer.
 - Mitigation : utiliser un contrat de coordonnées cohérent avec les événements déjà manipulés dans les tests/mocks.
 
 ### Étape 4 — Nettoyer le cycle de vie du listener `wheel`
 
 **À faire**
+
 - Ajouter un unbind explicite du listener `wheel`.
 - L'appeler depuis `#teardownViewport()`.
 - Réinitialiser les références de binding lorsque le viewport est détruit.
 
 **Fichier**
+
 - `module/applications/specialization-tree-app.mjs`
 
 **Risque**
+
 - fermeture/réouverture de l'app laissant un handler zombie sur un ancien canvas.
 
 ### Étape 5 — Étendre les tests
 
 **À faire**
+
 - Enrichir le mock canvas si nécessaire pour supporter `addEventListener` / `removeEventListener`.
 - Ajouter un test qui prouve que le listener `wheel` est bien enregistré sur le canvas.
 - Ajouter un test qui prouve qu'un tick de molette modifie `scale` selon `#zoomStep`.
@@ -202,9 +222,11 @@ Le résultat attendu est :
 - Ajouter un test de cleanup : `removeEventListener('wheel', ...)` est bien appelé au `close()`.
 
 **Fichier**
+
 - `tests/applications/specialization-tree-app.test.mjs`
 
 **Risque**
+
 - tests trop dépendants de l'implémentation privée.
 - Mitigation : tester le contrat observable via les appels à `position.set`, `scale.set`, les bornes, et l'immuabilité des nœuds.
 
@@ -212,23 +234,23 @@ Le résultat attendu est :
 
 ## 6. Fichiers modifiés
 
-| Fichier | Action | Description |
-|---|---|---|
-| `module/applications/specialization-tree-app.mjs` | modification | Ajouter le binding `wheel`, `#zoomAt(...)`, le calcul de zoom centré pointeur et le cleanup associé |
+| Fichier                                               | Action       | Description                                                                                            |
+| ----------------------------------------------------- | ------------ | ------------------------------------------------------------------------------------------------------ |
+| `module/applications/specialization-tree-app.mjs`     | modification | Ajouter le binding `wheel`, `#zoomAt(...)`, le calcul de zoom centré pointeur et le cleanup associé    |
 | `tests/applications/specialization-tree-app.test.mjs` | modification | Ajouter la couverture du zoom molette, des bornes, de la stabilité du point sous curseur et du cleanup |
 
 ---
 
 ## 7. Risques
 
-| Risque | Impact | Mitigation |
-|---|---|---|
-| Listener `wheel` dupliqué entre rendus | zoom accéléré, comportement incohérent | mémoriser la cible + handler et protéger le binding |
-| Mauvais repère de coordonnées | zoom qui "saute" ou dérive | centraliser le calcul dans `#zoomAt()` et tester un cas simple avec pointeur fixe |
-| Oubli du cleanup DOM | fuite mémoire / listeners zombies | unbind explicite au teardown |
-| Borne de scale mal appliquée | viewport inutilisable | tests dédiés sur min/max |
-| Mutation involontaire de `renderNodes` | régression métier | test explicite d'immuabilité après zoom |
-| Molette hors canvas prise en compte | UX surprenante | garde sur la cible canvas et test dédié si le mock le permet |
+| Risque                                 | Impact                                 | Mitigation                                                                        |
+| -------------------------------------- | -------------------------------------- | --------------------------------------------------------------------------------- |
+| Listener `wheel` dupliqué entre rendus | zoom accéléré, comportement incohérent | mémoriser la cible + handler et protéger le binding                               |
+| Mauvais repère de coordonnées          | zoom qui "saute" ou dérive             | centraliser le calcul dans `#zoomAt()` et tester un cas simple avec pointeur fixe |
+| Oubli du cleanup DOM                   | fuite mémoire / listeners zombies      | unbind explicite au teardown                                                      |
+| Borne de scale mal appliquée           | viewport inutilisable                  | tests dédiés sur min/max                                                          |
+| Mutation involontaire de `renderNodes` | régression métier                      | test explicite d'immuabilité après zoom                                           |
+| Molette hors canvas prise en compte    | UX surprenante                         | garde sur la cible canvas et test dédié si le mock le permet                      |
 
 ---
 

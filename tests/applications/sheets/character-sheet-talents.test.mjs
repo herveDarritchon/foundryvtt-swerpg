@@ -161,9 +161,7 @@ describe('CharacterSheet talent consolidation (US12)', () => {
         activation: 'passive',
         isRanked: false,
         rank: null,
-        sources: [
-          { specializationName: 'Bodyguard', resolutionState: 'ok' },
-        ],
+        sources: [{ specializationName: 'Bodyguard', resolutionState: 'ok' }],
       },
     ])
     const actor = buildMockActor()
@@ -186,9 +184,7 @@ describe('CharacterSheet talent consolidation (US12)', () => {
         activation: null,
         isRanked: null,
         rank: null,
-        sources: [
-          { specializationName: null, resolutionState: 'specialization-not-found' },
-        ],
+        sources: [{ specializationName: null, resolutionState: 'specialization-not-found' }],
       },
     ])
     const actor = buildMockActor()
@@ -196,9 +192,7 @@ describe('CharacterSheet talent consolidation (US12)', () => {
 
     const entry = context.talents[0]
     expect(entry.name).toBe('SWERPG.TALENT.UNKNOWN')
-    expect(entry.tags).toEqual([
-      { label: 'SWERPG.TALENT.UNSPECIFIED', cssClass: 'tag-neutral' },
-    ])
+    expect(entry.tags).toEqual([{ label: 'SWERPG.TALENT.UNSPECIFIED', cssClass: 'tag-neutral' }])
     expect(entry.rank).toBeNull()
   })
 
@@ -210,9 +204,7 @@ describe('CharacterSheet talent consolidation (US12)', () => {
         activation: 'active',
         isRanked: true,
         rank: 1,
-        sources: [
-          { specializationName: null, treeName: null, resolutionState: 'tree-unresolved' },
-        ],
+        sources: [{ specializationName: null, treeName: null, resolutionState: 'tree-unresolved' }],
       },
     ])
     const actor = buildMockActor()
@@ -273,10 +265,7 @@ describe('CharacterSheet talent consolidation (US12)', () => {
     const actor = buildMockActor()
     const context = await getContext(actor)
 
-    expect(context.talents[0].sourceLabels).toEqual([
-      'Bodyguard',
-      'SWERPG.TALENT.SOURCE_SPECIALIZATION_WITHOUT_TREE',
-    ])
+    expect(context.talents[0].sourceLabels).toEqual(['Bodyguard', 'SWERPG.TALENT.SOURCE_SPECIALIZATION_WITHOUT_TREE'])
   })
 
   it('maps missing node state to incomplete source label', async () => {
@@ -287,9 +276,7 @@ describe('CharacterSheet talent consolidation (US12)', () => {
         activation: 'active',
         isRanked: true,
         rank: 1,
-        sources: [
-          { specializationName: 'Bodyguard', treeName: 'Bodyguard Tree', resolutionState: 'node-missing' },
-        ],
+        sources: [{ specializationName: 'Bodyguard', treeName: 'Bodyguard Tree', resolutionState: 'node-missing' }],
       },
     ])
 
@@ -330,11 +317,7 @@ describe('CharacterSheet talent consolidation (US12)', () => {
     const actor = buildMockActor()
     const context = await getContext(actor)
 
-    expect(context.talents.map((entry) => entry.talentId)).toEqual([
-      'talent-alpha-a',
-      'talent-alpha-b',
-      'talent-zeta',
-    ])
+    expect(context.talents.map((entry) => entry.talentId)).toEqual(['talent-alpha-a', 'talent-alpha-b', 'talent-zeta'])
   })
 
   it('keeps rendering other talents when one entry has degraded sources', async () => {
@@ -385,11 +368,7 @@ describe('CharacterSheet talent consolidation (US12)', () => {
       system: { id: '', activation: 'passive', isRanked: true },
     }
 
-    globalThis.game.items = [
-      talentWithSystemId,
-      talentWithoutSystemId,
-      talentWithEmptySystemId,
-    ]
+    globalThis.game.items = [talentWithSystemId, talentWithoutSystemId, talentWithEmptySystemId]
 
     let capturedDefinitions
     buildOwnedTalentSummary.mockImplementationOnce((_actor, definitions) => {
@@ -426,9 +405,7 @@ describe('CharacterSheet talent consolidation (US12)', () => {
         activation: null,
         isRanked: null,
         rank: null,
-        sources: [
-          { specializationName: 'Bodyguard', resolutionState: 'ok' },
-        ],
+        sources: [{ specializationName: 'Bodyguard', resolutionState: 'ok' }],
       },
     ])
     const actor = buildMockActor({ id: 'actor-abc', name: 'Test Hero' })
@@ -440,9 +417,7 @@ describe('CharacterSheet talent consolidation (US12)', () => {
         actorId: 'actor-abc',
         actorName: 'Test Hero',
         talentId: 'talent-missing',
-        sources: [
-          { specializationName: 'Bodyguard', resolutionState: 'ok' },
-        ],
+        sources: [{ specializationName: 'Bodyguard', resolutionState: 'ok' }],
         keysTried: ['talent-missing'],
         definitionsAvailable: 0,
       }),
@@ -461,9 +436,7 @@ describe('CharacterSheet talent consolidation (US12)', () => {
         activation: 'active',
         isRanked: true,
         rank: 2,
-        sources: [
-          { specializationName: 'Bodyguard', resolutionState: 'ok' },
-        ],
+        sources: [{ specializationName: 'Bodyguard', resolutionState: 'ok' }],
       },
     ])
     const actor = buildMockActor()
@@ -487,7 +460,9 @@ describe('CharacterSheet talent consolidation (US12)', () => {
         if (spec.specializationId === 'spec-merc') {
           return {
             tree: {
-              id: 'tree-merc', name: 'Mercenary Soldier', type: 'specialization-tree',
+              id: 'tree-merc',
+              name: 'Mercenary Soldier',
+              type: 'specialization-tree',
               system: { specializationId: 'spec-merc', nodes: [{ nodeId: 'r1c1', talentId: 'talent-parry', row: 1, column: 1, cost: 10 }], connections: [] },
             },
             state: 'available',
@@ -495,16 +470,20 @@ describe('CharacterSheet talent consolidation (US12)', () => {
         }
         return {
           tree: {
-            id: 'tree-bodyguard', name: 'Bodyguard', type: 'specialization-tree',
-            system: { specializationId: 'spec-bodyguard', nodes: [{ nodeId: 'r1c1', talentId: 'talent-parry', row: 1, column: 1, cost: 5 }], connections: [{ from: 'r1c1', to: 'r2c1' }] },
+            id: 'tree-bodyguard',
+            name: 'Bodyguard',
+            type: 'specialization-tree',
+            system: {
+              specializationId: 'spec-bodyguard',
+              nodes: [{ nodeId: 'r1c1', talentId: 'talent-parry', row: 1, column: 1, cost: 5 }],
+              connections: [{ from: 'r1c1', to: 'r2c1' }],
+            },
           },
           state: 'available',
         }
       })
 
-      globalThis.game.items = [
-        { id: 'Item.parry', name: 'Parry', type: 'talent', system: { id: 'talent-parry', activation: 'active', isRanked: true } },
-      ]
+      globalThis.game.items = [{ id: 'Item.parry', name: 'Parry', type: 'talent', system: { id: 'talent-parry', activation: 'active', isRanked: true } }]
 
       const actor = buildMockActor({
         system: {
@@ -518,7 +497,14 @@ describe('CharacterSheet talent consolidation (US12)', () => {
             ],
           },
           characteristics: { brawn: { rank: { value: 2 } } },
-          details: { career: null, specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard' }, { specializationId: 'spec-merc', name: 'Mercenary Soldier' }], species: { name: 'Test Species' } },
+          details: {
+            career: null,
+            specializations: [
+              { specializationId: 'spec-bodyguard', name: 'Bodyguard' },
+              { specializationId: 'spec-merc', name: 'Mercenary Soldier' },
+            ],
+            species: { name: 'Test Species' },
+          },
           resources: { wounds: { value: 0, threshold: 10 }, strain: { value: 0, threshold: 10 }, encumbrance: { value: 0, threshold: 10 } },
           points: {},
         },
@@ -544,7 +530,9 @@ describe('CharacterSheet talent consolidation (US12)', () => {
         if (spec.specializationId === 'spec-merc') {
           return {
             tree: {
-              id: 'tree-merc', name: 'Mercenary Soldier', type: 'specialization-tree',
+              id: 'tree-merc',
+              name: 'Mercenary Soldier',
+              type: 'specialization-tree',
               system: { specializationId: 'spec-merc', nodes: [{ nodeId: 'r1c1', talentId: 'talent-toughness', row: 1, column: 1, cost: 5 }], connections: [] },
             },
             state: 'available',
@@ -552,8 +540,14 @@ describe('CharacterSheet talent consolidation (US12)', () => {
         }
         return {
           tree: {
-            id: 'tree-bodyguard', name: 'Bodyguard', type: 'specialization-tree',
-            system: { specializationId: 'spec-bodyguard', nodes: [{ nodeId: 'r1c1', talentId: 'talent-toughness', row: 1, column: 1, cost: 5 }], connections: [{ from: 'r1c1', to: 'r2c1' }] },
+            id: 'tree-bodyguard',
+            name: 'Bodyguard',
+            type: 'specialization-tree',
+            system: {
+              specializationId: 'spec-bodyguard',
+              nodes: [{ nodeId: 'r1c1', talentId: 'talent-toughness', row: 1, column: 1, cost: 5 }],
+              connections: [{ from: 'r1c1', to: 'r2c1' }],
+            },
           },
           state: 'available',
         }
@@ -575,7 +569,14 @@ describe('CharacterSheet talent consolidation (US12)', () => {
             ],
           },
           characteristics: { brawn: { rank: { value: 2 } } },
-          details: { career: null, specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard' }, { specializationId: 'spec-merc', name: 'Mercenary Soldier' }], species: { name: 'Test Species' } },
+          details: {
+            career: null,
+            specializations: [
+              { specializationId: 'spec-bodyguard', name: 'Bodyguard' },
+              { specializationId: 'spec-merc', name: 'Mercenary Soldier' },
+            ],
+            species: { name: 'Test Species' },
+          },
           resources: { wounds: { value: 0, threshold: 10 }, strain: { value: 0, threshold: 10 }, encumbrance: { value: 0, threshold: 10 } },
           points: {},
         },
@@ -599,9 +600,7 @@ describe('CharacterSheet talent consolidation (US12)', () => {
 
       resolveSpecializationTree.mockReturnValue({ tree: null, state: 'unresolved' })
 
-      globalThis.game.items = [
-        { id: 'Item.parry', name: 'Parry', type: 'talent', system: { id: 'talent-parry', activation: 'active', isRanked: true } },
-      ]
+      globalThis.game.items = [{ id: 'Item.parry', name: 'Parry', type: 'talent', system: { id: 'talent-parry', activation: 'active', isRanked: true } }]
 
       const actor = buildMockActor({
         system: {
@@ -609,9 +608,7 @@ describe('CharacterSheet talent consolidation (US12)', () => {
           progression: {
             freeSkillRanks: { career: { spent: 0, gained: 4, available: 4 }, specialization: { spent: 0, gained: 0, available: 0 } },
             experience: { available: 0, spent: 0, gained: 0, total: 0 },
-            talentPurchases: [
-              { talentId: 'talent-parry', specializationId: 'spec-bodyguard', treeId: 'tree-bodyguard', nodeId: 'r1c1' },
-            ],
+            talentPurchases: [{ talentId: 'talent-parry', specializationId: 'spec-bodyguard', treeId: 'tree-bodyguard', nodeId: 'r1c1' }],
           },
           characteristics: { brawn: { rank: { value: 2 } } },
           details: { career: null, specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard' }], species: { name: 'Test Species' } },

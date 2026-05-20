@@ -78,9 +78,18 @@ export function getAllImportStats() {
   const specialization = getCombinedSpecializationImportStats(safeCall(getSpecializationImportStats), safeCall(getSpecializationTreeImportStats))
   const duty = safeCall(getDutyImportStats)
 
-  const totalProcessed = armor.total + weapon.total + gear.total + species.total + career.total + talent.total + obligation.total + specialization.total + duty.total
+  const totalProcessed =
+    armor.total + weapon.total + gear.total + species.total + career.total + talent.total + obligation.total + specialization.total + duty.total
   const totalRejected =
-    armor.rejected + weapon.rejected + gear.rejected + species.rejected + career.rejected + talent.rejected + obligation.rejected + specialization.rejected + duty.rejected
+    armor.rejected +
+    weapon.rejected +
+    gear.rejected +
+    species.rejected +
+    career.rejected +
+    talent.rejected +
+    obligation.rejected +
+    specialization.rejected +
+    duty.rejected
   const totalImported = totalProcessed - totalRejected
 
   return {

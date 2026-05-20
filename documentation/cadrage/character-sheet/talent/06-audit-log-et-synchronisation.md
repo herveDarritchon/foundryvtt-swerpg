@@ -34,16 +34,16 @@ La source de vérité métier reste :
 
 ```txt
 actor.system.progression.talentPurchases
-````
+```
 
 ou structure équivalente.
 
 Les éléments suivants sont recalculés :
 
-* vue consolidée des talents ;
-* rangs consolidés ;
-* états graphiques des nœuds ;
-* accessibilité des nœuds suivants.
+- vue consolidée des talents ;
+- rangs consolidés ;
+- états graphiques des nœuds ;
+- accessibilité des nœuds suivants.
 
 ---
 
@@ -85,20 +85,20 @@ Données utiles si disponibles :
 
 La V1 Talents doit :
 
-* valider l’achat via la couche domaine ;
-* persister l’achat du nœud sur l’acteur ;
-* mettre à jour l’XP selon le modèle existant ;
-* produire une opération traçable ;
-* déclencher le recalcul des vues dérivées.
+- valider l’achat via la couche domaine ;
+- persister l’achat du nœud sur l’acteur ;
+- mettre à jour l’XP selon le modèle existant ;
+- produire une opération traçable ;
+- déclencher le recalcul des vues dérivées.
 
 ### 5.2 Audit/log
 
 Le système d’audit/log doit :
 
-* recevoir l’opération ;
-* persister l’historique ;
-* conserver les anciennes / nouvelles valeurs si nécessaire ;
-* permettre le diagnostic ultérieur.
+- recevoir l’opération ;
+- persister l’historique ;
+- conserver les anciennes / nouvelles valeurs si nécessaire ;
+- permettre le diagnostic ultérieur.
 
 La V1 Talents ne duplique pas ces données dans l’acteur.
 
@@ -108,9 +108,9 @@ La V1 Talents ne duplique pas ces données dans l’acteur.
 
 Si l’audit/log est indisponible :
 
-* l’achat ne doit pas être bloqué pour cette seule raison ;
-* un warning technique peut être émis ;
-* l’opération d’achat doit rester structurée pour un branchement futur.
+- l’achat ne doit pas être bloqué pour cette seule raison ;
+- un warning technique peut être émis ;
+- l’opération d’achat doit rester structurée pour un branchement futur.
 
 Exception : décision contraire explicite dans l’épic audit/log.
 
@@ -134,11 +134,11 @@ Après un achat réussi :
 
 La V1 ne doit pas :
 
-* stocker une liste d’événements d’achat dans l’acteur ;
-* stocker les anciennes valeurs dans l’acteur ;
-* considérer l’audit/log comme source de vérité ;
-* bloquer l’affichage si l’audit/log est absent ;
-* modifier directement la vue consolidée sans recalcul depuis les achats.
+- stocker une liste d’événements d’achat dans l’acteur ;
+- stocker les anciennes valeurs dans l’acteur ;
+- considérer l’audit/log comme source de vérité ;
+- bloquer l’affichage si l’audit/log est absent ;
+- modifier directement la vue consolidée sans recalcul depuis les achats.
 
 ---
 
@@ -146,14 +146,14 @@ La V1 ne doit pas :
 
 Tests ou scénarios à couvrir :
 
-* achat avec audit/log disponible ;
-* achat avec audit/log indisponible ;
-* opération d’achat contenant acteur, arbre, nœud, talent, coût ;
-* acteur mis à jour sans historique détaillé ;
-* vue consolidée recalculée après achat ;
-* vue graphique rafraîchie après achat ;
-* rang ranked avant / après si disponible ;
-* absence de double persistance historique dans l’acteur.
+- achat avec audit/log disponible ;
+- achat avec audit/log indisponible ;
+- opération d’achat contenant acteur, arbre, nœud, talent, coût ;
+- acteur mis à jour sans historique détaillé ;
+- vue consolidée recalculée après achat ;
+- vue graphique rafraîchie après achat ;
+- rang ranked avant / après si disponible ;
+- absence de double persistance historique dans l’acteur.
 
 ---
 
@@ -161,9 +161,9 @@ Tests ou scénarios à couvrir :
 
 Ce document ne couvre pas :
 
-* conception complète du système d’audit/log ;
-* interface de consultation de l’historique ;
-* rollback automatique ;
-* remboursement ;
-* suppression intelligente ;
-* comparaison détaillée de toutes les anciennes / nouvelles valeurs.
+- conception complète du système d’audit/log ;
+- interface de consultation de l’historique ;
+- rollback automatique ;
+- remboursement ;
+- suppression intelligente ;
+- comparaison détaillée de toutes les anciennes / nouvelles valeurs.

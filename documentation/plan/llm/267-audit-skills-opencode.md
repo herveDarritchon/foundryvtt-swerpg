@@ -34,13 +34,13 @@ Plan validé, fichier `.md` créé, aucune modification de code.
 
 ### Cohérence avec la doctrine
 
-| Critère | État |
-|---|---|
-| Rôle doctrinal attendu | Planification |
-| Séparation des responsabilités | ✅ Ne modifie pas le code |
-| Validation humaine | ✅ Décisions validées avant rédaction |
-| Skill ou commande | ✅ Skill (apporte méthode et structure de plan) |
-| Alignement risque | ✅ Risque moyen, validation humaine intégrée |
+| Critère                        | État                                            |
+| ------------------------------ | ----------------------------------------------- |
+| Rôle doctrinal attendu         | Planification                                   |
+| Séparation des responsabilités | ✅ Ne modifie pas le code                       |
+| Validation humaine             | ✅ Décisions validées avant rédaction           |
+| Skill ou commande              | ✅ Skill (apporte méthode et structure de plan) |
+| Alignement risque              | ✅ Risque moyen, validation humaine intégrée    |
 
 ### Écarts identifiés
 
@@ -72,13 +72,13 @@ Fichier Markdown créé au bon emplacement, contenu préservé.
 
 ### Cohérence avec la doctrine
 
-| Critère | État |
-|---|---|
-| Rôle doctrinal attendu | Documentation |
-| Séparation des responsabilités | ✅ Opération d’écriture pure |
-| Validation humaine | ✅ Plan déjà validé avant |
-| Skill ou commande | ⚠️ **Pourrait être une commande** — Opération mécanique, pas de savoir projet |
-| Alignement risque | ✅ Faible |
+| Critère                        | État                                                                          |
+| ------------------------------ | ----------------------------------------------------------------------------- |
+| Rôle doctrinal attendu         | Documentation                                                                 |
+| Séparation des responsabilités | ✅ Opération d’écriture pure                                                  |
+| Validation humaine             | ✅ Plan déjà validé avant                                                     |
+| Skill ou commande              | ⚠️ **Pourrait être une commande** — Opération mécanique, pas de savoir projet |
+| Alignement risque              | ✅ Faible                                                                     |
 
 ### Écarts identifiés
 
@@ -111,13 +111,13 @@ Code implémenté, tests ajoutés ou adaptés, validation effectuée, résumé l
 
 ### Cohérence avec la doctrine
 
-| Critère | État |
-|---|---|
-| Rôle doctrinal attendu | Implémentation |
-| Séparation des responsabilités | ✅ Suit un plan, ne planifie pas |
-| Validation humaine | ✅ Écarts signalés, validation des choix ambigus |
-| Skill ou commande | ✅ Skill (contient savoir projet : conventions, architecture, tests) |
-| Alignement risque | ✅ Risque élevé, encadré par des règles strictes |
+| Critère                        | État                                                                 |
+| ------------------------------ | -------------------------------------------------------------------- |
+| Rôle doctrinal attendu         | Implémentation                                                       |
+| Séparation des responsabilités | ✅ Suit un plan, ne planifie pas                                     |
+| Validation humaine             | ✅ Écarts signalés, validation des choix ambigus                     |
+| Skill ou commande              | ✅ Skill (contient savoir projet : conventions, architecture, tests) |
+| Alignement risque              | ✅ Risque élevé, encadré par des règles strictes                     |
 
 ### Écarts identifiés
 
@@ -147,14 +147,14 @@ Issues créées sur le tracker GitHub, découpées en tranches verticales, avec 
 
 ### Cohérence avec la doctrine
 
-| Critère | État |
-|---|---|
-| Rôle doctrinal attendu | Planification / Découpage |
-| Séparation des responsabilités | ✅ Crée des issues, ne modifie pas le code |
-| Validation humaine | ✅ Découpage validé avant publication |
-| Skill ou commande | ✅ Skill (apporte méthode de découpage vertical) |
-| Alignement risque | ✅ Moyen, validation humaine sur le contenu |
-| Langue | ⚠️ Skill en anglais, mais produit du contenu français — acceptable |
+| Critère                        | État                                                               |
+| ------------------------------ | ------------------------------------------------------------------ |
+| Rôle doctrinal attendu         | Planification / Découpage                                          |
+| Séparation des responsabilités | ✅ Crée des issues, ne modifie pas le code                         |
+| Validation humaine             | ✅ Découpage validé avant publication                              |
+| Skill ou commande              | ✅ Skill (apporte méthode de découpage vertical)                   |
+| Alignement risque              | ✅ Moyen, validation humaine sur le contenu                        |
+| Langue                         | ⚠️ Skill en anglais, mais produit du contenu français — acceptable |
 
 ### Écarts identifiés
 
@@ -183,19 +183,20 @@ Affichage des PR assignées à l’utilisateur, avec description, statut de revi
 
 ### Cohérence avec la doctrine
 
-| Critère | État |
-|---|---|
-| Rôle doctrinal attendu | Documentation / Consultation |
-| Séparation des responsabilités | ✅ Lecture seule |
-| Validation humaine | ✅ Pas d’action |
-| Skill ou commande | ⚠️ Usage très étroit, pourrait être une commande |
-| Alignement risque | ✅ Faible |
+| Critère                        | État                                             |
+| ------------------------------ | ------------------------------------------------ |
+| Rôle doctrinal attendu         | Documentation / Consultation                     |
+| Séparation des responsabilités | ✅ Lecture seule                                 |
+| Validation humaine             | ✅ Pas d’action                                  |
+| Skill ou commande              | ⚠️ Usage très étroit, pourrait être une commande |
+| Alignement risque              | ✅ Faible                                        |
 
 ### Écarts identifiés
 
 **Écart critique** : L’issue #267 liste comme activité fréquente “faire une pr avec le code développer” (préparer/créer une PR). Or `my-pull-requests` ne fait que **lister** les PR existantes. Il n’existe aucun skill ni commande pour **créer** ou **préparer** une PR.
 
 **Recommandation** : Créer un nouveau skill (ou étendre `my-pull-requests`) dédié à la préparation et création de PR, capable de :
+
 - Lire le diff, le plan initial et les résultats de tests
 - Générer un résumé factuel des changements
 - Créer la PR sur le tracker avec titre, corps et labels
@@ -204,13 +205,13 @@ Affichage des PR assignées à l’utilisateur, avec description, statut de revi
 
 ## Synthèse des écarts
 
-| Skill | Alignement | Écart | Priorité |
-|---|---|---|---|
-| `plan-depuis-issue` | ✅ Bon | Aucun | — |
-| `ecrire-plan-fichier` | ⚠️ Partiel | Opération mécanique → commande plutôt que skill | Faible |
-| `implementer-depuis-plan` | ✅ Bon | Aucun | — |
-| `to-issues` | ✅ Bon | Langue anglaise (mineur) | Très faible |
-| `my-pull-requests` | ❌ Décalé | Liste les PR mais ne permet pas d’en créer | **Élevée** |
+| Skill                     | Alignement | Écart                                           | Priorité    |
+| ------------------------- | ---------- | ----------------------------------------------- | ----------- |
+| `plan-depuis-issue`       | ✅ Bon     | Aucun                                           | —           |
+| `ecrire-plan-fichier`     | ⚠️ Partiel | Opération mécanique → commande plutôt que skill | Faible      |
+| `implementer-depuis-plan` | ✅ Bon     | Aucun                                           | —           |
+| `to-issues`               | ✅ Bon     | Langue anglaise (mineur)                        | Très faible |
+| `my-pull-requests`        | ❌ Décalé  | Liste les PR mais ne permet pas d’en créer      | **Élevée**  |
 
 ## Recommandations générales
 

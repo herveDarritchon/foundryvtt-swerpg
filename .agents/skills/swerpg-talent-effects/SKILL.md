@@ -184,67 +184,67 @@ Create or adapt the repo’s constants module. Suggested names:
 
 ```js
 export const TALENT_ACTIVATIONS = Object.freeze({
-  PASSIVE: "passive",
-  ACTIVE: "active",
-  REACTION: "reaction",
-  MANUAL: "manual",
-  MIXED: "mixed"
-});
+  PASSIVE: 'passive',
+  ACTIVE: 'active',
+  REACTION: 'reaction',
+  MANUAL: 'manual',
+  MIXED: 'mixed',
+})
 
 export const AUTOMATION_LEVELS = Object.freeze({
-  NONE: "none",
-  MANUAL: "manual",
-  CHAT_CARD: "chat-card",
-  SUGGESTED: "suggested",
-  ASSISTED: "assisted",
-  AUTO: "auto"
-});
+  NONE: 'none',
+  MANUAL: 'manual',
+  CHAT_CARD: 'chat-card',
+  SUGGESTED: 'suggested',
+  ASSISTED: 'assisted',
+  AUTO: 'auto',
+})
 
 export const EFFECT_TYPES = Object.freeze({
-  MODIFY_DICE_POOL: "modifyDicePool",
-  MODIFY_DERIVED_STAT: "modifyDerivedStat",
-  MODIFY_DAMAGE: "modifyDamage",
-  MODIFY_CRITICAL: "modifyCritical",
-  GRANT_CAREER_SKILL: "grantCareerSkill",
-  REROLL_CHECK: "rerollCheck",
-  CUSTOM: "custom"
-});
+  MODIFY_DICE_POOL: 'modifyDicePool',
+  MODIFY_DERIVED_STAT: 'modifyDerivedStat',
+  MODIFY_DAMAGE: 'modifyDamage',
+  MODIFY_CRITICAL: 'modifyCritical',
+  GRANT_CAREER_SKILL: 'grantCareerSkill',
+  REROLL_CHECK: 'rerollCheck',
+  CUSTOM: 'custom',
+})
 
 export const DEFERRED_EFFECT_TYPES = Object.freeze({
-  MODIFY_RECOVERY: "modifyRecovery",
-  MODIFY_ITEM: "modifyItem",
-  APPLY_CONDITION: "applyCondition"
-});
+  MODIFY_RECOVERY: 'modifyRecovery',
+  MODIFY_ITEM: 'modifyItem',
+  APPLY_CONDITION: 'applyCondition',
+})
 
 export const EFFECT_MODES = Object.freeze({
-  PASSIVE: "passive",
-  ACTIVATED: "activated",
-  REACTION: "reaction",
-  MANUAL: "manual"
-});
+  PASSIVE: 'passive',
+  ACTIVATED: 'activated',
+  REACTION: 'reaction',
+  MANUAL: 'manual',
+})
 
 export const EFFECT_APPLICATION_STRATEGIES = Object.freeze({
-  COMPUTED: "computed",
-  ACTIVE_EFFECT: "activeEffect",
-  CHAT_ONLY: "chatOnly",
-  MANUAL: "manual"
-});
+  COMPUTED: 'computed',
+  ACTIVE_EFFECT: 'activeEffect',
+  CHAT_ONLY: 'chatOnly',
+  MANUAL: 'manual',
+})
 
 export const EFFECT_TARGET_DOCUMENTS = Object.freeze({
-  ACTOR: "actor",
-  ITEM: "item",
-  TOKEN: "token",
-  ROLL: "roll"
-});
+  ACTOR: 'actor',
+  ITEM: 'item',
+  TOKEN: 'token',
+  ROLL: 'roll',
+})
 
 export const EFFECT_DIRECTIONS = Object.freeze({
-  SELF: "self",
-  OUTGOING: "outgoing",
-  INCOMING: "incoming",
-  TARGET: "target",
-  ALLY: "ally",
-  AREA: "area"
-});
+  SELF: 'self',
+  OUTGOING: 'outgoing',
+  INCOMING: 'incoming',
+  TARGET: 'target',
+  ALLY: 'ally',
+  AREA: 'area',
+})
 ```
 
 Also define timings, action types, action kinds, mapping statuses, and mapping confidence values if not already present.
@@ -389,14 +389,14 @@ Must validate:
 Only project to Foundry ActiveEffect when:
 
 ```js
-effect.application?.strategy === "activeEffect"
+effect.application?.strategy === 'activeEffect'
 ```
 
 Bridge function should preferably return creation data:
 
 ```js
 export function buildActiveEffectData(effect, context) {
-  if (effect?.application?.strategy !== "activeEffect") return null;
+  if (effect?.application?.strategy !== 'activeEffect') return null
 
   return {
     name: effect.ui?.label ?? effect.id,
@@ -407,11 +407,11 @@ export function buildActiveEffectData(effect, context) {
         generatedFrom: {
           itemUuid: effect.source?.itemUuid,
           effectId: effect.id,
-          schemaVersion: context?.schemaVersion ?? 1
-        }
-      }
-    }
-  };
+          schemaVersion: context?.schemaVersion ?? 1,
+        },
+      },
+    },
+  }
 }
 ```
 
@@ -429,7 +429,7 @@ Implement a safe first pass:
 
 ```js
 export function collectApplicableEffects(actor, context) {
-  return [];
+  return []
 }
 ```
 
@@ -737,11 +737,13 @@ feat(talents): add canonical mechanical effects model
 Do not send large context to an LLM unless reasoning is required.
 
 For deterministic tasks:
+
 - execute with shell, Git, npm, Vitest, Playwright or CI;
 - collect only the useful output;
 - call an LLM only if interpretation, decision or correction is needed.
 
 For failures:
+
 - send only the failing command;
 - send only the relevant error block;
 - send only the files directly involved;

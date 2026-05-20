@@ -34,9 +34,7 @@ describe('armorMapper - ADR-0008 alignment', () => {
 
     const armor = result[0]
     expect(armor.system.category).toBe('light')
-    expect(armor.system.qualities).toEqual([
-      { key: 'bulky', rank: null, hasRank: false, active: true, source: 'oggdude' },
-    ])
+    expect(armor.system.qualities).toEqual([{ key: 'bulky', rank: null, hasRank: false, active: true, source: 'oggdude' }])
     expect(armor.flags.swerpg.oggdude.categories).toEqual(['Light', 'Bulky'])
     expect(armor.flags.swerpg.oggdude.ignoredCategories).toBeUndefined()
     expect(armor.flags.swerpg.oggdude.unknownProperties).toBeUndefined()
@@ -58,9 +56,7 @@ describe('armorMapper - ADR-0008 alignment', () => {
 
     const armor = result[0]
     expect(armor.system.category).toBe('heavy')
-    expect(armor.system.qualities).toEqual([
-      { key: 'bulky', rank: null, hasRank: false, active: true, source: 'oggdude' },
-    ])
+    expect(armor.system.qualities).toEqual([{ key: 'bulky', rank: null, hasRank: false, active: true, source: 'oggdude' }])
     expect(armor.flags.swerpg.oggdude.categories).toEqual(['Heavy', 'Bulky', 'full body', 'MysteryTag'])
     expect(armor.flags.swerpg.oggdude.ignoredCategories).toEqual(['full body'])
     expect(armor.flags.swerpg.oggdude.unknownProperties).toEqual(['MysteryTag'])
@@ -118,9 +114,7 @@ describe('armorMapper - ADR-0008 alignment', () => {
         Defense: 10,
         Categories: { Category: ['Medium', 'Organic'] },
         BaseMods: {
-          Mod: [
-            { MiscDesc: 'Reinforced Plating' },
-          ],
+          Mod: [{ MiscDesc: 'Reinforced Plating' }],
         },
       },
     ]
@@ -172,9 +166,7 @@ describe('armorMapper - ADR-0008 alignment', () => {
 
     const armor = result[0]
     expect(armor.system.category).toBe('medium')
-    expect(armor.system.qualities).toEqual([
-      { key: 'organic', rank: null, hasRank: false, active: true, source: 'oggdude' },
-    ])
+    expect(armor.system.qualities).toEqual([{ key: 'organic', rank: null, hasRank: false, active: true, source: 'oggdude' }])
   })
 
   it('deduplicates raw categories in flags', () => {

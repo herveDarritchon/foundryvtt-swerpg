@@ -23,7 +23,9 @@ class MockBase {
     return this
   }
 
-  get talents() { return [] }
+  get talents() {
+    return []
+  }
 }
 
 // Import the mixin
@@ -45,10 +47,10 @@ describe('AttackMixin', () => {
             banes: {},
             weapon: null,
             defenseType: 'physical',
-            range: { maximum: 5 }
-          }
-        }
-      }
+            range: { maximum: 5 },
+          },
+        },
+      },
     })
   })
 
@@ -67,11 +69,11 @@ describe('AttackMixin', () => {
     test('should return boons and banes objects', () => {
       const target = {
         statuses: new Set(),
-        effects: new Map()
+        effects: new Map(),
       }
       const action = {
         usage: { boons: {}, banes: {} },
-        range: { maximum: 5 }
+        range: { maximum: 5 },
       }
 
       const result = actor.applyTargetBoons(target, action, 'weapon', false)
@@ -83,12 +85,12 @@ describe('AttackMixin', () => {
     test('should add guarded bane if target is guarded', () => {
       const target = {
         statuses: new Set(['guarded']),
-        effects: new Map()
+        effects: new Map(),
       }
       const action = {
         usage: { boons: {}, banes: {} },
         damage: {},
-        range: { maximum: 5 }
+        range: { maximum: 5 },
       }
 
       const { banes } = actor.applyTargetBoons(target, action, 'weapon', false)
@@ -99,12 +101,12 @@ describe('AttackMixin', () => {
     test('should add prone boon for melee, bane for ranged', () => {
       const target = {
         statuses: new Set(['prone']),
-        effects: new Map()
+        effects: new Map(),
       }
       const action = {
         usage: { boons: {}, banes: {} },
         damage: {},
-        range: { maximum: 5 }
+        range: { maximum: 5 },
       }
 
       // Melee attack

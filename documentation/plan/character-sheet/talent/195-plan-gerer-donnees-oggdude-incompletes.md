@@ -12,6 +12,7 @@
 Fiabiliser l'import OggDude des talents et arbres de spécialisation lorsque les données sont incomplètes, ambiguës ou incohérentes, afin d'éviter des référentiels apparemment valides mais métier faux.
 
 Le résultat attendu est un import qui :
+
 - conserve le brut utile au diagnostic ;
 - marque explicitement les arbres et nœuds incomplets ou invalides ;
 - empêche les achats non fiables ;
@@ -52,6 +53,7 @@ Le résultat attendu est un import qui :
 ### Une partie du besoin existe déjà sur les arbres
 
 Le mapper `module/importer/mappers/oggdude-specialization-tree-mapper.mjs` gère déjà plusieurs diagnostics :
+
 - `unresolved-talent:*` pour les références sans talent exploitable ;
 - `missing-cost:*` pour les nœuds sans coût ;
 - connexions invalides via les stats dédiées (`invalidConnections`) ;
@@ -64,6 +66,7 @@ Les tests `tests/importer/specialization-tree-ogg-dude.spec.mjs` couvrent déjà
 ### Le contrat actuel reste insuffisant pour fiabiliser l'aval
 
 L'implémentation actuelle ne garantit pas encore que les diagnostics d'import empêchent réellement les achats non fiables :
+
 - un nœud avec `talentId = unknown:*` reste structurellement "valide" pour `talent-node-state.mjs` qui ne vérifie que la présence de `nodeId`, `talentId`, `row`, `cost` ;
 - un arbre avec des connexions partiellement invalides peut rester `available` si `nodes.length > 0` et `connections.length > 0` ;
 - le resolver `talent-tree-resolver.mjs` ne connaît aujourd'hui que `available` vs `incomplete` sur base structurelle minimale, sans consulter `flags.swerpg.import`.
@@ -85,6 +88,7 @@ Le cadrage `03-import-oggdude-talents.md` et ADR-0010 demandent explicitement la
 **Décision** : stocker les données brutes OggDude utiles, les warnings, les références non résolues et le statut d'import dans `flags.swerpg.import`, avec un sous-champ `raw` dédié au brut utile.
 
 Justification :
+
 - conforme au cadrage `03-import-oggdude-talents.md` ;
 - conforme à ADR-0010 qui réserve `flags.swerpg.*` aux données d'import, de mapping et de traçabilité ;
 - évite de polluer le modèle métier cœur (`system.*`) avec du brut OggDude ;
@@ -93,12 +97,14 @@ Justification :
 ### 4.2. Aucun fallback implicite dangereux
 
 **Décision** : interdire toute reconstruction silencieuse non documentée :
+
 - pas de fallback `rank * 5` ;
 - pas de coût par défaut inventé ;
 - pas de connexion reconstruite "au mieux" ;
 - pas de résolution automatique opaque d'un talent inconnu.
 
 Justification :
+
 - explicitement demandé par l'issue ;
 - conforme au cadrage `02-regles-achat-progression.md` ;
 - évite des arbres faux mais visuellement plausibles.
@@ -108,6 +114,7 @@ Justification :
 **Décision** : conserver le placeholder existant `talentId = unknown:<specializationId>:<nodeId>` sur le nœud d'arbre importé, avec diagnostic explicite dans `flags.swerpg.import`.
 
 Justification :
+
 - cohérent avec l'implémentation déjà amorcée dans US10 ;
 - évite d'élargir US11 à la création automatique d'items de référence ;
 - permet l'affichage du nœud tout en interdisant son achat fiable (via l'étape 4.4).
@@ -117,11 +124,13 @@ Justification :
 **Décision** : faire évoluer `talent-tree-resolver.mjs` et `talent-node-state.mjs` pour qu'ils ne se fient plus uniquement à la structure minimale (`nodes.length > 0`), mais tiennent compte de la fiabilité exprimée dans `flags.swerpg.import`.
 
 Règles cibles :
+
 - un arbre marqué `unresolved: true` dans ses flags d'import n'est plus classé `available` mais `incomplete` ;
 - un nœud avec `talentId === undefined` OU un `talentId` commençant par `unknown:` est classé `invalid` par `talent-node-state` ;
 - un nœud sans coût (`cost == null`) est classé `invalid`.
 
 Justification :
+
 - l'issue ne demande pas seulement des warnings, mais aussi l'interdiction des achats non fiables ;
 - évite que la fiabilité dépende de conventions implicites que l'aval pourrait ignorer ;
 - garde la responsabilité métier côté domaine pur, testable sans Foundry.
@@ -131,6 +140,7 @@ Justification :
 **Décision** : conserver `activation = 'unspecified'` pour les talents importés avec activation inconnue, et ajouter un warning explicite (`flags.swerpg.import.warnings`) sur l'item importé.
 
 Justification :
+
 - conforme à l'issue et au cadrage ;
 - cas non bloquant pour l'affichage du talent, sans transformer une inconnue en donnée erronée.
 
@@ -139,12 +149,14 @@ Justification :
 **Décision** : uniformiser les clés de diagnostic dans `flags.swerpg.import` entre les deux flux d'import qui produisent des définitions de talents et des arbres.
 
 Contrat cible (indicatif) :
+
 - `flags.swerpg.import.status` : `'valid'` | `'incomplete'` | `'invalid'`
 - `flags.swerpg.import.warnings` : `string[]`
 - `flags.swerpg.import.unresolved` : `boolean`
 - `flags.swerpg.import.raw` : conservation du brut OggDude utile
 
 Justification :
+
 - les deux flux traitent des cas incomplets ;
 - éviter deux conventions parallèles qui compliqueraient la maintenance.
 
@@ -153,6 +165,7 @@ Justification :
 **Décision** : écrire des tests qui vérifient les statuts, warnings, identifiants et blocages métier utiles, plutôt que de comparer des objets complets verbeux.
 
 Justification :
+
 - conforme à ADR-0012 ;
 - facilite le diagnostic quand une régression survient sur un cas incomplet.
 
@@ -163,22 +176,26 @@ Justification :
 ### Étape 1 — Formaliser le contrat des diagnostics d'import incomplet
 
 **Quoi faire** : définir et homogénéiser le contrat minimal attendu dans `flags.swerpg.import` pour les talents et arbres :
+
 - `raw` : conservation du brut OggDude utile ;
 - `warnings` : tableau de chaînes explicites ;
 - `status` : `'valid'` | `'incomplete'` | `'invalid'` ;
 - `unresolved` : booléen indiquant si des références sont non résolues.
 
 **Fichiers** :
+
 - `module/importer/utils/specialization-tree-import-utils.mjs`
 - `module/importer/utils/talent-import-utils.mjs`
 
 **Risques spécifiques** :
+
 - contrat trop implicite ;
 - duplication de conventions différentes entre talent et specialization-tree.
 
 ### Étape 2 — Compléter le mapper `specialization-tree` pour couvrir tous les cas incomplets de l'issue
 
 **Quoi faire** : faire évoluer le mapper d'arbres pour que :
+
 - un talent inconnu reste affichable mais explicitement non fiable (`status`, `unresolved`) ;
 - un coût manquant n'introduise jamais de nœud achetable par erreur (nœud exclu des `normalizedNodes`, warning) ;
 - une connexion manquante ou incohérente dégrade explicitement l'arbre (`status`, warning) ;
@@ -186,47 +203,56 @@ Justification :
 - les données brutes utiles soient conservées dans `flags.swerpg.import.raw`.
 
 **Fichiers** :
+
 - `module/importer/mappers/oggdude-specialization-tree-mapper.mjs`
 - `module/importer/utils/specialization-tree-import-utils.mjs`
 
 **Risques spécifiques** :
+
 - marquer trop d'arbres `invalid` et dégrader l'utilité de l'import ;
 - au contraire laisser passer des arbres "partiellement faux" comme achetables.
 
 ### Étape 3 — Étendre le mapper talent pour exposer ses diagnostics dans le même contrat
 
 **Quoi faire** : compléter `module/importer/mappers/oggdude-talent-mapper.mjs` pour :
+
 - exporter un warning d'activation inconnue dans `flags.swerpg.import.warnings` ;
 - aligner `flags.swerpg.import` sur le contrat défini en étape 1 ;
 - conserver le brut utile dans `flags.swerpg.import.raw`.
 
 **Fichiers** :
+
 - `module/importer/mappers/oggdude-talent-mapper.mjs`
 - `module/importer/utils/talent-import-utils.mjs`
 
 **Risques spécifiques** :
+
 - casser le format actuel consommé par des tests ou modules aval ;
 - divergence entre statistiques globales et warning réellement porté sur l'item.
 
 ### Étape 4 — Aligner la couche domaine sur les diagnostics d'import
 
 **Quoi faire** : adapter :
+
 - `talent-tree-resolver.mjs` dans `getSpecializationTreeResolutionState()` pour consulter `flags.swerpg.import` et ne pas se limiter à la seule structure `nodes + connections` ;
 - `talent-node-state.mjs` dans `getNodeState()` pour invalider les nœuds dont :
   - `talentId` est manquant ou commence par `unknown:`;
   - le parent tree est marqué `unresolved` ou `incomplete`.
 
 **Fichiers** :
+
 - `module/lib/talent-node/talent-tree-resolver.mjs`
 - `module/lib/talent-node/talent-node-state.mjs`
 
 **Risques spécifiques** :
+
 - coupler trop fortement la couche domaine à une représentation interne d'import ;
 - casser des tests US4/US5 existants sans redéfinir clairement le contrat.
 
 ### Étape 5 — Verrouiller la non-régression par tests
 
 **Quoi faire** : compléter les tests pour couvrir :
+
 - placeholder talent inconnu et statut `incomplete` ;
 - coût manquant sur nœud ;
 - connexions invalides partielles ;
@@ -236,12 +262,14 @@ Justification :
 - conservation du brut utile dans `flags.swerpg.import.raw`.
 
 **Fichiers** :
+
 - `tests/importer/specialization-tree-ogg-dude.spec.mjs`
 - `tests/lib/talent-node/talent-tree-resolver.test.mjs`
 - `tests/lib/talent-node/talent-node-state.test.mjs`
 - `tests/importer/talent-mapper.spec.mjs`
 
 **Risques spécifiques** :
+
 - tests trop centrés sur la forme exacte du document (contraire à ADR-0012) ;
 - absence de couverture des interactions import → domaine.
 
@@ -249,32 +277,32 @@ Justification :
 
 ## 6. Fichiers modifiés
 
-| Fichier | Action | Description du changement |
-|---|---|---|
-| `module/importer/utils/specialization-tree-import-utils.mjs` | modification | Centraliser les statuts `valid/incomplete/invalid`, warnings et détails de diagnostic des arbres incomplets |
-| `module/importer/utils/talent-import-utils.mjs` | modification | Aligner les diagnostics talent sur le même contrat que les arbres (`status`, `warnings`, `raw`) |
-| `module/importer/mappers/oggdude-specialization-tree-mapper.mjs` | modification | Renforcer le mapping des cas incomplets, enrichir `flags.swerpg.import` (status, raw, warnings) |
-| `module/importer/mappers/oggdude-talent-mapper.mjs` | modification | Porter un warning explicite pour activation inconnue, aligner `flags.swerpg.import` |
-| `module/lib/talent-node/talent-tree-resolver.mjs` | modification | Consulter la fiabilité d'import de l'arbre pour déterminer son état de résolution |
-| `module/lib/talent-node/talent-node-state.mjs` | modification | Invalider les nœuds à `talentId` manquant / préfixé `unknown:` et les arbres non fiables |
-| `tests/importer/specialization-tree-ogg-dude.spec.mjs` | modification | Couvrir les nouveaux contrats `status`, `raw`, warnings et cas partiellement invalides |
-| `tests/importer/talent-mapper.spec.mjs` | modification | Vérifier `activation = unspecified` + warning de diagnostic et `flags.swerpg.import.raw` |
-| `tests/lib/talent-node/talent-tree-resolver.test.mjs` | modification | Vérifier que les arbres incomplets importés restent non fiables côté résolution |
-| `tests/lib/talent-node/talent-node-state.test.mjs` | modification | Vérifier qu'un nœud importé non fiable devient `invalid` |
+| Fichier                                                          | Action       | Description du changement                                                                                   |
+| ---------------------------------------------------------------- | ------------ | ----------------------------------------------------------------------------------------------------------- |
+| `module/importer/utils/specialization-tree-import-utils.mjs`     | modification | Centraliser les statuts `valid/incomplete/invalid`, warnings et détails de diagnostic des arbres incomplets |
+| `module/importer/utils/talent-import-utils.mjs`                  | modification | Aligner les diagnostics talent sur le même contrat que les arbres (`status`, `warnings`, `raw`)             |
+| `module/importer/mappers/oggdude-specialization-tree-mapper.mjs` | modification | Renforcer le mapping des cas incomplets, enrichir `flags.swerpg.import` (status, raw, warnings)             |
+| `module/importer/mappers/oggdude-talent-mapper.mjs`              | modification | Porter un warning explicite pour activation inconnue, aligner `flags.swerpg.import`                         |
+| `module/lib/talent-node/talent-tree-resolver.mjs`                | modification | Consulter la fiabilité d'import de l'arbre pour déterminer son état de résolution                           |
+| `module/lib/talent-node/talent-node-state.mjs`                   | modification | Invalider les nœuds à `talentId` manquant / préfixé `unknown:` et les arbres non fiables                    |
+| `tests/importer/specialization-tree-ogg-dude.spec.mjs`           | modification | Couvrir les nouveaux contrats `status`, `raw`, warnings et cas partiellement invalides                      |
+| `tests/importer/talent-mapper.spec.mjs`                          | modification | Vérifier `activation = unspecified` + warning de diagnostic et `flags.swerpg.import.raw`                    |
+| `tests/lib/talent-node/talent-tree-resolver.test.mjs`            | modification | Vérifier que les arbres incomplets importés restent non fiables côté résolution                             |
+| `tests/lib/talent-node/talent-node-state.test.mjs`               | modification | Vérifier qu'un nœud importé non fiable devient `invalid`                                                    |
 
 ---
 
 ## 7. Risques
 
-| Risque | Impact | Mitigation |
-|---|---|---|
-| Les diagnostics restent purement décoratifs, ignorés par la couche domaine | Des achats faux restent possibles | Brancher explicitement resolver et node-state sur la fiabilité import (étape 4) |
-| Le contrat de statut est trop implicite | Régressions futures difficiles à diagnostiquer | Formaliser un sous-contrat stable dans `flags.swerpg.import` et le tester |
-| Trop de cas passent en `invalid` | Import utile mais trop sévèrement bloqué | Distinguer clairement `incomplete` (affichable, achat contrôlé) et `invalid` (achat interdit) |
-| Les talents inconnus restent achetables | Corruption métier de la progression acteur | Faire traiter le préfixe `unknown:` comme non fiable côté domaine |
-| Les connexions partiellement invalides sont ignorées | Accessibilité calculée à tort alors que des nœuds sont inaccessibles | Ajouter des tests ciblés sur connexions incohérentes partielles |
-| Les warnings talent et les stats globales divergent | Diagnostic incohérent pour le MJ et le développeur | Vérifier dans les tests la cohérence item importé + statistiques |
-| L'alignement `flags.swerpg.import` casse des tests existants | Régression sur US9/US10 | Exécuter les tests des deux US avant de merger les changements |
+| Risque                                                                     | Impact                                                               | Mitigation                                                                                    |
+| -------------------------------------------------------------------------- | -------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| Les diagnostics restent purement décoratifs, ignorés par la couche domaine | Des achats faux restent possibles                                    | Brancher explicitement resolver et node-state sur la fiabilité import (étape 4)               |
+| Le contrat de statut est trop implicite                                    | Régressions futures difficiles à diagnostiquer                       | Formaliser un sous-contrat stable dans `flags.swerpg.import` et le tester                     |
+| Trop de cas passent en `invalid`                                           | Import utile mais trop sévèrement bloqué                             | Distinguer clairement `incomplete` (affichable, achat contrôlé) et `invalid` (achat interdit) |
+| Les talents inconnus restent achetables                                    | Corruption métier de la progression acteur                           | Faire traiter le préfixe `unknown:` comme non fiable côté domaine                             |
+| Les connexions partiellement invalides sont ignorées                       | Accessibilité calculée à tort alors que des nœuds sont inaccessibles | Ajouter des tests ciblés sur connexions incohérentes partielles                               |
+| Les warnings talent et les stats globales divergent                        | Diagnostic incohérent pour le MJ et le développeur                   | Vérifier dans les tests la cohérence item importé + statistiques                              |
+| L'alignement `flags.swerpg.import` casse des tests existants               | Régression sur US9/US10                                              | Exécuter les tests des deux US avant de merger les changements                                |
 
 ---
 

@@ -12,6 +12,7 @@
 Ajouter des logs de diagnostic structurés dans le mapper `specialization-tree` pour rendre le format XML réellement utilisé et les métriques de mapping visibles dans la console Foundry sans nécessiter de debug interactif.
 
 Le résultat attendu est le suivant :
+
 - le format XML réellement rencontré (TalentRows/Keys, TalentRows/Columns, flat list, ou inconnu) est loggé en `debug` ;
 - une synthèse du mapping (rawNodeCount, importedNodeCount, connectionCount) est loggée en `debug` ;
 - les anomalies structurelles (lignes sans nœuds, format non reconnu, cibles directionnelles absentes) sont loggées en `warn` ;
@@ -55,6 +56,7 @@ Le mapper `oggdude-specialization-tree-mapper.mjs` contient déjà :
 - **Aucune fonction de détection de format explicite** — la sélection du chemin XML est implicite dans `extractNodesFromRows()` (tente `Talents.Key` puis `TalentColumns.TalentColumn`) et dans `extractRawNodeEntries()` (tente rows puis flat list)
 
 Les compteurs et diagnostics suivants existent déjà :
+
 - `rawCount` : nombre brut d'entrées XML avant normalisation
 - `normalizedNodes.length` : nœuds effectivement importés
 - `connections.length` : connexions après déduplication
@@ -78,6 +80,7 @@ Le logger mocké est déjà présent dans les tests (lignes 3-10 du spec), avec 
 ### 4.2. Séparer logs `debug` et `warn`
 
 **Décision** :
+
 - `logger.debug` pour la télémétrie de mapping : format détecté, résumé des compteurs
 - `logger.warn` pour les anomalies récupérables : lignes sans nœuds, format non reconnu, cibles directionnelles absentes
 
@@ -86,6 +89,7 @@ Le logger mocké est déjà présent dans les tests (lignes 3-10 du spec), avec 
 ### 4.3. Détecter explicitement le format rencontré
 
 **Décision** : introduire une fonction `detectInputFormat(xmlSpecialization)` qui examine les chemins XML et retourne un identifiant de format :
+
 - `'talent-rows-keys'` : format réel OggDude `TalentRows.TalentRow[].Talents.Key[]`
 - `'talent-rows-columns'` : format legacy `TalentRows.TalentRow[].TalentColumns.TalentColumn[]`
 - `'talent-rows-unknown'` : format rows présent mais sous-format non reconnu
@@ -119,33 +123,40 @@ Le logger mocké est déjà présent dans les tests (lignes 3-10 du spec), avec 
 ### Étape 1 — Formaliser la détection de format
 
 **Quoi faire** :
+
 - créer `detectInputFormat(xmlSpecialization)` dans le mapper
 - la fonction examine les chemins XML et retourne un identifiant de format parmi `'talent-rows-keys'`, `'talent-rows-columns'`, `'talent-rows-unknown'`, `'flat-list'`, `'unknown'`
 - appeler cette fonction dans `specializationTreeMapper()` avant la normalisation
 
 **Fichiers** :
+
 - `module/importer/mappers/oggdude-specialization-tree-mapper.mjs`
 
 **Risques spécifiques** :
+
 - détecter un format différent de celui que le mapper utilisera effectivement (si la logique de fallback change)
 
 ### Étape 2 — Ajouter le log `debug` du format détecté
 
 **Quoi faire** :
+
 - après la détection de format et la résolution de `specializationId`, ajouter :
   ```js
   logger.debug('[SpecializationTreeImporter] Format détecté', { specializationId, format: detectedFormat })
   ```
 
 **Fichiers** :
+
 - `module/importer/mappers/oggdude-specialization-tree-mapper.mjs`
 
 **Risques spécifiques** :
+
 - logger avant que `specializationId` soit résolu → impossible, donc placer après la validation de `specializationId`
 
 ### Étape 3 — Ajouter le log `debug` du résumé de mapping
 
 **Quoi faire** :
+
 - après la construction des connexions et avant le `return`, ajouter :
   ```js
   logger.debug('[SpecializationTreeImporter] Résumé du mapping', {
@@ -157,6 +168,7 @@ Le logger mocké est déjà présent dans les tests (lignes 3-10 du spec), avec 
   ```
 
 **Fichiers** :
+
 - `module/importer/mappers/oggdude-specialization-tree-mapper.mjs`
 
 **Risques spécifiques** : aucun — les compteurs sont déjà calculés à ce stade.
@@ -164,6 +176,7 @@ Le logger mocké est déjà présent dans les tests (lignes 3-10 du spec), avec 
 ### Étape 4 — Ajouter les logs `warn` pour les anomalies structurelles
 
 **Quoi faire** :
+
 - si `detectedFormat === 'unknown'`, logger un `warn` avec `specializationId`
 - si `detectedFormat === 'talent-rows-unknown'`, logger un `warn` avec `specializationId`, `rowCount`
 - si `normalizedNodes.length === 0 && rawCount > 0`, logger un `warn` avec `specializationId`, `rawCount` (toutes les entrées brutes ont été rejetées)
@@ -175,14 +188,17 @@ Le logger mocké est déjà présent dans les tests (lignes 3-10 du spec), avec 
   ```
 
 **Fichiers** :
+
 - `module/importer/mappers/oggdude-specialization-tree-mapper.mjs`
 
 **Risques spécifiques** :
+
 - doubler les warnings si `logger.warn` est appelé en plus du stockage dans `warnings[]` → acceptable, c'est le comportement voulu (visible console + stocké flags)
 
 ### Étape 5 — Ajouter la couverture de test du contrat de logging
 
 **Quoi faire** :
+
 - ajouter un test qui vérifie `logger.debug` appelé avec le bon format et le bon `specializationId` pour le format `talent-rows-keys`
 - ajouter un test qui vérifie `logger.debug` appelé avec le résumé de mapping (rawNodeCount, importedNodeCount, connectionCount)
 - ajouter un test qui vérifie `logger.warn` appelé pour une cible directionnelle absente
@@ -190,33 +206,35 @@ Le logger mocké est déjà présent dans les tests (lignes 3-10 du spec), avec 
 - ne pas sur-tester les appels internes : vérifier la présence et le contenu des appels, pas le nombre exact
 
 **Fichiers** :
+
 - `tests/importer/specialization-tree-ogg-dude.spec.mjs`
 
 **Risques spécifiques** :
+
 - trop de coupling aux chaînes exactes de log (fragile au refactor) → mitiger en vérifiant `toContain` ou `toMatchObject` plutôt que des assertions rigides sur `toHaveBeenCalledWith`
 
 ---
 
 ## 6. Fichiers modifiés
 
-| Fichier | Action | Description du changement |
-|---|---|---|
-| `module/importer/mappers/oggdude-specialization-tree-mapper.mjs` | Modification | Ajouter `detectInputFormat()`, logs `debug` de format et résumé, logs `warn` pour anomalies structurelles et cibles manquantes |
-| `tests/importer/specialization-tree-ogg-dude.spec.mjs` | Modification | Ajouter la couverture des appels `logger.debug` et `logger.warn` pour les formats et anomalies |
-| `module/importer/items/specialization-tree-ogg-dude.mjs` | Vérification seule | Confirmer qu'aucun log supplémentaire n'est nécessaire au niveau du context builder |
-| `module/importer/utils/specialization-tree-import-utils.mjs` | Vérification seule | Confirmer que les compteurs existants suffisent sans ajout |
+| Fichier                                                          | Action             | Description du changement                                                                                                      |
+| ---------------------------------------------------------------- | ------------------ | ------------------------------------------------------------------------------------------------------------------------------ |
+| `module/importer/mappers/oggdude-specialization-tree-mapper.mjs` | Modification       | Ajouter `detectInputFormat()`, logs `debug` de format et résumé, logs `warn` pour anomalies structurelles et cibles manquantes |
+| `tests/importer/specialization-tree-ogg-dude.spec.mjs`           | Modification       | Ajouter la couverture des appels `logger.debug` et `logger.warn` pour les formats et anomalies                                 |
+| `module/importer/items/specialization-tree-ogg-dude.mjs`         | Vérification seule | Confirmer qu'aucun log supplémentaire n'est nécessaire au niveau du context builder                                            |
+| `module/importer/utils/specialization-tree-import-utils.mjs`     | Vérification seule | Confirmer que les compteurs existants suffisent sans ajout                                                                     |
 
 ---
 
 ## 7. Risques
 
-| Risque | Impact | Mitigation |
-|---|---|---|
-| Logs `debug` visibles en production sans activation volontaire | Bruit console | `logger.debug` est désactivé par défaut ; activé uniquement via `logger.enableDebug()` ou `game.settings.set('swerpg', 'debug', true)` |
-| Doublon entre `warnings[]` existant et `logger.warn` | Information redondante mais pas trompeuse | Documenter que les warnings sont volontairement dupliqués (console + flags) pour le diagnostic support |
-| Test trop couplé au message exact de log | Refactor coûteux | Utiliser `expect.stringContaining` ou `toMatchObject` partiel sur les arguments du logger |
-| Détection de format divergente de la réalité du mapper | Logs trompeurs | Tester `detectInputFormat()` isolément et comparer son résultat avec le comportement réel de `extractRawNodeEntries()` |
-| Ajout de logs dans la boucle `specializations.map()` sans garde | Logs répétés pour chaque arbre | C'est le comportement attendu (un log par arbre) ; les tests vérifient que chaque arbre produit ses logs |
+| Risque                                                          | Impact                                    | Mitigation                                                                                                                             |
+| --------------------------------------------------------------- | ----------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| Logs `debug` visibles en production sans activation volontaire  | Bruit console                             | `logger.debug` est désactivé par défaut ; activé uniquement via `logger.enableDebug()` ou `game.settings.set('swerpg', 'debug', true)` |
+| Doublon entre `warnings[]` existant et `logger.warn`            | Information redondante mais pas trompeuse | Documenter que les warnings sont volontairement dupliqués (console + flags) pour le diagnostic support                                 |
+| Test trop couplé au message exact de log                        | Refactor coûteux                          | Utiliser `expect.stringContaining` ou `toMatchObject` partiel sur les arguments du logger                                              |
+| Détection de format divergente de la réalité du mapper          | Logs trompeurs                            | Tester `detectInputFormat()` isolément et comparer son résultat avec le comportement réel de `extractRawNodeEntries()`                 |
+| Ajout de logs dans la boucle `specializations.map()` sans garde | Logs répétés pour chaque arbre            | C'est le comportement attendu (un log par arbre) ; les tests vérifient que chaque arbre produit ses logs                               |
 
 ---
 
@@ -238,6 +256,7 @@ Si l'implémentation reste compacte, un seul commit est acceptable :
 - **Facilite** : `#221` (les logs aident à comprendre les fixtures de test), `#222` (les logs aident à valider les imports complets)
 
 Ordre recommandé :
+
 1. `#218` — mapping des nœuds (done)
 2. `#219` — génération des connexions (done)
 3. `#220` — logs de diagnostic

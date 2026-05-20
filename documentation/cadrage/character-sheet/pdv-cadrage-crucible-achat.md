@@ -35,6 +35,7 @@ Donc ce point est **à traiter dans la V1**, sans ambiguïté.
 La V1 remplace les règles d’achat héritées de Crucible par une couche domaine dédiée aux talents Edge.
 
 La logique d’achat ne doit plus :
+
 - calculer le coût depuis le rang du talent ;
 - utiliser `isCreation` comme garde-fou métier ;
 - mélanger XP, talent points et états UI ;
@@ -42,6 +43,7 @@ La logique d’achat ne doit plus :
 - modifier la vue consolidée comme source de vérité.
 
 La logique d’achat doit :
+
 - partir d’un acteur ;
 - vérifier que la spécialisation concernée est possédée ;
 - vérifier que l’arbre de spécialisation référencé existe ;
@@ -75,10 +77,10 @@ module/lib/talents/edge-talent-purchase.mjs
 
 Mais conceptuellement, il faut éviter une logique enfouie dans :
 
-* la fiche acteur ;
-* le modèle `Talent`;
-* la vue PIXI ;
-* les handlers d’événements UI.
+- la fiche acteur ;
+- le modèle `Talent`;
+- la vue PIXI ;
+- les handlers d’événements UI.
 
 La bonne forme :
 
@@ -151,10 +153,10 @@ Un talent non-ranked déjà possédé est considéré comme acquis. Si un autre 
 
 Un nœud est achetable si :
 
-* il appartient à l’arbre sélectionné ;
-* sa spécialisation est possédée ;
-* il est dans la rangée accessible initiale, ou connecté à un nœud déjà acheté selon les règles du template ;
-* ses prérequis éventuels sont remplis.
+- il appartient à l’arbre sélectionné ;
+- sa spécialisation est possédée ;
+- il est dans la rangée accessible initiale, ou connecté à un nœud déjà acheté selon les règles du template ;
+- ses prérequis éventuels sont remplis.
 
 ### 5. XP
 
@@ -216,6 +218,7 @@ Pour les talents ranked, chaque nœud acheté portant le même talent augmente l
 Pour les talents non-ranked, plusieurs nœuds distincts peuvent être achetés si cela est nécessaire à la progression dans plusieurs arbres, mais le bénéfice du talent reste non cumulatif dans la vue consolidée.
 
 La logique d’achat doit vérifier :
+
 - que la spécialisation est possédée ;
 - que l’arbre existe ;
 - que le nœud existe ;

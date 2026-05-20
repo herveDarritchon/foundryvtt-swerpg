@@ -149,9 +149,11 @@ Justification :
 **Quoi** : Ajouter `row`, `column` et `cost` dans le `SchemaField` du tableau `nodes` dans `SwerpgSpecializationTree.defineSchema()`.
 
 **Fichiers** :
+
 - `module/models/specialization-tree.mjs` (modification)
 
 **Risques** :
+
 - Si `required` est mal positionné, les nœuds existants (créés avant US2) pourraient ne plus passer la validation. Vérifier que les nouveaux champs ont `required: false` (ou `required: true, nullable: true`) pour la rétrocompatibilité.
 - Les valeurs par défaut (`initial`) doivent être cohérentes : `row=1`, `column=1`, `cost=5`.
 
@@ -160,9 +162,11 @@ Justification :
 **Quoi** : Ajouter une validation dans `validateJoint()` qui itère sur `data.nodes` et vérifie la cohérence `nodeId` / `row` / `column` selon la convention `r{row}c{column}`.
 
 **Fichiers** :
+
 - `module/models/specialization-tree.mjs` (modification)
 
 **Risques** :
+
 - La validation ne doit pas être bloquante en V1 pour éviter de casser des imports OggDude partiels. Utiliser `logger.warn` plutôt que `throw`.
 - Si `nodes` est `undefined` ou vide, la validation doit passer silencieusement.
 
@@ -171,10 +175,12 @@ Justification :
 **Quoi** : Mettre à jour le hint de `SPECIALIZATION_TREE.FIELDS.nodes` pour indiquer que les nœuds portent désormais `nodeId`, `talentId`, `row`, `column` et `cost`. Ajouter des clés `SPECIALIZATION_TREE.FIELDS.nodes.row`, `.column`, `.cost` si nécessaire pour la future édition.
 
 **Fichiers** :
+
 - `lang/en.json` (modification)
 - `lang/fr.json` (modification)
 
 **Risques** :
+
 - Les clés ajoutées ne doivent pas casser les traductions existantes.
 
 ### Étape 4 — Mettre à jour les tests Vitest
@@ -188,9 +194,11 @@ Justification :
 - Vérifier qu'un nœud sans `row`/`column`/`cost` est toujours valide (rétrocompatibilité)
 
 **Fichiers** :
+
 - `tests/models/specialization-tree.test.mjs` (modification)
 
 **Risques** :
+
 - Le mock Foundry doit supporter `NumberField` (c'est déjà le cas, utilisé par d'autres modèles).
 - Les tests existants ne doivent pas être cassés par l'ajout des nouveaux champs.
 
@@ -199,9 +207,11 @@ Justification :
 **Quoi** : Vérifier que le template `specialization-tree-config.hbs` continue de fonctionner avec la structure enrichie. Si les nœuds sont affichés en JSON brut ou en liste simple, aucun changement n'est nécessaire. Si un affichage plus détaillé est souhaité, l'ajuster pour montrer `row`, `column` et `cost`.
 
 **Fichiers** :
+
 - `templates/sheets/partials/specialization-tree-config.hbs` (modification, optionnelle)
 
 **Risques** :
+
 - Si le template fait une hypothèse sur la structure des nœuds (par exemple `node.nodeId` sans vérification d'existence), l'ajout de champs ne casse rien.
 - Aucun changement n'est attendu en US2.
 
@@ -209,24 +219,24 @@ Justification :
 
 ## 6. Fichiers modifiés
 
-| Fichier                                                    | Action       | Description du changement                                                                                                                        |
-|------------------------------------------------------------|--------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
+| Fichier                                                    | Action       | Description du changement                                                                                                                            |
+| ---------------------------------------------------------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `module/models/specialization-tree.mjs`                    | Modification | Ajout de `row` (`NumberField`), `column` (`NumberField`), `cost` (`NumberField`) dans le `SchemaField` des nœuds ; enrichissement de `validateJoint` |
-| `lang/en.json`                                             | Modification | Mise à jour du hint de `SPECIALIZATION_TREE.FIELDS.nodes` ; ajout si nécessaire des sous-clés `row`, `column`, `cost`                            |
-| `lang/fr.json`                                             | Modification | Idem en français                                                                                                                                 |
-| `tests/models/specialization-tree.test.mjs`                | Modification | Ajout de tests pour les nouveaux champs (type, requis, initial, min) ; tests de `validateJoint` ; test d'instance avec données complètes           |
-| `templates/sheets/partials/specialization-tree-config.hbs` | Modification | Optionnelle — ajustement d'affichage des nœuds si souhaité                                                         |
+| `lang/en.json`                                             | Modification | Mise à jour du hint de `SPECIALIZATION_TREE.FIELDS.nodes` ; ajout si nécessaire des sous-clés `row`, `column`, `cost`                                |
+| `lang/fr.json`                                             | Modification | Idem en français                                                                                                                                     |
+| `tests/models/specialization-tree.test.mjs`                | Modification | Ajout de tests pour les nouveaux champs (type, requis, initial, min) ; tests de `validateJoint` ; test d'instance avec données complètes             |
+| `templates/sheets/partials/specialization-tree-config.hbs` | Modification | Optionnelle — ajustement d'affichage des nœuds si souhaité                                                                                           |
 
 ---
 
 ## 7. Risques
 
-| Risque                                                                                              | Impact                                                              | Mitigation                                                                                                                                        |
-|-----------------------------------------------------------------------------------------------------|---------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------|
-| Rétrocompatibilité : des nœuds existants sans `row`/`column`/`cost` pourraient planter à la lecture | Les arbres créés avant US2 deviennent invalides                    | Les nouveaux champs sont marqués `required: false` ou `required: true, nullable: true` pour accepter les données anciennes sans breaking change      |
-| `validateJoint` bloquante sur des données OggDude partielles                                        | L'import d'arbres OggDude échoue                                   | La validation utilise `logger.warn` et n'est pas bloquante (ne `throw` pas)                                                                        |
-| `NumberField` avec `min: 1` rejette des données à zéro                                              | Impossible de créer un nœud à la ligne/colonne 0                   | C'est le comportement souhaité (`row`/`column` sont 1-indexed dans la convention `r{row}c{column}`)                                                 |
-| `cost` avec `initial: 0` n'est pas l'intention (le coût par défaut devrait être ~5)                 | Un nœud sans coût explicite serait gratuit par défaut              | `cost` a `initial: 5` (ou `required: false` sans `initial` si le coût est obligatoire). Trancher lors de l'implémentation. Recommandé : `initial: 5` |
+| Risque                                                                                              | Impact                                                | Mitigation                                                                                                                                           |
+| --------------------------------------------------------------------------------------------------- | ----------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Rétrocompatibilité : des nœuds existants sans `row`/`column`/`cost` pourraient planter à la lecture | Les arbres créés avant US2 deviennent invalides       | Les nouveaux champs sont marqués `required: false` ou `required: true, nullable: true` pour accepter les données anciennes sans breaking change      |
+| `validateJoint` bloquante sur des données OggDude partielles                                        | L'import d'arbres OggDude échoue                      | La validation utilise `logger.warn` et n'est pas bloquante (ne `throw` pas)                                                                          |
+| `NumberField` avec `min: 1` rejette des données à zéro                                              | Impossible de créer un nœud à la ligne/colonne 0      | C'est le comportement souhaité (`row`/`column` sont 1-indexed dans la convention `r{row}c{column}`)                                                  |
+| `cost` avec `initial: 0` n'est pas l'intention (le coût par défaut devrait être ~5)                 | Un nœud sans coût explicite serait gratuit par défaut | `cost` a `initial: 5` (ou `required: false` sans `initial` si le coût est obligatoire). Trancher lors de l'implémentation. Recommandé : `initial: 5` |
 
 ---
 

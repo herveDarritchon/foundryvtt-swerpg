@@ -35,15 +35,15 @@ localisés en français et en anglais.
 - Consommer `getTreeNodesStates(actor, specializationId, tree)` pour obtenir l'état métier de chaque nœud affiché.
 - Enrichir le view-model de `SpecializationTreeApp` avec les informations d'état nécessaires au rendu.
 - Définir une variante PIXI dédiée pour chacun des états :
-    - `purchased`
-    - `available`
-    - `locked`
-    - `invalid`
+  - `purchased`
+  - `available`
+  - `locked`
+  - `invalid`
 - Appliquer ces variantes au rendu graphique des nœuds :
-    - couleur de fond ;
-    - bordure ;
-    - opacité ;
-    - couleur de texte si nécessaire.
+  - couleur de fond ;
+  - bordure ;
+  - opacité ;
+  - couleur de texte si nécessaire.
 - Ajouter les clés i18n FR/EN pour les libellés d'état de nœud.
 - Étendre les tests Vitest pour couvrir le mapping état métier -> variante UI.
 - Préserver la règle héritée de `#233` : l'arbre courant reste le dernier arbre résolu `available` dans l'ordre des
@@ -69,21 +69,21 @@ localisés en français et en anglais.
 - Le choix de l'arbre courant suit déjà la règle du dernier arbre `available`, conforme au cadrage US16 et au ticket
   `#233`.
 - Le rendu actuel des nœuds est neutre :
-    - fond uniforme ;
-    - bordure uniforme ;
-    - texte uniforme ;
-    - aucune distinction visuelle entre états métier.
+  - fond uniforme ;
+  - bordure uniforme ;
+  - texte uniforme ;
+  - aucune distinction visuelle entre états métier.
 - `module/lib/talent-node/talent-node-state.mjs` expose déjà :
-    - `NODE_STATE` avec `purchased`, `available`, `locked`, `invalid`
-    - `getTreeNodesStates(actor, specializationId, tree)`
-    - des `reasonCode` machine-readable pour les blocages et invalidités
+  - `NODE_STATE` avec `purchased`, `available`, `locked`, `invalid`
+  - `getTreeNodesStates(actor, specializationId, tree)`
+  - des `reasonCode` machine-readable pour les blocages et invalidités
 - Les fichiers `lang/fr.json` et `lang/en.json` contiennent déjà les libellés de statut de résolution d'arbre (
   `available`, `unresolved`, `incomplete`) mais pas les libellés d'état de nœud.
 - `tests/applications/specialization-tree-app.test.mjs` couvre déjà :
-    - le choix de l'arbre courant ;
-    - la construction de `renderNodes` ;
-    - la construction de `renderConnections` ;
-    - le rendu PIXI de base.
+  - le choix de l'arbre courant ;
+  - la construction de `renderNodes` ;
+  - la construction de `renderConnections` ;
+  - le rendu PIXI de base.
 - Aucun test actuel ne vérifie que les états de nœud sont récupérés depuis `getTreeNodesStates()` ni qu'ils sont
   traduits en variantes visuelles spécifiques.
 
@@ -189,6 +189,7 @@ l'absence de comportement d'achat, sans snapshots graphiques PIXI.
 **Problème** : les variantes d’état doivent être immédiatement compréhensibles, mais le rendu ne doit pas paraître générique ou hors thème.
 
 **Décision retenue** : les variantes visuelles sont définies selon une direction artistique légère, compatible avec Star Wars et avec le ton du système :
+
 - interface tactique / holo-affichage ;
 - palette sobre et crédible ;
 - contraste suffisant entre états ;
@@ -196,10 +197,12 @@ l'absence de comportement d'achat, sans snapshots graphiques PIXI.
 - priorité absolue à la lisibilité en jeu.
 
 **Justification** :
+
 - renforce l’immersion ;
 - donne une identité propre à la vue graphique ;
 - prépare les futures US sans imposer une refonte visuelle globale.
-- 
+-
+
 ---
 
 ## 5. Plan de travail détaillé
@@ -315,7 +318,7 @@ Les assertions doivent privilégier des contrats ciblés et lisibles.
 ## 6. Fichiers modifiés
 
 | Fichier                                               | Action       | Description du changement                                                                                            |
-|-------------------------------------------------------|--------------|----------------------------------------------------------------------------------------------------------------------|
+| ----------------------------------------------------- | ------------ | -------------------------------------------------------------------------------------------------------------------- |
 | `module/applications/specialization-tree-app.mjs`     | modification | Intégrer `getTreeNodesStates()`, enrichir `renderNodes` avec l'état métier et appliquer les variantes visuelles PIXI |
 | `lang/fr.json`                                        | modification | Ajouter les libellés FR des états de nœud                                                                            |
 | `lang/en.json`                                        | modification | Ajouter les libellés EN des états de nœud                                                                            |
@@ -333,7 +336,7 @@ Le rendu est déjà principalement assuré par PIXI, et le ticket `#234` ne dema
 ## 7. Risques
 
 | Risque                                                                              | Impact                                      | Mitigation                                                                                         |
-|-------------------------------------------------------------------------------------|---------------------------------------------|----------------------------------------------------------------------------------------------------|
+| ----------------------------------------------------------------------------------- | ------------------------------------------- | -------------------------------------------------------------------------------------------------- |
 | L'application recalcule localement l'état au lieu d'utiliser `getTreeNodesStates()` | divergence entre UI et métier               | imposer `getTreeNodesStates()` comme unique source de vérité dans le plan et dans les tests        |
 | Deux états restent visuellement trop proches                                        | critère d'acceptation non atteint           | définir des variantes explicites sur plusieurs dimensions : fond, bordure, opacité, texte          |
 | Confusion entre statut d'arbre et état de nœud                                      | erreurs de mapping ou faux positifs en test | nommer explicitement les champs `resolvedTreeStatus` vs `nodeState` dans le plan et les assertions |

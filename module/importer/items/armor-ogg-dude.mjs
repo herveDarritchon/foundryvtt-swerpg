@@ -211,7 +211,9 @@ function mapOggDudeArmor(xmlArmor) {
     // Mapping de la catégorie
     const xmlCategories = Array.isArray(xmlArmor?.Categories?.Category)
       ? xmlArmor.Categories.Category
-      : xmlArmor?.Categories?.Category ? [xmlArmor.Categories.Category] : []
+      : xmlArmor?.Categories?.Category
+        ? [xmlArmor.Categories.Category]
+        : []
 
     const categoryResult = resolveArmorCategoryWithFallback(xmlCategories, name)
     if (categoryResult.category === null) {
@@ -232,11 +234,7 @@ function mapOggDudeArmor(xmlArmor) {
     const description = buildArmorDescription(xmlArmor)
     const baseMods = extractBaseMods(xmlArmor)
 
-    const rawCategories = [...new Set(
-      xmlCategories
-        .filter(c => c?.trim())
-        .map(c => c.trim())
-    )]
+    const rawCategories = [...new Set(xmlCategories.filter((c) => c?.trim()).map((c) => c.trim()))]
 
     const oggdudeExtras = {}
     if (rawCategories.length > 0) {
@@ -344,9 +342,9 @@ export async function buildArmorContext(zipOrParams, groupByDirectory, groupByTy
 
   // Old signature: buildArmorContext(zip, groupByDirectory, groupByType)
   const zip = zipOrParams
-  logger.debug('[ArmorImporter] Building Armor context (old signature)', { 
-    groupByDirectoryCount: groupByDirectory?.length, 
-    hasZip: !!zip 
+  logger.debug('[ArmorImporter] Building Armor context (old signature)', {
+    groupByDirectoryCount: groupByDirectory?.length,
+    hasZip: !!zip,
   })
 
   const jsonData = await OggDudeDataElement.buildJsonDataFromFile(zip, groupByDirectory, 'Armor.xml', 'Armors.Armor')

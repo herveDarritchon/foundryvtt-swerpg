@@ -69,6 +69,7 @@ Ces indicateurs sont organisés en **3 colonnes** dans la ligne de compétence, 
 ```
 
 **Ce qui manque** :
+
 - Aucune propriété normalisée pour l'état visuel "increase" (icône, label, classe)
 - Aucune propriété pour l'état visuel "decrease"
 - Aucune classe CSS d'état sur la ligne
@@ -85,6 +86,7 @@ La ligne affiche déjà :
 - pips (losanges / hexagones)
 
 **Problèmes** :
+
 - `data-action` dupliqué en HTML (seule la dernière valeur est prise)
 - Textes hardcodés : `Career skill`, `Specialization skill`, `Rank`, `FREE`, `MAX`, `Dice pool after next rank`
 - Pas de structure "3 colonnes" explicite
@@ -99,10 +101,10 @@ La ligne affiche déjà :
 ### 3.4. États métier disponibles (`module/utils/skill-costs.mjs:34-77`)
 
 ```js
-'FREE_RANK_AVAILABLE'  // canPurchase=true,  isFreePurchase=true,  nextCost=0
-'AFFORDABLE'           // canPurchase=true,  isFreePurchase=false, nextCost=nombre
-'INSUFFICIENT_XP'      // canPurchase=false, isFreePurchase=false, nextCost=nombre
-'MAX_RANK'             // canPurchase=false, isFreePurchase=false, nextCost=null
+'FREE_RANK_AVAILABLE' // canPurchase=true,  isFreePurchase=true,  nextCost=0
+'AFFORDABLE' // canPurchase=true,  isFreePurchase=false, nextCost=nombre
+'INSUFFICIENT_XP' // canPurchase=false, isFreePurchase=false, nextCost=nombre
+'MAX_RANK' // canPurchase=false, isFreePurchase=false, nextCost=null
 ```
 
 ### 3.5. Icônes SVG disponibles
@@ -143,7 +145,7 @@ skill.ui = {
   markerLabel: 'SKILL.MARKER.CAREER' | 'SKILL.MARKER.SPECIALIZATION' | '',
 
   // === INCREASE ===
-  increaseState: purchaseReason,  // même chaîne normalisée
+  increaseState: purchaseReason, // même chaîne normalisée
   increaseIcon: 'free' | 'buy' | 'buy-blocked' | null,
   increaseLabelKey: 'SKILL.INCREASE.FREE' | 'SKILL.INCREASE.COST' | 'SKILL.INCREASE.BLOCKED' | 'SKILL.INCREASE.MAX',
 
@@ -271,14 +273,13 @@ Remplacer la grille existante par :
 
 ```less
 .skill {
-  grid-template-columns:
-    minmax(120px, 1fr)  // info (nom + abréviation)
-    28px                 // marker (C/S)
-    52px                 // action increase
-    52px                 // action decrease
-    36px                 // rank
-    80px                 // dice preview
-    1fr;                 // pips (flex)
+  grid-template-columns: minmax(120px, 1fr) // info (nom + abréviation)
+    28px // marker (C/S)
+    52px // action increase
+    52px // action decrease
+    36px // rank
+    80px // dice preview
+    1fr; // pips (flex)
 }
 ```
 
@@ -287,16 +288,24 @@ Ajouter les états visuels demandés par l'issue, en restant discret :
 ```less
 // Classes d'état sur la ligne
 .skill.is-free {
-  .skill__action--increase { color: @skill-free; }
+  .skill__action--increase {
+    color: @skill-free;
+  }
 }
 .skill.is-affordable {
-  .skill__action--increase { color: @skill-cost; }
+  .skill__action--increase {
+    color: @skill-cost;
+  }
 }
 .skill.is-blocked {
-  .skill__action--increase { opacity: 0.5; }
+  .skill__action--increase {
+    opacity: 0.5;
+  }
 }
 .skill.is-max {
-  .skill__action--increase { color: @color-label; }
+  .skill__action--increase {
+    color: @color-label;
+  }
 }
 .skill.is-career .skill-marker--career {
   color: @skill-career;
@@ -318,21 +327,21 @@ Ajouter les états visuels demandés par l'issue, en restant discret :
 
 Fichiers : `lang/en.json` et `lang/fr.json`
 
-| Clé i18n | EN | FR |
-|---|---|---|
-| `SKILL.MARKER.CAREER` | Career skill | Compétence de carrière |
-| `SKILL.MARKER.SPECIALIZATION` | Specialization skill | Compétence de spécialisation |
-| `SKILL.INCREASE.FREE` | FREE | GRATUIT |
-| `SKILL.INCREASE.FREE_TOOLTIP` | Free rank available | Rang gratuit disponible |
-| `SKILL.INCREASE.BLOCKED` | Blocked | Bloqué |
-| `SKILL.INCREASE.BLOCKED_TOOLTIP` | Insufficient XP | XP insuffisants |
-| `SKILL.INCREASE.MAX` | MAX | MAX |
-| `SKILL.INCREASE.MAX_TOOLTIP` | Maximum rank reached | Rang maximum atteint |
-| `SKILL.INCREASE.COST_TOOLTIP` | Cost: {cost} XP | Coût : {cost} XP |
-| `SKILL.DECREASE.PENDING` | Refund not available | Remboursement non disponible |
-| `SKILL.DECREASE.FORGETTABLE` | Refundable rank | Rang remboursable |
-| `SKILL.DECREASE.NON_REFUNDABLE` | Non-refundable rank | Rang non remboursable |
-| `SKILL.DICE_PREVIEW_TOOLTIP` | Current dice pool | Pool de dés actuel |
+| Clé i18n                         | EN                   | FR                           |
+| -------------------------------- | -------------------- | ---------------------------- |
+| `SKILL.MARKER.CAREER`            | Career skill         | Compétence de carrière       |
+| `SKILL.MARKER.SPECIALIZATION`    | Specialization skill | Compétence de spécialisation |
+| `SKILL.INCREASE.FREE`            | FREE                 | GRATUIT                      |
+| `SKILL.INCREASE.FREE_TOOLTIP`    | Free rank available  | Rang gratuit disponible      |
+| `SKILL.INCREASE.BLOCKED`         | Blocked              | Bloqué                       |
+| `SKILL.INCREASE.BLOCKED_TOOLTIP` | Insufficient XP      | XP insuffisants              |
+| `SKILL.INCREASE.MAX`             | MAX                  | MAX                          |
+| `SKILL.INCREASE.MAX_TOOLTIP`     | Maximum rank reached | Rang maximum atteint         |
+| `SKILL.INCREASE.COST_TOOLTIP`    | Cost: {cost} XP      | Coût : {cost} XP             |
+| `SKILL.DECREASE.PENDING`         | Refund not available | Remboursement non disponible |
+| `SKILL.DECREASE.FORGETTABLE`     | Refundable rank      | Rang remboursable            |
+| `SKILL.DECREASE.NON_REFUNDABLE`  | Non-refundable rank  | Rang non remboursable        |
+| `SKILL.DICE_PREVIEW_TOOLTIP`     | Current dice pool    | Pool de dés actuel           |
 
 ### Étape 5 : Tests unitaires
 
@@ -341,15 +350,33 @@ Fichier : `tests/applications/sheets/character-sheet-skills.test.mjs`
 Ajouter des tests sur le nouvel objet `ui` :
 
 ```js
-it('computes ui.markerState = "career" for career skill', () => { /* ... */ })
-it('computes ui.markerState = "specialization" for specialization skill', () => { /* ... */ })
-it('computes ui.markerState = "both" when career + specialization', () => { /* ... */ })
-it('computes ui.increaseState = "FREE_RANK_AVAILABLE" with icon "free"', () => { /* ... */ })
-it('computes ui.increaseState = "AFFORDABLE" with icon "buy"', () => { /* ... */ })
-it('computes ui.increaseState = "INSUFFICIENT_XP" with icon "buy-blocked"', () => { /* ... */ })
-it('computes ui.increaseState = "MAX_RANK" with icon null', () => { /* ... */ })
-it('computes ui.decreaseState = "pending" before US6', () => { /* ... */ })
-it('computes ui.lineCssClass with correct classes', () => { /* ... */ })
+it('computes ui.markerState = "career" for career skill', () => {
+  /* ... */
+})
+it('computes ui.markerState = "specialization" for specialization skill', () => {
+  /* ... */
+})
+it('computes ui.markerState = "both" when career + specialization', () => {
+  /* ... */
+})
+it('computes ui.increaseState = "FREE_RANK_AVAILABLE" with icon "free"', () => {
+  /* ... */
+})
+it('computes ui.increaseState = "AFFORDABLE" with icon "buy"', () => {
+  /* ... */
+})
+it('computes ui.increaseState = "INSUFFICIENT_XP" with icon "buy-blocked"', () => {
+  /* ... */
+})
+it('computes ui.increaseState = "MAX_RANK" with icon null', () => {
+  /* ... */
+})
+it('computes ui.decreaseState = "pending" before US6', () => {
+  /* ... */
+})
+it('computes ui.lineCssClass with correct classes', () => {
+  /* ... */
+})
 ```
 
 ### Étape 6 : Vérification manuelle
@@ -378,14 +405,14 @@ it('computes ui.lineCssClass with correct classes', () => { /* ... */ })
 
 ## 7. Fichiers modifiés
 
-| Fichier | Modification |
-|---|---|
-| `module/applications/sheets/character-sheet.mjs` | Ajout bloc `skill.ui` dans `#prepareSkills()` |
-| `templates/sheets/partials/character-skill.hbs` | Refactor complet en 3 colonnes + localisation |
-| `styles/actor.less` | Nouvelle grille + classes d'état |
-| `lang/en.json` | Nouvelles clés `SKILL.MARKER.*`, `SKILL.INCREASE.*`, `SKILL.DECREASE.*`, `SKILL.DICE_PREVIEW_TOOLTIP` |
-| `lang/fr.json` | Traductions françaises correspondantes |
-| `tests/applications/sheets/character-sheet-skills.test.mjs` | Tests sur `skill.ui` |
+| Fichier                                                     | Modification                                                                                          |
+| ----------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `module/applications/sheets/character-sheet.mjs`            | Ajout bloc `skill.ui` dans `#prepareSkills()`                                                         |
+| `templates/sheets/partials/character-skill.hbs`             | Refactor complet en 3 colonnes + localisation                                                         |
+| `styles/actor.less`                                         | Nouvelle grille + classes d'état                                                                      |
+| `lang/en.json`                                              | Nouvelles clés `SKILL.MARKER.*`, `SKILL.INCREASE.*`, `SKILL.DECREASE.*`, `SKILL.DICE_PREVIEW_TOOLTIP` |
+| `lang/fr.json`                                              | Traductions françaises correspondantes                                                                |
+| `tests/applications/sheets/character-sheet-skills.test.mjs` | Tests sur `skill.ui`                                                                                  |
 
 ---
 
@@ -403,13 +430,13 @@ npm run build:less  # ou équivalent
 
 ## 9. Risques
 
-| Risque | Impact | Mitigation |
-|---|---|---|
-| Restructurer le partial `character-skill.hbs` casse les sélecteurs CSS existants | Régression visuelle | Conserver les classes stables ; vérifier le rendu des pips |
-| L'état `pending` pour la colonne decrease est frustrant pour le joueur | UX dégradée | Ajouter un tooltip explicatif ; documenter que ce sera activé après US6 |
-| `skill.type.id` ne correspond pas au groupement attendu | Skills dans la mauvaise section | Vérifier avant de commencer l'étape 1 ; déjà corrigé dans US1 |
-| Utiliser des `<img>` pour les icônes SVG crée des requêtes HTTP | Latence au premier hover | Préférer des `background-image` en CSS ou vérifier que les SVG sont bien dans le système |
-| La grille à 7 colonnes ne passe pas sur écran étroit | Débordement horizontal | Tester avec un width de feuille réduit ; prévoir un breakpoint si nécessaire |
+| Risque                                                                           | Impact                          | Mitigation                                                                               |
+| -------------------------------------------------------------------------------- | ------------------------------- | ---------------------------------------------------------------------------------------- |
+| Restructurer le partial `character-skill.hbs` casse les sélecteurs CSS existants | Régression visuelle             | Conserver les classes stables ; vérifier le rendu des pips                               |
+| L'état `pending` pour la colonne decrease est frustrant pour le joueur           | UX dégradée                     | Ajouter un tooltip explicatif ; documenter que ce sera activé après US6                  |
+| `skill.type.id` ne correspond pas au groupement attendu                          | Skills dans la mauvaise section | Vérifier avant de commencer l'étape 1 ; déjà corrigé dans US1                            |
+| Utiliser des `<img>` pour les icônes SVG crée des requêtes HTTP                  | Latence au premier hover        | Préférer des `background-image` en CSS ou vérifier que les SVG sont bien dans le système |
+| La grille à 7 colonnes ne passe pas sur écran étroit                             | Débordement horizontal          | Tester avec un width de feuille réduit ; prévoir un breakpoint si nécessaire             |
 
 ---
 

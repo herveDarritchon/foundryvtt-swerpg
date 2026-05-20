@@ -306,9 +306,7 @@ describe('Mock Foundry Helpers', () => {
           type: 'Item',
           documentName: 'Item',
           collection: 'swerpg.talents',
-          documents: [
-            { id: 'talent-grit', name: 'Grit', type: 'talent', system: { id: 'grit', isRanked: true } },
-          ],
+          documents: [{ id: 'talent-grit', name: 'Grit', type: 'talent', system: { id: 'grit', isRanked: true } }],
         },
       }
 
@@ -330,9 +328,7 @@ describe('Mock Foundry Helpers', () => {
     test('should carry flags in index entries when provided', () => {
       const packDefinitions = {
         'swerpg.talents': {
-          documents: [
-            { id: 'talent-1', name: 'Talent 1', type: 'talent', flags: { swerpg: { oggdudeKey: 'TALENT_1' } } },
-          ],
+          documents: [{ id: 'talent-1', name: 'Talent 1', type: 'talent', flags: { swerpg: { oggdudeKey: 'TALENT_1' } } }],
         },
       }
 

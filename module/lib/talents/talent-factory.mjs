@@ -61,7 +61,11 @@ export default class TalentFactory {
    */
   static build(actor, item, { action /** @type {"train" | "forget"} */ = 'train', isCreation = false } = {}, options = {}) {
     if (DEPR().warn) {
-      logger.deprecated('talent-factory', `TalentFactory.build() called (isCreation=${isCreation})`, 'Use purchaseTalentNode() from talent-node-purchase instead.')
+      logger.deprecated(
+        'talent-factory',
+        `TalentFactory.build() called (isCreation=${isCreation})`,
+        'Use purchaseTalentNode() from talent-node-purchase instead.',
+      )
     }
 
     if (item.type !== 'talent') {

@@ -15,7 +15,7 @@ description: >
 ## Why this exists
 
 A unit test is an executable specification. When it fails, the assertion must tell you
-*what* is wrong, *what was expected*, and *what was received* — without decoding a
+_what_ is wrong, _what was expected_, and _what was received_ — without decoding a
 30-line JSON diff. This discipline keeps tests readable, debuggable, and focused on
 business contracts.
 
@@ -46,11 +46,14 @@ expect(result.cost).toBe(5)
 
 ```js
 // BAD — full array diff
-expect(results).toEqual([{ id: 'cool', cost: 5 }, { id: 'skulduggery', cost: 10 }])
+expect(results).toEqual([
+  { id: 'cool', cost: 5 },
+  { id: 'skulduggery', cost: 10 },
+])
 
 // GOOD — extract the interesting dimension
-expect(results.map(s => s.id)).toEqual(['cool', 'skulduggery'])
-expect(results.map(s => s.cost)).toEqual([5, 10])
+expect(results.map((s) => s.id)).toEqual(['cool', 'skulduggery'])
+expect(results.map((s) => s.cost)).toEqual([5, 10])
 ```
 
 ### R3. Assert on semantics, not serialization
@@ -81,8 +84,8 @@ Use `toBe`, `toBeNull`, `toBeUndefined`, `toBeTrue`, `toBeFalse` over `toEqual`
 when the type is part of the contract:
 
 ```js
-expect(active).toBeTrue()    // tells you it's a boolean
-expect(active).toBe(true)    // also ok
+expect(active).toBeTrue() // tells you it's a boolean
+expect(active).toBe(true) // also ok
 expect(active).toEqual(true) // ambiguous — works for '1' too with loose models
 ```
 
@@ -111,11 +114,11 @@ const data = createSkillData({ careerFree: 1, value: 1 })
 
 Full-object comparison is the right choice when:
 
-| Scenario | Example |
-|---|---|
-| Round-trip serialization | `expect(restored).toEqual(input)` |
-| Factory verification | `expect(createCharacter()).toMatchObject({ species: 'human', ... })` |
-| External API contract | The full response shape is documented and stable |
+| Scenario                 | Example                                                              |
+| ------------------------ | -------------------------------------------------------------------- |
+| Round-trip serialization | `expect(restored).toEqual(input)`                                    |
+| Factory verification     | `expect(createCharacter()).toMatchObject({ species: 'human', ... })` |
+| External API contract    | The full response shape is documented and stable                     |
 
 In all other cases, extract and compare the property that expresses the business rule.
 
@@ -132,25 +135,27 @@ looks like from the description alone.
 
 When reviewing, use these shorthand tags:
 
-| Tag | Meaning |
-|---|---|
-| `[deep-diff]` | Comparing too much — extract the value |
-| `[vague-assert]` | Assertion doesn't explain what's wrong |
+| Tag                   | Meaning                                          |
+| --------------------- | ------------------------------------------------ |
+| `[deep-diff]`         | Comparing too much — extract the value           |
+| `[vague-assert]`      | Assertion doesn't explain what's wrong           |
 | `[brittle-structure]` | Testing JSON shape instead of business semantics |
-| `[no-arrange]` | Missing Arrange step, hard to follow |
-| `[over-mocked]` | Mocks a pure function, tests nothing real |
-| `[tight-coupling]` | Test too dependent on implementation details |
+| `[no-arrange]`        | Missing Arrange step, hard to follow             |
+| `[over-mocked]`       | Mocks a pure function, tests nothing real        |
+| `[tight-coupling]`    | Test too dependent on implementation details     |
 
 ## Token budget policy
 
 Do not send large context to an LLM unless reasoning is required.
 
 For deterministic tasks:
+
 - execute with shell, Git, npm, Vitest, Playwright or CI;
 - collect only the useful output;
 - call an LLM only if interpretation, decision or correction is needed.
 
 For failures:
+
 - send only the failing command;
 - send only the relevant error block;
 - send only the files directly involved;

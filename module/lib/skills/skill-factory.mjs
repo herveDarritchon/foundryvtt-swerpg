@@ -63,7 +63,12 @@ export default class SkillFactory {
           return new TrainedSkill(actor, skill, { action, isCreation, isCareer, isSpecialization }, options)
         }
         if (skill.rank.base > 0) {
-          return new ErrorSkill(actor, skill, { action, isCreation, isCareer, isSpecialization }, { message: "you can't forget this rank because it comes from species!" })
+          return new ErrorSkill(
+            actor,
+            skill,
+            { action, isCreation, isCareer, isSpecialization },
+            { message: "you can't forget this rank because it comes from species!" },
+          )
         }
       }
       return new TrainedSkill(actor, skill, { action, isCreation, isCareer, isSpecialization }, options)
@@ -92,13 +97,19 @@ export default class SkillFactory {
     }
 
     if (isCareer) {
-      if ((action === 'train' && SkillFactory.#hasCareerFreeSkill(actor)) || (action === 'forget' && actor.system.progression.freeSkillRanks.career.spent > 0)) {
+      if (
+        (action === 'train' && SkillFactory.#hasCareerFreeSkill(actor)) ||
+        (action === 'forget' && actor.system.progression.freeSkillRanks.career.spent > 0)
+      ) {
         return new CareerFreeSkill(actor, skill, { action, isCreation, isCareer, isSpecialization }, options)
       }
     }
 
     if (isSpecialization) {
-      if ((action === 'train' && SkillFactory.#hasSpecializationFreeSkill(actor)) || (action === 'forget' && actor.system.progression.freeSkillRanks.specialization.spent > 0)) {
+      if (
+        (action === 'train' && SkillFactory.#hasSpecializationFreeSkill(actor)) ||
+        (action === 'forget' && actor.system.progression.freeSkillRanks.specialization.spent > 0)
+      ) {
         return new SpecializationFreeSkill(
           actor,
           skill,
@@ -120,12 +131,12 @@ export default class SkillFactory {
 
   static #hasCareerFreeSkill(actor) {
     const career = actor.system.progression.freeSkillRanks.career
-    return (career.gained - career.spent) > 0
+    return career.gained - career.spent > 0
   }
 
   static #hasSpecializationFreeSkill(actor) {
     const specialization = actor.system.progression.freeSkillRanks.specialization
-    return (specialization.gained - specialization.spent) > 0
+    return specialization.gained - specialization.spent > 0
   }
 
   /**

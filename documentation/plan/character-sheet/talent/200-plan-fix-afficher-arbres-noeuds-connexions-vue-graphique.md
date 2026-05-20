@@ -300,27 +300,27 @@ Cas à couvrir :
 
 ## 6. Fichiers modifiés
 
-| Fichier | Action | Description du changement |
-|---|---|---|
-| `module/applications/specialization-tree-app.mjs` | modification | Ajouter le choix de l'arbre courant, le view-model de rendu, le mapping états/raisons et le dessin des nœuds/connexions |
-| `templates/applications/specialization-tree-app.hbs` | modification | Prévoir les zones DOM nécessaires au détail de nœud et à l'affichage du contexte de l'arbre courant |
-| `styles/applications.less` | modification | Styliser les états visuels, le panneau de détail et la lisibilité générale de la vue graphique |
-| `lang/fr.json` | modification | Ajouter les libellés FR des états et raisons de nœud |
-| `lang/en.json` | modification | Ajouter les libellés EN correspondants |
-| `tests/applications/specialization-tree-app.test.mjs` | modification | Couvrir le contrat de rendu de l'arbre courant et des états de nœud |
+| Fichier                                               | Action       | Description du changement                                                                                               |
+| ----------------------------------------------------- | ------------ | ----------------------------------------------------------------------------------------------------------------------- |
+| `module/applications/specialization-tree-app.mjs`     | modification | Ajouter le choix de l'arbre courant, le view-model de rendu, le mapping états/raisons et le dessin des nœuds/connexions |
+| `templates/applications/specialization-tree-app.hbs`  | modification | Prévoir les zones DOM nécessaires au détail de nœud et à l'affichage du contexte de l'arbre courant                     |
+| `styles/applications.less`                            | modification | Styliser les états visuels, le panneau de détail et la lisibilité générale de la vue graphique                          |
+| `lang/fr.json`                                        | modification | Ajouter les libellés FR des états et raisons de nœud                                                                    |
+| `lang/en.json`                                        | modification | Ajouter les libellés EN correspondants                                                                                  |
+| `tests/applications/specialization-tree-app.test.mjs` | modification | Couvrir le contrat de rendu de l'arbre courant et des états de nœud                                                     |
 
 ---
 
 ## 7. Risques
 
-| Risque | Impact | Mitigation |
-|---|---|---|
-| US16 implémente déjà la sélection de spécialisation | chevauchement fonctionnel avec US17 et rework | figer explicitement un seul arbre affiché par défaut, sans état utilisateur persistant |
-| Le rendu recalcule localement les règles d'état | divergence entre UI, achat et tests | imposer `getTreeNodesStates()` comme unique source pour les états et raisons |
-| Les talents référencés par `talentId` ne sont pas tous résolus | nœuds partiellement vides ou incompréhensibles | prévoir un fallback explicite "talent introuvable" et classer le nœud `invalid` si nécessaire |
-| Les connexions existent mais sont mal placées | arbre visuellement trompeur | dériver le placement uniquement de `row` / `column` et tester la transformation en modèle de rendu |
-| Les couleurs/variantes d'état ne sont pas assez contrastées | états ambigus, AC non tenus | définir des variantes visuelles distinctes + libellé/raison complémentaire |
-| Les tests deviennent fragiles car trop liés à PIXI | maintenance coûteuse | tester le modèle de rendu et les contrats de contexte plutôt que le pixel-perfect |
+| Risque                                                         | Impact                                         | Mitigation                                                                                         |
+| -------------------------------------------------------------- | ---------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| US16 implémente déjà la sélection de spécialisation            | chevauchement fonctionnel avec US17 et rework  | figer explicitement un seul arbre affiché par défaut, sans état utilisateur persistant             |
+| Le rendu recalcule localement les règles d'état                | divergence entre UI, achat et tests            | imposer `getTreeNodesStates()` comme unique source pour les états et raisons                       |
+| Les talents référencés par `talentId` ne sont pas tous résolus | nœuds partiellement vides ou incompréhensibles | prévoir un fallback explicite "talent introuvable" et classer le nœud `invalid` si nécessaire      |
+| Les connexions existent mais sont mal placées                  | arbre visuellement trompeur                    | dériver le placement uniquement de `row` / `column` et tester la transformation en modèle de rendu |
+| Les couleurs/variantes d'état ne sont pas assez contrastées    | états ambigus, AC non tenus                    | définir des variantes visuelles distinctes + libellé/raison complémentaire                         |
+| Les tests deviennent fragiles car trop liés à PIXI             | maintenance coûteuse                           | tester le modèle de rendu et les contrats de contexte plutôt que le pixel-perfect                  |
 
 ---
 

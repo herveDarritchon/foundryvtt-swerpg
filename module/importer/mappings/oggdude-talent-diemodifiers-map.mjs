@@ -102,8 +102,8 @@ function normalizeDieModifier(modifierData) {
       let normalizedKey = field.charAt(0).toLowerCase() + field.slice(1)
 
       // Dans certains cas on a skillType au lieu de skillKey, on veut normaliser ça
-      if (normalizedKey === 'skillType'){
-        normalizedKey = 'skillKey';
+      if (normalizedKey === 'skillType') {
+        normalizedKey = 'skillKey'
       }
 
       normalized[normalizedKey] = value

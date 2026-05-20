@@ -12,7 +12,7 @@
 ### Tests unitaires — `tests/lib/skills/` (135 tests)
 
 | Fichier                                         | Tests | Ce qui est testé                                                                                                        |
-|-------------------------------------------------|-------|-------------------------------------------------------------------------------------------------------------------------|
+| ----------------------------------------------- | ----- | ----------------------------------------------------------------------------------------------------------------------- |
 | `skill-base.test.mjs`                           | 3     | Constructeur, deep clone, méthodes abstraites                                                                           |
 | `skill-factory.test.mjs`                        | 23    | `SkillFactory.build()` combinatoire complète (train/forget, career/specialization/both/neither, création/post-création) |
 | `skill-factory-additional.test.mjs`             | 9     | Cas non-création, rangs gratuits manquants                                                                              |
@@ -29,14 +29,14 @@
 ### Tests utilitaires — `tests/utils/` (47 tests)
 
 | Fichier                           | Tests | Ce qui est testé                                                              |
-|-----------------------------------|-------|-------------------------------------------------------------------------------|
+| --------------------------------- | ----- | ----------------------------------------------------------------------------- |
 | `skill-costs.test.mjs`            | 22    | `getSkillNextRankCost`, `getSkillPurchaseState`, `getPositiveDicePoolPreview` |
 | `skill-costs-additional.test.mjs` | 25    | Cas négatifs, valeurs limites, custom maxRank                                 |
 
 ### Tests d'intégration document — `tests/documents/` (14 tests)
 
 | Fichier                   | Tests | Ce qui est testé                                                                             |
-|---------------------------|-------|----------------------------------------------------------------------------------------------|
+| ------------------------- | ----- | -------------------------------------------------------------------------------------------- |
 | `actor-creation.test.mjs` | 14    | `purchaseSkill()` → délégation SkillFactory, params train/forget/delta > 1, warning on error |
 
 ### Duplication
@@ -51,7 +51,7 @@
 ### Aucun test pour la couche de présentation sheet
 
 | Code non testé                                     | Où                                              | Impact                                                                                                                                                                                                                      |
-|----------------------------------------------------|-------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| -------------------------------------------------- | ----------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `CharacterSheet.#prepareSkills()`                  | `character-sheet.mjs:420`                       | Cœur de la préparation des données skills pour le template. Transforme `actor.system.skills` en données enrichies (pips, freeRank, nextCost, dicePreview). Appelle `getSkillPurchaseState` et `getPositiveDicePoolPreview`. |
 | `CharacterSheet.#prepareSkillRanks()`              | `character-sheet.mjs:487`                       | Construit le tableau de pips pour l'affichage des rangs                                                                                                                                                                     |
 | `CharacterSheet.#prepareFreeSkill()`               | `character-sheet.mjs:~459`                      | Détermine l'état free skill par compétence                                                                                                                                                                                  |
@@ -62,7 +62,7 @@
 ### Tests manquants additionnels
 
 | Fonction non testée                      | Où                                                                     |
-|------------------------------------------|------------------------------------------------------------------------|
+| ---------------------------------------- | ---------------------------------------------------------------------- |
 | `hasFreeSkillsAvailable()`               | `module/documents/actor.mjs:716`                                       |
 | `hasCareerFreeSkillsAvailable()`         | `module/documents/actor.mjs:694`                                       |
 | `hasSpecializationFreeSkillsAvailable()` | `module/documents/actor.mjs:705`                                       |
@@ -80,14 +80,14 @@
 
 ## 3. Analyse de la qualité des tests existants
 
-| Critère                        | Évaluation                                                                         |
-|--------------------------------|------------------------------------------------------------------------------------|
+| Critère                        | Évaluation                                                                          |
+| ------------------------------ | ----------------------------------------------------------------------------------- |
 | Séparation domaine/adaptateur  | ✅ Bonne — les tests lib/skills utilisent des objets JS simples, pas de Foundry API |
 | Cas nominaux                   | ✅ Couverts                                                                         |
 | Cas limites                    | ✅ Bien couverts (XP à 0, max rank, valeurs négatives, free ranks épuisés)          |
 | Erreurs                        | ✅ ErrorSkill, overspent guards, validation XP                                      |
-| Tests -additional              | ⚠️ Suggèrent une couverture ajoutée après coup, certaines redondances              |
-| Duplication                    | ⚠️ `module/utils/__tests__/skill-costs.test.js` est un doublon à supprimer         |
+| Tests -additional              | ⚠️ Suggèrent une couverture ajoutée après coup, certaines redondances               |
+| Duplication                    | ⚠️ `module/utils/__tests__/skill-costs.test.js` est un doublon à supprimer          |
 | Couverture couche présentation | ❌ **Aucune**                                                                       |
 | Tests d'intégration chaînés    | ❌ **Aucun**                                                                        |
 | Tests de template              | ❌ **Aucun**                                                                        |

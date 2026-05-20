@@ -1,20 +1,22 @@
 # Chantier 04 : Extraction du Turn Lifecycle Mixin
 
 ## Objectif
+
 Extraire les méthodes liées au cycle de vie des tours (début, fin, sortie de combat, délai) vers `turn.mixin.mjs`
 
 ## Méthodes à extraire (~80 lignes)
 
-| Méthode | Lignes (actor.mjs) | Description |
-|---------|-------------------|-------------|
-| `onStartTurn()` | 1281-1308 | Actions au début du tour |
-| `onEndTurn()` | 1317-1336 | Actions à la fin du tour |
-| `onLeaveCombat()` | 1344-1351 | Actions en quittant le combat |
-| `delay()` | 1005-1028 | Retarde l'initiative du personnage |
+| Méthode           | Lignes (actor.mjs) | Description                        |
+| ----------------- | ------------------ | ---------------------------------- |
+| `onStartTurn()`   | 1281-1308          | Actions au début du tour           |
+| `onEndTurn()`     | 1317-1336          | Actions à la fin du tour           |
+| `onLeaveCombat()` | 1344-1351          | Actions en quittant le combat      |
+| `delay()`         | 1005-1028          | Retarde l'initiative du personnage |
 
 ## Dépendances des méthodes
 
 ### `onStartTurn()`
+
 - `this.reset()` - Méthode héritée d'Actor
 - `this._sheet` - Référence à la fiche de l'acteur
 - `this.flags.swerpg?.delay` - Flags de délai
@@ -26,17 +28,20 @@ Extraire les méthodes liées au cycle de vie des tours (début, fin, sortie de 
 - **Externe** : `game.combat.round`, `game.combat.combatant`
 
 ### `onEndTurn()`
+
 - `this.reset()`, `this._sheet`, `this.flags.swerpg`
 - `this.talentIds`, `this.system.resources.action.value`
 - **Appels** : `this.alterResources()`, `this.expireEffects()`
 - **Externe** : `game.combat`
 
 ### `onLeaveCombat()`
+
 - `this.flags.swerpg`
 - `this.reset()`, `this._sheet`
 - Pas d'autres dépendances
 
 ### `delay(initiative, actorUpdates)`
+
 - `this.id` - ID de l'acteur
 - `this.update()` - Méthode Foundry Actor
 - `this.flags.swerpg`
@@ -158,22 +163,26 @@ export const TurnMixin = (Base) =>
 ## Points d'attention
 
 ⚠️ **Dépendances sur EffectsMixin**
+
 - `onStartTurn()` appelle `this.expireEffects(true)` et `this.applyDamageOverTime()`
 - `onEndTurn()` appelle `this.expireEffects(false)`
 - Ces méthodes seront dans `EffectsMixin` (chantier 05)
 - L'ordre de composition dans `index.mjs` doit être : `EffectsMixin` → `TurnMixin`
 
 ⚠️ **Dépendances sur actor.mjs**
+
 - `this.alterResources()` - Méthode définie dans actor.mjs (pas encore extraite)
 - `this.reset()` - Méthode héritée de Foundry Actor
 - `this._sheet` - Propriété de Foundry Actor
 
 ⚠️ **Accès à `game.combat`**
+
 - C'est une variable globale de Foundry
 - Accessible partout dans le contexte Foundry
 - Pas besoin d'import spécifique
 
 ⚠️ **`foundry.utils.mergeObject`**
+
 - Utilisé dans `delay()`
 - Disponible globalement dans Foundry
 
@@ -220,6 +229,7 @@ node --check module/documents/actor-mixins/combat/turn.mixin.mjs
 ## Notes sur le flux de combat
 
 Le flux typique est :
+
 1. `SwerpgCombat._onStartTurn(combatant)` → `combatant.actor.onStartTurn()`
 2. (Le joueur effectue ses actions)
 3. `SwerpgCombat._onEndTurn(combatant)` → `combatant.actor.onEndTurn()`

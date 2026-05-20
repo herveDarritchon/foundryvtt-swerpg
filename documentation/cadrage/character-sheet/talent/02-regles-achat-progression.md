@@ -73,12 +73,12 @@ Si une condition échoue, l’achat est refusé avec une raison exploitable par 
 
 La V1 calcule au minimum les états suivants :
 
-| État | Signification |
-|---|---|
-| `purchased` | Le nœud est déjà acheté par l’acteur. |
-| `available` | Le nœud peut être acheté maintenant. |
-| `locked` | Le nœud est valide mais ses prérequis ne sont pas remplis. |
-| `invalid` | Le nœud ou ses références sont incomplets ou incohérents. |
+| État        | Signification                                              |
+| ----------- | ---------------------------------------------------------- |
+| `purchased` | Le nœud est déjà acheté par l’acteur.                      |
+| `available` | Le nœud peut être acheté maintenant.                       |
+| `locked`    | Le nœud est valide mais ses prérequis ne sont pas remplis. |
+| `invalid`   | Le nœud ou ses références sont incomplets ou incohérents.  |
 
 Un nœud `invalid` n’est jamais achetable.
 
@@ -120,7 +120,7 @@ Exemple :
 ```txt
 Parer acheté dans un arbre → rang 1
 Parer acheté dans un autre arbre → rang 2
-````
+```
 
 ---
 
@@ -130,10 +130,10 @@ Un talent non-ranked peut apparaître dans plusieurs nœuds et plusieurs arbres.
 
 Règle V1 :
 
-* chaque nœud peut être acheté s’il sert la progression de l’arbre concerné ;
-* le bénéfice du talent reste non cumulatif ;
-* l’onglet Talents affiche le talent une seule fois, avec plusieurs sources ;
-* la vue graphique peut signaler que le talent est déjà possédé mais que le nœud reste achetable pour progresser.
+- chaque nœud peut être acheté s’il sert la progression de l’arbre concerné ;
+- le bénéfice du talent reste non cumulatif ;
+- l’onglet Talents affiche le talent une seule fois, avec plusieurs sources ;
+- la vue graphique peut signaler que le talent est déjà possédé mais que le nœud reste achetable pour progresser.
 
 ---
 
@@ -145,10 +145,7 @@ L’opération d’achat reçoit au minimum :
 
 ```js
 {
-  actor,
-  specializationId,
-  treeId,
-  nodeId
+  ;(actor, specializationId, treeId, nodeId)
 }
 ```
 
@@ -229,10 +226,10 @@ buildOwnedTalentSummary(actor, talentDefinitions, specializationTrees)
 
 La couche domaine ne doit pas dépendre :
 
-* du rendu graphique ;
-* des handlers UI ;
-* du canvas Foundry ;
-* d’un état visuel comme source de vérité.
+- du rendu graphique ;
+- des handlers UI ;
+- du canvas Foundry ;
+- d’un état visuel comme source de vérité.
 
 ---
 
@@ -242,12 +239,12 @@ Les anciennes logiques doivent être supprimées, neutralisées ou isolées si e
 
 À exclure du flux V1 :
 
-* `rank * 5` comme coût ;
-* `isCreation` comme garde-fou métier ;
-* talent points ;
-* achat direct d’un talent générique ;
-* état UI comme source de vérité ;
-* logique d’arbre global.
+- `rank * 5` comme coût ;
+- `isCreation` comme garde-fou métier ;
+- talent points ;
+- achat direct d’un talent générique ;
+- état UI comme source de vérité ;
+- logique d’arbre global.
 
 ---
 
@@ -255,17 +252,17 @@ Les anciennes logiques doivent être supprimées, neutralisées ou isolées si e
 
 Les tests doivent couvrir au minimum :
 
-* achat simple d’un nœud racine ;
-* refus si spécialisation non possédée ;
-* refus si arbre introuvable ;
-* refus si nœud introuvable ;
-* refus si nœud verrouillé ;
-* refus si XP insuffisante ;
-* achat ranked depuis un seul arbre ;
-* achat ranked depuis plusieurs arbres ;
-* achat non-ranked déjà possédé dans un autre arbre ;
-* recalcul de la vue consolidée ;
-* nœud invalide non achetable.
+- achat simple d’un nœud racine ;
+- refus si spécialisation non possédée ;
+- refus si arbre introuvable ;
+- refus si nœud introuvable ;
+- refus si nœud verrouillé ;
+- refus si XP insuffisante ;
+- achat ranked depuis un seul arbre ;
+- achat ranked depuis plusieurs arbres ;
+- achat non-ranked déjà possédé dans un autre arbre ;
+- recalcul de la vue consolidée ;
+- nœud invalide non achetable.
 
 ---
 
@@ -273,11 +270,11 @@ Les tests doivent couvrir au minimum :
 
 Ce document ne couvre pas :
 
-* remboursement ;
-* suppression avec recalcul intelligent ;
-* override MJ ;
-* achat depuis l’onglet Talents ;
-* drag & drop d’achat ;
-* effets mécaniques des talents ;
-* ActiveEffects ;
-* talents signatures.
+- remboursement ;
+- suppression avec recalcul intelligent ;
+- override MJ ;
+- achat depuis l’onglet Talents ;
+- drag & drop d’achat ;
+- effets mécaniques des talents ;
+- ActiveEffects ;
+- talents signatures.

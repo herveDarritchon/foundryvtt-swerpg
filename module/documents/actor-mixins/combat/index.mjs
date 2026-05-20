@@ -12,5 +12,4 @@ import { EffectsMixin } from './effects.mixin.mjs'
  * Composes all combat mixins into a single mixin
  * Order matters: EffectsMixin is the base, then TurnMixin, DefenseMixin, AttackMixin (outermost)
  */
-export const CombatMixin = (Base) =>
-  AttackMixin(DefenseMixin(TurnMixin(EffectsMixin(Base))))
+export const CombatMixin = (Base) => AttackMixin(DefenseMixin(TurnMixin(EffectsMixin(Base))))

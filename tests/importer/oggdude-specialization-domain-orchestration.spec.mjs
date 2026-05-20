@@ -105,17 +105,15 @@ describe('OggDudeImporter specialization orchestration', () => {
     vi.spyOn(OggDudeImporter.prototype, 'load').mockResolvedValue({ files: {} })
 
     const progressEvents = []
-    await OggDudeImporter.processOggDudeData(
-      { size: 1 },
-      [{ id: 'specialization', checked: true }],
-      { progressCallback: (payload) => progressEvents.push(payload) },
-    )
+    await OggDudeImporter.processOggDudeData({ size: 1 }, [{ id: 'specialization', checked: true }], {
+      progressCallback: (payload) => progressEvents.push(payload),
+    })
 
     expect(processElements).toHaveBeenCalledTimes(2)
-    expect(processElements.mock.calls.map((call) => call[0].element.type), 'the specialization domain should execute both internal item types').toEqual([
-      'specialization',
-      'specialization-tree',
-    ])
+    expect(
+      processElements.mock.calls.map((call) => call[0].element.type),
+      'the specialization domain should execute both internal item types',
+    ).toEqual(['specialization', 'specialization-tree'])
     expect(progressEvents.at(-1).processed).toBe(1)
     expect(progressEvents.at(-1).domain).toBe('specialization')
   })

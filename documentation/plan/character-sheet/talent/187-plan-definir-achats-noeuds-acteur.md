@@ -28,18 +28,18 @@ la logique d'achat, de résolution d'arbre, de consolidation ni l'UI.
 
 - Ajout d'une structure `system.progression.talentPurchases` sur le data model `character`
 - Définition d'un tableau d'achats avec, pour chaque entrée :
-    - `treeId`
-    - `nodeId`
-    - `talentId`
-    - `specializationId`
+  - `treeId`
+  - `nodeId`
+  - `talentId`
+  - `specializationId`
 - Validation structurelle minimale via `TypeDataModel`
 - Valeur initiale sûre pour éviter les régressions sur les personnages existants
 - Tests Vitest couvrant :
-    - présence du champ dans le schéma
-    - structure d'une entrée
-    - valeur par défaut
-    - création d'une instance avec données minimales
-    - compatibilité avec un acteur existant sans achats de talents
+  - présence du champ dans le schéma
+  - structure d'une entrée
+  - valeur par défaut
+  - création d'une instance avec données minimales
+  - compatibilité avec un acteur existant sans achats de talents
 
 ### Exclu de cette US
 
@@ -274,7 +274,7 @@ des anciennes classes d'achat de talents.
 ## 6. Fichiers modifiés
 
 | Fichier                                            | Action       | Description du changement                                                                                   |
-|----------------------------------------------------|--------------|-------------------------------------------------------------------------------------------------------------|
+| -------------------------------------------------- | ------------ | ----------------------------------------------------------------------------------------------------------- |
 | `module/models/character.mjs`                      | Modification | Ajout du champ `system.progression.talentPurchases` au data model `character` avec structure typée minimale |
 | `tests/models/character-talent-purchases.test.mjs` | Création     | Tests Vitest dédiés au schéma et à la compatibilité de la structure d'achats                                |
 | `tests/utils/actors/actor.mjs`                     | Modification | Ajout éventuel de `talentPurchases: []` dans les fixtures partagées si requis par les tests                 |
@@ -284,7 +284,7 @@ des anciennes classes d'achat de talents.
 ## 7. Risques
 
 | Risque                                                                                                                          | Impact                               | Mitigation                                                                                                       |
-|---------------------------------------------------------------------------------------------------------------------------------|--------------------------------------|------------------------------------------------------------------------------------------------------------------|
+| ------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------ | ---------------------------------------------------------------------------------------------------------------- |
 | Divergence entre le cadrage historique (`system.talentPurchases`) et la décision retenue (`system.progression.talentPurchases`) | Confusion dans US4, US5, US6         | Documenter explicitement le chemin retenu dans le plan et réutiliser ce même chemin dans toutes les US suivantes |
 | Champ rendu trop strict                                                                                                         | Régression sur les acteurs existants | Utiliser un tableau initial vide et une structure compatible avec l'absence d'achats                             |
 | Scope creep vers la logique d'achat                                                                                             | Retard et risque de régression       | Limiter US3 au schéma et aux tests structurels                                                                   |
@@ -296,31 +296,31 @@ des anciennes classes d'achat de talents.
 ## 8. Proposition d'ordre de commit
 
 1. **`feat(model): add talentPurchase schema to character progression`**
-    - `module/models/character.mjs` (modification)
+   - `module/models/character.mjs` (modification)
 
 2. **`test(model): add character talent purchase schema coverage`**
-    - `tests/models/character-talent-purchases.test.mjs` (création)
+   - `tests/models/character-talent-purchases.test.mjs` (création)
 
 3. **`test(fixtures): align actor fixtures with talent purchase defaults`**
-    - `tests/utils/actors/actor.mjs` (modification, si nécessaire)
+   - `tests/utils/actors/actor.mjs` (modification, si nécessaire)
 
 ---
 
 ## 9. Dépendances avec les autres US
 
 - **Dépend de** :
-    - US1 (#185) — type `specialization-tree` déjà posé
-    - US2 (#186) — structure des nœuds déjà posée
+  - US1 (#185) — type `specialization-tree` déjà posé
+  - US2 (#186) — structure des nœuds déjà posée
 
 - **Prépare directement** :
-    - US4 — résolution spécialisation possédée → arbre
-    - US5 — calcul d'état des nœuds
-    - US6 — achat d'un nœud
-    - US7/US8 — consolidation des talents possédés
-    - intégration audit/log talents décrite dans `06-audit-log-et-synchronisation.md`
+  - US4 — résolution spécialisation possédée → arbre
+  - US5 — calcul d'état des nœuds
+  - US6 — achat d'un nœud
+  - US7/US8 — consolidation des talents possédés
+  - intégration audit/log talents décrite dans `06-audit-log-et-synchronisation.md`
 
 - **Ordre recommandé** :
-    1. US3 ← ici
-    2. US4 (peut être parallèle si pas de conflit)
-    3. US5
-    4. US6
+  1. US3 ← ici
+  2. US4 (peut être parallèle si pas de conflit)
+  3. US5
+  4. US6

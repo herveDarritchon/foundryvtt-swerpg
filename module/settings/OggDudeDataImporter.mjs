@@ -525,7 +525,9 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
       totalPages: Math.max(1, Math.ceil(total / size)),
       items: pageItems,
       filters: this.previewFilters,
-      categoryOptions: Array.from(categorySet).sort().map((k) => ({ value: k, label: catLabel(k) })),
+      categoryOptions: Array.from(categorySet)
+        .sort()
+        .map((k) => ({ value: k, label: catLabel(k) })),
       weaponTypeOptions: Array.from(weaponTypeSet).sort(),
     }
   }

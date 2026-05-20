@@ -29,7 +29,7 @@ const OGGDUDE_PACKS_BY_TYPE = {
     label: 'Motivations',
     folderGroup: 'actor-options',
   },
-  "motivation-category": {
+  'motivation-category': {
     name: 'swerpg-motivation-categories',
     label: 'Motivation Categories',
     folderGroup: 'actor-options',
