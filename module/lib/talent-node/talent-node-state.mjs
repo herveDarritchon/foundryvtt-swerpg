@@ -37,14 +37,14 @@ function findNode(tree, nodeId) {
   return nodes.find(n => n?.nodeId === nodeId)
 }
 
-function hasPurchase(actor, treeId, nodeId, talentId, specializationId) {
+function hasPurchase(actor, treeId, nodeId, talentId, specializationId, { treeUuid, talentUuid } = {}) {
   const purchases = actor?.system?.progression?.talentPurchases
   if (!Array.isArray(purchases)) return false
   return purchases.some(p =>
-    p.treeId === treeId
-    && p.nodeId === nodeId
-    && p.talentId === talentId
+    p.nodeId === nodeId
     && p.specializationId === specializationId
+    && (treeUuid && p.treeUuid ? p.treeUuid === treeUuid : p.treeId === treeId)
+    && (talentUuid && p.talentUuid ? p.talentUuid === talentUuid : p.talentId === talentId)
   )
 }
 
@@ -84,6 +84,7 @@ function isAccessible(actor, tree, node) {
   if (!Array.isArray(connections)) return false
 
   const treeId = tree.id ?? tree._id
+  const treeUuid = tree.uuid
   const nodes = tree.system.nodes
   const specializationId = tree.system?.specializationId
 
@@ -91,7 +92,7 @@ function isAccessible(actor, tree, node) {
     if (conn.to !== node.nodeId) continue
     const sourceNode = nodes.find(n => n.nodeId === conn.from)
     if (!sourceNode) continue
-    if (hasPurchase(actor, treeId, sourceNode.nodeId, sourceNode.talentId, specializationId)) {
+    if (hasPurchase(actor, treeId, sourceNode.nodeId, sourceNode.talentId, specializationId, { treeUuid, talentUuid: sourceNode.talentUuid })) {
       return true
     }
   }
@@ -146,7 +147,8 @@ export function getNodeState(actor, specializationId, tree, nodeId) {
   }
 
   const treeId = tree.id ?? tree._id
-  if (hasPurchase(actor, treeId, node.nodeId, node.talentId, specializationId)) {
+  const treeUuid = tree.uuid
+  if (hasPurchase(actor, treeId, node.nodeId, node.talentId, specializationId, { treeUuid, talentUuid: node.talentUuid })) {
     return makeResult(NODE_STATE.PURCHASED, REASON_CODE.ALREADY_PURCHASED, { nodeId, specializationId })
   }
 

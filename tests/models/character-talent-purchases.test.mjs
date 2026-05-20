@@ -37,10 +37,10 @@ describe('SwerpgCharacter — talentPurchases', () => {
       expect(elementField.schema.specializationId.config.blank).toBe(false)
     })
 
-    test('no extra fields beyond the four required identifiers', () => {
+    test('includes all six fields (four required + two optional UUID fields)', () => {
       const elementField = SwerpgCharacter.defineSchema().progression.schema.talentPurchases.field
       const fieldNames = Object.keys(elementField.schema)
-      expect(fieldNames).toEqual(['treeId', 'nodeId', 'talentId', 'specializationId'])
+      expect(fieldNames).toEqual(['treeId', 'treeUuid', 'nodeId', 'talentId', 'talentUuid', 'specializationId'])
     })
   })
 
