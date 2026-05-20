@@ -184,15 +184,15 @@ Puis le système intercepte cette règle.
 Selon l’architecture retenue, cela peut se faire par :
 
 ```js
-Hooks.on("applyActiveEffect", (actor, change, current, delta, changes) => {
-  if (change.type !== "custom") return;
+Hooks.on('applyActiveEffect', (actor, change, current, delta, changes) => {
+  if (change.type !== 'custom') return
 
   switch (change.key) {
-    case "system.rules.grantAdvantage":
-      changes[`system.rollOptions.${change.value}.advantage`] = true;
-      break;
+    case 'system.rules.grantAdvantage':
+      changes[`system.rollOptions.${change.value}.advantage`] = true
+      break
   }
-});
+})
 ```
 
 Ou par une sous-classe de `ActiveEffect` / logique d’application dédiée, selon le degré de contrôle voulu. Foundry expose `applyChange` et `applyChangeField`, qui permettent d’appliquer un changement à un document ou à un champ, avec support de données de remplacement pour les expressions `@`. ([foundryvtt.com][1])
@@ -259,10 +259,10 @@ L’effet ne modifie presque aucune donnée numérique. Il ajoute des tags ou é
 Puis les jets, l’UI ou les calculateurs de règles interrogent les tags actifs :
 
 ```js
-const frightened = actor.system.traits.conditions.includes("frightened");
+const frightened = actor.system.traits.conditions.includes('frightened')
 
 if (frightened) {
-  rollData.modifiers.push({ slug: "frightened", value: -2 });
+  rollData.modifiers.push({ slug: 'frightened', value: -2 })
 }
 ```
 
@@ -701,10 +701,10 @@ Region effects pour les effets spatiaux.
 
 Le mauvais design consiste à laisser les Active Effects écrire partout dans `system` sans stratégie. Le bon design consiste à préparer le modèle de données pour recevoir les effets proprement, puis à centraliser la résolution des règles dans l’acteur, les items et le moteur de jets.
 
-[1]: https://foundryvtt.com/api/classes/foundry.documents.ActiveEffect.html "ActiveEffect | Foundry Virtual Tabletop - API Documentation - Version 14"
-[2]: https://foundryvtt.com/article/active-effects/ "Active Effects | Foundry Virtual Tabletop"
-[3]: https://foundryvtt.com/releases/14.353 "Release 14.353 | Foundry Virtual Tabletop"
-[4]: https://foundryvtt.com/api/v14/variables/CONST.ACTIVE_EFFECT_CHANGE_TYPES.html "ACTIVE_EFFECT_CHANGE_TYPES | Foundry Virtual Tabletop - API Documentation - Version 14"
-[5]: https://foundryvtt.com/api/classes/foundry.data.regionBehaviors.ApplyActiveEffectRegionBehaviorType.html?utm_source=chatgpt.com "ApplyActiveEffectRegionBehavio..."
-[6]: https://foundryvtt.com/api/classes/foundry.documents.ActiveEffect.html?utm_source=chatgpt.com "ActiveEffect | Foundry Virtual Tabletop - API Documentation"
-[7]: https://github.com/foundryvtt/crucible/issues/607 "V14 Active Effect Redesign · Issue #607 · foundryvtt/crucible · GitHub"
+[1]: https://foundryvtt.com/api/classes/foundry.documents.ActiveEffect.html 'ActiveEffect | Foundry Virtual Tabletop - API Documentation - Version 14'
+[2]: https://foundryvtt.com/article/active-effects/ 'Active Effects | Foundry Virtual Tabletop'
+[3]: https://foundryvtt.com/releases/14.353 'Release 14.353 | Foundry Virtual Tabletop'
+[4]: https://foundryvtt.com/api/v14/variables/CONST.ACTIVE_EFFECT_CHANGE_TYPES.html 'ACTIVE_EFFECT_CHANGE_TYPES | Foundry Virtual Tabletop - API Documentation - Version 14'
+[5]: https://foundryvtt.com/api/classes/foundry.data.regionBehaviors.ApplyActiveEffectRegionBehaviorType.html?utm_source=chatgpt.com 'ApplyActiveEffectRegionBehavio...'
+[6]: https://foundryvtt.com/api/classes/foundry.documents.ActiveEffect.html?utm_source=chatgpt.com 'ActiveEffect | Foundry Virtual Tabletop - API Documentation'
+[7]: https://github.com/foundryvtt/crucible/issues/607 'V14 Active Effect Redesign · Issue #607 · foundryvtt/crucible · GitHub'

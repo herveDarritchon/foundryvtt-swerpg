@@ -1,6 +1,7 @@
 # Chantier 07 : Tests du refactoring combat
 
 ## Objectif
+
 Créer les tests pour valider que le refactoring vers les mixins de combat fonctionne correctement.
 
 ## Fichiers de tests à créer
@@ -31,9 +32,13 @@ class BaseActor {
     this.system = data.system || {}
     this.callActorHooks = mock()
   }
-  
-  async update() { return this }
-  get talents() { return [] }
+
+  async update() {
+    return this
+  }
+  get talents() {
+    return []
+  }
 }
 
 class TestActor extends AttackMixin(BaseActor) {}
@@ -51,11 +56,11 @@ describe('AttackMixin', () => {
             boons: {},
             banes: {},
             weapon: null,
-            defenseType: 'physical'
+            defenseType: 'physical',
           },
-          range: { maximum: 5 }
-        }
-      }
+          range: { maximum: 5 },
+        },
+      },
     })
   })
 
@@ -74,12 +79,12 @@ describe('AttackMixin', () => {
     test('should return boons and banes objects', () => {
       const target = {
         statuses: new Set(),
-        effects: new Map()
+        effects: new Map(),
       }
       const action = { usage: { boons: {}, banes: {} }, range: { maximum: 5 } }
-      
+
       const result = actor.applyTargetBoons(target, action, 'weapon', false)
-      
+
       expect(result).toHaveProperty('boons')
       expect(result).toHaveProperty('banes')
     })
@@ -87,12 +92,12 @@ describe('AttackMixin', () => {
     test('should add guarded bane if target is guarded', () => {
       const target = {
         statuses: new Set(['guarded']),
-        effects: new Map()
+        effects: new Map(),
       }
       const action = { usage: { boons: {}, banes: {} }, damage: {}, range: { maximum: 5 } }
-      
+
       const { banes } = actor.applyTargetBoons(target, action, 'weapon', false)
-      
+
       expect(banes).toHaveProperty('guarded')
     })
   })
@@ -115,9 +120,9 @@ class BaseActor {
         physical: { total: 10 },
         dodge: { total: 5 },
         parry: { total: 3 },
-        block: { total: 2 }
+        block: { total: 2 },
       },
-      skills: data.skills || {}
+      skills: data.skills || {},
     }
     this.resistances = data.resistances || {}
     this.isBroken = data.isBroken || false
@@ -184,7 +189,7 @@ class BaseActor {
     this.isBroken = data.isBroken || false
     this.system = data.system || { resources: { action: { value: 1 } } }
     this._sheet = { render: mock() }
-    
+
     this.reset = mock()
     this.update = mock().mockResolvedValue(this)
     this.expireEffects = mock().mockResolvedValue()
@@ -205,8 +210,8 @@ describe('TurnMixin', () => {
       combat: {
         round: 1,
         combatant: { initiative: 10 },
-        getCombatantByActor: mock().mockReturnValue({ initiative: 10, getDelayMaximum: () => 20 })
-      }
+        getCombatantByActor: mock().mockReturnValue({ initiative: 10, getDelayMaximum: () => 20 }),
+      },
     }
   })
 
@@ -250,7 +255,7 @@ class BaseActor {
     this.isBroken = data.isBroken || false
     this.isIncapacitated = data.isIncapacitated || false
     this.resistances = data.resistances || {}
-    
+
     this.callActorHooks = mock()
     this.alterResources = mock().mockResolvedValue()
     this.deleteEmbeddedDocuments = mock().mockResolvedValue()
@@ -268,19 +273,19 @@ describe('EffectsMixin', () => {
     actor = new TestActor()
     global.game = {
       combat: { round: 1, active: true },
-      settings: { get: mock().mockReturnValue(0), set: mock().mockResolvedValue() }
+      settings: { get: mock().mockReturnValue(0), set: mock().mockResolvedValue() },
     }
   })
 
   describe('applyDamageOverTime()', () => {
     test('should apply DOT from effects', async () => {
       actor.effects.set('dot-1', {
-        flags: { swerpg: { dot: { health: 5, damageType: 'poison' } } }
+        flags: { swerpg: { dot: { health: 5, damageType: 'poison' } } },
       })
       actor.resistances = { poison: { total: 2 } }
-      
+
       await actor.applyDamageOverTime()
-      
+
       expect(actor.alterResources).toHaveBeenCalled()
     })
   })
@@ -288,7 +293,7 @@ describe('EffectsMixin', () => {
   describe('_isEffectExpired()', () => {
     test('should return true for expired turn-based effects', () => {
       const effect = {
-        duration: { turns: 2, startRound: 1 }
+        duration: { turns: 2, startRound: 1 },
       }
       // elapsed = 1 - 1 + 1 = 1, turns = 2, so not expired at start
       expect(actor._isEffectExpired(effect, true)).toBe(false)
@@ -339,8 +344,8 @@ export default {
   test: {
     environment: 'node',
     globals: true,
-    include: ['tests/**/*.test.mjs']
-  }
+    include: ['tests/**/*.test.mjs'],
+  },
 }
 ```
 
@@ -383,10 +388,12 @@ Objectif : > 80% de couverture sur les fichiers de mixins.
 ## Notes
 
 ⚠️ **Tests dans l'environnement Foundry**
+
 - Certains tests nécessitent l'environnement Foundry complet (game, Actor, etc.)
 - Utiliser des mocks pour les tests unitaires
 - Les tests d'intégration nécessitent `foundry.js` chargé
 
 ⚠️ **Mocks complexes**
+
 - `AttackRoll` a beaucoup de dépendances
 - Pour tester `weaponAttack()` et `skillAttack()`, créer des mocks complets ou utiliser un vrai monde Foundry

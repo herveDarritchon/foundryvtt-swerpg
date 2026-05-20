@@ -29,9 +29,7 @@ function buildActor(overrides = {}) {
     id: 'actor-001',
     system: {
       details: {
-        specializations: [
-          { specializationId: 'spec-1', name: 'Bodyguard' },
-        ],
+        specializations: [{ specializationId: 'spec-1', name: 'Bodyguard' }],
       },
       progression: {
         talentPurchases: [],
@@ -58,9 +56,7 @@ function buildResolvedTree(overrides = {}) {
       id: 'tree-1',
       system: {
         specializationId: 'spec-1',
-        nodes: [
-          { nodeId: 'r1c1', talentId: 'talent-parry', row: 1, column: 1, cost: 5 },
-        ],
+        nodes: [{ nodeId: 'r1c1', talentId: 'talent-parry', row: 1, column: 1, cost: 5 }],
         connections: [{ from: 'r1c1', to: 'r2c1' }],
       },
       ...overrides.tree,
@@ -175,9 +171,7 @@ describe('TalentNodePurchase', () => {
             specializations: [{ specializationId: 'spec-1' }],
           },
           progression: {
-            talentPurchases: [
-              { treeId: 'tree-1', nodeId: 'r1c1', talentId: 'talent-parry', specializationId: 'spec-1' },
-            ],
+            talentPurchases: [{ treeId: 'tree-1', nodeId: 'r1c1', talentId: 'talent-parry', specializationId: 'spec-1' }],
             experience: { gained: 100, spent: 5 },
           },
         },
@@ -243,15 +237,18 @@ describe('TalentNodePurchase', () => {
       await purchaseTalentNode(actor, 'spec-1', 'r1c1')
 
       expect(recordTalentNodePurchase).toHaveBeenCalledTimes(1)
-      expect(recordTalentNodePurchase).toHaveBeenCalledWith(actor, expect.objectContaining({
-        specializationId: 'spec-1',
-        treeId: 'tree-1',
-        nodeId: 'r1c1',
-        talentId: 'talent-parry',
-        cost: 5,
-        previousXp: 0,
-        nextXp: 5,
-      }))
+      expect(recordTalentNodePurchase).toHaveBeenCalledWith(
+        actor,
+        expect.objectContaining({
+          specializationId: 'spec-1',
+          treeId: 'tree-1',
+          nodeId: 'r1c1',
+          talentId: 'talent-parry',
+          cost: 5,
+          previousXp: 0,
+          nextXp: 5,
+        }),
+      )
     })
 
     it('succeeds even when audit log write fails (non-blocking)', async () => {
@@ -344,9 +341,7 @@ describe('TalentNodePurchase', () => {
       })
 
       await purchaseTalentNode(actor, 'spec-1', 'r1c1')
-      actor.system.progression.talentPurchases = [
-        { treeId: 'tree-1', nodeId: 'r1c1', talentId: 'talent-parry', specializationId: 'spec-1' },
-      ]
+      actor.system.progression.talentPurchases = [{ treeId: 'tree-1', nodeId: 'r1c1', talentId: 'talent-parry', specializationId: 'spec-1' }]
       actor.system.progression.experience.spent = 5
 
       await purchaseTalentNode(actor, 'spec-2', 'r1c1')
@@ -413,9 +408,7 @@ describe('TalentNodePurchase', () => {
       })
 
       await purchaseTalentNode(actor, 'spec-1', 'r1c1')
-      actor.system.progression.talentPurchases = [
-        { treeId: 'tree-1', nodeId: 'r1c1', talentId: 'talent-toughness', specializationId: 'spec-1' },
-      ]
+      actor.system.progression.talentPurchases = [{ treeId: 'tree-1', nodeId: 'r1c1', talentId: 'talent-toughness', specializationId: 'spec-1' }]
       actor.system.progression.experience.spent = 5
 
       await purchaseTalentNode(actor, 'spec-2', 'r1c1')

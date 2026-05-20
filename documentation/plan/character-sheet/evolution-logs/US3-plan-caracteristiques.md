@@ -41,14 +41,14 @@ Vérifier que l'infrastructure livrée par US1 (#151) et TECH-159 (#159) satisfa
 
 ### 3.1. Infrastructure AOP livrée et fermée
 
-| Issue | Titre | Statut |
-|-------|-------|--------|
-| #151 | US1: Enregistrer chaque action d'évolution du personnage | CLOSED |
-| #158 | TECH: Architecture AOP et double hook preUpdateActor/updateActor | CLOSED |
-| #159 | TECH: Analyseur de diff pour détection des changements | CLOSED |
-| #160 | TECH: Résilience avancée (retry, GM whisper) | — |
-| #161 | TECH: Snapshot XP dans chaque entrée | — |
-| #162 | TECH: Taille max configurable (System Setting) | — |
+| Issue | Titre                                                            | Statut |
+| ----- | ---------------------------------------------------------------- | ------ |
+| #151  | US1: Enregistrer chaque action d'évolution du personnage         | CLOSED |
+| #158  | TECH: Architecture AOP et double hook preUpdateActor/updateActor | CLOSED |
+| #159  | TECH: Analyseur de diff pour détection des changements           | CLOSED |
+| #160  | TECH: Résilience avancée (retry, GM whisper)                     | —      |
+| #161  | TECH: Snapshot XP dans chaque entrée                             | —      |
+| #162  | TECH: Taille max configurable (System Setting)                   | —      |
 
 ### 3.2. `detectCharacteristicChanges()` — déjà implémenté
 
@@ -70,21 +70,26 @@ function detectCharacteristicChanges(oldState, changes, actor, ts, userId, user,
     const oldTotal = getCharacteristicTotalRank(oldRank)
     const newTotal = getCharacteristicTotalRank(newRank)
 
-    if (newTotal <= oldTotal) continue   // ← only increases
+    if (newTotal <= oldTotal) continue // ← only increases
 
-    const cost = computeCharacteristicCost(newTotal)   // newValue * 10
+    const cost = computeCharacteristicCost(newTotal) // newValue * 10
 
-    entries.push(makeEntry({
-      type: 'characteristic.increase',
-      data: {
-        characteristicId: charId,
-        oldValue: oldTotal,
-        newValue: newTotal,
-        cost,
-      },
-      xpDelta: -cost,
-      ts, userId, user, snapshot,
-    }))
+    entries.push(
+      makeEntry({
+        type: 'characteristic.increase',
+        data: {
+          characteristicId: charId,
+          oldValue: oldTotal,
+          newValue: newTotal,
+          cost,
+        },
+        xpDelta: -cost,
+        ts,
+        userId,
+        user,
+        snapshot,
+      }),
+    )
   }
   return entries
 }
@@ -149,10 +154,10 @@ actor.mjs :: purchaseCharacteristic(characteristicId, 'train')
 
 `tests/utils/audit-diff.test.mjs:838-898` :
 
-| Test | Statut |
-|------|--------|
+| Test                                              | Statut   |
+| ------------------------------------------------- | -------- |
 | `characteristic.increase from 2 to 3 costs 30 XP` | ✅ Passe |
-| `returns empty for characteristic decrease` | ✅ Passe |
+| `returns empty for characteristic decrease`       | ✅ Passe |
 
 ### 3.6. Différence notable avec skill.train
 
@@ -167,6 +172,7 @@ Les entrées `skill.train` incluent un champ `skillName` lisible (ex: "Athletics
 **Décision** : Aucune modification de code n'est nécessaire pour US3. L'infrastructure US1/TECH-159 couvre intégralement les critères d'acceptation.
 
 Justification :
+
 - Le détecteur `detectCharacteristicChanges()` est implémenté, testé, et fonctionnel
 - Il couvre les six caractéristiques (même schéma `system.characteristics.{id}.rank`)
 - La dédup XP fonctionne correctement (pas de double entrée `xp.spend` + `characteristic.increase`)
@@ -177,6 +183,7 @@ Justification :
 **Décision** : Ne pas ajouter de `characteristicName` lisible dans l'entrée de log. La résolution nom → label sera faite par US6 (UI).
 
 Justification :
+
 - Le label lisible est dans `SYSTEM.CHARACTERISTICS` (config) ou via i18n, pas dans les données de l'acteur
 - L'ajouter nécessiterait d'importer la config dans `audit-diff.mjs` (couplage)
 - US6 peut résoudre `characteristicId → label` via `game.i18n.localize('SWERPG.Characteristic.brawn')`
@@ -217,13 +224,13 @@ Si un hook d'update simulé est possible en test unitaire (via le mock d'acteur 
 
 ### Étape 4 : Validation des edge cases
 
-| Edge case | Impact attendu | Statut |
-|-----------|----------------|--------|
-| **XP insuffisant** | `process()` retourne `ErrorCharacteristic`, `updateState()` n'est pas appelé → pas d'`actor.update()` → pas de log | ✅ Fonctionnel |
-| **Augmentation au max (5→6)** | `trained` passe de 0 à 1, base à 5 → new total 6. Coût = 60 XP. Entrée créée | ⚠️ À tester |
-| **Augmentation après création (6 max)** | Bloqué par `process()` (value > 6) → pas de log | ✅ Fonctionnel |
-| **Bonus rank qui change seul** | `bonus` change sans `trained` → `newTotal > oldTotal` → entrée créée | ⚠️ Faux positif potentiel |
-| **Annulation (decrease)** | Ignoré intentionnellement → pas de log | ✅ Conforme |
+| Edge case                               | Impact attendu                                                                                                     | Statut                    |
+| --------------------------------------- | ------------------------------------------------------------------------------------------------------------------ | ------------------------- |
+| **XP insuffisant**                      | `process()` retourne `ErrorCharacteristic`, `updateState()` n'est pas appelé → pas d'`actor.update()` → pas de log | ✅ Fonctionnel            |
+| **Augmentation au max (5→6)**           | `trained` passe de 0 à 1, base à 5 → new total 6. Coût = 60 XP. Entrée créée                                       | ⚠️ À tester               |
+| **Augmentation après création (6 max)** | Bloqué par `process()` (value > 6) → pas de log                                                                    | ✅ Fonctionnel            |
+| **Bonus rank qui change seul**          | `bonus` change sans `trained` → `newTotal > oldTotal` → entrée créée                                               | ⚠️ Faux positif potentiel |
+| **Annulation (decrease)**               | Ignoré intentionnellement → pas de log                                                                             | ✅ Conforme               |
 
 ⚠️ **Faux positif potentiel** : si un effet de talent modifie `bonus` (ex: +1 bonus), le détecteur voit `newTotal > oldTotal` et crée une entrée `characteristic.increase`. À discuter si c'est souhaitable. Atténuation : l'entrée contient `oldValue` et `newValue` égaux au total (incluant bonus), donc le contexte est traçable.
 
@@ -235,8 +242,8 @@ Marquer US3 comme vérifiée dans la feuille de route de l'épic.
 
 ## 6. Fichiers modifiés
 
-| Fichier | Action | Description |
-|---------|--------|-------------|
+| Fichier                           | Action                     | Description                                                                    |
+| --------------------------------- | -------------------------- | ------------------------------------------------------------------------------ |
 | `tests/utils/audit-diff.test.mjs` | **Modification** (mineure) | Ajout d'un test paramétré pour les six caractéristiques + test edge case bonus |
 
 Aucune modification de code métier ou d'infrastructure n'est nécessaire.
@@ -245,12 +252,12 @@ Aucune modification de code métier ou d'infrastructure n'est nécessaire.
 
 ## 7. Risques
 
-| Risque | Impact | Mitigation |
-|--------|--------|------------|
-| **Faux positif bonus rank** : un changement de `bonus` (par talent) crée une entrée `characteristic.increase` non souhaitée | Entrée de log trompeuse (augmentation "gratuite") | Vérifier en étape 4 si c'est acceptable. Si nécessaire, filtrer les changements qui ne touchent QUE `bonus` |
-| **`purchaseCharacteristic` sans `await` sur `process()`** : ligne 252, `characteristicClass.process()` n'est pas attendu. Si `process()` devient synchrone, le comportement change | Possible incohérence si refacto | Bug préexistant hors périmètre US3. Documenté dans les risques. |
+| Risque                                                                                                                                                                                       | Impact                                             | Mitigation                                                                                                                               |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| **Faux positif bonus rank** : un changement de `bonus` (par talent) crée une entrée `characteristic.increase` non souhaitée                                                                  | Entrée de log trompeuse (augmentation "gratuite")  | Vérifier en étape 4 si c'est acceptable. Si nécessaire, filtrer les changements qui ne touchent QUE `bonus`                              |
+| **`purchaseCharacteristic` sans `await` sur `process()`** : ligne 252, `characteristicClass.process()` n'est pas attendu. Si `process()` devient synchrone, le comportement change           | Possible incohérence si refacto                    | Bug préexistant hors périmètre US3. Documenté dans les risques.                                                                          |
 | **Dédup XP fragile** : la suppression de `xp.spend` repose sur `!hasBusinessChange` (ligne 420). Si l'ordre des updates change (XP après caractéristique au lieu de avant), la logique casse | Double entrée (characteristic.increase + xp.spend) | Actuellement, XP est mis à jour AVANT la caractéristique dans `process()`. Vérifier que cet ordre est stable. Si inversé, la dédup rate. |
-| **Tests non exécutables sans Foundry** : certains tests nécessitent un hook Foundry réel | Couverture partielle | Les tests unitaires existants mockent les données sans dépendre de Foundry. Ajouter les nouveaux tests dans le même format. |
+| **Tests non exécutables sans Foundry** : certains tests nécessitent un hook Foundry réel                                                                                                     | Couverture partielle                               | Les tests unitaires existants mockent les données sans dépendre de Foundry. Ajouter les nouveaux tests dans le même format.              |
 
 ---
 

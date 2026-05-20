@@ -159,7 +159,7 @@ export default class SwerpgWeapon extends SwerpgCombatItem {
     }
 
     // Versatile Two-Handed
-    if (this.qualities.some(q => q.key === 'versatile') && this.slot === SYSTEM.WEAPON.SLOTS.TWOHAND) {
+    if (this.qualities.some((q) => q.key === 'versatile') && this.slot === SYSTEM.WEAPON.SLOTS.TWOHAND) {
       this.damage.base += 2
       this.actionCost += 1
     }

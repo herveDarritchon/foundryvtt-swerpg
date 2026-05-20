@@ -77,35 +77,35 @@ The most reliable way to get permanent image URLs is through the GitHub web UI:
 Use `puppeteer-core` with local Chrome to screenshot HTML mockups:
 
 ```javascript
-const puppeteer = require('puppeteer-core');
+const puppeteer = require('puppeteer-core')
 
 const browser = await puppeteer.launch({
   executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
-  defaultViewport: { width: 900, height: 600, deviceScaleFactor: 2 }
-});
+  defaultViewport: { width: 900, height: 600, deviceScaleFactor: 2 },
+})
 
-const page = await browser.newPage();
-await page.setContent(htmlString);
+const page = await browser.newPage()
+await page.setContent(htmlString)
 
 // Screenshot specific elements
-const elements = await page.$$('.section');
+const elements = await page.$$('.section')
 for (let i = 0; i < elements.length; i++) {
-  await elements[i].screenshot({ path: `mockup-${i + 1}.png` });
+  await elements[i].screenshot({ path: `mockup-${i + 1}.png` })
 }
 
-await browser.close();
+await browser.close()
 ```
 
 > **Note:** MCP Playwright may not connect to localhost due to network isolation. Use puppeteer-core with a local Chrome installation instead.
 
 ## Quick reference
 
-| Method | Private repos | Permanent | No auth needed | API-only |
-|--------|:---:|:---:|:---:|:---:|
-| Contents API + `github.com/raw/` | ✅ | ✅ | ❌ | ✅ |
-| Browser drag-drop (`user-attachments`) | ✅ | ✅ | ✅ | ❌ |
-| `raw.githubusercontent.com` | ❌ (404) | ✅ | ❌ | ✅ |
-| Gist | Public only | ✅ | ✅ | ❌ (no binary) |
+| Method                                 | Private repos | Permanent | No auth needed |    API-only    |
+| -------------------------------------- | :-----------: | :-------: | :------------: | :------------: |
+| Contents API + `github.com/raw/`       |      ✅       |    ✅     |       ❌       |       ✅       |
+| Browser drag-drop (`user-attachments`) |      ✅       |    ✅     |       ✅       |       ❌       |
+| `raw.githubusercontent.com`            |   ❌ (404)    |    ✅     |       ❌       |       ✅       |
+| Gist                                   |  Public only  |    ✅     |       ✅       | ❌ (no binary) |
 
 ## Common pitfalls
 

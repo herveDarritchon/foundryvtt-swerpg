@@ -192,36 +192,36 @@ ces achats et des référentiels d’arbres/talents.
 ## 7. Critères d'acceptation
 
 - [ ] L'onglet Talents affiche clairement les talents possédés et leur état (nom, activation, ranked ou non, rang,
-  spécialisation(s) source(s)).
+      spécialisation(s) source(s)).
 - [ ] Le personnage peut consulter ses arbres de spécialisation via une vue graphique dédiée, indépendante du canvas de
-  scène Foundry.
+      scène Foundry.
 - [ ] Une spécialisation peut être choisie comme contexte d’achat courant dans l’UI.
 - [ ] Les autres spécialisations possédées par l’acteur restent consultables en lecture.
 - [ ] L’achat d’un talent met à jour correctement :
-    - les données persistantes de l’acteur ;
-    - les achats de nœuds ;
-    - le rang consolidé du talent ;
-    - l’onglet Talents / vue consolidée ;
-    - la vue graphique d'arbre ;
-    - les règles d’accessibilité des nœuds suivants.
+  - les données persistantes de l’acteur ;
+  - les achats de nœuds ;
+  - le rang consolidé du talent ;
+  - l’onglet Talents / vue consolidée ;
+  - la vue graphique d'arbre ;
+  - les règles d’accessibilité des nœuds suivants.
 - [ ] Les talents à rangs sont gérés proprement : achats multiples possibles sur des nœuds valides, rang consolidé
-  correct, coût XP issu des nœuds achetés.
+      correct, coût XP issu des nœuds achetés.
 - [ ] Les prérequis et blocages sont compréhensibles côté UI.
 - [ ] Les données importées OggDude peuvent alimenter ce flux sans structure ad hoc cassante.
 - [ ] Les tests couvrent au minimum :
-    - achat simple ;
-    - achat ranked depuis un seul arbre ;
-    - achat ranked depuis plusieurs arbres ;
-    - verrouillage / déverrouillage par connexions ;
-    - recalcul de la vue consolidée ;
-    - import minimal d’un arbre OggDude.
+  - achat simple ;
+  - achat ranked depuis un seul arbre ;
+  - achat ranked depuis plusieurs arbres ;
+  - verrouillage / déverrouillage par connexions ;
+  - recalcul de la vue consolidée ;
+  - import minimal d’un arbre OggDude.
 
 ---
 
 ## 8. Points de vigilance à instruire
 
 | Point                      | Risque                                                                                                                                             | Décision de cadrage attendue                                                                                |
-|----------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------|
+| -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
 | Multi-spé existant         | Une partie du code semble déjà lire plusieurs spécialisations, mais certains compteurs ne prennent que la première. Risque de calculs incohérents. | Déterminer si la V1 corrige immédiatement le modèle multi-spé acteur.                                       |
 | Canvas hérité              | L’arbre actuel suppose un arbre global et des patterns Crucible. Risque de réutilisation abusive.                                                  | Confirmer ce qui est réécrit, ignoré ou seulement repris comme pattern technique.                           |
 | Règles d’achat Crucible    | Coût hardcodé, logique `isCreation`, mélange XP/talent points. Risque de fausse règle Edge.                                                        | Remplacer par une couche domaine testable et indépendante de Foundry.                                       |
@@ -289,6 +289,7 @@ La logique d’achat doit :
 - laisser l’audit/log tracer l’opération sans stocker l’historique dans l’acteur.
 
 #### Détails
+
 [pdv-cadrage-crucible-achat.md](pdv-cadrage-crucible-achat.md)
 
 ---
@@ -318,6 +319,7 @@ En cas de donnée ambiguë ou incomplète, l’import doit préserver la donnée
 plutôt que corrigé par une règle implicite.
 
 ### Détails
+
 [pdv-cadrage-import-ogg.md](pdv-cadrage-import-ogg.md)
 
 ---
@@ -342,6 +344,7 @@ La vue graphique délègue les règles d’achat, d’accessibilité et de conso
 l’état métier durable et ne dépend pas du canvas de scène Foundry.
 
 #### Détails
+
 [pdv-cadrage-canvas.md](pdv-cadrage-canvas.md)
 
 ---

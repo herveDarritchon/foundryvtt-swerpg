@@ -3,7 +3,7 @@ title: 'ADR-0009: Sous-système canonique de légalité des objets (system.restr
 status: 'Accepted'
 date: '2026-05-07'
 authors: 'Hervé Darritchon'
-tags: [ 'architecture', 'data-model', 'items', 'legality', 'restriction', 'import-oggdude', 'ui' ]
+tags: ['architecture', 'data-model', 'items', 'legality', 'restriction', 'import-oggdude', 'ui']
 supersedes: ''
 superseded_by: ''
 ---
@@ -79,12 +79,12 @@ Règles :
 
 La V1 retient une enum fermée de quatre niveaux :
 
-| Clé          | Label       | Description métier                                      |
-|--------------|-------------|---------------------------------------------------------|
-| `none`       | Aucune      | Objet libre, sans contrainte légale particulière        |
-| `restricted` | Restreinte  | Objet nécessitant une autorisation, un permis ou accord |
-| `military`   | Militaire   | Objet réservé à un usage, circuit ou profil militaire   |
-| `illegal`    | Illégale    | Objet illicite, de contrebande ou pénalement exposé     |
+| Clé          | Label      | Description métier                                      |
+| ------------ | ---------- | ------------------------------------------------------- |
+| `none`       | Aucune     | Objet libre, sans contrainte légale particulière        |
+| `restricted` | Restreinte | Objet nécessitant une autorisation, un permis ou accord |
+| `military`   | Militaire  | Objet réservé à un usage, circuit ou profil militaire   |
+| `illegal`    | Illégale   | Objet illicite, de contrebande ou pénalement exposé     |
 
 Règles :
 
@@ -97,7 +97,7 @@ Règles :
 OggDude ne fournit aujourd'hui qu'une information booléenne `Restricted`. Le mapping canonique est donc minimal :
 
 | Valeur OggDude | `system.restrictionLevel` |
-|----------------|---------------------------|
+| -------------- | ------------------------- |
 | `false`        | `none`                    |
 | `true`         | `restricted`              |
 

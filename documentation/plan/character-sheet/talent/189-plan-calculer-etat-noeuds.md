@@ -1,6 +1,6 @@
 # Plan d'implémentation — US5 : Calculer l'état des nœuds
 
-**Issue** : [#189 — US5: Calculer l'état des nœuds](https://github.com/herveDarritchon/foundryvtt-swerpg/issues/189)    
+**Issue** : [#189 — US5: Calculer l'état des nœuds](https://github.com/herveDarritchon/foundryvtt-swerpg/issues/189)  
 **Epic** : [#184 — EPIC: Refonte V1 des talents Edge](https://github.com/herveDarritchon/foundryvtt-swerpg/issues/184)  
 **ADR** : `documentation/architecture/adr/adr-0004-vitest-testing-strategy.md`,
 `documentation/architecture/adr/adr-0012-unit-tests-readable-diagnostics.md`  
@@ -15,7 +15,7 @@ Implémenter une couche domaine pure capable de calculer, pour un acteur donné 
 suivants :
 
 | État        | Signification                                              |
-|-------------|------------------------------------------------------------|
+| ----------- | ---------------------------------------------------------- |
 | `purchased` | Le nœud est déjà acheté par l'acteur.                      |
 | `available` | Le nœud peut être acheté maintenant.                       |
 | `locked`    | Le nœud est valide mais ses prérequis ne sont pas remplis. |
@@ -61,7 +61,7 @@ Application Foundry, ni d'un embedded Item `talent` comme source de vérité.
 Les US précédentes ont posé les briques nécessaires :
 
 | US         | Livraison                                                         | Utile pour US5                            |
-|------------|-------------------------------------------------------------------|-------------------------------------------|
+| ---------- | ----------------------------------------------------------------- | ----------------------------------------- |
 | US1 (#185) | Type `specialization-tree` avec `nodes[]`, `connections[]`        | Structure de l'arbre référentiel          |
 | US2 (#186) | Champs `row`, `column`, `cost` sur les nœuds                      | Convention racine `row === 1`, coût XP    |
 | US3 (#187) | `actor.system.progression.talentPurchases[]`                      | Source de vérité `purchased`              |
@@ -82,8 +82,8 @@ Crucible, repose encore sur :
 - un arbre global Crucible ;
 - une logique d'accessibilité non alignée sur `talentPurchases`.
 
-Ce code peut inspirer ponctuellement le calcul d'adjacence par connexions, l'interaction avec le Canvas, mais ne doit *
-*absolument** pas être reconduit comme base
+Ce code peut inspirer ponctuellement le calcul d'adjacence par connexions, l'interaction avec le Canvas, mais ne doit \*
+\*absolument\*\* pas être reconduit comme base
 fonctionnelle.
 
 ### La règle racine n'est pas portée par le schéma
@@ -368,9 +368,9 @@ Cette vérification répond au critère "aucune régression sur les anciennes lo
 
 ## 6. Fichiers modifiés
 
-| Fichier                                  | Action   | Description du changement                                                                              |
-|------------------------------------------|----------|--------------------------------------------------------------------------------------------------------|
-| `module/libs/talent-node-state.mjs`      | Création | Module domaine pur pour calculer l'état d'un nœud et retourner un résultat structuré                   |
+| Fichier                                            | Action   | Description du changement                                                                              |
+| -------------------------------------------------- | -------- | ------------------------------------------------------------------------------------------------------ |
+| `module/libs/talent-node-state.mjs`                | Création | Module domaine pur pour calculer l'état d'un nœud et retourner un résultat structuré                   |
 | `tests/lib/talent-node/talent-node-state.test.mjs` | Création | Tests Vitest couvrant les quatre états, les raisons de blocage, les cas dégradés et l'isolation legacy |
 
 ---
@@ -378,7 +378,7 @@ Cette vérification répond au critère "aucune régression sur les anciennes lo
 ## 7. Risques
 
 | Risque                                        | Impact                                                              | Mitigation                                                                                       |
-|-----------------------------------------------|---------------------------------------------------------------------|--------------------------------------------------------------------------------------------------|
+| --------------------------------------------- | ------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
 | Convention racine `row === 1` trop implicite  | Des nœuds mal renseignés deviennent faussement bloqués ou invalides | Documenter la convention dans le module ; classer les cas incomplets en `invalid` ; tests ciblés |
 | Confusion entre `locked` et `invalid`         | UI future trompeuse, diagnostic métier peu fiable                   | Donner priorité stricte à `invalid` ; couvrir chaque frontière par des tests                     |
 | Matching d'achat insuffisant                  | Faux `purchased` ou faux `available`                                | Baser le calcul sur les identifiants persistés, pas sur le nom ni les embedded Items             |
@@ -391,17 +391,17 @@ Cette vérification répond au critère "aucune régression sur les anciennes lo
 
 ## 8. Proposition d'ordre de commit
 
-| Ordre | Message                                                               | Fichiers                                 |
-|-------|-----------------------------------------------------------------------|------------------------------------------|
-| 1     | `feat(domain): add pure talent node state evaluator`                  | `module/libs/talent-node-state.mjs`      |
+| Ordre | Message                                                               | Fichiers                                           |
+| ----- | --------------------------------------------------------------------- | -------------------------------------------------- |
+| 1     | `feat(domain): add pure talent node state evaluator`                  | `module/libs/talent-node-state.mjs`                |
 | 2     | `test(domain): cover talent node states, reasons, and degraded cases` | `tests/lib/talent-node/talent-node-state.test.mjs` |
 
 Si un découpage plus fin est souhaité :
 
-| Ordre | Message                                                                         | Fichiers                                 |
-|-------|---------------------------------------------------------------------------------|------------------------------------------|
-| 1     | `feat(domain): add node validity guards and purchased state`                    | `module/libs/talent-node-state.mjs`      |
-| 2     | `feat(domain): add available/locked computation with XP check`                  | `module/libs/talent-node-state.mjs`      |
+| Ordre | Message                                                                         | Fichiers                                           |
+| ----- | ------------------------------------------------------------------------------- | -------------------------------------------------- |
+| 1     | `feat(domain): add node validity guards and purchased state`                    | `module/libs/talent-node-state.mjs`                |
+| 2     | `feat(domain): add available/locked computation with XP check`                  | `module/libs/talent-node-state.mjs`                |
 | 3     | `test(domain): cover all node states and blocking reasons`                      | `tests/lib/talent-node/talent-node-state.test.mjs` |
 | 4     | `test(domain): add degraded cases (incomplete trees, broken refs, empty actor)` | `tests/lib/talent-node/talent-node-state.test.mjs` |
 

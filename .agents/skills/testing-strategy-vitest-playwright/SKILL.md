@@ -323,10 +323,12 @@ Reject or rewrite:
 - `Object.groupBy` in production code — not available in Node.js < 21 (CI pipeline uses Node 20). Use `Array.reduce` instead:
   ```js
   // ❌ Avoid
-  const grouped = Object.groupBy(items, item => item.type.id)
+  const grouped = Object.groupBy(items, (item) => item.type.id)
   // ✅ Prefer
   const grouped = items.reduce((acc, item) => {
-    const key = item.type.id; (acc[key] ||= []).push(item); return acc
+    const key = item.type.id
+    ;(acc[key] ||= []).push(item)
+    return acc
   }, {})
   ```
 
@@ -622,11 +624,13 @@ For small diagnostic questions, shorten the format but keep the layer choice and
 Do not send large context to an LLM unless reasoning is required.
 
 For deterministic tasks:
+
 - execute with shell, Git, npm, Vitest, Playwright or CI;
 - collect only the useful output;
 - call an LLM only if interpretation, decision or correction is needed.
 
 For failures:
+
 - send only the failing command;
 - send only the relevant error block;
 - send only the files directly involved;

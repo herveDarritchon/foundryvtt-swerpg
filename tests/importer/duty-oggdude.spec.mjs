@@ -2,8 +2,7 @@ import { describe, it, expect, beforeEach } from 'vitest'
 import { dutyMapper, getDutyImportStats } from '../../module/importer/items/duty-ogg-dude.mjs'
 
 describe('dutyMapper', () => {
-  beforeEach(() => {
-  })
+  beforeEach(() => {})
 
   describe('Valid duty mapping', () => {
     it('should map basic duty with all standard fields', () => {
@@ -226,11 +225,7 @@ describe('dutyMapper', () => {
     })
 
     it('should track rejected count correctly', () => {
-      const xmlItems = [
-        { Key: 'KEY1', Name: 'Name1' },
-        { Key: 'KEY2' },
-        { Name: 'Name3' },
-      ]
+      const xmlItems = [{ Key: 'KEY1', Name: 'Name1' }, { Key: 'KEY2' }, { Name: 'Name3' }]
 
       dutyMapper(xmlItems)
       const stats = getDutyImportStats()

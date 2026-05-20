@@ -80,10 +80,10 @@ ambassador
 
 Elle sert à :
 
-* reconnaître une donnée métier ;
-* faire des correspondances pendant l’import ;
-* garantir une stabilité logique entre plusieurs imports ;
-* conserver une traçabilité vers la source externe.
+- reconnaître une donnée métier ;
+- faire des correspondances pendant l’import ;
+- garantir une stabilité logique entre plusieurs imports ;
+- conserver une traçabilité vers la source externe.
 
 Exemple pour un talent :
 
@@ -110,10 +110,10 @@ Compendium.world.swerpg-talents.Item.def456
 
 Elle sert à :
 
-* résoudre un document dans Foundry ;
-* créer des associations directes entre documents ;
-* éviter les recherches approximatives par nom ou par code ;
-* permettre à l’UI de récupérer rapidement les données liées.
+- résoudre un document dans Foundry ;
+- créer des associations directes entre documents ;
+- éviter les recherches approximatives par nom ou par code ;
+- permettre à l’UI de récupérer rapidement les données liées.
 
 Exemple pour un talent créé dans le monde :
 
@@ -160,10 +160,10 @@ Un item `talent` doit contenir :
 
 Règles :
 
-* `system.id` contient la clé métier stable.
-* `system.uuid` contient l’UUID Foundry du document.
-* `system.uuid` est rempli après création du document Foundry.
-* `system.uuid` doit correspondre à `item.uuid`.
+- `system.id` contient la clé métier stable.
+- `system.uuid` contient l’UUID Foundry du document.
+- `system.uuid` est rempli après création du document Foundry.
+- `system.uuid` doit correspondre à `item.uuid`.
 
 ### Nœud d’arbre de spécialisation
 
@@ -182,10 +182,10 @@ Un nœud de `specialization-tree` doit contenir :
 
 Règles :
 
-* `talentId` conserve la clé métier stable du talent.
-* `talentUuid` référence l’item Foundry réellement associé.
-* `talentUuid` doit correspondre à `system.uuid` du talent lié.
-* L’UI doit utiliser `talentUuid` en priorité pour résoudre le talent.
+- `talentId` conserve la clé métier stable du talent.
+- `talentUuid` référence l’item Foundry réellement associé.
+- `talentUuid` doit correspondre à `system.uuid` du talent lié.
+- L’UI doit utiliser `talentUuid` en priorité pour résoudre le talent.
 
 ## Ordre d’import attendu
 
@@ -217,7 +217,9 @@ Puis :
 const talentById = new Map()
 
 for (const talent of createdTalents) {
-  const talentId = String(talent.system?.id ?? '').trim().toLowerCase()
+  const talentId = String(talent.system?.id ?? '')
+    .trim()
+    .toLowerCase()
 
   if (!talentId) continue
 
@@ -233,7 +235,9 @@ Puis, lors du mapping des nœuds :
 
 ```js
 function mapSpecializationTreeNode(rawNode, talentById) {
-  const talentId = String(rawNode.talentId ?? '').trim().toLowerCase()
+  const talentId = String(rawNode.talentId ?? '')
+    .trim()
+    .toLowerCase()
   const talent = talentById.get(talentId)
 
   return {
@@ -285,54 +289,54 @@ Pendant la période de transition, l’UI peut conserver un fallback par clé m�
 
 ### Positive
 
-* **POS-001**: **Séparation claire des responsabilités** - La clé métier identifie le concept métier ; la clé technique référence le document Foundry.
-* **POS-002**: **Résolution fiable des associations** - Les nœuds d’arbres peuvent retrouver directement les items talents associés.
-* **POS-003**: **Compatibilité world items et compendiums** - La même règle fonctionne pour les documents créés dans le monde et dans un compendium.
-* **POS-004**: **Moins de recherches fragiles** - L’UI n’a plus besoin de deviner un talent par nom, code ou champ alternatif.
-* **POS-005**: **Import plus contrôlable** - Les erreurs d’association peuvent être détectées au moment de l’import.
-* **POS-006**: **Meilleure maintenabilité** - Le modèle rend explicite la différence entre données source et références Foundry.
+- **POS-001**: **Séparation claire des responsabilités** - La clé métier identifie le concept métier ; la clé technique référence le document Foundry.
+- **POS-002**: **Résolution fiable des associations** - Les nœuds d’arbres peuvent retrouver directement les items talents associés.
+- **POS-003**: **Compatibilité world items et compendiums** - La même règle fonctionne pour les documents créés dans le monde et dans un compendium.
+- **POS-004**: **Moins de recherches fragiles** - L’UI n’a plus besoin de deviner un talent par nom, code ou champ alternatif.
+- **POS-005**: **Import plus contrôlable** - Les erreurs d’association peuvent être détectées au moment de l’import.
+- **POS-006**: **Meilleure maintenabilité** - Le modèle rend explicite la différence entre données source et références Foundry.
 
 ### Negative
 
-* **NEG-001**: **Complexité d’import accrue** - L’import doit être séquencé pour créer les talents avant de créer les arbres.
-* **NEG-002**: **Mise à jour post-création nécessaire** - L’UUID Foundry n’est connu qu’après création du document.
-* **NEG-003**: **Migration des données existantes** - Les mondes déjà importés devront être enrichis progressivement avec les nouveaux champs techniques.
-* **NEG-004**: **Risque de désynchronisation** - Si un document est déplacé, recréé ou réimporté, `system.uuid` doit rester cohérent avec `item.uuid`.
+- **NEG-001**: **Complexité d’import accrue** - L’import doit être séquencé pour créer les talents avant de créer les arbres.
+- **NEG-002**: **Mise à jour post-création nécessaire** - L’UUID Foundry n’est connu qu’après création du document.
+- **NEG-003**: **Migration des données existantes** - Les mondes déjà importés devront être enrichis progressivement avec les nouveaux champs techniques.
+- **NEG-004**: **Risque de désynchronisation** - Si un document est déplacé, recréé ou réimporté, `system.uuid` doit rester cohérent avec `item.uuid`.
 
 ## Alternatives Considered
 
 ### Utiliser uniquement `talentId` comme clé universelle
 
-* **ALT-001**: **Description**: Utiliser `talentId` à la fois comme clé métier et comme clé de résolution UI.
-* **ALT-002**: **Rejection Reason**: Cela impose à l’UI de rechercher les talents par code métier dans les collections Foundry. Cette recherche est plus lente, plus fragile et dépend de la qualité du mapping.
+- **ALT-001**: **Description**: Utiliser `talentId` à la fois comme clé métier et comme clé de résolution UI.
+- **ALT-002**: **Rejection Reason**: Cela impose à l’UI de rechercher les talents par code métier dans les collections Foundry. Cette recherche est plus lente, plus fragile et dépend de la qualité du mapping.
 
 ### Remplacer `talentId` par l’UUID Foundry
 
-* **ALT-003**: **Description**: Faire de `talentId` un UUID Foundry.
-* **ALT-004**: **Rejection Reason**: Cette solution détruit la distinction entre identité métier et référence technique. Elle rend les données moins stables entre imports, mondes et compendiums.
+- **ALT-003**: **Description**: Faire de `talentId` un UUID Foundry.
+- **ALT-004**: **Rejection Reason**: Cette solution détruit la distinction entre identité métier et référence technique. Elle rend les données moins stables entre imports, mondes et compendiums.
 
 ### Utiliser le nom du talent comme clé d’association
 
-* **ALT-005**: **Description**: Associer les nœuds aux talents par `item.name`.
-* **ALT-006**: **Rejection Reason**: Le nom est localisable, modifiable et non garanti unique. Il ne doit jamais être utilisé comme clé technique principale.
+- **ALT-005**: **Description**: Associer les nœuds aux talents par `item.name`.
+- **ALT-006**: **Rejection Reason**: Le nom est localisable, modifiable et non garanti unique. Il ne doit jamais être utilisé comme clé technique principale.
 
 ### Résoudre dynamiquement à chaque affichage
 
-* **ALT-007**: **Description**: Ne pas stocker `talentUuid`, et retrouver le talent à chaque rendu via `game.items.find(...)`.
-* **ALT-008**: **Rejection Reason**: Cela déplace une responsabilité d’import vers l’UI, augmente le couplage et masque les erreurs de données au lieu de les révéler tôt.
+- **ALT-007**: **Description**: Ne pas stocker `talentUuid`, et retrouver le talent à chaque rendu via `game.items.find(...)`.
+- **ALT-008**: **Rejection Reason**: Cela déplace une responsabilité d’import vers l’UI, augmente le couplage et masque les erreurs de données au lieu de les révéler tôt.
 
 ## Implementation Notes
 
-* **IMP-001**: **Champ `system.uuid`** - Les items importés qui doivent être associés techniquement doivent exposer leur UUID Foundry dans leur structure système.
-* **IMP-002**: **Champ `talentUuid`** - Les nœuds d’arbre de spécialisation doivent référencer les talents via `talentUuid`.
-* **IMP-003**: **Ordre d’import** - Les talents doivent être créés ou retrouvés avant la création des arbres de spécialisation.
-* **IMP-004**: **Index métier** - L’importer doit construire un index par clé métier stable, par exemple `system.id`.
-* **IMP-005**: **Post-update UUID** - L’UUID doit être renseigné après création du document Foundry.
-* **IMP-006**: **Logs explicites** - Si un nœud référence un talent introuvable, l’importer doit produire un warning exploitable.
-* **IMP-007**: **Rétrocompatibilité** - L’UI doit temporairement accepter les anciens nœuds sans `talentUuid`.
-* **IMP-008**: **Tests ciblés** - Les tests doivent vérifier explicitement les valeurs métier et techniques attendues, conformément à ADR-0012 sur les tests lisibles et diagnostiques.
-* **IMP-009**: **Code review** - Toute nouvelle association entre documents doit expliciter si elle utilise une clé métier ou une clé technique.
-* **IMP-010**: **Pas d’association par nom** - Le nom affiché d’un document ne doit pas être utilisé comme clé d’association principale.
+- **IMP-001**: **Champ `system.uuid`** - Les items importés qui doivent être associés techniquement doivent exposer leur UUID Foundry dans leur structure système.
+- **IMP-002**: **Champ `talentUuid`** - Les nœuds d’arbre de spécialisation doivent référencer les talents via `talentUuid`.
+- **IMP-003**: **Ordre d’import** - Les talents doivent être créés ou retrouvés avant la création des arbres de spécialisation.
+- **IMP-004**: **Index métier** - L’importer doit construire un index par clé métier stable, par exemple `system.id`.
+- **IMP-005**: **Post-update UUID** - L’UUID doit être renseigné après création du document Foundry.
+- **IMP-006**: **Logs explicites** - Si un nœud référence un talent introuvable, l’importer doit produire un warning exploitable.
+- **IMP-007**: **Rétrocompatibilité** - L’UI doit temporairement accepter les anciens nœuds sans `talentUuid`.
+- **IMP-008**: **Tests ciblés** - Les tests doivent vérifier explicitement les valeurs métier et techniques attendues, conformément à ADR-0012 sur les tests lisibles et diagnostiques.
+- **IMP-009**: **Code review** - Toute nouvelle association entre documents doit expliciter si elle utilise une clé métier ou une clé technique.
+- **IMP-010**: **Pas d’association par nom** - Le nom affiché d’un document ne doit pas être utilisé comme clé d’association principale.
 
 ## Critères d’acceptation
 
@@ -341,7 +345,7 @@ Pendant la période de transition, l’UI peut conserver un fallback par clé m�
 Après import :
 
 ```js
-const talent = game.items.find(i => i.type === 'talent' && i.system.id === 'grit')
+const talent = game.items.find((i) => i.type === 'talent' && i.system.id === 'grit')
 ```
 
 Alors :
@@ -385,9 +389,9 @@ L’arbre de spécialisation doit afficher le nom réel du talent lorsque `node.
 
 L’affichage `Unknown Talent` ne doit apparaître que si :
 
-* `talentUuid` est absent ou invalide ;
-* le fallback métier échoue ;
-* le talent source est réellement introuvable.
+- `talentUuid` est absent ou invalide ;
+- le fallback métier échoue ;
+- le talent source est réellement introuvable.
 
 ## Migration
 
@@ -405,7 +409,7 @@ Principe :
 Pseudo-code :
 
 ```js
-for (const talent of game.items.filter(i => i.type === 'talent')) {
+for (const talent of game.items.filter((i) => i.type === 'talent')) {
   if (talent.system?.uuid !== talent.uuid) {
     await talent.update({ 'system.uuid': talent.uuid })
   }
@@ -413,13 +417,20 @@ for (const talent of game.items.filter(i => i.type === 'talent')) {
 
 const talentById = new Map(
   game.items
-    .filter(i => i.type === 'talent')
-    .map(i => [String(i.system?.id ?? '').trim().toLowerCase(), i.uuid])
+    .filter((i) => i.type === 'talent')
+    .map((i) => [
+      String(i.system?.id ?? '')
+        .trim()
+        .toLowerCase(),
+      i.uuid,
+    ]),
 )
 
-for (const tree of game.items.filter(i => i.type === 'specialization-tree')) {
+for (const tree of game.items.filter((i) => i.type === 'specialization-tree')) {
   const nodes = tree.system.nodes.map((node) => {
-    const talentId = String(node.talentId ?? '').trim().toLowerCase()
+    const talentId = String(node.talentId ?? '')
+      .trim()
+      .toLowerCase()
 
     return {
       ...node,
@@ -433,8 +444,8 @@ for (const tree of game.items.filter(i => i.type === 'specialization-tree')) {
 
 ## References
 
-* **REF-001**: Foundry VTT - Document UUIDs and `fromUuidSync`
-* **REF-002**: Foundry VTT - Item documents
-* **REF-003**: SWERPG - OggDude Importer architecture
-* **REF-004**: SWERPG - Specialization tree importer
-* **REF-005**: SWERPG ADR-0012 - Règles d’écriture des tests unitaires lisibles et diagnostiques
+- **REF-001**: Foundry VTT - Document UUIDs and `fromUuidSync`
+- **REF-002**: Foundry VTT - Item documents
+- **REF-003**: SWERPG - OggDude Importer architecture
+- **REF-004**: SWERPG - Specialization tree importer
+- **REF-005**: SWERPG ADR-0012 - Règles d’écriture des tests unitaires lisibles et diagnostiques

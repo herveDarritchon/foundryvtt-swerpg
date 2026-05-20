@@ -1,25 +1,27 @@
 # Chantier 05 : Extraction de l'Effects Manager Mixin
 
 ## Objectif
+
 Extraire les méthodes liées à la gestion des effets de combat vers `effects.mixin.mjs`
 
 ## Méthodes à extraire (~130 lignes)
 
-| Méthode | Lignes (actor.mjs) | Visibilité | Description |
-|---------|-------------------|------------|-------------|
-| `applyActionOutcome()` | 1181-1201 | Public | Applique le résultat d'une action |
-| `_applyOutcomeEffects()` | 1211-1235 | Private* | Crée/met à jour/supprime les effets |
-| `_trackHeroismDamage()` | 1244-1252 | Private* | Suit les dégâts pour l'héroïsme |
-| `onDealDamage()` | 1261-1269 | Public | Gère les dégâts critiques |
-| `applyDamageOverTime()` | 1361-1377 | Public | Applique les dégâts dans le temps |
-| `expireEffects()` | 1386-1392 | Public | Fait expirer les effets |
-| `_isEffectExpired()` | 1402-1417 | Private* | Vérifie si un effet est expiré |
+| Méthode                  | Lignes (actor.mjs) | Visibilité | Description                         |
+| ------------------------ | ------------------ | ---------- | ----------------------------------- |
+| `applyActionOutcome()`   | 1181-1201          | Public     | Applique le résultat d'une action   |
+| `_applyOutcomeEffects()` | 1211-1235          | Private\*  | Crée/met à jour/supprime les effets |
+| `_trackHeroismDamage()`  | 1244-1252          | Private\*  | Suit les dégâts pour l'héroïsme     |
+| `onDealDamage()`         | 1261-1269          | Public     | Gère les dégâts critiques           |
+| `applyDamageOverTime()`  | 1361-1377          | Public     | Applique les dégâts dans le temps   |
+| `expireEffects()`        | 1386-1392          | Public     | Fait expirer les effets             |
+| `_isEffectExpired()`     | 1402-1417          | Private\*  | Vérifie si un effet est expiré      |
 
-*Les méthodes privées `#method()` dans actor.mjs deviennent `_method()` (convention protected) dans le mixin.
+\*Les méthodes privées `#method()` dans actor.mjs deviennent `_method()` (convention protected) dans le mixin.
 
 ## Dépendances des méthodes
 
 ### `applyActionOutcome(action, outcome, { reverse })`
+
 - `this.isWeakened`, `this.isBroken`, `this.isIncapacitated` - Getters
 - `this.callActorHooks()` - Méthode actor.mjs
 - `this.alterResources()` - Méthode actor.mjs
@@ -27,29 +29,35 @@ Extraire les méthodes liées à la gestion des effets de combat vers `effects.m
 - `this._trackHeroismDamage()` - Sera dans ce mixin
 
 ### `_applyOutcomeEffects(outcome, reverse)`
+
 - `this.effects` - ActiveEffectCollection de Foundry
 - `this.deleteEmbeddedDocuments()` - Méthode Foundry
 - `this.updateEmbeddedDocuments()` - Méthode Foundry
 - `this.createEmbeddedDocuments()` - Méthode Foundry
 
 ### `_trackHeroismDamage(resources, reverse)`
+
 - **Externe** : `game.combat?.active`, `game.settings.get/set('swerpg', 'heroism')`
 
 ### `onDealDamage(action, outcomes)`
+
 - `this.callActorHooks()` - Méthode actor.mjs
 
 ### `applyDamageOverTime()`
+
 - `this.effects` - ActiveEffectCollection
 - `this.resistances` - Getter
 - `this.alterResources()` - Méthode actor.mjs
 - **Externe** : `SYSTEM.RESOURCES`
 
 ### `expireEffects(start)`
+
 - `this.effects` - ActiveEffectCollection
 - `this._isEffectExpired()` - Sera dans ce mixin
 - `this.deleteEmbeddedDocuments()` - Méthode Foundry
 
 ### `_isEffectExpired(effect, start)`
+
 - **Externe** : `game.combat.round`
 
 ## Implémentation de `effects.mixin.mjs`
@@ -228,21 +236,25 @@ export const EffectsMixin = (Base) =>
 ## Points d'attention
 
 ⚠️ **Méthodes privées `#` → `_`**
+
 - Dans actor.mjs : `#applyOutcomeEffects()`, `#trackHeroismDamage()`, `#isEffectExpired()`
 - Dans le mixin : `_applyOutcomeEffects()`, `_trackHeroismDamage()`, `_isEffectExpired()`
 - La syntaxe `#` est strictement privée en JavaScript et ne peut pas être utilisée dans un mixin classique
 - Utiliser le préfixe `_` (convention "protected") pour indiquer que ces méthodes ne sont pas destinées à être appelées de l'extérieur
 
 ⚠️ **Dépendances sur actor.mjs**
+
 - `this.callActorHooks()` - Méthode dans actor.mjs (pas encore extraite)
 - `this.alterResources()` - Méthode dans actor.mjs (pas encore extraite)
 - Ces méthodes restent dans actor.mjs pour l'instant
 
 ⚠️ **`SYSTEM.RESOURCES`**
+
 - Utilisé dans `applyDamageOverTime()` pour itérer sur les ressources
 - Vérifier que l'import fonctionne
 
 ⚠️ **`game.settings`**
+
 - Utilisé dans `_trackHeroismDamage()`
 - C'est une API Foundry globale, pas besoin d'import
 
@@ -290,12 +302,13 @@ node --check module/documents/actor-mixins/combat/effects.mixin.mjs
 ## Ordre de composition
 
 Ce mixin doit être le **premier** (le plus profond) dans la chaîne de composition car :
+
 - `TurnMixin` dépend de `expireEffects()` et `applyDamageOverTime()`
 - C'est une dépendance de bas niveau
 
 Dans `index.mjs` :
+
 ```javascript
-export const CombatMixin = (Base) =>
-  AttackMixin(DefenseMixin(TurnMixin(EffectsMixin(Base))))
+export const CombatMixin = (Base) => AttackMixin(DefenseMixin(TurnMixin(EffectsMixin(Base))))
 //                                           ^^^^^^^^^^^^ En premier
 ```

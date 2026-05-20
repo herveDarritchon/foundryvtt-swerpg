@@ -54,6 +54,7 @@ Iterate until the user approves the breakdown.
 Keep the skill instructions, workflow, and internal reasoning in English.
 
 All issue content published to the issue tracker MUST be written in French, including:
+
 - issue titles
 - issue descriptions
 - acceptance criteria
@@ -101,11 +102,13 @@ Do NOT close or modify any parent issue.
 Do not send large context to an LLM unless reasoning is required.
 
 For deterministic tasks:
+
 - execute with shell, Git, npm, Vitest, Playwright or CI;
 - collect only the useful output;
 - call an LLM only if interpretation, decision or correction is needed.
 
 For failures:
+
 - send only the failing command;
 - send only the relevant error block;
 - send only the files directly involved;

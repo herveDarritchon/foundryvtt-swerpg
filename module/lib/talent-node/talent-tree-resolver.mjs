@@ -4,11 +4,7 @@ export function findTreeForSpecialization(specData) {
   const name = specData?.name
   if (!name || !game?.items?.find) return null
   const nameSlug = name.toLowerCase().replace(/\s+/g, '-')
-  return game.items.find(
-    (item) =>
-      item?.type === 'specialization-tree' &&
-      (item?.system?.specializationId === nameSlug || item?.name === name),
-  ) ?? null
+  return game.items.find((item) => item?.type === 'specialization-tree' && (item?.system?.specializationId === nameSlug || item?.name === name)) ?? null
 }
 
 /**

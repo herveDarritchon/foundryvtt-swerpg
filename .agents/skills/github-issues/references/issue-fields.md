@@ -31,10 +31,12 @@ EOF
 ```
 
 **Important:** The payload must be a JSON object with an `issue_field_values` array. Each entry has:
+
 - `field_id` (integer): the field's numeric ID from the org fields list
 - `value` (string): the **option name** for single-select fields (e.g., `"P1"`, `"High"`), or the literal value for text/number/date fields
 
 Common mistakes to avoid:
+
 - Passing the option ID instead of the option name as `value` (the API expects the display name)
 - Sending `field_id` and `value` as top-level keys without wrapping in `issue_field_values` array
 - Using `-f` flags instead of `--input` with JSON body
@@ -86,10 +88,27 @@ The GraphQL API requires the `GraphQL-Features: issue_fields` HTTP header. Witho
     issueFields(first: 30) {
       nodes {
         __typename
-        ... on IssueFieldDate { id name }
-        ... on IssueFieldText { id name }
-        ... on IssueFieldNumber { id name }
-        ... on IssueFieldSingleSelect { id name options { id name color } }
+        ... on IssueFieldDate {
+          id
+          name
+        }
+        ... on IssueFieldText {
+          id
+          name
+        }
+        ... on IssueFieldNumber {
+          id
+          name
+        }
+        ... on IssueFieldSingleSelect {
+          id
+          name
+          options {
+            id
+            name
+            color
+          }
+        }
       }
     }
   }
@@ -110,20 +129,40 @@ Field types: `IssueFieldDate`, `IssueFieldText`, `IssueFieldNumber`, `IssueField
           __typename
           ... on IssueFieldDateValue {
             value
-            field { ... on IssueFieldDate { id name } }
+            field {
+              ... on IssueFieldDate {
+                id
+                name
+              }
+            }
           }
           ... on IssueFieldTextValue {
             value
-            field { ... on IssueFieldText { id name } }
+            field {
+              ... on IssueFieldText {
+                id
+                name
+              }
+            }
           }
           ... on IssueFieldNumberValue {
             value
-            field { ... on IssueFieldNumber { id name } }
+            field {
+              ... on IssueFieldNumber {
+                id
+                name
+              }
+            }
           }
           ... on IssueFieldSingleSelectValue {
             name
             color
-            field { ... on IssueFieldSingleSelect { id name } }
+            field {
+              ... on IssueFieldSingleSelect {
+                id
+                name
+              }
+            }
           }
         }
       }
@@ -139,28 +178,33 @@ Use `setIssueFieldValue` to set one or more fields at once. You need the issue's
 ```graphql
 # Header: GraphQL-Features: issue_fields
 mutation {
-  setIssueFieldValue(input: {
-    issueId: "ISSUE_NODE_ID"
-    issueFields: [
-      { fieldId: "IFD_xxx", dateValue: "2026-04-15" }
-      { fieldId: "IFT_xxx", textValue: "some text" }
-      { fieldId: "IFN_xxx", numberValue: 3.0 }
-      { fieldId: "IFSS_xxx", singleSelectOptionId: "OPTION_ID" }
-    ]
-  }) {
-    issue { id title }
+  setIssueFieldValue(
+    input: {
+      issueId: "ISSUE_NODE_ID"
+      issueFields: [
+        { fieldId: "IFD_xxx", dateValue: "2026-04-15" }
+        { fieldId: "IFT_xxx", textValue: "some text" }
+        { fieldId: "IFN_xxx", numberValue: 3.0 }
+        { fieldId: "IFSS_xxx", singleSelectOptionId: "OPTION_ID" }
+      ]
+    }
+  ) {
+    issue {
+      id
+      title
+    }
   }
 }
 ```
 
 Each entry in `issueFields` takes a `fieldId` plus exactly one value parameter:
 
-| Field type | Value parameter | Format |
-|-----------|----------------|--------|
-| Date | `dateValue` | ISO 8601 date string, e.g. `"2026-04-15"` |
-| Text | `textValue` | String |
-| Number | `numberValue` | Float |
-| Single select | `singleSelectOptionId` | Node ID from the field's `options` list |
+| Field type    | Value parameter        | Format                                    |
+| ------------- | ---------------------- | ----------------------------------------- |
+| Date          | `dateValue`            | ISO 8601 date string, e.g. `"2026-04-15"` |
+| Text          | `textValue`            | String                                    |
+| Number        | `numberValue`          | Float                                     |
+| Single select | `singleSelectOptionId` | Node ID from the field's `options` list   |
 
 To clear a field value, set `delete: true` instead of a value parameter.
 
@@ -203,6 +247,7 @@ gh api graphql -H "GraphQL-Features: issue_fields" -f query='
 ```
 
 **Schema notes for `IssueFieldSingleSelectValue`:**
+
 - The selected option's display text is in `.name` (not `.value`)
 - Also available: `.color`, `.description`, `.id`
 - The parent field reference is in `.field` (use inline fragment to get the field name)

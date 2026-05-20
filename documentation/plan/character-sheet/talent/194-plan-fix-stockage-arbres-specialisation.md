@@ -26,11 +26,11 @@ La cause racine est l'absence d'entrées de configuration pour le type `speciali
 
 Les trois tables de configuration suivantes ne contiennent pas d'entrée `specialization-tree` :
 
-| Table | Fichier | Conséquence |
-|---|---|---|
-| `OGGDUDE_PACKS_BY_TYPE` | `module/utils/oggdude-mapping-config.mjs` | `getOggDudePackConfig('specialization-tree')` throw `Unsupported OggDude element type` → échec compendium |
-| `OGGDUDE_FOLDER_MAP` | `module/importer/utils/oggdude-import-folders.mjs` | `getOrCreateWorldFolder('specialization-tree')` → fallback `Misc` |
-| `OGGDUDE_FOLDER_COLORS` | `module/importer/utils/oggdude-import-folders.mjs` | Couleur grise fallback au lieu d'une couleur dédiée |
+| Table                   | Fichier                                            | Conséquence                                                                                               |
+| ----------------------- | -------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| `OGGDUDE_PACKS_BY_TYPE` | `module/utils/oggdude-mapping-config.mjs`          | `getOggDudePackConfig('specialization-tree')` throw `Unsupported OggDude element type` → échec compendium |
+| `OGGDUDE_FOLDER_MAP`    | `module/importer/utils/oggdude-import-folders.mjs` | `getOrCreateWorldFolder('specialization-tree')` → fallback `Misc`                                         |
+| `OGGDUDE_FOLDER_COLORS` | `module/importer/utils/oggdude-import-folders.mjs` | Couleur grise fallback au lieu d'une couleur dédiée                                                       |
 
 ---
 
@@ -89,19 +89,19 @@ Ajouter dans `OGGDUDE_FOLDER_COLORS` :
 
 ## 6. Fichiers modifiés
 
-| Fichier | Action | Description |
-|---|---|---|
-| `module/utils/oggdude-mapping-config.mjs` | modification | Ajout `specialization-tree` dans `OGGDUDE_PACKS_BY_TYPE` |
-| `module/importer/utils/oggdude-import-folders.mjs` | modification | Ajout `specialization-tree` dans `OGGDUDE_FOLDER_MAP` et `OGGDUDE_FOLDER_COLORS` |
-| `tests/importer/utils/oggdude-mapping-config.spec.mjs` | création | Tests `getOggDudePackConfig` pour `specialization-tree` |
-| `tests/importer/utils/oggdude-import-folders.test.mjs` | modification | Tests résolution dossier et couleur `specialization-tree` |
+| Fichier                                                | Action       | Description                                                                      |
+| ------------------------------------------------------ | ------------ | -------------------------------------------------------------------------------- |
+| `module/utils/oggdude-mapping-config.mjs`              | modification | Ajout `specialization-tree` dans `OGGDUDE_PACKS_BY_TYPE`                         |
+| `module/importer/utils/oggdude-import-folders.mjs`     | modification | Ajout `specialization-tree` dans `OGGDUDE_FOLDER_MAP` et `OGGDUDE_FOLDER_COLORS` |
+| `tests/importer/utils/oggdude-mapping-config.spec.mjs` | création     | Tests `getOggDudePackConfig` pour `specialization-tree`                          |
+| `tests/importer/utils/oggdude-import-folders.test.mjs` | modification | Tests résolution dossier et couleur `specialization-tree`                        |
 
 ---
 
 ## 7. Risques
 
-| Risque | Impact | Mitigation |
-|---|---|---|
+| Risque                                                               | Impact    | Mitigation                                                       |
+| -------------------------------------------------------------------- | --------- | ---------------------------------------------------------------- |
 | Le dossier `Specialization Trees` n'existe pas dans l'UI des joueurs | Confusion | Cohérent avec le nommage existant (`Weapons`, `Specializations`) |
 
 ---

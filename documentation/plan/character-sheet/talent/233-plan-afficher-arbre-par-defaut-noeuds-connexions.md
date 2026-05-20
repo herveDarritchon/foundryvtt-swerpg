@@ -63,6 +63,7 @@ Faire en sorte que l'application graphique `SpecializationTreeApp` (livrée par 
 **Problème** : quel arbre afficher quand l'acteur possède plusieurs spécialisations résolues disponibles ?
 
 **Options envisagées** :
+
 - Implémenter un sélecteur interactif complet (relève de US17)
 - Afficher le premier arbre `available`
 - Afficher le dernier arbre `available`
@@ -70,6 +71,7 @@ Faire en sorte que l'application graphique `SpecializationTreeApp` (livrée par 
 **Décision retenue** : afficher le **dernier** arbre résolu `available` dans l'ordre des spécialisations possédées.
 
 **Justification** :
+
 - Respecte le découpage US16/US17 : pas de sélection interactive
 - Le dernier arbre correspond à la spécialisation la plus récemment ajoutée, donc la plus probablement active
 - Comportement déterministe et testable
@@ -82,6 +84,7 @@ Faire en sorte que l'application graphique `SpecializationTreeApp` (livrée par 
 **Décision retenue** : enrichir le contexte de `SpecializationTreeApp` avec une propriété view-model dérivée (`currentTree`, `renderNodes`, `renderConnections`) calculée dans `_prepareContext`.
 
 **Justification** :
+
 - Garde le code PIXI consomateur uniquement
 - Le view-model est testable unitairement sans canvas PIXI
 - Cohérent avec ADR-0001 (ApplicationV2, préparation de contexte)
@@ -95,6 +98,7 @@ Faire en sorte que l'application graphique `SpecializationTreeApp` (livrée par 
 **Décision retenue** : utiliser des constantes de layout (NODE_WIDTH, NODE_HEIGHT, H_GAP, V_GAP, PADDING) et calculer `x = column * (NODE_WIDTH + H_GAP) + PADDING`, `y = row * (NODE_HEIGHT + V_GAP) + PADDING`.
 
 **Justification** :
+
 - Conforme au schéma `specialization-tree` (ADR existant)
 - Placement déterministe, sans heuristique et sans couplage au canvas legacy
 - La grille row/column évite les chevauchements et rend l'arbre lisible
@@ -106,6 +110,7 @@ Faire en sorte que l'application graphique `SpecializationTreeApp` (livrée par 
 **Décision retenue** : les nœuds sont dessinés avec un style neutre unique (fond semi-transparent uniforme, texte blanc). Aucun appel à `getTreeNodesStates()` ni mapping état → couleur.
 
 **Justification** :
+
 - Respect strict du périmètre de `#233`
 - La coloration sera ajoutée par `#234` sans refonte du dessin
 - Le rendu neutre est immédiatement vérifiable (un arbre visible vs vide)
@@ -115,6 +120,7 @@ Faire en sorte que l'application graphique `SpecializationTreeApp` (livrée par 
 **Décision retenue** : tester le view-model (choix de l'arbre, nœuds présents, connexions présentes, coordonnées calculées) sans tester le dessin PIXI exact.
 
 **Justification** :
+
 - Conforme à ADR-0004 et ADR-0012
 - Les tests restent stables même si la mise en forme PIXI change
 - Le vrai contrat métier de cette tranche est la sélection et la structure de rendu
@@ -130,6 +136,7 @@ Faire en sorte que l'application graphique `SpecializationTreeApp` (livrée par 
 **Règle** : parcourir les `specializations` dans l'ordre, retenir la dernière entrée avec `isAvailable === true`. Si aucune, `currentTreeId = null`.
 
 **Fichiers** :
+
 - `module/applications/specialization-tree-app.mjs`
 
 **Risque** : le resolver `resolveActorSpecializationTrees` utilise une `Map` dont l'ordre n'est pas garanti. S'assurer que l'ordre des spécialisations dans `actor.system.details.specializations` est préservé (c'est un Array).
@@ -141,6 +148,7 @@ Faire en sorte que l'application graphique `SpecializationTreeApp` (livrée par 
 Si `currentTreeId` est null, `renderNodes` et `renderConnections` sont des tableaux vides. Si un talent référencé par `talentId` est introuvable, le `talentName` est mis à "Talent inconnu" via la clé i18n existante `SWERPG.TALENT.UNKNOWN`.
 
 **Fichiers** :
+
 - `module/applications/specialization-tree-app.mjs`
 
 ### Étape 3 — Définir les constantes de layout graphique
@@ -148,6 +156,7 @@ Si `currentTreeId` est null, `renderNodes` et `renderConnections` sont des table
 **Quoi faire** : ajouter des constantes de layout (NODE_WIDTH, NODE_HEIGHT, H_GAP, V_GAP, PADDING) en haut du module. Implémenter `#layoutNodePosition(row, column)` qui retourne `{ x, y }`.
 
 **Fichiers** :
+
 - `module/applications/specialization-tree-app.mjs`
 
 ### Étape 4 — Dessiner les connexions dans le viewport PIXI
@@ -155,6 +164,7 @@ Si `currentTreeId` est null, `renderNodes` et `renderConnections` sont des table
 **Quoi faire** : dans `#syncViewport` (ou une nouvelle méthode `#drawTree` appelée depuis `#syncViewport`), après avoir monté PIXI, itérer sur `renderConnections` et dessiner des lignes via `PIXI.Graphics`. Les connexions sont dessinées avant les nœuds pour un rendu propre.
 
 **Fichiers** :
+
 - `module/applications/specialization-tree-app.mjs`
 
 ### Étape 5 — Dessiner les nœuds dans le viewport PIXI
@@ -162,6 +172,7 @@ Si `currentTreeId` est null, `renderNodes` et `renderConnections` sont des table
 **Quoi faire** : après les connexions, itérer sur `renderNodes` et dessiner chaque nœud : fond rectangulaire (couleur neutre), texte du nom du talent, texte du coût XP. Utiliser `PIXI.Graphics` pour le fond et `PIXI.Text` pour les libellés.
 
 **Fichiers** :
+
 - `module/applications/specialization-tree-app.mjs`
 
 ### Étape 6 — Ajouter les tests de contrat
@@ -176,16 +187,17 @@ Si `currentTreeId` est null, `renderNodes` et `renderConnections` sont des table
 - Absence de dépendance au canvas de scène (vérifié indirectement via les tests PIXI existants)
 
 **Fichiers** :
+
 - `tests/applications/specialization-tree-app.test.mjs`
 
 ---
 
 ## 6. Fichiers modifiés
 
-| Fichier | Action | Description du changement |
-|---|---|---|
-| `module/applications/specialization-tree-app.mjs` | modification | Ajout des constantes de layout, de la sélection d'arbre courant, du view-model de rendu et du dessin PIXI des nœuds/connexions |
-| `tests/applications/specialization-tree-app.test.mjs` | modification | Ajout des cas de test couvrant le choix de l'arbre, le view-model, les nœuds et connexions |
+| Fichier                                               | Action       | Description du changement                                                                                                      |
+| ----------------------------------------------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------ |
+| `module/applications/specialization-tree-app.mjs`     | modification | Ajout des constantes de layout, de la sélection d'arbre courant, du view-model de rendu et du dessin PIXI des nœuds/connexions |
+| `tests/applications/specialization-tree-app.test.mjs` | modification | Ajout des cas de test couvrant le choix de l'arbre, le view-model, les nœuds et connexions                                     |
 
 Le template `.hbs` et les styles `.less` ne sont pas modifiés dans cette tranche : le viewport existe déjà, et le dessin PIXI ne nécessite pas de DOM supplémentaire. Les fichiers `lang/*.json` ne sont pas modifiés non plus (les seules clés utilisées existent déjà).
 
@@ -193,13 +205,13 @@ Le template `.hbs` et les styles `.less` ne sont pas modifiés dans cette tranch
 
 ## 7. Risques
 
-| Risque | Impact | Mitigation |
-|---|---|---|
-| Ordre des spécialisations non préservé dans la Map du resolver | Mauvais arbre affiché | Utiliser l'Array `specializations` directement pour la sélection, pas la Map |
-| TalentId non résolu : nœud sans nom | Nœud illisible | Fallback i18n explicite "Talent inconnu" |
-| Layout trop serré ou trop large : nœuds illisibles ou viewport scroll | Mauvaise expérience visuelle | Tester avec des arbres réels (Bodyguard, etc.) et ajuster les constantes |
-| `buildSpecializationTreeContext` devient trop gros | Fonction difficile à maintenir | Extraire les sous-fonctions `#selectCurrentTree`, `#buildRenderNodes`, `#buildRenderConnections` |
-| Les tests échouent car trop liés au view-model | Tests fragiles | Tester les identifiants, les longueurs et les valeurs métier, pas les coordonnées pixel exactes (conforme ADR-0012) |
+| Risque                                                                | Impact                         | Mitigation                                                                                                          |
+| --------------------------------------------------------------------- | ------------------------------ | ------------------------------------------------------------------------------------------------------------------- |
+| Ordre des spécialisations non préservé dans la Map du resolver        | Mauvais arbre affiché          | Utiliser l'Array `specializations` directement pour la sélection, pas la Map                                        |
+| TalentId non résolu : nœud sans nom                                   | Nœud illisible                 | Fallback i18n explicite "Talent inconnu"                                                                            |
+| Layout trop serré ou trop large : nœuds illisibles ou viewport scroll | Mauvaise expérience visuelle   | Tester avec des arbres réels (Bodyguard, etc.) et ajuster les constantes                                            |
+| `buildSpecializationTreeContext` devient trop gros                    | Fonction difficile à maintenir | Extraire les sous-fonctions `#selectCurrentTree`, `#buildRenderNodes`, `#buildRenderConnections`                    |
+| Les tests échouent car trop liés au view-model                        | Tests fragiles                 | Tester les identifiants, les longueurs et les valeurs métier, pas les coordonnées pixel exactes (conforme ADR-0012) |
 
 ---
 

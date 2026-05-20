@@ -59,11 +59,7 @@ describe('weaponMapper - stats and fallbacks', () => {
     ]
 
     const result = weaponMapper(xmlWeapons)
-    expect(result[0].system.qualities).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({ key: 'breach', hasRank: false }),
-      ])
-    )
+    expect(result[0].system.qualities).toEqual(expect.arrayContaining([expect.objectContaining({ key: 'breach', hasRank: false })]))
 
     const stats = getWeaponImportStats()
     expect(stats.unknownQualities).toBe(1)
@@ -109,7 +105,7 @@ describe('weaponMapper - stats and fallbacks', () => {
     ]
 
     const result = weaponMapper(xmlWeapons)
-    const blastQuality = result[0].system.qualities.find(q => q.key === 'blast')
+    const blastQuality = result[0].system.qualities.find((q) => q.key === 'blast')
     expect(blastQuality).toMatchObject({ key: 'blast', rank: 6, hasRank: true })
   })
 

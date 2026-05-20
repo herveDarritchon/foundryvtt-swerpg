@@ -115,9 +115,13 @@ export function renderChatMessage(message, html, data) {
   if (flags.action) {
     if (flags.confirmed) {
       html.querySelector('.damage-result .target')?.classList.add('applied')
-      html.querySelector('.message-metadata')?.insertAdjacentHTML('afterbegin', '<i class="confirmed fa-solid fa-hexagon-check" data-tooltip="ACTION.Confirmed"></i>')
+      html
+        .querySelector('.message-metadata')
+        ?.insertAdjacentHTML('afterbegin', '<i class="confirmed fa-solid fa-hexagon-check" data-tooltip="ACTION.Confirmed"></i>')
     } else {
-      html.querySelector('.message-metadata')?.insertAdjacentHTML('afterbegin', '<i class="unconfirmed fa-solid fa-hexagon-xmark" data-tooltip="ACTION.Unconfirmed"></i>')
+      html
+        .querySelector('.message-metadata')
+        ?.insertAdjacentHTML('afterbegin', '<i class="unconfirmed fa-solid fa-hexagon-xmark" data-tooltip="ACTION.Unconfirmed"></i>')
     }
   }
 

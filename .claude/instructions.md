@@ -19,6 +19,7 @@ this.actor.experiencePoints.spent = 20  // ❌ INTERDIT
 ```
 
 **Pourquoi c'est interdit :**
+
 1. Violation de l'encapsulation
 2. Getters = lecture seule par convention
 3. Non-testable (les mocks ne peuvent pas intercepter la mutation)
@@ -27,12 +28,14 @@ this.actor.experiencePoints.spent = 20  // ❌ INTERDIT
 #### ✅ CORRECT Patterns
 
 **Option 1 : Accès direct (Simple)**
+
 ```javascript
 // Accès direct aux données system
 this.actor.system.progression.experience.spent = 20
 ```
 
 **Option 2 : Méthode d'update encapsulée (Recommandé)**
+
 ```javascript
 // Dans actor.mjs
 updateExperiencePoints({ spent, gained, total } = {}) {
@@ -63,7 +66,7 @@ Dans l'écosystème Foundry VTT, privilégier l'utilisation de `actor.update()` 
 ```javascript
 // ✅ Pattern Foundry standard
 await actor.update({
-  'system.progression.experience.spent': newValue
+  'system.progression.experience.spent': newValue,
 })
 ```
 
@@ -72,12 +75,14 @@ await actor.update({
 ## File Structure
 
 ### Actor System
+
 - `module/documents/actor.mjs` : Document principal, contient les getters et méthodes d'update
 - `module/lib/skills/*.mjs` : Classes de traitement des compétences (ne doivent pas muter actor via getters)
 - `module/lib/talents/*.mjs` : Classes de traitement des talents
 - `module/lib/characteristics/*.mjs` : Classes de traitement des caractéristiques
 
 ### Tests
+
 - `tests/lib/` : Tests unitaires des classes de traitement
 - `tests/utils/` : Utilitaires et mocks pour les tests
 - `tests/documents/` : Tests d'intégration sur les documents Foundry
@@ -98,9 +103,9 @@ export function createActor({ careerSpent = 0, specializationSpent = 0 } = {}) {
         experience: { spent: 0, gained: 0, total: 100 },
         freeSkillRanks: {
           career: { spent: careerSpent, gained: 4 },
-          specialization: { spent: specializationSpent, gained: 2 }
-        }
-      }
+          specialization: { spent: specializationSpent, gained: 2 },
+        },
+      },
     },
     // Si tu dois mocker les getters, fais-le explicitement :
     // get experiencePoints() { return this.system.progression.experience }

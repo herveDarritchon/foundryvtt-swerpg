@@ -57,7 +57,6 @@ describe('character-audit-log application', () => {
         'SWERPG.AUDIT_LOG.DESCRIPTION.UNKNOWN': 'Unknown event ({type})',
       },
     })
-
     ;({
       default: CharacterAuditLogApp,
       buildAuditLogEntries,
@@ -231,13 +230,7 @@ describe('audit log CSV export', () => {
         return undefined
       }),
     }
-
-    ;({
-      escapeCsvCell,
-      buildCsvContent,
-      buildExportFilename,
-      getPrimaryOwnerName,
-    } = await import('../../module/applications/character-audit-log.mjs'))
+    ;({ escapeCsvCell, buildCsvContent, buildExportFilename, getPrimaryOwnerName } = await import('../../module/applications/character-audit-log.mjs'))
   })
 
   afterEach(() => {

@@ -224,9 +224,7 @@ describe('talent-tree-resolver', () => {
       const actor = {
         system: {
           details: {
-            specializations: new Set([
-              { name: 'Bodyguard', img: 'icons/bodyguard.png', freeSkillRank: 4, specializationSkills: [] },
-            ]),
+            specializations: new Set([{ name: 'Bodyguard', img: 'icons/bodyguard.png', freeSkillRank: 4, specializationSkills: [] }]),
           },
         },
         update: vi.fn(),
@@ -247,9 +245,7 @@ describe('talent-tree-resolver', () => {
       const actor = {
         system: {
           details: {
-            specializations: new Set([
-              { name: 'Bodyguard', specializationId: 'bodyguard', treeUuid: 'Item.tree-bodyguard' },
-            ]),
+            specializations: new Set([{ name: 'Bodyguard', specializationId: 'bodyguard', treeUuid: 'Item.tree-bodyguard' }]),
           },
         },
         update: vi.fn(),
@@ -267,9 +263,7 @@ describe('talent-tree-resolver', () => {
       const actor = {
         system: {
           details: {
-            specializations: new Set([
-              { name: 'Ambassador', img: 'icons/ambassador.png', freeSkillRank: 3 },
-            ]),
+            specializations: new Set([{ name: 'Ambassador', img: 'icons/ambassador.png', freeSkillRank: 3 }]),
           },
         },
         update: vi.fn(),

@@ -5,9 +5,10 @@
 **User Story** : [#151 — US1: Enregistrer chaque action d'évolution du personnage dans un journal de bord](https://github.com/herveDarritchon/foundryvtt-swerpg/issues/151)
 **ADR** : `documentation/architecture/adr/adr-0011-stockage-journal-evolution-personnage-flags.md`
 **Plans amont** :
-  - `documentation/plan/character-sheet/evolution-logs/US1-plan-audit-log-hooks.md` (§4.3, §4.4)
-  - `documentation/plan/character-sheet/evolution-logs/TECH-158-plan-aop-hooks.md`
-**Modules impactés** : `module/utils/audit-diff.mjs` (création), `module/utils/audit-log.mjs` (modification), `tests/utils/audit-diff.test.mjs` (création)
+
+- `documentation/plan/character-sheet/evolution-logs/US1-plan-audit-log-hooks.md` (§4.3, §4.4)
+- `documentation/plan/character-sheet/evolution-logs/TECH-158-plan-aop-hooks.md`
+  **Modules impactés** : `module/utils/audit-diff.mjs` (création), `module/utils/audit-log.mjs` (modification), `tests/utils/audit-diff.test.mjs` (création)
 
 ---
 
@@ -93,7 +94,7 @@ La fonction `snapshotOldState` (implémentée dans #158) aplatit ce diff et extr
     skills: {
       Athletics: {
         rank: {
-          trained: 2  // ancienne valeur
+          trained: 2 // ancienne valeur
         }
       }
     }
@@ -105,19 +106,20 @@ La fonction `snapshotOldState` (implémentée dans #158) aplatit ce diff et extr
 
 Pour référence, voici la structure des chemins impactés par les détecteurs :
 
-| Section | Chemin | Détecteur |
-|---------|--------|-----------|
-| Skills | `system.skills.{id}.rank.{base,careerFree,specializationFree,trained}` | `detectSkillChanges` |
-| Caractéristiques | `system.characteristics.{id}.rank.{base,trained,bonus}` | `detectCharacteristicChanges` |
-| XP | `system.progression.experience.{spent,gained}` | `detectXpChanges` |
-| Détails | `system.details.{species,career,specializations}` | `detectDetailChanges` |
-| Avancement | `system.advancement.level` | `detectAdvancementChanges` |
+| Section          | Chemin                                                                 | Détecteur                     |
+| ---------------- | ---------------------------------------------------------------------- | ----------------------------- |
+| Skills           | `system.skills.{id}.rank.{base,careerFree,specializationFree,trained}` | `detectSkillChanges`          |
+| Caractéristiques | `system.characteristics.{id}.rank.{base,trained,bonus}`                | `detectCharacteristicChanges` |
+| XP               | `system.progression.experience.{spent,gained}`                         | `detectXpChanges`             |
+| Détails          | `system.details.{species,career,specializations}`                      | `detectDetailChanges`         |
+| Avancement       | `system.advancement.level`                                             | `detectAdvancementChanges`    |
 
 ### Contrainte forte : aucune méthode métier existante
 
-L'issue spécifie : *"L'analyseur ne doit appeler aucune méthode métier existante"*. Les détecteurs doivent donc implémenter leurs propres calculs de coût XP à partir des seules données old/new, sans appeler `skill-costs.mjs`, `SkillCostCalculator`, ou toute autre classe métier.
+L'issue spécifie : _"L'analyseur ne doit appeler aucune méthode métier existante"_. Les détecteurs doivent donc implémenter leurs propres calculs de coût XP à partir des seules données old/new, sans appeler `skill-costs.mjs`, `SkillCostCalculator`, ou toute autre classe métier.
 
 Les formules de coût à dupliquer dans l'analyseur :
+
 - **Skill train** : `nextRank * 5` (career) ou `nextRank * 5 + 5` (non-career) où `nextRank = oldTotal + 1`
 - **Skill forget** : remboursement = coût du rang supprimé : `oldTotal * 5` (career) ou `oldTotal * 5 + 5` (non-career)
 - **Characteristic increase** : `newTotal * 10`
@@ -155,6 +157,7 @@ Les formules de coût à dupliquer dans l'analyseur :
 **Décision** : Chaque détecteur embarque ses propres formules de calcul, calquées sur la logique de `skill-costs.mjs` mais indépendantes.
 
 Formules intégrées :
+
 - `computeSkillTrainCost(oldTotal, isCareer)` = `(oldTotal + 1) * 5` (career) ou `(oldTotal + 1) * 5 + 5` (non-career)
 - `computeSkillForgetRefund(oldTotal, isCareer)` = `oldTotal * 5` (career) ou `oldTotal * 5 + 5` (non-career)
 - `computeCharacteristicCost(newValue)` = `newValue * 10`
@@ -166,6 +169,7 @@ Formules intégrées :
 **Problème** : Le code métier détermine si une skill est career/specialization via les données de carrière. L'analyseur ne peut pas y accéder.
 
 **Décision** :
+
 - `isFree` = le nouveau `rank.trained` n'a pas augmenté (seuls `careerFree` ou `specializationFree` ont changé)
 - `isCareer` = estimé depuis les career skills disponibles : si des `freeSkillRanks.career` ont été consommés entre old et new, la skill appartient à la carrière
 
@@ -237,6 +241,7 @@ module/utils/audit-diff.mjs
 ### Étape 2 : Modifier `module/utils/audit-log.mjs`
 
 Changements :
+
 1. **Supprimer le placeholder `composeEntries`** (lignes 134-137) et le remplacer par un import et une délégation
 2. **Importer `composeEntries`** depuis `./audit-diff.mjs`
 
@@ -251,60 +256,60 @@ Note : le flux existant dans `onUpdateActor` appelle déjà `composeEntries(pend
 
 #### Tests unitaires pour chaque détecteur
 
-| # | Test | Description |
-|---|------|-------------|
-| 1 | `composeEntries retourne [] si changes vide` | `changes = {}` → `[]` |
-| 2 | `composeEntries retourne [] si changes sans system` | `changes = { flags: {} }` → `[]` |
-| 3 | `detectSkillChanges produit skill.train` | rank 2→3, oldState a rank 2, actor rank 3 → type `skill.train`, data.oldRank=2, data.newRank=3 |
-| 4 | `detectSkillChanges produit skill.forget` | rank 3→2 → type `skill.forget`, data.oldRank=3, data.newRank=2 |
-| 5 | `detectSkillChanges ignore si rank inchangé` | rank 2→2 (seul un sous-champ non-rank a changé) → `[]` |
-| 6 | `detectSkillChanges calcule cost correct pour career` | oldTotal=2, isCareer=true → cost = 3*5 = 15 |
-| 7 | `detectSkillChanges calcule cost correct pour non-career` | oldTotal=2, isCareer=false → cost = 3*5+5 = 20 |
-| 8 | `detectSkillChanges détecte isFree=true` | seul careerFree a augmenté, trained inchangé → isFree=true, xpDelta=0 |
-| 9 | `detectCharacteristicChanges produit characteristic.increase` | rank 2→3 → type `characteristic.increase`, cost = 3*10 = 30 |
-| 10 | `detectCharacteristicChanges ignore si decrease` | rank 3→2 (annulation/erreur) → `[]` |
-| 11 | `detectCharacteristicChanges calcule cost correct` | newValue=4 → cost=40 |
-| 12 | `detectXpChanges produit xp.spend` | spent 50→75 → type `xp.spend`, amount=25, xpDelta=-25 |
-| 13 | `detectXpChanges produit xp.grant` | gained 100→150 → type `xp.grant`, amount=50, xpDelta=50 |
-| 14 | `detectXpChanges ignore si valeur inchangée` | spent 50→50 (même valeur) → `[]` |
-| 15 | `detectDetailChanges produit species.set` | species null→Human → type `species.set` |
-| 16 | `detectDetailChanges produit career.set` | career null→Mercenary → type `career.set` |
-| 17 | `detectDetailChanges produit specialization.add` | spécialisation ajoutée → type `specialization.add` |
-| 18 | `detectDetailChanges produit specialization.remove` | spécialisation retirée (path `.-=`) → type `specialization.remove` |
-| 19 | `detectAdvancementChanges produit advancement.level` | level 1→2 → type `advancement.level`, oldLevel=1, newLevel=2 |
-| 20 | `detectAdvancementChanges ignore si level inchangé` | level 1→1 → `[]` |
-| 21 | `makeEntry génère entrée bien formée` | Vérifie id (non vide), timestamp, userId, userName, type, data, xpDelta, snapshot |
+| #   | Test                                                          | Description                                                                                    |
+| --- | ------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| 1   | `composeEntries retourne [] si changes vide`                  | `changes = {}` → `[]`                                                                          |
+| 2   | `composeEntries retourne [] si changes sans system`           | `changes = { flags: {} }` → `[]`                                                               |
+| 3   | `detectSkillChanges produit skill.train`                      | rank 2→3, oldState a rank 2, actor rank 3 → type `skill.train`, data.oldRank=2, data.newRank=3 |
+| 4   | `detectSkillChanges produit skill.forget`                     | rank 3→2 → type `skill.forget`, data.oldRank=3, data.newRank=2                                 |
+| 5   | `detectSkillChanges ignore si rank inchangé`                  | rank 2→2 (seul un sous-champ non-rank a changé) → `[]`                                         |
+| 6   | `detectSkillChanges calcule cost correct pour career`         | oldTotal=2, isCareer=true → cost = 3\*5 = 15                                                   |
+| 7   | `detectSkillChanges calcule cost correct pour non-career`     | oldTotal=2, isCareer=false → cost = 3\*5+5 = 20                                                |
+| 8   | `detectSkillChanges détecte isFree=true`                      | seul careerFree a augmenté, trained inchangé → isFree=true, xpDelta=0                          |
+| 9   | `detectCharacteristicChanges produit characteristic.increase` | rank 2→3 → type `characteristic.increase`, cost = 3\*10 = 30                                   |
+| 10  | `detectCharacteristicChanges ignore si decrease`              | rank 3→2 (annulation/erreur) → `[]`                                                            |
+| 11  | `detectCharacteristicChanges calcule cost correct`            | newValue=4 → cost=40                                                                           |
+| 12  | `detectXpChanges produit xp.spend`                            | spent 50→75 → type `xp.spend`, amount=25, xpDelta=-25                                          |
+| 13  | `detectXpChanges produit xp.grant`                            | gained 100→150 → type `xp.grant`, amount=50, xpDelta=50                                        |
+| 14  | `detectXpChanges ignore si valeur inchangée`                  | spent 50→50 (même valeur) → `[]`                                                               |
+| 15  | `detectDetailChanges produit species.set`                     | species null→Human → type `species.set`                                                        |
+| 16  | `detectDetailChanges produit career.set`                      | career null→Mercenary → type `career.set`                                                      |
+| 17  | `detectDetailChanges produit specialization.add`              | spécialisation ajoutée → type `specialization.add`                                             |
+| 18  | `detectDetailChanges produit specialization.remove`           | spécialisation retirée (path `.-=`) → type `specialization.remove`                             |
+| 19  | `detectAdvancementChanges produit advancement.level`          | level 1→2 → type `advancement.level`, oldLevel=1, newLevel=2                                   |
+| 20  | `detectAdvancementChanges ignore si level inchangé`           | level 1→1 → `[]`                                                                               |
+| 21  | `makeEntry génère entrée bien formée`                         | Vérifie id (non vide), timestamp, userId, userName, type, data, xpDelta, snapshot              |
 
 #### Tests d'intégration pour composeEntries
 
-| # | Test | Description |
-|---|------|-------------|
-| 22 | `composeEntries délègue aux bons détecteurs` | changes avec skills+XP → 2 entrées (skill.train + xp.spend) |
-| 23 | `composeEntries gère les opérations composites` | skill.train + xp.spend dans le même changes (même timestamp) |
-| 24 | `composeEntries ignore sections sans changement réel` | changes.system.skills présent mais valeurs identiques → `[]` |
+| #   | Test                                                  | Description                                                  |
+| --- | ----------------------------------------------------- | ------------------------------------------------------------ |
+| 22  | `composeEntries délègue aux bons détecteurs`          | changes avec skills+XP → 2 entrées (skill.train + xp.spend)  |
+| 23  | `composeEntries gère les opérations composites`       | skill.train + xp.spend dans le même changes (même timestamp) |
+| 24  | `composeEntries ignore sections sans changement réel` | changes.system.skills présent mais valeurs identiques → `[]` |
 
 ---
 
 ## 6. Fichiers modifiés
 
-| Fichier | Action | Description |
-|---------|--------|-------------|
-| `module/utils/audit-diff.mjs` | **Création** | Module analyseur : `composeEntries`, 5 détecteurs, `makeEntry`, helpers de coûts |
-| `module/utils/audit-log.mjs` | **Modification** | Suppression du placeholder `composeEntries` (l.134-137), import de `audit-diff.mjs` |
-| `tests/utils/audit-diff.test.mjs` | **Création** | ~24 tests Vitest pour les détecteurs et `composeEntries` |
+| Fichier                           | Action           | Description                                                                         |
+| --------------------------------- | ---------------- | ----------------------------------------------------------------------------------- |
+| `module/utils/audit-diff.mjs`     | **Création**     | Module analyseur : `composeEntries`, 5 détecteurs, `makeEntry`, helpers de coûts    |
+| `module/utils/audit-log.mjs`      | **Modification** | Suppression du placeholder `composeEntries` (l.134-137), import de `audit-diff.mjs` |
+| `tests/utils/audit-diff.test.mjs` | **Création**     | ~24 tests Vitest pour les détecteurs et `composeEntries`                            |
 
 ---
 
 ## 7. Risques
 
-| Risque | Impact | Mitigation |
-|--------|--------|------------|
-| **Décalage structure oldState** : les détecteurs lisent `oldState.system.*` mais `snapshotOldState` ne capture que les feuilles du diff (pas les objets complets) | Old total rank incomplet si le diff ne contient pas toutes les sous-propriétés | Fallback : tout sous-champ manquant dans `oldState` est considéré inchangé (valeur par défaut 0 ou lue depuis `actor.system`) |
-| **isCareer indéterminable** : impossible de savoir si une skill est career sans appeler le métier | Coût XP erroné | Par défaut, considérer `isCareer=false` (coût majoré). Le snapshot inclura `progression.freeSkillRanks.career` si modifié, ce qui permet d'inférer le statut career |
-| **isFree ambigu** : une skill peut gagner un rank free ET un rank trained dans la même opération | `isFree` mal classifié | Cas rare. Si `trained` a augmenté ET que `careerFree` a aussi augmenté, classer comme non-free (l'utilisateur a payé). Acceptable pour un log secondaire |
-| **Spécialisation.add non détectée** : le diff spécialisations peut ne pas contenir les nouvelles clés si le SetField utilise un format inattendu | Entrée specialization.add manquée | Comparer oldState.specializations vs actor.specializations comme fallback robuste |
-| **Régression #158** : la modification de `audit-log.mjs` casse l'infrastructure existante | Plus aucun log produit | Tests d'intégration existants (404 lignes) inchangés. Ajouter un test qui vérifie que `onUpdateActor` appelle `composeEntries` et que le résultat est écrit |
-| **Formules de coût dupliquées** : si les règles de coût changent, `audit-diff.mjs` doit être mis à jour manuellement | Coûts XP désynchronisés | Documenter clairement les formules dans le code avec référence à `skill-costs.mjs`. Ajouter un test de cohérence qui compare les résultats des deux implémentations |
+| Risque                                                                                                                                                            | Impact                                                                         | Mitigation                                                                                                                                                          |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Décalage structure oldState** : les détecteurs lisent `oldState.system.*` mais `snapshotOldState` ne capture que les feuilles du diff (pas les objets complets) | Old total rank incomplet si le diff ne contient pas toutes les sous-propriétés | Fallback : tout sous-champ manquant dans `oldState` est considéré inchangé (valeur par défaut 0 ou lue depuis `actor.system`)                                       |
+| **isCareer indéterminable** : impossible de savoir si une skill est career sans appeler le métier                                                                 | Coût XP erroné                                                                 | Par défaut, considérer `isCareer=false` (coût majoré). Le snapshot inclura `progression.freeSkillRanks.career` si modifié, ce qui permet d'inférer le statut career |
+| **isFree ambigu** : une skill peut gagner un rank free ET un rank trained dans la même opération                                                                  | `isFree` mal classifié                                                         | Cas rare. Si `trained` a augmenté ET que `careerFree` a aussi augmenté, classer comme non-free (l'utilisateur a payé). Acceptable pour un log secondaire            |
+| **Spécialisation.add non détectée** : le diff spécialisations peut ne pas contenir les nouvelles clés si le SetField utilise un format inattendu                  | Entrée specialization.add manquée                                              | Comparer oldState.specializations vs actor.specializations comme fallback robuste                                                                                   |
+| **Régression #158** : la modification de `audit-log.mjs` casse l'infrastructure existante                                                                         | Plus aucun log produit                                                         | Tests d'intégration existants (404 lignes) inchangés. Ajouter un test qui vérifie que `onUpdateActor` appelle `composeEntries` et que le résultat est écrit         |
+| **Formules de coût dupliquées** : si les règles de coût changent, `audit-diff.mjs` doit être mis à jour manuellement                                              | Coûts XP désynchronisés                                                        | Documenter clairement les formules dans le code avec référence à `skill-costs.mjs`. Ajouter un test de cohérence qui compare les résultats des deux implémentations |
 
 ---
 

@@ -14,9 +14,9 @@ class TestActor {
         physical: { total: 10 },
         dodge: { total: 5 },
         parry: { total: 3 },
-        block: { total: 2 }
+        block: { total: 2 },
       },
-      skills: data.skills || {}
+      skills: data.skills || {},
     }
     this.resistances = data.resistances || {}
     this.isBroken = data.isBroken || false

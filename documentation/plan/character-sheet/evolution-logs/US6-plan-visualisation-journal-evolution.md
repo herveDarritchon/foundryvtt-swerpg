@@ -427,35 +427,35 @@ Justification :
 
 ## 6. Fichiers modifies
 
-| Fichier | Action | Description du changement |
-|---------|--------|---------------------------|
-| `module/applications/character-audit-log.mjs` | Creation | Nouvelle application V2 de consultation du journal |
-| `module/applications/_module.mjs` | Modification | Export de la nouvelle application |
-| `module/applications/sheets/character-sheet.mjs` | Modification | Action d'ouverture du journal depuis la fiche |
-| `module/utils/audit-diff.mjs` | Modification | Enrichissement des entrees de specialisation avec leur nom |
-| `templates/applications/character-audit-log.hbs` | Creation | Template de la fenetre d'historique |
-| `templates/sheets/actor/character-header.hbs` | Modification | Ajout de l'icone d'ouverture avec tooltip |
-| `styles/applications.less` | Modification | Style de la fenetre d'historique |
-| `styles/actor.less` | Modification mineure | Ajustement du header et du survol de l'icone |
-| `lang/fr.json` | Modification | Nouvelles cles FR de l'UI d'historique |
-| `lang/en.json` | Modification | Nouvelles cles EN de l'UI d'historique |
-| `tests/applications/character-audit-log.test.mjs` | Creation | Tests de l'application d'historique |
-| `tests/applications/sheets/character-sheet-audit-log.test.mjs` | Creation | Tests du declencheur depuis la fiche |
-| `tests/utils/audit-diff.test.mjs` | Modification | Couverture de l'enrichissement specialisation |
-| `documentation/tests/manuel/audit-log/README.md` | Modification | Ajout des scenarios manuels de consultation UI |
+| Fichier                                                        | Action               | Description du changement                                  |
+| -------------------------------------------------------------- | -------------------- | ---------------------------------------------------------- |
+| `module/applications/character-audit-log.mjs`                  | Creation             | Nouvelle application V2 de consultation du journal         |
+| `module/applications/_module.mjs`                              | Modification         | Export de la nouvelle application                          |
+| `module/applications/sheets/character-sheet.mjs`               | Modification         | Action d'ouverture du journal depuis la fiche              |
+| `module/utils/audit-diff.mjs`                                  | Modification         | Enrichissement des entrees de specialisation avec leur nom |
+| `templates/applications/character-audit-log.hbs`               | Creation             | Template de la fenetre d'historique                        |
+| `templates/sheets/actor/character-header.hbs`                  | Modification         | Ajout de l'icone d'ouverture avec tooltip                  |
+| `styles/applications.less`                                     | Modification         | Style de la fenetre d'historique                           |
+| `styles/actor.less`                                            | Modification mineure | Ajustement du header et du survol de l'icone               |
+| `lang/fr.json`                                                 | Modification         | Nouvelles cles FR de l'UI d'historique                     |
+| `lang/en.json`                                                 | Modification         | Nouvelles cles EN de l'UI d'historique                     |
+| `tests/applications/character-audit-log.test.mjs`              | Creation             | Tests de l'application d'historique                        |
+| `tests/applications/sheets/character-sheet-audit-log.test.mjs` | Creation             | Tests du declencheur depuis la fiche                       |
+| `tests/utils/audit-diff.test.mjs`                              | Modification         | Couverture de l'enrichissement specialisation              |
+| `documentation/tests/manuel/audit-log/README.md`               | Modification         | Ajout des scenarios manuels de consultation UI             |
 
 ---
 
 ## 7. Risques
 
-| Risque | Impact | Mitigation |
-|--------|--------|------------|
-| Les anciennes entrees de specialisation ne portent pas encore de nom pendant le developpement local | Description moins lisible sur certaines donnees de test | Fallback sur l'ID et enrichissement immediat pour toutes les nouvelles entrees |
-| Mauvais niveau de permission | Exposition du journal a des joueurs non proprietaires | Double garde : masquage UI + verification runtime a l'ouverture |
-| Rendu lent avec grand volume de logs | UX degradee | Liste simple, conteneur scrollable, filtrage local, pas de composants imbriques |
-| Desynchronisation FR/EN | UI partiellement localisee | Ajouter les cles dans les deux langues dans la meme etape et verifier la parite |
-| Regression visuelle du header personnage | Degradation de la fiche | Placement minimal, icone discrete, ajustement CSS limite et teste |
-| Effet immersif trop marque | Baisse de lisibilite ou surcharge visuelle | Prioriser contraste, taille contenue, survol discret et non bloquant |
+| Risque                                                                                              | Impact                                                  | Mitigation                                                                      |
+| --------------------------------------------------------------------------------------------------- | ------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| Les anciennes entrees de specialisation ne portent pas encore de nom pendant le developpement local | Description moins lisible sur certaines donnees de test | Fallback sur l'ID et enrichissement immediat pour toutes les nouvelles entrees  |
+| Mauvais niveau de permission                                                                        | Exposition du journal a des joueurs non proprietaires   | Double garde : masquage UI + verification runtime a l'ouverture                 |
+| Rendu lent avec grand volume de logs                                                                | UX degradee                                             | Liste simple, conteneur scrollable, filtrage local, pas de composants imbriques |
+| Desynchronisation FR/EN                                                                             | UI partiellement localisee                              | Ajouter les cles dans les deux langues dans la meme etape et verifier la parite |
+| Regression visuelle du header personnage                                                            | Degradation de la fiche                                 | Placement minimal, icone discrete, ajustement CSS limite et teste               |
+| Effet immersif trop marque                                                                          | Baisse de lisibilite ou surcharge visuelle              | Prioriser contraste, taille contenue, survol discret et non bloquant            |
 
 ---
 

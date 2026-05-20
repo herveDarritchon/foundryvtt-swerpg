@@ -5,10 +5,11 @@
 **User Story** : [#151 — US1: Enregistrer chaque action d'évolution du personnage dans un journal de bord](https://github.com/herveDarritchon/foundryvtt-swerpg/issues/151)
 **ADR** : `documentation/architecture/adr/adr-0011-stockage-journal-evolution-personnage-flags.md`
 **Plans amont** :
-  - `documentation/plan/character-sheet/evolution-logs/US1-plan-audit-log-hooks.md` (§4.5, §4.6)
-  - `documentation/plan/character-sheet/evolution-logs/TECH-158-plan-aop-hooks.md`
-  - `documentation/plan/character-sheet/evolution-logs/TECH-159-plan-diff-analyzer.md`
-**Modules impactés** : `module/utils/audit-log.mjs` (modification), `tests/utils/audit-log.test.mjs` (modification)
+
+- `documentation/plan/character-sheet/evolution-logs/US1-plan-audit-log-hooks.md` (§4.5, §4.6)
+- `documentation/plan/character-sheet/evolution-logs/TECH-158-plan-aop-hooks.md`
+- `documentation/plan/character-sheet/evolution-logs/TECH-159-plan-diff-analyzer.md`
+  **Modules impactés** : `module/utils/audit-log.mjs` (modification), `tests/utils/audit-log.test.mjs` (modification)
 
 ---
 
@@ -57,16 +58,16 @@ Les 3 premiers ont été implémentés dans #158 ; il reste à :
 
 Le module contient déjà l'essentiel des mécanismes de résilience :
 
-| Mécanisme | Statut | Code |
-|-----------|--------|------|
-| `isOnlyAuditChange` guard | ✔️ Implémenté | L.17-21 |
-| `isAuditInternalUpdate(options)` guard | ✔️ Implémenté | L.27-29 |
-| `void writeLogEntries(...)` (fire-and-forget) | ✔️ Implémenté | L.195 |
-| try/catch avec `logger.error` + `ui.notifications.warn` dans `writeLogEntries` | ✔️ Implémenté (inline) | L.147-152 |
-| `SWERPG.AUDIT.WRITE_FAILED` i18n key | ✔️ Dans en.json et fr.json | — |
-| TTL (30s) + MAX_PENDING (50) | ✔️ Implémenté | L.9-10, 44-82 |
-| File pending par actor:userId | ✔️ Implémenté | L.88-106 |
-| `snapshotOldState` générique | ✔️ Implémenté | L.116-130 |
+| Mécanisme                                                                      | Statut                     | Code          |
+| ------------------------------------------------------------------------------ | -------------------------- | ------------- |
+| `isOnlyAuditChange` guard                                                      | ✔️ Implémenté              | L.17-21       |
+| `isAuditInternalUpdate(options)` guard                                         | ✔️ Implémenté              | L.27-29       |
+| `void writeLogEntries(...)` (fire-and-forget)                                  | ✔️ Implémenté              | L.195         |
+| try/catch avec `logger.error` + `ui.notifications.warn` dans `writeLogEntries` | ✔️ Implémenté (inline)     | L.147-152     |
+| `SWERPG.AUDIT.WRITE_FAILED` i18n key                                           | ✔️ Dans en.json et fr.json | —             |
+| TTL (30s) + MAX_PENDING (50)                                                   | ✔️ Implémenté              | L.9-10, 44-82 |
+| File pending par actor:userId                                                  | ✔️ Implémenté              | L.88-106      |
+| `snapshotOldState` générique                                                   | ✔️ Implémenté              | L.116-130     |
 
 ### `handleWriteError` est actuellement inline
 
@@ -81,6 +82,7 @@ Le module contient déjà l'essentiel des mécanismes de résilience :
 ```
 
 Il n'y a pas :
+
 - De fonction `handleWriteError` nommée ❌
 - De retry en cas d'échec ❌
 - De message chuchoté aux MJ ❌
@@ -101,6 +103,7 @@ Module complet livré par #159. Non modifié par #160.
 **Décision** : Extraire dans une fonction exportée `handleWriteError(actor, err)` dans `audit-log.mjs`.
 
 **Justification** :
+
 - Testable unitairement (vérifier que `logger.error` et `ui.notifications.warn` sont appelés)
 - Extensible : le retry, le GM whisper et d'autres comportements futurs s'ajoutent à un seul endroit
 - Conforme à la spec #160 qui définit `handleWriteError` comme point d'extension
@@ -133,6 +136,7 @@ async function writeLogEntries(actor, entries) {
 ```
 
 **Justification** :
+
 - 1 seule tentative = pas de boucle de retry infinie
 - 1s de délai = laisse le temps à une éventuelle contention DB de se résoudre
 - Le log est secondaire : si le retry échoue, on notifie l'utilisateur et on abandonne
@@ -163,12 +167,14 @@ async function handleWriteError(actor, err) {
 ```
 
 **Justification** :
+
 - Message persistant dans le chat (contrairement à `ui.notifications.warn`)
 - Whisper aux MJ uniquement → ne pollue pas le chat des joueurs
 - Message en anglais (ciblé MJ technique) → pas de clé i18n nécessaire
 - `ChatMessage.create` protégé par try/catch → une erreur ici ne se propage pas
 
 **design graphique**
+
 - respecter le design et l'esprit graphique du système (exemple la notification `#sendSkillTransactionChat`) mais l'adapter à un whisper d'une notification de warning.
 - le design doit être immersif dans l'univers de star wars
 
@@ -182,7 +188,7 @@ async function handleWriteError(actor, err) {
 function pruneExpiredPending() {
   const now = Date.now()
   for (const [key, queue] of pendingOldStates) {
-    const remaining = queue.filter(p => now - p.timestamp <= PENDING_TTL_MS)
+    const remaining = queue.filter((p) => now - p.timestamp <= PENDING_TTL_MS)
     if (remaining.length === 0) {
       pendingOldStates.delete(key)
     } else if (remaining.length !== queue.length) {
@@ -198,6 +204,7 @@ function pruneExpiredPending() {
 ```
 
 **Justification** :
+
 - 100 est un seuil de sécurité bien au-dessus du MAX_PENDING=50 normal
 - Ne devrait jamais arriver sauf bug → le warning sert de diagnostique
 - `logger.warn` est toujours actif (même hors debug, car warn ∈ ALWAYS_ON_LEVELS)
@@ -207,7 +214,7 @@ function pruneExpiredPending() {
 **Décision** : Fonction utilitaire privée pour le délai de retry.
 
 ```js
-const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms))
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 ```
 
 ### 4.6. Organisation des exports
@@ -227,7 +234,7 @@ Dans la zone des constantes (après `MAX_PENDING`), ajouter :
 ```js
 const MAX_RETRIES = 1
 const RETRY_DELAY_MS = 1000
-const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms))
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 ```
 
 #### 1b. Extraire `handleWriteError` comme fonction exportée
@@ -237,9 +244,7 @@ Nouvelle fonction, positionnée avant `writeLogEntries` :
 ```js
 export async function handleWriteError(actor, err) {
   logger.error(`[AuditLog] Write failed for actor "${actor.name}" (${actor.id})`, err)
-  ui.notifications?.warn?.(
-    game.i18n.format('SWERPG.AUDIT.WRITE_FAILED', { actor: actor.name })
-  )
+  ui.notifications?.warn?.(game.i18n.format('SWERPG.AUDIT.WRITE_FAILED', { actor: actor.name }))
 
   if (game.user?.isGM) {
     try {
@@ -268,10 +273,7 @@ async function writeLogEntries(actor, entries) {
     try {
       const currentLogs = cloneValue(_getProperty(actor, AUDIT_LOG_KEY) ?? [])
       const nextLogs = [...currentLogs, ...entries]
-      await actor.update(
-        { [AUDIT_LOG_KEY]: nextLogs },
-        { swerpgAuditLog: false }
-      )
+      await actor.update({ [AUDIT_LOG_KEY]: nextLogs }, { swerpgAuditLog: false })
       return
     } catch (err) {
       if (attempt < MAX_RETRIES) {
@@ -311,56 +313,56 @@ globalThis.ChatMessage = {
 
 #### Tests unitaires pour `handleWriteError`
 
-| # | Test | Description | Vérification |
-|---|------|-------------|-------------|
-| 1 | `handleWriteError appelle logger.error` | Simulation d'erreur | `logger.error` appelé avec le message attendu |
-| 2 | `handleWriteError appelle ui.notifications.warn` | Simulation d'erreur | `ui.notifications.warn` appelé avec la clé i18n |
-| 3 | `handleWriteError envoie ChatMessage si GM` | `game.user.isGM = true` | `ChatMessage.create` appelé avec `whisper` |
-| 4 | `handleWriteError n'envoie pas ChatMessage si joueur` | `game.user.isGM = false` | `ChatMessage.create` NON appelé |
-| 5 | `handleWriteError catch l'échec de ChatMessage.create` | `ChatMessage.create` throw | `logger.warn` appelé, pas d'exception propagée |
+| #   | Test                                                   | Description                | Vérification                                    |
+| --- | ------------------------------------------------------ | -------------------------- | ----------------------------------------------- |
+| 1   | `handleWriteError appelle logger.error`                | Simulation d'erreur        | `logger.error` appelé avec le message attendu   |
+| 2   | `handleWriteError appelle ui.notifications.warn`       | Simulation d'erreur        | `ui.notifications.warn` appelé avec la clé i18n |
+| 3   | `handleWriteError envoie ChatMessage si GM`            | `game.user.isGM = true`    | `ChatMessage.create` appelé avec `whisper`      |
+| 4   | `handleWriteError n'envoie pas ChatMessage si joueur`  | `game.user.isGM = false`   | `ChatMessage.create` NON appelé                 |
+| 5   | `handleWriteError catch l'échec de ChatMessage.create` | `ChatMessage.create` throw | `logger.warn` appelé, pas d'exception propagée  |
 
 #### Tests unitaires pour le retry
 
-| # | Test | Description | Vérification |
-|---|------|-------------|-------------|
-| 6 | `writeLogEntries retry après échec puis réussite` | 1er `actor.update` échoue, 2e réussit | `actor.update` appelé 2 fois, `handleWriteError` non appelé |
-| 7 | `writeLogEntries appelle handleWriteError après 2 échecs` | Les 2 tentatives échouent | `handleWriteError` appelé après le 2e échec |
-| 8 | `writeLogEntries succès direct sans retry` | 1er `actor.update` réussit | `actor.update` appelé 1 fois |
+| #   | Test                                                      | Description                           | Vérification                                                |
+| --- | --------------------------------------------------------- | ------------------------------------- | ----------------------------------------------------------- |
+| 6   | `writeLogEntries retry après échec puis réussite`         | 1er `actor.update` échoue, 2e réussit | `actor.update` appelé 2 fois, `handleWriteError` non appelé |
+| 7   | `writeLogEntries appelle handleWriteError après 2 échecs` | Les 2 tentatives échouent             | `handleWriteError` appelé après le 2e échec                 |
+| 8   | `writeLogEntries succès direct sans retry`                | 1er `actor.update` réussit            | `actor.update` appelé 1 fois                                |
 
 #### Tests pour le warning pendingOldStates
 
-| # | Test | Description | Vérification |
-|---|------|-------------|-------------|
-| 9 | `pruneExpiredPending ne log pas si < 100` | 50 entrées | `logger.warn` non appelé |
-| 10 | `pruneExpiredPending log warning si > 100` | 101 entrées | `logger.warn` appelé avec "101" |
+| #   | Test                                       | Description | Vérification                    |
+| --- | ------------------------------------------ | ----------- | ------------------------------- |
+| 9   | `pruneExpiredPending ne log pas si < 100`  | 50 entrées  | `logger.warn` non appelé        |
+| 10  | `pruneExpiredPending log warning si > 100` | 101 entrées | `logger.warn` appelé avec "101" |
 
 #### Tests d'intégration
 
-| # | Test | Description | Vérification |
-|---|------|-------------|-------------|
-| 11 | `onUpdateActor ne throw pas si writeLogEntries échoue` | `writeLogEntries` échoue | `ui.notifications.warn` appelé, pas d'exception |
-| 12 | `onUpdateActor avec retry puis succès` | 1er update échoue, 2e réussit | Entrée écrite, pas d'erreur notifiée |
+| #   | Test                                                   | Description                   | Vérification                                    |
+| --- | ------------------------------------------------------ | ----------------------------- | ----------------------------------------------- |
+| 11  | `onUpdateActor ne throw pas si writeLogEntries échoue` | `writeLogEntries` échoue      | `ui.notifications.warn` appelé, pas d'exception |
+| 12  | `onUpdateActor avec retry puis succès`                 | 1er update échoue, 2e réussit | Entrée écrite, pas d'erreur notifiée            |
 
 ---
 
 ## 6. Fichiers modifiés
 
-| Fichier | Action | Description |
-|---------|--------|-------------|
-| `module/utils/audit-log.mjs` | **Modification** | Ajout `MAX_RETRIES`, `RETRY_DELAY_MS`, `sleep()` ; extraction de `handleWriteError` (nommée, exportée, avec GM whisper) ; refactor `writeLogEntries` avec retry loop ; ajout warning capacité dans `pruneExpiredPending` |
-| `tests/utils/audit-log.test.mjs` | **Modification** | Ajout des mocks `game.user`, `ChatMessage` ; ~12 nouveaux tests |
+| Fichier                          | Action           | Description                                                                                                                                                                                                              |
+| -------------------------------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `module/utils/audit-log.mjs`     | **Modification** | Ajout `MAX_RETRIES`, `RETRY_DELAY_MS`, `sleep()` ; extraction de `handleWriteError` (nommée, exportée, avec GM whisper) ; refactor `writeLogEntries` avec retry loop ; ajout warning capacité dans `pruneExpiredPending` |
+| `tests/utils/audit-log.test.mjs` | **Modification** | Ajout des mocks `game.user`, `ChatMessage` ; ~12 nouveaux tests                                                                                                                                                          |
 
 ---
 
 ## 7. Risques
 
-| Risque | Impact | Mitigation |
-|--------|--------|------------|
-| **Retry masque une erreur récurrente** : l'écriture échoue systématiquement, le retry de 1s retarde la notification | L'utilisateur voit la notification 1s plus tard | Acceptable : 1s est imperceptible. Le retry est limité à 1 tentative. |
-| **ChatMessage.create échoue** : l'envoi du whisper au MJ provoque une erreur | Exception non catchée dans `handleWriteError` | `try/catch` interne avec `logger.warn` silencieux |
-| **game.user non disponible** : pendant le setup ou dans les tests, `game` peut être null | `TypeError` | Guard `game.user?.isGM` (optional chaining) |
-| **sleep() non awaitée** : si `writeLogEntries` est appelée sans `await` (c'est le cas via `void`), le retry peut ne pas attendre | Le retry est immédiat, pas de délai réel | Vérifier que `sleep` est bien `await`ée dans la boucle. Le `void` n'impacte pas le flow interne de la promesse. |
-| **Tests lents** : le `sleep(1000)` dans les tests de retry allonge le temps d'exécution | Tests qui prennent 2+ secondes | Dans les tests, mocker `sleep` ou utiliser `vi.advanceTimersByTime()` pour éviter l'attente réelle. |
+| Risque                                                                                                                           | Impact                                          | Mitigation                                                                                                      |
+| -------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| **Retry masque une erreur récurrente** : l'écriture échoue systématiquement, le retry de 1s retarde la notification              | L'utilisateur voit la notification 1s plus tard | Acceptable : 1s est imperceptible. Le retry est limité à 1 tentative.                                           |
+| **ChatMessage.create échoue** : l'envoi du whisper au MJ provoque une erreur                                                     | Exception non catchée dans `handleWriteError`   | `try/catch` interne avec `logger.warn` silencieux                                                               |
+| **game.user non disponible** : pendant le setup ou dans les tests, `game` peut être null                                         | `TypeError`                                     | Guard `game.user?.isGM` (optional chaining)                                                                     |
+| **sleep() non awaitée** : si `writeLogEntries` est appelée sans `await` (c'est le cas via `void`), le retry peut ne pas attendre | Le retry est immédiat, pas de délai réel        | Vérifier que `sleep` est bien `await`ée dans la boucle. Le `void` n'impacte pas le flow interne de la promesse. |
+| **Tests lents** : le `sleep(1000)` dans les tests de retry allonge le temps d'exécution                                          | Tests qui prennent 2+ secondes                  | Dans les tests, mocker `sleep` ou utiliser `vi.advanceTimersByTime()` pour éviter l'attente réelle.             |
 
 ---
 

@@ -92,7 +92,7 @@ class MockActor {
       reduce: (fn, initial) => {
         const result = initial
         const values = Array.from(this._items.values())
-        values.forEach(item => fn(result, item))
+        values.forEach((item) => fn(result, item))
         return result
       },
       find: (fn) => {
@@ -417,5 +417,4 @@ describe('TalentsMixin', () => {
       expect(result).toBeDefined()
     })
   })
-
 })

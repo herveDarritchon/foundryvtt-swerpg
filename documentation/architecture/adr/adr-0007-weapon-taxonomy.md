@@ -3,7 +3,7 @@ title: 'ADR-0007: Taxonomie canonique des armes (system.category, system.weaponT
 status: 'Accepted'
 date: '2026-05-07'
 authors: 'Hervé Darritchon'
-tags: [ 'architecture', 'weapon', 'taxonomy', 'data-model', 'import-oggdude' ]
+tags: ['architecture', 'weapon', 'taxonomy', 'data-model', 'import-oggdude']
 supersedes: ''
 superseded_by: ''
 ---
@@ -46,15 +46,15 @@ d'architecture.
 On distingue deux champs distincts dans le schéma `weapon` :
 
 1. **`system.category`** : représente la **famille mécanique** de l'arme.
-    - Enum interne fermée, utilisée par le code, les filtres et l'UI.
-    - Détermine/complète le comportement mécanique (Ranged vs Melee, skill associé, etc.).
-    - Alimentée principalement par `<Categories>` OggDude (via mapping normalisé).
-    - Calquée sur le pattern existant de `system.ARMOR.CATEGORIES` (`module/config/armor.mjs:13`).
+   - Enum interne fermée, utilisée par le code, les filtres et l'UI.
+   - Détermine/complète le comportement mécanique (Ranged vs Melee, skill associé, etc.).
+   - Alimentée principalement par `<Categories>` OggDude (via mapping normalisé).
+   - Calquée sur le pattern existant de `system.ARMOR.CATEGORIES` (`module/config/armor.mjs:13`).
 
 2. **`system.weaponType`** : représente le **sous-type narratif / lignée d'arme**.
-    - Champ normalisé (valeurs connues via mapping OggDude mais pas nécessairement une enum fermée).
-    - Issu de `<Type>` OggDude.
-    - Usage informatif, affichage, filtres secondaires et préparation pour futurs comportements.
+   - Champ normalisé (valeurs connues via mapping OggDude mais pas nécessairement une enum fermée).
+   - Issu de `<Type>` OggDude.
+   - Usage informatif, affichage, filtres secondaires et préparation pour futurs comportements.
 
 ### D2 — Enum canonique pour `system.category`
 
@@ -62,15 +62,15 @@ Les valeurs canoniques finales sont définies dans la [spécification canonique 
 
 L'enum se compose des valeurs suivantes, validées dans #97 :
 
-| Clé         | Rôle mécanique                      | Skill principal          | RangeCategory |
-|-------------|-------------------------------------|--------------------------|---------------|
-| `melee`     | Corps-à-corps                       | melee, lightsaber, brawl | melee         |
-| `ranged`    | Tir standard                        | rangedLight, rangedHeavy | distant       |
-| `gunnery`   | Armes lourdes portatives            | gunnery                  | distant       |
-| `explosive` | Explosifs, démolitions              | rangedLight, gunnery     | distant       |
-| `thrown`    | Armes de jet                        | rangedLight              | distant       |
-| `vehicle`   | Armement monté                       | gunnery                  | distant       |
-| `natural`   | Attaques naturelles                 | brawl                    | melee         |
+| Clé         | Rôle mécanique           | Skill principal          | RangeCategory |
+| ----------- | ------------------------ | ------------------------ | ------------- |
+| `melee`     | Corps-à-corps            | melee, lightsaber, brawl | melee         |
+| `ranged`    | Tir standard             | rangedLight, rangedHeavy | distant       |
+| `gunnery`   | Armes lourdes portatives | gunnery                  | distant       |
+| `explosive` | Explosifs, démolitions   | rangedLight, gunnery     | distant       |
+| `thrown`    | Armes de jet             | rangedLight              | distant       |
+| `vehicle`   | Armement monté           | gunnery                  | distant       |
+| `natural`   | Attaques naturelles      | brawl                    | melee         |
 
 **Règles :**
 
@@ -93,7 +93,7 @@ Le champ `system.weaponType` reçoit une valeur normalisée à partir de `<Type>
 Les `<Categories>` OggDude sont utilisées pour **déduire ou confirmer** `system.category` :
 
 | `<Category>` OggDude | `system.category` mappé |
-|----------------------|-------------------------|
+| -------------------- | ----------------------- |
 | `Ranged`             | `ranged`                |
 | `Melee`              | `melee`                 |
 | `Thrown`             | `thrown`                |
@@ -106,9 +106,9 @@ Les `<Categories>` OggDude sont utilisées pour **déduire ou confirmer** `syste
 
 1. Si `<Categories>` fournit une valeur reconnue → celle-ci détermine `system.category`.
 2. Si `<Categories>` est absent ou ne contient que des valeurs inconnues → `SkillKey` détermine la catégorie :
-    - `melee`, `lightsaber`, `brawl` → `melee`
-    - `rangedLight`, `rangedHeavy` → `ranged`
-    - `gunnery` → `gunnery`
+   - `melee`, `lightsaber`, `brawl` → `melee`
+   - `rangedLight`, `rangedHeavy` → `ranged`
+   - `gunnery` → `gunnery`
 3. Fallback ultime : `melee` ou `ranged` selon la `Range` (engaged → melee).
 
 ### D5 — Conservation des valeurs brutes en flags
@@ -117,9 +117,9 @@ Les valeurs OggDude originales sont conservées dans `flags.swerpg.oggdude` pour
 
 ```javascript
 flags.swerpg.oggdude = {
-  type: "Explosives/Other",        // valeur brute de <Type>
-  categories: ["Ranged", "Starship"], // valeur brute de <Categories>
-  source: { name: "...", page: 123 },
+  type: 'Explosives/Other', // valeur brute de <Type>
+  categories: ['Ranged', 'Starship'], // valeur brute de <Categories>
+  source: { name: '...', page: 123 },
   sizeHigh: 2.5,
 }
 ```
@@ -135,9 +135,9 @@ C'est SWERPG qui fait autorité sur sa taxonomie :
 - Les valeurs brutes sont conservées en flags pour traçabilité.
 - Les futures sources d'import suivront les mêmes règles de mapping (pas d'exception par source).
 - Chaque mapper d’Item doit exposer une stratégie de validation :
-   - strict = rejet si catégorie mécanique non résolue ;
-   - normal = fallback documenté + warning ; 
-   - lenient éventuel = conservation brute + catégorie par défaut.
+  - strict = rejet si catégorie mécanique non résolue ;
+  - normal = fallback documenté + warning ;
+  - lenient éventuel = conservation brute + catégorie par défaut.
 
 ### D7 — Implications UX
 

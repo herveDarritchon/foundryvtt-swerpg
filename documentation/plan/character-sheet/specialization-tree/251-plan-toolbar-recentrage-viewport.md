@@ -12,6 +12,7 @@
 Ajouter le premier contrôle utilisateur explicite du viewport de `SpecializationTreeApp` : un bouton de toolbar permettant de recentrer l'arbre et de remettre le zoom à `1`.
 
 Le résultat attendu est :
+
 - une toolbar visible en surimpression du viewport, en haut à droite ;
 - une action ApplicationV2 `resetView` branchée au bouton ;
 - une clé i18n dédiée `SWERPG.TALENT.SPECIALIZATION_TREE_APP.ACTION.CENTER` ;
@@ -77,6 +78,7 @@ Le résultat attendu est :
 **Décision** : implémenter la toolbar dans le template Handlebars, pas dans le canvas PIXI.
 
 **Justification** :
+
 - cohérent avec `ApplicationV2` et les `data-action` du projet ;
 - plus simple à tester ;
 - évite de mélanger contrôles d'interface et couche de dessin du graphe.
@@ -86,6 +88,7 @@ Le résultat attendu est :
 **Décision** : ajouter `resetView` à `SpecializationTreeApp.DEFAULT_OPTIONS.actions`.
 
 **Justification** :
+
 - c'est le pattern déjà utilisé dans le repo ;
 - l'issue demande explicitement une action ApplicationV2 ;
 - le test peut invoquer directement le handler, sans dépendre d'un wiring DOM lourd.
@@ -95,6 +98,7 @@ Le résultat attendu est :
 **Décision** : exposer un handler interne `_onResetView()` qui appelle une méthode privée `#resetView()`.
 
 **Justification** :
+
 - sépare le contrat UI de la logique de caméra ;
 - garde `#resetView()` réutilisable en interne ;
 - respecte l'esprit de l'acceptance criterion.
@@ -104,6 +108,7 @@ Le résultat attendu est :
 **Décision** : `#resetView()` doit s'appuyer sur la logique actuelle de bounding box / centrage, pas introduire une seconde formule.
 
 **Justification** :
+
 - un seul comportement de recentrage ;
 - réduit le risque de divergence entre centrage initial et recentrage manuel ;
 - facilite les futurs boutons de zoom.
@@ -113,6 +118,7 @@ Le résultat attendu est :
 **Décision** : ajouter la toolbar comme sibling overlay du host `[data-specialization-tree-viewport]`, sans modifier son dataset ni son rôle.
 
 **Justification** :
+
 - `#getViewportHost()` dépend déjà de ce sélecteur ;
 - réduit le risque de casser le montage PIXI ou les tests existants ;
 - répond à l'acceptance criterion de non-régression template.
@@ -124,18 +130,22 @@ Le résultat attendu est :
 ### Étape 1 — Déclarer l'action ApplicationV2
 
 **À faire**
+
 - Ajouter `actions: { resetView: ... }` dans `SpecializationTreeApp.DEFAULT_OPTIONS`.
 - Introduire un handler `_onResetView(event, target)` ou équivalent.
 
 **Fichier**
+
 - `module/applications/specialization-tree-app.mjs`
 
 **Risque**
+
 - mauvais binding de `this` dans l'action.
 
 ### Étape 2 — Implémenter la logique de reset runtime
 
 **À faire**
+
 - Ajouter `#resetView()` si absente.
 - Faire en sorte que cette méthode :
   - récupère le contexte utile courant,
@@ -144,42 +154,51 @@ Le résultat attendu est :
   - appelle `#applyViewportTransform()` sans forcer un rerender complet.
 
 **Fichier**
+
 - `module/applications/specialization-tree-app.mjs`
 
 **Risque**
+
 - dépendre d'un contexte non disponible au moment du clic.
 - Mitigation : réutiliser `#renderNodesCache` ou reconstruire un contexte minimal fiable.
 
 ### Étape 3 — Ajouter la toolbar au template
 
 **À faire**
+
 - Introduire un conteneur toolbar dans `.specialization-tree-app__viewport-panel`.
 - Ajouter un bouton `type="button"` avec `data-action="resetView"`.
 - Utiliser `{{localize 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.ACTION.CENTER'}}`.
 
 **Fichier**
+
 - `templates/applications/specialization-tree-app.hbs`
 
 **Risque**
+
 - casser la structure actuelle du viewport ou du tooltip.
 - Mitigation : conserver le host viewport et le tooltip tels quels, ajouter la toolbar en overlay.
 
 ### Étape 4 — Ajouter les clés i18n
 
 **À faire**
+
 - Ajouter `ACTION.CENTER` sous `SWERPG.TALENT.SPECIALIZATION_TREE_APP` en français et en anglais.
 
 **Fichiers**
+
 - `lang/fr.json`
 - `lang/en.json`
 
 **Risque**
+
 - désynchronisation des fichiers de langue.
 - Mitigation : même structure dans les deux fichiers.
 
 ### Étape 5 — Styliser la toolbar
 
 **À faire**
+
 - Ajouter les classes de toolbar et bouton dans `styles/applications.less`.
 - Respecter le thème sombre SWERPG :
   - `rgba(...)`,
@@ -189,25 +208,30 @@ Le résultat attendu est :
   - `z-index` et `pointer-events` corrects.
 
 **Fichiers**
+
 - `styles/applications.less`
 - potentiellement `styles/swerpg.css` si le repo versionne l'artefact compilé
 
 **Risque**
+
 - chevauchement avec le tooltip ou mauvaise lisibilité mobile.
 - Mitigation : espacement simple, taille contenue, règles responsive minimales.
 
 ### Étape 6 — Étendre les tests
 
 **À faire**
+
 - Ajouter un test qui invoque l'action `resetView` et vérifie que `position.set(...)` reçoit les coordonnées de recentrage.
 - Vérifier que `scale.set(1)` est appliqué après reset.
 - Vérifier que l'action de clic n'altère pas `renderNodes`.
 - Conserver les assertions ciblées et diagnostiques.
 
 **Fichier**
+
 - `tests/applications/specialization-tree-app.test.mjs`
 
 **Risque**
+
 - test trop couplé à la structure interne.
 - Mitigation : tester le contrat observable (`position.set`, `scale.set`, coordonnées inchangées), pas l'implémentation détaillée.
 
@@ -215,27 +239,27 @@ Le résultat attendu est :
 
 ## 6. Fichiers modifiés
 
-| Fichier | Action | Description |
-|---|---|---|
-| `module/applications/specialization-tree-app.mjs` | modification | Ajouter l'action `resetView`, le handler UI et la logique de reset runtime |
-| `templates/applications/specialization-tree-app.hbs` | modification | Ajouter la toolbar overlay et le bouton de recentrage |
-| `styles/applications.less` | modification | Styliser la toolbar et son bouton |
-| `styles/swerpg.css` | potentielle modification | Refléter la compilation LESS si l'artefact est commité |
-| `lang/fr.json` | modification | Ajouter la clé `SWERPG.TALENT.SPECIALIZATION_TREE_APP.ACTION.CENTER` |
-| `lang/en.json` | modification | Ajouter la clé `SWERPG.TALENT.SPECIALIZATION_TREE_APP.ACTION.CENTER` |
-| `tests/applications/specialization-tree-app.test.mjs` | modification | Ajouter la couverture du clic de recentrage |
+| Fichier                                               | Action                   | Description                                                                |
+| ----------------------------------------------------- | ------------------------ | -------------------------------------------------------------------------- |
+| `module/applications/specialization-tree-app.mjs`     | modification             | Ajouter l'action `resetView`, le handler UI et la logique de reset runtime |
+| `templates/applications/specialization-tree-app.hbs`  | modification             | Ajouter la toolbar overlay et le bouton de recentrage                      |
+| `styles/applications.less`                            | modification             | Styliser la toolbar et son bouton                                          |
+| `styles/swerpg.css`                                   | potentielle modification | Refléter la compilation LESS si l'artefact est commité                     |
+| `lang/fr.json`                                        | modification             | Ajouter la clé `SWERPG.TALENT.SPECIALIZATION_TREE_APP.ACTION.CENTER`       |
+| `lang/en.json`                                        | modification             | Ajouter la clé `SWERPG.TALENT.SPECIALIZATION_TREE_APP.ACTION.CENTER`       |
+| `tests/applications/specialization-tree-app.test.mjs` | modification             | Ajouter la couverture du clic de recentrage                                |
 
 ---
 
 ## 7. Risques
 
-| Risque | Impact | Mitigation |
-|---|---|---|
-| Duplication entre `#centerTree()` et `#resetView()` | comportement divergent | faire de `#resetView()` un simple point d'entrée qui réutilise la logique de centrage existante |
-| Toolbar casse le host viewport | PIXI ne se monte plus correctement | conserver `[data-specialization-tree-viewport]` inchangé |
-| Handler d'action mal bindé | clic inopérant | suivre le pattern `DEFAULT_OPTIONS.actions` déjà utilisé dans le projet |
-| Test trop fragile | faux négatifs | assertions sur contrat observable seulement |
-| CSS overlay gêne tooltip ou mobile | UX dégradée | positionnement simple, espacements, vérification responsive minimale |
+| Risque                                              | Impact                             | Mitigation                                                                                      |
+| --------------------------------------------------- | ---------------------------------- | ----------------------------------------------------------------------------------------------- |
+| Duplication entre `#centerTree()` et `#resetView()` | comportement divergent             | faire de `#resetView()` un simple point d'entrée qui réutilise la logique de centrage existante |
+| Toolbar casse le host viewport                      | PIXI ne se monte plus correctement | conserver `[data-specialization-tree-viewport]` inchangé                                        |
+| Handler d'action mal bindé                          | clic inopérant                     | suivre le pattern `DEFAULT_OPTIONS.actions` déjà utilisé dans le projet                         |
+| Test trop fragile                                   | faux négatifs                      | assertions sur contrat observable seulement                                                     |
+| CSS overlay gêne tooltip ou mobile                  | UX dégradée                        | positionnement simple, espacements, vérification responsive minimale                            |
 
 ---
 

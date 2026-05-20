@@ -47,15 +47,15 @@ The system must preserve the Star Wars Edge / Genesys result model:
 
 Use these canonical dice identifiers unless the existing codebase already exposes equivalent constants:
 
-| Die | ID | Faces | Symbol | Color role | Axis |
-|---|---|---:|---|---|---|
-| Ability | `ability` | 8 | `dA` | green | positive |
-| Proficiency | `proficiency` | 12 | `dP` | yellow | positive |
-| Boost | `boost` | 6 | `dB` | blue | positive |
-| Difficulty | `difficulty` | 8 | `dD` | purple | negative |
-| Challenge | `challenge` | 12 | `dC` | red | negative |
-| Setback | `setback` | 6 | `dS` | black | negative |
-| Force | `force` | 12 | `dF` or existing project symbol | white | force |
+| Die         | ID            | Faces | Symbol                          | Color role | Axis     |
+| ----------- | ------------- | ----: | ------------------------------- | ---------- | -------- |
+| Ability     | `ability`     |     8 | `dA`                            | green      | positive |
+| Proficiency | `proficiency` |    12 | `dP`                            | yellow     | positive |
+| Boost       | `boost`       |     6 | `dB`                            | blue       | positive |
+| Difficulty  | `difficulty`  |     8 | `dD`                            | purple     | negative |
+| Challenge   | `challenge`   |    12 | `dC`                            | red        | negative |
+| Setback     | `setback`     |     6 | `dS`                            | black      | negative |
+| Force       | `force`       |    12 | `dF` or existing project symbol | white      | force    |
 
 If the project already defines dice constants in `module/dice/` or `CONFIG.SWERPG.DICE`, extend those instead of creating a second registry.
 
@@ -142,12 +142,12 @@ proficiency = upgrades
 
 Examples:
 
-| Characteristic | Skill | Result |
-|---:|---:|---|
-| 3 | 0 | 3 ability |
-| 3 | 1 | 2 ability + 1 proficiency |
-| 3 | 2 | 1 ability + 2 proficiency |
-| 2 | 4 | 0 ability + 2 proficiency |
+| Characteristic | Skill | Result                    |
+| -------------: | ----: | ------------------------- |
+|              3 |     0 | 3 ability                 |
+|              3 |     1 | 2 ability + 1 proficiency |
+|              3 |     2 | 1 ability + 2 proficiency |
+|              2 |     4 | 0 ability + 2 proficiency |
 
 Do not create more positive dice than the larger of the two values.
 
@@ -155,14 +155,14 @@ Do not create more positive dice than the larger of the two values.
 
 Use the project’s official difficulty table if it exists. Otherwise use the standard base mapping:
 
-| Difficulty | Difficulty dice | Challenge dice |
-|---|---:|---:|
-| `simple` | 0 | 0 |
-| `easy` | 1 | 0 |
-| `average` | 2 | 0 |
-| `hard` | 3 | 0 |
-| `daunting` | 4 | 0 |
-| `formidable` | 5 | 0 |
+| Difficulty   | Difficulty dice | Challenge dice |
+| ------------ | --------------: | -------------: |
+| `simple`     |               0 |              0 |
+| `easy`       |               1 |              0 |
+| `average`    |               2 |              0 |
+| `hard`       |               3 |              0 |
+| `daunting`   |               4 |              0 |
+| `formidable` |               5 |              0 |
 
 Do not silently introduce expanded/homebrew difficulty names unless the project configuration explicitly supports them.
 
@@ -542,11 +542,13 @@ Use `BREAKING CHANGE:` if a public roll API, chat flag shape, or persisted roll 
 Do not send large context to an LLM unless reasoning is required.
 
 For deterministic tasks:
+
 - execute with shell, Git, npm, Vitest, Playwright or CI;
 - collect only the useful output;
 - call an LLM only if interpretation, decision or correction is needed.
 
 For failures:
+
 - send only the failing command;
 - send only the relevant error block;
 - send only the files directly involved;

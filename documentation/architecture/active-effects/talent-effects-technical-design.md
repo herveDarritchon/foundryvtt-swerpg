@@ -89,13 +89,13 @@ Chaque effet ou action doit pouvoir indiquer son niveau d’automatisation :
  * @enum {string}
  */
 export const AUTOMATION_LEVELS = Object.freeze({
-  NONE: "none",
-  MANUAL: "manual",
-  CHAT_CARD: "chat-card",
-  SUGGESTED: "suggested",
-  ASSISTED: "assisted",
-  AUTO: "auto"
-});
+  NONE: 'none',
+  MANUAL: 'manual',
+  CHAT_CARD: 'chat-card',
+  SUGGESTED: 'suggested',
+  ASSISTED: 'assisted',
+  AUTO: 'auto',
+})
 ```
 
 Définition fonctionnelle :
@@ -113,11 +113,11 @@ Définition fonctionnelle :
 
 Les imports doivent conserver :
 
-* la donnée brute ;
-* la donnée normalisée ;
-* le statut de mapping ;
-* le niveau de confiance ;
-* les avertissements.
+- la donnée brute ;
+- la donnée normalisée ;
+- le statut de mapping ;
+- le niveau de confiance ;
+- les avertissements.
 
 OggDude est une source d’entrée, pas le modèle interne.
 
@@ -167,26 +167,26 @@ Conséquence : tout ActiveEffect généré depuis un effet SWERPG doit être tra
 
 ```js
 const talent = {
-  name: "Filature",
-  type: "talent",
+  name: 'Filature',
+  type: 'talent',
   system: {
     description: {
-      public: "",
-      gm: "",
-      source: ""
+      public: '',
+      gm: '',
+      source: '',
     },
-    activation: "passive",
+    activation: 'passive',
     ranked: true,
     effects: [],
-    actions: []
+    actions: [],
   },
   flags: {
     swerpg: {
       import: {},
-      mapping: {}
-    }
-  }
-};
+      mapping: {},
+    },
+  },
+}
 ```
 
 ## Constantes du modèle
@@ -201,12 +201,12 @@ const talent = {
  * @enum {string}
  */
 export const TALENT_ACTIVATIONS = Object.freeze({
-  PASSIVE: "passive",
-  ACTIVE: "active",
-  REACTION: "reaction",
-  MANUAL: "manual",
-  MIXED: "mixed"
-});
+  PASSIVE: 'passive',
+  ACTIVE: 'active',
+  REACTION: 'reaction',
+  MANUAL: 'manual',
+  MIXED: 'mixed',
+})
 ```
 
 | Valeur     | Usage                                             |
@@ -227,17 +227,17 @@ export const TALENT_ACTIVATIONS = Object.freeze({
  * @enum {string}
  */
 export const EFFECT_TYPES = Object.freeze({
-  MODIFY_DICE_POOL: "modifyDicePool",
-  MODIFY_DERIVED_STAT: "modifyDerivedStat",
-  MODIFY_DAMAGE: "modifyDamage",
-  MODIFY_CRITICAL: "modifyCritical",
-  GRANT_CAREER_SKILL: "grantCareerSkill",
-  REROLL_CHECK: "rerollCheck",
-  MODIFY_RECOVERY: "modifyRecovery",
-  MODIFY_ITEM: "modifyItem",
-  APPLY_CONDITION: "applyCondition",
-  CUSTOM: "custom"
-});
+  MODIFY_DICE_POOL: 'modifyDicePool',
+  MODIFY_DERIVED_STAT: 'modifyDerivedStat',
+  MODIFY_DAMAGE: 'modifyDamage',
+  MODIFY_CRITICAL: 'modifyCritical',
+  GRANT_CAREER_SKILL: 'grantCareerSkill',
+  REROLL_CHECK: 'rerollCheck',
+  MODIFY_RECOVERY: 'modifyRecovery',
+  MODIFY_ITEM: 'modifyItem',
+  APPLY_CONDITION: 'applyCondition',
+  CUSTOM: 'custom',
+})
 ```
 
 ### `EFFECT_MODES`
@@ -250,11 +250,11 @@ export const EFFECT_TYPES = Object.freeze({
  * @enum {string}
  */
 export const EFFECT_MODES = Object.freeze({
-  PASSIVE: "passive",
-  ACTIVATED: "activated",
-  REACTION: "reaction",
-  MANUAL: "manual"
-});
+  PASSIVE: 'passive',
+  ACTIVATED: 'activated',
+  REACTION: 'reaction',
+  MANUAL: 'manual',
+})
 ```
 
 ### `EFFECT_TIMINGS`
@@ -267,23 +267,23 @@ export const EFFECT_MODES = Object.freeze({
  * @enum {string}
  */
 export const EFFECT_TIMINGS = Object.freeze({
-  PREPARE_DATA: "prepareData",
-  ON_ACQUIRE: "onAcquire",
-  BEFORE_ROLL: "beforeRoll",
-  AFTER_ROLL: "afterRoll",
-  AFTER_SUCCESS: "afterSuccess",
-  AFTER_FAILURE: "afterFailure",
-  BEFORE_DAMAGE: "beforeDamage",
-  AFTER_DAMAGE: "afterDamage",
-  BEFORE_CRITICAL_ROLL: "beforeCriticalRoll",
-  AFTER_CRITICAL_ROLL: "afterCriticalRoll",
-  WHEN_TARGETED: "whenTargeted",
-  WHEN_TARGETED_BY_COMBAT_CHECK: "whenTargetedByCombatCheck",
-  END_OF_ENCOUNTER: "endOfEncounter",
-  START_OF_TURN: "startOfTurn",
-  END_OF_TURN: "endOfTurn",
-  MANUAL: "manual"
-});
+  PREPARE_DATA: 'prepareData',
+  ON_ACQUIRE: 'onAcquire',
+  BEFORE_ROLL: 'beforeRoll',
+  AFTER_ROLL: 'afterRoll',
+  AFTER_SUCCESS: 'afterSuccess',
+  AFTER_FAILURE: 'afterFailure',
+  BEFORE_DAMAGE: 'beforeDamage',
+  AFTER_DAMAGE: 'afterDamage',
+  BEFORE_CRITICAL_ROLL: 'beforeCriticalRoll',
+  AFTER_CRITICAL_ROLL: 'afterCriticalRoll',
+  WHEN_TARGETED: 'whenTargeted',
+  WHEN_TARGETED_BY_COMBAT_CHECK: 'whenTargetedByCombatCheck',
+  END_OF_ENCOUNTER: 'endOfEncounter',
+  START_OF_TURN: 'startOfTurn',
+  END_OF_TURN: 'endOfTurn',
+  MANUAL: 'manual',
+})
 ```
 
 ### `ACTION_TYPES`
@@ -296,13 +296,13 @@ export const EFFECT_TIMINGS = Object.freeze({
  * @enum {string}
  */
 export const ACTION_TYPES = Object.freeze({
-  TALENT: "talent",
-  ATTACK: "attack",
-  FORCE_POWER: "forcePower",
-  UTILITY: "utility",
-  RECOVERY: "recovery",
-  CUSTOM: "custom"
-});
+  TALENT: 'talent',
+  ATTACK: 'attack',
+  FORCE_POWER: 'forcePower',
+  UTILITY: 'utility',
+  RECOVERY: 'recovery',
+  CUSTOM: 'custom',
+})
 ```
 
 ### `ACTION_KINDS`
@@ -315,13 +315,13 @@ export const ACTION_TYPES = Object.freeze({
  * @enum {string}
  */
 export const ACTION_KINDS = Object.freeze({
-  ACTION: "action",
-  MANEUVER: "maneuver",
-  INCIDENTAL: "incidental",
-  REACTION: "reaction",
-  PASSIVE: "passive",
-  FREE: "free"
-});
+  ACTION: 'action',
+  MANEUVER: 'maneuver',
+  INCIDENTAL: 'incidental',
+  REACTION: 'reaction',
+  PASSIVE: 'passive',
+  FREE: 'free',
+})
 ```
 
 ### `MAPPING_STATUSES`
@@ -334,12 +334,12 @@ export const ACTION_KINDS = Object.freeze({
  * @enum {string}
  */
 export const MAPPING_STATUSES = Object.freeze({
-  MAPPED: "mapped",
-  PARTIALLY_MAPPED: "partiallyMapped",
-  UNMAPPED: "unmapped",
-  REQUIRES_REVIEW: "requiresReview",
-  UNSUPPORTED: "unsupported"
-});
+  MAPPED: 'mapped',
+  PARTIALLY_MAPPED: 'partiallyMapped',
+  UNMAPPED: 'unmapped',
+  REQUIRES_REVIEW: 'requiresReview',
+  UNSUPPORTED: 'unsupported',
+})
 ```
 
 ### `MAPPING_CONFIDENCE`
@@ -352,10 +352,10 @@ export const MAPPING_STATUSES = Object.freeze({
  * @enum {string}
  */
 export const MAPPING_CONFIDENCE = Object.freeze({
-  HIGH: "high",
-  MEDIUM: "medium",
-  LOW: "low"
-});
+  HIGH: 'high',
+  MEDIUM: 'medium',
+  LOW: 'low',
+})
 ```
 
 ### `EFFECT_APPLICATION_STRATEGIES`
@@ -371,19 +371,19 @@ export const MAPPING_CONFIDENCE = Object.freeze({
  * @enum {string}
  */
 export const EFFECT_APPLICATION_STRATEGIES = Object.freeze({
-  COMPUTED: "computed",
-  ACTIVE_EFFECT: "activeEffect",
-  CHAT_ONLY: "chatOnly",
-  MANUAL: "manual"
-});
+  COMPUTED: 'computed',
+  ACTIVE_EFFECT: 'activeEffect',
+  CHAT_ONLY: 'chatOnly',
+  MANUAL: 'manual',
+})
 ```
 
-| Valeur         | Usage                                                                 |
-| -------------- | --------------------------------------------------------------------- |
-| `computed`     | Effet calculé directement par le moteur SWERPG, sans ActiveEffect     |
-| `activeEffect` | Effet projetable vers un ActiveEffect Foundry V14                     |
-| `chatOnly`     | Effet présenté ou résolu via carte de chat, sans application directe  |
-| `manual`       | Effet documenté, mais appliqué manuellement par le joueur ou le MJ    |
+| Valeur         | Usage                                                                |
+| -------------- | -------------------------------------------------------------------- |
+| `computed`     | Effet calculé directement par le moteur SWERPG, sans ActiveEffect    |
+| `activeEffect` | Effet projetable vers un ActiveEffect Foundry V14                    |
+| `chatOnly`     | Effet présenté ou résolu via carte de chat, sans application directe |
+| `manual`       | Effet documenté, mais appliqué manuellement par le joueur ou le MJ   |
 
 ### `EFFECT_TARGET_DOCUMENTS`
 
@@ -395,13 +395,13 @@ export const EFFECT_APPLICATION_STRATEGIES = Object.freeze({
  * @enum {string}
  */
 export const EFFECT_TARGET_DOCUMENTS = Object.freeze({
-  ACTOR: "actor",
-  ITEM: "item",
-  TOKEN: "token",
-  ROLL: "roll",
-  CHAT: "chat",
-  NONE: "none"
-});
+  ACTOR: 'actor',
+  ITEM: 'item',
+  TOKEN: 'token',
+  ROLL: 'roll',
+  CHAT: 'chat',
+  NONE: 'none',
+})
 ```
 
 ### `EFFECT_DIRECTIONS`
@@ -414,13 +414,13 @@ export const EFFECT_TARGET_DOCUMENTS = Object.freeze({
  * @enum {string}
  */
 export const EFFECT_DIRECTIONS = Object.freeze({
-  SELF: "self",
-  OUTGOING: "outgoing",
-  INCOMING: "incoming",
-  TARGET: "target",
-  ALLY: "ally",
-  AREA: "area"
-});
+  SELF: 'self',
+  OUTGOING: 'outgoing',
+  INCOMING: 'incoming',
+  TARGET: 'target',
+  ALLY: 'ally',
+  AREA: 'area',
+})
 ```
 
 ## Contrats de données JSDoc
@@ -440,9 +440,9 @@ export const EFFECT_DIRECTIONS = Object.freeze({
 
 Règles :
 
-* `public` doit être conservé même si l’effet est structuré.
-* `gm` peut contenir des notes MJ.
-* `source` peut contenir une référence courte.
+- `public` doit être conservé même si l’effet est structuré.
+- `gm` peut contenir des notes MJ.
+- `source` peut contenir une référence courte.
 
 ### `EffectSource`
 
@@ -571,10 +571,10 @@ Règles :
 
 Règles :
 
-* `computed` est le choix par défaut pour les effets de seuil, de pool de dés, de dégâts ou de critiques résolus par le moteur SWERPG.
-* `activeEffect` est réservé aux effets qui bénéficient réellement de la persistance, de l’expiration ou de l’affichage Foundry.
-* `chatOnly` convient aux Talents qui doivent produire une carte, demander un choix ou guider une résolution sans appliquer automatiquement un changement.
-* `manual` convient aux effets narratifs ou non encore automatisés.
+- `computed` est le choix par défaut pour les effets de seuil, de pool de dés, de dégâts ou de critiques résolus par le moteur SWERPG.
+- `activeEffect` est réservé aux effets qui bénéficient réellement de la persistance, de l’expiration ou de l’affichage Foundry.
+- `chatOnly` convient aux Talents qui doivent produire une carte, demander un choix ou guider une résolution sans appliquer automatiquement un changement.
+- `manual` convient aux effets narratifs ou non encore automatisés.
 
 ### `GeneratedActiveEffectRef`
 
@@ -1316,10 +1316,10 @@ Ces effets restent dans `system.effects` et sont résolus par le moteur SWERPG. 
 
 Exemples :
 
-* `Robustesse` : augmentation du seuil de stress ;
-* `Endurci` : augmentation du seuil de blessure ;
-* `Filature` : modification d’un pool de dés sur certains tests ;
-* `Coup mortel` : bonus aux blessures critiques infligées.
+- `Robustesse` : augmentation du seuil de stress ;
+- `Endurci` : augmentation du seuil de blessure ;
+- `Filature` : modification d’un pool de dés sur certains tests ;
+- `Coup mortel` : bonus aux blessures critiques infligées.
 
 Stratégie recommandée :
 
@@ -1347,11 +1347,11 @@ Ces effets peuvent produire un ActiveEffect Foundry si la persistance, l’expir
 
 Exemples :
 
-* condition temporaire ;
-* bonus ou malus jusqu’à la fin du tour ;
-* bonus ou malus jusqu’à la fin de la rencontre ;
-* effet visible sur l’Actor ou le Token ;
-* effet dont l’expiration doit être gérée par Foundry.
+- condition temporaire ;
+- bonus ou malus jusqu’à la fin du tour ;
+- bonus ou malus jusqu’à la fin de la rencontre ;
+- effet visible sur l’Actor ou le Token ;
+- effet dont l’expiration doit être gérée par Foundry.
 
 Stratégie recommandée :
 
@@ -1386,10 +1386,10 @@ Ils servent à afficher une carte de chat, demander un choix, enregistrer une in
 
 Exemples :
 
-* `Dose de stimulant` ;
-* `Sens de la rhétorique` ;
-* `Répartie caustique` ;
-* effets dépendants d’une dépense d’avantages, de triomphes ou d’un choix narratif.
+- `Dose de stimulant` ;
+- `Sens de la rhétorique` ;
+- `Répartie caustique` ;
+- effets dépendants d’une dépense d’avantages, de triomphes ou d’un choix narratif.
 
 Stratégie recommandée :
 
@@ -1403,12 +1403,12 @@ application: {
 
 ### Règles de synchronisation
 
-* `system.effects` reste la source de vérité métier.
-* Un ActiveEffect généré depuis `system.effects` ne doit pas être interprété comme source métier autonome.
-* Un ActiveEffect généré doit être traçable via `flags.swerpg.generatedFrom`.
-* Si l’Item source est supprimé, désactivé ou migré, les ActiveEffects générés depuis cet Item doivent pouvoir être retrouvés et nettoyés.
-* Une édition directe d’un ActiveEffect généré ne doit pas modifier silencieusement `system.effects`.
-* Si une synchronisation inverse est un jour souhaitée, elle devra faire l’objet d’une ADR séparée.
+- `system.effects` reste la source de vérité métier.
+- Un ActiveEffect généré depuis `system.effects` ne doit pas être interprété comme source métier autonome.
+- Un ActiveEffect généré doit être traçable via `flags.swerpg.generatedFrom`.
+- Si l’Item source est supprimé, désactivé ou migré, les ActiveEffects générés depuis cet Item doivent pouvoir être retrouvés et nettoyés.
+- Une édition directe d’un ActiveEffect généré ne doit pas modifier silencieusement `system.effects`.
+- Si une synchronisation inverse est un jour souhaitée, elle devra faire l’objet d’une ADR séparée.
 
 ### Règle anti-pattern
 
@@ -1471,24 +1471,24 @@ OggDude raw data
 
 Un mapping peut être `high` si :
 
-* le Talent est connu ;
-* le type d’effet est explicite ;
-* le scope est explicite ;
-* le coût est explicite ;
-* le timing est explicite.
+- le Talent est connu ;
+- le type d’effet est explicite ;
+- le scope est explicite ;
+- le coût est explicite ;
+- le timing est explicite.
 
 Un mapping doit être `medium` si :
 
-* l’effet est compris mais le contexte exact dépend d’un choix ;
-* le Talent demande une activation variable ;
-* le système peut proposer l’effet mais pas l’appliquer automatiquement.
+- l’effet est compris mais le contexte exact dépend d’un choix ;
+- le Talent demande une activation variable ;
+- le système peut proposer l’effet mais pas l’appliquer automatiquement.
 
 Un mapping doit être `low` si :
 
-* le texte est ambigu ;
-* le `DieModifier` manque de contexte ;
-* le Talent demande une décision narrative ;
-* le Talent modifie une règle non encore implémentée.
+- le texte est ambigu ;
+- le `DieModifier` manque de contexte ;
+- le Talent demande une décision narrative ;
+- le Talent modifie une règle non encore implémentée.
 
 ## Validateurs runtime
 
@@ -1500,7 +1500,7 @@ Un mapping doit être `low` si :
  * @returns {value is Record<string, unknown>}
  */
 export function isPlainObject(value) {
-  return value !== null && typeof value === "object" && !Array.isArray(value);
+  return value !== null && typeof value === 'object' && !Array.isArray(value)
 }
 
 /**
@@ -1508,7 +1508,7 @@ export function isPlainObject(value) {
  * @returns {boolean}
  */
 export function isNonEmptyString(value) {
-  return typeof value === "string" && value.trim().length > 0;
+  return typeof value === 'string' && value.trim().length > 0
 }
 
 /**
@@ -1517,27 +1517,16 @@ export function isNonEmptyString(value) {
  * @returns {boolean}
  */
 export function isEnumValue(value, enumObject) {
-  return typeof value === "string" && Object.values(enumObject).includes(value);
+  return typeof value === 'string' && Object.values(enumObject).includes(value)
 }
 ```
 
 ### Validation d’un effet
 
 ```js
-import {
-  AUTOMATION_LEVELS,
-  EFFECT_APPLICATION_STRATEGIES,
-  EFFECT_DIRECTIONS,
-  EFFECT_MODES,
-  EFFECT_TIMINGS,
-  EFFECT_TYPES
-} from "./effect-constants.js";
+import { AUTOMATION_LEVELS, EFFECT_APPLICATION_STRATEGIES, EFFECT_DIRECTIONS, EFFECT_MODES, EFFECT_TIMINGS, EFFECT_TYPES } from './effect-constants.js'
 
-import {
-  isEnumValue,
-  isNonEmptyString,
-  isPlainObject
-} from "./validation-utils.js";
+import { isEnumValue, isNonEmptyString, isPlainObject } from './validation-utils.js'
 
 /**
  * Valide une définition d’effet mécanique.
@@ -1546,115 +1535,95 @@ import {
  * @returns {{ valid: boolean, errors: string[], warnings: string[] }}
  */
 export function validateEffectDefinition(effect) {
-  const errors = [];
-  const warnings = [];
+  const errors = []
+  const warnings = []
 
   if (!isPlainObject(effect)) {
     return {
       valid: false,
-      errors: ["Effect must be an object."],
-      warnings
-    };
+      errors: ['Effect must be an object.'],
+      warnings,
+    }
   }
 
   if (!isNonEmptyString(effect.id)) {
-    errors.push("Effect must have a non-empty string id.");
+    errors.push('Effect must have a non-empty string id.')
   }
 
   if (!isEnumValue(effect.type, EFFECT_TYPES)) {
-    errors.push(`Unknown effect type: ${String(effect.type)}`);
+    errors.push(`Unknown effect type: ${String(effect.type)}`)
   }
 
-  if (typeof effect.enabled !== "boolean") {
-    errors.push("Effect must define enabled as a boolean.");
+  if (typeof effect.enabled !== 'boolean') {
+    errors.push('Effect must define enabled as a boolean.')
   }
 
   if (!isPlainObject(effect.source)) {
-    errors.push("Effect must define a source object.");
+    errors.push('Effect must define a source object.')
   }
 
   if (!isEnumValue(effect.mode, EFFECT_MODES)) {
-    errors.push(`Unknown effect mode: ${String(effect.mode)}`);
+    errors.push(`Unknown effect mode: ${String(effect.mode)}`)
   }
 
   if (!isEnumValue(effect.timing, EFFECT_TIMINGS)) {
-    errors.push(`Unknown effect timing: ${String(effect.timing)}`);
+    errors.push(`Unknown effect timing: ${String(effect.timing)}`)
   }
 
   if (!isPlainObject(effect.scope)) {
-    errors.push("Effect must define a scope object.");
+    errors.push('Effect must define a scope object.')
   }
 
   if (!isPlainObject(effect.changes)) {
-    errors.push("Effect must define a changes object.");
+    errors.push('Effect must define a changes object.')
   }
 
-  if (
-    effect.direction !== undefined &&
-    !isEnumValue(effect.direction, EFFECT_DIRECTIONS)
-  ) {
-    errors.push(`Unknown effect direction: ${String(effect.direction)}`);
+  if (effect.direction !== undefined && !isEnumValue(effect.direction, EFFECT_DIRECTIONS)) {
+    errors.push(`Unknown effect direction: ${String(effect.direction)}`)
   }
 
   if (effect.application !== undefined) {
     if (!isPlainObject(effect.application)) {
-      errors.push("Effect application must be an object when defined.");
+      errors.push('Effect application must be an object when defined.')
     } else if (!isEnumValue(effect.application.strategy, EFFECT_APPLICATION_STRATEGIES)) {
-      errors.push(`Unknown effect application strategy: ${String(effect.application.strategy)}`);
+      errors.push(`Unknown effect application strategy: ${String(effect.application.strategy)}`)
     }
   }
 
   if (!isPlainObject(effect.ui)) {
-    warnings.push("Effect should define ui metadata.");
+    warnings.push('Effect should define ui metadata.')
   } else {
     if (!isNonEmptyString(effect.ui.label)) {
-      warnings.push("Effect should define ui.label.");
+      warnings.push('Effect should define ui.label.')
     }
 
-    if (
-      effect.ui.automationLevel !== undefined &&
-      !isEnumValue(effect.ui.automationLevel, AUTOMATION_LEVELS)
-    ) {
-      warnings.push(`Unknown automation level: ${String(effect.ui.automationLevel)}`);
+    if (effect.ui.automationLevel !== undefined && !isEnumValue(effect.ui.automationLevel, AUTOMATION_LEVELS)) {
+      warnings.push(`Unknown automation level: ${String(effect.ui.automationLevel)}`)
     }
   }
 
-  if (
-    effect.type === EFFECT_TYPES.CUSTOM &&
-    effect.ui?.automationLevel === AUTOMATION_LEVELS.AUTO
-  ) {
-    warnings.push("Custom effects should not use automationLevel auto.");
+  if (effect.type === EFFECT_TYPES.CUSTOM && effect.ui?.automationLevel === AUTOMATION_LEVELS.AUTO) {
+    warnings.push('Custom effects should not use automationLevel auto.')
   }
 
-  if (
-    effect.application?.strategy === EFFECT_APPLICATION_STRATEGIES.ACTIVE_EFFECT &&
-    effect.type === EFFECT_TYPES.CUSTOM
-  ) {
-    warnings.push("Custom effects should not be projected to ActiveEffect without a dedicated adapter.");
+  if (effect.application?.strategy === EFFECT_APPLICATION_STRATEGIES.ACTIVE_EFFECT && effect.type === EFFECT_TYPES.CUSTOM) {
+    warnings.push('Custom effects should not be projected to ActiveEffect without a dedicated adapter.')
   }
 
   return {
     valid: errors.length === 0,
     errors,
-    warnings
-  };
+    warnings,
+  }
 }
 ```
 
 ### Validation d’une action
 
 ```js
-import {
-  ACTION_KINDS,
-  ACTION_TYPES,
-  AUTOMATION_LEVELS
-} from "./effect-constants.js";
+import { ACTION_KINDS, ACTION_TYPES, AUTOMATION_LEVELS } from './effect-constants.js'
 
-import {
-  isEnumValue,
-  isNonEmptyString,
-  isPlainObject
-} from "./validation-utils.js";
+import { isEnumValue, isNonEmptyString, isPlainObject } from './validation-utils.js'
 
 /**
  * Valide une action cliquable ou assistée.
@@ -1663,48 +1632,48 @@ import {
  * @returns {{ valid: boolean, errors: string[], warnings: string[] }}
  */
 export function validateActionDefinition(action) {
-  const errors = [];
-  const warnings = [];
+  const errors = []
+  const warnings = []
 
   if (!isPlainObject(action)) {
     return {
       valid: false,
-      errors: ["Action must be an object."],
-      warnings
-    };
+      errors: ['Action must be an object.'],
+      warnings,
+    }
   }
 
   if (!isNonEmptyString(action.id)) {
-    errors.push("Action must have a non-empty string id.");
+    errors.push('Action must have a non-empty string id.')
   }
 
   if (!isNonEmptyString(action.label)) {
-    errors.push("Action must have a non-empty label.");
+    errors.push('Action must have a non-empty label.')
   }
 
   if (!isEnumValue(action.type, ACTION_TYPES)) {
-    errors.push(`Unknown action type: ${String(action.type)}`);
+    errors.push(`Unknown action type: ${String(action.type)}`)
   }
 
   if (!isPlainObject(action.activation)) {
-    errors.push("Action must define an activation object.");
+    errors.push('Action must define an activation object.')
   } else if (!isEnumValue(action.activation.kind, ACTION_KINDS)) {
-    errors.push(`Unknown action activation kind: ${String(action.activation.kind)}`);
+    errors.push(`Unknown action activation kind: ${String(action.activation.kind)}`)
   }
 
   if (!isEnumValue(action.automationLevel, AUTOMATION_LEVELS)) {
-    errors.push(`Unknown automation level: ${String(action.automationLevel)}`);
+    errors.push(`Unknown automation level: ${String(action.automationLevel)}`)
   }
 
   if (action.effectRefs !== undefined && !Array.isArray(action.effectRefs)) {
-    errors.push("Action effectRefs must be an array when defined.");
+    errors.push('Action effectRefs must be an array when defined.')
   }
 
   return {
     valid: errors.length === 0,
     errors,
-    warnings
-  };
+    warnings,
+  }
 }
 ```
 
@@ -1719,21 +1688,17 @@ export function validateActionDefinition(action) {
  * @returns {{ valid: boolean, errors: string[], warnings: string[] }}
  */
 export function validateActionEffectReferences(effects, actions) {
-  const errors = [];
-  const warnings = [];
+  const errors = []
+  const warnings = []
 
-  const effectIds = new Set(
-    effects
-      .filter((effect) => typeof effect.id === "string")
-      .map((effect) => effect.id)
-  );
+  const effectIds = new Set(effects.filter((effect) => typeof effect.id === 'string').map((effect) => effect.id))
 
   for (const action of actions) {
-    if (!Array.isArray(action.effectRefs)) continue;
+    if (!Array.isArray(action.effectRefs)) continue
 
     for (const effectRef of action.effectRefs) {
       if (!effectIds.has(effectRef)) {
-        errors.push(`Action "${action.id}" references unknown effect "${effectRef}".`);
+        errors.push(`Action "${action.id}" references unknown effect "${effectRef}".`)
       }
     }
   }
@@ -1741,8 +1706,8 @@ export function validateActionEffectReferences(effects, actions) {
   return {
     valid: errors.length === 0,
     errors,
-    warnings
-  };
+    warnings,
+  }
 }
 ```
 
@@ -1763,21 +1728,21 @@ La fiche de Talent doit afficher :
 
 Chaque effet doit afficher :
 
-* label ;
-* type ;
-* timing ;
-* scope ;
-* coût éventuel ;
-* niveau d’automatisation ;
-* statut actif/inactif.
+- label ;
+- type ;
+- timing ;
+- scope ;
+- coût éventuel ;
+- niveau d’automatisation ;
+- statut actif/inactif.
 
 ### Actions
 
 Chaque action doit pouvoir être rendue sous forme de bouton si :
 
-* `automationLevel !== "none"` ;
-* l’action est utilisable dans le contexte courant ;
-* l’utilisateur a les droits nécessaires.
+- `automationLevel !== "none"` ;
+- l’action est utilisable dans le contexte courant ;
+- l’utilisateur a les droits nécessaires.
 
 ## UI Actor Sheet
 
@@ -1787,11 +1752,11 @@ La fiche d’Actor doit pouvoir exploiter les Talents sans noyer le joueur.
 
 ### Règles
 
-* Les Talents passifs doivent rester lisibles mais discrets.
-* Les Talents activables doivent être accessibles dans une zone d’actions.
-* Les réactions doivent pouvoir apparaître contextuellement.
-* Les effets automatiques doivent être journalisés ou consultables.
-* Les effets assistés doivent pouvoir être acceptés ou ignorés.
+- Les Talents passifs doivent rester lisibles mais discrets.
+- Les Talents activables doivent être accessibles dans une zone d’actions.
+- Les réactions doivent pouvoir apparaître contextuellement.
+- Les effets automatiques doivent être journalisés ou consultables.
+- Les effets assistés doivent pouvoir être acceptés ou ignorés.
 
 ## Moteur d’effets
 
@@ -1860,7 +1825,7 @@ La fiche d’Actor doit pouvoir exploiter les Talents sans noyer le joueur.
  */
 export function collectApplicableEffects(actor, context) {
   // Implementation target
-  return [];
+  return []
 }
 ```
 
@@ -1880,17 +1845,17 @@ export function collectApplicableEffects(actor, context) {
  */
 export function buildActiveEffectData(resolvedEffect, context) {
   // Implementation target
-  return null;
+  return null
 }
 ```
 
 Règles :
 
-* ne jamais créer un ActiveEffect par défaut pour tous les Talents ;
-* ne créer un ActiveEffect que lorsque `application.strategy === "activeEffect"` ;
-* toujours ajouter `flags.swerpg.generatedFrom` ;
-* ne pas dupliquer un ActiveEffect déjà généré pour le même `itemUuid` et le même `effectId` ;
-* ne pas convertir les effets `computed`, `chatOnly` ou `manual` en ActiveEffects.
+- ne jamais créer un ActiveEffect par défaut pour tous les Talents ;
+- ne créer un ActiveEffect que lorsque `application.strategy === "activeEffect"` ;
+- toujours ajouter `flags.swerpg.generatedFrom` ;
+- ne pas dupliquer un ActiveEffect déjà généré pour le même `itemUuid` et le même `effectId` ;
+- ne pas convertir les effets `computed`, `chatOnly` ou `manual` en ActiveEffects.
 
 ## Gestion des actions
 
@@ -1937,8 +1902,8 @@ export async function useTalentAction(context) {
   // Implementation target
   return {
     success: false,
-    warnings: ["Not implemented yet."]
-  };
+    warnings: ['Not implemented yet.'],
+  }
 }
 ```
 
@@ -1948,35 +1913,35 @@ export async function useTalentAction(context) {
 
 Un effet doit avoir :
 
-* un `id` unique dans l’Item ;
-* un `type` connu ;
-* un `mode` connu ;
-* un `timing` connu ;
-* un `scope`, même minimal ;
-* un `changes`, même vide pour `custom` ;
-* idéalement un `ui.label` ;
-* idéalement une `application.strategy`, sinon `computed` est supposé par défaut.
+- un `id` unique dans l’Item ;
+- un `type` connu ;
+- un `mode` connu ;
+- un `timing` connu ;
+- un `scope`, même minimal ;
+- un `changes`, même vide pour `custom` ;
+- idéalement un `ui.label` ;
+- idéalement une `application.strategy`, sinon `computed` est supposé par défaut.
 
 Une action doit avoir :
 
-* un `id` unique dans l’Item ;
-* un `label` ;
-* un `type` ;
-* une `activation.kind` ;
-* un niveau d’automatisation.
+- un `id` unique dans l’Item ;
+- un `label` ;
+- un `type` ;
+- une `activation.kind` ;
+- un niveau d’automatisation.
 
 ### Warnings
 
 Le système doit produire un warning si :
 
-* un effet référence une compétence inconnue ;
-* un effet référence une action inexistante ;
-* une action référence un effet inexistant ;
-* un effet automatique utilise un type `custom` ;
-* un coût variable n’a pas de borne ;
-* un effet importé n’a pas été revu ;
-* un effet `custom` demande une projection ActiveEffect sans adaptateur dédié ;
-* un ActiveEffect généré ne contient pas `flags.swerpg.generatedFrom`.
+- un effet référence une compétence inconnue ;
+- un effet référence une action inexistante ;
+- une action référence un effet inexistant ;
+- un effet automatique utilise un type `custom` ;
+- un coût variable n’a pas de borne ;
+- un effet importé n’a pas été revu ;
+- un effet `custom` demande une projection ActiveEffect sans adaptateur dédié ;
+- un ActiveEffect généré ne contient pas `flags.swerpg.generatedFrom`.
 
 ## Migrations
 
@@ -1996,12 +1961,12 @@ Ajouter une version de schéma au système :
 
 Objectif :
 
-* initialiser `system.effects = []` si absent ;
-* initialiser `system.actions = []` si absent ;
-* initialiser `system.activation = "passive"` si absent ;
-* initialiser `system.schemaVersion = 1` si absent ;
-* déplacer les anciennes données intermédiaires vers `flags.swerpg.legacy` si nécessaire ;
-* conserver les descriptions existantes.
+- initialiser `system.effects = []` si absent ;
+- initialiser `system.actions = []` si absent ;
+- initialiser `system.activation = "passive"` si absent ;
+- initialiser `system.schemaVersion = 1` si absent ;
+- déplacer les anciennes données intermédiaires vers `flags.swerpg.legacy` si nécessaire ;
+- conserver les descriptions existantes.
 
 ### Migration import brut
 
@@ -2025,166 +1990,166 @@ Si des données OggDude existent déjà dans des flags non standardisés, les d�
 
 Prévoir des tests pour :
 
-* validation d’un effet complet ;
-* rejet d’un effet sans `id` ;
-* rejet d’un effet avec `type` inconnu ;
-* validation d’une action liée à un effet ;
-* détection d’un `effectRef` invalide ;
-* calcul du scaling par rang ;
-* filtrage par compétence ;
-* filtrage par timing ;
-* filtrage par scope ;
-* validation d’une stratégie `computed` ;
-* validation d’une stratégie `activeEffect` ;
-* construction d’un ActiveEffect avec `flags.swerpg.generatedFrom` ;
-* refus de conversion automatique d’un effet `chatOnly` en ActiveEffect.
+- validation d’un effet complet ;
+- rejet d’un effet sans `id` ;
+- rejet d’un effet avec `type` inconnu ;
+- validation d’une action liée à un effet ;
+- détection d’un `effectRef` invalide ;
+- calcul du scaling par rang ;
+- filtrage par compétence ;
+- filtrage par timing ;
+- filtrage par scope ;
+- validation d’une stratégie `computed` ;
+- validation d’une stratégie `activeEffect` ;
+- construction d’un ActiveEffect avec `flags.swerpg.generatedFrom` ;
+- refus de conversion automatique d’un effet `chatOnly` en ActiveEffect.
 
 ### Exemple de test
 
 ```js
-import { describe, expect, it } from "vitest";
-import { validateEffectDefinition } from "../src/effects/validate-effect-definition.js";
+import { describe, expect, it } from 'vitest'
+import { validateEffectDefinition } from '../src/effects/validate-effect-definition.js'
 
-describe("validateEffectDefinition", () => {
-  it("validates a minimal passive derived stat effect", () => {
+describe('validateEffectDefinition', () => {
+  it('validates a minimal passive derived stat effect', () => {
     const effect = {
-      id: "robustesse-strain-threshold",
-      type: "modifyDerivedStat",
+      id: 'robustesse-strain-threshold',
+      type: 'modifyDerivedStat',
       enabled: true,
       source: {
-        itemType: "talent",
-        origin: "builder"
+        itemType: 'talent',
+        origin: 'builder',
       },
-      mode: "passive",
-      timing: "prepareData",
+      mode: 'passive',
+      timing: 'prepareData',
       scope: {
-        actor: "self"
+        actor: 'self',
       },
       changes: {
-        strainThreshold: "+rank"
+        strainThreshold: '+rank',
       },
       ui: {
-        label: "Robustesse",
-        automationLevel: "auto"
-      }
-    };
+        label: 'Robustesse',
+        automationLevel: 'auto',
+      },
+    }
 
-    const result = validateEffectDefinition(effect);
+    const result = validateEffectDefinition(effect)
 
-    expect(result.valid).toBe(true);
-    expect(result.errors).toEqual([]);
-  });
-});
+    expect(result.valid).toBe(true)
+    expect(result.errors).toEqual([])
+  })
+})
 ```
 
 ### Tests d’import
 
 Prévoir des fixtures pour :
 
-* Robustesse ;
-* Endurci ;
-* Filature ;
-* Esquive ;
-* Coup mortel ;
-* Concentration intense ;
-* Dose de stimulant.
+- Robustesse ;
+- Endurci ;
+- Filature ;
+- Esquive ;
+- Coup mortel ;
+- Concentration intense ;
+- Dose de stimulant.
 
 ### Tests UI
 
 Prévoir des tests pour :
 
-* affichage d’un Talent passif ;
-* affichage d’un Talent activable ;
-* bouton d’action ;
-* effet importé non mappé ;
-* effet partiellement mappé ;
-* désactivation manuelle d’un effet.
+- affichage d’un Talent passif ;
+- affichage d’un Talent activable ;
+- bouton d’action ;
+- effet importé non mappé ;
+- effet partiellement mappé ;
+- désactivation manuelle d’un effet.
 
 ## Contraintes pour OpenCode
 
 ### À faire
 
-* Créer des constantes JavaScript pour les valeurs autorisées.
-* Documenter les structures avec JSDoc.
-* Ajouter `system.effects` au modèle de données Talent.
-* Ajouter `system.actions` au modèle de données Talent.
-* Ajouter `system.activation` au modèle de données Talent.
-* Ajouter les validateurs runtime.
-* Ajouter les helpers de mapping.
-* Ajouter les helpers de collecte d’effets.
-* Ajouter les constantes et validateurs liés à `application.strategy`.
-* Ajouter un bridge minimal vers ActiveEffect, sans génération automatique globale.
-* Ajouter une UI minimale de lecture des effets.
-* Ajouter les tests Vitest du modèle.
+- Créer des constantes JavaScript pour les valeurs autorisées.
+- Documenter les structures avec JSDoc.
+- Ajouter `system.effects` au modèle de données Talent.
+- Ajouter `system.actions` au modèle de données Talent.
+- Ajouter `system.activation` au modèle de données Talent.
+- Ajouter les validateurs runtime.
+- Ajouter les helpers de mapping.
+- Ajouter les helpers de collecte d’effets.
+- Ajouter les constantes et validateurs liés à `application.strategy`.
+- Ajouter un bridge minimal vers ActiveEffect, sans génération automatique globale.
+- Ajouter une UI minimale de lecture des effets.
+- Ajouter les tests Vitest du modèle.
 
 ### À ne pas faire en V1
 
-* Ne pas introduire TypeScript.
-* Ne pas ajouter de build TypeScript.
-* Ne pas automatiser tous les Talents.
-* Ne pas générer de `actorHooks`.
-* Ne pas créer une DSL complète.
-* Ne pas supprimer les descriptions textuelles.
-* Ne pas appliquer automatiquement les mappings incertains.
-* Ne pas convertir tous les Talents en ActiveEffects Foundry.
-* Ne pas considérer un ActiveEffect généré comme source de vérité métier.
-* Ne pas créer un modèle réservé uniquement aux Talents si le modèle peut être commun aux autres Items.
+- Ne pas introduire TypeScript.
+- Ne pas ajouter de build TypeScript.
+- Ne pas automatiser tous les Talents.
+- Ne pas générer de `actorHooks`.
+- Ne pas créer une DSL complète.
+- Ne pas supprimer les descriptions textuelles.
+- Ne pas appliquer automatiquement les mappings incertains.
+- Ne pas convertir tous les Talents en ActiveEffects Foundry.
+- Ne pas considérer un ActiveEffect généré comme source de vérité métier.
+- Ne pas créer un modèle réservé uniquement aux Talents si le modèle peut être commun aux autres Items.
 
 ## Roadmap technique
 
 ### Étape 1 — Modèle de données
 
-* Ajouter `system.effects`.
-* Ajouter `system.actions`.
-* Ajouter `system.activation`.
-* Ajouter `system.schemaVersion`.
+- Ajouter `system.effects`.
+- Ajouter `system.actions`.
+- Ajouter `system.activation`.
+- Ajouter `system.schemaVersion`.
 
 ### Étape 2 — Constantes et contrats JSDoc
 
-* Créer les constantes de valeurs autorisées.
-* Documenter les contrats avec JSDoc.
-* Ajouter les utilitaires de validation.
+- Créer les constantes de valeurs autorisées.
+- Documenter les contrats avec JSDoc.
+- Ajouter les utilitaires de validation.
 
 ### Étape 3 — Validation
 
-* Ajouter `validateEffectDefinition`.
-* Ajouter `validateActionDefinition`.
-* Ajouter `validateActionEffectReferences`.
-* Ajouter les warnings.
+- Ajouter `validateEffectDefinition`.
+- Ajouter `validateActionDefinition`.
+- Ajouter `validateActionEffectReferences`.
+- Ajouter les warnings.
 
 ### Étape 4 — Import
 
-* Conserver le brut dans `flags.swerpg.import.raw`.
-* Mapper quelques Talents simples.
-* Ajouter les statuts de mapping.
-* Ajouter les niveaux de confiance.
+- Conserver le brut dans `flags.swerpg.import.raw`.
+- Mapper quelques Talents simples.
+- Ajouter les statuts de mapping.
+- Ajouter les niveaux de confiance.
 
 ### Étape 5 — UI Talent
 
-* Afficher les effets.
-* Afficher les actions.
-* Afficher les statuts de mapping.
-* Afficher les warnings.
+- Afficher les effets.
+- Afficher les actions.
+- Afficher les statuts de mapping.
+- Afficher les warnings.
 
 ### Étape 6 — Actor Sheet
 
-* Afficher les actions de Talents activables.
-* Préparer les boutons d’action.
-* Ne pas encore automatiser agressivement.
+- Afficher les actions de Talents activables.
+- Préparer les boutons d’action.
+- Ne pas encore automatiser agressivement.
 
 ### Étape 7 — Moteur de jets
 
-* Collecter les effets applicables.
-* Appliquer seulement les effets sûrs.
-* Proposer les effets assistés.
-* Journaliser les effets appliqués.
+- Collecter les effets applicables.
+- Appliquer seulement les effets sûrs.
+- Proposer les effets assistés.
+- Journaliser les effets appliqués.
 
 ### Étape 8 — Bridge ActiveEffect Foundry
 
-* Ajouter `buildActiveEffectData`.
-* Générer un ActiveEffect uniquement pour les effets `application.strategy === "activeEffect"`.
-* Ajouter systématiquement `flags.swerpg.generatedFrom`.
-* Prévoir le nettoyage des ActiveEffects générés quand l’Item source est supprimé, désactivé ou migré.
+- Ajouter `buildActiveEffectData`.
+- Générer un ActiveEffect uniquement pour les effets `application.strategy === "activeEffect"`.
+- Ajouter systématiquement `flags.swerpg.generatedFrom`.
+- Prévoir le nettoyage des ActiveEffects générés quand l’Item source est supprimé, désactivé ou migré.
 
 ## Décisions ouvertes
 

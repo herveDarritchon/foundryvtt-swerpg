@@ -75,7 +75,11 @@ export default class SwerpgTalentNode {
    */
   static getNodes() {
     if (DEPR_GLOBAL_TREE().warn) {
-      logger.deprecated('talent-tree', 'SwerpgTalentNode.getNodes() — global tree access', 'Use specialization-tree items for per-tree resolution via resolveSpecializationTree().')
+      logger.deprecated(
+        'talent-tree',
+        'SwerpgTalentNode.getNodes() — global tree access',
+        'Use specialization-tree items for per-tree resolution via resolveSpecializationTree().',
+      )
     }
     return this.#nodes
   }

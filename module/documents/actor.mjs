@@ -388,11 +388,7 @@ export default class SwerpgActor extends TalentsMixin(EquipmentMixin(ResourcesMi
       const data = Object.assign(itemData.system, { name: itemData.name, img: itemData.img })
       if (isCollection && item?.type === 'specialization' && globalThis.game?.items?.find) {
         const nameSlug = data.name?.toLowerCase().replace(/\s+/g, '-') ?? ''
-        const tree = globalThis.game.items.find(
-          (i) =>
-            i?.type === 'specialization-tree' &&
-            (i?.system?.specializationId === nameSlug || i?.name === data.name),
-        )
+        const tree = globalThis.game.items.find((i) => i?.type === 'specialization-tree' && (i?.system?.specializationId === nameSlug || i?.name === data.name))
         if (tree) {
           data.specializationId = tree.system.specializationId || nameSlug
           data.treeUuid = tree.uuid
@@ -607,7 +603,11 @@ export default class SwerpgActor extends TalentsMixin(EquipmentMixin(ResourcesMi
     this.updateCachedResources()
 
     // Refresh display of the active talent tree
-    const talentChange = foundry.utils.hasProperty(data, 'system.advancement.level') || 'items' in data || foundry.utils.hasProperty(data, 'system.progression.talentPurchases') || foundry.utils.hasProperty(data, 'system.progression.experience.spent')
+    const talentChange =
+      foundry.utils.hasProperty(data, 'system.advancement.level') ||
+      'items' in data ||
+      foundry.utils.hasProperty(data, 'system.progression.talentPurchases') ||
+      foundry.utils.hasProperty(data, 'system.progression.experience.spent')
     if (talentChange) {
       const dedicatedTreeApp = game.system.specializationTreeApp
       if (dedicatedTreeApp?.actor === this && typeof dedicatedTreeApp.refresh === 'function') {

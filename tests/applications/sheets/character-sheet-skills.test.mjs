@@ -412,8 +412,8 @@ describe('CharacterSheet skill methods', () => {
       const context = await getContext(actor)
 
       expect(context.skills.general.length).toBeGreaterThanOrEqual(1)
-    expect(context.skills.knowledge.length).toBeGreaterThanOrEqual(1)
-    expect(context.skills.combat.length).toBeGreaterThanOrEqual(1)
+      expect(context.skills.knowledge.length).toBeGreaterThanOrEqual(1)
+      expect(context.skills.combat.length).toBeGreaterThanOrEqual(1)
     })
 
     it('uses merged skill data including SYSTEM.SKILLS config values', async () => {
@@ -625,13 +625,13 @@ describe('CharacterSheet US3 preview methods', () => {
         freeRank: { isCareer: true, isSpecialization: false, name: 'Scout' },
       }
 
-       const preview = CharacterSheet._buildSkillPreview(skill, baseProgression)
+      const preview = CharacterSheet._buildSkillPreview(skill, baseProgression)
 
-       expect(preview.statusKey).toBe('SKILL.XP_CONSOLE.STATUS.FREE_RANK')
-       expect(preview.consoleCssClass).toBe('is-free')
-       expect(preview.selectedCost).toBe('0 XP')
-       expect(preview.summaryText).toBeNull()
-     })
+      expect(preview.statusKey).toBe('SKILL.XP_CONSOLE.STATUS.FREE_RANK')
+      expect(preview.consoleCssClass).toBe('is-free')
+      expect(preview.selectedCost).toBe('0 XP')
+      expect(preview.summaryText).toBeNull()
+    })
 
     it('returns AFFORDABLE state', () => {
       const skill = {
@@ -648,15 +648,15 @@ describe('CharacterSheet US3 preview methods', () => {
         freeRank: { isCareer: true, isSpecialization: false, name: 'Scout' },
       }
 
-       const preview = CharacterSheet._buildSkillPreview(skill, baseProgression)
+      const preview = CharacterSheet._buildSkillPreview(skill, baseProgression)
 
-       expect(preview.statusKey).toBe('SKILL.XP_CONSOLE.STATUS.AFFORDABLE')
-       expect(preview.consoleCssClass).toBe('is-affordable')
-       expect(preview.selectedCost).toBe('10 XP')
-       expect(preview.summaryText).toBeNull()
-     })
+      expect(preview.statusKey).toBe('SKILL.XP_CONSOLE.STATUS.AFFORDABLE')
+      expect(preview.consoleCssClass).toBe('is-affordable')
+      expect(preview.selectedCost).toBe('10 XP')
+      expect(preview.summaryText).toBeNull()
+    })
 
-     it('returns INSUFFICIENT_XP state', () => {
+    it('returns INSUFFICIENT_XP state', () => {
       const skill = {
         id: 'athletics',
         label: 'SKILLS.Athletics',
@@ -672,15 +672,15 @@ describe('CharacterSheet US3 preview methods', () => {
       }
 
       const progressionLow = { experience: { available: 5, total: 100, gained: 100, spent: 95 } }
-       const preview = CharacterSheet._buildSkillPreview(skill, progressionLow)
+      const preview = CharacterSheet._buildSkillPreview(skill, progressionLow)
 
-       expect(preview.statusKey).toBe('SKILL.XP_CONSOLE.STATUS.INSUFFICIENT_XP')
-       expect(preview.consoleCssClass).toBe('is-locked')
-       expect(preview.selectedCost).toBe('15 XP')
-       expect(preview.summaryText).toBeNull()
-     })
+      expect(preview.statusKey).toBe('SKILL.XP_CONSOLE.STATUS.INSUFFICIENT_XP')
+      expect(preview.consoleCssClass).toBe('is-locked')
+      expect(preview.selectedCost).toBe('15 XP')
+      expect(preview.summaryText).toBeNull()
+    })
 
-     it('returns MAX_RANK state', () => {
+    it('returns MAX_RANK state', () => {
       const skill = {
         id: 'diplomacy',
         label: 'SKILLS.Diplomacy',
@@ -695,12 +695,12 @@ describe('CharacterSheet US3 preview methods', () => {
         freeRank: { isCareer: false, isSpecialization: false, name: '' },
       }
 
-       const preview = CharacterSheet._buildSkillPreview(skill, baseProgression)
+      const preview = CharacterSheet._buildSkillPreview(skill, baseProgression)
 
-        expect(preview.statusKey).toBe('SKILL.XP_CONSOLE.STATUS.MAX_RANK')
-        expect(preview.consoleCssClass).toBe('is-error')
-        expect(preview.selectedCost).toBe('—')
-        expect(preview.summaryText).toBeNull()
-      })
+      expect(preview.statusKey).toBe('SKILL.XP_CONSOLE.STATUS.MAX_RANK')
+      expect(preview.consoleCssClass).toBe('is-error')
+      expect(preview.selectedCost).toBe('—')
+      expect(preview.summaryText).toBeNull()
+    })
   })
 })

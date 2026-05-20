@@ -21,25 +21,17 @@
  * @returns {RenderViewModel} Normalized view-model for PIXI rendering.
  */
 export function buildRenderViewModel(currentTree, talentLookup) {
-  const nodes = Array.isArray(currentTree?.system?.nodes)
-    ? currentTree.system.nodes
-    : []
-  const connections = Array.isArray(currentTree?.system?.connections)
-    ? currentTree.system.connections
-    : []
+  const nodes = Array.isArray(currentTree?.system?.nodes) ? currentTree.system.nodes : []
+  const connections = Array.isArray(currentTree?.system?.connections) ? currentTree.system.connections : []
   const treeName = currentTree?.name ?? ''
   const treeId = currentTree?.id ?? currentTree?._id ?? ''
 
   /* ── Normalise nodes ─────────────────────────────────────────── */
   const viewNodes = nodes.map((node) => {
-    const resolved = typeof talentLookup === 'function'
-      ? talentLookup(node)
-      : null
+    const resolved = typeof talentLookup === 'function' ? talentLookup(node) : null
 
     const isUnresolved = !resolved || !resolved.name
-    const talent = isUnresolved
-      ? { name: '', uuid: 'unknown' }
-      : { name: resolved.name, uuid: resolved.uuid ?? node.talentUuid ?? '' }
+    const talent = isUnresolved ? { name: '', uuid: 'unknown' } : { name: resolved.name, uuid: resolved.uuid ?? node.talentUuid ?? '' }
     const state = isUnresolved ? 'unresolved' : 'available'
     const label = talent.name
 
@@ -77,10 +69,7 @@ export function buildRenderViewModel(currentTree, talentLookup) {
     if (!nodeIdSet.has(conn.from)) continue
     if (!nodeIdSet.has(conn.to)) continue
 
-    const type =
-      conn.type === 'straight' || conn.type === 'angled'
-        ? conn.type
-        : 'straight'
+    const type = conn.type === 'straight' || conn.type === 'angled' ? conn.type : 'straight'
 
     viewConnections.push({
       fromNodeId: conn.from,

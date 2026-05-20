@@ -1,12 +1,15 @@
 # Anti-Pattern : Getter Returning Mutable References
 
 ## Status
+
 🚨 **Active - To Be Fixed**
 
 ## Severity
+
 **High** - Impacts architecture integrity and testability
 
 ## Discovery Context
+
 - **Date** : 2026-05-06
 - **Identified by** : Analysis of failing tests on actor system
 - **Affected components** : Actor document, Skill/Talent/Characteristic processing classes
@@ -45,16 +48,19 @@ get freeSkillRanks() {
 ### 2. La Mutation dans les classes de traitement
 
 **Dans `module/lib/skills/trained-skill.mjs` (ligne 50) :**
+
 ```javascript
 this.actor.experiencePoints.spent = experiencePointsSpent
 ```
 
 **Dans `module/lib/skills/career-free-skill.mjs` (ligne 49) :**
+
 ```javascript
 this.actor.freeSkillRanks.career.spent = careerFreeRankSpent
 ```
 
 **Dans `module/lib/skills/specialization-free-skill.mjs` (ligne 49) :**
+
 ```javascript
 this.actor.freeSkillRanks.specialization.spent = specializationFreeRankSpent
 ```
@@ -64,26 +70,32 @@ this.actor.freeSkillRanks.specialization.spent = specializationFreeRankSpent
 ## Pourquoi c'est un Anti-Pattern
 
 ### 1. **Violation de l'encapsulation**
+
 Le principe d'encapsulation veut que l'état interne d'un objet ne soit modifiable que par ses propres méthodes. Ici, `TrainedSkill` modifie l'état de l'acteur sans passer par une API contrôlée.
 
 ### 2. **Getters = Lecture, pas Écriture**
+
 En convention logicielle (JavaScript/TypeScript), un getter est une méthode d'accès en lecture. L'écriture doit se faire par des méthodes dédiées (`updateX()`, `setX()`) ou des setters.
 
 ### 3. **Dépendance au détail d'implémentation**
+
 Ça "marche" uniquement parce que FoundryVTT utilise un `Proxy` pour `system`. Si cette implémentation change (ex: migration vers une structure immutable), tout casserait.
 
 ### 4. **Non-testabilité**
+
 Les tests ne peuvent pas mocker proprement ces getters car :
+
 - Chaque appel au getter retourne un nouvel objet (ou le même selon l'implémentation)
 - La mutation directe n'est pas interceptée
 - Le mock doit recréer toute la structure `system` en espérant que ça matche
 
 ### 5. **Comportement imprévisible**
+
 ```javascript
 // Premier appel
 actor.experiencePoints.spent = 20
 // Second appel - retourne une nouvelle référence ?
-const xp = actor.experiencePoints  // spent = 0 ou 20 ? Dépend de l'implémentation du Proxy
+const xp = actor.experiencePoints // spent = 0 ou 20 ? Dépend de l'implémentation du Proxy
 ```
 
 ---
@@ -92,12 +104,13 @@ const xp = actor.experiencePoints  // spent = 0 ou 20 ? Dépend de l'implémenta
 
 ### Erreurs observées
 
-| Erreur | Cause |
-|--------|-------|
-| `Cannot read properties of undefined (reading 'spent')` | Le mock ne définit pas la structure complète retournée par le getter |
-| `Cannot set properties of undefined (setting 'spent')` | Tentative de mutation d'un objet retourné par un getter qui n'est pas persisté |
+| Erreur                                                  | Cause                                                                          |
+| ------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| `Cannot read properties of undefined (reading 'spent')` | Le mock ne définit pas la structure complète retournée par le getter           |
+| `Cannot set properties of undefined (setting 'spent')`  | Tentative de mutation d'un objet retourné par un getter qui n'est pas persisté |
 
 ### Fichiers de tests affectés (non-exhaustif)
+
 - `tests/lib/skills/trained-skill.test.mjs`
 - `tests/lib/skills/career-free-skill.test.mjs`
 - `tests/lib/skills/specialization-free-skill.test.mjs`
@@ -114,11 +127,11 @@ En FoundryVTT, `actor.system` est un `Proxy` (via `foundry.utils.mergeObject` et
 
 ```javascript
 // En production, system est un Proxy Foundry
-actor.system.progression.experience === actor.system.progression.experience  // true (Proxy fait le lien)
+actor.system.progression.experience === actor.system.progression.experience // true (Proxy fait le lien)
 
 // Mais dans les tests sans Foundry...
 const actor = { system: { progression: { experience: { spent: 0 } } } }
-actor.experiencePoints  // Appelle le getter qui retourne actor.system.progression.experience
+actor.experiencePoints // Appelle le getter qui retourne actor.system.progression.experience
 // Si le getter est implémenté naïvement, chaque appel peut retourner une nouvelle référence
 ```
 
@@ -135,6 +148,7 @@ Voir section **Options de Résolution** ci-dessous.
 ### Option A : Supprimer les getters et accéder directement au `system`
 
 **Changement** :
+
 ```javascript
 // Au lieu de :
 this.actor.experiencePoints.spent = value
@@ -144,12 +158,14 @@ this.actor.system.progression.experience.spent = value
 ```
 
 **Avantages** :
+
 - ✅ Simple et direct
 - ✅ Pas de magie noire avec les getters
 - ✅ Visible dans le code ce qui est modifié
 - ✅ Pas de surcoût de méthodes
 
 **Inconvénients** :
+
 - ❌ Couplage fort avec la structure interne de `system`
 - ❌ Si la structure change, il faut changer partout
 
@@ -158,6 +174,7 @@ this.actor.system.progression.experience.spent = value
 ### Option B : Créer de vraies méthodes d'update sur l'acteur
 
 **Changement** :
+
 ```javascript
 // Dans actor.mjs
 updateExperiencePoints(spent) {
@@ -169,12 +186,14 @@ this.actor.updateExperiencePoints(experiencePointsSpent)
 ```
 
 **Avantages** :
+
 - ✅ Encapsulation respectée
 - ✅ API contrôlée
 - ✅ Facilite le debugging (on peut mettre un log dans la méthode)
 - ✅ Évolutivité (changement de structure interne = mise à jour d'une seule méthode)
 
 **Inconvénients** :
+
 - ❌ Plus de code à écrire
 - ❌ Surcoût de méthodes simples
 
@@ -238,7 +257,7 @@ updateFreeSkillRanks(type, { spent, gained } = {}) {
 
 ## Historique
 
-| Date | Action | Auteur |
-|------|--------|--------|
+| Date       | Action                                                   | Auteur           |
+| ---------- | -------------------------------------------------------- | ---------------- |
 | 2026-05-06 | Création du document et identification de l'anti-pattern | Analyse OpenCode |
-|  |  |  |
+|            |                                                          |                  |

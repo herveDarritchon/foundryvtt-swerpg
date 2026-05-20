@@ -5,10 +5,12 @@
 L'issue #14 pose une question d'architecture fondamentale pour le système SWERPG : **le format canonique de `system.qualities`** (qualités d'armes : Blast, Burn, Pierce, Vicious, etc.).
 
 ### Problème actuel
+
 - Le format de `system.qualities` **n'est pas clairement défini** ni stabilisé
 - Cela impacte : les Items (armes, armures, mods, talents), l'UI, les imports de données (OggDude), et les futures fonctionnalités d'automatisation
 
 ### Enjeu
+
 > "C'est le moment de décider **le format canonique** des qualités dans SWERPG. Si on le planifie maintenant, on va le traîner partout (armes, armures, talents, effets, UI, imports...)."
 
 ---
@@ -23,6 +25,7 @@ L'issue #14 pose une question d'architecture fondamentale pour le système SWERP
 - [x] **Base à de l'automatisation** (modificateurs de dés, effets conditionnels, interactions avec des règles maison, etc.) ?
 
 **À horizon 1-2 versions :**
+
 - [ ] On reste en **100% manuel** (affichage / aide-mémoire) ?
 - [x] On vise une **résolution semi-automatisée** basée sur les qualités (au moins pour certaines d'entre elles) ?
 
@@ -33,24 +36,30 @@ L'issue #14 pose une question d'architecture fondamentale pour le système SWERP
 **Aujourd'hui, pour une arme, quel format choisis-tu ?**
 
 #### Option A – Liste de chaînes
+
 ```javascript
-["blast 2", "burn 2", "pierce 2", "vicious 3"]
+;['blast 2', 'burn 2', 'pierce 2', 'vicious 3']
 ```
+
 - ✅ Simple pour l'affichage
 - ❌ Difficile pour l'automatisation (parsing nécessaire)
 
 #### Option B – Liste d'objets simples
+
 ```javascript
 [{ key: "blast", rank: 2 }, { key: "burn", rank: 2 }, ...]
 ```
+
 - ✅ Structure exploitable
 - ✅ Facile à étendre
 - ⚠️ Standard de facto pour Foundry
 
 #### Option C – Structure plus riche (avec flags / métadonnées)
+
 ```javascript
-[{ key: "blast", rank: 2, active: true, source: "base" }]
+;[{ key: 'blast', rank: 2, active: true, source: 'base' }]
 ```
+
 - ✅ Très extensible
 - ❌ Plus complexe à maintenir
 - ❌ Peut être overkill pour l'instant
@@ -58,6 +67,7 @@ L'issue #14 pose une question d'architecture fondamentale pour le système SWERP
 **Décision à prendre :** Jusqu'à quel niveau de structure on s'engage maintenant, en cohérence avec les besoins actuels et les futures features.
 
 ##### Réponse :
+
 - [ ] Option A – Liste de chaînes
 - [ ] Option B – Liste d'objets simples
 - [x] Option C – Structure plus riche (avec flags / métadonnées)
@@ -72,10 +82,12 @@ L'issue #14 pose une question d'architecture fondamentale pour le système SWERP
 - [ ] Conserver la casse / forme OggDude (`"BLAST"`, `"BURN"`, etc.) ?
 
 **Doit-on définir :**
+
 - [ ] Une **liste fermée** de qualités supportées (enum interne) ?
 - [x] Accepter **n'importe quelle clé** venant des datas (extensibilité / contenu maison), quitte à ne pas automatiser toutes les qualités ?
 
 Dans le JdR, on fait souvent du "homebrew" avec des qualités personnalisées. Il faut trouver un équilibre entre :
+
 - **Normalisation** pour les qualités standard (facilite l'automatisation)
 - **Flexibilité** pour les qualités maison (permet d'ajouter des effets uniques sans devoir modifier le code)
 
@@ -91,7 +103,7 @@ Dans le JdR, on fait souvent du "homebrew" avec des qualités personnalisées. I
 - ```javascript
   { key: "accurate", hasRank: false }
   ```
-- 
+-
 - **Objectif :** éviter que le code d'affichage / d'automatisation ne se casse sur les qualités non chiffrées.
 
 Possibilité d'ajouter un champ `hasRank` ou `type` pour différencier les qualités avec et sans rang, afin de faciliter le traitement dans l'UI et les règles d'automatisation.
@@ -101,6 +113,7 @@ Possibilité d'ajouter un champ `hasRank` ou `type` pour différencier les quali
 ### 5. Unification avec le reste du système
 
 **`system.qualities` doit-il être **le même format partout** pour :**
+
 - Armes ✅
 - Armures ❓
 - Talents ❓
@@ -110,10 +123,12 @@ Possibilité d'ajouter un champ `hasRank` ou `type` pour différencier les quali
 - [ ] **Non, format local** (spécifique aux armes seulement, les autres auront leur propre format)
 
 **Si Oui :**
+
 - [x] Est-on prêt à **refactoriser** les endroits où un autre format est déjà utilisé ?
-- [ ] On impose : *"À partir de maintenant, le format canonique est X, et on migrera le reste plus tard"* (avec un plan de migration explicite à prévoir) ?
+- [ ] On impose : _"À partir de maintenant, le format canonique est X, et on migrera le reste plus tard"_ (avec un plan de migration explicite à prévoir) ?
 
 #### Piste de solution :
+
 Ne pas hésiter à ajouter un attribut avec une liste d'objets sur lesquels la qualité pourra s'appliquer (armes, armures, talents, mods) pour clarifier les implications de la décision.
 
 ---
@@ -121,17 +136,20 @@ Ne pas hésiter à ajouter un attribut avec une liste d'objets sur lesquels la q
 ## 📋 Pistes / options possibles (à discuter)
 
 ### Minimaliste / court terme
+
 - `system.qualities` utilisé principalement pour l'affichage
 - Liste d'objets simples `{ key, rank }` pour rester exploitable plus tard
 - Enum interne "soft" (liste recommandée) mais sans enforcement strict dans le code
 
 ### Structurel / moyen terme
+
 - `system.qualities` devient la base d'un système commun de règles :
   - Même structure pour armes / armures / talents
   - Mapping rigoureux depuis OggDude vers un jeu de qualités internes normalisées
   - Préparation explicite à l'automatisation (drapeau `active`, `source`, etc.)
 
 #### Réponse :
+
 - [ ] Minimaliste / court terme
 - [x] Structurel / moyen terme
 
@@ -146,13 +164,14 @@ Ne pas hésiter à ajouter un attribut avec une liste d'objets sur lesquels la q
 - [x] Les implications sur :
   - Les imports (OggDude et futurs)
   - Les futures features d'automatisation
-  sont notées dans la spec / un ADR ou plan d'architecture lié
+    sont notées dans la spec / un ADR ou plan d'architecture lié
 
 ---
 
 ## 📋 Impacts de la décision
 
 **Cette décision impactera :**
+
 1. Le schéma de données des Items
 2. Les plans d'implémentation futurs (imports, UI, automatisation)
 3. La dette technique et le besoin de migration sur les données existantes

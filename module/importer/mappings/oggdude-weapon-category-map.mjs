@@ -14,37 +14,37 @@
  */
 export const WEAPON_CATEGORY_MAP = {
   // Direct matches
-  'Ranged': 'ranged',
-  'Melee': 'melee',
-  'Thrown': 'thrown',
-  'Vehicle': 'vehicle',
-  'Starship': 'vehicle',
-  'Explosive': 'explosive',
-  'Heavy': 'gunnery',
-  'Laser': 'ranged',
+  Ranged: 'ranged',
+  Melee: 'melee',
+  Thrown: 'thrown',
+  Vehicle: 'vehicle',
+  Starship: 'vehicle',
+  Explosive: 'explosive',
+  Heavy: 'gunnery',
+  Laser: 'ranged',
 
   // Compound / subtype categories → resolved to canonical
   'Cutting Edge Melee': 'melee',
   'Powered Melee': 'melee',
   'Bludgeoning Melee': 'melee',
   'Template (Brawl and Melee)': 'melee',
-  'Brawling': 'natural',
+  Brawling: 'natural',
   'Bludgeoning Brawl': 'natural',
   'Portable Gunnery': 'gunnery',
   'Template (Ranged)': 'ranged',
-  'Grenade': 'explosive',
-  'Missile': 'vehicle',
-  'Lightsaber': 'melee',
-  'Shield': 'melee',
+  Grenade: 'explosive',
+  Missile: 'vehicle',
+  Lightsaber: 'melee',
+  Shield: 'melee',
   'Space Mine': 'explosive',
-  'Ion': 'ranged',
+  Ion: 'ranged',
   'Micro-Rocket': 'explosive',
-  'Rocket': 'explosive',
+  Rocket: 'explosive',
   'Proton Torpedo': 'vehicle',
   'Proton Bomb': 'explosive',
-  'Flak': 'explosive',
-  'Mine': 'explosive',
-  'Tractor': 'vehicle',
+  Flak: 'explosive',
+  Mine: 'explosive',
+  Tractor: 'vehicle',
 }
 
 /**
@@ -53,12 +53,12 @@ export const WEAPON_CATEGORY_MAP = {
  * @type {Record<string, string>}
  */
 export const SKILL_TO_CATEGORY_MAP = {
-  'rangedLight': 'ranged',
-  'rangedHeavy': 'ranged',
-  'gunnery': 'gunnery',
-  'brawl': 'natural',
-  'melee': 'melee',
-  'lightSaber': 'melee',
+  rangedLight: 'ranged',
+  rangedHeavy: 'ranged',
+  gunnery: 'gunnery',
+  brawl: 'natural',
+  melee: 'melee',
+  lightSaber: 'melee',
 }
 
 /**
@@ -67,11 +67,11 @@ export const SKILL_TO_CATEGORY_MAP = {
  * @type {Record<string, string>}
  */
 export const RANGE_TO_CATEGORY_MAP = {
-  'engaged': 'melee',
-  'short': 'ranged',
-  'medium': 'ranged',
-  'long': 'ranged',
-  'extreme': 'ranged',
+  engaged: 'melee',
+  short: 'ranged',
+  medium: 'ranged',
+  long: 'ranged',
+  extreme: 'ranged',
 }
 
 /**

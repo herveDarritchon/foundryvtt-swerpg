@@ -14,7 +14,7 @@ Exemple actuel :
   "specializationSkills": {},
   "freeSkillRank": 4
 }
-````
+```
 
 Le resolver ne peut donc pas relier la spécialisation possédée à son arbre.
 
@@ -84,19 +84,19 @@ Ne pas supprimer les champs existants.
 
 ## À ne pas faire
 
-* Ne pas corriger dans le renderer graphique.
-* Ne pas utiliser `name` comme clé métier principale.
-* Ne pas traiter l’i18n dans ce fix.
-* Ne pas élargir le scope aux compendiums.
+- Ne pas corriger dans le renderer graphique.
+- Ne pas utiliser `name` comme clé métier principale.
+- Ne pas traiter l’i18n dans ce fix.
+- Ne pas élargir le scope aux compendiums.
 
 ## Tests à ajouter
 
-* Résolution par `treeUuid`.
-* Résolution par `specializationId`.
-* Résolution legacy par `name`.
-* Retour `unresolved` si aucune correspondance.
-* Retour `incomplete` si l’arbre n’a pas de nodes/connections.
-* Migration sans perte des champs existants.
+- Résolution par `treeUuid`.
+- Résolution par `specializationId`.
+- Résolution legacy par `name`.
+- Retour `unresolved` si aucune correspondance.
+- Retour `incomplete` si l’arbre n’a pas de nodes/connections.
+- Migration sans perte des champs existants.
 
 ## Critère d’acceptation
 

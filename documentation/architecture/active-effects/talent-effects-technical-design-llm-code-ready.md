@@ -103,130 +103,130 @@ Create `effect-constants.js`.
 ```js
 /** @readonly @enum {string} */
 export const TALENT_ACTIVATIONS = Object.freeze({
-  PASSIVE: "passive",
-  ACTIVE: "active",
-  REACTION: "reaction",
-  MANUAL: "manual",
-  MIXED: "mixed"
-});
+  PASSIVE: 'passive',
+  ACTIVE: 'active',
+  REACTION: 'reaction',
+  MANUAL: 'manual',
+  MIXED: 'mixed',
+})
 
 /** @readonly @enum {string} */
 export const AUTOMATION_LEVELS = Object.freeze({
-  NONE: "none",
-  MANUAL: "manual",
-  CHAT_CARD: "chat-card",
-  SUGGESTED: "suggested",
-  ASSISTED: "assisted",
-  AUTO: "auto"
-});
+  NONE: 'none',
+  MANUAL: 'manual',
+  CHAT_CARD: 'chat-card',
+  SUGGESTED: 'suggested',
+  ASSISTED: 'assisted',
+  AUTO: 'auto',
+})
 
 /** @readonly @enum {string} */
 export const EFFECT_TYPES = Object.freeze({
-  MODIFY_DICE_POOL: "modifyDicePool",
-  MODIFY_DERIVED_STAT: "modifyDerivedStat",
-  MODIFY_DAMAGE: "modifyDamage",
-  MODIFY_CRITICAL: "modifyCritical",
-  GRANT_CAREER_SKILL: "grantCareerSkill",
-  REROLL_CHECK: "rerollCheck",
-  CUSTOM: "custom"
-});
+  MODIFY_DICE_POOL: 'modifyDicePool',
+  MODIFY_DERIVED_STAT: 'modifyDerivedStat',
+  MODIFY_DAMAGE: 'modifyDamage',
+  MODIFY_CRITICAL: 'modifyCritical',
+  GRANT_CAREER_SKILL: 'grantCareerSkill',
+  REROLL_CHECK: 'rerollCheck',
+  CUSTOM: 'custom',
+})
 
 /** @readonly @enum {string} */
 export const DEFERRED_EFFECT_TYPES = Object.freeze({
-  MODIFY_RECOVERY: "modifyRecovery",
-  MODIFY_ITEM: "modifyItem",
-  APPLY_CONDITION: "applyCondition"
-});
+  MODIFY_RECOVERY: 'modifyRecovery',
+  MODIFY_ITEM: 'modifyItem',
+  APPLY_CONDITION: 'applyCondition',
+})
 
 /** @readonly @enum {string} */
 export const EFFECT_MODES = Object.freeze({
-  PASSIVE: "passive",
-  ACTIVATED: "activated",
-  REACTION: "reaction",
-  MANUAL: "manual"
-});
+  PASSIVE: 'passive',
+  ACTIVATED: 'activated',
+  REACTION: 'reaction',
+  MANUAL: 'manual',
+})
 
 /** @readonly @enum {string} */
 export const EFFECT_TIMINGS = Object.freeze({
-  PREPARE_DATA: "prepareData",
-  ON_ACQUIRE: "onAcquire",
-  BEFORE_ROLL: "beforeRoll",
-  AFTER_ROLL: "afterRoll",
-  AFTER_SUCCESS: "afterSuccess",
-  AFTER_FAILURE: "afterFailure",
-  BEFORE_DAMAGE: "beforeDamage",
-  AFTER_DAMAGE: "afterDamage",
-  BEFORE_CRITICAL_ROLL: "beforeCriticalRoll",
-  AFTER_CRITICAL_ROLL: "afterCriticalRoll",
-  WHEN_TARGETED: "whenTargeted",
-  WHEN_TARGETED_BY_COMBAT_CHECK: "whenTargetedByCombatCheck",
-  END_OF_ENCOUNTER: "endOfEncounter",
-  START_OF_TURN: "startOfTurn",
-  END_OF_TURN: "endOfTurn",
-  MANUAL: "manual"
-});
+  PREPARE_DATA: 'prepareData',
+  ON_ACQUIRE: 'onAcquire',
+  BEFORE_ROLL: 'beforeRoll',
+  AFTER_ROLL: 'afterRoll',
+  AFTER_SUCCESS: 'afterSuccess',
+  AFTER_FAILURE: 'afterFailure',
+  BEFORE_DAMAGE: 'beforeDamage',
+  AFTER_DAMAGE: 'afterDamage',
+  BEFORE_CRITICAL_ROLL: 'beforeCriticalRoll',
+  AFTER_CRITICAL_ROLL: 'afterCriticalRoll',
+  WHEN_TARGETED: 'whenTargeted',
+  WHEN_TARGETED_BY_COMBAT_CHECK: 'whenTargetedByCombatCheck',
+  END_OF_ENCOUNTER: 'endOfEncounter',
+  START_OF_TURN: 'startOfTurn',
+  END_OF_TURN: 'endOfTurn',
+  MANUAL: 'manual',
+})
 
 /** @readonly @enum {string} */
 export const EFFECT_APPLICATION_STRATEGIES = Object.freeze({
-  COMPUTED: "computed",
-  ACTIVE_EFFECT: "activeEffect",
-  CHAT_ONLY: "chatOnly",
-  MANUAL: "manual"
-});
+  COMPUTED: 'computed',
+  ACTIVE_EFFECT: 'activeEffect',
+  CHAT_ONLY: 'chatOnly',
+  MANUAL: 'manual',
+})
 
 /** @readonly @enum {string} */
 export const EFFECT_TARGET_DOCUMENTS = Object.freeze({
-  ACTOR: "actor",
-  ITEM: "item",
-  TOKEN: "token",
-  ROLL: "roll"
-});
+  ACTOR: 'actor',
+  ITEM: 'item',
+  TOKEN: 'token',
+  ROLL: 'roll',
+})
 
 /** @readonly @enum {string} */
 export const EFFECT_DIRECTIONS = Object.freeze({
-  SELF: "self",
-  OUTGOING: "outgoing",
-  INCOMING: "incoming",
-  TARGET: "target",
-  ALLY: "ally",
-  AREA: "area"
-});
+  SELF: 'self',
+  OUTGOING: 'outgoing',
+  INCOMING: 'incoming',
+  TARGET: 'target',
+  ALLY: 'ally',
+  AREA: 'area',
+})
 
 /** @readonly @enum {string} */
 export const ACTION_TYPES = Object.freeze({
-  TALENT: "talent",
-  ATTACK: "attack",
-  FORCE_POWER: "forcePower",
-  UTILITY: "utility",
-  RECOVERY: "recovery",
-  CUSTOM: "custom"
-});
+  TALENT: 'talent',
+  ATTACK: 'attack',
+  FORCE_POWER: 'forcePower',
+  UTILITY: 'utility',
+  RECOVERY: 'recovery',
+  CUSTOM: 'custom',
+})
 
 /** @readonly @enum {string} */
 export const ACTION_KINDS = Object.freeze({
-  ACTION: "action",
-  MANEUVER: "maneuver",
-  INCIDENTAL: "incidental",
-  REACTION: "reaction",
-  PASSIVE: "passive",
-  FREE: "free"
-});
+  ACTION: 'action',
+  MANEUVER: 'maneuver',
+  INCIDENTAL: 'incidental',
+  REACTION: 'reaction',
+  PASSIVE: 'passive',
+  FREE: 'free',
+})
 
 /** @readonly @enum {string} */
 export const MAPPING_STATUSES = Object.freeze({
-  MAPPED: "mapped",
-  PARTIALLY_MAPPED: "partiallyMapped",
-  UNMAPPED: "unmapped",
-  REQUIRES_REVIEW: "requiresReview",
-  UNSUPPORTED: "unsupported"
-});
+  MAPPED: 'mapped',
+  PARTIALLY_MAPPED: 'partiallyMapped',
+  UNMAPPED: 'unmapped',
+  REQUIRES_REVIEW: 'requiresReview',
+  UNSUPPORTED: 'unsupported',
+})
 
 /** @readonly @enum {string} */
 export const MAPPING_CONFIDENCE = Object.freeze({
-  HIGH: "high",
-  MEDIUM: "medium",
-  LOW: "low"
-});
+  HIGH: 'high',
+  MEDIUM: 'medium',
+  LOW: 'low',
+})
 ```
 
 ## JSDoc contracts to document
@@ -313,7 +313,7 @@ Create `validation-utils.js`.
  * @returns {value is Record<string, unknown>}
  */
 export function isPlainObject(value) {
-  return value !== null && typeof value === "object" && !Array.isArray(value);
+  return value !== null && typeof value === 'object' && !Array.isArray(value)
 }
 
 /**
@@ -321,7 +321,7 @@ export function isPlainObject(value) {
  * @returns {boolean}
  */
 export function isNonEmptyString(value) {
-  return typeof value === "string" && value.trim().length > 0;
+  return typeof value === 'string' && value.trim().length > 0
 }
 
 /**
@@ -330,7 +330,7 @@ export function isNonEmptyString(value) {
  * @returns {boolean}
  */
 export function isEnumValue(value, enumObject) {
-  return typeof value === "string" && Object.values(enumObject).includes(value);
+  return typeof value === 'string' && Object.values(enumObject).includes(value)
 }
 ```
 
@@ -404,7 +404,7 @@ Signature:
  * @returns {Object[]}
  */
 export function collectApplicableEffects(actor, context) {
-  return [];
+  return []
 }
 ```
 
@@ -443,7 +443,7 @@ Required behavior:
  * @returns {Object|null}
  */
 export function buildActiveEffectData(effect, context) {
-  if (effect?.application?.strategy !== "activeEffect") return null;
+  if (effect?.application?.strategy !== 'activeEffect') return null
 
   return {
     name: effect.ui?.label ?? effect.id,
@@ -454,11 +454,11 @@ export function buildActiveEffectData(effect, context) {
         generatedFrom: {
           itemUuid: effect.source?.itemUuid,
           effectId: effect.id,
-          schemaVersion: context?.schemaVersion ?? 1
-        }
-      }
-    }
-  };
+          schemaVersion: context?.schemaVersion ?? 1,
+        },
+      },
+    },
+  }
 }
 ```
 

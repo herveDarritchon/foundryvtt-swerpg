@@ -11,6 +11,7 @@
 Introduire dans `SpecializationTreeApp` une vraie caméra runtime de viewport, découplée des coordonnées métier des nœuds.
 
 Le résultat attendu est :
+
 - un état local `#viewport` qui porte `scale`, `x`, `y` ;
 - une méthode dédiée `#applyViewportTransform()` qui applique cette transformation au conteneur PIXI ;
 - une méthode `#centerTree()` qui calcule la vue initiale centrée à partir de la bounding box ;
@@ -61,6 +62,7 @@ Cette tranche prépare les futures interactions de zoom, pan et recentrage sans 
 **Décision** : conserver `renderNodes[].x/.y` comme coordonnées métier de layout, et appliquer le déplacement/zoom uniquement sur le conteneur PIXI parent.
 
 **Justification** :
+
 - conforme à l'issue ;
 - évite de mélanger layout métier et navigation UI ;
 - prépare naturellement zoom/pan sans recalcul de nœuds.
@@ -70,6 +72,7 @@ Cette tranche prépare les futures interactions de zoom, pan et recentrage sans 
 **Décision** : porter la caméra dans des champs privés de `SpecializationTreeApp`, pas dans le contexte ni dans les données de l'acteur.
 
 **Justification** :
+
 - état purement runtime ;
 - pas de persistance ni migration ;
 - cohérent avec une ApplicationV2 qui pilote son rendu local.
@@ -79,6 +82,7 @@ Cette tranche prépare les futures interactions de zoom, pan et recentrage sans 
 **Décision** : toute écriture sur la position/scale du conteneur passe par `#applyViewportTransform()`.
 
 **Justification** :
+
 - un seul point de vérité ;
 - évite les écritures dispersées dans `#drawTree()`, `#centerTree()`, futurs handlers de zoom/pan ;
 - rend les tests plus simples.
@@ -88,6 +92,7 @@ Cette tranche prépare les futures interactions de zoom, pan et recentrage sans 
 **Décision** : le premier `_onRender()` centre la vue quand `resetView !== false`, et préserve la caméra existante quand `resetView === false`.
 
 **Justification** :
+
 - cohérent avec le contrat déjà exposé par `open()`;
 - aligné avec l'ancien pattern de `module/canvas/talent-tree.mjs` ;
 - indispensable pour les futures interactions sans casser l'API existante.
@@ -95,11 +100,13 @@ Cette tranche prépare les futures interactions de zoom, pan et recentrage sans 
 ### 4.5. Tester le contrat de transformation, pas le rendu pixel-perfect
 
 **Décision** : les tests vérifient :
+
 - l'état viewport calculé ;
 - l'appel à `position.set()` / `scale.set()` ;
 - la non-mutation de `renderNodes`.
 
 **Justification** :
+
 - conforme ADR-0004 et ADR-0012 ;
 - évite des assertions fragiles sur le dessin PIXI.
 
@@ -110,13 +117,16 @@ Cette tranche prépare les futures interactions de zoom, pan et recentrage sans 
 ### Étape 1 — Introduire l'état caméra runtime
 
 **À faire**
+
 - Ajouter les champs privés `#viewport`, `#minZoom`, `#maxZoom`, `#zoomStep`.
 - Initialiser le viewport à `{ scale: 1, x: 0, y: 0 }`.
 
 **Fichier**
+
 - `module/applications/specialization-tree-app.mjs`
 
 **Risque**
+
 - multiplier les sources d'état si l'ancien centrage direct `treeContainer.x/y` reste en place.
 
 ---
@@ -124,15 +134,18 @@ Cette tranche prépare les futures interactions de zoom, pan et recentrage sans 
 ### Étape 2 — Extraire `#applyViewportTransform()`
 
 **À faire**
+
 - Créer une méthode qui applique `this.#viewport.x`, `this.#viewport.y`, `this.#viewport.scale` au `#treeContainer`.
 - Utiliser `position.set(x, y)` et `scale.set(scale)` si disponibles.
 - Prévoir un fallback de test minimal seulement si les mocks l'exigent.
 
 **Fichiers**
+
 - `module/applications/specialization-tree-app.mjs`
 - potentiellement `tests/helpers/mock-foundry.mjs`
 
 **Risque**
+
 - mocks PIXI trop faibles pour refléter le vrai contrat runtime.
 
 ---
@@ -140,14 +153,17 @@ Cette tranche prépare les futures interactions de zoom, pan et recentrage sans 
 ### Étape 3 — Extraire `#centerTree(renderNodes)`
 
 **À faire**
+
 - Réutiliser `computeTreeBoundingBox()` puis calculer la caméra centrée pour le viewport courant.
 - Mettre à jour `#viewport` au lieu d'écrire directement sur `#treeContainer`.
 - Garder `scale` à `1` dans cette tranche.
 
 **Fichier**
+
 - `module/applications/specialization-tree-app.mjs`
 
 **Risque**
+
 - double centrage si `#drawTree()` continue à appliquer un offset direct.
 
 ---
@@ -155,14 +171,17 @@ Cette tranche prépare les futures interactions de zoom, pan et recentrage sans 
 ### Étape 4 — Brancher le centrage dans le cycle de rendu
 
 **À faire**
+
 - Faire en sorte que `_onRender(context, options)` ou `#syncViewport(context, options)` exploite `options.resetView`.
 - Au premier rendu ou quand `resetView !== false`, appeler `#centerTree()`.
 - Quand `resetView === false`, conserver `#viewport` tel quel.
 
 **Fichier**
+
 - `module/applications/specialization-tree-app.mjs`
 
 **Risque**
+
 - un resize ou rerender pourrait recentrer la vue alors qu'une future interaction utilisateur voudra la conserver.
 
 ---
@@ -170,14 +189,17 @@ Cette tranche prépare les futures interactions de zoom, pan et recentrage sans 
 ### Étape 5 — Nettoyer `#drawTree()` pour consommer la caméra
 
 **À faire**
+
 - Supprimer l'écriture directe sur `this.#treeContainer.x/y`.
 - Dessiner les nœuds et connexions dans leurs coordonnées métier inchangées.
 - Appeler `#applyViewportTransform()` après création du conteneur.
 
 **Fichier**
+
 - `module/applications/specialization-tree-app.mjs`
 
 **Risque**
+
 - inversion accidentelle entre coordonnées du conteneur et coordonnées des nœuds.
 
 ---
@@ -185,6 +207,7 @@ Cette tranche prépare les futures interactions de zoom, pan et recentrage sans 
 ### Étape 6 — Étendre les tests
 
 **À faire**
+
 - Ajouter un test d'initialisation du viewport.
 - Ajouter un test prouvant que `#drawTree()` applique bien `position.set()` et `scale.set()`.
 - Ajouter un test prouvant que le premier rendu centre la vue.
@@ -193,6 +216,7 @@ Cette tranche prépare les futures interactions de zoom, pan et recentrage sans 
 - Enrichir les mocks PIXI si nécessaire avec `position.set` et `scale.set`.
 
 **Fichiers**
+
 - `tests/applications/specialization-tree-app.test.mjs`
 - potentiellement `tests/helpers/mock-foundry.mjs`
 
@@ -200,23 +224,23 @@ Cette tranche prépare les futures interactions de zoom, pan et recentrage sans 
 
 ## 6. Fichiers modifiés
 
-| Fichier | Action | Description |
-|---|---|---|
-| `module/applications/specialization-tree-app.mjs` | modification | Introduire la caméra runtime, extraire `#applyViewportTransform()` et `#centerTree()`, brancher `resetView` |
-| `tests/applications/specialization-tree-app.test.mjs` | modification | Couvrir viewport initial, centrage initial, transformation appliquée et non-mutation des nœuds |
-| `tests/helpers/mock-foundry.mjs` | potentielle modification | Renforcer les mocks PIXI si `position.set()` / `scale.set()` manquent |
+| Fichier                                               | Action                   | Description                                                                                                 |
+| ----------------------------------------------------- | ------------------------ | ----------------------------------------------------------------------------------------------------------- |
+| `module/applications/specialization-tree-app.mjs`     | modification             | Introduire la caméra runtime, extraire `#applyViewportTransform()` et `#centerTree()`, brancher `resetView` |
+| `tests/applications/specialization-tree-app.test.mjs` | modification             | Couvrir viewport initial, centrage initial, transformation appliquée et non-mutation des nœuds              |
+| `tests/helpers/mock-foundry.mjs`                      | potentielle modification | Renforcer les mocks PIXI si `position.set()` / `scale.set()` manquent                                       |
 
 ---
 
 ## 7. Risques
 
-| Risque | Impact | Mitigation |
-|---|---|---|
-| Ancien centrage direct laissé dans `#drawTree()` | Décalage cumulé ou comportement incohérent | Centraliser toute transformation dans `#applyViewportTransform()` |
-| `resetView` mal interprété | Vue recentrée alors qu'elle ne devrait pas | Tester explicitement `resetView: false` |
-| Mocks PIXI insuffisants | Faux négatifs en tests | Aligner les mocks sur le vrai contrat `position.set` / `scale.set` |
-| Mutation involontaire de `renderNodes` | Régression métier et futures interactions cassées | Ajouter un test ciblé sur l'immuabilité des coordonnées de nœud |
-| Recentrage forcé sur chaque rerender | Futur pan/zoom inutilisable | Distinguer centrage initial et simple redraw |
+| Risque                                           | Impact                                            | Mitigation                                                         |
+| ------------------------------------------------ | ------------------------------------------------- | ------------------------------------------------------------------ |
+| Ancien centrage direct laissé dans `#drawTree()` | Décalage cumulé ou comportement incohérent        | Centraliser toute transformation dans `#applyViewportTransform()`  |
+| `resetView` mal interprété                       | Vue recentrée alors qu'elle ne devrait pas        | Tester explicitement `resetView: false`                            |
+| Mocks PIXI insuffisants                          | Faux négatifs en tests                            | Aligner les mocks sur le vrai contrat `position.set` / `scale.set` |
+| Mutation involontaire de `renderNodes`           | Régression métier et futures interactions cassées | Ajouter un test ciblé sur l'immuabilité des coordonnées de nœud    |
+| Recentrage forcé sur chaque rerender             | Futur pan/zoom inutilisable                       | Distinguer centrage initial et simple redraw                       |
 
 ---
 

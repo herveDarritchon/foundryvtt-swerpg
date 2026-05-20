@@ -113,9 +113,7 @@ describe('SwerpgActor Actions', () => {
 
       await SwerpgActor.macroAction(mockActor, 'nonexistent')
 
-      expect(global.ui.notifications.warn).toHaveBeenCalledWith(
-        expect.stringContaining('does not have the action'),
-      )
+      expect(global.ui.notifications.warn).toHaveBeenCalledWith(expect.stringContaining('does not have the action'))
     })
 
     test('should call action.use() if actor and action exist', async () => {

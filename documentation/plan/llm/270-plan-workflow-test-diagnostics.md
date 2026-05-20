@@ -11,6 +11,7 @@
 Définir un workflow complet pour l'exécution de tests, de lint et de vérifications mécaniques dans OpenCode, avec une priorité donnée au diagnostic et à l'explication des échecs avant toute correction.
 
 Le résultat attendu est un cadre opérable qui :
+
 - prend en charge les demandes de vérification mécanique (tests, lint, format, scripts projet) de bout en bout ;
 - sépare explicitement l'exécution mécanique, le diagnostic des échecs et la décision éventuelle de correction ;
 - limite l'usage du modèle LLM aux cas où l'outil seul ne suffit pas (interprétation, analyse, arbitrage) ;
@@ -67,22 +68,26 @@ Le workflow de tests/diagnostic vient compléter cette chaîne : il est le trois
 ### 3.3. L'existant projet révèle l'état réel des vérifications mécaniques
 
 **Tests Vitest** :
+
 - 2 configurations coexistent : `vitest.config.mjs` (défaut, setup minimal, ~80+ fichiers de test) et `vitest.config.js` (coverage, clearMocks, setup complet).
 - Scripts package.js : `test`, `test:watch`, `test:coverage`.
 - Plus de 1500 tests dans `tests/` couvrant documents, dés, import OggDude, applications, lib, etc.
 
 **Tests E2E Playwright** :
+
 - Configuration complète dans `playwright.config.ts`.
 - Scripts : `e2e`, `e2e:headed`, `e2e:ci`, `e2e:ui`.
 - Documentation dédiée : `documentation/tests/e2e/playwright-e2e-guide.md`.
 
 **Lint ESLint** :
+
 - Configuration `eslint.config.mjs` existante et opérationnelle.
 - Mais **aucun script `lint` n'est encore déclaré dans `package.json`**.
 - Les références dans la documentation utilisent `pnpm exec eslint ...` ou `pnpm eslint ...` (via `npx`).
 - Une commande `fmt:check` existe pour Prettier.
 
 **Scripts mécaniques projet** :
+
 - `scripts/validate-logging-migration.sh` : valide la migration du logging (console → logger centralisé).
 - `scripts/e2e-foundry-start.sh` : gestion du conteneur Docker Foundry pour E2E.
 
@@ -93,6 +98,7 @@ Comme pour `#268` et `#269`, la référence GitHub `#256` pointe vers une PR `ta
 ### 3.5. Aucun artefact documentaire dédié au workflow de tests/diagnostic n'existe encore
 
 Le repo contient aujourd'hui :
+
 - une doctrine générale (cadrage OpenCode) ;
 - un workflow d'exploration documenté (`#268`) ;
 - un workflow de planification documenté (`#269`) ;
@@ -100,6 +106,7 @@ Le repo contient aujourd'hui :
 - une infrastructure de tests riche mais sans workflow OpenCode formalisé.
 
 Il manque :
+
 - une spécification documentaire explicite du workflow de tests/diagnostic OpenCode ;
 - une matrice de scénarios de validation ;
 - la section normative dans le cadrage OpenCode.
@@ -113,6 +120,7 @@ Il manque :
 **Question** : faut-il cadrer le workflow de tests/diagnostic comme un nouveau skill ou comme une commande OpenCode documentée ?
 
 **Options envisagées** :
+
 - créer un skill dédié aux vérifications mécaniques ;
 - cadrer une future commande OpenCode distincte ;
 - faire les deux.
@@ -120,6 +128,7 @@ Il manque :
 **Décision** : cadrer le workflow comme une future **commande OpenCode de test et diagnostic**, sans skill dédié.
 
 **Justification** :
+
 - `#267` classe les vérifications mécaniques parmi les activités à faible risque, adaptées aux commandes/scripts plutôt qu'aux skills.
 - L'audit `#267` recommande explicitement de ne pas créer de skill pour les activités mécaniques (lint, tests automatisés).
 - Le savoir projet à capitaliser est faible ici : le besoin est un flux standard, pas une connaissance métier durable.
@@ -130,6 +139,7 @@ Il manque :
 **Question** : comment organiser la séquence d'intervention pour une demande de test/vérification ?
 
 **Options envisagées** :
+
 - workflow monolithique (tout-en-un : exécuter, analyser, corriger) ;
 - 2 phases (exécution + analyse, puis correction si besoin) ;
 - 3 phases séparées (exécution, diagnostic, correction).
@@ -137,6 +147,7 @@ Il manque :
 **Décision** : retenir **3 phases strictement séparées**.
 
 **Justification** :
+
 - C'est le principe central énoncé dans le cadrage OpenCode (§4.7).
 - Chaque phase a un agent, un modèle et des permissions différents.
 - Cela évite qu'une simple demande d'exécution de tests déclenche une correction non sollicitée.
@@ -149,6 +160,7 @@ Il manque :
 **Question** : quelles vérifications mécaniques le workflow doit-il couvrir ?
 
 **Options envisagées** :
+
 - limiter à Vitest uniquement ;
 - couvrir Vitest + lint ;
 - couvrir toutes les vérifications projet (tests, lint, format, scripts, E2E).
@@ -156,12 +168,14 @@ Il manque :
 **Décision** : couvrir **toutes les vérifications mécaniques projet** dans le workflow, avec un paramètre de sélection.
 
 **Justification** :
+
 - L'issue demande explicitement "tests, lint et vérifications mécaniques".
 - L'existant projet montre que plusieurs outils sont déjà configurés (ESLint, Prettier, Vitest, Playwright, scripts shell).
 - Un workflow unique avec sous-commandes est plus simple que des workflows séparés par outil.
 - Cohérent avec la doctrine : toutes ces tâches relèvent du même profil d'exécution mécanique.
 
 Sous-commandes prévues :
+
 - `check tests` — exécution Vitest
 - `check coverage` — couverture Vitest
 - `check e2e` — tests Playwright (avec variantes headed/ci)
@@ -175,12 +189,14 @@ Sous-commandes prévues :
 **Question** : le workflow doit-il inclure une correction automatique des échecs ?
 
 **Options envisagées** :
+
 - inclure la correction dans le même workflow ;
 - arrêter le workflow au diagnostic et laisser la correction en étape séparée.
 
 **Décision** : arrêter le workflow au **diagnostic exploitable**.
 
 **Justification** :
+
 - L'acceptance criterion `#270` demande explicitement "avant modification".
 - La règle "exécuter ≠ analyser ≠ corriger" est fondamentale dans le cadrage OpenCode.
 - La correction nécessite un agent, un modèle et des permissions différents.
@@ -192,6 +208,7 @@ Sous-commandes prévues :
 **Question** : quel format de sortie pour le diagnostic en cas d'échec ?
 
 **Options envisagées** :
+
 - envoyer l'intégralité des logs au modèle pour analyse ;
 - pré-filtrer le résultat de la commande pour extraire le périmètre utile ;
 - les deux selon la complexité.
@@ -199,6 +216,7 @@ Sous-commandes prévues :
 **Décision** : le diagnostic doit travailler sur **un volume réduit et pertinent** extrait de la sortie de la commande.
 
 **Justification** :
+
 - Le cadrage OpenCode (§4.7) le stipule explicitement.
 - ADR-0012 impose des diagnostics lisibles et ciblés.
 - Évite la consommation inutile de tokens sur des logs massifs.
@@ -211,6 +229,7 @@ Sous-commandes prévues :
 **Décision** : l'exécution mécanique est confiée à un **agent économique ou local**, ou mieux à une **exécution script sans modèle**.
 
 **Justification** :
+
 - Conforme à la doctrine : ce qui peut être fait par script doit être fait par script.
 - Aucune intelligence n'est requise pour lancer une commande de test et en capturer la sortie.
 - Un modèle économique suffit pour interpréter le statut de sortie et décider de la suite.
@@ -222,6 +241,7 @@ Sous-commandes prévues :
 **Décision** : le diagnostic utilise un **modèle intermédiaire ou de raisonnement** selon la complexité de l'échec.
 
 **Justification** :
+
 - Un échec simple (test qui ne passe pas, erreur ESLint évidente) peut être diagnostiqué par un modèle intermédiaire.
 - Un échec complexe (régression transverse, mock obsolète, dépendance cassée) justifie un modèle de raisonnement.
 - Le diagnostic doit inclure : hypothèse de cause, fichiers concernés, suggestion de correction minimale.
@@ -231,6 +251,7 @@ Sous-commandes prévues :
 **Décision** : la correction est une **étape séparée et optionnelle**, déclenchée explicitement par l'utilisateur après réception du diagnostic.
 
 **Justification** :
+
 - Cohérence avec le périmètre "avant modification" de l'issue.
 - La correction mobilise un agent d'implémentation, pas un agent de diagnostic.
 - Évite les corrections automatiques non sollicitées.
@@ -241,6 +262,7 @@ Sous-commandes prévues :
 **Décision** : la référence `Blocked by #256` est traitée comme une **anomalie de traçabilité documentaire**, pas comme un blocage technique.
 
 **Justification** :
+
 - `#256` pointe vers une PR talent tree mergée, sans lien avec OpenCode ou les tests.
 - Même constat que pour `#268` et `#269`.
 - À signaler dans le plan comme risque de traçabilité, sans impact sur l'exécution du ticket.
@@ -252,6 +274,7 @@ Sous-commandes prévues :
 ### Étape 1 — Ajouter une section normative dédiée au workflow de tests et diagnostic
 
 **Quoi faire** :
+
 - Étendre `documentation/cadrage/llm/cadrage-opencode-configuration.md` avec une nouvelle section (section 20) dédiée au workflow de tests et diagnostic d'échec.
 - Y formaliser :
   - intention utilisateur ;
@@ -263,15 +286,18 @@ Sous-commandes prévues :
 - Structurer la section en 3 sous-sections correspondant aux 3 phases : exécution, diagnostic, correction.
 
 **Fichiers à modifier** :
+
 - `documentation/cadrage/llm/cadrage-opencode-configuration.md`
 
 **Risques spécifiques** :
+
 - Répéter la doctrine existante sans l'opérationnaliser.
 - Créer une section trop lourde qui duplique les §4.5, 4.6, 4.7 déjà présents.
 
 ### Étape 2 — Spécifier la future commande OpenCode de test et diagnostic
 
 **Quoi faire** :
+
 - Créer une spécification documentaire `opencode-test-diagnostics-command.md` dans `documentation/spec/llm/`.
 - Définir :
   - les demandes éligibles (exécuter des tests, lancer le lint, vérifier le format, exécuter un script) ;
@@ -283,18 +309,22 @@ Sous-commandes prévues :
   - les garde-fous explicites.
 
 **Fichiers à créer** :
+
 - `documentation/spec/llm/opencode-test-diagnostics-command.md`
 
 **Risques spécifiques** :
+
 - Produire une spec trop liée au runtime OpenCode actuel.
 - Négliger la variété des sous-commandes (tests, lint, format, E2E, scripts).
 
 ### Étape 3 — Formaliser les contrats de sortie par phase
 
 **Quoi faire** :
+
 - Définir le format de sortie pour chaque phase :
 
 **Phase 1 — Exécution** :
+
 ```
 Commande exécutée : <commande>
 Statut : <succès/échec>
@@ -306,6 +336,7 @@ Sortie complète : <référence vers fichier temporaire si longue>
 ```
 
 **Phase 2 — Diagnostic** (déclenché seulement si échec) :
+
 ```
 Périmètre analysé : <fichiers/modules>
 Cause probable : <hypothèse>
@@ -320,15 +351,18 @@ Modèle recommandé pour la correction : <type>
 Non détaillée dans ce ticket (renvoi vers `implementer-depuis-plan` ou workflow de correction).
 
 **Fichiers à modifier** :
+
 - `documentation/spec/llm/opencode-test-diagnostics-command.md`
 
 **Risques spécifiques** :
+
 - Formats trop verbeux pour une exécution rapide.
 - Formats trop pauvres pour un diagnostic utile.
 
 ### Étape 4 — Définir le routage et les garde-fous
 
 **Quoi faire** :
+
 - Documenter explicitement les règles de routage :
   - demande de test simple → exécution uniquement ;
   - demande de test avec analyse → exécution + diagnostic ;
@@ -345,19 +379,24 @@ Non détaillée dans ce ticket (renvoi vers `implementer-depuis-plan` ou workflo
   - diagnostic incertain.
 
 **Fichiers à modifier** :
+
 - `documentation/spec/llm/opencode-test-diagnostics-command.md`
 
 **Risques spécifiques** :
+
 - Garde-fous trop faibles (risque de dérive).
 - Garde-fous trop nombreux (blocage du workflow).
 
 ### Étape 5 — Articuler avec les workflows voisins
 
 **Quoi faire** :
+
 - Décrire la chaîne complète des workflows OpenCode :
+
 ```
 Exploration (#268) → Planification (#269) → Exécution de tests (ce ticket) → Diagnostic → Correction (séparée)
 ```
+
 - Préciser les transitions :
   - l'exploration peut détecter un besoin de test et orienter vers ce workflow ;
   - la planification peut inclure une validation par les tests ;
@@ -365,16 +404,19 @@ Exploration (#268) → Planification (#269) → Exécution de tests (ce ticket) 
   - le diagnostic peut escalader vers planification si l'échec révèle un problème d'architecture.
 
 **Fichiers à modifier** :
+
 - `documentation/spec/llm/opencode-test-diagnostics-command.md`
 - `documentation/cadrage/llm/cadrage-opencode-configuration.md`
 
 **Risques spécifiques** :
+
 - Créer des dépendances circulaires entre workflows.
 - Surcharger la spécification avec des cas d'escalade rares.
 
 ### Étape 6 — Produire une matrice de validation manuelle
 
 **Quoi faire** :
+
 - Créer des scénarios couvrant au minimum :
   - exécution simple de tous les tests (succès et échec) ;
   - exécution filtrée (un dossier, un fichier, un pattern) ;
@@ -389,9 +431,11 @@ Exploration (#268) → Planification (#269) → Exécution de tests (ce ticket) 
   - exécution d'un script projet (validate-logging-migration).
 
 **Fichiers à créer** :
+
 - `documentation/spec/llm/opencode-test-diagnostics-scenarios.md`
 
 **Risques spécifiques** :
+
 - Oublier des cas limites (échec de l'outil lui-même, timeout).
 - Scénarios trop théoriques pour être rejoués.
 
@@ -399,26 +443,26 @@ Exploration (#268) → Planification (#269) → Exécution de tests (ce ticket) 
 
 ## 6. Fichiers modifiés
 
-| Fichier | Action | Description du changement |
-|---|---|---|
-| `documentation/plan/llm/270-plan-workflow-test-diagnostics.md` | création | Plan canonique de l'issue |
-| `documentation/cadrage/llm/cadrage-opencode-configuration.md` | modification | Ajout d'une section 20 dédiée au workflow de tests et diagnostic d'échec |
-| `documentation/spec/llm/opencode-test-diagnostics-command.md` | création | Spécification opérable de la future commande OpenCode de test et diagnostic |
-| `documentation/spec/llm/opencode-test-diagnostics-scenarios.md` | création | Scénarios de validation manuelle et matrice d'escalade |
+| Fichier                                                         | Action       | Description du changement                                                   |
+| --------------------------------------------------------------- | ------------ | --------------------------------------------------------------------------- |
+| `documentation/plan/llm/270-plan-workflow-test-diagnostics.md`  | création     | Plan canonique de l'issue                                                   |
+| `documentation/cadrage/llm/cadrage-opencode-configuration.md`   | modification | Ajout d'une section 20 dédiée au workflow de tests et diagnostic d'échec    |
+| `documentation/spec/llm/opencode-test-diagnostics-command.md`   | création     | Spécification opérable de la future commande OpenCode de test et diagnostic |
+| `documentation/spec/llm/opencode-test-diagnostics-scenarios.md` | création     | Scénarios de validation manuelle et matrice d'escalade                      |
 
 ---
 
 ## 7. Risques
 
-| Risque | Impact | Mitigation |
-|---|---|---|
-| Confondre exécution et correction | L'agent corrige avant d'avoir diagnostiqué | Séparation stricte en 3 phases avec permissions différentes |
-| Confondre diagnostic et implémentation | Le diagnostic propose du code au lieu d'une analyse | Contrat de sortie borné : hypothèse, cause, fichiers, pas de code correctif |
-| Périmètre trop large (trop de sous-commandes) | Spécification difficile à implémenter | Prioriser Vitest + lint comme socle minimal, E2E et scripts comme extensions |
-| Aucun script lint dans package.json | Impossible d'exécuter "pnpm lint" | La spec documente l'appel explicite `pnpm exec eslint ...` et recommande d'ajouter le script dans un ticket ultérieur |
-| Sortie de test trop volumineuse pour le modèle | Consommation excessive de tokens | Filtrer la sortie : statut + erreurs + fichiers incriminés uniquement |
-| Dépendance `#256` incohérente | Mauvaise lecture des prérequis | Documenter la dépendance comme anomalie de traçabilité, pas comme blocage technique |
-| Validation trop théorique | Workflow non fiable en pratique | Prévoir une batterie de scénarios manuels représentatifs couvrant succès, échec simple, échec complexe |
+| Risque                                         | Impact                                              | Mitigation                                                                                                            |
+| ---------------------------------------------- | --------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| Confondre exécution et correction              | L'agent corrige avant d'avoir diagnostiqué          | Séparation stricte en 3 phases avec permissions différentes                                                           |
+| Confondre diagnostic et implémentation         | Le diagnostic propose du code au lieu d'une analyse | Contrat de sortie borné : hypothèse, cause, fichiers, pas de code correctif                                           |
+| Périmètre trop large (trop de sous-commandes)  | Spécification difficile à implémenter               | Prioriser Vitest + lint comme socle minimal, E2E et scripts comme extensions                                          |
+| Aucun script lint dans package.json            | Impossible d'exécuter "pnpm lint"                   | La spec documente l'appel explicite `pnpm exec eslint ...` et recommande d'ajouter le script dans un ticket ultérieur |
+| Sortie de test trop volumineuse pour le modèle | Consommation excessive de tokens                    | Filtrer la sortie : statut + erreurs + fichiers incriminés uniquement                                                 |
+| Dépendance `#256` incohérente                  | Mauvaise lecture des prérequis                      | Documenter la dépendance comme anomalie de traçabilité, pas comme blocage technique                                   |
+| Validation trop théorique                      | Workflow non fiable en pratique                     | Prévoir une batterie de scénarios manuels représentatifs couvrant succès, échec simple, échec complexe                |
 
 ---
 

@@ -72,9 +72,7 @@ export async function purchaseTalentNode(actor, specializationId, nodeId) {
   }
 
   const currentSpent = actor.system?.progression?.experience?.spent ?? 0
-  const currentPurchases = Array.isArray(actor.system?.progression?.talentPurchases)
-    ? actor.system.progression.talentPurchases
-    : []
+  const currentPurchases = Array.isArray(actor.system?.progression?.talentPurchases) ? actor.system.progression.talentPurchases : []
   const newSpent = currentSpent + node.cost
 
   await actor.update({
@@ -120,5 +118,5 @@ function findSpecialization(actor, specializationId) {
 function findNodeInTree(tree, nodeId) {
   const nodes = tree?.system?.nodes
   if (!Array.isArray(nodes)) return null
-  return nodes.find(n => n?.nodeId === nodeId) ?? null
+  return nodes.find((n) => n?.nodeId === nodeId) ?? null
 }

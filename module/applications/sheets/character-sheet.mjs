@@ -929,59 +929,61 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
     const unknownTalentLabel = game.i18n.localize('SWERPG.TALENT.UNKNOWN')
     const unspecifiedActivationLabel = game.i18n.localize('SWERPG.TALENT.UNSPECIFIED')
 
-    return summary.map((entry) => {
-      // Diagnostic log when a purchased talentId has no matching definition
-      if (entry.name === null) {
-        logger.warn('[CharacterSheet] Unresolved consolidated talent — no definition found for talentId', {
-          actorId: this.actor?.id,
-          actorName: this.actor?.name,
+    return summary
+      .map((entry) => {
+        // Diagnostic log when a purchased talentId has no matching definition
+        if (entry.name === null) {
+          logger.warn('[CharacterSheet] Unresolved consolidated talent — no definition found for talentId', {
+            actorId: this.actor?.id,
+            actorName: this.actor?.name,
+            talentId: entry.talentId,
+            sources: entry.sources,
+            keysTried: [entry.talentId],
+            definitionsAvailable: definitions.size,
+          })
+        }
+
+        const tags = []
+        if (entry.activation === 'active') {
+          tags.push({ label: game.i18n.localize('SWERPG.TALENT.ACTIVE'), cssClass: 'tag-active' })
+        } else if (entry.activation === 'passive') {
+          tags.push({ label: game.i18n.localize('SWERPG.TALENT.PASSIVE'), cssClass: 'tag-passive' })
+        } else {
+          tags.push({ label: unspecifiedActivationLabel, cssClass: 'tag-neutral' })
+        }
+
+        if (entry.isRanked) {
+          tags.push({ label: game.i18n.localize('SWERPG.TALENT.RANKED'), cssClass: 'tag-ranked' })
+        } else if (entry.isRanked === false) {
+          tags.push({ label: game.i18n.localize('SWERPG.TALENT.NON_RANKED'), cssClass: 'tag-neutral' })
+        }
+
+        const sources = CharacterSheet.#buildTalentSourceEntries(entry.sources)
+        const sourceLabels = sources.map(({ label }) => label)
+
+        const rankValue = entry.isRanked && entry.rank !== null ? entry.rank : null
+        const displayName = entry.name || unknownTalentLabel
+
+        return {
           talentId: entry.talentId,
-          sources: entry.sources,
-          keysTried: [entry.talentId],
-          definitionsAvailable: definitions.size,
-        })
-      }
+          name: displayName,
+          tags,
+          isRanked: entry.isRanked,
+          rank: rankValue,
+          sources,
+          sourceLabels,
+          hasDegradedSources: sources.some((source) => source.isDegraded),
+        }
+      })
+      .sort((left, right) => {
+        const leftName = left.name || unknownTalentLabel
+        const rightName = right.name || unknownTalentLabel
 
-      const tags = []
-      if (entry.activation === 'active') {
-        tags.push({ label: game.i18n.localize('SWERPG.TALENT.ACTIVE'), cssClass: 'tag-active' })
-      } else if (entry.activation === 'passive') {
-        tags.push({ label: game.i18n.localize('SWERPG.TALENT.PASSIVE'), cssClass: 'tag-passive' })
-      } else {
-        tags.push({ label: unspecifiedActivationLabel, cssClass: 'tag-neutral' })
-      }
+        const nameCompare = leftName.localeCompare(rightName)
+        if (nameCompare !== 0) return nameCompare
 
-      if (entry.isRanked) {
-        tags.push({ label: game.i18n.localize('SWERPG.TALENT.RANKED'), cssClass: 'tag-ranked' })
-      } else if (entry.isRanked === false) {
-        tags.push({ label: game.i18n.localize('SWERPG.TALENT.NON_RANKED'), cssClass: 'tag-neutral' })
-      }
-
-      const sources = CharacterSheet.#buildTalentSourceEntries(entry.sources)
-      const sourceLabels = sources.map(({ label }) => label)
-
-      const rankValue = entry.isRanked && entry.rank !== null ? entry.rank : null
-      const displayName = entry.name || unknownTalentLabel
-
-      return {
-        talentId: entry.talentId,
-        name: displayName,
-        tags,
-        isRanked: entry.isRanked,
-        rank: rankValue,
-        sources,
-        sourceLabels,
-        hasDegradedSources: sources.some((source) => source.isDegraded),
-      }
-    }).sort((left, right) => {
-      const leftName = left.name || unknownTalentLabel
-      const rightName = right.name || unknownTalentLabel
-
-      const nameCompare = leftName.localeCompare(rightName)
-      if (nameCompare !== 0) return nameCompare
-
-      return left.talentId.localeCompare(right.talentId)
-    })
+        return left.talentId.localeCompare(right.talentId)
+      })
   }
 
   /**

@@ -138,14 +138,14 @@ Le mapper `OggDudeTalentMapper.transform()` produit des données conformes à ce
 
 ⚠️ **Attention** : ce contrat **n'inclut pas** les champs suivants, qui sont legacy :
 
-| Champ legacy | Statut |
-|---|---|
-| `system.node` | Legacy — ne pas utiliser pour V1 |
-| `system.trees` | Legacy — ne pas utiliser pour V1 |
-| `system.row` | Legacy — ne pas utiliser pour V1 |
-| `system.rank.cost` | Non persistant — le coût XP relève de `specialization-tree` |
-| `system.actions` | Legacy — les actions ne sont pas importées depuis `Talent.xml` |
-| `system.actorHooks` | Legacy — non supporté dans le flux d'import V1 |
+| Champ legacy        | Statut                                                         |
+| ------------------- | -------------------------------------------------------------- |
+| `system.node`       | Legacy — ne pas utiliser pour V1                               |
+| `system.trees`      | Legacy — ne pas utiliser pour V1                               |
+| `system.row`        | Legacy — ne pas utiliser pour V1                               |
+| `system.rank.cost`  | Non persistant — le coût XP relève de `specialization-tree`    |
+| `system.actions`    | Legacy — les actions ne sont pas importées depuis `Talent.xml` |
+| `system.actorHooks` | Legacy — non supporté dans le flux d'import V1                 |
 
 ---
 

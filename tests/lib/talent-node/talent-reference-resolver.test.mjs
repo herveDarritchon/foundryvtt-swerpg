@@ -49,9 +49,7 @@ describe('TalentReferenceResolver', () => {
 
     it('falls back to talentId business key when fromUuidSync returns nothing', () => {
       globalThis.fromUuidSync = vi.fn(() => undefined)
-      mockGameItems([
-        { name: 'Grit', type: 'talent', system: { id: 'grit', isRanked: false } },
-      ])
+      mockGameItems([{ name: 'Grit', type: 'talent', system: { id: 'grit', isRanked: false } }])
 
       const result = resolveTalentDetail({ talentUuid: 'Item.nonexistent', talentId: 'grit' })
 
@@ -86,10 +84,10 @@ describe('TalentReferenceResolver', () => {
     })
 
     it('handles fromUuidSync throwing gracefully', () => {
-      globalThis.fromUuidSync = vi.fn(() => { throw new Error('bad') })
-      mockGameItems([
-        { name: 'Grit', type: 'talent', system: { id: 'grit', isRanked: false } },
-      ])
+      globalThis.fromUuidSync = vi.fn(() => {
+        throw new Error('bad')
+      })
+      mockGameItems([{ name: 'Grit', type: 'talent', system: { id: 'grit', isRanked: false } }])
 
       const result = resolveTalentDetail({ talentUuid: 'Item.bad', talentId: 'grit' })
 
@@ -134,9 +132,7 @@ describe('TalentReferenceResolver', () => {
     })
 
     it('falls back to item.id when system.id is missing', () => {
-      mockGameItems([
-        { uuid: 'Item.xyz', id: 'Item.xyz', name: 'Old Talent', type: 'talent', system: { activation: 'active', isRanked: false } },
-      ])
+      mockGameItems([{ uuid: 'Item.xyz', id: 'Item.xyz', name: 'Old Talent', type: 'talent', system: { activation: 'active', isRanked: false } }])
 
       const map = buildTalentDefinitionsMap()
 

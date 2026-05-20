@@ -337,7 +337,10 @@ describe('writeLogEntries max size', () => {
       return undefined
     })
 
-    await writeLogEntries(actor, Array.from({ length: 10 }, (_, i) => ({ type: `new-${i}`, idx: i })))
+    await writeLogEntries(
+      actor,
+      Array.from({ length: 10 }, (_, i) => ({ type: `new-${i}`, idx: i })),
+    )
 
     expect(actor.update).toHaveBeenCalledTimes(1)
     const updateArg = actor.update.mock.calls[0][0]
@@ -364,7 +367,9 @@ describe('writeLogEntries max size', () => {
 
     globalThis.foundry.utils.deepClone = vi.fn((o) => structuredClone(o))
 
-    globalThis.game.settings.get = vi.fn(() => { throw new Error('settings not ready') })
+    globalThis.game.settings.get = vi.fn(() => {
+      throw new Error('settings not ready')
+    })
 
     await writeLogEntries(actor, [{ type: 'new' }])
 
@@ -550,10 +555,7 @@ describe('writeLogEntries', () => {
     const { writeLogEntries } = await import('../../module/utils/audit-log.mjs')
     const actor = makeCharacterActor()
     await writeLogEntries(actor, [{ type: 'test' }])
-    expect(actor.update).toHaveBeenCalledWith(
-      expect.any(Object),
-      { swerpgAuditLog: false }
-    )
+    expect(actor.update).toHaveBeenCalledWith(expect.any(Object), { swerpgAuditLog: false })
   })
 })
 
@@ -735,10 +737,7 @@ describe('handleWriteError', () => {
 
     await handleWriteError(actor, err)
 
-    expect(logger.error).toHaveBeenCalledWith(
-      expect.stringContaining('[AuditLog] Write failed for actor "Test Character"'),
-      err,
-    )
+    expect(logger.error).toHaveBeenCalledWith(expect.stringContaining('[AuditLog] Write failed for actor "Test Character"'), err)
   })
 
   test('calls ui.notifications.warn with i18n key', async () => {
@@ -748,9 +747,7 @@ describe('handleWriteError', () => {
 
     await handleWriteError(actor, err)
 
-    expect(globalThis.ui.notifications.warn).toHaveBeenCalledWith(
-      expect.stringContaining('Audit log write failed for actor'),
-    )
+    expect(globalThis.ui.notifications.warn).toHaveBeenCalledWith(expect.stringContaining('Audit log write failed for actor'))
   })
 
   test('sends ChatMessage whisper to GM when user is GM', async () => {
@@ -786,10 +783,7 @@ describe('handleWriteError', () => {
     const err = new Error('DB timeout')
 
     await expect(handleWriteError(actor, err)).resolves.toBeUndefined()
-    expect(logger.warn).toHaveBeenCalledWith(
-      expect.stringContaining('[AuditLog] Failed to send GM whisper'),
-      expect.any(Error),
-    )
+    expect(logger.warn).toHaveBeenCalledWith(expect.stringContaining('[AuditLog] Failed to send GM whisper'), expect.any(Error))
   })
 })
 
@@ -802,9 +796,7 @@ describe('writeLogEntries retry', () => {
     const { writeLogEntries } = await import('../../module/utils/audit-log.mjs')
     const actor = makeCharacterActor()
 
-    actor.update
-      .mockRejectedValueOnce(new Error('First fail'))
-      .mockResolvedValueOnce(undefined)
+    actor.update.mockRejectedValueOnce(new Error('First fail')).mockResolvedValueOnce(undefined)
 
     await writeLogEntries(actor, [{ type: 'test' }])
 
@@ -867,9 +859,7 @@ describe('pruneExpiredPending capacity warning', () => {
 
     pruneExpiredPending()
 
-    expect(logger.warn).toHaveBeenCalledWith(
-      expect.stringContaining('pendingOldStates has 101 entries'),
-    )
+    expect(logger.warn).toHaveBeenCalledWith(expect.stringContaining('pendingOldStates has 101 entries'))
     flushPending()
   })
 })

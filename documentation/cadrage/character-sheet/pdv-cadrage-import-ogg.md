@@ -41,6 +41,7 @@ L’import OggDude doit alimenter le modèle cible sans dicter sa structure. Il 
 Les données brutes importées doivent être conservées dans `flags.swerpg.import` afin de permettre le diagnostic, la migration et les corrections futures.
 
 Si une donnée OggDude est ambiguë ou incomplète, l’import doit :
+
 - préserver la donnée brute ;
 - appliquer un fallback documenté si possible ;
 - produire un warning exploitable ;
@@ -221,6 +222,7 @@ Très important :
 
 ```md
 L’import OggDude ne doit pas :
+
 - créer des achats acteur ;
 - décider qu’un talent est possédé ;
 - stocker l’arbre complet dans l’acteur ;
@@ -249,6 +251,7 @@ Mais pas complet non plus, parce que l’import exhaustif de toutes les subtilit
 **Décision** : à traiter dans la V1, sur un périmètre minimal.
 
 L’import OggDude doit alimenter les référentiels nécessaires à la V1 sans dicter le modèle métier. Il doit produire ou compléter :
+
 - les définitions génériques de talents ;
 - les arbres de spécialisation ;
 - les nœuds de talents ;

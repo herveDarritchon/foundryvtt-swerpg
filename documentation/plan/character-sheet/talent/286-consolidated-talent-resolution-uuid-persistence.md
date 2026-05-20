@@ -32,7 +32,9 @@ Quand les Items Talent ne sont pas dans `game.items` (uniquement en compendium) 
 Le schéma d'achat acteur (`module/models/character.mjs:176`) stocke seulement :
 
 ```js
-{ treeId, nodeId, talentId, specializationId }
+{
+  ;(treeId, nodeId, talentId, specializationId)
+}
 ```
 
 alors que les nœuds d'arbre (`module/models/specialization-tree.mjs:16`) supportent déjà `talentUuid`. Les spécialisations possédées supportent `treeUuid`. Les achats ne les utilisent pas.
@@ -69,11 +71,11 @@ alors que les nœuds d'arbre (`module/models/specialization-tree.mjs:16`) suppor
 ```js
 talentPurchases: new fields.ArrayField(
   new fields.SchemaField({
-    treeId:          new fields.StringField({ required: true, blank: false }),
-    treeUuid:        new fields.StringField({ required: false, nullable: true, blank: false, initial: null }),
-    nodeId:          new fields.StringField({ required: true, blank: false }),
-    talentId:        new fields.StringField({ required: true, blank: false }),
-    talentUuid:      new fields.StringField({ required: false, nullable: true, blank: false, initial: null }),
+    treeId: new fields.StringField({ required: true, blank: false }),
+    treeUuid: new fields.StringField({ required: false, nullable: true, blank: false, initial: null }),
+    nodeId: new fields.StringField({ required: true, blank: false }),
+    talentId: new fields.StringField({ required: true, blank: false }),
+    talentUuid: new fields.StringField({ required: false, nullable: true, blank: false, initial: null }),
     specializationId: new fields.StringField({ required: true, blank: false }),
   }),
   { required: false, initial: [] },
@@ -85,6 +87,7 @@ talentPurchases: new fields.ArrayField(
 Nouveau fichier : `module/lib/talent-node/talent-reference-resolver.mjs`
 
 Responsabilités :
+
 - résoudre par `talentUuid` via `fromUuidSync` (priorité 1) ;
 - résoudre par `talentId` normalisé dans `game.items` via `system.id` ;
 - fallback `flags.swerpg.oggdudeKey` ;
@@ -94,6 +97,7 @@ Responsabilités :
 ### 4.3 Détection d'achat UUID-aware
 
 `module/lib/talent-node/talent-node-state.mjs:hasPurchase` : accepter que les nouveaux achats portent des UUIDs et les anciens non. Règle de matching :
+
 - obligatoire : `nodeId`, `specializationId` ;
 - matching par `treeUuid` si les deux côtés en ont, sinon `treeId` ;
 - matching par `talentUuid` si les deux côtés en ont, sinon `talentId`.
@@ -101,34 +105,35 @@ Responsabilités :
 ### 4.4 Groupement consolidé UUID-aware
 
 `module/lib/talent-node/owned-talent-summary.mjs` :
+
 - clé de groupement = `purchase.talentUuid || purchase.talentId` ;
 - ajout d'un champ optionnel `talentUuid` sur `OwnedTalentSummaryEntry` ;
 - résolution de définition : préférer `talentUuid`, fallback `talentId`.
 
 ## 5. Fichiers impactés
 
-| Fichier | Type de changement |
-|---|---|
-| `module/models/character.mjs` | Ajout `treeUuid`, `talentUuid` optionnels dans le schéma `talentPurchases` |
-| `module/lib/talent-node/talent-node-purchase.mjs` | Enrichir le payload achat avec `treeUuid`, `talentUuid` |
-| `module/lib/talent-node/talent-node-state.mjs` | `hasPurchase` compatible UUID |
-| `module/lib/talent-node/talent-reference-resolver.mjs` | **Nouveau** — helper partagé de résolution |
-| `module/applications/specialization-tree-app.mjs` | Supprimer `_resolveTalentByBusinessKey` / `resolveTalentDetail`, utiliser le helper partagé |
-| `module/applications/sheets/character-sheet.mjs` | Remplacer `#buildTalentDefinitions()` par le helper partagé |
-| `module/lib/talent-node/owned-talent-summary.mjs` | Groupement par `talentUuid ?? talentId`, ajout `talentUuid` au résultat |
-| `module/utils/audit-log.mjs` | (Optionnel) Ajout `treeUuid`, `talentUuid` dans le payload audit |
+| Fichier                                                | Type de changement                                                                          |
+| ------------------------------------------------------ | ------------------------------------------------------------------------------------------- |
+| `module/models/character.mjs`                          | Ajout `treeUuid`, `talentUuid` optionnels dans le schéma `talentPurchases`                  |
+| `module/lib/talent-node/talent-node-purchase.mjs`      | Enrichir le payload achat avec `treeUuid`, `talentUuid`                                     |
+| `module/lib/talent-node/talent-node-state.mjs`         | `hasPurchase` compatible UUID                                                               |
+| `module/lib/talent-node/talent-reference-resolver.mjs` | **Nouveau** — helper partagé de résolution                                                  |
+| `module/applications/specialization-tree-app.mjs`      | Supprimer `_resolveTalentByBusinessKey` / `resolveTalentDetail`, utiliser le helper partagé |
+| `module/applications/sheets/character-sheet.mjs`       | Remplacer `#buildTalentDefinitions()` par le helper partagé                                 |
+| `module/lib/talent-node/owned-talent-summary.mjs`      | Groupement par `talentUuid ?? talentId`, ajout `talentUuid` au résultat                     |
+| `module/utils/audit-log.mjs`                           | (Optionnel) Ajout `treeUuid`, `talentUuid` dans le payload audit                            |
 
 ## 6. Tests à ajouter ou modifier
 
-| Fichier test | Cas |
-|---|---|
-| `tests/lib/talent-node/talent-node-purchase.test.mjs` | Payload enrichi avec UUID ; absence de régression legacy |
-| `tests/lib/talent-node/talent-node-state.test.mjs` | `hasPurchase` match mixte UUID+legacy ; dédoublonnage UUID |
-| `tests/lib/talent-node/talent-reference-resolver.test.mjs` | Résolution par UUID, par business key, fallback compendium, fallback oggdudeKey, inconnu |
-| `tests/lib/talent-node/owned-talent-summary.test.mjs` | Groupement UUID ; fallback `talentId` legacy ; définition priorise UUID |
-| `tests/applications/sheets/character-sheet-talents.test.mjs` | Résolution compendium-only ; clé oggdudeKey ; warning enrichi avec UUID |
-| `tests/applications/specialization-tree-app.test.mjs` | Aucun changement de comportement attendu après extraction du helper |
-| `tests/unit/documents/actor-synchronization.test.mjs` | Vérifier que les achats avec UUID se consolident correctement |
+| Fichier test                                                 | Cas                                                                                      |
+| ------------------------------------------------------------ | ---------------------------------------------------------------------------------------- |
+| `tests/lib/talent-node/talent-node-purchase.test.mjs`        | Payload enrichi avec UUID ; absence de régression legacy                                 |
+| `tests/lib/talent-node/talent-node-state.test.mjs`           | `hasPurchase` match mixte UUID+legacy ; dédoublonnage UUID                               |
+| `tests/lib/talent-node/talent-reference-resolver.test.mjs`   | Résolution par UUID, par business key, fallback compendium, fallback oggdudeKey, inconnu |
+| `tests/lib/talent-node/owned-talent-summary.test.mjs`        | Groupement UUID ; fallback `talentId` legacy ; définition priorise UUID                  |
+| `tests/applications/sheets/character-sheet-talents.test.mjs` | Résolution compendium-only ; clé oggdudeKey ; warning enrichi avec UUID                  |
+| `tests/applications/specialization-tree-app.test.mjs`        | Aucun changement de comportement attendu après extraction du helper                      |
+| `tests/unit/documents/actor-synchronization.test.mjs`        | Vérifier que les achats avec UUID se consolident correctement                            |
 
 ## 7. Ordre d'implémentation recommandé
 

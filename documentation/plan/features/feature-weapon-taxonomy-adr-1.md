@@ -15,6 +15,7 @@ tags: ['feature', 'architecture', 'documentation', 'weapon', 'taxonomy']
 Ce plan définit les travaux pour formaliser dans un ADR (Architecture Decision Record) la taxonomie canonique des armes dans SWERPG, suite aux décisions actées dans #15.
 
 L'ADR sera le document de référence pour :
+
 - `system.category` (famille mécanique),
 - `system.weaponType` (sous-type narratif),
 - les règles de mapping depuis OggDude,
@@ -41,47 +42,47 @@ L'ADR sera le document de référence pour :
 
 - GOAL-001: Synthétiser toutes les décisions d'architecture issues de #15 pour les retranscrire dans l'ADR.
 
-| Task | Description | Completed | Date |
-| ---- | ----------- | --------- | ---- |
-| TASK-001 | Extraire les décisions de #15 et de la conversation associée (rôles category/weaponType, séparation, mapping OggDude, flags, UX). | ✅ | 2026-05-07 |
-| TASK-002 | Analyser les specs existantes (`qualities-format-spec.md`, `armor` config) pour assurer la cohérence de format. | ✅ | 2026-05-07 |
-| TASK-003 | Identifier les points ambigus ou non tranchés qui devront être laissés ouverts dans l'ADR en attendant #97. | ✅ | 2026-05-07 |
+| Task     | Description                                                                                                                       | Completed | Date       |
+| -------- | --------------------------------------------------------------------------------------------------------------------------------- | --------- | ---------- |
+| TASK-001 | Extraire les décisions de #15 et de la conversation associée (rôles category/weaponType, séparation, mapping OggDude, flags, UX). | ✅        | 2026-05-07 |
+| TASK-002 | Analyser les specs existantes (`qualities-format-spec.md`, `armor` config) pour assurer la cohérence de format.                   | ✅        | 2026-05-07 |
+| TASK-003 | Identifier les points ambigus ou non tranchés qui devront être laissés ouverts dans l'ADR en attendant #97.                       | ✅        | 2026-05-07 |
 
 ### Implementation Phase 2 - Rédaction de l'ADR
 
 - GOAL-002: Produire le document ADR-0007.
 
-| Task | Description | Completed | Date |
-| ---- | ----------- | --------- | ---- |
-| TASK-004 | Créer `documentation/architecture/adr/adr-0007-weapon-taxonomy.md` selon le gabarit ADR du projet. | ✅ | 2026-05-07 |
-| TASK-005 | Rédiger la section **Decision** : choix de séparation category/weaponType, rôles respectifs. | ✅ | 2026-05-07 |
-| TASK-006 | Rédiger la section **Context** : problèmes identifiés dans l'import OggDude, absence de taxonomie stable, schéma `physical.category` non spécialisé. | ✅ | 2026-05-07 |
-| TASK-007 | Rédiger la section **Options** : les alternatives envisagées (champ unique, texte libre, fusion, etc.). | ✅ | 2026-05-07 |
-| TASK-008 | Rédiger la section **Rationale** : pourquoi la séparation + enum interne + flags bruts. | ✅ | 2026-05-07 |
-| TASK-009 | Rédiger la section **Impact** : schéma weapon, import OggDude, UI/filtres, qualités. | ✅ | 2026-05-07 |
-| TASK-010 | Rédiger les sections **Security**, **Performance**, **Review**, **Links** avec références croisées. | ✅ | 2026-05-07 |
-| TASK-011 | Ajouter un tableau de mapping OggDude → SWERPG (catégories → system.category, types → system.weaponType, flags). | ✅ | 2026-05-07 |
-| TASK-012 | Proposer une première version des valeurs canoniques de `system.category` (sera affinée dans #97). | ✅ | 2026-05-07 |
+| Task     | Description                                                                                                                                          | Completed | Date       |
+| -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | ---------- |
+| TASK-004 | Créer `documentation/architecture/adr/adr-0007-weapon-taxonomy.md` selon le gabarit ADR du projet.                                                   | ✅        | 2026-05-07 |
+| TASK-005 | Rédiger la section **Decision** : choix de séparation category/weaponType, rôles respectifs.                                                         | ✅        | 2026-05-07 |
+| TASK-006 | Rédiger la section **Context** : problèmes identifiés dans l'import OggDude, absence de taxonomie stable, schéma `physical.category` non spécialisé. | ✅        | 2026-05-07 |
+| TASK-007 | Rédiger la section **Options** : les alternatives envisagées (champ unique, texte libre, fusion, etc.).                                              | ✅        | 2026-05-07 |
+| TASK-008 | Rédiger la section **Rationale** : pourquoi la séparation + enum interne + flags bruts.                                                              | ✅        | 2026-05-07 |
+| TASK-009 | Rédiger la section **Impact** : schéma weapon, import OggDude, UI/filtres, qualités.                                                                 | ✅        | 2026-05-07 |
+| TASK-010 | Rédiger les sections **Security**, **Performance**, **Review**, **Links** avec références croisées.                                                  | ✅        | 2026-05-07 |
+| TASK-011 | Ajouter un tableau de mapping OggDude → SWERPG (catégories → system.category, types → system.weaponType, flags).                                     | ✅        | 2026-05-07 |
+| TASK-012 | Proposer une première version des valeurs canoniques de `system.category` (sera affinée dans #97).                                                   | ✅        | 2026-05-07 |
 
 ### Implementation Phase 3 - Révision et mise à jour INDEX
 
 - GOAL-003: Intégrer l'ADR dans la documentation du projet.
 
-| Task | Description | Completed | Date |
-| ---- | ----------- | --------- | ---- |
-| TASK-013 | Mettre à jour `documentation/INDEX.md` pour référencer l'ADR. | ✅ | 2026-05-07 |
-| TASK-014 | Relecture finale : cohérence avec `qualities-format-spec.md` et `config/armor.mjs`. | ✅ | 2026-05-07 |
-| TASK-015 | Vérifier que les liens entre issues sont corrects (#15, #16, #17, #18, #97, #98, #100, #101). | ✅ | 2026-05-07 |
+| Task     | Description                                                                                   | Completed | Date       |
+| -------- | --------------------------------------------------------------------------------------------- | --------- | ---------- |
+| TASK-013 | Mettre à jour `documentation/INDEX.md` pour référencer l'ADR.                                 | ✅        | 2026-05-07 |
+| TASK-014 | Relecture finale : cohérence avec `qualities-format-spec.md` et `config/armor.mjs`.           | ✅        | 2026-05-07 |
+| TASK-015 | Vérifier que les liens entre issues sont corrects (#15, #16, #17, #18, #97, #98, #100, #101). | ✅        | 2026-05-07 |
 
 ### Implementation Phase 4 - Review
 
 - GOAL-004: Valider l'ADR avant implémentation du schéma.
 
-| Task | Description | Completed | Date |
-| ---- | ----------- | --------- | ---- |
-| TASK-016 | Soumettre l'ADR pour relecture (PR ou validation directe). | ✅ | 2026-05-07 |
-| TASK-017 | Intégrer les retours de review. | ✅ | 2026-05-07 |
-| TASK-018 | Mettre à jour le statut de l'ADR (Proposed → Accepted). | ✅ | 2026-05-07 |
+| Task     | Description                                                | Completed | Date       |
+| -------- | ---------------------------------------------------------- | --------- | ---------- |
+| TASK-016 | Soumettre l'ADR pour relecture (PR ou validation directe). | ✅        | 2026-05-07 |
+| TASK-017 | Intégrer les retours de review.                            | ✅        | 2026-05-07 |
+| TASK-018 | Mettre à jour le statut de l'ADR (Proposed → Accepted).    | ✅        | 2026-05-07 |
 
 ## 3. Alternatives
 

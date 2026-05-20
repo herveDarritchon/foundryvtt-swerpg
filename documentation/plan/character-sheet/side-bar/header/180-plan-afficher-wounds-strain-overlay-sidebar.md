@@ -3,10 +3,11 @@
 **Issue** : [#180 — Afficher Wounds et Strain (valeur/seuil) dans l'overlay de la sidebar](https://github.com/herveDarritchon/foundryvtt-swerpg/issues/180)
 **Epic** : [#177 — Epic: Enrichir le header de la sidebar Character Sheet](https://github.com/herveDarritchon/foundryvtt-swerpg/issues/177)
 **ADR(s)** :
+
 - `documentation/architecture/adr/adr-0001-foundry-applicationv2-adoption.md`
 - `documentation/architecture/adr/adr-0004-vitest-testing-strategy.md`
 - `documentation/architecture/adr/adr-0005-localization-strategy.md`
-**Module(s) impacté(s)** : `module/applications/sheets/character-sheet.mjs` (modification), `templates/sheets/actor/sidebar.hbs` (modification), `styles/actor.less` (modification), `tests/applications/sheets/character-sheet-sidebar-header.test.mjs` (modification), `lang/fr.json` (modification), `lang/en.json` (modification)
+  **Module(s) impacté(s)** : `module/applications/sheets/character-sheet.mjs` (modification), `templates/sheets/actor/sidebar.hbs` (modification), `styles/actor.less` (modification), `tests/applications/sheets/character-sheet-sidebar-header.test.mjs` (modification), `lang/fr.json` (modification), `lang/en.json` (modification)
 
 ---
 
@@ -106,6 +107,7 @@ L'issue mentionne du vert, mais le choix retenu pour ce ticket est de préserver
 **Question** : faut-il enrichir `sidebarHeader` existant ou exposer un bloc de contexte dédié ?
 
 **Options envisagées** :
+
 - Ajouter `wounds` / `strain` dans `sidebarHeader`
 - Exposer un nouveau bloc dédié (`context.sidebarResources`)
 - Lire directement dans `source.system.resources` depuis la template
@@ -113,6 +115,7 @@ L'issue mentionne du vert, mais le choix retenu pour ce ticket est de préserver
 **Décision** : enrichir `context.sidebarHeader` avec `wounds` et `strain`.
 
 **Justification** :
+
 - Le plan de l'épic `documentation/plan/character-sheet/side-bar/header/README.md` prévoit déjà cette extension
 - `sidebarHeader` est le point d'entrée logique de tout le bloc au-dessus de l'avatar
 - Éviter de faire dépendre le template d'un chemin métier profond alors que le header dispose déjà d'un contexte dédié
@@ -123,6 +126,7 @@ L'issue mentionne du vert, mais le choix retenu pour ce ticket est de préserver
 **Question** : faut-il remplir `sidebar-profile-overlay` ou créer un second conteneur ?
 
 **Options envisagées** :
+
 - Injecter les ressources dans `.sidebar-profile-overlay`
 - Créer un second conteneur sous l'image
 - Déplacer les ressources ailleurs dans la sidebar
@@ -130,6 +134,7 @@ L'issue mentionne du vert, mais le choix retenu pour ce ticket est de préserver
 **Décision** : remplir `.sidebar-profile-overlay` existant.
 
 **Justification** :
+
 - `#179` a précisément préparé ce conteneur pour `#180`
 - Le diff reste minimal
 - Pas de duplication structurelle ni de refonte de layout
@@ -139,6 +144,7 @@ L'issue mentionne du vert, mais le choix retenu pour ce ticket est de préserver
 **Question** : comment présenter les valeurs dans l'overlay ?
 
 **Options envisagées** :
+
 - Inputs désactivés
 - Composants interactifs
 - Markup purement présentational
@@ -146,6 +152,7 @@ L'issue mentionne du vert, mais le choix retenu pour ce ticket est de préserver
 **Décision** : utiliser des éléments de présentation simples (`div` / `span`) sans `input`.
 
 **Justification** :
+
 - Conforme au besoin fonctionnel de l'issue
 - Évite toute ambiguïté UX sur une éventuelle éditabilité
 - Préserve `pointer-events: none` sur l'overlay
@@ -155,6 +162,7 @@ L'issue mentionne du vert, mais le choix retenu pour ce ticket est de préserver
 **Question** : comment gérer l'affichage des labels ?
 
 **Options envisagées** :
+
 - Hardcoder `Wounds` / `Strain`
 - Réutiliser les clés existantes, avec ajout de la clé manquante
 - Détourner une autre clé proche (`MORALE`, `MADNESS`, etc.)
@@ -162,6 +170,7 @@ L'issue mentionne du vert, mais le choix retenu pour ce ticket est de préserver
 **Décision** : utiliser `{{localize}}` et ajouter `RESOURCES.STRAIN` dans les deux fichiers de langue.
 
 **Justification** :
+
 - Conforme à l'ADR-0005
 - Évite toute chaîne hardcodée dans la UI
 - Corrige un trou existant entre `module/config/attributes.mjs` et `lang/*.json`
@@ -172,12 +181,14 @@ L'issue mentionne du vert, mais le choix retenu pour ce ticket est de préserver
 **Question** : quelle couleur pour le label et la valeur `strain` dans l'overlay ?
 
 **Options envisagées** :
+
 - Suivre l'issue à la lettre avec une teinte verte
 - Réutiliser la palette `strain` déjà utilisée dans le design system
 
 **Décision** : conserver la couleur `strain` existante du système, donc bleu/cyan.
 
 **Justification** :
+
 - Cohérence visuelle avec les autres composants ressources
 - Pas de création d'une exception locale difficile à justifier
 - Réduit le risque d'incohérence entre l'overlay et les jauges existantes
@@ -187,6 +198,7 @@ L'issue mentionne du vert, mais le choix retenu pour ce ticket est de préserver
 **Question** : quel niveau de test pour ce ticket ?
 
 **Options envisagées** :
+
 - Tester le contexte seulement
 - Ajouter un test DOM/template complet
 - Validation manuelle uniquement
@@ -194,6 +206,7 @@ L'issue mentionne du vert, mais le choix retenu pour ce ticket est de préserver
 **Décision** : étendre les tests de contexte existants et compléter par validation manuelle du rendu.
 
 **Justification** :
+
 - La logique métier de ce ticket se situe surtout dans `_prepareContext()`
 - Le projet a déjà des tests ciblés sur `sidebarHeader`
 - Le rendu visuel reste principalement CSS et plus rentable à valider manuellement
@@ -216,6 +229,7 @@ Ajouter dans `_prepareContext()` l'exposition de :
 Les valeurs doivent venir de `actor.system.resources` sans transformation métier additionnelle.
 
 **Risques spécifiques** :
+
 - Mauvais usage de `source` au lieu des données préparées de l'actor
 - Accès non protégé si la structure `resources` est incomplète dans certains tests ou mocks
 
@@ -233,6 +247,7 @@ Remplacer l'overlay vide par une structure de lecture seule contenant :
 Le rendu doit rester dans la branche `{{#if sidebarHeader}}` uniquement.
 
 **Risques spécifiques** :
+
 - Régression sur les autres types d'acteurs si le guard est déplacé ou élargi
 - Dégradation de lisibilité si le markup introduit trop de profondeur inutile
 
@@ -252,6 +267,7 @@ Faire évoluer `.sidebar-profile-overlay` pour :
 Le style doit rester limité à la sidebar actor et ne pas redéfinir les tokens globaux.
 
 **Risques spécifiques** :
+
 - Surcharge visuelle si la hauteur de l'overlay devient trop faible pour le contenu
 - Contraste insuffisant selon certains portraits
 - Retours à la ligne indésirables sur `value/threshold`
@@ -259,6 +275,7 @@ Le style doit rester limité à la sidebar actor et ne pas redéfinir les tokens
 ### Étape 4 : Corriger l'i18n minimale nécessaire
 
 **Fichiers** :
+
 - `lang/fr.json`
 - `lang/en.json`
 
@@ -267,6 +284,7 @@ Ajouter la clé manquante `RESOURCES.STRAIN` dans les deux langues.
 Conserver `RESOURCES.WOUNDS` tel qu'il est déjà utilisé par le projet pour rester dans le scope strict du ticket.
 
 **Risques spécifiques** :
+
 - Introduire une divergence entre langues si une seule des deux clés est ajoutée
 - Déborder du scope en lançant une harmonisation terminologique plus large
 
@@ -281,6 +299,7 @@ Conserver `RESOURCES.WOUNDS` tel qu'il est déjà utilisé par le projet pour re
 - l'absence de régression sur le comportement hors `character`
 
 **Risques spécifiques** :
+
 - Mocks de test incomplets si les assertions deviennent plus strictes
 - Test fragile si le contexte attendu est reconstruit différemment sans raison fonctionnelle
 
@@ -290,40 +309,40 @@ Conserver `RESOURCES.WOUNDS` tel qu'il est déjà utilisé par le projet pour re
 
 Valider manuellement :
 
-| Scénario | Attendu |
-|---|---|
-| Character Sheet ouverte | L'overlay affiche deux blocs `Wounds` et `Strain` |
-| Ressource wounds à `3/12` | Le format affiché est `3/12` |
-| Ressource strain à `2/11` | Le format affiché est `2/11` |
-| Clic sur l'avatar | L'éditeur d'image s'ouvre toujours |
-| Portrait clair / portrait sombre | Le contraste reste lisible |
-| Adversary Sheet | Aucun bloc ressource n'apparaît dans la branche `else` |
+| Scénario                         | Attendu                                                |
+| -------------------------------- | ------------------------------------------------------ |
+| Character Sheet ouverte          | L'overlay affiche deux blocs `Wounds` et `Strain`      |
+| Ressource wounds à `3/12`        | Le format affiché est `3/12`                           |
+| Ressource strain à `2/11`        | Le format affiché est `2/11`                           |
+| Clic sur l'avatar                | L'éditeur d'image s'ouvre toujours                     |
+| Portrait clair / portrait sombre | Le contraste reste lisible                             |
+| Adversary Sheet                  | Aucun bloc ressource n'apparaît dans la branche `else` |
 
 ---
 
 ## 6. Fichiers modifiés
 
-| Fichier | Action | Description du changement |
-|---|---|---|
-| `module/applications/sheets/character-sheet.mjs` | Modification | Enrichir `context.sidebarHeader` avec `wounds` et `strain` |
-| `templates/sheets/actor/sidebar.hbs` | Modification | Remplacer l'overlay vide par le markup des deux ressources |
-| `styles/actor.less` | Modification | Ajouter le layout et la typographie de `.sidebar-profile-overlay` et `.sidebar-resource` |
-| `tests/applications/sheets/character-sheet-sidebar-header.test.mjs` | Modification | Étendre les assertions sur `sidebarHeader` |
-| `lang/fr.json` | Modification | Ajouter `RESOURCES.STRAIN` |
-| `lang/en.json` | Modification | Ajouter `RESOURCES.STRAIN` |
+| Fichier                                                             | Action       | Description du changement                                                                |
+| ------------------------------------------------------------------- | ------------ | ---------------------------------------------------------------------------------------- |
+| `module/applications/sheets/character-sheet.mjs`                    | Modification | Enrichir `context.sidebarHeader` avec `wounds` et `strain`                               |
+| `templates/sheets/actor/sidebar.hbs`                                | Modification | Remplacer l'overlay vide par le markup des deux ressources                               |
+| `styles/actor.less`                                                 | Modification | Ajouter le layout et la typographie de `.sidebar-profile-overlay` et `.sidebar-resource` |
+| `tests/applications/sheets/character-sheet-sidebar-header.test.mjs` | Modification | Étendre les assertions sur `sidebarHeader`                                               |
+| `lang/fr.json`                                                      | Modification | Ajouter `RESOURCES.STRAIN`                                                               |
+| `lang/en.json`                                                      | Modification | Ajouter `RESOURCES.STRAIN`                                                               |
 
 ---
 
 ## 7. Risques
 
-| Risque | Impact | Mitigation |
-|---|---|---|
-| `RESOURCES.STRAIN` absent au runtime | Moyen | Ajouter explicitement la clé dans `fr.json` et `en.json` |
-| Overlay trop chargé visuellement sur petits portraits | Moyen | Garder un markup minimal, limiter la taille de police, valider manuellement |
-| Régression du clic avatar | Élevé | Conserver `pointer-events: none` sur l'overlay et tester `editImage` |
-| Incohérence visuelle de `strain` si vert local | Moyen | Choix validé : réutiliser la palette bleue/cyan existante |
-| Régression sur `adversary` | Élevé | Ne modifier que la branche `{{#if sidebarHeader}}` et vérifier manuellement l'autre branche |
-| Tests cassés par manque de données mockées | Faible | Réutiliser le mock existant qui contient déjà `resources.wounds` et `resources.strain` |
+| Risque                                                | Impact | Mitigation                                                                                  |
+| ----------------------------------------------------- | ------ | ------------------------------------------------------------------------------------------- |
+| `RESOURCES.STRAIN` absent au runtime                  | Moyen  | Ajouter explicitement la clé dans `fr.json` et `en.json`                                    |
+| Overlay trop chargé visuellement sur petits portraits | Moyen  | Garder un markup minimal, limiter la taille de police, valider manuellement                 |
+| Régression du clic avatar                             | Élevé  | Conserver `pointer-events: none` sur l'overlay et tester `editImage`                        |
+| Incohérence visuelle de `strain` si vert local        | Moyen  | Choix validé : réutiliser la palette bleue/cyan existante                                   |
+| Régression sur `adversary`                            | Élevé  | Ne modifier que la branche `{{#if sidebarHeader}}` et vérifier manuellement l'autre branche |
+| Tests cassés par manque de données mockées            | Faible | Réutiliser le mock existant qui contient déjà `resources.wounds` et `resources.strain`      |
 
 ---
 

@@ -20,7 +20,7 @@ structurées dans `actor.flags.swerpg.logs`.
 ### 1.1. Lecture des logs
 
 | Action                                                                        | Résultat attendu                                                                                                         |
-|-------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------|
+| ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
 | Ouvrir la console développeur (F12)                                           | Console visible                                                                                                          |
 | Sélectionner le personnage dans le répertoire des acteurs                     | Acteur sélectionné                                                                                                       |
 | Exécuter dans la console : `game.actors.getName("NomDuPJ").flags.swerpg.logs` | Un tableau (vide si aucun log) ou la liste des entrées existantes                                                        |
@@ -29,7 +29,7 @@ structurées dans `actor.flags.swerpg.logs`.
 ### 1.2. Vérification de l'enregistrement des hooks
 
 | Action                                    | Résultat attendu                                                       |
-|-------------------------------------------|------------------------------------------------------------------------|
+| ----------------------------------------- | ---------------------------------------------------------------------- |
 | Exécuter dans la console : `Hooks.events` | Rechercher `preUpdateActor`, `updateActor`, `createItem` dans la liste |
 | Vérifier que les 3 hooks sont actifs      | Les hooks sont bien enregistrés par le système                         |
 
@@ -40,7 +40,7 @@ structurées dans `actor.flags.swerpg.logs`.
 ### 2.1. Achat de rang (skill.train)
 
 | Action                                                                              | Résultat attendu                           |
-|-------------------------------------------------------------------------------------|--------------------------------------------|
+| ----------------------------------------------------------------------------------- | ------------------------------------------ |
 | Ouvrir la fiche du personnage, onglet Compétences                                   | Onglet visible                             |
 | Cliquer sur le "+" d'une compétence de carrière (ex: Cool)                          | Le rang augmente, l'XP est déduite         |
 | Vérifier l'audit log : `flags.swerpg.logs`                                          | Une entrée `skill.train` est créée         |
@@ -50,21 +50,21 @@ structurées dans `actor.flags.swerpg.logs`.
 ### 2.2. Achat de rang hors carrière
 
 | Action                                          | Résultat attendu                                 |
-|-------------------------------------------------|--------------------------------------------------|
+| ----------------------------------------------- | ------------------------------------------------ |
 | Acheter un rang sur une compétence NON carrière | Le coût est plus élevé (rang × 5 + 5)            |
 | Vérifier l'entrée `skill.train`                 | `isCareer` = false, le `cost` reflète le surcoût |
 
 ### 2.3. Rang gratuit (isFree)
 
 | Action                                                           | Résultat attendu                                 |
-|------------------------------------------------------------------|--------------------------------------------------|
+| ---------------------------------------------------------------- | ------------------------------------------------ |
 | Utiliser un rang gratuit carrière sur une compétence de carrière | Le rang `careerFree` augmente, aucune XP déduite |
 | Vérifier l'entrée `skill.train`                                  | `isFree` = true, `cost` = 0, `xpDelta` = 0       |
 
 ### 2.4. Oubli de rang (skill.forget)
 
 | Action                                                     | Résultat attendu                     |
-|------------------------------------------------------------|--------------------------------------|
+| ---------------------------------------------------------- | ------------------------------------ |
 | Cliquer sur le "-" d'une compétence avec des rangs achetés | Le rang diminue, l'XP est remboursée |
 | Vérifier l'audit log                                       | Une entrée `skill.forget` est créée  |
 | Vérifier `xpDelta` positif                                 | Le montant remboursé est créditeur   |
@@ -76,7 +76,7 @@ structurées dans `actor.flags.swerpg.logs`.
 ### 3.1. Augmentation (characteristic.increase)
 
 | Action                                                                   | Résultat attendu                                   |
-|--------------------------------------------------------------------------|----------------------------------------------------|
+| ------------------------------------------------------------------------ | -------------------------------------------------- |
 | Cliquer sur le "+" d'une caractéristique (ex: Brawn)                     | La valeur augmente, coût = nouvelle valeur × 10 XP |
 | Vérifier l'audit log                                                     | Une entrée `characteristic.increase` est créée     |
 | Vérifier les champs : `characteristicId`, `oldValue`, `newValue`, `cost` | Les données correspondent                          |
@@ -89,14 +89,14 @@ structurées dans `actor.flags.swerpg.logs`.
 ### 4.1. Dépense d'XP (xp.spend)
 
 | Action                                        | Résultat attendu                                                             |
-|-----------------------------------------------|------------------------------------------------------------------------------|
+| --------------------------------------------- | ---------------------------------------------------------------------------- |
 | Acheter une compétence ou une caractéristique | `system.progression.experience.spent` augmente                               |
 | Vérifier l'audit log                          | Une entrée `xp.spend` peut être créée (si pas déjà couverte par skill.train) |
 
 ### 4.2. Gain d'XP (xp.grant)
 
 | Action                                                                                            | Résultat attendu                                      |
-|---------------------------------------------------------------------------------------------------|-------------------------------------------------------|
+| ------------------------------------------------------------------------------------------------- | ----------------------------------------------------- |
 | Accorder de l'XP via un script : `actor.update({"system.progression.experience.gained": valeur})` | `gained` augmente                                     |
 | Vérifier l'audit log                                                                              | Une entrée `xp.grant` est créée avec `amount` positif |
 | Vérifier `xpDelta` = +amount                                                                      | Le delta est positif (gain)                           |
@@ -104,7 +104,7 @@ structurées dans `actor.flags.swerpg.logs`.
 ### 4.3. Remboursement d'XP (xp.refund)
 
 | Action                        | Résultat attendu                                                                   |
-|-------------------------------|------------------------------------------------------------------------------------|
+| ----------------------------- | ---------------------------------------------------------------------------------- |
 | Oublier un rang de compétence | `spent` diminue du remboursement                                                   |
 | Vérifier l'audit log          | Une entrée `xp.refund` est créée (si le changement XP est pur, sans skill associé) |
 
@@ -115,7 +115,7 @@ structurées dans `actor.flags.swerpg.logs`.
 ### 5.1. Changement d'espèce (species.set)
 
 | Action                                          | Résultat attendu                       |
-|-------------------------------------------------|----------------------------------------|
+| ----------------------------------------------- | -------------------------------------- |
 | Glisser une nouvelle espèce sur la fiche        | L'espèce est remplacée                 |
 | Vérifier l'audit log                            | Une entrée `species.set` est créée     |
 | Vérifier `data.oldSpecies` et `data.newSpecies` | Les valeurs avant/après sont correctes |
@@ -123,7 +123,7 @@ structurées dans `actor.flags.swerpg.logs`.
 ### 5.2. Changement de carrière (career.set)
 
 | Action                                        | Résultat attendu                       |
-|-----------------------------------------------|----------------------------------------|
+| --------------------------------------------- | -------------------------------------- |
 | Glisser une nouvelle carrière sur la fiche    | La carrière est remplacée              |
 | Vérifier l'audit log                          | Une entrée `career.set` est créée      |
 | Vérifier `data.oldCareer` et `data.newCareer` | Les valeurs avant/après sont correctes |
@@ -135,7 +135,7 @@ structurées dans `actor.flags.swerpg.logs`.
 ### 6.1. Changement de niveau (advancement.level)
 
 | Action                                                                     | Résultat attendu                         |
-|----------------------------------------------------------------------------|------------------------------------------|
+| -------------------------------------------------------------------------- | ---------------------------------------- |
 | Modifier `actor.update({"system.advancement.level": 2})` depuis la console | Le niveau change                         |
 | Vérifier l'audit log                                                       | Une entrée `advancement.level` est créée |
 | Vérifier `data.oldLevel` et `data.newLevel`                                | Les niveaux avant/après sont corrects    |
@@ -147,7 +147,7 @@ structurées dans `actor.flags.swerpg.logs`.
 ### 7.1. Achat de talent (talent.purchase)
 
 | Action                                                                            | Résultat attendu                           |
-|-----------------------------------------------------------------------------------|--------------------------------------------|
+| --------------------------------------------------------------------------------- | ------------------------------------------ |
 | Ajouter un item de type `talent` au personnage (drag & drop depuis un compendium) | Le talent est ajouté                       |
 | Vérifier l'audit log                                                              | Une entrée `talent.purchase` est créée     |
 | Vérifier les champs : `talentId`, `talentName`, `cost`, `ranks`                   | Les données correspondent au talent ajouté |
@@ -156,7 +156,7 @@ structurées dans `actor.flags.swerpg.logs`.
 ### 7.2. Item non-talent ignoré
 
 | Action                                                   | Résultat attendu                                                          |
-|----------------------------------------------------------|---------------------------------------------------------------------------|
+| -------------------------------------------------------- | ------------------------------------------------------------------------- |
 | Ajouter un item de type `weapon` ou `gear` au personnage | L'item est ajouté                                                         |
 | Vérifier l'audit log                                     | Aucune entrée `talent.purchase` créée (les items non-talent sont ignorés) |
 
@@ -167,7 +167,7 @@ structurées dans `actor.flags.swerpg.logs`.
 ### 8.1. Vérification du snapshot dans une entrée
 
 | Action                                                              | Résultat attendu                                                                                                            |
-|---------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------|
+| ------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
 | Effectuer une action qui génère un log (ex: acheter une compétence) | Une entrée est créée                                                                                                        |
 | Inspecter `entry.snapshot` dans la console                          | Le snapshot contient : `xpAvailable`, `totalXpSpent`, `totalXpGained`, `careerFreeAvailable`, `specializationFreeAvailable` |
 | Vérifier la cohérence                                               | `xpAvailable` = `totalXpGained` - `totalXpSpent` (ou valeur stockée)                                                        |
@@ -179,14 +179,14 @@ structurées dans `actor.flags.swerpg.logs`.
 ### 9.1. Taille max par défaut (500)
 
 | Action                                                                                      | Résultat attendu                                            |
-|---------------------------------------------------------------------------------------------|-------------------------------------------------------------|
+| ------------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
 | Remplir le log avec 500+ entrées (script : boucle d'update avec des modifications mineures) | Le log ne dépasse pas 500 entrées                           |
 | Vérifier que les plus anciennes sont supprimées                                             | Les premières entrées (timestamp le plus bas) disparaissent |
 
 ### 9.2. Taille max configurable via setting
 
 | Action                                                                                    | Résultat attendu                                                |
-|-------------------------------------------------------------------------------------------|-----------------------------------------------------------------|
+| ----------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
 | Modifier le setting : `game.settings.set("swerpg", "auditLogMaxEntries", 100)`            | La limite est abaissée à 100                                    |
 | Déclencher une nouvelle entrée                                                            | Si le log a déjà 100+ entrées, les plus anciennes sont évincées |
 | Restaurer la valeur par défaut : `game.settings.set("swerpg", "auditLogMaxEntries", 500)` | Limite restaurée                                                |
@@ -198,7 +198,7 @@ structurées dans `actor.flags.swerpg.logs`.
 ### 10.1. Erreur d'écriture simulée
 
 | Action                                                                                                           | Résultat attendu                                          |
-|------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------|
+| ---------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
 | (Test indirect) Forcer une erreur en désactivant les permissions d'écriture sur l'acteur (via un module externe) | L'action utilisateur n'est PAS bloquée                    |
 | Vérifier la console développeur                                                                                  | Un message `logger.error` est émis par le système d'audit |
 | Vérifier la notification UI                                                                                      | `ui.notifications.warn` est affiché                       |
@@ -209,7 +209,7 @@ structurées dans `actor.flags.swerpg.logs`.
 ## 11. Scénario de bout en bout
 
 | Action                                                      | Résultat attendu                                                            |
-|-------------------------------------------------------------|-----------------------------------------------------------------------------|
+| ----------------------------------------------------------- | --------------------------------------------------------------------------- |
 | Créer un nouveau personnage `character`                     | La fiche s'ouvre                                                            |
 | Appliquer une espèce (drag & drop)                          | Entrée `species.set` créée                                                  |
 | Appliquer une carrière (drag & drop)                        | Entrée `career.set` créée                                                   |
@@ -226,35 +226,35 @@ structurées dans `actor.flags.swerpg.logs`.
 
 ### 12.1. Bouton d'export dans la fenêtre de consultation
 
-| Action | Résultat attendu |
-|--------|------------------|
-| Ouvrir la fenêtre du journal d'évolution depuis la fiche personnage | La fenêtre s'affiche avec les filtres habituels |
-| Vérifier la présence d'un bouton `Exporter` (icône download) | Le bouton est visible dans l'en-tête de la fenêtre |
-| Cliquer sur le bouton `Exporter` | Un fichier CSV est téléchargé par le navigateur |
+| Action                                                              | Résultat attendu                                   |
+| ------------------------------------------------------------------- | -------------------------------------------------- |
+| Ouvrir la fenêtre du journal d'évolution depuis la fiche personnage | La fenêtre s'affiche avec les filtres habituels    |
+| Vérifier la présence d'un bouton `Exporter` (icône download)        | Le bouton est visible dans l'en-tête de la fenêtre |
+| Cliquer sur le bouton `Exporter`                                    | Un fichier CSV est téléchargé par le navigateur    |
 
 ### 12.2. Nom du fichier exporté
 
-| Action | Résultat attendu |
-|--------|------------------|
+| Action                                                                                 | Résultat attendu                                                |
+| -------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
 | Exporter le journal d'un personnage nommé "Vara Kesh" dont le propriétaire est "Alice" | Le fichier téléchargé se nomme `vara_kesh_alice_YYYY-MM-DD.csv` |
-| Exporter le journal d'un personnage sans propriétaire explicite | Le fichier téléchargé contient `unknown-player` dans son nom |
+| Exporter le journal d'un personnage sans propriétaire explicite                        | Le fichier téléchargé contient `unknown-player` dans son nom    |
 
 ### 12.3. Contenu du CSV
 
-| Action | Résultat attendu |
-|--------|------------------|
-| Ouvrir le fichier CSV dans un tableur (Excel, LibreOffice) | Les colonnes sont : timestamp, date, userName, type, typeLabel, description, xpDelta, actorName, playerName |
-| Vérifier la première ligne de données | Les informations correspondent à la première entrée du journal (chronologie complète) |
-| Vérifier que toutes les entrées sont présentes | Le nombre de lignes de données correspond au nombre total d'entrées dans `flags.swerpg.logs` |
-| Appliquer un filtre (ex: "Compétences") dans la UI puis exporter | Le CSV exporté contient TOUTES les entrées, pas seulement celles du filtre actif |
+| Action                                                           | Résultat attendu                                                                                            |
+| ---------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| Ouvrir le fichier CSV dans un tableur (Excel, LibreOffice)       | Les colonnes sont : timestamp, date, userName, type, typeLabel, description, xpDelta, actorName, playerName |
+| Vérifier la première ligne de données                            | Les informations correspondent à la première entrée du journal (chronologie complète)                       |
+| Vérifier que toutes les entrées sont présentes                   | Le nombre de lignes de données correspond au nombre total d'entrées dans `flags.swerpg.logs`                |
+| Appliquer un filtre (ex: "Compétences") dans la UI puis exporter | Le CSV exporté contient TOUTES les entrées, pas seulement celles du filtre actif                            |
 
 ### 12.4. Cas aux limites
 
-| Action | Résultat attendu |
-|--------|------------------|
-| Exporter le journal d'un personnage sans aucune entrée | Le CSV contient uniquement l'en-tête (aucune ligne de données) |
-| Ouvrir le CSV dans un éditeur de texte | Les cellules contenant des virgules, guillemets ou sauts de ligne sont correctement échappées |
-| Vérifier les colonnes xpDelta | Les valeurs numériques sont présentes (positives, négatives, ou zéro) |
+| Action                                                 | Résultat attendu                                                                              |
+| ------------------------------------------------------ | --------------------------------------------------------------------------------------------- |
+| Exporter le journal d'un personnage sans aucune entrée | Le CSV contient uniquement l'en-tête (aucune ligne de données)                                |
+| Ouvrir le CSV dans un éditeur de texte                 | Les cellules contenant des virgules, guillemets ou sauts de ligne sont correctement échappées |
+| Vérifier les colonnes xpDelta                          | Les valeurs numériques sont présentes (positives, négatives, ou zéro)                         |
 
 ---
 

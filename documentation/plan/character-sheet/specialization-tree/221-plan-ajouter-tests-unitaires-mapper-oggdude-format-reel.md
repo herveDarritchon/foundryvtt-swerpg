@@ -12,6 +12,7 @@
 Ajouter une campagne de tests unitaires / d'intégration légère autour du mapper `specialization-tree` pour figer le comportement réel OggDude à partir d'un fixture XML dérivé d'`Advisor.xml`, avec une couverture suffisante des cas nominaux, des cas limites, des diagnostics et de la rétrocompatibilité.
 
 Le résultat attendu est le suivant :
+
 - le format réel `TalentRows/Talents/Key` est validé sur un fixture XML lisible représentant un arbre complet de 20 nœuds ;
 - les positions, `talentId`, coûts par ligne et connexions issues de `Directions` sont vérifiés de manière stable ;
 - l'absence de doublons et la tolérance aux directions manquantes sont couvertes ;
@@ -95,12 +96,14 @@ Le fichier de cadrage référencé par l'issue est vide, donc aucune contrainte 
 **Problème** : où placer la campagne de test plus large demandée par `#221` ?
 
 **Options envisagées** :
+
 - enrichir encore `tests/importer/specialization-tree-ogg-dude.spec.mjs`
 - créer une nouvelle spec dédiée au fixture XML réel
 
 **Décision retenue** : créer une spec dédiée, par exemple `tests/importer/specialization-tree-ogg-dude.integration.spec.mjs`.
 
 **Justification** :
+
 - le fichier de spec existant protège déjà les contrats unitaires ciblés de `#218`, `#219` et `#220` ;
 - `#221` introduit une campagne plus large et plus proche des données réelles ;
 - le projet utilise déjà des specs `*.integration.spec.mjs` pour les tests basés sur des fixtures XML ;
@@ -111,12 +114,14 @@ Le fichier de cadrage référencé par l'issue est vide, donc aucune contrainte 
 **Problème** : faut-il utiliser directement `resources/integration/Specializations/Advisor.xml` ou une fixture de test dédiée ?
 
 **Options envisagées** :
+
 - lire directement le fichier réel sous `resources/integration/Specializations/Advisor.xml`
 - créer une fixture dédiée dans `tests/fixtures/Specializations/`
 
 **Décision retenue** : créer une fixture dédiée dérivée d'`Advisor.xml`.
 
 **Justification** :
+
 - l'issue demande des fixtures minimales et lisibles ;
 - le fichier de ressource réel contient du contenu hors sujet pour le mapper (description complète, autres sections non nécessaires au contrat testé) ;
 - une fixture dédiée permet de ne garder que les champs réellement utiles : `Key`, `Name`, `TalentRows`, `Talents`, `Directions`, `Cost` ;
@@ -127,12 +132,14 @@ Le fichier de cadrage référencé par l'issue est vide, donc aucune contrainte 
 **Problème** : faut-il convertir le XML en objet JS à la main ou passer par le vrai parseur du projet ?
 
 **Options envisagées** :
+
 - parser "à la main" dans le test
 - utiliser `module/utils/xml/parser.mjs`
 
 **Décision retenue** : utiliser `parseXmlToJson()`.
 
 **Justification** :
+
 - `parseXmlToJson()` encode déjà les choix de parsing du projet (`explicitArray: false`, `trim: true`, `mergeAttrs: true`) ;
 - le contrat testé doit refléter la forme JSON réellement reçue par le mapper ;
 - cela évite de tester un objet artificiel trop éloigné du flux réel d'import.
@@ -142,12 +149,14 @@ Le fichier de cadrage référencé par l'issue est vide, donc aucune contrainte 
 **Problème** : où figer la rétrocompatibilité avec l'ancien format ?
 
 **Options envisagées** :
+
 - considérer que les anciens tests suffisent
 - ajouter un cas explicite dans `#221`
 
 **Décision retenue** : ajouter un cas explicite de non-régression dans `#221`.
 
 **Justification** :
+
 - l'issue le demande explicitement ;
 - `#218` a réordonné la priorité des formats, donc il est utile de garder un garde-fou durable ;
 - cela évite qu'une future simplification du mapper supprime accidentellement le fallback.
@@ -157,6 +166,7 @@ Le fichier de cadrage référencé par l'issue est vide, donc aucune contrainte 
 **Problème** : l'issue demande un test de `readBoolean()`, mais aucun helper de ce nom n'existe aujourd'hui dans le mapper.
 
 **Options envisagées** :
+
 - tester indirectement la coercition via `extractDirectionalConnections()`
 - introduire un petit helper local `readBoolean(value)` dans le mapper, exporté si nécessaire pour les tests
 - déplacer la logique dans un utilitaire partagé
@@ -164,6 +174,7 @@ Le fichier de cadrage référencé par l'issue est vide, donc aucune contrainte 
 **Décision retenue** : autoriser l'introduction d'un helper local pur `readBoolean(value)` dans le mapper si cela simplifie le contrat et les tests, sans créer d'utilitaire partagé transverse.
 
 **Justification** :
+
 - l'issue mentionne explicitement ce helper ;
 - la logique actuelle est inline et dupliquée sur `Right` et `Down` ;
 - un helper local garde le changement minimal tout en rendant le comportement testable et lisible ;
@@ -174,6 +185,7 @@ Le fichier de cadrage référencé par l'issue est vide, donc aucune contrainte 
 **Problème** : comment éviter des tests verbeux et fragiles sur un arbre de 20 nœuds ?
 
 **Décision retenue** : privilégier des assertions ciblées sur :
+
 - `length`
 - listes de `nodeId`
 - listes de `talentId`
@@ -183,6 +195,7 @@ Le fichier de cadrage référencé par l'issue est vide, donc aucune contrainte 
 - appels logger ciblés
 
 **Justification** :
+
 - conforme à ADR-0012 ;
 - les diffs seront immédiatement exploitables ;
 - cela réduit le couplage à la structure interne complète des objets.
@@ -194,6 +207,7 @@ Le fichier de cadrage référencé par l'issue est vide, donc aucune contrainte 
 ### Étape 1 — Préparer la fixture XML minimale dérivée d'Advisor
 
 **Quoi faire** :
+
 - créer une fixture XML dédiée sous `tests/fixtures/Specializations/`
 - conserver uniquement les champs nécessaires au mapper :
   - `Key`
@@ -205,31 +219,37 @@ Le fichier de cadrage référencé par l'issue est vide, donc aucune contrainte 
 - conserver les 5 lignes et 4 nœuds par ligne pour reproduire le contrat de 20 nœuds et les coûts `5/10/15/20/25`
 
 **Fichiers** :
+
 - `tests/fixtures/Specializations/Advisor.xml`
 
 **Risques spécifiques** :
+
 - une fixture trop "nettoyée" pourrait ne plus représenter le format réel ;
 - une fixture trop proche du fichier source complet deviendrait peu lisible.
 
 ### Étape 2 — Mettre en place la lecture XML dans une spec dédiée
 
 **Quoi faire** :
+
 - créer une spec de type intégration légère dédiée au specialization-tree mapper
 - lire la fixture XML depuis le filesystem
 - parser via `parseXmlToJson()`
 - extraire le sous-objet `Specialization` puis invoquer `specializationTreeMapper([specialization])`
 
 **Fichiers** :
+
 - `tests/importer/specialization-tree-ogg-dude.integration.spec.mjs`
 - éventuelle vérification de `module/utils/xml/parser.mjs` pour le pattern de test seulement
 
 **Risques spécifiques** :
+
 - oublier la forme racine `Specialization` ferait tester un mauvais contrat d'entrée ;
 - un shim `xml2js` incorrect rendrait le test flaky ou artificiel.
 
 ### Étape 3 — Couvrir le scénario nominal complet sur 20 nœuds
 
 **Quoi faire** :
+
 - ajouter un test qui vérifie qu'un import depuis la fixture produit 20 nœuds
 - vérifier explicitement :
   - `r1c1 -> plausden`
@@ -239,30 +259,36 @@ Le fichier de cadrage référencé par l'issue est vide, donc aucune contrainte 
 - vérifier que les compteurs `rawNodeCount` et `importedNodeCount` sont cohérents
 
 **Fichiers** :
+
 - `tests/importer/specialization-tree-ogg-dude.integration.spec.mjs`
 
 **Risques spécifiques** :
+
 - assertions trop larges sur l'objet complet ;
 - dépendance implicite à un ordre de nœuds non documenté si l'intention métier est seulement la position.
 
 ### Étape 4 — Couvrir les connexions réelles et l'absence de doublons
 
 **Quoi faire** :
+
 - vérifier sur la fixture qu'un ensemble représentatif de connexions issues de `Right` / `Down` est présent
 - vérifier qu'aucune connexion dupliquée n'est produite
 - vérifier que `Left` / `Up` n'introduisent pas de doublons inverses
 - vérifier que `importedConnectionCount` reflète bien le nombre final dédupliqué
 
 **Fichiers** :
+
 - `tests/importer/specialization-tree-ogg-dude.integration.spec.mjs`
 
 **Risques spécifiques** :
+
 - choisir trop de connexions de référence rendrait le test fragile ;
 - ne vérifier que la longueur totale pourrait laisser passer des erreurs de ciblage.
 
 ### Étape 5 — Couvrir les cas limites et diagnostics
 
 **Quoi faire** :
+
 - ajouter un cas où certaines directions sont absentes ou vides sans provoquer de crash
 - ajouter un cas de format inconnu qui :
   - retourne 0 nœud exploitable
@@ -271,16 +297,19 @@ Le fichier de cadrage référencé par l'issue est vide, donc aucune contrainte 
 - vérifier les warnings / logs avec assertions partielles et lisibles
 
 **Fichiers** :
+
 - `tests/importer/specialization-tree-ogg-dude.integration.spec.mjs`
 - `tests/importer/specialization-tree-ogg-dude.spec.mjs` si certains cas restent mieux placés dans la spec unitaire existante
 
 **Risques spécifiques** :
+
 - confondre "format inconnu" et "entrées brutes rejetées" ;
 - rendre les assertions logger trop dépendantes du texte exact.
 
 ### Étape 6 — Formaliser le contrat booléen si le helper est introduit
 
 **Quoi faire** :
+
 - si l'implémentation introduit `readBoolean(value)`, ajouter des tests explicites sur :
   - `true`
   - `false`
@@ -290,16 +319,19 @@ Le fichier de cadrage référencé par l'issue est vide, donc aucune contrainte 
 - si l'implémentation décide de ne pas extraire le helper, déplacer ce contrat sur des tests ciblés de `extractDirectionalConnections()` avec entrées booléennes et stringifiées
 
 **Fichiers** :
+
 - `tests/importer/specialization-tree-ogg-dude.spec.mjs`
 - `module/importer/mappers/oggdude-specialization-tree-mapper.mjs` uniquement si le helper local est créé
 
 **Risques spécifiques** :
+
 - créer un helper plus large que nécessaire ;
 - sur-spécifier un comportement non utilisé ailleurs dans le mapper.
 
 ### Étape 7 — Nettoyer et réaligner la lisibilité de la suite specialization-tree
 
 **Quoi faire** :
+
 - vérifier que la séparation entre tests unitaires ciblés et tests fixture-driven reste claire
 - conserver dans la spec existante les micro-contrats :
   - anciens formats
@@ -308,10 +340,12 @@ Le fichier de cadrage référencé par l'issue est vide, donc aucune contrainte 
 - réserver la nouvelle spec au scénario XML complet
 
 **Fichiers** :
+
 - `tests/importer/specialization-tree-ogg-dude.spec.mjs`
 - `tests/importer/specialization-tree-ogg-dude.integration.spec.mjs`
 
 **Risques spécifiques** :
+
 - dupliquer inutilement des cas entre les deux fichiers ;
 - disperser le contrat si la frontière entre unitaire et fixture-driven n'est pas claire.
 
@@ -319,28 +353,28 @@ Le fichier de cadrage référencé par l'issue est vide, donc aucune contrainte 
 
 ## 6. Fichiers modifiés
 
-| Fichier | Action | Description du changement |
-|---|---|---|
-| `tests/importer/specialization-tree-ogg-dude.integration.spec.mjs` | Création | Ajouter la campagne principale basée sur une fixture XML dérivée d'Advisor, avec parsing réel et assertions métier ciblées |
-| `tests/fixtures/Specializations/Advisor.xml` | Création | Fournir une fixture XML minimaliste et lisible représentant le vrai format OggDude à 20 nœuds |
-| `tests/importer/specialization-tree-ogg-dude.spec.mjs` | Modification ciblée éventuelle | Compléter les micro-contrats non couverts par la spec fixture-driven, notamment le booléen si besoin |
-| `module/importer/mappers/oggdude-specialization-tree-mapper.mjs` | Modification ciblée éventuelle | Introduire un helper local `readBoolean()` seulement si nécessaire pour rendre le contrat explicitement testable |
-| `module/utils/xml/parser.mjs` | Vérification seule | Confirmer que le parseur existant fournit bien la forme d'entrée attendue en test |
-| `resources/integration/Specializations/Advisor.xml` | Référence seule | Source métier du fixture dérivé, sans modification |
+| Fichier                                                            | Action                         | Description du changement                                                                                                  |
+| ------------------------------------------------------------------ | ------------------------------ | -------------------------------------------------------------------------------------------------------------------------- |
+| `tests/importer/specialization-tree-ogg-dude.integration.spec.mjs` | Création                       | Ajouter la campagne principale basée sur une fixture XML dérivée d'Advisor, avec parsing réel et assertions métier ciblées |
+| `tests/fixtures/Specializations/Advisor.xml`                       | Création                       | Fournir une fixture XML minimaliste et lisible représentant le vrai format OggDude à 20 nœuds                              |
+| `tests/importer/specialization-tree-ogg-dude.spec.mjs`             | Modification ciblée éventuelle | Compléter les micro-contrats non couverts par la spec fixture-driven, notamment le booléen si besoin                       |
+| `module/importer/mappers/oggdude-specialization-tree-mapper.mjs`   | Modification ciblée éventuelle | Introduire un helper local `readBoolean()` seulement si nécessaire pour rendre le contrat explicitement testable           |
+| `module/utils/xml/parser.mjs`                                      | Vérification seule             | Confirmer que le parseur existant fournit bien la forme d'entrée attendue en test                                          |
+| `resources/integration/Specializations/Advisor.xml`                | Référence seule                | Source métier du fixture dérivé, sans modification                                                                         |
 
 ---
 
 ## 7. Risques
 
-| Risque | Impact | Mitigation |
-|---|---|---|
-| Fixture XML trop lourde ou trop proche du fichier de prod | Lecture et maintenance difficiles | Créer une version dérivée centrée sur les seuls champs nécessaires au mapper |
-| Fixture trop simplifiée | Faux sentiment de sécurité, écart avec le format réel | Parser via `parseXmlToJson()` et conserver la structure `TalentRows/Talents/Key/Directions` intacte |
-| Assertions trop profondes sur 20 nœuds | Tests fragiles et diagnostics médiocres | Vérifier des listes ciblées, des longueurs, des coûts par ligne et quelques connexions représentatives |
-| Rétrocompatibilité ancien format cassée plus tard | Régression silencieuse | Ajouter un cas explicite de fallback ancien format dans la campagne #221 |
-| Contrat booléen implicite | Comportement ambigu sur `true` / `false` stringifiés | Formaliser par helper local ou assertions ciblées sur la fonction pure existante |
-| Couverture du logger trop couplée au texte exact | Refactorings coûteux | Utiliser `expect.stringContaining` et `expect.objectContaining` |
-| Duplication entre spec unitaire et spec fixture-driven | Maintenance inutilement coûteuse | Réserver la nouvelle spec au scénario XML complet et garder la spec existante pour les micro-contrats |
+| Risque                                                    | Impact                                                | Mitigation                                                                                             |
+| --------------------------------------------------------- | ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| Fixture XML trop lourde ou trop proche du fichier de prod | Lecture et maintenance difficiles                     | Créer une version dérivée centrée sur les seuls champs nécessaires au mapper                           |
+| Fixture trop simplifiée                                   | Faux sentiment de sécurité, écart avec le format réel | Parser via `parseXmlToJson()` et conserver la structure `TalentRows/Talents/Key/Directions` intacte    |
+| Assertions trop profondes sur 20 nœuds                    | Tests fragiles et diagnostics médiocres               | Vérifier des listes ciblées, des longueurs, des coûts par ligne et quelques connexions représentatives |
+| Rétrocompatibilité ancien format cassée plus tard         | Régression silencieuse                                | Ajouter un cas explicite de fallback ancien format dans la campagne #221                               |
+| Contrat booléen implicite                                 | Comportement ambigu sur `true` / `false` stringifiés  | Formaliser par helper local ou assertions ciblées sur la fonction pure existante                       |
+| Couverture du logger trop couplée au texte exact          | Refactorings coûteux                                  | Utiliser `expect.stringContaining` et `expect.objectContaining`                                        |
+| Duplication entre spec unitaire et spec fixture-driven    | Maintenance inutilement coûteuse                      | Réserver la nouvelle spec au scénario XML complet et garder la spec existante pour les micro-contrats  |
 
 ---
 
@@ -372,6 +406,7 @@ Si l'implémentation reste compacte, un seul commit est acceptable :
 - **Rôle dans l'epic** : `#221` transforme les corrections successives `#218/#219/#220` en contrat de non-régression robuste et lisible
 
 Ordre recommandé :
+
 1. `#218` — mapping des nœuds
 2. `#219` — connexions directionnelles
 3. `#220` — logs de diagnostic

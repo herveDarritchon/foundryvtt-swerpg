@@ -4,7 +4,6 @@
  */
 import { AttackRoll } from '../../../dice/_module.mjs'
 
-
 export const DefenseMixin = (Base) =>
   class extends Base {
     /**
@@ -16,40 +15,40 @@ export const DefenseMixin = (Base) =>
     testDefense(defenseType, roll) {
       const d = this.system.defenses
       const s = this.system.skills
-      
+
       if (defenseType !== 'physical' && !(defenseType in d) && !(defenseType in s)) {
         throw new Error(`Invalid defense type "${defenseType}" passed to Actor#testDefense`)
       }
-      
+
       if (!(roll instanceof AttackRoll)) {
         throw new Error('You must pass an AttackRoll instance to Actor#testDefense')
       }
-      
+
       const results = AttackRoll.RESULT_TYPES
       let dc
 
       // Physical Defense: dodge, parry, block, armor
       if (defenseType === 'physical') {
         dc = d.physical.total
-        
+
         // Hit - roll exceeds total defense
         if (roll.total > dc) return results.HIT
 
         // Random roll for defense type determination
         const r = twist.random() * d.physical.total
         const dodge = d.dodge.total
-        
+
         // Dodge check
         if (r <= dodge) return results.DODGE
-        
+
         // Parry check
         const parry = dodge + d.parry.total
         if (r <= parry) return results.PARRY
-        
+
         // Block check
         const block = dodge + d.block.total
         if (r <= block) return results.BLOCK
-        
+
         // Armor or Glance
         return roll.isCriticalFailure ? results.ARMOR : results.GLANCE
       }
@@ -60,7 +59,7 @@ export const DefenseMixin = (Base) =>
       } else {
         dc = d[defenseType].total
       }
-      
+
       if (roll.total > dc) return AttackRoll.RESULT_TYPES.HIT
       else return AttackRoll.RESULT_TYPES.RESIST
     }
@@ -74,9 +73,9 @@ export const DefenseMixin = (Base) =>
      */
     getResistance(resource, damageType, restoration) {
       if (restoration) return 0
-      
+
       let r = this.resistances[damageType]?.total ?? 0
-      
+
       switch (resource) {
         case 'health':
           if (this.isBroken) r -= 2
@@ -87,7 +86,7 @@ export const DefenseMixin = (Base) =>
           if (this.statuses.has('resolute')) r = Infinity
           break
       }
-      
+
       return r
     }
   }

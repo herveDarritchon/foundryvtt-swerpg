@@ -3,7 +3,7 @@ title: 'ADR-0008: Taxonomie canonique des armures (system.category, system.quali
 status: 'Accepted'
 date: '2026-05-07'
 authors: 'Hervé Darritchon'
-tags: [ 'architecture', 'armor', 'taxonomy', 'data-model', 'import-oggdude' ]
+tags: ['architecture', 'armor', 'taxonomy', 'data-model', 'import-oggdude']
 supersedes: ''
 superseded_by: ''
 ---
@@ -36,7 +36,7 @@ Issues connexes : #14 (qualités), #26 (format des propriétés d'armure — que
 Cinq catégories sont définies dans `module/config/armor.mjs` (`CATEGORIES`) et constituent une enum fermée :
 
 | Clé         | Label       | defense min/max | soak min/max | soak start | Description                               |
-|-------------|-------------|-----------------|--------------|------------|-------------------------------------------|
+| ----------- | ----------- | --------------- | ------------ | ---------- | ----------------------------------------- |
 | `unarmored` | Sans armure | 0 / 0           | 10 / 10      | 0          | Aucune protection                         |
 | `light`     | Légère      | 2 / 7           | 7 / 9        | 2          | Protection légère, grande mobilité        |
 | `medium`    | Moyenne     | 8 / 13          | 4 / 6        | 4          | Protection équilibrée                     |
@@ -59,15 +59,15 @@ format **Option C** défini dans `docs/specifications/qualities-format-spec.md` 
 
 ```javascript
 system.qualities = [
-  { key: "bulky", rank: null, hasRank: false, active: true, source: "oggdude" },
-  { key: "sealed", rank: null, hasRank: false, active: true, source: "base" },
+  { key: 'bulky', rank: null, hasRank: false, active: true, source: 'oggdude' },
+  { key: 'sealed', rank: null, hasRank: false, active: true, source: 'base' },
 ]
 ```
 
 Propriétés canoniques définies dans `module/config/armor.mjs` (`PROPERTIES`) :
 
 | Clé          | Label       | Description                                             |
-|--------------|-------------|---------------------------------------------------------|
+| ------------ | ----------- | ------------------------------------------------------- |
 | `bulky`      | Encombrante | Armure lourde qui réduit la mobilité                    |
 | `organic`    | Organique   | Matériau naturel (cuir, écailles)                       |
 | `sealed`     | Scellée     | Protection intégrale contre les environnements hostiles |
@@ -98,7 +98,7 @@ se fait en deux passes :
 Les valeurs OggDude ne sont jamais interprétées par un mapping global. Elles sont toujours résolues dans le contexte du type d’Item : weapon, armor, gear, etc.
 
 | Valeur `<Category>` OggDude | `system.category` |
-|-----------------------------|-------------------|
+| --------------------------- | ----------------- |
 | `Light`, `light`, `1`       | `light`           |
 | `Medium`, `medium`, `2`     | `medium`          |
 | `Heavy`, `heavy`, `3`       | `heavy`           |
@@ -108,7 +108,7 @@ Les valeurs OggDude ne sont jamais interprétées par un mapping global. Elles s
 **Table de mapping des propriétés OggDude vers SWERPG :**
 
 | Valeur `<Category>` OggDude | `system.qualities` key | Notes                        |
-|-----------------------------|------------------------|------------------------------|
+| --------------------------- | ---------------------- | ---------------------------- |
 | `Bulky`, `bulky`, `1`       | `bulky`                | Encombrant                   |
 | `Organic`, `organic`, `2`   | `organic`              | Organique                    |
 | `Heavy`                     | `bulky`                | Variante mappée vers bulky   |
@@ -122,7 +122,7 @@ Les valeurs OggDude ne sont jamais interprétées par un mapping global. Elles s
 `full body` n’est pas mappé automatiquement vers `full-body`, car les données OggDude l’emploient comme description d’habillage sans effet système fiable. La qualité canonique `full-body` reste disponible pour usage manuel ou futur mapping explicite.
 
 | Valeur OggDude   | Raison                                      |
-|------------------|---------------------------------------------|
+| ---------------- | ------------------------------------------- |
 | `full body`      | Propriété descriptive sans impact mécanique |
 | `hard full body` | Propriété descriptive                       |
 | `hard`           | Propriété descriptive                       |
@@ -254,7 +254,7 @@ Aucun impact — l'armure utilise `system.qualities` au même format que les arm
 
 ## Review
 
-Cette ADR est un enregistrement *a posteriori* de décisions déjà implémentées et en production. Aucune réévaluation
+Cette ADR est un enregistrement _a posteriori_ de décisions déjà implémentées et en production. Aucune réévaluation
 périodique nécessaire. Les évolutions futures (nouvelles propriétés, catégories supplémentaires) feront l'objet d'
 amendements à cet ADR ou d'ADRs séparées.
 

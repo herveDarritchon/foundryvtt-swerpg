@@ -337,7 +337,7 @@ bloquant.
 ## 6. Fichiers modifiés
 
 | Fichier                                               | Action       | Description du changement                                                                                |
-|-------------------------------------------------------|--------------|----------------------------------------------------------------------------------------------------------|
+| ----------------------------------------------------- | ------------ | -------------------------------------------------------------------------------------------------------- |
 | `module/lib/talent-node/talent-node-purchase.mjs`     | création     | Nouveau flux d'achat V1 d'un nœud de talent                                                              |
 | `module/utils/audit-log.mjs`                          | modification | Ajout d'un bridge explicite pour journaliser une opération `talent-node-purchase` sans hook `createItem` |
 | `tests/lib/talent-node/talent-node-purchase.test.mjs` | création     | Tests métier du flux d'achat                                                                             |
@@ -356,7 +356,7 @@ Ils pourront être neutralisés plus tard, mais ne doivent pas être utilisés c
 ## 7. Risques
 
 | Risque                                               | Impact                  | Mitigation                                                                           |
-|------------------------------------------------------|-------------------------|--------------------------------------------------------------------------------------|
+| ---------------------------------------------------- | ----------------------- | ------------------------------------------------------------------------------------ |
 | Réintroduction du coût legacy (`5` ou `rank * 5`)    | Achat faux métier       | Tester explicitement que le coût vient du nœud résolu                                |
 | Duplication des règles entre US5 et US6              | Divergences UI / achat  | Faire de `getNodeState()` la porte d'entrée canonique de validation                  |
 | Achat bloqué si audit/log échoue                     | Régression UX           | Isoler l'écriture d'audit dans un bridge non bloquant avec warning technique         |

@@ -151,9 +151,7 @@ describe('SwerpgSpecializationTree', () => {
     test('warns when nodeId does not match row/column convention', () => {
       logger.warn.mockClear()
       SwerpgSpecializationTree.validateJoint({
-        nodes: [
-          { nodeId: 'wrong', row: 1, column: 2, cost: 5 },
-        ],
+        nodes: [{ nodeId: 'wrong', row: 1, column: 2, cost: 5 }],
       })
       expect(logger.warn).toHaveBeenCalledWith(
         '[SwerpgSpecializationTree] Node nodeId mismatch with row/column',

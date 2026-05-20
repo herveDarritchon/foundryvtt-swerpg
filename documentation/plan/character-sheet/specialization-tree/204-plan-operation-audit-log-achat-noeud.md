@@ -13,6 +13,7 @@
 Rendre chaque achat de nœud de talent traçable par une opération structurée, émise après persistance de l'achat, compatible avec le système d'audit/log existant, sans stocker d'historique métier détaillé dans `actor.system`.
 
 Cette US complète le flux V1 Talents en fermant la boucle audit :
+
 - émission métier structurée ;
 - persistance audit secondaire ;
 - lisibilité dans l'UI du journal d'audit ;
@@ -71,6 +72,7 @@ Le gap principal identifié est côté exploitation du log.
 **Décision** : conserver la production de l'opération métier dans `module/lib/talent-node/talent-node-purchase.mjs`, après succès de `actor.update()`.
 
 Justification :
+
 - le contexte métier complet y est déjà disponible ;
 - l'achat V1 n'est pas basé sur `createItem`, donc il ne faut pas réintroduire le legacy `talent.purchase` comme source principale ;
 - cela garantit que l'opération n'est produite qu'après persistance réussie.
@@ -80,6 +82,7 @@ Justification :
 **Décision** : ne rien stocker de plus dans `actor.system` ; l'audit reste dans `actor.flags.swerpg.logs`.
 
 Justification :
+
 - conforme ADR-0011 ;
 - évite de transformer l'historique en donnée cœur ;
 - respecte le cadrage talents V1 qui garde `talentPurchases` comme source de vérité.
@@ -89,6 +92,7 @@ Justification :
 **Décision** : ajouter un support explicite de `talent-node-purchase` dans `CharacterAuditLogApp`, sans le masquer derrière `talent.purchase`.
 
 Justification :
+
 - les deux événements n'ont pas la même sémantique ;
 - `talent.purchase` décrit un achat legacy par création d'item ;
 - `talent-node-purchase` décrit un achat V1 par nœud d'arbre et doit rester identifiable.
@@ -98,6 +102,7 @@ Justification :
 **Décision** : `previousRank` et `nextRank` n'entrent dans cette US que s'ils peuvent être calculés depuis les achats existants sans introduire de nouvelle source de vérité ni coupler la couche domaine au rendu UI.
 
 Justification :
+
 - l'issue et le cadrage les demandent seulement "si disponibles" ;
 - la règle projet est de dériver les rangs depuis les achats, pas de les persister ;
 - cela évite d'alourdir inutilement le flux d'achat.
@@ -107,6 +112,7 @@ Justification :
 **Décision** : la description de `talent-node-purchase` doit pouvoir être rendue à partir des données embarquées dans l'entrée, avec fallback sur les identifiants métier si aucun libellé plus riche n'est disponible.
 
 Justification :
+
 - minimise le couplage entre le viewer audit et les documents monde/compendium ;
 - reste aligné avec ADR-0013 ;
 - évite qu'un audit ancien devienne illisible si un document lié est absent.
@@ -120,6 +126,7 @@ Justification :
 **Quoi faire** : confirmer le payload attendu côté bridge audit et tests.
 
 Le contrat minimal doit inclure :
+
 - `actorId`
 - `specializationId`
 - `treeId`
@@ -129,18 +136,21 @@ Le contrat minimal doit inclure :
 - `source: 'specialization-tree'`
 
 Les champs utiles mais optionnels :
+
 - `previousXp`
 - `nextXp`
 - `previousRank`
 - `nextRank`
 
 **Fichiers** :
+
 - `module/lib/talent-node/talent-node-purchase.mjs`
 - `module/utils/audit-log.mjs`
 - `tests/lib/talent-node/talent-node-purchase.test.mjs`
 - `tests/utils/audit-log.test.mjs`
 
 **Risques spécifiques** :
+
 - faire dériver le contrat de tests existants sans formalisation claire ;
 - ajouter trop de données non nécessaires au payload.
 
@@ -149,30 +159,36 @@ Les champs utiles mais optionnels :
 **Quoi faire** : ajuster la composition du payload si des champs optionnels doivent être ajoutés ou normalisés, tout en conservant l'écriture non bloquante.
 
 Si les rangs sont ajoutés :
+
 - les dériver depuis la source de vérité existante ;
 - ne jamais persister ces rangs sur l'acteur ;
 - ne pas dépendre d'un état UI ouvert.
 
 **Fichiers** :
+
 - `module/lib/talent-node/talent-node-purchase.mjs`
 - `module/utils/audit-log.mjs`
 
 **Risques spécifiques** :
+
 - coupler l'achat à la couche de consolidation de manière excessive ;
 - introduire des rangs incohérents pour les talents non-ranked.
 
 ### Étape 3 — Rendre `talent-node-purchase` exploitable dans l'UI audit
 
 **Quoi faire** :
+
 - ajouter le type dans `AUDIT_LOG_TYPE_LABELS` ;
 - mapper `talent-node-purchase` vers la famille `talents` ;
 - ajouter une description dédiée dans `buildAuditLogDescription()` ;
 - utiliser une description basée sur `talentId`, `nodeId`, `treeId`, `cost` et éventuellement `previousRank` / `nextRank`.
 
 **Fichiers** :
+
 - `module/applications/character-audit-log.mjs`
 
 **Risques spécifiques** :
+
 - confondre `talent.purchase` et `talent-node-purchase` ;
 - produire une description trop dépendante de données non garanties.
 
@@ -181,19 +197,23 @@ Si les rangs sont ajoutés :
 **Quoi faire** : introduire les clés i18n pour le nouveau type et sa description.
 
 Exemples attendus :
+
 - `SWERPG.AUDIT_LOG.TYPE.TALENT_NODE_PURCHASE`
 - `SWERPG.AUDIT_LOG.DESCRIPTION.TALENT_NODE_PURCHASE`
 
 **Fichiers** :
+
 - `lang/fr.json`
 - `lang/en.json`
 
 **Risques spécifiques** :
+
 - divergence entre les placeholders utilisés dans le code et ceux définis dans les fichiers de langue.
 
 ### Étape 5 — Étendre la couverture de tests
 
 **Quoi faire** :
+
 - compléter les tests métier pour vérifier le contrat exact envoyé au bridge ;
 - compléter les tests du bridge audit pour vérifier la forme finale de l'entrée ;
 - compléter les tests du viewer audit pour vérifier :
@@ -203,17 +223,20 @@ Exemples attendus :
   - l'absence de fallback `unknown` pour ce type.
 
 **Fichiers** :
+
 - `tests/lib/talent-node/talent-node-purchase.test.mjs`
 - `tests/utils/audit-log.test.mjs`
 - `tests/applications/character-audit-log.test.mjs`
 
 **Risques spécifiques** :
+
 - tests trop couplés au wording exact des traductions ;
 - oubli d'un cas sans champs optionnels.
 
 ### Étape 6 — Validation manuelle en environnement Foundry
 
 **Quoi faire** : vérifier manuellement :
+
 - achat d'un nœud avec audit disponible ;
 - achat d'un nœud avec échec d'écriture audit ;
 - apparition d'une entrée `talent-node-purchase` lisible dans le journal ;
@@ -222,6 +245,7 @@ Exemples attendus :
 **Fichiers** : aucun
 
 **Risques spécifiques** :
+
 - environnement de validation non disponible ;
 - faux positif si on ne vérifie que les tests unitaires.
 
@@ -229,28 +253,28 @@ Exemples attendus :
 
 ## 6. Fichiers modifiés
 
-| Fichier | Action | Description |
-|---|---|---|
-| `module/lib/talent-node/talent-node-purchase.mjs` | modification ciblée | Normaliser ou enrichir le payload envoyé au bridge audit si nécessaire |
-| `module/utils/audit-log.mjs` | modification | Finaliser le contrat de `recordTalentNodePurchase()` |
-| `module/applications/character-audit-log.mjs` | modification | Supporter `talent-node-purchase` dans le viewer audit |
-| `lang/fr.json` | modification | Ajouter le type et la description FR |
-| `lang/en.json` | modification | Ajouter le type et la description EN |
-| `tests/lib/talent-node/talent-node-purchase.test.mjs` | modification | Vérifier le payload métier et la résilience non bloquante |
-| `tests/utils/audit-log.test.mjs` | modification | Vérifier la structure finale de l'entrée audit |
-| `tests/applications/character-audit-log.test.mjs` | modification | Vérifier le rendu du nouveau type dans l'UI audit |
+| Fichier                                               | Action              | Description                                                            |
+| ----------------------------------------------------- | ------------------- | ---------------------------------------------------------------------- |
+| `module/lib/talent-node/talent-node-purchase.mjs`     | modification ciblée | Normaliser ou enrichir le payload envoyé au bridge audit si nécessaire |
+| `module/utils/audit-log.mjs`                          | modification        | Finaliser le contrat de `recordTalentNodePurchase()`                   |
+| `module/applications/character-audit-log.mjs`         | modification        | Supporter `talent-node-purchase` dans le viewer audit                  |
+| `lang/fr.json`                                        | modification        | Ajouter le type et la description FR                                   |
+| `lang/en.json`                                        | modification        | Ajouter le type et la description EN                                   |
+| `tests/lib/talent-node/talent-node-purchase.test.mjs` | modification        | Vérifier le payload métier et la résilience non bloquante              |
+| `tests/utils/audit-log.test.mjs`                      | modification        | Vérifier la structure finale de l'entrée audit                         |
+| `tests/applications/character-audit-log.test.mjs`     | modification        | Vérifier le rendu du nouveau type dans l'UI audit                      |
 
 ---
 
 ## 7. Risques
 
-| Risque | Impact | Mitigation |
-|---|---|---|
-| Périmètre réel de l'issue déjà partiellement implémenté | Travail redondant ou plan trop large | Cadrer explicitement l'US comme "complétion et visibilité audit", pas comme greenfield |
-| Confusion entre `talent.purchase` et `talent-node-purchase` | Historique incohérent ou UI ambiguë | Garder deux types distincts avec mapping explicite |
-| Calcul des rangs avant/après trop couplé | Complexité inutile dans la couche domaine | Rendre ces champs strictement optionnels |
-| Viewer audit dépendant d'une résolution Foundry fragile | Entrées illisibles si documents absents | Construire la description depuis le payload avec fallback identifiant |
-| Régression i18n | UI cassée ou placeholders non remplacés | Ajouter des tests ciblés sur les descriptions rendues |
+| Risque                                                      | Impact                                    | Mitigation                                                                             |
+| ----------------------------------------------------------- | ----------------------------------------- | -------------------------------------------------------------------------------------- |
+| Périmètre réel de l'issue déjà partiellement implémenté     | Travail redondant ou plan trop large      | Cadrer explicitement l'US comme "complétion et visibilité audit", pas comme greenfield |
+| Confusion entre `talent.purchase` et `talent-node-purchase` | Historique incohérent ou UI ambiguë       | Garder deux types distincts avec mapping explicite                                     |
+| Calcul des rangs avant/après trop couplé                    | Complexité inutile dans la couche domaine | Rendre ces champs strictement optionnels                                               |
+| Viewer audit dépendant d'une résolution Foundry fragile     | Entrées illisibles si documents absents   | Construire la description depuis le payload avec fallback identifiant                  |
+| Régression i18n                                             | UI cassée ou placeholders non remplacés   | Ajouter des tests ciblés sur les descriptions rendues                                  |
 
 ---
 
@@ -271,4 +295,5 @@ Si aucun enrichissement de payload n'est finalement nécessaire, le commit 2 peu
 - Reste cohérente avec l'épic audit/log initié par [#151 — US1](https://github.com/herveDarritchon/foundryvtt-swerpg/issues/151), mais ne doit pas refondre ce système.
 
 **Hypothèse retenue**
+
 - `previousRank` / `nextRank` ne sont pas bloquants pour déclarer l'US terminée si leur calcul propre impose un couplage excessif.

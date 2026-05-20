@@ -20,6 +20,7 @@ Tu peux ajouter sous le tableau des points de vigilance, ou dans une future sous
 **Décision** : à traiter dans la V1.
 
 La V1 Talents Edge doit considérer l’ensemble des spécialisations possédées par l’acteur pour :
+
 - déterminer les arbres de spécialisation consultables ;
 - sélectionner le contexte d’achat courant ;
 - vérifier l’accessibilité des nœuds ;
@@ -71,6 +72,7 @@ On doit sortir avec une conclusion comme celle-ci :
 **Décision finale — Multi-spé**
 
 La V1 corrige les incohérences multi-spé qui affectent directement :
+
 - l’affichage des arbres possédés ;
 - l’achat de talents ;
 - la consolidation des talents ;

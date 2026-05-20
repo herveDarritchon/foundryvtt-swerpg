@@ -6,10 +6,11 @@
 **ADR** : `documentation/architecture/adr/adr-0011-stockage-journal-evolution-personnage-flags.md`
 **Plan de référence** : `documentation/plan/character-sheet/evolution-logs/US1-plan-audit-log-hooks.md` (§4.7)
 **Plans amont** :
-  - `documentation/plan/character-sheet/evolution-logs/TECH-158-plan-aop-hooks.md`
-  - `documentation/plan/character-sheet/evolution-logs/TECH-159-plan-diff-analyzer.md`
-  - `documentation/plan/character-sheet/evolution-logs/TECH-160-plan-resilience.md`
-**Module impacté** : `module/utils/audit-diff.mjs` (modification)
+
+- `documentation/plan/character-sheet/evolution-logs/TECH-158-plan-aop-hooks.md`
+- `documentation/plan/character-sheet/evolution-logs/TECH-159-plan-diff-analyzer.md`
+- `documentation/plan/character-sheet/evolution-logs/TECH-160-plan-resilience.md`
+  **Module impacté** : `module/utils/audit-diff.mjs` (modification)
 
 ---
 
@@ -105,17 +106,17 @@ function makeEntry({ type, data, xpDelta, ts, userId, user, xpAfter }) {
 
 ### 3.4. Données XP disponibles dans `actor.system.progression`
 
-| Chemin | Origine |
-|--------|---------|
-| `experience.spent` | Persisté (data model) |
-| `experience.gained` | Persisté (data model) |
-| `experience.total` | Calculé dans `_prepareExperience()` |
-| `experience.available` | Calculé dans `_prepareExperience()` |
-| `freeSkillRanks.career.spent` | Persisté (data model) |
-| `freeSkillRanks.career.gained` | Persisté (data model) |
-| `freeSkillRanks.career.available` | Calculé dans `_prepareFreeSkillRanks()` |
-| `freeSkillRanks.specialization.spent` | Persisté (data model) |
-| `freeSkillRanks.specialization.gained` | Persisté (data model) |
+| Chemin                                    | Origine                                 |
+| ----------------------------------------- | --------------------------------------- |
+| `experience.spent`                        | Persisté (data model)                   |
+| `experience.gained`                       | Persisté (data model)                   |
+| `experience.total`                        | Calculé dans `_prepareExperience()`     |
+| `experience.available`                    | Calculé dans `_prepareExperience()`     |
+| `freeSkillRanks.career.spent`             | Persisté (data model)                   |
+| `freeSkillRanks.career.gained`            | Persisté (data model)                   |
+| `freeSkillRanks.career.available`         | Calculé dans `_prepareFreeSkillRanks()` |
+| `freeSkillRanks.specialization.spent`     | Persisté (data model)                   |
+| `freeSkillRanks.specialization.gained`    | Persisté (data model)                   |
 | `freeSkillRanks.specialization.available` | Calculé dans `_prepareFreeSkillRanks()` |
 
 Ces champs calculés sont disponibles au moment du hook `updateActor` car `prepareDerivedData()` est exécutée après chaque mise à jour.
@@ -136,6 +137,7 @@ Ces champs calculés sont disponibles au moment du hook `updateActor` car `prepa
 **Décision** : Remplacer `snapshot.xpAfter.{available, spent, gained}` par `snapshot.{xpAvailable, totalXpSpent, totalXpGained, careerFreeAvailable, specializationFreeAvailable}`.
 
 Justification :
+
 - Conforme à la spec de l'issue #161 (format exact imposé)
 - Noms longs auto-documentés dans le JSON brut
 - Structure aplatie plus simple à consommer par US6
@@ -146,6 +148,7 @@ Justification :
 **Décision** : Les entrées déjà stockées avec `snapshot.xpAfter` ne sont pas migrées.
 
 Justification :
+
 - ADR-0011 : les flags sont des données secondaires, pas une source de vérité
 - US6 devra normaliser les deux formats à l'affichage (ancien : `snapshot.xpAfter`, nouveau : `snapshot.*`)
 - Éviter une migration coûteuse et risquée sur des données non critiques
@@ -155,6 +158,7 @@ Justification :
 **Décision** : Lire `freeSkillRanks.career.available` et `freeSkillRanks.specialization.available` depuis `actor.system.progression`, plutôt que de recalculer `gained - spent`.
 
 Justification :
+
 - `available` est déjà calculé par `_prepareFreeSkillRanks()` durant `prepareDerivedData()`
 - Le `?? 0` de la spec couvre le cas d'indisponibilité
 - DRY : ne pas dupliquer la formule de calcul
@@ -164,6 +168,7 @@ Justification :
 **Décision** : Le paramètre `xpAfter` de `makeEntry` et des détecteurs devient `snapshot`.
 
 Justification :
+
 - Cohérence sémantique : la variable ne contient plus seulement "l'XP après" mais aussi les free ranks
 - Préparation à d'éventuelles extensions futures du snapshot
 
@@ -248,10 +253,11 @@ Détecteurs concernés :
 **Fichier** : `module/utils/audit-diff.mjs`
 
 Ligne ~437-446 :
+
 ```js
 export {
   makeEntry,
-  captureSnapshot,   // was captureXpSnapshotAfter
+  captureSnapshot, // was captureXpSnapshotAfter
   // ... unchanged ...
 }
 ```
@@ -285,25 +291,25 @@ export {
 
 ## 6. Fichiers modifiés
 
-| Fichier | Action | Description |
-|---------|--------|-------------|
-| `module/utils/audit-diff.mjs` | Modification | Renommage `captureXpSnapshotAfter` → `captureSnapshot`, enrichissement du payload, aplatissement de `snapshot`, mise à jour de `makeEntry`, des 6 détecteurs, de `composeEntries`, et des exports |
-| `tests/utils/audit-diff.test.mjs` | Modification | Mise à jour des 2 tests `captureXpSnapshotAfter` + 4 tests `makeEntry` + tests indirects ; ajout de `available` dans mock `freeSkillRanks` ; nouveaux tests pour `careerFreeAvailable` / `specializationFreeAvailable` |
-| `module/utils/audit-log.mjs` | Aucun changement | Importe `composeEntries` — signature publique inchangée |
-| `tests/utils/audit-log.test.mjs` | Aucun changement | Ne teste pas directement le snapshot |
-| `lang/en.json` | Aucun changement | Pas de clés i18n liées au snapshot |
-| `lang/fr.json` | Aucun changement | Idem |
+| Fichier                           | Action           | Description                                                                                                                                                                                                            |
+| --------------------------------- | ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `module/utils/audit-diff.mjs`     | Modification     | Renommage `captureXpSnapshotAfter` → `captureSnapshot`, enrichissement du payload, aplatissement de `snapshot`, mise à jour de `makeEntry`, des 6 détecteurs, de `composeEntries`, et des exports                      |
+| `tests/utils/audit-diff.test.mjs` | Modification     | Mise à jour des 2 tests `captureXpSnapshotAfter` + 4 tests `makeEntry` + tests indirects ; ajout de `available` dans mock `freeSkillRanks` ; nouveaux tests pour `careerFreeAvailable` / `specializationFreeAvailable` |
+| `module/utils/audit-log.mjs`      | Aucun changement | Importe `composeEntries` — signature publique inchangée                                                                                                                                                                |
+| `tests/utils/audit-log.test.mjs`  | Aucun changement | Ne teste pas directement le snapshot                                                                                                                                                                                   |
+| `lang/en.json`                    | Aucun changement | Pas de clés i18n liées au snapshot                                                                                                                                                                                     |
+| `lang/fr.json`                    | Aucun changement | Idem                                                                                                                                                                                                                   |
 
 ---
 
 ## 7. Risques
 
-| Risque | Impact | Mitigation |
-|--------|--------|------------|
-| **Régression sur un détecteur** : param `xpAfter` oublié, pas converti en `snapshot` | Les entrées de log pour ce type auront un snapshot vide ou `undefined` | Recherche exhaustive de `xpAfter` dans `audit-diff.mjs`. Vérification que tous les appels à `makeEntry` passent `snapshot` |
-| **Tests insuffisants** : les tests indirects ne couvrent pas les nouveaux champs | Régression non détectée | Ajouter des assertions explicites sur les nouveaux champs dans les tests des détecteurs |
-| **Rétrocompatibilité oubliée** : US6 attend le nouveau format mais reçoit l'ancien pour les logs pré-migration | Affichage partiellement cassé | Documenter dans le plan US6 la normalisation nécessaire des deux formats |
-| **`available` non défini** (cas edge : hook appelé avant `prepareDerivedData`) | `careerFreeAvailable` = 0 (fallback `?? 0`) | Comportement acceptable : 0 est une valeur valide (pas de rangs gratuits) |
+| Risque                                                                                                         | Impact                                                                 | Mitigation                                                                                                                 |
+| -------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| **Régression sur un détecteur** : param `xpAfter` oublié, pas converti en `snapshot`                           | Les entrées de log pour ce type auront un snapshot vide ou `undefined` | Recherche exhaustive de `xpAfter` dans `audit-diff.mjs`. Vérification que tous les appels à `makeEntry` passent `snapshot` |
+| **Tests insuffisants** : les tests indirects ne couvrent pas les nouveaux champs                               | Régression non détectée                                                | Ajouter des assertions explicites sur les nouveaux champs dans les tests des détecteurs                                    |
+| **Rétrocompatibilité oubliée** : US6 attend le nouveau format mais reçoit l'ancien pour les logs pré-migration | Affichage partiellement cassé                                          | Documenter dans le plan US6 la normalisation nécessaire des deux formats                                                   |
+| **`available` non défini** (cas edge : hook appelé avant `prepareDerivedData`)                                 | `careerFreeAvailable` = 0 (fallback `?? 0`)                            | Comportement acceptable : 0 est une valeur valide (pas de rangs gratuits)                                                  |
 
 ---
 

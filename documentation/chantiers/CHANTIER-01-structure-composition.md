@@ -1,6 +1,7 @@
 # Chantier 01 : Structure et Composition des Mixins de Combat
 
 ## Objectif
+
 Créer la structure de répertoires et le fichier de composition pour les mixins de combat.
 
 ## Fichiers à créer
@@ -31,13 +32,13 @@ import { EffectsMixin } from './effects.mixin.mjs'
  * Composes all combat mixins into a single mixin
  * Order matters: TurnMixin and EffectsMixin may depend on Attack/Defense mixins
  */
-export const CombatMixin = (Base) =>
-  AttackMixin(DefenseMixin(TurnMixin(EffectsMixin(Base))))
+export const CombatMixin = (Base) => AttackMixin(DefenseMixin(TurnMixin(EffectsMixin(Base))))
 ```
 
 ## Étapes
 
 1. **Créer le répertoire**
+
    ```bash
    mkdir -p module/documents/actor-mixins/combat
    ```

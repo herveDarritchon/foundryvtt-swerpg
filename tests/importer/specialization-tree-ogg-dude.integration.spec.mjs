@@ -4,7 +4,12 @@ import path from 'node:path'
 import xml2jsModule from '../../vendors/xml2js.min.js'
 import { parseXmlToJson } from '../../module/utils/xml/parser.mjs'
 import { extractDirectionalConnections, specializationTreeMapper } from '../../module/importer/mappers/oggdude-specialization-tree-mapper.mjs'
-import { buildSpecializationTreeContext, buildTalentIndex, buildTalentByIdFromWorld, buildTalentByIdFromCompendium } from '../../module/importer/items/specialization-tree-ogg-dude.mjs'
+import {
+  buildSpecializationTreeContext,
+  buildTalentIndex,
+  buildTalentByIdFromWorld,
+  buildTalentByIdFromCompendium,
+} from '../../module/importer/items/specialization-tree-ogg-dude.mjs'
 import OggDudeDataElement from '../../module/settings/models/OggDudeDataElement.mjs'
 import { resetSpecializationTreeImportStats } from '../../module/importer/utils/specialization-tree-import-utils.mjs'
 
@@ -51,7 +56,7 @@ describe('specializationTreeMapper — OggDude format réel (fixture XML)', () =
     })
 
     it('assigne les nodeId r1c1 à r5c4', () => {
-      const ids = tree.system.nodes.map(n => n.nodeId)
+      const ids = tree.system.nodes.map((n) => n.nodeId)
       expect(ids[0]).toBe('r1c1')
       expect(ids[3]).toBe('r1c4')
       expect(ids[4]).toBe('r2c1')
@@ -59,7 +64,7 @@ describe('specializationTreeMapper — OggDude format réel (fixture XML)', () =
     })
 
     it('normalise les talentId depuis les clés OggDude', () => {
-      const talentIds = tree.system.nodes.map(n => n.talentId)
+      const talentIds = tree.system.nodes.map((n) => n.talentId)
       expect(talentIds[0]).toBe('plausden')
       expect(talentIds[1]).toBe('knowsom')
       expect(talentIds[3]).toBe('kill')
@@ -68,11 +73,11 @@ describe('specializationTreeMapper — OggDude format réel (fixture XML)', () =
     })
 
     it('répartit les coûts par ligne : 5, 10, 15, 20, 25', () => {
-      expect(tree.system.nodes.filter(n => n.row === 1).every(n => n.cost === 5)).toBe(true)
-      expect(tree.system.nodes.filter(n => n.row === 2).every(n => n.cost === 10)).toBe(true)
-      expect(tree.system.nodes.filter(n => n.row === 3).every(n => n.cost === 15)).toBe(true)
-      expect(tree.system.nodes.filter(n => n.row === 4).every(n => n.cost === 20)).toBe(true)
-      expect(tree.system.nodes.filter(n => n.row === 5).every(n => n.cost === 25)).toBe(true)
+      expect(tree.system.nodes.filter((n) => n.row === 1).every((n) => n.cost === 5)).toBe(true)
+      expect(tree.system.nodes.filter((n) => n.row === 2).every((n) => n.cost === 10)).toBe(true)
+      expect(tree.system.nodes.filter((n) => n.row === 3).every((n) => n.cost === 15)).toBe(true)
+      expect(tree.system.nodes.filter((n) => n.row === 4).every((n) => n.cost === 20)).toBe(true)
+      expect(tree.system.nodes.filter((n) => n.row === 5).every((n) => n.cost === 25)).toBe(true)
     })
 
     it('reporte rawNodeCount et importedNodeCount à 20 dans les flags', () => {
@@ -115,7 +120,7 @@ describe('specializationTreeMapper — OggDude format réel (fixture XML)', () =
     })
 
     it('ne contient aucun doublon (clé from→to:type unique)', () => {
-      const keys = tree.system.connections.map(c => `${c.from}->${c.to}:${c.type}`)
+      const keys = tree.system.connections.map((c) => `${c.from}->${c.to}:${c.type}`)
       expect(new Set(keys).size).toBe(keys.length)
     })
 
@@ -188,8 +193,8 @@ describe('specializationTreeMapper — OggDude format réel (fixture XML)', () =
       const result = specializationTreeMapper([raw.Specialization])
       expect(result).toHaveLength(1)
       expect(result[0].system.nodes).toHaveLength(3)
-      expect(result[0].system.nodes.map(n => n.nodeId)).toEqual(['r1c1', 'r1c2', 'r2c1'])
-      expect(result[0].system.nodes.map(n => n.talentId)).toEqual(['PARRY', 'GRIT', 'TOUGHENED'])
+      expect(result[0].system.nodes.map((n) => n.nodeId)).toEqual(['r1c1', 'r1c2', 'r2c1'])
+      expect(result[0].system.nodes.map((n) => n.talentId)).toEqual(['PARRY', 'GRIT', 'TOUGHENED'])
     })
   })
 
@@ -204,10 +209,7 @@ describe('specializationTreeMapper — OggDude format réel (fixture XML)', () =
       expect(result).toHaveLength(1)
       expect(result[0].system.nodes).toEqual([])
 
-      expect(logger.warn).toHaveBeenCalledWith(
-        expect.stringContaining('Format non reconnu'),
-        expect.objectContaining({ specializationId: 'unknown' }),
-      )
+      expect(logger.warn).toHaveBeenCalledWith(expect.stringContaining('Format non reconnu'), expect.objectContaining({ specializationId: 'unknown' }))
     })
   })
 })
@@ -274,9 +276,7 @@ describe('extractDirectionalConnections — contrat booléen OggDude', () => {
   })
 
   it('tolère undefined Left sans créer de connexion', () => {
-    const nodes = [
-      { nodeId: 'r1c1', row: 1, column: 1, rawNode: { direction: { Left: undefined } } },
-    ]
+    const nodes = [{ nodeId: 'r1c1', row: 1, column: 1, rawNode: { direction: { Left: undefined } } }]
     const result = extractDirectionalConnections(nodes)
     expect(result.connections).toHaveLength(0)
     expect(result.warnings).toHaveLength(0)
@@ -321,16 +321,18 @@ describe('world items — end-to-end talent resolution chain', () => {
     expect(worldIndex.has('tough'), 'world index contains tough').toBe(true)
     expect(worldIndex.get('tough').uuid, 'tough uuid is Item.tough001').toBe('Item.tough001')
 
-    const input = [{
-      Key: 'BODYGUARD',
-      Name: 'Bodyguard',
-      TalentRows: {
-        TalentRow: [
-          { Index: '0', Cost: '5', Talents: { Key: ['GRIT'] } },
-          { Index: '1', Cost: '10', Talents: { Key: ['TOUGH'] } },
-        ],
+    const input = [
+      {
+        Key: 'BODYGUARD',
+        Name: 'Bodyguard',
+        TalentRows: {
+          TalentRow: [
+            { Index: '0', Cost: '5', Talents: { Key: ['GRIT'] } },
+            { Index: '1', Cost: '10', Talents: { Key: ['TOUGH'] } },
+          ],
+        },
       },
-    }]
+    ]
 
     const result = specializationTreeMapper(input, { talentById: worldIndex })
 
@@ -353,12 +355,17 @@ describe('world items — end-to-end talent resolution chain', () => {
     globalThis.game.packs.set('swerpg.talents', {
       documentName: 'Item',
       collection: 'swerpg.talents',
-      index: new Map([['talent-grit', {
-        _id: 'talent-grit',
-        name: 'Grit',
-        type: 'talent',
-        system: { id: 'grit', isRanked: true },
-      }]]),
+      index: new Map([
+        [
+          'talent-grit',
+          {
+            _id: 'talent-grit',
+            name: 'Grit',
+            type: 'talent',
+            system: { id: 'grit', isRanked: true },
+          },
+        ],
+      ]),
     })
 
     const combined = buildTalentIndex()
@@ -393,12 +400,17 @@ describe('compendium items — end-to-end talent resolution chain', () => {
     globalThis.game.packs.set('swerpg.talents', {
       documentName: 'Item',
       collection: 'swerpg.talents',
-      index: new Map([['talent-grit', {
-        _id: 'talent-grit',
-        name: 'Grit',
-        type: 'talent',
-        system: { id: 'grit', isRanked: true },
-      }]]),
+      index: new Map([
+        [
+          'talent-grit',
+          {
+            _id: 'talent-grit',
+            name: 'Grit',
+            type: 'talent',
+            system: { id: 'grit', isRanked: true },
+          },
+        ],
+      ]),
     })
 
     const compendiumIndex = buildTalentByIdFromCompendium()
@@ -406,15 +418,15 @@ describe('compendium items — end-to-end talent resolution chain', () => {
     expect(compendiumIndex.has('grit'), 'compendium index contains grit').toBe(true)
     expect(compendiumIndex.get('grit').uuid, 'compendium uuid format').toBe('Compendium.swerpg.talents.talent-grit')
 
-    const input = [{
-      Key: 'BODYGUARD',
-      Name: 'Bodyguard',
-      TalentRows: {
-        TalentRow: [
-          { Index: '0', Cost: '5', Talents: { Key: ['GRIT'] } },
-        ],
+    const input = [
+      {
+        Key: 'BODYGUARD',
+        Name: 'Bodyguard',
+        TalentRows: {
+          TalentRow: [{ Index: '0', Cost: '5', Talents: { Key: ['GRIT'] } }],
+        },
       },
-    }]
+    ]
 
     const result = specializationTreeMapper(input, { talentById: compendiumIndex })
 
@@ -426,11 +438,16 @@ describe('compendium items — end-to-end talent resolution chain', () => {
     globalThis.game.packs.set('swerpg.actors', {
       documentName: 'Actor',
       collection: 'swerpg.actors',
-      index: new Map([['actor-1', {
-        _id: 'actor-1',
-        name: 'Villain',
-        type: 'character',
-      }]]),
+      index: new Map([
+        [
+          'actor-1',
+          {
+            _id: 'actor-1',
+            name: 'Villain',
+            type: 'character',
+          },
+        ],
+      ]),
     })
 
     const compendiumIndex = buildTalentByIdFromCompendium()
@@ -454,12 +471,17 @@ describe('compendium items — end-to-end talent resolution chain', () => {
     globalThis.game.packs.set('swerpg.talents', {
       documentName: 'Item',
       collection: 'swerpg.talents',
-      index: new Map([['talent-legacy', {
-        _id: 'talent-legacy',
-        name: 'Legacy Talent',
-        type: 'talent',
-        flags: { swerpg: { oggdudeKey: 'LEGACY_TALENT' } },
-      }]]),
+      index: new Map([
+        [
+          'talent-legacy',
+          {
+            _id: 'talent-legacy',
+            name: 'Legacy Talent',
+            type: 'talent',
+            flags: { swerpg: { oggdudeKey: 'LEGACY_TALENT' } },
+          },
+        ],
+      ]),
     })
 
     const compendiumIndex = buildTalentByIdFromCompendium()

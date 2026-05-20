@@ -48,12 +48,10 @@ export function buildOwnedTalentSummary(actor, talentDefinitions = new Map()) {
     const talentId = first.talentId
 
     // Prefer UUID-based definition lookup, fallback to business key
-    const definition = talentUuid && talentDefinitions.has(talentUuid)
-      ? talentDefinitions.get(talentUuid)
-      : talentDefinitions.get(talentId) ?? null
+    const definition = talentUuid && talentDefinitions.has(talentUuid) ? talentDefinitions.get(talentUuid) : (talentDefinitions.get(talentId) ?? null)
     const isRanked = definition?.isRanked ?? null
 
-    const sources = group.map(p => resolveSource(p, specMap, resolvedCache))
+    const sources = group.map((p) => resolveSource(p, specMap, resolvedCache))
 
     entries.push({
       talentId,
@@ -134,7 +132,7 @@ function resolveSource(purchase, specMap, resolvedTreeCache) {
   }
 
   const tree = resolved.tree
-  const node = tree.system?.nodes?.find(n => n.nodeId === purchase.nodeId)
+  const node = tree.system?.nodes?.find((n) => n.nodeId === purchase.nodeId)
 
   return {
     specializationId: purchase.specializationId,

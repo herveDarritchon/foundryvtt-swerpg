@@ -287,16 +287,16 @@ Le template doit prévoir une toolbar positionnée au-dessus du canvas.
 Structure recommandée :
 
 ```hbs
-<div class="specialization-tree-app__viewport">
-  <div class="specialization-tree-app__viewport-toolbar">
-    <button type="button" data-action="zoomOut" aria-label="{{localize 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.ACTION.ZOOM_OUT'}}">−</button>
-    <button type="button" data-action="resetView">
-      {{localize "SWERPG.TALENT.SPECIALIZATION_TREE_APP.ACTION.CENTER"}}
+<div class='specialization-tree-app__viewport'>
+  <div class='specialization-tree-app__viewport-toolbar'>
+    <button type='button' data-action='zoomOut' aria-label='{{localize "SWERPG.TALENT.SPECIALIZATION_TREE_APP.ACTION.ZOOM_OUT"}}'>−</button>
+    <button type='button' data-action='resetView'>
+      {{localize 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.ACTION.CENTER'}}
     </button>
-    <button type="button" data-action="zoomIn" aria-label="{{localize 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.ACTION.ZOOM_IN'}}">+</button>
+    <button type='button' data-action='zoomIn' aria-label='{{localize "SWERPG.TALENT.SPECIALIZATION_TREE_APP.ACTION.ZOOM_IN"}}'>+</button>
   </div>
 
-  <div data-specialization-tree-viewport class="specialization-tree-app__viewport-host"></div>
+  <div data-specialization-tree-viewport class='specialization-tree-app__viewport-host'></div>
 </div>
 ```
 
@@ -355,37 +355,37 @@ Base recommandée :
 
 ```css
 .specialization-tree-app__viewport {
-    position: relative;
-    min-height: 0;
-    overflow: hidden;
+  position: relative;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .specialization-tree-app__viewport-toolbar {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    z-index: 2;
-    display: flex;
-    gap: 4px;
-    padding: 4px;
-    border: 1px solid rgba(120, 169, 194, 0.5);
-    border-radius: 6px;
-    background: rgba(5, 12, 20, 0.85);
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 2;
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid rgba(120, 169, 194, 0.5);
+  border-radius: 6px;
+  background: rgba(5, 12, 20, 0.85);
 }
 
 .specialization-tree-app__viewport-toolbar button {
-    min-width: 28px;
-    height: 28px;
-    border: 1px solid rgba(120, 169, 194, 0.6);
-    border-radius: 4px;
-    color: #d8edf7;
-    background: rgba(26, 44, 68, 0.9);
-    cursor: pointer;
+  min-width: 28px;
+  height: 28px;
+  border: 1px solid rgba(120, 169, 194, 0.6);
+  border-radius: 4px;
+  color: #d8edf7;
+  background: rgba(26, 44, 68, 0.9);
+  cursor: pointer;
 }
 
 .specialization-tree-app__viewport-toolbar button:hover {
-    border-color: rgba(120, 169, 194, 1);
-    background: rgba(34, 64, 96, 0.95);
+  border-color: rgba(120, 169, 194, 1);
+  background: rgba(34, 64, 96, 0.95);
 }
 ```
 

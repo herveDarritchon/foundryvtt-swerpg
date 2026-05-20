@@ -41,11 +41,11 @@ Vérifier que l'infrastructure livrée par US1 (#151) et TECH-159 (#159) satisfa
 
 ### 3.1. Infrastructure AOP livrée et fermée
 
-| Issue | Titre | Statut |
-|-------|-------|--------|
-| #151 | US1: Enregistrer chaque action d'évolution du personnage | CLOSED |
-| #158 | TECH: Architecture AOP et double hook preUpdateActor/updateActor | CLOSED |
-| #159 | TECH: Analyseur de diff pour détection des changements | CLOSED |
+| Issue | Titre                                                            | Statut |
+| ----- | ---------------------------------------------------------------- | ------ |
+| #151  | US1: Enregistrer chaque action d'évolution du personnage         | CLOSED |
+| #158  | TECH: Architecture AOP et double hook preUpdateActor/updateActor | CLOSED |
+| #159  | TECH: Analyseur de diff pour détection des changements           | CLOSED |
 
 ### 3.2. `detectDetailChanges()` — déjà implémenté
 
@@ -61,12 +61,17 @@ function detectDetailChanges(oldState, changes, actor, ts, userId, user, snapsho
     const oldSpecies = oldState.system?.details?.species?.name ?? null
     const newSpecies = actor.system?.details?.species?.name ?? null
     if (oldSpecies !== newSpecies) {
-      entries.push(makeEntry({
-        type: 'species.set',
-        data: { oldSpecies, newSpecies },
-        xpDelta: 0,
-        ts, userId, user, snapshot,
-      }))
+      entries.push(
+        makeEntry({
+          type: 'species.set',
+          data: { oldSpecies, newSpecies },
+          xpDelta: 0,
+          ts,
+          userId,
+          user,
+          snapshot,
+        }),
+      )
     }
   }
 
@@ -74,19 +79,22 @@ function detectDetailChanges(oldState, changes, actor, ts, userId, user, snapsho
     const oldCareer = oldState.system?.details?.career?.name ?? null
     const newCareer = actor.system?.details?.career?.name ?? null
     if (oldCareer !== newCareer) {
-      entries.push(makeEntry({
-        type: 'career.set',
-        data: { oldCareer, newCareer },
-        xpDelta: 0,
-        ts, userId, user, snapshot,
-      }))
+      entries.push(
+        makeEntry({
+          type: 'career.set',
+          data: { oldCareer, newCareer },
+          xpDelta: 0,
+          ts,
+          userId,
+          user,
+          snapshot,
+        }),
+      )
     }
   }
 
   if (detailChanges.specializations !== undefined) {
-    entries.push(
-      ...detectSpecializationChanges(oldState, detailChanges.specializations, actor, ts, userId, user, snapshot),
-    )
+    entries.push(...detectSpecializationChanges(oldState, detailChanges.specializations, actor, ts, userId, user, snapshot))
   }
 
   return entries
@@ -102,27 +110,38 @@ function detectSpecializationChanges(oldState, specializationChanges, actor, ts,
   const entries = []
 
   for (const [key, value] of Object.entries(specializationChanges)) {
-    if (key.startsWith('-=')) {    // Foundry deletion syntax
+    if (key.startsWith('-=')) {
+      // Foundry deletion syntax
       const specializationId = key.slice(2)
       if (!specializationId) continue
-      entries.push(makeEntry({
-        type: 'specialization.remove',
-        data: { specializationId },
-        xpDelta: 0,
-        ts, userId, user, snapshot,
-      }))
+      entries.push(
+        makeEntry({
+          type: 'specialization.remove',
+          data: { specializationId },
+          xpDelta: 0,
+          ts,
+          userId,
+          user,
+          snapshot,
+        }),
+      )
       continue
     }
 
     const oldSpec = oldState.system?.details?.specializations?.[key]
     const newSpec = actor.system?.details?.specializations?.[key]
     if (!oldSpec && newSpec) {
-      entries.push(makeEntry({
-        type: 'specialization.add',
-        data: { specializationId: key },
-        xpDelta: 0,
-        ts, userId, user, snapshot,
-      }))
+      entries.push(
+        makeEntry({
+          type: 'specialization.add',
+          data: { specializationId: key },
+          xpDelta: 0,
+          ts,
+          userId,
+          user,
+          snapshot,
+        }),
+      )
     }
   }
   return entries
@@ -165,13 +184,13 @@ function detectSpecializationChanges(oldState, specializationChanges, actor, ts,
 
 `tests/utils/audit-diff.test.mjs` — bloc `detail changes` (l.1244-1385) :
 
-| Test | Statut |
-|------|--------|
-| `creates species.set entry` | ✅ |
-| `creates career.set entry` | ✅ |
-| `detects specialization.add on real addition` | ✅ |
-| `does not detect specialization.add for internal specialization update` | ✅ |
-| `detects specialization.remove from -= key` | ✅ |
+| Test                                                                    | Statut |
+| ----------------------------------------------------------------------- | ------ |
+| `creates species.set entry`                                             | ✅     |
+| `creates career.set entry`                                              | ✅     |
+| `detects specialization.add on real addition`                           | ✅     |
+| `does not detect specialization.add for internal specialization update` | ✅     |
+| `detects specialization.remove from -= key`                             | ✅     |
 
 Les 5 tests sont dans le vert. Aucun test d'edge case pour les valeurs nulles, les changements vers `null`, ou les IDs vides.
 
@@ -196,6 +215,7 @@ Les détails sont traités après les skills/caracs et avant l'avancement. La d�
 **Décision** : Aucune modification de code n'est nécessaire pour US5. L'infrastructure US1/TECH-159 couvre intégralement les critères d'acceptation.
 
 Justification :
+
 - `detectDetailChanges()` et `detectSpecializationChanges()` sont implémentés, testés et fonctionnels
 - Les quatre types d'événements (`species.set`, `career.set`, `specialization.add`, `specialization.remove`) sont produits
 - La détection utilise des comparaisons old/new via `reconstructPreviousValue` et le snapshot oldState
@@ -231,13 +251,13 @@ Justification : Le diff Foundry ne distingue pas un rename d'un add/suppress au 
 
 ### Étape 3 : Ajout de tests pour les edge cases
 
-| Edge case | Description | Statut |
-|-----------|-------------|--------|
-| **species.set vers `null`** (suppression d'espèce) | `oldSpecies: 'Human', newSpecies: null` | ⚠️ À tester |
-| **career.set vers `null`** | `oldCareer: 'Mercenary', newCareer: null` | ⚠️ À tester |
-| **specializations.add avec clé non normalisée** | ID avec espaces ou caractères spéciaux | ⚠️ À tester |
-| **specialization.remove avec ID vide** | `-=: null` ignoré | ✅ Déjà géré |
-| **Aucun changement dans details** | `details` présent mais valeurs identiques → `[]` | ⚠️ À tester |
+| Edge case                                          | Description                                      | Statut       |
+| -------------------------------------------------- | ------------------------------------------------ | ------------ |
+| **species.set vers `null`** (suppression d'espèce) | `oldSpecies: 'Human', newSpecies: null`          | ⚠️ À tester  |
+| **career.set vers `null`**                         | `oldCareer: 'Mercenary', newCareer: null`        | ⚠️ À tester  |
+| **specializations.add avec clé non normalisée**    | ID avec espaces ou caractères spéciaux           | ⚠️ À tester  |
+| **specialization.remove avec ID vide**             | `-=: null` ignoré                                | ✅ Déjà géré |
+| **Aucun changement dans details**                  | `details` présent mais valeurs identiques → `[]` | ⚠️ À tester  |
 
 ### Étape 4 : Vérification de la chronologie
 
@@ -251,8 +271,8 @@ Marquer US5 comme vérifiée dans la feuille de route de l'épic.
 
 ## 6. Fichiers modifiés
 
-| Fichier | Action | Description |
-|---------|--------|-------------|
+| Fichier                           | Action                     | Description                                                                               |
+| --------------------------------- | -------------------------- | ----------------------------------------------------------------------------------------- |
 | `tests/utils/audit-diff.test.mjs` | **Modification** (mineure) | Ajout de tests edge case (valeurs nulles, changement vers null, spécialisation inchangée) |
 
 Aucune modification de code métier ou d'infrastructure n'est nécessaire.
@@ -261,12 +281,12 @@ Aucune modification de code métier ou d'infrastructure n'est nécessaire.
 
 ## 7. Risques
 
-| Risque | Impact | Mitigation |
-|--------|--------|------------|
-| **species.details ou career.details avec structure différente** | `species?.name` / `career?.name` peut être `undefined` si la structure change | Fallback `?? null` déjà en place. Tests à maintenir si le data model évolue |
-| **specializations SetField avec format non standard** | `specialization.add` non détecté si le diff Foundry utilise un autre format | Le pattern `!oldSpec && newSpec` est robuste. Risque faible |
-| **Ordre des updates inversé** (coût XP après choix, ou choix après XP) | Chronologie légèrement différente de l'ordre "logique" | Attendu : chaque update produit une entrée. US6 pourra regrouper par timestamp |
-| **OggDude import** : les choix sont définis en masse | Multiples entrées pour un seul import | Hors périmètre US5. L'import OggDude pourra être traité séparément |
+| Risque                                                                 | Impact                                                                        | Mitigation                                                                     |
+| ---------------------------------------------------------------------- | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| **species.details ou career.details avec structure différente**        | `species?.name` / `career?.name` peut être `undefined` si la structure change | Fallback `?? null` déjà en place. Tests à maintenir si le data model évolue    |
+| **specializations SetField avec format non standard**                  | `specialization.add` non détecté si le diff Foundry utilise un autre format   | Le pattern `!oldSpec && newSpec` est robuste. Risque faible                    |
+| **Ordre des updates inversé** (coût XP après choix, ou choix après XP) | Chronologie légèrement différente de l'ordre "logique"                        | Attendu : chaque update produit une entrée. US6 pourra regrouper par timestamp |
+| **OggDude import** : les choix sont définis en masse                   | Multiples entrées pour un seul import                                         | Hors périmètre US5. L'import OggDude pourra être traité séparément             |
 
 ---
 

@@ -38,20 +38,20 @@ La commande refuse ou redirige les demandes suivantes :
 
 ### 2.3. Entrées acceptées
 
-| Type d'entrée | Format | Exemple |
-|---|---|---|
-| Numéro d'issue | `#N` ou `N` | `#269` |
-| URL d'issue | URL GitHub complète | `https://github.com/.../issues/269` |
-| Demande textuelle | Phrase libre | « Fais un plan pour ajouter le system.restrictionLevel » |
-| Issue + exploration préalable | Constats d'exploration + numéro d'issue | Résultat d'exploration + `#269` |
+| Type d'entrée                 | Format                                  | Exemple                                                  |
+| ----------------------------- | --------------------------------------- | -------------------------------------------------------- |
+| Numéro d'issue                | `#N` ou `N`                             | `#269`                                                   |
+| URL d'issue                   | URL GitHub complète                     | `https://github.com/.../issues/269`                      |
+| Demande textuelle             | Phrase libre                            | « Fais un plan pour ajouter le system.restrictionLevel » |
+| Issue + exploration préalable | Constats d'exploration + numéro d'issue | Résultat d'exploration + `#269`                          |
 
 ### 2.4. Niveau de profondeur
 
-| Profondeur | Usage typique | Périmètre du plan |
-|---|---|---|
-| `quick` | Issue simple, périmètre connu, peu de fichiers | Étapes + fichiers, décisions rapides |
-| `standard` (défaut) | Issue standard avec analyse d'architecture | Sections complètes : objectif, périmètre, constats, décisions, étapes, risques, commits |
-| `deep` | Refactor transverse, feature complexe, plusieurs ADRs | Plan détaillé avec dépendances, validation par étapes, ordre d'exécution |
+| Profondeur          | Usage typique                                         | Périmètre du plan                                                                       |
+| ------------------- | ----------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| `quick`             | Issue simple, périmètre connu, peu de fichiers        | Étapes + fichiers, décisions rapides                                                    |
+| `standard` (défaut) | Issue standard avec analyse d'architecture            | Sections complètes : objectif, périmètre, constats, décisions, étapes, risques, commits |
+| `deep`              | Refactor transverse, feature complexe, plusieurs ADRs | Plan détaillé avec dépendances, validation par étapes, ordre d'exécution                |
 
 ---
 
@@ -101,9 +101,11 @@ Modèle standard ou économique selon la complexité du plan. Un plan transverse
 ## 2. Périmètre
 
 ### Inclus
+
 - <liste>
 
 ### Exclu
+
 - <liste>
 
 ## 3. Constat sur l'existant
@@ -121,12 +123,12 @@ Modèle standard ou économique selon la complexité du plan. Un plan transverse
 ## 6. Fichiers modifiés
 
 | Fichier | Action | Description |
-|---|---|---|
+| ------- | ------ | ----------- |
 
 ## 7. Risques
 
 | Risque | Impact | Mitigation |
-|---|---|---|
+| ------ | ------ | ---------- |
 
 ## 8. Proposition d'ordre de commit
 
@@ -173,14 +175,14 @@ Le workflow doit poser une question à l'utilisateur dans les cas suivants :
 
 ## 6. Matrice d'escalade
 
-| Condition d'escalade | Destination | Déclenchement |
-|---|---|---|
-| La demande nécessite une exploration préalable | Workflow d'exploration `#268` | L'utilisateur demande à comprendre avant de planifier |
-| La demande nécessite une implémentation | `implementer-depuis-plan` | L'utilisateur demande du code après le plan |
-| La demande nécessite une écriture de plan dans le repo | `ecrire-plan-fichier` | L'utilisateur demande de matérialiser le plan |
-| La demande nécessite une correction de bug | Diagnostic / Correction | L'utilisateur signale un comportement inattendu |
-| La demande nécessite une revue de diff | Revue de code | L'utilisateur fournit un diff ou une PR à relire |
-| Aucune des conditions ci-dessus | Fin | Le plan a répondu au besoin et est validé |
+| Condition d'escalade                                   | Destination                   | Déclenchement                                         |
+| ------------------------------------------------------ | ----------------------------- | ----------------------------------------------------- |
+| La demande nécessite une exploration préalable         | Workflow d'exploration `#268` | L'utilisateur demande à comprendre avant de planifier |
+| La demande nécessite une implémentation                | `implementer-depuis-plan`     | L'utilisateur demande du code après le plan           |
+| La demande nécessite une écriture de plan dans le repo | `ecrire-plan-fichier`         | L'utilisateur demande de matérialiser le plan         |
+| La demande nécessite une correction de bug             | Diagnostic / Correction       | L'utilisateur signale un comportement inattendu       |
+| La demande nécessite une revue de diff                 | Revue de code                 | L'utilisateur fournit un diff ou une PR à relire      |
+| Aucune des conditions ci-dessus                        | Fin                           | Le plan a répondu au besoin et est validé             |
 
 L'escalade n'est jamais automatique. Le workflow signale la recommandation et attend une instruction explicite.
 
@@ -213,11 +215,13 @@ Cette spécification sert de source de vérité fonctionnelle, indépendante de 
 Do not send large context to an LLM unless reasoning is required.
 
 For deterministic tasks:
+
 - execute with shell, Git, npm, Vitest, Playwright or CI;
 - collect only the useful output;
 - call an LLM only if interpretation, decision or correction is needed.
 
 For failures:
+
 - send only the failing command;
 - send only the relevant error block;
 - send only the files directly involved;

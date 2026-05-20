@@ -116,8 +116,31 @@ describe('OwnedTalentSummary', () => {
         ],
       })
       resolveSpecializationTree.mockImplementation((spec) => {
-        if (spec.specializationId === 'spec-bodyguard') return buildResolvedTree({ tree: { id: 'tree-bodyguard', name: 'Bodyguard', type: 'specialization-tree', system: { specializationId: 'spec-bodyguard', nodes: [{ nodeId: 'r1c1', talentId: 'talent-parry', row: 1, column: 1, cost: 5 }], connections: [{ from: 'r1c1', to: 'r2c1' }] } } })
-        return buildResolvedTree({ tree: { id: 'tree-merc', name: 'Mercenary Soldier', type: 'specialization-tree', system: { specializationId: 'spec-merc', nodes: [{ nodeId: 'r1c1', talentId: 'talent-parry', row: 1, column: 1, cost: 10 }], connections: [{ from: 'r1c1', to: 'r2c1' }] } } })
+        if (spec.specializationId === 'spec-bodyguard')
+          return buildResolvedTree({
+            tree: {
+              id: 'tree-bodyguard',
+              name: 'Bodyguard',
+              type: 'specialization-tree',
+              system: {
+                specializationId: 'spec-bodyguard',
+                nodes: [{ nodeId: 'r1c1', talentId: 'talent-parry', row: 1, column: 1, cost: 5 }],
+                connections: [{ from: 'r1c1', to: 'r2c1' }],
+              },
+            },
+          })
+        return buildResolvedTree({
+          tree: {
+            id: 'tree-merc',
+            name: 'Mercenary Soldier',
+            type: 'specialization-tree',
+            system: {
+              specializationId: 'spec-merc',
+              nodes: [{ nodeId: 'r1c1', talentId: 'talent-parry', row: 1, column: 1, cost: 10 }],
+              connections: [{ from: 'r1c1', to: 'r2c1' }],
+            },
+          },
+        })
       })
       const definitions = new Map([['talent-parry', buildTalentDefinition({ name: 'Parer', isRanked: true })]])
       const result = buildOwnedTalentSummary(actor, definitions)
@@ -138,8 +161,34 @@ describe('OwnedTalentSummary', () => {
         ],
       })
       resolveSpecializationTree.mockImplementation((spec) => {
-        if (spec.specializationId === 'spec-bodyguard') return buildResolvedTree({ tree: { id: 'tree-bodyguard', name: 'Bodyguard', type: 'specialization-tree', system: { specializationId: 'spec-bodyguard', nodes: [{ nodeId: 'r1c1', talentId: 'talent-grit', row: 1, column: 1, cost: 5 }, { nodeId: 'r2c1', talentId: 'talent-grit', row: 2, column: 1, cost: 10 }], connections: [{ from: 'r1c1', to: 'r2c1' }] } } })
-        return buildResolvedTree({ tree: { id: 'tree-pilot', name: 'Pilot', type: 'specialization-tree', system: { specializationId: 'spec-pilot', nodes: [{ nodeId: 'r2c1', talentId: 'talent-grit', row: 2, column: 1, cost: 10 }], connections: [{ from: 'r1c1', to: 'r2c1' }] } } })
+        if (spec.specializationId === 'spec-bodyguard')
+          return buildResolvedTree({
+            tree: {
+              id: 'tree-bodyguard',
+              name: 'Bodyguard',
+              type: 'specialization-tree',
+              system: {
+                specializationId: 'spec-bodyguard',
+                nodes: [
+                  { nodeId: 'r1c1', talentId: 'talent-grit', row: 1, column: 1, cost: 5 },
+                  { nodeId: 'r2c1', talentId: 'talent-grit', row: 2, column: 1, cost: 10 },
+                ],
+                connections: [{ from: 'r1c1', to: 'r2c1' }],
+              },
+            },
+          })
+        return buildResolvedTree({
+          tree: {
+            id: 'tree-pilot',
+            name: 'Pilot',
+            type: 'specialization-tree',
+            system: {
+              specializationId: 'spec-pilot',
+              nodes: [{ nodeId: 'r2c1', talentId: 'talent-grit', row: 2, column: 1, cost: 10 }],
+              connections: [{ from: 'r1c1', to: 'r2c1' }],
+            },
+          },
+        })
       })
       const definitions = new Map([['talent-grit', buildTalentDefinition({ name: 'Grit', isRanked: false, activation: 'passive' })]])
       const result = buildOwnedTalentSummary(actor, definitions)
@@ -159,8 +208,31 @@ describe('OwnedTalentSummary', () => {
         ],
       })
       resolveSpecializationTree.mockImplementation((spec) => {
-        if (spec.specializationId === 'spec-bodyguard') return buildResolvedTree({ tree: { id: 'tree-bodyguard', name: 'Bodyguard', type: 'specialization-tree', system: { specializationId: 'spec-bodyguard', nodes: [{ nodeId: 'r1c1', talentId: 'talent-parry', row: 1, column: 1, cost: 5 }], connections: [{ from: 'r1c1', to: 'r2c1' }] } } })
-        return buildResolvedTree({ tree: { id: 'tree-merc', name: 'Mercenary Soldier', type: 'specialization-tree', system: { specializationId: 'spec-merc', nodes: [{ nodeId: 'r1c1', talentId: 'talent-parry', row: 1, column: 1, cost: 10 }], connections: [{ from: 'r1c1', to: 'r2c1' }] } } })
+        if (spec.specializationId === 'spec-bodyguard')
+          return buildResolvedTree({
+            tree: {
+              id: 'tree-bodyguard',
+              name: 'Bodyguard',
+              type: 'specialization-tree',
+              system: {
+                specializationId: 'spec-bodyguard',
+                nodes: [{ nodeId: 'r1c1', talentId: 'talent-parry', row: 1, column: 1, cost: 5 }],
+                connections: [{ from: 'r1c1', to: 'r2c1' }],
+              },
+            },
+          })
+        return buildResolvedTree({
+          tree: {
+            id: 'tree-merc',
+            name: 'Mercenary Soldier',
+            type: 'specialization-tree',
+            system: {
+              specializationId: 'spec-merc',
+              nodes: [{ nodeId: 'r1c1', talentId: 'talent-parry', row: 1, column: 1, cost: 10 }],
+              connections: [{ from: 'r1c1', to: 'r2c1' }],
+            },
+          },
+        })
       })
       const definitions = new Map([['talent-parry', buildTalentDefinition({ isRanked: true })]])
       const result = buildOwnedTalentSummary(actor, definitions)
@@ -168,9 +240,9 @@ describe('OwnedTalentSummary', () => {
       expect(result).toHaveLength(1)
       const sources = result[0].sources
       expect(sources).toHaveLength(2)
-      const sourceIds = sources.map(s => s.specializationId)
+      const sourceIds = sources.map((s) => s.specializationId)
       expect(sourceIds).toEqual(expect.arrayContaining(['spec-bodyguard', 'spec-merc']))
-      const sourceNames = sources.map(s => s.specializationName)
+      const sourceNames = sources.map((s) => s.specializationName)
       expect(sourceNames).toEqual(expect.arrayContaining(['Bodyguard', 'Mercenary Soldier']))
     })
 
@@ -207,9 +279,7 @@ describe('OwnedTalentSummary', () => {
         talentPurchases: [buildPurchase({ nodeId: 'r3c1' })],
       })
       const resolvedTree = buildResolvedTree()
-      resolvedTree.tree.system.nodes = [
-        { nodeId: 'r1c1', talentId: 'talent-parry', row: 1, column: 1, cost: 5 },
-      ]
+      resolvedTree.tree.system.nodes = [{ nodeId: 'r1c1', talentId: 'talent-parry', row: 1, column: 1, cost: 5 }]
       resolveSpecializationTree.mockReturnValue(resolvedTree)
       const definitions = new Map([['talent-parry', buildTalentDefinition()]])
       const result = buildOwnedTalentSummary(actor, definitions)
@@ -251,10 +321,7 @@ describe('OwnedTalentSummary', () => {
     it('handles mixed ranked and non-ranked talents correctly', () => {
       const actor = buildActor({
         specializations: [buildSpec()],
-        talentPurchases: [
-          buildPurchase({ nodeId: 'r1c1', talentId: 'talent-parry' }),
-          buildPurchase({ nodeId: 'r2c1', talentId: 'talent-toughness' }),
-        ],
+        talentPurchases: [buildPurchase({ nodeId: 'r1c1', talentId: 'talent-parry' }), buildPurchase({ nodeId: 'r2c1', talentId: 'talent-toughness' })],
       })
       resolveSpecializationTree.mockReturnValue(buildResolvedTree())
       const definitions = new Map([
@@ -262,8 +329,8 @@ describe('OwnedTalentSummary', () => {
         ['talent-toughness', buildTalentDefinition({ name: 'Toughness', isRanked: false, activation: 'passive' })],
       ])
       const result = buildOwnedTalentSummary(actor, definitions)
-      const parryEntry = result.find(e => e.talentId === 'talent-parry')
-      const toughnessEntry = result.find(e => e.talentId === 'talent-toughness')
+      const parryEntry = result.find((e) => e.talentId === 'talent-parry')
+      const toughnessEntry = result.find((e) => e.talentId === 'talent-toughness')
 
       expect(parryEntry.isRanked).toBe(true)
       expect(parryEntry.rank).toBe(1)
@@ -274,10 +341,7 @@ describe('OwnedTalentSummary', () => {
     it('returns multiple entries for different talentIds', () => {
       const actor = buildActor({
         specializations: [buildSpec()],
-        talentPurchases: [
-          buildPurchase({ nodeId: 'r1c1', talentId: 'talent-parry' }),
-          buildPurchase({ nodeId: 'r2c1', talentId: 'talent-deflect' }),
-        ],
+        talentPurchases: [buildPurchase({ nodeId: 'r1c1', talentId: 'talent-parry' }), buildPurchase({ nodeId: 'r2c1', talentId: 'talent-deflect' })],
       })
       resolveSpecializationTree.mockReturnValue(buildResolvedTree())
       const definitions = new Map([
@@ -285,7 +349,7 @@ describe('OwnedTalentSummary', () => {
         ['talent-deflect', buildTalentDefinition({ name: 'Deflect', isRanked: false })],
       ])
       const result = buildOwnedTalentSummary(actor, definitions)
-      const talentIds = result.map(e => e.talentId)
+      const talentIds = result.map((e) => e.talentId)
 
       expect(talentIds).toEqual(['talent-parry', 'talent-deflect'])
     })
@@ -293,10 +357,7 @@ describe('OwnedTalentSummary', () => {
     it('groups ranked talent purchases from the same tree into rank 2', () => {
       const actor = buildActor({
         specializations: [buildSpec()],
-        talentPurchases: [
-          buildPurchase({ nodeId: 'r1c1', talentId: 'talent-parry' }),
-          buildPurchase({ nodeId: 'r2c1', talentId: 'talent-parry' }),
-        ],
+        talentPurchases: [buildPurchase({ nodeId: 'r1c1', talentId: 'talent-parry' }), buildPurchase({ nodeId: 'r2c1', talentId: 'talent-parry' })],
       })
       resolveSpecializationTree.mockReturnValue(buildResolvedTree())
       const definitions = new Map([['talent-parry', buildTalentDefinition({ isRanked: true })]])
@@ -323,8 +384,23 @@ describe('OwnedTalentSummary', () => {
       })
       resolveSpecializationTree.mockImplementation((spec) => {
         if (spec.specializationId === 'spec-bodyguard') return buildResolvedTree()
-        if (spec.specializationId === 'spec-merc') return buildResolvedTree({ tree: { id: 'tree-merc', name: 'Mercenary Soldier', type: 'specialization-tree', system: { specializationId: 'spec-merc', nodes: [{ nodeId: 'r1c1', talentId: 'talent-parry', row: 1, column: 1, cost: 10 }], connections: [] } } })
-        return buildResolvedTree({ tree: { id: 'tree-pilot', name: 'Pilot', type: 'specialization-tree', system: { specializationId: 'spec-pilot', nodes: [{ nodeId: 'r1c1', talentId: 'talent-parry', row: 1, column: 1, cost: 5 }], connections: [] } } })
+        if (spec.specializationId === 'spec-merc')
+          return buildResolvedTree({
+            tree: {
+              id: 'tree-merc',
+              name: 'Mercenary Soldier',
+              type: 'specialization-tree',
+              system: { specializationId: 'spec-merc', nodes: [{ nodeId: 'r1c1', talentId: 'talent-parry', row: 1, column: 1, cost: 10 }], connections: [] },
+            },
+          })
+        return buildResolvedTree({
+          tree: {
+            id: 'tree-pilot',
+            name: 'Pilot',
+            type: 'specialization-tree',
+            system: { specializationId: 'spec-pilot', nodes: [{ nodeId: 'r1c1', talentId: 'talent-parry', row: 1, column: 1, cost: 5 }], connections: [] },
+          },
+        })
       })
       const definitions = new Map([['talent-parry', buildTalentDefinition({ isRanked: true })]])
       const result = buildOwnedTalentSummary(actor, definitions)
@@ -336,10 +412,7 @@ describe('OwnedTalentSummary', () => {
 
     it('preserves invariant sources.length === rank for all ranked entries', () => {
       const actor = buildActor({
-        specializations: [
-          buildSpec(),
-          buildSpec({ specializationId: 'spec-merc', name: 'Mercenary Soldier' }),
-        ],
+        specializations: [buildSpec(), buildSpec({ specializationId: 'spec-merc', name: 'Mercenary Soldier' })],
         talentPurchases: [
           buildPurchase({ talentId: 'talent-parry', specializationId: 'spec-bodyguard' }),
           buildPurchase({ talentId: 'talent-parry', specializationId: 'spec-merc' }),
@@ -347,7 +420,15 @@ describe('OwnedTalentSummary', () => {
         ],
       })
       resolveSpecializationTree.mockImplementation((spec) => {
-        if (spec.specializationId === 'spec-merc') return buildResolvedTree({ tree: { id: 'tree-merc', name: 'Mercenary Soldier', type: 'specialization-tree', system: { specializationId: 'spec-merc', nodes: [{ nodeId: 'r1c1', talentId: 'talent-parry', row: 1, column: 1, cost: 10 }], connections: [] } } })
+        if (spec.specializationId === 'spec-merc')
+          return buildResolvedTree({
+            tree: {
+              id: 'tree-merc',
+              name: 'Mercenary Soldier',
+              type: 'specialization-tree',
+              system: { specializationId: 'spec-merc', nodes: [{ nodeId: 'r1c1', talentId: 'talent-parry', row: 1, column: 1, cost: 10 }], connections: [] },
+            },
+          })
         return buildResolvedTree()
       })
       const definitions = new Map([
@@ -355,7 +436,7 @@ describe('OwnedTalentSummary', () => {
         ['talent-deflect', buildTalentDefinition({ name: 'Deflect', isRanked: true })],
       ])
       const result = buildOwnedTalentSummary(actor, definitions)
-      const rankedEntries = result.filter(e => e.isRanked === true)
+      const rankedEntries = result.filter((e) => e.isRanked === true)
 
       expect(rankedEntries.length).toBeGreaterThan(0)
       rankedEntries.forEach((entry) => {
@@ -368,7 +449,9 @@ describe('OwnedTalentSummary', () => {
         specializations: [buildSpec()],
         talentPurchases: [buildPurchase()],
       })
-      resolveSpecializationTree.mockImplementation(() => { throw new Error('Unexpected error') })
+      resolveSpecializationTree.mockImplementation(() => {
+        throw new Error('Unexpected error')
+      })
       const definitions = new Map([['talent-parry', buildTalentDefinition()]])
       const result = buildOwnedTalentSummary(actor, definitions)
 
@@ -381,7 +464,20 @@ describe('OwnedTalentSummary', () => {
         specializations: [buildSpec()],
         talentPurchases: [buildPurchase()],
       })
-      resolveSpecializationTree.mockReturnValue(buildResolvedTree({ tree: { id: 'tree-bodyguard', name: 'Bodyguard Tree', type: 'specialization-tree', system: { specializationId: 'spec-bodyguard', nodes: [{ nodeId: 'r1c1', talentId: 'talent-parry', row: 1, column: 1, cost: 5 }], connections: [{ from: 'r1c1', to: 'r2c1' }] } } }))
+      resolveSpecializationTree.mockReturnValue(
+        buildResolvedTree({
+          tree: {
+            id: 'tree-bodyguard',
+            name: 'Bodyguard Tree',
+            type: 'specialization-tree',
+            system: {
+              specializationId: 'spec-bodyguard',
+              nodes: [{ nodeId: 'r1c1', talentId: 'talent-parry', row: 1, column: 1, cost: 5 }],
+              connections: [{ from: 'r1c1', to: 'r2c1' }],
+            },
+          },
+        }),
+      )
       const definitions = new Map([['talent-parry', buildTalentDefinition()]])
       const result = buildOwnedTalentSummary(actor, definitions)
 

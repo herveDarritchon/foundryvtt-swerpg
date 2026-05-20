@@ -14,32 +14,36 @@ globalThis.getDocumentClass = (type) => {
       if (options?.parent) this.parent = options.parent
     }
     prepareData() {}
-    update(data) { return Promise.resolve(this) }
+    update(data) {
+      return Promise.resolve(this)
+    }
   }
 }
 
 globalThis.ui = {
   notifications: {
-    warn: (msg) => console.warn(msg)
-  }
+    warn: (msg) => console.warn(msg),
+  },
 }
 
 globalThis.game = {
   i18n: {
     format: (key, data) => `${key}: ${JSON.stringify(data)}`,
-    localize: (key) => key
-  }
+    localize: (key) => key,
+  },
 }
 
 globalThis.foundry = {
   utils: {
-    setProperty: (obj, key, value) => { obj[key] = value }
-  }
+    setProperty: (obj, key, value) => {
+      obj[key] = value
+    },
+  },
 }
 
 globalThis.SYSTEM = {
   ARMOR: {
-    UNARMORED_DATA: { system: { category: 'unarmored' } }
+    UNARMORED_DATA: { system: { category: 'unarmored' } },
   },
   WEAPON: {
     SLOTS: {
@@ -47,9 +51,9 @@ globalThis.SYSTEM = {
       OFFHAND: 'offhand',
       TWOHAND: 'twohand',
       EITHER: 'either',
-      label: (slot) => slot
-    }
-  }
+      label: (slot) => slot,
+    },
+  },
 }
 
 // Mock Actor base class
@@ -60,7 +64,7 @@ class MockActor {
     this.system = {
       resources: { action: { value: 10 } },
       status: {},
-      details: {}
+      details: {},
     }
     this.equipment = null
     this.talentIds = new Set()
@@ -75,7 +79,7 @@ class MockActor {
 
   get items() {
     return {
-      get: (id) => this._items.get(id)
+      get: (id) => this._items.get(id),
     }
   }
 
@@ -119,7 +123,7 @@ describe('EquipmentMixin', () => {
     it('should return equipped armor when present', () => {
       const mockArmor = {
         system: { equipped: true, category: 'light' },
-        name: 'Test Armor'
+        name: 'Test Armor',
       }
       const armorItems = [mockArmor]
       const result = actor._prepareArmor(armorItems)
@@ -150,7 +154,7 @@ describe('Equipment Methods Integration', () => {
   it('should have all required methods', () => {
     const TestActor = EquipmentMixin(MockActor)
     const actor = new TestActor({}, {})
-    
+
     expect(typeof actor._prepareArmor).toBe('function')
     expect(typeof actor._prepareWeapons).toBe('function')
     expect(typeof actor._getUnarmoredArmor).toBe('function')

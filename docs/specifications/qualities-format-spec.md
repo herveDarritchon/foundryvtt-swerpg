@@ -10,37 +10,40 @@ Ce document définit la structure technique retenue pour `system.qualities` dans
 ## ✅ **Décisions Retenues**
 
 ### 1. Usage Attendu
+
 - **Base à de l'automatisation** (modificateurs de dés, effets conditionnels, interactions avec des règles maison, etc.)
 - **Résolution semi-automatisée** basée sur les qualités
 - **Préparation pour l'automatisation future** (drapeaux `active`, `source`, etc.)
 
 ### 2. Format de Base Retenu : **Option C – Structure Plus Riche**
+
 ```javascript
-[
+;[
   {
-    key: "blast",
+    key: 'blast',
     rank: 2,
     active: true,
-    source: "base"
+    source: 'base',
   },
   {
-    key: "burn",
+    key: 'burn',
     rank: 2,
     active: true,
-    source: "base"
+    source: 'base',
   },
   {
-    key: "accurate",
+    key: 'accurate',
     hasRank: false,
     active: true,
-    source: "homebrew"
-  }
+    source: 'homebrew',
+  },
 ]
 ```
 
 **Raison :** Très extensible, prépare l'automatisation, permet de gérer les flags et métadonnées.
 
 ### 3. Normalisation des Clés
+
 - **Clés normalisées en anglais** (`"blast"`, `"burn"`, `"pierce"`, `"vicious"`)
 - **Liste fermée de qualités supportées** (enum interne) pour les qualités standard
 - **Équilibre entre normalisation et flexibilité :**
@@ -48,16 +51,20 @@ Ce document définit la structure technique retenue pour `system.qualities` dans
   - Flexibilité pour les qualités maison (permet d'ajouter des effets uniques sans devoir modifier le code)
 
 ### 4. Gestion des Qualités Sans Rang
+
 **Option retenue :** Modèle mixte avec `hasRank`
+
 ```javascript
 { key: "accurate", hasRank: false }
 { key: "blast", hasRank: true, rank: 2 }
 ```
+
 - Permet de différencier les qualités avec et sans rang
 - Évite que le code d'affichage / d'automatisation ne se casse sur les qualités non chiffrées
 - Ajout possible d'un champ `hasRank` ou `type` pour faciliter le traitement dans l'UI et les règles d'automatisation
 
 ### 5. Unification avec le Reste du Système
+
 - **Oui, format global** (même structure partout) :
   - ✅ Armes
   - ✅ Armures
@@ -65,13 +72,14 @@ Ce document définit la structure technique retenue pour `system.qualities` dans
   - ✅ Mods / Attachments
 - **Piste de solution :** Ne pas hésiter à ajouter un attribut avec une liste d'objets sur lesquels la qualité pourra s'appliquer (armes, armures, talents, mods) pour clarifier les implications de la décision.
 
-**Si oui :** On impose : *"À partir de maintenant, le format canonique est Option C, et on migrera le reste plus tard"* (avec un plan de migration explicite à prévoir)
+**Si oui :** On impose : _"À partir de maintenant, le format canonique est Option C, et on migrera le reste plus tard"_ (avec un plan de migration explicite à prévoir)
 
 ---
 
 ## 📋 Structure Technique Détaillée
 
 ### Schéma JSON pour `system.qualities`
+
 ```javascript
 /**
  * @typedef {Object} Quality
@@ -84,27 +92,28 @@ Ce document définit la structure technique retenue pour `system.qualities` dans
  */
 
 // Exemple concret
-[
+;[
   {
-    "key": "blast",
-    "rank": 2,
-    "hasRank": true,
-    "active": true,
-    "source": "base",
-    "metadata": {
-      "description": "Adds blast dice to attack rolls"
-    }
+    key: 'blast',
+    rank: 2,
+    hasRank: true,
+    active: true,
+    source: 'base',
+    metadata: {
+      description: 'Adds blast dice to attack rolls',
+    },
   },
   {
-    "key": "accurate",
-    "hasRank": false,
-    "active": true,
-    "source": "homebrew"
-  }
+    key: 'accurate',
+    hasRank: false,
+    active: true,
+    source: 'homebrew',
+  },
 ]
 ```
 
 ### Enum Interne des Qualités Standard (Soft Enum)
+
 ```javascript
 // config/qualities.mjs
 export const QUALITIES = Object.freeze({
@@ -113,7 +122,7 @@ export const QUALITIES = Object.freeze({
   BURN: { key: 'burn', hasRank: true },
   PIERCE: { key: 'pierce', hasRank: true },
   VICIOUS: { key: 'vicious', hasRank: true },
-  
+
   // Qualités sans rang
   ACCURATE: { key: 'accurate', hasRank: false },
   LINKED: { key: 'linked', hasRank: false },
@@ -121,8 +130,8 @@ export const QUALITIES = Object.freeze({
 
 // Mapping OggDude vers qualités normalisées
 export const OGGDUDE_QUALITY_MAP = {
-  'BLAST': 'blast',
-  'BURN': 'burn',
+  BLAST: 'blast',
+  BURN: 'burn',
   // ...
 }
 ```
@@ -134,24 +143,29 @@ export const OGGDUDE_QUALITY_MAP = {
 ### Étapes à Suivre
 
 #### 1. Créer le fichier de configuration `config/qualities.mjs`
+
 - Définir l'enum interne `QUALITIES`
 - Définir le mapping `OGGDUDE_QUALITY_MAP`
 
 #### 2. Mettre à jour le schéma des Items
+
 - Armes : `system.qualities` → Option C
 - Armures : `system.qualities` → Option C
 - Talents : `system.qualities` → Option C (si applicable)
 - Mods / Attachments : `system.qualities` → Option C (si applicable)
 
 #### 3. Mettre à jour les imports OggDude
+
 - Utiliser `OGGDUDE_QUALITY_MAP` pour convertir les qualités OggDude vers le format canonique
 - Gérer les qualités inconnues (warning + fallback)
 
 #### 4. Préparer l'automatisation future
+
 - Utiliser le champ `active` pour activer/désactiver les effets
 - Utiliser le champ `source` pour tracer l'origine de la qualité
 
 #### 5. Plan de migration pour les données existantes
+
 - Script de migration pour convertir l'ancien format vers Option C
 - Gérer les cas particuliers (anciennes chaînes, objets simples, etc.)
 
@@ -170,6 +184,7 @@ export const OGGDUDE_QUALITY_MAP = {
 ## 📋 Impacts de la Décision
 
 Cette décision impactera :
+
 1. **Le schéma de données des Items** (armes, armures, talents, mods)
 2. **Les plans d'implémentation futurs** (imports, UI, automatisation)
 3. **La dette technique** et le besoin de migration sur les données existantes
@@ -188,4 +203,4 @@ Cette décision impactera :
 
 ---
 
-*Document créé suite aux décisions de l'issue #14 - Format canonique de `system.qualities`*
+_Document créé suite aux décisions de l'issue #14 - Format canonique de `system.qualities`_

@@ -620,7 +620,6 @@ Elle peut être généralisée ainsi :
 
 C’est cette règle qui doit guider en priorité la conception des agents, des commandes, des permissions et des choix de modèles.
 
-
 ## 2. Principe directeur
 
 La configuration OpenCode doit être organisée autour d’une idée centrale :
@@ -1200,26 +1199,26 @@ Cette section formalise la doctrine cible validée par l’issue [#267](https://
 
 ### 17.2. Matrice des usages fréquents
 
-| Activité | Risque | Autonomie | Type d’agent | Skill existant | Validation humaine |
-|---|---|---|---|---|---|
-| Créer des issues depuis un cadrage | Moyen | Assistée | Planification / Découpage | `to-issues` | Oui — contenu des issues |
-| Créer un plan depuis une issue | Moyen | Assistée | Planification | `plan-depuis-issue` | Oui — plan validé |
-| Écrire un plan dans `documentation/plan/` | Faible | Assistée | Documentation | `ecrire-plan-fichier` | Non |
-| Implémenter un plan | Élevé | Assistée | Implémentation | `implementer-depuis-plan` | Oui — code et tests |
-| Diagnostiquer / corriger un bug | Élevé | Assistée | Correction | `corriger-echec-validation` | Oui — fix et tests |
-| Exécuter et analyser des tests | Faible | Lecture seule ou assistée | Test | Aucun | Non — résultat suffit |
-| Relire un diff / revue de code | Élevé | Lecture seule | Revue | Aucun | Oui — approbation |
-| Préparer / créer une PR | Moyen | Assistée | Documentation | `creer-pull-request` | Oui — PR à valider |
-| Mettre à jour une documentation projet | Faible | Assistée | Documentation | Aucun | Non |
-| Lancer des vérifications mécaniques | Faible | Automatique (script) | Script | Aucun | Non |
+| Activité                                  | Risque | Autonomie                 | Type d’agent              | Skill existant              | Validation humaine       |
+| ----------------------------------------- | ------ | ------------------------- | ------------------------- | --------------------------- | ------------------------ |
+| Créer des issues depuis un cadrage        | Moyen  | Assistée                  | Planification / Découpage | `to-issues`                 | Oui — contenu des issues |
+| Créer un plan depuis une issue            | Moyen  | Assistée                  | Planification             | `plan-depuis-issue`         | Oui — plan validé        |
+| Écrire un plan dans `documentation/plan/` | Faible | Assistée                  | Documentation             | `ecrire-plan-fichier`       | Non                      |
+| Implémenter un plan                       | Élevé  | Assistée                  | Implémentation            | `implementer-depuis-plan`   | Oui — code et tests      |
+| Diagnostiquer / corriger un bug           | Élevé  | Assistée                  | Correction                | `corriger-echec-validation` | Oui — fix et tests       |
+| Exécuter et analyser des tests            | Faible | Lecture seule ou assistée | Test                      | Aucun                       | Non — résultat suffit    |
+| Relire un diff / revue de code            | Élevé  | Lecture seule             | Revue                     | Aucun                       | Oui — approbation        |
+| Préparer / créer une PR                   | Moyen  | Assistée                  | Documentation             | `creer-pull-request`        | Oui — PR à valider       |
+| Mettre à jour une documentation projet    | Faible | Assistée                  | Documentation             | Aucun                       | Non                      |
+| Lancer des vérifications mécaniques       | Faible | Automatique (script)      | Script                    | Aucun                       | Non                      |
 
 ### 17.3. Niveaux de risque — Définition
 
-| Niveau | Exemples | Exigence |
-|---|---|---|
-| **Faible** | Documentation, lint, tests automatisés, exploration | Autonomie large, contrôle minimal |
-| **Moyen** | Planification, issues, PR, refactor localisé | Autonomie assistée, validation humaine recommandée |
-| **Élevé** | Implémentation, architecture, Git destructeur, suppression | Validation humaine obligatoire avant action |
+| Niveau     | Exemples                                                   | Exigence                                           |
+| ---------- | ---------------------------------------------------------- | -------------------------------------------------- |
+| **Faible** | Documentation, lint, tests automatisés, exploration        | Autonomie large, contrôle minimal                  |
+| **Moyen**  | Planification, issues, PR, refactor localisé               | Autonomie assistée, validation humaine recommandée |
+| **Élevé**  | Implémentation, architecture, Git destructeur, suppression | Validation humaine obligatoire avant action        |
 
 ### 17.4. Écarts identifiés par l’audit des skills
 
@@ -1238,10 +1237,10 @@ L’audit des skills existants (cf. documentation/plan/llm/267-audit-skills-open
 5. Plugins / hooks transverses — Ajouter des garde-fous si nécessaire (sécurité, coût, validation)
 6. Mesure et ajustements — Observer l’utilisation réelle et ajuster la configuration
 
-[1]: https://opencode.ai/docs/agents/?utm_source=chatgpt.com "Agents"
-[2]: https://opencode.ai/docs/tools/?utm_source=chatgpt.com "Tools"
-[3]: https://opencode.ai/docs/commands/?utm_source=chatgpt.com "Commands"
-[4]: https://opencode.ai/docs/plugins/?utm_source=chatgpt.com "Plugins"
+[1]: https://opencode.ai/docs/agents/?utm_source=chatgpt.com 'Agents'
+[2]: https://opencode.ai/docs/tools/?utm_source=chatgpt.com 'Tools'
+[3]: https://opencode.ai/docs/commands/?utm_source=chatgpt.com 'Commands'
+[4]: https://opencode.ai/docs/plugins/?utm_source=chatgpt.com 'Plugins'
 
 ---
 
@@ -1279,13 +1278,13 @@ Ne pas utiliser ce workflow pour :
 
 ### 18.4. Agent et permissions
 
-| Propriété | Valeur |
-|---|---|
-| Type d'agent | `explore` |
-| Modèle cible | Économique ou local |
-| Autonomie | Lecture seule stricte |
+| Propriété        | Valeur                                                                                                |
+| ---------------- | ----------------------------------------------------------------------------------------------------- |
+| Type d'agent     | `explore`                                                                                             |
+| Modèle cible     | Économique ou local                                                                                   |
+| Autonomie        | Lecture seule stricte                                                                                 |
 | Outils autorisés | Recherche fichiers, recherche textuelle, lecture fichiers, consultation web si explicitement demandée |
-| Interdits | Édition, écriture, tests non nécessaires, Git modifiant l'état, commandes destructrices |
+| Interdits        | Édition, écriture, tests non nécessaires, Git modifiant l'état, commandes destructrices               |
 
 ### 18.5. Contrat de sortie
 
@@ -1308,23 +1307,23 @@ Règles de sobriété :
 
 Si la demande utilisateur dépasse le périmètre d'exploration, le workflow s'arrête et oriente vers :
 
-| Si la demande nécessite... | Orienter vers |
-|---|---|
-| Un plan d'implémentation | `plan-depuis-issue` |
-| De l'implémentation | `implementer-depuis-plan` |
-| Une revue de diff | Revue de code |
-| Un diagnostic de bug | Diagnostic / Correction |
-| Une mise à jour de documentation | Documentation |
+| Si la demande nécessite...       | Orienter vers             |
+| -------------------------------- | ------------------------- |
+| Un plan d'implémentation         | `plan-depuis-issue`       |
+| De l'implémentation              | `implementer-depuis-plan` |
+| Une revue de diff                | Revue de code             |
+| Un diagnostic de bug             | Diagnostic / Correction   |
+| Une mise à jour de documentation | Documentation             |
 
 L'exploration ne doit pas franchir ces frontières de rôle sans instruction explicite.
 
 ### 18.7. Variantes de profondeur
 
-| Profondeur | Périmètre typique | Temps estimé |
-|---|---|---|
-| Rapide | Un fichier, une convention, une référence | 1-2 min |
-| Moyenne | Un module, un flux, 3-5 fichiers | 3-5 min |
-| Approfondie | Architecture transverse, dépendances, 5-15 fichiers | 5-10 min |
+| Profondeur  | Périmètre typique                                   | Temps estimé |
+| ----------- | --------------------------------------------------- | ------------ |
+| Rapide      | Un fichier, une convention, une référence           | 1-2 min      |
+| Moyenne     | Un module, un flux, 3-5 fichiers                    | 3-5 min      |
+| Approfondie | Architecture transverse, dépendances, 5-15 fichiers | 5-10 min     |
 
 La profondeur est choisie par l'utilisateur ou inférée depuis l'intention exprimée.
 
@@ -1363,13 +1362,13 @@ Ne pas utiliser ce workflow pour :
 
 ### 19.4. Agent et permissions
 
-| Propriété | Valeur |
-|---|---|
-| Type d'agent | Général / Planification |
-| Modèle cible | Standard ou économique selon la complexité du plan |
-| Autonomie | Lecture seule stricte (code et dépôt), avec capacité d'analyse forte |
-| Outils autorisés | Recherche fichiers, recherche textuelle, lecture fichiers, consultation web, questions à l'utilisateur |
-| Interdits | Édition, écriture, matérialisation automatique dans le repo, modification d'issue, élargissement du scope |
+| Propriété        | Valeur                                                                                                    |
+| ---------------- | --------------------------------------------------------------------------------------------------------- |
+| Type d'agent     | Général / Planification                                                                                   |
+| Modèle cible     | Standard ou économique selon la complexité du plan                                                        |
+| Autonomie        | Lecture seule stricte (code et dépôt), avec capacité d'analyse forte                                      |
+| Outils autorisés | Recherche fichiers, recherche textuelle, lecture fichiers, consultation web, questions à l'utilisateur    |
+| Interdits        | Édition, écriture, matérialisation automatique dans le repo, modification d'issue, élargissement du scope |
 
 ### 19.5. Contrat de sortie
 
@@ -1468,32 +1467,32 @@ Ne pas utiliser ce workflow pour :
 
 #### Phase 1 — Exécution
 
-| Propriété | Valeur |
-|---|---|
-| Type d'agent | Exécution mécanique (script) |
-| Modèle cible | Aucun (exécution script) ou économique |
-| Autonomie | Exécution seule, pas d'analyse |
+| Propriété        | Valeur                                     |
+| ---------------- | ------------------------------------------ |
+| Type d'agent     | Exécution mécanique (script)               |
+| Modèle cible     | Aucun (exécution script) ou économique     |
+| Autonomie        | Exécution seule, pas d'analyse             |
 | Outils autorisés | Commande shell pour lancer la vérification |
-| Interdits | Modification de code, analyse, correction |
+| Interdits        | Modification de code, analyse, correction  |
 
 #### Phase 2 — Diagnostic
 
-| Propriété | Valeur |
-|---|---|
-| Type d'agent | Général / Diagnostic |
-| Modèle cible | Intermédiaire ou raisonnement selon complexité |
-| Autonomie | Lecture seule sur le code, analyse de la sortie d'erreur |
+| Propriété        | Valeur                                                                        |
+| ---------------- | ----------------------------------------------------------------------------- |
+| Type d'agent     | Général / Diagnostic                                                          |
+| Modèle cible     | Intermédiaire ou raisonnement selon complexité                                |
+| Autonomie        | Lecture seule sur le code, analyse de la sortie d'erreur                      |
 | Outils autorisés | Recherche fichiers, recherche textuelle, lecture fichiers, extraction de logs |
-| Interdits | Édition, écriture, correction, exécution de nouvelles vérifications |
+| Interdits        | Édition, écriture, correction, exécution de nouvelles vérifications           |
 
 #### Phase 3 — Correction
 
-| Propriété | Valeur |
-|---|---|
-| Type d'agent | Implémentation |
-| Déclenchement | Explicite par l'utilisateur après réception du diagnostic |
-| Périmètre | Correction minimale ciblée |
-| Note | Non détaillée dans ce workflow — renvoi vers `implementer-depuis-plan` ou workflow de correction dédié |
+| Propriété     | Valeur                                                                                                 |
+| ------------- | ------------------------------------------------------------------------------------------------------ |
+| Type d'agent  | Implémentation                                                                                         |
+| Déclenchement | Explicite par l'utilisateur après réception du diagnostic                                              |
+| Périmètre     | Correction minimale ciblée                                                                             |
+| Note          | Non détaillée dans ce workflow — renvoi vers `implementer-depuis-plan` ou workflow de correction dédié |
 
 ### 20.5. Contrat de sortie
 
@@ -1532,23 +1531,23 @@ Règles de sobriété :
 
 ### 20.6. Variantes de profondeur
 
-| Profondeur | Usage typique | Phases activées |
-|---|---|---|
-| `check` | Simple exécution, résultat binaire | Phase 1 uniquement |
-| `check --diagnose` | Exécution + diagnostic en cas d'échec | Phase 1 + Phase 2 |
+| Profondeur                        | Usage typique                                                           | Phases activées                                  |
+| --------------------------------- | ----------------------------------------------------------------------- | ------------------------------------------------ |
+| `check`                           | Simple exécution, résultat binaire                                      | Phase 1 uniquement                               |
+| `check --diagnose`                | Exécution + diagnostic en cas d'échec                                   | Phase 1 + Phase 2                                |
 | `check --fix` (demande explicite) | Exécution + diagnostic + proposition de correction (attente validation) | Phase 1 + Phase 2 + Phase 3 (validation requise) |
 
 ### 20.7. Sous-commandes prévues
 
-| Sous-commande | Outil | Commande exécutée |
-|---|---|---|
-| `check tests` | Vitest | `pnpm test` ou `pnpm vitest run <filtre>` |
-| `check coverage` | Vitest + V8 | `pnpm test:coverage` |
-| `check e2e` | Playwright | `pnpm e2e` (ou headed/ci/ui) |
-| `check lint` | ESLint | `pnpm exec eslint <cibles>` |
-| `check format` | Prettier | `pnpm fmt:check` |
-| `check script <nom>` | Script projet | `bash scripts/<nom>.sh` |
-| `check all` | Tous | Exécution séquentielle de toutes les vérifications |
+| Sous-commande        | Outil         | Commande exécutée                                  |
+| -------------------- | ------------- | -------------------------------------------------- |
+| `check tests`        | Vitest        | `pnpm test` ou `pnpm vitest run <filtre>`          |
+| `check coverage`     | Vitest + V8   | `pnpm test:coverage`                               |
+| `check e2e`          | Playwright    | `pnpm e2e` (ou headed/ci/ui)                       |
+| `check lint`         | ESLint        | `pnpm exec eslint <cibles>`                        |
+| `check format`       | Prettier      | `pnpm fmt:check`                                   |
+| `check script <nom>` | Script projet | `bash scripts/<nom>.sh`                            |
+| `check all`          | Tous          | Exécution séquentielle de toutes les vérifications |
 
 ### 20.8. Garde-fous
 

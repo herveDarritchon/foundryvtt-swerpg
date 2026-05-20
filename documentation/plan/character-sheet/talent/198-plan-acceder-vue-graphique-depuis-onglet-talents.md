@@ -239,29 +239,29 @@ Cas à couvrir :
 
 ## 6. Fichiers modifiés
 
-| Fichier | Action | Description du changement |
-|---|---|---|
-| `module/documents/actor-mixins/talents.mjs` | modification | Introduire ou stabiliser le bridge acteur vers l'application graphique dédiée |
-| `module/applications/sheets/character-sheet.mjs` | modification | Câbler l'action de feuille vers le bridge et supprimer le couplage direct au legacy |
-| `templates/sheets/actor/talents.hbs` | modification | Ajouter le CTA d'ouverture dans l'onglet Talents |
-| `styles/actor.less` | modification | Styliser la zone d'action et préserver la lisibilité de l'onglet |
-| `lang/fr.json` | modification potentielle | Ajouter les libellés FR du CTA si absents |
-| `lang/en.json` | modification potentielle | Ajouter les libellés EN du CTA si absents |
-| `tests/applications/sheets/character-sheet-talents.test.mjs` | modification | Couvrir le contrat de navigation côté feuille |
-| `tests/unit/documents/actor-talents-mixin.test.mjs` | modification potentielle | Couvrir le bridge acteur sans dépendre du canvas réel |
+| Fichier                                                      | Action                   | Description du changement                                                           |
+| ------------------------------------------------------------ | ------------------------ | ----------------------------------------------------------------------------------- |
+| `module/documents/actor-mixins/talents.mjs`                  | modification             | Introduire ou stabiliser le bridge acteur vers l'application graphique dédiée       |
+| `module/applications/sheets/character-sheet.mjs`             | modification             | Câbler l'action de feuille vers le bridge et supprimer le couplage direct au legacy |
+| `templates/sheets/actor/talents.hbs`                         | modification             | Ajouter le CTA d'ouverture dans l'onglet Talents                                    |
+| `styles/actor.less`                                          | modification             | Styliser la zone d'action et préserver la lisibilité de l'onglet                    |
+| `lang/fr.json`                                               | modification potentielle | Ajouter les libellés FR du CTA si absents                                           |
+| `lang/en.json`                                               | modification potentielle | Ajouter les libellés EN du CTA si absents                                           |
+| `tests/applications/sheets/character-sheet-talents.test.mjs` | modification             | Couvrir le contrat de navigation côté feuille                                       |
+| `tests/unit/documents/actor-talents-mixin.test.mjs`          | modification potentielle | Couvrir le bridge acteur sans dépendre du canvas réel                               |
 
 ---
 
 ## 7. Risques
 
-| Risque | Impact | Mitigation |
-|---|---|---|
+| Risque                                                          | Impact                              | Mitigation                                                                                   |
+| --------------------------------------------------------------- | ----------------------------------- | -------------------------------------------------------------------------------------------- |
 | US14 code contre le canvas legacy au lieu de l'application US15 | dette technique immédiate et rework | imposer dans le plan un bridge acteur ciblant l'API de la future app, pas `game.system.tree` |
-| Contrat d'ouverture non aligné avec US15 | intégration cassée ou doublon d'API | faire explicitement dépendre US14 du point d'entrée public livré par US15 |
-| CTA ambigu avec une action d'achat | confusion utilisateur | wording explicite orienté navigation et placement visuel distinct des talents |
-| Texte hardcodé ou incohérent entre langues | régression i18n | passer par des clés dédiées FR/EN conformes à ADR-0005 |
-| Tests trop intégrés à la vue graphique | tests fragiles et coûteux | limiter US14 à des tests de contrat : présence du CTA et appel du bridge |
-| Régression visuelle dans l'onglet Talents | baisse de lisibilité en jeu | ajouter un conteneur de CTA spécifique et vérifier le rendu sur largeur réduite |
+| Contrat d'ouverture non aligné avec US15                        | intégration cassée ou doublon d'API | faire explicitement dépendre US14 du point d'entrée public livré par US15                    |
+| CTA ambigu avec une action d'achat                              | confusion utilisateur               | wording explicite orienté navigation et placement visuel distinct des talents                |
+| Texte hardcodé ou incohérent entre langues                      | régression i18n                     | passer par des clés dédiées FR/EN conformes à ADR-0005                                       |
+| Tests trop intégrés à la vue graphique                          | tests fragiles et coûteux           | limiter US14 à des tests de contrat : présence du CTA et appel du bridge                     |
+| Régression visuelle dans l'onglet Talents                       | baisse de lisibilité en jeu         | ajouter un conteneur de CTA spécifique et vérifier le rendu sur largeur réduite              |
 
 ---
 

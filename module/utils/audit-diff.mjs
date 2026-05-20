@@ -447,11 +447,4 @@ export function composeEntries(oldState, changes, actor, userId) {
 /*  Exports pour tests                          */
 /* -------------------------------------------- */
 
-export {
-  makeEntry,
-  captureSnapshot,
-  computeCharacteristicCost,
-  inferIsCareer,
-  getCareerSkillIds,
-  reconstructPreviousValue,
-}
+export { makeEntry, captureSnapshot, computeCharacteristicCost, inferIsCareer, getCareerSkillIds, reconstructPreviousValue }

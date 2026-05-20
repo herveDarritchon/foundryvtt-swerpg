@@ -28,10 +28,7 @@ Avant, Foundry imposait un modèle assez universel :
 
 ```js
 {
-  key,
-  mode,
-  value,
-  priority
+  ;(key, mode, value, priority)
 }
 ```
 
@@ -184,7 +181,7 @@ system: {
 Avant V14, on aurait probablement mis tout ça dans :
 
 ```js
-flags["my-system"]
+flags['my-system']
 ```
 
 Ce qui marche, mais c’est moins propre, moins validé, moins migrable, et plus difficile à exposer dans une feuille d’effet.
@@ -266,11 +263,11 @@ Avant :
 ```js
 changes: [
   {
-    key: "system.speed",
+    key: 'system.speed',
     mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-    value: "2",
-    priority: 20
-  }
+    value: '2',
+    priority: 20,
+  },
 ]
 ```
 
@@ -280,12 +277,12 @@ Après :
 system: {
   changes: [
     {
-      key: "system.speed",
-      type: "add",
-      value: "2",
-      phase: "apply",
-      priority: 20
-    }
+      key: 'system.speed',
+      type: 'add',
+      value: '2',
+      phase: 'apply',
+      priority: 20,
+    },
   ]
 }
 ```
@@ -314,10 +311,10 @@ L’ancien modèle forçait souvent à faire ça :
 ```js
 changes: [
   {
-    key: "flags.mySystem.rollOptions.attack.advantage",
+    key: 'flags.mySystem.rollOptions.attack.advantage',
     mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-    value: "true"
-  }
+    value: 'true',
+  },
 ]
 ```
 
@@ -329,12 +326,12 @@ En V14, on peut tendre vers un modèle plus déclaratif :
 system: {
   changes: [
     {
-      type: "rollOption",
-      selector: "attack",
-      option: "advantage",
-      phase: "prepareRolls",
-      priority: 20
-    }
+      type: 'rollOption',
+      selector: 'attack',
+      option: 'advantage',
+      phase: 'prepareRolls',
+      priority: 20,
+    },
   ]
 }
 ```
@@ -468,7 +465,7 @@ mode: CONST.ACTIVE_EFFECT_MODES.ADD
 Maintenant, on pense plutôt :
 
 ```js
-type: "add"
+type: 'add'
 ```
 
 Mais l’intérêt n’est pas juste le renommage.
@@ -511,11 +508,11 @@ Pourquoi ?
 Parce que le système peut écrire une migration ciblée :
 
 ```js
-if (effect.type === "condition") {
+if (effect.type === 'condition') {
   // migrer les anciens changes de condition
 }
 
-if (effect.system.category === "equipment") {
+if (effect.system.category === 'equipment') {
   // migrer les effets d'équipement
 }
 ```
@@ -639,6 +636,6 @@ La phrase à retenir :
 
 Et c’est une vraie différence d’architecture, pas un simple renommage.
 
-[1]: https://github.com/foundryvtt/foundryvtt/issues/13740?utm_source=chatgpt.com "Migrate `ActiveEffect#changes` to ` ..."
-[2]: https://foundryvtt.com/packages/dae?utm_source=chatgpt.com "Dynamic Active Effects"
-[3]: https://foundryvtt.com/releases/14.353?utm_source=chatgpt.com "Release 14.353"
+[1]: https://github.com/foundryvtt/foundryvtt/issues/13740?utm_source=chatgpt.com 'Migrate `ActiveEffect#changes` to ` ...'
+[2]: https://foundryvtt.com/packages/dae?utm_source=chatgpt.com 'Dynamic Active Effects'
+[3]: https://foundryvtt.com/releases/14.353?utm_source=chatgpt.com 'Release 14.353'

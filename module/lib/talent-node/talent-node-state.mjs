@@ -34,17 +34,18 @@ function isSpecializationOwned(actor, specializationId) {
 function findNode(tree, nodeId) {
   const nodes = tree?.system?.nodes
   if (!Array.isArray(nodes)) return undefined
-  return nodes.find(n => n?.nodeId === nodeId)
+  return nodes.find((n) => n?.nodeId === nodeId)
 }
 
 function hasPurchase(actor, treeId, nodeId, talentId, specializationId, { treeUuid, talentUuid } = {}) {
   const purchases = actor?.system?.progression?.talentPurchases
   if (!Array.isArray(purchases)) return false
-  return purchases.some(p =>
-    p.nodeId === nodeId
-    && p.specializationId === specializationId
-    && (treeUuid && p.treeUuid ? p.treeUuid === treeUuid : p.treeId === treeId)
-    && (talentUuid && p.talentUuid ? p.talentUuid === talentUuid : p.talentId === talentId)
+  return purchases.some(
+    (p) =>
+      p.nodeId === nodeId &&
+      p.specializationId === specializationId &&
+      (treeUuid && p.treeUuid ? p.treeUuid === treeUuid : p.treeId === treeId) &&
+      (talentUuid && p.talentUuid ? p.talentUuid === talentUuid : p.talentId === talentId),
   )
 }
 
@@ -73,8 +74,7 @@ function isCompleteTree(tree) {
     return false
   }
 
-  return Array.isArray(nodes) && nodes.length > 0
-    && Array.isArray(connections) && connections.length > 0
+  return Array.isArray(nodes) && nodes.length > 0 && Array.isArray(connections) && connections.length > 0
 }
 
 function isAccessible(actor, tree, node) {
@@ -90,7 +90,7 @@ function isAccessible(actor, tree, node) {
 
   for (const conn of connections) {
     if (conn.to !== node.nodeId) continue
-    const sourceNode = nodes.find(n => n.nodeId === conn.from)
+    const sourceNode = nodes.find((n) => n.nodeId === conn.from)
     if (!sourceNode) continue
     if (hasPurchase(actor, treeId, sourceNode.nodeId, sourceNode.talentId, specializationId, { treeUuid, talentUuid: sourceNode.talentUuid })) {
       return true

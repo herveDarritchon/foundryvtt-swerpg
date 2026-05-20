@@ -43,43 +43,44 @@ Deux fichiers de tests existent déjà et couvrent la quasi-totalité de la spec
 
 **`tests/utils/audit-log.test.mjs`** (718 lignes, ~35 tests)
 
-| Groupe | Tests | Statut |
-|--------|-------|--------|
-| `isOnlyAuditChange` | 4 tests (true/false/vide/autres clés) | ✅ Complet |
-| `cloneValue` | 3 tests (objets simples/nested/undefined) | ✅ Complet |
-| `snapshotOldState` | 5 tests (chemins modifiés, clone défensif, chemins vides, deletion paths, chemins multiples) | ⚠️ Manque : chemin imbriqué profond |
-| `isDeletionPath` | 2 tests | ✅ Complet |
-| `pending queue` | 1 test FIFO | ✅ Complet |
-| `writeLogEntries max size` | 6 tests (éviction, seuil non atteint, limite basse 100, setting dynamique, fallback 500, multi-entries) | ✅ Complet |
-| `evictOldestIfNeeded` | 2 tests (overflow, under limit) | ✅ Complet |
-| `onPreUpdateActor` | 4 tests (non-character, only audit, swerpg option, capture) | ✅ Complet |
-| `onUpdateActor` | 4 tests (non-character, swerpg option, no pending, expired pending) | ✅ Complet |
-| `writeLogEntries` | 3 tests (batch, empty, swerpgAuditLog option) | ✅ Complet |
-| `registerAuditLogHooks` | 1 test (2 hooks registrés) | ✅ Complet |
-| `handleWriteError` | 5 tests (logger.error, ui.warn, GM whisper, non-GM, chat failure catch) | ✅ Complet |
-| `writeLogEntries retry` | 3 tests (retry success, retry exhausted, first attempt) | ✅ Complet |
-| `pruneExpiredPending` | 2 tests (warning threshold) | ✅ Complet |
+| Groupe                     | Tests                                                                                                   | Statut                              |
+| -------------------------- | ------------------------------------------------------------------------------------------------------- | ----------------------------------- |
+| `isOnlyAuditChange`        | 4 tests (true/false/vide/autres clés)                                                                   | ✅ Complet                          |
+| `cloneValue`               | 3 tests (objets simples/nested/undefined)                                                               | ✅ Complet                          |
+| `snapshotOldState`         | 5 tests (chemins modifiés, clone défensif, chemins vides, deletion paths, chemins multiples)            | ⚠️ Manque : chemin imbriqué profond |
+| `isDeletionPath`           | 2 tests                                                                                                 | ✅ Complet                          |
+| `pending queue`            | 1 test FIFO                                                                                             | ✅ Complet                          |
+| `writeLogEntries max size` | 6 tests (éviction, seuil non atteint, limite basse 100, setting dynamique, fallback 500, multi-entries) | ✅ Complet                          |
+| `evictOldestIfNeeded`      | 2 tests (overflow, under limit)                                                                         | ✅ Complet                          |
+| `onPreUpdateActor`         | 4 tests (non-character, only audit, swerpg option, capture)                                             | ✅ Complet                          |
+| `onUpdateActor`            | 4 tests (non-character, swerpg option, no pending, expired pending)                                     | ✅ Complet                          |
+| `writeLogEntries`          | 3 tests (batch, empty, swerpgAuditLog option)                                                           | ✅ Complet                          |
+| `registerAuditLogHooks`    | 1 test (2 hooks registrés)                                                                              | ✅ Complet                          |
+| `handleWriteError`         | 5 tests (logger.error, ui.warn, GM whisper, non-GM, chat failure catch)                                 | ✅ Complet                          |
+| `writeLogEntries retry`    | 3 tests (retry success, retry exhausted, first attempt)                                                 | ✅ Complet                          |
+| `pruneExpiredPending`      | 2 tests (warning threshold)                                                                             | ✅ Complet                          |
 
 **`tests/utils/audit-diff.test.mjs`** (1311 lignes, ~30 tests)
 
-| Groupe | Tests | Statut |
-|--------|-------|--------|
-| `captureSnapshot` | 2 tests (XP snapshot complet, progression manquante → zéros) | ✅ Complet |
-| `makeEntry` | 4 tests (bien formé, Unknown fallback, -0 normalisation, shallow clone) | ✅ Complet |
-| `cost helpers` | 5 tests (skill train career/non-career, forget, characteristic) | ✅ Complet |
-| `reconstructPreviousValue` | 2 tests | ✅ Complet |
-| `skill changes` | 5 tests (train career, train non-career, forget, unchanged → empty, isFree) | ✅ Complet |
-| `characteristic changes` | 2 tests (increase, decrease → empty) | ✅ Complet |
-| `XP changes` | 6 tests (spend, refund, grant, remove, unchanged, composite skill+XP) | ✅ Complet |
-| `detail changes` | 5 tests (species.set, career.set, spec.add, spec.add existant, spec.remove) | ✅ Complet |
-| `advancement changes` | 2 tests (level change, unchanged) | ✅ Complet |
-| `composeEntries` | 4 tests (empty changes, non-system, unknown user, flat Foundry diff, analyse failure) | ✅ Complet |
-| `inferIsCareer` | 3 tests (career skill, spec skill, non-career) | ✅ Complet |
-| `getCareerSkillIds` | 1 test (collecte career + spec skills avec objets) | ✅ Complet |
+| Groupe                     | Tests                                                                                 | Statut     |
+| -------------------------- | ------------------------------------------------------------------------------------- | ---------- |
+| `captureSnapshot`          | 2 tests (XP snapshot complet, progression manquante → zéros)                          | ✅ Complet |
+| `makeEntry`                | 4 tests (bien formé, Unknown fallback, -0 normalisation, shallow clone)               | ✅ Complet |
+| `cost helpers`             | 5 tests (skill train career/non-career, forget, characteristic)                       | ✅ Complet |
+| `reconstructPreviousValue` | 2 tests                                                                               | ✅ Complet |
+| `skill changes`            | 5 tests (train career, train non-career, forget, unchanged → empty, isFree)           | ✅ Complet |
+| `characteristic changes`   | 2 tests (increase, decrease → empty)                                                  | ✅ Complet |
+| `XP changes`               | 6 tests (spend, refund, grant, remove, unchanged, composite skill+XP)                 | ✅ Complet |
+| `detail changes`           | 5 tests (species.set, career.set, spec.add, spec.add existant, spec.remove)           | ✅ Complet |
+| `advancement changes`      | 2 tests (level change, unchanged)                                                     | ✅ Complet |
+| `composeEntries`           | 4 tests (empty changes, non-system, unknown user, flat Foundry diff, analyse failure) | ✅ Complet |
+| `inferIsCareer`            | 3 tests (career skill, spec skill, non-career)                                        | ✅ Complet |
+| `getCareerSkillIds`        | 1 test (collecte career + spec skills avec objets)                                    | ✅ Complet |
 
 ### Tests manuels existants
 
 Des tests manuels d'audit log sont déjà intégrés dans `documentation/tests/manuel/personnage/README.md` :
+
 - Vérification d'entrée `characteristic.increase` (l.108)
 - Vérification d'entrée `skill.train` (l.135)
 - Vérification d'entrée `xp.grant` (l.201)
@@ -100,6 +101,7 @@ Le plan US1 (§5) et la spec de l'issue #163 mentionnent un hook `createItem` po
 **Décision** : Conforme à la règle inviolable de l'issue, aucun fichier dans `module/` n'est modifié. Les tests sont purement additifs et ne touchent que `tests/` et `documentation/tests/`.
 
 Justification :
+
 - L'audit log est déjà implémenté et opérationnel
 - L'objectif est la couverture de test, pas l'évolution fonctionnelle
 - Réduit le risque de régression
@@ -109,6 +111,7 @@ Justification :
 **Décision** : Ajouter les tests manquants dans `tests/utils/audit-log.test.mjs` plutôt que de créer un nouveau fichier.
 
 Justification :
+
 - Cohérence : tous les tests du module `audit-log.mjs` sont déjà dans ce fichier
 - Pas de fragmentation
 - La spec de l'issue liste des tests qui s'ajoutent naturellement aux `describe` existants
@@ -118,6 +121,7 @@ Justification :
 **Décision** : Créer `documentation/tests/manuel/audit-log/README.md` avec des scénarios spécifiques, en extrayant et complétant les tests déjà présents dans `personnage/README.md`.
 
 Justification :
+
 - L'issue le demande explicitement
 - L'audit log est un aspect transverse (touche skills, caracs, XP, talents, espèces)
 - Un fichier dédié permet une couverture plus systématique
@@ -128,6 +132,7 @@ Justification :
 **Décision** : Les tests pour `onCreateItem` sont exclus du périmètre. Le gap est documenté dans ce plan et dans le README de tests manuels.
 
 Justification :
+
 - La fonction `onCreateItem` n'existe pas dans le code (seulement `onPreUpdateActor` et `onUpdateActor`)
 - La règle "Aucune modification du code métier" interdit de l'ajouter dans ce ticket
 - US4 (talents) prévoit l'instrumentation des achats de talent via `createItem`
@@ -141,11 +146,13 @@ Justification :
 **Quoi** : Lancer `npx vitest run tests/utils/audit-log.test.mjs tests/utils/audit-diff.test.mjs` et analyser les résultats. Identifier les échecs.
 
 Si des tests échouent, investiguer :
+
 - Est-ce un problème de mock (mock-foundry qui a changé) ?
 - Est-ce un problème de code métier (régression) ?
 - Est-ce un problème de test lui-même (assertion incorrecte) ?
 
 **Actions possibles** :
+
 - Si le test est mal écrit : corriger le test
 - Si le mock est obsolète : corriger le mock dans le test (pas dans le code métier)
 - Si le code métier est en cause : ne pas modifier, documenter l'écart et reporter
@@ -160,6 +167,7 @@ Si des tests échouent, investiguer :
 Tests à ajouter :
 
 **snapshotOldState (chemin profond imbriqué)** :
+
 ```
 test('captures deeply nested paths like system.skills.stealth.rank.trained')
   source = { system: { skills: { stealth: { rank: { base: 0, trained: 2, careerFree: 0, specializationFree: 0 } } } } }
@@ -198,6 +206,7 @@ Inspiration du format : `documentation/tests/manuel/talents/README.md`
 **Quoi** : Ajouter une ligne dans la section "Structure du dossier `tests/`" (l.90-111) pour mentionner les fichiers d'audit log.
 
 Ajout dans l'arborescence :
+
 ```
   utils/
     audit-log.test.mjs          # Tests du module d'audit log (hooks, écriture, résilience)
@@ -212,6 +221,7 @@ Ajout dans l'arborescence :
 **Quoi** : Ajouter une ligne dans le tableau des familles de test pour l'audit log, et mettre à jour les compteurs.
 
 Ajout dans le tableau :
+
 ```
 | [Audit Log](audit-log/README.md) | Hooks, entrées, résilience, éviction FIFO | ~12 scénarios |
 ```
@@ -224,6 +234,7 @@ Mettre à jour "Total scénarios documentés" (12 de plus).
 ### Étape 6 : Vérification finale
 
 **Quoi** :
+
 - Lancer tous les tests audit-log et audit-diff : `npx vitest run tests/utils/audit-log.test.mjs tests/utils/audit-diff.test.mjs`
 - Vérifier que le coverage est satisfaisant sur les chemins critiques (analyseur de diff, écriture, résilience)
 - Vérifier la cohérence de la documentation (liens, format des tableaux)
@@ -236,23 +247,23 @@ Mettre à jour "Total scénarios documentés" (12 de plus).
 
 ## 6. Fichiers modifiés
 
-| Fichier | Action | Description |
-|---------|--------|-------------|
-| `tests/utils/audit-log.test.mjs` | Modification | Ajout du test manquant `snapshotOldState` pour chemin profond imbriqué |
-| `documentation/tests/manuel/audit-log/README.md` | Création | Tests manuels dédiés à l'audit log (~12 scénarios) |
-| `tests/README.md` | Modification | Ajout des lignes pour les fichiers d'audit log dans l'arborescence |
-| `documentation/tests/manuel/README.md` | Modification | Ajout de la famille "Audit Log" dans l'index |
+| Fichier                                          | Action       | Description                                                            |
+| ------------------------------------------------ | ------------ | ---------------------------------------------------------------------- |
+| `tests/utils/audit-log.test.mjs`                 | Modification | Ajout du test manquant `snapshotOldState` pour chemin profond imbriqué |
+| `documentation/tests/manuel/audit-log/README.md` | Création     | Tests manuels dédiés à l'audit log (~12 scénarios)                     |
+| `tests/README.md`                                | Modification | Ajout des lignes pour les fichiers d'audit log dans l'arborescence     |
+| `documentation/tests/manuel/README.md`           | Modification | Ajout de la famille "Audit Log" dans l'index                           |
 
 ---
 
 ## 7. Risques
 
-| Risque | Impact | Mitigation |
-|--------|--------|------------|
-| **Tests existants qui échouent** (mock obsolète, régression code métier) | Bloquant pour l'étape 1 | Debug du test ou du mock (pas du code métier). Si régression code métier, documenter et reporter. |
-| **`onCreateItem` gap non documenté** | Confusion pour le développeur suivant | Documenter explicitement dans ce plan §4.4 et dans le README de tests manuels |
-| **Tests manuels redondants** avec `personnage/README.md` | Duplication, désynchronisation possible | Référencer les tests existants plutôt que de copier |
-| **Oubli de mise à jour de l'index** | Lien mort dans `documentation/tests/manuel/README.md` | Vérification finale incluse dans l'étape 6 |
+| Risque                                                                   | Impact                                                | Mitigation                                                                                        |
+| ------------------------------------------------------------------------ | ----------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| **Tests existants qui échouent** (mock obsolète, régression code métier) | Bloquant pour l'étape 1                               | Debug du test ou du mock (pas du code métier). Si régression code métier, documenter et reporter. |
+| **`onCreateItem` gap non documenté**                                     | Confusion pour le développeur suivant                 | Documenter explicitement dans ce plan §4.4 et dans le README de tests manuels                     |
+| **Tests manuels redondants** avec `personnage/README.md`                 | Duplication, désynchronisation possible               | Référencer les tests existants plutôt que de copier                                               |
+| **Oubli de mise à jour de l'index**                                      | Lien mort dans `documentation/tests/manuel/README.md` | Vérification finale incluse dans l'étape 6                                                        |
 
 ---
 
@@ -274,6 +285,7 @@ US1 (infrastructure audit log) — déjà implémentée
 ```
 
 **Gap connu** : Les tests pour `talent.purchase` (via `createItem`) ne peuvent pas être écrits car le hook `onCreateItem` n'est pas encore implémenté dans `module/utils/audit-log.mjs`. Ce gap sera résolu par US4 ou par un ticket dédié qui :
+
 1. Ajoutera `onCreateItem` dans `audit-log.mjs`
 2. Câblera `Hooks.on('createItem', auditLog.onCreateItem)` dans `registerAuditLogHooks()`
 3. Ajoutera les tests Vitest correspondants dans `audit-log.test.mjs`

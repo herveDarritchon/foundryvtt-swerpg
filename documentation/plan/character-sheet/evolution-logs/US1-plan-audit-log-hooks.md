@@ -93,15 +93,15 @@ Ces appels sont séquentiels avec `await` entre eux. Le hook `updateActor` sera 
 
 ### Signature des hooks Foundry v14
 
-| Hook | Paramètres | Timing |
-|------|-----------|--------|
+| Hook                                              | Paramètres                                                               | Timing            |
+| ------------------------------------------------- | ------------------------------------------------------------------------ | ----------------- |
 | `preUpdateActor(actor, changes, options, userId)` | `actor` = instance (old state dans `_source`), `changes` = diff imbriqué | Avant écriture DB |
-| `updateActor(actor, changes, options, userId)` | `actor` = instance (new state dans `_source`), `changes` = diff imbriqué | Après écriture DB |
+| `updateActor(actor, changes, options, userId)`    | `actor` = instance (new state dans `_source`), `changes` = diff imbriqué | Après écriture DB |
 
 **Important** : Après `updateActor`, `actor._source` contient déjà les nouvelles valeurs. On NE PEUT PAS récupérer les anciennes valeurs depuis `_source` dans ce hook. D'où la nécessité du hook `preUpdateActor` pour capturer l'ancien état.
 
-| Hook | Paramètres | Timing |
-|------|-----------|--------|
+| Hook                                      | Paramètres                                             | Timing            |
+| ----------------------------------------- | ------------------------------------------------------ | ----------------- |
 | `createItem(item, data, options, userId)` | `item` = l'item créé, `data` = les données de création | Après création DB |
 
 Le `createItem` permet de détecter les achats de talent (création d'un embedded Item de type `talent`).
@@ -211,11 +211,15 @@ function composeEntries(oldState, changes, actor, userId) {
 
   // Détection characteristic.increase
   const charsChanged = changes.system?.characteristics
-  if (charsChanged) { /* même logique */ }
+  if (charsChanged) {
+    /* même logique */
+  }
 
   // Détection xp.spend / xp.grant
   const xpChanged = changes.system?.progression?.experience
-  if (xpChanged) { /* détection spent / gained */ }
+  if (xpChanged) {
+    /* détection spent / gained */
+  }
 
   // Détection species.set, career.set
   // Détection specialization.add / .remove
@@ -304,8 +308,8 @@ function captureSnapshot(actor) {
 
 **Décision** : Namespace `AUDIT.*` (dans `SKILL.AUDIT.*` pour rester cohérent avec `SKILL.XP_CONSOLE.*`).
 
-| Clé | EN | FR |
-|-----|----|----|
+| Clé                        | EN                                                     | FR                                                                                       |
+| -------------------------- | ------------------------------------------------------ | ---------------------------------------------------------------------------------------- |
 | `SKILL.AUDIT.WRITE_FAILED` | Audit log could not be saved. See console for details. | Le journal d'évolution n'a pas pu être sauvegardé. Voir la console pour plus de détails. |
 
 Les descriptions lisibles des types d'événement seront ajoutées dans US6 (interface de visualisation).
@@ -439,25 +443,28 @@ function detectSkillChanges(oldState, changes, actor, ts, userId, user, snapshot
     if (!skillData.rank) continue
 
     const oldRank = oldState.skills?.[skillId]?.rank ?? {}
-    const oldTotal = (oldRank.base ?? 0) + (oldRank.careerFree ?? 0) +
-      (oldRank.specializationFree ?? 0) + (oldRank.trained ?? 0)
+    const oldTotal = (oldRank.base ?? 0) + (oldRank.careerFree ?? 0) + (oldRank.specializationFree ?? 0) + (oldRank.trained ?? 0)
 
     const newRankObj = actor.system.skills?.[skillId]?.rank
     if (!newRankObj) continue
-    const newTotal = newRankObj.base + newRankObj.careerFree +
-      newRankObj.specializationFree + newRankObj.trained
+    const newTotal = newRankObj.base + newRankObj.careerFree + newRankObj.specializationFree + newRankObj.trained
 
     if (oldTotal === newTotal) continue
 
     const cost = computeSkillCost(oldState, changes, skillId, newTotal > oldTotal)
     const isFree = cost === 0 && newTotal > oldTotal
 
-    entries.push(makeEntry({
-      type: newTotal > oldTotal ? 'skill.train' : 'skill.forget',
-      data: { skillId, oldRank: oldTotal, newRank: newTotal, cost, isFree },
-      xpDelta: newTotal > oldTotal ? -(cost) : cost,
-      ts, userId, user, snapshot,
-    }))
+    entries.push(
+      makeEntry({
+        type: newTotal > oldTotal ? 'skill.train' : 'skill.forget',
+        data: { skillId, oldRank: oldTotal, newRank: newTotal, cost, isFree },
+        xpDelta: newTotal > oldTotal ? -cost : cost,
+        ts,
+        userId,
+        user,
+        snapshot,
+      }),
+    )
   }
   return entries
 }
@@ -488,12 +495,17 @@ function detectXpChanges(oldState, changes, actor, ts, userId, user, snapshot) {
     const newSpent = actor.system.progression.experience.spent
     const diff = newSpent - oldSpent
     if (diff !== 0) {
-      entries.push(makeEntry({
-        type: diff > 0 ? 'xp.spend' : 'xp.refund',
-        data: { amount: Math.abs(diff), oldSpent, newSpent },
-        xpDelta: -diff,
-        ts, userId, user, snapshot,
-      }))
+      entries.push(
+        makeEntry({
+          type: diff > 0 ? 'xp.spend' : 'xp.refund',
+          data: { amount: Math.abs(diff), oldSpent, newSpent },
+          xpDelta: -diff,
+          ts,
+          userId,
+          user,
+          snapshot,
+        }),
+      )
     }
   }
 
@@ -502,12 +514,17 @@ function detectXpChanges(oldState, changes, actor, ts, userId, user, snapshot) {
     const newGained = actor.system.progression.experience.gained
     const diff = newGained - oldGained
     if (diff !== 0) {
-      entries.push(makeEntry({
-        type: 'xp.grant',
-        data: { amount: diff, oldGained, newGained },
-        xpDelta: diff,
-        ts, userId, user, snapshot,
-      }))
+      entries.push(
+        makeEntry({
+          type: 'xp.grant',
+          data: { amount: diff, oldGained, newGained },
+          xpDelta: diff,
+          ts,
+          userId,
+          user,
+          snapshot,
+        }),
+      )
     }
   }
 
@@ -621,49 +638,49 @@ Hooks.on('createItem', auditLog.onCreateItem)
 
 Fichier : `tests/utils/audit-log.test.mjs`
 
-| Test | Description | Vérification |
-|------|-------------|-------------|
-| `snapshotOldState captures only changed paths` | Simule un update de skill, vérifie que seul `skills.X` est capturé | `oldState` ne contient pas `progression` |
-| `snapshotOldState handles empty changes` | `changes` vide → `oldState` vide | Objet vide |
-| `composeEntries creates skill.train entry` | Rank 2→3, XP 10→20 | Type = `skill.train`, data.oldRank = 2, data.newRank = 3 |
-| `composeEntries creates skill.forget entry` | Rank 3→2, XP 20→10 | Type = `skill.forget`, data.oldRank = 3, data.newRank = 2 |
-| `composeEntries creates xp.spend entry` | XP.spent 30→40 | Type = `xp.spend`, data.amount = 10 |
-| `composeEntries creates xp.grant entry` | XP.gained 200→250 | Type = `xp.grant`, data.amount = 50 |
-| `composeEntries creates characteristic.increase` | Brawn 2→3 | Type = `characteristic.increase` |
-| `composeEntries creates species.set entry` | species de null→Human | Type = `species.set` |
-| `isOnlyAuditChange returns true` | changes = `{ flags: { swerpg: { logs: [...] } } }` | `true` |
-| `isOnlyAuditChange returns false` | changes = `{ system: { skills: { ... } } }` | `false` |
-| `writeLogEntry appends to existing logs` | 3 entrées existantes + 1 nouvelle | flags.swerpg.logs.length = 4 |
-| `writeLogEntry enforces max size` | 500 entrées + 1 nouvelle | 500 entrées, la plus ancienne retirée |
-| `writeLogEntry handles error gracefully` | `actor.update` throw | `logger.error` appelé |
-| `onUpdate ignore non-character` | Adversary update | Aucune entrée créée |
-| `onCreateItem creates talent.purchase entry` | Talent item créé sur character | Type = `talent.purchase` |
-| `onCreateItem ignore non-talent` | Weapon item créé | Aucune entrée |
+| Test                                             | Description                                                        | Vérification                                              |
+| ------------------------------------------------ | ------------------------------------------------------------------ | --------------------------------------------------------- |
+| `snapshotOldState captures only changed paths`   | Simule un update de skill, vérifie que seul `skills.X` est capturé | `oldState` ne contient pas `progression`                  |
+| `snapshotOldState handles empty changes`         | `changes` vide → `oldState` vide                                   | Objet vide                                                |
+| `composeEntries creates skill.train entry`       | Rank 2→3, XP 10→20                                                 | Type = `skill.train`, data.oldRank = 2, data.newRank = 3  |
+| `composeEntries creates skill.forget entry`      | Rank 3→2, XP 20→10                                                 | Type = `skill.forget`, data.oldRank = 3, data.newRank = 2 |
+| `composeEntries creates xp.spend entry`          | XP.spent 30→40                                                     | Type = `xp.spend`, data.amount = 10                       |
+| `composeEntries creates xp.grant entry`          | XP.gained 200→250                                                  | Type = `xp.grant`, data.amount = 50                       |
+| `composeEntries creates characteristic.increase` | Brawn 2→3                                                          | Type = `characteristic.increase`                          |
+| `composeEntries creates species.set entry`       | species de null→Human                                              | Type = `species.set`                                      |
+| `isOnlyAuditChange returns true`                 | changes = `{ flags: { swerpg: { logs: [...] } } }`                 | `true`                                                    |
+| `isOnlyAuditChange returns false`                | changes = `{ system: { skills: { ... } } }`                        | `false`                                                   |
+| `writeLogEntry appends to existing logs`         | 3 entrées existantes + 1 nouvelle                                  | flags.swerpg.logs.length = 4                              |
+| `writeLogEntry enforces max size`                | 500 entrées + 1 nouvelle                                           | 500 entrées, la plus ancienne retirée                     |
+| `writeLogEntry handles error gracefully`         | `actor.update` throw                                               | `logger.error` appelé                                     |
+| `onUpdate ignore non-character`                  | Adversary update                                                   | Aucune entrée créée                                       |
+| `onCreateItem creates talent.purchase entry`     | Talent item créé sur character                                     | Type = `talent.purchase`                                  |
+| `onCreateItem ignore non-talent`                 | Weapon item créé                                                   | Aucune entrée                                             |
 
 ---
 
 ## 6. Fichiers modifiés
 
-| Fichier | Action | Description |
-|---------|--------|-------------|
-| `module/utils/audit-log.mjs` | Création | Module principal : hooks, analyse, écriture |
-| `swerpg.mjs` | Modification | Ajout des 3 hooks (`preUpdateActor`, `updateActor`, `createItem`) |
-| `lang/en.json` | Modification | Ajout de `SKILL.AUDIT.WRITE_FAILED` |
-| `lang/fr.json` | Modification | Ajout de `SKILL.AUDIT.WRITE_FAILED` (traduction) |
-| `tests/utils/audit-log.test.mjs` | Création | Tests Vitest complets |
+| Fichier                          | Action       | Description                                                       |
+| -------------------------------- | ------------ | ----------------------------------------------------------------- |
+| `module/utils/audit-log.mjs`     | Création     | Module principal : hooks, analyse, écriture                       |
+| `swerpg.mjs`                     | Modification | Ajout des 3 hooks (`preUpdateActor`, `updateActor`, `createItem`) |
+| `lang/en.json`                   | Modification | Ajout de `SKILL.AUDIT.WRITE_FAILED`                               |
+| `lang/fr.json`                   | Modification | Ajout de `SKILL.AUDIT.WRITE_FAILED` (traduction)                  |
+| `tests/utils/audit-log.test.mjs` | Création     | Tests Vitest complets                                             |
 
 ---
 
 ## 7. Risques
 
-| Risque | Impact | Mitigation |
-|--------|--------|------------|
-| **Boucle infinie** si `writeLogEntry` déclenche un autre `updateActor` hook | Crash navigateur, freeze | Guard `isOnlyAuditChange` + test de non-régression |
-| **Perte d'entrée** si `preUpdateActor` reçu mais `updateActor` pas reçu (erreur DB) | Entrée non enregistrée | Acceptable : le log est secondaire. `pendingOldStates` sera nettoyée au prochain update réussi |
-| **Doublon d'entrée** si plusieurs `updateActor` pour la même modif (rare) | Entrée en double | Acceptable : mieux que de perdre une entrée. US6 pourra dédupliquer par timestamp |
-| **Taille du flag** : un personnage actif peut accumuler des centaines d'entrées | Document trop volumineux | Taille max = 500 entrées (bien en dessous des limites Foundry). `splice` FIFO |
-| **Performance** : analyse du diff sur chaque update | Latence perceptible | L'analyse est légère (parcours d'objets). Si besoin, utiliser `foundry.utils.hasProperty` qui est optimisé |
-| **Race condition** : deux updates simultanés sur le même actor (ex: GM + joueur) | Écrasement d'entrée | `actor.update` est atomique en Foundry. La lecture + écriture dans le hook est séquentielle |
+| Risque                                                                              | Impact                   | Mitigation                                                                                                 |
+| ----------------------------------------------------------------------------------- | ------------------------ | ---------------------------------------------------------------------------------------------------------- |
+| **Boucle infinie** si `writeLogEntry` déclenche un autre `updateActor` hook         | Crash navigateur, freeze | Guard `isOnlyAuditChange` + test de non-régression                                                         |
+| **Perte d'entrée** si `preUpdateActor` reçu mais `updateActor` pas reçu (erreur DB) | Entrée non enregistrée   | Acceptable : le log est secondaire. `pendingOldStates` sera nettoyée au prochain update réussi             |
+| **Doublon d'entrée** si plusieurs `updateActor` pour la même modif (rare)           | Entrée en double         | Acceptable : mieux que de perdre une entrée. US6 pourra dédupliquer par timestamp                          |
+| **Taille du flag** : un personnage actif peut accumuler des centaines d'entrées     | Document trop volumineux | Taille max = 500 entrées (bien en dessous des limites Foundry). `splice` FIFO                              |
+| **Performance** : analyse du diff sur chaque update                                 | Latence perceptible      | L'analyse est légère (parcours d'objets). Si besoin, utiliser `foundry.utils.hasProperty` qui est optimisé |
+| **Race condition** : deux updates simultanés sur le même actor (ex: GM + joueur)    | Écrasement d'entrée      | `actor.update` est atomique en Foundry. La lecture + écriture dans le hook est séquentielle                |
 
 ---
 

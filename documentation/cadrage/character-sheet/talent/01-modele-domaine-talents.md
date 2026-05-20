@@ -70,6 +70,7 @@ Les traitements liés aux nœuds de talent sont regroupés dans `module/lib/tale
 Ces modules sont des modules domaine purs : ils ne dépendent pas de `game.i18n`, de l'UI Foundry ni du cycle de vie des documents. Ils importent uniquement le logger centralisé.
 
 Les tests correspondants sont dans `tests/lib/talent-node/` :
+
 - `tests/lib/talent-node/talent-tree-resolver.test.mjs`
 - `tests/lib/talent-node/talent-node-state.test.mjs`
 
@@ -101,29 +102,29 @@ Une définition générique de talent doit permettre de porter au minimum :
     page: null
   }
 }
-````
+```
 
 ### 3.3 Responsabilités
 
 La définition générique de talent porte :
 
-* le nom ;
-* la description ;
-* l’activation ;
-* l’information ranked / non-ranked ;
-* les tags utiles à l’affichage ;
-* la source éditoriale ou importée.
+- le nom ;
+- la description ;
+- l’activation ;
+- l’information ranked / non-ranked ;
+- les tags utiles à l’affichage ;
+- la source éditoriale ou importée.
 
 ### 3.4 Ce qu’elle ne porte pas
 
 La définition générique de talent ne porte pas :
 
-* le coût XP d’achat dans un arbre ;
-* la position dans un arbre ;
-* l’état acheté / non acheté ;
-* le rang possédé par un acteur ;
-* les connexions d’un arbre ;
-* les effets mécaniques automatisés en V1.
+- le coût XP d’achat dans un arbre ;
+- la position dans un arbre ;
+- l’état acheté / non acheté ;
+- le rang possédé par un acteur ;
+- les connexions d’un arbre ;
+- les effets mécaniques automatisés en V1.
 
 Le coût d’achat dépend du nœud d’arbre, pas du talent générique.
 
@@ -147,9 +148,9 @@ specialization-tree
 
 Ces Items peuvent être stockés :
 
-* dans le monde ;
-* dans un compendium monde ;
-* dans un pack généré par import OggDude.
+- dans le monde ;
+- dans un compendium monde ;
+- dans un pack généré par import OggDude.
 
 ### 4.3 Données minimales
 
@@ -176,23 +177,23 @@ Un arbre de spécialisation doit permettre de porter au minimum :
 
 L’arbre de spécialisation porte :
 
-* la spécialisation liée ;
-* éventuellement la carrière liée ;
-* les nœuds de talents ;
-* les positions des nœuds ;
-* les coûts XP par nœud ;
-* les connexions entre nœuds ;
-* les métadonnées d’import et de source.
+- la spécialisation liée ;
+- éventuellement la carrière liée ;
+- les nœuds de talents ;
+- les positions des nœuds ;
+- les coûts XP par nœud ;
+- les connexions entre nœuds ;
+- les métadonnées d’import et de source.
 
 ### 4.5 Ce qu’il ne porte pas
 
 L’arbre de spécialisation ne porte pas :
 
-* l’état acheté par un acteur ;
-* le rang consolidé d’un talent ;
-* l’historique des achats ;
-* les effets mécaniques automatisés ;
-* les données propres à un personnage.
+- l’état acheté par un acteur ;
+- le rang consolidé d’un talent ;
+- l’historique des achats ;
+- les effets mécaniques automatisés ;
+- les données propres à un personnage.
 
 ---
 
@@ -244,11 +245,11 @@ Si les données futures imposent plusieurs nœuds sur une même case, une conven
 
 Le nœud porte :
 
-* la référence vers le talent générique ;
-* la position dans l’arbre ;
-* le coût XP ;
-* les connexions ou prérequis d’accès ;
-* l’état référentiel nécessaire pour calculer l’accessibilité.
+- la référence vers le talent générique ;
+- la position dans l’arbre ;
+- le coût XP ;
+- les connexions ou prérequis d’accès ;
+- l’état référentiel nécessaire pour calculer l’accessibilité.
 
 ### 5.5 Coût
 
@@ -256,10 +257,10 @@ Le coût d’achat est porté par le nœud.
 
 Aucun coût ne doit être calculé depuis :
 
-* le rang du talent ;
-* la définition générique du talent ;
-* un fallback générique de type `rank * 5` ;
-* une logique héritée de Crucible.
+- le rang du talent ;
+- la définition générique du talent ;
+- un fallback générique de type `rank * 5` ;
+- une logique héritée de Crucible.
 
 ---
 
@@ -289,11 +290,11 @@ ou équivalent technique validé lors de l’implémentation.
 
 Si l’arbre ne peut pas être résolu :
 
-* la spécialisation reste affichable ;
-* l’arbre est marqué indisponible ou incomplet ;
-* aucun achat ne doit être possible dans cet arbre ;
-* l’UI doit fournir un message compréhensible ;
-* un warning technique peut être produit.
+- la spécialisation reste affichable ;
+- l’arbre est marqué indisponible ou incomplet ;
+- aucun achat ne doit être possible dans cet arbre ;
+- l’UI doit fournir un message compréhensible ;
+- un warning technique peut être produit.
 
 ### 6.4 Multi-spé
 
@@ -301,18 +302,18 @@ La V1 doit considérer toutes les spécialisations possédées par l’acteur.
 
 Aucune logique liée aux talents ne doit supposer :
 
-* qu’un personnage ne possède qu’une seule spécialisation ;
-* que la première spécialisation est la seule pertinente ;
-* que les talents ou arbres peuvent être calculés depuis une seule spécialisation.
+- qu’un personnage ne possède qu’une seule spécialisation ;
+- que la première spécialisation est la seule pertinente ;
+- que les talents ou arbres peuvent être calculés depuis une seule spécialisation.
 
 Les spécialisations possédées servent notamment à :
 
-* déterminer les arbres consultables ;
-* sélectionner le contexte d’achat courant ;
-* vérifier qu’un achat est réalisé dans une spécialisation possédée ;
-* consolider les talents possédés ;
-* consolider les rangs des talents ranked ;
-* afficher les sources des talents dans l’onglet Talents.
+- déterminer les arbres consultables ;
+- sélectionner le contexte d’achat courant ;
+- vérifier qu’un achat est réalisé dans une spécialisation possédée ;
+- consolider les talents possédés ;
+- consolider les rangs des talents ranked ;
+- afficher les sources des talents dans l’onglet Talents.
 
 ---
 
@@ -352,24 +353,24 @@ Selon les conventions Foundry retenues, certaines références peuvent être des
 
 L’achat acteur permet de recalculer :
 
-* les talents possédés ;
-* les rangs consolidés ;
-* les sources de talents ;
-* les nœuds achetés ;
-* les nœuds accessibles ;
-* les coûts XP associés aux achats.
+- les talents possédés ;
+- les rangs consolidés ;
+- les sources de talents ;
+- les nœuds achetés ;
+- les nœuds accessibles ;
+- les coûts XP associés aux achats.
 
 ### 7.4 Ce que l’achat acteur ne doit pas contenir
 
 L’achat acteur ne doit pas contenir :
 
-* l’historique complet d’achat ;
-* les anciennes valeurs ;
-* les nouvelles valeurs ;
-* les métadonnées détaillées de transaction ;
-* une copie complète du talent ;
-* une copie complète de l’arbre ;
-* les effets mécaniques automatisés.
+- l’historique complet d’achat ;
+- les anciennes valeurs ;
+- les nouvelles valeurs ;
+- les métadonnées détaillées de transaction ;
+- une copie complète du talent ;
+- une copie complète de l’arbre ;
+- les effets mécaniques automatisés.
 
 L’historique d’achat relève du système d’audit/log.
 
@@ -383,10 +384,10 @@ La vue consolidée est une représentation dérivée destinée à l’onglet Tal
 
 Elle est recalculée à partir :
 
-* des achats acteur ;
-* des définitions de talents ;
-* des arbres de spécialisation ;
-* des spécialisations possédées.
+- des achats acteur ;
+- des définitions de talents ;
+- des arbres de spécialisation ;
+- des spécialisations possédées.
 
 ### 8.2 Données affichables
 
@@ -443,9 +444,9 @@ L’onglet Talents affiche le rang consolidé.
 
 La vue graphique peut afficher :
 
-* le nœud acheté ;
-* le rang consolidé actuel ;
-* les sources du talent si nécessaire.
+- le nœud acheté ;
+- le rang consolidé actuel ;
+- les sources du talent si nécessaire.
 
 ### 9.3 Source du rang
 
@@ -469,10 +470,10 @@ Cependant, le bénéfice du talent reste non cumulatif dans la vue consolidée.
 
 Si le talent non-ranked `Dur à cuire` est acheté dans deux arbres différents :
 
-* les deux nœuds peuvent être marqués comme achetés ;
-* les deux nœuds peuvent contribuer à la progression de leurs arbres respectifs ;
-* l’onglet Talents n’affiche pas deux bénéfices cumulés ;
-* la vue consolidée affiche le talent une seule fois, avec plusieurs sources.
+- les deux nœuds peuvent être marqués comme achetés ;
+- les deux nœuds peuvent contribuer à la progression de leurs arbres respectifs ;
+- l’onglet Talents n’affiche pas deux bénéfices cumulés ;
+- la vue consolidée affiche le talent une seule fois, avec plusieurs sources.
 
 ### 10.3 Conséquence UI
 
@@ -497,13 +498,13 @@ La V1 doit calculer au minimum les états suivants :
 
 Un nœud invalide peut résulter de :
 
-* talent introuvable ;
-* arbre introuvable ;
-* coût manquant ;
-* position incohérente ;
-* connexion invalide ;
-* import incomplet ;
-* référence cassée.
+- talent introuvable ;
+- arbre introuvable ;
+- coût manquant ;
+- position incohérente ;
+- connexion invalide ;
+- import incomplet ;
+- référence cassée.
 
 Un nœud invalide ne doit pas être achetable.
 
@@ -515,13 +516,13 @@ Un nœud invalide ne doit pas être achetable.
 
 Un nœud est achetable si :
 
-* sa spécialisation est possédée ;
-* l’arbre est résolu ;
-* le nœud est résolu ;
-* le nœud n’est pas déjà acheté ;
-* le nœud n’est pas invalide ;
-* l’acteur dispose de l’XP nécessaire ;
-* le nœud est racine ou connecté à un nœud déjà acheté selon les connexions de l’arbre.
+- sa spécialisation est possédée ;
+- l’arbre est résolu ;
+- le nœud est résolu ;
+- le nœud n’est pas déjà acheté ;
+- le nœud n’est pas invalide ;
+- l’acteur dispose de l’XP nécessaire ;
+- le nœud est racine ou connecté à un nœud déjà acheté selon les connexions de l’arbre.
 
 ### 12.2 Nœud racine
 
@@ -529,10 +530,10 @@ Un nœud racine est un nœud accessible sans achat préalable dans le même arbr
 
 La méthode exacte d’identification d’un nœud racine dépendra du modèle retenu :
 
-* champ explicite `root: true` ;
-* absence de prérequis ;
-* rangée initiale ;
-* connexions entrantes absentes.
+- champ explicite `root: true` ;
+- absence de prérequis ;
+- rangée initiale ;
+- connexions entrantes absentes.
 
 La convention retenue devra être fixée dans la couche règles d’achat.
 
@@ -544,22 +545,22 @@ La convention retenue devra être fixée dans la couche règles d’achat.
 
 L’acteur persiste uniquement l’état nécessaire au jeu et à la progression :
 
-* spécialisations possédées ;
-* achats de nœuds de talents ;
-* références vers les arbres concernés ;
-* références vers les talents concernés ;
-* références nécessaires au recalcul des coûts XP.
+- spécialisations possédées ;
+- achats de nœuds de talents ;
+- références vers les arbres concernés ;
+- références vers les talents concernés ;
+- références nécessaires au recalcul des coûts XP.
 
 ### 13.2 Données non persistées
 
 L’acteur ne persiste pas :
 
-* les arbres complets ;
-* les définitions complètes de talents ;
-* la vue consolidée comme source de vérité ;
-* l’historique détaillé des achats ;
-* les effets mécaniques automatisés ;
-* les données d’audit/log.
+- les arbres complets ;
+- les définitions complètes de talents ;
+- la vue consolidée comme source de vérité ;
+- l’historique détaillé des achats ;
+- les effets mécaniques automatisés ;
+- les données d’audit/log.
 
 ---
 
@@ -587,15 +588,15 @@ Les invariants suivants doivent rester vrais dans toute l’implémentation V1 :
 
 Le modèle domaine V1 ne couvre pas :
 
-* automatisation mécanique des effets de talents ;
-* projection ActiveEffects ;
-* talents signatures ;
-* achat de nouvelles spécialisations ;
-* consultation des spécialisations non possédées ;
-* édition manuelle des arbres ;
-* remboursement / suppression complète avec recalcul intelligent ;
-* mode MJ override ;
-* drag & drop d’achat depuis la fiche.
+- automatisation mécanique des effets de talents ;
+- projection ActiveEffects ;
+- talents signatures ;
+- achat de nouvelles spécialisations ;
+- consultation des spécialisations non possédées ;
+- édition manuelle des arbres ;
+- remboursement / suppression complète avec recalcul intelligent ;
+- mode MJ override ;
+- drag & drop d’achat depuis la fiche.
 
 ---
 
@@ -603,13 +604,13 @@ Le modèle domaine V1 ne couvre pas :
 
 Ce document prépare notamment les issues suivantes :
 
-* définir le type `specialization-tree` ;
-* définir la structure des nœuds de talent ;
-* définir la structure des achats acteur ;
-* résoudre les spécialisations possédées vers leurs arbres ;
-* calculer la vue consolidée des talents possédés ;
-* gérer les talents ranked ;
-* gérer les talents non-ranked présents dans plusieurs arbres ;
-* calculer les états minimaux des nœuds ;
-* traiter les arbres ou nœuds invalides ;
-* supprimer ou isoler les hypothèses mono-spécialisation dans les flux talents.
+- définir le type `specialization-tree` ;
+- définir la structure des nœuds de talent ;
+- définir la structure des achats acteur ;
+- résoudre les spécialisations possédées vers leurs arbres ;
+- calculer la vue consolidée des talents possédés ;
+- gérer les talents ranked ;
+- gérer les talents non-ranked présents dans plusieurs arbres ;
+- calculer les états minimaux des nœuds ;
+- traiter les arbres ou nœuds invalides ;
+- supprimer ou isoler les hypothèses mono-spécialisation dans les flux talents.

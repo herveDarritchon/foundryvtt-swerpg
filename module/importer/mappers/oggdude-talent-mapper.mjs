@@ -305,7 +305,6 @@ export class OggDudeTalentMapper {
       throw error
     }
   }
-
 }
 
 // Export par défaut pour compatibilité

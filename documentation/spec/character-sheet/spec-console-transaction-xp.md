@@ -6,13 +6,13 @@ La console de transaction XP permet au joueur de gérer l’évolution des comp�
 
 Elle doit rendre lisible, fiable et réversible la progression des compétences, en permettant :
 
-* de consulter les XP disponibles ;
-* de visualiser les XP déjà dépensés ;
-* de voir les rangs gratuits restants ;
-* de prévisualiser le coût d’un achat de rang ;
-* d’acheter un nouveau rang de compétence ;
-* de revenir sur un achat lorsque cela est autorisé ;
-* de comprendre pourquoi une action est possible ou impossible.
+- de consulter les XP disponibles ;
+- de visualiser les XP déjà dépensés ;
+- de voir les rangs gratuits restants ;
+- de prévisualiser le coût d’un achat de rang ;
+- d’acheter un nouveau rang de compétence ;
+- de revenir sur un achat lorsque cela est autorisé ;
+- de comprendre pourquoi une action est possible ou impossible.
 
 La fonctionnalité ne doit pas seulement modifier un rang. Elle doit sécuriser une **transaction de progression**.
 
@@ -24,11 +24,11 @@ Aujourd’hui, l’interface affiche une console XP statique. Elle donne l’imp
 
 Le joueur ne peut pas :
 
-* savoir combien coûtera le prochain rang ;
-* distinguer une compétence éligible à un rang gratuit d’une compétence payante ;
-* acheter un rang depuis l’interface ;
-* corriger une erreur d’achat ;
-* voir immédiatement l’impact sur ses XP et son pool de dés.
+- savoir combien coûtera le prochain rang ;
+- distinguer une compétence éligible à un rang gratuit d’une compétence payante ;
+- acheter un rang depuis l’interface ;
+- corriger une erreur d’achat ;
+- voir immédiatement l’impact sur ses XP et son pool de dés.
 
 Cela crée une rupture entre l’intention de l’interface et son comportement réel.
 
@@ -53,13 +53,13 @@ La console doit couvrir :
 
 Cette fonctionnalité ne couvre pas :
 
-* l’achat de talents ;
-* l’achat de spécialisations ;
-* l’achat de caractéristiques ;
-* la gestion complète de la création de personnage ;
-* la modification manuelle avancée par le MJ ;
-* la reconstruction automatique d’un historique XP depuis un personnage importé ;
-* la correction rétroactive de personnages déjà modifiés manuellement.
+- l’achat de talents ;
+- l’achat de spécialisations ;
+- l’achat de caractéristiques ;
+- la gestion complète de la création de personnage ;
+- la modification manuelle avancée par le MJ ;
+- la reconstruction automatique d’un historique XP depuis un personnage importé ;
+- la correction rétroactive de personnages déjà modifiés manuellement.
 
 ---
 
@@ -71,10 +71,10 @@ Le joueur peut utiliser la console pour gérer les compétences de son propre pe
 
 Il peut :
 
-* consulter l’état XP ;
-* prévisualiser un achat ;
-* acheter un rang ;
-* annuler un achat traçable effectué via la console.
+- consulter l’état XP ;
+- prévisualiser un achat ;
+- acheter un rang ;
+- annuler un achat traçable effectué via la console.
 
 ## Maître de jeu
 
@@ -130,11 +130,11 @@ La compétence sélectionnée peut recevoir un rang gratuit.
 
 La console doit indiquer :
 
-* la compétence concernée ;
-* le rang actuel ;
-* le rang obtenu après achat ;
-* que le coût est de 0 XP ;
-* le type de rang gratuit utilisé : carrière ou spécialisation.
+- la compétence concernée ;
+- le rang actuel ;
+- le rang obtenu après achat ;
+- que le coût est de 0 XP ;
+- le type de rang gratuit utilisé : carrière ou spécialisation.
 
 ## Achat payant possible
 
@@ -142,13 +142,13 @@ La compétence sélectionnée peut être augmentée avec les XP disponibles.
 
 La console doit indiquer :
 
-* la compétence concernée ;
-* le rang actuel ;
-* le rang après achat ;
-* le coût XP ;
-* les XP restants après achat ;
-* le pool de dés actuel ;
-* le pool de dés après achat.
+- la compétence concernée ;
+- le rang actuel ;
+- le rang après achat ;
+- le coût XP ;
+- les XP restants après achat ;
+- le pool de dés actuel ;
+- le pool de dés après achat.
 
 ## Achat impossible — XP insuffisants
 
@@ -156,9 +156,9 @@ La compétence peut théoriquement être augmentée, mais le personnage n’a pa
 
 La console doit indiquer :
 
-* le coût nécessaire ;
-* les XP disponibles ;
-* le manque d’XP.
+- le coût nécessaire ;
+- les XP disponibles ;
+- le manque d’XP.
 
 ## Achat impossible — rang maximum atteint
 
@@ -172,10 +172,10 @@ Le dernier rang de la compétence peut être oublié parce qu’il a été acqui
 
 La console doit indiquer :
 
-* la compétence concernée ;
-* le rang qui sera retiré ;
-* le remboursement prévu ;
-* ou la restauration d’un rang gratuit si le rang retiré était gratuit.
+- la compétence concernée ;
+- le rang qui sera retiré ;
+- le remboursement prévu ;
+- ou la restauration d’un rang gratuit si le rang retiré était gratuit.
 
 ## Retrait impossible
 
@@ -183,10 +183,10 @@ Le rang ne peut pas être oublié automatiquement.
 
 Cela concerne notamment :
 
-* les rangs importés ;
-* les rangs saisis manuellement ;
-* les rangs antérieurs à la mise en place de la console ;
-* les rangs dont le système ne connaît pas l’origine.
+- les rangs importés ;
+- les rangs saisis manuellement ;
+- les rangs antérieurs à la mise en place de la console ;
+- les rangs dont le système ne connaît pas l’origine.
 
 Message attendu :
 
@@ -202,9 +202,9 @@ Le joueur ne peut acheter que le prochain rang disponible.
 
 Exemple :
 
-* rang actuel : 1 ;
-* achat possible : rang 2 ;
-* achat impossible : rang 3 directement.
+- rang actuel : 1 ;
+- achat possible : rang 2 ;
+- achat impossible : rang 3 directement.
 
 ## 7.2. Rang maximum
 
@@ -224,8 +224,8 @@ Si aucun rang gratuit applicable n’est disponible, le système calcule le coû
 
 Le coût dépend du statut de la compétence :
 
-* compétence de carrière ou de spécialisation : coût réduit ;
-* compétence hors carrière : coût normal.
+- compétence de carrière ou de spécialisation : coût réduit ;
+- compétence hors carrière : coût normal.
 
 ## 7.5. XP insuffisants
 
@@ -243,9 +243,9 @@ Le joueur ne peut retirer que le dernier rang acquis d’une compétence.
 
 Exemple :
 
-* rang actuel : 4 ;
-* retrait possible : retour au rang 3 ;
-* retrait direct au rang 2 impossible.
+- rang actuel : 4 ;
+- retrait possible : retour au rang 3 ;
+- retrait direct au rang 2 impossible.
 
 ## 8.2. Retrait uniquement si l’origine du rang est connue
 
@@ -253,15 +253,15 @@ Un rang ne peut être oublié automatiquement que si le système sait comment il
 
 Sont oubliables :
 
-* les rangs achetés via la console XP ;
-* les rangs gratuits consommés via la console XP.
+- les rangs achetés via la console XP ;
+- les rangs gratuits consommés via la console XP.
 
 Ne sont pas oubliables automatiquement :
 
-* les rangs importés ;
-* les rangs créés manuellement ;
-* les rangs existants avant cette fonctionnalité ;
-* les rangs dont l’origine est inconnue.
+- les rangs importés ;
+- les rangs créés manuellement ;
+- les rangs existants avant cette fonctionnalité ;
+- les rangs dont l’origine est inconnue.
 
 ## 8.3. Remboursement d’un rang acheté avec XP
 
@@ -277,9 +277,9 @@ Le système restaure le rang gratuit correspondant.
 
 Exemple :
 
-* un rang gratuit de carrière avait été utilisé ;
-* le joueur retire ce rang ;
-* le compteur de rangs gratuits de carrière augmente de 1.
+- un rang gratuit de carrière avait été utilisé ;
+- le joueur retire ce rang ;
+- le compteur de rangs gratuits de carrière augmente de 1.
 
 ## 8.5. Pas de remboursement approximatif
 
@@ -300,13 +300,13 @@ La preview se limite à **deux informations clés** :
 
 ## Mapping des états
 
-| `purchaseReason` | Statut affiché | Classe CSS | Coût |
-|------------------|----------------|------------|------|
-| `FREE_RANK_AVAILABLE` | Rang gratuit disponible | `is-free` | 0 XP |
-| `AFFORDABLE` | Achat possible | `is-affordable` | `nextCost` XP |
-| `INSUFFICIENT_XP` | XP insuffisants | `is-locked` | `nextCost` XP |
-| `MAX_RANK` | Rang maximum | `is-error` | — |
-| (aucune sélection) | Sélectionnez une compétence | — | — |
+| `purchaseReason`      | Statut affiché              | Classe CSS      | Coût          |
+| --------------------- | --------------------------- | --------------- | ------------- |
+| `FREE_RANK_AVAILABLE` | Rang gratuit disponible     | `is-free`       | 0 XP          |
+| `AFFORDABLE`          | Achat possible              | `is-affordable` | `nextCost` XP |
+| `INSUFFICIENT_XP`     | XP insuffisants             | `is-locked`     | `nextCost` XP |
+| `MAX_RANK`            | Rang maximum                | `is-error`      | —             |
+| (aucune sélection)    | Sélectionnez une compétence | —               | —             |
 
 ## Principe de simplification
 
@@ -327,10 +327,10 @@ L’interaction ne repose pas sur des pips de rang. Elle repose sur la **ligne d
 
 Au survol d’une ligne, la console affiche la prévisualisation de l’action principale disponible :
 
-* achat du prochain rang ;
-* utilisation d’un rang gratuit ;
-* retrait du dernier rang acquis via la console ;
-* impossibilité d’agir, avec raison courte.
+- achat du prochain rang ;
+- utilisation d’un rang gratuit ;
+- retrait du dernier rang acquis via la console ;
+- impossibilité d’agir, avec raison courte.
 
 Le survol ne modifie jamais les données du personnage.
 
@@ -338,9 +338,9 @@ Le survol ne modifie jamais les données du personnage.
 
 Une compétence peut proposer des actions explicites et compactes :
 
-* acheter le prochain rang ;
-* oublier le dernier rang traçable ;
-* afficher le détail du calcul si nécessaire.
+- acheter le prochain rang ;
+- oublier le dernier rang traçable ;
+- afficher le détail du calcul si nécessaire.
 
 Ces actions peuvent être affichées au survol, à la sélection de la ligne ou directement dans la console.
 
@@ -358,9 +358,9 @@ L’action de retrait est disponible uniquement pour le dernier rang acquis via 
 
 Le retrait doit indiquer clairement :
 
-* le rang retiré ;
-* le remboursement XP éventuel ;
-* ou la restauration d’un rang gratuit.
+- le rang retiré ;
+- le remboursement XP éventuel ;
+- ou la restauration d’un rang gratuit.
 
 Un rang importé, manuel ou non traçable ne peut pas être remboursé automatiquement.
 
@@ -368,14 +368,14 @@ Un rang importé, manuel ou non traçable ne peut pas être remboursé automatiq
 
 La ligne de compétence doit permettre d’identifier rapidement :
 
-* compétence de carrière ;
-* compétence de spécialisation ;
-* prochain rang gratuit ;
-* prochain rang achetable ;
-* achat bloqué ;
-* rang maximum atteint ;
-* dernier rang oubliable ;
-* dernier rang non remboursable.
+- compétence de carrière ;
+- compétence de spécialisation ;
+- prochain rang gratuit ;
+- prochain rang achetable ;
+- achat bloqué ;
+- rang maximum atteint ;
+- dernier rang oubliable ;
+- dernier rang non remboursable.
 
 Ces états doivent rester visuellement discrets pour ne pas alourdir la liste.
 
@@ -393,10 +393,10 @@ La console et/ou une notification doivent confirmer :
 
 Le système doit expliquer la raison :
 
-* XP insuffisants ;
-* rang maximum atteint ;
-* compétence non éligible ;
-* transaction invalide.
+- XP insuffisants ;
+- rang maximum atteint ;
+- compétence non éligible ;
+- transaction invalide.
 
 ## Retrait réussi
 
@@ -408,10 +408,10 @@ La console et/ou une notification doivent confirmer :
 
 Le système doit expliquer pourquoi :
 
-* rang non traçable ;
-* retrait non séquentiel ;
-* action non autorisée ;
-* rang non remboursable.
+- rang non traçable ;
+- retrait non séquentiel ;
+- action non autorisée ;
+- rang non remboursable.
 
 ---
 
@@ -437,10 +437,10 @@ Ces rangs doivent être considérés comme **non traçables** tant qu’ils n’
 
 Conséquence :
 
-* ils restent affichés normalement ;
-* ils comptent dans le rang actuel ;
-* ils peuvent servir de base pour acheter le rang suivant ;
-* ils ne peuvent pas être remboursés automatiquement.
+- ils restent affichés normalement ;
+- ils comptent dans le rang actuel ;
+- ils peuvent servir de base pour acheter le rang suivant ;
+- ils ne peuvent pas être remboursés automatiquement.
 
 Exemple :
 
@@ -462,10 +462,10 @@ Le joueur survole une compétence au rang 1.
 
 La console indique :
 
-* passage du rang 1 au rang 2 ;
-* coût XP ;
-* XP restants après achat ;
-* nouveau pool de dés.
+- passage du rang 1 au rang 2 ;
+- coût XP ;
+- XP restants après achat ;
+- nouveau pool de dés.
 
 Le joueur clique sur le pip du rang 2.
 
@@ -557,15 +557,15 @@ Tous les textes visibles doivent être disponibles en français et en anglais.
 
 Sont concernés :
 
-* titres ;
-* libellés de statistiques ;
-* états de console ;
-* messages de prévisualisation ;
-* messages de succès ;
-* messages d’erreur ;
-* raisons de blocage ;
-* libellés liés aux rangs gratuits ;
-* libellés liés au remboursement.
+- titres ;
+- libellés de statistiques ;
+- états de console ;
+- messages de prévisualisation ;
+- messages de succès ;
+- messages d’erreur ;
+- raisons de blocage ;
+- libellés liés aux rangs gratuits ;
+- libellés liés au remboursement.
 
 Aucun texte visible ne doit rester figé dans une seule langue.
 
@@ -613,11 +613,11 @@ Les personnages importés ou déjà créés ne doivent pas être cassés par cet
 
 Le joueur doit toujours comprendre :
 
-* ce qu’il va acheter ;
-* combien cela coûte ;
-* pourquoi c’est gratuit ou payant ;
-* pourquoi c’est refusé ;
-* ce qui sera remboursé en cas d’oubli.
+- ce qu’il va acheter ;
+- combien cela coûte ;
+- pourquoi c’est gratuit ou payant ;
+- pourquoi c’est refusé ;
+- ce qui sera remboursé en cas d’oubli.
 
 ---
 
@@ -643,11 +643,11 @@ Elle doit conserver une hauteur proche de l’état actuel, sauf justification U
 
 La console doit afficher en priorité :
 
-* XP disponibles ;
-* XP dépensés ;
-* rangs gratuits restants ;
-* coût ou remboursement de la sélection ;
-* état court de l’action possible.
+- XP disponibles ;
+- XP dépensés ;
+- rangs gratuits restants ;
+- coût ou remboursement de la sélection ;
+- état court de l’action possible.
 
 Les détails longs ne doivent pas être visibles en permanence.
 
@@ -655,11 +655,11 @@ Les détails longs ne doivent pas être visibles en permanence.
 
 L’interface doit privilégier :
 
-* icônes ;
-* boutons courts ;
-* liens discrets ;
-* infobulles ;
-* états visuels.
+- icônes ;
+- boutons courts ;
+- liens discrets ;
+- infobulles ;
+- états visuels.
 
 Les textes longs doivent être réservés aux détails, confirmations ou erreurs.
 
@@ -669,8 +669,8 @@ La console ne doit pas répéter toute l’information déjà visible sur la lig
 
 Elle doit seulement compléter la ligne avec :
 
-* l’action possible ;
-* le coût ou remboursement ;
-* l’impact sur les XP ;
-* l’impact sur le rang ;
-* l’impact sur le pool de dés.
+- l’action possible ;
+- le coût ou remboursement ;
+- l’impact sur les XP ;
+- l’impact sur le rang ;
+- l’impact sur le pool de dés.

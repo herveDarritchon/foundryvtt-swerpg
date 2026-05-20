@@ -54,7 +54,7 @@ Achat via couche domaine
 Mise à jour acteur
 ↓
 Rafraîchissement vue graphique + onglet Talents
-````
+```
 
 ---
 
@@ -64,15 +64,15 @@ La V1 affiche uniquement les arbres des spécialisations déjà possédées par 
 
 Hors V1 :
 
-* consultation des spécialisations non possédées ;
-* achat d’une nouvelle spécialisation ;
-* prévisualisation avancée de progression future.
+- consultation des spécialisations non possédées ;
+- achat d’une nouvelle spécialisation ;
+- prévisualisation avancée de progression future.
 
 Si un arbre ne peut pas être résolu :
 
-* la spécialisation reste visible ;
-* l’arbre est marqué indisponible ou incomplet ;
-* aucun achat n’est possible dans cet arbre.
+- la spécialisation reste visible ;
+- l’arbre est marqué indisponible ou incomplet ;
+- aucun achat n’est possible dans cet arbre.
 
 ---
 
@@ -92,13 +92,13 @@ Elle ne rend pas les autres spécialisations mécaniquement inactives.
 
 La vue doit afficher :
 
-* nœuds de talents ;
-* connexions entre nœuds ;
-* coût XP des nœuds ;
-* état du nœud ;
-* nom du talent ;
-* indication ranked / non-ranked si utile ;
-* informations de verrouillage ou d’erreur.
+- nœuds de talents ;
+- connexions entre nœuds ;
+- coût XP des nœuds ;
+- état du nœud ;
+- nom du talent ;
+- indication ranked / non-ranked si utile ;
+- informations de verrouillage ou d’erreur.
 
 ---
 
@@ -121,11 +121,11 @@ Un nœud invalide n’est jamais achetable.
 
 Interactions V1 attendues :
 
-* consulter le détail du talent ;
-* voir le coût XP ;
-* voir pourquoi le nœud est verrouillé ;
-* voir pourquoi le nœud est invalide ;
-* acheter le nœud s’il est disponible.
+- consulter le détail du talent ;
+- voir le coût XP ;
+- voir pourquoi le nœud est verrouillé ;
+- voir pourquoi le nœud est invalide ;
+- acheter le nœud s’il est disponible.
 
 La V1 ne reconduit pas la `choice wheel` comme mécanisme métier.
 
@@ -139,12 +139,12 @@ L’achat se fait uniquement via un nœud disponible.
 
 La vue appelle la couche domaine, qui vérifie :
 
-* spécialisation possédée ;
-* arbre résolu ;
-* nœud résolu ;
-* nœud non acheté ;
-* accessibilité ;
-* XP disponible.
+- spécialisation possédée ;
+- arbre résolu ;
+- nœud résolu ;
+- nœud non acheté ;
+- accessibilité ;
+- XP disponible.
 
 La vue ne persiste pas directement l’achat sans passer par la couche domaine.
 
@@ -156,17 +156,17 @@ La vue ne persiste pas directement l’achat sans passer par la couche domaine.
 
 Pour un talent ranked, la vue peut afficher :
 
-* le nœud acheté ;
-* le rang consolidé actuel ;
-* le coût du prochain nœud achetable si applicable.
+- le nœud acheté ;
+- le rang consolidé actuel ;
+- le coût du prochain nœud achetable si applicable.
 
 ### 10.2 Non-ranked déjà possédé
 
 Si un talent non-ranked est déjà possédé via un autre arbre :
 
-* le nœud peut rester achetable s’il sert la progression de cet arbre ;
-* le bénéfice ne se cumule pas ;
-* l’UI doit éviter de laisser croire à un double bénéfice.
+- le nœud peut rester achetable s’il sert la progression de cet arbre ;
+- le bénéfice ne se cumule pas ;
+- l’UI doit éviter de laisser croire à un double bénéfice.
 
 Message indicatif :
 
@@ -180,10 +180,10 @@ Talent déjà possédé. Acheter ce nœud peut toutefois débloquer la progressi
 
 Si les données référentielles sont incomplètes :
 
-* afficher l’arbre ou le nœud si possible ;
-* marquer l’état comme `invalid` ou `incomplete` ;
-* interdire l’achat non fiable ;
-* afficher une raison compréhensible.
+- afficher l’arbre ou le nœud si possible ;
+- marquer l’état comme `invalid` ou `incomplete` ;
+- interdire l’achat non fiable ;
+- afficher une raison compréhensible.
 
 Exemples :
 
@@ -200,20 +200,20 @@ Arbre non résolu
 
 L’ancien code peut être consulté uniquement pour des patterns techniques :
 
-* rendu PIXI ;
-* pan / zoom ;
-* hover / clic ;
-* rendu de connexions ;
-* cycle de vie d’une fenêtre graphique.
+- rendu PIXI ;
+- pan / zoom ;
+- hover / clic ;
+- rendu de connexions ;
+- cycle de vie d’une fenêtre graphique.
 
 À ne pas reprendre comme logique fonctionnelle :
 
-* arbre global ;
-* `choice wheel` métier ;
-* coût hors nœud ;
-* achat direct d’un talent générique ;
-* état UI comme source de vérité ;
-* dépendance au canvas de scène.
+- arbre global ;
+- `choice wheel` métier ;
+- coût hors nœud ;
+- achat direct d’un talent générique ;
+- état UI comme source de vérité ;
+- dépendance au canvas de scène.
 
 ---
 
@@ -221,55 +221,55 @@ L’ancien code peut être consulté uniquement pour des patterns techniques :
 
 Après achat :
 
-* les données acteur sont mises à jour ;
-* la vue graphique est rafraîchie ;
-* les états des nœuds sont recalculés ;
-* l’onglet Talents / vue consolidée reflète le changement ;
-* l’audit/log peut tracer l’opération.
+- les données acteur sont mises à jour ;
+- la vue graphique est rafraîchie ;
+- les états des nœuds sont recalculés ;
+- l’onglet Talents / vue consolidée reflète le changement ;
+- l’audit/log peut tracer l’opération.
 
 ---
 
 ## 14. Critères d’acceptation
 
-* [ ] La vue affiche les arbres des spécialisations possédées.
-* [ ] Une spécialisation peut être sélectionnée comme contexte courant.
-* [ ] Les nœuds et connexions sont visibles.
-* [ ] Les états `purchased`, `available`, `locked`, `invalid` sont distinguables.
-* [ ] Le coût XP d’un nœud est visible ou accessible.
-* [ ] Un nœud disponible peut être acheté.
-* [ ] Un nœud verrouillé ou invalide ne peut pas être acheté.
-* [ ] La vue délègue l’achat à la couche domaine.
-* [ ] Après achat, la vue graphique et l’onglet Talents restent synchronisés.
-* [ ] La logique de `choice wheel` Crucible n’est pas reconduite comme mécanisme métier.
-* [ ] La vue ne dépend pas du canvas de scène Foundry.
+- [ ] La vue affiche les arbres des spécialisations possédées.
+- [ ] Une spécialisation peut être sélectionnée comme contexte courant.
+- [ ] Les nœuds et connexions sont visibles.
+- [ ] Les états `purchased`, `available`, `locked`, `invalid` sont distinguables.
+- [ ] Le coût XP d’un nœud est visible ou accessible.
+- [ ] Un nœud disponible peut être acheté.
+- [ ] Un nœud verrouillé ou invalide ne peut pas être acheté.
+- [ ] La vue délègue l’achat à la couche domaine.
+- [ ] Après achat, la vue graphique et l’onglet Talents restent synchronisés.
+- [ ] La logique de `choice wheel` Crucible n’est pas reconduite comme mécanisme métier.
+- [ ] La vue ne dépend pas du canvas de scène Foundry.
 
 ---
 
 ## 15. Tests / scénarios manuels attendus
 
-* personnage avec une spécialisation possédée ;
-* personnage avec plusieurs spécialisations possédées ;
-* sélection d’une spécialisation courante ;
-* affichage d’un nœud acheté ;
-* affichage d’un nœud achetable ;
-* affichage d’un nœud verrouillé ;
-* affichage d’un nœud invalide ;
-* achat d’un nœud depuis la vue ;
-* achat d’un talent ranked ;
-* achat d’un nœud non-ranked déjà possédé ailleurs ;
-* arbre introuvable ou incomplet ;
-* vérification que l’ancien canvas de scène n’est pas utilisé.
+- personnage avec une spécialisation possédée ;
+- personnage avec plusieurs spécialisations possédées ;
+- sélection d’une spécialisation courante ;
+- affichage d’un nœud acheté ;
+- affichage d’un nœud achetable ;
+- affichage d’un nœud verrouillé ;
+- affichage d’un nœud invalide ;
+- achat d’un nœud depuis la vue ;
+- achat d’un talent ranked ;
+- achat d’un nœud non-ranked déjà possédé ailleurs ;
+- arbre introuvable ou incomplet ;
+- vérification que l’ancien canvas de scène n’est pas utilisé.
 
 ---
 
 ## 16. Hors périmètre V1
 
-* édition manuelle d’arbre ;
-* consultation des arbres non possédés ;
-* achat de nouvelle spécialisation ;
-* drag & drop d’achat ;
-* remboursement / suppression ;
-* talents signatures ;
-* effets mécaniques ;
-* ActiveEffects ;
-* `choice wheel` comme mécanique métier.
+- édition manuelle d’arbre ;
+- consultation des arbres non possédés ;
+- achat de nouvelle spécialisation ;
+- drag & drop d’achat ;
+- remboursement / suppression ;
+- talents signatures ;
+- effets mécaniques ;
+- ActiveEffects ;
+- `choice wheel` comme mécanique métier.

@@ -10,12 +10,7 @@ vi.mock('../../../module/utils/logger.mjs', () => ({
 }))
 
 import { logger } from '../../../module/utils/logger.mjs'
-import {
-  getNodeState,
-  getTreeNodesStates,
-  NODE_STATE,
-  REASON_CODE,
-} from '../../../module/lib/talent-node/talent-node-state.mjs'
+import { getNodeState, getTreeNodesStates, NODE_STATE, REASON_CODE } from '../../../module/lib/talent-node/talent-node-state.mjs'
 
 function buildActor({ specializations, talentPurchases, experience } = {}) {
   return {
@@ -61,9 +56,7 @@ describe('TalentNodeState', () => {
     it('returns purchased when a matching purchase exists', () => {
       const actor = buildActor({
         specializations: [{ specializationId: 'spec-1' }],
-        talentPurchases: [
-          { treeId: 'tree-1', nodeId: 'r1c1', talentId: 'talent-parry', specializationId: 'spec-1' },
-        ],
+        talentPurchases: [{ treeId: 'tree-1', nodeId: 'r1c1', talentId: 'talent-parry', specializationId: 'spec-1' }],
       })
       const tree = buildTree({
         id: 'tree-1',
@@ -100,18 +93,13 @@ describe('TalentNodeState', () => {
     it('returns available for node unlocked by a purchased connection', () => {
       const actor = buildActor({
         specializations: [{ specializationId: 'spec-1' }],
-        talentPurchases: [
-          { treeId: 'tree-1', nodeId: 'r1c1', talentId: 'talent-parry', specializationId: 'spec-1' },
-        ],
+        talentPurchases: [{ treeId: 'tree-1', nodeId: 'r1c1', talentId: 'talent-parry', specializationId: 'spec-1' }],
         experience: { gained: 100, spent: 5 },
       })
       const tree = buildTree({
         id: 'tree-1',
         specializationId: 'spec-1',
-        nodes: [
-          buildNode({ nodeId: 'r1c1', row: 1, cost: 5 }),
-          buildNode({ nodeId: 'r2c1', row: 2, cost: 10 }),
-        ],
+        nodes: [buildNode({ nodeId: 'r1c1', row: 1, cost: 5 }), buildNode({ nodeId: 'r2c1', row: 2, cost: 10 })],
         connections: [{ from: 'r1c1', to: 'r2c1' }],
       })
 
@@ -129,10 +117,7 @@ describe('TalentNodeState', () => {
       const tree = buildTree({
         id: 'tree-1',
         specializationId: 'spec-1',
-        nodes: [
-          buildNode({ nodeId: 'r1c1', row: 1, cost: 5 }),
-          buildNode({ nodeId: 'r2c1', row: 2, cost: 10 }),
-        ],
+        nodes: [buildNode({ nodeId: 'r1c1', row: 1, cost: 5 }), buildNode({ nodeId: 'r2c1', row: 2, cost: 10 })],
         connections: [{ from: 'r1c1', to: 'r2c1' }],
       })
 
@@ -338,18 +323,13 @@ describe('TalentNodeState', () => {
     it('returns a map with all nodes in the tree', () => {
       const actor = buildActor({
         specializations: [{ specializationId: 'spec-1' }],
-        talentPurchases: [
-          { treeId: 'tree-1', nodeId: 'r1c1', talentId: 'talent-parry', specializationId: 'spec-1' },
-        ],
+        talentPurchases: [{ treeId: 'tree-1', nodeId: 'r1c1', talentId: 'talent-parry', specializationId: 'spec-1' }],
         experience: { gained: 100, spent: 5 },
       })
       const tree = buildTree({
         id: 'tree-1',
         specializationId: 'spec-1',
-        nodes: [
-          buildNode({ nodeId: 'r1c1', row: 1, cost: 5 }),
-          buildNode({ nodeId: 'r2c1', row: 2, cost: 10 }),
-        ],
+        nodes: [buildNode({ nodeId: 'r1c1', row: 1, cost: 5 }), buildNode({ nodeId: 'r2c1', row: 2, cost: 10 })],
         connections: [{ from: 'r1c1', to: 'r2c1' }],
       })
 

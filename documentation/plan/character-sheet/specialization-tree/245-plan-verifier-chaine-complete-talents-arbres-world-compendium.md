@@ -91,6 +91,7 @@ Pour un test compendium fiable, il faudra soit enrichir ce helper, soit créer l
 **Décision** : couvrir #245 principalement par des tests d'intégration Vitest.
 
 **Justification** :
+
 - conforme ADR-0004.
 - démonstration reproductible en CI.
 - plus robuste qu'une validation manuelle seule.
@@ -100,6 +101,7 @@ Pour un test compendium fiable, il faudra soit enrichir ce helper, soit créer l
 **Décision** : écrire deux scénarios nominaux complets : world et compendium.
 
 **Justification** :
+
 - correspond exactement aux critères d'acceptation.
 - évite une couverture dispersée difficile à relire.
 
@@ -112,6 +114,7 @@ Pour un test compendium fiable, il faudra soit enrichir ce helper, soit créer l
 - `buildSpecializationTreeContext()` de l'application UI.
 
 **Justification** :
+
 - meilleure preuve d'intégration.
 - limite les faux positifs dus à des mocks trop éloignés du runtime réel.
 
@@ -125,6 +128,7 @@ Pour un test compendium fiable, il faudra soit enrichir ce helper, soit créer l
 - absence de `Unknown talent`
 
 **Justification** :
+
 - conforme ADR-0012.
 - diagnostics plus lisibles.
 
@@ -133,6 +137,7 @@ Pour un test compendium fiable, il faudra soit enrichir ce helper, soit créer l
 **Décision** : ce ticket doit rester orienté validation. Toute modification de prod doit être justifiée par un échec réel découvert pendant la mise en place des scénarios.
 
 **Justification** :
+
 - le besoin exprimé est une vérification E2E, pas une nouvelle feature.
 - minimise le risque de régression.
 
@@ -155,10 +160,12 @@ Pour un test compendium fiable, il faudra soit enrichir ce helper, soit créer l
 - Vérifier que `buildSpecializationTreeContext()` affiche le vrai nom du talent.
 
 **Fichiers**
+
 - `tests/importer/specialization-tree-ogg-dude.integration.spec.mjs`
 - potentiellement `tests/applications/specialization-tree-app.test.mjs`
 
 **Risques**
+
 - scénario trop artificiel s'il ne réutilise pas un flux déjà présent dans les tests de fixture.
 
 ---
@@ -177,11 +184,13 @@ Pour un test compendium fiable, il faudra soit enrichir ce helper, soit créer l
 - Vérifier ensuite que l'UI résout ce `talentUuid` et affiche le bon talent.
 
 **Fichiers**
+
 - `tests/importer/specialization-tree-ogg-dude.integration.spec.mjs`
 - potentiellement `tests/helpers/mock-foundry.mjs`
 - potentiellement `tests/helpers/mock-foundry.test.mjs`
 
 **Risques**
+
 - mock compendium insuffisamment fidèle au runtime Foundry.
 - confusion entre format attendu par l'importer et format attendu par l'UI.
 
@@ -195,10 +204,12 @@ Pour un test compendium fiable, il faudra soit enrichir ce helper, soit créer l
 - Soit garder un mock local dédié dans le test si l'évolution du helper n'apporte pas de valeur réutilisable.
 
 **Fichiers**
+
 - `tests/helpers/mock-foundry.mjs`
 - `tests/helpers/mock-foundry.test.mjs`
 
 **Risques**
+
 - introduire un helper trop générique pour un besoin très local.
 - casser des tests existants si le contrat du helper change.
 
@@ -216,10 +227,12 @@ Pour chaque contexte :
 - vérifier que la résolution passe par la donnée enrichie attendue.
 
 **Fichiers**
+
 - `tests/applications/specialization-tree-app.test.mjs`
 - ou scénario transversal centralisé dans `tests/importer/specialization-tree-ogg-dude.integration.spec.mjs`
 
 **Risques**
+
 - dupliquer inutilement des cas déjà couverts.
 - disperser la lecture entre trop de fichiers.
 
@@ -234,10 +247,12 @@ Pour chaque contexte :
 - vérifier que la couche UI affiche le talent résolu sans réinterpréter `talentId` comme UUID nominal.
 
 **Fichiers**
+
 - `tests/importer/specialization-tree-ogg-dude.integration.spec.mjs`
 - `tests/applications/specialization-tree-app.test.mjs`
 
 **Risques**
+
 - assertions trop couplées à l'implémentation interne au lieu du contrat observable.
 
 ---
@@ -251,9 +266,11 @@ Pour chaque contexte :
 - vérifier que les messages d'échec restent lisibles.
 
 **Commande cible**
+
 - `pnpm vitest tests/importer/specialization-tree-ogg-dude.integration.spec.mjs tests/applications/specialization-tree-app.test.mjs`
 
 **Risques**
+
 - besoin d'ajuster les mocks Foundry globaux.
 - flakiness si un test repose trop sur un état global partagé.
 
@@ -261,25 +278,25 @@ Pour chaque contexte :
 
 ## 6. Fichiers modifiés
 
-| Fichier | Action | Description |
-|---|---|---|
-| `tests/importer/specialization-tree-ogg-dude.integration.spec.mjs` | modification | Ajouter les scénarios complets world et compendium |
-| `tests/applications/specialization-tree-app.test.mjs` | modification | Compléter la preuve d'affichage final côté UI si nécessaire |
-| `tests/helpers/mock-foundry.mjs` | modification potentielle | Rendre le mock compendium compatible avec `documentName`, `collection`, `index: Map` |
-| `tests/helpers/mock-foundry.test.mjs` | modification potentielle | Cadrer le nouveau contrat du helper si celui-ci évolue |
+| Fichier                                                            | Action                   | Description                                                                          |
+| ------------------------------------------------------------------ | ------------------------ | ------------------------------------------------------------------------------------ |
+| `tests/importer/specialization-tree-ogg-dude.integration.spec.mjs` | modification             | Ajouter les scénarios complets world et compendium                                   |
+| `tests/applications/specialization-tree-app.test.mjs`              | modification             | Compléter la preuve d'affichage final côté UI si nécessaire                          |
+| `tests/helpers/mock-foundry.mjs`                                   | modification potentielle | Rendre le mock compendium compatible avec `documentName`, `collection`, `index: Map` |
+| `tests/helpers/mock-foundry.test.mjs`                              | modification potentielle | Cadrer le nouveau contrat du helper si celui-ci évolue                               |
 
 ---
 
 ## 7. Risques
 
-| Risque | Impact | Mitigation |
-|---|---|---|
-| Le test compendium repose sur un mock irréaliste | faux positif | aligner le mock sur `pack.collection`, `pack.documentName`, `pack.index.values()` |
-| La couverture reste fragmentée entre importer et UI | preuve incomplète | ajouter au moins un scénario transversal lisible par contexte |
-| Les tests vérifient trop de structure | diagnostics médiocres | assertions ciblées sur UUID, nom affiché, absence de `Unknown talent` |
-| Le ticket dérive vers une refonte métier | scope creep | limiter les changements prod à une correction révélée par les tests |
-| État global Foundry partagé entre tests | intermittence | reset strict des mocks entre scénarios |
-| `buildTalentByIdFromWorld()` et `buildTalentByIdFromCompendium()` ne sont pas exportées dans les tests | blocage | les exporter depuis `specialization-tree-ogg-dude.mjs` (elles sont déjà dans le bloc `export { ... }`) |
+| Risque                                                                                                 | Impact                | Mitigation                                                                                             |
+| ------------------------------------------------------------------------------------------------------ | --------------------- | ------------------------------------------------------------------------------------------------------ |
+| Le test compendium repose sur un mock irréaliste                                                       | faux positif          | aligner le mock sur `pack.collection`, `pack.documentName`, `pack.index.values()`                      |
+| La couverture reste fragmentée entre importer et UI                                                    | preuve incomplète     | ajouter au moins un scénario transversal lisible par contexte                                          |
+| Les tests vérifient trop de structure                                                                  | diagnostics médiocres | assertions ciblées sur UUID, nom affiché, absence de `Unknown talent`                                  |
+| Le ticket dérive vers une refonte métier                                                               | scope creep           | limiter les changements prod à une correction révélée par les tests                                    |
+| État global Foundry partagé entre tests                                                                | intermittence         | reset strict des mocks entre scénarios                                                                 |
+| `buildTalentByIdFromWorld()` et `buildTalentByIdFromCompendium()` ne sont pas exportées dans les tests | blocage               | les exporter depuis `specialization-tree-ogg-dude.mjs` (elles sont déjà dans le bloc `export { ... }`) |
 
 ---
 

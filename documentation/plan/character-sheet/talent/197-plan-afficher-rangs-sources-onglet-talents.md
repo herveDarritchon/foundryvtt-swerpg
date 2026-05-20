@@ -252,29 +252,29 @@ Le template doit rester déclaratif, sans logique d'achat, d'édition ou de supp
 
 ## 6. Fichiers modifiés
 
-| Fichier | Action | Description du changement |
-|---|---|---|
-| `module/applications/sheets/character-sheet.mjs` | modification | Affiner le mapping `OwnedTalentSummary` -> données template-ready avec marqueurs de source plus explicites |
-| `templates/sheets/actor/talents.hbs` | modification | Rendre le rang et les sources plus lisibles, y compris en cas d'état dégradé |
-| `styles/actor.less` | modification | Ajuster la présentation des lignes consolidées, du rang et des sources multi-spé |
-| `lang/fr.json` | modification | Ajouter les libellés FR pour les nouveaux marqueurs de source dégradée |
-| `lang/en.json` | modification | Ajouter les libellés EN correspondants |
-| `tests/applications/sheets/character-sheet-talents.test.mjs` | modification | Vérifier le contrat d'affichage final de US13 |
-| `tests/lib/talent-node/owned-talent-summary.test.mjs` | modification optionnelle | Uniquement si un écart de contrat domaine est découvert en cours d'implémentation |
+| Fichier                                                      | Action                   | Description du changement                                                                                  |
+| ------------------------------------------------------------ | ------------------------ | ---------------------------------------------------------------------------------------------------------- |
+| `module/applications/sheets/character-sheet.mjs`             | modification             | Affiner le mapping `OwnedTalentSummary` -> données template-ready avec marqueurs de source plus explicites |
+| `templates/sheets/actor/talents.hbs`                         | modification             | Rendre le rang et les sources plus lisibles, y compris en cas d'état dégradé                               |
+| `styles/actor.less`                                          | modification             | Ajuster la présentation des lignes consolidées, du rang et des sources multi-spé                           |
+| `lang/fr.json`                                               | modification             | Ajouter les libellés FR pour les nouveaux marqueurs de source dégradée                                     |
+| `lang/en.json`                                               | modification             | Ajouter les libellés EN correspondants                                                                     |
+| `tests/applications/sheets/character-sheet-talents.test.mjs` | modification             | Vérifier le contrat d'affichage final de US13                                                              |
+| `tests/lib/talent-node/owned-talent-summary.test.mjs`        | modification optionnelle | Uniquement si un écart de contrat domaine est découvert en cours d'implémentation                          |
 
 ---
 
 ## 7. Risques
 
-| Risque | Impact | Mitigation |
-|---|---|---|
-| Tous les états dégradés restent ramenés à `UNKNOWN_SOURCE` | L'issue #197 n'est pas réellement satisfaite | Mapper explicitement les `resolutionState` vers des libellés distincts et les verrouiller par tests |
-| L'adaptateur UI réimplémente de la logique métier | Divergence future entre domaine et fiche personnage | Limiter la sheet à la traduction visuelle des états déjà calculés par `buildOwnedTalentSummary()` |
-| Les sources multi-spé deviennent illisibles | Régression UX malgré la consolidation correcte | Déduplication stricte, wrapping CSS contrôlé, tests ciblés sur les labels produits |
-| Le style de l'onglet impacte d'autres lignes de fiche | Régression visuelle hors Talents | Scoper le CSS sous `.tab.talents .talent-consolidated` |
-| Les nouvelles clés i18n ne sont ajoutées que dans une langue | Clés brutes ou UI incohérente | Mettre à jour FR et EN dans le même changement et vérifier les usages |
-| Les tests restent trop superficiels | Régression discrète sur les cas dégradés | Ajouter des assertions ciblées sur `sourceLabels`, `rank` et l'unicité des entrées |
-| Glissement de scope vers la vue graphique ou les effets mécaniques | Retard et complexité inutile | Garder explicitement hors scope arbres, achat et ADR-0010 |
+| Risque                                                             | Impact                                              | Mitigation                                                                                          |
+| ------------------------------------------------------------------ | --------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| Tous les états dégradés restent ramenés à `UNKNOWN_SOURCE`         | L'issue #197 n'est pas réellement satisfaite        | Mapper explicitement les `resolutionState` vers des libellés distincts et les verrouiller par tests |
+| L'adaptateur UI réimplémente de la logique métier                  | Divergence future entre domaine et fiche personnage | Limiter la sheet à la traduction visuelle des états déjà calculés par `buildOwnedTalentSummary()`   |
+| Les sources multi-spé deviennent illisibles                        | Régression UX malgré la consolidation correcte      | Déduplication stricte, wrapping CSS contrôlé, tests ciblés sur les labels produits                  |
+| Le style de l'onglet impacte d'autres lignes de fiche              | Régression visuelle hors Talents                    | Scoper le CSS sous `.tab.talents .talent-consolidated`                                              |
+| Les nouvelles clés i18n ne sont ajoutées que dans une langue       | Clés brutes ou UI incohérente                       | Mettre à jour FR et EN dans le même changement et vérifier les usages                               |
+| Les tests restent trop superficiels                                | Régression discrète sur les cas dégradés            | Ajouter des assertions ciblées sur `sourceLabels`, `rank` et l'unicité des entrées                  |
+| Glissement de scope vers la vue graphique ou les effets mécaniques | Retard et complexité inutile                        | Garder explicitement hors scope arbres, achat et ADR-0010                                           |
 
 ---
 

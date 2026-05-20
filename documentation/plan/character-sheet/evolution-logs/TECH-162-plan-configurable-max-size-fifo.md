@@ -82,6 +82,7 @@ Les clés existantes pour l'audit log utilisent le namespace `SWERPG.AUDIT.*`. L
 **Décision** : Ajouter le setting dans `registerSystemSettings()` dans `module/applications/settings/settings.js`.
 
 Justification :
+
 - Tous les settings existants du système sont dans ce fichier (actionAnimations, autoConfirm, etc.)
 - `registerSystemSettings()` est appelé depuis `init`, avant que les hooks audit-log ne soient enregistrés dans `setup`
 - Cohérence de maintenance : un seul point d'entrée pour les settings
@@ -92,6 +93,7 @@ Justification :
 **Décision** : Utiliser `SWERPG.SETTINGS.AUDIT_LOG_MAX_ENTRIES_NAME` et `SWERPG.SETTINGS.AUDIT_LOG_MAX_ENTRIES_HINT`.
 
 Justification :
+
 - Cohérence avec le namespace `SWERPG.*` existant (utilisé par `SWERPG.AUDIT.*`)
 - Le namespace `SKILL.*` est réservé aux données de compétences (skills)
 - Les settings existants utilisent déjà une structure plate : `SETTINGS.AutoConfirmName` — on reste dans le même esprit mais sous `SWERPG`
@@ -101,6 +103,7 @@ Justification :
 **Décision** : Lire `game.settings.get('swerpg', 'auditLogMaxEntries')` dans `writeLogEntries()` à chaque appel, pas une seule fois au démarrage.
 
 Justification :
+
 - Le MJ peut modifier le setting à chaud via la fenêtre des paramètres
 - Le `onChange` du setting invaliderait un cache local, mais un simple `game.settings.get` est négligeable (hash lookup)
 - Pas d'état global à synchroniser : chaque écriture lit la valeur courante
@@ -116,6 +119,7 @@ if (nextLogs.length > maxEntries) {
 ```
 
 Justification :
+
 - Algorithme O(n) borné par `maxEntries` (100–5000) — négligeable
 - Préserve les entrées les plus récentes
 - Pas de tri nécessaire (le tableau est ordonné chronologiquement)
@@ -126,6 +130,7 @@ Justification :
 **Décision** : `auditLogMaxEntries` (camelCase), clé `swerpg.auditLogMaxEntries`.
 
 Justification :
+
 - Conforme aux conventions de nommage des settings existants : `systemMigrationVersion`, `actionAnimations`, `autoConfirm`
 - Pas de clash de nom connu dans `game.settings`
 
@@ -157,10 +162,12 @@ game.settings.register(SYSTEM.id, 'auditLogMaxEntries', {
 ```
 
 Risques :
+
 - Nécessite d'importer `logger` dans `settings.js` (vérifier si déjà importé)
 - `onChange` ne doit pas throw (Foundry le gère, mais par principe)
 
 Fichiers :
+
 - `module/applications/settings/settings.js` — modification
 
 ### Étape 2 : Ajouter la logique FIFO dans `writeLogEntries()`
@@ -181,10 +188,7 @@ async function writeLogEntries(actor, entries) {
         nextLogs.splice(0, nextLogs.length - maxEntries)
       }
 
-      await actor.update(
-        { [AUDIT_LOG_KEY]: nextLogs },
-        { swerpgAuditLog: false }
-      )
+      await actor.update({ [AUDIT_LOG_KEY]: nextLogs }, { swerpgAuditLog: false })
       return
     } catch (err) {
       if (attempt < MAX_RETRIES) {
@@ -198,11 +202,13 @@ async function writeLogEntries(actor, entries) {
 ```
 
 Points d'attention :
+
 - `game.settings.get` peut throw si le setting n'existe pas (environnement test) → fallback `?? 500`
 - L'éviction doit se faire APRÈS l'ajout des nouvelles entrées, pas avant (pour respecter le seuil)
 - `maxEntries` est lu à chaque tentative (pas mis en cache hors de la boucle) pour réagir aux changements de setting entre retries (cas très marginal mais correct)
 
 Fichiers :
+
 - `module/utils/audit-log.mjs` — modification de `writeLogEntries()`
 
 ### Étape 3 : Ajouter les clés i18n
@@ -228,6 +234,7 @@ Fichiers :
 ```
 
 Fichiers :
+
 - `lang/en.json` — modification
 - `lang/fr.json` — modification
 
@@ -246,17 +253,18 @@ globalThis.game.settings.get = vi.fn((_key, _default) => {
 
 2. **Tests à ajouter** (describe `writeLogEntries max size`) :
 
-| Test | Description | Vérification |
-|------|-------------|-------------|
-| `évicte les entrées les plus anciennes quand le seuil est dépassé` | 3 entrées existantes + 2 nouvelles, max=3 | logs.length === 3, les 2 plus anciennes supprimées |
-| `ne fait rien quand le seuil n'est pas atteint` | 2 entrées existantes + 1 nouvelle, max=5 | logs.length === 3 |
-| `respecte une limite basse (100)` | 150 entrées existantes + 10 nouvelles, max=100 | logs.length === 100 |
-| `lit le setting dynamiquement à chaque appel` | Vérifie que `game.settings.get` est appelé 1 fois par write | `expect(game.settings.get).toHaveBeenCalledWith('swerpg', 'auditLogMaxEntries')` |
-| `fallback à 500 si game.settings.get throw` | Simule une erreur de `game.settings.get` | nextLogs.length inchangé, pas d'éviction erronée |
+| Test                                                               | Description                                                 | Vérification                                                                     |
+| ------------------------------------------------------------------ | ----------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| `évicte les entrées les plus anciennes quand le seuil est dépassé` | 3 entrées existantes + 2 nouvelles, max=3                   | logs.length === 3, les 2 plus anciennes supprimées                               |
+| `ne fait rien quand le seuil n'est pas atteint`                    | 2 entrées existantes + 1 nouvelle, max=5                    | logs.length === 3                                                                |
+| `respecte une limite basse (100)`                                  | 150 entrées existantes + 10 nouvelles, max=100              | logs.length === 100                                                              |
+| `lit le setting dynamiquement à chaque appel`                      | Vérifie que `game.settings.get` est appelé 1 fois par write | `expect(game.settings.get).toHaveBeenCalledWith('swerpg', 'auditLogMaxEntries')` |
+| `fallback à 500 si game.settings.get throw`                        | Simule une erreur de `game.settings.get`                    | nextLogs.length inchangé, pas d'éviction erronée                                 |
 
 3. **Régression** : Vérifier que les tests existants de `writeLogEntries` passent encore (ils n'atteignent pas le seuil de 500).
 
 Fichiers :
+
 - `tests/utils/audit-log.test.mjs` — modification
 - `tests/helpers/mock-foundry.mjs` — optionnel : ajout de `game.settings.get` stub si pertinent
 
@@ -264,25 +272,25 @@ Fichiers :
 
 ## 6. Fichiers modifiés
 
-| Fichier | Action | Description |
-|---------|--------|-------------|
-| `module/applications/settings/settings.js` | Modification | Ajout de `game.settings.register(SYSTEM.id, 'auditLogMaxEntries', ...)` |
-| `module/utils/audit-log.mjs` | Modification | Ajout de la lecture du setting + éviction FIFO dans `writeLogEntries()` |
-| `lang/en.json` | Modification | Ajout de `SWERPG.SETTINGS.AUDIT_LOG_MAX_ENTRIES_NAME` et `HINT` |
-| `lang/fr.json` | Modification | Ajout des traductions françaises |
-| `tests/utils/audit-log.test.mjs` | Modification | Mock de `game.settings.get` + nouveaux tests FIFO |
-| `tests/helpers/mock-foundry.mjs` | Modification possible | Ajout de `game.settings.get` stub si jugé utile pour les autres tests |
+| Fichier                                    | Action                | Description                                                             |
+| ------------------------------------------ | --------------------- | ----------------------------------------------------------------------- |
+| `module/applications/settings/settings.js` | Modification          | Ajout de `game.settings.register(SYSTEM.id, 'auditLogMaxEntries', ...)` |
+| `module/utils/audit-log.mjs`               | Modification          | Ajout de la lecture du setting + éviction FIFO dans `writeLogEntries()` |
+| `lang/en.json`                             | Modification          | Ajout de `SWERPG.SETTINGS.AUDIT_LOG_MAX_ENTRIES_NAME` et `HINT`         |
+| `lang/fr.json`                             | Modification          | Ajout des traductions françaises                                        |
+| `tests/utils/audit-log.test.mjs`           | Modification          | Mock de `game.settings.get` + nouveaux tests FIFO                       |
+| `tests/helpers/mock-foundry.mjs`           | Modification possible | Ajout de `game.settings.get` stub si jugé utile pour les autres tests   |
 
 ---
 
 ## 7. Risques
 
-| Risque | Impact | Mitigation |
-|--------|--------|------------|
-| `game.settings.get` throw en environnement de test | Tests cassés | Fallback `?? 500` dans `writeLogEntries()` ; le mock de test retourne 500 |
-| `onChange` callback throw | Setting non enregistré | `onChange` minimal (seulement logger.debug) ; pas de logique critique |
-| Éviction trop agressive avec `range.min = 100` | Perte de logs si MJ met 100 | Acceptable : c'est une configuration explicite du MJ |
-| Performance : `splice` sur tableau de 5000 entrées | Latence sur write | O(n) borné, négligeable. 5000 entrées ~ quelques microsecondes |
+| Risque                                                                           | Impact                          | Mitigation                                                                |
+| -------------------------------------------------------------------------------- | ------------------------------- | ------------------------------------------------------------------------- |
+| `game.settings.get` throw en environnement de test                               | Tests cassés                    | Fallback `?? 500` dans `writeLogEntries()` ; le mock de test retourne 500 |
+| `onChange` callback throw                                                        | Setting non enregistré          | `onChange` minimal (seulement logger.debug) ; pas de logique critique     |
+| Éviction trop agressive avec `range.min = 100`                                   | Perte de logs si MJ met 100     | Acceptable : c'est une configuration explicite du MJ                      |
+| Performance : `splice` sur tableau de 5000 entrées                               | Latence sur write               | O(n) borné, négligeable. 5000 entrées ~ quelques microsecondes            |
 | Concurrent writes : deux updates simultanés lisent la même valeur avant éviction | Dépassement temporaire du seuil | Acceptable : le prochain write corrigera. Le seuil est une limite souple. |
 
 ---

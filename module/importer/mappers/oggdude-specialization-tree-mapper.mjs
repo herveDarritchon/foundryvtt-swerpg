@@ -68,7 +68,9 @@ function resolveConnectionEndpoint(rawReference, maps) {
 
   if (isResolvedNodeReference(rawReference)) return rawReference.toLowerCase()
 
-  const coordinateMatch = String(rawReference).trim().match(/^r?(\d+)[^\d]+c?(\d+)$/i)
+  const coordinateMatch = String(rawReference)
+    .trim()
+    .match(/^r?(\d+)[^\d]+c?(\d+)$/i)
   if (coordinateMatch) {
     const [, row, column] = coordinateMatch
     return maps.byCoordinates.get(`${row}:${column}`) || normalizeNodeId(Number(row), Number(column))
@@ -223,11 +225,7 @@ function detectInputFormat(xmlSpecialization) {
     return 'talent-rows-unknown'
   }
 
-  if (
-    xmlSpecialization?.Nodes?.Node ||
-    xmlSpecialization?.TalentNodes?.TalentNode ||
-    xmlSpecialization?.Tree?.Nodes?.Node
-  ) {
+  if (xmlSpecialization?.Nodes?.Node || xmlSpecialization?.TalentNodes?.TalentNode || xmlSpecialization?.Tree?.Nodes?.Node) {
     return 'flat-list'
   }
 
@@ -299,7 +297,7 @@ function extractDirectionalConnections(nodes) {
 
     if (direction.Right === 'true' || direction.Right === true) {
       const targetNodeId = `r${node.row}c${node.column + 1}`
-      const targetExists = nodes.some(n => n.nodeId === targetNodeId)
+      const targetExists = nodes.some((n) => n.nodeId === targetNodeId)
       if (targetExists) {
         connections.push({ from: node.nodeId, to: targetNodeId, type: 'horizontal' })
       } else {
@@ -309,7 +307,7 @@ function extractDirectionalConnections(nodes) {
 
     if (direction.Down === 'true' || direction.Down === true) {
       const targetNodeId = `r${node.row + 1}c${node.column}`
-      const targetExists = nodes.some(n => n.nodeId === targetNodeId)
+      const targetExists = nodes.some((n) => n.nodeId === targetNodeId)
       if (targetExists) {
         connections.push({ from: node.nodeId, to: targetNodeId, type: 'vertical' })
       } else {
@@ -369,10 +367,7 @@ export function specializationTreeMapper(specializations, { talentById } = {}) {
         const nodeConnectionResults = normalizedNodes.map((node) => extractNodeConnectionEntries(node.rawNode, node.nodeId, nodeMaps))
         const globalConnectionResults = extractGlobalConnectionEntries(xmlSpecialization, nodeMaps)
         const nodeConnections = nodeConnectionResults.flatMap((result) => result.connections)
-        const connectionWarnings = [
-          ...nodeConnectionResults.flatMap((result) => result.warnings),
-          ...globalConnectionResults.warnings,
-        ]
+        const connectionWarnings = [...nodeConnectionResults.flatMap((result) => result.warnings), ...globalConnectionResults.warnings]
         warnings.push(...connectionWarnings)
         const connections = dedupeConnections([...nodeConnections, ...globalConnectionResults.connections, ...directionalConnections]).map((connection) => ({
           ...(connection.type ? connection : { from: connection.from, to: connection.to }),

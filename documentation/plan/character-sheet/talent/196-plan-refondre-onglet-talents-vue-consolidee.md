@@ -282,29 +282,29 @@ Ajouter des scenarios cibles seulement si le contrat feuille change reellement.
 
 ## 6. Fichiers modifies
 
-| Fichier | Action | Description du changement |
-|---|---|---|
-| `module/applications/sheets/character-sheet.mjs` | modification | Stabiliser l'adaptation de `buildOwnedTalentSummary()` vers les donnees template-ready |
-| `templates/sheets/actor/talents.hbs` | modification | Remplacer le rendu implicite par un affichage consolide explicite et non interactif |
-| `styles/actor.less` | modification | Ajouter le stylage specifique de l'onglet Talents consolide |
-| `lang/fr.json` | modification potentielle | Ajouter les libelles manquants cote FR si besoin reel |
-| `lang/en.json` | modification potentielle | Ajouter les libelles manquants cote EN si besoin reel |
-| `tests/applications/sheets/character-sheet-talents.test.mjs` | modification | Couvrir le contrat final de preparation de contexte et les cas degrages |
-| `tests/lib/talent-node/owned-talent-summary.test.mjs` | modification optionnelle | Uniquement si un ecart domaine reel est decouvert pendant l'alignement UI |
+| Fichier                                                      | Action                   | Description du changement                                                              |
+| ------------------------------------------------------------ | ------------------------ | -------------------------------------------------------------------------------------- |
+| `module/applications/sheets/character-sheet.mjs`             | modification             | Stabiliser l'adaptation de `buildOwnedTalentSummary()` vers les donnees template-ready |
+| `templates/sheets/actor/talents.hbs`                         | modification             | Remplacer le rendu implicite par un affichage consolide explicite et non interactif    |
+| `styles/actor.less`                                          | modification             | Ajouter le stylage specifique de l'onglet Talents consolide                            |
+| `lang/fr.json`                                               | modification potentielle | Ajouter les libelles manquants cote FR si besoin reel                                  |
+| `lang/en.json`                                               | modification potentielle | Ajouter les libelles manquants cote EN si besoin reel                                  |
+| `tests/applications/sheets/character-sheet-talents.test.mjs` | modification             | Couvrir le contrat final de preparation de contexte et les cas degrages                |
+| `tests/lib/talent-node/owned-talent-summary.test.mjs`        | modification optionnelle | Uniquement si un ecart domaine reel est decouvert pendant l'alignement UI              |
 
 ---
 
 ## 7. Risques
 
-| Risque | Impact | Mitigation |
-|---|---|---|
-| L'UI re-duplique de la logique metier | Divergence entre US7 et US12 | Garder toute consolidation dans `owned-talent-summary` et limiter la fiche a l'adaptation d'affichage |
-| Ordre d'affichage instable | Mauvaise lisibilite et tests fragiles | Definir un tri explicite et le documenter dans les tests |
-| Sources repetees pour un talent ranked | Affichage confus | Dedupliquer les labels de sources cote presentation |
-| Etats degrages masques | Donnees achetees invisibles | Toujours afficher une entree avec fallback localise |
-| Selecteurs LESS trop generiques | Regression visuelle sur d'autres onglets | Scoper le CSS sous `.swerpg.sheet.actor .tab.talents` |
-| Ajout i18n incomplet | Libelles bruts ou cles visibles | Verifier FR/EN ensemble et ne creer que les cles necessaires |
-| Glissement de scope vers la vue graphique | US plus large que prevu | Exclure explicitement le bouton d'acces et tout achat depuis l'onglet |
+| Risque                                    | Impact                                   | Mitigation                                                                                            |
+| ----------------------------------------- | ---------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| L'UI re-duplique de la logique metier     | Divergence entre US7 et US12             | Garder toute consolidation dans `owned-talent-summary` et limiter la fiche a l'adaptation d'affichage |
+| Ordre d'affichage instable                | Mauvaise lisibilite et tests fragiles    | Definir un tri explicite et le documenter dans les tests                                              |
+| Sources repetees pour un talent ranked    | Affichage confus                         | Dedupliquer les labels de sources cote presentation                                                   |
+| Etats degrages masques                    | Donnees achetees invisibles              | Toujours afficher une entree avec fallback localise                                                   |
+| Selecteurs LESS trop generiques           | Regression visuelle sur d'autres onglets | Scoper le CSS sous `.swerpg.sheet.actor .tab.talents`                                                 |
+| Ajout i18n incomplet                      | Libelles bruts ou cles visibles          | Verifier FR/EN ensemble et ne creer que les cles necessaires                                          |
+| Glissement de scope vers la vue graphique | US plus large que prevu                  | Exclure explicitement le bouton d'acces et tout achat depuis l'onglet                                 |
 
 ---
 

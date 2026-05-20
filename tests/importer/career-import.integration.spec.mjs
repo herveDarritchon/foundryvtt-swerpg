@@ -80,7 +80,9 @@ describe('Intégration import carrières XML', () => {
 
     expect(scholarSkillIds, '"scholar" doit conserver "perception" en mode strict car "perception" est présente dans SYSTEM.SKILLS').toContain('perception')
 
-    expect(scholarSkillIds, '"scholar" ne doit pas conserver "science" en mode strict car "science" n\'est pas présente dans SYSTEM.SKILLS').not.toContain('science')
+    expect(scholarSkillIds, '"scholar" ne doit pas conserver "science" en mode strict car "science" n\'est pas présente dans SYSTEM.SKILLS').not.toContain(
+      'science',
+    )
 
     expect([...scholarSkillIds].sort(), '"scholar" doit contenir exactement les careerSkills attendues en mode strict').toEqual([
       'athletics',

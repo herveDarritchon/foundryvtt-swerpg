@@ -52,6 +52,7 @@ Donc l’ancien canvas peut inspirer quelques détails techniques, mais pas stru
 Le canvas / arbre de talents hérité de Crucible n’est pas une base métier réutilisable. La V1 réimplémente une vue graphique dédiée aux arbres de spécialisation Edge, indépendante du canvas de scène Foundry.
 
 Les modules existants liés à l’arbre peuvent être consultés uniquement pour identifier des patterns techniques génériques :
+
 - initialisation d’un rendu PIXI dans une application dédiée ;
 - rendu de formes simples ;
 - gestion du pan / zoom ;
@@ -60,6 +61,7 @@ Les modules existants liés à l’arbre peuvent être consultés uniquement pou
 - éventuels helpers graphiques découplés du métier.
 
 Aucune logique métier héritée ne doit être reconduite si elle suppose :
+
 - un arbre global ;
 - une choice wheel métier ;
 - un coût calculé hors nœud ;
@@ -194,6 +196,7 @@ Comme ça, l’UI peut dire :
 
 ```md
 La vue graphique ne doit pas :
+
 - stocker l’état métier durable ;
 - calculer elle-même les coûts ;
 - décider seule de l’accessibilité ;

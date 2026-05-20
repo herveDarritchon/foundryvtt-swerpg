@@ -201,7 +201,7 @@ Il faut distinguer deux types de clés.
 ### Clé métier importée
 
 ```js
-talentId: "conv"
+talentId: 'conv'
 ```
 
 Rôle :
@@ -218,7 +218,7 @@ Cette clé est utile, mais elle n’est pas suffisante comme lien Foundry robust
 ### Lien Foundry résolu
 
 ```js
-talentUuid: "Compendium.swerpg.talents.Item.xxxxx"
+talentUuid: 'Compendium.swerpg.talents.Item.xxxxx'
 ```
 
 Rôle :
@@ -234,12 +234,7 @@ La cible souhaitable à moyen terme :
 
 ```js
 {
-  treeId,
-  treeUuid,
-  nodeId,
-  talentId,
-  talentUuid,
-  specializationId
+  ;(treeId, treeUuid, nodeId, talentId, talentUuid, specializationId)
 }
 ```
 

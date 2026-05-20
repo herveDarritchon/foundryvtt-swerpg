@@ -124,7 +124,7 @@ Extraire un builder pur `buildRenderViewModel(currentTree, talentLookup)` :
 ## Fichiers impactés
 
 | Fichier                                                         | Modifications                                              |
-|-----------------------------------------------------------------|------------------------------------------------------------|
+| --------------------------------------------------------------- | ---------------------------------------------------------- |
 | `module/applications/specialization-tree/render-view-model.mjs` | Nouveau builder pur `buildRenderViewModel()`               |
 | `module/applications/specialization-tree-app.mjs`               | Remplacer la préparation embarquée par un appel au builder |
 | `module/applications/specialization-tree/types.mjs`             | Nouveau (ou existant) — types du view-model                |
@@ -151,7 +151,7 @@ Extraire un builder pur `buildRenderViewModel(currentTree, talentLookup)` :
 ## Découpage en sous-issues
 
 | Issue | Titre                                            | Estimation |
-|-------|--------------------------------------------------|------------|
+| ----- | ------------------------------------------------ | ---------- |
 | #295  | Story parente                                    | 2          |
 | —     | US16.2.a — Normaliser les nœuds du tree courant  | 1          |
 | —     | US16.2.b — Préparer les connexions du view-model | 1          |

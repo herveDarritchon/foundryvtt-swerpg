@@ -48,25 +48,25 @@ Le socle métier V1 est déjà livré et partiellement testé. US22 consolide la
 
 ### 3.1. Le socle métier V1 est livré et partiellement testé
 
-| Règle | Test existant | Statut |
-|-------|---------------|--------|
-| Achat nœud `available` | `talent-node-purchase.test.mjs` — root node success | ✅ |
-| Achat nœud `locked` | `talent-node-purchase.test.mjs` — locked node error | ✅ |
-| Achat nœud `invalid` | `talent-node-state.test.mjs` — invalid states (missing fields, tree incomplete, flags) | ✅ |
-| Achat XP insuffisant | `talent-node-purchase.test.mjs` — NOT_ENOUGH_XP | ✅ |
-| Achat sans spécialisation | `talent-node-purchase.test.mjs` — SPECIALIZATION_NOT_OWNED | ✅ |
-| États purchased / available / locked / invalid | `talent-node-state.test.mjs` — 27 tests couvrant tous les codes raison | ✅ |
-| Raisons de blocage exploitables | `REASON_CODE` constants et `reason` textuelle dans chaque résultat | ✅ |
-| Ranked consolidé (deux arbres → rang 2) | `owned-talent-summary.test.mjs` — ranked purchase grouped | ✅ |
-| Non-ranked dédupliqué (deux arbres → une entrée, deux sources) | `owned-talent-summary.test.mjs` — deduplication test | ✅ |
-| Résolution d'arbre spécialisation | `talent-tree-resolver.test.mjs` — résolution par uuid, specializationId, nom, fallback | ✅ |
-| Vue consolidée sans doublon | `character-sheet-talents.test.mjs` — dedup source labels | ✅ |
-| Audit `talent-node-purchase` émis | `talent-node-purchase.test.mjs` — `recordTalentNodePurchase` appelé | ✅ |
-| Audit non-bloquant si échec écriture | `talent-node-purchase.test.mjs` — audit fail ne bloque pas l'achat | ✅ |
-| Contrat de l'entrée audit | `audit-log.test.mjs` — `recordTalentNodePurchase` 4 tests | ✅ |
-| Synchronisation purchase → vue consolidée | `actor-synchronization.test.mjs` — purchase puis summary séparés | ⚠️ Vue consolidée testée en isolation, pas dans la même fonction que l'achat |
-| Vue graphique refresh après achat | `actor.mjs:_onUpdate()` + `specialization-tree-app.test.mjs` | ✅ |
-| Résolution talents par `talentUuid` prioritaire | `specialization-tree-app.test.mjs` — resolveTalentDetail | ✅ |
+| Règle                                                          | Test existant                                                                          | Statut                                                                       |
+| -------------------------------------------------------------- | -------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| Achat nœud `available`                                         | `talent-node-purchase.test.mjs` — root node success                                    | ✅                                                                           |
+| Achat nœud `locked`                                            | `talent-node-purchase.test.mjs` — locked node error                                    | ✅                                                                           |
+| Achat nœud `invalid`                                           | `talent-node-state.test.mjs` — invalid states (missing fields, tree incomplete, flags) | ✅                                                                           |
+| Achat XP insuffisant                                           | `talent-node-purchase.test.mjs` — NOT_ENOUGH_XP                                        | ✅                                                                           |
+| Achat sans spécialisation                                      | `talent-node-purchase.test.mjs` — SPECIALIZATION_NOT_OWNED                             | ✅                                                                           |
+| États purchased / available / locked / invalid                 | `talent-node-state.test.mjs` — 27 tests couvrant tous les codes raison                 | ✅                                                                           |
+| Raisons de blocage exploitables                                | `REASON_CODE` constants et `reason` textuelle dans chaque résultat                     | ✅                                                                           |
+| Ranked consolidé (deux arbres → rang 2)                        | `owned-talent-summary.test.mjs` — ranked purchase grouped                              | ✅                                                                           |
+| Non-ranked dédupliqué (deux arbres → une entrée, deux sources) | `owned-talent-summary.test.mjs` — deduplication test                                   | ✅                                                                           |
+| Résolution d'arbre spécialisation                              | `talent-tree-resolver.test.mjs` — résolution par uuid, specializationId, nom, fallback | ✅                                                                           |
+| Vue consolidée sans doublon                                    | `character-sheet-talents.test.mjs` — dedup source labels                               | ✅                                                                           |
+| Audit `talent-node-purchase` émis                              | `talent-node-purchase.test.mjs` — `recordTalentNodePurchase` appelé                    | ✅                                                                           |
+| Audit non-bloquant si échec écriture                           | `talent-node-purchase.test.mjs` — audit fail ne bloque pas l'achat                     | ✅                                                                           |
+| Contrat de l'entrée audit                                      | `audit-log.test.mjs` — `recordTalentNodePurchase` 4 tests                              | ✅                                                                           |
+| Synchronisation purchase → vue consolidée                      | `actor-synchronization.test.mjs` — purchase puis summary séparés                       | ⚠️ Vue consolidée testée en isolation, pas dans la même fonction que l'achat |
+| Vue graphique refresh après achat                              | `actor.mjs:_onUpdate()` + `specialization-tree-app.test.mjs`                           | ✅                                                                           |
+| Résolution talents par `talentUuid` prioritaire                | `specialization-tree-app.test.mjs` — resolveTalentDetail                               | ✅                                                                           |
 
 ### 3.2. Gaps identifiés
 
@@ -97,6 +97,7 @@ Le socle métier V1 est déjà livré et partiellement testé. US22 consolide la
 **Décision** : Aucun fichier dans `module/` n'est modifié. L'US22 est un ticket de couverture de test uniquement.
 
 Justification :
+
 - Conforme à l'intitulé de l'issue (« couvrir la V1 Talents par des tests »)
 - Le socle métier est déjà livré (US5 à US20) et stable
 - Réduit le risque de régression
@@ -106,6 +107,7 @@ Justification :
 **Décision** : Ajouter les tests manquants dans les fichiers Vitest existants plutôt que de créer de nouveaux fichiers.
 
 Justification :
+
 - Cohérence : `talent-node-purchase.test.mjs`, `owned-talent-summary.test.mjs`, `actor-synchronization.test.mjs` sont les fichiers naturels
 - Pas de fragmentation de la couverture
 - Les tests d'intégration chaîne complète atterrissent dans `actor-synchronization.test.mjs` (déjà conçu pour ça, voir plan US19)
@@ -115,6 +117,7 @@ Justification :
 **Décision** : Mettre à jour `documentation/tests/manuel/talents/README.md` et `documentation/tests/manuel/audit-log/README.md` avec les scénarios V1, sans créer de nouveau dossier dédié.
 
 Justification :
+
 - L'écosystème documentaire est déjà organisé par domaine fonctionnel
 - Un dossier séparé « talents-v1 » créerait de la confusion avec le dossier « talents » existant
 - Les scénarios V1 s'intègrent naturellement dans le plan existant (sections 7 et 8 à ajouter)
@@ -124,6 +127,7 @@ Justification :
 **Décision** : Avant d'ajouter des tests, lancer la suite existante et corriger les échecs éventuels (mocks, setup).
 
 Justification :
+
 - Évite d'ajouter des tests sur une base rouge
 - Conforme à la pratique standard du projet (ADR-0004)
 - Les plans US1/TECH-audit-log et US19 ont montré que des échecs de tests existants sont possibles après des changements dans le code
@@ -141,6 +145,7 @@ pnpm vitest run tests/lib/talent-node/ tests/unit/documents/actor-synchronizatio
 ```
 
 Analyser les résultats. Si des tests échouent :
+
 - Investiguer (mock obsolète, régression code métier, assertion incorrecte)
 - Ne corriger que le test ou le mock, pas le code métier
 - Si régression code métier, documenter et reporter
@@ -164,6 +169,7 @@ Tests à ajouter dans `describe('purchaseTalentNode')` :
 ### Étape 3 — Ajouter les tests d'intégration chaîne complète dans `actor-synchronization.test.mjs`
 
 **Quoi** : Ajouter un test unique qui enchaîne :
+
 1. Création d'un mock actor avec deux spécialisations
 2. Achat `purchaseTalentNode()` du nœud r1c1 (talent ranked)
 3. Vérification que `buildOwnedTalentSummary()` retourne 1 entrée avec rang 1
@@ -172,6 +178,7 @@ Tests à ajouter dans `describe('purchaseTalentNode')` :
 6. Vérification que l'audit a été appelé 2 fois avec les bonnes données
 
 Tests supplémentaires :
+
 - Achat d'un talent non-ranked dans deux arbres → 1 entrée, 2 sources, rang null
 - Achat avec `talentPurchases` absent (graceful)
 
@@ -230,6 +237,7 @@ Pas de nouveaux tests nécessaires.
 **Section 7 — Spécialisation-tree V1 (application graphique dédiée)**
 
 Scénarios :
+
 - Ouvrir l'arbre de spécialisation depuis le bouton de la fiche
 - Sélectionner une spécialisation parmi celles possédées
 - Acheter un nœud available → nœud passe en purchased, XP déduite
@@ -240,6 +248,7 @@ Scénarios :
 **Section 8 — Vue consolidée (onglet Talents)**
 
 Scénarios :
+
 - Achat reflété dans l'onglet Talents après retour sur la fiche
 - Rang consolidé pour un talent ranked possédé dans deux arbres
 - Sources listées pour un talent non-ranked dans deux arbres
@@ -248,6 +257,7 @@ Scénarios :
 **Section 9 — Données dégradées V1**
 
 Scénarios :
+
 - Personnage avec une seule spécialisation
 - Personnage avec plusieurs spécialisations
 - Arbre introuvable (treeUuid invalide, specialisationId inconnu)
@@ -263,12 +273,12 @@ Scénarios :
 
 **7.3. Achat de nœud d'arbre (talent-node-purchase)**
 
-| Action | Résultat attendu |
-|--------|------------------|
-| Acheter un nœud dans l'arbre de spécialisation | Une entrée `talent-node-purchase` est créée |
+| Action                                                                                                            | Résultat attendu                             |
+| ----------------------------------------------------------------------------------------------------------------- | -------------------------------------------- |
+| Acheter un nœud dans l'arbre de spécialisation                                                                    | Une entrée `talent-node-purchase` est créée  |
 | Vérifier les champs : `specializationId`, `treeId`, `nodeId`, `talentId`, `cost`, `source: 'specialization-tree'` | Les données correspondent à l'achat effectué |
-| Vérifier `xpDelta` = -cost | Le delta est négatif (dépense) |
-| Vérifier `previousXp` et `nextXp` | Les valeurs XP avant/après sont correctes |
+| Vérifier `xpDelta` = -cost                                                                                        | Le delta est négatif (dépense)               |
+| Vérifier `previousXp` et `nextXp`                                                                                 | Les valeurs XP avant/après sont correctes    |
 
 **Fichiers** : `documentation/tests/manuel/audit-log/README.md` (modification)
 **Risque** : Faible.
@@ -276,6 +286,7 @@ Scénarios :
 ### Étape 8 — Vérification finale
 
 **Quoi** :
+
 1. Lancer toute la suite talent : `pnpm vitest run tests/lib/talent-node/ tests/unit/documents/actor-synchronization.test.mjs tests/applications/sheets/character-sheet-talents.test.mjs`
 2. Vérifier que tous les tests passent (étape 1 + nouveaux tests)
 3. Vérifier la cohérence de la documentation manuelle
@@ -287,23 +298,23 @@ Scénarios :
 
 ## 6. Fichiers modifiés
 
-| Fichier | Action | Description |
-|---------|--------|-------------|
-| `tests/lib/talent-node/talent-node-purchase.test.mjs` | Modification | Ajout des tests achat ranked + non-ranked avec consolidation via `buildOwnedTalentSummary` |
+| Fichier                                               | Action       | Description                                                                                           |
+| ----------------------------------------------------- | ------------ | ----------------------------------------------------------------------------------------------------- |
+| `tests/lib/talent-node/talent-node-purchase.test.mjs` | Modification | Ajout des tests achat ranked + non-ranked avec consolidation via `buildOwnedTalentSummary`            |
 | `tests/unit/documents/actor-synchronization.test.mjs` | Modification | Ajout du test chaîne complète purchase → consolidated → audit (2 arbres, ranked/non-ranked, graceful) |
-| `documentation/tests/manuel/talents/README.md` | Modification | Ajout sections 7, 8, 9 : scénarios V1 spécialisation-tree, vue consolidée, données dégradées |
-| `documentation/tests/manuel/audit-log/README.md` | Modification | Ajout scénario 7.3 : achat nœud d'arbre (`talent-node-purchase`) |
+| `documentation/tests/manuel/talents/README.md`        | Modification | Ajout sections 7, 8, 9 : scénarios V1 spécialisation-tree, vue consolidée, données dégradées          |
+| `documentation/tests/manuel/audit-log/README.md`      | Modification | Ajout scénario 7.3 : achat nœud d'arbre (`talent-node-purchase`)                                      |
 
 ---
 
 ## 7. Risques
 
-| Risque | Impact | Mitigation |
-|--------|--------|------------|
-| **Tests existants qui échouent** (mock obsolète, régression code métier, setup) | Bloquant pour l'étape 1 | Debug du test ou du mock. Si régression code métier, documenter et reporter sans corriger. |
-| **Mock trop complexe pour le test chaîne complète** (appels imbriqués `resolveSpecializationTree` avec plusieurs spécialisations) | Test fragile ou non maintenable | S'inspirer du pattern `mockImplementation()` déjà utilisé dans `owned-talent-summary.test.mjs` (2 spécialisations mockées par condition) |
-| **Documentation manuelle redondante** avec les scénarios existants | Duplication, désynchronisation | Référencer les sections existantes plutôt que de copier. Ajouter des scénarios, pas des doublons. |
-| **Oubli de couvrir un cas dégradé** | Faux sentiment de sécurité | Lire la checklist de l'issue § « Scénarios manuels » et s'assurer que chaque cas est couvert soit par test automatisé, soit par scénario manuel. |
+| Risque                                                                                                                            | Impact                          | Mitigation                                                                                                                                       |
+| --------------------------------------------------------------------------------------------------------------------------------- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Tests existants qui échouent** (mock obsolète, régression code métier, setup)                                                   | Bloquant pour l'étape 1         | Debug du test ou du mock. Si régression code métier, documenter et reporter sans corriger.                                                       |
+| **Mock trop complexe pour le test chaîne complète** (appels imbriqués `resolveSpecializationTree` avec plusieurs spécialisations) | Test fragile ou non maintenable | S'inspirer du pattern `mockImplementation()` déjà utilisé dans `owned-talent-summary.test.mjs` (2 spécialisations mockées par condition)         |
+| **Documentation manuelle redondante** avec les scénarios existants                                                                | Duplication, désynchronisation  | Référencer les sections existantes plutôt que de copier. Ajouter des scénarios, pas des doublons.                                                |
+| **Oubli de couvrir un cas dégradé**                                                                                               | Faux sentiment de sécurité      | Lire la checklist de l'issue § « Scénarios manuels » et s'assurer que chaque cas est couvert soit par test automatisé, soit par scénario manuel. |
 
 ---
 
@@ -320,14 +331,14 @@ Scénarios :
 
 US22 dépend des US suivantes (toutes livrées dans l'Epic #184) :
 
-| US | Périmètre | Nature de la dépendance |
-|----|-----------|------------------------|
-| US5 (#189) | Calcul d'état des nœuds (`talent-node-state.mjs`) | Tests d'état déjà existants |
-| US6 (#190) | Achat d'un nœud (`talent-node-purchase.mjs`) | Tests d'achat déjà existants |
-| US7 (#191) | Consolidation des talents possédés (`owned-talent-summary.mjs`) | Tests de consolidation déjà existants |
-| US8 (#192) | Gestion ranked / non-ranked / doublons | Tests de déduplication déjà existants |
-| US11 (#195) | Données OggDude incomplètes | Scénarios manuels dégradés (étape 6) |
-| US19 (#203) | Synchronisation achat → arbre → onglet Talents | Test chaîne complète (étape 3), scénarios manuels synchro |
-| US20 (#204) | Audit log lors d'un achat | Scénario manuel audit `talent-node-purchase` (étape 7) |
+| US          | Périmètre                                                       | Nature de la dépendance                                   |
+| ----------- | --------------------------------------------------------------- | --------------------------------------------------------- |
+| US5 (#189)  | Calcul d'état des nœuds (`talent-node-state.mjs`)               | Tests d'état déjà existants                               |
+| US6 (#190)  | Achat d'un nœud (`talent-node-purchase.mjs`)                    | Tests d'achat déjà existants                              |
+| US7 (#191)  | Consolidation des talents possédés (`owned-talent-summary.mjs`) | Tests de consolidation déjà existants                     |
+| US8 (#192)  | Gestion ranked / non-ranked / doublons                          | Tests de déduplication déjà existants                     |
+| US11 (#195) | Données OggDude incomplètes                                     | Scénarios manuels dégradés (étape 6)                      |
+| US19 (#203) | Synchronisation achat → arbre → onglet Talents                  | Test chaîne complète (étape 3), scénarios manuels synchro |
+| US20 (#204) | Audit log lors d'un achat                                       | Scénario manuel audit `talent-node-purchase` (étape 7)    |
 
 Aucune dépendance descendante : US22 ne bloque aucune autre US.

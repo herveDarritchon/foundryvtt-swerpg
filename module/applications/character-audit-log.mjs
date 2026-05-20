@@ -4,17 +4,7 @@ const { api } = foundry.applications
 
 const AUDIT_LOG_PATH = 'flags.swerpg.logs'
 
-const CSV_COLUMNS = Object.freeze([
-  'timestamp',
-  'date',
-  'userName',
-  'type',
-  'typeLabel',
-  'description',
-  'xpDelta',
-  'actorName',
-  'playerName',
-])
+const CSV_COLUMNS = Object.freeze(['timestamp', 'date', 'userName', 'type', 'typeLabel', 'description', 'xpDelta', 'actorName', 'playerName'])
 
 const AUDIT_LOG_FAMILIES = Object.freeze({
   all: 'all',
@@ -387,13 +377,15 @@ export function getPrimaryOwnerName(actor) {
 }
 
 function slugify(str) {
-  return str
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^a-zA-Z0-9-_]/g, '_')
-    .replace(/_+/g, '_')
-    .replace(/^_|_$/g, '')
-    .toLowerCase() || 'unnamed'
+  return (
+    str
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-zA-Z0-9-_]/g, '_')
+      .replace(/_+/g, '_')
+      .replace(/^_|_$/g, '')
+      .toLowerCase() || 'unnamed'
+  )
 }
 
 export function buildExportFilename(actor) {
@@ -415,17 +407,7 @@ export function buildCsvContent(actor) {
     const formattedDate = formatAuditLogTimestamp(entry.timestamp)
     const xpDelta = Number(entry.xpDelta) || 0
 
-    const row = [
-      entry.timestamp ?? '',
-      formattedDate,
-      entry.userName ?? '',
-      entry.type ?? '',
-      typeLabel,
-      description,
-      xpDelta,
-      actorName,
-      ownerName,
-    ]
+    const row = [entry.timestamp ?? '', formattedDate, entry.userName ?? '', entry.type ?? '', typeLabel, description, xpDelta, actorName, ownerName]
 
     return row.map(escapeCsvCell).join(',')
   })

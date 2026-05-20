@@ -8,7 +8,7 @@ end-to-end (E2E).
 ## 1. Types de tests
 
 | Type                 | Runner     | Emplacement                                  | Filtre d'inclusion                     |
-|----------------------|------------|----------------------------------------------|----------------------------------------|
+| -------------------- | ---------- | -------------------------------------------- | -------------------------------------- |
 | **Unitaires (TU)**   | Vitest     | `tests/**/*.test.mjs`, `tests/**/*.spec.mjs` | Métier pur, sans Foundry ou avec mocks |
 | **Intégration (TI)** | Vitest     | `tests/**/*.integration.spec.mjs`            | Combinaison de modules, imports réels  |
 | **End-to-End (E2E)** | Playwright | `e2e/**/*.spec.ts`                           | Instance Foundry réelle, navigateur    |
@@ -66,7 +66,7 @@ pnpm vitest run --config vitest.config.js
 ### 3.3. Convention de nommage
 
 | Suffixe                  | Nature                                                                     |
-|--------------------------|----------------------------------------------------------------------------|
+| ------------------------ | -------------------------------------------------------------------------- |
 | `*.test.mjs`             | Test unitaire standard (inclus automatiquement)                            |
 | `*.spec.mjs`             | Spec unitaire (doit être run explicitement ou via le second vitest.config) |
 | `*.unit.spec.mjs`        | Test unitaire explicite                                                    |
@@ -262,11 +262,11 @@ pnpm run less           # ou gulp css pour rebuild CSS
 ### 5.3. Scénarios de test manuel recommandés
 
 | Fonctionnalité       | Actions à tester                                                              |
-|----------------------|-------------------------------------------------------------------------------|
+| -------------------- | ----------------------------------------------------------------------------- |
 | **Fiche Personnage** | Création, modification des caractéristiques, compétences, talents, équipement |
 | **Combat**           | Init, attaque, défense, dégâts, effets de statut, tour de combat              |
 | **Dés narratifs**    | Pool de dés, upgrade/downgrade, symboles, Triumph/Despair, Force              |
-| **Import OggDude**   | Import d'un fichier ZIP, mapping des données, vérification des装备 et talents   |
+| **Import OggDude**   | Import d'un fichier ZIP, mapping des données, vérification des装备 et talents |
 | **Talents**          | Ajout, suppression, activation, effets mécaniques, cumul (ranked)             |
 | **Équipement**       | Armes, armures, équipement général, encaissement, attaches/modifications      |
 | **Véhicules**        | Création, pilotage, combat naval                                              |
@@ -312,7 +312,7 @@ pnpm run less           # ou gulp css pour rebuild CSS
 ## 7. Débogage rapide
 
 | Problème                         | Solution                                                                        |
-|----------------------------------|---------------------------------------------------------------------------------|
+| -------------------------------- | ------------------------------------------------------------------------------- |
 | `vitest` ne trouve pas les tests | Vérifier le pattern dans `vitest.config.mjs` : `tests/**/*.test.mjs`            |
 | Erreur `foundry is not defined`  | Ajouter `setupFoundryMock()` dans `beforeEach`                                  |
 | E2E : navigation impossible      | Vérifier `.env.e2e.local` et que Foundry tourne bien sur `E2E_FOUNDRY_BASE_URL` |
@@ -325,7 +325,7 @@ pnpm run less           # ou gulp css pour rebuild CSS
 ## 8. Références
 
 | Ressource                                                           | Description                                                  |
-|---------------------------------------------------------------------|--------------------------------------------------------------|
+| ------------------------------------------------------------------- | ------------------------------------------------------------ |
 | `documentation/tests/e2e/playwright-e2e-guide.md`                   | Guide E2E complet (configuration, debugging, best practices) |
 | `documentation/tests/e2e/playwright-spec-squelette-mon-parcours.md` | Squelette pour écrire une nouvelle spec E2E                  |
 | `.env.e2e.example`                                                  | Modèle de configuration E2E                                  |

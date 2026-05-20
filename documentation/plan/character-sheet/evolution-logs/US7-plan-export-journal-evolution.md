@@ -377,28 +377,28 @@ Justification :
 
 ## 6. Fichiers modifiés
 
-| Fichier | Action | Description du changement |
-|---------|--------|---------------------------|
-| `module/applications/character-audit-log.mjs` | Modification | Ajout des helpers d'export CSV, du calcul du nom de fichier, et du handler de téléchargement |
-| `templates/applications/character-audit-log.hbs` | Modification | Ajout du bouton `Exporter` dans l'UI du journal |
-| `lang/fr.json` | Modification | Ajout des clés FR liées à l'export |
-| `lang/en.json` | Modification | Ajout des clés EN liées à l'export |
-| `tests/applications/character-audit-log.test.mjs` | Modification | Couverture automatisée de la génération CSV et du téléchargement |
-| `documentation/tests/manuel/audit-log/README.md` | Modification | Ajout des scénarios manuels d'export CSV |
+| Fichier                                           | Action       | Description du changement                                                                    |
+| ------------------------------------------------- | ------------ | -------------------------------------------------------------------------------------------- |
+| `module/applications/character-audit-log.mjs`     | Modification | Ajout des helpers d'export CSV, du calcul du nom de fichier, et du handler de téléchargement |
+| `templates/applications/character-audit-log.hbs`  | Modification | Ajout du bouton `Exporter` dans l'UI du journal                                              |
+| `lang/fr.json`                                    | Modification | Ajout des clés FR liées à l'export                                                           |
+| `lang/en.json`                                    | Modification | Ajout des clés EN liées à l'export                                                           |
+| `tests/applications/character-audit-log.test.mjs` | Modification | Couverture automatisée de la génération CSV et du téléchargement                             |
+| `documentation/tests/manuel/audit-log/README.md`  | Modification | Ajout des scénarios manuels d'export CSV                                                     |
 
 ---
 
 ## 7. Risques
 
-| Risque | Impact | Mitigation |
-|--------|--------|------------|
-| L'export réutilise par erreur la vue filtrée | Fichier incomplet, non conforme à l'AC | Séparer explicitement la source brute d'export de la fonction de filtrage UI |
-| Le propriétaire principal n'est pas trivial à déterminer | Nom de fichier incohérent | Documenter la règle de sélection et tester le fallback `unknown-player` |
-| Des champs contiennent des virgules, guillemets ou retours à la ligne | CSV cassé ou mal interprété | Ajouter une fonction d'échappement centralisée et des tests dédiés |
-| L'encodage ouvre mal dans Excel | Mauvaise lisibilité côté utilisateur | Valider le format de sortie avec tests et scénario manuel |
-| Le téléchargement navigateur échoue silencieusement | Fonction perçue comme cassée | Ajouter notification localisée en cas d'erreur et tests de comportement |
-| Le header de la fenêtre devient chargé | Dégradation UX | Garder un seul bouton discret et cohérent avec la mise en page existante |
-| Désynchronisation FR/EN | Export partiellement localisé | Ajouter les deux langues dans la même étape et vérifier la parité |
+| Risque                                                                | Impact                                 | Mitigation                                                                   |
+| --------------------------------------------------------------------- | -------------------------------------- | ---------------------------------------------------------------------------- |
+| L'export réutilise par erreur la vue filtrée                          | Fichier incomplet, non conforme à l'AC | Séparer explicitement la source brute d'export de la fonction de filtrage UI |
+| Le propriétaire principal n'est pas trivial à déterminer              | Nom de fichier incohérent              | Documenter la règle de sélection et tester le fallback `unknown-player`      |
+| Des champs contiennent des virgules, guillemets ou retours à la ligne | CSV cassé ou mal interprété            | Ajouter une fonction d'échappement centralisée et des tests dédiés           |
+| L'encodage ouvre mal dans Excel                                       | Mauvaise lisibilité côté utilisateur   | Valider le format de sortie avec tests et scénario manuel                    |
+| Le téléchargement navigateur échoue silencieusement                   | Fonction perçue comme cassée           | Ajouter notification localisée en cas d'erreur et tests de comportement      |
+| Le header de la fenêtre devient chargé                                | Dégradation UX                         | Garder un seul bouton discret et cohérent avec la mise en page existante     |
+| Désynchronisation FR/EN                                               | Export partiellement localisé          | Ajouter les deux langues dans la même étape et vérifier la parité            |
 
 ---
 

@@ -37,16 +37,12 @@ describe('SwerpgActor Resources', () => {
 
     test('should throw error for invalid action', () => {
       const resource = { value: 3, threshold: 6, type: 'action' }
-      expect(() => actor.computeResourceValue(resource, 'invalid')).toThrow(
-        'Invalid action "invalid" for jauge type "action"',
-      )
+      expect(() => actor.computeResourceValue(resource, 'invalid')).toThrow('Invalid action "invalid" for jauge type "action"')
     })
 
     test('should throw error with correct message including resource type', () => {
       const resource = { value: 3, threshold: 6, type: 'focus' }
-      expect(() => actor.computeResourceValue(resource, 'bad')).toThrow(
-        'Invalid action "bad" for jauge type "focus"',
-      )
+      expect(() => actor.computeResourceValue(resource, 'bad')).toThrow('Invalid action "bad" for jauge type "focus"')
     })
   })
 
@@ -225,9 +221,7 @@ describe('SwerpgActor Resources', () => {
 
       await actor.toggleStatusEffect('weakened', { active: true })
 
-      expect(actor.createEmbeddedDocuments).toHaveBeenCalledWith('ActiveEffect', [
-        CONFIG.statusEffects[0],
-      ])
+      expect(actor.createEmbeddedDocuments).toHaveBeenCalledWith('ActiveEffect', [CONFIG.statusEffects[0]])
     })
 
     test('should delete effect when active is false and effect exists', async () => {

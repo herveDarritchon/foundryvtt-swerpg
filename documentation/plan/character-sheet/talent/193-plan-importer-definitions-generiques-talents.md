@@ -97,6 +97,7 @@ Le plan US7 et le module `owned-talent-summary` partent du principe que les déf
 **Décision** : réutiliser `Item` `talent` comme support canonique des définitions génériques, en assouplissant son data model pour qu'il puisse représenter un talent générique sans induire de faux champs métier.
 
 Justification :
+
 - évite de créer deux référentiels parallèles pour un même concept
 - cohérent avec le resolver temporaire déjà anticipé par US7
 - limite la dispersion de lecture côté UI et domaine
@@ -106,6 +107,7 @@ Justification :
 **Décision** : la définition générique importée ne porte aucun coût XP ; le contrat mapper retire toute dépendance à `system.rank.cost`.
 
 Justification :
+
 - conforme à l'issue #193
 - conforme au cadrage `01-modele-domaine-talents.md` et `02-regles-achat-progression.md`
 - évite une fausse source de vérité
@@ -115,6 +117,7 @@ Justification :
 **Décision** : remplacer l'usage principal de `flags.swerpg.oggdude` et `system.importMeta` par `flags.swerpg.import` pour les données brutes et de diagnostic pertinentes.
 
 Justification :
+
 - conforme à l'issue et au cadrage
 - conforme à ADR-0010
 - homogénéise la stratégie d'observabilité import
@@ -124,6 +127,7 @@ Justification :
 **Décision** : introduire une valeur d'activation neutre pour les cas non spécifiés ou inconnus, avec warning de mapping, plutôt qu'un fallback silencieux vers `passive`.
 
 Justification :
+
 - conforme au cadrage `03-import-oggdude-talents.md`
 - évite une corruption discrète de la donnée métier
 - améliore le diagnostic
@@ -133,6 +137,7 @@ Justification :
 **Décision** : US9 ne transforme pas les `DieModifiers` en `system.effects` métier canonique ; ils enrichissent la description et les flags d'import.
 
 Justification :
+
 - conforme à l'issue
 - conforme à ADR-0010
 - évite d'ouvrir prématurément le chantier d'automatisation mécanique
@@ -142,6 +147,7 @@ Justification :
 **Décision** : conserver le pattern de try/catch par talent dans le mapper, avec accumulation de métriques et diagnostics, sans bloquer tout le domaine sur un talent invalide.
 
 Justification :
+
 - cohérent avec ADR-0006
 - soutient le critère "aucune régression sur l'import OggDude existant"
 
@@ -150,6 +156,7 @@ Justification :
 **Décision** : US9 inclut des tests unitaires sur le contrat mapper et un test d'intégration du pipeline d'import talent.
 
 Justification :
+
 - conforme à ta décision validée
 - conforme à ADR-0004 et ADR-0012
 - nécessaire pour le critère de non-régression
@@ -163,6 +170,7 @@ Justification :
 **Quoi faire** : analyser puis faire évoluer `module/models/talent.mjs` pour que le type `talent` puisse représenter un talent générique sans exiger `node`, `row`, `rank` ou `actorHooks` comme champs obligatoires pour la définition référentielle.
 
 **Fichiers** :
+
 - `module/models/talent.mjs`
 
 **Risques** : casser des usages legacy qui supposent `node` ou `rank` toujours présents. Introduire une ambiguïté entre ancien talent "achetable" et nouveau talent "référentiel".
@@ -172,6 +180,7 @@ Justification :
 **Quoi faire** : faire évoluer `module/importer/mappers/oggdude-talent-mapper.mjs` pour ne produire que le contrat utile à la définition générique : `name`, `description`, `activation`, `isRanked`, `tags`, `source`, `flags.swerpg.import`. Retirer les champs legacy `node`, `rank`, `tier`, `actorHooks` du flux importé.
 
 **Fichiers** :
+
 - `module/importer/mappers/oggdude-talent-mapper.mjs`
 - éventuellement `module/importer/mappings/oggdude-talent-rank-map.mjs`
 - éventuellement `module/importer/mappings/oggdude-talent-diemodifiers-map.mjs`
@@ -183,6 +192,7 @@ Justification :
 **Quoi faire** : adapter le mapping d'activation pour distinguer les cas connus des cas inconnus/non spécifiés. Ajouter la valeur neutre dans les constantes système et l'i18n.
 
 **Fichiers** :
+
 - `module/importer/mappings/oggdude-talent-activation-map.mjs`
 - `module/config/attributes.mjs`
 - `lang/fr.json`
@@ -195,6 +205,7 @@ Justification :
 **Quoi faire** : adapter `module/importer/items/talent-ogg-dude.mjs` pour que le builder et le pipeline d'items créés s'alignent sur le nouveau contrat mapper, en conservant la compatibilité avec `OggDudeDataElement.processElements()`.
 
 **Fichiers** :
+
 - `module/importer/items/talent-ogg-dude.mjs`
 - `module/importer/utils/talent-import-utils.mjs`
 
@@ -205,6 +216,7 @@ Justification :
 **Quoi faire** : compléter les tests pour couvrir : absence de coût XP sur la définition générique, présence de `flags.swerpg.import`, conservation de `name`/`description`/`activation`/`ranked`/`tags`/`source`, comportement sur activation inconnue, résilience sur talent invalide, absence de création d'état acteur.
 
 **Fichiers** :
+
 - `tests/importer/talent-mapper.spec.mjs`
 - nouveau test d'intégration dans `tests/importer/`
 
@@ -214,33 +226,33 @@ Justification :
 
 ## 6. Fichiers modifiés
 
-| Fichier | Action | Description du changement |
-|---|---|---|
-| `module/models/talent.mjs` | modification | Recadrer le data model pour porter une définition générique sans coût ni nœud obligatoires |
-| `module/importer/mappers/oggdude-talent-mapper.mjs` | modification | Réduire la sortie du mapper au contrat US9 et déplacer les données brutes vers `flags.swerpg.import` |
-| `module/importer/items/talent-ogg-dude.mjs` | modification | Aligner le builder d'import talent sur le nouveau contrat mapper |
-| `module/importer/mappings/oggdude-talent-activation-map.mjs` | modification | Gérer explicitement les activations inconnues / non spécifiées |
-| `module/importer/mappings/oggdude-talent-rank-map.mjs` | modification potentielle | Neutraliser l'usage legacy du coût/rang dans le contrat importé |
-| `module/importer/mappings/oggdude-talent-diemodifiers-map.mjs` | modification potentielle | Limiter les enrichissements à la description/flags sans automatisation métier |
-| `module/importer/utils/talent-import-utils.mjs` | modification | Compléter la télémétrie et les raisons de rejet / warning spécifiques à US9 |
-| `module/config/attributes.mjs` | modification potentielle | Ajouter une valeur d'activation neutre |
-| `lang/fr.json` | modification | Libellés i18n pour l'activation neutre et les diagnostics |
-| `lang/en.json` | modification | Même besoin côté anglais |
-| `tests/importer/talent-mapper.spec.mjs` | modification | Mettre à jour le contrat attendu et couvrir les cas US9 |
-| `tests/importer/` | création ou modification | Ajouter un test d'intégration du flux d'import talent |
+| Fichier                                                        | Action                   | Description du changement                                                                            |
+| -------------------------------------------------------------- | ------------------------ | ---------------------------------------------------------------------------------------------------- |
+| `module/models/talent.mjs`                                     | modification             | Recadrer le data model pour porter une définition générique sans coût ni nœud obligatoires           |
+| `module/importer/mappers/oggdude-talent-mapper.mjs`            | modification             | Réduire la sortie du mapper au contrat US9 et déplacer les données brutes vers `flags.swerpg.import` |
+| `module/importer/items/talent-ogg-dude.mjs`                    | modification             | Aligner le builder d'import talent sur le nouveau contrat mapper                                     |
+| `module/importer/mappings/oggdude-talent-activation-map.mjs`   | modification             | Gérer explicitement les activations inconnues / non spécifiées                                       |
+| `module/importer/mappings/oggdude-talent-rank-map.mjs`         | modification potentielle | Neutraliser l'usage legacy du coût/rang dans le contrat importé                                      |
+| `module/importer/mappings/oggdude-talent-diemodifiers-map.mjs` | modification potentielle | Limiter les enrichissements à la description/flags sans automatisation métier                        |
+| `module/importer/utils/talent-import-utils.mjs`                | modification             | Compléter la télémétrie et les raisons de rejet / warning spécifiques à US9                          |
+| `module/config/attributes.mjs`                                 | modification potentielle | Ajouter une valeur d'activation neutre                                                               |
+| `lang/fr.json`                                                 | modification             | Libellés i18n pour l'activation neutre et les diagnostics                                            |
+| `lang/en.json`                                                 | modification             | Même besoin côté anglais                                                                             |
+| `tests/importer/talent-mapper.spec.mjs`                        | modification             | Mettre à jour le contrat attendu et couvrir les cas US9                                              |
+| `tests/importer/`                                              | création ou modification | Ajouter un test d'intégration du flux d'import talent                                                |
 
 ---
 
 ## 7. Risques
 
-| Risque | Impact | Mitigation |
-|---|---|---|
-| Le data model `talent` reste trop legacy | Les talents importés portent des champs incohérents ou un faux coût | Verrouiller d'abord le contrat du modèle avant de retoucher le mapper |
-| Activation inconnue convertie en `passive` | Référentiel importé faux mais apparemment valide | Ajouter un cas de test explicite et une valeur neutre documentée |
-| Données brutes non transférées vers `flags.swerpg.import` | Diagnostic et corrections futures plus difficiles | Définir un sous-contrat minimal des flags import et le tester |
-| Le pipeline réel diverge du mapper testé | Régression invisible malgré des tests unitaires verts | Ajouter un test d'intégration passant par `talent-ogg-dude.mjs` |
-| L'évolution du type `talent` casse des usages legacy | Régressions sur la sheet talent ou d'anciens flux | Limiter le changement au strict nécessaire et couvrir les invariants critiques par tests |
-| Les `DieModifiers` réouvrent le chantier des effets | US9 déborde vers ADR-0010 | Maintenir `DieModifiers` en données brutes / descriptives en V1 |
+| Risque                                                    | Impact                                                              | Mitigation                                                                               |
+| --------------------------------------------------------- | ------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| Le data model `talent` reste trop legacy                  | Les talents importés portent des champs incohérents ou un faux coût | Verrouiller d'abord le contrat du modèle avant de retoucher le mapper                    |
+| Activation inconnue convertie en `passive`                | Référentiel importé faux mais apparemment valide                    | Ajouter un cas de test explicite et une valeur neutre documentée                         |
+| Données brutes non transférées vers `flags.swerpg.import` | Diagnostic et corrections futures plus difficiles                   | Définir un sous-contrat minimal des flags import et le tester                            |
+| Le pipeline réel diverge du mapper testé                  | Régression invisible malgré des tests unitaires verts               | Ajouter un test d'intégration passant par `talent-ogg-dude.mjs`                          |
+| L'évolution du type `talent` casse des usages legacy      | Régressions sur la sheet talent ou d'anciens flux                   | Limiter le changement au strict nécessaire et couvrir les invariants critiques par tests |
+| Les `DieModifiers` réouvrent le chantier des effets       | US9 déborde vers ADR-0010                                           | Maintenir `DieModifiers` en données brutes / descriptives en V1                          |
 
 ---
 

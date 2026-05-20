@@ -26,7 +26,7 @@ export const AttackMixin = (Base) =>
       weapon ||= action.usage.weapon
       const { boons, banes } = this.applyTargetBoons(target, action, 'weapon', !!weapon.config.category.ranged)
       const defenseType = action.usage.defenseType || 'physical'
-      
+
       if (weapon?.type !== 'weapon') {
         throw new Error(`Weapon attack Action "${action.name}" did not specify which weapon is used in the attack`)
       }
@@ -70,22 +70,22 @@ export const AttackMixin = (Base) =>
       let { bonuses, damageType, defenseType, restoration, resource, skillId } = action.usage
       const { boons, banes } = this.applyTargetBoons(target, action, 'skill')
       let dc
-      
+
       if (defenseType in target.defenses) dc = target.defenses[defenseType].total
       else {
         defenseType = skillId
         dc = target.skills[skillId].passive
       }
-      
-      const rollData = { 
-        ...bonuses, 
-        actorId: this.id, 
-        type: skillId, 
-        target: target.uuid, 
-        boons, 
-        banes, 
-        defenseType, 
-        dc 
+
+      const rollData = {
+        ...bonuses,
+        actorId: this.id,
+        type: skillId,
+        target: target.uuid,
+        boons,
+        banes,
+        defenseType,
+        dc,
       }
 
       this.callActorHooks('prepareStandardCheck', rollData)
