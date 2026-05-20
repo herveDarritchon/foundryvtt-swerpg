@@ -1,6 +1,7 @@
 import { resolveActorSpecializationTrees } from '../lib/talent-node/talent-tree-resolver.mjs'
 import { getTreeNodesStates, NODE_STATE, REASON_CODE } from '../lib/talent-node/talent-node-state.mjs'
 import { purchaseTalentNode } from '../lib/talent-node/talent-node-purchase.mjs'
+import { resolveTalentDetail } from '../lib/talent-node/talent-reference-resolver.mjs'
 import { logger } from '../utils/logger.mjs'
 
 const { api } = foundry.applications
@@ -117,71 +118,6 @@ export function computeCenteredOffset(bbox, viewportWidth, viewportHeight) {
     offsetX: (viewportWidth - bbox.width) / 2 - bbox.minX,
     offsetY: (viewportHeight - bbox.height) / 2 - bbox.minY,
   }
-}
-
-function _resolveTalentByBusinessKey(normalizedKey) {
-  if (typeof game !== 'undefined' && game.items) {
-    for (const item of game.items) {
-      if (item.type !== 'talent') continue
-      const id = item.system?.id
-      if (id && typeof id === 'string' && id.toLowerCase().trim() === normalizedKey) {
-        return { name: item.name, isRanked: item.system?.isRanked ?? false }
-      }
-    }
-  }
-
-  if (typeof game !== 'undefined' && game.packs) {
-    for (const pack of game.packs.values()) {
-      if (pack.documentName !== 'Item') continue
-      if (!pack.index?.size) continue
-      for (const entry of pack.index.values()) {
-        if (entry.type !== 'talent') continue
-        const systemId = entry.system?.id
-        if (systemId && typeof systemId === 'string' && systemId.toLowerCase().trim() === normalizedKey) {
-          return { name: entry.name, isRanked: entry.system?.isRanked ?? false }
-        }
-      }
-    }
-  }
-
-  return null
-}
-
-export function resolveTalentItem(ref) {
-  return resolveTalentDetail(ref).name
-}
-
-export function resolveTalentDetail(nodeRef) {
-  const unknown = game.i18n.localize('SWERPG.TALENT.UNKNOWN')
-
-  const talentUuid = typeof nodeRef === 'string' ? nodeRef : nodeRef?.talentUuid
-  const talentId = typeof nodeRef === 'string' ? null : nodeRef?.talentId
-
-  if (talentUuid) {
-    try {
-      const item = fromUuidSync(talentUuid)
-      if (item) {
-        return {
-          name: item.name ?? unknown,
-          isRanked: item.system?.isRanked ?? false,
-        }
-      }
-    } catch {
-      // Fall through to legacy fallback
-    }
-  }
-
-  if (talentId) {
-    const matched = _resolveTalentByBusinessKey(talentId.toLowerCase().trim())
-    if (matched) {
-      return {
-        name: matched.name ?? unknown,
-        isRanked: matched.isRanked ?? false,
-      }
-    }
-  }
-
-  return { name: unknown, isRanked: false }
 }
 
 /**
