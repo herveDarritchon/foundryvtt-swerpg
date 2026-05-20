@@ -378,6 +378,110 @@ describe('specialization-tree application', () => {
     expect(context.currentTreeData).toBeNull()
     expect(context.renderNodes).toEqual([])
     expect(context.renderConnections).toEqual([])
+    expect(context.hasResolvedTrees).toBe(false)
+    expect(context.showViewport).toBe(false)
+    expect(context.emptyStateTitle).toBe('No available specialization tree')
+  })
+
+  it('builds empty state when actor has no owned specializations', () => {
+    const actor = createActor({
+      system: {
+        details: {
+          specializations: [],
+        },
+      },
+    })
+
+    const context = buildSpecializationTreeContext(actor)
+
+    expect(context.hasActor).toBe(true)
+    expect(context.hasSpecializations).toBe(false)
+    expect(context.hasResolvedTrees).toBe(false)
+    expect(context.showViewport).toBe(false)
+    expect(context.specializations).toEqual([])
+    expect(context.currentTreeId).toBeNull()
+    expect(context.currentTreeData).toBeNull()
+    expect(context.renderNodes).toEqual([])
+    expect(context.renderConnections).toEqual([])
+    expect(context.emptyStateTitle).toBe('No owned specialization')
+    expect(context.emptyStateDescription).toBe(
+      'This character does not currently own any specialization to display.',
+    )
+  })
+
+  it('builds empty state when all specialization trees are unresolved', () => {
+    const actor = createActor({
+      system: {
+        details: {
+          specializations: [
+            { specializationId: 'spec-alpha', name: 'Alpha', treeUuid: 'Item.tree-alpha' },
+            { specializationId: 'spec-beta', name: 'Beta', treeUuid: 'Item.tree-beta' },
+          ],
+        },
+      },
+    })
+
+    globalThis.fromUuidSync = vi.fn(() => null)
+
+    const context = buildSpecializationTreeContext(actor)
+
+    expect(context.hasActor).toBe(true)
+    expect(context.hasSpecializations).toBe(true)
+    expect(context.hasResolvedTrees).toBe(false)
+    expect(context.showViewport).toBe(false)
+    expect(context.currentTreeId).toBeNull()
+    expect(context.currentTreeData).toBeNull()
+    expect(context.renderNodes).toEqual([])
+    expect(context.renderConnections).toEqual([])
+    expect(context.emptyStateTitle).toBe('No available specialization tree')
+    expect(context.emptyStateDescription).toBe(
+      'The owned specializations were found, but none currently resolve to a complete reference tree.',
+    )
+  })
+
+  it('builds empty state when the specialization tree is structurally incomplete', () => {
+    const actor = createActor({
+      system: {
+        details: {
+          specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' }],
+        },
+      },
+    })
+
+    globalThis.fromUuidSync = vi.fn((uuid) => {
+      if (uuid === 'Item.tree-bodyguard') {
+        return {
+          type: 'specialization-tree',
+          name: 'Bodyguard Tree',
+          flags: {
+            swerpg: {
+              import: { status: 'incomplete' },
+            },
+          },
+          system: {
+            nodes: [],
+            connections: [],
+          },
+        }
+      }
+      return null
+    })
+
+    const context = buildSpecializationTreeContext(actor)
+
+    expect(context.hasSpecializations).toBe(true)
+    expect(context.hasResolvedTrees).toBe(false)
+    expect(context.showViewport).toBe(false)
+
+    expect(context.specializations).toHaveLength(1)
+    expect(context.specializations[0].state).toBe('incomplete')
+    expect(context.specializations[0].stateLabel).toBe('Incomplete tree')
+    expect(context.specializations[0].isAvailable).toBe(false)
+
+    expect(context.currentTreeId).toBeNull()
+    expect(context.renderNodes).toEqual([])
+    expect(context.renderConnections).toEqual([])
+    expect(context.emptyStateTitle).toBe('No available specialization tree')
   })
 
   it('builds renderNodes with computed positions, talent names and node states', () => {
@@ -1158,6 +1262,62 @@ describe('specialization-tree application', () => {
     expect(typeof node.variant.costColor).toBe('number')
     expect(typeof node.variant.borderWidth).toBe('number')
     expect(typeof node.variant.alpha).toBe('number')
+  })
+
+  it('sets nodeState to purchased when talent has already been purchased', () => {
+    const actor = createActor({
+      system: {
+        details: {
+          specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' }],
+        },
+        progression: {
+          talentPurchases: [
+            {
+              nodeId: 'r1c1',
+              specializationId: 'spec-bodyguard',
+              treeId: 'tree-bodyguard',
+              talentId: 'Item.talent-tough',
+            },
+          ],
+          experience: { available: 100 },
+        },
+      },
+    })
+
+    globalThis.fromUuidSync = vi.fn((uuid) => {
+      if (uuid === 'Item.tree-bodyguard') {
+        return {
+          id: 'tree-bodyguard',
+          type: 'specialization-tree',
+          name: 'Bodyguard Tree',
+          system: {
+            nodes: [
+              { nodeId: 'r1c1', talentId: 'Item.talent-tough', talentUuid: 'Item.talent-tough', row: 1, column: 1, cost: 10 },
+              { nodeId: 'r2c1', talentId: 'Item.talent-grit', talentUuid: 'Item.talent-grit', row: 2, column: 1, cost: 15 },
+            ],
+            connections: [{ from: 'r1c1', to: 'r2c1' }],
+          },
+        }
+      }
+      if (uuid === 'Item.talent-tough') return { name: 'Tough', system: { isRanked: false } }
+      if (uuid === 'Item.talent-grit') return { name: 'Grit', system: { isRanked: false } }
+      return null
+    })
+
+    const context = buildSpecializationTreeContext(actor)
+
+    expect(context.renderNodes, 'should have 2 render nodes').toHaveLength(2)
+
+    const purchased = context.renderNodes.find((n) => n.nodeId === 'r1c1')
+    expect(purchased, 'r1c1 should be purchased').toBeDefined()
+    expect(purchased.nodeState, 'purchased node state').toBe('purchased')
+    expect(purchased.nodeStateLabel, 'purchased node state label').toBe('Purchased')
+    expect(purchased.reasonCode, 'purchased reason code').toBe('already-purchased')
+    expect(purchased.reasonLabel, 'purchased reason label').toBe('Already purchased')
+
+    const other = context.renderNodes.find((n) => n.nodeId === 'r2c1')
+    expect(other, 'r2c1 should exist').toBeDefined()
+    expect(other.nodeState, 'other node must not be purchased').not.toBe('purchased')
   })
 
   it('does not trigger any purchase behavior from rendering', () => {
