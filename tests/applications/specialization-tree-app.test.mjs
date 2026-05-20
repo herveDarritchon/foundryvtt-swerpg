@@ -2395,6 +2395,361 @@ describe('specialization-tree application', () => {
     })
   })
 
+  describe('consultation detail (US16.6)', () => {
+    it('shows tooltip with talent name, xpCost, state and reason for a locked node', async () => {
+      const actor = createActor({
+        system: {
+          details: {
+            specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' }],
+          },
+          progression: {
+            talentPurchases: [],
+            experience: { available: 0 },
+          },
+        },
+      })
+
+      globalThis.fromUuidSync = vi.fn((uuid) => {
+        if (uuid === 'Item.tree-bodyguard') {
+          return {
+            type: 'specialization-tree',
+            name: 'Bodyguard Tree',
+            system: {
+              nodes: [{ nodeId: 'r1c1', talentId: 'Item.talent-tough', talentUuid: 'Item.talent-tough', row: 1, column: 1, cost: 10 }],
+              connections: [{ from: 'r1c1', to: 'r1c1' }],
+            },
+          }
+        }
+        if (uuid === 'Item.talent-tough') return { name: 'Tough', system: { isRanked: false } }
+        return null
+      })
+
+      const context = buildSpecializationTreeContext(actor)
+      const node = context.renderNodes[0]
+
+      expect(node.nodeState).toBe('locked')
+      expect(node.reasonLabel).toBe('Not enough XP')
+
+      const headerEl = { textContent: '' }
+      const bodyEl = { innerHTML: '' }
+
+      const tooltip = {
+        hidden: true,
+        querySelector: vi.fn((selector) => {
+          if (selector === '[data-tooltip-header]') return headerEl
+          if (selector === '[data-tooltip-body]') return bodyEl
+          return null
+        }),
+      }
+
+      const app = new SpecializationTreeApp()
+      app.actor = actor
+      app.document = actor
+      const host = createMockHost({ width: 640, height: 480 })
+      app.element = {
+        querySelector: vi.fn((selector) => {
+          if (selector === '[data-specialization-tree-viewport]') return host
+          if (selector === '[data-node-tooltip]') return tooltip
+          return null
+        }),
+      }
+
+      await app._onRender(context, { resetView: false })
+
+      // Click on the node — should show tooltip (consultation)
+      const stage = app.pixiApp.stage
+      const container = stage.children.find((child) => child.position && child.scale)
+      const nodeHitArea = container.children.find((child) => child._listeners?.pointerdown)
+      nodeHitArea._listeners.pointerdown({ stopPropagation: vi.fn() })
+
+      expect(tooltip.hidden).toBe(false)
+      expect(headerEl.textContent).toBe('Tough')
+      expect(bodyEl.innerHTML).toContain('Cost')
+      expect(bodyEl.innerHTML).toContain('10 XP')
+      expect(bodyEl.innerHTML).toContain('State')
+      expect(bodyEl.innerHTML).toContain('Locked')
+      expect(bodyEl.innerHTML).toContain('Reason')
+      expect(bodyEl.innerHTML).toContain('Not enough XP')
+    })
+
+    it('shows tooltip without reason for an available node', async () => {
+      const actor = createActor({
+        system: {
+          details: {
+            specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' }],
+          },
+          progression: {
+            talentPurchases: [],
+            experience: { available: 100 },
+          },
+        },
+      })
+
+      globalThis.fromUuidSync = vi.fn((uuid) => {
+        if (uuid === 'Item.tree-bodyguard') {
+          return {
+            type: 'specialization-tree',
+            name: 'Bodyguard Tree',
+            system: {
+              nodes: [{ nodeId: 'r1c1', talentId: 'Item.talent-tough', talentUuid: 'Item.talent-tough', row: 1, column: 1, cost: 10 }],
+              connections: [{ from: 'r1c1', to: 'r1c1' }],
+            },
+          }
+        }
+        if (uuid === 'Item.talent-tough') return { name: 'Tough', system: { isRanked: false } }
+        return null
+      })
+
+      const context = buildSpecializationTreeContext(actor)
+      const node = context.renderNodes[0]
+
+      expect(node.nodeState).toBe('available')
+      expect(node.reasonLabel).toBeNull()
+
+      const headerEl = { textContent: '' }
+      const bodyEl = { innerHTML: '' }
+
+      const tooltip = {
+        hidden: true,
+        querySelector: vi.fn((selector) => {
+          if (selector === '[data-tooltip-header]') return headerEl
+          if (selector === '[data-tooltip-body]') return bodyEl
+          return null
+        }),
+      }
+
+      const app = new SpecializationTreeApp()
+      app.actor = actor
+      app.document = actor
+      const host = createMockHost({ width: 640, height: 480 })
+      app.element = {
+        querySelector: vi.fn((selector) => {
+          if (selector === '[data-specialization-tree-viewport]') return host
+          if (selector === '[data-node-tooltip]') return tooltip
+          return null
+        }),
+      }
+
+      await app._onRender(context, { resetView: false })
+
+      const stage = app.pixiApp.stage
+      const container = stage.children.find((child) => child.position && child.scale)
+      const nodeHitArea = container.children.find((child) => child._listeners?.pointerdown)
+      nodeHitArea._listeners.pointerdown({ stopPropagation: vi.fn() })
+
+      expect(tooltip.hidden).toBe(false)
+      expect(headerEl.textContent).toBe('Tough')
+      expect(bodyEl.innerHTML).toContain('Cost')
+      expect(bodyEl.innerHTML).toContain('State')
+      expect(bodyEl.innerHTML).not.toContain('Reason')
+    })
+
+    it('does not trigger purchase or document mutation on node click', async () => {
+      const actor = createActor({
+        system: {
+          details: {
+            specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' }],
+          },
+          progression: {
+            talentPurchases: [],
+            experience: { available: 100 },
+          },
+        },
+      })
+
+      globalThis.fromUuidSync = vi.fn((uuid) => {
+        if (uuid === 'Item.tree-bodyguard') {
+          return {
+            type: 'specialization-tree',
+            name: 'Bodyguard Tree',
+            system: {
+              nodes: [{ nodeId: 'r1c1', talentId: 'Item.talent-tough', talentUuid: 'Item.talent-tough', row: 1, column: 1, cost: 10 }],
+              connections: [{ from: 'r1c1', to: 'r1c1' }],
+            },
+          }
+        }
+        if (uuid === 'Item.talent-tough') return { name: 'Tough', system: { isRanked: false } }
+        return null
+      })
+
+      const headerEl = { textContent: '' }
+      const bodyEl = { innerHTML: '' }
+
+      const tooltip = {
+        hidden: true,
+        querySelector: vi.fn((selector) => {
+          if (selector === '[data-tooltip-header]') return headerEl
+          if (selector === '[data-tooltip-body]') return bodyEl
+          return null
+        }),
+      }
+
+      const app = new SpecializationTreeApp()
+      app.actor = actor
+      app.document = actor
+      const host = createMockHost({ width: 640, height: 480 })
+      app.element = {
+        querySelector: vi.fn((selector) => {
+          if (selector === '[data-specialization-tree-viewport]') return host
+          if (selector === '[data-node-tooltip]') return tooltip
+          return null
+        }),
+      }
+
+      const context = buildSpecializationTreeContext(actor)
+      await app._onRender(context, { resetView: false })
+
+      // Simulate node click — should show tooltip, not mutate document.
+      const stage = app.pixiApp.stage
+      const container = stage.children.find((child) => child.position && child.scale)
+      const nodeHitArea = container.children.find((child) => child._listeners?.pointerdown)
+      const stopPropagation = vi.fn()
+
+      nodeHitArea._listeners.pointerdown({ stopPropagation })
+
+      expect(stopPropagation).toHaveBeenCalled()
+      expect(tooltip.hidden).toBe(false)
+      expect(actor.update).not.toHaveBeenCalled()
+    })
+
+    it('hides tooltip on stage background click', async () => {
+      const actor = createActor({
+        system: {
+          details: {
+            specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' }],
+          },
+          progression: {
+            talentPurchases: [],
+            experience: { available: 100 },
+          },
+        },
+      })
+
+      globalThis.fromUuidSync = vi.fn((uuid) => {
+        if (uuid === 'Item.tree-bodyguard') {
+          return {
+            type: 'specialization-tree',
+            name: 'Bodyguard Tree',
+            system: {
+              nodes: [{ nodeId: 'r1c1', talentId: 'Item.talent-tough', talentUuid: 'Item.talent-tough', row: 1, column: 1, cost: 10 }],
+              connections: [{ from: 'r1c1', to: 'r1c1' }],
+            },
+          }
+        }
+        if (uuid === 'Item.talent-tough') return { name: 'Tough', system: { isRanked: false } }
+        return null
+      })
+
+      const headerEl = { textContent: '' }
+      const bodyEl = { innerHTML: '' }
+
+      const tooltip = {
+        hidden: true,
+        querySelector: vi.fn((selector) => {
+          if (selector === '[data-tooltip-header]') return headerEl
+          if (selector === '[data-tooltip-body]') return bodyEl
+          return null
+        }),
+      }
+
+      const app = new SpecializationTreeApp()
+      app.actor = actor
+      app.document = actor
+      const host = createMockHost({ width: 640, height: 480 })
+      app.element = {
+        querySelector: vi.fn((selector) => {
+          if (selector === '[data-specialization-tree-viewport]') return host
+          if (selector === '[data-node-tooltip]') return tooltip
+          return null
+        }),
+      }
+
+      const context = buildSpecializationTreeContext(actor)
+      await app._onRender(context, { resetView: false })
+
+      const stage = app.pixiApp.stage
+
+      // Show the tooltip first by clicking on a node
+      const container = stage.children.find((child) => child.position && child.scale)
+      const nodeHitArea = container.children.find((child) => child._listeners?.pointerdown)
+      nodeHitArea._listeners.pointerdown({ stopPropagation: vi.fn() })
+      expect(tooltip.hidden).toBe(false)
+
+      // Click on stage background — should hide tooltip and clear any selection state
+      stage._listeners.pointerdown({ global: { x: 10, y: 10 } })
+      expect(tooltip.hidden).toBe(true)
+    })
+
+    it('hides tooltip on rerender', async () => {
+      const actor = createActor({
+        system: {
+          details: {
+            specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' }],
+          },
+          progression: {
+            talentPurchases: [],
+            experience: { available: 100 },
+          },
+        },
+      })
+
+      globalThis.fromUuidSync = vi.fn((uuid) => {
+        if (uuid === 'Item.tree-bodyguard') {
+          return {
+            type: 'specialization-tree',
+            name: 'Bodyguard Tree',
+            system: {
+              nodes: [{ nodeId: 'r1c1', talentId: 'Item.talent-tough', talentUuid: 'Item.talent-tough', row: 1, column: 1, cost: 10 }],
+              connections: [{ from: 'r1c1', to: 'r1c1' }],
+            },
+          }
+        }
+        if (uuid === 'Item.talent-tough') return { name: 'Tough', system: { isRanked: false } }
+        return null
+      })
+
+      const headerEl = { textContent: '' }
+      const bodyEl = { innerHTML: '' }
+
+      const tooltip = {
+        hidden: true,
+        querySelector: vi.fn((selector) => {
+          if (selector === '[data-tooltip-header]') return headerEl
+          if (selector === '[data-tooltip-body]') return bodyEl
+          return null
+        }),
+      }
+
+      const app = new SpecializationTreeApp()
+      app.actor = actor
+      app.document = actor
+      const host = createMockHost({ width: 640, height: 480 })
+      app.element = {
+        querySelector: vi.fn((selector) => {
+          if (selector === '[data-specialization-tree-viewport]') return host
+          if (selector === '[data-node-tooltip]') return tooltip
+          return null
+        }),
+      }
+
+      const context = buildSpecializationTreeContext(actor)
+
+      // First render
+      await app._onRender(context, { resetView: false })
+
+      // Show the tooltip by clicking on a node
+      const stage = app.pixiApp.stage
+      const container = stage.children.find((child) => child.position && child.scale)
+      const nodeHitArea = container.children.find((child) => child._listeners?.pointerdown)
+      nodeHitArea._listeners.pointerdown({ stopPropagation: vi.fn() })
+      expect(tooltip.hidden).toBe(false)
+
+      // Rerender — tooltip should be hidden
+      await app._onRender(context, { resetView: false })
+      expect(tooltip.hidden).toBe(true)
+    })
+  })
+
   describe('viewport stability', () => {
     it('preserves viewport camera when re-rendering the same specialization tree', async () => {
       const actor = createActor({
