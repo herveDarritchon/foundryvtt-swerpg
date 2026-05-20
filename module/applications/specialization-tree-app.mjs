@@ -655,6 +655,19 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
         costText.y = node.y + NODE_HEIGHT - 14
         this.#treeContainer.addChild(costText)
 
+        // Ranked indicator — shown only when the node is explicitly ranked
+        if (node.isRanked) {
+          const rankedText = new PIXI.Text('(R)', {
+            fontFamily: 'Arial',
+            fontSize: 9,
+            fill: v.costColor,
+            fontStyle: 'italic',
+          })
+          rankedText.x = node.x + NODE_WIDTH - rankedText.width - 4
+          rankedText.y = node.y + 4
+          this.#treeContainer.addChild(rankedText)
+        }
+
         const hitArea = new PIXI.Graphics()
         hitArea.beginFill(0xffffff, 0.001)
         hitArea.drawRect(node.x, node.y, NODE_WIDTH, NODE_HEIGHT)
