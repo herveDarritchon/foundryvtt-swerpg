@@ -2,6 +2,7 @@
 description: Review PR architecture, tests, maintainability and scope
 agent: cmd-review-pr
 subtask: true
+context: fork
 ---
 
 Use the `reviewer-pr-architecture` skill.

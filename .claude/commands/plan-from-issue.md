@@ -1,0 +1,1 @@
+../../.opencode/commands/plan-from-issue.md

@@ -1,0 +1,1 @@
+../../.opencode/commands/verify-scope-before-pr.md

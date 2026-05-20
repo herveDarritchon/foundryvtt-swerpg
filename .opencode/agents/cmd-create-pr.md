@@ -1,4 +1,5 @@
 ---
+name: "create-pr"
 description: Prépare ou crée une Pull Request vers develop via le skill creer-pull-request, avec commit Conventional Commits préalable si nécessaire.
 mode: subagent
 model: openai/gpt-5.4-mini

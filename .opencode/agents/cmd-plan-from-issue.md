@@ -1,4 +1,5 @@
 ---
+name: "create-implementation-plan"
 description: Transforme un cadrage ou une issue en fichier de plan Markdown sous documentation/plan/<business-domain-path>/.
 mode: subagent
 model: openai/gpt-5.4

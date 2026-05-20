@@ -2,6 +2,7 @@
 description: Run project validation commands and report factual results
 agent: cmd-validate
 subtask: true
+context: fork
 ---
 
 Use the `executer-validation-projet` skill if available.

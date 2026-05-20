@@ -1,0 +1,1 @@
+/Users/hervedarritchon/Workspace/Perso/FoundryVTT/foundryvtt-swerpg/.opencode/agents/cmd-verify-scope-before-pr.md

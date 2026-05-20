@@ -1,4 +1,5 @@
 ---
+name: "verify-scope-before-pr"
 description: Vérifie issue, plan, diff, tests et validations via le skill verifier-scope-avant-pr, sans modifier le code.
 mode: subagent
 model: openai/gpt-5.4-mini

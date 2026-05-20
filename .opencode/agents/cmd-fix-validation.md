@@ -1,4 +1,5 @@
 ---
+name: "fix-validation"
 description: Analyse un échec ciblé via le skill corriger-echec-validation et applique la correction minimale.
 mode: subagent
 model: openai/gpt-5.4

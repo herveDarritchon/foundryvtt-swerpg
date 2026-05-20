@@ -2,6 +2,7 @@
 description: Produce and write project-plan.md et issues-checklist.md
 agent: cmd-plan-from-cadrage
 subtask: true
+context: fork
 ---
 
 Use the `plan-depuis-issue` skill.

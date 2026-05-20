@@ -2,6 +2,7 @@
 description: Produce and write an actionable implementation plan from an issue or cadrage
 agent: cmd-plan-from-issue
 subtask: true
+context: fork
 ---
 
 Use the `structured-autonomy-plan` skill.
