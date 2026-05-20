@@ -232,9 +232,12 @@ describe('specialization-tree application', () => {
       computeNodePosition,
       computeTreeBoundingBox,
       computeCenteredOffset,
+    } = await import('../../module/applications/specialization-tree-app.mjs'))
+
+    ;({
       resolveTalentItem,
       resolveTalentDetail,
-    } = await import('../../module/applications/specialization-tree-app.mjs'))
+    } = await import('../../module/lib/talent-node/talent-reference-resolver.mjs'))
   })
 
   afterEach(() => {

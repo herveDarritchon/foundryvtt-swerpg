@@ -176,8 +176,10 @@ export default class SwerpgCharacter extends SwerpgActorType {
       talentPurchases: new fields.ArrayField(
         new fields.SchemaField({
           treeId: new fields.StringField({ required: true, blank: false }),
+          treeUuid: new fields.StringField({ required: false, nullable: true, blank: false, initial: null }),
           nodeId: new fields.StringField({ required: true, blank: false }),
           talentId: new fields.StringField({ required: true, blank: false }),
+          talentUuid: new fields.StringField({ required: false, nullable: true, blank: false, initial: null }),
           specializationId: new fields.StringField({ required: true, blank: false }),
         }),
         { required: false, initial: [] },

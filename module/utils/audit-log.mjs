@@ -313,8 +313,10 @@ function onCreateItem(item, data, options, userId) {
  * @param {object} purchaseData
  * @param {string} purchaseData.specializationId
  * @param {string} purchaseData.treeId
+ * @param {string|null} [purchaseData.treeUuid]
  * @param {string} purchaseData.nodeId
  * @param {string} purchaseData.talentId
+ * @param {string|null} [purchaseData.talentUuid]
  * @param {number} purchaseData.cost
  * @param {number} [purchaseData.previousXp]
  * @param {number} [purchaseData.nextXp]
@@ -330,8 +332,10 @@ async function recordTalentNodePurchase(actor, purchaseData) {
       actorId: actor.id,
       specializationId: purchaseData.specializationId,
       treeId: purchaseData.treeId,
+      treeUuid: purchaseData.treeUuid ?? null,
       nodeId: purchaseData.nodeId,
       talentId: purchaseData.talentId,
+      talentUuid: purchaseData.talentUuid ?? null,
       cost: purchaseData.cost,
       source: 'specialization-tree',
       ...(purchaseData.previousXp !== undefined ? { previousXp: purchaseData.previousXp } : {}),

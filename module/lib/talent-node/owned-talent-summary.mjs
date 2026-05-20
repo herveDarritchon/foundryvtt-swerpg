@@ -14,6 +14,7 @@ import { resolveSpecializationTree } from './talent-tree-resolver.mjs'
 /**
  * @typedef {Object} OwnedTalentSummaryEntry
  * @property {string} talentId
+ * @property {string|null} talentUuid
  * @property {string|null} name
  * @property {string|null} activation
  * @property {boolean|null} isRanked
@@ -38,17 +39,25 @@ export function buildOwnedTalentSummary(actor, talentDefinitions = new Map()) {
 
   const specMap = buildSpecializationMap(actor)
   const resolvedCache = new Map()
-  const grouped = groupByTalentId(purchases)
+  const grouped = groupByTalentKey(purchases)
   const entries = []
 
-  for (const [talentId, group] of grouped) {
-    const definition = talentDefinitions.get(talentId) ?? null
+  for (const [groupKey, group] of grouped) {
+    const first = group[0]
+    const talentUuid = first.talentUuid ?? null
+    const talentId = first.talentId
+
+    // Prefer UUID-based definition lookup, fallback to business key
+    const definition = talentUuid && talentDefinitions.has(talentUuid)
+      ? talentDefinitions.get(talentUuid)
+      : talentDefinitions.get(talentId) ?? null
     const isRanked = definition?.isRanked ?? null
 
     const sources = group.map(p => resolveSource(p, specMap, resolvedCache))
 
     entries.push({
       talentId,
+      talentUuid,
       name: definition?.name ?? null,
       activation: definition?.activation ?? null,
       isRanked,
@@ -78,13 +87,13 @@ function buildSpecializationMap(actor) {
 }
 
 /**
- * Group purchases by talentId.
+ * Group purchases by talentUuid ?? talentId for UUID-aware deduplication.
  * @param {Array} purchases
  * @returns {Map<string, Array>}
  */
-function groupByTalentId(purchases) {
+function groupByTalentKey(purchases) {
   return purchases.reduce((acc, p) => {
-    const key = p.talentId
+    const key = p.talentUuid ?? p.talentId
     if (!acc.has(key)) acc.set(key, [])
     acc.get(key).push(p)
     return acc

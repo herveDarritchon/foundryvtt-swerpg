@@ -85,14 +85,16 @@ describe('TalentNodePurchase', () => {
       expect(result.ok).toBe(true)
       expect(result.purchase).toMatchObject({
         treeId: 'tree-1',
+        treeUuid: null,
         nodeId: 'r1c1',
         talentId: 'talent-parry',
+        talentUuid: null,
         specializationId: 'spec-1',
         cost: 5,
       })
       expect(actor.update).toHaveBeenCalledWith({
         'system.progression.talentPurchases': [
-          { treeId: 'tree-1', nodeId: 'r1c1', talentId: 'talent-parry', specializationId: 'spec-1' },
+          { treeId: 'tree-1', treeUuid: null, nodeId: 'r1c1', talentId: 'talent-parry', talentUuid: null, specializationId: 'spec-1' },
         ],
         'system.progression.experience.spent': 5,
       })
