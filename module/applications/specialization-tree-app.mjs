@@ -240,8 +240,6 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
 
   #renderNodesCache = null
 
-  #selectedNodeId = null
-
   #viewport = { scale: 1, x: 0, y: 0 }
 
   #minZoom = 0.5
@@ -677,11 +675,9 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
         const capturedNode = node
         hitArea.on('pointerdown', (event) => {
           event.stopPropagation()
-          if (capturedNode.nodeState === NODE_STATE.AVAILABLE) {
-            this.#purchaseNode(capturedNode)
-          } else {
-            this.#showNodeTooltip(capturedNode)
-          }
+          // US16.6 — Node interaction is read-only consultation;
+          // purchase is not triggered from default node click.
+          this.#showNodeTooltip(capturedNode)
         })
         this.#treeContainer.addChild(hitArea)
       }
@@ -717,14 +713,12 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
     }
 
     tooltip.hidden = false
-    this.#selectedNodeId = node.nodeId
   }
 
   #hideNodeTooltip() {
     const root = typeof HTMLElement !== 'undefined' && this.element instanceof HTMLElement ? this.element : (this.element?.[0] ?? this.element)
     const tooltip = root?.querySelector?.('[data-node-tooltip]')
     if (tooltip) tooltip.hidden = true
-    this.#selectedNodeId = null
   }
 
   async #purchaseNode(node) {
@@ -759,7 +753,6 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
 
     this.#treeContainer = null
     this.#renderNodesCache = null
-    this.#selectedNodeId = null
     this.#viewport = { scale: 1, x: 0, y: 0 }
 
     if (this.pixiApp) {
