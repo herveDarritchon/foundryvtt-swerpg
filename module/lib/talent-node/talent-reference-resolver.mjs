@@ -4,6 +4,7 @@ import { logger } from '../../utils/logger.mjs'
  * @typedef {Object} TalentDetail
  * @property {string} name - The resolved talent name (localized unknown fallback if unresolved).
  * @property {boolean} isRanked - Whether the talent is ranked.
+ * @property {boolean} isActive - Whether the talent has an activation cost (active vs passive).
  */
 
 /**
@@ -11,6 +12,7 @@ import { logger } from '../../utils/logger.mjs'
  * @property {string} name
  * @property {string} [activation]
  * @property {boolean} [isRanked]
+ * @property {boolean} [isActive]
  */
 
 /**
@@ -18,7 +20,7 @@ import { logger } from '../../utils/logger.mjs'
  * Searches game.items first, then falls back to compendium pack indexes.
  *
  * @param {string} normalizedKey - Lowercase trimmed key to search for.
- * @returns {{ name: string, isRanked: boolean }|null}
+ * @returns {{ name: string, isRanked: boolean, isActive: boolean }|null}
  */
 function resolveTalentByBusinessKey(normalizedKey) {
   if (typeof game !== 'undefined' && game.items) {
@@ -27,12 +29,12 @@ function resolveTalentByBusinessKey(normalizedKey) {
 
       const id = item.system?.id
       if (id && typeof id === 'string' && id.toLowerCase().trim() === normalizedKey) {
-        return { name: item.name, isRanked: item.system?.isRanked ?? false }
+        return { name: item.name, isRanked: item.system?.isRanked ?? false, isActive: !!item.system?.activation }
       }
 
       const oggKey = item.getFlag?.('swerpg', 'oggdudeKey')
       if (oggKey && typeof oggKey === 'string' && oggKey.toLowerCase().trim() === normalizedKey) {
-        return { name: item.name, isRanked: item.system?.isRanked ?? false }
+        return { name: item.name, isRanked: item.system?.isRanked ?? false, isActive: !!item.system?.activation }
       }
     }
   }
@@ -47,12 +49,12 @@ function resolveTalentByBusinessKey(normalizedKey) {
 
         const systemId = entry.system?.id
         if (systemId && typeof systemId === 'string' && systemId.toLowerCase().trim() === normalizedKey) {
-          return { name: entry.name, isRanked: entry.system?.isRanked ?? false }
+          return { name: entry.name, isRanked: entry.system?.isRanked ?? false, isActive: !!entry.system?.activation }
         }
 
         const oggKey = entry.flags?.swerpg?.oggdudeKey
         if (oggKey && typeof oggKey === 'string' && oggKey.toLowerCase().trim() === normalizedKey) {
-          return { name: entry.name, isRanked: entry.system?.isRanked ?? false }
+          return { name: entry.name, isRanked: entry.system?.isRanked ?? false, isActive: !!entry.system?.activation }
         }
       }
     }
@@ -85,6 +87,7 @@ export function resolveTalentDetail(nodeRef) {
         return {
           name: item.name ?? unknown,
           isRanked: item.system?.isRanked ?? false,
+          isActive: !!item.system?.activation,
         }
       }
     } catch {
@@ -98,11 +101,12 @@ export function resolveTalentDetail(nodeRef) {
       return {
         name: matched.name ?? unknown,
         isRanked: matched.isRanked ?? false,
+        isActive: matched.isActive ?? false,
       }
     }
   }
 
-  return { name: unknown, isRanked: false }
+  return { name: unknown, isRanked: false, isActive: false }
 }
 
 /**
@@ -134,6 +138,7 @@ export function buildTalentDefinitionsMap() {
       name: item.name,
       activation: item.system?.activation,
       isRanked: item.system?.isRanked,
+      isActive: !!item.system?.activation,
     }
 
     // Index by UUID for talentUuid matching

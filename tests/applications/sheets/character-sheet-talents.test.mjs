@@ -383,16 +383,31 @@ describe('CharacterSheet talent consolidation (US12)', () => {
       name: 'Grit',
       activation: 'passive',
       isRanked: true,
+      isActive: true,
     })
     expect(capturedDefinitions.get('Item.def456')).toEqual({
       name: 'Old Talent',
       activation: 'active',
       isRanked: false,
+      isActive: true,
     })
     expect(capturedDefinitions.get('Item.ghi789')).toEqual({
       name: 'Willpower',
       activation: 'passive',
       isRanked: true,
+      isActive: true,
+    })
+    expect(capturedDefinitions.get('Item.def456')).toEqual({
+      name: 'Old Talent',
+      activation: 'active',
+      isRanked: false,
+      isActive: true,
+    })
+    expect(capturedDefinitions.get('Item.ghi789')).toEqual({
+      name: 'Willpower',
+      activation: 'passive',
+      isRanked: true,
+      isActive: true,
     })
     expect(capturedDefinitions.size).toBe(3)
   })

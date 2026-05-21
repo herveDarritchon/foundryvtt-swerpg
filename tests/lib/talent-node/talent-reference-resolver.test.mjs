@@ -125,10 +125,10 @@ describe('TalentReferenceResolver', () => {
 
       const map = buildTalentDefinitionsMap()
 
-      expect(map.get('Item.abc')).toEqual({ name: 'Parry', activation: 'active', isRanked: true })
-      expect(map.get('talent-parry')).toEqual({ name: 'Parry', activation: 'active', isRanked: true })
-      expect(map.get('Item.def')).toEqual({ name: 'Grit', activation: 'passive', isRanked: false })
-      expect(map.get('grit')).toEqual({ name: 'Grit', activation: 'passive', isRanked: false })
+      expect(map.get('Item.abc')).toEqual({ name: 'Parry', activation: 'active', isRanked: true, isActive: true })
+      expect(map.get('talent-parry')).toEqual({ name: 'Parry', activation: 'active', isRanked: true, isActive: true })
+      expect(map.get('Item.def')).toEqual({ name: 'Grit', activation: 'passive', isRanked: false, isActive: true })
+      expect(map.get('grit')).toEqual({ name: 'Grit', activation: 'passive', isRanked: false, isActive: true })
     })
 
     it('falls back to item.id when system.id is missing', () => {
@@ -136,7 +136,7 @@ describe('TalentReferenceResolver', () => {
 
       const map = buildTalentDefinitionsMap()
 
-      expect(map.get('Item.xyz')).toEqual({ name: 'Old Talent', activation: 'active', isRanked: false })
+      expect(map.get('Item.xyz')).toEqual({ name: 'Old Talent', activation: 'active', isRanked: false, isActive: true })
     })
 
     it('skips non-talent items', () => {
