@@ -99,6 +99,14 @@
           "UNRESOLVED": "Tree not resolved",
           "INCOMPLETE": "Incomplete tree"
         },
+        "SUMMARY": {
+          "CURRENT_TREE": "Current tree",
+          "SPECIALIZATIONS": "Specializations",
+          "PROGRESS": "Progress",
+          "ACTIONABLE": "Actionable",
+          "LOCKED": "Locked",
+          "AVAILABLE_XP": "Available XP"
+        },
         "NODE_STATE": {
           "PURCHASED": "Purchased",
           "AVAILABLE": "Available",

@@ -2,28 +2,70 @@
   <header class='specialization-tree-app__header'>
     <div class='specialization-tree-app__title-block'>
       <h2 class='specialization-tree-app__title'>{{title}}</h2>
-      <p class='specialization-tree-app__subtitle'>{{subtitle}}</p>
+      {{#unless currentTreeSummary}}
+        <p class='specialization-tree-app__subtitle'>{{subtitle}}</p>
+      {{/unless}}
     </div>
+
+    {{#if currentTreeSummary}}
+      <div class='specialization-tree-app__header-meta'>
+        <div class='specialization-tree-app__meta-pill'>
+          <span class='specialization-tree-app__meta-label'>{{localize 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.SUMMARY.CURRENT_TREE'}}</span>
+          <strong>{{currentTreeSummary.treeName}}</strong>
+        </div>
+        <div class='specialization-tree-app__meta-pill'>
+          <span class='specialization-tree-app__meta-label'>{{localize 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.SUMMARY.PROGRESS'}}</span>
+          <strong>{{currentTreeSummary.progressValue}}</strong>
+        </div>
+      </div>
+    {{/if}}
   </header>
 
   {{#if hasActor}}
     <section class='specialization-tree-app__layout'>
       <aside class='specialization-tree-app__sidebar'>
         {{#if hasSpecializations}}
-          <ul class='specialization-tree-app__specializations'>
-            {{#each specializations as |specialization|}}
-              <li class='specialization-tree-app__specialization {{#if specialization.isAvailable}}is-available{{else}}is-unavailable{{/if}} {{#if specialization.isSelected}}is-active{{/if}}'{{#if specialization.isAvailable}} data-action='selectTree' data-tree-key='{{specialization.key}}'{{/if}}>
-                <div class='specialization-tree-app__specialization-main'>
-                  <span class='specialization-tree-app__specialization-name'>{{specialization.name}}</span>
-                  <span class='specialization-tree-app__specialization-state'>{{specialization.stateLabel}}</span>
+          {{#if currentTreeSummary}}
+            <section class='specialization-tree-app__sidebar-section'>
+              <p class='specialization-tree-app__section-label'>{{localize 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.SUMMARY.CURRENT_TREE'}}</p>
+
+              <div class='specialization-tree-app__summary-card'>
+                <div class='specialization-tree-app__summary-head'>
+                  <h3 class='specialization-tree-app__summary-title'>{{currentTreeSummary.treeName}}</h3>
+                  <span class='specialization-tree-app__summary-progress'>{{currentTreeSummary.progressValue}}</span>
                 </div>
 
-                {{#if specialization.treeName}}
-                  <div class='specialization-tree-app__tree-name'>{{specialization.treeName}}</div>
-                {{/if}}
-              </li>
-            {{/each}}
-          </ul>
+                <dl class='specialization-tree-app__summary-stats'>
+                  {{#each currentTreeSummary.stats as |stat|}}
+                    <div class='specialization-tree-app__summary-stat'>
+                      <dt>{{stat.label}}</dt>
+                      <dd>{{stat.value}}</dd>
+                    </div>
+                  {{/each}}
+                </dl>
+              </div>
+            </section>
+          {{/if}}
+
+          <section class='specialization-tree-app__sidebar-section'>
+            <p class='specialization-tree-app__section-label'>{{localize 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.SUMMARY.SPECIALIZATIONS'}}</p>
+
+            <ul class='specialization-tree-app__specializations'>
+              {{#each specializations as |specialization|}}
+                <li
+                  class='specialization-tree-app__specialization {{#if specialization.isAvailable}}is-available{{else}}is-unavailable{{/if}} {{#if specialization.isSelected}}is-active{{/if}}'
+                  data-selected='{{#if specialization.isSelected}}true{{else}}false{{/if}}'
+                  {{#if specialization.isSelected}}aria-current='true'{{/if}}
+                  {{#if specialization.isAvailable}}data-action='selectTree' data-tree-key='{{specialization.key}}'{{/if}}
+                >
+                  <div class='specialization-tree-app__specialization-main'>
+                    <span class='specialization-tree-app__specialization-name'>{{specialization.name}}</span>
+                    <span class='specialization-tree-app__specialization-state'>{{specialization.stateLabel}}</span>
+                  </div>
+                </li>
+              {{/each}}
+            </ul>
+          </section>
         {{else}}
           <div class='specialization-tree-app__sidebar-empty'>
             <h3>{{emptyStateTitle}}</h3>
