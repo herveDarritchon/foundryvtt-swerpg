@@ -1,45 +1,26 @@
 /**
- * Mapping des codes d'activation OggDude vers les valeurs système TALENT_ACTIVATION
+ * Mapping des codes d'activation OggDude vers les valeurs système TALENT_ACTIVATION.
+ * Le modèle talent SWERPG ne distingue que `passive`, `active` et `unspecified`.
  */
-
-import { addTalentUnknownActivation } from '../utils/talent-import-utils.mjs'
-
-// Dans les tests on mocke SYSTEM.TALENT_ACTIVATION comme simples chaînes.
-// Ici on renvoie donc directement les codes systèmes attendus par les TUs, sans normaliser sur "active".
 
 /**
  * Table de correspondance entre codes OggDude et activations système
  */
 export const TALENT_ACTIVATION_MAP = Object.freeze({
-  // Valeurs courantes dans OggDude
   passive: 'passive',
-  Passive: 'passive',
-  PASSIVE: 'passive',
-
+  tapassive: 'passive',
   active: 'active',
-  Active: 'active',
-  ACTIVE: 'active',
-
-  // Variations possibles
-  incidental: 'incidental',
-  Incidental: 'incidental',
-  INCIDENTAL: 'incidental',
-
-  maneuver: 'maneuver',
-  Maneuver: 'maneuver',
-  MANEUVER: 'maneuver',
-
-  action: 'action',
-  Action: 'action',
-  ACTION: 'action',
-  reaction: 'reaction',
-  Reaction: 'reaction',
-  REACTION: 'reaction',
-
-  // Fallback par défaut (vide ou undefined) vers la valeur neutre
+  taactive: 'active',
+  incidental: 'active',
+  taincidental: 'active',
+  taincidentaloot: 'active',
+  maneuver: 'active',
+  tamaneuver: 'active',
+  action: 'active',
+  taaction: 'active',
+  reaction: 'active',
+  tareaction: 'active',
   '': 'unspecified',
-  undefined: 'unspecified',
-  null: 'unspecified',
 })
 
 /**
@@ -48,28 +29,15 @@ export const TALENT_ACTIVATION_MAP = Object.freeze({
  * @returns {string} ID de l'activation système correspondante
  */
 export function resolveTalentActivation(oggDudeCode) {
-  // Nettoyer l'entrée
-  const cleanCode = String(oggDudeCode || '').trim()
+  const cleanCode = String(oggDudeCode ?? '').trim()
+  const normalizedCode = cleanCode.toLowerCase()
 
-  // Recherche directe dans la table
-  if (cleanCode in TALENT_ACTIVATION_MAP) {
-    return TALENT_ACTIVATION_MAP[cleanCode]
+  if (normalizedCode in TALENT_ACTIVATION_MAP) {
+    return TALENT_ACTIVATION_MAP[normalizedCode]
   }
 
-  // Recherche insensible à la casse
-  const lowerCode = cleanCode.toLowerCase()
-  const foundEntry = Object.entries(TALENT_ACTIVATION_MAP).find(([key]) => key.toLowerCase() === lowerCode)
-
-  if (foundEntry) {
-    return foundEntry[1]
-  }
-
-  // Code inconnu - enregistrer pour statistiques et utiliser fallback
-  if (cleanCode !== '') {
-    addTalentUnknownActivation(cleanCode)
-  }
-
-  return 'unspecified' // Valeur neutre pour code inconnu
+  // Contrat OggDude réel: `taPassive` est passif, toute autre valeur non vide est active.
+  return cleanCode === '' ? 'unspecified' : 'active'
 }
 
 /**
@@ -77,7 +45,7 @@ export function resolveTalentActivation(oggDudeCode) {
  * @returns {string[]} Liste des codes supportés
  */
 export function getSupportedTalentActivationCodes() {
-  return Object.keys(TALENT_ACTIVATION_MAP)
+  return Object.keys(TALENT_ACTIVATION_MAP).filter(Boolean)
 }
 
 /**
@@ -87,5 +55,5 @@ export function getSupportedTalentActivationCodes() {
  */
 export function isTalentActivationSupported(code) {
   const cleanCode = String(code || '').trim()
-  return cleanCode in TALENT_ACTIVATION_MAP || getSupportedTalentActivationCodes().some((key) => key.toLowerCase() === cleanCode.toLowerCase())
+  return cleanCode === '' || typeof code === 'string'
 }

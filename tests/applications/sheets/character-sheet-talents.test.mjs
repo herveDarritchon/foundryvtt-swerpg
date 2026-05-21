@@ -383,7 +383,7 @@ describe('CharacterSheet talent consolidation (US12)', () => {
       name: 'Grit',
       activation: 'passive',
       isRanked: true,
-      isActive: true,
+      isActive: false,
     })
     expect(capturedDefinitions.get('Item.def456')).toEqual({
       name: 'Old Talent',
@@ -395,7 +395,7 @@ describe('CharacterSheet talent consolidation (US12)', () => {
       name: 'Willpower',
       activation: 'passive',
       isRanked: true,
-      isActive: true,
+      isActive: false,
     })
     expect(capturedDefinitions.get('Item.def456')).toEqual({
       name: 'Old Talent',
@@ -407,7 +407,7 @@ describe('CharacterSheet talent consolidation (US12)', () => {
       name: 'Willpower',
       activation: 'passive',
       isRanked: true,
-      isActive: true,
+      isActive: false,
     })
     expect(capturedDefinitions.size).toBe(3)
   })

@@ -1219,7 +1219,7 @@ describe('specialization-tree application', () => {
           },
         }
       }
-      if (uuid === 'Item.talent-tough') return { name: 'Tough', system: { isRanked: false, activation: 'Active' } }
+      if (uuid === 'Item.talent-tough') return { name: 'Tough', system: { isRanked: false, activation: 'active' } }
       return null
     })
 
@@ -1663,7 +1663,7 @@ describe('specialization-tree application', () => {
     it('returns talent name, isRanked and isActive when item is found', () => {
       globalThis.fromUuidSync = vi.fn(() => ({
         name: 'Dodge',
-        system: { isRanked: true, activation: 'Active' },
+        system: { isRanked: true, activation: 'active' },
       }))
       const detail = resolveTalentDetail('Item.talent-dodge')
       expect(detail.name).toBe('Dodge')
@@ -1704,7 +1704,7 @@ describe('specialization-tree application', () => {
   describe('resolveTalentDetail with node object', () => {
     it('prioritizes talentUuid over talentId', () => {
       globalThis.fromUuidSync = vi.fn((uuid) => {
-        if (uuid === 'Item.talent-dodge') return { name: 'Dodge', system: { isRanked: true, activation: 'Active' } }
+        if (uuid === 'Item.talent-dodge') return { name: 'Dodge', system: { isRanked: true, activation: 'active' } }
         return null
       })
 
@@ -1716,7 +1716,7 @@ describe('specialization-tree application', () => {
 
     it('falls back to legacy business key lookup when talentUuid is absent', () => {
       globalThis.fromUuidSync = vi.fn(() => null)
-      globalThis.game.items = [{ type: 'talent', name: 'Grit', uuid: 'Item.grit001', system: { id: 'grit', isRanked: true, activation: 'Active' } }]
+      globalThis.game.items = [{ type: 'talent', name: 'Grit', uuid: 'Item.grit001', system: { id: 'grit', isRanked: true, activation: 'active' } }]
 
       const detail = resolveTalentDetail({ talentUuid: null, talentId: 'grit' })
       expect(detail.name).toBe('Grit')
