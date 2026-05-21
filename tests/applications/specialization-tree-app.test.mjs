@@ -72,6 +72,12 @@ describe('specialization-tree application', () => {
         'SWERPG.TALENT.SPECIALIZATION_TREE_APP.STATUS.AVAILABLE': 'Available tree',
         'SWERPG.TALENT.SPECIALIZATION_TREE_APP.STATUS.UNRESOLVED': 'Tree not resolved',
         'SWERPG.TALENT.SPECIALIZATION_TREE_APP.STATUS.INCOMPLETE': 'Incomplete tree',
+        'SWERPG.TALENT.SPECIALIZATION_TREE_APP.SUMMARY.CURRENT_TREE': 'Current tree',
+        'SWERPG.TALENT.SPECIALIZATION_TREE_APP.SUMMARY.SPECIALIZATIONS': 'Specializations',
+        'SWERPG.TALENT.SPECIALIZATION_TREE_APP.SUMMARY.PROGRESS': 'Progress',
+        'SWERPG.TALENT.SPECIALIZATION_TREE_APP.SUMMARY.ACTIONABLE': 'Actionable',
+        'SWERPG.TALENT.SPECIALIZATION_TREE_APP.SUMMARY.LOCKED': 'Locked',
+        'SWERPG.TALENT.SPECIALIZATION_TREE_APP.SUMMARY.AVAILABLE_XP': 'Available XP',
         'SWERPG.TALENT.SPECIALIZATION_TREE_APP.EMPTY.NO_ACTOR_TITLE': 'No actor selected',
         'SWERPG.TALENT.SPECIALIZATION_TREE_APP.EMPTY.NO_ACTOR_DESCRIPTION':
           'Open this application from a character sheet to inspect the owned specialization trees.',
@@ -270,6 +276,7 @@ describe('specialization-tree application', () => {
     const context = buildSpecializationTreeContext(null)
 
     expect(context.hasActor).toBe(false)
+    expect(context.currentTreeSummary).toBeNull()
     expect(context.showViewport).toBe(false)
     expect(context.emptyStateTitle).toBe('No actor selected')
   })
@@ -394,6 +401,7 @@ describe('specialization-tree application', () => {
     const context = buildSpecializationTreeContext(actor)
 
     expect(context.currentTreeId).toBeNull()
+    expect(context.currentTreeSummary).toBeNull()
     expect(context.currentTreeData).toBeNull()
     expect(context.renderNodes).toEqual([])
     expect(context.renderConnections).toEqual([])
@@ -557,6 +565,64 @@ describe('specialization-tree application', () => {
     expect(secondNode.column).toBe(2)
     expect(secondNode.x).toBe(2 * (120 + 24) + 20)
     expect(secondNode.y).toBe(1 * (48 + 24) + 20)
+  })
+
+  it('builds a currentTreeSummary for the selected tree', () => {
+    const actor = createActor({
+      system: {
+        details: {
+          specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' }],
+        },
+        progression: {
+          talentPurchases: [{ specializationId: 'spec-bodyguard', nodeId: 'r1c1', talentId: 'Item.talent-tough', xpCost: 5 }],
+          experience: { available: 10 },
+        },
+      },
+    })
+
+    globalThis.fromUuidSync = vi.fn((uuid) => {
+      if (uuid === 'Item.tree-bodyguard') {
+        return {
+          type: 'specialization-tree',
+          name: 'Bodyguard Tree',
+          system: {
+            specializationId: 'spec-bodyguard',
+            nodes: [
+              { nodeId: 'r1c1', talentId: 'Item.talent-tough', talentUuid: 'Item.talent-tough', row: 1, column: 1, cost: 5 },
+              { nodeId: 'r2c1', talentId: 'Item.talent-grit', talentUuid: 'Item.talent-grit', row: 2, column: 1, cost: 10 },
+              { nodeId: 'r3c1', talentId: 'Item.talent-durable', talentUuid: 'Item.talent-durable', row: 3, column: 1, cost: 15 },
+            ],
+            connections: [
+              { from: 'r1c1', to: 'r2c1' },
+              { from: 'r2c1', to: 'r3c1' },
+            ],
+          },
+        }
+      }
+
+      if (uuid === 'Item.talent-tough') return { name: 'Tough', system: { isRanked: false } }
+      if (uuid === 'Item.talent-grit') return { name: 'Grit', system: { isRanked: false } }
+      if (uuid === 'Item.talent-durable') return { name: 'Durable', system: { isRanked: false } }
+
+      return null
+    })
+
+    const context = buildSpecializationTreeContext(actor)
+
+    expect(context.currentTreeSummary).toEqual({
+      treeName: 'Bodyguard Tree',
+      purchasedCount: 1,
+      totalCount: 3,
+      availableCount: 1,
+      lockedCount: 1,
+      availableXp: 10,
+      progressValue: '1/3',
+      stats: [
+        { key: 'available', label: 'Actionable', value: 1 },
+        { key: 'locked', label: 'Locked', value: 1 },
+        { key: 'xp', label: 'Available XP', value: 10 },
+      ],
+    })
   })
 
   it('includes node state for every render node', () => {
