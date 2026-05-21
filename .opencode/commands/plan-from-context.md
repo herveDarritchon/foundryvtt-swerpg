@@ -1,6 +1,6 @@
 ---
 description: Produce and write project-plan.md et issues-checklist.md
-agent: cmd-plan-from-cadrage
+agent: breakdown-plan
 subtask: true
 context: fork
 ---
