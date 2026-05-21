@@ -58,6 +58,8 @@ describe('specialization-tree application', () => {
   let computeCenteredOffset
   let resolveTalentItem
   let resolveTalentDetail
+  let purchaseTalentNodeModule
+  let forgetTalentNodeModule
 
   beforeEach(async () => {
     setupFoundryMock({
@@ -97,9 +99,24 @@ describe('specialization-tree application', () => {
         'SWERPG.TALENT.SPECIALIZATION_TREE_APP.TOOLTIP.NON_RANKED': 'Non-ranked Talent',
         'SWERPG.TALENT.SPECIALIZATION_TREE_APP.TOOLTIP.STATE': 'State',
         'SWERPG.TALENT.SPECIALIZATION_TREE_APP.TOOLTIP.REASON': 'Reason',
+        'SWERPG.TALENT.SPECIALIZATION_TREE_APP.PURCHASE.SUCCESS': 'Purchase successful: {talent}',
+        'SWERPG.TALENT.SPECIALIZATION_TREE_APP.PURCHASE.FAILURE': 'Purchase failed: {reason}',
+        'SWERPG.TALENT.SPECIALIZATION_TREE_APP.FORGET.SUCCESS': 'Talent forgotten: {talent}',
+        'SWERPG.TALENT.SPECIALIZATION_TREE_APP.FORGET.FAILURE': 'Forget failed: {reason}',
+        'SWERPG.TALENT.SPECIALIZATION_TREE_APP.CONFIRM.PURCHASE.TITLE': '{action}: {talent}',
+        'SWERPG.TALENT.SPECIALIZATION_TREE_APP.CONFIRM.PURCHASE.CONTENT': 'Spend {xp} XP to purchase <strong>{talent}</strong>?',
+        'SWERPG.TALENT.SPECIALIZATION_TREE_APP.CONFIRM.FORGET.TITLE': '{action}: {talent}',
+        'SWERPG.TALENT.SPECIALIZATION_TREE_APP.CONFIRM.FORGET.CONTENT': 'Forget <strong>{talent}</strong> and refund {xp} XP?',
+        'SWERPG.TALENT.SPECIALIZATION_TREE_APP.PERMISSION_DENIED': 'You do not have permission to modify this specialization tree.',
+        'SWERPG.TALENT.SPECIALIZATION_TREE_APP.ACTION.PURCHASE': 'Purchase',
+        'SWERPG.TALENT.SPECIALIZATION_TREE_APP.ACTION.FORGET': 'Forget',
+        'SWERPG.TALENT.SPECIALIZATION_TREE_APP.REASON.NODE_NOT_PURCHASED': 'Node not purchased',
+        'SWERPG.TALENT.SPECIALIZATION_TREE_APP.REASON.NODE_HAS_DEPENDENTS': 'Node has purchased dependents',
         'SWERPG.TALENT.UNKNOWN': 'Unknown talent',
       },
     })
+
+    globalThis.foundry.applications.api.DialogV2.confirm = vi.fn().mockResolvedValue(false)
 
     function createMockContainer() {
       const listeners = {}
@@ -233,6 +250,8 @@ describe('specialization-tree application', () => {
       computeCenteredOffset,
     } = await import('../../module/applications/specialization-tree-app.mjs'))
     ;({ resolveTalentItem, resolveTalentDetail } = await import('../../module/lib/talent-node/talent-reference-resolver.mjs'))
+    purchaseTalentNodeModule = await import('../../module/lib/talent-node/talent-node-purchase.mjs')
+    forgetTalentNodeModule = await import('../../module/lib/talent-node/talent-node-forget.mjs')
   })
 
   afterEach(() => {
@@ -2672,7 +2691,7 @@ describe('specialization-tree application', () => {
       expect(bodyEl.innerHTML).toContain('Not enough XP')
     })
 
-    it('shows tooltip without reason for an available node', async () => {
+    it('routes available node click to action flow instead of tooltip', async () => {
       const actor = createActor({
         system: {
           details: {
@@ -2700,20 +2719,11 @@ describe('specialization-tree application', () => {
         return null
       })
 
-      const context = buildSpecializationTreeContext(actor)
-      const node = context.renderNodes[0]
-
-      expect(node.nodeState).toBe('available')
-      expect(node.reasonLabel).toBeNull()
-
-      const headerEl = { textContent: '' }
-      const bodyEl = { innerHTML: '' }
-
       const tooltip = {
         hidden: true,
         querySelector: vi.fn((selector) => {
-          if (selector === '[data-tooltip-header]') return headerEl
-          if (selector === '[data-tooltip-body]') return bodyEl
+          if (selector === '[data-tooltip-header]') return { textContent: '' }
+          if (selector === '[data-tooltip-body]') return { innerHTML: '' }
           return null
         }),
       }
@@ -2729,6 +2739,10 @@ describe('specialization-tree application', () => {
           return null
         }),
       }
+
+      const context = buildSpecializationTreeContext(actor)
+
+      expect(context.renderNodes[0].actionable.primaryAction, 'available node must be actionable').toBe('purchase')
 
       await app._onRender(context, { resetView: false })
 
@@ -2737,14 +2751,10 @@ describe('specialization-tree application', () => {
       const nodeHitArea = container.children.find((child) => child._listeners?.pointerdown)
       nodeHitArea._listeners.pointerdown({ stopPropagation: vi.fn() })
 
-      expect(tooltip.hidden).toBe(false)
-      expect(headerEl.textContent).toBe('Tough')
-      expect(bodyEl.innerHTML).toContain('Cost')
-      expect(bodyEl.innerHTML).toContain('State')
-      expect(bodyEl.innerHTML).not.toContain('Reason')
+      expect(globalThis.foundry.applications.api.DialogV2.confirm, 'confirm dialog must be requested').toHaveBeenCalled()
     })
 
-    it('does not trigger purchase or document mutation on node click', async () => {
+    it('hides tooltip and does not mutate when confirmation is cancelled', async () => {
       const actor = createActor({
         system: {
           details: {
@@ -2772,14 +2782,11 @@ describe('specialization-tree application', () => {
         return null
       })
 
-      const headerEl = { textContent: '' }
-      const bodyEl = { innerHTML: '' }
-
       const tooltip = {
         hidden: true,
         querySelector: vi.fn((selector) => {
-          if (selector === '[data-tooltip-header]') return headerEl
-          if (selector === '[data-tooltip-body]') return bodyEl
+          if (selector === '[data-tooltip-header]') return { textContent: '' }
+          if (selector === '[data-tooltip-body]') return { innerHTML: '' }
           return null
         }),
       }
@@ -2799,16 +2806,19 @@ describe('specialization-tree application', () => {
       const context = buildSpecializationTreeContext(actor)
       await app._onRender(context, { resetView: false })
 
-      // Simulate node click — should show tooltip, not mutate document.
+      // Confirm returns false (cancelled)
+      globalThis.foundry.applications.api.DialogV2.confirm = vi.fn().mockResolvedValue(false)
+
       const stage = app.pixiApp.stage
       const container = stage.children.find((child) => child.position && child.scale)
       const nodeHitArea = container.children.find((child) => child._listeners?.pointerdown)
       const stopPropagation = vi.fn()
 
-      nodeHitArea._listeners.pointerdown({ stopPropagation })
+      await nodeHitArea._listeners.pointerdown({ stopPropagation })
 
       expect(stopPropagation).toHaveBeenCalled()
-      expect(tooltip.hidden).toBe(false)
+      // Tooltip should stay hidden after cancel — no tooltip, no mutation
+      expect(tooltip.hidden).toBe(true)
       expect(actor.update).not.toHaveBeenCalled()
     })
 
@@ -2820,7 +2830,7 @@ describe('specialization-tree application', () => {
           },
           progression: {
             talentPurchases: [],
-            experience: { available: 100 },
+            experience: { available: 0 },
           },
         },
       })
@@ -2839,6 +2849,8 @@ describe('specialization-tree application', () => {
         if (uuid === 'Item.talent-tough') return { name: 'Tough', system: { isRanked: false } }
         return null
       })
+
+      // Node is locked (0 XP, cost 10) — not actionable, click shows tooltip
 
       const headerEl = { textContent: '' }
       const bodyEl = { innerHTML: '' }
@@ -2888,7 +2900,7 @@ describe('specialization-tree application', () => {
           },
           progression: {
             talentPurchases: [],
-            experience: { available: 100 },
+            experience: { available: 0 },
           },
         },
       })
@@ -2907,6 +2919,8 @@ describe('specialization-tree application', () => {
         if (uuid === 'Item.talent-tough') return { name: 'Tough', system: { isRanked: false } }
         return null
       })
+
+      // Node is locked (0 XP) — click shows tooltip for consultation
 
       const headerEl = { textContent: '' }
       const bodyEl = { innerHTML: '' }
@@ -2947,6 +2961,280 @@ describe('specialization-tree application', () => {
       // Rerender — tooltip should be hidden
       await app._onRender(context, { resetView: false })
       expect(tooltip.hidden).toBe(true)
+    })
+  })
+
+  describe('UI action flow (US17.4)', () => {
+    let purchaseSpy
+    let forgetSpy
+
+    beforeEach(() => {
+      globalThis.foundry.applications.api.DialogV2.confirm = vi.fn().mockResolvedValue(true)
+
+      purchaseSpy = vi.spyOn(purchaseTalentNodeModule, 'purchaseTalentNode').mockResolvedValue({ ok: true })
+      forgetSpy = vi.spyOn(forgetTalentNodeModule, 'forgetTalentNode').mockResolvedValue({ ok: true })
+    })
+
+    afterEach(() => {
+      purchaseSpy?.mockRestore()
+      forgetSpy?.mockRestore()
+    })
+
+    it('purchases a talent node after user confirmation', async () => {
+      const actor = createActor({
+        system: {
+          details: {
+            specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' }],
+          },
+          progression: {
+            talentPurchases: [],
+            experience: { available: 100 },
+          },
+        },
+      })
+
+      globalThis.fromUuidSync = vi.fn((uuid) => {
+        if (uuid === 'Item.tree-bodyguard') {
+          return {
+            type: 'specialization-tree',
+            name: 'Bodyguard Tree',
+            system: {
+              nodes: [{ nodeId: 'r1c1', talentId: 'Item.talent-tough', talentUuid: 'Item.talent-tough', row: 1, column: 1, cost: 10 }],
+              connections: [{ from: 'r1c1', to: 'r2c1' }],
+            },
+          }
+        }
+        if (uuid === 'Item.talent-tough') return { name: 'Tough', system: { isRanked: false } }
+        return null
+      })
+
+      const tooltip = {
+        hidden: true,
+        querySelector: vi.fn(() => ({ textContent: '' })),
+      }
+
+      const app = new SpecializationTreeApp()
+      app.actor = actor
+      app.document = actor
+      const host = createMockHost({ width: 640, height: 480 })
+      app.element = {
+        querySelector: vi.fn((selector) => {
+          if (selector === '[data-specialization-tree-viewport]') return host
+          if (selector === '[data-node-tooltip]') return tooltip
+          return null
+        }),
+      }
+
+      const context = buildSpecializationTreeContext(actor)
+      await app._onRender(context, { resetView: false })
+
+      const stage = app.pixiApp.stage
+      const container = stage.children.find((child) => child.position && child.scale)
+      const nodeHitArea = container.children.find((child) => child._listeners?.pointerdown)
+
+      await nodeHitArea._listeners.pointerdown({ stopPropagation: vi.fn() })
+
+      expect(purchaseSpy, 'purchaseTalentNode must be called').toHaveBeenCalledWith(actor, 'spec-bodyguard', 'r1c1')
+      expect(globalThis.ui.notifications.info).toHaveBeenCalledWith('Purchase successful: Tough')
+    })
+
+    it('forgets a talent node after user confirmation', async () => {
+      const actor = createActor({
+        system: {
+          details: {
+            specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' }],
+          },
+          progression: {
+            talentPurchases: [
+              {
+                nodeId: 'r1c1',
+                specializationId: 'spec-bodyguard',
+                treeId: 'tree-bodyguard',
+                talentId: 'Item.talent-tough',
+              },
+            ],
+            experience: { available: 100 },
+          },
+        },
+      })
+
+      globalThis.fromUuidSync = vi.fn((uuid) => {
+        if (uuid === 'Item.tree-bodyguard') {
+          return {
+            id: 'tree-bodyguard',
+            type: 'specialization-tree',
+            name: 'Bodyguard Tree',
+            system: {
+              nodes: [
+                { nodeId: 'r1c1', talentId: 'Item.talent-tough', talentUuid: 'Item.talent-tough', row: 1, column: 1, cost: 10 },
+                { nodeId: 'r2c1', talentId: 'Item.talent-grit', talentUuid: 'Item.talent-grit', row: 2, column: 1, cost: 15 },
+              ],
+              connections: [{ from: 'r1c1', to: 'r2c1' }],
+            },
+          }
+        }
+        if (uuid === 'Item.talent-tough') return { name: 'Tough', system: { isRanked: false } }
+        if (uuid === 'Item.talent-grit') return { name: 'Grit', system: { isRanked: false } }
+        return null
+      })
+
+      const context = buildSpecializationTreeContext(actor)
+
+      const purchased = context.renderNodes.find((n) => n.nodeId === 'r1c1')
+      expect(purchased, 'r1c1 must be purchased').toBeDefined()
+      expect(purchased.nodeState, 'r1c1 state').toBe('purchased')
+
+      const forgetNode = context.renderNodes.find((n) => n.actionable?.primaryAction === 'forget')
+      expect(forgetNode, 'purchased node should be forgettable').toBeDefined()
+
+      const tooltip = {
+        hidden: true,
+        querySelector: vi.fn(() => ({ textContent: '' })),
+      }
+
+      const app = new SpecializationTreeApp()
+      app.actor = actor
+      app.document = actor
+      const host = createMockHost({ width: 640, height: 480 })
+      app.element = {
+        querySelector: vi.fn((selector) => {
+          if (selector === '[data-specialization-tree-viewport]') return host
+          if (selector === '[data-node-tooltip]') return tooltip
+          return null
+        }),
+      }
+
+      await app._onRender(context, { resetView: false })
+
+      const stage = app.pixiApp.stage
+      const container = stage.children.find((child) => child.position && child.scale)
+      const nodeHitArea = container.children.find((child) => child._listeners?.pointerdown)
+
+      await nodeHitArea._listeners.pointerdown({ stopPropagation: vi.fn() })
+
+      expect(forgetSpy, 'forgetTalentNode must be called').toHaveBeenCalledWith(actor, 'spec-bodyguard', 'r1c1')
+      expect(globalThis.ui.notifications.info).toHaveBeenCalledWith('Talent forgotten: Tough')
+    })
+
+    it('shows warning notification when permission is denied', async () => {
+      const actor = createActor({
+        isOwner: false,
+        system: {
+          details: {
+            specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' }],
+          },
+          progression: {
+            talentPurchases: [],
+            experience: { available: 100 },
+          },
+        },
+      })
+
+      globalThis.fromUuidSync = vi.fn((uuid) => {
+        if (uuid === 'Item.tree-bodyguard') {
+          return {
+            type: 'specialization-tree',
+            name: 'Bodyguard Tree',
+            system: {
+              nodes: [{ nodeId: 'r1c1', talentId: 'Item.talent-tough', talentUuid: 'Item.talent-tough', row: 1, column: 1, cost: 10 }],
+              connections: [{ from: 'r1c1', to: 'r2c1' }],
+            },
+          }
+        }
+        if (uuid === 'Item.talent-tough') return { name: 'Tough', system: { isRanked: false } }
+        return null
+      })
+
+      const tooltip = {
+        hidden: true,
+        querySelector: vi.fn(() => ({ textContent: '' })),
+      }
+
+      const app = new SpecializationTreeApp()
+      app.actor = actor
+      app.document = actor
+      const host = createMockHost({ width: 640, height: 480 })
+      app.element = {
+        querySelector: vi.fn((selector) => {
+          if (selector === '[data-specialization-tree-viewport]') return host
+          if (selector === '[data-node-tooltip]') return tooltip
+          return null
+        }),
+      }
+
+      const context = buildSpecializationTreeContext(actor)
+      await app._onRender(context, { resetView: false })
+
+      const stage = app.pixiApp.stage
+      const container = stage.children.find((child) => child.position && child.scale)
+      const nodeHitArea = container.children.find((child) => child._listeners?.pointerdown)
+
+      await nodeHitArea._listeners.pointerdown({ stopPropagation: vi.fn() })
+
+      expect(purchaseSpy, 'purchase must not be called without permission').not.toHaveBeenCalled()
+      expect(globalThis.ui.notifications.warn).toHaveBeenCalledWith(
+        'You do not have permission to modify this specialization tree.',
+      )
+    })
+
+    it('shows failure notification when purchase service returns error', async () => {
+      const actor = createActor({
+        system: {
+          details: {
+            specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' }],
+          },
+          progression: {
+            talentPurchases: [],
+            experience: { available: 100 },
+          },
+        },
+      })
+
+      purchaseSpy.mockResolvedValue({ ok: false, reasonCode: 'not-enough-xp' })
+
+      globalThis.fromUuidSync = vi.fn((uuid) => {
+        if (uuid === 'Item.tree-bodyguard') {
+          return {
+            type: 'specialization-tree',
+            name: 'Bodyguard Tree',
+            system: {
+              nodes: [{ nodeId: 'r1c1', talentId: 'Item.talent-tough', talentUuid: 'Item.talent-tough', row: 1, column: 1, cost: 10 }],
+              connections: [{ from: 'r1c1', to: 'r2c1' }],
+            },
+          }
+        }
+        if (uuid === 'Item.talent-tough') return { name: 'Tough', system: { isRanked: false } }
+        return null
+      })
+
+      const tooltip = {
+        hidden: true,
+        querySelector: vi.fn(() => ({ textContent: '' })),
+      }
+
+      const app = new SpecializationTreeApp()
+      app.actor = actor
+      app.document = actor
+      const host = createMockHost({ width: 640, height: 480 })
+      app.element = {
+        querySelector: vi.fn((selector) => {
+          if (selector === '[data-specialization-tree-viewport]') return host
+          if (selector === '[data-node-tooltip]') return tooltip
+          return null
+        }),
+      }
+
+      const context = buildSpecializationTreeContext(actor)
+      await app._onRender(context, { resetView: false })
+
+      const stage = app.pixiApp.stage
+      const container = stage.children.find((child) => child.position && child.scale)
+      const nodeHitArea = container.children.find((child) => child._listeners?.pointerdown)
+
+      await nodeHitArea._listeners.pointerdown({ stopPropagation: vi.fn() })
+
+      expect(purchaseSpy, 'purchaseTalentNode must be called').toHaveBeenCalled()
+      expect(globalThis.ui.notifications.warn).toHaveBeenCalledWith('Purchase failed: Not enough XP')
     })
   })
 

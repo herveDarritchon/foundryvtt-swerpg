@@ -1,5 +1,6 @@
 import { resolveActorSpecializationTrees } from '../lib/talent-node/talent-tree-resolver.mjs'
 import { getTreeNodesStates } from '../lib/talent-node/talent-node-state.mjs'
+import { forgetTalentNode } from '../lib/talent-node/talent-node-forget.mjs'
 import { purchaseTalentNode } from '../lib/talent-node/talent-node-purchase.mjs'
 import { resolveTalentDetail } from '../lib/talent-node/talent-reference-resolver.mjs'
 import { selectDefaultTreeKey } from '../lib/specialization-tree/default-tree-selector.mjs'
@@ -15,6 +16,21 @@ const SPECIALIZATION_TREE_STATE_LABELS = Object.freeze({
   available: 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.STATUS.AVAILABLE',
   unresolved: 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.STATUS.UNRESOLVED',
   incomplete: 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.STATUS.INCOMPLETE',
+})
+
+const ACTION_KEYS = Object.freeze({
+  purchase: {
+    success: 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.PURCHASE.SUCCESS',
+    failure: 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.PURCHASE.FAILURE',
+    confirmTitle: 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.CONFIRM.PURCHASE.TITLE',
+    confirmContent: 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.CONFIRM.PURCHASE.CONTENT',
+  },
+  forget: {
+    success: 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.FORGET.SUCCESS',
+    failure: 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.FORGET.FAILURE',
+    confirmTitle: 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.CONFIRM.FORGET.TITLE',
+    confirmContent: 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.CONFIRM.FORGET.CONTENT',
+  },
 })
 
 const MIN_VIEWPORT_SIZE = 320
@@ -685,15 +701,91 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
         hitArea.eventMode = 'static'
         hitArea.cursor = 'pointer'
         const capturedNode = node
-        hitArea.on('pointerdown', (event) => {
+        hitArea.on('pointerdown', async (event) => {
           event.stopPropagation()
-          // US16.6 — Node interaction is read-only consultation;
-          // purchase is not triggered from default node click.
+          if (capturedNode.actionable?.primaryAction) {
+            await this.#handleNodePrimaryAction(capturedNode)
+            return
+          }
+
           this.#showNodeTooltip(capturedNode)
         })
         this.#treeContainer.addChild(hitArea)
       }
     }
+  }
+
+  #canExecutePrimaryAction(node) {
+    const action = node?.actionable?.primaryAction
+    if (!this.actor || !action || !node?.nodeId) return false
+
+    const actionRef = node.actionable?.actionRef
+    if (!actionRef?.nodeId || !actionRef?.specializationId) return false
+    if (actionRef.specializationId !== this.#selectedTreeKey) return false
+
+    if (action === 'purchase') return node.actionable?.canPurchase === true
+    if (action === 'forget') return node.actionable?.canForget === true
+    return false
+  }
+
+  async #handleNodePrimaryAction(node) {
+    this.#hideNodeTooltip()
+
+    if (!this.#canExecutePrimaryAction(node)) {
+      this.#showNodeTooltip(node)
+      return
+    }
+
+    if (!this.actor?.isOwner) {
+      ui.notifications.warn(game.i18n.localize('SWERPG.TALENT.SPECIALIZATION_TREE_APP.PERMISSION_DENIED'))
+      return
+    }
+
+    const confirmed = await this.#confirmNodeAction(node)
+    if (!confirmed) return
+
+    await this.#executeNodeAction(node)
+  }
+
+  async #confirmNodeAction(node) {
+    const action = node?.actionable?.primaryAction
+    const keys = ACTION_KEYS[action]
+    if (!keys) return false
+
+    const actionLabel = node.actionable?.actionLabel ?? game.i18n.localize(`SWERPG.TALENT.SPECIALIZATION_TREE_APP.ACTION.${action.toUpperCase()}`)
+
+    return api.DialogV2.confirm({
+      title: game.i18n.format(keys.confirmTitle, {
+        action: actionLabel,
+        talent: node.talentName,
+      }),
+      content: `<p>${game.i18n.format(keys.confirmContent, {
+        action: actionLabel,
+        talent: node.talentName,
+        xp: node.xpCost,
+      })}</p>`,
+    })
+  }
+
+  async #executeNodeAction(node) {
+    const action = node?.actionable?.primaryAction
+    const specializationId = node?.actionable?.actionRef?.specializationId ?? this.#selectedTreeKey
+    const keys = ACTION_KEYS[action]
+
+    if (!action || !specializationId || !node?.nodeId || !keys) return
+
+    const operation = action === 'forget' ? forgetTalentNode : purchaseTalentNode
+    const result = await operation(this.actor, specializationId, node.nodeId)
+
+    if (result.ok) {
+      ui.notifications.info(game.i18n.format(keys.success, { talent: node.talentName }))
+    } else {
+      const reasonLabelKey = getReasonLabelKey(result.reasonCode)
+      const reasonLabel = game.i18n.localize(reasonLabelKey)
+      ui.notifications.warn(game.i18n.format(keys.failure, { reason: reasonLabel, talent: node.talentName }))
+    }
+
+    await this.refresh()
   }
 
   #showNodeTooltip(node) {
@@ -731,27 +823,6 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
     const root = typeof HTMLElement !== 'undefined' && this.element instanceof HTMLElement ? this.element : (this.element?.[0] ?? this.element)
     const tooltip = root?.querySelector?.('[data-node-tooltip]')
     if (tooltip) tooltip.hidden = true
-  }
-
-  async #purchaseNode(node) {
-    const specializationId = this.#selectedTreeKey
-    if (!specializationId || !node?.nodeId) return
-
-    const result = await purchaseTalentNode(this.actor, specializationId, node.nodeId)
-
-    this.#hideNodeTooltip()
-
-    if (result.ok) {
-      const key = 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.PURCHASE.SUCCESS'
-      ui.notifications.info(game.i18n.format(key, { talent: node.talentName }))
-    } else {
-      const reasonLabelKey = getReasonLabelKey(result.reasonCode)
-      const reasonLabel = game.i18n.localize(reasonLabelKey)
-      const key = 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.PURCHASE.FAILURE'
-      ui.notifications.warn(game.i18n.format(key, { reason: reasonLabel }))
-    }
-
-    this.refresh()
   }
 
   #teardownViewport() {
