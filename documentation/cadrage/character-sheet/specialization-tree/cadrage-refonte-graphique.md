@@ -102,29 +102,12 @@ Mettre à jour la couleur des nœuds pour respecter ces règles métier. Par exe
 
 ### 3.1.2. Ajouter un pictogramme
 
-Je veux ajouter un petit marqueur discret dans chaque nœud (en utilisant un svg chargé comme texture PIXI) :
+Je veux ajouter un petit marqueur discret (dans le coin en haut à droite) dans chaque nœud (en utilisant un svg chargé comme texture PIXI) :
 
-* "fa-solid fa-plus" pour acheté ;
-* chevron pour achetable ;
-* cadenas pour verrouillé ;
-* ⚠ pour invalide / non résolu.
-
-Exemple :
-
-```text
-✓ Black Market Contacts (R)
-5 XP
-```
-
-```text
-+ Convincing Demeanor (R)
-10 XP
-```
-
-```text
-🔒 Hidden Storage
-15 XP
-```
+* assets/images/icons/sell-card.svg pour acheté ;
+* assets/images/icons/buy-card.svg pour achetable ;
+* assets/images/icons/padlock.svg pour verrouillé ;
+* assets/images/icons/hazard-sign.svg pour invalide / non résolu.
 
 Pas besoin d’un pictogramme très visible. Un petit marqueur suffit, mais il rend l’état beaucoup plus immédiat.
 
@@ -147,20 +130,7 @@ Le joueur doit pouvoir planifier son build. Donc les talents verrouillés doiven
 
 ---
 
-## 3.3. Différencier “acheté” et “disponible” plus fortement
-
-Le vert et le bleu marchent, mais il faut renforcer le langage visuel :
-
-* acheté : fond plus plein, glow interne doux, coche ;
-* disponible : bordure lumineuse, fond moins plein, icône + ;
-* verrouillé : bordure grise, cadenas, pas de glow.
-
-Aujourd’hui, les nœuds verts et bleus sont tous les deux très “actifs”. Ce n’est pas dramatique, mais ça peut brouiller
-la lecture.
-
----
-
-## 3.4. Mettre le coût XP en position plus stable
+## 3.3. Mettre le coût XP en position plus stable
 
 Le coût XP est actuellement en bas à gauche, ce qui est bien. Je le rendrais un peu plus structuré :
 
@@ -190,8 +160,8 @@ Les connexions existent, mais elles ne portent pas encore assez d’information.
 
 Je proposerais trois styles :
 
-* lien acheté → plus lumineux ;
-* lien menant vers un nœud disponible → cyan ;
+* lien acheté → plus lumineux que le lien menant vers un noeud disponible ;
+* lien menant vers un nœud disponible → neutre ;
 * lien verrouillé → gris sombre.
 
 Cela permet au joueur de voir le chemin de progression d’un coup d’œil.
@@ -202,6 +172,7 @@ Cela permet au joueur de voir le chemin de progression d’un coup d’œil.
 
 Quand le joueur survole un nœud :
 
+*
 * mettre en lumière ses prérequis directs ;
 * mettre en lumière les talents qu’il débloque ;
 * atténuer légèrement le reste.
