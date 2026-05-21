@@ -574,6 +574,46 @@ describe('specialization-tree application', () => {
     }
   })
 
+  it('includes actionable view-model for every render node', () => {
+    const actor = createActor({
+      system: {
+        details: {
+          specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' }],
+        },
+        progression: {
+          talentPurchases: [],
+          experience: { available: 100 },
+        },
+      },
+    })
+
+    globalThis.fromUuidSync = vi.fn((uuid) => {
+      if (uuid === 'Item.tree-bodyguard') {
+        return {
+          type: 'specialization-tree',
+          name: 'Bodyguard Tree',
+          system: { nodes: [{ nodeId: 'r1c1', talentId: 'Item.talent-tough', row: 1, column: 1, cost: 10 }], connections: [{ from: 'r1c1', to: 'r2c1' }] },
+        }
+      }
+      if (uuid === 'Item.talent-tough') return { name: 'Tough' }
+      return null
+    })
+
+    const context = buildSpecializationTreeContext(actor)
+
+    expect(context.renderNodes, 'should have at least one render node').not.toHaveLength(0)
+    for (const node of context.renderNodes) {
+      expect(node.actionable).toBeDefined()
+      expect(typeof node.actionable.canPurchase).toBe('boolean')
+      expect(typeof node.actionable.canForget).toBe('boolean')
+      expect(['purchase', 'forget', null]).toContain(node.actionable.primaryAction)
+      expect(node.actionable.actionRef).toBeDefined()
+      expect(typeof node.actionable.actionRef.specializationId).toBe('string')
+      expect(typeof node.actionable.actionRef.nodeId).toBe('string')
+      expect(typeof node.actionable.actionRef.cost).toBe('number')
+    }
+  })
+
   it('builds renderConnections with correct from/to center positions', () => {
     const actor = createActor({
       system: {
