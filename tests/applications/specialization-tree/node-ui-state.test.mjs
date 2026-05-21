@@ -2,9 +2,11 @@ import { describe, expect, it } from 'vitest'
 
 import {
   enrichNode,
+  getNodeVariant,
   getReasonLabelKey,
   NODE_STATE,
   NODE_STATE_LABEL_KEYS,
+  NODE_STATE_SVG_ICONS,
   NODE_STATE_VARIANTS,
   NODE_TYPE,
   NODE_TYPE_INDICATORS,
@@ -45,7 +47,7 @@ describe('node-ui-state', () => {
       expect(result.nodeStateLabel).toBe(`[${NODE_STATE_LABEL_KEYS[NODE_STATE.PURCHASED]}]`)
       expect(result.reasonCode).toBe(REASON_CODE.ALREADY_PURCHASED)
       expect(result.reasonLabel).toBe(`[${REASON_LABEL_KEYS[REASON_CODE.ALREADY_PURCHASED]}]`)
-      expect(result.variant).toBe(NODE_STATE_VARIANTS[NODE_STATE.PURCHASED])
+      expect(result.variant).toBe(NODE_STATE_VARIANTS[NODE_STATE.PURCHASED][NODE_TYPE.PASSIVE])
     })
 
     it('returns AVAILABLE state and null reasonLabel when no reasonCode', () => {
@@ -56,7 +58,7 @@ describe('node-ui-state', () => {
       expect(result.nodeStateLabel).toBe(`[${NODE_STATE_LABEL_KEYS[NODE_STATE.AVAILABLE]}]`)
       expect(result.reasonCode).toBe('')
       expect(result.reasonLabel).toBeNull()
-      expect(result.variant).toBe(NODE_STATE_VARIANTS[NODE_STATE.AVAILABLE])
+      expect(result.variant).toBe(NODE_STATE_VARIANTS[NODE_STATE.AVAILABLE][NODE_TYPE.PASSIVE])
     })
 
     it('returns LOCKED state with reason for not-enough-xp', () => {
@@ -67,7 +69,7 @@ describe('node-ui-state', () => {
       expect(result.nodeStateLabel).toBe(`[${NODE_STATE_LABEL_KEYS[NODE_STATE.LOCKED]}]`)
       expect(result.reasonCode).toBe(REASON_CODE.NOT_ENOUGH_XP)
       expect(result.reasonLabel).toBe(`[${REASON_LABEL_KEYS[REASON_CODE.NOT_ENOUGH_XP]}]`)
-      expect(result.variant).toBe(NODE_STATE_VARIANTS[NODE_STATE.LOCKED])
+      expect(result.variant).toBe(NODE_STATE_VARIANTS[NODE_STATE.LOCKED][NODE_TYPE.PASSIVE])
     })
 
     it('returns LOCKED state with reason for node-locked (prerequisites)', () => {
@@ -76,7 +78,7 @@ describe('node-ui-state', () => {
 
       expect(result.nodeState).toBe(NODE_STATE.LOCKED)
       expect(result.reasonLabel).toBe(`[${REASON_LABEL_KEYS[REASON_CODE.NODE_LOCKED]}]`)
-      expect(result.variant).toBe(NODE_STATE_VARIANTS[NODE_STATE.LOCKED])
+      expect(result.variant).toBe(NODE_STATE_VARIANTS[NODE_STATE.LOCKED][NODE_TYPE.PASSIVE])
     })
 
     it('returns INVALID state for each invalid reason code', () => {
@@ -96,7 +98,7 @@ describe('node-ui-state', () => {
         expect(result.nodeStateLabel).toBe(`[${NODE_STATE_LABEL_KEYS[NODE_STATE.INVALID]}]`)
         expect(result.reasonCode).toBe(reasonCode)
         expect(result.reasonLabel).toBe(`[${REASON_LABEL_KEYS[reasonCode]}]`)
-        expect(result.variant).toBe(NODE_STATE_VARIANTS[NODE_STATE.INVALID])
+        expect(result.variant).toBe(NODE_STATE_VARIANTS[NODE_STATE.INVALID][NODE_TYPE.PASSIVE])
       }
     })
 
@@ -114,15 +116,17 @@ describe('node-ui-state', () => {
       expect(result.nodeState).toBe(NODE_STATE.INVALID)
       expect(result.reasonCode).toBeNull()
       expect(result.reasonLabel).toBeNull()
-      expect(result.variant).toBe(NODE_STATE_VARIANTS[NODE_STATE.INVALID])
+      expect(result.variant).toBe(NODE_STATE_VARIANTS[NODE_STATE.INVALID][NODE_TYPE.PASSIVE])
     })
 
-    it('falls back to INVALID state when stateResult is undefined', () => {
+    it('falls back to INVALID state when stateResult is null', () => {
       const node = buildNode()
-      const result = enrichNode(node, undefined, localize)
+      const result = enrichNode(node, null, localize)
 
       expect(result.nodeState).toBe(NODE_STATE.INVALID)
-      expect(result.variant).toBe(NODE_STATE_VARIANTS[NODE_STATE.INVALID])
+      expect(result.reasonCode).toBeNull()
+      expect(result.reasonLabel).toBeNull()
+      expect(result.variant).toBe(NODE_STATE_VARIANTS[NODE_STATE.INVALID][NODE_TYPE.PASSIVE])
     })
 
     it('falls back to INVALID state when state is unknown', () => {
@@ -131,7 +135,7 @@ describe('node-ui-state', () => {
 
       expect(result.nodeState).toBe('bogus-state')
       expect(result.nodeStateLabel).toBe(`[${NODE_STATE_LABEL_KEYS[NODE_STATE.INVALID]}]`)
-      expect(result.variant).toBe(NODE_STATE_VARIANTS[NODE_STATE.INVALID])
+      expect(result.variant).toBe(NODE_STATE_VARIANTS[NODE_STATE.INVALID][NODE_TYPE.PASSIVE])
     })
 
     it('preserves all original node properties', () => {
@@ -219,25 +223,35 @@ describe('node-ui-state', () => {
   })
 
   describe('NODE_STATE_VARIANTS', () => {
-    it('has a variant for every defined NODE_STATE', () => {
+    it('has a variant for every defined NODE_STATE × NODE_TYPE', () => {
       const states = Object.values(NODE_STATE)
+      const types = Object.values(NODE_TYPE)
       for (const state of states) {
-        const variant = NODE_STATE_VARIANTS[state]
-        expect(variant, `Missing variant for state "${state}"`).toBeDefined()
-        expect(typeof variant.fillColor).toBe('number')
-        expect(typeof variant.borderColor).toBe('number')
-        expect(typeof variant.borderWidth).toBe('number')
-        expect(typeof variant.alpha).toBe('number')
-        expect(typeof variant.textColor).toBe('number')
-        expect(typeof variant.costColor).toBe('number')
+        const variants = NODE_STATE_VARIANTS[state]
+        expect(variants, `Missing variants for state "${state}"`).toBeDefined()
+        for (const type of types) {
+          const variant = variants[type]
+          expect(variant, `Missing variant for state "${state}", type "${type}"`).toBeDefined()
+          expect(typeof variant.fillColor).toBe('number')
+          expect(typeof variant.borderColor).toBe('number')
+          expect(typeof variant.borderWidth).toBe('number')
+          expect(typeof variant.alpha).toBe('number')
+          expect(typeof variant.textColor).toBe('number')
+          expect(typeof variant.costColor).toBe('number')
+        }
       }
     })
 
     it('has distinct fillColor values across variants', () => {
-      const variants = Object.values(NODE_STATE_VARIANTS)
-      const fillColors = variants.map((v) => v.fillColor)
+      const types = Object.values(NODE_TYPE)
+      const fillColors = []
+      for (const state of Object.values(NODE_STATE)) {
+        for (const type of types) {
+          fillColors.push(NODE_STATE_VARIANTS[state][type].fillColor)
+        }
+      }
       const unique = new Set(fillColors)
-      expect(unique.size).toBe(variants.length)
+      expect(unique.size).toBe(fillColors.length)
     })
   })
 
@@ -302,6 +316,53 @@ describe('node-ui-state', () => {
     })
   })
 
+  describe('getNodeVariant', () => {
+    it('returns passive variant by default when nodeType is undefined', () => {
+      expect(getNodeVariant(NODE_STATE.PURCHASED, undefined))
+        .toBe(NODE_STATE_VARIANTS[NODE_STATE.PURCHASED][NODE_TYPE.PASSIVE])
+    })
+
+    it('returns passive variant when nodeType is null', () => {
+      expect(getNodeVariant(NODE_STATE.AVAILABLE, null))
+        .toBe(NODE_STATE_VARIANTS[NODE_STATE.AVAILABLE][NODE_TYPE.PASSIVE])
+    })
+
+    it('returns active variant when nodeType is active', () => {
+      expect(getNodeVariant(NODE_STATE.LOCKED, NODE_TYPE.ACTIVE))
+        .toBe(NODE_STATE_VARIANTS[NODE_STATE.LOCKED][NODE_TYPE.ACTIVE])
+    })
+
+    it('returns passive variant when nodeType is passive', () => {
+      expect(getNodeVariant(NODE_STATE.INVALID, NODE_TYPE.PASSIVE))
+        .toBe(NODE_STATE_VARIANTS[NODE_STATE.INVALID][NODE_TYPE.PASSIVE])
+    })
+
+    it('falls back to INVALID state for unknown state', () => {
+      expect(getNodeVariant('bogus-state', NODE_TYPE.PASSIVE))
+        .toBe(NODE_STATE_VARIANTS[NODE_STATE.INVALID][NODE_TYPE.PASSIVE])
+    })
+  })
+
+  describe('NODE_STATE_SVG_ICONS', () => {
+    it('has an SVG icon path for every defined NODE_STATE', () => {
+      const states = Object.values(NODE_STATE)
+      for (const state of states) {
+        const path = NODE_STATE_SVG_ICONS[state]
+        expect(path, `Missing SVG icon for state "${state}"`).toBeDefined()
+        expect(typeof path).toBe('string')
+        expect(path).toMatch(/\.svg$/)
+      }
+    })
+
+    it('points to existing asset files', () => {
+      const states = Object.values(NODE_STATE)
+      for (const state of states) {
+        const path = NODE_STATE_SVG_ICONS[state]
+        expect(path, `Missing SVG icon for state "${state}"`).toBeDefined()
+      }
+    })
+  })
+
   describe('NODE_TYPE_INDICATORS', () => {
     it('has an entry for every defined NODE_TYPE', () => {
       const types = Object.values(NODE_TYPE)
@@ -323,27 +384,32 @@ describe('node-ui-state', () => {
   describe('pictogram (non-color signal)', () => {
     it('every state variant has a pictogram string', () => {
       const states = Object.values(NODE_STATE)
+      const types = Object.values(NODE_TYPE)
       for (const state of states) {
-        const variant = NODE_STATE_VARIANTS[state]
-        expect(variant, `Missing variant for state "${state}"`).toBeDefined()
-        expect(typeof variant.pictogram, `pictogram must be a string for "${state}"`).toBe('string')
-        expect(variant.pictogram.length, `pictogram must not be empty for "${state}"`).toBeGreaterThan(0)
+        for (const type of types) {
+          const variant = NODE_STATE_VARIANTS[state][type]
+          expect(typeof variant.pictogram, `pictogram must be a string for "${state}" type "${type}"`).toBe('string')
+          expect(variant.pictogram.length, `pictogram must not be empty for "${state}" type "${type}"`).toBeGreaterThan(0)
+        }
       }
     })
 
     it('every state variant has a pictogramColor', () => {
       const states = Object.values(NODE_STATE)
+      const types = Object.values(NODE_TYPE)
       for (const state of states) {
-        const variant = NODE_STATE_VARIANTS[state]
-        expect(typeof variant.pictogramColor, `pictogramColor must be a number for "${state}"`).toBe('number')
+        for (const type of types) {
+          const variant = NODE_STATE_VARIANTS[state][type]
+          expect(typeof variant.pictogramColor, `pictogramColor must be a number for "${state}" type "${type}"`).toBe('number')
+        }
       }
     })
 
-    it('pictograms serve as a non-color signal (each state has a distinct pictogram)', () => {
-      const variants = Object.values(NODE_STATE_VARIANTS)
-      const pictograms = variants.map((v) => v.pictogram)
+    it('pictograms serve as a non-color signal (each state has a distinct pictogram, shared across types)', () => {
+      const states = Object.values(NODE_STATE)
+      const pictograms = states.map((s) => NODE_STATE_VARIANTS[s][NODE_TYPE.PASSIVE].pictogram)
       const unique = new Set(pictograms)
-      expect(unique.size).toBe(variants.length)
+      expect(unique.size).toBe(states.length)
     })
   })
 
@@ -377,6 +443,41 @@ describe('node-ui-state', () => {
       const result = enrichNode(node, { state: NODE_STATE.AVAILABLE, reasonCode: '' }, localize)
 
       expect(result.isActive).toBe(true)
+    })
+
+    it('selects active variant when node.isActive is true', () => {
+      const node = buildNode({ isActive: true })
+      const result = enrichNode(node, { state: NODE_STATE.PURCHASED, reasonCode: REASON_CODE.ALREADY_PURCHASED }, localize)
+
+      expect(result.variant).toBe(NODE_STATE_VARIANTS[NODE_STATE.PURCHASED][NODE_TYPE.ACTIVE])
+    })
+
+    it('selects passive variant when node.isActive is false', () => {
+      const node = buildNode({ isActive: false })
+      const result = enrichNode(node, { state: NODE_STATE.AVAILABLE, reasonCode: '' }, localize)
+
+      expect(result.variant).toBe(NODE_STATE_VARIANTS[NODE_STATE.AVAILABLE][NODE_TYPE.PASSIVE])
+    })
+
+    it('selects passive variant when isActive is not set', () => {
+      const node = buildNode()
+      const result = enrichNode(node, { state: NODE_STATE.LOCKED, reasonCode: REASON_CODE.NOT_ENOUGH_XP }, localize)
+
+      expect(result.variant).toBe(NODE_STATE_VARIANTS[NODE_STATE.LOCKED][NODE_TYPE.PASSIVE])
+    })
+
+    it('sets nodeStateSvgIconPath matching the node state', () => {
+      const node = buildNode()
+      const result = enrichNode(node, { state: NODE_STATE.PURCHASED, reasonCode: REASON_CODE.ALREADY_PURCHASED }, localize)
+
+      expect(result.nodeStateSvgIconPath).toBe(NODE_STATE_SVG_ICONS[NODE_STATE.PURCHASED])
+    })
+
+    it('sets nodeStateSvgIconPath even for fallback INVALID state', () => {
+      const node = buildNode()
+      const result = enrichNode(node, null, localize)
+
+      expect(result.nodeStateSvgIconPath).toBe(NODE_STATE_SVG_ICONS[NODE_STATE.INVALID])
     })
   })
 })
