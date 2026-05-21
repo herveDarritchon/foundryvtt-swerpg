@@ -1,3 +1,5 @@
+import { logger } from '../../utils/logger.mjs'
+import { recordTalentNodeOperation } from '../../utils/audit-log.mjs'
 import { processTalentNodeProgression } from './talent-node-progression.mjs'
 import { applyTalentNodePatch } from './talent-node-persistence.mjs'
 
@@ -35,6 +37,13 @@ export async function forgetTalentNode(actor, specializationId, nodeId) {
   const result = processTalentNodeProgression(actor, specializationId, nodeId, 'forget')
 
   if (!result.ok) {
+    auditTalentNode(actor, 'forget', 'failed', {
+      specializationId,
+      nodeId,
+      cost: 0,
+      reasonCode: result.reasonCode,
+      reason: result.reason,
+    })
     const forgetResult = { ok: false, reason: result.reason, reasonCode: result.reasonCode }
     if (result.dependents) {
       forgetResult.dependents = result.dependents
@@ -43,5 +52,51 @@ export async function forgetTalentNode(actor, specializationId, nodeId) {
   }
 
   const { payload } = result
-  return applyTalentNodePatch(actor, payload, 'forget')
+  const currentSpent = actor.system?.progression?.experience?.spent ?? 0
+
+  const persisted = await applyTalentNodePatch(actor, payload, 'forget')
+  if (!persisted.ok) {
+    auditTalentNode(actor, 'forget', 'failed', {
+      specializationId: payload.specializationId,
+      nodeId: payload.nodeId,
+      cost: payload.cost,
+      reasonCode: persisted.reasonCode,
+      reason: persisted.reason,
+    })
+    return persisted
+  }
+
+  auditTalentNode(actor, 'forget', 'succeeded', {
+    specializationId: payload.specializationId,
+    treeId: payload.treeId,
+    treeUuid: payload.treeUuid,
+    nodeId: payload.nodeId,
+    talentId: payload.talentId,
+    talentUuid: payload.talentUuid,
+    cost: payload.cost,
+    previousXp: currentSpent,
+    nextXp: payload.updatedSpent,
+  })
+
+  return persisted
+}
+
+/**
+ * Fire-and-forget audit emission. Never throws.
+ */
+function auditTalentNode(actor, operation, status, data) {
+  const promise = recordTalentNodeOperation(actor, operation, status, data)
+  runAudit(promise, { actorId: actor?.id, nodeId: data.nodeId }, '[TalentNodeForget]')
+}
+
+async function runAudit(promise, ctx, prefix) {
+  try {
+    await promise
+  } catch (err) {
+    logger.warn(`${prefix} Audit log write failed (non-blocking)`, {
+      actorId: ctx.actorId,
+      nodeId: ctx.nodeId,
+      error: err.message,
+    })
+  }
 }

@@ -1,5 +1,5 @@
 import { logger } from '../../utils/logger.mjs'
-import { recordTalentNodePurchase } from '../../utils/audit-log.mjs'
+import { recordTalentNodePurchase, recordTalentNodeOperation } from '../../utils/audit-log.mjs'
 import { processTalentNodeProgression } from './talent-node-progression.mjs'
 import { applyTalentNodePatch } from './talent-node-persistence.mjs'
 
@@ -33,6 +33,13 @@ export async function purchaseTalentNode(actor, specializationId, nodeId) {
   const result = processTalentNodeProgression(actor, specializationId, nodeId, 'purchase')
 
   if (!result.ok) {
+    auditTalentNode(actor, 'purchase', 'failed', {
+      specializationId,
+      nodeId,
+      cost: 0,
+      reasonCode: result.reasonCode,
+      reason: result.reason,
+    })
     return { ok: false, reason: result.reason, reasonCode: result.reasonCode }
   }
 
@@ -41,28 +48,53 @@ export async function purchaseTalentNode(actor, specializationId, nodeId) {
 
   const persisted = await applyTalentNodePatch(actor, payload, 'purchase')
   if (!persisted.ok) {
+    auditTalentNode(actor, 'purchase', 'failed', {
+      specializationId: payload.specializationId,
+      nodeId: payload.nodeId,
+      cost: payload.cost,
+      reasonCode: persisted.reasonCode,
+      reason: persisted.reason,
+    })
     return persisted
   }
 
+  auditTalentNode(actor, 'purchase', 'succeeded', {
+    specializationId: payload.specializationId,
+    treeId: payload.treeId,
+    treeUuid: payload.treeUuid,
+    nodeId: payload.nodeId,
+    talentId: payload.talentId,
+    talentUuid: payload.talentUuid,
+    cost: payload.cost,
+    previousXp: currentSpent,
+    nextXp: payload.updatedSpent,
+  })
+
+  return persisted
+}
+
+/**
+ * Fire-and-forget audit emission. Never throws.
+ */
+function auditTalentNode(actor, operation, status, data) {
+  const ctx = { actorId: actor?.id, nodeId: data.nodeId }
+  let promise
+  if (status === 'succeeded' && operation === 'purchase') {
+    promise = recordTalentNodePurchase(actor, data)
+  } else {
+    promise = recordTalentNodeOperation(actor, operation, status, data)
+  }
+  runAudit(promise, ctx, '[TalentNodePurchase]')
+}
+
+async function runAudit(promise, ctx, prefix) {
   try {
-    await recordTalentNodePurchase(actor, {
-      specializationId: payload.specializationId,
-      treeId: payload.treeId,
-      treeUuid: payload.treeUuid,
-      nodeId: payload.nodeId,
-      talentId: payload.talentId,
-      talentUuid: payload.talentUuid,
-      cost: payload.cost,
-      previousXp: currentSpent,
-      nextXp: payload.updatedSpent,
-    })
+    await promise
   } catch (err) {
-    logger.warn('[TalentNodePurchase] Audit log write failed (non-blocking)', {
-      actorId: actor.id,
-      nodeId,
+    logger.warn(`${prefix} Audit log write failed (non-blocking)`, {
+      actorId: ctx.actorId,
+      nodeId: ctx.nodeId,
       error: err.message,
     })
   }
-
-  return persisted
 }

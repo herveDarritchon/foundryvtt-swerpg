@@ -240,6 +240,7 @@ export {
   readMaxLogEntries,
   onCreateItem,
   recordTalentNodePurchase,
+  recordTalentNodeOperation,
 }
 
 /* -------------------------------------------- */
@@ -312,45 +313,65 @@ function onCreateItem(item, data, options, userId) {
 }
 
 /* -------------------------------------------- */
-/*  Talent node purchase audit bridge           */
+/*  Shared talent node audit bridge             */
 /* -------------------------------------------- */
 
 /**
- * Record a talent node purchase in the audit log.
- * Non-blocking: failures are caught internally without throwing.
- * @param {object} actor - The actor document instance.
- * @param {object} purchaseData
- * @param {string} purchaseData.specializationId
- * @param {string} purchaseData.treeId
- * @param {string|null} [purchaseData.treeUuid]
- * @param {string} purchaseData.nodeId
- * @param {string} purchaseData.talentId
- * @param {string|null} [purchaseData.talentUuid]
- * @param {number} purchaseData.cost
- * @param {number} [purchaseData.previousXp]
- * @param {number} [purchaseData.nextXp]
+ * Build entry data for a talent node operation.
+ * @param {object} actor
+ * @param {object} data
+ * @returns {object}
  */
-async function recordTalentNodePurchase(actor, purchaseData) {
+function buildTalentNodeEntryData(actor, data) {
+  return {
+    actorId: actor.id,
+    specializationId: data.specializationId,
+    treeId: data.treeId,
+    treeUuid: data.treeUuid ?? null,
+    nodeId: data.nodeId,
+    talentId: data.talentId,
+    talentUuid: data.talentUuid ?? null,
+    cost: data.cost,
+    source: 'specialization-tree',
+    ...(data.previousXp !== undefined ? { previousXp: data.previousXp } : {}),
+    ...(data.nextXp !== undefined ? { nextXp: data.nextXp } : {}),
+    ...(data.reasonCode !== undefined ? { reasonCode: data.reasonCode } : {}),
+    ...(data.reason !== undefined ? { reason: data.reason } : {}),
+  }
+}
+
+/**
+ * Record a talent node operation (purchase or forget) in the audit log.
+ * Non-blocking: failures are caught internally without throwing.
+ *
+ * @param {object} actor - The actor document instance.
+ * @param {'purchase'|'forget'} operation - The operation type.
+ * @param {'succeeded'|'failed'} status - The operation outcome.
+ * @param {object} data
+ * @param {string} data.specializationId
+ * @param {string} data.treeId
+ * @param {string|null} [data.treeUuid]
+ * @param {string} data.nodeId
+ * @param {string} data.talentId
+ * @param {string|null} [data.talentUuid]
+ * @param {number} data.cost
+ * @param {number} [data.previousXp]
+ * @param {number} [data.nextXp]
+ * @param {string} [data.reasonCode]
+ * @param {string} [data.reason]
+ */
+async function recordTalentNodeOperation(actor, operation, status, data) {
+  const type = `talent-node-${operation}-${status}`
+  const xpDelta = operation === 'purchase' ? -data.cost : data.cost
+
   const ts = Date.now()
   const snapshot = captureSnapshot(actor)
   const user = game.users?.get(game.user?.id) ?? null
 
   const entry = makeEntry({
-    type: 'talent-node-purchase',
-    data: {
-      actorId: actor.id,
-      specializationId: purchaseData.specializationId,
-      treeId: purchaseData.treeId,
-      treeUuid: purchaseData.treeUuid ?? null,
-      nodeId: purchaseData.nodeId,
-      talentId: purchaseData.talentId,
-      talentUuid: purchaseData.talentUuid ?? null,
-      cost: purchaseData.cost,
-      source: 'specialization-tree',
-      ...(purchaseData.previousXp !== undefined ? { previousXp: purchaseData.previousXp } : {}),
-      ...(purchaseData.nextXp !== undefined ? { nextXp: purchaseData.nextXp } : {}),
-    },
-    xpDelta: -purchaseData.cost,
+    type,
+    data: buildTalentNodeEntryData(actor, data),
+    xpDelta,
     ts,
     userId: game.user?.id,
     user,
@@ -358,6 +379,15 @@ async function recordTalentNodePurchase(actor, purchaseData) {
   })
 
   await writeLogEntries(actor, [entry])
+}
+
+/**
+ * Record a talent node purchase in the audit log (backward-compatible wrapper).
+ * @param {object} actor
+ * @param {object} purchaseData
+ */
+async function recordTalentNodePurchase(actor, purchaseData) {
+  return recordTalentNodeOperation(actor, 'purchase', 'succeeded', purchaseData)
 }
 
 /* -------------------------------------------- */

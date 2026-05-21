@@ -9,10 +9,16 @@ vi.mock('../../../module/utils/logger.mjs', () => ({
   },
 }))
 
+vi.mock('../../../module/utils/audit-log.mjs', () => ({
+  recordTalentNodeOperation: vi.fn().mockResolvedValue(undefined),
+}))
+
 vi.mock('../../../module/lib/talent-node/talent-tree-resolver.mjs', () => ({
   resolveSpecializationTree: vi.fn(),
 }))
 
+import { logger } from '../../../module/utils/logger.mjs'
+import { recordTalentNodeOperation } from '../../../module/utils/audit-log.mjs'
 import { resolveSpecializationTree } from '../../../module/lib/talent-node/talent-tree-resolver.mjs'
 import { forgetTalentNode } from '../../../module/lib/talent-node/talent-node-forget.mjs'
 import { REASON_CODE } from '../../../module/lib/talent-node/talent-node-state.mjs'
@@ -161,6 +167,43 @@ describe('forgetTalentNode', () => {
     })
   })
 
+    it('emits a forget-succeeded audit event on success', async () => {
+      const actor = buildActor()
+      resolveSpecializationTree.mockReturnValue(buildResolvedTree())
+
+      await forgetTalentNode(actor, 'spec-1', 'r1c1')
+
+      expect(recordTalentNodeOperation).toHaveBeenCalledTimes(1)
+      expect(recordTalentNodeOperation).toHaveBeenCalledWith(
+        actor,
+        'forget',
+        'succeeded',
+        expect.objectContaining({
+          specializationId: 'spec-1',
+          treeId: 'tree-1',
+          nodeId: 'r1c1',
+          talentId: 'talent-parry',
+          cost: 5,
+          previousXp: 5,
+          nextXp: 0,
+        }),
+      )
+    })
+
+    it('succeeds even when audit log write fails (non-blocking)', async () => {
+      const actor = buildActor()
+      resolveSpecializationTree.mockReturnValue(buildResolvedTree())
+      recordTalentNodeOperation.mockRejectedValue(new Error('Audit write failed'))
+
+      const result = await forgetTalentNode(actor, 'spec-1', 'r1c1')
+
+      expect(result.ok).toBe(true)
+      expect(logger.warn).toHaveBeenCalledWith(
+        '[TalentNodeForget] Audit log write failed (non-blocking)',
+        expect.objectContaining({ actorId: 'actor-001', nodeId: 'r1c1' }),
+      )
+    })
+
   // ---------------------------------------------------------------------------
   // forgetTalentNode — rejection cases (no actor.update emitted)
   // ---------------------------------------------------------------------------
@@ -277,6 +320,28 @@ describe('forgetTalentNode', () => {
       expect(result.reasonCode).toBe(REASON_CODE.NODE_HAS_DEPENDENTS)
       expect(result.dependents).toContain('r2c1')
       expect(actor.update).not.toHaveBeenCalled()
+    })
+
+    it('emits a forget-failed audit event on business rejection', async () => {
+      const actor = buildActor()
+      resolveSpecializationTree.mockReturnValue(buildResolvedTree())
+      actor.system.progression.talentPurchases = []
+
+      const result = await forgetTalentNode(actor, 'spec-1', 'r1c1')
+
+      expect(result.ok).toBe(false)
+      expect(result.reasonCode).toBe(REASON_CODE.NODE_NOT_PURCHASED)
+      expect(recordTalentNodeOperation).toHaveBeenCalledTimes(1)
+      expect(recordTalentNodeOperation).toHaveBeenCalledWith(
+        actor,
+        'forget',
+        'failed',
+        expect.objectContaining({
+          specializationId: 'spec-1',
+          nodeId: 'r1c1',
+          reasonCode: REASON_CODE.NODE_NOT_PURCHASED,
+        }),
+      )
     })
   })
 
