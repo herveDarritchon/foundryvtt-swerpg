@@ -1,8 +1,0 @@
-{
-  "description": "Minimal Claude Code settings for repository exposure",
-  "sourceAgentsFile": "AGENTS.md",
-  "skillsPath": ".claude/skills",
-  "agentsPath": ".claude/agents",
-  "mcpConfig": ".mcp.json"
-}
-

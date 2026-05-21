@@ -1,6 +1,6 @@
 ---
-description: Prepare or create a Pull Request targeting develop
-agent: cmd-create-pr
+description: Opencode - Prepare or create a Pull Request targeting develop
+agent: opencode-create-pr
 subtask: true
 context: fork
 ---
