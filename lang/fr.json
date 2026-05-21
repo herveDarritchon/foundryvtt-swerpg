@@ -79,6 +79,14 @@
           "UNRESOLVED": "Arbre non résolu",
           "INCOMPLETE": "Arbre incomplet"
         },
+        "SUMMARY": {
+          "CURRENT_TREE": "Arbre courant",
+          "SPECIALIZATIONS": "Spécialisations",
+          "PROGRESS": "Progression",
+          "ACTIONABLE": "Actionnables",
+          "LOCKED": "Verrouillés",
+          "AVAILABLE_XP": "XP disponibles"
+        },
         "NODE_STATE": {
           "PURCHASED": "Acheté",
           "AVAILABLE": "Disponible",

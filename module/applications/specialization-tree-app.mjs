@@ -73,6 +73,58 @@ export function computeCenteredOffset(bbox, viewportWidth, viewportHeight) {
   }
 }
 
+function buildCurrentTreeSummary(actor, currentTreeName, renderNodes) {
+  if (!currentTreeName || !renderNodes.length) {
+    return null
+  }
+
+  const stateCounts = renderNodes.reduce(
+    (counts, node) => {
+      counts[node.nodeState] = (counts[node.nodeState] ?? 0) + 1
+      return counts
+    },
+    {
+      [NODE_STATE.PURCHASED]: 0,
+      [NODE_STATE.AVAILABLE]: 0,
+      [NODE_STATE.LOCKED]: 0,
+    },
+  )
+
+  const purchasedCount = stateCounts[NODE_STATE.PURCHASED] ?? 0
+  const totalCount = renderNodes.length
+  const availableXp = actor?.system?.progression?.experience?.available
+  const hasAvailableXp = Number.isFinite(availableXp)
+
+  return {
+    treeName: currentTreeName,
+    purchasedCount,
+    totalCount,
+    availableCount: stateCounts[NODE_STATE.AVAILABLE] ?? 0,
+    lockedCount: stateCounts[NODE_STATE.LOCKED] ?? 0,
+    availableXp: hasAvailableXp ? availableXp : null,
+    progressValue: `${purchasedCount}/${totalCount}`,
+    stats: [
+      {
+        key: 'available',
+        label: game.i18n.localize('SWERPG.TALENT.SPECIALIZATION_TREE_APP.SUMMARY.ACTIONABLE'),
+        value: stateCounts[NODE_STATE.AVAILABLE] ?? 0,
+      },
+      {
+        key: 'locked',
+        label: game.i18n.localize('SWERPG.TALENT.SPECIALIZATION_TREE_APP.SUMMARY.LOCKED'),
+        value: stateCounts[NODE_STATE.LOCKED] ?? 0,
+      },
+      hasAvailableXp
+        ? {
+            key: 'xp',
+            label: game.i18n.localize('SWERPG.TALENT.SPECIALIZATION_TREE_APP.SUMMARY.AVAILABLE_XP'),
+            value: availableXp,
+          }
+        : null,
+    ].filter(Boolean),
+  }
+}
+
 /**
  * Build the render context for the specialization tree application.
  * @param {Actor|object|null} actor - The active actor document.
@@ -100,6 +152,7 @@ export function buildSpecializationTreeContext(actor, selectedKey = null) {
       specializations: [],
       currentTreeId: null,
       currentTreeName: null,
+      currentTreeSummary: null,
       currentTreeData: null,
       renderNodes: [],
       renderConnections: [],
@@ -130,6 +183,7 @@ export function buildSpecializationTreeContext(actor, selectedKey = null) {
 
   let currentTreeId = null
   let currentTreeName = null
+  let currentTreeSummary = null
   let currentTreeData = null
   let renderNodes = []
   let renderConnections = []
@@ -185,6 +239,7 @@ export function buildSpecializationTreeContext(actor, selectedKey = null) {
     })
 
     renderConnections = buildConnectionAnchors(renderNodes, viewModel.connections)
+    currentTreeSummary = buildCurrentTreeSummary(actor, currentTreeName, renderNodes)
   }
 
   return {
@@ -202,6 +257,7 @@ export function buildSpecializationTreeContext(actor, selectedKey = null) {
     specializations: specializationEntries,
     currentTreeId,
     currentTreeName,
+    currentTreeSummary,
     currentTreeData,
     renderNodes,
     renderConnections,
