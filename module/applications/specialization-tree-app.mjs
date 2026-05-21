@@ -282,6 +282,8 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
 
   #isViewportInteractionsBound = false
 
+  #refreshPending = false
+
   #zoomCanvas = null
 
   #zoomWheelHandler = null
@@ -307,11 +309,22 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
 
   /**
    * Refresh the application when it is currently open.
+   * Preserves viewport by default (resetView: false) to avoid losing scroll/zoom on actor-driven updates.
+   * Coalesces concurrent calls: subsequent calls while a refresh is in flight return the pending promise.
+   * @param {object} [options={}]
+   * @param {boolean} [options.resetView=false] - Reset the viewport to centered view when true.
    * @returns {Promise<SpecializationTreeApp>}
    */
-  async refresh() {
+  async refresh(options = {}) {
     if (!this.rendered || !this.actor) return this
-    await this.render({ force: true })
+    if (this.#refreshPending) return this
+    this.#refreshPending = true
+    try {
+      const renderOptions = { force: true, resetView: false, ...options }
+      await this.render(renderOptions)
+    } finally {
+      this.#refreshPending = false
+    }
     return this
   }
 

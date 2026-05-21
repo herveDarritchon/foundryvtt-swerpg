@@ -816,7 +816,34 @@ describe('specialization-tree application', () => {
 
     app.rendered = true
     await app.refresh()
-    expect(renderSpy).toHaveBeenCalledWith({ force: true })
+    expect(renderSpy).toHaveBeenCalledWith({ force: true, resetView: false })
+  })
+
+  it('coalesces concurrent refresh calls and prevents double render', async () => {
+    const actor = createActor()
+    const app = new SpecializationTreeApp()
+    const renderSpy = vi.spyOn(app, 'render').mockResolvedValue(app)
+
+    app.actor = actor
+    app.rendered = true
+
+    const [r1, r2] = await Promise.all([app.refresh(), app.refresh()])
+
+    expect(r1).toBe(app)
+    expect(r2).toBe(app)
+    expect(renderSpy).toHaveBeenCalledTimes(1)
+  })
+
+  it('passes custom options to render and merges with defaults', async () => {
+    const actor = createActor()
+    const app = new SpecializationTreeApp()
+    const renderSpy = vi.spyOn(app, 'render').mockResolvedValue(app)
+
+    app.actor = actor
+    app.rendered = true
+    await app.refresh({ resetView: true, extraOption: 'test' })
+
+    expect(renderSpy).toHaveBeenCalledWith({ force: true, resetView: true, extraOption: 'test' })
   })
 
   it('mounts and resizes a PIXI viewport without using the scene canvas', async () => {
