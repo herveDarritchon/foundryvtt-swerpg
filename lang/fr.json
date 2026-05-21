@@ -110,6 +110,21 @@
           "SUCCESS": "Achat réussi : {talent}",
           "FAILURE": "Échec de l'achat : {reason}"
         },
+        "FORGET": {
+          "SUCCESS": "Talent oublié : {talent}",
+          "FAILURE": "Échec de l'oubli : {reason}"
+        },
+        "CONFIRM": {
+          "PURCHASE": {
+            "TITLE": "{action} : {talent}",
+            "CONTENT": "Dépenser {xp} XP pour acheter <strong>{talent}</strong>?"
+          },
+          "FORGET": {
+            "TITLE": "{action} : {talent}",
+            "CONTENT": "Oublier <strong>{talent}</strong> et récupérer {xp} XP?"
+          }
+        },
+        "PERMISSION_DENIED": "Vous n'avez pas la permission de modifier cet arbre de spécialisation.",
         "EMPTY": {
           "NO_ACTOR_TITLE": "Aucun acteur sélectionné",
           "NO_ACTOR_DESCRIPTION": "Ouvrez cette application depuis une fiche personnage pour consulter les arbres de spécialisation possédés.",
