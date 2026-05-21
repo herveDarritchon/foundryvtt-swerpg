@@ -4,6 +4,7 @@ import { purchaseTalentNode } from '../lib/talent-node/talent-node-purchase.mjs'
 import { resolveTalentDetail } from '../lib/talent-node/talent-reference-resolver.mjs'
 import { selectDefaultTreeKey } from '../lib/specialization-tree/default-tree-selector.mjs'
 import { buildRenderViewModel } from './specialization-tree/render-view-model.mjs'
+import { actionableNodeViewModel } from './specialization-tree/actionable-node-view-model.mjs'
 import { enrichNode, getReasonLabelKey, NODE_STATE, NODE_STATE_VARIANTS } from './specialization-tree/node-ui-state.mjs'
 import { NODE_WIDTH, NODE_HEIGHT, computeNodePosition, buildConnectionAnchors } from './specialization-tree/layout.mjs'
 import { logger } from '../utils/logger.mjs'
@@ -151,9 +152,20 @@ export function buildSpecializationTreeContext(actor, selectedKey = null) {
     })
 
     const nodeStates = getTreeNodesStates(actor, currentTreeId, currentTreeData)
+    const localize = game.i18n.localize.bind(game.i18n)
     renderNodes = renderNodes.map((node) => {
       const stateResult = nodeStates.get(node.nodeId) ?? { state: NODE_STATE.INVALID }
-      return enrichNode(node, stateResult, game.i18n.localize.bind(game.i18n))
+      const enriched = enrichNode(node, stateResult, localize)
+      return {
+        ...enriched,
+        actionable: actionableNodeViewModel({
+          renderNode: enriched,
+          actor,
+          specializationId: currentTreeId,
+          tree: currentTreeData,
+          localize,
+        }),
+      }
     })
 
     renderConnections = buildConnectionAnchors(renderNodes, viewModel.connections)
