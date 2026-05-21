@@ -114,6 +114,8 @@
           "NODE_INVALID": "Node data is invalid",
           "NODE_LOCKED": "Prerequisites not met",
           "NOT_ENOUGH_XP": "Not enough XP",
+          "NODE_NOT_PURCHASED": "Node not purchased",
+          "NODE_HAS_DEPENDENTS": "Node has purchased dependents",
           "UNKNOWN": "Unknown reason"
         },
         "TOOLTIP": {
@@ -139,7 +141,9 @@
         "ACTION": {
           "CENTER": "Center",
           "ZOOM_IN": "Zoom in",
-          "ZOOM_OUT": "Zoom out"
+          "ZOOM_OUT": "Zoom out",
+          "PURCHASE": "Purchase",
+          "FORGET": "Forget"
         }
       },
       "ACTIONS": {

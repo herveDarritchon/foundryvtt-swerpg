@@ -70,4 +70,29 @@
  * @property {RenderViewModelMetadata} metadata - View-model summary metadata.
  */
 
+/**
+ * Stable action reference for the future UI purchase/forget flow.
+ * @typedef {Object} ActionRef
+ * @property {string} specializationId - The specialization identifier.
+ * @property {string|null} treeId - The tree document ID.
+ * @property {string|null} treeUuid - The tree document UUID.
+ * @property {string} nodeId - The node identifier.
+ * @property {string} talentId - The talent business key.
+ * @property {string|null} talentUuid - The talent document UUID.
+ * @property {number} cost - XP cost of the node.
+ */
+
+/**
+ * Actionable sub-view-model describing the primary user action possible on a node.
+ * @typedef {Object} ActionableNodeViewModel
+ * @property {boolean} canPurchase - Whether the node can be purchased.
+ * @property {boolean} canForget - Whether the node can be forgotten.
+ * @property {'purchase'|'forget'|null} primaryAction - The recommended primary action (or null if blocked).
+ * @property {string|null} actionLabel - Localized label for the primary action.
+ * @property {string|null} blockedReasonCode - Machine-readable blocked reason code.
+ * @property {string|null} blockedReasonLabel - Localized blocked reason label.
+ * @property {string[]} blockingDependents - NodeIds of purchased dependents blocking forget.
+ * @property {ActionRef} actionRef - Stable reference for the future interaction flow.
+ */
+
 export default {}
