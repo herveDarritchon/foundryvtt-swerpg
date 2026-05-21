@@ -919,7 +919,7 @@ describe('recordTalentNodePurchase', () => {
     expect(actor.update).toHaveBeenCalledTimes(1)
     const updateArg = actor.update.mock.calls[0][0]
     const log = updateArg['flags.swerpg.logs'][0]
-    expect(log.type).toBe('talent-node-purchase')
+    expect(log.type).toBe('talent-node-purchase-succeeded')
     expect(log.data).toMatchObject({
       actorId: 'actor-001',
       specializationId: 'spec-1',
@@ -1010,5 +1010,185 @@ describe('recordTalentNodePurchase', () => {
         cost: 5,
       }),
     ).resolves.toBeUndefined()
+  })
+})
+
+/* ============================================ */
+/*  recordTalentNodeOperation                   */
+/* ============================================ */
+
+describe('recordTalentNodeOperation', () => {
+  function makeActor(overrides = {}) {
+    return {
+      type: 'character',
+      id: 'actor-001',
+      name: 'Test Character',
+      _source: {
+        system: {
+          skills: {},
+          characteristics: {},
+          progression: { totalXP: 0, spentXP: 0 },
+          details: {},
+          advancement: {},
+        },
+        flags: {},
+      },
+      system: {
+        progression: {
+          experience: { spent: 0, gained: 0, available: 0, total: 0 },
+          freeSkillRanks: {
+            career: { spent: 0, gained: 0, available: 0 },
+            specialization: { spent: 0, gained: 0, available: 0 },
+          },
+        },
+      },
+      update: vi.fn(),
+      ...overrides,
+    }
+  }
+
+  test('creates a purchase-succeeded entry with all data', async () => {
+    const { recordTalentNodeOperation } = await import('../../module/utils/audit-log.mjs')
+    globalThis.foundry.utils.deepClone = vi.fn((o) => structuredClone(o))
+    globalThis.game.users = { get: vi.fn(() => ({ id: 'gm-1', name: 'Game Master' })) }
+
+    const actor = makeActor()
+    const data = {
+      specializationId: 'spec-1',
+      treeId: 'tree-1',
+      nodeId: 'r2c3',
+      talentId: 'talent-deflect',
+      cost: 10,
+      previousXp: 50,
+      nextXp: 60,
+    }
+
+    await recordTalentNodeOperation(actor, 'purchase', 'succeeded', data)
+
+    expect(actor.update).toHaveBeenCalledTimes(1)
+    const updateArg = actor.update.mock.calls[0][0]
+    const log = updateArg['flags.swerpg.logs'][0]
+    expect(log.type).toBe('talent-node-purchase-succeeded')
+    expect(log.data).toMatchObject({
+      actorId: 'actor-001',
+      specializationId: 'spec-1',
+      treeId: 'tree-1',
+      nodeId: 'r2c3',
+      talentId: 'talent-deflect',
+      cost: 10,
+      source: 'specialization-tree',
+      previousXp: 50,
+      nextXp: 60,
+    })
+    expect(log.xpDelta).toBe(-10)
+    expect(log.userId).toBe('gm-1')
+    expect(log.userName).toBe('Game Master')
+  })
+
+  test('creates a forget-succeeded entry with positive XP delta', async () => {
+    const { recordTalentNodeOperation } = await import('../../module/utils/audit-log.mjs')
+    globalThis.foundry.utils.deepClone = vi.fn((o) => structuredClone(o))
+    globalThis.game.users = { get: vi.fn(() => ({ id: 'gm-1', name: 'Game Master' })) }
+
+    const actor = makeActor()
+    const data = {
+      specializationId: 'spec-1',
+      treeId: 'tree-1',
+      nodeId: 'r1c1',
+      talentId: 'talent-parry',
+      cost: 5,
+      previousXp: 50,
+      nextXp: 45,
+    }
+
+    await recordTalentNodeOperation(actor, 'forget', 'succeeded', data)
+
+    const updateArg = actor.update.mock.calls[0][0]
+    const log = updateArg['flags.swerpg.logs'][0]
+    expect(log.type).toBe('talent-node-forget-succeeded')
+    expect(log.xpDelta).toBe(5)
+    expect(log.data.actorId).toBe('actor-001')
+    expect(log.data.cost).toBe(5)
+  })
+
+  test('creates a purchase-failed entry with reasonCode', async () => {
+    const { recordTalentNodeOperation } = await import('../../module/utils/audit-log.mjs')
+    globalThis.foundry.utils.deepClone = vi.fn((o) => structuredClone(o))
+
+    const actor = makeActor()
+    const data = {
+      specializationId: 'spec-1',
+      nodeId: 'r1c1',
+      cost: 5,
+      reasonCode: 'not-enough-xp',
+      reason: 'Not enough XP available',
+    }
+
+    await recordTalentNodeOperation(actor, 'purchase', 'failed', data)
+
+    const updateArg = actor.update.mock.calls[0][0]
+    const log = updateArg['flags.swerpg.logs'][0]
+    expect(log.type).toBe('talent-node-purchase-failed')
+    expect(log.xpDelta).toBe(-5)
+    expect(log.data.reasonCode).toBe('not-enough-xp')
+    expect(log.data.reason).toBe('Not enough XP available')
+  })
+
+  test('creates a forget-failed entry with reasonCode', async () => {
+    const { recordTalentNodeOperation } = await import('../../module/utils/audit-log.mjs')
+    globalThis.foundry.utils.deepClone = vi.fn((o) => structuredClone(o))
+
+    const actor = makeActor()
+    const data = {
+      specializationId: 'spec-1',
+      nodeId: 'r1c1',
+      cost: 5,
+      reasonCode: 'node-has-dependents',
+      reason: 'Node has dependent nodes',
+    }
+
+    await recordTalentNodeOperation(actor, 'forget', 'failed', data)
+
+    const updateArg = actor.update.mock.calls[0][0]
+    const log = updateArg['flags.swerpg.logs'][0]
+    expect(log.type).toBe('talent-node-forget-failed')
+    expect(log.xpDelta).toBe(5)
+    expect(log.data.reasonCode).toBe('node-has-dependents')
+  })
+
+  test('includes snapshot of actor XP state', async () => {
+    const { recordTalentNodeOperation } = await import('../../module/utils/audit-log.mjs')
+    globalThis.foundry.utils.deepClone = vi.fn((o) => structuredClone(o))
+
+    const actor = makeActor({
+      system: {
+        progression: {
+          experience: { spent: 50, gained: 200, available: 150, total: 200 },
+          freeSkillRanks: {
+            career: { spent: 2, gained: 5, available: 3 },
+            specialization: { spent: 0, gained: 3, available: 3 },
+          },
+        },
+      },
+    })
+    const data = {
+      specializationId: 'spec-1',
+      treeId: 'tree-1',
+      nodeId: 'r1c1',
+      talentId: 'talent-parry',
+      cost: 5,
+    }
+
+    await recordTalentNodeOperation(actor, 'purchase', 'succeeded', data)
+
+    const updateArg = actor.update.mock.calls[0][0]
+    const snapshot = updateArg['flags.swerpg.logs'][0].snapshot
+    expect(snapshot).toMatchObject({
+      xpAvailable: 150,
+      totalXpSpent: 50,
+      totalXpGained: 200,
+      careerFreeAvailable: 3,
+      specializationFreeAvailable: 3,
+    })
   })
 })

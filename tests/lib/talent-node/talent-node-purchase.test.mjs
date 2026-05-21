@@ -11,6 +11,7 @@ vi.mock('../../../module/utils/logger.mjs', () => ({
 
 vi.mock('../../../module/utils/audit-log.mjs', () => ({
   recordTalentNodePurchase: vi.fn(),
+  recordTalentNodeOperation: vi.fn().mockResolvedValue(undefined),
 }))
 
 vi.mock('../../../module/lib/talent-node/talent-tree-resolver.mjs', () => ({
@@ -18,7 +19,7 @@ vi.mock('../../../module/lib/talent-node/talent-tree-resolver.mjs', () => ({
 }))
 
 import { logger } from '../../../module/utils/logger.mjs'
-import { recordTalentNodePurchase } from '../../../module/utils/audit-log.mjs'
+import { recordTalentNodePurchase, recordTalentNodeOperation } from '../../../module/utils/audit-log.mjs'
 import { resolveSpecializationTree } from '../../../module/lib/talent-node/talent-tree-resolver.mjs'
 import { purchaseTalentNode } from '../../../module/lib/talent-node/talent-node-purchase.mjs'
 import { buildOwnedTalentSummary } from '../../../module/lib/talent-node/owned-talent-summary.mjs'
