@@ -2,7 +2,7 @@
 name: "create-pr"
 description: Prépare ou crée une Pull Request vers develop via le skill creer-pull-request, avec commit Conventional Commits préalable si nécessaire.
 mode: subagent
-model: "claude-haiku-4-5"
+model: github-copilot/gpt-4.1
 temperature: 0.1
 permission:
   read: allow

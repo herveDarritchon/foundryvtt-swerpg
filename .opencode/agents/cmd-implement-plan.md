@@ -1,7 +1,8 @@
 ---
-name: "implement-plan"
+name: "cmd-implement-plan"
 description: Implémente strictement un plan approuvé via le skill implementer-depuis-plan, avec lecture ciblée et tests associés.
 mode: subagent
+model: openai/gpt-5.4
 reasoningEffort: medium
 textVerbosity: low
 temperature: 0.1
