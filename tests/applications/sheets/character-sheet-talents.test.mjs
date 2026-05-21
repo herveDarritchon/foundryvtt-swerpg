@@ -627,6 +627,35 @@ describe('CharacterSheet talent consolidation (US12)', () => {
     })
   })
 
+  it('rebuilds talents context from fresh actor data after mutation (US17.7)', async () => {
+    let capturedActor
+    buildOwnedTalentSummary.mockImplementation((actor, definitions) => {
+      capturedActor = actor
+      const purchases = actor.system?.progression?.talentPurchases ?? []
+      return purchases.map((p, i) => ({
+        talentId: p.talentId || `talent-${i}`,
+        name: `Talent ${i}`,
+        activation: 'passive',
+        isRanked: false,
+        rank: null,
+        sources: [{ specializationName: 'Test Spec', resolutionState: 'ok' }],
+      }))
+    })
+
+    const actor = buildMockActor()
+    const context1 = await getContext(actor)
+    expect(context1.talents).toHaveLength(0)
+
+    actor.system.progression.talentPurchases = [
+      { talentId: 'talent-new', specializationId: 'spec-bodyguard', treeId: 'tree-1', nodeId: 'r1c1' },
+    ]
+
+    const context2 = await getContext(actor)
+    expect(context2.talents).toHaveLength(1)
+    expect(context2.talents[0].talentId).toBe('talent-new')
+    expect(capturedActor).toBe(actor)
+  })
+
   it('opens the specialization tree app from the talents action handler', async () => {
     const actor = buildMockActor()
     const sheet = new CharacterSheet({ document: actor })
