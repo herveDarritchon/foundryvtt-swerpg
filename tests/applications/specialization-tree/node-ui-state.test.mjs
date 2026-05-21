@@ -318,28 +318,23 @@ describe('node-ui-state', () => {
 
   describe('getNodeVariant', () => {
     it('returns passive variant by default when nodeType is undefined', () => {
-      expect(getNodeVariant(NODE_STATE.PURCHASED, undefined))
-        .toBe(NODE_STATE_VARIANTS[NODE_STATE.PURCHASED][NODE_TYPE.PASSIVE])
+      expect(getNodeVariant(NODE_STATE.PURCHASED, undefined)).toBe(NODE_STATE_VARIANTS[NODE_STATE.PURCHASED][NODE_TYPE.PASSIVE])
     })
 
     it('returns passive variant when nodeType is null', () => {
-      expect(getNodeVariant(NODE_STATE.AVAILABLE, null))
-        .toBe(NODE_STATE_VARIANTS[NODE_STATE.AVAILABLE][NODE_TYPE.PASSIVE])
+      expect(getNodeVariant(NODE_STATE.AVAILABLE, null)).toBe(NODE_STATE_VARIANTS[NODE_STATE.AVAILABLE][NODE_TYPE.PASSIVE])
     })
 
     it('returns active variant when nodeType is active', () => {
-      expect(getNodeVariant(NODE_STATE.LOCKED, NODE_TYPE.ACTIVE))
-        .toBe(NODE_STATE_VARIANTS[NODE_STATE.LOCKED][NODE_TYPE.ACTIVE])
+      expect(getNodeVariant(NODE_STATE.LOCKED, NODE_TYPE.ACTIVE)).toBe(NODE_STATE_VARIANTS[NODE_STATE.LOCKED][NODE_TYPE.ACTIVE])
     })
 
     it('returns passive variant when nodeType is passive', () => {
-      expect(getNodeVariant(NODE_STATE.INVALID, NODE_TYPE.PASSIVE))
-        .toBe(NODE_STATE_VARIANTS[NODE_STATE.INVALID][NODE_TYPE.PASSIVE])
+      expect(getNodeVariant(NODE_STATE.INVALID, NODE_TYPE.PASSIVE)).toBe(NODE_STATE_VARIANTS[NODE_STATE.INVALID][NODE_TYPE.PASSIVE])
     })
 
     it('falls back to INVALID state for unknown state', () => {
-      expect(getNodeVariant('bogus-state', NODE_TYPE.PASSIVE))
-        .toBe(NODE_STATE_VARIANTS[NODE_STATE.INVALID][NODE_TYPE.PASSIVE])
+      expect(getNodeVariant('bogus-state', NODE_TYPE.PASSIVE)).toBe(NODE_STATE_VARIANTS[NODE_STATE.INVALID][NODE_TYPE.PASSIVE])
     })
   })
 

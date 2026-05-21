@@ -50,6 +50,33 @@ function getTreeContainer(app) {
   return app.pixiApp.stage.children.find((child) => child.position && child.scale)
 }
 
+/**
+ * Collect all display objects (recursively) from a container tree.
+ * @param {object} container
+ * @returns {object[]}
+ */
+function flattenChildren(container) {
+  const result = []
+  for (const child of container.children ?? []) {
+    result.push(child)
+    if (Array.isArray(child.children)) {
+      result.push(...flattenChildren(child))
+    }
+  }
+  return result
+}
+
+/**
+ * Find the first node hit area within a tree container.
+ * Each node is now wrapped in its own PIXI.Container (for hover dimming),
+ * so the hit area is one level deeper than the tree container.
+ * @param {object} treeContainer
+ * @returns {object|undefined}
+ */
+function findNodeHitArea(treeContainer) {
+  return flattenChildren(treeContainer).find((child) => child._listeners?.pointerdown)
+}
+
 describe('specialization-tree application', () => {
   let SpecializationTreeApp
   let buildSpecializationTreeContext
@@ -431,9 +458,7 @@ describe('specialization-tree application', () => {
     expect(context.renderNodes).toEqual([])
     expect(context.renderConnections).toEqual([])
     expect(context.emptyStateTitle).toBe('No owned specialization')
-    expect(context.emptyStateDescription).toBe(
-      'This character does not currently own any specialization to display.',
-    )
+    expect(context.emptyStateDescription).toBe('This character does not currently own any specialization to display.')
   })
 
   it('builds empty state when all specialization trees are unresolved', () => {
@@ -461,9 +486,7 @@ describe('specialization-tree application', () => {
     expect(context.renderNodes).toEqual([])
     expect(context.renderConnections).toEqual([])
     expect(context.emptyStateTitle).toBe('No available specialization tree')
-    expect(context.emptyStateDescription).toBe(
-      'The owned specializations were found, but none currently resolve to a complete reference tree.',
-    )
+    expect(context.emptyStateDescription).toBe('The owned specializations were found, but none currently resolve to a complete reference tree.')
   })
 
   it('builds empty state when the specialization tree is structurally incomplete', () => {
@@ -1026,16 +1049,15 @@ describe('specialization-tree application', () => {
     const treeContainer = app.pixiApp.stage.children.find((c) => c.position && c.scale)
     expect(treeContainer, 'tree container must exist').toBeDefined()
 
-    const children = treeContainer.children
-    const graphicsChildren = children.filter((c) => c.constructor.name === 'MockGraphics')
-
-    // The first Graphics child is the connections (lineStyle is its first call)
-    const firstGraphicsCall = graphicsChildren[0]?.calls?.[0]?.[0]
+    // The first direct Graphics child of the treeContainer is the connections (lineStyle is its first call)
+    const directGraphicsChildren = treeContainer.children.filter((c) => c.constructor.name === 'MockGraphics')
+    const firstGraphicsCall = directGraphicsChildren[0]?.calls?.[0]?.[0]
     expect(firstGraphicsCall, 'first Graphics call must be lineStyle for connections').toBe('lineStyle')
 
-    // The second Graphics child is the node backgrounds (beginFill is its first call)
-    const secondGraphicsCall = graphicsChildren[1]?.calls?.[0]?.[0]
-    expect(secondGraphicsCall, 'second Graphics call must be beginFill for node backgrounds').toBe('beginFill')
+    // Node backgrounds are now inside per-node Containers — find the first one
+    const allGraphicsChildren = flattenChildren(treeContainer).filter((c) => c.constructor.name === 'MockGraphics')
+    const nodeBackground = allGraphicsChildren.find((c) => c.calls?.[0]?.[0] === 'beginFill')
+    expect(nodeBackground, 'a node background Graphics with beginFill must exist').toBeDefined()
   })
 
   it('renders a (R) indicator on PIXI cards for ranked talents', async () => {
@@ -1081,14 +1103,10 @@ describe('specialization-tree application', () => {
     const treeContainer = app.pixiApp.stage.children.find((c) => c.position && c.scale)
     expect(treeContainer, 'tree container must exist').toBeDefined()
 
-    const rankedTexts = treeContainer.children.filter(
-      (c) => c.constructor.name === 'MockText' && c.text === '(R)',
-    )
+    const rankedTexts = flattenChildren(treeContainer).filter((c) => c.constructor.name === 'MockText' && c.text === '(R)')
     expect(rankedTexts, 'ranked indicator (R) must appear exactly once for Tough').toHaveLength(1)
 
-    const nonRankedTexts = treeContainer.children.filter(
-      (c) => c.constructor.name === 'MockText' && /^Grit$/.test(c.text),
-    )
+    const nonRankedTexts = flattenChildren(treeContainer).filter((c) => c.constructor.name === 'MockText' && /^Grit$/.test(c.text))
     expect(nonRankedTexts, 'Grit text must be present').toHaveLength(1)
   })
 
@@ -1110,9 +1128,7 @@ describe('specialization-tree application', () => {
           type: 'specialization-tree',
           name: 'Bodyguard Tree',
           system: {
-            nodes: [
-              { nodeId: 'r1c1', talentId: 'Item.talent-tough', talentUuid: 'Item.talent-tough', row: 1, column: 1, cost: 10 },
-            ],
+            nodes: [{ nodeId: 'r1c1', talentId: 'Item.talent-tough', talentUuid: 'Item.talent-tough', row: 1, column: 1, cost: 10 }],
             connections: [{ from: 'r1c1', to: 'r2c1' }],
           },
         }
@@ -1137,9 +1153,7 @@ describe('specialization-tree application', () => {
     const pictogram = node.variant.pictogram
     expect(pictogram, 'node variant must have a pictogram').toBeTruthy()
 
-    const pictogramTexts = treeContainer.children.filter(
-      (c) => c.constructor.name === 'MockText' && c.text === pictogram,
-    )
+    const pictogramTexts = flattenChildren(treeContainer).filter((c) => c.constructor.name === 'MockText' && c.text === pictogram)
     expect(pictogramTexts.length, 'state pictogram must appear on the node card').toBeGreaterThanOrEqual(1)
   })
 
@@ -1161,9 +1175,7 @@ describe('specialization-tree application', () => {
           type: 'specialization-tree',
           name: 'Bodyguard Tree',
           system: {
-            nodes: [
-              { nodeId: 'r1c1', talentId: 'Item.talent-tough', talentUuid: 'Item.talent-tough', row: 1, column: 1, cost: 10 },
-            ],
+            nodes: [{ nodeId: 'r1c1', talentId: 'Item.talent-tough', talentUuid: 'Item.talent-tough', row: 1, column: 1, cost: 10 }],
             connections: [{ from: 'r1c1', to: 'r2c1' }],
           },
         }
@@ -1188,9 +1200,7 @@ describe('specialization-tree application', () => {
     const expectedIcon = node.nodeTypeIcon
     expect(expectedIcon, 'node must have a type icon').toBeTruthy()
 
-    const typeTexts = treeContainer.children.filter(
-      (c) => c.constructor.name === 'MockText' && c.text === expectedIcon,
-    )
+    const typeTexts = flattenChildren(treeContainer).filter((c) => c.constructor.name === 'MockText' && c.text === expectedIcon)
     expect(typeTexts.length, 'type indicator icon must be rendered on the node card').toBeGreaterThanOrEqual(1)
   })
 
@@ -1212,9 +1222,7 @@ describe('specialization-tree application', () => {
           type: 'specialization-tree',
           name: 'Bodyguard Tree',
           system: {
-            nodes: [
-              { nodeId: 'r1c1', talentId: 'Item.talent-tough', talentUuid: 'Item.talent-tough', row: 1, column: 1, cost: 10 },
-            ],
+            nodes: [{ nodeId: 'r1c1', talentId: 'Item.talent-tough', talentUuid: 'Item.talent-tough', row: 1, column: 1, cost: 10 }],
             connections: [{ from: 'r1c1', to: 'r2c1' }],
           },
         }
@@ -1239,9 +1247,7 @@ describe('specialization-tree application', () => {
     expect(node.isActive, 'tough must be active').toBe(true)
     expect(node.nodeType, 'nodeType must be active').toBe('active')
 
-    const typeTexts = treeContainer.children.filter(
-      (c) => c.constructor.name === 'MockText' && c.text === '\u26A1',
-    )
+    const typeTexts = flattenChildren(treeContainer).filter((c) => c.constructor.name === 'MockText' && c.text === '\u26A1')
     expect(typeTexts.length, 'active type indicator (⚡) must be rendered').toBeGreaterThanOrEqual(1)
   })
 
@@ -1334,9 +1340,7 @@ describe('specialization-tree application', () => {
     const treeContainer = app.pixiApp.stage.children.find((c) => c.position && c.scale)
     expect(treeContainer, 'tree container must exist').toBeDefined()
 
-    const rankedTexts = treeContainer.children.filter(
-      (c) => c.constructor.name === 'MockText' && c.text === '(R)',
-    )
+    const rankedTexts = flattenChildren(treeContainer).filter((c) => c.constructor.name === 'MockText' && c.text === '(R)')
     expect(rankedTexts, 'no (R) indicator must appear for non-ranked talents').toHaveLength(0)
   })
 
@@ -1810,9 +1814,7 @@ describe('specialization-tree application', () => {
           type: 'specialization-tree',
           name: 'Bodyguard Tree',
           system: {
-            nodes: [
-              { nodeId: 'r1c1', talentId: 'Item.talent-tough', talentUuid: 'Item.talent-tough', row: 1, column: 1, cost: 10 },
-            ],
+            nodes: [{ nodeId: 'r1c1', talentId: 'Item.talent-tough', talentUuid: 'Item.talent-tough', row: 1, column: 1, cost: 10 }],
             connections: [{ from: 'r1c1', to: 'r2c1' }],
           },
         }
@@ -2249,7 +2251,7 @@ describe('specialization-tree application', () => {
 
     const stage = app.pixiApp.stage
     const container = stage.children.find((child) => child.position && child.scale)
-    const nodeHitArea = container.children.find((child) => child._listeners?.pointerdown)
+    const nodeHitArea = findNodeHitArea(container)
     const stopPropagation = vi.fn()
 
     nodeHitArea._listeners.pointerdown({ stopPropagation })
@@ -2972,7 +2974,7 @@ describe('specialization-tree application', () => {
       // Click on the node — should show tooltip (consultation)
       const stage = app.pixiApp.stage
       const container = stage.children.find((child) => child.position && child.scale)
-      const nodeHitArea = container.children.find((child) => child._listeners?.pointerdown)
+      const nodeHitArea = findNodeHitArea(container)
       nodeHitArea._listeners.pointerdown({ stopPropagation: vi.fn() })
 
       expect(tooltip.hidden).toBe(false)
@@ -3042,7 +3044,7 @@ describe('specialization-tree application', () => {
 
       const stage = app.pixiApp.stage
       const container = stage.children.find((child) => child.position && child.scale)
-      const nodeHitArea = container.children.find((child) => child._listeners?.pointerdown)
+      const nodeHitArea = findNodeHitArea(container)
       nodeHitArea._listeners.pointerdown({ stopPropagation: vi.fn() })
 
       expect(globalThis.foundry.applications.api.DialogV2.confirm, 'confirm dialog must be requested').toHaveBeenCalled()
@@ -3105,7 +3107,7 @@ describe('specialization-tree application', () => {
 
       const stage = app.pixiApp.stage
       const container = stage.children.find((child) => child.position && child.scale)
-      const nodeHitArea = container.children.find((child) => child._listeners?.pointerdown)
+      const nodeHitArea = findNodeHitArea(container)
       const stopPropagation = vi.fn()
 
       await nodeHitArea._listeners.pointerdown({ stopPropagation })
@@ -3177,7 +3179,7 @@ describe('specialization-tree application', () => {
 
       // Show the tooltip first by clicking on a node
       const container = stage.children.find((child) => child.position && child.scale)
-      const nodeHitArea = container.children.find((child) => child._listeners?.pointerdown)
+      const nodeHitArea = findNodeHitArea(container)
       nodeHitArea._listeners.pointerdown({ stopPropagation: vi.fn() })
       expect(tooltip.hidden).toBe(false)
 
@@ -3248,7 +3250,7 @@ describe('specialization-tree application', () => {
       // Show the tooltip by clicking on a node
       const stage = app.pixiApp.stage
       const container = stage.children.find((child) => child.position && child.scale)
-      const nodeHitArea = container.children.find((child) => child._listeners?.pointerdown)
+      const nodeHitArea = findNodeHitArea(container)
       nodeHitArea._listeners.pointerdown({ stopPropagation: vi.fn() })
       expect(tooltip.hidden).toBe(false)
 
@@ -3324,7 +3326,7 @@ describe('specialization-tree application', () => {
 
       const stage = app.pixiApp.stage
       const container = stage.children.find((child) => child.position && child.scale)
-      const nodeHitArea = container.children.find((child) => child._listeners?.pointerdown)
+      const nodeHitArea = findNodeHitArea(container)
 
       await nodeHitArea._listeners.pointerdown({ stopPropagation: vi.fn() })
 
@@ -3402,7 +3404,7 @@ describe('specialization-tree application', () => {
 
       const stage = app.pixiApp.stage
       const container = stage.children.find((child) => child.position && child.scale)
-      const nodeHitArea = container.children.find((child) => child._listeners?.pointerdown)
+      const nodeHitArea = findNodeHitArea(container)
 
       await nodeHitArea._listeners.pointerdown({ stopPropagation: vi.fn() })
 
@@ -3461,14 +3463,12 @@ describe('specialization-tree application', () => {
 
       const stage = app.pixiApp.stage
       const container = stage.children.find((child) => child.position && child.scale)
-      const nodeHitArea = container.children.find((child) => child._listeners?.pointerdown)
+      const nodeHitArea = findNodeHitArea(container)
 
       await nodeHitArea._listeners.pointerdown({ stopPropagation: vi.fn() })
 
       expect(purchaseSpy, 'purchase must not be called without permission').not.toHaveBeenCalled()
-      expect(globalThis.ui.notifications.warn).toHaveBeenCalledWith(
-        'You do not have permission to modify this specialization tree.',
-      )
+      expect(globalThis.ui.notifications.warn).toHaveBeenCalledWith('You do not have permission to modify this specialization tree.')
     })
 
     it('click on purchased node blocked by dependents shows tooltip, no confirm dialog, no mutation', async () => {
@@ -3546,7 +3546,7 @@ describe('specialization-tree application', () => {
 
       const stage = app.pixiApp.stage
       const container = stage.children.find((child) => child.position && child.scale)
-      const nodeHitArea = container.children.find((child) => child._listeners?.pointerdown)
+      const nodeHitArea = findNodeHitArea(container)
 
       await nodeHitArea._listeners.pointerdown({ stopPropagation: vi.fn() })
 
@@ -3608,7 +3608,7 @@ describe('specialization-tree application', () => {
 
       const stage = app.pixiApp.stage
       const container = stage.children.find((child) => child.position && child.scale)
-      const nodeHitArea = container.children.find((child) => child._listeners?.pointerdown)
+      const nodeHitArea = findNodeHitArea(container)
 
       await nodeHitArea._listeners.pointerdown({ stopPropagation: vi.fn() })
 
@@ -4000,6 +4000,494 @@ describe('specialization-tree application', () => {
       await app.close()
 
       expect(observer.disconnect, 'close must disconnect the ResizeObserver').toHaveBeenCalled()
+    })
+  })
+
+  describe('connection visual variants (GUX3 — step 1)', () => {
+    it('buildConnectionVariants annotates each connection with a connectionVariant and lineStyle', async () => {
+      const { buildConnectionVariants } = await import('../../module/applications/specialization-tree-app.mjs')
+      const { NODE_STATE, CONNECTION_VARIANT, CONNECTION_LINE_STYLES } = await import('../../module/applications/specialization-tree/node-ui-state.mjs')
+
+      const renderNodes = [
+        { nodeId: 'r1c1', nodeState: NODE_STATE.PURCHASED },
+        { nodeId: 'r2c1', nodeState: NODE_STATE.AVAILABLE },
+        { nodeId: 'r3c1', nodeState: NODE_STATE.LOCKED },
+      ]
+      const renderConnections = [
+        { fromNodeId: 'r1c1', toNodeId: 'r2c1', fromX: 0, fromY: 0, toX: 1, toY: 1 },
+        { fromNodeId: 'r2c1', toNodeId: 'r3c1', fromX: 1, fromY: 1, toX: 2, toY: 2 },
+      ]
+
+      const result = buildConnectionVariants(renderConnections, renderNodes)
+
+      expect(result).toHaveLength(2)
+      expect(result[0].connectionVariant).toBe(CONNECTION_VARIANT.AVAILABLE)
+      expect(result[0].lineStyle).toBe(CONNECTION_LINE_STYLES[CONNECTION_VARIANT.AVAILABLE])
+      expect(result[1].connectionVariant).toBe(CONNECTION_VARIANT.LOCKED)
+      expect(result[1].lineStyle).toBe(CONNECTION_LINE_STYLES[CONNECTION_VARIANT.LOCKED])
+    })
+
+    it('buildConnectionVariants assigns PURCHASED variant when both endpoints are purchased', async () => {
+      const { buildConnectionVariants } = await import('../../module/applications/specialization-tree-app.mjs')
+      const { NODE_STATE, CONNECTION_VARIANT } = await import('../../module/applications/specialization-tree/node-ui-state.mjs')
+
+      const renderNodes = [
+        { nodeId: 'r1c1', nodeState: NODE_STATE.PURCHASED },
+        { nodeId: 'r2c1', nodeState: NODE_STATE.PURCHASED },
+      ]
+      const renderConnections = [{ fromNodeId: 'r1c1', toNodeId: 'r2c1', fromX: 0, fromY: 0, toX: 1, toY: 1 }]
+
+      const result = buildConnectionVariants(renderConnections, renderNodes)
+
+      expect(result[0].connectionVariant).toBe(CONNECTION_VARIANT.PURCHASED)
+    })
+
+    it('buildConnectionVariants assigns LOCKED variant for connections involving missing node IDs', async () => {
+      const { buildConnectionVariants } = await import('../../module/applications/specialization-tree-app.mjs')
+      const { NODE_STATE, CONNECTION_VARIANT } = await import('../../module/applications/specialization-tree/node-ui-state.mjs')
+
+      const renderNodes = [{ nodeId: 'r1c1', nodeState: NODE_STATE.PURCHASED }]
+      const renderConnections = [{ fromNodeId: 'r1c1', toNodeId: 'r-missing', fromX: 0, fromY: 0, toX: 1, toY: 1 }]
+
+      const result = buildConnectionVariants(renderConnections, renderNodes)
+
+      expect(result[0].connectionVariant).toBe(CONNECTION_VARIANT.LOCKED)
+    })
+
+    it('renders connections with variant-aware line styles in the PIXI container', async () => {
+      const actor = createActor({
+        system: {
+          details: {
+            specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' }],
+          },
+          progression: {
+            talentPurchases: [{ specializationId: 'spec-bodyguard', nodeId: 'r1c1', talentId: 'Item.talent-tough', xpCost: 10, treeId: 'tree-bodyguard' }],
+            experience: { available: 100 },
+          },
+        },
+      })
+      globalThis.fromUuidSync = vi.fn((uuid) => {
+        if (uuid === 'Item.tree-bodyguard') {
+          return {
+            id: 'tree-bodyguard',
+            type: 'specialization-tree',
+            name: 'Bodyguard Tree',
+            system: {
+              specializationId: 'spec-bodyguard',
+              nodes: [
+                { nodeId: 'r1c1', talentId: 'Item.talent-tough', talentUuid: 'Item.talent-tough', row: 1, column: 1, cost: 10 },
+                { nodeId: 'r2c1', talentId: 'Item.talent-grit', talentUuid: 'Item.talent-grit', row: 2, column: 1, cost: 15 },
+              ],
+              connections: [{ from: 'r1c1', to: 'r2c1' }],
+            },
+          }
+        }
+        if (uuid === 'Item.talent-tough') return { name: 'Tough', system: { isRanked: false } }
+        if (uuid === 'Item.talent-grit') return { name: 'Grit', system: { isRanked: false } }
+        return null
+      })
+
+      const app = new SpecializationTreeApp()
+      app.actor = actor
+      app.document = actor
+      const host = createMockHost({ width: 640, height: 480 })
+      app.element = { querySelector: vi.fn(() => host) }
+
+      const context = buildSpecializationTreeContext(actor)
+      await app._onRender(context, { resetView: false })
+
+      const treeContainer = app.pixiApp.stage.children.find((c) => c.position && c.scale)
+      expect(treeContainer, 'tree container must exist').toBeDefined()
+
+      // First child of treeContainer is the connections Graphics
+      const connectionGfx = treeContainer.children.find((c) => c.constructor.name === 'MockGraphics')
+      expect(connectionGfx, 'connection graphics must exist').toBeDefined()
+
+      // With r1c1 purchased and r2c1 available, the connection variant is AVAILABLE
+      // The lineStyle call should use a width > 1 (AVAILABLE has width 2)
+      const lineStyleCalls = connectionGfx.calls.filter((call) => call[0] === 'lineStyle')
+      expect(lineStyleCalls.length, 'lineStyle must be called for each connection').toBeGreaterThanOrEqual(1)
+      // Each lineStyle call has [cmd, width, color, alpha]
+      const [, firstWidth] = lineStyleCalls[0]
+      expect(typeof firstWidth, 'lineStyle width must be a number').toBe('number')
+      expect(firstWidth, 'AVAILABLE connection must use width >= 2').toBeGreaterThanOrEqual(2)
+    })
+  })
+
+  describe('hover contextual behaviour (GUX3 — step 2)', () => {
+    it('computeHoverContext returns empty sets when hoveredNodeId is null', async () => {
+      const { computeHoverContext } = await import('../../module/applications/specialization-tree-app.mjs')
+
+      const connections = [{ fromNodeId: 'r1c1', toNodeId: 'r2c1' }]
+      const { prerequisiteNodeIds, unlockNodeIds } = computeHoverContext(null, connections)
+
+      expect(prerequisiteNodeIds.size).toBe(0)
+      expect(unlockNodeIds.size).toBe(0)
+    })
+
+    it('computeHoverContext identifies prerequisites and unlockable nodes for a hovered node', async () => {
+      const { computeHoverContext } = await import('../../module/applications/specialization-tree-app.mjs')
+
+      const connections = [
+        { fromNodeId: 'r1c1', toNodeId: 'r2c1' },
+        { fromNodeId: 'r2c1', toNodeId: 'r3c1' },
+        { fromNodeId: 'r2c1', toNodeId: 'r3c2' },
+      ]
+      const { prerequisiteNodeIds, unlockNodeIds } = computeHoverContext('r2c1', connections)
+
+      expect(prerequisiteNodeIds.has('r1c1'), 'r1c1 is a prerequisite of r2c1').toBe(true)
+      expect(unlockNodeIds.has('r3c1'), 'r3c1 is unlocked by r2c1').toBe(true)
+      expect(unlockNodeIds.has('r3c2'), 'r3c2 is unlocked by r2c1').toBe(true)
+      expect(unlockNodeIds.size).toBe(2)
+      expect(prerequisiteNodeIds.size).toBe(1)
+    })
+
+    it('computeHoverContext returns empty sets for a node with no connections', async () => {
+      const { computeHoverContext } = await import('../../module/applications/specialization-tree-app.mjs')
+
+      const connections = [{ fromNodeId: 'r1c1', toNodeId: 'r2c1' }]
+      const { prerequisiteNodeIds, unlockNodeIds } = computeHoverContext('r3c1', connections)
+
+      expect(prerequisiteNodeIds.size).toBe(0)
+      expect(unlockNodeIds.size).toBe(0)
+    })
+
+    it('shows the detail panel on node pointerover', async () => {
+      const actor = createActor({
+        system: {
+          details: {
+            specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' }],
+          },
+          progression: {
+            talentPurchases: [],
+            experience: { available: 0 },
+          },
+        },
+      })
+      globalThis.fromUuidSync = vi.fn((uuid) => {
+        if (uuid === 'Item.tree-bodyguard') {
+          return {
+            type: 'specialization-tree',
+            name: 'Bodyguard Tree',
+            system: {
+              nodes: [{ nodeId: 'r1c1', talentId: 'Item.talent-tough', talentUuid: 'Item.talent-tough', row: 1, column: 1, cost: 10 }],
+              connections: [{ from: 'r1c1', to: 'r1c1' }],
+            },
+          }
+        }
+        if (uuid === 'Item.talent-tough') return { name: 'Tough', system: { isRanked: false } }
+        return null
+      })
+
+      const headerEl = { textContent: '' }
+      const bodyEl = { innerHTML: '' }
+      const tooltip = {
+        hidden: true,
+        querySelector: vi.fn((selector) => {
+          if (selector === '[data-tooltip-header]') return headerEl
+          if (selector === '[data-tooltip-body]') return bodyEl
+          return null
+        }),
+      }
+
+      const app = new SpecializationTreeApp()
+      app.actor = actor
+      app.document = actor
+      const host = createMockHost({ width: 640, height: 480 })
+      app.element = {
+        querySelector: vi.fn((selector) => {
+          if (selector === '[data-specialization-tree-viewport]') return host
+          if (selector === '[data-node-tooltip]') return tooltip
+          return null
+        }),
+      }
+
+      const context = buildSpecializationTreeContext(actor)
+      await app._onRender(context, { resetView: false })
+
+      const treeContainer = app.pixiApp.stage.children.find((c) => c.position && c.scale)
+      const hitArea = findNodeHitArea(treeContainer)
+      expect(hitArea, 'hit area must exist').toBeDefined()
+
+      // Simulate pointerover
+      hitArea._listeners.pointerover?.()
+
+      expect(tooltip.hidden, 'tooltip must be shown on hover').toBe(false)
+      expect(headerEl.textContent, 'header must show talent name').toBe('Tough')
+    })
+
+    it('hides the detail panel on node pointerout', async () => {
+      const actor = createActor({
+        system: {
+          details: {
+            specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' }],
+          },
+          progression: {
+            talentPurchases: [],
+            experience: { available: 0 },
+          },
+        },
+      })
+      globalThis.fromUuidSync = vi.fn((uuid) => {
+        if (uuid === 'Item.tree-bodyguard') {
+          return {
+            type: 'specialization-tree',
+            name: 'Bodyguard Tree',
+            system: {
+              nodes: [{ nodeId: 'r1c1', talentId: 'Item.talent-tough', talentUuid: 'Item.talent-tough', row: 1, column: 1, cost: 10 }],
+              connections: [{ from: 'r1c1', to: 'r1c1' }],
+            },
+          }
+        }
+        if (uuid === 'Item.talent-tough') return { name: 'Tough', system: { isRanked: false } }
+        return null
+      })
+
+      const tooltip = {
+        hidden: false,
+        querySelector: vi.fn(() => null),
+      }
+
+      const app = new SpecializationTreeApp()
+      app.actor = actor
+      app.document = actor
+      const host = createMockHost({ width: 640, height: 480 })
+      app.element = {
+        querySelector: vi.fn((selector) => {
+          if (selector === '[data-specialization-tree-viewport]') return host
+          if (selector === '[data-node-tooltip]') return tooltip
+          return null
+        }),
+      }
+
+      const context = buildSpecializationTreeContext(actor)
+      await app._onRender(context, { resetView: false })
+
+      const treeContainer = app.pixiApp.stage.children.find((c) => c.position && c.scale)
+      const hitArea = findNodeHitArea(treeContainer)
+
+      // Enter then leave hover
+      hitArea._listeners.pointerover?.()
+      hitArea._listeners.pointerout?.()
+
+      expect(tooltip.hidden, 'tooltip must be hidden after pointerout').toBe(true)
+    })
+
+    it('dims non-highlighted nodes during hover and restores on pointerout', async () => {
+      const actor = createActor({
+        system: {
+          details: {
+            specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' }],
+          },
+          progression: {
+            talentPurchases: [],
+            experience: { available: 100 },
+          },
+        },
+      })
+      globalThis.fromUuidSync = vi.fn((uuid) => {
+        if (uuid === 'Item.tree-bodyguard') {
+          return {
+            type: 'specialization-tree',
+            name: 'Bodyguard Tree',
+            system: {
+              nodes: [
+                { nodeId: 'r1c1', talentId: 'Item.talent-tough', talentUuid: 'Item.talent-tough', row: 1, column: 1, cost: 10 },
+                { nodeId: 'r2c1', talentId: 'Item.talent-grit', talentUuid: 'Item.talent-grit', row: 2, column: 1, cost: 15 },
+                { nodeId: 'r3c1', talentId: 'Item.talent-durable', talentUuid: 'Item.talent-durable', row: 3, column: 1, cost: 20 },
+              ],
+              connections: [
+                { from: 'r1c1', to: 'r2c1' },
+                { from: 'r2c1', to: 'r3c1' },
+              ],
+            },
+          }
+        }
+        if (uuid === 'Item.talent-tough') return { name: 'Tough', system: { isRanked: false } }
+        if (uuid === 'Item.talent-grit') return { name: 'Grit', system: { isRanked: false } }
+        if (uuid === 'Item.talent-durable') return { name: 'Durable', system: { isRanked: false } }
+        return null
+      })
+
+      const app = new SpecializationTreeApp()
+      app.actor = actor
+      app.document = actor
+      const host = createMockHost({ width: 640, height: 480 })
+      app.element = {
+        querySelector: vi.fn((selector) => {
+          if (selector === '[data-specialization-tree-viewport]') return host
+          if (selector === '[data-node-tooltip]') return { hidden: true, querySelector: vi.fn(() => null) }
+          return null
+        }),
+      }
+
+      const context = buildSpecializationTreeContext(actor)
+      await app._onRender(context, { resetView: false })
+
+      const treeContainer = app.pixiApp.stage.children.find((c) => c.position && c.scale)
+
+      // Hover over middle node (r2c1) — r1c1 is prerequisite, r3c1 is unlocked
+      // Find all three per-node containers (they are direct children of treeContainer that are not the connections Graphics)
+      const nodeContainers = treeContainer.children.filter((c) => c.constructor.name === 'MockContainer')
+      expect(nodeContainers, 'there must be 3 per-node containers').toHaveLength(3)
+
+      // Find the hit area inside the second node container (r2c1)
+      const r2c1HitArea = nodeContainers[1]?.children?.find((c) => c._listeners?.pointerover)
+      expect(r2c1HitArea, 'r2c1 must have a pointerover-enabled hit area').toBeDefined()
+
+      r2c1HitArea._listeners.pointerover?.()
+
+      // r2c1 (hovered), r1c1 (prerequisite), r3c1 (unlocked) → alpha 1
+      expect(nodeContainers[0].alpha, 'r1c1 (prerequisite) must stay at full opacity').toBe(1)
+      expect(nodeContainers[1].alpha, 'r2c1 (hovered) must stay at full opacity').toBe(1)
+      expect(nodeContainers[2].alpha, 'r3c1 (unlocked) must stay at full opacity').toBe(1)
+
+      // Hover over first node (r1c1) — no prerequisites, r2c1 is unlocked
+      const r1c1HitArea = nodeContainers[0]?.children?.find((c) => c._listeners?.pointerover)
+      r1c1HitArea._listeners.pointerover?.()
+
+      // r1c1 (hovered), r2c1 (unlocked by r1c1) → alpha 1; r3c1 → dimmed
+      expect(nodeContainers[0].alpha, 'r1c1 (hovered) must stay at full opacity').toBe(1)
+      expect(nodeContainers[1].alpha, 'r2c1 (directly unlocked) must stay at full opacity').toBe(1)
+      expect(nodeContainers[2].alpha, 'r3c1 (not directly connected to r1c1) must be dimmed').toBeLessThan(1)
+
+      // Exit hover — all nodes must restore to alpha 1
+      r1c1HitArea._listeners.pointerout?.()
+
+      expect(nodeContainers[0].alpha, 'r1c1 must restore to full opacity').toBe(1)
+      expect(nodeContainers[1].alpha, 'r2c1 must restore to full opacity').toBe(1)
+      expect(nodeContainers[2].alpha, 'r3c1 must restore to full opacity').toBe(1)
+    })
+
+    it('does not start hover if the same node is hovered again', async () => {
+      const actor = createActor({
+        system: {
+          details: {
+            specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' }],
+          },
+          progression: {
+            talentPurchases: [],
+            experience: { available: 100 },
+          },
+        },
+      })
+      globalThis.fromUuidSync = vi.fn((uuid) => {
+        if (uuid === 'Item.tree-bodyguard') {
+          return {
+            type: 'specialization-tree',
+            name: 'Bodyguard Tree',
+            system: {
+              nodes: [{ nodeId: 'r1c1', talentId: 'Item.talent-tough', talentUuid: 'Item.talent-tough', row: 1, column: 1, cost: 10 }],
+              connections: [{ from: 'r1c1', to: 'r1c1' }],
+            },
+          }
+        }
+        if (uuid === 'Item.talent-tough') return { name: 'Tough', system: { isRanked: false } }
+        return null
+      })
+
+      let tooltipShowCount = 0
+      const tooltip = {
+        hidden: true,
+        querySelector: vi.fn((selector) => {
+          if (selector === '[data-tooltip-header]') return { textContent: '' }
+          if (selector === '[data-tooltip-body]') return { innerHTML: '' }
+          return null
+        }),
+        get hidden() {
+          return this._hidden
+        },
+        set hidden(v) {
+          if (!v) tooltipShowCount++
+          this._hidden = v
+        },
+        _hidden: true,
+      }
+
+      const app = new SpecializationTreeApp()
+      app.actor = actor
+      app.document = actor
+      const host = createMockHost({ width: 640, height: 480 })
+      app.element = {
+        querySelector: vi.fn((selector) => {
+          if (selector === '[data-specialization-tree-viewport]') return host
+          if (selector === '[data-node-tooltip]') return tooltip
+          return null
+        }),
+      }
+
+      const context = buildSpecializationTreeContext(actor)
+      await app._onRender(context, { resetView: false })
+
+      const treeContainer = app.pixiApp.stage.children.find((c) => c.position && c.scale)
+      const hitArea = findNodeHitArea(treeContainer)
+
+      // Two consecutive pointerover on the same node must not show the tooltip twice
+      hitArea._listeners.pointerover?.()
+      hitArea._listeners.pointerover?.()
+
+      expect(tooltipShowCount, 'tooltip must only be shown once for repeated hover of the same node').toBe(1)
+    })
+
+    it('clears hover state when the tree is redrawn on refresh', async () => {
+      const actor = createActor({
+        system: {
+          details: {
+            specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' }],
+          },
+          progression: {
+            talentPurchases: [],
+            experience: { available: 100 },
+          },
+        },
+      })
+      globalThis.fromUuidSync = vi.fn((uuid) => {
+        if (uuid === 'Item.tree-bodyguard') {
+          return {
+            type: 'specialization-tree',
+            name: 'Bodyguard Tree',
+            system: {
+              nodes: [{ nodeId: 'r1c1', talentId: 'Item.talent-tough', talentUuid: 'Item.talent-tough', row: 1, column: 1, cost: 10 }],
+              connections: [{ from: 'r1c1', to: 'r1c1' }],
+            },
+          }
+        }
+        if (uuid === 'Item.talent-tough') return { name: 'Tough', system: { isRanked: false } }
+        return null
+      })
+
+      const tooltip = {
+        hidden: true,
+        querySelector: vi.fn((selector) => {
+          if (selector === '[data-tooltip-header]') return { textContent: '' }
+          if (selector === '[data-tooltip-body]') return { innerHTML: '' }
+          return null
+        }),
+      }
+
+      const app = new SpecializationTreeApp()
+      app.actor = actor
+      app.document = actor
+      const host = createMockHost({ width: 640, height: 480 })
+      app.element = {
+        querySelector: vi.fn((selector) => {
+          if (selector === '[data-specialization-tree-viewport]') return host
+          if (selector === '[data-node-tooltip]') return tooltip
+          return null
+        }),
+      }
+
+      const context = buildSpecializationTreeContext(actor)
+      await app._onRender(context, { resetView: false })
+
+      const treeContainer = app.pixiApp.stage.children.find((c) => c.position && c.scale)
+      const hitArea = findNodeHitArea(treeContainer)
+      hitArea._listeners.pointerover?.()
+      expect(tooltip.hidden, 'tooltip must be shown before redraw').toBe(false)
+
+      // Re-render (simulates refresh after actor update) — tooltip must be hidden
+      await app._onRender(context, { resetView: false })
+      expect(tooltip.hidden, 'tooltip must be hidden after tree redraw').toBe(true)
     })
   })
 })

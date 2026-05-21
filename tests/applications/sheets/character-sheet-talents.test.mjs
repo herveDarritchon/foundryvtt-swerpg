@@ -661,9 +661,7 @@ describe('CharacterSheet talent consolidation (US12)', () => {
     const context1 = await getContext(actor)
     expect(context1.talents).toHaveLength(0)
 
-    actor.system.progression.talentPurchases = [
-      { talentId: 'talent-new', specializationId: 'spec-bodyguard', treeId: 'tree-1', nodeId: 'r1c1' },
-    ]
+    actor.system.progression.talentPurchases = [{ talentId: 'talent-new', specializationId: 'spec-bodyguard', treeId: 'tree-1', nodeId: 'r1c1' }]
 
     const context2 = await getContext(actor)
     expect(context2.talents).toHaveLength(1)

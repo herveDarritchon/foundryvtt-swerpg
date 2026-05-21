@@ -94,9 +94,7 @@ describe('buildConnectionAnchors', () => {
   })
 
   it('uses (0, 0) anchor when a referenced node is missing', () => {
-    const connections = [
-      { fromNodeId: 'n1', toNodeId: 'missing', type: 'straight' },
-    ]
+    const connections = [{ fromNodeId: 'n1', toNodeId: 'missing', type: 'straight' }]
 
     const anchors = buildConnectionAnchors(positionedNodes, connections)
 
