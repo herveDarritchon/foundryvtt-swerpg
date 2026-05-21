@@ -30,21 +30,25 @@ describe('Talent Mappings', () => {
   describe('resolveTalentActivation', () => {
     it('devrait résoudre les activations connues', () => {
       expect(resolveTalentActivation('Passive')).toBe('passive')
-      expect(resolveTalentActivation('Action')).toBe('action')
-      expect(resolveTalentActivation('Incidental')).toBe('incidental')
-      expect(resolveTalentActivation('Maneuver')).toBe('maneuver')
-      expect(resolveTalentActivation('Reaction')).toBe('reaction')
+      expect(resolveTalentActivation('taPassive')).toBe('passive')
+      expect(resolveTalentActivation('Action')).toBe('active')
+      expect(resolveTalentActivation('taAction')).toBe('active')
+      expect(resolveTalentActivation('Incidental')).toBe('active')
+      expect(resolveTalentActivation('taIncidentalOOT')).toBe('active')
+      expect(resolveTalentActivation('Maneuver')).toBe('active')
+      expect(resolveTalentActivation('Reaction')).toBe('active')
     })
 
     it('devrait être insensible à la casse', () => {
       expect(resolveTalentActivation('passive')).toBe('passive')
       expect(resolveTalentActivation('PASSIVE')).toBe('passive')
       expect(resolveTalentActivation('PaSSiVe')).toBe('passive')
+      expect(resolveTalentActivation('TAPASSIVE')).toBe('passive')
     })
 
-    it('devrait retourner unspecified pour les activations inconnues ou vides', () => {
-      expect(resolveTalentActivation('Unknown')).toBe('unspecified')
-      expect(resolveTalentActivation('Custom')).toBe('unspecified')
+    it('devrait retourner active pour les activations non vides non passives et unspecified pour les activations vides', () => {
+      expect(resolveTalentActivation('Unknown')).toBe('active')
+      expect(resolveTalentActivation('Custom')).toBe('active')
       expect(resolveTalentActivation('')).toBe('unspecified')
       expect(resolveTalentActivation(null)).toBe('unspecified')
       expect(resolveTalentActivation(undefined)).toBe('unspecified')
@@ -144,16 +148,16 @@ describe('Talent Mappings', () => {
     })
   })
 
-  describe('Talent avec Ranked=true et Activation=Passive', () => {
+  describe('Talent avec Ranked=true et ActivationValue=taPassive', () => {
     it('devrait créer un talent avec isRanked=true et activation=passive', () => {
       const talentData = {
         Ranked: 'true',
-        Activation: 'Passive',
+        ActivationValue: 'taPassive',
         Tier: '2',
       }
 
       const isRanked = extractIsRanked(talentData)
-      const activation = resolveTalentActivation(talentData.Activation)
+      const activation = resolveTalentActivation(talentData.ActivationValue)
       const rank = transformTalentRank(talentData)
 
       expect(isRanked).toBe(true)

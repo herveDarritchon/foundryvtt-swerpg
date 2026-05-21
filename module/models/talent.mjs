@@ -23,7 +23,7 @@ const DEPR_TALENT_POINTS = () => SYSTEM.DEPRECATION.crucible.talentPoints
  * @property {string} description
  * @property {boolean} isRanked
  * @property {Rank} rank
- * @property {boolean} active
+ * @property {string} activation
  * @property {SwerpgSpecialization[]} [trees]  @deprecated V1 Edge legacy — do not use for V1. Use specialization-tree items to access tree membership.
  * @property {SwerpgAction[]} actions   The actions which have been unlocked by this talent
  * @property {number} iconicSpells

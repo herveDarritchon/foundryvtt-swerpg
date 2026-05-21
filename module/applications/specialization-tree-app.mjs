@@ -6,7 +6,13 @@ import { resolveTalentDetail } from '../lib/talent-node/talent-reference-resolve
 import { selectDefaultTreeKey } from '../lib/specialization-tree/default-tree-selector.mjs'
 import { buildRenderViewModel } from './specialization-tree/render-view-model.mjs'
 import { actionableNodeViewModel } from './specialization-tree/actionable-node-view-model.mjs'
-import { enrichNode, getReasonLabelKey, NODE_STATE, NODE_STATE_VARIANTS } from './specialization-tree/node-ui-state.mjs'
+import {
+  enrichNode,
+  getReasonLabelKey,
+  NODE_STATE,
+  NODE_STATE_SVG_ICONS,
+  NODE_STATE_VARIANTS,
+} from './specialization-tree/node-ui-state.mjs'
 import { NODE_WIDTH, NODE_HEIGHT, computeNodePosition, buildConnectionAnchors } from './specialization-tree/layout.mjs'
 import { logger } from '../utils/logger.mjs'
 
@@ -34,6 +40,40 @@ const ACTION_KEYS = Object.freeze({
 })
 
 const MIN_VIEWPORT_SIZE = 320
+const STATE_PICTOGRAM_TEXTURE_CACHE = new Map()
+
+/**
+ * Load the SVG pictogram texture for a node state.
+ * @param {string|null|undefined} state
+ * @returns {Promise<PIXI.Texture|null>}
+ */
+export async function loadStatePictogram(state) {
+  const iconPath = NODE_STATE_SVG_ICONS[state] ?? NODE_STATE_SVG_ICONS[NODE_STATE.INVALID]
+  if (!iconPath) return null
+
+  if (STATE_PICTOGRAM_TEXTURE_CACHE.has(iconPath)) {
+    return STATE_PICTOGRAM_TEXTURE_CACHE.get(iconPath)
+  }
+
+  let texturePromise
+
+  if (PIXI.Assets?.load) {
+    texturePromise = PIXI.Assets.load(iconPath)
+  } else if (PIXI.Texture?.from) {
+    texturePromise = Promise.resolve(PIXI.Texture.from(iconPath))
+  } else {
+    texturePromise = Promise.resolve(null)
+  }
+
+  STATE_PICTOGRAM_TEXTURE_CACHE.set(iconPath, texturePromise)
+
+  try {
+    return await texturePromise
+  } catch (error) {
+    STATE_PICTOGRAM_TEXTURE_CACHE.delete(iconPath)
+    throw error
+  }
+}
 
 /**
  * Compute the viewport size from a host element.
@@ -203,7 +243,7 @@ export function buildSpecializationTreeContext(actor, selectedKey = null) {
 
     const viewModel = buildRenderViewModel(currentTreeData, (node) => {
       const detail = resolveTalentDetail(node)
-      return detail ? { name: detail.name, uuid: node.talentUuid ?? node.talentId ?? '', isRanked: detail.isRanked } : null
+      return detail ? { name: detail.name, uuid: node.talentUuid ?? node.talentId ?? '', isRanked: detail.isRanked, isActive: detail.isActive } : null
     })
 
     renderNodes = viewModel.nodes.map((viewNode) => {
@@ -213,6 +253,7 @@ export function buildSpecializationTreeContext(actor, selectedKey = null) {
         talentId: viewNode.talentId,
         talentName: viewNode.talent.name,
         isRanked: viewNode.isRanked,
+        isActive: viewNode.isActive,
         xpCost: viewNode.cost,
         row: viewNode.row,
         column: viewNode.column,
@@ -404,10 +445,10 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
   /** @override */
   async _onRender(context, options) {
     await super._onRender?.(context, options)
-    this.#syncViewport(context, options)
+    await this.#syncViewport(context, options)
   }
 
-  #syncViewport(context, options = {}) {
+  async #syncViewport(context, options = {}) {
     const viewportHost = this.#getViewportHost()
     if (!viewportHost) {
       this.#teardownViewport()
@@ -431,7 +472,7 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
       this.#centerTree(context)
     }
 
-    this.#drawTree(context)
+    await this.#drawTree(context)
 
     requestAnimationFrame(() => {
       this.#resizeViewport()
@@ -686,7 +727,7 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
     this.#lastPointerPosition = null
   }
 
-  #drawTree(context) {
+  async #drawTree(context) {
     if (!this.pixiApp) return
 
     if (this.#treeContainer) {
@@ -720,7 +761,7 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
     if (renderNodes.length > 0) {
       const bg = new PIXI.Graphics()
       for (const node of renderNodes) {
-        const v = node.variant ?? NODE_STATE_VARIANTS[NODE_STATE.AVAILABLE]
+        const v = node.variant ?? NODE_STATE_VARIANTS[NODE_STATE.AVAILABLE].passive
         bg.beginFill(v.fillColor, v.alpha)
         bg.lineStyle(v.borderWidth, v.borderColor, v.alpha)
         bg.drawRoundedRect(node.x, node.y, NODE_WIDTH, NODE_HEIGHT, 4)
@@ -729,26 +770,79 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
       this.#treeContainer.addChild(bg)
 
       for (const node of renderNodes) {
-        const v = node.variant ?? NODE_STATE_VARIANTS[NODE_STATE.AVAILABLE]
+        const v = node.variant ?? NODE_STATE_VARIANTS[NODE_STATE.AVAILABLE].passive
+
+        // Type indicator (active/passive icon) — top-left corner
+        const typeIcon = node.nodeTypeIcon ?? ''
+        const nameOffsetX = typeIcon ? 14 : 4
+        if (typeIcon) {
+          const typeText = new PIXI.Text(typeIcon, {
+            fontFamily: 'Arial',
+            fontSize: 9,
+            fill: v.textColor,
+          })
+          typeText.x = node.x + 4
+          typeText.y = node.y + 5
+          this.#treeContainer.addChild(typeText)
+        }
+
         const nameText = new PIXI.Text(node.talentName, {
           fontFamily: 'Arial',
           fontSize: 10,
           fill: v.textColor,
           wordWrap: true,
-          wordWrapWidth: NODE_WIDTH - 8,
+          wordWrapWidth: NODE_WIDTH - nameOffsetX - 4,
         })
-        nameText.x = node.x + 4
+        nameText.alpha = v.textAlpha ?? 1
+        nameText.x = node.x + nameOffsetX
         nameText.y = node.y + 4
         this.#treeContainer.addChild(nameText)
 
-        const costText = new PIXI.Text(`${node.xpCost} XP`, {
+        const costLabel = `${node.xpCost} XP`
+        let costTextX = node.x + 4
+        const costText = new PIXI.Text(costLabel, {
           fontFamily: 'Arial',
           fontSize: 9,
           fill: v.costColor,
         })
-        costText.x = node.x + 4
-        costText.y = node.y + NODE_HEIGHT - 14
+        costText.alpha = v.costAlpha ?? 1
+
+        if (v.costDisplay === 'badge') {
+          const badgePaddingX = 5
+          const badgePaddingY = 2
+          const badgeX = node.x + 4
+          const badgeY = node.y + NODE_HEIGHT - 17
+          const badgeWidth = costText.width + badgePaddingX * 2
+          const badgeHeight = costText.height + badgePaddingY * 2
+          const badge = new PIXI.Graphics()
+          badge.beginFill(v.costBadgeFillColor ?? 0x333333, 1)
+          badge.lineStyle(1, v.costBadgeBorderColor ?? v.borderColor, 1)
+          badge.drawRoundedRect(badgeX, badgeY, badgeWidth, badgeHeight, 6)
+          badge.endFill()
+          this.#treeContainer.addChild(badge)
+
+          costTextX = badgeX + badgePaddingX
+          costText.y = badgeY + badgePaddingY
+        }
+
+        costText.x = costTextX
+        if (v.costDisplay !== 'badge') {
+          costText.y = node.y + NODE_HEIGHT - 14
+        }
         this.#treeContainer.addChild(costText)
+
+        const hasRenderedSvgPictogram = await this.#drawStatePictogramSprite(node)
+
+        if (!hasRenderedSvgPictogram && v.pictogram) {
+          const pictogramText = new PIXI.Text(v.pictogram, {
+            fontFamily: 'Arial',
+            fontSize: 10,
+            fill: v.pictogramColor,
+          })
+          pictogramText.x = node.x + NODE_WIDTH - pictogramText.width - 6
+          pictogramText.y = node.y + 4
+          this.#treeContainer.addChild(pictogramText)
+        }
 
         // Ranked indicator — shown only when the node is explicitly ranked
         if (node.isRanked) {
@@ -781,6 +875,30 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
         })
         this.#treeContainer.addChild(hitArea)
       }
+    }
+  }
+
+  async #drawStatePictogramSprite(node) {
+    if (!this.#treeContainer || !PIXI.Sprite) return false
+
+    try {
+      const texture = await loadStatePictogram(node?.nodeState)
+      if (!texture) return false
+
+      const sprite = new PIXI.Sprite(texture)
+      sprite.x = node.x + NODE_WIDTH - 20
+      sprite.y = node.y + 4
+      sprite.width = 16
+      sprite.height = 16
+      sprite.tint = 0xffffff
+      this.#treeContainer.addChild(sprite)
+      return true
+    } catch (error) {
+      logger.warn('[SpecializationTreeApp] Failed to load node state pictogram, falling back to Unicode glyph', {
+        state: node?.nodeState,
+        error,
+      })
+      return false
     }
   }
 

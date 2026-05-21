@@ -1092,6 +1092,159 @@ describe('specialization-tree application', () => {
     expect(nonRankedTexts, 'Grit text must be present').toHaveLength(1)
   })
 
+  it('renders state pictogram on every node card', async () => {
+    const actor = createActor({
+      system: {
+        details: {
+          specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' }],
+        },
+        progression: {
+          talentPurchases: [],
+          experience: { available: 100 },
+        },
+      },
+    })
+    globalThis.fromUuidSync = vi.fn((uuid) => {
+      if (uuid === 'Item.tree-bodyguard') {
+        return {
+          type: 'specialization-tree',
+          name: 'Bodyguard Tree',
+          system: {
+            nodes: [
+              { nodeId: 'r1c1', talentId: 'Item.talent-tough', talentUuid: 'Item.talent-tough', row: 1, column: 1, cost: 10 },
+            ],
+            connections: [{ from: 'r1c1', to: 'r2c1' }],
+          },
+        }
+      }
+      if (uuid === 'Item.talent-tough') return { name: 'Tough', system: { isRanked: false } }
+      return null
+    })
+
+    const app = new SpecializationTreeApp()
+    app.actor = actor
+    app.document = actor
+    const host = createMockHost({ width: 640, height: 480 })
+    app.element = { querySelector: vi.fn(() => host) }
+
+    const context = buildSpecializationTreeContext(actor)
+    await app._onRender(context, {})
+
+    const treeContainer = app.pixiApp.stage.children.find((c) => c.position && c.scale)
+    expect(treeContainer, 'tree container must exist').toBeDefined()
+
+    const node = context.renderNodes[0]
+    const pictogram = node.variant.pictogram
+    expect(pictogram, 'node variant must have a pictogram').toBeTruthy()
+
+    const pictogramTexts = treeContainer.children.filter(
+      (c) => c.constructor.name === 'MockText' && c.text === pictogram,
+    )
+    expect(pictogramTexts.length, 'state pictogram must appear on the node card').toBeGreaterThanOrEqual(1)
+  })
+
+  it('renders type indicator icon for passive talents by default', async () => {
+    const actor = createActor({
+      system: {
+        details: {
+          specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' }],
+        },
+        progression: {
+          talentPurchases: [],
+          experience: { available: 100 },
+        },
+      },
+    })
+    globalThis.fromUuidSync = vi.fn((uuid) => {
+      if (uuid === 'Item.tree-bodyguard') {
+        return {
+          type: 'specialization-tree',
+          name: 'Bodyguard Tree',
+          system: {
+            nodes: [
+              { nodeId: 'r1c1', talentId: 'Item.talent-tough', talentUuid: 'Item.talent-tough', row: 1, column: 1, cost: 10 },
+            ],
+            connections: [{ from: 'r1c1', to: 'r2c1' }],
+          },
+        }
+      }
+      if (uuid === 'Item.talent-tough') return { name: 'Tough', system: { isRanked: false } }
+      return null
+    })
+
+    const app = new SpecializationTreeApp()
+    app.actor = actor
+    app.document = actor
+    const host = createMockHost({ width: 640, height: 480 })
+    app.element = { querySelector: vi.fn(() => host) }
+
+    const context = buildSpecializationTreeContext(actor)
+    await app._onRender(context, {})
+
+    const treeContainer = app.pixiApp.stage.children.find((c) => c.position && c.scale)
+    expect(treeContainer, 'tree container must exist').toBeDefined()
+
+    const node = context.renderNodes[0]
+    const expectedIcon = node.nodeTypeIcon
+    expect(expectedIcon, 'node must have a type icon').toBeTruthy()
+
+    const typeTexts = treeContainer.children.filter(
+      (c) => c.constructor.name === 'MockText' && c.text === expectedIcon,
+    )
+    expect(typeTexts.length, 'type indicator icon must be rendered on the node card').toBeGreaterThanOrEqual(1)
+  })
+
+  it('renders type indicator icon for active talents', async () => {
+    const actor = createActor({
+      system: {
+        details: {
+          specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' }],
+        },
+        progression: {
+          talentPurchases: [],
+          experience: { available: 100 },
+        },
+      },
+    })
+    globalThis.fromUuidSync = vi.fn((uuid) => {
+      if (uuid === 'Item.tree-bodyguard') {
+        return {
+          type: 'specialization-tree',
+          name: 'Bodyguard Tree',
+          system: {
+            nodes: [
+              { nodeId: 'r1c1', talentId: 'Item.talent-tough', talentUuid: 'Item.talent-tough', row: 1, column: 1, cost: 10 },
+            ],
+            connections: [{ from: 'r1c1', to: 'r2c1' }],
+          },
+        }
+      }
+      if (uuid === 'Item.talent-tough') return { name: 'Tough', system: { isRanked: false, activation: 'active' } }
+      return null
+    })
+
+    const app = new SpecializationTreeApp()
+    app.actor = actor
+    app.document = actor
+    const host = createMockHost({ width: 640, height: 480 })
+    app.element = { querySelector: vi.fn(() => host) }
+
+    const context = buildSpecializationTreeContext(actor)
+    await app._onRender(context, {})
+
+    const treeContainer = app.pixiApp.stage.children.find((c) => c.position && c.scale)
+    expect(treeContainer, 'tree container must exist').toBeDefined()
+
+    const node = context.renderNodes[0]
+    expect(node.isActive, 'tough must be active').toBe(true)
+    expect(node.nodeType, 'nodeType must be active').toBe('active')
+
+    const typeTexts = treeContainer.children.filter(
+      (c) => c.constructor.name === 'MockText' && c.text === '\u26A1',
+    )
+    expect(typeTexts.length, 'active type indicator (⚡) must be rendered').toBeGreaterThanOrEqual(1)
+  })
+
   it('clears and rebuilds the PIXI tree container on each render', async () => {
     const actor = createActor({
       system: {
@@ -1507,17 +1660,18 @@ describe('specialization-tree application', () => {
   })
 
   describe('resolveTalentDetail', () => {
-    it('returns talent name and isRanked when item is found', () => {
+    it('returns talent name, isRanked and isActive when item is found', () => {
       globalThis.fromUuidSync = vi.fn(() => ({
         name: 'Dodge',
-        system: { isRanked: true },
+        system: { isRanked: true, activation: 'active' },
       }))
       const detail = resolveTalentDetail('Item.talent-dodge')
       expect(detail.name).toBe('Dodge')
       expect(detail.isRanked).toBe(true)
+      expect(detail.isActive).toBe(true)
     })
 
-    it('returns talent name and isRanked=false when item is found but not ranked', () => {
+    it('returns isActive=false when item has no activation', () => {
       globalThis.fromUuidSync = vi.fn(() => ({
         name: 'Tough',
         system: { isRanked: false },
@@ -1525,52 +1679,58 @@ describe('specialization-tree application', () => {
       const detail = resolveTalentDetail('Item.talent-tough')
       expect(detail.name).toBe('Tough')
       expect(detail.isRanked).toBe(false)
+      expect(detail.isActive).toBe(false)
     })
 
-    it('returns unknown fallback when item is not found', () => {
+    it('returns unknown fallback and isActive=false when item is not found', () => {
       globalThis.fromUuidSync = vi.fn(() => null)
       const detail = resolveTalentDetail('Item.talent-nonexistent')
       expect(detail.name).toBe('Unknown talent')
       expect(detail.isRanked).toBe(false)
+      expect(detail.isActive).toBe(false)
     })
 
-    it('returns unknown fallback when fromUuidSync throws', () => {
+    it('returns unknown fallback and isActive=false when fromUuidSync throws', () => {
       globalThis.fromUuidSync = vi.fn(() => {
         throw new Error('not found')
       })
       const detail = resolveTalentDetail('Item.talent-error')
       expect(detail.name).toBe('Unknown talent')
       expect(detail.isRanked).toBe(false)
+      expect(detail.isActive).toBe(false)
     })
   })
 
   describe('resolveTalentDetail with node object', () => {
     it('prioritizes talentUuid over talentId', () => {
       globalThis.fromUuidSync = vi.fn((uuid) => {
-        if (uuid === 'Item.talent-dodge') return { name: 'Dodge', system: { isRanked: true } }
+        if (uuid === 'Item.talent-dodge') return { name: 'Dodge', system: { isRanked: true, activation: 'active' } }
         return null
       })
 
       const detail = resolveTalentDetail({ talentUuid: 'Item.talent-dodge', talentId: 'grit' })
       expect(detail.name).toBe('Dodge')
       expect(detail.isRanked).toBe(true)
+      expect(detail.isActive).toBe(true)
     })
 
     it('falls back to legacy business key lookup when talentUuid is absent', () => {
       globalThis.fromUuidSync = vi.fn(() => null)
-      globalThis.game.items = [{ type: 'talent', name: 'Grit', uuid: 'Item.grit001', system: { id: 'grit', isRanked: true } }]
+      globalThis.game.items = [{ type: 'talent', name: 'Grit', uuid: 'Item.grit001', system: { id: 'grit', isRanked: true, activation: 'active' } }]
 
       const detail = resolveTalentDetail({ talentUuid: null, talentId: 'grit' })
       expect(detail.name).toBe('Grit')
       expect(detail.isRanked).toBe(true)
+      expect(detail.isActive).toBe(true)
     })
 
-    it('returns unknown when both talentUuid and talentId fail', () => {
+    it('returns unknown and isActive=false when both talentUuid and talentId fail', () => {
       globalThis.fromUuidSync = vi.fn(() => null)
 
       const detail = resolveTalentDetail({ talentUuid: null, talentId: 'nonexistent' })
       expect(detail.name).toBe('Unknown talent')
       expect(detail.isRanked).toBe(false)
+      expect(detail.isActive).toBe(false)
     })
 
     it('never calls fromUuidSync with a business-key talentId', () => {
@@ -1629,6 +1789,47 @@ describe('specialization-tree application', () => {
     expect(protect).toBeDefined()
     expect(protect.talentId).toBe('Item.talent-protect')
     expect(protect.isRanked).toBe(false)
+  })
+
+  it('includes isActive, nodeType and nodeTypeIcon in every render node', () => {
+    const actor = createActor({
+      system: {
+        details: {
+          specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' }],
+        },
+        progression: {
+          talentPurchases: [],
+          experience: { available: 100 },
+        },
+      },
+    })
+
+    globalThis.fromUuidSync = vi.fn((uuid) => {
+      if (uuid === 'Item.tree-bodyguard') {
+        return {
+          type: 'specialization-tree',
+          name: 'Bodyguard Tree',
+          system: {
+            nodes: [
+              { nodeId: 'r1c1', talentId: 'Item.talent-tough', talentUuid: 'Item.talent-tough', row: 1, column: 1, cost: 10 },
+            ],
+            connections: [{ from: 'r1c1', to: 'r2c1' }],
+          },
+        }
+      }
+      if (uuid === 'Item.talent-tough') return { name: 'Tough', system: { isRanked: true } }
+      return null
+    })
+
+    const context = buildSpecializationTreeContext(actor)
+
+    expect(context.renderNodes).toHaveLength(1)
+    const node = context.renderNodes[0]
+    expect(node).toBeDefined()
+    expect(typeof node.isActive).toBe('boolean')
+    expect(typeof node.nodeType).toBe('string')
+    expect(typeof node.nodeTypeIcon).toBe('string')
+    expect(node.nodeTypeIcon).toBeTruthy()
   })
 
   it('includes reasonCode and reasonLabel for locked nodes', () => {
