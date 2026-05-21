@@ -1,6 +1,6 @@
 ---
-description: Create a feature branch from up-to-date develop
-agent: cmd-create-feature-branch
+description: Opencode - Create a feature branch from up-to-date develop
+agent: opencode-create-feature-branch
 subtask: true
 context: fork
 ---

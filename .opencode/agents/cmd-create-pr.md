@@ -1,6 +1,6 @@
 ---
-name: "create-pr"
-description: Prépare ou crée une Pull Request vers develop via le skill creer-pull-request, avec commit Conventional Commits préalable si nécessaire.
+name: "opencode-create-pr"
+description: Opencode - Prépare ou crée une Pull Request vers develop via le skill creer-pull-request, avec commit Conventional Commits préalable si nécessaire.
 mode: subagent
 model: github-copilot/gpt-4.1
 temperature: 0.1

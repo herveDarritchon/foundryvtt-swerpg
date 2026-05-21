@@ -1,8 +1,9 @@
 ---
-name: "create-feature-branch"
-description: Crée une branche dédiée depuis develop via le skill creer-branche-feature, sans implémenter ni committer.
+name: "cmd-create-feature-branch"
+description: Claude - Crée une branche dédiée depuis develop via le skill creer-branche-feature, sans implémenter ni committer.
 mode: subagent
-model: claude-haiku-4-5
+#model: claude-haiku-4-5
+model: github-copilot/gpt-4.1
 temperature: 0.1
 memory: project
 permission:
