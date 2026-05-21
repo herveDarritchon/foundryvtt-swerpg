@@ -72,53 +72,168 @@ export const REASON_LABEL_DEFAULT = 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.REASO
  * @property {number} borderWidth    - Border thickness in pixels.
  * @property {number} alpha          - Overall node opacity.
  * @property {number} textColor      - Talent name colour.
+ * @property {number} textAlpha      - Talent name opacity.
  * @property {number} costColor      - XP cost colour.
+ * @property {number} costAlpha      - XP cost opacity.
+ * @property {'badge'|'secondary'|'plain'} costDisplay - XP cost presentation mode.
+ * @property {number|null} costBadgeFillColor - Badge background colour when `costDisplay` is `badge`.
+ * @property {number|null} costBadgeBorderColor - Badge border colour when `costDisplay` is `badge`.
  * @property {string} pictogram      - Non-color state signal (rendered on the node card).
  * @property {number} pictogramColor - Colour for the pictogram glyph.
  */
 
-/** @type {Readonly<Record<string, NodeVariant>>} */
-export const NODE_STATE_VARIANTS = Object.freeze({
+const PASSIVE_NODE_VARIANTS = Object.freeze({
   [NODE_STATE.PURCHASED]: Object.freeze({
-    fillColor: 0x1a3a2a,
-    borderColor: 0x4a9a6a,
-    borderWidth: 2,
-    alpha: 1,
-    textColor: 0xcccccc,
-    costColor: 0x88bb88,
-    pictogram: '\u25C9',
-    pictogramColor: 0x4a9a6a,
-  }),
-  [NODE_STATE.AVAILABLE]: Object.freeze({
-    fillColor: 0x1a2c44,
-    borderColor: 0x78a9c2,
+    fillColor: 0x1f4f8c,
+    borderColor: 0x95c9ff,
     borderWidth: 2,
     alpha: 1,
     textColor: 0xffffff,
-    costColor: 0xcccccc,
-    pictogram: '\u25C7',
-    pictogramColor: 0x78a9c2,
+    textAlpha: 1,
+    costColor: 0xb9d9ff,
+    costAlpha: 0.72,
+    costDisplay: 'secondary',
+    costBadgeFillColor: null,
+    costBadgeBorderColor: null,
+    pictogram: '\u25C9',
+    pictogramColor: 0x95c9ff,
   }),
-  [NODE_STATE.LOCKED]: Object.freeze({
-    fillColor: 0x222222,
-    borderColor: 0x555555,
-    borderWidth: 1,
-    alpha: 0.85,
-    textColor: 0x888888,
-    costColor: 0x666666,
-    pictogram: '\u2014',
-    pictogramColor: 0x555555,
-  }),
-  [NODE_STATE.INVALID]: Object.freeze({
-    fillColor: 0x3a1a1a,
-    borderColor: 0x8a3333,
+  [NODE_STATE.AVAILABLE]: Object.freeze({
+    fillColor: 0x21344d,
+    borderColor: 0x5f85ad,
     borderWidth: 2,
     alpha: 1,
-    textColor: 0xaaaaaa,
-    costColor: 0xaa6666,
-    pictogram: '\u25B2',
-    pictogramColor: 0x8a3333,
+    textColor: 0xf5f9ff,
+    textAlpha: 1,
+    costColor: 0xffffff,
+    costAlpha: 1,
+    costDisplay: 'badge',
+    costBadgeFillColor: 0x355a84,
+    costBadgeBorderColor: 0x8cb8e8,
+    pictogram: '\u25C7',
+    pictogramColor: 0x8cb8e8,
   }),
+  [NODE_STATE.LOCKED]: Object.freeze({
+    fillColor: 0x1f2630,
+    borderColor: 0x7a7a7a,
+    borderWidth: 2,
+    alpha: 1,
+    textColor: 0xd7dbe2,
+    textAlpha: 0.68,
+    costColor: 0x999999,
+    costAlpha: 1,
+    costDisplay: 'plain',
+    costBadgeFillColor: null,
+    costBadgeBorderColor: null,
+    pictogram: '\u2014',
+    pictogramColor: 0x9a9a9a,
+  }),
+  [NODE_STATE.INVALID]: Object.freeze({
+    fillColor: 0x2b1f28,
+    borderColor: 0x7c4e5a,
+    borderWidth: 2,
+    alpha: 1,
+    textColor: 0xf1dfe4,
+    textAlpha: 1,
+    costColor: 0xf1dfe4,
+    costAlpha: 1,
+    costDisplay: 'plain',
+    costBadgeFillColor: null,
+    costBadgeBorderColor: null,
+    pictogram: '\u25B2',
+    pictogramColor: 0xb86f82,
+  }),
+})
+
+const ACTIVE_NODE_VARIANTS = Object.freeze({
+  [NODE_STATE.PURCHASED]: Object.freeze({
+    fillColor: 0x7a2323,
+    borderColor: 0xffa2a2,
+    borderWidth: 2,
+    alpha: 1,
+    textColor: 0xfff7f7,
+    textAlpha: 1,
+    costColor: 0xffc7c7,
+    costAlpha: 0.72,
+    costDisplay: 'secondary',
+    costBadgeFillColor: null,
+    costBadgeBorderColor: null,
+    pictogram: '\u25C9',
+    pictogramColor: 0xffb3b3,
+  }),
+  [NODE_STATE.AVAILABLE]: Object.freeze({
+    fillColor: 0x4d2525,
+    borderColor: 0xb87676,
+    borderWidth: 2,
+    alpha: 1,
+    textColor: 0xfff5f5,
+    textAlpha: 1,
+    costColor: 0xffffff,
+    costAlpha: 1,
+    costDisplay: 'badge',
+    costBadgeFillColor: 0x7a3e3e,
+    costBadgeBorderColor: 0xd9a0a0,
+    pictogram: '\u25C7',
+    pictogramColor: 0xd9a0a0,
+  }),
+  [NODE_STATE.LOCKED]: Object.freeze({
+    fillColor: 0x302020,
+    borderColor: 0x7a7a7a,
+    borderWidth: 2,
+    alpha: 1,
+    textColor: 0xe2d7d7,
+    textAlpha: 0.68,
+    costColor: 0x999999,
+    costAlpha: 1,
+    costDisplay: 'plain',
+    costBadgeFillColor: null,
+    costBadgeBorderColor: null,
+    pictogram: '\u2014',
+    pictogramColor: 0x9a9a9a,
+  }),
+  [NODE_STATE.INVALID]: Object.freeze({
+    fillColor: 0x3c1d1d,
+    borderColor: 0x8f4a4a,
+    borderWidth: 2,
+    alpha: 1,
+    textColor: 0xffe8e8,
+    textAlpha: 1,
+    costColor: 0xffe8e8,
+    costAlpha: 1,
+    costDisplay: 'plain',
+    costBadgeFillColor: null,
+    costBadgeBorderColor: null,
+    pictogram: '\u25B2',
+    pictogramColor: 0xd07b7b,
+  }),
+})
+
+/** @type {Readonly<Record<string, Readonly<Record<string, NodeVariant>>>>} */
+export const NODE_STATE_VARIANTS = Object.freeze({
+  [NODE_STATE.PURCHASED]: Object.freeze({
+    [NODE_TYPE.ACTIVE]: ACTIVE_NODE_VARIANTS[NODE_STATE.PURCHASED],
+    [NODE_TYPE.PASSIVE]: PASSIVE_NODE_VARIANTS[NODE_STATE.PURCHASED],
+  }),
+  [NODE_STATE.AVAILABLE]: Object.freeze({
+    [NODE_TYPE.ACTIVE]: ACTIVE_NODE_VARIANTS[NODE_STATE.AVAILABLE],
+    [NODE_TYPE.PASSIVE]: PASSIVE_NODE_VARIANTS[NODE_STATE.AVAILABLE],
+  }),
+  [NODE_STATE.LOCKED]: Object.freeze({
+    [NODE_TYPE.ACTIVE]: ACTIVE_NODE_VARIANTS[NODE_STATE.LOCKED],
+    [NODE_TYPE.PASSIVE]: PASSIVE_NODE_VARIANTS[NODE_STATE.LOCKED],
+  }),
+  [NODE_STATE.INVALID]: Object.freeze({
+    [NODE_TYPE.ACTIVE]: ACTIVE_NODE_VARIANTS[NODE_STATE.INVALID],
+    [NODE_TYPE.PASSIVE]: PASSIVE_NODE_VARIANTS[NODE_STATE.INVALID],
+  }),
+})
+
+/** Maps each NODE_STATE value to its fallback SVG asset path. */
+export const NODE_STATE_SVG_ICONS = Object.freeze({
+  [NODE_STATE.PURCHASED]: 'assets/images/icons/sell-card.svg',
+  [NODE_STATE.AVAILABLE]: 'assets/images/icons/buy-card.svg',
+  [NODE_STATE.LOCKED]: 'assets/images/icons/padlock.svg',
+  [NODE_STATE.INVALID]: 'assets/images/icons/hazard-sign.svg',
 })
 
 /* ── Active/passive type indicators ─────────────────────────────── */
@@ -161,6 +276,18 @@ export function getReasonLabelKey(reasonCode) {
 }
 
 /**
+ * Resolve the visual variant for a given node state and node type.
+ * @param {string|null|undefined} state
+ * @param {string|null|undefined} nodeType
+ * @returns {NodeVariant}
+ */
+export function getNodeVariant(state, nodeType) {
+  const normalizedState = NODE_STATE_VARIANTS[state] ? state : NODE_STATE.INVALID
+  const normalizedType = nodeType === NODE_TYPE.ACTIVE ? NODE_TYPE.ACTIVE : NODE_TYPE.PASSIVE
+  return NODE_STATE_VARIANTS[normalizedState][normalizedType]
+}
+
+/**
  * Enrich a bare render node with UI-ready properties derived from its business state.
  *
  * This function is ***pure***: it does not access `game.i18n`, `ui`, or any
@@ -182,15 +309,15 @@ export function getReasonLabelKey(reasonCode) {
 export function enrichNode(node, stateResult, localize) {
   const state = stateResult?.state ?? NODE_STATE.INVALID
   const reasonCode = stateResult?.reasonCode ?? null
+  const nodeType = resolveNodeType(node.isActive)
 
   const nodeStateLabel = localize(NODE_STATE_LABEL_KEYS[state] ?? NODE_STATE_LABEL_KEYS[NODE_STATE.INVALID])
 
   const reasonLabel = reasonCode ? localize(REASON_LABEL_KEYS[reasonCode] ?? REASON_LABEL_DEFAULT) : null
 
-  const variant = NODE_STATE_VARIANTS[state] ?? NODE_STATE_VARIANTS[NODE_STATE.INVALID]
-
-  const nodeType = resolveNodeType(node.isActive)
+  const variant = getNodeVariant(state, nodeType)
   const typeIndicator = NODE_TYPE_INDICATORS[nodeType] ?? NODE_TYPE_INDICATORS[NODE_TYPE.PASSIVE]
+  const nodeStateSvgIconPath = NODE_STATE_SVG_ICONS[state] ?? NODE_STATE_SVG_ICONS[NODE_STATE.INVALID]
 
   return {
     ...node,
@@ -201,5 +328,6 @@ export function enrichNode(node, stateResult, localize) {
     variant,
     nodeType,
     nodeTypeIcon: typeIndicator.icon,
+    nodeStateSvgIconPath,
   }
 }
