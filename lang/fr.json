@@ -94,6 +94,8 @@
           "NODE_INVALID": "Données du nœud invalides",
           "NODE_LOCKED": "Prérequis non remplis",
           "NOT_ENOUGH_XP": "XP insuffisants",
+          "NODE_NOT_PURCHASED": "Nœud non acheté",
+          "NODE_HAS_DEPENDENTS": "Le nœud a des dépendants achetés",
           "UNKNOWN": "Raison inconnue"
         },
         "TOOLTIP": {
@@ -119,7 +121,9 @@
         "ACTION": {
           "CENTER": "Centrer",
           "ZOOM_IN": "Zoom avant",
-          "ZOOM_OUT": "Zoom arrière"
+          "ZOOM_OUT": "Zoom arrière",
+          "PURCHASE": "Acheter",
+          "FORGET": "Oublier"
         }
       },
       "ACTIONS": {
