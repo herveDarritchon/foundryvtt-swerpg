@@ -51,6 +51,10 @@ const AUDIT_LOG_TYPE_LABELS = Object.freeze({
   'specialization.remove': 'SWERPG.AUDIT_LOG.TYPE.SPECIALIZATION_REMOVE',
   'talent.purchase': 'SWERPG.AUDIT_LOG.TYPE.TALENT_PURCHASE',
   'talent-node-purchase': 'SWERPG.AUDIT_LOG.TYPE.TALENT_NODE_PURCHASE',
+  'talent-node-purchase-succeeded': 'SWERPG.AUDIT_LOG.TYPE.TALENT_NODE_PURCHASE_SUCCEEDED',
+  'talent-node-purchase-failed': 'SWERPG.AUDIT_LOG.TYPE.TALENT_NODE_PURCHASE_FAILED',
+  'talent-node-forget-succeeded': 'SWERPG.AUDIT_LOG.TYPE.TALENT_NODE_FORGET_SUCCEEDED',
+  'talent-node-forget-failed': 'SWERPG.AUDIT_LOG.TYPE.TALENT_NODE_FORGET_FAILED',
   'advancement.level': 'SWERPG.AUDIT_LOG.TYPE.ADVANCEMENT_LEVEL',
 })
 
@@ -78,6 +82,10 @@ export function getAuditLogFamily(type) {
       return AUDIT_LOG_FAMILIES.skills
     case 'talent.purchase':
     case 'talent-node-purchase':
+    case 'talent-node-purchase-succeeded':
+    case 'talent-node-purchase-failed':
+    case 'talent-node-forget-succeeded':
+    case 'talent-node-forget-failed':
       return AUDIT_LOG_FAMILIES.talents
     case 'xp.spend':
     case 'xp.refund':
@@ -202,10 +210,27 @@ export function buildAuditLogDescription(entry) {
         ranks: data.ranks ?? 1,
       })
     case 'talent-node-purchase':
+    case 'talent-node-purchase-succeeded':
       return game.i18n.format('SWERPG.AUDIT_LOG.DESCRIPTION.TALENT_NODE_PURCHASE', {
         talentId: getAuditLogName(data.talentId, 'SWERPG.AUDIT_LOG.UNKNOWN_VALUE'),
         specializationId: getAuditLogName(data.specializationId, 'SWERPG.AUDIT_LOG.UNKNOWN_VALUE'),
         cost: data.cost ?? 0,
+      })
+    case 'talent-node-purchase-failed':
+      return game.i18n.format('SWERPG.AUDIT_LOG.DESCRIPTION.TALENT_NODE_PURCHASE_FAILED', {
+        nodeId: getAuditLogName(data.nodeId, 'SWERPG.AUDIT_LOG.UNKNOWN_VALUE'),
+        reasonCode: getAuditLogName(data.reasonCode, 'SWERPG.AUDIT_LOG.UNKNOWN_VALUE'),
+      })
+    case 'talent-node-forget-succeeded':
+      return game.i18n.format('SWERPG.AUDIT_LOG.DESCRIPTION.TALENT_NODE_FORGET', {
+        talentId: getAuditLogName(data.talentId, 'SWERPG.AUDIT_LOG.UNKNOWN_VALUE'),
+        specializationId: getAuditLogName(data.specializationId, 'SWERPG.AUDIT_LOG.UNKNOWN_VALUE'),
+        cost: data.cost ?? 0,
+      })
+    case 'talent-node-forget-failed':
+      return game.i18n.format('SWERPG.AUDIT_LOG.DESCRIPTION.TALENT_NODE_FORGET_FAILED', {
+        nodeId: getAuditLogName(data.nodeId, 'SWERPG.AUDIT_LOG.UNKNOWN_VALUE'),
+        reasonCode: getAuditLogName(data.reasonCode, 'SWERPG.AUDIT_LOG.UNKNOWN_VALUE'),
       })
     case 'advancement.level':
       return game.i18n.format('SWERPG.AUDIT_LOG.DESCRIPTION.ADVANCEMENT_LEVEL', {

@@ -46,6 +46,10 @@ describe('character-audit-log application', () => {
         'SWERPG.AUDIT_LOG.TYPE.SKILL_TRAIN': 'Skill purchase',
         'SWERPG.AUDIT_LOG.TYPE.SPECIALIZATION_REMOVE': 'Specialization removed',
         'SWERPG.AUDIT_LOG.TYPE.TALENT_NODE_PURCHASE': 'Talent node purchase',
+        'SWERPG.AUDIT_LOG.TYPE.TALENT_NODE_PURCHASE_SUCCEEDED': 'Talent node purchased',
+        'SWERPG.AUDIT_LOG.TYPE.TALENT_NODE_PURCHASE_FAILED': 'Talent node purchase failed',
+        'SWERPG.AUDIT_LOG.TYPE.TALENT_NODE_FORGET_SUCCEEDED': 'Talent node forgotten',
+        'SWERPG.AUDIT_LOG.TYPE.TALENT_NODE_FORGET_FAILED': 'Talent node forget failed',
         'SWERPG.AUDIT_LOG.TYPE.UNKNOWN': 'Unknown event',
         'SWERPG.AUDIT_LOG.NONE': 'None',
         'SWERPG.AUDIT_LOG.UNKNOWN_SPECIALIZATION': 'Unknown specialization',
@@ -54,6 +58,9 @@ describe('character-audit-log application', () => {
         'SWERPG.AUDIT_LOG.DESCRIPTION.SKILL_TRAIN': 'Skill {skill}: rank {oldRank} -> {newRank}',
         'SWERPG.AUDIT_LOG.DESCRIPTION.SPECIALIZATION_REMOVE': 'Removed specialization {specialization}',
         'SWERPG.AUDIT_LOG.DESCRIPTION.TALENT_NODE_PURCHASE': 'Talent node {talentId} / specialization {specializationId} ({cost} XP)',
+        'SWERPG.AUDIT_LOG.DESCRIPTION.TALENT_NODE_PURCHASE_FAILED': 'Talent node purchase failed: {reasonCode} (node {nodeId})',
+        'SWERPG.AUDIT_LOG.DESCRIPTION.TALENT_NODE_FORGET': 'Forgot talent node {talentId} / specialization {specializationId} ({cost} XP)',
+        'SWERPG.AUDIT_LOG.DESCRIPTION.TALENT_NODE_FORGET_FAILED': 'Talent node forget failed: {reasonCode} (node {nodeId})',
         'SWERPG.AUDIT_LOG.DESCRIPTION.UNKNOWN': 'Unknown event ({type})',
       },
     })
@@ -172,6 +179,88 @@ describe('character-audit-log application', () => {
 
     expect(description).not.toContain('Unknown event')
     expect(description).not.toContain('Unrecognized event')
+  })
+
+  it('builds description for talent-node-purchase-succeeded (same as legacy)', () => {
+    const description = buildAuditLogDescription({
+      type: 'talent-node-purchase-succeeded',
+      xpDelta: -10,
+      data: { talentId: 'grit', specializationId: 'spec-bodyguard', cost: 10 },
+    })
+
+    expect(description).toBe('Talent node grit / specialization spec-bodyguard (10 XP)')
+  })
+
+  it('builds description for talent-node-purchase-failed with reason', () => {
+    const description = buildAuditLogDescription({
+      type: 'talent-node-purchase-failed',
+      xpDelta: -5,
+      data: { nodeId: 'r1c1', reasonCode: 'not-enough-xp', cost: 5 },
+    })
+
+    expect(description).toBe('Talent node purchase failed: not-enough-xp (node r1c1)')
+  })
+
+  it('builds description for talent-node-forget-succeeded', () => {
+    const description = buildAuditLogDescription({
+      type: 'talent-node-forget-succeeded',
+      xpDelta: 5,
+      data: { talentId: 'parry', specializationId: 'spec-bodyguard', cost: 5 },
+    })
+
+    expect(description).toBe('Forgot talent node parry / specialization spec-bodyguard (5 XP)')
+  })
+
+  it('builds description for talent-node-forget-failed with reason', () => {
+    const description = buildAuditLogDescription({
+      type: 'talent-node-forget-failed',
+      xpDelta: 5,
+      data: { nodeId: 'r1c1', reasonCode: 'node-has-dependents', cost: 5 },
+    })
+
+    expect(description).toBe('Talent node forget failed: node-has-dependents (node r1c1)')
+  })
+
+  it('maps canonical types to talents family', () => {
+    const actor = createActor({
+      flags: {
+        swerpg: {
+          logs: [
+            { id: 'e1', timestamp: 100, type: 'talent-node-purchase-succeeded', xpDelta: -10, data: {} },
+            { id: 'e2', timestamp: 200, type: 'talent-node-purchase-failed', xpDelta: -5, data: {} },
+            { id: 'e3', timestamp: 300, type: 'talent-node-forget-succeeded', xpDelta: 5, data: {} },
+            { id: 'e4', timestamp: 400, type: 'talent-node-forget-failed', xpDelta: 5, data: {} },
+          ],
+        },
+      },
+    })
+
+    const entries = buildAuditLogEntries(actor, 'talents')
+    expect(entries).toHaveLength(4)
+    entries.forEach((e) => {
+      expect(e.family).toBe('talents')
+    })
+  })
+
+  it('displays type label for canonical types without unknown fallback', () => {
+    const actor = createActor({
+      flags: {
+        swerpg: {
+          logs: [
+            { id: 'e1', timestamp: 100, type: 'talent-node-purchase-succeeded', xpDelta: -10, data: {} },
+            { id: 'e2', timestamp: 200, type: 'talent-node-purchase-failed', xpDelta: -5, data: {} },
+            { id: 'e3', timestamp: 300, type: 'talent-node-forget-succeeded', xpDelta: 5, data: {} },
+            { id: 'e4', timestamp: 400, type: 'talent-node-forget-failed', xpDelta: 5, data: {} },
+          ],
+        },
+      },
+    })
+
+    const entries = buildAuditLogEntries(actor, 'all')
+    expect(entries).toHaveLength(4)
+    for (const entry of entries) {
+      expect(entry.typeLabel).not.toBe('Unknown event')
+    }
   })
 
   it('falls back to an unknown description for unsupported types', () => {

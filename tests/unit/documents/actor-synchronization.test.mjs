@@ -6,6 +6,7 @@ vi.mock('../../../module/utils/logger.mjs', () => ({
 
 vi.mock('../../../module/utils/audit-log.mjs', () => ({
   recordTalentNodePurchase: vi.fn(),
+  recordTalentNodeOperation: vi.fn().mockResolvedValue(undefined),
 }))
 
 vi.mock('../../../module/lib/talent-node/talent-tree-resolver.mjs', () => ({
