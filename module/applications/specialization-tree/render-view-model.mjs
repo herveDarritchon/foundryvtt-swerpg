@@ -52,6 +52,7 @@ export function buildRenderViewModel(currentTree, talentLookup) {
       },
       /** Extra field – consumed by the app enrichment layer */
       isRanked: resolved?.isRanked ?? false,
+      isActive: resolved?.isActive ?? false,
     }
   })
 

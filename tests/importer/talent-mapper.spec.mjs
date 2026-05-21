@@ -121,6 +121,37 @@ describe('OggDudeTalentMapper', () => {
     })
   })
 
+  describe('buildSingleTalentContext', () => {
+    it('prioritise ActivationValue et mappe taPassive vers passive', () => {
+      const context = OggDudeTalentMapper.buildSingleTalentContext(
+        {
+          Name: 'Secret Lore',
+          Key: 'secret_lore',
+          ActivationValue: 'taPassive',
+          Activation: 'Action',
+        },
+        {},
+      )
+
+      expect(context.activation).toBe('passive')
+      expect(context.hasUnknownActivation).toBe(false)
+    })
+
+    it('mappe toute ActivationValue non vide non passive vers active', () => {
+      const context = OggDudeTalentMapper.buildSingleTalentContext(
+        {
+          Name: 'Dodge',
+          Key: 'dodge',
+          ActivationValue: 'taIncidentalOOT',
+        },
+        {},
+      )
+
+      expect(context.activation).toBe('active')
+      expect(context.hasUnknownActivation).toBe(false)
+    })
+  })
+
   describe('transform', () => {
     it('devrait produire une définition générique sans coût XP ni nœud', () => {
       const context = {
@@ -294,14 +325,14 @@ describe('OggDudeTalentMapper', () => {
               Name: 'Force Sensitive',
               Key: 'force_sensitive',
               Description: 'You are sensitive to the Force',
-              Activation: 'Passive',
+              ActivationValue: 'taPassive',
               Tier: '1',
             },
             {
               Name: 'Lightsaber Training',
               Key: 'lightsaber_training',
               Description: 'Training with lightsabers',
-              Activation: 'Action',
+              ActivationValue: 'taAction',
               Tier: '2',
             },
           ],
@@ -316,6 +347,7 @@ describe('OggDudeTalentMapper', () => {
       const context = result.get('force_sensitive')
       expect(context.name).toBe('Force Sensitive')
       expect(context.activation).toBe('passive')
+      expect(result.get('lightsaber_training').activation).toBe('active')
     })
   })
 })
