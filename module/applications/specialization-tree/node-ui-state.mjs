@@ -236,6 +236,101 @@ export const NODE_STATE_SVG_ICONS = Object.freeze({
   [NODE_STATE.INVALID]: 'assets/images/icons/hazard-sign.svg',
 })
 
+/* ── Connection visual variants ──────────────────────────────── */
+
+/**
+ * Connection visual variant categories.
+ *
+ * - `PURCHASED`: Link between two purchased nodes — represents an already-traversed path.
+ * - `AVAILABLE`: Link from a purchased node to an available node — the immediate progression front.
+ * - `LOCKED`: Link involving a locked or invalid node — progression not yet reachable.
+ * - `HOVER_PREREQUISITE`: Link from a hovered node back to one of its direct prerequisites.
+ * - `HOVER_UNLOCKS`: Link from a hovered node forward to a node it unlocks.
+ *
+ * @enum {string}
+ */
+export const CONNECTION_VARIANT = Object.freeze({
+  PURCHASED: 'purchased',
+  AVAILABLE: 'available',
+  LOCKED: 'locked',
+  HOVER_PREREQUISITE: 'hover-prerequisite',
+  HOVER_UNLOCKS: 'hover-unlocks',
+})
+
+/**
+ * Visual descriptor for a connection line between two nodes.
+ *
+ * @typedef {Object} ConnectionLineStyle
+ * @property {number} color  - Line color (hex integer).
+ * @property {number} width  - Line width in pixels.
+ * @property {number} alpha  - Line opacity (0–1).
+ */
+
+/** @type {Readonly<Record<string, ConnectionLineStyle>>} */
+export const CONNECTION_LINE_STYLES = Object.freeze({
+  [CONNECTION_VARIANT.PURCHASED]: Object.freeze({ color: 0x95c9ff, width: 3, alpha: 0.9 }),
+  [CONNECTION_VARIANT.AVAILABLE]: Object.freeze({ color: 0x5f85ad, width: 2, alpha: 0.7 }),
+  [CONNECTION_VARIANT.LOCKED]: Object.freeze({ color: 0x4a4a4a, width: 1, alpha: 0.35 }),
+  [CONNECTION_VARIANT.HOVER_PREREQUISITE]: Object.freeze({ color: 0xffd700, width: 3, alpha: 1.0 }),
+  [CONNECTION_VARIANT.HOVER_UNLOCKS]: Object.freeze({ color: 0x88ff88, width: 3, alpha: 1.0 }),
+})
+
+/**
+ * Resolve the connection visual variant from the states of the two connected nodes.
+ *
+ * Precendence (highest to lowest):
+ *  1. If either end is in hover-prerequisite role → `HOVER_PREREQUISITE`
+ *  2. If either end is in hover-unlocks role → `HOVER_UNLOCKS`
+ *  3. Both purchased → `PURCHASED`
+ *  4. One purchased + one available → `AVAILABLE`
+ *  5. All other combinations → `LOCKED`
+ *
+ * @param {string} fromState NODE_STATE of the source node.
+ * @param {string} toState   NODE_STATE of the target node.
+ * @returns {string} One of the `CONNECTION_VARIANT` values.
+ */
+export function resolveConnectionVariant(fromState, toState) {
+  if (fromState === NODE_STATE.PURCHASED && toState === NODE_STATE.PURCHASED) {
+    return CONNECTION_VARIANT.PURCHASED
+  }
+  if ((fromState === NODE_STATE.PURCHASED && toState === NODE_STATE.AVAILABLE) || (fromState === NODE_STATE.AVAILABLE && toState === NODE_STATE.PURCHASED)) {
+    return CONNECTION_VARIANT.AVAILABLE
+  }
+  return CONNECTION_VARIANT.LOCKED
+}
+
+/**
+ * Resolve the hover-aware connection variant from the connection and the set of
+ * hover-highlighted nodeIds.
+ *
+ * When a node is hovered, its direct prerequisites and direct unlockables are
+ * identified by the caller. This function maps a connection to either a hover
+ * variant (prerequisite / unlocks) or falls back to the nominal progression
+ * variant.
+ *
+ * @param {string} fromNodeId Source node ID.
+ * @param {string} toNodeId   Target node ID.
+ * @param {string} fromState  NODE_STATE of the source node.
+ * @param {string} toState    NODE_STATE of the target node.
+ * @param {Set<string>} prerequisiteNodeIds NodeIds of direct prerequisites of the hovered node.
+ * @param {Set<string>} unlockNodeIds       NodeIds of nodes the hovered node directly unlocks.
+ * @param {string|null}  hoveredNodeId      Currently hovered node ID (or null).
+ * @returns {string} One of the `CONNECTION_VARIANT` values.
+ */
+export function resolveHoverConnectionVariant(fromNodeId, toNodeId, fromState, toState, prerequisiteNodeIds, unlockNodeIds, hoveredNodeId) {
+  if (!hoveredNodeId) return resolveConnectionVariant(fromState, toState)
+
+  // Connection from prerequisite to hovered node
+  if (prerequisiteNodeIds.has(fromNodeId) && toNodeId === hoveredNodeId) {
+    return CONNECTION_VARIANT.HOVER_PREREQUISITE
+  }
+  // Connection from hovered node to unlocked node
+  if (fromNodeId === hoveredNodeId && unlockNodeIds.has(toNodeId)) {
+    return CONNECTION_VARIANT.HOVER_UNLOCKS
+  }
+  return resolveConnectionVariant(fromState, toState)
+}
+
 /* ── Active/passive type indicators ─────────────────────────────── */
 
 /**

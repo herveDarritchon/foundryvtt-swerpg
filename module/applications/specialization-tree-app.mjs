@@ -12,6 +12,10 @@ import {
   NODE_STATE,
   NODE_STATE_SVG_ICONS,
   NODE_STATE_VARIANTS,
+  CONNECTION_LINE_STYLES,
+  CONNECTION_VARIANT,
+  resolveConnectionVariant,
+  resolveHoverConnectionVariant,
 } from './specialization-tree/node-ui-state.mjs'
 import { NODE_WIDTH, NODE_HEIGHT, computeNodePosition, buildConnectionAnchors } from './specialization-tree/layout.mjs'
 import { logger } from '../utils/logger.mjs'
@@ -111,6 +115,61 @@ export function computeCenteredOffset(bbox, viewportWidth, viewportHeight) {
     offsetX: (viewportWidth - bbox.width) / 2 - bbox.minX,
     offsetY: (viewportHeight - bbox.height) / 2 - bbox.minY,
   }
+}
+
+/**
+ * Build the nominal connection visual variant for each connection based on the
+ * states of its two endpoint nodes, without any hover context.
+ *
+ * @param {Array<{ fromX: number, fromY: number, toX: number, toY: number, fromNodeId?: string, toNodeId?: string, type?: string }>} renderConnections
+ * @param {Array<{ nodeId: string, nodeState: string }>} renderNodes
+ * @returns {Array<{ connectionVariant: string, lineStyle: object }>} Same connections, each annotated with a `connectionVariant` and `lineStyle`.
+ */
+export function buildConnectionVariants(renderConnections, renderNodes) {
+  const stateByNodeId = new Map()
+  for (const node of renderNodes) {
+    stateByNodeId.set(node.nodeId, node.nodeState)
+  }
+
+  return renderConnections.map((conn) => {
+    const fromState = stateByNodeId.get(conn.fromNodeId) ?? NODE_STATE.INVALID
+    const toState = stateByNodeId.get(conn.toNodeId) ?? NODE_STATE.INVALID
+    const connectionVariant = resolveConnectionVariant(fromState, toState)
+    return {
+      ...conn,
+      connectionVariant,
+      lineStyle: CONNECTION_LINE_STYLES[connectionVariant],
+    }
+  })
+}
+
+/**
+ * Compute hover context for a given hovered node: which nodes are direct
+ * prerequisites (they have a connection TO the hovered node), and which nodes
+ * are directly unlocked (the hovered node has a connection TO them).
+ *
+ * Uses the connections graph — no new business logic is introduced.
+ *
+ * @param {string|null} hoveredNodeId
+ * @param {Array<{ fromNodeId: string, toNodeId: string }>} renderConnections
+ * @returns {{ prerequisiteNodeIds: Set<string>, unlockNodeIds: Set<string> }}
+ */
+export function computeHoverContext(hoveredNodeId, renderConnections) {
+  const prerequisiteNodeIds = new Set()
+  const unlockNodeIds = new Set()
+
+  if (!hoveredNodeId) return { prerequisiteNodeIds, unlockNodeIds }
+
+  for (const conn of renderConnections) {
+    if (conn.toNodeId === hoveredNodeId) {
+      prerequisiteNodeIds.add(conn.fromNodeId)
+    }
+    if (conn.fromNodeId === hoveredNodeId) {
+      unlockNodeIds.add(conn.toNodeId)
+    }
+  }
+
+  return { prerequisiteNodeIds, unlockNodeIds }
 }
 
 function buildCurrentTreeSummary(actor, currentTreeName, renderNodes) {
@@ -365,6 +424,11 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
 
   #renderNodesCache = null
 
+  #renderConnectionsCache = null
+
+  /** @type {Map<string, PIXI.DisplayObject[]>} Maps nodeId → list of PIXI objects belonging to that node. */
+  #nodeDisplayObjects = new Map()
+
   #viewport = { scale: 1, x: 0, y: 0 }
 
   #minZoom = 0.5
@@ -384,6 +448,9 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
   #zoomCanvas = null
 
   #zoomWheelHandler = null
+
+  /** @type {string|null} Node ID currently under the pointer, or null when not hovering. */
+  #hoveredNodeId = null
 
   get title() {
     return game.i18n.format('SWERPG.TALENT.SPECIALIZATION_TREE_APP.TITLE', {
@@ -737,6 +804,9 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
     }
 
     this.#renderNodesCache = null
+    this.#renderConnectionsCache = null
+    this.#nodeDisplayObjects = new Map()
+    this.#hoveredNodeId = null
     this.#hideNodeTooltip()
 
     const { renderNodes, renderConnections } = context ?? {}
@@ -748,10 +818,16 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
 
     this.#renderNodesCache = renderNodes
 
-    if (renderConnections.length > 0) {
+    // Annotate connections with their nominal progression variant so the
+    // render loop can apply the correct line style without any extra business logic.
+    const annotatedConnections = buildConnectionVariants(renderConnections, renderNodes)
+    this.#renderConnectionsCache = annotatedConnections
+
+    if (annotatedConnections.length > 0) {
       const gfx = new PIXI.Graphics()
-      gfx.lineStyle(2, 0x78a9c2, 0.6)
-      for (const conn of renderConnections) {
+      for (const conn of annotatedConnections) {
+        const ls = conn.lineStyle ?? CONNECTION_LINE_STYLES[CONNECTION_VARIANT.LOCKED]
+        gfx.lineStyle(ls.width, ls.color, ls.alpha)
         gfx.moveTo(conn.fromX, conn.fromY)
         gfx.lineTo(conn.toX, conn.toY)
       }
@@ -759,18 +835,18 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
     }
 
     if (renderNodes.length > 0) {
-      const bg = new PIXI.Graphics()
       for (const node of renderNodes) {
         const v = node.variant ?? NODE_STATE_VARIANTS[NODE_STATE.AVAILABLE].passive
+
+        // Each node gets its own Container so hover dimming can target individual nodes.
+        const nodeContainer = new PIXI.Container()
+
+        const bg = new PIXI.Graphics()
         bg.beginFill(v.fillColor, v.alpha)
         bg.lineStyle(v.borderWidth, v.borderColor, v.alpha)
         bg.drawRoundedRect(node.x, node.y, NODE_WIDTH, NODE_HEIGHT, 4)
         bg.endFill()
-      }
-      this.#treeContainer.addChild(bg)
-
-      for (const node of renderNodes) {
-        const v = node.variant ?? NODE_STATE_VARIANTS[NODE_STATE.AVAILABLE].passive
+        nodeContainer.addChild(bg)
 
         // Type indicator (active/passive icon) — top-left corner
         const typeIcon = node.nodeTypeIcon ?? ''
@@ -783,7 +859,7 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
           })
           typeText.x = node.x + 4
           typeText.y = node.y + 5
-          this.#treeContainer.addChild(typeText)
+          nodeContainer.addChild(typeText)
         }
 
         const nameText = new PIXI.Text(node.talentName, {
@@ -796,7 +872,7 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
         nameText.alpha = v.textAlpha ?? 1
         nameText.x = node.x + nameOffsetX
         nameText.y = node.y + 4
-        this.#treeContainer.addChild(nameText)
+        nodeContainer.addChild(nameText)
 
         const costLabel = `${node.xpCost} XP`
         let costTextX = node.x + 4
@@ -819,7 +895,7 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
           badge.lineStyle(1, v.costBadgeBorderColor ?? v.borderColor, 1)
           badge.drawRoundedRect(badgeX, badgeY, badgeWidth, badgeHeight, 6)
           badge.endFill()
-          this.#treeContainer.addChild(badge)
+          nodeContainer.addChild(badge)
 
           costTextX = badgeX + badgePaddingX
           costText.y = badgeY + badgePaddingY
@@ -829,9 +905,9 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
         if (v.costDisplay !== 'badge') {
           costText.y = node.y + NODE_HEIGHT - 14
         }
-        this.#treeContainer.addChild(costText)
+        nodeContainer.addChild(costText)
 
-        const hasRenderedSvgPictogram = await this.#drawStatePictogramSprite(node)
+        const hasRenderedSvgPictogram = await this.#drawStatePictogramSprite(node, nodeContainer)
 
         if (!hasRenderedSvgPictogram && v.pictogram) {
           const pictogramText = new PIXI.Text(v.pictogram, {
@@ -841,7 +917,7 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
           })
           pictogramText.x = node.x + NODE_WIDTH - pictogramText.width - 6
           pictogramText.y = node.y + 4
-          this.#treeContainer.addChild(pictogramText)
+          nodeContainer.addChild(pictogramText)
         }
 
         // Ranked indicator — shown only when the node is explicitly ranked
@@ -854,7 +930,7 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
           })
           rankedText.x = node.x + NODE_WIDTH - rankedText.width - 4
           rankedText.y = node.y + 4
-          this.#treeContainer.addChild(rankedText)
+          nodeContainer.addChild(rankedText)
         }
 
         const hitArea = new PIXI.Graphics()
@@ -873,13 +949,86 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
 
           this.#showNodeTooltip(capturedNode)
         })
-        this.#treeContainer.addChild(hitArea)
+        hitArea.on('pointerover', () => {
+          this.#onNodeHoverEnter(capturedNode)
+        })
+        hitArea.on('pointerout', () => {
+          this.#onNodeHoverExit()
+        })
+        nodeContainer.addChild(hitArea)
+
+        this.#treeContainer.addChild(nodeContainer)
+        this.#nodeDisplayObjects.set(node.nodeId, nodeContainer)
       }
     }
   }
 
-  async #drawStatePictogramSprite(node) {
-    if (!this.#treeContainer || !PIXI.Sprite) return false
+  /**
+   * Enter hover state for a node: show the detail panel and redraw the tree
+   * with contextual highlighting (hovered node prominent, prerequisites and
+   * unlockable nodes highlighted, rest dimmed).
+   * @param {object} node - The enriched render node being hovered.
+   */
+  #onNodeHoverEnter(node) {
+    if (this.#hoveredNodeId === node.nodeId) return
+    this.#hoveredNodeId = node.nodeId
+    this.#showNodeTooltip(node)
+    this.#applyHoverOverlay(node)
+  }
+
+  /**
+   * Exit hover state: hide the detail panel, restore nominal tree rendering.
+   */
+  #onNodeHoverExit() {
+    if (!this.#hoveredNodeId) return
+    this.#hoveredNodeId = null
+    this.#hideNodeTooltip()
+    this.#clearHoverOverlay()
+  }
+
+  /**
+   * Apply a transient hover overlay on the existing tree container:
+   * - Dim all nodes that are neither the hovered node, a direct prerequisite, nor a direct unlockable.
+   * - Keep the hovered node, prerequisites, and unlockable nodes at full opacity.
+   *
+   * The overlay reuses per-node Containers tracked in `#nodeDisplayObjects` and
+   * the connection graph already computed from `buildConnectionVariants`.
+   *
+   * @param {object} hoveredNode - The enriched render node being hovered.
+   */
+  #applyHoverOverlay(hoveredNode) {
+    if (!this.#nodeDisplayObjects.size) return
+
+    const renderConnections = this.#renderConnectionsCache ?? []
+    const { prerequisiteNodeIds, unlockNodeIds } = computeHoverContext(hoveredNode.nodeId, renderConnections)
+
+    const DIMMED_ALPHA = 0.25
+
+    for (const [nodeId, container] of this.#nodeDisplayObjects) {
+      const isHovered = nodeId === hoveredNode.nodeId
+      const isPrerequisite = prerequisiteNodeIds.has(nodeId)
+      const isUnlockable = unlockNodeIds.has(nodeId)
+      container.alpha = isHovered || isPrerequisite || isUnlockable ? 1 : DIMMED_ALPHA
+    }
+  }
+
+  /**
+   * Clear the hover overlay by restoring all per-node containers to full opacity.
+   */
+  #clearHoverOverlay() {
+    for (const container of this.#nodeDisplayObjects.values()) {
+      container.alpha = 1
+    }
+  }
+
+  /**
+   * @param {object} node
+   * @param {PIXI.Container} [container] - Optional container to add sprite to; defaults to #treeContainer.
+   * @returns {Promise<boolean>}
+   */
+  async #drawStatePictogramSprite(node, container) {
+    const target = container ?? this.#treeContainer
+    if (!target || !PIXI.Sprite) return false
 
     try {
       const texture = await loadStatePictogram(node?.nodeState)
@@ -891,7 +1040,7 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
       sprite.width = 16
       sprite.height = 16
       sprite.tint = 0xffffff
-      this.#treeContainer.addChild(sprite)
+      target.addChild(sprite)
       return true
     } catch (error) {
       logger.warn('[SpecializationTreeApp] Failed to load node state pictogram, falling back to Unicode glyph', {
@@ -1023,6 +1172,9 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
 
     this.#treeContainer = null
     this.#renderNodesCache = null
+    this.#renderConnectionsCache = null
+    this.#nodeDisplayObjects = new Map()
+    this.#hoveredNodeId = null
     this.#viewport = { scale: 1, x: 0, y: 0 }
 
     if (this.pixiApp) {

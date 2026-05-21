@@ -273,10 +273,7 @@ describe('processTalentNodeProgression — forget', () => {
   })
 
   it('returns NODE_HAS_DEPENDENTS listing all purchased dependents', () => {
-    const tree = buildTree(
-      [{ nodeId: 'r2c2', talentId: 'talent-dodge', row: 2, column: 2, cost: 10 }],
-      [{ from: 'r1c1', to: 'r2c2' }],
-    )
+    const tree = buildTree([{ nodeId: 'r2c2', talentId: 'talent-dodge', row: 2, column: 2, cost: 10 }], [{ from: 'r1c1', to: 'r2c2' }])
     resolveSpecializationTree.mockReturnValue(resolvedTree(tree))
 
     const actor = buildActor()
