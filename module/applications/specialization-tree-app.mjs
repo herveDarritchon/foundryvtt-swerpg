@@ -203,7 +203,7 @@ export function buildSpecializationTreeContext(actor, selectedKey = null) {
 
     const viewModel = buildRenderViewModel(currentTreeData, (node) => {
       const detail = resolveTalentDetail(node)
-      return detail ? { name: detail.name, uuid: node.talentUuid ?? node.talentId ?? '', isRanked: detail.isRanked } : null
+      return detail ? { name: detail.name, uuid: node.talentUuid ?? node.talentId ?? '', isRanked: detail.isRanked, isActive: detail.isActive } : null
     })
 
     renderNodes = viewModel.nodes.map((viewNode) => {
@@ -213,6 +213,7 @@ export function buildSpecializationTreeContext(actor, selectedKey = null) {
         talentId: viewNode.talentId,
         talentName: viewNode.talent.name,
         isRanked: viewNode.isRanked,
+        isActive: viewNode.isActive,
         xpCost: viewNode.cost,
         row: viewNode.row,
         column: viewNode.column,
@@ -730,14 +731,29 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
 
       for (const node of renderNodes) {
         const v = node.variant ?? NODE_STATE_VARIANTS[NODE_STATE.AVAILABLE]
+
+        // Type indicator (active/passive icon) — top-left corner
+        const typeIcon = node.nodeTypeIcon ?? ''
+        const nameOffsetX = typeIcon ? 14 : 4
+        if (typeIcon) {
+          const typeText = new PIXI.Text(typeIcon, {
+            fontFamily: 'Arial',
+            fontSize: 9,
+            fill: v.textColor,
+          })
+          typeText.x = node.x + 4
+          typeText.y = node.y + 5
+          this.#treeContainer.addChild(typeText)
+        }
+
         const nameText = new PIXI.Text(node.talentName, {
           fontFamily: 'Arial',
           fontSize: 10,
           fill: v.textColor,
           wordWrap: true,
-          wordWrapWidth: NODE_WIDTH - 8,
+          wordWrapWidth: NODE_WIDTH - nameOffsetX - 4,
         })
-        nameText.x = node.x + 4
+        nameText.x = node.x + nameOffsetX
         nameText.y = node.y + 4
         this.#treeContainer.addChild(nameText)
 
@@ -749,6 +765,18 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
         costText.x = node.x + 4
         costText.y = node.y + NODE_HEIGHT - 14
         this.#treeContainer.addChild(costText)
+
+        // State pictogram — bottom-right corner (non-color signal)
+        if (v.pictogram) {
+          const pictogramText = new PIXI.Text(v.pictogram, {
+            fontFamily: 'Arial',
+            fontSize: 10,
+            fill: v.pictogramColor,
+          })
+          pictogramText.x = node.x + NODE_WIDTH - pictogramText.width - 4
+          pictogramText.y = node.y + NODE_HEIGHT - 14
+          this.#treeContainer.addChild(pictogramText)
+        }
 
         // Ranked indicator — shown only when the node is explicitly ranked
         if (node.isRanked) {

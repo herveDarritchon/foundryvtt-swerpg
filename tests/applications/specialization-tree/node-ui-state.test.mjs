@@ -6,9 +6,12 @@ import {
   NODE_STATE,
   NODE_STATE_LABEL_KEYS,
   NODE_STATE_VARIANTS,
+  NODE_TYPE,
+  NODE_TYPE_INDICATORS,
   REASON_CODE,
   REASON_LABEL_DEFAULT,
   REASON_LABEL_KEYS,
+  resolveNodeType,
 } from '../../../module/applications/specialization-tree/node-ui-state.mjs'
 
 const localize = (key) => `[${key}]`
@@ -268,6 +271,112 @@ describe('node-ui-state', () => {
     it('REASON_LABEL_DEFAULT is a non-empty string', () => {
       expect(REASON_LABEL_DEFAULT).toBeTruthy()
       expect(typeof REASON_LABEL_DEFAULT).toBe('string')
+    })
+  })
+
+  describe('NODE_TYPE', () => {
+    it('defines ACTIVE as "active"', () => {
+      expect(NODE_TYPE.ACTIVE).toBe('active')
+    })
+
+    it('defines PASSIVE as "passive"', () => {
+      expect(NODE_TYPE.PASSIVE).toBe('passive')
+    })
+  })
+
+  describe('resolveNodeType', () => {
+    it('returns ACTIVE when isActive is true', () => {
+      expect(resolveNodeType(true)).toBe(NODE_TYPE.ACTIVE)
+    })
+
+    it('returns PASSIVE when isActive is false', () => {
+      expect(resolveNodeType(false)).toBe(NODE_TYPE.PASSIVE)
+    })
+
+    it('returns PASSIVE when isActive is undefined', () => {
+      expect(resolveNodeType(undefined)).toBe(NODE_TYPE.PASSIVE)
+    })
+
+    it('returns PASSIVE when isActive is null', () => {
+      expect(resolveNodeType(null)).toBe(NODE_TYPE.PASSIVE)
+    })
+  })
+
+  describe('NODE_TYPE_INDICATORS', () => {
+    it('has an entry for every defined NODE_TYPE', () => {
+      const types = Object.values(NODE_TYPE)
+      for (const type of types) {
+        const indicator = NODE_TYPE_INDICATORS[type]
+        expect(indicator, `Missing indicator for type "${type}"`).toBeDefined()
+        expect(typeof indicator.icon).toBe('string')
+        expect(typeof indicator.label).toBe('string')
+      }
+    })
+
+    it('has distinct icons for active and passive', () => {
+      const icons = Object.values(NODE_TYPE_INDICATORS).map((i) => i.icon)
+      const unique = new Set(icons)
+      expect(unique.size).toBe(Object.keys(NODE_TYPE_INDICATORS).length)
+    })
+  })
+
+  describe('pictogram (non-color signal)', () => {
+    it('every state variant has a pictogram string', () => {
+      const states = Object.values(NODE_STATE)
+      for (const state of states) {
+        const variant = NODE_STATE_VARIANTS[state]
+        expect(variant, `Missing variant for state "${state}"`).toBeDefined()
+        expect(typeof variant.pictogram, `pictogram must be a string for "${state}"`).toBe('string')
+        expect(variant.pictogram.length, `pictogram must not be empty for "${state}"`).toBeGreaterThan(0)
+      }
+    })
+
+    it('every state variant has a pictogramColor', () => {
+      const states = Object.values(NODE_STATE)
+      for (const state of states) {
+        const variant = NODE_STATE_VARIANTS[state]
+        expect(typeof variant.pictogramColor, `pictogramColor must be a number for "${state}"`).toBe('number')
+      }
+    })
+
+    it('pictograms serve as a non-color signal (each state has a distinct pictogram)', () => {
+      const variants = Object.values(NODE_STATE_VARIANTS)
+      const pictograms = variants.map((v) => v.pictogram)
+      const unique = new Set(pictograms)
+      expect(unique.size).toBe(variants.length)
+    })
+  })
+
+  describe('enrichNode with isActive', () => {
+    it('sets nodeType to active when node.isActive is true', () => {
+      const node = buildNode({ isActive: true })
+      const result = enrichNode(node, { state: NODE_STATE.AVAILABLE, reasonCode: '' }, localize)
+
+      expect(result.nodeType).toBe(NODE_TYPE.ACTIVE)
+      expect(result.nodeTypeIcon).toBe(NODE_TYPE_INDICATORS[NODE_TYPE.ACTIVE].icon)
+    })
+
+    it('sets nodeType to passive when node.isActive is false', () => {
+      const node = buildNode({ isActive: false })
+      const result = enrichNode(node, { state: NODE_STATE.AVAILABLE, reasonCode: '' }, localize)
+
+      expect(result.nodeType).toBe(NODE_TYPE.PASSIVE)
+      expect(result.nodeTypeIcon).toBe(NODE_TYPE_INDICATORS[NODE_TYPE.PASSIVE].icon)
+    })
+
+    it('sets nodeType to passive when node.isActive is undefined', () => {
+      const node = buildNode()
+      const result = enrichNode(node, { state: NODE_STATE.AVAILABLE, reasonCode: '' }, localize)
+
+      expect(result.nodeType).toBe(NODE_TYPE.PASSIVE)
+      expect(result.nodeTypeIcon).toBe(NODE_TYPE_INDICATORS[NODE_TYPE.PASSIVE].icon)
+    })
+
+    it('preserves isActive on the enriched node', () => {
+      const node = buildNode({ isActive: true })
+      const result = enrichNode(node, { state: NODE_STATE.AVAILABLE, reasonCode: '' }, localize)
+
+      expect(result.isActive).toBe(true)
     })
   })
 })
