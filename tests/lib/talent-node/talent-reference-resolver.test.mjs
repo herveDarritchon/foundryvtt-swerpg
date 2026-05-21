@@ -127,8 +127,8 @@ describe('TalentReferenceResolver', () => {
 
       expect(map.get('Item.abc')).toEqual({ name: 'Parry', activation: 'active', isRanked: true, isActive: true })
       expect(map.get('talent-parry')).toEqual({ name: 'Parry', activation: 'active', isRanked: true, isActive: true })
-      expect(map.get('Item.def')).toEqual({ name: 'Grit', activation: 'passive', isRanked: false, isActive: true })
-      expect(map.get('grit')).toEqual({ name: 'Grit', activation: 'passive', isRanked: false, isActive: true })
+      expect(map.get('Item.def')).toEqual({ name: 'Grit', activation: 'passive', isRanked: false, isActive: false })
+      expect(map.get('grit')).toEqual({ name: 'Grit', activation: 'passive', isRanked: false, isActive: false })
     })
 
     it('falls back to item.id when system.id is missing', () => {

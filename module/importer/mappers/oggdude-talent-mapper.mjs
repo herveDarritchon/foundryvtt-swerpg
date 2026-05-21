@@ -101,7 +101,9 @@ export class OggDudeTalentMapper {
       // Clé unique du talent
       const key = this.generateTalentKey(talentData)
       const name = talentData.Name || talentData.TalentName || key
-      const rawActivation = talentData.Activation || talentData.ActivationType
+      const rawActivation = [talentData.ActivationValue, talentData.Activation, talentData.ActivationType].find(
+        (value) => value != null && String(value).trim() !== '',
+      )
       const activation = resolveTalentActivation(rawActivation)
 
       // Construction du contexte avec toutes les transformations
@@ -286,7 +288,10 @@ export class OggDudeTalentMapper {
               tier: context.tier || 1,
               raw: {
                 key: context.key,
-                activation: context.originalData?.Activation || context.originalData?.ActivationType || undefined,
+                activation:
+                  [context.originalData?.ActivationValue, context.originalData?.Activation, context.originalData?.ActivationType].find(
+                    (value) => value != null && String(value).trim() !== '',
+                  ) || undefined,
                 source: context.originalData?.Source || context.originalData?.SourceBook || undefined,
               },
               importedAt: new Date().toISOString(),
