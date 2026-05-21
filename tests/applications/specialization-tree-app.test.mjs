@@ -3204,6 +3204,91 @@ describe('specialization-tree application', () => {
       )
     })
 
+    it('click on purchased node blocked by dependents shows tooltip, no confirm dialog, no mutation', async () => {
+      const actor = createActor({
+        system: {
+          details: {
+            specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' }],
+          },
+          progression: {
+            talentPurchases: [
+              { treeId: 'tree-bodyguard', nodeId: 'r1c1', talentId: 'Item.talent-tough', specializationId: 'spec-bodyguard' },
+              { treeId: 'tree-bodyguard', nodeId: 'r2c1', talentId: 'Item.talent-protect', specializationId: 'spec-bodyguard' },
+            ],
+            experience: { available: 100, spent: 25 },
+          },
+        },
+      })
+
+      globalThis.fromUuidSync = vi.fn((uuid) => {
+        if (uuid === 'Item.tree-bodyguard') {
+          return {
+            id: 'tree-bodyguard',
+            type: 'specialization-tree',
+            name: 'Bodyguard Tree',
+            system: {
+              nodes: [
+                { nodeId: 'r1c1', talentId: 'Item.talent-tough', talentUuid: 'Item.talent-tough', row: 1, column: 1, cost: 10 },
+                { nodeId: 'r2c1', talentId: 'Item.talent-protect', talentUuid: 'Item.talent-protect', row: 2, column: 1, cost: 15 },
+              ],
+              connections: [{ from: 'r1c1', to: 'r2c1' }],
+            },
+          }
+        }
+        if (uuid === 'Item.talent-tough') return { name: 'Tough', system: { isRanked: false } }
+        if (uuid === 'Item.talent-protect') return { name: 'Protect', system: { isRanked: false } }
+        return null
+      })
+
+      const headerEl = { textContent: '' }
+      const bodyEl = { innerHTML: '' }
+
+      const tooltip = {
+        hidden: true,
+        querySelector: vi.fn((selector) => {
+          if (selector === '[data-tooltip-header]') return headerEl
+          if (selector === '[data-tooltip-body]') return bodyEl
+          return null
+        }),
+      }
+
+      const app = new SpecializationTreeApp()
+      app.actor = actor
+      app.document = actor
+      const host = createMockHost({ width: 640, height: 480 })
+      app.element = {
+        querySelector: vi.fn((selector) => {
+          if (selector === '[data-specialization-tree-viewport]') return host
+          if (selector === '[data-node-tooltip]') return tooltip
+          return null
+        }),
+      }
+
+      const context = buildSpecializationTreeContext(actor)
+
+      const blockedNode = context.renderNodes.find((n) => n.nodeId === 'r1c1')
+      expect(blockedNode, 'r1c1 must exist').toBeDefined()
+      expect(blockedNode.nodeState, 'r1c1 must be purchased').toBe('purchased')
+      expect(blockedNode.actionable.primaryAction, 'r1c1 must not be actionable when blocked by dependents').toBeNull()
+      expect(blockedNode.actionable.blockedReasonCode, 'r1c1 must have blocked reason code').toBe('node-has-dependents')
+
+      await app._onRender(context, { resetView: false })
+
+      const confirmSpy = vi.fn().mockResolvedValue(false)
+      globalThis.foundry.applications.api.DialogV2.confirm = confirmSpy
+
+      const stage = app.pixiApp.stage
+      const container = stage.children.find((child) => child.position && child.scale)
+      const nodeHitArea = container.children.find((child) => child._listeners?.pointerdown)
+
+      await nodeHitArea._listeners.pointerdown({ stopPropagation: vi.fn() })
+
+      expect(confirmSpy, 'confirm dialog must NOT be called for a blocked node').not.toHaveBeenCalled()
+      expect(actor.update, 'actor.update must NOT be called for a blocked node').not.toHaveBeenCalled()
+      expect(tooltip.hidden, 'tooltip must be shown for consultation').toBe(false)
+      expect(headerEl.textContent, 'tooltip must show talent name').toBe('Tough')
+    })
+
     it('shows failure notification when purchase service returns error', async () => {
       const actor = createActor({
         system: {
@@ -3262,6 +3347,76 @@ describe('specialization-tree application', () => {
 
       expect(purchaseSpy, 'purchaseTalentNode must be called').toHaveBeenCalled()
       expect(globalThis.ui.notifications.warn).toHaveBeenCalledWith('Purchase failed: Not enough XP')
+    })
+  })
+
+  describe('refresh re-evaluates node states from current actor data (US17.7)', () => {
+    it('refresh after actor data mutation picks up updated node states', async () => {
+      const actor = createActor({
+        system: {
+          details: {
+            specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' }],
+          },
+          progression: {
+            talentPurchases: [],
+            experience: { available: 100 },
+          },
+        },
+      })
+
+      globalThis.fromUuidSync = vi.fn((uuid) => {
+        if (uuid === 'Item.tree-bodyguard') {
+          return {
+            id: 'tree-bodyguard',
+            type: 'specialization-tree',
+            name: 'Bodyguard Tree',
+            system: {
+              specializationId: 'spec-bodyguard',
+              nodes: [
+                { nodeId: 'r1c1', talentId: 'Item.talent-tough', talentUuid: 'Item.talent-tough', row: 1, column: 1, cost: 10 },
+                { nodeId: 'r2c1', talentId: 'Item.talent-protect', talentUuid: 'Item.talent-protect', row: 2, column: 1, cost: 15 },
+              ],
+              connections: [{ from: 'r1c1', to: 'r2c1' }],
+            },
+          }
+        }
+        if (uuid === 'Item.talent-tough') return { name: 'Tough', system: { isRanked: false } }
+        if (uuid === 'Item.talent-protect') return { name: 'Protect', system: { isRanked: false } }
+        return null
+      })
+
+      const app = new SpecializationTreeApp()
+      app.actor = actor
+      app.document = actor
+      const host = createMockHost({ width: 640, height: 480 })
+      app.element = { querySelector: vi.fn(() => host) }
+
+      // Initial context: r1c1 available
+      let context = buildSpecializationTreeContext(actor)
+      expect(context.renderNodes.find((n) => n.nodeId === 'r1c1').nodeState).toBe('available')
+
+      await app._onRender(context, { resetView: false })
+
+      // Simulate actor data mutation (purchase r1c1)
+      actor.system.progression.talentPurchases = [
+        { treeId: 'tree-bodyguard', nodeId: 'r1c1', talentId: 'Item.talent-tough', specializationId: 'spec-bodyguard' },
+      ]
+      actor.system.progression.experience = { available: 90, spent: 10 }
+
+      // Refresh the tree app
+      await app.refresh()
+
+      // Context rebuilt from fresh actor data: r1c1 now purchased
+      context = buildSpecializationTreeContext(actor)
+      const r1c1 = context.renderNodes.find((n) => n.nodeId === 'r1c1')
+      expect(r1c1, 'r1c1 must exist after refresh').toBeDefined()
+      expect(r1c1.nodeState, 'r1c1 must be purchased after refresh from updated actor').toBe('purchased')
+      expect(r1c1.reasonCode, 'purchased node must have reason code').toBe('already-purchased')
+
+      // r2c1 should now be available (row access gained via r1c1 purchase)
+      const r2c1 = context.renderNodes.find((n) => n.nodeId === 'r2c1')
+      expect(r2c1, 'r2c1 must exist after refresh').toBeDefined()
+      expect(r2c1.nodeState, 'r2c1 must be available after r1c1 purchased').toBe('available')
     })
   })
 

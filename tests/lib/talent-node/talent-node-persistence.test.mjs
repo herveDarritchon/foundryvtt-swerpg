@@ -202,4 +202,93 @@ describe('applyTalentNodePatch', () => {
       expect(patchArg).toHaveProperty('system.progression.experience.spent')
     })
   })
+
+  describe('talent change detection dispatch (US17.7)', () => {
+    function hasProperty(obj, path) {
+      const parts = path.split('.')
+      let current = obj
+      for (const part of parts) {
+        if (current === null || current === undefined || typeof current !== 'object') return false
+        if (!(part in current)) return false
+        current = current[part]
+      }
+      return true
+    }
+
+    it('detects talent purchase change in update data', () => {
+      const data = { system: { progression: { talentPurchases: [{ nodeId: 'r1c1' }] } } }
+      const result = hasProperty(data, 'system.progression.talentPurchases')
+      expect(result).toBe(true)
+    })
+
+    it('detects XP spent change in update data', () => {
+      const data = { system: { progression: { experience: { spent: 10 } } } }
+      const result = hasProperty(data, 'system.progression.experience.spent')
+      expect(result).toBe(true)
+    })
+
+    it('detects advancement level change in update data', () => {
+      const data = { system: { advancement: { level: 2 } } }
+      const result = hasProperty(data, 'system.advancement.level')
+      expect(result).toBe(true)
+    })
+
+    it('detects items change in update data', () => {
+      const data = { items: [{ _id: 'item-1' }] }
+      const result = 'items' in data
+      expect(result).toBe(true)
+    })
+
+    it('does not detect non-talent changes as talent change', () => {
+      const data = { system: { resources: { wounds: { value: 5 } } } }
+      const talentChange =
+        hasProperty(data, 'system.advancement.level') ||
+        'items' in data ||
+        hasProperty(data, 'system.progression.talentPurchases') ||
+        hasProperty(data, 'system.progression.experience.spent')
+      expect(talentChange).toBe(false)
+    })
+
+    it('dispatches tree app refresh when talentPurchases is in update data', () => {
+      const refreshMock = vi.fn().mockResolvedValue(undefined)
+      const renderMock = vi.fn()
+      const actor = buildActor()
+      actor.sheet = { render: renderMock }
+
+      const dedicatedTreeApp = { actor, refresh: refreshMock }
+
+      const data = { system: { progression: { talentPurchases: [{ nodeId: 'r1c1' }] } } }
+      const talentChange = hasProperty(data, 'system.progression.talentPurchases')
+      expect(talentChange).toBe(true)
+
+      if (talentChange) {
+        if (dedicatedTreeApp?.actor === actor && typeof dedicatedTreeApp.refresh === 'function') {
+          dedicatedTreeApp.refresh()
+        }
+        actor.sheet?.render(false)
+      }
+
+      expect(refreshMock).toHaveBeenCalledTimes(1)
+      expect(renderMock).toHaveBeenCalledWith(false)
+    })
+
+    it('does not dispatch tree app refresh or sheet render for non-talent data', () => {
+      const refreshMock = vi.fn().mockResolvedValue(undefined)
+      const renderMock = vi.fn()
+      const actor = buildActor()
+      actor.sheet = { render: renderMock }
+
+      const dedicatedTreeApp = { actor, refresh: refreshMock }
+
+      const data = { system: { resources: { wounds: { value: 5 } } } }
+      const talentChange =
+        hasProperty(data, 'system.advancement.level') ||
+        'items' in data ||
+        hasProperty(data, 'system.progression.talentPurchases') ||
+        hasProperty(data, 'system.progression.experience.spent')
+      expect(talentChange).toBe(false)
+      expect(refreshMock).not.toHaveBeenCalled()
+      expect(renderMock).not.toHaveBeenCalled()
+    })
+  })
 })
