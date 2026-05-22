@@ -533,6 +533,20 @@ describe('specialization-tree application', () => {
     expect(typeTexts.length, 'active type indicator (⚡) must be rendered').toBeGreaterThanOrEqual(1)
   })
 
+  it('requests reset view when tree selection changes', async () => {
+    const app = new SpecializationTreeApp()
+    const viewportHost = { dataset: {}, firstElementChild: null, replaceChildren: vi.fn() }
+    const tooltip = { hidden: true, querySelector: vi.fn(() => null) }
+    app.element = createRoot({ viewportHost, tooltip })
+
+    await app._onRender({ currentTreeId: 'spec-a', renderNodes: [], renderConnections: [] }, {})
+    await app._onRender({ currentTreeId: 'spec-b', renderNodes: [], renderConnections: [] }, {})
+
+    const renderer = mockRendererInstances[0]
+    expect(renderer.update.mock.calls[0][1]).toEqual({ resetView: true })
+    expect(renderer.update.mock.calls[1][1]).toEqual({ resetView: true })
+  })
+
   it('close destroys the renderer and clears actor bindings', async () => {
     const app = new SpecializationTreeApp()
     app.actor = actor
@@ -1083,6 +1097,23 @@ describe('specialization-tree application', () => {
     expect(tooltip.hidden).toBe(false)
     expect(headerEl.textContent).toBe('Tough')
     expect(bodyEl.innerHTML).toContain('5 XP')
+  })
+
+  it('background callback hides visible tooltip', async () => {
+    const viewportHost = { dataset: {}, firstElementChild: null, replaceChildren: vi.fn() }
+    const tooltip = {
+      hidden: false,
+      querySelector: vi.fn(() => null),
+    }
+
+    const app = new SpecializationTreeApp()
+    app.actor = createActor()
+    app.element = createRoot({ viewportHost, tooltip })
+    await app._onRender({ currentTreeId: 'spec-a', renderNodes: [], renderConnections: [] }, {})
+
+    app.renderer.onBackgroundPointerDown()
+
+    expect(tooltip.hidden).toBe(true)
   })
 
   it('renderer node callback executes purchase flow and refreshes on success', async () => {

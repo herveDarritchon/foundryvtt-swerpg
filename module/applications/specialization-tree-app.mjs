@@ -421,6 +421,7 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
     })
 
     this.renderer.onNodePointerDown = (node) => this.#handleNodePointerDown(node)
+    this.renderer.onBackgroundPointerDown = () => this.#hideNodeTooltip()
   }
 
   #getViewportHost() {
