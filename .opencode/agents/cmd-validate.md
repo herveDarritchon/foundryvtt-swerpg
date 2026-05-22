@@ -2,7 +2,7 @@
 name: "validate"
 description: Exécute les validations projet via le skill executer-validation-projet, sans correction ni analyse coûteuse inutile.
 mode: subagent
-model: github-copilot/gpt-4.1
+model: github-copilot/gpt-5-mini
 temperature: 0.1
 permission:
   read: allow
