@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest'
 
 import {
+  ACTIVE_TYPE_ICON_PATH,
+  buildIconSlots,
+  FORGET_ACTION_ICON_PATH,
   enrichNode,
   getNodeVariant,
   getReasonLabelKey,
@@ -10,9 +13,12 @@ import {
   NODE_STATE_VARIANTS,
   NODE_TYPE,
   NODE_TYPE_INDICATORS,
+  PASSIVE_TYPE_ICON_PATH,
+  PURCHASE_ACTION_ICON_PATH,
   REASON_CODE,
   REASON_LABEL_DEFAULT,
   REASON_LABEL_KEYS,
+  RANKED_ICON_PATH,
   resolveNodeType,
 } from '../../../module/applications/specialization-tree/node-ui-state.mjs'
 
@@ -219,6 +225,44 @@ describe('node-ui-state', () => {
 
     it('returns REASON_LABEL_DEFAULT for unknown reason code', () => {
       expect(getReasonLabelKey('no-such-reason')).toBe(REASON_LABEL_DEFAULT)
+    })
+  })
+
+  describe('buildIconSlots', () => {
+    it('maps passive purchase ranked nodes to the three expected slots', () => {
+      const iconSlots = buildIconSlots({
+        isActive: false,
+        isRanked: true,
+        actionable: { primaryAction: 'purchase' },
+      })
+
+      expect(iconSlots.topLeft).toBe(PASSIVE_TYPE_ICON_PATH)
+      expect(iconSlots.topRight).toBe(PURCHASE_ACTION_ICON_PATH)
+      expect(iconSlots.bottomRight).toBe(RANKED_ICON_PATH)
+    })
+
+    it('maps active forget nodes to active type and forget action slots', () => {
+      const iconSlots = buildIconSlots({
+        nodeType: NODE_TYPE.ACTIVE,
+        isRanked: false,
+        actionable: { primaryAction: 'forget' },
+      })
+
+      expect(iconSlots.topLeft).toBe(ACTIVE_TYPE_ICON_PATH)
+      expect(iconSlots.topRight).toBe(FORGET_ACTION_ICON_PATH)
+      expect(iconSlots.bottomRight).toBeNull()
+    })
+
+    it('omits action and rank slots when the node has no CTA and is not ranked', () => {
+      const iconSlots = buildIconSlots({
+        nodeType: NODE_TYPE.PASSIVE,
+        isRanked: false,
+        actionable: { primaryAction: null },
+      })
+
+      expect(iconSlots.topLeft).toBe(PASSIVE_TYPE_ICON_PATH)
+      expect(iconSlots.topRight).toBeNull()
+      expect(iconSlots.bottomRight).toBeNull()
     })
   })
 

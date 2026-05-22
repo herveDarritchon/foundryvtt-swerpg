@@ -12,7 +12,7 @@
  */
 
 import { buildRenderViewModel } from './render-view-model.mjs'
-import { enrichNode, NODE_STATE } from './node-ui-state.mjs'
+import { buildIconSlots, enrichNode, NODE_STATE } from './node-ui-state.mjs'
 import { actionableNodeViewModel } from './actionable-node-view-model.mjs'
 import { buildConnectionAnchors, computeNodePosition } from './layout.mjs'
 import { selectDefaultTreeKey } from '../../lib/specialization-tree/default-tree-selector.mjs'
@@ -214,15 +214,17 @@ export function buildRenderNodesAndConnections(currentTreeData, actor, currentTr
   const renderNodes = positionedNodes.map((node) => {
     const stateResult = nodeStates.get(node.nodeId) ?? { state: NODE_STATE.INVALID }
     const enriched = enrichNode(node, stateResult, localize)
+    const actionable = actionableNodeViewModel({
+      renderNode: enriched,
+      actor,
+      specializationId: currentTreeId,
+      tree: currentTreeData,
+      localize,
+    })
     return {
       ...enriched,
-      actionable: actionableNodeViewModel({
-        renderNode: enriched,
-        actor,
-        specializationId: currentTreeId,
-        tree: currentTreeData,
-        localize,
-      }),
+      actionable,
+      iconSlots: buildIconSlots({ ...enriched, actionable }),
     }
   })
 

@@ -28,6 +28,12 @@ function createRoot({ viewportHost, panel }) {
   }
 }
 
+async function triggerContextualAction(app, SpecializationTreeApp) {
+  const event = { preventDefault: vi.fn() }
+  await SpecializationTreeApp.DEFAULT_OPTIONS.actions.contextualAction.call(app, event, null)
+  return event
+}
+
 describe('specialization-tree app orchestration', () => {
   let SpecializationTreeApp
   let buildSpecializationTreeContext
@@ -358,7 +364,7 @@ describe('specialization-tree app orchestration', () => {
     expect(panel.hidden).toBe(true)
   })
 
-  it('renderer node callback executes purchase flow and refreshes on success', async () => {
+  it('renderer node callback opens detail first, then contextual CTA executes purchase flow', async () => {
     const app = new SpecializationTreeApp()
     app.actor = createActor()
     app.rendered = true
@@ -384,12 +390,17 @@ describe('specialization-tree app orchestration', () => {
 
     await app.renderer.onNodePointerDown(node)
 
+    expect(purchaseTalentNodeMock).not.toHaveBeenCalled()
+    expect(app._currentDetailNode).toBe(node)
+
+    await triggerContextualAction(app, SpecializationTreeApp)
+
     expect(purchaseTalentNodeMock).toHaveBeenCalledWith(app.actor, 'spec-a', 'n1')
     expect(infoSpy).toHaveBeenCalled()
     expect(refreshSpy).toHaveBeenCalled()
   })
 
-  it('renderer node callback executes forget flow and warns on failure', async () => {
+  it('renderer node callback opens detail first, then contextual CTA executes forget flow', async () => {
     forgetTalentNodeMock.mockResolvedValue({ ok: false, reasonCode: 'node-has-dependents' })
     const app = new SpecializationTreeApp()
     app.actor = createActor()
@@ -415,6 +426,11 @@ describe('specialization-tree app orchestration', () => {
     }
 
     await app.renderer.onNodePointerDown(node)
+
+    expect(forgetTalentNodeMock).not.toHaveBeenCalled()
+    expect(app._currentDetailNode).toBe(node)
+
+    await triggerContextualAction(app, SpecializationTreeApp)
 
     expect(forgetTalentNodeMock).toHaveBeenCalledWith(app.actor, 'spec-a', 'n1')
     expect(warnSpy).toHaveBeenCalled()
@@ -526,6 +542,7 @@ describe('specialization-tree app orchestration', () => {
     }
 
     await app.renderer.onNodePointerDown(node)
+    await triggerContextualAction(app, SpecializationTreeApp)
 
     expect(confirmSpy).toHaveBeenCalled()
     const callArgs = confirmSpy.mock.calls[0][0]
@@ -703,6 +720,7 @@ describe('specialization-tree app orchestration', () => {
         }
 
         await app.renderer.onNodePointerDown(node)
+        await triggerContextualAction(app, SpecializationTreeApp)
 
         expect(confirmSpy).toHaveBeenCalled()
         const callArgs = confirmSpy.mock.calls[0][0]
@@ -740,6 +758,7 @@ describe('specialization-tree app orchestration', () => {
         }
 
         await app.renderer.onNodePointerDown(node)
+        await triggerContextualAction(app, SpecializationTreeApp)
 
         expect(confirmSpy).toHaveBeenCalled()
         const callArgs = confirmSpy.mock.calls[0][0]
@@ -804,8 +823,11 @@ describe('specialization-tree app orchestration', () => {
         appLocked.renderer.onBackgroundPointerDown()
         expect(lockedPanel.hidden).toBe(true)
 
-        // 5 — Available node triggers purchase flow directly (panel stays hidden)
-        const fastPanel = { hidden: true, querySelector: vi.fn(() => null) }
+        // 5 — Available node opens detail first, CTA triggers purchase flow
+        const fastPanel = {
+          hidden: true,
+          querySelector: vi.fn(() => null),
+        }
         const viewportHostAvail = { dataset: {}, firstElementChild: null, replaceChildren: vi.fn() }
         const appAvail = new SpecializationTreeApp()
         appAvail.actor = createActor()
@@ -829,6 +851,11 @@ describe('specialization-tree app orchestration', () => {
             actionRef: { specializationId: 'spec-a', nodeId: 'n1' },
           },
         })
+
+        expect(purchaseTalentNodeMock).not.toHaveBeenCalled()
+        expect(appAvail._currentDetailNode?.nodeId).toBe('n1')
+
+        await triggerContextualAction(appAvail, SpecializationTreeApp)
 
         expect(purchaseTalentNodeMock).toHaveBeenCalledWith(appAvail.actor, 'spec-a', 'n1')
         expect(infoSpy).toHaveBeenCalled()
