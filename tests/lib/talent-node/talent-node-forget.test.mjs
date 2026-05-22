@@ -35,9 +35,7 @@ function buildActor(overrides = {}) {
         specializations: [{ specializationId: 'spec-1', name: 'Bodyguard' }],
       },
       progression: {
-        talentPurchases: [
-          { treeId: 'tree-1', treeUuid: null, nodeId: 'r1c1', talentId: 'talent-parry', talentUuid: null, specializationId: 'spec-1' },
-        ],
+        talentPurchases: [{ treeId: 'tree-1', treeUuid: null, nodeId: 'r1c1', talentId: 'talent-parry', talentUuid: null, specializationId: 'spec-1' }],
         experience: { gained: 100, spent: 5 },
       },
     },
@@ -137,9 +135,7 @@ describe('forgetTalentNode', () => {
         system: {
           details: { specializations: [{ specializationId: 'spec-1' }] },
           progression: {
-            talentPurchases: [
-              { treeId: 'tree-1', treeUuid: null, nodeId: 'r2c1', talentId: 'talent-deflect', talentUuid: null, specializationId: 'spec-1' },
-            ],
+            talentPurchases: [{ treeId: 'tree-1', treeUuid: null, nodeId: 'r2c1', talentId: 'talent-deflect', talentUuid: null, specializationId: 'spec-1' }],
             // Simulating that r2c1 (cost 10) was purchased, r1c1 is not a dependency we care about here
             experience: { gained: 100, spent: 10 },
           },
@@ -167,42 +163,42 @@ describe('forgetTalentNode', () => {
     })
   })
 
-    it('emits a forget-succeeded audit event on success', async () => {
-      const actor = buildActor()
-      resolveSpecializationTree.mockReturnValue(buildResolvedTree())
+  it('emits a forget-succeeded audit event on success', async () => {
+    const actor = buildActor()
+    resolveSpecializationTree.mockReturnValue(buildResolvedTree())
 
-      await forgetTalentNode(actor, 'spec-1', 'r1c1')
+    await forgetTalentNode(actor, 'spec-1', 'r1c1')
 
-      expect(recordTalentNodeOperation).toHaveBeenCalledTimes(1)
-      expect(recordTalentNodeOperation).toHaveBeenCalledWith(
-        actor,
-        'forget',
-        'succeeded',
-        expect.objectContaining({
-          specializationId: 'spec-1',
-          treeId: 'tree-1',
-          nodeId: 'r1c1',
-          talentId: 'talent-parry',
-          cost: 5,
-          previousXp: 5,
-          nextXp: 0,
-        }),
-      )
-    })
+    expect(recordTalentNodeOperation).toHaveBeenCalledTimes(1)
+    expect(recordTalentNodeOperation).toHaveBeenCalledWith(
+      actor,
+      'forget',
+      'succeeded',
+      expect.objectContaining({
+        specializationId: 'spec-1',
+        treeId: 'tree-1',
+        nodeId: 'r1c1',
+        talentId: 'talent-parry',
+        cost: 5,
+        previousXp: 5,
+        nextXp: 0,
+      }),
+    )
+  })
 
-    it('succeeds even when audit log write fails (non-blocking)', async () => {
-      const actor = buildActor()
-      resolveSpecializationTree.mockReturnValue(buildResolvedTree())
-      recordTalentNodeOperation.mockRejectedValue(new Error('Audit write failed'))
+  it('succeeds even when audit log write fails (non-blocking)', async () => {
+    const actor = buildActor()
+    resolveSpecializationTree.mockReturnValue(buildResolvedTree())
+    recordTalentNodeOperation.mockRejectedValue(new Error('Audit write failed'))
 
-      const result = await forgetTalentNode(actor, 'spec-1', 'r1c1')
+    const result = await forgetTalentNode(actor, 'spec-1', 'r1c1')
 
-      expect(result.ok).toBe(true)
-      expect(logger.warn).toHaveBeenCalledWith(
-        '[TalentNodeForget] Audit log write failed (non-blocking)',
-        expect.objectContaining({ actorId: 'actor-001', nodeId: 'r1c1' }),
-      )
-    })
+    expect(result.ok).toBe(true)
+    expect(logger.warn).toHaveBeenCalledWith(
+      '[TalentNodeForget] Audit log write failed (non-blocking)',
+      expect.objectContaining({ actorId: 'actor-001', nodeId: 'r1c1' }),
+    )
+  })
 
   // ---------------------------------------------------------------------------
   // forgetTalentNode — rejection cases (no actor.update emitted)

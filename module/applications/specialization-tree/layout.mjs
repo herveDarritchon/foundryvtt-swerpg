@@ -78,6 +78,8 @@ export function buildConnectionAnchors(renderNodes, connections) {
     const toPos = nodePositionMap.get(viewConn.toNodeId) ?? { centerX: 0, centerY: 0 }
 
     return {
+      fromNodeId: viewConn.fromNodeId,
+      toNodeId: viewConn.toNodeId,
       fromX: fromPos.centerX,
       fromY: fromPos.centerY,
       toX: toPos.centerX,

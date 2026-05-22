@@ -35,9 +35,7 @@ function buildPayload(overrides = {}) {
     talentId: 'talent-parry',
     talentUuid: null,
     cost: 5,
-    updatedPurchases: [
-      { treeId: 'tree-1', treeUuid: null, nodeId: 'r1c1', talentId: 'talent-parry', talentUuid: null, specializationId: 'spec-1' },
-    ],
+    updatedPurchases: [{ treeId: 'tree-1', treeUuid: null, nodeId: 'r1c1', talentId: 'talent-parry', talentUuid: null, specializationId: 'spec-1' }],
     updatedSpent: 5,
     ...overrides,
   }
@@ -84,9 +82,7 @@ describe('applyTalentNodePatch', () => {
       const actor = buildActor({
         system: {
           progression: {
-            talentPurchases: [
-              { treeId: 'tree-1', treeUuid: null, nodeId: 'r1c1', talentId: 'talent-parry', talentUuid: null, specializationId: 'spec-1' },
-            ],
+            talentPurchases: [{ treeId: 'tree-1', treeUuid: null, nodeId: 'r1c1', talentId: 'talent-parry', talentUuid: null, specializationId: 'spec-1' }],
             experience: { gained: 100, spent: 5 },
           },
         },
