@@ -37,51 +37,51 @@ Ce plan remplace la v1 (implémentée partiellement dans PR #333) pour corriger 
 
 - GOAL-001: Rebaser la palette `NODE_STATE_VARIANTS` sur le système bleu (passif) / rouge (actif) avec différenciation par luminance entre acheté et disponible, et renforcer la lisibilité des verrouillés.
 
-| Task | Description | Completed | Date |
-| ---- | ----------- | --------- | ---- |
-| TASK-001 | Définir la matrice combinant état × type → attributs : fillColor, borderColor, borderWidth, alpha, textColor, costColor avec bleu (passif) / rouge (actif) en teinte de base | | |
-| TASK-002 | Appliquer la luminance : acheté → saturation élevée + bordure lumineuse (borderWidth+glow) ; disponible → saturation réduite + bordure terne | | |
-| TASK-003 | Mettre à jour la matrice des verrouillés : fond sombre mais pas noir (ex: `0x1a1a1a`), texte 65-70% opacité, bordure grise nette (borderWidth 2), coût XP en `0x999999` | | |
-| TASK-004 | Mettre à jour la matrice des invalides : teinte rouge sombre, bordure rouge terne, texte lisible | | |
-| TASK-005 | Conserver l'indicateur iconographique actif/passif (`nodeTypeIcon`) en complément de la couleur | ✅ PR #333 | 2026-05-21 |
-| TASK-006 | Mettre à jour `enrichNode()` si la signature change pour accepter les nouvelles données | | |
-| TASK-007 | Mettre à jour les tests `node-ui-state.test.mjs` : vérifier chaque combinaison état × type avec les nouvelles couleurs | | |
+| Task     | Description                                                                                                                                                                  | Completed  | Date       |
+| -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- | ---------- |
+| TASK-001 | Définir la matrice combinant état × type → attributs : fillColor, borderColor, borderWidth, alpha, textColor, costColor avec bleu (passif) / rouge (actif) en teinte de base |            |            |
+| TASK-002 | Appliquer la luminance : acheté → saturation élevée + bordure lumineuse (borderWidth+glow) ; disponible → saturation réduite + bordure terne                                 |            |            |
+| TASK-003 | Mettre à jour la matrice des verrouillés : fond sombre mais pas noir (ex: `0x1a1a1a`), texte 65-70% opacité, bordure grise nette (borderWidth 2), coût XP en `0x999999`      |            |            |
+| TASK-004 | Mettre à jour la matrice des invalides : teinte rouge sombre, bordure rouge terne, texte lisible                                                                             |            |            |
+| TASK-005 | Conserver l'indicateur iconographique actif/passif (`nodeTypeIcon`) en complément de la couleur                                                                              | ✅ PR #333 | 2026-05-21 |
+| TASK-006 | Mettre à jour `enrichNode()` si la signature change pour accepter les nouvelles données                                                                                      |            |            |
+| TASK-007 | Mettre à jour les tests `node-ui-state.test.mjs` : vérifier chaque combinaison état × type avec les nouvelles couleurs                                                       |            |            |
 
 ### Implementation Phase 2 — Pictogrammes SVG chargés comme textures PIXI
 
 - GOAL-002: Remplacer les pictogrammes Unicode par des sprites PIXI chargés depuis `assets/images/icons/`, positionnés en haut-droit du nœud.
 
-| Task | Description | Completed | Date |
-| ---- | ----------- | --------- | ---- |
-| TASK-008 | Exporter les constantes de chemins SVG dans `node-ui-state.mjs` : `NODE_STATE_SVG_ICONS` mappant chaque état → chemin relatif | | |
-| TASK-009 | Créer une fonction utilitaire `loadStatePictogram(state): Promise<PIXI.Texture>` dans la couche applicative (hors module pur) | | |
-| TASK-010 | Implémenter un cache de textures (`Map<string, PIXI.Texture>`) pour éviter de recharger les SVGs à chaque render | | |
-| TASK-011 | Dans `#drawTree()` de `specialization-tree-app.mjs` : charger la texture au premier render, créer un `PIXI.Sprite` positionné en haut-droit (node.x + NODE_WIDTH - 20, node.y + 4) | | |
-| TASK-012 | Fallback : si le chargement SVG échoue, afficher le pictogramme Unicode comme fallback | | |
-| TASK-013 | Mettre à jour les tests de rendu PIXI dans `specialization-tree-app.test.mjs` : vérifier la présence du Sprite | | |
-| TASK-014 | Supprimer le rendu Unicode des pictogrammes en bas-droit (remplacé par SVG en haut-droit) | | |
+| Task     | Description                                                                                                                                                                        | Completed | Date |
+| -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | ---- |
+| TASK-008 | Exporter les constantes de chemins SVG dans `node-ui-state.mjs` : `NODE_STATE_SVG_ICONS` mappant chaque état → chemin relatif                                                      |           |      |
+| TASK-009 | Créer une fonction utilitaire `loadStatePictogram(state): Promise<PIXI.Texture>` dans la couche applicative (hors module pur)                                                      |           |      |
+| TASK-010 | Implémenter un cache de textures (`Map<string, PIXI.Texture>`) pour éviter de recharger les SVGs à chaque render                                                                   |           |      |
+| TASK-011 | Dans `#drawTree()` de `specialization-tree-app.mjs` : charger la texture au premier render, créer un `PIXI.Sprite` positionné en haut-droit (node.x + NODE_WIDTH - 20, node.y + 4) |           |      |
+| TASK-012 | Fallback : si le chargement SVG échoue, afficher le pictogramme Unicode comme fallback                                                                                             |           |      |
+| TASK-013 | Mettre à jour les tests de rendu PIXI dans `specialization-tree-app.test.mjs` : vérifier la présence du Sprite                                                                     |           |      |
+| TASK-014 | Supprimer le rendu Unicode des pictogrammes en bas-droit (remplacé par SVG en haut-droit)                                                                                          |           |      |
 
 ### Implementation Phase 3 — Stabilisation du coût XP
 
 - GOAL-003: Rendre l'affichage du coût XP plus structuré et cohérent visuellement entre tous les états.
 
-| Task | Description | Completed | Date |
-| ---- | ----------- | --------- | ---- |
-| TASK-015 | Pour les nœuds disponibles : afficher le coût XP dans une pastille/badge `[5 XP]` avec une couleur plus visible | | |
-| TASK-016 | Pour les nœuds achetés : afficher le coût XP en texte secondaire (grisé) | | |
-| TASK-017 | Pour les nœuds verrouillés et invalides : coût XP en texte lisible, identique au texte principal | | |
-| TASK-018 | Mettre à jour `#drawTree()` : appliquer le style de coût selon l'état du nœud | | |
-| TASK-019 | Mettre à jour les tests de rendu PIXI pour vérifier le style du coût XP par état | | |
+| Task     | Description                                                                                                     | Completed | Date |
+| -------- | --------------------------------------------------------------------------------------------------------------- | --------- | ---- |
+| TASK-015 | Pour les nœuds disponibles : afficher le coût XP dans une pastille/badge `[5 XP]` avec une couleur plus visible |           |      |
+| TASK-016 | Pour les nœuds achetés : afficher le coût XP en texte secondaire (grisé)                                        |           |      |
+| TASK-017 | Pour les nœuds verrouillés et invalides : coût XP en texte lisible, identique au texte principal                |           |      |
+| TASK-018 | Mettre à jour `#drawTree()` : appliquer le style de coût selon l'état du nœud                                   |           |      |
+| TASK-019 | Mettre à jour les tests de rendu PIXI pour vérifier le style du coût XP par état                                |           |      |
 
 ### Implementation Phase 4 — Finalisation i18n et documentation
 
 - GOAL-004: Ajouter les clés i18n minimales et finaliser la documentation.
 
-| Task | Description | Completed | Date |
-| ---- | ----------- | --------- | ---- |
-| TASK-020 | Ajouter les clés i18n dans `lang/en.json` et `lang/fr.json` si des libellés SVG ou badges sont introduits | | |
-| TASK-021 | Mettre à jour la Définition of Done dans ce plan | | |
-| TASK-022 | Exécuter la suite complète de tests (`pnpm test`) | | |
+| Task     | Description                                                                                               | Completed | Date |
+| -------- | --------------------------------------------------------------------------------------------------------- | --------- | ---- |
+| TASK-020 | Ajouter les clés i18n dans `lang/en.json` et `lang/fr.json` si des libellés SVG ou badges sont introduits |           |      |
+| TASK-021 | Mettre à jour la Définition of Done dans ce plan                                                          |           |      |
+| TASK-022 | Exécuter la suite complète de tests (`pnpm test`)                                                         |           |      |
 
 ## 3. Alternatives
 

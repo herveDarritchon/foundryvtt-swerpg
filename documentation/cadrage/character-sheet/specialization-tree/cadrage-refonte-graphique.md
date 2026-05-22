@@ -40,10 +40,10 @@ contexte**, pas un panneau marketing.
 
 À faire :
 
-* réduire la hauteur du header ;
-* afficher la progression utile ;
-* afficher l’XP disponible si l’achat est possible depuis l’écran ;
-* garder le style Star Wars mais avec moins de verticalité.
+- réduire la hauteur du header ;
+- afficher la progression utile ;
+- afficher l’XP disponible si l’achat est possible depuis l’écran ;
+- garder le style Star Wars mais avec moins de verticalité.
 
 ---
 
@@ -70,9 +70,10 @@ Supprimer la deuxième ligne qui sera remplacée par la barre de progression (2.
 ### 2.3.2. Rendre l'arbre actif plus visible
 
 Améliorer l'affichage de l'arbre actif:
-* avoir un effet hover sur l'arbre que l'on survole (couleur de fond plus claire, bordure lumineuse, etc.) pour indiquer que c'est cliquable.
-* mettre en surbrillance l'arbre actif dans la sidebar quand il est sélectionné.
-* 
+
+- avoir un effet hover sur l'arbre que l'on survole (couleur de fond plus claire, bordure lumineuse, etc.) pour indiquer que c'est cliquable.
+- mettre en surbrillance l'arbre actif dans la sidebar quand il est sélectionné.
+-
 
 ---
 
@@ -82,19 +83,20 @@ Améliorer l'affichage de l'arbre actif:
 
 Actuellement, on distingue :
 
-* vert : acheté ;
-* bleu : disponible ;
-* sombre : verrouillé.
+- vert : acheté ;
+- bleu : disponible ;
+- sombre : verrouillé.
 
 C’est correct, mais encore trop dépendant de la couleur.
 
 ### 3.1.1. Correction de la couleur des noeuds
 
 Règles métier de la couleur :
-* bleu: talent passif
-* rouge: talent actif
-* acheté: couleur plus dense, bordure lumineuse
-* disponible: couleur plus claire, bordure terne
+
+- bleu: talent passif
+- rouge: talent actif
+- acheté: couleur plus dense, bordure lumineuse
+- disponible: couleur plus claire, bordure terne
 
 Jouer sur la luminosité des couleurs pour exprimer qu'un nœud est acheté ou pas.
 
@@ -104,10 +106,10 @@ Mettre à jour la couleur des nœuds pour respecter ces règles métier. Par exe
 
 Je veux ajouter un petit marqueur discret (dans le coin en haut à droite) dans chaque nœud (en utilisant un svg chargé comme texture PIXI) :
 
-* assets/images/icons/sell-card.svg pour acheté ;
-* assets/images/icons/buy-card.svg pour achetable ;
-* assets/images/icons/padlock.svg pour verrouillé ;
-* assets/images/icons/hazard-sign.svg pour invalide / non résolu.
+- assets/images/icons/sell-card.svg pour acheté ;
+- assets/images/icons/buy-card.svg pour achetable ;
+- assets/images/icons/padlock.svg pour verrouillé ;
+- assets/images/icons/hazard-sign.svg pour invalide / non résolu.
 
 Pas besoin d’un pictogramme très visible. Un petit marqueur suffit, mais il rend l’état beaucoup plus immédiat.
 
@@ -121,10 +123,10 @@ Un verrouillé doit être secondaire, pas fantomatique.
 
 Je proposerais :
 
-* texte à 65–70 % d’opacité, pas 35–40 % ;
-* bordure grise plus nette ;
-* fond sombre, mais pas noir ;
-* coût XP toujours lisible.
+- texte à 65–70 % d’opacité, pas 35–40 % ;
+- bordure grise plus nette ;
+- fond sombre, mais pas noir ;
+- coût XP toujours lisible.
 
 Le joueur doit pouvoir planifier son build. Donc les talents verrouillés doivent rester lisibles.
 
@@ -160,9 +162,9 @@ Les connexions existent, mais elles ne portent pas encore assez d’information.
 
 Je proposerais trois styles :
 
-* lien acheté → plus lumineux que le lien menant vers un noeud disponible ;
-* lien menant vers un nœud disponible → neutre ;
-* lien verrouillé → gris sombre.
+- lien acheté → plus lumineux que le lien menant vers un noeud disponible ;
+- lien menant vers un nœud disponible → neutre ;
+- lien verrouillé → gris sombre.
 
 Cela permet au joueur de voir le chemin de progression d’un coup d’œil.
 
@@ -172,11 +174,11 @@ Cela permet au joueur de voir le chemin de progression d’un coup d’œil.
 
 Quand le joueur survole un nœud :
 
-* rendre le nœud plus lumineux ;
-* mettre en lumière (moins lumineux que le nœud survolé) ses prérequis directs ;
-* mettre en lumière les talents qu’il débloque (même luminosité que les prérequis directs) ;
-* atténuer légèrement le reste de l'arbre.
-* afficher au survol le panneau de détail, le temps du survol.
+- rendre le nœud plus lumineux ;
+- mettre en lumière (moins lumineux que le nœud survolé) ses prérequis directs ;
+- mettre en lumière les talents qu’il débloque (même luminosité que les prérequis directs) ;
+- atténuer légèrement le reste de l'arbre.
+- afficher au survol le panneau de détail, le temps du survol.
 
 C’est une amélioration UX très forte. Elle répond immédiatement à :
 
@@ -281,8 +283,8 @@ C’est clair, mais un peu pauvre. Surtout pour une action qui modifie la fiche.
 
 Tu pourrais prévoir plus tard :
 
-* double-clic sur un nœud disponible → ouvrir confirmation d’achat ;
-* double-clic sur un nœud acheté → ouvrir confirmation d’oubli.
+- double-clic sur un nœud disponible → ouvrir confirmation d’achat ;
+- double-clic sur un nœud acheté → ouvrir confirmation d’oubli.
 
 Mais pas prioritaire. Le flux principal doit rester explicite.
 
@@ -292,17 +294,17 @@ Mais pas prioritaire. Le flux principal doit rester explicite.
 
 Le curseur doit raconter ce qui est possible :
 
-* nœud disponible : cursor pointer ;
-* nœud acheté : cursor pointer ;
-* nœud verrouillé : cursor help ou default ;
-* nœud invalide : cursor not-allowed ou help.
+- nœud disponible : cursor pointer ;
+- nœud acheté : cursor pointer ;
+- nœud verrouillé : cursor help ou default ;
+- nœud invalide : cursor not-allowed ou help.
 
 Au hover :
 
-* nœud disponible : halo léger ;
-* nœud acheté : halo vert ;
-* nœud verrouillé : highlight sobre + panneau expliquant le blocage ;
-* nœud invalide : highlight ambre/rouge.
+- nœud disponible : halo léger ;
+- nœud acheté : halo vert ;
+- nœud verrouillé : highlight sobre + panneau expliquant le blocage ;
+- nœud invalide : highlight ambre/rouge.
 
 ---
 
@@ -330,20 +332,20 @@ Pas trop impérial, pas trop cyberpunk, pas trop MMO. Un outil de contrebandier 
 
 Éléments possibles :
 
-* grille holographique très discrète dans le fond du canevas ;
-* coins légèrement biseautés sur les nœuds ;
-* petites lignes de scan très subtiles ;
-* icônes simples façon datapad ;
-* labels courts en capitales seulement pour les métadonnées, pas pour tout ;
-* glow limité aux nœuds actionnables.
+- grille holographique très discrète dans le fond du canevas ;
+- coins légèrement biseautés sur les nœuds ;
+- petites lignes de scan très subtiles ;
+- icônes simples façon datapad ;
+- labels courts en capitales seulement pour les métadonnées, pas pour tout ;
+- glow limité aux nœuds actionnables.
 
 À éviter :
 
-* trop d’animations ;
-* trop de néon ;
-* gros effets de particules ;
-* typographie illisible ;
-* modales trop décorées.
+- trop d’animations ;
+- trop de néon ;
+- gros effets de particules ;
+- typographie illisible ;
+- modales trop décorées.
 
 ---
 
@@ -355,8 +357,8 @@ C’est le point UX le plus faible des modales.
 
 À remplacer par :
 
-* **Purchase / Cancel**
-* **Refund / Cancel**
+- **Purchase / Cancel**
+- **Refund / Cancel**
 
 “Oui / Non” est toujours moins bon qu’un verbe d’action explicite.
 
@@ -364,7 +366,7 @@ C’est le point UX le plus faible des modales.
 
 ## 10.2. La modale est trop large pour peu d’information
 
-La modale occupe beaucoup d’espace mais affiche peu de contenu. 
+La modale occupe beaucoup d’espace mais affiche peu de contenu.
 L’enrichis avec XP avant/après et contexte.
 
 ---

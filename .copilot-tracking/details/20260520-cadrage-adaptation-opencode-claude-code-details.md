@@ -39,4 +39,3 @@ Notes for reviewers:
 
 - No secrets should be added to `.mcp.json` if created. Use environment vars.
 - The validator script intentionally does not fail on absence of `.mcp.json`.
-

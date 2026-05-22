@@ -36,15 +36,15 @@ Garantir qu'un achat ou un oubli validé produit un patch acteur unique, cohére
 
 ## Fichiers pressentis
 
-| Fichier | Rôle |
-| --- | --- |
-| `module/lib/talent-node/talent-node-persistence.mjs` | Nouveau helper applicatif pour transformer un résultat métier valide en patch acteur atomique |
-| `module/lib/talent-node/talent-node-purchase.mjs` | Déléguer la persistance d'achat au helper partagé et conserver le contrat public existant |
-| `module/lib/talent-node/talent-node-forget.mjs` | Nouveau point d'entrée applicatif pour persister l'oubli d'un nœud |
-| `module/lib/talent-node/talent-node-progression.mjs` | Confirmer/compléter les métadonnées minimales nécessaires au patch applicatif |
-| `tests/lib/talent-node/talent-node-persistence.test.mjs` | Vérifier la construction du patch atomique et les garde-fous applicatifs |
-| `tests/lib/talent-node/talent-node-purchase.test.mjs` | Réaligner les assertions d'achat sur la couche de persistance partagée |
-| `tests/lib/talent-node/talent-node-forget.test.mjs` | Couvrir oubli nominal, remboursement XP et refus sans effet de bord |
+| Fichier                                                  | Rôle                                                                                          |
+| -------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| `module/lib/talent-node/talent-node-persistence.mjs`     | Nouveau helper applicatif pour transformer un résultat métier valide en patch acteur atomique |
+| `module/lib/talent-node/talent-node-purchase.mjs`        | Déléguer la persistance d'achat au helper partagé et conserver le contrat public existant     |
+| `module/lib/talent-node/talent-node-forget.mjs`          | Nouveau point d'entrée applicatif pour persister l'oubli d'un nœud                            |
+| `module/lib/talent-node/talent-node-progression.mjs`     | Confirmer/compléter les métadonnées minimales nécessaires au patch applicatif                 |
+| `tests/lib/talent-node/talent-node-persistence.test.mjs` | Vérifier la construction du patch atomique et les garde-fous applicatifs                      |
+| `tests/lib/talent-node/talent-node-purchase.test.mjs`    | Réaligner les assertions d'achat sur la couche de persistance partagée                        |
+| `tests/lib/talent-node/talent-node-forget.test.mjs`      | Couvrir oubli nominal, remboursement XP et refus sans effet de bord                           |
 
 ## Plan d'implémentation
 

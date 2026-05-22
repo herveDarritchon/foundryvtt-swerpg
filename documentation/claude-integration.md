@@ -7,6 +7,7 @@ est d'exposer les mêmes fichiers aux deux outils (OpenCode et Claude Code)
 sans dupliquer le contenu.
 
 Approche
+
 - créer un répertoire `.claude/` à la racine du dépôt
 - créer des liens symboliques depuis `.claude/` vers les ressources canonique
   utilisées par OpenCode (ex: `opencode.jsonc`, `.agents/`, `scripts/`)
@@ -34,6 +35,7 @@ Supprimer les liens créés par le script:
 ```
 
 Notes
+
 - Le script est conservateur: il n’écrase pas des fichiers existants qui ne
   sont pas des symlinks, sauf si vous passez `--force`.
 - Si Claude Code s’exécute dans un environnement sandboxé qui n’autorise pas
@@ -50,10 +52,11 @@ readlink .claude/agents
 ```
 
 Rollback
+
 - `--revert` supprime uniquement les symlinks créés par ce script et
   supprime `.claude/` si le dossier est vide.
 
 Sécurité
+
 - Les symlinks créés référencent des fichiers dans ce dépôt. Ne créez pas de
   symlink vers des emplacements sensibles externes.
-

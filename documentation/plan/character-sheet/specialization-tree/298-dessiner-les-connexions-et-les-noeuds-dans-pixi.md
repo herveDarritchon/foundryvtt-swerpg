@@ -42,8 +42,8 @@ Dessiner l'arbre courant dans le viewport PIXI en affichant les connexions, les 
 
 ## Fichiers pressentis
 
-| Fichier                                               | Rôle                                                             |
-| ----------------------------------------------------- | ---------------------------------------------------------------- |
+| Fichier                                               | Rôle                                                                             |
+| ----------------------------------------------------- | -------------------------------------------------------------------------------- |
 | `module/applications/specialization-tree-app.mjs`     | Consommer `renderNodes` / `renderConnections` et piloter le rendu PIXI read-only |
 | `tests/applications/specialization-tree-app.test.mjs` | Vérifier le contrat observable du rendu, son cleanup et l'absence d'effet métier |
 

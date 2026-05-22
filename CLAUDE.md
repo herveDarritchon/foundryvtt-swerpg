@@ -101,10 +101,10 @@ Actor sheets extend `SwerpgBaseActorSheet`; item sheets extend `SwerpgBaseItemSh
 
 ```js
 import { logger } from '../utils/logger.mjs'
-logger.info('…')   // debug-mode only
-logger.warn('…')   // always visible
-logger.error('…')  // always visible
-logger.debug('…')  // debug-mode only
+logger.info('…') // debug-mode only
+logger.warn('…') // always visible
+logger.error('…') // always visible
+logger.debug('…') // debug-mode only
 ```
 
 `warn` and `error` are always active. All other levels are gated by debug mode (set at init via `logger.setDebug(developmentMode)`). The logger also has `logger.deprecated(moduleName, feature, suggestion)` for legacy code warnings.
@@ -112,6 +112,7 @@ logger.debug('…')  // debug-mode only
 ## Tests
 
 Two Vitest configs:
+
 - `vitest.config.mjs` — default, minimal `tests/setup.mjs` (basic `foundry`/`game` stubs)
 - `vitest.config.js` — coverage, `clearMocks`, `restoreMocks`, full `tests/vitest-setup.js`
 

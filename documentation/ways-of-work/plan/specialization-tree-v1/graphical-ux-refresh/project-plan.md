@@ -44,12 +44,12 @@ Réaliser une passe UX courte sur l'écran graphique des arbres de spécialisati
 
 ## 4. Risques
 
-| Risque | Impact | Mitigation |
-| --- | --- | --- |
-| Surcharger l'écran avec trop de signaux visuels | bruit UX, perte de lisibilité | privilégier une hiérarchie sobre et des marqueurs discrets |
-| Mélanger type de talent et état d'achat dans la même couleur | ambiguïté sur la signification des nœuds | séparer couleur métier, luminosité d'état et pictogramme |
-| Hover trop agressif sur de grands arbres | fatigue visuelle | limiter l'atténuation du reste de l'arbre et garder des transitions sobres |
-| Panneau d'action dépendant d'états déjà livrés par US17 | régression fonctionnelle si contrat instable | traiter le refresh UX comme couche au-dessus des contrats déjà en place |
+| Risque                                                       | Impact                                       | Mitigation                                                                 |
+| ------------------------------------------------------------ | -------------------------------------------- | -------------------------------------------------------------------------- |
+| Surcharger l'écran avec trop de signaux visuels              | bruit UX, perte de lisibilité                | privilégier une hiérarchie sobre et des marqueurs discrets                 |
+| Mélanger type de talent et état d'achat dans la même couleur | ambiguïté sur la signification des nœuds     | séparer couleur métier, luminosité d'état et pictogramme                   |
+| Hover trop agressif sur de grands arbres                     | fatigue visuelle                             | limiter l'atténuation du reste de l'arbre et garder des transitions sobres |
+| Panneau d'action dépendant d'états déjà livrés par US17      | régression fonctionnelle si contrat instable | traiter le refresh UX comme couche au-dessus des contrats déjà en place    |
 
 ## 5. Hiérarchie des work items
 
@@ -78,15 +78,15 @@ graph TD
 
 ## 6. Découpage GitHub recommandé
 
-| Type | Titre | Priorité | Estimate | Dépendances |
-| --- | --- | --- | --- | --- |
-| Feature | `Graphical UX Refresh - Rendre l'arbre de spécialisation plus lisible et actionnable` | P1 | 8 | Epic `Specialization Tree V1`, prérequis US16 + US17 |
-| Story | `GUX1 - Compacter le header et clarifier la sidebar de progression` | P1 | 2 | Feature |
-| Story | `GUX2 - Clarifier les états des nœuds avec couleurs, contraste et pictogrammes` | P1 | 3 | Feature |
-| Story | `GUX3 - Rendre les connexions et le hover plus explicites pour la progression` | P1 | 2 | GUX2 |
-| Story | `GUX4 - Transformer le panneau de détail en panneau d'action contextuelle` | P1 | 3 | GUX2, prérequis US17 |
-| Enabler | `GUX5 - Harmoniser microcopy, curseurs, légende et ambiance visuelle` | P2 | 2 | GUX1, GUX2, GUX3, GUX4 |
-| Test | `GUX6 - Valider lisibilité, affordances et non-régression du flux` | P1 | 2 | GUX1, GUX2, GUX3, GUX4, GUX5 |
+| Type    | Titre                                                                                 | Priorité | Estimate | Dépendances                                          |
+| ------- | ------------------------------------------------------------------------------------- | -------- | -------- | ---------------------------------------------------- |
+| Feature | `Graphical UX Refresh - Rendre l'arbre de spécialisation plus lisible et actionnable` | P1       | 8        | Epic `Specialization Tree V1`, prérequis US16 + US17 |
+| Story   | `GUX1 - Compacter le header et clarifier la sidebar de progression`                   | P1       | 2        | Feature                                              |
+| Story   | `GUX2 - Clarifier les états des nœuds avec couleurs, contraste et pictogrammes`       | P1       | 3        | Feature                                              |
+| Story   | `GUX3 - Rendre les connexions et le hover plus explicites pour la progression`        | P1       | 2        | GUX2                                                 |
+| Story   | `GUX4 - Transformer le panneau de détail en panneau d'action contextuelle`            | P1       | 3        | GUX2, prérequis US17                                 |
+| Enabler | `GUX5 - Harmoniser microcopy, curseurs, légende et ambiance visuelle`                 | P2       | 2        | GUX1, GUX2, GUX3, GUX4                               |
+| Test    | `GUX6 - Valider lisibilité, affordances et non-régression du flux`                    | P1       | 2        | GUX1, GUX2, GUX3, GUX4, GUX5                         |
 
 ## 7. Dépendances et ordre recommandé
 
