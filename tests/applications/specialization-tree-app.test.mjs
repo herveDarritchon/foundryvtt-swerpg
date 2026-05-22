@@ -51,9 +51,9 @@ function getTreeContainer(app) {
 }
 
 /**
- * Collect all display objects (recursively) from a container tree.
- * @param {object} container
- * @returns {object[]}
+ * Recursively collect all descendant display objects from a container.
+ * @param {object} container - A mock PIXI container with a `children` array.
+ * @returns {object[]} Flat list of all descendants.
  */
 function flattenChildren(container) {
   const result = []
@@ -292,6 +292,8 @@ describe('specialization-tree application', () => {
     vi.clearAllMocks()
     delete globalThis.PIXI
     delete globalThis.window
+    delete globalThis.swerpgDebug
+    delete globalThis.__PIXI_DEVTOOLS__
     delete globalThis.ResizeObserver
     delete globalThis.requestAnimationFrame
     delete globalThis.cancelAnimationFrame
@@ -1299,6 +1301,117 @@ describe('specialization-tree application', () => {
     expect(containerBefore.destroy, 'old container must have been destroyed').toHaveBeenCalled()
     expect(containerAfter.children.length, 'new container must be rebuilt with fresh children').toBeGreaterThan(0)
     expect(containerAfter.children.length, 'new container must have at least as many children').toBeGreaterThanOrEqual(1)
+  })
+
+  it('creates named connections-layer and nodes-layer containers inside the tree container', async () => {
+    const actor = createActor({
+      system: {
+        details: {
+          specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' }],
+        },
+        progression: {
+          talentPurchases: [],
+          experience: { available: 100 },
+        },
+      },
+    })
+    globalThis.fromUuidSync = vi.fn((uuid) => {
+      if (uuid === 'Item.tree-bodyguard') {
+        return {
+          type: 'specialization-tree',
+          name: 'Bodyguard Tree',
+          system: {
+            nodes: [{ nodeId: 'r1c1', talentId: 'Item.talent-tough', talentUuid: 'Item.talent-tough', row: 1, column: 1, cost: 10 }],
+            connections: [{ from: 'r1c1', to: 'r2c1' }],
+          },
+        }
+      }
+      if (uuid === 'Item.talent-tough') return { name: 'Tough', system: { isRanked: false } }
+      return null
+    })
+
+    const app = new SpecializationTreeApp()
+    app.actor = actor
+    app.document = actor
+    const host = createMockHost({ width: 640, height: 480 })
+    app.element = { querySelector: vi.fn(() => host) }
+
+    const context = buildSpecializationTreeContext(actor)
+    await app._onRender(context, {})
+
+    const treeContainer = app.pixiApp.stage.children.find((c) => c.position && c.scale)
+    expect(treeContainer, 'tree container must exist').toBeDefined()
+    expect(treeContainer.label, 'tree container must carry debug label').toBe('specialization-tree')
+
+    const connectionsLayer = treeContainer.children[0]
+    const nodesLayer = treeContainer.children[1]
+    expect(connectionsLayer, 'connections-layer must be first child').toBeDefined()
+    expect(connectionsLayer.label, 'connections-layer label').toBe('connections-layer')
+    expect(nodesLayer, 'nodes-layer must be second child').toBeDefined()
+    expect(nodesLayer.label, 'nodes-layer label').toBe('nodes-layer')
+
+    const nodeContainers = nodesLayer.children.filter((c) => c.constructor.name === 'MockContainer')
+    expect(nodeContainers.length, 'one node container per render node').toBe(context.renderNodes.length)
+    expect(nodeContainers[0].label, 'node container must carry debug label starting with node:').toMatch(/^node:r1c1:/)
+  })
+
+  it('populates window.swerpgDebug.specializationTree.nodeViews after draw', async () => {
+    const actor = createActor({
+      system: {
+        details: {
+          specializations: [{ specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard' }],
+        },
+        progression: {
+          talentPurchases: [],
+          experience: { available: 100 },
+        },
+      },
+    })
+    globalThis.fromUuidSync = vi.fn((uuid) => {
+      if (uuid === 'Item.tree-bodyguard') {
+        return {
+          type: 'specialization-tree',
+          name: 'Bodyguard Tree',
+          system: {
+            nodes: [
+              { nodeId: 'r1c1', talentId: 'Item.talent-tough', talentUuid: 'Item.talent-tough', row: 1, column: 1, cost: 10 },
+              { nodeId: 'r2c1', talentId: 'Item.talent-grit', talentUuid: 'Item.talent-grit', row: 2, column: 1, cost: 15 },
+            ],
+            connections: [{ from: 'r1c1', to: 'r2c1' }],
+          },
+        }
+      }
+      if (uuid === 'Item.talent-tough') return { name: 'Tough', system: { isRanked: false } }
+      if (uuid === 'Item.talent-grit') return { name: 'Grit', system: { isRanked: false } }
+      return null
+    })
+
+    globalThis.game.user = { isGM: true }
+
+    const app = new SpecializationTreeApp()
+    app.actor = actor
+    app.document = actor
+    const host = createMockHost({ width: 640, height: 480 })
+    app.element = { querySelector: vi.fn(() => host) }
+
+    const context = buildSpecializationTreeContext(actor)
+    await app._onRender(context, {})
+
+    const nodeViews = globalThis.swerpgDebug?.specializationTree?.nodeViews
+    expect(nodeViews, 'nodeViews must be exposed after draw').toBeDefined()
+    expect(nodeViews).toBeInstanceOf(Map)
+    expect(nodeViews.size, 'nodeViews must have one entry per node').toBe(2)
+    expect(nodeViews.has('r1c1'), 'r1c1 must be in nodeViews').toBe(true)
+    expect(nodeViews.has('r2c1'), 'r2c1 must be in nodeViews').toBe(true)
+
+    const view = nodeViews.get('r1c1')
+    expect(view.container, 'view.container must be defined').toBeDefined()
+    expect(view.background, 'view.background must be defined').toBeDefined()
+    expect(view.nameText, 'view.nameText must be defined').toBeDefined()
+    expect(view.costText, 'view.costText must be defined').toBeDefined()
+    expect(view.hitArea, 'view.hitArea must be defined').toBeDefined()
+    expect(view.data, 'view.data must be the render node').toBeDefined()
+    expect(view.data.nodeId).toBe('r1c1')
   })
 
   it('does not render a (R) indicator when isRanked is false', async () => {
