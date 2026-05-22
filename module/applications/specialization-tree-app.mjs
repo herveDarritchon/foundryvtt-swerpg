@@ -1,5 +1,4 @@
 import { resolveActorSpecializationTrees } from '../lib/talent-node/talent-tree-resolver.mjs'
-import { getTreeNodesStates } from '../lib/talent-node/talent-node-state.mjs'
 import { forgetTalentNode } from '../lib/talent-node/talent-node-forget.mjs'
 import { purchaseTalentNode } from '../lib/talent-node/talent-node-purchase.mjs'
 import { resolveTalentDetail } from '../lib/talent-node/talent-reference-resolver.mjs'
@@ -22,12 +21,6 @@ import { logger } from '../utils/logger.mjs'
 
 const { api } = foundry.applications
 
-const SPECIALIZATION_TREE_STATE_LABELS = Object.freeze({
-  available: 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.STATUS.AVAILABLE',
-  unresolved: 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.STATUS.UNRESOLVED',
-  incomplete: 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.STATUS.INCOMPLETE',
-})
-
 const ACTION_KEYS = Object.freeze({
   purchase: {
     success: 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.PURCHASE.SUCCESS',
@@ -42,23 +35,6 @@ const ACTION_KEYS = Object.freeze({
     confirmContent: 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.CONFIRM.FORGET.CONTENT',
   },
 })
-
-const MIN_VIEWPORT_SIZE = 320
-const STATE_PICTOGRAM_TEXTURE_CACHE = new Map()
-
-/**
- * Assign a human-readable label to a PIXI display object for devtools inspection.
- * Sets both `label` (Pixi DevTools) and `name` (legacy) on the object.
- * @param {PIXI.DisplayObject} displayObject - The PIXI object to label.
- * @param {string} label - The label to assign.
- * @returns {PIXI.DisplayObject} The same display object, for chaining.
- */
-function setPixiDebugLabel(displayObject, label) {
-  if (!displayObject || !label) return displayObject
-  displayObject.label = label
-  displayObject.name = label
-  return displayObject
-}
 
 /**
  * Load the SVG pictogram texture for a node state.
@@ -241,149 +217,30 @@ function buildCurrentTreeSummary(actor, currentTreeName, renderNodes) {
 /**
  * Build the render context for the specialization tree application.
  * @param {Actor|object|null} actor - The active actor document.
- * @returns {object} Display-ready render context.
+ * @param {string|null} [selectedKey=null] - Optional tree key to select.
+ * @returns {object} Display-ready render context with Foundry refs.
  */
 export function buildSpecializationTreeContext(actor, selectedKey = null) {
-  const specializations = Array.from(actor?.system?.details?.specializations || [])
-  const title = game.i18n.format('SWERPG.TALENT.SPECIALIZATION_TREE_APP.TITLE', {
-    actor: actor?.name ?? game.i18n.localize('SWERPG.TALENT.SPECIALIZATION_TREE_APP.UNKNOWN_ACTOR'),
-  })
-
-  if (!actor) {
-    return {
-      actor: null,
-      document: null,
-      system: null,
-      config: game.system.config,
-      isOwner: false,
-      title,
-      subtitle: game.i18n.localize('SWERPG.TALENT.SPECIALIZATION_TREE_APP.SUBTITLE'),
-      hasActor: false,
-      hasSpecializations: false,
-      hasResolvedTrees: false,
-      showViewport: false,
-      specializations: [],
-      currentTreeId: null,
-      currentTreeName: null,
-      currentTreeSummary: null,
-      currentTreeData: null,
-      renderNodes: [],
-      renderConnections: [],
-      emptyStateTitle: game.i18n.localize('SWERPG.TALENT.SPECIALIZATION_TREE_APP.EMPTY.NO_ACTOR_TITLE'),
-      emptyStateDescription: game.i18n.localize('SWERPG.TALENT.SPECIALIZATION_TREE_APP.EMPTY.NO_ACTOR_DESCRIPTION'),
-      viewportAriaLabel: game.i18n.localize('SWERPG.TALENT.SPECIALIZATION_TREE_APP.VIEWPORT_ARIA_LABEL'),
-    }
-  }
-
   const resolutions = resolveActorSpecializationTrees(actor)
-  const specializationEntries = specializations.map((specialization, index) => {
-    const key = specialization?.specializationId || specialization?.treeUuid || specialization?.name || `specialization-${index}`
-    const resolution = resolutions.get(key) ?? { tree: null, state: 'unresolved' }
-    const state = resolution.state ?? 'unresolved'
+  const localize = game.i18n.localize.bind(game.i18n)
+  const format = game.i18n.format.bind(game.i18n)
 
-    return {
-      key,
-      specializationId: specialization?.specializationId ?? null,
-      name: specialization?.name || game.i18n.localize('SWERPG.TALENT.SPECIALIZATION_TREE_APP.UNKNOWN_SPECIALIZATION'),
-      treeName: resolution.tree?.name ?? null,
-      state,
-      stateLabel: game.i18n.localize(SPECIALIZATION_TREE_STATE_LABELS[state] ?? SPECIALIZATION_TREE_STATE_LABELS.unresolved),
-      isAvailable: state === 'available',
-    }
-  })
-
-  const hasResolvedTrees = specializationEntries.some((specialization) => specialization.isAvailable)
-
-  let currentTreeId = null
-  let currentTreeName = null
-  let currentTreeSummary = null
-  let currentTreeData = null
-  let renderNodes = []
-  let renderConnections = []
-
-  const activeKey = selectDefaultTreeKey(specializationEntries, selectedKey)
-
-  for (const entry of specializationEntries) {
-    entry.isSelected = entry.key === activeKey
+  const talentLookup = (node) => {
+    const detail = resolveTalentDetail(node)
+    return detail
+      ? { name: detail.name, uuid: node.talentUuid ?? node.talentId ?? '', isRanked: detail.isRanked, isActive: detail.isActive }
+      : null
   }
 
-  if (activeKey) {
-    currentTreeId = activeKey
-    const entry = specializationEntries.find((e) => e.key === activeKey)
-    currentTreeName = entry?.treeName ?? null
-    const resolution = resolutions.get(activeKey)
-    currentTreeData = resolution?.tree ?? null
-
-    const viewModel = buildRenderViewModel(currentTreeData, (node) => {
-      const detail = resolveTalentDetail(node)
-      return detail ? { name: detail.name, uuid: node.talentUuid ?? node.talentId ?? '', isRanked: detail.isRanked, isActive: detail.isActive } : null
-    })
-
-    renderNodes = viewModel.nodes.map((viewNode) => {
-      const pos = computeNodePosition(viewNode.row, viewNode.column)
-      return {
-        nodeId: viewNode.nodeId,
-        talentId: viewNode.talentId,
-        talentName: viewNode.talent.name,
-        isRanked: viewNode.isRanked,
-        isActive: viewNode.isActive,
-        xpCost: viewNode.cost,
-        row: viewNode.row,
-        column: viewNode.column,
-        x: pos.x,
-        y: pos.y,
-      }
-    })
-
-    const nodeStates = getTreeNodesStates(actor, currentTreeId, currentTreeData)
-    const localize = game.i18n.localize.bind(game.i18n)
-    renderNodes = renderNodes.map((node) => {
-      const stateResult = nodeStates.get(node.nodeId) ?? { state: NODE_STATE.INVALID }
-      const enriched = enrichNode(node, stateResult, localize)
-      return {
-        ...enriched,
-        actionable: actionableNodeViewModel({
-          renderNode: enriched,
-          actor,
-          specializationId: currentTreeId,
-          tree: currentTreeData,
-          localize,
-        }),
-      }
-    })
-
-    renderConnections = buildConnectionAnchors(renderNodes, viewModel.connections)
-    currentTreeSummary = buildCurrentTreeSummary(actor, currentTreeName, renderNodes)
-  }
+  const pureContext = buildContextPure(actor, selectedKey, { resolutions, localize, format, talentLookup })
 
   return {
+    ...pureContext,
     actor,
     document: actor,
-    system: actor.system,
+    system: actor?.system ?? null,
     config: game.system.config,
-    isOwner: actor.isOwner,
-    title,
-    subtitle: game.i18n.localize('SWERPG.TALENT.SPECIALIZATION_TREE_APP.SUBTITLE'),
-    hasActor: true,
-    hasSpecializations: specializationEntries.length > 0,
-    hasResolvedTrees,
-    showViewport: hasResolvedTrees,
-    specializations: specializationEntries,
-    currentTreeId,
-    currentTreeName,
-    currentTreeSummary,
-    currentTreeData,
-    renderNodes,
-    renderConnections,
-    emptyStateTitle:
-      specializationEntries.length === 0
-        ? game.i18n.localize('SWERPG.TALENT.SPECIALIZATION_TREE_APP.EMPTY.NO_SPECIALIZATIONS_TITLE')
-        : game.i18n.localize('SWERPG.TALENT.SPECIALIZATION_TREE_APP.EMPTY.NO_AVAILABLE_TREE_TITLE'),
-    emptyStateDescription:
-      specializationEntries.length === 0
-        ? game.i18n.localize('SWERPG.TALENT.SPECIALIZATION_TREE_APP.EMPTY.NO_SPECIALIZATIONS_DESCRIPTION')
-        : game.i18n.localize('SWERPG.TALENT.SPECIALIZATION_TREE_APP.EMPTY.NO_AVAILABLE_TREE_DESCRIPTION'),
-    viewportAriaLabel: game.i18n.localize('SWERPG.TALENT.SPECIALIZATION_TREE_APP.VIEWPORT_ARIA_LABEL'),
+    isOwner: actor?.isOwner ?? false,
   }
 }
 
@@ -420,13 +277,8 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
 
   document = null
 
-  pixiApp = null
-
-  #viewportHost = null
-
-  #treeContainer = null
-
-  #resizeObserver = null
+  /** @type {PixiTreeRenderer|null} */
+  renderer = null
 
   #selectedTreeKey = null
 
@@ -476,8 +328,8 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
 
   /**
    * Open the specialization tree application for an actor.
-   * @param {Actor|object|null} actor - The actor owning the specializations to display.
-   * @param {object} [options={}] - Render options.
+   * @param {Actor|object|null} actor
+   * @param {object} [options={}]
    * @returns {Promise<SpecializationTreeApp>}
    */
   async open(actor, options = {}) {
@@ -489,10 +341,9 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
 
   /**
    * Refresh the application when it is currently open.
-   * Preserves viewport by default (resetView: false) to avoid losing scroll/zoom on actor-driven updates.
-   * Coalesces concurrent calls: subsequent calls while a refresh is in flight return the pending promise.
+   * Coalesces concurrent calls.
    * @param {object} [options={}]
-   * @param {boolean} [options.resetView=false] - Reset the viewport to centered view when true.
+   * @param {boolean} [options.resetView=false]
    * @returns {Promise<SpecializationTreeApp>}
    */
   async refresh(options = {}) {
@@ -511,10 +362,9 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
   /** @override */
   async close(options) {
     await super.close(options)
-    this.#teardownViewport()
+    this.#teardownRenderer()
     this.actor = null
     this.document = null
-    this.#viewportHost = null
     return this
   }
 
@@ -528,64 +378,49 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
   /** @override */
   async _onRender(context, options) {
     await super._onRender?.(context, options)
-    await this.#syncViewport(context, options)
+    await this.#syncRenderer(context, options)
   }
 
-  async #syncViewport(context, options = {}) {
+  /* ═══════════════════════════════════════════════════════════════ */
+  /*  Renderer orchestration (private)                              */
+  /* ═══════════════════════════════════════════════════════════════ */
+
+  async #syncRenderer(context, options = {}) {
     const viewportHost = this.#getViewportHost()
     if (!viewportHost) {
-      this.#teardownViewport()
+      this.#teardownRenderer()
       return
     }
 
-    this.#viewportHost = viewportHost
-    this.#ensurePixiApp(viewportHost)
-    this.#bindViewportInteractions()
-    this.#bindResizeObserver(viewportHost)
+    this.#ensureRenderer()
+    this.renderer.mount(viewportHost)
 
     const nextTreeKey = context?.currentTreeId ?? null
-    const shouldResetView = options.resetView !== false && (!this.#hasInitializedViewport || this.#selectedTreeKey !== nextTreeKey)
+    const shouldResetView = options.resetView !== false
+      && (!this.#selectedTreeKey || this.#selectedTreeKey !== nextTreeKey)
 
     this.#selectedTreeKey = nextTreeKey
-    this.#hasInitializedViewport = true
 
-    this.#resizeViewport()
-
-    if (shouldResetView) {
-      this.#centerTree(context)
+    const viewModel = {
+      renderNodes: context.renderNodes ?? [],
+      renderConnections: context.renderConnections ?? [],
+      currentTreeId: context.currentTreeId,
     }
 
-    await this.#drawTree(context)
-
-    requestAnimationFrame(() => {
-      this.#resizeViewport()
-
-      if (shouldResetView) {
-        this.#centerTree(context)
-      }
-
-      this.#applyViewportTransform()
-    })
+    await this.renderer.update(viewModel, { resetView: shouldResetView })
   }
 
-  #bindResizeObserver(viewportHost) {
-    if (this.#resizeObserver && this.#observedViewportHost === viewportHost) return
+  #ensureRenderer() {
+    if (this.renderer) return
 
-    if (this.#resizeObserver) {
-      this.#resizeObserver.disconnect()
-      this.#resizeObserver = null
-    }
+    const isDebugAllowed = game.user?.isGM === true
+      || game.settings?.get?.('swerpg', 'debugMode') === true
 
-    this.#observedViewportHost = viewportHost
-
-    this.#resizeObserver = new ResizeObserver(() => {
-      requestAnimationFrame(() => {
-        this.#resizeViewport()
-        this.#applyViewportTransform()
-      })
+    this.renderer = new PixiTreeRenderer({
+      debug: isDebugAllowed,
     })
 
-    this.#resizeObserver.observe(viewportHost)
+    this.renderer.onNodePointerDown = (node) => this.#handleNodePointerDown(node)
   }
 
   #getViewportHost() {
@@ -594,117 +429,21 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
     return root?.querySelector?.('[data-specialization-tree-viewport]') ?? null
   }
 
-  #ensurePixiApp(viewportHost) {
-    if (!this.pixiApp) {
-      const { width, height } = getViewportDimensions(viewportHost)
-      this.pixiApp = new PIXI.Application({
-        width,
-        height,
-        antialias: true,
-        autoDensity: true,
-        backgroundAlpha: 0,
-      })
-
-      this.#exposePixiDevtools()
-    }
-
-    const view = this.pixiApp.canvas ?? this.pixiApp.view
-    if (!view) {
-      logger.warn('[SpecializationTreeApp] PIXI application did not expose a canvas view')
-      return
-    }
-
-    view.classList.add('specialization-tree-app__canvas')
-    if (viewportHost.firstElementChild !== view) {
-      viewportHost.replaceChildren(view)
-    }
+  #teardownRenderer() {
+    this.renderer?.destroy()
+    this.renderer = null
+    this.#selectedTreeKey = null
+    this.#pendingSelection = null
   }
 
-  #exposePixiDevtools() {
-    if (!this.pixiApp) return
-
-    const isDebugAllowed = game.user?.isGM === true || game.settings?.get?.('swerpg', 'debugMode') === true
-
-    if (!isDebugAllowed) return
-
-    globalThis.__PIXI_DEVTOOLS__ = {
-      app: this.pixiApp,
-      renderer: this.pixiApp.renderer,
-      stage: this.pixiApp.stage,
-    }
-
-    globalThis.swerpgDebug ??= {}
-
-    globalThis.swerpgDebug.specializationTree = {
-      app: this,
-      pixiApp: this.pixiApp,
-      renderer: this.pixiApp.renderer,
-      stage: this.pixiApp.stage,
-      treeContainer: this.#treeContainer,
-      viewport: { ...this.#viewport },
-      renderNodes: this.#renderNodesCache ?? [],
-      nodeViews: this.#debugNodeViews,
-      resetView: () => this.#resetView(),
-      setViewport: ({ x, y, scale } = {}) => {
-        if (Number.isFinite(x)) this.#viewport.x = x
-        if (Number.isFinite(y)) this.#viewport.y = y
-        if (Number.isFinite(scale)) this.#viewport.scale = scale
-        this.#applyViewportTransform()
-      },
-      refresh: () => this.refresh({ resetView: false }),
-    }
-
-    logger.debug('[SWERPG] PIXI debug exposed', globalThis.swerpgDebug.specializationTree)
-  }
-
-  #resizeViewport() {
-    if (!this.pixiApp || !this.#viewportHost) return
-
-    const { width, height } = getViewportDimensions(this.#viewportHost)
-
-    const renderer = this.pixiApp.renderer
-    if (renderer?.width !== width || renderer?.height !== height) {
-      renderer?.resize?.(width, height)
-    }
-
-    const canvas = this.pixiApp.canvas ?? this.pixiApp.view
-    if (canvas) {
-      canvas.style.width = '100%'
-      canvas.style.height = '100%'
-      canvas.style.display = 'block'
-    }
-
-    if (this.pixiApp.stage) {
-      this.pixiApp.stage.hitArea = new PIXI.Rectangle(0, 0, width, height)
-    }
-  }
-
-  #applyViewportTransform() {
-    if (!this.#treeContainer) return
-    this.#treeContainer.position.set(this.#viewport.x, this.#viewport.y)
-    this.#treeContainer.scale.set(this.#viewport.scale)
-  }
-
-  #centerTree(context) {
-    const { renderNodes } = context ?? {}
-    if (!renderNodes?.length) {
-      this.#viewport.x = 0
-      this.#viewport.y = 0
-      this.#viewport.scale = 1
-      return
-    }
-    const bbox = computeTreeBoundingBox(renderNodes, NODE_WIDTH, NODE_HEIGHT)
-    const { width: vw, height: vh } = getViewportDimensions(this.#viewportHost)
-    const { offsetX, offsetY } = computeCenteredOffset(bbox, vw, vh)
-    this.#viewport.x = offsetX
-    this.#viewport.y = offsetY
-    this.#viewport.scale = 1
-  }
+  /* ═══════════════════════════════════════════════════════════════ */
+  /*  Action handlers (private static)                              */
+  /* ═══════════════════════════════════════════════════════════════ */
 
   /** @returns {Promise<void>} */
   static async #onResetView(event, _target) {
     event.preventDefault()
-    this.#resetView()
+    this.renderer?.resetView()
   }
 
   /** @returns {Promise<void>} */
@@ -719,27 +458,23 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
   /** @returns {Promise<void>} */
   static async #onZoomIn(event, _target) {
     event.preventDefault()
-    this.#zoomIn()
+    this.renderer?.zoomIn()
   }
 
   /** @returns {Promise<void>} */
   static async #onZoomOut(event, _target) {
     event.preventDefault()
-    this.#zoomOut()
+    this.renderer?.zoomOut()
   }
 
-  /**
-   * Reset the viewport to the centered initial view.
-   * Relies on the cached render nodes from the last draw.
-   */
-  #resetView() {
-    this.#centerTree({ renderNodes: this.#renderNodesCache })
-    this.#applyViewportTransform()
-  }
+  /* ═══════════════════════════════════════════════════════════════ */
+  /*  Node interaction flow (private)                               */
+  /* ═══════════════════════════════════════════════════════════════ */
 
   /**
-   * Zoom in by one zoomStep around the visible center of the viewport.
-   * Delegates to #zoomAt() for clamp and repositioning.
+   * Handle a node pointer down event from the renderer.
+   * Dispatches purchase/forget or shows tooltip.
+   * @param {object} node - The enriched render node.
    */
   #zoomIn() {
     if (!this.#viewportHost) return
@@ -1186,7 +921,8 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
     const keys = ACTION_KEYS[action]
     if (!keys) return false
 
-    const actionLabel = node.actionable?.actionLabel ?? game.i18n.localize(`SWERPG.TALENT.SPECIALIZATION_TREE_APP.ACTION.${action.toUpperCase()}`)
+    const actionLabel = node.actionable?.actionLabel
+      ?? game.i18n.localize(`SWERPG.TALENT.SPECIALIZATION_TREE_APP.ACTION.${action.toUpperCase()}`)
 
     return api.DialogV2.confirm({
       title: game.i18n.format(keys.confirmTitle, {
@@ -1223,38 +959,27 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
   }
 
   #showNodeTooltip(node) {
-    const root = typeof HTMLElement !== 'undefined' && this.element instanceof HTMLElement ? this.element : (this.element?.[0] ?? this.element)
+    const root = typeof HTMLElement !== 'undefined' && this.element instanceof HTMLElement
+      ? this.element
+      : (this.element?.[0] ?? this.element)
     const tooltip = root?.querySelector?.('[data-node-tooltip]')
     if (!tooltip) return
 
-    const i18n = game.i18n.localize.bind(game.i18n)
-
-    const typeLabel = node.isRanked
-      ? i18n('SWERPG.TALENT.SPECIALIZATION_TREE_APP.TOOLTIP.RANKED')
-      : i18n('SWERPG.TALENT.SPECIALIZATION_TREE_APP.TOOLTIP.NON_RANKED')
+    const localize = game.i18n.localize.bind(game.i18n)
+    const vm = buildNodeTooltipViewModel(node, localize)
 
     const headerEl = tooltip.querySelector('[data-tooltip-header]')
     const bodyEl = tooltip.querySelector('[data-tooltip-body]')
-    if (headerEl) {
-      headerEl.textContent = node.talentName
-    }
-    if (bodyEl) {
-      const parts = [
-        `${i18n('SWERPG.TALENT.SPECIALIZATION_TREE_APP.TOOLTIP.XP_COST')}: ${node.xpCost} XP`,
-        `${i18n('SWERPG.TALENT.SPECIALIZATION_TREE_APP.TOOLTIP.TYPE')}: ${typeLabel}`,
-        `${i18n('SWERPG.TALENT.SPECIALIZATION_TREE_APP.TOOLTIP.STATE')}: ${node.nodeStateLabel}`,
-      ]
-      if (node.reasonLabel) {
-        parts.push(`${i18n('SWERPG.TALENT.SPECIALIZATION_TREE_APP.TOOLTIP.REASON')}: ${node.reasonLabel}`)
-      }
-      bodyEl.innerHTML = parts.join('<br>')
-    }
+    if (headerEl) headerEl.textContent = vm.header
+    if (bodyEl) bodyEl.innerHTML = vm.lines.join('<br>')
 
     tooltip.hidden = false
   }
 
   #hideNodeTooltip() {
-    const root = typeof HTMLElement !== 'undefined' && this.element instanceof HTMLElement ? this.element : (this.element?.[0] ?? this.element)
+    const root = typeof HTMLElement !== 'undefined' && this.element instanceof HTMLElement
+      ? this.element
+      : (this.element?.[0] ?? this.element)
     const tooltip = root?.querySelector?.('[data-node-tooltip]')
     if (tooltip) tooltip.hidden = true
   }
