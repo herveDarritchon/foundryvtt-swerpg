@@ -9,12 +9,12 @@ describe('connection-ui-state', () => {
   it('exposes the expected predefined styles', () => {
     expect(CONNECTION_VISUAL_STYLES.default).toMatchObject({
       color: 0x78a9c2,
-      alpha: 0.6,
-      thickness: 2,
+      alpha: 0.75,
+      thickness: 3,
     })
-    expect(CONNECTION_VISUAL_STYLES.active).toMatchObject({ thickness: 2 })
-    expect(CONNECTION_VISUAL_STYLES.inactive).toMatchObject({ thickness: 1 })
-    expect(CONNECTION_VISUAL_STYLES.highlighted).toMatchObject({ thickness: 3 })
+    expect(CONNECTION_VISUAL_STYLES.active).toMatchObject({ color: 0xa8d8ff, thickness: 3 })
+    expect(CONNECTION_VISUAL_STYLES.inactive).toMatchObject({ color: 0x4a7a9e, thickness: 2, alpha: 0.5 })
+    expect(CONNECTION_VISUAL_STYLES.highlighted).toMatchObject({ thickness: 4, color: 0xffd700 })
   })
 
   it('returns the default style for a render connection', () => {
