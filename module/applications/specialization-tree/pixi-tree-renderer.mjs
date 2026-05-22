@@ -34,6 +34,53 @@ function setPixiDebugLabel(displayObject, label) {
 }
 
 const MIN_VIEWPORT_SIZE = 320
+const NODE_CORNER_ICON_SIZE = 16
+const NODE_CORNER_ICON_MARGIN = 4
+
+const ICON_SLOT_POSITIONS = Object.freeze({
+  topLeft: Object.freeze({ x: NODE_CORNER_ICON_MARGIN, y: NODE_CORNER_ICON_MARGIN }),
+  topRight: Object.freeze({ x: NODE_WIDTH - NODE_CORNER_ICON_SIZE - NODE_CORNER_ICON_MARGIN, y: NODE_CORNER_ICON_MARGIN }),
+  bottomRight: Object.freeze({
+    x: NODE_WIDTH - NODE_CORNER_ICON_SIZE - NODE_CORNER_ICON_MARGIN,
+    y: NODE_HEIGHT - NODE_CORNER_ICON_SIZE - NODE_CORNER_ICON_MARGIN,
+  }),
+})
+
+const ICON_SLOT_FALLBACKS = Object.freeze({
+  topLeft: Object.freeze({
+    label: 'type-icon-fallback',
+    text: (node) => node?.nodeTypeIcon ?? '',
+    style: (node) => ({
+      fontFamily: 'Arial',
+      fontSize: 9,
+      fill: node?.variant?.textColor ?? 0xffffff,
+    }),
+  }),
+  topRight: Object.freeze({
+    label: 'action-icon-fallback',
+    text: (node) => {
+      if (node?.actionable?.primaryAction === 'purchase') return '+'
+      if (node?.actionable?.primaryAction === 'forget') return '-'
+      return ''
+    },
+    style: (node) => ({
+      fontFamily: 'Arial',
+      fontSize: 10,
+      fill: node?.variant?.pictogramColor ?? 0xffffff,
+      fontWeight: 'bold',
+    }),
+  }),
+  bottomRight: Object.freeze({
+    label: 'ranked-indicator-fallback',
+    text: (node) => (node?.isRanked ? '(R)' : ''),
+    style: (node) => ({
+      fontFamily: 'Arial',
+      fontSize: 9,
+      fill: node?.variant?.costColor ?? 0xffffff,
+      fontStyle: 'italic',
+    }),
+  }),
+})
 
 /**
  * Compute the viewport size from a host element.
@@ -87,9 +134,10 @@ export function computeCenteredOffset(bbox, viewportWidth, viewportHeight) {
   }
 }
 
-/* ── Texture cache ────────────────────────────────────────────── */
+/* ── Texture caches ───────────────────────────────────────────── */
 
 const STATE_PICTOGRAM_TEXTURE_CACHE = new Map()
+const ICON_TEXTURE_CACHE = new Map()
 
 /**
  * Load the SVG pictogram texture for a node state.
@@ -120,6 +168,38 @@ export async function loadStatePictogram(state) {
     return await texturePromise
   } catch (error) {
     STATE_PICTOGRAM_TEXTURE_CACHE.delete(iconPath)
+    throw error
+  }
+}
+
+/**
+ * Load an SVG texture from any icon path, with caching.
+ * @param {string|null|undefined} iconPath - Direct file path to the SVG.
+ * @returns {Promise<PIXI.Texture|null>}
+ */
+export async function loadIconTexture(iconPath) {
+  if (!iconPath) return null
+
+  if (ICON_TEXTURE_CACHE.has(iconPath)) {
+    return ICON_TEXTURE_CACHE.get(iconPath)
+  }
+
+  let texturePromise
+
+  if (PIXI.Assets?.load) {
+    texturePromise = PIXI.Assets.load(iconPath)
+  } else if (PIXI.Texture?.from) {
+    texturePromise = Promise.resolve(PIXI.Texture.from(iconPath))
+  } else {
+    texturePromise = Promise.resolve(null)
+  }
+
+  ICON_TEXTURE_CACHE.set(iconPath, texturePromise)
+
+  try {
+    return await texturePromise
+  } catch (error) {
+    ICON_TEXTURE_CACHE.delete(iconPath)
     throw error
   }
 }
@@ -603,21 +683,10 @@ export class PixiTreeRenderer {
       background.endFill()
       nodeContainer.addChild(background)
 
-      // Type indicator (active/passive icon) — top-left corner
-      const typeIcon = node.nodeTypeIcon ?? ''
-      const nameOffsetX = typeIcon ? 14 : 4
-      let typeText = null
-      if (typeIcon) {
-        typeText = new PIXI.Text(typeIcon, {
-          fontFamily: 'Arial',
-          fontSize: 9,
-          fill: v.textColor,
-        })
-        setPixiDebugLabel(typeText, `${nodeLabel}:type-icon`)
-        typeText.x = 4
-        typeText.y = 5
-        nodeContainer.addChild(typeText)
-      }
+      const hasTopLeftIcon = Boolean(node.iconSlots?.topLeft)
+      const hasTopRightIcon = Boolean(node.iconSlots?.topRight)
+      const nameOffsetX = hasTopLeftIcon ? 24 : 4
+      const nameRightPadding = hasTopRightIcon ? 24 : 4
 
       // Talent name — local coords
       const nameText = new PIXI.Text(node.talentName, {
@@ -625,7 +694,7 @@ export class PixiTreeRenderer {
         fontSize: 10,
         fill: v.textColor,
         wordWrap: true,
-        wordWrapWidth: this.nodeWidth - nameOffsetX - 4,
+        wordWrapWidth: this.nodeWidth - nameOffsetX - nameRightPadding,
       })
       setPixiDebugLabel(nameText, `${nodeLabel}:title`)
       nameText.alpha = v.textAlpha ?? 1
@@ -667,37 +736,7 @@ export class PixiTreeRenderer {
       }
       nodeContainer.addChild(costText)
 
-      // State pictogram sprite — local coords
-      const hasRenderedSvgPictogram = await this.#drawStatePictogramSprite(node, nodeContainer, nodeLabel)
-
-      // Fallback Unicode pictogram — local coords
-      let pictogramText = null
-      if (!hasRenderedSvgPictogram && v.pictogram) {
-        pictogramText = new PIXI.Text(v.pictogram, {
-          fontFamily: 'Arial',
-          fontSize: 10,
-          fill: v.pictogramColor,
-        })
-        setPixiDebugLabel(pictogramText, `${nodeLabel}:state-pictogram-text`)
-        pictogramText.x = this.nodeWidth - pictogramText.width - 6
-        pictogramText.y = 4
-        nodeContainer.addChild(pictogramText)
-      }
-
-      // Ranked indicator — local coords
-      let rankedText = null
-      if (node.isRanked) {
-        rankedText = new PIXI.Text('(R)', {
-          fontFamily: 'Arial',
-          fontSize: 9,
-          fill: v.costColor,
-          fontStyle: 'italic',
-        })
-        setPixiDebugLabel(rankedText, `${nodeLabel}:ranked-indicator`)
-        rankedText.x = this.nodeWidth - rankedText.width - 4
-        rankedText.y = 4
-        nodeContainer.addChild(rankedText)
-      }
+      const iconSlotSprites = await this.#drawNodeIconSlots(node, nodeContainer, nodeLabel)
 
       // Hit area — local coords, transparent overlay
       const hitArea = new PIXI.Graphics()
@@ -723,9 +762,7 @@ export class PixiTreeRenderer {
         nameText,
         costText,
         badge,
-        typeText,
-        pictogramText,
-        rankedText,
+        iconSlotSprites,
         hitArea,
       })
     }
@@ -756,5 +793,67 @@ export class PixiTreeRenderer {
       })
       return false
     }
+  }
+
+  async #drawNodeIconSlots(node, parent, nodeLabel = 'node:unknown') {
+    const iconSlots = node?.iconSlots ?? {}
+    const renderedSlots = {}
+
+    for (const slotName of Object.keys(ICON_SLOT_POSITIONS)) {
+      renderedSlots[slotName] = await this.#drawNodeIconSlot(node, parent, nodeLabel, slotName, iconSlots[slotName] ?? null)
+    }
+
+    return renderedSlots
+  }
+
+  async #drawNodeIconSlot(node, parent, nodeLabel, slotName, iconPath) {
+    if (!parent) return null
+
+    const position = ICON_SLOT_POSITIONS[slotName]
+    if (!position) return null
+
+    if (!iconPath) {
+      return null
+    }
+
+    try {
+      const texture = await loadIconTexture(iconPath)
+      if (texture && PIXI.Sprite) {
+        const sprite = new PIXI.Sprite(texture)
+        setPixiDebugLabel(sprite, `${nodeLabel}:icon-slot:${slotName}`)
+        sprite.x = position.x
+        sprite.y = position.y
+        sprite.width = NODE_CORNER_ICON_SIZE
+        sprite.height = NODE_CORNER_ICON_SIZE
+        sprite.tint = 0xffffff
+        parent.addChild(sprite)
+        return sprite
+      }
+    } catch (error) {
+      logger.warn('[PixiTreeRenderer] Failed to load node corner icon, falling back to text', {
+        slotName,
+        iconPath,
+        nodeId: node?.nodeId,
+        error,
+      })
+    }
+
+    return this.#drawNodeIconSlotFallback(node, parent, nodeLabel, slotName)
+  }
+
+  #drawNodeIconSlotFallback(node, parent, nodeLabel, slotName) {
+    if (!PIXI.Text) return null
+
+    const fallback = ICON_SLOT_FALLBACKS[slotName]
+    const position = ICON_SLOT_POSITIONS[slotName]
+    const text = fallback?.text?.(node) ?? ''
+    if (!text) return null
+
+    const textNode = new PIXI.Text(text, fallback.style?.(node) ?? {})
+    setPixiDebugLabel(textNode, `${nodeLabel}:${fallback.label}`)
+    textNode.x = position.x
+    textNode.y = position.y
+    parent.addChild(textNode)
+    return textNode
   }
 }
