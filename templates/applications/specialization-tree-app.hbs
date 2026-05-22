@@ -92,9 +92,18 @@
             data-specialization-tree-viewport
             aria-label='{{viewportAriaLabel}}'
           ></div>
-          <div class='specialization-tree-app__node-tooltip' data-node-tooltip role='tooltip' aria-live='polite' hidden>
-            <div class='specialization-tree-app__node-tooltip-header' data-tooltip-header></div>
-            <div class='specialization-tree-app__node-tooltip-body' data-tooltip-body></div>
+          <div class='specialization-tree-app__detail-panel' data-detail-panel role='region' aria-live='polite' hidden>
+            <div class='specialization-tree-app__detail-panel-header'>
+              <span class='specialization-tree-app__detail-panel-talent-name' data-detail-talent-name></span>
+              <span class='specialization-tree-app__detail-panel-cost' data-detail-cost></span>
+              <span class='specialization-tree-app__detail-panel-type' data-detail-type></span>
+            </div>
+            <div class='specialization-tree-app__detail-panel-state' data-detail-state></div>
+            <div class='specialization-tree-app__detail-panel-reason' data-detail-reason hidden></div>
+            <div class='specialization-tree-app__detail-panel-description' data-detail-description hidden></div>
+            <button type='button' class='specialization-tree-app__detail-panel-cta' data-action='contextualAction' data-detail-cta hidden>
+              <span data-detail-cta-label></span>
+            </button>
           </div>
         {{else}}
           <div class='specialization-tree-app__empty'>

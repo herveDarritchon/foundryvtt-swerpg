@@ -18,11 +18,11 @@ function createActor(overrides = {}) {
   }
 }
 
-function createRoot({ viewportHost, tooltip }) {
+function createRoot({ viewportHost, panel }) {
   return {
     querySelector: vi.fn((selector) => {
       if (selector === '[data-specialization-tree-viewport]') return viewportHost
-      if (selector === '[data-node-tooltip]') return tooltip
+      if (selector === '[data-detail-panel]') return panel
       return null
     }),
   }
@@ -200,8 +200,8 @@ describe('specialization-tree app orchestration', () => {
   it('creates, mounts and updates the renderer on render', async () => {
     const app = new SpecializationTreeApp()
     const viewportHost = { dataset: {}, firstElementChild: null, replaceChildren: vi.fn() }
-    const tooltip = { hidden: true, querySelector: vi.fn(() => null) }
-    app.element = createRoot({ viewportHost, tooltip })
+    const panel = { hidden: true, querySelector: vi.fn(() => null) }
+    app.element = createRoot({ viewportHost, panel })
 
     const context = {
       currentTreeId: 'spec-a',
@@ -228,8 +228,8 @@ describe('specialization-tree app orchestration', () => {
   it('does not reset view on rerender when tree selection is unchanged', async () => {
     const app = new SpecializationTreeApp()
     const viewportHost = { dataset: {}, firstElementChild: null, replaceChildren: vi.fn() }
-    const tooltip = { hidden: true, querySelector: vi.fn(() => null) }
-    app.element = createRoot({ viewportHost, tooltip })
+    const panel = { hidden: true, querySelector: vi.fn(() => null) }
+    app.element = createRoot({ viewportHost, panel })
 
     const context = { currentTreeId: 'spec-a', renderNodes: [], renderConnections: [] }
 
@@ -244,8 +244,8 @@ describe('specialization-tree app orchestration', () => {
   it('requests reset view when tree selection changes', async () => {
     const app = new SpecializationTreeApp()
     const viewportHost = { dataset: {}, firstElementChild: null, replaceChildren: vi.fn() }
-    const tooltip = { hidden: true, querySelector: vi.fn(() => null) }
-    app.element = createRoot({ viewportHost, tooltip })
+    const panel = { hidden: true, querySelector: vi.fn(() => null) }
+    app.element = createRoot({ viewportHost, panel })
 
     await app._onRender({ currentTreeId: 'spec-a', renderNodes: [], renderConnections: [] }, {})
     await app._onRender({ currentTreeId: 'spec-b', renderNodes: [], renderConnections: [] }, {})
@@ -289,28 +289,41 @@ describe('specialization-tree app orchestration', () => {
     expect(app.renderer.zoomOut).toHaveBeenCalled()
   })
 
-  it('renderer node callback triggers tooltip rendering when no primary action exists', async () => {
+  it('renderer node callback shows detail panel when no primary action exists', async () => {
     const viewportHost = { dataset: {}, firstElementChild: null, replaceChildren: vi.fn() }
-    const headerEl = { textContent: '' }
-    const bodyEl = { innerHTML: '' }
-    const tooltip = {
+    const nameEl = { textContent: '' }
+    const costEl = { textContent: '' }
+    const typeEl = { textContent: '' }
+    const stateEl = { textContent: '' }
+    const reasonEl = { hidden: false }
+    const descriptionEl = { hidden: false, innerHTML: '' }
+    const ctaEl = { hidden: false }
+    const ctaLabelEl = { textContent: '' }
+    const panel = {
       hidden: true,
       querySelector: vi.fn((selector) => {
-        if (selector === '[data-tooltip-header]') return headerEl
-        if (selector === '[data-tooltip-body]') return bodyEl
+        if (selector === '[data-detail-talent-name]') return nameEl
+        if (selector === '[data-detail-cost]') return costEl
+        if (selector === '[data-detail-type]') return typeEl
+        if (selector === '[data-detail-state]') return stateEl
+        if (selector === '[data-detail-reason]') return reasonEl
+        if (selector === '[data-detail-description]') return descriptionEl
+        if (selector === '[data-detail-cta]') return ctaEl
+        if (selector === '[data-detail-cta-label]') return ctaLabelEl
         return null
       }),
     }
 
     const app = new SpecializationTreeApp()
     app.actor = createActor()
-    app.element = createRoot({ viewportHost, tooltip })
+    app.element = createRoot({ viewportHost, panel })
     await app._onRender({ currentTreeId: 'spec-a', renderNodes: [], renderConnections: [] }, {})
 
     const node = {
       talentName: 'Tough',
       xpCost: 5,
       isRanked: true,
+      talentDescription: '<p>Desc</p>',
       nodeStateLabel: 'Available',
       reasonLabel: null,
       actionable: { primaryAction: null },
@@ -318,26 +331,28 @@ describe('specialization-tree app orchestration', () => {
 
     await app.renderer.onNodePointerDown(node)
 
-    expect(tooltip.hidden).toBe(false)
-    expect(headerEl.textContent).toBe('Tough')
-    expect(bodyEl.innerHTML).toContain('5 XP')
+    expect(panel.hidden).toBe(false)
+    expect(nameEl.textContent).toBe('Tough')
+    expect(costEl.textContent).toContain('5 XP')
+    expect(stateEl.textContent).toBe('Available')
+    expect(ctaEl.hidden).toBe(true)
   })
 
-  it('background callback hides visible tooltip', async () => {
+  it('background callback hides visible detail panel', async () => {
     const viewportHost = { dataset: {}, firstElementChild: null, replaceChildren: vi.fn() }
-    const tooltip = {
+    const panel = {
       hidden: false,
       querySelector: vi.fn(() => null),
     }
 
     const app = new SpecializationTreeApp()
     app.actor = createActor()
-    app.element = createRoot({ viewportHost, tooltip })
+    app.element = createRoot({ viewportHost, panel })
     await app._onRender({ currentTreeId: 'spec-a', renderNodes: [], renderConnections: [] }, {})
 
     app.renderer.onBackgroundPointerDown()
 
-    expect(tooltip.hidden).toBe(true)
+    expect(panel.hidden).toBe(true)
   })
 
   it('renderer node callback executes purchase flow and refreshes on success', async () => {
@@ -345,8 +360,8 @@ describe('specialization-tree app orchestration', () => {
     app.actor = createActor()
     app.rendered = true
     const viewportHost = { dataset: {}, firstElementChild: null, replaceChildren: vi.fn() }
-    const tooltip = { hidden: true, querySelector: vi.fn(() => null) }
-    app.element = createRoot({ viewportHost, tooltip })
+    const panel = { hidden: true, querySelector: vi.fn(() => null) }
+    app.element = createRoot({ viewportHost, panel })
     const refreshSpy = vi.spyOn(app, 'refresh').mockResolvedValue(app)
     const infoSpy = vi.spyOn(ui.notifications, 'info')
     foundry.applications.api.DialogV2.confirm.mockResolvedValue(true)
@@ -377,8 +392,8 @@ describe('specialization-tree app orchestration', () => {
     app.actor = createActor()
     app.rendered = true
     const viewportHost = { dataset: {}, firstElementChild: null, replaceChildren: vi.fn() }
-    const tooltip = { hidden: true, querySelector: vi.fn(() => null) }
-    app.element = createRoot({ viewportHost, tooltip })
+    const panel = { hidden: true, querySelector: vi.fn(() => null) }
+    app.element = createRoot({ viewportHost, panel })
     const refreshSpy = vi.spyOn(app, 'refresh').mockResolvedValue(app)
     const warnSpy = vi.spyOn(ui.notifications, 'warn')
     foundry.applications.api.DialogV2.confirm.mockResolvedValue(true)

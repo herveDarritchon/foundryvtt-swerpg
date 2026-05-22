@@ -198,6 +198,7 @@ export function buildRenderNodesAndConnections(currentTreeData, actor, currentTr
       nodeId: viewNode.nodeId,
       talentId: viewNode.talentId,
       talentName: viewNode.talent.name,
+      talentDescription: viewNode.talent.description ?? null,
       isRanked: viewNode.isRanked,
       isActive: viewNode.isActive,
       xpCost: viewNode.cost,

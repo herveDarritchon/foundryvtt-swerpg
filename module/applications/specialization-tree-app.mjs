@@ -4,7 +4,7 @@ import { purchaseTalentNode } from '../lib/talent-node/talent-node-purchase.mjs'
 import { resolveTalentDetail } from '../lib/talent-node/talent-reference-resolver.mjs'
 import { getReasonLabelKey } from './specialization-tree/node-ui-state.mjs'
 import { buildSpecializationTreeContext as buildContextPure } from './specialization-tree/tree-context-builder.mjs'
-import { buildNodeTooltipViewModel } from './specialization-tree/node-tooltip-view-model.mjs'
+import { buildContextualActionPanelViewModel } from './specialization-tree/contextual-action-panel-view-model.mjs'
 import { PixiTreeRenderer } from './specialization-tree/pixi-tree-renderer.mjs'
 
 const { api } = foundry.applications
@@ -42,7 +42,7 @@ export function buildSpecializationTreeContext(actor, selectedKey = null) {
   const talentLookup = (node) => {
     const detail = resolveTalentDetail(node)
     return detail
-      ? { name: detail.name, uuid: node.talentUuid ?? node.talentId ?? '', isRanked: detail.isRanked, isActive: detail.isActive }
+      ? { name: detail.name, uuid: node.talentUuid ?? node.talentId ?? '', isRanked: detail.isRanked, isActive: detail.isActive, description: detail.description }
       : null
   }
 
@@ -76,6 +76,7 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
       selectTree: SpecializationTreeApp.#onSelectTree,
       zoomIn: SpecializationTreeApp.#onZoomIn,
       zoomOut: SpecializationTreeApp.#onZoomOut,
+      contextualAction: SpecializationTreeApp.#onContextualAction,
     },
   }
 
@@ -99,6 +100,12 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
   #pendingSelection = null
 
   #refreshPending = false
+
+  /** @type {object|null} */
+  #currentDetailNode = null
+
+  /** Public getter for #currentDetailNode, accessible from static action handlers. */
+  get _currentDetailNode() { return this.#currentDetailNode }
 
   get title() {
     return game.i18n.format('SWERPG.TALENT.SPECIALIZATION_TREE_APP.TITLE', {
@@ -201,7 +208,7 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
     })
 
     this.renderer.onNodePointerDown = (node) => this.#handleNodePointerDown(node)
-    this.renderer.onBackgroundPointerDown = () => this.#hideNodeTooltip()
+    this.renderer.onBackgroundPointerDown = () => this.#hideDetailPanel()
   }
 
   #getViewportHost() {
@@ -263,7 +270,7 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
       return
     }
 
-    this.#showNodeTooltip(node)
+    this.#showDetailPanel(node)
   }
 
   #canExecutePrimaryAction(node) {
@@ -280,10 +287,10 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
   }
 
   async #handleNodePrimaryAction(node) {
-    this.#hideNodeTooltip()
+    this.#hideDetailPanel()
 
     if (!this.#canExecutePrimaryAction(node)) {
-      this.#showNodeTooltip(node)
+      this.#showDetailPanel(node)
       return
     }
 
@@ -340,29 +347,74 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
     await this.refresh()
   }
 
-  #showNodeTooltip(node) {
-    const root = typeof HTMLElement !== 'undefined' && this.element instanceof HTMLElement
-      ? this.element
-      : (this.element?.[0] ?? this.element)
-    const tooltip = root?.querySelector?.('[data-node-tooltip]')
-    if (!tooltip) return
-
-    const localize = game.i18n.localize.bind(game.i18n)
-    const vm = buildNodeTooltipViewModel(node, localize)
-
-    const headerEl = tooltip.querySelector('[data-tooltip-header]')
-    const bodyEl = tooltip.querySelector('[data-tooltip-body]')
-    if (headerEl) headerEl.textContent = vm.header
-    if (bodyEl) bodyEl.innerHTML = vm.lines.join('<br>')
-
-    tooltip.hidden = false
+  /** @returns {Promise<void>} */
+  static async #onContextualAction(event, _target) {
+    event.preventDefault()
+    const node = this._currentDetailNode
+    if (!node) return
+    await this.#handleNodePrimaryAction(node)
   }
 
-  #hideNodeTooltip() {
+  #showDetailPanel(node) {
+    this.#currentDetailNode = node
+
     const root = typeof HTMLElement !== 'undefined' && this.element instanceof HTMLElement
       ? this.element
       : (this.element?.[0] ?? this.element)
-    const tooltip = root?.querySelector?.('[data-node-tooltip]')
-    if (tooltip) tooltip.hidden = true
+    const panel = root?.querySelector?.('[data-detail-panel]')
+    if (!panel) return
+
+    const localize = game.i18n.localize.bind(game.i18n)
+    const vm = buildContextualActionPanelViewModel(node, localize)
+
+    const nameEl = panel.querySelector('[data-detail-talent-name]')
+    const costEl = panel.querySelector('[data-detail-cost]')
+    const typeEl = panel.querySelector('[data-detail-type]')
+    const stateEl = panel.querySelector('[data-detail-state]')
+    const reasonEl = panel.querySelector('[data-detail-reason]')
+    const descriptionEl = panel.querySelector('[data-detail-description]')
+    const ctaEl = panel.querySelector('[data-detail-cta]')
+    const ctaLabelEl = panel.querySelector('[data-detail-cta-label]')
+
+    if (nameEl) nameEl.textContent = vm.talentName
+    if (costEl) costEl.textContent = `${vm.xpCost} XP`
+    if (typeEl) typeEl.textContent = vm.typeLabel
+    if (stateEl) stateEl.textContent = vm.nodeStateLabel
+    if (reasonEl) {
+      if (vm.reasonLabel) {
+        reasonEl.textContent = vm.reasonLabel
+        reasonEl.hidden = false
+      } else {
+        reasonEl.hidden = true
+      }
+    }
+    if (descriptionEl) {
+      if (vm.description) {
+        descriptionEl.innerHTML = vm.description
+        descriptionEl.hidden = false
+      } else {
+        descriptionEl.hidden = true
+      }
+    }
+    if (ctaEl && ctaLabelEl) {
+      if (vm.canAction && vm.actionLabel) {
+        ctaLabelEl.textContent = vm.actionLabel
+        ctaEl.hidden = false
+      } else {
+        ctaEl.hidden = true
+      }
+    }
+
+    panel.hidden = false
+  }
+
+  #hideDetailPanel() {
+    this.#currentDetailNode = null
+
+    const root = typeof HTMLElement !== 'undefined' && this.element instanceof HTMLElement
+      ? this.element
+      : (this.element?.[0] ?? this.element)
+    const panel = root?.querySelector?.('[data-detail-panel]')
+    if (panel) panel.hidden = true
   }
 }
