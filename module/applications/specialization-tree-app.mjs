@@ -118,6 +118,7 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
       zoomIn: SpecializationTreeApp.#onZoomIn,
       zoomOut: SpecializationTreeApp.#onZoomOut,
       contextualAction: SpecializationTreeApp.#onContextualAction,
+      closeDetail: SpecializationTreeApp.#onCloseDetail,
     },
   }
 
@@ -401,6 +402,12 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
     const node = this._currentDetailNode
     if (!node) return
     await this.#handleNodePrimaryAction(node)
+  }
+
+  /** @returns {Promise<void>} */
+  static async #onCloseDetail(event, _target) {
+    event.preventDefault()
+    this.#hideDetailPanel()
   }
 
   #showDetailPanel(node) {

@@ -170,7 +170,8 @@
           "ZOOM_IN": "Zoom in",
           "ZOOM_OUT": "Zoom out",
           "PURCHASE": "Purchase",
-          "FORGET": "Forget"
+          "FORGET": "Forget",
+          "CLOSE_DETAIL": "Close"
         }
       },
       "ACTIONS": {
