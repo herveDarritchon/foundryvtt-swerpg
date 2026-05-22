@@ -2,7 +2,7 @@
 name: "opencode-create-feature-branch"
 description: Opencode - Crée une branche dédiée depuis develop via le skill creer-branche-feature, sans implémenter ni committer.
 mode: subagent
-model: github-copilot/gpt-4.1
+model: github-copilot/gpt-5-mini
 temperature: 0.1
 memory: project
 permission:

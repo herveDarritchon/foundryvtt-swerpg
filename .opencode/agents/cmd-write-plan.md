@@ -2,7 +2,7 @@
 name: "write-plan"
 description: Écrit un plan déjà validé sous documentation/plan/ via le skill ecrire-plan-fichier, sans réinterprétation.
 mode: subagent
-model: github-copilot/gpt-4.1
+model: github-copilot/gpt-5-mini
 temperature: 0.1
 permission:
   read: allow
