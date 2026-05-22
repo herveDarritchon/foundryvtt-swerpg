@@ -12,9 +12,9 @@
     "dev:css": "pnpm run less:watch",
     "compile": "node build.mjs compile",
     "extract": "node build.mjs extract",
-    "test": "vitest",
-    "test:watch": "vitest --watch",
-    "test:coverage": "pnpm vitest run --coverage",
+    "test": "vitest run --config vitest.config.mjs",
+    "test:watch": "vitest --watch --config vitest.config.mjs",
+    "test:coverage": "vitest run --coverage --config vitest.config.mjs",
     "e2e": "playwright test",
     "e2e:headed": "playwright test --headed",
     "e2e:ci": "playwright test --project=chromium --grep \"\\[ci\\]\"",
@@ -28,6 +28,7 @@
   "devDependencies": {
     "@eslint/js": "^9.8.0",
     "@foundryvtt/foundryvtt-cli": "^3.0.0",
+    "@playwright/test": "^1.57.0",
     "@rollup/plugin-commonjs": "^28.0.7",
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^16.0.3",
@@ -57,8 +58,7 @@
     "prettier-plugin-handlebars": "^0.0.1",
     "rollup": "^4.41.1",
     "semantic-release": "^24.2.5",
-    "vitest": "^3.1.1",
-    "@playwright/test": "^1.57.0"
+    "vitest": "^3.1.1"
   },
   "author": "Behaska",
   "license": "MIT"

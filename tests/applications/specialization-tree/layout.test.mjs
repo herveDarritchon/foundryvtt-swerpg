@@ -69,11 +69,32 @@ describe('buildConnectionAnchors', () => {
     const anchors = buildConnectionAnchors(positionedNodes, connections)
 
     expect(anchors).toHaveLength(1)
+    expect(anchors[0].fromNodeId).toBe('n1')
+    expect(anchors[0].toNodeId).toBe('n2')
     expect(anchors[0].fromX).toBe(20 + NODE_WIDTH / 2)
     expect(anchors[0].fromY).toBe(20 + NODE_HEIGHT / 2)
     expect(anchors[0].toX).toBe(164 + NODE_WIDTH / 2)
     expect(anchors[0].toY).toBe(20 + NODE_HEIGHT / 2)
     expect(anchors[0].type).toBe('straight')
+  })
+
+  it('exposes fromNodeId and toNodeId in every anchor object', () => {
+    const nodes = [
+      { nodeId: 'n1', x: 20, y: 20 },
+      { nodeId: 'n2', x: 164, y: 20 },
+      { nodeId: 'n3', x: 20, y: 92 },
+    ]
+    const connections = [
+      { fromNodeId: 'n1', toNodeId: 'n2', type: 'straight' },
+      { fromNodeId: 'n2', toNodeId: 'n3', type: 'angled' },
+    ]
+
+    const anchors = buildConnectionAnchors(nodes, connections)
+
+    expect(anchors[0].fromNodeId).toBe('n1')
+    expect(anchors[0].toNodeId).toBe('n2')
+    expect(anchors[1].fromNodeId).toBe('n2')
+    expect(anchors[1].toNodeId).toBe('n3')
   })
 
   it('defaults type to null when not provided', () => {

@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm vitest *)",
+      "Bash(xxd)",
+      "Bash(python3 *)",
+      "Bash(cat)",
+      "Bash(node /tmp/debug_test.mjs)",
+      "Bash(pnpm run *)",
+      "Bash(git checkout *)",
+      "Bash(gh pr *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(gh issue create --title 'refactor\\(specialization-tree\\): named Pixi containers per node for debuggability' --body ' *)",
+      "Bash(git stash *)"
+    ]
+  }
+}

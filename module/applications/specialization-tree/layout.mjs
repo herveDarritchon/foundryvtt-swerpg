@@ -62,7 +62,7 @@ export function computeNodeCenter(node) {
  *
  * @param {Array<{ nodeId: string, x: number, y: number }>} renderNodes Nodes already positioned with `x`, `y`.
  * @param {Array<{ fromNodeId: string, toNodeId: string, type?: string }>} connections Connection descriptors.
- * @returns {Array<{ fromX: number, fromY: number, toX: number, toY: number, type: string|null }>}
+ * @returns {Array<{ fromNodeId: string, toNodeId: string, fromX: number, fromY: number, toX: number, toY: number, type: string|null }>}
  *   Connection anchor points. Missing nodes yield `(0, 0)` anchors.
  */
 export function buildConnectionAnchors(renderNodes, connections) {

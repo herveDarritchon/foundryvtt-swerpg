@@ -5,8 +5,8 @@
     "chrome-devtools": {
       "type": "local",
       "command": ["npx", "-y", "chrome-devtools-mcp@latest"],
-      "enabled": true
-    }
+      "enabled": true,
+    },
   },
   "model": "opencode/big-pickle",
   "small_model": "github-copilot/gpt-4.1",
@@ -15,10 +15,10 @@
       "models": {
         "gpt-4.1": {
           "options": {
-            "textVerbosity": "low"
-          }
-        }
-      }
+            "textVerbosity": "low",
+          },
+        },
+      },
     },
     "openai": {
       "models": {
@@ -26,17 +26,17 @@
           "options": {
             "reasoningEffort": "medium",
             "textVerbosity": "low",
-            "reasoningSummary": "auto"
-          }
+            "reasoningSummary": "auto",
+          },
         },
         "gpt-5.4": {
           "options": {
             "reasoningEffort": "high",
             "textVerbosity": "low",
-            "reasoningSummary": "auto"
-          }
-        }
-      }
-    }
-  }
+            "reasoningSummary": "auto",
+          },
+        },
+      },
+    },
+  },
 }

@@ -73,9 +73,7 @@ Améliorer l'affichage de l'arbre actif:
 
 - avoir un effet hover sur l'arbre que l'on survole (couleur de fond plus claire, bordure lumineuse, etc.) pour indiquer que c'est cliquable.
 - mettre en surbrillance l'arbre actif dans la sidebar quand il est sélectionné.
--
-
----
+- ***
 
 # 3. Améliorations des nœuds
 
