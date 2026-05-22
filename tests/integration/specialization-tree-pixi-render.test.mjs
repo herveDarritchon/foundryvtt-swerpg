@@ -356,6 +356,176 @@ describe('PixiTreeRenderer integration', () => {
     expect(activeTopLeft?.texture?.path).toBe(ACTIVE_TYPE_ICON_PATH)
   })
 
+  /* ═══════════════════════════════════════════════════════════════ */
+  /*  PXP5 — Multi-state icon coverage                              */
+  /* ═══════════════════════════════════════════════════════════════ */
+
+  /**
+   * Build a view model covering all 4 node states × 2 node types = 6 variants.
+   * Each node has a distinct state and type so the icon slot rendering can be
+   * verified across the full visual matrix.
+   */
+  function createMultiStateViewModel() {
+    return {
+      renderNodes: [
+        {
+          nodeId: 'n-purchased',
+          talentName: 'Tough',
+          x: 20,
+          y: 20,
+          xpCost: 5,
+          isRanked: true,
+          nodeTypeIcon: 'P',
+          nodeState: NODE_STATE.PURCHASED,
+          variant: NODE_STATE_VARIANTS[NODE_STATE.PURCHASED].passive,
+          iconSlots: {
+            topLeft: PASSIVE_TYPE_ICON_PATH,
+            topRight: null,
+            bottomRight: RANKED_ICON_PATH,
+          },
+          actionable: { primaryAction: null },
+        },
+        {
+          nodeId: 'n-available',
+          talentName: 'Grit',
+          x: 20,
+          y: 92,
+          xpCost: 10,
+          isRanked: false,
+          nodeTypeIcon: 'A',
+          nodeState: NODE_STATE.AVAILABLE,
+          variant: NODE_STATE_VARIANTS[NODE_STATE.AVAILABLE].active,
+          iconSlots: {
+            topLeft: ACTIVE_TYPE_ICON_PATH,
+            topRight: PURCHASE_ACTION_ICON_PATH,
+            bottomRight: null,
+          },
+          actionable: { primaryAction: 'purchase' },
+        },
+        {
+          nodeId: 'n-locked',
+          talentName: 'Durable',
+          x: 164,
+          y: 20,
+          xpCost: 15,
+          isRanked: true,
+          nodeTypeIcon: 'P',
+          nodeState: NODE_STATE.LOCKED,
+          variant: NODE_STATE_VARIANTS[NODE_STATE.LOCKED].passive,
+          iconSlots: {
+            topLeft: PASSIVE_TYPE_ICON_PATH,
+            topRight: null,
+            bottomRight: RANKED_ICON_PATH,
+          },
+          actionable: { primaryAction: null },
+        },
+        {
+          nodeId: 'n-invalid',
+          talentName: '???',
+          x: 164,
+          y: 92,
+          xpCost: 0,
+          isRanked: false,
+          nodeTypeIcon: 'A',
+          nodeState: NODE_STATE.INVALID,
+          variant: NODE_STATE_VARIANTS[NODE_STATE.INVALID].active,
+          iconSlots: {
+            topLeft: ACTIVE_TYPE_ICON_PATH,
+            topRight: null,
+            bottomRight: null,
+          },
+          actionable: { primaryAction: null },
+        },
+      ],
+      renderConnections: [],
+    }
+  }
+
+  it('renders icon slots correctly for all 4 node states', async () => {
+    const host = createMockHost()
+    const renderer = new PixiTreeRenderer()
+    renderer.mount(host)
+
+    await renderer.update(createMultiStateViewModel(), {})
+
+    const descendants = flattenChildren(renderer.treeContainer)
+
+    // purchased passive node: type icon + ranked icon, no action icon
+    expect(descendants.some((c) => c.label === 'node:n-purchased:Tough:icon-slot:topLeft')).toBe(true)
+    expect(descendants.some((c) => c.label === 'node:n-purchased:Tough:icon-slot:topRight')).toBe(false)
+    expect(descendants.some((c) => c.label === 'node:n-purchased:Tough:icon-slot:bottomRight')).toBe(true)
+    expect(descendants.some((c) => c.label === 'node:n-purchased:Tough:icon-slot:topLeft' && c.texture?.path === PASSIVE_TYPE_ICON_PATH)).toBe(true)
+
+    // available active node: type icon + purchase action icon, no ranked icon
+    expect(descendants.some((c) => c.label === 'node:n-available:Grit:icon-slot:topLeft')).toBe(true)
+    expect(descendants.some((c) => c.label === 'node:n-available:Grit:icon-slot:topRight')).toBe(true)
+    expect(descendants.some((c) => c.label === 'node:n-available:Grit:icon-slot:bottomRight')).toBe(false)
+    expect(descendants.some((c) => c.label === 'node:n-available:Grit:icon-slot:topLeft' && c.texture?.path === ACTIVE_TYPE_ICON_PATH)).toBe(true)
+    expect(descendants.some((c) => c.label === 'node:n-available:Grit:icon-slot:topRight' && c.texture?.path === PURCHASE_ACTION_ICON_PATH)).toBe(true)
+
+    // locked passive node: type icon + ranked icon, no action icon
+    expect(descendants.some((c) => c.label === 'node:n-locked:Durable:icon-slot:topLeft')).toBe(true)
+    expect(descendants.some((c) => c.label === 'node:n-locked:Durable:icon-slot:topRight')).toBe(false)
+    expect(descendants.some((c) => c.label === 'node:n-locked:Durable:icon-slot:bottomRight')).toBe(true)
+    expect(descendants.some((c) => c.label === 'node:n-locked:Durable:icon-slot:topLeft' && c.texture?.path === PASSIVE_TYPE_ICON_PATH)).toBe(true)
+
+    // invalid active node: type icon only, no action or ranked icon
+    expect(descendants.some((c) => c.label === 'node:n-invalid:???:icon-slot:topLeft')).toBe(true)
+    expect(descendants.some((c) => c.label === 'node:n-invalid:???:icon-slot:topRight')).toBe(false)
+    expect(descendants.some((c) => c.label === 'node:n-invalid:???:icon-slot:bottomRight')).toBe(false)
+    expect(descendants.some((c) => c.label === 'node:n-invalid:???:icon-slot:topLeft' && c.texture?.path === ACTIVE_TYPE_ICON_PATH)).toBe(true)
+  })
+
+  it('renders all 4 nodes from multi-state view-model', async () => {
+    const host = createMockHost()
+    const renderer = new PixiTreeRenderer()
+    renderer.mount(host)
+
+    await renderer.update(createMultiStateViewModel(), {})
+
+    const descendants = flattenChildren(renderer.treeContainer)
+    expect(descendants.some((child) => child.text === 'Tough')).toBe(true)
+    expect(descendants.some((child) => child.text === 'Grit')).toBe(true)
+    expect(descendants.some((child) => child.text === 'Durable')).toBe(true)
+    expect(descendants.some((child) => child.text === '???')).toBe(true)
+    expect(renderer.renderNodesCache).toHaveLength(4)
+  })
+
+  it('zoom in/out/reset preserves the PIXI application sharpness settings', async () => {
+    const host = createMockHost()
+    const renderer = new PixiTreeRenderer()
+    renderer.mount(host)
+
+    await renderer.update(createViewModel(), { resetView: true })
+
+    // Capture sharpness values from the PIXI Application options (set at construction)
+    const initialAntialias = renderer.pixiApp.options.antialias
+    const initialAutoDensity = renderer.pixiApp.options.autoDensity
+    const initialBackgroundAlpha = renderer.pixiApp.options.backgroundAlpha
+    const initialResolution = renderer.pixiApp.options.resolution
+
+    // Zoom in — sharpness config remains intact
+    renderer.zoomIn()
+    expect(renderer.pixiApp.options.antialias).toBe(initialAntialias)
+    expect(renderer.pixiApp.options.autoDensity).toBe(initialAutoDensity)
+    expect(renderer.pixiApp.options.backgroundAlpha).toBe(initialBackgroundAlpha)
+    expect(renderer.pixiApp.options.resolution).toBe(initialResolution)
+
+    // Zoom out — sharpness config remains intact
+    renderer.zoomOut()
+    expect(renderer.pixiApp.options.antialias).toBe(initialAntialias)
+    expect(renderer.pixiApp.options.autoDensity).toBe(initialAutoDensity)
+    expect(renderer.pixiApp.options.backgroundAlpha).toBe(initialBackgroundAlpha)
+    expect(renderer.pixiApp.options.resolution).toBe(initialResolution)
+
+    // Reset view — sharpness config remains intact
+    renderer.resetView()
+    expect(renderer.pixiApp.options.antialias).toBe(initialAntialias)
+    expect(renderer.pixiApp.options.autoDensity).toBe(initialAutoDensity)
+    expect(renderer.pixiApp.options.backgroundAlpha).toBe(initialBackgroundAlpha)
+    expect(renderer.pixiApp.options.resolution).toBe(initialResolution)
+  })
+
   it('rebuilds the tree container on subsequent updates', async () => {
     const host = createMockHost()
     const renderer = new PixiTreeRenderer()

@@ -707,6 +707,82 @@ describe('specialization-tree app orchestration', () => {
       })
     })
 
+    /* ── Available node affordance ──────────────────────────────── */
+
+    describe('available node affordance', () => {
+      it('shows detail panel with purchase CTA and correct labels', async () => {
+        const { panel, els } = createPanelMock()
+        const viewportHost = { dataset: {}, firstElementChild: null, replaceChildren: vi.fn() }
+        const app = new SpecializationTreeApp()
+        app.actor = createActor()
+        app.element = createRoot({ viewportHost, panel })
+        await app._onRender({ currentTreeId: 'spec-a', renderNodes: [], renderConnections: [] }, {})
+
+        const node = {
+          talentName: 'Tough',
+          xpCost: 5,
+          isRanked: true,
+          talentDescription: '<p>Increases soak by 1.</p>',
+          nodeStateLabel: 'Available',
+          reasonLabel: null,
+          actionable: {
+            primaryAction: 'purchase',
+            canPurchase: true,
+            actionLabel: '[SWERPG.TALENT.SPECIALIZATION_TREE_APP.ACTION.PURCHASE]',
+          },
+        }
+
+        await app.renderer.onNodePointerDown(node)
+
+        expect(panel.hidden).toBe(false)
+        expect(els.nameEl.textContent).toBe('Tough')
+        expect(els.costEl.textContent).toContain('5 XP')
+        expect(els.stateEl.textContent).toBe('Available')
+        expect(els.reasonEl.hidden).toBe(true)
+        expect(els.descriptionEl.innerHTML).toBe('<p>Increases soak by 1.</p>')
+        expect(els.ctaEl.hidden).toBe(false)
+        expect(els.ctaLabelEl.textContent).toBe('[SWERPG.TALENT.SPECIALIZATION_TREE_APP.ACTION.PURCHASE]')
+      })
+    })
+
+    /* ── Purchased node affordance ──────────────────────────────── */
+
+    describe('purchased node affordance', () => {
+      it('shows detail panel with forget CTA and correct labels', async () => {
+        const { panel, els } = createPanelMock()
+        const viewportHost = { dataset: {}, firstElementChild: null, replaceChildren: vi.fn() }
+        const app = new SpecializationTreeApp()
+        app.actor = createActor()
+        app.element = createRoot({ viewportHost, panel })
+        await app._onRender({ currentTreeId: 'spec-a', renderNodes: [], renderConnections: [] }, {})
+
+        const node = {
+          talentName: 'Grit',
+          xpCost: 10,
+          isRanked: false,
+          talentDescription: null,
+          nodeStateLabel: 'Purchased',
+          reasonLabel: null,
+          actionable: {
+            primaryAction: 'forget',
+            canForget: true,
+            actionLabel: '[SWERPG.TALENT.SPECIALIZATION_TREE_APP.ACTION.FORGET]',
+          },
+        }
+
+        await app.renderer.onNodePointerDown(node)
+
+        expect(panel.hidden).toBe(false)
+        expect(els.nameEl.textContent).toBe('Grit')
+        expect(els.costEl.textContent).toContain('10 XP')
+        expect(els.stateEl.textContent).toBe('Purchased')
+        expect(els.reasonEl.hidden).toBe(true)
+        expect(els.descriptionEl.hidden).toBe(true)
+        expect(els.ctaEl.hidden).toBe(false)
+        expect(els.ctaLabelEl.textContent).toBe('[SWERPG.TALENT.SPECIALIZATION_TREE_APP.ACTION.FORGET]')
+      })
+    })
+
     /* ── Action / microcopy continuity ────────────────────────── */
 
     describe('action/microcopy continuity', () => {
