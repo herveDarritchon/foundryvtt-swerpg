@@ -31,7 +31,7 @@ export function buildRenderViewModel(currentTree, talentLookup) {
     const resolved = typeof talentLookup === 'function' ? talentLookup(node) : null
 
     const isUnresolved = !resolved || !resolved.name
-    const talent = isUnresolved ? { name: '', uuid: 'unknown' } : { name: resolved.name, uuid: resolved.uuid ?? node.talentUuid ?? '' }
+    const talent = isUnresolved ? { name: '', uuid: 'unknown', description: null } : { name: resolved.name, uuid: resolved.uuid ?? node.talentUuid ?? '', description: resolved.description ?? null }
     const state = isUnresolved ? 'unresolved' : 'available'
     const label = talent.name
 
