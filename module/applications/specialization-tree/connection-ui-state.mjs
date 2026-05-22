@@ -24,23 +24,23 @@
 export const CONNECTION_VISUAL_STYLES = Object.freeze({
   default: Object.freeze({
     color: 0x78a9c2,
-    alpha: 0.6,
-    thickness: 2,
+    alpha: 0.75,
+    thickness: 3,
   }),
   active: Object.freeze({
-    color: 0x95c9ff,
+    color: 0xa8d8ff,
     alpha: 0.9,
-    thickness: 2,
+    thickness: 3,
   }),
   inactive: Object.freeze({
-    color: 0x3a5a6e,
-    alpha: 0.3,
-    thickness: 1,
+    color: 0x4a7a9e,
+    alpha: 0.5,
+    thickness: 2,
   }),
   highlighted: Object.freeze({
     color: 0xffd700,
     alpha: 0.85,
-    thickness: 3,
+    thickness: 4,
   }),
 })
 

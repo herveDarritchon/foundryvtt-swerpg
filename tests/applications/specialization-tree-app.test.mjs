@@ -87,6 +87,7 @@ describe('specialization-tree app orchestration', () => {
         'SWERPG.TALENT.SPECIALIZATION_TREE_APP.PERMISSION_DENIED': 'Denied',
         'SWERPG.TALENT.SPECIALIZATION_TREE_APP.ACTION.PURCHASE': 'Purchase',
         'SWERPG.TALENT.SPECIALIZATION_TREE_APP.ACTION.FORGET': 'Forget',
+        'SWERPG.TALENT.SPECIALIZATION_TREE_APP.ACTION.CLOSE_DETAIL': 'Close',
         'SWERPG.TALENT.SPECIALIZATION_TREE_APP.CONFIRM.CANCEL': 'Cancel',
         'SWERPG.TALENT.UNKNOWN': 'Unknown talent',
       },
@@ -296,6 +297,22 @@ describe('specialization-tree app orchestration', () => {
     expect(app.renderer.resetView).toHaveBeenCalled()
     expect(app.renderer.zoomIn).toHaveBeenCalled()
     expect(app.renderer.zoomOut).toHaveBeenCalled()
+  })
+
+  it('closeDetail action hides the detail panel', async () => {
+    const viewportHost = { dataset: {}, firstElementChild: null, replaceChildren: vi.fn() }
+    const panel = { hidden: false, querySelector: vi.fn(() => null) }
+
+    const app = new SpecializationTreeApp()
+    app.actor = createActor()
+    app.element = createRoot({ viewportHost, panel })
+    await app._onRender({ currentTreeId: 'spec-a', renderNodes: [], renderConnections: [] }, {})
+
+    const event = { preventDefault: vi.fn() }
+    await SpecializationTreeApp.DEFAULT_OPTIONS.actions.closeDetail.call(app, event)
+
+    expect(event.preventDefault).toHaveBeenCalled()
+    expect(panel.hidden).toBe(true)
   })
 
   it('renderer node callback shows detail panel when no primary action exists', async () => {
