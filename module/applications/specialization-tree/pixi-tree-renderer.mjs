@@ -134,6 +134,21 @@ export function computeCenteredOffset(bbox, viewportWidth, viewportHeight) {
   }
 }
 
+/**
+ * Get the canonical sharpness configuration for the PIXI renderer.
+ * Single source of truth for resolution, autoDensity, antialias, and background
+ * opacity. Used at both init and resize to keep the canvas crisp.
+ * @returns {{ antialias: boolean, autoDensity: boolean, resolution: number, backgroundAlpha: number }}
+ */
+export function getCanvasSharpnessConfig() {
+  return {
+    antialias: true,
+    autoDensity: true,
+    resolution: (typeof window !== 'undefined' && window.devicePixelRatio) || 1,
+    backgroundAlpha: 0,
+  }
+}
+
 /* ── Texture caches ───────────────────────────────────────────── */
 
 const STATE_PICTOGRAM_TEXTURE_CACHE = new Map()
@@ -152,12 +167,13 @@ export async function loadStatePictogram(state) {
     return STATE_PICTOGRAM_TEXTURE_CACHE.get(iconPath)
   }
 
+  const { resolution } = getCanvasSharpnessConfig()
   let texturePromise
 
   if (PIXI.Assets?.load) {
-    texturePromise = PIXI.Assets.load(iconPath)
+    texturePromise = PIXI.Assets.load(iconPath, { resolution })
   } else if (PIXI.Texture?.from) {
-    texturePromise = Promise.resolve(PIXI.Texture.from(iconPath))
+    texturePromise = Promise.resolve(PIXI.Texture.from(iconPath, { resolution }))
   } else {
     texturePromise = Promise.resolve(null)
   }
@@ -184,12 +200,13 @@ export async function loadIconTexture(iconPath) {
     return ICON_TEXTURE_CACHE.get(iconPath)
   }
 
+  const { resolution } = getCanvasSharpnessConfig()
   let texturePromise
 
   if (PIXI.Assets?.load) {
-    texturePromise = PIXI.Assets.load(iconPath)
+    texturePromise = PIXI.Assets.load(iconPath, { resolution })
   } else if (PIXI.Texture?.from) {
-    texturePromise = Promise.resolve(PIXI.Texture.from(iconPath))
+    texturePromise = Promise.resolve(PIXI.Texture.from(iconPath, { resolution }))
   } else {
     texturePromise = Promise.resolve(null)
   }
@@ -399,9 +416,7 @@ export class PixiTreeRenderer {
       this.pixiApp = new PIXI.Application({
         width,
         height,
-        antialias: true,
-        autoDensity: true,
-        backgroundAlpha: 0,
+        ...getCanvasSharpnessConfig(),
       })
 
       this.#exposePixiDevtools()
@@ -455,10 +470,11 @@ export class PixiTreeRenderer {
     if (!this.pixiApp || !this.#viewportHost) return
 
     const { width, height } = getViewportDimensions(this.#viewportHost)
+    const { resolution } = getCanvasSharpnessConfig()
 
     const renderer = this.pixiApp.renderer
     if (renderer?.width !== width || renderer?.height !== height) {
-      renderer?.resize?.(width, height)
+      renderer?.resize?.(width, height, resolution)
     }
 
     const canvas = this.pixiApp.canvas ?? this.pixiApp.view
