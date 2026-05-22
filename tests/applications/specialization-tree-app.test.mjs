@@ -535,4 +535,305 @@ describe('specialization-tree app orchestration', () => {
     expect(callArgs.buttons[0].label).toBe('Purchase')
     expect(callArgs.buttons[1].label).toBe('Cancel')
   })
+
+  /* ═════════════════════════════════════════════════════════════ */
+  /*  GUX6 — UX observable validation matrix                    */
+  /* ═════════════════════════════════════════════════════════════ */
+
+  describe('GUX6 — UX observable validation matrix', () => {
+    /**
+     * Helper: create a detail panel mock that records DOM updates.
+     * Returns `{ panel, els }` where `els` holds textContent/hidden references.
+     */
+    function createPanelMock() {
+      const els = {
+        nameEl: { textContent: '' },
+        costEl: { textContent: '' },
+        typeEl: { textContent: '' },
+        stateEl: { textContent: '' },
+        reasonEl: { hidden: false },
+        descriptionEl: { hidden: false, innerHTML: '' },
+        ctaEl: { hidden: false },
+        ctaLabelEl: { textContent: '' },
+      }
+
+      const panel = {
+        hidden: true,
+        querySelector: vi.fn((selector) => {
+          if (selector === '[data-detail-talent-name]') return els.nameEl
+          if (selector === '[data-detail-cost]') return els.costEl
+          if (selector === '[data-detail-type]') return els.typeEl
+          if (selector === '[data-detail-state]') return els.stateEl
+          if (selector === '[data-detail-reason]') return els.reasonEl
+          if (selector === '[data-detail-description]') return els.descriptionEl
+          if (selector === '[data-detail-cta]') return els.ctaEl
+          if (selector === '[data-detail-cta-label]') return els.ctaLabelEl
+          return null
+        }),
+      }
+
+      return { panel, els }
+    }
+
+    /* ── Per-state detail panel behaviour ─────────────────────── */
+
+    describe('locked node affordance', () => {
+      it('shows detail panel with state label and reason, no CTA', async () => {
+        const { panel, els } = createPanelMock()
+        const viewportHost = { dataset: {}, firstElementChild: null, replaceChildren: vi.fn() }
+        const app = new SpecializationTreeApp()
+        app.actor = createActor()
+        app.element = createRoot({ viewportHost, panel })
+        await app._onRender({ currentTreeId: 'spec-a', renderNodes: [], renderConnections: [] }, {})
+
+        const node = {
+          talentName: 'Durable',
+          xpCost: 15,
+          isRanked: false,
+          talentDescription: null,
+          nodeStateLabel: 'Locked',
+          reasonLabel: 'Prerequisites not met',
+          actionable: { primaryAction: null },
+        }
+
+        await app.renderer.onNodePointerDown(node)
+
+        expect(panel.hidden).toBe(false)
+        expect(els.nameEl.textContent).toBe('Durable')
+        expect(els.costEl.textContent).toContain('15 XP')
+        expect(els.stateEl.textContent).toBe('Locked')
+        expect(els.reasonEl.hidden).toBe(false)
+        expect(els.reasonEl.textContent).toBe('Prerequisites not met')
+        expect(els.ctaEl.hidden).toBe(true)
+      })
+    })
+
+    describe('invalid node affordance', () => {
+      it('shows detail panel with state label and reason, no CTA', async () => {
+        const { panel, els } = createPanelMock()
+        const viewportHost = { dataset: {}, firstElementChild: null, replaceChildren: vi.fn() }
+        const app = new SpecializationTreeApp()
+        app.actor = createActor()
+        app.element = createRoot({ viewportHost, panel })
+        await app._onRender({ currentTreeId: 'spec-a', renderNodes: [], renderConnections: [] }, {})
+
+        const node = {
+          talentName: 'Unknown talent',
+          xpCost: 0,
+          isRanked: false,
+          talentDescription: null,
+          nodeStateLabel: 'Invalid',
+          reasonLabel: 'Node not found',
+          actionable: { primaryAction: null },
+        }
+
+        await app.renderer.onNodePointerDown(node)
+
+        expect(panel.hidden).toBe(false)
+        expect(els.nameEl.textContent).toBe('Unknown talent')
+        expect(els.stateEl.textContent).toBe('Invalid')
+        expect(els.reasonEl.hidden).toBe(false)
+        expect(els.reasonEl.textContent).toBe('Node not found')
+        expect(els.ctaEl.hidden).toBe(true)
+      })
+    })
+
+    describe('purchased node blocked by dependents', () => {
+      it('shows detail panel with blocked reason and no CTA', async () => {
+        const { panel, els } = createPanelMock()
+        const viewportHost = { dataset: {}, firstElementChild: null, replaceChildren: vi.fn() }
+        const app = new SpecializationTreeApp()
+        app.actor = createActor()
+        app.element = createRoot({ viewportHost, panel })
+        await app._onRender({ currentTreeId: 'spec-a', renderNodes: [], renderConnections: [] }, {})
+
+        const node = {
+          talentName: 'Tough',
+          xpCost: 5,
+          isRanked: true,
+          talentDescription: '<p>Already owned</p>',
+          nodeStateLabel: 'Purchased',
+          reasonLabel: null,
+          actionable: {
+            primaryAction: null,
+            blockedReasonCode: 'node-has-dependents',
+            blockedReasonLabel: 'Node has purchased dependents',
+          },
+        }
+
+        await app.renderer.onNodePointerDown(node)
+
+        expect(panel.hidden).toBe(false)
+        expect(els.nameEl.textContent).toBe('Tough')
+        expect(els.stateEl.textContent).toBe('Purchased')
+        expect(els.reasonEl.hidden).toBe(false)
+        expect(els.reasonEl.textContent).toBe('Node has purchased dependents')
+        expect(els.ctaEl.hidden).toBe(true)
+        expect(els.descriptionEl.innerHTML).toBe('<p>Already owned</p>')
+      })
+    })
+
+    /* ── Action / microcopy continuity ────────────────────────── */
+
+    describe('action/microcopy continuity', () => {
+      it('confirm dialog purchase action label matches the actionable actionLabel', async () => {
+        const app = new SpecializationTreeApp()
+        app.actor = createActor()
+        app.rendered = true
+        const viewportHost = { dataset: {}, firstElementChild: null, replaceChildren: vi.fn() }
+        const panel = { hidden: true, querySelector: vi.fn(() => null) }
+        app.element = createRoot({ viewportHost, panel })
+        vi.spyOn(app, 'refresh').mockResolvedValue(app)
+
+        await app._onRender({ currentTreeId: 'spec-a', renderNodes: [], renderConnections: [] }, {})
+
+        const confirmSpy = vi.spyOn(foundry.applications.api.DialogV2, 'confirm')
+        confirmSpy.mockResolvedValue(true)
+
+        const node = {
+          nodeId: 'n1',
+          talentName: 'Tough',
+          xpCost: 5,
+          actionable: {
+            primaryAction: 'purchase',
+            canPurchase: true,
+            actionLabel: '[SWERPG.TALENT.SPECIALIZATION_TREE_APP.ACTION.PURCHASE]',
+            actionRef: { specializationId: 'spec-a', nodeId: 'n1' },
+          },
+        }
+
+        await app.renderer.onNodePointerDown(node)
+
+        expect(confirmSpy).toHaveBeenCalled()
+        const callArgs = confirmSpy.mock.calls[0][0]
+
+        // Button label uses the same actionLabel as the panel CTA would show
+        expect(callArgs.buttons[0].label).toBe('[SWERPG.TALENT.SPECIALIZATION_TREE_APP.ACTION.PURCHASE]')
+        // Title includes the actionLabel via {action} interpolation
+        expect(callArgs.title).toBe('[SWERPG.TALENT.SPECIALIZATION_TREE_APP.ACTION.PURCHASE]: Tough')
+      })
+
+      it('confirm dialog forget action label matches the actionable actionLabel', async () => {
+        const app = new SpecializationTreeApp()
+        app.actor = createActor()
+        app.rendered = true
+        const viewportHost = { dataset: {}, firstElementChild: null, replaceChildren: vi.fn() }
+        const panel = { hidden: true, querySelector: vi.fn(() => null) }
+        app.element = createRoot({ viewportHost, panel })
+        vi.spyOn(app, 'refresh').mockResolvedValue(app)
+
+        await app._onRender({ currentTreeId: 'spec-a', renderNodes: [], renderConnections: [] }, {})
+
+        const confirmSpy = vi.spyOn(foundry.applications.api.DialogV2, 'confirm')
+        confirmSpy.mockResolvedValue(true)
+
+        const node = {
+          nodeId: 'n1',
+          talentName: 'Tough',
+          xpCost: 5,
+          actionable: {
+            primaryAction: 'forget',
+            canForget: true,
+            actionLabel: '[SWERPG.TALENT.SPECIALIZATION_TREE_APP.ACTION.FORGET]',
+            actionRef: { specializationId: 'spec-a', nodeId: 'n1' },
+          },
+        }
+
+        await app.renderer.onNodePointerDown(node)
+
+        expect(confirmSpy).toHaveBeenCalled()
+        const callArgs = confirmSpy.mock.calls[0][0]
+
+        // Button label uses the same actionLabel as the panel CTA would show
+        expect(callArgs.buttons[0].label).toBe('[SWERPG.TALENT.SPECIALIZATION_TREE_APP.ACTION.FORGET]')
+        // Title includes the actionLabel via {action} interpolation
+        expect(callArgs.title).toBe('[SWERPG.TALENT.SPECIALIZATION_TREE_APP.ACTION.FORGET]: Tough')
+      })
+    })
+
+    /* ── Non-regression compact flow ──────────────────────────── */
+
+    describe('non-regression flow (GUX1→GUX5)', () => {
+      it('legend items, detail panel, and purchase action coexist coherently', async () => {
+        const localize = (key) => key
+        const legendItems = buildLegendItems(localize)
+
+        // 1 — Legend exposes all four states with coherent affordance
+        expect(legendItems).toHaveLength(4)
+        const affordanceMap = Object.fromEntries(legendItems.map((i) => [i.state, i.affordance]))
+        expect(affordanceMap).toEqual({
+          purchased: 'informational',
+          available: 'actionable',
+          locked: 'blocked',
+          invalid: 'informational',
+        })
+
+        // 2 — Legend cursor assignment matches affordance intent
+        const cursorMap = Object.fromEntries(legendItems.map((i) => [i.state, i.cursor]))
+        expect(cursorMap).toEqual({
+          purchased: 'default',
+          available: 'pointer',
+          locked: 'not-allowed',
+          invalid: 'help',
+        })
+
+        // 3 — Locked node triggers detail panel (no action) with correct state
+        const { panel: lockedPanel, els: lockedEls } = createPanelMock()
+        const viewportHostLocked = { dataset: {}, firstElementChild: null, replaceChildren: vi.fn() }
+        const appLocked = new SpecializationTreeApp()
+        appLocked.actor = createActor()
+        appLocked.element = createRoot({ viewportHost: viewportHostLocked, panel: lockedPanel })
+        await appLocked._onRender({ currentTreeId: 'spec-a', renderNodes: [], renderConnections: [] }, {})
+
+        await appLocked.renderer.onNodePointerDown({
+          talentName: 'Grit',
+          xpCost: 10,
+          isRanked: true,
+          talentDescription: null,
+          nodeStateLabel: 'Locked',
+          reasonLabel: 'Not enough XP',
+          actionable: { primaryAction: null },
+        })
+
+        expect(lockedPanel.hidden).toBe(false)
+        expect(lockedEls.stateEl.textContent).toBe('Locked')
+        expect(lockedEls.reasonEl.textContent).toBe('Not enough XP')
+        expect(lockedEls.ctaEl.hidden).toBe(true)
+
+        // 4 — Deselected background callback hides panel
+        appLocked.renderer.onBackgroundPointerDown()
+        expect(lockedPanel.hidden).toBe(true)
+
+        // 5 — Available node triggers purchase flow directly (panel stays hidden)
+        const fastPanel = { hidden: true, querySelector: vi.fn(() => null) }
+        const viewportHostAvail = { dataset: {}, firstElementChild: null, replaceChildren: vi.fn() }
+        const appAvail = new SpecializationTreeApp()
+        appAvail.actor = createActor()
+        appAvail.rendered = true
+        appAvail.element = createRoot({ viewportHost: viewportHostAvail, panel: fastPanel })
+        const refreshSpy = vi.spyOn(appAvail, 'refresh').mockResolvedValue(appAvail)
+        await appAvail._onRender({ currentTreeId: 'spec-a', renderNodes: [], renderConnections: [] }, {})
+
+        purchaseTalentNodeMock.mockResolvedValue({ ok: true })
+        const confirmSpy = vi.spyOn(foundry.applications.api.DialogV2, 'confirm')
+        confirmSpy.mockResolvedValue(true)
+        const infoSpy = vi.spyOn(ui.notifications, 'info')
+
+        await appAvail.renderer.onNodePointerDown({
+          nodeId: 'n1',
+          talentName: 'Tough',
+          xpCost: 5,
+          actionable: {
+            primaryAction: 'purchase',
+            canPurchase: true,
+            actionRef: { specializationId: 'spec-a', nodeId: 'n1' },
+          },
+        })
+
+        expect(purchaseTalentNodeMock).toHaveBeenCalledWith(appAvail.actor, 'spec-a', 'n1')
+        expect(infoSpy).toHaveBeenCalled()
+        expect(refreshSpy).toHaveBeenCalled()
+      })
+    })
+  })
 })
