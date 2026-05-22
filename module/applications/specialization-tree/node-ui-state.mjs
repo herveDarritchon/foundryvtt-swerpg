@@ -87,7 +87,7 @@ const PASSIVE_NODE_VARIANTS = Object.freeze({
     fillColor: 0x1f4f8c,
     borderColor: 0x95c9ff,
     borderWidth: 2,
-    alpha: 0.6,
+    alpha: 1,
     textColor: 0xffffff,
     textAlpha: 1,
     costColor: 0xb9d9ff,
