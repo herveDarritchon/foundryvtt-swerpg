@@ -24,39 +24,80 @@ const ACTION_KEYS = Object.freeze({
   },
 })
 
-/**
- * Build the full render context for the specialization tree application.
- *
- * Wraps the pure builder from `tree-context-builder.mjs` and injects the
- * Foundry-specific fields that the template and orchestration layer require.
- *
- * @param {Actor|object|null} actor - The active actor document.
- * @param {string|null} [selectedKey=null] - Optional tree key to select.
- * @returns {object} Display-ready render context with Foundry refs.
- */
-export function buildSpecializationTreeContext(actor, selectedKey = null) {
-  const resolutions = resolveActorSpecializationTrees(actor)
-  const localize = game.i18n.localize.bind(game.i18n)
-  const format = game.i18n.format.bind(game.i18n)
+  /**
+   * Build the full render context for the specialization tree application.
+   *
+   * Wraps the pure builder from `tree-context-builder.mjs` and injects the
+   * Foundry-specific fields that the template and orchestration layer require.
+   *
+   * @param {Actor|object|null} actor - The active actor document.
+   * @param {string|null} [selectedKey=null] - Optional tree key to select.
+   * @returns {object} Display-ready render context with Foundry refs.
+   */
+  export function buildSpecializationTreeContext(actor, selectedKey = null) {
+    const resolutions = resolveActorSpecializationTrees(actor)
+    const localize = game.i18n.localize.bind(game.i18n)
+    const format = game.i18n.format.bind(game.i18n)
 
-  const talentLookup = (node) => {
-    const detail = resolveTalentDetail(node)
-    return detail
-      ? { name: detail.name, uuid: node.talentUuid ?? node.talentId ?? '', isRanked: detail.isRanked, isActive: detail.isActive, description: detail.description }
-      : null
+    const talentLookup = (node) => {
+      const detail = resolveTalentDetail(node)
+      return detail
+        ? { name: detail.name, uuid: node.talentUuid ?? node.talentId ?? '', isRanked: detail.isRanked, isActive: detail.isActive, description: detail.description }
+        : null
+    }
+
+    const pureContext = buildContextPure(actor, selectedKey, { resolutions, localize, format, talentLookup })
+
+    const legendItems = buildLegendItems(localize)
+
+    return {
+      ...pureContext,
+      actor,
+      document: actor,
+      system: actor?.system ?? null,
+      config: game.system.config,
+      isOwner: actor?.isOwner ?? false,
+      legendItems,
+    }
   }
 
-  const pureContext = buildContextPure(actor, selectedKey, { resolutions, localize, format, talentLookup })
-
-  return {
-    ...pureContext,
-    actor,
-    document: actor,
-    system: actor?.system ?? null,
-    config: game.system.config,
-    isOwner: actor?.isOwner ?? false,
+  /**
+   * Build the legend items for the specialization tree viewport.
+   *
+   * Each item carries the state key, a localized label, the affordance type
+   * (actionable, informational, blocked), and the matching CSS cursor.
+   *
+   * @param {(key: string) => string} localize - i18n localize function.
+   * @returns {Array<{state: string, label: string, affordance: string, cursor: string}>}
+   */
+  export function buildLegendItems(localize) {
+    return [
+      {
+        state: 'purchased',
+        label: localize('SWERPG.TALENT.SPECIALIZATION_TREE_APP.NODE_STATE.PURCHASED'),
+        affordance: 'informational',
+        cursor: 'default',
+      },
+      {
+        state: 'available',
+        label: localize('SWERPG.TALENT.SPECIALIZATION_TREE_APP.NODE_STATE.AVAILABLE'),
+        affordance: 'actionable',
+        cursor: 'pointer',
+      },
+      {
+        state: 'locked',
+        label: localize('SWERPG.TALENT.SPECIALIZATION_TREE_APP.NODE_STATE.LOCKED'),
+        affordance: 'blocked',
+        cursor: 'not-allowed',
+      },
+      {
+        state: 'invalid',
+        label: localize('SWERPG.TALENT.SPECIALIZATION_TREE_APP.NODE_STATE.INVALID'),
+        affordance: 'informational',
+        cursor: 'help',
+      },
+    ]
   }
-}
 
 export default class SpecializationTreeApp extends api.HandlebarsApplicationMixin(api.ApplicationV2) {
   static DEFAULT_OPTIONS = {
@@ -312,6 +353,7 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
 
     const actionLabel = node.actionable?.actionLabel
       ?? game.i18n.localize(`SWERPG.TALENT.SPECIALIZATION_TREE_APP.ACTION.${action.toUpperCase()}`)
+    const cancelLabel = game.i18n.localize('SWERPG.TALENT.SPECIALIZATION_TREE_APP.CONFIRM.CANCEL')
 
     return api.DialogV2.confirm({
       title: game.i18n.format(keys.confirmTitle, {
@@ -323,6 +365,17 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
         talent: node.talentName,
         xp: node.xpCost,
       })}</p>`,
+      buttons: [
+        {
+          action: 'confirm',
+          label: actionLabel,
+          default: true,
+        },
+        {
+          action: 'cancel',
+          label: cancelLabel,
+        },
+      ],
     })
   }
 

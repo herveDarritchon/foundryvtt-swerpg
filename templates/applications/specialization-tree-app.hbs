@@ -92,6 +92,20 @@
             data-specialization-tree-viewport
             aria-label='{{viewportAriaLabel}}'
           ></div>
+
+          {{#if showViewport}}
+            <div class='specialization-tree-app__legend' role='note' aria-label='{{localize "SWERPG.TALENT.SPECIALIZATION_TREE_APP.LEGEND.TITLE"}}'>
+              <span class='specialization-tree-app__legend-title'>{{localize "SWERPG.TALENT.SPECIALIZATION_TREE_APP.LEGEND.TITLE"}}</span>
+              <span class='specialization-tree-app__legend-items'>
+                {{#each legendItems as |item|}}
+                  <span class='specialization-tree-app__legend-item' data-state='{{item.state}}' data-affordance='{{item.affordance}}' style='cursor: {{item.cursor}}'>
+                    <span class='specialization-tree-app__legend-swatch' data-state='{{item.state}}'></span>
+                    <span class='specialization-tree-app__legend-label'>{{item.label}}</span>
+                  </span>
+                {{/each}}
+              </span>
+            </div>
+          {{/if}}
           <div class='specialization-tree-app__detail-panel' data-detail-panel role='region' aria-live='polite' hidden>
             <div class='specialization-tree-app__detail-panel-header'>
               <span class='specialization-tree-app__detail-panel-talent-name' data-detail-talent-name></span>
