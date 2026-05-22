@@ -37,24 +37,24 @@
 
     {{#unless incomplete.creation}}
       <div class="experience flexrow">
-        {{#if canViewAuditLog}}
-          <button
-            type="button"
-            class="button icon audit-log-trigger"
-            data-action="openAuditLog"
-            data-tooltip="SWERPG.AUDIT_LOG.OPEN"
-            aria-label="{{localize 'SWERPG.AUDIT_LOG.OPEN'}}"
-            title="{{localize 'SWERPG.AUDIT_LOG.OPEN'}}"
-          >
-            <i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i>
-          </button>
-        {{/if}}
         <div class="experience">Experience
           <span>{{progression.experience.available}}</span>
           /<span>{{progression.experience.total}}</span>
         </div>
       </div>
     {{/unless}}
+    {{#if canViewAuditLog}}
+      <button
+        type="button"
+        class="button icon audit-log-trigger"
+        data-action="openAuditLog"
+        data-tooltip="SWERPG.AUDIT_LOG.OPEN"
+        aria-label="{{localize 'SWERPG.AUDIT_LOG.OPEN'}}"
+        title="{{localize 'SWERPG.AUDIT_LOG.OPEN'}}"
+      >
+        <i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i>
+      </button>
+    {{/if}}
 
   </header>
 

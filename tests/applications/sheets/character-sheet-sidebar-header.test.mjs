@@ -25,6 +25,10 @@ describe('CharacterSheet sidebarHeader context', () => {
     SwerpgBaseActorSheet = (await import('../../../module/applications/sheets/base-actor-sheet.mjs')).default
   })
 
+  /**
+   * Build a minimal character actor mock for sheet-context tests.
+   * @returns {object}
+   */
   function buildCharacterActor() {
     const actor = {
       name: 'Darth Maul',
@@ -54,7 +58,11 @@ describe('CharacterSheet sidebarHeader context', () => {
           strain: { value: 2, threshold: 11 },
           encumbrance: { value: 0, threshold: 10 },
         },
-        points: {},
+        points: {
+          ability: {},
+          skill: {},
+          talent: {},
+        },
       },
       items: [],
       hasFreeSkillsAvailable: () => false,
@@ -73,6 +81,11 @@ describe('CharacterSheet sidebarHeader context', () => {
     return actor
   }
 
+  /**
+   * Build the mocked base sheet context consumed by CharacterSheet.
+   * @param {object} actor
+   * @returns {object}
+   */
   function buildBaseContext(actor) {
     return {
       actor,
@@ -90,15 +103,24 @@ describe('CharacterSheet sidebarHeader context', () => {
     }
   }
 
-  it('exposes sidebarHeader with name and img for a character actor', async () => {
-    const actor = buildCharacterActor()
+  /**
+   * Render the CharacterSheet context with the mocked base actor sheet.
+   * @param {object} actor
+   * @returns {Promise<object>}
+   */
+  async function getContext(actor) {
     vi.spyOn(SwerpgBaseActorSheet.prototype, '_prepareContext').mockResolvedValue(buildBaseContext(actor))
 
     const sheet = new CharacterSheet({ document: actor })
     sheet.actor = actor
     sheet.document = actor
 
-    const context = await sheet._prepareContext({})
+    return await sheet._prepareContext({})
+  }
+
+  it('exposes sidebarHeader with name and img for a character actor', async () => {
+    const actor = buildCharacterActor()
+    const context = await getContext(actor)
 
     expect(context.sidebarHeader).toBeDefined()
     expect(context.sidebarHeader.name).toBe('Darth Maul')
@@ -110,13 +132,7 @@ describe('CharacterSheet sidebarHeader context', () => {
   it('exposes multi-specialization display data in the sheet context', async () => {
     const actor = buildCharacterActor()
     actor.system.details.specializations = new Set([{ name: 'Bodyguard' }, { name: 'Mercenary Soldier' }])
-    vi.spyOn(SwerpgBaseActorSheet.prototype, '_prepareContext').mockResolvedValue(buildBaseContext(actor))
-
-    const sheet = new CharacterSheet({ document: actor })
-    sheet.actor = actor
-    sheet.document = actor
-
-    const context = await sheet._prepareContext({})
+    const context = await getContext(actor)
 
     expect(context.specializationName).toBe('Bodyguard')
     expect(context.specializationNames).toEqual(['Bodyguard', 'Mercenary Soldier'])
@@ -132,5 +148,34 @@ describe('CharacterSheet sidebarHeader context', () => {
     const context = buildBaseContext(actor)
 
     expect(context.sidebarHeader).toBeUndefined()
+  })
+
+  it('marks creation as complete for a V1 character when legacy creation counters are absent', async () => {
+    const actor = buildCharacterActor()
+    actor.system.details.career = { name: 'Assassin' }
+    actor.system.details.specializations = new Set([{ name: 'Infiltrator' }])
+
+    const context = await getContext(actor)
+
+    expect(context.incomplete.characteristics).toBe(false)
+    expect(context.incomplete.skills).toBe(false)
+    expect(context.incomplete.talents).toBe(false)
+    expect(context.incomplete.creation).toBe(false)
+  })
+
+  it('keeps creation incomplete when legacy creation counters still require input', async () => {
+    const actor = buildCharacterActor()
+    actor.system.details.career = { name: 'Assassin' }
+    actor.system.details.specializations = new Set([{ name: 'Infiltrator' }])
+    actor.system.points.ability.requireInput = true
+    actor.system.points.skill.available = 2
+    actor.system.points.talent.available = 1
+
+    const context = await getContext(actor)
+
+    expect(context.incomplete.characteristics).toBe(true)
+    expect(context.incomplete.skills).toBe(true)
+    expect(context.incomplete.talents).toBe(true)
+    expect(context.incomplete.creation).toBe(true)
   })
 })
