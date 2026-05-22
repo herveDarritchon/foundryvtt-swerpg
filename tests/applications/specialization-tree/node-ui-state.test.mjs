@@ -475,4 +475,170 @@ describe('node-ui-state', () => {
       expect(result.nodeStateSvgIconPath).toBe(NODE_STATE_SVG_ICONS[NODE_STATE.INVALID])
     })
   })
+
+  /**
+   * PXP1 - Visual contract tests for the 6 priority cases from issue #341
+   * These tests lock in the exact visual matrix defined in the implementation plan.
+   *
+   * Matrix:
+   * - Active talents: red-based fill colors
+   * - Passive talents: blue-based fill colors
+   * - purchased: bright, costDisplay='secondary' (no badge)
+   * - available: medium, costDisplay='badge' (only state with XP badge)
+   * - locked: dark, textAlpha=0.68, costDisplay='plain'
+   */
+  describe('PXP1 visual contract - 6 priority cases', () => {
+    it('ACTIVE PURCHASED: red base, bright border, no XP badge', () => {
+      const v = NODE_STATE_VARIANTS[NODE_STATE.PURCHASED][NODE_TYPE.ACTIVE]
+
+      // Red-based fill for active
+      expect(v.fillColor).toBe(0x7a2323)
+      expect(v.borderColor).toBe(0xffa2a2)
+      expect(v.textColor).toBe(0xfff7f7)
+      expect(v.textAlpha).toBe(1)
+      expect(v.costColor).toBe(0xffc7c7)
+      // Purchased has no badge
+      expect(v.costDisplay).toBe('secondary')
+      expect(v.costBadgeFillColor).toBeNull()
+      expect(v.costBadgeBorderColor).toBeNull()
+    })
+
+    it('ACTIVE AVAILABLE: darker red, medium border, XP badge present', () => {
+      const v = NODE_STATE_VARIANTS[NODE_STATE.AVAILABLE][NODE_TYPE.ACTIVE]
+
+      // Darker red fill for available active
+      expect(v.fillColor).toBe(0x4d2525)
+      expect(v.borderColor).toBe(0xb87676)
+      expect(v.textColor).toBe(0xfff5f5)
+      expect(v.textAlpha).toBe(1)
+      expect(v.costColor).toBe(0xffffff)
+      // Available is the ONLY state with XP badge
+      expect(v.costDisplay).toBe('badge')
+      expect(v.costBadgeFillColor).toBe(0x7a3e3e)
+      expect(v.costBadgeBorderColor).toBe(0xd9a0a0)
+    })
+
+    it('ACTIVE LOCKED: darkest red, gray border, reduced text alpha, no badge', () => {
+      const v = NODE_STATE_VARIANTS[NODE_STATE.LOCKED][NODE_TYPE.ACTIVE]
+
+      // Darkest red fill for locked active
+      expect(v.fillColor).toBe(0x302020)
+      expect(v.borderColor).toBe(0x7a7a7a)
+      expect(v.textColor).toBe(0xe2d7d7)
+      expect(v.textAlpha).toBe(0.68) // Reduced alpha for locked
+      expect(v.costColor).toBe(0x999999)
+      // Locked has no badge
+      expect(v.costDisplay).toBe('plain')
+      expect(v.costBadgeFillColor).toBeNull()
+      expect(v.costBadgeBorderColor).toBeNull()
+    })
+
+    it('PASSIVE PURCHASED: blue base, bright border, no XP badge', () => {
+      const v = NODE_STATE_VARIANTS[NODE_STATE.PURCHASED][NODE_TYPE.PASSIVE]
+
+      // Blue-based fill for passive
+      expect(v.fillColor).toBe(0x1f4f8c)
+      expect(v.borderColor).toBe(0x95c9ff)
+      expect(v.textColor).toBe(0xffffff)
+      expect(v.textAlpha).toBe(1)
+      expect(v.costColor).toBe(0xb9d9ff)
+      // Purchased has no badge
+      expect(v.costDisplay).toBe('secondary')
+      expect(v.costBadgeFillColor).toBeNull()
+      expect(v.costBadgeBorderColor).toBeNull()
+    })
+
+    it('PASSIVE AVAILABLE: darker blue, medium border, XP badge present', () => {
+      const v = NODE_STATE_VARIANTS[NODE_STATE.AVAILABLE][NODE_TYPE.PASSIVE]
+
+      // Darker blue fill for available passive
+      expect(v.fillColor).toBe(0x21344d)
+      expect(v.borderColor).toBe(0x5f85ad)
+      expect(v.textColor).toBe(0xf5f9ff)
+      expect(v.textAlpha).toBe(1)
+      expect(v.costColor).toBe(0xffffff)
+      // Available is the ONLY state with XP badge
+      expect(v.costDisplay).toBe('badge')
+      expect(v.costBadgeFillColor).toBe(0x355a84)
+      expect(v.costBadgeBorderColor).toBe(0x8cb8e8)
+    })
+
+    it('PASSIVE LOCKED: darkest blue-gray, gray border, reduced text alpha, no badge', () => {
+      const v = NODE_STATE_VARIANTS[NODE_STATE.LOCKED][NODE_TYPE.PASSIVE]
+
+      // Darkest blue-gray fill for locked passive
+      expect(v.fillColor).toBe(0x1f2630)
+      expect(v.borderColor).toBe(0x7a7a7a)
+      expect(v.textColor).toBe(0xd7dbe2)
+      expect(v.textAlpha).toBe(0.68) // Reduced alpha for locked
+      expect(v.costColor).toBe(0x999999)
+      // Locked has no badge
+      expect(v.costDisplay).toBe('plain')
+      expect(v.costBadgeFillColor).toBeNull()
+      expect(v.costBadgeBorderColor).toBeNull()
+    })
+
+    it('Active/Passive distinction: red vs blue fill colors', () => {
+      const activePurchased = NODE_STATE_VARIANTS[NODE_STATE.PURCHASED][NODE_TYPE.ACTIVE]
+      const passivePurchased = NODE_STATE_VARIANTS[NODE_STATE.PURCHASED][NODE_TYPE.PASSIVE]
+      const activeAvailable = NODE_STATE_VARIANTS[NODE_STATE.AVAILABLE][NODE_TYPE.ACTIVE]
+      const passiveAvailable = NODE_STATE_VARIANTS[NODE_STATE.AVAILABLE][NODE_TYPE.PASSIVE]
+      const activeLocked = NODE_STATE_VARIANTS[NODE_STATE.LOCKED][NODE_TYPE.ACTIVE]
+      const passiveLocked = NODE_STATE_VARIANTS[NODE_STATE.LOCKED][NODE_TYPE.PASSIVE]
+
+      // Active = red-based (higher red channel)
+      expect(activePurchased.fillColor).toBeGreaterThan(0x700000)
+      expect(activeAvailable.fillColor).toBeGreaterThan(0x400000)
+      expect(activeLocked.fillColor).toBeGreaterThan(0x300000)
+
+      // Passive = blue-based (higher blue channel)
+      expect(passivePurchased.fillColor).toBeLessThan(0x200000)
+      expect(passiveAvailable.fillColor).toBeLessThan(0x300000)
+      expect(passiveLocked.fillColor).toBeLessThan(0x200000)
+    })
+
+    it('State distinction: purchased vs available vs locked have distinguishable properties', () => {
+      const activePurchased = NODE_STATE_VARIANTS[NODE_STATE.PURCHASED][NODE_TYPE.ACTIVE]
+      const activeAvailable = NODE_STATE_VARIANTS[NODE_STATE.AVAILABLE][NODE_TYPE.ACTIVE]
+      const activeLocked = NODE_STATE_VARIANTS[NODE_STATE.LOCKED][NODE_TYPE.ACTIVE]
+
+      // Fill colors are distinct (brightest → darkest)
+      expect(activePurchased.fillColor).not.toBe(activeAvailable.fillColor)
+      expect(activeAvailable.fillColor).not.toBe(activeLocked.fillColor)
+
+      // Border colors are distinct
+      expect(activePurchased.borderColor).not.toBe(activeAvailable.borderColor)
+      expect(activeAvailable.borderColor).not.toBe(activeLocked.borderColor)
+
+      // Only available has badge
+      expect(activePurchased.costDisplay).not.toBe('badge')
+      expect(activeAvailable.costDisplay).toBe('badge')
+      expect(activeLocked.costDisplay).not.toBe('badge')
+
+      // Only locked has reduced text alpha
+      expect(activePurchased.textAlpha).toBe(1)
+      expect(activeAvailable.textAlpha).toBe(1)
+      expect(activeLocked.textAlpha).toBe(0.68)
+    })
+
+    it('Only AVAILABLE nodes have XP badge - non-color state signal', () => {
+      const states = [NODE_STATE.PURCHASED, NODE_STATE.AVAILABLE, NODE_STATE.LOCKED, NODE_STATE.INVALID]
+      const types = [NODE_TYPE.ACTIVE, NODE_TYPE.PASSIVE]
+
+      for (const state of states) {
+        for (const type of types) {
+          const v = NODE_STATE_VARIANTS[state][type]
+          if (state === NODE_STATE.AVAILABLE) {
+            expect(v.costDisplay).toBe('badge')
+            expect(v.costBadgeFillColor).not.toBeNull()
+            expect(v.costBadgeBorderColor).not.toBeNull()
+          } else {
+            expect(v.costDisplay).not.toBe('badge')
+            expect(v.costBadgeFillColor).toBeNull()
+            expect(v.costBadgeBorderColor).toBeNull()
+          }
+        }
+      }
+    })
+  })
 })
