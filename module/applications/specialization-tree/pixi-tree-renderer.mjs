@@ -203,8 +203,7 @@ export class PixiTreeRenderer {
 
     await this.#drawTree(viewModel)
 
-    const shouldResetView = options.resetView !== false
-      && (!this.#hasInitializedViewport)
+    const shouldResetView = options.resetView !== false || !this.#hasInitializedViewport
 
     this.#hasInitializedViewport = true
     this.#resizeViewport()

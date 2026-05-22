@@ -294,6 +294,24 @@ describe('PixiTreeRenderer integration', () => {
     expect(renderer.treeContainer).not.toBe(firstContainer)
   })
 
+  it('recenters viewport when update requests resetView after initialization', async () => {
+    const host = createMockHost()
+    const renderer = new PixiTreeRenderer()
+    renderer.mount(host)
+
+    await renderer.update(createViewModel(), { resetView: false })
+    renderer.viewport.x = 999
+    renderer.viewport.y = 888
+    renderer.viewport.scale = 1.5
+
+    const nextViewModel = createViewModel()
+    await renderer.update(nextViewModel, { resetView: true })
+
+    expect(renderer.viewport).toMatchObject({ x: 240, y: 160, scale: 1 })
+    expect(renderer.treeContainer.position.set).toHaveBeenLastCalledWith(240, 160)
+    expect(renderer.treeContainer.scale.set).toHaveBeenLastCalledWith(1)
+  })
+
   it('exposes debug helpers when debug mode is enabled', async () => {
     const host = createMockHost()
     const renderer = new PixiTreeRenderer({ debug: true })
@@ -321,7 +339,7 @@ describe('PixiTreeRenderer integration', () => {
     stage._listeners.pointermove({ global: { x: 140, y: 170 } })
 
     expect(onBackgroundPointerDown).toHaveBeenCalled()
-    expect(renderer.treeContainer.position.set).toHaveBeenCalledWith(40, 50)
+    expect(renderer.treeContainer.position.set).toHaveBeenCalledWith(280, 210)
   })
 
   it('stops panning on pointerup and pointerupoutside', async () => {
