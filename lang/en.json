@@ -143,6 +143,7 @@
           "FAILURE": "Forget failed: {reason}"
         },
         "CONFIRM": {
+          "CANCEL": "Cancel",
           "PURCHASE": {
             "TITLE": "{action}: {talent}",
             "CONTENT": "Spend {xp} XP to purchase <strong>{talent}</strong>?"
@@ -151,6 +152,9 @@
             "TITLE": "{action}: {talent}",
             "CONTENT": "Forget <strong>{talent}</strong> and refund {xp} XP?"
           }
+        },
+        "LEGEND": {
+          "TITLE": "Legend"
         },
         "PERMISSION_DENIED": "You do not have permission to modify this specialization tree.",
         "EMPTY": {
