@@ -208,4 +208,3 @@ Ce chantier ne remplace pas OpenCode. Il ne refond pas la stratégie globale d�
 ## 12. Slug proposé
 
 `cadrage-adaptation-opencode-claude-code`
-

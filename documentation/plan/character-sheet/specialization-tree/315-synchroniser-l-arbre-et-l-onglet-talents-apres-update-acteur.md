@@ -36,13 +36,13 @@ Garantir qu'un `actor.update()` pertinent après achat ou oubli de nœud rafraî
 
 ## Fichiers pressentis
 
-| Fichier | Rôle |
-| --- | --- |
-| `module/documents/actor.mjs` | Filtrer les updates acteur qui doivent déclencher la synchronisation UI |
-| `module/applications/specialization-tree-app.mjs` | Recharger le contexte arbre et préserver le viewport pendant le refresh |
-| `module/applications/sheets/character-sheet.mjs` | Garantir que la vue Talents se recalcule sur l'état acteur mis à jour |
-| `tests/applications/specialization-tree-app.test.mjs` | Cas de refresh arbre avec viewport conservé *(si couverture locale minimale ajoutée dans la même PR)* |
-| `tests/applications/sheets/character-sheet-talents.test.mjs` | Cas de réalignement de la vue Talents *(sinon couverture reportée à US17.7)* |
+| Fichier                                                      | Rôle                                                                                                  |
+| ------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------- |
+| `module/documents/actor.mjs`                                 | Filtrer les updates acteur qui doivent déclencher la synchronisation UI                               |
+| `module/applications/specialization-tree-app.mjs`            | Recharger le contexte arbre et préserver le viewport pendant le refresh                               |
+| `module/applications/sheets/character-sheet.mjs`             | Garantir que la vue Talents se recalcule sur l'état acteur mis à jour                                 |
+| `tests/applications/specialization-tree-app.test.mjs`        | Cas de refresh arbre avec viewport conservé _(si couverture locale minimale ajoutée dans la même PR)_ |
+| `tests/applications/sheets/character-sheet-talents.test.mjs` | Cas de réalignement de la vue Talents _(sinon couverture reportée à US17.7)_                          |
 
 ## Plan d'implémentation
 

@@ -36,15 +36,15 @@ Enrichir chaque nœud rendu avec un sous-view-model actionnable, localisable et 
 
 ## Fichiers pressentis
 
-| Fichier | Rôle |
-| --- | --- |
-| `module/applications/specialization-tree/actionable-node-view-model.mjs` | Nouveau builder pur du sous-view-model actionnable d'un nœud |
-| `module/applications/specialization-tree-app.mjs` | Brancher l'enrichissement actionnable dans `buildSpecializationTreeContext()` |
-| `module/applications/specialization-tree/node-ui-state.mjs` | Réutiliser/compléter le mapping i18n UI si le contrat actionnable partage des labels |
-| `lang/fr.json` | Ajouter les libellés FR des actions et blocages manquants |
-| `lang/en.json` | Ajouter les libellés EN des actions et blocages manquants |
-| `tests/applications/specialization-tree/actionable-node-view-model.test.mjs` | Tests unitaires du mapper pur |
-| `tests/applications/specialization-tree-app.test.mjs` | Vérifier l'intégration du contrat dans le contexte exposé à l'application |
+| Fichier                                                                      | Rôle                                                                                 |
+| ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| `module/applications/specialization-tree/actionable-node-view-model.mjs`     | Nouveau builder pur du sous-view-model actionnable d'un nœud                         |
+| `module/applications/specialization-tree-app.mjs`                            | Brancher l'enrichissement actionnable dans `buildSpecializationTreeContext()`        |
+| `module/applications/specialization-tree/node-ui-state.mjs`                  | Réutiliser/compléter le mapping i18n UI si le contrat actionnable partage des labels |
+| `lang/fr.json`                                                               | Ajouter les libellés FR des actions et blocages manquants                            |
+| `lang/en.json`                                                               | Ajouter les libellés EN des actions et blocages manquants                            |
+| `tests/applications/specialization-tree/actionable-node-view-model.test.mjs` | Tests unitaires du mapper pur                                                        |
+| `tests/applications/specialization-tree-app.test.mjs`                        | Vérifier l'intégration du contrat dans le contexte exposé à l'application            |
 
 ## Plan d'implémentation
 

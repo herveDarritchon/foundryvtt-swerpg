@@ -201,9 +201,7 @@ l'absence de comportement d'achat, sans snapshots graphiques PIXI.
 - renforce l’immersion ;
 - donne une identité propre à la vue graphique ;
 - prépare les futures US sans imposer une refonte visuelle globale.
--
-
----
+- ***
 
 ## 5. Plan de travail détaillé
 

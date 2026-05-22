@@ -37,14 +37,14 @@ Centraliser la logique métier de progression des nœuds de talent dans un servi
 
 ## Fichiers pressentis
 
-| Fichier | Rôle |
-| --- | --- |
-| `module/lib/talent-node/talent-node-purchase.mjs` | Point d'entrée existant à refactorer ou à déléguer vers le nouveau service métier |
-| `module/lib/talent-node/talent-node-state.mjs` | Réutiliser les états/raisons canoniques et compléter si l'oubli exige de nouveaux codes |
-| `module/lib/talent-node/owned-talent-summary.mjs` | Référence utile pour dériver les dépendances ou consolider le rang courant |
-| `module/lib/talent-node/talent-node-progression.mjs` | Nouveau service métier central pressenti pour achat / oubli |
-| `tests/lib/talent-node/talent-node-purchase.test.mjs` | Couverture existante d'achat à réaligner sur le contrat central |
-| `tests/lib/talent-node/talent-node-progression.test.mjs` | Nouvelle suite ciblant achat, oubli et blocages de dépendance |
+| Fichier                                                  | Rôle                                                                                    |
+| -------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| `module/lib/talent-node/talent-node-purchase.mjs`        | Point d'entrée existant à refactorer ou à déléguer vers le nouveau service métier       |
+| `module/lib/talent-node/talent-node-state.mjs`           | Réutiliser les états/raisons canoniques et compléter si l'oubli exige de nouveaux codes |
+| `module/lib/talent-node/owned-talent-summary.mjs`        | Référence utile pour dériver les dépendances ou consolider le rang courant              |
+| `module/lib/talent-node/talent-node-progression.mjs`     | Nouveau service métier central pressenti pour achat / oubli                             |
+| `tests/lib/talent-node/talent-node-purchase.test.mjs`    | Couverture existante d'achat à réaligner sur le contrat central                         |
+| `tests/lib/talent-node/talent-node-progression.test.mjs` | Nouvelle suite ciblant achat, oubli et blocages de dépendance                           |
 
 ## Plan d'implémentation
 

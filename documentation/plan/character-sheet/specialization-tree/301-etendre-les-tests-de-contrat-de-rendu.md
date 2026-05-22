@@ -37,8 +37,8 @@ Sécuriser les comportements attendus de `SpecializationTreeApp` et de `buildSpe
 
 ## Fichiers pressentis
 
-| Fichier                                               | Rôle                                                               |
-| ----------------------------------------------------- | ------------------------------------------------------------------ |
+| Fichier                                               | Rôle                                                                              |
+| ----------------------------------------------------- | --------------------------------------------------------------------------------- |
 | `tests/applications/specialization-tree-app.test.mjs` | Consolider et compléter les tests de contrat du view-model et du rendu observable |
 
 ## Plan d'implémentation

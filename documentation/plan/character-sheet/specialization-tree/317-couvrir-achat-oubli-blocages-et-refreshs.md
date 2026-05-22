@@ -39,18 +39,18 @@ Ajouter une couverture de tests ciblée qui sécurise le parcours complet depuis
 
 ## Fichiers pressentis
 
-| Fichier | Rôle |
-| --- | --- |
-| `tests/lib/talent-node/talent-node-progression.test.mjs` | Verrouiller les refus métier et la cohérence du résultat central |
-| `tests/lib/talent-node/talent-node-purchase.test.mjs` | Garder le scénario nominal d'achat et ses effets observables |
-| `tests/lib/talent-node/talent-node-forget.test.mjs` | Couvrir l'oubli nominal et les blocages par dépendants |
-| `tests/lib/talent-node/talent-node-persistence.test.mjs` | Vérifier le patch acteur/XP appliqué au bon moment |
-| `tests/applications/specialization-tree/actionable-node-view-model.test.mjs` | Verrouiller le contrat UI des nœuds actionnables et bloqués |
-| `tests/applications/specialization-tree-app.test.mjs` | Cibler permissions, déclenchement d'action et refresh arbre |
-| `tests/applications/sheets/character-sheet-talents.test.mjs` | Vérifier le réalignement de la vue Talents après update acteur |
-| `module/lib/talent-node/*.mjs` | Support d'un fix minimal si un test prouve une divergence métier |
-| `module/applications/specialization-tree-app.mjs` | Support d'un fix minimal si un test prouve une divergence applicative |
-| `module/documents/actor.mjs` | Support d'un fix minimal si le déclenchement de refresh est incomplet |
+| Fichier                                                                      | Rôle                                                                  |
+| ---------------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| `tests/lib/talent-node/talent-node-progression.test.mjs`                     | Verrouiller les refus métier et la cohérence du résultat central      |
+| `tests/lib/talent-node/talent-node-purchase.test.mjs`                        | Garder le scénario nominal d'achat et ses effets observables          |
+| `tests/lib/talent-node/talent-node-forget.test.mjs`                          | Couvrir l'oubli nominal et les blocages par dépendants                |
+| `tests/lib/talent-node/talent-node-persistence.test.mjs`                     | Vérifier le patch acteur/XP appliqué au bon moment                    |
+| `tests/applications/specialization-tree/actionable-node-view-model.test.mjs` | Verrouiller le contrat UI des nœuds actionnables et bloqués           |
+| `tests/applications/specialization-tree-app.test.mjs`                        | Cibler permissions, déclenchement d'action et refresh arbre           |
+| `tests/applications/sheets/character-sheet-talents.test.mjs`                 | Vérifier le réalignement de la vue Talents après update acteur        |
+| `module/lib/talent-node/*.mjs`                                               | Support d'un fix minimal si un test prouve une divergence métier      |
+| `module/applications/specialization-tree-app.mjs`                            | Support d'un fix minimal si un test prouve une divergence applicative |
+| `module/documents/actor.mjs`                                                 | Support d'un fix minimal si le déclenchement de refresh est incomplet |
 
 ## Plan d'implémentation
 

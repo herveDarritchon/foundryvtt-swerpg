@@ -42,12 +42,12 @@ Rendre l'arbre de spécialisation à nouveau actionnable pour permettre l'achat 
 
 ## 4. Risques
 
-| Risque | Impact | Mitigation |
-| --- | --- | --- |
-| Règle des talents non ranked dupliqués non arbitrée | comportement incohérent entre progression et consolidation | figer l'hypothèse V1 dans l'issue domaine avant implémentation |
-| Remboursement XP divergent du modèle acteur existant | dette métier ou régressions XP | aligner explicitement l'issue XP sur la convention déjà retenue côté acteur |
-| Validation refaite côté UI au lieu du domaine | duplication de logique et bugs de synchronisation | imposer un unique service métier comme source de vérité |
-| Refresh incomplet après update acteur | arbre et onglet Talents désynchronisés | traiter la synchro comme une story dédiée avec test d'intégration |
+| Risque                                               | Impact                                                     | Mitigation                                                                  |
+| ---------------------------------------------------- | ---------------------------------------------------------- | --------------------------------------------------------------------------- |
+| Règle des talents non ranked dupliqués non arbitrée  | comportement incohérent entre progression et consolidation | figer l'hypothèse V1 dans l'issue domaine avant implémentation              |
+| Remboursement XP divergent du modèle acteur existant | dette métier ou régressions XP                             | aligner explicitement l'issue XP sur la convention déjà retenue côté acteur |
+| Validation refaite côté UI au lieu du domaine        | duplication de logique et bugs de synchronisation          | imposer un unique service métier comme source de vérité                     |
+| Refresh incomplet après update acteur                | arbre et onglet Talents désynchronisés                     | traiter la synchro comme une story dédiée avec test d'intégration           |
 
 ## 5. Hiérarchie des work items
 
@@ -81,16 +81,16 @@ graph TD
 
 ## 6. Découpage GitHub recommandé
 
-| Type | Titre | Priorité | Estimate | Dépendances |
-| --- | --- | --- | --- | --- |
-| Feature | `US17 - Restaurer l'achat et l'oubli de talents depuis l'arbre de spécialisation` | P0 | 8 | Epic `Specialization Tree V1`, prérequis US16 |
-| Story | `US17.1 - Créer le service métier d'achat et d'oubli de nœud` | P0 | 3 | Feature |
-| Enabler | `US17.2 - Stabiliser la persistance acteur et l'impact XP` | P0 | 2 | US17.1 |
-| Enabler | `US17.3 - Exposer un view-model de nœud actionnable` | P0 | 2 | US17.1 |
-| Story | `US17.4 - Brancher les interactions UI et confirmations dans SpecializationTreeApp` | P0 | 2 | US17.2, US17.3 |
-| Story | `US17.5 - Synchroniser l'arbre et l'onglet Talents après update acteur` | P0 | 1 | US17.4 |
-| Enabler | `US17.6 - Émettre les événements d'audit log d'achat et d'oubli` | P1 | 1 | US17.1, US17.2 |
-| Test | `US17.7 - Couvrir achat, oubli, blocages et refreshs` | P0 | 2 | US17.2, US17.3, US17.4, US17.5 |
+| Type    | Titre                                                                               | Priorité | Estimate | Dépendances                                   |
+| ------- | ----------------------------------------------------------------------------------- | -------- | -------- | --------------------------------------------- |
+| Feature | `US17 - Restaurer l'achat et l'oubli de talents depuis l'arbre de spécialisation`   | P0       | 8        | Epic `Specialization Tree V1`, prérequis US16 |
+| Story   | `US17.1 - Créer le service métier d'achat et d'oubli de nœud`                       | P0       | 3        | Feature                                       |
+| Enabler | `US17.2 - Stabiliser la persistance acteur et l'impact XP`                          | P0       | 2        | US17.1                                        |
+| Enabler | `US17.3 - Exposer un view-model de nœud actionnable`                                | P0       | 2        | US17.1                                        |
+| Story   | `US17.4 - Brancher les interactions UI et confirmations dans SpecializationTreeApp` | P0       | 2        | US17.2, US17.3                                |
+| Story   | `US17.5 - Synchroniser l'arbre et l'onglet Talents après update acteur`             | P0       | 1        | US17.4                                        |
+| Enabler | `US17.6 - Émettre les événements d'audit log d'achat et d'oubli`                    | P1       | 1        | US17.1, US17.2                                |
+| Test    | `US17.7 - Couvrir achat, oubli, blocages et refreshs`                               | P0       | 2        | US17.2, US17.3, US17.4, US17.5                |
 
 ## 7. Dépendances et ordre recommandé
 

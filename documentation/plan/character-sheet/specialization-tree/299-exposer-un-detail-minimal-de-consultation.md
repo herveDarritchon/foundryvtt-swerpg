@@ -41,12 +41,12 @@ Permettre à l'utilisateur de consulter, depuis un nœud du tree, un détail min
 
 ## Fichiers pressentis
 
-| Fichier                                               | Rôle                                                        |
-| ----------------------------------------------------- | ----------------------------------------------------------- |
+| Fichier                                               | Rôle                                                           |
+| ----------------------------------------------------- | -------------------------------------------------------------- |
 | `module/applications/specialization-tree-app.mjs`     | Porter le flux de consultation read-only et le cycle show/hide |
-| `templates/applications/specialization-tree-app.hbs`  | Stabiliser le conteneur de détail minimal accessible        |
-| `styles/applications.less`                            | Garantir une présentation légère, lisible et non intrusive  |
-| `tests/applications/specialization-tree-app.test.mjs` | Verrouiller l'absence d'action métier et l'affichage minimal |
+| `templates/applications/specialization-tree-app.hbs`  | Stabiliser le conteneur de détail minimal accessible           |
+| `styles/applications.less`                            | Garantir une présentation légère, lisible et non intrusive     |
+| `tests/applications/specialization-tree-app.test.mjs` | Verrouiller l'absence d'action métier et l'affichage minimal   |
 
 ## Plan d'implémentation
 

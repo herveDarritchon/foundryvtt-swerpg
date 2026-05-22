@@ -1,5 +1,5 @@
 ---
-name: "cmd-implement-plan"
+name: 'cmd-implement-plan'
 description: Implémente strictement un plan approuvé via le skill implementer-depuis-plan, avec lecture ciblée et tests associés.
 mode: subagent
 model: claude-sonnet-4-6
@@ -15,12 +15,12 @@ permission:
   skill: allow
   edit: allow
   bash:
-    "*": ask
-    "git status*": allow
-    "git diff*": allow
-    "pnpm vitest run *": ask
-    "pnpm test*": ask
-    "pnpm exec eslint *": ask
+    '*': ask
+    'git status*': allow
+    'git diff*': allow
+    'pnpm vitest run *': ask
+    'pnpm test*': ask
+    'pnpm exec eslint *': ask
   webfetch: deny
   websearch: deny
   task: deny
@@ -31,6 +31,7 @@ Tu es l’agent de commande `/implement-plan`.
 Rôle unique : charger `implementer-depuis-plan`, puis implémenter strictement le plan fourni.
 
 Règles de contexte :
+
 - Lis d’abord le plan.
 - Charge `coding-standards-project-conventions` et `testing-strategy-vitest-playwright` seulement si le plan implique du code/tests.
 - Charge un skill métier uniquement si le plan touche explicitement son domaine : `applicationv2-ui-sheets`, `narrative-dice`, `oggdude-importer`, `swerpg-talent-effects`, `foundry-vtt-system-architecture`, etc.
@@ -38,6 +39,7 @@ Règles de contexte :
 - Ne lis que les fichiers cités par le plan, puis leurs imports directs si nécessaire.
 
 Règles d’implémentation :
+
 - Reste dans le scope.
 - Ajoute ou mets à jour les tests nécessaires.
 - Ne fais aucun refactor opportuniste.

@@ -40,16 +40,16 @@ Retablir une chaine coherente de bout en bout pour que :
 
 ## Fichiers pressentis
 
-| Fichier | Role |
-| --- | --- |
-| `module/importer/mappings/oggdude-talent-activation-map.mjs` | Porter le vrai contrat OggDude pour `ActivationValue` |
-| `module/importer/mappers/oggdude-talent-mapper.mjs` | Lire `ActivationValue` en priorite dans le contexte talent |
-| `module/lib/talent-node/talent-reference-resolver.mjs` | Deriver `isActive` a partir de `system.activation === 'active'` |
-| `module/models/talent.mjs` | Aligner le typedef/documentation sur `activation` plutot que `active` |
-| `tests/importer/talent-mappings.spec.mjs` | Verrouiller le mapping OggDude `taPassive` / autres valeurs |
-| `tests/lib/talent-node/talent-reference-resolver.test.mjs` | Verrouiller la derivee `isActive` pour `active` vs `passive` |
-| `tests/applications/specialization-tree-app.test.mjs` | Verrouiller la resolution utilisee par l'app de l'arbre |
-| `tests/applications/sheets/character-sheet-talents.test.mjs` | Verrouiller les definitions consolidees exposees a l'UI |
+| Fichier                                                      | Role                                                                  |
+| ------------------------------------------------------------ | --------------------------------------------------------------------- |
+| `module/importer/mappings/oggdude-talent-activation-map.mjs` | Porter le vrai contrat OggDude pour `ActivationValue`                 |
+| `module/importer/mappers/oggdude-talent-mapper.mjs`          | Lire `ActivationValue` en priorite dans le contexte talent            |
+| `module/lib/talent-node/talent-reference-resolver.mjs`       | Deriver `isActive` a partir de `system.activation === 'active'`       |
+| `module/models/talent.mjs`                                   | Aligner le typedef/documentation sur `activation` plutot que `active` |
+| `tests/importer/talent-mappings.spec.mjs`                    | Verrouiller le mapping OggDude `taPassive` / autres valeurs           |
+| `tests/lib/talent-node/talent-reference-resolver.test.mjs`   | Verrouiller la derivee `isActive` pour `active` vs `passive`          |
+| `tests/applications/specialization-tree-app.test.mjs`        | Verrouiller la resolution utilisee par l'app de l'arbre               |
+| `tests/applications/sheets/character-sheet-talents.test.mjs` | Verrouiller les definitions consolidees exposees a l'UI               |
 
 ## Plan d'implementation
 

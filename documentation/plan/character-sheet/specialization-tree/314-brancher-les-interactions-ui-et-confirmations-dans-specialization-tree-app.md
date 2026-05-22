@@ -39,15 +39,15 @@ Permettre à `SpecializationTreeApp` de déclencher un achat ou un oubli depuis 
 
 ## Fichiers pressentis
 
-| Fichier | Rôle |
-| --- | --- |
-| `module/applications/specialization-tree-app.mjs` | Orchestrer clic nœud, permission, confirmation, appel achat/oubli, notification et refresh local |
-| `module/lib/talent-node/talent-node-purchase.mjs` | Contrat de succès/échec déjà consommé par l'UI d'achat |
-| `module/lib/talent-node/talent-node-forget.mjs` | Contrat symétrique à brancher pour l'oubli |
-| `templates/applications/specialization-tree-app.hbs` | Ajouter si nécessaire un conteneur/état minimal pour l'interaction active côté application |
-| `lang/fr.json` | Ajouter les textes FR de confirmation, refus permission et oubli |
-| `lang/en.json` | Ajouter les textes EN de confirmation, refus permission et oubli |
-| `tests/applications/specialization-tree-app.test.mjs` | Couvrir clic actionnable, annulation, permissions, notifications achat/oubli |
+| Fichier                                               | Rôle                                                                                             |
+| ----------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `module/applications/specialization-tree-app.mjs`     | Orchestrer clic nœud, permission, confirmation, appel achat/oubli, notification et refresh local |
+| `module/lib/talent-node/talent-node-purchase.mjs`     | Contrat de succès/échec déjà consommé par l'UI d'achat                                           |
+| `module/lib/talent-node/talent-node-forget.mjs`       | Contrat symétrique à brancher pour l'oubli                                                       |
+| `templates/applications/specialization-tree-app.hbs`  | Ajouter si nécessaire un conteneur/état minimal pour l'interaction active côté application       |
+| `lang/fr.json`                                        | Ajouter les textes FR de confirmation, refus permission et oubli                                 |
+| `lang/en.json`                                        | Ajouter les textes EN de confirmation, refus permission et oubli                                 |
+| `tests/applications/specialization-tree-app.test.mjs` | Couvrir clic actionnable, annulation, permissions, notifications achat/oubli                     |
 
 ## Plan d'implémentation
 

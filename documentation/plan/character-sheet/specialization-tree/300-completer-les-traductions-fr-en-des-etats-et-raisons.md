@@ -33,12 +33,12 @@ Garantir que tous les états de nœud, raisons principales et fallbacks visibles
 
 ## Fichiers pressentis
 
-| Fichier                                                         | Rôle                                                |
-| --------------------------------------------------------------- | --------------------------------------------------- |
-| `lang/fr.json`                                                  | Compléter les libellés FR                           |
-| `lang/en.json`                                                  | Compléter les libellés EN                           |
+| Fichier                                                         | Rôle                                                 |
+| --------------------------------------------------------------- | ---------------------------------------------------- |
+| `lang/fr.json`                                                  | Compléter les libellés FR                            |
+| `lang/en.json`                                                  | Compléter les libellés EN                            |
 | `tests/applications/specialization-tree/node-ui-state.test.mjs` | Verrouiller la parité des clés et fallbacks attendus |
-| `tests/applications/specialization-tree-app.test.mjs`           | Vérifier l'absence de texte utilisateur hardcodé    |
+| `tests/applications/specialization-tree-app.test.mjs`           | Vérifier l'absence de texte utilisateur hardcodé     |
 
 ## Plan d'implémentation
 

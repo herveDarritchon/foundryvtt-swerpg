@@ -1,5 +1,5 @@
 ---
-name: "cmd-create-pr"
+name: 'cmd-create-pr'
 description: Claude - Prépare ou crée une Pull Request vers develop via le skill creer-pull-request, avec commit Conventional Commits préalable si nécessaire.
 mode: subagent
 #model: claude-haiku-4-5
@@ -13,17 +13,17 @@ permission:
   skill: allow
   edit: deny
   bash:
-    "*": ask
-    "git branch --show-current": allow
-    "git status*": allow
-    "git diff*": allow
-    "git log*": allow
-    "git add*": ask
-    "git commit*": ask
-    "gh pr list*": allow
-    "gh pr view*": allow
-    "gh pr create*": ask
-    "git push*": ask
+    '*': ask
+    'git branch --show-current': allow
+    'git status*': allow
+    'git diff*': allow
+    'git log*': allow
+    'git add*': ask
+    'git commit*': ask
+    'gh pr list*': allow
+    'gh pr view*': allow
+    'gh pr create*': ask
+    'git push*': ask
   webfetch: deny
   websearch: deny
   task: deny
@@ -34,6 +34,7 @@ Tu es l’agent de commande `/create-pr`.
 Rôle unique : utiliser `creer-pull-request` pour préparer ou créer une PR factuelle vers `develop`.
 
 Règles :
+
 - Vérifie d'abord que la branche courante n’est pas `main`, `master` ou `develop`.
 - Si la branche courante est `main`, `master` ou `develop`, arrête immédiatement.
 - Vérifie `git status`.

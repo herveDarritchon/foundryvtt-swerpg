@@ -40,12 +40,12 @@ Transformer les coordonnées logiques `row` / `column` du view-model en position
 
 ## Fichiers pressentis
 
-| Fichier                                                    | Rôle                                                      |
-| ---------------------------------------------------------- | --------------------------------------------------------- |
-| `module/applications/specialization-tree/layout.mjs`       | Nouveau module pur de layout minimal                      |
-| `module/applications/specialization-tree-app.mjs`          | Remplacer le calcul inline par l'appel au layout dédié    |
-| `tests/applications/specialization-tree/layout.test.mjs`   | Tests unitaires purs du contrat de layout                 |
-| `tests/applications/specialization-tree-app.test.mjs`      | Vérification d'intégration du contexte consommé par l'app |
+| Fichier                                                  | Rôle                                                      |
+| -------------------------------------------------------- | --------------------------------------------------------- |
+| `module/applications/specialization-tree/layout.mjs`     | Nouveau module pur de layout minimal                      |
+| `module/applications/specialization-tree-app.mjs`        | Remplacer le calcul inline par l'appel au layout dédié    |
+| `tests/applications/specialization-tree/layout.test.mjs` | Tests unitaires purs du contrat de layout                 |
+| `tests/applications/specialization-tree-app.test.mjs`    | Vérification d'intégration du contexte consommé par l'app |
 
 ## Plan d'implémentation
 

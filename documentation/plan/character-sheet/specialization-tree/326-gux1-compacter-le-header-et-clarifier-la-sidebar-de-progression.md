@@ -40,12 +40,12 @@ Rendre `SpecializationTreeApp` plus dense et plus lisible en exposant un résum�
 
 ## Fichiers pressentis
 
-| Fichier | Rôle |
-| --- | --- |
-| `module/applications/specialization-tree-app.mjs` | Exposer un résumé dérivé de progression et réduire les données redondantes du contexte |
-| `templates/applications/specialization-tree-app.hbs` | Recomposer le header et la sidebar autour du nouvel affichage compact |
-| `styles/applications.less` | Porter le layout compact, la hiérarchie visuelle et l'état actif renforcé |
-| `tests/applications/specialization-tree-app.test.mjs` | Verrouiller le nouveau contrat de contexte et les garanties UX observables |
+| Fichier                                               | Rôle                                                                                   |
+| ----------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| `module/applications/specialization-tree-app.mjs`     | Exposer un résumé dérivé de progression et réduire les données redondantes du contexte |
+| `templates/applications/specialization-tree-app.hbs`  | Recomposer le header et la sidebar autour du nouvel affichage compact                  |
+| `styles/applications.less`                            | Porter le layout compact, la hiérarchie visuelle et l'état actif renforcé              |
+| `tests/applications/specialization-tree-app.test.mjs` | Verrouiller le nouveau contrat de contexte et les garanties UX observables             |
 
 ## Plan d'implémentation
 

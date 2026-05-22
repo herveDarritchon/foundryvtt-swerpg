@@ -38,18 +38,18 @@ L'existant dispose déjà d'un bridge d'audit non bloquant pour le succès d'ach
 
 ## Fichiers pressentis
 
-| Fichier | Rôle |
-| --- | --- |
-| `module/utils/audit-log.mjs` | Centraliser le bridge d'audit des opérations de nœud et garantir le mode non bloquant |
-| `module/lib/talent-node/talent-node-purchase.mjs` | Émettre les événements d'audit du flux d'achat aux bons moments |
-| `module/lib/talent-node/talent-node-forget.mjs` | Ajouter l'émission symétrique d'audit pour l'oubli |
-| `module/applications/character-audit-log.mjs` | Mapper les nouveaux types d'événements vers familles, labels et descriptions |
-| `lang/fr.json` | Ajouter les libellés/descriptions FR des nouveaux événements |
-| `lang/en.json` | Ajouter les libellés/descriptions EN des nouveaux événements |
-| `tests/utils/audit-log.test.mjs` | Verrouiller le contrat des entrées d'audit de nœud |
-| `tests/lib/talent-node/talent-node-purchase.test.mjs` | Vérifier les émissions d'audit achat et leur non-régression |
-| `tests/lib/talent-node/talent-node-forget.test.mjs` | Vérifier les émissions d'audit oubli et le caractère non bloquant |
-| `tests/applications/character-audit-log.test.mjs` | Vérifier le rendu lisible des nouveaux types |
+| Fichier                                               | Rôle                                                                                  |
+| ----------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| `module/utils/audit-log.mjs`                          | Centraliser le bridge d'audit des opérations de nœud et garantir le mode non bloquant |
+| `module/lib/talent-node/talent-node-purchase.mjs`     | Émettre les événements d'audit du flux d'achat aux bons moments                       |
+| `module/lib/talent-node/talent-node-forget.mjs`       | Ajouter l'émission symétrique d'audit pour l'oubli                                    |
+| `module/applications/character-audit-log.mjs`         | Mapper les nouveaux types d'événements vers familles, labels et descriptions          |
+| `lang/fr.json`                                        | Ajouter les libellés/descriptions FR des nouveaux événements                          |
+| `lang/en.json`                                        | Ajouter les libellés/descriptions EN des nouveaux événements                          |
+| `tests/utils/audit-log.test.mjs`                      | Verrouiller le contrat des entrées d'audit de nœud                                    |
+| `tests/lib/talent-node/talent-node-purchase.test.mjs` | Vérifier les émissions d'audit achat et leur non-régression                           |
+| `tests/lib/talent-node/talent-node-forget.test.mjs`   | Vérifier les émissions d'audit oubli et le caractère non bloquant                     |
+| `tests/applications/character-audit-log.test.mjs`     | Vérifier le rendu lisible des nouveaux types                                          |
 
 ## Plan d'implémentation
 
