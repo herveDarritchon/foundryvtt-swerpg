@@ -738,6 +738,9 @@
   .specialization-tree-app__viewport {
     min-height: 420px;
     overflow: hidden;
+    background-image:
+      radial-gradient(circle at 1px 1px, rgba(120, 169, 194, 0.06) 1px, transparent 0);
+    background-size: 24px 24px;
   }
 
   .specialization-tree-app__canvas {
@@ -854,6 +857,85 @@
     }
   }
 
+  /* ── Legend: compact state reference at bottom of viewport ──── */
+
+  .specialization-tree-app__legend {
+    position: absolute;
+    bottom: 1.5rem;
+    left: 1.5rem;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.35rem 0.65rem;
+    background: rgba(10, 17, 26, 0.82);
+    border: 1px solid rgba(120, 169, 194, 0.14);
+    border-radius: 6px;
+    pointer-events: none;
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+  }
+
+  .specialization-tree-app__legend-title {
+    color: #9fc0d6;
+    font-size: var(--font-size-10, 10px);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    flex: none;
+    opacity: 0.8;
+  }
+
+  .specialization-tree-app__legend-items {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .specialization-tree-app__legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    color: #c8dcee;
+    font-size: var(--font-size-10, 10px);
+    line-height: 1;
+    pointer-events: auto;
+    white-space: nowrap;
+  }
+
+  .specialization-tree-app__legend-swatch {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex: none;
+  }
+
+  .specialization-tree-app__legend-label {
+    color: inherit;
+  }
+
+  /* Swatch colours matched to the PIXI node-state visual palette */
+  .specialization-tree-app__legend-swatch[data-state='purchased'] {
+    background: #5f85ad;
+    box-shadow: 0 0 0 1px rgba(149, 201, 255, 0.45);
+  }
+
+  .specialization-tree-app__legend-swatch[data-state='available'] {
+    background: #355a84;
+    box-shadow: 0 0 0 1px rgba(140, 184, 232, 0.45);
+  }
+
+  .specialization-tree-app__legend-swatch[data-state='locked'] {
+    background: #4a4a4a;
+    box-shadow: 0 0 0 1px rgba(122, 122, 122, 0.3);
+  }
+
+  .specialization-tree-app__legend-swatch[data-state='invalid'] {
+    background: #7c4e5a;
+    box-shadow: 0 0 0 1px rgba(180, 111, 130, 0.35);
+  }
+
   .specialization-tree-app__viewport-toolbar {
     position: absolute;
     top: 1.5rem;
@@ -936,6 +1018,14 @@
 
     .specialization-tree-app__viewport {
       min-height: 320px;
+    }
+
+    .specialization-tree-app__legend {
+      bottom: 0.75rem;
+      left: 0.75rem;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      padding: 0.3rem 0.5rem;
     }
   }
 }

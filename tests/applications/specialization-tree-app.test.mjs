@@ -31,6 +31,7 @@ function createRoot({ viewportHost, panel }) {
 describe('specialization-tree app orchestration', () => {
   let SpecializationTreeApp
   let buildSpecializationTreeContext
+  let buildLegendItems
   let mockRendererInstances
   let purchaseTalentNodeMock
   let forgetTalentNodeMock
@@ -80,6 +81,7 @@ describe('specialization-tree app orchestration', () => {
         'SWERPG.TALENT.SPECIALIZATION_TREE_APP.PERMISSION_DENIED': 'Denied',
         'SWERPG.TALENT.SPECIALIZATION_TREE_APP.ACTION.PURCHASE': 'Purchase',
         'SWERPG.TALENT.SPECIALIZATION_TREE_APP.ACTION.FORGET': 'Forget',
+        'SWERPG.TALENT.SPECIALIZATION_TREE_APP.CONFIRM.CANCEL': 'Cancel',
         'SWERPG.TALENT.UNKNOWN': 'Unknown talent',
       },
     })
@@ -119,6 +121,7 @@ describe('specialization-tree app orchestration', () => {
     const mod = await import('../../module/applications/specialization-tree-app.mjs')
     SpecializationTreeApp = mod.default
     buildSpecializationTreeContext = mod.buildSpecializationTreeContext
+    buildLegendItems = mod.buildLegendItems
   })
 
   afterEach(() => {
@@ -426,5 +429,110 @@ describe('specialization-tree app orchestration', () => {
 
     expect(context).toBeDefined()
     expect(typeof context.hasActor).toBe('boolean')
+  })
+
+  /* ── Legend items ───────────────────────────────────────────── */
+
+  it('buildLegendItems returns 4 entries with correct structure', () => {
+    const localize = (key) => key
+    const items = buildLegendItems(localize)
+
+    expect(items).toHaveLength(4)
+    for (const item of items) {
+      expect(item).toHaveProperty('state')
+      expect(item).toHaveProperty('label')
+      expect(item).toHaveProperty('affordance')
+      expect(item).toHaveProperty('cursor')
+    }
+  })
+
+  it('buildLegendItems maps affordance correctly per state', () => {
+    const localize = (key) => key
+    const items = buildLegendItems(localize)
+
+    const lookup = Object.fromEntries(items.map((i) => [i.state, i.affordance]))
+    expect(lookup).toEqual({
+      purchased: 'informational',
+      available: 'actionable',
+      locked: 'blocked',
+      invalid: 'informational',
+    })
+  })
+
+  it('buildLegendItems maps cursor correctly per state', () => {
+    const localize = (key) => key
+    const items = buildLegendItems(localize)
+
+    const lookup = Object.fromEntries(items.map((i) => [i.state, i.cursor]))
+    expect(lookup).toEqual({
+      purchased: 'default',
+      available: 'pointer',
+      locked: 'not-allowed',
+      invalid: 'help',
+    })
+  })
+
+  it('buildLegendItems localizes labels through the provided function', () => {
+    const localize = vi.fn((key) => `[[${key}]]`)
+    const items = buildLegendItems(localize)
+
+    expect(items[0].label).toBe('[[SWERPG.TALENT.SPECIALIZATION_TREE_APP.NODE_STATE.PURCHASED]]')
+    expect(localize).toHaveBeenCalledWith('SWERPG.TALENT.SPECIALIZATION_TREE_APP.NODE_STATE.PURCHASED')
+    expect(localize).toHaveBeenCalledWith('SWERPG.TALENT.SPECIALIZATION_TREE_APP.NODE_STATE.AVAILABLE')
+    expect(localize).toHaveBeenCalledWith('SWERPG.TALENT.SPECIALIZATION_TREE_APP.NODE_STATE.LOCKED')
+    expect(localize).toHaveBeenCalledWith('SWERPG.TALENT.SPECIALIZATION_TREE_APP.NODE_STATE.INVALID')
+  })
+
+  it('buildSpecializationTreeContext(null) includes legendItems with 4 entries', () => {
+    const context = buildSpecializationTreeContext(null)
+
+    expect(context.legendItems).toBeDefined()
+    expect(context.legendItems).toHaveLength(4)
+  })
+
+  it('buildSpecializationTreeContext(actor) includes legendItems with 4 entries', () => {
+    globalThis.fromUuidSync = vi.fn(() => null)
+
+    const actor = createActor()
+    const context = buildSpecializationTreeContext(actor)
+
+    expect(context.legendItems).toBeDefined()
+    expect(context.legendItems).toHaveLength(4)
+  })
+
+  it('confirm dialog uses custom action label and cancel button', async () => {
+    const app = new SpecializationTreeApp()
+    app.actor = createActor()
+    app.rendered = true
+    const viewportHost = { dataset: {}, firstElementChild: null, replaceChildren: vi.fn() }
+    const panel = { hidden: true, querySelector: vi.fn(() => null) }
+    app.element = createRoot({ viewportHost, panel })
+    const refreshSpy = vi.spyOn(app, 'refresh').mockResolvedValue(app)
+
+    await app._onRender({ currentTreeId: 'spec-a', renderNodes: [], renderConnections: [] }, {})
+
+    const confirmSpy = vi.spyOn(foundry.applications.api.DialogV2, 'confirm')
+    confirmSpy.mockResolvedValue(true)
+
+    const node = {
+      nodeId: 'n1',
+      talentName: 'Tough',
+      xpCost: 5,
+      actionable: {
+        primaryAction: 'purchase',
+        canPurchase: true,
+        actionRef: { specializationId: 'spec-a', nodeId: 'n1' },
+      },
+    }
+
+    await app.renderer.onNodePointerDown(node)
+
+    expect(confirmSpy).toHaveBeenCalled()
+    const callArgs = confirmSpy.mock.calls[0][0]
+
+    expect(callArgs.buttons).toBeDefined()
+    expect(callArgs.buttons).toHaveLength(2)
+    expect(callArgs.buttons[0].label).toBe('Purchase')
+    expect(callArgs.buttons[1].label).toBe('Cancel')
   })
 })

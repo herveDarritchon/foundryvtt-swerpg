@@ -123,6 +123,7 @@
           "FAILURE": "Échec de l'oubli : {reason}"
         },
         "CONFIRM": {
+          "CANCEL": "Annuler",
           "PURCHASE": {
             "TITLE": "{action} : {talent}",
             "CONTENT": "Dépenser {xp} XP pour acheter <strong>{talent}</strong>?"
@@ -131,6 +132,9 @@
             "TITLE": "{action} : {talent}",
             "CONTENT": "Oublier <strong>{talent}</strong> et récupérer {xp} XP?"
           }
+        },
+        "LEGEND": {
+          "TITLE": "Légende"
         },
         "PERMISSION_DENIED": "Vous n'avez pas la permission de modifier cet arbre de spécialisation.",
         "EMPTY": {
