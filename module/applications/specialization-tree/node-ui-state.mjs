@@ -87,7 +87,7 @@ const PASSIVE_NODE_VARIANTS = Object.freeze({
     fillColor: 0x1f4f8c,
     borderColor: 0x95c9ff,
     borderWidth: 2,
-    alpha: 1,
+    alpha: 0.6,
     textColor: 0xffffff,
     textAlpha: 1,
     costColor: 0xb9d9ff,
@@ -117,7 +117,7 @@ const PASSIVE_NODE_VARIANTS = Object.freeze({
     fillColor: 0x1f2630,
     borderColor: 0x7a7a7a,
     borderWidth: 2,
-    alpha: 1,
+    alpha: 0.6,
     textColor: 0xd7dbe2,
     textAlpha: 0.68,
     costColor: 0x999999,
@@ -132,7 +132,7 @@ const PASSIVE_NODE_VARIANTS = Object.freeze({
     fillColor: 0x2b1f28,
     borderColor: 0x7c4e5a,
     borderWidth: 2,
-    alpha: 1,
+    alpha: 0.6,
     textColor: 0xf1dfe4,
     textAlpha: 1,
     costColor: 0xf1dfe4,
@@ -180,7 +180,7 @@ const ACTIVE_NODE_VARIANTS = Object.freeze({
     fillColor: 0x302020,
     borderColor: 0x7a7a7a,
     borderWidth: 2,
-    alpha: 1,
+    alpha: 0.6,
     textColor: 0xe2d7d7,
     textAlpha: 0.68,
     costColor: 0x999999,
@@ -195,7 +195,7 @@ const ACTIVE_NODE_VARIANTS = Object.freeze({
     fillColor: 0x3c1d1d,
     borderColor: 0x8f4a4a,
     borderWidth: 2,
-    alpha: 1,
+    alpha: 0.6,
     textColor: 0xffe8e8,
     textAlpha: 1,
     costColor: 0xffe8e8,
@@ -357,6 +357,67 @@ export const NODE_TYPE_INDICATORS = Object.freeze({
     label: 'Passive',
   }),
 })
+
+/* ── Icon slot paths (PXP2) ─────────────────────────────────────── */
+
+/**
+ * Icon slot paths for the three stable corner positions on each node card.
+ *
+ * - `topLeft`    — Active/inactive type icon (electric.svg / plain-circle.svg).
+ * - `topRight`   — Primary action icon (buy-card.svg for purchase, sell-card.svg for forget).
+ * - `bottomRight`— Ranked indicator icon (rank.svg when isRanked === true).
+ *
+ * @typedef {Object} NodeIconSlots
+ * @property {string|null} topLeft    - SVG icon path for the active/passive type indicator.
+ * @property {string|null} topRight   - SVG icon path for the primary action (or null).
+ * @property {string|null} bottomRight - SVG icon path for the ranked indicator (or null).
+ */
+
+/** @type {string} */
+export const ACTIVE_TYPE_ICON_PATH = 'assets/images/icons/electric.svg'
+
+/** @type {string} */
+export const PASSIVE_TYPE_ICON_PATH = 'assets/images/icons/plain-circle.svg'
+
+/** @type {string} */
+export const PURCHASE_ACTION_ICON_PATH = 'assets/images/icons/buy-card.svg'
+
+/** @type {string} */
+export const FORGET_ACTION_ICON_PATH = 'assets/images/icons/sell-card.svg'
+
+/** @type {string} */
+export const RANKED_ICON_PATH = 'assets/images/icons/rank.svg'
+
+/**
+ * Build the icon slot descriptor for a render node.
+ *
+ * Pure function — no Foundry dependencies.
+ * Consumes the node's enriched properties (nodeType, isRanked) and the
+ * actionable sub-view-model (primaryAction) to produce the stable three-corner
+ * icon contract consumed by the PIXI renderer.
+ *
+ * @param {object} node - Enriched render node with `nodeType`, `isRanked`,
+ *        and `actionable` (which must carry `primaryAction` if set).
+ * @returns {NodeIconSlots} Icon paths for the three corner slots.
+ */
+export function buildIconSlots(node) {
+  const nodeType = node?.nodeType ?? resolveNodeType(node?.isActive)
+
+  const topLeft = nodeType === NODE_TYPE.ACTIVE
+    ? ACTIVE_TYPE_ICON_PATH
+    : PASSIVE_TYPE_ICON_PATH
+
+  let topRight = null
+  if (node.actionable?.primaryAction === 'purchase') {
+    topRight = PURCHASE_ACTION_ICON_PATH
+  } else if (node.actionable?.primaryAction === 'forget') {
+    topRight = FORGET_ACTION_ICON_PATH
+  }
+
+  const bottomRight = node.isRanked ? RANKED_ICON_PATH : null
+
+  return { topLeft, topRight, bottomRight }
+}
 
 /* ── Pure UI mapping functions ──────────────────────────────────── */
 

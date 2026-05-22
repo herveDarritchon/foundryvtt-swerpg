@@ -7,7 +7,14 @@ import {
   PixiTreeRenderer,
 } from '../../module/applications/specialization-tree/pixi-tree-renderer.mjs'
 import { CONNECTION_VISUAL_STYLES } from '../../module/applications/specialization-tree/connection-ui-state.mjs'
-import { NODE_STATE, NODE_STATE_VARIANTS } from '../../module/applications/specialization-tree/node-ui-state.mjs'
+import {
+  ACTIVE_TYPE_ICON_PATH,
+  NODE_STATE,
+  NODE_STATE_VARIANTS,
+  PASSIVE_TYPE_ICON_PATH,
+  PURCHASE_ACTION_ICON_PATH,
+  RANKED_ICON_PATH,
+} from '../../module/applications/specialization-tree/node-ui-state.mjs'
 
 function createMockCanvas() {
   const listeners = {}
@@ -74,6 +81,12 @@ function createViewModel() {
         nodeTypeIcon: 'P',
         nodeState: NODE_STATE.AVAILABLE,
         variant: NODE_STATE_VARIANTS[NODE_STATE.AVAILABLE].passive,
+        iconSlots: {
+          topLeft: PASSIVE_TYPE_ICON_PATH,
+          topRight: PURCHASE_ACTION_ICON_PATH,
+          bottomRight: RANKED_ICON_PATH,
+        },
+        actionable: { primaryAction: 'purchase' },
       },
       {
         nodeId: 'n2',
@@ -85,6 +98,12 @@ function createViewModel() {
         nodeTypeIcon: 'A',
         nodeState: NODE_STATE.LOCKED,
         variant: NODE_STATE_VARIANTS[NODE_STATE.LOCKED].active,
+        iconSlots: {
+          topLeft: ACTIVE_TYPE_ICON_PATH,
+          topRight: null,
+          bottomRight: null,
+        },
+        actionable: { primaryAction: null },
       },
     ],
     renderConnections: [
@@ -152,7 +171,8 @@ describe('PixiTreeRenderer integration', () => {
         }
       },
       Sprite: class MockSprite {
-        constructor() {
+        constructor(texture) {
+          this.texture = texture
           this.x = 0
           this.y = 0
           this.width = 0
@@ -160,7 +180,7 @@ describe('PixiTreeRenderer integration', () => {
           this.tint = 0
         }
       },
-      Assets: { load: vi.fn().mockResolvedValue(null) },
+      Assets: { load: vi.fn().mockImplementation(async (path) => ({ path })) },
       Texture: { from: vi.fn().mockReturnValue(null) },
     }
 
@@ -251,7 +271,7 @@ describe('PixiTreeRenderer integration', () => {
     ])
   })
 
-  it('renders type icons, title texts, cost texts and ranked indicator', async () => {
+  it('renders title texts, cost texts, and corner icon sprites from icon slots', async () => {
     const host = createMockHost()
     const renderer = new PixiTreeRenderer()
     renderer.mount(host)
@@ -261,23 +281,32 @@ describe('PixiTreeRenderer integration', () => {
     const descendants = flattenChildren(renderer.treeContainer)
     expect(descendants.some((child) => child.text === 'Tough')).toBe(true)
     expect(descendants.some((child) => child.text === 'Grit')).toBe(true)
-    expect(descendants.some((child) => child.text === '(R)')).toBe(true)
-    expect(descendants.some((child) => child.text === 'P')).toBe(true)
-    expect(descendants.some((child) => child.text === 'A')).toBe(true)
+    expect(descendants.some((child) => child.text === '5 XP')).toBe(true)
+    expect(descendants.some((child) => child.label === 'node:n1:Tough:icon-slot:topLeft')).toBe(true)
+    expect(descendants.some((child) => child.label === 'node:n1:Tough:icon-slot:topRight')).toBe(true)
+    expect(descendants.some((child) => child.label === 'node:n1:Tough:icon-slot:bottomRight')).toBe(true)
+    expect(descendants.some((child) => child.label === 'node:n2:Grit:icon-slot:topLeft')).toBe(true)
+    expect(descendants.some((child) => child.label === 'node:n2:Grit:icon-slot:topRight')).toBe(false)
+    expect(descendants.some((child) => child.label === 'node:n2:Grit:icon-slot:bottomRight')).toBe(false)
   })
 
-  it('renders fallback pictograms from node variants when svg is unavailable', async () => {
+  it('attaches the expected textures to rendered icon slot sprites', async () => {
     const host = createMockHost()
     const renderer = new PixiTreeRenderer()
     renderer.mount(host)
-    const viewModel = createViewModel()
 
-    await renderer.update(viewModel, {})
+    await renderer.update(createViewModel(), {})
 
-    const expectedPictograms = new Set(viewModel.renderNodes.map((node) => node.variant.pictogram))
     const descendants = flattenChildren(renderer.treeContainer)
-    const found = descendants.filter((child) => expectedPictograms.has(child.text))
-    expect(found).toHaveLength(2)
+    const topLeft = descendants.find((child) => child.label === 'node:n1:Tough:icon-slot:topLeft')
+    const topRight = descendants.find((child) => child.label === 'node:n1:Tough:icon-slot:topRight')
+    const bottomRight = descendants.find((child) => child.label === 'node:n1:Tough:icon-slot:bottomRight')
+    const activeTopLeft = descendants.find((child) => child.label === 'node:n2:Grit:icon-slot:topLeft')
+
+    expect(topLeft?.texture?.path).toBe(PASSIVE_TYPE_ICON_PATH)
+    expect(topRight?.texture?.path).toBe(PURCHASE_ACTION_ICON_PATH)
+    expect(bottomRight?.texture?.path).toBe(RANKED_ICON_PATH)
+    expect(activeTopLeft?.texture?.path).toBe(ACTIVE_TYPE_ICON_PATH)
   })
 
   it('rebuilds the tree container on subsequent updates', async () => {

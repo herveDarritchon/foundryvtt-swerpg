@@ -302,15 +302,10 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
 
   /**
    * Handle a node pointer down event from the renderer.
-   * Dispatches purchase/forget or shows tooltip.
+   * Opens the detail panel for the clicked node.
    * @param {object} node - The enriched render node.
    */
   async #handleNodePointerDown(node) {
-    if (node?.actionable?.primaryAction) {
-      await this.#handleNodePrimaryAction(node)
-      return
-    }
-
     this.#showDetailPanel(node)
   }
 
