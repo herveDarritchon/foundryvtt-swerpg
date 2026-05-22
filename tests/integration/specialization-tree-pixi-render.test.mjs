@@ -3,7 +3,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import {
   computeCenteredOffset,
   computeTreeBoundingBox,
+  getCanvasSharpnessConfig,
   getViewportDimensions,
+  loadStatePictogram,
   PixiTreeRenderer,
 } from '../../module/applications/specialization-tree/pixi-tree-renderer.mjs'
 import { CONNECTION_VISUAL_STYLES } from '../../module/applications/specialization-tree/connection-ui-state.mjs'
@@ -134,7 +136,7 @@ describe('PixiTreeRenderer integration', () => {
       Application: class MockPixiApplication {
         constructor(options = {}) {
           this.options = options
-          this.renderer = { resize: vi.fn() }
+          this.renderer = { resize: vi.fn(), resolution: 1, width: 0, height: 0 }
           this.canvas = createMockCanvas()
           this.stage = createMockContainer()
           this.destroy = vi.fn()
@@ -228,6 +230,51 @@ describe('PixiTreeRenderer integration', () => {
     })
   })
 
+  it('getCanvasSharpnessConfig returns a complete sharpness contract', () => {
+    const config = getCanvasSharpnessConfig()
+    expect(config).toMatchObject({
+      antialias: true,
+      autoDensity: true,
+      backgroundAlpha: 0,
+    })
+    expect(config.resolution).toBeGreaterThanOrEqual(1)
+    expect(Number.isFinite(config.resolution)).toBe(true)
+  })
+
+  it('creates PIXI Application with explicit sharpness config', async () => {
+    const host = createMockHost()
+    const renderer = new PixiTreeRenderer()
+    renderer.mount(host)
+
+    const appOptions = renderer.pixiApp.options
+    expect(appOptions.antialias).toBe(true)
+    expect(appOptions.autoDensity).toBe(true)
+    expect(appOptions.resolution).toBeGreaterThanOrEqual(1)
+    expect(appOptions.backgroundAlpha).toBe(0)
+  })
+
+  it('resize passes resolution to renderer.resize', async () => {
+    const host = createMockHost()
+    const renderer = new PixiTreeRenderer()
+    renderer.mount(host)
+    await renderer.update(createViewModel(), {})
+
+    expect(renderer.pixiApp.renderer.resize).toHaveBeenCalledWith(640, 480, 1)
+  })
+
+  it('loadStatePictogram passes resolution to Assets.load', async () => {
+    PIXI.Assets.load.mockClear()
+    const loadSpy = vi.mocked(PIXI.Assets.load)
+
+    const result = await loadStatePictogram(NODE_STATE.AVAILABLE)
+
+    expect(result).not.toBeNull()
+    expect(loadSpy).toHaveBeenCalledWith(
+      expect.stringContaining('.svg'),
+      expect.objectContaining({ resolution: 1 }),
+    )
+  })
+
   it('mounts the PIXI canvas into the host and resizes on first update', async () => {
     const host = createMockHost()
     const renderer = new PixiTreeRenderer()
@@ -237,7 +284,7 @@ describe('PixiTreeRenderer integration', () => {
 
     expect(renderer.pixiApp).not.toBeNull()
     expect(host.firstElementChild).toBe(renderer.pixiApp.canvas)
-    expect(renderer.pixiApp.renderer.resize).toHaveBeenCalledWith(640, 480)
+    expect(renderer.pixiApp.renderer.resize).toHaveBeenCalledWith(640, 480, 1)
   })
 
   it('draws named layers, nodes and connections on update', async () => {
