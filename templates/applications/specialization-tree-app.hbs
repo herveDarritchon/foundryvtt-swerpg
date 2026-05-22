@@ -107,6 +107,11 @@
             </div>
           {{/if}}
           <div class='specialization-tree-app__detail-panel' data-detail-panel role='region' aria-live='polite' hidden>
+            <button type='button' class='specialization-tree-app__detail-panel-close' data-action='closeDetail'
+              aria-label='{{localize "SWERPG.TALENT.SPECIALIZATION_TREE_APP.ACTION.CLOSE_DETAIL"}}'
+              title='{{localize "SWERPG.TALENT.SPECIALIZATION_TREE_APP.ACTION.CLOSE_DETAIL"}}'>
+              <i class='fa-solid fa-xmark'></i>
+            </button>
             <div class='specialization-tree-app__detail-panel-header'>
               <span class='specialization-tree-app__detail-panel-talent-name' data-detail-talent-name></span>
               <span class='specialization-tree-app__detail-panel-cost' data-detail-cost></span>

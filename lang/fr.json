@@ -150,7 +150,8 @@
           "ZOOM_IN": "Zoom avant",
           "ZOOM_OUT": "Zoom arrière",
           "PURCHASE": "Acheter",
-          "FORGET": "Oublier"
+          "FORGET": "Oublier",
+          "CLOSE_DETAIL": "Fermer"
         }
       },
       "ACTIONS": {
