@@ -17,7 +17,7 @@ import {
   resolveConnectionVariant,
   resolveHoverConnectionVariant,
 } from './specialization-tree/node-ui-state.mjs'
-import { NODE_WIDTH, NODE_HEIGHT, computeNodePosition, buildConnectionAnchors } from './specialization-tree/layout.mjs'
+import { buildConnectionAnchors, computeNodePosition, NODE_HEIGHT, NODE_WIDTH } from './specialization-tree/layout.mjs'
 import { logger } from '../utils/logger.mjs'
 
 const { api } = foundry.applications
@@ -45,6 +45,20 @@ const ACTION_KEYS = Object.freeze({
 
 const MIN_VIEWPORT_SIZE = 320
 const STATE_PICTOGRAM_TEXTURE_CACHE = new Map()
+
+/**
+ * Assign a human-readable label to a PIXI display object for devtools inspection.
+ * Sets both `label` (Pixi DevTools) and `name` (legacy) on the object.
+ * @param {PIXI.DisplayObject} displayObject - The PIXI object to label.
+ * @param {string} label - The label to assign.
+ * @returns {PIXI.DisplayObject} The same display object, for chaining.
+ */
+function setPixiDebugLabel(displayObject, label) {
+  if (!displayObject || !label) return displayObject
+  displayObject.label = label
+  displayObject.name = label
+  return displayObject
+}
 
 /**
  * Load the SVG pictogram texture for a node state.
@@ -449,6 +463,8 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
 
   #zoomWheelHandler = null
 
+  #debugNodeViews = new Map()
+
   /** @type {string|null} Node ID currently under the pointer, or null when not hovering. */
   #hoveredNodeId = null
 
@@ -588,6 +604,8 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
         autoDensity: true,
         backgroundAlpha: 0,
       })
+
+      this.#exposePixiDevtools()
     }
 
     const view = this.pixiApp.canvas ?? this.pixiApp.view
@@ -600,6 +618,43 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
     if (viewportHost.firstElementChild !== view) {
       viewportHost.replaceChildren(view)
     }
+  }
+
+  #exposePixiDevtools() {
+    if (!this.pixiApp) return
+
+    const isDebugAllowed = game.user?.isGM === true || game.settings?.get?.('swerpg', 'debugMode') === true
+
+    if (!isDebugAllowed) return
+
+    globalThis.__PIXI_DEVTOOLS__ = {
+      app: this.pixiApp,
+      renderer: this.pixiApp.renderer,
+      stage: this.pixiApp.stage,
+    }
+
+    globalThis.swerpgDebug ??= {}
+
+    globalThis.swerpgDebug.specializationTree = {
+      app: this,
+      pixiApp: this.pixiApp,
+      renderer: this.pixiApp.renderer,
+      stage: this.pixiApp.stage,
+      treeContainer: this.#treeContainer,
+      viewport: { ...this.#viewport },
+      renderNodes: this.#renderNodesCache ?? [],
+      nodeViews: this.#debugNodeViews,
+      resetView: () => this.#resetView(),
+      setViewport: ({ x, y, scale } = {}) => {
+        if (Number.isFinite(x)) this.#viewport.x = x
+        if (Number.isFinite(y)) this.#viewport.y = y
+        if (Number.isFinite(scale)) this.#viewport.scale = scale
+        this.#applyViewportTransform()
+      },
+      refresh: () => this.refresh({ resetView: false }),
+    }
+
+    logger.debug('[SWERPG] PIXI debug exposed', globalThis.swerpgDebug.specializationTree)
   }
 
   #resizeViewport() {
@@ -804,15 +859,20 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
     }
 
     this.#renderNodesCache = null
+    this.#debugNodeViews.clear()
     this.#renderConnectionsCache = null
     this.#nodeDisplayObjects = new Map()
     this.#hoveredNodeId = null
     this.#hideNodeTooltip()
 
     const { renderNodes, renderConnections } = context ?? {}
-    if (!renderNodes?.length && !renderConnections?.length) return
+    if (!renderNodes?.length && !renderConnections?.length) {
+      this.#exposePixiDevtools()
+      return
+    }
 
     this.#treeContainer = new PIXI.Container()
+    setPixiDebugLabel(this.#treeContainer, 'specialization-tree')
     this.pixiApp.stage.addChild(this.#treeContainer)
     this.#applyViewportTransform()
 
@@ -837,10 +897,11 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
     if (renderNodes.length > 0) {
       for (const node of renderNodes) {
         const v = node.variant ?? NODE_STATE_VARIANTS[NODE_STATE.AVAILABLE].passive
+        const nodeLabel = `node:${node.nodeId}:${node.talentName}`
 
         // Each node gets its own Container so hover dimming can target individual nodes.
         const nodeContainer = new PIXI.Container()
-
+        setPixiDebugLabel(nodeContainer, nodeLabel)
         const bg = new PIXI.Graphics()
         bg.beginFill(v.fillColor, v.alpha)
         bg.lineStyle(v.borderWidth, v.borderColor, v.alpha)
@@ -848,20 +909,32 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
         bg.endFill()
         nodeContainer.addChild(bg)
 
-        // Type indicator (active/passive icon) — top-left corner
+        // Background — local coords (0, 0)
+        const background = new PIXI.Graphics()
+        setPixiDebugLabel(background, `${nodeLabel}:background`)
+        background.beginFill(v.fillColor, v.alpha)
+        background.lineStyle(v.borderWidth, v.borderColor, v.alpha)
+        background.drawRoundedRect(0, 0, NODE_WIDTH, NODE_HEIGHT, 4)
+        background.endFill()
+        nodeContainer.addChild(background)
+
+        // Type indicator (active/passive icon) — top-left corner, local coords
         const typeIcon = node.nodeTypeIcon ?? ''
         const nameOffsetX = typeIcon ? 14 : 4
+        let typeText = null
         if (typeIcon) {
-          const typeText = new PIXI.Text(typeIcon, {
+          typeText = new PIXI.Text(typeIcon, {
             fontFamily: 'Arial',
             fontSize: 9,
             fill: v.textColor,
           })
-          typeText.x = node.x + 4
-          typeText.y = node.y + 5
+          setPixiDebugLabel(typeText, `${nodeLabel}:type-icon`)
+          typeText.x = 4
+          typeText.y = 5
           nodeContainer.addChild(typeText)
         }
 
+        // Talent name — local coords
         const nameText = new PIXI.Text(node.talentName, {
           fontFamily: 'Arial',
           fontSize: 10,
@@ -869,73 +942,82 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
           wordWrap: true,
           wordWrapWidth: NODE_WIDTH - nameOffsetX - 4,
         })
+        setPixiDebugLabel(nameText, `${nodeLabel}:title`)
         nameText.alpha = v.textAlpha ?? 1
-        nameText.x = node.x + nameOffsetX
-        nameText.y = node.y + 4
+        nameText.x = nameOffsetX
+        nameText.y = 4
         nodeContainer.addChild(nameText)
 
+        // Cost badge and cost text — local coords
         const costLabel = `${node.xpCost} XP`
-        let costTextX = node.x + 4
         const costText = new PIXI.Text(costLabel, {
           fontFamily: 'Arial',
           fontSize: 9,
           fill: v.costColor,
         })
+        setPixiDebugLabel(costText, `${nodeLabel}:cost-text`)
         costText.alpha = v.costAlpha ?? 1
 
+        let badge = null
         if (v.costDisplay === 'badge') {
           const badgePaddingX = 5
           const badgePaddingY = 2
-          const badgeX = node.x + 4
-          const badgeY = node.y + NODE_HEIGHT - 17
+          const badgeX = 4
+          const badgeY = NODE_HEIGHT - 17
           const badgeWidth = costText.width + badgePaddingX * 2
           const badgeHeight = costText.height + badgePaddingY * 2
-          const badge = new PIXI.Graphics()
+          badge = new PIXI.Graphics()
+          setPixiDebugLabel(badge, `${nodeLabel}:cost-badge`)
           badge.beginFill(v.costBadgeFillColor ?? 0x333333, 1)
           badge.lineStyle(1, v.costBadgeBorderColor ?? v.borderColor, 1)
           badge.drawRoundedRect(badgeX, badgeY, badgeWidth, badgeHeight, 6)
           badge.endFill()
           nodeContainer.addChild(badge)
 
-          costTextX = badgeX + badgePaddingX
+          costText.x = badgeX + badgePaddingX
           costText.y = badgeY + badgePaddingY
-        }
-
-        costText.x = costTextX
-        if (v.costDisplay !== 'badge') {
-          costText.y = node.y + NODE_HEIGHT - 14
+        } else {
+          costText.x = 4
+          costText.y = NODE_HEIGHT - 14
         }
         nodeContainer.addChild(costText)
 
-        const hasRenderedSvgPictogram = await this.#drawStatePictogramSprite(node, nodeContainer)
+        const hasRenderedSvgPictogram = await this.#drawStatePictogramSprite(node, nodeContainer, nodeLabel)
 
+        // Fallback Unicode pictogram — local coords
+        let pictogramText = null
         if (!hasRenderedSvgPictogram && v.pictogram) {
-          const pictogramText = new PIXI.Text(v.pictogram, {
+          pictogramText = new PIXI.Text(v.pictogram, {
             fontFamily: 'Arial',
             fontSize: 10,
             fill: v.pictogramColor,
           })
-          pictogramText.x = node.x + NODE_WIDTH - pictogramText.width - 6
-          pictogramText.y = node.y + 4
+          setPixiDebugLabel(pictogramText, `${nodeLabel}:state-pictogram-text`)
+          pictogramText.x = NODE_WIDTH - pictogramText.width - 6
+          pictogramText.y = 4
           nodeContainer.addChild(pictogramText)
         }
 
-        // Ranked indicator — shown only when the node is explicitly ranked
+        // Ranked indicator — local coords, shown only when explicitly ranked
+        let rankedText = null
         if (node.isRanked) {
-          const rankedText = new PIXI.Text('(R)', {
+          rankedText = new PIXI.Text('(R)', {
             fontFamily: 'Arial',
             fontSize: 9,
             fill: v.costColor,
             fontStyle: 'italic',
           })
-          rankedText.x = node.x + NODE_WIDTH - rankedText.width - 4
-          rankedText.y = node.y + 4
+          setPixiDebugLabel(rankedText, `${nodeLabel}:ranked-indicator`)
+          rankedText.x = NODE_WIDTH - rankedText.width - 4
+          rankedText.y = 4
           nodeContainer.addChild(rankedText)
         }
 
+        // Hit area — local coords, transparent overlay that captures pointer events
         const hitArea = new PIXI.Graphics()
+        setPixiDebugLabel(hitArea, `${nodeLabel}:hit-area`)
         hitArea.beginFill(0xffffff, 0.001)
-        hitArea.drawRect(node.x, node.y, NODE_WIDTH, NODE_HEIGHT)
+        hitArea.drawRect(0, 0, NODE_WIDTH, NODE_HEIGHT)
         hitArea.endFill()
         hitArea.eventMode = 'static'
         hitArea.cursor = 'pointer'
@@ -957,10 +1039,25 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
         })
         nodeContainer.addChild(hitArea)
 
+        this.#debugNodeViews.set(node.nodeId, {
+          data: node,
+          container: nodeContainer,
+          background,
+          nameText,
+          costText,
+          badge,
+          typeText,
+          pictogramText,
+          rankedText,
+          hitArea,
+        })
+
         this.#treeContainer.addChild(nodeContainer)
         this.#nodeDisplayObjects.set(node.nodeId, nodeContainer)
       }
     }
+
+    this.#exposePixiDevtools()
   }
 
   /**
@@ -1026,7 +1123,7 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
    * @param {PIXI.Container} [container] - Optional container to add sprite to; defaults to #treeContainer.
    * @returns {Promise<boolean>}
    */
-  async #drawStatePictogramSprite(node, container) {
+  async #drawStatePictogramSprite(node, container, nodeLabel = 'node:unknown') {
     const target = container ?? this.#treeContainer
     if (!target || !PIXI.Sprite) return false
 
@@ -1035,8 +1132,9 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
       if (!texture) return false
 
       const sprite = new PIXI.Sprite(texture)
-      sprite.x = node.x + NODE_WIDTH - 20
-      sprite.y = node.y + 4
+      setPixiDebugLabel(sprite, `${nodeLabel}:state-pictogram`)
+      sprite.x = NODE_WIDTH - 20
+      sprite.y = 4
       sprite.width = 16
       sprite.height = 16
       sprite.tint = 0xffffff
