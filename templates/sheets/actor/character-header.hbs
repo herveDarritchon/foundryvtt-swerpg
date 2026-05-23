@@ -17,7 +17,17 @@
       <h2 class="specialization flexrow {{#if incomplete.specialization}}incomplete{{/if}}"
           data-action="editSpecializations"
           {{#if incomplete.specialization}}data-tooltip="WALKTHROUGH.AddSpecialization"{{/if}}>
-        <a>{{#if incomplete.specialization}}<i class="fa-solid fa-circle-plus"></i> {{/if}}{{specializationDisplayName}}
+        <a>
+          {{#if incomplete.specialization}}
+            <i class="fa-solid fa-circle-plus"></i> {{specializationHeader.displayName}}
+          {{else}}
+            {{specializationHeader.primaryName}}
+            {{#if specializationHeader.hasExtraSpecializations}}
+              <span class="specialization-badge" data-tooltip="{{specializationHeader.tooltip}}">
+                +{{specializationHeader.extraCount}}
+              </span>
+            {{/if}}
+          {{/if}}
         </a>
       </h2>
       {{#if actor.system.details.signatureName}}

@@ -92,6 +92,16 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
     const specializationFallback = game.i18n.localize('SPECIALIZATION.SHEET.CHOOSE')
     const creationPoints = a.points ?? a.system.points ?? {}
 
+    const specializationHeader = {
+      primaryName: specializationNames[0] || null,
+      extraCount: Math.max(0, specializationNames.length - 1),
+      extraNames: specializationNames.slice(1),
+      hasExtraSpecializations: specializationNames.length > 1,
+      displayName: specializationNames[0] || game.i18n.localize('SPECIALIZATION.SHEET.NO_SPECIALIZATION'),
+      badgeLabel: specializationNames.length > 1 ? `+${specializationNames.length - 1}` : null,
+      tooltip: specializationNames.slice(1).join(', ') || null,
+    }
+
     // Expand Context
     Object.assign(context, {
       speciesName: a.system.details.species?.name || game.i18n.localize('SPECIES.SHEET.CHOOSE'),
@@ -100,6 +110,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
       specializationNames,
       specializationCount: specializations.length,
       specializationDisplayName: specializationNames.join(', ') || specializationFallback,
+      specializationHeader,
       specializationTreeButtonLabel: game.i18n.localize('SWERPG.TALENT.VIEW_SPECIALIZATION_TREES'),
       experience: a.system.progression?.experience,
       canViewAuditLog: canViewAuditLog(a),
@@ -606,7 +617,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
    * @returns {Promise<void>}
    */
   static async #onEditSpecializations(event) {
-    await this.actor._viewDetailItem('specialization', 'specializations', { editable: false })
+    await this.actor.openSpecializationTreeApp()
   }
 
   /* -------------------------------------------- */

@@ -1171,6 +1171,7 @@
     "SHEET": {
       "CHOOSE": "Choisir une Spécialisation",
       "CLEAR": "Effacer la Spécialisation",
+      "NO_SPECIALIZATION": "Aucune Spécialisation",
       "SpecializationSkills": {
         "maxNumber": "Nombre maximum de compétences de spécialisation à choisir"
       }
