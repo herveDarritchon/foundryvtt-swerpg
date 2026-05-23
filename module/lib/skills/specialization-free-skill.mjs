@@ -52,6 +52,10 @@ export default class SpecializationFreeSkill extends Skill {
     this.data.rank.specializationFree = specializationFree
     this.data.rank.value = this.computeRankValue()
 
+    if (this.isCreation && this.data.rank.value > 2) {
+      return this.createError("you can't have more than 2 ranks at creation!")
+    }
+
     this.updateData['system.progression.freeSkillRanks.specialization.spent'] = specializationFreeRankSpent
     this.prepareRankUpdate()
 
