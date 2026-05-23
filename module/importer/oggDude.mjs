@@ -19,26 +19,186 @@ import { getMotivationImportStats, getMotivationCategoryImportStats } from './ut
 import { buildDutyContext } from './items/duty-ogg-dude.mjs'
 import { getDutyImportStats } from './utils/duty-import-utils.mjs'
 import { resetFolderCache } from './utils/oggdude-import-folders.mjs'
+import { createImportSession, buildExecutionPlan, publishTalentReferences } from './utils/import-session.mjs'
 
+/**
+ * Build the enriched pipeline registry with explicit dependency declarations.
+ * Each entry declares:
+ *  - id: unique pipeline identifier
+ *  - domain: user-facing domain key
+ *  - type: Foundry item type produced
+ *  - contextBuilder: async builder function
+ *  - dependsOn: mandatory dependencies (hard ordering)
+ *  - softDependsOn: preferred ordering (not blocking)
+ *  - producesReferences: reference types published to the session index
+ *
+ * @returns {Map<string, import('./utils/import-session.mjs').PipelineDescriptor[]>}
+ */
 function buildContextRegistry() {
   return new Map([
-    ['weapon', [{ type: 'weapon', contextBuilder: buildWeaponContext }]],
-    ['armor', [{ type: 'armor', contextBuilder: buildArmorContext }]],
-    ['gear', [{ type: 'gear', contextBuilder: buildGearContext }]],
-    ['species', [{ type: 'species', contextBuilder: buildSpeciesContext }]],
-    ['career', [{ type: 'career', contextBuilder: buildCareerContext }]],
-    ['talent', [{ type: 'talent', contextBuilder: buildTalentContext }]],
-    ['obligation', [{ type: 'obligation', contextBuilder: buildObligationContext }]],
+    [
+      'weapon',
+      [
+        {
+          id: 'weapon',
+          domain: 'weapon',
+          type: 'weapon',
+          contextBuilder: buildWeaponContext,
+          dependsOn: [],
+          softDependsOn: [],
+          producesReferences: [],
+        },
+      ],
+    ],
+    [
+      'armor',
+      [
+        {
+          id: 'armor',
+          domain: 'armor',
+          type: 'armor',
+          contextBuilder: buildArmorContext,
+          dependsOn: [],
+          softDependsOn: [],
+          producesReferences: [],
+        },
+      ],
+    ],
+    [
+      'gear',
+      [
+        {
+          id: 'gear',
+          domain: 'gear',
+          type: 'gear',
+          contextBuilder: buildGearContext,
+          dependsOn: [],
+          softDependsOn: [],
+          producesReferences: [],
+        },
+      ],
+    ],
+    [
+      'talent',
+      [
+        {
+          id: 'talent',
+          domain: 'talent',
+          type: 'talent',
+          contextBuilder: buildTalentContext,
+          dependsOn: [],
+          softDependsOn: [],
+          producesReferences: ['talent.oggdudeKey', 'talent.system.id', 'talent.uuid'],
+        },
+      ],
+    ],
+    [
+      'species',
+      [
+        {
+          id: 'species',
+          domain: 'species',
+          type: 'species',
+          contextBuilder: buildSpeciesContext,
+          dependsOn: ['talent'],
+          softDependsOn: [],
+          producesReferences: ['species.oggdudeKey', 'species.uuid'],
+        },
+      ],
+    ],
+    [
+      'career',
+      [
+        {
+          id: 'career',
+          domain: 'career',
+          type: 'career',
+          contextBuilder: buildCareerContext,
+          dependsOn: [],
+          softDependsOn: [],
+          producesReferences: [],
+        },
+      ],
+    ],
+    [
+      'obligation',
+      [
+        {
+          id: 'obligation',
+          domain: 'obligation',
+          type: 'obligation',
+          contextBuilder: buildObligationContext,
+          dependsOn: [],
+          softDependsOn: [],
+          producesReferences: [],
+        },
+      ],
+    ],
     [
       'specialization',
       [
-        { type: 'specialization', contextBuilder: buildSpecializationContext },
-        { type: 'specialization-tree', contextBuilder: buildSpecializationTreeContext },
+        {
+          id: 'specialization',
+          domain: 'specialization',
+          type: 'specialization',
+          contextBuilder: buildSpecializationContext,
+          dependsOn: [],
+          softDependsOn: [],
+          producesReferences: [],
+        },
+        {
+          id: 'specialization-tree',
+          domain: 'specialization',
+          type: 'specialization-tree',
+          contextBuilder: buildSpecializationTreeContext,
+          dependsOn: ['talent'],
+          softDependsOn: ['career', 'specialization'],
+          producesReferences: ['specialization-tree.specializationId', 'specialization-tree.uuid'],
+        },
       ],
     ],
-    ['motivation-category', [{ type: 'motivation-category', contextBuilder: buildMotivationCategoryContext }]],
-    ['motivation', [{ type: 'motivation', contextBuilder: buildMotivationContext }]],
-    ['duty', [{ type: 'duty', contextBuilder: buildDutyContext }]],
+    [
+      'motivation-category',
+      [
+        {
+          id: 'motivation-category',
+          domain: 'motivation-category',
+          type: 'motivation-category',
+          contextBuilder: buildMotivationCategoryContext,
+          dependsOn: [],
+          softDependsOn: [],
+          producesReferences: [],
+        },
+      ],
+    ],
+    [
+      'motivation',
+      [
+        {
+          id: 'motivation',
+          domain: 'motivation',
+          type: 'motivation',
+          contextBuilder: buildMotivationContext,
+          dependsOn: [],
+          softDependsOn: ['motivation-category'],
+          producesReferences: [],
+        },
+      ],
+    ],
+    [
+      'duty',
+      [
+        {
+          id: 'duty',
+          domain: 'duty',
+          type: 'duty',
+          contextBuilder: buildDutyContext,
+          dependsOn: [],
+          softDependsOn: [],
+          producesReferences: [],
+        },
+      ],
+    ],
   ])
 }
 
@@ -236,7 +396,28 @@ export default class OggDudeImporter {
     }
     logger.debug('[ProcessOggDudeData] -Step 3.3: Domains to Import >', domainsToImport)
 
-    const contextEntries = domainsToImport.map((id) => ({ domain: id, pipelines: buildContextMap.get(id) })).filter((entry) => Array.isArray(entry.pipelines))
+    // Build execution plan with topological sort on hard dependencies
+    const sortedPipelines = buildExecutionPlan(domainsToImport, buildContextMap)
+    logger.info('[ProcessOggDudeData] Execution plan after topological sort', {
+      order: sortedPipelines.map((p) => p.id),
+    })
+
+    // Create a shared import session for cross-pipeline reference resolution
+    const importSession = createImportSession()
+    importSession.executionOrder = sortedPipelines.map((p) => p.id)
+
+    // Group sorted pipelines back by domain for progress reporting
+    const domainOrder = []
+    const pipelinesByDomain = new Map()
+    for (const pipeline of sortedPipelines) {
+      if (!pipelinesByDomain.has(pipeline.domain)) {
+        pipelinesByDomain.set(pipeline.domain, [])
+        domainOrder.push(pipeline.domain)
+      }
+      pipelinesByDomain.get(pipeline.domain).push(pipeline)
+    }
+
+    const contextEntries = domainOrder.map((domain) => ({ domain, pipelines: pipelinesByDomain.get(domain) }))
     const total = contextEntries.length
     let processed = 0
     const completedDomains = []
@@ -266,7 +447,7 @@ export default class OggDudeImporter {
       try {
         let ranAtLeastOnePipeline = false
         for (const pipeline of entry.pipelines) {
-          const context = await withRetry(() => pipeline.contextBuilder(zip, groupByDirectory, groupByType), {
+          const context = await withRetry(() => pipeline.contextBuilder(zip, groupByDirectory, groupByType, importSession), {
             shouldRetry: (err) => /parse|XML|network/i.test(err?.message || ''),
           })
           const datasetSize = Array.isArray(context?.jsonData) ? context.jsonData.filter((el) => el != null).length : 0
@@ -292,9 +473,26 @@ export default class OggDudeImporter {
             elementKeys: Object.keys(context?.element || {}),
           })
 
-          await withRetry(() => OggDudeDataElement.processElements(context, { importToCompendium }), {
+          const created = await withRetry(() => OggDudeDataElement.processElements(context, { importToCompendium }), {
             shouldRetry: (err) => /database|upload|parse/i.test(err?.message || ''),
           })
+
+          // Publish references after talent pipeline so dependent pipelines can resolve UUIDs
+          if (pipeline.type === 'talent' && Array.isArray(created) && created.length > 0) {
+            publishTalentReferences(importSession, created)
+            logger.info('[ProcessOggDudeData] Talent references published to session index', {
+              count: created.length,
+              byOggdudeKeyCount: importSession.referenceIndex.talent.byOggdudeKey.size,
+              bySystemIdCount: importSession.referenceIndex.talent.bySystemId.size,
+            })
+          }
+
+          // Track created documents in session
+          const pipelineCreated = importSession.createdByPipeline.get(pipeline.id) ?? []
+          if (Array.isArray(created)) {
+            pipelineCreated.push(...created)
+          }
+          importSession.createdByPipeline.set(pipeline.id, pipelineCreated)
 
           ranAtLeastOnePipeline = true
 
@@ -329,6 +527,15 @@ export default class OggDudeImporter {
         recordDomainEnd(entry.domain)
       }
     }
+
+    // Log session diagnostics: unresolved references summary
+    if (importSession.unresolvedReferences.length > 0) {
+      logger.warn('[ProcessOggDudeData] Unresolved cross-pipeline references after import', {
+        count: importSession.unresolvedReferences.length,
+        details: importSession.unresolvedReferences.slice(0, 20),
+      })
+    }
+
     Hooks.callAll('oggdudeImport.completed', { processed, total, domains: completedDomains })
     markGlobalEnd()
 
