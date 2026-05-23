@@ -198,4 +198,51 @@ describe('tree-context-builder (pure)', () => {
     const entries = buildSpecializationEntries([], new Map(), (k) => k)
     expect(entries).toHaveLength(0)
   })
+
+  describe('canonicalSpecializationId', () => {
+    it('buildSpecializationEntries includes canonicalSpecializationId from tree.system.specializationId', () => {
+      const specializations = [{ specializationId: 'spec-a', name: 'A', treeUuid: 'Item.tree-a' }]
+
+      const resolutions = new Map([
+        ['spec-a', {
+          tree: { name: 'Tree A', system: { specializationId: 'canonical-v1' } },
+          state: 'available',
+        }],
+      ])
+
+      const entries = buildSpecializationEntries(specializations, resolutions, () => 'x')
+
+      expect(entries[0].canonicalSpecializationId).toBe('canonical-v1')
+    })
+
+    it('buildSpecializationEntries falls back to specialization.specializationId when tree has no specializationId', () => {
+      const specializations = [{ specializationId: 'spec-b', name: 'B', treeUuid: 'Item.tree-b' }]
+
+      const resolutions = new Map([
+        ['spec-b', {
+          tree: { name: 'Tree B', system: {} },
+          state: 'available',
+        }],
+      ])
+
+      const entries = buildSpecializationEntries(specializations, resolutions, () => 'x')
+
+      expect(entries[0].canonicalSpecializationId).toBe('spec-b')
+    })
+
+    it('buildSpecializationEntries falls back to key when neither tree nor specialization has specializationId (legacy)', () => {
+      const specializations = [{ name: 'Legacy Spec', treeUuid: 'Item.legacy' }]
+
+      const resolutions = new Map([
+        ['Item.legacy', {
+          tree: { name: 'Legacy Tree', system: {} },
+          state: 'available',
+        }],
+      ])
+
+      const entries = buildSpecializationEntries(specializations, resolutions, () => 'x')
+
+      expect(entries[0].canonicalSpecializationId).toBe('Item.legacy')
+    })
+  })
 })

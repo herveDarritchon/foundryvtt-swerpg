@@ -87,6 +87,12 @@ describe('specialization-tree app orchestration', () => {
         'SWERPG.TALENT.SPECIALIZATION_TREE_APP.PERMISSION_DENIED': 'Denied',
         'SWERPG.TALENT.SPECIALIZATION_TREE_APP.ACTION.PURCHASE': 'Purchase',
         'SWERPG.TALENT.SPECIALIZATION_TREE_APP.ACTION.FORGET': 'Forget',
+        'SWERPG.TALENT.SPECIALIZATION_TREE_APP.REMOVE.SUCCESS': 'Specialization removed: {specialization}',
+        'SWERPG.TALENT.SPECIALIZATION_TREE_APP.REMOVE.FAILURE': 'Remove failed: {reason}',
+        'SWERPG.TALENT.SPECIALIZATION_TREE_APP.CONFIRM.REMOVE.TITLE': 'Remove specialization: {specialization}',
+        'SWERPG.TALENT.SPECIALIZATION_TREE_APP.CONFIRM.REMOVE.CONTENT': 'Remove {specialization}?',
+        'SWERPG.TALENT.SPECIALIZATION_TREE_APP.ACTION.REMOVE': 'Remove',
+        'SPECIALIZATION.REMOVAL.NOT_FOUND': 'Specialization not found.',
         'SWERPG.TALENT.SPECIALIZATION_TREE_APP.ACTION.CLOSE_DETAIL': 'Close',
         'SWERPG.TALENT.SPECIALIZATION_TREE_APP.CONFIRM.CANCEL': 'Cancel',
         'SWERPG.TALENT.UNKNOWN': 'Unknown talent',
@@ -453,6 +459,113 @@ describe('specialization-tree app orchestration', () => {
     expect(warnSpy).toHaveBeenCalled()
     expect(refreshSpy).toHaveBeenCalled()
   })
+
+  /* ── Specialization removal action ──────────────────────────── */
+
+  it('remove button triggers removal confirmation dialog', async () => {
+    const removeSpy = vi.fn().mockResolvedValue(undefined)
+    const app = new SpecializationTreeApp()
+    app.actor = createActor({
+      system: {
+        details: {
+          specializations: new Set([
+            { specializationId: 'spec-a', name: 'Spec A' },
+            { specializationId: 'spec-b', name: 'Spec B' },
+          ]),
+        },
+        progression: { talentPurchases: [], experience: { available: 100 } },
+        removeSpecialization: removeSpy,
+      },
+    })
+    app.rendered = true
+    app.element = { querySelector: vi.fn(() => null) }
+    const refreshSpy = vi.spyOn(app, 'refresh').mockResolvedValue(app)
+    foundry.applications.api.DialogV2.confirm.mockResolvedValue(false)
+
+    const event = { preventDefault: vi.fn() }
+    const target = { dataset: { specializationKey: 'spec-a' } }
+    await SpecializationTreeApp.DEFAULT_OPTIONS.actions.removeSpecialization.call(app, event, target)
+
+    expect(foundry.applications.api.DialogV2.confirm).toHaveBeenCalled()
+    expect(removeSpy).not.toHaveBeenCalled()
+    expect(refreshSpy).not.toHaveBeenCalled()
+  })
+
+  it('confirmed removal persists and refreshes the app', async () => {
+    const removeSpy = vi.fn().mockResolvedValue(undefined)
+    const app = new SpecializationTreeApp()
+    app.actor = createActor({
+      system: {
+        details: {
+          specializations: new Set([
+            { specializationId: 'spec-a', name: 'Spec A' },
+            { specializationId: 'spec-b', name: 'Spec B' },
+          ]),
+        },
+        progression: { talentPurchases: [], experience: { available: 100 } },
+        removeSpecialization: removeSpy,
+      },
+    })
+    app.rendered = true
+    app.element = { querySelector: vi.fn(() => null) }
+    const refreshSpy = vi.spyOn(app, 'refresh').mockResolvedValue(app)
+    const infoSpy = vi.spyOn(ui.notifications, 'info')
+
+    foundry.applications.api.DialogV2.confirm.mockResolvedValue(true)
+
+    const event = { preventDefault: vi.fn() }
+    const target = { dataset: { specializationKey: 'spec-a' } }
+    await SpecializationTreeApp.DEFAULT_OPTIONS.actions.removeSpecialization.call(app, event, target)
+
+    expect(foundry.applications.api.DialogV2.confirm).toHaveBeenCalled()
+    expect(removeSpy).toHaveBeenCalledWith('spec-a')
+    expect(infoSpy).toHaveBeenCalled()
+    expect(refreshSpy).toHaveBeenCalled()
+  })
+
+  it('blocked removal shows warning notification without persisting', async () => {
+    const removeSpy = vi.fn().mockResolvedValue(undefined)
+    const app = new SpecializationTreeApp()
+    app.actor = createActor({
+      system: {
+        details: {
+          specializations: new Set([
+            { specializationId: 'spec-a', name: 'Spec A' },
+          ]),
+        },
+        progression: { talentPurchases: [], experience: { available: 100 } },
+        removeSpecialization: removeSpy,
+      },
+    })
+    app.rendered = true
+    app.element = { querySelector: vi.fn(() => null) }
+    const refreshSpy = vi.spyOn(app, 'refresh').mockResolvedValue(app)
+    const warnSpy = vi.spyOn(ui.notifications, 'warn')
+
+    const event = { preventDefault: vi.fn() }
+    const target = { dataset: { specializationKey: 'nonexistent' } }
+    await SpecializationTreeApp.DEFAULT_OPTIONS.actions.removeSpecialization.call(app, event, target)
+
+    expect(foundry.applications.api.DialogV2.confirm).not.toHaveBeenCalled()
+    expect(removeSpy).not.toHaveBeenCalled()
+    expect(warnSpy).toHaveBeenCalled()
+    expect(refreshSpy).not.toHaveBeenCalled()
+  })
+
+  it('removal skips when actor is not owner', async () => {
+    const app = new SpecializationTreeApp()
+    app.actor = createActor({ isOwner: false })
+    app.rendered = true
+    app.element = { querySelector: vi.fn(() => null) }
+
+    const event = { preventDefault: vi.fn() }
+    const target = { dataset: { specializationKey: 'spec-a' } }
+    await SpecializationTreeApp.DEFAULT_OPTIONS.actions.removeSpecialization.call(app, event, target)
+
+    expect(foundry.applications.api.DialogV2.confirm).not.toHaveBeenCalled()
+  })
+
+  /* ── Context preparation ────────────────────────────────────── */
 
   it('_prepareContext returns a context object', async () => {
     const app = new SpecializationTreeApp()

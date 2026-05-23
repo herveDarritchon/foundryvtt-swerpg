@@ -665,4 +665,31 @@ export default class SwerpgCharacter extends SwerpgActorType {
       { keepEmbeddedIds: true },
     )
   }
+
+  /**
+   * Remove a specialization post-creation.
+   *
+   * Retire la spécialisation correspondant à la clé fournie de la liste
+   * des spécialisations possédées. Ne gère pas le fallback de l'arbre
+   * courant — ce recalage est assuré par la couche applicative.
+   *
+   * @param {string} specializationKey - Clé de la spécialisation à retirer
+   *        (specializationId, treeUuid, ou name)
+   * @returns {Promise<void>}
+   */
+  async removeSpecialization(specializationKey) {
+    const actor = this.parent
+    const specializations = Array.from(this.details.specializations || [])
+    const remaining = specializations.filter((spec) => {
+      const key = spec.specializationId || spec.treeUuid || spec.name
+      return key !== specializationKey
+    })
+
+    await actor.update(
+      {
+        'system.details.specializations': remaining,
+      },
+      { keepEmbeddedIds: true },
+    )
+  }
 }
