@@ -66,6 +66,31 @@
               {{/each}}
             </ul>
           </section>
+          {{#if buyableSpecializations.length}}
+            <section class='specialization-tree-app__sidebar-section'>
+              <p class='specialization-tree-app__section-label'>{{localize 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.PURCHASE.SECTION_TITLE'}}</p>
+              <ul class='specialization-tree-app__buyable-specs'>
+                {{#each buyableSpecializations as |candidate|}}
+                  <li class='specialization-tree-app__buyable-spec {{#if candidate.canPurchase}}can-purchase{{else}}blocked{{/if}}' data-candidate-key='{{candidate.key}}'>
+                    <div class='specialization-tree-app__buyable-spec-main'>
+                      <span class='specialization-tree-app__buyable-spec-name'>{{candidate.name}}</span>
+                      <span class='specialization-tree-app__buyable-spec-type'>{{candidate.typeLabel}}</span>
+                    </div>
+                    {{#if candidate.canPurchase}}
+                      {{#if candidate.isFirstSpecialization}}
+                        <span class='specialization-tree-app__buyable-spec-free'>{{localize 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.PURCHASE.FIRST_SPEC_FREE'}}</span>
+                      {{else}}
+                        <span class='specialization-tree-app__buyable-spec-cost'>{{localize 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.PURCHASE.COST_TOTAL'}}: {{candidate.costPreview.finalCost}} XP</span>
+                      {{/if}}
+                      <button type='button' class='specialization-tree-app__buyable-spec-cta' data-action='purchaseSpecialization' data-candidate-key='{{candidate.key}}'>{{localize 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.ACTION.PURCHASE'}}</button>
+                    {{else}}
+                      <span class='specialization-tree-app__buyable-spec-blocked-reason'>{{candidate.blockedReasonLabel}}</span>
+                    {{/if}}
+                  </li>
+                {{/each}}
+              </ul>
+            </section>
+          {{/if}}
         {{else}}
           <div class='specialization-tree-app__sidebar-empty'>
             <h3>{{emptyStateTitle}}</h3>

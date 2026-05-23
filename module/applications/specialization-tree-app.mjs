@@ -6,6 +6,8 @@ import { getReasonLabelKey } from './specialization-tree/node-ui-state.mjs'
 import { buildSpecializationTreeContext as buildContextPure } from './specialization-tree/tree-context-builder.mjs'
 import { buildContextualActionPanelViewModel } from './specialization-tree/contextual-action-panel-view-model.mjs'
 import { PixiTreeRenderer } from './specialization-tree/pixi-tree-renderer.mjs'
+import { evaluateSpecializationPurchase, getBlockedReasonLabelKey } from '../lib/specializations/specialization-purchase-service.mjs'
+import { getOwnedSpecializations, isUniversalSpecialization } from '../lib/specializations/owned-specializations.mjs'
 
 const { api } = foundry.applications
 
@@ -49,6 +51,7 @@ const ACTION_KEYS = Object.freeze({
     const pureContext = buildContextPure(actor, selectedKey, { resolutions, localize, format, talentLookup })
 
     const legendItems = buildLegendItems(localize)
+    const buyableSpecializations = buildBuyableSpecializations(actor, localize)
 
     return {
       ...pureContext,
@@ -58,6 +61,7 @@ const ACTION_KEYS = Object.freeze({
       config: game.system.config,
       isOwner: actor?.isOwner ?? false,
       legendItems,
+      buyableSpecializations,
     }
   }
 
@@ -96,8 +100,94 @@ const ACTION_KEYS = Object.freeze({
         affordance: 'informational',
         cursor: 'help',
       },
-    ]
-  }
+  ]
+}
+
+/**
+ * Find a specialization Item document by key (id, uuid, specializationId, or name).
+ * @param {string} key - Lookup key
+ * @returns {object|null} The matching Item document, or null
+ */
+function findSpecializationItem(key) {
+  const items = game.items
+  if (!items) return null
+
+  const byId = items.get?.(key)
+  if (byId?.type === 'specialization') return byId
+
+  const source = items.contents ?? Array.from(items)
+  return source.find(
+    (i) => i.type === 'specialization' && (i.name === key || i.system?.specializationId === key),
+  ) ?? null
+}
+
+/**
+ * Build the buyable specializations view-model for the purchase section.
+ *
+ * Iterates all specializations from game.items, filters out already-owned
+ * candidates, and computes purchase eligibility + cost preview for each.
+ *
+ * @param {object|null|undefined} actor - The actor document
+ * @param {(key: string) => string} localize - i18n localize function
+ * @returns {Array<object>} Buyable specialization entries
+ */
+export function buildBuyableSpecializations(actor, localize) {
+  if (!actor || !game.items) return []
+
+  const ownedSnapshot = getOwnedSpecializations(actor)
+  const career = actor.system?.details?.career ?? null
+  const availableXp = actor.system?.progression?.experience?.available ?? 0
+
+  const source = game.items.contents ?? Array.from(game.items)
+  const allSpecItems = source.filter((i) => i.type === 'specialization')
+
+  return allSpecItems.map((item) => {
+    const candidate = {
+      specializationId: item.system?.specializationId ?? null,
+      name: item.name,
+      system: item.system,
+    }
+
+    const isUniversal = isUniversalSpecialization(candidate)
+    const evaluation = evaluateSpecializationPurchase({
+      ownedSpecializations: ownedSnapshot,
+      candidateSpecialization: candidate,
+      career,
+      availableXp,
+    })
+
+    const isFirstSpec = evaluation.costPreview?.ownedCountBefore === 0
+
+    let typeLabel
+    if (isUniversal) {
+      typeLabel = localize('SWERPG.TALENT.SPECIALIZATION_TREE_APP.PURCHASE.UNIVERSAL')
+    } else if (evaluation.isCareerOrUniversal) {
+      typeLabel = localize('SWERPG.TALENT.SPECIALIZATION_TREE_APP.PURCHASE.CAREER')
+    } else {
+      typeLabel = localize('SWERPG.TALENT.SPECIALIZATION_TREE_APP.PURCHASE.NON_CAREER')
+    }
+
+    let blockedReasonLabel = null
+    if (!evaluation.canPurchase && evaluation.blockedReasonCode) {
+      blockedReasonLabel = localize(getBlockedReasonLabelKey(evaluation.blockedReasonCode))
+    }
+
+    const key = item.id ?? candidate.specializationId ?? candidate.name
+
+    return {
+      specializationId: candidate.specializationId,
+      name: candidate.name,
+      key,
+      canPurchase: evaluation.canPurchase,
+      blockedReasonCode: evaluation.blockedReasonCode,
+      blockedReasonLabel,
+      costPreview: evaluation.costPreview,
+      isCareerOrUniversal: evaluation.isCareerOrUniversal,
+      typeLabel,
+      isFirstSpecialization: isFirstSpec,
+    }
+  })
+}
 
 export default class SpecializationTreeApp extends api.HandlebarsApplicationMixin(api.ApplicationV2) {
   static DEFAULT_OPTIONS = {
@@ -119,6 +209,7 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
       zoomOut: SpecializationTreeApp.#onZoomOut,
       contextualAction: SpecializationTreeApp.#onContextualAction,
       closeDetail: SpecializationTreeApp.#onCloseDetail,
+      purchaseSpecialization: SpecializationTreeApp.#onPurchaseSpecialization,
     },
   }
 
@@ -408,6 +499,83 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
   static async #onCloseDetail(event, _target) {
     event.preventDefault()
     this.#hideDetailPanel()
+  }
+
+  /** @returns {Promise<void>} */
+  static async #onPurchaseSpecialization(event, target) {
+    event.preventDefault()
+    const candidateKey = target.dataset.candidateKey
+    if (!candidateKey || !this.actor) return
+
+    if (!this.actor.isOwner) {
+      ui.notifications.warn(game.i18n.localize('SWERPG.TALENT.SPECIALIZATION_TREE_APP.PERMISSION_DENIED'))
+      return
+    }
+
+    const specItem = findSpecializationItem(candidateKey)
+    if (!specItem) {
+      ui.notifications.warn(game.i18n.localize('SWERPG.TALENT.SPECIALIZATION_TREE_APP.REASON.UNKNOWN'))
+      return
+    }
+
+    const ownedSnapshot = getOwnedSpecializations(this.actor)
+    const career = this.actor.system?.details?.career ?? null
+    const availableXp = this.actor.system?.progression?.experience?.available ?? 0
+
+    const candidate = {
+      specializationId: specItem.system?.specializationId ?? null,
+      name: specItem.name,
+    }
+
+    const evaluation = evaluateSpecializationPurchase({
+      ownedSpecializations: ownedSnapshot,
+      candidateSpecialization: candidate,
+      career,
+      availableXp,
+    })
+
+    if (!evaluation.canPurchase) {
+      const reasonKey = getBlockedReasonLabelKey(evaluation.blockedReasonCode)
+      ui.notifications.warn(game.i18n.localize(reasonKey))
+      return
+    }
+
+    const cost = evaluation.costPreview.finalCost
+    const actionLabel = game.i18n.localize('SWERPG.TALENT.SPECIALIZATION_TREE_APP.ACTION.PURCHASE')
+    const cancelLabel = game.i18n.localize('SWERPG.TALENT.SPECIALIZATION_TREE_APP.CONFIRM.CANCEL')
+
+    const confirmed = await api.DialogV2.confirm({
+      title: game.i18n.format('SWERPG.TALENT.SPECIALIZATION_TREE_APP.CONFIRM.PURCHASE.TITLE', {
+        action: actionLabel,
+        talent: specItem.name,
+      }),
+      content: `<p>${game.i18n.format('SWERPG.TALENT.SPECIALIZATION_TREE_APP.CONFIRM.PURCHASE.CONTENT', {
+        action: actionLabel,
+        talent: specItem.name,
+        xp: cost,
+      })}</p>`,
+      buttons: [
+        { action: 'confirm', label: actionLabel, default: true },
+        { action: 'cancel', label: cancelLabel },
+      ],
+    })
+    if (!confirmed) return
+
+    await this.actor._applyDetailItem(specItem, {
+      canApply: true,
+      canClear: false,
+      isCollection: true,
+      collectionKey: 'specializations',
+    })
+
+    const currentSpent = this.actor.system.progression.experience.spent ?? 0
+    await this.actor.updateExperiencePoints({ spent: currentSpent + cost })
+
+    ui.notifications.info(game.i18n.format('SWERPG.TALENT.SPECIALIZATION_TREE_APP.PURCHASE.SUCCESS', {
+      talent: specItem.name,
+    }))
+
+    await this.refresh()
   }
 
   #showDetailPanel(node) {

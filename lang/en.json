@@ -136,7 +136,17 @@
         },
         "PURCHASE": {
           "SUCCESS": "Purchase successful: {talent}",
-          "FAILURE": "Purchase failed: {reason}"
+          "FAILURE": "Purchase failed: {reason}",
+          "SECTION_TITLE": "Purchase a Specialization",
+          "COST_BASE": "Base cost",
+          "COST_NON_CAREER": "Non-career surcharge",
+          "COST_TOTAL": "Total",
+          "FIRST_SPEC_FREE": "Free (first specialization)",
+          "INVALID_CANDIDATE": "Cannot purchase this specialization",
+          "CAREER": "Career",
+          "UNIVERSAL": "Universal",
+          "NON_CAREER": "Non-career",
+          "NO_CANDIDATES": "No additional specializations available"
         },
         "FORGET": {
           "SUCCESS": "Talent forgotten: {talent}",

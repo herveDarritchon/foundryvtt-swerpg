@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { setupFoundryMock, teardownFoundryMock } from '../helpers/mock-foundry.mjs'
 
 function createActor(overrides = {}) {
-  return {
+  const base = {
     id: 'actor-1',
     name: 'Vara Kesh',
     type: 'character',
@@ -12,10 +12,15 @@ function createActor(overrides = {}) {
     system: {
       details: { specializations: [] },
       progression: { talentPurchases: [], experience: { available: 100 } },
-      ...overrides.system,
     },
-    ...overrides,
   }
+
+  if (overrides.system) {
+    base.system = { ...base.system, ...overrides.system }
+  }
+
+  const { system: _, ...otherOverrides } = overrides
+  return { ...base, ...otherOverrides }
 }
 
 function createRoot({ viewportHost, panel }) {
@@ -38,6 +43,7 @@ describe('specialization-tree app orchestration', () => {
   let SpecializationTreeApp
   let buildSpecializationTreeContext
   let buildLegendItems
+  let buildBuyableSpecializations
   let mockRendererInstances
   let purchaseTalentNodeMock
   let forgetTalentNodeMock
@@ -129,6 +135,7 @@ describe('specialization-tree app orchestration', () => {
     SpecializationTreeApp = mod.default
     buildSpecializationTreeContext = mod.buildSpecializationTreeContext
     buildLegendItems = mod.buildLegendItems
+    buildBuyableSpecializations = mod.buildBuyableSpecializations
   })
 
   afterEach(() => {
@@ -954,6 +961,200 @@ describe('specialization-tree app orchestration', () => {
         expect(infoSpy).toHaveBeenCalled()
         expect(refreshSpy).toHaveBeenCalled()
       })
+    })
+  })
+
+  describe('buildBuyableSpecializations', () => {
+    it('returns empty array when no actor', () => {
+      const result = buildBuyableSpecializations(null, (key) => key)
+      expect(result).toEqual([])
+    })
+
+    it('returns empty array when game.items is null', () => {
+      const actor = createActor()
+      const result = buildBuyableSpecializations(actor, (key) => key)
+      expect(result).toEqual([])
+    })
+
+    it('returns candidates for available specialization items', () => {
+      const actor = createActor({
+        system: {
+          details: {
+            specializations: [],
+            career: { specializations: [{ specializationId: 'scoundrel' }] },
+          },
+        },
+      })
+      game.items = {
+        contents: [
+          { id: 'spec-1', name: 'Scoundrel', type: 'specialization', system: { specializationId: 'scoundrel' } },
+          { id: 'spec-2', name: 'Pilot', type: 'specialization', system: { specializationId: 'pilot' } },
+        ],
+      }
+
+      const result = buildBuyableSpecializations(actor, (key) => key)
+
+      expect(result).toHaveLength(2)
+      expect(result[0].name).toBe('Scoundrel')
+      expect(result[0].canPurchase).toBe(true)
+      expect(result[0].costPreview.finalCost).toBe(0)
+      expect(result[0].isFirstSpecialization).toBe(true)
+      expect(result[1].name).toBe('Pilot')
+      expect(result[1].canPurchase).toBe(true)
+      expect(result[1].costPreview.finalCost).toBe(10)
+    })
+
+    it('excludes already owned specializations', () => {
+      const actor = createActor({
+        system: {
+          details: {
+            specializations: new Set([{ specializationId: 'scoundrel', name: 'Scoundrel' }]),
+            career: { specializations: [{ specializationId: 'scoundrel' }, { specializationId: 'pilot' }] },
+          },
+        },
+      })
+      game.items = {
+        contents: [
+          { id: 'spec-1', name: 'Scoundrel', type: 'specialization', system: { specializationId: 'scoundrel' } },
+          { id: 'spec-2', name: 'Pilot', type: 'specialization', system: { specializationId: 'pilot' } },
+        ],
+      }
+
+      const result = buildBuyableSpecializations(actor, (key) => key)
+
+      expect(result).toHaveLength(2)
+      expect(result[0].canPurchase).toBe(false)
+      expect(result[0].blockedReasonCode).toBe('specialization.alreadyOwned')
+      expect(result[1].canPurchase).toBe(true)
+    })
+
+    it('marks candidates with insufficient XP as blocked', () => {
+      const actor = createActor({
+        system: {
+          details: {
+            specializations: new Set([{ specializationId: 'scoundrel', name: 'Scoundrel' }]),
+            career: { specializations: [{ specializationId: 'scoundrel' }, { specializationId: 'pilot' }] },
+          },
+          progression: { talentPurchases: [], experience: { available: 5 } },
+        },
+      })
+      game.items = {
+        contents: [
+          { id: 'spec-2', name: 'Pilot', type: 'specialization', system: { specializationId: 'pilot' } },
+        ],
+      }
+
+      const result = buildBuyableSpecializations(actor, (key) => key)
+
+      expect(result).toHaveLength(1)
+      expect(result[0].canPurchase).toBe(false)
+      expect(result[0].costPreview.finalCost).toBe(20)
+    })
+
+    it('includes buyable specializations in the render context', () => {
+      const actor = createActor()
+      game.items = { contents: [] }
+
+      const context = buildSpecializationTreeContext(actor)
+
+      expect(context).toHaveProperty('buyableSpecializations')
+      expect(Array.isArray(context.buyableSpecializations)).toBe(true)
+    })
+  })
+
+  describe('purchaseSpecialization action', () => {
+    it('applies specialization item and deducts XP on success', async () => {
+      const mockSpecItem = {
+        id: 'spec-pilot',
+        name: 'Pilot',
+        type: 'specialization',
+        system: { specializationId: 'pilot' },
+      }
+      game.items = {
+        get: (key) => (key === 'spec-pilot' ? mockSpecItem : undefined),
+        contents: [mockSpecItem],
+      }
+
+      const actor = createActor({
+        system: {
+          details: {
+            specializations: new Set([{ specializationId: 'scoundrel', name: 'Scoundrel' }]),
+            career: { specializations: [{ specializationId: 'scoundrel' }, { specializationId: 'pilot' }] },
+          },
+          progression: { talentPurchases: [], experience: { available: 50, spent: 0 } },
+        },
+      })
+      actor._applyDetailItem = vi.fn().mockResolvedValue(undefined)
+      actor.updateExperiencePoints = vi.fn().mockResolvedValue(undefined)
+
+      const app = new SpecializationTreeApp()
+      app.actor = actor
+      app.rendered = true
+      const refreshSpy = vi.spyOn(app, 'refresh').mockResolvedValue(app)
+      const infoSpy = vi.spyOn(ui.notifications, 'info')
+
+      const confirmSpy = vi.spyOn(foundry.applications.api.DialogV2, 'confirm')
+      confirmSpy.mockResolvedValue(true)
+
+      const event = { preventDefault: vi.fn() }
+      const target = { dataset: { candidateKey: 'spec-pilot' } }
+
+      await SpecializationTreeApp.DEFAULT_OPTIONS.actions.purchaseSpecialization.call(app, event, target)
+
+      expect(actor._applyDetailItem).toHaveBeenCalledWith(mockSpecItem, {
+        canApply: true,
+        canClear: false,
+        isCollection: true,
+        collectionKey: 'specializations',
+      })
+      expect(actor.updateExperiencePoints).toHaveBeenCalledWith({ spent: 20 })
+      expect(infoSpy).toHaveBeenCalled()
+      expect(refreshSpy).toHaveBeenCalled()
+    })
+
+    it('warns when actor cannot afford the specialization', async () => {
+      const mockSpecItem = {
+        id: 'spec-pilot',
+        name: 'Pilot',
+        type: 'specialization',
+        system: { specializationId: 'pilot' },
+      }
+      game.items = {
+        get: (key) => (key === 'spec-pilot' ? mockSpecItem : undefined),
+        contents: [mockSpecItem],
+      }
+
+      const actor = createActor({
+        system: {
+          details: { specializations: new Set([{ specializationId: 'scoundrel', name: 'Scoundrel' }]) },
+          progression: { talentPurchases: [], experience: { available: 5 } },
+        },
+      })
+      const warnSpy = vi.spyOn(ui.notifications, 'warn')
+
+      const app = new SpecializationTreeApp()
+      app.actor = actor
+      app.rendered = true
+
+      const event = { preventDefault: vi.fn() }
+      const target = { dataset: { candidateKey: 'spec-pilot' } }
+
+      await SpecializationTreeApp.DEFAULT_OPTIONS.actions.purchaseSpecialization.call(app, event, target)
+
+      expect(warnSpy).toHaveBeenCalled()
+    })
+
+    it('does nothing when target has no candidateKey', async () => {
+      const actor = createActor()
+      const app = new SpecializationTreeApp()
+      app.actor = actor
+
+      const event = { preventDefault: vi.fn() }
+      const target = { dataset: {} }
+
+      await expect(
+        SpecializationTreeApp.DEFAULT_OPTIONS.actions.purchaseSpecialization.call(app, event, target),
+      ).resolves.toBeUndefined()
     })
   })
 })
