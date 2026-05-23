@@ -95,4 +95,48 @@ describe('SwerpgCharacter — owned specializations', () => {
       expect(character.progression.freeSkillRanks.specialization.gained).toBe(0)
     })
   })
+
+  describe('acquireSpecialization', () => {
+    test('should zero out freeSkillRank before persisting', async () => {
+      const character = new SwerpgCharacter(buildCharacterData())
+
+      const mockUpdate = { args: null }
+
+      const mockParent = {
+        update: (...args) => {
+          mockUpdate.args = args
+          return Promise.resolve()
+        },
+      }
+
+      character.parent = mockParent
+
+      character.details.specializations = new Set()
+
+      const fakeItem = {
+        toObject: () => ({
+          name: 'Pilot',
+          img: 'systems/swerpg/assets/pilot.png',
+          system: {
+            specializationId: 'pilot',
+            freeSkillRank: 4,
+            specializationSkills: [],
+          },
+        }),
+      }
+
+      await character.acquireSpecialization(fakeItem)
+
+      const [payload, options] = mockUpdate.args
+      const specs = payload['system.details.specializations']
+
+      expect(specs).toHaveLength(1)
+      expect(specs[0].name).toBe('Pilot')
+      expect(specs[0].img).toBe('systems/swerpg/assets/pilot.png')
+      expect(specs[0].specializationId).toBe('pilot')
+      expect(specs[0].freeSkillRank).toBe(0)
+
+      expect(options).toEqual({ keepEmbeddedIds: true })
+    })
+  })
 })

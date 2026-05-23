@@ -10,6 +10,7 @@ import { buildTalentDefinitionsMap } from '../../lib/talent-node/talent-referenc
 import { logger } from '../../utils/logger.mjs'
 import { getPositiveDicePoolPreview } from '../../utils/skill-costs.mjs'
 import SkillCostCalculator from '../../lib/skills/skill-cost-calculator.mjs'
+import { evaluateSpecializationPurchase } from '../../lib/specializations/specialization-purchase-flow.mjs'
 
 /**
  * @typedef {Object} DefenseDisplayData
@@ -680,7 +681,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
         await this.actor.system.applyCareer(item)
         return
       case 'specialization':
-        await this.actor.system.applySpecialization(item)
+        await this.#handleSpecializationDrop(item)
         return
       case 'talent':
         // Build the skill class depending on the context
@@ -733,6 +734,84 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
         return
     }
     return super._onDropItem(event, item)
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Handle drop of a specialization item with purchase flow.
+   * @param {object} item - The dropped Item document (specialization)
+   */
+  async #handleSpecializationDrop(item) {
+    const actor = this.actor
+    const career = actor.system.details.career
+    const xpAvailable = actor.system.progression.experience.available
+
+    const result = evaluateSpecializationPurchase({ actor, candidateItem: item, career, xpAvailable })
+
+    switch (result.decision) {
+      case 'free-add':
+        await actor.system.acquireSpecialization(item)
+        return
+
+      case 'blocked-duplicate':
+        ui.notifications.warn(game.i18n.localize(result.messageKey))
+        return
+
+      case 'blocked-insufficient-xp': {
+        const msg = game.i18n.format(result.messageKey, {
+          cost: result.cost.finalCost,
+          available: result.xpAvailable,
+        })
+        ui.notifications.warn(msg)
+        return
+      }
+
+      case 'confirm-required': {
+        const confirmed = await this.#confirmSpecializationPurchase(result)
+        if (!confirmed) return
+        await actor.system.acquireSpecialization(item)
+        const newSpent = (actor.system.progression.experience.spent || 0) + result.cost.finalCost
+        await actor.update({ 'system.progression.experience.spent': newSpent })
+      }
+    }
+  }
+
+  /**
+   * Show a DialogV2 confirmation for a paid specialization purchase.
+   * @param {object} result - Purchase evaluation result with decision 'confirm-required'
+   * @returns {Promise<boolean>} True if the user confirmed
+   */
+  async #confirmSpecializationPurchase(result) {
+    const { specializationName, cost, xpAvailable, xpRemaining } = result
+    const i18n = game.i18n
+
+    const careerLabel = cost.isCareerOrUniversal ? i18n.localize('SPECIALIZATION.PURCHASE.CAREER') : i18n.localize('SPECIALIZATION.PURCHASE.NON_CAREER')
+
+    return foundry.applications.api.DialogV2.confirm({
+      window: {
+        title: i18n.format('SPECIALIZATION.PURCHASE.CONFIRM_TITLE', {
+          name: specializationName,
+        }),
+      },
+      content: `<p>${i18n.format('SPECIALIZATION.PURCHASE.CONFIRM_CONTENT', {
+        name: specializationName,
+        careerStatus: careerLabel,
+        cost: cost.finalCost,
+        available: xpAvailable,
+        remaining: xpRemaining,
+      })}</p>`,
+      yes: {
+        label: i18n.format('SPECIALIZATION.PURCHASE.CONFIRM_BUTTON', {
+          cost: cost.finalCost,
+        }),
+        icon: 'fa-solid fa-check',
+      },
+      no: {
+        label: i18n.localize('SPECIALIZATION.PURCHASE.CANCEL_BUTTON'),
+        icon: 'fa-solid fa-xmark',
+      },
+    })
   }
 
   /* -------------------------------------------- */
