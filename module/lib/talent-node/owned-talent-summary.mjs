@@ -8,7 +8,8 @@ import { resolveSpecializationTree } from './talent-tree-resolver.mjs'
  * @property {string} treeId
  * @property {string|null} treeName
  * @property {string} nodeId
- * @property {string} resolutionState - 'ok' | 'specialization-not-found' | 'tree-unresolved' | 'tree-incomplete' | 'node-missing'
+ * @property {string} resolutionState - 'ok' | 'specialization-not-found' | 'tree-unresolved' | 'tree-incomplete' | 'node-missing' | 'species'
+ * @property {string|null} [speciesName] - Present when resolutionState is 'species'
  */
 
 /**
@@ -23,26 +24,48 @@ import { resolveSpecializationTree } from './talent-tree-resolver.mjs'
  */
 
 /**
- * Build a consolidated summary of talents owned by an actor from talentPurchases.
+ * Build a consolidated summary of talents owned by an actor from talentPurchases
+ * and free species talents embedded on the actor.
  *
  * The summary is derived, not persisted. It groups purchases by talentId,
  * resolves source specialization/tree/node information, and enriches each
  * entry with talent definition metadata when available.
  *
- * @param {object} actor - Actor with system.progression.talentPurchases and system.details.specializations.
+ * Free species talents (actor.items where type === 'talent' and system.isFree === true)
+ * are merged into the result with a synthetic 'species' source. Their rank contribution
+ * is counted alongside tree purchases for ranked talents.
+ *
+ * @param {object} actor - Actor with system.progression.talentPurchases, system.details.specializations, system.details.species, and items.
  * @param {Map<string, {name?: string, activation?: string, isRanked?: boolean}>} [talentDefinitions] - Map of talentId -> definition.
  * @returns {OwnedTalentSummaryEntry[]}
  */
 export function buildOwnedTalentSummary(actor, talentDefinitions = new Map()) {
-  const purchases = actor?.system?.progression?.talentPurchases
-  if (!Array.isArray(purchases) || purchases.length === 0) return []
+  const purchases = actor?.system?.progression?.talentPurchases ?? []
+  const speciesName = actor?.system?.details?.species?.name ?? null
 
   const specMap = buildSpecializationMap(actor)
   const resolvedCache = new Map()
-  const grouped = groupByTalentKey(purchases)
+
+  // Group tree purchases by talentId key
+  const grouped = Array.isArray(purchases) && purchases.length > 0 ? groupByTalentKey(purchases) : new Map()
+
+  // Collect free species talents from embedded items
+  const freeSpeciesTalents = collectFreeSpeciesTalents(actor, speciesName)
+
+  if (grouped.size === 0 && freeSpeciesTalents.length === 0) return []
+
+  // Merge free species talents into the grouped map using their talentId as key
+  for (const freeEntry of freeSpeciesTalents) {
+    const key = freeEntry.talentId
+    if (!grouped.has(key)) {
+      grouped.set(key, [])
+    }
+    grouped.get(key).push(freeEntry)
+  }
+
   const entries = []
 
-  for (const [groupKey, group] of grouped) {
+  for (const [, group] of grouped) {
     const first = group[0]
     const talentUuid = first.talentUuid ?? null
     const talentId = first.talentId
@@ -51,7 +74,12 @@ export function buildOwnedTalentSummary(actor, talentDefinitions = new Map()) {
     const definition = talentUuid && talentDefinitions.has(talentUuid) ? talentDefinitions.get(talentUuid) : (talentDefinitions.get(talentId) ?? null)
     const isRanked = definition?.isRanked ?? null
 
-    const sources = group.map((p) => resolveSource(p, specMap, resolvedCache))
+    const sources = group.map((p) => {
+      if (p._isFreeSpecies) {
+        return buildSpeciesSource(p, speciesName)
+      }
+      return resolveSource(p, specMap, resolvedCache)
+    })
 
     entries.push({
       talentId,
@@ -65,6 +93,48 @@ export function buildOwnedTalentSummary(actor, talentDefinitions = new Map()) {
   }
 
   return entries
+}
+
+/**
+ * Collect free species talents from actor embedded items.
+ * Returns synthetic purchase-like objects that carry a _isFreeSpecies flag.
+ * @param {object} actor
+ * @param {string|null} speciesName
+ * @returns {Array<{talentId: string, talentUuid: string|null, _isFreeSpecies: true, speciesName: string|null}>}
+ */
+function collectFreeSpeciesTalents(actor, speciesName) {
+  const items = actor?.items
+  if (!items) return []
+
+  // items may be a Map (Foundry Collection) or an array
+  const itemList = typeof items[Symbol.iterator] === 'function' ? Array.from(items.values ? items.values() : items) : []
+
+  return itemList
+    .filter((item) => item?.type === 'talent' && item?.system?.isFree === true)
+    .map((item) => ({
+      talentId: item.system?.id || item.id,
+      talentUuid: item.uuid ?? null,
+      _isFreeSpecies: true,
+      speciesName,
+    }))
+}
+
+/**
+ * Build a synthetic species source entry for a free talent.
+ * @param {{ speciesName: string|null }} freeEntry
+ * @param {string|null} speciesName
+ * @returns {OwnedTalentSource}
+ */
+function buildSpeciesSource(freeEntry) {
+  return {
+    specializationId: null,
+    specializationName: null,
+    treeId: null,
+    treeName: null,
+    nodeId: null,
+    resolutionState: 'species',
+    speciesName: freeEntry.speciesName ?? null,
+  }
 }
 
 /**
