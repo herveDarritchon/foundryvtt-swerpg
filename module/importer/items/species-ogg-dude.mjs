@@ -4,17 +4,19 @@ import OggDudeDataElement from '../../settings/models/OggDudeDataElement.mjs'
 import { logger } from '../../utils/logger.mjs'
 import { SYSTEM } from '../../config/system.mjs'
 import { mapOggDudeSkillCodes } from '../mappings/oggdude-skill-map.mjs'
-import { resetSpeciesImportStats, incrementSpeciesImportStat, getSpeciesImportStats, FLAG_STRICT_SPECIES_VALIDATION } from '../utils/species-import-utils.mjs'
+import { resetSpeciesImportStats, incrementSpeciesImportStat, getSpeciesImportStats, addSpeciesUnknownTalent, FLAG_STRICT_SPECIES_VALIDATION } from '../utils/species-import-utils.mjs'
+import { resolveTalentKeysFromSession } from '../utils/import-session.mjs'
 
 /**
- * Species Array Mapper : Map the Species XML data to the SwerpgArmor object array.
+ * Species Array Mapper : Map the Species XML data to the SwerpgSpecies object array.
  * @param species {Array} The Species data from the XML file.
+ * @param {import('../utils/import-session.mjs').ImportSession|null} [importSession] - Optional shared import session for cross-pipeline resolution.
  * @returns {Array} The SwerpgSpecies object array.
  * @public
  * @function
  * @name speciesMapper
  */
-export function speciesMapper(species) {
+export function speciesMapper(species, importSession = null) {
   // Réinitialiser les statistiques à chaque session de mapping (comportement identique à weaponMapper)
   resetSpeciesImportStats()
 
@@ -64,29 +66,62 @@ export function speciesMapper(species) {
     // Validation finale par rapport au set de choix du modèle (SYSTEM.SKILLS). On garde seulement les ids connus.
     const validFreeSkills = freeSkills.filter((id) => SYSTEM.SKILLS[id])
 
-    // Free talents: map keys to UUIDs if available
+    // Free talents: extract OggDude keys first, then attempt UUID resolution
     const talentModifiers = OggDudeImporter.mapOptionalArray(xmlSpecies?.TalentModifiers?.TalentModifier, (tal) => ({
       key: OggDudeImporter.mapMandatoryString('species.TalentModifiers.TalentModifier.Key', tal?.Key),
     }))
-    const freeTalents = resolveTalentUUIDs(talentModifiers.map((t) => t.key))
+    const freeTalentKeys = talentModifiers.map((t) => t.key).filter((k) => !!k)
+
+    let resolvedUUIDs, unresolvedKeys
+    if (importSession) {
+      // Session-based resolution: uses batch-created talents from the current import
+      ;({ resolvedUUIDs, unresolvedKeys } = resolveTalentKeysFromSession(importSession, freeTalentKeys, xmlSpecies?.Key ?? ''))
+    } else {
+      // Fallback: legacy resolution via game.items and game.packs only
+      ;({ resolvedUUIDs, unresolvedKeys } = resolveTalentUUIDs(freeTalentKeys))
+    }
+
+    // Track unresolved talent keys in diagnostics
+    for (const key of unresolvedKeys) {
+      addSpeciesUnknownTalent(key)
+      logger.warn('[SpeciesImporter] Talent key could not be resolved to UUID — stored in flags for reconciliation', {
+        key,
+        speciesKey: xmlSpecies?.Key,
+      })
+    }
+
+    const speciesKey = OggDudeImporter.mapMandatoryString('species.Key', xmlSpecies.Key)
+    const speciesName = OggDudeImporter.mapMandatoryString('species.Name', xmlSpecies?.Name)
 
     const speciesObject = {
-      key: OggDudeImporter.mapMandatoryString('species.Key', xmlSpecies.Key),
-      name: OggDudeImporter.mapMandatoryString('species.Name', xmlSpecies?.Name),
-      description: OggDudeImporter.mapOptionalString(xmlSpecies?.Description),
-      // Backward compatibility with previous importer structure
-      startingChars: { ...characteristics },
-      startingAttrs: {
-        woundThreshold: woundThreshold.modifier,
-        strainThreshold: strainThreshold.modifier,
-        experience: startingExperience,
+      key: speciesKey,
+      name: speciesName,
+      // system holds all TypeDataModel-validated fields
+      system: {
+        description: OggDudeImporter.mapOptionalString(xmlSpecies?.Description),
+        // Backward compatibility with previous importer structure
+        startingChars: { ...characteristics },
+        startingAttrs: {
+          woundThreshold: woundThreshold.modifier,
+          strainThreshold: strainThreshold.modifier,
+          experience: startingExperience,
+        },
+        characteristics,
+        woundThreshold,
+        strainThreshold,
+        startingExperience,
+        freeSkills: validFreeSkills,
+        freeTalents: resolvedUUIDs,
       },
-      characteristics,
-      woundThreshold,
-      strainThreshold,
-      startingExperience,
-      freeSkills: validFreeSkills,
-      freeTalents,
+      flags: {
+        swerpg: {
+          oggdudeKey: speciesKey,
+          oggdude: {
+            // Preserve source OggDude talent keys for post-import reconciliation
+            freeTalentKeys,
+          },
+        },
+      },
     }
 
     // (Extension future) Validation stricte éventuelle -> rejet (non implémenté pour le moment)
@@ -134,29 +169,44 @@ function extractSkillModifiersFromOption(opt) {
 }
 
 /**
- * Try to resolve talent keys into Foundry UUIDs.
- * Falls back to empty array if game context not ready.
- * @param {string[]} keys
- * @returns {string[]}
+ * Try to resolve talent OggDude keys into Foundry UUIDs.
+ * Returns both resolved UUIDs and any keys that could not be resolved.
+ * Falls back gracefully if the game context is not ready.
+ * @param {string[]} keys - OggDude talent keys (e.g. 'CONV')
+ * @returns {{ resolvedUUIDs: string[], unresolvedKeys: string[] }}
  */
 function resolveTalentUUIDs(keys) {
-  if (typeof game === 'undefined' || !Array.isArray(keys)) return []
-  return keys.reduce((acc, key) => {
-    if (!key) return acc
+  if (typeof game === 'undefined' || !Array.isArray(keys)) {
+    return { resolvedUUIDs: [], unresolvedKeys: keys ?? [] }
+  }
+  const resolvedUUIDs = []
+  const unresolvedKeys = []
+
+  for (const key of keys) {
+    if (!key) continue
+
     const direct = game.items?.find((i) => i.type === 'talent' && (i.getFlag?.('swerpg', 'oggdudeKey') === key || i.system?.key === key || i.name === key))
     if (direct) {
-      acc.push(direct.uuid)
-      return acc
+      resolvedUUIDs.push(direct.uuid)
+      continue
     }
+
     const packMatch = [...(game.packs?.values?.() || [])]
       .filter((p) => p.documentName === 'Item' && /talent/i.test(p.title))
       .find((p) => p.index?.find((e) => e.type === 'talent' && (e.flags?.swerpg?.oggdudeKey === key || e.name === key)))
+
     if (packMatch) {
       const idx = packMatch.index.find((e) => e.type === 'talent' && (e.flags?.swerpg?.oggdudeKey === key || e.name === key))
-      if (idx) acc.push(`Compendium.${packMatch.collection}.${idx._id}`)
+      if (idx) {
+        resolvedUUIDs.push(`Compendium.${packMatch.collection}.${idx._id}`)
+        continue
+      }
     }
-    return acc
-  }, [])
+
+    unresolvedKeys.push(key)
+  }
+
+  return { resolvedUUIDs, unresolvedKeys }
 }
 
 /**
@@ -164,11 +214,12 @@ function resolveTalentUUIDs(keys) {
  * @param zip
  * @param groupByDirectory
  * @param groupByType
+ * @param {import('../utils/import-session.mjs').ImportSession|null} [importSession] - Optional shared import session for cross-pipeline resolution.
  * @returns {{zip: {elementFileName: string, directories, content}, image: {images: (string|((buffer: Buffer, options?: ansiEscapes.ImageOptions) => string)|number|[OggDudeDataElement]|[OggDudeDataElement,OggDudeDataElement]|[OggDudeDataElement,OggDudeDataElement]|OggDudeContextImage|*), criteria: string, systemPath: string, worldPath: string}, folder: {name: string, type: string}, element: {jsonCriteria: string, mapper: *, type: string}}}
  * @public
  * @function
  */
-export async function buildSpeciesContext(zip, groupByDirectory, groupByType) {
+export async function buildSpeciesContext(zip, groupByDirectory, groupByType, importSession = null) {
   logger.debug('[SpeciesImporter] Building Species context', { groupByDirectoryCount: groupByDirectory.length, groupByType, hasZip: !!zip })
 
   return {
@@ -192,7 +243,7 @@ export async function buildSpeciesContext(zip, groupByDirectory, groupByType) {
     },
     element: {
       jsonCriteria: 'Species.Species',
-      mapper: speciesMapper,
+      mapper: (species) => speciesMapper(species, importSession),
       type: 'species',
     },
   }
