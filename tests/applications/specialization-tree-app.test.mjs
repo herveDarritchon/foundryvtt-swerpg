@@ -677,10 +677,10 @@ describe('specialization-tree app orchestration', () => {
     expect(confirmSpy).toHaveBeenCalled()
     const callArgs = confirmSpy.mock.calls[0][0]
 
-    expect(callArgs.buttons).toBeDefined()
-    expect(callArgs.buttons).toHaveLength(2)
-    expect(callArgs.buttons[0].label).toBe('Purchase')
-    expect(callArgs.buttons[1].label).toBe('Cancel')
+    expect(callArgs.yes).toBeDefined()
+    expect(callArgs.no).toBeDefined()
+    expect(callArgs.yes.label).toBe('Purchase')
+    expect(callArgs.no.label).toBe('Cancel')
   })
 
   /* ═════════════════════════════════════════════════════════════ */
@@ -932,7 +932,7 @@ describe('specialization-tree app orchestration', () => {
         const callArgs = confirmSpy.mock.calls[0][0]
 
         // Button label uses the same actionLabel as the panel CTA would show
-        expect(callArgs.buttons[0].label).toBe('[SWERPG.TALENT.SPECIALIZATION_TREE_APP.ACTION.PURCHASE]')
+        expect(callArgs.yes.label).toBe('[SWERPG.TALENT.SPECIALIZATION_TREE_APP.ACTION.PURCHASE]')
         // Title includes the actionLabel via {action} interpolation
         expect(callArgs.title).toBe('[SWERPG.TALENT.SPECIALIZATION_TREE_APP.ACTION.PURCHASE]: Tough')
       })
@@ -970,7 +970,7 @@ describe('specialization-tree app orchestration', () => {
         const callArgs = confirmSpy.mock.calls[0][0]
 
         // Button label uses the same actionLabel as the panel CTA would show
-        expect(callArgs.buttons[0].label).toBe('[SWERPG.TALENT.SPECIALIZATION_TREE_APP.ACTION.FORGET]')
+        expect(callArgs.yes.label).toBe('[SWERPG.TALENT.SPECIALIZATION_TREE_APP.ACTION.FORGET]')
         // Title includes the actionLabel via {action} interpolation
         expect(callArgs.title).toBe('[SWERPG.TALENT.SPECIALIZATION_TREE_APP.ACTION.FORGET]: Tough')
       })
