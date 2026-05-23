@@ -298,6 +298,10 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
       labelKey: 'SWERPG.TALENT.SOURCE_INCOMPLETE',
       cssClass: 'talent-source--degraded',
     },
+    species: {
+      labelKey: 'SWERPG.TALENT.SOURCE_SPECIES',
+      cssClass: 'talent-source--species',
+    },
   }
 
   /**
@@ -1094,7 +1098,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
 
   /**
    * Build one display entry for a consolidated talent source.
-   * @param {{ specializationName?: string|null, treeName?: string|null, resolutionState?: string }} source
+   * @param {{ specializationName?: string|null, treeName?: string|null, resolutionState?: string, speciesName?: string|null }} source
    * @param {string} unknownSourceLabel
    * @returns {{ label: string, cssClass: string, isDegraded: boolean }}
    */
@@ -1103,6 +1107,14 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
       return {
         label: source.specializationName || source.treeName || unknownSourceLabel,
         cssClass: 'talent-source--resolved',
+        isDegraded: false,
+      }
+    }
+
+    if (source?.resolutionState === 'species') {
+      return {
+        label: source.speciesName || game.i18n.localize('SWERPG.TALENT.SOURCE_SPECIES'),
+        cssClass: 'talent-source--species',
         isDegraded: false,
       }
     }

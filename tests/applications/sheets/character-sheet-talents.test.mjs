@@ -712,4 +712,92 @@ describe('CharacterSheet talent consolidation (US12)', () => {
 
     expect(actor.openSpecializationTreeApp).toHaveBeenCalledTimes(1)
   })
+
+  describe('species free talent source display', () => {
+    it('renders a species source entry with the species name as label', async () => {
+      buildOwnedTalentSummary.mockReturnValue([
+        {
+          talentId: 'talent-resilience',
+          name: 'Resilience',
+          activation: 'passive',
+          isRanked: false,
+          rank: null,
+          sources: [{ resolutionState: 'species', speciesName: 'Twi\'lek', specializationId: null, specializationName: null, treeId: null, treeName: null, nodeId: null }],
+        },
+      ])
+      const actor = buildMockActor()
+      const context = await getContext(actor)
+
+      expect(context.talents).toHaveLength(1)
+      const entry = context.talents[0]
+      expect(entry.talentId).toBe('talent-resilience')
+      expect(entry.sourceLabels).toEqual(['Twi\'lek'])
+      expect(entry.sources).toEqual([{ label: 'Twi\'lek', cssClass: 'talent-source--species', isDegraded: false }])
+      expect(entry.hasDegradedSources).toBe(false)
+    })
+
+    it('falls back to localized SOURCE_SPECIES label when speciesName is null', async () => {
+      buildOwnedTalentSummary.mockReturnValue([
+        {
+          talentId: 'talent-resilience',
+          name: 'Resilience',
+          activation: 'passive',
+          isRanked: false,
+          rank: null,
+          sources: [{ resolutionState: 'species', speciesName: null, specializationId: null, specializationName: null, treeId: null, treeName: null, nodeId: null }],
+        },
+      ])
+      const actor = buildMockActor()
+      const context = await getContext(actor)
+
+      const entry = context.talents[0]
+      expect(entry.sourceLabels).toEqual(['SWERPG.TALENT.SOURCE_SPECIES'])
+      expect(entry.sources[0].cssClass).toBe('talent-source--species')
+      expect(entry.sources[0].isDegraded).toBe(false)
+    })
+
+    it('does not mark species source as degraded even when species name is missing', async () => {
+      buildOwnedTalentSummary.mockReturnValue([
+        {
+          talentId: 'talent-resilience',
+          name: 'Resilience',
+          activation: 'passive',
+          isRanked: false,
+          rank: null,
+          sources: [{ resolutionState: 'species', speciesName: null }],
+        },
+      ])
+      const actor = buildMockActor()
+      const context = await getContext(actor)
+
+      expect(context.talents[0].hasDegradedSources).toBe(false)
+    })
+
+    it('combines a species source and a tree source in the same entry', async () => {
+      buildOwnedTalentSummary.mockReturnValue([
+        {
+          talentId: 'talent-parry',
+          name: 'Parry',
+          activation: 'active',
+          isRanked: true,
+          rank: 2,
+          sources: [
+            { resolutionState: 'ok', specializationName: 'Bodyguard', treeName: null },
+            { resolutionState: 'species', speciesName: 'Wookiee' },
+          ],
+        },
+      ])
+      const actor = buildMockActor()
+      const context = await getContext(actor)
+
+      const entry = context.talents[0]
+      expect(entry.rank).toBe(2)
+      expect(entry.sourceLabels).toEqual(['Bodyguard', 'Wookiee'])
+      expect(entry.hasDegradedSources).toBe(false)
+      expect(entry.sources).toEqual([
+        { label: 'Bodyguard', cssClass: 'talent-source--resolved', isDegraded: false },
+        { label: 'Wookiee', cssClass: 'talent-source--species', isDegraded: false },
+      ])
+    })
+  })
 })
