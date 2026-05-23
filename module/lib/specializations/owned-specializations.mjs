@@ -57,6 +57,20 @@ export function normalizeSpecialization(raw) {
 }
 
 /**
+ * Calcule la clé canonique d'une spécialisation.
+ *
+ * L'ordre de précédence est : specializationId > treeUuid > name.
+ * Utilisée par l'audit log, la suppression et toute identification métier.
+ *
+ * @param {object|null|undefined} spec - Entrée de spécialisation normalisée
+ * @returns {string|null} Clé canonique ou null si aucune information disponible
+ */
+export function getCanonicalSpecializationKey(spec) {
+  if (!spec) return null
+  return spec.specializationId || spec.treeUuid || spec.name || null
+}
+
+/**
  * Détermine si une spécialisation est une spécialisation de carrière.
  *
  * V1 : vérifie si la spécialisation est explicitement associée à la carrière du personnage.

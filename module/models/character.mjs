@@ -643,9 +643,11 @@ export default class SwerpgCharacter extends SwerpgActorType {
    * free skill rank attribution during prepareBaseData.
    *
    * @param {object} specialization The specialization Item to acquire
+   * @param {object} [options]                Options
+   * @param {number} [options.xpCost=0]        XP cost to deduct in the same update
    * @returns {Promise<void>}
    */
-  async acquireSpecialization(specialization) {
+  async acquireSpecialization(specialization, { xpCost = 0 } = {}) {
     const actor = this.parent
     const itemData = specialization.toObject()
 
@@ -657,13 +659,15 @@ export default class SwerpgCharacter extends SwerpgActorType {
     }
 
     const specializations = Array.from(this.details.specializations || [])
+    const updateData = {
+      'system.details.specializations': [...specializations, acquiredSpecialization],
+    }
 
-    await actor.update(
-      {
-        'system.details.specializations': [...specializations, acquiredSpecialization],
-      },
-      { keepEmbeddedIds: true },
-    )
+    if (xpCost > 0) {
+      updateData['system.progression.experience.spent'] = (this.progression.experience.spent || 0) + xpCost
+    }
+
+    await actor.update(updateData, { keepEmbeddedIds: true })
   }
 
   /**

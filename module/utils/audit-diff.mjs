@@ -1,5 +1,6 @@
 import { logger } from './logger.mjs'
 import SkillCostCalculator from '../lib/skills/skill-cost-calculator.mjs'
+import { getCanonicalSpecializationKey } from '../lib/specializations/owned-specializations.mjs'
 
 /* -------------------------------------------- */
 /*  Capture instantané de l'état XP après update */
@@ -317,59 +318,125 @@ function detectDetailChanges(oldState, changes, actor, ts, userId, user, snapsho
   }
 
   if (detailChanges.specializations !== undefined) {
-    entries.push(...detectSpecializationChanges(oldState, detailChanges.specializations, actor, ts, userId, user, snapshot))
+    const batchXpDelta = getXpDeltaFromChanges(oldState, changes)
+    entries.push(...detectSpecializationChanges(oldState, detailChanges.specializations, actor, ts, userId, user, snapshot, batchXpDelta))
   }
 
   return entries
 }
 
-function detectSpecializationChanges(oldState, specializationChanges, actor, ts, userId, user, snapshot) {
+function getXpDeltaFromChanges(oldState, changes) {
+  const newSpent = changes.system?.progression?.experience?.spent
+  if (newSpent === undefined) return 0
+  const oldSpent = oldState.system?.progression?.experience?.spent ?? 0
+  const diff = newSpent - oldSpent
+  return diff === 0 ? 0 : -diff
+}
+
+function getSpecArray(source) {
+  const raw = source.system?.details?.specializations
+  if (!raw) return []
+  if (raw instanceof Set) return [...raw]
+  if (Array.isArray(raw)) return raw
+  if (typeof raw === 'object') return Object.values(raw)
+  return []
+}
+
+function buildSpecMap(source) {
+  const specs = getSpecArray(source)
+  const map = {}
+  for (const spec of specs) {
+    if (!spec || typeof spec !== 'object') continue
+    const key = spec.specializationId || spec.treeUuid
+    if (key) map[key] = spec
+  }
+  return map
+}
+
+function detectSpecializationChanges(oldState, specializationChanges, actor, ts, userId, user, snapshot, batchXpDelta) {
   const entries = []
 
-  for (const [key, value] of Object.entries(specializationChanges)) {
-    if (key.startsWith('-=')) {
-      const specializationId = key.slice(2)
-      if (!specializationId) continue
+  for (const [key] of Object.entries(specializationChanges)) {
+    if (!key.startsWith('-=')) continue
+    const specializationId = key.slice(2)
+    if (!specializationId) continue
 
-      const oldSpec = oldState.system?.details?.specializations?.[specializationId]
+    const oldSpec = oldState.system?.details?.specializations?.[specializationId]
 
-      entries.push(
-        makeEntry({
-          type: 'specialization.remove',
-          data: {
-            specializationId,
-            specializationName: oldSpec?.name ?? specializationId,
-          },
-          xpDelta: 0,
-          ts,
-          userId,
-          user,
-          snapshot,
-        }),
-      )
+    entries.push(
+      makeEntry({
+        type: 'specialization.remove',
+        data: {
+          specializationId,
+          specializationName: oldSpec?.name ?? specializationId,
+        },
+        xpDelta: 0,
+        ts,
+        userId,
+        user,
+        snapshot,
+      }),
+    )
+  }
 
-      continue
-    }
+  for (const [key, changeValue] of Object.entries(specializationChanges)) {
+    if (key.startsWith('-=')) continue
+    if (!changeValue || typeof changeValue !== 'object') continue
 
+    // Direct key access (works for object-style/SetField old state)
     const oldSpec = oldState.system?.details?.specializations?.[key]
-    const newSpec = actor.system?.details?.specializations?.[key]
+    if (oldSpec !== undefined && oldSpec !== null) continue
 
-    if (!oldSpec && newSpec) {
-      entries.push(
-        makeEntry({
-          type: 'specialization.add',
-          data: {
-            specializationId: key,
-            specializationName: newSpec?.name ?? value?.name ?? key,
-          },
-          xpDelta: 0,
-          ts,
-          userId,
-          user,
-          snapshot,
-        }),
-      )
+    // For array/Set old state: fall back to canonical key matching
+    const changeKey = getCanonicalSpecializationKey(changeValue)
+    if (changeKey) {
+      const oldSpecs = getSpecArray(oldState)
+      const alreadyExists = oldSpecs.some((s) => getCanonicalSpecializationKey(s) === changeKey)
+      if (alreadyExists) continue
     }
+
+    entries.push(
+      makeEntry({
+        type: 'specialization.add',
+        data: {
+          specializationId: changeValue.specializationId || changeValue.name || key,
+          specializationName: changeValue.name || key,
+          ...(batchXpDelta ? { cost: Math.abs(batchXpDelta) } : {}),
+        },
+        xpDelta: batchXpDelta || 0,
+        ts,
+        userId,
+        user,
+        snapshot,
+      }),
+    )
+  }
+
+  const oldSpecMap = buildSpecMap(oldState)
+  const newSpecMap = buildSpecMap(actor)
+
+  for (const [canonicalKey, spec] of Object.entries(newSpecMap)) {
+    if (oldSpecMap[canonicalKey]) continue
+    const alreadyDetected = entries.some(
+      (e) => e.type === 'specialization.add' && e.data.specializationId === (spec.specializationId || canonicalKey),
+    )
+    if (alreadyDetected) continue
+
+    entries.push(
+      makeEntry({
+        type: 'specialization.add',
+        data: {
+          specializationId: spec.specializationId || canonicalKey,
+          specializationName: spec.name || canonicalKey,
+          ...(batchXpDelta ? { cost: Math.abs(batchXpDelta) } : {}),
+        },
+        xpDelta: batchXpDelta || 0,
+        ts,
+        userId,
+        user,
+        snapshot,
+      }),
+    )
   }
 
   return entries
