@@ -87,16 +87,30 @@ describe('getSkillPurchaseState - Additional Coverage', () => {
     expect(result.reason).toBe('FREE_RANK_AVAILABLE')
   })
 
-  it('should not return FREE_RANK_AVAILABLE at rank > 0 even with free ranks', () => {
+  it('should not return FREE_RANK_AVAILABLE when career free rank already applied to this skill', () => {
     const result = getSkillPurchaseState({
       ...baseParams,
       rank: 1,
       isCareer: true,
       freeCareerSkillsLeft: 2,
+      careerFreeRank: 1,
       availableXp: 100,
     })
     expect(result.isFreePurchase).toBe(false)
     expect(result.reason).toBe('AFFORDABLE')
+  })
+
+  it('should return FREE_RANK_AVAILABLE for career skill with species base rank and career free not yet applied', () => {
+    const result = getSkillPurchaseState({
+      ...baseParams,
+      rank: 1,
+      isCareer: true,
+      freeCareerSkillsLeft: 2,
+      careerFreeRank: 0,
+      availableXp: 100,
+    })
+    expect(result.isFreePurchase).toBe(true)
+    expect(result.reason).toBe('FREE_RANK_AVAILABLE')
   })
 
   it('should return MAX_RANK when at max rank', () => {
