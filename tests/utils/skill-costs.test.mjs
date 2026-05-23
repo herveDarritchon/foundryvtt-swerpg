@@ -160,15 +160,48 @@ describe('getSkillPurchaseState', () => {
     expect(result.reason).toBe('FREE_RANK_AVAILABLE')
   })
 
-  it('should not allow free purchase at rank > 0 even with free ranks left', () => {
+  it('should not allow free purchase when career free rank already applied to this skill', () => {
     const result = getSkillPurchaseState({
       ...baseParams,
       rank: 1,
       isCareer: true,
       freeCareerSkillsLeft: 2,
+      careerFreeRank: 1,
     })
     expect(result.isFreePurchase).toBe(false)
     expect(result.reason).toBe('AFFORDABLE')
+  })
+
+  it('should allow free purchase for career skill with species base rank when career free not yet applied', () => {
+    // Twi'Lek scenario: rank.value=1 from species (base=1), careerFreeRank=0, career free ranks available
+    const result = getSkillPurchaseState({
+      ...baseParams,
+      rank: 1,
+      isCareer: true,
+      freeCareerSkillsLeft: 2,
+      careerFreeRank: 0,
+      availableXp: 100,
+    })
+    expect(result.canPurchase).toBe(true)
+    expect(result.isFreePurchase).toBe(true)
+    expect(result.reason).toBe('FREE_RANK_AVAILABLE')
+    expect(result.nextCost).toBe(0)
+  })
+
+  it('should allow free purchase for specialization skill with species base rank when spec free not yet applied', () => {
+    // Twi'Lek Charm (Scoundrel spec): rank.value=1 from species (base=1), specializationFreeRank=0
+    const result = getSkillPurchaseState({
+      ...baseParams,
+      rank: 1,
+      isSpecialization: true,
+      freeSpecializationSkillsLeft: 1,
+      specializationFreeRank: 0,
+      availableXp: 100,
+    })
+    expect(result.canPurchase).toBe(true)
+    expect(result.isFreePurchase).toBe(true)
+    expect(result.reason).toBe('FREE_RANK_AVAILABLE')
+    expect(result.nextCost).toBe(0)
   })
 
   it('should respect custom maxRank', () => {

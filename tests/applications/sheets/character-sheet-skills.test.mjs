@@ -251,6 +251,8 @@ describe('CharacterSheet skill methods', () => {
           availableXp: experience.available,
           freeCareerSkillsLeft: freeSkillRanks.career.gained - freeSkillRanks.career.spent,
           freeSpecializationSkillsLeft: freeSkillRanks.specialization.gained - freeSkillRanks.specialization.spent,
+          careerFreeRank: skill.rank.careerFree,
+          specializationFreeRank: skill.rank.specializationFree,
         })
         skill.nextRank = purchaseState.nextRank
         skill.nextCost = purchaseState.nextCost
@@ -313,10 +315,11 @@ describe('CharacterSheet skill methods', () => {
     })
 
     it('computes purchase state: AFFORDABLE for rank 1 career skill with enough XP', async () => {
+      // careerFree:1 means the career free rank was already applied — next rank costs XP
       const actor = buildMockActor({
         experienceAvailable: 100,
         skills: {
-          athletics: { rank: { base: 1, careerFree: 0, specializationFree: 0, trained: 0 } },
+          athletics: { rank: { base: 0, careerFree: 1, specializationFree: 0, trained: 0 } },
         },
       })
       const context = await getContext(actor)
@@ -330,10 +333,11 @@ describe('CharacterSheet skill methods', () => {
     })
 
     it('computes purchase state: INSUFFICIENT_XP when XP too low', async () => {
+      // careerFree:1 + trained:1 = rank 2; career free already applied — next rank costs 15 XP
       const actor = buildMockActor({
         experienceAvailable: 5,
         skills: {
-          athletics: { rank: { base: 2, careerFree: 0, specializationFree: 0, trained: 0 } },
+          athletics: { rank: { base: 0, careerFree: 1, specializationFree: 0, trained: 1 } },
         },
       })
       const context = await getContext(actor)
@@ -489,10 +493,11 @@ describe('CharacterSheet skill methods', () => {
     })
 
     it('computes ui.increaseState = "AFFORDABLE" with icon "buy"', async () => {
+      // careerFree:1 means free rank already applied — next rank costs XP
       const actor = buildMockActor({
         experienceAvailable: 100,
         skills: {
-          athletics: { rank: { base: 1, careerFree: 0, specializationFree: 0, trained: 0 } },
+          athletics: { rank: { base: 0, careerFree: 1, specializationFree: 0, trained: 0 } },
         },
       })
       const context = await getContext(actor)
@@ -504,10 +509,11 @@ describe('CharacterSheet skill methods', () => {
     })
 
     it('computes ui.increaseState = "INSUFFICIENT_XP" with icon "buy-blocked"', async () => {
+      // careerFree:1 + trained:1 = rank 2; career free already applied — next rank costs 15 XP, only 5 available
       const actor = buildMockActor({
         experienceAvailable: 5,
         skills: {
-          athletics: { rank: { base: 2, careerFree: 0, specializationFree: 0, trained: 0 } },
+          athletics: { rank: { base: 0, careerFree: 1, specializationFree: 0, trained: 1 } },
         },
       })
       const context = await getContext(actor)
