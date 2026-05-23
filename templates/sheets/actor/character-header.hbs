@@ -17,11 +17,11 @@
       <h2 class="specialization flexrow {{#if incomplete.specialization}}incomplete{{/if}}"
           data-action="editSpecializations"
           {{#if incomplete.specialization}}data-tooltip="WALKTHROUGH.AddSpecialization"{{/if}}>
-        <a>
+        <a class="specialization-link">
           {{#if incomplete.specialization}}
             <i class="fa-solid fa-circle-plus"></i> {{specializationHeader.displayName}}
           {{else}}
-            {{specializationHeader.primaryName}}
+            <span class="specialization-label">{{specializationHeader.primaryName}}</span>
             {{#if specializationHeader.hasExtraSpecializations}}
               <span class="specialization-badge" data-tooltip="{{specializationHeader.tooltip}}">
                 +{{specializationHeader.extraCount}}
@@ -30,6 +30,14 @@
           {{/if}}
         </a>
       </h2>
+      <button type="button"
+        class="button icon specialization-tree-trigger"
+        data-action="editSpecializationTrees"
+        data-tooltip="{{specializationTreeButtonLabel}}"
+        aria-label="{{localize specializationTreeButtonLabel}}"
+        title="{{localize specializationTreeButtonLabel}}">
+        <img src="systems/swerpg/assets/images/icons/choice.svg" alt="" aria-hidden="true" />
+      </button>
       {{#if actor.system.details.signatureName}}
         <h2 class="signature">{{actor.system.details.signatureName}}</h2>
       {{/if}}
