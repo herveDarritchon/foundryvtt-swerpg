@@ -6,6 +6,8 @@ import { getReasonLabelKey } from './specialization-tree/node-ui-state.mjs'
 import { buildSpecializationTreeContext as buildContextPure } from './specialization-tree/tree-context-builder.mjs'
 import { buildContextualActionPanelViewModel } from './specialization-tree/contextual-action-panel-view-model.mjs'
 import { PixiTreeRenderer } from './specialization-tree/pixi-tree-renderer.mjs'
+import { getOwnedSpecializations } from '../lib/specializations/owned-specializations.mjs'
+import { evaluateSpecializationRemoval } from '../lib/specializations/specialization-removal-flow.mjs'
 
 const { api } = foundry.applications
 
@@ -21,6 +23,12 @@ const ACTION_KEYS = Object.freeze({
     failure: 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.FORGET.FAILURE',
     confirmTitle: 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.CONFIRM.FORGET.TITLE',
     confirmContent: 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.CONFIRM.FORGET.CONTENT',
+  },
+  remove: {
+    success: 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.REMOVE.SUCCESS',
+    failure: 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.REMOVE.FAILURE',
+    confirmTitle: 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.CONFIRM.REMOVE.TITLE',
+    confirmContent: 'SWERPG.TALENT.SPECIALIZATION_TREE_APP.CONFIRM.REMOVE.CONTENT',
   },
 })
 
@@ -119,6 +127,7 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
       zoomOut: SpecializationTreeApp.#onZoomOut,
       contextualAction: SpecializationTreeApp.#onContextualAction,
       closeDetail: SpecializationTreeApp.#onCloseDetail,
+      removeSpecialization: SpecializationTreeApp.#onRemoveSpecialization,
     },
   }
 
@@ -408,6 +417,57 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
   static async #onCloseDetail(event, _target) {
     event.preventDefault()
     this.#hideDetailPanel()
+  }
+
+  /** @returns {Promise<void>} */
+  static async #onRemoveSpecialization(event, target) {
+    event.preventDefault()
+    const specializationKey = target.dataset.specializationKey
+    if (!specializationKey || !this.actor?.isOwner) return
+
+    const snapshot = getOwnedSpecializations(this.actor)
+    const result = evaluateSpecializationRemoval({
+      items: snapshot.items,
+      specializationKey,
+      selectedTreeKey: this.#selectedTreeKey,
+    })
+
+    if (!result.allowed) {
+      const reasonLabel = game.i18n.localize(result.reasonCode)
+      ui.notifications.warn(game.i18n.format(ACTION_KEYS.remove.failure, { reason: reasonLabel }))
+      return
+    }
+
+    const confirmed = await api.DialogV2.confirm({
+      title: game.i18n.format(ACTION_KEYS.remove.confirmTitle, { specialization: result.specializationName }),
+      content: `<p>${game.i18n.format(ACTION_KEYS.remove.confirmContent, { specialization: result.specializationName })}</p>`,
+      buttons: [
+        {
+          action: 'confirm',
+          label: game.i18n.localize('SWERPG.TALENT.SPECIALIZATION_TREE_APP.ACTION.REMOVE'),
+          default: true,
+        },
+        {
+          action: 'cancel',
+          label: game.i18n.localize('SWERPG.TALENT.SPECIALIZATION_TREE_APP.CONFIRM.CANCEL'),
+        },
+      ],
+    })
+
+    if (!confirmed) return
+
+    try {
+      await this.actor.system.removeSpecialization(specializationKey)
+
+      this.#selectedTreeKey = result.fallbackTreeKey
+
+      ui.notifications.info(game.i18n.format(ACTION_KEYS.remove.success, { specialization: result.specializationName }))
+    } catch (err) {
+      logger.error('[SpecializationTreeApp] Failed to remove specialization', err)
+      ui.notifications.error(game.i18n.localize('SWERPG.ERRORS.UnexpectedError'))
+    }
+
+    await this.refresh()
   }
 
   #showDetailPanel(node) {
