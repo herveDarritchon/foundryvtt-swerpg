@@ -138,6 +138,72 @@ describe('SwerpgCharacter — owned specializations', () => {
 
       expect(options).toEqual({ keepEmbeddedIds: true })
     })
+
+    test('includes xpCost in the same update when provided', async () => {
+      const character = new SwerpgCharacter(buildCharacterData())
+
+      let capturedUpdate = null
+      character.parent = {
+        update: (data, options) => {
+          capturedUpdate = { data, options }
+          return Promise.resolve()
+        },
+      }
+
+      character.details.specializations = new Set()
+      character.progression.experience.spent = 15
+
+      const fakeItem = {
+        toObject: () => ({
+          name: 'Pilot',
+          img: 'systems/swerpg/assets/pilot.png',
+          system: {
+            specializationId: 'pilot',
+            freeSkillRank: 4,
+            specializationSkills: [],
+          },
+        }),
+      }
+
+      await character.acquireSpecialization(fakeItem, { xpCost: 20 })
+
+      expect(capturedUpdate.data['system.details.specializations']).toHaveLength(1)
+      expect(capturedUpdate.data['system.details.specializations'][0].name).toBe('Pilot')
+      expect(capturedUpdate.data['system.details.specializations'][0].freeSkillRank).toBe(0)
+      expect(capturedUpdate.data['system.progression.experience.spent']).toBe(35)
+      expect(capturedUpdate.options).toEqual({ keepEmbeddedIds: true })
+    })
+
+    test('does not include xpCost when xpCost is 0', async () => {
+      const character = new SwerpgCharacter(buildCharacterData())
+
+      let capturedUpdate = null
+      character.parent = {
+        update: (data, options) => {
+          capturedUpdate = { data, options }
+          return Promise.resolve()
+        },
+      }
+
+      character.details.specializations = new Set()
+
+      const fakeItem = {
+        toObject: () => ({
+          name: 'Pilot',
+          img: 'systems/swerpg/assets/pilot.png',
+          system: {
+            specializationId: 'pilot',
+            freeSkillRank: 4,
+            specializationSkills: [],
+          },
+        }),
+      }
+
+      await character.acquireSpecialization(fakeItem, { xpCost: 0 })
+
+      expect(capturedUpdate.data['system.details.specializations']).toHaveLength(1)
+      expect(capturedUpdate.data['system.progression.experience.spent']).toBeUndefined()
+    })
   })
 
   describe('removeSpecialization', () => {

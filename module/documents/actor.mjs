@@ -395,8 +395,8 @@ export default class SwerpgActor extends TalentsMixin(EquipmentMixin(ResourcesMi
         }
       }
       if (isCollection) {
-        this.system.details.specializations.add(data)
-        updateData[key] = this.system.details.specializations
+        const existing = Array.from(this.system.details.specializations || [])
+        updateData[key] = [...existing, data]
       } else {
         const detail = (updateData[key] = data)
         if (detail.freeTalents?.length) {

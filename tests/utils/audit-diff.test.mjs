@@ -1325,10 +1325,134 @@ describe('detail changes', () => {
       type: 'specialization.add',
       xpDelta: 0,
       data: {
-        specializationId: 'spec1',
+        specializationId: 'Bodyguard',
         specializationName: 'Bodyguard',
       },
     })
+  })
+
+  test('detects specialization.add for second specialization beyond the first', async () => {
+    const changes = {
+      system: {
+        details: {
+          specializations: {
+            spec1: { name: 'Bodyguard', specializationId: 'bodyguard' },
+            spec2: { name: 'Pilot', specializationId: 'pilot' },
+          },
+        },
+      },
+    }
+
+    const source = defaultSource()
+    source.system.details.specializations = {
+      spec1: { name: 'Bodyguard', specializationId: 'bodyguard' },
+    }
+
+    const entries = await composeFromChanges(changes, source)
+    const addEntries = entries.filter((e) => e.type === 'specialization.add')
+
+    expect(addEntries).toHaveLength(1)
+    expect(addEntries[0]).toMatchObject({
+      type: 'specialization.add',
+      xpDelta: 0,
+      data: {
+        specializationId: 'pilot',
+        specializationName: 'Pilot',
+      },
+    })
+  })
+
+  test('does not detect specialization.add when existing spec is enriched with treeUuid', async () => {
+    const changes = {
+      system: {
+        details: {
+          specializations: {
+            spec1: { name: 'Bodyguard', specializationId: 'bodyguard', treeUuid: 'Item.tree-bodyguard' },
+          },
+        },
+      },
+    }
+
+    const source = defaultSource()
+    source.system.details.specializations = {
+      spec1: { name: 'Bodyguard', specializationId: 'bodyguard' },
+    }
+
+    const entries = await composeFromChanges(changes, source)
+    const addEntries = entries.filter((e) => e.type === 'specialization.add')
+
+    expect(addEntries).toHaveLength(0)
+  })
+
+  test('detects specialization.add with xp cost in same batch', async () => {
+    const changes = {
+      system: {
+        details: {
+          specializations: {
+            spec1: { name: 'Pilot', specializationId: 'pilot' },
+          },
+        },
+        progression: {
+          experience: {
+            spent: 20,
+          },
+        },
+      },
+    }
+
+    const source = defaultSource()
+    source.system.details.specializations = {}
+    source.system.progression.experience = {
+      spent: 0,
+      gained: 100,
+      available: 100,
+      total: 100,
+    }
+
+    const entries = await composeFromChanges(changes, source)
+    const addEntries = entries.filter((e) => e.type === 'specialization.add')
+
+    expect(addEntries).toHaveLength(1)
+    expect(addEntries[0]).toMatchObject({
+      type: 'specialization.add',
+      xpDelta: -20,
+      data: {
+        specializationId: 'pilot',
+        specializationName: 'Pilot',
+        cost: 20,
+      },
+    })
+  })
+
+  test('does not create xp entry when specialization add also updates experience.spent', async () => {
+    const changes = {
+      system: {
+        details: {
+          specializations: {
+            spec1: { name: 'Pilot', specializationId: 'pilot' },
+          },
+        },
+        progression: {
+          experience: {
+            spent: 20,
+          },
+        },
+      },
+    }
+
+    const source = defaultSource()
+    source.system.details.specializations = {}
+    source.system.progression.experience = {
+      spent: 0,
+      gained: 100,
+      available: 100,
+      total: 100,
+    }
+
+    const entries = await composeFromChanges(changes, source)
+
+    expect(entries.filter((e) => e.type.startsWith('xp.'))).toHaveLength(0)
+    expect(entries.filter((e) => e.type === 'specialization.add')).toHaveLength(1)
   })
 
   test('does not detect specialization.add for internal specialization update', async () => {
@@ -1462,7 +1586,7 @@ describe('detail changes', () => {
       type: 'specialization.add',
       xpDelta: 0,
       data: {
-        specializationId: 'my spec!',
+        specializationId: 'Bodyguard',
         specializationName: 'Bodyguard',
       },
     })
@@ -1489,6 +1613,182 @@ describe('detail changes', () => {
     const entries = await composeFromChanges(changes, source)
 
     expect(entries).toEqual([])
+  })
+
+  test('detects specialization.add when actor stores specs as Set', async () => {
+    const changes = {
+      system: {
+        details: {
+          specializations: {
+            spec1: { name: 'Marauder', specializationId: 'marauder' },
+          },
+        },
+      },
+    }
+
+    const source = defaultSource()
+    source.system.details.specializations = new Set()
+
+    const expandedChanges = foundry.utils.expandObject(changes)
+    const oldState = makeOldState(expandedChanges, source)
+    const newSystem = applyChangesToSystem(source.system, expandedChanges)
+    newSystem.details.specializations = new Set([
+      { name: 'Marauder', specializationId: 'marauder' },
+    ])
+    const actor = makeActor(newSystem)
+
+    const { composeEntries } = await import('../../module/utils/audit-diff.mjs')
+    const entries = await composeEntries(oldState, changes, actor, 'user-1')
+    const addEntries = entries.filter((e) => e.type === 'specialization.add')
+
+    expect(addEntries).toHaveLength(1)
+    expect(addEntries[0]).toMatchObject({
+      type: 'specialization.add',
+      xpDelta: 0,
+      data: {
+        specializationId: 'marauder',
+        specializationName: 'Marauder',
+      },
+    })
+  })
+
+  test('detects 2nd specialization.add when actor stores specs as Set', async () => {
+    const changes = {
+      system: {
+        details: {
+          specializations: {
+            spec1: { name: 'Bodyguard', specializationId: 'bodyguard' },
+            spec2: { name: 'Marauder', specializationId: 'marauder' },
+          },
+        },
+      },
+    }
+
+    const source = defaultSource()
+    source.system.details.specializations = new Set([
+      { name: 'Bodyguard', specializationId: 'bodyguard' },
+    ])
+
+    const expandedChanges = foundry.utils.expandObject(changes)
+    const newSystem = applyChangesToSystem(source.system, expandedChanges)
+    newSystem.details.specializations = new Set([
+      { name: 'Bodyguard', specializationId: 'bodyguard' },
+      { name: 'Marauder', specializationId: 'marauder' },
+    ])
+    const actor = makeActor(newSystem)
+
+    const oldState = {
+      system: {
+        details: {
+          specializations: [{ name: 'Bodyguard', specializationId: 'bodyguard' }],
+        },
+      },
+    }
+
+    const { composeEntries } = await import('../../module/utils/audit-diff.mjs')
+    const entries = await composeEntries(oldState, changes, actor, 'user-1')
+    const addEntries = entries.filter((e) => e.type === 'specialization.add')
+
+    expect(addEntries).toHaveLength(1)
+    expect(addEntries[0]).toMatchObject({
+      type: 'specialization.add',
+      xpDelta: 0,
+      data: {
+        specializationId: 'marauder',
+        specializationName: 'Marauder',
+      },
+    })
+  })
+
+  test('detects specialization.add with xp cost when actor stores specs as Set', async () => {
+    const changes = {
+      system: {
+        details: {
+          specializations: {
+            spec1: { name: 'Marauder', specializationId: 'marauder' },
+          },
+        },
+        progression: {
+          experience: {
+            spent: 20,
+          },
+        },
+      },
+    }
+
+    const source = defaultSource()
+    source.system.details.specializations = new Set()
+    source.system.progression.experience = {
+      spent: 0,
+      gained: 100,
+      available: 100,
+      total: 100,
+    }
+
+    const expandedChanges = foundry.utils.expandObject(changes)
+    const oldState = makeOldState(expandedChanges, source)
+    const newSystem = applyChangesToSystem(source.system, expandedChanges)
+    newSystem.details.specializations = new Set([
+      { name: 'Marauder', specializationId: 'marauder' },
+    ])
+    newSystem.progression.experience.spent = 20
+    const actor = makeActor(newSystem)
+
+    const { composeEntries } = await import('../../module/utils/audit-diff.mjs')
+    const entries = await composeEntries(oldState, changes, actor, 'user-1')
+    const addEntries = entries.filter((e) => e.type === 'specialization.add')
+
+    expect(addEntries).toHaveLength(1)
+    expect(addEntries[0]).toMatchObject({
+      type: 'specialization.add',
+      xpDelta: -20,
+      data: {
+        specializationId: 'marauder',
+        specializationName: 'Marauder',
+        cost: 20,
+      },
+    })
+  })
+
+  test('does not create xp.spend when specialization add with cost uses Set', async () => {
+    const changes = {
+      system: {
+        details: {
+          specializations: {
+            spec1: { name: 'Marauder', specializationId: 'marauder' },
+          },
+        },
+        progression: {
+          experience: {
+            spent: 20,
+          },
+        },
+      },
+    }
+
+    const source = defaultSource()
+    source.system.details.specializations = new Set()
+    source.system.progression.experience = {
+      spent: 0,
+      gained: 100,
+      available: 100,
+      total: 100,
+    }
+
+    const expandedChanges = foundry.utils.expandObject(changes)
+    const oldState = makeOldState(expandedChanges, source)
+    const newSystem = applyChangesToSystem(source.system, expandedChanges)
+    newSystem.details.specializations = new Set([
+      { name: 'Marauder', specializationId: 'marauder' },
+    ])
+    newSystem.progression.experience.spent = 20
+    const actor = makeActor(newSystem)
+
+    const { composeEntries } = await import('../../module/utils/audit-diff.mjs')
+    const entries = await composeEntries(oldState, changes, actor, 'user-1')
+
+    expect(entries.filter((e) => e.type.startsWith('xp.'))).toHaveLength(0)
+    expect(entries.filter((e) => e.type === 'specialization.add')).toHaveLength(1)
   })
 })
 

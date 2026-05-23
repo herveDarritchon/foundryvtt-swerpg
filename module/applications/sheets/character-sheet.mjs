@@ -770,9 +770,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
       case 'confirm-required': {
         const confirmed = await this.#confirmSpecializationPurchase(result)
         if (!confirmed) return
-        await actor.system.acquireSpecialization(item)
-        const newSpent = (actor.system.progression.experience.spent || 0) + result.cost.finalCost
-        await actor.update({ 'system.progression.experience.spent': newSpent })
+        await actor.system.acquireSpecialization(item, { xpCost: result.cost.finalCost })
       }
     }
   }
