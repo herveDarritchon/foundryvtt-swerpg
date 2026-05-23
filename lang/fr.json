@@ -122,6 +122,10 @@
           "SUCCESS": "Talent oublié : {talent}",
           "FAILURE": "Échec de l'oubli : {reason}"
         },
+        "REMOVE": {
+          "SUCCESS": "Spécialisation retirée : {specialization}",
+          "FAILURE": "Échec du retrait : {reason}"
+        },
         "CONFIRM": {
           "CANCEL": "Annuler",
           "PURCHASE": {
@@ -131,6 +135,10 @@
           "FORGET": {
             "TITLE": "{action} : {talent}",
             "CONTENT": "Oublier <strong>{talent}</strong> et récupérer {xp} XP?"
+          },
+          "REMOVE": {
+            "TITLE": "Retirer la spécialisation : {specialization}",
+            "CONTENT": "Retirer <strong>{specialization}</strong> ? Cela supprimera également tous les talents achetés dans cet arbre."
           }
         },
         "LEGEND": {
@@ -151,6 +159,7 @@
           "ZOOM_OUT": "Zoom arrière",
           "PURCHASE": "Acheter",
           "FORGET": "Oublier",
+          "REMOVE": "Retirer",
           "CLOSE_DETAIL": "Fermer"
         }
       },
@@ -1160,6 +1169,9 @@
     "XenologyAbbr": "Xen"
   },
   "SPECIALIZATION": {
+    "REMOVAL": {
+      "NOT_FOUND": "Spécialisation introuvable dans la liste des spécialisations possédées."
+    },
     "FIELDS": {
       "FreeSkill": "Compétence Gratuite",
       "Skills": "Compétences de Spécialisation",
