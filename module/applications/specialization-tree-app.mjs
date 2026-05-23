@@ -1,4 +1,5 @@
-import { resolveActorSpecializationTrees } from '../lib/talent-node/talent-tree-resolver.mjs'
+import { resolveActorSpecializationTrees, normalizeActorSpecializations } from '../lib/talent-node/talent-tree-resolver.mjs'
+import { logger } from '../utils/logger.mjs'
 import { forgetTalentNode } from '../lib/talent-node/talent-node-forget.mjs'
 import { purchaseTalentNode } from '../lib/talent-node/talent-node-purchase.mjs'
 import { resolveTalentDetail } from '../lib/talent-node/talent-reference-resolver.mjs'
@@ -155,6 +156,17 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
   /** @type {object|null} */
   #currentDetailNode = null
 
+  /** @type {boolean} Whether runtime specialization normalization has been applied once. */
+  #_normalized = false
+
+  /**
+   * The canonical specializationId for the currently active tree, used for
+   * all business-layer calls (state resolution, progression validation).
+   * Distinct from #selectedTreeKey (UI key) which may be a treeUuid or name.
+   * @type {string|null}
+   */
+  #currentCanonicalSpecializationId = null
+
   /** Public getter for #currentDetailNode, accessible from static action handlers. */
   get _currentDetailNode() { return this.#currentDetailNode }
 
@@ -203,11 +215,17 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
     this.#teardownRenderer()
     this.actor = null
     this.document = null
+    this.#_normalized = false
+    this.#currentCanonicalSpecializationId = null
     return this
   }
 
   /** @override */
   async _prepareContext(_options) {
+    if (!this.#_normalized && this.actor) {
+      normalizeActorSpecializations(this.actor)
+      this.#_normalized = true
+    }
     const pendingKey = this.#pendingSelection
     this.#pendingSelection = null
     return buildSpecializationTreeContext(this.actor, pendingKey ?? this.#selectedTreeKey)
@@ -234,10 +252,12 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
     this.renderer.mount(viewportHost)
 
     const nextTreeKey = context?.currentTreeId ?? null
+    const nextCanonicalId = context?.currentCanonicalSpecializationId ?? null
     const shouldResetView = options.resetView !== false
       && (!this.#selectedTreeKey || this.#selectedTreeKey !== nextTreeKey)
 
     this.#selectedTreeKey = nextTreeKey
+    this.#currentCanonicalSpecializationId = nextCanonicalId
 
     const viewModel = {
       renderNodes: context.renderNodes ?? [],
@@ -273,6 +293,7 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
     this.renderer = null
     this.#selectedTreeKey = null
     this.#pendingSelection = null
+    this.#currentCanonicalSpecializationId = null
   }
 
   /* ═══════════════════════════════════════════════════════════════ */
@@ -325,7 +346,8 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
 
     const actionRef = node.actionable?.actionRef
     if (!actionRef?.nodeId || !actionRef?.specializationId) return false
-    if (actionRef.specializationId !== this.#selectedTreeKey) return false
+    const expectedId = this.#currentCanonicalSpecializationId ?? this.#selectedTreeKey
+    if (actionRef.specializationId !== expectedId) return false
 
     if (action === 'purchase') return node.actionable?.canPurchase === true
     if (action === 'forget') return node.actionable?.canForget === true
@@ -386,7 +408,7 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
 
   async #executeNodeAction(node) {
     const action = node?.actionable?.primaryAction
-    const specializationId = node?.actionable?.actionRef?.specializationId ?? this.#selectedTreeKey
+    const specializationId = node?.actionable?.actionRef?.specializationId ?? this.#currentCanonicalSpecializationId ?? this.#selectedTreeKey
     const keys = ACTION_KEYS[action]
 
     if (!action || !specializationId || !node?.nodeId || !keys) return

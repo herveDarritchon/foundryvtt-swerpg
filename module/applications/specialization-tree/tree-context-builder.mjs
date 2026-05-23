@@ -86,6 +86,7 @@ export function buildSpecializationTreeContext(actor, selectedKey, deps) {
   let currentTreeName = null
   let currentTreeSummary = null
   let currentTreeData = null
+  let currentCanonicalSpecializationId = null
   let renderNodes = []
   let renderConnections = []
 
@@ -99,10 +100,11 @@ export function buildSpecializationTreeContext(actor, selectedKey, deps) {
     currentTreeId = activeKey
     const entry = specializationEntries.find((e) => e.key === activeKey)
     currentTreeName = entry?.treeName ?? null
+    currentCanonicalSpecializationId = entry?.canonicalSpecializationId ?? activeKey
     const resolution = resolutions.get(activeKey)
     currentTreeData = resolution?.tree ?? null
 
-    const result = buildRenderNodesAndConnections(currentTreeData, actor, currentTreeId, {
+    const result = buildRenderNodesAndConnections(currentTreeData, actor, currentCanonicalSpecializationId, {
       localize,
       talentLookup,
     })
@@ -123,6 +125,7 @@ export function buildSpecializationTreeContext(actor, selectedKey, deps) {
     showViewport: hasResolvedTrees,
     specializations: specializationEntries,
     currentTreeId,
+    currentCanonicalSpecializationId,
     currentTreeName,
     currentTreeSummary,
     currentTreeData,
@@ -158,9 +161,24 @@ export function buildSpecializationEntries(specializations, resolutions, localiz
     const resolution = resolutions.get(key) ?? { tree: null, state: 'unresolved' }
     const state = resolution.state ?? 'unresolved'
 
+    /**
+     * Canonical specialization identifier for business-layer calls.
+     *
+     * Priority:
+     * 1. `tree.system.specializationId` from the resolved tree item document
+     *    (most authoritative — comes from the canonical specialization-tree compendium).
+     * 2. `specialization.specializationId` already stored on the actor.
+     * 3. The entry `key` itself as a last resort (preserves pre-existing behaviour).
+     */
+    const canonicalSpecializationId =
+      resolution.tree?.system?.specializationId ??
+      specialization?.specializationId ??
+      key
+
     return {
       key,
       specializationId: specialization?.specializationId ?? null,
+      canonicalSpecializationId,
       name:
         specialization?.name ||
         localize('SWERPG.TALENT.SPECIALIZATION_TREE_APP.UNKNOWN_SPECIALIZATION'),
@@ -179,11 +197,14 @@ export function buildSpecializationEntries(specializations, resolutions, localiz
  *
  * @param {object|null} currentTreeData - The resolved specialization tree item.
  * @param {object} actor - The actor document.
- * @param {string} currentTreeId - The active tree key.
+ * @param {string} canonicalSpecializationId - The canonical specialization identifier
+ *        for business-layer calls (NOT the UI selection key). Passed directly
+ *        to `getTreeNodesStates` and `actionableNodeViewModel` so that strict
+ *        equality checks in the business engine match.
  * @param {{ localize: (key: string) => string, talentLookup: (node: object) => object|null }} deps
  * @returns {{ renderNodes: Array<object>, renderConnections: Array<object> }}
  */
-export function buildRenderNodesAndConnections(currentTreeData, actor, currentTreeId, deps) {
+export function buildRenderNodesAndConnections(currentTreeData, actor, canonicalSpecializationId, deps) {
   const { localize, talentLookup } = deps
 
   if (!currentTreeData) {
@@ -209,7 +230,7 @@ export function buildRenderNodesAndConnections(currentTreeData, actor, currentTr
     }
   })
 
-  const nodeStates = getTreeNodesStates(actor, currentTreeId, currentTreeData)
+  const nodeStates = getTreeNodesStates(actor, canonicalSpecializationId, currentTreeData)
 
   const renderNodes = positionedNodes.map((node) => {
     const stateResult = nodeStates.get(node.nodeId) ?? { state: NODE_STATE.INVALID }
@@ -217,7 +238,7 @@ export function buildRenderNodesAndConnections(currentTreeData, actor, currentTr
     const actionable = actionableNodeViewModel({
       renderNode: enriched,
       actor,
-      specializationId: currentTreeId,
+      specializationId: canonicalSpecializationId,
       tree: currentTreeData,
       localize,
     })

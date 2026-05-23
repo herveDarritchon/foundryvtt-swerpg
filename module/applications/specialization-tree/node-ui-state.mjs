@@ -230,10 +230,10 @@ export const NODE_STATE_VARIANTS = Object.freeze({
 
 /** Maps each NODE_STATE value to its fallback SVG asset path. */
 export const NODE_STATE_SVG_ICONS = Object.freeze({
-  [NODE_STATE.PURCHASED]: 'assets/images/icons/sell-card.svg',
-  [NODE_STATE.AVAILABLE]: 'assets/images/icons/buy-card.svg',
-  [NODE_STATE.LOCKED]: 'assets/images/icons/padlock.svg',
-  [NODE_STATE.INVALID]: 'assets/images/icons/hazard-sign.svg',
+  [NODE_STATE.PURCHASED]: 'systems/swerpg/assets/images/icons/sell-card.svg',
+  [NODE_STATE.AVAILABLE]: 'systems/swerpg/assets/images/icons/buy-card.svg',
+  [NODE_STATE.LOCKED]: 'systems/swerpg/assets/images/icons/padlock.svg',
+  [NODE_STATE.INVALID]: 'systems/swerpg/assets/images/icons/hazard-sign.svg',
 })
 
 /* ── Connection visual variants ──────────────────────────────── */
@@ -374,19 +374,19 @@ export const NODE_TYPE_INDICATORS = Object.freeze({
  */
 
 /** @type {string} */
-export const ACTIVE_TYPE_ICON_PATH = 'assets/images/icons/electric.svg'
+export const ACTIVE_TYPE_ICON_PATH = 'systems/swerpg/assets/images/icons/electric.svg'
 
 /** @type {string} */
-export const PASSIVE_TYPE_ICON_PATH = 'assets/images/icons/plain-circle.svg'
+export const PASSIVE_TYPE_ICON_PATH = 'systems/swerpg/assets/images/icons/plain-circle.svg'
 
 /** @type {string} */
-export const PURCHASE_ACTION_ICON_PATH = 'assets/images/icons/buy-card.svg'
+export const PURCHASE_ACTION_ICON_PATH = 'systems/swerpg/assets/images/icons/buy-card.svg'
 
 /** @type {string} */
-export const FORGET_ACTION_ICON_PATH = 'assets/images/icons/sell-card.svg'
+export const FORGET_ACTION_ICON_PATH = 'systems/swerpg/assets/images/icons/sell-card.svg'
 
 /** @type {string} */
-export const RANKED_ICON_PATH = 'assets/images/icons/rank.svg'
+export const RANKED_ICON_PATH = 'systems/swerpg/assets/images/icons/rank.svg'
 
 /**
  * Build the icon slot descriptor for a render node.
