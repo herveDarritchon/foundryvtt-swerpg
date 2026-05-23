@@ -688,8 +688,9 @@ describe('CharacterSheet talent consolidation (US12)', () => {
     expect(actor.openSpecializationTreeApp, 'talentTree action should delegate to the actor bridge').toHaveBeenCalledTimes(1)
   })
 
-  it('opens the specialization tree app from the editSpecializations action', async () => {
+  it('opens the specialization compendium from the editSpecializations action', async () => {
     const actor = buildMockActor()
+    actor._viewDetailItem = vi.fn()
     const sheet = new CharacterSheet({ document: actor })
     sheet.actor = actor
     sheet.document = actor
@@ -697,6 +698,18 @@ describe('CharacterSheet talent consolidation (US12)', () => {
     const event = { preventDefault: vi.fn(), stopPropagation: vi.fn() }
     await CharacterSheet.DEFAULT_OPTIONS.actions.editSpecializations.call(sheet, event)
 
-    expect(actor.openSpecializationTreeApp, 'editSpecializations action should delegate to the actor bridge').toHaveBeenCalledTimes(1)
+    expect(actor._viewDetailItem).toHaveBeenCalledWith('specialization', 'specializations', { editable: false })
+  })
+
+  it('opens the specialization tree app from the editSpecializationTrees action', async () => {
+    const actor = buildMockActor()
+    const sheet = new CharacterSheet({ document: actor })
+    sheet.actor = actor
+    sheet.document = actor
+
+    const event = { preventDefault: vi.fn(), stopPropagation: vi.fn() }
+    await CharacterSheet.DEFAULT_OPTIONS.actions.editSpecializationTrees.call(sheet, event)
+
+    expect(actor.openSpecializationTreeApp).toHaveBeenCalledTimes(1)
   })
 })

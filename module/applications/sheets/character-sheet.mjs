@@ -66,6 +66,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
       editSpecies: CharacterSheet.#onEditSpecies,
       editCareer: CharacterSheet.#onEditCareer,
       editSpecializations: CharacterSheet.#onEditSpecializations,
+      editSpecializationTrees: CharacterSheet.#onEditSpecializationTrees,
       openAuditLog: CharacterSheet.#onOpenAuditLog,
       skillBuy: CharacterSheet.#onSkillBuy,
       skillRefund: CharacterSheet.#onSkillRefund,
@@ -611,12 +612,22 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
   /* -------------------------------------------- */
 
   /**
-   * Handle click action to choose or edit your Career.
+   * Handle click action to view the specialization compendium entry.
    * @this {CharacterSheet}
    * @param {PointerEvent} event
    * @returns {Promise<void>}
    */
   static async #onEditSpecializations(event) {
+    await this.actor._viewDetailItem('specialization', 'specializations', { editable: false })
+  }
+
+  /**
+   * Handle click action to open the specialization tree management app.
+   * @this {CharacterSheet}
+   * @param {PointerEvent} event
+   * @returns {Promise<void>}
+   */
+  static async #onEditSpecializationTrees(event) {
     await this.actor.openSpecializationTreeApp()
   }
 
