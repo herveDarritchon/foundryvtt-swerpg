@@ -38,11 +38,11 @@ Transformer le panneau de détail de la vue graphique en panneau d'action contex
 
 ## Fichiers pressentis
 
-| Fichier                                               | Rôle                                                                                   |
-| ----------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| Fichier                                               | Rôle                                                                                  |
+| ----------------------------------------------------- | ------------------------------------------------------------------------------------- |
 | `module/applications/specialization-tree-app.mjs`     | Construire le view-model du panneau, router l'action contextuelle et gérer le refresh |
 | `templates/applications/specialization-tree-app.hbs`  | Rendre le panneau avec zone d'action, état, raison et description                     |
-| `styles/applications.less`                            | Assurer la hiérarchie visuelle du panneau d'action sans bruit UX                       |
+| `styles/applications.less`                            | Assurer la hiérarchie visuelle du panneau d'action sans bruit UX                      |
 | `lang/fr.json`                                        | Ajouter ou compléter les libellés FR du panneau et des CTA                            |
 | `lang/en.json`                                        | Ajouter ou compléter les libellés EN du panneau et des CTA                            |
 | `tests/applications/specialization-tree-app.test.mjs` | Verrouiller le contrat du panneau d'action contextuelle                               |

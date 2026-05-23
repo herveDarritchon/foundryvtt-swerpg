@@ -17,9 +17,9 @@ tags: ['foundry-vtt', 'ui', 'dialogv2', 'applicationv2']
 Il retourne un booléen :
 
 ```js
-true  // confirmation
+true // confirmation
 false // annulation
-````
+```
 
 Il fournit déjà deux boutons internes :
 
@@ -157,15 +157,15 @@ if (!confirmed) return
 
 ### Positive
 
-* usage clair de `DialogV2.confirm()` ;
-* deux boutons maximum garantis ;
-* retour booléen simple ;
-* code plus lisible ;
-* moins de dialogues UI incohérents.
+- usage clair de `DialogV2.confirm()` ;
+- deux boutons maximum garantis ;
+- retour booléen simple ;
+- code plus lisible ;
+- moins de dialogues UI incohérents.
 
 ### Negative
 
-* nécessite de choisir explicitement `DialogV2.wait()` pour les dialogues non binaires.
+- nécessite de choisir explicitement `DialogV2.wait()` pour les dialogues non binaires.
 
 ## Code Review Checklist
 
@@ -190,5 +190,5 @@ Utiliser `DialogV2.wait()` dès que le dialogue n’est pas strictement booléen
 
 ## References
 
-* Foundry VTT - `DialogV2.confirm`
-* Foundry VTT - `DialogV2.wait`
+- Foundry VTT - `DialogV2.confirm`
+- Foundry VTT - `DialogV2.wait`

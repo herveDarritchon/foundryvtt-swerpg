@@ -30,7 +30,7 @@ dépendance UI, afin que l'arbre courant ne puisse plus influencer les décision
 ### Fichiers pressentis
 
 | Fichier                                                            | Rôle                                                                           |
-|--------------------------------------------------------------------|--------------------------------------------------------------------------------|
+| ------------------------------------------------------------------ | ------------------------------------------------------------------------------ |
 | `module/lib/specializations/owned-specializations.mjs`             | Nouveau module pur : contrat canonique, lecture/normalisation, helpers métier  |
 | `module/lib/specializations/specialization-cost-service.mjs`       | Nouveau service pur de calcul de coût                                          |
 | `module/models/character.mjs`                                      | Documenter l'alignement entre le modèle acteur et le contrat métier            |

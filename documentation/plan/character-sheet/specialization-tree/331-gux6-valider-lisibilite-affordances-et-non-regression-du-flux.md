@@ -39,15 +39,15 @@ Sécuriser le flux UX de l'arbre de spécialisation avec une couverture ciblée 
 
 ## Fichiers pressentis
 
-| Fichier                                               | Rôle                                                                          |
-| ----------------------------------------------------- | ----------------------------------------------------------------------------- |
-| `tests/applications/specialization-tree-app.test.mjs` | Couvrir la matrice UX observable de bout en bout sur l'application            |
-| `tests/applications/specialization-tree/*.test.mjs`   | Compléter les contrats ciblés de view-model et d'affordances si nécessaire    |
-| `module/applications/specialization-tree-app.mjs`     | Support d'un fix minimal si la validation prouve un écart de contexte UI      |
-| `templates/applications/specialization-tree-app.hbs`  | Support d'un fix minimal si un écart de rendu ou d'affordance est observé     |
-| `styles/applications.less`                            | Support d'un fix minimal si la cohérence visuelle ou curseur est en défaut    |
-| `lang/fr.json`                                        | Ajuster la microcopy FR uniquement si un libellé prouvé est ambigu ou erroné  |
-| `lang/en.json`                                        | Ajuster la microcopy EN uniquement si un libellé prouvé est ambigu ou erroné  |
+| Fichier                                               | Rôle                                                                         |
+| ----------------------------------------------------- | ---------------------------------------------------------------------------- |
+| `tests/applications/specialization-tree-app.test.mjs` | Couvrir la matrice UX observable de bout en bout sur l'application           |
+| `tests/applications/specialization-tree/*.test.mjs`   | Compléter les contrats ciblés de view-model et d'affordances si nécessaire   |
+| `module/applications/specialization-tree-app.mjs`     | Support d'un fix minimal si la validation prouve un écart de contexte UI     |
+| `templates/applications/specialization-tree-app.hbs`  | Support d'un fix minimal si un écart de rendu ou d'affordance est observé    |
+| `styles/applications.less`                            | Support d'un fix minimal si la cohérence visuelle ou curseur est en défaut   |
+| `lang/fr.json`                                        | Ajuster la microcopy FR uniquement si un libellé prouvé est ambigu ou erroné |
+| `lang/en.json`                                        | Ajuster la microcopy EN uniquement si un libellé prouvé est ambigu ou erroné |
 
 ## Plan d'implémentation
 

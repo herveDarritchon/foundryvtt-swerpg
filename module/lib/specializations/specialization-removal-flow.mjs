@@ -86,8 +86,7 @@ export function evaluateSpecializationRemoval({ items, specializationKey, select
     // Si aucune restante, fallbackTreeKey reste null → état vide
   } else {
     // Conserver la sélection actuelle si elle est encore valide
-    const currentStillValid = selectedTreeKey
-      && remaining.some((spec) => getCanonicalSpecializationKey(spec) === selectedTreeKey)
+    const currentStillValid = selectedTreeKey && remaining.some((spec) => getCanonicalSpecializationKey(spec) === selectedTreeKey)
 
     if (currentStillValid) {
       fallbackTreeKey = selectedTreeKey

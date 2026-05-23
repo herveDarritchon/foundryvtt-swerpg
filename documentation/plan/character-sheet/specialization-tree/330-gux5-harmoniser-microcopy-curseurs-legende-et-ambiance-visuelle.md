@@ -38,14 +38,14 @@ Rendre la vue d'arbre immédiatement compréhensible et cohérente dans ses sign
 
 ## Fichiers pressentis
 
-| Fichier                                               | Rôle                                                                                  |
-| ----------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| Fichier                                               | Rôle                                                                                |
+| ----------------------------------------------------- | ----------------------------------------------------------------------------------- |
 | `module/applications/specialization-tree-app.mjs`     | Centraliser la microcopy d'action, les métadonnées de légende et les affordances UI |
-| `templates/applications/specialization-tree-app.hbs`  | Rendre la légende compacte et brancher les hooks d'affordance visibles               |
-| `styles/applications.less`                            | Porter les curseurs, la légende et le polish visuel sobre                            |
+| `templates/applications/specialization-tree-app.hbs`  | Rendre la légende compacte et brancher les hooks d'affordance visibles              |
+| `styles/applications.less`                            | Porter les curseurs, la légende et le polish visuel sobre                           |
 | `lang/fr.json`                                        | Localiser les libellés FR des actions, états et légende                             |
 | `lang/en.json`                                        | Localiser les libellés EN des actions, états et légende                             |
-| `tests/applications/specialization-tree-app.test.mjs` | Verrouiller la cohérence microcopy / légende / affordances                           |
+| `tests/applications/specialization-tree-app.test.mjs` | Verrouiller la cohérence microcopy / légende / affordances                          |
 
 ## Plan d'implémentation
 

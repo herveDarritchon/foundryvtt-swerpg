@@ -40,7 +40,7 @@ attribuer de rangs gratuits de compétences.
 ### Fichiers pressentis
 
 | Fichier                                                       | Rôle                                                                              |
-|---------------------------------------------------------------|-----------------------------------------------------------------------------------|
+| ------------------------------------------------------------- | --------------------------------------------------------------------------------- |
 | `module/lib/specializations/owned-specializations.mjs`        | Réutiliser/compléter la détection de spécialisation déjà possédée                 |
 | `module/lib/specializations/specialization-cost-service.mjs`  | Réutiliser le calcul de coût MSM1 pour la prévisualisation                        |
 | `module/lib/specializations/specialization-purchase-flow.mjs` | Nouveau service métier pur de validation, preview et résultat d'achat             |

@@ -38,16 +38,16 @@ Sécuriser la non-régression observable de `SpecializationTreeApp` après `PXP1
 
 ## Fichiers pressentis
 
-| Fichier                                                      | Rôle                                                                    |
-| ------------------------------------------------------------ | ----------------------------------------------------------------------- |
-| `tests/applications/specialization-tree-app.test.mjs`        | Couvrir les parcours observables clic → détail → fermeture → action     |
-| `tests/applications/specialization-tree/*.test.mjs`          | Compléter les contrats ciblés de nœuds, d'icônes et d'affordances       |
-| `tests/integration/specialization-tree-pixi-render.test.mjs` | Verrouiller le rendu des connexions, icônes et réglages de netteté PIXI |
-| `module/applications/specialization-tree-app.mjs`            | Support d'un fix minimal si le flux UI observable diverge               |
-| `module/applications/specialization-tree/pixi-tree-renderer.mjs` | Support d'un fix minimal si la netteté ou le rendu canvas divergent |
-| `templates/applications/specialization-tree-app.hbs`         | Support d'un fix minimal si une affordance visible manque               |
-| `styles/applications.less`                                   | Support d'un fix minimal si la lisibilité observable n'est pas tenue    |
-| `lang/fr.json` / `lang/en.json`                              | Ajustement ponctuel uniquement si un libellé prouvé est ambigu          |
+| Fichier                                                          | Rôle                                                                    |
+| ---------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| `tests/applications/specialization-tree-app.test.mjs`            | Couvrir les parcours observables clic → détail → fermeture → action     |
+| `tests/applications/specialization-tree/*.test.mjs`              | Compléter les contrats ciblés de nœuds, d'icônes et d'affordances       |
+| `tests/integration/specialization-tree-pixi-render.test.mjs`     | Verrouiller le rendu des connexions, icônes et réglages de netteté PIXI |
+| `module/applications/specialization-tree-app.mjs`                | Support d'un fix minimal si le flux UI observable diverge               |
+| `module/applications/specialization-tree/pixi-tree-renderer.mjs` | Support d'un fix minimal si la netteté ou le rendu canvas divergent     |
+| `templates/applications/specialization-tree-app.hbs`             | Support d'un fix minimal si une affordance visible manque               |
+| `styles/applications.less`                                       | Support d'un fix minimal si la lisibilité observable n'est pas tenue    |
+| `lang/fr.json` / `lang/en.json`                                  | Ajustement ponctuel uniquement si un libellé prouvé est ambigu          |
 
 ## Plan d'implémentation
 

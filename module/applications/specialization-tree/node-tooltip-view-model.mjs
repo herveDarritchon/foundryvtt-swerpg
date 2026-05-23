@@ -29,9 +29,7 @@ export function buildNodeTooltipViewModel(node, localize) {
   ]
 
   if (node.reasonLabel) {
-    lines.push(
-      `${localize('SWERPG.TALENT.SPECIALIZATION_TREE_APP.TOOLTIP.REASON')}: ${node.reasonLabel}`
-    )
+    lines.push(`${localize('SWERPG.TALENT.SPECIALIZATION_TREE_APP.TOOLTIP.REASON')}: ${node.reasonLabel}`)
   }
 
   return {

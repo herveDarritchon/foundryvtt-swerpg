@@ -417,9 +417,7 @@ function detectSpecializationChanges(oldState, specializationChanges, actor, ts,
 
   for (const [canonicalKey, spec] of Object.entries(newSpecMap)) {
     if (oldSpecMap[canonicalKey]) continue
-    const alreadyDetected = entries.some(
-      (e) => e.type === 'specialization.add' && e.data.specializationId === (spec.specializationId || canonicalKey),
-    )
+    const alreadyDetected = entries.some((e) => e.type === 'specialization.add' && e.data.specializationId === (spec.specializationId || canonicalKey))
     if (alreadyDetected) continue
 
     entries.push(

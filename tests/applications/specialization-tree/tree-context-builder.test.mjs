@@ -28,13 +28,9 @@ describe('tree-context-builder (pure)', () => {
   })
 
   it('builds specialization entries with name fallback key when no ids exist', () => {
-    const specializations = [
-      { name: 'Spec One' },
-    ]
+    const specializations = [{ name: 'Spec One' }]
 
-    const resolutions = new Map([
-      ['Spec One', { tree: { name: 'Tree One' }, state: 'available' }],
-    ])
+    const resolutions = new Map([['Spec One', { tree: { name: 'Tree One' }, state: 'available' }]])
 
     const localize = (k) => k
 
@@ -46,9 +42,7 @@ describe('tree-context-builder (pure)', () => {
   })
 
   it('marks entries as unresolved when resolution is missing', () => {
-    const specializations = [
-      { specializationId: 'spec-missing', name: 'Ghost' },
-    ]
+    const specializations = [{ specializationId: 'spec-missing', name: 'Ghost' }]
 
     const resolutions = new Map()
 
@@ -161,11 +155,7 @@ describe('tree-context-builder (pure)', () => {
   })
 
   it('builds a current tree summary with XP when provided', () => {
-    const renderNodes = [
-      { nodeState: 'purchased' },
-      { nodeState: 'available' },
-      { nodeState: 'locked' },
-    ]
+    const renderNodes = [{ nodeState: 'purchased' }, { nodeState: 'available' }, { nodeState: 'locked' }]
 
     const localize = (k) => k
 
@@ -176,10 +166,7 @@ describe('tree-context-builder (pure)', () => {
   })
 
   it('builds tree summary without XP when undefined', () => {
-    const renderNodes = [
-      { nodeState: 'purchased' },
-      { nodeState: 'purchased' },
-    ]
+    const renderNodes = [{ nodeState: 'purchased' }, { nodeState: 'purchased' }]
 
     const summary = buildCurrentTreeSummary('Tree Y', renderNodes, (k) => k, undefined)
 
@@ -204,10 +191,13 @@ describe('tree-context-builder (pure)', () => {
       const specializations = [{ specializationId: 'spec-a', name: 'A', treeUuid: 'Item.tree-a' }]
 
       const resolutions = new Map([
-        ['spec-a', {
-          tree: { name: 'Tree A', system: { specializationId: 'canonical-v1' } },
-          state: 'available',
-        }],
+        [
+          'spec-a',
+          {
+            tree: { name: 'Tree A', system: { specializationId: 'canonical-v1' } },
+            state: 'available',
+          },
+        ],
       ])
 
       const entries = buildSpecializationEntries(specializations, resolutions, () => 'x')
@@ -219,10 +209,13 @@ describe('tree-context-builder (pure)', () => {
       const specializations = [{ specializationId: 'spec-b', name: 'B', treeUuid: 'Item.tree-b' }]
 
       const resolutions = new Map([
-        ['spec-b', {
-          tree: { name: 'Tree B', system: {} },
-          state: 'available',
-        }],
+        [
+          'spec-b',
+          {
+            tree: { name: 'Tree B', system: {} },
+            state: 'available',
+          },
+        ],
       ])
 
       const entries = buildSpecializationEntries(specializations, resolutions, () => 'x')
@@ -234,10 +227,13 @@ describe('tree-context-builder (pure)', () => {
       const specializations = [{ name: 'Legacy Spec', treeUuid: 'Item.legacy' }]
 
       const resolutions = new Map([
-        ['Item.legacy', {
-          tree: { name: 'Legacy Tree', system: {} },
-          state: 'available',
-        }],
+        [
+          'Item.legacy',
+          {
+            tree: { name: 'Legacy Tree', system: {} },
+            state: 'available',
+          },
+        ],
       ])
 
       const entries = buildSpecializationEntries(specializations, resolutions, () => 'x')

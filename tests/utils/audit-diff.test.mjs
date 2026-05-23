@@ -1632,9 +1632,7 @@ describe('detail changes', () => {
     const expandedChanges = foundry.utils.expandObject(changes)
     const oldState = makeOldState(expandedChanges, source)
     const newSystem = applyChangesToSystem(source.system, expandedChanges)
-    newSystem.details.specializations = new Set([
-      { name: 'Marauder', specializationId: 'marauder' },
-    ])
+    newSystem.details.specializations = new Set([{ name: 'Marauder', specializationId: 'marauder' }])
     const actor = makeActor(newSystem)
 
     const { composeEntries } = await import('../../module/utils/audit-diff.mjs')
@@ -1665,9 +1663,7 @@ describe('detail changes', () => {
     }
 
     const source = defaultSource()
-    source.system.details.specializations = new Set([
-      { name: 'Bodyguard', specializationId: 'bodyguard' },
-    ])
+    source.system.details.specializations = new Set([{ name: 'Bodyguard', specializationId: 'bodyguard' }])
 
     const expandedChanges = foundry.utils.expandObject(changes)
     const newSystem = applyChangesToSystem(source.system, expandedChanges)
@@ -1728,9 +1724,7 @@ describe('detail changes', () => {
     const expandedChanges = foundry.utils.expandObject(changes)
     const oldState = makeOldState(expandedChanges, source)
     const newSystem = applyChangesToSystem(source.system, expandedChanges)
-    newSystem.details.specializations = new Set([
-      { name: 'Marauder', specializationId: 'marauder' },
-    ])
+    newSystem.details.specializations = new Set([{ name: 'Marauder', specializationId: 'marauder' }])
     newSystem.progression.experience.spent = 20
     const actor = makeActor(newSystem)
 
@@ -1778,9 +1772,7 @@ describe('detail changes', () => {
     const expandedChanges = foundry.utils.expandObject(changes)
     const oldState = makeOldState(expandedChanges, source)
     const newSystem = applyChangesToSystem(source.system, expandedChanges)
-    newSystem.details.specializations = new Set([
-      { name: 'Marauder', specializationId: 'marauder' },
-    ])
+    newSystem.details.specializations = new Set([{ name: 'Marauder', specializationId: 'marauder' }])
     newSystem.progression.experience.spent = 20
     const actor = makeActor(newSystem)
 

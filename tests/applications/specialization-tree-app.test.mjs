@@ -237,7 +237,7 @@ describe('specialization-tree app orchestration', () => {
         renderConnections: context.renderConnections,
         currentTreeId: 'spec-a',
       },
-      { resetView: true }
+      { resetView: true },
     )
   })
 
@@ -529,9 +529,7 @@ describe('specialization-tree app orchestration', () => {
     app.actor = createActor({
       system: {
         details: {
-          specializations: new Set([
-            { specializationId: 'spec-a', name: 'Spec A' },
-          ]),
+          specializations: new Set([{ specializationId: 'spec-a', name: 'Spec A' }]),
         },
         progression: { talentPurchases: [], experience: { available: 100 } },
         removeSpecialization: removeSpy,

@@ -80,8 +80,7 @@ Source de règle : table de progression XP reprise du système Star Wars FFG / E
 L’ajout est autorisé uniquement si le personnage dispose d’assez d’XP disponible.
 
 ```js
-canPurchaseSpecialization =
-  actor.system.experience.available >= specializationPurchaseCost
+canPurchaseSpecialization = actor.system.experience.available >= specializationPurchaseCost
 ```
 
 Si l’XP disponible est insuffisante, l’action doit être bloquée.
@@ -99,8 +98,7 @@ Résultat : ajout interdit
 Une spécialisation déjà possédée ne doit pas pouvoir être ajoutée une seconde fois.
 
 ```js
-canPurchaseSpecialization =
-  !ownedSpecializations.includes(candidateSpecializationId)
+canPurchaseSpecialization = !ownedSpecializations.includes(candidateSpecializationId)
 ```
 
 La vue d’ajout doit donc exclure les spécialisations déjà possédées ou les afficher en état désactivé avec un message clair.
@@ -142,8 +140,7 @@ Une spécialisation achetée après la création ne doit pas attribuer automatiq
 Une spécialisation peut être supprimée uniquement si aucun talent n’a été acheté dans son arbre.
 
 ```js
-canRemoveSpecialization =
-  purchasedTalentsInSpecialization.length === 0
+canRemoveSpecialization = purchasedTalentsInSpecialization.length === 0
 ```
 
 Cette règle protège l’intégrité de la progression du personnage.
@@ -157,9 +154,7 @@ Raison : elle peut avoir participé à la création du personnage, notamment via
 Règle recommandée :
 
 ```js
-canRemoveSpecialization =
-  !isInitialSpecialization
-  && purchasedTalentsInSpecialization.length === 0
+canRemoveSpecialization = !isInitialSpecialization && purchasedTalentsInSpecialization.length === 0
 ```
 
 ### 6.3. Suppression et remboursement XP
@@ -622,5 +617,5 @@ Audit log
 
 Le point à ne pas rater : **ne pas transformer la spécialisation sélectionnée dans l’UI en état métier exclusif**. Un personnage peut posséder plusieurs spécialisations et continuer à progresser dans chacune. L’interface doit donc parler de **current tree** ou **selected tree**, pas de spécialisation active au sens mécanique.
 
-[1]: https://sw-eote-srd.vercel.app/experience-points?utm_source=chatgpt.com "Experience Points"
-[2]: https://sw-eote-srd.vercel.app/careers-specializations?utm_source=chatgpt.com "Careers & Specs"
+[1]: https://sw-eote-srd.vercel.app/experience-points?utm_source=chatgpt.com 'Experience Points'
+[2]: https://sw-eote-srd.vercel.app/careers-specializations?utm_source=chatgpt.com 'Careers & Specs'

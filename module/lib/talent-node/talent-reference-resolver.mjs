@@ -34,12 +34,22 @@ function resolveTalentByBusinessKey(normalizedKey) {
 
       const id = item.system?.id
       if (id && typeof id === 'string' && id.toLowerCase().trim() === normalizedKey) {
-        return { name: item.name, isRanked: item.system?.isRanked ?? false, isActive: isTalentActivationActive(item.system?.activation), description: item.system?.description ?? null }
+        return {
+          name: item.name,
+          isRanked: item.system?.isRanked ?? false,
+          isActive: isTalentActivationActive(item.system?.activation),
+          description: item.system?.description ?? null,
+        }
       }
 
       const oggKey = item.getFlag?.('swerpg', 'oggdudeKey')
       if (oggKey && typeof oggKey === 'string' && oggKey.toLowerCase().trim() === normalizedKey) {
-        return { name: item.name, isRanked: item.system?.isRanked ?? false, isActive: isTalentActivationActive(item.system?.activation), description: item.system?.description ?? null }
+        return {
+          name: item.name,
+          isRanked: item.system?.isRanked ?? false,
+          isActive: isTalentActivationActive(item.system?.activation),
+          description: item.system?.description ?? null,
+        }
       }
     }
   }
@@ -54,12 +64,22 @@ function resolveTalentByBusinessKey(normalizedKey) {
 
         const systemId = entry.system?.id
         if (systemId && typeof systemId === 'string' && systemId.toLowerCase().trim() === normalizedKey) {
-          return { name: entry.name, isRanked: entry.system?.isRanked ?? false, isActive: isTalentActivationActive(entry.system?.activation), description: entry.system?.description ?? null }
+          return {
+            name: entry.name,
+            isRanked: entry.system?.isRanked ?? false,
+            isActive: isTalentActivationActive(entry.system?.activation),
+            description: entry.system?.description ?? null,
+          }
         }
 
         const oggKey = entry.flags?.swerpg?.oggdudeKey
         if (oggKey && typeof oggKey === 'string' && oggKey.toLowerCase().trim() === normalizedKey) {
-          return { name: entry.name, isRanked: entry.system?.isRanked ?? false, isActive: isTalentActivationActive(entry.system?.activation), description: entry.system?.description ?? null }
+          return {
+            name: entry.name,
+            isRanked: entry.system?.isRanked ?? false,
+            isActive: isTalentActivationActive(entry.system?.activation),
+            description: entry.system?.description ?? null,
+          }
         }
       }
     }

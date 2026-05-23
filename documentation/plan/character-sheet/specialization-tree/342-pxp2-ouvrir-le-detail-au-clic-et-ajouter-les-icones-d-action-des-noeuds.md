@@ -38,14 +38,14 @@ Faire du clic sur nœud le point d'entrée unique de consultation/action, puis r
 
 ## Fichiers pressentis
 
-| Fichier                                                           | Rôle                                                                    |
-| ----------------------------------------------------------------- | ----------------------------------------------------------------------- |
-| `module/applications/specialization-tree/node-ui-state.mjs`       | Centraliser le contrat d'icônes par coin selon type, action et rang     |
-| `module/applications/specialization-tree/pixi-tree-renderer.mjs`  | Rendre les sprites/icônes aux bons emplacements sur chaque nœud         |
-| `module/applications/specialization-tree-app.mjs`                 | Faire du clic un ouvre-détail et réserver l'exécution au CTA du panneau |
-| `tests/applications/specialization-tree/node-ui-state.test.mjs`   | Verrouiller le mapping des slots d'icônes                               |
-| `tests/applications/specialization-tree-app.test.mjs`             | Vérifier le nouveau flux clic → détail → action                         |
-| `tests/integration/specialization-tree-pixi-render.test.mjs`      | Vérifier la présence et la stabilité des icônes rendues                 |
+| Fichier                                                          | Rôle                                                                    |
+| ---------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| `module/applications/specialization-tree/node-ui-state.mjs`      | Centraliser le contrat d'icônes par coin selon type, action et rang     |
+| `module/applications/specialization-tree/pixi-tree-renderer.mjs` | Rendre les sprites/icônes aux bons emplacements sur chaque nœud         |
+| `module/applications/specialization-tree-app.mjs`                | Faire du clic un ouvre-détail et réserver l'exécution au CTA du panneau |
+| `tests/applications/specialization-tree/node-ui-state.test.mjs`  | Verrouiller le mapping des slots d'icônes                               |
+| `tests/applications/specialization-tree-app.test.mjs`            | Vérifier le nouveau flux clic → détail → action                         |
+| `tests/integration/specialization-tree-pixi-render.test.mjs`     | Vérifier la présence et la stabilité des icônes rendues                 |
 
 ## Plan d'implémentation
 

@@ -35,9 +35,8 @@ export function buildContextualActionPanelViewModel(node, localize) {
 
   const primaryAction = node.actionable?.primaryAction ?? null
   const canAction = !!(
-    primaryAction
-    && ((primaryAction === 'purchase' && node.actionable?.canPurchase === true)
-      || (primaryAction === 'forget' && node.actionable?.canForget === true))
+    primaryAction &&
+    ((primaryAction === 'purchase' && node.actionable?.canPurchase === true) || (primaryAction === 'forget' && node.actionable?.canForget === true))
   )
 
   return {

@@ -62,11 +62,11 @@ Le premier jet (PR #359) a modifié `editSpecializations` pour ouvrir `Specializ
 
 ## Fichiers modifiés
 
-| Fichier | Rôle |
-|---|---|
-| `module/applications/sheets/character-sheet.mjs` | Rétablir `_viewDetailItem`, ajouter action secondaire pour `openSpecializationTreeApp()` |
-| `templates/sheets/actor/character-header.hbs` | Badge en position absolue, nouveau bouton icône arbres |
-| `styles/actor.less` | Contraste pastille (ambre/holo), positionnement badge, style bouton secondaire |
+| Fichier                                                      | Rôle                                                                                                                          |
+| ------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------- |
+| `module/applications/sheets/character-sheet.mjs`             | Rétablir `_viewDetailItem`, ajouter action secondaire pour `openSpecializationTreeApp()`                                      |
+| `templates/sheets/actor/character-header.hbs`                | Badge en position absolue, nouveau bouton icône arbres                                                                        |
+| `styles/actor.less`                                          | Contraste pastille (ambre/holo), positionnement badge, style bouton secondaire                                                |
 | `tests/applications/sheets/character-sheet-talents.test.mjs` | Mettre à jour les tests d'action : `editSpecializations` → `_viewDetailItem`, nouvelle action → `openSpecializationTreeApp()` |
 
 ## Pas de nouvelles clés i18n

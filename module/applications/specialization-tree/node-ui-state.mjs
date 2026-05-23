@@ -403,9 +403,7 @@ export const RANKED_ICON_PATH = 'systems/swerpg/assets/images/icons/rank.svg'
 export function buildIconSlots(node) {
   const nodeType = node?.nodeType ?? resolveNodeType(node?.isActive)
 
-  const topLeft = nodeType === NODE_TYPE.ACTIVE
-    ? ACTIVE_TYPE_ICON_PATH
-    : PASSIVE_TYPE_ICON_PATH
+  const topLeft = nodeType === NODE_TYPE.ACTIVE ? ACTIVE_TYPE_ICON_PATH : PASSIVE_TYPE_ICON_PATH
 
   let topRight = null
   if (node.actionable?.primaryAction === 'purchase') {

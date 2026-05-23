@@ -44,12 +44,12 @@ Renforcer la lisibilité immédiate des nœuds et des connexions, rendre le pann
 
 ## 4. Risques
 
-| Risque | Impact | Mitigation |
-| --- | --- | --- |
-| Trop d'icônes sur un nœud | surcharge visuelle | garder des marqueurs discrets et positions stables |
-| Couleur métier et état d'achat mélangés | ambiguïté utilisateur | séparer couleur de base et variation d'état |
-| Connexions plus épaisses mais trop dominantes | bruit visuel | augmenter la visibilité sans concurrencer les nœuds |
-| Correction du zoom qui casse le rendu courant | régression UX | isoler l'issue zoom comme enabler technique avec validation dédiée |
+| Risque                                        | Impact                | Mitigation                                                         |
+| --------------------------------------------- | --------------------- | ------------------------------------------------------------------ |
+| Trop d'icônes sur un nœud                     | surcharge visuelle    | garder des marqueurs discrets et positions stables                 |
+| Couleur métier et état d'achat mélangés       | ambiguïté utilisateur | séparer couleur de base et variation d'état                        |
+| Connexions plus épaisses mais trop dominantes | bruit visuel          | augmenter la visibilité sans concurrencer les nœuds                |
+| Correction du zoom qui casse le rendu courant | régression UX         | isoler l'issue zoom comme enabler technique avec validation dédiée |
 
 ## 5. Hiérarchie des work items
 
@@ -74,14 +74,14 @@ graph TD
 
 ## 6. Découpage GitHub recommandé
 
-| Type | Titre | Priorité | Estimate | Dépendances |
-| --- | --- | --- | --- | --- |
-| Feature | `Pixi Tree Polish - Renforcer lisibilité et netteté de l'arbre de spécialisation` | P1 | 8 | Epic `Specialization Tree V1`, continuité `Graphical UX Refresh` |
-| Story | `PXP1 - Clarifier contraste et états des nœuds actifs/inactifs` | P1 | 3 | Feature |
-| Story | `PXP2 - Ouvrir le détail au clic et ajouter les icônes d'action des nœuds` | P1 | 3 | PXP1 |
-| Story | `PXP3 - Renforcer connexions et compacter la fenêtre de détail` | P1 | 2 | PXP1 |
-| Enabler | `PXP4 - Corriger le flou du zoom PIXI dans le viewport` | P0 | 3 | Feature |
-| Test | `PXP5 - Valider lisibilité, affordances et netteté du canvas` | P1 | 2 | PXP1, PXP2, PXP3, PXP4 |
+| Type    | Titre                                                                             | Priorité | Estimate | Dépendances                                                      |
+| ------- | --------------------------------------------------------------------------------- | -------- | -------- | ---------------------------------------------------------------- |
+| Feature | `Pixi Tree Polish - Renforcer lisibilité et netteté de l'arbre de spécialisation` | P1       | 8        | Epic `Specialization Tree V1`, continuité `Graphical UX Refresh` |
+| Story   | `PXP1 - Clarifier contraste et états des nœuds actifs/inactifs`                   | P1       | 3        | Feature                                                          |
+| Story   | `PXP2 - Ouvrir le détail au clic et ajouter les icônes d'action des nœuds`        | P1       | 3        | PXP1                                                             |
+| Story   | `PXP3 - Renforcer connexions et compacter la fenêtre de détail`                   | P1       | 2        | PXP1                                                             |
+| Enabler | `PXP4 - Corriger le flou du zoom PIXI dans le viewport`                           | P0       | 3        | Feature                                                          |
+| Test    | `PXP5 - Valider lisibilité, affordances et netteté du canvas`                     | P1       | 2        | PXP1, PXP2, PXP3, PXP4                                           |
 
 ## 7. Dépendances et ordre recommandé
 

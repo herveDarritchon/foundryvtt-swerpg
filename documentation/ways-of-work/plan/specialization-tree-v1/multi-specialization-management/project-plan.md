@@ -53,7 +53,7 @@ initiale sans talents achetés.
 ## 4. Risques
 
 | Risque                                                        | Impact                                | Mitigation                                                                                  |
-|---------------------------------------------------------------|---------------------------------------|---------------------------------------------------------------------------------------------|
+| ------------------------------------------------------------- | ------------------------------------- | ------------------------------------------------------------------------------------------- |
 | Confondre arbre courant UI et spécialisation active métier    | bugs de progression ou d'affichage    | figer explicitement le contrat `career / ownedSpecializations / selectedSpecializationTree` |
 | Autoriser l'achat d'une spécialisation non résoluble          | acteur incohérent, arbre inutilisable | bloquer la V1 si la spécialisation ne résout pas proprement son arbre                       |
 | Supprimer une spécialisation avec talents achetés ou initiale | corruption de progression             | verrouiller la suppression par règles métier et message explicite                           |
@@ -84,7 +84,7 @@ graph TD
 ## 6. Découpage GitHub recommandé
 
 | Type    | Titre                                                                                         | Priorité | Estimate | Dépendances                                           |
-|---------|-----------------------------------------------------------------------------------------------|----------|----------|-------------------------------------------------------|
+| ------- | --------------------------------------------------------------------------------------------- | -------- | -------- | ----------------------------------------------------- |
 | Feature | `Multi-Specialization Management - Gérer ajout, synthèse et suppression des spécialisations`  | P1       | 8        | Epic `Specialization Tree V1`, continuité US16 + US17 |
 | Enabler | `MSM1 - Stabiliser le contrat métier des spécialisations et de l'arbre courant`               | P1       | 2        | Feature                                               |
 | Story   | `MSM2 - Résumer les spécialisations dans le header et ouvrir la gestion`                      | P1       | 2        | MSM1                                                  |

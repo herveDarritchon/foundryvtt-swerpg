@@ -1,5 +1,6 @@
 import { logger } from './logger.mjs'
 import { composeEntries, makeEntry, captureSnapshot } from './audit-diff.mjs'
+import { buildAuditLogDescription } from '../applications/character-audit-log.mjs'
 
 /* -------------------------------------------- */
 /*  Constantes                                  */
@@ -200,6 +201,7 @@ async function writeLogEntries(actor, entries) {
       }
 
       await actor.update({ [AUDIT_LOG_KEY]: nextLogs }, { swerpgAuditLog: false })
+      void sendChatForAuditEntries(actor, entries)
       return
     } catch (err) {
       if (attempt < MAX_RETRIES) {
@@ -238,6 +240,7 @@ export {
   handleWriteError,
   pruneExpiredPending,
   readMaxLogEntries,
+  sendChatForAuditEntries,
   onCreateItem,
   recordTalentNodePurchase,
   recordTalentNodeOperation,
@@ -388,6 +391,206 @@ async function recordTalentNodeOperation(actor, operation, status, data) {
  */
 async function recordTalentNodePurchase(actor, purchaseData) {
   return recordTalentNodeOperation(actor, 'purchase', 'succeeded', purchaseData)
+}
+
+/* -------------------------------------------- */
+/*  Émission de messages chat depuis l'audit    */
+/* -------------------------------------------- */
+
+/**
+ * Build the template context for a chat message from a single audit entry.
+ * @param {object} actor - The actor document
+ * @param {object} entry - A single audit log entry
+ * @returns {object} Context for audit-entry.hbs
+ */
+function _buildChatContext(actor, entry) {
+  const type = entry.type
+  const data = entry.data ?? {}
+  const snapshot = entry.snapshot ?? {}
+  const xpDelta = entry.xpDelta ?? 0
+
+  const context = {
+    actorImg: actor.img,
+    actorName: actor.name,
+    typeLabel: '',
+    changeText: '',
+    changeCssClass: 'is-change',
+    showDetails: false,
+    costLabel: '',
+    costCssClass: '',
+    contextLabel: '',
+  }
+
+  switch (type) {
+    case 'skill.train': {
+      const isFree = data.isFree === true
+      context.typeLabel = game.i18n.localize('SWERPG.AUDIT_LOG.TYPE.SKILL_TRAIN')
+      context.changeText = `${data.oldRank} → ${data.newRank}`
+      context.showDetails = true
+      if (isFree) {
+        context.changeCssClass = 'is-free'
+        context.costLabel = game.i18n.localize('SWERPG.SKILL.CHAT.FREE_COST')
+        context.costCssClass = 'is-free'
+      } else {
+        context.changeCssClass = 'is-train'
+        context.costLabel = game.i18n.format('SWERPG.SKILL.CHAT.COST', { cost: data.cost })
+      }
+      break
+    }
+
+    case 'skill.forget': {
+      context.typeLabel = game.i18n.localize('SWERPG.AUDIT_LOG.TYPE.SKILL_FORGET')
+      context.changeText = `${data.oldRank} → ${data.newRank}`
+      context.changeCssClass = 'is-forget'
+      context.showDetails = true
+      context.costLabel = game.i18n.format('SWERPG.SKILL.CHAT.REFUND', { cost: data.cost })
+      context.costCssClass = 'is-refund'
+      break
+    }
+
+    case 'characteristic.increase': {
+      context.typeLabel = game.i18n.localize('SWERPG.AUDIT_LOG.TYPE.CHARACTERISTIC_INCREASE')
+      context.changeText = `${data.oldValue} → ${data.newValue}`
+      context.changeCssClass = 'is-train'
+      context.showDetails = true
+      context.costLabel = game.i18n.format('SWERPG.SKILL.CHAT.COST', { cost: data.cost })
+      break
+    }
+
+    case 'xp.spend':
+    case 'xp.refund':
+    case 'xp.grant':
+    case 'xp.remove': {
+      const isGain = type === 'xp.grant' || type === 'xp.refund'
+      context.typeLabel = game.i18n.localize(
+        `SWERPG.AUDIT_LOG.TYPE.${type === 'xp.spend' ? 'XP_SPEND' : type === 'xp.refund' ? 'XP_REFUND' : type === 'xp.grant' ? 'XP_GRANT' : 'XP_REMOVE'}`,
+      )
+      context.changeText = isGain ? `+${data.amount} XP` : `-${data.amount} XP`
+      context.changeCssClass = isGain ? 'is-forget' : 'is-train'
+      context.showDetails = true
+      if (isGain) {
+        context.costLabel = game.i18n.format('SWERPG.SKILL.CHAT.REFUND', { cost: data.amount })
+        context.costCssClass = 'is-refund'
+      } else {
+        context.costLabel = game.i18n.format('SWERPG.SKILL.CHAT.COST', { cost: data.amount })
+      }
+      break
+    }
+
+    case 'species.set':
+    case 'career.set': {
+      const isSpecies = type === 'species.set'
+      context.typeLabel = game.i18n.localize(isSpecies ? 'SWERPG.AUDIT_LOG.TYPE.SPECIES_SET' : 'SWERPG.AUDIT_LOG.TYPE.CAREER_SET')
+      const oldV = data.oldSpecies ?? data.oldCareer ?? game.i18n.localize('SWERPG.AUDIT_LOG.NONE')
+      const newV = data.newSpecies ?? data.newCareer ?? game.i18n.localize('SWERPG.AUDIT_LOG.NONE')
+      context.changeText = `${oldV} → ${newV}`
+      context.changeCssClass = 'is-change'
+      break
+    }
+
+    case 'specialization.add':
+    case 'specialization.remove': {
+      const isAdd = type === 'specialization.add'
+      context.typeLabel = game.i18n.localize(isAdd ? 'SWERPG.AUDIT_LOG.TYPE.SPECIALIZATION_ADD' : 'SWERPG.AUDIT_LOG.TYPE.SPECIALIZATION_REMOVE')
+      context.changeText = data.specializationName ?? data.specializationId ?? ''
+      context.changeCssClass = isAdd ? 'is-train' : 'is-forget'
+      if (data.cost) {
+        context.showDetails = true
+        context.costLabel = game.i18n.format('SWERPG.SKILL.CHAT.COST', { cost: data.cost })
+      }
+      break
+    }
+
+    case 'talent.purchase': {
+      context.typeLabel = game.i18n.localize('SWERPG.AUDIT_LOG.TYPE.TALENT_PURCHASE')
+      context.changeText = data.talentName ?? data.talentId ?? ''
+      context.changeCssClass = 'is-train'
+      context.showDetails = true
+      context.costLabel = game.i18n.format('SWERPG.SKILL.CHAT.COST', { cost: data.cost })
+      break
+    }
+
+    case 'talent-node-purchase-succeeded':
+    case 'talent-node-purchase-failed':
+    case 'talent-node-forget-succeeded':
+    case 'talent-node-forget-failed': {
+      const isSuccess = type.endsWith('succeeded')
+      const isPurchase = type.includes('purchase')
+      context.typeLabel = game.i18n.localize(`SWERPG.AUDIT_LOG.TYPE.${type.replace(/[-.]/g, '_').toUpperCase()}`)
+      context.changeText = isSuccess
+        ? (data.talentId ?? data.nodeId ?? '')
+        : game.i18n.format('SWERPG.AUDIT_LOG.DESCRIPTION.TALENT_NODE_PURCHASE_FAILED', { reasonCode: data.reasonCode ?? '', nodeId: data.nodeId ?? '' })
+      context.changeCssClass = isSuccess ? (isPurchase ? 'is-train' : 'is-forget') : 'is-fail'
+      if (isSuccess && data.cost) {
+        context.showDetails = true
+        if (isPurchase) {
+          context.costLabel = game.i18n.format('SWERPG.SKILL.CHAT.COST', { cost: data.cost })
+        } else {
+          context.costLabel = game.i18n.format('SWERPG.SKILL.CHAT.REFUND', { cost: data.cost })
+          context.costCssClass = 'is-refund'
+        }
+      }
+      break
+    }
+
+    case 'advancement.level': {
+      context.typeLabel = game.i18n.localize('SWERPG.AUDIT_LOG.TYPE.ADVANCEMENT_LEVEL')
+      context.changeText = `${data.oldLevel} → ${data.newLevel}`
+      context.changeCssClass = 'is-change'
+      break
+    }
+
+    default: {
+      const desc = buildAuditLogDescription(entry)
+      context.typeLabel = game.i18n.localize('SWERPG.AUDIT_LOG.TYPE.UNKNOWN')
+      context.changeText = desc
+      context.changeCssClass = xpDelta > 0 ? 'is-forget' : xpDelta < 0 ? 'is-train' : 'is-change'
+      if (xpDelta !== 0) {
+        context.showDetails = true
+        if (xpDelta > 0) {
+          context.costLabel = game.i18n.format('SWERPG.SKILL.CHAT.REFUND', { cost: xpDelta })
+          context.costCssClass = 'is-refund'
+        } else {
+          context.costLabel = game.i18n.format('SWERPG.SKILL.CHAT.COST', { cost: Math.abs(xpDelta) })
+        }
+      }
+    }
+  }
+
+  if (context.showDetails && snapshot.xpAvailable !== undefined) {
+    context.contextLabel = game.i18n.format('SWERPG.SKILL.CHAT.REMAINING', { xp: snapshot.xpAvailable })
+  }
+
+  return context
+}
+
+/**
+ * Send a chat message for each audit entry.
+ * Non-blocking: failures are caught internally.
+ * @param {object} actor
+ * @param {object[]} entries
+ */
+async function sendChatForAuditEntries(actor, entries) {
+  for (const entry of entries) {
+    try {
+      const context = _buildChatContext(actor, entry)
+      const content = await foundry.applications.handlebars.renderTemplate('systems/swerpg/templates/chat/audit-entry.hbs', context)
+
+      await ChatMessage.create({
+        content,
+        speaker: ChatMessage.getSpeaker({ actor }),
+        flags: {
+          swerpg: {
+            auditChat: true,
+            auditType: entry.type,
+            auditEntryId: entry.id,
+          },
+        },
+      })
+    } catch (err) {
+      logger.warn(`[AuditLog] Failed to send chat for ${entry.type}`, err)
+    }
+  }
 }
 
 /* -------------------------------------------- */
