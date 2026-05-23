@@ -634,4 +634,35 @@ export default class SwerpgCharacter extends SwerpgActorType {
       collectionKey: 'specializations',
     })
   }
+
+  /**
+   * Acquire a specialization post-creation without granting free skill ranks.
+   * Used by the specialization purchase flow (drop on character sheet).
+   *
+   * Differs from applySpecialization by zeroing freeSkillRank to prevent
+   * free skill rank attribution during prepareBaseData.
+   *
+   * @param {object} specialization The specialization Item to acquire
+   * @returns {Promise<void>}
+   */
+  async acquireSpecialization(specialization) {
+    const actor = this.parent
+    const itemData = specialization.toObject()
+
+    const acquiredSpecialization = {
+      ...itemData.system,
+      name: itemData.name,
+      img: itemData.img,
+      freeSkillRank: 0,
+    }
+
+    const specializations = Array.from(this.details.specializations || [])
+
+    await actor.update(
+      {
+        'system.details.specializations': [...specializations, acquiredSpecialization],
+      },
+      { keepEmbeddedIds: true },
+    )
+  }
 }

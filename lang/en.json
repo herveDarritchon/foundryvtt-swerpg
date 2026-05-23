@@ -1175,6 +1175,16 @@
         "hint": "Select number of free ranks from specialization."
       }
     },
+    "PURCHASE": {
+      "DUPLICATE": "This specialization is already owned.",
+      "INSUFFICIENT_XP": "Not enough XP to purchase this specialization ({cost} XP needed, {available} XP available).",
+      "CAREER": "Career",
+      "NON_CAREER": "Non-Career",
+      "CONFIRM_TITLE": "Purchase Specialization: {name}",
+      "CONFIRM_CONTENT": "Purchase <strong>{name}</strong> ({careerStatus}) for <strong>{cost} XP</strong>?<br>Available: {available} XP — Remaining after purchase: {remaining} XP.",
+      "CONFIRM_BUTTON": "Spend {cost} XP",
+      "CANCEL_BUTTON": "Cancel"
+    },
     "SHEET": {
       "CHOOSE": "Choose Specialization",
       "CLEAR": "Clear Specialization",
