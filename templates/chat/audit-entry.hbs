@@ -1,16 +1,43 @@
-<div class="swerpg chat-message skill-transaction">
-  <div class="skill-transaction__header">
-    <img class="skill-transaction__portrait" src="{{actorImg}}" alt="{{actorName}}">
-    <div class="skill-transaction__info">
-      <span class="skill-transaction__actor">{{actorName}}</span>
-      <span class="skill-transaction__skill">{{typeLabel}}</span>
+<article class="swerpg chat-message audit-entry audit-entry--{{variant}}">
+  <header class="audit-entry__header">
+    <img class="audit-entry__avatar" src="{{actorImg}}" alt="{{actorName}}">
+    <div class="audit-entry__meta">
+      <span class="audit-entry__actor">{{actorName}}</span>
+      <span class="audit-entry__label">{{eventLabel}}</span>
     </div>
-    <div class="skill-transaction__rank {{changeCssClass}}">{{changeText}}</div>
+  </header>
+
+  <div class="audit-entry__body">
+    {{#if previousValue}}
+    <div class="audit-entry__previous" title="{{previousValue}}">
+      {{previousValue}}
+    </div>
+    {{/if}}
+
+    <div class="audit-entry__change">
+      {{#if previousValue}}
+      <span class="audit-entry__arrow">→</span>
+      {{/if}}
+      <span class="audit-entry__badge" title="{{nextValue}}">
+        {{nextValue}}
+      </span>
+    </div>
+
+    {{#if description}}
+    <div class="audit-entry__description">
+      {{description}}
+    </div>
+    {{/if}}
   </div>
-  {{#if showDetails}}
-  <div class="skill-transaction__details">
-    <span class="skill-transaction__cost {{costCssClass}}">{{costLabel}}</span>
-    <span class="skill-transaction__remaining">{{contextLabel}}</span>
-  </div>
+
+  {{#if hasMeta}}
+  <footer class="audit-entry__footer">
+    {{#if metaLeft}}
+    <span class="audit-entry__meta-left">{{metaLeft}}</span>
+    {{/if}}
+    {{#if metaRight}}
+    <span class="audit-entry__meta-right">{{metaRight}}</span>
+    {{/if}}
+  </footer>
   {{/if}}
-</div>
+</article>
