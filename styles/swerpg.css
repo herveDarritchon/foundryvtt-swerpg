@@ -1699,6 +1699,21 @@ input[type='range'] {
   border-color: var(--color-box-warm-2);
   color: var(--color-box-warm-1);
 }
+.swerpg.sheet.actor .sheet-header div.identity-summary .specialization-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  margin-left: 4px;
+  padding: 0 4px;
+  border-radius: 9px;
+  background: var(--color-accent);
+  color: var(--color-text-light-highlight);
+  font-size: var(--font-size-11);
+  line-height: 1;
+  vertical-align: middle;
+}
 .swerpg.sheet.actor .sheet-header div.metadata {
   justify-content: flex-end;
   gap: 0.5rem;
