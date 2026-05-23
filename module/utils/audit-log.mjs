@@ -399,6 +399,17 @@ async function recordTalentNodePurchase(actor, purchaseData) {
 
 /**
  * Build the template context for a chat message from a single audit entry.
+ *
+ * Produces a generic audit-entry view-model with explicit fields:
+ * - eventLabel: human-readable event label
+ * - previousValue: old value (optional, for change events)
+ * - nextValue: new value displayed prominently
+ * - description: secondary description (optional)
+ * - metaLeft: left footer metadata (optional)
+ * - metaRight: right footer metadata (optional)
+ * - hasMeta: true when at least one footer metadata is present
+ * - variant: CSS modifier class ('change' | 'add' | 'remove' | 'gain' | 'fail')
+ *
  * @param {object} actor - The actor document
  * @param {object} entry - A single audit log entry
  * @returns {object} Context for audit-entry.hbs
@@ -412,48 +423,44 @@ function _buildChatContext(actor, entry) {
   const context = {
     actorImg: actor.img,
     actorName: actor.name,
-    typeLabel: '',
-    changeText: '',
-    changeCssClass: 'is-change',
-    showDetails: false,
-    costLabel: '',
-    costCssClass: '',
-    contextLabel: '',
+    eventLabel: '',
+    previousValue: null,
+    nextValue: '',
+    description: null,
+    metaLeft: null,
+    metaRight: null,
+    hasMeta: false,
+    variant: 'change',
   }
 
   switch (type) {
     case 'skill.train': {
       const isFree = data.isFree === true
-      context.typeLabel = game.i18n.localize('SWERPG.AUDIT_LOG.TYPE.SKILL_TRAIN')
-      context.changeText = `${data.oldRank} → ${data.newRank}`
-      context.showDetails = true
-      if (isFree) {
-        context.changeCssClass = 'is-free'
-        context.costLabel = game.i18n.localize('SWERPG.SKILL.CHAT.FREE_COST')
-        context.costCssClass = 'is-free'
-      } else {
-        context.changeCssClass = 'is-train'
-        context.costLabel = game.i18n.format('SWERPG.SKILL.CHAT.COST', { cost: data.cost })
-      }
+      context.eventLabel = game.i18n.localize('SWERPG.AUDIT_LOG.TYPE.SKILL_TRAIN')
+      context.previousValue = String(data.oldRank)
+      context.nextValue = String(data.newRank)
+      context.variant = isFree ? 'gain' : 'add'
+      context.metaLeft = isFree
+        ? game.i18n.localize('SWERPG.SKILL.CHAT.FREE_COST')
+        : game.i18n.format('SWERPG.SKILL.CHAT.COST', { cost: data.cost })
       break
     }
 
     case 'skill.forget': {
-      context.typeLabel = game.i18n.localize('SWERPG.AUDIT_LOG.TYPE.SKILL_FORGET')
-      context.changeText = `${data.oldRank} → ${data.newRank}`
-      context.changeCssClass = 'is-forget'
-      context.showDetails = true
-      context.costLabel = game.i18n.format('SWERPG.SKILL.CHAT.REFUND', { cost: data.cost })
-      context.costCssClass = 'is-refund'
+      context.eventLabel = game.i18n.localize('SWERPG.AUDIT_LOG.TYPE.SKILL_FORGET')
+      context.previousValue = String(data.oldRank)
+      context.nextValue = String(data.newRank)
+      context.variant = 'remove'
+      context.metaLeft = game.i18n.format('SWERPG.SKILL.CHAT.REFUND', { cost: data.cost })
       break
     }
 
     case 'characteristic.increase': {
-      context.typeLabel = game.i18n.localize('SWERPG.AUDIT_LOG.TYPE.CHARACTERISTIC_INCREASE')
-      context.changeText = `${data.oldValue} → ${data.newValue}`
-      context.changeCssClass = 'is-train'
-      context.showDetails = true
-      context.costLabel = game.i18n.format('SWERPG.SKILL.CHAT.COST', { cost: data.cost })
+      context.eventLabel = game.i18n.localize('SWERPG.AUDIT_LOG.TYPE.CHARACTERISTIC_INCREASE')
+      context.previousValue = String(data.oldValue)
+      context.nextValue = String(data.newValue)
+      context.variant = 'add'
+      context.metaLeft = game.i18n.format('SWERPG.SKILL.CHAT.COST', { cost: data.cost })
       break
     }
 
@@ -462,51 +469,47 @@ function _buildChatContext(actor, entry) {
     case 'xp.grant':
     case 'xp.remove': {
       const isGain = type === 'xp.grant' || type === 'xp.refund'
-      context.typeLabel = game.i18n.localize(
+      context.eventLabel = game.i18n.localize(
         `SWERPG.AUDIT_LOG.TYPE.${type === 'xp.spend' ? 'XP_SPEND' : type === 'xp.refund' ? 'XP_REFUND' : type === 'xp.grant' ? 'XP_GRANT' : 'XP_REMOVE'}`,
       )
-      context.changeText = isGain ? `+${data.amount} XP` : `-${data.amount} XP`
-      context.changeCssClass = isGain ? 'is-forget' : 'is-train'
-      context.showDetails = true
-      if (isGain) {
-        context.costLabel = game.i18n.format('SWERPG.SKILL.CHAT.REFUND', { cost: data.amount })
-        context.costCssClass = 'is-refund'
-      } else {
-        context.costLabel = game.i18n.format('SWERPG.SKILL.CHAT.COST', { cost: data.amount })
-      }
+      context.nextValue = isGain ? `+${data.amount} XP` : `-${data.amount} XP`
+      context.variant = isGain ? 'gain' : 'remove'
+      context.metaLeft = isGain
+        ? game.i18n.format('SWERPG.SKILL.CHAT.REFUND', { cost: data.amount })
+        : game.i18n.format('SWERPG.SKILL.CHAT.COST', { cost: data.amount })
       break
     }
 
     case 'species.set':
     case 'career.set': {
       const isSpecies = type === 'species.set'
-      context.typeLabel = game.i18n.localize(isSpecies ? 'SWERPG.AUDIT_LOG.TYPE.SPECIES_SET' : 'SWERPG.AUDIT_LOG.TYPE.CAREER_SET')
-      const oldV = data.oldSpecies ?? data.oldCareer ?? game.i18n.localize('SWERPG.AUDIT_LOG.NONE')
-      const newV = data.newSpecies ?? data.newCareer ?? game.i18n.localize('SWERPG.AUDIT_LOG.NONE')
-      context.changeText = `${oldV} → ${newV}`
-      context.changeCssClass = 'is-change'
+      context.eventLabel = game.i18n.localize(isSpecies ? 'SWERPG.AUDIT_LOG.TYPE.SPECIES_SET' : 'SWERPG.AUDIT_LOG.TYPE.CAREER_SET')
+      const noneLabel = game.i18n.localize('SWERPG.AUDIT_LOG.NONE')
+      const oldV = data.oldSpecies ?? data.oldCareer ?? null
+      const newV = data.newSpecies ?? data.newCareer ?? null
+      context.previousValue = oldV ?? noneLabel
+      context.nextValue = newV ?? noneLabel
+      context.variant = 'change'
       break
     }
 
     case 'specialization.add':
     case 'specialization.remove': {
       const isAdd = type === 'specialization.add'
-      context.typeLabel = game.i18n.localize(isAdd ? 'SWERPG.AUDIT_LOG.TYPE.SPECIALIZATION_ADD' : 'SWERPG.AUDIT_LOG.TYPE.SPECIALIZATION_REMOVE')
-      context.changeText = data.specializationName ?? data.specializationId ?? ''
-      context.changeCssClass = isAdd ? 'is-train' : 'is-forget'
+      context.eventLabel = game.i18n.localize(isAdd ? 'SWERPG.AUDIT_LOG.TYPE.SPECIALIZATION_ADD' : 'SWERPG.AUDIT_LOG.TYPE.SPECIALIZATION_REMOVE')
+      context.nextValue = data.specializationName ?? data.specializationId ?? ''
+      context.variant = isAdd ? 'add' : 'remove'
       if (data.cost) {
-        context.showDetails = true
-        context.costLabel = game.i18n.format('SWERPG.SKILL.CHAT.COST', { cost: data.cost })
+        context.metaLeft = game.i18n.format('SWERPG.SKILL.CHAT.COST', { cost: data.cost })
       }
       break
     }
 
     case 'talent.purchase': {
-      context.typeLabel = game.i18n.localize('SWERPG.AUDIT_LOG.TYPE.TALENT_PURCHASE')
-      context.changeText = data.talentName ?? data.talentId ?? ''
-      context.changeCssClass = 'is-train'
-      context.showDetails = true
-      context.costLabel = game.i18n.format('SWERPG.SKILL.CHAT.COST', { cost: data.cost })
+      context.eventLabel = game.i18n.localize('SWERPG.AUDIT_LOG.TYPE.TALENT_PURCHASE')
+      context.nextValue = data.talentName ?? data.talentId ?? ''
+      context.variant = 'add'
+      context.metaLeft = game.i18n.format('SWERPG.SKILL.CHAT.COST', { cost: data.cost })
       break
     }
 
@@ -516,50 +519,53 @@ function _buildChatContext(actor, entry) {
     case 'talent-node-forget-failed': {
       const isSuccess = type.endsWith('succeeded')
       const isPurchase = type.includes('purchase')
-      context.typeLabel = game.i18n.localize(`SWERPG.AUDIT_LOG.TYPE.${type.replace(/[-.]/g, '_').toUpperCase()}`)
-      context.changeText = isSuccess
-        ? (data.talentId ?? data.nodeId ?? '')
-        : game.i18n.format('SWERPG.AUDIT_LOG.DESCRIPTION.TALENT_NODE_PURCHASE_FAILED', { reasonCode: data.reasonCode ?? '', nodeId: data.nodeId ?? '' })
-      context.changeCssClass = isSuccess ? (isPurchase ? 'is-train' : 'is-forget') : 'is-fail'
-      if (isSuccess && data.cost) {
-        context.showDetails = true
-        if (isPurchase) {
-          context.costLabel = game.i18n.format('SWERPG.SKILL.CHAT.COST', { cost: data.cost })
-        } else {
-          context.costLabel = game.i18n.format('SWERPG.SKILL.CHAT.REFUND', { cost: data.cost })
-          context.costCssClass = 'is-refund'
+      context.eventLabel = game.i18n.localize(`SWERPG.AUDIT_LOG.TYPE.${type.replace(/[-.]/g, '_').toUpperCase()}`)
+      if (isSuccess) {
+        context.nextValue = data.talentId ?? data.nodeId ?? ''
+        context.variant = isPurchase ? 'add' : 'remove'
+        if (data.cost) {
+          context.metaLeft = isPurchase
+            ? game.i18n.format('SWERPG.SKILL.CHAT.COST', { cost: data.cost })
+            : game.i18n.format('SWERPG.SKILL.CHAT.REFUND', { cost: data.cost })
         }
+      } else {
+        context.nextValue = data.nodeId ?? ''
+        context.description = game.i18n.format('SWERPG.AUDIT_LOG.DESCRIPTION.TALENT_NODE_PURCHASE_FAILED', {
+          reasonCode: data.reasonCode ?? '',
+          nodeId: data.nodeId ?? '',
+        })
+        context.variant = 'fail'
       }
       break
     }
 
     case 'advancement.level': {
-      context.typeLabel = game.i18n.localize('SWERPG.AUDIT_LOG.TYPE.ADVANCEMENT_LEVEL')
-      context.changeText = `${data.oldLevel} → ${data.newLevel}`
-      context.changeCssClass = 'is-change'
+      context.eventLabel = game.i18n.localize('SWERPG.AUDIT_LOG.TYPE.ADVANCEMENT_LEVEL')
+      context.previousValue = String(data.oldLevel)
+      context.nextValue = String(data.newLevel)
+      context.variant = 'change'
       break
     }
 
     default: {
       const desc = buildAuditLogDescription(entry)
-      context.typeLabel = game.i18n.localize('SWERPG.AUDIT_LOG.TYPE.UNKNOWN')
-      context.changeText = desc
-      context.changeCssClass = xpDelta > 0 ? 'is-forget' : xpDelta < 0 ? 'is-train' : 'is-change'
+      context.eventLabel = game.i18n.localize('SWERPG.AUDIT_LOG.TYPE.UNKNOWN')
+      context.nextValue = desc
+      context.variant = xpDelta > 0 ? 'gain' : xpDelta < 0 ? 'remove' : 'change'
       if (xpDelta !== 0) {
-        context.showDetails = true
-        if (xpDelta > 0) {
-          context.costLabel = game.i18n.format('SWERPG.SKILL.CHAT.REFUND', { cost: xpDelta })
-          context.costCssClass = 'is-refund'
-        } else {
-          context.costLabel = game.i18n.format('SWERPG.SKILL.CHAT.COST', { cost: Math.abs(xpDelta) })
-        }
+        context.metaLeft =
+          xpDelta > 0
+            ? game.i18n.format('SWERPG.SKILL.CHAT.REFUND', { cost: xpDelta })
+            : game.i18n.format('SWERPG.SKILL.CHAT.COST', { cost: Math.abs(xpDelta) })
       }
     }
   }
 
-  if (context.showDetails && snapshot.xpAvailable !== undefined) {
-    context.contextLabel = game.i18n.format('SWERPG.SKILL.CHAT.REMAINING', { xp: snapshot.xpAvailable })
+  if (context.metaLeft !== null && snapshot.xpAvailable !== undefined) {
+    context.metaRight = game.i18n.format('SWERPG.SKILL.CHAT.REMAINING', { xp: snapshot.xpAvailable })
   }
+
+  context.hasMeta = context.metaLeft !== null || context.metaRight !== null
 
   return context
 }
@@ -582,6 +588,7 @@ async function sendChatForAuditEntries(actor, entries) {
         flags: {
           swerpg: {
             auditChat: true,
+            action: 'audit',
             auditType: entry.type,
             auditEntryId: entry.id,
           },

@@ -1388,7 +1388,7 @@ describe('sendChatForAuditEntries', () => {
     await expect(sendChatForAuditEntries(actor, [entry])).resolves.toBeUndefined()
   })
 
-  test('calls renderTemplate with audit-entry.hbs and expected context', async () => {
+  test('calls renderTemplate with audit-entry.hbs and expected context for skill.train', async () => {
     const { sendChatForAuditEntries } = await import('../../module/utils/audit-log.mjs')
     const actor = makeActor()
     const entry = makeEntry()
@@ -1400,9 +1400,127 @@ describe('sendChatForAuditEntries', () => {
       expect.objectContaining({
         actorImg: 'icons/test-character.svg',
         actorName: 'Test Character',
-        showDetails: true,
-        changeText: '2 → 3',
+        previousValue: '2',
+        nextValue: '3',
+        variant: 'add',
       }),
     )
+  })
+
+  test('species.set: previousValue and nextValue are set separately, no concatenated string', async () => {
+    const { sendChatForAuditEntries } = await import('../../module/utils/audit-log.mjs')
+    const actor = makeActor()
+    const entry = makeEntry({ type: 'species.set', data: { oldSpecies: 'Wookiee', newSpecies: 'Human' }, xpDelta: 0 })
+
+    await sendChatForAuditEntries(actor, [entry])
+
+    const ctx = globalThis.foundry.applications.handlebars.renderTemplate.mock.calls[0][1]
+    expect(ctx.previousValue).toBe('Wookiee')
+    expect(ctx.nextValue).toBe('Human')
+    expect(ctx.variant).toBe('change')
+    // Ensure no old concatenated field
+    expect(ctx.changeText).toBeUndefined()
+  })
+
+  test('career.set: previousValue and nextValue are set separately, no concatenated string', async () => {
+    const { sendChatForAuditEntries } = await import('../../module/utils/audit-log.mjs')
+    const actor = makeActor()
+    const entry = makeEntry({ type: 'career.set', data: { oldCareer: 'Smuggler', newCareer: 'Bounty Hunter' }, xpDelta: 0 })
+
+    await sendChatForAuditEntries(actor, [entry])
+
+    const ctx = globalThis.foundry.applications.handlebars.renderTemplate.mock.calls[0][1]
+    expect(ctx.previousValue).toBe('Smuggler')
+    expect(ctx.nextValue).toBe('Bounty Hunter')
+    expect(ctx.variant).toBe('change')
+    expect(ctx.changeText).toBeUndefined()
+  })
+
+  test('species.set with null oldSpecies: previousValue uses NONE label', async () => {
+    const { sendChatForAuditEntries } = await import('../../module/utils/audit-log.mjs')
+    const actor = makeActor()
+    const entry = makeEntry({ type: 'species.set', data: { oldSpecies: null, newSpecies: 'Human' }, xpDelta: 0 })
+
+    await sendChatForAuditEntries(actor, [entry])
+
+    const ctx = globalThis.foundry.applications.handlebars.renderTemplate.mock.calls[0][1]
+    expect(ctx.previousValue).toBe('SWERPG.AUDIT_LOG.NONE')
+    expect(ctx.nextValue).toBe('Human')
+  })
+
+  test('specialization.add: nextValue is the specialization name, variant is add', async () => {
+    const { sendChatForAuditEntries } = await import('../../module/utils/audit-log.mjs')
+    const actor = makeActor()
+    const entry = makeEntry({ type: 'specialization.add', data: { specializationId: 'spec-ace', specializationName: 'Ace Pilot', cost: 25 }, xpDelta: -25 })
+
+    await sendChatForAuditEntries(actor, [entry])
+
+    const ctx = globalThis.foundry.applications.handlebars.renderTemplate.mock.calls[0][1]
+    expect(ctx.nextValue).toBe('Ace Pilot')
+    expect(ctx.previousValue).toBeNull()
+    expect(ctx.variant).toBe('add')
+    expect(ctx.metaLeft).toBe('SWERPG.SKILL.CHAT.COST')
+    expect(ctx.changeText).toBeUndefined()
+  })
+
+  test('specialization.remove: nextValue is the specialization name, variant is remove', async () => {
+    const { sendChatForAuditEntries } = await import('../../module/utils/audit-log.mjs')
+    const actor = makeActor()
+    const entry = makeEntry({ type: 'specialization.remove', data: { specializationId: 'spec-ace', specializationName: 'Ace Pilot' }, xpDelta: 0 })
+
+    await sendChatForAuditEntries(actor, [entry])
+
+    const ctx = globalThis.foundry.applications.handlebars.renderTemplate.mock.calls[0][1]
+    expect(ctx.nextValue).toBe('Ace Pilot')
+    expect(ctx.variant).toBe('remove')
+  })
+
+  test('skill.train free: variant is gain, metaLeft is free cost label', async () => {
+    const { sendChatForAuditEntries } = await import('../../module/utils/audit-log.mjs')
+    const actor = makeActor()
+    const entry = makeEntry({ type: 'skill.train', data: { skillId: 'athletics', skillName: 'Athletics', oldRank: 0, newRank: 1, cost: 0, isFree: true, isCareer: true }, xpDelta: 0 })
+
+    await sendChatForAuditEntries(actor, [entry])
+
+    const ctx = globalThis.foundry.applications.handlebars.renderTemplate.mock.calls[0][1]
+    expect(ctx.variant).toBe('gain')
+    expect(ctx.previousValue).toBe('0')
+    expect(ctx.nextValue).toBe('1')
+    expect(ctx.metaLeft).toBe('SWERPG.SKILL.CHAT.FREE_COST')
+  })
+
+  test('hasMeta is true when metaLeft is set', async () => {
+    const { sendChatForAuditEntries } = await import('../../module/utils/audit-log.mjs')
+    const actor = makeActor()
+    const entry = makeEntry()
+
+    await sendChatForAuditEntries(actor, [entry])
+
+    const ctx = globalThis.foundry.applications.handlebars.renderTemplate.mock.calls[0][1]
+    expect(ctx.hasMeta).toBe(true)
+  })
+
+  test('hasMeta is false when no metaLeft or metaRight', async () => {
+    const { sendChatForAuditEntries } = await import('../../module/utils/audit-log.mjs')
+    const actor = makeActor()
+    const entry = makeEntry({ type: 'species.set', data: { oldSpecies: 'Wookiee', newSpecies: 'Human' }, xpDelta: 0, snapshot: {} })
+
+    await sendChatForAuditEntries(actor, [entry])
+
+    const ctx = globalThis.foundry.applications.handlebars.renderTemplate.mock.calls[0][1]
+    expect(ctx.hasMeta).toBe(false)
+  })
+
+  test('talent-node-purchase-failed: variant is fail and description is set', async () => {
+    const { sendChatForAuditEntries } = await import('../../module/utils/audit-log.mjs')
+    const actor = makeActor()
+    const entry = makeEntry({ type: 'talent-node-purchase-failed', data: { nodeId: 'r1c1', reasonCode: 'not-enough-xp', cost: 5 }, xpDelta: -5 })
+
+    await sendChatForAuditEntries(actor, [entry])
+
+    const ctx = globalThis.foundry.applications.handlebars.renderTemplate.mock.calls[0][1]
+    expect(ctx.variant).toBe('fail')
+    expect(ctx.description).toBeTruthy()
+    expect(ctx.nextValue).toBe('r1c1')
   })
 })

@@ -199,6 +199,160 @@
 }
 
 /* -------------------------------------------- */
+/*  Audit Entry Chat                            */
+/* -------------------------------------------- */
+
+.swerpg.chat-message.audit-entry {
+  padding: 0.35rem 0.5rem 0.4rem;
+
+  .audit-entry__header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .audit-entry__avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 4px;
+    border: 1px solid var(--color-frame);
+    flex: none;
+  }
+
+  .audit-entry__meta {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .audit-entry__actor {
+    display: block;
+    font-family: var(--font-h3);
+    font-size: var(--font-size-11);
+    color: var(--color-tertiary);
+    line-height: 1.2;
+  }
+
+  .audit-entry__label {
+    display: block;
+    font-family: var(--font-h2);
+    font-size: var(--font-size-13);
+    color: var(--color-text);
+    line-height: 1.3;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .audit-entry__body {
+    margin-top: 0.4rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+    min-width: 0;
+  }
+
+  .audit-entry__previous {
+    font-family: 'Orbitron', sans-serif;
+    font-size: var(--font-size-11);
+    color: var(--color-text-dark-secondary);
+    max-width: 45%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+    opacity: 0.7;
+  }
+
+  .audit-entry__change {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .audit-entry__arrow {
+    flex: none;
+    color: var(--color-secondary);
+    font-size: var(--font-size-11);
+  }
+
+  .audit-entry__badge {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 3px;
+    background: var(--color-frame-bg);
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+  }
+
+  .audit-entry__description {
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: var(--font-size-11);
+    color: var(--color-secondary);
+    font-style: italic;
+    word-break: break-word;
+  }
+
+  .audit-entry__footer {
+    margin-top: 0.35rem;
+    padding-top: 0.3rem;
+    border-top: 1px solid var(--color-frame);
+    display: flex;
+    justify-content: space-between;
+    font-size: var(--font-size-11);
+  }
+
+  .audit-entry__meta-left {
+    color: var(--color-accent-yellow);
+  }
+
+  .audit-entry__meta-right {
+    color: var(--color-secondary);
+  }
+
+  // Variant: add (train, purchase)
+  &.audit-entry--add .audit-entry__badge {
+    color: var(--color-success);
+    border: 1px solid var(--color-success);
+  }
+
+  // Variant: remove (forget, remove)
+  &.audit-entry--remove .audit-entry__badge {
+    color: var(--color-box-warm-1);
+    border: 1px solid var(--color-box-warm-1);
+  }
+
+  // Variant: gain (free rank, xp gain)
+  &.audit-entry--gain .audit-entry__badge {
+    color: var(--color-accent-blue);
+    border: 1px solid var(--color-accent-blue);
+  }
+
+  &.audit-entry--gain .audit-entry__meta-left {
+    color: var(--color-accent-blue);
+  }
+
+  // Variant: fail
+  &.audit-entry--fail .audit-entry__badge {
+    color: var(--color-error);
+    border: 1px solid var(--color-error);
+  }
+
+  // Variant: change (species, career, level)
+  &.audit-entry--change .audit-entry__badge {
+    color: var(--color-text-dark-secondary);
+    border: 1px solid var(--color-underline);
+  }
+}
+
+/* -------------------------------------------- */
 /*  Audit Log Warning (GM whisper)              */
 /* -------------------------------------------- */
 
