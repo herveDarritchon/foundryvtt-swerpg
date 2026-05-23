@@ -140,6 +140,67 @@ describe('CharacterSheet sidebarHeader context', () => {
     expect(context.specializationDisplayName).toBe('Bodyguard, Mercenary Soldier')
   })
 
+  it('exposes specializationHeader with displayName fallback when no specializations', async () => {
+    const actor = buildCharacterActor()
+    actor.system.details.specializations = new Set()
+    const context = await getContext(actor)
+
+    expect(context.specializationHeader).toBeDefined()
+    expect(context.specializationHeader.primaryName).toBeNull()
+    expect(context.specializationHeader.extraCount).toBe(0)
+    expect(context.specializationHeader.extraNames).toEqual([])
+    expect(context.specializationHeader.hasExtraSpecializations).toBe(false)
+    expect(context.specializationHeader.displayName).toBe('SPECIALIZATION.SHEET.NO_SPECIALIZATION')
+    expect(context.specializationHeader.badgeLabel).toBeNull()
+    expect(context.specializationHeader.tooltip).toBeNull()
+  })
+
+  it('exposes specializationHeader with single specialization when count is 1', async () => {
+    const actor = buildCharacterActor()
+    actor.system.details.specializations = new Set([{ name: 'Bodyguard' }])
+    const context = await getContext(actor)
+
+    expect(context.specializationHeader.primaryName).toBe('Bodyguard')
+    expect(context.specializationHeader.extraCount).toBe(0)
+    expect(context.specializationHeader.extraNames).toEqual([])
+    expect(context.specializationHeader.hasExtraSpecializations).toBe(false)
+    expect(context.specializationHeader.displayName).toBe('Bodyguard')
+    expect(context.specializationHeader.badgeLabel).toBeNull()
+    expect(context.specializationHeader.tooltip).toBeNull()
+  })
+
+  it('exposes specializationHeader with primary name and +N badge when count is 2', async () => {
+    const actor = buildCharacterActor()
+    actor.system.details.specializations = new Set([{ name: 'Bodyguard' }, { name: 'Mercenary Soldier' }])
+    const context = await getContext(actor)
+
+    expect(context.specializationHeader.primaryName).toBe('Bodyguard')
+    expect(context.specializationHeader.extraCount).toBe(1)
+    expect(context.specializationHeader.extraNames).toEqual(['Mercenary Soldier'])
+    expect(context.specializationHeader.hasExtraSpecializations).toBe(true)
+    expect(context.specializationHeader.displayName).toBe('Bodyguard')
+    expect(context.specializationHeader.badgeLabel).toBe('+1')
+    expect(context.specializationHeader.tooltip).toBe('Mercenary Soldier')
+  })
+
+  it('exposes specializationHeader with +2 badge and tooltip listing extras when count is 3', async () => {
+    const actor = buildCharacterActor()
+    actor.system.details.specializations = new Set([
+      { name: 'Bodyguard' },
+      { name: 'Mercenary Soldier' },
+      { name: 'Infiltrator' },
+    ])
+    const context = await getContext(actor)
+
+    expect(context.specializationHeader.primaryName).toBe('Bodyguard')
+    expect(context.specializationHeader.extraCount).toBe(2)
+    expect(context.specializationHeader.extraNames).toEqual(['Mercenary Soldier', 'Infiltrator'])
+    expect(context.specializationHeader.hasExtraSpecializations).toBe(true)
+    expect(context.specializationHeader.displayName).toBe('Bodyguard')
+    expect(context.specializationHeader.badgeLabel).toBe('+2')
+    expect(context.specializationHeader.tooltip).toBe('Mercenary Soldier, Infiltrator')
+  })
+
   it('does not expose sidebarHeader from the base actor sheet context', async () => {
     const actor = buildCharacterActor()
     actor.type = 'adversary'

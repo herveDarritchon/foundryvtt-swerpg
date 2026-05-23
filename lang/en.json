@@ -1178,6 +1178,7 @@
     "SHEET": {
       "CHOOSE": "Choose Specialization",
       "CLEAR": "Clear Specialization",
+      "NO_SPECIALIZATION": "No Specialization",
       "SpecializationSkills": {
         "maxNumber": "Number of Specialization Skills maximum to pick"
       }
