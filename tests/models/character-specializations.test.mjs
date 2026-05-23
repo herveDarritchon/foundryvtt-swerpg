@@ -139,4 +139,121 @@ describe('SwerpgCharacter — owned specializations', () => {
       expect(options).toEqual({ keepEmbeddedIds: true })
     })
   })
+
+  describe('removeSpecialization', () => {
+    test('removes a specialization by specializationId', async () => {
+      const character = new SwerpgCharacter(
+        buildCharacterData({
+          specializations: new Set([
+            { specializationId: 'spec-a', name: 'Spec A' },
+            { specializationId: 'spec-b', name: 'Spec B' },
+          ]),
+        }),
+      )
+
+      let capturedUpdate = null
+      character.parent = {
+        update: (data, options) => {
+          capturedUpdate = { data, options }
+          return Promise.resolve()
+        },
+      }
+
+      await character.removeSpecialization('spec-a')
+
+      expect(capturedUpdate).not.toBeNull()
+      expect(capturedUpdate.data['system.details.specializations']).toHaveLength(1)
+      expect(capturedUpdate.data['system.details.specializations'][0].specializationId).toBe('spec-b')
+      expect(capturedUpdate.options).toEqual({ keepEmbeddedIds: true })
+    })
+
+    test('removes a specialization by name when specializationId is absent', async () => {
+      const character = new SwerpgCharacter(
+        buildCharacterData({
+          specializations: new Set([
+            { name: 'Pilot' },
+            { specializationId: 'spec-b', name: 'Spec B' },
+          ]),
+        }),
+      )
+
+      let capturedUpdate = null
+      character.parent = {
+        update: (data, options) => {
+          capturedUpdate = { data, options }
+          return Promise.resolve()
+        },
+      }
+
+      await character.removeSpecialization('Pilot')
+
+      expect(capturedUpdate).not.toBeNull()
+      expect(capturedUpdate.data['system.details.specializations']).toHaveLength(1)
+      expect(capturedUpdate.data['system.details.specializations'][0].specializationId).toBe('spec-b')
+    })
+
+    test('removes a specialization by treeUuid', async () => {
+      const character = new SwerpgCharacter(
+        buildCharacterData({
+          specializations: new Set([
+            { treeUuid: 'Item.tree-pilot', name: 'Pilot' },
+            { specializationId: 'spec-b', name: 'Spec B' },
+          ]),
+        }),
+      )
+
+      let capturedUpdate = null
+      character.parent = {
+        update: (data, options) => {
+          capturedUpdate = { data, options }
+          return Promise.resolve()
+        },
+      }
+
+      await character.removeSpecialization('Item.tree-pilot')
+
+      expect(capturedUpdate).not.toBeNull()
+      expect(capturedUpdate.data['system.details.specializations']).toHaveLength(1)
+    })
+
+    test('keeps all specializations when key does not match any', async () => {
+      const character = new SwerpgCharacter(
+        buildCharacterData({
+          specializations: new Set([
+            { specializationId: 'spec-a', name: 'Spec A' },
+          ]),
+        }),
+      )
+
+      let capturedUpdate = null
+      character.parent = {
+        update: (data, options) => {
+          capturedUpdate = { data, options }
+          return Promise.resolve()
+        },
+      }
+
+      await character.removeSpecialization('nonexistent')
+
+      expect(capturedUpdate).not.toBeNull()
+      expect(capturedUpdate.data['system.details.specializations']).toHaveLength(1)
+    })
+
+    test('handles empty specializations gracefully', async () => {
+      const character = new SwerpgCharacter(buildCharacterData())
+
+      let capturedUpdate = null
+      character.parent = {
+        update: (data, options) => {
+          capturedUpdate = { data, options }
+          return Promise.resolve()
+        },
+      }
+
+      await character.removeSpecialization('spec-a')
+
+      expect(capturedUpdate).not.toBeNull()
+      expect(capturedUpdate.data['system.details.specializations']).toHaveLength(0)
+    })
+  })
 })

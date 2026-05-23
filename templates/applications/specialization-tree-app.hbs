@@ -62,6 +62,17 @@
                     <span class='specialization-tree-app__specialization-name'>{{specialization.name}}</span>
                     <span class='specialization-tree-app__specialization-state'>{{specialization.stateLabel}}</span>
                   </div>
+                  <button
+                    type='button'
+                    class='specialization-tree-app__specialization-remove'
+                    data-action='removeSpecialization'
+                    data-specialization-key='{{specialization.key}}'
+                    data-tooltip='{{localize "SWERPG.TALENT.SPECIALIZATION_TREE_APP.ACTION.REMOVE"}}'
+                    aria-label='{{localize "SWERPG.TALENT.SPECIALIZATION_TREE_APP.ACTION.REMOVE"}}'
+                    title='{{localize "SWERPG.TALENT.SPECIALIZATION_TREE_APP.ACTION.REMOVE"}}'
+                  >
+                    <i class='fa-solid fa-trash-can'></i>
+                  </button>
                 </li>
               {{/each}}
             </ul>
