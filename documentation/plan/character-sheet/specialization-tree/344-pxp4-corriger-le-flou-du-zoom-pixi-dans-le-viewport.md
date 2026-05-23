@@ -36,10 +36,10 @@ Figer un contrat de netteté explicite pour le renderer PIXI du `SpecializationT
 
 ## Fichiers pressentis
 
-| Fichier                                                      | Rôle                                                                      |
-| ------------------------------------------------------------ | ------------------------------------------------------------------------- |
+| Fichier                                                          | Rôle                                                                     |
+| ---------------------------------------------------------------- | ------------------------------------------------------------------------ |
 | `module/applications/specialization-tree/pixi-tree-renderer.mjs` | Centraliser le contrat de netteté du viewport, du canvas et des textures |
-| `tests/integration/specialization-tree-pixi-render.test.mjs` | Verrouiller le contrat technique de rendu et la non-régression du zoom   |
+| `tests/integration/specialization-tree-pixi-render.test.mjs`     | Verrouiller le contrat technique de rendu et la non-régression du zoom   |
 
 ## Plan d'implémentation
 

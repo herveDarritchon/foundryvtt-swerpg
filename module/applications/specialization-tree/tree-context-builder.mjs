@@ -153,11 +153,7 @@ export function buildSpecializationTreeContext(actor, selectedKey, deps) {
  */
 export function buildSpecializationEntries(specializations, resolutions, localize) {
   return specializations.map((specialization, index) => {
-    const key =
-      specialization?.specializationId ||
-      specialization?.treeUuid ||
-      specialization?.name ||
-      `specialization-${index}`
+    const key = specialization?.specializationId || specialization?.treeUuid || specialization?.name || `specialization-${index}`
     const resolution = resolutions.get(key) ?? { tree: null, state: 'unresolved' }
     const state = resolution.state ?? 'unresolved'
 
@@ -170,23 +166,16 @@ export function buildSpecializationEntries(specializations, resolutions, localiz
      * 2. `specialization.specializationId` already stored on the actor.
      * 3. The entry `key` itself as a last resort (preserves pre-existing behaviour).
      */
-    const canonicalSpecializationId =
-      resolution.tree?.system?.specializationId ??
-      specialization?.specializationId ??
-      key
+    const canonicalSpecializationId = resolution.tree?.system?.specializationId ?? specialization?.specializationId ?? key
 
     return {
       key,
       specializationId: specialization?.specializationId ?? null,
       canonicalSpecializationId,
-      name:
-        specialization?.name ||
-        localize('SWERPG.TALENT.SPECIALIZATION_TREE_APP.UNKNOWN_SPECIALIZATION'),
+      name: specialization?.name || localize('SWERPG.TALENT.SPECIALIZATION_TREE_APP.UNKNOWN_SPECIALIZATION'),
       treeName: resolution.tree?.name ?? null,
       state,
-      stateLabel: localize(
-        SPECIALIZATION_TREE_STATE_LABELS[state] ?? SPECIALIZATION_TREE_STATE_LABELS.unresolved
-      ),
+      stateLabel: localize(SPECIALIZATION_TREE_STATE_LABELS[state] ?? SPECIALIZATION_TREE_STATE_LABELS.unresolved),
       isAvailable: state === 'available',
     }
   })
@@ -277,7 +266,7 @@ export function buildCurrentTreeSummary(currentTreeName, renderNodes, localize, 
       [NODE_STATE.PURCHASED]: 0,
       [NODE_STATE.AVAILABLE]: 0,
       [NODE_STATE.LOCKED]: 0,
-    }
+    },
   )
 
   const purchasedCount = stateCounts[NODE_STATE.PURCHASED] ?? 0

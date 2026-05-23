@@ -37,17 +37,17 @@ Ajouter dans la gestion multi-spécialisations un flux de suppression sûr et lo
 
 ### Fichiers pressentis
 
-| Fichier                                                      | Rôle                                                                      |
-|--------------------------------------------------------------|---------------------------------------------------------------------------|
-| `module/lib/specializations/owned-specializations.mjs`       | Réutiliser le contrat canonique et exposer les helpers de retrait         |
-| `module/lib/specializations/specialization-removal-flow.mjs` | Nouveau service pur de validation, preview et résultat de suppression     |
-| `module/models/character.mjs`                                | Introduire le point d'entrée dédié à la suppression post-création         |
-| `module/applications/specialization-tree-app.mjs`            | Brancher l'action de suppression, la confirmation et le fallback UI       |
+| Fichier                                                      | Rôle                                                                       |
+| ------------------------------------------------------------ | -------------------------------------------------------------------------- |
+| `module/lib/specializations/owned-specializations.mjs`       | Réutiliser le contrat canonique et exposer les helpers de retrait          |
+| `module/lib/specializations/specialization-removal-flow.mjs` | Nouveau service pur de validation, preview et résultat de suppression      |
+| `module/models/character.mjs`                                | Introduire le point d'entrée dédié à la suppression post-création          |
+| `module/applications/specialization-tree-app.mjs`            | Brancher l'action de suppression, la confirmation et le fallback UI        |
 | `templates/applications/specialization-tree-app.hbs`         | Exposer l'action utilisateur de suppression sur une spécialisation gérable |
-| `lang/en.json` / `lang/fr.json`                              | Ajouter confirmation, warnings et libellés du flux                        |
-| `tests/lib/specializations/*.test.mjs`                       | Couvrir validation, blocages et calcul du fallback métier                 |
-| `tests/models/character-specializations.test.mjs`            | Verrouiller le patch persistant produit par le flux                       |
-| `tests/applications/specialization-tree-app.test.mjs`        | Vérifier confirmation, annulation et recalage de l'arbre courant          |
+| `lang/en.json` / `lang/fr.json`                              | Ajouter confirmation, warnings et libellés du flux                         |
+| `tests/lib/specializations/*.test.mjs`                       | Couvrir validation, blocages et calcul du fallback métier                  |
+| `tests/models/character-specializations.test.mjs`            | Verrouiller le patch persistant produit par le flux                        |
+| `tests/applications/specialization-tree-app.test.mjs`        | Vérifier confirmation, annulation et recalage de l'arbre courant           |
 
 ### Plan d'implémentation
 

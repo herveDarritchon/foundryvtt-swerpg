@@ -185,11 +185,7 @@ describe('CharacterSheet sidebarHeader context', () => {
 
   it('exposes specializationHeader with +2 badge and tooltip listing extras when count is 3', async () => {
     const actor = buildCharacterActor()
-    actor.system.details.specializations = new Set([
-      { name: 'Bodyguard' },
-      { name: 'Mercenary Soldier' },
-      { name: 'Infiltrator' },
-    ])
+    actor.system.details.specializations = new Set([{ name: 'Bodyguard' }, { name: 'Mercenary Soldier' }, { name: 'Infiltrator' }])
     const context = await getContext(actor)
 
     expect(context.specializationHeader.primaryName).toBe('Bodyguard')

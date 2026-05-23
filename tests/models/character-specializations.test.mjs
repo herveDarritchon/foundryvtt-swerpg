@@ -236,10 +236,7 @@ describe('SwerpgCharacter — owned specializations', () => {
     test('removes a specialization by name when specializationId is absent', async () => {
       const character = new SwerpgCharacter(
         buildCharacterData({
-          specializations: new Set([
-            { name: 'Pilot' },
-            { specializationId: 'spec-b', name: 'Spec B' },
-          ]),
+          specializations: new Set([{ name: 'Pilot' }, { specializationId: 'spec-b', name: 'Spec B' }]),
         }),
       )
 
@@ -285,9 +282,7 @@ describe('SwerpgCharacter — owned specializations', () => {
     test('keeps all specializations when key does not match any', async () => {
       const character = new SwerpgCharacter(
         buildCharacterData({
-          specializations: new Set([
-            { specializationId: 'spec-a', name: 'Spec A' },
-          ]),
+          specializations: new Set([{ specializationId: 'spec-a', name: 'Spec A' }]),
         }),
       )
 

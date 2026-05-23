@@ -40,14 +40,14 @@ Rendre la synthèse des spécialisations immédiatement lisible dans le header d
 
 ### Fichiers pressentis
 
-| Fichier                                                                  | Rôle                                                                 |
-|--------------------------------------------------------------------------|----------------------------------------------------------------------|
-| `module/applications/sheets/character-sheet.mjs`                        | Construire le résumé compact consommé par le header                  |
-| `templates/sheets/actor/character-header.hbs`                           | Rendre les états `0 / 1 / N`, la pastille `+N` et le tooltip         |
-| `styles/actor.less`                                                     | Ajuster au besoin l'alignement léger du libellé primaire et badge    |
-| `lang/en.json` / `lang/fr.json`                                         | Ajouter `No specialization` et le texte/format du tooltip            |
-| `tests/applications/sheets/character-sheet-sidebar-header.test.mjs`     | Verrouiller le view-model header pour 0, 1, 2 et 3 spécialisations   |
-| `tests/applications/sheets/character-sheet-talents.test.mjs` ou ciblé   | Verrouiller l'action `editSpecializations` → `openSpecializationTreeApp()` |
+| Fichier                                                               | Rôle                                                                       |
+| --------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| `module/applications/sheets/character-sheet.mjs`                      | Construire le résumé compact consommé par le header                        |
+| `templates/sheets/actor/character-header.hbs`                         | Rendre les états `0 / 1 / N`, la pastille `+N` et le tooltip               |
+| `styles/actor.less`                                                   | Ajuster au besoin l'alignement léger du libellé primaire et badge          |
+| `lang/en.json` / `lang/fr.json`                                       | Ajouter `No specialization` et le texte/format du tooltip                  |
+| `tests/applications/sheets/character-sheet-sidebar-header.test.mjs`   | Verrouiller le view-model header pour 0, 1, 2 et 3 spécialisations         |
+| `tests/applications/sheets/character-sheet-talents.test.mjs` ou ciblé | Verrouiller l'action `editSpecializations` → `openSpecializationTreeApp()` |
 
 ### Plan d'implémentation
 

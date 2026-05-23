@@ -3,12 +3,14 @@
     <img class="skill-transaction__portrait" src="{{actorImg}}" alt="{{actorName}}">
     <div class="skill-transaction__info">
       <span class="skill-transaction__actor">{{actorName}}</span>
-      <span class="skill-transaction__skill">{{skillLabel}}</span>
+      <span class="skill-transaction__skill">{{typeLabel}}</span>
     </div>
-    <div class="skill-transaction__rank {{cssClass}}">{{oldRank}} → {{newRank}}</div>
+    <div class="skill-transaction__rank {{changeCssClass}}">{{changeText}}</div>
   </div>
+  {{#if showDetails}}
   <div class="skill-transaction__details">
     <span class="skill-transaction__cost {{costCssClass}}">{{costLabel}}</span>
-    <span class="skill-transaction__remaining">{{remainingLabel}}</span>
+    <span class="skill-transaction__remaining">{{contextLabel}}</span>
   </div>
+  {{/if}}
 </div>

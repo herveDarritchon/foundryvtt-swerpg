@@ -3972,6 +3972,14 @@ input[type='range'] {
   color: var(--color-accent-blue);
   border: 1px solid var(--color-accent-blue);
 }
+.swerpg.chat-message.skill-transaction .skill-transaction__rank.is-change {
+  color: var(--color-text-dark-secondary);
+  border: 1px solid var(--color-underline);
+}
+.swerpg.chat-message.skill-transaction .skill-transaction__rank.is-fail {
+  color: var(--color-error);
+  border: 1px solid var(--color-error);
+}
 .swerpg.chat-message.skill-transaction .skill-transaction__details {
   margin-top: 0.35rem;
   padding-top: 0.3rem;

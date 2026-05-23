@@ -18,7 +18,7 @@ Donc ceci est faux :
 
 ```js
 this.system.details.specializations
-````
+```
 
 Il faut écrire :
 
@@ -42,9 +42,9 @@ actor.update({
 
 Cette pratique est fragile, car elle mélange :
 
-* lecture du modèle préparé ;
-* mutation en place ;
-* persistance Foundry.
+- lecture du modèle préparé ;
+- mutation en place ;
+- persistance Foundry.
 
 ## Decision
 
@@ -79,10 +79,7 @@ await actor.update({
 const specializations = Array.from(this.details.specializations || [])
 
 await actor.update({
-  'system.details.specializations': [
-    ...specializations,
-    data,
-  ],
+  'system.details.specializations': [...specializations, data],
 })
 ```
 
@@ -120,25 +117,25 @@ async acquireSpecialization(specialization) {
 
 ### Positive
 
-* moins d’effets de bord ;
-* payloads `update()` plus lisibles ;
-* tests plus simples ;
-* meilleure compatibilité avec l’évolution de Foundry ;
-* séparation claire entre modèle préparé et donnée persistée.
+- moins d’effets de bord ;
+- payloads `update()` plus lisibles ;
+- tests plus simples ;
+- meilleure compatibilité avec l’évolution de Foundry ;
+- séparation claire entre modèle préparé et donnée persistée.
 
 ### Negative
 
-* code un peu plus verbeux ;
-* refactor progressif nécessaire ;
-* vigilance en review sur `.add()`, `.push()`, `.set()`, `.delete()`, `.splice()`.
+- code un peu plus verbeux ;
+- refactor progressif nécessaire ;
+- vigilance en review sur `.add()`, `.push()`, `.set()`, `.delete()`, `.splice()`.
 
 ## Implementation Notes
 
-* Lire depuis `this`.
-* Copier la collection.
-* Construire la nouvelle valeur.
-* Persister avec `this.parent.update(...)`.
-* Ne jamais utiliser une collection préparée comme payload muté.
+- Lire depuis `this`.
+- Copier la collection.
+- Construire la nouvelle valeur.
+- Persister avec `this.parent.update(...)`.
+- Ne jamais utiliser une collection préparée comme payload muté.
 
 ## Tests attendus
 
@@ -151,6 +148,6 @@ Vérifier que :
 
 ## References
 
-* Foundry VTT - DataModel
-* Foundry VTT - Document update workflow
-* SWERPG ADR-0012 - Tests unitaires lisibles et diagnostiques
+- Foundry VTT - DataModel
+- Foundry VTT - Document update workflow
+- SWERPG ADR-0012 - Tests unitaires lisibles et diagnostiques

@@ -40,17 +40,17 @@ Renforcer la lisibilité immédiate de l'arbre de spécialisation en rendant les
 
 ## Fichiers pressentis
 
-| Fichier                                                           | Rôle                                                                       |
-| ----------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| `module/applications/specialization-tree/connection-ui-state.mjs` | Renforcer et formaliser le contrat visuel des connexions                   |
-| `module/applications/specialization-tree/pixi-tree-renderer.mjs`  | Appliquer les nouveaux styles de lignes dans le rendu PIXI                 |
-| `module/applications/specialization-tree-app.mjs`                 | Gérer la fermeture explicite et préserver le flux détail → CTA             |
-| `templates/applications/specialization-tree-app.hbs`              | Recomposer le header du détail et ajouter la croix de fermeture            |
-| `styles/applications.less`                                        | Porter la compaction du détail et le bouton de fermeture visible           |
-| `lang/fr.json` / `lang/en.json`                                   | Ajouter le libellé/aria du contrôle de fermeture si nécessaire             |
-| `tests/applications/specialization-tree/connection-ui-state.test.mjs` | Verrouiller le contrat pur des connexions                              |
-| `tests/integration/specialization-tree-pixi-render.test.mjs`      | Vérifier l'application effective des styles de connexions                  |
-| `tests/applications/specialization-tree-app.test.mjs`             | Vérifier l'ouverture, la fermeture explicite et la non-régression du CTA   |
+| Fichier                                                               | Rôle                                                                     |
+| --------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| `module/applications/specialization-tree/connection-ui-state.mjs`     | Renforcer et formaliser le contrat visuel des connexions                 |
+| `module/applications/specialization-tree/pixi-tree-renderer.mjs`      | Appliquer les nouveaux styles de lignes dans le rendu PIXI               |
+| `module/applications/specialization-tree-app.mjs`                     | Gérer la fermeture explicite et préserver le flux détail → CTA           |
+| `templates/applications/specialization-tree-app.hbs`                  | Recomposer le header du détail et ajouter la croix de fermeture          |
+| `styles/applications.less`                                            | Porter la compaction du détail et le bouton de fermeture visible         |
+| `lang/fr.json` / `lang/en.json`                                       | Ajouter le libellé/aria du contrôle de fermeture si nécessaire           |
+| `tests/applications/specialization-tree/connection-ui-state.test.mjs` | Verrouiller le contrat pur des connexions                                |
+| `tests/integration/specialization-tree-pixi-render.test.mjs`          | Vérifier l'application effective des styles de connexions                |
+| `tests/applications/specialization-tree-app.test.mjs`                 | Vérifier l'ouverture, la fermeture explicite et la non-régression du CTA |
 
 ## Plan d'implémentation
 

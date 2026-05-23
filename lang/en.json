@@ -138,29 +138,29 @@
           "SUCCESS": "Purchase successful: {talent}",
           "FAILURE": "Purchase failed: {reason}"
         },
+        "FORGET": {
+          "SUCCESS": "Talent forgotten: {talent}",
+          "FAILURE": "Forget failed: {reason}"
+        },
+        "REMOVE": {
+          "SUCCESS": "Specialization removed: {specialization}",
+          "FAILURE": "Remove failed: {reason}"
+        },
+        "CONFIRM": {
+          "CANCEL": "Cancel",
+          "PURCHASE": {
+            "TITLE": "{action}: {talent}",
+            "CONTENT": "Spend {xp} XP to purchase <strong>{talent}</strong>?"
+          },
           "FORGET": {
-            "SUCCESS": "Talent forgotten: {talent}",
-            "FAILURE": "Forget failed: {reason}"
+            "TITLE": "{action}: {talent}",
+            "CONTENT": "Forget <strong>{talent}</strong> and refund {xp} XP?"
           },
           "REMOVE": {
-            "SUCCESS": "Specialization removed: {specialization}",
-            "FAILURE": "Remove failed: {reason}"
-          },
-          "CONFIRM": {
-            "CANCEL": "Cancel",
-            "PURCHASE": {
-              "TITLE": "{action}: {talent}",
-              "CONTENT": "Spend {xp} XP to purchase <strong>{talent}</strong>?"
-            },
-            "FORGET": {
-              "TITLE": "{action}: {talent}",
-              "CONTENT": "Forget <strong>{talent}</strong> and refund {xp} XP?"
-            },
-            "REMOVE": {
-              "TITLE": "Remove specialization: {specialization}",
-              "CONTENT": "Remove <strong>{specialization}</strong>? This will also remove all purchased talents in this tree."
-            }
-          },
+            "TITLE": "Remove specialization: {specialization}",
+            "CONTENT": "Remove <strong>{specialization}</strong>? This will also remove all purchased talents in this tree."
+          }
+        },
         "LEGEND": {
           "TITLE": "Legend"
         },

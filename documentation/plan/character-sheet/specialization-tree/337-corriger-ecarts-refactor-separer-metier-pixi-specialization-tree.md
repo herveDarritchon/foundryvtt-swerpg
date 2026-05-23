@@ -1,16 +1,19 @@
 # Corriger les écarts du refactor séparation métier / PIXI de SpecializationTreeApp
 
 Contexte
+
 - Le plan initial `336-refactor-separer-metier-pixi-specialization-tree.md` visait à séparer la logique métier pure, le renderer PIXI et l'orchestration applicative.
 - Une première implémentation a bien extrait une partie métier (`tree-context-builder.mjs`) et un view-model de tooltip (`node-tooltip-view-model.mjs`), puis a réduit le test monolithique.
 - La code review montre cependant que l'objectif global du plan 336 n'est pas atteint : la séparation renderer/app n'est pas faite, la pureté de la couche builder est incomplète, et la couverture de tests reste inférieure au niveau annoncé.
 
 Référence
+
 - Plan source : `documentation/plan/character-sheet/specialization-tree/336-refactor-separer-metier-pixi-specialization-tree.md`
 
 ## Constats issus de la code review
 
 ### 1. Le renderer PIXI n'a pas été extrait
+
 - `module/applications/specialization-tree/pixi-tree-renderer.mjs` est absent.
 - `module/applications/specialization-tree-app.mjs` conserve encore :
   - la création de `PIXI.Application` ;
@@ -22,6 +25,7 @@ Référence
   - les hit areas et les interactions de pointeur.
 
 ### 2. `SpecializationTreeApp` n'est pas encore un orchestrateur fin
+
 - L'app porte encore à la fois :
   - le renderer technique ;
   - les callbacks d'interaction ;
@@ -30,17 +34,20 @@ Référence
 - Le découplage attendu entre renderer technique et orchestration applicative n'est pas terminé.
 
 ### 3. Le builder pur n'est pas totalement pur / sérialisable
+
 - `tree-context-builder.mjs` documente un retour sans références Foundry.
 - Pourtant, le builder retourne encore `actor`, `document: actor` et `system: actor.system`.
 - La frontière entre view-model pur et contexte applicatif reste donc ambiguë.
 
 ### 4. Les tests ont été restructurés, mais pas jusqu'au contrat prévu
+
 - `tests/applications/specialization-tree-app.test.mjs` a bien été réduit.
 - Les tests PIXI lourds ont bien été déplacés dans `tests/integration/specialization-tree-pixi-render.test.mjs`.
 - Mais les tests d'orchestration n'utilisent pas un renderer mocké, car aucun renderer dédié n'existe encore.
 - Le flow achat / oubli / confirmation / notification n'est pas couvert dans le test d'orchestration minimal.
 
 ### 5. La couverture pure reste insuffisante par rapport au plan 336
+
 - `tests/applications/specialization-tree/tree-context-builder.test.mjs` couvre seulement quelques happy paths.
 - `tests/applications/specialization-tree/node-tooltip-view-model.test.mjs` couvre un seul cas.
 - `tests/applications/specialization-tree/connection-ui-state.test.mjs` n'existe pas.
@@ -72,9 +79,11 @@ Référence
 ### Phase 1 — Rendre le builder réellement pur
 
 Objectif
+
 - Faire en sorte que `tree-context-builder.mjs` ne retourne qu'un view-model pur et sérialisable.
 
 Travaux
+
 - Modifier `module/applications/specialization-tree/tree-context-builder.mjs` pour retirer du retour pur :
   - `actor`
   - `document`
@@ -98,15 +107,18 @@ Travaux
   - `isOwner`
 
 Résultat attendu
+
 - Le builder devient effectivement pur.
 - L'app garde la responsabilité des références live Foundry.
 
 ### Phase 2 — Extraire `connection-ui-state.mjs`
 
 Objectif
+
 - Sortir les règles visuelles des connexions de la couche renderer.
 
 Travaux
+
 - Créer `module/applications/specialization-tree/connection-ui-state.mjs`.
 - Définir un contrat pur pour chaque connexion rendu :
   - couleur,
@@ -117,14 +129,17 @@ Travaux
 - Adapter le builder ou une étape d'enrichissement pour fournir au renderer des connexions déjà décorées visuellement.
 
 Résultat attendu
+
 - Le renderer PIXI n'encode plus les styles de lignes en dur.
 
 ### Phase 3 — Extraire `pixi-tree-renderer.mjs`
 
 Objectif
+
 - Déplacer toute la technique PIXI dans un composant dédié.
 
 Travaux
+
 - Créer `module/applications/specialization-tree/pixi-tree-renderer.mjs`.
 - Déplacer dans ce module :
   - `loadStatePictogram()` ;
@@ -150,14 +165,17 @@ Travaux
   - éventuellement `onViewportChange(viewport)` si utile.
 
 Résultat attendu
+
 - `specialization-tree-app.mjs` ne manipule plus directement `PIXI.Container`, `PIXI.Graphics`, `PIXI.Text`, `PIXI.Sprite`, ni les listeners canvas/stage.
 
 ### Phase 4 — Réduire `SpecializationTreeApp` à l'orchestration
 
 Objectif
+
 - Faire de l'app une fine couche entre Foundry, la logique métier et le renderer.
 
 Travaux
+
 - Adapter `module/applications/specialization-tree-app.mjs` pour :
   - préparer le contexte via le builder pur ;
   - instancier et piloter `pixi-tree-renderer.mjs` ;
@@ -171,14 +189,17 @@ Travaux
 - Garder le renderer totalement ignorant de `purchaseTalentNode`, `forgetTalentNode`, `DialogV2` et `ui.notifications`.
 
 Résultat attendu
+
 - La frontière renderer / orchestration / métier devient nette et maintenable.
 
 ### Phase 5 — Compléter la stratégie de tests
 
 Objectif
+
 - Aligner les tests sur le contrat annoncé dans le plan 336.
 
 Travaux sur les tests purs
+
 - Étendre `tests/applications/specialization-tree/tree-context-builder.test.mjs` pour couvrir :
   - sélection d'arbre par défaut ;
   - sélection explicite par `selectedKey` ;
@@ -196,6 +217,7 @@ Travaux sur les tests purs
   - contenu locked / available / purchased.
 
 Travaux sur les tests d'orchestration
+
 - Adapter `tests/applications/specialization-tree-app.test.mjs` pour mocker le renderer dédié.
 - Vérifier explicitement que l'app :
   - monte le renderer ;
@@ -205,10 +227,12 @@ Travaux sur les tests d'orchestration
   - exécute correctement le flow achat / oubli / confirmation / notifications.
 
 Travaux sur les tests d'intégration
+
 - Conserver `tests/integration/specialization-tree-pixi-render.test.mjs` pour la vérification du renderer réel.
 - Le recentrer sur le contrat du renderer plutôt que sur les détails internes de l'app.
 
 Résultat attendu
+
 - Les tests unitaires valident la logique pure.
 - Les tests d'orchestration valident l'app sans dépendre du détail PIXI.
 - Les tests d'intégration valident le renderer réel.
@@ -216,11 +240,13 @@ Résultat attendu
 ## Fichiers à créer ou modifier
 
 Créer
+
 - `module/applications/specialization-tree/pixi-tree-renderer.mjs`
 - `module/applications/specialization-tree/connection-ui-state.mjs`
 - `tests/applications/specialization-tree/connection-ui-state.test.mjs`
 
 Modifier
+
 - `module/applications/specialization-tree/tree-context-builder.mjs`
 - `module/applications/specialization-tree-app.mjs`
 - `tests/applications/specialization-tree/tree-context-builder.test.mjs`
@@ -231,6 +257,7 @@ Modifier
 ## Validation attendue
 
 Validation ciblée
+
 - `pnpm vitest run tests/applications/specialization-tree/tree-context-builder.test.mjs`
 - `pnpm vitest run tests/applications/specialization-tree/connection-ui-state.test.mjs`
 - `pnpm vitest run tests/applications/specialization-tree/node-tooltip-view-model.test.mjs`
@@ -238,10 +265,12 @@ Validation ciblée
 - `pnpm vitest run tests/integration/specialization-tree-pixi-render.test.mjs`
 
 Validation élargie
+
 - `pnpm vitest run tests/applications/`
 - `pnpm vitest run tests/integration/`
 
 Validation manuelle recommandée
+
 - Ouvrir l'application dans Foundry.
 - Vérifier :
   - affichage initial ;

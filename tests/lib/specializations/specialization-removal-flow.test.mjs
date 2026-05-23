@@ -15,10 +15,7 @@ function makeSpec(overrides = {}) {
 describe('specialization-removal-flow', () => {
   describe('evaluateSpecializationRemoval', () => {
     it('allows removal of a specialization that is not the current tree', () => {
-      const items = [
-        makeSpec({ specializationId: 'spec-a', name: 'Spec A' }),
-        makeSpec({ specializationId: 'spec-b', name: 'Spec B' }),
-      ]
+      const items = [makeSpec({ specializationId: 'spec-a', name: 'Spec A' }), makeSpec({ specializationId: 'spec-b', name: 'Spec B' })]
 
       const result = evaluateSpecializationRemoval({
         items,
@@ -36,10 +33,7 @@ describe('specialization-removal-flow', () => {
     })
 
     it('allows removal and falls back to another specialization when removing current tree', () => {
-      const items = [
-        makeSpec({ specializationId: 'spec-a', name: 'Spec A' }),
-        makeSpec({ specializationId: 'spec-b', name: 'Spec B' }),
-      ]
+      const items = [makeSpec({ specializationId: 'spec-a', name: 'Spec A' }), makeSpec({ specializationId: 'spec-b', name: 'Spec B' })]
 
       const result = evaluateSpecializationRemoval({
         items,
@@ -54,9 +48,7 @@ describe('specialization-removal-flow', () => {
     })
 
     it('allows removal and sets fallback to null when removing the last specialization', () => {
-      const items = [
-        makeSpec({ specializationId: 'spec-a', name: 'Spec A' }),
-      ]
+      const items = [makeSpec({ specializationId: 'spec-a', name: 'Spec A' })]
 
       const result = evaluateSpecializationRemoval({
         items,
@@ -70,9 +62,7 @@ describe('specialization-removal-flow', () => {
     })
 
     it('blocks removal when specialization is not found', () => {
-      const items = [
-        makeSpec({ specializationId: 'spec-a', name: 'Spec A' }),
-      ]
+      const items = [makeSpec({ specializationId: 'spec-a', name: 'Spec A' })]
 
       const result = evaluateSpecializationRemoval({
         items,
@@ -134,10 +124,7 @@ describe('specialization-removal-flow', () => {
     })
 
     it('falls back when current selection would be invalid after removal', () => {
-      const items = [
-        makeSpec({ specializationId: 'spec-a', name: 'Spec A' }),
-        makeSpec({ specializationId: 'spec-b', name: 'Spec B' }),
-      ]
+      const items = [makeSpec({ specializationId: 'spec-a', name: 'Spec A' }), makeSpec({ specializationId: 'spec-b', name: 'Spec B' })]
 
       const result = evaluateSpecializationRemoval({
         items,

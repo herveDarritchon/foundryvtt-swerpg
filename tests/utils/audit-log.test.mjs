@@ -1192,3 +1192,217 @@ describe('recordTalentNodeOperation', () => {
     })
   })
 })
+
+/* ============================================ */
+/*  sendChatForAuditEntries                     */
+/* ============================================ */
+
+describe('sendChatForAuditEntries', () => {
+  function makeActor(overrides = {}) {
+    return {
+      type: 'character',
+      id: 'actor-001',
+      uuid: 'Actor.actor-001',
+      name: 'Test Character',
+      img: 'icons/test-character.svg',
+      _source: {
+        system: {
+          skills: {},
+          characteristics: {},
+          progression: { totalXP: 0, spentXP: 0 },
+          details: {},
+          advancement: {},
+        },
+        flags: {},
+      },
+      system: {
+        progression: {
+          experience: { spent: 0, gained: 0, available: 0, total: 0 },
+          freeSkillRanks: {
+            career: { spent: 0, gained: 0, available: 0 },
+            specialization: { spent: 0, gained: 0, available: 0 },
+          },
+        },
+      },
+      update: vi.fn(),
+      ...overrides,
+    }
+  }
+
+  function makeEntry(overrides = {}) {
+    return {
+      id: 'entry-001',
+      timestamp: 1000,
+      userId: 'user-1',
+      userName: 'Player One',
+      type: 'skill.train',
+      data: {
+        skillId: 'athletics',
+        skillName: 'Athletics',
+        oldRank: 2,
+        newRank: 3,
+        cost: 10,
+        isFree: false,
+        isCareer: true,
+      },
+      xpDelta: -10,
+      snapshot: {
+        xpAvailable: 90,
+        totalXpSpent: 10,
+        totalXpGained: 100,
+        careerFreeAvailable: 2,
+        specializationFreeAvailable: 1,
+      },
+      ...overrides,
+    }
+  }
+
+  test('sends one chat per entry for skill.train', async () => {
+    const { sendChatForAuditEntries } = await import('../../module/utils/audit-log.mjs')
+    const actor = makeActor()
+    const entry = makeEntry()
+
+    await sendChatForAuditEntries(actor, [entry])
+
+    expect(globalThis.ChatMessage.create).toHaveBeenCalledTimes(1)
+    expect(globalThis.ChatMessage.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        content: expect.any(String),
+        speaker: expect.any(Object),
+        flags: expect.objectContaining({
+          swerpg: expect.objectContaining({
+            auditChat: true,
+            auditType: 'skill.train',
+            auditEntryId: entry.id,
+          }),
+        }),
+      }),
+    )
+  })
+
+  test('sends one chat per entry for skill.forget', async () => {
+    const { sendChatForAuditEntries } = await import('../../module/utils/audit-log.mjs')
+    const actor = makeActor()
+    const entry = makeEntry({ type: 'skill.forget', data: { ...makeEntry().data, oldRank: 3, newRank: 2, cost: 10 }, xpDelta: 10 })
+
+    await sendChatForAuditEntries(actor, [entry])
+
+    expect(globalThis.ChatMessage.create).toHaveBeenCalledTimes(1)
+    expect(globalThis.ChatMessage.create.mock.calls[0][0].flags.swerpg.auditType).toBe('skill.forget')
+  })
+
+  test('sends one chat per entry for characteristic.increase', async () => {
+    const { sendChatForAuditEntries } = await import('../../module/utils/audit-log.mjs')
+    const actor = makeActor()
+    const entry = makeEntry({ type: 'characteristic.increase', data: { characteristicId: 'brawn', oldValue: 3, newValue: 4, cost: 40 }, xpDelta: -40 })
+
+    await sendChatForAuditEntries(actor, [entry])
+
+    expect(globalThis.ChatMessage.create).toHaveBeenCalledTimes(1)
+  })
+
+  test('sends one chat per entry for xp.grant', async () => {
+    const { sendChatForAuditEntries } = await import('../../module/utils/audit-log.mjs')
+    const actor = makeActor()
+    const entry = makeEntry({ type: 'xp.grant', data: { amount: 50 }, xpDelta: 50 })
+
+    await sendChatForAuditEntries(actor, [entry])
+
+    expect(globalThis.ChatMessage.create).toHaveBeenCalledTimes(1)
+  })
+
+  test('sends one chat per entry for species.set', async () => {
+    const { sendChatForAuditEntries } = await import('../../module/utils/audit-log.mjs')
+    const actor = makeActor()
+    const entry = makeEntry({ type: 'species.set', data: { oldSpecies: null, newSpecies: 'Human' }, xpDelta: 0 })
+
+    await sendChatForAuditEntries(actor, [entry])
+
+    expect(globalThis.ChatMessage.create).toHaveBeenCalledTimes(1)
+  })
+
+  test('sends one chat per entry for talent-node-purchase-succeeded', async () => {
+    const { sendChatForAuditEntries } = await import('../../module/utils/audit-log.mjs')
+    const actor = makeActor()
+    const entry = makeEntry({
+      type: 'talent-node-purchase-succeeded',
+      data: { specializationId: 'spec-1', nodeId: 'r1c1', talentId: 'grit', cost: 5 },
+      xpDelta: -5,
+    })
+
+    await sendChatForAuditEntries(actor, [entry])
+
+    expect(globalThis.ChatMessage.create).toHaveBeenCalledTimes(1)
+  })
+
+  test('sends one chat per entry for talent-node-purchase-failed', async () => {
+    const { sendChatForAuditEntries } = await import('../../module/utils/audit-log.mjs')
+    const actor = makeActor()
+    const entry = makeEntry({ type: 'talent-node-purchase-failed', data: { nodeId: 'r1c1', reasonCode: 'not-enough-xp', cost: 5 }, xpDelta: -5 })
+
+    await sendChatForAuditEntries(actor, [entry])
+
+    expect(globalThis.ChatMessage.create).toHaveBeenCalledTimes(1)
+  })
+
+  test('sends one chat per entry for advancement.level', async () => {
+    const { sendChatForAuditEntries } = await import('../../module/utils/audit-log.mjs')
+    const actor = makeActor()
+    const entry = makeEntry({ type: 'advancement.level', data: { oldLevel: 3, newLevel: 4 }, xpDelta: 0 })
+
+    await sendChatForAuditEntries(actor, [entry])
+
+    expect(globalThis.ChatMessage.create).toHaveBeenCalledTimes(1)
+  })
+
+  test('sends one chat per entry for unknown type (fallback)', async () => {
+    const { sendChatForAuditEntries } = await import('../../module/utils/audit-log.mjs')
+    const actor = makeActor()
+    const entry = makeEntry({ type: 'unknown.event', data: {} })
+
+    await sendChatForAuditEntries(actor, [entry])
+
+    expect(globalThis.ChatMessage.create).toHaveBeenCalledTimes(1)
+  })
+
+  test('sends one chat per entry in a batch', async () => {
+    const { sendChatForAuditEntries } = await import('../../module/utils/audit-log.mjs')
+    const actor = makeActor()
+    const entries = [
+      makeEntry({ type: 'skill.train' }),
+      makeEntry({ type: 'characteristic.increase', data: { characteristicId: 'brawn', oldValue: 3, newValue: 4, cost: 40 }, xpDelta: -40 }),
+      makeEntry({ type: 'species.set', data: { oldSpecies: null, newSpecies: 'Human' }, xpDelta: 0 }),
+    ]
+
+    await sendChatForAuditEntries(actor, entries)
+
+    expect(globalThis.ChatMessage.create).toHaveBeenCalledTimes(3)
+  })
+
+  test('does not propagate ChatMessage.create error', async () => {
+    const { sendChatForAuditEntries } = await import('../../module/utils/audit-log.mjs')
+    const actor = makeActor()
+    const entry = makeEntry()
+    globalThis.ChatMessage.create = vi.fn().mockRejectedValue(new Error('Chat failed'))
+
+    await expect(sendChatForAuditEntries(actor, [entry])).resolves.toBeUndefined()
+  })
+
+  test('calls renderTemplate with audit-entry.hbs and expected context', async () => {
+    const { sendChatForAuditEntries } = await import('../../module/utils/audit-log.mjs')
+    const actor = makeActor()
+    const entry = makeEntry()
+
+    await sendChatForAuditEntries(actor, [entry])
+
+    expect(globalThis.foundry.applications.handlebars.renderTemplate).toHaveBeenCalledWith(
+      'systems/swerpg/templates/chat/audit-entry.hbs',
+      expect.objectContaining({
+        actorImg: 'icons/test-character.svg',
+        actorName: 'Test Character',
+        showDetails: true,
+        changeText: '2 → 3',
+      }),
+    )
+  })
+})

@@ -51,6 +51,7 @@ Ni l'une ni l'autre n'est volontaire ; ce plan couvre l'analyse et la correction
 #### 3.1 — Séparer clé UI et identifiant métier (achat/oubli)
 
 Fichiers cibles :
+
 - `module/applications/specialization-tree/tree-context-builder.mjs`
 - `module/applications/specialization-tree/node-ui-state.mjs`
 - `module/lib/talent-node/talent-node-state.mjs`
@@ -58,6 +59,7 @@ Fichiers cibles :
 - `module/applications/specialization-tree-app.mjs`
 
 Modifications :
+
 1. Dans `tree-context-builder.mjs`, exposer deux valeurs distinctes : `selectionKey` (pour l'UI) et `canonicalSpecializationId` (pour le métier).
 2. Calculer `canonicalSpecializationId` par résolution : si `tree.system.specializationId` existe, l'utiliser ; sinon résoudre via `resolveSpecializationTree()` ou fallback vers `name`.
 3. Propager `canonicalSpecializationId` dans `getTreeNodesStates()` et `processTalentNodeProgression()`.
@@ -68,6 +70,7 @@ Modifications :
 Fichier cible : `module/applications/specialization-tree-app.mjs`
 
 Modifications :
+
 1. Appeler `normalizeActorSpecializations(this.actor)` dans `_prepareContext()` ou `onTreeChanged()`.
 2. Ajouter une vérification : si la normalisation a modifié la `selectedTreeKey`, rafraîchir le rendu.
 
@@ -79,11 +82,13 @@ Modifications :
 #### 3.4 — Tests de régression
 
 Fichiers cibles : nouveaux tests ou extension des fichiers existants :
+
 - `tests/lib/talent-node/talent-node-state.test.mjs`
 - `tests/lib/talent-node/talent-node-progression.test.mjs`
 - `tests/applications/specialization-tree-app.test.mjs`
 
 Cas à couvrir :
+
 1. Acteur legacy **sans** `specializationId` : achat d'un nœud racine.
 2. Acteur legacy **sans** `specializationId` : oubli d'un nœud acheté.
 3. Sélection UI par `treeUuid` → achat correct.
@@ -95,15 +100,15 @@ Cas à couvrir :
 
 ### Fichiers impactés (résumé)
 
-| Fichier | Modifications |
-|---|---|
+| Fichier                                                            | Modifications                                                |
+| ------------------------------------------------------------------ | ------------------------------------------------------------ |
 | `module/applications/specialization-tree/tree-context-builder.mjs` | Exposer `canonicalSpecializationId` + `selectionKey` séparés |
-| `module/lib/talent-node/talent-node-state.mjs` | Optionnel : assouplir comparaison si besoin |
-| `module/lib/talent-node/talent-node-progression.mjs` | Optionnel : assouplir comparaison si besoin |
-| `module/applications/specialization-tree-app.mjs` | Normalisation au runtime + propagation nouvel ID |
-| `module/applications/specialization-tree/node-ui-state.mjs` | Aucun (sauf revert palette) |
-| `styles/applications.less` | Aucun (sauf revert palette) |
-| `tests/*` | Nouveaux tests de régression |
+| `module/lib/talent-node/talent-node-state.mjs`                     | Optionnel : assouplir comparaison si besoin                  |
+| `module/lib/talent-node/talent-node-progression.mjs`               | Optionnel : assouplir comparaison si besoin                  |
+| `module/applications/specialization-tree-app.mjs`                  | Normalisation au runtime + propagation nouvel ID             |
+| `module/applications/specialization-tree/node-ui-state.mjs`        | Aucun (sauf revert palette)                                  |
+| `styles/applications.less`                                         | Aucun (sauf revert palette)                                  |
+| `tests/*`                                                          | Nouveaux tests de régression                                 |
 
 ---
 

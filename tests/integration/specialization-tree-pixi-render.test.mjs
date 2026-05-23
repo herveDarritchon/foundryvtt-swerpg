@@ -24,8 +24,12 @@ function createMockCanvas() {
     classList: { add: vi.fn() },
     style: {},
     _listeners: listeners,
-    addEventListener: vi.fn((event, handler) => { listeners[event] = handler }),
-    removeEventListener: vi.fn((event) => { delete listeners[event] }),
+    addEventListener: vi.fn((event, handler) => {
+      listeners[event] = handler
+    }),
+    removeEventListener: vi.fn((event) => {
+      delete listeners[event]
+    }),
   }
 }
 
@@ -34,7 +38,9 @@ function createMockHost({ width = 640, height = 480 } = {}) {
     clientWidth: width,
     clientHeight: height,
     firstElementChild: null,
-    replaceChildren: vi.fn(function replaceChildren(child) { this.firstElementChild = child }),
+    replaceChildren: vi.fn(function replaceChildren(child) {
+      this.firstElementChild = child
+    }),
   }
 }
 
@@ -46,11 +52,25 @@ function createMockContainer() {
     hitArea: null,
     position: { set: vi.fn() },
     scale: { set: vi.fn() },
-    addChild: vi.fn(function addChild(child) { this.children.push(child); return child }),
-    removeChild: vi.fn(function removeChild(child) { this.children = this.children.filter((c) => c !== child); return child }),
-    destroy: vi.fn(function destroy() { this.children = [] }),
-    on: vi.fn(function on(event, handler) { listeners[event] = handler; return this }),
-    off: vi.fn(function off(event) { delete listeners[event]; return this }),
+    addChild: vi.fn(function addChild(child) {
+      this.children.push(child)
+      return child
+    }),
+    removeChild: vi.fn(function removeChild(child) {
+      this.children = this.children.filter((c) => c !== child)
+      return child
+    }),
+    destroy: vi.fn(function destroy() {
+      this.children = []
+    }),
+    on: vi.fn(function on(event, handler) {
+      listeners[event] = handler
+      return this
+    }),
+    off: vi.fn(function off(event) {
+      delete listeners[event]
+      return this
+    }),
     _listeners: listeners,
   }
 }
@@ -143,7 +163,9 @@ describe('PixiTreeRenderer integration', () => {
         }
       },
       Container: class MockContainer {
-        constructor() { Object.assign(this, createMockContainer()) }
+        constructor() {
+          Object.assign(this, createMockContainer())
+        }
       },
       Graphics: class MockGraphics {
         constructor() {
@@ -152,14 +174,38 @@ describe('PixiTreeRenderer integration', () => {
           this.cursor = 'default'
           this._listeners = {}
         }
-        lineStyle(...args) { this.calls.push(['lineStyle', ...args]); return this }
-        moveTo(...args) { this.calls.push(['moveTo', ...args]); return this }
-        lineTo(...args) { this.calls.push(['lineTo', ...args]); return this }
-        beginFill(...args) { this.calls.push(['beginFill', ...args]); return this }
-        endFill() { this.calls.push(['endFill']); return this }
-        drawRoundedRect(...args) { this.calls.push(['drawRoundedRect', ...args]); return this }
-        drawRect(...args) { this.calls.push(['drawRect', ...args]); return this }
-        on(event, handler) { this._listeners[event] = handler; return this }
+        lineStyle(...args) {
+          this.calls.push(['lineStyle', ...args])
+          return this
+        }
+        moveTo(...args) {
+          this.calls.push(['moveTo', ...args])
+          return this
+        }
+        lineTo(...args) {
+          this.calls.push(['lineTo', ...args])
+          return this
+        }
+        beginFill(...args) {
+          this.calls.push(['beginFill', ...args])
+          return this
+        }
+        endFill() {
+          this.calls.push(['endFill'])
+          return this
+        }
+        drawRoundedRect(...args) {
+          this.calls.push(['drawRoundedRect', ...args])
+          return this
+        }
+        drawRect(...args) {
+          this.calls.push(['drawRect', ...args])
+          return this
+        }
+        on(event, handler) {
+          this._listeners[event] = handler
+          return this
+        }
       },
       Text: class MockText {
         constructor(text, style) {
@@ -269,10 +315,7 @@ describe('PixiTreeRenderer integration', () => {
     const result = await loadStatePictogram(NODE_STATE.AVAILABLE)
 
     expect(result).not.toBeNull()
-    expect(loadSpy).toHaveBeenCalledWith(
-      expect.stringContaining('.svg'),
-      expect.objectContaining({ resolution: 1 }),
-    )
+    expect(loadSpy).toHaveBeenCalledWith(expect.stringContaining('.svg'), expect.objectContaining({ resolution: 1 }))
   })
 
   it('mounts the PIXI canvas into the host and resizes on first update', async () => {
@@ -630,12 +673,7 @@ describe('PixiTreeRenderer integration', () => {
     renderer.mount(host)
     await renderer.update(createViewModel(), {})
 
-    expect(renderer.pixiApp.stage.on.mock.calls.map(([eventName]) => eventName)).toEqual([
-      'pointerdown',
-      'pointermove',
-      'pointerup',
-      'pointerupoutside',
-    ])
+    expect(renderer.pixiApp.stage.on.mock.calls.map(([eventName]) => eventName)).toEqual(['pointerdown', 'pointermove', 'pointerup', 'pointerupoutside'])
 
     renderer.pixiApp.stage.on.mockClear()
     renderer.mount(host)

@@ -1,9 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import {
-  CONNECTION_VISUAL_STYLES,
-  getConnectionStyle,
-} from '../../../module/applications/specialization-tree/connection-ui-state.mjs'
+import { CONNECTION_VISUAL_STYLES, getConnectionStyle } from '../../../module/applications/specialization-tree/connection-ui-state.mjs'
 
 describe('connection-ui-state', () => {
   it('exposes the expected predefined styles', () => {
@@ -33,7 +30,7 @@ describe('connection-ui-state', () => {
       new Map([
         ['n1', { nodeState: 'purchased' }],
         ['n2', { nodeState: 'available' }],
-      ])
+      ]),
     )
 
     expect(style).toBe(CONNECTION_VISUAL_STYLES.default)

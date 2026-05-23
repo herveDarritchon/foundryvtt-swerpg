@@ -526,8 +526,6 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
         rank: skill.rank.value,
       }),
     )
-
-    await CharacterSheet.#sendSkillTransactionChat(app, skillId, action, oldRank, cost)
   }
 
   static #refreshConsoleStats(app) {
@@ -549,53 +547,6 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
 
     const specEl = consoleEl.querySelector('[data-free-specialization-skills]')
     if (specEl) specEl.textContent = free.specialization.available ?? 0
-  }
-
-  /**
-   * Send an immersive chat message after a successful skill transaction (US7).
-   * Renders the skill-transaction.hbs template with actor portrait, rank change, and cost.
-   * @param {CharacterSheet} app - The sheet instance
-   * @param {string} skillId - The skill ID
-   * @param {'train'|'forget'} action - The action performed
-   * @param {number} oldRank - The rank before the transaction
-   * @param {number} cost - The XP cost (train) or refund (forget) amount
-   */
-  static async #sendSkillTransactionChat(app, skillId, action, oldRank, cost) {
-    const actor = app.actor
-    const skill = actor.system.skills?.[skillId]
-    if (!skill) return
-
-    const newRank = skill.rank.value
-    const remainingXp = actor.system.progression.experience.available
-    const isFree = action === 'train' && cost === 0
-    const isRefund = action === 'forget'
-
-    let costLabel
-    if (isFree) {
-      costLabel = game.i18n.localize('SKILL.CHAT.FREE_COST')
-    } else if (isRefund) {
-      costLabel = game.i18n.format('SKILL.CHAT.REFUND', { cost })
-    } else {
-      costLabel = game.i18n.format('SKILL.CHAT.COST', { cost })
-    }
-
-    const content = await foundry.applications.handlebars.renderTemplate('systems/swerpg/templates/chat/skill-transaction.hbs', {
-      actorImg: actor.img,
-      actorName: actor.name,
-      skillLabel: skill.label,
-      oldRank,
-      newRank,
-      costLabel,
-      remainingLabel: game.i18n.format('SKILL.CHAT.REMAINING', { xp: remainingXp }),
-      cssClass: isFree ? 'is-free' : isRefund ? 'is-forget' : 'is-train',
-      costCssClass: isFree ? 'is-free' : isRefund ? 'is-refund' : '',
-    })
-
-    await ChatMessage.create({
-      content,
-      speaker: ChatMessage.getSpeaker({ actor }),
-      flags: { swerpg: { skillTransaction: true, action, skillId } },
-    })
   }
 
   /* -------------------------------------------- */
