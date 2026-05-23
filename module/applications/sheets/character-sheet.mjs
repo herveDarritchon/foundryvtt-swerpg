@@ -691,6 +691,12 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
 
   /**
    * Handle drop of a specialization item with purchase flow.
+   *
+   * During character creation (actor.isL0), the first specialization is applied via
+   * applySpecialization() to preserve its freeSkillRank.
+   * Post-creation, acquireSpecialization() is used, which zeroes freeSkillRank to
+   * prevent free skill rank re-attribution.
+   *
    * @param {object} item - The dropped Item document (specialization)
    */
   async #handleSpecializationDrop(item) {
@@ -702,7 +708,11 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
 
     switch (result.decision) {
       case 'free-add':
-        await actor.system.acquireSpecialization(item)
+        if (actor.isL0) {
+          await actor.system.applySpecialization(item)
+        } else {
+          await actor.system.acquireSpecialization(item)
+        }
         return
 
       case 'blocked-duplicate':
