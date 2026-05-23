@@ -16,15 +16,31 @@ vi.mock('../../../module/lib/talent-node/talent-tree-resolver.mjs', () => ({
 import { resolveSpecializationTree } from '../../../module/lib/talent-node/talent-tree-resolver.mjs'
 import { buildOwnedTalentSummary } from '../../../module/lib/talent-node/owned-talent-summary.mjs'
 
-function buildActor({ specializations, talentPurchases } = {}) {
+function buildActor({ specializations, talentPurchases, species, items } = {}) {
   return {
+    items: items ?? [],
     system: {
       details: {
         specializations: specializations ?? [],
+        species: species ?? null,
       },
       progression: {
         talentPurchases: talentPurchases ?? [],
       },
+    },
+  }
+}
+
+function buildFreeItem({ id = 'talent-resilience', systemId, name = 'Resilience', isFree = true } = {}) {
+  return {
+    id,
+    type: 'talent',
+    name,
+    system: {
+      id: systemId ?? id,
+      isFree,
+      activation: 'passive',
+      isRanked: false,
     },
   }
 }
@@ -483,6 +499,118 @@ describe('OwnedTalentSummary', () => {
 
       expect(result[0].sources[0].treeName).toBe('Bodyguard Tree')
       expect(result[0].sources[0].resolutionState).toBe('ok')
+    })
+
+    // Free species talent tests
+    it('returns entry for a free species talent even when talentPurchases is empty', () => {
+      const actor = buildActor({
+        species: { name: 'Twi\'lek' },
+        items: [buildFreeItem({ id: 'talent-resilience', name: 'Resilience' })],
+      })
+      const definitions = new Map([['talent-resilience', buildTalentDefinition({ name: 'Resilience', isRanked: false, activation: 'passive' })]])
+
+      const result = buildOwnedTalentSummary(actor, definitions)
+
+      expect(result).toHaveLength(1)
+      expect(result[0].talentId).toBe('talent-resilience')
+      expect(result[0].name).toBe('Resilience')
+      expect(result[0].sources).toHaveLength(1)
+      expect(result[0].sources[0].resolutionState).toBe('species')
+      expect(result[0].sources[0].speciesName).toBe('Twi\'lek')
+    })
+
+    it('carries the species name in the source when species is set on actor', () => {
+      const actor = buildActor({
+        species: { name: 'Wookiee' },
+        items: [buildFreeItem({ id: 'talent-brawling', name: 'Brawling' })],
+      })
+
+      const result = buildOwnedTalentSummary(actor, new Map())
+
+      expect(result[0].sources[0].speciesName).toBe('Wookiee')
+    })
+
+    it('uses null speciesName in source when species is not set on actor', () => {
+      const actor = buildActor({
+        items: [buildFreeItem({ id: 'talent-resilience', name: 'Resilience' })],
+      })
+
+      const result = buildOwnedTalentSummary(actor, new Map())
+
+      expect(result[0].sources[0].speciesName).toBeNull()
+    })
+
+    it('ignores non-free embedded talent items', () => {
+      const actor = buildActor({
+        species: { name: 'Human' },
+        items: [
+          buildFreeItem({ id: 'talent-free', isFree: true }),
+          buildFreeItem({ id: 'talent-purchased', isFree: false }),
+        ],
+      })
+
+      const result = buildOwnedTalentSummary(actor, new Map())
+
+      expect(result).toHaveLength(1)
+      expect(result[0].talentId).toBe('talent-free')
+    })
+
+    it('merges a free species talent with a tree purchase of the same talentId', () => {
+      const actor = buildActor({
+        specializations: [buildSpec()],
+        talentPurchases: [buildPurchase({ talentId: 'talent-parry' })],
+        species: { name: 'Human' },
+        items: [buildFreeItem({ id: 'talent-parry', name: 'Parry' })],
+      })
+      resolveSpecializationTree.mockReturnValue(buildResolvedTree())
+      const definitions = new Map([['talent-parry', buildTalentDefinition({ name: 'Parry', isRanked: true })]])
+
+      const result = buildOwnedTalentSummary(actor, definitions)
+
+      expect(result).toHaveLength(1)
+      expect(result[0].talentId).toBe('talent-parry')
+      // One source from tree purchase + one from species
+      expect(result[0].sources).toHaveLength(2)
+      const states = result[0].sources.map((s) => s.resolutionState)
+      expect(states).toContain('ok')
+      expect(states).toContain('species')
+      // Ranked: counted across both sources
+      expect(result[0].rank).toBe(2)
+    })
+
+    it('returns empty array when there are no purchases and no free species items', () => {
+      const actor = buildActor({
+        species: { name: 'Rodian' },
+        items: [],
+      })
+
+      const result = buildOwnedTalentSummary(actor, new Map())
+
+      expect(result).toEqual([])
+    })
+
+    it('uses item.system.id as talentId for free species talents when available', () => {
+      const item = buildFreeItem({ id: 'Item.abc123', systemId: 'resilience', name: 'Resilience' })
+      const actor = buildActor({
+        species: { name: 'Human' },
+        items: [item],
+      })
+
+      const result = buildOwnedTalentSummary(actor, new Map())
+
+      expect(result[0].talentId).toBe('resilience')
+    })
+
+    it('falls back to item.id as talentId when system.id is absent', () => {
+      const item = { id: 'Item.xyz', type: 'talent', name: 'Grit', system: { isFree: true, activation: 'passive', isRanked: false } }
+      const actor = buildActor({
+        species: { name: 'Human' },
+        items: [item],
+      })
+
+      const result = buildOwnedTalentSummary(actor, new Map())
+
+      expect(result[0].talentId).toBe('Item.xyz')
     })
   })
 })
