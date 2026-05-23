@@ -215,4 +215,24 @@ describe('getSkillPurchaseState', () => {
     expect(result.canPurchase).toBe(false)
     expect(result.reason).toBe('MAX_RANK')
   })
+
+  it('should return MAX_RANK at rank 2 with maxRank=2 during creation even when free ranks are available', () => {
+    // At creation, rank cap is 2. A skill already at rank 2 must show MAX_RANK
+    // regardless of remaining free career or specialization ranks.
+    const result = getSkillPurchaseState({
+      ...baseParams,
+      rank: 2,
+      isCareer: true,
+      isSpecialization: true,
+      availableXp: 100,
+      freeCareerSkillsLeft: 2,
+      freeSpecializationSkillsLeft: 1,
+      careerFreeRank: 0,
+      specializationFreeRank: 1,
+      maxRank: 2,
+    })
+    expect(result.canPurchase).toBe(false)
+    expect(result.reason).toBe('MAX_RANK')
+    expect(result.nextCost).toBeNull()
+  })
 })

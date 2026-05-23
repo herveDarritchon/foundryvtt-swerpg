@@ -458,6 +458,7 @@ export default class SwerpgCharacter extends SwerpgActorType {
     }
 
     const progression = this.progression
+    const isCreation = this.parent?.isL0 ?? false
     const purchaseState = getSkillPurchaseState({
       rank: skill.rank.value,
       isCareer: freeStatus.isCareer,
@@ -467,6 +468,7 @@ export default class SwerpgCharacter extends SwerpgActorType {
       freeSpecializationSkillsLeft: progression.freeSkillRanks.specialization.available,
       careerFreeRank: skill.rank.careerFree,
       specializationFreeRank: skill.rank.specializationFree,
+      maxRank: isCreation ? 2 : 5,
     })
 
     skill.nextRank = purchaseState.nextRank

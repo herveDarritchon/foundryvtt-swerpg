@@ -270,6 +270,39 @@ describe('CareerFreeSkill', () => {
         expect(result.options.message).toBe("career free skill ranks spent can't be negative!")
         expect(result.evaluated).toBe(false)
       })
+
+      test('should return ErrorSkill when species base + specializationFree + careerFree would exceed 2 at creation', async () => {
+        // Scenario: species gives base=1, specializationFree=1 already spent, trying to add careerFree
+        // rank.value before careerFree train = base(1) + careerFree(0) + specializationFree(1) + trained(0) = 2
+        // After train: rank.value = 3 => must be rejected
+        const actor = createActor()
+
+        const data = createSkillData({
+          base: 1,
+          careerFree: 0,
+          specializationFree: 1,
+          trained: 0,
+          value: 2,
+        })
+
+        const careerFreeSkill = new CareerFreeSkill(
+          actor,
+          data,
+          {
+            action: 'train',
+            isCreation: true,
+            isCareer: true,
+            isSpecialization: true,
+          },
+          {},
+        )
+
+        const result = await careerFreeSkill.process()
+
+        expect(result).toBeInstanceOf(ErrorSkill)
+        expect(result.options.message).toBe("you can't have more than 2 ranks at creation!")
+        expect(result.evaluated).toBe(false)
+      })
     })
   })
 
