@@ -392,17 +392,12 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
         talent: node.talentName,
         xp: node.xpCost,
       })}</p>`,
-      buttons: [
-        {
-          action: 'confirm',
-          label: actionLabel,
-          default: true,
-        },
-        {
-          action: 'cancel',
-          label: cancelLabel,
-        },
-      ],
+      yes: {
+        label: actionLabel,
+      },
+      no: {
+        label: cancelLabel,
+      },
     })
   }
 
@@ -463,17 +458,12 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
     const confirmed = await api.DialogV2.confirm({
       title: game.i18n.format(ACTION_KEYS.remove.confirmTitle, { specialization: result.specializationName }),
       content: `<p>${game.i18n.format(ACTION_KEYS.remove.confirmContent, { specialization: result.specializationName })}</p>`,
-      buttons: [
-        {
-          action: 'confirm',
-          label: game.i18n.localize('SWERPG.TALENT.SPECIALIZATION_TREE_APP.ACTION.REMOVE'),
-          default: true,
-        },
-        {
-          action: 'cancel',
-          label: game.i18n.localize('SWERPG.TALENT.SPECIALIZATION_TREE_APP.CONFIRM.CANCEL'),
-        },
-      ],
+      yes: {
+        label: game.i18n.localize('SWERPG.TALENT.SPECIALIZATION_TREE_APP.ACTION.REMOVE'),
+      },
+      no: {
+        label: game.i18n.localize('SWERPG.TALENT.SPECIALIZATION_TREE_APP.CONFIRM.CANCEL'),
+      },
     })
 
     if (!confirmed) return

@@ -53,7 +53,9 @@ describe('SwerpgActor Talents', () => {
           const confirm = await DialogV2.confirm({
             title: `Purchase Talent: ${talent.name}`,
             content: `<p>Spend 1 Talent Point to purchase <strong>${talent.name}</strong>?</p>`,
-            defaultYes: false,
+            no: {
+              default: true,
+            },
           })
           if (!confirm) return null
 
@@ -157,7 +159,11 @@ describe('SwerpgActor Talents', () => {
             },
             content: `<p>Are you sure you wish to reset all Talents?</p>`,
             yes: {
+              label: 'Yes',
               default: true,
+            },
+            no: {
+              label: 'No',
             },
           })
           if (!confirm) return
