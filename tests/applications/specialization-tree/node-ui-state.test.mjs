@@ -685,4 +685,38 @@ describe('node-ui-state', () => {
       }
     })
   })
+
+  /* ── Exhaustive color contract: fillColor + borderColor for all 8 variants ── */
+
+  describe('fillColor and borderColor contract — all 8 variants', () => {
+    const EXPECTED_COLORS = {
+      [NODE_STATE.PURCHASED]: {
+        [NODE_TYPE.PASSIVE]: { fillColor: 0x1f4f8c, borderColor: 0x95c9ff },
+        [NODE_TYPE.ACTIVE]: { fillColor: 0x7a2323, borderColor: 0xffa2a2 },
+      },
+      [NODE_STATE.AVAILABLE]: {
+        [NODE_TYPE.PASSIVE]: { fillColor: 0x21344d, borderColor: 0x5f85ad },
+        [NODE_TYPE.ACTIVE]: { fillColor: 0x4d2525, borderColor: 0xb87676 },
+      },
+      [NODE_STATE.LOCKED]: {
+        [NODE_TYPE.PASSIVE]: { fillColor: 0x1f2630, borderColor: 0x7a7a7a },
+        [NODE_TYPE.ACTIVE]: { fillColor: 0x302020, borderColor: 0x7a7a7a },
+      },
+      [NODE_STATE.INVALID]: {
+        [NODE_TYPE.PASSIVE]: { fillColor: 0x2b1f28, borderColor: 0x7c4e5a },
+        [NODE_TYPE.ACTIVE]: { fillColor: 0x3c1d1d, borderColor: 0x8f4a4a },
+      },
+    }
+
+    for (const state of Object.values(NODE_STATE)) {
+      for (const type of Object.values(NODE_TYPE)) {
+        const expected = EXPECTED_COLORS[state][type]
+        it(`${state}/${type}: fillColor 0x${expected.fillColor.toString(16).padStart(6, '0')}, borderColor 0x${expected.borderColor.toString(16).padStart(6, '0')}`, () => {
+          const v = NODE_STATE_VARIANTS[state][type]
+          expect(v.fillColor).toBe(expected.fillColor)
+          expect(v.borderColor).toBe(expected.borderColor)
+        })
+      }
+    }
+  })
 })

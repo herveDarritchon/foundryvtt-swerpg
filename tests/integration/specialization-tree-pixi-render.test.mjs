@@ -318,6 +318,38 @@ describe('PixiTreeRenderer integration', () => {
     ])
   })
 
+  it('applies variant fillColor, borderColor and borderWidth to node backgrounds', async () => {
+    const host = createMockHost()
+    const renderer = new PixiTreeRenderer()
+    renderer.mount(host)
+
+    await renderer.update(createViewModel(), {})
+
+    const descendants = flattenChildren(renderer.treeContainer)
+
+    // First node: AVAILABLE + passive
+    const bg1 = descendants.find((c) => c.label === 'node:n1:Tough:background')
+    expect(bg1).toBeDefined()
+    const v1 = NODE_STATE_VARIANTS[NODE_STATE.AVAILABLE].passive
+    expect(bg1.calls).toEqual(
+      expect.arrayContaining([
+        ['beginFill', v1.fillColor, v1.alpha],
+        ['lineStyle', v1.borderWidth, v1.borderColor, v1.alpha],
+      ]),
+    )
+
+    // Second node: LOCKED + active
+    const bg2 = descendants.find((c) => c.label === 'node:n2:Grit:background')
+    expect(bg2).toBeDefined()
+    const v2 = NODE_STATE_VARIANTS[NODE_STATE.LOCKED].active
+    expect(bg2.calls).toEqual(
+      expect.arrayContaining([
+        ['beginFill', v2.fillColor, v2.alpha],
+        ['lineStyle', v2.borderWidth, v2.borderColor, v2.alpha],
+      ]),
+    )
+  })
+
   it('renders title texts, cost texts, and corner icon sprites from icon slots', async () => {
     const host = createMockHost()
     const renderer = new PixiTreeRenderer()
