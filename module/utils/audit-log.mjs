@@ -441,8 +441,8 @@ function _buildChatContext(actor, entry) {
       context.nextValue = String(data.newRank)
       context.variant = isFree ? 'gain' : 'add'
       context.metaLeft = isFree
-        ? game.i18n.localize('SWERPG.SKILL.CHAT.FREE_COST')
-        : game.i18n.format('SWERPG.SKILL.CHAT.COST', { cost: data.cost })
+        ? game.i18n.localize('SKILL.CHAT.FREE_COST')
+        : game.i18n.format('SKILL.CHAT.COST', { cost: data.cost })
       break
     }
 
@@ -451,7 +451,7 @@ function _buildChatContext(actor, entry) {
       context.previousValue = String(data.oldRank)
       context.nextValue = String(data.newRank)
       context.variant = 'remove'
-      context.metaLeft = game.i18n.format('SWERPG.SKILL.CHAT.REFUND', { cost: data.cost })
+      context.metaLeft = game.i18n.format('SKILL.CHAT.REFUND', { cost: data.cost })
       break
     }
 
@@ -460,7 +460,7 @@ function _buildChatContext(actor, entry) {
       context.previousValue = String(data.oldValue)
       context.nextValue = String(data.newValue)
       context.variant = 'add'
-      context.metaLeft = game.i18n.format('SWERPG.SKILL.CHAT.COST', { cost: data.cost })
+      context.metaLeft = game.i18n.format('SKILL.CHAT.COST', { cost: data.cost })
       break
     }
 
@@ -475,8 +475,8 @@ function _buildChatContext(actor, entry) {
       context.nextValue = isGain ? `+${data.amount} XP` : `-${data.amount} XP`
       context.variant = isGain ? 'gain' : 'remove'
       context.metaLeft = isGain
-        ? game.i18n.format('SWERPG.SKILL.CHAT.REFUND', { cost: data.amount })
-        : game.i18n.format('SWERPG.SKILL.CHAT.COST', { cost: data.amount })
+        ? game.i18n.format('SKILL.CHAT.REFUND', { cost: data.amount })
+        : game.i18n.format('SKILL.CHAT.COST', { cost: data.amount })
       break
     }
 
@@ -500,7 +500,7 @@ function _buildChatContext(actor, entry) {
       context.nextValue = data.specializationName ?? data.specializationId ?? ''
       context.variant = isAdd ? 'add' : 'remove'
       if (data.cost) {
-        context.metaLeft = game.i18n.format('SWERPG.SKILL.CHAT.COST', { cost: data.cost })
+        context.metaLeft = game.i18n.format('SKILL.CHAT.COST', { cost: data.cost })
       }
       break
     }
@@ -509,7 +509,7 @@ function _buildChatContext(actor, entry) {
       context.eventLabel = game.i18n.localize('SWERPG.AUDIT_LOG.TYPE.TALENT_PURCHASE')
       context.nextValue = data.talentName ?? data.talentId ?? ''
       context.variant = 'add'
-      context.metaLeft = game.i18n.format('SWERPG.SKILL.CHAT.COST', { cost: data.cost })
+      context.metaLeft = game.i18n.format('SKILL.CHAT.COST', { cost: data.cost })
       break
     }
 
@@ -525,8 +525,8 @@ function _buildChatContext(actor, entry) {
         context.variant = isPurchase ? 'add' : 'remove'
         if (data.cost) {
           context.metaLeft = isPurchase
-            ? game.i18n.format('SWERPG.SKILL.CHAT.COST', { cost: data.cost })
-            : game.i18n.format('SWERPG.SKILL.CHAT.REFUND', { cost: data.cost })
+            ? game.i18n.format('SKILL.CHAT.COST', { cost: data.cost })
+            : game.i18n.format('SKILL.CHAT.REFUND', { cost: data.cost })
         }
       } else {
         context.nextValue = data.nodeId ?? ''
@@ -555,14 +555,14 @@ function _buildChatContext(actor, entry) {
       if (xpDelta !== 0) {
         context.metaLeft =
           xpDelta > 0
-            ? game.i18n.format('SWERPG.SKILL.CHAT.REFUND', { cost: xpDelta })
-            : game.i18n.format('SWERPG.SKILL.CHAT.COST', { cost: Math.abs(xpDelta) })
+            ? game.i18n.format('SKILL.CHAT.REFUND', { cost: xpDelta })
+            : game.i18n.format('SKILL.CHAT.COST', { cost: Math.abs(xpDelta) })
       }
     }
   }
 
   if (context.metaLeft !== null && snapshot.xpAvailable !== undefined) {
-    context.metaRight = game.i18n.format('SWERPG.SKILL.CHAT.REMAINING', { xp: snapshot.xpAvailable })
+    context.metaRight = game.i18n.format('SKILL.CHAT.REMAINING', { xp: snapshot.xpAvailable })
   }
 
   context.hasMeta = context.metaLeft !== null || context.metaRight !== null

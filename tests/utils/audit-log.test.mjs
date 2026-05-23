@@ -1459,7 +1459,7 @@ describe('sendChatForAuditEntries', () => {
     expect(ctx.nextValue).toBe('Ace Pilot')
     expect(ctx.previousValue).toBeNull()
     expect(ctx.variant).toBe('add')
-    expect(ctx.metaLeft).toBe('SWERPG.SKILL.CHAT.COST')
+    expect(ctx.metaLeft).toBe('SKILL.CHAT.COST')
     expect(ctx.changeText).toBeUndefined()
   })
 
@@ -1486,7 +1486,7 @@ describe('sendChatForAuditEntries', () => {
     expect(ctx.variant).toBe('gain')
     expect(ctx.previousValue).toBe('0')
     expect(ctx.nextValue).toBe('1')
-    expect(ctx.metaLeft).toBe('SWERPG.SKILL.CHAT.FREE_COST')
+    expect(ctx.metaLeft).toBe('SKILL.CHAT.FREE_COST')
   })
 
   test('hasMeta is true when metaLeft is set', async () => {
