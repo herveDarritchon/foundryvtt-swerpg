@@ -159,3 +159,17 @@ describe('OggDudeDataImporter statsTableRows régression', () => {
     expect(lastRow.labelI18n).toBe('SETTINGS.OggDudeDataImporter.loadWindow.domains.new-test-domain')
   })
 })
+
+describe('OggDudeDataImporter pipeline order — talent avant species', () => {
+  it('talent apparaît avant species dans _domainNames (non-regression bug CONV)', () => {
+    // Ce test vérifie que le domaine talent est importé avant species.
+    // Sans cet ordre, la résolution des talents gratuits de species (ex: Bothan -> CONV)
+    // échoue car les talents ne sont pas encore dans game.items au moment du mapping.
+    const app = buildInstance()
+    const talentIdx = app._domainNames.indexOf('talent')
+    const speciesIdx = app._domainNames.indexOf('species')
+    expect(talentIdx).toBeGreaterThanOrEqual(0)
+    expect(speciesIdx).toBeGreaterThanOrEqual(0)
+    expect(talentIdx).toBeLessThan(speciesIdx)
+  })
+})

@@ -479,7 +479,7 @@ class OggDudeDataElement {
     logger.debug('[OggDudeDataElement] ProcessElements - Step 6-4 Items', { items })
 
     // Step 6-5: Store the Items in the server database
-    await OggDudeDataElement._storeItems(
+    const created = await OggDudeDataElement._storeItems(
       items,
       context.folder.type,
       context.element.type,
@@ -494,6 +494,8 @@ class OggDudeDataElement {
       itemsCreated: items?.length || 0,
       elementType: context?.element?.type,
     })
+
+    return created
   }
 
   /**

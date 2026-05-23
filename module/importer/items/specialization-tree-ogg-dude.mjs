@@ -4,6 +4,7 @@ import { logger } from '../../utils/logger.mjs'
 import { getSpecializationTreeImportStats, resetSpecializationTreeImportStats } from '../utils/specialization-tree-import-utils.mjs'
 import { specializationTreeMapper } from '../mappers/oggdude-specialization-tree-mapper.mjs'
 
+
 function buildTalentByIdFromWorld() {
   if (typeof game === 'undefined' || !game.items) return new Map()
 
@@ -70,7 +71,48 @@ function buildTalentIndex() {
   return result
 }
 
-export async function buildSpecializationTreeContext(zip, groupByDirectory, groupByType) {
+/**
+ * Build a merged talent index combining session-published references (highest priority),
+ * world items, and compendium index.
+ *
+ * @param {import('../utils/import-session.mjs').ImportSession|null} importSession
+ * @returns {Map<string, {uuid: string, id: string}>}
+ */
+function buildMergedTalentIndex(importSession) {
+  // Base index from world and compendium (legacy fallback)
+  const worldAndPackIndex = buildTalentIndex()
+
+  if (!importSession) return worldAndPackIndex
+
+  // Session index entries take priority: they reflect the current batch
+  const merged = new Map(worldAndPackIndex)
+
+  for (const [oggdudeKey, uuid] of importSession.referenceIndex.talent.byOggdudeKey.entries()) {
+    const key = oggdudeKey.toLowerCase().trim()
+    merged.set(key, { uuid, id: oggdudeKey })
+  }
+
+  for (const [systemId, uuid] of importSession.referenceIndex.talent.bySystemId.entries()) {
+    if (!merged.has(systemId)) {
+      merged.set(systemId, { uuid, id: systemId })
+    }
+  }
+
+  logger.debug('[SpecializationTreeImporter] Merged talent index built', {
+    sessionKeys: importSession.referenceIndex.talent.byOggdudeKey.size,
+    totalKeys: merged.size,
+  })
+
+  return merged
+}
+
+/**
+ * @param zip
+ * @param groupByDirectory
+ * @param groupByType
+ * @param {import('../utils/import-session.mjs').ImportSession|null} [importSession] - Optional shared import session for cross-pipeline resolution.
+ */
+export async function buildSpecializationTreeContext(zip, groupByDirectory, groupByType, importSession = null) {
   logger.debug('[SpecializationTreeImporter] Building Specialization Tree context', {
     groupByDirectoryCount: groupByDirectory.length,
     hasZip: !!zip,
@@ -88,7 +130,7 @@ export async function buildSpecializationTreeContext(zip, groupByDirectory, grou
         .filter((entry) => entry && typeof entry === 'object')
     : []
 
-  const talentById = buildTalentIndex()
+  const talentById = buildMergedTalentIndex(importSession)
 
   return {
     jsonData: flattened,
