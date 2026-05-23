@@ -380,6 +380,14 @@ export default class SwerpgActor extends TalentsMixin(EquipmentMixin(ResourcesMi
       await this.deleteEmbeddedDocuments('Item', deleteIds)
     }
 
+    // Remove free talents granted by the previous species (isFree items added from freeTalents UUIDs)
+    if (existing?.freeTalents?.length) {
+      const freeDeleteIds = this.items.filter((i) => i.type === 'talent' && i.system?.isFree === true).map((i) => i.id)
+      if (freeDeleteIds.length) {
+        await this.deleteEmbeddedDocuments('Item', freeDeleteIds)
+      }
+    }
+
     // Clear the detail data
     if (!item) updateData[key] = null
     // Add new detail data
