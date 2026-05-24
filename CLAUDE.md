@@ -1,10 +1,16 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+## Règles agent (toujours)
+
+- Si ambigu : demande. Ne choisis pas en silence.
+- Diff minimal. Touche uniquement ce qui est demandé.
+- Définis « done » avant de commencer (1 ligne suffit).
+- Vérifie dans le code latest. Jamais d'hypothèse.
+- Code minimum. Pas de feature spéculative.
 
 ## Project
 
-**Swerpg** is a Foundry VTT v13+ game system for Star Wars Edge RPG. It targets `foundry.applications.api` (ApplicationV2) and `foundry.abstract.TypeDataModel`. The codebase is ES2022 modules only — no TypeScript, no `require`.
+**Swerpg** is a Foundry VTT v14+ game system for Star Wars Edge RPG. It targets `foundry.applications.api` (ApplicationV2) and `foundry.abstract.TypeDataModel`. The codebase is ES2022 modules only — no TypeScript, no `require`.
 
 - **Entry point**: `swerpg.mjs` → bundled to `dist/swerpg.bundle.js` via Rollup
 - **System ID**: `swerpg` (in `module/config/system.mjs`)
