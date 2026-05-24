@@ -47,6 +47,25 @@ opérationnelles avant de lancer cette commande.
 
 **Cette suite remplace les checks manuels basiques de surface post-déploiement.**
 
+### `pnpm e2e:documentation` — validation documentaire (manuelle)
+
+- **Instance** : instance de production ou dédiée stable, port 30000
+- **Monde** : monde stable dans un état représentatif des captures attendues
+- **Usage** : exécution manuelle lors de mise à jour de documentation, refactor UI, ou validation de stabilité documentaire
+- **Mutations** : lecture seule par défaut — prérequis contrôlés autorisés si documentés dans la spec
+- **Config** : `.env.e2e.documentation` (copier depuis `.env.e2e.documentation.example`)
+- **Commandes** : `pnpm e2e:documentation`, `pnpm e2e:documentation:headed`, `pnpm e2e:documentation:ui`
+
+**Périmètre** : parcours documentables (feuilles d'acteur, interfaces clés), invariants visibles (i18n, absence de placeholder cassé), absence d'erreurs navigateur inattendues dans les zones documentées.
+
+**Frontière avec `regression` et `smoke`** :
+
+| Critère | `documentation` | `regression` | `smoke` |
+|---|---|---|---|
+| Objectif | Captures documentaires, invariants visibles | Validation fonctionnelle pré-livraison | Santé de surface post-déploiement |
+| Mutations | Lecture seule par défaut (prérequis contrôlés documentés) | Autorisées | Interdites |
+| Instance cible | Port 30000 | Port 31001 | Port 30000 |
+
 ### Frontière CI / local manuel
 
 Les suites `regression` et `smoke` ne tournent **jamais** en CI GitHub Actions.
@@ -130,6 +149,10 @@ Les scripts E2E sont déclarés dans `package.json` :
   // Smoke de surface post-déploiement (instance prod, port 30000 — manuel uniquement)
   "e2e:smoke": "playwright test --config playwright.smoke.config.ts",
   "e2e:smoke:headed": "playwright test --config playwright.smoke.config.ts --headed",
+  // Documentation — captures documentaires et invariants visibles (manuel uniquement)
+  "e2e:documentation": "playwright test --config playwright.documentation.config.ts",
+  "e2e:documentation:headed": "playwright test --config playwright.documentation.config.ts --headed",
+  "e2e:documentation:ui": "playwright test --config playwright.documentation.config.ts --ui",
   // Instance Foundry dédiée E2E
   "foundry:e2e:start": "bash ./scripts/e2e-foundry-start.sh start",
   "foundry:e2e:stop": "bash ./scripts/e2e-foundry-start.sh stop",
@@ -224,6 +247,7 @@ Trois fichiers de configuration Playwright coexistent, un par commande :
 | `playwright.config.ts` | `e2e:ci` | tests `[ci]` uniquement | port 30000 | `.env.e2e.local` |
 | `playwright.regression.config.ts` | `e2e:regression` | régression fonctionnelle | port 31001 | `.env.e2e.regression` |
 | `playwright.smoke.config.ts` | `e2e:smoke` | smoke de surface | port 30000 | `.env.e2e.smoke.prod` |
+| `playwright.documentation.config.ts` | `e2e:documentation` | captures documentaires | port 30000 | `.env.e2e.documentation` |
 
 La commande `pnpm e2e` ne possède pas de config propre : elle orchestre `e2e:regression` puis `e2e:smoke`,
 chacune chargeant son propre fichier d'environnement.
@@ -244,6 +268,15 @@ chacune chargeant son propre fichier d'environnement.
 - `use.baseURL` – dérivé de `E2E_FOUNDRY_BASE_URL` (port 30000 par défaut)
 - `acceptDownloads: false` – lecture seule stricte
 
+**`playwright.documentation.config.ts`** :
+
+- `testDir: './e2e/documentation/specs'`
+- `workers: 1`
+- `timeout: 90000ms` – délais généreux pour les parcours documentaires
+- `use.baseURL` – dérivé de `E2E_FOUNDRY_BASE_URL` (port 30000 par défaut)
+- `trace: 'on'` et `screenshot: 'on'` – captures systématiques (pas seulement en échec)
+- `acceptDownloads: false` – lecture seule par défaut
+
 **`playwright.config.ts`** (CI uniquement) :
 
 - `testDir: './e2e'` – racine générale
@@ -254,6 +287,7 @@ Reporter :
 
 - `regression` (local) : `list` + `html` dans `playwright-regression-report/` — systématiquement généré
 - `smoke` (local) : `list` + `html` dans `playwright-smoke-report/` — systématiquement généré
+- `documentation` (local) : `list` + `html` dans `playwright-documentation-report/` — systématiquement généré
 - `e2e:ci` : `list` + `html` dans `playwright-report/` (héritage config `playwright.config.ts`) — non pertinent en pratique car Playwright ne tourne pas en CI
 
 > Les suites `regression` et `smoke` ne tournent **jamais** en CI. Le report HTML est donc un artefact local de diagnostic et de preuve de validation.
@@ -292,6 +326,12 @@ e2e/
     utils/
       oggdude-importer.ts
       world-manager.ts
+  documentation/          # Suite documentation — captures documentaires et invariants visibles
+    fixtures.ts           # Fixture documentationReady — navigation, lecture seule par défaut
+    global-setup.ts       # Vérification de connectivité avant les specs
+    specs/                # Specs documentation — un fichier par domaine documenté
+    utils/                # Helpers spécifiques à la suite documentation
+    README.md
   specs/                  # Specs legacy / [ci] — à requalifier progressivement
     bootstrap.spec.ts          # → candidat regression (santé de base)
     oggdude-import.spec.ts     # → candidat regression (import fonctionnel)
@@ -300,7 +340,7 @@ e2e/
     global-setup.ts
   helper/
     overlay.ts            # Fermeture des overlays Foundry
-  utils/                  # Helpers de session communs aux deux suites
+  utils/                  # Helpers de session communs aux suites
     foundrySession.ts
     foundryUI.ts
     playwrightTest.ts
@@ -312,6 +352,7 @@ e2e/
 
 - vérifie une surface sans mutation → `e2e/smoke/`
 - valide un workflow fonctionnel ou une feature → `e2e/regression/specs/`
+- produit des captures documentaires ou valide des invariants visibles → `e2e/documentation/specs/`
 - test `[ci]` en attente de migration → `e2e/specs/` (temporaire)
 
 ### 5.1. Fixtures et session Foundry
@@ -545,9 +586,10 @@ Pour tout nouveau test E2E :
 2. **Choisir la destination** selon le type de test :
    - vérification de surface, lecture seule → `e2e/smoke/`
    - workflow fonctionnel ou feature → `e2e/regression/specs/`
+   - captures documentaires ou invariants visibles → `e2e/documentation/specs/`
    - test `[ci]` legacy en attente de migration → `e2e/specs/` (temporaire)
 3. Créer le fichier dans le dossier approprié.
-4. Importer les fixtures de la suite : `import { test, expect } from '../fixtures'` (regression) ou `import { test, expect } from './fixtures'` (smoke).
+4. Importer les fixtures de la suite : `import { test, expect } from '../fixtures'` (regression) ou `import { test, expect } from './fixtures'` (smoke) ou `import { test, expect } from '../fixtures'` (documentation).
 5. Se baser sur les helpers existants (la page est déjà prête en `/game`).
 6. Utiliser des locators accessibles et éviter les sélecteurs CSS fragiles.
 7. Garder les scénarios concentrés sur un objectif métier précis.
@@ -606,11 +648,12 @@ Pour analyser une trace générée (par défaut conservée en cas d’échec) :
 pnpm exec playwright show-trace test-results/path-to-trace/trace.zip
 ```
 
-Les rapports HTML sont générés systématiquement lors de tout run local dans `playwright-regression-report/` (suite regression) et `playwright-smoke-report/` (suite smoke) :
+Les rapports HTML sont générés systématiquement lors de tout run local dans `playwright-regression-report/` (suite regression), `playwright-smoke-report/` (suite smoke) et `playwright-documentation-report/` (suite documentation) :
 
 ```bash
 pnpm exec playwright show-report playwright-regression-report
 pnpm exec playwright show-report playwright-smoke-report
+pnpm exec playwright show-report playwright-documentation-report
 ```
 
 ### 8.5. Tests instables (flaky)
@@ -719,12 +762,13 @@ pnpm exec playwright show-report playwright-smoke-report
 
 - `pnpm e2e:smoke` : vérification de surface, exécution manuelle, lecture seule sur instance de production.
 - `pnpm e2e:regression` : validation fonctionnelle pré-livraison sur instance dédiée, remplace les campagnes QA manuelles répétitives.
+- `pnpm e2e:documentation` : captures documentaires et invariants visibles, exécution manuelle, lecture seule par défaut.
 - `pnpm e2e` : campagne complète qui orchestre `regression` puis `smoke` — requiert les deux instances disponibles.
-- Trois configs Playwright distinctes, chacune chargeant son propre fichier d'environnement.
-- Reports HTML générés systématiquement en local (`playwright-regression-report/`, `playwright-smoke-report/`).
+- Quatre configs Playwright distinctes, chacune chargeant son propre fichier d'environnement.
+- Reports HTML générés systématiquement en local (`playwright-regression-report/`, `playwright-smoke-report/`, `playwright-documentation-report/`).
 - Les helpers `foundrySession.ts`, `e2eTest.ts` et les fixtures partagées encapsulent la logique de connexion et de lancement du monde Swerpg.
 - Les scénarios doivent rester courts, robustes, et utiliser des locators accessibles.
-- Toute nouvelle spec doit être placée dans `e2e/smoke/` ou `e2e/regression/specs/` selon son type.
+- Toute nouvelle spec doit être placée dans `e2e/smoke/`, `e2e/regression/specs/` ou `e2e/documentation/specs/` selon son type.
 - Matrice de couverture : `documentation/tests/e2e/couverture-e2e-matrice.md`.
 
 ---
