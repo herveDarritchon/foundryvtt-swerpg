@@ -27,7 +27,8 @@
       "Bash(/Users/hervedarritchon/Workspace/Perso/FoundryVTT/foundryvtt-swerpg/node_modules/.bin/playwright *)",
       "Bash(git -C /Users/hervedarritchon/Workspace/Perso/FoundryVTT/foundryvtt-swerpg diff --stat HEAD)",
       "Bash(git *)",
-      "Bash(echo \"exit: $?\")"
+      "Bash(echo \"exit: $?\")",
+      "Bash(pnpm add *)"
     ]
   }
 }
