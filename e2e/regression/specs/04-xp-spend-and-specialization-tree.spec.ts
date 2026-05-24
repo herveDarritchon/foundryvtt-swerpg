@@ -1,5 +1,6 @@
 import { expect, test } from '../../fixtures'
 import { createActor, openActorsTab, openActorSkillsTab, openSpecializationTree } from '../../utils/foundryUI'
+import { deleteActorByName } from '../utils/world-manager'
 
 /**
  * 04 — Dépense simple d'XP et ouverture arbre de spécialisation (Tier 1 Regression)
@@ -13,6 +14,11 @@ import { createActor, openActorsTab, openActorSkillsTab, openSpecializationTree 
  *   6. Vérifier que le recalcul XP est visible et persistant dans la console
  *   7. Ouvrir l'arbre de spécialisation via le bouton dédié de la fiche
  *   8. Vérifier que l'arbre s'ouvre sans erreur navigateur non autorisée
+ *
+ * Stratégie d'hygiène (contrat Tier 1) :
+ *   - Chaque test crée ses acteurs avec un nom horodaté unique (`Test-XP-<timestamp>`, etc.).
+ *   - Chaque test supprime ses acteurs en teardown via `deleteActorByName`.
+ *   - Le monde n'est pas recréé entre les runs : seuls les artefacts éphémères sont nettoyés.
  *
  * Pré-requis :
  *   - Instance Foundry sur port 31001 avec monde Swerpg-Regression-World
@@ -40,10 +46,7 @@ test.describe('[regression] 04 — XP spend and specialization tree', () => {
     await createActor(page, actorName, 'character')
 
     // Assert 1 : la fiche est ouverte
-    const actorSheet = page
-      .locator('.application.sheet, .app.sheet, .window-app, dialog.sheet, [role="dialog"]')
-      .filter({ hasText: actorName })
-      .first()
+    const actorSheet = page.locator('.application.sheet, .app.sheet, .window-app, dialog.sheet, [role="dialog"]').filter({ hasText: actorName }).first()
     await expect(actorSheet).toBeVisible()
 
     // Assert 2 : le panneau XP console est visible (mode création incomplète = L0)
@@ -56,6 +59,9 @@ test.describe('[regression] 04 — XP spend and specialization tree', () => {
     const spentEl = xpConsole.locator('[data-xp-spent]')
     await expect(availableEl).toBeVisible()
     await expect(spentEl).toBeVisible()
+
+    // Teardown : supprimer l'artefact de test
+    await deleteActorByName(page, actorName)
   })
 
   test('achat rang compétence : console XP reste cohérente après transaction', async ({ page }) => {
@@ -69,10 +75,7 @@ test.describe('[regression] 04 — XP spend and specialization tree', () => {
     // Ouvrir l'onglet Skills de la fiche
     await openActorSkillsTab(page, actorName)
 
-    const actorSheet = page
-      .locator('.application.sheet, .app.sheet, .window-app, dialog.sheet, [role="dialog"]')
-      .filter({ hasText: actorName })
-      .first()
+    const actorSheet = page.locator('.application.sheet, .app.sheet, .window-app, dialog.sheet, [role="dialog"]').filter({ hasText: actorName }).first()
 
     // Assert : la console XP et au moins une compétence sont visibles
     const xpConsole = actorSheet.locator('[data-skill-purchase-console]')
@@ -108,6 +111,9 @@ test.describe('[regression] 04 — XP spend and specialization tree', () => {
 
     // Documenter les valeurs avant/après pour diagnostic en cas de régression
     expect({ availableBefore, spentBefore, availableAfter, spentAfter }).toBeDefined()
+
+    // Teardown : supprimer l'artefact de test
+    await deleteActorByName(page, actorName)
   })
 
   test("arbre de spécialisation s'ouvre sans erreur navigateur", async ({ page }) => {
@@ -131,5 +137,8 @@ test.describe('[regression] 04 — XP spend and specialization tree', () => {
 
     // Assert 3 (implicite) : aucune erreur navigateur — vérifiée automatiquement
     // par la fixture `worldReady` en teardown via errorCollector.assertNoErrors()
+
+    // Teardown : supprimer l'artefact de test
+    await deleteActorByName(page, actorName)
   })
 })

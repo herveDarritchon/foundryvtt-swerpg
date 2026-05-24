@@ -1,5 +1,6 @@
 import { expect, test } from '../../fixtures'
 import { createActor, openActorsTab } from '../../utils/foundryUI'
+import { deleteActorByName } from '../utils/world-manager'
 
 /**
  * 03 — Création de personnage et ouverture de fiche (Tier 1 Regression)
@@ -11,6 +12,11 @@ import { createActor, openActorsTab } from '../../utils/foundryUI'
  *   4. Vérifier que la fiche s'ouvre (fenêtre de sheet visible avec le bon titre)
  *   5. Vérifier l'absence d'erreur navigateur (contrôle assuré automatiquement
  *      par la fixture `worldReady` en teardown via `assertNoErrors`)
+ *
+ * Stratégie d'hygiène (contrat Tier 1) :
+ *   - Chaque test crée ses acteurs avec un nom horodaté unique (`Test-Personnage-<timestamp>`).
+ *   - Chaque test supprime ses acteurs en teardown via `deleteActorByName`.
+ *   - Le monde n'est pas recréé entre les runs : seuls les artefacts éphémères sont nettoyés.
  *
  * Pré-requis :
  *   - Instance Foundry sur port 31001 avec monde Swerpg-Regression-World
@@ -48,13 +54,14 @@ test.describe('[regression] 03 — character creation', () => {
 
     // Assert 2 : la fiche de l'acteur est ouverte et affiche le bon titre
     // Foundry v14 ApplicationV2 rend : <form class="application sheet ...">
-    const actorSheet = page
-      .locator('.application.sheet, .app.sheet, .window-app, dialog.sheet, [role="dialog"]')
-      .filter({ hasText: actorName })
-      .first()
+    const actorSheet = page.locator('.application.sheet, .app.sheet, .window-app, dialog.sheet, [role="dialog"]').filter({ hasText: actorName }).first()
     await expect(actorSheet).toBeVisible()
 
     // Assert 3 (implicite) : aucune erreur navigateur — vérifiée automatiquement
     // par la fixture `worldReady` en teardown via errorCollector.assertNoErrors()
+
+    // Teardown : supprimer l'artefact de test pour ne pas polluer le monde
+    // (effectué après les assertions pour ne pas masquer un éventuel échec)
+    await deleteActorByName(page, actorName)
   })
 })
