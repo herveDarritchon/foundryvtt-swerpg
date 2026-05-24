@@ -8,6 +8,29 @@ export interface WorldManagerOptions {
   world: string
 }
 
+// ---------------------------------------------------------------------------
+// Contrat d'hygiène Tier 1
+// ---------------------------------------------------------------------------
+//
+// Stratégie retenue : cleanup ciblé par spec (pas de recréation du monde).
+//
+// Règles opérationnelles :
+// 1. Chaque spec crée ses artefacts avec un nom unique horodaté (ex. `Test-${Date.now()}`).
+// 2. Chaque spec supprime ses propres artefacts en afterEach via `deleteActorByName`.
+// 3. Le bootstrap `globalSetup` est idempotent : monde absent → création, monde présent → validation.
+// 4. En cas d'artefacts résiduels, `cleanupTestActors` permet un nettoyage ciblé par préfixe.
+//
+// Données minimales requises par domaine :
+// - smoke (01) : monde actif, système swerpg chargé, sidebar visible.
+// - OggDude import (02) : monde actif, settings système accessibles.
+// - création personnage (03) : monde actif, aucun acteur préexistant requis.
+// - dépense XP / arbre (04) : monde actif, aucun acteur préexistant requis.
+//
+// Frontière données communes vs artefacts éphémères :
+// - données communes de baseline : le monde lui-même (`Swerpg-Regression-World`), système swerpg.
+// - artefacts éphémères de scénario : acteurs créés par les specs 03 et 04 (nommés `Test-*`).
+// ---------------------------------------------------------------------------
+
 /**
  * Navigue vers /setup en gérant toutes les pages intermédiaires :
  * /license → /auth → /setup (ou /join si monde déjà actif → Return to Setup).
@@ -49,9 +72,7 @@ export async function navigateToSetup(page: Page, options: WorldManagerOptions):
   await dismissShareUsageDataIfPresent(page)
   await dismissTourIfPresent(page)
   // Cleanup résiduel du DOM (au cas où le dismiss partiel laisserait l'overlay)
-  await page.evaluate(() =>
-    document.querySelectorAll('.tour-overlay, .tour-container').forEach((el) => el.remove()),
-  )
+  await page.evaluate(() => document.querySelectorAll('.tour-overlay, .tour-container').forEach((el) => el.remove()))
 
   console.log('[worldManager] Sur /setup ✔')
 }
@@ -204,5 +225,121 @@ async function returnToSetupFromGame(page: Page, options: WorldManagerOptions): 
   } catch (error) {
     await page.goto(`${options.baseURL}/setup`, { waitUntil: 'domcontentloaded' }).catch(() => {})
     console.warn('[worldManager] returnToSetupFromGame fallback:', error)
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Primitives de cleanup d'artefacts de test
+// ---------------------------------------------------------------------------
+
+/**
+ * Supprime un acteur par nom depuis la sidebar Actors en /game.
+ *
+ * Utilisé en teardown de spec pour éliminer les artefacts de test et garantir
+ * que le monde ne soit pas pollué entre les runs.
+ *
+ * Pré-requis : être en /game avec la sidebar Actors accessible.
+ *
+ * @param page - Page Playwright
+ * @param actorName - Nom exact de l'acteur à supprimer
+ */
+export async function deleteActorByName(page: Page, actorName: string): Promise<void> {
+  try {
+    // S'assurer que l'onglet Actors est actif
+    const actorsTab = page
+      .locator('[role="tab"][data-tab="actors"]')
+      .or(page.locator('[data-action="tab"][data-tab="actors"]'))
+      .or(page.getByRole('tab', { name: /^Actors$/i }))
+      .first()
+
+    await actorsTab.waitFor({ state: 'visible', timeout: 5000 })
+    await actorsTab.click()
+    await page.locator('#actors').waitFor({ state: 'visible', timeout: 5000 })
+
+    // Localiser l'entrée de l'acteur dans la liste
+    const actorEntry = page.locator('#actors').locator('li.actor, li.document').filter({ hasText: actorName }).first()
+    const exists = await actorEntry.isVisible({ timeout: 3000 }).catch(() => false)
+
+    if (!exists) {
+      console.log(`[worldManager] Acteur "${actorName}" introuvable dans la liste — pas de suppression nécessaire`)
+      return
+    }
+
+    // Clic droit pour ouvrir le menu contextuel
+    await actorEntry.click({ button: 'right' })
+
+    // Foundry v14 : menu contextuel avec option "Delete"
+    const deleteOption = page
+      .locator('[data-action="delete"]')
+      .or(page.locator('.context-menu li').filter({ hasText: /^Delete$/i }))
+      .or(page.getByRole('menuitem', { name: /Delete/i }))
+      .first()
+
+    await deleteOption.waitFor({ state: 'visible', timeout: 5000 })
+    await deleteOption.click()
+
+    // Confirmer la suppression dans le dialog de confirmation Foundry
+    const confirmBtn = page
+      .getByRole('button', { name: /^Yes$/i })
+      .or(page.getByRole('button', { name: /Confirm/i }))
+      .or(page.locator('[data-button="yes"]'))
+      .first()
+
+    await confirmBtn.waitFor({ state: 'visible', timeout: 5000 })
+    await confirmBtn.click()
+
+    // Attendre que l'entrée disparaisse de la liste
+    await actorEntry.waitFor({ state: 'hidden', timeout: 5000 }).catch(() => {})
+
+    console.log(`[worldManager] Acteur "${actorName}" supprimé ✔`)
+  } catch (error) {
+    console.warn(`[worldManager] deleteActorByName("${actorName}") échoué (non bloquant):`, error)
+  }
+}
+
+/**
+ * Supprime tous les acteurs dont le nom correspond au préfixe donné.
+ *
+ * Utile en cas d'artefacts résiduels laissés par des runs précédents interrompus.
+ * Les specs créent leurs acteurs avec un préfixe fixe (ex. "Test-Personnage-", "Test-XP-")
+ * afin de permettre ce nettoyage ciblé sans affecter d'autres données du monde.
+ *
+ * Pré-requis : être en /game avec la sidebar Actors accessible.
+ *
+ * @param page - Page Playwright
+ * @param prefix - Préfixe des acteurs à supprimer (ex: "Test-")
+ */
+export async function cleanupTestActors(page: Page, prefix: string): Promise<void> {
+  try {
+    // S'assurer que l'onglet Actors est actif
+    const actorsTab = page
+      .locator('[role="tab"][data-tab="actors"]')
+      .or(page.locator('[data-action="tab"][data-tab="actors"]'))
+      .or(page.getByRole('tab', { name: /^Actors$/i }))
+      .first()
+
+    await actorsTab.waitFor({ state: 'visible', timeout: 5000 })
+    await actorsTab.click()
+    await page.locator('#actors').waitFor({ state: 'visible', timeout: 5000 })
+
+    // Récupérer tous les noms d'acteurs correspondant au préfixe
+    const actorEntries = page.locator('#actors').locator('li.actor, li.document')
+    const names = await actorEntries.allTextContents()
+    const toDelete = names.filter((n) => n.trim().startsWith(prefix))
+
+    if (toDelete.length === 0) {
+      console.log(`[worldManager] cleanupTestActors("${prefix}"): aucun artefact résiduel trouvé`)
+      return
+    }
+
+    console.log(`[worldManager] cleanupTestActors("${prefix}"): ${toDelete.length} artefact(s) à supprimer`)
+
+    for (const name of toDelete) {
+      await deleteActorByName(page, name.trim())
+    }
+
+    console.log(`[worldManager] cleanupTestActors("${prefix}") terminé ✔`)
+  } catch (error) {
+    console.warn(`[worldManager] cleanupTestActors("${prefix}") échoué (non bloquant):`, error)
   }
 }

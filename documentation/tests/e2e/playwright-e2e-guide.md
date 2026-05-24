@@ -486,6 +486,54 @@ Avantages :
 - En cas d’erreur lors du cleanup, les helpers se contentent d’essayer de revenir sur `/setup` ou `/auth` sans faire échouer le test : objectif → éviter les effets de bord sur les scénarios suivants.
 - Évitez de modifier à la main l’état du monde de test (suppression massive de données, changements de configuration critique) dans un test sans cleanup dédié.
 
+
+### 7.3b. Stratégie de reset déterministe Tier 1 (contrat d’hygiène)
+
+La suite de régression Tier 1 applique un **cleanup ciblé par spec** (pas de recréation du monde).
+
+#### Décision
+
+| Approche | Décision |
+|---|---|
+| Monde jetable recréé à chaque run | Non retenu — trop lent, masque les régressions de persistance |
+| Cleanup ciblé par spec | **Retenu** — rapide, déterministe, préserve la baseline commune |
+
+#### Règles à respecter
+
+1. **Noms uniques horodatés** : utiliser `<Prefixe>-${Date.now()}` pour tout artefact créé par une spec.
+2. **Teardown explicite** : appeler `deleteActorByName(page, actorName)` après les assertions du test, avant que la fixture `worldReady` ne clôture la session.
+3. **Pas de dépendance inter-specs** : chaque spec doit fonctionner seule, dans n’importe quel ordre, même sur un monde déjà existant.
+4. **Bootstrap idempotent** : le `globalSetup` crée le monde s’il est absent, ne fait rien s’il est présent — il ne réinitialise pas le contenu.
+
+#### Primitives disponibles
+
+| Fonction | Fichier | Usage |
+|---|---|---|
+| `deleteActorByName(page, name)` | `e2e/regression/utils/world-manager.ts` | Supprimer un acteur en fin de test |
+| `cleanupTestActors(page, prefix)` | `e2e/regression/utils/world-manager.ts` | Nettoyer des artefacts résiduels par préfixe |
+
+#### Exemple de teardown dans une spec
+
+```ts
+test('création personnage et ouverture de fiche', async ({ page }) => {
+  const actorName = `Test-Personnage-${Date.now()}`
+
+  // ... Act et Assert ...
+
+  // Teardown : supprimer l’artefact de test pour ne pas polluer le monde
+  await deleteActorByName(page, actorName)
+})
+```
+
+#### Données minimales par domaine
+
+| Spec | Données communes attendues | Artefacts éphémères |
+|---|---|---|
+| 01 — smoke | monde actif, système swerpg chargé | aucun |
+| 02 — OggDude import | monde actif, settings accessibles | aucun |
+| 03 — création personnage | monde actif | acteurs `Test-Personnage-*` |
+| 04 — XP / arbre | monde actif | acteurs `Test-XP-*`, `Test-XP-Skill-*`, `Test-SpecTree-*` |
+
 ### 7.4. Écriture de nouveaux tests
 
 Pour tout nouveau test E2E :

@@ -232,6 +232,50 @@ Pour les détails complets, voir `documentation/tests/e2e/playwright-e2e-guide.m
 
 ---
 
+## Hygiène monde Tier 1 et stratégie de reset déterministe
+
+### Décision retenue
+
+La suite de régression Tier 1 repose sur un **cleanup ciblé par spec**, pas sur la recréation du monde entre chaque run.
+
+| Approche | Décision |
+|---|---|
+| Monde jetable recréé à chaque run | Non retenu — trop long, masque des régressions de persistance |
+| Cleanup ciblé par spec (artefacts éphémères) | **Retenu** — rapide, déterministe, préserve la baseline |
+
+### Règles opérationnelles
+
+1. **Noms uniques** : chaque spec crée ses acteurs avec un nom horodaté unique (ex. `Test-Personnage-<timestamp>`). Cette convention suffit à éviter les collisions si le teardown échoue.
+2. **Teardown obligatoire** : chaque spec supprime ses acteurs après les assertions via `deleteActorByName` (importé depuis `e2e/regression/utils/world-manager.ts`).
+3. **Bootstrap idempotent** : le `globalSetup` crée le monde s'il est absent, ne fait rien s'il est présent. Un monde partiellement pollué est accepté — les specs nettoient leurs propres artefacts.
+4. **Nettoyage résiduel** : en cas de run interrompu, `cleanupTestActors(page, 'Test-')` permet de nettoyer les artefacts résiduels par préfixe depuis `/game`.
+
+### Données minimales requises par domaine
+
+| Spec | Données communes attendues | Artefacts éphémères (créés / supprimés par la spec) |
+|---|---|---|
+| 01 — smoke | monde actif, système swerpg chargé | aucun |
+| 02 — OggDude import | monde actif, settings système accessibles | aucun |
+| 03 — création personnage | monde actif | acteurs préfixés `Test-Personnage-*` |
+| 04 — XP / arbre spécialisation | monde actif | acteurs préfixés `Test-XP-*`, `Test-XP-Skill-*`, `Test-SpecTree-*` |
+
+### Primitives de cleanup disponibles
+
+| Fonction | Fichier | Usage |
+|---|---|---|
+| `deleteActorByName(page, name)` | `e2e/regression/utils/world-manager.ts` | Supprimer un acteur précis en fin de test |
+| `cleanupTestActors(page, prefix)` | `e2e/regression/utils/world-manager.ts` | Nettoyer tous les artefacts résiduels d'un préfixe |
+| `ensureWorldExists(page, opts)` | `e2e/regression/utils/world-manager.ts` | Bootstrap idempotent (globalSetup) |
+
+### Checklist pour toute nouvelle spec qui crée des données
+
+- [ ] Nom de l'artefact horodaté unique (`<Prefixe>-${Date.now()}`)
+- [ ] `deleteActorByName` (ou équivalent) appelé en fin de test après les assertions
+- [ ] Préfixe documenté dans le tableau "données minimales" ci-dessus
+- [ ] Pas de dépendance à l'état d'un artefact créé par une autre spec
+
+---
+
 ## Conseils
 
 Préférer `beforeEach` et `beforeAll` pour se mettre dans un état initial plutôt que
