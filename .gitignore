@@ -219,6 +219,8 @@ dist
 
 # Playwright outputs
 playwright-report/
+playwright-regression-report/
+playwright-smoke-report/
 test-results/
 
 ### GitHubPages template
