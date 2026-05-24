@@ -1,6 +1,7 @@
 import { expect, test as base } from '@playwright/test'
 import { accepteLicense, enterGameAsGamemaster, enterWorld, FoundrySessionOptions, loginIntoInstance } from '../utils/foundrySession'
 import { dismissOverlayIfPresent } from '../helper/overlay'
+import { createBrowserErrorCollector } from '../utils/browserErrors'
 
 /**
  * Fixtures pour la suite smoke prod.
@@ -23,9 +24,22 @@ export const test = base.extend<{ smokeReady: void }>({
         world: process.env.E2E_FOUNDRY_WORLD ?? '',
       }
 
+      // Brancher la capture d'erreurs navigateur avant le setUp pour ne rien rater
+      const errorCollector = createBrowserErrorCollector(page)
+
       await setUpSmoke(page, options)
 
+      // Réinitialiser les erreurs captées pendant le setUp (navigation, redirections)
+      // pour ne cibler que les erreurs liées au scénario de test lui-même
+      errorCollector.reset()
+
       await use()
+
+      // Vérifier qu'aucune erreur navigateur inattendue n'a été collectée pendant le test
+      // Smoke : ne pas faire échouer sur les erreurs non critiques connues de l'env de prod
+      if (options.world && page.url().includes('/game')) {
+        errorCollector.assertNoErrors('fin du scénario smokeReady')
+      }
 
       // Smoke prod : pas de tearDown destructif — retour soft à /setup seulement
       await tearDownSmoke(page, options)

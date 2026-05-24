@@ -327,7 +327,7 @@ La fixture principale (par convention nommée `worldReady`) se charge de :
 - filtrer et lancer le monde Swerpg ciblé (`enterWorld`),
 - rejoindre la partie en tant que MJ (`enterGameAsGamemaster`).
 
-Ces opérations sont implémentées dans `e2e/utils/foundrySession.ts` et orchestrées par `e2e/utils/e2eTest.ts`.
+Ces opérations sont implémentées dans `e2e/utils/foundrySession.ts` et orchestrées par `e2e/utils/playwrightTest.ts`.
 
 En début de test, la page est donc déjà sur `/game` avec l’UI Swerpg chargée.
 
@@ -389,9 +389,77 @@ Pour un squelette générique et un guide plus détaillé sur la création d’u
 
 ---
 
-## 6. Bonnes pratiques spécifiques Swerpg / Foundry
+## 6. Contrat d'interaction et capture d'erreurs navigateur
 
-### 6.1. Locators accessibles
+### 6.1. Helpers d'interaction centralisés
+
+Toutes les interactions critiques avec Foundry doivent passer par les helpers communs plutôt que d'être dupliquées dans chaque spec.
+
+| Helper | Fichier | Usage |
+|---|---|---|
+| `setUp` / `tearDown` | `e2e/utils/playwrightTest.ts` | Bootstrap complet `licence → auth → setup → join → game` |
+| `ensureSessionActive` | `e2e/utils/foundryUI.ts` | Vérification que la session `/game` est toujours active |
+| `openGameSettings` | `e2e/utils/foundryUI.ts` | Ouverture de l'onglet Settings dans la sidebar |
+| `navigateToSystemSettings` | `e2e/utils/foundryUI.ts` | Navigation complète vers les settings d'un système |
+| `openOggDudeImporterDialog` | `e2e/regression/utils/oggdude-importer.ts` | Ouverture du dialog OggDude depuis les settings |
+| `createBrowserErrorCollector` | `e2e/utils/browserErrors.ts` | Capture centralisée des erreurs navigateur |
+
+Ne pas réimplémenter ces helpers dans les specs. Si un helper manque, l'ajouter dans le fichier centralisé.
+
+### 6.2. Politique de capture des erreurs navigateur
+
+Toute spec de régression et toute spec legacy active doit détecter les erreurs navigateur inattendues.
+
+#### Contrat imposé par la fixture
+
+Les fixtures `worldReady` (`e2e/fixtures/index.ts`) et `smokeReady` (`e2e/smoke/fixtures.ts`) branchent automatiquement un collecteur d'erreurs (`createBrowserErrorCollector`) avant le setUp. À la fin de chaque test, elles appellent `assertNoErrors` pour faire échouer explicitement si une erreur non autorisée a été captée.
+
+**Conséquence : aucun listener `page.on('console')` ou `page.on('pageerror')` ad hoc n'est nécessaire dans les specs qui consomment ces fixtures.**
+
+#### Utilisation explicite dans un test (cas avancé)
+
+Si un test a besoin d'isoler les erreurs d'une étape précise (par exemple après rechargement de page) :
+
+```ts
+import { createBrowserErrorCollector } from '../../utils/browserErrors'
+
+test('aucune erreur après rechargement', async ({ page }) => {
+  const errorCollector = createBrowserErrorCollector(page)
+
+  await page.reload({ waitUntil: 'domcontentloaded' })
+  await expect(page.locator('body.system-swerpg')).toHaveCount(1)
+
+  errorCollector.assertNoErrors('rechargement /game')
+})
+```
+
+#### Politique de filtrage
+
+Les patterns suivants sont filtrés automatiquement comme bruits connus (définis dans `e2e/utils/browserErrors.ts`) :
+
+- `/favicon/i`
+- `/chrome-extension:/i`
+- `/moz-extension:/i`
+- `/No module named/i`
+
+Pour ajouter un nouveau pattern de bruit maîtrisé, modifier `KNOWN_NOISE_PATTERNS` dans `e2e/utils/browserErrors.ts` et documenter pourquoi ce bruit est ignoré.
+
+Ne jamais élargir cette liste pour masquer de vraies régressions.
+
+#### Checklist pour toute nouvelle spec regression ou legacy
+
+- [ ] La spec importe depuis `../../fixtures` (regression) ou `./fixtures` (smoke) — ne pas créer de fixture locale.
+- [ ] Aucun listener `page.on('console')` ou `page.on('pageerror')` ad hoc dans la spec (sauf cas documenté).
+- [ ] Les interactions critiques utilisent les helpers de `foundryUI.ts` et `foundrySession.ts`.
+- [ ] `ensureSessionActive` est appelé avant toute séquence longue (settings, import, navigation complexe).
+- [ ] Pas de `waitForTimeout` comme synchronisation — utiliser des assertions web-first.
+- [ ] Pas de `click({ force: true })` sans justification écrite.
+
+---
+
+## 7. Bonnes pratiques spécifiques Swerpg / Foundry
+
+### 7.1. Locators accessibles
 
 Toujours privilégier les locators Playwright basés sur l’accessibilité :
 
@@ -404,7 +472,7 @@ Avantages :
 - tests plus robustes face aux refactors CSS/HTML,
 - meilleure cohérence avec les bonnes pratiques a11y (labels explicites, rôles ARIA corrects).
 
-### 6.2. Conventions Foundry
+### 7.2. Conventions Foundry
 
 - Utiliser les **URLs symboliques** plutôt que des chemins absolus complets :
   - `/license`, `/auth`, `/setup`, `/join`, `/game`
@@ -412,13 +480,13 @@ Avantages :
 - Attendre explicitement les bonnes étapes de navigation :
   - `page.waitForURL('**/setup', { waitUntil: 'domcontentloaded' })`
 
-### 6.3. Nettoyage et stabilité
+### 7.3. Nettoyage et stabilité
 
-- Le helper `tearDown` (`e2e/utils/e2eTest.ts`) est prévu pour revenir à un état stable entre les tests.
+- Le helper `tearDown` (`e2e/utils/playwrightTest.ts`) est prévu pour revenir à un état stable entre les tests.
 - En cas d’erreur lors du cleanup, les helpers se contentent d’essayer de revenir sur `/setup` ou `/auth` sans faire échouer le test : objectif → éviter les effets de bord sur les scénarios suivants.
 - Évitez de modifier à la main l’état du monde de test (suppression massive de données, changements de configuration critique) dans un test sans cleanup dédié.
 
-### 6.4. Écriture de nouveaux tests
+### 7.4. Écriture de nouveaux tests
 
 Pour tout nouveau test E2E :
 
@@ -439,9 +507,9 @@ Pour un guide complet avec un exemple de squelette de spec et comment l’adapte
 
 ---
 
-## 7. Débogage et troubleshooting
+## 8. Débogage et troubleshooting
 
-### 7.1. Foundry inaccessible
+### 8.1. Foundry inaccessible
 
 Symptôme : les tests échouent très tôt avec des erreurs de navigation ou de timeout.
 
@@ -456,7 +524,7 @@ Symptôme : les tests échouent très tôt avec des erreurs de navigation ou de
 2. Vérifier que le monde configuré dans `E2E_FOUNDRY_WORLD` existe et est jouable.
 3. S’assurer que le mot de passe admin est correct (`E2E_FOUNDRY_ADMIN_PASSWORD`).
 
-### 7.2. Problèmes de navigateurs Playwright
+### 8.2. Problèmes de navigateurs Playwright
 
 Si Playwright se plaint que les exécutables navigateur sont manquants :
 
@@ -464,7 +532,7 @@ Si Playwright se plaint que les exécutables navigateur sont manquants :
 pnpm exec playwright install --with-deps
 ```
 
-### 7.3. Timeouts, surtout en mode headed
+### 8.3. Timeouts, surtout en mode headed
 
 - Les tests headed sont parfois plus lents (latence UI humaine, animations, etc.).
 - Adaptez les timeouts via les variables d’environnement si nécessaire :
@@ -473,7 +541,7 @@ pnpm exec playwright install --with-deps
   PLAYWRIGHT_TEST_TIMEOUT=1200000 PLAYWRIGHT_EXPECT_TIMEOUT=30000 pnpm e2e:regression:headed
   ```
 
-### 7.4. Inspection et traces de tests
+### 8.4. Inspection et traces de tests
 
 Pour ouvrir l’UI Playwright et déboguer interactivement :
 
@@ -489,13 +557,13 @@ pnpm exec playwright show-trace test-results/path-to-trace/trace.zip
 
 Les rapports HTML sont générés (en CI) dans `playwright-report/`.
 
-### 7.5. Tests instables (flaky)
+### 8.5. Tests instables (flaky)
 
 - Éviter les `page.waitForTimeout()` au profit d’assertions web-first (`expect(locator).toBeVisible()`, `toHaveURL`, etc.).
 - Vérifier que les selectors ne dépendent pas de textes mouvants ou de structures trop fragiles.
 - En cas de flakiness persistante, augmenter légèrement `retries` ou investiguer les temps de réponse de Foundry.
 
-### 7.6. Raccourcis utiles pour debug et génération de tests
+### 8.6. Raccourcis utiles pour debug et génération de tests
 
 Voici quelques commandes rapides et utiles pour déboguer, visualiser les rapports, et générer des scénarios Playwright : elles sont pratiques lors du développement local des tests.
 
@@ -535,7 +603,7 @@ Remarque : si vous utilisez `pnpm` dans ce projet, vous pouvez remplacer `npx` 
 
 ---
 
-## 8. Résumé
+## 9. Résumé
 
 - `pnpm e2e:smoke` : vérification de surface, exécution manuelle, lecture seule sur instance de production.
 - `pnpm e2e:regression` : validation fonctionnelle pré-livraison sur instance dédiée, remplace les campagnes QA manuelles répétitives.

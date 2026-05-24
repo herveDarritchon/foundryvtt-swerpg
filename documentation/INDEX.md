@@ -13,7 +13,7 @@ Cette documentation technique couvre l'architecture, les modules, les exigences,
 | [OVERVIEW.md](./architecture/OVERVIEW.md)                  | Architecture globale du système swerpg                |
 | [MODELS.md](./architecture/MODELS.md)                      | Modèles de données (TypeDataModel, acteurs, etc.)     |
 | Dossiers détaillés                                         |                                                       |
-| [`architecture/adr/`](./architecture/adr/)                 | Architecture Decision Records (ADR-0001 → 0008)       |
+| [`architecture/adr/`](./architecture/adr/)                 | Architecture Decision Records (ADR-0001 → 0017)       |
 | [`architecture/core/`](./architecture/core/)               | Cœur système, entrypoints, configuration              |
 | [`architecture/data/`](./architecture/data/)               | Modèles de données, schémas et persistance            |
 | [`architecture/integration/`](./architecture/integration/) | Intégrations Foundry, hooks, API externes             |
@@ -87,6 +87,15 @@ Cette documentation technique couvre l'architecture, les modules, les exigences,
 | [TESTING_GUIDE_specialization_ui_fix.md](./TESTING_GUIDE_specialization_ui_fix.md) | Guide de tests pour la correction UI des spécialisations |
 | [TESTS_COVERAGE_IMPROVEMENT.md](./TESTS_COVERAGE_IMPROVEMENT.md)                   | Stratégie d'amélioration de la couverture de tests       |
 | [item-sheet-creation-guide.md](./item-sheet-creation-guide.md)                     | Guide de création de fiches d'objet                      |
+
+### Tests E2E Playwright
+
+| Document                                                                                                                                                                                | Description                                                                   |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| [playwright-e2e-guide.md](./tests/e2e/playwright-e2e-guide.md)                                                                                                                         | Guide complet E2E : prérequis, config, structure, contrat, checklist          |
+| [e2e/README.md](../e2e/README.md)                                                                                                                                                       | Vue rapide, contrat d'interaction, checklist spec                             |
+| [ADR-0017](./architecture/adr/adr-0017-e2e-playwright-interaction-contract-and-browser-error-capture.md)                                                                                | Décision architecture : contrat d'interaction et capture erreurs navigateur   |
+| [playwright-spec-squelette-mon-parcours.md](./tests/e2e/playwright-spec-squelette-mon-parcours.md)                                                                                      | Squelette de spec E2E prêt à l'emploi                                         |
 
 ## 🔍 Recherche Rapide
 

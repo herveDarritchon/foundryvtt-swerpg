@@ -1,4 +1,5 @@
 import { expect, test } from './fixtures'
+import { createBrowserErrorCollector } from '../utils/browserErrors'
 
 /**
  * 01 — Smoke prod : santé de l'instance
@@ -33,30 +34,14 @@ test.describe('[smoke] 01 — health', () => {
       return
     }
 
-    const errors: string[] = []
+    // Utiliser le collecteur centralisé pour unifier la politique de filtrage
+    const errorCollector = createBrowserErrorCollector(page)
 
-    page.on('console', (msg) => {
-      if (msg.type() === 'error') {
-        errors.push(msg.text())
-      }
-    })
-
-    page.on('pageerror', (err) => {
-      errors.push(err.message)
-    })
-
-    // Recharger la page pour capturer les erreurs au démarrage
+    // Recharger la page pour capturer les erreurs au démarrage du système
     await page.reload({ waitUntil: 'domcontentloaded' })
     await expect(page.locator('body.system-swerpg')).toHaveCount(1)
 
-    const criticalErrors = errors.filter(
-      (e) =>
-        // Exclure les erreurs connues non bloquantes (ex: extensions navigateur)
-        !e.includes('favicon') &&
-        !e.includes('chrome-extension'),
-    )
-
-    expect(criticalErrors, `Erreurs console critiques détectées : ${criticalErrors.join('\n')}`).toHaveLength(0)
+    errorCollector.assertNoErrors('rechargement /game smoke')
   })
 
   test('aucun asset système critique en 404', async ({ page }) => {
