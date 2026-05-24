@@ -281,3 +281,7 @@ tmp/
 .opencode/
 !.opencode/agents
 !.opencode/commands
+
+# Local claude/opencode settings (developer machine)
+.claude/settings.local.json
+.claude/scheduled_tasks.lock
