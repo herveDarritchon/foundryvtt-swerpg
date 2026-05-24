@@ -216,11 +216,13 @@ dist
 !.env.e2e.example
 !.env.e2e.regression.example
 !.env.e2e.smoke.prod.example
+!.env.e2e.documentation.example
 
 # Playwright outputs
 playwright-report/
 playwright-regression-report/
 playwright-smoke-report/
+playwright-documentation-report/
 test-results/
 
 ### GitHubPages template

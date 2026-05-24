@@ -16,7 +16,7 @@ Pour la matrice de couverture (domaines fonctionnels, parcours critiques, specs 
 
 ## Contrat des commandes E2E
 
-La suite E2E repose sur trois commandes aux rôles distincts et sans ambiguité.
+La suite E2E repose sur quatre commandes aux rôles distincts et sans ambiguité.
 
 ### `pnpm run e2e` — campagne complète (orchestrateur)
 
@@ -106,6 +106,48 @@ pnpm e2e:smoke:headed
 
 ---
 
+### `pnpm run e2e:documentation` — validation documentaire (manuelle)
+
+**Rôle** : produit des captures d'écran reproductibles et valide les invariants visibles (i18n, placeholders, absence d'erreurs navigateur) sur les parcours documentaires.
+
+**Usage** : exécution manuelle — lors de la mise à jour de documentation, d'un refactor UI impactant les captures, ou pour valider qu'une zone documentée reste stable.
+
+**Caractéristiques** :
+
+- instance Foundry sur port 30000 (`E2E_FOUNDRY_BASE_URL=http://localhost:30000`) ;
+- monde stable dans un état représentatif des captures attendues ;
+- lecture seule par défaut — prérequis contrôlés autorisés si documentés dans la spec ;
+- traces et captures systématiques (pas seulement en échec) ;
+- durée courte acceptable.
+
+**Ce que la suite couvre :**
+
+- parcours et pages documentables (feuilles d'acteur, compendium, interfaces clés) ;
+- invariants visibles : absence de placeholder cassé (`undefined`, `null`, clé brute `SWERPG.*`) ;
+- absence d'erreurs `console.error` ou `pageerror` inattendues dans les zones documentées.
+
+**Frontière avec `regression` et `smoke`** :
+
+| Critère | `documentation` | `regression` | `smoke` |
+|---|---|---|---|
+| Objectif | Captures documentaires, invariants visibles | Validation fonctionnelle pré-livraison | Santé de surface post-déploiement |
+| Mutations | Lecture seule par défaut (prérequis contrôlés documentés acceptés) | Autorisées | Interdites |
+| Instance cible | Port 30000 | Port 31001 | Port 30000 |
+
+**Configuration** : `.env.e2e.documentation` (copier depuis `.env.e2e.documentation.example`)
+
+**Commandes** :
+
+```bash
+pnpm e2e:documentation
+pnpm e2e:documentation:headed
+pnpm e2e:documentation:ui
+```
+
+**Specs** : `e2e/documentation/specs/`
+
+---
+
 ## Frontière CI / local manuel
 
 | Suite | CI GitHub Actions | Local manuel |
@@ -113,6 +155,7 @@ pnpm e2e:smoke:headed
 | `pnpm test` (Vitest) | oui | oui |
 | `pnpm e2e:regression` | non | oui |
 | `pnpm e2e:smoke` | non | oui |
+| `pnpm e2e:documentation` | non | oui |
 | `pnpm e2e:ci` (tests `[ci]`) | oui | oui |
 
 Les suites `regression` et `smoke` ne tournent pas en CI car elles nécessitent une machine locale
@@ -128,6 +171,7 @@ Les suites `regression` et `smoke` génèrent un report HTML systématiquement l
 |---|---|---|
 | `pnpm e2e:regression` | `playwright-regression-report/` | `pnpm exec playwright show-report playwright-regression-report` |
 | `pnpm e2e:smoke` | `playwright-smoke-report/` | `pnpm exec playwright show-report playwright-smoke-report` |
+| `pnpm e2e:documentation` | `playwright-documentation-report/` | `pnpm exec playwright show-report playwright-documentation-report` |
 
 Ces reports permettent d'inspecter les résultats, traces, screenshots et vidéos de chaque run. Ils constituent la preuve de validation reproductible pour les campagnes pre-livraison.
 
@@ -148,6 +192,12 @@ En cas d'échec, les artefacts (traces `.zip`, screenshots, vidéos) sont conser
 1. Instance Foundry de production accessible sur port 30000
 2. Fichier `.env.e2e.smoke.prod` configuré (depuis `.env.e2e.smoke.prod.example`)
 3. Monde de production stable configuré dans `E2E_FOUNDRY_WORLD`
+
+### `pnpm e2e:documentation`
+
+1. Instance Foundry accessible sur le port configuré dans `E2E_FOUNDRY_BASE_URL` (port 30000 par défaut)
+2. Fichier `.env.e2e.documentation` configuré (depuis `.env.e2e.documentation.example`)
+3. Monde stable dans un état représentatif des captures attendues, configuré dans `E2E_FOUNDRY_WORLD`
 
 ### `pnpm e2e` (campagne complète)
 
@@ -173,6 +223,12 @@ e2e/
     utils/
       oggdude-importer.ts
       world-manager.ts
+  documentation/       # Suite documentation — captures documentaires et invariants visibles
+    fixtures.ts        # Fixture documentationReady — navigation, lecture seule par défaut
+    global-setup.ts    # Vérification de connectivité avant les specs
+    specs/             # Specs documentation — un fichier par domaine documenté
+    utils/             # Helpers spécifiques à la suite documentation
+    README.md
   specs/               # Specs legacy / [ci] — à requalifier progressivement
     bootstrap.spec.ts        # → candidat regression (santé de base)
     oggdude-import.spec.ts   # → candidat regression (import fonctionnel)
@@ -181,7 +237,7 @@ e2e/
     global-setup.ts
   helper/
     overlay.ts         # Fermeture des overlays Foundry (tour, usage data)
-  utils/               # Helpers de session communs aux deux suites
+  utils/               # Helpers de session communs aux suites
     foundrySession.ts  # Primitives /license → /auth → /setup → /join → /game
     foundryUI.ts       # Interactions UI récurrentes (Settings, system settings)
     playwrightTest.ts  # setUp / tearDown haut niveau
