@@ -1,14 +1,19 @@
 import { expect, test } from '../fixtures'
 import { navigateToSystemSettings } from '../utils/foundryUI'
 
+/**
+ * OggDude importer — spec legacy
+ *
+ * Vérifie que le dialog OggDude s'ouvre depuis les System Settings.
+ * La fixture `worldReady` (auto=true) gère la connexion, la capture d'erreurs navigateur,
+ * et le tearDown pour chaque test.
+ */
 test.describe('OggDude importer', () => {
-  test('should open the OggDude import interface', async ({ page, browserName }, testInfo) => {
-    console.log(`[oggdude-import] 🧪 Démarrage du test sur ${browserName}`)
-
+  test('should open the OggDude import interface', async ({ page }) => {
     // Vérifier l'URL
     await expect(page).toHaveURL(/.*game/)
 
-    // 1-3) Navigation vers System Settings (refactorisé via helper)
+    // 1-3) Navigation vers System Settings (via helper centralisé)
     await navigateToSystemSettings(page, 'Star Wars Edge RPG')
 
     // 4) Cliquer sur la section OggDude Data Importer
@@ -27,7 +32,5 @@ test.describe('OggDude importer', () => {
     // 6) Vérifier que l'interface d'import OggDude est bien affichée
     const fileInput = page.getByRole('button', { name: 'OggDude Zip Data File' })
     await expect(fileInput).toBeVisible()
-
-    console.log(`[oggdude-import] ✅ Fin du test sur ${browserName}`)
   })
 })

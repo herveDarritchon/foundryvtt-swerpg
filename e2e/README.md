@@ -194,6 +194,44 @@ dédiée soit ajoutée.
 
 ---
 
+## Contrat d'interaction et erreurs navigateur
+
+### Helpers à utiliser
+
+Toutes les interactions critiques Foundry doivent passer par les helpers communs :
+
+| Besoin | Helper | Fichier |
+|---|---|---|
+| Bootstrap complet | `setUp` / `tearDown` | `utils/playwrightTest.ts` |
+| Vérifier session active | `ensureSessionActive` | `utils/foundryUI.ts` |
+| Ouvrir Game Settings | `openGameSettings` | `utils/foundryUI.ts` |
+| Naviguer vers settings système | `navigateToSystemSettings` | `utils/foundryUI.ts` |
+| Ouvrir dialog OggDude | `openOggDudeImporterDialog` | `regression/utils/oggdude-importer.ts` |
+| Capturer les erreurs navigateur | `createBrowserErrorCollector` | `utils/browserErrors.ts` |
+
+Ne pas réimplémenter ces helpers dans les specs. Si un helper manque, l'ajouter dans le fichier centralisé.
+
+### Capture d'erreurs navigateur
+
+Les fixtures `worldReady` (`fixtures/index.ts`) et `smokeReady` (`smoke/fixtures.ts`) branchent automatiquement un collecteur d'erreurs navigateur (`createBrowserErrorCollector`) avant le setUp. À la fin de chaque test, elles appellent `assertNoErrors` pour faire échouer explicitement si une erreur non autorisée a été captée.
+
+**Règle** : aucun listener `page.on('console')` ou `page.on('pageerror')` ad hoc dans les specs — la fixture s'en charge.
+
+Exception documentée : si un test recharge la page pour tester spécifiquement les erreurs au démarrage, il peut créer un collecteur local via `createBrowserErrorCollector(page)` et appeler `assertNoErrors` manuellement.
+
+### Checklist pour toute nouvelle spec
+
+- [ ] Importer depuis `../../fixtures` (regression) ou `./fixtures` (smoke)
+- [ ] Pas de listener ad hoc `page.on('console')` ou `page.on('pageerror')`
+- [ ] Interactions critiques via helpers de `foundryUI.ts` et `foundrySession.ts`
+- [ ] `ensureSessionActive` avant toute séquence longue
+- [ ] Pas de `waitForTimeout` — utiliser des assertions web-first
+- [ ] Pas de `click({ force: true })` sans justification écrite
+
+Pour les détails complets, voir `documentation/tests/e2e/playwright-e2e-guide.md` section 6.
+
+---
+
 ## Conseils
 
 Préférer `beforeEach` et `beforeAll` pour se mettre dans un état initial plutôt que

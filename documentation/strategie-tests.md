@@ -624,7 +624,7 @@ test('debug xml2js interface', () => {
 
 - **Unit Tests** : ~70% (logique métier isolée)
 - **Integration Tests** : ~25% (composants + interactions)
-- **End-to-End Tests** : ~5% (workflows complets)
+- **End-to-End Tests** : ~5% (workflows complets via Playwright — voir section dédiée ci-dessous)
 
 ## Migration et Évolution
 
@@ -636,7 +636,7 @@ test('debug xml2js interface', () => {
 
 ### Roadmap
 
-- **Phase 2** : Tests E2E avec Playwright
+- **Phase 2** : ✅ Tests E2E avec Playwright — implémenté (voir section dédiée ci-dessous)
 - **Phase 3** : Visual regression testing
 - **Phase 4** : Performance benchmarking
 
@@ -747,3 +747,52 @@ beforeEach(async () => {
 5. **Création diagrammes** - Visualisation architecture
 
 Cette documentation sert de référence complète pour comprendre, maintenir et faire évoluer la stratégie de test du système SweRPG.
+
+---
+
+## Tests E2E avec Playwright
+
+### Stratégie deux niveaux
+
+La suite E2E est organisée en deux tiers complémentaires :
+
+| Tier | Commande | Rôle | Instance | Mutations |
+|---|---|---|---|---|
+| Tier 1 — Regression | `pnpm e2e:regression` | Validation fonctionnelle pré-livraison | port 31001 (dédiée) | autorisées |
+| Tier 2 — Smoke | `pnpm e2e:smoke` | Vérification de surface post-déploiement | port 30000 (prod) | interdites |
+
+Les suites ne tournent pas en CI GitHub Actions (instance Foundry live requise). Seuls les tests marqués `[ci]` dans leur titre tournent en CI via `pnpm e2e:ci`.
+
+### Contrat d'interaction partagé
+
+Toutes les interactions critiques avec Foundry VTT passent par des helpers centralisés :
+
+| Helper | Fichier | Rôle |
+|---|---|---|
+| `setUp` / `tearDown` | `e2e/utils/playwrightTest.ts` | Bootstrap complet `licence → auth → setup → join → game` |
+| `ensureSessionActive` | `e2e/utils/foundryUI.ts` | Vérification session `/game` active |
+| `openGameSettings` | `e2e/utils/foundryUI.ts` | Ouverture onglet Settings |
+| `navigateToSystemSettings` | `e2e/utils/foundryUI.ts` | Navigation settings système |
+| `openOggDudeImporterDialog` | `e2e/regression/utils/oggdude-importer.ts` | Ouverture dialog OggDude |
+| `createBrowserErrorCollector` | `e2e/utils/browserErrors.ts` | Capture centralisée erreurs navigateur |
+
+Ne jamais réimplémenter ces helpers dans les specs. Si un helper manque, l'ajouter dans le fichier centralisé.
+
+### Capture centralisée des erreurs navigateur
+
+Les fixtures `worldReady` (regression/legacy) et `smokeReady` (smoke) branchent automatiquement un collecteur d'erreurs navigateur (`createBrowserErrorCollector`) avant le setUp. À la fin de chaque test, elles appellent `assertNoErrors` pour faire échouer explicitement si une erreur non autorisée a été captée.
+
+**Règle** : aucun listener `page.on('console')` ou `page.on('pageerror')` ad hoc dans les specs — la fixture s'en charge.
+
+Les bruits connus (favicon 404, extensions navigateur, modules Foundry absents du monde de test) sont filtrés via `KNOWN_NOISE_PATTERNS` dans `e2e/utils/browserErrors.ts`. Tout ajout à cette liste doit être justifié par un commentaire.
+
+### Décision d'architecture
+
+Cette stratégie est formalisée dans l'ADR correspondant :
+
+- [ADR-0017 — Contrat d'interaction E2E et capture centralisée des erreurs navigateur](./architecture/adr/adr-0017-e2e-playwright-interaction-contract-and-browser-error-capture.md)
+
+### Documentation de référence
+
+- [Guide complet Playwright E2E](./tests/e2e/playwright-e2e-guide.md) — prérequis, configuration, structure, contrat, checklist, troubleshooting
+- [e2e/README.md](../e2e/README.md) — vue rapide et checklist spec

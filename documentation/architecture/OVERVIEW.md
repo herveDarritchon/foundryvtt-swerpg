@@ -141,6 +141,34 @@ Ce dossier décrit la façon dont swerpg s’intègre à Foundry et comment le s
 - [Performance Optimization](integration/PERFORMANCE.md)
 - [Security Guidelines](integration/SECURITY.md)
 
+## 🧪 Stratégie de Tests
+
+### Niveaux de test
+
+| Niveau | Framework | Périmètre | Commande |
+|---|---|---|---|
+| **Unitaire / Intégration** | Vitest | `module/lib/` (pur domaine) + adapters Foundry mockés | `pnpm test` |
+| **E2E — Regression** | Playwright | Workflows fonctionnels complets sur instance dédiée | `pnpm e2e:regression` |
+| **E2E — Smoke** | Playwright | Vérification de surface lecture-seule sur instance prod | `pnpm e2e:smoke` |
+
+### Contrat E2E (ADR-0017)
+
+Toute spec Playwright doit :
+
+- Importer les fixtures de la suite (`../../fixtures` regression / `./fixtures` smoke).
+- N'ajouter aucun listener `page.on('console')` ou `page.on('pageerror')` — les fixtures branchent automatiquement `createBrowserErrorCollector` et appellent `assertNoErrors` en fin de test.
+- Passer par les helpers centralisés (`foundryUI.ts`, `foundrySession.ts`, `playwrightTest.ts`) pour toute interaction critique avec Foundry.
+- Utiliser des assertions web-first, pas de `waitForTimeout`.
+
+### Références
+
+- [Stratégie de tests](../strategie-tests.md)
+- [Guide Playwright E2E](../tests/e2e/playwright-e2e-guide.md)
+- [ADR-0004 — Stratégie Vitest](./adr/adr-0004-vitest-testing-strategy.md)
+- [ADR-0017 — Contrat E2E et capture erreurs navigateur](./adr/adr-0017-e2e-playwright-interaction-contract-and-browser-error-capture.md)
+
+---
+
 ## 🚀 Démarrage Rapide
 
 ### Pour les Développeurs
