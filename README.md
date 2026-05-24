@@ -97,62 +97,54 @@ pnpm test
 pnpm vitest run tests/integration/species-import.integration.spec.mjs # ex. tester un fichier d'intégration
 ```
 
-## Tests E2E (Playwright)
+## Tests E2E (Playwright) — stratégie à deux étages
 
-Le projet inclut une suite de tests end-to-end basée sur Playwright, séparée des tests unitaires (Vitest).
+Les tests end-to-end sont séparés en deux étages indépendants.
 
-- Tests unitaires : `pnpm test`
-- Tests E2E : `pnpm test:e2e` (ou `pnpm test:e2e:headed`)
+### Étage 1 — Régression (port 31001, Docker, CI)
 
-Voir `documentation/tests/playwright-e2e-guide.md` pour la configuration détaillée et les bonnes pratiques.
+Specs dans `e2e/regression/`. Instance Foundry éphémère créée automatiquement par Docker.
+Config : `playwright.config.ts`. Env : `.env.e2e.local`.
 
-## Tests E2E Playwright – Environnement Foundry local
+```bash
+pnpm foundry:e2e:start   # démarrer l’instance Docker (port 31001)
+pnpm e2e                 # lancer la suite headless
+pnpm e2e:headed          # lancer avec navigateur visible
+pnpm e2e:ci              # Chromium uniquement, specs taggées [ci] (pour la CI)
+pnpm foundry:e2e:stop    # arrêter l’instance Docker
+```
 
-Pour exécuter les tests end‑to‑end Playwright contre une instance Foundry locale, un script Docker est fourni.
-
-- Script: `scripts/e2e-foundry-start.sh`
-- Guide détaillé: `scripts/README-e2e-foundry-start.md`
-
-### Pré‑requis
-
-- Docker installé
-- Licence Foundry VTT valide (ne pas commiter la clé)
-- Fichier `.env.e2e.local` pour les variables E2E (ignoré par Git)
-
-Exemple minimal de `.env.e2e.local`:
+Exemple minimal `.env.e2e.local` :
 
 ```dotenv
-E2E_FOUNDRY_BASE_URL=http://localhost:30000
+E2E_FOUNDRY_BASE_URL=http://localhost:31001
 E2E_FOUNDRY_ADMIN_PASSWORD=admin
 E2E_FOUNDRY_USERNAME=Gamemaster
 E2E_FOUNDRY_PASSWORD=changeme
 E2E_FOUNDRY_WORLD=Swerpg-E2E-World
 ```
 
-### Démarrer/arrêter Foundry E2E
+### Étage 2 — Smoke prod (port 30000, lecture seule, hors CI)
+
+Specs dans `e2e/smoke/`. Cible une instance Foundry déjà active — aucune mutation du monde.
+Config : `playwright.smoke.config.ts`. Env : `.env.e2e.smoke.prod` (voir `.env.e2e.smoke.prod.example`).
 
 ```bash
-pnpm foundry:e2e:start
-pnpm foundry:e2e:stop
-# ou
-pnpm foundry:e2e:restart
+pnpm e2e:smoke           # suite smoke headless
+pnpm e2e:smoke:headed    # suite smoke avec navigateur visible
 ```
 
-Le script crée un répertoire éphémère `.e2e-foundry-data` pour les données et le nettoie à l’arrêt (sauf si `KEEP_DATA=1`).
+Vérifie : présence de `body.system-swerpg`, absence d’erreurs console critiques, assets non-404, sidebar sans clés i18n brutes ni `undefined`.
 
-### Lancer un test E2E de base
+> Ne commitez jamais les fichiers `.env.e2e.*` contenant des secrets.
 
-```bash
-pnpm e2e:headed e2e/specs/bootstrap.spec.ts
-```
-
-En cas d’échec, utilisez la trace Playwright pour diagnostiquer:
+En cas d’échec, diagnostiquer avec la trace Playwright :
 
 ```bash
 pnpm exec playwright show-trace test-results/**/trace.zip
 ```
 
-> Sécurité: fournissez `FOUNDRY_LICENSE_KEY`, `FOUNDRY_USERNAME`, `FOUNDRY_PASSWORD`, `FOUNDRY_ADMIN_KEY` via l’environnement. Ne commitez jamais vos secrets.
+Voir `e2e/README.md` et `documentation/tests/e2e/playwright-e2e-guide.md` pour les détails.
 
 ## Règles de contribution (rapide)
 

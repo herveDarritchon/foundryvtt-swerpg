@@ -22,9 +22,11 @@ pnpm vitest run --grep "pattern"        # Filter by name
 pnpm exec eslint <targets>              # Lint (no npm script exists)
 pnpm fmt:check                          # Prettier check (no --write)
 pnpm run build                         # fmt → rollup → less
-pnpm e2e                               # Playwright E2E (requires Docker Foundry)
-pnpm e2e:headed                        # E2E with visible browser
+pnpm e2e                               # E2E regression (requires Docker Foundry, port 31001)
+pnpm e2e:headed                        # E2E regression with visible browser
 pnpm e2e:ci                            # Chromium only, tag [ci]
+pnpm e2e:smoke                         # E2E smoke prod headless (read-only, port 30000)
+pnpm e2e:smoke:headed                  # E2E smoke prod with visible browser
 pnpm compile                           # YAML _source/ → LevelDB packs/
 pnpm extract                           # LevelDB packs/ → YAML _source/
 ```
@@ -82,8 +84,10 @@ lang/              # en.json, fr.json
 - Setup: `tests/setup.mjs` (default) or `tests/vitest-setup.js` (full mock-foundry)
 - Mock helpers: `tests/helpers/mock-foundry.mjs`
 - Use `setupFoundryMock()` / `teardownFoundryMock()` in beforeEach/afterEach for Foundry-dependent tests
-- E2E requires Docker Foundry instance, configured via `.env.e2e.local`
-- CI runs `pnpm test` (Vitest) + `pnpm e2e:ci` (Playwright Chromium, tag `[ci]`)
+- **E2E two-tier strategy**:
+  - Tier 1 `e2e/regression/` — mutating specs, requires Docker Foundry (port 31001), env `.env.e2e.local`, config `playwright.config.ts`
+  - Tier 2 `e2e/smoke/` — read-only surface checks, targets any live Foundry (port 30000), env `.env.e2e.smoke.prod`, config `playwright.smoke.config.ts`
+- CI runs `pnpm test` (Vitest) + `pnpm e2e:ci` (Playwright Chromium, tag `[ci]`); smoke suite is local-only
 
 ## ApplicationV2 sheets
 
@@ -151,5 +155,5 @@ For failures:
 
 - `.github/copilot-instructions.md` — references Foundry v13/Crucible/Tenebris (outdated), wrong npm commands (use
   `pnpm`)
-- `README.md` — E2E script names may be stale (real ones: `pnpm e2e*`)
+- `README.md` — E2E sections updated; two-tier strategy now documented inline
 - No `lint` npm script in `package.json` — use `pnpm exec eslint <targets>` directly

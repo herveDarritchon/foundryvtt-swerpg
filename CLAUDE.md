@@ -1,10 +1,16 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+## Règles agent (toujours)
+
+- Si ambigu : demande. Ne choisis pas en silence.
+- Diff minimal. Touche uniquement ce qui est demandé.
+- Définis « done » avant de commencer (1 ligne suffit).
+- Vérifie dans le code latest. Jamais d'hypothèse.
+- Code minimum. Pas de feature spéculative.
 
 ## Project
 
-**Swerpg** is a Foundry VTT v13+ game system for Star Wars Edge RPG. It targets `foundry.applications.api` (ApplicationV2) and `foundry.abstract.TypeDataModel`. The codebase is ES2022 modules only — no TypeScript, no `require`.
+**Swerpg** is a Foundry VTT v14+ game system for Star Wars Edge RPG. It targets `foundry.applications.api` (ApplicationV2) and `foundry.abstract.TypeDataModel`. The codebase is ES2022 modules only — no TypeScript, no `require`.
 
 - **Entry point**: `swerpg.mjs` → bundled to `dist/swerpg.bundle.js` via Rollup
 - **System ID**: `swerpg` (in `module/config/system.mjs`)
@@ -35,12 +41,16 @@ pnpm fmt:check                                         # Prettier check only
 pnpm run compile        # YAML _source/ → LevelDB packs/
 pnpm run extract        # LevelDB packs/ → YAML _source/
 
-# E2E (requires Docker Foundry)
-pnpm e2e                # Playwright headless
+# E2E — Tier 1: regression (requires Docker Foundry on port 31001)
+pnpm e2e                # Playwright headless (regression suite)
 pnpm e2e:headed         # Playwright with browser
 pnpm e2e:ci             # Chromium only, [ci]-tagged specs
 pnpm foundry:e2e:start  # start Docker Foundry instance
 pnpm foundry:e2e:stop   # stop Docker Foundry instance
+
+# E2E — Tier 2: smoke prod (read-only, targets port 30000, no Docker needed)
+pnpm e2e:smoke          # smoke suite headless
+pnpm e2e:smoke:headed   # smoke suite with browser
 ```
 
 ## Architecture

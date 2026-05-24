@@ -1,12 +1,43 @@
 # Guide Playwright E2E pour Swerpg
 
-Ce guide décrit comment exécuter et étendre la suite de tests end-to-end Playwright pour le système **Swerpg** sous Foundry VTT v13.
+Ce guide décrit comment exécuter et étendre la suite de tests end-to-end Playwright pour le système **Swerpg** sous Foundry VTT v14.
 
 Il s’adresse à des développeurs déjà à l’aise avec Foundry VTT, TypeScript et Playwright.
 
 > Pour un modèle de spec prêt à l’emploi et un guide détaillé sur la création de nouveaux scénarios E2E, voir également :
 >
 > - `documentation/tests/e2e/playwright-spec-squelette-mon-parcours.md`
+
+---
+
+## Stratégie à deux étages
+
+La suite E2E est organisée en deux étages distincts :
+
+### Étage 1 — `regression` (non-régression profonde)
+
+- **Instance** : Foundry E2E dédiée, port 31001
+- **Monde** : monde contrôlé et jetable (`Swerpg-Regression-World`)
+- **Usage** : avant merge important, avant release, en campagne locale dédiée
+- **Mutations** : autorisées, persistance vérifiée
+- **Config** : `.env.e2e.regression` (copier depuis `.env.e2e.regression.example`)
+- **Commandes** : `pnpm e2e:regression`, `pnpm e2e:regression:headed`
+
+### Étage 2 — `smoke` (vérification post-déploiement)
+
+- **Instance** : instance de production, port 30000
+- **Monde** : monde stable (`test-v14-309` ou équivalent)
+- **Usage** : vérification manuelle post-déploiement uniquement
+- **Mutations** : interdites — lecture seule stricte
+- **Config** : `.env.e2e.smoke.prod` (copier depuis `.env.e2e.smoke.prod.example`)
+- **Commandes** : `pnpm e2e:smoke`, `pnpm e2e:smoke:headed`
+
+### Frontière CI / local manuel
+
+Les suites `regression` et `smoke` ne tournent **jamais** en CI GitHub Actions.
+Elles nécessitent une machine locale adaptée (GPU, performances navigateur, instance Foundry live).
+
+Seuls les tests marqués `[ci]` dans leur titre (via `pnpm e2e:ci`) tournent en CI.
 
 ---
 
@@ -73,11 +104,19 @@ Les scripts E2E sont déclarés dans `package.json` :
 
 ```jsonc
 "scripts": {
-  ...
+  // Suite générale (instance dev, port 30000)
   "e2e": "playwright test",
   "e2e:headed": "playwright test --headed",
   "e2e:ci": "playwright test --project=chromium --grep \"\\[ci\\]\"",
   "e2e:ui": "playwright test --ui",
+  // Non-régression profonde (instance dédiée, port 31001)
+  "e2e:regression": "playwright test --config playwright.regression.config.ts",
+  "e2e:regression:headed": "playwright test --config playwright.regression.config.ts --headed",
+  "e2e:regression:ui": "playwright test --config playwright.regression.config.ts --ui",
+  // Smoke post-déploiement (instance prod, port 30000 — manuel uniquement)
+  "e2e:smoke": "playwright test --config playwright.smoke.config.ts",
+  "e2e:smoke:headed": "playwright test --config playwright.smoke.config.ts --headed",
+  // Instance Foundry dédiée E2E
   "foundry:e2e:start": "bash ./scripts/e2e-foundry-start.sh start",
   "foundry:e2e:stop": "bash ./scripts/e2e-foundry-start.sh stop",
   "foundry:e2e:restart": "bash ./scripts/e2e-foundry-start.sh restart"
@@ -188,19 +227,47 @@ Ces ajustements résolvent les problèmes de redirection vers `/join` observés 
 
 ## 5. Structure des tests E2E
 
-Le dossier `e2e/` est organisé ainsi :
+Le dossier `e2e/` est organisé selon la stratégie à deux étages :
 
-- `e2e/specs/` – fichiers de tests (scénarios métiers)
-  - `bootstrap.spec.ts` – test minimal qui vérifie que le monde Swerpg se charge correctement
-  - `oggdude-import.spec.ts` – test UI de l’importeur OggDude
-- `e2e/utils/` – utilitaires de session Foundry et helpers de setup/teardown
-  - `foundrySession.ts` – primitives pour naviguer dans les écrans `/license`, `/auth`, `/setup`, `/join`, `/game`
-  - `e2eTest.ts` – `setUp` / `tearDown` haut niveau, basés sur `FoundrySessionOptions`
-  - `foundryUI.ts` – helpers pour interactions UI récurrentes (Game Settings, navigation système)
-- `e2e/helper/`
-  - `overlay.ts` – helpers pour fermer les overlays Foundry (tour, partage de données, etc.)
-- `e2e/fixtures.ts` (si présent) – fixtures Playwright projet, notamment `worldReady`
-- `e2e/README.md` – résumé rapide et renvoi vers ce guide détaillé
+```
+e2e/
+  smoke/                  # Étage 2 — smoke post-déploiement (lecture seule)
+    fixtures.ts           # Fixture smokeReady — navigation sans mutation
+    01-health.spec.ts     # Santé de l'instance, erreurs console, 404 système
+    02-surfaces.spec.ts   # Surfaces UI critiques, i18n, placeholders
+  regression/             # Étage 1 — non-régression profonde (mutations autorisées)
+    fixtures/
+      global-setup.ts     # Bootstrap monde de régression
+    specs/
+      01-smoke.spec.ts
+      02-oggdude-import.spec.ts
+    utils/
+      oggdude-importer.ts
+      world-manager.ts
+  specs/                  # Specs générales / tests [ci] pour la CI
+    bootstrap.spec.ts
+    oggdude-import.spec.ts
+  fixtures/               # Fixtures partagées (worldReady)
+    index.ts
+    global-setup.ts
+  helper/
+    overlay.ts            # Fermeture des overlays Foundry
+  utils/                  # Helpers de session communs aux deux étages
+    foundrySession.ts
+    foundryUI.ts
+    playwrightTest.ts
+  README.md
+  tsconfig.json
+```
+
+### 5.1. Fichiers de configuration Playwright
+
+| Config | Suite | Instance | Env file |
+|---|---|---|---|
+| `playwright.config.ts` | générale + `[ci]` | port 30000 | `.env.e2e.local` |
+| `playwright.regression.config.ts` | non-régression | port 31001 | `.env.e2e.regression` |
+| `playwright.smoke.config.ts` | smoke prod | port 30000 | `.env.e2e.smoke.prod` |
+
 
 ### 5.1. Fixtures et session Foundry
 
