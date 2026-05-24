@@ -166,32 +166,24 @@ export async function tearDown(page: Page, options: FoundrySessionOptions) {
  */
 async function returnToSetupFromJoin(page: Page, options: FoundrySessionOptions): Promise<void> {
   try {
-    const returnBtn = page.getByRole('button', { name: /Return to Setup/i })
+    // Le contenu de /join est rendu par JS — attendre le DOM complet avant toute interaction
+    await page.waitForLoadState('networkidle', { timeout: 15000 }).catch(() => {})
 
-    // Attendre brièvement que le DOM soit stable
-    await returnBtn.waitFor({ state: 'visible', timeout: 5000 }).catch(() => {})
+    // Foundry v14 : le formulaire "Return to Setup" est form[data-application-part="setup"]
+    // avec input[name="adminPassword"] et button[type="submit"]
+    const setupForm = page.locator('form[data-application-part="setup"], #join-game-setup')
+    await setupForm.waitFor({ state: 'visible', timeout: 10000 })
 
-    if ((await returnBtn.count()) === 0) {
-      console.warn('[returnToSetupFromJoin] Bouton "Return to Setup" introuvable')
-      return
-    }
+    const adminPasswordInput = setupForm.locator('input[name="adminPassword"]')
+    await adminPasswordInput.waitFor({ state: 'visible', timeout: 5000 })
+    await adminPasswordInput.fill(options.adminPassword)
 
-    // Chercher le champ mot de passe admin dans le même conteneur que le bouton
-    // (distinctif du champ "Password" du formulaire Join Game Session)
-    const returnToSetupContainer = page.locator('article, section, div, form').filter({
-      has: page.getByRole('button', { name: /Return to Setup/i }),
-    })
-    const adminPasswordInput = returnToSetupContainer.locator('input[type="password"]').first()
-
-    if ((await adminPasswordInput.count()) > 0) {
-      await adminPasswordInput.fill(options.adminPassword).catch(() => {})
-    }
-
+    const returnBtn = setupForm.locator('button[type="submit"]')
+    await returnBtn.waitFor({ state: 'visible', timeout: 5000 })
     await returnBtn.click()
 
     // Foundry peut afficher une dialogue de confirmation :
     // "There is one other User currently active... Do you wish to proceed? Yes/No"
-    // Si ce dialogue apparaît, cliquer "Yes" pour confirmer la fermeture du monde.
     const yesBtn = page.getByRole('button', { name: /^Yes$/i })
     await yesBtn.waitFor({ state: 'visible', timeout: 3000 }).catch(() => {})
     if ((await yesBtn.count()) > 0) {
@@ -199,7 +191,7 @@ async function returnToSetupFromJoin(page: Page, options: FoundrySessionOptions)
       console.log('[returnToSetupFromJoin] Dialogue de confirmation confirmé (Yes) ✔')
     }
 
-    await page.waitForURL('**/setup', { waitUntil: 'domcontentloaded', timeout: 15000 })
+    await page.waitForURL('**/setup', { waitUntil: 'domcontentloaded', timeout: 20000 })
     console.log('[returnToSetupFromJoin] Monde fermé via "Return to Setup" ✔')
   } catch (error) {
     console.warn('[returnToSetupFromJoin] Échec:', error)
