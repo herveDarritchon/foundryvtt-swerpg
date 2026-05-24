@@ -225,6 +225,9 @@ playwright-smoke-report/
 playwright-documentation-report/
 test-results/
 
+# Documentation e2e — artefacts générés (screenshots et guides JSON)
+documentation-output/
+
 ### GitHubPages template
 # This .gitignore is appropriate for repositories deployed to GitHub Pages and using
 # a Gemfile as specified at https://github.com/github/pages-gem#conventional

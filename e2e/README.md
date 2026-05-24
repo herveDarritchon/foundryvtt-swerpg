@@ -173,6 +173,13 @@ Les suites `regression` et `smoke` génèrent un report HTML systématiquement l
 | `pnpm e2e:smoke` | `playwright-smoke-report/` | `pnpm exec playwright show-report playwright-smoke-report` |
 | `pnpm e2e:documentation` | `playwright-documentation-report/` | `pnpm exec playwright show-report playwright-documentation-report` |
 
+La suite `e2e:documentation` produit également des artefacts structurés dans `documentation-output/` :
+
+- `documentation-output/screenshots/<guide>/` — captures nommées par index et slug ;
+- `documentation-output/guides/<guide>.json` — métadonnées JSON exploitables pour la génération de guides.
+
+Ces artefacts sont distincts du report Playwright et constituent la matière première pour les guides utilisateur.
+
 Ces reports permettent d'inspecter les résultats, traces, screenshots et vidéos de chaque run. Ils constituent la preuve de validation reproductible pour les campagnes pre-livraison.
 
 En cas d'échec, les artefacts (traces `.zip`, screenshots, vidéos) sont conservés et accessibles directement depuis le report HTML.
@@ -198,6 +205,10 @@ En cas d'échec, les artefacts (traces `.zip`, screenshots, vidéos) sont conser
 1. Instance Foundry accessible sur le port configuré dans `E2E_FOUNDRY_BASE_URL` (port 30000 par défaut)
 2. Fichier `.env.e2e.documentation` configuré (depuis `.env.e2e.documentation.example`)
 3. Monde stable dans un état représentatif des captures attendues, configuré dans `E2E_FOUNDRY_WORLD`
+
+Le monde documentaire recommandé est `documentation-world`. Ce monde est distinct du monde de
+régression (`Swerpg-Regression-World`) et du monde de production. Il doit être dans un état stable
+avant chaque run. Voir `e2e/documentation/README.md` pour le contrat complet du monde documentaire.
 
 ### `pnpm e2e` (campagne complète)
 
@@ -227,7 +238,11 @@ e2e/
     fixtures.ts        # Fixture documentationReady — navigation, lecture seule par défaut
     global-setup.ts    # Vérification de connectivité avant les specs
     specs/             # Specs documentation — un fichier par domaine documenté
-    utils/             # Helpers spécifiques à la suite documentation
+    utils/             # Helpers spécifiques à la suite documentation (isolés de regression/smoke)
+      documentation-world-manager.ts  # Préparation déterministe avant capture
+      screenshot-helper.ts            # Captures avec nom stable et viewport fixe
+      guide-step-recorder.ts          # Enregistrement des étapes d'un parcours
+      guide-metadata-writer.ts        # Écriture du JSON structuré du guide
     README.md
   specs/               # Specs legacy / [ci] — à requalifier progressivement
     bootstrap.spec.ts        # → candidat regression (santé de base)
