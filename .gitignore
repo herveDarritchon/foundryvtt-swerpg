@@ -213,6 +213,9 @@ dist
 
 # E2E Playwright env files
 .env.e2e*
+!.env.e2e.example
+!.env.e2e.regression.example
+!.env.e2e.smoke.prod.example
 
 # Playwright outputs
 playwright-report/
