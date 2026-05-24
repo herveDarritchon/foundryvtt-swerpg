@@ -107,3 +107,106 @@ export async function navigateToSystemSettings(page: Page, systemName: string): 
   await openGameSettings(page)
   await openSystemSettings(page, systemName)
 }
+
+/**
+ * Ouvre l'onglet Actors dans la sidebar Foundry.
+ *
+ * Foundry v14 utilise des onglets avec data-tab="actors" sans libellé visible.
+ * On essaie plusieurs sélecteurs pour la compatibilité v13/v14.
+ *
+ * @param page - Page Playwright
+ */
+export async function openActorsTab(page: Page): Promise<void> {
+  await ensureSessionActive(page)
+  await dismissOverlayIfPresent(page)
+
+  // Foundry v14 : onglet sidebar = <button role="tab" data-tab="actors">
+  // Fallback v13 : role="tab" avec libellé "Actors"
+  const actorsTab = page
+    .locator('[role="tab"][data-tab="actors"]')
+    .or(page.locator('[data-action="tab"][data-tab="actors"]'))
+    .or(page.getByRole('tab', { name: /^Actors$/i }))
+    .first()
+
+  await actorsTab.waitFor({ state: 'visible', timeout: 10000 })
+  await actorsTab.click()
+
+  // Attendre que la section #actors soit visible
+  await page.locator('#actors').waitFor({ state: 'visible', timeout: 10000 })
+}
+
+/**
+ * Crée un acteur depuis la sidebar Actors et attend l'ouverture de sa fiche.
+ *
+ * Workflow :
+ * 1. Clic sur le bouton "Create Actor" dans la sidebar.
+ * 2. Sélection du type d'acteur dans le dialog de création.
+ * 3. Saisie du nom et validation.
+ * 4. Attente de l'ouverture de la fiche (dialog visible avec le bon titre).
+ *
+ * Pré-requis : l'onglet Actors doit être actif (`openActorsTab` appelé avant).
+ *
+ * @param page - Page Playwright
+ * @param name - Nom de l'acteur à créer
+ * @param type - Type d'acteur Foundry (ex: "character")
+ * @returns Le nom de l'acteur tel que saisi (utilisable pour vérifier la fiche)
+ */
+export async function createActor(page: Page, name: string, type: string): Promise<string> {
+  await ensureSessionActive(page)
+
+  // Clic sur le bouton de création d'acteur dans la section #actors
+  // Foundry v14 : bouton avec data-action="create" ou libellé "Create Actor"
+  const createButton = page
+    .locator('#actors')
+    .locator('[data-action="create"]')
+    .or(page.locator('#actors').getByRole('button', { name: /Create Actor/i }))
+    .first()
+
+  await createButton.waitFor({ state: 'visible', timeout: 10000 })
+  await createButton.click()
+
+  // Attendre le dialog de création d'acteur
+  const createDialog = page
+    .locator('dialog.dialog, .dialog, [role="dialog"]')
+    .filter({ hasText: /type|create|actor/i })
+    .first()
+
+  await createDialog.waitFor({ state: 'visible', timeout: 10000 })
+
+  // Remplir le nom de l'acteur
+  const nameInput = createDialog
+    .locator('input[name="name"]')
+    .or(createDialog.locator('input[type="text"]'))
+    .first()
+
+  await nameInput.waitFor({ state: 'visible', timeout: 5000 })
+  await nameInput.fill(name)
+
+  // Sélectionner le type d'acteur si un select est présent
+  const typeSelect = createDialog.locator('select[name="type"]')
+  if ((await typeSelect.count()) > 0) {
+    await typeSelect.selectOption({ value: type })
+  }
+
+  // Valider la création (bouton de confirmation)
+  const confirmButton = createDialog
+    .getByRole('button', { name: /^Create Actor$/i })
+    .or(createDialog.getByRole('button', { name: /^Create$/i }))
+    .or(createDialog.locator('[data-action="submit"], button[type="submit"]'))
+    .first()
+
+  await confirmButton.waitFor({ state: 'visible', timeout: 5000 })
+  await confirmButton.click()
+
+  // Attendre l'ouverture de la fiche (window/dialog avec le nom de l'acteur)
+  // Foundry v14 ApplicationV2 rend : <form class="application sheet ...">
+  // Foundry v13 ApplicationV1 rend : <div class="app window-app ...">
+  const sheet = page
+    .locator('.application.sheet, .app.sheet, .window-app, dialog.sheet, [role="dialog"]')
+    .filter({ hasText: name })
+    .first()
+
+  await sheet.waitFor({ state: 'visible', timeout: 15000 })
+
+  return name
+}
