@@ -10,6 +10,7 @@ const baseURL = process.env.E2E_FOUNDRY_BASE_URL || 'http://localhost:30000'
 
 export default defineConfig({
   testDir: './e2e/smoke',
+  globalSetup: './e2e/smoke/global-setup.ts',
   workers: 1,
   // Délais courts : les smoke tests doivent rester rapides et non-destructifs
   timeout: process.env.PLAYWRIGHT_TEST_TIMEOUT ? parseInt(process.env.PLAYWRIGHT_TEST_TIMEOUT) : 60000,
