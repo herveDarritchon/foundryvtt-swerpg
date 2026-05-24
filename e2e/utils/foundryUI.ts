@@ -16,7 +16,7 @@ import { dismissOverlayIfPresent } from '../helper/overlay'
 export async function ensureSessionActive(page: Page): Promise<void> {
   const currentUrl = page.url()
 
-  if (currentUrl.includes('/join') || currentUrl.includes('/auth')) {
+  if (currentUrl.includes('/join') || currentUrl.includes('/auth') || currentUrl.includes('/setup')) {
     throw new Error(`Session lost: redirected to ${currentUrl}. This may indicate a session timeout or cookies issue.`)
   }
 
@@ -31,7 +31,10 @@ export async function ensureSessionActive(page: Page): Promise<void> {
 
 /**
  * Ouvre l'onglet Game Settings dans la sidebar.
- * Gère automatiquement le clic et attend que l'onglet soit actif.
+ *
+ * Foundry VTT v14 a redessiné la sidebar : les onglets sont des icônes sans libellé
+ * visible (collapsed par défaut) et utilisent l'attribut data-tab plutôt que des
+ * rôles ARIA explicites. On essaie plusieurs sélecteurs pour la compatibilité v13/v14.
  *
  * @param page - Page Playwright
  */
@@ -39,12 +42,26 @@ export async function openGameSettings(page: Page): Promise<void> {
   await ensureSessionActive(page)
   await dismissOverlayIfPresent(page)
 
-  const gameSettingsTab = page.getByRole('tab', { name: /Game Settings/i })
-  await gameSettingsTab.waitFor({ state: 'visible', timeout: 10000 })
-  await gameSettingsTab.click()
+  // Foundry v14 : onglet sidebar = <button role="tab" data-tab="settings" data-action="tab">
+  // Utiliser [role="tab"][data-tab="settings"] pour cibler le bouton NAV (pas la section contenu)
+  // Fallback v13 : role="tab" avec libellé "Game Settings"
+  const settingsTab = page
+    .locator('[role="tab"][data-tab="settings"]')
+    .or(page.locator('[data-action="tab"][data-tab="settings"]'))
+    .or(page.getByRole('tab', { name: /Game Settings/i }))
+    .or(page.getByRole('tab', { name: /^Settings$/i }))
+    .first()
 
-  // Attendre que le contenu de Game Settings soit chargé (bouton Configure Settings visible)
-  await page.getByRole('button', { name: /Configure Settings/i }).waitFor({ state: 'visible', timeout: 10000 })
+  await settingsTab.waitFor({ state: 'visible', timeout: 10000 })
+  await settingsTab.click()
+
+  // Foundry v14 : le bouton s'appelle "Game Settings" (SIDEBAR.SETTINGS.ACTIONS.Configure)
+  // Foundry v13 : le bouton s'appelait "Configure Settings"
+  const configureBtn = page
+    .getByRole('button', { name: /^Game Settings$/i })
+    .or(page.getByRole('button', { name: /Configure Settings/i }))
+    .first()
+  await configureBtn.waitFor({ state: 'visible', timeout: 10000 })
 }
 
 /**
@@ -58,8 +75,11 @@ export async function openSystemSettings(page: Page, systemName: string): Promis
   await ensureSessionActive(page)
   await dismissOverlayIfPresent(page)
 
-  // Ouvrir Configure Settings
-  const configureButton = page.getByRole('button', { name: /Configure Settings/i })
+  // Ouvrir Configure Settings (v13) / Game Settings (v14)
+  const configureButton = page
+    .getByRole('button', { name: /^Game Settings$/i })
+    .or(page.getByRole('button', { name: /Configure Settings/i }))
+    .first()
   await configureButton.waitFor({ state: 'visible', timeout: 10000 })
   await configureButton.click()
 
