@@ -210,3 +210,72 @@ export async function createActor(page: Page, name: string, type: string): Promi
 
   return name
 }
+
+/**
+ * Ouvre l'onglet Skills dans la fiche d'un acteur déjà ouvert.
+ *
+ * La fiche utilise des onglets avec `data-action="tab"` et `data-tab="skills"`.
+ * L'onglet est cherché dans la fiche filtrée par le nom de l'acteur pour éviter
+ * les conflits si plusieurs fiches sont ouvertes.
+ *
+ * @param page - Page Playwright
+ * @param actorName - Nom de l'acteur dont la fiche est ouverte
+ */
+export async function openActorSkillsTab(page: Page, actorName: string): Promise<void> {
+  await ensureSessionActive(page)
+
+  // Localiser la fiche de l'acteur (même sélecteur que dans createActor)
+  const sheet = page
+    .locator('.application.sheet, .app.sheet, .window-app, dialog.sheet, [role="dialog"]')
+    .filter({ hasText: actorName })
+    .first()
+
+  await sheet.waitFor({ state: 'visible', timeout: 10000 })
+
+  // Cliquer sur l'onglet Skills : data-action="tab" data-tab="skills"
+  const skillsTab = sheet
+    .locator('[data-action="tab"][data-tab="skills"]')
+    .or(sheet.locator('[data-tab="skills"]'))
+    .first()
+
+  await skillsTab.waitFor({ state: 'visible', timeout: 10000 })
+  await skillsTab.click()
+
+  // Attendre qu'un élément de compétence soit visible (indicateur que l'onglet est actif)
+  await sheet.locator('[data-skill-id]').first().waitFor({ state: 'visible', timeout: 10000 })
+}
+
+/**
+ * Ouvre l'arbre de spécialisation depuis la fiche d'un personnage.
+ *
+ * Clique sur le bouton `[data-action="editSpecializationTrees"]` présent dans
+ * l'en-tête de la fiche de personnage, puis attend que l'application
+ * de l'arbre de spécialisation soit rendue.
+ *
+ * Pré-requis : la fiche du personnage doit être ouverte et visible.
+ *
+ * @param page - Page Playwright
+ * @param actorName - Nom de l'acteur dont la fiche est ouverte
+ */
+export async function openSpecializationTree(page: Page, actorName: string): Promise<void> {
+  await ensureSessionActive(page)
+
+  // Localiser la fiche de l'acteur
+  const sheet = page
+    .locator('.application.sheet, .app.sheet, .window-app, dialog.sheet, [role="dialog"]')
+    .filter({ hasText: actorName })
+    .first()
+
+  await sheet.waitFor({ state: 'visible', timeout: 10000 })
+
+  // Cliquer sur le bouton d'ouverture de l'arbre de spécialisation
+  // Foundry v14 : <button data-action="editSpecializationTrees" ...>
+  const treeButton = sheet.locator('[data-action="editSpecializationTrees"]').first()
+  await treeButton.waitFor({ state: 'visible', timeout: 10000 })
+  await treeButton.click()
+
+  // Attendre que l'application de l'arbre de spécialisation soit visible
+  // Template : <section class="swerpg application specialization-tree-app">
+  const treeApp = page.locator('.specialization-tree-app').first()
+  await treeApp.waitFor({ state: 'visible', timeout: 15000 })
+}
