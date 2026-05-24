@@ -22,7 +22,8 @@ export async function loginIntoInstance(page: Page, options: FoundrySessionOptio
   await page.getByPlaceholder('Administrator Password').fill(options.adminPassword)
   await page.getByRole('button', { name: /log in/i }).click()
 
-  await page.waitForURL('**/setup', { waitUntil: 'domcontentloaded' })
+  // Après login, on peut atterrir sur /setup (pas de monde actif) ou /join (monde déjà actif)
+  await page.waitForURL(/\/(setup|join)/, { waitUntil: 'domcontentloaded' })
   return page.url()
 }
 
@@ -65,8 +66,7 @@ export async function enterGameAsGamemaster(page: Page, options: FoundrySessionO
   }
 
   // 2) Sélection de l'utilisateur
-  // Utiliser l'accessible name est souvent plus robuste que name="userid"
-  const userSelect = page.locator('select[name="userid"]') // label "User Name" sur l'écran join
+  const userSelect = page.locator('select[name="userid"]')
 
   await userSelect.waitFor({ state: 'visible', timeout: 10_000 })
 
@@ -76,6 +76,18 @@ export async function enterGameAsGamemaster(page: Page, options: FoundrySessionO
   if (optionLabels.length === 0) {
     throw new Error('[enterGameAsGamemaster] select User présent mais sans aucune option – vérifie ta config Foundry (users/world).')
   }
+
+  // L'attribut "disabled" sur l'option est un hint client-side pour signaler qu'une session est active.
+  // Foundry côté serveur accepte les reconnexions : on lève le disabled JS-side si nécessaire,
+  // puis on sélectionne l'option normalement. Le serveur termine la session précédente et crée une nouvelle.
+  await userSelect.evaluate((selectEl: HTMLSelectElement, username: string) => {
+    const option = Array.from(selectEl.options).find((o) => o.text.trim() === username)
+    if (option) {
+      option.disabled = false
+      selectEl.value = option.value
+    }
+  }, options.username)
+
   await userSelect.selectOption({ label: options.username })
 
   await page.getByRole('button', { name: /join game session/i }).click()
