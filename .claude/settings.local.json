@@ -13,7 +13,17 @@
       "Bash(git commit *)",
       "Bash(git push *)",
       "Bash(gh issue create --title 'refactor\\(specialization-tree\\): named Pixi containers per node for debuggability' --body ' *)",
-      "Bash(git stash *)"
+      "Bash(git stash *)",
+      "Bash(npx tsc *)",
+      "Bash(pnpm exec *)",
+      "Bash(node_modules/.bin/tsc --noEmit --project e2e/tsconfig.json)",
+      "Bash(pnpm playwright *)",
+      "mcp__plugin_chrome-devtools-mcp_chrome-devtools__new_page",
+      "mcp__plugin_chrome-devtools-mcp_chrome-devtools__list_pages",
+      "mcp__plugin_chrome-devtools-mcp_chrome-devtools__navigate_page",
+      "Bash(cp /tmp/inspect-foundry.mjs /Users/hervedarritchon/Workspace/Perso/FoundryVTT/foundryvtt-swerpg/inspect-foundry.mjs)",
+      "Bash(node inspect-foundry.mjs)",
+      "Skill(git-commit)"
     ]
   }
 }
