@@ -39,6 +39,8 @@ export default defineConfig({
       },
     },
   ],
-  reporter: 'list',
+  // Générer le report HTML systématiquement en local pour diagnostic et preuve de validation.
+  // En CI, les tests Playwright smoke ne tournent jamais — cette ligne ne s'applique donc qu'en local.
+  reporter: [['list'], ['html', { outputFolder: 'playwright-smoke-report', open: 'never' }]],
   retries: 0,
 })

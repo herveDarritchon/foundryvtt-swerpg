@@ -252,8 +252,11 @@ chacune chargeant son propre fichier d'environnement.
 
 Reporter :
 
-- En local : `list`
-- En CI : `list` + `html`
+- `regression` (local) : `list` + `html` dans `playwright-regression-report/` — systématiquement généré
+- `smoke` (local) : `list` + `html` dans `playwright-smoke-report/` — systématiquement généré
+- `e2e:ci` : `list` + `html` dans `playwright-report/` (héritage config `playwright.config.ts`) — non pertinent en pratique car Playwright ne tourne pas en CI
+
+> Les suites `regression` et `smoke` ne tournent **jamais** en CI. Le report HTML est donc un artefact local de diagnostic et de preuve de validation.
 
 ### 4.1. Spécificités Chromium
 
@@ -603,7 +606,12 @@ Pour analyser une trace générée (par défaut conservée en cas d’échec) :
 pnpm exec playwright show-trace test-results/path-to-trace/trace.zip
 ```
 
-Les rapports HTML sont générés (en CI) dans `playwright-report/`.
+Les rapports HTML sont générés systématiquement lors de tout run local dans `playwright-regression-report/` (suite regression) et `playwright-smoke-report/` (suite smoke) :
+
+```bash
+pnpm exec playwright show-report playwright-regression-report
+pnpm exec playwright show-report playwright-smoke-report
+```
 
 ### 8.5. Tests instables (flaky)
 
@@ -651,15 +659,74 @@ Remarque : si vous utilisez `pnpm` dans ce projet, vous pouvez remplacer `npx` 
 
 ---
 
-## 9. Résumé
+## 9. Matrice de couverture E2E
+
+La matrice de couverture officielle reliant domaines fonctionnels, parcours critiques et specs Playwright se trouve dans :
+
+- `documentation/tests/e2e/couverture-e2e-matrice.md`
+
+Elle liste les parcours couverts par suite (`regression`, `smoke`, `[ci]`), les relais Vitest pour les couches pures, et les trous de couverture acceptés. Mettre ce document à jour à chaque ajout ou déplacement de spec.
+
+---
+
+## 10. Checklist de validation et clôture PWE6
+
+Cette checklist permet de conclure qu'une campagne E2E est valide et que la stratégie à deux étages est effectivement stabilisée.
+
+### Ordre de validation recommandé
+
+1. Lancer la suite `regression` et vérifier tous les parcours PWE3 / PWE4 :
+
+   ```bash
+   pnpm e2e:regression
+   ```
+
+2. Lancer la suite `smoke` et vérifier la lecture seule sans erreur inattendue :
+
+   ```bash
+   pnpm e2e:smoke
+   ```
+
+3. Vérifier les specs `[ci]` legacy si un changement les concerne :
+
+   ```bash
+   pnpm e2e:ci
+   ```
+
+### Signaux de clôture
+
+- [ ] Aucune erreur navigateur inattendue (ni `console.error` non filtré, ni `pageerror`) dans `regression` ni dans `smoke`.
+- [ ] Matrice de couverture (`couverture-e2e-matrice.md`) à jour avec toutes les specs actives.
+- [ ] Commandes `pnpm e2e:regression` et `pnpm e2e:smoke` alignées avec les configs `playwright.regression.config.ts` et `playwright.smoke.config.ts`.
+- [ ] Fichiers d'environnement `.env.e2e.regression` et `.env.e2e.smoke.prod` documentés et exemples à jour.
+- [ ] Frontière CI documentée : `regression` et `smoke` ne tournent jamais en CI — seul `e2e:ci` est autorisé en pipeline.
+- [ ] Report HTML généré et vérifiable après chaque run local :
+  - `playwright-regression-report/` après `pnpm e2e:regression`
+  - `playwright-smoke-report/` après `pnpm e2e:smoke`
+- [ ] Artefacts d'échec (traces, screenshots, vidéos) retrouvables depuis le report HTML en cas d'échec.
+- [ ] Trous de couverture restants explicitement listés dans `couverture-e2e-matrice.md` section 3 (non confondus avec des oublis).
+
+### Ouvrir les reports HTML
+
+```bash
+pnpm exec playwright show-report playwright-regression-report
+pnpm exec playwright show-report playwright-smoke-report
+```
+
+---
+
+## 11. Résumé
 
 - `pnpm e2e:smoke` : vérification de surface, exécution manuelle, lecture seule sur instance de production.
 - `pnpm e2e:regression` : validation fonctionnelle pré-livraison sur instance dédiée, remplace les campagnes QA manuelles répétitives.
 - `pnpm e2e` : campagne complète qui orchestre `regression` puis `smoke` — requiert les deux instances disponibles.
 - Trois configs Playwright distinctes, chacune chargeant son propre fichier d'environnement.
+- Reports HTML générés systématiquement en local (`playwright-regression-report/`, `playwright-smoke-report/`).
 - Les helpers `foundrySession.ts`, `e2eTest.ts` et les fixtures partagées encapsulent la logique de connexion et de lancement du monde Swerpg.
 - Les scénarios doivent rester courts, robustes, et utiliser des locators accessibles.
 - Toute nouvelle spec doit être placée dans `e2e/smoke/` ou `e2e/regression/specs/` selon son type.
+- Matrice de couverture : `documentation/tests/e2e/couverture-e2e-matrice.md`.
+
 ---
 
 > Remarque pour l'intégration continue (GitHub Actions) : en raison des contraintes de performance des runners GitHub, la pipeline CI n'exécute **que** les tests explicitement marqués avec le tag `[ci]` dans leur titre. Le script `e2e:ci` (défini ci‑dessus) filtre les tests via `--grep "[ci]"` pour ne lancer que ces scénarios critiques.

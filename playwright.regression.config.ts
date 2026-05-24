@@ -38,6 +38,8 @@ export default defineConfig({
       },
     },
   ],
-  reporter: process.env.CI ? [['list'], ['html', { outputFolder: 'playwright-regression-report' }]] : 'list',
+  // Générer le report HTML systématiquement en local pour diagnostic et preuve de validation.
+  // En CI, les tests Playwright regression ne tournent jamais — cette ligne ne s'applique donc qu'en local.
+  reporter: [['list'], ['html', { outputFolder: 'playwright-regression-report', open: 'never' }]],
   retries: 0,
 })

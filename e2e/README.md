@@ -8,6 +8,10 @@ se référer au guide complet :
 
 - `documentation/tests/e2e/playwright-e2e-guide.md`
 
+Pour la matrice de couverture (domaines fonctionnels, parcours critiques, specs et trous de couverture acceptés) :
+
+- `documentation/tests/e2e/couverture-e2e-matrice.md`
+
 ---
 
 ## Contrat des commandes E2E
@@ -113,6 +117,21 @@ pnpm e2e:smoke:headed
 
 Les suites `regression` et `smoke` ne tournent pas en CI car elles nécessitent une machine locale
 adaptée (GPU, performances navigateur, instance Foundry live).
+
+---
+
+## Reports HTML
+
+Les suites `regression` et `smoke` génèrent un report HTML systématiquement lors de tout run local.
+
+| Suite | Dossier de sortie | Commande pour ouvrir |
+|---|---|---|
+| `pnpm e2e:regression` | `playwright-regression-report/` | `pnpm exec playwright show-report playwright-regression-report` |
+| `pnpm e2e:smoke` | `playwright-smoke-report/` | `pnpm exec playwright show-report playwright-smoke-report` |
+
+Ces reports permettent d'inspecter les résultats, traces, screenshots et vidéos de chaque run. Ils constituent la preuve de validation reproductible pour les campagnes pre-livraison.
+
+En cas d'échec, les artefacts (traces `.zip`, screenshots, vidéos) sont conservés et accessibles directement depuis le report HTML.
 
 ---
 
