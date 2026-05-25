@@ -37,8 +37,8 @@ import { deleteActorByName } from '../../regression/utils/world-manager'
  */
 
 const GUIDE_ID = 'character-sheet'
-const GUIDE_TITLE = 'Fiche de personnage'
-const GUIDE_DESCRIPTION = 'Parcours documentaire de la fiche de personnage Swerpg : sidebar, ouverture de fiche, onglet Attributs, onglet Compétences.'
+const GUIDE_TITLE = 'Character Sheet'
+const GUIDE_DESCRIPTION = 'Documentation journey of the Swerpg character sheet: sidebar, sheet opening, Attributes tab, Skills tab.'
 
 test.describe('Guide documentaire — fiche de personnage', () => {
   test('parcours complet character-sheet : screenshots ordonnés et JSON intermédiaire', async ({ page, documentationReady }) => {
@@ -66,9 +66,9 @@ test.describe('Guide documentaire — fiche de personnage', () => {
     })
 
     recorder.record({
-      title: 'Vue générale du monde documentaire',
-      userAction: 'Ouverture de la session dans le monde documentaire',
-      expectedState: 'La page /game est chargée avec la sidebar visible et aucune application ouverte',
+      title: 'General view of the documentation world',
+      userAction: 'Opening the session in the documentation world',
+      expectedState: 'The /game page is loaded with the sidebar visible and no open application',
       screenshot: shot01,
     })
 
@@ -91,9 +91,9 @@ test.describe('Guide documentaire — fiche de personnage', () => {
     })
 
     recorder.record({
-      title: 'Sidebar Actors ouverte',
-      userAction: 'Clic sur l\'onglet Actors dans la barre de navigation de la sidebar',
-      expectedState: 'La liste des acteurs est visible dans la sidebar',
+      title: 'Actors sidebar open',
+      userAction: 'Click on the Actors tab in the sidebar navigation bar',
+      expectedState: 'The actor list is visible in the sidebar',
       screenshot: shot02,
     })
 
@@ -126,9 +126,9 @@ test.describe('Guide documentaire — fiche de personnage', () => {
     })
 
     recorder.record({
-      title: 'Fiche de personnage ouverte',
-      userAction: 'Double-clic sur le nom de l\'acteur dans la sidebar Actors',
-      expectedState: 'La fiche de personnage est visible avec l\'onglet par défaut chargé',
+      title: 'Character sheet open',
+      userAction: 'Double-click on the actor name in the Actors sidebar',
+      expectedState: 'The character sheet is visible with the default tab loaded',
       screenshot: shot03,
     })
 
@@ -153,9 +153,9 @@ test.describe('Guide documentaire — fiche de personnage', () => {
     })
 
     recorder.record({
-      title: 'Onglet Compétences ouvert',
-      userAction: 'Clic sur l\'onglet "Compétences" dans la fiche de personnage',
-      expectedState: 'L\'onglet Compétences est actif et la liste des compétences est visible',
+      title: 'Skills tab open',
+      userAction: 'Click on the "Skills" tab in the character sheet',
+      expectedState: 'The Skills tab is active and the skills list is visible',
       screenshot: shot04,
     })
 
