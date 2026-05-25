@@ -114,6 +114,8 @@ export async function closeAllOpenApplications(page: Page): Promise<void> {
  *
  * @param page - Page Playwright en cours
  */
+export { dismissOverlayIfPresent } from '../../helper/overlay'
+
 export async function disableAnimations(page: Page): Promise<void> {
   await page.addStyleTag({
     content: `
@@ -170,7 +172,7 @@ export async function assertDocumentationWorldReady(page: Page, options: Pick<Do
   }
 
   const sidebar = page.locator('#sidebar')
-  const sidebarVisible = await sidebar.isVisible({ timeout: 5000 }).catch(() => false)
+  const sidebarVisible = await sidebar.waitFor({ state: 'visible', timeout: 15000 }).then(() => true).catch(() => false)
 
   if (!sidebarVisible) {
     throw new Error(
