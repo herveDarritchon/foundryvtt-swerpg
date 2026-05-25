@@ -18,13 +18,13 @@ La suite `e2e:documentation` produit des captures d'écran et valide les invaria
 
 **Frontière avec les autres suites :**
 
-| Critère | `documentation` | `regression` | `smoke` |
-|---|---|---|---|
-| Objectif | Captures documentaires, invariants visibles | Validation fonctionnelle pré-livraison | Santé de surface post-déploiement |
-| Mutations | Lecture seule par défaut (prérequis contrôlés acceptés si documentés) | Autorisées | Interdites |
-| Instance cible | Port 30000 (production ou dédiée stable) | Port 31001 (dédiée, monde jetable) | Port 30000 (production) |
-| Exécution | Manuelle | Manuelle | Manuelle |
-| CI | Non | Non | Non |
+| Critère        | `documentation`                                                       | `regression`                           | `smoke`                           |
+|----------------|-----------------------------------------------------------------------|----------------------------------------|-----------------------------------|
+| Objectif       | Captures documentaires, invariants visibles                           | Validation fonctionnelle pré-livraison | Santé de surface post-déploiement |
+| Mutations      | Lecture seule par défaut (prérequis contrôlés acceptés si documentés) | Autorisées                             | Interdites                        |
+| Instance cible | Port 30000 (production ou dédiée stable)                              | Port 31001 (dédiée, monde jetable)     | Port 30000 (production)           |
+| Exécution      | Manuelle                                                              | Manuelle                               | Manuelle                          |
+| CI             | Non                                                                   | Non                                    | Non                               |
 
 **Décision : lecture seule par défaut**
 
@@ -62,12 +62,12 @@ Ce reset est visuel uniquement — il ne touche aucune donnée persistée.
 
 ### Frontière documentation vs régression
 
-| Aspect | Documentation | Régression |
-|---|---|---|
-| Données | Lecture seule, état stable | Mutations autorisées, cleanup par spec |
-| Monde | Stable et représentatif | Monde contrôlé recréé ou nettoyé |
-| Reset | Visuel uniquement | Artefacts éphémères supprimés |
-| Artefacts de test | Préfixe `Doc-` + horodatage | Préfixe `Test-` + horodatage |
+| Aspect            | Documentation               | Régression                             |
+|-------------------|-----------------------------|----------------------------------------|
+| Données           | Lecture seule, état stable  | Mutations autorisées, cleanup par spec |
+| Monde             | Stable et représentatif     | Monde contrôlé recréé ou nettoyé       |
+| Reset             | Visuel uniquement           | Artefacts éphémères supprimés          |
+| Artefacts de test | Préfixe `Doc-` + horodatage | Préfixe `Test-` + horodatage           |
 
 ---
 
@@ -97,13 +97,13 @@ cp .env.e2e.documentation.example .env.e2e.documentation
 
 Variables requises :
 
-| Variable | Rôle | Valeur par défaut |
-|---|---|---|
-| `E2E_FOUNDRY_BASE_URL` | URL de l'instance Foundry | `http://localhost:30000` |
-| `E2E_FOUNDRY_ADMIN_PASSWORD` | Mot de passe administrateur | — (requis) |
-| `E2E_FOUNDRY_USERNAME` | Nom du compte | `Gamemaster` |
-| `E2E_FOUNDRY_PASSWORD` | Mot de passe du compte | — (vide si non requis) |
-| `E2E_FOUNDRY_WORLD` | Monde stable cible | `test-v14-309` |
+| Variable                     | Rôle                        | Valeur par défaut        |
+|------------------------------|-----------------------------|--------------------------|
+| `E2E_FOUNDRY_BASE_URL`       | URL de l'instance Foundry   | `http://localhost:30000` |
+| `E2E_FOUNDRY_ADMIN_PASSWORD` | Mot de passe administrateur | — (requis)               |
+| `E2E_FOUNDRY_USERNAME`       | Nom du compte               | `Gamemaster`             |
+| `E2E_FOUNDRY_PASSWORD`       | Mot de passe du compte      | — (vide si non requis)   |
+| `E2E_FOUNDRY_WORLD`          | Monde stable cible          | `test-v14-309`           |
 
 ---
 
@@ -146,18 +146,18 @@ ou alimenter un pipeline de génération documentaire.
 Les helpers spécifiques à la suite documentation sont dans `e2e/documentation/utils/`.
 Ils sont **isolés** des helpers des suites `regression` et `smoke`.
 
-| Helper | Fichier | Responsabilité |
-|---|---|---|
-| `prepareDocumentationState` | `documentation-world-manager.ts` | Reset visuel avant capture (overlays, applications, animations) |
-| `closeAllOpenApplications` | `documentation-world-manager.ts` | Fermeture de toutes les fenêtres Foundry ouvertes |
-| `disableAnimations` | `documentation-world-manager.ts` | Désactivation des animations CSS pour des captures stables |
-| `assertDocumentationWorldReady` | `documentation-world-manager.ts` | Vérification que le monde documentaire est actif |
-| `navigateDocumentation` | `documentation-world-manager.ts` | Navigation documentaire sans mutation |
-| `takeDocumentationScreenshot` | `screenshot-helper.ts` | Capture avec nom stable, viewport fixe et attente réseau |
-| `toKebabSlug` | `screenshot-helper.ts` | Normalisation d'un texte en slug kebab-case pour les noms de fichier |
-| `createGuideStepRecorder` | `guide-step-recorder.ts` | Enregistrement des étapes d'un parcours documentaire |
-| `writeGuideMetadata` | `guide-metadata-writer.ts` | Écriture du JSON structuré d'un guide |
-| `readGuideMetadata` | `guide-metadata-writer.ts` | Lecture des métadonnées d'un guide existant |
+| Helper                          | Fichier                          | Responsabilité                                                       |
+|---------------------------------|----------------------------------|----------------------------------------------------------------------|
+| `prepareDocumentationState`     | `documentation-world-manager.ts` | Reset visuel avant capture (overlays, applications, animations)      |
+| `closeAllOpenApplications`      | `documentation-world-manager.ts` | Fermeture de toutes les fenêtres Foundry ouvertes                    |
+| `disableAnimations`             | `documentation-world-manager.ts` | Désactivation des animations CSS pour des captures stables           |
+| `assertDocumentationWorldReady` | `documentation-world-manager.ts` | Vérification que le monde documentaire est actif                     |
+| `navigateDocumentation`         | `documentation-world-manager.ts` | Navigation documentaire sans mutation                                |
+| `takeDocumentationScreenshot`   | `screenshot-helper.ts`           | Capture avec nom stable, viewport fixe et attente réseau             |
+| `toKebabSlug`                   | `screenshot-helper.ts`           | Normalisation d'un texte en slug kebab-case pour les noms de fichier |
+| `createGuideStepRecorder`       | `guide-step-recorder.ts`         | Enregistrement des étapes d'un parcours documentaire                 |
+| `writeGuideMetadata`            | `guide-metadata-writer.ts`       | Écriture du JSON structuré d'un guide                                |
+| `readGuideMetadata`             | `guide-metadata-writer.ts`       | Lecture des métadonnées d'un guide existant                          |
 
 ### Usage typique dans une spec
 
@@ -244,7 +244,8 @@ e2e/documentation/
 - [ ] Interactions via helpers de `e2e/utils/foundryUI.ts` et `e2e/utils/foundrySession.ts`
 - [ ] `ensureSessionActive` avant toute séquence longue
 - [ ] Pas de `waitForTimeout` — utiliser des assertions web-first
-- [ ] Si un prérequis contrôlé est créé : nom `Doc-<Prefixe>-${Date.now()}`, cleanup explicite, mention dans la description
+- [ ] Si un prérequis contrôlé est créé : nom `Doc-<Prefixe>-${Date.now()}`, cleanup explicite, mention dans la
+  description
 - [ ] Pas de `click({ force: true })` sans justification écrite
 
 ---
@@ -259,6 +260,58 @@ e2e/documentation/
 - [x] Helper `guide-step-recorder` pour capturer ordre, titre, action, état attendu, screenshot
 - [x] Helper `guide-metadata-writer` pour produire un JSON structuré exploitable
 - [x] Artefacts structurés dans `documentation-output/` séparés du report Playwright
+
+---
+
+## Premier parcours guide documentaire (issue #385)
+
+### Parcours `character-sheet`
+
+**Spec** : `e2e/documentation/specs/character-sheet.guide.spec.ts`
+
+**Commande d'exécution** :
+
+```bash
+pnpm e2e:documentation -- e2e/documentation/specs/character-sheet.guide.spec.ts
+```
+
+**Étapes documentées** :
+
+| #  | Titre                              | Action utilisateur                                   | État attendu                                                    |
+|----|------------------------------------|------------------------------------------------------|-----------------------------------------------------------------|
+| 01 | Vue générale du monde documentaire | Ouverture de la session dans le monde documentaire   | Page /game chargée, sidebar visible, aucune application ouverte |
+| 02 | Sidebar Actors ouverte             | Clic sur l'onglet Actors dans la barre de navigation | Liste des acteurs visible dans la sidebar                       |
+| 03 | Fiche de personnage ouverte        | Double-clic sur le nom de l'acteur dans la sidebar   | Fiche de personnage visible avec l'onglet par défaut chargé     |
+| 04 | Onglet Compétences ouvert          | Clic sur l'onglet Compétences dans la fiche          | Onglet Compétences actif, liste des compétences visible         |
+
+**Artefacts produits** :
+
+```
+documentation-output/
+  screenshots/
+    character-sheet/
+      01-vue-generale-monde-documentaire.png
+      02-sidebar-actors-ouverte.png
+      03-fiche-personnage-ouverte.png
+      04-onglet-competences-ouvert.png
+  guides/
+    character-sheet.json
+```
+
+**JSON intermédiaire** : `documentation-output/guides/character-sheet.json`
+
+Le JSON produit est exploitable pour générer de la documentation Markdown ou alimenter un pipeline de génération
+documentaire.
+
+**Critères de clôture (issue #385)** :
+
+- [x] Spec complète dans `e2e/documentation/specs/character-sheet.guide.spec.ts`
+- [x] Captures exploitables avec préfixe d'ordre stable (`01-`, `02-`, `03-`, `04-`)
+- [x] Ordre des étapes stable et reproductible
+- [x] JSON intermédiaire fidèle aux étapes capturées avec chemins d'artefacts corrects
+- [x] Artefacts rangés dans `documentation-output/`
+- [x] Prérequis contrôlé documenté (acteur `Doc-Personnage-<timestamp>`, cleanup explicite)
+- [x] Aucune mutation persistée hors artefact éphémère déclaré
 
 ---
 
