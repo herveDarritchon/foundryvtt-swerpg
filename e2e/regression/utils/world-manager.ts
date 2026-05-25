@@ -252,8 +252,7 @@ export async function deleteActorByName(page: Page, actorName: string): Promise<
   // -------------------------------------------------------------------------
   try {
     const deleted = await page.evaluate(async (name: string) => {
-      const g = window as unknown as { game?: { actors?: { getName: (n: string) => { delete: () => Promise<unknown> } | undefined } } }
-      const actor = g.game?.actors?.getName(name)
+      const actor = game?.actors?.getName(name)
       if (!actor) return false
       await actor.delete()
       return true
