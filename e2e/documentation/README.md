@@ -73,6 +73,8 @@ Ce reset est visuel uniquement — il ne touche aucune donnée persistée.
 
 ## Commandes
 
+### Capture documentaire (Playwright)
+
 ```bash
 # Suite documentation headless
 pnpm e2e:documentation
@@ -83,6 +85,24 @@ pnpm e2e:documentation:headed
 # Suite documentation en mode UI interactif (debug)
 pnpm e2e:documentation:ui
 ```
+
+### Génération des guides utilisateur Markdown (séparée)
+
+```bash
+# Générer tous les guides disponibles depuis les JSON produits
+pnpm run docs:generate-user-guides
+
+# Générer un seul guide ciblé
+pnpm run docs:generate-user-guides -- --guide character-sheet
+```
+
+**Ordre d'usage :**
+
+1. Exécuter d'abord `pnpm e2e:documentation` pour produire les JSON et les screenshots.
+2. Exécuter ensuite `pnpm run docs:generate-user-guides` pour transformer les JSON en Markdown anglais.
+
+La génération Markdown est indépendante de Playwright — elle ne recapture pas les screenshots.
+Si les artefacts sources (JSON ou dossier de screenshots) sont absents, la commande échoue avec un message explicite.
 
 ---
 
@@ -128,16 +148,18 @@ dans `documentation-output/` :
 
 ```
 documentation-output/
-  screenshots/           # Captures d'écran par guide
+  screenshots/           # Captures d'écran par guide (produit par e2e:documentation)
     <guide>/             # Un sous-dossier par guide (ex: character-sheet/)
       01-<slug>.png      # Captures nommées par index et slug
       02-<slug>.png
-  guides/                # Métadonnées JSON par guide
+  guides/                # Métadonnées JSON par guide (produit par e2e:documentation)
     <guide>.json         # JSON structuré décrivant le guide et ses artefacts
+  markdown/              # Guides utilisateur Markdown en anglais (produit par docs:generate-user-guides)
+    <guide>.md           # Guide final lisible, screenshots référencés en relatif
 ```
 
-Le format JSON d'un guide est exploitable pour générer de la documentation Markdown
-ou alimenter un pipeline de génération documentaire.
+Le format JSON d'un guide est la matière première de la génération Markdown.
+Exécuter `pnpm run docs:generate-user-guides` pour transformer les JSON en `documentation-output/markdown/`.
 
 ---
 
@@ -146,18 +168,21 @@ ou alimenter un pipeline de génération documentaire.
 Les helpers spécifiques à la suite documentation sont dans `e2e/documentation/utils/`.
 Ils sont **isolés** des helpers des suites `regression` et `smoke`.
 
-| Helper                          | Fichier                          | Responsabilité                                                       |
-|---------------------------------|----------------------------------|----------------------------------------------------------------------|
-| `prepareDocumentationState`     | `documentation-world-manager.ts` | Reset visuel avant capture (overlays, applications, animations)      |
-| `closeAllOpenApplications`      | `documentation-world-manager.ts` | Fermeture de toutes les fenêtres Foundry ouvertes                    |
-| `disableAnimations`             | `documentation-world-manager.ts` | Désactivation des animations CSS pour des captures stables           |
-| `assertDocumentationWorldReady` | `documentation-world-manager.ts` | Vérification que le monde documentaire est actif                     |
-| `navigateDocumentation`         | `documentation-world-manager.ts` | Navigation documentaire sans mutation                                |
-| `takeDocumentationScreenshot`   | `screenshot-helper.ts`           | Capture avec nom stable, viewport fixe et attente réseau             |
-| `toKebabSlug`                   | `screenshot-helper.ts`           | Normalisation d'un texte en slug kebab-case pour les noms de fichier |
-| `createGuideStepRecorder`       | `guide-step-recorder.ts`         | Enregistrement des étapes d'un parcours documentaire                 |
-| `writeGuideMetadata`            | `guide-metadata-writer.ts`       | Écriture du JSON structuré d'un guide                                |
-| `readGuideMetadata`             | `guide-metadata-writer.ts`       | Lecture des métadonnées d'un guide existant                          |
+| Helper                          | Fichier                           | Responsabilité                                                       |
+|---------------------------------|-----------------------------------|----------------------------------------------------------------------|
+| `prepareDocumentationState`     | `documentation-world-manager.ts`  | Reset visuel avant capture (overlays, applications, animations)      |
+| `closeAllOpenApplications`      | `documentation-world-manager.ts`  | Fermeture de toutes les fenêtres Foundry ouvertes                    |
+| `disableAnimations`             | `documentation-world-manager.ts`  | Désactivation des animations CSS pour des captures stables           |
+| `assertDocumentationWorldReady` | `documentation-world-manager.ts`  | Vérification que le monde documentaire est actif                     |
+| `navigateDocumentation`         | `documentation-world-manager.ts`  | Navigation documentaire sans mutation                                |
+| `takeDocumentationScreenshot`   | `screenshot-helper.ts`            | Capture avec nom stable, viewport fixe et attente réseau             |
+| `toKebabSlug`                   | `screenshot-helper.ts`            | Normalisation d'un texte en slug kebab-case pour les noms de fichier |
+| `createGuideStepRecorder`       | `guide-step-recorder.ts`          | Enregistrement des étapes d'un parcours documentaire                 |
+| `writeGuideMetadata`            | `guide-metadata-writer.ts`        | Écriture du JSON structuré d'un guide                                |
+| `readGuideMetadata`             | `guide-metadata-writer.ts`        | Lecture des métadonnées d'un guide existant                          |
+| `generateMarkdownFromMetadata`  | `markdown-guide-generator.mjs`    | Transformation d'un JSON guide en Markdown anglais (pure, sans I/O) |
+| `generateUserGuide`             | `markdown-guide-generator.mjs`    | Génération complète d'un guide Markdown depuis le JSON sur disque    |
+| `discoverGuideIds`              | `markdown-guide-generator.mjs`    | Découverte des guides disponibles dans `documentation-output/guides/`|
 
 ### Usage typique dans une spec
 
@@ -216,6 +241,7 @@ e2e/documentation/
     screenshot-helper.ts            # Captures avec nom stable et viewport fixe
     guide-step-recorder.ts          # Enregistrement des étapes d'un parcours
     guide-metadata-writer.ts        # Écriture du JSON structuré du guide
+    markdown-guide-generator.mjs    # Générateur Markdown anglais depuis JSON (commande séparée)
   fixtures.ts          # Fixture documentationReady — navigation sans mutation par défaut
   global-setup.ts      # Vérification de connectivité avant les specs
   README.md
@@ -312,6 +338,63 @@ documentaire.
 - [x] Artefacts rangés dans `documentation-output/`
 - [x] Prérequis contrôlé documenté (acteur `Doc-Personnage-<timestamp>`, cleanup explicite)
 - [x] Aucune mutation persistée hors artefact éphémère déclaré
+
+---
+
+## Génération des guides utilisateur Markdown (issue #386)
+
+### Commande séparée `docs:generate-user-guides`
+
+**Entrée** : JSON produit par `pnpm e2e:documentation` dans `documentation-output/guides/`
+
+**Sortie** : Fichiers Markdown en anglais dans `documentation-output/markdown/`
+
+**Flux complet** :
+
+```bash
+# Étape 1 : capturer les parcours documentaires (Playwright)
+pnpm e2e:documentation
+
+# Étape 2 : générer les guides utilisateur Markdown (Node, sans navigateur)
+pnpm run docs:generate-user-guides
+
+# Optionnel : cibler un seul guide
+pnpm run docs:generate-user-guides -- --guide character-sheet
+```
+
+**Artefacts produits après le flux complet** :
+
+```
+documentation-output/
+  screenshots/
+    character-sheet/
+      01-vue-generale-monde-documentaire.png
+      ...
+  guides/
+    character-sheet.json          ← produit par e2e:documentation
+  markdown/
+    character-sheet.md            ← produit par docs:generate-user-guides
+```
+
+**Comportement en cas d'artefact manquant** :
+
+La commande `docs:generate-user-guides` échoue explicitement avec un message d'erreur si :
+- le dossier `documentation-output/guides/` est absent ou vide ;
+- le fichier `<guide>.json` est absent ou illisible ;
+- le dossier de screenshots référencé par le JSON est absent.
+
+Elle ne relance pas Playwright.
+
+**Critères de clôture (issue #386)** :
+
+- [x] Commande séparée `pnpm run docs:generate-user-guides` disponible dans `package.json`
+- [x] Génération de tous les guides disponibles par défaut, avec ciblage `--guide <id>` optionnel
+- [x] Markdown en anglais avec titre, prérequis, étapes (action + résultat attendu + screenshot)
+- [x] Screenshots référencés en chemins relatifs stables depuis le fichier Markdown
+- [x] Sortie déterministe — deux runs identiques produisent le même fichier
+- [x] Échec explicite si JSON source ou dossier screenshots absent
+- [x] Aucun détail Playwright, aucune donnée technique interne dans le rendu final
+- [x] Tests unitaires couvrant `generateMarkdownFromMetadata` dans `tests/documentation/`
 
 ---
 

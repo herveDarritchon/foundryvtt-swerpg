@@ -148,6 +148,39 @@ pnpm e2e:documentation:ui
 
 ---
 
+### `pnpm run docs:generate-user-guides` — génération des guides Markdown (séparée)
+
+**Rôle** : transforme les artefacts JSON produits par `e2e:documentation` en guides utilisateur Markdown en anglais.
+
+**Usage** : après un run `e2e:documentation`, pour produire ou rafraîchir les guides Markdown sans relancer Playwright.
+
+**Caractéristiques** :
+
+- aucune dépendance à Playwright ni à Foundry — traitement fichier à fichier en Node.js ;
+- consomme `documentation-output/guides/<guide>.json` et les screenshots associés ;
+- produit `documentation-output/markdown/<guide>.md` avec screenshots référencés en relatif ;
+- sortie déterministe — identique sur deux runs consécutifs avec les mêmes artefacts d'entrée ;
+- échoue explicitement si le JSON source ou le dossier de screenshots est absent.
+
+**Commandes** :
+
+```bash
+# Générer tous les guides disponibles
+pnpm run docs:generate-user-guides
+
+# Cibler un guide spécifique
+pnpm run docs:generate-user-guides -- --guide character-sheet
+```
+
+**Flux complet** :
+
+```bash
+pnpm e2e:documentation                                 # 1. Capturer — produit JSON + screenshots
+pnpm run docs:generate-user-guides                     # 2. Générer — produit Markdown anglais
+```
+
+---
+
 ## Frontière CI / local manuel
 
 | Suite | CI GitHub Actions | Local manuel |
@@ -157,6 +190,7 @@ pnpm e2e:documentation:ui
 | `pnpm e2e:smoke` | non | oui |
 | `pnpm e2e:documentation` | non | oui |
 | `pnpm e2e:ci` (tests `[ci]`) | oui | oui |
+| `pnpm docs:generate-user-guides` | non | oui |
 
 Les suites `regression` et `smoke` ne tournent pas en CI car elles nécessitent une machine locale
 adaptée (GPU, performances navigateur, instance Foundry live).
@@ -177,6 +211,10 @@ La suite `e2e:documentation` produit également des artefacts structurés dans `
 
 - `documentation-output/screenshots/<guide>/` — captures nommées par index et slug ;
 - `documentation-output/guides/<guide>.json` — métadonnées JSON exploitables pour la génération de guides.
+
+La commande `docs:generate-user-guides` transforme ces artefacts en guides Markdown :
+
+- `documentation-output/markdown/<guide>.md` — guide utilisateur en anglais avec captures référencées.
 
 Ces artefacts sont distincts du report Playwright et constituent la matière première pour les guides utilisateur.
 
