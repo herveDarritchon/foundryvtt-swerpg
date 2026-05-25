@@ -49,14 +49,25 @@ opérationnelles avant de lancer cette commande.
 
 ### `pnpm e2e:documentation` — validation documentaire (manuelle)
 
-- **Instance** : instance de production ou dédiée stable, port 30000
-- **Monde** : monde stable dans un état représentatif des captures attendues
+- **Instance** : instance dédiée stable, port 30000 — **jamais sur production partagée ni environnement client actif**
+- **Monde** : monde dédié stable (`documentation-world` recommandé, distinct de la production et du monde de régression)
 - **Usage** : exécution manuelle lors de mise à jour de documentation, refactor UI, ou validation de stabilité documentaire
 - **Mutations** : lecture seule par défaut — prérequis contrôlés autorisés si documentés dans la spec
+- **Caractère** : **non bloquante** — ne fait partie d'aucun pipeline CI, ne conditionne aucun merge ni aucune release
 - **Config** : `.env.e2e.documentation` (copier depuis `.env.e2e.documentation.example`)
 - **Commandes** : `pnpm e2e:documentation`, `pnpm e2e:documentation:headed`, `pnpm e2e:documentation:ui`
 
 **Périmètre** : parcours documentables (feuilles d'acteur, interfaces clés), invariants visibles (i18n, absence de placeholder cassé), absence d'erreurs navigateur inattendues dans les zones documentées.
+
+**Non-objectifs** : la suite `e2e:documentation` ne valide pas les features fonctionnelles (rôle de `e2e:regression`), ne vérifie pas la santé de surface de production (rôle de `e2e:smoke`), ne conditionne aucun merge ni aucune release.
+
+**Mode rerun documentaire** :
+
+| Situation | Action |
+|---|---|
+| Mise à jour d'un parcours (spec, UI, données) | `pnpm e2e:documentation` puis `pnpm docs:generate-user-guides` |
+| Seule la mise en forme Markdown change | `pnpm docs:generate-user-guides` uniquement — pas de rerun Playwright |
+| Artefacts JSON ou screenshots absents | Rerun Playwright obligatoire avant toute génération |
 
 **Frontière avec `regression` et `smoke`** :
 
@@ -65,6 +76,20 @@ opérationnelles avant de lancer cette commande.
 | Objectif | Captures documentaires, invariants visibles | Validation fonctionnelle pré-livraison | Santé de surface post-déploiement |
 | Mutations | Lecture seule par défaut (prérequis contrôlés documentés) | Autorisées | Interdites |
 | Instance cible | Port 30000 | Port 31001 | Port 30000 |
+| Monde | Dédié stable (`documentation-world`) | Contrôlé jetable | Production stable |
+| Niveau de confiance | Documentaire — invariants visibles seulement | Validation fonctionnelle profonde | Santé minimale de surface |
+| Statut CI | Non — manuel uniquement | Non — manuel uniquement | Non — manuel uniquement |
+| Bloquant | Non | Oui (pré-livraison) | Non (diagnostic) |
+
+**Gouvernance** :
+
+| Périmètre | Responsable |
+|---|---|
+| Parcours Playwright, screenshots, monde documentaire | Dev / QA |
+| Relecture métier et validation des guides générés | Documentation / PO |
+| Décision de publication d'un guide | Documentation / PO (exclusivement) |
+
+Pour le contrat d'exploitation complet (rerun, prérequis, gouvernance, critères de clôture), voir `e2e/documentation/README.md`.
 
 ### Frontière CI / local manuel
 
@@ -742,12 +767,21 @@ Cette checklist permet de conclure qu'une campagne E2E est valide et que la stra
 - [ ] Matrice de couverture (`couverture-e2e-matrice.md`) à jour avec toutes les specs actives.
 - [ ] Commandes `pnpm e2e:regression` et `pnpm e2e:smoke` alignées avec les configs `playwright.regression.config.ts` et `playwright.smoke.config.ts`.
 - [ ] Fichiers d'environnement `.env.e2e.regression` et `.env.e2e.smoke.prod` documentés et exemples à jour.
-- [ ] Frontière CI documentée : `regression` et `smoke` ne tournent jamais en CI — seul `e2e:ci` est autorisé en pipeline.
+- [ ] Frontière CI documentée : `regression`, `smoke` et `documentation` ne tournent jamais en CI — seul `e2e:ci` est autorisé en pipeline.
 - [ ] Report HTML généré et vérifiable après chaque run local :
   - `playwright-regression-report/` après `pnpm e2e:regression`
   - `playwright-smoke-report/` après `pnpm e2e:smoke`
+  - `playwright-documentation-report/` après `pnpm e2e:documentation`
 - [ ] Artefacts d'échec (traces, screenshots, vidéos) retrouvables depuis le report HTML en cas d'échec.
 - [ ] Trous de couverture restants explicitement listés dans `couverture-e2e-matrice.md` section 3 (non confondus avec des oublis).
+
+### Signaux de clôture spécifiques à `e2e:documentation`
+
+- [ ] Mode rerun documentaire explicite : commandes canoniques, prérequis, monde dédié, cas où seule la génération Markdown doit être relancée.
+- [ ] Rôles de gouvernance clairs : Dev/QA (parcours, screenshots, monde) — Documentation/PO (relecture métier, validation, publication).
+- [ ] Suite documentée comme non bloquante, non CI, et distincte de `smoke` / `regression`.
+- [ ] Recommandation explicite contre l'exécution sur production ou environnement client partagé.
+- [ ] Matrice de frontière à jour dans `e2e/README.md`, `e2e/documentation/README.md` et ce guide.
 
 ### Ouvrir les reports HTML
 
@@ -762,7 +796,7 @@ pnpm exec playwright show-report playwright-smoke-report
 
 - `pnpm e2e:smoke` : vérification de surface, exécution manuelle, lecture seule sur instance de production.
 - `pnpm e2e:regression` : validation fonctionnelle pré-livraison sur instance dédiée, remplace les campagnes QA manuelles répétitives.
-- `pnpm e2e:documentation` : captures documentaires et invariants visibles, exécution manuelle, lecture seule par défaut.
+- `pnpm e2e:documentation` : captures documentaires et invariants visibles, exécution manuelle, lecture seule par défaut, **non bloquante**, jamais en CI, jamais sur production ou environnement client partagé.
 - `pnpm e2e` : campagne complète qui orchestre `regression` puis `smoke` — requiert les deux instances disponibles.
 - Quatre configs Playwright distinctes, chacune chargeant son propre fichier d'environnement.
 - Reports HTML générés systématiquement en local (`playwright-regression-report/`, `playwright-smoke-report/`, `playwright-documentation-report/`).
@@ -770,6 +804,7 @@ pnpm exec playwright show-report playwright-smoke-report
 - Les scénarios doivent rester courts, robustes, et utiliser des locators accessibles.
 - Toute nouvelle spec doit être placée dans `e2e/smoke/`, `e2e/regression/specs/` ou `e2e/documentation/specs/` selon son type.
 - Matrice de couverture : `documentation/tests/e2e/couverture-e2e-matrice.md`.
+- Gouvernance `e2e:documentation` : Dev/QA maintient les parcours et le monde — Documentation/PO valide les guides et décide de la publication. Voir `e2e/documentation/README.md`.
 
 ---
 

@@ -115,10 +115,11 @@ pnpm e2e:smoke:headed
 **Caractéristiques** :
 
 - instance Foundry sur port 30000 (`E2E_FOUNDRY_BASE_URL=http://localhost:30000`) ;
-- monde stable dans un état représentatif des captures attendues ;
+- monde dédié stable (`documentation-world` recommandé, distinct de la production et du monde de régression) ;
 - lecture seule par défaut — prérequis contrôlés autorisés si documentés dans la spec ;
 - traces et captures systématiques (pas seulement en échec) ;
-- durée courte acceptable.
+- durée courte acceptable ;
+- **non bloquante** — ne fait partie d'aucun pipeline CI, ne conditionne aucun merge ni aucune release.
 
 **Ce que la suite couvre :**
 
@@ -126,13 +127,26 @@ pnpm e2e:smoke:headed
 - invariants visibles : absence de placeholder cassé (`undefined`, `null`, clé brute `SWERPG.*`) ;
 - absence d'erreurs `console.error` ou `pageerror` inattendues dans les zones documentées.
 
-**Frontière avec `regression` et `smoke`** :
+**Ce que la suite ne couvre pas (non-objectifs) :**
+
+- validation fonctionnelle des features (rôle de `e2e:regression`) ;
+- vérification de la santé de surface de production (rôle de `e2e:smoke`) ;
+- validation métier humaine des parcours ;
+- gate de qualité bloquant un merge ou une release.
+
+**Matrice de frontière entre les trois suites :**
 
 | Critère | `documentation` | `regression` | `smoke` |
 |---|---|---|---|
 | Objectif | Captures documentaires, invariants visibles | Validation fonctionnelle pré-livraison | Santé de surface post-déploiement |
 | Mutations | Lecture seule par défaut (prérequis contrôlés documentés acceptés) | Autorisées | Interdites |
 | Instance cible | Port 30000 | Port 31001 | Port 30000 |
+| Monde | Dédié stable (`documentation-world`) | Contrôlé jetable (`Swerpg-Regression-World`) | Production (`test-v14-309`) |
+| Niveau de confiance | Documentaire — invariants visibles seulement | Validation fonctionnelle profonde | Santé minimale de surface |
+| Statut CI | Non — manuel uniquement | Non — manuel uniquement | Non — manuel uniquement |
+| Bloquant | Non | Oui (pré-livraison) | Non (diagnostic) |
+
+**Recommandation d'environnement** : exécuter uniquement sur un environnement contrôlé dédié. Ne **jamais** exécuter sur un environnement de production partagé, un environnement client actif, ou un environnement en cours de migration.
 
 **Configuration** : `.env.e2e.documentation` (copier depuis `.env.e2e.documentation.example`)
 
@@ -145,6 +159,8 @@ pnpm e2e:documentation:ui
 ```
 
 **Specs** : `e2e/documentation/specs/`
+
+Pour le contrat d'exploitation complet (mode rerun, gouvernance, rôles, critères de clôture), voir `e2e/documentation/README.md`.
 
 ---
 

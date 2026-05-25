@@ -398,6 +398,110 @@ Elle ne relance pas Playwright.
 
 ---
 
+## Contrat d'exploitation et mode rerun
+
+### Quand relancer la suite
+
+| Situation | Action recommandée |
+|---|---|
+| Mise à jour d'un parcours (spec, UI, données) | Rerun Playwright complet (`pnpm e2e:documentation`) puis génération Markdown (`pnpm docs:generate-user-guides`) |
+| Seule la mise en forme Markdown change | Relancer uniquement `pnpm docs:generate-user-guides` — pas de rerun Playwright |
+| Artefacts JSON ou screenshots absents ou corrompus | Rerun Playwright obligatoire avant toute génération |
+| Vérification ponctuelle de la stabilité visuelle | Rerun Playwright ciblé sur la spec concernée |
+
+### Commande canonique de rerun documentaire
+
+```bash
+# Rerun complet — Playwright puis génération Markdown
+pnpm e2e:documentation
+pnpm docs:generate-user-guides
+
+# Rerun ciblé sur un seul parcours
+pnpm e2e:documentation -- e2e/documentation/specs/character-sheet.guide.spec.ts
+pnpm docs:generate-user-guides -- --guide character-sheet
+
+# Rerun avec navigateur visible (debug)
+pnpm e2e:documentation:headed
+```
+
+### Prérequis avant tout rerun
+
+1. Instance Foundry accessible et stabilisée sur le port configuré dans `E2E_FOUNDRY_BASE_URL` (port 30000 par défaut).
+2. Fichier `.env.e2e.documentation` configuré avec les bonnes valeurs.
+3. Monde documentaire (`documentation-world` ou valeur de `E2E_FOUNDRY_WORLD`) dans un état stable et représentatif **avant** le run — la suite ne le crée pas et ne le réinitialise pas.
+4. Artefacts du run précédent présents dans `documentation-output/` si seule la génération Markdown est relancée.
+
+### Caractère non bloquant et documentaire
+
+La suite `e2e:documentation` est **strictement documentaire et non bloquante** :
+
+- elle ne fait partie d'aucun pipeline CI ;
+- ses résultats ne conditionnent pas un merge, une release ni une validation fonctionnelle ;
+- un échec de spec documentaire ne bloque pas le développement — il indique que les captures sont à régénérer ou qu'un invariant visible a régressé ;
+- la suite ne remplace pas `e2e:smoke` ni `e2e:regression`.
+
+### Environnement recommandé
+
+La suite documentaire doit être exécutée sur un **environnement contrôlé dédié**, jamais sur :
+
+- un environnement de production partagé avec des utilisateurs actifs ;
+- un environnement client ou de démonstration ;
+- un environnement instable ou en cours de migration.
+
+Le monde documentaire `documentation-world` doit être distinct du monde de production et du monde de régression. Aucune donnée critique ne doit y être présente.
+
+---
+
+## Gouvernance et responsabilités
+
+### Qui maintient quoi
+
+| Périmètre | Responsable |
+|---|---|
+| Parcours Playwright (`*.guide.spec.ts`) | Dev / QA |
+| Screenshots et artefacts documentaires (`documentation-output/`) | Dev / QA |
+| Monde documentaire (`documentation-world`) — stabilité et état représentatif | Dev / QA |
+| Relecture métier des guides générés | Documentation / PO |
+| Validation de la pertinence et de la publication des guides | Documentation / PO |
+| Génération Markdown (`docs:generate-user-guides`) | Dev / QA (déclenchement) |
+
+### Rôle de l'IA dans la génération
+
+La commande `docs:generate-user-guides` utilise une assistance IA pour rédiger les guides Markdown en anglais depuis les métadonnées JSON.
+
+L'IA **assiste la rédaction** mais :
+
+- ne valide **pas** la cohérence fonctionnelle du contenu ;
+- ne valide **pas** que les captures reflètent fidèlement le comportement attendu ;
+- ne prend **pas** de décision de publication.
+
+La validation du fond fonctionnel et la décision de diffusion appartiennent exclusivement à Documentation / PO.
+
+### Point de passage avant diffusion
+
+Avant toute mise à jour ou diffusion d'un guide généré :
+
+1. Dev / QA confirme que les captures sont à jour et représentatives.
+2. Documentation / PO relit le contenu sur le fond fonctionnel.
+3. Documentation / PO valide ou demande une correction.
+4. Le guide est diffusé uniquement après validation explicite de Documentation / PO.
+
+---
+
+## Non-objectifs de la suite documentaire
+
+La suite `e2e:documentation` **ne fait pas** :
+
+- validation fonctionnelle des features (c'est le rôle de `e2e:regression`) ;
+- vérification de la santé de surface de production (c'est le rôle de `e2e:smoke`) ;
+- validation métier humaine des parcours utilisateur ;
+- gate de qualité bloquant un merge ou une release ;
+- détection de régressions fonctionnelles profondes.
+
+Les invariants minimaux vérifiés (i18n, absence de placeholder cassé, absence d'erreur navigateur inattendue) sont des **garde-fous documentaires**, pas des checks de validation fonctionnelle.
+
+---
+
 ## Prérequis
 
 1. Instance Foundry accessible sur le port configuré dans `E2E_FOUNDRY_BASE_URL`
