@@ -24,11 +24,32 @@ These values flow into `documentation-output/guides/<guide>.json` and then into 
 
 ## Generated artefacts
 
-After any spec change, run:
+| Command | Input | Output |
+|---|---|---|
+| `pnpm e2e:documentation` | Playwright spec | `documentation-output/guides/<id>.json` + screenshots |
+| `pnpm docs:generate-user-guides` | JSON | `documentation-output/markdown/<id>.md` |
+| `pnpm docs:generate-user-guides:html` | JSON | `documentation-output/html/<id>.html` + `index.html` |
+| `pnpm docs:generate-all` | JSON | markdown + HTML in one shot |
+
+After any spec change, run e2e first, then regenerate outputs:
 
 ```bash
-pnpm e2e:documentation   # regenerates JSON + screenshots
-pnpm docs:generate-user-guides  # regenerates markdown from JSON
+pnpm e2e:documentation
+pnpm docs:generate-all
 ```
 
-If you edit the JSON directly (without re-running e2e), still run `pnpm docs:generate-user-guides` to keep the markdown in sync.
+## HTML deployment
+
+The `documentation-output/html/` folder is deployable to any static server.
+Deploy it alongside `documentation-output/screenshots/` at the same level so relative paths (`../screenshots/…`) resolve correctly.
+
+```
+server-root/
+  html/
+    index.html
+    character-sheet.html
+  screenshots/
+    character-sheet/
+      01-*.png
+      …
+```

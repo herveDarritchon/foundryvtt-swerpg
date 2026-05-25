@@ -233,19 +233,47 @@ async function returnToSetupFromGame(page: Page, options: WorldManagerOptions): 
 // ---------------------------------------------------------------------------
 
 /**
- * Supprime un acteur par nom depuis la sidebar Actors en /game.
+ * Supprime un acteur par nom via l'API Foundry exécutée dans la page.
+ *
+ * Stratégie : `page.evaluate()` en premier (déterministe, pas de DOM, pas de timing).
+ * Fallback UI si le contexte Foundry n'est pas disponible (ex. page en état dégradé).
  *
  * Utilisé en teardown de spec pour éliminer les artefacts de test et garantir
  * que le monde ne soit pas pollué entre les runs.
  *
- * Pré-requis : être en /game avec la sidebar Actors accessible.
+ * Pré-requis : être en /game avec `game.actors` initialisé.
  *
  * @param page - Page Playwright
  * @param actorName - Nom exact de l'acteur à supprimer
  */
 export async function deleteActorByName(page: Page, actorName: string): Promise<void> {
+  // -------------------------------------------------------------------------
+  // Stratégie 1 : suppression via API Foundry dans la page (déterministe)
+  // -------------------------------------------------------------------------
   try {
-    // S'assurer que l'onglet Actors est actif
+    const deleted = await page.evaluate(async (name: string) => {
+      const g = window as unknown as { game?: { actors?: { getName: (n: string) => { delete: () => Promise<unknown> } | undefined } } }
+      const actor = g.game?.actors?.getName(name)
+      if (!actor) return false
+      await actor.delete()
+      return true
+    }, actorName)
+
+    if (deleted) {
+      console.log(`[worldManager] Acteur "${actorName}" supprimé via API ✔`)
+      return
+    }
+
+    console.log(`[worldManager] Acteur "${actorName}" introuvable dans game.actors — pas de suppression nécessaire`)
+    return
+  } catch (evaluateError) {
+    console.warn(`[worldManager] deleteActorByName("${actorName}") — API evaluate échoué, fallback UI:`, evaluateError)
+  }
+
+  // -------------------------------------------------------------------------
+  // Stratégie 2 : fallback UI (context menu → Delete → confirm dialog)
+  // -------------------------------------------------------------------------
+  try {
     const actorsTab = page
       .locator('[role="tab"][data-tab="actors"]')
       .or(page.locator('[data-action="tab"][data-tab="actors"]'))
@@ -256,19 +284,16 @@ export async function deleteActorByName(page: Page, actorName: string): Promise<
     await actorsTab.click()
     await page.locator('#actors').waitFor({ state: 'visible', timeout: 5000 })
 
-    // Localiser l'entrée de l'acteur dans la liste
     const actorEntry = page.locator('#actors').locator('li.actor, li.document').filter({ hasText: actorName }).first()
     const exists = await actorEntry.isVisible({ timeout: 3000 }).catch(() => false)
 
     if (!exists) {
-      console.log(`[worldManager] Acteur "${actorName}" introuvable dans la liste — pas de suppression nécessaire`)
+      console.log(`[worldManager] Acteur "${actorName}" introuvable dans la sidebar — pas de suppression nécessaire`)
       return
     }
 
-    // Clic droit pour ouvrir le menu contextuel
     await actorEntry.click({ button: 'right' })
 
-    // Foundry v14 : menu contextuel avec option "Delete"
     const deleteOption = page
       .locator('[data-action="delete"]')
       .or(page.locator('.context-menu li').filter({ hasText: /^Delete$/i }))
@@ -278,7 +303,6 @@ export async function deleteActorByName(page: Page, actorName: string): Promise<
     await deleteOption.waitFor({ state: 'visible', timeout: 5000 })
     await deleteOption.click()
 
-    // Confirmer la suppression dans le dialog de confirmation Foundry
     const confirmBtn = page
       .getByRole('button', { name: /^Yes$/i })
       .or(page.getByRole('button', { name: /Confirm/i }))
@@ -288,10 +312,9 @@ export async function deleteActorByName(page: Page, actorName: string): Promise<
     await confirmBtn.waitFor({ state: 'visible', timeout: 5000 })
     await confirmBtn.click()
 
-    // Attendre que l'entrée disparaisse de la liste
     await actorEntry.waitFor({ state: 'hidden', timeout: 5000 }).catch(() => {})
 
-    console.log(`[worldManager] Acteur "${actorName}" supprimé ✔`)
+    console.log(`[worldManager] Acteur "${actorName}" supprimé via UI (fallback) ✔`)
   } catch (error) {
     console.warn(`[worldManager] deleteActorByName("${actorName}") échoué (non bloquant):`, error)
   }
