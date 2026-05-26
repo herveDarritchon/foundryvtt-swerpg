@@ -483,19 +483,32 @@ export default class SwerpgCharacter extends SwerpgActorType {
   /* -------------------------------------------- */
 
   /**
+   * Delegate an item application to `Actor._applyDetailItem` with the common
+   * options shared by all detail-item wrappers, merged with any caller-specific
+   * overrides.
+   *
+   * @param {SwerpgItem} item            The item to apply to the actor.
+   * @param {object}     [extraOptions]  Additional options merged on top of the common ones.
+   * @returns {Promise<void>}
+   */
+  async #applyDetailItem(item, extraOptions = {}) {
+    // TODO Change this when points are used for experience
+    // canApply: this.parent.isL0 && !this.parent.points.ability.spent,
+    // canClear: this.parent.isL0
+    await this.parent._applyDetailItem(item, {
+      canApply: true,
+      canClear: true,
+      ...extraOptions,
+    })
+  }
+
+  /**
    * Apply a Species item to this Character Actor.
    * @param {SwerpgItem} species     The species Item to apply to the Actor.
    * @returns {Promise<void>}
    */
   async applySpecies(species) {
-    const actor = this.parent
-    await actor._applyDetailItem(species, {
-      // TODO Change this when points are used for experience
-      // canApply: actor.isL0 && !actor.points.ability.spent,
-      canApply: true,
-      // CanClear: actor.isL0
-      canClear: true,
-    })
+    await this.#applyDetailItem(species)
   }
 
   /**
@@ -504,14 +517,7 @@ export default class SwerpgCharacter extends SwerpgActorType {
    * @returns {Promise<void>}
    */
   async applyCareer(career) {
-    const actor = this.parent
-    await actor._applyDetailItem(career, {
-      // TODO Change this when points are used for experience
-      // canApply: actor.isL0 && !actor.points.ability.spent,
-      canApply: true,
-      // CanClear: actor.isL0
-      canClear: true,
-    })
+    await this.#applyDetailItem(career)
   }
 
   /**
@@ -520,13 +526,7 @@ export default class SwerpgCharacter extends SwerpgActorType {
    * @returns {Promise<void>}
    */
   async applySpecialization(specialization) {
-    const actor = this.parent
-    await actor._applyDetailItem(specialization, {
-      // TODO Change this when points are used for experience
-      // canApply: actor.isL0 && !actor.points.ability.spent,
-      canApply: true,
-      // CanClear: actor.isL0
-      canClear: true,
+    await this.#applyDetailItem(specialization, {
       isCollection: true,
       collectionKey: 'specializations',
     })
