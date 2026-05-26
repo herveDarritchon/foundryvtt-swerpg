@@ -145,6 +145,7 @@ Pure domain tests in `module/lib/` need no mocking — import directly and test 
 - No business logic in `.hbs` templates; no jQuery
 - No `document.update()` calls inside `prepareDerivedData()` — derived data must be side-effect free
 - i18n keys follow `SWERPG.Domain.Subdomain.Key`; no hard-coded user-facing strings
+- **No magic numbers or magic strings** — any numeric/string literal with business meaning must be a named constant in `module/config/<entity>.mjs`, exposed via `SYSTEM.<ENTITY>.CONST_NAME`. If the parent object is iterated by consumers, use `Object.defineProperty` with `enumerable: false`. Add a contractual test in `tests/config/<entity>.test.mjs`. See [ADR-0018](documentation/architecture/adr/adr-0018-no-magic-numbers-named-constants.md).
 
 ## Compendiums
 

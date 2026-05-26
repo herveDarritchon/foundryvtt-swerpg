@@ -75,6 +75,7 @@ lang/              # en.json, fr.json
 - No business logic in Handlebars templates
 - No jQuery
 - Pure domain logic in `module/lib/` without `game`, `ui`, `canvas`, `foundry` deps
+- **No magic numbers or magic strings** — any numeric/string literal with business meaning must be a named constant in `module/config/<entity>.mjs`, exposed via `SYSTEM.<ENTITY>.CONST_NAME`. If the parent object is iterated by consumers, use `Object.defineProperty` with `enumerable: false`. Add a contractual test in `tests/config/<entity>.test.mjs`. See [ADR-0018](documentation/architecture/adr/adr-0018-no-magic-numbers-named-constants.md).
 
 ## Tests
 

@@ -123,6 +123,46 @@ Voir `/docs/anti-patterns/` pour la documentation complète des anti-patterns id
 
 ---
 
+## Magic Numbers — Règle globale
+
+**Aucun literal numérique ou textuel à sens métier dans `models/`, `documents/`, `lib/`, `applications/`.**
+
+### Checklist avant d'écrire un literal
+
+1. Ce literal a-t-il un sens métier ? → Créer ou réutiliser une constante dans `module/config/`.
+2. La constante coexiste-t-elle sur un objet itéré (`Object.values`, `for...in`) ? → `Object.defineProperty` avec `enumerable: false`.
+3. Test contractuel présent ? → Créer ou compléter `tests/config/<entity>.test.mjs`.
+4. Constante exposée via `SYSTEM` ? → Vérifier `module/config/system.mjs`.
+
+### Pattern
+
+```js
+// module/config/<entity>.mjs
+export const MY_LIMIT = 42
+
+// module/config/system.mjs (si objet itéré)
+Object.defineProperty(SYSTEM.ENTITY, 'MY_LIMIT', {
+  value: MY_LIMIT,
+  enumerable: false,
+  configurable: false,
+  writable: false,
+})
+
+// logique applicative
+import { SYSTEM } from '../config/system.mjs'
+if (value > SYSTEM.ENTITY.MY_LIMIT) throw new Error(...)
+```
+
+### Exceptions autorisées
+
+- `0` et `1` comme index/sentinelles neutres
+- `100` pour normalisation de pourcentage sans ambiguïté
+- Constantes locales sans signification partagée → nommer en tête de fichier (`const MAX_RETRIES = 3`)
+
+Voir [ADR-0018](documentation/architecture/adr/adr-0018-no-magic-numbers-named-constants.md).
+
+---
+
 ## Commit Messages
 
 Format : `type(scope): description`
