@@ -37,7 +37,7 @@ jobs:
           node-version: '20' # adapte à ta version
 
       - name: 📦 Setup pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v6
         with:
           version: 10 # ou "latest" si tu préfères
 
