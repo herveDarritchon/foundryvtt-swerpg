@@ -1,11 +1,10 @@
 ---
 name: creer-pull-request
 description: >
-  Prépare ou crée une pull request GitHub vers `develop` à partir de la branche
-  courante, après avoir créé si nécessaire un commit Conventional Commits /
-  semantic-release avec le contenu modifié de la branche de travail. Vérifie
-  l'état Git, refuse `develop`, `main` et `master`, analyse les commits inclus,
-  le remote, puis rédige un titre et un corps de PR cohérents avec le repository.
+  Prépare ou crée une pull request GitHub vers `develop` depuis la branche
+  courante, avec commit Conventional Commits / semantic-release préalable si
+  nécessaire. Vérifie la branche, l'état Git, le remote, les commits inclus,
+  puis rédige un titre et un corps de PR factuels et valides en Markdown.
 license: project-internal
 compatibility:
   - claude-code
@@ -19,160 +18,53 @@ metadata:
 
 Utilise ce skill pour préparer ou créer une pull request GitHub vers `develop` depuis la branche courante.
 
-Ce skill couvre :
+Il couvre uniquement : vérification Git, commit préalable si nécessaire, analyse du diff, push éventuel, création de PR avec `gh pr create`.
 
-1. la vérification stricte de la branche courante ;
-2. la création préalable d'un commit Conventional Commits compatible semantic-release si le worktree contient des modifications ;
-3. l'analyse Git de la branche ;
-4. le push éventuel de la branche ;
-5. la création de la PR avec `gh pr create`.
-
-Il ne couvre ni l'implémentation du ticket, ni la correction de tests, ni le merge final.
+Il ne couvre pas : implémentation, correction de tests, merge, approbation, nettoyage de branche ou modification de configuration Git.
 
 ## 1. Mission
 
-Le but est de produire une PR propre, reviewable, et fidèle au contenu réellement modifié sur la branche de travail.
+Produire une PR propre, reviewable et fidèle au contenu réellement modifié sur la branche de travail.
 
 Le skill doit :
 
-1. vérifier que la branche courante n'est pas `develop`, `main` ou `master` ;
-2. vérifier l'état Git local et distant de la branche courante ;
-3. si des modifications non commités existent, créer d'abord un commit Conventional Commits compatible semantic-release ;
-4. comparer la branche à `develop` ;
-5. analyser tous les commits inclus dans la PR, pas seulement le dernier ;
-6. rédiger un titre et un corps de PR utiles pour la review ;
-7. pousser la branche si nécessaire ;
-8. créer la PR vers `develop` avec `gh pr create` ;
-9. répondre avec l'URL de la PR, ou avec le blocage exact si la PR ne peut pas être créée.
+1. refuser toute exécution directe depuis `develop`, `main` ou `master` ;
+2. vérifier l'état local, le tracking remote et la base `develop` ;
+3. créer un commit Conventional Commits si le worktree contient des changements pertinents ;
+4. analyser tous les commits et le diff `develop...HEAD` ;
+5. rédiger un titre et un corps de PR factuels, valides en Markdown ;
+6. pousser la branche si nécessaire ;
+7. créer la PR vers `develop`, ou expliquer précisément le blocage.
 
-## 2. Règles absolues
+## 2. Invariants non négociables
 
-1. Utilise `gh` pour les opérations GitHub liées aux PR.
-2. Utilise `develop` comme branche de base par défaut.
-3. N'ouvre pas de PR vide : s'il n'y a aucun commit ou aucune différence utile par rapport à `develop`, arrête-toi.
-4. Avant tout commit ou PR, vérifie que la branche courante n'est pas `develop`, `main` ou `master`.
-5. Si la branche courante est `develop`, `main`, ou `master`, arrête-toi et explique qu'une branche de travail dédiée est attendue.
-6. Si des changements non commités existent sur une branche de travail, crée un commit avant la PR.
-7. Le commit préalable doit respecter Conventional Commits / semantic-release, par exemple `feat: ...`, `fix: ...`, `docs: ...`, `test: ...`, `refactor: ...`, `chore: ...`.
-8. Ne fais jamais de `git push --force`, `git reset --hard`, `git checkout --`, `git branch -D`, ni d'autre commande destructive.
-9. Ne merge pas la PR et ne change pas sa cible sans demande explicite.
-10. Si le remote n'est pas configuré correctement, explique le blocage au lieu de bricoler une configuration Git.
-11. N'invente pas le contenu de la PR sans avoir analysé les commits et le diff `develop...HEAD`.
-12. Ne prétends jamais qu'un test, lint, build ou validation a été exécuté si ce n'est pas prouvé.
+- Base par défaut : `develop`.
+- Outil GitHub : `gh`.
+- Aucune PR vide : arrêter si la branche ne contient aucun commit ou diff utile par rapport à `develop`.
+- Aucune action destructive : pas de `git push --force`, `git reset --hard`, `git checkout --`, `git branch -D`, ni équivalent.
+- Aucun merge, changement de cible ou changement de configuration Git sans demande explicite.
+- Aucun contenu inventé : le titre, le corps, les notes et les limites doivent venir des commits et du diff.
+- Aucun résultat inventé : ne mentionner test, lint, build ou validation que s'ils ont réellement été exécutés.
+- Si le remote, les permissions ou l'authentification GitHub bloquent la PR, expliquer le blocage au lieu de bricoler.
 
-## 3. Politique de commit préalable
+## 3. Quand utiliser ce skill
 
-### Quand committer
+Utilise-le pour :
 
-Avant de créer ou préparer la PR :
+- préparer ou créer une PR vers `develop` ;
+- pousser une branche et ouvrir une PR ;
+- rédiger un titre et une description de PR ;
+- comparer la branche courante à `develop` avant PR.
 
-1. exécute `git branch --show-current` ;
-2. refuse immédiatement si la branche est `develop`, `main` ou `master` ;
-3. exécute `git status --short` ;
-4. si le worktree est propre, ne crée pas de commit inutile ;
-5. si le worktree contient des modifications, prépare un commit avec le contenu modifié ;
-6. après le commit, relis `git status --short` pour vérifier que le worktree est propre ou signaler ce qui reste volontairement non inclus.
+Ne l'utilise pas pour : créer une branche, implémenter du code, corriger des tests, relire une PR existante, lister des PR, merger ou fermer une PR.
 
-### Contenu du commit
+Entrées possibles : demande de PR, numéro ou lien d'issue, consigne de titre ou de ton, ordre explicite de push/création.
 
-Le commit doit porter le contenu modifié de la branche de travail.
+## 4. Workflow
 
-Par défaut, il peut inclure les fichiers modifiés, ajoutés, supprimés et non suivis visibles dans `git status --short`, sauf si un fichier semble manifestement hors scope, temporaire, secret, généré ou à ignorer.
+### 4.1 Inspecter l'état Git
 
-Ne committe pas :
-
-- fichiers `.env` ou secrets ;
-- logs temporaires ;
-- fichiers de cache ;
-- dossiers de dépendances ;
-- artefacts manifestement générés non attendus ;
-- fichiers hors scope évident.
-
-En cas de doute bloquant sur un fichier sensible ou hors scope, arrête-toi et signale le blocage.
-
-### Format du message
-
-Utilise un message compatible semantic-release :
-
-```text
-<type>(<scope optionnel>): <résumé impératif ou descriptif court>
-```
-
-Types recommandés :
-
-- `feat` pour une fonctionnalité ;
-- `fix` pour une correction ;
-- `docs` pour de la documentation seule ;
-- `test` pour des tests seuls ;
-- `refactor` pour un refactor sans changement fonctionnel ;
-- `chore` pour de la maintenance ;
-- `build` pour build/package/outillage ;
-- `ci` pour GitHub Actions ou CI.
-
-Inférence conseillée :
-
-- branche `feat/...` -> `feat`;
-- branche `fix/...` -> `fix`;
-- branche `docs/...` ou modifications uniquement documentaires -> `docs`;
-- modifications uniquement sous `tests/` -> `test`;
-- modifications CI -> `ci`;
-- modifications outillage/build -> `build`;
-- sinon `chore` si aucun type plus précis n'est justifié.
-
-Le résumé doit être factuel et dérivé du diff, jamais marketing.
-
-Exemples :
-
-```text
-docs: document create-pr semantic commit workflow
-fix(talents): resolve known talents by business identifier
-feat(talents): add consolidated known talent resolution
-chore(opencode): tighten pull request command safeguards
-```
-
-## 4. Quand l'utiliser
-
-Utilise ce skill pour des demandes comme :
-
-- "Prépare une PR vers develop"
-- "Crée la pull request pour cette branche"
-- "Push la branche et ouvre la PR"
-- "Rédige le titre et la description de PR pour ce ticket"
-- "Compare ma branche à develop et ouvre la PR si tout est prêt"
-
-Ne l'utilise pas si la demande principale est :
-
-- créer une branche feature ;
-- implémenter du code ;
-- corriger des tests ;
-- relire une PR existante ;
-- lister des PR uniquement ;
-- merger, fermer, ou nettoyer des PR.
-
-## 5. Entrées attendues
-
-Le skill peut recevoir :
-
-- une demande de PR explicite ;
-- un numéro d'issue ou un lien GitHub à référencer ;
-- une consigne sur le titre ou le ton de la PR ;
-- l'ordre de pousser la branche avant création.
-
-Si l'utilisateur ne précise rien, la base est `develop`.
-
-## 6. Workflow
-
-### Étape 1 : Inspecter l'état Git minimal
-
-Avant toute création de PR, vérifier :
-
-- la branche courante ;
-- l'état du worktree ;
-- le tracking remote de la branche ;
-- l'existence de `develop` localement ou sur le remote ;
-- les commits présents sur la branche depuis sa divergence avec `develop`.
-
-Commandes utiles :
+Exécuter au minimum :
 
 ```bash
 git branch --show-current
@@ -184,84 +76,80 @@ git diff --stat develop...HEAD
 
 Si `develop` local n'existe pas, utiliser la référence remote pertinente, par exemple `origin/develop`, sans modifier la configuration Git.
 
-### Étape 2 : Créer le commit préalable si nécessaire
+Arrêter immédiatement si la branche courante est `develop`, `main` ou `master`.
 
-Si `git status --short` montre des modifications :
+### 4.2 Créer un commit préalable si nécessaire
 
-1. vérifier une seconde fois que la branche n'est pas protégée ;
-2. analyser les fichiers modifiés ;
-3. déterminer un message Conventional Commits compatible semantic-release ;
-4. indexer les fichiers à inclure ;
-5. créer le commit avec `git commit -m "<type>: <résumé>"`.
+Si `git status --short` indique des changements :
 
-Commandes possibles :
+1. analyser les fichiers modifiés, ajoutés, supprimés et non suivis ;
+2. exclure tout fichier manifestement secret, temporaire, généré, de cache, de dépendances ou hors scope ;
+3. arrêter si un fichier sensible ou hors scope crée un doute bloquant ;
+4. indexer uniquement les fichiers pertinents ;
+5. créer un commit Conventional Commits compatible semantic-release ;
+6. relire `git status --short` et signaler ce qui reste volontairement non inclus.
 
-```bash
-git add <fichiers>
-git commit -m "<type>: <résumé factuel>"
-git status --short
+Format obligatoire :
+
+```text
+<type>(<scope optionnel>): <résumé court et factuel>
 ```
 
-Ne lance pas de tests ou lint dans cette étape. La création de PR ne doit pas inventer de validation.
+Types usuels : `feat`, `fix`, `docs`, `test`, `refactor`, `chore`, `build`, `ci`.
 
-### Étape 3 : Analyser le contenu réel de la PR
+Inférence recommandée :
 
-Lire et résumer :
+- `feat/...` -> `feat` ;
+- `fix/...` -> `fix` ;
+- `docs/...` ou changements uniquement documentaires -> `docs` ;
+- changements uniquement sous tests -> `test` ;
+- CI -> `ci` ;
+- build/outillage -> `build` ;
+- sinon type conservateur et factuel, souvent `chore`.
 
-- `git log develop..HEAD` pour les commits ;
-- `git diff develop...HEAD` pour le contenu global ;
-- l'état des changements non commités restants, afin de signaler ce qui ne sera pas inclus.
+Exemples :
 
-La synthèse doit refléter le pourquoi et les effets métier ou techniques du travail, pas seulement une liste brute de fichiers.
+```text
+docs: document create-pr semantic commit workflow
+fix(talents): resolve known talents by business identifier
+feat(talents): add consolidated known talent resolution
+chore(opencode): tighten pull request command safeguards
+```
 
-### Étape 4 : Vérifier si la PR est légitime
+Ne lance pas lint, tests ou build dans cette étape sauf demande explicite.
 
-Arrêter le workflow si l'un des cas suivants est vrai :
+### 4.3 Analyser le contenu réel de la PR
 
-- aucun commit n'existe sur la branche par rapport à `develop` ;
-- aucune différence utile n'existe par rapport à `develop` ;
-- la branche courante ne correspond pas à une branche de travail ;
+Après le commit éventuel, analyser :
+
+```bash
+git log --oneline develop..HEAD
+git diff --stat develop...HEAD
+git diff develop...HEAD
+```
+
+La synthèse doit expliquer les changements utiles pour la review, pas seulement lister les fichiers.
+
+Arrêter si :
+
+- aucun commit n'existe par rapport à `develop` ;
+- aucun diff utile n'existe ;
 - une PR ouverte existe déjà pour la même branche et la même cible ;
 - le remote ou les permissions empêchent la création.
 
-Quand une PR existe déjà, réponds avec son URL au lieu d'en créer une seconde.
+Si une PR existe déjà, répondre avec son URL au lieu d'en créer une seconde.
 
-### Étape 5 : Préparer le titre et le corps de PR
+### 4.4 Préparer le titre et le corps de PR
 
-Construis un titre concis, cohérent avec le style du repo et le scope réel.
-
-Par défaut, préfère un titre de la forme :
+Titre recommandé :
 
 ```text
 <type>: <résumé concis>
 ```
 
-Le corps de PR doit inclure, si l'information existe :
+Le titre doit être cohérent avec le scope réel de la branche.
 
-- une section `## Summary` avec 1 à 3 puces ;
-- une référence d'issue, par exemple `Closes #270` ;
-- une section `## Tests` avec uniquement les validations réellement exécutées ;
-- une section `## Notes` ou `## Known limits` si nécessaire ;
-- le chemin du plan d'implémentation si un plan est présent dans le contexte de la branche.
-
-Évite les descriptions vagues ou génériques.
-
-### Contrat Markdown strict pour le corps de PR
-
-Le corps transmis à `gh pr create --body-file` doit être un Markdown GitHub valide, stable et directement reviewable.
-
-Règles obligatoires :
-
-1. Génère toujours le corps de PR dans un fichier temporaire, par exemple `/tmp/create-pr-body.md`, puis passe ce fichier à `gh pr create --body-file`.
-2. N'utilise pas `--body "..."` pour un corps multi-ligne : le quoting shell ne doit jamais risquer de casser le Markdown.
-3. Utilise uniquement des titres Markdown de niveau 2 pour les sections principales : `## Summary`, `## Context`, `## Tests`, `## Notes` ou `## Known limits`.
-4. Ne saute pas la section `## Tests`. Si aucune validation n'a été exécutée, écris exactement : `- Not run (not requested).`
-5. Les listes doivent être de vraies listes Markdown : une puce par ligne, préfixée par `- `.
-6. N'insère jamais de listes vides, de titres sans contenu, de tableaux Markdown non nécessaires, de HTML brut ou de blocs de code non fermés.
-7. Toute référence d'issue doit être placée sur une ligne dédiée, par exemple `Closes #270`, uniquement si elle est fiable.
-8. Avant de créer la PR, relis le fichier de corps généré avec `cat` ou équivalent et vérifie visuellement : titres, puces, lignes vides, absence de placeholder, absence de bloc de code ouvert.
-9. Le corps ne doit contenir aucun placeholder comme `TBD`, `TODO`, `<issue>`, `<summary>` ou `...`. Si une information manque, omets-la ou indique explicitement la limite factuelle.
-10. Le corps doit refléter le diff `develop...HEAD` et les commits inclus ; il ne doit pas reprendre mécaniquement le message de commit si celui-ci est insuffisant.
+Le corps de PR doit être généré dans un fichier temporaire, par exemple `/tmp/create-pr-body.md`, puis transmis avec `gh pr create --body-file`. Ne jamais utiliser `--body "..."` pour un corps multi-ligne.
 
 Structure recommandée :
 
@@ -284,34 +172,46 @@ Closes #270
 - ...
 ```
 
-Supprime `## Context`, `## Notes` ou `## Known limits` si ces sections n'apportent rien de vérifiable.
+Règles Markdown obligatoires :
 
-### Étape 6 : Pousser la branche si nécessaire
+- sections principales en titres de niveau 2 uniquement : `## Summary`, `## Context`, `## Tests`, `## Notes` ou `## Known limits` ;
+- `## Summary` contient 1 à 3 puces factuelles ;
+- `## Tests` est obligatoire ; si rien n'a été lancé, écrire exactement `- Not run (not requested).` ;
+- références d'issue sur ligne dédiée, par exemple `Closes #270`, uniquement si elles sont fiables ;
+- supprimer `## Context`, `## Notes` ou `## Known limits` si elles n'apportent rien de vérifiable ;
+- aucune liste vide, aucun titre vide, aucun placeholder (`TBD`, `TODO`, `<issue>`, `<summary>`, `...`) ;
+- pas de tableau inutile, HTML brut ou bloc de code non fermé ;
+- le corps doit refléter `develop...HEAD`, pas recopier mécaniquement le dernier commit.
 
-Si la branche n'est pas encore publiée et que la PR doit être créée, pousse-la avec un flux non destructif :
+Avant création, relire le fichier généré avec `cat` ou équivalent pour vérifier visuellement titres, puces, lignes vides, absence de placeholders et absence de bloc ouvert.
+
+### 4.5 Pousser et créer la PR
+
+Si la branche n'est pas publiée et que la PR doit être créée, utiliser uniquement un push non destructif :
 
 ```bash
 git push -u <remote> <branch>
 ```
 
-N'utilise jamais de push forcé.
+Créer ensuite la PR vers `develop` :
 
-### Étape 7 : Créer la PR
+```bash
+gh pr create --base develop --head <branch> --title "<titre>" --body-file /tmp/create-pr-body.md
+```
 
-Créer la PR avec `gh pr create` en visant `develop`.
+Adapter `<remote>` et `<branch>` aux valeurs réellement détectées.
 
-Passe le corps via un heredoc ou une chaîne correctement quotée pour éviter de casser le format Markdown.
+## 5. Réponse finale
 
-### Étape 8 : Réponse finale
+Répondre brièvement avec :
 
-Réponds brièvement avec :
-
-- le commit créé, s'il y en a eu un ;
-- le titre de PR utilisé ;
-- la base et la branche source ;
-- l'URL de la PR créée, ou celle de la PR existante ;
-- les validations réellement faites, si elles sont importantes pour la review ;
-- les éventuels fichiers non inclus dans le commit ou la PR.
+- commit créé, s'il y en a eu un ;
+- titre de PR ;
+- base et branche source ;
+- URL de la PR créée ou existante ;
+- validations réellement exécutées ;
+- fichiers non inclus, le cas échéant ;
+- blocage exact si la PR n'a pas été créée.
 
 Exemples :
 
@@ -320,34 +220,20 @@ Exemples :
 - `Impossible de créer la PR : la branche courante est develop. Crée une branche de travail dédiée.`
 - `Impossible de créer la PR : la branche courante ne contient aucun commit par rapport à develop.`
 
-## 7. Questions légitimes à poser
+## 6. Questions bloquantes autorisées
 
-Pose une question courte seulement si elle est bloquante :
+Pose une question courte seulement si :
 
-- la branche de base doit être autre chose que `develop` ;
-- plusieurs issues plausibles doivent être référencées ;
-- le titre souhaité par l'utilisateur contredit le contenu réel de la branche ;
-- le remote à utiliser n'est pas identifiable ;
-- le repo n'est pas connecté à GitHub via `gh` ;
-- un fichier modifié semble secret, temporaire, généré ou hors scope.
+- la base doit manifestement être autre chose que `develop` ;
+- plusieurs issues plausibles peuvent être référencées ;
+- le titre demandé contredit le diff ;
+- le remote est ambigu ;
+- `gh` n'est pas authentifié ou le repo n'est pas connecté à GitHub ;
+- un fichier semble secret, temporaire, généré ou hors scope.
 
 Quand le choix raisonnable est évident, fais-le et indique-le dans la réponse finale.
 
-## 8. Périmètre strict
-
-Ce skill s'arrête une fois la PR créée, identifiée, ou bloquée avec une explication claire.
-
-Il ne doit pas :
-
-- implémenter ou corriger le code de la branche ;
-- créer un plan ;
-- lancer lint, tests, build ou validation sauf demande explicite séparée ;
-- réécrire l'historique Git ;
-- merger la PR ;
-- approuver sa propre PR ;
-- modifier la configuration Git locale ou globale.
-
-## Token budget policy
+## 7. Token budget policy
 
 Do not send large context to an LLM unless reasoning is required.
 
