@@ -268,8 +268,22 @@ export default class SwerpgActorType extends foundry.abstract.TypeDataModel {
     specialization.available = Math.max(0, (specialization.gained ?? 0) - (specialization.spent ?? 0))
   }
 
+  /**
+   * Compute the base derived experience fields from the persisted schema values.
+   *
+   * `spent` and `gained` are the only persisted fields on `progression.experience`.
+   * Everything else (`startingExperience`, `total`, `available`) is derived at
+   * runtime and never written to the database. Subclasses may extend this method
+   * to layer in additional derived values (e.g. `obligationXpBonus` in
+   * `SwerpgCharacter`) before or after calling `super._prepareExperience()`.
+   *
+   * See the `Experience` typedef in `character.mjs` for the full field contract.
+   *
+   * @protected
+   */
   _prepareExperience() {
     const e = this.progression.experience
+    // Derived (not persisted): full XP pool and remaining budget.
     e.total = e.startingExperience + e.gained
     e.available = e.total - e.spent
   }
