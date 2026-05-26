@@ -41,7 +41,7 @@ Rôle unique : utiliser `creer-pull-request` pour préparer ou créer une PR fac
 Règles :
 
 - Vérifie d'abord que la branche courante n’est pas `main`, `master` ou `develop`.
-- Si la branche courante est `main`, `master` ou `develop`, arrête immédiatement.
+  - Si la branche courante est `main`, `master` ou `develop`, arrête immédiatement.
 - Vérifie `git status`.
 - Si le worktree contient des modifications, crée d'abord un commit Conventional Commits compatible semantic-release.
 - Le commit doit être factuel, dérivé du diff, par exemple `feat: ...`, `fix: ...`, `docs: ...`, `test: ...`, `chore: ...`.

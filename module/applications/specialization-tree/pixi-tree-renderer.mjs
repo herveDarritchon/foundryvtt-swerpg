@@ -37,6 +37,73 @@ const MIN_VIEWPORT_SIZE = 320
 const NODE_CORNER_ICON_SIZE = 16
 const NODE_CORNER_ICON_MARGIN = 4
 
+/* ── Node card geometry ───────────────────────────────────────── */
+
+/** Corner radius of the node card background rectangle. */
+const NODE_CARD_CORNER_RADIUS = 4
+
+/** Default X padding between the left edge and the talent name text. */
+const NODE_NAME_DEFAULT_X = 4
+
+/** X padding applied to the talent name when a top-left icon is present. */
+const NODE_NAME_ICON_OFFSET_X = 24
+
+/** Default right padding for the talent name when no top-right icon is present. */
+const NODE_NAME_DEFAULT_RIGHT_PADDING = 4
+
+/** Right padding applied to the talent name when a top-right icon is present. */
+const NODE_NAME_ICON_RIGHT_PADDING = 24
+
+/** Y position of the talent name text inside the node card. */
+const NODE_NAME_Y = 4
+
+/* ── Cost badge geometry ──────────────────────────────────────── */
+
+/** Horizontal padding on each side of the cost badge. */
+const BADGE_PADDING_X = 5
+
+/** Vertical padding on each side of the cost badge. */
+const BADGE_PADDING_Y = 2
+
+/** X offset of the cost badge from the left edge of the node card. */
+const BADGE_X = 4
+
+/**
+ * Distance from the bottom of the node card to the bottom of the cost badge.
+ * badgeY = nodeHeight - BADGE_BOTTOM_OFFSET
+ */
+const BADGE_BOTTOM_OFFSET = 17
+
+/* ── Cost text (plain mode) ───────────────────────────────────── */
+
+/**
+ * Distance from the bottom of the node card to the baseline of the plain cost text.
+ * costTextY = nodeHeight - COST_TEXT_BOTTOM_OFFSET
+ */
+const COST_TEXT_BOTTOM_OFFSET = 14
+
+/* ── Hit area ─────────────────────────────────────────────────── */
+
+/**
+ * Near-transparent fill alpha for the hit-area overlay.
+ * Non-zero so PIXI registers pointer events without visual impact.
+ */
+const HIT_AREA_FILL_ALPHA = 0.001
+
+/* ── State-pictogram slot ─────────────────────────────────────── */
+
+/** Size (width and height) in pixels of the state-pictogram sprite. */
+const STATE_PICTOGRAM_SIZE = 16
+
+/** Y position of the state-pictogram sprite inside the node card. */
+const STATE_PICTOGRAM_Y = 4
+
+/**
+ * X offset from the right edge of the node card for the state-pictogram.
+ * pictogramX = nodeWidth - STATE_PICTOGRAM_RIGHT_OFFSET
+ */
+const STATE_PICTOGRAM_RIGHT_OFFSET = 20
+
 const ICON_SLOT_POSITIONS = Object.freeze({
   topLeft: Object.freeze({ x: NODE_CORNER_ICON_MARGIN, y: NODE_CORNER_ICON_MARGIN }),
   topRight: Object.freeze({ x: NODE_WIDTH - NODE_CORNER_ICON_SIZE - NODE_CORNER_ICON_MARGIN, y: NODE_CORNER_ICON_MARGIN }),
@@ -695,14 +762,14 @@ export class PixiTreeRenderer {
       setPixiDebugLabel(background, `${nodeLabel}:background`)
       background.beginFill(v.fillColor, v.alpha)
       background.lineStyle(v.borderWidth, v.borderColor, v.alpha)
-      background.drawRoundedRect(0, 0, this.nodeWidth, this.nodeHeight, 4)
+      background.drawRoundedRect(0, 0, this.nodeWidth, this.nodeHeight, NODE_CARD_CORNER_RADIUS)
       background.endFill()
       nodeContainer.addChild(background)
 
       const hasTopLeftIcon = Boolean(node.iconSlots?.topLeft)
       const hasTopRightIcon = Boolean(node.iconSlots?.topRight)
-      const nameOffsetX = hasTopLeftIcon ? 24 : 4
-      const nameRightPadding = hasTopRightIcon ? 24 : 4
+      const nameOffsetX = hasTopLeftIcon ? NODE_NAME_ICON_OFFSET_X : NODE_NAME_DEFAULT_X
+      const nameRightPadding = hasTopRightIcon ? NODE_NAME_ICON_RIGHT_PADDING : NODE_NAME_DEFAULT_RIGHT_PADDING
 
       // Talent name — local coords
       const nameText = new PIXI.Text(node.talentName, {
@@ -715,7 +782,7 @@ export class PixiTreeRenderer {
       setPixiDebugLabel(nameText, `${nodeLabel}:title`)
       nameText.alpha = v.textAlpha ?? 1
       nameText.x = nameOffsetX
-      nameText.y = 4
+      nameText.y = NODE_NAME_Y
       nodeContainer.addChild(nameText)
 
       // Cost badge and cost text — local coords
@@ -730,25 +797,22 @@ export class PixiTreeRenderer {
 
       let badge = null
       if (v.costDisplay === 'badge') {
-        const badgePaddingX = 5
-        const badgePaddingY = 2
-        const badgeX = 4
-        const badgeY = this.nodeHeight - 17
-        const badgeWidth = costText.width + badgePaddingX * 2
-        const badgeHeight = costText.height + badgePaddingY * 2
+        const badgeY = this.nodeHeight - BADGE_BOTTOM_OFFSET
+        const badgeWidth = costText.width + BADGE_PADDING_X * 2
+        const badgeHeight = costText.height + BADGE_PADDING_Y * 2
         badge = new PIXI.Graphics()
         setPixiDebugLabel(badge, `${nodeLabel}:cost-badge`)
         badge.beginFill(v.costBadgeFillColor ?? 0x333333, 1)
         badge.lineStyle(1, v.costBadgeBorderColor ?? v.borderColor, 1)
-        badge.drawRoundedRect(badgeX, badgeY, badgeWidth, badgeHeight, 6)
+        badge.drawRoundedRect(BADGE_X, badgeY, badgeWidth, badgeHeight, 6)
         badge.endFill()
         nodeContainer.addChild(badge)
 
-        costText.x = badgeX + badgePaddingX
-        costText.y = badgeY + badgePaddingY
+        costText.x = BADGE_X + BADGE_PADDING_X
+        costText.y = badgeY + BADGE_PADDING_Y
       } else {
-        costText.x = 4
-        costText.y = this.nodeHeight - 14
+        costText.x = NODE_NAME_DEFAULT_X
+        costText.y = this.nodeHeight - COST_TEXT_BOTTOM_OFFSET
       }
       nodeContainer.addChild(costText)
 
@@ -757,7 +821,7 @@ export class PixiTreeRenderer {
       // Hit area — local coords, transparent overlay
       const hitArea = new PIXI.Graphics()
       setPixiDebugLabel(hitArea, `${nodeLabel}:hit-area`)
-      hitArea.beginFill(0xffffff, 0.001)
+      hitArea.beginFill(0xffffff, HIT_AREA_FILL_ALPHA)
       hitArea.drawRect(0, 0, this.nodeWidth, this.nodeHeight)
       hitArea.endFill()
       hitArea.eventMode = 'static'
@@ -795,10 +859,10 @@ export class PixiTreeRenderer {
 
       const sprite = new PIXI.Sprite(texture)
       setPixiDebugLabel(sprite, `${nodeLabel}:state-pictogram`)
-      sprite.x = this.nodeWidth - 20
-      sprite.y = 4
-      sprite.width = 16
-      sprite.height = 16
+      sprite.x = this.nodeWidth - STATE_PICTOGRAM_RIGHT_OFFSET
+      sprite.y = STATE_PICTOGRAM_Y
+      sprite.width = STATE_PICTOGRAM_SIZE
+      sprite.height = STATE_PICTOGRAM_SIZE
       sprite.tint = 0xffffff
       parent.addChild(sprite)
       return true

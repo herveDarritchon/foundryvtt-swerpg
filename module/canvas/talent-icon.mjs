@@ -1,3 +1,31 @@
+/* ── Default icon config ──────────────────────────────────────── */
+
+/** Default overall opacity for icons. */
+const ICON_DEFAULT_ALPHA = 1.0
+
+/** Default background fill color for icons (opaque black). */
+const ICON_DEFAULT_BACKGROUND_COLOR = 0x000000
+
+/** Default border stroke width for icons. */
+const ICON_DEFAULT_BORDER_WIDTH = 3
+
+/** Default icon size (width and height) in pixels. */
+const ICON_DEFAULT_SIZE = 50
+
+/** Default tint for icon sprites (white = no tint). */
+const ICON_DEFAULT_TINT = 0xffffff
+
+/* ── Number badge ─────────────────────────────────────────────── */
+
+/** Font size in pixels for the count badge text. */
+const ICON_NUMBER_FONT_SIZE = 24
+
+/**
+ * Divisor applied to icon size to compute the number badge position offset.
+ * Badge is placed at (size / DIVISOR, -size / DIVISOR) relative to center.
+ */
+const ICON_NUMBER_POSITION_DIVISOR = 3
+
 export default class SwerpgTalentIcon extends PIXI.Container {
   constructor(config) {
     super(config)
@@ -7,15 +35,15 @@ export default class SwerpgTalentIcon extends PIXI.Container {
      * @type {object}
      */
     this.config = {
-      alpha: 1.0,
-      backgroundColor: 0x000000,
+      alpha: ICON_DEFAULT_ALPHA,
+      backgroundColor: ICON_DEFAULT_BACKGROUND_COLOR,
       borderColor: undefined,
-      borderWidth: 3,
+      borderWidth: ICON_DEFAULT_BORDER_WIDTH,
       borderRadius: undefined,
-      size: 50,
+      size: ICON_DEFAULT_SIZE,
       text: undefined,
       texture: undefined,
-      tint: 0xffffff,
+      tint: ICON_DEFAULT_TINT,
       ...config,
     }
 
@@ -31,10 +59,10 @@ export default class SwerpgTalentIcon extends PIXI.Container {
     this.border = this.addChild(new PIXI.Graphics())
 
     // Number
-    const textStyle = PreciseText.getTextStyle({ fontSize: 24 })
+    const textStyle = PreciseText.getTextStyle({ fontSize: ICON_NUMBER_FONT_SIZE })
     this.number = this.addChild(new PreciseText('', textStyle))
     this.number.anchor.set(0.5, 0.5)
-    this.number.position.set(this.config.size / 3, -this.config.size / 3)
+    this.number.position.set(this.config.size / ICON_NUMBER_POSITION_DIVISOR, -this.config.size / ICON_NUMBER_POSITION_DIVISOR)
   }
 
   /* -------------------------------------------- */
