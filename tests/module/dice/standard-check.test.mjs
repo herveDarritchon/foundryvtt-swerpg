@@ -3,7 +3,19 @@ import StandardCheck from '../../../module/dice/standard-check.mjs'
 import { logger } from '../../../module/utils/logger.mjs'
 
 // SYSTEM constants pour les tests
-globalThis.SYSTEM = { id: 'swerpg', dice: { MAX_BOONS: 6, DIE_STEP: 2, MAX_DIE: 12, MIN_DIE: 4 } }
+globalThis.SYSTEM = {
+  id: 'swerpg',
+  dice: {
+    MAX_BOONS: 6,
+    DIE_STEP: 2,
+    MAX_DIE: 12,
+    MIN_DIE: 4,
+    CRITICAL_SUCCESS_THRESHOLD: 6,
+    CRITICAL_FAILURE_THRESHOLD: 6,
+    CRITICAL_SUCCESS_THRESHOLD_KEEN: 4,
+    CRITICAL_FAILURE_THRESHOLD_RELIABLE: 4,
+  },
+}
 
 // Polyfill Math.clamp pour les tests (pas fourni par les mocks globaux)
 if (!Math.clamp) {

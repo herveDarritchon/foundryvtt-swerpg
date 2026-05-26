@@ -43,8 +43,12 @@ export const AttackMixin = (Base) =>
         boons,
         defenseType,
         dc: target.defenses[defenseType].total,
-        criticalSuccessThreshold: weapon.system.properties.has('keen') ? 4 : 6,
-        criticalFailureThreshold: weapon.system.properties.has('reliable') ? 4 : 6,
+        criticalSuccessThreshold: weapon.system.properties.has('keen')
+          ? SYSTEM.dice.CRITICAL_SUCCESS_THRESHOLD_KEEN
+          : SYSTEM.dice.CRITICAL_SUCCESS_THRESHOLD,
+        criticalFailureThreshold: weapon.system.properties.has('reliable')
+          ? SYSTEM.dice.CRITICAL_FAILURE_THRESHOLD_RELIABLE
+          : SYSTEM.dice.CRITICAL_FAILURE_THRESHOLD,
       }
 
       this.callActorHooks('prepareStandardCheck', rollData)
