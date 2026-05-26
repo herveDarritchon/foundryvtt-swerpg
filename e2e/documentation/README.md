@@ -507,3 +507,99 @@ Les invariants minimaux vérifiés (i18n, absence de placeholder cassé, absence
 1. Instance Foundry accessible sur le port configuré dans `E2E_FOUNDRY_BASE_URL`
 2. Fichier `.env.e2e.documentation` configuré
 3. Monde stable dans un état représentatif des captures attendues (configuré dans `E2E_FOUNDRY_WORLD`)
+
+---
+
+## Contrat de stabilité des captures et des artefacts (EDG6)
+
+### Invariants attendus entre deux reruns identiques
+
+Pour qu'un guide soit diffable et relisible avant release, les éléments suivants doivent rester déterministes :
+
+| Invariant | Mécanisme |
+|---|---|
+| Ordre des captures | Préfixe d'index `01-`, `02-`, `03-`, `04-` — incrémenté dans l'ordre des étapes de la spec |
+| Viewport constant | `1920×1080` défini dans `playwright.documentation.config.ts` — ne pas modifier entre les runs |
+| Nommage déterministe | Slugs kebab-case fixes (`toKebabSlug`) — pas d'horodatage ni d'identifiant aléatoire dans le nom de fichier |
+| Écrans sans bruit parasite | `prepareDocumentationState` appelé avant chaque capture (overlays, apps, animations) |
+| Cohérence JSON ↔ screenshots | `writeGuideMetadata` écrit les chemins dans l'ordre d'enregistrement — aligné avec les fichiers produits |
+
+### Écarts tolérés
+
+- Légère variation de rendu due à la police ou au zoom entre machines.
+- Durée de chargement variable — le helper attend `networkidle` avant chaque capture.
+- Artefacts d'un run précédent dans `documentation-output/` — les fichiers sont écrasés lors du rerun.
+
+### Écarts bloquants avant release documentaire
+
+- Capture manquante ou fichier PNG corrompu → rerun obligatoire.
+- Ordre des captures incohérent avec le JSON → rerun obligatoire.
+- Nom de fichier contenant un identifiant aléatoire ou un horodatage → correction de la spec + rerun.
+- Donnée sensible visible dans une capture → nettoyage du monde + rerun obligatoire.
+- JSON dont un `screenshotPath` pointe vers un fichier absent → rerun obligatoire.
+
+---
+
+## Sûreté des données du monde documentaire (EDG6)
+
+### Données interdites dans les artefacts
+
+Les catégories suivantes ne doivent **jamais** apparaître dans `screenshots/`, `guides/*.json` ou `markdown/*.md` :
+
+| Catégorie | Mécanisme d'évitement |
+|---|---|
+| Identifiants réels (noms d'utilisateurs, comptes client, emails) | Monde dédié, noms neutres (`Doc-<Prefixe>-${Date.now()}`) |
+| Données client ou de campagne réelle | Monde documentaire isolé, distinct de la production |
+| Secrets et tokens (mots de passe, clés API, tokens de session) | Monde dédié, captures sans zone sensible |
+| URLs non prévues ou redirections vers un autre environnement | Contrôle du point d'entrée avant run |
+| Bruit de session (notifications d'usage, alertes de mise à jour, popups) | `dismissOverlayIfPresent` + `closeAllOpenApplications` dans `prepareDocumentationState` |
+| États non représentatifs (erreur, migration incomplète) | Monde stable et représentatif avant run |
+
+### Point de contrôle documentaire
+
+La génération Markdown (`pnpm run docs:generate-user-guides`) ne peut introduire aucune information hors JSON source.
+Le JSON source ne contient que les métadonnées déclarées dans la spec : titre, actions utilisateur, états attendus, chemins de screenshots.
+
+Avant diffusion d'un guide :
+1. Dev/QA confirme que les captures sont à jour et représentatives.
+2. Documentation/PO relit le contenu sur le fond fonctionnel.
+3. Documentation/PO valide ou demande une correction.
+4. Le guide est diffusé uniquement après validation explicite de Documentation/PO.
+
+---
+
+## Checklist de release `e2e:documentation` (EDG6)
+
+La checklist complète est disponible dans `documentation/tests/e2e/edg6-release-checklist.md`.
+
+### Séquence canonique (rappel court)
+
+```
+1. Préparer le monde documentaire (état stable, aucune donnée sensible)
+2. Lancer la capture : pnpm e2e:documentation
+3. Vérifier screenshots + JSON (ordre, nommage, cohérence, sûreté des données)
+4. Générer le Markdown : pnpm run docs:generate-user-guides
+5. Relecture humaine Dev/QA + Documentation/PO avant diffusion
+```
+
+### Signal de clôture EDG6
+
+Un flux documentaire peut être rerun, relu et diffusé quand :
+
+- [x] Captures stables et déterministes entre deux reruns identiques
+- [x] Artefacts sûrs — aucune donnée sensible, client ou non maîtrisée visible
+- [x] Checklist de release courte et exécutable (`edg6-release-checklist.md`)
+- [x] Rerun compréhensible — commandes canoniques, prérequis et cas de rerun documentés
+- [x] Revue humaine explicitement requise avant toute diffusion
+
+### Feu vert documentaire vs release applicative globale
+
+La suite `e2e:documentation` est **strictement documentaire et non bloquante** :
+
+- Elle ne fait partie d'aucun pipeline CI.
+- Ses résultats ne conditionnent pas un merge, une release ni une validation fonctionnelle.
+- Un guide documentaire non à jour ne bloque pas la livraison — il indique que la documentation est à régénérer.
+
+---
+
+## Critères de clôture du socle documentaire (issue #384)

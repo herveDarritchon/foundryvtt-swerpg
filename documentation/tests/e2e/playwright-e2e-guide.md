@@ -792,7 +792,87 @@ pnpm exec playwright show-report playwright-smoke-report
 
 ---
 
-## 11. Résumé
+## 11. Clôture EDG6 — Stabilité des captures, sûreté des données et checklist de release
+
+Cette section formalise les critères de sortie du chantier `e2e:documentation` (EDG6) et complète le contrat de qualité documentaire.
+
+Pour la checklist complète et exécutable, voir : `documentation/tests/e2e/edg6-release-checklist.md`
+
+### 11.1. Contrat de stabilité des captures
+
+Pour qu'un guide soit reproductible et diffable, les invariants suivants doivent tenir entre deux reruns identiques :
+
+| Invariant | Mécanisme |
+|---|---|
+| Ordre des captures | Préfixe d'index `01-`, `02-`, `03-`, `04-` — incrémenté dans l'ordre des étapes |
+| Viewport constant | `1920×1080` fixé dans `playwright.documentation.config.ts` |
+| Nommage déterministe | Slugs kebab-case stables via `toKebabSlug` — pas d'horodatage ni d'aléatoire dans le nom |
+| Écrans sans bruit parasite | `prepareDocumentationState` appelé avant chaque capture (overlays, apps, animations) |
+| Cohérence JSON ↔ screenshots | `writeGuideMetadata` écrit les chemins dans l'ordre d'enregistrement |
+
+**Écarts tolérés :** légère variation de rendu entre machines, durée de chargement variable (compensée par `networkidle`), artefacts du run précédent (écrasés au rerun).
+
+**Écarts bloquants :** capture manquante ou PNG corrompu, ordre incohérent JSON ↔ fichiers, nom de fichier avec identifiant aléatoire, donnée sensible visible, `screenshotPath` pointant vers un fichier absent.
+
+### 11.2. Sûreté des données du monde documentaire
+
+Les catégories suivantes ne doivent **jamais** apparaître dans `screenshots/`, `guides/*.json` ou `markdown/*.md` :
+
+| Catégorie interdite | Mécanisme d'évitement |
+|---|---|
+| Identifiants réels (noms d'utilisateurs, comptes client) | Monde dédié, noms neutres `Doc-<Prefixe>-${Date.now()}` |
+| Données client ou de campagne réelle | Monde documentaire isolé, distinct de la production |
+| Secrets et tokens (mots de passe, clés API) | Monde dédié, captures sans zone sensible |
+| URLs non prévues ou redirections vers un autre environnement | Contrôle du point d'entrée avant run |
+| Bruit de session (notifications, popups, alertes de mise à jour) | `prepareDocumentationState` avant chaque capture |
+| États non représentatifs (erreur, migration incomplète) | Monde stable et représentatif avant run |
+
+**Point de contrôle génération :** la commande `pnpm run docs:generate-user-guides` ne peut introduire aucune information hors JSON source. Le JSON source ne contient que les métadonnées déclarées dans la spec.
+
+### 11.3. Checklist de release `e2e:documentation`
+
+La séquence canonique pour conclure qu'un guide est prêt à être diffusé :
+
+```
+1. Préparer le monde documentaire (état stable, aucune donnée sensible)
+2. Lancer la capture : pnpm e2e:documentation
+3. Vérifier screenshots + JSON (ordre, nommage, cohérence, sûreté des données)
+4. Générer le Markdown : pnpm run docs:generate-user-guides
+5. Relecture humaine Dev/QA + Documentation/PO avant diffusion
+```
+
+**Preuves minimales à conserver à la clôture :**
+
+- Artefacts produits présents et cohérents dans `documentation-output/`.
+- Absence d'erreurs navigateur inattendues dans la sortie du run.
+- Captures lisibles et représentatives (vérification manuelle).
+- Contrôle des données sensibles effectué.
+- Relecture métier effectuée par Documentation/PO.
+
+### 11.4. Frontière feu vert documentaire vs release applicative globale
+
+| Signal | Périmètre |
+|---|---|
+| Feu vert documentaire (EDG6) | Captures stables + artefacts sûrs + checklist complète + relecture humaine |
+| Release applicative globale | Régression fonctionnelle, smoke, Vitest, validation métier — indépendant d'EDG6 |
+
+La suite `e2e:documentation` n'est **jamais** un gate bloquant pour un merge ou une release applicative.
+Un guide documentaire non à jour ne bloque pas la livraison — il indique que la documentation est à régénérer.
+
+### 11.5. Signal de clôture EDG6
+
+Le chantier `e2e:documentation` est clos quand :
+
+- [x] Captures reproductibles — contrat de stabilité formalisé et outillé (`prepareDocumentationState`, `toKebabSlug`, viewport fixe)
+- [x] Artefacts sûrs — catégories de données interdites documentées, mécanismes d'évitement en place
+- [x] Checklist de release courte et exécutable — `documentation/tests/e2e/edg6-release-checklist.md`
+- [x] Rerun compréhensible — commandes canoniques, prérequis et cas de rerun dans `e2e/documentation/README.md`
+- [x] Revue humaine explicitement requise avant toute diffusion
+- [x] Un seul contrat de release documentaire — `e2e/documentation/README.md` + `e2e/README.md` + ce guide + `edg6-release-checklist.md` sans consignes concurrentes
+
+---
+
+## 12. Résumé
 
 - `pnpm e2e:smoke` : vérification de surface, exécution manuelle, lecture seule sur instance de production.
 - `pnpm e2e:regression` : validation fonctionnelle pré-livraison sur instance dédiée, remplace les campagnes QA manuelles répétitives.
@@ -805,6 +885,7 @@ pnpm exec playwright show-report playwright-smoke-report
 - Toute nouvelle spec doit être placée dans `e2e/smoke/`, `e2e/regression/specs/` ou `e2e/documentation/specs/` selon son type.
 - Matrice de couverture : `documentation/tests/e2e/couverture-e2e-matrice.md`.
 - Gouvernance `e2e:documentation` : Dev/QA maintient les parcours et le monde — Documentation/PO valide les guides et décide de la publication. Voir `e2e/documentation/README.md`.
+- Clôture EDG6 : contrat de stabilité des captures, sûreté des données et checklist de release dans `documentation/tests/e2e/edg6-release-checklist.md` et section 11 de ce guide.
 
 ---
 

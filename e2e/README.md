@@ -162,6 +162,18 @@ pnpm e2e:documentation:ui
 
 Pour le contrat d'exploitation complet (mode rerun, gouvernance, rôles, critères de clôture), voir `e2e/documentation/README.md`.
 
+**Clôture EDG6 — signal de fermeture du chantier `e2e:documentation` :**
+
+Le chantier `e2e:documentation` est considéré clos quand les cinq conditions suivantes sont remplies :
+
+1. **Captures stables** — invariants de stabilité formalisés (ordre, viewport, nommage, reset visuel) : `e2e/documentation/README.md` section "Contrat de stabilité".
+2. **Artefacts sûrs** — catégories de données interdites documentées et mécanismes d'évitement en place : `e2e/documentation/README.md` section "Sûreté des données".
+3. **Checklist de release courte** — séquence canonique exécutable en 5 étapes : `documentation/tests/e2e/edg6-release-checklist.md`.
+4. **Rerun compréhensible** — commandes canoniques, prérequis et cas de rerun documentés : `e2e/documentation/README.md` section "Contrat d'exploitation".
+5. **Revue humaine explicitement requise** — Documentation/PO valide avant toute diffusion : contrat de gouvernance dans `e2e/documentation/README.md`.
+
+La suite reste **strictement documentaire et non bloquante** — elle ne conditionne aucun merge ni aucune release applicative.
+
 ---
 
 ### `pnpm run docs:generate-user-guides` — génération des guides Markdown (séparée)
