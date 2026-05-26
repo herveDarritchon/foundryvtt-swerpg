@@ -1,5 +1,5 @@
 ---
-name: 'claude-create-pr'
+name: 'cmd-create-pr'
 description: Claude - Prépare ou crée une Pull Request vers develop via le skill creer-pull-request, avec commit Conventional Commits préalable si nécessaire.
 mode: subagent
 #model: claude-haiku-4-5
