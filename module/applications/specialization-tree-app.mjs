@@ -474,7 +474,7 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
     if (!confirmed) return
 
     try {
-      await this.actor.system.removeSpecialization(specializationKey)
+      await this.actor.removeSpecialization(specializationKey)
 
       this.#selectedTreeKey = result.fallbackTreeKey
 
