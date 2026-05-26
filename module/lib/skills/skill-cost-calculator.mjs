@@ -1,4 +1,5 @@
 import TrainedSkill from './trained-skill.mjs'
+import { SKILL_RANK_COST_MULTIPLIER, SKILL_NON_CAREER_SURCHARGE } from '../../config/progression.mjs'
 
 export default class SkillCostCalculator {
   constructor(skillTransaction) {
@@ -13,12 +14,14 @@ export default class SkillCostCalculator {
    */
   static computeCost({ action, rankValue, isSpecialized }) {
     if (action === 'train') {
-      return isSpecialized ? rankValue * 5 : rankValue * 5 + 5
+      return isSpecialized ? rankValue * SKILL_RANK_COST_MULTIPLIER : rankValue * SKILL_RANK_COST_MULTIPLIER + SKILL_NON_CAREER_SURCHARGE
     }
 
     if (action === 'forget') {
       // forget cost = train cost at (rankAfterDecrease + 1)
-      return isSpecialized ? (rankValue + 1) * 5 : (rankValue + 1) * 5 + 5
+      return isSpecialized
+        ? (rankValue + 1) * SKILL_RANK_COST_MULTIPLIER
+        : (rankValue + 1) * SKILL_RANK_COST_MULTIPLIER + SKILL_NON_CAREER_SURCHARGE
     }
 
     return 0

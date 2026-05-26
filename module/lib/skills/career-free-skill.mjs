@@ -1,5 +1,7 @@
 import ErrorSkill from './error-skill.mjs'
 import Skill from './skill.mjs'
+import { MAX_RANK_AT_CREATION } from '../../config/skills.mjs'
+import { SKILL_MAX_CAREER_FREE_RANK_PER_SKILL } from '../../config/progression.mjs'
 
 export default class CareerFreeSkill extends Skill {
   getCost() {
@@ -33,7 +35,7 @@ export default class CareerFreeSkill extends Skill {
       return this.createError("you can't forget this career free rank because this skill has no career free rank!")
     }
 
-    if (careerFree > 1) {
+    if (careerFree > SKILL_MAX_CAREER_FREE_RANK_PER_SKILL) {
       return this.createError("you can't use more than 1 career free skill rank into the same skill!")
     }
 
@@ -52,7 +54,7 @@ export default class CareerFreeSkill extends Skill {
     this.data.rank.careerFree = careerFree
     this.data.rank.value = this.computeRankValue()
 
-    if (this.isCreation && this.data.rank.value > 2) {
+    if (this.isCreation && this.data.rank.value > MAX_RANK_AT_CREATION) {
       return this.createError("you can't have more than 2 ranks at creation!")
     }
 

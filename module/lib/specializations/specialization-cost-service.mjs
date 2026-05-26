@@ -10,6 +10,7 @@
  */
 
 import { isTreatedAsCareerForCost } from './owned-specializations.mjs'
+import { SPECIALIZATION_FIRST_COST, SPECIALIZATION_RANK_COST_MULTIPLIER, SPECIALIZATION_NON_CAREER_PENALTY } from '../../config/progression.mjs'
 
 /**
  * @typedef {Object} SpecializationCostResult
@@ -49,14 +50,14 @@ export function calculateSpecializationCost(params) {
   // Coût de base
   let baseCost
   if (ownedCountBefore === 0) {
-    baseCost = 0
+    baseCost = SPECIALIZATION_FIRST_COST
   } else {
-    baseCost = 10 * ownedCountAfter
+    baseCost = SPECIALIZATION_RANK_COST_MULTIPLIER * ownedCountAfter
   }
 
   // Pénalité hors carrière
   const isCareerOrUniversal = isTreatedAsCareerForCost(candidateSpecialization, career)
-  const nonCareerPenalty = isCareerOrUniversal ? 0 : 10
+  const nonCareerPenalty = isCareerOrUniversal ? 0 : SPECIALIZATION_NON_CAREER_PENALTY
 
   // Coût final
   const finalCost = baseCost + nonCareerPenalty
