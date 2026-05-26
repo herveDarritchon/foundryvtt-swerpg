@@ -144,6 +144,19 @@ function getAuditLogName(value, fallbackKey = 'SWERPG.AUDIT_LOG.UNKNOWN_VALUE') 
 }
 
 /**
+ * Resolve a localized characteristic label from its technical identifier.
+ * Falls back to the localized UNKNOWN_VALUE key when the id is absent or unrecognized.
+ * @param {string|null|undefined} characteristicId
+ * @returns {string}
+ */
+function getCharacteristicLabel(characteristicId) {
+  if (!characteristicId) return game.i18n.localize('SWERPG.AUDIT_LOG.UNKNOWN_VALUE')
+  const characteristic = game.system.config?.CHARACTERISTICS?.[characteristicId]
+  if (!characteristic?.label) return game.i18n.localize('SWERPG.AUDIT_LOG.UNKNOWN_VALUE')
+  return game.i18n.localize(characteristic.label)
+}
+
+/**
  * Build a localized description for a single audit log entry.
  * @param {object} entry
  * @returns {string}
@@ -166,7 +179,7 @@ export function buildAuditLogDescription(entry) {
       })
     case 'characteristic.increase':
       return game.i18n.format('SWERPG.AUDIT_LOG.DESCRIPTION.CHARACTERISTIC_INCREASE', {
-        characteristic: getAuditLogName(data.characteristicId, 'SWERPG.AUDIT_LOG.UNKNOWN_VALUE'),
+        characteristic: getCharacteristicLabel(data.characteristicId),
         oldValue: data.oldValue ?? 0,
         newValue: data.newValue ?? 0,
       })
