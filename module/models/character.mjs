@@ -7,13 +7,25 @@ import SwerpgSpecialization from './specialization.mjs'
 import { getSkillPurchaseState } from '../utils/skill-costs.mjs'
 
 /**
+ * Tracks experience points for a Character actor.
+ *
+ * Convention — persisted vs. derived fields
+ * ------------------------------------------
+ * Only `spent` and `gained` are part of the Foundry schema and are written to
+ * the database. All other fields on this object are computed at runtime during
+ * `prepareDerivedData` and are never saved. They enrich the prepared data object
+ * for sheet rendering and skill-cost calculations without widening the schema.
+ *
+ * Persisted (schema fields, saved to database):
  * @typedef {Object} Experience
- * @property {number} spent - The number of experience points spent
- * @property {number} gained - The number of experience points gained
- * @property {number} [startingExperience] - Derived (not persisted): species starting XP, populated during prepareBaseData
- * @property {number} [obligationXpBonus] - Derived (not persisted): total extra XP granted by obligations
- * @property {number} [total] - Derived (not persisted): startingExperience + gained + obligationXpBonus
- * @property {number} [available] - Derived (not persisted): total - spent
+ * @property {number} spent  - XP already spent on skills, talents, etc. Persisted.
+ * @property {number} gained - XP explicitly awarded to the character. Persisted.
+ *
+ * Derived (not persisted — computed in `_prepareExperience` and friends):
+ * @property {number} startingExperience - Species starting XP. Set in `#prepareSpecies()` from `details.species.startingExperience`. Not persisted.
+ * @property {number} obligationXpBonus  - Extra XP granted by "extra" obligation items. Set in `SwerpgCharacter._prepareExperience()`. Not persisted.
+ * @property {number} total              - Full XP pool: `startingExperience + gained + obligationXpBonus`. Not persisted.
+ * @property {number} available          - Remaining spendable XP: `total - spent`. Not persisted.
  */
 
 /**
@@ -219,14 +231,32 @@ export default class SwerpgCharacter extends SwerpgActorType {
   /* -------------------------------------------- */
 
   /**
+   * Enrich the experience object with Character-specific derived fields.
+   *
+   * This method runs after `SwerpgActorType._prepareExperience()`, which already
+   * sets the base derived fields (`startingExperience`, `total`, `available`) from
+   * the species data. Here we layer in the Character-only obligation bonus before
+   * recomputing `total` and `available`.
+   *
+   * All fields written here are derived (not persisted). They extend the prepared
+   * data object in memory and are never written back to the database. See the
+   * `Experience` typedef above for the full list of persisted vs. derived fields.
+   *
    * @override
    */
   _prepareExperience() {
+    // Base pass: sets startingExperience, total = startingExperience + gained, available = total - spent.
     super._prepareExperience()
+
     const e = this.progression.experience
+
+    // Derived (not persisted): extra XP from obligation items marked as "extra".
     e.obligationXpBonus = SwerpgCharacter.#computeObligationBonusExperience(this.parent)
+
+    // Derived (not persisted): final XP pool and remaining budget, incorporating the obligation bonus.
     e.total = e.total + e.obligationXpBonus
     e.available = e.total - e.spent
+
     logger.debug(`[character-sheet] _prepareExperience - experience for ${this.parent.name} is :`, this.progression.experience)
   }
 
@@ -361,6 +391,8 @@ export default class SwerpgCharacter extends SwerpgActorType {
 
     this._applyFreeSkillSpecies(this.skills)
 
+    // Derived (not persisted): species starting XP used as the base of the XP pool.
+    // Read by `SwerpgActorType._prepareExperience()` when computing `total`.
     this.progression.experience.startingExperience = species?.startingExperience || 0
   }
 
