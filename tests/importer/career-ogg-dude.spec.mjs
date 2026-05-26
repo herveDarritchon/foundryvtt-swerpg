@@ -1,4 +1,10 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, beforeEach } from 'vitest'
+import {
+  CAREER_DEFAULT_FREE_SKILL_RANK,
+  CAREER_MIN_FREE_SKILL_RANK,
+  CAREER_MAX_FREE_SKILL_RANK,
+  CAREER_MAX_SKILL_COUNT,
+} from '../../module/config/progression.mjs'
 // Minimal SYSTEM mock must precede imports that rely on SYSTEM
 if (globalThis.SYSTEM === undefined) {
   globalThis.SYSTEM = {
@@ -185,5 +191,60 @@ describe('careerMapper', () => {
       { id: 'rangedlight' },
     ])
     expect(mapped.system.careerSkills.length).toBe(6)
+  })
+})
+
+describe('careerMapper — MC4 shared-constant freeSkillRank', () => {
+  beforeEach(() => {
+    resetCareerImportStats()
+  })
+
+  it('invalid FreeRanks falls back to CAREER_DEFAULT_FREE_SKILL_RANK', () => {
+    const [mapped] = careerMapper([
+      {
+        Name: 'DefaultRankCareer',
+        Key: 'default_rank_career',
+        CareerSkills: [],
+        FreeRanks: 'not-a-number',
+      },
+    ])
+    expect(mapped.system.freeSkillRank).toBe(CAREER_DEFAULT_FREE_SKILL_RANK)
+  })
+
+  it('FreeRanks below minimum clamps to CAREER_MIN_FREE_SKILL_RANK', () => {
+    const [mapped] = careerMapper([
+      {
+        Name: 'MinRankCareer',
+        Key: 'min_rank_career',
+        CareerSkills: [],
+        FreeRanks: '-5',
+      },
+    ])
+    expect(mapped.system.freeSkillRank).toBe(CAREER_MIN_FREE_SKILL_RANK)
+  })
+
+  it('FreeRanks above maximum clamps to CAREER_MAX_FREE_SKILL_RANK', () => {
+    const [mapped] = careerMapper([
+      {
+        Name: 'MaxRankCareer',
+        Key: 'max_rank_career',
+        CareerSkills: [],
+        FreeRanks: '99',
+      },
+    ])
+    expect(mapped.system.freeSkillRank).toBe(CAREER_MAX_FREE_SKILL_RANK)
+  })
+
+  it('career skills are truncated to CAREER_MAX_SKILL_COUNT', () => {
+    const overflowSkills = ['ATHL', 'AWAR', 'COOL', 'DISC', 'GUNN', 'MED', 'PILOTPL', 'PILOTSP', 'RANGEDHEAVY']
+    const [mapped] = careerMapper([
+      {
+        Name: 'LargeCareer',
+        Key: 'large_career',
+        CareerSkills: overflowSkills,
+        FreeRanks: '4',
+      },
+    ])
+    expect(mapped.system.careerSkills.length).toBeLessThanOrEqual(CAREER_MAX_SKILL_COUNT)
   })
 })

@@ -3,6 +3,7 @@
  */
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { OggDudeTalentMapper } from '../../module/importer/mappers/oggdude-talent-mapper.mjs'
+import { SYSTEM } from '../../module/config/system.mjs'
 
 // Mock des dépendances
 vi.mock('../../module/utils/logger.mjs', () => ({
@@ -349,5 +350,33 @@ describe('OggDudeTalentMapper', () => {
       expect(context.activation).toBe('passive')
       expect(result.get('lightsaber_training').activation).toBe('active')
     })
+  })
+})
+
+describe('OggDudeTalentMapper — MC4 shared-constant activation', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  it('missing activation produces SYSTEM.TALENT_ACTIVATION.unspecified.id in transform output', () => {
+    const context = OggDudeTalentMapper.buildSingleTalentContext(
+      { Name: 'Blank Talent', Key: 'blank_talent', Description: 'A talent with no activation' },
+      {},
+    )
+    expect(context).not.toBeNull()
+    const transformed = OggDudeTalentMapper.transform(context)
+    expect(transformed.system.activation).toBe(SYSTEM.TALENT_ACTIVATION.unspecified.id)
+  })
+
+  it('hasUnknownActivation is true only when activation equals SYSTEM.TALENT_ACTIVATION.unspecified.id with non-empty raw value', () => {
+    const context = OggDudeTalentMapper.buildSingleTalentContext(
+      { Name: 'Mystery Talent', Key: 'mystery_talent', Description: 'Unknown activation', ActivationValue: 'taWhatever' },
+      {},
+    )
+    expect(context).not.toBeNull()
+    // taWhatever not in map → resolved to 'active' (non-empty non-passive fallback)
+    // so hasUnknownActivation should be false
+    expect(context.hasUnknownActivation).toBe(false)
+    expect(context.activation).toBe('active')
   })
 })

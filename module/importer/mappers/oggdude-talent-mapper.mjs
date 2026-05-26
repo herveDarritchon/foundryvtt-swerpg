@@ -5,6 +5,13 @@
 
 import { logger } from '../../utils/logger.mjs'
 import { buildTalentImportDiagnostics, incrementTalentImportStat } from '../utils/talent-import-utils.mjs'
+import { SYSTEM } from '../../config/system.mjs'
+
+/**
+ * Default source label applied when no source information is found in OggDude data.
+ * @type {string}
+ */
+const OGGDUDE_DEFAULT_SOURCE = 'OggDude Import'
 
 // Mappings spécialisés
 import { resolveTalentActivation } from '../mappings/oggdude-talent-activation-map.mjs'
@@ -113,12 +120,12 @@ export class OggDudeTalentMapper {
         originalData: talentData,
 
         // Métadonnées
-        source: talentData.Source || talentData.SourceBook || 'OggDude Import',
+        source: talentData.Source || talentData.SourceBook || OGGDUDE_DEFAULT_SOURCE,
         custom: talentData.Custom === 'true' || talentData.IsCustom === 'true',
 
         // Données transformées (contrat canonique : system.* générique uniquement)
         activation,
-        hasUnknownActivation: activation === 'unspecified' && typeof rawActivation === 'string' && rawActivation.trim() !== '',
+        hasUnknownActivation: activation === SYSTEM.TALENT_ACTIVATION.unspecified.id && typeof rawActivation === 'string' && rawActivation.trim() !== '',
         // Diagnostics legacy — calculés mais NON persistés dans system.*.
         //   node : résolution de nœud OggDude / Crucible (legacy, diagnostic only)
         //   tier : tier OggDude, stocké dans flags.swerpg.import.tier (diagnostic)
@@ -272,7 +279,7 @@ export class OggDudeTalentMapper {
         type: 'talent',
         system: {
           id: context.key,
-          activation: context.activation || 'unspecified',
+          activation: context.activation || SYSTEM.TALENT_ACTIVATION.unspecified.id,
           isRanked: context.isRanked || false,
           description: enrichedDescription,
         },
@@ -281,7 +288,7 @@ export class OggDudeTalentMapper {
             oggdudeKey: context.key,
             import: {
               ...diagnostics,
-              source: context.source || 'OggDude Import',
+              source: context.source || OGGDUDE_DEFAULT_SOURCE,
               sourceText: context.sourceText || '',
               dieModifiers: context.dieModifiers || [],
               prerequisites: context.prerequisites || {},

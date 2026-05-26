@@ -12,6 +12,7 @@ import {
   FLAG_STRICT_CAREER_VALIDATION,
 } from '../utils/career-import-utils.mjs'
 import { sanitizeDescription } from '../utils/text.mjs'
+import { normalizeFreeSkillRank } from '../utils/description-markup-utils.mjs'
 
 /**
  * Career Array Mapper : Map the Career XML data to the SwerpgCareer creation objects.
@@ -96,19 +97,6 @@ export function careerMapper(careers, { strictSkills = false } = {}) {
   })
   logger.debug('[CareerImporter] Statistiques après mapping', { stats: getCareerImportStats() })
   return mapped
-}
-
-/**
- * Normalise la valeur FreeRanks en entier borné 0-8, défaut 4.
- * @param {any} raw
- * @returns {number}
- */
-function normalizeFreeSkillRank(raw) {
-  let n = Number.parseInt(raw, 10)
-  if (Number.isNaN(n)) n = 4
-  if (n < 0) n = 0
-  if (n > 8) n = 8
-  return n
 }
 
 /**

@@ -125,3 +125,35 @@ export const SPECIALIZATION_NON_CAREER_PENALTY = 10
  * @type {number}
  */
 export const ENCUMBRANCE_BASE_BONUS = 5
+
+/* -------------------------------------------- */
+/*  Career skill list limits                    */
+/* -------------------------------------------- */
+
+/**
+ * Maximum number of career skills that can be assigned to a single career.
+ * Matches SwerpgCareer schema validation (careerSkills.length <= CAREER_MAX_SKILL_COUNT).
+ * @type {number}
+ */
+export const CAREER_MAX_SKILL_COUNT = 8
+
+/**
+ * Default value for the free skill rank granted by a career at character creation.
+ * Matches SwerpgCareer schema initial value for freeSkillRank.
+ * @type {number}
+ */
+export const CAREER_DEFAULT_FREE_SKILL_RANK = 4
+
+/**
+ * Minimum value for the free skill rank granted by a career.
+ * Matches SwerpgCareer schema min for freeSkillRank.
+ * @type {number}
+ */
+export const CAREER_MIN_FREE_SKILL_RANK = 0
+
+/**
+ * Maximum value for the free skill rank granted by a career.
+ * Matches SwerpgCareer schema max for freeSkillRank.
+ * @type {number}
+ */
+export const CAREER_MAX_FREE_SKILL_RANK = 8

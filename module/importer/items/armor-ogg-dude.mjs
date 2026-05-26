@@ -19,7 +19,6 @@ import {
 } from '../utils/armor-import-utils.mjs'
 import { parseOggDudeBoolean } from '../mappings/oggdude-weapon-utils.mjs'
 
-const DEFAULT_CATEGORY = 'medium'
 const DEFAULT_SOAK = 2
 const DEFAULT_DEFENSE = 0
 
@@ -111,7 +110,7 @@ function resolveArmorCategoryWithFallback(xmlCategories, armorName) {
     return { category: null, unknownCategories }
   }
 
-  return { category: SYSTEM.ARMOR.DEFAULT_CATEGORY || 'medium', unknownCategories }
+  return { category: SYSTEM.ARMOR.DEFAULT_CATEGORY, unknownCategories }
 }
 
 /**
@@ -278,7 +277,7 @@ function mapOggDudeArmor(xmlArmor) {
         rarity,
         price,
         qualities: propertyResult.qualities,
-        restrictionLevel: isRestricted ? 'restricted' : 'none',
+        restrictionLevel: isRestricted ? SYSTEM.RESTRICTION_LEVELS.restricted.id : SYSTEM.DEFAULT_RESTRICTION_LEVEL,
         description,
       },
       flags,

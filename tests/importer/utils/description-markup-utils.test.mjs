@@ -6,6 +6,11 @@ import {
   resolveSource,
   normalizeFreeSkillRank,
 } from '../../../module/importer/utils/description-markup-utils.mjs'
+import {
+  CAREER_DEFAULT_FREE_SKILL_RANK,
+  CAREER_MIN_FREE_SKILL_RANK,
+  CAREER_MAX_FREE_SKILL_RANK,
+} from '../../../module/config/progression.mjs'
 
 describe('Description Markup Utils', () => {
   describe('normalizeFreeSkillRank', () => {
@@ -159,5 +164,29 @@ describe('Description Markup Utils', () => {
       const result = buildDescription('Content', { name: '', page: null })
       expect(result).not.toContain('<strong>Source:</strong>')
     })
+  })
+})
+
+describe('normalizeFreeSkillRank — MC4 shared-constant bounds', () => {
+  it('default value matches CAREER_DEFAULT_FREE_SKILL_RANK', () => {
+    expect(normalizeFreeSkillRank(undefined)).toBe(CAREER_DEFAULT_FREE_SKILL_RANK)
+    expect(normalizeFreeSkillRank(null)).toBe(CAREER_DEFAULT_FREE_SKILL_RANK)
+    expect(normalizeFreeSkillRank('invalid')).toBe(CAREER_DEFAULT_FREE_SKILL_RANK)
+  })
+
+  it('minimum clamp matches CAREER_MIN_FREE_SKILL_RANK', () => {
+    expect(normalizeFreeSkillRank(-10)).toBe(CAREER_MIN_FREE_SKILL_RANK)
+    expect(normalizeFreeSkillRank(-1)).toBe(CAREER_MIN_FREE_SKILL_RANK)
+  })
+
+  it('maximum clamp matches CAREER_MAX_FREE_SKILL_RANK', () => {
+    expect(normalizeFreeSkillRank(100)).toBe(CAREER_MAX_FREE_SKILL_RANK)
+    expect(normalizeFreeSkillRank(CAREER_MAX_FREE_SKILL_RANK + 1)).toBe(CAREER_MAX_FREE_SKILL_RANK)
+  })
+
+  it('valid in-range value passes through unchanged', () => {
+    expect(normalizeFreeSkillRank(CAREER_DEFAULT_FREE_SKILL_RANK)).toBe(CAREER_DEFAULT_FREE_SKILL_RANK)
+    expect(normalizeFreeSkillRank(CAREER_MIN_FREE_SKILL_RANK)).toBe(CAREER_MIN_FREE_SKILL_RANK)
+    expect(normalizeFreeSkillRank(CAREER_MAX_FREE_SKILL_RANK)).toBe(CAREER_MAX_FREE_SKILL_RANK)
   })
 })

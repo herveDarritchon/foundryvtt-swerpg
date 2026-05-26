@@ -29,8 +29,6 @@ import {
   resetWeaponImportStats,
 } from '../utils/weapon-import-utils.mjs'
 
-const DEFAULT_SKILL = 'rangedLight'
-const DEFAULT_RANGE = 'medium'
 const DEFAULT_QUALITY_COUNT = 1
 
 function coerceQualityCount(value) {
@@ -128,7 +126,7 @@ function mapOggDudeWeapon(xmlWeapon) {
         incrementWeaponImportStat('rejected')
         return null
       }
-      mappedSkill = DEFAULT_SKILL
+      mappedSkill = SYSTEM.WEAPON.DEFAULT_SKILL
     }
 
     const rangeCode = xmlWeapon.RangeValue || xmlWeapon.Range
@@ -140,7 +138,7 @@ function mapOggDudeWeapon(xmlWeapon) {
         incrementWeaponImportStat('rejected')
         return null
       }
-      mappedRange = DEFAULT_RANGE
+      mappedRange = SYSTEM.WEAPON.DEFAULT_RANGE
     }
 
     const baseDamage = clampNumber(xmlWeapon.Damage, 0, 20, 0)
@@ -188,7 +186,7 @@ function mapOggDudeWeapon(xmlWeapon) {
     qualities.sort((a, b) => a.key.localeCompare(b.key))
 
     const handsCode = xmlWeapon.Hands
-    const mappedSlot = WEAPON_HANDS_MAP[handsCode] || 'mainhand'
+    const mappedSlot = WEAPON_HANDS_MAP[handsCode] || SYSTEM.WEAPON.SLOTS.MAINHAND
 
     const rarity = clampNumber(xmlWeapon.Rarity, 0, 20, 0)
     const price = clampNumber(xmlWeapon.Price, 0, Number.MAX_SAFE_INTEGER, 0)
@@ -196,14 +194,14 @@ function mapOggDudeWeapon(xmlWeapon) {
     const hp = clampNumber(xmlWeapon.HP, 0, Number.MAX_SAFE_INTEGER, 0)
 
     const isRestricted = parseOggDudeBoolean(xmlWeapon.Restricted)
-    const restrictionLevel = isRestricted ? 'restricted' : 'none'
+    const restrictionLevel = isRestricted ? SYSTEM.RESTRICTION_LEVELS.restricted.id : SYSTEM.DEFAULT_RESTRICTION_LEVEL
     const rawType = xmlWeapon.Type || ''
     const categoryTags = normalizeCategoryValues(xmlWeapon?.Categories?.Category)
     const sizeHigh = normalizeSizeHigh(xmlWeapon.SizeHigh)
     const { name: sourceName, page: sourcePage } = extractSourceInfo(xmlWeapon.Source)
 
     // Resolve system.category (ADR-0007 priority: Categories → SkillKey → Range → default)
-    const { category: resolvedCategory, source: categorySource } = resolveWeaponCategory(categoryTags, mappedSkill, mappedRange, 'ranged')
+    const { category: resolvedCategory, source: categorySource } = resolveWeaponCategory(categoryTags, mappedSkill, mappedRange, SYSTEM.WEAPON.CATEGORIES.ranged.id)
     if (categorySource !== 'category') {
       incrementWeaponCategoryFallback()
     }
