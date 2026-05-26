@@ -33,9 +33,7 @@ export default async function globalSetup(_config: FullConfig): Promise<void> {
   const page = await browser.newPage()
 
   try {
-    const response = await page
-      .goto(`${baseURL}/auth`, { waitUntil: 'domcontentloaded', timeout: 15000 })
-      .catch(() => null)
+    const response = await page.goto(`${baseURL}/auth`, { waitUntil: 'domcontentloaded', timeout: 15000 }).catch(() => null)
 
     if (!response || (!response.ok() && response.status() !== 302)) {
       throw new Error(

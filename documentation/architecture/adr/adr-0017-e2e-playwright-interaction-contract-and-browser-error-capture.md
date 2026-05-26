@@ -1,11 +1,11 @@
 ---
 title: "ADR-0017: Contrat d'interaction E2E et capture centralisée des erreurs navigateur"
-status: "Accepted"
-date: "2026-05-24"
-authors: "Hervé Darritchon, Architecture Team"
-tags: ["architecture", "testing", "e2e", "playwright", "quality", "browser-errors"]
-supersedes: ""
-superseded_by: ""
+status: 'Accepted'
+date: '2026-05-24'
+authors: 'Hervé Darritchon, Architecture Team'
+tags: ['architecture', 'testing', 'e2e', 'playwright', 'quality', 'browser-errors']
+supersedes: ''
+superseded_by: ''
 ---
 
 ## Status
@@ -53,14 +53,14 @@ Pour `smokeReady`, l'assertion est conditionnelle : elle ne s'exécute que si le
 
 Toutes les interactions critiques avec Foundry VTT doivent passer par les helpers communs :
 
-| Besoin | Helper | Fichier |
-|---|---|---|
-| Bootstrap complet (licence → auth → setup → join → game) | `setUp` / `tearDown` | `e2e/utils/playwrightTest.ts` |
-| Vérifier session active `/game` | `ensureSessionActive` | `e2e/utils/foundryUI.ts` |
-| Ouvrir l'onglet Game Settings | `openGameSettings` | `e2e/utils/foundryUI.ts` |
-| Naviguer vers settings d'un système | `navigateToSystemSettings` | `e2e/utils/foundryUI.ts` |
-| Ouvrir le dialog OggDude | `openOggDudeImporterDialog` | `e2e/regression/utils/oggdude-importer.ts` |
-| Capturer les erreurs navigateur | `createBrowserErrorCollector` | `e2e/utils/browserErrors.ts` |
+| Besoin                                                   | Helper                        | Fichier                                    |
+| -------------------------------------------------------- | ----------------------------- | ------------------------------------------ |
+| Bootstrap complet (licence → auth → setup → join → game) | `setUp` / `tearDown`          | `e2e/utils/playwrightTest.ts`              |
+| Vérifier session active `/game`                          | `ensureSessionActive`         | `e2e/utils/foundryUI.ts`                   |
+| Ouvrir l'onglet Game Settings                            | `openGameSettings`            | `e2e/utils/foundryUI.ts`                   |
+| Naviguer vers settings d'un système                      | `navigateToSystemSettings`    | `e2e/utils/foundryUI.ts`                   |
+| Ouvrir le dialog OggDude                                 | `openOggDudeImporterDialog`   | `e2e/regression/utils/oggdude-importer.ts` |
+| Capturer les erreurs navigateur                          | `createBrowserErrorCollector` | `e2e/utils/browserErrors.ts`               |
 
 Les helpers ne doivent pas être réimplémentés dans les specs. Si un helper manque, il doit être ajouté dans le fichier centralisé.
 

@@ -169,8 +169,7 @@ function readGuideJson(guideId) {
 
   if (!fs.existsSync(jsonPath)) {
     throw new Error(
-      `[generate-user-guides] JSON source not found: ${jsonPath}\n` +
-        `  → Run 'pnpm e2e:documentation' first to capture screenshots and produce the JSON.`,
+      `[generate-user-guides] JSON source not found: ${jsonPath}\n` + `  → Run 'pnpm e2e:documentation' first to capture screenshots and produce the JSON.`,
     )
   }
 
@@ -194,8 +193,7 @@ function validateScreenshotsDir(metadata) {
 
   if (!fs.existsSync(screenshotsDirAbsolute)) {
     throw new Error(
-      `[generate-user-guides] Screenshots directory not found: ${screenshotsDirAbsolute}\n` +
-        `  → Run 'pnpm e2e:documentation' first to capture screenshots.`,
+      `[generate-user-guides] Screenshots directory not found: ${screenshotsDirAbsolute}\n` + `  → Run 'pnpm e2e:documentation' first to capture screenshots.`,
     )
   }
 }
@@ -247,8 +245,7 @@ export function generateUserGuide(guideId) {
 export function discoverGuideIds() {
   if (!fs.existsSync(GUIDES_INPUT_DIR)) {
     throw new Error(
-      `[generate-user-guides] Guides directory not found: ${GUIDES_INPUT_DIR}\n` +
-        `  → Run 'pnpm e2e:documentation' first to produce guide JSON files.`,
+      `[generate-user-guides] Guides directory not found: ${GUIDES_INPUT_DIR}\n` + `  → Run 'pnpm e2e:documentation' first to produce guide JSON files.`,
     )
   }
 
@@ -257,8 +254,7 @@ export function discoverGuideIds() {
 
   if (guideIds.length === 0) {
     throw new Error(
-      `[generate-user-guides] No guide JSON files found in ${GUIDES_INPUT_DIR}.\n` +
-        `  → Run 'pnpm e2e:documentation' first to produce guide JSON files.`,
+      `[generate-user-guides] No guide JSON files found in ${GUIDES_INPUT_DIR}.\n` + `  → Run 'pnpm e2e:documentation' first to produce guide JSON files.`,
     )
   }
 

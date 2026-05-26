@@ -77,13 +77,7 @@ export async function closeAllOpenApplications(page: Page): Promise<void> {
 
     // Fermer les éventuels résidus DOM (dialogs, windows Foundry non gérées par game.closeAll)
     await page.evaluate(() => {
-      const selectors = [
-        '.application.sheet',
-        'dialog[open]',
-        '.app.window-app',
-        '.notification-ui',
-        '.notification',
-      ]
+      const selectors = ['.application.sheet', 'dialog[open]', '.app.window-app', '.notification-ui', '.notification']
       selectors.forEach((selector) => {
         document.querySelectorAll(selector).forEach((el) => {
           if (el instanceof HTMLElement && el.isConnected) {
@@ -172,12 +166,12 @@ export async function assertDocumentationWorldReady(page: Page, options: Pick<Do
   }
 
   const sidebar = page.locator('#sidebar')
-  const sidebarVisible = await sidebar.waitFor({ state: 'visible', timeout: 15000 }).then(() => true).catch(() => false)
+  const sidebarVisible = await sidebar
+    .waitFor({ state: 'visible', timeout: 15000 })
+    .then(() => true)
+    .catch(() => false)
 
   if (!sidebarVisible) {
-    throw new Error(
-      `[documentationWorldManager] Sidebar non visible sur ${currentURL}.\n` +
-        `  → L'interface Foundry n'est peut-être pas entièrement chargée.`,
-    )
+    throw new Error(`[documentationWorldManager] Sidebar non visible sur ${currentURL}.\n` + `  → L'interface Foundry n'est peut-être pas entièrement chargée.`)
   }
 }

@@ -504,7 +504,7 @@ describe('OwnedTalentSummary', () => {
     // Free species talent tests
     it('returns entry for a free species talent even when talentPurchases is empty', () => {
       const actor = buildActor({
-        species: { name: 'Twi\'lek' },
+        species: { name: "Twi'lek" },
         items: [buildFreeItem({ id: 'talent-resilience', name: 'Resilience' })],
       })
       const definitions = new Map([['talent-resilience', buildTalentDefinition({ name: 'Resilience', isRanked: false, activation: 'passive' })]])
@@ -516,7 +516,7 @@ describe('OwnedTalentSummary', () => {
       expect(result[0].name).toBe('Resilience')
       expect(result[0].sources).toHaveLength(1)
       expect(result[0].sources[0].resolutionState).toBe('species')
-      expect(result[0].sources[0].speciesName).toBe('Twi\'lek')
+      expect(result[0].sources[0].speciesName).toBe("Twi'lek")
     })
 
     it('carries the species name in the source when species is set on actor', () => {
@@ -543,10 +543,7 @@ describe('OwnedTalentSummary', () => {
     it('ignores non-free embedded talent items', () => {
       const actor = buildActor({
         species: { name: 'Human' },
-        items: [
-          buildFreeItem({ id: 'talent-free', isFree: true }),
-          buildFreeItem({ id: 'talent-purchased', isFree: false }),
-        ],
+        items: [buildFreeItem({ id: 'talent-free', isFree: true }), buildFreeItem({ id: 'talent-purchased', isFree: false })],
       })
 
       const result = buildOwnedTalentSummary(actor, new Map())

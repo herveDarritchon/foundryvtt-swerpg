@@ -14,12 +14,12 @@ Aucun helper partagé d'interaction acteur n'existe dans `e2e/utils/foundryUI.ts
 
 ## 2. Fichiers ciblés
 
-| Fichier | Action |
-|---------|--------|
-| `e2e/regression/specs/03-character-creation.spec.ts` | **Créer** — nouvelle spec Tier 1 |
-| `e2e/utils/foundryUI.ts` | **Étendre** — ajouter helpers `openActorsTab()`, `createActor(name, type)` |
-| `e2e/utils/browserErrors.ts` | **Aucun changement** — déjà fonctionnel, utilisé via la fixture |
-| `e2e/fixtures/index.ts` | **Aucun changement** — `worldReady` + `createBrowserErrorCollector` déjà branchés |
+| Fichier                                              | Action                                                                            |
+| ---------------------------------------------------- | --------------------------------------------------------------------------------- |
+| `e2e/regression/specs/03-character-creation.spec.ts` | **Créer** — nouvelle spec Tier 1                                                  |
+| `e2e/utils/foundryUI.ts`                             | **Étendre** — ajouter helpers `openActorsTab()`, `createActor(name, type)`        |
+| `e2e/utils/browserErrors.ts`                         | **Aucun changement** — déjà fonctionnel, utilisé via la fixture                   |
+| `e2e/fixtures/index.ts`                              | **Aucun changement** — `worldReady` + `createBrowserErrorCollector` déjà branchés |
 
 ## 3. Plan de travail
 
@@ -42,6 +42,7 @@ export async function createActor(page: Page, name: string, type: string): Promi
 **Répertoire** : `e2e/regression/specs/`
 
 **Scénario** :
+
 1. Fixture `worldReady` (auto) → page en `/game`.
 2. Ouvrir l'onglet Actors.
 3. Créer un personnage (nom unique, type personnage).
@@ -49,6 +50,7 @@ export async function createActor(page: Page, name: string, type: string): Promi
 5. Vérifier qu'aucune erreur navigateur n'est survenue (via `errorCollector` déjà dans la fixture).
 
 **Assertions clés** :
+
 - Acteur créé visible dans la directory Actors.
 - Fiche ouverte (fenêtre de sheet avec le bon titre).
 - `assertNoErrors('création personnage')` en fin de scénario.

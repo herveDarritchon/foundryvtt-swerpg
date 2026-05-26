@@ -5,7 +5,7 @@
 
 - [#383 — EDG1 - Cadrer la suite e2e:documentation et sa configuration dédiée](https://github.com/herveDarritchon/foundryvtt-swerpg/issues/383)
 - [#384 — EDG2 - Mettre en place un monde documentaire déterministe et les helpers d'artefacts](https://github.com/herveDarritchon/foundryvtt-swerpg/issues/384)
-- [#385 — EDG3 - Livrer un premier parcours *.guide.spec.ts avec screenshots et JSON](https://github.com/herveDarritchon/foundryvtt-swerpg/issues/385)
+- [#385 — EDG3 - Livrer un premier parcours \*.guide.spec.ts avec screenshots et JSON](https://github.com/herveDarritchon/foundryvtt-swerpg/issues/385)
 
 **Domaine métier** : `tests/e2e`
 **Source de cadrage** :

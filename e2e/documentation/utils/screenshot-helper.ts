@@ -66,10 +66,7 @@ export interface DocumentationScreenshotResult {
  * @param options - Options de la capture
  * @returns Le résultat de la capture avec les chemins absolus et relatifs
  */
-export async function takeDocumentationScreenshot(
-  page: Page,
-  options: DocumentationScreenshotOptions,
-): Promise<DocumentationScreenshotResult> {
+export async function takeDocumentationScreenshot(page: Page, options: DocumentationScreenshotOptions): Promise<DocumentationScreenshotResult> {
   const { guide, stepIndex, stepSlug, fullPage = true, elementSelector } = options
 
   const filename = `${String(stepIndex).padStart(2, '0')}-${stepSlug}.png`

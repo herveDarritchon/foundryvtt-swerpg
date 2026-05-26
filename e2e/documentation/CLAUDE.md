@@ -6,12 +6,12 @@
 
 This applies to every `*.guide.spec.ts` file under `specs/`:
 
-| Field | Scope | Rule |
-|---|---|---|
-| `GUIDE_TITLE` | constant | English |
-| `GUIDE_DESCRIPTION` | constant | English |
-| `recorder.record({ title })` | step title | English |
-| `recorder.record({ userAction })` | step action | English |
+| Field                                | Scope                | Rule    |
+| ------------------------------------ | -------------------- | ------- |
+| `GUIDE_TITLE`                        | constant             | English |
+| `GUIDE_DESCRIPTION`                  | constant             | English |
+| `recorder.record({ title })`         | step title           | English |
+| `recorder.record({ userAction })`    | step action          | English |
 | `recorder.record({ expectedState })` | step expected result | English |
 
 These values flow into `documentation-output/guides/<guide>.json` and then into `documentation-output/markdown/<guide>.md`. The markdown is the end-user artefact — it must be fully English.
@@ -24,12 +24,12 @@ These values flow into `documentation-output/guides/<guide>.json` and then into 
 
 ## Generated artefacts
 
-| Command | Input | Output |
-|---|---|---|
-| `pnpm e2e:documentation` | Playwright spec | `documentation-output/guides/<id>.json` + screenshots |
-| `pnpm docs:generate-user-guides` | JSON | `documentation-output/markdown/<id>.md` |
-| `pnpm docs:generate-user-guides:html` | JSON | `documentation-output/html/<id>.html` + `index.html` |
-| `pnpm docs:generate-all` | JSON | markdown + HTML in one shot |
+| Command                               | Input           | Output                                                |
+| ------------------------------------- | --------------- | ----------------------------------------------------- |
+| `pnpm e2e:documentation`              | Playwright spec | `documentation-output/guides/<id>.json` + screenshots |
+| `pnpm docs:generate-user-guides`      | JSON            | `documentation-output/markdown/<id>.md`               |
+| `pnpm docs:generate-user-guides:html` | JSON            | `documentation-output/html/<id>.html` + `index.html`  |
+| `pnpm docs:generate-all`              | JSON            | markdown + HTML in one shot                           |
 
 After any spec change, run e2e first, then regenerate outputs:
 

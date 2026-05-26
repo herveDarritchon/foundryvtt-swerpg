@@ -4,7 +4,13 @@ import OggDudeDataElement from '../../settings/models/OggDudeDataElement.mjs'
 import { logger } from '../../utils/logger.mjs'
 import { SYSTEM } from '../../config/system.mjs'
 import { mapOggDudeSkillCodes } from '../mappings/oggdude-skill-map.mjs'
-import { resetSpeciesImportStats, incrementSpeciesImportStat, getSpeciesImportStats, addSpeciesUnknownTalent, FLAG_STRICT_SPECIES_VALIDATION } from '../utils/species-import-utils.mjs'
+import {
+  resetSpeciesImportStats,
+  incrementSpeciesImportStat,
+  getSpeciesImportStats,
+  addSpeciesUnknownTalent,
+  FLAG_STRICT_SPECIES_VALIDATION,
+} from '../utils/species-import-utils.mjs'
 import { resolveTalentKeysFromSession } from '../utils/import-session.mjs'
 
 /**

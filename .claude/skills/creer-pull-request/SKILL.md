@@ -246,6 +246,46 @@ Le corps de PR doit inclure, si l'information existe :
 
 Évite les descriptions vagues ou génériques.
 
+### Contrat Markdown strict pour le corps de PR
+
+Le corps transmis à `gh pr create --body-file` doit être un Markdown GitHub valide, stable et directement reviewable.
+
+Règles obligatoires :
+
+1. Génère toujours le corps de PR dans un fichier temporaire, par exemple `/tmp/create-pr-body.md`, puis passe ce fichier à `gh pr create --body-file`.
+2. N'utilise pas `--body "..."` pour un corps multi-ligne : le quoting shell ne doit jamais risquer de casser le Markdown.
+3. Utilise uniquement des titres Markdown de niveau 2 pour les sections principales : `## Summary`, `## Context`, `## Tests`, `## Notes` ou `## Known limits`.
+4. Ne saute pas la section `## Tests`. Si aucune validation n'a été exécutée, écris exactement : `- Not run (not requested).`
+5. Les listes doivent être de vraies listes Markdown : une puce par ligne, préfixée par `- `.
+6. N'insère jamais de listes vides, de titres sans contenu, de tableaux Markdown non nécessaires, de HTML brut ou de blocs de code non fermés.
+7. Toute référence d'issue doit être placée sur une ligne dédiée, par exemple `Closes #270`, uniquement si elle est fiable.
+8. Avant de créer la PR, relis le fichier de corps généré avec `cat` ou équivalent et vérifie visuellement : titres, puces, lignes vides, absence de placeholder, absence de bloc de code ouvert.
+9. Le corps ne doit contenir aucun placeholder comme `TBD`, `TODO`, `<issue>`, `<summary>` ou `...`. Si une information manque, omets-la ou indique explicitement la limite factuelle.
+10. Le corps doit refléter le diff `develop...HEAD` et les commits inclus ; il ne doit pas reprendre mécaniquement le message de commit si celui-ci est insuffisant.
+
+Structure recommandée :
+
+```markdown
+## Summary
+
+- ...
+- ...
+
+## Context
+
+Closes #270
+
+## Tests
+
+- Not run (not requested).
+
+## Notes
+
+- ...
+```
+
+Supprime `## Context`, `## Notes` ou `## Known limits` si ces sections n'apportent rien de vérifiable.
+
 ### Étape 6 : Pousser la branche si nécessaire
 
 Si la branche n'est pas encore publiée et que la PR doit être créée, pousse-la avec un flux non destructif :

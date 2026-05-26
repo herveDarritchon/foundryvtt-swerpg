@@ -41,7 +41,10 @@ function buildMinimalRegistry() {
     ['talent', [makePipeline('talent', { producesReferences: ['talent.oggdudeKey'] })]],
     ['species', [makePipeline('species', { dependsOn: ['talent'] })]],
     ['career', [makePipeline('career')]],
-    ['specialization', [makePipeline('specialization'), makePipeline('specialization-tree', { dependsOn: ['talent'], softDependsOn: ['career', 'specialization'] })]],
+    [
+      'specialization',
+      [makePipeline('specialization'), makePipeline('specialization-tree', { dependsOn: ['talent'], softDependsOn: ['career', 'specialization'] })],
+    ],
     ['motivation-category', [makePipeline('motivation-category')]],
     ['motivation', [makePipeline('motivation', { softDependsOn: ['motivation-category'] })]],
     ['duty', [makePipeline('duty')]],
@@ -140,19 +143,13 @@ describe('Soft dependency — not blocking when absent', () => {
 
 describe('Cycle detection', () => {
   it('detects a cycle on hard dependencies and returns hasCycle=true', () => {
-    const pipelines = [
-      makePipeline('A', { dependsOn: ['B'] }),
-      makePipeline('B', { dependsOn: ['A'] }),
-    ]
+    const pipelines = [makePipeline('A', { dependsOn: ['B'] }), makePipeline('B', { dependsOn: ['A'] })]
     const { hasCycle } = topologicalSort(pipelines)
     expect(hasCycle).toBe(true)
   })
 
   it('fallback order is returned intact when cycle is detected', () => {
-    const pipelines = [
-      makePipeline('A', { dependsOn: ['B'] }),
-      makePipeline('B', { dependsOn: ['A'] }),
-    ]
+    const pipelines = [makePipeline('A', { dependsOn: ['B'] }), makePipeline('B', { dependsOn: ['A'] })]
     const { sorted } = topologicalSort(pipelines)
     // Falls back to original pipelines array (same reference)
     expect(sorted).toEqual(pipelines)
@@ -187,9 +184,7 @@ describe('speciesMapper — session-based resolution (Bothan -> CONV)', () => {
   it('resolves CONV from importSession.referenceIndex when talent was imported in the same batch', () => {
     const session = createImportSession()
     // Simulate talent pipeline having published CONV
-    publishTalentReferences(session, [
-      { uuid: 'Item.convincing-demeanor-uuid', flags: { swerpg: { oggdudeKey: 'CONV' } }, system: {} },
-    ])
+    publishTalentReferences(session, [{ uuid: 'Item.convincing-demeanor-uuid', flags: { swerpg: { oggdudeKey: 'CONV' } }, system: {} }])
 
     const [mapped] = speciesMapper(bothanInput, session)
 

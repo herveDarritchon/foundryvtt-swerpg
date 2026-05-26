@@ -84,7 +84,7 @@ specializations: new fields.SetField(
 
 **9. Responsabilité mixte.**
 
-`acquireSpecialization` / `removeSpecialization` font `actor.update(...)` depuis le DataModel. Le DataModel sait normalement *décrire* et *préparer*, pas *persister*. Ces opérations métier appartiennent à un service ou à l'extension `SwerpgActor`. Acceptable tant que discipliné, mais à isoler avant prolifération.
+`acquireSpecialization` / `removeSpecialization` font `actor.update(...)` depuis le DataModel. Le DataModel sait normalement _décrire_ et _préparer_, pas _persister_. Ces opérations métier appartiennent à un service ou à l'extension `SwerpgActor`. Acceptable tant que discipliné, mais à isoler avant prolifération.
 
 ---
 
@@ -114,17 +114,17 @@ Mélange `#privateMethod` (true private) et `_protectedMethod` (convention). Coe
 
 ## Améliorations recommandées
 
-| Prio | Action | Effort |
-|------|--------|--------|
-| P0 | Supprimer code mort (`#prepareAdvancement`, `#prepareExperience`, blocs commentés, propriété `points`) | S |
-| P0 | Retirer FIXME hardcode `thresholds.strain/wounds = 2/3` ou ouvrir issue dédiée | S |
-| P1 | Extraire constantes `SYSTEM.MOVEMENT.BASE_SIZE/STRIDE`, `SYSTEM.SKILLS.MAX_RANK_CREATION` | S |
-| P1 | Remplacer `SetField` par `ArrayField` pour `details.specializations`, supprimer `Array.from(... \|\| [])` partout | M |
-| P1 | Factoriser `applySpecies / applyCareer / applySpecialization` en helper paramétré | S |
-| P2 | Déplacer `acquireSpecialization / removeSpecialization` vers `SwerpgActor` ou un `SpecializationService` | M |
-| P2 | Documenter convention "champs dérivés non-schéma" (`@property` JSDoc ou pattern `derived`) | S |
-| P2 | Renommer `thresholds.wounds/strain` → `woundsBonus/strainBonus` pour aligner sémantique | S |
-| P3 | Corriger JSDoc copy-paste cassés, homogénéiser langue (EN), retirer optional chaining superflu | S |
+| Prio | Action                                                                                                            | Effort |
+| ---- | ----------------------------------------------------------------------------------------------------------------- | ------ |
+| P0   | Supprimer code mort (`#prepareAdvancement`, `#prepareExperience`, blocs commentés, propriété `points`)            | S      |
+| P0   | Retirer FIXME hardcode `thresholds.strain/wounds = 2/3` ou ouvrir issue dédiée                                    | S      |
+| P1   | Extraire constantes `SYSTEM.MOVEMENT.BASE_SIZE/STRIDE`, `SYSTEM.SKILLS.MAX_RANK_CREATION`                         | S      |
+| P1   | Remplacer `SetField` par `ArrayField` pour `details.specializations`, supprimer `Array.from(... \|\| [])` partout | M      |
+| P1   | Factoriser `applySpecies / applyCareer / applySpecialization` en helper paramétré                                 | S      |
+| P2   | Déplacer `acquireSpecialization / removeSpecialization` vers `SwerpgActor` ou un `SpecializationService`          | M      |
+| P2   | Documenter convention "champs dérivés non-schéma" (`@property` JSDoc ou pattern `derived`)                        | S      |
+| P2   | Renommer `thresholds.wounds/strain` → `woundsBonus/strainBonus` pour aligner sémantique                           | S      |
+| P3   | Corriger JSDoc copy-paste cassés, homogénéiser langue (EN), retirer optional chaining superflu                    | S      |
 
 ---
 

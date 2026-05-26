@@ -1,6 +1,6 @@
 # Plan d'implémentation — Issue #385
 
-**Issue** : [#385 — EDG3 - Livrer un premier parcours *.guide.spec.ts avec screenshots et JSON](https://github.com/herveDarritchon/foundryvtt-swerpg/issues/385)
+**Issue** : [#385 — EDG3 - Livrer un premier parcours \*.guide.spec.ts avec screenshots et JSON](https://github.com/herveDarritchon/foundryvtt-swerpg/issues/385)
 **Dépendances** :
 
 - [#383 — EDG1 - Cadrer la suite e2e:documentation et sa configuration dédiée](https://github.com/herveDarritchon/foundryvtt-swerpg/issues/383)

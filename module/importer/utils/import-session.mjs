@@ -94,9 +94,7 @@ export function resolveTalentKeysFromSession(session, keys, ownerKey = '') {
 
     // 2. game.items fallback
     if (typeof game !== 'undefined' && game.items) {
-      const worldItem = game.items.find(
-        (i) => i.type === 'talent' && (i.getFlag?.('swerpg', 'oggdudeKey') === key || i.system?.key === key || i.name === key),
-      )
+      const worldItem = game.items.find((i) => i.type === 'talent' && (i.getFlag?.('swerpg', 'oggdudeKey') === key || i.system?.key === key || i.name === key))
       if (worldItem) {
         resolvedUUIDs.push(worldItem.uuid)
         logger.debug('[ImportSession] Talent resolved via game.items', { key, uuid: worldItem.uuid })
@@ -106,9 +104,9 @@ export function resolveTalentKeysFromSession(session, keys, ownerKey = '') {
 
     // 3. game.packs fallback
     if (typeof game !== 'undefined' && game.packs) {
-      const packMatch = [...(game.packs.values?.() || [])].filter((p) => p.documentName === 'Item' && /talent/i.test(p.title)).find((p) =>
-        p.index?.find((e) => e.type === 'talent' && (e.flags?.swerpg?.oggdudeKey === key || e.name === key)),
-      )
+      const packMatch = [...(game.packs.values?.() || [])]
+        .filter((p) => p.documentName === 'Item' && /talent/i.test(p.title))
+        .find((p) => p.index?.find((e) => e.type === 'talent' && (e.flags?.swerpg?.oggdudeKey === key || e.name === key)))
 
       if (packMatch) {
         const idx = packMatch.index.find((e) => e.type === 'talent' && (e.flags?.swerpg?.oggdudeKey === key || e.name === key))

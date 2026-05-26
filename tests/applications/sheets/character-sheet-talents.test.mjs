@@ -722,7 +722,17 @@ describe('CharacterSheet talent consolidation (US12)', () => {
           activation: 'passive',
           isRanked: false,
           rank: null,
-          sources: [{ resolutionState: 'species', speciesName: 'Twi\'lek', specializationId: null, specializationName: null, treeId: null, treeName: null, nodeId: null }],
+          sources: [
+            {
+              resolutionState: 'species',
+              speciesName: "Twi'lek",
+              specializationId: null,
+              specializationName: null,
+              treeId: null,
+              treeName: null,
+              nodeId: null,
+            },
+          ],
         },
       ])
       const actor = buildMockActor()
@@ -731,8 +741,8 @@ describe('CharacterSheet talent consolidation (US12)', () => {
       expect(context.talents).toHaveLength(1)
       const entry = context.talents[0]
       expect(entry.talentId).toBe('talent-resilience')
-      expect(entry.sourceLabels).toEqual(['Twi\'lek'])
-      expect(entry.sources).toEqual([{ label: 'Twi\'lek', cssClass: 'talent-source--species', isDegraded: false }])
+      expect(entry.sourceLabels).toEqual(["Twi'lek"])
+      expect(entry.sources).toEqual([{ label: "Twi'lek", cssClass: 'talent-source--species', isDegraded: false }])
       expect(entry.hasDegradedSources).toBe(false)
     })
 
@@ -744,7 +754,9 @@ describe('CharacterSheet talent consolidation (US12)', () => {
           activation: 'passive',
           isRanked: false,
           rank: null,
-          sources: [{ resolutionState: 'species', speciesName: null, specializationId: null, specializationName: null, treeId: null, treeName: null, nodeId: null }],
+          sources: [
+            { resolutionState: 'species', speciesName: null, specializationId: null, specializationName: null, treeId: null, treeName: null, nodeId: null },
+          ],
         },
       ])
       const actor = buildMockActor()

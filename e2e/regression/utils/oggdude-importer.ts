@@ -22,7 +22,10 @@ export async function openOggDudeImporterDialog(page: Page): Promise<void> {
   await navigateToSystemSettings(page, 'Star Wars Edge RPG')
 
   // La section "OggDude Data Importer" peut être collapsée — cliquer pour l'ouvrir
-  const oggDudeSection = page.locator('section').filter({ hasText: /OggDude Data Importer/i }).first()
+  const oggDudeSection = page
+    .locator('section')
+    .filter({ hasText: /OggDude Data Importer/i })
+    .first()
   const sectionCount = await oggDudeSection.count()
   if (sectionCount > 0) {
     await oggDudeSection.click()
@@ -109,7 +112,7 @@ export async function waitForOggDudeImportComplete(page: Page, timeout = 120_000
 export async function closeOggDudeDialogs(page: Page): Promise<void> {
   // Fermer le formulaire OggDude settings (#swerpgSettings-form)
   const closeSwerpg = page.locator('#swerpgSettings-form').getByRole('button', { name: /Close Window/i })
-  if (await closeSwerpg.count() > 0) {
+  if ((await closeSwerpg.count()) > 0) {
     await closeSwerpg.click()
     await page.waitForTimeout(300)
   }
@@ -130,6 +133,9 @@ export async function verifyOggDudeCompendiums(page: Page): Promise<void> {
   await page.getByRole('tab', { name: /Compendium/i }).click()
 
   // Section "SWERPG OggDude Import" dans la liste des compendiums
-  const oggDudeSection = page.locator('header, h3, .directory-header, li').filter({ hasText: /SWERPG OggDude Import/i }).first()
+  const oggDudeSection = page
+    .locator('header, h3, .directory-header, li')
+    .filter({ hasText: /SWERPG OggDude Import/i })
+    .first()
   await expect(oggDudeSection).toBeVisible({ timeout: 10000 })
 }

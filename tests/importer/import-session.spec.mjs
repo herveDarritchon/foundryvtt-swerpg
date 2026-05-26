@@ -44,25 +44,19 @@ describe('createImportSession', () => {
 describe('publishTalentReferences', () => {
   it('indexes a talent by its oggdudeKey flag', () => {
     const session = makeSession()
-    publishTalentReferences(session, [
-      { uuid: 'Item.abc123', flags: { swerpg: { oggdudeKey: 'CONV' } }, system: {} },
-    ])
+    publishTalentReferences(session, [{ uuid: 'Item.abc123', flags: { swerpg: { oggdudeKey: 'CONV' } }, system: {} }])
     expect(session.referenceIndex.talent.byOggdudeKey.get('CONV')).toBe('Item.abc123')
   })
 
   it('indexes a talent by its system.id', () => {
     const session = makeSession()
-    publishTalentReferences(session, [
-      { uuid: 'Item.xyz', flags: {}, system: { id: 'convincing-demeanor' } },
-    ])
+    publishTalentReferences(session, [{ uuid: 'Item.xyz', flags: {}, system: { id: 'convincing-demeanor' } }])
     expect(session.referenceIndex.talent.bySystemId.get('convincing-demeanor')).toBe('Item.xyz')
   })
 
   it('indexes both oggdudeKey and system.id from the same document', () => {
     const session = makeSession()
-    publishTalentReferences(session, [
-      { uuid: 'Item.both', flags: { swerpg: { oggdudeKey: 'CONV' } }, system: { id: 'convincing-demeanor' } },
-    ])
+    publishTalentReferences(session, [{ uuid: 'Item.both', flags: { swerpg: { oggdudeKey: 'CONV' } }, system: { id: 'convincing-demeanor' } }])
     expect(session.referenceIndex.talent.byOggdudeKey.get('CONV')).toBe('Item.both')
     expect(session.referenceIndex.talent.bySystemId.get('convincing-demeanor')).toBe('Item.both')
   })
@@ -75,9 +69,7 @@ describe('publishTalentReferences', () => {
 
   it('uses _id as fallback when uuid is absent', () => {
     const session = makeSession()
-    publishTalentReferences(session, [
-      { _id: 'fallback-id', flags: { swerpg: { oggdudeKey: 'FALL' } }, system: {} },
-    ])
+    publishTalentReferences(session, [{ _id: 'fallback-id', flags: { swerpg: { oggdudeKey: 'FALL' } }, system: {} }])
     expect(session.referenceIndex.talent.byOggdudeKey.get('FALL')).toBe('fallback-id')
   })
 
@@ -146,7 +138,13 @@ describe('resolveTalentKeysFromSession', () => {
     globalThis.game = {
       items: {
         find: (fn) => {
-          const fakeItem = { type: 'talent', uuid: 'Item.world-uuid', getFlag: (s, k) => (s === 'swerpg' && k === 'oggdudeKey' ? 'WITEM' : null), system: {}, name: '' }
+          const fakeItem = {
+            type: 'talent',
+            uuid: 'Item.world-uuid',
+            getFlag: (s, k) => (s === 'swerpg' && k === 'oggdudeKey' ? 'WITEM' : null),
+            system: {},
+            name: '',
+          }
           return fn(fakeItem) ? fakeItem : undefined
         },
       },
@@ -162,7 +160,13 @@ describe('resolveTalentKeysFromSession', () => {
     globalThis.game = {
       items: {
         find: (fn) => {
-          const fakeItem = { type: 'talent', uuid: 'Item.world-uuid', getFlag: (s, k) => (s === 'swerpg' && k === 'oggdudeKey' ? 'CONV' : null), system: {}, name: '' }
+          const fakeItem = {
+            type: 'talent',
+            uuid: 'Item.world-uuid',
+            getFlag: (s, k) => (s === 'swerpg' && k === 'oggdudeKey' ? 'CONV' : null),
+            system: {},
+            name: '',
+          }
           return fn(fakeItem) ? fakeItem : undefined
         },
       },
@@ -236,10 +240,7 @@ describe('topologicalSort', () => {
   })
 
   it('detects a cycle on hard dependencies and returns hasCycle=true', () => {
-    const pipelines = [
-      makePipeline('A', { dependsOn: ['B'] }),
-      makePipeline('B', { dependsOn: ['A'] }),
-    ]
+    const pipelines = [makePipeline('A', { dependsOn: ['B'] }), makePipeline('B', { dependsOn: ['A'] })]
     const { hasCycle, cycleDetails } = topologicalSort(pipelines)
     expect(hasCycle).toBe(true)
     expect(cycleDetails.length).toBeGreaterThan(0)

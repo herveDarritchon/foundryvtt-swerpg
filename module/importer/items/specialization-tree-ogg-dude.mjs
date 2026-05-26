@@ -4,7 +4,6 @@ import { logger } from '../../utils/logger.mjs'
 import { getSpecializationTreeImportStats, resetSpecializationTreeImportStats } from '../utils/specialization-tree-import-utils.mjs'
 import { specializationTreeMapper } from '../mappers/oggdude-specialization-tree-mapper.mjs'
 
-
 function buildTalentByIdFromWorld() {
   if (typeof game === 'undefined' || !game.items) return new Map()
 

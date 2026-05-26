@@ -174,10 +174,7 @@ export async function createActor(page: Page, name: string, type: string): Promi
   await createDialog.waitFor({ state: 'visible', timeout: 10000 })
 
   // Remplir le nom de l'acteur
-  const nameInput = createDialog
-    .locator('input[name="name"]')
-    .or(createDialog.locator('input[type="text"]'))
-    .first()
+  const nameInput = createDialog.locator('input[name="name"]').or(createDialog.locator('input[type="text"]')).first()
 
   await nameInput.waitFor({ state: 'visible', timeout: 5000 })
   await nameInput.fill(name)
@@ -201,10 +198,7 @@ export async function createActor(page: Page, name: string, type: string): Promi
   // Attendre l'ouverture de la fiche (window/dialog avec le nom de l'acteur)
   // Foundry v14 ApplicationV2 rend : <form class="application sheet ...">
   // Foundry v13 ApplicationV1 rend : <div class="app window-app ...">
-  const sheet = page
-    .locator('.application.sheet, .app.sheet, .window-app, dialog.sheet, [role="dialog"]')
-    .filter({ hasText: name })
-    .first()
+  const sheet = page.locator('.application.sheet, .app.sheet, .window-app, dialog.sheet, [role="dialog"]').filter({ hasText: name }).first()
 
   await sheet.waitFor({ state: 'visible', timeout: 15000 })
 
@@ -225,18 +219,12 @@ export async function openActorSkillsTab(page: Page, actorName: string): Promise
   await ensureSessionActive(page)
 
   // Localiser la fiche de l'acteur (même sélecteur que dans createActor)
-  const sheet = page
-    .locator('.application.sheet, .app.sheet, .window-app, dialog.sheet, [role="dialog"]')
-    .filter({ hasText: actorName })
-    .first()
+  const sheet = page.locator('.application.sheet, .app.sheet, .window-app, dialog.sheet, [role="dialog"]').filter({ hasText: actorName }).first()
 
   await sheet.waitFor({ state: 'visible', timeout: 10000 })
 
   // Cliquer sur l'onglet Skills : data-action="tab" data-tab="skills"
-  const skillsTab = sheet
-    .locator('[data-action="tab"][data-tab="skills"]')
-    .or(sheet.locator('[data-tab="skills"]'))
-    .first()
+  const skillsTab = sheet.locator('[data-action="tab"][data-tab="skills"]').or(sheet.locator('[data-tab="skills"]')).first()
 
   await skillsTab.waitFor({ state: 'visible', timeout: 10000 })
   await skillsTab.click()
@@ -261,10 +249,7 @@ export async function openSpecializationTree(page: Page, actorName: string): Pro
   await ensureSessionActive(page)
 
   // Localiser la fiche de l'acteur
-  const sheet = page
-    .locator('.application.sheet, .app.sheet, .window-app, dialog.sheet, [role="dialog"]')
-    .filter({ hasText: actorName })
-    .first()
+  const sheet = page.locator('.application.sheet, .app.sheet, .window-app, dialog.sheet, [role="dialog"]').filter({ hasText: actorName }).first()
 
   await sheet.waitFor({ state: 'visible', timeout: 10000 })
 

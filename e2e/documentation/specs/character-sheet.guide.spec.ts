@@ -104,10 +104,7 @@ test.describe('Guide documentaire — fiche de personnage', () => {
     await createActor(page, actorName, 'character')
 
     // La fiche s'ouvre automatiquement après la création
-    const actorSheet = page
-      .locator('.application.sheet, .app.sheet, .window-app, dialog.sheet, [role="dialog"]')
-      .filter({ hasText: actorName })
-      .first()
+    const actorSheet = page.locator('.application.sheet, .app.sheet, .window-app, dialog.sheet, [role="dialog"]').filter({ hasText: actorName }).first()
 
     await expect(actorSheet).toBeVisible()
 

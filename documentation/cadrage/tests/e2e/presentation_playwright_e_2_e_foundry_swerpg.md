@@ -172,10 +172,7 @@ export default defineConfig({
   fullyParallel: false,
   retries: 0,
   workers: 1,
-  reporter: [
-    ['list'],
-    ['html', { open: 'never' }],
-  ],
+  reporter: [['list'], ['html', { open: 'never' }]],
   use: {
     baseURL: process.env.FOUNDRY_URL ?? 'http://localhost:30000',
     browserName: 'chromium',
@@ -320,13 +317,7 @@ Il faut ajouter des attributs stables orientés test ou accessibilité.
 Exemple dans une feuille :
 
 ```html
-<button
-  type="button"
-  data-action="editSpecies"
-  data-testid="character-edit-species"
->
-  {{species.name}}
-</button>
+<button type="button" data-action="editSpecies" data-testid="character-edit-species">{{species.name}}</button>
 ```
 
 Puis côté Playwright :
@@ -802,4 +793,3 @@ Au-delà, le risque est de reconstruire en Playwright une deuxième pyramide de 
 - Documentation officielle Playwright — configuration, locators, codegen, UI mode, trace viewer, storage state.
 - Documentation officielle Foundry VTT — configuration serveur, port par défaut, `--world`, `--dataPath`, documentation API v14, ApplicationV2.
 - Documentation communautaire Foundry VTT — guides de développement système et conversion ApplicationV2.
-

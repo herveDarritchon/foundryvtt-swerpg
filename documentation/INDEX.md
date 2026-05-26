@@ -90,12 +90,12 @@ Cette documentation technique couvre l'architecture, les modules, les exigences,
 
 ### Tests E2E Playwright
 
-| Document                                                                                                                                                                                | Description                                                                   |
-| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
-| [playwright-e2e-guide.md](./tests/e2e/playwright-e2e-guide.md)                                                                                                                         | Guide complet E2E : prérequis, config, structure, contrat, checklist          |
-| [e2e/README.md](../e2e/README.md)                                                                                                                                                       | Vue rapide, contrat d'interaction, checklist spec                             |
-| [ADR-0017](./architecture/adr/adr-0017-e2e-playwright-interaction-contract-and-browser-error-capture.md)                                                                                | Décision architecture : contrat d'interaction et capture erreurs navigateur   |
-| [playwright-spec-squelette-mon-parcours.md](./tests/e2e/playwright-spec-squelette-mon-parcours.md)                                                                                      | Squelette de spec E2E prêt à l'emploi                                         |
+| Document                                                                                                 | Description                                                                 |
+| -------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| [playwright-e2e-guide.md](./tests/e2e/playwright-e2e-guide.md)                                           | Guide complet E2E : prérequis, config, structure, contrat, checklist        |
+| [e2e/README.md](../e2e/README.md)                                                                        | Vue rapide, contrat d'interaction, checklist spec                           |
+| [ADR-0017](./architecture/adr/adr-0017-e2e-playwright-interaction-contract-and-browser-error-capture.md) | Décision architecture : contrat d'interaction et capture erreurs navigateur |
+| [playwright-spec-squelette-mon-parcours.md](./tests/e2e/playwright-spec-squelette-mon-parcours.md)       | Squelette de spec E2E prêt à l'emploi                                       |
 
 ## 🔍 Recherche Rapide
 

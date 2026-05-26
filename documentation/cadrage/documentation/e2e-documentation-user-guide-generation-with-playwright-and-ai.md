@@ -10,7 +10,7 @@ La commande cible est :
 
 ```bash
 pnpm run e2e:documentation
-````
+```
 
 Le résultat attendu est un ensemble de captures d’écran, de métadonnées de parcours et de fichiers Markdown pouvant servir de base à une documentation utilisateur.
 
@@ -53,13 +53,13 @@ Elle peut contenir des assertions minimales de sécurité, mais son rôle princi
 
 Cette suite ne doit pas servir à :
 
-* remplacer les tests smoke ;
-* remplacer les tests de regression ;
-* valider exhaustivement les règles métier ;
-* détecter tous les bugs fonctionnels ;
-* générer automatiquement une documentation publiable sans relecture humaine ;
-* produire une documentation commerciale ou marketing ;
-* documenter des états instables, aléatoires ou dépendants de données non maîtrisées.
+- remplacer les tests smoke ;
+- remplacer les tests de regression ;
+- valider exhaustivement les règles métier ;
+- détecter tous les bugs fonctionnels ;
+- générer automatiquement une documentation publiable sans relecture humaine ;
+- produire une documentation commerciale ou marketing ;
+- documenter des états instables, aléatoires ou dépendants de données non maîtrisées.
 
 La documentation générée par IA doit être considérée comme une première version éditoriale, jamais comme une source finale non relue.
 
@@ -202,29 +202,29 @@ Exemple de données structurées :
 
 Playwright est utilisé pour :
 
-* piloter le navigateur ;
-* ouvrir l’application ;
-* cliquer dans l’interface ;
-* remplir des formulaires ;
-* stabiliser les attentes avant capture ;
-* capturer des screenshots ;
-* produire des artefacts techniques ;
-* structurer les étapes de parcours.
+- piloter le navigateur ;
+- ouvrir l’application ;
+- cliquer dans l’interface ;
+- remplir des formulaires ;
+- stabiliser les attentes avant capture ;
+- capturer des screenshots ;
+- produire des artefacts techniques ;
+- structurer les étapes de parcours.
 
 Playwright ne doit pas être utilisé ici pour faire des assertions métier complexes. Les assertions doivent rester limitées aux conditions nécessaires pour garantir que la capture est pertinente.
 
 Exemples d’assertions acceptables :
 
 ```ts
-await expect(page.getByRole('heading', { name: 'Actors' })).toBeVisible();
-await expect(page.getByRole('button', { name: 'Create Actor' })).toBeVisible();
+await expect(page.getByRole('heading', { name: 'Actors' })).toBeVisible()
+await expect(page.getByRole('button', { name: 'Create Actor' })).toBeVisible()
 ```
 
 Exemples d’assertions à éviter dans cette suite :
 
 ```ts
-await expect(character.xp).toBe(42);
-await expect(databaseState).toEqual(expectedComplexState);
+await expect(character.xp).toBe(42)
+await expect(databaseState).toEqual(expectedComplexState)
 ```
 
 Ces vérifications appartiennent aux suites regression.
@@ -235,22 +235,22 @@ L’IA est utilisée pour transformer les données structurées et les screensho
 
 Elle peut :
 
-* reformuler les étapes en anglais clair ;
-* produire des titres lisibles ;
-* générer une introduction ;
-* générer des notes utilisateur ;
-* proposer des warnings ou tips si fournis dans les métadonnées ;
-* transformer le JSON intermédiaire en Markdown ;
-* harmoniser le ton et le niveau de détail.
+- reformuler les étapes en anglais clair ;
+- produire des titres lisibles ;
+- générer une introduction ;
+- générer des notes utilisateur ;
+- proposer des warnings ou tips si fournis dans les métadonnées ;
+- transformer le JSON intermédiaire en Markdown ;
+- harmoniser le ton et le niveau de détail.
 
 L’IA ne doit pas :
 
-* inventer des fonctionnalités ;
-* ajouter des boutons qui ne sont pas présents dans le parcours ;
-* extrapoler des règles métier ;
-* modifier le sens d’une étape ;
-* remplacer la validation humaine ;
-* produire une documentation finale sans relecture.
+- inventer des fonctionnalités ;
+- ajouter des boutons qui ne sont pas présents dans le parcours ;
+- extrapoler des règles métier ;
+- modifier le sens d’une étape ;
+- remplacer la validation humaine ;
+- produire une documentation finale sans relecture.
 
 ## 12. Format cible du user guide
 
@@ -292,8 +292,8 @@ Enter the character name and confirm the creation.
 ## 13. Exemple de spec Playwright documentaire
 
 ```ts
-import { test, expect } from '@playwright/test';
-import { createGuideRecorder } from '../utils/guide-step-recorder';
+import { test, expect } from '@playwright/test'
+import { createGuideRecorder } from '../utils/guide-step-recorder'
 
 test.describe('User Guide — Character Creation', () => {
   test('Generate documentation assets for character creation', async ({ page }) => {
@@ -302,43 +302,39 @@ test.describe('User Guide — Character Creation', () => {
       title: 'Creating a Character',
       language: 'en',
       outputDir: 'e2e/documentation/output',
-    });
+    })
 
-    await page.goto('/');
+    await page.goto('/')
 
     await test.step('Open the Actors directory', async () => {
-      await page.getByRole('tab', { name: 'Actors' }).click();
+      await page.getByRole('tab', { name: 'Actors' }).click()
 
-      await expect(
-        page.getByRole('heading', { name: 'Actors' })
-      ).toBeVisible();
+      await expect(page.getByRole('heading', { name: 'Actors' })).toBeVisible()
 
       await guide.captureStep(page, {
         title: 'Open the Actors directory',
         userAction: 'Click the Actors tab in the sidebar.',
         expectedScreenState: 'The Actors directory is visible.',
         screenshotName: '01-open-actors-directory.png',
-      });
-    });
+      })
+    })
 
     await test.step('Create a new character', async () => {
-      await page.getByRole('button', { name: 'Create Actor' }).click();
+      await page.getByRole('button', { name: 'Create Actor' }).click()
 
-      await expect(
-        page.getByRole('dialog')
-      ).toBeVisible();
+      await expect(page.getByRole('dialog')).toBeVisible()
 
       await guide.captureStep(page, {
         title: 'Create a new character',
         userAction: 'Click the Create Actor button.',
         expectedScreenState: 'The character creation dialog is displayed.',
         screenshotName: '02-create-character-dialog.png',
-      });
-    });
+      })
+    })
 
-    await guide.writeMetadata();
-  });
-});
+    await guide.writeMetadata()
+  })
+})
 ```
 
 ## 14. Configuration Playwright dédiée
@@ -348,7 +344,7 @@ Créer une configuration séparée :
 ```ts
 // e2e/documentation/playwright.documentation.config.ts
 
-import { defineConfig } from '@playwright/test';
+import { defineConfig } from '@playwright/test'
 
 export default defineConfig({
   testDir: './specs',
@@ -367,11 +363,8 @@ export default defineConfig({
     },
   },
 
-  reporter: [
-    ['list'],
-    ['html', { outputFolder: 'e2e/documentation/output/playwright-report', open: 'never' }],
-  ],
-});
+  reporter: [['list'], ['html', { outputFolder: 'e2e/documentation/output/playwright-report', open: 'never' }]],
+})
 ```
 
 Décision importante : `fullyParallel: false`.
@@ -382,14 +375,14 @@ Pour de la documentation, la priorité n’est pas la vitesse. La priorité est 
 
 Les screenshots doivent être :
 
-* stables ;
-* lisibles ;
-* non bruités ;
-* exempts de données personnelles ;
-* produits avec une taille de viewport constante ;
-* nommés explicitement ;
-* versionnables si nécessaire ;
-* ou générés en artefacts CI si l’équipe ne veut pas les committer.
+- stables ;
+- lisibles ;
+- non bruités ;
+- exempts de données personnelles ;
+- produits avec une taille de viewport constante ;
+- nommés explicitement ;
+- versionnables si nécessaire ;
+- ou générés en artefacts CI si l’équipe ne veut pas les committer.
 
 Recommandation :
 
@@ -398,7 +391,7 @@ await page.screenshot({
   path: screenshotPath,
   fullPage: false,
   animations: 'disabled',
-});
+})
 ```
 
 Les animations doivent être désactivées ou neutralisées autant que possible pour éviter les captures instables.
@@ -409,10 +402,10 @@ La suite Documentation E2E doit utiliser un monde ou un état applicatif dédié
 
 Elle ne doit jamais être exécutée sur :
 
-* un environnement de production ;
-* un environnement client partagé ;
-* une base contenant des données sensibles ;
-* un monde de test utilisé en parallèle par une autre suite.
+- un environnement de production ;
+- un environnement client partagé ;
+- une base contenant des données sensibles ;
+- un monde de test utilisé en parallèle par une autre suite.
 
 Recommandation :
 
@@ -436,12 +429,12 @@ Objectif : garantir un état visuel propre, pas seulement un état fonctionnel v
 
 Exemples de responsabilités :
 
-* supprimer les entités créées par une génération précédente ;
-* recréer les données minimales nécessaires ;
-* garantir des noms stables ;
-* éviter les timestamps variables ;
-* éviter les états aléatoires ;
-* nettoyer les notifications ou popups parasites.
+- supprimer les entités créées par une génération précédente ;
+- recréer les données minimales nécessaires ;
+- garantir des noms stables ;
+- éviter les timestamps variables ;
+- éviter les états aléatoires ;
+- nettoyer les notifications ou popups parasites.
 
 ## 18. Intégration IA
 
@@ -536,16 +529,16 @@ Input:
 
 La mise en place est considérée comme valide si :
 
-* une commande `pnpm run e2e:documentation` existe ;
-* la commande exécute uniquement les specs `*.guide.spec.ts` ;
-* au moins un parcours documentaire complet est disponible ;
-* le parcours génère des screenshots stables ;
-* le parcours génère un fichier JSON structuré ;
-* une commande séparée permet de générer un user guide Markdown en anglais ;
-* le Markdown référence correctement les screenshots ;
-* les captures ne contiennent pas de données sensibles ;
-* les specs documentaires ne sont pas mélangées avec les specs smoke ou regression ;
-* la documentation explique clairement comment relancer la génération.
+- une commande `pnpm run e2e:documentation` existe ;
+- la commande exécute uniquement les specs `*.guide.spec.ts` ;
+- au moins un parcours documentaire complet est disponible ;
+- le parcours génère des screenshots stables ;
+- le parcours génère un fichier JSON structuré ;
+- une commande séparée permet de générer un user guide Markdown en anglais ;
+- le Markdown référence correctement les screenshots ;
+- les captures ne contiennent pas de données sensibles ;
+- les specs documentaires ne sont pas mélangées avec les specs smoke ou regression ;
+- la documentation explique clairement comment relancer la génération.
 
 ## 22. Exemple de sortie attendue
 
@@ -575,9 +568,9 @@ Les specs documentaires peuvent être perçues comme des tests de regression.
 
 Mesure :
 
-* utiliser le suffixe `*.guide.spec.ts` ;
-* documenter explicitement leur rôle ;
-* ne pas les inclure dans les pipelines bloquants de validation fonctionnelle.
+- utiliser le suffixe `*.guide.spec.ts` ;
+- documenter explicitement leur rôle ;
+- ne pas les inclure dans les pipelines bloquants de validation fonctionnelle.
 
 ### Risque 2 — Screenshots instables
 
@@ -585,11 +578,11 @@ Les captures peuvent varier à cause d’animations, de données dynamiques ou d
 
 Mesure :
 
-* viewport fixe ;
-* données déterministes ;
-* animations désactivées ;
-* reset documentaire dédié ;
-* masquage des éléments variables si nécessaire.
+- viewport fixe ;
+- données déterministes ;
+- animations désactivées ;
+- reset documentaire dédié ;
+- masquage des éléments variables si nécessaire.
 
 ### Risque 3 — Hallucinations IA
 
@@ -597,10 +590,10 @@ L’IA peut inventer des étapes, des fonctionnalités ou des explications.
 
 Mesure :
 
-* prompt restrictif ;
-* JSON structuré ;
-* interdiction d’utiliser des informations hors input ;
-* relecture humaine obligatoire.
+- prompt restrictif ;
+- JSON structuré ;
+- interdiction d’utiliser des informations hors input ;
+- relecture humaine obligatoire.
 
 ### Risque 4 — Maintenance excessive
 
@@ -608,10 +601,10 @@ Les guides peuvent casser si l’interface change souvent.
 
 Mesure :
 
-* cibler uniquement les parcours utilisateur stables ;
-* commencer avec peu de guides ;
-* réutiliser les helpers Playwright ;
-* éviter les sélecteurs fragiles.
+- cibler uniquement les parcours utilisateur stables ;
+- commencer avec peu de guides ;
+- réutiliser les helpers Playwright ;
+- éviter les sélecteurs fragiles.
 
 ## 24. Recommandation de gouvernance
 
@@ -657,4 +650,4 @@ e2e:documentation
 
 Cette approche permet de produire une documentation utilisateur plus fiable, plus visuelle et plus facile à maintenir, tout en évitant de polluer les tests de validation existants.
 
-[1]: https://playwright.dev/?utm_source=chatgpt.com "Playwright: Fast and reliable end-to-end testing for modern ..."
+[1]: https://playwright.dev/?utm_source=chatgpt.com 'Playwright: Fast and reliable end-to-end testing for modern ...'

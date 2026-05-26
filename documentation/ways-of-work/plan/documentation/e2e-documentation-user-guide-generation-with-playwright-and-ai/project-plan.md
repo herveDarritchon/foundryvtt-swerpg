@@ -41,12 +41,12 @@ Découper un plan d'issues court pour mettre en place une suite `e2e:documentati
 
 ## 4. Risques
 
-| Risque | Impact | Mitigation |
-| --- | --- | --- |
+| Risque                                        | Impact                                       | Mitigation                                                        |
+| --------------------------------------------- | -------------------------------------------- | ----------------------------------------------------------------- |
 | Confusion avec les suites de tests existantes | mauvais usage de la suite, attentes erronées | suffixe `*.guide.spec.ts`, config dédiée, documentation explicite |
-| Screenshots instables | artefacts inutilisables | viewport fixe, animations neutralisées, monde déterministe |
-| Hallucinations IA | guide faux ou trompeur | JSON structuré, prompt restrictif, relecture humaine obligatoire |
-| Données sensibles dans les captures | risque documentaire et sécurité | monde dédié, nettoyage des données, contrôle des captures |
+| Screenshots instables                         | artefacts inutilisables                      | viewport fixe, animations neutralisées, monde déterministe        |
+| Hallucinations IA                             | guide faux ou trompeur                       | JSON structuré, prompt restrictif, relecture humaine obligatoire  |
+| Données sensibles dans les captures           | risque documentaire et sécurité              | monde dédié, nettoyage des données, contrôle des captures         |
 
 ## 5. Hiérarchie des work items
 
@@ -70,15 +70,15 @@ graph TD
 
 ## 6. Découpage GitHub recommandé
 
-| Type | Titre | Priorité | Estimate | Dépendances |
-| --- | --- | --- | --- | --- |
-| Feature | `Documentation E2E User Guides - Produire des guides utilisateur à partir de parcours Playwright` | P1 | 8 | Epic `Documentation` |
-| Story | `EDG1 - Cadrer la suite e2e:documentation et sa configuration dédiée` | P1 | 2 | Feature |
-| Enabler | `EDG2 - Mettre en place un monde documentaire déterministe et les helpers d'artefacts` | P1 | 3 | EDG1 |
-| Story | `EDG3 - Livrer un premier parcours *.guide.spec.ts avec screenshots et JSON` | P1 | 3 | EDG1, EDG2 |
-| Story | `EDG4 - Générer un user guide Markdown en anglais via commande séparée` | P1 | 3 | EDG3 |
-| Story | `EDG5 - Documenter l'exploitation, la gouvernance et la séparation avec smoke/regression` | P2 | 2 | EDG1, EDG4 |
-| Test | `EDG6 - Valider la stabilité des captures, la sûreté des données et la checklist de release` | P1 | 2 | EDG3, EDG4, EDG5 |
+| Type    | Titre                                                                                             | Priorité | Estimate | Dépendances          |
+| ------- | ------------------------------------------------------------------------------------------------- | -------- | -------- | -------------------- |
+| Feature | `Documentation E2E User Guides - Produire des guides utilisateur à partir de parcours Playwright` | P1       | 8        | Epic `Documentation` |
+| Story   | `EDG1 - Cadrer la suite e2e:documentation et sa configuration dédiée`                             | P1       | 2        | Feature              |
+| Enabler | `EDG2 - Mettre en place un monde documentaire déterministe et les helpers d'artefacts`            | P1       | 3        | EDG1                 |
+| Story   | `EDG3 - Livrer un premier parcours *.guide.spec.ts avec screenshots et JSON`                      | P1       | 3        | EDG1, EDG2           |
+| Story   | `EDG4 - Générer un user guide Markdown en anglais via commande séparée`                           | P1       | 3        | EDG3                 |
+| Story   | `EDG5 - Documenter l'exploitation, la gouvernance et la séparation avec smoke/regression`         | P2       | 2        | EDG1, EDG4           |
+| Test    | `EDG6 - Valider la stabilité des captures, la sûreté des données et la checklist de release`      | P1       | 2        | EDG3, EDG4, EDG5     |
 
 ## 7. Dépendances et ordre recommandé
 

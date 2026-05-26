@@ -136,15 +136,15 @@ pnpm e2e:smoke:headed
 
 **Matrice de frontière entre les trois suites :**
 
-| Critère | `documentation` | `regression` | `smoke` |
-|---|---|---|---|
-| Objectif | Captures documentaires, invariants visibles | Validation fonctionnelle pré-livraison | Santé de surface post-déploiement |
-| Mutations | Lecture seule par défaut (prérequis contrôlés documentés acceptés) | Autorisées | Interdites |
-| Instance cible | Port 30000 | Port 31001 | Port 30000 |
-| Monde | Dédié stable (`documentation-world`) | Contrôlé jetable (`Swerpg-Regression-World`) | Production (`test-v14-309`) |
-| Niveau de confiance | Documentaire — invariants visibles seulement | Validation fonctionnelle profonde | Santé minimale de surface |
-| Statut CI | Non — manuel uniquement | Non — manuel uniquement | Non — manuel uniquement |
-| Bloquant | Non | Oui (pré-livraison) | Non (diagnostic) |
+| Critère             | `documentation`                                                    | `regression`                                 | `smoke`                           |
+| ------------------- | ------------------------------------------------------------------ | -------------------------------------------- | --------------------------------- |
+| Objectif            | Captures documentaires, invariants visibles                        | Validation fonctionnelle pré-livraison       | Santé de surface post-déploiement |
+| Mutations           | Lecture seule par défaut (prérequis contrôlés documentés acceptés) | Autorisées                                   | Interdites                        |
+| Instance cible      | Port 30000                                                         | Port 31001                                   | Port 30000                        |
+| Monde               | Dédié stable (`documentation-world`)                               | Contrôlé jetable (`Swerpg-Regression-World`) | Production (`test-v14-309`)       |
+| Niveau de confiance | Documentaire — invariants visibles seulement                       | Validation fonctionnelle profonde            | Santé minimale de surface         |
+| Statut CI           | Non — manuel uniquement                                            | Non — manuel uniquement                      | Non — manuel uniquement           |
+| Bloquant            | Non                                                                | Oui (pré-livraison)                          | Non (diagnostic)                  |
 
 **Recommandation d'environnement** : exécuter uniquement sur un environnement contrôlé dédié. Ne **jamais** exécuter sur un environnement de production partagé, un environnement client actif, ou un environnement en cours de migration.
 
@@ -211,14 +211,14 @@ pnpm run docs:generate-user-guides                     # 2. Générer — produi
 
 ## Frontière CI / local manuel
 
-| Suite | CI GitHub Actions | Local manuel |
-|---|---|---|
-| `pnpm test` (Vitest) | oui | oui |
-| `pnpm e2e:regression` | non | oui |
-| `pnpm e2e:smoke` | non | oui |
-| `pnpm e2e:documentation` | non | oui |
-| `pnpm e2e:ci` (tests `[ci]`) | oui | oui |
-| `pnpm docs:generate-user-guides` | non | oui |
+| Suite                            | CI GitHub Actions | Local manuel |
+| -------------------------------- | ----------------- | ------------ |
+| `pnpm test` (Vitest)             | oui               | oui          |
+| `pnpm e2e:regression`            | non               | oui          |
+| `pnpm e2e:smoke`                 | non               | oui          |
+| `pnpm e2e:documentation`         | non               | oui          |
+| `pnpm e2e:ci` (tests `[ci]`)     | oui               | oui          |
+| `pnpm docs:generate-user-guides` | non               | oui          |
 
 Les suites `regression` et `smoke` ne tournent pas en CI car elles nécessitent une machine locale
 adaptée (GPU, performances navigateur, instance Foundry live).
@@ -229,10 +229,10 @@ adaptée (GPU, performances navigateur, instance Foundry live).
 
 Les suites `regression` et `smoke` génèrent un report HTML systématiquement lors de tout run local.
 
-| Suite | Dossier de sortie | Commande pour ouvrir |
-|---|---|---|
-| `pnpm e2e:regression` | `playwright-regression-report/` | `pnpm exec playwright show-report playwright-regression-report` |
-| `pnpm e2e:smoke` | `playwright-smoke-report/` | `pnpm exec playwright show-report playwright-smoke-report` |
+| Suite                    | Dossier de sortie                  | Commande pour ouvrir                                               |
+| ------------------------ | ---------------------------------- | ------------------------------------------------------------------ |
+| `pnpm e2e:regression`    | `playwright-regression-report/`    | `pnpm exec playwright show-report playwright-regression-report`    |
+| `pnpm e2e:smoke`         | `playwright-smoke-report/`         | `pnpm exec playwright show-report playwright-smoke-report`         |
 | `pnpm e2e:documentation` | `playwright-documentation-report/` | `pnpm exec playwright show-report playwright-documentation-report` |
 
 La suite `e2e:documentation` produit également des artefacts structurés dans `documentation-output/` :
@@ -356,14 +356,14 @@ dédiée soit ajoutée.
 
 Toutes les interactions critiques Foundry doivent passer par les helpers communs :
 
-| Besoin | Helper | Fichier |
-|---|---|---|
-| Bootstrap complet | `setUp` / `tearDown` | `utils/playwrightTest.ts` |
-| Vérifier session active | `ensureSessionActive` | `utils/foundryUI.ts` |
-| Ouvrir Game Settings | `openGameSettings` | `utils/foundryUI.ts` |
-| Naviguer vers settings système | `navigateToSystemSettings` | `utils/foundryUI.ts` |
-| Ouvrir dialog OggDude | `openOggDudeImporterDialog` | `regression/utils/oggdude-importer.ts` |
-| Capturer les erreurs navigateur | `createBrowserErrorCollector` | `utils/browserErrors.ts` |
+| Besoin                          | Helper                        | Fichier                                |
+| ------------------------------- | ----------------------------- | -------------------------------------- |
+| Bootstrap complet               | `setUp` / `tearDown`          | `utils/playwrightTest.ts`              |
+| Vérifier session active         | `ensureSessionActive`         | `utils/foundryUI.ts`                   |
+| Ouvrir Game Settings            | `openGameSettings`            | `utils/foundryUI.ts`                   |
+| Naviguer vers settings système  | `navigateToSystemSettings`    | `utils/foundryUI.ts`                   |
+| Ouvrir dialog OggDude           | `openOggDudeImporterDialog`   | `regression/utils/oggdude-importer.ts` |
+| Capturer les erreurs navigateur | `createBrowserErrorCollector` | `utils/browserErrors.ts`               |
 
 Ne pas réimplémenter ces helpers dans les specs. Si un helper manque, l'ajouter dans le fichier centralisé.
 
@@ -394,10 +394,10 @@ Pour les détails complets, voir `documentation/tests/e2e/playwright-e2e-guide.m
 
 La suite de régression Tier 1 repose sur un **cleanup ciblé par spec**, pas sur la recréation du monde entre chaque run.
 
-| Approche | Décision |
-|---|---|
-| Monde jetable recréé à chaque run | Non retenu — trop long, masque des régressions de persistance |
-| Cleanup ciblé par spec (artefacts éphémères) | **Retenu** — rapide, déterministe, préserve la baseline |
+| Approche                                     | Décision                                                      |
+| -------------------------------------------- | ------------------------------------------------------------- |
+| Monde jetable recréé à chaque run            | Non retenu — trop long, masque des régressions de persistance |
+| Cleanup ciblé par spec (artefacts éphémères) | **Retenu** — rapide, déterministe, préserve la baseline       |
 
 ### Règles opérationnelles
 
@@ -408,20 +408,20 @@ La suite de régression Tier 1 repose sur un **cleanup ciblé par spec**, pas su
 
 ### Données minimales requises par domaine
 
-| Spec | Données communes attendues | Artefacts éphémères (créés / supprimés par la spec) |
-|---|---|---|
-| 01 — smoke | monde actif, système swerpg chargé | aucun |
-| 02 — OggDude import | monde actif, settings système accessibles | aucun |
-| 03 — création personnage | monde actif | acteurs préfixés `Test-Personnage-*` |
-| 04 — XP / arbre spécialisation | monde actif | acteurs préfixés `Test-XP-*`, `Test-XP-Skill-*`, `Test-SpecTree-*` |
+| Spec                           | Données communes attendues                | Artefacts éphémères (créés / supprimés par la spec)                |
+| ------------------------------ | ----------------------------------------- | ------------------------------------------------------------------ |
+| 01 — smoke                     | monde actif, système swerpg chargé        | aucun                                                              |
+| 02 — OggDude import            | monde actif, settings système accessibles | aucun                                                              |
+| 03 — création personnage       | monde actif                               | acteurs préfixés `Test-Personnage-*`                               |
+| 04 — XP / arbre spécialisation | monde actif                               | acteurs préfixés `Test-XP-*`, `Test-XP-Skill-*`, `Test-SpecTree-*` |
 
 ### Primitives de cleanup disponibles
 
-| Fonction | Fichier | Usage |
-|---|---|---|
-| `deleteActorByName(page, name)` | `e2e/regression/utils/world-manager.ts` | Supprimer un acteur précis en fin de test |
+| Fonction                          | Fichier                                 | Usage                                              |
+| --------------------------------- | --------------------------------------- | -------------------------------------------------- |
+| `deleteActorByName(page, name)`   | `e2e/regression/utils/world-manager.ts` | Supprimer un acteur précis en fin de test          |
 | `cleanupTestActors(page, prefix)` | `e2e/regression/utils/world-manager.ts` | Nettoyer tous les artefacts résiduels d'un préfixe |
-| `ensureWorldExists(page, opts)` | `e2e/regression/utils/world-manager.ts` | Bootstrap idempotent (globalSetup) |
+| `ensureWorldExists(page, opts)`   | `e2e/regression/utils/world-manager.ts` | Bootstrap idempotent (globalSetup)                 |
 
 ### Checklist pour toute nouvelle spec qui crée des données
 

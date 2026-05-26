@@ -1478,7 +1478,11 @@ describe('sendChatForAuditEntries', () => {
   test('skill.train free: variant is gain, metaLeft is free cost label', async () => {
     const { sendChatForAuditEntries } = await import('../../module/utils/audit-log.mjs')
     const actor = makeActor()
-    const entry = makeEntry({ type: 'skill.train', data: { skillId: 'athletics', skillName: 'Athletics', oldRank: 0, newRank: 1, cost: 0, isFree: true, isCareer: true }, xpDelta: 0 })
+    const entry = makeEntry({
+      type: 'skill.train',
+      data: { skillId: 'athletics', skillName: 'Athletics', oldRank: 0, newRank: 1, cost: 0, isFree: true, isCareer: true },
+      xpDelta: 0,
+    })
 
     await sendChatForAuditEntries(actor, [entry])
 

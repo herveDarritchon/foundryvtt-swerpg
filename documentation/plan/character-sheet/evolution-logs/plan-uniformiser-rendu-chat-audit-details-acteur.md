@@ -61,21 +61,21 @@ Tous les messages d'audit de changement d'acteur doivent partager :
 
 ## Fichiers affectes
 
-| Fichier | Type de changement | Notes |
-| --- | --- | --- |
-| `module/utils/audit-log.mjs` | modification | faire evoluer le contrat de `_buildChatContext(...)` |
-| `templates/chat/audit-entry.hbs` | modification | aligner la structure HTML sur le nouveau view-model |
-| `styles/chat.less` | modification | introduire une structure visuelle adaptee aux changements de details |
-| `module/applications/character-audit-log.mjs` | optionnel | seulement si un alignement des libelles devient utile |
-| `tests/utils/audit-log.test.mjs` | modification | verifier le nouveau contexte passe au template |
-| `tests/utils/audit-diff.test.mjs` | probablement inchange | les donnees metier semblent deja suffisantes |
+| Fichier                                       | Type de changement    | Notes                                                                |
+| --------------------------------------------- | --------------------- | -------------------------------------------------------------------- |
+| `module/utils/audit-log.mjs`                  | modification          | faire evoluer le contrat de `_buildChatContext(...)`                 |
+| `templates/chat/audit-entry.hbs`              | modification          | aligner la structure HTML sur le nouveau view-model                  |
+| `styles/chat.less`                            | modification          | introduire une structure visuelle adaptee aux changements de details |
+| `module/applications/character-audit-log.mjs` | optionnel             | seulement si un alignement des libelles devient utile                |
+| `tests/utils/audit-log.test.mjs`              | modification          | verifier le nouveau contexte passe au template                       |
+| `tests/utils/audit-diff.test.mjs`             | probablement inchange | les donnees metier semblent deja suffisantes                         |
 
 ## Structure HTML cible
 
 ```html
 <article class="swerpg chat-message audit-entry audit-entry--change">
   <header class="audit-entry__header">
-    <img class="audit-entry__avatar" src="{{actorImg}}" alt="{{actorName}}">
+    <img class="audit-entry__avatar" src="{{actorImg}}" alt="{{actorName}}" />
     <div class="audit-entry__meta">
       <span class="audit-entry__actor">{{actorName}}</span>
       <span class="audit-entry__label">{{eventLabel}}</span>
@@ -84,24 +84,18 @@ Tous les messages d'audit de changement d'acteur doivent partager :
 
   <div class="audit-entry__body">
     {{#if previousValue}}
-    <div class="audit-entry__previous" title="{{previousValue}}">
-      {{previousValue}}
-    </div>
+    <div class="audit-entry__previous" title="{{previousValue}}">{{previousValue}}</div>
     {{/if}}
 
     <div class="audit-entry__change">
       {{#if previousValue}}
       <span class="audit-entry__arrow">-></span>
       {{/if}}
-      <span class="audit-entry__badge" title="{{nextValue}}">
-        {{nextValue}}
-      </span>
+      <span class="audit-entry__badge" title="{{nextValue}}"> {{nextValue}} </span>
     </div>
 
     {{#if description}}
-    <div class="audit-entry__description">
-      {{description}}
-    </div>
+    <div class="audit-entry__description">{{description}}</div>
     {{/if}}
   </div>
 
@@ -109,8 +103,7 @@ Tous les messages d'audit de changement d'acteur doivent partager :
   <footer class="audit-entry__footer">
     {{#if metaLeft}}
     <span class="audit-entry__meta-left">{{metaLeft}}</span>
-    {{/if}}
-    {{#if metaRight}}
+    {{/if}} {{#if metaRight}}
     <span class="audit-entry__meta-right">{{metaRight}}</span>
     {{/if}}
   </footer>
