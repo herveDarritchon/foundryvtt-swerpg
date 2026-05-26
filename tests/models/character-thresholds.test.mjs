@@ -96,65 +96,88 @@ function buildMockParent() {
   }
 }
 
-describe('SwerpgCharacter — threshold bonus methods', () => {
-  describe('_getWoundThresholdBonus', () => {
-    test('returns species woundThreshold modifier when species is set', () => {
+/**
+ * Tests for the species additive bonus methods.
+ *
+ * These methods return a *partial additive contribution* from the species formula,
+ * not the final threshold. The final absolute values live in
+ * `resources.wounds.threshold` and `resources.strain.threshold` respectively.
+ * See the "threshold calculation contract" suites below for the end-to-end flow.
+ */
+describe('SwerpgCharacter — species additive bonus methods', () => {
+  describe('_getWoundThresholdBonus — returns the species additive wound bonus (not the final threshold)', () => {
+    test('returns species woundThreshold.modifier as the additive bonus when species is set', () => {
       const character = new SwerpgCharacter(buildCharacterData({ species: buildSpecies(10, 0) }))
       expect(character._getWoundThresholdBonus()).toBe(10)
     })
 
-    test('returns 0 when species is null', () => {
+    test('returns 0 (no bonus) when species is null', () => {
       const character = new SwerpgCharacter(buildCharacterData({ species: null }))
       expect(character._getWoundThresholdBonus()).toBe(0)
     })
 
-    test('returns 0 when species has no woundThreshold', () => {
+    test('returns 0 (no bonus) when species has no woundThreshold field', () => {
       const character = new SwerpgCharacter(buildCharacterData({ species: { characteristics: {}, freeSkills: new Set(), startingExperience: 0 } }))
       expect(character._getWoundThresholdBonus()).toBe(0)
     })
   })
 
-  describe('_getStrainThresholdBonus', () => {
-    test('returns species strainThreshold modifier when species is set', () => {
+  describe('_getStrainThresholdBonus — returns the species additive strain bonus (not the final threshold)', () => {
+    test('returns species strainThreshold.modifier as the additive bonus when species is set', () => {
       const character = new SwerpgCharacter(buildCharacterData({ species: buildSpecies(0, 8) }))
       expect(character._getStrainThresholdBonus()).toBe(8)
     })
 
-    test('returns 0 when species is null', () => {
+    test('returns 0 (no bonus) when species is null', () => {
       const character = new SwerpgCharacter(buildCharacterData({ species: null }))
       expect(character._getStrainThresholdBonus()).toBe(0)
     })
 
-    test('returns 0 when species has no strainThreshold', () => {
+    test('returns 0 (no bonus) when species has no strainThreshold field', () => {
       const character = new SwerpgCharacter(buildCharacterData({ species: { characteristics: {}, freeSkills: new Set(), startingExperience: 0 } }))
       expect(character._getStrainThresholdBonus()).toBe(0)
     })
   })
 })
 
-describe('SwerpgCharacter — threshold schema', () => {
-  test('defineSchema does not include a thresholds field', () => {
+describe('SwerpgCharacter — schema contract: no intermediate thresholds field', () => {
+  test('defineSchema does not expose a thresholds field — species bonuses and final thresholds are distinct', () => {
+    // The Character model has no intermediate `thresholds.wounds` or `thresholds.strain` field.
+    // Species additive bonuses feed _getWoundThresholdBonus()/_getStrainThresholdBonus(),
+    // which combine with characteristic ranks to produce resources.wounds.threshold / resources.strain.threshold.
     const schema = SwerpgCharacter.defineSchema()
     expect(schema).not.toHaveProperty('thresholds')
   })
 })
 
-describe('SwerpgCharacter — wound threshold calculation contract', () => {
-  test('wounds.threshold equals brawn + species woundThreshold modifier', () => {
-    // brawn base comes from species.characteristics.brawn (set to 3) after #prepareSpecies
+/**
+ * End-to-end contract tests for `resources.wounds.threshold`.
+ *
+ * The final wound threshold is the absolute value exposed to the rest of the
+ * system. It is distinct from the species additive bonus
+ * (`details.species.woundThreshold.modifier`) which is only a partial input.
+ *
+ * Formula: resources.wounds.threshold = brawn rank + _getWoundThresholdBonus()
+ *   where _getWoundThresholdBonus() = details.species.woundThreshold.modifier
+ */
+describe('SwerpgCharacter — final wound threshold calculation (resources.wounds.threshold)', () => {
+  test('final wound threshold = brawn rank + species additive wound bonus', () => {
+    // brawn base comes from species.characteristics.brawn (set to 3) after #prepareSpecies.
+    // The species wound bonus (10) is additive — resources.wounds.threshold is the sum, not the bonus alone.
     const species = buildSpecies(10, 0, { brawn: 3 })
     const character = new SwerpgCharacter(buildCharacterData({ species }))
     character.parent = buildMockParent()
 
     // prepareBaseData populates characteristic rank.value via #prepareSpecies, then
-    // _prepareDerivedAttributes reads rank.value and _getWoundThresholdBonus() to set the threshold
+    // prepareDerivedData calls _prepareDerivedAttributes which reads rank.value and
+    // _getWoundThresholdBonus() to write the final absolute threshold.
     character.prepareBaseData()
     character.prepareDerivedData()
 
     expect(character.resources.wounds.threshold).toBe(3 + 10)
   })
 
-  test('wounds.threshold equals brawn when species woundThreshold.modifier is 0', () => {
+  test('final wound threshold = brawn rank when species wound bonus is 0', () => {
     const species = buildSpecies(0, 0, { brawn: 4 })
     const character = new SwerpgCharacter(buildCharacterData({ species }))
     character.parent = buildMockParent()
@@ -165,8 +188,8 @@ describe('SwerpgCharacter — wound threshold calculation contract', () => {
     expect(character.resources.wounds.threshold).toBe(4)
   })
 
-  test('wounds.threshold equals brawn with non-zero strain modifier only', () => {
-    // wound modifier is 0 — the strain modifier (5) must not bleed into wound threshold
+  test('species strain bonus does not bleed into the final wound threshold', () => {
+    // wound bonus is 0 — the strain bonus (5) must not affect resources.wounds.threshold
     const species = buildSpecies(0, 5, { brawn: 2 })
     const character = new SwerpgCharacter(buildCharacterData({ species }))
     character.parent = buildMockParent()
@@ -178,9 +201,20 @@ describe('SwerpgCharacter — wound threshold calculation contract', () => {
   })
 })
 
-describe('SwerpgCharacter — strain threshold calculation contract', () => {
-  test('strain.threshold equals willpower + species strainThreshold modifier', () => {
-    // willpower base comes from species.characteristics.willpower (set to 3) after #prepareSpecies
+/**
+ * End-to-end contract tests for `resources.strain.threshold`.
+ *
+ * The final strain threshold is the absolute value exposed to the rest of the
+ * system. It is distinct from the species additive bonus
+ * (`details.species.strainThreshold.modifier`) which is only a partial input.
+ *
+ * Formula: resources.strain.threshold = willpower rank + _getStrainThresholdBonus()
+ *   where _getStrainThresholdBonus() = details.species.strainThreshold.modifier
+ */
+describe('SwerpgCharacter — final strain threshold calculation (resources.strain.threshold)', () => {
+  test('final strain threshold = willpower rank + species additive strain bonus', () => {
+    // willpower base comes from species.characteristics.willpower (set to 3) after #prepareSpecies.
+    // The species strain bonus (8) is additive — resources.strain.threshold is the sum, not the bonus alone.
     const species = buildSpecies(0, 8, { willpower: 3 })
     const character = new SwerpgCharacter(buildCharacterData({ species }))
     character.parent = buildMockParent()
@@ -191,7 +225,7 @@ describe('SwerpgCharacter — strain threshold calculation contract', () => {
     expect(character.resources.strain.threshold).toBe(3 + 8)
   })
 
-  test('strain.threshold equals willpower when species strainThreshold.modifier is 0', () => {
+  test('final strain threshold = willpower rank when species strain bonus is 0', () => {
     const species = buildSpecies(0, 0, { willpower: 4 })
     const character = new SwerpgCharacter(buildCharacterData({ species }))
     character.parent = buildMockParent()
@@ -202,8 +236,8 @@ describe('SwerpgCharacter — strain threshold calculation contract', () => {
     expect(character.resources.strain.threshold).toBe(4)
   })
 
-  test('strain.threshold equals willpower with non-zero wound modifier only', () => {
-    // strain modifier is 0 — the wound modifier (5) must not bleed into strain threshold
+  test('species wound bonus does not bleed into the final strain threshold', () => {
+    // strain bonus is 0 — the wound bonus (5) must not affect resources.strain.threshold
     const species = buildSpecies(5, 0, { willpower: 2 })
     const character = new SwerpgCharacter(buildCharacterData({ species }))
     character.parent = buildMockParent()
