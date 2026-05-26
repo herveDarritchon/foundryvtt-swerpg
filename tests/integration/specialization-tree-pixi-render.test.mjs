@@ -720,4 +720,54 @@ describe('PixiTreeRenderer integration', () => {
     expect(renderer.pixiApp).toBeNull()
     expect(renderer.treeContainer).toBeNull()
   })
+
+  /* ═══════════════════════════════════════════════════════════════ */
+  /*  MC5 — Named constants contract tests                          */
+  /* ═══════════════════════════════════════════════════════════════ */
+
+  it('MIN_VIEWPORT_SIZE clamps small host dimensions to at least 320', () => {
+    // width=50 and height=80 are both below MIN_VIEWPORT_SIZE (320)
+    expect(getViewportDimensions({ clientWidth: 50, clientHeight: 80 })).toEqual({ width: 320, height: 320 })
+    // width=400 is above MIN_VIEWPORT_SIZE; height=100 is below
+    expect(getViewportDimensions({ clientWidth: 400, clientHeight: 100 })).toEqual({ width: 400, height: 320 })
+  })
+
+  it('node card background uses the corner-radius constant (4px rounded rect)', async () => {
+    const host = createMockHost()
+    const renderer = new PixiTreeRenderer()
+    renderer.mount(host)
+    await renderer.update(createViewModel(), {})
+
+    const descendants = flattenChildren(renderer.treeContainer)
+    const bg = descendants.find((c) => c.label === 'node:n1:Tough:background')
+    expect(bg).toBeDefined()
+    // drawRoundedRect is called with (0, 0, nodeWidth, nodeHeight, cornerRadius)
+    const drawCall = bg.calls.find((c) => c[0] === 'drawRoundedRect')
+    expect(drawCall).toBeDefined()
+    expect(drawCall[5]).toBe(4) // NODE_CARD_CORNER_RADIUS
+  })
+
+  it('cost badge geometry uses the named padding constants', async () => {
+    const host = createMockHost()
+    const renderer = new PixiTreeRenderer()
+    renderer.mount(host)
+    await renderer.update(createViewModel(), {})
+
+    const descendants = flattenChildren(renderer.treeContainer)
+    // n1 (AVAILABLE state) has a badge-mode cost display
+    const badge = descendants.find((c) => c.label === 'node:n1:Tough:cost-badge')
+    expect(badge).toBeDefined()
+    // drawRoundedRect(badgeX, badgeY, badgeWidth, badgeHeight, cornerRadius)
+    const drawCall = badge.calls.find((c) => c[0] === 'drawRoundedRect')
+    expect(drawCall).toBeDefined()
+    // badgeX = BADGE_X = 4
+    expect(drawCall[1]).toBe(4)
+    // badgeY = nodeHeight - BADGE_BOTTOM_OFFSET = 48 - 17 = 31
+    expect(drawCall[2]).toBe(31)
+  })
+
+  it('getCanvasSharpnessConfig backgroundAlpha is always 0 (transparent canvas)', () => {
+    const config = getCanvasSharpnessConfig()
+    expect(config.backgroundAlpha).toBe(0)
+  })
 })

@@ -1,5 +1,50 @@
 import SwerpgTalentIcon from './talent-icon.mjs'
 
+/* ── Node interaction scales ───────────────────────────────────── */
+
+/** Scale applied to a node on pointer hover or when the node is active. */
+const NODE_HOVER_SCALE = 1.2
+
+/** Scale applied to a node in its default resting state. */
+const NODE_NORMAL_SCALE = 1.0
+
+/* ── Signature node geometry ───────────────────────────────────── */
+
+/** Size (width and height) in pixels for signature-type nodes. */
+const SIGNATURE_NODE_SIZE = 80
+
+/** Border radius for signature-type nodes (fully rounded). */
+const SIGNATURE_NODE_BORDER_RADIUS = 80
+
+/* ── Standard node visual config ──────────────────────────────── */
+
+/** Border width for accessible (but not purchased) nodes. */
+const NODE_ACCESSIBLE_BORDER_WIDTH = 2
+
+/** Alpha for accessible (but not purchased) nodes. */
+const NODE_ACCESSIBLE_ALPHA = 0.4
+
+/** Border color for accessible (but not purchased) nodes. */
+const NODE_ACCESSIBLE_BORDER_COLOR = 0x827f7d
+
+/** Alpha for inaccessible nodes. */
+const NODE_INACCESSIBLE_ALPHA = 0.1
+
+/** Border color for inaccessible nodes. */
+const NODE_INACCESSIBLE_BORDER_COLOR = 0x262322
+
+/** Border width for inaccessible nodes. */
+const NODE_INACCESSIBLE_BORDER_WIDTH = 2
+
+/** Alpha for fully purchased nodes. */
+const NODE_PURCHASED_ALPHA = 1.0
+
+/** Border width for purchased nodes. */
+const NODE_PURCHASED_BORDER_WIDTH = 3
+
+/** Border color for banned (but not purchased) nodes. */
+const NODE_BANNED_BORDER_COLOR = 0x330000
+
 export default class SwerpgTalentTreeNode extends SwerpgTalentIcon {
   constructor(node, config) {
     super(config)
@@ -36,31 +81,31 @@ export default class SwerpgTalentTreeNode extends SwerpgTalentIcon {
 
     // Signature nodes
     if (this.node.type === 'signature') {
-      config.size = 80
-      config.borderRadius = 80
+      config.size = SIGNATURE_NODE_SIZE
+      config.borderRadius = SIGNATURE_NODE_BORDER_RADIUS
     }
 
     // Is the node accessible or not?
     if (state.accessible) {
-      config.alpha = 0.4
-      config.borderColor = 0x827f7d
-      config.borderWidth = 2
+      config.alpha = NODE_ACCESSIBLE_ALPHA
+      config.borderColor = NODE_ACCESSIBLE_BORDER_COLOR
+      config.borderWidth = NODE_ACCESSIBLE_BORDER_WIDTH
     } else {
-      config.alpha = 0.1
-      config.borderColor = 0x262322
-      config.borderWidth = 2
+      config.alpha = NODE_INACCESSIBLE_ALPHA
+      config.borderColor = NODE_INACCESSIBLE_BORDER_COLOR
+      config.borderWidth = NODE_INACCESSIBLE_BORDER_WIDTH
     }
 
     // Has the node been purchased?
     if (state.purchased) {
-      config.alpha = 1.0
+      config.alpha = NODE_PURCHASED_ALPHA
       config.borderColor = this.node.color
-      config.borderWidth = 3
+      config.borderWidth = NODE_PURCHASED_BORDER_WIDTH
     }
 
     // Has the node been banned?
     else if (state.banned) {
-      config.borderColor = 0x330000
+      config.borderColor = NODE_BANNED_BORDER_COLOR
     }
 
     // Draw Icon
@@ -135,7 +180,7 @@ export default class SwerpgTalentTreeNode extends SwerpgTalentIcon {
     if (!tree.app.renderer.enabled) return
     if (document.elementFromPoint(event.globalX, event.globalY)?.id !== 'swerpg-talent-tree') return
     tree.hud.activate(this)
-    this.scale.set(1.2, 1.2)
+    this.scale.set(NODE_HOVER_SCALE, NODE_HOVER_SCALE)
   }
 
   /* -------------------------------------------- */
@@ -147,6 +192,6 @@ export default class SwerpgTalentTreeNode extends SwerpgTalentIcon {
     if (document.elementFromPoint(event.globalX, event.globalY)?.id !== 'swerpg-talent-tree') return
     tree.hud.clear()
     if (this.isActive) return // Don't un-hover an active node
-    this.scale.set(1.0, 1.0)
+    this.scale.set(NODE_NORMAL_SCALE, NODE_NORMAL_SCALE)
   }
 }

@@ -1,3 +1,54 @@
+/* ── Bar geometry ──────────────────────────────────────────────── */
+
+/** Height in pixels of the primary (health) resource bar. */
+const BAR_PRIMARY_HEIGHT = 8
+
+/** Height in pixels of the secondary (morale) resource bar. */
+const BAR_SECONDARY_HEIGHT = 6
+
+/** Border stroke width for resource bars. */
+const BAR_BORDER_WIDTH = 1
+
+/** Fill alpha for the bar background (dark tint). */
+const BAR_BG_ALPHA = 0.5
+
+/** Alpha filter opacity applied to the bars container. */
+const BAR_ALPHA_FILTER = 0.6
+
+/** Y offset from bottom of token for the primary bar. */
+const BAR_PRIMARY_Y_OFFSET = 8
+
+/** Y offset from bottom of token for the secondary bar. */
+const BAR_SECONDARY_Y_OFFSET = 14
+
+/* ── Pip geometry ──────────────────────────────────────────────── */
+
+/** Radius in pixels of each resource pip circle. */
+const PIP_RADIUS = 3
+
+/** Horizontal spacing between consecutive pips. */
+const PIP_SPACING = 10
+
+/** X offset from the left edge for the first action pip. */
+const PIP_ACTION_START_X = 6
+
+/** X offset from the right edge for the first focus pip. */
+const PIP_FOCUS_END_X = 6
+
+/* ── Overlay and effect geometry ───────────────────────────────── */
+
+/** Fraction of token width/height used for the overlay effect size. */
+const OVERLAY_SCALE_FACTOR = 0.6
+
+/** Rounding radius for status-effect background rectangles. */
+const STATUS_EFFECT_CORNER_RADIUS = 2
+
+/** Margin inset on each side for rounded status-effect backgrounds. */
+const STATUS_EFFECT_BG_INSET = 1
+
+/** Scale factor for the target indicator size relative to token size. */
+const TARGET_SIZE_SCALE = 0.5
+
 export default class SwerpgTokenObject extends foundry.canvas.placeables.Token {
   /** @inheritDoc */
   static RENDER_FLAGS = { ...super.RENDER_FLAGS, refreshFlanking: {} }
@@ -50,7 +101,7 @@ export default class SwerpgTokenObject extends foundry.canvas.placeables.Token {
    * TODO remove in V13+ if core supports better UI scale
    */
   _drawTarget(options = {}) {
-    return super._drawTarget({ ...options, size: 0.5 })
+    return super._drawTarget({ ...options, size: TARGET_SIZE_SCALE })
   }
 
   /* -------------------------------------------- */
@@ -64,7 +115,7 @@ export default class SwerpgTokenObject extends foundry.canvas.placeables.Token {
       this.bars.alphaFilter = new PIXI.filters.AlphaFilter()
       this.bars.filters = [this.bars.alphaFilter]
     }
-    this.bars.alphaFilter.alpha = 0.6
+    this.bars.alphaFilter.alpha = BAR_ALPHA_FILTER
   }
 
   /* -------------------------------------------- */
@@ -80,8 +131,8 @@ export default class SwerpgTokenObject extends foundry.canvas.placeables.Token {
     // Determine sizing
     const { width, height } = this.getSize()
     const bw = width
-    const bh = number === 0 ? 8 : 6
-    const bs = 1
+    const bh = number === 0 ? BAR_PRIMARY_HEIGHT : BAR_SECONDARY_HEIGHT
+    const bs = BAR_BORDER_WIDTH
 
     // Determine the color to use
     const colors = number === 0 ? SYSTEM.RESOURCES.health.color : SYSTEM.RESOURCES.morale.color
@@ -90,11 +141,11 @@ export default class SwerpgTokenObject extends foundry.canvas.placeables.Token {
     // Draw bar
     bar.clear()
     bar.lineStyle(bs, 0x000000, 1.0)
-    bar.beginFill(0x000000, 0.5).drawRect(0, 0, bw, bh, 3)
+    bar.beginFill(0x000000, BAR_BG_ALPHA).drawRect(0, 0, bw, bh, 3)
     bar.beginFill(color, 1.0).drawRect(0, 0, pct * bw, bh, 2)
 
     // Set position
-    const posY = number === 0 ? height - 8 : height - 14
+    const posY = number === 0 ? height - BAR_PRIMARY_Y_OFFSET : height - BAR_SECONDARY_Y_OFFSET
     bar.position.set(0, posY)
     return true
   }
@@ -116,17 +167,17 @@ export default class SwerpgTokenObject extends foundry.canvas.placeables.Token {
 
     // Action Pips
     const ac = SYSTEM.RESOURCES.action.color
-    r.beginFill(ac, 1.0).lineStyle({ color: 0x000000, width: 1 })
+    r.beginFill(ac, 1.0).lineStyle({ color: 0x000000, width: BAR_BORDER_WIDTH })
     for (let i = 0; i < action.value; i++) {
-      r.drawCircle(6 + i * 10, height - 8, 3)
+      r.drawCircle(PIP_ACTION_START_X + i * PIP_SPACING, height - BAR_PRIMARY_Y_OFFSET, PIP_RADIUS)
     }
     r.endFill()
 
     // Focus Pips
     const fc = SYSTEM.RESOURCES.focus.color
-    r.beginFill(fc, 1.0).lineStyle({ color: 0x000000, width: 1 })
+    r.beginFill(fc, 1.0).lineStyle({ color: 0x000000, width: BAR_BORDER_WIDTH })
     for (let i = 0; i < focus.value; i++) {
-      r.drawCircle(width - 6 - i * 10, height - 14, 3)
+      r.drawCircle(width - PIP_FOCUS_END_X - i * PIP_SPACING, height - BAR_SECONDARY_Y_OFFSET, PIP_RADIUS)
     }
     r.endFill()
   }
@@ -148,7 +199,7 @@ export default class SwerpgTokenObject extends foundry.canvas.placeables.Token {
       // Overlay effect
       if (effect === this.effects.overlay) {
         const { width, height } = this.getSize()
-        const size = Math.min(width * 0.6, height * 0.6)
+        const size = Math.min(width * OVERLAY_SCALE_FACTOR, height * OVERLAY_SCALE_FACTOR)
         effect.width = effect.height = size
         effect.position = this.getCenterPoint({ x: 0, y: 0 })
         effect.anchor.set(0.5, 0.5)
@@ -159,7 +210,13 @@ export default class SwerpgTokenObject extends foundry.canvas.placeables.Token {
         effect.width = effect.height = size
         effect.x = Math.floor(i / rows) * size
         effect.y = (i % rows) * size
-        bg.drawRoundedRect(effect.x + 1, effect.y + 1, size - 2, size - 2, 2)
+        bg.drawRoundedRect(
+          effect.x + STATUS_EFFECT_BG_INSET,
+          effect.y + STATUS_EFFECT_BG_INSET,
+          size - STATUS_EFFECT_BG_INSET * 2,
+          size - STATUS_EFFECT_BG_INSET * 2,
+          STATUS_EFFECT_CORNER_RADIUS,
+        )
         i++
       }
     }

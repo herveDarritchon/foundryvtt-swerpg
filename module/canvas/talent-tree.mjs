@@ -4,6 +4,68 @@ import SwerpgTalentTreeNode from './talent-tree-node.mjs'
 import SwerpgTalentChoiceWheel from './talent-choice-wheel.mjs'
 import SwerpgTalentHUD from './talent-hud.mjs'
 
+/* ── Background and viewport ──────────────────────────────────── */
+
+/** Background color of the talent tree canvas (dark near-black). */
+const CANVAS_BACKGROUND_COLOR = 0x0b0909
+
+/** Half-width and half-height of the square used by darkenBackground. */
+const DARKEN_RECT_HALF_SIZE = 6000
+
+/** Alpha of the darkening overlay applied when a node is active. */
+const DARKEN_OVERLAY_ALPHA = 0.5
+
+/* ── Tree decoration circles ──────────────────────────────────── */
+
+/** Radius of the inner decorative circle drawn on the tree background. */
+const TREE_INNER_CIRCLE_RADIUS = 1400
+
+/** Radius of the outer decorative circle drawn on the tree background. */
+const TREE_OUTER_CIRCLE_RADIUS = 2000
+
+/* ── Character sprite ─────────────────────────────────────────── */
+
+/** Height in pixels of the actor portrait sprite at the tree center. */
+const CHARACTER_SPRITE_HEIGHT = 200
+
+/* ── Active connections ───────────────────────────────────────── */
+
+/** Line width for active (purchased) connections between nodes. */
+const CONNECTION_LINE_WIDTH = 3
+
+/** Line alpha for active (purchased) connections between nodes. */
+const CONNECTION_LINE_ALPHA = 1.0
+
+/** Background edge line alpha (dim, non-interactive). */
+const EDGE_LINE_ALPHA = 0.35
+
+/* ── Audio ────────────────────────────────────────────────────── */
+
+/** Volume for UI click sound effects. */
+const CLICK_SOUND_VOLUME = 0.2
+
+/* ── Interaction ──────────────────────────────────────────────── */
+
+/** Speed multiplier applied to right-drag pan deltas. */
+const DRAG_PAN_SPEED = 0.8
+
+/** Zoom scale multiplier for a single wheel-up tick. */
+const ZOOM_IN_FACTOR = 1.05
+
+/** Zoom scale multiplier for a single wheel-down tick. */
+const ZOOM_OUT_FACTOR = 0.95
+
+/** Scale applied to a deactivated node returning to its resting state. */
+const NODE_NORMAL_SCALE = 1.0
+
+/* ── Z-index ──────────────────────────────────────────────────── */
+
+/** Z-index applied to the HUD element while the talent tree is open. */
+const HUD_Z_INDEX_TREE_OPEN = 9999
+
+/** Z-index applied to the talent tree canvas in development mode. */
+const TREE_CANVAS_Z_INDEX_DEV = 0
+
 /**
  * @typedef {Object} SwerpgTalentNodeState
  * @property {boolean} [accessible]
@@ -125,7 +187,7 @@ export default class SwerpgTalentTree extends PIXI.Container {
         transparent: false,
         resolution: 1,
         autoDensity: true,
-        background: 0x0b0909,
+        background: CANVAS_BACKGROUND_COLOR,
         antialias: false, // Not needed because we use SmoothGraphics
         powerPreference: 'high-performance', // Prefer high performance GPU for devices with dual graphics cards
       }),
@@ -165,7 +227,7 @@ export default class SwerpgTalentTree extends PIXI.Container {
 
     // Background connections
     this.edges = this.background.addChild(new PIXI.Graphics())
-    this.edges.lineStyle({ color: 0x000000, alpha: 0.35, width: 3 })
+    this.edges.lineStyle({ color: 0x000000, alpha: EDGE_LINE_ALPHA, width: CONNECTION_LINE_WIDTH })
 
     // Active connections
     this.connections = this.background.addChild(new PIXI.Graphics())
@@ -229,7 +291,7 @@ export default class SwerpgTalentTree extends PIXI.Container {
   #drawCharacter(texture) {
     if (!this.actor) return (this.character.visible = false)
     if (texture) this.character.texture = texture
-    this.character.height = 200
+    this.character.height = CHARACTER_SPRITE_HEIGHT
     this.character.scale.x = this.character.scale.y
     this.character.anchor.set(0.5, 0.5)
     this.character.visible = true
@@ -240,7 +302,7 @@ export default class SwerpgTalentTree extends PIXI.Container {
   #drawConnections(node, seen) {
     for (const c of node.connected) {
       if (seen.has(c) || c.tier < 0 || !this.state.get(c).purchased) continue
-      this.connections.lineStyle({ color: c.color, width: 3, alpha: 1.0 }).moveTo(node.point.x, node.point.y).lineTo(c.point.x, c.point.y)
+      this.connections.lineStyle({ color: c.color, width: CONNECTION_LINE_WIDTH, alpha: CONNECTION_LINE_ALPHA }).moveTo(node.point.x, node.point.y).lineTo(c.point.x, c.point.y)
     }
   }
 
@@ -280,9 +342,8 @@ export default class SwerpgTalentTree extends PIXI.Container {
   /* -------------------------------------------- */
 
   #drawCircles() {
-    // This.edges.drawCircle(0, 0, 800);
-    this.edges.drawCircle(0, 0, 1400)
-    this.edges.drawCircle(0, 0, 2000)
+    this.edges.drawCircle(0, 0, TREE_INNER_CIRCLE_RADIUS)
+    this.edges.drawCircle(0, 0, TREE_OUTER_CIRCLE_RADIUS)
   }
 
   /* -------------------------------------------- */
@@ -327,8 +388,8 @@ export default class SwerpgTalentTree extends PIXI.Container {
     this.stage.eventMode = 'static'
     this.stage.interactiveChildren = true
     this.canvas.hidden = false
-    if (this.developmentMode) this.canvas.style.zIndex = 0
-    else canvas.hud.element.style.zIndex = 9999 // Move HUD above our canvas
+    if (this.developmentMode) this.canvas.style.zIndex = TREE_CANVAS_Z_INDEX_DEV
+    else canvas.hud.element.style.zIndex = HUD_Z_INDEX_TREE_OPEN // Move HUD above our canvas
   }
 
   /* -------------------------------------------- */
@@ -410,7 +471,7 @@ export default class SwerpgTalentTree extends PIXI.Container {
    */
   playClick() {
     const src = this.constructor.clickSounds[Math.floor(Math.random() * this.constructor.clickSounds.length)]
-    game.audio.play(src, { volume: 0.2, loop: false, context: game.audio.interface })
+    game.audio.play(src, { volume: CLICK_SOUND_VOLUME, loop: false, context: game.audio.interface })
   }
 
   /* -------------------------------------------- */
@@ -431,7 +492,7 @@ export default class SwerpgTalentTree extends PIXI.Container {
   deactivateNode({ click = true } = {}) {
     if (!this.active) return
     this.wheel.deactivate()
-    this.active.scale.set(1.0, 1.0)
+    this.active.scale.set(NODE_NORMAL_SCALE, NODE_NORMAL_SCALE)
     this.active = null
     this.darkenBackground(false)
     if (click) this.playClick()
@@ -441,11 +502,11 @@ export default class SwerpgTalentTree extends PIXI.Container {
 
   darkenBackground(fade = true) {
     this.background.darken.clear()
-    const w = 12000
+    const w = DARKEN_RECT_HALF_SIZE * 2
     if (fade)
       this.background.darken
-        .beginFill(0x000000, 0.5)
-        .drawRect(-w / 2, -w / 2, w, w)
+        .beginFill(0x000000, DARKEN_OVERLAY_ALPHA)
+        .drawRect(-DARKEN_RECT_HALF_SIZE, -DARKEN_RECT_HALF_SIZE, w, w)
         .endFill()
     this.background.blurFilter.enabled = fade
   }
@@ -558,13 +619,12 @@ export default class SwerpgTalentTree extends PIXI.Container {
    * @param {PIXI.FederatedEvent} event
    */
   #onDragRightMove(event) {
-    const DRAG_SPEED_MODIFIER = 0.8
     const { origin, destination } = event.interactionData
     const dx = destination.x - origin.x
     const dy = destination.y - origin.y
     this.pan({
-      x: this.stage.pivot.x - dx * DRAG_SPEED_MODIFIER,
-      y: this.stage.pivot.y - dy * DRAG_SPEED_MODIFIER,
+      x: this.stage.pivot.x - dx * DRAG_PAN_SPEED,
+      y: this.stage.pivot.y - dy * DRAG_PAN_SPEED,
     })
   }
 
@@ -588,7 +648,7 @@ export default class SwerpgTalentTree extends PIXI.Container {
    */
   #onWheel(event) {
     if (this.canvas.hidden || event.target?.id !== 'swerpg-talent-tree') return
-    let dz = event.delta < 0 ? 1.05 : 0.95
+    const dz = event.delta < 0 ? ZOOM_IN_FACTOR : ZOOM_OUT_FACTOR
     this.pan({ scale: dz * this.stage.scale.x })
   }
 
