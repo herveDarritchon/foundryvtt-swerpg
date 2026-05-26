@@ -26,6 +26,10 @@ describe('StandardCheck', () => {
     globalThis.SYSTEM = {
       dice: {
         MAX_BOONS: 6,
+        CRITICAL_SUCCESS_THRESHOLD: 6,
+        CRITICAL_FAILURE_THRESHOLD: 6,
+        CRITICAL_SUCCESS_THRESHOLD_KEEN: 4,
+        CRITICAL_FAILURE_THRESHOLD_RELIABLE: 4,
       },
     }
 

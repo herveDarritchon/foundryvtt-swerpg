@@ -100,7 +100,7 @@ export default class StandardCheck extends Roll {
    */
   get isCriticalSuccess() {
     if (!this._evaluated) return undefined
-    return this.total > this.data.dc + (this.data.criticalSuccessThreshold ?? 6)
+    return this.total > this.data.dc + (this.data.criticalSuccessThreshold ?? SYSTEM.dice.CRITICAL_SUCCESS_THRESHOLD)
   }
 
   /* -------------------------------------------- */
@@ -123,7 +123,7 @@ export default class StandardCheck extends Roll {
   get isCriticalFailure() {
     if (!this._evaluated) return undefined
     // A critical failure occurs only when strictly below (not equal to) DC - threshold
-    return this.total < this.data.dc - (this.data.criticalFailureThreshold ?? 6)
+    return this.total < this.data.dc - (this.data.criticalFailureThreshold ?? SYSTEM.dice.CRITICAL_FAILURE_THRESHOLD)
   }
 
   /* -------------------------------------------- */
