@@ -7,12 +7,6 @@ import SwerpgSpecialization from './specialization.mjs'
 import { getSkillPurchaseState } from '../utils/skill-costs.mjs'
 
 /**
- * @typedef {Object} Thresholds
- * @property {number} wounds - The wounds threshold
- * @property {number} strain - The strain threshold
- */
-
-/**
  * @typedef {Object} Experience
  * @property {number} spent - The number of experience points spent
  * @property {number} gained - The number of experience points gained
@@ -71,31 +65,6 @@ export default class SwerpgCharacter extends SwerpgActorType {
     for (const characteristicField of Object.values(schema.characteristics.fields)) {
       characteristicField.options.validate = SwerpgCharacter.#validateAttribute
     }
-
-    schema.thresholds = new fields.SchemaField({
-      wounds: new fields.NumberField(
-        {
-          required: true,
-          integer: true,
-          initial: 0,
-          min: 0,
-          max: 2000,
-          step: 1,
-        },
-        { label: 'THRESHOLD.Wounds' },
-      ),
-      strain: new fields.NumberField(
-        {
-          required: true,
-          integer: true,
-          initial: 0,
-          min: 0,
-          max: 2000,
-          step: 1,
-        },
-        { label: 'THRESHOLD.Strain' },
-      ),
-    })
 
     // Experience/Advancement
     schema.progression = new fields.SchemaField({
@@ -266,6 +235,34 @@ export default class SwerpgCharacter extends SwerpgActorType {
   /* -------------------------------------------- */
 
   /**
+   * Return the wound threshold bonus sourced from the character's species.
+   * Reads `details.species.woundThreshold.modifier` and defaults to 0 when no
+   * species is set or the modifier is absent.
+   *
+   * @override
+   * @returns {number}
+   */
+  _getWoundThresholdBonus() {
+    return this.details.species?.woundThreshold?.modifier ?? 0
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Return the strain threshold bonus sourced from the character's species.
+   * Reads `details.species.strainThreshold.modifier` and defaults to 0 when no
+   * species is set or the modifier is absent.
+   *
+   * @override
+   * @returns {number}
+   */
+  _getStrainThresholdBonus() {
+    return this.details.species?.strainThreshold?.modifier ?? 0
+  }
+
+  /* -------------------------------------------- */
+
+  /**
    * Validate an attribute field
    * @param actor
    */
@@ -357,10 +354,6 @@ export default class SwerpgCharacter extends SwerpgActorType {
    */
   #prepareSpecies() {
     const species = this.details.species
-    const thresholds = this.thresholds
-
-    thresholds.wounds = species?.woundThreshold?.modifier ?? 0
-    thresholds.strain = species?.strainThreshold?.modifier ?? 0
 
     for (let a in SYSTEM.CHARACTERISTICS) {
       const characteristic = this.characteristics[a]

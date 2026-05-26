@@ -336,6 +336,30 @@ export default class SwerpgActorType extends foundry.abstract.TypeDataModel {
   /* -------------------------------------------- */
 
   /**
+   * Return the bonus to add to the wound threshold for this actor subtype.
+   * Subclasses override this method to provide species or item-based bonuses.
+   * The base implementation returns 0, which is correct for adversaries.
+   *
+   * @returns {number} Non-negative bonus applied on top of the brawn characteristic.
+   * @protected
+   */
+  _getWoundThresholdBonus() {
+    return 0
+  }
+
+  /**
+   * Return the bonus to add to the strain threshold for this actor subtype.
+   * Subclasses override this method to provide species or item-based bonuses.
+   * The base implementation returns 0, which is correct for adversaries.
+   *
+   * @returns {number} Non-negative bonus applied on top of the willpower characteristic.
+   * @protected
+   */
+  _getStrainThresholdBonus() {
+    return 0
+  }
+
+  /**
    * The wound threshold determines how much damage a character can take
    * before experiencing significant negative effects.
    *
@@ -347,10 +371,10 @@ export default class SwerpgActorType extends foundry.abstract.TypeDataModel {
    * @returns {number} The calculated wound threshold value.
    */
   static #calculateWoundThreshold(actor) {
-    const { characteristics, thresholds } = actor
+    const { characteristics } = actor
     const brawn = characteristics?.brawn?.rank?.value ?? 0
-    const wounds = thresholds?.wounds ?? 0
-    const result = brawn + wounds
+    const bonus = actor._getWoundThresholdBonus()
+    const result = brawn + bonus
     logger.debug(`Calculating Wound Threshold for actor: ${result}`, actor)
     return result
   }
@@ -367,10 +391,10 @@ export default class SwerpgActorType extends foundry.abstract.TypeDataModel {
    * @returns {number} The calculated strain threshold value.
    */
   static #calculateStrainThreshold(actor) {
-    const { characteristics, thresholds } = actor
+    const { characteristics } = actor
     const willpower = characteristics?.willpower?.rank?.value ?? 0
-    const strain = thresholds?.strain ?? 0
-    const result = willpower + strain
+    const bonus = actor._getStrainThresholdBonus()
+    const result = willpower + bonus
     logger.debug(`Calculating Strain Threshold for actor: ${result}`, actor)
     return result
   }

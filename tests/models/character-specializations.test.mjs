@@ -6,7 +6,6 @@ function buildCharacterData({ specializations } = {}) {
   const characteristicRank = { base: 1, trained: 0, bonus: 0, value: 1 }
 
   return {
-    thresholds: { wounds: 0, strain: 0 },
     progression: {
       freeSkillRanks: {
         career: { id: '', name: '', spent: 0, gained: 0 },
