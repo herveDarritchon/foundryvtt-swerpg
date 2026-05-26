@@ -3,6 +3,27 @@ import { CHARACTERISTICS, DAMAGE_TYPES, RESOURCES } from './attributes.mjs'
 import Enum from './enum.mjs'
 
 /**
+ * The default defense type used by weapon attacks.
+ * Canonical key from SYSTEM.DEFENSES (physical defense).
+ * @type {string}
+ */
+export const DEFAULT_DEFENSE_TYPE = 'physical'
+
+/**
+ * The default resource targeted by healing actions and weapon attacks.
+ * @type {string}
+ */
+export const DEFAULT_RESOURCE = 'health'
+
+/**
+ * The default morale resource, used by rallying actions and morale-based resistance checks.
+ * @type {string}
+ */
+export const DEFAULT_RESOURCE_MORALE = 'morale'
+
+/* -------------------------------------------- */
+
+/**
  * The scope of creatures affected by an action.
  * @enum {number}
  */
@@ -139,7 +160,7 @@ function weaponAttack(type = 'mainhand') {
       }
 
       // Configure usage data
-      Object.assign(this.usage, { weapon: w, hasDice: true, defenseType: 'physical' })
+      Object.assign(this.usage, { weapon: w, hasDice: true, defenseType: DEFAULT_DEFENSE_TYPE })
       Object.assign(this.usage.context, { type: 'weapons', label: 'Weapon Tags', icon: 'fa-solid fa-swords' })
       this.usage.context.tags.add(w.name)
     },
@@ -733,7 +754,7 @@ export const TAGS = {
     tooltip: 'ACTION.TagHealingTooltip',
     category: 'damage',
     prepare() {
-      this.usage.resource = 'health'
+      this.usage.resource = DEFAULT_RESOURCE
       this.usage.defenseType = 'wounds'
       this.usage.restoration = true
     },
@@ -745,7 +766,7 @@ export const TAGS = {
     tooltip: 'ACTION.TagRallyingTooltip',
     category: 'damage',
     prepare() {
-      this.usage.resource = 'morale'
+      this.usage.resource = DEFAULT_RESOURCE_MORALE
       this.usage.defenseType = 'madness'
       this.usage.restoration = true
     },

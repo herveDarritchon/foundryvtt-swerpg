@@ -1,3 +1,5 @@
+import Enum from './enum.mjs'
+
 /**
  * @typedef {Object} ActivationType    A weapon quality activation type
  * @property {string} id               The activation type id
@@ -526,3 +528,40 @@ export const QUALITIES = {
  * @type {string[]}
  */
 export const ANIMATION_TYPES = Object.freeze(['explosion', 'laser_shot', 'laser_sword', 'double_bladed_laser_sword', 'throwable'])
+
+/* -------------------------------------------- */
+
+/**
+ * Equipment slots available for weapons.
+ * Used as canonical identifiers in schema fields, equipment preparation, and slot comparisons.
+ * @type {Enum}
+ */
+export const SLOTS = new Enum({
+  MAINHAND: { value: 'mainhand', label: 'WEAPON.SLOT.Mainhand' },
+  OFFHAND: { value: 'offhand', label: 'WEAPON.SLOT.Offhand' },
+  TWOHAND: { value: 'twohand', label: 'WEAPON.SLOT.Twohand' },
+  EITHER: { value: 'either', label: 'WEAPON.SLOT.Either' },
+})
+
+/* -------------------------------------------- */
+
+/**
+ * The default skill used for new weapons.
+ * Canonical key from SKILLS enum.
+ * @type {string}
+ */
+export const DEFAULT_SKILL = 'rangedLight'
+
+/**
+ * The default range band used for new weapons.
+ * Canonical key from RANGETYPES enum.
+ * @type {string}
+ */
+export const DEFAULT_RANGE = 'medium'
+
+/**
+ * The default resource targeted by weapon attacks.
+ * Used as fallback in getDamage() when no explicit resource is set.
+ * @type {string}
+ */
+export const DEFAULT_RESOURCE = 'health'

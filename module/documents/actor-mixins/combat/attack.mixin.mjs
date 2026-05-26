@@ -2,6 +2,7 @@
  * Attack Mixin - Handles all attack-related actions
  * Extracted from actor.mjs lines ~716-995
  */
+import { DEFAULT_DEFENSE_TYPE } from '../../../config/action.mjs'
 
 export const AttackMixin = (Base) =>
   class extends Base {
@@ -25,7 +26,7 @@ export const AttackMixin = (Base) =>
     async weaponAttack(action, target, weapon) {
       weapon ||= action.usage.weapon
       const { boons, banes } = this.applyTargetBoons(target, action, 'weapon', !!weapon.config.category.ranged)
-      const defenseType = action.usage.defenseType || 'physical'
+      const defenseType = action.usage.defenseType || DEFAULT_DEFENSE_TYPE
 
       if (weapon?.type !== 'weapon') {
         throw new Error(`Weapon attack Action "${action.name}" did not specify which weapon is used in the attack`)

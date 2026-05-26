@@ -1,4 +1,20 @@
 /**
+ * The default quality tier applied to new physical items.
+ * Canonical key from QUALITY_TIERS.
+ * @type {string}
+ */
+export const DEFAULT_QUALITY = 'standard'
+
+/**
+ * The default restriction level applied to new physical items.
+ * Canonical key from RESTRICTION_LEVELS.
+ * @type {string}
+ */
+export const DEFAULT_RESTRICTION_LEVEL = 'none'
+
+/* -------------------------------------------- */
+
+/**
  * @typedef {Object} ItemQualityTier
  * @property {string} id            The quality tier id
  * @property {string} label         A localized label for the quality tier

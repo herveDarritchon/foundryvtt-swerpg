@@ -2,6 +2,7 @@ import StandardCheck from '../dice/standard-check.mjs'
 import { logger } from '../utils/logger.mjs'
 import ActionUseDialog from '../dice/action-use-dialog.mjs'
 import ActionConfig from '../applications/config/action.mjs'
+import { DEFAULT_RESOURCE } from '../config/action.mjs'
 
 /**
  * @typedef {Object} ActionContext
@@ -879,7 +880,7 @@ export default class SwerpgAction extends foundry.abstract.DataModel {
   #finalizeOutcome(outcome) {
     for (const roll of outcome.rolls) {
       const damage = roll.data.damage || {}
-      const resource = damage.resource ?? 'health'
+      const resource = damage.resource ?? DEFAULT_RESOURCE
       outcome.resources[resource] ??= 0
       outcome.resources[resource] += (damage.total ?? 0) * (damage.restoration ? 1 : -1)
       if (roll.isCriticalSuccess) outcome.criticalSuccess = true
