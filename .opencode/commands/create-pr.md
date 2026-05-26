@@ -1,6 +1,6 @@
 ---
 description: Prepare or create a Pull Request targeting develop
-agent: opencode-create-pr
+agent: claude-create-pr
 subtask: true
 context: fork
 ---
