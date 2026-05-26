@@ -1,6 +1,7 @@
 import Characteristic from './characteristic.mjs'
 import ErrorCharacteristic from './error-characteristic.mjs'
 import CharacteristicCostCalculator from './characteristic-cost-calculator.mjs'
+import { CHARACTERISTIC_MAX_RANK_AT_CREATION, CHARACTERISTIC_MAX_RANK } from '../../config/progression.mjs'
 
 export default class TrainedCharacteristic extends Characteristic {
   constructor(actor, data, params, options) {
@@ -30,11 +31,11 @@ export default class TrainedCharacteristic extends Characteristic {
       return new ErrorCharacteristic(this.actor, this.data, {}, { message: "you can't forget this rank anymore because you are at & (minimal value)!" })
     }
 
-    if (this.isCreation && value > 5) {
+    if (this.isCreation && value > CHARACTERISTIC_MAX_RANK_AT_CREATION) {
       return new ErrorCharacteristic(this.actor, this.data, {}, { message: "you can't have more than 5 rank during creation!" })
     }
 
-    if (!this.isCreation && value > 6) {
+    if (!this.isCreation && value > CHARACTERISTIC_MAX_RANK) {
       return new ErrorCharacteristic(this.actor, this.data, {}, { message: "you can't have more than 6 rank!" })
     }
 

@@ -1,6 +1,7 @@
 import Skill from './skill.mjs'
 import ErrorSkill from './error-skill.mjs'
 import SkillCostCalculator from './skill-cost-calculator.mjs'
+import { MAX_RANK_AT_CREATION, MAX_RANK } from '../../config/skills.mjs'
 
 export default class TrainedSkill extends Skill {
   getCost(oldRank) {
@@ -53,11 +54,11 @@ export default class TrainedSkill extends Skill {
     this.data.rank.trained = trained
     this.data.rank.value = this.computeRankValue()
 
-    if (this.isCreation && this.data.rank.value > 2) {
+    if (this.isCreation && this.data.rank.value > MAX_RANK_AT_CREATION) {
       return this.createError("you can't have more than 2 ranks at creation!")
     }
 
-    if (!this.isCreation && this.data.rank.value > 5) {
+    if (!this.isCreation && this.data.rank.value > MAX_RANK) {
       return this.createError("you can't have more than 5 ranks!")
     }
 

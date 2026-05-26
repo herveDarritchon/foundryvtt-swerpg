@@ -1,5 +1,6 @@
 import { logger } from '../utils/logger.mjs'
 import { getPositiveDicePoolPreview } from '../utils/skill-costs.mjs'
+import { ENCUMBRANCE_BASE_BONUS } from '../config/progression.mjs'
 /**
  * @typedef {Object} SwerpgActorSkill
  * @property {Object} rank
@@ -388,7 +389,7 @@ export default class SwerpgActorType extends foundry.abstract.TypeDataModel {
   static #calculateEncumbranceThreshold(actor) {
     const { characteristics } = actor
     const brawn = characteristics?.brawn?.rank?.value ?? 0
-    const result = brawn + 5
+    const result = brawn + ENCUMBRANCE_BASE_BONUS
     logger.debug(`Calculating Encumbrance Threshold for actor: ${result}`, actor)
     return result
   }

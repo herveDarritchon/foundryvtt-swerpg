@@ -1,4 +1,5 @@
 import TrainedCharacteristic from './trained-characteristic.mjs'
+import { CHARACTERISTIC_RANK_COST_MULTIPLIER } from '../../config/progression.mjs'
 
 /**
  * CharacteristicCostCalculator class
@@ -29,7 +30,7 @@ export default class CharacteristicCostCalculator {
   }
 
   #calculateTrainCost(value) {
-    return value * 10
+    return value * CHARACTERISTIC_RANK_COST_MULTIPLIER
   }
 
   #calculateForgetCost(value) {
