@@ -1,6 +1,6 @@
 # Plan — Extraire les constantes magiques `SYSTEM.SKILLS.MAX_RANK*` dans SwerpgCharacter
 
-**Issue** : [#395 — Refactor: extraire constantes magiques SYSTEM.MOVEMENT.\* et SYSTEM.SKILLS.MAX\_RANK dans SwerpgCharacter](https://github.com/herveDarritchon/foundryvtt-swerpg/issues/395)
+**Issue** : [#395 — Refactor: extraire constantes magiques SYSTEM.MOVEMENT.\* et SYSTEM.SKILLS.MAX_RANK dans SwerpgCharacter](https://github.com/herveDarritchon/foundryvtt-swerpg/issues/395)
 
 ## Décision issue
 
@@ -14,7 +14,7 @@
 
 `SYSTEM.SKILL` pointe vers `module/config/skills.mjs` (les rangs et leurs coûts).
 
-→ `SYSTEM.SKILLS.MAX_RANK*` ajoute un export au *même* objet `SYSTEM.SKILLS`. Le plan doit soit :
+→ `SYSTEM.SKILLS.MAX_RANK*` ajoute un export au _même_ objet `SYSTEM.SKILLS`. Le plan doit soit :
 
 1. déplacer `MAX_RANK*` dans `module/config/skills.mjs` et l'exporter sous `SYSTEM.SKILL.MAX_RANK*` (cohérent avec la sémantique de `SYSTEM.SKILL`), **ou**
 2. enrichir `SYSTEM.SKILLS` avec `MAX_RANK*` en acceptant la dualité sémantique (catalogue + config de rang).
@@ -27,11 +27,11 @@
 
 ## Fichiers impactés
 
-| Fichier | Nature |
-|---|---|
-| `module/config/skills.mjs` | + `MAX_RANK_AT_CREATION`, `MAX_RANK` |
-| `module/config/system.mjs` | Surface `MAX_RANK*` sous `SYSTEM.SKILLS` |
-| `module/models/character.mjs` | Remplacer `2` et `5` par les constantes |
+| Fichier                       | Nature                                   |
+| ----------------------------- | ---------------------------------------- |
+| `module/config/skills.mjs`    | + `MAX_RANK_AT_CREATION`, `MAX_RANK`     |
+| `module/config/system.mjs`    | Surface `MAX_RANK*` sous `SYSTEM.SKILLS` |
+| `module/models/character.mjs` | Remplacer `2` et `5` par les constantes  |
 
 ## Étapes
 

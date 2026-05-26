@@ -42,12 +42,12 @@ L'audit ADR-0018 a révélé **316 occurrences candidates** dans **73 fichiers**
 
 ## 4. Risques
 
-| Risque | Impact | Mitigation |
-| --- | --- | --- |
-| Sur-centralisation de constantes purement visuelles dans `module/config/` | dilution du catalogue, perte de lisibilité | lot 5 : nommer localement, ne centraliser que si la règle est transverse |
-| Collision de namespace `SYSTEM.*` (ex. `SYSTEM.SKILLS` déjà utilisé) | régression silencieuse des consommateurs | vérifier itérateurs + `Object.defineProperty` si `enumerable: false` requis |
-| Régressions sur règles métier partagées (XP, rangs) | fausse facturation, corruption de personnage | tests contractuels + tests existants inchangés |
-| Étendue trop large du lot 3 (80+ magic strings) | dispersion, PR trop grosse | découper par entité métier (weapon, action, adversary, species, etc.) |
+| Risque                                                                    | Impact                                       | Mitigation                                                                  |
+| ------------------------------------------------------------------------- | -------------------------------------------- | --------------------------------------------------------------------------- |
+| Sur-centralisation de constantes purement visuelles dans `module/config/` | dilution du catalogue, perte de lisibilité   | lot 5 : nommer localement, ne centraliser que si la règle est transverse    |
+| Collision de namespace `SYSTEM.*` (ex. `SYSTEM.SKILLS` déjà utilisé)      | régression silencieuse des consommateurs     | vérifier itérateurs + `Object.defineProperty` si `enumerable: false` requis |
+| Régressions sur règles métier partagées (XP, rangs)                       | fausse facturation, corruption de personnage | tests contractuels + tests existants inchangés                              |
+| Étendue trop large du lot 3 (80+ magic strings)                           | dispersion, PR trop grosse                   | découper par entité métier (weapon, action, adversary, species, etc.)       |
 
 ## 5. Hiérarchie des work items
 
@@ -77,15 +77,15 @@ graph TD
 
 ## 6. Découpage GitHub recommandé
 
-| Type | Titre | Priorité | Estimate | Dépendances |
-| --- | --- | --- | --- | --- |
-| Feature | `ADR-0018 Magic Numbers Compliance — Mettre la codebase en conformité ADR-0018` | P1 | 21 | Epic `Core Refactor` |
-| Story | `MC1 — Extraire les constantes de progression/XP/rangs/coûts métier` | P1 | 5 | Feature |
-| Story | `MC2 — Extraire les seuils du moteur de dés et du combat` | P1 | 5 | Feature |
-| Story | `MC3 — Centraliser les enums et defaults de schéma métier` | P1 | 8 | Feature |
-| Enabler | `MC4 — Normaliser l'importer OggDude avec les constantes partagées` | P2 | 3 | MC1, MC3 |
-| Enabler | `MC5 — Nommer les constantes UI/canvas locales` | P2 | 3 | Feature |
-| Test | `MC6 — Verrouiller les contrats config et valider la non-régression` | P1 | 3 | MC1, MC2, MC3, MC4, MC5 |
+| Type    | Titre                                                                           | Priorité | Estimate | Dépendances             |
+| ------- | ------------------------------------------------------------------------------- | -------- | -------- | ----------------------- |
+| Feature | `ADR-0018 Magic Numbers Compliance — Mettre la codebase en conformité ADR-0018` | P1       | 21       | Epic `Core Refactor`    |
+| Story   | `MC1 — Extraire les constantes de progression/XP/rangs/coûts métier`            | P1       | 5        | Feature                 |
+| Story   | `MC2 — Extraire les seuils du moteur de dés et du combat`                       | P1       | 5        | Feature                 |
+| Story   | `MC3 — Centraliser les enums et defaults de schéma métier`                      | P1       | 8        | Feature                 |
+| Enabler | `MC4 — Normaliser l'importer OggDude avec les constantes partagées`             | P2       | 3        | MC1, MC3                |
+| Enabler | `MC5 — Nommer les constantes UI/canvas locales`                                 | P2       | 3        | Feature                 |
+| Test    | `MC6 — Verrouiller les contrats config et valider la non-régression`            | P1       | 3        | MC1, MC2, MC3, MC4, MC5 |
 
 ## 7. Dépendances et ordre recommandé
 

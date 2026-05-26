@@ -19,7 +19,7 @@ La suite `e2e:documentation` produit des captures d'écran et valide les invaria
 **Frontière avec les autres suites :**
 
 | Critère        | `documentation`                                                       | `regression`                           | `smoke`                           |
-|----------------|-----------------------------------------------------------------------|----------------------------------------|-----------------------------------|
+| -------------- | --------------------------------------------------------------------- | -------------------------------------- | --------------------------------- |
 | Objectif       | Captures documentaires, invariants visibles                           | Validation fonctionnelle pré-livraison | Santé de surface post-déploiement |
 | Mutations      | Lecture seule par défaut (prérequis contrôlés acceptés si documentés) | Autorisées                             | Interdites                        |
 | Instance cible | Port 30000 (production ou dédiée stable)                              | Port 31001 (dédiée, monde jetable)     | Port 30000 (production)           |
@@ -63,7 +63,7 @@ Ce reset est visuel uniquement — il ne touche aucune donnée persistée.
 ### Frontière documentation vs régression
 
 | Aspect            | Documentation               | Régression                             |
-|-------------------|-----------------------------|----------------------------------------|
+| ----------------- | --------------------------- | -------------------------------------- |
 | Données           | Lecture seule, état stable  | Mutations autorisées, cleanup par spec |
 | Monde             | Stable et représentatif     | Monde contrôlé recréé ou nettoyé       |
 | Reset             | Visuel uniquement           | Artefacts éphémères supprimés          |
@@ -118,7 +118,7 @@ cp .env.e2e.documentation.example .env.e2e.documentation
 Variables requises :
 
 | Variable                     | Rôle                        | Valeur par défaut        |
-|------------------------------|-----------------------------|--------------------------|
+| ---------------------------- | --------------------------- | ------------------------ |
 | `E2E_FOUNDRY_BASE_URL`       | URL de l'instance Foundry   | `http://localhost:30000` |
 | `E2E_FOUNDRY_ADMIN_PASSWORD` | Mot de passe administrateur | — (requis)               |
 | `E2E_FOUNDRY_USERNAME`       | Nom du compte               | `Gamemaster`             |
@@ -168,21 +168,21 @@ Exécuter `pnpm run docs:generate-user-guides` pour transformer les JSON en `doc
 Les helpers spécifiques à la suite documentation sont dans `e2e/documentation/utils/`.
 Ils sont **isolés** des helpers des suites `regression` et `smoke`.
 
-| Helper                          | Fichier                           | Responsabilité                                                       |
-|---------------------------------|-----------------------------------|----------------------------------------------------------------------|
-| `prepareDocumentationState`     | `documentation-world-manager.ts`  | Reset visuel avant capture (overlays, applications, animations)      |
-| `closeAllOpenApplications`      | `documentation-world-manager.ts`  | Fermeture de toutes les fenêtres Foundry ouvertes                    |
-| `disableAnimations`             | `documentation-world-manager.ts`  | Désactivation des animations CSS pour des captures stables           |
-| `assertDocumentationWorldReady` | `documentation-world-manager.ts`  | Vérification que le monde documentaire est actif                     |
-| `navigateDocumentation`         | `documentation-world-manager.ts`  | Navigation documentaire sans mutation                                |
-| `takeDocumentationScreenshot`   | `screenshot-helper.ts`            | Capture avec nom stable, viewport fixe et attente réseau             |
-| `toKebabSlug`                   | `screenshot-helper.ts`            | Normalisation d'un texte en slug kebab-case pour les noms de fichier |
-| `createGuideStepRecorder`       | `guide-step-recorder.ts`          | Enregistrement des étapes d'un parcours documentaire                 |
-| `writeGuideMetadata`            | `guide-metadata-writer.ts`        | Écriture du JSON structuré d'un guide                                |
-| `readGuideMetadata`             | `guide-metadata-writer.ts`        | Lecture des métadonnées d'un guide existant                          |
-| `generateMarkdownFromMetadata`  | `markdown-guide-generator.mjs`    | Transformation d'un JSON guide en Markdown anglais (pure, sans I/O) |
-| `generateUserGuide`             | `markdown-guide-generator.mjs`    | Génération complète d'un guide Markdown depuis le JSON sur disque    |
-| `discoverGuideIds`              | `markdown-guide-generator.mjs`    | Découverte des guides disponibles dans `documentation-output/guides/`|
+| Helper                          | Fichier                          | Responsabilité                                                        |
+| ------------------------------- | -------------------------------- | --------------------------------------------------------------------- |
+| `prepareDocumentationState`     | `documentation-world-manager.ts` | Reset visuel avant capture (overlays, applications, animations)       |
+| `closeAllOpenApplications`      | `documentation-world-manager.ts` | Fermeture de toutes les fenêtres Foundry ouvertes                     |
+| `disableAnimations`             | `documentation-world-manager.ts` | Désactivation des animations CSS pour des captures stables            |
+| `assertDocumentationWorldReady` | `documentation-world-manager.ts` | Vérification que le monde documentaire est actif                      |
+| `navigateDocumentation`         | `documentation-world-manager.ts` | Navigation documentaire sans mutation                                 |
+| `takeDocumentationScreenshot`   | `screenshot-helper.ts`           | Capture avec nom stable, viewport fixe et attente réseau              |
+| `toKebabSlug`                   | `screenshot-helper.ts`           | Normalisation d'un texte en slug kebab-case pour les noms de fichier  |
+| `createGuideStepRecorder`       | `guide-step-recorder.ts`         | Enregistrement des étapes d'un parcours documentaire                  |
+| `writeGuideMetadata`            | `guide-metadata-writer.ts`       | Écriture du JSON structuré d'un guide                                 |
+| `readGuideMetadata`             | `guide-metadata-writer.ts`       | Lecture des métadonnées d'un guide existant                           |
+| `generateMarkdownFromMetadata`  | `markdown-guide-generator.mjs`   | Transformation d'un JSON guide en Markdown anglais (pure, sans I/O)   |
+| `generateUserGuide`             | `markdown-guide-generator.mjs`   | Génération complète d'un guide Markdown depuis le JSON sur disque     |
+| `discoverGuideIds`              | `markdown-guide-generator.mjs`   | Découverte des guides disponibles dans `documentation-output/guides/` |
 
 ### Usage typique dans une spec
 
@@ -271,7 +271,7 @@ e2e/documentation/
 - [ ] `ensureSessionActive` avant toute séquence longue
 - [ ] Pas de `waitForTimeout` — utiliser des assertions web-first
 - [ ] Si un prérequis contrôlé est créé : nom `Doc-<Prefixe>-${Date.now()}`, cleanup explicite, mention dans la
-  description
+      description
 - [ ] Pas de `click({ force: true })` sans justification écrite
 
 ---
@@ -303,12 +303,12 @@ pnpm e2e:documentation -- e2e/documentation/specs/character-sheet.guide.spec.ts
 
 **Étapes documentées** :
 
-| #  | Titre                              | Action utilisateur                                   | État attendu                                                    |
-|----|------------------------------------|------------------------------------------------------|-----------------------------------------------------------------|
-| 01 | Vue générale du monde documentaire | Ouverture de la session dans le monde documentaire   | Page /game chargée, sidebar visible, aucune application ouverte |
-| 02 | Sidebar Actors ouverte             | Clic sur l'onglet Actors dans la barre de navigation | Liste des acteurs visible dans la sidebar                       |
-| 03 | Fiche de personnage ouverte        | Double-clic sur le nom de l'acteur dans la sidebar   | Fiche de personnage visible avec l'onglet par défaut chargé     |
-| 04 | Onglet Compétences ouvert          | Clic sur l'onglet Compétences dans la fiche          | Onglet Compétences actif, liste des compétences visible         |
+| #   | Titre                              | Action utilisateur                                   | État attendu                                                    |
+| --- | ---------------------------------- | ---------------------------------------------------- | --------------------------------------------------------------- |
+| 01  | Vue générale du monde documentaire | Ouverture de la session dans le monde documentaire   | Page /game chargée, sidebar visible, aucune application ouverte |
+| 02  | Sidebar Actors ouverte             | Clic sur l'onglet Actors dans la barre de navigation | Liste des acteurs visible dans la sidebar                       |
+| 03  | Fiche de personnage ouverte        | Double-clic sur le nom de l'acteur dans la sidebar   | Fiche de personnage visible avec l'onglet par défaut chargé     |
+| 04  | Onglet Compétences ouvert          | Clic sur l'onglet Compétences dans la fiche          | Onglet Compétences actif, liste des compétences visible         |
 
 **Artefacts produits** :
 
@@ -379,6 +379,7 @@ documentation-output/
 **Comportement en cas d'artefact manquant** :
 
 La commande `docs:generate-user-guides` échoue explicitement avec un message d'erreur si :
+
 - le dossier `documentation-output/guides/` est absent ou vide ;
 - le fichier `<guide>.json` est absent ou illisible ;
 - le dossier de screenshots référencé par le JSON est absent.
@@ -402,12 +403,12 @@ Elle ne relance pas Playwright.
 
 ### Quand relancer la suite
 
-| Situation | Action recommandée |
-|---|---|
-| Mise à jour d'un parcours (spec, UI, données) | Rerun Playwright complet (`pnpm e2e:documentation`) puis génération Markdown (`pnpm docs:generate-user-guides`) |
-| Seule la mise en forme Markdown change | Relancer uniquement `pnpm docs:generate-user-guides` — pas de rerun Playwright |
-| Artefacts JSON ou screenshots absents ou corrompus | Rerun Playwright obligatoire avant toute génération |
-| Vérification ponctuelle de la stabilité visuelle | Rerun Playwright ciblé sur la spec concernée |
+| Situation                                          | Action recommandée                                                                                              |
+| -------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| Mise à jour d'un parcours (spec, UI, données)      | Rerun Playwright complet (`pnpm e2e:documentation`) puis génération Markdown (`pnpm docs:generate-user-guides`) |
+| Seule la mise en forme Markdown change             | Relancer uniquement `pnpm docs:generate-user-guides` — pas de rerun Playwright                                  |
+| Artefacts JSON ou screenshots absents ou corrompus | Rerun Playwright obligatoire avant toute génération                                                             |
+| Vérification ponctuelle de la stabilité visuelle   | Rerun Playwright ciblé sur la spec concernée                                                                    |
 
 ### Commande canonique de rerun documentaire
 
@@ -456,14 +457,14 @@ Le monde documentaire `documentation-world` doit être distinct du monde de prod
 
 ### Qui maintient quoi
 
-| Périmètre | Responsable |
-|---|---|
-| Parcours Playwright (`*.guide.spec.ts`) | Dev / QA |
-| Screenshots et artefacts documentaires (`documentation-output/`) | Dev / QA |
-| Monde documentaire (`documentation-world`) — stabilité et état représentatif | Dev / QA |
-| Relecture métier des guides générés | Documentation / PO |
-| Validation de la pertinence et de la publication des guides | Documentation / PO |
-| Génération Markdown (`docs:generate-user-guides`) | Dev / QA (déclenchement) |
+| Périmètre                                                                    | Responsable              |
+| ---------------------------------------------------------------------------- | ------------------------ |
+| Parcours Playwright (`*.guide.spec.ts`)                                      | Dev / QA                 |
+| Screenshots et artefacts documentaires (`documentation-output/`)             | Dev / QA                 |
+| Monde documentaire (`documentation-world`) — stabilité et état représentatif | Dev / QA                 |
+| Relecture métier des guides générés                                          | Documentation / PO       |
+| Validation de la pertinence et de la publication des guides                  | Documentation / PO       |
+| Génération Markdown (`docs:generate-user-guides`)                            | Dev / QA (déclenchement) |
 
 ### Rôle de l'IA dans la génération
 
@@ -516,13 +517,13 @@ Les invariants minimaux vérifiés (i18n, absence de placeholder cassé, absence
 
 Pour qu'un guide soit diffable et relisible avant release, les éléments suivants doivent rester déterministes :
 
-| Invariant | Mécanisme |
-|---|---|
-| Ordre des captures | Préfixe d'index `01-`, `02-`, `03-`, `04-` — incrémenté dans l'ordre des étapes de la spec |
-| Viewport constant | `1920×1080` défini dans `playwright.documentation.config.ts` — ne pas modifier entre les runs |
-| Nommage déterministe | Slugs kebab-case fixes (`toKebabSlug`) — pas d'horodatage ni d'identifiant aléatoire dans le nom de fichier |
-| Écrans sans bruit parasite | `prepareDocumentationState` appelé avant chaque capture (overlays, apps, animations) |
-| Cohérence JSON ↔ screenshots | `writeGuideMetadata` écrit les chemins dans l'ordre d'enregistrement — aligné avec les fichiers produits |
+| Invariant                     | Mécanisme                                                                                                   |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| Ordre des captures            | Préfixe d'index `01-`, `02-`, `03-`, `04-` — incrémenté dans l'ordre des étapes de la spec                  |
+| Viewport constant             | `1920×1080` défini dans `playwright.documentation.config.ts` — ne pas modifier entre les runs               |
+| Nommage déterministe          | Slugs kebab-case fixes (`toKebabSlug`) — pas d'horodatage ni d'identifiant aléatoire dans le nom de fichier |
+| Écrans sans bruit parasite    | `prepareDocumentationState` appelé avant chaque capture (overlays, apps, animations)                        |
+| Cohérence JSON ↔ screenshots | `writeGuideMetadata` écrit les chemins dans l'ordre d'enregistrement — aligné avec les fichiers produits    |
 
 ### Écarts tolérés
 
@@ -546,14 +547,14 @@ Pour qu'un guide soit diffable et relisible avant release, les éléments suivan
 
 Les catégories suivantes ne doivent **jamais** apparaître dans `screenshots/`, `guides/*.json` ou `markdown/*.md` :
 
-| Catégorie | Mécanisme d'évitement |
-|---|---|
-| Identifiants réels (noms d'utilisateurs, comptes client, emails) | Monde dédié, noms neutres (`Doc-<Prefixe>-${Date.now()}`) |
-| Données client ou de campagne réelle | Monde documentaire isolé, distinct de la production |
-| Secrets et tokens (mots de passe, clés API, tokens de session) | Monde dédié, captures sans zone sensible |
-| URLs non prévues ou redirections vers un autre environnement | Contrôle du point d'entrée avant run |
+| Catégorie                                                                | Mécanisme d'évitement                                                                   |
+| ------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- |
+| Identifiants réels (noms d'utilisateurs, comptes client, emails)         | Monde dédié, noms neutres (`Doc-<Prefixe>-${Date.now()}`)                               |
+| Données client ou de campagne réelle                                     | Monde documentaire isolé, distinct de la production                                     |
+| Secrets et tokens (mots de passe, clés API, tokens de session)           | Monde dédié, captures sans zone sensible                                                |
+| URLs non prévues ou redirections vers un autre environnement             | Contrôle du point d'entrée avant run                                                    |
 | Bruit de session (notifications d'usage, alertes de mise à jour, popups) | `dismissOverlayIfPresent` + `closeAllOpenApplications` dans `prepareDocumentationState` |
-| États non représentatifs (erreur, migration incomplète) | Monde stable et représentatif avant run |
+| États non représentatifs (erreur, migration incomplète)                  | Monde stable et représentatif avant run                                                 |
 
 ### Point de contrôle documentaire
 
@@ -561,6 +562,7 @@ La génération Markdown (`pnpm run docs:generate-user-guides`) ne peut introdui
 Le JSON source ne contient que les métadonnées déclarées dans la spec : titre, actions utilisateur, états attendus, chemins de screenshots.
 
 Avant diffusion d'un guide :
+
 1. Dev/QA confirme que les captures sont à jour et représentatives.
 2. Documentation/PO relit le contenu sur le fond fonctionnel.
 3. Documentation/PO valide ou demande une correction.

@@ -440,9 +440,7 @@ function _buildChatContext(actor, entry) {
       context.previousValue = String(data.oldRank)
       context.nextValue = String(data.newRank)
       context.variant = isFree ? 'gain' : 'add'
-      context.metaLeft = isFree
-        ? game.i18n.localize('SKILL.CHAT.FREE_COST')
-        : game.i18n.format('SKILL.CHAT.COST', { cost: data.cost })
+      context.metaLeft = isFree ? game.i18n.localize('SKILL.CHAT.FREE_COST') : game.i18n.format('SKILL.CHAT.COST', { cost: data.cost })
       break
     }
 
@@ -474,9 +472,7 @@ function _buildChatContext(actor, entry) {
       )
       context.nextValue = isGain ? `+${data.amount} XP` : `-${data.amount} XP`
       context.variant = isGain ? 'gain' : 'remove'
-      context.metaLeft = isGain
-        ? game.i18n.format('SKILL.CHAT.REFUND', { cost: data.amount })
-        : game.i18n.format('SKILL.CHAT.COST', { cost: data.amount })
+      context.metaLeft = isGain ? game.i18n.format('SKILL.CHAT.REFUND', { cost: data.amount }) : game.i18n.format('SKILL.CHAT.COST', { cost: data.amount })
       break
     }
 
@@ -524,9 +520,7 @@ function _buildChatContext(actor, entry) {
         context.nextValue = data.talentId ?? data.nodeId ?? ''
         context.variant = isPurchase ? 'add' : 'remove'
         if (data.cost) {
-          context.metaLeft = isPurchase
-            ? game.i18n.format('SKILL.CHAT.COST', { cost: data.cost })
-            : game.i18n.format('SKILL.CHAT.REFUND', { cost: data.cost })
+          context.metaLeft = isPurchase ? game.i18n.format('SKILL.CHAT.COST', { cost: data.cost }) : game.i18n.format('SKILL.CHAT.REFUND', { cost: data.cost })
         }
       } else {
         context.nextValue = data.nodeId ?? ''
@@ -554,9 +548,7 @@ function _buildChatContext(actor, entry) {
       context.variant = xpDelta > 0 ? 'gain' : xpDelta < 0 ? 'remove' : 'change'
       if (xpDelta !== 0) {
         context.metaLeft =
-          xpDelta > 0
-            ? game.i18n.format('SKILL.CHAT.REFUND', { cost: xpDelta })
-            : game.i18n.format('SKILL.CHAT.COST', { cost: Math.abs(xpDelta) })
+          xpDelta > 0 ? game.i18n.format('SKILL.CHAT.REFUND', { cost: xpDelta }) : game.i18n.format('SKILL.CHAT.COST', { cost: Math.abs(xpDelta) })
       }
     }
   }

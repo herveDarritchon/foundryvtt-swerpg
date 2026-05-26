@@ -398,35 +398,36 @@ Exemples :
 #### Recommandation
 
 Si ces zones sont retouchées :
+
 - nommer localement les constantes techniques ;
 - ne pas lancer de chantier dédié uniquement pour ces cas.
 
 ## Fichiers les plus denses
 
-| Occurrences numériques | Fichier |
-| ---: | --- |
-| 42 | `module/canvas/token.mjs` |
-| 26 | `module/applications/specialization-tree/pixi-tree-renderer.mjs` |
-| 13 | `module/canvas/talent-tree-node.mjs` |
-| 13 | `module/canvas/talent-tree.mjs` |
-| 12 | `module/canvas/talent-icon.mjs` |
-| 12 | `module/dice/standard-check.mjs` |
-| 10 | `module/models/actor-type.mjs` |
-| 9 | `module/importer/utils/global-import-metrics.mjs` |
-| 8 | `module/applications/sheets/adversary-sheet.mjs` |
-| 8 | `module/importer/items/career-ogg-dude.mjs` |
+| Occurrences numériques | Fichier                                                          |
+| ---------------------: | ---------------------------------------------------------------- |
+|                     42 | `module/canvas/token.mjs`                                        |
+|                     26 | `module/applications/specialization-tree/pixi-tree-renderer.mjs` |
+|                     13 | `module/canvas/talent-tree-node.mjs`                             |
+|                     13 | `module/canvas/talent-tree.mjs`                                  |
+|                     12 | `module/canvas/talent-icon.mjs`                                  |
+|                     12 | `module/dice/standard-check.mjs`                                 |
+|                     10 | `module/models/actor-type.mjs`                                   |
+|                      9 | `module/importer/utils/global-import-metrics.mjs`                |
+|                      8 | `module/applications/sheets/adversary-sheet.mjs`                 |
+|                      8 | `module/importer/items/career-ogg-dude.mjs`                      |
 
 ## Évaluation par famille
 
-| Famille | Volume approx. | Criticité | Corriger |
-| --- | ---: | --- | --- |
-| Progression / XP / rangs | 30+ | Critique | Oui |
-| Dés / combat / résolution | 20+ | Critique | Oui |
-| Magic strings de schéma / enums métier | 80+ | Critique | Oui, par vagues |
-| Importer OggDude | 50+ | Majeure | Oui, partiel |
-| Applications / sheets | 49 | Majeure | Oui, sélectif |
-| Canvas / Pixi / rendu | 106 | Mineure à Majeure | Oui localement |
-| Sentinelles / couleurs / formatage | variable | Faible | Non prioritaire |
+| Famille                                | Volume approx. | Criticité         | Corriger        |
+| -------------------------------------- | -------------: | ----------------- | --------------- |
+| Progression / XP / rangs               |            30+ | Critique          | Oui             |
+| Dés / combat / résolution              |            20+ | Critique          | Oui             |
+| Magic strings de schéma / enums métier |            80+ | Critique          | Oui, par vagues |
+| Importer OggDude                       |            50+ | Majeure           | Oui, partiel    |
+| Applications / sheets                  |             49 | Majeure           | Oui, sélectif   |
+| Canvas / Pixi / rendu                  |            106 | Mineure à Majeure | Oui localement  |
+| Sentinelles / couleurs / formatage     |       variable | Faible            | Non prioritaire |
 
 ## Cas déjà alignés avec l’ADR
 

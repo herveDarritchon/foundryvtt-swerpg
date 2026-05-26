@@ -78,7 +78,10 @@ export async function setUp(page: Page, options: FoundrySessionOptions) {
  */
 async function dismissSessionConflictIfPresent(page: Page): Promise<void> {
   const conflictText = page.getByText(/currently active in this World/i)
-  const appeared = await conflictText.waitFor({ state: 'visible', timeout: 3000 }).then(() => true).catch(() => false)
+  const appeared = await conflictText
+    .waitFor({ state: 'visible', timeout: 3000 })
+    .then(() => true)
+    .catch(() => false)
   if (appeared) {
     const yesBtn = page.getByRole('button', { name: /^Yes$/i })
     await yesBtn.click().catch(() => {})
@@ -137,8 +140,14 @@ export async function tearDown(page: Page, options: FoundrySessionOptions) {
       await page.goto(`${options.baseURL}/auth`, { waitUntil: 'domcontentloaded', timeout: 10000 }).catch(() => {})
 
       if (page.url().includes('/auth')) {
-        await page.getByPlaceholder('Administrator Password').fill(options.adminPassword).catch(() => {})
-        await page.getByRole('button', { name: /log in/i }).click().catch(() => {})
+        await page
+          .getByPlaceholder('Administrator Password')
+          .fill(options.adminPassword)
+          .catch(() => {})
+        await page
+          .getByRole('button', { name: /log in/i })
+          .click()
+          .catch(() => {})
         await page.waitForURL('**/setup', { waitUntil: 'domcontentloaded', timeout: 10000 }).catch(() => {})
       }
 

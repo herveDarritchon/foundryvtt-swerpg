@@ -114,24 +114,24 @@ La validation Dev/QA seule ne suffit pas pour autoriser la publication.
 
 ### Écarts tolérés avant release documentaire
 
-| Écart | Tolérance |
-|---|---|
-| Légère variation de rendu due à la police ou au zoom | Toléré si le contenu reste lisible et représentatif |
-| Durée de chargement variable selon l'environnement | Toléré si `networkidle` stabilise les captures |
-| Captures partiellement décalées d'1-2px entre reruns | Toléré — pas de comparaison pixel-à-pixel |
-| Artefacts d'un run précédent présents dans `documentation-output/` | Toléré — les fichiers sont écrasés lors du rerun |
+| Écart                                                              | Tolérance                                           |
+| ------------------------------------------------------------------ | --------------------------------------------------- |
+| Légère variation de rendu due à la police ou au zoom               | Toléré si le contenu reste lisible et représentatif |
+| Durée de chargement variable selon l'environnement                 | Toléré si `networkidle` stabilise les captures      |
+| Captures partiellement décalées d'1-2px entre reruns               | Toléré — pas de comparaison pixel-à-pixel           |
+| Artefacts d'un run précédent présents dans `documentation-output/` | Toléré — les fichiers sont écrasés lors du rerun    |
 
 ### Écarts bloquants avant release documentaire
 
-| Écart | Statut |
-|---|---|
-| Capture manquante ou fichier PNG corrompu | **Bloquant** — rerun obligatoire |
-| Ordre des captures incohérent avec le JSON | **Bloquant** — rerun obligatoire |
-| Nom de fichier contenant un horodatage ou un identifiant aléatoire | **Bloquant** — rerun et correction de la spec |
-| Donnée sensible, client ou non maîtrisée visible dans une capture | **Bloquant** — nettoyage du monde et rerun obligatoire |
-| Erreur navigateur inattendue non filtrée pendant le run | **Bloquant** — investigation et rerun après correction |
-| JSON incohérent avec les captures (étape manquante, chemin invalide) | **Bloquant** — rerun obligatoire |
-| Guide généré contenant des informations hors JSON source | **Bloquant** — investigation du générateur Markdown |
+| Écart                                                                | Statut                                                 |
+| -------------------------------------------------------------------- | ------------------------------------------------------ |
+| Capture manquante ou fichier PNG corrompu                            | **Bloquant** — rerun obligatoire                       |
+| Ordre des captures incohérent avec le JSON                           | **Bloquant** — rerun obligatoire                       |
+| Nom de fichier contenant un horodatage ou un identifiant aléatoire   | **Bloquant** — rerun et correction de la spec          |
+| Donnée sensible, client ou non maîtrisée visible dans une capture    | **Bloquant** — nettoyage du monde et rerun obligatoire |
+| Erreur navigateur inattendue non filtrée pendant le run              | **Bloquant** — investigation et rerun après correction |
+| JSON incohérent avec les captures (étape manquante, chemin invalide) | **Bloquant** — rerun obligatoire                       |
+| Guide généré contenant des informations hors JSON source             | **Bloquant** — investigation du générateur Markdown    |
 
 ---
 
@@ -139,14 +139,14 @@ La validation Dev/QA seule ne suffit pas pour autoriser la publication.
 
 Les catégories suivantes ne doivent **jamais** apparaître dans `screenshots/`, `guides/*.json` ou `markdown/*.md` :
 
-| Catégorie | Exemples | Mécanisme d'évitement |
-|---|---|---|
-| Identifiants réels | Noms d'utilisateurs réels, comptes client, emails | Monde dédié, noms neutres (`Doc-*`) |
-| Données client | Personnages issus d'une campagne réelle, données de jeu partagées | Monde dédié isolé |
-| Secrets et tokens | Mots de passe, clés API, tokens de session visibles | Monde dédié, captures sans zone sensible |
-| URLs non prévues | Redirections vers un autre environnement, URLs de production dans le DOM | Contrôle du point d'entrée avant run |
-| Bruit de session | Notifications d'usage Foundry, alertes de mise à jour, popups de cookies | `dismissOverlayIfPresent` + `closeAllOpenApplications` |
-| Données non représentatives | États d'erreur, données de migration incomplète | État stable du monde avant run |
+| Catégorie                   | Exemples                                                                 | Mécanisme d'évitement                                  |
+| --------------------------- | ------------------------------------------------------------------------ | ------------------------------------------------------ |
+| Identifiants réels          | Noms d'utilisateurs réels, comptes client, emails                        | Monde dédié, noms neutres (`Doc-*`)                    |
+| Données client              | Personnages issus d'une campagne réelle, données de jeu partagées        | Monde dédié isolé                                      |
+| Secrets et tokens           | Mots de passe, clés API, tokens de session visibles                      | Monde dédié, captures sans zone sensible               |
+| URLs non prévues            | Redirections vers un autre environnement, URLs de production dans le DOM | Contrôle du point d'entrée avant run                   |
+| Bruit de session            | Notifications d'usage Foundry, alertes de mise à jour, popups de cookies | `dismissOverlayIfPresent` + `closeAllOpenApplications` |
+| Données non représentatives | États d'erreur, données de migration incomplète                          | État stable du monde avant run                         |
 
 **Mécanismes en place :**
 
@@ -162,10 +162,10 @@ Les catégories suivantes ne doivent **jamais** apparaître dans `screenshots/`,
 
 La clôture EDG6 s'applique **uniquement** au flux documentaire `e2e:documentation`.
 
-| Signal | Périmètre |
-|---|---|
-| Feu vert documentaire (EDG6) | Captures stables + artefacts sûrs + checklist complète + relecture humaine |
-| Release applicative globale | Inclut régression fonctionnelle, smoke, validation métier, tests Vitest — indépendant d'EDG6 |
+| Signal                       | Périmètre                                                                                    |
+| ---------------------------- | -------------------------------------------------------------------------------------------- |
+| Feu vert documentaire (EDG6) | Captures stables + artefacts sûrs + checklist complète + relecture humaine                   |
+| Release applicative globale  | Inclut régression fonctionnelle, smoke, validation métier, tests Vitest — indépendant d'EDG6 |
 
 La suite `e2e:documentation` n'est **jamais** un gate bloquant pour un merge ou une release applicative.
 Un guide documentaire non à jour ne bloque pas la livraison — il indique que la documentation est à régénérer.

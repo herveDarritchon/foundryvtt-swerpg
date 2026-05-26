@@ -145,11 +145,11 @@ Ce dossier décrit la façon dont swerpg s’intègre à Foundry et comment le s
 
 ### Niveaux de test
 
-| Niveau | Framework | Périmètre | Commande |
-|---|---|---|---|
-| **Unitaire / Intégration** | Vitest | `module/lib/` (pur domaine) + adapters Foundry mockés | `pnpm test` |
-| **E2E — Regression** | Playwright | Workflows fonctionnels complets sur instance dédiée | `pnpm e2e:regression` |
-| **E2E — Smoke** | Playwright | Vérification de surface lecture-seule sur instance prod | `pnpm e2e:smoke` |
+| Niveau                     | Framework  | Périmètre                                               | Commande              |
+| -------------------------- | ---------- | ------------------------------------------------------- | --------------------- |
+| **Unitaire / Intégration** | Vitest     | `module/lib/` (pur domaine) + adapters Foundry mockés   | `pnpm test`           |
+| **E2E — Regression**       | Playwright | Workflows fonctionnels complets sur instance dédiée     | `pnpm e2e:regression` |
+| **E2E — Smoke**            | Playwright | Vérification de surface lecture-seule sur instance prod | `pnpm e2e:smoke`      |
 
 ### Contrat E2E (ADR-0017)
 

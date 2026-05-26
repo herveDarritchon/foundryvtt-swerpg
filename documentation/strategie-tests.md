@@ -756,10 +756,10 @@ Cette documentation sert de référence complète pour comprendre, maintenir et 
 
 La suite E2E est organisée en deux tiers complémentaires :
 
-| Tier | Commande | Rôle | Instance | Mutations |
-|---|---|---|---|---|
-| Tier 1 — Regression | `pnpm e2e:regression` | Validation fonctionnelle pré-livraison | port 31001 (dédiée) | autorisées |
-| Tier 2 — Smoke | `pnpm e2e:smoke` | Vérification de surface post-déploiement | port 30000 (prod) | interdites |
+| Tier                | Commande              | Rôle                                     | Instance            | Mutations  |
+| ------------------- | --------------------- | ---------------------------------------- | ------------------- | ---------- |
+| Tier 1 — Regression | `pnpm e2e:regression` | Validation fonctionnelle pré-livraison   | port 31001 (dédiée) | autorisées |
+| Tier 2 — Smoke      | `pnpm e2e:smoke`      | Vérification de surface post-déploiement | port 30000 (prod)   | interdites |
 
 Les suites ne tournent pas en CI GitHub Actions (instance Foundry live requise). Seuls les tests marqués `[ci]` dans leur titre tournent en CI via `pnpm e2e:ci`.
 
@@ -767,14 +767,14 @@ Les suites ne tournent pas en CI GitHub Actions (instance Foundry live requise).
 
 Toutes les interactions critiques avec Foundry VTT passent par des helpers centralisés :
 
-| Helper | Fichier | Rôle |
-|---|---|---|
-| `setUp` / `tearDown` | `e2e/utils/playwrightTest.ts` | Bootstrap complet `licence → auth → setup → join → game` |
-| `ensureSessionActive` | `e2e/utils/foundryUI.ts` | Vérification session `/game` active |
-| `openGameSettings` | `e2e/utils/foundryUI.ts` | Ouverture onglet Settings |
-| `navigateToSystemSettings` | `e2e/utils/foundryUI.ts` | Navigation settings système |
-| `openOggDudeImporterDialog` | `e2e/regression/utils/oggdude-importer.ts` | Ouverture dialog OggDude |
-| `createBrowserErrorCollector` | `e2e/utils/browserErrors.ts` | Capture centralisée erreurs navigateur |
+| Helper                        | Fichier                                    | Rôle                                                     |
+| ----------------------------- | ------------------------------------------ | -------------------------------------------------------- |
+| `setUp` / `tearDown`          | `e2e/utils/playwrightTest.ts`              | Bootstrap complet `licence → auth → setup → join → game` |
+| `ensureSessionActive`         | `e2e/utils/foundryUI.ts`                   | Vérification session `/game` active                      |
+| `openGameSettings`            | `e2e/utils/foundryUI.ts`                   | Ouverture onglet Settings                                |
+| `navigateToSystemSettings`    | `e2e/utils/foundryUI.ts`                   | Navigation settings système                              |
+| `openOggDudeImporterDialog`   | `e2e/regression/utils/oggdude-importer.ts` | Ouverture dialog OggDude                                 |
+| `createBrowserErrorCollector` | `e2e/utils/browserErrors.ts`               | Capture centralisée erreurs navigateur                   |
 
 Ne jamais réimplémenter ces helpers dans les specs. Si un helper manque, l'ajouter dans le fichier centralisé.
 

@@ -21,8 +21,7 @@ export default async function globalSetup(_config: FullConfig): Promise<void> {
 
   if (!adminPassword) {
     throw new Error(
-      '[smokeSetup] E2E_FOUNDRY_ADMIN_PASSWORD non défini.\n' +
-        "  → Copier .env.e2e.smoke.prod.example en .env.e2e.smoke.prod et remplir les valeurs.",
+      '[smokeSetup] E2E_FOUNDRY_ADMIN_PASSWORD non défini.\n' + '  → Copier .env.e2e.smoke.prod.example en .env.e2e.smoke.prod et remplir les valeurs.',
     )
   }
 
@@ -34,14 +33,11 @@ export default async function globalSetup(_config: FullConfig): Promise<void> {
   const page = await browser.newPage()
 
   try {
-    const response = await page
-      .goto(`${baseURL}/auth`, { waitUntil: 'domcontentloaded', timeout: 15000 })
-      .catch(() => null)
+    const response = await page.goto(`${baseURL}/auth`, { waitUntil: 'domcontentloaded', timeout: 15000 }).catch(() => null)
 
     if (!response || (!response.ok() && response.status() !== 302)) {
       throw new Error(
-        `[smokeSetup] Instance inaccessible sur ${baseURL}/auth (statut: ${response?.status() ?? 'aucun'}).\n` +
-          `  → Vérifier que Foundry tourne sur ce port.`,
+        `[smokeSetup] Instance inaccessible sur ${baseURL}/auth (statut: ${response?.status() ?? 'aucun'}).\n` + `  → Vérifier que Foundry tourne sur ce port.`,
       )
     }
 

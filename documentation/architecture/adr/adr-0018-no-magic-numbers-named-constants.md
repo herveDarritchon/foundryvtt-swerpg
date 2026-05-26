@@ -37,12 +37,12 @@ directement dans la logique applicative (models/, documents/, lib/, applications
 
 ### Où placer les constantes
 
-| Catégorie | Fichier de destination | Exposition |
-|---|---|---|
+| Catégorie                                                                 | Fichier de destination       | Exposition                   |
+| ------------------------------------------------------------------------- | ---------------------------- | ---------------------------- |
 | Règles métier d'une entité (compétences, talents, caractéristiques, etc.) | `module/config/<entity>.mjs` | `SYSTEM.<ENTITY>.CONST_NAME` |
-| Valeurs de dés, seuils de probabilité | `module/config/dice.mjs` | `SYSTEM.DICE.CONST_NAME` |
-| Limites d'IU (pagination, colonnes, délais) | `module/config/ui.mjs` | `SYSTEM.UI.CONST_NAME` |
-| Constantes transverses (timeouts, limites globales) | `module/config/system.mjs` | `SYSTEM.CONST_NAME` |
+| Valeurs de dés, seuils de probabilité                                     | `module/config/dice.mjs`     | `SYSTEM.DICE.CONST_NAME`     |
+| Limites d'IU (pagination, colonnes, délais)                               | `module/config/ui.mjs`       | `SYSTEM.UI.CONST_NAME`       |
+| Constantes transverses (timeouts, limites globales)                       | `module/config/system.mjs`   | `SYSTEM.CONST_NAME`          |
 
 ### Pattern d'implémentation
 
@@ -63,7 +63,7 @@ import { MY_LIMIT, ANOTHER_THRESHOLD } from './<entity>.mjs'
 // utiliser Object.defineProperty pour ne pas polluer l'itération :
 Object.defineProperty(SYSTEM.ENTITY, 'MY_LIMIT', {
   value: MY_LIMIT,
-  enumerable: false,   // ne pollue pas Object.values(SYSTEM.ENTITY)
+  enumerable: false, // ne pollue pas Object.values(SYSTEM.ENTITY)
   configurable: false,
   writable: false,
 })
@@ -106,17 +106,12 @@ it('SYSTEM.ENTITY.MY_LIMIT equals exported constant', () => {
 
 ```js
 // ❌ Magic numbers — intention opaque
-if (rank > 2)
-if (cost < 5)
-if (dice.length === 6)
-setTimeout(fn, 3000)
+if (rank > 2) if (cost < 5) if (dice.length === 6) setTimeout(fn, 3000)
 const pool = new Array(10)
 
 // ✅ Constantes nommées — intention explicite
 if (rank > SYSTEM.SKILLS.MAX_RANK_AT_CREATION)
-if (cost < SYSTEM.TALENTS.MIN_COST)
-if (dice.length === SYSTEM.DICE.POOL_SIZE)
-setTimeout(fn, SYSTEM.UI.NOTIFICATION_DELAY_MS)
+  if (cost < SYSTEM.TALENTS.MIN_COST) if (dice.length === SYSTEM.DICE.POOL_SIZE) setTimeout(fn, SYSTEM.UI.NOTIFICATION_DELAY_MS)
 const pool = new Array(SYSTEM.DICE.DEFAULT_POOL_SIZE)
 ```
 

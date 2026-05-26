@@ -246,12 +246,7 @@ const EMBEDDED_CSS = `
  * @returns {string}
  */
 export function escapeHtml(str) {
-  return str
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;')
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;')
 }
 
 /**
@@ -538,8 +533,7 @@ export function generateUserGuideHtml(guideId) {
 export function discoverGuideIds() {
   if (!fs.existsSync(GUIDES_INPUT_DIR)) {
     throw new Error(
-      `[generate-user-guides:html] Guides directory not found: ${GUIDES_INPUT_DIR}\n` +
-        `  → Run 'pnpm e2e:documentation' first to produce guide JSON files.`,
+      `[generate-user-guides:html] Guides directory not found: ${GUIDES_INPUT_DIR}\n` + `  → Run 'pnpm e2e:documentation' first to produce guide JSON files.`,
     )
   }
 
@@ -548,8 +542,7 @@ export function discoverGuideIds() {
 
   if (guideIds.length === 0) {
     throw new Error(
-      `[generate-user-guides:html] No guide JSON files found in ${GUIDES_INPUT_DIR}.\n` +
-        `  → Run 'pnpm e2e:documentation' first to produce guide JSON files.`,
+      `[generate-user-guides:html] No guide JSON files found in ${GUIDES_INPUT_DIR}.\n` + `  → Run 'pnpm e2e:documentation' first to produce guide JSON files.`,
     )
   }
 

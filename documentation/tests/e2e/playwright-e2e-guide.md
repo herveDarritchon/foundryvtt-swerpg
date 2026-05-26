@@ -63,31 +63,31 @@ opérationnelles avant de lancer cette commande.
 
 **Mode rerun documentaire** :
 
-| Situation | Action |
-|---|---|
-| Mise à jour d'un parcours (spec, UI, données) | `pnpm e2e:documentation` puis `pnpm docs:generate-user-guides` |
-| Seule la mise en forme Markdown change | `pnpm docs:generate-user-guides` uniquement — pas de rerun Playwright |
-| Artefacts JSON ou screenshots absents | Rerun Playwright obligatoire avant toute génération |
+| Situation                                     | Action                                                                |
+| --------------------------------------------- | --------------------------------------------------------------------- |
+| Mise à jour d'un parcours (spec, UI, données) | `pnpm e2e:documentation` puis `pnpm docs:generate-user-guides`        |
+| Seule la mise en forme Markdown change        | `pnpm docs:generate-user-guides` uniquement — pas de rerun Playwright |
+| Artefacts JSON ou screenshots absents         | Rerun Playwright obligatoire avant toute génération                   |
 
 **Frontière avec `regression` et `smoke`** :
 
-| Critère | `documentation` | `regression` | `smoke` |
-|---|---|---|---|
-| Objectif | Captures documentaires, invariants visibles | Validation fonctionnelle pré-livraison | Santé de surface post-déploiement |
-| Mutations | Lecture seule par défaut (prérequis contrôlés documentés) | Autorisées | Interdites |
-| Instance cible | Port 30000 | Port 31001 | Port 30000 |
-| Monde | Dédié stable (`documentation-world`) | Contrôlé jetable | Production stable |
-| Niveau de confiance | Documentaire — invariants visibles seulement | Validation fonctionnelle profonde | Santé minimale de surface |
-| Statut CI | Non — manuel uniquement | Non — manuel uniquement | Non — manuel uniquement |
-| Bloquant | Non | Oui (pré-livraison) | Non (diagnostic) |
+| Critère             | `documentation`                                           | `regression`                           | `smoke`                           |
+| ------------------- | --------------------------------------------------------- | -------------------------------------- | --------------------------------- |
+| Objectif            | Captures documentaires, invariants visibles               | Validation fonctionnelle pré-livraison | Santé de surface post-déploiement |
+| Mutations           | Lecture seule par défaut (prérequis contrôlés documentés) | Autorisées                             | Interdites                        |
+| Instance cible      | Port 30000                                                | Port 31001                             | Port 30000                        |
+| Monde               | Dédié stable (`documentation-world`)                      | Contrôlé jetable                       | Production stable                 |
+| Niveau de confiance | Documentaire — invariants visibles seulement              | Validation fonctionnelle profonde      | Santé minimale de surface         |
+| Statut CI           | Non — manuel uniquement                                   | Non — manuel uniquement                | Non — manuel uniquement           |
+| Bloquant            | Non                                                       | Oui (pré-livraison)                    | Non (diagnostic)                  |
 
 **Gouvernance** :
 
-| Périmètre | Responsable |
-|---|---|
-| Parcours Playwright, screenshots, monde documentaire | Dev / QA |
-| Relecture métier et validation des guides générés | Documentation / PO |
-| Décision de publication d'un guide | Documentation / PO (exclusivement) |
+| Périmètre                                            | Responsable                        |
+| ---------------------------------------------------- | ---------------------------------- |
+| Parcours Playwright, screenshots, monde documentaire | Dev / QA                           |
+| Relecture métier et validation des guides générés    | Documentation / PO                 |
+| Décision de publication d'un guide                   | Documentation / PO (exclusivement) |
 
 Pour le contrat d'exploitation complet (rerun, prérequis, gouvernance, critères de clôture), voir `e2e/documentation/README.md`.
 
@@ -267,12 +267,12 @@ Selon votre environnement, vous pouvez aussi lancer Foundry manuellement via son
 
 Trois fichiers de configuration Playwright coexistent, un par commande :
 
-| Config | Commande | Suite | Instance | Env file |
-|---|---|---|---|---|
-| `playwright.config.ts` | `e2e:ci` | tests `[ci]` uniquement | port 30000 | `.env.e2e.local` |
-| `playwright.regression.config.ts` | `e2e:regression` | régression fonctionnelle | port 31001 | `.env.e2e.regression` |
-| `playwright.smoke.config.ts` | `e2e:smoke` | smoke de surface | port 30000 | `.env.e2e.smoke.prod` |
-| `playwright.documentation.config.ts` | `e2e:documentation` | captures documentaires | port 30000 | `.env.e2e.documentation` |
+| Config                               | Commande            | Suite                    | Instance   | Env file                 |
+| ------------------------------------ | ------------------- | ------------------------ | ---------- | ------------------------ |
+| `playwright.config.ts`               | `e2e:ci`            | tests `[ci]` uniquement  | port 30000 | `.env.e2e.local`         |
+| `playwright.regression.config.ts`    | `e2e:regression`    | régression fonctionnelle | port 31001 | `.env.e2e.regression`    |
+| `playwright.smoke.config.ts`         | `e2e:smoke`         | smoke de surface         | port 30000 | `.env.e2e.smoke.prod`    |
+| `playwright.documentation.config.ts` | `e2e:documentation` | captures documentaires   | port 30000 | `.env.e2e.documentation` |
 
 La commande `pnpm e2e` ne possède pas de config propre : elle orchestre `e2e:regression` puis `e2e:smoke`,
 chacune chargeant son propre fichier d'environnement.
@@ -464,14 +464,14 @@ Pour un squelette générique et un guide plus détaillé sur la création d’u
 
 Toutes les interactions critiques avec Foundry doivent passer par les helpers communs plutôt que d'être dupliquées dans chaque spec.
 
-| Helper | Fichier | Usage |
-|---|---|---|
-| `setUp` / `tearDown` | `e2e/utils/playwrightTest.ts` | Bootstrap complet `licence → auth → setup → join → game` |
-| `ensureSessionActive` | `e2e/utils/foundryUI.ts` | Vérification que la session `/game` est toujours active |
-| `openGameSettings` | `e2e/utils/foundryUI.ts` | Ouverture de l'onglet Settings dans la sidebar |
-| `navigateToSystemSettings` | `e2e/utils/foundryUI.ts` | Navigation complète vers les settings d'un système |
-| `openOggDudeImporterDialog` | `e2e/regression/utils/oggdude-importer.ts` | Ouverture du dialog OggDude depuis les settings |
-| `createBrowserErrorCollector` | `e2e/utils/browserErrors.ts` | Capture centralisée des erreurs navigateur |
+| Helper                        | Fichier                                    | Usage                                                    |
+| ----------------------------- | ------------------------------------------ | -------------------------------------------------------- |
+| `setUp` / `tearDown`          | `e2e/utils/playwrightTest.ts`              | Bootstrap complet `licence → auth → setup → join → game` |
+| `ensureSessionActive`         | `e2e/utils/foundryUI.ts`                   | Vérification que la session `/game` est toujours active  |
+| `openGameSettings`            | `e2e/utils/foundryUI.ts`                   | Ouverture de l'onglet Settings dans la sidebar           |
+| `navigateToSystemSettings`    | `e2e/utils/foundryUI.ts`                   | Navigation complète vers les settings d'un système       |
+| `openOggDudeImporterDialog`   | `e2e/regression/utils/oggdude-importer.ts` | Ouverture du dialog OggDude depuis les settings          |
+| `createBrowserErrorCollector` | `e2e/utils/browserErrors.ts`               | Capture centralisée des erreurs navigateur               |
 
 Ne pas réimplémenter ces helpers dans les specs. Si un helper manque, l'ajouter dans le fichier centralisé.
 
@@ -555,17 +555,16 @@ Avantages :
 - En cas d’erreur lors du cleanup, les helpers se contentent d’essayer de revenir sur `/setup` ou `/auth` sans faire échouer le test : objectif → éviter les effets de bord sur les scénarios suivants.
 - Évitez de modifier à la main l’état du monde de test (suppression massive de données, changements de configuration critique) dans un test sans cleanup dédié.
 
-
 ### 7.3b. Stratégie de reset déterministe Tier 1 (contrat d’hygiène)
 
 La suite de régression Tier 1 applique un **cleanup ciblé par spec** (pas de recréation du monde).
 
 #### Décision
 
-| Approche | Décision |
-|---|---|
-| Monde jetable recréé à chaque run | Non retenu — trop lent, masque les régressions de persistance |
-| Cleanup ciblé par spec | **Retenu** — rapide, déterministe, préserve la baseline commune |
+| Approche                          | Décision                                                        |
+| --------------------------------- | --------------------------------------------------------------- |
+| Monde jetable recréé à chaque run | Non retenu — trop lent, masque les régressions de persistance   |
+| Cleanup ciblé par spec            | **Retenu** — rapide, déterministe, préserve la baseline commune |
 
 #### Règles à respecter
 
@@ -576,9 +575,9 @@ La suite de régression Tier 1 applique un **cleanup ciblé par spec** (pas de r
 
 #### Primitives disponibles
 
-| Fonction | Fichier | Usage |
-|---|---|---|
-| `deleteActorByName(page, name)` | `e2e/regression/utils/world-manager.ts` | Supprimer un acteur en fin de test |
+| Fonction                          | Fichier                                 | Usage                                        |
+| --------------------------------- | --------------------------------------- | -------------------------------------------- |
+| `deleteActorByName(page, name)`   | `e2e/regression/utils/world-manager.ts` | Supprimer un acteur en fin de test           |
 | `cleanupTestActors(page, prefix)` | `e2e/regression/utils/world-manager.ts` | Nettoyer des artefacts résiduels par préfixe |
 
 #### Exemple de teardown dans une spec
@@ -596,12 +595,12 @@ test('création personnage et ouverture de fiche', async ({ page }) => {
 
 #### Données minimales par domaine
 
-| Spec | Données communes attendues | Artefacts éphémères |
-|---|---|---|
-| 01 — smoke | monde actif, système swerpg chargé | aucun |
-| 02 — OggDude import | monde actif, settings accessibles | aucun |
-| 03 — création personnage | monde actif | acteurs `Test-Personnage-*` |
-| 04 — XP / arbre | monde actif | acteurs `Test-XP-*`, `Test-XP-Skill-*`, `Test-SpecTree-*` |
+| Spec                     | Données communes attendues         | Artefacts éphémères                                       |
+| ------------------------ | ---------------------------------- | --------------------------------------------------------- |
+| 01 — smoke               | monde actif, système swerpg chargé | aucun                                                     |
+| 02 — OggDude import      | monde actif, settings accessibles  | aucun                                                     |
+| 03 — création personnage | monde actif                        | acteurs `Test-Personnage-*`                               |
+| 04 — XP / arbre          | monde actif                        | acteurs `Test-XP-*`, `Test-XP-Skill-*`, `Test-SpecTree-*` |
 
 ### 7.4. Écriture de nouveaux tests
 
@@ -802,13 +801,13 @@ Pour la checklist complète et exécutable, voir : `documentation/tests/e2e/edg6
 
 Pour qu'un guide soit reproductible et diffable, les invariants suivants doivent tenir entre deux reruns identiques :
 
-| Invariant | Mécanisme |
-|---|---|
-| Ordre des captures | Préfixe d'index `01-`, `02-`, `03-`, `04-` — incrémenté dans l'ordre des étapes |
-| Viewport constant | `1920×1080` fixé dans `playwright.documentation.config.ts` |
-| Nommage déterministe | Slugs kebab-case stables via `toKebabSlug` — pas d'horodatage ni d'aléatoire dans le nom |
-| Écrans sans bruit parasite | `prepareDocumentationState` appelé avant chaque capture (overlays, apps, animations) |
-| Cohérence JSON ↔ screenshots | `writeGuideMetadata` écrit les chemins dans l'ordre d'enregistrement |
+| Invariant                     | Mécanisme                                                                                |
+| ----------------------------- | ---------------------------------------------------------------------------------------- |
+| Ordre des captures            | Préfixe d'index `01-`, `02-`, `03-`, `04-` — incrémenté dans l'ordre des étapes          |
+| Viewport constant             | `1920×1080` fixé dans `playwright.documentation.config.ts`                               |
+| Nommage déterministe          | Slugs kebab-case stables via `toKebabSlug` — pas d'horodatage ni d'aléatoire dans le nom |
+| Écrans sans bruit parasite    | `prepareDocumentationState` appelé avant chaque capture (overlays, apps, animations)     |
+| Cohérence JSON ↔ screenshots | `writeGuideMetadata` écrit les chemins dans l'ordre d'enregistrement                     |
 
 **Écarts tolérés :** légère variation de rendu entre machines, durée de chargement variable (compensée par `networkidle`), artefacts du run précédent (écrasés au rerun).
 
@@ -818,14 +817,14 @@ Pour qu'un guide soit reproductible et diffable, les invariants suivants doivent
 
 Les catégories suivantes ne doivent **jamais** apparaître dans `screenshots/`, `guides/*.json` ou `markdown/*.md` :
 
-| Catégorie interdite | Mécanisme d'évitement |
-|---|---|
-| Identifiants réels (noms d'utilisateurs, comptes client) | Monde dédié, noms neutres `Doc-<Prefixe>-${Date.now()}` |
-| Données client ou de campagne réelle | Monde documentaire isolé, distinct de la production |
-| Secrets et tokens (mots de passe, clés API) | Monde dédié, captures sans zone sensible |
-| URLs non prévues ou redirections vers un autre environnement | Contrôle du point d'entrée avant run |
-| Bruit de session (notifications, popups, alertes de mise à jour) | `prepareDocumentationState` avant chaque capture |
-| États non représentatifs (erreur, migration incomplète) | Monde stable et représentatif avant run |
+| Catégorie interdite                                              | Mécanisme d'évitement                                   |
+| ---------------------------------------------------------------- | ------------------------------------------------------- |
+| Identifiants réels (noms d'utilisateurs, comptes client)         | Monde dédié, noms neutres `Doc-<Prefixe>-${Date.now()}` |
+| Données client ou de campagne réelle                             | Monde documentaire isolé, distinct de la production     |
+| Secrets et tokens (mots de passe, clés API)                      | Monde dédié, captures sans zone sensible                |
+| URLs non prévues ou redirections vers un autre environnement     | Contrôle du point d'entrée avant run                    |
+| Bruit de session (notifications, popups, alertes de mise à jour) | `prepareDocumentationState` avant chaque capture        |
+| États non représentatifs (erreur, migration incomplète)          | Monde stable et représentatif avant run                 |
 
 **Point de contrôle génération :** la commande `pnpm run docs:generate-user-guides` ne peut introduire aucune information hors JSON source. Le JSON source ne contient que les métadonnées déclarées dans la spec.
 
@@ -851,10 +850,10 @@ La séquence canonique pour conclure qu'un guide est prêt à être diffusé :
 
 ### 11.4. Frontière feu vert documentaire vs release applicative globale
 
-| Signal | Périmètre |
-|---|---|
-| Feu vert documentaire (EDG6) | Captures stables + artefacts sûrs + checklist complète + relecture humaine |
-| Release applicative globale | Régression fonctionnelle, smoke, Vitest, validation métier — indépendant d'EDG6 |
+| Signal                       | Périmètre                                                                       |
+| ---------------------------- | ------------------------------------------------------------------------------- |
+| Feu vert documentaire (EDG6) | Captures stables + artefacts sûrs + checklist complète + relecture humaine      |
+| Release applicative globale  | Régression fonctionnelle, smoke, Vitest, validation métier — indépendant d'EDG6 |
 
 La suite `e2e:documentation` n'est **jamais** un gate bloquant pour un merge ou une release applicative.
 Un guide documentaire non à jour ne bloque pas la livraison — il indique que la documentation est à régénérer.

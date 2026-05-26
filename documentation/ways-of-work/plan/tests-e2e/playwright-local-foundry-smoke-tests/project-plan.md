@@ -41,12 +41,12 @@ Consolider un plan d'issues court pour faire de Playwright un filet de sécurit�
 
 ## 4. Risques
 
-| Risque | Impact | Mitigation |
-| --- | --- | --- |
-| Décalage entre cadrage initial et outillage E2E actuel du dépôt | plan d'issues mal ciblé | prendre le guide Playwright du projet comme référence d'exécution actuelle |
-| Flakiness liée aux temps de chargement Foundry | faux négatifs, baisse de confiance | `workers: 1`, attentes web-first, helpers de session partagés |
-| Sélecteurs dépendants du CSS ou des traductions | maintenance coûteuse | privilégier accessibilité et `data-testid` sur actions critiques |
-| Pollution du monde de test | scénarios non déterministes | noms uniques puis stratégie de reset/cleanup dédiée |
+| Risque                                                          | Impact                             | Mitigation                                                                 |
+| --------------------------------------------------------------- | ---------------------------------- | -------------------------------------------------------------------------- |
+| Décalage entre cadrage initial et outillage E2E actuel du dépôt | plan d'issues mal ciblé            | prendre le guide Playwright du projet comme référence d'exécution actuelle |
+| Flakiness liée aux temps de chargement Foundry                  | faux négatifs, baisse de confiance | `workers: 1`, attentes web-first, helpers de session partagés              |
+| Sélecteurs dépendants du CSS ou des traductions                 | maintenance coûteuse               | privilégier accessibilité et `data-testid` sur actions critiques           |
+| Pollution du monde de test                                      | scénarios non déterministes        | noms uniques puis stratégie de reset/cleanup dédiée                        |
 
 ## 5. Hiérarchie des work items
 
@@ -70,15 +70,15 @@ graph TD
 
 ## 6. Découpage GitHub recommandé
 
-| Type | Titre | Priorité | Estimate | Dépendances |
-| --- | --- | --- | --- | --- |
-| Feature | `Playwright Local Foundry Smoke Tests - Sécuriser les parcours MJ essentiels en local` | P1 | 8 | Epic `Tests E2E` |
-| Story | `PWE1 - Stabiliser la baseline locale Playwright et le monde E2E` | P1 | 2 | Feature |
-| Story | `PWE2 - Fiabiliser les contrats d'interaction et la capture d'erreurs navigateur` | P1 | 3 | PWE1 |
-| Story | `PWE3 - Couvrir les smoke tests de démarrage du monde et de création personnage` | P1 | 3 | PWE2 |
-| Story | `PWE4 - Couvrir la dépense simple d'XP et l'ouverture de l'arbre de spécialisation` | P1 | 3 | PWE2, PWE3 |
-| Enabler | `PWE5 - Formaliser l'hygiène du monde de test et la stratégie de reset` | P2 | 2 | PWE1 |
-| Test | `PWE6 - Valider la non-régression locale, les erreurs console et la frontière CI` | P1 | 2 | PWE3, PWE4, PWE5 |
+| Type    | Titre                                                                                  | Priorité | Estimate | Dépendances      |
+| ------- | -------------------------------------------------------------------------------------- | -------- | -------- | ---------------- |
+| Feature | `Playwright Local Foundry Smoke Tests - Sécuriser les parcours MJ essentiels en local` | P1       | 8        | Epic `Tests E2E` |
+| Story   | `PWE1 - Stabiliser la baseline locale Playwright et le monde E2E`                      | P1       | 2        | Feature          |
+| Story   | `PWE2 - Fiabiliser les contrats d'interaction et la capture d'erreurs navigateur`      | P1       | 3        | PWE1             |
+| Story   | `PWE3 - Couvrir les smoke tests de démarrage du monde et de création personnage`       | P1       | 3        | PWE2             |
+| Story   | `PWE4 - Couvrir la dépense simple d'XP et l'ouverture de l'arbre de spécialisation`    | P1       | 3        | PWE2, PWE3       |
+| Enabler | `PWE5 - Formaliser l'hygiène du monde de test et la stratégie de reset`                | P2       | 2        | PWE1             |
+| Test    | `PWE6 - Valider la non-régression locale, les erreurs console et la frontière CI`      | P1       | 2        | PWE3, PWE4, PWE5 |
 
 ## 7. Dépendances et ordre recommandé
 
