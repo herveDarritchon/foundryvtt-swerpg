@@ -29,5 +29,16 @@ describe('adversaries config — ADR-0018 contractual constants', () => {
         expect(TAXONOMY_CATEGORIES).toHaveProperty(key)
       }
     })
+
+    test('each category value is a non-empty i18n string', () => {
+      for (const value of Object.values(TAXONOMY_CATEGORIES)) {
+        expect(typeof value).toBe('string')
+        expect(value.length).toBeGreaterThan(0)
+      }
+    })
+
+    test('is exposed on SYSTEM.ADVERSARY.TAXONOMY_CATEGORIES', () => {
+      expect(SYSTEM.ADVERSARY.TAXONOMY_CATEGORIES).toBe(TAXONOMY_CATEGORIES)
+    })
   })
 })
