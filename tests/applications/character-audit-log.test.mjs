@@ -61,9 +61,27 @@ describe('character-audit-log application', () => {
         'SWERPG.AUDIT_LOG.DESCRIPTION.TALENT_NODE_PURCHASE_FAILED': 'Talent node purchase failed: {reasonCode} (node {nodeId})',
         'SWERPG.AUDIT_LOG.DESCRIPTION.TALENT_NODE_FORGET': 'Forgot talent node {talentId} / specialization {specializationId} ({cost} XP)',
         'SWERPG.AUDIT_LOG.DESCRIPTION.TALENT_NODE_FORGET_FAILED': 'Talent node forget failed: {reasonCode} (node {nodeId})',
+        'SWERPG.AUDIT_LOG.DESCRIPTION.CHARACTERISTIC_INCREASE': 'Characteristic {characteristic}: {oldValue} -> {newValue}',
         'SWERPG.AUDIT_LOG.DESCRIPTION.UNKNOWN': 'Unknown event ({type})',
+        'CHARACTERISTICS.Brawn': 'Brawn',
+        'CHARACTERISTICS.Agility': 'Agility',
+        'CHARACTERISTICS.Intellect': 'Intellect',
+        'CHARACTERISTICS.Cunning': 'Cunning',
+        'CHARACTERISTICS.Willpower': 'Willpower',
+        'CHARACTERISTICS.Presence': 'Presence',
       },
     })
+
+    globalThis.game.system.config = {
+      CHARACTERISTICS: {
+        brawn: { id: 'brawn', label: 'CHARACTERISTICS.Brawn' },
+        agility: { id: 'agility', label: 'CHARACTERISTICS.Agility' },
+        intellect: { id: 'intellect', label: 'CHARACTERISTICS.Intellect' },
+        cunning: { id: 'cunning', label: 'CHARACTERISTICS.Cunning' },
+        willpower: { id: 'willpower', label: 'CHARACTERISTICS.Willpower' },
+        presence: { id: 'presence', label: 'CHARACTERISTICS.Presence' },
+      },
+    }
     ;({
       default: CharacterAuditLogApp,
       buildAuditLogEntries,
@@ -261,6 +279,55 @@ describe('character-audit-log application', () => {
     for (const entry of entries) {
       expect(entry.typeLabel).not.toBe('Unknown event')
     }
+  })
+
+  it('builds a localized description for characteristic.increase with a known id', () => {
+    const description = buildAuditLogDescription({
+      type: 'characteristic.increase',
+      data: { characteristicId: 'brawn', oldValue: 2, newValue: 3 },
+    })
+
+    expect(description).toBe('Characteristic Brawn: 2 -> 3')
+    expect(description).not.toContain('brawn')
+  })
+
+  it('builds localized descriptions for all six known characteristics', () => {
+    const cases = [
+      { id: 'brawn', expected: 'Brawn' },
+      { id: 'agility', expected: 'Agility' },
+      { id: 'intellect', expected: 'Intellect' },
+      { id: 'cunning', expected: 'Cunning' },
+      { id: 'willpower', expected: 'Willpower' },
+      { id: 'presence', expected: 'Presence' },
+    ]
+
+    for (const { id, expected } of cases) {
+      const description = buildAuditLogDescription({
+        type: 'characteristic.increase',
+        data: { characteristicId: id, oldValue: 1, newValue: 2 },
+      })
+      expect(description).toContain(expected)
+      expect(description).not.toContain(id)
+    }
+  })
+
+  it('falls back to Unknown value for an unrecognized characteristicId', () => {
+    const description = buildAuditLogDescription({
+      type: 'characteristic.increase',
+      data: { characteristicId: 'unknownStat', oldValue: 1, newValue: 2 },
+    })
+
+    expect(description).toContain('Unknown value')
+    expect(description).not.toContain('unknownStat')
+  })
+
+  it('falls back to Unknown value when characteristicId is absent', () => {
+    const description = buildAuditLogDescription({
+      type: 'characteristic.increase',
+      data: { oldValue: 1, newValue: 2 },
+    })
+
+    expect(description).toContain('Unknown value')
   })
 
   it('falls back to an unknown description for unsupported types', () => {
