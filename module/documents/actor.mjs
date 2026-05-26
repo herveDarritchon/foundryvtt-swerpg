@@ -711,6 +711,70 @@ export default class SwerpgActor extends TalentsMixin(EquipmentMixin(ResourcesMi
   }
 
   /**
+   * Acquire a specialization post-creation without granting free skill ranks.
+   * Used by the specialization purchase flow (drop on character sheet).
+   *
+   * Differs from applySpecialization (on SwerpgCharacter) by zeroing freeSkillRank
+   * to prevent free skill rank attribution during prepareBaseData.
+   *
+   * @param {object} specialization - The specialization Item to acquire
+   * @param {object} [options]
+   * @param {number} [options.xpCost=0] - XP cost to deduct in the same update
+   * @returns {Promise<void>}
+   */
+  async acquireSpecialization(specialization, { xpCost = 0 } = {}) {
+    const itemData = specialization.toObject()
+
+    const acquiredSpecialization = {
+      ...itemData.system,
+      name: itemData.name,
+      img: itemData.img,
+      freeSkillRank: 0,
+    }
+
+    const specializations = Array.from(this.system.details.specializations)
+    const updateData = {
+      'system.details.specializations': [...specializations, acquiredSpecialization],
+    }
+
+    if (xpCost > 0) {
+      updateData['system.progression.experience.spent'] = (this.system.progression.experience.spent || 0) + xpCost
+    }
+
+    await this.update(updateData, { keepEmbeddedIds: true })
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Remove a specialization post-creation.
+   *
+   * Removes the specialization matching the provided key from the owned
+   * specializations list. Does not handle the current tree fallback —
+   * that realignment is the responsibility of the application layer.
+   *
+   * @param {string} specializationKey - Key of the specialization to remove
+   *        (specializationId, treeUuid, or name)
+   * @returns {Promise<void>}
+   */
+  async removeSpecialization(specializationKey) {
+    const specializations = Array.from(this.system.details.specializations)
+    const remaining = specializations.filter((spec) => {
+      const key = spec.specializationId || spec.treeUuid || spec.name
+      return key !== specializationKey
+    })
+
+    await this.update(
+      {
+        'system.details.specializations': remaining,
+      },
+      { keepEmbeddedIds: true },
+    )
+  }
+
+  /* -------------------------------------------- */
+
+  /**
    * Update free skill ranks
    * @param {'career'|'specialization'} type - Type of free skill rank
    * @param {Object} params

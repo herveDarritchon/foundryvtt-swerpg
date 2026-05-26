@@ -466,6 +466,7 @@ describe('specialization-tree app orchestration', () => {
     const removeSpy = vi.fn().mockResolvedValue(undefined)
     const app = new SpecializationTreeApp()
     app.actor = createActor({
+      removeSpecialization: removeSpy,
       system: {
         details: {
           specializations: new Set([
@@ -474,7 +475,6 @@ describe('specialization-tree app orchestration', () => {
           ]),
         },
         progression: { talentPurchases: [], experience: { available: 100 } },
-        removeSpecialization: removeSpy,
       },
     })
     app.rendered = true
@@ -495,6 +495,7 @@ describe('specialization-tree app orchestration', () => {
     const removeSpy = vi.fn().mockResolvedValue(undefined)
     const app = new SpecializationTreeApp()
     app.actor = createActor({
+      removeSpecialization: removeSpy,
       system: {
         details: {
           specializations: new Set([
@@ -503,7 +504,6 @@ describe('specialization-tree app orchestration', () => {
           ]),
         },
         progression: { talentPurchases: [], experience: { available: 100 } },
-        removeSpecialization: removeSpy,
       },
     })
     app.rendered = true
@@ -527,12 +527,12 @@ describe('specialization-tree app orchestration', () => {
     const removeSpy = vi.fn().mockResolvedValue(undefined)
     const app = new SpecializationTreeApp()
     app.actor = createActor({
+      removeSpecialization: removeSpy,
       system: {
         details: {
           specializations: new Set([{ specializationId: 'spec-a', name: 'Spec A' }]),
         },
         progression: { talentPurchases: [], experience: { available: 100 } },
-        removeSpecialization: removeSpy,
       },
     })
     app.rendered = true

@@ -56,6 +56,7 @@ function buildMockActor({ isL0 = true, xpAvailable = 0, specializations = [] } =
   return {
     isOwner: true,
     isL0,
+    acquireSpecialization: vi.fn(() => Promise.resolve()),
     system: {
       details: {
         career: { name: 'Bounty Hunter', specializations: [] },
@@ -77,7 +78,6 @@ function buildMockActor({ isL0 = true, xpAvailable = 0, specializations = [] } =
       },
       points: {},
       applySpecialization: vi.fn(() => Promise.resolve()),
-      acquireSpecialization: vi.fn(() => Promise.resolve()),
     },
     items: [],
     hasFreeSkillsAvailable: vi.fn(() => false),
@@ -127,7 +127,7 @@ describe('CharacterSheet — specialization drop routing', () => {
 
       expect(actor.system.applySpecialization).toHaveBeenCalledOnce()
       expect(actor.system.applySpecialization).toHaveBeenCalledWith(item)
-      expect(actor.system.acquireSpecialization).not.toHaveBeenCalled()
+      expect(actor.acquireSpecialization).not.toHaveBeenCalled()
     })
 
     it('does not call acquireSpecialization during creation so freeSkillRank is preserved', async () => {
@@ -146,7 +146,7 @@ describe('CharacterSheet — specialization drop routing', () => {
 
       // applySpecialization preserves freeSkillRank; acquireSpecialization would zero it
       expect(actor.system.applySpecialization).toHaveBeenCalledWith(item)
-      expect(actor.system.acquireSpecialization).not.toHaveBeenCalled()
+      expect(actor.acquireSpecialization).not.toHaveBeenCalled()
     })
   })
 
@@ -165,8 +165,8 @@ describe('CharacterSheet — specialization drop routing', () => {
 
       await sheet._onDropItem({}, item)
 
-      expect(actor.system.acquireSpecialization).toHaveBeenCalledOnce()
-      expect(actor.system.acquireSpecialization).toHaveBeenCalledWith(item)
+      expect(actor.acquireSpecialization).toHaveBeenCalledOnce()
+      expect(actor.acquireSpecialization).toHaveBeenCalledWith(item)
       expect(actor.system.applySpecialization).not.toHaveBeenCalled()
     })
 
@@ -186,7 +186,7 @@ describe('CharacterSheet — specialization drop routing', () => {
 
       await sheet._onDropItem({}, item)
 
-      expect(actor.system.acquireSpecialization).toHaveBeenCalledWith(item)
+      expect(actor.acquireSpecialization).toHaveBeenCalledWith(item)
       expect(actor.system.applySpecialization).not.toHaveBeenCalled()
     })
   })
@@ -207,7 +207,7 @@ describe('CharacterSheet — specialization drop routing', () => {
       await sheet._onDropItem({}, item)
 
       expect(actor.system.applySpecialization).not.toHaveBeenCalled()
-      expect(actor.system.acquireSpecialization).not.toHaveBeenCalled()
+      expect(actor.acquireSpecialization).not.toHaveBeenCalled()
     })
   })
 })

@@ -715,7 +715,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
         if (actor.isL0) {
           await actor.system.applySpecialization(item)
         } else {
-          await actor.system.acquireSpecialization(item)
+          await actor.acquireSpecialization(item)
         }
         return
 
@@ -735,7 +735,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
       case 'confirm-required': {
         const confirmed = await this.#confirmSpecializationPurchase(result)
         if (!confirmed) return
-        await actor.system.acquireSpecialization(item, { xpCost: result.cost.finalCost })
+        await actor.acquireSpecialization(item, { xpCost: result.cost.finalCost })
       }
     }
   }
