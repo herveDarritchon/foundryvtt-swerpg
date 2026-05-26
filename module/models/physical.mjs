@@ -1,5 +1,6 @@
 import SwerpgAction from './action.mjs'
 import { SYSTEM } from '../config/system.mjs'
+import { DEFAULT_QUALITY, DEFAULT_RESTRICTION_LEVEL } from '../config/items.mjs'
 /**
  * A data structure which is shared by all physical items.
  */
@@ -14,8 +15,8 @@ export default class SwerpgPhysicalItem extends foundry.abstract.TypeDataModel {
       }),
       quantity: new fields.NumberField({ required: true, nullable: false, integer: true, initial: 1, min: 0 }),
       price: new fields.NumberField({ required: true, nullable: false, integer: true, initial: 0, min: 0 }),
-      quality: new fields.StringField({ required: true, choices: SYSTEM.QUALITY_TIERS, initial: 'standard' }),
-      restrictionLevel: new fields.StringField({ required: true, choices: SYSTEM.RESTRICTION_LEVELS, initial: 'none' }),
+      quality: new fields.StringField({ required: true, choices: SYSTEM.QUALITY_TIERS, initial: DEFAULT_QUALITY }),
+      restrictionLevel: new fields.StringField({ required: true, choices: SYSTEM.RESTRICTION_LEVELS, initial: DEFAULT_RESTRICTION_LEVEL }),
       encumbrance: new fields.NumberField({ required: true, nullable: false, integer: true, initial: 1, min: 0 }),
       rarity: new fields.NumberField({ required: true, nullable: false, integer: true, initial: 1, min: 0 }),
       broken: new fields.BooleanField({ initial: false }),

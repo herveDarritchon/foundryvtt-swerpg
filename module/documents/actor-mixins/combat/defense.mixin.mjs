@@ -3,6 +3,7 @@
  * Extracted from actor.mjs lines ~750-868
  */
 import { AttackRoll } from '../../../dice/_module.mjs'
+import { DEFAULT_DEFENSE_TYPE, DEFAULT_RESOURCE, DEFAULT_RESOURCE_MORALE } from '../../../config/action.mjs'
 
 export const DefenseMixin = (Base) =>
   class extends Base {
@@ -16,7 +17,7 @@ export const DefenseMixin = (Base) =>
       const d = this.system.defenses
       const s = this.system.skills
 
-      if (defenseType !== 'physical' && !(defenseType in d) && !(defenseType in s)) {
+      if (defenseType !== DEFAULT_DEFENSE_TYPE && !(defenseType in d) && !(defenseType in s)) {
         throw new Error(`Invalid defense type "${defenseType}" passed to Actor#testDefense`)
       }
 
@@ -28,7 +29,7 @@ export const DefenseMixin = (Base) =>
       let dc
 
       // Physical Defense: dodge, parry, block, armor
-      if (defenseType === 'physical') {
+      if (defenseType === DEFAULT_DEFENSE_TYPE) {
         dc = d.physical.total
 
         // Hit - roll exceeds total defense
@@ -77,11 +78,11 @@ export const DefenseMixin = (Base) =>
       let r = this.resistances[damageType]?.total ?? 0
 
       switch (resource) {
-        case 'health':
+        case DEFAULT_RESOURCE:
           if (this.isBroken) r -= 2
           if (this.statuses.has('invulnerable')) r = Infinity
           break
-        case 'morale':
+        case DEFAULT_RESOURCE_MORALE:
           if (this.isWeakened) r -= 2
           if (this.statuses.has('resolute')) r = Infinity
           break

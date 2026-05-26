@@ -34,8 +34,8 @@ export default class SwerpgWeapon extends SwerpgCombatItem {
   static defineSchema() {
     const fields = foundry.data.fields
     return foundry.utils.mergeObject(super.defineSchema(), {
-      skill: new fields.StringField({ required: true, choices: SYSTEM.WEAPON.SKILLS, initial: 'rangedLight' }),
-      range: new fields.StringField({ required: true, choices: SYSTEM.WEAPON.RANGETYPES, initial: 'medium' }),
+      skill: new fields.StringField({ required: true, choices: SYSTEM.WEAPON.SKILLS, initial: SYSTEM.WEAPON.DEFAULT_SKILL }),
+      range: new fields.StringField({ required: true, choices: SYSTEM.WEAPON.RANGETYPES, initial: SYSTEM.WEAPON.DEFAULT_RANGE }),
       damage: new fields.NumberField({
         required: true,
         integer: true,
@@ -250,7 +250,7 @@ export default class SwerpgWeapon extends SwerpgCombatItem {
    * @returns {DamageData}              Damage data for the roll
    */
   getDamage(actor, action, target, roll) {
-    const resource = action.usage.resouce || 'health'
+    const resource = action.usage.resouce || SYSTEM.WEAPON.DEFAULT_RESOURCE
     const type = this.damageType
     let { weapon: base, bonus } = this.damage
     const multiplier = action.usage.bonuses.multiplier ?? 1

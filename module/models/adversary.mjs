@@ -1,4 +1,5 @@
 import SwerpgActorType from './actor-type.mjs'
+import { DEFAULT_THREAT } from '../config/adversaries.mjs'
 
 /**
  * Data schema, attributes, and methods specific to Adversary type Actors.
@@ -24,7 +25,7 @@ export default class SwerpgAdversary extends SwerpgActorType {
         max: 24,
         label: 'ADVANCEMENT.Level',
       }),
-      threat: new fields.StringField({ required: true, choices: SYSTEM.THREAT_LEVELS, initial: 'normal' }),
+      threat: new fields.StringField({ required: true, choices: SYSTEM.THREAT_LEVELS, initial: DEFAULT_THREAT }),
     })
 
     schema.details = new fields.SchemaField({

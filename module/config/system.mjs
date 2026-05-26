@@ -9,7 +9,7 @@ import * as SKILL from './skills.mjs'
 import { MAX_RANK_AT_CREATION, MAX_RANK } from './skills.mjs'
 import * as PROGRESSION from './progression.mjs'
 import * as WEAPON from './weapon.mjs'
-import { ENCHANTMENT_TIERS, QUALITY_TIERS } from './items.mjs'
+import { ENCHANTMENT_TIERS, QUALITY_TIERS, DEFAULT_QUALITY, DEFAULT_RESTRICTION_LEVEL } from './items.mjs'
 import { ASCII, ASCII_DEV_MODE, DEV_MODE } from '../applications/system/constants.mjs'
 
 export const SYSTEM_ID = 'swerpg'
@@ -229,6 +229,8 @@ export const SYSTEM = {
   DEV_MODE,
   EFFECTS,
   ENCHANTMENT_TIERS,
+  DEFAULT_QUALITY,
+  DEFAULT_RESTRICTION_LEVEL,
   PASSIVE_BASE: ATTRIBUTES.PASSIVE_BASE,
   PROGRESSION,
   QUALITY_TIERS,
