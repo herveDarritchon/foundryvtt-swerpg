@@ -2,7 +2,7 @@ import { describe, expect, test } from 'vitest'
 
 import SwerpgCharacter from '../../module/models/character.mjs'
 
-function buildCharacterData({ specializations } = {}) {
+function buildCharacterData({ specializations = new Set() } = {}) {
   const characteristicRank = { base: 1, trained: 0, bonus: 0, value: 1 }
 
   return {
@@ -44,6 +44,15 @@ describe('SwerpgCharacter — owned specializations', () => {
       expect(specializationSchema.treeUuid).toBeInstanceOf(foundry.data.fields.DocumentUUIDField)
       expect(specializationSchema.treeUuid.config.required).toBe(false)
       expect(specializationSchema.treeUuid.config.type).toBe('Item')
+    })
+
+    test('details.specializations is a SetField with required:true, nullable:false, and initial:[]', () => {
+      const specializationsField = SwerpgCharacter.defineSchema().details.schema.specializations
+
+      expect(specializationsField).toBeInstanceOf(foundry.data.fields.SetField)
+      expect(specializationsField.config.required).toBe(true)
+      expect(specializationsField.config.nullable).toBe(false)
+      expect(specializationsField.config.initial).toEqual([])
     })
   })
 
@@ -87,9 +96,24 @@ describe('SwerpgCharacter — owned specializations', () => {
       expect(character.progression.freeSkillRanks.specialization.gained).toBe(0)
     })
 
-    test('handles missing specializations without throwing', () => {
+    test('handles empty specializations without throwing', () => {
+      // The SetField contract guarantees a non-null Set; buildCharacterData defaults to new Set()
       const character = new SwerpgCharacter(buildCharacterData())
 
+      expect(() => character.prepareBaseData()).not.toThrow()
+      expect(character.progression.freeSkillRanks.specialization.gained).toBe(0)
+    })
+
+    test('details.specializations is a non-null Set when initialised with the canonical default', () => {
+      // buildCharacterData defaults to new Set(), reflecting the SetField initial:[] contract
+      const character = new SwerpgCharacter(buildCharacterData())
+
+      // The Set is always available — no || [] fallback needed in character.mjs
+      expect(character.details.specializations).toBeInstanceOf(Set)
+      expect(character.details.specializations).not.toBeNull()
+      expect(character.details.specializations.size).toBe(0)
+
+      // prepareBaseData must iterate the set directly without any fallback guard
       expect(() => character.prepareBaseData()).not.toThrow()
       expect(character.progression.freeSkillRanks.specialization.gained).toBe(0)
     })

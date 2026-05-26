@@ -177,16 +177,14 @@ export default class SwerpgCharacter extends SwerpgActorType {
         { required: true, nullable: true, initial: null },
       ),
       specializations: new fields.SetField(
-        new fields.SchemaField(
-          {
-            specializationId: new fields.StringField({ required: false, blank: false, initial: undefined }),
-            treeUuid: new fields.DocumentUUIDField({ type: 'Item', required: false, nullable: true, initial: undefined }),
-            name: new fields.StringField({ blank: false }),
-            img: new fields.StringField(),
-            ...SwerpgSpecialization.defineSchema(),
-          },
-          { required: true, nullable: true, initial: null },
-        ),
+        new fields.SchemaField({
+          specializationId: new fields.StringField({ required: false, blank: false, initial: undefined }),
+          treeUuid: new fields.DocumentUUIDField({ type: 'Item', required: false, nullable: true, initial: undefined }),
+          name: new fields.StringField({ blank: false }),
+          img: new fields.StringField(),
+          ...SwerpgSpecialization.defineSchema(),
+        }),
+        { required: true, nullable: false, initial: [] },
       ),
       specialities: new fields.ArrayField(
         new fields.SchemaField({
@@ -428,7 +426,7 @@ export default class SwerpgCharacter extends SwerpgActorType {
     const career = this.details.career
     const isCareer = career ? Array.from(career.careerSkills || []).some((s) => s.id === skillId) : false
 
-    const specializations = Array.from(this.details.specializations || [])
+    const specializations = Array.from(this.details.specializations)
     const isSpecialization = specializations.some((spec) => Array.from(spec.specializationSkills || []).some((s) => s.id === skillId))
 
     return { isCareer, isSpecialization }
@@ -442,7 +440,7 @@ export default class SwerpgCharacter extends SwerpgActorType {
    */
   #prepareSpecializations() {
     let totalFreeRanks = 0
-    for (const specialization of Array.from(this.details.specializations || [])) {
+    for (const specialization of Array.from(this.details.specializations)) {
       totalFreeRanks += specialization?.freeSkillRank || 0
     }
 
@@ -557,7 +555,7 @@ export default class SwerpgCharacter extends SwerpgActorType {
       freeSkillRank: 0,
     }
 
-    const specializations = Array.from(this.details.specializations || [])
+    const specializations = Array.from(this.details.specializations)
     const updateData = {
       'system.details.specializations': [...specializations, acquiredSpecialization],
     }
@@ -582,7 +580,7 @@ export default class SwerpgCharacter extends SwerpgActorType {
    */
   async removeSpecialization(specializationKey) {
     const actor = this.parent
-    const specializations = Array.from(this.details.specializations || [])
+    const specializations = Array.from(this.details.specializations)
     const remaining = specializations.filter((spec) => {
       const key = spec.specializationId || spec.treeUuid || spec.name
       return key !== specializationKey
