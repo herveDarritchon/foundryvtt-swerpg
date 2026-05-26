@@ -602,4 +602,16 @@ La suite `e2e:documentation` est **strictement documentaire et non bloquante** :
 
 ---
 
-## Critères de clôture du socle documentaire (issue #384)
+## Critères de clôture EDG6 (issue #388)
+
+- [x] Contrat de stabilité des captures formalisé : invariants documentés (ordre, viewport, nommage, reset visuel) dans ce README
+- [x] Écarts tolérés vs écarts bloquants définis explicitement avant release documentaire
+- [x] Catégories de données interdites dans les artefacts documentées et mécanismes d'évitement en place
+- [x] Point de contrôle documentaire : la génération Markdown ne peut introduire aucune information hors JSON source
+- [x] Checklist de release courte et exécutable disponible dans `documentation/tests/e2e/edg6-release-checklist.md`
+- [x] Séquence canonique de 5 étapes définie : préparation monde → capture → vérification → génération Markdown → relecture humaine
+- [x] Signal de clôture EDG6 unique et non ambigu dans ce README (section `Signal de clôture EDG6`)
+- [x] Preuves minimales à conserver à la clôture listées dans `edg6-release-checklist.md`
+- [x] Feu vert documentaire distingué explicitement de la release applicative globale
+- [x] Revue humaine Dev/QA + Documentation/PO requise avant toute diffusion d'un guide généré
+- [x] Un seul contrat de release documentaire : ce README + `e2e/README.md` + `playwright-e2e-guide.md` + `edg6-release-checklist.md` sans consignes concurrentes
