@@ -263,12 +263,21 @@ export default class SwerpgCharacter extends SwerpgActorType {
   /* -------------------------------------------- */
 
   /**
-   * Return the wound threshold bonus sourced from the character's species.
-   * Reads `details.species.woundThreshold.modifier` and defaults to 0 when no
-   * species is set or the modifier is absent.
+   * Return the additive wound bonus sourced from the character's species.
+   *
+   * `details.species.woundThreshold.modifier` is the species-specific additive
+   * contribution to the wound threshold formula. It is **not** the final wound
+   * threshold — the absolute final value is computed in
+   * `SwerpgActorType.#calculateWoundThreshold` as:
+   *   `brawn rank + _getWoundThresholdBonus()`
+   * and written to `resources.wounds.threshold`.
+   *
+   * Note: there is no intermediate `thresholds.wounds` field on the Character
+   * model. The only runtime output consumed by the rest of the system is
+   * `resources.wounds.threshold`.
    *
    * @override
-   * @returns {number}
+   * @returns {number} Additive bonus from the species formula. Defaults to 0 when no species is set.
    */
   _getWoundThresholdBonus() {
     return this.details.species?.woundThreshold?.modifier ?? 0
@@ -277,12 +286,21 @@ export default class SwerpgCharacter extends SwerpgActorType {
   /* -------------------------------------------- */
 
   /**
-   * Return the strain threshold bonus sourced from the character's species.
-   * Reads `details.species.strainThreshold.modifier` and defaults to 0 when no
-   * species is set or the modifier is absent.
+   * Return the additive strain bonus sourced from the character's species.
+   *
+   * `details.species.strainThreshold.modifier` is the species-specific additive
+   * contribution to the strain threshold formula. It is **not** the final strain
+   * threshold — the absolute final value is computed in
+   * `SwerpgActorType.#calculateStrainThreshold` as:
+   *   `willpower rank + _getStrainThresholdBonus()`
+   * and written to `resources.strain.threshold`.
+   *
+   * Note: there is no intermediate `thresholds.strain` field on the Character
+   * model. The only runtime output consumed by the rest of the system is
+   * `resources.strain.threshold`.
    *
    * @override
-   * @returns {number}
+   * @returns {number} Additive bonus from the species formula. Defaults to 0 when no species is set.
    */
   _getStrainThresholdBonus() {
     return this.details.species?.strainThreshold?.modifier ?? 0
@@ -500,11 +518,13 @@ export default class SwerpgCharacter extends SwerpgActorType {
     super._prepareResources()
     const r = this.resources
 
-    // Wounds
+    // Wounds: max derived from the final wound threshold (resources.wounds.threshold).
+    // resources.wounds.threshold is set by _prepareDerivedAttributes via _getWoundThresholdBonus().
     r.wounds.max = Math.ceil(1.5 * r.wounds.threshold)
     r.wounds.value = Math.clamp(r.wounds.value, 0, r.wounds.max)
 
-    // Madness
+    // Strain: max derived from the final strain threshold (resources.strain.threshold).
+    // resources.strain.threshold is set by _prepareDerivedAttributes via _getStrainThresholdBonus().
     r.strain.max = Math.ceil(1.5 * r.strain.threshold)
     r.strain.value = Math.clamp(r.strain.value, 0, r.strain.max)
   }

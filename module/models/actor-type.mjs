@@ -30,8 +30,14 @@ import { ENCUMBRANCE_BASE_BONUS } from '../config/progression.mjs'
 
 /**
  * @typedef {Object} DerivedAttributes
- * @property {number} woundThreshold Amount of Wounds a character can withstand before being knocked out.
- * @property {number} strainThreshold Amount of Strain a character can withstand before being stunned.
+ * @property {number} woundThreshold   Final wound threshold written to `resources.wounds.threshold`.
+ *   Equals brawn rank + the additive bonus returned by `_getWoundThresholdBonus()`.
+ *   Do not confuse with the bonus itself: the bonus is a partial additive value,
+ *   while this field holds the absolute threshold consumed by the rest of the system.
+ * @property {number} strainThreshold  Final strain threshold written to `resources.strain.threshold`.
+ *   Equals willpower rank + the additive bonus returned by `_getStrainThresholdBonus()`.
+ *   Do not confuse with the bonus itself: the bonus is a partial additive value,
+ *   while this field holds the absolute threshold consumed by the rest of the system.
  * @property {number} encumbranceThreshold Amount of Encumbrance a character can carry before being encumbered.
  * @property {DefenseAttributes} defense Determines how difficult it is to hit a character with an attack.
  * @property {number} soakValue Determines how much incoming damage a character can shrug off before being seriously wounded.
@@ -350,11 +356,17 @@ export default class SwerpgActorType extends foundry.abstract.TypeDataModel {
   /* -------------------------------------------- */
 
   /**
-   * Return the bonus to add to the wound threshold for this actor subtype.
+   * Return the additive wound bonus for this actor subtype.
+   *
+   * This value is combined with the brawn characteristic rank inside
+   * `#calculateWoundThreshold` to produce the **final** wound threshold
+   * written to `resources.wounds.threshold`. It is a partial contribution,
+   * not the absolute threshold itself.
+   *
    * Subclasses override this method to provide species or item-based bonuses.
    * The base implementation returns 0, which is correct for adversaries.
    *
-   * @returns {number} Non-negative bonus applied on top of the brawn characteristic.
+   * @returns {number} Additive bonus applied on top of the brawn characteristic rank.
    * @protected
    */
   _getWoundThresholdBonus() {
@@ -362,11 +374,17 @@ export default class SwerpgActorType extends foundry.abstract.TypeDataModel {
   }
 
   /**
-   * Return the bonus to add to the strain threshold for this actor subtype.
+   * Return the additive strain bonus for this actor subtype.
+   *
+   * This value is combined with the willpower characteristic rank inside
+   * `#calculateStrainThreshold` to produce the **final** strain threshold
+   * written to `resources.strain.threshold`. It is a partial contribution,
+   * not the absolute threshold itself.
+   *
    * Subclasses override this method to provide species or item-based bonuses.
    * The base implementation returns 0, which is correct for adversaries.
    *
-   * @returns {number} Non-negative bonus applied on top of the willpower characteristic.
+   * @returns {number} Additive bonus applied on top of the willpower characteristic rank.
    * @protected
    */
   _getStrainThresholdBonus() {
