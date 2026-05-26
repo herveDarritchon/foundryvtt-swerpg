@@ -309,8 +309,9 @@ export default class SwerpgCharacter extends SwerpgActorType {
   /* -------------------------------------------- */
 
   /**
-   * Validate an attribute field
-   * @param actor
+   * Compute the total extra XP granted by obligation items marked as "extra".
+   * @param {SwerpgActor} actor - The parent actor whose items are searched.
+   * @returns {number} Sum of `extraXp` from all obligation items with `isExtra === true`.
    */
   static #computeObligationBonusExperience(actor) {
     return actor.items.filter((item) => item.type === 'obligation' && item.system.isExtra === true).reduce((total, item) => total + item.system.extraXp, 0)
@@ -319,8 +320,9 @@ export default class SwerpgCharacter extends SwerpgActorType {
   /* -------------------------------------------- */
 
   /**
-   * Validate an attribute field
-   * @param {{base: number, trained: number, bonus: number}} attr     The attribute value
+   * Validate a characteristic attribute field.
+   * @param {{ value: number }} attr - The characteristic object. Must have a `value` between 1 and 6 inclusive.
+   * @throws {Error} If `attr.value` is less than 1 or greater than 6.
    */
   static #validateAttribute(attr) {
     if (attr.value < 1 || attr.value > 6) throw new Error(`Characteristic cannot be lower than 1 and cannot exceed 6`)
@@ -422,7 +424,7 @@ export default class SwerpgCharacter extends SwerpgActorType {
    */
   _applyFreeSkillSpecies(skills) {
     Object.entries(skills).forEach(([skillId, skill]) => {
-      if (this.details.species?.freeSkills?.has(skillId)) {
+      if (this.details.species?.freeSkills.has(skillId)) {
         skill.rank.base = 1
       }
     })
@@ -491,7 +493,7 @@ export default class SwerpgCharacter extends SwerpgActorType {
   #prepareSpecializations() {
     let totalFreeRanks = 0
     for (const specialization of Array.from(this.details.specializations)) {
-      totalFreeRanks += specialization?.freeSkillRank || 0
+      totalFreeRanks += specialization.freeSkillRank || 0
     }
 
     this.progression.freeSkillRanks.specialization.gained = totalFreeRanks
