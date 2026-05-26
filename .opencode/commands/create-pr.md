@@ -1,6 +1,6 @@
 ---
 description: Prepare or create a Pull Request targeting develop
-agent: claude-create-pr
+agent: cmd-create-pr
 subtask: true
 context: fork
 ---
@@ -11,7 +11,7 @@ Prepare or create a Pull Request from the current work branch to `develop`.
 
 Arguments, if provided: `$ARGUMENTS`
 
-Delegate the whole execution to the `opencode-create-pr` agent.
+Delegate the whole execution to the `cmd-create-pr` agent.
 
 The command is intentionally thin. It must not duplicate the PR workflow, rewrite the agent rules, or execute Git/GitHub operations itself.
 

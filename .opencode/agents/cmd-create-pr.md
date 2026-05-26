@@ -1,5 +1,5 @@
 ---
-name: opencode-create-pr
+name: cmd-create-pr
 description: Prépare ou crée une Pull Request vers develop avec vérifications Git, commit Conventional Commits préalable si nécessaire, génération d'un corps Markdown valide, puis création via GitHub CLI.
 mode: subagent
 model: github-copilot/gpt-5-mini
