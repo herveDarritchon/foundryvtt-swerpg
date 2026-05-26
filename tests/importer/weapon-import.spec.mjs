@@ -449,3 +449,49 @@ describe('SwerpgWeapon - schema taxonomy', () => {
     expect(weaponSchema.restrictionLevel.config.choices).toBe(SYSTEM.RESTRICTION_LEVELS)
   })
 })
+
+describe('weaponMapper — MC4 shared-constant fallbacks', () => {
+  beforeEach(() => {
+    resetWeaponImportStats()
+  })
+
+  it('unknown skill falls back to SYSTEM.WEAPON.DEFAULT_SKILL', () => {
+    const result = weaponMapper([
+      { Name: 'Mystery Gun', Key: 'mystery', SkillKey: 'UNKNOWN_SKILL_XYZ', Range: 'Short', Damage: 3, Crit: 3 },
+    ])
+    expect(result).toHaveLength(1)
+    expect(result[0].system.skill).toBe(SYSTEM.WEAPON.DEFAULT_SKILL)
+  })
+
+  it('unknown range falls back to SYSTEM.WEAPON.DEFAULT_RANGE', () => {
+    const result = weaponMapper([
+      { Name: 'Mystery Gun', Key: 'mystery2', SkillKey: 'RangedLight', Range: 'UNKNOWN_RANGE_XYZ', Damage: 3, Crit: 3 },
+    ])
+    expect(result).toHaveLength(1)
+    expect(result[0].system.range).toBe(SYSTEM.WEAPON.DEFAULT_RANGE)
+  })
+
+  it('unknown hands falls back to SYSTEM.WEAPON.SLOTS.MAINHAND', () => {
+    const result = weaponMapper([
+      { Name: 'Mystery Gun', Key: 'mystery3', SkillKey: 'RangedLight', Range: 'Short', Hands: 'UNKNOWN_HAND_XYZ', Damage: 3, Crit: 3 },
+    ])
+    expect(result).toHaveLength(1)
+    expect(result[0].system.slot).toBe(SYSTEM.WEAPON.SLOTS.MAINHAND)
+  })
+
+  it('unrestricted weapon uses SYSTEM.DEFAULT_RESTRICTION_LEVEL', () => {
+    const result = weaponMapper([
+      { Name: 'Basic Pistol', Key: 'basic', SkillKey: 'RangedLight', Range: 'Short', Restricted: 'false', Damage: 3, Crit: 3 },
+    ])
+    expect(result).toHaveLength(1)
+    expect(result[0].system.restrictionLevel).toBe(SYSTEM.DEFAULT_RESTRICTION_LEVEL)
+  })
+
+  it('restricted weapon uses SYSTEM.RESTRICTION_LEVELS.restricted.id', () => {
+    const result = weaponMapper([
+      { Name: 'Military Rifle', Key: 'milrifle', SkillKey: 'RangedHeavy', Range: 'Long', Restricted: 'true', Damage: 5, Crit: 3 },
+    ])
+    expect(result).toHaveLength(1)
+    expect(result[0].system.restrictionLevel).toBe(SYSTEM.RESTRICTION_LEVELS.restricted.id)
+  })
+})

@@ -11,6 +11,10 @@ import {
   SPECIALIZATION_RANK_COST_MULTIPLIER,
   SPECIALIZATION_NON_CAREER_PENALTY,
   ENCUMBRANCE_BASE_BONUS,
+  CAREER_MAX_SKILL_COUNT,
+  CAREER_DEFAULT_FREE_SKILL_RANK,
+  CAREER_MIN_FREE_SKILL_RANK,
+  CAREER_MAX_FREE_SKILL_RANK,
 } from '../../module/config/progression.mjs'
 import { MAX_RANK_AT_CREATION, MAX_RANK } from '../../module/config/skills.mjs'
 
@@ -150,6 +154,37 @@ describe('Progression config — contractual constants (ADR-0018)', () => {
 
     test('encumbrance threshold formula for brawn 2 yields 7', () => {
       expect(2 + ENCUMBRANCE_BASE_BONUS).toBe(7)
+    })
+  })
+
+  /* -------------------------------------------- */
+  /*  Career skill list limits                     */
+  /* -------------------------------------------- */
+
+  describe('Career skill list constants (MC4 — ADR-0018)', () => {
+    test('CAREER_MAX_SKILL_COUNT is 8 (matches SwerpgCareer schema)', () => {
+      expect(CAREER_MAX_SKILL_COUNT).toBe(8)
+    })
+
+    test('CAREER_DEFAULT_FREE_SKILL_RANK is 4 (matches SwerpgCareer schema initial)', () => {
+      expect(CAREER_DEFAULT_FREE_SKILL_RANK).toBe(4)
+    })
+
+    test('CAREER_MIN_FREE_SKILL_RANK is 0 (matches SwerpgCareer schema min)', () => {
+      expect(CAREER_MIN_FREE_SKILL_RANK).toBe(0)
+    })
+
+    test('CAREER_MAX_FREE_SKILL_RANK is 8 (matches SwerpgCareer schema max)', () => {
+      expect(CAREER_MAX_FREE_SKILL_RANK).toBe(8)
+    })
+
+    test('CAREER_DEFAULT_FREE_SKILL_RANK is within [CAREER_MIN_FREE_SKILL_RANK, CAREER_MAX_FREE_SKILL_RANK]', () => {
+      expect(CAREER_DEFAULT_FREE_SKILL_RANK).toBeGreaterThanOrEqual(CAREER_MIN_FREE_SKILL_RANK)
+      expect(CAREER_DEFAULT_FREE_SKILL_RANK).toBeLessThanOrEqual(CAREER_MAX_FREE_SKILL_RANK)
+    })
+
+    test('CAREER_MAX_FREE_SKILL_RANK matches CAREER_MAX_SKILL_COUNT (same upper bound)', () => {
+      expect(CAREER_MAX_FREE_SKILL_RANK).toBe(CAREER_MAX_SKILL_COUNT)
     })
   })
 })

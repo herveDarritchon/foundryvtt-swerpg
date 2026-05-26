@@ -67,6 +67,13 @@ export const PROPERTIES = {
 }
 
 /**
+ * The default armor category applied when an OggDude armor has no recognizable category.
+ * Canonical key from CATEGORIES enum.
+ * @type {string}
+ */
+export const DEFAULT_CATEGORY = 'medium'
+
+/**
  * Data representing the default "unarmored" armor item.
  * @type {object}
  */

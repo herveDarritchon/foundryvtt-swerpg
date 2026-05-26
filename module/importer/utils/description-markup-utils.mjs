@@ -4,17 +4,23 @@
  */
 
 import { sanitizeDescription } from './text.mjs'
+import {
+  CAREER_DEFAULT_FREE_SKILL_RANK,
+  CAREER_MIN_FREE_SKILL_RANK,
+  CAREER_MAX_FREE_SKILL_RANK,
+} from '../../config/progression.mjs'
 
 /**
- * Normalise la valeur FreeRanks en entier borné 0-8, défaut 4.
+ * Normalise la valeur FreeRanks en entier borné [CAREER_MIN_FREE_SKILL_RANK, CAREER_MAX_FREE_SKILL_RANK],
+ * défaut CAREER_DEFAULT_FREE_SKILL_RANK.
  * @param {any} raw
  * @returns {number}
  */
 export function normalizeFreeSkillRank(raw) {
   let n = Number.parseInt(raw, 10)
-  if (Number.isNaN(n)) n = 4
-  if (n < 0) n = 0
-  if (n > 8) n = 8
+  if (Number.isNaN(n)) n = CAREER_DEFAULT_FREE_SKILL_RANK
+  if (n < CAREER_MIN_FREE_SKILL_RANK) n = CAREER_MIN_FREE_SKILL_RANK
+  if (n > CAREER_MAX_FREE_SKILL_RANK) n = CAREER_MAX_FREE_SKILL_RANK
   return n
 }
 

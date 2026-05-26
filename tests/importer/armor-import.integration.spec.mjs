@@ -301,3 +301,53 @@ describe('SwerpgArmor - getTags restrictionLevel', () => {
     expect(localizeSpy).toHaveBeenCalledWith('ARMOR.CATEGORIES.MEDIUM')
   })
 })
+
+describe('armorMapper — MC4 shared-constant fallbacks', () => {
+  beforeEach(() => {
+    resetArmorImportStats()
+  })
+
+  it('unknown category falls back to SYSTEM.ARMOR.DEFAULT_CATEGORY', () => {
+    const result = armorMapper([
+      {
+        Name: 'Mysterious Plates',
+        Key: 'mystery_armor',
+        Soak: 3,
+        Defense: 5,
+        Categories: { Category: ['UnknownCategoryXYZ'] },
+      },
+    ])
+    expect(result).toHaveLength(1)
+    expect(result[0].system.category).toBe(SYSTEM.ARMOR.DEFAULT_CATEGORY)
+  })
+
+  it('unrestricted armor uses SYSTEM.DEFAULT_RESTRICTION_LEVEL', () => {
+    const result = armorMapper([
+      {
+        Name: 'Padded Vest',
+        Key: 'padded_vest',
+        Soak: 2,
+        Defense: 0,
+        Categories: { Category: ['Light'] },
+        Restricted: 'false',
+      },
+    ])
+    expect(result).toHaveLength(1)
+    expect(result[0].system.restrictionLevel).toBe(SYSTEM.DEFAULT_RESTRICTION_LEVEL)
+  })
+
+  it('restricted armor uses SYSTEM.RESTRICTION_LEVELS.restricted.id', () => {
+    const result = armorMapper([
+      {
+        Name: 'Battle Armor',
+        Key: 'battle_armor',
+        Soak: 5,
+        Defense: 3,
+        Categories: { Category: ['Heavy'] },
+        Restricted: 'true',
+      },
+    ])
+    expect(result).toHaveLength(1)
+    expect(result[0].system.restrictionLevel).toBe(SYSTEM.RESTRICTION_LEVELS.restricted.id)
+  })
+})
