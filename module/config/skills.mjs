@@ -209,3 +209,15 @@ export const SKILLS = {
  * @type {string}
  */
 export let JOURNAL_ID = 'Compendium.swerpg.rules.JournalEntry.SwerpgSkills00'
+
+/**
+ * The maximum skill rank a character may reach during character creation.
+ * @type {number}
+ */
+export const MAX_RANK_AT_CREATION = 2
+
+/**
+ * The absolute maximum skill rank a character may ever reach.
+ * @type {number}
+ */
+export const MAX_RANK = 5

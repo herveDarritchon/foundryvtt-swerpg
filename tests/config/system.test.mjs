@@ -217,4 +217,27 @@ describe('System Configuration', () => {
       }
     })
   })
+
+  describe('SYSTEM.SKILLS rank limit constants', () => {
+    test('MAX_RANK_AT_CREATION is accessible on SYSTEM.SKILLS', () => {
+      expect(SystemConfig.SYSTEM.SKILLS.MAX_RANK_AT_CREATION).toBe(2)
+    })
+
+    test('MAX_RANK is accessible on SYSTEM.SKILLS', () => {
+      expect(SystemConfig.SYSTEM.SKILLS.MAX_RANK).toBe(5)
+    })
+
+    test('MAX_RANK_AT_CREATION and MAX_RANK are non-enumerable so Object.values() only returns skill definitions', () => {
+      const values = Object.values(SystemConfig.SYSTEM.SKILLS)
+      for (const v of values) {
+        expect(typeof v).toBe('object')
+        expect(v).toHaveProperty('id')
+      }
+    })
+
+    test('existing skill definitions remain accessible after extension', () => {
+      expect(SystemConfig.SYSTEM.SKILLS.cool).toBeDefined()
+      expect(SystemConfig.SYSTEM.SKILLS.cool).toHaveProperty('id', 'cool')
+    })
+  })
 })

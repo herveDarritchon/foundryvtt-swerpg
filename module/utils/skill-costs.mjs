@@ -1,3 +1,5 @@
+import { MAX_RANK } from '../config/skills.mjs'
+
 /**
  * Calculate the cost for the next skill rank based on FFG Edge of the Empire rules.
  * Career skills: nextRank * 5 XP
@@ -8,7 +10,7 @@
  * @param {number} [params.maxRank=5] - Maximum rank allowed
  * @returns {number|null} - Cost for next rank, or null if max rank reached
  */
-export function getSkillNextRankCost({ rank, isCareer, maxRank = 5 }) {
+export function getSkillNextRankCost({ rank, isCareer, maxRank = MAX_RANK }) {
   const nextRank = rank + 1
 
   if (nextRank > maxRank) {
@@ -40,7 +42,7 @@ export function getSkillPurchaseState({
   freeSpecializationSkillsLeft,
   careerFreeRank = 0,
   specializationFreeRank = 0,
-  maxRank = 5,
+  maxRank = MAX_RANK,
 }) {
   const nextRank = rank + 1
   const nextCost = getSkillNextRankCost({ rank, isCareer, maxRank })
