@@ -6,6 +6,7 @@ import * as dice from './dice.mjs'
 import { logger } from '../utils/logger.mjs'
 import * as EFFECTS from './effects.mjs'
 import * as SKILL from './skills.mjs'
+import { MAX_RANK_AT_CREATION, MAX_RANK } from './skills.mjs'
 import * as WEAPON from './weapon.mjs'
 import { ENCHANTMENT_TIERS, QUALITY_TIERS } from './items.mjs'
 import { ASCII, ASCII_DEV_MODE, DEV_MODE } from '../applications/system/constants.mjs'
@@ -195,6 +196,17 @@ export const RESTRICTION_LEVELS = {
 /* -------------------------------------------- */
 
 /**
+ * The skill catalogue extended with rank limit constants.
+ * MAX_RANK_AT_CREATION and MAX_RANK are non-enumerable so that Object.values(SYSTEM.SKILLS)
+ * continues to yield only skill-definition objects, preserving all existing consumer behaviour.
+ * @type {typeof ATTRIBUTES.SKILLS & { MAX_RANK_AT_CREATION: number, MAX_RANK: number }}
+ */
+const SKILLS_WITH_RANK_LIMITS = Object.defineProperties(Object.assign({}, ATTRIBUTES.SKILLS), {
+  MAX_RANK_AT_CREATION: { value: MAX_RANK_AT_CREATION, enumerable: false, configurable: false, writable: false },
+  MAX_RANK: { value: MAX_RANK, enumerable: false, configurable: false, writable: false },
+})
+
+/**
  * Include all constant definitions within the SYSTEM global export
  * @type {Object}
  */
@@ -221,7 +233,7 @@ export const SYSTEM = {
   RESTRICTION_LEVELS,
   RESOURCES: ATTRIBUTES.RESOURCES,
   SKILL,
-  SKILLS: ATTRIBUTES.SKILLS,
+  SKILLS: SKILLS_WITH_RANK_LIMITS,
   SECONDARY_ATTRIBUTES: ATTRIBUTES.SECONDARY_ATTRIBUTES,
   TALENTS: ATTRIBUTES.TALENTS,
   TALENT_ACTIVATION: ATTRIBUTES.TALENT_ACTIVATION,

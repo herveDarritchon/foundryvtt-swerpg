@@ -414,7 +414,7 @@ export default class SwerpgCharacter extends SwerpgActorType {
       freeSpecializationSkillsLeft: progression.freeSkillRanks.specialization.available,
       careerFreeRank: skill.rank.careerFree,
       specializationFreeRank: skill.rank.specializationFree,
-      maxRank: isCreation ? 2 : 5,
+      maxRank: isCreation ? SYSTEM.SKILLS.MAX_RANK_AT_CREATION : SYSTEM.SKILLS.MAX_RANK,
     })
 
     skill.nextRank = purchaseState.nextRank
