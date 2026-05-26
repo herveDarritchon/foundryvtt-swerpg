@@ -181,6 +181,41 @@ export default [
       },
     },
   },
+  // ADR-0018 — no-magic-numbers on the module/config perimeter.
+  // Purpose: make any re-introduction of raw numeric/string literals in the
+  // configuration layer immediately observable during development.
+  // Scope: module/config/*.mjs only — the exact boundary defined by ADR-0018.
+  // Exceptions rationale:
+  //   0, 1, -1  — conventional sentinel / identity values; not domain magic numbers.
+  //   Infinity  — used in action.mjs cost guards; not a business constant.
+  //   ignoreArrayIndexes — numeric array indices are never magic numbers.
+  //   ignoreDefaultValues — default parameter values in function signatures.
+  //   ignoreClassFieldInitialValues — class-field initialisers are not inline rules.
+  {
+    files: ['module/config/*.mjs'],
+    rules: {
+      'no-magic-numbers': [
+        'warn',
+        {
+          ignore: [0, 1, -1],
+          ignoreArrayIndexes: true,
+          ignoreDefaultValues: true,
+          ignoreClassFieldInitialValues: true,
+        },
+      ],
+    },
+  },
+
+  // tests/config — contractual test literals are intentional proofs of ADR-0018 values.
+  // Disabling no-magic-numbers here allows `.toBe(5)` style assertions that lock the
+  // exact constant values without requiring every test to re-import the constant.
+  {
+    files: ['tests/config/**/*.mjs', 'tests/config/**/*.js'],
+    rules: {
+      'no-magic-numbers': 'off',
+    },
+  },
+
   // Ajout de la configuration Prettier qui désactive les règles ESLint en conflit avec Prettier
   configPrettier,
 ]
