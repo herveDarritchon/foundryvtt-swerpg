@@ -43,6 +43,7 @@ export default class TalentCostCalculator {
   }
 
   /**
+   * Compute the XP cost to train a skill to the given rank.
    * @param rank
    * @deprecated Crucible legacy
    */
@@ -51,6 +52,7 @@ export default class TalentCostCalculator {
   }
 
   /**
+   * Compute the XP refund for forgetting a skill at the given rank.
    * @param rank
    * @deprecated Crucible legacy
    */

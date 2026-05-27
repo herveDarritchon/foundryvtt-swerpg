@@ -94,7 +94,7 @@ function auditTalentNode(actor, operation, status, data) {
 }
 
 /**
- *
+ * Await an audit promise and log any rejection as an error without propagating it.
  * @param promise
  * @param ctx
  * @param prefix

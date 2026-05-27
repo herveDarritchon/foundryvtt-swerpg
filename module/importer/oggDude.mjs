@@ -203,7 +203,7 @@ function buildContextRegistry() {
 }
 
 /**
- *
+ * Return the import statistics payload for the given domain identifier.
  * @param domain
  */
 function getDomainStatsPayload(domain) {
@@ -601,6 +601,7 @@ export default class OggDudeImporter {
   }
 
   /**
+   * Load an OggDude zip archive and return its entries keyed by path.
    * @param file : File (Zip file path) from OGGDude https://www.swrpgcommunity.com/gm-resources/apps-dice-utilities/oggdudes-generator
    * @returns {Promise<{[p: string]: JSZip.JSZipObject}>}
    */

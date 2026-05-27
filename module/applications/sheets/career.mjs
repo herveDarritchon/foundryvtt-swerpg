@@ -65,6 +65,7 @@ export default class CareerSheet extends SwerpgBaseItemSheet {
   /* -------------------------------------------- */
 
   /**
+   * Toggle a skill's career status on the item when the corresponding checkbox is clicked.
    * @this {SwerpgBaseActorSheet}
    * @param {PointerEvent} event
    * @returns {Promise<void>}

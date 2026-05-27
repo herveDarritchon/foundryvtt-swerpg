@@ -201,7 +201,7 @@ export function mapCareerSkills(rawCodes = [], { strict = false } = {}) {
 }
 
 /**
- *
+ * Resolve the primary source reference from a raw OggDude career XML node.
  * @param xmlCareer
  */
 function resolveCareerSource(xmlCareer) {
@@ -227,7 +227,7 @@ function resolveCareerSource(xmlCareer) {
 }
 
 /**
- *
+ * Extract source name and page number from a single OggDude source entry node.
  * @param entry
  */
 function extractCareerSourceEntry(entry) {
@@ -251,7 +251,7 @@ function extractCareerSourceEntry(entry) {
 }
 
 /**
- *
+ * Convert a raw OggDude career description with markup tags to sanitized HTML, appending source attribution.
  * @param rawDescription
  * @param sourceInfo
  */
@@ -288,7 +288,7 @@ function buildCareerDescription(rawDescription, sourceInfo) {
 }
 
 /**
- *
+ * Append a formatted source attribution paragraph to the given HTML sections array when source info is present.
  * @param sections
  * @param sourceInfo
  */
@@ -304,7 +304,7 @@ function appendSourceSection(sections, sourceInfo) {
 }
 
 /**
- *
+ * Convert OggDude bracket-style markup tags in a career description string to equivalent HTML tags.
  * @param description
  */
 function convertCareerMarkupToHtml(description) {
@@ -374,7 +374,7 @@ function convertCareerMarkupToHtml(description) {
 }
 
 /**
- *
+ * Escape HTML special characters in a string, using Foundry's utility when available.
  * @param value
  */
 function escapeHtmlSafe(value) {

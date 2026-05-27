@@ -79,7 +79,7 @@ function mapOggDudeSkillToSystem(oggDudeSkillCode) {
 
 // Mapping minimal selon TUs
 /**
- *
+ * Map an OggDude characteristic name to its system key, or return null when unrecognized.
  * @param k
  */
 function mapCharacteristicKey(k) {
@@ -95,7 +95,7 @@ function mapCharacteristicKey(k) {
 }
 
 /**
- *
+ * Map an OggDude skill identifier to its normalized lowercase system key.
  * @param k
  */
 function mapSkillKey(k) {

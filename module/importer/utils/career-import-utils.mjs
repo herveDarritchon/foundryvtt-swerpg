@@ -12,7 +12,7 @@ const careerStats = new ImportStats({
 })
 
 /**
- *
+ * Reset all career import counters and skill details to zero.
  */
 export function resetCareerImportStats() {
   careerStats.reset({
@@ -22,7 +22,7 @@ export function resetCareerImportStats() {
 }
 
 /**
- *
+ * Increment a named career import counter by the given amount.
  * @param key
  * @param amount
  */
@@ -31,7 +31,7 @@ export function incrementCareerImportStat(key, amount = 1) {
 }
 
 /**
- *
+ * Record an unknown skill code encountered during career import.
  * @param code
  */
 export function addCareerUnknownSkill(code) {
@@ -39,7 +39,7 @@ export function addCareerUnknownSkill(code) {
 }
 
 /**
- *
+ * Return the current career import statistics snapshot.
  */
 export function getCareerImportStats() {
   return careerStats.getStats()

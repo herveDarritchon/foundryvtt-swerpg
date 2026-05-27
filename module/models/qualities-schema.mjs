@@ -1,5 +1,5 @@
 /**
- *
+ * Build the SchemaField definition for a single item quality entry, including key, rank, hasRank, active, and source fields.
  */
 export function buildQualitySchema() {
   const fields = foundry.data.fields

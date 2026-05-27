@@ -6,7 +6,7 @@ import { resetDutyImportStats, incrementDutyImportStat, getDutyImportStats } fro
 import { sanitizeDescription } from '../utils/text.mjs'
 
 /**
- *
+ * Map an array of raw OggDude duty XML objects to Foundry item data objects.
  * @param duties
  */
 export function dutyMapper(duties) {
@@ -105,7 +105,7 @@ export function dutyMapper(duties) {
 export { getDutyImportStats }
 
 /**
- *
+ * Build the import context for OggDude duty data, including JSON payload and image references.
  * @param zip
  * @param groupByDirectory
  * @param groupByType

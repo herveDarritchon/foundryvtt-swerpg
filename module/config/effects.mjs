@@ -8,7 +8,7 @@ export function getEffectId(label) {
 }
 
 /**
- *
+ * Build the ActiveEffect data for the Bleeding condition, dealing piercing damage over time.
  * @param {object} actor
  * @param {object} target
  * @param {object} root0
@@ -34,7 +34,7 @@ export function bleeding(actor, target, { ability = 'dexterity', damageType = 'p
 }
 
 /**
- *
+ * Build the ActiveEffect data for the Burning condition, dealing fire damage over time to health and morale.
  * @param {object} actor
  * @param {object} target
  */
@@ -58,7 +58,7 @@ export function burning(actor, target) {
 }
 
 /**
- *
+ * Build the ActiveEffect data for the Chilled condition, applying cold damage and the slowed status.
  * @param {object} actor
  * @param {object} target
  */
@@ -82,7 +82,7 @@ export function chilled(actor, target) {
 }
 
 /**
- *
+ * Build the ActiveEffect data for the Confusion condition, dealing psychic morale damage and applying the disoriented status.
  * @param {object} actor
  * @param {object} target
  */
@@ -106,7 +106,7 @@ export function confusion(actor, target) {
 }
 
 /**
- *
+ * Build the ActiveEffect data for the Corroding condition, dealing acid damage over three turns.
  * @param {object} actor
  * @param {object} target
  */
@@ -129,7 +129,7 @@ export function corroding(actor, target) {
 }
 
 /**
- *
+ * Build the ActiveEffect data for the Decay condition, dealing corruption damage over three turns.
  * @param {object} actor
  * @param {object} target
  */
@@ -152,7 +152,7 @@ export function decay(actor, target) {
 }
 
 /**
- *
+ * Build the ActiveEffect data for the Entropy condition, dealing void damage and applying the frightened status.
  * @param {object} actor
  * @param {object} target
  */
@@ -176,7 +176,7 @@ export function entropy(actor, target) {
 }
 
 /**
- *
+ * Build the ActiveEffect data for the Irradiated condition, dealing radiant damage to both health and morale.
  * @param {object} actor
  * @param {object} target
  */
@@ -200,7 +200,7 @@ export function irradiated(actor, target) {
 }
 
 /**
- *
+ * Build the ActiveEffect data for the Mending condition, restoring health each turn.
  * @param {object} actor
  * @param {object} target
  */
@@ -222,7 +222,7 @@ export function mending(actor, target) {
 }
 
 /**
- *
+ * Build the ActiveEffect data for the Inspired condition, restoring morale each turn.
  * @param {object} actor
  * @param {object} target
  */
@@ -244,7 +244,7 @@ export function inspired(actor, target) {
 }
 
 /**
- *
+ * Build the ActiveEffect data for the Poisoned condition, dealing poison damage over six turns.
  * @param {object} actor
  * @param {object} target
  */
@@ -267,7 +267,7 @@ export function poisoned(actor, target) {
 }
 
 /**
- *
+ * Build the ActiveEffect data for the Shocked condition, dealing electricity morale damage and applying the staggered status.
  * @param {object} actor
  * @param {object} target
  */
@@ -291,7 +291,7 @@ export function shocked(actor, target) {
 }
 
 /**
- *
+ * Build the ActiveEffect data for the Staggered condition, applying the staggered status for one turn.
  * @param {object} actor
  * @param {object} target
  */

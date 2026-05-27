@@ -31,7 +31,7 @@ import {
 const DEFAULT_QUALITY_COUNT = 1
 
 /**
- *
+ * Parse a raw quality count value and return a positive integer, defaulting to 1 when invalid.
  * @param value
  */
 function coerceQualityCount(value) {
@@ -40,7 +40,7 @@ function coerceQualityCount(value) {
 }
 
 /**
- *
+ * Split a delimited string on semicolons, commas, or slashes and return a trimmed, non-empty array.
  * @param input
  */
 function normalizeDelimitedValues(input) {
@@ -57,7 +57,7 @@ function normalizeDelimitedValues(input) {
 }
 
 /**
- *
+ * Normalize a raw category value or array to a trimmed, non-empty string array.
  * @param rawCategories
  */
 function normalizeCategoryValues(rawCategories) {
@@ -104,7 +104,7 @@ function normalizeSizeValue(value) {
 }
 
 /**
- *
+ * Extract source book name and page number from a raw OggDude source node.
  * @param source
  */
 function extractSourceInfo(source) {

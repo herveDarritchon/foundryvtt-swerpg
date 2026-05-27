@@ -526,7 +526,7 @@ export default class SwerpgTalentTree extends PIXI.Container {
 
     // Recursive testing function
     /**
-     *
+     * Process a batch of talent nodes, updating their accessibility state and queuing child nodes for the next pass.
      * @param nodes
      * @param accessible
      */

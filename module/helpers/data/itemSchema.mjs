@@ -10,7 +10,7 @@ import SwerpgCombatItemData from '../../data/combat-item.mjs'
 import { buildQualitySchema } from '../../models/qualities-schema.mjs'
 
 /**
- *
+ * Build the SchemaField for item starting attributes including wound/strain thresholds, defense, soak, experience, and force rating.
  * @param fields
  */
 export function buildAttributesSchema(fields) {
@@ -70,7 +70,7 @@ export function buildAttributesSchema(fields) {
 }
 
 /**
- *
+ * Build the standard requirement SchemaField including armor, non-career, and soak constraints on top of the base schema.
  * @param fields
  * @param extraFields
  */
@@ -101,7 +101,7 @@ export function buildStandardRequirementSchema(fields, extraFields = {}) {
 }
 
 /**
- *
+ * Build the base requirement SchemaField with career and specialization boolean flags, merging any extra fields.
  * @param fields
  * @param extraFields
  */
@@ -127,7 +127,7 @@ export function buildBaseRequirementSchema(fields, extraFields = {}) {
 }
 
 /**
- *
+ * Build a requirement schema extended with melee, brawl, and lightsaber wielding constraints.
  * @param fields
  */
 export function buildRequirementSchemaWithExtraFields(fields) {
@@ -148,7 +148,7 @@ export function buildRequirementSchemaWithExtraFields(fields) {
 }
 
 /**
- *
+ * Build the SetField schema for skill modifiers, extending talent modifiers with isCareer and skillType fields.
  * @param fields
  */
 export function buildSkillModifiersSchema(fields) {
@@ -165,7 +165,7 @@ export function buildSkillModifiersSchema(fields) {
 }
 
 /**
- *
+ * Build the SetField schema for talent modifiers, each entry carrying rank range, limit, and requirement fields.
  * @param fields
  * @param extraFields
  */
@@ -198,7 +198,7 @@ export function buildTalentModifiersSchema(fields, extraFields = {}) {
 }
 
 /**
- *
+ * Build the ArrayField schema for item qualities using the quality schema definition.
  * @param fields
  */
 export function buildQualitiesSchema(fields) {
@@ -206,7 +206,7 @@ export function buildQualitiesSchema(fields) {
 }
 
 /**
- *
+ * Build the SetField schema for weapon modifiers including unarmed, skill key, damage, crit, range, and quality fields.
  * @param fields
  * @param extraFields
  */
@@ -266,7 +266,7 @@ export function buildWeaponModifiersSchema(fields, extraFields = {}) {
 }
 
 /**
- *
+ * Build the weapon modifiers schema extended with range and baseMods fields.
  * @param fields
  */
 export function buildWeaponModifiersSchemaWithExtraSchema(fields) {

@@ -21,7 +21,7 @@ const OGGDUDE_COMPENDIUM_FOLDERS = {
 }
 
 /**
- *
+ * Return the first folder matching the given name, document type, and optional parent folder ID.
  * @param name
  * @param type
  * @param parentId
@@ -35,7 +35,7 @@ function findFolderByNameTypeAndParent(name, type, parentId = null) {
 }
 
 /**
- *
+ * Find an existing folder matching the given name, type, and parent, or create it when absent.
  * @param root0
  * @param root0.name
  * @param root0.type
@@ -57,7 +57,7 @@ async function getOrCreateFolder({ name, type, color, parentId = null }) {
 }
 
 /**
- *
+ * Ensure the compendium pack is placed in the correct OggDude import folder group, creating folders as needed.
  * @param pack
  * @param elementType
  */

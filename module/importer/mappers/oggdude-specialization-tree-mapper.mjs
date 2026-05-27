@@ -19,7 +19,7 @@ import {
 } from '../utils/specialization-tree-import-utils.mjs'
 
 /**
- *
+ * Wrap a value in an array if it is not already an array, normalizing objects and strings to single-element arrays.
  * @param value
  */
 function asArray(value) {
@@ -30,7 +30,7 @@ function asArray(value) {
 }
 
 /**
- *
+ * Return the trimmed string value, logging a warning when the value is absent or not a string.
  * @param label
  * @param value
  */
@@ -44,7 +44,7 @@ function readMandatoryString(label, value) {
 }
 
 /**
- *
+ * Return the value if it is a string, or an empty string otherwise.
  * @param value
  */
 function readOptionalString(value) {
@@ -52,7 +52,7 @@ function readOptionalString(value) {
 }
 
 /**
- *
+ * Return the first non-empty trimmed string found among the provided values, or an empty string when none qualify.
  * @param {...any} values
  */
 function readFirstString(...values) {
@@ -67,7 +67,7 @@ function readFirstString(...values) {
 }
 
 /**
- *
+ * Build lookup maps from raw node keys and row/column coordinates to normalized node IDs.
  * @param nodes
  */
 function buildNodeReferenceMaps(nodes) {
@@ -85,7 +85,7 @@ function buildNodeReferenceMaps(nodes) {
 }
 
 /**
- *
+ * Resolve a raw connection endpoint reference to a canonical node ID using the provided reference maps.
  * @param rawReference
  * @param maps
  */
@@ -106,7 +106,7 @@ function resolveConnectionEndpoint(rawReference, maps) {
 }
 
 /**
- *
+ * Extract connection entries declared on a single node, resolving endpoints and recording invalid connections.
  * @param rawNode
  * @param currentNodeId
  * @param maps
@@ -136,7 +136,7 @@ function extractNodeConnectionEntries(rawNode, currentNodeId, maps) {
 }
 
 /**
- *
+ * Extract connection entries declared at the specialization level, resolving from/to endpoints and recording invalid connections.
  * @param xmlSpecialization
  * @param maps
  */
@@ -168,7 +168,7 @@ function extractGlobalConnectionEntries(xmlSpecialization, maps) {
 }
 
 /**
- *
+ * Extract raw node entries from a talent-rows-style specialization XML block.
  * @param xmlSpecialization
  */
 function extractNodesFromRows(xmlSpecialization) {
@@ -214,7 +214,7 @@ function extractNodesFromRows(xmlSpecialization) {
 }
 
 /**
- *
+ * Derive the tree row index from a node XP cost value, returning null when the cost does not map to a valid row.
  * @param cost
  */
 function computeRowFromCost(cost) {
@@ -226,7 +226,7 @@ function computeRowFromCost(cost) {
 }
 
 /**
- *
+ * Extract raw node entries from a flat Nodes/TalentNodes list in the specialization XML block.
  * @param xmlSpecialization
  */
 function extractNodesFromFlatList(xmlSpecialization) {
@@ -247,7 +247,7 @@ function extractNodesFromFlatList(xmlSpecialization) {
 }
 
 /**
- *
+ * Select and return raw node entries from a specialization XML block, preferring row-based extraction over the flat-list format.
  * @param xmlSpecialization
  */
 function extractRawNodeEntries(xmlSpecialization) {
@@ -257,7 +257,7 @@ function extractRawNodeEntries(xmlSpecialization) {
 }
 
 /**
- *
+ * Detect the structural format of the specialization XML input block (talent-rows-keys, talent-rows-columns, flat-list, or unknown).
  * @param xmlSpecialization
  */
 function detectInputFormat(xmlSpecialization) {
@@ -290,7 +290,7 @@ function detectInputFormat(xmlSpecialization) {
 }
 
 /**
- *
+ * Parse and normalize all node entries from the specialization XML, validating positions and costs.
  * @param xmlSpecialization
  * @param specializationId
  */
@@ -332,7 +332,7 @@ function normalizeNodes(xmlSpecialization, specializationId) {
 }
 
 /**
- *
+ * Remove duplicate connection entries, keeping only the first occurrence of each from→to:type combination.
  * @param connections
  */
 function dedupeConnections(connections) {
@@ -350,7 +350,7 @@ function dedupeConnections(connections) {
 }
 
 /**
- *
+ * Derive Right and Down directional connections from node direction flags in talent-rows-keys format.
  * @param nodes
  */
 function extractDirectionalConnections(nodes) {
@@ -390,7 +390,7 @@ function extractDirectionalConnections(nodes) {
 }
 
 /**
- *
+ * Map an array of raw OggDude specialization XML objects to Foundry specialization tree item data.
  * @param specializations
  * @param root0
  * @param root0.talentById

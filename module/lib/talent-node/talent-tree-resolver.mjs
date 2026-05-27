@@ -1,7 +1,7 @@
 import { logger } from '../../utils/logger.mjs'
 
 /**
- *
+ * Find the specialization tree item that matches the given specialization data by name or slug.
  * @param specData
  */
 export function findTreeForSpecialization(specData) {

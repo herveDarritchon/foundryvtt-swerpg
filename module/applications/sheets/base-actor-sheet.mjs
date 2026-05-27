@@ -783,6 +783,7 @@ export default class SwerpgBaseActorSheet extends HBMixin(BaseActorSheetV2) {
   /* -------------------------------------------- */
 
   /**
+   * Open the sheet of the action item associated with the clicked element.
    * @this {SwerpgBaseActorSheet}
    * @param {PointerEvent} event
    * @returns {Promise<void>}
@@ -797,6 +798,7 @@ export default class SwerpgBaseActorSheet extends HBMixin(BaseActorSheetV2) {
   /* -------------------------------------------- */
 
   /**
+   * Toggle the favorite state of an action on the actor.
    * @this {SwerpgBaseActorSheet}
    * @param {PointerEvent} event
    * @returns {Promise<void>}
@@ -812,6 +814,7 @@ export default class SwerpgBaseActorSheet extends HBMixin(BaseActorSheetV2) {
   /* -------------------------------------------- */
 
   /**
+   * Execute the action identified by the clicked element on the actor.
    * @this {SwerpgBaseActorSheet}
    * @param {PointerEvent} event
    * @returns {Promise<void>}
@@ -824,6 +827,7 @@ export default class SwerpgBaseActorSheet extends HBMixin(BaseActorSheetV2) {
   /* -------------------------------------------- */
 
   /**
+   * Open the item creation dialog for the actor, defaulting to the weapon type.
    * @this {SwerpgBaseActorSheet}
    * @param {PointerEvent} event
    * @returns {Promise<void>}
@@ -854,6 +858,7 @@ export default class SwerpgBaseActorSheet extends HBMixin(BaseActorSheetV2) {
   /* -------------------------------------------- */
 
   /**
+   * Open the sheet of the item associated with the clicked element.
    * @this {SwerpgBaseActorSheet}
    * @param {PointerEvent} event
    * @returns {Promise<void>}
@@ -867,6 +872,7 @@ export default class SwerpgBaseActorSheet extends HBMixin(BaseActorSheetV2) {
   /* -------------------------------------------- */
 
   /**
+   * Toggle the equipped state of an armor or weapon item on the actor.
    * @this {SwerpgBaseActorSheet}
    * @param {PointerEvent} event
    * @returns {Promise<void>}
@@ -1010,6 +1016,7 @@ export default class SwerpgBaseActorSheet extends HBMixin(BaseActorSheetV2) {
   /* -------------------------------------------- */
 
   /**
+   * Open the ActiveEffect creation dialog for the actor.
    * @this {SwerpgBaseActorSheet}
    * @param {PointerEvent} event
    * @returns {Promise<void>}
@@ -1022,6 +1029,7 @@ export default class SwerpgBaseActorSheet extends HBMixin(BaseActorSheetV2) {
   /* -------------------------------------------- */
 
   /**
+   * Open the deletion confirmation dialog for the ActiveEffect associated with the clicked element.
    * @this {SwerpgBaseActorSheet}
    * @param {PointerEvent} event
    * @returns {Promise<void>}
@@ -1034,6 +1042,7 @@ export default class SwerpgBaseActorSheet extends HBMixin(BaseActorSheetV2) {
   /* -------------------------------------------- */
 
   /**
+   * Open the sheet of the ActiveEffect associated with the clicked element.
    * @this {SwerpgBaseActorSheet}
    * @param {PointerEvent} event
    * @returns {Promise<void>}
@@ -1046,6 +1055,7 @@ export default class SwerpgBaseActorSheet extends HBMixin(BaseActorSheetV2) {
   /* -------------------------------------------- */
 
   /**
+   * Toggle the disabled state of the ActiveEffect associated with the clicked element.
    * @this {SwerpgBaseActorSheet}
    * @param {PointerEvent} event
    * @returns {Promise<void>}

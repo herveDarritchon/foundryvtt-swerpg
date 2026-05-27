@@ -49,7 +49,7 @@ export function addSpecializationRejectionReason(reason) {
 }
 
 /**
- *
+ * Record an unknown skill code encountered during specialization import.
  * @param code
  */
 export function addSpecializationUnknownSkill(code) {

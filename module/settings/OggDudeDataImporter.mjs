@@ -535,7 +535,7 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
   /* -------------------------------------------- */
 
   /**
-   *
+   * Handle clicks on the load-zip button by reading the selected file and initiating the import pipeline.
    * @param {Event} event  The originating click event
    * @private
    */

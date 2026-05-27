@@ -423,7 +423,7 @@ Hooks.on('getSceneControlButtons', (controls) => {
 
 /* -------------------------------------------- */
 /**
- *
+ * Preload all Handlebars partial templates used by the system.
  */
 async function preloadHandlebarsTemplates() {
   const templatePaths = [
@@ -512,7 +512,7 @@ async function standardizeItemIds() {
 }
 
 /**
- *
+ * Register development-only Foundry hooks that keep talent data synchronized during authoring.
  */
 function registerDevelopmentHooks() {
   Hooks.on('preCreateItem', (item, data, options, user) => {
@@ -563,7 +563,7 @@ async function syncTalents(force = false) {
 /* -------------------------------------------- */
 
 /**
- *
+ * Delete all non-species talent items from every actor in the world.
  */
 async function resetAllActorTalents() {
   for (const actor of game.actors) {

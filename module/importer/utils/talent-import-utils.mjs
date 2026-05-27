@@ -126,7 +126,7 @@ export function generateTalentKey(name) {
 }
 
 /**
- *
+ * Build a talent import diagnostics object summarizing warnings and unresolved reference status.
  * @param warnings
  * @param unresolved
  */

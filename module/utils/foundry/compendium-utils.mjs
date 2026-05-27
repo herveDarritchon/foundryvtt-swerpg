@@ -1,7 +1,7 @@
 import { getOggDudePackConfig } from '../oggdude-mapping-config.mjs'
 
 /**
- *
+ * Retrieve the compendium pack for the given OggDude element type, returning a result object with pack, config, and reason fields.
  * @param type
  */
 export function getCharacterCreationCompendiumPack(type) {

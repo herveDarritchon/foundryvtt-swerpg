@@ -250,7 +250,7 @@ export function buildOptionalHtmlField({ initial = '', itemType, key }) {
 }
 
 /**
- *
+ * Build a mandatory HTMLField with localized label and hint derived from the item type and key.
  * @param {object} root0
  * @param {string} root0.itemType
  * @param {string} root0.key
@@ -296,7 +296,7 @@ export function mandatorySchemaField(field = {}) {
 }
 
 /**
- *
+ * Build an optional SetField with the given element field and initial value.
  * @param {object} root0
  * @param {Array} root0.initial
  * @param {object} root0.field

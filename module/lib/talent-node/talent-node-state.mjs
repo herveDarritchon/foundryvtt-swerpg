@@ -21,7 +21,7 @@ export const REASON_CODE = Object.freeze({
 })
 
 /**
- *
+ * Build a structured node state result object.
  * @param {string} state
  * @param {string} reasonCode
  * @param {object} details
@@ -31,7 +31,7 @@ function makeResult(state, reasonCode, details = {}) {
 }
 
 /**
- *
+ * Return true if the actor currently owns the specialization identified by specializationId.
  * @param {object} actor
  * @param {string} specializationId
  */
@@ -45,7 +45,7 @@ function isSpecializationOwned(actor, specializationId) {
 }
 
 /**
- *
+ * Find and return the node with the given nodeId within the tree's nodes array, or undefined if not found.
  * @param {object} tree
  * @param {string} nodeId
  */
@@ -56,7 +56,7 @@ function findNode(tree, nodeId) {
 }
 
 /**
- *
+ * Return true if the actor has a recorded purchase matching the given tree, node, talent, and specialization.
  * @param {object} actor
  * @param {string} treeId
  * @param {string} nodeId
@@ -79,7 +79,7 @@ function hasPurchase(actor, treeId, nodeId, talentId, specializationId, { treeUu
 }
 
 /**
- *
+ * Return true if the node has all mandatory fields populated with valid values.
  * @param {object} node
  */
 function hasValidFields(node) {
@@ -90,7 +90,7 @@ function hasValidFields(node) {
 }
 
 /**
- *
+ * Return the list of mandatory field names that are absent or null on the node.
  * @param {object} node
  */
 function missingFields(node) {
@@ -103,7 +103,7 @@ function missingFields(node) {
 }
 
 /**
- *
+ * Return true if the tree has non-empty nodes and connections arrays and carries no unresolved import flags.
  * @param {object} tree
  */
 function isCompleteTree(tree) {
@@ -119,7 +119,7 @@ function isCompleteTree(tree) {
 }
 
 /**
- *
+ * Return true if the node is accessible: either it is on row 1, or at least one predecessor node is purchased.
  * @param {object} actor
  * @param {object} tree
  * @param {object} node
@@ -147,7 +147,7 @@ function isAccessible(actor, tree, node) {
 }
 
 /**
- *
+ * Return the actor's available XP from the progression data, computing it from gained minus spent when not directly stored.
  * @param {object} actor
  */
 function getAvailableXp(actor) {
@@ -158,7 +158,7 @@ function getAvailableXp(actor) {
 }
 
 /**
- *
+ * Return the computed state of a single talent node for the given actor and specialization context.
  * @param {object} actor
  * @param {string} specializationId
  * @param {object} tree
@@ -232,7 +232,7 @@ export function getNodeState(actor, specializationId, tree, nodeId) {
 }
 
 /**
- *
+ * Compute the state of every node in the tree for the given actor and specialization, returning a map keyed by nodeId.
  * @param {object} actor
  * @param {string} specializationId
  * @param {object} tree

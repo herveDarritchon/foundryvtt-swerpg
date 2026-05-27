@@ -25,7 +25,7 @@ const _runtime = {
 // For tests and reset scenarios we expose a reset helper so consumers (tests) can
 // ensure a clean state between runs.
 /**
- *
+ * Reset the internal runtime metrics, optionally preserving the last successful import stats.
  * @param preserveLastImportStats
  */
 export function resetRuntimeMetrics(preserveLastImportStats = false) {
@@ -39,7 +39,7 @@ export function resetRuntimeMetrics(preserveLastImportStats = false) {
 }
 
 /**
- *
+ * Record the global import start timestamp using performance.now when available.
  */
 export function markGlobalStart() {
   _runtime.globalStart = typeof performance !== 'undefined' && typeof performance.now === 'function' ? performance.now() : Date.now()
@@ -47,7 +47,7 @@ export function markGlobalStart() {
 }
 
 /**
- *
+ * Record the global import end timestamp and log the overall duration.
  */
 export function markGlobalEnd() {
   _runtime.globalEnd = typeof performance !== 'undefined' && typeof performance.now === 'function' ? performance.now() : Date.now()
@@ -56,7 +56,7 @@ export function markGlobalEnd() {
 }
 
 /**
- *
+ * Store the import archive size in bytes when the provided value is a non-negative finite number.
  * @param size
  */
 export function markArchiveSize(size) {
@@ -66,7 +66,7 @@ export function markArchiveSize(size) {
 }
 
 /**
- *
+ * Record the start timestamp for the given import domain.
  * @param domain
  */
 export function recordDomainStart(domain) {
@@ -75,7 +75,7 @@ export function recordDomainStart(domain) {
 }
 
 /**
- *
+ * Record the end timestamp for the given import domain when its entry exists in the runtime map.
  * @param domain
  */
 export function recordDomainEnd(domain) {
@@ -131,7 +131,7 @@ export function getAllImportStats() {
 }
 
 /**
- *
+ * Invoke fn and return its result, returning a zero-filled stats object if an error is thrown.
  * @param fn
  */
 function safeCall(fn) {
@@ -196,7 +196,7 @@ export { aggregateImportMetrics as getGlobalImportMetrics }
 // ---- Format helpers (human readable) ---------------------------------
 
 /**
- *
+ * Format a byte count as a human-readable string with the appropriate unit.
  * @param bytes
  * @param decimals
  */
@@ -209,7 +209,7 @@ function _formatBytes(bytes, decimals = 2) {
 }
 
 /**
- *
+ * Format a duration in milliseconds as a human-readable string, showing seconds when the value exceeds 1000.
  * @param ms
  */
 function _formatDurationMs(ms) {
@@ -222,7 +222,7 @@ function _formatDurationMs(ms) {
 }
 
 /**
- *
+ * Format a 0–1 ratio as a percentage string with the given number of decimal places.
  * @param value
  * @param decimals
  */
@@ -232,7 +232,7 @@ function _formatPercent(value, decimals = 2) {
 }
 
 /**
- *
+ * Format a numeric value as a string, returning integers without a decimal point.
  * @param value
  * @param decimals
  */
