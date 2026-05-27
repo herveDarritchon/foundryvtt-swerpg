@@ -41,9 +41,6 @@ class MockBase {
   }
 }
 
-// Import the mixin
-import { AttackMixin } from '../../module/documents/actor-mixins/combat/attack.mixin.mjs'
-
 class TestActor extends AttackMixin(MockBase) {}
 
 describe('AttackMixin', () => {
