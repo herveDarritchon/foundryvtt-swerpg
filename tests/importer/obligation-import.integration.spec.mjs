@@ -1,14 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import fs from 'node:fs/promises'
-import xml2jsModule from '../../vendors/xml2js.min.js'
 import { parseXmlToJson } from '../../module/utils/xml/parser.mjs'
 import { getObligationImportStats, obligationMapper } from '../../module/importer/items/obligation-ogg-dude.mjs'
 import { resetObligationImportStats } from '../../module/importer/utils/obligation-import-utils.mjs'
-
-// Shim xml2js global (same pattern as armor/weapon)
-if (globalThis.xml2js === undefined) {
-  globalThis.xml2js = { js: xml2jsModule }
-}
 
 describe('Obligation Import Integration Tests', () => {
   describe('Obligations.xml - mapping real OggDude data', () => {

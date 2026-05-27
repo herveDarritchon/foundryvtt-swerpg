@@ -1,11 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import fs from 'node:fs/promises'
-// Charge la lib XML (vendeur) pour que parseXmlToJson fonctionne en environnement Node
-import xml2jsModule from '../../vendors/xml2js.min.js'
-// Shim pour environnement Vitest: le bundle UMD exporte via module.exports, on le ré-injecte sous la forme attendue par parser.mjs
-if (globalThis.xml2js === undefined) {
-  globalThis.xml2js = { js: xml2jsModule }
-}
 import { parseXmlToJson } from '../../module/utils/xml/parser.mjs'
 import { speciesMapper } from '../../module/importer/items/species-ogg-dude.mjs'
 import { getSpeciesImportStats, resetSpeciesImportStats } from '../../module/importer/utils/species-import-utils.mjs'

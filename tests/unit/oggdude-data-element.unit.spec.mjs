@@ -1,11 +1,29 @@
-import { describe, it, expect, beforeEach } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import OggDudeDataElement from '../../module/settings/models/OggDudeDataElement.mjs'
 import { parseXmlToJson } from '../../module/utils/xml/parser.mjs'
 
+vi.mock('xml2js', () => ({
+  parseStringPromise: vi.fn(async (xml) => {
+    // Extremely naive XML to JSON for controlled test inputs only
+    // Weapons test
+    if (xml.includes('<Weapons>')) {
+      const nameMatch = /<Name>([^<]+)<\/Name>/.exec(xml)
+      return { Weapons: { Weapon: { Name: nameMatch ? nameMatch[1] : '' } } }
+    }
+    // Generic root test <Root><A>1</A></Root>
+    if (xml.includes('<Root>')) {
+      const aMatch = /<A>([^<]+)<\/A>/.exec(xml)
+      return { Root: { A: aMatch ? aMatch[1] : '' } }
+    }
+    return {}
+  }),
+}))
+
 // Helper: minimal fake JSZip shape
 /**
- *
- * @param filesMap
+ * Build a minimal fake JSZip-shaped object from a map of filename to content.
+ * @param {Record<string, string>} filesMap Map of file paths to string content.
+ * @returns {{ files: Record<string, object> }} Fake zip object.
  */
 function buildFakeZip(filesMap) {
   const files = {}
@@ -70,29 +88,7 @@ describe('OggDudeDataElement - security name validation', () => {
   })
 })
 
-describe('OggDudeDataElement - XML parsing with stubbed vendor', () => {
-  beforeEach(() => {
-    // Minimal stub of xml2js vendor to satisfy parser usage
-    globalThis.xml2js = {
-      js: {
-        parseStringPromise: async (xml) => {
-          // Extremely naive XML to JSON for controlled test inputs only
-          // Weapons test
-          if (xml.includes('<Weapons>')) {
-            const nameMatch = /<Name>([^<]+)<\/Name>/.exec(xml)
-            return { Weapons: { Weapon: { Name: nameMatch ? nameMatch[1] : '' } } }
-          }
-          // Generic root test <Root><A>1</A></Root>
-          if (xml.includes('<Root>')) {
-            const aMatch = /<A>([^<]+)<\/A>/.exec(xml)
-            return { Root: { A: aMatch ? aMatch[1] : '' } }
-          }
-          return {}
-        },
-      },
-    }
-  })
-
+describe('OggDudeDataElement - XML parsing with vi.mock xml2js', () => {
   it('buildJsonDataFromFile parses simple Weapons.xml and extracts Weapon Name', async () => {
     const xml = '<Weapons><Weapon><Name>Blaster</Name></Weapon></Weapons>'
     const zip = buildFakeZip({ 'Data/Weapons.xml': xml })
@@ -107,11 +103,9 @@ describe('OggDudeDataElement - XML parsing with stubbed vendor', () => {
     expect(result.Root.A).toBe('1')
   })
 
-  it('throws when vendor xml2js missing interface', async () => {
-    // Temporarily sabotage vendor to simulate failure
-    const original = globalThis.xml2js
-    globalThis.xml2js = { js: { parseStringPromise: undefined } }
-    await expect(parseXmlToJson('<X/>')).rejects.toThrow()
-    globalThis.xml2js = original
+  it('propagates error when parseStringPromise rejects', async () => {
+    const { parseStringPromise } = await import('xml2js')
+    vi.mocked(parseStringPromise).mockRejectedValueOnce(new Error('parse failure'))
+    await expect(parseXmlToJson('<X/>')).rejects.toThrow('parse failure')
   })
 })

@@ -6,6 +6,13 @@ settings:
 
 importers:
   .:
+    dependencies:
+      events:
+        specifier: ^3.3.0
+        version: 3.3.0
+      xml2js:
+        specifier: ^0.6.2
+        version: 0.6.2
     devDependencies:
       '@eslint/js':
         specifier: ^9.8.0
@@ -1518,6 +1525,10 @@ packages:
 
   eventemitter3@5.0.4:
     resolution: { integrity: sha512-mlsTRyGaPBjPedk6Bvw+aqbsXDtoAyAzm5MO7JgU+yVRyMQ5O8bD4Kcci7BS85f93veegeCPkL8R4GLClnjLFw== }
+
+  events@3.3.0:
+    resolution: { integrity: sha512-mQw+2fkQbALzQ7V0MY0IqdnXNOeTtP4r0lN9z7AAawCXgqea7bDii20AYrIBrFd/Hx0M2Ocz6S111CaFkUcb0Q== }
+    engines: { node: '>=0.8.x' }
 
   execa@5.1.1:
     resolution: { integrity: sha512-8uSpZZocAZRBAPIEINJj3Lo9HyGitllczc27Eh5YYojjMFMn8yHMDMaUHE2Jqfq05D/wucwI4JGURyXt1vchyg== }
@@ -3620,6 +3631,14 @@ packages:
   wrappy@1.0.2:
     resolution: { integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ== }
 
+  xml2js@0.6.2:
+    resolution: { integrity: sha512-T4rieHaC1EXcES0Kxxj4JWgaUQHDk+qwHcYOCFHfiwKz7tOVPLq7Hjq9dM1WCMhylqMEfP7hMcOIChvotiZegA== }
+    engines: { node: '>=4.0.0' }
+
+  xmlbuilder@11.0.1:
+    resolution: { integrity: sha512-fDlsI/kFEx7gLvbecc0/ohLG50fugQp8ryHzMTuW9vSa1GJ0XYWKnhsUx7oie3G98+r56aTQIUB4kht42R3JvA== }
+    engines: { node: '>=4.0' }
+
   xtend@4.0.2:
     resolution: { integrity: sha512-LKYU1iAXJXUgAXn9URjiu+MWhyUXHsvfp7mcuYm9dSUKK0/CjtrUwFAxD82/mCWbtLsGjFIad0wIsod4zrTAEQ== }
     engines: { node: '>=0.4' }
@@ -5114,6 +5133,8 @@ snapshots:
 
   eventemitter3@5.0.4: {}
 
+  events@3.3.0: {}
+
   execa@5.1.1:
     dependencies:
       cross-spawn: 7.0.6
@@ -6586,8 +6607,7 @@ snapshots:
 
   safer-buffer@2.1.2: {}
 
-  sax@1.4.1:
-    optional: true
+  sax@1.4.1: {}
 
   semantic-release@24.2.5(typescript@6.0.3):
     dependencies:
@@ -7300,6 +7320,13 @@ snapshots:
       strip-ansi: 7.1.0
 
   wrappy@1.0.2: {}
+
+  xml2js@0.6.2:
+    dependencies:
+      sax: 1.4.1
+      xmlbuilder: 11.0.1
+
+  xmlbuilder@11.0.1: {}
 
   xtend@4.0.2: {}
 

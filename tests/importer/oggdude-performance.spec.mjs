@@ -1,10 +1,5 @@
 import { describe, it, expect } from 'vitest'
 import OggDudeDataElement from '../../module/settings/models/OggDudeDataElement.mjs'
-import xml2jsModule from '../../vendors/xml2js.min.js'
-// Shim global xml2js comme dans autres tests d'intégration
-if (globalThis.xml2js === undefined) {
-  globalThis.xml2js = { js: xml2jsModule }
-}
 
 // Génère un gros XML >10MB pour test performance parsing/buildJsonDataFromFile
 /**
