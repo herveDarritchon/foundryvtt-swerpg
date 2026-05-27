@@ -5,6 +5,11 @@ import { setupFoundryMock, teardownFoundryMock } from '../helpers/mock-foundry.m
 /*  Helpers de test — objets et diffs           */
 /* ============================================ */
 
+/**
+ *
+ * @param target
+ * @param source
+ */
 function deepMerge(target, source) {
   const result = structuredClone(target)
 
@@ -22,6 +27,10 @@ function deepMerge(target, source) {
   return result
 }
 
+/**
+ *
+ * @param system
+ */
 function makeActor(system) {
   return {
     type: 'character',
@@ -32,6 +41,11 @@ function makeActor(system) {
   }
 }
 
+/**
+ *
+ * @param obj
+ * @param prefix
+ */
 function flattenObject(obj, prefix = '') {
   const result = {}
 
@@ -51,6 +65,11 @@ function flattenObject(obj, prefix = '') {
   return result
 }
 
+/**
+ *
+ * @param object
+ * @param path
+ */
 function getProperty(object, path) {
   const keys = path.split('.')
   let current = object
@@ -63,6 +82,12 @@ function getProperty(object, path) {
   return current
 }
 
+/**
+ *
+ * @param object
+ * @param path
+ * @param value
+ */
 function setProperty(object, path, value) {
   const keys = path.split('.')
   let current = object
@@ -76,6 +101,11 @@ function setProperty(object, path, value) {
   current[keys[keys.length - 1]] = value
 }
 
+/**
+ *
+ * @param changes
+ * @param source
+ */
 function makeOldState(changes, source) {
   const oldState = {}
   const flat = flattenObject(changes)
@@ -101,6 +131,11 @@ function makeOldState(changes, source) {
   return oldState
 }
 
+/**
+ *
+ * @param sourceSystem
+ * @param changes
+ */
 function applyChangesToSystem(sourceSystem, changes) {
   const flat = flattenObject(changes)
   const result = structuredClone(sourceSystem)
@@ -116,6 +151,9 @@ function applyChangesToSystem(sourceSystem, changes) {
   return result
 }
 
+/**
+ *
+ */
 function defaultSource() {
   return {
     system: {
@@ -155,6 +193,12 @@ function defaultSource() {
   }
 }
 
+/**
+ *
+ * @param changes
+ * @param source
+ * @param userId
+ */
 async function composeFromChanges(changes, source, userId = 'user-1') {
   const { composeEntries } = await import('../../module/utils/audit-diff.mjs')
 

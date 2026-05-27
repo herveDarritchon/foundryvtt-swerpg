@@ -14,6 +14,9 @@ import SwerpgCharacter from '../../module/models/character.mjs'
  * `applySpecies` and `applyCareer` pass no extra options beyond the common ones.
  */
 
+/**
+ *
+ */
 function buildCharacterData() {
   const characteristicRank = { base: 1, trained: 0, bonus: 0, value: 1 }
 
@@ -44,6 +47,9 @@ function buildCharacterData() {
   }
 }
 
+/**
+ *
+ */
 function buildCharacterWithParent() {
   const character = new SwerpgCharacter(buildCharacterData())
   const applyDetailItem = vi.fn(() => Promise.resolve())

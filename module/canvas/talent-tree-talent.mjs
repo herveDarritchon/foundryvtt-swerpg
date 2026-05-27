@@ -45,6 +45,7 @@ export default class SwerpgTalentTreeTalent extends SwerpgTalentIcon {
   /* -------------------------------------------- */
 
   /**
+   * @param event
    * @deprecated Crucible legacy — choice wheel left-click purchase.
    *   V1 Edge uses specialization-tree-app.mjs with purchaseTalentNode().
    */

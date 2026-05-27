@@ -3,6 +3,10 @@ import OggDudeDataElement from '../../module/settings/models/OggDudeDataElement.
 import { parseXmlToJson } from '../../module/utils/xml/parser.mjs'
 
 // Helper: minimal fake JSZip shape
+/**
+ *
+ * @param filesMap
+ */
 function buildFakeZip(filesMap) {
   const files = {}
   Object.entries(filesMap).forEach(([name, content]) => {
@@ -50,8 +54,8 @@ describe('OggDudeDataElement - basic file classification & grouping', () => {
       { name: 'Images/weapon1.png', dir: false },
     ].map((z) => new OggDudeDataElement(z))
     const grouped = OggDudeDataElement.groupByDirectory(entries)
-    expect(grouped['Data'].length).toBe(2)
-    expect(grouped['Images'].length).toBe(1)
+    expect(grouped.Data.length).toBe(2)
+    expect(grouped.Images.length).toBe(1)
   })
 })
 

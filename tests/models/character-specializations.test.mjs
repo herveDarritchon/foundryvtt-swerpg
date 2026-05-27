@@ -2,6 +2,11 @@ import { describe, expect, test } from 'vitest'
 
 import SwerpgCharacter from '../../module/models/character.mjs'
 
+/**
+ *
+ * @param root0
+ * @param root0.specializations
+ */
 function buildCharacterData({ specializations = new Set() } = {}) {
   const characteristicRank = { base: 1, trained: 0, bonus: 0, value: 1 }
 

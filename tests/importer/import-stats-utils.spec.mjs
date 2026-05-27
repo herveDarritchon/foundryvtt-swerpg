@@ -7,6 +7,10 @@ import { getCareerImportStats } from '../../module/importer/utils/career-import-
 import { getDutyImportStats } from '../../module/importer/utils/duty-import-utils.mjs'
 import { getAllImportStats, aggregateImportMetrics } from '../../module/importer/utils/global-import-metrics.mjs'
 
+/**
+ *
+ * @param stats
+ */
 function expectBaseDomainStats(stats) {
   expect(stats).toHaveProperty('total')
   expect(stats).toHaveProperty('rejected')

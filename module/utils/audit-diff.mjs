@@ -6,6 +6,10 @@ import { getCanonicalSpecializationKey } from '../lib/specializations/owned-spec
 /*  Capture instantané de l'état XP après update */
 /* -------------------------------------------- */
 
+/**
+ *
+ * @param actor
+ */
 function captureSnapshot(actor) {
   const xp = actor.system?.progression?.experience
   const freeRanks = actor.system?.progression?.freeSkillRanks
@@ -18,6 +22,10 @@ function captureSnapshot(actor) {
   }
 }
 
+/**
+ *
+ * @param newValue
+ */
 function computeCharacteristicCost(newValue) {
   return newValue * 10
 }
@@ -30,6 +38,8 @@ function computeCharacteristicCost(newValue) {
  * - currentValue = { base: 0, trained: 2, bonus: 0 }
  * - oldPartialValue = { trained: 1 }
  * - résultat = { base: 0, trained: 1, bonus: 0 }
+ * @param oldPartialValue
+ * @param currentValue
  */
 function reconstructPreviousValue(oldPartialValue, currentValue) {
   if (oldPartialValue === undefined) return currentValue
@@ -50,6 +60,17 @@ function reconstructPreviousValue(oldPartialValue, currentValue) {
 /*  Helper de construction d'entrée             */
 /* -------------------------------------------- */
 
+/**
+ *
+ * @param root0
+ * @param root0.type
+ * @param root0.data
+ * @param root0.xpDelta
+ * @param root0.ts
+ * @param root0.userId
+ * @param root0.user
+ * @param root0.snapshot
+ */
 function makeEntry({ type, data, xpDelta, ts, userId, user, snapshot }) {
   return {
     id: foundry.utils.randomID(),
@@ -68,6 +89,16 @@ function makeEntry({ type, data, xpDelta, ts, userId, user, snapshot }) {
 /*  Détecteurs                                  */
 /* -------------------------------------------- */
 
+/**
+ *
+ * @param oldState
+ * @param changes
+ * @param actor
+ * @param ts
+ * @param userId
+ * @param user
+ * @param snapshot
+ */
 function detectSkillChanges(oldState, changes, actor, ts, userId, user, snapshot) {
   const entries = []
   const skillChanges = changes.system?.skills
@@ -144,14 +175,28 @@ function detectSkillChanges(oldState, changes, actor, ts, userId, user, snapshot
   return entries
 }
 
+/**
+ *
+ * @param rank
+ */
 function getSkillTotalRank(rank) {
   return (rank.base ?? 0) + (rank.careerFree ?? 0) + (rank.specializationFree ?? 0) + (rank.trained ?? 0)
 }
 
+/**
+ *
+ * @param skillId
+ * @param _oldState
+ * @param actor
+ */
 function inferIsCareer(skillId, _oldState, actor) {
   return getCareerSkillIds(actor).has(skillId)
 }
 
+/**
+ *
+ * @param actor
+ */
 function getCareerSkillIds(actor) {
   const ids = new Set()
 
@@ -171,6 +216,16 @@ function getCareerSkillIds(actor) {
   return ids
 }
 
+/**
+ *
+ * @param oldState
+ * @param changes
+ * @param actor
+ * @param ts
+ * @param userId
+ * @param user
+ * @param snapshot
+ */
 function detectCharacteristicChanges(oldState, changes, actor, ts, userId, user, snapshot) {
   const entries = []
   const characteristicChanges = changes.system?.characteristics
@@ -212,10 +267,24 @@ function detectCharacteristicChanges(oldState, changes, actor, ts, userId, user,
   return entries
 }
 
+/**
+ *
+ * @param rank
+ */
 function getCharacteristicTotalRank(rank) {
   return (rank.base ?? 0) + (rank.trained ?? 0) + (rank.bonus ?? 0)
 }
 
+/**
+ *
+ * @param oldState
+ * @param changes
+ * @param actor
+ * @param ts
+ * @param userId
+ * @param user
+ * @param snapshot
+ */
 function detectXpChanges(oldState, changes, actor, ts, userId, user, snapshot) {
   const entries = []
   const expChanges = changes.system?.progression?.experience
@@ -274,6 +343,16 @@ function detectXpChanges(oldState, changes, actor, ts, userId, user, snapshot) {
   return entries
 }
 
+/**
+ *
+ * @param oldState
+ * @param changes
+ * @param actor
+ * @param ts
+ * @param userId
+ * @param user
+ * @param snapshot
+ */
 function detectDetailChanges(oldState, changes, actor, ts, userId, user, snapshot) {
   const entries = []
   const detailChanges = changes.system?.details
@@ -325,6 +404,11 @@ function detectDetailChanges(oldState, changes, actor, ts, userId, user, snapsho
   return entries
 }
 
+/**
+ *
+ * @param oldState
+ * @param changes
+ */
 function getXpDeltaFromChanges(oldState, changes) {
   const newSpent = changes.system?.progression?.experience?.spent
   if (newSpent === undefined) return 0
@@ -333,6 +417,10 @@ function getXpDeltaFromChanges(oldState, changes) {
   return diff === 0 ? 0 : -diff
 }
 
+/**
+ *
+ * @param source
+ */
 function getSpecArray(source) {
   const raw = source.system?.details?.specializations
   if (!raw) return []
@@ -342,6 +430,10 @@ function getSpecArray(source) {
   return []
 }
 
+/**
+ *
+ * @param source
+ */
 function buildSpecMap(source) {
   const specs = getSpecArray(source)
   const map = {}
@@ -353,6 +445,17 @@ function buildSpecMap(source) {
   return map
 }
 
+/**
+ *
+ * @param oldState
+ * @param specializationChanges
+ * @param actor
+ * @param ts
+ * @param userId
+ * @param user
+ * @param snapshot
+ * @param batchXpDelta
+ */
 function detectSpecializationChanges(oldState, specializationChanges, actor, ts, userId, user, snapshot, batchXpDelta) {
   const entries = []
 
@@ -440,6 +543,16 @@ function detectSpecializationChanges(oldState, specializationChanges, actor, ts,
   return entries
 }
 
+/**
+ *
+ * @param oldState
+ * @param changes
+ * @param actor
+ * @param ts
+ * @param userId
+ * @param user
+ * @param snapshot
+ */
 function detectAdvancementChanges(oldState, changes, actor, ts, userId, user, snapshot) {
   if (changes.system?.advancement?.level === undefined) return []
 
@@ -465,6 +578,13 @@ function detectAdvancementChanges(oldState, changes, actor, ts, userId, user, sn
 /*  Point d'entrée unique                       */
 /* -------------------------------------------- */
 
+/**
+ *
+ * @param oldState
+ * @param changes
+ * @param actor
+ * @param userId
+ */
 export function composeEntries(oldState, changes, actor, userId) {
   try {
     const entries = []

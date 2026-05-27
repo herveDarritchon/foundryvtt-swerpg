@@ -64,6 +64,10 @@ export const OGGDUDE_QUALITY_MAP = {
   TRACTOR: 'tractor',
 }
 
+/**
+ *
+ * @param key
+ */
 export function getQualityConfig(key) {
   return Object.values(QUALITIES).find((q) => q.key === key)
 }

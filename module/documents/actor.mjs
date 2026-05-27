@@ -60,9 +60,9 @@ export default class SwerpgActor extends TalentsMixin(EquipmentMixin(ResourcesMi
   /**
    * Update actor's experience points
    * @param {Object} params
-   * @param {number} [params.spent] - Experience points spent
-   * @param {number} [params.gained] - Experience points gained
-   * @param {number} [params.total] - Total experience points
+   * @param {number} [params.spent] Experience points spent
+   * @param {number} [params.gained] Experience points gained
+   * @param {number} [params.total] Total experience points
    * @returns {Promise} Foundry update promise
    */
   async updateExperiencePoints({ spent, gained, total } = {}) {
@@ -705,9 +705,9 @@ export default class SwerpgActor extends TalentsMixin(EquipmentMixin(ResourcesMi
    * Differs from applySpecialization (on SwerpgCharacter) by zeroing freeSkillRank
    * to prevent free skill rank attribution during prepareBaseData.
    *
-   * @param {object} specialization - The specialization Item to acquire
+   * @param {object} specialization The specialization Item to acquire
    * @param {object} [options]
-   * @param {number} [options.xpCost=0] - XP cost to deduct in the same update
+   * @param {number} [options.xpCost=0] XP cost to deduct in the same update
    * @returns {Promise<void>}
    */
   async acquireSpecialization(specialization, { xpCost = 0 } = {}) {
@@ -741,7 +741,7 @@ export default class SwerpgActor extends TalentsMixin(EquipmentMixin(ResourcesMi
    * specializations list. Does not handle the current tree fallback —
    * that realignment is the responsibility of the application layer.
    *
-   * @param {string} specializationKey - Key of the specialization to remove
+   * @param {string} specializationKey Key of the specialization to remove
    *        (specializationId, treeUuid, or name)
    * @returns {Promise<void>}
    */
@@ -764,10 +764,10 @@ export default class SwerpgActor extends TalentsMixin(EquipmentMixin(ResourcesMi
 
   /**
    * Update free skill ranks
-   * @param {'career'|'specialization'} type - Type of free skill rank
+   * @param {'career'|'specialization'} type Type of free skill rank
    * @param {Object} params
-   * @param {number} [params.spent] - Ranks spent
-   * @param {number} [params.gained] - Ranks gained
+   * @param {number} [params.spent] Ranks spent
+   * @param {number} [params.gained] Ranks gained
    * @returns {Promise} Foundry update promise
    */
   async updateFreeSkillRanks(type, { spent, gained } = {}) {

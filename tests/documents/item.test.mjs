@@ -241,7 +241,9 @@ describe('SwerpgItem Document', () => {
   })
 
   describe('_preCreate workflow', () => {
-    let mockData, mockOptions, mockUser
+    let mockData
+    let mockOptions
+    let mockUser
 
     beforeEach(() => {
       mockData = { type: 'talent' }
@@ -264,7 +266,9 @@ describe('SwerpgItem Document', () => {
   })
 
   describe('_onCreate workflow', () => {
-    let mockData, mockOptions, mockUser
+    let mockData
+    let mockOptions
+    let mockUser
 
     beforeEach(() => {
       mockData = { type: 'talent' }

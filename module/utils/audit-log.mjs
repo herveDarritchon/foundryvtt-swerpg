@@ -18,16 +18,28 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 /*  Gardes                                      */
 /* -------------------------------------------- */
 
+/**
+ *
+ * @param changes
+ */
 function isOnlyAuditChange(changes) {
   const flat = _flattenObject(changes)
   const keys = Object.keys(flat)
   return keys.length === 1 && keys[0] === AUDIT_LOG_KEY
 }
 
+/**
+ *
+ * @param actor
+ */
 function isCharacterActor(actor) {
   return actor?.type === 'character'
 }
 
+/**
+ *
+ * @param options
+ */
 function isAuditInternalUpdate(options) {
   return options?.swerpgAuditLog === false
 }
@@ -36,6 +48,10 @@ function isAuditInternalUpdate(options) {
 /*  Clone utilitaire                            */
 /* -------------------------------------------- */
 
+/**
+ *
+ * @param value
+ */
 function cloneValue(value) {
   if (value === undefined) return undefined
   return foundry.utils.deepClone?.(value) ?? structuredClone(value)
@@ -45,6 +61,9 @@ function cloneValue(value) {
 /*  Anti-fuite mémoire                          */
 /* -------------------------------------------- */
 
+/**
+ *
+ */
 function pruneExpiredPending() {
   const now = Date.now()
   for (const [key, queue] of pendingOldStates) {
@@ -62,12 +81,19 @@ function pruneExpiredPending() {
   }
 }
 
+/**
+ *
+ */
 function countPendingEntries() {
   let count = 0
   for (const queue of pendingOldStates.values()) count += queue.length
   return count
 }
 
+/**
+ *
+ * @param incomingCount
+ */
 function evictOldestIfNeeded(incomingCount = 1) {
   const overflow = countPendingEntries() + incomingCount - MAX_PENDING
   if (overflow <= 0) return
@@ -94,10 +120,21 @@ function evictOldestIfNeeded(incomingCount = 1) {
 /*  File pending par actor:userId               */
 /* -------------------------------------------- */
 
+/**
+ *
+ * @param actor
+ * @param userId
+ */
 function getPendingKey(actor, userId) {
   return `${actor.uuid}:${userId}`
 }
 
+/**
+ *
+ * @param actor
+ * @param userId
+ * @param entry
+ */
 function pushPendingEntry(actor, userId, entry) {
   const key = getPendingKey(actor, userId)
   const queue = pendingOldStates.get(key) ?? []
@@ -105,6 +142,11 @@ function pushPendingEntry(actor, userId, entry) {
   pendingOldStates.set(key, queue)
 }
 
+/**
+ *
+ * @param actor
+ * @param userId
+ */
 function shiftPendingEntry(actor, userId) {
   const key = getPendingKey(actor, userId)
   const queue = pendingOldStates.get(key)
@@ -118,10 +160,18 @@ function shiftPendingEntry(actor, userId) {
 /*  Capture old state (générique par chemins)   */
 /* -------------------------------------------- */
 
+/**
+ *
+ * @param path
+ */
 function isDeletionPath(path) {
   return path.includes('.-=')
 }
 
+/**
+ *
+ * @param path
+ */
 function getDeletionParentPath(path) {
   const segments = path.split('.')
   const deletionIndex = segments.findIndex((segment) => segment.startsWith('-='))
@@ -129,6 +179,11 @@ function getDeletionParentPath(path) {
   return segments.slice(0, deletionIndex).join('.')
 }
 
+/**
+ *
+ * @param source
+ * @param changes
+ */
 function snapshotOldState(source, changes) {
   const oldState = {}
   const flatChanges = _flattenObject(changes)
@@ -160,6 +215,11 @@ function snapshotOldState(source, changes) {
 /*  Gestion d'erreur                            */
 /* -------------------------------------------- */
 
+/**
+ *
+ * @param actor
+ * @param err
+ */
 async function handleWriteError(actor, err) {
   logger.error(`[AuditLog] Write failed for actor "${actor.name}" (${actor.id})`, err)
   ui.notifications?.warn?.(game.i18n.format('SWERPG.AUDIT.WRITE_FAILED', { actor: actor.name }))
@@ -186,6 +246,11 @@ async function handleWriteError(actor, err) {
 /*  Écriture batch fire-and-forget              */
 /* -------------------------------------------- */
 
+/**
+ *
+ * @param actor
+ * @param entries
+ */
 async function writeLogEntries(actor, entries) {
   if (!entries.length) return
 
@@ -213,6 +278,9 @@ async function writeLogEntries(actor, entries) {
   }
 }
 
+/**
+ *
+ */
 function readMaxLogEntries() {
   try {
     return game.settings.get('swerpg', 'auditLogMaxEntries') ?? 500
@@ -250,6 +318,13 @@ export {
 /*  Handlers (exportés)                         */
 /* -------------------------------------------- */
 
+/**
+ *
+ * @param actor
+ * @param changes
+ * @param options
+ * @param userId
+ */
 export function onPreUpdateActor(actor, changes, options, userId) {
   if (isAuditInternalUpdate(options)) return
   if (!isCharacterActor(actor)) return
@@ -268,6 +343,13 @@ export function onPreUpdateActor(actor, changes, options, userId) {
   })
 }
 
+/**
+ *
+ * @param actor
+ * @param changes
+ * @param options
+ * @param userId
+ */
 export function onUpdateActor(actor, changes, options, userId) {
   if (isAuditInternalUpdate(options)) return
   if (!isCharacterActor(actor)) return
@@ -287,6 +369,13 @@ export function onUpdateActor(actor, changes, options, userId) {
 /*  createItem handler (talent detection)        */
 /* -------------------------------------------- */
 
+/**
+ *
+ * @param item
+ * @param data
+ * @param options
+ * @param userId
+ */
 function onCreateItem(item, data, options, userId) {
   if (item.parent?.type !== 'character') return
   if (item.type !== 'talent') return
@@ -347,9 +436,9 @@ function buildTalentNodeEntryData(actor, data) {
  * Record a talent node operation (purchase or forget) in the audit log.
  * Non-blocking: failures are caught internally without throwing.
  *
- * @param {object} actor - The actor document instance.
- * @param {'purchase'|'forget'} operation - The operation type.
- * @param {'succeeded'|'failed'} status - The operation outcome.
+ * @param {object} actor The actor document instance.
+ * @param {'purchase'|'forget'} operation The operation type.
+ * @param {'succeeded'|'failed'} status The operation outcome.
  * @param {object} data
  * @param {string} data.specializationId
  * @param {string} data.treeId
@@ -410,8 +499,8 @@ async function recordTalentNodePurchase(actor, purchaseData) {
  * - hasMeta: true when at least one footer metadata is present
  * - variant: CSS modifier class ('change' | 'add' | 'remove' | 'gain' | 'fail')
  *
- * @param {object} actor - The actor document
- * @param {object} entry - A single audit log entry
+ * @param {object} actor The actor document
+ * @param {object} entry A single audit log entry
  * @returns {object} Context for audit-entry.hbs
  */
 function _buildChatContext(actor, entry) {
@@ -596,6 +685,9 @@ async function sendChatForAuditEntries(actor, entries) {
 /*  Point d'entrée unique                       */
 /* -------------------------------------------- */
 
+/**
+ *
+ */
 export function registerAuditLogHooks() {
   Hooks.on('preUpdateActor', onPreUpdateActor)
   Hooks.on('updateActor', onUpdateActor)
@@ -606,6 +698,11 @@ export function registerAuditLogHooks() {
 /*  Utilitaires internes                        */
 /* -------------------------------------------- */
 
+/**
+ *
+ * @param obj
+ * @param prefix
+ */
 function _flattenObject(obj, prefix = '') {
   const result = {}
   if (obj === null || obj === undefined) return result
@@ -621,6 +718,11 @@ function _flattenObject(obj, prefix = '') {
   return result
 }
 
+/**
+ *
+ * @param object
+ * @param path
+ */
 function _getProperty(object, path) {
   const keys = path.split('.')
   let current = object
@@ -631,6 +733,12 @@ function _getProperty(object, path) {
   return current
 }
 
+/**
+ *
+ * @param object
+ * @param path
+ * @param value
+ */
 function _setProperty(object, path, value) {
   const keys = path.split('.')
   let current = object
@@ -646,6 +754,9 @@ function _setProperty(object, path, value) {
 /*  Utilitaires exportés pour tests             */
 /* -------------------------------------------- */
 
+/**
+ *
+ */
 function flushPending() {
   pendingOldStates.clear()
 }

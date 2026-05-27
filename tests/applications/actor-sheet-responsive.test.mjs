@@ -16,6 +16,7 @@ describe('Sidebar Current Equipment - Mode Compact', () => {
     /**
      * Simule la méthode privée #applyFeaturedEquipmentCompactMode
      * selon l'implémentation réelle dans base-actor-sheet.mjs
+     * @param context
      */
     applyFeaturedEquipmentCompactMode(context) {
       const count = context.featuredEquipment?.length ?? 0
@@ -34,6 +35,10 @@ describe('Sidebar Current Equipment - Mode Compact', () => {
     }
   }
 
+  /**
+   *
+   * @param id
+   */
   function mockEquipmentItem(id) {
     return {
       id,

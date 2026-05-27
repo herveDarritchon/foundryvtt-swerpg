@@ -77,6 +77,10 @@ afterEach(() => {
   vi.restoreAllMocks()
 })
 
+/**
+ *
+ * @param overrides
+ */
 function makeCharacterActor(overrides = {}) {
   return {
     type: 'character',
@@ -564,6 +568,10 @@ describe('writeLogEntries', () => {
 /* ============================================ */
 
 describe('onCreateItem', () => {
+  /**
+   *
+   * @param overrides
+   */
   function makeCharacterActor(overrides = {}) {
     return {
       type: 'character',
@@ -594,6 +602,11 @@ describe('onCreateItem', () => {
     }
   }
 
+  /**
+   *
+   * @param actor
+   * @param overrides
+   */
   function makeTalentItem(actor, overrides = {}) {
     return {
       type: 'talent',
@@ -869,6 +882,10 @@ describe('pruneExpiredPending capacity warning', () => {
 /* ============================================ */
 
 describe('recordTalentNodePurchase', () => {
+  /**
+   *
+   * @param overrides
+   */
   function makeActor(overrides = {}) {
     return {
       type: 'character',
@@ -1018,6 +1035,10 @@ describe('recordTalentNodePurchase', () => {
 /* ============================================ */
 
 describe('recordTalentNodeOperation', () => {
+  /**
+   *
+   * @param overrides
+   */
   function makeActor(overrides = {}) {
     return {
       type: 'character',
@@ -1198,6 +1219,10 @@ describe('recordTalentNodeOperation', () => {
 /* ============================================ */
 
 describe('sendChatForAuditEntries', () => {
+  /**
+   *
+   * @param overrides
+   */
   function makeActor(overrides = {}) {
     return {
       type: 'character',
@@ -1229,6 +1254,10 @@ describe('sendChatForAuditEntries', () => {
     }
   }
 
+  /**
+   *
+   * @param overrides
+   */
   function makeEntry(overrides = {}) {
     return {
       id: 'entry-001',

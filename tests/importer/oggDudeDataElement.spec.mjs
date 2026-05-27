@@ -2,6 +2,11 @@ import { describe, it, expect } from 'vitest'
 import OggDudeDataElement from '../../module/settings/models/OggDudeDataElement.mjs'
 
 // Construire des entrées zip factices
+/**
+ *
+ * @param name
+ * @param dir
+ */
 function makeZipEntry(name, dir = false) {
   return { name, dir }
 }
@@ -35,6 +40,6 @@ describe('OggDudeDataElement', () => {
       new OggDudeDataElement(makeZipEntry('Data/Armor2.xml')),
     ]
     const grouped = OggDudeDataElement.groupByDirectory(entries)
-    expect(grouped['Data']).toHaveLength(2)
+    expect(grouped.Data).toHaveLength(2)
   })
 })

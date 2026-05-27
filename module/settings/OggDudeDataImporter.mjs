@@ -194,7 +194,7 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
 
   /**
    * Checks if no ZIP file has been selected.
-   * @return {boolean} Returns true if the zipFile property is null, indicating no ZIP file has been selected; otherwise, false.
+   * @returns {boolean} Returns true if the zipFile property is null, indicating no ZIP file has been selected; otherwise, false.
    */
   noZipFileSelected() {
     return this.zipFile == null
@@ -204,7 +204,7 @@ export class OggDudeDataImporter extends HandlebarsApplicationMixin(ApplicationV
 
   /**
    * Checks if no domain is selected.
-   * @return {boolean} Returns true if no domain is selected; otherwise, false.
+   * @returns {boolean} Returns true if no domain is selected; otherwise, false.
    */
   _noDomainSelected() {
     return this.domains.filter((domain) => domain.checked).length === 0

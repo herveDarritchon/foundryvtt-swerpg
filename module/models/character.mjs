@@ -310,7 +310,7 @@ export default class SwerpgCharacter extends SwerpgActorType {
 
   /**
    * Compute the total extra XP granted by obligation items marked as "extra".
-   * @param {SwerpgActor} actor - The parent actor whose items are searched.
+   * @param {SwerpgActor} actor The parent actor whose items are searched.
    * @returns {number} Sum of `extraXp` from all obligation items with `isExtra === true`.
    */
   static #computeObligationBonusExperience(actor) {
@@ -321,7 +321,7 @@ export default class SwerpgCharacter extends SwerpgActorType {
 
   /**
    * Validate a characteristic attribute field.
-   * @param {{ value: number }} attr - The characteristic object. Must have a `value` between 1 and 6 inclusive.
+   * @param {{ value: number }} attr The characteristic object. Must have a `value` between 1 and 6 inclusive.
    * @throws {Error} If `attr.value` is less than 1 or greater than 6.
    */
   static #validateAttribute(attr) {

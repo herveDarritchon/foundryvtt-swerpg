@@ -202,6 +202,10 @@ function buildContextRegistry() {
   ])
 }
 
+/**
+ *
+ * @param domain
+ */
 function getDomainStatsPayload(domain) {
   if (domain === 'specialization') {
     return getCombinedSpecializationImportStats(getSpecializationImportStats(), getSpecializationTreeImportStats())
@@ -351,6 +355,7 @@ export default class OggDudeImporter {
    * @param domains {Object[]}The list of domains to import from the OggDude File.
    * @param {Object} [options] Options supplémentaires
    * @param {function(Object):void} [options.progressCallback] Callback appelé à chaque étape (payload: {total, processed, domain?, phase, reason?, error?, domainStats?})
+   * @param options.importToCompendium
    * @returns {Promise<void>} A Promise that resolves when the Armor data has been processed.
    * @async
    * @public

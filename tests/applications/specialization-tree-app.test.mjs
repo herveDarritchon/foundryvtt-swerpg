@@ -2,6 +2,10 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { setupFoundryMock, teardownFoundryMock } from '../helpers/mock-foundry.mjs'
 
+/**
+ *
+ * @param overrides
+ */
 function createActor(overrides = {}) {
   return {
     id: 'actor-1',
@@ -18,6 +22,12 @@ function createActor(overrides = {}) {
   }
 }
 
+/**
+ *
+ * @param root0
+ * @param root0.viewportHost
+ * @param root0.panel
+ */
 function createRoot({ viewportHost, panel }) {
   return {
     querySelector: vi.fn((selector) => {
@@ -28,6 +38,11 @@ function createRoot({ viewportHost, panel }) {
   }
 }
 
+/**
+ *
+ * @param app
+ * @param SpecializationTreeApp
+ */
 async function triggerContextualAction(app, SpecializationTreeApp) {
   const event = { preventDefault: vi.fn() }
   await SpecializationTreeApp.DEFAULT_OPTIONS.actions.contextualAction.call(app, event, null)

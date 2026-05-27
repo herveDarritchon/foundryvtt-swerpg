@@ -21,6 +21,10 @@ globalThis.SYSTEM = {
 
 import { careerMapper } from '../../module/importer/items/career-ogg-dude.mjs'
 
+/**
+ *
+ * @param xml
+ */
 function parseCareerXml(xml) {
   // Parsing simpliste suffisant pour tests (pas besoin d'un vrai parser XML complet)
   // Hypothèse: structure <Career><Name>..</Name><Key>..</Key>...</Career>

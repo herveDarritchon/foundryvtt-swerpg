@@ -1,5 +1,8 @@
 import { SYSTEM } from '../config/system.mjs'
 
+/**
+ *
+ */
 export function buildQualitySchema() {
   const fields = foundry.data.fields
 

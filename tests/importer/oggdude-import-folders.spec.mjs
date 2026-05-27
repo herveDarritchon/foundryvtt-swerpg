@@ -2,6 +2,9 @@ import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 // Configuration du mock Folder avant l'import du module
 const mockFolders = []
 
+/**
+ *
+ */
 function attachGameFolders() {
   globalThis.game = globalThis.game || {}
   globalThis.game.folders = mockFolders

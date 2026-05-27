@@ -11,6 +11,8 @@ import { describe, expect, test, vi, beforeEach } from 'vitest'
  *   - this.update(data, options) (Promise)
  *
  * @param {object} [overrides]
+ * @param overrides.specializations
+ * @param overrides.experienceSpent
  * @returns {object}
  */
 function buildActorStub({ specializations = [], experienceSpent = 0 } = {}) {
@@ -71,6 +73,14 @@ function buildActorStub({ specializations = [], experienceSpent = 0 } = {}) {
   return actor
 }
 
+/**
+ *
+ * @param root0
+ * @param root0.name
+ * @param root0.img
+ * @param root0.specializationId
+ * @param root0.freeSkillRank
+ */
 function buildFakeSpecializationItem({ name = 'Pilot', img = 'systems/swerpg/assets/pilot.png', specializationId = 'pilot', freeSkillRank = 4 } = {}) {
   return {
     toObject: () => ({

@@ -202,10 +202,13 @@ export const RESTRICTION_LEVELS = {
  * continues to yield only skill-definition objects, preserving all existing consumer behaviour.
  * @type {typeof ATTRIBUTES.SKILLS & { MAX_RANK_AT_CREATION: number, MAX_RANK: number }}
  */
-const SKILLS_WITH_RANK_LIMITS = Object.defineProperties(Object.assign({}, ATTRIBUTES.SKILLS), {
-  MAX_RANK_AT_CREATION: { value: MAX_RANK_AT_CREATION, enumerable: false, configurable: false, writable: false },
-  MAX_RANK: { value: MAX_RANK, enumerable: false, configurable: false, writable: false },
-})
+const SKILLS_WITH_RANK_LIMITS = Object.defineProperties(
+  { ...ATTRIBUTES.SKILLS },
+  {
+    MAX_RANK_AT_CREATION: { value: MAX_RANK_AT_CREATION, enumerable: false, configurable: false, writable: false },
+    MAX_RANK: { value: MAX_RANK, enumerable: false, configurable: false, writable: false },
+  },
+)
 
 /**
  * Include all constant definitions within the SYSTEM global export
