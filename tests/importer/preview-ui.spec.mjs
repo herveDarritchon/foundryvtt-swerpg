@@ -4,14 +4,17 @@ import path from 'node:path'
 import OggDudeImporter from '../../module/importer/oggDude.mjs'
 import { OggDudeDataImporter } from '../../module/settings/OggDudeDataImporter.mjs'
 
-vi.mock('xml2js', () => ({
-  parseStringPromise: async (xml) => {
-    if (xml.includes('<Weapons>')) {
-      const names = [...xml.matchAll(/<Name>([^<]+)<\/Name>/g)].map((m) => ({ Name: m[1] }))
-      return { Weapons: { Weapon: names.length ? names : [{ Name: 'Unknown' }] } }
+vi.mock('fast-xml-parser', () => ({
+  XMLParser: class {
+    parse(xml) {
+      if (xml.includes('<Weapons>')) {
+        const names = [...xml.matchAll(/<Name>([^<]+)<\/Name>/g)].map((m) => ({ Name: m[1] }))
+        return { Weapons: { Weapon: names.length ? names : [{ Name: 'Unknown' }] } }
+      }
+      return {}
     }
-    return {}
   },
+  XMLValidator: { validate: () => true },
 }))
 
 /**
