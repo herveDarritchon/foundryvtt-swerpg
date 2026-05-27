@@ -5,7 +5,7 @@ import { getSpecializationTreeImportStats, resetSpecializationTreeImportStats } 
 import { specializationTreeMapper } from '../mappers/oggdude-specialization-tree-mapper.mjs'
 
 /**
- *
+ * Build a talent lookup map keyed by system ID or OggDude key from the active Foundry world items.
  */
 function buildTalentByIdFromWorld() {
   if (typeof game === 'undefined' || !game.items) return new Map()
@@ -30,7 +30,7 @@ function buildTalentByIdFromWorld() {
 }
 
 /**
- *
+ * Build a talent lookup map keyed by system ID or OggDude key from all loaded compendium packs.
  */
 function buildTalentByIdFromCompendium() {
   if (typeof game === 'undefined' || !game.packs) return new Map()
@@ -61,7 +61,7 @@ function buildTalentByIdFromCompendium() {
 }
 
 /**
- *
+ * Merge the world talent index with the compendium talent index, giving priority to world entries.
  */
 function buildTalentIndex() {
   const worldIndex = buildTalentByIdFromWorld()
@@ -115,6 +115,7 @@ function buildMergedTalentIndex(importSession) {
 }
 
 /**
+ * Build the import context for OggDude specialization tree data, resolving talent references via world, compendium, and session indexes.
  * @param zip
  * @param groupByDirectory
  * @param groupByType

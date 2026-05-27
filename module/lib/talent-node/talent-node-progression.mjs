@@ -83,7 +83,7 @@ export function processTalentNodeProgression(actor, specializationId, nodeId, ac
 // ---------------------------------------------------------------------------
 
 /**
- *
+ * Validate that the node is in AVAILABLE state and return the purchase success result or a failure reason.
  * @param {object} actor
  * @param {string} specializationId
  * @param {object} tree
@@ -104,7 +104,7 @@ function validatePurchase(actor, specializationId, tree, node, action) {
 // ---------------------------------------------------------------------------
 
 /**
- *
+ * Validate that the node is purchased and has no blocking dependents, returning the forget success result or a failure reason.
  * @param {object} actor
  * @param {string} specializationId
  * @param {object} tree
@@ -138,7 +138,7 @@ function validateForget(actor, specializationId, tree, node, action) {
 // ---------------------------------------------------------------------------
 
 /**
- *
+ * Build the success result payload for a purchase or forget action, computing updated purchases and XP spent.
  * @param {object} actor
  * @param {string} specializationId
  * @param {object} tree
@@ -250,7 +250,7 @@ function findBlockingDependents(actor, tree, targetNodeId, specializationId) {
 }
 
 /**
- *
+ * Find and return the specialization object on the actor matching the given specializationId, or null if absent.
  * @param {object} actor
  * @param {string} specializationId
  */
@@ -264,7 +264,7 @@ function findSpecialization(actor, specializationId) {
 }
 
 /**
- *
+ * Find and return the node with the given nodeId within the tree, or null if not found.
  * @param {object} tree
  * @param {string} nodeId
  */

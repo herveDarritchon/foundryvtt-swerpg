@@ -662,6 +662,7 @@ export class PixiTreeRenderer {
   }
 
   /**
+   * Extract the canvas pointer position from a PIXI federated pointer event, or return null when unavailable.
    * @param {PIXI.FederatedPointerEvent} event
    * @returns {{ x: number, y: number }|null}
    */

@@ -27,7 +27,7 @@ function isTalentActivationActive(activation) {
 }
 
 /**
- *
+ * Resolve a talent item from world items or compendium packs using its normalized business key.
  * @param normalizedKey
  */
 function resolveTalentByBusinessKey(normalizedKey) {

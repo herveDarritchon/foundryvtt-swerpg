@@ -15,6 +15,7 @@ export class AbstractJauge {
   }
 
   /**
+   * Build and return the display data object for this gauge.
    * @returns {JaugeDisplayData}
    */
   create() {

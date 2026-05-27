@@ -5,14 +5,14 @@ import { ImportStats } from './import-stats.mjs'
 const dutyStats = new ImportStats()
 
 /**
- *
+ * Reset all duty import counters to zero.
  */
 export function resetDutyImportStats() {
   dutyStats.reset()
 }
 
 /**
- *
+ * Increment a named duty import counter by the given amount.
  * @param key
  * @param amount
  */
@@ -21,7 +21,7 @@ export function incrementDutyImportStat(key, amount = 1) {
 }
 
 /**
- *
+ * Return the current duty import statistics snapshot.
  */
 export function getDutyImportStats() {
   return dutyStats.getStats()

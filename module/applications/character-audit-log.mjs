@@ -107,7 +107,7 @@ export function getAuditLogFamily(type) {
 }
 
 /**
- *
+ * Return the locale string for date formatting based on the current i18n language.
  */
 function getAuditLogDateLocale() {
   const language = game.i18n?.lang
@@ -117,7 +117,7 @@ function getAuditLogDateLocale() {
 }
 
 /**
- *
+ * Format a Unix timestamp as a localized date-time string.
  * @param timestamp
  */
 function formatAuditLogTimestamp(timestamp) {
@@ -135,7 +135,7 @@ function formatAuditLogTimestamp(timestamp) {
 }
 
 /**
- *
+ * Format an XP delta value as a signed string with the "XP" suffix.
  * @param xpDelta
  */
 function formatAuditLogDelta(xpDelta) {
@@ -145,7 +145,7 @@ function formatAuditLogDelta(xpDelta) {
 }
 
 /**
- *
+ * Return the localized label for the given audit entry type, falling back to the UNKNOWN key.
  * @param type
  */
 function getAuditLogTypeLabel(type) {
@@ -154,7 +154,7 @@ function getAuditLogTypeLabel(type) {
 }
 
 /**
- *
+ * Return the display name for a value, localizing the fallback key when the value is absent or empty.
  * @param value
  * @param fallbackKey
  */
@@ -412,7 +412,7 @@ export default class CharacterAuditLogApp extends api.HandlebarsApplicationMixin
 /* -------------------------------------------- */
 
 /**
- *
+ * Escape a value for inclusion in a CSV cell, wrapping in double-quotes when the string contains commas, quotes, or line breaks.
  * @param value
  */
 export function escapeCsvCell(value) {
@@ -425,7 +425,7 @@ export function escapeCsvCell(value) {
 }
 
 /**
- *
+ * Return the display name of the first user with owner-level permission on the actor, or "unknown-player".
  * @param actor
  */
 export function getPrimaryOwnerName(actor) {
@@ -443,7 +443,7 @@ export function getPrimaryOwnerName(actor) {
 }
 
 /**
- *
+ * Convert a string to a lowercase slug safe for use in filenames.
  * @param str
  */
 function slugify(str) {
@@ -459,7 +459,7 @@ function slugify(str) {
 }
 
 /**
- *
+ * Build a dated CSV export filename from the actor's name and primary owner name.
  * @param actor
  */
 export function buildExportFilename(actor) {
@@ -470,7 +470,7 @@ export function buildExportFilename(actor) {
 }
 
 /**
- *
+ * Build the full CSV content for the actor's audit log, including the header row.
  * @param actor
  */
 export function buildCsvContent(actor) {

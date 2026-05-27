@@ -12,7 +12,7 @@ const gearStats = new ImportStats({
 })
 
 /**
- *
+ * Reset all gear import counters and category details to zero.
  */
 export function resetGearImportStats() {
   gearStats.reset({
@@ -21,7 +21,7 @@ export function resetGearImportStats() {
 }
 
 /**
- *
+ * Increment a named gear import counter by the given amount.
  * @param key
  * @param amount
  */
@@ -30,7 +30,7 @@ export function incrementGearImportStat(key, amount = 1) {
 }
 
 /**
- *
+ * Record an unknown category code encountered during gear import.
  * @param code
  */
 export function addGearUnknownCategory(code) {
@@ -38,7 +38,7 @@ export function addGearUnknownCategory(code) {
 }
 
 /**
- *
+ * Return the current gear import statistics snapshot.
  */
 export function getGearImportStats() {
   return gearStats.getStats()

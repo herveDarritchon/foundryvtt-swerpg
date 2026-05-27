@@ -157,7 +157,7 @@ function collectNestedOptionSkillModifiers(xmlSpecies) {
 }
 
 /**
- *
+ * Extract all skill modifiers from the Options list of a single species choice node.
  * @param choice
  */
 function extractOptionsSkillModifiers(choice) {
@@ -168,7 +168,7 @@ function extractOptionsSkillModifiers(choice) {
 }
 
 /**
- *
+ * Extract all skill modifier entries from a single species option node.
  * @param opt
  */
 function extractSkillModifiersFromOption(opt) {

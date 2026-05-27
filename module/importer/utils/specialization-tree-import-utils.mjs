@@ -8,7 +8,7 @@ const specializationTreeStats = new ImportStats({
 })
 
 /**
- *
+ * Reset all specialization tree import counters and detail lists to their initial zero values.
  */
 export function resetSpecializationTreeImportStats() {
   specializationTreeStats.reset({
@@ -20,7 +20,7 @@ export function resetSpecializationTreeImportStats() {
 }
 
 /**
- *
+ * Increment a named statistic counter for the current specialization tree import run.
  * @param key
  * @param amount
  */
@@ -29,7 +29,7 @@ export function incrementSpecializationTreeImportStat(key, amount = 1) {
 }
 
 /**
- *
+ * Record a rejection reason string for the current specialization tree import run.
  * @param reason
  */
 export function addSpecializationTreeRejectionReason(reason) {
@@ -37,7 +37,7 @@ export function addSpecializationTreeRejectionReason(reason) {
 }
 
 /**
- *
+ * Record a missing-cost detail entry for a node that could not be mapped to a cost value.
  * @param detail
  */
 export function addSpecializationTreeMissingCost(detail) {
@@ -45,7 +45,7 @@ export function addSpecializationTreeMissingCost(detail) {
 }
 
 /**
- *
+ * Record an unresolved-talent detail entry for a node whose talent could not be resolved.
  * @param detail
  */
 export function addSpecializationTreeUnresolvedTalent(detail) {
@@ -53,7 +53,7 @@ export function addSpecializationTreeUnresolvedTalent(detail) {
 }
 
 /**
- *
+ * Record a detail entry for a talent node whose UUID could not be resolved to a compendium item.
  * @param detail
  */
 export function addSpecializationTreeTalentUuidNotResolved(detail) {
@@ -61,7 +61,7 @@ export function addSpecializationTreeTalentUuidNotResolved(detail) {
 }
 
 /**
- *
+ * Record an invalid-connection detail entry for a node connection that could not be resolved.
  * @param detail
  */
 export function addSpecializationTreeInvalidConnection(detail) {
@@ -69,14 +69,14 @@ export function addSpecializationTreeInvalidConnection(detail) {
 }
 
 /**
- *
+ * Return the accumulated statistics for the current specialization tree import run.
  */
 export function getSpecializationTreeImportStats() {
   return specializationTreeStats.getStats()
 }
 
 /**
- *
+ * Merge base specialization stats with specialization-tree stats into a single combined object.
  * @param baseStats
  * @param treeStats
  */
@@ -95,7 +95,7 @@ export function getCombinedSpecializationImportStats(baseStats = {}, treeStats =
 }
 
 /**
- *
+ * Normalize a raw specialization key into a lowercase hyphenated identifier.
  * @param rawKey
  */
 export function normalizeSpecializationTreeId(rawKey) {
@@ -107,7 +107,7 @@ export function normalizeSpecializationTreeId(rawKey) {
 }
 
 /**
- *
+ * Build a canonical node identifier string from a positive integer row and column, returning null for invalid inputs.
  * @param row
  * @param column
  */
@@ -117,7 +117,7 @@ export function normalizeNodeId(row, column) {
 }
 
 /**
- *
+ * Parse a raw value as a positive integer, returning null when the result is not a positive integer.
  * @param rawValue
  */
 export function parsePositiveInteger(rawValue) {
@@ -126,7 +126,7 @@ export function parsePositiveInteger(rawValue) {
 }
 
 /**
- *
+ * Parse a raw value as a non-negative integer, returning null when the result is negative or not an integer.
  * @param rawValue
  */
 export function parseNonNegativeInteger(rawValue) {
@@ -135,7 +135,7 @@ export function parseNonNegativeInteger(rawValue) {
 }
 
 /**
- *
+ * Normalize a raw connection type string to a lowercase trimmed value, returning undefined for non-string inputs.
  * @param rawValue
  */
 export function normalizeConnectionType(rawValue) {
@@ -149,7 +149,7 @@ export function normalizeConnectionType(rawValue) {
 }
 
 /**
- *
+ * Return true if the nodeId string already matches the canonical "rNcN" node reference format.
  * @param nodeId
  */
 export function isResolvedNodeReference(nodeId) {
@@ -157,7 +157,7 @@ export function isResolvedNodeReference(nodeId) {
 }
 
 /**
- *
+ * Build a diagnostics object for a specialization tree import result, combining warnings and completeness flags.
  * @param warnings
  * @param unresolved
  * @param options

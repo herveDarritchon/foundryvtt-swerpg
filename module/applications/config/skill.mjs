@@ -95,6 +95,7 @@ export default class SkillConfig extends api.HandlebarsApplicationMixin(api.Docu
   /* -------------------------------------------- */
 
   /**
+   * Handle the selection of a skill progression path for the actor.
    * @this {SkillConfig}
    * @param {PointerEvent} event
    * @returns {Promise<void>}
@@ -109,6 +110,7 @@ export default class SkillConfig extends api.HandlebarsApplicationMixin(api.Docu
   /* -------------------------------------------- */
 
   /**
+   * Open the rules journal page for the configured skill.
    * @this {SkillConfig}
    * @param {PointerEvent} event
    * @returns {Promise<void>}
@@ -121,6 +123,7 @@ export default class SkillConfig extends api.HandlebarsApplicationMixin(api.Docu
   /* -------------------------------------------- */
 
   /**
+   * Decrease the actor's rank in the configured skill by one.
    * @this {SkillConfig}
    * @param {PointerEvent} event
    */
@@ -131,6 +134,7 @@ export default class SkillConfig extends api.HandlebarsApplicationMixin(api.Docu
   /* -------------------------------------------- */
 
   /**
+   * Increase the actor's rank in the configured skill by one.
    * @this {SkillConfig}
    * @param {PointerEvent} event
    */

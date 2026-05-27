@@ -98,7 +98,7 @@ export default class ActionUseDialog extends StandardCheckDialog {
   /* -------------------------------------------- */
 
   /**
-   *
+   * Prepare and annotate the list of action targets with CSS class and tooltip derived from their error state.
    * @returns {ActionUseTarget[]}
    */
   #prepareTargets() {

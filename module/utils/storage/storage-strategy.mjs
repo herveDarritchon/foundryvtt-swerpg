@@ -6,7 +6,7 @@ import { CompendiumItemStorageTarget } from './compendium-item-storage-target.mj
 import { organizeCompendiumPack } from '../../helpers/foundry/compendium-folders.mjs'
 
 /**
- *
+ * Create and return the appropriate storage target (world folder or compendium pack) for the given OggDude import mode.
  * @param root0
  * @param root0.mode
  * @param root0.elementType

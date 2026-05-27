@@ -71,6 +71,7 @@ export function actionableNodeViewModel({ renderNode, actor, specializationId, t
 }
 
 /**
+ * Build an ActionRef descriptor for a talent node, resolving tree identity and node position.
  * @param {string} specializationId
  * @param {object|null} tree
  * @param {object} renderNode

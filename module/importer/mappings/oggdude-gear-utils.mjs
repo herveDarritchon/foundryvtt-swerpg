@@ -5,7 +5,7 @@ import { getQualityConfig } from '../../config/qualities.mjs'
 const BRAWN_BASED_SKILLS = new Set(['melee', 'meleeheavy', 'meleelight', 'brawl', 'lightsaber'])
 
 /**
- *
+ * Return the value wrapped in an array if it is not already an array, or an empty array for falsy values.
  * @param value
  */
 function ensureArray(value) {
@@ -16,7 +16,7 @@ function ensureArray(value) {
 }
 
 /**
- *
+ * Parse a value as an integer, returning the fallback when the result is NaN.
  * @param value
  * @param fallback
  */
@@ -29,7 +29,7 @@ function parseInteger(value, fallback = 0) {
 }
 
 /**
- *
+ * Convert a PascalCase key to camelCase by lowercasing the first character.
  * @param key
  */
 function toCamelCase(key) {
@@ -40,7 +40,7 @@ function toCamelCase(key) {
 }
 
 /**
- *
+ * Convert a raw key or enum value to a title-cased human-readable label.
  * @param value
  */
 function humanizeLabel(value) {
@@ -61,7 +61,7 @@ function humanizeLabel(value) {
 }
 
 /**
- *
+ * Map a raw OggDude range string to the canonical SWERPG range value using the weapon range map.
  * @param range
  */
 function normalizeRangeValue(range) {
@@ -91,7 +91,7 @@ function normalizeRangeValue(range) {
 }
 
 /**
- *
+ * Return true if the skill key corresponds to a brawn-based combat skill.
  * @param skillKey
  */
 function isBrawnSkill(skillKey) {
@@ -105,7 +105,7 @@ function isBrawnSkill(skillKey) {
 }
 
 /**
- *
+ * Build a display label for weapon damage, using "Brawn" notation for brawn-based skills.
  * @param baseDamage
  * @param bonusDamage
  * @param skillKey
@@ -133,7 +133,7 @@ function formatDamageLabel(baseDamage, bonusDamage, skillKey) {
 }
 
 /**
- *
+ * Sanitize an OggDude gear description string using the same rules as weapon descriptions.
  * @param description
  */
 export function sanitizeOggDudeGearDescription(description) {
@@ -141,7 +141,7 @@ export function sanitizeOggDudeGearDescription(description) {
 }
 
 /**
- *
+ * Extract source book name and page number from an OggDude source field.
  * @param source
  */
 export function extractGearSourceInfo(source) {
@@ -162,7 +162,7 @@ export function extractGearSourceInfo(source) {
 }
 
 /**
- *
+ * Format an extracted source info object as a display string, appending the page number when available.
  * @param root0
  * @param root0.name
  * @param root0.page
@@ -178,7 +178,7 @@ export function formatGearSourceLine({ name, page }) {
 }
 
 /**
- *
+ * Convert a gear category label to a normalized lowercase underscore-separated slug, defaulting to "general".
  * @param value
  */
 export function slugifyGearCategory(value) {
@@ -197,7 +197,7 @@ export function slugifyGearCategory(value) {
 }
 
 /**
- *
+ * Extract and normalize base modification entries from an OggDude BaseMods XML node.
  * @param baseModsNode
  */
 export function extractBaseMods(baseModsNode) {
@@ -290,7 +290,7 @@ export function extractBaseMods(baseModsNode) {
 }
 
 /**
- *
+ * Extract the primary weapon profile from an OggDude WeaponModifiers XML node, including damage, crit, range, and qualities.
  * @param weaponModifiersNode
  */
 export function extractWeaponProfile(weaponModifiersNode) {
@@ -398,7 +398,7 @@ export function extractWeaponProfile(weaponModifiersNode) {
 }
 
 /**
- *
+ * Compose the full gear item description by assembling base text, source line, base mods, and weapon use sections.
  * @param root0
  * @param root0.baseDescription
  * @param root0.sourceLine

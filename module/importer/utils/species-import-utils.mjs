@@ -11,7 +11,7 @@ const speciesStats = new ImportStats({
 })
 
 /**
- *
+ * Reset all species import counters and talent details to zero.
  */
 export function resetSpeciesImportStats() {
   speciesStats.reset({
@@ -20,7 +20,7 @@ export function resetSpeciesImportStats() {
 }
 
 /**
- *
+ * Increment a named species import counter by the given amount.
  * @param key
  * @param amount
  */
@@ -29,7 +29,7 @@ export function incrementSpeciesImportStat(key, amount = 1) {
 }
 
 /**
- *
+ * Record an unknown talent code encountered during species import.
  * @param code
  */
 export function addSpeciesUnknownTalent(code) {
@@ -37,7 +37,7 @@ export function addSpeciesUnknownTalent(code) {
 }
 
 /**
- *
+ * Return the current species import statistics snapshot.
  */
 export function getSpeciesImportStats() {
   return speciesStats.getStats()

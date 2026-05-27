@@ -6,7 +6,7 @@
 	Web:     https://github.com/henrikingo/xml2json
 */
 /**
- *
+ * Return an XML-to-JSON translation utility object with methods to parse XML nodes into plain JS objects.
  */
 export function xml2json_translator() {
   var X = {
@@ -208,7 +208,7 @@ export function xml2json_translator() {
 }
 
 /**
- *
+ * Convert an XML DOM node to a JSON string representation using the xml2json_translator.
  * @param xml
  * @param tab
  */

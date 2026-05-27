@@ -174,7 +174,7 @@ export function topologicalSort(pipelines) {
   const cycleDetails = []
 
   /**
-   *
+   * Recursively visit a node to produce a topologically sorted order, detecting cycles.
    * @param id
    */
   function visit(id) {

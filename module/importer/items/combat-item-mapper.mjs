@@ -1,7 +1,7 @@
 import OggDudeImporter from '../oggDude.mjs'
 
 /**
- *
+ * Map an OggDude XML weapon modifier node to a flat weapon modifier object.
  * @param xmlWeaponModifier
  */
 export function buildWeaponModifiers(xmlWeaponModifier) {
@@ -32,7 +32,7 @@ export function buildWeaponModifiers(xmlWeaponModifier) {
 }
 
 /**
- *
+ * Map an OggDude XML die modifier node to a flat die modifier object.
  * @param dieModifier
  */
 function _buildDieModifier(dieModifier) {
@@ -56,7 +56,7 @@ function _buildDieModifier(dieModifier) {
 }
 
 /**
- *
+ * Map an OggDude XML base mod node to a flat mod object including nested die modifiers.
  * @param mod
  */
 export function buildMod(mod) {

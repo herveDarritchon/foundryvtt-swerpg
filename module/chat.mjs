@@ -1,7 +1,7 @@
 import SwerpgAction from './models/action.mjs'
 
 /**
- *
+ * Add SWERPG context menu options to the chat log, allowing GMs to set difficulty or confirm actions.
  * @param html
  * @param options
  */
@@ -93,7 +93,7 @@ export async function onCreateChatMessage(message, data, options, userId) {
 /* -------------------------------------------- */
 
 /**
- *
+ * Return true if the chat message carries a SWERPG action flag.
  * @param message
  */
 function isSwerpgActionMessage(message) {

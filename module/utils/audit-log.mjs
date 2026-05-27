@@ -19,7 +19,7 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 /* -------------------------------------------- */
 
 /**
- *
+ * Return true if the changes object only modifies the audit log flag path.
  * @param {object} changes
  */
 function isOnlyAuditChange(changes) {
@@ -29,7 +29,7 @@ function isOnlyAuditChange(changes) {
 }
 
 /**
- *
+ * Return true if the actor document is of type "character".
  * @param {object} actor
  */
 function isCharacterActor(actor) {
@@ -37,7 +37,7 @@ function isCharacterActor(actor) {
 }
 
 /**
- *
+ * Return true if the update options flag this as an internal audit log write.
  * @param {object} options
  */
 function isAuditInternalUpdate(options) {
@@ -49,7 +49,7 @@ function isAuditInternalUpdate(options) {
 /* -------------------------------------------- */
 
 /**
- *
+ * Deep-clone a value using Foundry utilities when available, falling back to structuredClone.
  * @param {*} value
  */
 function cloneValue(value) {
@@ -62,7 +62,7 @@ function cloneValue(value) {
 /* -------------------------------------------- */
 
 /**
- *
+ * Remove expired pending entries from the pending state map and warn when the total count is high.
  */
 function pruneExpiredPending() {
   const now = Date.now()
@@ -82,7 +82,7 @@ function pruneExpiredPending() {
 }
 
 /**
- *
+ * Return the total number of pending state entries across all actor/user queues.
  */
 function countPendingEntries() {
   let count = 0
@@ -91,7 +91,7 @@ function countPendingEntries() {
 }
 
 /**
- *
+ * Evict the oldest pending entries when the pending map would exceed MAX_PENDING after adding incomingCount new entries.
  * @param {number} incomingCount
  */
 function evictOldestIfNeeded(incomingCount = 1) {
@@ -121,7 +121,7 @@ function evictOldestIfNeeded(incomingCount = 1) {
 /* -------------------------------------------- */
 
 /**
- *
+ * Build the composite map key for a pending entry keyed by actor UUID and user ID.
  * @param {object} actor
  * @param {string} userId
  */
@@ -130,7 +130,7 @@ function getPendingKey(actor, userId) {
 }
 
 /**
- *
+ * Append an old-state entry to the pending queue for the given actor and user.
  * @param {object} actor
  * @param {string} userId
  * @param {object} entry
@@ -143,7 +143,7 @@ function pushPendingEntry(actor, userId, entry) {
 }
 
 /**
- *
+ * Remove and return the oldest pending entry for the given actor and user, or undefined when the queue is empty.
  * @param {object} actor
  * @param {string} userId
  */
@@ -161,7 +161,7 @@ function shiftPendingEntry(actor, userId) {
 /* -------------------------------------------- */
 
 /**
- *
+ * Return true if the dot-notation path contains a Foundry deletion segment (".-=").
  * @param {string} path
  */
 function isDeletionPath(path) {
@@ -169,7 +169,7 @@ function isDeletionPath(path) {
 }
 
 /**
- *
+ * Return the dot-notation path of the parent object targeted by a Foundry deletion segment, or null when not found.
  * @param {string} path
  */
 function getDeletionParentPath(path) {
@@ -180,7 +180,7 @@ function getDeletionParentPath(path) {
 }
 
 /**
- *
+ * Capture the old values of every path present in changes from the document source, handling deletion paths.
  * @param {object} source
  * @param {object} changes
  */
@@ -216,7 +216,7 @@ function snapshotOldState(source, changes) {
 /* -------------------------------------------- */
 
 /**
- *
+ * Log a write failure, notify the user, and send a GM whisper with the error details.
  * @param {object} actor
  * @param {Error} err
  */
@@ -247,7 +247,7 @@ async function handleWriteError(actor, err) {
 /* -------------------------------------------- */
 
 /**
- *
+ * Append audit entries to the actor's log flag, trimming to the configured max, with retry on failure.
  * @param {object} actor
  * @param {object[]} entries
  */
@@ -279,7 +279,7 @@ async function writeLogEntries(actor, entries) {
 }
 
 /**
- *
+ * Read the configured maximum number of audit log entries from game settings, defaulting to 500.
  */
 function readMaxLogEntries() {
   try {
@@ -319,7 +319,7 @@ export {
 /* -------------------------------------------- */
 
 /**
- *
+ * Capture the old actor state before an update and push it to the pending queue.
  * @param {object} actor
  * @param {object} changes
  * @param {object} options
@@ -344,7 +344,7 @@ export function onPreUpdateActor(actor, changes, options, userId) {
 }
 
 /**
- *
+ * Compare the applied changes against the previously captured state and write the resulting audit entries.
  * @param {object} actor
  * @param {object} changes
  * @param {object} options
@@ -370,7 +370,7 @@ export function onUpdateActor(actor, changes, options, userId) {
 /* -------------------------------------------- */
 
 /**
- *
+ * Record a talent purchase audit entry when a talent item is created on a character actor.
  * @param {object} item
  * @param {object} data
  * @param {object} options
@@ -686,7 +686,7 @@ async function sendChatForAuditEntries(actor, entries) {
 /* -------------------------------------------- */
 
 /**
- *
+ * Register Foundry hooks for the audit log subsystem.
  */
 export function registerAuditLogHooks() {
   Hooks.on('preUpdateActor', onPreUpdateActor)
@@ -699,7 +699,7 @@ export function registerAuditLogHooks() {
 /* -------------------------------------------- */
 
 /**
- *
+ * Recursively flatten a nested object into dot-notation key/value pairs.
  * @param {object} obj
  * @param {string} prefix
  */
@@ -719,7 +719,7 @@ function _flattenObject(obj, prefix = '') {
 }
 
 /**
- *
+ * Retrieve the value at a dot-notation path from a nested object, returning undefined when any segment is missing.
  * @param {object} object
  * @param {string} path
  */
@@ -734,7 +734,7 @@ function _getProperty(object, path) {
 }
 
 /**
- *
+ * Set the value at a dot-notation path on a nested object, creating intermediate objects as needed.
  * @param {object} object
  * @param {string} path
  * @param {*} value
@@ -755,7 +755,7 @@ function _setProperty(object, path, value) {
 /* -------------------------------------------- */
 
 /**
- *
+ * Clear all pending old-state entries from the map (used for testing and reset scenarios).
  */
 function flushPending() {
   pendingOldStates.clear()

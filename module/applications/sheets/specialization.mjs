@@ -60,6 +60,7 @@ export default class SpecializationSheet extends SwerpgBaseItemSheet {
   /* -------------------------------------------- */
 
   /**
+   * Toggle a skill's specialization status on the item when the corresponding checkbox is clicked.
    * @this {SwerpgBaseActorSheet}
    * @param {PointerEvent} event
    * @returns {Promise<void>}

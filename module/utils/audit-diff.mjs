@@ -7,7 +7,7 @@ import { getCanonicalSpecializationKey } from '../lib/specializations/owned-spec
 /* -------------------------------------------- */
 
 /**
- *
+ * Capture the current XP and free skill rank values from the actor's progression data.
  * @param {object} actor
  */
 function captureSnapshot(actor) {
@@ -23,7 +23,7 @@ function captureSnapshot(actor) {
 }
 
 /**
- *
+ * Compute the XP cost of increasing a characteristic to newValue.
  * @param {number} newValue
  */
 function computeCharacteristicCost(newValue) {
@@ -61,7 +61,7 @@ function reconstructPreviousValue(oldPartialValue, currentValue) {
 /* -------------------------------------------- */
 
 /**
- *
+ * Build a structured audit log entry with a generated ID and schema version.
  * @param {object} root0
  * @param {string} root0.type
  * @param {object} root0.data
@@ -90,7 +90,7 @@ function makeEntry({ type, data, xpDelta, ts, userId, user, snapshot }) {
 /* -------------------------------------------- */
 
 /**
- *
+ * Detect skill rank changes between old state and applied changes and return the corresponding audit entries.
  * @param {object} oldState
  * @param {object} changes
  * @param {object} actor
@@ -176,7 +176,7 @@ function detectSkillChanges(oldState, changes, actor, ts, userId, user, snapshot
 }
 
 /**
- *
+ * Compute the total skill rank by summing all rank sub-fields.
  * @param {object} rank
  */
 function getSkillTotalRank(rank) {
@@ -184,7 +184,7 @@ function getSkillTotalRank(rank) {
 }
 
 /**
- *
+ * Return true if the skill is a career skill for the actor, based on career and specialization data.
  * @param {string} skillId
  * @param {object} _oldState
  * @param {object} actor
@@ -194,7 +194,7 @@ function inferIsCareer(skillId, _oldState, actor) {
 }
 
 /**
- *
+ * Collect all career skill IDs for the actor, including those from active specializations.
  * @param {object} actor
  */
 function getCareerSkillIds(actor) {
@@ -217,7 +217,7 @@ function getCareerSkillIds(actor) {
 }
 
 /**
- *
+ * Detect characteristic rank increases between old state and applied changes and return the corresponding audit entries.
  * @param {object} oldState
  * @param {object} changes
  * @param {object} actor
@@ -268,7 +268,7 @@ function detectCharacteristicChanges(oldState, changes, actor, ts, userId, user,
 }
 
 /**
- *
+ * Compute the total characteristic rank by summing base, trained, and bonus sub-fields.
  * @param {object} rank
  */
 function getCharacteristicTotalRank(rank) {
@@ -276,7 +276,7 @@ function getCharacteristicTotalRank(rank) {
 }
 
 /**
- *
+ * Detect XP spend, refund, grant, or remove events from progression changes and return the corresponding audit entries.
  * @param {object} oldState
  * @param {object} changes
  * @param {object} actor
@@ -344,7 +344,7 @@ function detectXpChanges(oldState, changes, actor, ts, userId, user, snapshot) {
 }
 
 /**
- *
+ * Detect species, career, and specialization changes in the details block and return the corresponding audit entries.
  * @param {object} oldState
  * @param {object} changes
  * @param {object} actor
@@ -405,7 +405,7 @@ function detectDetailChanges(oldState, changes, actor, ts, userId, user, snapsho
 }
 
 /**
- *
+ * Compute the XP delta from the experience spent change, returning 0 when no spent value is present in the changes.
  * @param {object} oldState
  * @param {object} changes
  */
@@ -418,7 +418,7 @@ function getXpDeltaFromChanges(oldState, changes) {
 }
 
 /**
- *
+ * Return the specializations on a source object as a plain array, regardless of the underlying storage type.
  * @param {object} source
  */
 function getSpecArray(source) {
@@ -431,7 +431,7 @@ function getSpecArray(source) {
 }
 
 /**
- *
+ * Build a map from canonical specialization key to specialization object for the given source.
  * @param {object} source
  */
 function buildSpecMap(source) {
@@ -446,7 +446,7 @@ function buildSpecMap(source) {
 }
 
 /**
- *
+ * Detect specialization additions and removals from the specialization changes block and return the corresponding audit entries.
  * @param {object} oldState
  * @param {object} specializationChanges
  * @param {object} actor
@@ -544,7 +544,7 @@ function detectSpecializationChanges(oldState, specializationChanges, actor, ts,
 }
 
 /**
- *
+ * Detect level advancement changes and return the corresponding audit entry when the level differs.
  * @param {object} oldState
  * @param {object} changes
  * @param {object} actor
@@ -579,7 +579,7 @@ function detectAdvancementChanges(oldState, changes, actor, ts, userId, user, sn
 /* -------------------------------------------- */
 
 /**
- *
+ * Compose all audit log entries from a set of actor changes, dispatching to per-domain detectors.
  * @param {object} oldState
  * @param {object} changes
  * @param {object} actor

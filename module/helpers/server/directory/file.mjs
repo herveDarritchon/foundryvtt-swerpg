@@ -19,7 +19,7 @@
 import { logger } from '../../../utils/logger.mjs'
 
 /**
- *
+ * Create a subdirectory under the given path on the Foundry data storage.
  * @param path
  * @param target
  */

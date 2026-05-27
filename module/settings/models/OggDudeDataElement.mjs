@@ -90,7 +90,7 @@ class OggDudeDataElement {
   static directory = 'directory'
 
   /**
-   *
+   * Initialize an OggDudeDataElement from the given zip entry metadata.
    * @param {ZipEntry} zipEntry Object the zip entry object
    */
   constructor(zipEntry = {}) {
