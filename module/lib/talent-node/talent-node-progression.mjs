@@ -84,11 +84,11 @@ export function processTalentNodeProgression(actor, specializationId, nodeId, ac
 
 /**
  *
- * @param actor
- * @param specializationId
- * @param tree
- * @param node
- * @param action
+ * @param {object} actor
+ * @param {string} specializationId
+ * @param {object} tree
+ * @param {object} node
+ * @param {NodeAction} action
  */
 function validatePurchase(actor, specializationId, tree, node, action) {
   const state = getNodeState(actor, specializationId, tree, node.nodeId)
@@ -105,11 +105,11 @@ function validatePurchase(actor, specializationId, tree, node, action) {
 
 /**
  *
- * @param actor
- * @param specializationId
- * @param tree
- * @param node
- * @param action
+ * @param {object} actor
+ * @param {string} specializationId
+ * @param {object} tree
+ * @param {object} node
+ * @param {NodeAction} action
  */
 function validateForget(actor, specializationId, tree, node, action) {
   const treeId = tree.id ?? tree._id
@@ -139,12 +139,12 @@ function validateForget(actor, specializationId, tree, node, action) {
 
 /**
  *
- * @param actor
- * @param specializationId
- * @param tree
- * @param node
- * @param action
- * @param costSign
+ * @param {object} actor
+ * @param {string} specializationId
+ * @param {object} tree
+ * @param {object} node
+ * @param {NodeAction} action
+ * @param {number} costSign
  */
 function buildSuccessResult(actor, specializationId, tree, node, action, costSign) {
   const treeId = tree.id ?? tree._id
@@ -189,11 +189,11 @@ function buildSuccessResult(actor, specializationId, tree, node, action, costSig
 
 /**
  * Determine whether a node is currently purchased by the actor.
- * @param actor
- * @param treeId
- * @param treeUuid
- * @param node
- * @param specializationId
+ * @param {object} actor
+ * @param {string} treeId
+ * @param {string|null} treeUuid
+ * @param {object} node
+ * @param {string} specializationId
  */
 function isPurchased(actor, treeId, treeUuid, node, specializationId) {
   const purchases = actor?.system?.progression?.talentPurchases
@@ -204,11 +204,11 @@ function isPurchased(actor, treeId, treeUuid, node, specializationId) {
 /**
  * Match a purchase record against a node identity.
  * Prefers UUID-based matching when both sides carry a UUID.
- * @param p
- * @param treeId
- * @param treeUuid
- * @param node
- * @param specializationId
+ * @param {object} p
+ * @param {string} treeId
+ * @param {string|null} treeUuid
+ * @param {object} node
+ * @param {string} specializationId
  */
 function matchesPurchase(p, treeId, treeUuid, node, specializationId) {
   const treeMatch = treeUuid && p.treeUuid ? p.treeUuid === treeUuid : p.treeId === treeId
@@ -222,10 +222,10 @@ function matchesPurchase(p, treeId, treeUuid, node, specializationId) {
  *
  * A node is a blocking dependent if there is a connection from targetNodeId
  * to that node AND the node is currently purchased.
- * @param actor
- * @param tree
- * @param targetNodeId
- * @param specializationId
+ * @param {object} actor
+ * @param {object} tree
+ * @param {string} targetNodeId
+ * @param {string} specializationId
  */
 function findBlockingDependents(actor, tree, targetNodeId, specializationId) {
   const connections = tree?.system?.connections
@@ -251,8 +251,8 @@ function findBlockingDependents(actor, tree, targetNodeId, specializationId) {
 
 /**
  *
- * @param actor
- * @param specializationId
+ * @param {object} actor
+ * @param {string} specializationId
  */
 function findSpecialization(actor, specializationId) {
   const specs = actor?.system?.details?.specializations
@@ -265,8 +265,8 @@ function findSpecialization(actor, specializationId) {
 
 /**
  *
- * @param tree
- * @param nodeId
+ * @param {object} tree
+ * @param {string} nodeId
  */
 function findNodeInTree(tree, nodeId) {
   const nodes = tree?.system?.nodes

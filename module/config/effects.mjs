@@ -9,11 +9,11 @@ export function getEffectId(label) {
 
 /**
  *
- * @param actor
- * @param target
- * @param root0
- * @param root0.ability
- * @param root0.damageType
+ * @param {object} actor
+ * @param {object} target
+ * @param {object} root0
+ * @param {string} root0.ability
+ * @param {string} root0.damageType
  */
 export function bleeding(actor, target, { ability = 'dexterity', damageType = 'piercing' } = {}) {
   return {
@@ -35,8 +35,8 @@ export function bleeding(actor, target, { ability = 'dexterity', damageType = 'p
 
 /**
  *
- * @param actor
- * @param target
+ * @param {object} actor
+ * @param {object} target
  */
 export function burning(actor, target) {
   return {
@@ -59,8 +59,8 @@ export function burning(actor, target) {
 
 /**
  *
- * @param actor
- * @param target
+ * @param {object} actor
+ * @param {object} target
  */
 export function chilled(actor, target) {
   return {
@@ -83,8 +83,8 @@ export function chilled(actor, target) {
 
 /**
  *
- * @param actor
- * @param target
+ * @param {object} actor
+ * @param {object} target
  */
 export function confusion(actor, target) {
   return {
@@ -107,8 +107,8 @@ export function confusion(actor, target) {
 
 /**
  *
- * @param actor
- * @param target
+ * @param {object} actor
+ * @param {object} target
  */
 export function corroding(actor, target) {
   return {
@@ -130,8 +130,8 @@ export function corroding(actor, target) {
 
 /**
  *
- * @param actor
- * @param target
+ * @param {object} actor
+ * @param {object} target
  */
 export function decay(actor, target) {
   return {
@@ -153,8 +153,8 @@ export function decay(actor, target) {
 
 /**
  *
- * @param actor
- * @param target
+ * @param {object} actor
+ * @param {object} target
  */
 export function entropy(actor, target) {
   return {
@@ -177,8 +177,8 @@ export function entropy(actor, target) {
 
 /**
  *
- * @param actor
- * @param target
+ * @param {object} actor
+ * @param {object} target
  */
 export function irradiated(actor, target) {
   return {
@@ -201,8 +201,8 @@ export function irradiated(actor, target) {
 
 /**
  *
- * @param actor
- * @param target
+ * @param {object} actor
+ * @param {object} target
  */
 export function mending(actor, target) {
   return {
@@ -223,8 +223,8 @@ export function mending(actor, target) {
 
 /**
  *
- * @param actor
- * @param target
+ * @param {object} actor
+ * @param {object} target
  */
 export function inspired(actor, target) {
   return {
@@ -245,8 +245,8 @@ export function inspired(actor, target) {
 
 /**
  *
- * @param actor
- * @param target
+ * @param {object} actor
+ * @param {object} target
  */
 export function poisoned(actor, target) {
   return {
@@ -268,8 +268,8 @@ export function poisoned(actor, target) {
 
 /**
  *
- * @param actor
- * @param target
+ * @param {object} actor
+ * @param {object} target
  */
 export function shocked(actor, target) {
   return {
@@ -292,8 +292,8 @@ export function shocked(actor, target) {
 
 /**
  *
- * @param actor
- * @param target
+ * @param {object} actor
+ * @param {object} target
  */
 export function staggered(actor, target) {
   return {

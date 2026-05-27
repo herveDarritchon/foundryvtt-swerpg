@@ -8,7 +8,7 @@ import { getCanonicalSpecializationKey } from '../lib/specializations/owned-spec
 
 /**
  *
- * @param actor
+ * @param {object} actor
  */
 function captureSnapshot(actor) {
   const xp = actor.system?.progression?.experience
@@ -24,7 +24,7 @@ function captureSnapshot(actor) {
 
 /**
  *
- * @param newValue
+ * @param {number} newValue
  */
 function computeCharacteristicCost(newValue) {
   return newValue * 10
@@ -38,8 +38,8 @@ function computeCharacteristicCost(newValue) {
  * - currentValue = { base: 0, trained: 2, bonus: 0 }
  * - oldPartialValue = { trained: 1 }
  * - résultat = { base: 0, trained: 1, bonus: 0 }
- * @param oldPartialValue
- * @param currentValue
+ * @param {*} oldPartialValue
+ * @param {*} currentValue
  */
 function reconstructPreviousValue(oldPartialValue, currentValue) {
   if (oldPartialValue === undefined) return currentValue
@@ -62,14 +62,14 @@ function reconstructPreviousValue(oldPartialValue, currentValue) {
 
 /**
  *
- * @param root0
- * @param root0.type
- * @param root0.data
- * @param root0.xpDelta
- * @param root0.ts
- * @param root0.userId
- * @param root0.user
- * @param root0.snapshot
+ * @param {object} root0
+ * @param {string} root0.type
+ * @param {object} root0.data
+ * @param {number} root0.xpDelta
+ * @param {number} root0.ts
+ * @param {string} root0.userId
+ * @param {object|null} root0.user
+ * @param {object} root0.snapshot
  */
 function makeEntry({ type, data, xpDelta, ts, userId, user, snapshot }) {
   return {
@@ -91,13 +91,13 @@ function makeEntry({ type, data, xpDelta, ts, userId, user, snapshot }) {
 
 /**
  *
- * @param oldState
- * @param changes
- * @param actor
- * @param ts
- * @param userId
- * @param user
- * @param snapshot
+ * @param {object} oldState
+ * @param {object} changes
+ * @param {object} actor
+ * @param {number} ts
+ * @param {string} userId
+ * @param {object|null} user
+ * @param {object} snapshot
  */
 function detectSkillChanges(oldState, changes, actor, ts, userId, user, snapshot) {
   const entries = []
@@ -177,7 +177,7 @@ function detectSkillChanges(oldState, changes, actor, ts, userId, user, snapshot
 
 /**
  *
- * @param rank
+ * @param {object} rank
  */
 function getSkillTotalRank(rank) {
   return (rank.base ?? 0) + (rank.careerFree ?? 0) + (rank.specializationFree ?? 0) + (rank.trained ?? 0)
@@ -185,9 +185,9 @@ function getSkillTotalRank(rank) {
 
 /**
  *
- * @param skillId
- * @param _oldState
- * @param actor
+ * @param {string} skillId
+ * @param {object} _oldState
+ * @param {object} actor
  */
 function inferIsCareer(skillId, _oldState, actor) {
   return getCareerSkillIds(actor).has(skillId)
@@ -195,7 +195,7 @@ function inferIsCareer(skillId, _oldState, actor) {
 
 /**
  *
- * @param actor
+ * @param {object} actor
  */
 function getCareerSkillIds(actor) {
   const ids = new Set()
@@ -218,13 +218,13 @@ function getCareerSkillIds(actor) {
 
 /**
  *
- * @param oldState
- * @param changes
- * @param actor
- * @param ts
- * @param userId
- * @param user
- * @param snapshot
+ * @param {object} oldState
+ * @param {object} changes
+ * @param {object} actor
+ * @param {number} ts
+ * @param {string} userId
+ * @param {object|null} user
+ * @param {object} snapshot
  */
 function detectCharacteristicChanges(oldState, changes, actor, ts, userId, user, snapshot) {
   const entries = []
@@ -269,7 +269,7 @@ function detectCharacteristicChanges(oldState, changes, actor, ts, userId, user,
 
 /**
  *
- * @param rank
+ * @param {object} rank
  */
 function getCharacteristicTotalRank(rank) {
   return (rank.base ?? 0) + (rank.trained ?? 0) + (rank.bonus ?? 0)
@@ -277,13 +277,13 @@ function getCharacteristicTotalRank(rank) {
 
 /**
  *
- * @param oldState
- * @param changes
- * @param actor
- * @param ts
- * @param userId
- * @param user
- * @param snapshot
+ * @param {object} oldState
+ * @param {object} changes
+ * @param {object} actor
+ * @param {number} ts
+ * @param {string} userId
+ * @param {object|null} user
+ * @param {object} snapshot
  */
 function detectXpChanges(oldState, changes, actor, ts, userId, user, snapshot) {
   const entries = []
@@ -345,13 +345,13 @@ function detectXpChanges(oldState, changes, actor, ts, userId, user, snapshot) {
 
 /**
  *
- * @param oldState
- * @param changes
- * @param actor
- * @param ts
- * @param userId
- * @param user
- * @param snapshot
+ * @param {object} oldState
+ * @param {object} changes
+ * @param {object} actor
+ * @param {number} ts
+ * @param {string} userId
+ * @param {object|null} user
+ * @param {object} snapshot
  */
 function detectDetailChanges(oldState, changes, actor, ts, userId, user, snapshot) {
   const entries = []
@@ -406,8 +406,8 @@ function detectDetailChanges(oldState, changes, actor, ts, userId, user, snapsho
 
 /**
  *
- * @param oldState
- * @param changes
+ * @param {object} oldState
+ * @param {object} changes
  */
 function getXpDeltaFromChanges(oldState, changes) {
   const newSpent = changes.system?.progression?.experience?.spent
@@ -419,7 +419,7 @@ function getXpDeltaFromChanges(oldState, changes) {
 
 /**
  *
- * @param source
+ * @param {object} source
  */
 function getSpecArray(source) {
   const raw = source.system?.details?.specializations
@@ -432,7 +432,7 @@ function getSpecArray(source) {
 
 /**
  *
- * @param source
+ * @param {object} source
  */
 function buildSpecMap(source) {
   const specs = getSpecArray(source)
@@ -447,14 +447,14 @@ function buildSpecMap(source) {
 
 /**
  *
- * @param oldState
- * @param specializationChanges
- * @param actor
- * @param ts
- * @param userId
- * @param user
- * @param snapshot
- * @param batchXpDelta
+ * @param {object} oldState
+ * @param {object} specializationChanges
+ * @param {object} actor
+ * @param {number} ts
+ * @param {string} userId
+ * @param {object|null} user
+ * @param {object} snapshot
+ * @param {number} batchXpDelta
  */
 function detectSpecializationChanges(oldState, specializationChanges, actor, ts, userId, user, snapshot, batchXpDelta) {
   const entries = []
@@ -545,13 +545,13 @@ function detectSpecializationChanges(oldState, specializationChanges, actor, ts,
 
 /**
  *
- * @param oldState
- * @param changes
- * @param actor
- * @param ts
- * @param userId
- * @param user
- * @param snapshot
+ * @param {object} oldState
+ * @param {object} changes
+ * @param {object} actor
+ * @param {number} ts
+ * @param {string} userId
+ * @param {object|null} user
+ * @param {object} snapshot
  */
 function detectAdvancementChanges(oldState, changes, actor, ts, userId, user, snapshot) {
   if (changes.system?.advancement?.level === undefined) return []
@@ -580,10 +580,10 @@ function detectAdvancementChanges(oldState, changes, actor, ts, userId, user, sn
 
 /**
  *
- * @param oldState
- * @param changes
- * @param actor
- * @param userId
+ * @param {object} oldState
+ * @param {object} changes
+ * @param {object} actor
+ * @param {string} userId
  */
 export function composeEntries(oldState, changes, actor, userId) {
   try {
