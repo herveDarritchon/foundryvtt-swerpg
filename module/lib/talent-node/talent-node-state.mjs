@@ -22,9 +22,9 @@ export const REASON_CODE = Object.freeze({
 
 /**
  *
- * @param state
- * @param reasonCode
- * @param details
+ * @param {string} state
+ * @param {string} reasonCode
+ * @param {object} details
  */
 function makeResult(state, reasonCode, details = {}) {
   return { state, reasonCode, details }
@@ -32,8 +32,8 @@ function makeResult(state, reasonCode, details = {}) {
 
 /**
  *
- * @param actor
- * @param specializationId
+ * @param {object} actor
+ * @param {string} specializationId
  */
 function isSpecializationOwned(actor, specializationId) {
   const specs = actor?.system?.details?.specializations
@@ -46,8 +46,8 @@ function isSpecializationOwned(actor, specializationId) {
 
 /**
  *
- * @param tree
- * @param nodeId
+ * @param {object} tree
+ * @param {string} nodeId
  */
 function findNode(tree, nodeId) {
   const nodes = tree?.system?.nodes
@@ -57,14 +57,14 @@ function findNode(tree, nodeId) {
 
 /**
  *
- * @param actor
- * @param treeId
- * @param nodeId
- * @param talentId
- * @param specializationId
- * @param root0
- * @param root0.treeUuid
- * @param root0.talentUuid
+ * @param {object} actor
+ * @param {string} treeId
+ * @param {string} nodeId
+ * @param {string} talentId
+ * @param {string} specializationId
+ * @param {object} root0
+ * @param {string|undefined} root0.treeUuid
+ * @param {string|undefined} root0.talentUuid
  */
 function hasPurchase(actor, treeId, nodeId, talentId, specializationId, { treeUuid, talentUuid } = {}) {
   const purchases = actor?.system?.progression?.talentPurchases
@@ -80,7 +80,7 @@ function hasPurchase(actor, treeId, nodeId, talentId, specializationId, { treeUu
 
 /**
  *
- * @param node
+ * @param {object} node
  */
 function hasValidFields(node) {
   if (!node.nodeId || !node.talentId) return false
@@ -91,7 +91,7 @@ function hasValidFields(node) {
 
 /**
  *
- * @param node
+ * @param {object} node
  */
 function missingFields(node) {
   const fields = []
@@ -104,7 +104,7 @@ function missingFields(node) {
 
 /**
  *
- * @param tree
+ * @param {object} tree
  */
 function isCompleteTree(tree) {
   const nodes = tree?.system?.nodes
@@ -120,9 +120,9 @@ function isCompleteTree(tree) {
 
 /**
  *
- * @param actor
- * @param tree
- * @param node
+ * @param {object} actor
+ * @param {object} tree
+ * @param {object} node
  */
 function isAccessible(actor, tree, node) {
   if (node.row === 1) return true
@@ -148,7 +148,7 @@ function isAccessible(actor, tree, node) {
 
 /**
  *
- * @param actor
+ * @param {object} actor
  */
 function getAvailableXp(actor) {
   const exp = actor?.system?.progression?.experience
@@ -159,10 +159,10 @@ function getAvailableXp(actor) {
 
 /**
  *
- * @param actor
- * @param specializationId
- * @param tree
- * @param nodeId
+ * @param {object} actor
+ * @param {string} specializationId
+ * @param {object} tree
+ * @param {string} nodeId
  */
 export function getNodeState(actor, specializationId, tree, nodeId) {
   if (!actor) {
@@ -233,9 +233,9 @@ export function getNodeState(actor, specializationId, tree, nodeId) {
 
 /**
  *
- * @param actor
- * @param specializationId
- * @param tree
+ * @param {object} actor
+ * @param {string} specializationId
+ * @param {object} tree
  */
 export function getTreeNodesStates(actor, specializationId, tree) {
   const map = new Map()

@@ -9,10 +9,9 @@ const mandatoryHtml = { required: true, blank: false, textSearch: true }
 
 /**
  * Enrich the initialization schema with the initial value if it is not null or empty
- * @param initial.initial
- * @param initial {string|number|boolean} The initial value of the field
- * @param dataFieldConfiguration {{nullable: boolean,integer: boolean,required: boolean }|{blank: boolean,textSearch: boolean,initial: string,required: boolean }|{blank: boolean, trim: boolean, nullable: boolean, required: boolean}|{nullable: boolean, initial: number, integer: boolean, required: boolean}} The configuration of the field
- * @param initial.dataFieldConfiguration
+ * @param {object} root0
+ * @param {string|number|boolean|undefined} root0.initial The initial value of the field
+ * @param {object} root0.dataFieldConfiguration The configuration of the field
  * @private
  * @static
  * @function
@@ -28,7 +27,7 @@ export function _enrichDataFieldConfiguration({ initial = undefined, dataFieldCo
 
 /**
  * Check if the initial value is not null or empty
- * @param initial {string|number|boolean|undefined|null} The initial value of the field
+ * @param {string|number|boolean|undefined|null} initial The initial value of the field
  * @returns {boolean} True if the initial value is not null or empty
  */
 export function isNullOrEmpty(initial) {
@@ -49,13 +48,11 @@ export function isNullOrEmpty(initial) {
 
 /**
  * Build the localization prefix for the item
- * @param itemType.itemType
- * @param itemType {string} The type of the item for Localization (e.g. 'Base-Item', 'Combat-Item', 'Species-Item')
- * @param key {string} The key of the item for Localization (e.g. 'sources.page', 'attributes.requirement.key')
- * @param itemType.key
+ * @param {object} root0
+ * @param {string} root0.itemType The type of the item for Localization (e.g. 'Base-Item', 'Combat-Item', 'Species-Item')
+ * @param {string} root0.key The key of the item for Localization (e.g. 'sources.page', 'attributes.requirement.key')
  * @returns {string[]} The localization prefix
  * @private
- * @function
  * @function
  * @name _buildLocalizationPrefix
  * @example
@@ -67,16 +64,13 @@ export function _buildLocalizationPrefix({ itemType, key }) {
 }
 
 /**
- *  Create a new StringField with the requiredString properties set to false
- * @param itemType.initial
- *  @param itemType {string} The type of the item for Localization (e.g. 'Base-Item', 'Combat-Item', 'Species-Item')
- * @param key {string} The key of the item for Localization (e.g. 'sources.page', 'attributes.requirement.key')
- * @param initial {string} The initial value of the field (default is "")
- * @param itemType.itemType
- * @param itemType.key
+ * Create a new StringField with the requiredString properties set to false
+ * @param {object} root0
+ * @param {string} root0.itemType The type of the item for Localization (e.g. 'Base-Item', 'Combat-Item', 'Species-Item')
+ * @param {string} root0.key The key of the item for Localization (e.g. 'sources.page', 'attributes.requirement.key')
+ * @param {string} root0.initial The initial value of the field (default is "")
  * @returns {fields.StringField} A schema Field used to describe the structure and type of the data
  * @public
- * @function
  * @function
  * @name buildOptionalStringField
  */
@@ -97,14 +91,12 @@ export function buildOptionalStringField({ initial = '', itemType, key }) {
 }
 
 /**
- *  Create a new StringField  with the requiredString properties set to true
- * @param itemType.itemType
- *  @param itemType {string} The type of the item for Localization (e.g. 'Base-Item', 'Combat-Item', 'Species-Item')
- *  @param key {string} The key of the item for Localization (e.g. 'sources.page', 'attributes.requirement.key')
- * @param itemType.key
+ * Create a new StringField with the requiredString properties set to true
+ * @param {object} root0
+ * @param {string} root0.itemType The type of the item for Localization (e.g. 'Base-Item', 'Combat-Item', 'Species-Item')
+ * @param {string} root0.key The key of the item for Localization (e.g. 'sources.page', 'attributes.requirement.key')
  * @returns {fields.StringField} A schema Field used to describe the structure and type of the data
  * @public
- * @function
  * @function
  * @name buildMandatoryStringField
  */
@@ -125,19 +117,14 @@ export function buildMandatoryStringField({ itemType, key }) {
 
 /**
  * Create a new NumberField with the required properties set to false
- * @param initial.itemType
- * @param initial {number} The initial value of the field (default is 0)
- * @param itemType {string} The type of the item for Localization (e.g. 'Base-Item', 'Combat-Item', 'Species-Item')
- * @param key {string} The key of the item for Localization (e.g. 'sources.page', 'attributes.requirement.key')
- * @param min {number} The minimum value of the field (default is 0)
- * @param max {number} The maximum value of the field (default is 10)
- * @param initial.key
- * @param initial.initial
- * @param initial.min
- * @param initial.max
+ * @param {object} root0
+ * @param {string} root0.itemType The type of the item for Localization (e.g. 'Base-Item', 'Combat-Item', 'Species-Item')
+ * @param {string} root0.key The key of the item for Localization (e.g. 'sources.page', 'attributes.requirement.key')
+ * @param {number} root0.initial The initial value of the field (default is 0)
+ * @param {number} root0.min The minimum value of the field (default is 0)
+ * @param {number} root0.max The maximum value of the field (default is 10)
  * @returns {fields.NumberField} A schema Field used to describe the structure and type of the data
  * @public
- * @function
  * @function
  * @name buildOptionalIntegerField
  */
@@ -160,19 +147,14 @@ export function buildOptionalIntegerField({ itemType, key, initial = 0, min = 0,
 
 /**
  * Create a new NumberField with the required properties set to true
- * @param initial.itemType
- * @param initial {number} Initial value for the field (default is 0)
- * @param itemType {string} The type of the item for Localization (e.g. 'Base-Item', 'Combat-Item', 'Species-Item')
- * @param key {string} The key of the item for Localization (e.g. 'sources.page', 'attributes.requirement.key')
- * @param min {number} The minimum value of the field (default is 0)
- * @param max {number} The maximum value of the field (default is 10)
- * @param initial.key
- * @param initial.initial
- * @param initial.min
- * @param initial.max
+ * @param {object} root0
+ * @param {string} root0.itemType The type of the item for Localization (e.g. 'Base-Item', 'Combat-Item', 'Species-Item')
+ * @param {string} root0.key The key of the item for Localization (e.g. 'sources.page', 'attributes.requirement.key')
+ * @param {number} root0.initial Initial value for the field (default is 0)
+ * @param {number} root0.min The minimum value of the field (default is 0)
+ * @param {number} root0.max The maximum value of the field (default is 10)
  * @returns {fields.NumberField} A schema Field used to describe the structure and type of the data
  * @public
- * @function
  * @function
  * @name buildMandatoryIntegerField
  */
@@ -195,15 +177,12 @@ export function buildMandatoryIntegerField({ itemType, key, initial = 0, min = 0
 
 /**
  * Create a new BooleanField with the required properties set to false
- * @param initial.initial
- * @param initial  {boolean} The initial value of the field (default is false)
- * @param itemType {string} The type of the item for Localization (e.g. 'Base-Item', 'Combat-Item', 'Species-Item')
- * @param key {string} The key of the item for Localization (e.g. 'sources.page', 'attributes.requirement.key')
- * @param initial.itemType
- * @param initial.key
+ * @param {object} root0
+ * @param {boolean} root0.initial The initial value of the field (default is false)
+ * @param {string} root0.itemType The type of the item for Localization (e.g. 'Base-Item', 'Combat-Item', 'Species-Item')
+ * @param {string} root0.key The key of the item for Localization (e.g. 'sources.page', 'attributes.requirement.key')
  * @returns {fields.BooleanField} A schema Field used to describe the structure and type of the data
  * @public
- * @function
  * @function
  * @name buildOptionalBooleanField
  */
@@ -224,14 +203,11 @@ export function buildOptionalBooleanField({ initial = false, itemType, key }) {
 
 /**
  * Create a new BooleanField with the required properties set to true
- * @param initial {boolean} The initial value of the field (default is false)
- * @param initial.itemType
- * @param itemType {string} The type of the item for Localization (e.g. 'Base-Item', 'Combat-Item', 'Species-Item')
- * @param key {string} The key of the item for Localization (e.g. 'sources.page', 'attributes.requirement.key')
- * @param initial.key
+ * @param {object} root0
+ * @param {string} root0.itemType The type of the item for Localization (e.g. 'Base-Item', 'Combat-Item', 'Species-Item')
+ * @param {string} root0.key The key of the item for Localization (e.g. 'sources.page', 'attributes.requirement.key')
  * @returns {fields.BooleanField} A schema Field used to describe the structure and type of the data
  * @public
- * @function
  * @function
  * @name buildMandatoryBooleanField
  */
@@ -252,10 +228,10 @@ export function buildMandatoryBooleanField({ itemType, key }) {
 /**
  * Create a new StringField with the requiredString properties
  *
- * @param root0
- * @param root0.initial
- * @param root0.itemType
- * @param root0.key
+ * @param {object} root0
+ * @param {string} root0.initial
+ * @param {string} root0.itemType
+ * @param {string} root0.key
  * @returns {fields.HTMLField}
  */
 export function buildOptionalHtmlField({ initial = '', itemType, key }) {
@@ -275,9 +251,9 @@ export function buildOptionalHtmlField({ initial = '', itemType, key }) {
 
 /**
  *
- * @param root0
- * @param root0.itemType
- * @param root0.key
+ * @param {object} root0
+ * @param {string} root0.itemType
+ * @param {string} root0.key
  */
 export function buildMandatoryHtmlField({ itemType, key }) {
   const fields = foundry.data.fields
@@ -298,7 +274,7 @@ export function buildMandatoryHtmlField({ itemType, key }) {
 /**
  * Create a new SchemaField with the required properties set to false
  *
- * @param field {DataField} The field object inside the SchemaField
+ * @param {object} field The field object inside the SchemaField
  * @returns {fields.SchemaField} A schema Field used to describe the structure and type of the data
  */
 export function buildOptionalSchemaField(field = {}) {
@@ -308,10 +284,9 @@ export function buildOptionalSchemaField(field = {}) {
 
 /**
  * Create a new SchemaField with the required properties set to true
- * @param field {DataField} The field object inside the SchemaField
+ * @param {object} field The field object inside the SchemaField
  * @returns {fields.SchemaField} A schema Field used to describe the structure and type of the data
  * @public
- * @function
  * @function
  * @name mandatorySchemaField
  */
@@ -322,9 +297,9 @@ export function mandatorySchemaField(field = {}) {
 
 /**
  *
- * @param root0
- * @param root0.initial
- * @param root0.field
+ * @param {object} root0
+ * @param {Array} root0.initial
+ * @param {object} root0.field
  */
 export function buildOptionalSetField({ initial = [], field = {} }) {
   const fields = foundry.data.fields
@@ -333,10 +308,9 @@ export function buildOptionalSetField({ initial = [], field = {} }) {
 
 /**
  * Create a new SetField with the required properties set to true
- * @param field {DataField} The field object inside the SetField
+ * @param {object} field The field object inside the SetField
  * @returns {fields.SetField} A schema Field used to describe the structure and type of the data
  * @public
- * @function
  * @function
  * @name mandatorySetField
  */
@@ -348,10 +322,9 @@ export function mandatorySetField(field = {}) {
 /**
  * Create a new ArrayField with the required properties set to false
  *
- * @param initial.initial
- * @param initial {Array} The initial value of the field
- * @param field {DataField} The field object inside the ArrayField
- * @param initial.field
+ * @param {object} root0
+ * @param {Array} root0.initial The initial value of the field
+ * @param {object} root0.field The field object inside the ArrayField
  * @returns {fields.ArrayField} A schema Field used to describe the structure and type of the data
  */
 export function buildOptionalArrayField({ initial = [], field }) {
@@ -361,9 +334,8 @@ export function buildOptionalArrayField({ initial = [], field }) {
 /**
  * Create a new ArrayField with the required properties set to true
  *
- * @param initial {Array} The initial value of the field
- * @param initial.field
- * @param field {DataField} The field object
+ * @param {object} root0
+ * @param {object} root0.field The field object
  * @returns {fields.ArrayField} A schema Field used to describe the structure and type of the data
  */
 export function buildMandatoryArrayField({ field }) {

@@ -20,7 +20,7 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
 /**
  *
- * @param changes
+ * @param {object} changes
  */
 function isOnlyAuditChange(changes) {
   const flat = _flattenObject(changes)
@@ -30,7 +30,7 @@ function isOnlyAuditChange(changes) {
 
 /**
  *
- * @param actor
+ * @param {object} actor
  */
 function isCharacterActor(actor) {
   return actor?.type === 'character'
@@ -38,7 +38,7 @@ function isCharacterActor(actor) {
 
 /**
  *
- * @param options
+ * @param {object} options
  */
 function isAuditInternalUpdate(options) {
   return options?.swerpgAuditLog === false
@@ -50,7 +50,7 @@ function isAuditInternalUpdate(options) {
 
 /**
  *
- * @param value
+ * @param {*} value
  */
 function cloneValue(value) {
   if (value === undefined) return undefined
@@ -92,7 +92,7 @@ function countPendingEntries() {
 
 /**
  *
- * @param incomingCount
+ * @param {number} incomingCount
  */
 function evictOldestIfNeeded(incomingCount = 1) {
   const overflow = countPendingEntries() + incomingCount - MAX_PENDING
@@ -122,8 +122,8 @@ function evictOldestIfNeeded(incomingCount = 1) {
 
 /**
  *
- * @param actor
- * @param userId
+ * @param {object} actor
+ * @param {string} userId
  */
 function getPendingKey(actor, userId) {
   return `${actor.uuid}:${userId}`
@@ -131,9 +131,9 @@ function getPendingKey(actor, userId) {
 
 /**
  *
- * @param actor
- * @param userId
- * @param entry
+ * @param {object} actor
+ * @param {string} userId
+ * @param {object} entry
  */
 function pushPendingEntry(actor, userId, entry) {
   const key = getPendingKey(actor, userId)
@@ -144,8 +144,8 @@ function pushPendingEntry(actor, userId, entry) {
 
 /**
  *
- * @param actor
- * @param userId
+ * @param {object} actor
+ * @param {string} userId
  */
 function shiftPendingEntry(actor, userId) {
   const key = getPendingKey(actor, userId)
@@ -162,7 +162,7 @@ function shiftPendingEntry(actor, userId) {
 
 /**
  *
- * @param path
+ * @param {string} path
  */
 function isDeletionPath(path) {
   return path.includes('.-=')
@@ -170,7 +170,7 @@ function isDeletionPath(path) {
 
 /**
  *
- * @param path
+ * @param {string} path
  */
 function getDeletionParentPath(path) {
   const segments = path.split('.')
@@ -181,8 +181,8 @@ function getDeletionParentPath(path) {
 
 /**
  *
- * @param source
- * @param changes
+ * @param {object} source
+ * @param {object} changes
  */
 function snapshotOldState(source, changes) {
   const oldState = {}
@@ -217,8 +217,8 @@ function snapshotOldState(source, changes) {
 
 /**
  *
- * @param actor
- * @param err
+ * @param {object} actor
+ * @param {Error} err
  */
 async function handleWriteError(actor, err) {
   logger.error(`[AuditLog] Write failed for actor "${actor.name}" (${actor.id})`, err)
@@ -248,8 +248,8 @@ async function handleWriteError(actor, err) {
 
 /**
  *
- * @param actor
- * @param entries
+ * @param {object} actor
+ * @param {object[]} entries
  */
 async function writeLogEntries(actor, entries) {
   if (!entries.length) return
@@ -320,10 +320,10 @@ export {
 
 /**
  *
- * @param actor
- * @param changes
- * @param options
- * @param userId
+ * @param {object} actor
+ * @param {object} changes
+ * @param {object} options
+ * @param {string} userId
  */
 export function onPreUpdateActor(actor, changes, options, userId) {
   if (isAuditInternalUpdate(options)) return
@@ -345,10 +345,10 @@ export function onPreUpdateActor(actor, changes, options, userId) {
 
 /**
  *
- * @param actor
- * @param changes
- * @param options
- * @param userId
+ * @param {object} actor
+ * @param {object} changes
+ * @param {object} options
+ * @param {string} userId
  */
 export function onUpdateActor(actor, changes, options, userId) {
   if (isAuditInternalUpdate(options)) return
@@ -371,10 +371,10 @@ export function onUpdateActor(actor, changes, options, userId) {
 
 /**
  *
- * @param item
- * @param data
- * @param options
- * @param userId
+ * @param {object} item
+ * @param {object} data
+ * @param {object} options
+ * @param {string} userId
  */
 function onCreateItem(item, data, options, userId) {
   if (item.parent?.type !== 'character') return
@@ -700,8 +700,8 @@ export function registerAuditLogHooks() {
 
 /**
  *
- * @param obj
- * @param prefix
+ * @param {object} obj
+ * @param {string} prefix
  */
 function _flattenObject(obj, prefix = '') {
   const result = {}
@@ -720,8 +720,8 @@ function _flattenObject(obj, prefix = '') {
 
 /**
  *
- * @param object
- * @param path
+ * @param {object} object
+ * @param {string} path
  */
 function _getProperty(object, path) {
   const keys = path.split('.')
@@ -735,9 +735,9 @@ function _getProperty(object, path) {
 
 /**
  *
- * @param object
- * @param path
- * @param value
+ * @param {object} object
+ * @param {string} path
+ * @param {*} value
  */
 function _setProperty(object, path, value) {
   const keys = path.split('.')
