@@ -76,10 +76,10 @@ export const RANGE_TO_CATEGORY_MAP = {
 
 /**
  * Resolve a weapon's category from its OggDude data using the ADR-0007 priority chain.
- * @param {string[]} rawCategories - Array of category strings from OggDude XML
- * @param {string} mappedSkill - The already-mapped SWERPG skill ID
- * @param {string} mappedRange - The already-mapped SWERPG range ID
- * @param {string} defaultCategory - Fallback if nothing matches
+ * @param {string[]} rawCategories Array of category strings from OggDude XML
+ * @param {string} mappedSkill The already-mapped SWERPG skill ID
+ * @param {string} mappedRange The already-mapped SWERPG range ID
+ * @param {string} defaultCategory Fallback if nothing matches
  * @returns {{ category: string, source: string }} The resolved category and how it was resolved
  */
 export function resolveWeaponCategory(rawCategories, mappedSkill, mappedRange, defaultCategory = 'ranged') {

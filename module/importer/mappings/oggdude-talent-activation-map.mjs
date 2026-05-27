@@ -25,7 +25,7 @@ export const TALENT_ACTIVATION_MAP = Object.freeze({
 
 /**
  * Résout un code d'activation OggDude vers une activation système
- * @param {string} oggDudeCode - Code d'activation depuis OggDude XML
+ * @param {string} oggDudeCode Code d'activation depuis OggDude XML
  * @returns {string} ID de l'activation système correspondante
  */
 export function resolveTalentActivation(oggDudeCode) {
@@ -50,7 +50,7 @@ export function getSupportedTalentActivationCodes() {
 
 /**
  * Vérifie si un code d'activation est supporté
- * @param {string} code - Code à vérifier
+ * @param {string} code Code à vérifier
  * @returns {boolean} True si supporté
  */
 export function isTalentActivationSupported(code) {

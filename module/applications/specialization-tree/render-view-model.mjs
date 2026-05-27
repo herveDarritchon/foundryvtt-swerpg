@@ -13,9 +13,9 @@
 /**
  * Build a pure render view-model from a resolved specialization tree.
  *
- * @param {object|null|undefined} currentTree - The resolved tree data (Item or plain object
+ * @param {object|null|undefined} currentTree The resolved tree data (Item or plain object
  * with `system.nodes`, `system.connections`, `name`, `id`/`_id`).
- * @param {Function|null|undefined} talentLookup - Callback invoked for each tree node:
+ * @param {Function|null|undefined} talentLookup Callback invoked for each tree node:
  * `(node: object) => {{ name: string, uuid: string, isRanked: boolean } | null}`.
  * Return `null` when the talent cannot be resolved → node marked `unresolved`.
  * @returns {RenderViewModel} Normalized view-model for PIXI rendering.

@@ -4,6 +4,9 @@ import { logger } from '../../utils/logger.mjs'
 import { getSpecializationTreeImportStats, resetSpecializationTreeImportStats } from '../utils/specialization-tree-import-utils.mjs'
 import { specializationTreeMapper } from '../mappers/oggdude-specialization-tree-mapper.mjs'
 
+/**
+ *
+ */
 function buildTalentByIdFromWorld() {
   if (typeof game === 'undefined' || !game.items) return new Map()
 
@@ -26,6 +29,9 @@ function buildTalentByIdFromWorld() {
   return index
 }
 
+/**
+ *
+ */
 function buildTalentByIdFromCompendium() {
   if (typeof game === 'undefined' || !game.packs) return new Map()
 
@@ -54,6 +60,9 @@ function buildTalentByIdFromCompendium() {
   return index
 }
 
+/**
+ *
+ */
 function buildTalentIndex() {
   const worldIndex = buildTalentByIdFromWorld()
   const compendiumIndex = buildTalentByIdFromCompendium()
@@ -109,7 +118,7 @@ function buildMergedTalentIndex(importSession) {
  * @param zip
  * @param groupByDirectory
  * @param groupByType
- * @param {import('../utils/import-session.mjs').ImportSession|null} [importSession] - Optional shared import session for cross-pipeline resolution.
+ * @param {import('../utils/import-session.mjs').ImportSession|null} [importSession] Optional shared import session for cross-pipeline resolution.
  */
 export async function buildSpecializationTreeContext(zip, groupByDirectory, groupByType, importSession = null) {
   logger.debug('[SpecializationTreeImporter] Building Specialization Tree context', {

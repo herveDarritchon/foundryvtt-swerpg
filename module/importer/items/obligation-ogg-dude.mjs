@@ -11,7 +11,7 @@ import { sanitizeDescription } from '../utils/text.mjs'
  * OggDude XML provides: Key, Name, Description, Source/Sources.
  * System defaults are applied for value (10), isExtra (false), extraXp (0), extraCredits (0).
  *
- * @param {Array} obligations - Raw XML obligation entries from OggDude data
+ * @param {Array} obligations Raw XML obligation entries from OggDude data
  * @returns {Array} Array of item source objects { name, type, system, flags }
  * @public
  * @function
@@ -117,15 +117,15 @@ export function obligationMapper(obligations) {
   return mapped
 }
 
-export { getObligationImportStats } from '../utils/obligation-import-utils.mjs'
+export { getObligationImportStats }
 
 /**
  * Build the Obligation context for the importer process.
  * Defines how to load, parse, and map Obligations.xml from OggDude data.
  *
- * @param {JSZip} zip - The OggDude ZIP archive
- * @param {Array} groupByDirectory - Elements grouped by directory path
- * @param {Object} groupByType - Elements grouped by file type
+ * @param {JSZip} zip The OggDude ZIP archive
+ * @param {Array} groupByDirectory Elements grouped by directory path
+ * @param {Object} groupByType Elements grouped by file type
  * @returns {Promise<Object>} Context object with jsonData, zip, image, folder, and element configuration
  * @public
  * @function

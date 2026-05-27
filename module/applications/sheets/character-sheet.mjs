@@ -166,7 +166,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
   /**
    * Determine whether the characteristics step is incomplete during character creation.
    * A step is incomplete when at least one characteristic can still be increased.
-   * @param {Array} characteristicScores - Enriched characteristic score objects.
+   * @param {Array} characteristicScores Enriched characteristic score objects.
    * @returns {boolean}
    */
   static #hasIncompleteCharacteristicStep(characteristicScores = []) {
@@ -395,9 +395,9 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
 
   /**
    * Execute a skill transaction (buy or refund a rank).
-   * @param {CharacterSheet} app - The sheet instance
-   * @param {string} skillId - The skill ID
-   * @param {'train'|'forget'} action - Transaction direction
+   * @param {CharacterSheet} app The sheet instance
+   * @param {string} skillId The skill ID
+   * @param {'train'|'forget'} action Transaction direction
    * @returns {Promise<void>}
    */
   static async #executeSkillTransaction(app, skillId, action) {
@@ -493,11 +493,11 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
 
   /**
    * Refresh the XP console stats and send a feedback chat message after a transaction.
-   * @param {CharacterSheet} app - The sheet instance
-   * @param {string} skillId - The skill ID
-   * @param {'train'|'forget'} action - The action performed
-   * @param {number} oldRank - The rank before the transaction
-   * @param {number} cost - The XP cost (train) or refund (forget) amount
+   * @param {CharacterSheet} app The sheet instance
+   * @param {string} skillId The skill ID
+   * @param {'train'|'forget'} action The action performed
+   * @param {number} oldRank The rank before the transaction
+   * @param {number} cost The XP cost (train) or refund (forget) amount
    */
   static async #refreshConsoleAfterPurchase(app, skillId, action, oldRank, cost) {
     CharacterSheet.#refreshConsoleStats(app)
@@ -685,7 +685,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
    * Post-creation, acquireSpecialization() is used, which zeroes freeSkillRank to
    * prevent free skill rank re-attribution.
    *
-   * @param {object} item - The dropped Item document (specialization)
+   * @param {object} item The dropped Item document (specialization)
    */
   async #handleSpecializationDrop(item) {
     const actor = this.actor
@@ -726,7 +726,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
 
   /**
    * Show a DialogV2 confirmation for a paid specialization purchase.
-   * @param {object} result - Purchase evaluation result with decision 'confirm-required'
+   * @param {object} result Purchase evaluation result with decision 'confirm-required'
    * @returns {Promise<boolean>} True if the user confirmed
    */
   async #confirmSpecializationPurchase(result) {
@@ -888,7 +888,6 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
         return this.#previewItem(event, target)
 
       default:
-        return
     }
   }
 
@@ -906,13 +905,12 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
         return this.#hideTooltip(event, target)
 
       default:
-        return
     }
   }
 
   /**
    * Handle entering a skill row (mouseenter or focusin) to show preview.
-   * @param {HTMLElement} target - The skill row element.
+   * @param {HTMLElement} target The skill row element.
    */
   #handleSkillPreviewEnter(target) {
     const skillId = target.dataset.skillId
@@ -923,8 +921,8 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
   /**
    * Handle leaving a skill row (mouseleave or focusout) to reset preview.
    * Uses relatedTarget to avoid flickering when moving between adjacent skill rows.
-   * @param {HTMLElement} target - The skill row element being left.
-   * @param {Event} event - The original mouseout/focusout event.
+   * @param {HTMLElement} target The skill row element being left.
+   * @param {Event} event The original mouseout/focusout event.
    */
   #handleSkillPreviewLeave(target, event) {
     const related = event.relatedTarget
@@ -958,7 +956,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
   /**
    * Build the console preview data for a skill being hovered.
    * Reads purchase state directly from the enriched skill.
-   * @param {object} skill - Enriched skill data from model
+   * @param {object} skill Enriched skill data from model
    * @returns {object} Preview data { statusKey, consoleCssClass, selectedCost, summaryText }
    */
   static _buildSkillPreview(skill) {

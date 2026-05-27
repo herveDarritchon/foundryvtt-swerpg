@@ -11,7 +11,7 @@ export default class Characteristic {
   /**
    * Processes the action on the characteristic.
    * @abstract
-   * return {Characteristic} the result of the action
+   * @returns {Characteristic} the result of the action
    */
   process() {
     throw new Error("Method 'process()' must be implemented.")
@@ -20,8 +20,7 @@ export default class Characteristic {
   /**
    * Save the characteristic elements in the Database.
    * @abstract
-   * @async
-   * return {Promise<Characteristic>} the result of the action
+   * @returns {Promise<Characteristic>} the result of the action
    */
   async updateState() {
     throw new Error("Method 'updateState()' must be implemented.")

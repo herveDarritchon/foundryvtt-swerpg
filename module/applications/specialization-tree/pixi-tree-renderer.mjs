@@ -257,7 +257,7 @@ export async function loadStatePictogram(state) {
 
 /**
  * Load an SVG texture from any icon path, with caching.
- * @param {string|null|undefined} iconPath - Direct file path to the SVG.
+ * @param {string|null|undefined} iconPath Direct file path to the SVG.
  * @returns {Promise<PIXI.Texture|null>}
  */
 export async function loadIconTexture(iconPath) {

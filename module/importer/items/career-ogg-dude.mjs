@@ -18,6 +18,8 @@ import { normalizeFreeSkillRank } from '../utils/description-markup-utils.mjs'
  * Career Array Mapper : Map the Career XML data to the SwerpgCareer creation objects.
  * Seuls les champs définis dans le schéma SwerpgCareer sont produits dans system.
  * @param careers {Array} Raw XML career entries.
+ * @param root0
+ * @param root0.strictSkills
  * @returns {Array} Array of item source objects { name, type, system }
  */
 export function careerMapper(careers, { strictSkills = false } = {}) {
@@ -145,6 +147,8 @@ function extractRawCareerSkillCodes(xmlCareer) {
  * - tronquage à 8 entrées (REQ-002, REQ-003)
  * - logging des codes inconnus (REQ-008)
  * @param {string[]} rawCodes
+ * @param root0
+ * @param root0.strict
  * @returns {{id:string}[]}
  */
 export function mapCareerSkills(rawCodes = [], { strict = false } = {}) {
@@ -196,6 +200,10 @@ export function mapCareerSkills(rawCodes = [], { strict = false } = {}) {
   return result
 }
 
+/**
+ *
+ * @param xmlCareer
+ */
 function resolveCareerSource(xmlCareer) {
   if (!xmlCareer) return { name: '', page: null }
 
@@ -218,6 +226,10 @@ function resolveCareerSource(xmlCareer) {
   return { name: '', page: null }
 }
 
+/**
+ *
+ * @param entry
+ */
 function extractCareerSourceEntry(entry) {
   if (!entry) return { name: '', page: null }
 
@@ -238,6 +250,11 @@ function extractCareerSourceEntry(entry) {
   return { name: '', page: null }
 }
 
+/**
+ *
+ * @param rawDescription
+ * @param sourceInfo
+ */
 function buildCareerDescription(rawDescription, sourceInfo) {
   const markupHtml = convertCareerMarkupToHtml(rawDescription)
   const sections = markupHtml
@@ -270,6 +287,11 @@ function buildCareerDescription(rawDescription, sourceInfo) {
   return sanitizeDescription(html, 2000, { preserveLineBreaks: true })
 }
 
+/**
+ *
+ * @param sections
+ * @param sourceInfo
+ */
 function appendSourceSection(sections, sourceInfo) {
   if (!sourceInfo?.name) {
     return sections
@@ -281,6 +303,10 @@ function appendSourceSection(sections, sourceInfo) {
   return [...sections, `<p><strong>Source:</strong> ${escapedName}${pageSuffix}</p>`]
 }
 
+/**
+ *
+ * @param description
+ */
 function convertCareerMarkupToHtml(description) {
   if (!description) {
     return ''
@@ -342,11 +368,15 @@ function convertCareerMarkupToHtml(description) {
   })
 
   // Nettoyer les balises restantes non reconnues
-  result = result.replace(/\[[^\[\]]+\]/g, '')
+  result = result.replace(/\[[^\][]+\]/g, '')
 
   return result
 }
 
+/**
+ *
+ * @param value
+ */
 function escapeHtmlSafe(value) {
   const text = String(value ?? '')
   if (typeof foundry !== 'undefined' && foundry?.utils?.escapeHTML) {
@@ -400,4 +430,4 @@ export async function buildCareerContext(zip, groupByDirectory, groupByType) {
 }
 
 // Export utilitaires stats pour tests & agrégation
-export { getCareerImportStats, resetCareerImportStats } from '../utils/career-import-utils.mjs'
+export { getCareerImportStats, resetCareerImportStats }

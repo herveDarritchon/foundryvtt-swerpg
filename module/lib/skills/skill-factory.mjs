@@ -127,6 +127,7 @@ export default class SkillFactory {
     if (actor.system.progression.experience.available > 0) {
       return new TrainedSkill(actor, skill, { action, isCreation, isCareer, isSpecialization }, options)
     }
+    return undefined
   }
 
   static #hasCareerFreeSkill(actor) {
@@ -246,5 +247,6 @@ export default class SkillFactory {
         options,
       )
     }
+    return undefined
   }
 }

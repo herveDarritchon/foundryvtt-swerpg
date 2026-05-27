@@ -33,8 +33,8 @@ export function resetSpecializationImportStats() {
 
 /**
  * Incrémente les statistiques d'import
- * @param {string} stat - Le nom de la statistique à incrémenter
- * @param {number} amount - Le montant à ajouter (défaut: 1)
+ * @param {string} stat Le nom de la statistique à incrémenter
+ * @param {number} amount Le montant à ajouter (défaut: 1)
  */
 export function incrementSpecializationImportStat(stat, amount = 1) {
   specializationStats.increment(stat, amount)
@@ -42,12 +42,16 @@ export function incrementSpecializationImportStat(stat, amount = 1) {
 
 /**
  * Ajoute une raison de rejet aux statistiques
- * @param {string} reason - La raison du rejet
+ * @param {string} reason La raison du rejet
  */
 export function addSpecializationRejectionReason(reason) {
   specializationStats.addRejectionReason(reason)
 }
 
+/**
+ *
+ * @param code
+ */
 export function addSpecializationUnknownSkill(code) {
   specializationStats.addDetail('unknownSkills', code, 'skillDetails')
 }

@@ -2,10 +2,10 @@ import { logger } from '../../utils/logger.mjs'
 
 /**
  * Clamp a number between min and max
- * @param {*} value - The value to clamp
- * @param {number} min - Minimum value
- * @param {number} max - Maximum value
- * @param {number} defaultValue - Default value if input is invalid
+ * @param {*} value The value to clamp
+ * @param {number} min Minimum value
+ * @param {number} max Maximum value
+ * @param {number} defaultValue Default value if input is invalid
  * @returns {number} The clamped value
  */
 export function clampNumber(value, min, max, defaultValue = 0) {
@@ -19,7 +19,7 @@ export function clampNumber(value, min, max, defaultValue = 0) {
 /**
  * Sanitize text to prevent HTML injection (basic sanitization)
  * For rich text with markup, use sanitizeDescription instead.
- * @param {string} str - The string to sanitize
+ * @param {string} str The string to sanitize
  * @returns {string} The sanitized string
  */
 export function sanitizeText(str) {
@@ -39,8 +39,8 @@ export function sanitizeText(str) {
  * Nettoie et sanitize une description riche en conservant une typographie lisible.
  * Empêche l'injection de code HTML/JS et harmonise les espaces sans détruire la structure.
  *
- * @param {string} description - Description brute
- * @param {number} maxLength - Longueur maximale (défaut: 2000)
+ * @param {string} description Description brute
+ * @param {number} maxLength Longueur maximale (défaut: 2000)
  * @param {{preserveLineBreaks?: boolean}} [options]
  * @returns {string} Description nettoyée
  */

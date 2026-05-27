@@ -2,11 +2,11 @@ import { logger } from '../../utils/logger.mjs'
 
 /**
  * Exécute une fonction asynchrone avec retry exponentiel simple.
- * @param {Function} fn - fonction asynchrone à exécuter
+ * @param {Function} fn fonction asynchrone à exécuter
  * @param {Object} [options]
  * @param {number} [options.maxAttempts=3]
- * @param {number} [options.initialDelay=100] - ms
- * @param {Function} [options.shouldRetry] - (error)=>boolean pour filtrer erreurs transitoires
+ * @param {number} [options.initialDelay=100] ms
+ * @param {Function} [options.shouldRetry] (error)=>boolean pour filtrer erreurs transitoires
  * @returns {Promise<*>}
  */
 export async function withRetry(fn, options = {}) {

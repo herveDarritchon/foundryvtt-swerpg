@@ -124,7 +124,4 @@ export const WEAPON_QUALITY_MAP = {
   STUNBATON: 'stun',
   STUNCLUB: 'stun',
   STUNGR: 'stun',
-  STUNSETTING: 'stunSetting',
-  LIMITEDAMMO: 'limitedAmmo',
-  SLOWFIRING: 'slowFiring',
 }

@@ -5,6 +5,10 @@ import { buildItemImgSystemPath } from '../../settings/directories.mjs'
 import { resetDutyImportStats, incrementDutyImportStat, getDutyImportStats } from '../utils/duty-import-utils.mjs'
 import { sanitizeDescription } from '../utils/text.mjs'
 
+/**
+ *
+ * @param duties
+ */
 export function dutyMapper(duties) {
   resetDutyImportStats()
   if (!Array.isArray(duties)) {
@@ -98,8 +102,14 @@ export function dutyMapper(duties) {
   return mapped
 }
 
-export { getDutyImportStats } from '../utils/duty-import-utils.mjs'
+export { getDutyImportStats }
 
+/**
+ *
+ * @param zip
+ * @param groupByDirectory
+ * @param groupByType
+ */
 export async function buildDutyContext(zip, groupByDirectory, groupByType) {
   logger.debug('[DutyImporter] Building Duty context')
 

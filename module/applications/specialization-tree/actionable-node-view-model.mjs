@@ -15,12 +15,12 @@ const ACTION_LABEL_KEYS = Object.freeze({
  * Business validation is delegated to `processTalentNodeProgression()`.
  *
  * @param {object} options
- * @param {object} options.renderNode   - Enriched render node (must carry `nodeState`,
+ * @param {object} options.renderNode   Enriched render node (must carry `nodeState`,
  *        `reasonCode`, `nodeId`, `talentId`, `xpCost` from `enrichNode`).
- * @param {object} options.actor        - The actor document instance.
- * @param {string} options.specializationId - Active specialization/tree key.
- * @param {object|null} options.tree    - The resolved specialization tree item.
- * @param {(key: string) => string} options.localize - i18n localize callback.
+ * @param {object} options.actor        The actor document instance.
+ * @param {string} options.specializationId Active specialization/tree key.
+ * @param {object|null} options.tree    The resolved specialization tree item.
+ * @param {(key: string) => string} options.localize i18n localize callback.
  * @returns {import('./types.mjs').ActionableNodeViewModel}
  */
 export function actionableNodeViewModel({ renderNode, actor, specializationId, tree, localize }) {

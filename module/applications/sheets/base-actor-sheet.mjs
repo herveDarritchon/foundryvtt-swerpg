@@ -925,7 +925,7 @@ export default class SwerpgBaseActorSheet extends HBMixin(BaseActorSheetV2) {
   /**
    * Get the Item document associated with an action event.
    * @param {PointerEvent} event
-   * @param {SwerpgActor} actor - The actor that owns the items
+   * @param {SwerpgActor} actor The actor that owns the items
    * @returns {SwerpgItem|null}
    * @since 0.0.0
    * @throws {Error} Never throws – returns null and emits UI notifications instead.
@@ -988,6 +988,7 @@ export default class SwerpgBaseActorSheet extends HBMixin(BaseActorSheetV2) {
   /**
    * Retourne la fonction de suppression à exécuter en fonction du dataset.
    * @param {PointerEvent} event
+   * @param actor
    * @returns {function(): Promise<void>}
    */
   static #getEventItemDeleteAction(event, actor) {

@@ -41,8 +41,8 @@ export function resetArmorImportStats() {
 
 /**
  * Incrémente les statistiques d'import
- * @param {string} stat - Le nom de la statistique à incrémenter
- * @param {number} amount - Le montant à ajouter (défaut: 1)
+ * @param {string} stat Le nom de la statistique à incrémenter
+ * @param {number} amount Le montant à ajouter (défaut: 1)
  */
 export function incrementArmorImportStat(stat, amount = 1) {
   armorStats.increment(stat, amount)
@@ -50,7 +50,7 @@ export function incrementArmorImportStat(stat, amount = 1) {
 
 /**
  * Ajoute une raison de rejet aux statistiques
- * @param {string} reason - La raison du rejet
+ * @param {string} reason La raison du rejet
  */
 export function addRejectionReason(reason) {
   armorStats.addRejectionReason(reason)
@@ -58,7 +58,7 @@ export function addRejectionReason(reason) {
 
 /**
  * Normalise une catégorie OggDude en tag de propriété
- * @param {string} category - La catégorie à normaliser
+ * @param {string} category La catégorie à normaliser
  * @returns {string} La catégorie normalisée en kebab-case
  */
 export function normalizeArmorCategoryTag(category) {
@@ -75,7 +75,7 @@ export function normalizeArmorCategoryTag(category) {
 
 /**
  * Construit la description complète d'une armure
- * @param {object} xmlArmor - Les données XML de l'armure
+ * @param {object} xmlArmor Les données XML de l'armure
  * @returns {string} La description formatée
  */
 export function buildArmorDescription(xmlArmor) {
@@ -125,7 +125,7 @@ export function buildArmorDescription(xmlArmor) {
 
 /**
  * Extrait et structure les BaseMods pour les flags
- * @param {object} xmlArmor - Les données XML de l'armure
+ * @param {object} xmlArmor Les données XML de l'armure
  * @returns {Array} Les BaseMods structurés
  */
 export function extractBaseMods(xmlArmor) {

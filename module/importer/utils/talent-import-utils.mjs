@@ -53,8 +53,8 @@ export function resetTalentImportStats() {
 
 /**
  * Incrémente un compteur numérique connu.
- * @param {string} key - Clé de la statistique
- * @param {number} amount - Montant à ajouter (défaut: 1)
+ * @param {string} key Clé de la statistique
+ * @param {number} amount Montant à ajouter (défaut: 1)
  */
 export function incrementTalentImportStat(key, amount = 1) {
   talentStats.increment(key, amount)
@@ -62,7 +62,7 @@ export function incrementTalentImportStat(key, amount = 1) {
 
 /**
  * Enregistre un nœud talent inconnu.
- * @param {string} nodeId - Identifiant du nœud inconnu
+ * @param {string} nodeId Identifiant du nœud inconnu
  */
 export function addTalentUnknownNode(nodeId) {
   talentStats.addDetail('unresolvedNodes', nodeId, 'nodeDetails')
@@ -70,7 +70,7 @@ export function addTalentUnknownNode(nodeId) {
 
 /**
  * Enregistre une activation talent inconnue.
- * @param {string} activationCode - Code d'activation inconnu
+ * @param {string} activationCode Code d'activation inconnu
  */
 export function addTalentUnknownActivation(activationCode) {
   talentStats.addDetail('unknownActivations', activationCode, 'activationDetails')
@@ -78,7 +78,7 @@ export function addTalentUnknownActivation(activationCode) {
 
 /**
  * Ajoute une raison de rejet aux statistiques.
- * @param {string} reason - La raison du rejet
+ * @param {string} reason La raison du rejet
  */
 export function addTalentRejectionReason(reason) {
   talentStats.addRejectionReason(reason)
@@ -94,7 +94,7 @@ export function getTalentImportStats() {
 
 /**
  * Limite un tier de talent aux valeurs autorisées
- * @param {number} tier - Le tier à limiter
+ * @param {number} tier Le tier à limiter
  * @returns {number} Le tier limité entre 0 et 5
  */
 export function clampTalentTier(tier) {
@@ -104,7 +104,7 @@ export function clampTalentTier(tier) {
 
 /**
  * Valide et nettoie un coût de talent
- * @param {number|string} cost - Le coût à valider
+ * @param {number|string} cost Le coût à valider
  * @returns {number} Le coût validé (minimum 0)
  */
 export function validateTalentCost(cost) {
@@ -114,7 +114,7 @@ export function validateTalentCost(cost) {
 
 /**
  * Génère une clé unique pour un talent basée sur son nom
- * @param {string} name - Nom du talent
+ * @param {string} name Nom du talent
  * @returns {string} Clé unique
  */
 export function generateTalentKey(name) {
@@ -125,6 +125,11 @@ export function generateTalentKey(name) {
     .replace(/^_|_$/g, '')
 }
 
+/**
+ *
+ * @param warnings
+ * @param unresolved
+ */
 export function buildTalentImportDiagnostics(warnings = [], unresolved = false) {
   const w = Array.isArray(warnings) ? [...warnings] : []
   const u = Boolean(unresolved)

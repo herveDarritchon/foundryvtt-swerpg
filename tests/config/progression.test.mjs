@@ -34,11 +34,11 @@ describe('Progression config — contractual constants (ADR-0018)', () => {
     })
 
     test('career rank-1 cost formula yields 5', () => {
-      expect(1 * SKILL_RANK_COST_MULTIPLIER).toBe(5)
+      expect(Number(SKILL_RANK_COST_MULTIPLIER)).toBe(5)
     })
 
     test('non-career rank-1 cost formula yields 10', () => {
-      expect(1 * SKILL_RANK_COST_MULTIPLIER + SKILL_NON_CAREER_SURCHARGE).toBe(10)
+      expect(Number(SKILL_RANK_COST_MULTIPLIER) + SKILL_NON_CAREER_SURCHARGE).toBe(10)
     })
 
     test('career rank-2 cost formula yields 10', () => {

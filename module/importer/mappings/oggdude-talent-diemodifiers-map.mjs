@@ -29,7 +29,7 @@ const SUPPORTED_DIE_MODIFIER_FIELDS = Object.freeze([
 
 /**
  * Extrait les DieModifiers d'un talent OggDude
- * @param {object} talentData - Données du talent OggDude
+ * @param {object} talentData Données du talent OggDude
  * @returns {Array<object>} Liste des DieModifiers normalisés
  */
 export function extractTalentDieModifiers(talentData) {
@@ -64,7 +64,7 @@ export function extractTalentDieModifiers(talentData) {
 
 /**
  * Normalise un DieModifier OggDude vers une structure standardisée
- * @param {object} modifierData - Données du modificateur brut
+ * @param {object} modifierData Données du modificateur brut
  * @returns {object|null} Modificateur normalisé ou null si invalide
  * @private
  */
@@ -121,7 +121,7 @@ function normalizeDieModifier(modifierData) {
 
 /**
  * Formate les DieModifiers pour affichage dans la description
- * @param {Array<object>} modifiers - Liste des modificateurs normalisés
+ * @param {Array<object>} modifiers Liste des modificateurs normalisés
  * @returns {string} Texte formaté pour la description
  */
 export function formatTalentDieModifiersForDescription(modifiers) {
@@ -192,7 +192,7 @@ export function formatTalentDieModifiersForDescription(modifiers) {
 
 /**
  * Extrait les sources (livre + page) d'un talent OggDude
- * @param {object} talentData - Données du talent OggDude
+ * @param {object} talentData Données du talent OggDude
  * @returns {string} Ligne de source formatée (ex: "Source: Unlimited Power, p.33")
  */
 export function extractTalentSource(talentData) {
@@ -257,11 +257,11 @@ export function extractTalentSource(talentData) {
 
 /**
  * Assemble une description complète de talent avec toutes les informations
- * @param {object} options - Options d'assemblage
- * @param {string} options.baseDescription - Description de base du talent
- * @param {string} options.source - Ligne de source
- * @param {Array<object>} options.dieModifiers - Liste des DieModifiers
- * @param {number} options.maxLength - Longueur maximale (défaut: 2000)
+ * @param {object} options Options d'assemblage
+ * @param {string} options.baseDescription Description de base du talent
+ * @param {string} options.source Ligne de source
+ * @param {Array<object>} options.dieModifiers Liste des DieModifiers
+ * @param {number} options.maxLength Longueur maximale (défaut: 2000)
  * @returns {string} Description complète assemblée
  */
 export function assembleTalentDescription({ baseDescription = '', source = '', dieModifiers = [], maxLength = 2000 }) {

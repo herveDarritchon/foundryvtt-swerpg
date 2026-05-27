@@ -30,8 +30,8 @@ export const ResourcesMixin = (Base) =>
 
     /**
      * Compute the new value for a resource based on the action
-     * @param {object} resource - The resource object with value, threshold, etc.
-     * @param {string} action - The action to perform ('increase' or 'decrease')
+     * @param {object} resource The resource object with value, threshold, etc.
+     * @param {string} action The action to perform ('increase' or 'decrease')
      * @returns {number} The new value
      */
     computeResourceValue(resource, action) {
@@ -45,9 +45,11 @@ export const ResourcesMixin = (Base) =>
 
     /**
      * Alter multiple resources at once
-     * @param {object} resources - Object with resource keys and delta values
-     * @param {object} actorUpdates - Additional actor data to update
-     * @param {object} options - Options including { reverse: boolean, statusText: string }
+     * @param {object} resources Object with resource keys and delta values
+     * @param {object} actorUpdates Additional actor data to update
+     * @param {object} options Options including { reverse: boolean, statusText: string }
+     * @param options.reverse
+     * @param options.statusText
      */
     async alterResources(resources, actorUpdates = {}, { reverse = false, statusText } = {}) {
       const updates = {}
@@ -92,7 +94,7 @@ export const ResourcesMixin = (Base) =>
 
     /**
      * Replenish resources when leveling up or advancing
-     * @param {object} data - The update data
+     * @param {object} data The update data
      * @private
      */
     #replenishResources(data) {
@@ -156,8 +158,9 @@ export const ResourcesMixin = (Base) =>
 
     /**
      * Toggle a status effect on the actor
-     * @param {string} effectId - The ID of the status effect
-     * @param {object} options - Options including { active: boolean }
+     * @param {string} effectId The ID of the status effect
+     * @param {object} options Options including { active: boolean }
+     * @param options.active
      * @returns {Promise<void>}
      */
     async toggleStatusEffect(effectId, { active }) {

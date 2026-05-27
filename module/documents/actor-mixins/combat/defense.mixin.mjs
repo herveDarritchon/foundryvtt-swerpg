@@ -9,8 +9,8 @@ export const DefenseMixin = (Base) =>
   class extends Base {
     /**
      * Test a defense against an attack roll
-     * @param {string} defenseType - Type of defense ('physical', skill ID, etc.)
-     * @param {AttackRoll} roll - The attack roll to test against
+     * @param {string} defenseType Type of defense ('physical', skill ID, etc.)
+     * @param {AttackRoll} roll The attack roll to test against
      * @returns {number} Result type from AttackRoll.RESULT_TYPES
      */
     testDefense(defenseType, roll) {
@@ -67,9 +67,9 @@ export const DefenseMixin = (Base) =>
 
     /**
      * Get resistance value for a specific damage type and resource
-     * @param {string} resource - Resource type ('health', 'morale', etc.)
-     * @param {string} damageType - Type of damage
-     * @param {boolean} restoration - Whether this is a restoration (healing)
+     * @param {string} resource Resource type ('health', 'morale', etc.)
+     * @param {string} damageType Type of damage
+     * @param {boolean} restoration Whether this is a restoration (healing)
      * @returns {number} Resistance value (can be Infinity)
      */
     getResistance(resource, damageType, restoration) {

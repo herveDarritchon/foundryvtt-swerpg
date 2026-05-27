@@ -18,7 +18,7 @@ export class ImportStats {
 
   /**
    * Reset statistics to initial state
-   * @param {object} initialStats - Optional initial stats to reset to
+   * @param {object} initialStats Optional initial stats to reset to
    */
   reset(initialStats = {}) {
     this._stats = {
@@ -32,8 +32,8 @@ export class ImportStats {
 
   /**
    * Increment a numeric statistic
-   * @param {string} key - The statistic key to increment
-   * @param {number} amount - Amount to increment by (default: 1)
+   * @param {string} key The statistic key to increment
+   * @param {number} amount Amount to increment by (default: 1)
    */
   increment(key, amount = 1) {
     if (typeof this._stats[key] === 'undefined') {
@@ -46,9 +46,9 @@ export class ImportStats {
 
   /**
    * Add a unique detail to a set-based statistic
-   * @param {string} key - The statistic key (e.g., 'unknownSkills')
-   * @param {string} detail - The unique detail to add (e.g., skill code)
-   * @param {string} setKey - The key for the set in the output object (e.g., 'skillDetails')
+   * @param {string} key The statistic key (e.g., 'unknownSkills')
+   * @param {string} detail The unique detail to add (e.g., skill code)
+   * @param {string} setKey The key for the set in the output object (e.g., 'skillDetails')
    */
   addDetail(key, detail, setKey) {
     if (!this._customSets.has(setKey)) {
@@ -62,7 +62,7 @@ export class ImportStats {
 
   /**
    * Add a rejection reason
-   * @param {string} reason - The reason for rejection
+   * @param {string} reason The reason for rejection
    */
   addRejectionReason(reason) {
     this._stats.rejectionReasons.push(reason)

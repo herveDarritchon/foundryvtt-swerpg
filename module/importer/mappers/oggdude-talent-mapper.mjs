@@ -27,8 +27,8 @@ import { assembleTalentDescription, extractTalentDieModifiers, extractTalentSour
 export class OggDudeTalentMapper {
   /**
    * Construit le contexte de mapping pour les talents OggDude
-   * @param {object} oggDudeData - Données talents depuis OggDude
-   * @param {object} options - Options d'import
+   * @param {object} oggDudeData Données talents depuis OggDude
+   * @param {object} options Options d'import
    * @returns {Map<string, object>} Context map talent_key -> talent_data
    */
   static buildContextMap(oggDudeData, options = {}) {
@@ -70,7 +70,7 @@ export class OggDudeTalentMapper {
 
   /**
    * Extrait les données talents depuis la structure OggDude
-   * @param {object} oggDudeData - Données OggDude complètes
+   * @param {object} oggDudeData Données OggDude complètes
    * @returns {Array} Liste des talents
    * @private
    */
@@ -96,8 +96,8 @@ export class OggDudeTalentMapper {
 
   /**
    * Construit le contexte pour un talent individuel
-   * @param {object} talentData - Données d'un talent OggDude
-   * @param {object} options - Options d'import
+   * @param {object} talentData Données d'un talent OggDude
+   * @param {object} options Options d'import
    * @returns {object} Contexte de mapping
    * @private
    */
@@ -165,7 +165,7 @@ export class OggDudeTalentMapper {
 
   /**
    * Génère une clé unique pour un talent
-   * @param {object} talentData - Données du talent
+   * @param {object} talentData Données du talent
    * @returns {string} Clé unique
    * @private
    */
@@ -182,7 +182,7 @@ export class OggDudeTalentMapper {
 
   /**
    * Nettoie une chaîne pour créer une clé valide
-   * @param {string} input - Chaîne à nettoyer
+   * @param {string} input Chaîne à nettoyer
    * @returns {string} Clé nettoyée
    * @private
    */
@@ -196,7 +196,7 @@ export class OggDudeTalentMapper {
 
   /**
    * Extrait et nettoie la description d'un talent
-   * @param {object} talentData - Données du talent
+   * @param {object} talentData Données du talent
    * @returns {string} Description nettoyée
    * @private
    */
@@ -221,7 +221,7 @@ export class OggDudeTalentMapper {
 
   /**
    * Valide le contexte d'un talent
-   * @param {object} context - Contexte à valider
+   * @param {object} context Contexte à valider
    * @returns {boolean} True si valide
    * @private
    */
@@ -249,7 +249,7 @@ export class OggDudeTalentMapper {
   /**
    * Transforme un contexte de talent en données SwerpgTalent
    * Méthode principale appelée par l'orchestrateur
-   * @param {object} context - Contexte de mapping
+   * @param {object} context Contexte de mapping
    * @returns {object} Données pour création SwerpgTalent
    */
   static transform(context) {

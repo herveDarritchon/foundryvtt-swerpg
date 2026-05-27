@@ -82,6 +82,7 @@ function validateGearBooleanField(value, defaultValue) {
 /**
  * Build the system object for SwerpgGear from XML gear data.
  * @param {Object} xmlGear Raw XML gear object
+ * @param options
  * @returns {Object} System object conforming to SwerpgGear schema
  */
 function buildGearSystem(xmlGear, options = {}) {
@@ -265,7 +266,7 @@ export function gearMapper(gears) {
   return mapped
 }
 
-export { getGearImportStats } from '../utils/gear-import-utils.mjs'
+export { getGearImportStats }
 
 /**
  * Build the Gear context for the importer process.

@@ -147,7 +147,7 @@ export default class SwerpgTalentNode {
     const ad = this.groups ? 1 : this.abilities.size - 1
 
     if (this.abilities == null) {
-      return
+      return reqs
     }
 
     for (const ability of this.abilities) {

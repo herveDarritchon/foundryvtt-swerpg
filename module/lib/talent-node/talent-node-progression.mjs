@@ -30,10 +30,10 @@ import { getNodeState, NODE_STATE, REASON_CODE } from './talent-node-state.mjs'
  *
  * The caller is responsible for persisting the payload via actor.update().
  *
- * @param {object} actor - The actor document instance.
- * @param {string} specializationId - The specialization identifier.
- * @param {string} nodeId - The node identifier within the specialization tree.
- * @param {NodeAction} action - Either 'purchase' or 'forget'.
+ * @param {object} actor The actor document instance.
+ * @param {string} specializationId The specialization identifier.
+ * @param {string} nodeId The node identifier within the specialization tree.
+ * @param {NodeAction} action Either 'purchase' or 'forget'.
  * @returns {ProgressionResult}
  */
 export function processTalentNodeProgression(actor, specializationId, nodeId, action) {
@@ -82,6 +82,14 @@ export function processTalentNodeProgression(actor, specializationId, nodeId, ac
 // Purchase validation
 // ---------------------------------------------------------------------------
 
+/**
+ *
+ * @param actor
+ * @param specializationId
+ * @param tree
+ * @param node
+ * @param action
+ */
 function validatePurchase(actor, specializationId, tree, node, action) {
   const state = getNodeState(actor, specializationId, tree, node.nodeId)
   if (state.state !== NODE_STATE.AVAILABLE) {
@@ -95,6 +103,14 @@ function validatePurchase(actor, specializationId, tree, node, action) {
 // Forget validation
 // ---------------------------------------------------------------------------
 
+/**
+ *
+ * @param actor
+ * @param specializationId
+ * @param tree
+ * @param node
+ * @param action
+ */
 function validateForget(actor, specializationId, tree, node, action) {
   const treeId = tree.id ?? tree._id
   const treeUuid = tree.uuid ?? null
@@ -121,6 +137,15 @@ function validateForget(actor, specializationId, tree, node, action) {
 // Shared helpers
 // ---------------------------------------------------------------------------
 
+/**
+ *
+ * @param actor
+ * @param specializationId
+ * @param tree
+ * @param node
+ * @param action
+ * @param costSign
+ */
 function buildSuccessResult(actor, specializationId, tree, node, action, costSign) {
   const treeId = tree.id ?? tree._id
   const treeUuid = tree.uuid ?? null
@@ -164,6 +189,11 @@ function buildSuccessResult(actor, specializationId, tree, node, action, costSig
 
 /**
  * Determine whether a node is currently purchased by the actor.
+ * @param actor
+ * @param treeId
+ * @param treeUuid
+ * @param node
+ * @param specializationId
  */
 function isPurchased(actor, treeId, treeUuid, node, specializationId) {
   const purchases = actor?.system?.progression?.talentPurchases
@@ -174,6 +204,11 @@ function isPurchased(actor, treeId, treeUuid, node, specializationId) {
 /**
  * Match a purchase record against a node identity.
  * Prefers UUID-based matching when both sides carry a UUID.
+ * @param p
+ * @param treeId
+ * @param treeUuid
+ * @param node
+ * @param specializationId
  */
 function matchesPurchase(p, treeId, treeUuid, node, specializationId) {
   const treeMatch = treeUuid && p.treeUuid ? p.treeUuid === treeUuid : p.treeId === treeId
@@ -187,6 +222,10 @@ function matchesPurchase(p, treeId, treeUuid, node, specializationId) {
  *
  * A node is a blocking dependent if there is a connection from targetNodeId
  * to that node AND the node is currently purchased.
+ * @param actor
+ * @param tree
+ * @param targetNodeId
+ * @param specializationId
  */
 function findBlockingDependents(actor, tree, targetNodeId, specializationId) {
   const connections = tree?.system?.connections
@@ -210,6 +249,11 @@ function findBlockingDependents(actor, tree, targetNodeId, specializationId) {
   return blockingNodeIds
 }
 
+/**
+ *
+ * @param actor
+ * @param specializationId
+ */
 function findSpecialization(actor, specializationId) {
   const specs = actor?.system?.details?.specializations
   if (!specs) return null
@@ -219,6 +263,11 @@ function findSpecialization(actor, specializationId) {
   return null
 }
 
+/**
+ *
+ * @param tree
+ * @param nodeId
+ */
 function findNodeInTree(tree, nodeId) {
   const nodes = tree?.system?.nodes
   if (!Array.isArray(nodes)) return null

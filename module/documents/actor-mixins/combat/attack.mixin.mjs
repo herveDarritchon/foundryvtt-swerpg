@@ -8,8 +8,8 @@ export const AttackMixin = (Base) =>
   class extends Base {
     /**
      * Use an action by its ID
-     * @param {string} actionId - The action identifier
-     * @param {object} options - Additional options
+     * @param {string} actionId The action identifier
+     * @param {object} options Additional options
      */
     async useAction(actionId, options = {}) {
       const action = this.actions[actionId]
@@ -19,9 +19,9 @@ export const AttackMixin = (Base) =>
 
     /**
      * Perform a weapon attack
-     * @param {SwerpgAction} action - The action being used
-     * @param {SwerpgActor} target - The target actor
-     * @param {SwerpgItem} weapon - The weapon to use (optional)
+     * @param {SwerpgAction} action The action being used
+     * @param {SwerpgActor} target The target actor
+     * @param {SwerpgItem} weapon The weapon to use (optional)
      */
     async weaponAttack(action, target, weapon) {
       weapon ||= action.usage.weapon
@@ -66,8 +66,8 @@ export const AttackMixin = (Base) =>
 
     /**
      * Perform a skill attack
-     * @param {SwerpgAction} action - The action being used
-     * @param {SwerpgActor} target - The target actor
+     * @param {SwerpgAction} action The action being used
+     * @param {SwerpgActor} target The target actor
      */
     async skillAttack(action, target) {
       let { bonuses, damageType, defenseType, restoration, resource, skillId } = action.usage
@@ -117,8 +117,8 @@ export const AttackMixin = (Base) =>
 
     /**
      * Cast a spell (to be implemented)
-     * @param {SwerpgAction} action - The spell action
-     * @param {SwerpgActor} target - The target actor
+     * @param {SwerpgAction} action The spell action
+     * @param {SwerpgActor} target The target actor
      */
     async castSpell(action, target) {
       // TODO: Implement spell casting logic
@@ -128,10 +128,10 @@ export const AttackMixin = (Base) =>
 
     /**
      * Apply target-specific boons and banes based on target status
-     * @param {SwerpgActor} target - The target actor
-     * @param {SwerpgAction} action - The action being used
-     * @param {string} actionType - Type of action ('weapon', 'skill', etc.)
-     * @param {boolean} ranged - Whether the attack is ranged
+     * @param {SwerpgActor} target The target actor
+     * @param {SwerpgAction} action The action being used
+     * @param {string} actionType Type of action ('weapon', 'skill', etc.)
+     * @param {boolean} ranged Whether the attack is ranged
      */
     applyTargetBoons(target, action, actionType, ranged) {
       const boons = foundry.utils.deepClone(action.usage.boons)

@@ -396,7 +396,7 @@ export const RANKED_ICON_PATH = 'systems/swerpg/assets/images/icons/rank.svg'
  * actionable sub-view-model (primaryAction) to produce the stable three-corner
  * icon contract consumed by the PIXI renderer.
  *
- * @param {object} node - Enriched render node with `nodeType`, `isRanked`,
+ * @param {object} node Enriched render node with `nodeType`, `isRanked`,
  *        and `actionable` (which must carry `primaryAction` if set).
  * @returns {NodeIconSlots} Icon paths for the three corner slots.
  */

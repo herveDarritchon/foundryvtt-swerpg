@@ -18,7 +18,6 @@ vi.mock('../../module/applications/sheets/base-item.mjs', () => {
       item: { type: undefined, includesActions: false, includesHooks: false },
     }
     static _initializeItemSheetClass() {}
-    constructor() {}
   }
   return { default: MockBaseItemSheet }
 })

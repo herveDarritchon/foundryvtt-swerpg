@@ -12,10 +12,10 @@
 /**
  * Build the contextual action panel view-model for a specialization tree node.
  *
- * @param {object} node - The enriched render node (must carry `talentName`,
+ * @param {object} node The enriched render node (must carry `talentName`,
  *        `xpCost`, `isRanked`, `talentDescription`, `nodeStateLabel`,
  *        and optionally `reasonLabel`, `actionable`).
- * @param {(key: string) => string} localize - i18n localize function.
+ * @param {(key: string) => string} localize i18n localize function.
  * @returns {{
  *   talentName: string,
  *   xpCost: number,

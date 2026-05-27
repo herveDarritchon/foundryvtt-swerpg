@@ -14,4 +14,4 @@ export function mapCareerOggDudeSkillCodes(codes = []) {
   return mapOggDudeSkillCodes(codes)
 }
 
-export { mapOggDudeSkillCode } from './oggdude-skill-map.mjs'
+export { mapOggDudeSkillCode }
