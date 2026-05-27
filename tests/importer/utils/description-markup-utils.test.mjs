@@ -6,11 +6,7 @@ import {
   resolveSource,
   normalizeFreeSkillRank,
 } from '../../../module/importer/utils/description-markup-utils.mjs'
-import {
-  CAREER_DEFAULT_FREE_SKILL_RANK,
-  CAREER_MIN_FREE_SKILL_RANK,
-  CAREER_MAX_FREE_SKILL_RANK,
-} from '../../../module/config/progression.mjs'
+import { CAREER_DEFAULT_FREE_SKILL_RANK, CAREER_MIN_FREE_SKILL_RANK, CAREER_MAX_FREE_SKILL_RANK } from '../../../module/config/progression.mjs'
 
 describe('Description Markup Utils', () => {
   describe('normalizeFreeSkillRank', () => {

@@ -10,10 +10,10 @@
 
 ## Fichiers impactés
 
-| Fichier | Nature du changement |
-| --- | --- |
-| `module/models/character.mjs` | Extraire un helper commun, y router les trois wrappers publics, conserver les options métier existantes |
-| `tests/models/character-detail-application.test.mjs` | Ajouter des non-régressions sur les options déléguées à `_applyDetailItem` |
+| Fichier                                                                  | Nature du changement                                                                                       |
+| ------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------- |
+| `module/models/character.mjs`                                            | Extraire un helper commun, y router les trois wrappers publics, conserver les options métier existantes    |
+| `tests/models/character-detail-application.test.mjs`                     | Ajouter des non-régressions sur les options déléguées à `_applyDetailItem`                                 |
 | `tests/applications/sheets/character-sheet-specialization-drop.test.mjs` | Garder le rôle de garde d'intégration sur l'API publique `applySpecialization` sans changer le flux métier |
 
 ## Étapes

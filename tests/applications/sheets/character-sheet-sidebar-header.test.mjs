@@ -58,11 +58,6 @@ describe('CharacterSheet sidebarHeader context', () => {
           strain: { value: 2, threshold: 11 },
           encumbrance: { value: 0, threshold: 10 },
         },
-        points: {
-          ability: {},
-          skill: {},
-          talent: {},
-        },
       },
       items: [],
       hasFreeSkillsAvailable: () => false,
@@ -207,7 +202,7 @@ describe('CharacterSheet sidebarHeader context', () => {
     expect(context.sidebarHeader).toBeUndefined()
   })
 
-  it('marks creation as complete for a V1 character when legacy creation counters are absent', async () => {
+  it('marks creation as complete when all creation steps are satisfied', async () => {
     const actor = buildCharacterActor()
     actor.system.details.career = { name: 'Assassin' }
     actor.system.details.specializations = new Set([{ name: 'Infiltrator' }])
@@ -220,19 +215,15 @@ describe('CharacterSheet sidebarHeader context', () => {
     expect(context.incomplete.creation).toBe(false)
   })
 
-  it('keeps creation incomplete when legacy creation counters still require input', async () => {
+  it('keeps creation incomplete when free skill ranks are still available', async () => {
     const actor = buildCharacterActor()
     actor.system.details.career = { name: 'Assassin' }
     actor.system.details.specializations = new Set([{ name: 'Infiltrator' }])
-    actor.system.points.ability.requireInput = true
-    actor.system.points.skill.available = 2
-    actor.system.points.talent.available = 1
+    actor.hasFreeSkillsAvailable = () => true
 
     const context = await getContext(actor)
 
-    expect(context.incomplete.characteristics).toBe(true)
-    expect(context.incomplete.skills).toBe(true)
-    expect(context.incomplete.talents).toBe(true)
+    expect(context.incomplete.freeSkill).toBe(true)
     expect(context.incomplete.creation).toBe(true)
   })
 })

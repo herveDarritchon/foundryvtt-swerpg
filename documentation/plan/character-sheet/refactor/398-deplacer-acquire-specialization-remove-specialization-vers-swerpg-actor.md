@@ -10,15 +10,15 @@
 
 ## Fichiers impactés
 
-| Fichier | Nature du changement |
-| --- | --- |
-| `module/documents/actor.mjs` | Ajouter `acquireSpecialization` et `removeSpecialization` sur `SwerpgActor` en conservant le comportement actuel |
-| `module/models/character.mjs` | Retirer ces méthodes de `SwerpgCharacter` sans toucher aux méthodes `apply*` |
-| `module/applications/sheets/character-sheet.mjs` | Appeler `actor.acquireSpecialization(...)` au lieu de `actor.system.acquireSpecialization(...)` |
-| `module/applications/specialization-tree-app.mjs` | Appeler `actor.removeSpecialization(...)` au lieu de `actor.system.removeSpecialization(...)` |
-| `tests/documents/actor-specializations.test.mjs` | Couvrir l'API document déplacée et ses payloads d'update |
-| `tests/applications/sheets/character-sheet-specialization-drop.test.mjs` | Réaligner les mocks/attentes sur l'API `actor.acquireSpecialization(...)` |
-| `tests/applications/specialization-tree-app.test.mjs` | Réaligner les mocks/attentes sur l'API `actor.removeSpecialization(...)` |
+| Fichier                                                                  | Nature du changement                                                                                             |
+| ------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------- |
+| `module/documents/actor.mjs`                                             | Ajouter `acquireSpecialization` et `removeSpecialization` sur `SwerpgActor` en conservant le comportement actuel |
+| `module/models/character.mjs`                                            | Retirer ces méthodes de `SwerpgCharacter` sans toucher aux méthodes `apply*`                                     |
+| `module/applications/sheets/character-sheet.mjs`                         | Appeler `actor.acquireSpecialization(...)` au lieu de `actor.system.acquireSpecialization(...)`                  |
+| `module/applications/specialization-tree-app.mjs`                        | Appeler `actor.removeSpecialization(...)` au lieu de `actor.system.removeSpecialization(...)`                    |
+| `tests/documents/actor-specializations.test.mjs`                         | Couvrir l'API document déplacée et ses payloads d'update                                                         |
+| `tests/applications/sheets/character-sheet-specialization-drop.test.mjs` | Réaligner les mocks/attentes sur l'API `actor.acquireSpecialization(...)`                                        |
+| `tests/applications/specialization-tree-app.test.mjs`                    | Réaligner les mocks/attentes sur l'API `actor.removeSpecialization(...)`                                         |
 
 ## Étapes
 

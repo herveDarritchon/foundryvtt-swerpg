@@ -118,5 +118,4 @@ describe('SwerpgCharacter — owned specializations', () => {
       expect(character.progression.freeSkillRanks.specialization.gained).toBe(0)
     })
   })
-
 })
