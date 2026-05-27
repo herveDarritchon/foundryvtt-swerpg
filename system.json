@@ -37,7 +37,7 @@
   "license": "LICENSE",
   "esmodules": ["dist/swerpg.bundle.js"],
   "styles": ["styles/swerpg.css"],
-  "scripts": ["./vendors/jszip.min.js"],
+  "scripts": [],
   "packs": [],
   "packFolders": [],
   "languages": [

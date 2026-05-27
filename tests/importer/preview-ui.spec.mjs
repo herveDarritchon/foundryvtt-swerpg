@@ -29,10 +29,11 @@ function buildFakeZip() {
   return { files }
 }
 
-// stub global JSZip for importer load
-globalThis.JSZip = {
-  loadAsync: async (_buffer) => buildFakeZip(),
-}
+vi.mock('jszip', () => ({
+  default: {
+    loadAsync: async (_buffer) => buildFakeZip(),
+  },
+}))
 
 // Stub monde pour buildWeaponImgWorldPath
 if (!globalThis.game) globalThis.game = {}
