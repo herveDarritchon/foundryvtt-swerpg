@@ -30,12 +30,15 @@
     "e2e:documentation:report": "playwright test --config playwright.documentation.config.ts --pass-with-no-tests && playwright show-report playwright-documentation-report",
     "fmt": "prettier --write .",
     "fmt:check": "prettier --check .",
+    "lint": "eslint module/**/*.js module/**/*.mjs tests/**/*.js tests/**/*.mjs",
+    "lint:fix": "eslint module/**/*.js module/**/*.mjs tests/**/*.js tests/**/*.mjs --fix",
     "foundry:e2e:start": "bash ./scripts/e2e-foundry-start.sh start",
     "foundry:e2e:stop": "bash ./scripts/e2e-foundry-start.sh stop",
     "foundry:e2e:restart": "bash ./scripts/e2e-foundry-start.sh restart",
     "docs:generate-user-guides": "node e2e/documentation/utils/markdown-guide-generator.mjs",
     "docs:generate-user-guides:html": "node e2e/documentation/utils/html-guide-generator.mjs",
-    "docs:generate-all": "pnpm run docs:generate-user-guides && pnpm run docs:generate-user-guides:html"
+    "docs:generate-all": "pnpm run docs:generate-user-guides && pnpm run docs:generate-user-guides:html",
+    "prepare": "husky"
   },
   "devDependencies": {
     "@eslint/js": "^9.8.0",
@@ -65,14 +68,25 @@
     "gulp-less": "^5.0.0",
     "gulp-plumber": "^1.2.1",
     "gulp-touch-cmd": "^0.0.1",
+    "husky": "^9.1.7",
     "jszip": "^3.10.1",
     "less": "^4.3.0",
+    "lint-staged": "^17.0.5",
     "prettier": "^3.6.2",
     "prettier-plugin-handlebars": "^0.0.1",
     "rollup": "^4.41.1",
     "semantic-release": "^24.2.5",
     "typescript": "^6.0.3",
     "vitest": "^3.1.1"
+  },
+  "lint-staged": {
+    "*.{js,mjs}": [
+      "prettier --write",
+      "eslint --fix"
+    ],
+    "*.{hbs,json,md,less,yml,yaml}": [
+      "prettier --write"
+    ]
   },
   "author": "Behaska",
   "license": "MIT"
