@@ -248,6 +248,10 @@ describe('armorMapper - ADR-0008 alignment', () => {
 })
 
 describe('SwerpgArmor - getTags restrictionLevel', () => {
+  /**
+   *
+   * @param restrictionLevel
+   */
   function makeArmor(restrictionLevel) {
     return {
       restrictionLevel,

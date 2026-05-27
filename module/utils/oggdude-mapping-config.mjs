@@ -63,6 +63,7 @@ const OGGDUDE_PACKS_BY_TYPE = {
 
 /**
  *
+ * @param elementType
  */
 export function getOggDudePackConfig(elementType) {
   const normalizedType = String(elementType).toLowerCase()

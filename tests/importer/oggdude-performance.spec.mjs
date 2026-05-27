@@ -7,6 +7,10 @@ if (globalThis.xml2js === undefined) {
 }
 
 // Génère un gros XML >10MB pour test performance parsing/buildJsonDataFromFile
+/**
+ *
+ * @param count
+ */
 function buildLargeWeaponsXml(count) {
   let parts = ['<Weapons>']
   for (let i = 0; i < count; i++) {

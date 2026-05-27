@@ -5,9 +5,9 @@ import { MAX_RANK } from '../config/skills.mjs'
  * Career skills: nextRank * 5 XP
  * Non-career skills: nextRank * 5 XP + 5 XP
  * @param {Object} params
- * @param {number} params.rank - Current skill rank
- * @param {boolean} params.isCareer - Whether the skill is a career skill
- * @param {number} [params.maxRank=5] - Maximum rank allowed
+ * @param {number} params.rank Current skill rank
+ * @param {boolean} params.isCareer Whether the skill is a career skill
+ * @param {number} [params.maxRank=5] Maximum rank allowed
  * @returns {number|null} - Cost for next rank, or null if max rank reached
  */
 export function getSkillNextRankCost({ rank, isCareer, maxRank = MAX_RANK }) {
@@ -24,13 +24,15 @@ export function getSkillNextRankCost({ rank, isCareer, maxRank = MAX_RANK }) {
 /**
  * Determine the purchase state for a skill
  * @param {Object} params
- * @param {number} params.rank - Current skill rank
- * @param {boolean} params.isCareer - Whether the skill is a career skill
- * @param {boolean} params.isSpecialization - Whether the skill is a specialization skill
- * @param {number} params.availableXp - Available XP
- * @param {number} params.freeCareerSkillsLeft - Number of free career skills left
- * @param {number} params.freeSpecializationSkillsLeft - Number of free specialization skills left
- * @param {number} [params.maxRank=5] - Maximum rank allowed
+ * @param {number} params.rank Current skill rank
+ * @param {boolean} params.isCareer Whether the skill is a career skill
+ * @param {boolean} params.isSpecialization Whether the skill is a specialization skill
+ * @param {number} params.availableXp Available XP
+ * @param {number} params.freeCareerSkillsLeft Number of free career skills left
+ * @param {number} params.freeSpecializationSkillsLeft Number of free specialization skills left
+ * @param {number} [params.maxRank=5] Maximum rank allowed
+ * @param params.careerFreeRank
+ * @param params.specializationFreeRank
  * @returns {Object} Purchase state
  */
 export function getSkillPurchaseState({
@@ -92,8 +94,8 @@ export function getSkillPurchaseState({
 /**
  * Calculate the positive dice pool preview based on characteristic value and skill rank
  * @param {Object} params
- * @param {number} params.characteristicValue - The characteristic value
- * @param {number} params.skillRank - The skill rank
+ * @param {number} params.characteristicValue The characteristic value
+ * @param {number} params.skillRank The skill rank
  * @returns {Object} Dice pool with ability and proficiency dice counts
  */
 export function getPositiveDicePoolPreview({ characteristicValue, skillRank }) {

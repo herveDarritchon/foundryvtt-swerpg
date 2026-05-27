@@ -6,9 +6,9 @@ import SwerpgCharacter from '../../module/models/character.mjs'
  * Build a minimal SwerpgCharacter data payload.
  *
  * @param {object} [overrides]
- * @param {object|null} [overrides.species] - Species data embedded in details.
- * @param {number} [overrides.brawn] - Base brawn rank value.
- * @param {number} [overrides.willpower] - Base willpower rank value.
+ * @param {object|null} [overrides.species] Species data embedded in details.
+ * @param {number} [overrides.brawn] Base brawn rank value.
+ * @param {number} [overrides.willpower] Base willpower rank value.
  * @returns {object} Plain data object suitable for `new SwerpgCharacter(data)`.
  */
 function buildCharacterData({ species = null, brawn = 2, willpower = 2 } = {}) {
@@ -55,7 +55,7 @@ function buildCharacterData({ species = null, brawn = 2, willpower = 2 } = {}) {
  *
  * @param {number} woundModifier
  * @param {number} strainModifier
- * @param {object} [characteristics] - Per-characteristic base values used during #prepareSpecies.
+ * @param {object} [characteristics] Per-characteristic base values used during #prepareSpecies.
  *   Defaults to 2 for all characteristics when not supplied.
  * @returns {object}
  */

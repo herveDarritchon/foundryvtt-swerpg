@@ -10,10 +10,22 @@ import {
 
 // ---- Helpers ----------------------------------------------------------------
 
+/**
+ *
+ * @param id
+ * @param root0
+ * @param root0.dependsOn
+ * @param root0.softDependsOn
+ * @param root0.domain
+ * @param root0.type
+ */
 function makePipeline(id, { dependsOn = [], softDependsOn = [], domain = id, type = id } = {}) {
   return { id, domain, type, contextBuilder: () => {}, dependsOn, softDependsOn, producesReferences: [] }
 }
 
+/**
+ *
+ */
 function makeSession() {
   return createImportSession()
 }
@@ -264,6 +276,10 @@ describe('topologicalSort', () => {
 // ---- buildExecutionPlan -----------------------------------------------------
 
 describe('buildExecutionPlan', () => {
+  /**
+   *
+   * @param entries
+   */
   function makeRegistry(entries) {
     return new Map(entries.map(([domain, pipelines]) => [domain, pipelines]))
   }

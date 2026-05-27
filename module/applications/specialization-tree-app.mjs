@@ -39,8 +39,8 @@ const ACTION_KEYS = Object.freeze({
  * Wraps the pure builder from `tree-context-builder.mjs` and injects the
  * Foundry-specific fields that the template and orchestration layer require.
  *
- * @param {Actor|object|null} actor - The active actor document.
- * @param {string|null} [selectedKey=null] - Optional tree key to select.
+ * @param {Actor|object|null} actor The active actor document.
+ * @param {string|null} [selectedKey=null] Optional tree key to select.
  * @returns {object} Display-ready render context with Foundry refs.
  */
 export function buildSpecializationTreeContext(actor, selectedKey = null) {
@@ -82,7 +82,7 @@ export function buildSpecializationTreeContext(actor, selectedKey = null) {
  * Each item carries the state key, a localized label, the affordance type
  * (actionable, informational, blocked), and the matching CSS cursor.
  *
- * @param {(key: string) => string} localize - i18n localize function.
+ * @param {(key: string) => string} localize i18n localize function.
  * @returns {Array<{state: string, label: string, affordance: string, cursor: string}>}
  */
 export function buildLegendItems(localize) {
@@ -306,13 +306,21 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
   /*  Action handlers (private static)                              */
   /* ═══════════════════════════════════════════════════════════════ */
 
-  /** @returns {Promise<void>} */
+  /**
+   * @param event
+   * @param _target
+   * @returns {Promise<void>}
+   */
   static async #onResetView(event, _target) {
     event.preventDefault()
     this.renderer?.resetView()
   }
 
-  /** @returns {Promise<void>} */
+  /**
+   * @param event
+   * @param target
+   * @returns {Promise<void>}
+   */
   static async #onSelectTree(event, target) {
     event.preventDefault()
     const key = target.dataset.treeKey
@@ -321,13 +329,21 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
     await this.render()
   }
 
-  /** @returns {Promise<void>} */
+  /**
+   * @param event
+   * @param _target
+   * @returns {Promise<void>}
+   */
   static async #onZoomIn(event, _target) {
     event.preventDefault()
     this.renderer?.zoomIn()
   }
 
-  /** @returns {Promise<void>} */
+  /**
+   * @param event
+   * @param _target
+   * @returns {Promise<void>}
+   */
   static async #onZoomOut(event, _target) {
     event.preventDefault()
     this.renderer?.zoomOut()
@@ -340,7 +356,7 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
   /**
    * Handle a node pointer down event from the renderer.
    * Opens the detail panel for the clicked node.
-   * @param {object} node - The enriched render node.
+   * @param {object} node The enriched render node.
    */
   async #handleNodePointerDown(node) {
     this.#showDetailPanel(node)
@@ -427,7 +443,11 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
     await this.refresh()
   }
 
-  /** @returns {Promise<void>} */
+  /**
+   * @param event
+   * @param _target
+   * @returns {Promise<void>}
+   */
   static async #onContextualAction(event, _target) {
     event.preventDefault()
     const node = this._currentDetailNode
@@ -435,13 +455,21 @@ export default class SpecializationTreeApp extends api.HandlebarsApplicationMixi
     await this.#handleNodePrimaryAction(node)
   }
 
-  /** @returns {Promise<void>} */
+  /**
+   * @param event
+   * @param _target
+   * @returns {Promise<void>}
+   */
   static async #onCloseDetail(event, _target) {
     event.preventDefault()
     this.#hideDetailPanel()
   }
 
-  /** @returns {Promise<void>} */
+  /**
+   * @param event
+   * @param target
+   * @returns {Promise<void>}
+   */
   static async #onRemoveSpecialization(event, target) {
     event.preventDefault()
     const specializationKey = target.dataset.specializationKey

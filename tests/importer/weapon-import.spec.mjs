@@ -180,7 +180,7 @@ describe('weaponMapper - mapping', () => {
     expect(tags.category).toBe('Ranged')
     expect(tags['weapon-type']).toBe('Heavy Blaster')
     expect(tags.restricted).toBe(game.i18n.localize('ITEM.RESTRICTION_LEVEL.RESTRICTED'))
-    expect(tags['blast']).toBe(game.i18n.localize('WEAPON.QUALITIES.Blast') + ' 2')
+    expect(tags.blast).toBe(game.i18n.localize('WEAPON.QUALITIES.Blast') + ' 2')
   })
 
   it('getTags includes restrictionLevel tag for restricted level', () => {
@@ -485,5 +485,65 @@ describe('weaponMapper — MC4 shared-constant fallbacks', () => {
     const result = weaponMapper([{ Name: 'Military Rifle', Key: 'milrifle', SkillKey: 'RangedHeavy', Range: 'Long', Restricted: 'true', Damage: 5, Crit: 3 }])
     expect(result).toHaveLength(1)
     expect(result[0].system.restrictionLevel).toBe(SYSTEM.RESTRICTION_LEVELS.restricted.id)
+  })
+})
+
+describe('weaponMapper — SizeHigh / SizeLow (ADR-0019)', () => {
+  beforeEach(() => {
+    resetWeaponImportStats()
+  })
+
+  it('SizeHigh numeric is stored in flags.swerpg.oggdude.sizeHigh', () => {
+    const result = weaponMapper([{ Name: 'Sniper', Key: 'sniper', SkillKey: 'RangedHeavy', Range: 'Long', Damage: 5, Crit: 4, SizeHigh: '10' }])
+    expect(result).toHaveLength(1)
+    expect(result[0].flags.swerpg.oggdude.sizeHigh).toBe(10)
+  })
+
+  it('SizeHigh = 0 is preserved in flags (0 is a valid silhouette constraint)', () => {
+    const result = weaponMapper([{ Name: 'Pistol', Key: 'pistol', SkillKey: 'RangedLight', Range: 'Short', Damage: 4, Crit: 3, SizeHigh: '0' }])
+    expect(result).toHaveLength(1)
+    expect(result[0].flags.swerpg.oggdude.sizeHigh).toBe(0)
+  })
+
+  it('SizeHigh absent → sizeHigh key absent from flags', () => {
+    const result = weaponMapper([{ Name: 'Simple Gun', Key: 'simplegun', SkillKey: 'RangedLight', Range: 'Short', Damage: 3, Crit: 3 }])
+    expect(result).toHaveLength(1)
+    expect(result[0].flags.swerpg.oggdude?.sizeHigh).toBeUndefined()
+  })
+
+  it('SizeLow numeric is stored in flags.swerpg.oggdude.sizeLow', () => {
+    const result = weaponMapper([{ Name: 'Cannon', Key: 'cannon', SkillKey: 'Gunnery', Range: 'Long', Damage: 7, Crit: 3, SizeLow: '3' }])
+    expect(result).toHaveLength(1)
+    expect(result[0].flags.swerpg.oggdude.sizeLow).toBe(3)
+  })
+
+  it('SizeLow = 0 is preserved in flags', () => {
+    const result = weaponMapper([{ Name: 'Basic Rifle', Key: 'rifle', SkillKey: 'RangedHeavy', Range: 'Long', Damage: 4, Crit: 3, SizeLow: '0' }])
+    expect(result).toHaveLength(1)
+    expect(result[0].flags.swerpg.oggdude.sizeLow).toBe(0)
+  })
+
+  it('SizeLow absent → sizeLow key absent from flags', () => {
+    const result = weaponMapper([{ Name: 'Simple Gun', Key: 'simplegun2', SkillKey: 'RangedLight', Range: 'Short', Damage: 3, Crit: 3 }])
+    expect(result).toHaveLength(1)
+    expect(result[0].flags.swerpg.oggdude?.sizeLow).toBeUndefined()
+  })
+
+  it('SizeHigh and SizeLow are both stored when both present', () => {
+    const result = weaponMapper([
+      { Name: 'Mini Rocket', Key: 'minirocket', SkillKey: 'Gunnery', Range: 'Long', Damage: 3, Crit: 4, SizeLow: '3', SizeHigh: '4' },
+    ])
+    expect(result).toHaveLength(1)
+    expect(result[0].flags.swerpg.oggdude.sizeLow).toBe(3)
+    expect(result[0].flags.swerpg.oggdude.sizeHigh).toBe(4)
+  })
+
+  it('SizeHigh and SizeLow are never stored in system.*', () => {
+    const result = weaponMapper([
+      { Name: 'Heavy Blaster', Key: 'hblaster', SkillKey: 'RangedHeavy', Range: 'Long', Damage: 6, Crit: 3, SizeLow: '2', SizeHigh: '10' },
+    ])
+    expect(result).toHaveLength(1)
+    expect(result[0].system.sizeHigh).toBeUndefined()
+    expect(result[0].system.sizeLow).toBeUndefined()
   })
 })

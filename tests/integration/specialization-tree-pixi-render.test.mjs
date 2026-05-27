@@ -18,6 +18,9 @@ import {
   RANKED_ICON_PATH,
 } from '../../module/applications/specialization-tree/node-ui-state.mjs'
 
+/**
+ *
+ */
 function createMockCanvas() {
   const listeners = {}
   return {
@@ -33,6 +36,12 @@ function createMockCanvas() {
   }
 }
 
+/**
+ *
+ * @param root0
+ * @param root0.width
+ * @param root0.height
+ */
 function createMockHost({ width = 640, height = 480 } = {}) {
   return {
     clientWidth: width,
@@ -44,6 +53,9 @@ function createMockHost({ width = 640, height = 480 } = {}) {
   }
 }
 
+/**
+ *
+ */
 function createMockContainer() {
   const listeners = {}
   return {
@@ -75,6 +87,10 @@ function createMockContainer() {
   }
 }
 
+/**
+ *
+ * @param container
+ */
 function flattenChildren(container) {
   const result = []
   for (const child of container.children ?? []) {
@@ -86,10 +102,17 @@ function flattenChildren(container) {
   return result
 }
 
+/**
+ *
+ * @param container
+ */
 function findNodeHitArea(container) {
   return flattenChildren(container).find((child) => child._listeners?.pointerdown)
 }
 
+/**
+ *
+ */
 function createViewModel() {
   return {
     renderNodes: [

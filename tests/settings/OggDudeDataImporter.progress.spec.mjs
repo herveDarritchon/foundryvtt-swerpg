@@ -10,6 +10,10 @@ if (!globalThis.foundry) {
 
 import { OggDudeDataImporter } from '../../module/settings/OggDudeDataImporter.mjs'
 
+/**
+ *
+ * @param progress
+ */
 function build(progress) {
   const app = new OggDudeDataImporter()
   app._progress = progress

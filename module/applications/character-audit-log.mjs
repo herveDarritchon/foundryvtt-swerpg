@@ -106,6 +106,9 @@ export function getAuditLogFamily(type) {
   }
 }
 
+/**
+ *
+ */
 function getAuditLogDateLocale() {
   const language = game.i18n?.lang
   if (language === 'fr') return 'fr-FR'
@@ -113,6 +116,10 @@ function getAuditLogDateLocale() {
   return language
 }
 
+/**
+ *
+ * @param timestamp
+ */
 function formatAuditLogTimestamp(timestamp) {
   const date = new Date(timestamp)
   const locale = getAuditLogDateLocale()
@@ -127,17 +134,30 @@ function formatAuditLogTimestamp(timestamp) {
   }
 }
 
+/**
+ *
+ * @param xpDelta
+ */
 function formatAuditLogDelta(xpDelta) {
   const value = Number(xpDelta) || 0
   const sign = value > 0 ? '+' : ''
   return `${sign}${value} XP`
 }
 
+/**
+ *
+ * @param type
+ */
 function getAuditLogTypeLabel(type) {
   const key = AUDIT_LOG_TYPE_LABELS[type] ?? 'SWERPG.AUDIT_LOG.TYPE.UNKNOWN'
   return game.i18n.localize(key)
 }
 
+/**
+ *
+ * @param value
+ * @param fallbackKey
+ */
 function getAuditLogName(value, fallbackKey = 'SWERPG.AUDIT_LOG.UNKNOWN_VALUE') {
   if (value === null || value === undefined || value === '') return game.i18n.localize(fallbackKey)
   return value
@@ -391,6 +411,10 @@ export default class CharacterAuditLogApp extends api.HandlebarsApplicationMixin
 /*  CSV export helpers                          */
 /* -------------------------------------------- */
 
+/**
+ *
+ * @param value
+ */
 export function escapeCsvCell(value) {
   if (value === null || value === undefined) return ''
   const str = String(value)
@@ -400,6 +424,10 @@ export function escapeCsvCell(value) {
   return str
 }
 
+/**
+ *
+ * @param actor
+ */
 export function getPrimaryOwnerName(actor) {
   if (!actor?.ownership) return 'unknown-player'
 
@@ -414,6 +442,10 @@ export function getPrimaryOwnerName(actor) {
   return user?.name ?? 'unknown-player'
 }
 
+/**
+ *
+ * @param str
+ */
 function slugify(str) {
   return (
     str
@@ -426,6 +458,10 @@ function slugify(str) {
   )
 }
 
+/**
+ *
+ * @param actor
+ */
 export function buildExportFilename(actor) {
   const charName = slugify(actor?.name ?? 'character')
   const ownerName = slugify(getPrimaryOwnerName(actor))
@@ -433,6 +469,10 @@ export function buildExportFilename(actor) {
   return `${charName}_${ownerName}_${date}.csv`
 }
 
+/**
+ *
+ * @param actor
+ */
 export function buildCsvContent(actor) {
   const rawLogs = foundry.utils.getProperty(actor, AUDIT_LOG_PATH) ?? []
   const ownerName = getPrimaryOwnerName(actor)

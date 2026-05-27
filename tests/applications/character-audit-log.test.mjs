@@ -2,6 +2,10 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { setupFoundryMock, teardownFoundryMock } from '../helpers/mock-foundry.mjs'
 
+/**
+ *
+ * @param overrides
+ */
 function createActor(overrides = {}) {
   return {
     id: 'actor-1',

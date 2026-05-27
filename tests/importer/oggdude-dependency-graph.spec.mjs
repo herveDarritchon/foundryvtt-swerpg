@@ -29,10 +29,22 @@ if (globalThis.SYSTEM === undefined) {
 
 // ---- Helpers ----------------------------------------------------------------
 
+/**
+ *
+ * @param id
+ * @param root0
+ * @param root0.dependsOn
+ * @param root0.softDependsOn
+ * @param root0.domain
+ * @param root0.type
+ */
 function makePipeline(id, { dependsOn = [], softDependsOn = [], domain = id, type = id } = {}) {
   return { id, domain, type, contextBuilder: () => {}, dependsOn, softDependsOn, producesReferences: [] }
 }
 
+/**
+ *
+ */
 function buildMinimalRegistry() {
   return new Map([
     ['weapon', [makePipeline('weapon')]],

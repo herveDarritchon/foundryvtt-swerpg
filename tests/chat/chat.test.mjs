@@ -10,7 +10,8 @@ const actionSpies = {
 }
 
 describe('Chat Module', () => {
-  let mockMessage, mockDialog
+  let mockMessage
+  let mockDialog
 
   beforeEach(() => {
     // Ensure Foundry globals before requiring modules that access them immediately
@@ -356,7 +357,9 @@ describe('Chat Module', () => {
   })
 
   describe('onChatTargetLinkHover', () => {
-    let mockToken, mockTarget, mockEvent
+    let mockToken
+    let mockTarget
+    let mockEvent
 
     beforeEach(() => {
       mockToken = {

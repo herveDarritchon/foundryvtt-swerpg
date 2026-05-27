@@ -31,11 +31,19 @@ import {
 
 const DEFAULT_QUALITY_COUNT = 1
 
+/**
+ *
+ * @param value
+ */
 function coerceQualityCount(value) {
   const parsed = Number.parseInt(value, 10)
   return Number.isFinite(parsed) && parsed > 0 ? parsed : DEFAULT_QUALITY_COUNT
 }
 
+/**
+ *
+ * @param input
+ */
 function normalizeDelimitedValues(input) {
   if (!input) {
     return []
@@ -49,6 +57,10 @@ function normalizeDelimitedValues(input) {
     .filter(Boolean)
 }
 
+/**
+ *
+ * @param rawCategories
+ */
 function normalizeCategoryValues(rawCategories) {
   if (!rawCategories) {
     return []
@@ -71,7 +83,14 @@ function normalizeCategoryValues(rawCategories) {
     .filter(Boolean)
 }
 
-function normalizeSizeHigh(value) {
+/**
+ * Normalize a raw OggDude silhouette size value (SizeHigh or SizeLow).
+ * Returns the numeric value when finite (including 0), or a sanitized string fallback.
+ * Returns null only when the field is absent or empty — callers decide whether null means "absent" or "no restriction".
+ * @param {*} value Raw value from the XML node
+ * @returns {number|string|null}
+ */
+function normalizeSizeValue(value) {
   if (value === undefined || value === null || value === '') {
     return null
   }
@@ -85,6 +104,10 @@ function normalizeSizeHigh(value) {
   return sanitized || null
 }
 
+/**
+ *
+ * @param source
+ */
 function extractSourceInfo(source) {
   if (!source) {
     return { name: '', page: null }
@@ -106,7 +129,7 @@ function extractSourceInfo(source) {
 
 /**
  * Maps a single OggDude weapon XML object to SWERPG system format.
- * @param {Object} xmlWeapon - Raw weapon data from OggDude XML
+ * @param {Object} xmlWeapon Raw weapon data from OggDude XML
  * @returns {Object|null} Mapped weapon object or null if invalid
  */
 function mapOggDudeWeapon(xmlWeapon) {
@@ -197,7 +220,8 @@ function mapOggDudeWeapon(xmlWeapon) {
     const restrictionLevel = isRestricted ? SYSTEM.RESTRICTION_LEVELS.restricted.id : SYSTEM.DEFAULT_RESTRICTION_LEVEL
     const rawType = xmlWeapon.Type || ''
     const categoryTags = normalizeCategoryValues(xmlWeapon?.Categories?.Category)
-    const sizeHigh = normalizeSizeHigh(xmlWeapon.SizeHigh)
+    const sizeHigh = normalizeSizeValue(xmlWeapon.SizeHigh)
+    const sizeLow = normalizeSizeValue(xmlWeapon.SizeLow)
     const { name: sourceName, page: sourcePage } = extractSourceInfo(xmlWeapon.Source)
 
     // Resolve system.category (ADR-0007 priority: Categories → SkillKey → Range → default)
@@ -243,6 +267,9 @@ function mapOggDudeWeapon(xmlWeapon) {
     }
     if (sizeHigh !== null) {
       oggdudeExtras.sizeHigh = sizeHigh
+    }
+    if (sizeLow !== null) {
+      oggdudeExtras.sizeLow = sizeLow
     }
     if (sourceName) {
       oggdudeExtras.source = {

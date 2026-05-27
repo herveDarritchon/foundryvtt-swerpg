@@ -11,6 +11,9 @@ if (!globalThis.foundry) {
 // Safe import (module uses optional chaining for foundry access)
 import { OggDudeDataImporter } from '../../module/settings/OggDudeDataImporter.mjs'
 
+/**
+ *
+ */
 function buildInstance() {
   return new OggDudeDataImporter()
 }

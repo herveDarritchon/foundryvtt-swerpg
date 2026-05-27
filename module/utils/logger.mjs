@@ -116,9 +116,9 @@ export const logger = {
   /**
    * Émet un avertissement de dépréciation structuré pour les logiques legacy.
    * Le message est visible hors mode debug (via warn).
-   * @param {string} moduleName - Nom du module concerné (ex: 'talent-cost-calculator')
-   * @param {string} feature - Nom de la fonctionnalité dépréciée (ex: 'rank * 5 cost calculation')
-   * @param {string} [suggestion] - Suggestion de remplacement (ex: 'Use node-based cost from specialization-tree instead.')
+   * @param {string} moduleName Nom du module concerné (ex: 'talent-cost-calculator')
+   * @param {string} feature Nom de la fonctionnalité dépréciée (ex: 'rank * 5 cost calculation')
+   * @param {string} [suggestion] Suggestion de remplacement (ex: 'Use node-based cost from specialization-tree instead.')
    */
   deprecated(moduleName, feature, suggestion) {
     let message = `[DEPRECATED] [${moduleName}] ${feature}`

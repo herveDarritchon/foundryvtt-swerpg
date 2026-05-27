@@ -12,23 +12,23 @@ import {
 
 describe('ARMOR_CATEGORY_MAP', () => {
   it('devrait contenir les catégories de base', () => {
-    expect(ARMOR_CATEGORY_MAP['Light']).toBeDefined()
-    expect(ARMOR_CATEGORY_MAP['Medium']).toBeDefined()
-    expect(ARMOR_CATEGORY_MAP['Heavy']).toBeDefined()
-    expect(ARMOR_CATEGORY_MAP['Light'].swerpgCategory).toBe('light')
-    expect(ARMOR_CATEGORY_MAP['Medium'].swerpgCategory).toBe('medium')
-    expect(ARMOR_CATEGORY_MAP['Heavy'].swerpgCategory).toBe('heavy')
+    expect(ARMOR_CATEGORY_MAP.Light).toBeDefined()
+    expect(ARMOR_CATEGORY_MAP.Medium).toBeDefined()
+    expect(ARMOR_CATEGORY_MAP.Heavy).toBeDefined()
+    expect(ARMOR_CATEGORY_MAP.Light.swerpgCategory).toBe('light')
+    expect(ARMOR_CATEGORY_MAP.Medium.swerpgCategory).toBe('medium')
+    expect(ARMOR_CATEGORY_MAP.Heavy.swerpgCategory).toBe('heavy')
   })
 
   it('devrait supporter les variantes en minuscules', () => {
-    expect(ARMOR_CATEGORY_MAP['light'].swerpgCategory).toBe('light')
-    expect(ARMOR_CATEGORY_MAP['medium'].swerpgCategory).toBe('medium')
-    expect(ARMOR_CATEGORY_MAP['heavy'].swerpgCategory).toBe('heavy')
+    expect(ARMOR_CATEGORY_MAP.light.swerpgCategory).toBe('light')
+    expect(ARMOR_CATEGORY_MAP.medium.swerpgCategory).toBe('medium')
+    expect(ARMOR_CATEGORY_MAP.heavy.swerpgCategory).toBe('heavy')
   })
 
   it('devrait supporter les catégories spéciales', () => {
-    expect(ARMOR_CATEGORY_MAP['Natural'].swerpgCategory).toBe('natural')
-    expect(ARMOR_CATEGORY_MAP['Unarmored'].swerpgCategory).toBe('unarmored')
+    expect(ARMOR_CATEGORY_MAP.Natural.swerpgCategory).toBe('natural')
+    expect(ARMOR_CATEGORY_MAP.Unarmored.swerpgCategory).toBe('unarmored')
   })
 
   it('devrait supporter les codes numériques', () => {
@@ -84,23 +84,23 @@ describe('getSupportedOggDudeCategories', () => {
 
 describe('ARMOR_PROPERTY_MAP', () => {
   it('devrait contenir les propriétés de base', () => {
-    expect(ARMOR_PROPERTY_MAP['Bulky']).toBeDefined()
-    expect(ARMOR_PROPERTY_MAP['Organic']).toBeDefined()
-    expect(ARMOR_PROPERTY_MAP['Bulky'].swerpgProperty).toBe('bulky')
-    expect(ARMOR_PROPERTY_MAP['Organic'].swerpgProperty).toBe('organic')
+    expect(ARMOR_PROPERTY_MAP.Bulky).toBeDefined()
+    expect(ARMOR_PROPERTY_MAP.Organic).toBeDefined()
+    expect(ARMOR_PROPERTY_MAP.Bulky.swerpgProperty).toBe('bulky')
+    expect(ARMOR_PROPERTY_MAP.Organic.swerpgProperty).toBe('organic')
   })
 
   it('devrait supporter les variantes en minuscules', () => {
-    expect(ARMOR_PROPERTY_MAP['bulky'].swerpgProperty).toBe('bulky')
-    expect(ARMOR_PROPERTY_MAP['organic'].swerpgProperty).toBe('organic')
+    expect(ARMOR_PROPERTY_MAP.bulky.swerpgProperty).toBe('bulky')
+    expect(ARMOR_PROPERTY_MAP.organic.swerpgProperty).toBe('organic')
   })
 
   it('devrait mapper les propriétés similaires', () => {
-    expect(ARMOR_PROPERTY_MAP['Heavy'].swerpgProperty).toBe('bulky')
-    expect(ARMOR_PROPERTY_MAP['Unwieldy'].swerpgProperty).toBe('bulky')
-    expect(ARMOR_PROPERTY_MAP['Natural'].swerpgProperty).toBe('organic')
-    expect(ARMOR_PROPERTY_MAP['Leather'].swerpgProperty).toBe('organic')
-    expect(ARMOR_PROPERTY_MAP['Hide'].swerpgProperty).toBe('organic')
+    expect(ARMOR_PROPERTY_MAP.Heavy.swerpgProperty).toBe('bulky')
+    expect(ARMOR_PROPERTY_MAP.Unwieldy.swerpgProperty).toBe('bulky')
+    expect(ARMOR_PROPERTY_MAP.Natural.swerpgProperty).toBe('organic')
+    expect(ARMOR_PROPERTY_MAP.Leather.swerpgProperty).toBe('organic')
+    expect(ARMOR_PROPERTY_MAP.Hide.swerpgProperty).toBe('organic')
   })
 
   it('devrait supporter les codes numériques', () => {

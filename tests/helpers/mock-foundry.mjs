@@ -753,7 +753,7 @@ export function setCombatMock({ round = 1, combatants = [] } = {}) {
 /**
  * Add mock compendium packs to game.packs.
  * Each pack definition: { id, documents: Array<{id,name,type?,system?,flags?}> }
- * @param {object} packs - Object map of pack id → pack definition
+ * @param {object} packs Object map of pack id → pack definition
  */
 export function addPacksMock(packs = {}) {
   if (!globalThis.game) {
