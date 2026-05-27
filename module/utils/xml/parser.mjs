@@ -1,23 +1,33 @@
-import { parseStringPromise } from 'xml2js'
+import { XMLParser, XMLValidator } from 'fast-xml-parser'
 
 import { logger } from '../logger.mjs'
+import { XML_PARSER_OPTIONS } from './xml-parser-options.mjs'
 
 /**
- * Parse a XML data string to JSON string.
+ * Parse an XML data string and return the equivalent JSON object.
+ *
+ * The function wraps the synchronous fast-xml-parser API in a Promise so that
+ * callers that already `await` the result continue to work without modification.
+ *
  * @module module/utils/xml/parser
- * @requires xml2js
- * @param {string} data The data to parse from XML to JSON.
- * @returns {Promise<object>} The data parsed from XML to JSON.
+ * @requires fast-xml-parser
+ * @param {string} data The XML string to parse.
+ * @returns {Promise<object>} Resolves with the parsed JSON representation.
+ * @throws {Error} Rejects when the XML is structurally invalid.
  * @public
  * @function
  * @name parseXmlToJson
  */
 export async function parseXmlToJson(data) {
-  const jsonData = await parseStringPromise(data, {
-    explicitArray: false,
-    trim: true,
-    mergeAttrs: true,
-  })
+  if (logger.isDebugEnabled?.()) {
+    const validation = XMLValidator.validate(data)
+    if (validation !== true) {
+      logger.warn('[XMLParser] Invalid XML detected', validation)
+    }
+  }
+
+  const parser = new XMLParser(XML_PARSER_OPTIONS)
+  const jsonData = parser.parse(data)
   logger.debug('[XMLParser] Data XML parsed', jsonData)
   return jsonData
 }

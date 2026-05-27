@@ -91,8 +91,7 @@
   "author": "Behaska",
   "license": "MIT",
   "dependencies": {
-    "events": "^3.3.0",
-    "jszip": "^3.10.1",
-    "xml2js": "^0.6.2"
+    "fast-xml-parser": "^5.8.0",
+    "jszip": "^3.10.1"
   }
 }
