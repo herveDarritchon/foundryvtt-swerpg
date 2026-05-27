@@ -420,10 +420,10 @@ export default class SwerpgActor extends TalentsMixin(EquipmentMixin(ResourcesMi
   /**
    * View actor detail data as an editable item.
    * This is an internal helper method not intended for external use.
-   * @param {string} type         The data type stored in `system.details`
-   * @param {object} [options]    Options that configure how the data is viewed
-   * @param {string} detailsId    The id in the details structure to view, if the type is a collection
-   * @param {boolean} [options.editable]    Is the detail item editable?
+   * @param {string} type The data type stored in `system.details`.
+   * @param {string} detailsId The id in the details structure to view, if the type is a collection.
+   * @param {object} [options] Options that configure how the data is viewed.
+   * @param {boolean} [options.editable] Is the detail item editable?
    * @returns {Promise<void>}
    * @internal
    */

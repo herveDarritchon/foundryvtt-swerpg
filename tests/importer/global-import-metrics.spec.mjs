@@ -25,7 +25,9 @@ describe('aggregateImportMetrics', () => {
     const stats = { totalProcessed: 10, totalRejected: 2, totalImported: 8 }
     metrics.markGlobalStart()
     // small delay
-    await new Promise((r) => setTimeout(r, 20))
+    await new Promise((r) => {
+      setTimeout(r, 20)
+    })
     metrics.markGlobalEnd()
     const res = metrics.aggregateImportMetrics(stats)
     expect(res.overallDurationMs).toBeGreaterThan(0)
@@ -38,7 +40,9 @@ describe('aggregateImportMetrics', () => {
     const spy = vi.spyOn(metrics, 'getAllImportStats').mockReturnValue({ totalProcessed: 1, totalRejected: 0, totalImported: 1 })
     try {
       metrics.recordDomainStart('weapon')
-      await new Promise((r) => setTimeout(r, 10))
+      await new Promise((r) => {
+        setTimeout(r, 10)
+      })
       metrics.recordDomainEnd('weapon')
       const res = metrics.aggregateImportMetrics()
       expect(res.domains).toHaveProperty('weapon')

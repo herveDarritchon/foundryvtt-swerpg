@@ -46,7 +46,9 @@ describe('Last import stats preservation fix', () => {
     getCareerImportStats.mockReturnValue({ total: 4, rejected: 1, imported: 3 })
 
     markGlobalStart()
-    await new Promise((resolve) => setTimeout(resolve, 50))
+    await new Promise((resolve) => {
+      setTimeout(resolve, 50)
+    })
     markGlobalEnd()
 
     // Premier appel avec des stats non-zéro - doit les sauvegarder
@@ -83,7 +85,9 @@ describe('Last import stats preservation fix', () => {
     getArmorImportStats.mockReturnValue({ total: 10, rejected: 1, imported: 9 })
 
     markGlobalStart()
-    await new Promise((resolve) => setTimeout(resolve, 30))
+    await new Promise((resolve) => {
+      setTimeout(resolve, 30)
+    })
     markGlobalEnd()
 
     const metrics = aggregateImportMetrics()

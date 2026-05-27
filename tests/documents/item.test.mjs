@@ -114,9 +114,9 @@ describe('SwerpgItem Document', () => {
       mockItem.type = 'skill'
       mockItem.system.skill = 'testSkill'
 
-      // Mock the super method
+      // Mock the super method by replacing the grandparent prototype
       const superPrepareBaseData = vi.fn()
-      mockItem.__proto__.__proto__ = { prepareBaseData: superPrepareBaseData }
+      Object.setPrototypeOf(Object.getPrototypeOf(mockItem), { prepareBaseData: superPrepareBaseData })
 
       SwerpgItem.prototype.prepareBaseData.call(mockItem)
 
@@ -129,7 +129,7 @@ describe('SwerpgItem Document', () => {
       mockItem.system.skill = 'unknownSkill'
 
       const superPrepareBaseData = vi.fn()
-      mockItem.__proto__.__proto__ = { prepareBaseData: superPrepareBaseData }
+      Object.setPrototypeOf(Object.getPrototypeOf(mockItem), { prepareBaseData: superPrepareBaseData })
 
       SwerpgItem.prototype.prepareBaseData.call(mockItem)
 
@@ -141,7 +141,7 @@ describe('SwerpgItem Document', () => {
       mockItem.type = 'weapon'
 
       const superPrepareBaseData = vi.fn()
-      mockItem.__proto__.__proto__ = { prepareBaseData: superPrepareBaseData }
+      Object.setPrototypeOf(Object.getPrototypeOf(mockItem), { prepareBaseData: superPrepareBaseData })
 
       SwerpgItem.prototype.prepareBaseData.call(mockItem)
 
@@ -250,9 +250,9 @@ describe('SwerpgItem Document', () => {
       mockOptions = {}
       mockUser = { id: 'user-id' }
 
-      // Mock super method
+      // Mock super method by replacing the grandparent prototype
       const superPreCreate = vi.fn().mockResolvedValue(true)
-      mockItem.__proto__.__proto__ = { _preCreate: superPreCreate }
+      Object.setPrototypeOf(Object.getPrototypeOf(mockItem), { _preCreate: superPreCreate })
     })
 
     test('should handle talent type', async () => {
@@ -276,7 +276,7 @@ describe('SwerpgItem Document', () => {
       mockUser = { id: 'user-id' }
 
       const superOnCreate = vi.fn().mockResolvedValue(true)
-      mockItem.__proto__.__proto__ = { _onCreate: superOnCreate }
+      Object.setPrototypeOf(Object.getPrototypeOf(mockItem), { _onCreate: superOnCreate })
     })
 
     test('should set system.uuid for non-owned talent', async () => {
@@ -327,9 +327,9 @@ describe('SwerpgItem Document', () => {
 
   describe('_onUpdate', () => {
     beforeEach(() => {
-      // Mock super method
+      // Mock super method by replacing the grandparent prototype
       const superOnUpdate = vi.fn().mockReturnValue(true)
-      mockItem.__proto__.__proto__ = { _onUpdate: superOnUpdate }
+      Object.setPrototypeOf(Object.getPrototypeOf(mockItem), { _onUpdate: superOnUpdate })
 
       // Mock _displayScrollingStatus
       mockItem._displayScrollingStatus = vi.fn()

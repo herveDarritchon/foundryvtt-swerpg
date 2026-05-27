@@ -457,10 +457,10 @@ export default class SwerpgAction extends foundry.abstract.DataModel {
 
   /**
    * Execute the cloned action.
-   * @param {object} [options]                      Options which modify action usage
-   * @param {boolean} [options.chatMessage]         Automatically create a ChatMessage for the action?
-   * @param {boolean} [options.dialog]              Present the user with an action configuration dialog?
-   * @param {string} [options.rollMode]             Which roll mode to apply to the resulting message?
+   * @param {object} [options] Options which modify action usage.
+   * @param {boolean} [options.chatMessage] Automatically create a ChatMessage for the action?
+   * @param {object} [options.chatMessageOptions] Additional options forwarded to the chat message creation.
+   * @param {boolean} [options.dialog] Present the user with an action configuration dialog?
    * @returns {Promise<SwerpgActionOutcomes|null>}
    */
   async #use({ chatMessage = true, chatMessageOptions = {}, dialog = true } = {}) {

@@ -219,6 +219,20 @@ export default [
     },
   },
 
+  // Tests override — disable low-signal JSDoc rules in test files.
+  // Rationale: test helpers and spec functions do not need the same documentation
+  // level as production APIs. Keeping jsdoc/check-param-names active ensures that
+  // any existing documentation in tests is not misleading.
+  {
+    files: ['tests/**/*.mjs', 'tests/**/*.js'],
+    rules: {
+      'jsdoc/require-description': 'off',
+      'jsdoc/require-param-type': 'off',
+      'jsdoc/require-jsdoc': 'off',
+      'jsdoc/require-param': 'off',
+    },
+  },
+
   // Ajout de la configuration Prettier qui désactive les règles ESLint en conflit avec Prettier
   configPrettier,
 ]

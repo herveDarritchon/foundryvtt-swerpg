@@ -12,7 +12,10 @@ const MAX_PENDING = 50
 const MAX_RETRIES = 1
 const RETRY_DELAY_MS = 1000
 const pendingOldStates = new Map()
-const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
+const sleep = (ms) =>
+  new Promise((resolve) => {
+    setTimeout(resolve, ms)
+  })
 
 /* -------------------------------------------- */
 /*  Gardes                                      */
