@@ -10,11 +10,11 @@
 
 ## Fichiers impactés
 
-| Fichier                         | Nature du changement                                                |
-| ------------------------------- | ------------------------------------------------------------------- |
-| `module/models/actor-type.mjs`  | Remplacer la dépendance à `actor.thresholds.*` par un point d'accès explicite aux bonus |
-| `module/models/character.mjs`   | Calculer les bonus depuis l'espèce et retirer le stub `thresholds.*` |
-| `tests/models/character-thresholds.test.mjs` | Verrouiller le calcul des seuils sans champ intermédiaire |
+| Fichier                                      | Nature du changement                                                                    |
+| -------------------------------------------- | --------------------------------------------------------------------------------------- |
+| `module/models/actor-type.mjs`               | Remplacer la dépendance à `actor.thresholds.*` par un point d'accès explicite aux bonus |
+| `module/models/character.mjs`                | Calculer les bonus depuis l'espèce et retirer le stub `thresholds.*`                    |
+| `tests/models/character-thresholds.test.mjs` | Verrouiller le calcul des seuils sans champ intermédiaire                               |
 
 ## Étapes
 

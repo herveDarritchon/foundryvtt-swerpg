@@ -159,33 +159,25 @@ describe('AttackMixin', () => {
 
     test('weapon with keen property selects CRITICAL_SUCCESS_THRESHOLD_KEEN', () => {
       const keenProperties = new Set(['keen'])
-      const threshold = keenProperties.has('keen')
-        ? SYSTEM.dice.CRITICAL_SUCCESS_THRESHOLD_KEEN
-        : SYSTEM.dice.CRITICAL_SUCCESS_THRESHOLD
+      const threshold = keenProperties.has('keen') ? SYSTEM.dice.CRITICAL_SUCCESS_THRESHOLD_KEEN : SYSTEM.dice.CRITICAL_SUCCESS_THRESHOLD
       expect(threshold).toBe(4)
     })
 
     test('weapon without keen property selects default CRITICAL_SUCCESS_THRESHOLD', () => {
       const standardProperties = new Set()
-      const threshold = standardProperties.has('keen')
-        ? SYSTEM.dice.CRITICAL_SUCCESS_THRESHOLD_KEEN
-        : SYSTEM.dice.CRITICAL_SUCCESS_THRESHOLD
+      const threshold = standardProperties.has('keen') ? SYSTEM.dice.CRITICAL_SUCCESS_THRESHOLD_KEEN : SYSTEM.dice.CRITICAL_SUCCESS_THRESHOLD
       expect(threshold).toBe(6)
     })
 
     test('weapon with reliable property selects CRITICAL_FAILURE_THRESHOLD_RELIABLE', () => {
       const reliableProperties = new Set(['reliable'])
-      const threshold = reliableProperties.has('reliable')
-        ? SYSTEM.dice.CRITICAL_FAILURE_THRESHOLD_RELIABLE
-        : SYSTEM.dice.CRITICAL_FAILURE_THRESHOLD
+      const threshold = reliableProperties.has('reliable') ? SYSTEM.dice.CRITICAL_FAILURE_THRESHOLD_RELIABLE : SYSTEM.dice.CRITICAL_FAILURE_THRESHOLD
       expect(threshold).toBe(4)
     })
 
     test('weapon without reliable property selects default CRITICAL_FAILURE_THRESHOLD', () => {
       const standardProperties = new Set()
-      const threshold = standardProperties.has('reliable')
-        ? SYSTEM.dice.CRITICAL_FAILURE_THRESHOLD_RELIABLE
-        : SYSTEM.dice.CRITICAL_FAILURE_THRESHOLD
+      const threshold = standardProperties.has('reliable') ? SYSTEM.dice.CRITICAL_FAILURE_THRESHOLD_RELIABLE : SYSTEM.dice.CRITICAL_FAILURE_THRESHOLD
       expect(threshold).toBe(6)
     })
   })

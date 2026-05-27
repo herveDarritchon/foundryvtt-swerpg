@@ -10,9 +10,9 @@
 
 ## Fichiers impactés
 
-| Fichier | Nature du changement |
-| --- | --- |
-| `module/models/character.mjs` | Corriger les options du `SetField` et retirer les `Array.from(... || [])` devenus inutiles sur `details.specializations` |
+| Fichier                                           | Nature du changement                                                            |
+| ------------------------------------------------- | ------------------------------------------------------------------------------- | --- | ------------------------------------------------- |
+| `module/models/character.mjs`                     | Corriger les options du `SetField` et retirer les `Array.from(...               |     | [])`devenus inutiles sur`details.specializations` |
 | `tests/models/character-specializations.test.mjs` | Verrouiller le contrat de schéma et la disponibilité d'un `Set` vide par défaut |
 
 ## Étapes

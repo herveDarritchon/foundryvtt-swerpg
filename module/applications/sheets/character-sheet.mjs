@@ -92,7 +92,6 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
     const specializations = Array.from(a.system.details.specializations || [])
     const specializationNames = specializations.map((specialization) => specialization?.name).filter(Boolean)
     const specializationFallback = game.i18n.localize('SPECIALIZATION.SHEET.CHOOSE')
-    const creationPoints = a.points ?? a.system.points ?? {}
 
     const specializationHeader = {
       primaryName: specializationNames[0] || null,
@@ -119,17 +118,15 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
     })
 
     context.skills = CharacterSheet.#prepareSkills(a)
-    // Incomplete Tasks
-    context.points = a.system.points
 
     Object.assign(i, {
       species: !s.system.details.species?.name,
       career: !s.system.details.career?.name,
       specialization: specializations.length === 0,
       freeSkill: a.hasFreeSkillsAvailable(),
-      characteristics: CharacterSheet.#hasIncompleteCharacteristicStep(creationPoints.ability, context.characteristicScores),
-      skills: CharacterSheet.#hasIncompleteCreationStep(creationPoints.skill),
-      talents: CharacterSheet.#hasIncompleteCreationStep(creationPoints.talent),
+      characteristics: CharacterSheet.#hasIncompleteCharacteristicStep(context.characteristicScores),
+      skills: false,
+      talents: false,
     })
     i.creation = i.species || i.career || i.freeSkill || i.specialization || i.characteristics || i.skills || i.talents
     if (i.creation) {
@@ -166,27 +163,14 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
     return context
   }
 
-  static #hasIncompleteCharacteristicStep(abilityPoints, characteristicScores = []) {
-    if (typeof abilityPoints?.requireInput === 'boolean') return abilityPoints.requireInput
-    if (CharacterSheet.#hasPositiveCreationCounter(abilityPoints?.pool)) return true
-    if (CharacterSheet.#hasPositiveCreationCounter(abilityPoints?.available)) return true
-
+  /**
+   * Determine whether the characteristics step is incomplete during character creation.
+   * A step is incomplete when at least one characteristic can still be increased.
+   * @param {Array} characteristicScores - Enriched characteristic score objects.
+   * @returns {boolean}
+   */
+  static #hasIncompleteCharacteristicStep(characteristicScores = []) {
     return Array.isArray(characteristicScores) && characteristicScores.some((characteristic) => characteristic?.canIncrease === true)
-  }
-
-  static #hasIncompleteCreationStep(stepPoints) {
-    if (typeof stepPoints?.available === 'boolean') return stepPoints.available
-    if (CharacterSheet.#hasPositiveCreationCounter(stepPoints?.available)) return true
-
-    if (Number.isFinite(stepPoints?.total) && Number.isFinite(stepPoints?.spent)) {
-      return stepPoints.total - stepPoints.spent > 0
-    }
-
-    return false
-  }
-
-  static #hasPositiveCreationCounter(value) {
-    return Number.isFinite(value) && value > 0
   }
 
   /**

@@ -4,11 +4,7 @@
  */
 
 import { sanitizeDescription } from './text.mjs'
-import {
-  CAREER_DEFAULT_FREE_SKILL_RANK,
-  CAREER_MIN_FREE_SKILL_RANK,
-  CAREER_MAX_FREE_SKILL_RANK,
-} from '../../config/progression.mjs'
+import { CAREER_DEFAULT_FREE_SKILL_RANK, CAREER_MIN_FREE_SKILL_RANK, CAREER_MAX_FREE_SKILL_RANK } from '../../config/progression.mjs'
 
 /**
  * Normalise la valeur FreeRanks en entier borné [CAREER_MIN_FREE_SKILL_RANK, CAREER_MAX_FREE_SKILL_RANK],

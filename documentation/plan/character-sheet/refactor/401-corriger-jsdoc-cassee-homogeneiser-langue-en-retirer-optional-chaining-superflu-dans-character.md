@@ -10,8 +10,8 @@
 
 ## Fichiers impactés
 
-| Fichier | Nature du changement |
-| --- | --- |
+| Fichier                       | Nature du changement                                                                    |
+| ----------------------------- | --------------------------------------------------------------------------------------- |
 | `module/models/character.mjs` | Nettoyage JSDoc/commentaires et simplification syntaxique locale sans changement métier |
 
 ## Étapes

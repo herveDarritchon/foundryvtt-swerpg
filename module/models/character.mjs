@@ -333,16 +333,6 @@ export default class SwerpgCharacter extends SwerpgActorType {
   /* -------------------------------------------- */
 
   /**
-   * Advancement points that are available to spend and have been spent.
-   * @type {{
-   *   ability: {pool: number, total: number, bought: number, spent: number, available: number },
-   *   skill: {total: number, spent: number, available: number },
-   *   talent: {total: number, spent: number, available: number }
-   * }}
-   */
-  points
-
-  /**
    * Character actor size.
    * @type {number}
    */
@@ -546,9 +536,6 @@ export default class SwerpgCharacter extends SwerpgActorType {
    * @returns {Promise<void>}
    */
   async #applyDetailItem(item, extraOptions = {}) {
-    // TODO Change this when points are used for experience
-    // canApply: this.parent.isL0 && !this.parent.points.ability.spent,
-    // canClear: this.parent.isL0
     await this.parent._applyDetailItem(item, {
       canApply: true,
       canClear: true,
@@ -585,5 +572,4 @@ export default class SwerpgCharacter extends SwerpgActorType {
       collectionKey: 'specializations',
     })
   }
-
 }

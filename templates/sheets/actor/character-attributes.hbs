@@ -120,16 +120,6 @@
         </div>
       {{/each}}
     </div>
-    {{#if points.characteristic.requireInput}}
-      <footer class="footer-section point-pools flexrow">
-        <span class="label">Characteristic Points</span>
-        {{#if points.characteristic.pool}}
-          <span class="value hex filled">{{points.characteristic.pool}}</span>
-        {{else if points.characteristic.available}}
-          <span class="value hex filled">{{points.characteristic.available}}</span>
-        {{/if}}
-      </footer>
-    {{/if}}
   </div>
 
   <div class="sheet-section resistances flexrow">

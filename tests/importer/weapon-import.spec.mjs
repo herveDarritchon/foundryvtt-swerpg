@@ -456,17 +456,13 @@ describe('weaponMapper — MC4 shared-constant fallbacks', () => {
   })
 
   it('unknown skill falls back to SYSTEM.WEAPON.DEFAULT_SKILL', () => {
-    const result = weaponMapper([
-      { Name: 'Mystery Gun', Key: 'mystery', SkillKey: 'UNKNOWN_SKILL_XYZ', Range: 'Short', Damage: 3, Crit: 3 },
-    ])
+    const result = weaponMapper([{ Name: 'Mystery Gun', Key: 'mystery', SkillKey: 'UNKNOWN_SKILL_XYZ', Range: 'Short', Damage: 3, Crit: 3 }])
     expect(result).toHaveLength(1)
     expect(result[0].system.skill).toBe(SYSTEM.WEAPON.DEFAULT_SKILL)
   })
 
   it('unknown range falls back to SYSTEM.WEAPON.DEFAULT_RANGE', () => {
-    const result = weaponMapper([
-      { Name: 'Mystery Gun', Key: 'mystery2', SkillKey: 'RangedLight', Range: 'UNKNOWN_RANGE_XYZ', Damage: 3, Crit: 3 },
-    ])
+    const result = weaponMapper([{ Name: 'Mystery Gun', Key: 'mystery2', SkillKey: 'RangedLight', Range: 'UNKNOWN_RANGE_XYZ', Damage: 3, Crit: 3 }])
     expect(result).toHaveLength(1)
     expect(result[0].system.range).toBe(SYSTEM.WEAPON.DEFAULT_RANGE)
   })
@@ -480,17 +476,13 @@ describe('weaponMapper — MC4 shared-constant fallbacks', () => {
   })
 
   it('unrestricted weapon uses SYSTEM.DEFAULT_RESTRICTION_LEVEL', () => {
-    const result = weaponMapper([
-      { Name: 'Basic Pistol', Key: 'basic', SkillKey: 'RangedLight', Range: 'Short', Restricted: 'false', Damage: 3, Crit: 3 },
-    ])
+    const result = weaponMapper([{ Name: 'Basic Pistol', Key: 'basic', SkillKey: 'RangedLight', Range: 'Short', Restricted: 'false', Damage: 3, Crit: 3 }])
     expect(result).toHaveLength(1)
     expect(result[0].system.restrictionLevel).toBe(SYSTEM.DEFAULT_RESTRICTION_LEVEL)
   })
 
   it('restricted weapon uses SYSTEM.RESTRICTION_LEVELS.restricted.id', () => {
-    const result = weaponMapper([
-      { Name: 'Military Rifle', Key: 'milrifle', SkillKey: 'RangedHeavy', Range: 'Long', Restricted: 'true', Damage: 5, Crit: 3 },
-    ])
+    const result = weaponMapper([{ Name: 'Military Rifle', Key: 'milrifle', SkillKey: 'RangedHeavy', Range: 'Long', Restricted: 'true', Damage: 5, Crit: 3 }])
     expect(result).toHaveLength(1)
     expect(result[0].system.restrictionLevel).toBe(SYSTEM.RESTRICTION_LEVELS.restricted.id)
   })

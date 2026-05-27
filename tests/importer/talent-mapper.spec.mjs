@@ -359,10 +359,7 @@ describe('OggDudeTalentMapper — MC4 shared-constant activation', () => {
   })
 
   it('missing activation produces SYSTEM.TALENT_ACTIVATION.unspecified.id in transform output', () => {
-    const context = OggDudeTalentMapper.buildSingleTalentContext(
-      { Name: 'Blank Talent', Key: 'blank_talent', Description: 'A talent with no activation' },
-      {},
-    )
+    const context = OggDudeTalentMapper.buildSingleTalentContext({ Name: 'Blank Talent', Key: 'blank_talent', Description: 'A talent with no activation' }, {})
     expect(context).not.toBeNull()
     const transformed = OggDudeTalentMapper.transform(context)
     expect(transformed.system.activation).toBe(SYSTEM.TALENT_ACTIVATION.unspecified.id)

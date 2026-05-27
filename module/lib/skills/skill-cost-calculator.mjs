@@ -19,9 +19,7 @@ export default class SkillCostCalculator {
 
     if (action === 'forget') {
       // forget cost = train cost at (rankAfterDecrease + 1)
-      return isSpecialized
-        ? (rankValue + 1) * SKILL_RANK_COST_MULTIPLIER
-        : (rankValue + 1) * SKILL_RANK_COST_MULTIPLIER + SKILL_NON_CAREER_SURCHARGE
+      return isSpecialized ? (rankValue + 1) * SKILL_RANK_COST_MULTIPLIER : (rankValue + 1) * SKILL_RANK_COST_MULTIPLIER + SKILL_NON_CAREER_SURCHARGE
     }
 
     return 0

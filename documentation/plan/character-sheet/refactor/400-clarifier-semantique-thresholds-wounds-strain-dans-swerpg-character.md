@@ -10,10 +10,10 @@
 
 ## Fichiers impactés
 
-| Fichier | Nature du changement |
-| --- | --- |
-| `module/models/actor-type.mjs` | Clarifier le contrat entre helpers de bonus et calcul des seuils finaux |
-| `module/models/character.mjs` | Documenter la provenance du bonus d'espèce et la sémantique locale côté Character |
+| Fichier                                      | Nature du changement                                                                   |
+| -------------------------------------------- | -------------------------------------------------------------------------------------- |
+| `module/models/actor-type.mjs`               | Clarifier le contrat entre helpers de bonus et calcul des seuils finaux                |
+| `module/models/character.mjs`                | Documenter la provenance du bonus d'espèce et la sémantique locale côté Character      |
 | `tests/models/character-thresholds.test.mjs` | Aligner les libellés et assertions sur le contrat « bonus additif » vs « seuil final » |
 
 ## Étapes

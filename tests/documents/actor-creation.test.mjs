@@ -194,19 +194,25 @@ describe('SwerpgActor Character Creation', () => {
 
   describe('canPurchaseCharacteristic()', () => {
     beforeEach(() => {
+      // Set up the progression structure used by the real canPurchaseCharacteristic
+      actor.system.progression = {
+        experience: { available: 10, spent: 0, gained: 10, total: 10 },
+      }
       actor.canPurchaseCharacteristic = vi.fn().mockImplementation((ability, delta) => {
-        if (!actor.system.characteristics[ability]) return false
+        delta = Math.sign(delta)
+        const a = actor.system.characteristics[ability]
+        if (!a || !delta) return false
+
         if (actor.isL0) {
-          const a = actor.system.characteristics[ability]
-          if (delta > 0 && (a.base === 3 || actor.points.ability.pool < 1)) return false
+          if (delta > 0 && a.base === 3) return false
           if (delta < 0 && a.base === 0) return false
           return true
-        } else {
-          const a = actor.system.characteristics[ability]
-          if (delta > 0 && (a.value === 12 || actor.points.ability.available < 1)) return false
-          if (delta < 0 && a.trained === 0) return false
-          return true
         }
+
+        const xpAvailable = actor.system.progression?.experience?.available ?? 0
+        if (delta > 0 && (a.value === 12 || xpAvailable < 1)) return false
+        if (delta < 0 && a.trained === 0) return false
+        return true
       })
     })
 
@@ -220,21 +226,14 @@ describe('SwerpgActor Character Creation', () => {
         actor.isL0 = true
       })
 
-      test('should return true if increasing and base < 3 and pool > 0', () => {
+      test('should return true if increasing and base < 3', () => {
         actor.system.characteristics.strength.base = 2
-        actor.points.ability.pool = 1
         const result = actor.canPurchaseCharacteristic('strength', 1)
         expect(result).toBe(true)
       })
 
       test('should return false if base is at max (3)', () => {
         actor.system.characteristics.strength.base = 3
-        const result = actor.canPurchaseCharacteristic('strength', 1)
-        expect(result).toBe(false)
-      })
-
-      test('should return false if pool is 0', () => {
-        actor.points.ability.pool = 0
         const result = actor.canPurchaseCharacteristic('strength', 1)
         expect(result).toBe(false)
       })
@@ -253,15 +252,22 @@ describe('SwerpgActor Character Creation', () => {
     })
 
     describe('isL0 = false (regular play)', () => {
-      test('should return true if increasing and value < 12 and points available', () => {
+      test('should return true if increasing and value < 12 and XP available', () => {
         actor.system.characteristics.strength.value = 3
-        actor.points.ability.available = 1
+        actor.system.progression.experience.available = 1
         const result = actor.canPurchaseCharacteristic('strength', 1)
         expect(result).toBe(true)
       })
 
       test('should return false if value is at max (12)', () => {
         actor.system.characteristics.strength.value = 12
+        const result = actor.canPurchaseCharacteristic('strength', 1)
+        expect(result).toBe(false)
+      })
+
+      test('should return false if XP available is 0', () => {
+        actor.system.characteristics.strength.value = 3
+        actor.system.progression.experience.available = 0
         const result = actor.canPurchaseCharacteristic('strength', 1)
         expect(result).toBe(false)
       })
@@ -283,15 +289,13 @@ describe('SwerpgActor Character Creation', () => {
   describe('levelUp()', () => {
     beforeEach(() => {
       actor.update = vi.fn().mockResolvedValue(actor)
+      actor.hasFreeSkillsAvailable = vi.fn().mockReturnValue(false)
       actor.levelUp = vi.fn().mockImplementation(async (delta = 1) => {
         if (delta === 0) return
 
-        if (actor.isL0) {
-          const steps = [!actor.points.ability.requireInput, !actor.points.skill.available, !actor.points.talent.available]
-          if (!steps.every((k) => k)) {
-            global.ui.notifications.warn('WALKTHROUGH.LevelZeroIncomplete', { localize: true })
-            return
-          }
+        if (actor.isL0 && actor.hasFreeSkillsAvailable()) {
+          global.ui.notifications.warn('WALKTHROUGH.LevelZeroIncomplete', { localize: true })
+          return
         }
 
         const level = Math.clamp(actor.level + delta, 0, 24)
@@ -328,11 +332,9 @@ describe('SwerpgActor Character Creation', () => {
       expect(actor.update).toHaveBeenCalledWith({ 'system.advancement.level': 0 })
     })
 
-    test('should show warning if isL0 and creation incomplete', async () => {
+    test('should show warning if isL0 and free skill ranks are still available', async () => {
       actor.isL0 = true
-      actor.points.ability.requireInput = true
-      actor.points.skill.available = true
-      actor.points.talent.available = true
+      actor.hasFreeSkillsAvailable.mockReturnValue(true)
 
       await actor.levelUp(1)
 
@@ -342,11 +344,9 @@ describe('SwerpgActor Character Creation', () => {
       expect(actor.update).not.toHaveBeenCalled()
     })
 
-    test('should level up if isL0 and creation is complete', async () => {
+    test('should level up if isL0 and no free skill ranks remain', async () => {
       actor.isL0 = true
-      actor.points.ability.requireInput = false
-      actor.points.skill.available = false
-      actor.points.talent.available = false
+      actor.hasFreeSkillsAvailable.mockReturnValue(false)
 
       await actor.levelUp(1)
 

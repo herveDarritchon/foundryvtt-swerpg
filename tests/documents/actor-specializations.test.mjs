@@ -208,10 +208,7 @@ describe('SwerpgActor — removeSpecialization', () => {
 
   test('removes a specialization by name when both specializationId and treeUuid are absent', async () => {
     const actor = buildActorStub({
-      specializations: [
-        { name: 'Pilot' },
-        { specializationId: 'spec-b', name: 'Spec B' },
-      ],
+      specializations: [{ name: 'Pilot' }, { specializationId: 'spec-b', name: 'Spec B' }],
     })
 
     await actor.removeSpecialization('Pilot')

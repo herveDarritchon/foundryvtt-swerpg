@@ -98,14 +98,6 @@ export default class SwerpgActor extends TalentsMixin(EquipmentMixin(ResourcesMi
   }
 
   /**
-   * Convenient access to the Actor's points (ability, skill, talent).
-   * @type {object}  The points data
-   */
-  get points() {
-    return this.system.points
-  }
-
-  /**
    * Convenient access to the Actor's resistances.
    * @type {object}  The resistances data
    */
@@ -206,10 +198,9 @@ export default class SwerpgActor extends TalentsMixin(EquipmentMixin(ResourcesMi
   async levelUp(delta = 1) {
     if (delta === 0) return
 
-    // Confirm that character creation is complete
-    if (this.isL0) {
-      const steps = [!this.points.ability.requireInput, !this.points.skill.available, !this.points.talent.available]
-      if (!steps.every((k) => k)) return ui.notifications.warn('WALKTHROUGH.LevelZeroIncomplete', { localize: true })
+    // Confirm that character creation is complete: no unspent free skill ranks remain.
+    if (this.isL0 && this.hasFreeSkillsAvailable()) {
+      return ui.notifications.warn('WALKTHROUGH.LevelZeroIncomplete', { localize: true })
     }
 
     // Commit the update
@@ -271,30 +262,27 @@ export default class SwerpgActor extends TalentsMixin(EquipmentMixin(ResourcesMi
 
   /**
    * Test whether this Actor can modify an ability score in a certain direction.
-   * @param {string} ability      A value in ABILITIES
+   * @param {string} ability      A value in SYSTEM.CHARACTERISTICS
    * @param {number} delta        A number in [-1, 1] for the direction of the purchase
    * @returns {boolean}           Can the ability score be changed?
    */
   canPurchaseCharacteristic(ability, delta = 1) {
-    if (!this.system.points) return true
     delta = Math.sign(delta)
-    const points = this.points.ability
-    const a = this.system.abilities[ability]
+    const a = this.system.characteristics[ability]
     if (!a || !delta) return false
 
-    // Case 1 - Point Buy
+    // Case 1 - Point Buy (character creation)
     if (this.isL0) {
-      if (delta > 0 && (a.base === 3 || points.pool < 1)) return false
-      else if (delta < 0 && a.base === 0) return false
+      if (delta > 0 && a.rank.base === 3) return false
+      else if (delta < 0 && a.rank.base === 0) return false
       return true
     }
 
-    // Case 2 - Regular Increase
-    else {
-      if (delta > 0 && (a.value === 12 || points.available < 1)) return false
-      else if (delta < 0 && a.trained === 0) return false
-      return true
-    }
+    // Case 2 - Regular Increase (post-creation via XP)
+    const xpAvailable = this.system.progression?.experience?.available ?? 0
+    if (delta > 0 && (a.rank.value === 12 || xpAvailable < 1)) return false
+    else if (delta < 0 && a.rank.trained === 0) return false
+    return true
   }
 
   /* -------------------------------------------- */

@@ -62,11 +62,6 @@ export function createMockActor(overrides = {}) {
       status: null,
       resistances: {},
     },
-    points: {
-      skill: { available: 10, spent: 0, total: 10, requireInput: false },
-      ability: { pool: 6, spent: 0, available: 6, requireInput: false },
-      talent: { available: 5, spent: 0, total: 5 },
-    },
   }
 
   const mockActor = new MockActorBase(baseData)

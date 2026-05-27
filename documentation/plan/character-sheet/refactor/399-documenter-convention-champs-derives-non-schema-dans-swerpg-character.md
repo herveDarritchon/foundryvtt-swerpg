@@ -10,8 +10,8 @@
 
 ## Fichiers impactés
 
-| Fichier | Nature du changement |
-| --- | --- |
+| Fichier                       | Nature du changement                                                                                                      |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
 | `module/models/character.mjs` | Compléter la JSDoc du typedef `Experience` et clarifier la convention persisté vs dérivé autour de `_prepareExperience()` |
 
 ## Étapes

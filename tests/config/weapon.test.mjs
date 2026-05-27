@@ -1,12 +1,5 @@
 import { describe, test, expect } from 'vitest'
-import {
-  SLOTS,
-  DEFAULT_SKILL,
-  DEFAULT_RANGE,
-  DEFAULT_RESOURCE,
-  SKILLS,
-  RANGETYPES,
-} from '../../module/config/weapon.mjs'
+import { SLOTS, DEFAULT_SKILL, DEFAULT_RANGE, DEFAULT_RESOURCE, SKILLS, RANGETYPES } from '../../module/config/weapon.mjs'
 import { SYSTEM } from '../../module/config/system.mjs'
 
 describe('weapon config — ADR-0018 contractual constants', () => {

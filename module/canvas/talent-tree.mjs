@@ -302,7 +302,10 @@ export default class SwerpgTalentTree extends PIXI.Container {
   #drawConnections(node, seen) {
     for (const c of node.connected) {
       if (seen.has(c) || c.tier < 0 || !this.state.get(c).purchased) continue
-      this.connections.lineStyle({ color: c.color, width: CONNECTION_LINE_WIDTH, alpha: CONNECTION_LINE_ALPHA }).moveTo(node.point.x, node.point.y).lineTo(c.point.x, c.point.y)
+      this.connections
+        .lineStyle({ color: c.color, width: CONNECTION_LINE_WIDTH, alpha: CONNECTION_LINE_ALPHA })
+        .moveTo(node.point.x, node.point.y)
+        .lineTo(c.point.x, c.point.y)
     }
   }
 
@@ -503,11 +506,7 @@ export default class SwerpgTalentTree extends PIXI.Container {
   darkenBackground(fade = true) {
     this.background.darken.clear()
     const w = DARKEN_RECT_HALF_SIZE * 2
-    if (fade)
-      this.background.darken
-        .beginFill(0x000000, DARKEN_OVERLAY_ALPHA)
-        .drawRect(-DARKEN_RECT_HALF_SIZE, -DARKEN_RECT_HALF_SIZE, w, w)
-        .endFill()
+    if (fade) this.background.darken.beginFill(0x000000, DARKEN_OVERLAY_ALPHA).drawRect(-DARKEN_RECT_HALF_SIZE, -DARKEN_RECT_HALF_SIZE, w, w).endFill()
     this.background.blurFilter.enabled = fade
   }
 

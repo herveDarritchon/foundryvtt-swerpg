@@ -201,7 +201,12 @@ function mapOggDudeWeapon(xmlWeapon) {
     const { name: sourceName, page: sourcePage } = extractSourceInfo(xmlWeapon.Source)
 
     // Resolve system.category (ADR-0007 priority: Categories → SkillKey → Range → default)
-    const { category: resolvedCategory, source: categorySource } = resolveWeaponCategory(categoryTags, mappedSkill, mappedRange, SYSTEM.WEAPON.CATEGORIES.ranged.id)
+    const { category: resolvedCategory, source: categorySource } = resolveWeaponCategory(
+      categoryTags,
+      mappedSkill,
+      mappedRange,
+      SYSTEM.WEAPON.CATEGORIES.ranged.id,
+    )
     if (categorySource !== 'category') {
       incrementWeaponCategoryFallback()
     }
