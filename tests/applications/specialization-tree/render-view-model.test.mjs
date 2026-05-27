@@ -2,6 +2,10 @@ import { describe, expect, it } from 'vitest'
 
 import { buildRenderViewModel } from '../../../module/applications/specialization-tree/render-view-model.mjs'
 
+/**
+ *
+ * @param overrides
+ */
 function mockTree(overrides = {}) {
   return {
     id: 'tree-1',
@@ -17,6 +21,10 @@ function mockTree(overrides = {}) {
   }
 }
 
+/**
+ *
+ * @param node
+ */
 function mockTalentLookup(node) {
   const talents = {
     'talent-parry': { name: 'Parry', uuid: 'Item.talent-parry-uuid', isRanked: true },

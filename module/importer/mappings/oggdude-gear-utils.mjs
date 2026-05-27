@@ -4,6 +4,10 @@ import { getQualityConfig } from '../../config/qualities.mjs'
 
 const BRAWN_BASED_SKILLS = new Set(['melee', 'meleeheavy', 'meleelight', 'brawl', 'lightsaber'])
 
+/**
+ *
+ * @param value
+ */
 function ensureArray(value) {
   if (!value) {
     return []
@@ -11,6 +15,11 @@ function ensureArray(value) {
   return Array.isArray(value) ? value : [value]
 }
 
+/**
+ *
+ * @param value
+ * @param fallback
+ */
 function parseInteger(value, fallback = 0) {
   const parsed = Number.parseInt(value, 10)
   if (Number.isNaN(parsed)) {
@@ -19,6 +28,10 @@ function parseInteger(value, fallback = 0) {
   return parsed
 }
 
+/**
+ *
+ * @param key
+ */
 function toCamelCase(key) {
   if (!key) {
     return key
@@ -26,6 +39,10 @@ function toCamelCase(key) {
   return key.charAt(0).toLowerCase() + key.slice(1)
 }
 
+/**
+ *
+ * @param value
+ */
 function humanizeLabel(value) {
   if (!value) {
     return ''
@@ -43,6 +60,10 @@ function humanizeLabel(value) {
     .replace(/\b\w/g, (char) => char.toUpperCase())
 }
 
+/**
+ *
+ * @param range
+ */
 function normalizeRangeValue(range) {
   if (!range) {
     return ''
@@ -69,6 +90,10 @@ function normalizeRangeValue(range) {
   return lowered
 }
 
+/**
+ *
+ * @param skillKey
+ */
 function isBrawnSkill(skillKey) {
   if (!skillKey) {
     return false
@@ -79,6 +104,12 @@ function isBrawnSkill(skillKey) {
   return BRAWN_BASED_SKILLS.has(normalized)
 }
 
+/**
+ *
+ * @param baseDamage
+ * @param bonusDamage
+ * @param skillKey
+ */
 function formatDamageLabel(baseDamage, bonusDamage, skillKey) {
   if (baseDamage <= 0 && bonusDamage <= 0) {
     if (isBrawnSkill(skillKey)) {
@@ -101,10 +132,18 @@ function formatDamageLabel(baseDamage, bonusDamage, skillKey) {
   return `${baseDamage}`
 }
 
+/**
+ *
+ * @param description
+ */
 export function sanitizeOggDudeGearDescription(description) {
   return sanitizeOggDudeWeaponDescription(description)
 }
 
+/**
+ *
+ * @param source
+ */
 export function extractGearSourceInfo(source) {
   if (!source) {
     return { name: '', page: null }
@@ -122,6 +161,12 @@ export function extractGearSourceInfo(source) {
   return { name, page }
 }
 
+/**
+ *
+ * @param root0
+ * @param root0.name
+ * @param root0.page
+ */
 export function formatGearSourceLine({ name, page }) {
   if (!name) {
     return ''
@@ -132,6 +177,10 @@ export function formatGearSourceLine({ name, page }) {
   return `Source: ${name}`
 }
 
+/**
+ *
+ * @param value
+ */
 export function slugifyGearCategory(value) {
   if (!value) {
     return 'general'
@@ -147,6 +196,10 @@ export function slugifyGearCategory(value) {
   return sanitized || 'general'
 }
 
+/**
+ *
+ * @param baseModsNode
+ */
 export function extractBaseMods(baseModsNode) {
   const mods = ensureArray(baseModsNode?.Mod ?? baseModsNode)
   const descriptionLines = []
@@ -236,6 +289,10 @@ export function extractBaseMods(baseModsNode) {
   }
 }
 
+/**
+ *
+ * @param weaponModifiersNode
+ */
 export function extractWeaponProfile(weaponModifiersNode) {
   const weaponModifiers = ensureArray(weaponModifiersNode?.WeaponModifier ?? weaponModifiersNode)
   if (weaponModifiers.length === 0) {
@@ -340,6 +397,14 @@ export function extractWeaponProfile(weaponModifiersNode) {
   }
 }
 
+/**
+ *
+ * @param root0
+ * @param root0.baseDescription
+ * @param root0.sourceLine
+ * @param root0.baseModsLines
+ * @param root0.weaponUseLines
+ */
 export function composeGearDescription({ baseDescription, sourceLine, baseModsLines = [], weaponUseLines = [] }) {
   const sections = []
   const cleanedBase = (baseDescription ?? '').trim()

@@ -27,6 +27,10 @@ import { REASON_CODE } from '../../../module/lib/talent-node/talent-node-state.m
 // Builders
 // ---------------------------------------------------------------------------
 
+/**
+ *
+ * @param overrides
+ */
 function buildActor(overrides = {}) {
   return {
     id: 'actor-001',
@@ -44,6 +48,11 @@ function buildActor(overrides = {}) {
   }
 }
 
+/**
+ *
+ * @param nodeOverrides
+ * @param connectionOverrides
+ */
 function buildResolvedTree(nodeOverrides = [], connectionOverrides = []) {
   return {
     tree: {

@@ -1,6 +1,10 @@
 import { vi } from 'vitest'
 import { createActor, updateActor } from './actor.mjs'
 
+/**
+ *
+ * @param options
+ */
 export function createActorWithUpdate(options = {}) {
   const actor = createActor(options)
 

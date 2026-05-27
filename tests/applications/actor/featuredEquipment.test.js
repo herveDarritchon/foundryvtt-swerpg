@@ -1,6 +1,16 @@
 import { describe, it, expect } from 'vitest'
 import { computeFeaturedEquipment } from '../../../module/lib/featured-equipment.mjs'
 
+/**
+ *
+ * @param root0
+ * @param root0.id
+ * @param root0.name
+ * @param root0.img
+ * @param root0.type
+ * @param root0.system
+ * @param root0.tags
+ */
 function mockItem({ id, name, img = 'icon.png', type, system = {}, tags = {} }) {
   return {
     id,
@@ -15,6 +25,10 @@ function mockItem({ id, name, img = 'icon.png', type, system = {}, tags = {} }) 
   }
 }
 
+/**
+ *
+ * @param obj
+ */
 function deepClone(obj) {
   if (Array.isArray(obj)) return obj.map(deepClone)
   if (obj && typeof obj === 'object') {

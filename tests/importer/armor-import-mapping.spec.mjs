@@ -1,7 +1,7 @@
 /**
  * Tests pour le mapping des armures OggDude - Version simplifiée
  */
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import { buildArmorDescription, normalizeArmorCategoryTag } from '../../module/importer/utils/armor-import-utils.mjs'
 
 describe('Armor Import Mapping - Utils', () => {

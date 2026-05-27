@@ -6,7 +6,6 @@ import { createActor } from '../../utils/actors/actor.mjs'
 import { createTalentData } from '../../utils/talents/talent.mjs'
 import RankedTrainedTalent from '../../../module/lib/talents/ranked-trained-talent.mjs'
 import ErrorTalent from '../../../module/lib/talents/error-talent.mjs'
-import TrainedTalent from '../../../module/lib/talents/trained-talent.mjs'
 
 describe('Ranked Trained Talent', () => {
   describe('train a ranked talent', () => {

@@ -7,28 +7,50 @@ const motivationCategoryStats = new ImportStats()
 
 // --- Motivation ---
 
+/**
+ *
+ */
 export function resetMotivationImportStats() {
   motivationStats.reset()
 }
 
+/**
+ *
+ * @param key
+ * @param amount
+ */
 export function incrementMotivationImportStat(key, amount = 1) {
   motivationStats.increment(key, amount)
 }
 
+/**
+ *
+ */
 export function getMotivationImportStats() {
   return motivationStats.getStats()
 }
 
 // --- Motivation Category ---
 
+/**
+ *
+ */
 export function resetMotivationCategoryImportStats() {
   motivationCategoryStats.reset()
 }
 
+/**
+ *
+ * @param key
+ * @param amount
+ */
 export function incrementMotivationCategoryImportStat(key, amount = 1) {
   motivationCategoryStats.increment(key, amount)
 }
 
+/**
+ *
+ */
 export function getMotivationCategoryImportStats() {
   return motivationCategoryStats.getStats()
 }

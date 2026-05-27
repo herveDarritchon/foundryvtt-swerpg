@@ -7,7 +7,7 @@ import { CombatMixin } from '../../../module/documents/actor-mixins/combat/index
  * Create a mock SwerpgActor for unit testing.
  * Uses ResourcesMixin to provide real method implementations.
  *
- * @param {object} [overrides={}] - Override default mock values
+ * @param {object} [overrides={}] Override default mock values
  * @returns {object} A mock actor object
  */
 export function createMockActor(overrides = {}) {

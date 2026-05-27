@@ -1,4 +1,5 @@
 import jsdoc from 'eslint-plugin-jsdoc'
+import unusedImports from 'eslint-plugin-unused-imports'
 import globals from 'globals'
 import configPrettier from 'eslint-config-prettier'
 
@@ -12,6 +13,7 @@ export default [
     },
     plugins: {
       jsdoc,
+      'unused-imports': unusedImports,
     },
     rules: {
       'arrow-spacing': 'off',
@@ -62,6 +64,7 @@ export default [
       'no-dupe-keys': 'warn',
       'no-duplicate-case': 'warn',
       'no-duplicate-imports': ['warn', { includeExports: true }],
+      'unused-imports/no-unused-imports': 'warn',
       'no-empty': ['warn', { allowEmptyCatch: true }],
       'no-empty-character-class': 'warn',
       'no-empty-pattern': 'warn',

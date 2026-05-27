@@ -1,4 +1,3 @@
-import SwerpgAction from './action.mjs'
 import SwerpgPhysicalItem from './physical.mjs'
 
 /**

@@ -12,6 +12,13 @@ vi.mock('../../../module/utils/logger.mjs', () => ({
 import { logger } from '../../../module/utils/logger.mjs'
 import { getNodeState, getTreeNodesStates, NODE_STATE, REASON_CODE } from '../../../module/lib/talent-node/talent-node-state.mjs'
 
+/**
+ *
+ * @param root0
+ * @param root0.specializations
+ * @param root0.talentPurchases
+ * @param root0.experience
+ */
 function buildActor({ specializations, talentPurchases, experience } = {}) {
   return {
     system: {
@@ -26,6 +33,14 @@ function buildActor({ specializations, talentPurchases, experience } = {}) {
   }
 }
 
+/**
+ *
+ * @param root0
+ * @param root0.id
+ * @param root0.specializationId
+ * @param root0.nodes
+ * @param root0.connections
+ */
 function buildTree({ id, specializationId, nodes, connections } = {}) {
   return {
     id: id ?? 'tree-1',
@@ -37,6 +52,15 @@ function buildTree({ id, specializationId, nodes, connections } = {}) {
   }
 }
 
+/**
+ *
+ * @param root0
+ * @param root0.nodeId
+ * @param root0.talentId
+ * @param root0.row
+ * @param root0.column
+ * @param root0.cost
+ */
 function buildNode({ nodeId, talentId, row, column, cost } = {}) {
   return {
     nodeId: nodeId ?? 'r1c1',

@@ -20,10 +20,21 @@ export const REASON_CODE = Object.freeze({
   NODE_HAS_DEPENDENTS: 'node-has-dependents',
 })
 
+/**
+ *
+ * @param state
+ * @param reasonCode
+ * @param details
+ */
 function makeResult(state, reasonCode, details = {}) {
   return { state, reasonCode, details }
 }
 
+/**
+ *
+ * @param actor
+ * @param specializationId
+ */
 function isSpecializationOwned(actor, specializationId) {
   const specs = actor?.system?.details?.specializations
   if (!specs) return false
@@ -33,12 +44,28 @@ function isSpecializationOwned(actor, specializationId) {
   return false
 }
 
+/**
+ *
+ * @param tree
+ * @param nodeId
+ */
 function findNode(tree, nodeId) {
   const nodes = tree?.system?.nodes
   if (!Array.isArray(nodes)) return undefined
   return nodes.find((n) => n?.nodeId === nodeId)
 }
 
+/**
+ *
+ * @param actor
+ * @param treeId
+ * @param nodeId
+ * @param talentId
+ * @param specializationId
+ * @param root0
+ * @param root0.treeUuid
+ * @param root0.talentUuid
+ */
 function hasPurchase(actor, treeId, nodeId, talentId, specializationId, { treeUuid, talentUuid } = {}) {
   const purchases = actor?.system?.progression?.talentPurchases
   if (!Array.isArray(purchases)) return false
@@ -51,6 +78,10 @@ function hasPurchase(actor, treeId, nodeId, talentId, specializationId, { treeUu
   )
 }
 
+/**
+ *
+ * @param node
+ */
 function hasValidFields(node) {
   if (!node.nodeId || !node.talentId) return false
   if (node.row == null || node.cost == null) return false
@@ -58,6 +89,10 @@ function hasValidFields(node) {
   return true
 }
 
+/**
+ *
+ * @param node
+ */
 function missingFields(node) {
   const fields = []
   if (!node.nodeId) fields.push('nodeId')
@@ -67,6 +102,10 @@ function missingFields(node) {
   return fields
 }
 
+/**
+ *
+ * @param tree
+ */
 function isCompleteTree(tree) {
   const nodes = tree?.system?.nodes
   const connections = tree?.system?.connections
@@ -79,6 +118,12 @@ function isCompleteTree(tree) {
   return Array.isArray(nodes) && nodes.length > 0 && Array.isArray(connections) && connections.length > 0
 }
 
+/**
+ *
+ * @param actor
+ * @param tree
+ * @param node
+ */
 function isAccessible(actor, tree, node) {
   if (node.row === 1) return true
 
@@ -101,6 +146,10 @@ function isAccessible(actor, tree, node) {
   return false
 }
 
+/**
+ *
+ * @param actor
+ */
 function getAvailableXp(actor) {
   const exp = actor?.system?.progression?.experience
   if (!exp) return 0
@@ -108,6 +157,13 @@ function getAvailableXp(actor) {
   return (exp.gained ?? 0) - (exp.spent ?? 0)
 }
 
+/**
+ *
+ * @param actor
+ * @param specializationId
+ * @param tree
+ * @param nodeId
+ */
 export function getNodeState(actor, specializationId, tree, nodeId) {
   if (!actor) {
     logger.warn('[TalentNodeState] getNodeState called without actor')
@@ -175,6 +231,12 @@ export function getNodeState(actor, specializationId, tree, nodeId) {
   return makeResult(NODE_STATE.AVAILABLE, '', { nodeId, specializationId, cost: node.cost })
 }
 
+/**
+ *
+ * @param actor
+ * @param specializationId
+ * @param tree
+ */
 export function getTreeNodesStates(actor, specializationId, tree) {
   const map = new Map()
   if (!tree?.system?.nodes) return map

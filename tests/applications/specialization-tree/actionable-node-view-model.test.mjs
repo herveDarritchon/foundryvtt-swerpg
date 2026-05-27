@@ -15,6 +15,10 @@ import { processTalentNodeProgression } from '../../../module/lib/talent-node/ta
 
 const localize = (key) => `[${key}]`
 
+/**
+ *
+ * @param overrides
+ */
 function buildRenderNode(overrides = {}) {
   return {
     nodeId: 'r1c1',
@@ -35,6 +39,10 @@ function buildRenderNode(overrides = {}) {
   }
 }
 
+/**
+ *
+ * @param overrides
+ */
 function buildTree(overrides = {}) {
   return {
     id: 'tree-1',
@@ -50,6 +58,10 @@ function buildTree(overrides = {}) {
   }
 }
 
+/**
+ *
+ * @param overrides
+ */
 function buildActor(overrides = {}) {
   return {
     id: 'actor-1',

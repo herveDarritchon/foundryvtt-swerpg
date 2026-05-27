@@ -1,5 +1,3 @@
-import { SYSTEM } from '../config/system.mjs'
-
 /**
  *
  */

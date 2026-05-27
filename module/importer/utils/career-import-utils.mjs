@@ -11,6 +11,9 @@ const careerStats = new ImportStats({
   skillCount: 0,
 })
 
+/**
+ *
+ */
 export function resetCareerImportStats() {
   careerStats.reset({
     unknownSkills: 0,
@@ -18,14 +21,26 @@ export function resetCareerImportStats() {
   })
 }
 
+/**
+ *
+ * @param key
+ * @param amount
+ */
 export function incrementCareerImportStat(key, amount = 1) {
   careerStats.increment(key, amount)
 }
 
+/**
+ *
+ * @param code
+ */
 export function addCareerUnknownSkill(code) {
   careerStats.addDetail('unknownSkills', code, 'skillDetails')
 }
 
+/**
+ *
+ */
 export function getCareerImportStats() {
   return careerStats.getStats()
 }

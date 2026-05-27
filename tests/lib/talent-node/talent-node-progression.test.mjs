@@ -12,6 +12,10 @@ import { REASON_CODE } from '../../../module/lib/talent-node/talent-node-state.m
 // Builders
 // ---------------------------------------------------------------------------
 
+/**
+ *
+ * @param overrides
+ */
 function buildActor(overrides = {}) {
   return {
     id: 'actor-001',
@@ -28,6 +32,11 @@ function buildActor(overrides = {}) {
   }
 }
 
+/**
+ *
+ * @param nodeOverrides
+ * @param connectionOverrides
+ */
 function buildTree(nodeOverrides = [], connectionOverrides = []) {
   return {
     id: 'tree-1',
@@ -44,6 +53,10 @@ function buildTree(nodeOverrides = [], connectionOverrides = []) {
   }
 }
 
+/**
+ *
+ * @param tree
+ */
 function resolvedTree(tree = buildTree()) {
   return { tree, state: 'available' }
 }

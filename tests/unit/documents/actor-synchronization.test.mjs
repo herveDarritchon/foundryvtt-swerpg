@@ -25,6 +25,10 @@ describe('Talent purchase sync chain (US19)', () => {
     vi.clearAllMocks()
   })
 
+  /**
+   *
+   * @param overrides
+   */
   function buildActor(overrides = {}) {
     return {
       id: 'actor-001',
@@ -44,6 +48,10 @@ describe('Talent purchase sync chain (US19)', () => {
     }
   }
 
+  /**
+   *
+   * @param overrides
+   */
   function buildResolvedTree(overrides = {}) {
     return {
       tree: {

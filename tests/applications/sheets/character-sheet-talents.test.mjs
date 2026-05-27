@@ -40,6 +40,10 @@ describe('CharacterSheet talent consolidation (US12)', () => {
     CharacterSheet = (await import('../../../module/applications/sheets/character-sheet.mjs')).default
   })
 
+  /**
+   *
+   * @param actor
+   */
   function buildBaseContext(actor) {
     return {
       actor,
@@ -57,6 +61,10 @@ describe('CharacterSheet talent consolidation (US12)', () => {
     }
   }
 
+  /**
+   *
+   * @param overrides
+   */
   function buildMockActor(overrides = {}) {
     const actor = {
       items: [],
@@ -93,6 +101,10 @@ describe('CharacterSheet talent consolidation (US12)', () => {
     return actor
   }
 
+  /**
+   *
+   * @param actor
+   */
   async function getContext(actor) {
     vi.spyOn(SwerpgBaseActorSheet.prototype, '_prepareContext').mockResolvedValue(buildBaseContext(actor))
     const sheet = new CharacterSheet({ document: actor })

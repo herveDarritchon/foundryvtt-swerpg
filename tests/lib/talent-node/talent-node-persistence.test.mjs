@@ -12,6 +12,10 @@ vi.mock('../../../module/utils/logger.mjs', () => ({
 import { logger } from '../../../module/utils/logger.mjs'
 import { applyTalentNodePatch } from '../../../module/lib/talent-node/talent-node-persistence.mjs'
 
+/**
+ *
+ * @param overrides
+ */
 function buildActor(overrides = {}) {
   return {
     id: 'actor-001',
@@ -26,6 +30,10 @@ function buildActor(overrides = {}) {
   }
 }
 
+/**
+ *
+ * @param overrides
+ */
 function buildPayload(overrides = {}) {
   return {
     specializationId: 'spec-1',
@@ -200,6 +208,11 @@ describe('applyTalentNodePatch', () => {
   })
 
   describe('talent change detection dispatch (US17.7)', () => {
+    /**
+     *
+     * @param obj
+     * @param path
+     */
     function hasProperty(obj, path) {
       const parts = path.split('.')
       let current = obj
