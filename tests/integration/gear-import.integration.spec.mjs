@@ -1,9 +1,5 @@
 import { describe, it, expect } from 'vitest'
 import fs from 'node:fs/promises'
-import xml2jsModule from '../../vendors/xml2js.min.js'
-if (globalThis.xml2js === undefined) {
-  globalThis.xml2js = { js: xml2jsModule }
-}
 import { parseXmlToJson } from '../../module/utils/xml/parser.mjs'
 import { gearMapper } from '../../module/importer/items/gear-ogg-dude.mjs'
 

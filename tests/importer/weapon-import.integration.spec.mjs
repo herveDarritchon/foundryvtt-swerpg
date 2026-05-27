@@ -1,13 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import fs from 'node:fs/promises'
-import xml2jsModule from '../../vendors/xml2js.min.js'
 import { parseXmlToJson } from '../../module/utils/xml/parser.mjs'
 import { weaponMapper, getWeaponImportStats, resetWeaponImportStats } from '../../module/importer/items/weapon-ogg-dude.mjs'
-
-// Shim xml2js global
-if (globalThis.xml2js === undefined) {
-  globalThis.xml2js = { js: xml2jsModule }
-}
 
 // Mock minimal SYSTEM si absent (qualités d'armes)
 if (!globalThis.SYSTEM) {

@@ -606,11 +606,6 @@ export default class OggDudeImporter {
    * @returns {Promise<{[p: string]: JSZip.JSZipObject}>}
    */
   async load(file) {
-    // Support global stub JSZip in tests
-    if (globalThis.JSZip && typeof globalThis.JSZip.loadAsync === 'function') {
-      return globalThis.JSZip.loadAsync(file)
-    }
-    // Dynamic import pour éviter échec de résolution statique dans certains environnements
     const lib = await import('jszip').then((m) => m.default || m)
     return lib.loadAsync(file)
   }

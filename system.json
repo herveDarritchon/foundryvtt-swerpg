@@ -35,9 +35,9 @@
     "maximum": 14
   },
   "license": "LICENSE",
-  "esmodules": ["swerpg.mjs"],
+  "esmodules": ["dist/swerpg.bundle.js"],
   "styles": ["styles/swerpg.css"],
-  "scripts": ["./vendors/jszip.min.js", "./vendors/xml2js.min.js"],
+  "scripts": [],
   "packs": [],
   "packFolders": [],
   "languages": [

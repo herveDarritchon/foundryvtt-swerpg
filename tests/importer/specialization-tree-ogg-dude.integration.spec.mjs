@@ -1,7 +1,6 @@
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 import fs from 'node:fs/promises'
 import path from 'node:path'
-import xml2jsModule from '../../vendors/xml2js.min.js'
 import { parseXmlToJson } from '../../module/utils/xml/parser.mjs'
 import { extractDirectionalConnections, specializationTreeMapper } from '../../module/importer/mappers/oggdude-specialization-tree-mapper.mjs'
 import {
@@ -23,10 +22,6 @@ vi.mock('../../module/utils/logger.mjs', () => ({
 }))
 
 import { logger } from '../../module/utils/logger.mjs'
-
-if (globalThis.xml2js === undefined) {
-  globalThis.xml2js = { js: xml2jsModule }
-}
 
 const fixturePath = path.resolve(process.cwd(), 'tests/fixtures/Specializations/Advisor.xml')
 

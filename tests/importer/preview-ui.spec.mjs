@@ -1,8 +1,18 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import fs from 'node:fs'
 import path from 'node:path'
 import OggDudeImporter from '../../module/importer/oggDude.mjs'
 import { OggDudeDataImporter } from '../../module/settings/OggDudeDataImporter.mjs'
+
+vi.mock('xml2js', () => ({
+  parseStringPromise: async (xml) => {
+    if (xml.includes('<Weapons>')) {
+      const names = [...xml.matchAll(/<Name>([^<]+)<\/Name>/g)].map((m) => ({ Name: m[1] }))
+      return { Weapons: { Weapon: names.length ? names : [{ Name: 'Unknown' }] } }
+    }
+    return {}
+  },
+}))
 
 /**
  * Build a minimal fake ZIP for OggDude with only weapons
@@ -19,23 +29,11 @@ function buildFakeZip() {
   return { files }
 }
 
-// stub global JSZip for importer load
-globalThis.JSZip = {
-  loadAsync: async (_buffer) => buildFakeZip(),
-}
-
-// Shim xml2js minimal pour parser Name
-globalThis.xml2js = {
-  js: {
-    parseStringPromise: async (xml) => {
-      if (xml.includes('<Weapons>')) {
-        const names = [...xml.matchAll(/<Name>([^<]+)<\/Name>/g)].map((m) => ({ Name: m[1] }))
-        return { Weapons: { Weapon: names.length ? names : [{ Name: 'Unknown' }] } }
-      }
-      return {}
-    },
+vi.mock('jszip', () => ({
+  default: {
+    loadAsync: async (_buffer) => buildFakeZip(),
   },
-}
+}))
 
 // Stub monde pour buildWeaponImgWorldPath
 if (!globalThis.game) globalThis.game = {}

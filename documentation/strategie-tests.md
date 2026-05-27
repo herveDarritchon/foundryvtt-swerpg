@@ -133,39 +133,37 @@ export function setupFoundryMock(options = {}) {
 - **`addPacksMock()`** : Mock compendia
 - **`extendFoundryMock()`** : Extension dynamique
 
-### 3. Mocking des Librairies Externes (JSZip et xml2js)
+### 3. Mocking des Librairies Externes (xml2js)
 
-Les librairies JSZip et xml2js sont chargées via FoundryVTT (voir `system.json`) et ne sont pas disponibles dans l'environnement de test Node.js/Vitest. Il faut donc les mocker ou les shimer pour les tests.
+La librairie xml2js est disponible comme dépendance npm et utilisée via import dynamique dans le code de production. En environnement de test Node.js/Vitest, il faut la mocker via `vi.mock`.
 
-#### JSZip Mock pour Tests d'Import
+JSZip est désormais une dépendance npm bundlée dans `dist/swerpg.bundle.js`. Les tests qui nécessitent un faux ZIP passent directement des fake zip shapes aux fonctions testées, ou utilisent `vi.mock('jszip', ...)` pour intercepter l'import dynamique.
 
-Le système utilise JSZip pour traiter les archives OggDude. En environnement de test, il faut fournir un mock minimal :
+#### JSZip Mock via vi.mock pour Tests d'Import
+
+Le système charge jszip via `await import('jszip')` dans `OggDudeImporter.load()`. Pour les tests qui passent par cette méthode, utiliser `vi.mock` :
 
 ```javascript
-// Mock JSZip global pour tests d'import
-globalThis.JSZip = {
-  loadAsync: async (file) => buildFakeZip(domains),
-}
+import { vi } from 'vitest'
 
 // Helper pour construire un faux zip avec structure OggDude
-function buildFakeZip(domains = ['armor']) {
+function buildFakeZip() {
   const files = {}
-
   // Exemple pour domaine armor
-  if (domains.includes('armor')) {
-    const armorXml = fs.readFileSync(path.join('resources', 'integration', 'Armor.xml'), 'utf-8')
-    files['Data/Armor.xml'] = {
-      name: 'Data/Armor.xml',
-      dir: false,
-      async: async (type) => {
-        if (type === 'text') return armorXml
-        return armorXml
-      },
-    }
+  const armorXml = fs.readFileSync(path.join('resources', 'integration', 'Armor.xml'), 'utf-8')
+  files['Data/Armor.xml'] = {
+    name: 'Data/Armor.xml',
+    dir: false,
+    async: async (type) => armorXml,
   }
-
   return { files }
 }
+
+vi.mock('jszip', () => ({
+  default: {
+    loadAsync: async (_buffer) => buildFakeZip(),
+  },
+}))
 ```
 
 **Structure minimale requise** : `fakeZip.files[path].async('text')` doit retourner le contenu XML.
@@ -502,46 +500,39 @@ beforeEach(() => {
 const complexActor = createActor().withExperience(150).withSkills(['cool', 'discipline']).withTalents(['adversary', 'lethal-blows']).build()
 ```
 
-### Intégration des Vendors FoundryVTT
+### Intégration des Dépendances npm (xml2js)
 
 #### Problématique
 
-FoundryVTT charge JSZip et xml2js via le `system.json` (`scripts: ["./vendors/jszip.min.js", "./vendors/xml2js.min.js"]`), mais ces librairies ne sont pas disponibles dans l'environnement de test Node.js. Le code de production accède à ces librairies via `globalThis.JSZip` et `globalThis.xml2js`.
+xml2js est une dépendance npm accessible directement via `import`. Dans Vitest, elle peut être mockée avec `vi.mock`. jszip est une dépendance npm bundlée dans `dist/swerpg.bundle.js` — les tests qui passent par `OggDudeImporter.load()` utilisent `vi.mock('jszip', ...)` ; les tests qui construisent des fake zips directement n'ont pas besoin de mocker jszip.
 
 #### Solutions par Type de Test
 
-**Tests Unitaires** : Mock complet des interfaces
+**Tests Unitaires** : Mock complet des interfaces via `vi.mock`
 
 ```javascript
-// Mock JSZip pour tests unitaires isolés
-globalThis.JSZip = {
-  loadAsync: vi.fn().mockResolvedValue({
-    files: {
-      'Data/test.xml': {
-        async: vi.fn().mockResolvedValue('<test>data</test>'),
+// Mock jszip pour tests unitaires
+vi.mock('jszip', () => ({
+  default: {
+    loadAsync: vi.fn().mockResolvedValue({
+      files: {
+        'Data/test.xml': {
+          async: vi.fn().mockResolvedValue('<test>data</test>'),
+        },
       },
-    },
-  }),
-}
+    }),
+  },
+}))
 
 // Mock xml2js pour tests unitaires
-globalThis.xml2js = {
-  js: {
-    parseStringPromise: vi.fn().mockResolvedValue({ test: 'data' }),
-  },
-}
+vi.mock('xml2js', () => ({
+  parseStringPromise: vi.fn().mockResolvedValue({ test: 'data' }),
+}))
 ```
 
-**Tests d'Intégration** : Shim avec vraies librairies
+**Tests d'Intégration** : Fake zip shapes passés directement aux fonctions
 
 ```javascript
-// Import et shim des vraies librairies
-import xml2jsModule from '../../vendors/xml2js.min.js'
-
-if (globalThis.xml2js === undefined) {
-  globalThis.xml2js = { js: xml2jsModule }
-}
-
 // Construction de faux zips avec vraies données
 function buildFakeZip(filesMap) {
   const files = {}
@@ -554,61 +545,6 @@ function buildFakeZip(filesMap) {
   })
   return { files }
 }
-```
-
-#### Ordre d'Initialisation Critique
-
-⚠️ **IMPORTANT** : Le shim doit être fait **AVANT** l'import des modules qui utilisent ces librairies.
-
-```javascript
-// ❌ INCORRECT - Import avant shim
-import { parseXmlToJson } from '../../module/utils/xml/parser.mjs'
-if (globalThis.xml2js === undefined) {
-  globalThis.xml2js = { js: xml2jsModule }
-}
-
-// ✅ CORRECT - Shim avant import
-if (globalThis.xml2js === undefined) {
-  globalThis.xml2js = { js: xml2jsModule }
-}
-import { parseXmlToJson } from '../../module/utils/xml/parser.mjs'
-```
-
-#### Centralisation des Shims
-
-Pour éviter la duplication, centraliser les shims dans `tests/helpers/vendor-shims.mjs` :
-
-```javascript
-// tests/helpers/vendor-shims.mjs
-import xml2jsModule from '../../vendors/xml2js.min.js'
-
-export function setupVendorShims() {
-  if (globalThis.xml2js === undefined) {
-    globalThis.xml2js = { js: xml2jsModule }
-  }
-
-  if (globalThis.JSZip === undefined) {
-    globalThis.JSZip = {
-      loadAsync: async () => ({ files: {} }),
-    }
-  }
-}
-
-export function teardownVendorShims() {
-  delete globalThis.xml2js
-  delete globalThis.JSZip
-}
-```
-
-#### Debugging des Mocks Vendors
-
-```javascript
-test('debug xml2js interface', () => {
-  console.log('xml2js available:', !!globalThis.xml2js)
-  console.log('parseStringPromise available:', !!globalThis.xml2js?.js?.parseStringPromise)
-
-  expect(globalThis.xml2js.js.parseStringPromise).toBeTypeOf('function')
-})
 ```
 
 ## Métriques et Monitoring

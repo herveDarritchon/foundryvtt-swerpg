@@ -1,13 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import fs from 'node:fs/promises'
-import xml2jsModule from '../../vendors/xml2js.min.js'
 import { parseXmlToJson } from '../../module/utils/xml/parser.mjs'
 import { getDutyImportStats, dutyMapper } from '../../module/importer/items/duty-ogg-dude.mjs'
 import { resetDutyImportStats } from '../../module/importer/utils/duty-import-utils.mjs'
-
-if (globalThis.xml2js === undefined) {
-  globalThis.xml2js = { js: xml2jsModule }
-}
 
 describe('Duty Import Integration Tests', () => {
   describe('Duty.xml - mapping real OggDude data', () => {
