@@ -4,6 +4,7 @@ import { describe, expect, test, vi, beforeEach } from 'vitest'
 // Mock du logger
 vi.mock('../../../module/utils/logger.mjs', () => ({
   logger: {
+    debug: vi.fn(),
     error: vi.fn(),
     warn: vi.fn(),
     info: vi.fn(),
@@ -204,5 +205,244 @@ describe('SwerpgBaseActorSheet Bug Fix Integration Tests', () => {
       await expect(SwerpgBaseActorSheet.DEFAULT_OPTIONS.actions.itemEdit.call(sheetWithBrokenActor, mockEvent)).resolves.toBeUndefined()
       expect(actorWithBrokenItems.items.get).toHaveBeenCalled()
     })
+  })
+})
+
+// ---------------------------------------------------------------------------
+// Regression: gear items must appear in inventory.backpack (issue #447)
+// ---------------------------------------------------------------------------
+import { computeFeaturedEquipment as computeFeaturedEquipmentForGearTests } from '../../../module/lib/featured-equipment.mjs'
+
+describe('SwerpgBaseActorSheet #prepareItems — gear inventory classification', () => {
+  let SwerpgBaseActorSheetLocal
+
+  /**
+   * Build a minimal mock actor/document so that _prepareContext() can run through
+   * without throwing.  All helpers that are irrelevant to the inventory test are
+   * given their smallest-possible return values.
+   *
+   * @param {object[]} itemsArray   Array of plain item mocks (id, name, img, type, system, getTags, actions).
+   * @returns {{ document: object, actor: object }}
+   */
+  function buildMockDocument(itemsArray) {
+    const actor = {
+      id: 'actor-test',
+      name: 'Test Actor',
+      system: {
+        characteristics: {
+          brawn: { rank: { base: 2, trained: 0 } },
+          agility: { rank: { base: 2, trained: 0 } },
+          intellect: { rank: { base: 2, trained: 0 } },
+          cunning: { rank: { base: 2, trained: 0 } },
+          willpower: { rank: { base: 2, trained: 0 } },
+          presence: { rank: { base: 2, trained: 0 } },
+        },
+        progression: {
+          experience: { gained: 0, spent: 0 },
+          freeSkillRanks: {
+            career: { gained: 0, spent: 0 },
+            specialization: { gained: 0, spent: 0 },
+          },
+        },
+        details: {
+          biography: { appearance: '', public: '', private: '' },
+          commitments: { motivation: '' },
+        },
+        schema: { fields: {} },
+      },
+      isOwner: true,
+      items: {
+        find: vi.fn((fn) => itemsArray.find(fn) || null),
+        filter: vi.fn((fn) => itemsArray.filter(fn)),
+        get: vi.fn((id) => itemsArray.find((i) => i.id === id) || null),
+        [Symbol.iterator]: function* () {
+          yield* itemsArray
+        },
+      },
+      effects: [],
+      actions: {},
+      canPurchaseCharacteristic: vi.fn(() => false),
+      toObject: vi.fn(() => ({})),
+    }
+    return actor
+  }
+
+  /**
+   * Create a minimal SwerpgBaseActorSheet instance wired to the given items.
+   * Must use `new` to initialize private class fields.
+   * After construction, document and actor are overwritten with the test mock.
+   */
+  async function buildSheet(itemsArray) {
+    const Sheet = SwerpgBaseActorSheetLocal
+    const actor = buildMockDocument(itemsArray)
+
+    // Patch foundry.applications.ux.TextEditor if not yet defined
+    if (!globalThis.foundry.applications.ux) {
+      globalThis.foundry.applications.ux = {}
+    }
+    if (!globalThis.foundry.applications.ux.TextEditor) {
+      globalThis.foundry.applications.ux.TextEditor = { enrichHTML: vi.fn(async (s) => s || '') }
+    }
+
+    // Patch SYSTEM.RESTRICTION_LEVELS if not present (needed by #prepareFeaturedEquipment)
+    if (!globalThis.SYSTEM.RESTRICTION_LEVELS) {
+      globalThis.SYSTEM.RESTRICTION_LEVELS = {}
+    }
+
+    // Use `new` so private class fields are properly initialized
+    const instance = new Sheet({})
+    // Override document/actor with our test mock after construction
+    instance.document = actor
+    instance.actor = actor
+    instance.tabGroups = { sheet: 'attributes' }
+    instance.isEditable = true
+
+    return instance
+  }
+
+  beforeEach(async () => {
+    vi.clearAllMocks()
+    SwerpgBaseActorSheetLocal = (await import('../../../module/applications/sheets/base-actor-sheet.mjs')).default
+    vi.mocked(computeFeaturedEquipmentForGearTests).mockReturnValue([])
+  })
+
+  test('gear item appears in inventory.backpack', async () => {
+    const gearItem = {
+      id: 'gear-1',
+      name: 'Medpac',
+      img: 'icons/gear.webp',
+      type: 'gear',
+      system: { quantity: 2 },
+      getTags: vi.fn(() => ({})),
+      actions: { at: () => null },
+    }
+    const instance = await buildSheet([gearItem])
+    const ctx = await instance._prepareContext({})
+
+    const backpackItems = ctx.inventory.backpack.items
+    expect(backpackItems).toHaveLength(1)
+    expect(backpackItems[0].id).toBe('gear-1')
+    expect(backpackItems[0].name).toBe('Medpac')
+  })
+
+  test('gear item is excluded from inventory.equipment', async () => {
+    const gearItem = {
+      id: 'gear-1',
+      name: 'Medpac',
+      img: 'icons/gear.webp',
+      type: 'gear',
+      system: { quantity: 1 },
+      getTags: vi.fn(() => ({})),
+      actions: { at: () => null },
+    }
+    const instance = await buildSheet([gearItem])
+    const ctx = await instance._prepareContext({})
+
+    expect(ctx.inventory.equipment.items).toHaveLength(0)
+  })
+
+  test('gear item is marked canEquip: false', async () => {
+    const gearItem = {
+      id: 'gear-1',
+      name: 'Medpac',
+      img: 'icons/gear.webp',
+      type: 'gear',
+      system: { quantity: 1 },
+      getTags: vi.fn(() => ({})),
+      actions: { at: () => null },
+    }
+    const instance = await buildSheet([gearItem])
+    const ctx = await instance._prepareContext({})
+
+    expect(ctx.inventory.backpack.items[0].canEquip).toBe(false)
+  })
+
+  test('equipped weapon appears in inventory.equipment with canEquip: true', async () => {
+    const weaponItem = {
+      id: 'weapon-1',
+      name: 'Blaster Pistol',
+      img: 'icons/weapon.webp',
+      type: 'weapon',
+      system: { equipped: true, quantity: 1 },
+      getTags: vi.fn(() => ({})),
+      actions: { at: () => null },
+    }
+    const instance = await buildSheet([weaponItem])
+    const ctx = await instance._prepareContext({})
+
+    const equipmentItems = ctx.inventory.equipment.items
+    expect(equipmentItems).toHaveLength(1)
+    expect(equipmentItems[0].id).toBe('weapon-1')
+    expect(equipmentItems[0].canEquip).toBe(true)
+  })
+
+  test('unequipped armor appears in inventory.backpack with canEquip: true', async () => {
+    const armorItem = {
+      id: 'armor-1',
+      name: 'Light Armor',
+      img: 'icons/armor.webp',
+      type: 'armor',
+      system: { equipped: false, quantity: 1 },
+      getTags: vi.fn(() => ({})),
+      actions: { at: () => null },
+    }
+    const instance = await buildSheet([armorItem])
+    const ctx = await instance._prepareContext({})
+
+    const backpackItems = ctx.inventory.backpack.items
+    expect(backpackItems).toHaveLength(1)
+    expect(backpackItems[0].id).toBe('armor-1')
+    expect(backpackItems[0].canEquip).toBe(true)
+  })
+
+  test('mixed inventory: gear goes to backpack, equipped weapon goes to equipment, unequipped armor goes to backpack', async () => {
+    const items = [
+      {
+        id: 'gear-1',
+        name: 'Medpac',
+        img: '',
+        type: 'gear',
+        system: { quantity: 3 },
+        getTags: vi.fn(() => ({})),
+        actions: { at: () => null },
+      },
+      {
+        id: 'weapon-1',
+        name: 'Blaster Pistol',
+        img: '',
+        type: 'weapon',
+        system: { equipped: true, quantity: 1 },
+        getTags: vi.fn(() => ({})),
+        actions: { at: () => null },
+      },
+      {
+        id: 'armor-1',
+        name: 'Light Armor',
+        img: '',
+        type: 'armor',
+        system: { equipped: false, quantity: 1 },
+        getTags: vi.fn(() => ({})),
+        actions: { at: () => null },
+      },
+    ]
+    const instance = await buildSheet(items)
+    const ctx = await instance._prepareContext({})
+
+    // Equipment: only equipped weapon
+    expect(ctx.inventory.equipment.items).toHaveLength(1)
+    expect(ctx.inventory.equipment.items[0].id).toBe('weapon-1')
+    expect(ctx.inventory.equipment.items[0].canEquip).toBe(true)
+
+    // Backpack: gear + unequipped armor (sorted by name: Light Armor < Medpac)
+    expect(ctx.inventory.backpack.items).toHaveLength(2)
+    const backpackIds = ctx.inventory.backpack.items.map((i) => i.id)
+    expect(backpackIds).toContain('gear-1')
+    expect(backpackIds).toContain('armor-1')
+
+    const gearEntry = ctx.inventory.backpack.items.find((i) => i.id === 'gear-1')
+    expect(gearEntry.canEquip).toBe(false)
+
+    const armorEntry = ctx.inventory.backpack.items.find((i) => i.id === 'armor-1')
+    expect(armorEntry.canEquip).toBe(true)
   })
 })

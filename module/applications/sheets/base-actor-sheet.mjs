@@ -408,12 +408,22 @@ export default class SwerpgBaseActorSheet extends HBMixin(BaseActorSheetV2) {
         case 'armor':
         case 'weapon':
           Object.assign(d, {
+            canEquip: true,
             quantity: i.system.quantity,
             showStack: i.system?.quantity && i.system.quantity !== 1,
             cssClass: i.system.equipped ? 'equipped' : 'unequipped',
           })
           if (i.system.equipped) section = sections.inventory.equipment
           else section = sections.inventory.backpack
+          break
+        case 'gear':
+          Object.assign(d, {
+            canEquip: false,
+            quantity: i.system?.quantity,
+            showStack: i.system?.quantity && i.system.quantity !== 1,
+            cssClass: 'unequipped',
+          })
+          section = sections.inventory.backpack
           break
         case 'talent':
           d.tier = i.system.node?.tier || 0
