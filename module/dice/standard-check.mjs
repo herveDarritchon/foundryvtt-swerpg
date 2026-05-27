@@ -299,9 +299,10 @@ export default class StandardCheck extends Roll {
 
   /**
    * Present a Dialog instance for this pool
-   * @param {string} title      The title of the roll request
-   * @param {string} flavor     Any flavor text attached to the roll
-   * @param {string} rollMode   The requested roll mode
+   * @param {object} [options] Options for the dialog.
+   * @param {string} [options.title] The title of the roll request.
+   * @param {string} [options.flavor] Any flavor text attached to the roll.
+   * @param {string} [options.rollMode] The requested roll mode.
    * @returns {Promise<{roll:StandardCheck, rollMode: string}|null>}
    */
   async dialog({ title, flavor, rollMode } = {}) {
@@ -374,8 +375,9 @@ export default class StandardCheck extends Roll {
 
   /**
    * Dispatch a request to perform a roll
-   * @param {string} title      The title of the roll request
-   * @param {string} flavor     Any flavor text attached to the roll
+   * @param {object} [options] Options for the roll request.
+   * @param {string} [options.title] The title of the roll request.
+   * @param {string} [options.flavor] Any flavor text attached to the roll.
    */
   request({ title, flavor } = {}) {
     game.socket.emit(`system.${SYSTEM.id}`, {
@@ -392,9 +394,10 @@ export default class StandardCheck extends Roll {
 
   /**
    * Handle a request to roll a standard check
-   * @param {string} title              The title of the roll request
-   * @param {string} flavor             Any flavor text attached to the roll
-   * @param {StandardCheckData} check   Data for the handled check request
+   * @param {object} [options] Options for the handled check request.
+   * @param {string} [options.title] The title of the roll request.
+   * @param {string} [options.flavor] Any flavor text attached to the roll.
+   * @param {StandardCheckData} [options.check] Data for the handled check request.
    */
   static async handle({ title, flavor, check } = {}) {
     const actor = game.actors.get(check.actorId)

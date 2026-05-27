@@ -454,9 +454,10 @@ export default class SwerpgTalentTree extends PIXI.Container {
 
   /**
    * Pan the visual position of the talent tree canvas.
-   * @param {number} x
-   * @param {number} y
-   * @param {number} scale
+   * @param {object} [options] Pan options.
+   * @param {number} [options.x] Horizontal pivot position.
+   * @param {number} [options.y] Vertical pivot position.
+   * @param {number} [options.scale] Zoom scale factor.
    */
   pan({ x, y, scale } = {}) {
     x ??= this.stage.pivot.x
