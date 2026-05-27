@@ -262,7 +262,6 @@ export default class SwerpgActorType extends foundry.abstract.TypeDataModel {
 
   /**
    * Prepare formatted experience scores for display on the Actor sheet.
-   * @returns {object[]}
    */
   _prepareFreeSkillRanks() {
     const freeSkillRanks = this.progression.freeSkillRanks
@@ -296,7 +295,6 @@ export default class SwerpgActorType extends foundry.abstract.TypeDataModel {
 
   /**
    * Prepare derived attributes for all Actor subtypes.
-   * @returns {DerivedAttributes}
    * @private
    */
   _prepareDerivedAttributes() {

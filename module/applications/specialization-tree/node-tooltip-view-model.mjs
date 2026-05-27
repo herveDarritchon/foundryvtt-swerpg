@@ -12,9 +12,9 @@
 /**
  * Build the tooltip view-model for a specialization tree node.
  *
- * @param {object} node - The enriched render node (must carry `talentName`,
+ * @param {object} node The enriched render node (must carry `talentName`,
  *        `xpCost`, `isRanked`, `nodeStateLabel`, and optionally `reasonLabel`).
- * @param {(key: string) => string} localize - i18n localize function.
+ * @param {(key: string) => string} localize i18n localize function.
  * @returns {{ header: string, lines: string[] }} Tooltip content.
  */
 export function buildNodeTooltipViewModel(node, localize) {

@@ -7,6 +7,10 @@ import { organizeCompendiumPack } from '../../helpers/foundry/compendium-folders
 
 /**
  *
+ * @param root0
+ * @param root0.mode
+ * @param root0.elementType
+ * @param root0.folderType
  */
 export async function createOggDudeStorageTarget({ mode, elementType, folderType }) {
   if (mode === 'world') {

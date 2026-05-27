@@ -16,8 +16,9 @@ import { createOggDudeStorageTarget } from '../../utils/storage/storage-strategy
  * @property {number} uncompressedSize
  * @property {object} _data
  * @property {boolean} _dataBinary
+ */
 
- /**
+/**
  * @typedef {object} FoundryItemFolder The folder of the element
  * @property {string} name The name of the folder
  * @property {string} type The type of the folder
@@ -39,7 +40,7 @@ import { createOggDudeStorageTarget } from '../../utils/storage/storage-strategy
 /**
  * @typedef {object} ItemElement The item element of the file
  * @property {string} jsonCriteria The criteria to select the elements in the json file.
- * @property {function} mapper The function to map the Armor data to the SwerpgArmor object array.
+ * @property {Function} mapper The function to map the Armor data to the SwerpgArmor object array.
  * @property {string} type The type of the element to be stored, must be a system item type.
  */
 
@@ -259,6 +260,7 @@ class OggDudeDataElement {
     } else if (extension === OggDudeDataElement.xml) {
       return OggDudeDataElement.xml
     }
+    return undefined
   }
 
   /**
@@ -442,6 +444,7 @@ class OggDudeDataElement {
   /**
    * Store Items base on the context provided
    * @param context {OggDudeElementContext} The context of the element to be stored
+   * @param importToCompendium.importToCompendium
    * @param importToCompendium
    * @returns {Promise<void>} A Promise that resolves when the element has been stored.
    * @async

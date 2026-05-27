@@ -51,8 +51,8 @@ export const CONNECTION_VISUAL_STYLES = Object.freeze({
  * may inspect connection or node state to return `active`, `inactive`, or
  * `highlighted` variants.
  *
- * @param {object} _connection - A render connection descriptor.
- * @param {Map<string, object>} [_nodeStates] - Optional node state map keyed by nodeId.
+ * @param {object} _connection A render connection descriptor.
+ * @param {Map<string, object>} [_nodeStates] Optional node state map keyed by nodeId.
  * @returns {ConnectionVisualStyle} The visual style to apply.
  */
 export function getConnectionStyle(_connection, _nodeStates) {

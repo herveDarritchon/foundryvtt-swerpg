@@ -17,8 +17,8 @@ export function resetObligationImportStats() {
 
 /**
  * Increment a specific obligation import statistic.
- * @param {string} key - The statistic key to increment ('total', 'rejected', etc.)
- * @param {number} value - The value to add (default: 1)
+ * @param {string} key The statistic key to increment ('total', 'rejected', etc.)
+ * @param {number} value The value to add (default: 1)
  */
 export function incrementObligationImportStat(key, value = 1) {
   obligationStats.increment(key, value)
@@ -27,7 +27,7 @@ export function incrementObligationImportStat(key, value = 1) {
 /**
  * Track an unknown property encountered during mapping.
  * Used for observability and debugging of OggDude data variations.
- * @param {string} property - The name of the unknown property
+ * @param {string} property The name of the unknown property
  */
 export function addUnknownObligationProperty(property) {
   obligationStats.addDetail('unknownProperties', property, 'propertyDetails')

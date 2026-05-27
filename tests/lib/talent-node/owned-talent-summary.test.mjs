@@ -16,6 +16,14 @@ vi.mock('../../../module/lib/talent-node/talent-tree-resolver.mjs', () => ({
 import { resolveSpecializationTree } from '../../../module/lib/talent-node/talent-tree-resolver.mjs'
 import { buildOwnedTalentSummary } from '../../../module/lib/talent-node/owned-talent-summary.mjs'
 
+/**
+ *
+ * @param root0
+ * @param root0.specializations
+ * @param root0.talentPurchases
+ * @param root0.species
+ * @param root0.items
+ */
 function buildActor({ specializations, talentPurchases, species, items } = {}) {
   return {
     items: items ?? [],
@@ -31,6 +39,14 @@ function buildActor({ specializations, talentPurchases, species, items } = {}) {
   }
 }
 
+/**
+ *
+ * @param root0
+ * @param root0.id
+ * @param root0.systemId
+ * @param root0.name
+ * @param root0.isFree
+ */
 function buildFreeItem({ id = 'talent-resilience', systemId, name = 'Resilience', isFree = true } = {}) {
   return {
     id,
@@ -45,10 +61,18 @@ function buildFreeItem({ id = 'talent-resilience', systemId, name = 'Resilience'
   }
 }
 
+/**
+ *
+ * @param overrides
+ */
 function buildSpec(overrides = {}) {
   return { specializationId: 'spec-bodyguard', name: 'Bodyguard', treeUuid: 'Item.tree-bodyguard', ...overrides }
 }
 
+/**
+ *
+ * @param overrides
+ */
 function buildPurchase(overrides = {}) {
   return {
     treeId: 'tree-bodyguard',
@@ -59,6 +83,10 @@ function buildPurchase(overrides = {}) {
   }
 }
 
+/**
+ *
+ * @param overrides
+ */
 function buildResolvedTree(overrides = {}) {
   return {
     tree: {
@@ -79,6 +107,10 @@ function buildResolvedTree(overrides = {}) {
   }
 }
 
+/**
+ *
+ * @param overrides
+ */
 function buildTalentDefinition(overrides = {}) {
   return { name: 'Parer', activation: 'active', isRanked: true, ...overrides }
 }

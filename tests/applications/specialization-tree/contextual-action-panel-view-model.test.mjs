@@ -3,6 +3,10 @@ import { buildContextualActionPanelViewModel } from '../../../module/application
 
 const localize = (k) => k
 
+/**
+ *
+ * @param overrides
+ */
 function makeNode(overrides = {}) {
   return {
     talentName: 'Tough',

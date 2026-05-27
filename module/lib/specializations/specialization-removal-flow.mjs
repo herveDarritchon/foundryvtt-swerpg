@@ -32,9 +32,9 @@ import { getCanonicalSpecializationKey } from './owned-specializations.mjs'
  * Le seul cas bloqué est l'absence de la spécialisation dans la liste.
  *
  * @param {object} params
- * @param {Array<object>} params.items - Les spécialisations possédées (ownedSpecializations snapshot items)
- * @param {string|null} params.specializationKey - La clé de la spécialisation à supprimer
- * @param {string|null} params.selectedTreeKey - La clé de l'arbre courant sélectionné (ou null)
+ * @param {Array<object>} params.items Les spécialisations possédées (ownedSpecializations snapshot items)
+ * @param {string|null} params.specializationKey La clé de la spécialisation à supprimer
+ * @param {string|null} params.selectedTreeKey La clé de l'arbre courant sélectionné (ou null)
  * @returns {SpecializationRemovalResult}
  */
 export function evaluateSpecializationRemoval({ items, specializationKey, selectedTreeKey }) {

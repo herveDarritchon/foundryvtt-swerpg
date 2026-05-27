@@ -25,8 +25,8 @@ import { logger } from '../../utils/logger.mjs'
  * The minimum persisted shape of a purchase entry is:
  *   { treeId, treeUuid, nodeId, talentId, talentUuid, specializationId }
  *
- * @param {object} actor - The actor document instance.
- * @param {object} payload - The validated payload from processTalentNodeProgression.
+ * @param {object} actor The actor document instance.
+ * @param {object} payload The validated payload from processTalentNodeProgression.
  * @param {string} payload.specializationId
  * @param {string} payload.treeId
  * @param {string|null} payload.treeUuid
@@ -34,9 +34,9 @@ import { logger } from '../../utils/logger.mjs'
  * @param {string} payload.talentId
  * @param {string|null} payload.talentUuid
  * @param {number} payload.cost
- * @param {Array} payload.updatedPurchases - New talentPurchases array to persist.
- * @param {number} payload.updatedSpent - New experience.spent value to persist.
- * @param {'purchase'|'forget'} action - The action that produced this payload.
+ * @param {Array} payload.updatedPurchases New talentPurchases array to persist.
+ * @param {number} payload.updatedSpent New experience.spent value to persist.
+ * @param {'purchase'|'forget'} action The action that produced this payload.
  * @returns {Promise<PersistenceResult>}
  */
 export async function applyTalentNodePatch(actor, payload, action) {

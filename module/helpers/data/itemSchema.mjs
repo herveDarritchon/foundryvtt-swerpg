@@ -9,6 +9,10 @@ import {
 import SwerpgCombatItemData from '../../data/combat-item.mjs'
 import { buildQualitySchema } from '../../models/qualities-schema.mjs'
 
+/**
+ *
+ * @param fields
+ */
 export function buildAttributesSchema(fields) {
   return new fields.SchemaField(
     {
@@ -65,6 +69,11 @@ export function buildAttributesSchema(fields) {
   )
 }
 
+/**
+ *
+ * @param fields
+ * @param extraFields
+ */
 export function buildStandardRequirementSchema(fields, extraFields = {}) {
   return buildBaseRequirementSchema(fields, {
     ...extraFields,
@@ -91,6 +100,11 @@ export function buildStandardRequirementSchema(fields, extraFields = {}) {
   })
 }
 
+/**
+ *
+ * @param fields
+ * @param extraFields
+ */
 export function buildBaseRequirementSchema(fields, extraFields = {}) {
   return new fields.SchemaField(
     {
@@ -112,6 +126,10 @@ export function buildBaseRequirementSchema(fields, extraFields = {}) {
   )
 }
 
+/**
+ *
+ * @param fields
+ */
 export function buildRequirementSchemaWithExtraFields(fields) {
   return buildStandardRequirementSchema(fields, {
     wieldingMelee: buildOptionalBooleanField({
@@ -129,6 +147,10 @@ export function buildRequirementSchemaWithExtraFields(fields) {
   })
 }
 
+/**
+ *
+ * @param fields
+ */
 export function buildSkillModifiersSchema(fields) {
   return buildTalentModifiersSchema(fields, {
     isCareer: buildOptionalBooleanField({
@@ -142,6 +164,11 @@ export function buildSkillModifiersSchema(fields) {
   })
 }
 
+/**
+ *
+ * @param fields
+ * @param extraFields
+ */
 export function buildTalentModifiersSchema(fields, extraFields = {}) {
   return new fields.SetField(
     new fields.SchemaField(
@@ -170,10 +197,19 @@ export function buildTalentModifiersSchema(fields, extraFields = {}) {
   )
 }
 
+/**
+ *
+ * @param fields
+ */
 export function buildQualitiesSchema(fields) {
   return new fields.ArrayField(buildQualitySchema())
 }
 
+/**
+ *
+ * @param fields
+ * @param extraFields
+ */
 export function buildWeaponModifiersSchema(fields, extraFields = {}) {
   return buildOptionalSetField({
     field: buildOptionalSchemaField({
@@ -229,6 +265,10 @@ export function buildWeaponModifiersSchema(fields, extraFields = {}) {
   })
 }
 
+/**
+ *
+ * @param fields
+ */
 export function buildWeaponModifiersSchemaWithExtraSchema(fields) {
   return buildWeaponModifiersSchema(fields, {
     range: buildOptionalStringField({

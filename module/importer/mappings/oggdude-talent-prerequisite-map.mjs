@@ -7,7 +7,7 @@ import SwerpgTalentNode from '../../config/talent-tree.mjs'
 
 /**
  * Transforme les prérequis XML OggDude vers la structure requirements système
- * @param {object} oggDudePrerequisites - Prérequis depuis OggDude XML
+ * @param {object} oggDudePrerequisites Prérequis depuis OggDude XML
  * @returns {object} Structure requirements compatible système
  */
 export function transformTalentPrerequisites(oggDudePrerequisites) {
@@ -45,7 +45,7 @@ export function transformTalentPrerequisites(oggDudePrerequisites) {
 
 /**
  * Mappe un code de compétence OggDude vers le système
- * @param {string} oggDudeSkillCode - Code compétence OggDude
+ * @param {string} oggDudeSkillCode Code compétence OggDude
  * @returns {string|null} Code compétence système ou null si inconnu
  * @private
  */
@@ -78,6 +78,10 @@ function mapOggDudeSkillToSystem(oggDudeSkillCode) {
 }
 
 // Mapping minimal selon TUs
+/**
+ *
+ * @param k
+ */
 function mapCharacteristicKey(k) {
   const map = {
     Brawn: 'brawn',
@@ -90,6 +94,10 @@ function mapCharacteristicKey(k) {
   return map[k] || null
 }
 
+/**
+ *
+ * @param k
+ */
 function mapSkillKey(k) {
   // Lightsaber non présent dans mapOggDudeSkillToSystem (spécifique SW), on renvoie lowercase simplifié
   return String(k || '').toLowerCase()
@@ -97,7 +105,7 @@ function mapSkillKey(k) {
 
 /**
  * Valide une structure de prérequis
- * @param {object} requirements - Structure requirements à valider
+ * @param {object} requirements Structure requirements à valider
  * @returns {boolean} True si valide
  */
 export function validateTalentPrerequisites(requirements) {
@@ -128,7 +136,7 @@ export function validateTalentPrerequisites(requirements) {
 
 /**
  * Prépare les prérequis pour l'affichage (utilise la méthode du système)
- * @param {object} requirements - Structure requirements
+ * @param {object} requirements Structure requirements
  * @returns {object} Prérequis préparés avec labels et métadonnées
  */
 export function prepareTalentPrerequisitesForDisplay(requirements) {
@@ -137,7 +145,7 @@ export function prepareTalentPrerequisitesForDisplay(requirements) {
 
 /**
  * Fusionne plusieurs structures de prérequis
- * @param {...object} requirementSets - Ensembles de prérequis à fusionner
+ * @param {...object} requirementSets Ensembles de prérequis à fusionner
  * @returns {object} Prérequis fusionnés (valeur max pour chaque clé)
  */
 export function mergeTalentPrerequisites(...requirementSets) {

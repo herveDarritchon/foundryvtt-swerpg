@@ -2,6 +2,10 @@ import { describe, it, expect } from 'vitest'
 
 import { evaluateSpecializationPurchase } from '../../../module/lib/specializations/specialization-purchase-flow.mjs'
 
+/**
+ *
+ * @param specializations
+ */
 function buildActor(specializations = []) {
   return {
     system: {
@@ -12,6 +16,13 @@ function buildActor(specializations = []) {
   }
 }
 
+/**
+ *
+ * @param root0
+ * @param root0.specializationId
+ * @param root0.name
+ * @param root0.isUniversal
+ */
 function buildCandidateItem({ specializationId, name, isUniversal } = {}) {
   return {
     name: name ?? 'Test Spec',

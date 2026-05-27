@@ -19,12 +19,16 @@ vi.mock('../../../module/lib/talent-node/talent-tree-resolver.mjs', () => ({
 }))
 
 import { logger } from '../../../module/utils/logger.mjs'
-import { recordTalentNodePurchase, recordTalentNodeOperation } from '../../../module/utils/audit-log.mjs'
+import { recordTalentNodePurchase } from '../../../module/utils/audit-log.mjs'
 import { resolveSpecializationTree } from '../../../module/lib/talent-node/talent-tree-resolver.mjs'
 import { purchaseTalentNode } from '../../../module/lib/talent-node/talent-node-purchase.mjs'
 import { buildOwnedTalentSummary } from '../../../module/lib/talent-node/owned-talent-summary.mjs'
 import { REASON_CODE } from '../../../module/lib/talent-node/talent-node-state.mjs'
 
+/**
+ *
+ * @param overrides
+ */
 function buildActor(overrides = {}) {
   return {
     id: 'actor-001',
@@ -42,6 +46,10 @@ function buildActor(overrides = {}) {
   }
 }
 
+/**
+ *
+ * @param overrides
+ */
 function buildSpecializationData(overrides = {}) {
   return {
     specializationId: 'spec-1',
@@ -51,6 +59,10 @@ function buildSpecializationData(overrides = {}) {
   }
 }
 
+/**
+ *
+ * @param overrides
+ */
 function buildResolvedTree(overrides = {}) {
   return {
     tree: {

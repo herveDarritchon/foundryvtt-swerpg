@@ -97,8 +97,8 @@ export default class SwerpgTokenObject extends foundry.canvas.placeables.Token {
   /* -------------------------------------------- */
 
   /**
-   * @override
    * TODO remove in V13+ if core supports better UI scale
+   * @override
    */
   _drawTarget(options = {}) {
     return super._drawTarget({ ...options, size: TARGET_SIZE_SCALE })
@@ -121,8 +121,8 @@ export default class SwerpgTokenObject extends foundry.canvas.placeables.Token {
   /* -------------------------------------------- */
 
   /**
-   * @override
    * TODO remove in V13+ if core supports better UI scale
+   * @override
    */
   _drawBar(number, bar, data) {
     const val = Number(data.value)
@@ -180,46 +180,6 @@ export default class SwerpgTokenObject extends foundry.canvas.placeables.Token {
       r.drawCircle(width - PIP_FOCUS_END_X - i * PIP_SPACING, height - BAR_SECONDARY_Y_OFFSET, PIP_RADIUS)
     }
     r.endFill()
-  }
-
-  /* -------------------------------------------- */
-
-  /**
-   * @override
-   * TODO remove in V13+ if core supports better UI scale
-   */
-  _refreshEffects() {
-    let i = 0
-    const size = Math.round(canvas.scene._source.grid.size / 10) * 2 // Unmodified grid size
-    const rows = Math.floor(this.h / size)
-    const bg = this.effects.bg.clear().beginFill(0x000000, 0.4).lineStyle(1.0, 0x000000)
-    for (const effect of this.effects.children) {
-      if (effect === bg) continue
-
-      // Overlay effect
-      if (effect === this.effects.overlay) {
-        const { width, height } = this.getSize()
-        const size = Math.min(width * OVERLAY_SCALE_FACTOR, height * OVERLAY_SCALE_FACTOR)
-        effect.width = effect.height = size
-        effect.position = this.getCenterPoint({ x: 0, y: 0 })
-        effect.anchor.set(0.5, 0.5)
-      }
-
-      // Status effect
-      else {
-        effect.width = effect.height = size
-        effect.x = Math.floor(i / rows) * size
-        effect.y = (i % rows) * size
-        bg.drawRoundedRect(
-          effect.x + STATUS_EFFECT_BG_INSET,
-          effect.y + STATUS_EFFECT_BG_INSET,
-          size - STATUS_EFFECT_BG_INSET * 2,
-          size - STATUS_EFFECT_BG_INSET * 2,
-          STATUS_EFFECT_CORNER_RADIUS,
-        )
-        i++
-      }
-    }
   }
 
   /* -------------------------------------------- */

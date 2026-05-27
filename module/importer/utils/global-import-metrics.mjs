@@ -24,6 +24,10 @@ const _runtime = {
 
 // For tests and reset scenarios we expose a reset helper so consumers (tests) can
 // ensure a clean state between runs.
+/**
+ *
+ * @param preserveLastImportStats
+ */
 export function resetRuntimeMetrics(preserveLastImportStats = false) {
   _runtime.globalStart = 0
   _runtime.globalEnd = 0
@@ -34,28 +38,46 @@ export function resetRuntimeMetrics(preserveLastImportStats = false) {
   }
 }
 
+/**
+ *
+ */
 export function markGlobalStart() {
   _runtime.globalStart = typeof performance !== 'undefined' && typeof performance.now === 'function' ? performance.now() : Date.now()
   logger.debug('[GlobalMetrics] markGlobalStart called', { timestamp: _runtime.globalStart })
 }
 
+/**
+ *
+ */
 export function markGlobalEnd() {
   _runtime.globalEnd = typeof performance !== 'undefined' && typeof performance.now === 'function' ? performance.now() : Date.now()
   const duration = _runtime.globalEnd - _runtime.globalStart
   logger.debug('[GlobalMetrics] markGlobalEnd called', { timestamp: _runtime.globalEnd, duration })
 }
 
+/**
+ *
+ * @param size
+ */
 export function markArchiveSize(size) {
   if (typeof size === 'number' && size >= 0) {
     _runtime.archiveSizeBytes = size
   }
 }
 
+/**
+ *
+ * @param domain
+ */
 export function recordDomainStart(domain) {
   const now = typeof performance !== 'undefined' && typeof performance.now === 'function' ? performance.now() : Date.now()
   _runtime.domains.set(domain, { start: now, end: 0 })
 }
 
+/**
+ *
+ * @param domain
+ */
 export function recordDomainEnd(domain) {
   const entry = _runtime.domains.get(domain)
   if (entry) {
@@ -108,6 +130,10 @@ export function getAllImportStats() {
   }
 }
 
+/**
+ *
+ * @param fn
+ */
 function safeCall(fn) {
   try {
     return fn()
@@ -118,6 +144,7 @@ function safeCall(fn) {
 
 /**
  * Agrège les métriques globales (durées, taux d'erreur, vitesse, taille archive)
+ * @param statsOverride
  * @returns {{overallDurationMs:number, domainsCount:number, errorRate:number, archiveSizeBytes:number, itemsPerSecond:number, domains: Object<string,{durationMs:number}>, totalProcessed:number, totalRejected:number, totalImported:number}}
  */
 export function aggregateImportMetrics(statsOverride) {
@@ -168,6 +195,11 @@ export { aggregateImportMetrics as getGlobalImportMetrics }
 
 // ---- Format helpers (human readable) ---------------------------------
 
+/**
+ *
+ * @param bytes
+ * @param decimals
+ */
 function _formatBytes(bytes, decimals = 2) {
   if (!Number.isFinite(bytes) || bytes <= 0) return '0 B'
   const units = ['B', 'KB', 'MB', 'GB', 'TB']
@@ -176,6 +208,10 @@ function _formatBytes(bytes, decimals = 2) {
   return `${value.toFixed(decimals)} ${units[i]}`
 }
 
+/**
+ *
+ * @param ms
+ */
 function _formatDurationMs(ms) {
   if (!Number.isFinite(ms) || ms <= 0) return '0 ms'
   if (ms >= 1000) {
@@ -185,11 +221,21 @@ function _formatDurationMs(ms) {
   return `${Math.round(ms)} ms`
 }
 
+/**
+ *
+ * @param value
+ * @param decimals
+ */
 function _formatPercent(value, decimals = 2) {
   if (!Number.isFinite(value)) return '0%'
   return `${(value * 100).toFixed(decimals)}%`
 }
 
+/**
+ *
+ * @param value
+ * @param decimals
+ */
 function _formatNumber(value, decimals = 2) {
   if (!Number.isFinite(value)) return '0'
   return Number.isInteger(value) ? String(value) : value.toFixed(decimals)
@@ -198,7 +244,7 @@ function _formatNumber(value, decimals = 2) {
 /**
  * Retourne un objet contenant les mêmes métriques mais avec des champs lisibles
  * par un humain (chaînes) en complément des valeurs brutes.
- * @param {Object} rawMetrics - Résultat de `aggregateImportMetrics()`
+ * @param {Object} rawMetrics Résultat de `aggregateImportMetrics()`
  * @returns {Object}
  */
 export function formatGlobalMetrics(rawMetrics) {
@@ -229,7 +275,7 @@ export function formatGlobalMetrics(rawMetrics) {
 
 /**
  * Génère une chaîne multi-lignes prête à être affichée dans la sortie console/UI.
- * @param {Object} rawMetrics - Résultat de `aggregateImportMetrics()`
+ * @param {Object} rawMetrics Résultat de `aggregateImportMetrics()`
  * @returns {string}
  */
 export function formatMetricsForDisplay(rawMetrics) {

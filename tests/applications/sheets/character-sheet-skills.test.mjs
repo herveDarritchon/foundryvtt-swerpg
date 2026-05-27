@@ -39,6 +39,10 @@ const MOCK_SKILL_CONFIG = {
   diplomacy: { id: 'diplomacy', label: 'SKILLS.Diplomacy', characteristics: MOCK_CHARACTERISTICS.presence, type: SKILL_TYPE.combat },
 }
 
+/**
+ *
+ * @param overrides
+ */
 function buildMockActor(overrides = {}) {
   const {
     skills = {},
@@ -196,6 +200,10 @@ describe('CharacterSheet skill methods', () => {
       CharacterSheet = (await import('../../../module/applications/sheets/character-sheet.mjs')).default
     })
 
+    /**
+     *
+     * @param actor
+     */
     function buildBaseContext(actor) {
       return {
         actor,
@@ -216,6 +224,7 @@ describe('CharacterSheet skill methods', () => {
     /**
      * Enrich mock skills with the same fields the data model would provide.
      * This mimics SwerpgActorType._prepareSkill() + SwerpgCharacter._prepareSkill().
+     * @param actor
      */
     function enrichMockSkills(actor) {
       const skills = actor.system.skills
@@ -262,6 +271,10 @@ describe('CharacterSheet skill methods', () => {
       })
     }
 
+    /**
+     *
+     * @param actor
+     */
     async function getContext(actor) {
       enrichMockSkills(actor)
       vi.spyOn(SwerpgBaseActorSheet.prototype, '_prepareContext').mockResolvedValue(buildBaseContext(actor))

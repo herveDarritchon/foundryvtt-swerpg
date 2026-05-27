@@ -60,7 +60,7 @@ export const TalentsMixin = (Base) =>
 
     /**
      * Open the specialization tree UI for this actor.
-     * @param {object} [options] - UI options forwarded to the underlying controller.
+     * @param {object} [options] UI options forwarded to the underlying controller.
      * @returns {Promise<unknown>|unknown}
      */
     async openSpecializationTreeApp(options = {}) {
@@ -93,7 +93,7 @@ export const TalentsMixin = (Base) =>
 
     /**
      * Toggle display of the Talent Tree.
-     * @param {boolean} active - Whether to open or close the tree
+     * @param {boolean} active Whether to open or close the tree
      */
     async toggleTalentTree(active) {
       if (active === false) return this.closeSpecializationTreeApp()

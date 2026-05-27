@@ -92,6 +92,10 @@ export async function onCreateChatMessage(message, data, options, userId) {
 
 /* -------------------------------------------- */
 
+/**
+ *
+ * @param message
+ */
 function isSwerpgActionMessage(message) {
   const flags = message.flags.swerpg
 

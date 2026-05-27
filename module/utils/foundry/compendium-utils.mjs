@@ -1,5 +1,9 @@
 import { getOggDudePackConfig } from '../oggdude-mapping-config.mjs'
 
+/**
+ *
+ * @param type
+ */
 export function getCharacterCreationCompendiumPack(type) {
   const packConfig = getOggDudePackConfig(type)
   const pack = game.packs.get(packConfig.fullName)

@@ -35,8 +35,8 @@ import { resolveSpecializationTree } from './talent-tree-resolver.mjs'
  * are merged into the result with a synthetic 'species' source. Their rank contribution
  * is counted alongside tree purchases for ranked talents.
  *
- * @param {object} actor - Actor with system.progression.talentPurchases, system.details.specializations, system.details.species, and items.
- * @param {Map<string, {name?: string, activation?: string, isRanked?: boolean}>} [talentDefinitions] - Map of talentId -> definition.
+ * @param {object} actor Actor with system.progression.talentPurchases, system.details.specializations, system.details.species, and items.
+ * @param {Map<string, {name?: string, activation?: string, isRanked?: boolean}>} [talentDefinitions] Map of talentId -> definition.
  * @returns {OwnedTalentSummaryEntry[]}
  */
 export function buildOwnedTalentSummary(actor, talentDefinitions = new Map()) {

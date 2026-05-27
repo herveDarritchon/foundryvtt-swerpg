@@ -303,4 +303,4 @@ export async function buildSpecializationContext(zip, groupByDirectory, groupByT
   }
 }
 
-export { getSpecializationImportStats, resetSpecializationImportStats } from '../utils/specialization-import-utils.mjs'
+export { getSpecializationImportStats, resetSpecializationImportStats }

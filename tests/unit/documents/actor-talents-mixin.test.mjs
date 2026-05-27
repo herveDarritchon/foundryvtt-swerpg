@@ -3,7 +3,7 @@
  * Issue #91: Refactoring - Extract talent methods to actor-mixins/talents.mjs
  */
 
-import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest'
+import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { TalentsMixin } from '../../../module/documents/actor-mixins/talents.mjs'
 
 // Mock Foundry globals
@@ -215,9 +215,9 @@ describe('TalentsMixin', () => {
 
       actor.prepareTalents([mockTalent])
 
-      expect(actor.actorHooks['prepareResources']).toBeDefined()
-      expect(actor.actorHooks['prepareResources']).toHaveLength(1)
-      expect(actor.actorHooks['prepareResources'][0].talent).toBe(mockTalent)
+      expect(actor.actorHooks.prepareResources).toBeDefined()
+      expect(actor.actorHooks.prepareResources).toHaveLength(1)
+      expect(actor.actorHooks.prepareResources[0].talent).toBe(mockTalent)
     })
   })
 
@@ -226,7 +226,7 @@ describe('TalentsMixin', () => {
     // The hook validation is not working properly with the current mock setup
     it.skip('should call registered hook functions', () => {
       const mockFn = vi.fn()
-      actor.actorHooks['testHook'] = [
+      actor.actorHooks.testHook = [
         {
           talent: { name: 'Test Talent' },
           fn: mockFn,
@@ -240,7 +240,7 @@ describe('TalentsMixin', () => {
 
     it.skip('should handle errors in hook functions gracefully', () => {
       const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
-      actor.actorHooks['testHook'] = [
+      actor.actorHooks.testHook = [
         {
           talent: { name: 'Bad Talent' },
           fn: () => {

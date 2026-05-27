@@ -18,7 +18,7 @@ export default class Talent {
   /**
    * Processes the action on the talent.
    * @abstract
-   * return {Talent} the result of the action
+   * @returns {Talent} the result of the action
    */
   process() {
     throw new Error("Method 'process()' must be implemented.")
@@ -27,8 +27,7 @@ export default class Talent {
   /**
    * Save the talent elements in the Database.
    * @abstract
-   * @async
-   * return {Promise<Talent>} the result of the action
+   * @returns {Promise<Talent>} the result of the action
    */
   async updateState() {
     throw new Error("Method 'updateState()' must be implemented.")

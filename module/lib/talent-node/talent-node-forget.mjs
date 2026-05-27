@@ -28,9 +28,9 @@ import { applyTalentNodePatch } from './talent-node-persistence.mjs'
  * XP convention: oubli autorisé decrements experience.spent by the node cost,
  * symmetric to the purchase increment.
  *
- * @param {object} actor - The actor document instance.
- * @param {string} specializationId - The specialization identifier.
- * @param {string} nodeId - The node identifier within the specialization tree.
+ * @param {object} actor The actor document instance.
+ * @param {string} specializationId The specialization identifier.
+ * @param {string} nodeId The node identifier within the specialization tree.
  * @returns {Promise<ForgetResult>}
  */
 export async function forgetTalentNode(actor, specializationId, nodeId) {
@@ -83,12 +83,22 @@ export async function forgetTalentNode(actor, specializationId, nodeId) {
 
 /**
  * Fire-and-forget audit emission. Never throws.
+ * @param actor
+ * @param operation
+ * @param status
+ * @param data
  */
 function auditTalentNode(actor, operation, status, data) {
   const promise = recordTalentNodeOperation(actor, operation, status, data)
   runAudit(promise, { actorId: actor?.id, nodeId: data.nodeId }, '[TalentNodeForget]')
 }
 
+/**
+ *
+ * @param promise
+ * @param ctx
+ * @param prefix
+ */
 async function runAudit(promise, ctx, prefix) {
   try {
     await promise

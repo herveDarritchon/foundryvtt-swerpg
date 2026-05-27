@@ -8,7 +8,8 @@ import { logger } from '../../utils/logger.mjs'
 
 /**
  * Résout un identifiant de nœud OggDude vers un SwerpgTalentNode existant
- * @param {string} oggDudeNodeId - Identifiant de nœud depuis OggDude XML
+ * @param {string} oggDudeNodeId Identifiant de nœud depuis OggDude XML
+ * @param options
  * @returns {SwerpgTalentNode|null} Nœud de talent correspondant ou null si non trouvé
  */
 export function resolveTalentNode(oggDudeNodeId, options = {}) {
@@ -56,7 +57,7 @@ export function resolveTalentNode(oggDudeNodeId, options = {}) {
 
 /**
  * Tente de résoudre un nœud par correspondance de pattern OggDude courants
- * @param {string} nodeId - ID à résoudre
+ * @param {string} nodeId ID à résoudre
  * @returns {SwerpgTalentNode|null} Nœud résolu ou null
  * @private
  */
@@ -104,8 +105,8 @@ function tryResolveByPattern(nodeId) {
 /**
  * Crée un nœud de talent de fallback pour les cas où le nœud OggDude n'existe pas
  * ATTENTION: Cette fonction est expérimentale et peut créer des incohérences
- * @param {string} nodeId - ID du nœud à créer
- * @param {object} options - Options de création
+ * @param {string} nodeId ID du nœud à créer
+ * @param {object} options Options de création
  * @returns {SwerpgTalentNode|null} Nœud créé ou null si création échoue
  */
 export function createFallbackTalentNode(nodeId, options = {}) {
@@ -139,7 +140,7 @@ export function getAvailableTalentNodes() {
 
 /**
  * Vérifie si un nœud de talent existe
- * @param {string} nodeId - ID du nœud à vérifier
+ * @param {string} nodeId ID du nœud à vérifier
  * @returns {boolean} True si le nœud existe
  */
 export function isTalentNodeAvailable(nodeId) {

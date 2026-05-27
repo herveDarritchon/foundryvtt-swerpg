@@ -11,7 +11,6 @@ import {
   WEAPON_QUALITY_MAP,
   WEAPON_RANGE_MAP,
   WEAPON_SKILL_MAP,
-  WEAPON_TYPE_MAP,
   WEAPON_CATEGORY_MAP,
   resolveWeaponType,
   resolveWeaponCategory,
@@ -353,7 +352,7 @@ export function weaponMapper(weapons) {
 }
 
 // Export stats utils for global metrics and test resets
-export { getWeaponImportStats, resetWeaponImportStats } from '../utils/weapon-import-utils.mjs'
+export { getWeaponImportStats, resetWeaponImportStats }
 
 /**
  * Create the Weapon Context for the OggDude Data Importer.

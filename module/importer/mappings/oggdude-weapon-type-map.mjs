@@ -30,7 +30,7 @@ export const WEAPON_TYPE_MAP = {
 /**
  * Slugify a weapon type string for use as weaponType value.
  * Falls back gracefully for empty/null inputs.
- * @param {string} raw - The raw weapon type string
+ * @param {string} raw The raw weapon type string
  * @returns {string} The slugified type
  */
 export function slugifyWeaponType(raw) {
@@ -43,7 +43,7 @@ export function slugifyWeaponType(raw) {
 
 /**
  * Resolve an OggDude weapon Type into a stable SWERPG weaponType.
- * @param {string} rawType - The raw Type value from OggDude XML
+ * @param {string} rawType The raw Type value from OggDude XML
  * @returns {{ weaponType: string, isMapped: boolean }}
  */
 export function resolveWeaponType(rawType) {

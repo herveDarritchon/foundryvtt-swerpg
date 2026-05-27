@@ -6,6 +6,10 @@ vi.mock('../../../module/utils/logger.mjs', () => ({
 
 import { resolveTalentDetail, resolveTalentItem, buildTalentDefinitionsMap } from '../../../module/lib/talent-node/talent-reference-resolver.mjs'
 
+/**
+ *
+ * @param uuid
+ */
 function mockFromUuidSync(uuid) {
   globalThis.fromUuidSync = vi.fn((lookup) => {
     if (lookup === 'Item.talent-parry-uuid') {
@@ -18,6 +22,10 @@ function mockFromUuidSync(uuid) {
   })
 }
 
+/**
+ *
+ * @param items
+ */
 function mockGameItems(items = []) {
   globalThis.game = {
     ...globalThis.game,

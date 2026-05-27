@@ -6,8 +6,8 @@ import { logger } from '../../utils/logger.mjs'
 
 /**
  * Transforme les données de rang OggDude vers la structure rank système
- * @param {object} oggDudeRankData - Données de rang depuis OggDude XML
- * @param {object} options - Options de transformation
+ * @param {object} oggDudeRankData Données de rang depuis OggDude XML
+ * @param {object} options Options de transformation
  * @returns {object} Structure rank compatible système {idx, cost}
  */
 export function transformTalentRank(oggDudeRankData, options = {}) {
@@ -33,7 +33,7 @@ export function transformTalentRank(oggDudeRankData, options = {}) {
 
 /**
  * Extrait et valide le tier (niveau) d'un talent OggDude
- * @param {object} oggDudeTalentData - Données complètes du talent OggDude
+ * @param {object} oggDudeTalentData Données complètes du talent OggDude
  * @returns {number} Tier validé (0-5)
  */
 export function extractTalentTier(oggDudeTalentData) {
@@ -44,7 +44,7 @@ export function extractTalentTier(oggDudeTalentData) {
 
 /**
  * Détermine si un talent est classé (ranked) basé sur les données OggDude
- * @param {object} oggDudeTalentData - Données du talent OggDude
+ * @param {object} oggDudeTalentData Données du talent OggDude
  * @returns {boolean} True si le talent est classé
  */
 export function extractIsRanked(oggDudeTalentData) {
@@ -64,8 +64,8 @@ export function extractIsRanked(oggDudeTalentData) {
 
 /**
  * Calcule le coût par défaut d'un talent basé sur son index et tier
- * @param {number} rankIndex - Index du rang (0-based)
- * @param {number} tier - Tier du talent (0-5)
+ * @param {number} rankIndex Index du rang (0-based)
+ * @param {number} tier Tier du talent (0-5)
  * @returns {number} Coût calculé
  * @private
  */
@@ -79,7 +79,7 @@ function calculateDefaultTalentCost(rankIndex, tier = 0) {
 
 /**
  * Valide une structure de rang complète
- * @param {object} rankData - Structure rank à valider
+ * @param {object} rankData Structure rank à valider
  * @returns {boolean} True si valide
  */
 export function validateTalentRank(rankData) {
@@ -106,7 +106,7 @@ export function validateTalentRank(rankData) {
 
 /**
  * Génère une structure de rang par défaut pour un tier donné
- * @param {number} tier - Tier du talent
+ * @param {number} tier Tier du talent
  * @returns {object} Structure rank par défaut
  */
 export function generateDefaultTalentRank(tier = 0) {
@@ -118,8 +118,8 @@ export function generateDefaultTalentRank(tier = 0) {
 
 /**
  * Calcule le coût total pour atteindre un rang donné
- * @param {number} targetRank - Rang cible (0-based)
- * @param {number} tier - Tier du talent
+ * @param {number} targetRank Rang cible (0-based)
+ * @param {number} tier Tier du talent
  * @returns {number} Coût total cumulé
  */
 export function calculateCumulativeTalentCost(targetRank, tier = 0) {

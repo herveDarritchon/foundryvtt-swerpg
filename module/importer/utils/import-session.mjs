@@ -45,7 +45,7 @@ export function createImportSession() {
  * Called after each talent pipeline completes its storage step.
  *
  * @param {ImportSession} session
- * @param {object[]} createdDocuments - Array of Foundry-like document objects with uuid, flags, system
+ * @param {object[]} createdDocuments Array of Foundry-like document objects with uuid, flags, system
  */
 export function publishTalentReferences(session, createdDocuments) {
   if (!Array.isArray(createdDocuments)) return
@@ -71,8 +71,8 @@ export function publishTalentReferences(session, createdDocuments) {
  * then game.items as fallback, then game.packs as final fallback.
  *
  * @param {ImportSession} session
- * @param {string[]} keys - OggDude talent keys to resolve
- * @param {string} ownerKey - Source entity key (for diagnostics)
+ * @param {string[]} keys OggDude talent keys to resolve
+ * @param {string} ownerKey Source entity key (for diagnostics)
  * @returns {{ resolvedUUIDs: string[], unresolvedKeys: string[] }}
  */
 export function resolveTalentKeysFromSession(session, keys, ownerKey = '') {
@@ -133,7 +133,7 @@ export function resolveTalentKeysFromSession(session, keys, ownerKey = '') {
  * then world, then compendium.
  *
  * @param {ImportSession} session
- * @param {string} talentId - The talent system.id or oggdudeKey
+ * @param {string} talentId The talent system.id or oggdudeKey
  * @returns {string|null} UUID if found, null otherwise
  */
 export function resolveTalentIdFromSession(session, talentId) {
@@ -163,7 +163,7 @@ export function resolveTalentIdFromSession(session, talentId) {
  * Independent pipelines retain stable relative order from the input array.
  * Soft dependencies are used only for preferred ordering when no hard constraint exists.
  *
- * @param {PipelineDescriptor[]} pipelines - The list of pipeline descriptors to sort
+ * @param {PipelineDescriptor[]} pipelines The list of pipeline descriptors to sort
  * @returns {{ sorted: PipelineDescriptor[], hasCycle: boolean, cycleDetails: string[] }}
  */
 export function topologicalSort(pipelines) {
@@ -173,6 +173,10 @@ export function topologicalSort(pipelines) {
   const visited = new Set()
   const cycleDetails = []
 
+  /**
+   *
+   * @param id
+   */
   function visit(id) {
     if (visited.has(id)) return true
     if (visiting.has(id)) {
@@ -220,8 +224,8 @@ export function topologicalSort(pipelines) {
  * Build the sorted execution list from a set of selected domain ids and the full pipeline registry.
  * Applies topological sort on hard dependencies, preserves stable order for independent pipelines.
  *
- * @param {string[]} selectedDomainIds - The domain IDs checked by the user
- * @param {Map<string, PipelineDescriptor[]>} registry - The full pipeline registry
+ * @param {string[]} selectedDomainIds The domain IDs checked by the user
+ * @param {Map<string, PipelineDescriptor[]>} registry The full pipeline registry
  * @returns {PipelineDescriptor[]} Sorted pipeline descriptors to execute
  */
 export function buildExecutionPlan(selectedDomainIds, registry) {

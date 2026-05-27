@@ -123,7 +123,6 @@ export default class SkillConfig extends api.HandlebarsApplicationMixin(api.Docu
   /**
    * @this {SkillConfig}
    * @param {PointerEvent} event
-   * @returns {Promise<void>}
    */
   static #onDecrease(event) {
     this.actor.purchaseSkill(this.skillId, -1)
@@ -134,7 +133,6 @@ export default class SkillConfig extends api.HandlebarsApplicationMixin(api.Docu
   /**
    * @this {SkillConfig}
    * @param {PointerEvent} event
-   * @returns {Promise<void>}
    */
   static #onIncrease(event) {
     this.actor.purchaseSkill(this.skillId, 1)

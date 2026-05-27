@@ -19,7 +19,7 @@ describe('Skill Base Class', () => {
 
       const skill = new Skill(actor, data, {}, {})
 
-      expect(() => skill.updateState()).toThrow
+      await expect(skill.updateState()).rejects.toThrow()
     })
   })
 

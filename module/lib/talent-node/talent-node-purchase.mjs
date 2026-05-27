@@ -24,9 +24,9 @@ import { applyTalentNodePatch } from './talent-node-persistence.mjs'
  * persists the purchase and XP atomically via the shared persistence helper,
  * then records an audit entry (non-blocking).
  *
- * @param {object} actor - The actor document instance.
- * @param {string} specializationId - The specialization identifier.
- * @param {string} nodeId - The node identifier within the specialization tree.
+ * @param {object} actor The actor document instance.
+ * @param {string} specializationId The specialization identifier.
+ * @param {string} nodeId The node identifier within the specialization tree.
  * @returns {Promise<PurchaseResult>}
  */
 export async function purchaseTalentNode(actor, specializationId, nodeId) {
@@ -75,6 +75,10 @@ export async function purchaseTalentNode(actor, specializationId, nodeId) {
 
 /**
  * Fire-and-forget audit emission. Never throws.
+ * @param actor
+ * @param operation
+ * @param status
+ * @param data
  */
 function auditTalentNode(actor, operation, status, data) {
   const ctx = { actorId: actor?.id, nodeId: data.nodeId }
@@ -87,6 +91,12 @@ function auditTalentNode(actor, operation, status, data) {
   runAudit(promise, ctx, '[TalentNodePurchase]')
 }
 
+/**
+ *
+ * @param promise
+ * @param ctx
+ * @param prefix
+ */
 async function runAudit(promise, ctx, prefix) {
   try {
     await promise

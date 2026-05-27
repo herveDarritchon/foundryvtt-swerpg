@@ -1,5 +1,9 @@
 import OggDudeImporter from '../oggDude.mjs'
 
+/**
+ *
+ * @param xmlWeaponModifier
+ */
 export function buildWeaponModifiers(xmlWeaponModifier) {
   if (xmlWeaponModifier == null) {
     return {}
@@ -27,6 +31,10 @@ export function buildWeaponModifiers(xmlWeaponModifier) {
   }
 }
 
+/**
+ *
+ * @param dieModifier
+ */
 function _buildDieModifier(dieModifier) {
   if (dieModifier == null) {
     return {}
@@ -47,6 +55,10 @@ function _buildDieModifier(dieModifier) {
   }
 }
 
+/**
+ *
+ * @param mod
+ */
 export function buildMod(mod) {
   if (mod == null) {
     return {}

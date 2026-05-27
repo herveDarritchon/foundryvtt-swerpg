@@ -20,6 +20,12 @@ const OGGDUDE_COMPENDIUM_FOLDERS = {
   },
 }
 
+/**
+ *
+ * @param name
+ * @param type
+ * @param parentId
+ */
 function findFolderByNameTypeAndParent(name, type, parentId = null) {
   return game.folders.find((folder) => {
     const folderParentId = folder.folder?.id ?? folder.folder ?? null
@@ -28,6 +34,14 @@ function findFolderByNameTypeAndParent(name, type, parentId = null) {
   })
 }
 
+/**
+ *
+ * @param root0
+ * @param root0.name
+ * @param root0.type
+ * @param root0.color
+ * @param root0.parentId
+ */
 async function getOrCreateFolder({ name, type, color, parentId = null }) {
   const existing = findFolderByNameTypeAndParent(name, type, parentId)
 
@@ -42,6 +56,11 @@ async function getOrCreateFolder({ name, type, color, parentId = null }) {
   })
 }
 
+/**
+ *
+ * @param pack
+ * @param elementType
+ */
 export async function organizeCompendiumPack(pack, elementType) {
   const packConfig = getOggDudePackConfig(elementType)
 

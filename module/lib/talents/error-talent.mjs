@@ -5,10 +5,6 @@ import Talent from './talent.mjs'
  *   Will be removed in a future version.
  */
 export default class ErrorTalent extends Talent {
-  constructor(actor, data, params, options) {
-    super(actor, data, params, options)
-  }
-
   /**
    * @inheritDoc
    * @override

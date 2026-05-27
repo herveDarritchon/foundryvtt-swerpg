@@ -581,9 +581,4 @@ async function resetAllActorTalents() {
 /*  ESModules API                               */
 /* -------------------------------------------- */
 
-export { SYSTEM } from './module/config/system.mjs'
-export * as applications from './module/applications/_module.mjs'
-export * as dice from './module/dice/_module.mjs'
-export * as documents from './module/documents/_module.mjs'
-export * as models from './module/models/_module.mjs'
-export * as chat from './module/chat.mjs'
+export { SYSTEM, applications, dice, documents, models, chat }

@@ -22,7 +22,7 @@ export function normalizeFreeSkillRank(raw) {
 
 /**
  * Résout les informations de source depuis un objet XML career/specialization.
- * @param {object} xmlElement - Élément XML (career ou specialization)
+ * @param {object} xmlElement Élément XML (career ou specialization)
  * @returns {{name: string, page: number|null}}
  */
 export function resolveSource(xmlElement) {
@@ -192,7 +192,7 @@ export function convertMarkupToHtml(description) {
     return `<h${level}>${content.trimEnd()}</h${level}>`
   })
 
-  result = result.replace(/\[[^\[\]]+\]/g, '')
+  result = result.replace(/\[[^\][]+\]/g, '')
 
   return result
 }

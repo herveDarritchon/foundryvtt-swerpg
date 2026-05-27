@@ -47,7 +47,7 @@ function createMockHost({ width = 640, height = 480 } = {}) {
     clientWidth: width,
     clientHeight: height,
     firstElementChild: null,
-    replaceChildren: vi.fn(function replaceChildren(child) {
+    replaceChildren: vi.fn(function (child) {
       this.firstElementChild = child
     }),
   }
@@ -64,22 +64,22 @@ function createMockContainer() {
     hitArea: null,
     position: { set: vi.fn() },
     scale: { set: vi.fn() },
-    addChild: vi.fn(function addChild(child) {
+    addChild: vi.fn(function (child) {
       this.children.push(child)
       return child
     }),
-    removeChild: vi.fn(function removeChild(child) {
+    removeChild: vi.fn(function (child) {
       this.children = this.children.filter((c) => c !== child)
       return child
     }),
-    destroy: vi.fn(function destroy() {
+    destroy: vi.fn(function () {
       this.children = []
     }),
-    on: vi.fn(function on(event, handler) {
+    on: vi.fn(function (event, handler) {
       listeners[event] = handler
       return this
     }),
-    off: vi.fn(function off(event) {
+    off: vi.fn(function (event) {
       delete listeners[event]
       return this
     }),

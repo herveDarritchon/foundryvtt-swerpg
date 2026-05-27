@@ -11,20 +11,35 @@ const gearStats = new ImportStats({
   unknownCategories: 0,
 })
 
+/**
+ *
+ */
 export function resetGearImportStats() {
   gearStats.reset({
     unknownCategories: 0,
   })
 }
 
+/**
+ *
+ * @param key
+ * @param amount
+ */
 export function incrementGearImportStat(key, amount = 1) {
   gearStats.increment(key, amount)
 }
 
+/**
+ *
+ * @param code
+ */
 export function addGearUnknownCategory(code) {
   gearStats.addDetail('unknownCategories', code, 'categoryDetails')
 }
 
+/**
+ *
+ */
 export function getGearImportStats() {
   return gearStats.getStats()
 }

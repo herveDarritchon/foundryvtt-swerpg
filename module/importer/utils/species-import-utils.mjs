@@ -10,20 +10,35 @@ const speciesStats = new ImportStats({
   unknownTalents: 0,
 })
 
+/**
+ *
+ */
 export function resetSpeciesImportStats() {
   speciesStats.reset({
     unknownTalents: 0,
   })
 }
 
+/**
+ *
+ * @param key
+ * @param amount
+ */
 export function incrementSpeciesImportStat(key, amount = 1) {
   speciesStats.increment(key, amount)
 }
 
+/**
+ *
+ * @param code
+ */
 export function addSpeciesUnknownTalent(code) {
   speciesStats.addDetail('unknownTalents', code, 'talentDetails')
 }
 
+/**
+ *
+ */
 export function getSpeciesImportStats() {
   return speciesStats.getStats()
 }

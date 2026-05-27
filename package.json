@@ -63,6 +63,7 @@
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-jsdoc": "^48.11.0",
     "eslint-plugin-prettier": "^5.2.1",
+    "eslint-plugin-unused-imports": "^4.4.1",
     "globals": "^15.9.0",
     "gulp": "^5.0.0",
     "gulp-less": "^5.0.0",

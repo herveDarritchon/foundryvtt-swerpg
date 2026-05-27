@@ -1,5 +1,4 @@
 import { SYSTEM } from '../config/system.mjs'
-import { getQualityConfig } from '../config/qualities.mjs'
 import { buildQualitySchema } from './qualities-schema.mjs'
 import SwerpgCombatItem from './combat.mjs'
 

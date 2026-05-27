@@ -266,7 +266,7 @@ async function writeLogEntries(actor, entries) {
       }
 
       await actor.update({ [AUDIT_LOG_KEY]: nextLogs }, { swerpgAuditLog: false })
-      void sendChatForAuditEntries(actor, entries)
+      sendChatForAuditEntries(actor, entries)
       return
     } catch (err) {
       if (attempt < MAX_RETRIES) {
@@ -362,7 +362,7 @@ export function onUpdateActor(actor, changes, options, userId) {
   const entries = composeEntries(pending.oldState, changes, actor, pending.userId)
   if (!entries.length) return
 
-  void writeLogEntries(actor, entries)
+  writeLogEntries(actor, entries)
 }
 
 /* -------------------------------------------- */
@@ -401,7 +401,7 @@ function onCreateItem(item, data, options, userId) {
     snapshot,
   })
 
-  void writeLogEntries(item.parent, [entry])
+  writeLogEntries(item.parent, [entry])
 }
 
 /* -------------------------------------------- */

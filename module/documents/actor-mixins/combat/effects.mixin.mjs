@@ -7,9 +7,10 @@ export const EffectsMixin = (Base) =>
   class extends Base {
     /**
      * Apply the outcome of an action (damage, resources, effects)
-     * @param {SwerpgAction} action - The action that was performed
-     * @param {object} outcome - The action outcome
-     * @param {object} options - Options including { reverse: boolean }
+     * @param {SwerpgAction} action The action that was performed
+     * @param {object} outcome The action outcome
+     * @param {object} options Options including { reverse: boolean }
+     * @param options.reverse
      */
     async applyActionOutcome(action, outcome, { reverse = false } = {}) {
       const wasWeakened = this.isWeakened
@@ -37,8 +38,8 @@ export const EffectsMixin = (Base) =>
 
     /**
      * Apply effects from an action outcome (create/update/delete ActiveEffects)
-     * @param {object} outcome - Action outcome containing effects
-     * @param {boolean} reverse - Whether to reverse the effects
+     * @param {object} outcome Action outcome containing effects
+     * @param {boolean} reverse Whether to reverse the effects
      */
     async _applyOutcomeEffects(outcome, reverse = false) {
       // Reverse effects - delete applied effects
@@ -74,8 +75,8 @@ export const EffectsMixin = (Base) =>
 
     /**
      * Track heroism damage for combat metrics
-     * @param {object} resources - Resource changes
-     * @param {boolean} reverse - Whether to reverse the tracking
+     * @param {object} resources Resource changes
+     * @param {boolean} reverse Whether to reverse the tracking
      */
     async _trackHeroismDamage(resources, reverse) {
       if (!game.combat?.active) return
@@ -96,8 +97,8 @@ export const EffectsMixin = (Base) =>
     /**
      * Called when this actor deals damage to others
      * Applies critical effects if applicable
-     * @param {SwerpgAction} action - The action used
-     * @param {Map} outcomes - Map of outcomes by actor
+     * @param {SwerpgAction} action The action used
+     * @param {Map} outcomes Map of outcomes by actor
      */
     onDealDamage(action, outcomes) {
       const self = outcomes.get(this)
@@ -132,7 +133,7 @@ export const EffectsMixin = (Base) =>
 
     /**
      * Expire active effects whose durations have concluded
-     * @param {boolean} start - Is it the start of the turn (true) or the end of the turn (false)
+     * @param {boolean} start Is it the start of the turn (true) or the end of the turn (false)
      */
     async expireEffects(start = true) {
       const toDelete = []
@@ -144,8 +145,8 @@ export const EffectsMixin = (Base) =>
 
     /**
      * Test whether an ActiveEffect is expired
-     * @param {ActiveEffect} effect - The effect being tested
-     * @param {boolean} start - Is it the start of the turn (true) or the end of the turn (false)
+     * @param {ActiveEffect} effect The effect being tested
+     * @param {boolean} start Is it the start of the turn (true) or the end of the turn (false)
      * @returns {boolean}
      */
     _isEffectExpired(effect, start = true) {

@@ -161,7 +161,6 @@ export default class StandardCheck extends Roll {
   /**
    * Configure the provided data used to customize this type of Roll
    * @param {object} data     The initially provided data object
-   * @returns {object}        The configured data object
    */
   static #configureData(data) {
     // Bonuses

@@ -18,6 +18,11 @@
  */
 import { logger } from '../../../utils/logger.mjs'
 
+/**
+ *
+ * @param path
+ * @param target
+ */
 async function _createDirectory(path, target) {
   logger.debug(`Create Path ${path} with target ${target}.`)
   return await foundry.applications.apps.FilePicker.createDirectory('data', path + '/' + target, { bucket: 'data' })

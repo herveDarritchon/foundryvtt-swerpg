@@ -78,7 +78,7 @@ export const ARMOR_CATEGORY_MAP = {
 
 /**
  * Résout une catégorie OggDude vers une catégorie SwerpgArmor
- * @param {string} oggDudeCategory - La catégorie depuis les données OggDude
+ * @param {string} oggDudeCategory La catégorie depuis les données OggDude
  * @returns {string|null} La catégorie SwerpgArmor correspondante ou null si non trouvée
  */
 export function resolveArmorCategory(oggDudeCategory) {

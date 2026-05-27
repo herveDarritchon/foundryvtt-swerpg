@@ -30,6 +30,13 @@ vi.mock('../../../module/lib/specializations/specialization-purchase-flow.mjs', 
 
 import { evaluateSpecializationPurchase } from '../../../module/lib/specializations/specialization-purchase-flow.mjs'
 
+/**
+ *
+ * @param root0
+ * @param root0.name
+ * @param root0.specializationId
+ * @param root0.freeSkillRank
+ */
 function buildMockSpecializationItem({ name = 'Scoundrel', specializationId = 'scoundrel', freeSkillRank = 2 } = {}) {
   return {
     name,
@@ -52,6 +59,13 @@ function buildMockSpecializationItem({ name = 'Scoundrel', specializationId = 's
   }
 }
 
+/**
+ *
+ * @param root0
+ * @param root0.isL0
+ * @param root0.xpAvailable
+ * @param root0.specializations
+ */
 function buildMockActor({ isL0 = true, xpAvailable = 0, specializations = [] } = {}) {
   return {
     isOwner: true,
@@ -103,6 +117,7 @@ describe('CharacterSheet — specialization drop routing', () => {
    * Creates a real CharacterSheet instance with its actor replaced.
    * Using `new CharacterSheet()` is required because #handleSpecializationDrop
    * is a native ES private method — it requires an actual class instance.
+   * @param actor
    */
   function buildSheet(actor) {
     const sheet = new CharacterSheet()

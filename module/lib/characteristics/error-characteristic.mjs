@@ -1,10 +1,6 @@
 import Characteristic from './characteristic.mjs'
 
 export default class ErrorCharacteristic extends Characteristic {
-  constructor(actor, data, params, options) {
-    super(actor, data, params, options)
-  }
-
   /**
    * @inheritDoc
    * @override

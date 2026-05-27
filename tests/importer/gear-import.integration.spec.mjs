@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { gearMapper, buildGearContext } from '../../module/importer/items/gear-ogg-dude.mjs'
+import { gearMapper } from '../../module/importer/items/gear-ogg-dude.mjs'
 
 describe('Gear Import Integration', () => {
   it('should produce objects conforming to SwerpgGear schema', () => {

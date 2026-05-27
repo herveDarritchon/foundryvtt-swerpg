@@ -34,13 +34,13 @@ const SPECIALIZATION_TREE_STATE_LABELS = Object.freeze({
  * Pure function — all Foundry dependencies (tree resolution, talent lookup,
  * i18n) must be injected via `deps`.
  *
- * @param {object|null|undefined} actor - The actor document (or null).
- * @param {string|null} selectedKey - Optional tree key to select.
- * @param {object} deps - Injected dependencies.
+ * @param {object|null|undefined} actor The actor document (or null).
+ * @param {string|null} selectedKey Optional tree key to select.
+ * @param {object} deps Injected dependencies.
  * @param {Map<string, { tree: object|null, state: string }>} deps.resolutions
  *        Resolved specialization trees (from `resolveActorSpecializationTrees`).
- * @param {(key: string) => string} deps.localize - i18n localize function.
- * @param {(key: string, data: object) => string} deps.format - i18n format function.
+ * @param {(key: string) => string} deps.localize i18n localize function.
+ * @param {(key: string, data: object) => string} deps.format i18n format function.
  * @param {(node: object) => object|null|undefined} deps.talentLookup
  *        Talent lookup callback for `buildRenderViewModel`.
  * @returns {object} Display-ready render context (plain object, no Foundry refs).
@@ -146,7 +146,7 @@ export function buildSpecializationTreeContext(actor, selectedKey, deps) {
 /**
  * Build specialization entries from actor specializations and their resolved states.
  *
- * @param {Array<object>} specializations - Actor specialization entries.
+ * @param {Array<object>} specializations Actor specialization entries.
  * @param {Map<string, { tree: object|null, state: string }>} resolutions
  * @param {(key: string) => string} localize
  * @returns {Array<object>} Specialization entries with state, label, and metadata.
@@ -184,9 +184,9 @@ export function buildSpecializationEntries(specializations, resolutions, localiz
 /**
  * Build render nodes and connections for the active specialization tree.
  *
- * @param {object|null} currentTreeData - The resolved specialization tree item.
- * @param {object} actor - The actor document.
- * @param {string} canonicalSpecializationId - The canonical specialization identifier
+ * @param {object|null} currentTreeData The resolved specialization tree item.
+ * @param {object} actor The actor document.
+ * @param {string} canonicalSpecializationId The canonical specialization identifier
  *        for business-layer calls (NOT the UI selection key). Passed directly
  *        to `getTreeNodesStates` and `actionableNodeViewModel` so that strict
  *        equality checks in the business engine match.
@@ -246,10 +246,10 @@ export function buildRenderNodesAndConnections(currentTreeData, actor, canonical
 /**
  * Build a tree summary from rendered nodes and available XP.
  *
- * @param {string|null} currentTreeName - Name of the currently active tree.
- * @param {Array<object>} renderNodes - Enriched render nodes.
+ * @param {string|null} currentTreeName Name of the currently active tree.
+ * @param {Array<object>} renderNodes Enriched render nodes.
  * @param {(key: string) => string} localize
- * @param {number|null|undefined} [availableXp] - Actor's available XP.
+ * @param {number|null|undefined} [availableXp] Actor's available XP.
  * @returns {object|null} Summary object or null if no tree is active.
  */
 export function buildCurrentTreeSummary(currentTreeName, renderNodes, localize, availableXp) {

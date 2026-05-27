@@ -83,7 +83,7 @@ export default class Skill {
    * Subclasses override if needed.
    *
    * @param {string} message
-   * @returns {Error}
+   * @throws {Error}
    */
   createError(message) {
     throw new Error(message)

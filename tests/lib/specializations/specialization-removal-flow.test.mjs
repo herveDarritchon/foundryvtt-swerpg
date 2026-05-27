@@ -2,6 +2,10 @@ import { describe, it, expect } from 'vitest'
 
 import { evaluateSpecializationRemoval } from '../../../module/lib/specializations/specialization-removal-flow.mjs'
 
+/**
+ *
+ * @param overrides
+ */
 function makeSpec(overrides = {}) {
   return {
     specializationId: overrides.specializationId ?? null,

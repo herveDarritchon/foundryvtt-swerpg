@@ -42,12 +42,18 @@ export default class TalentCostCalculator {
     return cost
   }
 
-  /** @deprecated Crucible legacy */
+  /**
+   * @param rank
+   * @deprecated Crucible legacy
+   */
   #calculateTrainCost(rank) {
     return rank * 5
   }
 
-  /** @deprecated Crucible legacy */
+  /**
+   * @param rank
+   * @deprecated Crucible legacy
+   */
   #calculateForgetCost(rank) {
     return this.#calculateTrainCost(rank)
   }

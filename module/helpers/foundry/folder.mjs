@@ -1,6 +1,3 @@
-import { getOrCreateWorldFolder } from '../../importer/utils/oggdude-import-folders.mjs'
-import { logger } from '../../utils/logger.mjs'
-
 /**
  * Create a folder in the Foundry VTT sidebar
  * @param name {string} The name of the folder to create.

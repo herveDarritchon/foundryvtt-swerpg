@@ -16,7 +16,7 @@ import { resolveTalentKeysFromSession } from '../utils/import-session.mjs'
 /**
  * Species Array Mapper : Map the Species XML data to the SwerpgSpecies object array.
  * @param species {Array} The Species data from the XML file.
- * @param {import('../utils/import-session.mjs').ImportSession|null} [importSession] - Optional shared import session for cross-pipeline resolution.
+ * @param {import('../utils/import-session.mjs').ImportSession|null} [importSession] Optional shared import session for cross-pipeline resolution.
  * @returns {Array} The SwerpgSpecies object array.
  * @public
  * @function
@@ -78,7 +78,8 @@ export function speciesMapper(species, importSession = null) {
     }))
     const freeTalentKeys = talentModifiers.map((t) => t.key).filter((k) => !!k)
 
-    let resolvedUUIDs, unresolvedKeys
+    let resolvedUUIDs
+    let unresolvedKeys
     if (importSession) {
       // Session-based resolution: uses batch-created talents from the current import
       ;({ resolvedUUIDs, unresolvedKeys } = resolveTalentKeysFromSession(importSession, freeTalentKeys, xmlSpecies?.Key ?? ''))
@@ -155,6 +156,10 @@ function collectNestedOptionSkillModifiers(xmlSpecies) {
   return choiceArray.flatMap(extractOptionsSkillModifiers)
 }
 
+/**
+ *
+ * @param choice
+ */
 function extractOptionsSkillModifiers(choice) {
   const rawOptions = choice?.Options?.Option
   if (!rawOptions) return []
@@ -162,6 +167,10 @@ function extractOptionsSkillModifiers(choice) {
   return optArray.flatMap(extractSkillModifiersFromOption)
 }
 
+/**
+ *
+ * @param opt
+ */
 function extractSkillModifiersFromOption(opt) {
   const rawSkillMods = opt?.SkillModifiers?.SkillModifier
   if (!rawSkillMods) return []
@@ -178,7 +187,7 @@ function extractSkillModifiersFromOption(opt) {
  * Try to resolve talent OggDude keys into Foundry UUIDs.
  * Returns both resolved UUIDs and any keys that could not be resolved.
  * Falls back gracefully if the game context is not ready.
- * @param {string[]} keys - OggDude talent keys (e.g. 'CONV')
+ * @param {string[]} keys OggDude talent keys (e.g. 'CONV')
  * @returns {{ resolvedUUIDs: string[], unresolvedKeys: string[] }}
  */
 function resolveTalentUUIDs(keys) {
@@ -220,7 +229,7 @@ function resolveTalentUUIDs(keys) {
  * @param zip
  * @param groupByDirectory
  * @param groupByType
- * @param {import('../utils/import-session.mjs').ImportSession|null} [importSession] - Optional shared import session for cross-pipeline resolution.
+ * @param {import('../utils/import-session.mjs').ImportSession|null} [importSession] Optional shared import session for cross-pipeline resolution.
  * @returns {{zip: {elementFileName: string, directories, content}, image: {images: (string|((buffer: Buffer, options?: ansiEscapes.ImageOptions) => string)|number|[OggDudeDataElement]|[OggDudeDataElement,OggDudeDataElement]|[OggDudeDataElement,OggDudeDataElement]|OggDudeContextImage|*), criteria: string, systemPath: string, worldPath: string}, folder: {name: string, type: string}, element: {jsonCriteria: string, mapper: *, type: string}}}
  * @public
  * @function
@@ -256,4 +265,4 @@ export async function buildSpeciesContext(zip, groupByDirectory, groupByType, im
 }
 
 // Export utilitaires stats pour tests & agrégation (alignement avec armor/weapon)
-export { getSpeciesImportStats, resetSpeciesImportStats } from '../utils/species-import-utils.mjs'
+export { getSpeciesImportStats, resetSpeciesImportStats }

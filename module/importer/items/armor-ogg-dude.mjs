@@ -2,7 +2,7 @@ import { buildArmorImgWorldPath, buildItemImgSystemPath } from '../../settings/d
 import OggDudeDataElement from '../../settings/models/OggDudeDataElement.mjs'
 import { logger } from '../../utils/logger.mjs'
 import { SYSTEM } from '../../config/system.mjs'
-import { resolveArmorCategory, resolveArmorProperties, ARMOR_CATEGORY_MAP, ARMOR_PROPERTY_MAP } from '../mappings/index-armor.mjs'
+import { resolveArmorCategory, ARMOR_PROPERTY_MAP } from '../mappings/index-armor.mjs'
 import { getQualityConfig } from '../../config/qualities.mjs'
 import {
   clampNumber,
@@ -12,7 +12,6 @@ import {
   getArmorImportStats,
   incrementArmorImportStat,
   addRejectionReason,
-  normalizeArmorCategoryTag,
   buildArmorDescription,
   extractBaseMods,
   resetArmorImportStats,
@@ -24,6 +23,7 @@ const DEFAULT_DEFENSE = 0
 
 /**
  * Résout la catégorie d'une armure avec gestion des erreurs et fallback
+ * @param system
  */
 function validateArmorSystem(system) {
   const errors = []
@@ -68,6 +68,8 @@ function validateArmorSystem(system) {
  * 1. Ignore les tags ADR-ignorés
  * 2. Cherche une catégorie valide
  * 3. Saute les propriétés connues
+ * @param xmlCategories
+ * @param armorName
  * @returns {{ category: string|null, unknownCategories: string[] }}
  */
 function resolveArmorCategoryWithFallback(xmlCategories, armorName) {
@@ -116,6 +118,8 @@ function resolveArmorCategoryWithFallback(xmlCategories, armorName) {
 /**
  * Traite les propriétés d'une armure et les convertit en format Option C
  * Mapping strict selon ADR-0008 (ARMOR_PROPERTY_MAP uniquement, pas de mapping permissif)
+ * @param xmlCategories
+ * @param armorName
  * @returns {{ qualities: Array, unknownProperties: string[], ignoredProperties: string[] }}
  */
 function processArmorProperties(xmlCategories, armorName) {
@@ -173,7 +177,7 @@ function processArmorProperties(xmlCategories, armorName) {
 
 /**
  * Mappe une armure XML OggDude vers un objet SwerpgArmor (Option C)
- * @param {object} xmlArmor - Les données XML de l'armure
+ * @param {object} xmlArmor Les données XML de l'armure
  * @param armorName
  * @returns {object|null} L'objet armure mappé ou null si rejeté
  */
@@ -197,7 +201,7 @@ function mapArmorNumericValues(xmlArmor, armorName) {
 
 /**
  * Mappe une armure XML OggDude vers un objet SwerpgArmor (Option C)
- * @param {object} xmlArmor - Les données XML de l'armure
+ * @param {object} xmlArmor Les données XML de l'armure
  * @returns {object|null} L'objet armure mappé ou null si rejeté
  */
 function mapOggDudeArmor(xmlArmor) {
@@ -323,9 +327,9 @@ export { getArmorImportStats, resetArmorImportStats }
  * Create the Armor Context for the OggDude Data Import
  * Supports both old signature (zip, groupByDirectory, groupByType) for backward compatibility
  * and new signature ({importedFile, options})
- * @param {Object|any} zipOrParams - Zip file or params object
- * @param {Object} [groupByDirectory] - Directory grouping (old signature)
- * @param {Object} [groupByType] - Type grouping (old signature)
+ * @param {Object|any} zipOrParams Zip file or params object
+ * @param {Object} [groupByDirectory] Directory grouping (old signature)
+ * @param {Object} [groupByType] Type grouping (old signature)
  * @returns {Promise<Object>} The import context with items and stats
  */
 export async function buildArmorContext(zipOrParams, groupByDirectory, groupByType) {
@@ -375,7 +379,7 @@ export async function buildArmorContext(zipOrParams, groupByDirectory, groupByTy
 
 /**
  * Build context from dataset
- * @param {Array} dataset - The XML dataset
+ * @param {Array} dataset The XML dataset
  * @returns {Object} Context with items and stats
  */
 function buildContextFromDataset(dataset) {

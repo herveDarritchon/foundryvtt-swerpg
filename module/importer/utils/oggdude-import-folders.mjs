@@ -172,6 +172,8 @@ async function getOrCreateFolderInternal(folderName, folderType, parentId = null
 /**
  * Create a folder in the Foundry VTT sidebar
  * @param context {OggDudeElementContext} The context of the element to be stored
+ * @param elementType
+ * @param folderType
  * @returns {Promise<Folder>} The created folder.
  * @async
  * @public

@@ -18,6 +18,10 @@ import {
   resetSpecializationTreeImportStats,
 } from '../utils/specialization-tree-import-utils.mjs'
 
+/**
+ *
+ * @param value
+ */
 function asArray(value) {
   if (Array.isArray(value)) return value.filter(Boolean)
   if (value && typeof value === 'object') return [value]
@@ -25,6 +29,11 @@ function asArray(value) {
   return []
 }
 
+/**
+ *
+ * @param label
+ * @param value
+ */
 function readMandatoryString(label, value) {
   if (value == null || typeof value !== 'string') {
     logger.warn(`[SpecializationTreeImporter] Value ${label} is mandatory`, { value })
@@ -34,10 +43,18 @@ function readMandatoryString(label, value) {
   return value.trim()
 }
 
+/**
+ *
+ * @param value
+ */
 function readOptionalString(value) {
   return typeof value === 'string' ? value : ''
 }
 
+/**
+ *
+ * @param {...any} values
+ */
 function readFirstString(...values) {
   for (const value of values) {
     if (typeof value === 'string' && value.trim()) return value.trim()
@@ -49,6 +66,10 @@ function readFirstString(...values) {
   return ''
 }
 
+/**
+ *
+ * @param nodes
+ */
 function buildNodeReferenceMaps(nodes) {
   const maps = {
     byRawKey: new Map(),
@@ -63,6 +84,11 @@ function buildNodeReferenceMaps(nodes) {
   return maps
 }
 
+/**
+ *
+ * @param rawReference
+ * @param maps
+ */
 function resolveConnectionEndpoint(rawReference, maps) {
   if (!rawReference) return null
 
@@ -79,6 +105,12 @@ function resolveConnectionEndpoint(rawReference, maps) {
   return maps.byRawKey.get(String(rawReference).trim()) || null
 }
 
+/**
+ *
+ * @param rawNode
+ * @param currentNodeId
+ * @param maps
+ */
 function extractNodeConnectionEntries(rawNode, currentNodeId, maps) {
   const connections = []
   const warnings = []
@@ -103,6 +135,11 @@ function extractNodeConnectionEntries(rawNode, currentNodeId, maps) {
   return { connections, warnings }
 }
 
+/**
+ *
+ * @param xmlSpecialization
+ * @param maps
+ */
 function extractGlobalConnectionEntries(xmlSpecialization, maps) {
   const candidates = asArray(xmlSpecialization?.Connections?.Connection)
   const connections = []
@@ -130,6 +167,10 @@ function extractGlobalConnectionEntries(xmlSpecialization, maps) {
   return { connections, warnings }
 }
 
+/**
+ *
+ * @param xmlSpecialization
+ */
 function extractNodesFromRows(xmlSpecialization) {
   const rows = asArray(xmlSpecialization?.TalentRows?.TalentRow)
   const nodes = []
@@ -172,6 +213,10 @@ function extractNodesFromRows(xmlSpecialization) {
   return nodes
 }
 
+/**
+ *
+ * @param cost
+ */
 function computeRowFromCost(cost) {
   const numericCost = Number(cost)
   if (!Number.isFinite(numericCost)) return null
@@ -180,6 +225,10 @@ function computeRowFromCost(cost) {
   return row >= 1 && row <= 5 ? row : null
 }
 
+/**
+ *
+ * @param xmlSpecialization
+ */
 function extractNodesFromFlatList(xmlSpecialization) {
   const candidates = [
     ...asArray(xmlSpecialization?.Nodes?.Node),
@@ -197,12 +246,20 @@ function extractNodesFromFlatList(xmlSpecialization) {
   }))
 }
 
+/**
+ *
+ * @param xmlSpecialization
+ */
 function extractRawNodeEntries(xmlSpecialization) {
   const rowNodes = extractNodesFromRows(xmlSpecialization)
   if (rowNodes.length > 0) return rowNodes
   return extractNodesFromFlatList(xmlSpecialization)
 }
 
+/**
+ *
+ * @param xmlSpecialization
+ */
 function detectInputFormat(xmlSpecialization) {
   const rows = asArray(xmlSpecialization?.TalentRows?.TalentRow)
 
@@ -232,6 +289,11 @@ function detectInputFormat(xmlSpecialization) {
   return 'unknown'
 }
 
+/**
+ *
+ * @param xmlSpecialization
+ * @param specializationId
+ */
 function normalizeNodes(xmlSpecialization, specializationId) {
   const warnings = []
   const normalizedNodes = []
@@ -269,6 +331,10 @@ function normalizeNodes(xmlSpecialization, specializationId) {
   return { normalizedNodes, warnings, rawCount: rawNodes.length }
 }
 
+/**
+ *
+ * @param connections
+ */
 function dedupeConnections(connections) {
   const seen = new Set()
   const deduped = []
@@ -283,6 +349,10 @@ function dedupeConnections(connections) {
   return deduped
 }
 
+/**
+ *
+ * @param nodes
+ */
 function extractDirectionalConnections(nodes) {
   const connections = []
   const warnings = []
@@ -319,6 +389,12 @@ function extractDirectionalConnections(nodes) {
   return { connections, warnings }
 }
 
+/**
+ *
+ * @param specializations
+ * @param root0
+ * @param root0.talentById
+ */
 export function specializationTreeMapper(specializations, { talentById } = {}) {
   resetSpecializationTreeImportStats()
 

@@ -7,12 +7,13 @@ import OggDudeDataElement from '../../settings/models/OggDudeDataElement.mjs'
 import { OggDudeTalentMapper } from '../mappers/oggdude-talent-mapper.mjs'
 import { logger } from '../../utils/logger.mjs'
 import { buildItemImgSystemPath } from '../../settings/directories.mjs'
-import { resetTalentImportStats, incrementTalentImportStat } from '../utils/talent-import-utils.mjs'
+import { resetTalentImportStats, incrementTalentImportStat, getTalentImportStats } from '../utils/talent-import-utils.mjs'
 
 /**
  * Mapper pour transformer les données talent OggDude en objets SwerpgTalent
  * Compatible avec OggDudeDataElement.processElements()
- * @param {object} oggDudeData - Données OggDude d'un talent individuel
+ * @param {object} oggDudeData Données OggDude d'un talent individuel
+ * @param talents
  * @returns {object} Données formatées pour création Item Foundry
  */
 function talentMapper(talents) {
@@ -65,9 +66,9 @@ function talentMapper(talents) {
 /**
  * Construit le contexte d'import pour les talents OggDude
  * Compatible avec l'architecture de processOggDudeData()
- * @param {object} zip - Archive ZIP OggDude
- * @param {Array} groupByDirectory - Éléments groupés par répertoire
- * @param {object} groupByType - Éléments groupés par type
+ * @param {object} zip Archive ZIP OggDude
+ * @param {Array} groupByDirectory Éléments groupés par répertoire
+ * @param {object} groupByType Éléments groupés par type
  * @returns {Promise<object>} Contexte d'import structuré
  */
 export async function buildTalentContext(zip, groupByDirectory, groupByType) {
@@ -104,4 +105,4 @@ export async function buildTalentContext(zip, groupByDirectory, groupByType) {
 }
 
 // Export stats utils for global metrics and test resets
-export { getTalentImportStats, resetTalentImportStats } from '../utils/talent-import-utils.mjs'
+export { getTalentImportStats, resetTalentImportStats }

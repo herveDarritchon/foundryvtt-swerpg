@@ -54,6 +54,12 @@ describe('StandardCheck _prepareData', () => {
   })
 })
 
+/**
+ *
+ * @param evaluatedTotal
+ * @param dc
+ * @param thresholds
+ */
 function make(evaluatedTotal, dc = 20, thresholds = {}) {
   const sc = new StandardCheck('', { dc, ...thresholds })
   sc.total = evaluatedTotal

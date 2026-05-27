@@ -78,8 +78,8 @@ export const TurnMixin = (Base) =>
 
     /**
      * Delay this actor's turn to a later initiative value
-     * @param {number} initiative - The new initiative value
-     * @param {object} actorUpdates - Additional updates to apply to the actor
+     * @param {number} initiative The new initiative value
+     * @param {object} actorUpdates Additional updates to apply to the actor
      */
     async delay(initiative, actorUpdates = {}) {
       const combatant = game.combat.getCombatantByActor(this)

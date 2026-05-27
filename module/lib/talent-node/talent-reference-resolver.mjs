@@ -1,5 +1,3 @@
-import { logger } from '../../utils/logger.mjs'
-
 /**
  * @typedef {Object} TalentDetail
  * @property {string} name - The resolved talent name (localized unknown fallback if unresolved).
@@ -20,13 +18,18 @@ import { logger } from '../../utils/logger.mjs'
  * Resolve a talent reference by business key (system.id or oggdudeKey).
  * Searches game.items first, then falls back to compendium pack indexes.
  *
- * @param {string} normalizedKey - Lowercase trimmed key to search for.
+ * @param {string} normalizedKey Lowercase trimmed key to search for.
+ * @param activation
  * @returns {{ name: string, isRanked: boolean, isActive: boolean }|null}
  */
 function isTalentActivationActive(activation) {
   return typeof activation === 'string' && activation.trim().toLowerCase() === 'active'
 }
 
+/**
+ *
+ * @param normalizedKey
+ */
 function resolveTalentByBusinessKey(normalizedKey) {
   if (typeof game !== 'undefined' && game.items) {
     for (const item of game.items) {
@@ -96,7 +99,7 @@ function resolveTalentByBusinessKey(normalizedKey) {
  * 2. Business key lookup in game.items (system.id, oggdudeKey)
  * 3. Compendium index lookup by business key
  *
- * @param {string|{ talentUuid?: string|null, talentId?: string|null }} nodeRef - UUID string, or object with talentUuid/talentId.
+ * @param {string|{ talentUuid?: string|null, talentId?: string|null }} nodeRef UUID string, or object with talentUuid/talentId.
  * @returns {TalentDetail} Resolved talent detail (unknown fallback on failure).
  */
 export function resolveTalentDetail(nodeRef) {

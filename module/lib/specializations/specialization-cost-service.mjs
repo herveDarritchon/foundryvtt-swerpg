@@ -25,11 +25,11 @@ import { SPECIALIZATION_FIRST_COST, SPECIALIZATION_RANK_COST_MULTIPLIER, SPECIAL
 /**
  * Calcule le coût d'obtention d'une nouvelle spécialisation.
  *
- * @param {object} params - Paramètres d'entrée
- * @param {Array<object>|{count: number, items: Array<object>}} params.ownedSpecializations -
+ * @param {object} params Paramètres d'entrée
+ * @param {Array<object>|{count: number, items: Array<object>}} params.ownedSpecializations
  *        Soit un snapshot de getOwnedSpecializations(), soit un tableau brut de spécialisations
- * @param {object|null|undefined} params.candidateSpecialization - La spécialisation candidate à acheter
- * @param {object|null|undefined} params.career - La carrière du personnage (actor.system.details.career)
+ * @param {object|null|undefined} params.candidateSpecialization La spécialisation candidate à acheter
+ * @param {object|null|undefined} params.career La carrière du personnage (actor.system.details.career)
  * @returns {SpecializationCostResult} Résultat détaillé du calcul de coût
  */
 export function calculateSpecializationCost(params) {

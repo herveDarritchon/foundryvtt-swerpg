@@ -7,7 +7,7 @@ import { logger } from '../../utils/logger.mjs'
 
 /**
  * Génère un ID unique pour une action de talent
- * @param {string} talentName - Nom du talent
+ * @param {string} talentName Nom du talent
  * @returns {string} ID unique
  */
 function generateActionId(talentName) {
@@ -25,8 +25,8 @@ function generateActionId(talentName) {
 
 /**
  * Transforme les actions OggDude vers un tableau d'instances SwerpgAction
- * @param {object|Array} oggDudeActions - Actions depuis OggDude XML
- * @param {object} context - Contexte du talent (nom, type, etc.)
+ * @param {object|Array} oggDudeActions Actions depuis OggDude XML
+ * @param {object} context Contexte du talent (nom, type, etc.)
  * @returns {SwerpgAction[]} Tableau d'actions système
  */
 export function transformTalentActions(oggDudeActions, context = {}) {
@@ -57,8 +57,8 @@ export function transformTalentActions(oggDudeActions, context = {}) {
 
 /**
  * Transforme une action individuelle OggDude vers SwerpgAction
- * @param {object} actionData - Données d'action OggDude
- * @param {object} context - Contexte du talent
+ * @param {object} actionData Données d'action OggDude
+ * @param {object} context Contexte du talent
  * @returns {SwerpgAction|null} Action transformée ou null
  * @private
  */
@@ -108,7 +108,7 @@ function transformSingleTalentAction(actionData, context) {
 
 /**
  * Mappe un type d'activation OggDude vers les types système
- * @param {string} oggDudeType - Type d'activation OggDude
+ * @param {string} oggDudeType Type d'activation OggDude
  * @returns {string} Type d'activation système
  * @private
  */
@@ -133,7 +133,7 @@ function mapActionActivationType(oggDudeType) {
 
 /**
  * Extrait le coût d'activation d'une action
- * @param {object|string|number} costData - Données de coût OggDude
+ * @param {object|string|number} costData Données de coût OggDude
  * @returns {object} Structure de coût système
  * @private
  */
@@ -168,7 +168,7 @@ function extractActionCost(costData) {
 
 /**
  * Crée une action par défaut pour un talent sans actions spécifiées
- * @param {object} talentContext - Contexte du talent
+ * @param {object} talentContext Contexte du talent
  * @returns {SwerpgAction} Action par défaut
  */
 export function createDefaultTalentAction(talentContext) {
@@ -201,7 +201,7 @@ export function createDefaultTalentAction(talentContext) {
 
 /**
  * Valide un tableau d'actions transformées
- * @param {SwerpgAction[]} actions - Actions à valider
+ * @param {SwerpgAction[]} actions Actions à valider
  * @returns {boolean} True si toutes les actions sont valides
  */
 export function validateTalentActions(actions) {
@@ -226,7 +226,7 @@ export function validateTalentActions(actions) {
 
 /**
  * Fusionne plusieurs listes d'actions en éliminant les doublons
- * @param {...SwerpgAction[]} actionLists - Listes d'actions à fusionner
+ * @param {...SwerpgAction[]} actionLists Listes d'actions à fusionner
  * @returns {SwerpgAction[]} Actions fusionnées et déduplicadas
  */
 export function mergeTalentActions(...actionLists) {

@@ -26,7 +26,7 @@
 /**
  * Extrait et normalise les spécialisations possédées depuis un acteur.
  *
- * @param {object|null|undefined} actor - L'acteur (document Foundry ou objet plain)
+ * @param {object|null|undefined} actor L'acteur (document Foundry ou objet plain)
  * @returns {OwnedSpecializationsSnapshot} Snapshot normalisé des spécialisations
  */
 export function getOwnedSpecializations(actor) {
@@ -41,7 +41,7 @@ export function getOwnedSpecializations(actor) {
 /**
  * Normalise une entrée de spécialisation brute en un OwnedSpecialization stable.
  *
- * @param {object|null|undefined} raw - Entrée brute depuis actor.system.details.specializations
+ * @param {object|null|undefined} raw Entrée brute depuis actor.system.details.specializations
  * @returns {OwnedSpecialization|null} Spécialisation normalisée, ou null si invalide
  */
 export function normalizeSpecialization(raw) {
@@ -62,7 +62,7 @@ export function normalizeSpecialization(raw) {
  * L'ordre de précédence est : specializationId > treeUuid > name.
  * Utilisée par l'audit log, la suppression et toute identification métier.
  *
- * @param {object|null|undefined} spec - Entrée de spécialisation normalisée
+ * @param {object|null|undefined} spec Entrée de spécialisation normalisée
  * @returns {string|null} Clé canonique ou null si aucune information disponible
  */
 export function getCanonicalSpecializationKey(spec) {
@@ -75,8 +75,8 @@ export function getCanonicalSpecializationKey(spec) {
  *
  * V1 : vérifie si la spécialisation est explicitement associée à la carrière du personnage.
  *
- * @param {OwnedSpecialization|object|null} specialization - La spécialisation à évaluer
- * @param {object|null|undefined} career - La carrière du personnage (actor.system.details.career)
+ * @param {OwnedSpecialization|object|null} specialization La spécialisation à évaluer
+ * @param {object|null|undefined} career La carrière du personnage (actor.system.details.career)
  * @returns {boolean} True si c'est une spécialisation de carrière
  */
 export function isCareerSpecialization(specialization, career) {
@@ -107,7 +107,7 @@ export function isCareerSpecialization(specialization, career) {
  *
  * V1 : les spécialisations universelles sont traitées comme des spécialisations de carrière pour le coût.
  *
- * @param {OwnedSpecialization|object|null} specialization - La spécialisation à évaluer
+ * @param {OwnedSpecialization|object|null} specialization La spécialisation à évaluer
  * @returns {boolean} True si c'est une spécialisation universelle
  */
 export function isUniversalSpecialization(specialization) {
@@ -141,8 +141,8 @@ export function isUniversalSpecialization(specialization) {
  *
  * Combine : isCareerSpecialization OU isUniversalSpecialization
  *
- * @param {OwnedSpecialization|object|null} specialization - La spécialisation à évaluer
- * @param {object|null|undefined} career - La carrière du personnage
+ * @param {OwnedSpecialization|object|null} specialization La spécialisation à évaluer
+ * @param {object|null|undefined} career La carrière du personnage
  * @returns {boolean} True si traité comme carrière pour le coût
  */
 export function isTreatedAsCareerForCost(specialization, career) {

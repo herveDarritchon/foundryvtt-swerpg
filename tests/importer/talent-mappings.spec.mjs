@@ -1,14 +1,11 @@
 /**
  * Tests pour les mappings de talents OggDude
  */
-import { describe, it, expect, beforeEach } from 'vitest'
+import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { resolveTalentActivation } from '../../module/importer/mappings/oggdude-talent-activation-map.mjs'
 import { transformTalentPrerequisites, validateTalentPrerequisites } from '../../module/importer/mappings/oggdude-talent-prerequisite-map.mjs'
 import { transformTalentRank, extractTalentTier, extractIsRanked } from '../../module/importer/mappings/oggdude-talent-rank-map.mjs'
 import { transformTalentActions, createDefaultTalentAction, validateTalentActions } from '../../module/importer/mappings/oggdude-talent-actions-map.mjs'
-
-// Mock des dépendances
-import { vi } from 'vitest'
 
 vi.mock('../../module/config/system.mjs', () => ({
   SYSTEM: {

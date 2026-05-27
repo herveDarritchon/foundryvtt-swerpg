@@ -15,6 +15,8 @@
  * @param name.idxRank
  * @param name.cost
  * @param name.trees
+ * @param name.talentId
+ * @param name.talentUuid
  * @returns {SwerpgTalent} a talent object
  */
 export function createTalentData(

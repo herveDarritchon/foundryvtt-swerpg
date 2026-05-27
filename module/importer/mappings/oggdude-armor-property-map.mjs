@@ -68,7 +68,7 @@ export const ARMOR_PROPERTY_MAP = {
 
 /**
  * Résout une propriété OggDude vers une propriété SwerpgArmor
- * @param {string} oggDudeProperty - La propriété depuis les données OggDude
+ * @param {string} oggDudeProperty La propriété depuis les données OggDude
  * @returns {string|null} La propriété SwerpgArmor correspondante ou null si non trouvée
  */
 export function resolveArmorProperty(oggDudeProperty) {
@@ -82,7 +82,7 @@ export function resolveArmorProperty(oggDudeProperty) {
 
 /**
  * Résout un tableau de propriétés OggDude vers un Set de propriétés SwerpgArmor
- * @param {string[]} oggDudeProperties - Les propriétés depuis les données OggDude
+ * @param {string[]} oggDudeProperties Les propriétés depuis les données OggDude
  * @returns {{resolvedProperties: Set<string>, unknownProperties: string[]}}
  *   Propriétés résolues et propriétés inconnues
  */

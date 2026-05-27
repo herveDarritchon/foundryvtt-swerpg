@@ -1,5 +1,9 @@
 import { logger } from '../../utils/logger.mjs'
 
+/**
+ *
+ * @param specData
+ */
 export function findTreeForSpecialization(specData) {
   const name = specData?.name
   if (!name || !game?.items?.find) return null
@@ -10,7 +14,7 @@ export function findTreeForSpecialization(specData) {
 /**
  * Enrich an actor's owned specializations that are missing specializationId / treeUuid.
  * Resolves them by name and persists the enrichment.
- * @param {Actor|object} actor - The actor whose specializations should be normalized.
+ * @param {Actor|object} actor The actor whose specializations should be normalized.
  * @returns {Promise<Array<object>>} The enriched specializations array.
  */
 export async function normalizeActorSpecializations(actor) {
@@ -35,7 +39,7 @@ export async function normalizeActorSpecializations(actor) {
 
 /**
  * Determine whether a specialization tree is structurally usable.
- * @param {Item|object|null} tree - The specialization-tree item to inspect.
+ * @param {Item|object|null} tree The specialization-tree item to inspect.
  * @returns {'available'|'incomplete'}
  */
 export function getSpecializationTreeResolutionState(tree) {
@@ -52,7 +56,7 @@ export function getSpecializationTreeResolutionState(tree) {
 
 /**
  * Resolve a single owned specialization to its reference tree.
- * @param {object} specializationData - An entry from actor.system.details.specializations.
+ * @param {object} specializationData An entry from actor.system.details.specializations.
  * @returns {{ tree: Item|object|null, state: 'available'|'unresolved'|'incomplete' }}
  */
 export function resolveSpecializationTree(specializationData = {}) {
@@ -108,7 +112,7 @@ export function resolveSpecializationTree(specializationData = {}) {
 
 /**
  * Resolve all owned specializations for an actor.
- * @param {Actor|object} actor - The actor owning specializations.
+ * @param {Actor|object} actor The actor owning specializations.
  * @returns {Map<string, { tree: Item|object|null, state: 'available'|'unresolved'|'incomplete' }>}
  */
 export function resolveActorSpecializationTrees(actor) {

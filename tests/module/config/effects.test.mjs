@@ -24,7 +24,7 @@ if (!String.prototype.slugify) {
   // replacement:'' => suppression
   // Implementation minimale suffisante pour les tests
   // (ne couvre pas toutes les variantes Foundry)
-  // eslint-disable-next-line no-extend-native
+
   String.prototype.slugify = function ({ replacement = '', lowercase = false, strict = true } = {}) {
     let s = this.toString()
     if (lowercase) s = s.toLowerCase()
