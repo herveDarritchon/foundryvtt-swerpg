@@ -371,12 +371,19 @@ export default class SwerpgCharacter extends SwerpgActorType {
     }
 
     // Derived (not persisted): full credit budget including owned items and manual adjustments.
+    // Read _source (schema raw values, before prepareDerivedData() overrides) so that a broken
+    // _preparePrice() on an item cannot propagate NaN into the credit calculation.
     const ownedItems = this.parent.items
       .filter((item) => ['weapon', 'armor', 'gear'].includes(item.type))
       .map((item) => ({
-        price: item.system.price ?? 0,
-        quantity: item.system.quantity ?? 1,
+        price: item.system._source?.price ?? item.system.price ?? 0,
+        quantity: item.system._source?.quantity ?? item.system.quantity ?? 1,
       }))
+
+    const nanItems = ownedItems.filter((i) => !Number.isFinite(i.price))
+    if (nanItems.length > 0) {
+      logger.warn(`[SwerpgCharacter] _prepareCredits - item with NaN price detected for ${this.parent.name}`, nanItems)
+    }
 
     this.creditBudget = computeCreditBudget({
       startingCredits: STARTING_CREDITS,
