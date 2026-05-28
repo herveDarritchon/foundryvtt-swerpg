@@ -1354,6 +1354,7 @@
     "UnspecifiedAbbr": "N.spéc."
   },
   "MARKET": {
+    "Title": "Marché",
     "ItemType": {
       "Weapon": "Arme",
       "Armor": "Armure",
@@ -1372,6 +1373,22 @@
       "Compendium": "Compendium",
       "World": "Monde",
       "Import": "Import"
+    },
+    "Catalog": {
+      "Empty": "Aucun article disponible dans le marché.",
+      "OpenSheet": "Ouvrir la fiche de l'objet",
+      "Column": {
+        "Name": "Nom",
+        "Type": "Type",
+        "Price": "Prix",
+        "Rarity": "Rareté",
+        "Restriction": "Restriction"
+      },
+      "Group": {
+        "Weapon": "Armes",
+        "Armor": "Armures",
+        "Gear": "Équipements"
+      }
     }
   }
 }

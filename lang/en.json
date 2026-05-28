@@ -1458,6 +1458,7 @@
     "UnspecifiedAbbr": "Unsp."
   },
   "MARKET": {
+    "Title": "Market",
     "ItemType": {
       "Weapon": "Weapon",
       "Armor": "Armor",
@@ -1476,6 +1477,22 @@
       "Compendium": "Compendium",
       "World": "World",
       "Import": "Import"
+    },
+    "Catalog": {
+      "Empty": "No items available in the market.",
+      "OpenSheet": "Open item sheet",
+      "Column": {
+        "Name": "Name",
+        "Type": "Type",
+        "Price": "Price",
+        "Rarity": "Rarity",
+        "Restriction": "Restriction"
+      },
+      "Group": {
+        "Weapon": "Weapons",
+        "Armor": "Armor",
+        "Gear": "Gear"
+      }
     }
   }
 }

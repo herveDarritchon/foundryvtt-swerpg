@@ -1,0 +1,45 @@
+{{!-- Market Catalogue — part: catalog --}}
+<div class="market-catalog" data-application-part="catalog">
+  {{#if catalog.isEmpty}}
+    <p class="market-empty">{{localize "MARKET.Catalog.Empty"}}</p>
+  {{else}}
+    {{#each catalog.groups as |group|}}
+      <section class="market-group">
+        <header class="market-group__header">
+          <i class="{{group.icon}}"></i>
+          <h3 class="market-group__title">{{localize group.label}}</h3>
+        </header>
+
+        <table class="market-group__table">
+          <thead>
+            <tr>
+              <th class="market-col--icon" aria-label="{{localize 'MARKET.Catalog.Column.Name'}}"></th>
+              <th class="market-col--name">{{localize "MARKET.Catalog.Column.Name"}}</th>
+              <th class="market-col--type">{{localize "MARKET.Catalog.Column.Type"}}</th>
+              <th class="market-col--price">{{localize "MARKET.Catalog.Column.Price"}}</th>
+              <th class="market-col--rarity">{{localize "MARKET.Catalog.Column.Rarity"}}</th>
+              <th class="market-col--restriction">{{localize "MARKET.Catalog.Column.Restriction"}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each group.items as |entry|}}
+              <tr class="market-item" data-uuid="{{entry.uuid}}" data-action="openItem"
+                  title="{{localize 'MARKET.Catalog.OpenSheet'}}">
+                <td class="market-col--icon">
+                  {{#if entry.img}}
+                    <img class="market-item__icon" src="{{entry.img}}" alt="{{entry.name}}" />
+                  {{/if}}
+                </td>
+                <td class="market-col--name">{{entry.name}}</td>
+                <td class="market-col--type">{{localize entry.itemType}}</td>
+                <td class="market-col--price">{{entry.basePrice}}</td>
+                <td class="market-col--rarity">{{entry.rarity}}</td>
+                <td class="market-col--restriction">{{entry.restrictionLevel}}</td>
+              </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </section>
+    {{/each}}
+  {{/if}}
+</div>

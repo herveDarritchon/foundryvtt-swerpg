@@ -70,6 +70,7 @@ Hooks.once('init', async function () {
     logger,
     methods: {
       generateId,
+      openMarket,
       packageCompendium,
       resetAllActorTalents,
       standardizeItemIds,
@@ -336,6 +337,9 @@ Hooks.once('setup', function () {
   // Create the dedicated specialization tree application
   game.system.specializationTreeApp = new applications.SpecializationTreeApp()
 
+  // Create the Market application singleton
+  game.system.marketApp = new applications.MarketApplicationV2()
+
   // Create Talent Tree canvas
   game.system.tree = new SwerpgTalentTree()
 
@@ -575,6 +579,17 @@ async function resetAllActorTalents() {
     }
     await actor.deleteEmbeddedDocuments('Item', Array.from(deleteIds))
   }
+}
+
+/* -------------------------------------------- */
+
+/**
+ * Open the Market application window.
+ * Reuses the singleton created during setup.
+ * @returns {Promise<MarketApplicationV2>}
+ */
+function openMarket() {
+  return game.system.marketApp.render({ force: true })
 }
 
 /* -------------------------------------------- */
