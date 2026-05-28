@@ -586,9 +586,15 @@ async function resetAllActorTalents() {
 /**
  * Open the Market application window.
  * Reuses the singleton created during setup.
+ * When called with a buyer actor, the Market stores that actor as the active buyer
+ * for the session so that purchase affordance can be rendered correctly.
+ * @param {Actor|null} [actor=null]  The buyer actor, usually the current character sheet's actor.
  * @returns {Promise<MarketApplicationV2>}
  */
-function openMarket() {
+function openMarket(actor = null) {
+  if (actor !== null) {
+    game.system.marketApp.setBuyerActor(actor)
+  }
   return game.system.marketApp.render({ force: true })
 }
 

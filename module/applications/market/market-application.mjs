@@ -1,4 +1,5 @@
 import { createMarketEntry } from '../../lib/market/market-entry.mjs'
+import { validatePurchase } from '../../lib/market/purchase.mjs'
 import { PURCHASABLE_ITEM_TYPES, SOURCE_TYPES, DEFAULT_MARKET_CONTEXT } from '../../config/market.mjs'
 import { logger } from '../../utils/logger.mjs'
 
@@ -145,6 +146,7 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
     actions: {
       openItem: MarketApplicationV2.#onOpenItem,
       resetCatalog: MarketApplicationV2.#onResetCatalog,
+      buyItem: MarketApplicationV2.#onBuyItem,
     },
   }
 
@@ -165,6 +167,25 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
    */
   _viewState = { ...DEFAULT_VIEW_STATE }
 
+  /**
+   * Active buyer actor for this Market session. May be null when the Market
+   * is opened without a specific buyer (catalogue-only / GM consultation).
+   * @type {Actor|null}
+   */
+  _buyerActor = null
+
+  /* -------------------------------------------- */
+
+  /**
+   * Set the active buyer actor for this Market session and re-render if already displayed.
+   * Called by the system `openMarket(actor)` API entry point.
+   * @param {Actor|null} actor
+   */
+  setBuyerActor(actor) {
+    this._buyerActor = actor ?? null
+    logger.debug('[Market] Buyer actor set', { actorId: actor?.id ?? null, actorName: actor?.name ?? null })
+  }
+
   /* -------------------------------------------- */
 
   /** @override */
@@ -178,11 +199,21 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
   /** @override */
   async _preparePartContext(partId, context) {
     if (partId === 'catalog') {
-      context.catalog = this.#prepareCatalog()
+      const buyer = this._buyerActor
+      const buyerCredits = buyer?.system?.credits ?? null
+
+      context.catalog = this.#prepareCatalog(buyer, buyerCredits)
       context.viewState = { ...this._viewState }
       context.sortOptions = this.#buildSortOptions()
       context.typeFilterOptions = this.#buildTypeFilterOptions()
       context.sourceFilterOptions = this.#buildSourceFilterOptions()
+      context.buyer = buyer
+        ? {
+            id: buyer.id,
+            name: buyer.name,
+            credits: buyerCredits,
+          }
+        : null
     }
     return context
   }
@@ -233,7 +264,9 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
 
   /**
    * Build the filtered, sorted, and grouped catalogue from World Items.
-   * Pipeline: build all eligible entries → apply search → apply filters → sort → group.
+   * Pipeline: build all eligible entries → apply search → apply filters → sort → group → annotate with canBuy.
+   * @param {Actor|null} buyer        The buyer actor, or null when browsing without a character context.
+   * @param {number|null} buyerCredits  The buyer's current credit balance (null when no buyer).
    * @returns {{
    *   groups: Array<{typeKey: string, label: string, icon: string, items: MarketEntry[]}>,
    *   isEmpty: boolean,
@@ -242,7 +275,7 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
    *   filteredCount: number
    * }}
    */
-  #prepareCatalog() {
+  #prepareCatalog(buyer = null, buyerCredits = null) {
     // 1. Build all eligible entries from game.items
     const allEntries = []
     const marketContext = { ...DEFAULT_MARKET_CONTEXT }
@@ -269,13 +302,23 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
     const sorted = sortEntries(filtered, sortBy, sortDirection)
     const filteredCount = sorted.length
 
-    // 4. Group by item type
+    // 4. Annotate each entry with canBuy based on buyer affordability
+    const annotated = sorted.map((entry) => {
+      const validation = validatePurchase({ actor: buyer, entry })
+      return {
+        ...entry,
+        canBuy: buyer !== null && validation.canPurchase,
+        buyBlockedReason: buyer !== null && !validation.canPurchase ? validation.reason : null,
+      }
+    })
+
+    // 5. Group by item type
     /** @type {Map<string, import('../../lib/market/market-entry.mjs').MarketEntry[]>} */
     const grouped = new Map()
     for (const typeKey of Object.keys(PURCHASABLE_ITEM_TYPES)) {
       grouped.set(typeKey, [])
     }
-    for (const entry of sorted) {
+    for (const entry of annotated) {
       const bucket = grouped.get(entry.itemType)
       if (bucket) bucket.push(entry)
     }
@@ -345,6 +388,136 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
   static async #onResetCatalog(_event, _target) {
     this._viewState = { ...DEFAULT_VIEW_STATE }
     await this.render()
+  }
+
+  /**
+   * Initiate the purchase flow for a market entry.
+   * Validates solvability, shows a confirmation dialog, then executes the purchase.
+   *
+   * @this {MarketApplicationV2}
+   * @param {PointerEvent} _event   The initiating click event
+   * @param {HTMLElement}  target   The element bearing data-action="buyItem"
+   * @returns {Promise<void>}
+   */
+  static async #onBuyItem(_event, target) {
+    const row = target.closest('[data-uuid]')
+    const uuid = row?.dataset?.uuid
+    if (!uuid) {
+      logger.warn('[Market] buyItem action triggered without a data-uuid attribute')
+      return
+    }
+
+    const buyer = this._buyerActor
+    if (!buyer) {
+      ui.notifications.warn(game.i18n.localize('MARKET.Purchase.Error.MissingActor'))
+      return
+    }
+
+    // Re-resolve the item source at purchase time to detect deleted items.
+    let item
+    try {
+      item = await fromUuid(uuid)
+    } catch (err) {
+      logger.warn(`[Market] Could not resolve UUID "${uuid}" at purchase time: ${err.message}`)
+      ui.notifications.error(game.i18n.localize('MARKET.Purchase.Error.ItemNotFound'))
+      return
+    }
+
+    if (!item) {
+      logger.warn(`[Market] Item with UUID "${uuid}" no longer exists.`)
+      ui.notifications.error(game.i18n.localize('MARKET.Purchase.Error.ItemNotFound'))
+      return
+    }
+
+    // Rebuild a market entry from the live item to get the canonical price.
+    let entry
+    try {
+      const rawItem = {
+        uuid: item.uuid ?? '',
+        name: item.name ?? '',
+        img: item.img ?? '',
+        type: item.type ?? '',
+        basePrice: item.system?.price ?? 0,
+        rarity: item.system?.rarity ?? 0,
+        quality: item.system?.quality ?? '',
+        restrictionLevel: item.system?.restrictionLevel ?? '',
+        availability: item.system?.availability ?? undefined,
+        nonPurchasable: item.system?.nonPurchasable === true,
+        broken: item.system?.broken === true,
+      }
+      entry = createMarketEntry(rawItem, { sourceType: 'world', sourceId: item.uuid ?? '' }, { ...DEFAULT_MARKET_CONTEXT })
+    } catch (err) {
+      logger.warn(`[Market] Could not build market entry for "${uuid}": ${err.message}`)
+      ui.notifications.error(game.i18n.localize('MARKET.Purchase.Error.ItemNotFound'))
+      return
+    }
+
+    const validation = validatePurchase({ actor: buyer, entry })
+    if (!validation.canPurchase) {
+      const msgKey = validation.messageKey ?? 'MARKET.Purchase.Error.InsufficientCredits'
+      ui.notifications.warn(game.i18n.localize(msgKey))
+      return
+    }
+
+    // Confirmation dialog
+    const i18n = game.i18n
+    const confirmed = await foundry.applications.api.DialogV2.confirm({
+      window: {
+        title: i18n.format('MARKET.Purchase.Confirm.Title', { name: entry.name }),
+      },
+      content: `<p>${i18n.format('MARKET.Purchase.Confirm.Content', {
+        name: entry.name,
+        price: validation.finalPrice,
+        credits: buyer.system.credits,
+        remaining: validation.creditsAfter,
+      })}</p>`,
+      yes: {
+        label: i18n.format('MARKET.Purchase.Confirm.Buy', { price: validation.finalPrice }),
+        icon: 'fa-solid fa-coins',
+      },
+      no: {
+        label: i18n.localize('MARKET.Purchase.Confirm.Cancel'),
+        icon: 'fa-solid fa-xmark',
+      },
+    })
+
+    if (!confirmed) return
+
+    // Re-validate at mutation time (credits might have changed since dialog opened)
+    const finalValidation = validatePurchase({ actor: buyer, entry })
+    if (!finalValidation.canPurchase) {
+      ui.notifications.warn(game.i18n.localize(finalValidation.messageKey ?? 'MARKET.Purchase.Error.InsufficientCredits'))
+      return
+    }
+
+    try {
+      // Deduct credits
+      await buyer.update({ 'system.credits': finalValidation.creditsAfter })
+
+      // Add a copy of the item to the buyer's inventory
+      const itemData = item.toObject()
+      await buyer.createEmbeddedDocuments('Item', [itemData])
+
+      ui.notifications.info(
+        i18n.format('MARKET.Purchase.Success', {
+          name: entry.name,
+          price: finalValidation.finalPrice,
+          remaining: finalValidation.creditsAfter,
+        }),
+      )
+
+      logger.info('[Market] Purchase completed', {
+        actorId: buyer.id,
+        actorName: buyer.name,
+        itemUuid: uuid,
+        itemName: entry.name,
+        price: finalValidation.finalPrice,
+        creditsAfter: finalValidation.creditsAfter,
+      })
+    } catch (err) {
+      logger.error('[Market] Purchase failed during mutation', err)
+      ui.notifications.error(game.i18n.localize('MARKET.Purchase.Error.WriteFailed'))
+    }
   }
 
   /* -------------------------------------------- */

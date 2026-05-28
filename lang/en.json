@@ -254,6 +254,8 @@
       }
     }
   },
+  "SWERPG.Character.Credits.Label": "Credits",
+  "SWERPG.Character.Credits.Hint": "The character's current credit balance.",
   "SWERPG.ERRORS.InvalidEvent": "Invalid event: Unable to process the UI interaction.",
   "SWERPG.ERRORS.InvalidActor": "Invalid actor: Unable to access character data.",
   "SWERPG.ERRORS.NoItemId": "No item selected: Please click on a valid item.",
@@ -1495,7 +1497,8 @@
         "Type": "Type",
         "Price": "Price",
         "Rarity": "Rarity",
-        "Restriction": "Restriction"
+        "Restriction": "Restriction",
+        "Buy": "Buy"
       },
       "Group": {
         "Weapon": "Weapons",
@@ -1510,6 +1513,27 @@
         "availability": "Availability",
         "rarity": "Rarity",
         "gmModifier": "GM adjustment"
+      }
+    },
+    "Buyer": {
+      "Credits": "Credits"
+    },
+    "Purchase": {
+      "BuyButton": "Buy",
+      "Confirm": {
+        "Title": "Purchase {name}",
+        "Content": "Buy {name} for {price} credits? You have {credits} and will have {remaining} after.",
+        "Buy": "Buy ({price} credits)",
+        "Cancel": "Cancel"
+      },
+      "Success": "Purchased {name} for {price} credits. Remaining balance: {remaining}.",
+      "Error": {
+        "MissingActor": "No character selected. Open the Market from a character sheet.",
+        "MissingEntry": "This item is not available for purchase.",
+        "InvalidPrice": "This item has an invalid price and cannot be purchased.",
+        "InsufficientCredits": "Insufficient credits to purchase this item.",
+        "ItemNotFound": "This item no longer exists and cannot be purchased.",
+        "WriteFailed": "The purchase could not be completed due to a write error."
       }
     },
     "Toolbar": {

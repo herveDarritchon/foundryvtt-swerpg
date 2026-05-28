@@ -1,5 +1,15 @@
 {{!-- Market Catalogue — part: catalog --}}
-<div class="market-catalog" data-application-part="catalog">
+<div class="market-catalog scrollable" data-application-part="catalog">
+
+  {{!-- Buyer info bar (only shown when a buyer actor is active) --}}
+  {{#if buyer}}
+    <div class="market-buyer-bar">
+      <span class="market-buyer-bar__name">{{buyer.name}}</span>
+      <span class="market-buyer-bar__credits">
+        {{localize "MARKET.Buyer.Credits"}}: <strong>{{buyer.credits}}</strong>
+      </span>
+    </div>
+  {{/if}}
 
   {{!-- Toolbar: search, filters, sort, reset --}}
   <div class="market-toolbar">
@@ -93,6 +103,7 @@
               <th class="market-col--price">{{localize "MARKET.Catalog.Column.Price"}}</th>
               <th class="market-col--rarity">{{localize "MARKET.Catalog.Column.Rarity"}}</th>
               <th class="market-col--restriction">{{localize "MARKET.Catalog.Column.Restriction"}}</th>
+              {{#if ../buyer}}<th class="market-col--buy" aria-label="{{localize 'MARKET.Catalog.Column.Buy'}}"></th>{{/if}}
             </tr>
           </thead>
           <tbody>
@@ -118,6 +129,21 @@
                 </td>
                 <td class="market-col--rarity">{{entry.rarity}}</td>
                 <td class="market-col--restriction">{{entry.restrictionLevel}}</td>
+                {{#if ../buyer}}
+                  <td class="market-col--buy">
+                    <button
+                      type="button"
+                      class="market-item__buy {{#unless entry.canBuy}}market-item__buy--disabled{{/unless}}"
+                      data-action="buyItem"
+                      data-uuid="{{entry.uuid}}"
+                      {{#unless entry.canBuy}}disabled aria-disabled="true"{{/unless}}
+                      title="{{localize 'MARKET.Purchase.BuyButton'}}"
+                      aria-label="{{localize 'MARKET.Purchase.BuyButton'}}"
+                    >
+                      <i class="fa-solid fa-coins" aria-hidden="true"></i>
+                    </button>
+                  </td>
+                {{/if}}
               </tr>
             {{/each}}
           </tbody>
