@@ -7,6 +7,8 @@
     "build": "pnpm run fmt && pnpm run rollup && pnpm run less",
     "rollup:watch": "rollup --config rollup.config.mjs --watch",
     "rollup": "rollup --config",
+    "rollup:dev": "rollup --config rollup.config.dev.mjs",
+    "rollup:dev:watch": "rollup --config rollup.config.dev.mjs --watch",
     "less": "gulp css",
     "less:watch": "gulp watch:css",
     "dev:css": "pnpm run less:watch",
