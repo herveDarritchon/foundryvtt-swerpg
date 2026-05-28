@@ -1352,5 +1352,26 @@
   "TALENT_ACTIVATION": {
     "Unspecified": "Non spécifié",
     "UnspecifiedAbbr": "N.spéc."
+  },
+  "MARKET": {
+    "ItemType": {
+      "Weapon": "Arme",
+      "Armor": "Armure",
+      "Gear": "Équipement"
+    },
+    "Availability": {
+      "Available": "Disponible",
+      "Common": "Commun",
+      "Rare": "Rare",
+      "VeryRare": "Très rare",
+      "Restricted": "Restreint",
+      "BlackMarket": "Marché noir",
+      "Unavailable": "Indisponible"
+    },
+    "Source": {
+      "Compendium": "Compendium",
+      "World": "Monde",
+      "Import": "Import"
+    }
   }
 }
