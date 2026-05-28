@@ -43,6 +43,29 @@
       </ol>
     </div>
   {{/each}}
+  <div class="credits-summary">
+    <h4>{{localize "SWERPG.Character.Credits.Summary"}}</h4>
+    <div class="credits-breakdown">
+      <div class="line">
+        <span>{{localize "SWERPG.Character.Credits.Starting"}}</span>
+        <span class="value">{{creditsInfo.starting}}</span>
+      </div>
+      {{#if creditsInfo.obligationBonus}}
+      <div class="line bonus">
+        <span>{{localize "SWERPG.Character.Credits.ObligationBonus"}}</span>
+        <span class="value">+{{creditsInfo.obligationBonus}}</span>
+      </div>
+      {{/if}}
+      <div class="line total">
+        <span>{{localize "SWERPG.Character.Credits.TotalStarting"}}</span>
+        <span class="value">{{creditsInfo.totalStarting}}</span>
+      </div>
+      <div class="line current">
+        <span>{{localize "SWERPG.Character.Credits.Current"}}</span>
+        <span class="value">{{creditsInfo.current}}</span>
+      </div>
+    </div>
+  </div>
   <div class="inventory-actions">
     <button type="button" class="icon frame-brown fa-solid fa-plus inventory-create" data-action="itemCreate" data-tooltip="Create Item"></button>
     {{#if showMarketButton}}

@@ -148,6 +148,13 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
     context.obligations = this.#buildObligationList()
     context.obligationPoints = this.#computeObligationPoints(context.obligations)
 
+    context.creditsInfo = {
+      starting: a.system.progression.credits?.starting ?? 0,
+      obligationBonus: a.system.progression.credits?.obligationBonus ?? 0,
+      totalStarting: a.system.progression.credits?.totalStarting ?? 0,
+      current: a.system.credits,
+    }
+
     context.jauges = this.buildJaugeDisplayData(a.system.resources)
     context.soak = this.#buildSoakDisplayData(a.system.characteristics.brawn)
     context.defenses = this.buildDefenseDisplayData()

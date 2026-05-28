@@ -15,6 +15,9 @@ import {
   CAREER_DEFAULT_FREE_SKILL_RANK,
   CAREER_MIN_FREE_SKILL_RANK,
   CAREER_MAX_FREE_SKILL_RANK,
+  STARTING_CREDITS,
+  OBLIGATION_EXTRA_CREDITS_5,
+  OBLIGATION_EXTRA_CREDITS_10,
 } from '../../module/config/progression.mjs'
 import { MAX_RANK_AT_CREATION, MAX_RANK } from '../../module/config/skills.mjs'
 import { SYSTEM } from '../../module/config/system.mjs'
@@ -190,6 +193,41 @@ describe('Progression config — contractual constants (ADR-0018)', () => {
   })
 
   /* -------------------------------------------- */
+  /*  Starting Resources                          */
+  /* -------------------------------------------- */
+
+  describe('Starting Resources constants', () => {
+    test('STARTING_CREDITS constant should be 500', () => {
+      expect(STARTING_CREDITS).toBe(500)
+    })
+
+    test('STARTING_CREDITS should be a positive integer', () => {
+      expect(Number.isInteger(STARTING_CREDITS)).toBe(true)
+      expect(STARTING_CREDITS > 0).toBe(true)
+    })
+
+    test('OBLIGATION_EXTRA_CREDITS_5 is 1000 (+5 Obligation bonus)', () => {
+      expect(OBLIGATION_EXTRA_CREDITS_5).toBe(1000)
+    })
+
+    test('OBLIGATION_EXTRA_CREDITS_10 is 2500 (+10 Obligation bonus)', () => {
+      expect(OBLIGATION_EXTRA_CREDITS_10).toBe(2500)
+    })
+
+    test('OBLIGATION_EXTRA_CREDITS_5 is strictly less than OBLIGATION_EXTRA_CREDITS_10', () => {
+      expect(OBLIGATION_EXTRA_CREDITS_5).toBeLessThan(OBLIGATION_EXTRA_CREDITS_10)
+    })
+
+    test('STARTING_CREDITS + OBLIGATION_EXTRA_CREDITS_5 yields 1500 (500 + 1000)', () => {
+      expect(STARTING_CREDITS + OBLIGATION_EXTRA_CREDITS_5).toBe(1500)
+    })
+
+    test('STARTING_CREDITS + OBLIGATION_EXTRA_CREDITS_10 yields 3000 (500 + 2500)', () => {
+      expect(STARTING_CREDITS + OBLIGATION_EXTRA_CREDITS_10).toBe(3000)
+    })
+  })
+
+  /* -------------------------------------------- */
   /*  SYSTEM.PROGRESSION exposure (ADR-0018)      */
   /* -------------------------------------------- */
 
@@ -252,6 +290,18 @@ describe('Progression config — contractual constants (ADR-0018)', () => {
 
     test('SYSTEM.PROGRESSION.CAREER_MAX_FREE_SKILL_RANK equals CAREER_MAX_FREE_SKILL_RANK', () => {
       expect(SYSTEM.PROGRESSION.CAREER_MAX_FREE_SKILL_RANK).toBe(CAREER_MAX_FREE_SKILL_RANK)
+    })
+
+    test('SYSTEM.PROGRESSION.STARTING_CREDITS equals STARTING_CREDITS', () => {
+      expect(SYSTEM.PROGRESSION.STARTING_CREDITS).toBe(STARTING_CREDITS)
+    })
+
+    test('SYSTEM.PROGRESSION.OBLIGATION_EXTRA_CREDITS_5 equals OBLIGATION_EXTRA_CREDITS_5', () => {
+      expect(SYSTEM.PROGRESSION.OBLIGATION_EXTRA_CREDITS_5).toBe(OBLIGATION_EXTRA_CREDITS_5)
+    })
+
+    test('SYSTEM.PROGRESSION.OBLIGATION_EXTRA_CREDITS_10 equals OBLIGATION_EXTRA_CREDITS_10', () => {
+      expect(SYSTEM.PROGRESSION.OBLIGATION_EXTRA_CREDITS_10).toBe(OBLIGATION_EXTRA_CREDITS_10)
     })
   })
 })
