@@ -1,13 +1,17 @@
 {{!-- Market Catalogue — part: catalog --}}
 <div class="market-catalog scrollable" data-application-part="catalog">
 
-  {{!-- Buyer info bar (only shown when a buyer actor is active) --}}
+  {{!-- Buyer info bar (shows buyer credits when active, invitation message otherwise) --}}
   {{#if buyer}}
     <div class="market-buyer-bar">
       <span class="market-buyer-bar__name">{{buyer.name}}</span>
       <span class="market-buyer-bar__credits">
         {{localize "MARKET.Buyer.Credits"}}: <strong>{{buyer.credits}}</strong>
       </span>
+    </div>
+  {{else}}
+    <div class="market-buyer-bar market-buyer-bar--empty">
+      <span>{{localize "MARKET.Buyer.SelectCharacter"}}</span>
     </div>
   {{/if}}
 
@@ -70,7 +74,7 @@
       type="button"
       class="market-toolbar__reset"
       data-action="resetCatalog"
-      title="{{localize 'MARKET.Toolbar.Reset.Tooltip'}}"
+      data-tooltip="{{localize 'MARKET.Toolbar.Reset.Tooltip'}}"
       aria-label="{{localize 'MARKET.Toolbar.Reset.Tooltip'}}"
     >
       <i class="fa-solid fa-rotate-left" aria-hidden="true"></i>
@@ -103,13 +107,13 @@
               <th class="market-col--price">{{localize "MARKET.Catalog.Column.Price"}}</th>
               <th class="market-col--rarity">{{localize "MARKET.Catalog.Column.Rarity"}}</th>
               <th class="market-col--restriction">{{localize "MARKET.Catalog.Column.Restriction"}}</th>
-              {{#if ../buyer}}<th class="market-col--buy" aria-label="{{localize 'MARKET.Catalog.Column.Buy'}}"></th>{{/if}}
+              {{#if @root.buyer}}<th class="market-col--buy" aria-label="{{localize 'MARKET.Catalog.Column.Buy'}}"></th>{{/if}}
             </tr>
           </thead>
           <tbody>
             {{#each group.items as |entry|}}
               <tr class="market-item" data-uuid="{{entry.uuid}}" data-action="openItem"
-                  title="{{localize 'MARKET.Catalog.OpenSheet'}}">
+                  data-tooltip="{{localize 'MARKET.Catalog.OpenSheet'}}">
                 <td class="market-col--icon">
                   {{#if entry.img}}
                     <img class="market-item__icon" src="{{entry.img}}" alt="{{entry.name}}" />
@@ -120,7 +124,7 @@
                 <td class="market-col--price">
                   {{#if entry.priceResult.modifiers.length}}
                     <span class="market-price market-price--modified"
-                      title="{{localize 'MARKET.Price.BaseLabel'}}: {{entry.priceResult.basePrice}} → {{localize 'MARKET.Price.FinalLabel'}}: {{entry.priceResult.finalPrice}}"
+                      data-tooltip="{{localize 'MARKET.Price.BaseLabel'}}: {{entry.priceResult.basePrice}} → {{localize 'MARKET.Price.FinalLabel'}}: {{entry.priceResult.finalPrice}}"
                       aria-label="{{localize 'MARKET.Price.FinalLabel'}}: {{entry.priceResult.finalPrice}}"
                     >{{entry.priceResult.finalPrice}}</span>
                   {{else}}
@@ -129,15 +133,15 @@
                 </td>
                 <td class="market-col--rarity">{{entry.rarity}}</td>
                 <td class="market-col--restriction">{{entry.restrictionLevel}}</td>
-                {{#if ../buyer}}
+                {{#if @root.buyer}}
                   <td class="market-col--buy">
                     <button
                       type="button"
                       class="market-item__buy {{#unless entry.canBuy}}market-item__buy--disabled{{/unless}}"
                       data-action="buyItem"
+                      data-tooltip="{{localize 'MARKET.Purchase.BuyButton'}}"
                       data-uuid="{{entry.uuid}}"
                       {{#unless entry.canBuy}}disabled aria-disabled="true"{{/unless}}
-                      title="{{localize 'MARKET.Purchase.BuyButton'}}"
                       aria-label="{{localize 'MARKET.Purchase.BuyButton'}}"
                     >
                       <i class="fa-solid fa-coins" aria-hidden="true"></i>

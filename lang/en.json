@@ -1526,7 +1526,8 @@
       }
     },
     "Buyer": {
-      "Credits": "Credits"
+      "Credits": "Credits",
+      "SelectCharacter": "Open the Market from a character sheet to make purchases."
     },
     "Purchase": {
       "BuyButton": "Buy",

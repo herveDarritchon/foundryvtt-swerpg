@@ -1422,7 +1422,8 @@
       }
     },
     "Buyer": {
-      "Credits": "Crédits"
+      "Credits": "Crédits",
+      "SelectCharacter": "Ouvrez le marché depuis une fiche personnage pour effectuer un achat."
     },
     "Purchase": {
       "BuyButton": "Acheter",

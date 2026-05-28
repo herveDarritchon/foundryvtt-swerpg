@@ -707,4 +707,123 @@ describe('MarketApplicationV2', () => {
       await expect(action.call(app, {}, target)).resolves.toBeUndefined()
     })
   })
+
+  /* -------------------------------------------- */
+  /*  buyItem action                              */
+  /* -------------------------------------------- */
+
+  describe('buyItem action', () => {
+    it('logs a warning and returns when no data-uuid is present', async () => {
+      const app = new MarketApplicationV2()
+      const action = MarketApplicationV2.DEFAULT_OPTIONS.actions.buyItem
+      const target = { closest: vi.fn(() => ({ dataset: {} })) }
+
+      await expect(action.call(app, {}, target)).resolves.toBeUndefined()
+      expect(globalThis.ui.notifications.warn).not.toHaveBeenCalled()
+      expect(globalThis.ui.notifications.error).not.toHaveBeenCalled()
+    })
+
+    it('shows a warn notification when no buyer actor is set', async () => {
+      const app = new MarketApplicationV2()
+      // No buyer actor set (_buyerActor is null by default)
+      const action = MarketApplicationV2.DEFAULT_OPTIONS.actions.buyItem
+      const target = { closest: vi.fn(() => ({ dataset: { uuid: 'Item.abc' } })) }
+
+      await action.call(app, {}, target)
+
+      expect(globalThis.ui.notifications.warn).toHaveBeenCalledWith('MARKET.Purchase.Error.MissingActor')
+    })
+
+    it('shows an error notification when UUID resolves to null (item deleted)', async () => {
+      const actor = { id: 'actor-1', name: 'Test', system: { credits: 500 } }
+      globalThis.fromUuid = vi.fn().mockResolvedValue(null)
+
+      const app = new MarketApplicationV2()
+      app.setBuyerActor(actor)
+      const action = MarketApplicationV2.DEFAULT_OPTIONS.actions.buyItem
+      const target = { closest: vi.fn(() => ({ dataset: { uuid: 'Item.deleted' } })) }
+
+      await action.call(app, {}, target)
+
+      expect(globalThis.ui.notifications.error).toHaveBeenCalledWith('MARKET.Purchase.Error.ItemNotFound')
+
+      delete globalThis.fromUuid
+    })
+
+    it('shows a warn notification when validation fails (canPurchase=false)', async () => {
+      // Buyer has insufficient credits
+      const actor = { id: 'actor-1', name: 'Test', system: { credits: 10 } }
+      const item = makeItem({ uuid: 'Item.expensive', type: 'weapon', price: 1000 })
+      item.toObject = vi.fn(() => ({ type: 'weapon', name: item.name, system: item.system }))
+      globalThis.fromUuid = vi.fn().mockResolvedValue(item)
+
+      const app = new MarketApplicationV2()
+      app.setBuyerActor(actor)
+      const action = MarketApplicationV2.DEFAULT_OPTIONS.actions.buyItem
+      const target = { closest: vi.fn(() => ({ dataset: { uuid: 'Item.expensive' } })) }
+
+      await action.call(app, {}, target)
+
+      expect(globalThis.ui.notifications.warn).toHaveBeenCalled()
+
+      delete globalThis.fromUuid
+    })
+
+    it('calls createEmbeddedDocuments and shows success notification when confirmed', async () => {
+      // Buyer has enough credits
+      const actor = {
+        id: 'actor-1',
+        name: 'Test',
+        system: { credits: 500 },
+        createEmbeddedDocuments: vi.fn().mockResolvedValue([]),
+      }
+      const item = makeItem({ uuid: 'Item.cheap', type: 'weapon', price: 100, rarity: 0 })
+      item.toObject = vi.fn(() => ({ type: 'weapon', name: item.name, system: item.system }))
+      globalThis.fromUuid = vi.fn().mockResolvedValue(item)
+
+      // Confirm dialog returns true
+      globalThis.foundry.applications.api.DialogV2.confirm = vi.fn().mockResolvedValue(true)
+
+      const app = new MarketApplicationV2()
+      app.setBuyerActor(actor)
+      const action = MarketApplicationV2.DEFAULT_OPTIONS.actions.buyItem
+      const target = { closest: vi.fn(() => ({ dataset: { uuid: 'Item.cheap' } })) }
+
+      await action.call(app, {}, target)
+
+      expect(actor.createEmbeddedDocuments).toHaveBeenCalledWith('Item', expect.any(Array))
+      expect(globalThis.ui.notifications.info).toHaveBeenCalled()
+
+      delete globalThis.fromUuid
+      delete globalThis.foundry.applications.api.DialogV2.confirm
+    })
+
+    it('does not mutate actor when dialog is cancelled', async () => {
+      const actor = {
+        id: 'actor-1',
+        name: 'Test',
+        system: { credits: 500 },
+        createEmbeddedDocuments: vi.fn().mockResolvedValue([]),
+      }
+      const item = makeItem({ uuid: 'Item.cheap', type: 'weapon', price: 100, rarity: 0 })
+      item.toObject = vi.fn(() => ({ type: 'weapon', name: item.name, system: item.system }))
+      globalThis.fromUuid = vi.fn().mockResolvedValue(item)
+
+      // Cancel dialog
+      globalThis.foundry.applications.api.DialogV2.confirm = vi.fn().mockResolvedValue(false)
+
+      const app = new MarketApplicationV2()
+      app.setBuyerActor(actor)
+      const action = MarketApplicationV2.DEFAULT_OPTIONS.actions.buyItem
+      const target = { closest: vi.fn(() => ({ dataset: { uuid: 'Item.cheap' } })) }
+
+      await action.call(app, {}, target)
+
+      expect(actor.createEmbeddedDocuments).not.toHaveBeenCalled()
+      expect(globalThis.ui.notifications.info).not.toHaveBeenCalled()
+
+      delete globalThis.fromUuid
+      delete globalThis.foundry.applications.api.DialogV2.confirm
+    })
+  })
 })
