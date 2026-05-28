@@ -49,6 +49,39 @@ describe('createMarketEntry', () => {
       expect(entry.eligible).toBe(true)
       expect(entry.ineligibilityReason).toBeNull()
     })
+
+    test('exposes priceResult with basePrice, finalPrice, and modifiers', () => {
+      const entry = createMarketEntry(makeRawItem({ basePrice: 100, rarity: 0, availability: 'available' }), validSourceInfo)
+      expect(entry.priceResult).toBeDefined()
+      expect(entry.priceResult.basePrice).toBe(100)
+      expect(entry.priceResult.finalPrice).toBe(100)
+      expect(Array.isArray(entry.priceResult.modifiers)).toBe(true)
+    })
+
+    test('priceResult.finalPrice reflects rarity modifier', () => {
+      // rarity=5 → 10% * 5 = 50% → 100 * 1.5 = 150
+      const entry = createMarketEntry(makeRawItem({ basePrice: 100, rarity: 5, availability: 'available' }), validSourceInfo)
+      expect(entry.priceResult.finalPrice).toBe(150)
+    })
+
+    test('priceResult.finalPrice reflects availability modifier', () => {
+      // availability=rare → +25% → 100 * 1.25 = 125
+      const entry = createMarketEntry(makeRawItem({ basePrice: 100, rarity: 0, availability: 'rare' }), validSourceInfo)
+      expect(entry.priceResult.finalPrice).toBe(125)
+    })
+
+    test('priceResult.finalPrice reflects manualModifier from marketContext', () => {
+      // manualModifier=+50 → 100 * 1.5 = 150
+      const entry = createMarketEntry(makeRawItem({ basePrice: 100, rarity: 0, availability: 'available' }), validSourceInfo, { manualModifier: 50 })
+      expect(entry.priceResult.finalPrice).toBe(150)
+    })
+
+    test('priceResult is deterministic for the same inputs', () => {
+      const raw = makeRawItem()
+      const a = createMarketEntry(raw, validSourceInfo)
+      const b = createMarketEntry(raw, validSourceInfo)
+      expect(a.priceResult.finalPrice).toBe(b.priceResult.finalPrice)
+    })
   })
 
   describe('name normalization', () => {

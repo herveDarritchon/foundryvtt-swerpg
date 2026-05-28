@@ -1399,6 +1399,15 @@
         "Gear": "Équipements"
       }
     },
+    "Price": {
+      "BaseLabel": "Prix de base",
+      "FinalLabel": "Prix final",
+      "Modifier": {
+        "availability": "Disponibilité",
+        "rarity": "Rareté",
+        "gmModifier": "Ajustement MJ"
+      }
+    },
     "Toolbar": {
       "Search": {
         "Label": "Rechercher des objets",

@@ -1,5 +1,6 @@
 export { evaluateEligibility, ELIGIBILITY_REASONS } from './eligibility.mjs'
 export { computeMarketPrice } from './pricing.mjs'
+export { calculateItemPrice } from './price-engine.mjs'
 export { resolveMarketSources, filterDuplicates, filterByActiveConfig, DEDUP_STRATEGIES } from './source-resolver.mjs'
 export { createMarketEntry } from './market-entry.mjs'
 export {

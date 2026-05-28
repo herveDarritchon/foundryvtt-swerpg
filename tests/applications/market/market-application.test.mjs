@@ -233,6 +233,20 @@ describe('MarketApplicationV2', () => {
       expect(entry.sourceType).toBe('world')
     })
 
+    it('exposes priceResult on each catalog entry', async () => {
+      const item = makeItem({ type: 'weapon', price: 100, rarity: 0, availability: 'available' })
+      globalThis.game.items = makeItemsCollection([item])
+
+      const app = new MarketApplicationV2()
+      const context = await app._preparePartContext('catalog', {})
+
+      const entry = context.catalog.groups[0].items[0]
+      expect(entry.priceResult).toBeDefined()
+      expect(typeof entry.priceResult.finalPrice).toBe('number')
+      expect(typeof entry.priceResult.basePrice).toBe('number')
+      expect(Array.isArray(entry.priceResult.modifiers)).toBe(true)
+    })
+
     it('does not mutate context for non-catalog parts', async () => {
       const app = new MarketApplicationV2()
       const context = { someExistingKey: 'value' }
@@ -460,7 +474,7 @@ describe('MarketApplicationV2', () => {
       app._viewState = { ...app._viewState, sortBy: 'price', sortDirection: 'asc' }
       const context = await app._preparePartContext('catalog', {})
 
-      const prices = context.catalog.groups[0].items.map((e) => e.basePrice)
+      const prices = context.catalog.groups[0].items.map((e) => e.priceResult.finalPrice)
       expect(prices[0]).toBeLessThanOrEqual(prices[1])
     })
 
@@ -473,8 +487,25 @@ describe('MarketApplicationV2', () => {
       app._viewState = { ...app._viewState, sortBy: 'price', sortDirection: 'desc' }
       const context = await app._preparePartContext('catalog', {})
 
-      const prices = context.catalog.groups[0].items.map((e) => e.basePrice)
+      const prices = context.catalog.groups[0].items.map((e) => e.priceResult.finalPrice)
       expect(prices[0]).toBeGreaterThanOrEqual(prices[1])
+    })
+
+    it('sort by price uses finalPrice (not basePrice) — rarity-modified items sort on computed price', async () => {
+      // Item A: basePrice=100, rarity=0 → finalPrice=100
+      // Item B: basePrice=80, rarity=5 → finalPrice=80*(1+0.5)=120
+      const itemA = makeItem({ type: 'weapon', name: 'Item A', price: 100, rarity: 0 })
+      const itemB = makeItem({ type: 'weapon', name: 'Item B', price: 80, rarity: 5 })
+      globalThis.game.items = makeItemsCollection([itemA, itemB])
+
+      const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, sortBy: 'price', sortDirection: 'asc' }
+      const context = await app._preparePartContext('catalog', {})
+
+      const names = context.catalog.groups[0].items.map((e) => e.name)
+      // Item A (finalPrice=100) should come before Item B (finalPrice=120)
+      expect(names[0]).toBe('Item A')
+      expect(names[1]).toBe('Item B')
     })
   })
 
