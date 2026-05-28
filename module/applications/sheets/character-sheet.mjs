@@ -155,6 +155,16 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
       current: a.system.credits,
     }
 
+    context.creditBudget = {
+      starting: a.system.creditBudget?.startingCredits ?? 0,
+      obligationBonus: a.system.creditBudget?.obligationBonus ?? 0,
+      manualAdjustment: a.system.creditBudget?.manualAdjustment ?? 0,
+      totalBudget: a.system.creditBudget?.totalBudget ?? 0,
+      totalSpent: a.system.creditBudget?.totalSpent ?? 0,
+      available: a.system.creditBudget?.availableCredits ?? 0,
+      isOverBudget: a.system.creditBudget?.isOverBudget ?? false,
+    }
+
     context.jauges = this.buildJaugeDisplayData(a.system.resources)
     context.soak = this.#buildSoakDisplayData(a.system.characteristics.brawn)
     context.defenses = this.buildDefenseDisplayData()

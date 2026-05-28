@@ -7,7 +7,7 @@ import { validatePurchase } from '../../../module/lib/market/purchase.mjs'
 /* -------------------------------------------- */
 
 /**
- * Build a minimal actor-like plain object with credits.
+ * Build a minimal actor-like plain object with credits (legacy shape).
  * @param {object} [overrides]
  */
 function makeActor({ credits = 500, id = 'actor-1', name = 'Test Character' } = {}) {
@@ -15,6 +15,21 @@ function makeActor({ credits = 500, id = 'actor-1', name = 'Test Character' } = 
     id,
     name,
     system: { credits },
+  }
+}
+
+/**
+ * Build an actor-like plain object with a creditBudget (derived budget shape).
+ * @param {object} [overrides]
+ */
+function makeActorWithBudget({ availableCredits = 500, id = 'actor-1', name = 'Test Character' } = {}) {
+  return {
+    id,
+    name,
+    system: {
+      creditBudget: { availableCredits },
+      credits: 0, // manual adjustment — should NOT be used for affordability check
+    },
   }
 }
 
@@ -175,6 +190,55 @@ describe('validatePurchase', () => {
 
       expect(JSON.stringify(actor)).toBe(actorBefore)
       expect(JSON.stringify(entry)).toBe(entryBefore)
+    })
+  })
+
+  /* -------------------------------------------- */
+  /*  creditBudget.availableCredits resolution    */
+  /* -------------------------------------------- */
+
+  describe('creditBudget-aware credit resolution', () => {
+    it('uses creditBudget.availableCredits when present (preferred path)', () => {
+      const actor = makeActorWithBudget({ availableCredits: 500 })
+      const result = validatePurchase({ actor, entry: makeEntry({ finalPrice: 100 }) })
+      expect(result.canPurchase).toBe(true)
+      expect(result.creditsAfter).toBe(400)
+    })
+
+    it('blocks purchase when creditBudget.availableCredits is insufficient', () => {
+      const actor = makeActorWithBudget({ availableCredits: 50 })
+      const result = validatePurchase({ actor, entry: makeEntry({ finalPrice: 100 }) })
+      expect(result.canPurchase).toBe(false)
+      expect(result.reason).toBe('insufficient-credits')
+    })
+
+    it('blocks purchase when creditBudget.availableCredits is negative (over budget)', () => {
+      const actor = makeActorWithBudget({ availableCredits: -200 })
+      const result = validatePurchase({ actor, entry: makeEntry({ finalPrice: 1 }) })
+      expect(result.canPurchase).toBe(false)
+      expect(result.reason).toBe('insufficient-credits')
+    })
+
+    it('falls back to system.credits when creditBudget is absent', () => {
+      const actor = makeActor({ credits: 500 })
+      const result = validatePurchase({ actor, entry: makeEntry({ finalPrice: 100 }) })
+      expect(result.canPurchase).toBe(true)
+      expect(result.creditsAfter).toBe(400)
+    })
+
+    it('prioritises creditBudget.availableCredits over system.credits (legacy field ignored)', () => {
+      // Actor has 0 system.credits but 800 available from budget — should be able to buy
+      const actor = {
+        id: 'actor-budget',
+        name: 'Budget Actor',
+        system: {
+          creditBudget: { availableCredits: 800 },
+          credits: 0,
+        },
+      }
+      const result = validatePurchase({ actor, entry: makeEntry({ finalPrice: 300 }) })
+      expect(result.canPurchase).toBe(true)
+      expect(result.creditsAfter).toBe(500)
     })
   })
 })

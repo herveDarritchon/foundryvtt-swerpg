@@ -200,7 +200,7 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
   async _preparePartContext(partId, context) {
     if (partId === 'catalog') {
       const buyer = this._buyerActor
-      const buyerCredits = buyer?.system?.credits ?? null
+      const buyerCredits = buyer?.system?.creditBudget?.availableCredits ?? buyer?.system?.credits ?? null
 
       context.catalog = this.#prepareCatalog(buyer, buyerCredits)
       context.viewState = { ...this._viewState }
@@ -461,6 +461,7 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
 
     // Confirmation dialog
     const i18n = game.i18n
+    const currentCredits = buyer.system?.creditBudget?.availableCredits ?? buyer.system?.credits ?? 0
     const confirmed = await foundry.applications.api.DialogV2.confirm({
       window: {
         title: i18n.format('MARKET.Purchase.Confirm.Title', { name: entry.name }),
@@ -468,7 +469,7 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
       content: `<p>${i18n.format('MARKET.Purchase.Confirm.Content', {
         name: entry.name,
         price: validation.finalPrice,
-        credits: buyer.system.credits,
+        credits: currentCredits,
         remaining: validation.creditsAfter,
       })}</p>`,
       yes: {
@@ -491,10 +492,9 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
     }
 
     try {
-      // Deduct credits
-      await buyer.update({ 'system.credits': finalValidation.creditsAfter })
-
-      // Add a copy of the item to the buyer's inventory
+      // Add a copy of the item to the buyer's inventory.
+      // Credit deduction is now derived automatically via _prepareCredits() when the item
+      // is added — no direct update of system.credits is needed.
       const itemData = item.toObject()
       await buyer.createEmbeddedDocuments('Item', [itemData])
 

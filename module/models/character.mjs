@@ -7,6 +7,7 @@ import SwerpgSpecialization from './specialization.mjs'
 import { getSkillPurchaseState } from '../utils/skill-costs.mjs'
 import ObligationBonusCalculator from '../lib/obligations/obligation-bonus-calculator.mjs'
 import { STARTING_CREDITS } from '../config/progression.mjs'
+import { computeCreditBudget } from '../lib/credits/credit-calculator.mjs'
 
 /**
  * Tracks experience points for a Character actor.
@@ -339,7 +340,7 @@ export default class SwerpgCharacter extends SwerpgActorType {
   }
 
   /**
-   * Prepare starting credits allocation for the character.
+   * Prepare the full credit budget for the character.
    *
    * All fields written here are derived (not persisted). They extend the prepared
    * data object in memory and are never written back to the database.
@@ -348,19 +349,43 @@ export default class SwerpgCharacter extends SwerpgActorType {
    * - `starting`       — base starting credits (STARTING_CREDITS constant, always 500)
    * - `obligationBonus`— extra credits from obligation items marked as "extra"
    * - `totalStarting`  — sum of starting + obligationBonus
+   *
+   * Derived field set on `this.creditBudget` (full budget breakdown):
+   * - `startingCredits`   — base pool
+   * - `obligationBonus`   — obligation bonus applied
+   * - `manualAdjustment`  — system.credits persisted value (GM adjustments: rewards, fines, etc.)
+   * - `totalBudget`       — startingCredits + obligationBonus + manualAdjustment
+   * - `totalSpent`        — sum of (price × quantity) for all owned physical items
+   * - `availableCredits`  — totalBudget − totalSpent (can be negative = debt)
+   * - `isOverBudget`      — availableCredits < 0
    */
   _prepareCredits() {
     const obligationData = SwerpgCharacter.#extractObligationData(this.parent)
+    const obligationBonus = ObligationBonusCalculator.computeObligationBonusCredits(obligationData)
 
     // Derived (not persisted): credits breakdown for character creation display.
     this.progression.credits = {
       starting: STARTING_CREDITS,
-      obligationBonus: ObligationBonusCalculator.computeObligationBonusCredits(obligationData),
-      totalStarting: 0,
+      obligationBonus,
+      totalStarting: STARTING_CREDITS + obligationBonus,
     }
-    this.progression.credits.totalStarting = this.progression.credits.starting + this.progression.credits.obligationBonus
 
-    logger.debug(`[SwerpgCharacter] _prepareCredits - credits for ${this.parent.name}:`, this.progression.credits)
+    // Derived (not persisted): full credit budget including owned items and manual adjustments.
+    const ownedItems = this.parent.items
+      .filter((item) => ['weapon', 'armor', 'gear'].includes(item.type))
+      .map((item) => ({
+        price: item.system.price ?? 0,
+        quantity: item.system.quantity ?? 1,
+      }))
+
+    this.creditBudget = computeCreditBudget({
+      startingCredits: STARTING_CREDITS,
+      obligationBonusCredits: obligationBonus,
+      manualAdjustment: this.credits,
+      ownedItems,
+    })
+
+    logger.debug(`[SwerpgCharacter] _prepareCredits - credits for ${this.parent.name}:`, this.progression.credits, this.creditBudget)
   }
 
   /* -------------------------------------------- */
