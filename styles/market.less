@@ -31,12 +31,135 @@
 
 /* Empty state */
 .market-empty {
-  display: grid;
-  place-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
   padding: 2rem;
   color: var(--color-secondary);
   text-align: center;
   font-style: italic;
+
+  i {
+    font-size: var(--font-size-20);
+    opacity: 0.5;
+  }
+}
+
+/* ----------------------------------------- */
+/*  Market Toolbar                           */
+/* ----------------------------------------- */
+
+.market-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: rgba(12, 18, 27, 0.7);
+  border: 1px solid var(--color-cool-4, rgba(120, 169, 194, 0.22));
+  border-radius: 6px;
+  margin-bottom: 0.25rem;
+}
+
+.market-toolbar__search-group {
+  flex: 1 1 160px;
+  min-width: 120px;
+}
+
+.market-toolbar__search {
+  width: 100%;
+  padding: 0.3rem 0.6rem;
+  background: rgba(10, 17, 26, 0.7);
+  border: 1px solid rgba(120, 169, 194, 0.25);
+  border-radius: 4px;
+  color: var(--color-text, #d5e4f1);
+  font-size: var(--font-size-13);
+
+  &::placeholder {
+    color: var(--color-secondary);
+    opacity: 0.6;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: var(--color-cool-4, rgba(120, 169, 194, 0.5));
+  }
+}
+
+.market-toolbar__filters {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.market-toolbar__filter,
+.market-toolbar__sort--field,
+.market-toolbar__sort--direction {
+  padding: 0.3rem 0.5rem;
+  background: rgba(10, 17, 26, 0.7);
+  border: 1px solid rgba(120, 169, 194, 0.25);
+  border-radius: 4px;
+  color: var(--color-text, #d5e4f1);
+  font-size: var(--font-size-12);
+  cursor: pointer;
+
+  &:focus {
+    outline: none;
+    border-color: var(--color-cool-4, rgba(120, 169, 194, 0.5));
+  }
+
+  /* Indicate an active (non-default) filter */
+  &.is-active {
+    border-color: var(--color-cool-3, rgba(120, 169, 194, 0.6));
+    background: rgba(120, 169, 194, 0.1);
+  }
+}
+
+.market-toolbar__sort {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+.market-toolbar__reset {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.6rem;
+  background: transparent;
+  border: 1px solid rgba(120, 169, 194, 0.2);
+  border-radius: 4px;
+  color: var(--color-secondary);
+  font-size: var(--font-size-12);
+  cursor: pointer;
+  transition:
+    background 0.12s ease,
+    color 0.12s ease;
+
+  &:hover {
+    background: rgba(120, 169, 194, 0.1);
+    color: var(--color-primary);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-cool-4, rgba(120, 169, 194, 0.5));
+    outline-offset: 2px;
+  }
+}
+
+/* Screen-reader only label utility (toolbar) */
+.market-toolbar .sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 /* ----------------------------------------- */

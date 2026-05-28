@@ -1,7 +1,81 @@
 {{!-- Market Catalogue — part: catalog --}}
 <div class="market-catalog" data-application-part="catalog">
+
+  {{!-- Toolbar: search, filters, sort, reset --}}
+  <div class="market-toolbar">
+    <div class="market-toolbar__search-group">
+      <label for="market-search" class="sr-only">{{localize "MARKET.Toolbar.Search.Label"}}</label>
+      <input
+        id="market-search"
+        class="market-toolbar__search"
+        type="search"
+        placeholder="{{localize 'MARKET.Toolbar.Search.Placeholder'}}"
+        value="{{viewState.search}}"
+        aria-label="{{localize 'MARKET.Toolbar.Search.Label'}}"
+      />
+    </div>
+
+    <div class="market-toolbar__filters">
+      <label for="market-filter-type" class="sr-only">{{localize "MARKET.Toolbar.Filter.TypeLabel"}}</label>
+      <select id="market-filter-type" class="market-toolbar__filter market-toolbar__filter--type" aria-label="{{localize 'MARKET.Toolbar.Filter.TypeLabel'}}">
+        {{#each typeFilterOptions as |opt|}}
+          <option value="{{opt.value}}" {{#if (eq opt.value ../viewState.filterType)}}selected{{/if}}>
+            {{localize opt.label}}
+          </option>
+        {{/each}}
+      </select>
+
+      <label for="market-filter-source" class="sr-only">{{localize "MARKET.Toolbar.Filter.SourceLabel"}}</label>
+      <select id="market-filter-source" class="market-toolbar__filter market-toolbar__filter--source" aria-label="{{localize 'MARKET.Toolbar.Filter.SourceLabel'}}">
+        {{#each sourceFilterOptions as |opt|}}
+          <option value="{{opt.value}}" {{#if (eq opt.value ../viewState.filterSource)}}selected{{/if}}>
+            {{localize opt.label}}
+          </option>
+        {{/each}}
+      </select>
+    </div>
+
+    <div class="market-toolbar__sort">
+      <label for="market-sort-field" class="sr-only">{{localize "MARKET.Toolbar.Sort.Label"}}</label>
+      <select id="market-sort-field" class="market-toolbar__sort--field" aria-label="{{localize 'MARKET.Toolbar.Sort.Label'}}">
+        {{#each sortOptions as |opt|}}
+          <option value="{{opt.value}}" {{#if (eq opt.value ../viewState.sortBy)}}selected{{/if}}>
+            {{localize opt.label}}
+          </option>
+        {{/each}}
+      </select>
+
+      <label for="market-sort-dir" class="sr-only">{{localize "MARKET.Toolbar.Sort.DirectionLabel"}}</label>
+      <select id="market-sort-dir" class="market-toolbar__sort--direction" aria-label="{{localize 'MARKET.Toolbar.Sort.DirectionLabel'}}">
+        <option value="asc" {{#if (eq viewState.sortDirection "asc")}}selected{{/if}}>
+          {{localize "MARKET.Toolbar.Sort.Asc"}}
+        </option>
+        <option value="desc" {{#if (eq viewState.sortDirection "desc")}}selected{{/if}}>
+          {{localize "MARKET.Toolbar.Sort.Desc"}}
+        </option>
+      </select>
+    </div>
+
+    <button
+      type="button"
+      class="market-toolbar__reset"
+      data-action="resetCatalog"
+      title="{{localize 'MARKET.Toolbar.Reset.Tooltip'}}"
+      aria-label="{{localize 'MARKET.Toolbar.Reset.Tooltip'}}"
+    >
+      <i class="fa-solid fa-rotate-left" aria-hidden="true"></i>
+      <span class="market-toolbar__reset-label">{{localize "MARKET.Toolbar.Reset.Label"}}</span>
+    </button>
+  </div>
+
+  {{!-- Catalog content --}}
   {{#if catalog.isEmpty}}
     <p class="market-empty">{{localize "MARKET.Catalog.Empty"}}</p>
+  {{else if catalog.isFilteredEmpty}}
+    <p class="market-empty market-empty--filtered">
+      <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+      {{localize "MARKET.Catalog.EmptySearch"}}
+    </p>
   {{else}}
     {{#each catalog.groups as |group|}}
       <section class="market-group">

@@ -1384,6 +1384,7 @@
     },
     "Catalog": {
       "Empty": "Aucun article disponible dans le marché.",
+      "EmptySearch": "Aucun article ne correspond à votre recherche ou à vos filtres.",
       "OpenSheet": "Ouvrir la fiche de l'objet",
       "Column": {
         "Name": "Nom",
@@ -1396,6 +1397,31 @@
         "Weapon": "Armes",
         "Armor": "Armures",
         "Gear": "Équipements"
+      }
+    },
+    "Toolbar": {
+      "Search": {
+        "Label": "Rechercher des objets",
+        "Placeholder": "Rechercher…"
+      },
+      "Filter": {
+        "TypeLabel": "Filtrer par type",
+        "SourceLabel": "Filtrer par source",
+        "AllTypes": "Tous les types",
+        "AllSources": "Toutes les sources"
+      },
+      "Sort": {
+        "Label": "Trier par",
+        "DirectionLabel": "Sens de tri",
+        "Name": "Nom",
+        "Price": "Prix",
+        "Rarity": "Rareté",
+        "Asc": "Croissant",
+        "Desc": "Décroissant"
+      },
+      "Reset": {
+        "Label": "Réinitialiser",
+        "Tooltip": "Réinitialiser les filtres et la recherche"
       }
     }
   }
