@@ -5,6 +5,9 @@ import { SwerpgSpecies } from './_module.mjs'
 import SwerpgCareer from './career.mjs'
 import SwerpgSpecialization from './specialization.mjs'
 import { getSkillPurchaseState } from '../utils/skill-costs.mjs'
+import ObligationBonusCalculator from '../lib/obligations/obligation-bonus-calculator.mjs'
+import { STARTING_CREDITS } from '../config/progression.mjs'
+import { computeCreditBudget } from '../lib/credits/credit-calculator.mjs'
 
 /**
  * Tracks experience points for a Character actor.
@@ -260,7 +263,8 @@ export default class SwerpgCharacter extends SwerpgActorType {
     const e = this.progression.experience
 
     // Derived (not persisted): extra XP from obligation items marked as "extra".
-    e.obligationXpBonus = SwerpgCharacter.#computeObligationBonusExperience(this.parent)
+    const obligationData = SwerpgCharacter.#extractObligationData(this.parent)
+    e.obligationXpBonus = ObligationBonusCalculator.computeObligationBonusXp(obligationData)
 
     // Derived (not persisted): final XP pool and remaining budget, incorporating the obligation bonus.
     e.total = e.total + e.obligationXpBonus
@@ -318,12 +322,77 @@ export default class SwerpgCharacter extends SwerpgActorType {
   /* -------------------------------------------- */
 
   /**
-   * Compute the total extra XP granted by obligation items marked as "extra".
+   * Extract obligation data as plain objects from a Foundry actor's items.
+   * This is the Foundry-adapter bridge: maps Item documents → plain ObligationBonusInput objects
+   * that the pure domain ObligationBonusCalculator can consume without Foundry dependencies.
+   *
    * @param {SwerpgActor} actor The parent actor whose items are searched.
-   * @returns {number} Sum of `extraXp` from all obligation items with `isExtra === true`.
+   * @returns {{ isExtra: boolean, extraCredits: number, extraXp: number }[]} Plain obligation data.
    */
-  static #computeObligationBonusExperience(actor) {
-    return actor.items.filter((item) => item.type === 'obligation' && item.system.isExtra === true).reduce((total, item) => total + item.system.extraXp, 0)
+  static #extractObligationData(actor) {
+    return actor.items
+      .filter((item) => item.type === 'obligation')
+      .map((item) => ({
+        isExtra: item.system.isExtra,
+        extraCredits: item.system.extraCredits,
+        extraXp: item.system.extraXp,
+      }))
+  }
+
+  /**
+   * Prepare the full credit budget for the character.
+   *
+   * All fields written here are derived (not persisted). They extend the prepared
+   * data object in memory and are never written back to the database.
+   *
+   * Derived fields set on `this.progression.credits`:
+   * - `starting`       — base starting credits (STARTING_CREDITS constant, always 500)
+   * - `obligationBonus`— extra credits from obligation items marked as "extra"
+   * - `totalStarting`  — sum of starting + obligationBonus
+   *
+   * Derived field set on `this.creditBudget` (full budget breakdown):
+   * - `startingCredits`   — base pool
+   * - `obligationBonus`   — obligation bonus applied
+   * - `manualAdjustment`  — system.credits persisted value (GM adjustments: rewards, fines, etc.)
+   * - `totalBudget`       — startingCredits + obligationBonus + manualAdjustment
+   * - `totalSpent`        — sum of (price × quantity) for all owned physical items
+   * - `availableCredits`  — totalBudget − totalSpent (can be negative = debt)
+   * - `isOverBudget`      — availableCredits < 0
+   */
+  _prepareCredits() {
+    const obligationData = SwerpgCharacter.#extractObligationData(this.parent)
+    const obligationBonus = ObligationBonusCalculator.computeObligationBonusCredits(obligationData)
+
+    // Derived (not persisted): credits breakdown for character creation display.
+    this.progression.credits = {
+      starting: STARTING_CREDITS,
+      obligationBonus,
+      totalStarting: STARTING_CREDITS + obligationBonus,
+    }
+
+    // Derived (not persisted): full credit budget including owned items and manual adjustments.
+    // Read _source (schema raw values, before prepareDerivedData() overrides) so that a broken
+    // _preparePrice() on an item cannot propagate NaN into the credit calculation.
+    const ownedItems = this.parent.items
+      .filter((item) => ['weapon', 'armor', 'gear'].includes(item.type))
+      .map((item) => ({
+        price: item.system._source?.price ?? item.system.price ?? 0,
+        quantity: item.system._source?.quantity ?? item.system.quantity ?? 1,
+      }))
+
+    const nanItems = ownedItems.filter((i) => !Number.isFinite(i.price))
+    if (nanItems.length > 0) {
+      logger.warn(`[SwerpgCharacter] _prepareCredits - item with NaN price detected for ${this.parent.name}`, nanItems)
+    }
+
+    this.creditBudget = computeCreditBudget({
+      startingCredits: STARTING_CREDITS,
+      obligationBonusCredits: obligationBonus,
+      manualAdjustment: this.credits,
+      ownedItems,
+    })
+
+    logger.debug(`[SwerpgCharacter] _prepareCredits - credits for ${this.parent.name}:`, this.progression.credits, this.creditBudget)
   }
 
   /* -------------------------------------------- */
@@ -360,6 +429,19 @@ export default class SwerpgCharacter extends SwerpgActorType {
     this.#prepareSpecializations()
     this.#prepareBaseMovement()
     super.prepareBaseData()
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Extend the base derived data preparation with Character-specific computations.
+   * Adds `_prepareCredits()` after the base pass so that obligation items (available
+   * only during `prepareDerivedData`) can be accessed.
+   * @override
+   */
+  prepareDerivedData() {
+    super.prepareDerivedData()
+    this._prepareCredits()
   }
 
   /* -------------------------------------------- */

@@ -256,6 +256,16 @@
   },
   "SWERPG.Character.Credits.Label": "Credits",
   "SWERPG.Character.Credits.Hint": "The character's current credit balance.",
+  "SWERPG.Character.Credits.Summary": "Credits",
+  "SWERPG.Character.Credits.Starting": "Starting Credits",
+  "SWERPG.Character.Credits.ObligationBonus": "Obligation Bonus",
+  "SWERPG.Character.Credits.TotalStarting": "Total Starting Credits",
+  "SWERPG.Character.Credits.Current": "Current Balance",
+  "SWERPG.Character.Credits.ManualAdjustment": "Manual Adjustment",
+  "SWERPG.Character.Credits.TotalBudget": "Total Budget",
+  "SWERPG.Character.Credits.TotalSpent": "Spent on Items",
+  "SWERPG.Character.Credits.Available": "Available Balance",
+  "SWERPG.Character.Credits.OverBudget": "Over Budget! (Deficit)",
   "SWERPG.ERRORS.InvalidEvent": "Invalid event: Unable to process the UI interaction.",
   "SWERPG.ERRORS.InvalidActor": "Invalid actor: Unable to access character data.",
   "SWERPG.ERRORS.NoItemId": "No item selected: Please click on a valid item.",
@@ -1516,7 +1526,8 @@
       }
     },
     "Buyer": {
-      "Credits": "Credits"
+      "Credits": "Credits",
+      "SelectCharacter": "Open the Market from a character sheet to make purchases."
     },
     "Purchase": {
       "BuyButton": "Buy",

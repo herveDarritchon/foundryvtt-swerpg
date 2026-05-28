@@ -5330,3 +5330,67 @@ input[type='range'] {
   border-radius: 3px;
   border: 1px solid rgba(120, 169, 194, 0.15);
 }
+/* ----------------------------------------- */
+/*  Market Buyer Bar                         */
+/* ----------------------------------------- */
+.market-buyer-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.4rem 0.75rem;
+  background: rgba(12, 18, 27, 0.7);
+  border: 1px solid var(--color-cool-4, rgba(120, 169, 194, 0.22));
+  border-radius: 6px;
+  margin-bottom: 0.25rem;
+  font-size: var(--font-size-13);
+}
+.market-buyer-bar__name {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+.market-buyer-bar__credits {
+  color: var(--color-secondary);
+}
+.market-buyer-bar--empty {
+  justify-content: center;
+  color: var(--color-secondary);
+  font-style: italic;
+}
+/* ----------------------------------------- */
+/*  Market Buy Column & Button               */
+/* ----------------------------------------- */
+.market-col--buy {
+  width: 50px;
+  text-align: center;
+}
+.market-item__buy {
+  padding: 0.3rem 0.5rem;
+  background: rgba(76, 175, 80, 0.15);
+  border: 1px solid rgba(76, 175, 80, 0.3);
+  border-radius: 4px;
+  color: #81c784;
+  cursor: pointer;
+  transition:
+    background 0.12s ease,
+    color 0.12s ease;
+  font-size: var(--font-size-13);
+}
+.market-item__buy:hover {
+  background: rgba(76, 175, 80, 0.3);
+  color: #a5d6a7;
+}
+.market-item__buy:focus-visible {
+  outline: 2px solid var(--color-cool-4, rgba(120, 169, 194, 0.5));
+  outline-offset: 2px;
+}
+.market-item__buy--disabled {
+  background: rgba(120, 169, 194, 0.08);
+  border-color: rgba(120, 169, 194, 0.15);
+  color: var(--color-secondary);
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+.market-item__buy--disabled:hover {
+  background: rgba(120, 169, 194, 0.08);
+  color: var(--color-secondary);
+}

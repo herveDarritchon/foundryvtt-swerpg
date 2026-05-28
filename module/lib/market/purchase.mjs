@@ -8,7 +8,9 @@
 
 /**
  * @typedef {Object} PurchaseInput
- * @property {{ id: string, name: string, system: { credits: number } }} actor  Plain actor-like object with credit balance.
+ * @property {{ id: string, name: string, system: { creditBudget?: { availableCredits: number }, credits?: number } }} actor
+ *   Plain actor-like object. Credit balance is read from `system.creditBudget.availableCredits` (derived budget)
+ *   when available, falling back to `system.credits` for backward compatibility.
  * @property {{ uuid: string, name: string, priceResult: { finalPrice: number } }} entry  Market entry to purchase.
  */
 
@@ -22,7 +24,29 @@
  */
 
 /**
+ * Resolve the effective credit balance from an actor-like plain object.
+ *
+ * Reads `system.creditBudget.availableCredits` first (the derived budget set by
+ * `SwerpgCharacter._prepareCredits()`). Falls back to `system.credits` when the
+ * derived budget is not yet available (e.g. in tests with minimal actor stubs).
+ *
+ * @param {{ system?: { creditBudget?: { availableCredits?: number }, credits?: number } }} actor
+ * @returns {number}
+ */
+function resolveActorCredits(actor) {
+  const budgetCredits = actor?.system?.creditBudget?.availableCredits
+  if (typeof budgetCredits === 'number' && Number.isFinite(budgetCredits)) {
+    return budgetCredits
+  }
+  return actor?.system?.credits ?? 0
+}
+
+/**
  * Validate whether an actor can purchase a market entry at the given price.
+ *
+ * Credit balance resolution (in priority order):
+ * 1. `actor.system.creditBudget.availableCredits` — derived credit budget (preferred)
+ * 2. `actor.system.credits`                        — persisted field (fallback)
  *
  * Rules (in order of evaluation):
  * 1. Actor must be provided.
@@ -59,7 +83,7 @@ export function validatePurchase({ actor, entry } = {}) {
     }
   }
 
-  const credits = actor?.system?.credits ?? 0
+  const credits = resolveActorCredits(actor)
   if (typeof credits !== 'number' || !Number.isFinite(credits) || credits < finalPrice) {
     return {
       canPurchase: false,

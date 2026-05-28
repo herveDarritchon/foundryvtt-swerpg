@@ -157,3 +157,25 @@ export const CAREER_MIN_FREE_SKILL_RANK = 0
  * @type {number}
  */
 export const CAREER_MAX_FREE_SKILL_RANK = 8
+
+/* -------------------------------------------- */
+/*  Starting Resources                          */
+/* -------------------------------------------- */
+
+/**
+ * Starting credits granted to a new character at creation.
+ * @type {number}
+ */
+export const STARTING_CREDITS = 500
+
+/**
+ * Extra credits bonus for +5 Obligation during character creation.
+ * @type {number}
+ */
+export const OBLIGATION_EXTRA_CREDITS_5 = 1000
+
+/**
+ * Extra credits bonus for +10 Obligation during character creation.
+ * @type {number}
+ */
+export const OBLIGATION_EXTRA_CREDITS_10 = 2500

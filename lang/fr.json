@@ -236,6 +236,16 @@
   },
   "SWERPG.Character.Credits.Label": "Crédits",
   "SWERPG.Character.Credits.Hint": "Le solde de crédits actuel du personnage.",
+  "SWERPG.Character.Credits.Summary": "Crédits",
+  "SWERPG.Character.Credits.Starting": "Crédits de départ",
+  "SWERPG.Character.Credits.ObligationBonus": "Bonus Obligation",
+  "SWERPG.Character.Credits.TotalStarting": "Total de départ",
+  "SWERPG.Character.Credits.Current": "Solde actuel",
+  "SWERPG.Character.Credits.ManualAdjustment": "Ajustement manuel",
+  "SWERPG.Character.Credits.TotalBudget": "Budget total",
+  "SWERPG.Character.Credits.TotalSpent": "Dépensé (items)",
+  "SWERPG.Character.Credits.Available": "Solde disponible",
+  "SWERPG.Character.Credits.OverBudget": "Budget dépassé ! (Déficit)",
   "SWERPG.ERRORS.InvalidEvent": "Événement invalide: impossible de traiter l'interaction.",
   "SWERPG.AUDIT.WRITE_FAILED": "Échec d'écriture du journal d'audit pour l'acteur \"{actor}\". Voir la console pour les détails.",
   "SWERPG.AUDIT.ACTOR": "Acteur",
@@ -1412,7 +1422,8 @@
       }
     },
     "Buyer": {
-      "Credits": "Crédits"
+      "Credits": "Crédits",
+      "SelectCharacter": "Ouvrez le marché depuis une fiche personnage pour effectuer un achat."
     },
     "Purchase": {
       "BuyButton": "Acheter",
