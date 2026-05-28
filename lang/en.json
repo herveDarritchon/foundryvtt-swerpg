@@ -1503,6 +1503,15 @@
         "Gear": "Gear"
       }
     },
+    "Price": {
+      "BaseLabel": "Base price",
+      "FinalLabel": "Final price",
+      "Modifier": {
+        "availability": "Availability",
+        "rarity": "Rarity",
+        "gmModifier": "GM adjustment"
+      }
+    },
     "Toolbar": {
       "Search": {
         "Label": "Search items",

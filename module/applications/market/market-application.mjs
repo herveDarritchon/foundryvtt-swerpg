@@ -1,5 +1,5 @@
 import { createMarketEntry } from '../../lib/market/market-entry.mjs'
-import { PURCHASABLE_ITEM_TYPES, SOURCE_TYPES } from '../../config/market.mjs'
+import { PURCHASABLE_ITEM_TYPES, SOURCE_TYPES, DEFAULT_MARKET_CONTEXT } from '../../config/market.mjs'
 import { logger } from '../../utils/logger.mjs'
 
 const { api } = foundry.applications
@@ -112,7 +112,7 @@ function sortEntries(entries, sortBy, direction) {
     if (sortBy === MARKET_SORT_FIELDS.name) {
       cmp = a.name.localeCompare(b.name)
     } else if (sortBy === MARKET_SORT_FIELDS.price) {
-      cmp = a.basePrice - b.basePrice
+      cmp = a.priceResult.finalPrice - b.priceResult.finalPrice
     } else if (sortBy === MARKET_SORT_FIELDS.rarity) {
       cmp = a.rarity - b.rarity
     }
@@ -245,10 +245,11 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
   #prepareCatalog() {
     // 1. Build all eligible entries from game.items
     const allEntries = []
+    const marketContext = { ...DEFAULT_MARKET_CONTEXT }
     for (const item of game.items) {
       try {
         const rawItem = itemToRawItem(item)
-        const entry = createMarketEntry(rawItem, { sourceType: 'world', sourceId: item.uuid ?? '' })
+        const entry = createMarketEntry(rawItem, { sourceType: 'world', sourceId: item.uuid ?? '' }, marketContext)
         if (!entry.eligible) continue
         allEntries.push(entry)
       } catch (err) {

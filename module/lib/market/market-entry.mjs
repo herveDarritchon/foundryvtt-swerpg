@@ -1,5 +1,6 @@
 import { PURCHASABLE_ITEM_TYPES, SOURCE_TYPES, DEFAULT_SOURCE_TYPE, DEFAULT_AVAILABILITY } from '../../config/market.mjs'
 import { evaluateEligibility } from './eligibility.mjs'
+import { calculateItemPrice } from './price-engine.mjs'
 
 /**
  * @typedef {Object} MarketEntry
@@ -14,6 +15,7 @@ import { evaluateEligibility } from './eligibility.mjs'
  * @property {string}      quality             Quality tier key
  * @property {string}      restrictionLevel    Restriction level key
  * @property {string}      availability        Computed availability status key
+ * @property {import('./price-engine.mjs').PriceResult} priceResult  Computed price with breakdown
  * @property {boolean}     eligible            Whether this entry passes all eligibility rules
  * @property {string|null} ineligibilityReason Machine-readable reason if not eligible, null otherwise
  */
@@ -49,15 +51,17 @@ import { evaluateEligibility } from './eligibility.mjs'
  * - `itemType` must be a key of PURCHASABLE_ITEM_TYPES (throws if not)
  * - `basePrice` is always a finite number >= 0
  * - `eligible` is deterministic for the same inputs
+ * - `priceResult` is always present and computed by the canonical price engine
  *
  * No Foundry dependencies — accepts plain objects only.
  *
- * @param {RawItem}    rawItem     The raw item data to normalize
- * @param {SourceInfo} sourceInfo  Source metadata for this item
+ * @param {RawItem}    rawItem       The raw item data to normalize
+ * @param {SourceInfo} sourceInfo    Source metadata for this item
+ * @param {Partial<import('../../config/market.mjs').MarketContext>} [marketContext]  Optional market context for price computation
  * @returns {MarketEntry}
  * @throws {TypeError} If itemType is not a key of PURCHASABLE_ITEM_TYPES
  */
-export function createMarketEntry(rawItem, sourceInfo) {
+export function createMarketEntry(rawItem, sourceInfo, marketContext = {}) {
   const itemType = rawItem.type ?? rawItem.itemType ?? ''
 
   if (!(itemType in PURCHASABLE_ITEM_TYPES)) {
@@ -74,6 +78,7 @@ export function createMarketEntry(rawItem, sourceInfo) {
 
   const rarity = Number.isFinite(rawItem.rarity) ? rawItem.rarity : 0
   const name = typeof rawItem.name === 'string' && rawItem.name.trim().length > 0 ? rawItem.name : 'unknown'
+  const availability = rawItem.availability ?? DEFAULT_AVAILABILITY
 
   const eligibilityItem = {
     itemType,
@@ -89,6 +94,8 @@ export function createMarketEntry(rawItem, sourceInfo) {
     sourceTypes: SOURCE_TYPES,
   })
 
+  const priceResult = calculateItemPrice({ basePrice, rarity, availability }, marketContext)
+
   return {
     uuid: rawItem.uuid ?? '',
     name,
@@ -100,7 +107,8 @@ export function createMarketEntry(rawItem, sourceInfo) {
     rarity,
     quality: rawItem.quality ?? '',
     restrictionLevel: rawItem.restrictionLevel ?? '',
-    availability: rawItem.availability ?? DEFAULT_AVAILABILITY,
+    availability,
+    priceResult,
     eligible,
     ineligibilityReason: reason,
   }

@@ -152,3 +152,34 @@ export const DEFAULT_MARKET_CONFIG = Object.freeze({
   allowedItemTypes: Object.freeze(Object.keys(PURCHASABLE_ITEM_TYPES)),
   dedupStrategy: 'prefer-compendium',
 })
+
+/* -------------------------------------------- */
+
+/**
+ * @typedef {Object} MarketContext
+ * @property {string}  availability    Availability key (one of AVAILABILITY_STATUS keys)
+ * @property {string}  marketType      Market type key: 'standard' | 'blackMarket' | 'imperial'
+ * @property {number}  manualModifier  Manual GM percentage modifier (-100 to +100), default 0
+ */
+
+/**
+ * Market types that affect pricing context.
+ * Additional market types can be registered in future tranches without breaking the API.
+ * @enum {string}
+ */
+export const MARKET_TYPES = Object.freeze({
+  standard: 'standard',
+  blackMarket: 'blackMarket',
+  imperial: 'imperial',
+})
+
+/**
+ * Default market context applied when none is provided to the price engine.
+ * Uses deterministic fallback values that produce no price modification beyond item data.
+ * @type {Readonly<MarketContext>}
+ */
+export const DEFAULT_MARKET_CONTEXT = Object.freeze({
+  availability: DEFAULT_AVAILABILITY,
+  marketType: MARKET_TYPES.standard,
+  manualModifier: 0,
+})

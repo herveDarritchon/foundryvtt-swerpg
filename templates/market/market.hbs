@@ -106,7 +106,16 @@
                 </td>
                 <td class="market-col--name">{{entry.name}}</td>
                 <td class="market-col--type">{{localize entry.itemType}}</td>
-                <td class="market-col--price">{{entry.basePrice}}</td>
+                <td class="market-col--price">
+                  {{#if entry.priceResult.modifiers.length}}
+                    <span class="market-price market-price--modified"
+                      title="{{localize 'MARKET.Price.BaseLabel'}}: {{entry.priceResult.basePrice}} → {{localize 'MARKET.Price.FinalLabel'}}: {{entry.priceResult.finalPrice}}"
+                      aria-label="{{localize 'MARKET.Price.FinalLabel'}}: {{entry.priceResult.finalPrice}}"
+                    >{{entry.priceResult.finalPrice}}</span>
+                  {{else}}
+                    <span class="market-price">{{entry.priceResult.finalPrice}}</span>
+                  {{/if}}
+                </td>
                 <td class="market-col--rarity">{{entry.rarity}}</td>
                 <td class="market-col--restriction">{{entry.restrictionLevel}}</td>
               </tr>
