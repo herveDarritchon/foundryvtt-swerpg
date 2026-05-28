@@ -798,6 +798,58 @@ describe('MarketApplicationV2', () => {
       delete globalThis.foundry.applications.api.DialogV2.confirm
     })
 
+    it('calls render() on the instance after a successful purchase', async () => {
+      const actor = {
+        id: 'actor-1',
+        name: 'Test',
+        system: { credits: 500 },
+        createEmbeddedDocuments: vi.fn().mockResolvedValue([]),
+      }
+      const item = makeItem({ uuid: 'Item.cheap', type: 'weapon', price: 100, rarity: 0 })
+      item.toObject = vi.fn(() => ({ type: 'weapon', name: item.name, system: item.system }))
+      globalThis.fromUuid = vi.fn().mockResolvedValue(item)
+      globalThis.foundry.applications.api.DialogV2.confirm = vi.fn().mockResolvedValue(true)
+
+      const app = new MarketApplicationV2()
+      app.render = vi.fn().mockResolvedValue(undefined)
+      app.setBuyerActor(actor)
+      const action = MarketApplicationV2.DEFAULT_OPTIONS.actions.buyItem
+      const target = { closest: vi.fn(() => ({ dataset: { uuid: 'Item.cheap' } })) }
+
+      await action.call(app, {}, target)
+
+      expect(app.render).toHaveBeenCalled()
+
+      delete globalThis.fromUuid
+      delete globalThis.foundry.applications.api.DialogV2.confirm
+    })
+
+    it('_preparePartContext exposes updated credits and canBuy=false after purchase reduces budget below item price', async () => {
+      // Actor starts with 500 credits; after buying item at 100, mock reduces credits to 400.
+      // Item priced at 500 should then be canBuy=false.
+      const actorSystem = { credits: 400 }
+      const actor = {
+        id: 'actor-1',
+        name: 'Test',
+        get system() {
+          return actorSystem
+        },
+      }
+
+      const expensiveItem = makeItem({ type: 'weapon', name: 'Expensive Blaster', price: 500 })
+      globalThis.game.items = makeItemsCollection([expensiveItem])
+
+      const app = new MarketApplicationV2()
+      app.setBuyerActor(actor)
+
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.buyer.credits).toBe(400)
+      const entry = context.catalog.groups[0].items[0]
+      expect(entry.canBuy).toBe(false)
+      expect(entry.buyBlockedReason).toBe('insufficient-credits')
+    })
+
     it('does not mutate actor when dialog is cancelled', async () => {
       const actor = {
         id: 'actor-1',

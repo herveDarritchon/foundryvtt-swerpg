@@ -514,6 +514,8 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
         price: finalValidation.finalPrice,
         creditsAfter: finalValidation.creditsAfter,
       })
+
+      await this.render()
     } catch (err) {
       logger.error('[Market] Purchase failed during mutation', err)
       ui.notifications.error(game.i18n.localize('MARKET.Purchase.Error.WriteFailed'))
