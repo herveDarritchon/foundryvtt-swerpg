@@ -6,9 +6,9 @@ export default {
   output: {
     file: 'dist/swerpg.bundle.js',
     format: 'es',
-    compact: true,
+    compact: false,
     inlineDynamicImports: true,
-    sourcemap: true,
+    sourcemap: 'inline',
   },
   plugins: [nodeResolve({ browser: true, preferBuiltins: false }), commonjs()],
 }
