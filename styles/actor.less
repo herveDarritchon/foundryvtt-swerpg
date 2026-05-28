@@ -1740,10 +1740,18 @@
   }
 
   .tab.inventory {
-    .inventory-create {
+    .inventory-actions {
       position: absolute;
       right: 0;
       bottom: 0;
+      display: flex;
+      flex-direction: row;
+      gap: 4px;
+      align-items: center;
+    }
+
+    .inventory-create,
+    .inventory-market {
       width: 32px;
     }
   }

@@ -1355,6 +1355,8 @@
   },
   "MARKET": {
     "Title": "Marché",
+    "Open": "Marché",
+    "OpenTooltip": "Ouvrir le marché",
     "ItemType": {
       "Weapon": "Arme",
       "Armor": "Armure",

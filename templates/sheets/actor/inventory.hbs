@@ -43,5 +43,16 @@
       </ol>
     </div>
   {{/each}}
-  <button type="button" class="icon frame-brown fa-solid fa-plus inventory-create" data-action="itemCreate" data-tooltip="Create Item"></button>
+  <div class="inventory-actions">
+    <button type="button" class="icon frame-brown fa-solid fa-plus inventory-create" data-action="itemCreate" data-tooltip="Create Item"></button>
+    {{#if showMarketButton}}
+      <button
+        type="button"
+        class="icon frame-brown fa-solid fa-coins inventory-market"
+        data-action="openMarket"
+        data-tooltip="{{localize 'MARKET.OpenTooltip'}}"
+        aria-label="{{localize 'MARKET.Open'}}"
+      ></button>
+    {{/if}}
+  </div>
 </section>

@@ -69,6 +69,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
       editSpecializations: CharacterSheet.#onEditSpecializations,
       editSpecializationTrees: CharacterSheet.#onEditSpecializationTrees,
       openAuditLog: CharacterSheet.#onOpenAuditLog,
+      openMarket: CharacterSheet.#onOpenMarket,
       skillBuy: CharacterSheet.#onSkillBuy,
       skillRefund: CharacterSheet.#onSkillRefund,
       skillSelect: CharacterSheet.#onSkillSelect,
@@ -115,6 +116,7 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
       specializationTreeButtonLabel: game.i18n.localize('SWERPG.TALENT.VIEW_SPECIALIZATION_TREES'),
       experience: a.system.progression?.experience,
       canViewAuditLog: canViewAuditLog(a),
+      showMarketButton: true,
     })
 
     context.skills = CharacterSheet.#prepareSkills(a)
@@ -601,6 +603,20 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
 
     const app = new CharacterAuditLogApp({ document: this.actor })
     await app.render({ force: true })
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Handle click action to open the Market application.
+   * Delegates to the system API entry point.
+   * @this {CharacterSheet}
+   * @param {PointerEvent} event
+   * @returns {Promise<void>}
+   */
+  static async #onOpenMarket(event) {
+    logger.debug('[CharacterSheet] Opening Market application')
+    await game.system.api.methods.openMarket()
   }
 
   /* -------------------------------------------- */
