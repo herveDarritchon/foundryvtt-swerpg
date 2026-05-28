@@ -609,14 +609,14 @@ export default class CharacterSheet extends SwerpgBaseActorSheet {
 
   /**
    * Handle click action to open the Market application.
-   * Delegates to the system API entry point.
+   * Passes the current actor as the buyer so the Market can show purchase affordance.
    * @this {CharacterSheet}
    * @param {PointerEvent} event
    * @returns {Promise<void>}
    */
   static async #onOpenMarket(event) {
-    logger.debug('[CharacterSheet] Opening Market application')
-    await game.system.api.methods.openMarket()
+    logger.debug('[CharacterSheet] Opening Market application', { actorId: this.actor?.id, actorName: this.actor?.name })
+    await game.system.api.methods.openMarket(this.actor ?? null)
   }
 
   /* -------------------------------------------- */

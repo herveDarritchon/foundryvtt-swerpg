@@ -234,6 +234,8 @@
       }
     }
   },
+  "SWERPG.Character.Credits.Label": "Crédits",
+  "SWERPG.Character.Credits.Hint": "Le solde de crédits actuel du personnage.",
   "SWERPG.ERRORS.InvalidEvent": "Événement invalide: impossible de traiter l'interaction.",
   "SWERPG.AUDIT.WRITE_FAILED": "Échec d'écriture du journal d'audit pour l'acteur \"{actor}\". Voir la console pour les détails.",
   "SWERPG.AUDIT.ACTOR": "Acteur",
@@ -1391,7 +1393,8 @@
         "Type": "Type",
         "Price": "Prix",
         "Rarity": "Rareté",
-        "Restriction": "Restriction"
+        "Restriction": "Restriction",
+        "Buy": "Acheter"
       },
       "Group": {
         "Weapon": "Armes",
@@ -1406,6 +1409,27 @@
         "availability": "Disponibilité",
         "rarity": "Rareté",
         "gmModifier": "Ajustement MJ"
+      }
+    },
+    "Buyer": {
+      "Credits": "Crédits"
+    },
+    "Purchase": {
+      "BuyButton": "Acheter",
+      "Confirm": {
+        "Title": "Acheter {name}",
+        "Content": "Acheter {name} pour {price} crédits ? Vous avez {credits} crédits et il vous en restera {remaining}.",
+        "Buy": "Acheter ({price} crédits)",
+        "Cancel": "Annuler"
+      },
+      "Success": "{name} acheté pour {price} crédits. Solde restant : {remaining}.",
+      "Error": {
+        "MissingActor": "Aucun personnage sélectionné. Ouvrez le marché depuis une fiche de personnage.",
+        "MissingEntry": "Cet article n'est pas disponible à l'achat.",
+        "InvalidPrice": "Cet article a un prix invalide et ne peut pas être acheté.",
+        "InsufficientCredits": "Crédits insuffisants pour acheter cet article.",
+        "ItemNotFound": "Cet article n'existe plus et ne peut pas être acheté.",
+        "WriteFailed": "L'achat n'a pas pu être finalisé en raison d'une erreur d'écriture."
       }
     },
     "Toolbar": {

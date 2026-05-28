@@ -171,6 +171,15 @@ export default class SwerpgCharacter extends SwerpgActorType {
       ),
     })
 
+    // Credits — persisted integer balance, always >= 0
+    schema.credits = new fields.NumberField({
+      required: true,
+      nullable: false,
+      integer: true,
+      initial: 0,
+      min: 0,
+    })
+
     schema.details = new fields.SchemaField({
       species: new fields.SchemaField(
         {

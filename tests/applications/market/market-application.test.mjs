@@ -106,6 +106,10 @@ describe('MarketApplicationV2', () => {
     it('declares the resetCatalog action', () => {
       expect(MarketApplicationV2.DEFAULT_OPTIONS.actions).toHaveProperty('resetCatalog')
     })
+
+    it('declares the buyItem action', () => {
+      expect(MarketApplicationV2.DEFAULT_OPTIONS.actions).toHaveProperty('buyItem')
+    })
   })
 
   /* -------------------------------------------- */
@@ -125,6 +129,93 @@ describe('MarketApplicationV2', () => {
       const app = new MarketApplicationV2()
       expect(app._viewState.sortBy).toBe('name')
       expect(app._viewState.sortDirection).toBe('asc')
+    })
+  })
+
+  /* -------------------------------------------- */
+  /*  Buyer actor management                      */
+  /* -------------------------------------------- */
+
+  describe('setBuyerActor', () => {
+    it('starts with null buyer actor', () => {
+      const app = new MarketApplicationV2()
+      expect(app._buyerActor).toBeNull()
+    })
+
+    it('stores the actor passed to setBuyerActor', () => {
+      const app = new MarketApplicationV2()
+      const actor = { id: 'actor-1', name: 'Test Character', system: { credits: 500 } }
+      app.setBuyerActor(actor)
+      expect(app._buyerActor).toBe(actor)
+    })
+
+    it('clears the buyer actor when called with null', () => {
+      const app = new MarketApplicationV2()
+      app._buyerActor = { id: 'actor-1', name: 'Test' }
+      app.setBuyerActor(null)
+      expect(app._buyerActor).toBeNull()
+    })
+  })
+
+  describe('buyer context in _preparePartContext', () => {
+    it('exposes buyer as null when no buyer actor is set', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const app = new MarketApplicationV2()
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.buyer).toBeNull()
+    })
+
+    it('exposes buyer name and credits when buyer actor is set', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const actor = { id: 'actor-1', name: 'Vara Kesh', system: { credits: 750 } }
+      const app = new MarketApplicationV2()
+      app.setBuyerActor(actor)
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.buyer).not.toBeNull()
+      expect(context.buyer.id).toBe('actor-1')
+      expect(context.buyer.name).toBe('Vara Kesh')
+      expect(context.buyer.credits).toBe(750)
+    })
+  })
+
+  describe('canBuy annotation on catalog entries', () => {
+    it('sets canBuy=false on all entries when no buyer actor', async () => {
+      const item = makeItem({ type: 'weapon', name: 'Blaster', price: 100 })
+      globalThis.game.items = makeItemsCollection([item])
+
+      const app = new MarketApplicationV2()
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.catalog.groups[0].items[0].canBuy).toBe(false)
+    })
+
+    it('sets canBuy=true when buyer has sufficient credits', async () => {
+      const item = makeItem({ type: 'weapon', name: 'Blaster', price: 100 })
+      globalThis.game.items = makeItemsCollection([item])
+
+      const actor = { id: 'actor-1', name: 'Test', system: { credits: 500 } }
+      const app = new MarketApplicationV2()
+      app.setBuyerActor(actor)
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.catalog.groups[0].items[0].canBuy).toBe(true)
+    })
+
+    it('sets canBuy=false when buyer has insufficient credits', async () => {
+      const item = makeItem({ type: 'weapon', name: 'Blaster', price: 1000 })
+      globalThis.game.items = makeItemsCollection([item])
+
+      const actor = { id: 'actor-1', name: 'Test', system: { credits: 50 } }
+      const app = new MarketApplicationV2()
+      app.setBuyerActor(actor)
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.catalog.groups[0].items[0].canBuy).toBe(false)
+      expect(context.catalog.groups[0].items[0].buyBlockedReason).toBe('insufficient-credits')
     })
   })
 

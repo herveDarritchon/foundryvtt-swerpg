@@ -60,6 +60,19 @@
           /<span>{{progression.experience.total}}</span>
         </div>
       </div>
+      <div class="credits flexrow">
+        <label class="credits__label" for="system.credits">{{localize "SWERPG.Character.Credits.Label"}}</label>
+        <input
+          id="system.credits"
+          class="credits__value"
+          type="number"
+          name="system.credits"
+          value="{{actor.system.credits}}"
+          min="0"
+          step="1"
+          aria-label="{{localize 'SWERPG.Character.Credits.Label'}}"
+        />
+      </div>
     {{/unless}}
     {{#if canViewAuditLog}}
       <button

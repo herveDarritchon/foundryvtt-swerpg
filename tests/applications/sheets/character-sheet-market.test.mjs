@@ -40,7 +40,7 @@ describe('CharacterSheet market button', () => {
 
   describe('openMarket action', () => {
     it('calls game.system.api.methods.openMarket() when the action is triggered', async () => {
-      const sheet = {}
+      const sheet = { actor: null }
       const event = { preventDefault: vi.fn() }
 
       await CharacterSheet.DEFAULT_OPTIONS.actions.openMarket.call(sheet, event)
@@ -50,6 +50,25 @@ describe('CharacterSheet market button', () => {
 
     it('is registered in DEFAULT_OPTIONS actions', () => {
       expect(typeof CharacterSheet.DEFAULT_OPTIONS.actions.openMarket).toBe('function')
+    })
+
+    it('passes the actor to openMarket when this.actor is set', async () => {
+      const mockActor = { id: 'actor-1', name: 'Test Character', system: { credits: 500 } }
+      const sheet = { actor: mockActor }
+      const event = { preventDefault: vi.fn() }
+
+      await CharacterSheet.DEFAULT_OPTIONS.actions.openMarket.call(sheet, event)
+
+      expect(openMarketSpy).toHaveBeenCalledWith(mockActor)
+    })
+
+    it('passes null when this.actor is undefined', async () => {
+      const sheet = { actor: undefined }
+      const event = { preventDefault: vi.fn() }
+
+      await CharacterSheet.DEFAULT_OPTIONS.actions.openMarket.call(sheet, event)
+
+      expect(openMarketSpy).toHaveBeenCalledWith(null)
     })
   })
 
