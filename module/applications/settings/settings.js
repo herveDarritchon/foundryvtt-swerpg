@@ -1,6 +1,7 @@
 import * as chat from '../../chat.mjs'
 import { OggDudeDataImporter } from '../../settings/OggDudeDataImporter.mjs'
 import { logger } from '../../utils/logger.mjs'
+import { registerMarketSettings } from '../../lib/market/market-settings.mjs'
 
 export const registerSystemSettings = function () {
   /**
@@ -90,6 +91,9 @@ export const registerSystemSettings = function () {
     type: Number,
     default: 0,
   })
+
+  // Market configuration settings
+  registerMarketSettings(SYSTEM.id)
 
   // Audit Log max entries setting
   game.settings.register(SYSTEM.id, 'auditLogMaxEntries', {

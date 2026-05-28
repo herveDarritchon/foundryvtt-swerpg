@@ -7,6 +7,9 @@ import {
   DEFAULT_AVAILABILITY,
   DEFAULT_SOURCE_TYPE,
   MIN_PRICE_FOR_ELIGIBILITY,
+  DEFAULT_MARKET_CONFIG,
+  MARKET_FLAG_NAMESPACE,
+  MARKET_EXCLUDED_FLAG,
 } from '../../module/config/market.mjs'
 import { SYSTEM } from '../../module/config/system.mjs'
 
@@ -217,5 +220,74 @@ describe('market config — ADR-0018 contractual constants', () => {
     test('SYSTEM.MARKET.EXCLUDED_ITEM_TYPES is the canonical object', () => {
       expect(SYSTEM.MARKET.EXCLUDED_ITEM_TYPES).toBe(EXCLUDED_ITEM_TYPES)
     })
+  })
+})
+
+/* -------------------------------------------- */
+
+describe('DEFAULT_MARKET_CONFIG', () => {
+  test('is defined and frozen', () => {
+    expect(DEFAULT_MARKET_CONFIG).toBeDefined()
+    expect(Object.isFrozen(DEFAULT_MARKET_CONFIG)).toBe(true)
+  })
+
+  test('enabledSources contains all SOURCE_TYPES keys by default', () => {
+    const sourceKeys = Object.keys(SOURCE_TYPES)
+    expect(DEFAULT_MARKET_CONFIG.enabledSources).toEqual(expect.arrayContaining(sourceKeys))
+    expect(DEFAULT_MARKET_CONFIG.enabledSources).toHaveLength(sourceKeys.length)
+  })
+
+  test('allowedItemTypes contains all PURCHASABLE_ITEM_TYPES keys by default', () => {
+    const typeKeys = Object.keys(PURCHASABLE_ITEM_TYPES)
+    expect(DEFAULT_MARKET_CONFIG.allowedItemTypes).toEqual(expect.arrayContaining(typeKeys))
+    expect(DEFAULT_MARKET_CONFIG.allowedItemTypes).toHaveLength(typeKeys.length)
+  })
+
+  test('dedupStrategy equals "prefer-compendium"', () => {
+    expect(DEFAULT_MARKET_CONFIG.dedupStrategy).toBe('prefer-compendium')
+  })
+
+  test('enabledSources is a frozen array', () => {
+    expect(Array.isArray(DEFAULT_MARKET_CONFIG.enabledSources)).toBe(true)
+    expect(Object.isFrozen(DEFAULT_MARKET_CONFIG.enabledSources)).toBe(true)
+  })
+
+  test('allowedItemTypes is a frozen array', () => {
+    expect(Array.isArray(DEFAULT_MARKET_CONFIG.allowedItemTypes)).toBe(true)
+    expect(Object.isFrozen(DEFAULT_MARKET_CONFIG.allowedItemTypes)).toBe(true)
+  })
+
+  test('enabledSources keys are all valid SOURCE_TYPES keys', () => {
+    for (const key of DEFAULT_MARKET_CONFIG.enabledSources) {
+      expect(SOURCE_TYPES).toHaveProperty(key)
+    }
+  })
+
+  test('allowedItemTypes keys are all valid PURCHASABLE_ITEM_TYPES keys', () => {
+    for (const key of DEFAULT_MARKET_CONFIG.allowedItemTypes) {
+      expect(PURCHASABLE_ITEM_TYPES).toHaveProperty(key)
+    }
+  })
+})
+
+/* -------------------------------------------- */
+
+describe('MARKET_FLAG_NAMESPACE and MARKET_EXCLUDED_FLAG', () => {
+  test('MARKET_FLAG_NAMESPACE is "swerpg"', () => {
+    expect(MARKET_FLAG_NAMESPACE).toBe('swerpg')
+  })
+
+  test('MARKET_EXCLUDED_FLAG is "marketExcluded"', () => {
+    expect(MARKET_EXCLUDED_FLAG).toBe('marketExcluded')
+  })
+
+  test('MARKET_FLAG_NAMESPACE is a non-empty string', () => {
+    expect(typeof MARKET_FLAG_NAMESPACE).toBe('string')
+    expect(MARKET_FLAG_NAMESPACE.length).toBeGreaterThan(0)
+  })
+
+  test('MARKET_EXCLUDED_FLAG is a non-empty string', () => {
+    expect(typeof MARKET_EXCLUDED_FLAG).toBe('string')
+    expect(MARKET_EXCLUDED_FLAG.length).toBeGreaterThan(0)
   })
 })
