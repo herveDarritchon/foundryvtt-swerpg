@@ -7,6 +7,7 @@ import { logger } from '../utils/logger.mjs'
 import * as EFFECTS from './effects.mjs'
 import * as SKILL from './skills.mjs'
 import { MAX_RANK_AT_CREATION, MAX_RANK } from './skills.mjs'
+import * as MARKET from './market.mjs'
 import * as PROGRESSION from './progression.mjs'
 import * as WEAPON from './weapon.mjs'
 import { ENCHANTMENT_TIERS, QUALITY_TIERS, DEFAULT_QUALITY, DEFAULT_RESTRICTION_LEVEL } from './items.mjs'
@@ -234,6 +235,7 @@ export const SYSTEM = {
   ENCHANTMENT_TIERS,
   DEFAULT_QUALITY,
   DEFAULT_RESTRICTION_LEVEL,
+  MARKET,
   PASSIVE_BASE: ATTRIBUTES.PASSIVE_BASE,
   PROGRESSION,
   QUALITY_TIERS,
