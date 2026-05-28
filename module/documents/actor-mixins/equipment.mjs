@@ -276,7 +276,7 @@ export const EquipmentMixin = (Base) =>
       const itemUpdates = [{ _id: weapon.id, 'system.equipped': true, 'system.slot': slot }]
       const actorUpdates = {}
 
-      let actionCost = weapon.system.properties.has('ambush') ? 0 : 1
+      let actionCost = weapon.system?.properties?.has('ambush') ? 0 : 1
       if (actionCost && this.talentIds.has('preparedness0000') && !this.system.status.hasMoved) {
         actionCost = 0
         foundry.utils.setProperty(actorUpdates, 'system.status.hasMoved', true)
