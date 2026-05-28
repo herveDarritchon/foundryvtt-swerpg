@@ -1488,6 +1488,7 @@
     },
     "Catalog": {
       "Empty": "No items available in the market.",
+      "EmptySearch": "No items match your search or filters.",
       "OpenSheet": "Open item sheet",
       "Column": {
         "Name": "Name",
@@ -1500,6 +1501,31 @@
         "Weapon": "Weapons",
         "Armor": "Armor",
         "Gear": "Gear"
+      }
+    },
+    "Toolbar": {
+      "Search": {
+        "Label": "Search items",
+        "Placeholder": "Search…"
+      },
+      "Filter": {
+        "TypeLabel": "Filter by type",
+        "SourceLabel": "Filter by source",
+        "AllTypes": "All types",
+        "AllSources": "All sources"
+      },
+      "Sort": {
+        "Label": "Sort by",
+        "DirectionLabel": "Sort direction",
+        "Name": "Name",
+        "Price": "Price",
+        "Rarity": "Rarity",
+        "Asc": "Ascending",
+        "Desc": "Descending"
+      },
+      "Reset": {
+        "Label": "Reset",
+        "Tooltip": "Reset filters and search"
       }
     }
   }

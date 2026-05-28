@@ -59,12 +59,22 @@ describe('MarketApplicationV2', () => {
       translations: {
         'MARKET.Title': 'Market',
         'MARKET.Catalog.Empty': 'No items available in the market.',
+        'MARKET.Catalog.EmptySearch': 'No items match your search or filters.',
         'MARKET.Catalog.OpenSheet': 'Open item sheet',
         'MARKET.Catalog.Column.Name': 'Name',
         'MARKET.Catalog.Column.Type': 'Type',
         'MARKET.Catalog.Column.Price': 'Price',
         'MARKET.Catalog.Column.Rarity': 'Rarity',
         'MARKET.Catalog.Column.Restriction': 'Restriction',
+        'MARKET.Toolbar.Search.Label': 'Search items',
+        'MARKET.Toolbar.Search.Placeholder': 'Search…',
+        'MARKET.Toolbar.Filter.AllTypes': 'All types',
+        'MARKET.Toolbar.Filter.AllSources': 'All sources',
+        'MARKET.Toolbar.Sort.Name': 'Name',
+        'MARKET.Toolbar.Sort.Price': 'Price',
+        'MARKET.Toolbar.Sort.Rarity': 'Rarity',
+        'MARKET.Toolbar.Reset.Label': 'Reset',
+        'MARKET.Toolbar.Reset.Tooltip': 'Reset filters and search',
       },
     })
     ;({ default: MarketApplicationV2 } = await import('../../../module/applications/market/market-application.mjs'))
@@ -91,6 +101,30 @@ describe('MarketApplicationV2', () => {
 
     it('declares the openItem action', () => {
       expect(MarketApplicationV2.DEFAULT_OPTIONS.actions).toHaveProperty('openItem')
+    })
+
+    it('declares the resetCatalog action', () => {
+      expect(MarketApplicationV2.DEFAULT_OPTIONS.actions).toHaveProperty('resetCatalog')
+    })
+  })
+
+  /* -------------------------------------------- */
+  /*  _viewState default                          */
+  /* -------------------------------------------- */
+
+  describe('_viewState default', () => {
+    it('starts with empty search and no filters', () => {
+      const app = new MarketApplicationV2()
+      expect(app._viewState.search).toBe('')
+      expect(app._viewState.filterType).toBe('')
+      expect(app._viewState.filterSource).toBe('')
+      expect(app._viewState.filterRestriction).toBe('')
+    })
+
+    it('starts sorted by name ascending', () => {
+      const app = new MarketApplicationV2()
+      expect(app._viewState.sortBy).toBe('name')
+      expect(app._viewState.sortDirection).toBe('asc')
     })
   })
 
@@ -206,6 +240,288 @@ describe('MarketApplicationV2', () => {
 
       expect(result).not.toHaveProperty('catalog')
       expect(result.someExistingKey).toBe('value')
+    })
+
+    it('exposes viewState, sortOptions, and typeFilterOptions in catalog context', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const app = new MarketApplicationV2()
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.viewState).toBeDefined()
+      expect(context.sortOptions).toBeDefined()
+      expect(Array.isArray(context.sortOptions)).toBe(true)
+      expect(context.typeFilterOptions).toBeDefined()
+      expect(Array.isArray(context.typeFilterOptions)).toBe(true)
+      expect(context.sourceFilterOptions).toBeDefined()
+      expect(Array.isArray(context.sourceFilterOptions)).toBe(true)
+    })
+
+    it('exposes totalCount and filteredCount in catalog', async () => {
+      const weapon = makeItem({ type: 'weapon', name: 'Blaster' })
+      const armor = makeItem({ type: 'armor', name: 'Armor' })
+      globalThis.game.items = makeItemsCollection([weapon, armor])
+
+      const app = new MarketApplicationV2()
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.catalog.totalCount).toBe(2)
+      expect(context.catalog.filteredCount).toBe(2)
+    })
+  })
+
+  /* -------------------------------------------- */
+  /*  Text search                                 */
+  /* -------------------------------------------- */
+
+  describe('text search', () => {
+    it('filters items by name (case-insensitive)', async () => {
+      const blaster = makeItem({ type: 'weapon', name: 'Blaster Pistol' })
+      const vibro = makeItem({ type: 'weapon', name: 'Vibro Knife' })
+      globalThis.game.items = makeItemsCollection([blaster, vibro])
+
+      const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, search: 'blaster' }
+      const context = await app._preparePartContext('catalog', {})
+
+      const weaponGroup = context.catalog.groups.find((g) => g.typeKey === 'weapon')
+      expect(weaponGroup.items).toHaveLength(1)
+      expect(weaponGroup.items[0].name).toBe('Blaster Pistol')
+    })
+
+    it('is case-insensitive', async () => {
+      const item = makeItem({ type: 'weapon', name: 'Blaster Pistol' })
+      globalThis.game.items = makeItemsCollection([item])
+
+      const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, search: 'BLASTER' }
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.catalog.filteredCount).toBe(1)
+    })
+
+    it('returns isFilteredEmpty=true when search matches nothing but items exist', async () => {
+      const item = makeItem({ type: 'weapon', name: 'Vibro Knife' })
+      globalThis.game.items = makeItemsCollection([item])
+
+      const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, search: 'lightsaber' }
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.catalog.isEmpty).toBe(false)
+      expect(context.catalog.isFilteredEmpty).toBe(true)
+      expect(context.catalog.filteredCount).toBe(0)
+      expect(context.catalog.totalCount).toBe(1)
+    })
+
+    it('empty search returns all eligible items', async () => {
+      const item1 = makeItem({ type: 'weapon', name: 'Blaster' })
+      const item2 = makeItem({ type: 'armor', name: 'Armor' })
+      globalThis.game.items = makeItemsCollection([item1, item2])
+
+      const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, search: '' }
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.catalog.filteredCount).toBe(2)
+    })
+  })
+
+  /* -------------------------------------------- */
+  /*  Filters                                     */
+  /* -------------------------------------------- */
+
+  describe('type filter', () => {
+    it('restricts visible items to the selected type', async () => {
+      const weapon = makeItem({ type: 'weapon', name: 'Blaster' })
+      const armor = makeItem({ type: 'armor', name: 'Armor' })
+      globalThis.game.items = makeItemsCollection([weapon, armor])
+
+      const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, filterType: 'weapon' }
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.catalog.filteredCount).toBe(1)
+      const armorGroup = context.catalog.groups.find((g) => g.typeKey === 'armor')
+      expect(armorGroup).toBeUndefined()
+    })
+
+    it('empty filterType shows all types', async () => {
+      const weapon = makeItem({ type: 'weapon', name: 'Blaster' })
+      const armor = makeItem({ type: 'armor', name: 'Armor' })
+      globalThis.game.items = makeItemsCollection([weapon, armor])
+
+      const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, filterType: '' }
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.catalog.filteredCount).toBe(2)
+    })
+  })
+
+  describe('source filter', () => {
+    it('restricts visible items to the selected source', async () => {
+      const weapon = makeItem({ type: 'weapon', name: 'Blaster' })
+      globalThis.game.items = makeItemsCollection([weapon])
+
+      const app = new MarketApplicationV2()
+      // All items are sourceType='world' by default in the adapter
+      app._viewState = { ...app._viewState, filterSource: 'world' }
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.catalog.filteredCount).toBe(1)
+    })
+
+    it('returns isFilteredEmpty when source filter excludes all items', async () => {
+      const weapon = makeItem({ type: 'weapon', name: 'Blaster' })
+      globalThis.game.items = makeItemsCollection([weapon])
+
+      const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, filterSource: 'compendium' }
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.catalog.isFilteredEmpty).toBe(true)
+    })
+  })
+
+  describe('cumulative filters', () => {
+    it('applies search and type filter together', async () => {
+      const blasterW = makeItem({ type: 'weapon', name: 'Blaster Pistol' })
+      const vibroW = makeItem({ type: 'weapon', name: 'Vibro Knife' })
+      const blasterA = makeItem({ type: 'armor', name: 'Blaster Armor' })
+      globalThis.game.items = makeItemsCollection([blasterW, vibroW, blasterA])
+
+      const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, search: 'blaster', filterType: 'weapon' }
+      const context = await app._preparePartContext('catalog', {})
+
+      // Only the weapon named "Blaster Pistol" — armor is excluded by type, vibro by search
+      expect(context.catalog.filteredCount).toBe(1)
+      const weaponGroup = context.catalog.groups.find((g) => g.typeKey === 'weapon')
+      expect(weaponGroup.items[0].name).toBe('Blaster Pistol')
+    })
+
+    it('does not re-introduce items excluded by eligibility', async () => {
+      const eligible = makeItem({ type: 'weapon', name: 'Blaster' })
+      const nonPurchasable = makeItem({ type: 'weapon', name: 'Blaster Broken', nonPurchasable: true })
+      globalThis.game.items = makeItemsCollection([eligible, nonPurchasable])
+
+      const app = new MarketApplicationV2()
+      // Search would match both names, but nonPurchasable is ineligible before filtering
+      app._viewState = { ...app._viewState, search: 'blaster' }
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.catalog.filteredCount).toBe(1)
+      expect(context.catalog.groups[0].items[0].name).toBe('Blaster')
+    })
+  })
+
+  /* -------------------------------------------- */
+  /*  Sort                                        */
+  /* -------------------------------------------- */
+
+  describe('sort by name', () => {
+    it('sorts ascending (A→Z)', async () => {
+      const z = makeItem({ type: 'weapon', name: 'Z-6 Rotary Blaster' })
+      const a = makeItem({ type: 'weapon', name: 'A-310 Rifle' })
+      const m = makeItem({ type: 'weapon', name: 'Blaster Pistol' })
+      globalThis.game.items = makeItemsCollection([z, a, m])
+
+      const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, sortBy: 'name', sortDirection: 'asc' }
+      const context = await app._preparePartContext('catalog', {})
+
+      const names = context.catalog.groups[0].items.map((e) => e.name)
+      expect(names).toEqual([...names].sort((a, b) => a.localeCompare(b)))
+    })
+
+    it('sorts descending (Z→A)', async () => {
+      const z = makeItem({ type: 'weapon', name: 'Z-6 Rotary Blaster' })
+      const a = makeItem({ type: 'weapon', name: 'A-310 Rifle' })
+      globalThis.game.items = makeItemsCollection([z, a])
+
+      const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, sortBy: 'name', sortDirection: 'desc' }
+      const context = await app._preparePartContext('catalog', {})
+
+      const names = context.catalog.groups[0].items.map((e) => e.name)
+      expect(names[0]).toBe('Z-6 Rotary Blaster')
+      expect(names[1]).toBe('A-310 Rifle')
+    })
+  })
+
+  describe('sort by price', () => {
+    it('sorts ascending (cheapest first)', async () => {
+      const cheap = makeItem({ type: 'weapon', name: 'Cheap', price: 50 })
+      const expensive = makeItem({ type: 'weapon', name: 'Expensive', price: 500 })
+      globalThis.game.items = makeItemsCollection([expensive, cheap])
+
+      const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, sortBy: 'price', sortDirection: 'asc' }
+      const context = await app._preparePartContext('catalog', {})
+
+      const prices = context.catalog.groups[0].items.map((e) => e.basePrice)
+      expect(prices[0]).toBeLessThanOrEqual(prices[1])
+    })
+
+    it('sorts descending (most expensive first)', async () => {
+      const cheap = makeItem({ type: 'weapon', name: 'Cheap', price: 50 })
+      const expensive = makeItem({ type: 'weapon', name: 'Expensive', price: 500 })
+      globalThis.game.items = makeItemsCollection([cheap, expensive])
+
+      const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, sortBy: 'price', sortDirection: 'desc' }
+      const context = await app._preparePartContext('catalog', {})
+
+      const prices = context.catalog.groups[0].items.map((e) => e.basePrice)
+      expect(prices[0]).toBeGreaterThanOrEqual(prices[1])
+    })
+  })
+
+  describe('sort by rarity', () => {
+    it('sorts ascending (most common first)', async () => {
+      const common = makeItem({ type: 'weapon', name: 'Common', rarity: 1 })
+      const rare = makeItem({ type: 'weapon', name: 'Rare', rarity: 7 })
+      globalThis.game.items = makeItemsCollection([rare, common])
+
+      const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, sortBy: 'rarity', sortDirection: 'asc' }
+      const context = await app._preparePartContext('catalog', {})
+
+      const rarities = context.catalog.groups[0].items.map((e) => e.rarity)
+      expect(rarities[0]).toBeLessThanOrEqual(rarities[1])
+    })
+  })
+
+  /* -------------------------------------------- */
+  /*  Reset                                       */
+  /* -------------------------------------------- */
+
+  describe('resetCatalog action', () => {
+    it('resets _viewState to defaults and calls render', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const app = new MarketApplicationV2()
+      app._viewState = {
+        search: 'blaster',
+        filterType: 'weapon',
+        filterSource: 'world',
+        filterRestriction: 'restricted',
+        sortBy: 'price',
+        sortDirection: 'desc',
+      }
+      app.render = vi.fn().mockResolvedValue(undefined)
+
+      const action = MarketApplicationV2.DEFAULT_OPTIONS.actions.resetCatalog
+      await action.call(app, {}, {})
+
+      expect(app._viewState.search).toBe('')
+      expect(app._viewState.filterType).toBe('')
+      expect(app._viewState.filterSource).toBe('')
+      expect(app._viewState.filterRestriction).toBe('')
+      expect(app._viewState.sortBy).toBe('name')
+      expect(app._viewState.sortDirection).toBe('asc')
+      expect(app.render).toHaveBeenCalled()
     })
   })
 
