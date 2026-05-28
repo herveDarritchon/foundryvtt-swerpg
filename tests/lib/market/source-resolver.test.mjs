@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'vitest'
-import { resolveMarketSources, filterDuplicates, DEDUP_STRATEGIES } from '../../../module/lib/market/source-resolver.mjs'
+import { resolveMarketSources, filterDuplicates, filterByActiveConfig, DEDUP_STRATEGIES } from '../../../module/lib/market/source-resolver.mjs'
 
 describe('resolveMarketSources', () => {
   describe('with no allSources pool', () => {
@@ -172,6 +172,85 @@ describe('filterDuplicates', () => {
 
     test('is frozen', () => {
       expect(Object.isFrozen(DEDUP_STRATEGIES)).toBe(true)
+    })
+  })
+})
+
+/* -------------------------------------------- */
+
+describe('filterByActiveConfig', () => {
+  const makeEntry = (sourceType, itemType) => ({ sourceType, itemType, name: 'Test' })
+
+  describe('basic filtering', () => {
+    test('keeps entries whose sourceType and itemType are both enabled', () => {
+      const entries = [makeEntry('compendium', 'weapon'), makeEntry('world', 'armor')]
+      const result = filterByActiveConfig(entries, ['compendium', 'world'], ['weapon', 'armor'])
+      expect(result).toHaveLength(2)
+    })
+
+    test('removes entries whose sourceType is not in enabledSources', () => {
+      const entries = [makeEntry('import', 'weapon'), makeEntry('compendium', 'weapon')]
+      const result = filterByActiveConfig(entries, ['compendium'], ['weapon'])
+      expect(result).toHaveLength(1)
+      expect(result[0].sourceType).toBe('compendium')
+    })
+
+    test('removes entries whose itemType is not in allowedItemTypes', () => {
+      const entries = [makeEntry('compendium', 'weapon'), makeEntry('compendium', 'gear')]
+      const result = filterByActiveConfig(entries, ['compendium'], ['weapon'])
+      expect(result).toHaveLength(1)
+      expect(result[0].itemType).toBe('weapon')
+    })
+
+    test('removes entries failing both source and type filter', () => {
+      const entries = [makeEntry('import', 'gear')]
+      const result = filterByActiveConfig(entries, ['compendium'], ['weapon'])
+      expect(result).toHaveLength(0)
+    })
+  })
+
+  describe('empty config rules', () => {
+    test('returns empty array when enabledSources is empty', () => {
+      const entries = [makeEntry('compendium', 'weapon')]
+      const result = filterByActiveConfig(entries, [], ['weapon'])
+      expect(result).toEqual([])
+    })
+
+    test('returns empty array when allowedItemTypes is empty', () => {
+      const entries = [makeEntry('compendium', 'weapon')]
+      const result = filterByActiveConfig(entries, ['compendium'], [])
+      expect(result).toEqual([])
+    })
+  })
+
+  describe('edge cases', () => {
+    test('returns empty array for empty entries', () => {
+      expect(filterByActiveConfig([], ['compendium'], ['weapon'])).toEqual([])
+    })
+
+    test('returns empty array for null entries', () => {
+      expect(filterByActiveConfig(null, ['compendium'], ['weapon'])).toEqual([])
+    })
+
+    test('returns empty array when enabledSources is not an array', () => {
+      const entries = [makeEntry('compendium', 'weapon')]
+      expect(filterByActiveConfig(entries, null, ['weapon'])).toEqual([])
+    })
+
+    test('returns empty array when allowedItemTypes is not an array', () => {
+      const entries = [makeEntry('compendium', 'weapon')]
+      expect(filterByActiveConfig(entries, ['compendium'], null)).toEqual([])
+    })
+  })
+
+  describe('canonical integration with DEFAULT_MARKET_CONFIG', () => {
+    test('all entries pass when config is the full default', () => {
+      const entries = [makeEntry('compendium', 'weapon'), makeEntry('world', 'armor'), makeEntry('import', 'gear')]
+      // Default config includes all source types and all purchasable types
+      const enabledSources = ['compendium', 'world', 'import']
+      const allowedItemTypes = ['weapon', 'armor', 'gear']
+      const result = filterByActiveConfig(entries, enabledSources, allowedItemTypes)
+      expect(result).toHaveLength(3)
     })
   })
 })

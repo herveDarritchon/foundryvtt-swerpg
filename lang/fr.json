@@ -299,6 +299,12 @@
   "SWERPG.AUDIT_LOG.EXPORT_FAILED": "Échec de l'export du journal d'évolution du personnage.",
   "SWERPG.SETTINGS.AUDIT_LOG_MAX_ENTRIES_NAME": "Nombre max d'entrées du journal",
   "SWERPG.SETTINGS.AUDIT_LOG_MAX_ENTRIES_HINT": "Nombre maximum d'entrées dans le journal d'évolution du personnage (100-5000). Les plus anciennes sont supprimées en premier lorsque la limite est dépassée.",
+  "SWERPG.SETTINGS.MARKET_ENABLED_SOURCES_NAME": "Sources actives du marché",
+  "SWERPG.SETTINGS.MARKET_ENABLED_SOURCES_HINT": "Tableau JSON des types de sources actives dans le marché (ex. [\"compendium\",\"world\"]). Toutes les sources sont activées par défaut.",
+  "SWERPG.SETTINGS.MARKET_ALLOWED_ITEM_TYPES_NAME": "Types d'objets autorisés dans le marché",
+  "SWERPG.SETTINGS.MARKET_ALLOWED_ITEM_TYPES_HINT": "Tableau JSON des types d'objets visibles dans le marché (ex. [\"weapon\",\"armor\",\"gear\"]). Tous les types achetables sont autorisés par défaut.",
+  "SWERPG.SETTINGS.MARKET_DEDUP_STRATEGY_NAME": "Stratégie de déduplication du marché",
+  "SWERPG.SETTINGS.MARKET_DEDUP_STRATEGY_HINT": "Comment gérer les objets en double entre sources. Options : prefer-compendium, prefer-newest, keep-all.",
   "SETTINGS": {
     "OggDudeDataImporter": {
       "name": "Importateur de Données OggDude",

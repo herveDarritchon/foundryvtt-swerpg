@@ -110,3 +110,45 @@ export const DEFAULT_SOURCE_TYPE = 'compendium'
  * @type {number}
  */
 export const MIN_PRICE_FOR_ELIGIBILITY = 0
+
+/* -------------------------------------------- */
+
+/**
+ * The Foundry flag namespace used for Market-specific item flags.
+ * Used for the `non-purchasable` per-item exclusion flag.
+ * @type {string}
+ */
+export const MARKET_FLAG_NAMESPACE = 'swerpg'
+
+/**
+ * The flag key used to mark an item as explicitly excluded from the Market.
+ * When this flag is `true` on an item, it is not eligible regardless of source or type.
+ * @type {string}
+ */
+export const MARKET_EXCLUDED_FLAG = 'marketExcluded'
+
+/* -------------------------------------------- */
+
+/**
+ * @typedef {Object} MarketConfig
+ * @property {string[]} enabledSources    List of enabled source type keys (subset of SOURCE_TYPES keys)
+ * @property {string[]} allowedItemTypes  List of allowed item type keys (subset of PURCHASABLE_ITEM_TYPES keys)
+ * @property {string}   dedupStrategy     Deduplication strategy key (one of DEDUP_STRATEGIES values)
+ */
+
+/**
+ * Default Market runtime configuration.
+ * All sources and purchasable types are enabled by default.
+ * Deduplication prefers compendium entries.
+ *
+ * This object is the canonical source of truth for the Market defaults.
+ * Consumers must not hardcode these values — read them from this constant or
+ * from the resolved runtime config via `resolveMarketConfig()`.
+ *
+ * @type {Readonly<MarketConfig>}
+ */
+export const DEFAULT_MARKET_CONFIG = Object.freeze({
+  enabledSources: Object.freeze(Object.keys(SOURCE_TYPES)),
+  allowedItemTypes: Object.freeze(Object.keys(PURCHASABLE_ITEM_TYPES)),
+  dedupStrategy: 'prefer-compendium',
+})
