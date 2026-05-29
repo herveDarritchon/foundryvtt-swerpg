@@ -1,5 +1,27 @@
 {{!-- Market Catalogue — part: catalog --}}
-<div class="market-catalog scrollable" data-application-part="catalog">
+<div class="market-catalog scrollable {{catalog.activeMarketDef.uiVariant}}" data-application-part="catalog">
+
+  {{!-- Market type selector --}}
+  <div class="market-selector">
+    <label for="market-type-select" class="sr-only">{{localize "MARKET.MarketType.SelectorLabel"}}</label>
+    <select
+      id="market-type-select"
+      class="market-selector__select"
+      aria-label="{{localize 'MARKET.MarketType.SelectorLabel'}}"
+    >
+      {{#each marketTypeOptions as |opt|}}
+        <option
+          value="{{opt.value}}"
+          {{#if (eq opt.value ../viewState.activeMarketType)}}selected{{/if}}
+        >
+          {{localize opt.label}}
+        </option>
+      {{/each}}
+    </select>
+    {{#if catalog.activeMarketDef}}
+      <p class="market-selector__description">{{localize catalog.activeMarketDef.description}}</p>
+    {{/if}}
+  </div>
 
   {{!-- Buyer info bar (shows buyer credits when active, invitation message otherwise) --}}
   {{#if buyer}}

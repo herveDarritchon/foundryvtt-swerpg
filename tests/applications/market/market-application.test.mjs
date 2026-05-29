@@ -130,6 +130,11 @@ describe('MarketApplicationV2', () => {
       expect(app._viewState.sortBy).toBe('name')
       expect(app._viewState.sortDirection).toBe('asc')
     })
+
+    it('starts with activeMarketType set to "standard"', () => {
+      const app = new MarketApplicationV2()
+      expect(app._viewState.activeMarketType).toBe('standard')
+    })
   })
 
   /* -------------------------------------------- */
@@ -631,6 +636,7 @@ describe('MarketApplicationV2', () => {
         filterRestriction: 'restricted',
         sortBy: 'price',
         sortDirection: 'desc',
+        activeMarketType: 'black-market',
       }
       app.render = vi.fn().mockResolvedValue(undefined)
 
@@ -643,7 +649,219 @@ describe('MarketApplicationV2', () => {
       expect(app._viewState.filterRestriction).toBe('')
       expect(app._viewState.sortBy).toBe('name')
       expect(app._viewState.sortDirection).toBe('asc')
+      expect(app._viewState.activeMarketType).toBe('standard')
       expect(app.render).toHaveBeenCalled()
+    })
+  })
+
+  /* -------------------------------------------- */
+  /*  Market type selector                        */
+  /* -------------------------------------------- */
+
+  describe('_preparePartContext — marketTypeOptions', () => {
+    it('exposes marketTypeOptions array in catalog context', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const app = new MarketApplicationV2()
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.marketTypeOptions).toBeDefined()
+      expect(Array.isArray(context.marketTypeOptions)).toBe(true)
+      expect(context.marketTypeOptions.length).toBeGreaterThanOrEqual(4)
+    })
+
+    it('each market type option has value, label, description, uiVariant', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const app = new MarketApplicationV2()
+      const context = await app._preparePartContext('catalog', {})
+
+      for (const opt of context.marketTypeOptions) {
+        expect(opt).toHaveProperty('value')
+        expect(opt).toHaveProperty('label')
+        expect(opt).toHaveProperty('description')
+        expect(opt).toHaveProperty('uiVariant')
+      }
+    })
+
+    it('exposes standard, local, specialized, black-market options', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const app = new MarketApplicationV2()
+      const context = await app._preparePartContext('catalog', {})
+
+      const values = context.marketTypeOptions.map((o) => o.value)
+      expect(values).toContain('standard')
+      expect(values).toContain('local')
+      expect(values).toContain('specialized')
+      expect(values).toContain('black-market')
+    })
+
+    it('exposes activeMarketType and activeMarketDef in catalog', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const app = new MarketApplicationV2()
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.catalog.activeMarketType).toBe('standard')
+      expect(context.catalog.activeMarketDef).toBeDefined()
+      expect(context.catalog.activeMarketDef.id).toBe('standard')
+    })
+  })
+
+  describe('changeMarket action', () => {
+    it('updates activeMarketType and calls render', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const app = new MarketApplicationV2()
+      app.render = vi.fn().mockResolvedValue(undefined)
+
+      const action = MarketApplicationV2.DEFAULT_OPTIONS.actions.changeMarket
+      const target = { dataset: { marketType: 'black-market' } }
+
+      await action.call(app, {}, target)
+
+      expect(app._viewState.activeMarketType).toBe('black-market')
+      expect(app.render).toHaveBeenCalled()
+    })
+
+    it('does not update state for unknown market type', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const app = new MarketApplicationV2()
+      app.render = vi.fn().mockResolvedValue(undefined)
+
+      const action = MarketApplicationV2.DEFAULT_OPTIONS.actions.changeMarket
+      const target = { dataset: { marketType: 'unknown-market' } }
+
+      await action.call(app, {}, target)
+
+      expect(app._viewState.activeMarketType).toBe('standard')
+      expect(app.render).not.toHaveBeenCalled()
+    })
+
+    it('does not update state when marketType is absent', async () => {
+      const app = new MarketApplicationV2()
+      app.render = vi.fn().mockResolvedValue(undefined)
+
+      const action = MarketApplicationV2.DEFAULT_OPTIONS.actions.changeMarket
+      const target = { dataset: {} }
+
+      await action.call(app, {}, target)
+
+      expect(app._viewState.activeMarketType).toBe('standard')
+      expect(app.render).not.toHaveBeenCalled()
+    })
+  })
+
+  /* -------------------------------------------- */
+  /*  Market-type visibility filtering            */
+  /* -------------------------------------------- */
+
+  describe('market-type visibility filtering in catalog', () => {
+    it('standard market excludes veryRare items', async () => {
+      const veryRareItem = makeItem({ type: 'weapon', name: 'Very Rare Weapon', availability: 'veryRare' })
+      const commonItem = makeItem({ type: 'weapon', name: 'Common Blaster', availability: 'available' })
+      globalThis.game.items = makeItemsCollection([veryRareItem, commonItem])
+
+      const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, activeMarketType: 'standard' }
+      const context = await app._preparePartContext('catalog', {})
+
+      // Only commonItem should be visible
+      expect(context.catalog.totalCount).toBe(1)
+      const names = context.catalog.groups[0]?.items.map((e) => e.name) ?? []
+      expect(names).toContain('Common Blaster')
+      expect(names).not.toContain('Very Rare Weapon')
+    })
+
+    it('black-market includes restricted items invisible in standard market', async () => {
+      const restrictedItem = makeItem({ type: 'weapon', name: 'Restricted Blaster', availability: 'restricted' })
+      globalThis.game.items = makeItemsCollection([restrictedItem])
+
+      const app = new MarketApplicationV2()
+
+      // Standard market: item hidden
+      app._viewState = { ...app._viewState, activeMarketType: 'standard' }
+      const standardContext = await app._preparePartContext('catalog', {})
+      expect(standardContext.catalog.totalCount).toBe(0)
+
+      // Black market: item visible
+      app._viewState = { ...app._viewState, activeMarketType: 'black-market' }
+      const blackMarketContext = await app._preparePartContext('catalog', {})
+      expect(blackMarketContext.catalog.totalCount).toBe(1)
+      expect(blackMarketContext.catalog.groups[0].items[0].name).toBe('Restricted Blaster')
+    })
+
+    it('local market excludes rare items', async () => {
+      const rareItem = makeItem({ type: 'weapon', name: 'Rare Blaster', availability: 'rare' })
+      const commonItem = makeItem({ type: 'armor', name: 'Common Armor', availability: 'common' })
+      globalThis.game.items = makeItemsCollection([rareItem, commonItem])
+
+      const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, activeMarketType: 'local' }
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.catalog.totalCount).toBe(1)
+      const names = context.catalog.groups.flatMap((g) => g.items.map((e) => e.name))
+      expect(names).toContain('Common Armor')
+      expect(names).not.toContain('Rare Blaster')
+    })
+
+    it('specialized market includes veryRare items not visible in standard market', async () => {
+      const veryRareItem = makeItem({ type: 'weapon', name: 'Very Rare Blaster', availability: 'veryRare' })
+      globalThis.game.items = makeItemsCollection([veryRareItem])
+
+      const app = new MarketApplicationV2()
+
+      // Standard: hidden
+      app._viewState = { ...app._viewState, activeMarketType: 'standard' }
+      const stdCtx = await app._preparePartContext('catalog', {})
+      expect(stdCtx.catalog.totalCount).toBe(0)
+
+      // Specialized: visible
+      app._viewState = { ...app._viewState, activeMarketType: 'specialized' }
+      const specCtx = await app._preparePartContext('catalog', {})
+      expect(specCtx.catalog.totalCount).toBe(1)
+      expect(specCtx.catalog.groups[0].items[0].name).toBe('Very Rare Blaster')
+    })
+
+    it('black-market applies a price premium (+50%) compared to standard', async () => {
+      // Item price=100, rarity=0, no availability modifier → standard=100, black-market=150
+      const item = makeItem({ type: 'weapon', name: 'Blaster', price: 100, rarity: 0, availability: 'available' })
+      globalThis.game.items = makeItemsCollection([item])
+
+      const app = new MarketApplicationV2()
+
+      app._viewState = { ...app._viewState, activeMarketType: 'standard' }
+      const stdCtx = await app._preparePartContext('catalog', {})
+      const stdPrice = stdCtx.catalog.groups[0].items[0].priceResult.finalPrice
+
+      app._viewState = { ...app._viewState, activeMarketType: 'black-market' }
+      const bmCtx = await app._preparePartContext('catalog', {})
+      const bmPrice = bmCtx.catalog.groups[0].items[0].priceResult.finalPrice
+
+      expect(stdPrice).toBe(100)
+      expect(bmPrice).toBe(150)
+    })
+
+    it('local market applies a -10% price discount compared to standard', async () => {
+      // Item price=100, rarity=0 → standard=100, local=90
+      const item = makeItem({ type: 'weapon', name: 'Blaster', price: 100, rarity: 0, availability: 'available' })
+      globalThis.game.items = makeItemsCollection([item])
+
+      const app = new MarketApplicationV2()
+
+      app._viewState = { ...app._viewState, activeMarketType: 'standard' }
+      const stdCtx = await app._preparePartContext('catalog', {})
+      const stdPrice = stdCtx.catalog.groups[0].items[0].priceResult.finalPrice
+
+      app._viewState = { ...app._viewState, activeMarketType: 'local' }
+      const localCtx = await app._preparePartContext('catalog', {})
+      const localPrice = localCtx.catalog.groups[0].items[0].priceResult.finalPrice
+
+      expect(stdPrice).toBe(100)
+      expect(localPrice).toBe(90)
     })
   })
 

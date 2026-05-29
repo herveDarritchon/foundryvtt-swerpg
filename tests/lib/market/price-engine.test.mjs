@@ -193,4 +193,65 @@ describe('calculateItemPrice', () => {
       expect(result.modifiers.some((m) => m.label === 'gmModifier')).toBe(true)
     })
   })
+
+  /* -------------------------------------------- */
+  /*  Market type modifiers                        */
+  /* -------------------------------------------- */
+
+  describe('market type modifiers', () => {
+    it('standard market type produces no market type modifier step', () => {
+      const result = calculateItemPrice({ basePrice: 100, rarity: 0 }, { marketType: 'standard' })
+      const step = result.modifiers.find((m) => m.label === 'marketType')
+      expect(step).toBeUndefined()
+      expect(result.finalPrice).toBe(100)
+    })
+
+    it('local market type applies -10% price discount', () => {
+      // 100 * (1 + (-0.1)) = 90
+      const result = calculateItemPrice({ basePrice: 100, rarity: 0 }, { marketType: 'local' })
+      expect(result.finalPrice).toBe(90)
+      const step = result.modifiers.find((m) => m.label === 'marketType')
+      expect(step).toBeDefined()
+      expect(step.modifier).toBeCloseTo(-0.1)
+    })
+
+    it('specialized market type applies +25% price premium', () => {
+      // 100 * (1 + 0.25) = 125
+      const result = calculateItemPrice({ basePrice: 100, rarity: 0 }, { marketType: 'specialized' })
+      expect(result.finalPrice).toBe(125)
+      const step = result.modifiers.find((m) => m.label === 'marketType')
+      expect(step).toBeDefined()
+      expect(step.modifier).toBeCloseTo(0.25)
+    })
+
+    it('black-market type applies +50% price premium', () => {
+      // 100 * (1 + 0.5) = 150
+      const result = calculateItemPrice({ basePrice: 100, rarity: 0 }, { marketType: 'black-market' })
+      expect(result.finalPrice).toBe(150)
+      const step = result.modifiers.find((m) => m.label === 'marketType')
+      expect(step).toBeDefined()
+      expect(step.modifier).toBeCloseTo(0.5)
+    })
+
+    it('unknown market type produces no market type modifier (permissive fallback)', () => {
+      const result = calculateItemPrice({ basePrice: 100, rarity: 0 }, { marketType: 'unknown-type' })
+      const step = result.modifiers.find((m) => m.label === 'marketType')
+      expect(step).toBeUndefined()
+      expect(result.finalPrice).toBe(100)
+    })
+
+    it('market type modifier stacks with rarity and availability modifiers', () => {
+      // base=100, rarity=2 (0.2), availability=rare (0.25), marketType=black-market (0.5)
+      // 100 * (1 + 0.2 + 0.25 + 0.5) = 195
+      const result = calculateItemPrice({ basePrice: 100, rarity: 2, availability: 'rare' }, { marketType: 'black-market' })
+      expect(result.finalPrice).toBe(195)
+      expect(result.modifiers).toHaveLength(3)
+    })
+
+    it('local market discount stacks with rarity — net result is rarity + discount', () => {
+      // base=100, rarity=5 (0.5), local (-0.1) → 100 * (1 + 0.5 - 0.1) = 140
+      const result = calculateItemPrice({ basePrice: 100, rarity: 5 }, { marketType: 'local' })
+      expect(result.finalPrice).toBe(140)
+    })
+  })
 })

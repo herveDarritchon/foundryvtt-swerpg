@@ -158,20 +158,80 @@ export const DEFAULT_MARKET_CONFIG = Object.freeze({
 /**
  * @typedef {Object} MarketContext
  * @property {string}  availability    Availability key (one of AVAILABILITY_STATUS keys)
- * @property {string}  marketType      Market type key: 'standard' | 'blackMarket' | 'imperial'
+ * @property {string}  marketType      Market type key: one of MARKET_TYPES keys
  * @property {number}  manualModifier  Manual GM percentage modifier (-100 to +100), default 0
  */
 
+/* -------------------------------------------- */
+
 /**
- * Market types that affect pricing context.
- * Additional market types can be registered in future tranches without breaking the API.
- * @enum {string}
+ * @typedef {Object} MarketTypeDefinition
+ * @property {string}   id                  Canonical market type key
+ * @property {string}   label               Localization key
+ * @property {string}   description         Short description localization key
+ * @property {string[]} allowedItemTypes    Item type keys visible in this market (['*'] = all purchasable)
+ * @property {string[]} allowedAvailability Availability keys allowed; items with other keys are hidden
+ * @property {number}   priceModifier       Flat additive fractional modifier applied on top of item modifiers
+ * @property {string}   uiVariant           CSS modifier class applied to the market UI for visual distinction
+ */
+
+/**
+ * Canonical registry of market types available in V1.
+ *
+ * Rules per type:
+ * - `standard`    : all purchasable types, all normal availability statuses, no extra price modifier.
+ * - `local`       : all purchasable types, only available/common items, -10% price discount (proximity bonus).
+ * - `specialized` : all purchasable types, rare/veryRare items unlocked, +25% price premium.
+ * - `black-market`: all purchasable types, restricted/blackMarket/illegal items visible, +50% price premium.
+ *
+ * Consumers must iterate this registry — never hardcode market type keys.
+ * @enum {MarketTypeDefinition}
  */
 export const MARKET_TYPES = Object.freeze({
-  standard: 'standard',
-  blackMarket: 'blackMarket',
-  imperial: 'imperial',
+  standard: Object.freeze({
+    id: 'standard',
+    label: 'MARKET.MarketType.Standard.Label',
+    description: 'MARKET.MarketType.Standard.Description',
+    allowedItemTypes: Object.freeze(['*']),
+    allowedAvailability: Object.freeze(['available', 'common', 'rare']),
+    priceModifier: 0,
+    uiVariant: 'market--standard',
+  }),
+  local: Object.freeze({
+    id: 'local',
+    label: 'MARKET.MarketType.Local.Label',
+    description: 'MARKET.MarketType.Local.Description',
+    allowedItemTypes: Object.freeze(['*']),
+    allowedAvailability: Object.freeze(['available', 'common']),
+    priceModifier: -0.1,
+    uiVariant: 'market--local',
+  }),
+  specialized: Object.freeze({
+    id: 'specialized',
+    label: 'MARKET.MarketType.Specialized.Label',
+    description: 'MARKET.MarketType.Specialized.Description',
+    allowedItemTypes: Object.freeze(['*']),
+    allowedAvailability: Object.freeze(['available', 'common', 'rare', 'veryRare']),
+    priceModifier: 0.25,
+    uiVariant: 'market--specialized',
+  }),
+  'black-market': Object.freeze({
+    id: 'black-market',
+    label: 'MARKET.MarketType.BlackMarket.Label',
+    description: 'MARKET.MarketType.BlackMarket.Description',
+    allowedItemTypes: Object.freeze(['*']),
+    allowedAvailability: Object.freeze(['available', 'common', 'rare', 'veryRare', 'restricted', 'blackMarket']),
+    priceModifier: 0.5,
+    uiVariant: 'market--black-market',
+  }),
 })
+
+/**
+ * The default market type key applied when none is provided to the price engine.
+ * Must be a key of {@link MARKET_TYPES}.
+ * @type {string}
+ */
+export const DEFAULT_MARKET_TYPE = 'standard'
 
 /**
  * Default market context applied when none is provided to the price engine.
@@ -180,6 +240,6 @@ export const MARKET_TYPES = Object.freeze({
  */
 export const DEFAULT_MARKET_CONTEXT = Object.freeze({
   availability: DEFAULT_AVAILABILITY,
-  marketType: MARKET_TYPES.standard,
+  marketType: DEFAULT_MARKET_TYPE,
   manualModifier: 0,
 })

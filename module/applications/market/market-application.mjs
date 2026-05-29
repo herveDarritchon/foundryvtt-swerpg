@@ -1,6 +1,6 @@
-import { createMarketEntry } from '../../lib/market/market-entry.mjs'
+import { createMarketEntry, resolveMarketCatalogVisibility } from '../../lib/market/market-entry.mjs'
 import { validatePurchase } from '../../lib/market/purchase.mjs'
-import { PURCHASABLE_ITEM_TYPES, SOURCE_TYPES, DEFAULT_MARKET_CONTEXT } from '../../config/market.mjs'
+import { PURCHASABLE_ITEM_TYPES, SOURCE_TYPES, DEFAULT_MARKET_CONTEXT, MARKET_TYPES, DEFAULT_MARKET_TYPE } from '../../config/market.mjs'
 import { logger } from '../../utils/logger.mjs'
 
 const { api } = foundry.applications
@@ -9,12 +9,13 @@ const { api } = foundry.applications
 
 /**
  * @typedef {Object} MarketViewState
- * @property {string} search         Text search query (matches item name)
- * @property {string} filterType     Item type filter key, or '' for all types
- * @property {string} filterSource   Source type filter key, or '' for all sources
+ * @property {string} search             Text search query (matches item name)
+ * @property {string} filterType         Item type filter key, or '' for all types
+ * @property {string} filterSource       Source type filter key, or '' for all sources
  * @property {string} filterRestriction  Restriction level filter key, or '' for all
- * @property {string} sortBy         Sort field key: 'name' | 'price' | 'rarity'
+ * @property {string} sortBy             Sort field key: 'name' | 'price' | 'rarity'
  * @property {'asc'|'desc'} sortDirection  Sort direction
+ * @property {string} activeMarketType   Active market type key (key of MARKET_TYPES)
  */
 
 /**
@@ -38,6 +39,7 @@ const DEFAULT_VIEW_STATE = Object.freeze({
   filterRestriction: '',
   sortBy: MARKET_SORT_FIELDS.name,
   sortDirection: 'asc',
+  activeMarketType: DEFAULT_MARKET_TYPE,
 })
 
 /* -------------------------------------------- */
@@ -147,6 +149,7 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
       openItem: MarketApplicationV2.#onOpenItem,
       resetCatalog: MarketApplicationV2.#onResetCatalog,
       buyItem: MarketApplicationV2.#onBuyItem,
+      changeMarket: MarketApplicationV2.#onChangeMarket,
     },
   }
 
@@ -207,6 +210,7 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
       context.sortOptions = this.#buildSortOptions()
       context.typeFilterOptions = this.#buildTypeFilterOptions()
       context.sourceFilterOptions = this.#buildSourceFilterOptions()
+      context.marketTypeOptions = this.#buildMarketTypeOptions()
       context.buyer = buyer
         ? {
             id: buyer.id,
@@ -260,11 +264,24 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
     return [allOption, ...sourceOptions]
   }
 
+  /**
+   * Build the list of market type selector options from MARKET_TYPES.
+   * @returns {Array<{value: string, label: string, description: string, uiVariant: string}>}
+   */
+  #buildMarketTypeOptions() {
+    return Object.entries(MARKET_TYPES).map(([key, def]) => ({
+      value: key,
+      label: def.label,
+      description: def.description,
+      uiVariant: def.uiVariant,
+    }))
+  }
+
   /* -------------------------------------------- */
 
   /**
    * Build the filtered, sorted, and grouped catalogue from World Items.
-   * Pipeline: build all eligible entries → apply search → apply filters → sort → group → annotate with canBuy.
+   * Pipeline: build all eligible entries → apply market-type visibility → apply search → apply filters → sort → group → annotate with canBuy.
    * @param {Actor|null} buyer        The buyer actor, or null when browsing without a character context.
    * @param {number|null} buyerCredits  The buyer's current credit balance (null when no buyer).
    * @returns {{
@@ -272,13 +289,17 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
    *   isEmpty: boolean,
    *   isFilteredEmpty: boolean,
    *   totalCount: number,
-   *   filteredCount: number
+   *   filteredCount: number,
+   *   activeMarketType: string,
+   *   activeMarketDef: import('../../config/market.mjs').MarketTypeDefinition|null
    * }}
    */
   #prepareCatalog(buyer = null, buyerCredits = null) {
-    // 1. Build all eligible entries from game.items
+    const activeMarketType = this._viewState.activeMarketType ?? DEFAULT_MARKET_TYPE
+
+    // 1. Build all eligible entries from game.items, using active market type for price calculation
     const allEntries = []
-    const marketContext = { ...DEFAULT_MARKET_CONTEXT }
+    const marketContext = { ...DEFAULT_MARKET_CONTEXT, marketType: activeMarketType }
     for (const item of game.items) {
       try {
         const rawItem = itemToRawItem(item)
@@ -291,18 +312,24 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
       }
     }
 
-    const totalCount = allEntries.length
+    // 2. Apply market-type visibility rules (hide items whose availability is not allowed in this market)
+    const visibleEntries = allEntries.filter((entry) => {
+      const { visible } = resolveMarketCatalogVisibility(entry, activeMarketType)
+      return visible
+    })
 
-    // 2. Apply search and filters
+    const totalCount = visibleEntries.length
+
+    // 3. Apply search and filters
     const { search, filterType, filterSource, filterRestriction, sortBy, sortDirection } = this._viewState
-    let filtered = filterBySearch(allEntries, search)
+    let filtered = filterBySearch(visibleEntries, search)
     filtered = filterByFilters(filtered, { filterType, filterSource, filterRestriction })
 
-    // 3. Sort
+    // 4. Sort
     const sorted = sortEntries(filtered, sortBy, sortDirection)
     const filteredCount = sorted.length
 
-    // 4. Annotate each entry with canBuy based on buyer affordability
+    // 5. Annotate each entry with canBuy based on buyer affordability
     const annotated = sorted.map((entry) => {
       const validation = validatePurchase({ actor: buyer, entry })
       return {
@@ -312,7 +339,7 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
       }
     })
 
-    // 5. Group by item type
+    // 6. Group by item type
     /** @type {Map<string, import('../../lib/market/market-entry.mjs').MarketEntry[]>} */
     const grouped = new Map()
     for (const typeKey of Object.keys(PURCHASABLE_ITEM_TYPES)) {
@@ -340,6 +367,8 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
       isFilteredEmpty: totalCount > 0 && filteredCount === 0 && hasActiveFilter,
       totalCount,
       filteredCount,
+      activeMarketType,
+      activeMarketDef: MARKET_TYPES[activeMarketType] ?? null,
     }
   }
 
@@ -387,6 +416,26 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
    */
   static async #onResetCatalog(_event, _target) {
     this._viewState = { ...DEFAULT_VIEW_STATE }
+    await this.render()
+  }
+
+  /**
+   * Change the active market type and re-render the catalogue.
+   * Validates that the requested type key is in MARKET_TYPES before applying.
+   *
+   * @this {MarketApplicationV2}
+   * @param {PointerEvent} _event   The initiating event
+   * @param {HTMLElement}  target   The element bearing data-action="changeMarket" and data-market-type
+   * @returns {Promise<void>}
+   */
+  static async #onChangeMarket(_event, target) {
+    const marketType = target.dataset?.marketType
+    if (!marketType || !(marketType in MARKET_TYPES)) {
+      logger.warn(`[Market] changeMarket action received unknown market type "${marketType}"`)
+      return
+    }
+    this._viewState = { ...this._viewState, activeMarketType: marketType }
+    logger.debug('[Market] Active market type changed', { marketType })
     await this.render()
   }
 
@@ -531,6 +580,18 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
     super._onRender?.(context, options)
     const html = this.element
     if (!html) return
+
+    // Market type selector — updates activeMarketType and re-renders catalogue
+    const marketTypeSelect = html.querySelector('.market-selector__select')
+    if (marketTypeSelect) {
+      marketTypeSelect.addEventListener('change', (event) => {
+        const marketType = event.currentTarget.value ?? DEFAULT_MARKET_TYPE
+        if (!(marketType in MARKET_TYPES)) return
+        this._viewState = { ...this._viewState, activeMarketType: marketType }
+        logger.debug('[Market] Market type changed via selector', { marketType })
+        this.render()
+      })
+    }
 
     // Search input — update on every keystroke
     const searchInput = html.querySelector('.market-toolbar__search')

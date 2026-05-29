@@ -1467,6 +1467,25 @@
         "Label": "Réinitialiser",
         "Tooltip": "Réinitialiser les filtres et la recherche"
       }
+    },
+    "MarketType": {
+      "SelectorLabel": "Type de marché",
+      "Standard": {
+        "Label": "Marché standard",
+        "Description": "Articles courants aux prix normaux. Articles disponibles et rares uniquement."
+      },
+      "Local": {
+        "Label": "Marché local",
+        "Description": "Articles du quotidien avec une légère remise. Seulement les articles courants et disponibles."
+      },
+      "Specialized": {
+        "Label": "Marché spécialisé",
+        "Description": "Articles haut de gamme incluant les très rares, à un prix premium."
+      },
+      "BlackMarket": {
+        "Label": "Marché noir",
+        "Description": "Articles restreints et illégaux disponibles, mais à un prix élevé."
+      }
     }
   }
 }

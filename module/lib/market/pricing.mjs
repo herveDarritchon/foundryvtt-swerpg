@@ -6,7 +6,8 @@ import { AVAILABILITY_STATUS } from '../../config/market.mjs'
  * @property {number}  rarity                Rarity score 0–10
  * @property {string}  availability          Key of AVAILABILITY_STATUS
  * @property {number}  [gmModifier]          Manual MJ percentage override (-100 to +100)
- * @property {string}  [marketType]          Future: 'standard' | 'blackMarket' | 'imperial'
+ * @property {string}  [marketType]          Market type key (one of MARKET_TYPES keys)
+ * @property {number}  [marketTypeModifier]  Pre-resolved market type fractional modifier from MARKET_TYPES registry
  */
 
 /**
@@ -28,12 +29,13 @@ import { AVAILABILITY_STATUS } from '../../config/market.mjs'
  * Compute the final Market price for an item given a price context.
  *
  * Formula:
- *   finalPrice = floor(basePrice * (1 + availabilityModifier + rarityModifier + gmModifier/100))
+ *   finalPrice = floor(basePrice * (1 + availabilityModifier + rarityModifier + gmModifier/100 + marketTypeModifier))
  *
  * Where:
  *   - availabilityModifier = AVAILABILITY_STATUS[availability].priceModifier (or 0 if null/unknown)
  *   - rarityModifier       = rarity * 0.1  (10% per rarity point)
  *   - gmModifier           = gmModifier / 100 (percent → fraction)
+ *   - marketTypeModifier   = pre-resolved modifier from MARKET_TYPES registry (or 0)
  *
  * Price floor: 0 (never negative).
  * Result is always an integer (Math.floor applied).
@@ -46,7 +48,7 @@ import { AVAILABILITY_STATUS } from '../../config/market.mjs'
  * @throws {TypeError} If rarity is not a finite number
  */
 export function computeMarketPrice(context) {
-  const { basePrice, rarity, availability, gmModifier = 0, marketType: _marketType } = context
+  const { basePrice, rarity, availability, gmModifier = 0, marketTypeModifier = 0 } = context
 
   if (!Number.isFinite(basePrice) || basePrice < 0) {
     throw new TypeError(`computeMarketPrice: basePrice must be a finite non-negative number, got ${basePrice}`)
@@ -77,7 +79,12 @@ export function computeMarketPrice(context) {
     breakdown.push({ label: 'gmModifier', modifier: gmFraction })
   }
 
-  const totalModifier = availabilityModifier + rarityModifier + gmFraction
+  // Market type modifier: pre-resolved fractional value from MARKET_TYPES registry
+  if (marketTypeModifier !== 0) {
+    breakdown.push({ label: 'marketType', modifier: marketTypeModifier })
+  }
+
+  const totalModifier = availabilityModifier + rarityModifier + gmFraction + marketTypeModifier
   const rawPrice = basePrice * (1 + totalModifier)
   const finalPrice = Math.max(0, Math.floor(rawPrice))
 
