@@ -1564,12 +1564,18 @@ input[type='range'] {
   justify-content: flex-start;
   gap: 1rem;
   height: 100%;
+  min-height: 0;
+  overflow: hidden;
 }
 .swerpg.sheet.actor .tab {
   position: relative;
   flex: 1;
   padding: 1.5rem 0 1rem;
   gap: 1.5rem;
+}
+.swerpg.sheet.actor .tab.scrollable {
+  overflow-y: auto;
+  min-height: 0;
 }
 .swerpg.sheet.actor a.button.icon {
   flex: none;
