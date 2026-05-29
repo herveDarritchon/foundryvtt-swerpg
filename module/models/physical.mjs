@@ -1,6 +1,7 @@
 import SwerpgAction from './action.mjs'
 import { SYSTEM } from '../config/system.mjs'
 import { DEFAULT_QUALITY, DEFAULT_RESTRICTION_LEVEL } from '../config/items.mjs'
+import { logger } from '../utils/logger.mjs'
 /**
  * A data structure which is shared by all physical items.
  */
@@ -50,6 +51,14 @@ export default class SwerpgPhysicalItem extends foundry.abstract.TypeDataModel {
 
   _preparePrice() {
     const rarity = this.rarity
+    if (!Number.isFinite(rarity)) {
+      logger.warn(`[SwerpgPhysicalItem] _preparePrice - rarity is not finite (${rarity}), returning source price unchanged`, {
+        itemType: this.constructor.name,
+        price: this.price,
+        rarity,
+      })
+      return Number.isFinite(this.price) ? this.price : 0
+    }
     if (rarity < 0) return Math.floor(this.price / Math.abs(rarity - 1))
     else return this.price * Math.pow(rarity + 1, 3)
   }

@@ -317,6 +317,33 @@ describe('MarketApplicationV2', () => {
       expect(gearGroup.icon).toBe('fa-solid fa-toolbox')
     })
 
+    it('gear item with price 200 and rarity 1 should have non-zero basePrice and finalPrice', async () => {
+      // Regression test: gear items were displaying price 0 in the Market because
+      // itemToRawItem() was reading system.price (post-derivation, potentially NaN)
+      // instead of system._source.price (schema source value).
+      const gearItem = makeItem({
+        type: 'gear',
+        name: 'Medpac',
+        price: 200,
+        rarity: 1,
+        availability: 'available',
+      })
+      // Simulate a Foundry Item document where _source holds the raw schema values
+      gearItem.system._source = { price: 200, rarity: 1 }
+      globalThis.game.items = makeItemsCollection([gearItem])
+
+      const app = new MarketApplicationV2()
+      const context = await app._preparePartContext('catalog', {})
+
+      const gearGroup = context.catalog.groups.find((g) => g.typeKey === 'gear')
+      expect(gearGroup).toBeDefined()
+      expect(gearGroup.items).toHaveLength(1)
+
+      const entry = gearGroup.items[0]
+      expect(entry.basePrice).toBeGreaterThan(0)
+      expect(entry.priceResult.finalPrice).toBeGreaterThan(0)
+    })
+
     it('uses item.uuid as sourceId in the market entry', async () => {
       const item = makeItem({ type: 'weapon', uuid: 'Item.myUuid' })
       globalThis.game.items = makeItemsCollection([item])
