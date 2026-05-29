@@ -52,10 +52,78 @@ export async function enterWorld(page: Page, options: FoundrySessionOptions): Pr
   await launchButton.waitFor({ state: 'visible' })
   await launchButton.click()
 
+  // After clicking "Launch World", Foundry may show blocking dialogs before navigating to /join:
+  // 1. "World Data Migration" — appears when the world's stored core version differs from current.
+  // 2. "Creating Backup" — appears when a backup was requested (either by the user or the migration).
+  // These dialogs must be dismissed before waitForURL('/join') can resolve.
+  await dismissFoundryLaunchDialogs(page)
+
   // 5) Écran de join : choisir un user et rejoindre
   await page.waitForURL('**/join', { waitUntil: 'domcontentloaded' })
 
   return page.url()
+}
+
+/**
+ * Dismisses any Foundry dialogs that can block world launch (migration and backup).
+ *
+ * After clicking "Launch World", Foundry may display:
+ * - "World Data Migration": uncheck the backup option, then confirm migration.
+ * - "Creating Backup": close the dialog (skip backup) so the world can proceed to launch.
+ *
+ * Both dialogs are polled in a short loop so that dialogs appearing slightly after
+ * the initial click are still caught.
+ */
+async function dismissFoundryLaunchDialogs(page: Page): Promise<void> {
+  // Poll for blocking dialogs for up to 8 seconds after the launch click.
+  // Each iteration checks for known dialogs and dismisses them; if neither appears
+  // within the poll window, we assume no dialog is blocking the launch.
+  const deadline = Date.now() + 8000
+  while (Date.now() < deadline) {
+    // Check for "World Data Migration" dialog
+    const migrationDialog = page.locator('dialog, [role="dialog"]').filter({ hasText: /World Data Migration/i })
+    const migrationVisible = await migrationDialog.isVisible().catch(() => false)
+    if (migrationVisible) {
+      console.log('[enterWorld] Dialogue "World Data Migration" détecté — confirmation de la migration')
+      // Uncheck "Create a backup before migrating?" to skip the backup sub-dialog
+      const backupCheckbox = migrationDialog.locator('input[type="checkbox"]').first()
+      const isChecked = await backupCheckbox.isChecked().catch(() => false)
+      if (isChecked) {
+        await backupCheckbox.uncheck()
+        console.log('[enterWorld] Backup avant migration désactivé ✔')
+      }
+      const beginBtn = migrationDialog.getByRole('button', { name: /Begin Migration/i })
+      await beginBtn.click()
+      console.log('[enterWorld] Migration confirmée ✔')
+      // Reset deadline after handling to allow time for any subsequent dialog
+      // (do NOT break here — loop continues to catch the backup sub-dialog if it appears)
+      continue
+    }
+
+    // Check for "Creating Backup" dialog — close it to skip the backup
+    const backupDialog = page.locator('dialog, [role="dialog"]').filter({ hasText: /Creating Backup/i })
+    const backupVisible = await backupDialog.isVisible().catch(() => false)
+    if (backupVisible) {
+      console.log('[enterWorld] Dialogue "Creating Backup" détecté — fermeture sans backup')
+      const closeBtn = backupDialog.getByRole('button', { name: /Close Window/i })
+      const closeBtnVisible = await closeBtn.isVisible().catch(() => false)
+      if (closeBtnVisible) {
+        await closeBtn.click()
+        console.log('[enterWorld] Backup annulé (Close Window) ✔')
+      } else {
+        // Fallback: click Backup and wait for it to complete
+        const backupBtn = backupDialog.getByRole('button', { name: /^Backup$/i })
+        await backupBtn.click().catch(() => {})
+        console.log('[enterWorld] Backup confirmé (fallback) ✔')
+        // After clicking Backup, wait for the dialog to close before continuing
+        await backupDialog.waitFor({ state: 'hidden', timeout: 60000 }).catch(() => {})
+      }
+      continue
+    }
+
+    // No blocking dialog visible — break out of the poll loop
+    break
+  }
 }
 
 export async function enterGameAsGamemaster(page: Page, options: FoundrySessionOptions): Promise<string> {
