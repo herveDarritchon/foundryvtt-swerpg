@@ -1573,6 +1573,10 @@ input[type='range'] {
   padding: 1.5rem 0 1rem;
   gap: 1.5rem;
 }
+.swerpg.sheet.actor .tab.scrollable {
+  overflow-y: auto;
+  min-height: 0;
+}
 .swerpg.sheet.actor a.button.icon {
   flex: none;
   font-size: var(--font-size-12);
