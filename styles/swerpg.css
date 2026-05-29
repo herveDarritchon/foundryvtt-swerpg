@@ -1,3 +1,4 @@
+@charset "UTF-8";
 /* ----------------------------------------- */
 /*  Font Faces                               */
 /* ----------------------------------------- */
@@ -1108,11 +1109,7 @@ input[type='range'] {
   border: 1px solid rgba(120, 169, 194, 0.18);
   border-radius: 8px;
   background: rgba(18, 28, 42, 0.72);
-  transition:
-    border-color 0.15s ease,
-    background 0.15s ease,
-    box-shadow 0.15s ease,
-    transform 0.15s ease;
+  transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
 }
 .swerpg.application.specialization-tree-app .specialization-tree-app__specialization.is-available {
   border-color: rgba(99, 200, 166, 0.38);
@@ -1122,9 +1119,7 @@ input[type='range'] {
 .swerpg.application.specialization-tree-app .specialization-tree-app__specialization.is-active {
   border-color: rgba(120, 169, 194, 0.7);
   background: rgba(28, 43, 62, 0.92);
-  box-shadow:
-    inset 0 0 0 1px rgba(120, 169, 194, 0.25),
-    0 0 0 1px rgba(120, 169, 194, 0.18);
+  box-shadow: inset 0 0 0 1px rgba(120, 169, 194, 0.25), 0 0 0 1px rgba(120, 169, 194, 0.18);
   transform: translateX(2px);
 }
 .swerpg.application.specialization-tree-app .specialization-tree-app__specialization[data-selected='true'] {
@@ -1300,9 +1295,7 @@ input[type='range'] {
   font-size: var(--font-size-11, 11px);
   font-weight: 600;
   cursor: pointer;
-  transition:
-    background 0.15s,
-    border-color 0.15s;
+  transition: background 0.15s, border-color 0.15s;
 }
 .swerpg.application.specialization-tree-app .specialization-tree-app__detail-panel-cta:hover {
   background: rgba(99, 200, 166, 0.25);
@@ -1401,9 +1394,7 @@ input[type='range'] {
   color: #c8dcee;
   font-size: var(--font-size-11, 11px);
   cursor: pointer;
-  transition:
-    background 0.15s,
-    border-color 0.15s;
+  transition: background 0.15s, border-color 0.15s;
 }
 .swerpg.application.specialization-tree-app .specialization-tree-app__toolbar-btn:hover {
   background: rgba(24, 39, 58, 0.9);
@@ -1672,11 +1663,7 @@ input[type='range'] {
   color: var(--color-secondary);
   box-shadow: 0 0 8px rgba(79, 168, 255, 0.15);
   opacity: 0.85;
-  transition:
-    transform 120ms ease,
-    box-shadow 120ms ease,
-    color 120ms ease,
-    border-color 120ms ease;
+  transition: transform 120ms ease, box-shadow 120ms ease, color 120ms ease, border-color 120ms ease;
 }
 .swerpg.sheet.actor .sheet-header header.title .audit-log-trigger:hover,
 .swerpg.sheet.actor .sheet-header header.title .audit-log-trigger:focus-visible {
@@ -1700,11 +1687,7 @@ input[type='range'] {
   color: var(--color-secondary);
   cursor: pointer;
   opacity: 0.85;
-  transition:
-    transform 120ms ease,
-    box-shadow 120ms ease,
-    color 120ms ease,
-    border-color 120ms ease;
+  transition: transform 120ms ease, box-shadow 120ms ease, color 120ms ease, border-color 120ms ease;
 }
 .swerpg.sheet.actor .sheet-header header.title .specialization-tree-trigger:hover,
 .swerpg.sheet.actor .sheet-header header.title .specialization-tree-trigger:focus-visible {
@@ -1801,11 +1784,8 @@ input[type='range'] {
   width: min(760px, 100%);
   border: 1px solid rgba(120, 169, 194, 0.28);
   border-radius: 4px;
-  background:
-    linear-gradient(90deg, rgba(26, 26, 46, 0.82), rgba(15, 15, 26, 0.62)), radial-gradient(circle at 50% 0%, rgba(120, 169, 194, 0.14), transparent 58%);
-  box-shadow:
-    inset 0 0 18px rgba(120, 169, 194, 0.08),
-    0 0 12px rgba(120, 169, 194, 0.08);
+  background: linear-gradient(90deg, rgba(26, 26, 46, 0.82), rgba(15, 15, 26, 0.62)), radial-gradient(circle at 50% 0%, rgba(120, 169, 194, 0.14), transparent 58%);
+  box-shadow: inset 0 0 18px rgba(120, 169, 194, 0.08), 0 0 12px rgba(120, 169, 194, 0.08);
 }
 .swerpg.sheet.actor .sheet-header .xp-console .xp-console__header {
   display: flex;
@@ -2170,16 +2150,7 @@ input[type='range'] {
   --notchSize: 5px;
   display: flex;
   margin: 0;
-  clip-path: polygon(
-    0% var(--notchSize),
-    var(--notchSize) 0%,
-    calc(100% - var(--notchSize)) 0%,
-    100% var(--notchSize),
-    100% calc(100% - var(--notchSize)),
-    calc(100% - var(--notchSize)) 100%,
-    var(--notchSize) 100%,
-    0% calc(100% - var(--notchSize))
-  );
+  clip-path: polygon(0% var(--notchSize), var(--notchSize) 0%, calc(100% - var(--notchSize)) 0%, 100% var(--notchSize), 100% calc(100% - var(--notchSize)), calc(100% - var(--notchSize)) 100%, var(--notchSize) 100%, 0% calc(100% - var(--notchSize)));
 }
 .swerpg.sheet.actor .tab.attributes .resources .resource-wrapper .beveled-rectangle .label,
 .swerpg.sheet.actor .tab.attributes .resources .resource-wrapper .beveled-frame .label,
@@ -2424,9 +2395,7 @@ input[type='range'] {
   width: 100%;
 }
 .swerpg.sheet.actor .characteristics .characteristics-wrapper:hover .circle-content {
-  box-shadow:
-    inset 0 0 8px rgba(120, 169, 194, 0.12),
-    0 0 6px rgba(120, 169, 194, 0.1);
+  box-shadow: inset 0 0 8px rgba(120, 169, 194, 0.12), 0 0 6px rgba(120, 169, 194, 0.1);
 }
 .swerpg.sheet.actor .characteristics .characteristics-wrapper .characteristic-wrapper {
   display: flex;
@@ -2469,9 +2438,7 @@ input[type='range'] {
   border-radius: 50%;
   background: radial-gradient(ellipse at center, rgba(16, 23, 34, 0.95) 0%, rgba(8, 12, 18, 0.8) 60%, transparent 100%);
   box-shadow: inset 0 0 6px rgba(120, 169, 194, 0.08);
-  transition:
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
   fill: var(--color-accent);
 }
 .swerpg.sheet.actor .characteristics .characteristics-wrapper .characteristic-wrapper .characteristic.holo-circle .circle-content .characteristic-icon {
@@ -2542,10 +2509,7 @@ input[type='range'] {
   cursor: pointer;
   font-size: 9px;
   line-height: 1;
-  transition:
-    background 0.15s ease,
-    border-color 0.15s ease,
-    opacity 0.15s ease;
+  transition: background 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
 }
 .swerpg.sheet.actor .characteristics .characteristics-wrapper .stepper-btn:hover:not(:disabled) {
   border-color: rgba(120, 169, 194, 0.5);
@@ -3193,10 +3157,7 @@ input[type='range'] {
   -webkit-mask-size: contain;
   -webkit-mask-repeat: no-repeat;
   -webkit-mask-position: center;
-  transition:
-    transform 0.15s ease,
-    background-color 0.15s ease,
-    filter 0.15s ease;
+  transition: transform 0.15s ease, background-color 0.15s ease, filter 0.15s ease;
 }
 .swerpg.sheet.actor .tab.skills.skills.skills .skills-wrapper .skill .skill__action .skill__icon--increase {
   mask-image: url('../assets/images/icons/increase.svg');
@@ -3408,9 +3369,7 @@ input[type='range'] {
   font-weight: bold;
   letter-spacing: 2px;
   text-transform: uppercase;
-  transition:
-    box-shadow 0.3s ease-in-out,
-    transform 0.3s ease-in-out;
+  transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
 }
 .swerpg.sheet.actor .tab.skills.skills.skills .skill-container .skill-title span {
   font-size: 16px;
@@ -3432,9 +3391,7 @@ input[type='range'] {
   color: #e4c9a8;
   font-family: 'Patrick Hand', cursive;
   font-weight: bold;
-  transition:
-    box-shadow 0.3s ease-in-out,
-    transform 0.3s ease-in-out;
+  transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
 }
 .swerpg.sheet.actor .tab.skills.skills.skills .skill-container .skill-box span {
   position: relative;
@@ -3457,11 +3414,7 @@ input[type='range'] {
   background-position: center;
   background-size: cover;
   cursor: pointer;
-  transition:
-    background-color 0.2s ease-in-out,
-    border-color 0.2s ease-in-out,
-    opacity 0.2s ease-in-out,
-    transform 0.2s ease-in-out;
+  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
 }
 .swerpg.sheet.actor .sw-toggle.active {
   background-color: rgba(255, 255, 255, 0.75);
@@ -4776,9 +4729,7 @@ input[type='range'] {
   border-radius: 2px;
   background-color: var(--resource-block-bg);
   opacity: 0.35;
-  transition:
-    background-color 0.3s ease,
-    opacity 0.3s ease;
+  transition: background-color 0.3s ease, opacity 0.3s ease;
 }
 .swerpg.sheet.actor .resource-bar-container .block.active {
   background-color: var(--resource-color);
@@ -4821,10 +4772,7 @@ input[type='range'] {
   font-size: 10px;
   line-height: 1;
   transform: translateY(-50%);
-  transition:
-    background 0.15s ease,
-    opacity 0.15s ease,
-    border-color 0.15s ease;
+  transition: background 0.15s ease, opacity 0.15s ease, border-color 0.15s ease;
 }
 .swerpg.sheet.actor .resource-bar-container .label a.button.icon:hover {
   background: rgba(16, 23, 34, 0.4);
@@ -4887,9 +4835,7 @@ input[type='range'] {
   border-radius: 6px;
   background-color: rgba(16, 23, 34, 0.7);
   box-shadow: inset 0 1px 0 rgba(120, 169, 194, 0.06);
-  transition:
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
   min-width: 0;
 }
 .swerpg.sheet.actor .defense-soak-card {
@@ -4966,9 +4912,7 @@ input[type='range'] {
 }
 .swerpg.sheet.actor .defense-soak-card:hover,
 .swerpg.sheet.actor .defense-card:hover {
-  box-shadow:
-    inset 0 1px 0 rgba(120, 169, 194, 0.08),
-    0 0 8px rgba(90, 180, 201, 0.08);
+  box-shadow: inset 0 1px 0 rgba(120, 169, 194, 0.08), 0 0 8px rgba(90, 180, 201, 0.08);
 }
 .import-summary.sw-panel,
 .import-stats.sw-collapsible,
@@ -5194,9 +5138,7 @@ input[type='range'] {
   color: var(--color-secondary);
   font-size: var(--font-size-12);
   cursor: pointer;
-  transition:
-    background 0.12s ease,
-    color 0.12s ease;
+  transition: background 0.12s ease, color 0.12s ease;
 }
 .market-toolbar__reset:hover {
   background: rgba(120, 169, 194, 0.1);
@@ -5370,9 +5312,7 @@ input[type='range'] {
   border-radius: 4px;
   color: #81c784;
   cursor: pointer;
-  transition:
-    background 0.12s ease,
-    color 0.12s ease;
+  transition: background 0.12s ease, color 0.12s ease;
   font-size: var(--font-size-13);
 }
 .market-item__buy:hover {
