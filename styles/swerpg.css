@@ -1488,6 +1488,7 @@ input[type='range'] {
   --profile-size: 200px;
   --margin-size: 1rem;
   --margin-half: calc(var(--margin-size) / 2);
+  --tabs-rail-offset: 36px;
   overflow: visible;
   /* ----------------------------------------- */
   /*  General Styles                           */
@@ -1576,6 +1577,8 @@ input[type='range'] {
 .swerpg.sheet.actor .tab.scrollable {
   overflow-y: auto;
   min-height: 0;
+  padding-inline-end: calc(var(--tabs-rail-offset) + 8px);
+  scrollbar-gutter: stable;
 }
 .swerpg.sheet.actor a.button.icon {
   flex: none;
