@@ -23,20 +23,6 @@ export default class SwerpgGear extends SwerpgPhysicalItem {
   /* -------------------------------------------- */
 
   /**
-   * Weapon configuration data.
-   * @type {{category: WeaponCategory, quality: ItemQualityTier, enchantment: ItemEnchantmentTier}}
-   */
-  config
-
-  /**
-   * Item rarity score.
-   * @type {number}
-   */
-  rarity
-
-  /* -------------------------------------------- */
-
-  /**
    * Prepare derived data specific to the weapon type.
    */
   prepareBaseData() {}
@@ -45,11 +31,6 @@ export default class SwerpgGear extends SwerpgPhysicalItem {
 
   /** @inheritDoc */
   prepareDerivedData() {
-    if (this.broken) {
-      this.defense.base = Math.floor(this.defense.base / 2)
-      this.defense.bonus = Math.floor(this.defense.bonus / 2)
-      this.rarity -= 2
-    }
     this.price = this._preparePrice()
   }
 

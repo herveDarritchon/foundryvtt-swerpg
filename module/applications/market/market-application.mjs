@@ -58,7 +58,10 @@ function itemToRawItem(item) {
     name: item.name ?? '',
     img: item.img ?? '',
     type: item.type ?? '',
-    basePrice: system.price ?? 0,
+    // Read the schema source price (before prepareDerivedData overrides) so the Market engine
+    // always receives the raw base price, not the post-derivation value.
+    // This mirrors the pattern used by _prepareCredits() in character.mjs.
+    basePrice: system._source?.price ?? system.price ?? 0,
     rarity: system.rarity ?? 0,
     quality: system.quality ?? '',
     restrictionLevel: system.restrictionLevel ?? '',
@@ -481,19 +484,7 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
     // Rebuild a market entry from the live item to get the canonical price.
     let entry
     try {
-      const rawItem = {
-        uuid: item.uuid ?? '',
-        name: item.name ?? '',
-        img: item.img ?? '',
-        type: item.type ?? '',
-        basePrice: item.system?.price ?? 0,
-        rarity: item.system?.rarity ?? 0,
-        quality: item.system?.quality ?? '',
-        restrictionLevel: item.system?.restrictionLevel ?? '',
-        availability: item.system?.availability ?? undefined,
-        nonPurchasable: item.system?.nonPurchasable === true,
-        broken: item.system?.broken === true,
-      }
+      const rawItem = itemToRawItem(item)
       entry = createMarketEntry(rawItem, { sourceType: 'world', sourceId: item.uuid ?? '' }, { ...DEFAULT_MARKET_CONTEXT })
     } catch (err) {
       logger.warn(`[Market] Could not build market entry for "${uuid}": ${err.message}`)
