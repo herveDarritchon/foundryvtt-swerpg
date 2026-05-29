@@ -5161,49 +5161,22 @@ input[type='range'] {
   border: 0;
 }
 /* ----------------------------------------- */
-/*  Market Groups                            */
+/*  Market Table                             */
 /* ----------------------------------------- */
-.market-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+.market-catalog__table {
   border: 1px solid var(--color-cool-4, rgba(120, 169, 194, 0.22));
   border-radius: 8px;
   overflow: hidden;
   background: rgba(12, 18, 27, 0.6);
-}
-.market-group__header {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.6rem 1rem;
-  background: rgba(18, 28, 42, 0.85);
-  border-bottom: 1px solid var(--color-cool-4, rgba(120, 169, 194, 0.22));
-}
-.market-group__header i {
-  color: var(--color-secondary);
-  font-size: var(--font-size-14);
-  flex: none;
-}
-.market-group__title {
-  margin: 0;
-  font-family: var(--font-h1);
-  font-size: var(--font-size-14);
-  color: var(--color-primary);
-  font-weight: normal;
-}
-/* ----------------------------------------- */
-/*  Market Table                             */
-/* ----------------------------------------- */
-.market-group__table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   font-size: var(--font-size-13);
 }
-.market-group__table thead tr {
+.market-catalog__table thead tr {
   background: rgba(10, 17, 26, 0.5);
 }
-.market-group__table th {
+.market-catalog__table th {
   padding: 0.35rem 0.75rem;
   text-align: left;
   color: var(--color-secondary);
@@ -5214,17 +5187,17 @@ input[type='range'] {
   border-bottom: 1px solid rgba(120, 169, 194, 0.15);
   white-space: nowrap;
 }
-.market-group__table tbody tr.market-item {
+.market-catalog__table tbody tr.market-item {
   cursor: pointer;
   transition: background 0.12s ease;
 }
-.market-group__table tbody tr.market-item:hover {
+.market-catalog__table tbody tr.market-item:hover {
   background: rgba(120, 169, 194, 0.08);
 }
-.market-group__table tbody tr.market-item:not(:last-child) {
+.market-catalog__table tbody tr.market-item:not(:last-child) {
   border-bottom: 1px solid rgba(120, 169, 194, 0.07);
 }
-.market-group__table td {
+.market-catalog__table td {
   padding: 0.4rem 0.75rem;
   color: var(--color-text, #d5e4f1);
   vertical-align: middle;

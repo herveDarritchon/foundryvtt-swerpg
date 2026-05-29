@@ -130,7 +130,8 @@ function sortEntries(entries, sortBy, direction) {
 
 /**
  * The Market application presents a read-only catalogue of World Items that are eligible for purchase.
- * Items are grouped by purchasable type (weapon, armor, gear).
+ * Items are displayed as a single flat list sorted globally. Type, source, and restriction filters
+ * allow navigation within the unified list.
  * The catalogue supports text search, type/source/restriction filters, and name/price/rarity sort.
  */
 export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(api.ApplicationV2) {
@@ -283,12 +284,12 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
   /* -------------------------------------------- */
 
   /**
-   * Build the filtered, sorted, and grouped catalogue from World Items.
-   * Pipeline: build all eligible entries → apply market-type visibility → apply search → apply filters → sort → group → annotate with canBuy.
+   * Build the filtered, sorted catalogue from World Items as a flat list.
+   * Pipeline: build all eligible entries → apply market-type visibility → apply search → apply filters → sort → annotate with canBuy.
    * @param {Actor|null} buyer        The buyer actor, or null when browsing without a character context.
    * @param {number|null} buyerCredits  The buyer's current credit balance (null when no buyer).
    * @returns {{
-   *   groups: Array<{typeKey: string, label: string, icon: string, items: MarketEntry[]}>,
+   *   items: import('../../lib/market/market-entry.mjs').MarketEntry[],
    *   isEmpty: boolean,
    *   isFilteredEmpty: boolean,
    *   totalCount: number,
@@ -328,12 +329,12 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
     let filtered = filterBySearch(visibleEntries, search)
     filtered = filterByFilters(filtered, { filterType, filterSource, filterRestriction })
 
-    // 4. Sort
+    // 4. Sort globally across all types
     const sorted = sortEntries(filtered, sortBy, sortDirection)
     const filteredCount = sorted.length
 
     // 5. Annotate each entry with canBuy based on buyer affordability
-    const annotated = sorted.map((entry) => {
+    const items = sorted.map((entry) => {
       const validation = validatePurchase({ actor: buyer, entry })
       return {
         ...entry,
@@ -342,30 +343,10 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
       }
     })
 
-    // 6. Group by item type
-    /** @type {Map<string, import('../../lib/market/market-entry.mjs').MarketEntry[]>} */
-    const grouped = new Map()
-    for (const typeKey of Object.keys(PURCHASABLE_ITEM_TYPES)) {
-      grouped.set(typeKey, [])
-    }
-    for (const entry of annotated) {
-      const bucket = grouped.get(entry.itemType)
-      if (bucket) bucket.push(entry)
-    }
-
-    const groups = Object.entries(PURCHASABLE_ITEM_TYPES)
-      .map(([typeKey, typeCfg]) => ({
-        typeKey,
-        label: typeCfg.label,
-        icon: typeCfg.icon,
-        items: grouped.get(typeKey) ?? [],
-      }))
-      .filter((group) => group.items.length > 0)
-
     const hasActiveFilter = !!(search || filterType || filterSource || filterRestriction)
 
     return {
-      groups,
+      items,
       isEmpty: totalCount === 0,
       isFilteredEmpty: totalCount > 0 && filteredCount === 0 && hasActiveFilter,
       totalCount,
