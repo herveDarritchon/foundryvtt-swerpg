@@ -163,49 +163,17 @@
 }
 
 /* ----------------------------------------- */
-/*  Market Groups                            */
+/*  Market Table                             */
 /* ----------------------------------------- */
 
-.market-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+.market-catalog__table {
   border: 1px solid var(--color-cool-4, rgba(120, 169, 194, 0.22));
   border-radius: 8px;
   overflow: hidden;
   background: rgba(12, 18, 27, 0.6);
-}
-
-.market-group__header {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.6rem 1rem;
-  background: rgba(18, 28, 42, 0.85);
-  border-bottom: 1px solid var(--color-cool-4, rgba(120, 169, 194, 0.22));
-
-  i {
-    color: var(--color-secondary);
-    font-size: var(--font-size-14);
-    flex: none;
-  }
-}
-
-.market-group__title {
-  margin: 0;
-  font-family: var(--font-h1);
-  font-size: var(--font-size-14);
-  color: var(--color-primary);
-  font-weight: normal;
-}
-
-/* ----------------------------------------- */
-/*  Market Table                             */
-/* ----------------------------------------- */
-
-.market-group__table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   font-size: var(--font-size-13);
 
   thead tr {

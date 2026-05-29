@@ -195,7 +195,7 @@ describe('MarketApplicationV2', () => {
       const app = new MarketApplicationV2()
       const context = await app._preparePartContext('catalog', {})
 
-      expect(context.catalog.groups[0].items[0].canBuy).toBe(false)
+      expect(context.catalog.items[0].canBuy).toBe(false)
     })
 
     it('sets canBuy=true when buyer has sufficient credits', async () => {
@@ -207,7 +207,7 @@ describe('MarketApplicationV2', () => {
       app.setBuyerActor(actor)
       const context = await app._preparePartContext('catalog', {})
 
-      expect(context.catalog.groups[0].items[0].canBuy).toBe(true)
+      expect(context.catalog.items[0].canBuy).toBe(true)
     })
 
     it('sets canBuy=false when buyer has insufficient credits', async () => {
@@ -219,8 +219,8 @@ describe('MarketApplicationV2', () => {
       app.setBuyerActor(actor)
       const context = await app._preparePartContext('catalog', {})
 
-      expect(context.catalog.groups[0].items[0].canBuy).toBe(false)
-      expect(context.catalog.groups[0].items[0].buyBlockedReason).toBe('insufficient-credits')
+      expect(context.catalog.items[0].canBuy).toBe(false)
+      expect(context.catalog.items[0].buyBlockedReason).toBe('insufficient-credits')
     })
   })
 
@@ -229,7 +229,7 @@ describe('MarketApplicationV2', () => {
   /* -------------------------------------------- */
 
   describe('_preparePartContext — catalog', () => {
-    it('groups eligible items by type', async () => {
+    it('returns a flat item list with all types', async () => {
       const weaponItem = makeItem({ type: 'weapon', name: 'Blaster Pistol' })
       const armorItem = makeItem({ type: 'armor', name: 'Light Armor', basePrice: 200 })
       globalThis.game.items = makeItemsCollection([weaponItem, armorItem])
@@ -238,17 +238,12 @@ describe('MarketApplicationV2', () => {
       const context = await app._preparePartContext('catalog', {})
 
       expect(context.catalog.isEmpty).toBe(false)
-      expect(context.catalog.groups).toHaveLength(2)
+      expect(Array.isArray(context.catalog.items)).toBe(true)
+      expect(context.catalog.items).toHaveLength(2)
 
-      const weaponGroup = context.catalog.groups.find((g) => g.typeKey === 'weapon')
-      expect(weaponGroup).toBeDefined()
-      expect(weaponGroup.items).toHaveLength(1)
-      expect(weaponGroup.items[0].name).toBe('Blaster Pistol')
-
-      const armorGroup = context.catalog.groups.find((g) => g.typeKey === 'armor')
-      expect(armorGroup).toBeDefined()
-      expect(armorGroup.items).toHaveLength(1)
-      expect(armorGroup.items[0].name).toBe('Light Armor')
+      const names = context.catalog.items.map((e) => e.name)
+      expect(names).toContain('Blaster Pistol')
+      expect(names).toContain('Light Armor')
     })
 
     it('excludes items with non-purchasable types (e.g. talent)', async () => {
@@ -259,7 +254,7 @@ describe('MarketApplicationV2', () => {
       const context = await app._preparePartContext('catalog', {})
 
       expect(context.catalog.isEmpty).toBe(true)
-      expect(context.catalog.groups).toHaveLength(0)
+      expect(context.catalog.items).toHaveLength(0)
     })
 
     it('excludes ineligible items (nonPurchasable=true)', async () => {
@@ -289,32 +284,7 @@ describe('MarketApplicationV2', () => {
       const context = await app._preparePartContext('catalog', {})
 
       expect(context.catalog.isEmpty).toBe(true)
-      expect(context.catalog.groups).toHaveLength(0)
-    })
-
-    it('does not include groups with zero items', async () => {
-      // Only one weapon, no armor, no gear
-      const weaponItem = makeItem({ type: 'weapon' })
-      globalThis.game.items = makeItemsCollection([weaponItem])
-
-      const app = new MarketApplicationV2()
-      const context = await app._preparePartContext('catalog', {})
-
-      expect(context.catalog.groups.every((g) => g.items.length > 0)).toBe(true)
-      expect(context.catalog.groups.some((g) => g.typeKey === 'armor')).toBe(false)
-      expect(context.catalog.groups.some((g) => g.typeKey === 'gear')).toBe(false)
-    })
-
-    it('includes typeKey, label, icon in each group', async () => {
-      const item = makeItem({ type: 'gear', name: 'Medpac', basePrice: 25 })
-      globalThis.game.items = makeItemsCollection([item])
-
-      const app = new MarketApplicationV2()
-      const context = await app._preparePartContext('catalog', {})
-
-      const gearGroup = context.catalog.groups.find((g) => g.typeKey === 'gear')
-      expect(gearGroup.label).toBe('MARKET.ItemType.Gear')
-      expect(gearGroup.icon).toBe('fa-solid fa-toolbox')
+      expect(context.catalog.items).toHaveLength(0)
     })
 
     it('gear item with price 200 and rarity 1 should have non-zero basePrice and finalPrice', async () => {
@@ -335,11 +305,9 @@ describe('MarketApplicationV2', () => {
       const app = new MarketApplicationV2()
       const context = await app._preparePartContext('catalog', {})
 
-      const gearGroup = context.catalog.groups.find((g) => g.typeKey === 'gear')
-      expect(gearGroup).toBeDefined()
-      expect(gearGroup.items).toHaveLength(1)
+      expect(context.catalog.items).toHaveLength(1)
 
-      const entry = gearGroup.items[0]
+      const entry = context.catalog.items[0]
       expect(entry.basePrice).toBeGreaterThan(0)
       expect(entry.priceResult.finalPrice).toBeGreaterThan(0)
     })
@@ -351,7 +319,7 @@ describe('MarketApplicationV2', () => {
       const app = new MarketApplicationV2()
       const context = await app._preparePartContext('catalog', {})
 
-      const entry = context.catalog.groups[0].items[0]
+      const entry = context.catalog.items[0]
       expect(entry.sourceId).toBe('Item.myUuid')
       expect(entry.sourceType).toBe('world')
     })
@@ -363,7 +331,7 @@ describe('MarketApplicationV2', () => {
       const app = new MarketApplicationV2()
       const context = await app._preparePartContext('catalog', {})
 
-      const entry = context.catalog.groups[0].items[0]
+      const entry = context.catalog.items[0]
       expect(entry.priceResult).toBeDefined()
       expect(typeof entry.priceResult.finalPrice).toBe('number')
       expect(typeof entry.priceResult.basePrice).toBe('number')
@@ -421,9 +389,8 @@ describe('MarketApplicationV2', () => {
       app._viewState = { ...app._viewState, search: 'blaster' }
       const context = await app._preparePartContext('catalog', {})
 
-      const weaponGroup = context.catalog.groups.find((g) => g.typeKey === 'weapon')
-      expect(weaponGroup.items).toHaveLength(1)
-      expect(weaponGroup.items[0].name).toBe('Blaster Pistol')
+      expect(context.catalog.items).toHaveLength(1)
+      expect(context.catalog.items[0].name).toBe('Blaster Pistol')
     })
 
     it('is case-insensitive', async () => {
@@ -479,8 +446,7 @@ describe('MarketApplicationV2', () => {
       const context = await app._preparePartContext('catalog', {})
 
       expect(context.catalog.filteredCount).toBe(1)
-      const armorGroup = context.catalog.groups.find((g) => g.typeKey === 'armor')
-      expect(armorGroup).toBeUndefined()
+      expect(context.catalog.items.every((e) => e.itemType === 'weapon')).toBe(true)
     })
 
     it('empty filterType shows all types', async () => {
@@ -534,8 +500,7 @@ describe('MarketApplicationV2', () => {
 
       // Only the weapon named "Blaster Pistol" — armor is excluded by type, vibro by search
       expect(context.catalog.filteredCount).toBe(1)
-      const weaponGroup = context.catalog.groups.find((g) => g.typeKey === 'weapon')
-      expect(weaponGroup.items[0].name).toBe('Blaster Pistol')
+      expect(context.catalog.items[0].name).toBe('Blaster Pistol')
     })
 
     it('does not re-introduce items excluded by eligibility', async () => {
@@ -549,7 +514,7 @@ describe('MarketApplicationV2', () => {
       const context = await app._preparePartContext('catalog', {})
 
       expect(context.catalog.filteredCount).toBe(1)
-      expect(context.catalog.groups[0].items[0].name).toBe('Blaster')
+      expect(context.catalog.items[0].name).toBe('Blaster')
     })
   })
 
@@ -568,7 +533,7 @@ describe('MarketApplicationV2', () => {
       app._viewState = { ...app._viewState, sortBy: 'name', sortDirection: 'asc' }
       const context = await app._preparePartContext('catalog', {})
 
-      const names = context.catalog.groups[0].items.map((e) => e.name)
+      const names = context.catalog.items.map((e) => e.name)
       expect(names).toEqual([...names].sort((a, b) => a.localeCompare(b)))
     })
 
@@ -581,7 +546,7 @@ describe('MarketApplicationV2', () => {
       app._viewState = { ...app._viewState, sortBy: 'name', sortDirection: 'desc' }
       const context = await app._preparePartContext('catalog', {})
 
-      const names = context.catalog.groups[0].items.map((e) => e.name)
+      const names = context.catalog.items.map((e) => e.name)
       expect(names[0]).toBe('Z-6 Rotary Blaster')
       expect(names[1]).toBe('A-310 Rifle')
     })
@@ -597,7 +562,7 @@ describe('MarketApplicationV2', () => {
       app._viewState = { ...app._viewState, sortBy: 'price', sortDirection: 'asc' }
       const context = await app._preparePartContext('catalog', {})
 
-      const prices = context.catalog.groups[0].items.map((e) => e.priceResult.finalPrice)
+      const prices = context.catalog.items.map((e) => e.priceResult.finalPrice)
       expect(prices[0]).toBeLessThanOrEqual(prices[1])
     })
 
@@ -610,7 +575,7 @@ describe('MarketApplicationV2', () => {
       app._viewState = { ...app._viewState, sortBy: 'price', sortDirection: 'desc' }
       const context = await app._preparePartContext('catalog', {})
 
-      const prices = context.catalog.groups[0].items.map((e) => e.priceResult.finalPrice)
+      const prices = context.catalog.items.map((e) => e.priceResult.finalPrice)
       expect(prices[0]).toBeGreaterThanOrEqual(prices[1])
     })
 
@@ -625,7 +590,7 @@ describe('MarketApplicationV2', () => {
       app._viewState = { ...app._viewState, sortBy: 'price', sortDirection: 'asc' }
       const context = await app._preparePartContext('catalog', {})
 
-      const names = context.catalog.groups[0].items.map((e) => e.name)
+      const names = context.catalog.items.map((e) => e.name)
       // Item A (finalPrice=100) should come before Item B (finalPrice=120)
       expect(names[0]).toBe('Item A')
       expect(names[1]).toBe('Item B')
@@ -642,7 +607,7 @@ describe('MarketApplicationV2', () => {
       app._viewState = { ...app._viewState, sortBy: 'rarity', sortDirection: 'asc' }
       const context = await app._preparePartContext('catalog', {})
 
-      const rarities = context.catalog.groups[0].items.map((e) => e.rarity)
+      const rarities = context.catalog.items.map((e) => e.rarity)
       expect(rarities[0]).toBeLessThanOrEqual(rarities[1])
     })
   })
@@ -797,7 +762,7 @@ describe('MarketApplicationV2', () => {
 
       // Only commonItem should be visible
       expect(context.catalog.totalCount).toBe(1)
-      const names = context.catalog.groups[0]?.items.map((e) => e.name) ?? []
+      const names = context.catalog.items.map((e) => e.name)
       expect(names).toContain('Common Blaster')
       expect(names).not.toContain('Very Rare Weapon')
     })
@@ -817,7 +782,7 @@ describe('MarketApplicationV2', () => {
       app._viewState = { ...app._viewState, activeMarketType: 'black-market' }
       const blackMarketContext = await app._preparePartContext('catalog', {})
       expect(blackMarketContext.catalog.totalCount).toBe(1)
-      expect(blackMarketContext.catalog.groups[0].items[0].name).toBe('Restricted Blaster')
+      expect(blackMarketContext.catalog.items[0].name).toBe('Restricted Blaster')
     })
 
     it('local market excludes rare items', async () => {
@@ -830,7 +795,7 @@ describe('MarketApplicationV2', () => {
       const context = await app._preparePartContext('catalog', {})
 
       expect(context.catalog.totalCount).toBe(1)
-      const names = context.catalog.groups.flatMap((g) => g.items.map((e) => e.name))
+      const names = context.catalog.items.map((e) => e.name)
       expect(names).toContain('Common Armor')
       expect(names).not.toContain('Rare Blaster')
     })
@@ -850,7 +815,7 @@ describe('MarketApplicationV2', () => {
       app._viewState = { ...app._viewState, activeMarketType: 'specialized' }
       const specCtx = await app._preparePartContext('catalog', {})
       expect(specCtx.catalog.totalCount).toBe(1)
-      expect(specCtx.catalog.groups[0].items[0].name).toBe('Very Rare Blaster')
+      expect(specCtx.catalog.items[0].name).toBe('Very Rare Blaster')
     })
 
     it('black-market applies a price premium (+50%) compared to standard', async () => {
@@ -862,11 +827,11 @@ describe('MarketApplicationV2', () => {
 
       app._viewState = { ...app._viewState, activeMarketType: 'standard' }
       const stdCtx = await app._preparePartContext('catalog', {})
-      const stdPrice = stdCtx.catalog.groups[0].items[0].priceResult.finalPrice
+      const stdPrice = stdCtx.catalog.items[0].priceResult.finalPrice
 
       app._viewState = { ...app._viewState, activeMarketType: 'black-market' }
       const bmCtx = await app._preparePartContext('catalog', {})
-      const bmPrice = bmCtx.catalog.groups[0].items[0].priceResult.finalPrice
+      const bmPrice = bmCtx.catalog.items[0].priceResult.finalPrice
 
       expect(stdPrice).toBe(100)
       expect(bmPrice).toBe(150)
@@ -881,11 +846,11 @@ describe('MarketApplicationV2', () => {
 
       app._viewState = { ...app._viewState, activeMarketType: 'standard' }
       const stdCtx = await app._preparePartContext('catalog', {})
-      const stdPrice = stdCtx.catalog.groups[0].items[0].priceResult.finalPrice
+      const stdPrice = stdCtx.catalog.items[0].priceResult.finalPrice
 
       app._viewState = { ...app._viewState, activeMarketType: 'local' }
       const localCtx = await app._preparePartContext('catalog', {})
-      const localPrice = localCtx.catalog.groups[0].items[0].priceResult.finalPrice
+      const localPrice = localCtx.catalog.items[0].priceResult.finalPrice
 
       expect(stdPrice).toBe(100)
       expect(localPrice).toBe(90)
@@ -1090,7 +1055,7 @@ describe('MarketApplicationV2', () => {
       const context = await app._preparePartContext('catalog', {})
 
       expect(context.buyer.credits).toBe(400)
-      const entry = context.catalog.groups[0].items[0]
+      const entry = context.catalog.items[0]
       expect(entry.canBuy).toBe(false)
       expect(entry.buyBlockedReason).toBe('insufficient-credits')
     })
