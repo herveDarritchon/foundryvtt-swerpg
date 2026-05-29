@@ -7,3 +7,6 @@ packs
 /.foundryvtt*
 *.log
 templates/**/*.hbs
+
+# Generated files — do not format
+styles/swerpg.css
