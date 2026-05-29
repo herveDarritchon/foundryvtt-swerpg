@@ -1545,7 +1545,8 @@ input[type='range'] {
   gap: var(--margin-size);
   height: calc(100% - var(--header-height));
   padding: 0 var(--margin-size) var(--margin-size);
-  overflow: visible;
+  overflow-x: visible;
+  overflow-y: clip;
 }
 .swerpg.sheet.actor.minimized,
 .swerpg.sheet.actor.minimizing,
@@ -1563,7 +1564,6 @@ input[type='range'] {
   flex-direction: column;
   justify-content: flex-start;
   gap: 1rem;
-  height: 100%;
   min-height: 0;
   overflow: hidden;
 }
@@ -1572,10 +1572,6 @@ input[type='range'] {
   flex: 1;
   padding: 1.5rem 0 1rem;
   gap: 1.5rem;
-}
-.swerpg.sheet.actor .tab.scrollable {
-  overflow-y: auto;
-  min-height: 0;
 }
 .swerpg.sheet.actor a.button.icon {
   flex: none;

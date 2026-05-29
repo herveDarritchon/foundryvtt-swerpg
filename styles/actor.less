@@ -61,7 +61,8 @@
     gap: var(--margin-size);
     height: calc(100% - var(--header-height));
     padding: 0 var(--margin-size) var(--margin-size);
-    overflow: visible;
+    overflow-x: visible;
+    overflow-y: clip;
   }
 
   &.minimized,
@@ -80,7 +81,6 @@
     flex-direction: column;
     justify-content: flex-start;
     gap: 1rem;
-    height: 100%;
     min-height: 0;
     overflow: hidden;
   }
@@ -90,11 +90,6 @@
     flex: 1;
     padding: 1.5rem 0 1rem;
     gap: 1.5rem;
-
-    &.scrollable {
-      overflow-y: auto;
-      min-height: 0;
-    }
   }
 
   a.button.icon {
