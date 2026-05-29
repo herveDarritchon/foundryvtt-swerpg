@@ -1,4 +1,4 @@
-import { PURCHASABLE_ITEM_TYPES, SOURCE_TYPES, DEFAULT_SOURCE_TYPE, DEFAULT_AVAILABILITY } from '../../config/market.mjs'
+import { PURCHASABLE_ITEM_TYPES, SOURCE_TYPES, DEFAULT_SOURCE_TYPE, DEFAULT_AVAILABILITY, MARKET_TYPES, DEFAULT_MARKET_TYPE } from '../../config/market.mjs'
 import { evaluateEligibility } from './eligibility.mjs'
 import { calculateItemPrice } from './price-engine.mjs'
 
@@ -112,4 +112,54 @@ export function createMarketEntry(rawItem, sourceInfo, marketContext = {}) {
     eligible,
     ineligibilityReason: reason,
   }
+}
+
+/* -------------------------------------------- */
+
+/**
+ * @typedef {Object} MarketCatalogVisibility
+ * @property {boolean}     visible      Whether this entry is visible in the active market
+ * @property {boolean}     blocked      Whether this entry is explicitly blocked by market rules
+ * @property {string|null} reason       Machine-readable reason for blocking, null if visible
+ */
+
+/**
+ * Resolve whether a MarketEntry is visible in the given market type.
+ *
+ * Rules:
+ * - If the market type is unknown, the entry is visible (permissive fallback).
+ * - If the market's `allowedAvailability` is ['*'], all availability statuses are allowed.
+ * - If the entry's `availability` is not in the market's `allowedAvailability`, it is blocked.
+ * - A blocked entry returns `{ visible: false, blocked: true, reason: 'availability-not-allowed' }`.
+ *
+ * This function is a pure domain rule — no Foundry dependencies.
+ *
+ * @param {import('./market-entry.mjs').MarketEntry} entry        A market entry (plain object)
+ * @param {string} [marketTypeKey]                                 Active market type key (key of MARKET_TYPES)
+ * @returns {MarketCatalogVisibility}
+ */
+export function resolveMarketCatalogVisibility(entry, marketTypeKey = DEFAULT_MARKET_TYPE) {
+  const marketDef = MARKET_TYPES[marketTypeKey]
+
+  // Unknown market type → permissive fallback: everything visible
+  if (!marketDef) {
+    return { visible: true, blocked: false, reason: null }
+  }
+
+  const { allowedAvailability } = marketDef
+
+  // Wildcard: all availability statuses allowed
+  if (Array.isArray(allowedAvailability) && allowedAvailability.includes('*')) {
+    return { visible: true, blocked: false, reason: null }
+  }
+
+  // Check whether entry's availability is allowed by this market
+  const entryAvailability = entry.availability ?? DEFAULT_AVAILABILITY
+  const isAllowed = Array.isArray(allowedAvailability) && allowedAvailability.includes(entryAvailability)
+
+  if (!isAllowed) {
+    return { visible: false, blocked: true, reason: 'availability-not-allowed' }
+  }
+
+  return { visible: true, blocked: false, reason: null }
 }

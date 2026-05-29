@@ -1,4 +1,4 @@
-import { DEFAULT_MARKET_CONTEXT } from '../../config/market.mjs'
+import { DEFAULT_MARKET_CONTEXT, MARKET_TYPES } from '../../config/market.mjs'
 import { computeMarketPrice } from './pricing.mjs'
 
 /**
@@ -53,12 +53,17 @@ export function calculateItemPrice(itemData, marketContext = {}) {
   // Item-level availability takes precedence over context
   const availability = itemData.availability ?? ctx.availability
 
+  // Resolve market-type price modifier from the registry
+  const marketTypeDef = MARKET_TYPES[ctx.marketType]
+  const marketTypeModifier = marketTypeDef?.priceModifier ?? 0
+
   const pricingContext = {
     basePrice: itemData.basePrice,
     rarity: itemData.rarity,
     availability,
     gmModifier: ctx.manualModifier ?? 0,
     marketType: ctx.marketType,
+    marketTypeModifier,
   }
 
   const { finalPrice, basePrice, breakdown } = computeMarketPrice(pricingContext)

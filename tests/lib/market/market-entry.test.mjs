@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'vitest'
-import { createMarketEntry } from '../../../module/lib/market/market-entry.mjs'
+import { createMarketEntry, resolveMarketCatalogVisibility } from '../../../module/lib/market/market-entry.mjs'
 import { DEFAULT_AVAILABILITY, DEFAULT_SOURCE_TYPE } from '../../../module/config/market.mjs'
 
 /**
@@ -223,6 +223,160 @@ describe('createMarketEntry', () => {
       const b = createMarketEntry(raw, source)
       expect(a.eligible).toBe(b.eligible)
       expect(a.ineligibilityReason).toBe(b.ineligibilityReason)
+    })
+  })
+})
+
+/* -------------------------------------------- */
+
+/**
+ * Build a minimal MarketEntry-shaped plain object for visibility tests.
+ * @param {object} [overrides]
+ */
+function makeEntry(overrides = {}) {
+  return {
+    uuid: 'Item.test',
+    name: 'Test Item',
+    itemType: 'weapon',
+    sourceType: 'compendium',
+    availability: overrides.availability ?? 'available',
+    ...overrides,
+  }
+}
+
+describe('resolveMarketCatalogVisibility', () => {
+  describe('standard market', () => {
+    test('available item is visible in standard market', () => {
+      const { visible, blocked, reason } = resolveMarketCatalogVisibility(makeEntry({ availability: 'available' }), 'standard')
+      expect(visible).toBe(true)
+      expect(blocked).toBe(false)
+      expect(reason).toBeNull()
+    })
+
+    test('common item is visible in standard market', () => {
+      const { visible } = resolveMarketCatalogVisibility(makeEntry({ availability: 'common' }), 'standard')
+      expect(visible).toBe(true)
+    })
+
+    test('rare item is visible in standard market', () => {
+      const { visible } = resolveMarketCatalogVisibility(makeEntry({ availability: 'rare' }), 'standard')
+      expect(visible).toBe(true)
+    })
+
+    test('veryRare item is NOT visible in standard market', () => {
+      const { visible, blocked, reason } = resolveMarketCatalogVisibility(makeEntry({ availability: 'veryRare' }), 'standard')
+      expect(visible).toBe(false)
+      expect(blocked).toBe(true)
+      expect(reason).toBe('availability-not-allowed')
+    })
+
+    test('restricted item is NOT visible in standard market', () => {
+      const { visible, blocked } = resolveMarketCatalogVisibility(makeEntry({ availability: 'restricted' }), 'standard')
+      expect(visible).toBe(false)
+      expect(blocked).toBe(true)
+    })
+
+    test('blackMarket item is NOT visible in standard market', () => {
+      const { visible } = resolveMarketCatalogVisibility(makeEntry({ availability: 'blackMarket' }), 'standard')
+      expect(visible).toBe(false)
+    })
+  })
+
+  describe('local market', () => {
+    test('available item is visible in local market', () => {
+      const { visible } = resolveMarketCatalogVisibility(makeEntry({ availability: 'available' }), 'local')
+      expect(visible).toBe(true)
+    })
+
+    test('common item is visible in local market', () => {
+      const { visible } = resolveMarketCatalogVisibility(makeEntry({ availability: 'common' }), 'local')
+      expect(visible).toBe(true)
+    })
+
+    test('rare item is NOT visible in local market', () => {
+      const { visible, blocked } = resolveMarketCatalogVisibility(makeEntry({ availability: 'rare' }), 'local')
+      expect(visible).toBe(false)
+      expect(blocked).toBe(true)
+    })
+
+    test('veryRare item is NOT visible in local market', () => {
+      const { visible } = resolveMarketCatalogVisibility(makeEntry({ availability: 'veryRare' }), 'local')
+      expect(visible).toBe(false)
+    })
+  })
+
+  describe('specialized market', () => {
+    test('available item is visible in specialized market', () => {
+      const { visible } = resolveMarketCatalogVisibility(makeEntry({ availability: 'available' }), 'specialized')
+      expect(visible).toBe(true)
+    })
+
+    test('veryRare item is visible in specialized market', () => {
+      const { visible } = resolveMarketCatalogVisibility(makeEntry({ availability: 'veryRare' }), 'specialized')
+      expect(visible).toBe(true)
+    })
+
+    test('restricted item is NOT visible in specialized market', () => {
+      const { visible, blocked } = resolveMarketCatalogVisibility(makeEntry({ availability: 'restricted' }), 'specialized')
+      expect(visible).toBe(false)
+      expect(blocked).toBe(true)
+    })
+
+    test('blackMarket item is NOT visible in specialized market', () => {
+      const { visible } = resolveMarketCatalogVisibility(makeEntry({ availability: 'blackMarket' }), 'specialized')
+      expect(visible).toBe(false)
+    })
+  })
+
+  describe('black-market', () => {
+    test('available item is visible in black-market', () => {
+      const { visible } = resolveMarketCatalogVisibility(makeEntry({ availability: 'available' }), 'black-market')
+      expect(visible).toBe(true)
+    })
+
+    test('restricted item is visible in black-market', () => {
+      const { visible } = resolveMarketCatalogVisibility(makeEntry({ availability: 'restricted' }), 'black-market')
+      expect(visible).toBe(true)
+    })
+
+    test('blackMarket item is visible in black-market', () => {
+      const { visible } = resolveMarketCatalogVisibility(makeEntry({ availability: 'blackMarket' }), 'black-market')
+      expect(visible).toBe(true)
+    })
+
+    test('unavailable item is NOT visible even in black-market', () => {
+      const { visible, blocked, reason } = resolveMarketCatalogVisibility(makeEntry({ availability: 'unavailable' }), 'black-market')
+      expect(visible).toBe(false)
+      expect(blocked).toBe(true)
+      expect(reason).toBe('availability-not-allowed')
+    })
+  })
+
+  describe('unknown market type (permissive fallback)', () => {
+    test('any item is visible when market type is unknown', () => {
+      const { visible, blocked, reason } = resolveMarketCatalogVisibility(makeEntry({ availability: 'restricted' }), 'unknown-market')
+      expect(visible).toBe(true)
+      expect(blocked).toBe(false)
+      expect(reason).toBeNull()
+    })
+  })
+
+  describe('default market type fallback', () => {
+    test('uses standard market when no market type is provided', () => {
+      // veryRare is blocked in standard market
+      const { visible } = resolveMarketCatalogVisibility(makeEntry({ availability: 'veryRare' }))
+      expect(visible).toBe(false)
+    })
+  })
+
+  describe('determinism', () => {
+    test('same inputs always produce the same visibility result', () => {
+      const entry = makeEntry({ availability: 'restricted' })
+      const a = resolveMarketCatalogVisibility(entry, 'black-market')
+      const b = resolveMarketCatalogVisibility(entry, 'black-market')
+      expect(a.visible).toBe(b.visible)
+      expect(a.blocked).toBe(b.blocked)
+      expect(a.reason).toBe(b.reason)
     })
   })
 })

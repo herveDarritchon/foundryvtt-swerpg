@@ -1571,6 +1571,25 @@
         "Label": "Reset",
         "Tooltip": "Reset filters and search"
       }
+    },
+    "MarketType": {
+      "SelectorLabel": "Market type",
+      "Standard": {
+        "Label": "Standard Market",
+        "Description": "Common goods at regular prices. Available and rare items only."
+      },
+      "Local": {
+        "Label": "Local Market",
+        "Description": "Everyday goods at a slight discount. Only common and available items."
+      },
+      "Specialized": {
+        "Label": "Specialized Market",
+        "Description": "High-end goods including very rare items, at a premium price."
+      },
+      "BlackMarket": {
+        "Label": "Black Market",
+        "Description": "Restricted and illegal items available, but at a steep price."
+      }
     }
   }
 }
