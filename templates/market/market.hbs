@@ -69,6 +69,20 @@
           </option>
         {{/each}}
       </select>
+
+      <label class="market-toolbar__filter-label market-toolbar__filter-label--affordable-only"
+        data-tooltip="{{localize 'MARKET.Toolbar.Filter.AffordableOnlyTooltip'}}"
+        aria-label="{{localize 'MARKET.Toolbar.Filter.AffordableOnlyLabel'}}"
+      >
+        <input
+          type="checkbox"
+          class="market-toolbar__filter--affordable-only"
+          {{#if viewState.affordableOnly}}checked{{/if}}
+          {{#unless buyer}}disabled aria-disabled="true"{{/unless}}
+          aria-label="{{localize 'MARKET.Toolbar.Filter.AffordableOnlyLabel'}}"
+        />
+        {{localize "MARKET.Toolbar.Filter.AffordableOnly"}}
+      </label>
     </div>
 
     <div class="market-toolbar__sort">

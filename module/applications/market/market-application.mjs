@@ -13,6 +13,7 @@ const { api } = foundry.applications
  * @property {string} filterType         Item type filter key, or '' for all types
  * @property {string} filterSource       Source type filter key, or '' for all sources
  * @property {string} filterRestriction  Restriction level filter key, or '' for all
+ * @property {boolean} affordableOnly    When true, only items the buyer can afford are shown
  * @property {string} sortBy             Sort field key: 'name' | 'price' | 'rarity'
  * @property {'asc'|'desc'} sortDirection  Sort direction
  * @property {string} activeMarketType   Active market type key (key of MARKET_TYPES)
@@ -37,6 +38,7 @@ const DEFAULT_VIEW_STATE = Object.freeze({
   filterType: '',
   filterSource: '',
   filterRestriction: '',
+  affordableOnly: false,
   sortBy: MARKET_SORT_FIELDS.name,
   sortDirection: 'asc',
   activeMarketType: DEFAULT_MARKET_TYPE,
@@ -325,16 +327,15 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
     const totalCount = visibleEntries.length
 
     // 3. Apply search and filters
-    const { search, filterType, filterSource, filterRestriction, sortBy, sortDirection } = this._viewState
+    const { search, filterType, filterSource, filterRestriction, affordableOnly, sortBy, sortDirection } = this._viewState
     let filtered = filterBySearch(visibleEntries, search)
     filtered = filterByFilters(filtered, { filterType, filterSource, filterRestriction })
 
     // 4. Sort globally across all types
     const sorted = sortEntries(filtered, sortBy, sortDirection)
-    const filteredCount = sorted.length
 
     // 5. Annotate each entry with canBuy based on buyer affordability
-    const items = sorted.map((entry) => {
+    const annotated = sorted.map((entry) => {
       const validation = validatePurchase({ actor: buyer, entry })
       return {
         ...entry,
@@ -343,7 +344,11 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
       }
     })
 
-    const hasActiveFilter = !!(search || filterType || filterSource || filterRestriction)
+    // 6. Apply affordableOnly filter after canBuy annotation (buyer must be present for this filter to take effect)
+    const items = affordableOnly && buyer !== null ? annotated.filter((entry) => entry.canBuy) : annotated
+
+    const filteredCount = items.length
+    const hasActiveFilter = !!(search || filterType || filterSource || filterRestriction || (affordableOnly && buyer !== null))
 
     return {
       items,
@@ -595,6 +600,15 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
     if (restrictionSelect) {
       restrictionSelect.addEventListener('change', (event) => {
         this._viewState = { ...this._viewState, filterRestriction: event.currentTarget.value ?? '' }
+        this.render()
+      })
+    }
+
+    // Affordable only checkbox — only active when a buyer is set
+    const affordableOnlyCheckbox = html.querySelector('.market-toolbar__filter--affordable-only')
+    if (affordableOnlyCheckbox) {
+      affordableOnlyCheckbox.addEventListener('change', (event) => {
+        this._viewState = { ...this._viewState, affordableOnly: event.currentTarget.checked }
         this.render()
       })
     }
