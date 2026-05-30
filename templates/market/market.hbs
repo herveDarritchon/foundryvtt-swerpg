@@ -70,6 +70,15 @@
         {{/each}}
       </select>
 
+      <label for="market-filter-restriction" class="sr-only">{{localize "MARKET.Toolbar.Filter.RestrictionLabel"}}</label>
+      <select id="market-filter-restriction" class="market-toolbar__filter market-toolbar__filter--restriction" aria-label="{{localize 'MARKET.Toolbar.Filter.RestrictionLabel'}}">
+        {{#each restrictionFilterOptions as |opt|}}
+          <option value="{{opt.value}}" {{#if (eq opt.value ../viewState.filterRestriction)}}selected{{/if}}>
+            {{localize opt.label}}
+          </option>
+        {{/each}}
+      </select>
+
       <label class="market-toolbar__filter-label market-toolbar__filter-label--affordable-only"
         data-tooltip="{{localize 'MARKET.Toolbar.Filter.AffordableOnlyTooltip'}}"
         aria-label="{{localize 'MARKET.Toolbar.Filter.AffordableOnlyLabel'}}"

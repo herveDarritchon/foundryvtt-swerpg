@@ -4,11 +4,16 @@
 
 ### Besoin
 
-Le système doit proposer une fenêtre dédiée au marché, ouvrable depuis la feuille de personnage, dans un premier temps depuis l’onglet Inventory.
+Le système doit proposer une fenêtre dédiée au marché, ouvrable depuis la feuille de personnage, dans un premier temps
+depuis l’onglet Inventory.
 
-Cette fenêtre doit permettre au joueur ou au MJ de consulter les objets achetables disponibles dans le jeu, de les parcourir, de les filtrer et, à terme, de les acheter pour les ajouter à l’inventaire d’un personnage.
+Cette fenêtre doit permettre au joueur ou au MJ de consulter les objets achetables disponibles dans le jeu, de les
+parcourir, de les filtrer et, à terme, de les acheter pour les ajouter à l’inventaire d’un personnage.
 
-L’objectif n’est pas seulement d’afficher une liste d’items. L’objectif est de créer une expérience de marché crédible, pratique et immersive, adaptée à Star Wars FFG : crédits, disponibilité, rareté, restrictions locales, marchés légaux ou illégaux, vendeurs douteux, matériel militaire contrôlé, équipement courant, pièces récupérées, droïdes, armes, armures, véhicules ou services selon les phases retenues.
+L’objectif n’est pas seulement d’afficher une liste d’items. L’objectif est de créer une expérience de marché crédible,
+pratique et immersive, adaptée à Star Wars FFG : crédits, disponibilité, rareté, restrictions locales, marchés légaux ou
+illégaux, vendeurs douteux, matériel militaire contrôlé, équipement courant, pièces récupérées, droïdes, armes, armures,
+véhicules ou services selon les phases retenues.
 
 ## 2. Vision fonctionnelle
 
@@ -37,19 +42,23 @@ Il doit s’appuyer sur une logique métier séparée du reste de l’interface.
 
 Il doit intégrer progressivement un calcul de prix dépendant de la disponibilité, de la rareté et du contexte.
 
-Il doit être pensé pour une expérience moderne, claire, rapide à utiliser en table et visuellement cohérente avec Star Wars.
+Il doit être pensé pour une expérience moderne, claire, rapide à utiliser en table et visuellement cohérente avec Star
+Wars.
 
 ### Hors périmètre initial
 
 Le marché ne doit pas, dans une première version, chercher à simuler toute l’économie galactique.
 
-Il ne doit pas gérer immédiatement des stocks dynamiques par vendeur, sauf si cette notion est explicitement retenue pour une phase ultérieure.
+Il ne doit pas gérer immédiatement des stocks dynamiques par vendeur, sauf si cette notion est explicitement retenue
+pour une phase ultérieure.
 
 Il ne doit pas imposer un modèle unique de commerce pour toute la galaxie.
 
-Il ne doit pas mélanger dans une même première livraison l’achat, la vente, le troc, les services, les réparations, les commandes spéciales et le marché noir.
+Il ne doit pas mélanger dans une même première livraison l’achat, la vente, le troc, les services, les réparations, les
+commandes spéciales et le marché noir.
 
-Il ne doit pas être dépendant uniquement de la feuille de personnage, même s’il est ouvert depuis celle-ci dans la première phase.
+Il ne doit pas être dépendant uniquement de la feuille de personnage, même s’il est ouvert depuis celle-ci dans la
+première phase.
 
 ## 4. Principes métier
 
@@ -57,11 +66,13 @@ Il ne doit pas être dépendant uniquement de la feuille de personnage, même s�
 
 Tous les items du système ne sont pas destinés à être achetés.
 
-Certains items sont techniques, narratifs, uniques, liés à un PNJ, liés à une récompense, liés à un pouvoir, liés à un vaisseau précis, ou simplement non commercialisables.
+Certains items sont techniques, narratifs, uniques, liés à un PNJ, liés à une récompense, liés à un pouvoir, liés à un
+vaisseau précis, ou simplement non commercialisables.
 
 Le marché doit donc s’appuyer sur une règle d’éligibilité.
 
-Un item est affichable dans le marché uniquement s’il appartient à un type autorisé et s’il dispose des données minimales nécessaires à l’achat.
+Un item est affichable dans le marché uniquement s’il appartient à un type autorisé et s’il dispose des données
+minimales nécessaires à l’achat.
 
 ### 4.2. Le prix affiché n’est pas toujours le prix de base
 
@@ -97,7 +108,8 @@ Le système doit aider à automatiser, pas décider à la place du MJ.
 
 Le MJ doit pouvoir autoriser, masquer, restreindre, surclasser ou modifier les disponibilités et les prix.
 
-Dans Star Wars FFG, le commerce est fortement lié au contexte : un blaster n’a pas le même statut dans un astroport impérial, une enclave rebelle, une cantina de Tatooine ou un marché noir hutt.
+Dans Star Wars FFG, le commerce est fortement lié au contexte : un blaster n’a pas le même statut dans un astroport
+impérial, une enclave rebelle, une cantina de Tatooine ou un marché noir hutt.
 
 ## 5. Types d’items achetables
 
@@ -116,9 +128,11 @@ Pour éviter une première version trop large, le marché devrait commencer par 
 
 ### À traiter plus tard
 
-Les véhicules, vaisseaux, services, réparations, modifications, licences, faux papiers, informations, soins médicaux, cargaisons et marchandises devraient être traités dans des phases ultérieures.
+Les véhicules, vaisseaux, services, réparations, modifications, licences, faux papiers, informations, soins médicaux,
+cargaisons et marchandises devraient être traités dans des phases ultérieures.
 
-La raison est simple : ces éléments ne relèvent pas toujours d’un achat d’item classique. Ils impliquent souvent un contexte narratif, une disponibilité rare, une négociation, ou une intégration technique plus lourde.
+La raison est simple : ces éléments ne relèvent pas toujours d’un achat d’item classique. Ils impliquent souvent un
+contexte narratif, une disponibilité rare, une négociation, ou une intégration technique plus lourde.
 
 ## 6. Expérience utilisateur attendue
 
@@ -213,7 +227,8 @@ Sources possibles :
 
 Point à arbitrer : faut-il que le marché scanne toutes les sources disponibles ou seulement des sources configurées ?
 
-Recommandation : utiliser des sources configurées. Scanner tout automatiquement risque d’afficher des éléments non prévus, des doublons ou des items narratifs.
+Recommandation : utiliser des sources configurées. Scanner tout automatiquement risque d’afficher des éléments non
+prévus, des doublons ou des items narratifs.
 
 ### 7.3. Prix de base
 
@@ -268,7 +283,8 @@ La disponibilité décrit le fait qu’il soit accessible ici, maintenant, dans 
 
 ### 7.6. Achat
 
-L’achat ne doit pas être inclus dans la toute première étape si l’objectif est d’abord de cadrer, afficher et filtrer proprement.
+L’achat ne doit pas être inclus dans la toute première étape si l’objectif est d’abord de cadrer, afficher et filtrer
+proprement.
 
 Quand l’achat sera implémenté, il devra :
 
@@ -282,7 +298,8 @@ Quand l’achat sera implémenté, il devra :
 
 Point à arbitrer : l’achat doit-il créer une copie de l’item ou une référence à l’item source ?
 
-Recommandation métier : l’inventaire du personnage doit recevoir une instance propre de l’item acheté. Le marché est une source d’achat, pas un lien permanent vers l’objet catalogue.
+Recommandation métier : l’inventaire du personnage doit recevoir une instance propre de l’item acheté. Le marché est une
+source d’achat, pas un lien permanent vers l’objet catalogue.
 
 ## 8. Découpage projet recommandé
 
@@ -434,11 +451,13 @@ Valeur : le marché devient un moteur de jeu, pas seulement une boutique.
 
 Un simple tableau d’items ne sera pas suffisant.
 
-Le système doit rester pratique, mais il doit aussi sentir Star Wars : marché noir, pénurie, contrôle impérial, vendeurs douteux, récupération, rareté locale.
+Le système doit rester pratique, mais il doit aussi sentir Star Wars : marché noir, pénurie, contrôle impérial, vendeurs
+douteux, récupération, rareté locale.
 
 ### Risque 2 — Trop automatiser trop tôt
 
-Le calcul de prix, la disponibilité, l’achat, la négociation et les conséquences narratives peuvent vite devenir complexes.
+Le calcul de prix, la disponibilité, l’achat, la négociation et les conséquences narratives peuvent vite devenir
+complexes.
 
 Il faut livrer par étapes.
 
@@ -460,9 +479,11 @@ Recommandation : commencer par un catalogue global achetable, puis introduire le
 
 ### Risque 5 — Coupler trop fortement la feature à la feuille personnage
 
-Le marché peut être ouvert depuis la feuille, mais il ne doit pas être conçu comme une simple sous-fenêtre de l’inventaire.
+Le marché peut être ouvert depuis la feuille, mais il ne doit pas être conçu comme une simple sous-fenêtre de
+l’inventaire.
 
-À terme, il pourrait aussi être ouvert par le MJ, depuis un lieu, depuis une scène, depuis un vendeur, ou depuis une macro.
+À terme, il pourrait aussi être ouvert par le MJ, depuis un lieu, depuis une scène, depuis un vendeur, ou depuis une
+macro.
 
 ## 10. Arbitrages à prendre avant les issues
 
@@ -481,11 +502,13 @@ Le marché peut être ouvert depuis la feuille, mais il ne doit pas être conçu
 
 ### Epic — Market / Marché
 
-Créer une fonctionnalité de marché permettant de consulter, filtrer, valoriser et acheter des items achetables dans le système Star Wars FFG.
+Créer une fonctionnalité de marché permettant de consulter, filtrer, valoriser et acheter des items achetables dans le
+système Star Wars FFG.
 
 ### Issue 1 — Définir le modèle métier du Market
 
-But : stabiliser les notions de marché, item achetable, éligibilité, prix de base, prix final, disponibilité et source commerciale.
+But : stabiliser les notions de marché, item achetable, éligibilité, prix de base, prix final, disponibilité et source
+commerciale.
 
 ### Issue 2 — Ouvrir la fenêtre Market depuis l’inventaire
 
@@ -531,8 +554,10 @@ La première version doit être un catalogue achetable propre, rapide, filtrable
 
 La deuxième version doit intégrer un vrai moteur métier de prix et de disponibilité.
 
-La troisième version doit rendre le marché vivant : marchés locaux, vendeurs, rareté contextuelle, marché noir, conséquences narratives.
+La troisième version doit rendre le marché vivant : marchés locaux, vendeurs, rareté contextuelle, marché noir,
+conséquences narratives.
 
 Le cœur de la feature ne doit pas être “acheter un objet”.
 
-Le cœur de la feature doit être : “accéder à l’économie galactique depuis le personnage, avec des règles cohérentes, contrôlables et immersives”.
+Le cœur de la feature doit être : “accéder à l’économie galactique depuis le personnage, avec des règles cohérentes,
+contrôlables et immersives”.

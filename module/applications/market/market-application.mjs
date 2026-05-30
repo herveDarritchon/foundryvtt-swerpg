@@ -1,6 +1,9 @@
 import { createMarketEntry, resolveMarketCatalogVisibility } from '../../lib/market/market-entry.mjs'
+import { loadMarketCatalog } from '../../lib/market/catalog-loader.mjs'
 import { validatePurchase } from '../../lib/market/purchase.mjs'
+import { readMarketConfig } from '../../lib/market/market-settings.mjs'
 import { PURCHASABLE_ITEM_TYPES, SOURCE_TYPES, DEFAULT_MARKET_CONTEXT, MARKET_TYPES, DEFAULT_MARKET_TYPE } from '../../config/market.mjs'
+import { loadCompendiumItems } from './compendium-source-adapter.mjs'
 import { logger } from '../../utils/logger.mjs'
 
 const { api } = foundry.applications
@@ -211,11 +214,12 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
       const buyer = this._buyerActor
       const buyerCredits = buyer?.system?.creditBudget?.availableCredits ?? buyer?.system?.credits ?? null
 
-      context.catalog = this.#prepareCatalog(buyer, buyerCredits)
+      context.catalog = await this.#prepareCatalog(buyer, buyerCredits)
       context.viewState = { ...this._viewState }
       context.sortOptions = this.#buildSortOptions()
       context.typeFilterOptions = this.#buildTypeFilterOptions()
       context.sourceFilterOptions = this.#buildSourceFilterOptions()
+      context.restrictionFilterOptions = this.#buildRestrictionFilterOptions()
       context.marketTypeOptions = this.#buildMarketTypeOptions()
       context.buyer = buyer
         ? {
@@ -271,6 +275,21 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
   }
 
   /**
+   * Build the list of restriction level filter options.
+   * First entry is the "all restrictions" placeholder.
+   * @returns {Array<{value: string, label: string}>}
+   */
+  #buildRestrictionFilterOptions() {
+    const allOption = { value: '', label: 'MARKET.Toolbar.Filter.AllRestrictions' }
+    const restrictionOptions = [
+      { value: 'restricted', label: 'MARKET.Restriction.Restricted' },
+      { value: 'illegal', label: 'MARKET.Restriction.Illegal' },
+      { value: 'licensed', label: 'MARKET.Restriction.Licensed' },
+    ]
+    return [allOption, ...restrictionOptions]
+  }
+
+  /**
    * Build the list of market type selector options from MARKET_TYPES.
    * @returns {Array<{value: string, label: string, description: string, uiVariant: string}>}
    */
@@ -286,11 +305,12 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
   /* -------------------------------------------- */
 
   /**
-   * Build the filtered, sorted catalogue from World Items as a flat list.
-   * Pipeline: build all eligible entries → apply market-type visibility → apply search → apply filters → sort → annotate with canBuy.
+   * Build the filtered, sorted catalogue from World and Compendium Items as a flat list.
+   * Pipeline: load world+compendium items → domain catalog loader (eligibility, dedup, config)
+   *           → apply market-type visibility → apply search → apply filters → sort → annotate with canBuy.
    * @param {Actor|null} buyer        The buyer actor, or null when browsing without a character context.
    * @param {number|null} buyerCredits  The buyer's current credit balance (null when no buyer).
-   * @returns {{
+   * @returns {Promise<{
    *   items: import('../../lib/market/market-entry.mjs').MarketEntry[],
    *   isEmpty: boolean,
    *   isFilteredEmpty: boolean,
@@ -298,27 +318,39 @@ export default class MarketApplicationV2 extends api.HandlebarsApplicationMixin(
    *   filteredCount: number,
    *   activeMarketType: string,
    *   activeMarketDef: import('../../config/market.mjs').MarketTypeDefinition|null
-   * }}
+   * }>}
    */
-  #prepareCatalog(buyer = null, buyerCredits = null) {
+  async #prepareCatalog(buyer = null, buyerCredits = null) {
     const activeMarketType = this._viewState.activeMarketType ?? DEFAULT_MARKET_TYPE
-
-    // 1. Build all eligible entries from game.items, using active market type for price calculation
-    const allEntries = []
     const marketContext = { ...DEFAULT_MARKET_CONTEXT, marketType: activeMarketType }
-    for (const item of game.items) {
-      try {
-        const rawItem = itemToRawItem(item)
-        const entry = createMarketEntry(rawItem, { sourceType: 'world', sourceId: item.uuid ?? '' }, marketContext)
-        if (!entry.eligible) continue
-        allEntries.push(entry)
-      } catch (err) {
-        // createMarketEntry throws TypeError for non-purchasable item types — skip silently
-        logger.debug(`[Market] Skipping item "${item.name}" (type="${item.type}"): ${err.message}`)
-      }
+    const marketConfig = readMarketConfig('swerpg')
+
+    // 1. Load world items
+    const worldItems = Array.from(game.items).map((item) => itemToRawItem(item))
+
+    // 2. Load compendium items (async)
+    let compendiumItems = []
+    try {
+      compendiumItems = await loadCompendiumItems()
+    } catch (err) {
+      logger.warn('[Market] Could not load compendium items', err)
     }
 
-    // 2. Apply market-type visibility rules (hide items whose availability is not allowed in this market)
+    // 3. Delegate to domain loader (handles eligibility, config filtering, dedup)
+    let allEntries
+    try {
+      allEntries = loadMarketCatalog({
+        worldItems,
+        compendiumItems,
+        config: marketConfig,
+        marketContext,
+      })
+    } catch (err) {
+      logger.error('[Market] Catalog loading failed', err)
+      allEntries = []
+    }
+
+    // 4. Apply market-type visibility rules (hide items whose availability is not allowed in this market)
     const visibleEntries = allEntries.filter((entry) => {
       const { visible } = resolveMarketCatalogVisibility(entry, activeMarketType)
       return visible

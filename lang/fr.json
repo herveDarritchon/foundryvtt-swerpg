@@ -1455,7 +1455,9 @@
         "AllSources": "Toutes les sources",
         "AffordableOnly": "Abordables uniquement",
         "AffordableOnlyLabel": "Afficher uniquement les objets dans le budget",
-        "AffordableOnlyTooltip": "Afficher uniquement les objets que l'acheteur peut se permettre"
+        "AffordableOnlyTooltip": "Afficher uniquement les objets que l'acheteur peut se permettre",
+        "RestrictionLabel": "Restriction",
+        "AllRestrictions": "Tous"
       },
       "Sort": {
         "Label": "Trier par",
@@ -1470,6 +1472,11 @@
         "Label": "Réinitialiser",
         "Tooltip": "Réinitialiser les filtres et la recherche"
       }
+    },
+    "Restriction": {
+      "Restricted": "Restreint",
+      "Illegal": "Illégal",
+      "Licensed": "Licencié"
     },
     "MarketType": {
       "SelectorLabel": "Type de marché",

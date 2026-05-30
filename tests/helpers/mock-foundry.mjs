@@ -780,6 +780,7 @@ export function addPacksMock(packs = {}) {
       index,
       contents: documents,
       getDocument: vi.fn(async (docId) => documents.find((d) => (d.id ?? d._id) === docId) ?? undefined),
+      getIndex: vi.fn(async (_options) => index),
     }
     globalThis.game.packs.set(id, packObj)
   }
