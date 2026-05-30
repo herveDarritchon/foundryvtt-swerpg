@@ -1,0 +1,33 @@
+{{#if (eq activeTab "exclusions")}}
+<section class="market-settings-panel__section market-settings-panel__section--exclusions" data-application-part="exclusions">
+  <h3>{{localize "MARKET.Settings.Exclusions.ManuallyExcluded"}}</h3>
+  <p class="notes">{{localize "MARKET.Settings.Exclusions.ManuallyExcludedHint"}}</p>
+
+  <div class="market-settings-panel__exclusions-toolbar">
+    <button type="button" data-action="addExcludedItem" class="market-settings-panel__add-btn">
+      <i class="fa-solid fa-plus"></i>
+      {{localize "MARKET.Settings.Exclusions.AddItem"}}
+    </button>
+  </div>
+
+  {{#if excludedItems.length}}
+    <ul class="market-settings-panel__exclusions-list">
+      {{#each excludedItems}}
+        <li class="market-settings-panel__exclusion-entry">
+          <span class="market-settings-panel__exclusion-uuid">{{this}}</span>
+          <button type="button"
+                  class="market-settings-panel__remove-btn"
+                  data-action="removeExcludedItem"
+                  data-uuid="{{this}}"
+                  aria-label="{{localize 'MARKET.Settings.Exclusions.RemoveItem'}}"
+                  data-tooltip="{{localize 'MARKET.Settings.Exclusions.RemoveItem'}}">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </li>
+      {{/each}}
+    </ul>
+  {{else}}
+    <p class="market-settings-panel__empty">{{localize "MARKET.Settings.Exclusions.Empty"}}</p>
+  {{/if}}
+</section>
+{{/if}}

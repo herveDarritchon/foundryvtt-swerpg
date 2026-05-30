@@ -1,0 +1,66 @@
+{{#if (eq activeTab "locations")}}
+<section class="market-settings-panel__section market-settings-panel__section--locations" data-application-part="locations">
+  <h3>{{localize "MARKET.Settings.Locations.ConfiguredLocations"}}</h3>
+  <p class="notes">{{localize "MARKET.Settings.Locations.ConfiguredLocationsHint"}}</p>
+
+  <div class="market-settings-panel__locations-toolbar">
+    <button type="button" data-action="addLocation" class="market-settings-panel__add-btn">
+      <i class="fa-solid fa-plus"></i>
+      {{localize "MARKET.Settings.Locations.AddLocation"}}
+    </button>
+  </div>
+
+  {{#if locationList.length}}
+    <ul class="market-settings-panel__locations-list">
+      {{#each locationList}}
+        <li class="market-settings-panel__location-entry">
+          <div class="market-settings-panel__location-header">
+            <strong class="market-settings-panel__location-name">
+              <i class="fa-solid fa-map-location-dot"></i>
+              {{this.name}}
+            </strong>
+            <span class="market-settings-panel__location-type">
+              {{this.preferredMarketType}}
+            </span>
+            <button type="button"
+                    class="market-settings-panel__remove-btn"
+                    data-action="removeLocation"
+                    data-location-name="{{this.name}}"
+                    aria-label="{{localize 'MARKET.Settings.Locations.RemoveLocation'}}"
+                    data-tooltip="{{localize 'MARKET.Settings.Locations.RemoveLocation'}}">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </div>
+          {{#if (or this.planetId this.regionId)}}
+            <div class="market-settings-panel__location-meta">
+              {{#if this.planetId}}
+                <span class="market-settings-panel__location-planet">
+                  <i class="fa-solid fa-earth-asia"></i> {{this.planetId}}
+                </span>
+              {{/if}}
+              {{#if this.regionId}}
+                <span class="market-settings-panel__location-region">
+                  <i class="fa-solid fa-compass"></i> {{this.regionId}}
+                </span>
+              {{/if}}
+            </div>
+          {{/if}}
+          {{#if this.rarityModifiers}}
+            <div class="market-settings-panel__location-rarity">
+              {{#each this.rarityModifiers}}
+                {{#unless (eq this 0)}}
+                  <span class="market-settings-panel__rarity-badge {{#if (gt this 0)}}positive{{else}}negative{{/if}}">
+                    {{@key}}: {{#if (gt this 0)}}+{{/if}}{{this}}
+                  </span>
+                {{/unless}}
+              {{/each}}
+            </div>
+          {{/if}}
+        </li>
+      {{/each}}
+    </ul>
+  {{else}}
+    <p class="market-settings-panel__empty">{{localize "MARKET.Settings.Locations.Empty"}}</p>
+  {{/if}}
+</section>
+{{/if}}

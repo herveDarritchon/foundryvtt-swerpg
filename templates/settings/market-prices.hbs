@@ -1,0 +1,49 @@
+{{#if (eq activeTab "prices")}}
+<section class="market-settings-panel__section market-settings-panel__section--prices" data-application-part="prices">
+  <h3>{{localize "MARKET.Settings.Prices.Global"}}</h3>
+  <p class="notes">{{localize "MARKET.Settings.Prices.GlobalHint"}}</p>
+  <div class="form-group">
+    <label>{{localize "MARKET.Settings.Prices.GlobalLabel"}}</label>
+    <input type="number" name="globalPriceModifier"
+           value="{{globalPriceModifier}}"
+           min="-100" max="100" step="1"
+           placeholder="0" />
+    <span class="units">%</span>
+  </div>
+
+  <h3>{{localize "MARKET.Settings.Prices.TypeModifiers"}}</h3>
+  <p class="notes">{{localize "MARKET.Settings.Prices.TypeModifiersHint"}}</p>
+  <table class="market-settings-panel__type-modifiers">
+    <thead>
+      <tr>
+        <th>{{localize "MARKET.Settings.Prices.TypeColumn"}}</th>
+        <th>{{localize "MARKET.Settings.Prices.ModifierColumn"}} (%)</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each purchasableTypes}}
+        <tr>
+          <td>
+            <i class="{{this.icon}}"></i>
+            {{localize this.label}}
+          </td>
+          <td>
+            <input type="number"
+                   data-type-modifier="{{this.id}}"
+                   value="{{typeModifierPercent ../typeModifiers this.id}}"
+                   min="-100" max="100" step="1"
+                   placeholder="0" />
+          </td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+  <div class="market-settings-panel__actions">
+    <button type="button" data-action="saveSettings" class="market-settings-panel__save-btn">
+      <i class="fa-solid fa-floppy-disk"></i>
+      {{localize "MARKET.Settings.Save"}}
+    </button>
+  </div>
+</section>
+{{/if}}

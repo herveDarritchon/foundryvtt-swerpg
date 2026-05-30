@@ -1185,7 +1185,7 @@ export default class SwerpgAction extends foundry.abstract.DataModel {
 
     // Create chat message
     const messageData = {
-      type: CONST.CHAT_MESSAGE_TYPES[rolls.length > 0 ? 'ROLL' : 'OTHER'],
+      type: rolls.length > 0 ? 'roll' : 'other',
       content: content,
       speaker: ChatMessage.getSpeaker({ actor: this.actor }),
       rolls: rolls,

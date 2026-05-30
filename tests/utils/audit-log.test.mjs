@@ -55,11 +55,7 @@ beforeEach(() => {
     },
   }
 
-  globalThis.CONST = {
-    CHAT_MESSAGE_TYPES: {
-      WHISPER: 4,
-    },
-  }
+  globalThis.CONST = {}
 
   globalThis.ChatMessage = {
     create: vi.fn().mockResolvedValue(undefined),

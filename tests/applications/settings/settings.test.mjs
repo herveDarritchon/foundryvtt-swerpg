@@ -38,8 +38,8 @@ describe('System Settings Registration', () => {
     test('should register all system settings', () => {
       registerSystemSettings()
 
-      // Verify all settings were registered (8 core + 3 market = 11 total)
-      expect(mockGameSettings.register).toHaveBeenCalledTimes(11) // 11 settings total
+      // Verify all settings were registered (8 core + 3 original market + 4 phase-9 market = 15 total)
+      expect(mockGameSettings.register).toHaveBeenCalledTimes(15) // 15 settings total
       expect(mockKeybindings.register).toHaveBeenCalledTimes(1) // 1 keybinding
     })
 
@@ -155,9 +155,9 @@ describe('System Settings Registration', () => {
 
         const calls = mockGameSettings.register.mock.calls
 
-        // World-scoped settings (7 core + 3 market = 10)
+        // World-scoped settings (7 core + 3 original market + 4 phase-9 market = 14)
         const worldSettings = calls.filter((call) => call[2].scope === 'world')
-        expect(worldSettings).toHaveLength(10)
+        expect(worldSettings).toHaveLength(14)
 
         // Client-scoped settings
         const clientSettings = calls.filter((call) => call[2].scope === 'client')
@@ -170,9 +170,9 @@ describe('System Settings Registration', () => {
 
         const calls = mockGameSettings.register.mock.calls
 
-        // Hidden settings (config: false) — 5 core + 3 market = 8
+        // Hidden settings (config: false) — 5 core + 3 original market + 4 phase-9 market = 12
         const hiddenSettings = calls.filter((call) => call[2].config === false)
-        expect(hiddenSettings).toHaveLength(8)
+        expect(hiddenSettings).toHaveLength(12)
 
         // Visible settings (config: true)
         const visibleSettings = calls.filter((call) => call[2].config === true)
@@ -190,11 +190,20 @@ describe('System Settings Registration', () => {
 
         const calls = mockGameSettings.register.mock.calls
 
-        // String settings — 2 core + 3 market = 5
+        // String settings — 2 core + 3 original market + 3 phase-9 market (string) = 8
         const stringSettings = calls.filter((call) => call[2].type === String)
-        expect(stringSettings).toHaveLength(5)
+        expect(stringSettings).toHaveLength(8)
         expect(stringSettings.map((call) => call[1])).toEqual(
-          expect.arrayContaining(['systemMigrationVersion', 'worldKey', 'marketEnabledSources', 'marketAllowedItemTypes', 'marketDedupStrategy']),
+          expect.arrayContaining([
+            'systemMigrationVersion',
+            'worldKey',
+            'marketEnabledSources',
+            'marketAllowedItemTypes',
+            'marketDedupStrategy',
+            'marketExcludedItems',
+            'marketTypeModifiers',
+            'marketLocationConfigs',
+          ]),
         )
 
         // Boolean settings
@@ -202,10 +211,12 @@ describe('System Settings Registration', () => {
         expect(booleanSettings).toHaveLength(3)
         expect(booleanSettings.map((call) => call[1])).toEqual(expect.arrayContaining(['devMode', 'actionAnimations', 'welcome']))
 
-        // Number settings
+        // Number settings (autoConfirm, heroism, auditLogMaxEntries, marketGlobalPriceModifier)
         const numberSettings = calls.filter((call) => call[2].type === Number)
-        expect(numberSettings).toHaveLength(3)
-        expect(numberSettings.map((call) => call[1])).toEqual(expect.arrayContaining(['autoConfirm', 'heroism', 'auditLogMaxEntries']))
+        expect(numberSettings).toHaveLength(4)
+        expect(numberSettings.map((call) => call[1])).toEqual(
+          expect.arrayContaining(['autoConfirm', 'heroism', 'auditLogMaxEntries', 'marketGlobalPriceModifier']),
+        )
       })
 
       test('should have correct default values', () => {
@@ -289,8 +300,8 @@ describe('System Settings Registration', () => {
         registerSystemSettings()
         registerSystemSettings()
 
-        // Should have been called twice for each setting (11 settings x 2 calls)
-        expect(mockGameSettings.register).toHaveBeenCalledTimes(22) // 11 settings x 2 calls
+        // Should have been called twice for each setting (15 settings x 2 calls)
+        expect(mockGameSettings.register).toHaveBeenCalledTimes(30) // 15 settings x 2 calls
         expect(mockKeybindings.register).toHaveBeenCalledTimes(2) // 1 keybinding x 2 calls
       })
     })
@@ -312,6 +323,10 @@ describe('System Settings Registration', () => {
           'marketEnabledSources',
           'marketAllowedItemTypes',
           'marketDedupStrategy',
+          'marketExcludedItems',
+          'marketTypeModifiers',
+          'marketGlobalPriceModifier',
+          'marketLocationConfigs',
         ]
 
         for (const key of expectedKeys) {

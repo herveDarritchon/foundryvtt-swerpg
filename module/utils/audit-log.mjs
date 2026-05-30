@@ -237,7 +237,7 @@ async function handleWriteError(actor, err) {
         content,
         speaker: ChatMessage.getSpeaker({ actor }),
         whisper: ChatMessage.getWhisperRecipients('GM'),
-        type: CONST.CHAT_MESSAGE_TYPES.WHISPER,
+        type: 'whisper',
       })
     } catch (chatErr) {
       logger.warn('[AuditLog] Failed to send GM whisper for write error:', chatErr)

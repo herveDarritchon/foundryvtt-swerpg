@@ -80,7 +80,8 @@ export async function buildPurchaseChatData({ buyer, entry, outcome = null, cons
   return {
     content,
     speaker: ChatMessage.getSpeaker({ actor: buyer }),
-    type: CONST.CHAT_MESSAGE_TYPES?.IC ?? CONST.CHAT_MESSAGE_STYLES?.IC ?? 0,
     flavor: game.i18n.localize('MARKET.Chat.PurchaseTitle'),
+    // Note: No `type` field - Foundry v14 uses `type` for document types, not message styles.
+    // Use `style: CONST.CHAT_MESSAGE_STYLES.IC` if specific styling is needed.
   }
 }
