@@ -1452,7 +1452,10 @@
         "TypeLabel": "Filtrer par type",
         "SourceLabel": "Filtrer par source",
         "AllTypes": "Tous les types",
-        "AllSources": "Toutes les sources"
+        "AllSources": "Toutes les sources",
+        "AffordableOnly": "Abordables uniquement",
+        "AffordableOnlyLabel": "Afficher uniquement les objets dans le budget",
+        "AffordableOnlyTooltip": "Afficher uniquement les objets que l'acheteur peut se permettre"
       },
       "Sort": {
         "Label": "Trier par",

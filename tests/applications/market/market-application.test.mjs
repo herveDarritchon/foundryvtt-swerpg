@@ -519,6 +519,88 @@ describe('MarketApplicationV2', () => {
   })
 
   /* -------------------------------------------- */
+  /*  Affordable-only filter                      */
+  /* -------------------------------------------- */
+
+  describe('affordableOnly filter', () => {
+    it('_viewState starts with affordableOnly=false', () => {
+      const app = new MarketApplicationV2()
+      expect(app._viewState.affordableOnly).toBe(false)
+    })
+
+    it('with affordableOnly=false, shows all items regardless of buyer budget', async () => {
+      const cheap = makeItem({ type: 'weapon', name: 'Cheap Blaster', price: 50 })
+      const expensive = makeItem({ type: 'weapon', name: 'Expensive Blaster', price: 9999 })
+      globalThis.game.items = makeItemsCollection([cheap, expensive])
+
+      const actor = { id: 'actor-1', name: 'Test', system: { credits: 100 } }
+      const app = new MarketApplicationV2()
+      app.setBuyerActor(actor)
+      app._viewState = { ...app._viewState, affordableOnly: false }
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.catalog.filteredCount).toBe(2)
+    })
+
+    it('with affordableOnly=true and a buyer, shows only items the buyer can afford', async () => {
+      const cheap = makeItem({ type: 'weapon', name: 'Cheap Blaster', price: 50 })
+      const expensive = makeItem({ type: 'weapon', name: 'Expensive Blaster', price: 9999 })
+      globalThis.game.items = makeItemsCollection([cheap, expensive])
+
+      const actor = { id: 'actor-1', name: 'Test', system: { credits: 100 } }
+      const app = new MarketApplicationV2()
+      app.setBuyerActor(actor)
+      app._viewState = { ...app._viewState, affordableOnly: true }
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.catalog.filteredCount).toBe(1)
+      expect(context.catalog.items[0].name).toBe('Cheap Blaster')
+    })
+
+    it('with affordableOnly=true but no buyer, shows all items (filter is a no-op)', async () => {
+      const cheap = makeItem({ type: 'weapon', name: 'Cheap Blaster', price: 50 })
+      const expensive = makeItem({ type: 'weapon', name: 'Expensive Blaster', price: 9999 })
+      globalThis.game.items = makeItemsCollection([cheap, expensive])
+
+      const app = new MarketApplicationV2()
+      // No buyer set — filter must not apply
+      app._viewState = { ...app._viewState, affordableOnly: true }
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.catalog.filteredCount).toBe(2)
+    })
+
+    it('with affordableOnly=true and buyer who cannot afford any item, returns isFilteredEmpty=true', async () => {
+      const expensive = makeItem({ type: 'weapon', name: 'Expensive Blaster', price: 9999 })
+      globalThis.game.items = makeItemsCollection([expensive])
+
+      const actor = { id: 'actor-1', name: 'Test', system: { credits: 1 } }
+      const app = new MarketApplicationV2()
+      app.setBuyerActor(actor)
+      app._viewState = { ...app._viewState, affordableOnly: true }
+      const context = await app._preparePartContext('catalog', {})
+
+      expect(context.catalog.totalCount).toBe(1)
+      expect(context.catalog.filteredCount).toBe(0)
+      expect(context.catalog.isFilteredEmpty).toBe(true)
+    })
+
+    it('resetCatalog action resets affordableOnly to false', async () => {
+      globalThis.game.items = makeItemsCollection([])
+
+      const app = new MarketApplicationV2()
+      app._viewState = { ...app._viewState, affordableOnly: true }
+      app.render = vi.fn().mockResolvedValue(undefined)
+
+      const action = MarketApplicationV2.DEFAULT_OPTIONS.actions.resetCatalog
+      await action.call(app, {}, {})
+
+      expect(app._viewState.affordableOnly).toBe(false)
+      expect(app.render).toHaveBeenCalled()
+    })
+  })
+
+  /* -------------------------------------------- */
   /*  Sort                                        */
   /* -------------------------------------------- */
 
