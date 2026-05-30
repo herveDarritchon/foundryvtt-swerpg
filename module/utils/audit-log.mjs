@@ -315,6 +315,7 @@ export {
   onCreateItem,
   recordTalentNodePurchase,
   recordTalentNodeOperation,
+  recordItemPurchase,
 }
 
 /* -------------------------------------------- */
@@ -485,6 +486,46 @@ async function recordTalentNodePurchase(actor, purchaseData) {
   return recordTalentNodeOperation(actor, 'purchase', 'succeeded', purchaseData)
 }
 
+/**
+ * Record an item purchase audit entry when an item is bought via Market.
+ * Non-blocking: failures are caught internally without throwing.
+ *
+ * @param {object} actor The actor document instance.
+ * @param {object} purchaseData
+ * @param {string} purchaseData.itemName
+ * @param {string} purchaseData.itemType
+ * @param {number} purchaseData.price
+ * @param {number} [purchaseData.quantity=1]
+ * @param {number} purchaseData.creditsAfter
+ */
+async function recordItemPurchase(actor, { itemName, itemType, price, quantity = 1, creditsAfter }) {
+  const ts = Date.now()
+  const creditsBefore = actor.system?.creditBudget?.availableCredits ?? actor.system?.credits ?? null
+  const snapshot = { creditsBefore, creditsAfter }
+  const user = game.users?.get(game.user?.id) ?? null
+  const creditDelta = -(price * quantity)
+
+  const entry = {
+    ...makeEntry({
+      type: 'item.purchase',
+      data: {
+        itemName,
+        itemType,
+        price,
+        quantity,
+      },
+      xpDelta: 0,
+      ts,
+      userId: game.user?.id,
+      user,
+      snapshot,
+    }),
+    creditDelta,
+  }
+
+  await writeLogEntries(actor, [entry])
+}
+
 /* -------------------------------------------- */
 /*  Émission de messages chat depuis l'audit    */
 /* -------------------------------------------- */
@@ -630,6 +671,18 @@ function _buildChatContext(actor, entry) {
       context.previousValue = String(data.oldLevel)
       context.nextValue = String(data.newLevel)
       context.variant = 'change'
+      break
+    }
+
+    case 'item.purchase': {
+      context.eventLabel = game.i18n.localize('SWERPG.AUDIT_LOG.TYPE.ITEM_PURCHASE')
+      context.nextValue = `${data.itemName ?? ''} (${data.itemType ?? ''})`
+      context.variant = 'add'
+      context.metaLeft = game.i18n.format('SWERPG.AUDIT_LOG.META.PRICE', { price: data.price ?? 0 })
+      if (snapshot.creditsAfter !== undefined && snapshot.creditsAfter !== null) {
+        context.metaRight = game.i18n.format('SWERPG.AUDIT_LOG.META.CREDITS_REMAINING', { credits: snapshot.creditsAfter })
+      }
+      context.hasMeta = true
       break
     }
 

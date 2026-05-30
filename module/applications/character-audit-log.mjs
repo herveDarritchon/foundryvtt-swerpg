@@ -14,6 +14,7 @@ const AUDIT_LOG_FAMILIES = Object.freeze({
   characteristics: 'characteristics',
   details: 'details',
   advancement: 'advancement',
+  purchases: 'purchases',
   other: 'other',
 })
 
@@ -25,6 +26,7 @@ const AUDIT_LOG_FILTER_ORDER = Object.freeze([
   AUDIT_LOG_FAMILIES.characteristics,
   AUDIT_LOG_FAMILIES.details,
   AUDIT_LOG_FAMILIES.advancement,
+  AUDIT_LOG_FAMILIES.purchases,
 ])
 
 const AUDIT_LOG_FILTER_LABELS = Object.freeze({
@@ -35,6 +37,7 @@ const AUDIT_LOG_FILTER_LABELS = Object.freeze({
   [AUDIT_LOG_FAMILIES.characteristics]: 'SWERPG.AUDIT_LOG.FILTER.CHARACTERISTICS',
   [AUDIT_LOG_FAMILIES.details]: 'SWERPG.AUDIT_LOG.FILTER.DETAILS',
   [AUDIT_LOG_FAMILIES.advancement]: 'SWERPG.AUDIT_LOG.FILTER.ADVANCEMENT',
+  [AUDIT_LOG_FAMILIES.purchases]: 'SWERPG.AUDIT_LOG.FILTER.PURCHASES',
 })
 
 const AUDIT_LOG_TYPE_LABELS = Object.freeze({
@@ -56,6 +59,7 @@ const AUDIT_LOG_TYPE_LABELS = Object.freeze({
   'talent-node-forget-succeeded': 'SWERPG.AUDIT_LOG.TYPE.TALENT_NODE_FORGET_SUCCEEDED',
   'talent-node-forget-failed': 'SWERPG.AUDIT_LOG.TYPE.TALENT_NODE_FORGET_FAILED',
   'advancement.level': 'SWERPG.AUDIT_LOG.TYPE.ADVANCEMENT_LEVEL',
+  'item.purchase': 'SWERPG.AUDIT_LOG.TYPE.ITEM_PURCHASE',
 })
 
 /**
@@ -101,6 +105,8 @@ export function getAuditLogFamily(type) {
       return AUDIT_LOG_FAMILIES.details
     case 'advancement.level':
       return AUDIT_LOG_FAMILIES.advancement
+    case 'item.purchase':
+      return AUDIT_LOG_FAMILIES.purchases
     default:
       return AUDIT_LOG_FAMILIES.other
   }
@@ -142,6 +148,16 @@ function formatAuditLogDelta(xpDelta) {
   const value = Number(xpDelta) || 0
   const sign = value > 0 ? '+' : ''
   return `${sign}${value} XP`
+}
+
+/**
+ * Format a credit delta value as a signed string with the "cr" suffix.
+ * @param creditDelta
+ */
+function formatAuditLogCreditDelta(creditDelta) {
+  const value = Number(creditDelta) || 0
+  const sign = value > 0 ? '+' : ''
+  return `${sign}${value} cr`
 }
 
 /**
@@ -270,6 +286,13 @@ export function buildAuditLogDescription(entry) {
         oldLevel: data.oldLevel ?? 0,
         newLevel: data.newLevel ?? 0,
       })
+    case 'item.purchase':
+      return game.i18n.format('SWERPG.AUDIT_LOG.DESCRIPTION.ITEM_PURCHASE', {
+        itemName: getAuditLogName(data.itemName, 'SWERPG.AUDIT_LOG.UNKNOWN_ITEM'),
+        itemType: data.itemType ?? '',
+        price: data.price ?? 0,
+        quantity: data.quantity ?? 1,
+      })
     default:
       return game.i18n.format('SWERPG.AUDIT_LOG.DESCRIPTION.UNKNOWN', {
         type: getAuditLogName(entry?.type, 'SWERPG.AUDIT_LOG.UNKNOWN_VALUE'),
@@ -291,6 +314,10 @@ export function buildAuditLogEntries(actor, filter = AUDIT_LOG_FAMILIES.all) {
     .map((entry) => {
       const family = getAuditLogFamily(entry.type)
       const xpDelta = Number(entry.xpDelta) || 0
+      const isPurchaseEntry = entry.type === 'item.purchase'
+      const creditDelta = Number(entry.creditDelta) || 0
+      const deltaValue = isPurchaseEntry ? creditDelta : xpDelta
+      const formattedDelta = isPurchaseEntry ? formatAuditLogCreditDelta(creditDelta) : formatAuditLogDelta(xpDelta)
 
       return {
         ...entry,
@@ -299,6 +326,9 @@ export function buildAuditLogEntries(actor, filter = AUDIT_LOG_FAMILIES.all) {
         typeLabel: getAuditLogTypeLabel(entry.type),
         description: buildAuditLogDescription(entry),
         formattedTimestamp: formatAuditLogTimestamp(entry.timestamp),
+        formattedDelta,
+        deltaClass: deltaValue > 0 ? 'is-gain' : deltaValue < 0 ? 'is-spend' : 'is-neutral',
+        hasDelta: deltaValue !== 0,
         formattedXpDelta: formatAuditLogDelta(xpDelta),
         xpDeltaClass: xpDelta > 0 ? 'is-gain' : xpDelta < 0 ? 'is-spend' : 'is-neutral',
         hasXpDelta: xpDelta !== 0,
