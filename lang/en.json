@@ -1656,13 +1656,16 @@
         "Complication": "Complication"
       },
       "ImperialSuspicion": {
-        "Description": "This purchase involves restricted items. An Imperial agent may have noticed."
+        "Title": "Imperial Suspicion",
+        "Description": "This purchase involves restricted items. An Imperial agent may have noticed. Purchasing restricted items may attract Imperial scrutiny."
       },
       "BlackMarketDebt": {
-        "Description": "Buying on the black market creates a debt toward the vendor. Accept the obligation?"
+        "Title": "Black Market Debt",
+        "Description": "Buying on the black market creates a debt toward the vendor. Accept the obligation? The vendor may demand repayment with interest, or services rendered."
       },
       "Complication": {
-        "Description": "This very rare or illegal item may trigger a narrative complication (Disadvantage or Disaster)."
+        "Title": "Complication",
+        "Description": "This very rare or illegal item may trigger a narrative complication (Disadvantage or Disaster). This transaction may trigger unforeseen complications."
       },
       "Badge": {
         "Automatic": "Automatic"
@@ -1671,6 +1674,14 @@
         "Label": "Accept",
         "Tooltip": "Accept this consequence"
       }
+    },
+    "Chat": {
+      "PurchaseTitle": "Market Purchase",
+      "ItemLabel": "Item",
+      "PriceLabel": "Price",
+      "ConsequencesLabel": "Consequences",
+      "BoughtBy": "Bought by",
+      "Negotiated": "negotiated"
     },
     "Badge": {
       "AriaLabel": "Item badges",

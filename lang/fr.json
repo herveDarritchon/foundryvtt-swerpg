@@ -1552,13 +1552,16 @@
         "Complication": "Complication"
       },
       "ImperialSuspicion": {
-        "Description": "Cet achat implique des articles restreints. Un agent impérial a peut-être remarqué."
+        "Title": "Suspicion impériale",
+        "Description": "Cet achat implique des articles restreints. Un agent impérial a peut-être remarqué. L'achat d'articles restreints peut attirer la surveillance impériale."
       },
       "BlackMarketDebt": {
-        "Description": "Acheter au marché noir crée une dette envers le vendeur. Accepter l'obligation ?"
+        "Title": "Dette marché noir",
+        "Description": "Acheter au marché noir crée une dette envers le vendeur. Accepter l'obligation ? Le vendeur peut exiger un remboursement avec intérêts, ou des services rendus."
       },
       "Complication": {
-        "Description": "Cet article très rare ou illégal peut déclencher une complication narrative (Désavantage ou Désastre)."
+        "Title": "Complication",
+        "Description": "Cet article très rare ou illégal peut déclencher une complication narrative (Désavantage ou Désastre). Cette transaction peut entraîner des complications imprévues."
       },
       "Badge": {
         "Automatic": "Automatique"
@@ -1567,6 +1570,14 @@
         "Label": "Accepter",
         "Tooltip": "Accepter cette conséquence"
       }
+    },
+    "Chat": {
+      "PurchaseTitle": "Achat au marché",
+      "ItemLabel": "Objet",
+      "PriceLabel": "Prix",
+      "ConsequencesLabel": "Conséquences",
+      "BoughtBy": "Acheté par",
+      "Negotiated": "négocié"
     },
     "Badge": {
       "AriaLabel": "Badges de l'objet",
