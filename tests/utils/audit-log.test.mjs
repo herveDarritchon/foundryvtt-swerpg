@@ -1797,4 +1797,82 @@ describe('recordItemPurchase', () => {
       }),
     ).resolves.toBeUndefined()
   })
+
+  test('captures itemId in entry.data when provided', async () => {
+    const { recordItemPurchase } = await import('../../module/utils/audit-log.mjs')
+    globalThis.foundry.utils.deepClone = vi.fn((o) => structuredClone(o))
+
+    const actor = makeActor({ system: { credits: 250 } })
+    await recordItemPurchase(actor, {
+      itemName: 'Blaster Pistol',
+      itemType: 'weapon',
+      price: 100,
+      quantity: 1,
+      creditsAfter: 150,
+      itemId: 'item-uuid-12345',
+    })
+
+    const updateArg = actor.update.mock.calls[0][0]
+    const entry = updateArg['flags.swerpg.logs'][0]
+    expect(entry.data.itemId).toBe('item-uuid-12345')
+  })
+
+  test('itemId is undefined in entry.data when not provided', async () => {
+    const { recordItemPurchase } = await import('../../module/utils/audit-log.mjs')
+    globalThis.foundry.utils.deepClone = vi.fn((o) => structuredClone(o))
+
+    const actor = makeActor({ system: { credits: 250 } })
+    await recordItemPurchase(actor, {
+      itemName: 'Blaster Pistol',
+      itemType: 'weapon',
+      price: 100,
+      quantity: 1,
+      creditsAfter: 150,
+    })
+
+    const updateArg = actor.update.mock.calls[0][0]
+    const entry = updateArg['flags.swerpg.logs'][0]
+    expect(entry.data.itemId).toBeUndefined()
+  })
+
+  test('calculates creditsDelta in snapshot as creditsBefore - creditsAfter', async () => {
+    const { recordItemPurchase } = await import('../../module/utils/audit-log.mjs')
+    globalThis.foundry.utils.deepClone = vi.fn((o) => structuredClone(o))
+
+    const actor = makeActor({ system: { credits: 250 } })
+    await recordItemPurchase(actor, {
+      itemName: 'Blaster Pistol',
+      itemType: 'weapon',
+      price: 100,
+      quantity: 1,
+      creditsAfter: 150,
+      itemId: 'item-uuid-12345',
+    })
+
+    const updateArg = actor.update.mock.calls[0][0]
+    const entry = updateArg['flags.swerpg.logs'][0]
+    expect(entry.snapshot.creditsBefore).toBe(250)
+    expect(entry.snapshot.creditsAfter).toBe(150)
+    expect(entry.snapshot.creditsDelta).toBe(100) // 250 - 150
+    expect(entry.creditDelta).toBe(-100) // -(100 * 1)
+  })
+
+  test('creditsDelta is null when creditsBefore is null', async () => {
+    const { recordItemPurchase } = await import('../../module/utils/audit-log.mjs')
+    globalThis.foundry.utils.deepClone = vi.fn((o) => structuredClone(o))
+
+    const actor = makeActor({ system: {} }) // no credits field
+    await recordItemPurchase(actor, {
+      itemName: 'Armor',
+      itemType: 'armor',
+      price: 50,
+      quantity: 1,
+      creditsAfter: null,
+    })
+
+    const updateArg = actor.update.mock.calls[0][0]
+    const entry = updateArg['flags.swerpg.logs'][0]
+    expect(entry.snapshot.creditsBefore).toBeNull()
+    expect(entry.snapshot.creditsDelta).toBeNull()
+  })
 })

@@ -497,11 +497,13 @@ async function recordTalentNodePurchase(actor, purchaseData) {
  * @param {number} purchaseData.price
  * @param {number} [purchaseData.quantity=1]
  * @param {number} purchaseData.creditsAfter
+ * @param {string} [purchaseData.itemId] The ID of the purchased item document (optional, for audit traceability).
  */
-async function recordItemPurchase(actor, { itemName, itemType, price, quantity = 1, creditsAfter }) {
+async function recordItemPurchase(actor, { itemName, itemType, price, quantity = 1, creditsAfter, itemId }) {
   const ts = Date.now()
   const creditsBefore = actor.system?.creditBudget?.availableCredits ?? actor.system?.credits ?? null
-  const snapshot = { creditsBefore, creditsAfter }
+  const creditsDelta = creditsBefore !== null && creditsAfter !== null ? creditsBefore - creditsAfter : null
+  const snapshot = { creditsBefore, creditsAfter, creditsDelta }
   const user = game.users?.get(game.user?.id) ?? null
   const creditDelta = -(price * quantity)
 
@@ -513,6 +515,7 @@ async function recordItemPurchase(actor, { itemName, itemType, price, quantity =
         itemType,
         price,
         quantity,
+        itemId,
       },
       xpDelta: 0,
       ts,
